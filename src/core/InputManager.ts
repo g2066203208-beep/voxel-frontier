@@ -2,7 +2,6 @@ import * as THREE from 'three';
 
 export interface InputCallbacks {
   onActiveChange(active: boolean): void;
-  onPrimaryAction(): void;
   onSecondaryAction(): void;
   onSlotSelect(index: number): void;
   onSlotStep(step: number): void;
@@ -11,6 +10,7 @@ export interface InputCallbacks {
 export class InputManager {
   private readonly keys = new Set<string>();
   private jumpRequested = false;
+  private primaryDown = false;
   private readonly canvas: HTMLCanvasElement;
   private readonly callbacks: InputCallbacks;
 
@@ -25,6 +25,10 @@ export class InputManager {
 
   get active(): boolean {
     return document.pointerLockElement === this.canvas;
+  }
+
+  get primaryHeld(): boolean {
+    return this.active && this.primaryDown;
   }
 
   requestPointerLock(): void {
@@ -54,7 +58,10 @@ export class InputManager {
     });
 
     document.addEventListener('pointerlockchange', () => {
-      if (!this.active) this.keys.clear();
+      if (!this.active) {
+        this.keys.clear();
+        this.primaryDown = false;
+      }
       this.callbacks.onActiveChange(this.active);
     });
 
@@ -73,7 +80,7 @@ export class InputManager {
       if (!this.active) return;
       this.keys.add(event.code);
       if (event.code === 'Space') this.jumpRequested = true;
-      if (/^Digit[1-5]$/.test(event.code)) {
+      if (/^Digit[1-7]$/.test(event.code)) {
         this.callbacks.onSlotSelect(Number(event.code.slice(-1)) - 1);
       }
     });
@@ -83,8 +90,11 @@ export class InputManager {
     this.canvas.addEventListener('contextmenu', (event) => event.preventDefault());
     this.canvas.addEventListener('mousedown', (event) => {
       if (!this.active) return;
-      if (event.button === 0) this.callbacks.onPrimaryAction();
+      if (event.button === 0) this.primaryDown = true;
       if (event.button === 2) this.callbacks.onSecondaryAction();
+    });
+    document.addEventListener('mouseup', (event) => {
+      if (event.button === 0) this.primaryDown = false;
     });
 
     this.canvas.addEventListener(
