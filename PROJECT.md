@@ -1,51 +1,84 @@
-# Voxel Frontier Roadmap
+# Voxel Frontier — RPG Sandbox Roadmap
 
-## Engineering baseline
+## Engineering baseline — DONE
 - TypeScript strict mode
 - Vite production bundling
 - Three.js renderer isolated from world data
-- Input, player physics, HUD, world storage and terrain generation split into modules
-- GitHub Actions type-check/build gate before deployment
+- Core / render / systems / UI / world modules
+- GitHub Actions type-check/build gate
 
-## Phase 0 — Playable browser slice
+## Phase 0 — Browser voxel foundation — DONE
 - Procedural voxel terrain
 - First-person controller
+- Collision and gravity
+- Raycast targeting
 - Block break/place
-- Hotbar
-- Static web deployment
+- Static web build
 
-## Phase 1 — World architecture
+## Phase 1 — Survival + destruction + building — CURRENT
+### Completed in Alpha 0.3
+- Health / hunger / stamina
+- Stamina-limited sprint
+- Starvation, healing, fall damage, death and respawn
+- Block hardness and hold-to-break progress
+- Physical item drops and proximity pickup
+- Typed inventory counts
+- Food item and consumption
+- Material-consuming building
+- Placement validity preview
+- Day/night lighting cycle
+
+### Next hardening tasks
 - Chunk streaming and dirty-chunk remeshing
 - Seeded world generation
-- Save/load format
-- Better collision and step climbing
+- Save/load persistence
 - Texture atlas and original art direction
+- Step climbing and improved collision
 - Worker-based terrain/mesh generation
 
-## Phase 2 — Survival sandbox systems
-- Inventory
-- Crafting
-- Tools and durability
-- Health / stamina
-- Day-night and weather
-- Basic creatures
+## Phase 2 — RPG survival systems
+- Full inventory window and item stacks
+- Crafting and recipes
+- Tools, mining efficiency and durability
+- Weapons, armor and equipment slots
+- Damage types and status effects
+- Experience, character level and skill progression
+- Weather and temperature exposure
 
-## Phase 3 — Large-world content
+## Phase 3 — Living world
+- Neutral and hostile creatures
+- Combat AI and pathfinding
+- Loot tables
 - Biomes
-- Structures and cities
-- NPCs and factions
-- Vehicles
-- Machines and power systems
+- Resource distribution
+- Structures, camps and dungeons
 
-## Phase 4 — Extensibility
+## Phase 4 — RPG content
+- NPCs and factions
+- Dialogue
+- Quests
+- Traders and economy
+- Villages and cities
+- Procedural points of interest
+- Boss encounters
+
+## Phase 5 — Large sandbox systems
+- Vehicles and mounts
+- Machines and power systems
+- Farming
+- Base defense
+- World events
+
+## Phase 6 — Extensibility
 - Data-driven block/item/entity registry
 - Versioned Mod API
 - ZIP mod-pack loader
 - Manifest validation
 - Sandboxed permissions and compatibility gates
 
-## Phase 5 — Online
+## Phase 7 — Online
 - Authoritative multiplayer server
 - Player persistence
 - Shared worlds
+- Server-side combat/state validation
 - Mod compatibility handshake
