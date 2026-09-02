@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#7fb7dd" />
-  <meta name="description" content="Voxel Frontier - 原创浏览器大型体素沙盒游戏" />
+  <meta name="description" content="Voxel Frontier - 原创浏览器 RPG 体素沙盒游戏" />
   <title>Voxel Frontier</title>
 </head>
 <body>
@@ -14,32 +14,42 @@
     <div id="hud" aria-live="polite">
       <div id="topbar">
         <span class="brand">VOXEL FRONTIER</span>
+        <span id="day-clock">第 1 天 · 08:00</span>
         <span id="status">世界加载中…</span>
       </div>
+
+      <div id="vitals" aria-label="生存状态">
+        <div class="vital health"><span>生命</span><div class="meter"><i id="health-fill"></i></div><b id="health-value">100</b></div>
+        <div class="vital hunger"><span>饥饿</span><div class="meter"><i id="hunger-fill"></i></div><b id="hunger-value">100</b></div>
+        <div class="vital stamina"><span>体力</span><div class="meter"><i id="stamina-fill"></i></div><b id="stamina-value">100</b></div>
+      </div>
+
       <div id="crosshair" aria-hidden="true"></div>
+      <div id="break-progress" aria-hidden="true"><span id="break-label"></span><div class="break-track"><i id="break-fill"></i></div></div>
       <div id="hotbar" aria-label="快捷栏"></div>
     </div>
 
     <section id="start-panel" class="panel">
       <div class="panel-card">
-        <p class="eyebrow">Browser voxel sandbox · TypeScript Alpha 0.2</p>
+        <p class="eyebrow">Browser RPG voxel sandbox · Survival Alpha 0.3</p>
         <h1>Voxel Frontier</h1>
-        <p>原创浏览器体素沙盒游戏。当前版本已迁移到 TypeScript + Vite + Three.js 正式工程结构。</p>
+        <p>原创 RPG 沙盒：采集资源、维持生存、持续破坏不同硬度的方块，并用真实库存搭建自己的建筑。</p>
         <button id="play-button" type="button">进入世界</button>
         <div class="controls-grid">
           <span><kbd>W A S D</kbd> 移动</span>
           <span><kbd>Space</kbd> 跳跃</span>
-          <span><kbd>Shift</kbd> 冲刺</span>
+          <span><kbd>Shift</kbd> 消耗体力冲刺</span>
           <span><kbd>鼠标</kbd> 观察</span>
-          <span><kbd>左键</kbd> 破坏</span>
-          <span><kbd>右键</kbd> 放置</span>
-          <span><kbd>1–5</kbd> 选择方块</span>
+          <span><kbd>按住左键</kbd> 持续破坏</span>
+          <span><kbd>右键</kbd> 放置 / 使用</span>
+          <span><kbd>1–7</kbd> 选择物品</span>
           <span><kbd>Esc</kbd> 释放鼠标</span>
         </div>
       </div>
     </section>
 
     <div id="toast" role="status"></div>
+    <div id="damage-flash" aria-hidden="true"></div>
   </main>
   <script type="module" src="/src/main.ts"></script>
 </body>
