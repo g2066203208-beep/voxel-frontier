@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7fb7dd" />
+  <meta name="description" content="Voxel Frontier - 原创浏览器大型体素沙盒游戏" />
+  <title>Voxel Frontier</title>
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game" aria-label="Voxel Frontier 3D 游戏画面"></canvas>
+
+    <div id="hud" aria-live="polite">
+      <div id="topbar">
+        <span class="brand">VOXEL FRONTIER</span>
+        <span id="status">世界加载中…</span>
+      </div>
+      <div id="crosshair" aria-hidden="true"></div>
+      <div id="hotbar" aria-label="快捷栏"></div>
+    </div>
+
+    <section id="start-panel" class="panel">
+      <div class="panel-card">
+        <p class="eyebrow">Browser voxel sandbox · TypeScript Alpha 0.2</p>
+        <h1>Voxel Frontier</h1>
+        <p>原创浏览器体素沙盒游戏。当前版本已迁移到 TypeScript + Vite + Three.js 正式工程结构。</p>
+        <button id="play-button" type="button">进入世界</button>
+        <div class="controls-grid">
+          <span><kbd>W A S D</kbd> 移动</span>
+          <span><kbd>Space</kbd> 跳跃</span>
+          <span><kbd>Shift</kbd> 冲刺</span>
+          <span><kbd>鼠标</kbd> 观察</span>
+          <span><kbd>左键</kbd> 破坏</span>
+          <span><kbd>右键</kbd> 放置</span>
+          <span><kbd>1–5</kbd> 选择方块</span>
+          <span><kbd>Esc</kbd> 释放鼠标</span>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
