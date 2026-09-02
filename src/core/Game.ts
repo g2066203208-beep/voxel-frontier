@@ -9,7 +9,6 @@ import { InputManager } from './InputManager';
 import { PlayerController } from './PlayerController';
 
 export class Game {
-  private readonly canvas: HTMLCanvasElement;
   private readonly renderer: THREE.WebGLRenderer;
   private readonly scene: THREE.Scene;
   private readonly camera: THREE.PerspectiveCamera;
@@ -26,7 +25,6 @@ export class Game {
   private fpsTimestamp = performance.now();
 
   constructor(canvas: HTMLCanvasElement, playButton: HTMLButtonElement) {
-    this.canvas = canvas;
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
