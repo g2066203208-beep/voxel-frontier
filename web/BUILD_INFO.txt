@@ -1,3 +1,0 @@
-Target: modern desktop browsers with WebGL2
-Renderer: Three.js module build
-Deployment: GitHub Pages

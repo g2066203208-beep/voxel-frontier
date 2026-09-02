@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#7fb7dd" />
+  <meta name="description" content="Voxel Frontier - 原创浏览器大型体素沙盒游戏" />
   <title>Voxel Frontier</title>
-  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <main id="game-shell">
@@ -22,9 +22,9 @@
 
     <section id="start-panel" class="panel">
       <div class="panel-card">
-        <p class="eyebrow">Browser voxel sandbox · Alpha 0.1</p>
+        <p class="eyebrow">Browser voxel sandbox · TypeScript Alpha 0.2</p>
         <h1>Voxel Frontier</h1>
-        <p>这是我们自己的浏览器体素游戏原型，不依赖 Minecraft、NeoForge 或任何原版资源。</p>
+        <p>原创浏览器体素沙盒游戏。当前版本已迁移到 TypeScript + Vite + Three.js 正式工程结构。</p>
         <button id="play-button" type="button">进入世界</button>
         <div class="controls-grid">
           <span><kbd>W A S D</kbd> 移动</span>
@@ -41,7 +41,6 @@
 
     <div id="toast" role="status"></div>
   </main>
-
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

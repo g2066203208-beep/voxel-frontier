@@ -1,5 +1,12 @@
 # Voxel Frontier Roadmap
 
+## Engineering baseline
+- TypeScript strict mode
+- Vite production bundling
+- Three.js renderer isolated from world data
+- Input, player physics, HUD, world storage and terrain generation split into modules
+- GitHub Actions type-check/build gate before deployment
+
 ## Phase 0 — Playable browser slice
 - Procedural voxel terrain
 - First-person controller
@@ -8,11 +15,12 @@
 - Static web deployment
 
 ## Phase 1 — World architecture
-- Chunk streaming and remeshing
+- Chunk streaming and dirty-chunk remeshing
 - Seeded world generation
 - Save/load format
 - Better collision and step climbing
 - Texture atlas and original art direction
+- Worker-based terrain/mesh generation
 
 ## Phase 2 — Survival sandbox systems
 - Inventory
@@ -31,10 +39,10 @@
 
 ## Phase 4 — Extensibility
 - Data-driven block/item/entity registry
-- Custom JavaScript Mod API
+- Versioned Mod API
 - ZIP mod-pack loader
-- Versioned manifest format
-- Sandbox permissions for mods
+- Manifest validation
+- Sandboxed permissions and compatibility gates
 
 ## Phase 5 — Online
 - Authoritative multiplayer server

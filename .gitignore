@@ -1,17 +1,11 @@
-# OS / editor
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-
-# Node tooling (reserved for future bundling)
 node_modules/
 dist/
-.cache/
-
-# Logs
+.vite/
 *.log
-
-# Local saves and generated test output
-saves/
-test-output/
+.DS_Store
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+coverage/
