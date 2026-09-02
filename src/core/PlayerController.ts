@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { BlockPosition } from '../types';
+import type { BlockPosition, PlayerMotionState } from '../types';
 import { VoxelWorld } from '../world/VoxelWorld';
 import type { InputManager } from './InputManager';
 
@@ -11,19 +11,29 @@ export class PlayerController {
 
   private verticalVelocity = 0;
   private grounded = false;
+  private fallStartY: number | null = null;
 
   respawn(world: VoxelWorld): void {
     this.position.set(0.5, world.topSolidY(0, 0) + 1.02, 0.5);
     this.verticalVelocity = 0;
+    this.grounded = false;
+    this.fallStartY = null;
   }
 
-  update(dt: number, input: InputManager, world: VoxelWorld): void {
+  update(
+    dt: number,
+    input: InputManager,
+    world: VoxelWorld,
+    canSprint: boolean
+  ): PlayerMotionState {
     const movement = input.movementAxes();
+    const moving = Math.abs(movement.forward) > 0.001 || Math.abs(movement.right) > 0.001;
+    const sprinting = moving && movement.sprint && canSprint;
     const forwardX = -Math.sin(input.yaw);
     const forwardZ = -Math.cos(input.yaw);
     const rightX = Math.cos(input.yaw);
     const rightZ = -Math.sin(input.yaw);
-    const speed = movement.sprint ? 7.2 : 4.8;
+    const speed = sprinting ? 7.2 : 4.8;
 
     const dx = (forwardX * movement.forward + rightX * movement.right) * speed * dt;
     const dz = (forwardZ * movement.forward + rightZ * movement.right) * speed * dt;
@@ -45,18 +55,31 @@ export class PlayerController {
     if (input.consumeJump() && this.grounded) {
       this.verticalVelocity = 8.4;
       this.grounded = false;
+      this.fallStartY = this.position.y;
     }
 
+    if (!this.grounded) {
+      this.fallStartY = Math.max(this.fallStartY ?? this.position.y, this.position.y);
+    }
+
+    let fallDistance = 0;
     this.verticalVelocity -= 24 * dt;
     const nextY = this.position.y + this.verticalVelocity * dt;
     if (!this.collidesAt(this.position.x, nextY, this.position.z, world)) {
       this.position.y = nextY;
     } else {
-      if (nextY < this.position.y) this.grounded = true;
+      if (nextY < this.position.y) {
+        this.grounded = true;
+        if (this.fallStartY !== null) {
+          fallDistance = Math.max(0, this.fallStartY - this.position.y);
+          this.fallStartY = null;
+        }
+      }
       this.verticalVelocity = 0;
     }
 
-    if (this.position.y < -20) this.respawn(world);
+    const voided = this.position.y < -20;
+    return { moving, sprinting, fallDistance, voided };
   }
 
   applyCamera(camera: THREE.PerspectiveCamera, input: InputManager): void {
