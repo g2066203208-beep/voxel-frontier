@@ -23,6 +23,13 @@ export class WorldRenderer {
   private readonly materials: Record<BlockId, THREE.MeshLambertMaterial>;
   private readonly meshes: THREE.InstancedMesh[] = [];
   private readonly raycaster = new THREE.Raycaster();
+  private readonly previewMaterial = new THREE.MeshBasicMaterial({
+    color: 0x76e58a,
+    transparent: true,
+    opacity: 0.28,
+    depthWrite: false
+  });
+  private readonly preview = new THREE.Mesh(this.geometry, this.previewMaterial);
 
   constructor(scene: THREE.Scene) {
     this.scene = scene;
@@ -33,10 +40,16 @@ export class WorldRenderer {
         new THREE.MeshLambertMaterial({ color: def.color })
       ])
     ) as Record<BlockId, THREE.MeshLambertMaterial>;
+    this.preview.visible = false;
+    this.preview.renderOrder = 10;
+    this.scene.add(this.preview);
   }
 
   rebuild(world: VoxelWorld): void {
-    for (const mesh of this.meshes) this.scene.remove(mesh);
+    for (const mesh of this.meshes) {
+      this.scene.remove(mesh);
+      mesh.dispose();
+    }
     this.meshes.length = 0;
 
     const grouped = new Map<BlockId, BlockPosition[]>();
@@ -79,6 +92,16 @@ export class WorldRenderer {
       position,
       normal: hit.face.normal.clone()
     };
+  }
+
+  setPlacementPreview(position: BlockPosition, valid: boolean): void {
+    this.preview.position.set(position.x + 0.5, position.y + 0.5, position.z + 0.5);
+    this.previewMaterial.color.setHex(valid ? 0x76e58a : 0xef5b5b);
+    this.preview.visible = true;
+  }
+
+  hidePlacementPreview(): void {
+    this.preview.visible = false;
   }
 
   private isExposed(world: VoxelWorld, x: number, y: number, z: number): boolean {
