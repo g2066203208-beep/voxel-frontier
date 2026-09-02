@@ -36,10 +36,7 @@ export class WorldRenderer {
   }
 
   rebuild(world: VoxelWorld): void {
-    for (const mesh of this.meshes) {
-      this.scene.remove(mesh);
-      mesh.dispose();
-    }
+    for (const mesh of this.meshes) this.scene.remove(mesh);
     this.meshes.length = 0;
 
     const grouped = new Map<BlockId, BlockPosition[]>();
