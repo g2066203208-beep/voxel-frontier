@@ -70,6 +70,26 @@ void testCapsules() {
     require(manifold.points[0].penetration > 0.19 && manifold.points[0].penetration < 0.21, "capsule/capsule penetration incorrect");
 }
 
+void testBoxCapsuleGeneralConvexDispatch() {
+    const auto box = vf::CollisionShape::box({1.0, 1.0, 1.0});
+    const auto capsule = vf::CollisionShape::capsule(0.4, 0.8);
+    vf::ContactManifold manifold{};
+
+    require(vf::collideShapes(box, {}, capsule, {{1.2, 0.0, 0.0}, {}}, manifold),
+        "production dispatcher must route overlapping box/capsule through GJK/EPA");
+    require(manifold.pointCount == 1U, "box/capsule GJK/EPA contact should currently produce one witness point");
+    require(manifold.normal.x > 0.99, "box/capsule production normal must point A to B");
+    require(manifold.points[0].penetration > 0.195 && manifold.points[0].penetration < 0.205,
+        "box/capsule production penetration should be approximately 0.2 m");
+
+    require(vf::collideShapes(capsule, {{1.2, 0.0, 0.0}, {}}, box, {}, manifold),
+        "production dispatcher must support capsule/box reverse order");
+    require(manifold.normal.x < -0.99, "reverse capsule/box production normal must point A to B");
+
+    require(!vf::collideShapes(box, {}, capsule, {{1.5, 0.0, 0.0}, {}}, manifold),
+        "production dispatcher must reject separated box/capsule");
+}
+
 void testBoxFaceManifold() {
     const auto box = vf::CollisionShape::box({1.0, 1.0, 1.0});
     vf::ContactManifold manifold{};
@@ -118,6 +138,7 @@ int main() {
     testSphereSphere();
     testSphereBox();
     testCapsules();
+    testBoxCapsuleGeneralConvexDispatch();
     testBoxFaceManifold();
     testOrientedBoxesSat();
     testSupportMapping();
