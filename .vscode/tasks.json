@@ -54,7 +54,6 @@
       "options": { "cwd": "${workspaceFolder}/native" },
       "dependsOn": ["VF: Configure Release"],
       "dependsOrder": "sequence",
-      "group": { "kind": "build", "isDefault": false },
       "problemMatcher": "$msCompile"
     },
     {
