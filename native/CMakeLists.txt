@@ -159,4 +159,8 @@ if(VF_BUILD_TESTS)
     add_executable(vf_engine_tests tests/EngineTests.cpp)
     target_link_libraries(vf_engine_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_engine_tests COMMAND vf_engine_tests)
+
+    add_executable(vf_gas_chamber_tests tests/GasChamberTests.cpp)
+    target_link_libraries(vf_gas_chamber_tests PRIVATE vf_engine)
+    add_test(NAME vf_gas_chamber_tests COMMAND vf_gas_chamber_tests)
 endif()
