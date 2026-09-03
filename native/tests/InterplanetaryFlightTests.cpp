@@ -19,7 +19,7 @@ void require(bool condition, std::string_view message) {
     if (!condition) fail(message);
 }
 
-void testCameraEscapesSurfaceControllerIntoInertialFlight() {
+void testCreativeFlightIsExplicitAndGravityIndependent() {
     vf::PlanetDefinition terrain{};
     terrain.radius = 50.0;
     terrain.maxElevation = 0.0;
@@ -33,7 +33,6 @@ void testCameraEscapesSurfaceControllerIntoInertialFlight() {
         / vf::CelestialSystem::kGravitationalConstant;
     home.gameplaySurfaceGravityMps2 = 5.0;
     home.gravityInfluenceRadiusMeters = 180.0;
-    home.atmosphere.enabled = false;
     const auto homeId = celestial.addBody(home);
 
     vf::CelestialBody destination{};
@@ -47,29 +46,30 @@ void testCameraEscapesSurfaceControllerIntoInertialFlight() {
     celestial.addBody(destination);
 
     vf::PlanetCamera camera{terrain, &celestial, homeId};
-    vf::PlanetMovementInput ascend{};
-    ascend.vertical = 1.0;
-    ascend.sprint = true;
+    require(!camera.flightMode(), "camera must spawn with creative flight disabled");
 
-    for (int i = 0; i < 180 && !camera.flightMode(); ++i) {
-        camera.update(ascend, 1.0 / 60.0);
-    }
-    require(camera.flightMode(),
-        "sustained ascent must leave the near-surface controller and enter true flight mode");
-    require(camera.altitude() > 18.0,
-        "flight transition must occur only after the camera has physically climbed away from the surface");
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+    require(camera.flightMode(), "double-space event must enable creative flight explicitly");
+
+    const glm::dvec3 hoverStart = camera.position();
+    vf::PlanetMovementInput idle{};
+    for (int i = 0; i < 180; ++i) camera.update(idle, 1.0 / 60.0);
+    require(glm::length(camera.position() - hoverStart) < 0.15,
+        "creative flight must bypass planetary gravity so an idle player can hover");
 
     const glm::dvec3 forwardBefore = camera.forwardDirection();
-    const double forwardSpeedBefore = glm::dot(camera.velocity(), forwardBefore);
-
     vf::PlanetMovementInput thrust{};
     thrust.forward = 1.0;
     thrust.sprint = true;
-    camera.update(thrust, 0.05);
+    for (int i = 0; i < 30; ++i) camera.update(thrust, 1.0 / 60.0);
+    require(glm::dot(camera.velocity(), forwardBefore) > 100.0,
+        "creative flight W must produce strong camera-forward travel instead of a planet tangent walk");
 
-    const double forwardSpeedAfter = glm::dot(camera.velocity(), forwardBefore);
-    require(forwardSpeedAfter > forwardSpeedBefore + 5.0,
-        "in flight mode W must add camera-forward inertial velocity instead of tangent-plane teleportation");
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+    require(!camera.flightMode(), "a second double-space event must disable creative flight");
 }
 
 void testPlanetaryReferenceEndsAtSphereOfInfluence() {
@@ -105,7 +105,7 @@ void testPlanetaryReferenceEndsAtSphereOfInfluence() {
 } // namespace
 
 int main() {
-    testCameraEscapesSurfaceControllerIntoInertialFlight();
+    testCreativeFlightIsExplicitAndGravityIndependent();
     testPlanetaryReferenceEndsAtSphereOfInfluence();
     std::cout << "vf_interplanetary_flight_tests: PASS\n";
     return 0;
