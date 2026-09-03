@@ -1,4 +1,7 @@
 #include "vf/core/Engine.hpp"
+#include "vf/physics/PhysicsWorld.hpp"
+#include "vf/physics/ShallowWater.hpp"
+#include "vf/physics/TreePhysics.hpp"
 #include "vf/player/PlanetCamera.hpp"
 #include "vf/world/Chunk.hpp"
 #include "vf/world/PlanetSurface.hpp"
@@ -111,6 +114,174 @@ void testRadialCamera() {
     require(std::abs(glm::length(localUp) - 1.0) < 1.0e-12, "radial up must remain normalized");
 }
 
+vf::PhysicsEnvironment makeVacuumPhysicsEnvironment() {
+    vf::PhysicsEnvironment environment{};
+    environment.planet.radius = 100.0;
+    environment.planet.maxElevation = 0.0;
+    environment.planet.atmosphereHeight = 50.0;
+    environment.surfaceGravity = 0.0;
+    environment.atmosphere.seaLevelPressurePa = 0.0;
+    environment.atmosphere.gustAmplitude = 0.0;
+    environment.atmosphere.prevailingWind = {};
+    environment.ocean.enabled = false;
+    return environment;
+}
+
+void testFixedStepAndMomentum() {
+    auto environment = makeVacuumPhysicsEnvironment();
+    vf::PhysicsWorld worldA{environment};
+    vf::PhysicsWorld worldB{environment};
+
+    vf::RigidBodyDesc desc{};
+    desc.mass = 4.0;
+    desc.position = {150.0, 0.0, 0.0};
+    desc.linearVelocity = {3.0, -2.0, 0.5};
+    desc.linearDamping = 0.0;
+    desc.angularDamping = 0.0;
+    desc.aerodynamics.referenceArea = 0.0;
+    const auto aId = worldA.createRigidBody(desc);
+    const auto bId = worldB.createRigidBody(desc);
+
+    worldA.advance(1.0 / 60.0);
+    worldB.advance(1.0 / 120.0);
+    worldB.advance(1.0 / 120.0);
+
+    const auto* a = worldA.body(aId);
+    const auto* b = worldB.body(bId);
+    require(a != nullptr && b != nullptr, "fixed-step bodies missing");
+    require(glm::length(a->position - b->position) < 1.0e-12, "fixed-step integration must be frame-rate independent for equal elapsed time");
+    require(glm::length(a->linearMomentum() - glm::dvec3{12.0, -8.0, 2.0}) < 1.0e-10, "linear momentum must equal mass times velocity");
+}
+
+void testRigidBodyCollisionMomentumConservation() {
+    auto environment = makeVacuumPhysicsEnvironment();
+    vf::PhysicsWorld world{environment};
+
+    vf::RigidBodyDesc aDesc{};
+    aDesc.mass = 2.0;
+    aDesc.position = {150.0, -2.0, 0.0};
+    aDesc.linearVelocity = {0.0, 5.0, 0.0};
+    aDesc.collisionRadius = 0.5;
+    aDesc.linearDamping = 0.0;
+    aDesc.angularDamping = 0.0;
+    aDesc.material.friction = 0.0;
+    aDesc.material.restitution = 0.6;
+    aDesc.aerodynamics.referenceArea = 0.0;
+
+    vf::RigidBodyDesc bDesc = aDesc;
+    bDesc.mass = 1.0;
+    bDesc.position = {150.0, 2.0, 0.0};
+    bDesc.linearVelocity = {0.0, -2.0, 0.0};
+
+    const auto aId = world.createRigidBody(aDesc);
+    const auto bId = world.createRigidBody(bDesc);
+    const glm::dvec3 initialMomentum = aDesc.mass * aDesc.linearVelocity + bDesc.mass * bDesc.linearVelocity;
+
+    for (int i = 0; i < 120; ++i) world.stepFixed();
+    const auto* a = world.body(aId);
+    const auto* b = world.body(bId);
+    require(a != nullptr && b != nullptr, "collision bodies missing");
+    const glm::dvec3 finalMomentum = a->linearMomentum() + b->linearMomentum();
+    require(glm::length(finalMomentum - initialMomentum) < 1.0e-8, "isolated body collision must conserve linear momentum");
+}
+
+void testRadialGravityAndGroundFriction() {
+    vf::PhysicsEnvironment environment{};
+    environment.planet.radius = 100.0;
+    environment.planet.maxElevation = 0.0;
+    environment.surfaceGravity = 9.81;
+    environment.atmosphere.seaLevelPressurePa = 0.0;
+    environment.ocean.enabled = false;
+    vf::PhysicsWorld world{environment};
+
+    vf::RigidBodyDesc desc{};
+    desc.mass = 10.0;
+    desc.position = {0.0, 101.0, 0.0};
+    desc.linearVelocity = {8.0, 0.0, 0.0};
+    desc.collisionRadius = 1.0;
+    desc.linearDamping = 0.0;
+    desc.material.friction = 0.9;
+    desc.material.restitution = 0.0;
+    desc.aerodynamics.referenceArea = 0.0;
+    const auto id = world.createRigidBody(desc);
+
+    for (int i = 0; i < 120; ++i) world.stepFixed();
+    const auto* body = world.body(id);
+    require(body != nullptr, "friction body missing");
+    require(glm::length(body->linearVelocity) < 8.0, "ground friction should remove tangential speed");
+    require(glm::length(body->position) >= 100.999, "planet contact must prevent penetration below terrain");
+}
+
+void testAtmospherePressureDensityAndWind() {
+    vf::PhysicsEnvironment environment{};
+    environment.planet.radius = 1000.0;
+    environment.planet.atmosphereHeight = 2000.0;
+    environment.surfaceGravity = 9.81;
+    environment.weather.stormIntensity = 0.6;
+    const auto sea = environment.sampleAtmosphere({0.0, 1000.0, 0.0}, 12.0);
+    const auto high = environment.sampleAtmosphere({0.0, 1500.0, 0.0}, 12.0);
+
+    require(sea.temperatureK > high.temperatureK, "temperature should decrease with altitude in the tropospheric model");
+    require(sea.pressurePa > high.pressurePa, "air pressure should decrease with altitude");
+    require(sea.densityKgPerM3 > high.densityKgPerM3, "air density should decrease with altitude");
+    require(glm::length(sea.windVelocity) > 0.1, "wind field should produce non-zero local air velocity");
+}
+
+void testBuoyancyAndGasChamberPrinciple() {
+    vf::PhysicsEnvironment environment{};
+    environment.planet.radius = 100.0;
+    environment.planet.maxElevation = 0.0;
+    environment.surfaceGravity = 9.81;
+    environment.atmosphere.seaLevelPressurePa = 0.0;
+    environment.ocean.enabled = true;
+    environment.ocean.surfaceRadius = 110.0;
+    environment.ocean.densityKgPerM3 = 1000.0;
+    vf::PhysicsWorld world{environment};
+
+    vf::RigidBodyDesc desc{};
+    desc.mass = 350.0;
+    desc.position = {0.0, 109.0, 0.0};
+    desc.collisionRadius = 1.0;
+    desc.linearDamping = 0.0;
+    desc.aerodynamics.referenceArea = 0.0;
+    desc.buoyancy.enabled = true;
+    desc.buoyancy.displacedVolume = 1.0;
+    desc.buoyancy.fluidDragCoefficient = 0.2;
+    desc.buoyancy.fluidReferenceArea = 1.0;
+    const auto id = world.createRigidBody(desc);
+
+    for (int i = 0; i < 12; ++i) world.stepFixed();
+    const auto* body = world.body(id);
+    require(body != nullptr, "buoyant body missing");
+    require(glm::dot(body->linearVelocity, glm::normalize(body->position)) > 0.0, "displaced water should create net upward buoyancy when mass is low enough");
+}
+
+void testShallowWaterFlowsDownhillAndConservesVolume() {
+    vf::ShallowWaterGrid water{4, 1, 1.0};
+    water.cell(0, 0).bedElevation = 2.0;
+    water.cell(1, 0).bedElevation = 1.0;
+    water.cell(2, 0).bedElevation = 0.0;
+    water.cell(3, 0).bedElevation = -0.5;
+    water.addWater(0, 0, 1.5);
+    const double initialVolume = water.totalWaterVolume();
+
+    for (int i = 0; i < 240; ++i) water.step(1.0 / 120.0, 9.81);
+    require(water.cell(3, 0).waterDepth > 0.0, "water should propagate from high hydraulic head toward lower terrain");
+    require(std::abs(water.totalWaterVolume() - initialVolume) < 1.0e-9, "closed shallow-water grid must conserve water volume");
+}
+
+void testTreeFallsAfterCut() {
+    vf::TreePhysics tree{};
+    tree.trunkLength = 9.0;
+    tree.trunkMass = 320.0;
+    tree.applyCut(0.62, {1.0, 0.0, 0.0});
+    require(tree.state == vf::TreeState::Hinging, "sufficient cut should release tree into hinge motion");
+
+    for (int i = 0; i < 360; ++i) tree.step(1.0 / 120.0, 9.81, {8.0, 0.0, 0.0}, 1.225);
+    require(tree.hingeAngleRadians > 0.1, "cut tree should rotate under gravity and wind instead of remaining upright");
+    require(tree.tipPosition().x > 0.1, "tree tip should move toward preferred fall direction");
+}
+
 void testBootstrapAndTiming() {
     const auto start = std::chrono::steady_clock::now();
     vf::Engine engine{42};
@@ -136,6 +307,13 @@ int main() {
     testCubeSphereProjection();
     testPlanetSurfaceDeterminism();
     testRadialCamera();
+    testFixedStepAndMomentum();
+    testRigidBodyCollisionMomentumConservation();
+    testRadialGravityAndGroundFriction();
+    testAtmospherePressureDensityAndWind();
+    testBuoyancyAndGasChamberPrinciple();
+    testShallowWaterFlowsDownhillAndConservesVolume();
+    testTreeFallsAfterCut();
     testBootstrapAndTiming();
     std::cout << "vf_native_engine_tests: PASS\n";
     return 0;
