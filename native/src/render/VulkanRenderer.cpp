@@ -155,7 +155,7 @@ void VulkanRenderer::createInstance() {
     createInfo.enabledExtensionCount = extensionCount;
     createInfo.ppEnabledExtensionNames = extensions;
 
-    const VkResult result = vkCreateInstance(&createInfo, nullptr, &instance_);
+    const VkResult result = vkCreateInstance(instance_, &createInfo, nullptr, &instance_);
     if (result != VK_SUCCESS) fail("vkCreateInstance failed", result);
     volkLoadInstance(instance_);
 }
@@ -440,7 +440,7 @@ void VulkanRenderer::createSwapchain() {
     if (capabilities.maxImageCount > 0) imageCount = std::min(imageCount, capabilities.maxImageCount);
 
     VkSwapchainCreateInfoKHR createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO;
     createInfo.surface = surface_;
     createInfo.minImageCount = imageCount;
     createInfo.imageFormat = chosenFormat.format;
@@ -577,7 +577,7 @@ void VulkanRenderer::createBuffer(
 
     result = vkAllocateMemory(device_, &allocInfo, nullptr, &memory);
     if (result != VK_SUCCESS) fail("vkAllocateMemory(buffer) failed", result);
-    result = vkBindBufferMemory(device_, buffer, 0, memory);
+    result = vkBindBufferMemory(device_, buffer, memory, 0);
     if (result != VK_SUCCESS) fail("vkBindBufferMemory failed", result);
 }
 
