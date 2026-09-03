@@ -3,6 +3,7 @@ name: Native Desktop Engine
 on:
   push:
     branches:
+      - main
       - engine/native-cpp-vulkan
   pull_request:
     branches:
@@ -11,6 +12,7 @@ on:
       - 'native/**'
       - '.github/workflows/native-desktop.yml'
       - '.vscode/**'
+  workflow_dispatch:
 
 concurrency:
   group: native-desktop-${{ github.ref }}
