@@ -32,6 +32,30 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     return value / std::sqrt(lengthSquared);
 }
 
+[[nodiscard]] bool hasLineOfSightToStar(
+    const vf::CelestialSystem& celestial,
+    const glm::dvec3& observer,
+    std::uint32_t starId) noexcept {
+    const auto* star = celestial.body(starId);
+    if (star == nullptr) return false;
+
+    const glm::dvec3 toStar = star->position - observer;
+    const double starDistance = glm::length(toStar);
+    if (starDistance <= 1.0e-9) return true;
+    const glm::dvec3 ray = toStar / starDistance;
+
+    for (const auto& body : celestial.bodies()) {
+        if (body.id == starId || body.type == vf::CelestialBodyType::Star) continue;
+        const glm::dvec3 toCenter = body.position - observer;
+        const double alongRay = glm::dot(toCenter, ray);
+        if (alongRay <= 1.0e-5 || alongRay >= starDistance) continue;
+        const glm::dvec3 closest = observer + ray * alongRay;
+        const double clearance = glm::length(closest - body.position);
+        if (clearance < body.radiusMeters) return false;
+    }
+    return true;
+}
+
 } // namespace
 
 int main() {
@@ -45,8 +69,8 @@ int main() {
         planet.maxElevation = 22.0;
         planet.atmosphereHeight = 120.0;
 
-        // Real game-scale celestial system. Distances/times are intentionally compressed so
-        // orbit and rotation are visible during play while preserving Newtonian relationships.
+        // Game-scale celestial dynamics. Distances/times are compressed so orbit and spin are
+        // visible during play, while force directions and energy relationships remain coherent.
         vf::CelestialSystem celestial;
 
         vf::CelestialBody primary{};
@@ -82,8 +106,6 @@ int main() {
         star.type = vf::CelestialBodyType::Star;
         star.name = "Helion";
         star.radiusMeters = 180.0;
-        // Compressed but non-zero stellar mass: enough for coherent long-range gravity without
-        // overwhelming the short game-scale planetary system.
         star.massKg = 25.0 * star.radiusMeters * star.radiusMeters
             / vf::CelestialSystem::kGravitationalConstant;
         star.position = {7600.0, 3100.0, -5200.0};
@@ -147,6 +169,8 @@ int main() {
         environment.primaryCelestialBodyId = primaryId;
         vf::PhysicsWorld physics{environment};
 
+        // Static primary terrain stays in one GPU buffer; the renderer rotates it by the actual
+        // CelestialBody quaternion, avoiding per-frame terrain rebuilds/uploads.
         vf::PlanetMesh mesh = vf::buildPlanetSurface(planet, 64U);
         renderer.uploadPlanetMesh(mesh);
 
@@ -162,12 +186,10 @@ int main() {
         const glm::dvec3 sunLinearRgb = vf::spectrumToLinearSrgb(sunSpectrum);
         const double sunMax = std::max({sunLinearRgb.x, sunLinearRgb.y, sunLinearRgb.z, 1.0e-6});
         const glm::vec3 sunDisplayColor = glm::vec3(glm::clamp(
-            sunLinearRgb / sunMax * 1.15,
+            sunLinearRgb / sunMax,
             glm::dvec3{0.0},
             glm::dvec3{1.0}));
 
-        // Lightweight field-physics demonstration station near spawn. These are real analytic
-        // fields and energy transfers, not scripted transforms.
         const glm::dvec3 fieldUp = playgroundDirection;
         const glm::dvec3 fieldReference = std::abs(fieldUp.y) < 0.9
             ? glm::dvec3{0.0, 1.0, 0.0}
@@ -207,9 +229,7 @@ int main() {
 
         vf::ElectromagneticRadiationSystem::ThinLens lens{};
         lens.position = lensPosition;
-        if (const auto* sun = celestial.body(starId)) {
-            lens.opticalAxis = safeNormalize(lens.position - sun->position);
-        }
+        if (const auto* sun = celestial.body(starId)) lens.opticalAxis = safeNormalize(lens.position - sun->position);
         lens.focalLengthMeters = 0.42;
         lens.apertureRadiusMeters = 0.25;
         lens.transmission = 0.90;
@@ -238,7 +258,6 @@ int main() {
                   << VK_API_VERSION_MINOR(renderer.apiVersion()) << '.'
                   << VK_API_VERSION_PATCH(renderer.apiVersion()) << '\n';
         std::cout << "Celestial bodies: " << celestial.bodies().size() << " (Aster, Helion, Cinder)\n";
-        std::cout << "Primary surface gravity: 9.81 m/s^2; Cinder surface gravity: 3.7 m/s^2\n";
         std::cout << "Celestial tick: 10 Hz; rigid-body physics: " << (1.0 / physics.fixedDeltaSeconds()) << " Hz\n";
         std::cout << "EM/radiation: Coulomb + Lorentz + solenoid + Faraday induction + broadband radiation + lens heating\n";
         std::cout << "Vacuum background is exact black; atmosphere color exists only inside a body's atmosphere.\n";
@@ -316,12 +335,7 @@ int main() {
             playground.update(dt);
 
             const auto lensField = fields.sample(lens.position);
-            const auto* sunForLens = celestial.body(starId);
-            const glm::dvec3 lensLocalUp = safeNormalize(lens.position);
-            const glm::dvec3 directionToSun = sunForLens != nullptr
-                ? safeNormalize(sunForLens->position - lens.position)
-                : glm::dvec3{0.0, 1.0, 0.0};
-            const bool lensHasSun = glm::dot(lensLocalUp, directionToSun) > 0.0;
+            const bool lensHasSun = hasLineOfSightToStar(celestial, lens.position, starId);
             const double opticalIrradiance = lensHasSun
                 ? lensField.irradianceWattsPerSquareMeter[vf::ElectromagneticRadiationSystem::RadiationBand::Infrared]
                     + lensField.irradianceWattsPerSquareMeter[vf::ElectromagneticRadiationSystem::RadiationBand::Visible]
@@ -360,6 +374,7 @@ int main() {
             const vf::CelestialEnvironmentSample localEnvironment = celestial.sampleEnvironment(camera.position());
             const vf::CelestialBody* localBody = celestial.body(localEnvironment.bodyId);
             const vf::CelestialBody* sun = celestial.body(starId);
+            const bool cameraHasSun = hasLineOfSightToStar(celestial, camera.position(), starId);
 
             glm::vec3 sky{0.0F};
             if (localBody != nullptr && localEnvironment.pressurePa > 0.0 && localBody->atmosphere.enabled) {
@@ -371,18 +386,19 @@ int main() {
                     ? safeNormalize(sun->position - camera.position())
                     : glm::dvec3{0.0, 1.0, 0.0};
                 const double solarElevation = glm::dot(camera.up(), sunDirection);
-                const double daylight = std::clamp((solarElevation + 0.10) / 0.45, 0.0, 1.0);
+                const double daylight = cameraHasSun
+                    ? std::clamp((solarElevation + 0.10) / 0.45, 0.0, 1.0)
+                    : 0.0;
                 const double twilight = std::clamp(1.0 - std::abs(solarElevation + 0.06) / 0.18, 0.0, 1.0);
                 const double cloudDimming = 1.0 - 0.40 * std::clamp(localEnvironment.cloudCover, 0.0, 1.0);
                 const glm::dvec3 rayleigh = localBody->atmosphere.rayleighRgb
-                    * pressureRatio * (0.015 + 0.30 * daylight);
+                    * pressureRatio * (0.008 + 0.30 * daylight);
                 const glm::dvec3 mie = glm::dvec3{1.0, 0.72, 0.48}
                     * localBody->atmosphere.mieStrength * pressureRatio * (0.08 * daylight + 0.05 * twilight);
                 sky = glm::vec3(glm::clamp((rayleigh + mie) * cloudDimming, glm::dvec3{0.0}, glm::dvec3{1.0}));
             }
 
             const auto cameraField = fields.sample(camera.position());
-            const bool cameraHasSun = sun != nullptr && glm::dot(camera.up(), safeNormalize(sun->position - camera.position())) > 0.0;
             lastLux = cameraHasSun
                 ? vf::ElectromagneticRadiationSystem::photopicIlluminanceLux(
                     cameraField.visibleIrradianceWattsPerSquareMeter)
@@ -434,7 +450,26 @@ int main() {
                     sunDisplayColor);
             }
             renderer.setDynamicMesh(dynamicMesh);
-            renderer.drawFrame(sky, camera.viewProjection(aspect), camera.position());
+
+            const glm::vec3 sunDirectionToLight = sun != nullptr
+                ? glm::vec3(safeNormalize(sun->position - camera.position()))
+                : glm::vec3{0.38F, 0.83F, 0.41F};
+            const double cameraStellarIrradiance = cameraHasSun
+                ? cameraField.irradianceWattsPerSquareMeter.total()
+                : 0.0;
+            const float sunIntensity = static_cast<float>(
+                2.2 * std::clamp(cameraStellarIrradiance / 1320.0, 0.0, 4.0));
+            const glm::dquat primaryRotation = celestial.body(primaryId) != nullptr
+                ? celestial.body(primaryId)->orientation
+                : glm::dquat{1.0, 0.0, 0.0, 0.0};
+            renderer.drawFrame(
+                sky,
+                camera.viewProjection(aspect),
+                camera.position(),
+                sunDirectionToLight,
+                sunDisplayColor,
+                sunIntensity,
+                primaryRotation);
 
             diagnosticsTime += dt;
             ++diagnosticsFrames;
