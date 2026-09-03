@@ -15,6 +15,7 @@ struct VertexOutput
 struct PushConstants
 {
     float4x4 viewProj;
+    float4 cameraPosition;
     float4 sunDirection;
 };
 
@@ -24,7 +25,8 @@ struct PushConstants
 VertexOutput vertexMain(VertexInput input)
 {
     VertexOutput output;
-    output.position = mul(gPush.viewProj, float4(input.position, 1.0));
+    float3 relativePosition = input.position - gPush.cameraPosition.xyz;
+    output.position = mul(gPush.viewProj, float4(relativePosition, 1.0));
     output.normal = input.normal;
     output.color = input.color;
     return output;
