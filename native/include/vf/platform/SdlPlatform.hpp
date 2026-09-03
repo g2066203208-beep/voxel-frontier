@@ -16,6 +16,7 @@ struct PlatformInput {
     bool sprint{};
     bool ascend{};
     bool descend{};
+    bool toggleFlight{};
     bool mouseCaptured{true};
     float mouseDx{};
     float mouseDy{};
@@ -43,6 +44,7 @@ private:
     SDL_Window* window_{};
     bool resized_{true};
     PlatformInput input_{};
+    std::uint64_t lastSpacePressMilliseconds_{};
 };
 
 } // namespace vf
