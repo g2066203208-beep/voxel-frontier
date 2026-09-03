@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "vf/physics/PhysicsWorld.hpp"
 #include "vf/physics/RopeXpbd.hpp"
@@ -17,7 +18,9 @@ public:
     PhysicsPlayground(
         PhysicsWorld& physics,
         const PlanetDefinition& planet,
-        const glm::dvec3& centerDirection);
+        const glm::dvec3& centerDirectionLocal,
+        const glm::dvec3& planetOriginWorld = glm::dvec3{0.0},
+        const glm::dquat& planetOrientationWorld = glm::dquat{1.0, 0.0, 0.0, 0.0});
 
     void update(double deltaSeconds);
     [[nodiscard]] PlanetMesh buildDebugMesh() const;
@@ -32,7 +35,9 @@ private:
 
     PhysicsWorld* physics_{};
     const PlanetDefinition* planet_{};
-    glm::dvec3 centerDirection_{};
+    glm::dvec3 planetOriginWorld_{};
+    glm::dquat planetOrientationWorld_{1.0, 0.0, 0.0, 0.0};
+    glm::dvec3 centerDirectionLocal_{};
     glm::dvec3 up_{};
     glm::dvec3 east_{};
     glm::dvec3 north_{};
