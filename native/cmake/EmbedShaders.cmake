@@ -1,0 +1,15 @@
+if(NOT DEFINED VERT OR NOT DEFINED FRAG OR NOT DEFINED OUT)
+    message(FATAL_ERROR "VERT, FRAG and OUT are required")
+endif()
+
+file(READ "${VERT}" VERT_HEX HEX)
+file(READ "${FRAG}" FRAG_HEX HEX)
+string(REGEX REPLACE "([0-9A-Fa-f][0-9A-Fa-f])" "0x\\1," VERT_BYTES "${VERT_HEX}")
+string(REGEX REPLACE "([0-9A-Fa-f][0-9A-Fa-f])" "0x\\1," FRAG_BYTES "${FRAG_HEX}")
+
+file(WRITE "${OUT}" "#pragma once\n#include <cstddef>\n\nnamespace vf::shaders {\n")
+file(APPEND "${OUT}" "alignas(4) inline constexpr unsigned char kPlanetVertexSpv[] = {${VERT_BYTES}};\n")
+file(APPEND "${OUT}" "inline constexpr std::size_t kPlanetVertexSpvSize = sizeof(kPlanetVertexSpv);\n")
+file(APPEND "${OUT}" "alignas(4) inline constexpr unsigned char kPlanetFragmentSpv[] = {${FRAG_BYTES}};\n")
+file(APPEND "${OUT}" "inline constexpr std::size_t kPlanetFragmentSpvSize = sizeof(kPlanetFragmentSpv);\n")
+file(APPEND "${OUT}" "}\n")

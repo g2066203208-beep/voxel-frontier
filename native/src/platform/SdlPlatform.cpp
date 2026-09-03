@@ -22,6 +22,8 @@ SdlPlatform::SdlPlatform(std::string_view title, std::int32_t width, std::int32_
         SDL_Quit();
         throw std::runtime_error("SDL_CreateWindow failed: " + error);
     }
+
+    setMouseCaptured(true);
 }
 
 SdlPlatform::~SdlPlatform() {
@@ -29,7 +31,38 @@ SdlPlatform::~SdlPlatform() {
     SDL_Quit();
 }
 
+void SdlPlatform::setMouseCaptured(bool captured) {
+    input_.mouseCaptured = captured;
+    if (window_) {
+        if (!SDL_SetWindowRelativeMouseMode(window_, captured)) {
+            SDL_Log("SDL_SetWindowRelativeMouseMode failed: %s", SDL_GetError());
+        }
+    }
+}
+
+void SdlPlatform::refreshKeyboardState() {
+    int keyCount = 0;
+    const bool* keys = SDL_GetKeyboardState(&keyCount);
+    if (!keys || keyCount <= 0) return;
+
+    const auto down = [keys, keyCount](SDL_Scancode code) {
+        const int index = static_cast<int>(code);
+        return index >= 0 && index < keyCount && keys[index];
+    };
+
+    input_.forward = down(SDL_SCANCODE_W);
+    input_.backward = down(SDL_SCANCODE_S);
+    input_.left = down(SDL_SCANCODE_A);
+    input_.right = down(SDL_SCANCODE_D);
+    input_.sprint = down(SDL_SCANCODE_LSHIFT) || down(SDL_SCANCODE_RSHIFT);
+    input_.ascend = down(SDL_SCANCODE_SPACE);
+    input_.descend = down(SDL_SCANCODE_LCTRL) || down(SDL_SCANCODE_RCTRL);
+}
+
 bool SdlPlatform::pumpEvents() {
+    input_.mouseDx = 0.0F;
+    input_.mouseDy = 0.0F;
+
     SDL_Event event{};
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -39,13 +72,26 @@ bool SdlPlatform::pumpEvents() {
         case SDL_EVENT_WINDOW_RESIZED:
             resized_ = true;
             break;
+        case SDL_EVENT_MOUSE_MOTION:
+            if (input_.mouseCaptured) {
+                input_.mouseDx += event.motion.xrel;
+                input_.mouseDy += event.motion.yrel;
+            }
+            break;
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            if (!input_.mouseCaptured) setMouseCaptured(true);
+            break;
         case SDL_EVENT_KEY_DOWN:
-            if (event.key.key == SDLK_ESCAPE) return false;
+            if (!event.key.repeat && event.key.key == SDLK_ESCAPE) {
+                setMouseCaptured(!input_.mouseCaptured);
+            }
             break;
         default:
             break;
         }
     }
+
+    refreshKeyboardState();
     return true;
 }
 
@@ -60,6 +106,10 @@ bool SdlPlatform::consumeResize() noexcept {
     const bool value = resized_;
     resized_ = false;
     return value;
+}
+
+void SdlPlatform::setWindowTitle(std::string_view title) {
+    if (window_) SDL_SetWindowTitle(window_, std::string{title}.c_str());
 }
 
 } // namespace vf
