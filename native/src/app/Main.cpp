@@ -125,9 +125,11 @@ int main() {
         aster.gravityFalloffPower = 7.0;
         aster.gravityInfluenceRadiusMeters = planet.radius + 900000.0;
         aster.physicsBubbleRadiusMeters = planet.radius + 1300000.0;
-        aster.position = {asterOrbitRadius, 0.0, 0.0};
+        // Start at -X so PlanetCamera's authored +X-biased spawn patch is on the daylight
+        // hemisphere facing Helion at the origin. Circular-orbit velocity sign follows this pose.
+        aster.position = {-asterOrbitRadius, 0.0, 0.0};
         aster.orbitParentId = sunId;
-        aster.linearVelocity = {0.0, 0.0, circularOrbitSpeed(sun.massKg, asterOrbitRadius)};
+        aster.linearVelocity = {0.0, 0.0, -circularOrbitSpeed(sun.massKg, asterOrbitRadius)};
         aster.spinAxis = safeNormalize({0.0, 1.0, 0.0});
         aster.spinRateRadPerSecond = 2.0 * kPi / 86164.0905;
         aster.visibleAlbedo = {0.20, 0.42, 0.18};
