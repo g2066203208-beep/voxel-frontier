@@ -246,8 +246,13 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, localUp), east);
         const double tangentSpeed = input.sprint ? 34.0 : 12.0;
         candidate += (tangentForward * input.forward + tangentRight * input.right) * tangentSpeed * dt;
-        const double verticalSpeed = (input.sprint ? 70.0 : 28.0) * dt;
-        candidate += localUp * input.vertical * verticalSpeed;
+
+        // Preserve the original standalone/free-camera radial control exactly: it is used by
+        // deterministic planet tests and remains useful when no CelestialSystem is attached.
+        const double altitudeScale = 1.0 + std::max(0.0, altitude()) / 80.0;
+        const double verticalSpeed = (input.sprint ? 70.0 : 28.0) * std::min(altitudeScale, 20.0);
+        candidate += localUp * input.vertical * verticalSpeed * dt;
+
         glm::dvec3 direction = safeNormalize(candidate);
         const double minimumRadius = planetSurfaceRadius(*planet_, direction) + eyeHeight_;
         double radius = glm::length(candidate);
