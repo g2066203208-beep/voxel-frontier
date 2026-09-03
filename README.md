@@ -1,51 +1,74 @@
 # Voxel Frontier
 
-原创大型 PC 体素 RPG 沙盒游戏。
+Voxel Frontier is an original native PC sandbox/RPG built around finite spherical planets, seamless ground-to-space traversal, procedural triangle-surface terrain and a shared physically based simulation.
 
-## 正式技术主线
+## Production stack
 
-- C++23：游戏与引擎主体
-- Vulkan 1.4：自研图形与 GPU 计算后端
-- SDL3：仅负责窗口、输入、手柄、音频等平台接入
-- CMake：原生工程构建
-- GitHub Actions：Windows/Linux 自动编译与测试
+- C++23 for engine and gameplay
+- Vulkan 1.4-class explicit rendering path (1.3 minimum runtime path where required)
+- SDL3 only for platform/window/input/audio access
+- Slang -> embedded SPIR-V shaders
+- CMake native builds
+- GitHub Actions Linux correctness gates + Windows executable build/tests
 
-正式版不再以浏览器为运行目标。游戏世界、渲染、资源系统、任务调度、物理、AI、存档、网络和玩法系统均沿自研原生引擎路线开发。
+There is no production browser, TypeScript, Three.js, WebGPU, WebAssembly, Unity, Unreal or Godot runtime path in this repository anymore. Historical browser/WASM prototypes were removed after the native migration became authoritative.
 
-## 当前原生工程
+## World architecture
+
+The rendered natural world is not a block-voxel surface.
 
 ```text
-native/
-├─ include/vf/
-│  ├─ core/       # 引擎主循环
-│  ├─ platform/   # SDL3 平台层
-│  ├─ render/     # Vulkan 原生渲染器
-│  └─ world/      # Chunk / World
-├─ src/
-│  ├─ app/
-│  ├─ core/
-│  ├─ platform/
-│  ├─ render/
-│  └─ world/
-└─ tests/
+Planet
+ -> procedural spherical surface patches
+ -> explicit vertices / triangle mesh
+ -> Vulkan rendering
+
+Local excavations / caves / destructive terrain
+ -> sparse local signed-distance data
+ -> surface extraction
+ -> triangle mesh
 ```
 
-当前底座已经采用 `32 × 32 × 32` 连续内存 Chunk，支持确定性世界生成、正确负坐标映射、局部 Dirty Chunk 与边界邻居失效传播。Windows 运行时直接生成 `voxel_frontier.exe`。
+See `docs/TERRAIN_ARCHITECTURE.md`.
 
-## 第一阶段目标
+## Physics architecture
 
-1. 原生 Vulkan 窗口与稳定帧循环
-2. 多线程 Chunk 流式生成
-3. Greedy Meshing / Meshlet 数据
-4. GPU 顶点与索引缓冲管理
-5. 深度、相机、Shader 与视锥裁剪
-6. 第一人称移动与碰撞
-7. 方块破坏、放置与局部重网格
-8. 性能 Profiler 与自动帧时间门禁
+The project owns a custom fixed-step physics stack. The current runtime already contains:
 
-基础性能稳定后，再向生存、背包、合成、战斗、NPC、城市、车辆和多人世界扩展。
+- 120 Hz fixed simulation stepping
+- rigid-body mass, inertia, momentum, force, torque and impulses
+- radial altitude-aware planetary gravity
+- sphere contacts, restitution, Coulomb-style friction and sleeping
+- sweep-and-prune broadphase
+- distance, spring-damper, hinge, motor and gear constraints
+- break force / break torque limits
+- atmosphere temperature, pressure, density and deterministic wind/gust state
+- aerodynamic body forces and local aerodynamic surfaces with angle-of-attack/stall behavior
+- shallow-water transport and fluid buoyancy/drag foundations
+- ideal-gas chamber / pneumatic foundations
+- physically driven tree-hinge fall model
+- visible in-world physics playground
 
-## Windows 构建
+Collision v3 adds an isolated, testable shape/narrowphase foundation for sphere, oriented box and capsule primitives, AABB generation, support mapping and 15-axis OBB SAT. General convex GJK/EPA and persistent multi-point manifolds are the next integration layer rather than ad-hoc approximate collision code.
+
+See `docs/PHYSICS_ARCHITECTURE.md`.
+
+## Repository layout
+
+```text
+.github/workflows/    native CI only
+.vscode/              native CMake launch/tasks/settings
+native/
+  include/vf/         public engine interfaces
+  src/                native engine/runtime implementation
+  shaders/            Slang shaders
+  tests/              Release-active regression tests
+docs/                 authoritative architecture documents
+scripts/              Windows bootstrap/run helpers
+PROJECT.md             product/technical direction
+```
+
+## Windows build
 
 ```powershell
 cmake -S native -B build/native -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -53,4 +76,4 @@ cmake --build build/native --config Release --parallel
 ctest --test-dir build/native -C Release --output-on-failure
 ```
 
-VS Code 已配置 `native` 为 CMake 工程源目录。详细说明见 `native/README.md`。
+The executable is `voxel_frontier.exe`.
