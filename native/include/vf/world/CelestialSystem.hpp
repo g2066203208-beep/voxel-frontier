@@ -67,6 +67,14 @@ struct CelestialBody {
     double spinRateRadPerSecond{};
     double luminosityWatts{};
     glm::dvec3 visibleAlbedo{0.45, 0.48, 0.52};
+
+    // Gameplay gravity profile. Zero means derive surface gravity from GM/R^2 and choose a
+    // conservative default influence radius. A finite sphere of influence prevents a tiny
+    // compressed-scale planet from dominating the whole solar system and makes interplanetary
+    // flight controllable without running an expensive N-body solver.
+    double gameplaySurfaceGravityMps2{};
+    double gravityInfluenceRadiusMeters{};
+
     CelestialAtmosphere atmosphere{};
     CelestialClimate climate{};
     CelestialWeather weather{};
@@ -100,7 +108,13 @@ public:
 
     void step(double deltaSeconds);
 
+    // Physical/vector-superposition query retained for diagnostics and orbital mechanics.
     [[nodiscard]] glm::dvec3 gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
+    // Player/gameplay query: local planetary SOIs blend smoothly and do not exert infinite-range
+    // control over the player. Outside all planetary SOIs, only stellar gravity remains.
+    [[nodiscard]] glm::dvec3 gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
+    [[nodiscard]] const CelestialBody* gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
+
     [[nodiscard]] const CelestialBody* dominantBodyAt(const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] double signedSurfaceDistance(const CelestialBody& body, const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] CelestialEnvironmentSample sampleEnvironment(const glm::dvec3& worldPosition) const noexcept;
@@ -113,6 +127,13 @@ private:
     void updateOrbit(CelestialBody& body, double deltaSeconds);
     void updateSpin(CelestialBody& body, double deltaSeconds) noexcept;
     void updateClimateAndWeather(CelestialBody& body, double deltaSeconds) noexcept;
+
+    [[nodiscard]] double gameplayInfluenceWeight(
+        const CelestialBody& body,
+        const glm::dvec3& worldPosition) const noexcept;
+    [[nodiscard]] glm::dvec3 gameplayBodyGravity(
+        const CelestialBody& body,
+        const glm::dvec3& worldPosition) const noexcept;
 
     std::vector<CelestialBody> bodies_;
     std::uint32_t nextBodyId_{1};
