@@ -131,18 +131,15 @@ bool refractDirection(
     double nIncident,
     double nTransmitted,
     glm::dvec3& transmittedDirection) noexcept {
-    glm::dvec3 i = safeNormalize(incidentDirection);
+    const glm::dvec3 i = safeNormalize(incidentDirection);
     glm::dvec3 n = safeNormalize(surfaceNormal, {0.0, 1.0, 0.0});
     nIncident = std::max(1.0e-6, nIncident);
     nTransmitted = std::max(1.0e-6, nTransmitted);
 
-    double cosI = std::clamp(-glm::dot(i, n), -1.0, 1.0);
-    if (cosI < 0.0) {
-        cosI = -cosI;
-        n = -n;
-        std::swap(nIncident, nTransmitted);
-    }
-
+    // The caller explicitly supplies the refractive indices of the incident and transmitted
+    // media. Only orient the normal against the incoming ray; never silently swap the media.
+    if (glm::dot(i, n) > 0.0) n = -n;
+    const double cosI = std::clamp(-glm::dot(i, n), 0.0, 1.0);
     const double eta = nIncident / nTransmitted;
     const double k = 1.0 - eta * eta * std::max(0.0, 1.0 - cosI * cosI);
     if (k < 0.0) {
