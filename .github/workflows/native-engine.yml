@@ -24,8 +24,8 @@ jobs:
       - name: Compile native engine tests
         run: cmake --build build/native --parallel
 
-      - name: Run correctness and performance smoke tests
-        run: ctest --test-dir build/native --output-on-failure
+      - name: Run correctness and performance gates
+        run: ctest --test-dir build/native --verbose --output-on-failure
 
   wasm-release:
     runs-on: ubuntu-latest
