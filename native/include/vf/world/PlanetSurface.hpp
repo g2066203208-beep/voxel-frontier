@@ -48,4 +48,15 @@ void appendCelestialBodyProxy(
     std::uint32_t subdivisionsPerFace,
     const glm::vec3& baseColor);
 
+// Adds one transparent atmosphere shell. The vertex color uses an internal negative marker so
+// the shared shader can distinguish participating atmosphere from opaque matter without adding a
+// new vertex layout or expensive material buffer. opticalStrength controls visible rim density.
+void appendAtmosphereProxy(
+    PlanetMesh& mesh,
+    const glm::dvec3& center,
+    double outerRadius,
+    std::uint32_t subdivisionsPerFace,
+    const glm::vec3& scatteringColor,
+    float opticalStrength);
+
 } // namespace vf
