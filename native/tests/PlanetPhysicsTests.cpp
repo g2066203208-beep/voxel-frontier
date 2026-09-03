@@ -71,6 +71,35 @@ void testRadialCamera() {
     require(std::abs(glm::length(camera.up()) - 1.0) < 1.0e-12, "radial up must remain normalized");
 }
 
+void testGroundedCameraCoRotatesWithCelestialSurface() {
+    vf::PlanetDefinition definition{};
+    definition.radius = 240.0;
+    definition.maxElevation = 0.0;
+
+    vf::CelestialSystem celestial;
+    vf::CelestialBody planet{};
+    planet.radiusMeters = definition.radius;
+    planet.massKg = 9.81 * planet.radiusMeters * planet.radiusMeters
+        / vf::CelestialSystem::kGravitationalConstant;
+    planet.spinAxis = {0.0, 1.0, 0.0};
+    planet.spinRateRadPerSecond = 0.01;
+    const auto planetId = celestial.addBody(planet);
+
+    vf::PlanetCamera camera{definition, &celestial, planetId};
+    const glm::dvec3 initialPosition = camera.position();
+    vf::PlanetMovementInput idle{};
+    for (int i = 0; i < 240; ++i) {
+        celestial.step(1.0 / 120.0);
+        camera.update(idle, 1.0 / 120.0);
+    }
+
+    require(camera.grounded(), "gravity-driven camera should remain grounded on the rotating planet");
+    require(glm::length(camera.position() - initialPosition) > 1.0,
+        "a grounded camera must be carried tangentially by the rotating celestial surface");
+    require(std::abs(camera.altitude() - 1.75) < 0.05,
+        "co-rotation must not make a grounded camera drift vertically away from the surface");
+}
+
 vf::PhysicsEnvironment makeVacuumPhysicsEnvironment() {
     vf::PhysicsEnvironment environment{};
     environment.planet.radius = 100.0;
@@ -168,6 +197,56 @@ void testRadialGravityAndGroundFriction() {
     require(glm::length(body->position) >= 100.999, "planet contact must prevent terrain penetration");
 }
 
+void testRigidBodyLandsOnSecondaryCelestialBody() {
+    vf::PlanetDefinition primaryTerrain{};
+    primaryTerrain.radius = 100.0;
+    primaryTerrain.maxElevation = 0.0;
+
+    vf::CelestialSystem celestial;
+    vf::CelestialBody primary{};
+    primary.radiusMeters = primaryTerrain.radius;
+    primary.massKg = 9.81 * primary.radiusMeters * primary.radiusMeters
+        / vf::CelestialSystem::kGravitationalConstant;
+    const auto primaryId = celestial.addBody(primary);
+
+    vf::CelestialBody moon{};
+    moon.type = vf::CelestialBodyType::Moon;
+    moon.radiusMeters = 30.0;
+    moon.massKg = 2.0 * moon.radiusMeters * moon.radiusMeters
+        / vf::CelestialSystem::kGravitationalConstant;
+    moon.position = {600.0, 0.0, 0.0};
+    const auto moonId = celestial.addBody(moon);
+
+    vf::PhysicsEnvironment environment{};
+    environment.planet = primaryTerrain;
+    environment.atmosphere.seaLevelPressurePa = 0.0;
+    environment.ocean.enabled = false;
+    environment.celestialSystem = &celestial;
+    environment.primaryCelestialBodyId = primaryId;
+    vf::PhysicsWorld world{environment};
+
+    vf::RigidBodyDesc desc{};
+    desc.position = moon.position + glm::dvec3{0.0, moon.radiusMeters + 6.0, 0.0};
+    desc.mass = 2.0;
+    desc.collisionShape = vf::CollisionShape::sphere(1.0);
+    desc.linearDamping = 0.02;
+    desc.angularDamping = 0.02;
+    desc.material.restitution = 0.0;
+    desc.material.friction = 0.8;
+    desc.aerodynamics.referenceArea = 0.0;
+    const auto bodyId = world.createRigidBody(desc);
+
+    for (int i = 0; i < 720; ++i) world.stepFixed();
+    const auto* body = world.body(bodyId);
+    const auto* storedMoon = celestial.body(moonId);
+    require(body != nullptr && storedMoon != nullptr, "secondary celestial landing test bodies must exist");
+    const double centerDistance = glm::length(body->position - storedMoon->position);
+    require(centerDistance >= moon.radiusMeters + 0.999,
+        "secondary celestial contact must prevent a rigid body from falling through the moon");
+    require(centerDistance < moon.radiusMeters + 1.05,
+        "secondary celestial gravity and contact should settle the rigid body onto the moon surface");
+}
+
 void testAtmospherePressureDensityAndWind() {
     vf::PhysicsEnvironment environment{};
     environment.planet.radius = 1000.0;
@@ -244,9 +323,11 @@ int main() {
     testCubeSphereProjection();
     testPlanetSurfaceDeterminism();
     testRadialCamera();
+    testGroundedCameraCoRotatesWithCelestialSurface();
     testFixedStepAndMomentum();
     testRigidBodyCollisionMomentumConservation();
     testRadialGravityAndGroundFriction();
+    testRigidBodyLandsOnSecondaryCelestialBody();
     testAtmospherePressureDensityAndWind();
     testBuoyancy();
     testShallowWaterConservation();
