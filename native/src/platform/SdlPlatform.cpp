@@ -62,6 +62,7 @@ void SdlPlatform::refreshKeyboardState() {
 bool SdlPlatform::pumpEvents() {
     input_.mouseDx = 0.0F;
     input_.mouseDy = 0.0F;
+    input_.toggleFlight = false;
 
     SDL_Event event{};
     while (SDL_PollEvent(&event)) {
@@ -84,6 +85,17 @@ bool SdlPlatform::pumpEvents() {
         case SDL_EVENT_KEY_DOWN:
             if (!event.key.repeat && event.key.key == SDLK_ESCAPE) {
                 setMouseCaptured(!input_.mouseCaptured);
+            }
+            if (!event.key.repeat && event.key.key == SDLK_SPACE) {
+                constexpr std::uint64_t kDoubleTapWindowMilliseconds = 300U;
+                const std::uint64_t now = SDL_GetTicks();
+                if (lastSpacePressMilliseconds_ != 0U
+                    && now - lastSpacePressMilliseconds_ <= kDoubleTapWindowMilliseconds) {
+                    input_.toggleFlight = true;
+                    lastSpacePressMilliseconds_ = 0U;
+                } else {
+                    lastSpacePressMilliseconds_ = now;
+                }
             }
             break;
         default:
