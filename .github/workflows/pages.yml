@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 'refactor/**'
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -34,11 +33,29 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
+      - name: Build C++23 engine to WebAssembly SIMD
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            -w /src \
+            emscripten/emsdk:6.0.9 \
+            bash -lc 'emcmake cmake -S engine -B build/wasm -DCMAKE_BUILD_TYPE=Release && cmake --build build/wasm --parallel'
+          mkdir -p public/engine
+          cp build/wasm/vf_engine.js public/engine/vf_engine.js
+          cp build/wasm/vf_engine.wasm public/engine/vf_engine.wasm
+          test -s public/engine/vf_engine.js
+          test -s public/engine/vf_engine.wasm
+
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Type-check and build
+      - name: Type-check and build web client
         run: npm run build
+
+      - name: Verify native engine is packaged
+        run: |
+          test -s dist/engine/vf_engine.js
+          test -s dist/engine/vf_engine.wasm
 
       - name: Upload production bundle
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

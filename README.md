@@ -1,72 +1,71 @@
 # Voxel Frontier
 
-原创浏览器大型 RPG 体素沙盒游戏。项目以探索、采集、生存、建造和角色成长为核心，面向可持续扩展的大型世界玩法。
+原创浏览器大型 RPG 体素沙盒游戏。
 
-## 技术栈
+## 技术主线
 
-- TypeScript（strict mode）
-- Three.js / WebGL
-- Vite
-- GitHub Actions + GitHub Pages
+- C++23：高性能体素世界与核心算法
+- WebAssembly + SIMD：浏览器原生核心
+- WebGPU + WGSL：新一代 GPU 渲染路径
+- TypeScript：浏览器、UI、输入与应用层
+- Vite：网页构建
+- GitHub Actions + GitHub Pages：自动编译、测试与部署
 
-## 当前工程结构
+## 新引擎架构
 
 ```text
-src/
-├─ core/        # 游戏主循环、输入、玩家控制、碰撞与坠落检测
-├─ render/      # Three.js 场景、体素渲染、射线选择与建造预览
-├─ systems/     # 生存、背包、掉落拾取、昼夜系统
-├─ ui/          # HUD、生命/饥饿/体力、破坏进度与快捷栏
-├─ world/       # 方块/物品注册、世界数据、程序化地形
-├─ main.ts      # 应用入口
-├─ styles.css   # 游戏界面样式
-└─ types.ts     # 公共类型
+Browser / TypeScript
+        │
+        ├─ UI / Input / App
+        │
+        ▼
+C++23 Engine Core
+        │
+        ├─ contiguous chunks
+        ├─ terrain generation
+        ├─ greedy meshing
+        └─ 3D DDA voxel traversal
+        │
+        ▼
+WebAssembly + SIMD
+        │
+        ▼
+WebGPU / WGSL
 ```
 
-## Survival Alpha 0.3 可玩功能
+新引擎使用 `16 × 64 × 16` 连续内存 Chunk，并逐步替换旧版按字符串坐标存储、整世界重建的原型架构。方块修改采用局部 dirty-chunk 重建路线。
 
-- 程序化体素地形与树木
-- 第一人称移动、跳跃、重力、碰撞与体力限制冲刺
-- 生命、饥饿、体力三项生存属性
-- 饥饿伤害、饱食回血、坠落伤害、死亡与重生
-- 300 秒完整昼夜循环与动态天空/光照
-- 不同方块独立硬度，按住左键持续破坏
-- 破坏进度 HUD 与不可破坏基岩层
-- 方块破坏后生成实体掉落物，靠近后自动拾取
-- 树叶有概率额外掉落野莓
-- 7 格快捷栏、真实库存数量与资源消耗
-- 野莓作为食物，可恢复饥饿和部分体力
-- 右键放置方块，建造会实际消耗背包材料
-- 绿色/红色半透明建造预览，检测占位、库存和玩家碰撞
-- GitHub Actions 自动执行 TypeScript 类型检查与 Vite 生产构建
+## 当前新引擎预览
 
-## 操作
+部署后，在游戏地址后加：
 
-- `W A S D`：移动
-- `Space`：跳跃
-- `Shift`：消耗体力冲刺
-- 鼠标：观察
-- 按住左键：持续破坏目标方块
-- 右键：放置当前方块；选择野莓时为进食
-- `1–7` / 滚轮：切换快捷栏
-- `Esc`：释放鼠标
+```text
+?engine=next
+```
 
-## 本地开发
+即可进入 C++/WASM + WebGPU 新引擎预览。当前预览优先验证 Chunk 流式加载、网格生成和 GPU 渲染性能；完整生存、背包、建造/破坏、战斗等玩法继续迁移。
 
-需要 Node.js 22 或兼容版本。
+## 自动质量门禁
+
+新引擎改动必须同时通过：
+
+- C++23 原生正确性与性能测试
+- Emscripten C++ → WebAssembly SIMD Release 编译
+- TypeScript strict + WebGPU 网页集成构建
+
+生产部署会自动编译 C++、打包 `.wasm`，随后构建网页并发布，不需要玩家本机安装编译环境。
+
+## 本地网页开发
 
 ```bash
 npm install
 npm run dev
 ```
 
-类型检查与生产构建：
+正式构建：
 
 ```bash
-npm run typecheck
 npm run build
 ```
 
-## 项目方向
-
-下一阶段优先完成区块流式世界、存档、完整背包与合成、工具和装备、基础战斗、敌对/中立生物、经验等级与技能；之后继续扩展 NPC、任务、村镇、地牢、车辆、多人联机和大型世界内容。
+更详细的引擎说明见 `ENGINE.md`。

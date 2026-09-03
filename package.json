@@ -1,8 +1,8 @@
 {
   "name": "voxel-frontier",
   "private": true,
-  "version": "0.3.0",
-  "description": "Browser-based voxel RPG sandbox built with TypeScript, Three.js and Vite.",
+  "version": "0.4.0",
+  "description": "Browser voxel RPG engine using C++ WebAssembly, WebGPU and TypeScript.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@types/three": "0.180.0",
+    "@webgpu/types": "0.1.71",
     "typescript": "^5.9.0",
     "vite": "^7.1.0"
   }

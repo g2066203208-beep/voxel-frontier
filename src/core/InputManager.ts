@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-
 export interface InputCallbacks {
   onActiveChange(active: boolean): void;
   onSecondaryAction(): void;
@@ -69,11 +67,8 @@ export class InputManager {
       if (!this.active) return;
       this.yaw -= event.movementX * 0.0022;
       this.pitch -= event.movementY * 0.0022;
-      this.pitch = THREE.MathUtils.clamp(
-        this.pitch,
-        -Math.PI / 2 + 0.02,
-        Math.PI / 2 - 0.02
-      );
+      const limit = Math.PI / 2 - 0.02;
+      this.pitch = Math.max(-limit, Math.min(limit, this.pitch));
     });
 
     document.addEventListener('keydown', (event) => {
