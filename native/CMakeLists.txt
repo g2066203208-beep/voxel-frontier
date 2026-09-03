@@ -29,6 +29,7 @@ add_library(vf_engine STATIC
     src/physics/PhysicsWorld.cpp
     src/physics/ShallowWater.cpp
     src/physics/TreePhysics.cpp
+    src/physics/GasChamber.cpp
 )
 
 target_include_directories(vf_engine PUBLIC include)
