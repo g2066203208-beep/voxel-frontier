@@ -25,6 +25,11 @@ constexpr double kEpsilon = 1.0e-9;
     return std::clamp(value, 0.0, 1.0);
 }
 
+[[nodiscard]] double smooth01(double value) noexcept {
+    const double x = saturate(value);
+    return x * x * (3.0 - 2.0 * x);
+}
+
 } // namespace
 
 std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
@@ -34,6 +39,12 @@ std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
     bodyValue.massKg = std::max(0.0, bodyValue.massKg);
     bodyValue.orientation = glm::normalize(bodyValue.orientation);
     bodyValue.spinAxis = safeNormalize(bodyValue.spinAxis);
+    bodyValue.gameplaySurfaceGravityMps2 = std::max(0.0, bodyValue.gameplaySurfaceGravityMps2);
+    if (bodyValue.gravityInfluenceRadiusMeters > 0.0) {
+        bodyValue.gravityInfluenceRadiusMeters = std::max(
+            bodyValue.radiusMeters * 1.05,
+            bodyValue.gravityInfluenceRadiusMeters);
+    }
     bodyValue.atmosphere.heightMeters = std::max(0.0, bodyValue.atmosphere.heightMeters);
     bodyValue.atmosphere.scaleHeightMeters = std::max(1.0, bodyValue.atmosphere.scaleHeightMeters);
     bodies_.push_back(std::move(bodyValue));
@@ -74,8 +85,9 @@ void CelestialSystem::updateOrbit(CelestialBody& celestialBody, double deltaSeco
     const glm::dvec3 acceleration = offset * (kGravitationalConstant * parent->massKg * inverseDistance
         / distanceSquared);
 
-    // Symplectic Euler is deliberately used here: one acceleration evaluation, stable enough
-    // for game-scale bound orbits, and dramatically cheaper than high-order ephemeris solvers.
+    // Parent-only symplectic Euler deliberately avoids an unstable compressed-scale N-body
+    // simulation. Moons/planets orbit their declared parent, while player/rigid-body gravity is
+    // handled separately by the gameplay SOI model below.
     celestialBody.linearVelocity += acceleration * deltaSeconds;
     celestialBody.position += celestialBody.linearVelocity * deltaSeconds;
 }
@@ -144,6 +156,81 @@ glm::dvec3 CelestialSystem::gravityAccelerationAt(const glm::dvec3& worldPositio
     return total;
 }
 
+double CelestialSystem::gameplayInfluenceWeight(
+    const CelestialBody& celestialBody,
+    const glm::dvec3& worldPosition) const noexcept {
+    if (celestialBody.type == CelestialBodyType::Star || celestialBody.massKg <= 0.0) return 0.0;
+    const double radius = std::max(0.1, celestialBody.radiusMeters);
+    const double influence = celestialBody.gravityInfluenceRadiusMeters > radius
+        ? celestialBody.gravityInfluenceRadiusMeters
+        : radius * 4.0;
+    const double distance = glm::length(worldPosition - celestialBody.position);
+    if (distance <= radius) return 1.0;
+    if (distance >= influence) return 0.0;
+    return smooth01((influence - distance) / std::max(1.0e-6, influence - radius));
+}
+
+glm::dvec3 CelestialSystem::gameplayBodyGravity(
+    const CelestialBody& celestialBody,
+    const glm::dvec3& worldPosition) const noexcept {
+    if (celestialBody.type == CelestialBodyType::Star || celestialBody.massKg <= 0.0) return {};
+    const glm::dvec3 delta = celestialBody.position - worldPosition;
+    const double distance = std::max(1.0e-6, glm::length(delta));
+    const double radius = std::max(0.1, celestialBody.radiusMeters);
+    const double surfaceGravity = celestialBody.gameplaySurfaceGravityMps2 > 0.0
+        ? celestialBody.gameplaySurfaceGravityMps2
+        : kGravitationalConstant * celestialBody.massKg / (radius * radius);
+    const double weight = gameplayInfluenceWeight(celestialBody, worldPosition);
+    return safeNormalize(delta, {0.0, -1.0, 0.0}) * surfaceGravity * weight;
+}
+
+glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
+    glm::dvec3 blendedPlanetGravity{};
+    double totalWeight = 0.0;
+
+    for (const auto& source : bodies_) {
+        if (source.type == CelestialBodyType::Star) continue;
+        const double influence = gameplayInfluenceWeight(source, worldPosition);
+        if (influence <= 0.0) continue;
+
+        // Squared weight makes ownership decisive near a planet while still producing a smooth
+        // hand-over in overlapping SOIs. Normalize instead of summing so two nearby compressed
+        // planets do not create an artificial gravity spike between them.
+        const double blendWeight = influence * influence;
+        blendedPlanetGravity += gameplayBodyGravity(source, worldPosition) * blendWeight;
+        totalWeight += blendWeight;
+    }
+
+    if (totalWeight > kEpsilon) return blendedPlanetGravity / totalWeight;
+
+    // In interplanetary space, planets stop exerting long-range control. Stars keep ordinary
+    // inverse-square gravity so a solar system still has a coherent large-scale centre without
+    // trapping the player in the primary planet's orbit.
+    glm::dvec3 stellarGravity{};
+    for (const auto& source : bodies_) {
+        if (source.type != CelestialBodyType::Star || source.massKg <= 0.0) continue;
+        const glm::dvec3 delta = source.position - worldPosition;
+        const double distanceSquared = std::max(glm::dot(delta, delta), source.radiusMeters * source.radiusMeters);
+        const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
+        stellarGravity += delta * (kGravitationalConstant * source.massKg * inverseDistance / distanceSquared);
+    }
+    return stellarGravity;
+}
+
+const CelestialBody* CelestialSystem::gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept {
+    const CelestialBody* best = nullptr;
+    double bestWeight = 0.0;
+    for (const auto& source : bodies_) {
+        if (source.type == CelestialBodyType::Star) continue;
+        const double weight = gameplayInfluenceWeight(source, worldPosition);
+        if (weight > bestWeight) {
+            bestWeight = weight;
+            best = &source;
+        }
+    }
+    return best;
+}
+
 const CelestialBody* CelestialSystem::dominantBodyAt(const glm::dvec3& worldPosition) const noexcept {
     const CelestialBody* best = nullptr;
     double bestAcceleration = -1.0;
@@ -195,14 +282,16 @@ CelestialEnvironmentSample CelestialSystem::sampleEnvironment(const glm::dvec3& 
             bestSurfaceDistance = std::abs(altitude);
         }
     }
-    if (environmentBody == nullptr) environmentBody = dominantBodyAt(worldPosition);
+    if (environmentBody == nullptr) environmentBody = gameplayReferenceBodyAt(worldPosition);
     if (environmentBody == nullptr) {
         sample.temperatureK = 2.725;
+        sample.gravityAcceleration = gameplayGravityAccelerationAt(worldPosition);
         return sample;
     }
 
     sample.bodyId = environmentBody->id;
     sample.altitudeMeters = signedSurfaceDistance(*environmentBody, worldPosition);
+    sample.gravityAcceleration = gameplayGravityAccelerationAt(worldPosition);
     sample.magneticFieldTesla = magneticFieldAt(*environmentBody, worldPosition);
     sample.humidity = environmentBody->weather.humidity;
     sample.cloudCover = environmentBody->weather.cloudCover;
