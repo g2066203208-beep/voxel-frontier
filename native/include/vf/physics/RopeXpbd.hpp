@@ -55,6 +55,9 @@ public:
     [[nodiscard]] double restLengthMeters() const noexcept;
     [[nodiscard]] double currentLengthMeters() const noexcept;
     [[nodiscard]] std::size_t brokenLinkCount() const noexcept;
+    [[nodiscard]] bool linkBroken(std::size_t index) const noexcept {
+        return index >= linkBroken_.size() || linkBroken_[index] != 0U;
+    }
     [[nodiscard]] double lastMaximumTensionN() const noexcept { return lastMaximumTensionN_; }
 
     void pinParticle(std::size_t index, const glm::dvec3& worldPosition);
