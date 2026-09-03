@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.8.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.9.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -34,6 +34,9 @@ add_library(vf_engine STATIC
     src/physics/GasChamber.cpp
     src/physics/SpectralOptics.cpp
     src/physics/ElectromagneticRadiation.cpp
+    src/physics/MaterialPhysics.cpp
+    src/physics/GasVolume.cpp
+    src/physics/RopeXpbd.cpp
     src/render/PhysicsDebugMesh.cpp
     src/gameplay/PhysicsPlayground.cpp
 )
@@ -210,6 +213,18 @@ if(VF_BUILD_TESTS)
     add_executable(vf_electromagnetic_radiation_tests tests/ElectromagneticRadiationTests.cpp)
     target_link_libraries(vf_electromagnetic_radiation_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_electromagnetic_radiation_tests COMMAND vf_electromagnetic_radiation_tests)
+
+    add_executable(vf_material_physics_tests tests/MaterialPhysicsTests.cpp)
+    target_link_libraries(vf_material_physics_tests PRIVATE vf_engine)
+    add_test(NAME vf_material_physics_tests COMMAND vf_material_physics_tests)
+
+    add_executable(vf_gas_volume_tests tests/GasVolumeTests.cpp)
+    target_link_libraries(vf_gas_volume_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_gas_volume_tests COMMAND vf_gas_volume_tests)
+
+    add_executable(vf_rope_xpbd_tests tests/RopeXpbdTests.cpp)
+    target_link_libraries(vf_rope_xpbd_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_rope_xpbd_tests COMMAND vf_rope_xpbd_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests
