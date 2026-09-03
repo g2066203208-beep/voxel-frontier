@@ -33,6 +33,7 @@ add_library(vf_engine STATIC
     src/physics/TreePhysics.cpp
     src/physics/GasChamber.cpp
     src/physics/SpectralOptics.cpp
+    src/physics/ElectromagneticRadiation.cpp
     src/render/PhysicsDebugMesh.cpp
     src/gameplay/PhysicsPlayground.cpp
 )
@@ -205,6 +206,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_spectral_optics_tests tests/SpectralOpticsTests.cpp)
     target_link_libraries(vf_spectral_optics_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_spectral_optics_tests COMMAND vf_spectral_optics_tests)
+
+    add_executable(vf_electromagnetic_radiation_tests tests/ElectromagneticRadiationTests.cpp)
+    target_link_libraries(vf_electromagnetic_radiation_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_electromagnetic_radiation_tests COMMAND vf_electromagnetic_radiation_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests
