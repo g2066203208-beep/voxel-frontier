@@ -63,8 +63,6 @@ const CelestialBody* CelestialSystem::body(std::uint32_t id) const noexcept {
 
 void CelestialSystem::step(double deltaSeconds) {
     if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0) return;
-    // Celestial motion is intentionally low-frequency game physics. A caller can feed a
-    // coarse tick (e.g. 10-30 Hz or slower); there is no need to run it at rigid-body rate.
     const double dt = std::min(deltaSeconds, 60.0);
     for (auto& celestialBody : bodies_) updateOrbit(celestialBody, dt);
     for (auto& celestialBody : bodies_) {
@@ -86,8 +84,8 @@ void CelestialSystem::updateOrbit(CelestialBody& celestialBody, double deltaSeco
         / distanceSquared);
 
     // Parent-only symplectic Euler deliberately avoids an unstable compressed-scale N-body
-    // simulation. Moons/planets orbit their declared parent, while player/rigid-body gravity is
-    // handled separately by the gameplay SOI model below.
+    // simulation. Moons/planets orbit their declared parent; ordinary gameplay gravity is the
+    // local SOI model below and therefore cannot make every object chase every distant planet.
     celestialBody.linearVelocity += acceleration * deltaSeconds;
     celestialBody.position += celestialBody.linearVelocity * deltaSeconds;
 }
@@ -125,8 +123,6 @@ void CelestialSystem::updateClimateAndWeather(CelestialBody& celestialBody, doub
         celestialBody.climate.meanTemperatureK += (equilibrium - celestialBody.climate.meanTemperatureK) * blend;
     }
 
-    // Weather is a deterministic, ultra-cheap state model. It gives coherent slow variation
-    // without simulating global CFD. Climate sets the envelope; local sampling adds small gusts.
     const double bodyPhase = static_cast<double>(celestialBody.id) * 1.731;
     const double slow = std::sin(simulationTime_ * 0.00045 + bodyPhase);
     const double faster = std::sin(simulationTime_ * 0.0017 + bodyPhase * 0.47);
@@ -143,7 +139,7 @@ void CelestialSystem::updateClimateAndWeather(CelestialBody& celestialBody, doub
     celestialBody.weather.windMultiplier = 0.75 + 1.45 * celestialBody.weather.stormIntensity;
 }
 
-glm::dvec3 CelestialSystem::gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
+glm::dvec3 CelestialSystem::physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
     glm::dvec3 total{};
     for (const auto& source : bodies_) {
         if (source.massKg <= 0.0) continue;
@@ -175,7 +171,6 @@ glm::dvec3 CelestialSystem::gameplayBodyGravity(
     const glm::dvec3& worldPosition) const noexcept {
     if (celestialBody.type == CelestialBodyType::Star || celestialBody.massKg <= 0.0) return {};
     const glm::dvec3 delta = celestialBody.position - worldPosition;
-    const double distance = std::max(1.0e-6, glm::length(delta));
     const double radius = std::max(0.1, celestialBody.radiusMeters);
     const double surfaceGravity = celestialBody.gameplaySurfaceGravityMps2 > 0.0
         ? celestialBody.gameplaySurfaceGravityMps2
@@ -193,9 +188,6 @@ glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worl
         const double influence = gameplayInfluenceWeight(source, worldPosition);
         if (influence <= 0.0) continue;
 
-        // Squared weight makes ownership decisive near a planet while still producing a smooth
-        // hand-over in overlapping SOIs. Normalize instead of summing so two nearby compressed
-        // planets do not create an artificial gravity spike between them.
         const double blendWeight = influence * influence;
         blendedPlanetGravity += gameplayBodyGravity(source, worldPosition) * blendWeight;
         totalWeight += blendWeight;
@@ -203,9 +195,9 @@ glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worl
 
     if (totalWeight > kEpsilon) return blendedPlanetGravity / totalWeight;
 
-    // In interplanetary space, planets stop exerting long-range control. Stars keep ordinary
-    // inverse-square gravity so a solar system still has a coherent large-scale centre without
-    // trapping the player in the primary planet's orbit.
+    // Outside all planetary SOIs, the actual star still provides the weak large-scale attraction
+    // that makes the solar system coherent. Planetary long-range gravity is intentionally omitted
+    // here so a compressed game planet cannot trap the player/props from across the whole system.
     glm::dvec3 stellarGravity{};
     for (const auto& source : bodies_) {
         if (source.type != CelestialBodyType::Star || source.massKg <= 0.0) continue;
@@ -215,6 +207,10 @@ glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worl
         stellarGravity += delta * (kGravitationalConstant * source.massKg * inverseDistance / distanceSquared);
     }
     return stellarGravity;
+}
+
+glm::dvec3 CelestialSystem::gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
+    return gameplayGravityAccelerationAt(worldPosition);
 }
 
 const CelestialBody* CelestialSystem::gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept {
@@ -285,13 +281,11 @@ CelestialEnvironmentSample CelestialSystem::sampleEnvironment(const glm::dvec3& 
     if (environmentBody == nullptr) environmentBody = gameplayReferenceBodyAt(worldPosition);
     if (environmentBody == nullptr) {
         sample.temperatureK = 2.725;
-        sample.gravityAcceleration = gameplayGravityAccelerationAt(worldPosition);
         return sample;
     }
 
     sample.bodyId = environmentBody->id;
     sample.altitudeMeters = signedSurfaceDistance(*environmentBody, worldPosition);
-    sample.gravityAcceleration = gameplayGravityAccelerationAt(worldPosition);
     sample.magneticFieldTesla = magneticFieldAt(*environmentBody, worldPosition);
     sample.humidity = environmentBody->weather.humidity;
     sample.cloudCover = environmentBody->weather.cloudCover;
