@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.2.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.3.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,6 +26,10 @@ add_library(vf_engine STATIC
     src/world/World.cpp
     src/world/PlanetSurface.cpp
     src/player/PlanetCamera.cpp
+    src/physics/PhysicsWorld.cpp
+    src/physics/ShallowWater.cpp
+    src/physics/TreePhysics.cpp
+    src/physics/GasChamber.cpp
 )
 
 target_include_directories(vf_engine PUBLIC include)
@@ -155,4 +159,8 @@ if(VF_BUILD_TESTS)
     add_executable(vf_engine_tests tests/EngineTests.cpp)
     target_link_libraries(vf_engine_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_engine_tests COMMAND vf_engine_tests)
+
+    add_executable(vf_gas_chamber_tests tests/GasChamberTests.cpp)
+    target_link_libraries(vf_gas_chamber_tests PRIVATE vf_engine)
+    add_test(NAME vf_gas_chamber_tests COMMAND vf_gas_chamber_tests)
 endif()

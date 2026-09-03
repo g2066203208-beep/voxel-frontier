@@ -1,3 +1,4 @@
+#include "vf/physics/PhysicsWorld.hpp"
 #include "vf/platform/SdlPlatform.hpp"
 #include "vf/player/PlanetCamera.hpp"
 #include "vf/render/VulkanRenderer.hpp"
@@ -11,6 +12,7 @@
 #include <sstream>
 
 #include <glm/common.hpp>
+#include <glm/geometric.hpp>
 
 int main() {
     try {
@@ -22,6 +24,21 @@ int main() {
         planet.radius = 240.0;
         planet.maxElevation = 22.0;
         planet.atmosphereHeight = 120.0;
+
+        vf::PhysicsEnvironment environment{};
+        environment.planet = planet;
+        environment.surfaceGravity = 9.81;
+        environment.atmosphere.seaLevelTemperatureK = 288.15;
+        environment.atmosphere.seaLevelPressurePa = 101325.0;
+        environment.atmosphere.prevailingWind = {8.0, 0.0, 2.5};
+        environment.atmosphere.gustAmplitude = 3.5;
+        environment.weather.humidity = 0.58;
+        environment.weather.cloudCover = 0.32;
+        environment.weather.stormIntensity = 0.08;
+        environment.ocean.enabled = true;
+        environment.ocean.surfaceRadius = planet.radius - 6.0;
+        environment.ocean.densityKgPerM3 = 997.0;
+        vf::PhysicsWorld physics{environment};
 
         vf::PlanetMesh mesh = vf::buildPlanetSurface(planet, 64U);
         // A second celestial body is a real geometry proxy with a real world-space location,
@@ -35,6 +52,7 @@ int main() {
         renderer.uploadPlanetMesh(mesh);
 
         vf::PlanetCamera camera{planet};
+        const auto seaLevelAtmosphere = environment.sampleAtmosphere({0.0, planet.radius, 0.0}, 0.0);
 
         std::cout << "Voxel Frontier native spherical runtime\n";
         std::cout << "GPU: " << renderer.gpuName() << '\n';
@@ -43,12 +61,17 @@ int main() {
                   << VK_API_VERSION_MINOR(renderer.apiVersion()) << '.'
                   << VK_API_VERSION_PATCH(renderer.apiVersion()) << '\n';
         std::cout << "Planet radius: " << planet.radius << " m\n";
+        std::cout << "Physics fixed step: " << (1.0 / physics.fixedDeltaSeconds()) << " Hz\n";
+        std::cout << "Sea-level atmosphere: " << seaLevelAtmosphere.temperatureK - 273.15 << " C, "
+                  << seaLevelAtmosphere.pressurePa / 1000.0 << " kPa, "
+                  << seaLevelAtmosphere.densityKgPerM3 << " kg/m^3\n";
         std::cout << "Surface + celestial proxy triangles: " << renderer.triangleCount() << '\n';
         std::cout << "Controls: WASD move, mouse look, Shift boost, Space ascend, Ctrl descend, Esc release/capture mouse\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
         double diagnosticsTime = 0.0;
+        double runtimeSeconds = 0.0;
         std::uint64_t diagnosticsFrames = 0;
 
         while (platform.pumpEvents()) {
@@ -56,6 +79,8 @@ int main() {
             double dt = std::chrono::duration<double>(now - previous).count();
             previous = now;
             dt = std::clamp(dt, 0.0, 0.05);
+            runtimeSeconds += dt;
+            physics.advance(dt);
 
             if (platform.consumeResize()) renderer.requestResize();
 
@@ -69,13 +94,16 @@ int main() {
             movement.sprint = input.sprint;
             camera.update(movement, dt);
 
+            const auto atmosphere = environment.sampleAtmosphere(camera.position(), runtimeSeconds);
             const auto [width, height] = platform.drawableSize();
             const float aspect = height > 0 ? static_cast<float>(width) / static_cast<float>(height) : 16.0F / 9.0F;
             const double altitude = camera.altitude();
-            const float spaceBlend = static_cast<float>(std::clamp(altitude / planet.atmosphereHeight, 0.0, 1.0));
-            const glm::vec3 atmosphereSky{0.055F, 0.15F, 0.29F};
+            const double densityReference = std::max(1.0e-6, seaLevelAtmosphere.densityKgPerM3);
+            const float atmosphereVisibility = static_cast<float>(std::clamp(atmosphere.densityKgPerM3 / densityReference, 0.0, 1.0));
+            const float cloudDimming = static_cast<float>(1.0 - 0.28 * std::clamp(environment.weather.cloudCover, 0.0, 1.0));
+            const glm::vec3 atmosphereSky{0.055F * cloudDimming, 0.15F * cloudDimming, 0.29F * cloudDimming};
             const glm::vec3 spaceSky{0.0015F, 0.0025F, 0.008F};
-            const glm::vec3 sky = glm::mix(atmosphereSky, spaceSky, spaceBlend);
+            const glm::vec3 sky = glm::mix(spaceSky, atmosphereSky, atmosphereVisibility);
 
             renderer.drawFrame(sky, camera.viewProjection(aspect), camera.position());
 
@@ -85,10 +113,13 @@ int main() {
                 const double fps = diagnosticsTime > 0.0
                     ? static_cast<double>(diagnosticsFrames) / diagnosticsTime
                     : 0.0;
+                const double windSpeed = glm::length(atmosphere.windVelocity);
                 std::ostringstream title;
                 title << "Voxel Frontier | FPS " << std::fixed << std::setprecision(0) << fps
-                      << " | Tris " << renderer.triangleCount()
-                      << " | Alt " << std::setprecision(1) << altitude << " m";
+                      << " | Alt " << std::setprecision(1) << altitude << " m"
+                      << " | T " << atmosphere.temperatureK - 273.15 << " C"
+                      << " | P " << atmosphere.pressurePa / 1000.0 << " kPa"
+                      << " | Wind " << windSpeed << " m/s";
                 platform.setWindowTitle(title.str());
 
                 diagnosticsTime = 0.0;
