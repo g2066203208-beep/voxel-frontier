@@ -2,6 +2,9 @@
   "cmake.sourceDirectory": "${workspaceFolder}/native",
   "cmake.useCMakePresets": "always",
   "cmake.configureOnOpen": false,
+  "git.autofetch": true,
+  "git.autofetchPeriod": 180,
+  "git.showProgress": true,
   "files.exclude": {
     "**/build": true,
     "**/out": true
