@@ -36,6 +36,7 @@ add_library(vf_engine STATIC
     src/physics/ElectromagneticRadiation.cpp
     src/physics/MaterialPhysics.cpp
     src/physics/StructuralDamage.cpp
+    src/physics/StructuralAssembly.cpp
     src/physics/GasVolume.cpp
     src/physics/RopeXpbd.cpp
     src/render/PhysicsDebugMesh.cpp
@@ -219,6 +220,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_structural_damage_tests tests/StructuralDamageTests.cpp)
     target_link_libraries(vf_structural_damage_tests PRIVATE vf_engine)
     add_test(NAME vf_structural_damage_tests COMMAND vf_structural_damage_tests)
+
+    add_executable(vf_structural_assembly_tests tests/StructuralAssemblyTests.cpp)
+    target_link_libraries(vf_structural_assembly_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_structural_assembly_tests COMMAND vf_structural_assembly_tests)
 
     add_executable(vf_gas_volume_tests tests/GasVolumeTests.cpp)
     target_link_libraries(vf_gas_volume_tests PRIVATE vf_engine glm::glm)
