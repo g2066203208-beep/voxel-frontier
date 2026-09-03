@@ -37,6 +37,11 @@ vf::PhysicsWorld makeWorld(vf::CelestialSystem& celestial, std::uint32_t planetI
     return vf::PhysicsWorld{environment};
 }
 
+[[nodiscard]] glm::dvec3 surfaceVelocity(const vf::CelestialBody& body, const glm::dvec3& point) {
+    const glm::dvec3 omega = glm::normalize(body.spinAxis) * body.spinRateRadPerSecond;
+    return body.linearVelocity + glm::cross(omega, point - body.position);
+}
+
 void testStaticFixtureFollowsRealPlanetRotation() {
     vf::CelestialSystem celestial;
     vf::CelestialBody planet{};
@@ -56,11 +61,13 @@ void testStaticFixtureFollowsRealPlanetRotation() {
     vf::CelestialSurfaceFrames frames;
     frames.beforePhysics(world, celestial);
     require(frames.isAttached(fixtureId), "surface static fixture must bind to its planet-local frame");
+    frames.afterPhysics(world, celestial, 1.0 / 60.0);
     const glm::dvec3 before = world.body(fixtureId)->position;
 
     celestial.step(0.5);
     frames.beforePhysics(world, celestial);
     const glm::dvec3 after = world.body(fixtureId)->position;
+    frames.afterPhysics(world, celestial, 0.5);
 
     require(glm::length(after - before) > 1.0,
         "planet-local fixture must move through inertial world when the actual planet rotates");
@@ -68,44 +75,7 @@ void testStaticFixtureFollowsRealPlanetRotation() {
         "planet-local fixture must keep the same radius while rotating with the planet");
 }
 
-void testRestingDynamicBodySleepsRelativeToMovingSurface() {
-    vf::CelestialSystem celestial;
-    vf::CelestialBody planet{};
-    planet.radiusMeters = 100.0;
-    planet.massKg = 9.81 * 100.0 * 100.0 / vf::CelestialSystem::kGravitationalConstant;
-    planet.spinAxis = {0.0, 1.0, 0.0};
-    planet.spinRateRadPerSecond = 0.05;
-    const auto planetId = celestial.addBody(planet);
-    auto world = makeWorld(celestial, planetId);
-
-    vf::RigidBodyDesc payload{};
-    payload.position = {101.0, 0.0, 0.0};
-    payload.mass = 1.0;
-    payload.collisionShape = vf::CollisionShape::sphere(1.0);
-    payload.linearVelocity = {0.0, 0.0, -5.05};
-    payload.angularVelocity = {0.0, 0.05, 0.0};
-    payload.linearDamping = 0.0;
-    payload.angularDamping = 0.0;
-    payload.aerodynamics.referenceArea = 0.0;
-    const auto payloadId = world.createRigidBody(payload);
-
-    vf::CelestialSurfaceFrames frames;
-    for (int i = 0; i < 6; ++i) frames.afterPhysics(world, celestial, 0.10);
-    auto* body = world.body(payloadId);
-    require(body != nullptr, "dynamic surface payload must exist");
-    require(frames.isAttached(payloadId),
-        "a body stationary relative to a 5 m/s rotating surface must be allowed to sleep");
-    require(body->sleeping, "planet-local resting body must enter sleeping state");
-
-    const glm::dvec3 before = body->position;
-    celestial.step(0.25);
-    frames.beforePhysics(world, celestial);
-    const glm::dvec3 after = body->position;
-    require(glm::length(after - before) > 0.5,
-        "sleeping dynamic body must follow real celestial rotation instead of being left behind");
-}
-
-void testSpawnedSurfaceBodyInheritsPlanetFrameVelocity() {
+void testLocalSolveRemovesLargeSurfaceVelocityThenRestoresIt() {
     vf::CelestialSystem celestial;
 
     vf::CelestialBody star{};
@@ -131,7 +101,7 @@ void testSpawnedSurfaceBodyInheritsPlanetFrameVelocity() {
     payload.position = {1101.0, 0.0, 0.0};
     payload.mass = 1.0;
     payload.collisionShape = vf::CollisionShape::sphere(1.0);
-    payload.linearVelocity = {};
+    payload.linearVelocity = {}; // authored as at-rest-on-the-ground
     payload.angularVelocity = {};
     payload.linearDamping = 0.0;
     payload.angularDamping = 0.0;
@@ -140,18 +110,24 @@ void testSpawnedSurfaceBodyInheritsPlanetFrameVelocity() {
 
     vf::CelestialSurfaceFrames frames;
     frames.beforePhysics(world, celestial);
+    auto* body = world.body(payloadId);
+    require(body != nullptr, "surface payload must exist");
+    require(glm::length(body->linearVelocity) < 1.0e-10,
+        "inside the fixed-step local physics solve a resting prop must not carry orbital/surface speed");
+    require(world.environment().celestialSystem != &celestial,
+        "fixed-step solve must use a frozen local celestial proxy rather than the moving global planet");
 
+    frames.afterPhysics(world, celestial, 1.0 / 60.0);
     const auto* storedPlanet = celestial.body(planetId);
-    const auto* body = world.body(payloadId);
-    require(storedPlanet != nullptr && body != nullptr, "spawn-frame test bodies must exist");
-    const glm::dvec3 angularVelocity = storedPlanet->spinAxis * storedPlanet->spinRateRadPerSecond;
-    const glm::dvec3 expected = storedPlanet->linearVelocity
-        + glm::cross(angularVelocity, body->position - storedPlanet->position);
+    require(storedPlanet != nullptr, "surface planet must exist");
+    const glm::dvec3 expected = surfaceVelocity(*storedPlanet, body->position);
     require(glm::length(body->linearVelocity - expected) < 1.0e-9,
-        "zero-world-speed surface spawn must inherit orbital plus rotational frame velocity immediately");
+        "after the solve the prop must recover exact inertial orbital plus rotational velocity");
+    require(world.environment().celestialSystem == &celestial,
+        "world-level systems must regain the authoritative inertial celestial system after physics");
 }
 
-void testGameplayGravityIncludesCommonOrbitalFrameAcceleration() {
+void testRelativeGravityRemovesOnlyCommonOrbitalAcceleration() {
     vf::CelestialSystem celestial;
 
     vf::CelestialBody star{};
@@ -170,18 +146,52 @@ void testGameplayGravityIncludesCommonOrbitalFrameAcceleration() {
     const auto planetId = celestial.addBody(planet);
 
     const glm::dvec3 surfacePoint{1100.0, 0.0, 0.0};
-    const glm::dvec3 gravity = celestial.gameplayGravityAccelerationAt(surfacePoint);
-    const double orbitalFrameAcceleration = vf::CelestialSystem::kGravitationalConstant
-        * star.massKg / (1000.0 * 1000.0);
+    const glm::dvec3 relative = celestial.gravityAccelerationRelativeTo(planetId, surfacePoint);
 
-    requireNear(gravity.x, -(9.81 + orbitalFrameAcceleration), 1.0e-8,
-        "surface gameplay gravity must include the planet's common parent-orbit acceleration");
-    requireNear(gravity.y, 0.0, 1.0e-10,
-        "collinear orbital frame acceleration must not invent transverse gravity");
-    requireNear(gravity.z, 0.0, 1.0e-10,
-        "collinear orbital frame acceleration must not invent transverse gravity");
+    const double starAtSurface = vf::CelestialSystem::kGravitationalConstant * star.massKg / (1100.0 * 1100.0);
+    const double starAtPlanet = vf::CelestialSystem::kGravitationalConstant * star.massKg / (1000.0 * 1000.0);
+    const double expectedX = -9.81 + (starAtSurface - starAtPlanet);
+    requireNear(relative.x, expectedX, 1.0e-8,
+        "local planet frame must subtract common parent acceleration but preserve real tidal difference");
+    requireNear(relative.y, 0.0, 1.0e-10, "relative frame gravity must not invent transverse acceleration");
+    requireNear(relative.z, 0.0, 1.0e-10, "relative frame gravity must not invent transverse acceleration");
+}
 
-    (void)planetId;
+void testRestingDynamicBodyCanSleepInLocalSolve() {
+    vf::CelestialSystem celestial;
+    vf::CelestialBody planet{};
+    planet.radiusMeters = 100.0;
+    planet.massKg = 9.81 * 100.0 * 100.0 / vf::CelestialSystem::kGravitationalConstant;
+    planet.spinAxis = {0.0, 1.0, 0.0};
+    planet.spinRateRadPerSecond = 0.05;
+    const auto planetId = celestial.addBody(planet);
+    auto world = makeWorld(celestial, planetId);
+
+    vf::RigidBodyDesc payload{};
+    payload.position = {101.0, 0.0, 0.0};
+    payload.mass = 1.0;
+    payload.collisionShape = vf::CollisionShape::sphere(1.0);
+    payload.material.restitution = 0.0;
+    payload.material.friction = 1.0;
+    payload.linearDamping = 0.10;
+    payload.angularDamping = 0.10;
+    payload.aerodynamics.referenceArea = 0.0;
+    const auto payloadId = world.createRigidBody(payload);
+
+    vf::CelestialSurfaceFrames frames;
+    constexpr double dt = 1.0 / 60.0;
+    for (int i = 0; i < 120; ++i) {
+        celestial.step(dt);
+        frames.beforePhysics(world, celestial);
+        world.advance(dt);
+        frames.afterPhysics(world, celestial, dt);
+    }
+
+    const auto* body = world.body(payloadId);
+    require(body != nullptr, "dynamic surface payload must exist");
+    require(frames.isAttached(payloadId),
+        "a body genuinely stationary relative to a rotating surface must enter planet-local sleep");
+    require(body->sleeping, "planet-local resting body must enter sleeping state");
 }
 
 void testOrbitingSurfaceBodySettlesWithoutLocalFrameJitter() {
@@ -253,9 +263,9 @@ void testOrbitingSurfaceBodySettlesWithoutLocalFrameJitter() {
 
 int main() {
     testStaticFixtureFollowsRealPlanetRotation();
-    testRestingDynamicBodySleepsRelativeToMovingSurface();
-    testSpawnedSurfaceBodyInheritsPlanetFrameVelocity();
-    testGameplayGravityIncludesCommonOrbitalFrameAcceleration();
+    testLocalSolveRemovesLargeSurfaceVelocityThenRestoresIt();
+    testRelativeGravityRemovesOnlyCommonOrbitalAcceleration();
+    testRestingDynamicBodyCanSleepInLocalSolve();
     testOrbitingSurfaceBodySettlesWithoutLocalFrameJitter();
     std::cout << "vf_celestial_surface_frames_tests: PASS\n";
     return 0;
