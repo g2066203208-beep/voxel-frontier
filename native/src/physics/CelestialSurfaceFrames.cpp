@@ -15,6 +15,7 @@ namespace vf {
 namespace {
 
 constexpr double kEpsilon = 1.0e-9;
+constexpr double kSpawnFrameCaptureGapMeters = 64.0;
 
 [[nodiscard]] glm::dvec3 safeNormalize(
     const glm::dvec3& value,
@@ -104,8 +105,9 @@ void CelestialSurfaceFrames::lockToBody(
     if (attachment.dynamicBody) {
         rigidBody.sleeping = true;
         rigidBody.sleepTimer = 1.0;
-        // While locked, zero velocities are local-frame velocities. On release we add the
-        // celestial surface velocity back so momentum is continuous in the inertial world.
+        // A locked sleeper is stored in planet-local coordinates. World velocity is reconstructed
+        // when it is released; keeping zero here prevents the generic world-space sleep detector
+        // from immediately waking a perfectly still local object just because the planet orbits.
         rigidBody.linearVelocity = {};
         rigidBody.angularVelocity = {};
     }
@@ -119,13 +121,11 @@ void CelestialSurfaceFrames::updateLockedTransform(
     rigidBody.orientation = glm::normalize(celestialBody.orientation * attachment.localOrientation);
 
     if (rigidBody.motionType == MotionType::Dynamic) {
-        // Dynamic sleepers stay numerically still in the local frame. If an impact wakes them,
-        // afterPhysics() converts them back to the inertial velocity of the rotating surface.
         rigidBody.linearVelocity = {};
         rigidBody.angularVelocity = {};
     } else {
-        // Static/kinematic fixtures are moved as a kinematic celestial floor so active bodies see
-        // the correct point velocity at contact rather than colliding with a teleporting object.
+        // Static fixtures are moved with a valid point velocity so dynamic contacts see a moving
+        // platform rather than a teleporting wall/floor.
         rigidBody.linearVelocity = surfaceVelocityAt(celestialBody, rigidBody.position);
         rigidBody.angularVelocity = angularVelocityOf(celestialBody);
     }
@@ -139,17 +139,36 @@ void CelestialSurfaceFrames::beforePhysics(
     for (auto& rigidBody : world.bodies()) {
         auto found = attachments_.find(rigidBody.id);
 
-        // Surface fixtures are authored in planet-local space automatically. This fixes the old
-        // bug where tree bases, spring anchors and other static playground objects were left at a
-        // world coordinate while the planet rotated underneath them.
-        if (found == attachments_.end() && rigidBody.motionType != MotionType::Dynamic) {
+        if (found == attachments_.end()) {
             double gap = 0.0;
-            if (const CelestialBody* surface = nearestSurfaceBody(rigidBody, world, celestial, &gap)) {
-                if (std::abs(gap) <= 24.0) {
+            const CelestialBody* surface = nearestSurfaceBody(rigidBody, world, celestial, &gap);
+            if (surface != nullptr) {
+                if (rigidBody.motionType != MotionType::Dynamic && std::abs(gap) <= 24.0) {
+                    // Static fixtures authored on a planet are permanently planet-local.
                     Attachment attachment{};
                     lockToBody(rigidBody, *surface, attachment);
                     attachments_.emplace(rigidBody.id, attachment);
                     found = attachments_.find(rigidBody.id);
+                } else if (rigidBody.motionType == MotionType::Dynamic
+                    && std::abs(gap) <= kSpawnFrameCaptureGapMeters) {
+                    // Most gameplay props are spawned "at rest on/near the ground". In an
+                    // inertial solar-system frame, zero world velocity is *not* at rest: Aster is
+                    // already orbiting Helion and spinning. Bootstrap zero-velocity props with the
+                    // local surface inertial velocity once so the contact solver only handles their
+                    // small relative motion instead of a 50-100 m/s frame mismatch.
+                    Attachment attachment{};
+                    attachment.celestialBodyId = surface->id;
+                    attachment.dynamicBody = true;
+                    attachment.locked = false;
+                    attachments_.emplace(rigidBody.id, attachment);
+                    found = attachments_.find(rigidBody.id);
+
+                    if (glm::length(rigidBody.linearVelocity) < 0.25) {
+                        rigidBody.linearVelocity = surfaceVelocityAt(*surface, rigidBody.position);
+                    }
+                    if (glm::length(rigidBody.angularVelocity) < 0.05) {
+                        rigidBody.angularVelocity = angularVelocityOf(*surface);
+                    }
                 }
             }
         }
@@ -162,8 +181,8 @@ void CelestialSurfaceFrames::beforePhysics(
             continue;
         }
 
-        // External forces/impacts wake a dynamic sleeper through RigidBody::wake(). Release it
-        // immediately and restore the inertial velocity that the rotating/orbiting ground had.
+        // A real force/impact wakes a dynamic local sleeper. Restore the inertial motion of the
+        // moving surface exactly once and then let normal rigid-body physics take over.
         if (attachment.dynamicBody && !rigidBody.sleeping) {
             rigidBody.linearVelocity += surfaceVelocityAt(*frame, rigidBody.position);
             rigidBody.angularVelocity += angularVelocityOf(*frame);
@@ -210,14 +229,16 @@ void CelestialSurfaceFrames::afterPhysics(
             continue;
         }
 
+        attachment.celestialBodyId = frame->id;
+        attachment.dynamicBody = true;
+
         const glm::dvec3 expectedLinear = surfaceVelocityAt(*frame, rigidBody.position);
         const glm::dvec3 expectedAngular = angularVelocityOf(*frame);
         const double relativeLinearSpeed = glm::length(rigidBody.linearVelocity - expectedLinear);
         const double relativeAngularSpeed = glm::length(rigidBody.angularVelocity - expectedAngular);
 
-        // Rest is defined in the rotating planet frame, not in world coordinates. On Aster the
-        // surface itself moves around 5 m/s, so the previous world-speed sleep test could never
-        // succeed and objects visibly jittered forever.
+        // Sleeping is judged in the local rotating frame. Once genuinely at rest, store an exact
+        // local transform so there is no residual solver chatter at all.
         if (relativeLinearSpeed < 0.12 && relativeAngularSpeed < 0.20) {
             attachment.restTimer += dt;
             if (attachment.restTimer >= 0.45) lockToBody(rigidBody, *frame, attachment);
