@@ -6,6 +6,7 @@ Voxel Frontier is a native C++23 exploration game with finite spherical planets 
 
 Non-negotiable world rules:
 - Every planet has finite physical size and a real spherical surface.
+- Natural terrain is a continuous smooth surface, **not visible block voxels**.
 - The player can walk continuously around a planet with no world-edge seam.
 - Local gravity points toward the active planet's center.
 - The player can climb to high altitude, leave the atmosphere, enter space, and later land again without a loading-screen world swap.
@@ -18,7 +19,7 @@ Non-negotiable world rules:
 
 Use hierarchical reference frames instead of one giant float coordinate system:
 
-Universe -> Star System -> Planet Local Frame -> Surface Patch -> Voxel/Terrain Cell
+Universe -> Star System -> Planet Local Frame -> Surface Patch -> Local Terrain Field
 
 - Universe/system positions use 64-bit integer or double-precision coordinates.
 - Rendering uses camera-relative/local-origin coordinates to keep GPU float precision stable.
@@ -27,33 +28,38 @@ Universe -> Star System -> Planet Local Frame -> Surface Patch -> Voxel/Terrain 
 
 ## Planet representation
 
-Production direction: cube-sphere + six face quadtrees / clipmap-style LOD.
+Production direction: **surface triangle geometry + procedural planet function + sparse local SDF/density edits**.
 
 Each planet:
-- has six logical cube faces projected onto a sphere;
+- has six logical cube faces projected onto a sphere/ellipsoid, or an equivalent clipmap-friendly parameterization;
 - maintains hierarchical surface patches;
 - refines patches near the camera and collapses distant patches;
-- keeps seam-safe adjacency across cube-face boundaries;
-- supports high-detail deformable/voxel terrain only around the player;
-- supports low-detail radial/height or procedural representations at medium distance;
+- keeps seam-safe adjacency across patch/cube-face boundaries;
+- renders explicit vertices + indexed triangles/meshlets rather than visible cubes;
+- uses deterministic procedural displacement for untouched terrain;
+- allocates sparse local SDF/density data only where true 3D topology is required: caves, overhangs, excavation, filling, player deformation;
+- extracts smooth triangle surfaces from that local field;
 - collapses to very cheap planetary proxy/impostor geometry at orbital/interplanetary distance.
 
-This avoids loading or meshing an entire planet while preserving a real spherical surface.
+This avoids loading or meshing an entire planet while preserving a real spherical and deformable surface.
+
+See `docs/TERRAIN_ARCHITECTURE.md` for the terrain decision.
 
 ## Multi-scale rendering
 
 Target representation ladder:
 
 1. Foot-scale / local terrain
-   - deformable voxel/SDF or dense terrain patches
+   - smooth explicit triangle surface
+   - sparse local SDF/density only where needed
    - collision, caves, resources, player edits
 2. Surface / regional distance
-   - simplified mesh patches generated from the same deterministic planet function
-   - aggressive geometric LOD
+   - regular procedural surface patches
+   - screen-space-error-driven LOD / clipmap-style refinement
 3. Orbital distance
    - low-poly sphere/cube-sphere proxy + procedural material/normal data
 4. Interplanetary distance
-   - tiny proxy / billboard / analytical sphere with atmosphere halo
+   - tiny proxy / analytical sphere with atmosphere halo
 5. Stellar / deep-space distance
    - point/cluster/catalog representation
 
@@ -62,6 +68,7 @@ All levels describe the same persistent planet identity and parameters. A distan
 ## Visibility/performance strategy
 
 - CPU coarse culling by hierarchical spatial cells / star-system bounds.
+- Planet horizon culling + frustum culling before expensive terrain work.
 - GPU frustum and optional Hi-Z occlusion culling for local scene content.
 - Multi-draw indirect / GPU-generated draw lists for large patch counts.
 - Mesh/task shader path where supported and measured beneficial; conventional indexed fallback remains available.
@@ -86,9 +93,7 @@ There is no separate 'planet level' and 'space level'.
 - C++23 native runtime
 - SDL3 thin desktop platform layer
 - Vulkan native renderer bootstrap
-- deterministic seeded chunk/world foundation
-- correct negative coordinate conversion
-- dirty owner/neighbor invalidation
+- deterministic seeded world foundation
 - Linux/Windows native CI and executable production
 - VS Code/CMake one-click development setup
 
@@ -96,8 +101,9 @@ There is no separate 'planet level' and 'space level'.
 - hierarchical universe/system/planet/local coordinate frames
 - camera-relative rendering origin
 - finite procedural planet definition (radius, seed, atmosphere, gravity)
-- cube-sphere six-face patch topology
-- quadtree patch LOD and seam-safe neighbors
+- cube-sphere / clipmap-friendly surface topology
+- smooth indexed surface mesh
+- quadtree/clipmap patch LOD and seam-safe neighbors
 - visible spherical terrain from ground to orbit
 - first-person movement with radial up/gravity
 - walk continuously around the globe
@@ -106,7 +112,15 @@ There is no separate 'planet level' and 'space level'.
 - at least one second real celestial body visible as a cheap proxy
 - CPU/GPU profiler overlay and frame budgets
 
-### Engine milestone 2 — real interplanetary travel
+### Engine milestone 2 — sculptable smooth terrain
+- sparse local SDF/density bricks
+- procedural base + persistent CSG/deformation deltas
+- smooth local surface extraction (Dual Contouring / Marching Cubes family)
+- crack-free multiresolution transitions
+- caves, overhangs, excavation and terrain addition
+- local collision remeshing only where terrain changes
+
+### Engine milestone 3 — real interplanetary travel
 - multiple finite planets in one star system
 - physical/analytical orbits and rotation
 - deep-space camera/reference-frame transitions
@@ -116,7 +130,7 @@ There is no separate 'planet level' and 'space level'.
 - deterministic celestial catalog
 - save/load of planet edits independent of procedural base terrain
 
-### Engine milestone 3 — effectively unbounded universe
+### Engine milestone 4 — effectively unbounded universe
 - deterministic star-sector generation
 - hierarchical sector streaming
 - unloaded systems represented only by compact metadata/seeds
@@ -144,6 +158,7 @@ After spherical-planet traversal is technically stable:
 - planet/patch/LOD visualizer
 - coordinate-frame visualizer
 - procedural seed inspector
+- SDF/deformation inspector
 - content compiler
 - shader compiler/cache
 - asset database
