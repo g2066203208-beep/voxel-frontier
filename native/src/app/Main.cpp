@@ -106,7 +106,6 @@ int main() {
             const auto atmosphere = physics.environment().sampleAtmosphere(camera.position(), physics.simulationTime());
             const auto [width, height] = platform.drawableSize();
             const float aspect = height > 0 ? static_cast<float>(width) / static_cast<float>(height) : 16.0F / 9.0F;
-            const double altitude = camera.altitude();
             const double densityReference = std::max(1.0e-6, seaLevelAtmosphere.densityKgPerM3);
             const float atmosphereVisibility = static_cast<float>(std::clamp(atmosphere.densityKgPerM3 / densityReference, 0.0, 1.0));
             const float cloudDimming = static_cast<float>(1.0 - 0.28 * std::clamp(physics.environment().weather.cloudCover, 0.0, 1.0));
