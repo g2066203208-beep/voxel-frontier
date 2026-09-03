@@ -22,6 +22,9 @@ public:
         const glm::dvec3& planetOriginWorld = glm::dvec3{0.0},
         const glm::dquat& planetOrientationWorld = glm::dquat{1.0, 0.0, 0.0, 0.0});
 
+    void syncPlanetFrame(
+        const glm::dvec3& planetOriginWorld,
+        const glm::dquat& planetOrientationWorld);
     void update(double deltaSeconds);
     [[nodiscard]] PlanetMesh buildDebugMesh() const;
 
