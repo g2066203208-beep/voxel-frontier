@@ -35,6 +35,7 @@ add_library(vf_engine STATIC
     src/physics/SpectralOptics.cpp
     src/physics/ElectromagneticRadiation.cpp
     src/physics/MaterialPhysics.cpp
+    src/physics/StructuralDamage.cpp
     src/physics/GasVolume.cpp
     src/physics/RopeXpbd.cpp
     src/render/PhysicsDebugMesh.cpp
@@ -106,9 +107,6 @@ if(VF_BUILD_RUNTIME)
     set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
-    # Slang renames SPIR-V entry points to "main" by default. The Vulkan runtime
-    # explicitly requests vertexMain/fragmentMain in VkPipelineShaderStageCreateInfo,
-    # so preserve those source names in the generated OpEntryPoint instructions.
     add_custom_command(
         OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
@@ -217,6 +215,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_material_physics_tests tests/MaterialPhysicsTests.cpp)
     target_link_libraries(vf_material_physics_tests PRIVATE vf_engine)
     add_test(NAME vf_material_physics_tests COMMAND vf_material_physics_tests)
+
+    add_executable(vf_structural_damage_tests tests/StructuralDamageTests.cpp)
+    target_link_libraries(vf_structural_damage_tests PRIVATE vf_engine)
+    add_test(NAME vf_structural_damage_tests COMMAND vf_structural_damage_tests)
 
     add_executable(vf_gas_volume_tests tests/GasVolumeTests.cpp)
     target_link_libraries(vf_gas_volume_tests PRIVATE vf_engine glm::glm)
