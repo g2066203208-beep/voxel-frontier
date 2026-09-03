@@ -22,6 +22,7 @@ FetchContent_MakeAvailable(glm)
 add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
     src/world/CelestialSystem.cpp
+    src/world/CelestialPhysicsFrame.cpp
     src/world/SparseUniverseCatalog.cpp
     src/player/PlanetCamera.cpp
     src/physics/PhysicsWorld.cpp
@@ -202,6 +203,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_celestial_system_tests tests/CelestialSystemTests.cpp)
     target_link_libraries(vf_celestial_system_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_celestial_system_tests COMMAND vf_celestial_system_tests)
+
+    add_executable(vf_celestial_physics_frame_tests tests/CelestialPhysicsFrameTests.cpp)
+    target_link_libraries(vf_celestial_physics_frame_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_celestial_physics_frame_tests COMMAND vf_celestial_physics_frame_tests)
 
     add_executable(vf_celestial_surface_frames_tests tests/CelestialSurfaceFramesTests.cpp)
     target_link_libraries(vf_celestial_surface_frames_tests PRIVATE vf_engine glm::glm)
