@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.7.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.7.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -100,13 +100,18 @@ if(VF_BUILD_RUNTIME)
     set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
+    # Slang renames SPIR-V entry points to "main" by default. The Vulkan runtime
+    # explicitly requests vertexMain/fragmentMain in VkPipelineShaderStageCreateInfo,
+    # so preserve those source names in the generated OpEntryPoint instructions.
     add_custom_command(
         OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
-                -target spirv -entry vertexMain -stage vertex -matrix-layout-column-major -O2 -o "${VF_VERTEX_SPV}"
+                -target spirv -entry vertexMain -stage vertex -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_VERTEX_SPV}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
-                -target spirv -entry fragmentMain -stage fragment -matrix-layout-column-major -O2 -o "${VF_FRAGMENT_SPV}"
+                -target spirv -entry fragmentMain -stage fragment -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_FRAGMENT_SPV}"
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
         VERBATIM
     )
@@ -182,4 +187,14 @@ if(VF_BUILD_TESTS)
     add_executable(vf_physics_mesh_tests tests/PhysicsMeshTests.cpp)
     target_link_libraries(vf_physics_mesh_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_physics_mesh_tests COMMAND vf_physics_mesh_tests)
+
+    if(VF_BUILD_RUNTIME)
+        add_executable(vf_shader_contract_tests
+            tests/ShaderContractTests.cpp
+            "${VF_SHADER_HEADER}"
+        )
+        add_dependencies(vf_shader_contract_tests vf_shaders)
+        target_include_directories(vf_shader_contract_tests PRIVATE "${VF_GENERATED_DIR}")
+        add_test(NAME vf_shader_contract_tests COMMAND vf_shader_contract_tests)
+    endif()
 endif()
