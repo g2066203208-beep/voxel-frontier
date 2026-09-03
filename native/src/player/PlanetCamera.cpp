@@ -47,7 +47,9 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     dt = std::min(dt, 0.05);
 
     constexpr double mouseSensitivity = 0.0022;
-    heading_ -= input.mouseDx * mouseSensitivity;
+    // SDL relative X motion is positive when the mouse moves right. Positive heading
+    // rotates tangent-forward toward the camera's local right, so keep the signs aligned.
+    heading_ += input.mouseDx * mouseSensitivity;
     pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.45, 1.45);
 
     const glm::dvec3 localUp = up();
