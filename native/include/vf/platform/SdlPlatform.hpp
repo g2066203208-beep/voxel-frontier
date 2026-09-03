@@ -42,10 +42,12 @@ public:
 private:
     void setMouseCaptured(bool captured);
     void refreshKeyboardState();
+    void updateSpaceDoubleTap(bool spaceDown);
 
     SDL_Window* window_{};
     bool resized_{true};
     PlatformInput input_{};
+    bool spaceWasDown_{};
     std::uint64_t lastSpacePressNanoseconds_{};
 };
 
