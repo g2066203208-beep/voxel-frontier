@@ -1,0 +1,72 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "VF: Configure Debug",
+      "type": "shell",
+      "command": "cmake --preset windows-debug",
+      "options": { "cwd": "${workspaceFolder}/native" },
+      "problemMatcher": []
+    },
+    {
+      "label": "VF: Build Debug",
+      "type": "shell",
+      "command": "cmake --build --preset windows-debug --parallel",
+      "options": { "cwd": "${workspaceFolder}/native" },
+      "dependsOn": ["VF: Configure Debug"],
+      "dependsOrder": "sequence",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "VF: Test Debug",
+      "type": "shell",
+      "command": "ctest --preset windows-debug",
+      "options": { "cwd": "${workspaceFolder}/native" },
+      "dependsOn": ["VF: Build Debug"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "VF: Run Debug",
+      "type": "shell",
+      "command": "${workspaceFolder}\\build\\vscode-windows\\Debug\\voxel_frontier.exe",
+      "dependsOn": ["VF: Build Debug"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "VF: Configure Release",
+      "type": "shell",
+      "command": "cmake --preset windows-release",
+      "options": { "cwd": "${workspaceFolder}/native" },
+      "problemMatcher": []
+    },
+    {
+      "label": "VF: Build Release",
+      "type": "shell",
+      "command": "cmake --build --preset windows-release --parallel",
+      "options": { "cwd": "${workspaceFolder}/native" },
+      "dependsOn": ["VF: Configure Release"],
+      "dependsOrder": "sequence",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "VF: Test Release",
+      "type": "shell",
+      "command": "ctest --preset windows-release",
+      "options": { "cwd": "${workspaceFolder}/native" },
+      "dependsOn": ["VF: Build Release"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "VF: Run Release",
+      "type": "shell",
+      "command": "${workspaceFolder}\\build\\vscode-windows\\Release\\voxel_frontier.exe",
+      "dependsOn": ["VF: Build Release"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}
