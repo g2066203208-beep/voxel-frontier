@@ -37,11 +37,12 @@ struct Aabb {
     [[nodiscard]] bool overlaps(const Aabb& other) const noexcept;
 };
 
+// Pure narrow-phase geometry. Solver state (warm-start impulses, local anchors,
+// lifetime) lives in PhysicsWorld's contact cache rather than leaking into shape code.
 struct ContactPoint {
     glm::dvec3 position{};
     double penetration{};
-    double accumulatedNormalImpulse{};
-    glm::dvec3 accumulatedTangentImpulse{};
+    std::uint32_t featureId{};
 };
 
 struct ContactManifold {
@@ -53,12 +54,13 @@ struct ContactManifold {
 };
 
 [[nodiscard]] Aabb computeWorldAabb(const CollisionShape& shape, const ShapePose& pose) noexcept;
+[[nodiscard]] double collisionBoundingRadius(const CollisionShape& shape) noexcept;
 [[nodiscard]] glm::dvec3 supportPoint(const CollisionShape& shape, const ShapePose& pose, const glm::dvec3& direction) noexcept;
 
-// Specialized primitive narrowphase. The architecture intentionally keeps this API
-// independent from PhysicsWorld so it can be validated in isolation and later used
-// behind the broadphase/narrowphase split. Arbitrary convex pairs will be added via
-// GJK/EPA on top of the same support-map interface.
+// Primitive narrow phase. Sphere/box/capsule pairs use specialized tests where that
+// is clearer and cheaper. Box/box uses full OBB SAT plus reference/incident face
+// clipping to generate an actual contact patch (up to four points). General convex
+// support-mapped pairs remain the next GJK/EPA layer.
 [[nodiscard]] bool collideShapes(
     const CollisionShape& a,
     const ShapePose& poseA,
