@@ -36,9 +36,8 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     first.climate.meanTemperatureK = 288.15;
     const auto firstId = system.addBody(first);
 
-    // Verify the configured body's own Newtonian surface gravity before adding another
-    // source. Once multiple bodies exist, the physically correct result is their vector sum.
-    const auto isolatedSurface = system.sampleEnvironment({240.0, 0.0, 0.0});
+    const glm::dvec3 primarySurfacePoint{240.0, 0.0, 0.0};
+    const auto isolatedSurface = system.sampleEnvironment(primarySurfacePoint);
     require(isolatedSurface.bodyId == firstId, "primary planet must own its local environment");
     requireNear(glm::length(isolatedSurface.gravityAcceleration), 9.81, 0.02,
         "isolated primary surface gravity must match GM/R^2");
@@ -52,10 +51,20 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     second.climate.meanTemperatureK = 220.0;
     const auto secondId = system.addBody(second);
 
-    const auto firstSurface = system.sampleEnvironment({240.0, 0.0, 0.0});
+    const auto firstSurface = system.sampleEnvironment(primarySurfacePoint);
     require(firstSurface.bodyId == firstId, "primary planet must retain ownership after another gravity source is added");
-    require(glm::length(firstSurface.gravityAcceleration) > glm::length(isolatedSurface.gravityAcceleration),
-        "multi-body gravity must include the second body's physical contribution");
+
+    const double primaryAcceleration = vf::CelestialSystem::kGravitationalConstant
+        * first.massKg / (first.radiusMeters * first.radiusMeters);
+    const double secondDistance = second.position.x - primarySurfacePoint.x;
+    const double secondaryAcceleration = vf::CelestialSystem::kGravitationalConstant
+        * second.massKg / (secondDistance * secondDistance);
+    const double expectedX = -primaryAcceleration + secondaryAcceleration;
+    requireNear(firstSurface.gravityAcceleration.x, expectedX, 1.0e-6,
+        "multi-body gravity must equal the vector superposition of both bodies");
+    require(std::abs(firstSurface.gravityAcceleration.y) < 1.0e-10
+        && std::abs(firstSurface.gravityAcceleration.z) < 1.0e-10,
+        "collinear two-body gravity must remain collinear");
 
     const auto secondSurface = system.sampleEnvironment({1440.0, 0.0, 0.0});
     require(secondSurface.bodyId == secondId, "second planet must own its local environment");
