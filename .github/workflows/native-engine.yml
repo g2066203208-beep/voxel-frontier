@@ -1,0 +1,39 @@
+name: Native Engine CI
+
+on:
+  push:
+    branches:
+      - engine/cpp-wasm-webgpu
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'engine/**'
+      - '.github/workflows/native-engine.yml'
+
+jobs:
+  wasm-release:
+    runs-on: ubuntu-latest
+    container:
+      image: emscripten/emsdk:6.0.9
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Toolchain versions
+        run: |
+          em++ --version
+          cmake --version
+
+      - name: Configure WebAssembly build
+        run: emcmake cmake -S engine -B build/wasm -DCMAKE_BUILD_TYPE=Release
+
+      - name: Compile C++23 engine to WebAssembly
+        run: cmake --build build/wasm --parallel
+
+      - name: Verify browser artifacts
+        run: |
+          test -s build/wasm/vf_engine.js
+          test -s build/wasm/vf_engine.wasm
+          ls -lh build/wasm/vf_engine.js build/wasm/vf_engine.wasm
