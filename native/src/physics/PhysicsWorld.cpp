@@ -34,6 +34,19 @@ constexpr std::uint32_t kContactSolverIterations = 10;
     return value / std::sqrt(lengthSquared);
 }
 
+[[nodiscard]] glm::dvec3 bodyLocalDirection(
+    const CelestialBody& body,
+    const glm::dvec3& worldDirection) noexcept {
+    return safeNormalize(glm::conjugate(glm::normalize(body.orientation)) * safeNormalize(worldDirection));
+}
+
+[[nodiscard]] glm::dvec3 celestialSurfaceVelocity(
+    const CelestialBody& body,
+    const glm::dvec3& worldPoint) noexcept {
+    const glm::dvec3 angularVelocity = safeNormalize(body.spinAxis) * body.spinRateRadPerSecond;
+    return body.linearVelocity + glm::cross(angularVelocity, worldPoint - body.position);
+}
+
 [[nodiscard]] glm::dmat3 diagonalMatrix(const glm::dvec3& diagonal) noexcept {
     glm::dmat3 matrix{0.0};
     matrix[0][0] = diagonal.x;
@@ -77,8 +90,8 @@ constexpr std::uint32_t kContactSolverIterations = 10;
     return std::sqrt(std::max(0.0, a) * std::max(0.0, b));
 }
 
-[[nodiscard]] glm::dvec3 worldAnchor(const RigidBody& body, const glm::dvec3& localAnchor) noexcept {
-    return body.position + body.orientation * localAnchor;
+[[nodiscard]] glm::dvec3 worldAnchor(const RigidBody& body, const glm::dvec3& localAnchorValue) noexcept {
+    return body.position + body.orientation * localAnchorValue;
 }
 
 [[nodiscard]] glm::dvec3 localAnchor(const RigidBody& body, const glm::dvec3& worldPoint) noexcept {
@@ -504,12 +517,12 @@ void PhysicsWorld::applyEnvironmentForces(RigidBody& rigidBody) {
     const double gravity = glm::length(gravityAcceleration);
     rigidBody.accumulatedForce += rigidBody.mass * gravityAcceleration;
 
-    const AtmosphereSample atmosphere = environment_.sampleAtmosphere(rigidBody.position, simulationTime_);
-    const glm::dvec3 relativeAirVelocity = rigidBody.linearVelocity - atmosphere.windVelocity;
+    const AtmosphereSample atmosphereSample = environment_.sampleAtmosphere(rigidBody.position, simulationTime_);
+    const glm::dvec3 relativeAirVelocity = rigidBody.linearVelocity - atmosphereSample.windVelocity;
     const double airSpeed = glm::length(relativeAirVelocity);
-    if (airSpeed > 1.0e-5 && atmosphere.densityKgPerM3 > 0.0) {
+    if (airSpeed > 1.0e-5 && atmosphereSample.densityKgPerM3 > 0.0) {
         const glm::dvec3 flowDirection = relativeAirVelocity / airSpeed;
-        const double dynamicPressure = 0.5 * atmosphere.densityKgPerM3 * airSpeed * airSpeed;
+        const double dynamicPressure = 0.5 * atmosphereSample.densityKgPerM3 * airSpeed * airSpeed;
         const double dragMagnitude = dynamicPressure * std::max(0.0, rigidBody.aerodynamics.dragCoefficient)
             * std::max(0.0, rigidBody.aerodynamics.referenceArea);
         rigidBody.accumulatedForce -= flowDirection * dragMagnitude;
@@ -530,7 +543,7 @@ void PhysicsWorld::applyEnvironmentForces(RigidBody& rigidBody) {
         && rigidBody.buoyancy.displacedVolume > 0.0 && gravity > 0.0) {
         const glm::dvec3 outward = -safeNormalize(gravityAcceleration);
         rigidBody.accumulatedForce += outward
-            * (atmosphere.densityKgPerM3 * rigidBody.buoyancy.displacedVolume * gravity);
+            * (atmosphereSample.densityKgPerM3 * rigidBody.buoyancy.displacedVolume * gravity);
     }
 
     if (!rigidBody.buoyancy.enabled || !environment_.ocean.enabled || rigidBody.buoyancy.displacedVolume <= 0.0) return;
@@ -590,35 +603,33 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
     glm::dvec3 bodyCenter{};
     double surfaceRadius = 0.0;
     bool useProceduralPrimary = false;
+    const CelestialBody* contactCelestialBody = nullptr;
 
     if (environment_.celestialSystem != nullptr) {
-        const CelestialBody* nearestBody = nullptr;
         double nearestSurfaceGap = std::numeric_limits<double>::infinity();
-        glm::dvec3 nearestDirection{0.0, 1.0, 0.0};
         double nearestRadius = 0.0;
 
         for (const auto& celestialBody : environment_.celestialSystem->bodies()) {
             if (celestialBody.type == CelestialBodyType::Star) continue;
             const glm::dvec3 offset = rigidBody.position - celestialBody.position;
             const double distance = glm::length(offset);
-            const glm::dvec3 direction = safeNormalize(offset);
+            const glm::dvec3 worldDirection = safeNormalize(offset);
             const bool procedural = celestialBody.id == environment_.primaryCelestialBodyId;
             const double candidateRadius = procedural
-                ? planetSurfaceRadius(environment_.planet, direction)
+                ? planetSurfaceRadius(environment_.planet, bodyLocalDirection(celestialBody, worldDirection))
                 : celestialBody.radiusMeters;
             const double gap = std::abs(distance - candidateRadius);
             if (gap < nearestSurfaceGap) {
                 nearestSurfaceGap = gap;
-                nearestBody = &celestialBody;
-                nearestDirection = direction;
+                contactCelestialBody = &celestialBody;
                 nearestRadius = candidateRadius;
             }
         }
 
-        if (nearestBody == nullptr) return;
-        bodyCenter = nearestBody->position;
+        if (contactCelestialBody == nullptr) return;
+        bodyCenter = contactCelestialBody->position;
         surfaceRadius = nearestRadius;
-        useProceduralPrimary = nearestBody->id == environment_.primaryCelestialBodyId;
+        useProceduralPrimary = contactCelestialBody->id == environment_.primaryCelestialBodyId;
     }
 
     glm::dvec3 offset = rigidBody.position - bodyCenter;
@@ -629,23 +640,28 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
     if (environment_.celestialSystem == nullptr) {
         surfaceRadius = planetSurfaceRadius(environment_.planet, normal);
         useProceduralPrimary = true;
-    } else if (useProceduralPrimary) {
-        surfaceRadius = planetSurfaceRadius(environment_.planet, normal);
+    } else if (useProceduralPrimary && contactCelestialBody != nullptr) {
+        surfaceRadius = planetSurfaceRadius(environment_.planet, bodyLocalDirection(*contactCelestialBody, normal));
     }
 
     glm::dvec3 contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
     double penetration = surfaceRadius - glm::dot(contactPoint - bodyCenter, normal);
     if (penetration <= 0.0) return;
 
-    // Each celestial surface is treated as a cheap static contact constraint. The primary
-    // body can still use procedural terrain; secondary planets use their spherical gameplay
-    // surface until local triangle terrain chunks are streamed around the player.
     rigidBody.position += normal * penetration;
     normal = safeNormalize(rigidBody.position - bodyCenter);
-    if (useProceduralPrimary) surfaceRadius = planetSurfaceRadius(environment_.planet, normal);
+    if (useProceduralPrimary) {
+        surfaceRadius = contactCelestialBody != nullptr
+            ? planetSurfaceRadius(environment_.planet, bodyLocalDirection(*contactCelestialBody, normal))
+            : planetSurfaceRadius(environment_.planet, normal);
+    }
     contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
 
-    const double normalVelocity = glm::dot(rigidBody.velocityAtPoint(contactPoint), normal);
+    const glm::dvec3 surfaceVelocity = contactCelestialBody != nullptr
+        ? celestialSurfaceVelocity(*contactCelestialBody, contactPoint)
+        : glm::dvec3{};
+    glm::dvec3 relativePointVelocity = rigidBody.velocityAtPoint(contactPoint) - surfaceVelocity;
+    const double normalVelocity = glm::dot(relativePointVelocity, normal);
     double normalImpulseMagnitude = 0.0;
     if (normalVelocity < 0.0) {
         const double restitution = std::clamp(rigidBody.material.restitution, 0.0, 1.0);
@@ -659,8 +675,8 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
         }
     }
 
-    const glm::dvec3 pointVelocity = rigidBody.velocityAtPoint(contactPoint);
-    glm::dvec3 tangentVelocity = pointVelocity - normal * glm::dot(pointVelocity, normal);
+    relativePointVelocity = rigidBody.velocityAtPoint(contactPoint) - surfaceVelocity;
+    glm::dvec3 tangentVelocity = relativePointVelocity - normal * glm::dot(relativePointVelocity, normal);
     const double tangentSpeed = glm::length(tangentVelocity);
     if (tangentSpeed > 1.0e-7) {
         const glm::dvec3 tangent = tangentVelocity / tangentSpeed;
@@ -791,9 +807,6 @@ void PhysicsWorld::solveBodyContacts() {
         manifolds.push_back(solver);
     }
 
-    // Warm starting is intentionally applied before the iterative solve. It preserves
-    // the previous fixed step's converged impulses and is critical for stable resting
-    // stacks at real-time iteration counts.
     for (auto& manifold : manifolds) {
         RigidBody& a = bodies_[manifold.bodyIndexA];
         RigidBody& b = bodies_[manifold.bodyIndexB];
@@ -878,7 +891,6 @@ void PhysicsWorld::solveBodyContacts() {
 void PhysicsWorld::solveMechanicalConstraints() {
     const double dt = fixedDeltaSeconds_;
 
-    // Warm-start persistent impulses from the previous fixed step.
     for (auto& constraint : distanceConstraints_) {
         if (constraint.broken || std::abs(constraint.accumulatedImpulse) <= 1.0e-10) continue;
         RigidBody* a = body(constraint.bodyA);
@@ -990,12 +1002,12 @@ void PhysicsWorld::solveMechanicalConstraints() {
             b->applyAngularImpulse(axisImpulse);
 
             const double relativeHingeSpeed = glm::dot(b->angularVelocity - a->angularVelocity, hingeAxis);
-            const double inverseAngularMassAlong = angularInverseMassAlong(*a, hingeAxis)
+            const double inverseAngularMassAlongValue = angularInverseMassAlong(*a, hingeAxis)
                 + angularInverseMassAlong(*b, hingeAxis);
-            if (inverseAngularMassAlong <= kEpsilon) continue;
+            if (inverseAngularMassAlongValue <= kEpsilon) continue;
 
             if (hinge.motorEnabled && hinge.maxMotorTorqueNm > 0.0) {
-                const double desiredImpulse = (hinge.targetAngularSpeedRadPerS - relativeHingeSpeed) / inverseAngularMassAlong;
+                const double desiredImpulse = (hinge.targetAngularSpeedRadPerS - relativeHingeSpeed) / inverseAngularMassAlongValue;
                 const double maxMotorImpulse = hinge.maxMotorTorqueNm * dt;
                 const double previousMotorImpulse = hinge.accumulatedMotorImpulse;
                 hinge.accumulatedMotorImpulse = std::clamp(
