@@ -3,15 +3,17 @@
   "tasks": [
     {
       "label": "VF: Configure Debug",
-      "type": "shell",
-      "command": "cmake --preset windows-debug",
+      "type": "process",
+      "command": "C:\\Program Files\\CMake\\bin\\cmake.exe",
+      "args": ["--preset", "windows-debug"],
       "options": { "cwd": "${workspaceFolder}/native" },
       "problemMatcher": []
     },
     {
       "label": "VF: Build Debug",
-      "type": "shell",
-      "command": "cmake --build --preset windows-debug --parallel",
+      "type": "process",
+      "command": "C:\\Program Files\\CMake\\bin\\cmake.exe",
+      "args": ["--build", "--preset", "windows-debug", "--parallel"],
       "options": { "cwd": "${workspaceFolder}/native" },
       "dependsOn": ["VF: Configure Debug"],
       "dependsOrder": "sequence",
@@ -20,8 +22,9 @@
     },
     {
       "label": "VF: Test Debug",
-      "type": "shell",
-      "command": "ctest --preset windows-debug",
+      "type": "process",
+      "command": "C:\\Program Files\\CMake\\bin\\ctest.exe",
+      "args": ["--preset", "windows-debug"],
       "options": { "cwd": "${workspaceFolder}/native" },
       "dependsOn": ["VF: Build Debug"],
       "dependsOrder": "sequence",
@@ -37,15 +40,17 @@
     },
     {
       "label": "VF: Configure Release",
-      "type": "shell",
-      "command": "cmake --preset windows-release",
+      "type": "process",
+      "command": "C:\\Program Files\\CMake\\bin\\cmake.exe",
+      "args": ["--preset", "windows-release"],
       "options": { "cwd": "${workspaceFolder}/native" },
       "problemMatcher": []
     },
     {
       "label": "VF: Build Release",
-      "type": "shell",
-      "command": "cmake --build --preset windows-release --parallel",
+      "type": "process",
+      "command": "C:\\Program Files\\CMake\\bin\\cmake.exe",
+      "args": ["--build", "--preset", "windows-release", "--parallel"],
       "options": { "cwd": "${workspaceFolder}/native" },
       "dependsOn": ["VF: Configure Release"],
       "dependsOrder": "sequence",
@@ -53,8 +58,9 @@
     },
     {
       "label": "VF: Test Release",
-      "type": "shell",
-      "command": "ctest --preset windows-release",
+      "type": "process",
+      "command": "C:\\Program Files\\CMake\\bin\\ctest.exe",
+      "args": ["--preset", "windows-release"],
       "options": { "cwd": "${workspaceFolder}/native" },
       "dependsOn": ["VF: Build Release"],
       "dependsOrder": "sequence",
