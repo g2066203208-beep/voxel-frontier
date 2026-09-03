@@ -1,6 +1,7 @@
 #include "vf/physics/RopeXpbd.hpp"
 #include "vf/physics/PhysicsWorld.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
