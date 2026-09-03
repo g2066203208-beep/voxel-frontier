@@ -10,7 +10,6 @@ include(FetchContent)
 option(VF_BUILD_RUNTIME "Build the native desktop runtime" ON)
 option(VF_BUILD_TESTS "Build native engine tests" ON)
 
-# Header-only graphics math. Keep this dependency pinned for reproducible CI.
 set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(
     glm
@@ -23,6 +22,7 @@ FetchContent_MakeAvailable(glm)
 add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
     src/world/CelestialSystem.cpp
+    src/world/SparseUniverseCatalog.cpp
     src/player/PlanetCamera.cpp
     src/physics/PhysicsWorld.cpp
     src/physics/Broadphase.cpp
@@ -85,7 +85,6 @@ if(VF_BUILD_RUNTIME)
     )
     FetchContent_MakeAvailable(volk)
 
-    # Slang is a build-time shader compiler only. SPIR-V is embedded into the executable.
     if(WIN32)
         FetchContent_Declare(
             slang_bin
@@ -107,9 +106,6 @@ if(VF_BUILD_RUNTIME)
     set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
-    # Slang renames SPIR-V entry points to "main" by default. The Vulkan runtime
-    # explicitly requests vertexMain/fragmentMain in VkPipelineShaderStageCreateInfo,
-    # so preserve those source names in the generated OpEntryPoint instructions.
     add_custom_command(
         OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
@@ -214,6 +210,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_interplanetary_flight_tests tests/InterplanetaryFlightTests.cpp)
     target_link_libraries(vf_interplanetary_flight_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_interplanetary_flight_tests COMMAND vf_interplanetary_flight_tests)
+
+    add_executable(vf_sparse_universe_catalog_tests tests/SparseUniverseCatalogTests.cpp)
+    target_link_libraries(vf_sparse_universe_catalog_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_sparse_universe_catalog_tests COMMAND vf_sparse_universe_catalog_tests)
 
     add_executable(vf_spectral_optics_tests tests/SpectralOpticsTests.cpp)
     target_link_libraries(vf_spectral_optics_tests PRIVATE vf_engine glm::glm)
