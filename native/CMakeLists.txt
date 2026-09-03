@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.4.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.5.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,6 +32,8 @@ add_library(vf_engine STATIC
     src/physics/ShallowWater.cpp
     src/physics/TreePhysics.cpp
     src/physics/GasChamber.cpp
+    src/render/PhysicsDebugMesh.cpp
+    src/gameplay/PhysicsPlayground.cpp
 )
 
 target_include_directories(vf_engine PUBLIC include)
@@ -46,7 +48,6 @@ else()
 endif()
 
 if(VF_BUILD_RUNTIME)
-    # Thin platform layer only. SDL does not provide our renderer/world/physics/gameplay.
     set(SDL_SHARED OFF CACHE BOOL "" FORCE)
     set(SDL_STATIC ON CACHE BOOL "" FORCE)
     set(SDL_TESTS OFF CACHE BOOL "" FORCE)
@@ -60,7 +61,6 @@ if(VF_BUILD_RUNTIME)
     )
     FetchContent_MakeAvailable(SDL3)
 
-    # Pin Vulkan headers and volk to the same published Vulkan revision.
     set(VULKAN_HEADERS_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
     set(VULKAN_HEADERS_ENABLE_MODULE OFF CACHE BOOL "" FORCE)
     FetchContent_Declare(
@@ -169,4 +169,8 @@ if(VF_BUILD_TESTS)
     add_executable(vf_mechanics_tests tests/MechanicsTests.cpp)
     target_link_libraries(vf_mechanics_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_mechanics_tests COMMAND vf_mechanics_tests)
+
+    add_executable(vf_physics_mesh_tests tests/PhysicsMeshTests.cpp)
+    target_link_libraries(vf_physics_mesh_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_physics_mesh_tests COMMAND vf_physics_mesh_tests)
 endif()

@@ -6,6 +6,7 @@
 #include <SDL3/SDL_vulkan.h>
 
 #include <algorithm>
+#include <array>
 #include <cstddef>
 #include <cstring>
 #include <limits>
@@ -61,6 +62,15 @@ static_assert(sizeof(PushConstants) <= 128U, "planet push constants must fit the
     return module;
 }
 
+[[nodiscard]] VkDeviceSize growCapacity(VkDeviceSize current, VkDeviceSize required, VkDeviceSize minimum) {
+    VkDeviceSize capacity = std::max(current, minimum);
+    while (capacity < required) {
+        if (capacity > std::numeric_limits<VkDeviceSize>::max() / 2U) return required;
+        capacity *= 2U;
+    }
+    return capacity;
+}
+
 } // namespace
 
 VulkanRenderer::VulkanRenderer(SDL_Window* window) : window_(window) {
@@ -82,6 +92,7 @@ VulkanRenderer::VulkanRenderer(SDL_Window* window) : window_(window) {
 VulkanRenderer::~VulkanRenderer() {
     if (device_ != VK_NULL_HANDLE) vkDeviceWaitIdle(device_);
 
+    for (auto& dynamicMesh : dynamicMeshes_) destroyDynamicFrameMesh(dynamicMesh);
     destroyMesh();
     destroySwapchainResources();
     destroySwapchain();
@@ -120,9 +131,9 @@ void VulkanRenderer::createInstance() {
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "Voxel Frontier";
-    appInfo.applicationVersion = VK_MAKE_API_VERSION(0, 0, 2, 0);
+    appInfo.applicationVersion = VK_MAKE_API_VERSION(0, 0, 4, 0);
     appInfo.pEngineName = "Voxel Frontier Native Engine";
-    appInfo.engineVersion = VK_MAKE_API_VERSION(0, 0, 2, 0);
+    appInfo.engineVersion = VK_MAKE_API_VERSION(0, 0, 4, 0);
     appInfo.apiVersion = apiVersion_;
 
     VkInstanceCreateInfo createInfo{};
@@ -656,6 +667,86 @@ void VulkanRenderer::destroyMesh() noexcept {
     indexCount_ = 0;
 }
 
+void VulkanRenderer::destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept {
+    if (mesh.mappedVertices != nullptr && mesh.vertexMemory != VK_NULL_HANDLE) vkUnmapMemory(device_, mesh.vertexMemory);
+    if (mesh.mappedIndices != nullptr && mesh.indexMemory != VK_NULL_HANDLE) vkUnmapMemory(device_, mesh.indexMemory);
+    mesh.mappedVertices = nullptr;
+    mesh.mappedIndices = nullptr;
+    if (mesh.indexBuffer != VK_NULL_HANDLE) vkDestroyBuffer(device_, mesh.indexBuffer, nullptr);
+    if (mesh.indexMemory != VK_NULL_HANDLE) vkFreeMemory(device_, mesh.indexMemory, nullptr);
+    if (mesh.vertexBuffer != VK_NULL_HANDLE) vkDestroyBuffer(device_, mesh.vertexBuffer, nullptr);
+    if (mesh.vertexMemory != VK_NULL_HANDLE) vkFreeMemory(device_, mesh.vertexMemory, nullptr);
+    mesh = {};
+}
+
+void VulkanRenderer::ensureDynamicFrameCapacity(
+    DynamicFrameMesh& mesh,
+    VkDeviceSize vertexBytes,
+    VkDeviceSize indexBytes) {
+    if (vertexBytes <= mesh.vertexCapacityBytes && indexBytes <= mesh.indexCapacityBytes) return;
+
+    const VkDeviceSize newVertexCapacity = growCapacity(mesh.vertexCapacityBytes, vertexBytes, 64U * 1024U);
+    const VkDeviceSize newIndexCapacity = growCapacity(mesh.indexCapacityBytes, indexBytes, 32U * 1024U);
+    destroyDynamicFrameMesh(mesh);
+
+    createBuffer(
+        newVertexCapacity,
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        mesh.vertexBuffer,
+        mesh.vertexMemory);
+    createBuffer(
+        newIndexCapacity,
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        mesh.indexBuffer,
+        mesh.indexMemory);
+
+    VkResult result = vkMapMemory(device_, mesh.vertexMemory, 0, newVertexCapacity, 0, &mesh.mappedVertices);
+    if (result != VK_SUCCESS) fail("vkMapMemory(dynamic vertex) failed", result);
+    result = vkMapMemory(device_, mesh.indexMemory, 0, newIndexCapacity, 0, &mesh.mappedIndices);
+    if (result != VK_SUCCESS) fail("vkMapMemory(dynamic index) failed", result);
+    mesh.vertexCapacityBytes = newVertexCapacity;
+    mesh.indexCapacityBytes = newIndexCapacity;
+}
+
+void VulkanRenderer::setDynamicMesh(const PlanetMesh& mesh) {
+    pendingDynamicVertices_ = mesh.vertices;
+    pendingDynamicIndices_ = mesh.indices;
+}
+
+void VulkanRenderer::clearDynamicMesh() {
+    pendingDynamicVertices_.clear();
+    pendingDynamicIndices_.clear();
+}
+
+void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
+    auto& mesh = dynamicMeshes_[frame];
+    if (pendingDynamicVertices_.empty() || pendingDynamicIndices_.empty()) {
+        mesh.indexCount = 0;
+        return;
+    }
+
+    const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(pendingDynamicVertices_.size() * sizeof(PlanetVertex));
+    const VkDeviceSize indexBytes = static_cast<VkDeviceSize>(pendingDynamicIndices_.size() * sizeof(std::uint32_t));
+    ensureDynamicFrameCapacity(mesh, vertexBytes, indexBytes);
+    std::memcpy(mesh.mappedVertices, pendingDynamicVertices_.data(), static_cast<std::size_t>(vertexBytes));
+    std::memcpy(mesh.mappedIndices, pendingDynamicIndices_.data(), static_cast<std::size_t>(indexBytes));
+    mesh.indexCount = static_cast<std::uint32_t>(pendingDynamicIndices_.size());
+}
+
+void VulkanRenderer::drawBoundMesh(
+    VkCommandBuffer commandBuffer,
+    VkBuffer vertexBuffer,
+    VkBuffer indexBuffer,
+    std::uint32_t indexCount) {
+    if (vertexBuffer == VK_NULL_HANDLE || indexBuffer == VK_NULL_HANDLE || indexCount == 0U) return;
+    constexpr VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, &offset);
+    vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+    vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+}
+
 void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
     if (mesh.vertices.empty() || mesh.indices.empty()) fail("Cannot upload an empty planet mesh");
     vkDeviceWaitIdle(device_);
@@ -702,6 +793,10 @@ void VulkanRenderer::drawFrame(
     const auto frame = frameIndex_ % kFramesInFlight;
     VkResult result = vkWaitForFences(device_, 1, &inFlight_[frame], VK_TRUE, UINT64_MAX);
     if (result != VK_SUCCESS) fail("vkWaitForFences failed", result);
+
+    // This frame's fence proves the GPU is no longer reading this frame-owned dynamic mesh.
+    // HOST_COHERENT memory plus the subsequent queue submission makes these host writes visible.
+    uploadDynamicMeshForFrame(frame);
 
     std::uint32_t imageIndex = 0;
     result = vkAcquireNextImageKHR(device_, swapchain_, UINT64_MAX, imageAvailable_[frame], VK_NULL_HANDLE, &imageIndex);
@@ -801,24 +896,25 @@ void VulkanRenderer::drawFrame(
     vkCmdSetScissor(commandBuffers_[frame], 0, 1, &scissor);
     vkCmdBindPipeline(commandBuffers_[frame], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline_);
 
-    if (indexCount_ > 0U) {
-        constexpr VkDeviceSize offset = 0;
-        vkCmdBindVertexBuffers(commandBuffers_[frame], 0, 1, &vertexBuffer_, &offset);
-        vkCmdBindIndexBuffer(commandBuffers_[frame], indexBuffer_, 0, VK_INDEX_TYPE_UINT32);
+    PushConstants push{};
+    push.viewProjection = viewProjection;
+    push.cameraPosition = glm::vec4(glm::vec3(cameraPosition), 1.0F);
+    push.sunDirection = glm::vec4(-0.38F, -0.83F, -0.41F, 0.0F);
+    vkCmdPushConstants(
+        commandBuffers_[frame],
+        pipelineLayout_,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        0,
+        sizeof(PushConstants),
+        &push);
 
-        PushConstants push{};
-        push.viewProjection = viewProjection;
-        push.cameraPosition = glm::vec4(glm::vec3(cameraPosition), 1.0F);
-        push.sunDirection = glm::vec4(-0.38F, -0.83F, -0.41F, 0.0F);
-        vkCmdPushConstants(
-            commandBuffers_[frame],
-            pipelineLayout_,
-            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-            0,
-            sizeof(PushConstants),
-            &push);
-        vkCmdDrawIndexed(commandBuffers_[frame], indexCount_, 1, 0, 0, 0);
-    }
+    drawBoundMesh(commandBuffers_[frame], vertexBuffer_, indexBuffer_, indexCount_);
+    const auto& dynamicMesh = dynamicMeshes_[frame];
+    drawBoundMesh(
+        commandBuffers_[frame],
+        dynamicMesh.vertexBuffer,
+        dynamicMesh.indexBuffer,
+        dynamicMesh.indexCount);
 
     vkCmdEndRendering(commandBuffers_[frame]);
 
