@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
-
-#include <glm/gtx/quaternion.hpp>
+#include <utility>
 
 namespace vf {
 namespace {
