@@ -108,10 +108,13 @@ public:
 
     void step(double deltaSeconds);
 
-    // Physical/vector-superposition query retained for diagnostics and orbital mechanics.
+    // Default world/gameplay gravity. Planetary spheres of influence blend smoothly and do not
+    // exert infinite-range control. This is what players and ordinary rigid bodies should use.
     [[nodiscard]] glm::dvec3 gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
-    // Player/gameplay query: local planetary SOIs blend smoothly and do not exert infinite-range
-    // control over the player. Outside all planetary SOIs, only stellar gravity remains.
+    // Explicit full GM/r^2 vector superposition for orbital diagnostics, validation and tools.
+    [[nodiscard]] glm::dvec3 physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
+    // Kept as an explicit alias because some gameplay systems benefit from saying SOI semantics
+    // at the call site; it returns the same value as gravityAccelerationAt().
     [[nodiscard]] glm::dvec3 gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] const CelestialBody* gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
 
