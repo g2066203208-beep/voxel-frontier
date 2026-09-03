@@ -33,7 +33,6 @@ public:
         const glm::vec3& sunDirectionToLight = glm::vec3{0.38F, 0.83F, 0.41F},
         const glm::vec3& sunLinearColor = glm::vec3{1.0F},
         float sunIntensity = 2.2F,
-        const glm::dvec3& staticObjectOrigin = glm::dvec3{0.0},
         const glm::dquat& staticObjectRotation = glm::dquat{1.0, 0.0, 0.0, 0.0});
     void requestResize() noexcept { resizeRequested_ = true; }
 
