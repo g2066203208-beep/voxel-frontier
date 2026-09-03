@@ -40,6 +40,22 @@ void SdlPlatform::setMouseCaptured(bool captured) {
     }
 }
 
+void SdlPlatform::updateSpaceDoubleTap(bool spaceDown) {
+    if (spaceDown && !spaceWasDown_) {
+        constexpr std::uint64_t kDoubleTapWindowNanoseconds = 420000000ULL;
+        const std::uint64_t now = SDL_GetTicksNS();
+        if (lastSpacePressNanoseconds_ != 0U
+            && now >= lastSpacePressNanoseconds_
+            && now - lastSpacePressNanoseconds_ <= kDoubleTapWindowNanoseconds) {
+            input_.toggleFlight = true;
+            lastSpacePressNanoseconds_ = 0U;
+        } else {
+            lastSpacePressNanoseconds_ = now;
+        }
+    }
+    spaceWasDown_ = spaceDown;
+}
+
 void SdlPlatform::refreshKeyboardState() {
     int keyCount = 0;
     const bool* keys = SDL_GetKeyboardState(&keyCount);
@@ -57,6 +73,7 @@ void SdlPlatform::refreshKeyboardState() {
     input_.sprint = down(SDL_SCANCODE_LSHIFT) || down(SDL_SCANCODE_RSHIFT);
     input_.ascend = down(SDL_SCANCODE_SPACE);
     input_.descend = down(SDL_SCANCODE_LCTRL) || down(SDL_SCANCODE_RCTRL);
+    updateSpaceDoubleTap(input_.ascend);
 }
 
 bool SdlPlatform::pumpEvents() {
@@ -84,7 +101,6 @@ bool SdlPlatform::pumpEvents() {
         case SDL_EVENT_MOUSE_BUTTON_DOWN: {
             const bool wasCaptured = input_.mouseCaptured;
             if (!wasCaptured) {
-                // The click that re-captures the mouse is not also a gameplay action.
                 setMouseCaptured(true);
                 break;
             }
@@ -96,27 +112,15 @@ bool SdlPlatform::pumpEvents() {
             if (!event.key.repeat && event.key.scancode == SDL_SCANCODE_ESCAPE) {
                 setMouseCaptured(!input_.mouseCaptured);
             }
-            if (!event.key.repeat && event.key.scancode == SDL_SCANCODE_SPACE) {
-                // Use the physical SDL scancode rather than the layout-dependent keycode. SDL3
-                // timestamps key events in nanoseconds, so the double tap is deterministic even if
-                // a frame stalls between the two presses.
-                constexpr std::uint64_t kDoubleTapWindowNanoseconds = 360000000ULL;
-                const std::uint64_t now = event.key.timestamp;
-                if (lastSpacePressNanoseconds_ != 0U
-                    && now > lastSpacePressNanoseconds_
-                    && now - lastSpacePressNanoseconds_ <= kDoubleTapWindowNanoseconds) {
-                    input_.toggleFlight = true;
-                    lastSpacePressNanoseconds_ = 0U;
-                } else {
-                    lastSpacePressNanoseconds_ = now;
-                }
-            }
             break;
         default:
             break;
         }
     }
 
+    // Continuous movement and the Space rising edge come from the same physical-key state.
+    // This avoids event timestamp/layout differences and makes Minecraft-style double-tap flight
+    // deterministic even if the frame containing the key event stalls.
     refreshKeyboardState();
     return true;
 }
