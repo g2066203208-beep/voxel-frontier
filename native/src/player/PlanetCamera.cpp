@@ -95,8 +95,6 @@ glm::dvec3 PlanetCamera::up() const {
     if (const auto* bodyValue = referenceBody(position_)) {
         return safeNormalize(position_ - bodyValue->position);
     }
-    // Free space is no longer secretly tied to Aster. A stable inertial up keeps mouse yaw/pitch
-    // predictable while forward thrust is fully 3D and can point at any other planet.
     return {0.0, 1.0, 0.0};
 }
 
@@ -137,19 +135,16 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     heading_ += input.mouseDx * mouseSensitivity;
     pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.52, 1.52);
 
-    const CelestialBody* initialReference = referenceBody(position_);
-    const double currentAltitude = initialReference != nullptr
-        ? surfaceAltitudeFor(*initialReference, planet_, primaryCelestialBodyId_, position_)
-        : std::numeric_limits<double>::infinity();
-    const double flightTransitionAltitude = initialReference != nullptr
-        ? std::clamp(
-            10.0 + 0.15 * std::max(0.0, initialReference->atmosphere.heightMeters),
-            18.0,
-            42.0)
-        : 0.0;
-
-    if (grounded_) flightMode_ = false;
-    if (initialReference == nullptr || currentAltitude > flightTransitionAltitude) flightMode_ = true;
+    if (input.toggleFlight) {
+        flightMode_ = !flightMode_;
+        if (flightMode_) {
+            if (const auto* bodyValue = referenceBody(position_)) {
+                velocity_ = celestialSurfaceVelocity(*bodyValue, position_);
+            } else {
+                velocity_ = {};
+            }
+        }
+    }
 
     const glm::dvec3 localUp = up();
     const glm::dvec3 forward = forwardDirection();
@@ -161,40 +156,22 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     glm::dvec3 candidate = position_;
 
     if (celestialSystem_ != nullptr) {
-        velocity_ += celestialSystem_->gameplayGravityAccelerationAt(position_) * dt;
-
         if (flightMode_) {
-            // Interplanetary mode is true inertial flight. Input changes velocity in camera-space;
-            // it never teleports along Aster's tangent plane. Aim at Cinder and hold W/Shift to
-            // accelerate toward it, then turn around and brake exactly as the velocity vector says.
-            glm::dvec3 thrustDirection = forward * input.forward + right * input.right + localUp * input.vertical;
-            const double thrustLength = glm::length(thrustDirection);
-            if (thrustLength > 1.0) thrustDirection /= thrustLength;
-            const double thrustAcceleration = input.sprint ? 180.0 : 62.0;
-            velocity_ += thrustDirection * thrustAcceleration * dt;
+            // Minecraft-style creative travel flight for the player only. The world keeps its
+            // real/gameplay gravity; creative flight simply bypasses it so testing another planet
+            // never requires performing an orbital transfer with the debug camera.
+            glm::dvec3 moveDirection = forward * input.forward + right * input.right + localUp * input.vertical;
+            const double moveLength = glm::length(moveDirection);
+            if (moveLength > 1.0) moveDirection /= moveLength;
 
-            const auto environment = celestialSystem_->sampleEnvironment(position_);
-            if (environment.densityKgPerM3 > 1.0e-5) {
-                const glm::dvec3 relativeAir = velocity_ - environment.windVelocity;
-                const double airSpeed = glm::length(relativeAir);
-                if (airSpeed > 1.0e-5) {
-                    // Cheap player/ship drag approximation: physically directional and density/
-                    // speed dependent, but intentionally avoids modeling a detailed hull here.
-                    const double dragAcceleration = std::min(
-                        90.0,
-                        0.012 * environment.densityKgPerM3 * airSpeed * airSpeed);
-                    velocity_ -= (relativeAir / airSpeed) * dragAcceleration * dt;
-                }
-            }
-
-            const double speed = glm::length(velocity_);
-            constexpr double maxFlightSpeed = 900.0;
-            if (speed > maxFlightSpeed) velocity_ *= maxFlightSpeed / speed;
+            const double targetSpeed = input.sprint ? 1200.0 : 320.0;
+            const glm::dvec3 desiredVelocity = moveLength > 1.0e-8 ? moveDirection * targetSpeed : glm::dvec3{};
+            const double response = 1.0 - std::exp(-(moveLength > 1.0e-8 ? 8.0 : 5.0) * dt);
+            velocity_ += (desiredVelocity - velocity_) * response;
             candidate += velocity_ * dt;
         } else {
-            // Near a planetary surface, keep responsive on-foot tangent movement while radial
-            // motion remains gravity/thrust driven. Once clear of the near-surface zone the same
-            // velocity is retained and the controller transitions to inertial flight.
+            velocity_ += celestialSystem_->gameplayGravityAccelerationAt(position_) * dt;
+
             const glm::dvec3 east = safeEast(localUp);
             const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
             const glm::dvec3 tangentForward = safeNormalize(
@@ -206,16 +183,12 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
 
             const double verticalAcceleration = input.sprint ? 95.0 : 36.0;
             velocity_ += localUp * input.vertical * verticalAcceleration * dt;
-            const double speed = glm::length(velocity_);
-            if (speed > 260.0) velocity_ *= 260.0 / speed;
             candidate += velocity_ * dt;
         }
 
-        // Every non-star body is a real collision volume. Landing transfers the body's orbital
-        // and rotational surface velocity to the player, instead of pinning the player to a
-        // fictional world origin.
         for (const auto& bodyValue : celestialSystem_->bodies()) {
-            if (bodyValue.type == CelestialBodyType::Star) continue;
+            // Stars are physical celestial bodies too: the camera can approach their photosphere.
+            // Radiation/thermal gameplay determines whether ordinary entities can survive there.
             glm::dvec3 offset = candidate - bodyValue.position;
             double distance = glm::length(offset);
             if (distance <= 1.0e-9) {
@@ -223,7 +196,9 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
                 distance = 1.0;
             }
             const glm::dvec3 direction = safeNormalize(offset);
-            const double minimumRadius = minimumEyeRadius(bodyValue, direction);
+            const double minimumRadius = bodyValue.type == CelestialBodyType::Star
+                ? bodyValue.radiusMeters + eyeHeight_
+                : minimumEyeRadius(bodyValue, direction);
             if (distance >= minimumRadius) continue;
 
             candidate = bodyValue.position + direction * minimumRadius;
@@ -232,32 +207,43 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             const double inwardSpeed = glm::dot(relativeVelocity, direction);
             if (inwardSpeed < 0.0) relativeVelocity -= direction * inwardSpeed;
 
-            const glm::dvec3 relativeNormal = direction * glm::dot(relativeVelocity, direction);
-            glm::dvec3 relativeTangent = relativeVelocity - relativeNormal;
-            relativeTangent *= std::exp(-12.0 * dt);
-            velocity_ = surfaceVelocity + relativeNormal + relativeTangent;
-            grounded_ = true;
-            flightMode_ = false;
+            if (!flightMode_) {
+                const glm::dvec3 relativeNormal = direction * glm::dot(relativeVelocity, direction);
+                glm::dvec3 relativeTangent = relativeVelocity - relativeNormal;
+                relativeTangent *= std::exp(-12.0 * dt);
+                velocity_ = surfaceVelocity + relativeNormal + relativeTangent;
+                grounded_ = bodyValue.type != CelestialBodyType::Star;
+            } else {
+                velocity_ = surfaceVelocity + relativeVelocity;
+            }
         }
     } else {
-        const glm::dvec3 east = safeEast(localUp);
-        const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
-        const glm::dvec3 tangentForward = safeNormalize(std::cos(heading_) * north + std::sin(heading_) * east, north);
-        const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, localUp), east);
-        const double tangentSpeed = input.sprint ? 34.0 : 12.0;
-        candidate += (tangentForward * input.forward + tangentRight * input.right) * tangentSpeed * dt;
+        if (flightMode_) {
+            glm::dvec3 moveDirection = forward * input.forward + right * input.right + localUp * input.vertical;
+            const double moveLength = glm::length(moveDirection);
+            if (moveLength > 1.0) moveDirection /= moveLength;
+            const double targetSpeed = input.sprint ? 220.0 : 70.0;
+            const glm::dvec3 desiredVelocity = moveLength > 1.0e-8 ? moveDirection * targetSpeed : glm::dvec3{};
+            velocity_ += (desiredVelocity - velocity_) * (1.0 - std::exp(-8.0 * dt));
+            candidate += velocity_ * dt;
+        } else {
+            const glm::dvec3 east = safeEast(localUp);
+            const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
+            const glm::dvec3 tangentForward = safeNormalize(std::cos(heading_) * north + std::sin(heading_) * east, north);
+            const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, localUp), east);
+            const double tangentSpeed = input.sprint ? 34.0 : 12.0;
+            candidate += (tangentForward * input.forward + tangentRight * input.right) * tangentSpeed * dt;
 
-        // Preserve the original standalone/free-camera radial control exactly: it is used by
-        // deterministic planet tests and remains useful when no CelestialSystem is attached.
-        const double altitudeScale = 1.0 + std::max(0.0, altitude()) / 80.0;
-        const double verticalSpeed = (input.sprint ? 70.0 : 28.0) * std::min(altitudeScale, 20.0);
-        candidate += localUp * input.vertical * verticalSpeed * dt;
+            const double altitudeScale = 1.0 + std::max(0.0, altitude()) / 80.0;
+            const double verticalSpeed = (input.sprint ? 70.0 : 28.0) * std::min(altitudeScale, 20.0);
+            candidate += localUp * input.vertical * verticalSpeed * dt;
 
-        glm::dvec3 direction = safeNormalize(candidate);
-        const double minimumRadius = planetSurfaceRadius(*planet_, direction) + eyeHeight_;
-        double radius = glm::length(candidate);
-        radius = std::max(radius, minimumRadius);
-        candidate = direction * radius;
+            glm::dvec3 direction = safeNormalize(candidate);
+            const double minimumRadius = planetSurfaceRadius(*planet_, direction) + eyeHeight_;
+            double radius = glm::length(candidate);
+            radius = std::max(radius, minimumRadius);
+            candidate = direction * radius;
+        }
     }
 
     position_ = candidate;
@@ -268,15 +254,12 @@ glm::mat4 PlanetCamera::viewProjection(float aspectRatio) const {
     const glm::dvec3 look = forwardDirection();
     const glm::dvec3 localUp = up();
 
-    // Camera-relative rendering: authoritative celestial/player coordinates remain double
-    // precision in one inertial world, while the GPU sees positions translated by -camera.
-    // The universe is not rotated around the player; only the render origin is rebased.
     const glm::vec3 eye{0.0F};
     const glm::vec3 target = glm::vec3(look);
     const glm::vec3 upVector = glm::vec3(localUp);
     const glm::mat4 view = glm::lookAtRH(eye, target, upVector);
 
-    glm::mat4 projection = glm::perspectiveRH_ZO(glm::radians(68.0F), aspectRatio, 0.05F, 20000.0F);
+    glm::mat4 projection = glm::perspectiveRH_ZO(glm::radians(68.0F), aspectRatio, 0.05F, 2000000.0F);
     projection[1][1] *= -1.0F;
     return projection * view;
 }
