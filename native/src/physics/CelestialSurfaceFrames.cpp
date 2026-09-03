@@ -2,12 +2,10 @@
 
 #include "vf/physics/CollisionGeometry.hpp"
 #include "vf/physics/PhysicsWorld.hpp"
-#include "vf/world/CelestialSystem.hpp"
 #include "vf/world/PlanetSurface.hpp"
 
 #include <algorithm>
 #include <cmath>
-#include <vector>
 
 #include <glm/geometric.hpp>
 
@@ -16,6 +14,7 @@ namespace {
 
 constexpr double kEpsilon = 1.0e-9;
 constexpr double kSpawnFrameCaptureGapMeters = 64.0;
+constexpr double kSurfaceBoundGapMeters = 0.24;
 
 [[nodiscard]] glm::dvec3 safeNormalize(
     const glm::dvec3& value,
@@ -35,7 +34,7 @@ constexpr double kSpawnFrameCaptureGapMeters = 64.0;
     return safeNormalize(body.spinAxis) * body.spinRateRadPerSecond;
 }
 
-[[nodiscard]] glm::dvec3 surfaceVelocityAt(
+[[nodiscard]] glm::dvec3 inertialFrameVelocityAt(
     const CelestialBody& body,
     const glm::dvec3& worldPoint) noexcept {
     return body.linearVelocity + glm::cross(angularVelocityOf(body), worldPoint - body.position);
@@ -99,18 +98,16 @@ void CelestialSurfaceFrames::lockToBody(
     attachment.localPosition = inverseFrame * (rigidBody.position - celestialBody.position);
     attachment.localOrientation = glm::normalize(inverseFrame * rigidBody.orientation);
     attachment.locked = true;
+    attachment.surfaceBound = true;
     attachment.dynamicBody = rigidBody.motionType == MotionType::Dynamic;
     attachment.restTimer = 0.0;
 
     if (attachment.dynamicBody) {
         rigidBody.sleeping = true;
         rigidBody.sleepTimer = 1.0;
-        // A locked sleeper is stored in planet-local coordinates. World velocity is reconstructed
-        // when it is released; keeping zero here prevents the generic world-space sleep detector
-        // from immediately waking a perfectly still local object just because the planet orbits.
-        rigidBody.linearVelocity = {};
-        rigidBody.angularVelocity = {};
     }
+    rigidBody.linearVelocity = {};
+    rigidBody.angularVelocity = {};
 }
 
 void CelestialSurfaceFrames::updateLockedTransform(
@@ -119,82 +116,121 @@ void CelestialSurfaceFrames::updateLockedTransform(
     const Attachment& attachment) noexcept {
     rigidBody.position = celestialBody.position + celestialBody.orientation * attachment.localPosition;
     rigidBody.orientation = glm::normalize(celestialBody.orientation * attachment.localOrientation);
+    rigidBody.linearVelocity = {};
+    rigidBody.angularVelocity = {};
+}
 
-    if (rigidBody.motionType == MotionType::Dynamic) {
-        rigidBody.linearVelocity = {};
-        rigidBody.angularVelocity = {};
+void CelestialSurfaceFrames::configureLocalProxy(
+    PhysicsWorld& world,
+    const CelestialBody& frameBody) {
+    CelestialBody proxy = frameBody;
+    proxy.orbitParentId = 0U;
+    proxy.linearVelocity = {};
+    proxy.spinRateRadPerSecond = 0.0;
+
+    if (CelestialBody* existing = localPhysicsCelestial_.body(frameBody.id)) {
+        *existing = proxy;
     } else {
-        // Static fixtures are moved with a valid point velocity so dynamic contacts see a moving
-        // platform rather than a teleporting wall/floor.
-        rigidBody.linearVelocity = surfaceVelocityAt(celestialBody, rigidBody.position);
-        rigidBody.angularVelocity = angularVelocityOf(celestialBody);
+        (void)localPhysicsCelestial_.addBody(proxy);
     }
+
+    world.environment().celestialSystem = &localPhysicsCelestial_;
+    world.environment().rotatingFrameAngularVelocity = angularVelocityOf(frameBody);
 }
 
 void CelestialSurfaceFrames::beforePhysics(
     PhysicsWorld& world,
     const CelestialSystem& celestial) {
-    std::vector<std::uint32_t> eraseIds;
+    // Defensive recovery for tests/tools that call beforePhysics twice without an intervening
+    // solve. Normal runtime always pairs before/after.
+    if (localSolveActive_) {
+        world.environment().celestialSystem = previousEnvironmentCelestial_;
+        world.environment().rotatingFrameAngularVelocity = {};
+        localSolveActive_ = false;
+    }
+
+    const std::uint32_t primaryId = world.environment().primaryCelestialBodyId;
+    const CelestialBody* frameBody = celestial.body(primaryId);
+    if (frameBody == nullptr) return;
+
+    frameBodyId_ = frameBody->id;
+    previousEnvironmentCelestial_ = world.environment().celestialSystem;
+    const glm::dvec3 currentOmega = angularVelocityOf(*frameBody);
+    const glm::dquat currentOrientation = glm::normalize(frameBody->orientation);
+    const glm::dquat deltaRotation = previousFrameValid_
+        ? glm::normalize(currentOrientation * glm::conjugate(previousFrameOrientation_))
+        : glm::dquat{1.0, 0.0, 0.0, 0.0};
 
     for (auto& rigidBody : world.bodies()) {
-        auto found = attachments_.find(rigidBody.id);
+        Attachment& attachment = attachments_[rigidBody.id];
+        if (attachment.celestialBodyId == 0U) attachment.celestialBodyId = frameBody->id;
+        attachment.dynamicBody = rigidBody.motionType == MotionType::Dynamic;
 
-        if (found == attachments_.end()) {
-            double gap = 0.0;
-            const CelestialBody* surface = nearestSurfaceBody(rigidBody, world, celestial, &gap);
-            if (surface != nullptr) {
-                if (rigidBody.motionType != MotionType::Dynamic && std::abs(gap) <= 24.0) {
-                    // Static fixtures authored on a planet are permanently planet-local.
-                    Attachment attachment{};
-                    lockToBody(rigidBody, *surface, attachment);
-                    attachments_.emplace(rigidBody.id, attachment);
-                    found = attachments_.find(rigidBody.id);
-                } else if (rigidBody.motionType == MotionType::Dynamic
-                    && std::abs(gap) <= kSpawnFrameCaptureGapMeters) {
-                    // Most gameplay props are spawned "at rest on/near the ground". In an
-                    // inertial solar-system frame, zero world velocity is *not* at rest: Aster is
-                    // already orbiting Helion and spinning. Bootstrap zero-velocity props with the
-                    // local surface inertial velocity once so the contact solver only handles their
-                    // small relative motion instead of a 50-100 m/s frame mismatch.
-                    Attachment attachment{};
-                    attachment.celestialBodyId = surface->id;
-                    attachment.dynamicBody = true;
-                    attachment.locked = false;
-                    attachments_.emplace(rigidBody.id, attachment);
-                    found = attachments_.find(rigidBody.id);
+        double gap = 1.0e30;
+        const CelestialBody* nearest = nearestSurfaceBody(rigidBody, world, celestial, &gap);
+        const bool nearFrameSurface = nearest != nullptr && nearest->id == frameBody->id
+            && std::abs(gap) <= kSpawnFrameCaptureGapMeters;
 
-                    if (glm::length(rigidBody.linearVelocity) < 0.25) {
-                        rigidBody.linearVelocity = surfaceVelocityAt(*surface, rigidBody.position);
-                    }
-                    if (glm::length(rigidBody.angularVelocity) < 0.05) {
-                        rigidBody.angularVelocity = angularVelocityOf(*surface);
-                    }
-                }
+        if (rigidBody.motionType != MotionType::Dynamic && nearFrameSurface && !attachment.locked) {
+            lockToBody(rigidBody, *frameBody, attachment);
+        }
+
+        if (attachment.locked) {
+            if (attachment.dynamicBody && !rigidBody.sleeping) {
+                // A real force/impulse woke a local sleeper between frames. The body currently has
+                // inertial world velocity; release it and convert that state below.
+                attachment.locked = false;
+                attachment.surfaceBound = true;
+            } else {
+                updateLockedTransform(rigidBody, *frameBody, attachment);
+                continue;
             }
         }
 
-        if (found == attachments_.end() || !found->second.locked) continue;
-        Attachment& attachment = found->second;
-        const CelestialBody* frame = celestial.body(attachment.celestialBodyId);
-        if (frame == nullptr) {
-            eraseIds.push_back(rigidBody.id);
+        if (rigidBody.motionType != MotionType::Dynamic) {
+            rigidBody.linearVelocity = {};
+            rigidBody.angularVelocity = {};
             continue;
         }
 
-        // A real force/impact wakes a dynamic local sleeper. Restore the inertial motion of the
-        // moving surface exactly once and then let normal rigid-body physics take over.
-        if (attachment.dynamicBody && !rigidBody.sleeping) {
-            rigidBody.linearVelocity += surfaceVelocityAt(*frame, rigidBody.position);
-            rigidBody.angularVelocity += angularVelocityOf(*frame);
-            attachment.locked = false;
-            attachment.restTimer = 0.0;
-            continue;
+        const glm::dvec3 oldPosition = rigidBody.position;
+        glm::dvec3 relativeLinear{};
+        glm::dvec3 relativeAngular{};
+
+        if (previousFrameValid_ && attachment.surfaceBound && attachment.celestialBodyId == frameBody->id) {
+            const glm::dvec3 previousPointVelocity = previousFrameLinearVelocity_
+                + glm::cross(previousFrameAngularVelocity_, oldPosition - previousFramePosition_);
+            relativeLinear = deltaRotation * (rigidBody.linearVelocity - previousPointVelocity);
+            relativeAngular = deltaRotation * (rigidBody.angularVelocity - previousFrameAngularVelocity_);
+
+            // Contact-bound bodies share the surface pose change between render frames. Their own
+            // solved local velocity remains independent, so a rover can drive while the planet
+            // orbits/spins without being numerically launched by the moving floor.
+            rigidBody.position = frameBody->position + deltaRotation * (oldPosition - previousFramePosition_);
+            rigidBody.orientation = glm::normalize(deltaRotation * rigidBody.orientation);
+        } else {
+            relativeLinear = rigidBody.linearVelocity - inertialFrameVelocityAt(*frameBody, rigidBody.position);
+            relativeAngular = rigidBody.angularVelocity - currentOmega;
+
+            // Authored gameplay props commonly spawn with world velocity zero even though the
+            // surface has a large inertial velocity. Interpret a near-ground zero-speed spawn as
+            // "at rest relative to where it was placed", not as a 250 m/s collision with the floor.
+            if (!previousFrameValid_ && nearFrameSurface && glm::length(rigidBody.linearVelocity) < 0.25) {
+                relativeLinear = {};
+            }
+            if (!previousFrameValid_ && nearFrameSurface && glm::length(rigidBody.angularVelocity) < 0.05) {
+                relativeAngular = {};
+            }
         }
 
-        updateLockedTransform(rigidBody, *frame, attachment);
+        rigidBody.linearVelocity = relativeLinear;
+        rigidBody.angularVelocity = relativeAngular;
+        attachment.surfaceBound = nearFrameSurface || attachment.surfaceBound;
+        attachment.celestialBodyId = frameBody->id;
     }
 
-    for (const std::uint32_t id : eraseIds) attachments_.erase(id);
+    configureLocalProxy(world, *frameBody);
+    localSolveActive_ = true;
 }
 
 void CelestialSurfaceFrames::afterPhysics(
@@ -202,50 +238,78 @@ void CelestialSurfaceFrames::afterPhysics(
     const CelestialSystem& celestial,
     double frameDeltaSeconds) {
     const double dt = std::clamp(frameDeltaSeconds, 0.0, 0.10);
+    const CelestialBody* frameBody = celestial.body(frameBodyId_);
+    if (frameBody == nullptr) {
+        if (localSolveActive_) {
+            world.environment().celestialSystem = previousEnvironmentCelestial_;
+            world.environment().rotatingFrameAngularVelocity = {};
+            localSolveActive_ = false;
+        }
+        return;
+    }
+
+    const glm::dvec3 omega = angularVelocityOf(*frameBody);
 
     for (auto& rigidBody : world.bodies()) {
-        if (rigidBody.motionType != MotionType::Dynamic) continue;
-
         Attachment& attachment = attachments_[rigidBody.id];
+
         if (attachment.locked) {
-            const CelestialBody* frame = celestial.body(attachment.celestialBodyId);
-            if (frame == nullptr) {
-                attachments_.erase(rigidBody.id);
-                continue;
-            }
-            if (!rigidBody.sleeping) {
-                rigidBody.linearVelocity += surfaceVelocityAt(*frame, rigidBody.position);
-                rigidBody.angularVelocity += angularVelocityOf(*frame);
-                attachment.locked = false;
-                attachment.restTimer = 0.0;
+            updateLockedTransform(rigidBody, *frameBody, attachment);
+            if (attachment.dynamicBody) {
+                rigidBody.linearVelocity = inertialFrameVelocityAt(*frameBody, rigidBody.position);
+                rigidBody.angularVelocity = omega;
             }
             continue;
         }
 
-        double gap = 0.0;
-        const CelestialBody* frame = nearestSurfaceBody(rigidBody, world, celestial, &gap);
-        if (frame == nullptr || std::abs(gap) > 0.16) {
-            attachment.restTimer = 0.0;
+        if (rigidBody.motionType != MotionType::Dynamic) {
+            rigidBody.linearVelocity = inertialFrameVelocityAt(*frameBody, rigidBody.position);
+            rigidBody.angularVelocity = omega;
             continue;
         }
 
-        attachment.celestialBodyId = frame->id;
+        // PhysicsWorld has just solved this body in low-speed frame-relative velocities.
+        const double relativeLinearSpeed = glm::length(rigidBody.linearVelocity);
+        const double relativeAngularSpeed = glm::length(rigidBody.angularVelocity);
+
+        double gap = 1.0e30;
+        const CelestialBody* nearest = nearestSurfaceBody(rigidBody, world, celestial, &gap);
+        const bool touchingSurface = nearest != nullptr && nearest->id == frameBody->id
+            && std::abs(gap) <= kSurfaceBoundGapMeters;
+        const glm::dvec3 outward = safeNormalize(rigidBody.position - frameBody->position);
+        const double outwardRelativeSpeed = glm::dot(rigidBody.linearVelocity, outward);
+        attachment.surfaceBound = touchingSurface && outwardRelativeSpeed < 0.50;
+        attachment.celestialBodyId = frameBody->id;
         attachment.dynamicBody = true;
 
-        const glm::dvec3 expectedLinear = surfaceVelocityAt(*frame, rigidBody.position);
-        const glm::dvec3 expectedAngular = angularVelocityOf(*frame);
-        const double relativeLinearSpeed = glm::length(rigidBody.linearVelocity - expectedLinear);
-        const double relativeAngularSpeed = glm::length(rigidBody.angularVelocity - expectedAngular);
-
-        // Sleeping is judged in the local rotating frame. Once genuinely at rest, store an exact
-        // local transform so there is no residual solver chatter at all.
-        if (relativeLinearSpeed < 0.12 && relativeAngularSpeed < 0.20) {
+        if (attachment.surfaceBound && relativeLinearSpeed < 0.12 && relativeAngularSpeed < 0.20) {
             attachment.restTimer += dt;
-            if (attachment.restTimer >= 0.45) lockToBody(rigidBody, *frame, attachment);
+            if (attachment.restTimer >= 0.45) {
+                lockToBody(rigidBody, *frameBody, attachment);
+                rigidBody.linearVelocity = inertialFrameVelocityAt(*frameBody, rigidBody.position);
+                rigidBody.angularVelocity = omega;
+                continue;
+            }
         } else {
             attachment.restTimer = 0.0;
         }
+
+        // Return an exact inertial velocity for world-level systems between physics solves.
+        rigidBody.linearVelocity += inertialFrameVelocityAt(*frameBody, rigidBody.position);
+        rigidBody.angularVelocity += omega;
     }
+
+    if (localSolveActive_) {
+        world.environment().celestialSystem = previousEnvironmentCelestial_;
+        world.environment().rotatingFrameAngularVelocity = {};
+        localSolveActive_ = false;
+    }
+
+    previousFramePosition_ = frameBody->position;
+    previousFrameLinearVelocity_ = frameBody->linearVelocity;
+    previousFrameAngularVelocity_ = omega;
+    previousFrameOrientation_ = glm::normalize(frameBody->orientation);
+    previousFrameValid_ = true;
 }
 
 } // namespace vf
