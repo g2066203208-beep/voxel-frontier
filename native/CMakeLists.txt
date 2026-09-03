@@ -83,10 +83,7 @@ if(VF_BUILD_RUNTIME)
             slang_bin
             URL https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-windows-x86_64.zip
         )
-        FetchContent_GetProperties(slang_bin)
-        if(NOT slang_bin_POPULATED)
-            FetchContent_Populate(slang_bin)
-        endif()
+        FetchContent_MakeAvailable(slang_bin)
         file(GLOB_RECURSE SLANGC_CANDIDATES "${slang_bin_SOURCE_DIR}/slangc.exe")
         list(LENGTH SLANGC_CANDIDATES SLANGC_COUNT)
         if(SLANGC_COUNT EQUAL 0)
