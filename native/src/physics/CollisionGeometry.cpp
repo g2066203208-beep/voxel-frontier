@@ -5,6 +5,8 @@
 #include <array>
 #include <cmath>
 #include <limits>
+#include <stdexcept>
+#include <utility>
 
 #include <glm/common.hpp>
 #include <glm/geometric.hpp>
@@ -502,6 +504,10 @@ void flipManifold(ContactManifold& manifold) noexcept {
     manifold.normal = -manifold.normal;
 }
 
+[[nodiscard]] bool finitePoint(const glm::dvec3& point) noexcept {
+    return std::isfinite(point.x) && std::isfinite(point.y) && std::isfinite(point.z);
+}
+
 } // namespace
 
 CollisionShape CollisionShape::sphere(double sphereRadius) noexcept {
@@ -531,6 +537,87 @@ CollisionShape CollisionShape::capsule(double capsuleRadius, double capsuleHalfH
     return shape;
 }
 
+CollisionShape CollisionShape::convexHull(std::vector<glm::dvec3> points) {
+    if (points.size() < 4U) {
+        throw std::invalid_argument("convex hull requires at least four points");
+    }
+    if (points.size() > kMaxConvexHullPoints) {
+        throw std::invalid_argument("convex hull exceeds 256-point limit");
+    }
+
+    for (const glm::dvec3& point : points) {
+        if (!finitePoint(point)) throw std::invalid_argument("convex hull contains non-finite point");
+    }
+
+    glm::dvec3 minimum = points.front();
+    glm::dvec3 maximum = points.front();
+    double boundingRadiusSquared = 0.0;
+    for (const glm::dvec3& point : points) {
+        minimum = glm::min(minimum, point);
+        maximum = glm::max(maximum, point);
+        boundingRadiusSquared = std::max(boundingRadiusSquared, glm::dot(point, point));
+    }
+
+    const double scale = std::max(1.0, glm::length(maximum - minimum));
+    const double geometricTolerance = scale * 1.0e-9;
+    const double geometricToleranceSquared = geometricTolerance * geometricTolerance;
+
+    const glm::dvec3 p0 = points.front();
+    std::size_t p1Index = 0U;
+    double farthestDistanceSquared = 0.0;
+    for (std::size_t i = 1U; i < points.size(); ++i) {
+        const double distanceSquared = glm::dot(points[i] - p0, points[i] - p0);
+        if (distanceSquared > farthestDistanceSquared) {
+            farthestDistanceSquared = distanceSquared;
+            p1Index = i;
+        }
+    }
+    if (farthestDistanceSquared <= geometricToleranceSquared) {
+        throw std::invalid_argument("convex hull point set is coincident");
+    }
+
+    const glm::dvec3 lineDirection = safeNormalize(points[p1Index] - p0);
+    std::size_t p2Index = 0U;
+    double farthestFromLineSquared = 0.0;
+    for (std::size_t i = 0U; i < points.size(); ++i) {
+        const glm::dvec3 offset = points[i] - p0;
+        const glm::dvec3 perpendicular = offset - lineDirection * glm::dot(offset, lineDirection);
+        const double distanceSquared = glm::dot(perpendicular, perpendicular);
+        if (distanceSquared > farthestFromLineSquared) {
+            farthestFromLineSquared = distanceSquared;
+            p2Index = i;
+        }
+    }
+    if (farthestFromLineSquared <= geometricToleranceSquared) {
+        throw std::invalid_argument("convex hull point set is collinear");
+    }
+
+    const glm::dvec3 planeNormal = safeNormalize(
+        glm::cross(points[p1Index] - p0, points[p2Index] - p0),
+        {0.0, 0.0, 1.0});
+    double farthestFromPlane = 0.0;
+    for (const glm::dvec3& point : points) {
+        farthestFromPlane = std::max(farthestFromPlane, std::abs(glm::dot(point - p0, planeNormal)));
+    }
+    if (farthestFromPlane <= geometricTolerance) {
+        throw std::invalid_argument("convex hull point set is coplanar");
+    }
+
+    auto data = std::make_shared<ConvexHullData>();
+    data->points = std::move(points);
+    data->localMinimum = minimum;
+    data->localMaximum = maximum;
+    data->boundingRadius = std::sqrt(boundingRadiusSquared);
+
+    CollisionShape shape{};
+    shape.type = CollisionShapeType::ConvexHull;
+    shape.convexHullData = std::move(data);
+    shape.radius = shape.convexHullData->boundingRadius;
+    shape.halfExtents = 0.5 * (maximum - minimum);
+    shape.halfHeight = 0.0;
+    return shape;
+}
+
 bool Aabb::overlaps(const Aabb& other) const noexcept {
     return minimum.x <= other.maximum.x && maximum.x >= other.minimum.x
         && minimum.y <= other.maximum.y && maximum.y >= other.minimum.y
@@ -545,6 +632,8 @@ double collisionBoundingRadius(const CollisionShape& shape) noexcept {
         return glm::length(glm::max(absVector(shape.halfExtents), glm::dvec3{0.0}));
     case CollisionShapeType::Capsule:
         return std::max(0.0, shape.radius) + std::max(0.0, shape.halfHeight);
+    case CollisionShapeType::ConvexHull:
+        return shape.convexHullData ? std::max(0.0, shape.convexHullData->boundingRadius) : 0.0;
     }
     return 0.0;
 }
@@ -569,6 +658,18 @@ Aabb computeWorldAabb(const CollisionShape& shape, const ShapePose& pose) noexce
         const glm::dvec3 axis = absVector(capsuleAxis(pose));
         worldHalfExtents = axis * std::max(0.0, shape.halfHeight) + glm::dvec3{std::max(0.0, shape.radius)};
         break;
+    }
+    case CollisionShapeType::ConvexHull: {
+        if (!shape.convexHullData || shape.convexHullData->points.empty()) return {pose.position, pose.position};
+        const glm::dquat orientation = glm::normalize(pose.orientation);
+        glm::dvec3 worldMinimum = pose.position + orientation * shape.convexHullData->points.front();
+        glm::dvec3 worldMaximum = worldMinimum;
+        for (std::size_t i = 1U; i < shape.convexHullData->points.size(); ++i) {
+            const glm::dvec3 worldPoint = pose.position + orientation * shape.convexHullData->points[i];
+            worldMinimum = glm::min(worldMinimum, worldPoint);
+            worldMaximum = glm::max(worldMaximum, worldPoint);
+        }
+        return {worldMinimum, worldMaximum};
     }
     }
     return {pose.position - worldHalfExtents, pose.position + worldHalfExtents};
@@ -599,6 +700,21 @@ glm::dvec3 supportPoint(
         const glm::dvec3 segmentCenter = pose.position
             + axis * (glm::dot(worldDirection, axis) >= 0.0 ? std::max(0.0, shape.halfHeight) : -std::max(0.0, shape.halfHeight));
         return segmentCenter + worldDirection * std::max(0.0, shape.radius);
+    }
+    case CollisionShapeType::ConvexHull: {
+        if (!shape.convexHullData || shape.convexHullData->points.empty()) return pose.position;
+        const glm::dvec3 localDirection = glm::conjugate(orientation) * worldDirection;
+        const glm::dvec3* bestPoint = &shape.convexHullData->points.front();
+        double bestProjection = glm::dot(*bestPoint, localDirection);
+        for (std::size_t i = 1U; i < shape.convexHullData->points.size(); ++i) {
+            const glm::dvec3& candidate = shape.convexHullData->points[i];
+            const double projection = glm::dot(candidate, localDirection);
+            if (projection > bestProjection) {
+                bestProjection = projection;
+                bestPoint = &candidate;
+            }
+        }
+        return pose.position + orientation * *bestPoint;
     }
     }
     return pose.position;
@@ -639,9 +755,8 @@ bool collideShapes(
     }
 
     // Remaining support-mapped convex pairs share one general GJK + EPA path.
-    // At v5 this principally activates Box/Capsule in production; future convex
-    // hull types plug into the same supportPoint() contract rather than adding
-    // pair-specific approximations.
+    // ConvexHull point sets plug into the same supportPoint() contract, so adding
+    // hulls does not create an N-by-N family of pair-specific collision routines.
     return collideConvexGjkEpa(a, poseA, b, poseB, manifold);
 }
 

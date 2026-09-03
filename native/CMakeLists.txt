@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.7.1 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.8.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,6 +22,7 @@ FetchContent_MakeAvailable(glm)
 
 add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
+    src/world/CelestialSystem.cpp
     src/player/PlanetCamera.cpp
     src/physics/PhysicsWorld.cpp
     src/physics/Broadphase.cpp
@@ -31,6 +32,8 @@ add_library(vf_engine STATIC
     src/physics/ShallowWater.cpp
     src/physics/TreePhysics.cpp
     src/physics/GasChamber.cpp
+    src/physics/SpectralOptics.cpp
+    src/physics/ElectromagneticRadiation.cpp
     src/render/PhysicsDebugMesh.cpp
     src/gameplay/PhysicsPlayground.cpp
 )
@@ -172,6 +175,10 @@ if(VF_BUILD_TESTS)
     target_link_libraries(vf_collision_geometry_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_collision_geometry_tests COMMAND vf_collision_geometry_tests)
 
+    add_executable(vf_convex_hull_tests tests/ConvexHullTests.cpp)
+    target_link_libraries(vf_convex_hull_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_convex_hull_tests COMMAND vf_convex_hull_tests)
+
     add_executable(vf_gjk_epa_tests tests/GjkEpaTests.cpp)
     target_link_libraries(vf_gjk_epa_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_gjk_epa_tests COMMAND vf_gjk_epa_tests)
@@ -191,6 +198,18 @@ if(VF_BUILD_TESTS)
     add_executable(vf_physics_mesh_tests tests/PhysicsMeshTests.cpp)
     target_link_libraries(vf_physics_mesh_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_physics_mesh_tests COMMAND vf_physics_mesh_tests)
+
+    add_executable(vf_celestial_system_tests tests/CelestialSystemTests.cpp)
+    target_link_libraries(vf_celestial_system_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_celestial_system_tests COMMAND vf_celestial_system_tests)
+
+    add_executable(vf_spectral_optics_tests tests/SpectralOpticsTests.cpp)
+    target_link_libraries(vf_spectral_optics_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_spectral_optics_tests COMMAND vf_spectral_optics_tests)
+
+    add_executable(vf_electromagnetic_radiation_tests tests/ElectromagneticRadiationTests.cpp)
+    target_link_libraries(vf_electromagnetic_radiation_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_electromagnetic_radiation_tests COMMAND vf_electromagnetic_radiation_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests

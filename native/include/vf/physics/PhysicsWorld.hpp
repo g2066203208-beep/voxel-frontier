@@ -11,6 +11,7 @@
 
 #include "vf/physics/CollisionGeometry.hpp"
 #include "vf/physics/ConstraintTypes.hpp"
+#include "vf/world/CelestialSystem.hpp"
 #include "vf/world/PlanetSurface.hpp"
 
 namespace vf {
@@ -139,6 +140,8 @@ struct PhysicsEnvironment {
     AtmosphereDefinition atmosphere{};
     WeatherState weather{};
     FluidDefinition ocean{};
+    const CelestialSystem* celestialSystem{};
+    std::uint32_t primaryCelestialBodyId{};
 
     [[nodiscard]] double gravityMagnitude(const glm::dvec3& position) const noexcept;
     [[nodiscard]] glm::dvec3 gravityAcceleration(const glm::dvec3& position) const noexcept;
