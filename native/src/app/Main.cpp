@@ -1,4 +1,5 @@
 #include "vf/gameplay/PhysicsPlayground.hpp"
+#include "vf/physics/CelestialSurfaceFrames.hpp"
 #include "vf/physics/ElectromagneticRadiation.hpp"
 #include "vf/physics/PhysicsWorld.hpp"
 #include "vf/physics/SpectralOptics.hpp"
@@ -56,11 +57,21 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     return true;
 }
 
+[[nodiscard]] float atmosphereOpticalStrength(const vf::CelestialBody& body) noexcept {
+    if (!body.atmosphere.enabled || body.atmosphere.surfacePressurePa <= 0.0) return 0.0F;
+    const double pressureRatio = body.atmosphere.surfacePressurePa / 101325.0;
+    // Keep thin atmospheres visible from space without pretending their optical thickness equals
+    // Earth's. Mie adds a small extra haze term, then the shader still makes the limb strongest.
+    const double strength = 0.18 + 0.26 * std::sqrt(std::clamp(pressureRatio, 0.0, 2.0))
+        + 0.35 * std::clamp(body.atmosphere.mieStrength, 0.0, 1.0);
+    return static_cast<float>(std::clamp(strength, 0.12, 0.72));
+}
+
 } // namespace
 
 int main() {
     try {
-        vf::SdlPlatform platform{"Voxel Frontier — Celestial + Field Physics v6", 1600, 900};
+        vf::SdlPlatform platform{"Voxel Frontier — Interplanetary Physics v7 Preview", 1600, 900};
         vf::VulkanRenderer renderer{platform.window()};
 
         vf::PlanetDefinition planet{};
@@ -69,8 +80,9 @@ int main() {
         planet.maxElevation = 22.0;
         planet.atmosphereHeight = 120.0;
 
-        // Game-scale celestial dynamics. Distances/times are compressed so orbit and spin are
-        // visible during play, while force directions and energy relationships remain coherent.
+        // Game-scale celestial dynamics. Distances/times are compressed so motion is visible in
+        // play, but each body owns a real position, orientation, linear velocity and angular
+        // velocity. Rendering is camera-relative; the universe is not rotated around the player.
         vf::CelestialSystem celestial;
 
         vf::CelestialBody primary{};
@@ -79,6 +91,8 @@ int main() {
         primary.radiusMeters = planet.radius;
         primary.massKg = 9.81 * primary.radiusMeters * primary.radiusMeters
             / vf::CelestialSystem::kGravitationalConstant;
+        primary.gameplaySurfaceGravityMps2 = 9.81;
+        primary.gravityInfluenceRadiusMeters = 650.0;
         primary.spinAxis = safeNormalize({0.08, 1.0, 0.03});
         primary.spinRateRadPerSecond = 2.0 * kPi / 300.0;
         primary.visibleAlbedo = {0.30, 0.55, 0.32};
@@ -121,6 +135,8 @@ int main() {
         secondary.radiusMeters = 92.0;
         secondary.massKg = 3.7 * secondary.radiusMeters * secondary.radiusMeters
             / vf::CelestialSystem::kGravitationalConstant;
+        secondary.gameplaySurfaceGravityMps2 = 3.7;
+        secondary.gravityInfluenceRadiusMeters = 360.0;
         secondary.position = {1050.0, 520.0, -760.0};
         secondary.orbitParentId = primaryId;
         const glm::dvec3 orbitalRadius = secondary.position - primary.position;
@@ -168,6 +184,7 @@ int main() {
         environment.celestialSystem = &celestial;
         environment.primaryCelestialBodyId = primaryId;
         vf::PhysicsWorld physics{environment};
+        vf::CelestialSurfaceFrames surfaceFrames;
 
         // Static primary terrain stays in one GPU buffer; the renderer rotates it by the actual
         // CelestialBody quaternion, avoiding per-frame terrain rebuilds/uploads.
@@ -178,9 +195,9 @@ int main() {
         const glm::dvec3 cameraUp = camera.up();
         glm::dvec3 tangentForward = camera.forwardDirection()
             - cameraUp * glm::dot(camera.forwardDirection(), cameraUp);
-        tangentForward = glm::normalize(tangentForward);
-        const glm::dvec3 playgroundDirection = glm::normalize(camera.position() + tangentForward * 22.0);
-        vf::PhysicsPlayground playground{physics, planet, playgroundDirection};
+        tangentForward = safeNormalize(tangentForward, {0.0, 0.0, 1.0});
+        const glm::dvec3 playgroundDirectionLocal = safeNormalize(camera.position() + tangentForward * 22.0);
+        vf::PhysicsPlayground playground{physics, planet, playgroundDirectionLocal};
 
         const auto sunSpectrum = vf::blackbodySpectrum(5772.0);
         const glm::dvec3 sunLinearRgb = vf::spectrumToLinearSrgb(sunSpectrum);
@@ -190,27 +207,40 @@ int main() {
             glm::dvec3{0.0},
             glm::dvec3{1.0}));
 
-        const glm::dvec3 fieldUp = playgroundDirection;
-        const glm::dvec3 fieldReference = std::abs(fieldUp.y) < 0.9
+        // The field playground is authored once in Aster-local coordinates. Every frame these
+        // coordinates are transformed by Aster's real orientation, so the charge/coil/lens do not
+        // remain floating at an old world coordinate while the ground rotates underneath them.
+        const glm::dvec3 fieldUpLocal = playgroundDirectionLocal;
+        const glm::dvec3 fieldReferenceLocal = std::abs(fieldUpLocal.y) < 0.9
             ? glm::dvec3{0.0, 1.0, 0.0}
             : glm::dvec3{1.0, 0.0, 0.0};
-        const glm::dvec3 fieldEast = safeNormalize(glm::cross(fieldReference, fieldUp), {1.0, 0.0, 0.0});
-        const glm::dvec3 fieldNorth = safeNormalize(glm::cross(fieldUp, fieldEast), {0.0, 0.0, 1.0});
-        const auto fieldSurfacePoint = [&](double eastMeters, double northMeters, double heightMeters) {
+        const glm::dvec3 fieldEastLocal = safeNormalize(glm::cross(fieldReferenceLocal, fieldUpLocal), {1.0, 0.0, 0.0});
+        const glm::dvec3 fieldNorthLocal = safeNormalize(glm::cross(fieldUpLocal, fieldEastLocal), {0.0, 0.0, 1.0});
+        const auto localSurfacePoint = [&](double eastMeters, double northMeters, double heightMeters) {
             const glm::dvec3 direction = safeNormalize(
-                playgroundDirection
-                    + fieldEast * (eastMeters / planet.radius)
-                    + fieldNorth * (northMeters / planet.radius),
-                playgroundDirection);
+                fieldUpLocal
+                    + fieldEastLocal * (eastMeters / planet.radius)
+                    + fieldNorthLocal * (northMeters / planet.radius),
+                fieldUpLocal);
             return direction * (vf::planetSurfaceRadius(planet, direction) + heightMeters);
         };
+        const auto asterWorldPoint = [&](const glm::dvec3& localPoint) {
+            if (const auto* aster = celestial.body(primaryId)) {
+                return aster->position + aster->orientation * localPoint;
+            }
+            return localPoint;
+        };
 
-        const glm::dvec3 pointChargePosition = fieldSurfacePoint(5.0, -8.0, 1.2);
-        const glm::dvec3 solenoidPosition = fieldSurfacePoint(10.0, -8.0, 1.0);
-        const glm::dvec3 lensPosition = fieldSurfacePoint(-10.0, -8.0, 1.6);
+        const glm::dvec3 pointChargeLocal = localSurfacePoint(5.0, -8.0, 1.2);
+        const glm::dvec3 solenoidLocal = localSurfacePoint(10.0, -8.0, 1.0);
+        const glm::dvec3 lensLocal = localSurfacePoint(-10.0, -8.0, 1.6);
+        glm::dvec3 pointChargePosition = asterWorldPoint(pointChargeLocal);
+        glm::dvec3 solenoidPosition = asterWorldPoint(solenoidLocal);
+        glm::dvec3 lensPosition = asterWorldPoint(lensLocal);
+        glm::dvec3 fieldUpWorld = fieldUpLocal;
 
         vf::RigidBodyDesc chargedBallDesc{};
-        chargedBallDesc.position = fieldSurfacePoint(7.0, -8.0, 1.4);
+        chargedBallDesc.position = asterWorldPoint(localSurfacePoint(7.0, -8.0, 1.4));
         chargedBallDesc.mass = 0.35;
         chargedBallDesc.collisionShape = vf::CollisionShape::sphere(0.24);
         chargedBallDesc.inertiaDiagonal = {0.008, 0.008, 0.008};
@@ -222,7 +252,7 @@ int main() {
         vf::ElectromagneticRadiationSystem fields;
         vf::ElectromagneticRadiationSystem::InductionCoil inductionCoil{};
         inductionCoil.position = solenoidPosition;
-        inductionCoil.normal = fieldUp;
+        inductionCoil.normal = fieldUpWorld;
         inductionCoil.areaSquareMeters = 0.025;
         inductionCoil.turns = 250.0;
         inductionCoil.resistanceOhms = 8.0;
@@ -251,22 +281,24 @@ int main() {
         lightSensor.activeAreaSquareMeters = 2.0e-4;
         lightSensor.responsivityAmperesPerWatt = 0.45;
 
-        std::cout << "Voxel Frontier celestial + spectral + field physics runtime\n";
+        // Bind static playground fixtures to Aster before the first physics frame.
+        surfaceFrames.beforePhysics(physics, celestial);
+
+        std::cout << "Voxel Frontier interplanetary + atmosphere + surface-frame preview\n";
         std::cout << "GPU: " << renderer.gpuName() << '\n';
         std::cout << "Vulkan API: "
                   << VK_API_VERSION_MAJOR(renderer.apiVersion()) << '.'
                   << VK_API_VERSION_MINOR(renderer.apiVersion()) << '.'
                   << VK_API_VERSION_PATCH(renderer.apiVersion()) << '\n';
         std::cout << "Celestial bodies: " << celestial.bodies().size() << " (Aster, Helion, Cinder)\n";
-        std::cout << "Celestial tick: 10 Hz; rigid-body physics: " << (1.0 / physics.fixedDeltaSeconds()) << " Hz\n";
-        std::cout << "EM/radiation: Coulomb + Lorentz + solenoid + Faraday induction + broadband radiation + lens heating\n";
-        std::cout << "Vacuum background is exact black; atmosphere color exists only inside a body's atmosphere.\n";
-        std::cout << "Controls: WASD tangent move, mouse look, Shift boost, Space/Ctrl local thrust, Esc release/capture mouse\n";
+        std::cout << "Celestial motion updates every frame; rigid-body physics: " << (1.0 / physics.fixedDeltaSeconds()) << " Hz\n";
+        std::cout << "Aster SOI 650m, Cinder SOI 360m. Outside both, flight is inertial with weak stellar gravity.\n";
+        std::cout << "Atmospheres are finite shells plus per-body pressure/density/weather sampling.\n";
+        std::cout << "Controls: surface WASD; Space/Ctrl thrust; above near-surface zone WASD becomes camera-space inertial thrust; Shift boosts.\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
         double diagnosticsTime = 0.0;
-        double celestialAccumulator = 0.0;
         std::uint64_t diagnosticsFrames = 0;
         double lastFocusPowerWatts = 0.0;
         double lastLux = 0.0;
@@ -277,11 +309,20 @@ int main() {
             previous = now;
             dt = std::clamp(dt, 0.0, 0.05);
 
-            celestialAccumulator += dt;
-            while (celestialAccumulator >= 0.10) {
-                celestial.step(0.10);
-                celestialAccumulator -= 0.10;
+            // Three bodies are trivial to update per frame and this removes the visible 10 Hz
+            // stepping that previously made rotating ground and attached objects stutter.
+            celestial.step(dt);
+
+            const auto* aster = celestial.body(primaryId);
+            if (aster != nullptr) {
+                pointChargePosition = aster->position + aster->orientation * pointChargeLocal;
+                solenoidPosition = aster->position + aster->orientation * solenoidLocal;
+                lensPosition = aster->position + aster->orientation * lensLocal;
+                fieldUpWorld = safeNormalize(aster->orientation * fieldUpLocal, fieldUpLocal);
             }
+            inductionCoil.position = solenoidPosition;
+            inductionCoil.normal = fieldUpWorld;
+            lens.position = lensPosition;
 
             fields.clearSources();
 
@@ -294,7 +335,7 @@ int main() {
 
             vf::ElectromagneticRadiationSystem::SolenoidSource solenoid{};
             solenoid.position = solenoidPosition;
-            solenoid.axis = fieldUp;
+            solenoid.axis = fieldUpWorld;
             solenoid.turns = 600.0;
             solenoid.lengthMeters = 0.70;
             solenoid.radiusMeters = 0.18;
@@ -331,8 +372,13 @@ int main() {
                     chargedField));
             }
 
+            // Move planet-local sleepers/fixtures after the celestial pose update. Calling this
+            // after external forces also lets wake() release a sleeper with inherited surface
+            // velocity before the rigid-body integrator runs.
+            surfaceFrames.beforePhysics(physics, celestial);
             physics.advance(dt);
             playground.update(dt);
+            surfaceFrames.afterPhysics(physics, celestial, dt);
 
             const auto lensField = fields.sample(lens.position);
             const bool lensHasSun = hasLineOfSightToStar(celestial, lens.position, starId);
@@ -417,8 +463,8 @@ int main() {
             vf::appendDebugSphere(dynamicMesh, pointChargePosition, 0.20, {0.85F, 0.22F, 0.78F}, 6U, 10U);
             vf::appendDebugRod(
                 dynamicMesh,
-                solenoidPosition - fieldUp * 0.35,
-                solenoidPosition + fieldUp * 0.35,
+                solenoidPosition - fieldUpWorld * 0.35,
+                solenoidPosition + fieldUpWorld * 0.35,
                 0.18,
                 {0.24F, 0.62F, 0.95F});
             vf::appendDebugSphere(dynamicMesh, inductionCoil.position, 0.23, {0.20F, 0.92F, 0.88F}, 6U, 10U);
@@ -449,6 +495,25 @@ int main() {
                     8U,
                     sunDisplayColor);
             }
+
+            // Real finite atmosphere shells are visible from space. Inside a body's atmosphere we
+            // omit its shell because the clear sky already represents the integrated local medium.
+            for (const auto& body : celestial.bodies()) {
+                if (body.type == vf::CelestialBodyType::Star || !body.atmosphere.enabled
+                    || body.atmosphere.heightMeters <= 0.0) {
+                    continue;
+                }
+                const double outerRadius = body.radiusMeters + body.atmosphere.heightMeters;
+                const double cameraRadius = glm::length(camera.position() - body.position);
+                if (cameraRadius <= outerRadius * 0.985) continue;
+                vf::appendAtmosphereProxy(
+                    dynamicMesh,
+                    body.position,
+                    outerRadius,
+                    10U,
+                    glm::vec3(body.atmosphere.rayleighRgb),
+                    atmosphereOpticalStrength(body));
+            }
             renderer.setDynamicMesh(dynamicMesh);
 
             const glm::vec3 sunDirectionToLight = sun != nullptr
@@ -477,11 +542,12 @@ int main() {
                 const double fps = diagnosticsTime > 0.0
                     ? static_cast<double>(diagnosticsFrames) / diagnosticsTime
                     : 0.0;
-                const double windSpeed = glm::length(localEnvironment.windVelocity);
                 const double gravity = glm::length(localEnvironment.gravityAcceleration);
+                const vf::CelestialBody* gravityBody = celestial.gameplayReferenceBodyAt(camera.position());
                 std::ostringstream title;
-                title << "Voxel Frontier v6 | FPS " << std::fixed << std::setprecision(0) << fps
-                      << " | World " << (localBody != nullptr ? localBody->name : std::string{"Vacuum"})
+                title << "Voxel Frontier v7 | FPS " << std::fixed << std::setprecision(0) << fps
+                      << " | " << (camera.flightMode() ? "FLIGHT" : "SURFACE")
+                      << " | SOI " << (gravityBody != nullptr ? gravityBody->name : std::string{"Interplanetary"})
                       << " | g " << std::setprecision(2) << gravity
                       << " | P " << std::setprecision(1) << localEnvironment.pressurePa / 1000.0 << "kPa"
                       << " | Lux " << std::setprecision(0) << lastLux
@@ -489,7 +555,7 @@ int main() {
                       << " | Focus " << std::setprecision(1) << lastFocusPowerWatts << "W"
                       << " | Target " << tinder.temperatureK - 273.15 << "C"
                       << (tinder.ignited ? " IGNITED" : "")
-                      << " | Ground " << (camera.grounded() ? "YES" : "NO");
+                      << " | SurfaceLocks " << surfaceFrames.attachmentCount();
                 platform.setWindowTitle(title.str());
 
                 diagnosticsTime = 0.0;
