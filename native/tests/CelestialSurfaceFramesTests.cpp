@@ -2,6 +2,7 @@
 #include "vf/physics/PhysicsWorld.hpp"
 #include "vf/world/CelestialSystem.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -81,7 +82,7 @@ void testRestingDynamicBodySleepsRelativeToMovingSurface() {
     payload.position = {101.0, 0.0, 0.0};
     payload.mass = 1.0;
     payload.collisionShape = vf::CollisionShape::sphere(1.0);
-    payload.linearVelocity = {0.0, 0.0, -5.05}; // omega x r at x=101 m.
+    payload.linearVelocity = {0.0, 0.0, -5.05};
     payload.angularVelocity = {0.0, 0.05, 0.0};
     payload.linearDamping = 0.0;
     payload.angularDamping = 0.0;
@@ -130,7 +131,7 @@ void testSpawnedSurfaceBodyInheritsPlanetFrameVelocity() {
     payload.position = {1101.0, 0.0, 0.0};
     payload.mass = 1.0;
     payload.collisionShape = vf::CollisionShape::sphere(1.0);
-    payload.linearVelocity = {}; // authored as "at rest relative to the spawn surface"
+    payload.linearVelocity = {};
     payload.angularVelocity = {};
     payload.linearDamping = 0.0;
     payload.angularDamping = 0.0;
@@ -183,6 +184,71 @@ void testGameplayGravityIncludesCommonOrbitalFrameAcceleration() {
     (void)planetId;
 }
 
+void testOrbitingSurfaceBodySettlesWithoutLocalFrameJitter() {
+    vf::CelestialSystem celestial;
+
+    vf::CelestialBody star{};
+    star.type = vf::CelestialBodyType::Star;
+    star.radiusMeters = 50.0;
+    star.massKg = 2.0e16;
+    const auto starId = celestial.addBody(star);
+
+    vf::CelestialBody planet{};
+    planet.radiusMeters = 100.0;
+    planet.massKg = 9.81 * 100.0 * 100.0 / vf::CelestialSystem::kGravitationalConstant;
+    planet.gameplaySurfaceGravityMps2 = 9.81;
+    planet.gravityInfluenceRadiusMeters = 500.0;
+    planet.position = {1000.0, 0.0, 0.0};
+    planet.linearVelocity = {0.0, 0.0,
+        std::sqrt(vf::CelestialSystem::kGravitationalConstant * star.massKg / 1000.0)};
+    planet.orbitParentId = starId;
+    planet.spinAxis = {0.0, 1.0, 0.0};
+    planet.spinRateRadPerSecond = 0.02;
+    const auto planetId = celestial.addBody(planet);
+    auto world = makeWorld(celestial, planetId);
+
+    vf::RigidBodyDesc payload{};
+    payload.position = {1101.0, 0.0, 0.0};
+    payload.mass = 2.0;
+    payload.collisionShape = vf::CollisionShape::sphere(1.0);
+    payload.material.friction = 1.0;
+    payload.material.restitution = 0.0;
+    payload.material.rollingResistance = 0.08;
+    payload.linearDamping = 0.05;
+    payload.angularDamping = 0.08;
+    payload.aerodynamics.referenceArea = 0.0;
+    const auto payloadId = world.createRigidBody(payload);
+
+    vf::CelestialSurfaceFrames frames;
+    double minLocalRadius = 1.0e30;
+    double maxLocalRadius = 0.0;
+
+    constexpr double dt = 1.0 / 60.0;
+    for (int frame = 0; frame < 360; ++frame) {
+        celestial.step(dt);
+        frames.beforePhysics(world, celestial);
+        world.advance(dt);
+        frames.afterPhysics(world, celestial, dt);
+
+        const auto* p = celestial.body(planetId);
+        const auto* b = world.body(payloadId);
+        require(p != nullptr && b != nullptr, "jitter regression bodies must remain valid");
+        if (frame >= 180) {
+            const glm::dvec3 local = glm::conjugate(glm::normalize(p->orientation)) * (b->position - p->position);
+            const double localRadius = glm::length(local);
+            minLocalRadius = std::min(minLocalRadius, localRadius);
+            maxLocalRadius = std::max(maxLocalRadius, localRadius);
+        }
+    }
+
+    require(frames.isAttached(payloadId),
+        "a stationary prop on an orbiting and rotating planet must eventually enter planet-local sleep");
+    require(maxLocalRadius - minLocalRadius < 0.02,
+        "settled surface prop must not exhibit visible frame-to-frame radial jitter in planet-local coordinates");
+    requireNear(0.5 * (maxLocalRadius + minLocalRadius), 101.0, 0.03,
+        "settled surface prop must stay on the expected local surface radius while the planet orbits");
+}
+
 } // namespace
 
 int main() {
@@ -190,6 +256,7 @@ int main() {
     testRestingDynamicBodySleepsRelativeToMovingSurface();
     testSpawnedSurfaceBodyInheritsPlanetFrameVelocity();
     testGameplayGravityIncludesCommonOrbitalFrameAcceleration();
+    testOrbitingSurfaceBodySettlesWithoutLocalFrameJitter();
     std::cout << "vf_celestial_surface_frames_tests: PASS\n";
     return 0;
 }
