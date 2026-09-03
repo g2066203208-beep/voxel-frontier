@@ -68,12 +68,27 @@ struct CelestialBody {
     double luminosityWatts{};
     glm::dvec3 visibleAlbedo{0.45, 0.48, 0.52};
 
-    // Gameplay gravity profile. Zero means derive surface gravity from GM/R^2 and choose a
-    // conservative default influence radius. A finite sphere of influence prevents a tiny
-    // compressed-scale planet from dominating the whole solar system and makes interplanetary
-    // flight controllable without running an expensive N-body solver.
+    // Gravity and coordinate/reference-frame ranges are intentionally independent.
+    // A player can be in a planet-centered precision/physics bubble while already in zero-g,
+    // and being inside a gravity field never means the character is allowed to "walk in space".
     double gameplaySurfaceGravityMps2{};
+
+    // Radius where the fast outer-space falloff begins. Zero chooses the top of the atmosphere
+    // (or the solid radius for airless bodies). Between the solid surface and this radius the
+    // magnitude follows inverse-square gravity. Beyond it a configurable high-power tail gives a
+    // Space-Engineers/Astroneer-like finite game gravity well without a hard discontinuity.
+    double gravityFalloffStartRadiusMeters{};
+    double gravityFalloffPower{6.0};
+    double gravityCutoffAccelerationMps2{0.05};
+
+    // Optional explicit hard outer reach. Zero derives it from falloffStart/falloffPower/cutoff-g.
+    // Kept for authored worlds and backwards compatibility with existing content.
     double gravityInfluenceRadiusMeters{};
+
+    // Coordinate/nearby-physics ownership radius. This is NOT a gravity cutoff and NOT a walking
+    // state. It exists so nearby players/props/vehicles can run in a low-speed planet-centered
+    // physics space while the celestial simulation remains in double-precision inertial space.
+    double physicsBubbleRadiusMeters{};
 
     CelestialAtmosphere atmosphere{};
     CelestialClimate climate{};
@@ -108,14 +123,36 @@ public:
 
     void step(double deltaSeconds);
 
-    // Default world/gameplay gravity. Planetary spheres of influence blend smoothly and do not
-    // exert infinite-range control. This is what players and ordinary rigid bodies should use.
+    // Inertial game-world gravity. Planet/moon fields have a finite game reach, stars keep their
+    // inverse-square long-range field. Multiple overlapping fields add as vectors; there is never
+    // an artificial "wait until the next planet then switch gravity" rule.
     [[nodiscard]] glm::dvec3 gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
+    [[nodiscard]] glm::dvec3 gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
+
+    // Apparent gravity inside a translating planet-centered physics frame. External common-mode
+    // acceleration at the frame origin is subtracted, leaving local gravity plus only real tidal
+    // differences. This is the KSP-style separation needed to stop an orbiting ground from shaking
+    // every rigid body while preserving correct free-flight when the object leaves the frame.
+    [[nodiscard]] glm::dvec3 gravityAccelerationRelativeTo(
+        std::uint32_t frameBodyId,
+        const glm::dvec3& worldPosition) const noexcept;
+
     // Explicit full GM/r^2 vector superposition for orbital diagnostics, validation and tools.
     [[nodiscard]] glm::dvec3 physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
-    // Kept as an explicit alias because some gameplay systems benefit from saying SOI semantics
-    // at the call site; it returns the same value as gravityAccelerationAt().
-    [[nodiscard]] glm::dvec3 gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
+
+    [[nodiscard]] double gravityMagnitudeFromBody(
+        const CelestialBody& body,
+        const glm::dvec3& worldPosition) const noexcept;
+    [[nodiscard]] double gravityCutoffRadius(const CelestialBody& body) const noexcept;
+    [[nodiscard]] bool insideAtmosphere(
+        const CelestialBody& body,
+        const glm::dvec3& worldPosition) const noexcept;
+
+    [[nodiscard]] const CelestialBody* gravityReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
+    [[nodiscard]] const CelestialBody* physicsReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
+
+    // Compatibility alias for older callers. New movement code should explicitly choose either
+    // gravityReferenceBodyAt() or physicsReferenceBodyAt() instead of conflating the concepts.
     [[nodiscard]] const CelestialBody* gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
 
     [[nodiscard]] const CelestialBody* dominantBodyAt(const glm::dvec3& worldPosition) const noexcept;
@@ -131,10 +168,10 @@ private:
     void updateSpin(CelestialBody& body, double deltaSeconds) noexcept;
     void updateClimateAndWeather(CelestialBody& body, double deltaSeconds) noexcept;
 
-    [[nodiscard]] double gameplayInfluenceWeight(
+    [[nodiscard]] glm::dvec3 gameplayBodyGravity(
         const CelestialBody& body,
         const glm::dvec3& worldPosition) const noexcept;
-    [[nodiscard]] glm::dvec3 gameplayBodyGravity(
+    [[nodiscard]] glm::dvec3 gravityFromSource(
         const CelestialBody& body,
         const glm::dvec3& worldPosition) const noexcept;
 
