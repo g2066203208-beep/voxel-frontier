@@ -10,13 +10,14 @@ on:
     paths:
       - 'native/**'
       - '.github/workflows/native-desktop.yml'
+      - '.vscode/**'
 
 jobs:
   core-tests:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure C++23 engine core
         run: cmake -S native -B build/core -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
@@ -31,7 +32,7 @@ jobs:
     runs-on: windows-2025
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure native Windows runtime
         run: cmake -S native -B build/windows -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -42,9 +43,18 @@ jobs:
       - name: Run core tests on Windows
         run: ctest --test-dir build/windows -C Release --verbose --output-on-failure
 
-      - name: Verify executable
+      - name: Stage self-contained executable
         shell: pwsh
         run: |
           $exe = Get-ChildItem -Path build/windows -Recurse -Filter voxel_frontier.exe | Select-Object -First 1
           if (-not $exe) { throw 'voxel_frontier.exe was not produced' }
+          New-Item -ItemType Directory -Force artifact | Out-Null
+          Copy-Item $exe.FullName artifact/voxel_frontier.exe
           Write-Host "Native executable: $($exe.FullName)"
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v5
+        with:
+          name: voxel-frontier-windows-x64
+          path: artifact/voxel_frontier.exe
+          if-no-files-found: error
