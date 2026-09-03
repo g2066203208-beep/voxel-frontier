@@ -16,6 +16,7 @@ struct PlanetMovementInput {
     double mouseDx{};
     double mouseDy{};
     bool sprint{};
+    bool toggleFlight{};
 };
 
 class PlanetCamera final {
