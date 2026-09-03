@@ -1,0 +1,9 @@
+{
+  "cmake.sourceDirectory": "${workspaceFolder}/native",
+  "cmake.useCMakePresets": "always",
+  "cmake.configureOnOpen": false,
+  "files.exclude": {
+    "**/build": true,
+    "**/out": true
+  }
+}
