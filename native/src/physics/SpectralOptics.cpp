@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include <glm/geometric.hpp>
+
 namespace vf {
 namespace {
 
@@ -13,6 +15,14 @@ constexpr double kPi = 3.1415926535897932384626433832795;
 
 [[nodiscard]] double saturate(double value) noexcept {
     return std::clamp(value, 0.0, 1.0);
+}
+
+[[nodiscard]] glm::dvec3 safeNormalize(
+    const glm::dvec3& value,
+    const glm::dvec3& fallback = {0.0, 0.0, -1.0}) noexcept {
+    const double lengthSquared = glm::dot(value, value);
+    if (lengthSquared <= 1.0e-12) return fallback;
+    return value / std::sqrt(lengthSquared);
 }
 
 [[nodiscard]] double planckRadiance(double wavelengthMeters, double temperatureK) noexcept {
@@ -115,6 +125,59 @@ double cauchyIor(
         / (wavelengthMicrometers * wavelengthMicrometers));
 }
 
+bool refractDirection(
+    const glm::dvec3& incidentDirection,
+    const glm::dvec3& surfaceNormal,
+    double nIncident,
+    double nTransmitted,
+    glm::dvec3& transmittedDirection) noexcept {
+    glm::dvec3 i = safeNormalize(incidentDirection);
+    glm::dvec3 n = safeNormalize(surfaceNormal, {0.0, 1.0, 0.0});
+    nIncident = std::max(1.0e-6, nIncident);
+    nTransmitted = std::max(1.0e-6, nTransmitted);
+
+    double cosI = std::clamp(-glm::dot(i, n), -1.0, 1.0);
+    if (cosI < 0.0) {
+        cosI = -cosI;
+        n = -n;
+        std::swap(nIncident, nTransmitted);
+    }
+
+    const double eta = nIncident / nTransmitted;
+    const double k = 1.0 - eta * eta * std::max(0.0, 1.0 - cosI * cosI);
+    if (k < 0.0) {
+        transmittedDirection = {};
+        return false;
+    }
+
+    transmittedDirection = safeNormalize(eta * i + (eta * cosI - std::sqrt(k)) * n);
+    return true;
+}
+
+double opticalPhaseRadians(double pathDifferenceMeters, double wavelengthNm) noexcept {
+    const double wavelengthMeters = std::max(1.0e-12, wavelengthNm * 1.0e-9);
+    double phase = std::fmod(2.0 * kPi * pathDifferenceMeters / wavelengthMeters, 2.0 * kPi);
+    if (phase < 0.0) phase += 2.0 * kPi;
+    return phase;
+}
+
+bool diffractionGratingAngle(
+    double wavelengthNm,
+    double grooveSpacingNm,
+    double incidentAngleRadians,
+    int order,
+    double& diffractedAngleRadians) noexcept {
+    const double spacing = std::max(1.0e-9, grooveSpacingNm);
+    const double sinOut = std::sin(incidentAngleRadians)
+        + static_cast<double>(order) * wavelengthNm / spacing;
+    if (sinOut < -1.0 || sinOut > 1.0) {
+        diffractedAngleRadians = 0.0;
+        return false;
+    }
+    diffractedAngleRadians = std::asin(sinOut);
+    return true;
+}
+
 GameSpectrum thinFilmReflectance(
     double cosThetaIncident,
     double filmThicknessNm,
@@ -143,6 +206,55 @@ GameSpectrum thinFilmReflectance(
         spectrum[i] = saturate(denominator > 1.0e-12 ? numerator / denominator : 1.0);
     }
     return spectrum;
+}
+
+GameSpectrum materialTransmission(
+    const OpticalMaterial& material,
+    const GameSpectrum& incident,
+    double distanceMeters,
+    double cosThetaIncident) noexcept {
+    GameSpectrum output{};
+    const double transmission = saturate(material.transmission);
+    for (std::size_t i = 0; i < output.values.size(); ++i) {
+        const double ior = cauchyIor(
+            GameSpectrum::wavelengthsNm[i],
+            material.iorA,
+            material.iorBMicrometerSquared);
+        const double interfaceTransmission = 1.0 - fresnelDielectric(cosThetaIncident, 1.0, ior).unpolarized();
+        const double bulkTransmission = beerLambertTransmittance(material.absorptionPerMeter[i], distanceMeters);
+        output[i] = std::max(0.0, incident[i]) * transmission * interfaceTransmission * bulkTransmission;
+    }
+    return output;
+}
+
+GameSpectrum materialReflection(
+    const OpticalMaterial& material,
+    const GameSpectrum& incident,
+    double cosThetaIncident) noexcept {
+    GameSpectrum output{};
+    GameSpectrum film{};
+    const bool hasFilm = material.thinFilmThicknessNm > 0.0;
+    if (hasFilm) {
+        film = thinFilmReflectance(
+            cosThetaIncident,
+            material.thinFilmThicknessNm,
+            1.0,
+            std::max(1.0, material.thinFilmIor),
+            std::max(1.0, material.iorA));
+    }
+
+    for (std::size_t i = 0; i < output.values.size(); ++i) {
+        const double ior = cauchyIor(
+            GameSpectrum::wavelengthsNm[i],
+            material.iorA,
+            material.iorBMicrometerSquared);
+        const double fresnel = fresnelDielectric(cosThetaIncident, 1.0, ior).unpolarized();
+        const double diffuseReflectance = saturate(material.baseReflectance[i]) * (1.0 - saturate(material.transmission));
+        double reflectance = fresnel + (1.0 - fresnel) * diffuseReflectance;
+        if (hasFilm) reflectance = saturate(0.55 * reflectance + 0.45 * film[i]);
+        output[i] = std::max(0.0, incident[i]) * saturate(reflectance);
+    }
+    return output;
 }
 
 StokesVector linearPolarizer(const StokesVector& input, double axisRadians) noexcept {
