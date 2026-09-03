@@ -6,7 +6,7 @@
 #include <string_view>
 
 #include <glm/gtc/constants.hpp>
-#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace {
 
