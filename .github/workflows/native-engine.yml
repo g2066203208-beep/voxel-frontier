@@ -9,6 +9,10 @@ on:
       - main
     paths:
       - 'engine/**'
+      - 'src/engine/**'
+      - 'src/render-next/**'
+      - 'package.json'
+      - 'tsconfig.json'
       - '.github/workflows/native-engine.yml'
 
 jobs:
@@ -52,3 +56,20 @@ jobs:
           test -s build/wasm/vf_engine.js
           test -s build/wasm/vf_engine.wasm
           ls -lh build/wasm/vf_engine.js build/wasm/vf_engine.wasm
+
+  web-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install web dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check WebGPU/WASM bridge and build web app
+        run: npm run build
