@@ -30,6 +30,28 @@ constexpr double kEpsilon = 1.0e-9;
     return x * x * (3.0 - 2.0 * x);
 }
 
+// A body that orbits a parent is itself in an accelerating reference frame. Objects near that
+// body must inherit the same common-mode orbital acceleration or they will slowly shear away from
+// the moving planet even when their local gravity/contact state is otherwise correct. We add only
+// the acceleration of the declared parent chain at each body's center; we intentionally do not
+// apply the distant parent's full position-dependent field to every surface prop. That keeps local
+// gameplay stable while preserving the actual large-scale orbit.
+[[nodiscard]] glm::dvec3 orbitalFrameAcceleration(
+    const CelestialSystem& system,
+    const CelestialBody& bodyValue,
+    std::uint32_t depth = 0U) noexcept {
+    if (bodyValue.orbitParentId == 0U || depth >= 8U) return {};
+    const CelestialBody* parent = system.body(bodyValue.orbitParentId);
+    if (parent == nullptr || parent == &bodyValue || parent->massKg <= 0.0) return {};
+
+    const glm::dvec3 delta = parent->position - bodyValue.position;
+    const double distanceSquared = std::max(glm::dot(delta, delta), 1.0);
+    const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
+    const glm::dvec3 direct = delta
+        * (CelestialSystem::kGravitationalConstant * parent->massKg * inverseDistance / distanceSquared);
+    return direct + orbitalFrameAcceleration(system, *parent, depth + 1U);
+}
+
 } // namespace
 
 std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
@@ -80,12 +102,11 @@ void CelestialSystem::updateOrbit(CelestialBody& celestialBody, double deltaSeco
     const glm::dvec3 offset = parent->position - celestialBody.position;
     const double distanceSquared = std::max(glm::dot(offset, offset), 1.0);
     const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
-    const glm::dvec3 acceleration = offset * (kGravitationalConstant * parent->massKg * inverseDistance
-        / distanceSquared);
+    const glm::dvec3 acceleration = offset
+        * (kGravitationalConstant * parent->massKg * inverseDistance / distanceSquared);
 
-    // Parent-only symplectic Euler deliberately avoids an unstable compressed-scale N-body
-    // simulation. Moons/planets orbit their declared parent; ordinary gameplay gravity is the
-    // local SOI model below and therefore cannot make every object chase every distant planet.
+    // Parent-only symplectic Euler keeps compressed game orbits stable and O(N). The local
+    // gameplay frame gets the same parent acceleration through gameplayGravityAccelerationAt().
     celestialBody.linearVelocity += acceleration * deltaSeconds;
     celestialBody.position += celestialBody.linearVelocity * deltaSeconds;
 }
@@ -189,15 +210,17 @@ glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worl
         if (influence <= 0.0) continue;
 
         const double blendWeight = influence * influence;
-        blendedPlanetGravity += gameplayBodyGravity(source, worldPosition) * blendWeight;
+        const glm::dvec3 localGravity = gameplayBodyGravity(source, worldPosition);
+        const glm::dvec3 frameAcceleration = orbitalFrameAcceleration(*this, source);
+        blendedPlanetGravity += (localGravity + frameAcceleration) * blendWeight;
         totalWeight += blendWeight;
     }
 
     if (totalWeight > kEpsilon) return blendedPlanetGravity / totalWeight;
 
-    // Outside all planetary SOIs, the actual star still provides the weak large-scale attraction
-    // that makes the solar system coherent. Planetary long-range gravity is intentionally omitted
-    // here so a compressed game planet cannot trap the player/props from across the whole system.
+    // Outside all planetary SOIs, the actual stars provide weak large-scale inverse-square
+    // attraction. Inside a planetary SOI the same parent acceleration is supplied as common-mode
+    // frame acceleration above, while the planet owns local surface gravity.
     glm::dvec3 stellarGravity{};
     for (const auto& source : bodies_) {
         if (source.type != CelestialBodyType::Star || source.massKg <= 0.0) continue;
