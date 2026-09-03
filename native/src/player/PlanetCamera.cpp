@@ -9,7 +9,6 @@
 #include <glm/geometric.hpp>
 
 namespace vf {
-
 namespace {
 
 [[nodiscard]] glm::dvec3 safeNormalize(
@@ -20,74 +19,10 @@ namespace {
     return value / std::sqrt(lengthSquared);
 }
 
-[[nodiscard]] glm::dvec3 safeEast(const glm::dvec3& up) {
+[[nodiscard]] glm::dvec3 safeEast(const glm::dvec3& up) noexcept {
     glm::dvec3 east = glm::cross(glm::dvec3{0.0, 1.0, 0.0}, up);
     if (glm::dot(east, east) < 1.0e-8) east = glm::cross(glm::dvec3{1.0, 0.0, 0.0}, up);
     return safeNormalize(east, {1.0, 0.0, 0.0});
-}
-
-[[nodiscard]] glm::dvec3 bodyLocalDirection(
-    const CelestialBody& body,
-    const glm::dvec3& worldDirection) noexcept {
-    return safeNormalize(glm::conjugate(glm::normalize(body.orientation)) * safeNormalize(worldDirection));
-}
-
-[[nodiscard]] glm::dvec3 celestialAngularVelocity(const CelestialBody& body) noexcept {
-    return safeNormalize(body.spinAxis) * body.spinRateRadPerSecond;
-}
-
-[[nodiscard]] glm::dvec3 celestialSurfaceVelocity(
-    const CelestialBody& body,
-    const glm::dvec3& worldPoint) noexcept {
-    return body.linearVelocity
-        + glm::cross(celestialAngularVelocity(body), worldPoint - body.position);
-}
-
-[[nodiscard]] double smooth01(double value) noexcept {
-    const double x = std::clamp(value, 0.0, 1.0);
-    return x * x * (3.0 - 2.0 * x);
-}
-
-[[nodiscard]] double gameplayInfluenceWeight(
-    const CelestialBody& body,
-    const glm::dvec3& worldPosition) noexcept {
-    if (body.type == CelestialBodyType::Star || body.massKg <= 0.0) return 0.0;
-    const double radius = std::max(0.1, body.radiusMeters);
-    const double influence = body.gravityInfluenceRadiusMeters > radius
-        ? body.gravityInfluenceRadiusMeters
-        : radius * 4.0;
-    const double distance = glm::length(worldPosition - body.position);
-    if (distance <= radius) return 1.0;
-    if (distance >= influence) return 0.0;
-    return smooth01((influence - distance) / std::max(1.0e-6, influence - radius));
-}
-
-[[nodiscard]] glm::dvec3 localGameplayGravity(
-    const CelestialBody& body,
-    const glm::dvec3& worldPosition) noexcept {
-    if (body.type == CelestialBodyType::Star || body.massKg <= 0.0) return {};
-    const glm::dvec3 delta = body.position - worldPosition;
-    const double radius = std::max(0.1, body.radiusMeters);
-    const double surfaceGravity = body.gameplaySurfaceGravityMps2 > 0.0
-        ? body.gameplaySurfaceGravityMps2
-        : CelestialSystem::kGravitationalConstant * body.massKg / (radius * radius);
-    return safeNormalize(delta, {0.0, -1.0, 0.0})
-        * surfaceGravity * gameplayInfluenceWeight(body, worldPosition);
-}
-
-[[nodiscard]] double surfaceAltitudeFor(
-    const CelestialBody& body,
-    const PlanetDefinition* primaryTerrain,
-    std::uint32_t primaryId,
-    const glm::dvec3& position) noexcept {
-    const glm::dvec3 offset = position - body.position;
-    const double distance = glm::length(offset);
-    if (distance <= 1.0e-9) return -body.radiusMeters;
-    const glm::dvec3 direction = offset / distance;
-    const double radius = body.id == primaryId && primaryTerrain != nullptr
-        ? planetSurfaceRadius(*primaryTerrain, bodyLocalDirection(body, direction))
-        : body.radiusMeters;
-    return distance - radius;
 }
 
 } // namespace
@@ -99,71 +34,108 @@ PlanetCamera::PlanetCamera(
     : planet_(&planet),
       celestialSystem_(celestialSystem),
       primaryCelestialBodyId_(primaryCelestialBodyId) {
-    const glm::dvec3 startDirection = glm::normalize(glm::dvec3{0.72, 0.52, 0.46});
-    double surface = planetSurfaceRadius(planet, startDirection);
-    glm::dvec3 center{};
+    const glm::dvec3 startDirection = safeNormalize({0.72, 0.52, 0.46});
+
     if (celestialSystem_ != nullptr && primaryCelestialBodyId_ != 0U) {
         if (const auto* primary = celestialSystem_->body(primaryCelestialBodyId_)) {
-            center = primary->position;
-            surface = planetSurfaceRadius(planet, bodyLocalDirection(*primary, startDirection));
-            velocity_ = celestialSurfaceVelocity(*primary, center + startDirection * (surface + eyeHeight_));
+            physicsFrameBodyId_ = primary->id;
+            physicsFrame_.setBodyId(primary->id);
+            inPhysicsFrame_ = true;
+            const double surface = planetSurfaceRadius(planet, startDirection);
+            localPosition_ = startDirection * (surface + eyeHeight_);
+            localVelocity_ = {};
+            grounded_ = true;
+            syncWorldStateFromLocal(*primary);
+            return;
         }
     }
-    position_ = center + startDirection * (surface + eyeHeight_);
-    rememberLocalFrame(referenceBody(position_));
+
+    const double surface = planetSurfaceRadius(planet, startDirection);
+    position_ = startDirection * (surface + eyeHeight_);
+    velocity_ = {};
+    grounded_ = true;
 }
 
-const CelestialBody* PlanetCamera::referenceBody(const glm::dvec3& position) const noexcept {
-    if (celestialSystem_ == nullptr) return nullptr;
-    return celestialSystem_->gameplayReferenceBodyAt(position);
+const CelestialBody* PlanetCamera::physicsFrameBody() const noexcept {
+    if (!inPhysicsFrame_ || celestialSystem_ == nullptr || physicsFrameBodyId_ == 0U) return nullptr;
+    return celestialSystem_->body(physicsFrameBodyId_);
 }
 
-double PlanetCamera::minimumEyeRadius(
-    const CelestialBody& bodyValue,
-    const glm::dvec3& direction) const noexcept {
-    if (bodyValue.id == primaryCelestialBodyId_ && planet_ != nullptr) {
-        return planetSurfaceRadius(*planet_, bodyLocalDirection(bodyValue, direction)) + eyeHeight_;
+double PlanetCamera::localMinimumEyeRadius(
+    const CelestialBody& body,
+    const glm::dvec3& localDirection) const noexcept {
+    if (body.id == primaryCelestialBodyId_ && planet_ != nullptr) {
+        return planetSurfaceRadius(*planet_, safeNormalize(localDirection)) + eyeHeight_;
     }
-    return bodyValue.radiusMeters + eyeHeight_;
+    return body.radiusMeters + eyeHeight_;
 }
 
-void PlanetCamera::rememberLocalFrame(const CelestialBody* bodyValue) noexcept {
-    if (bodyValue == nullptr) {
-        localFrameBodyId_ = 0U;
-        localFrameInitialized_ = false;
-        return;
-    }
-    localFrameBodyId_ = bodyValue->id;
-    previousFramePosition_ = bodyValue->position;
-    previousFrameLinearVelocity_ = bodyValue->linearVelocity;
-    previousFrameAngularVelocity_ = celestialAngularVelocity(*bodyValue);
-    previousFrameOrientation_ = glm::normalize(bodyValue->orientation);
-    localFrameInitialized_ = true;
+glm::dvec3 PlanetCamera::localForwardDirection(const glm::dvec3& localUp) const noexcept {
+    const glm::dvec3 east = safeEast(localUp);
+    const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
+    const glm::dvec3 tangentForward = safeNormalize(
+        std::cos(heading_) * north + std::sin(heading_) * east,
+        north);
+    return safeNormalize(
+        std::cos(pitch_) * tangentForward + std::sin(pitch_) * localUp,
+        tangentForward);
+}
+
+void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
+    physicsFrameBodyId_ = body.id;
+    physicsFrame_.setBodyId(body.id);
+    localPosition_ = physicsFrame_.toLocalPosition(body, position_);
+    localVelocity_ = physicsFrame_.toLocalVelocity(body, position_, velocity_);
+    inPhysicsFrame_ = true;
+    grounded_ = false;
+}
+
+void PlanetCamera::leavePhysicsFrame() noexcept {
+    inPhysicsFrame_ = false;
+    physicsFrameBodyId_ = 0U;
+    physicsFrame_.setBodyId(0U);
+    grounded_ = false;
+}
+
+void PlanetCamera::syncWorldStateFromLocal(const CelestialBody& body) noexcept {
+    position_ = physicsFrame_.toWorldPosition(body, localPosition_);
+    velocity_ = physicsFrame_.toWorldVelocity(body, localPosition_, localVelocity_);
 }
 
 glm::dvec3 PlanetCamera::up() const {
-    if (celestialSystem_ == nullptr) {
-        // Legacy/single-planet mode still has a spherical local world centered at the origin.
-        return safeNormalize(position_);
+    if (const auto* body = physicsFrameBody()) {
+        const glm::dvec3 localUp = safeNormalize(localPosition_);
+        const double localGravity = celestialSystem_ != nullptr
+            ? celestialSystem_->gravityMagnitudeFromBody(*body, position_)
+            : 0.0;
+        if (grounded_ || localGravity > 0.10 || celestialSystem_->insideAtmosphere(*body, position_)) {
+            return safeNormalize(body->orientation * localUp);
+        }
+        // Deep zero-g can still remain inside a large coordinate/precision bubble, but it must no
+        // longer behave like a spherical walking surface.
+        return {0.0, 1.0, 0.0};
     }
-    if (const auto* bodyValue = referenceBody(position_)) {
-        return safeNormalize(position_ - bodyValue->position);
-    }
-    // Only true interplanetary free space uses a stable inertial up.
+
+    if (celestialSystem_ == nullptr) return safeNormalize(position_);
     return {0.0, 1.0, 0.0};
 }
 
 double PlanetCamera::altitude() const {
-    if (const auto* bodyValue = referenceBody(position_)) {
-        return surfaceAltitudeFor(*bodyValue, planet_, primaryCelestialBodyId_, position_);
+    if (const auto* body = physicsFrameBody()) {
+        const double distance = glm::length(localPosition_);
+        if (distance <= 1.0e-9) return -body->radiusMeters;
+        const glm::dvec3 direction = localPosition_ / distance;
+        const double surface = body->id == primaryCelestialBodyId_ && planet_ != nullptr
+            ? planetSurfaceRadius(*planet_, direction)
+            : body->radiusMeters;
+        return distance - surface;
     }
 
     if (celestialSystem_ != nullptr) {
         double closest = std::numeric_limits<double>::infinity();
-        for (const auto& bodyValue : celestialSystem_->bodies()) {
-            if (bodyValue.type == CelestialBodyType::Star) continue;
-            closest = std::min(closest, surfaceAltitudeFor(
-                bodyValue, planet_, primaryCelestialBodyId_, position_));
+        for (const auto& body : celestialSystem_->bodies()) {
+            if (body.type == CelestialBodyType::Star) continue;
+            closest = std::min(closest, celestialSystem_->signedSurfaceDistance(body, position_));
         }
         return closest;
     }
@@ -173,6 +145,11 @@ double PlanetCamera::altitude() const {
 }
 
 glm::dvec3 PlanetCamera::forwardDirection() const {
+    if (const auto* body = physicsFrameBody()) {
+        const glm::dvec3 localUp = safeNormalize(localPosition_);
+        return safeNormalize(body->orientation * localForwardDirection(localUp));
+    }
+
     const glm::dvec3 localUp = up();
     const glm::dvec3 east = safeEast(localUp);
     const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
@@ -190,155 +167,157 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     heading_ += input.mouseDx * mouseSensitivity;
     pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.52, 1.52);
 
-    const CelestialBody* frameBody = referenceBody(position_);
+    // Reconstruct the same local state under the celestial body's latest orbit/spin pose. A player
+    // standing still therefore remains at exactly the same planet-local patch without a contact
+    // solver having to chase the planet's absolute orbital/surface speed.
+    if (const auto* body = physicsFrameBody()) syncWorldStateFromLocal(*body);
 
-    if (frameBody != nullptr && localFrameInitialized_ && localFrameBodyId_ == frameBody->id) {
-        const glm::dvec3 oldPosition = position_;
-        const glm::dquat currentOrientation = glm::normalize(frameBody->orientation);
-        const glm::dquat deltaRotation = glm::normalize(
-            currentOrientation * glm::conjugate(previousFrameOrientation_));
-        const glm::dvec3 oldFramePointVelocity = previousFrameLinearVelocity_
-            + glm::cross(previousFrameAngularVelocity_, oldPosition - previousFramePosition_);
-        const glm::dvec3 relativeVelocity = velocity_ - oldFramePointVelocity;
-
-        position_ = frameBody->position + deltaRotation * (oldPosition - previousFramePosition_);
-        const glm::dvec3 currentFramePointVelocity = celestialSurfaceVelocity(*frameBody, position_);
-        velocity_ = currentFramePointVelocity + deltaRotation * relativeVelocity;
-    }
-
-    frameBody = referenceBody(position_);
-
-    if (input.toggleFlight) {
-        flightMode_ = !flightMode_;
-        if (flightMode_) {
-            velocity_ = frameBody != nullptr
-                ? celestialSurfaceVelocity(*frameBody, position_)
-                : glm::dvec3{};
-            grounded_ = false;
+    if (celestialSystem_ != nullptr) {
+        const CelestialBody* desiredFrame = celestialSystem_->physicsReferenceBodyAt(position_);
+        if (inPhysicsFrame_ && (desiredFrame == nullptr || desiredFrame->id != physicsFrameBodyId_)) {
+            // position_/velocity_ are already inertial, including orbital + omega x r velocity.
+            leavePhysicsFrame();
+            if (desiredFrame != nullptr) enterPhysicsFrame(*desiredFrame);
+        } else if (!inPhysicsFrame_ && desiredFrame != nullptr) {
+            enterPhysicsFrame(*desiredFrame);
         }
     }
 
-    const glm::dvec3 localUp = up();
+    if (input.toggleFlight) {
+        flightMode_ = !flightMode_;
+        grounded_ = false;
+        if (flightMode_) {
+            if (inPhysicsFrame_) localVelocity_ = {};
+            else velocity_ = {};
+        }
+    }
+
+    if (auto* body = const_cast<CelestialBody*>(physicsFrameBody())) {
+        const glm::dvec3 localUp = safeNormalize(localPosition_);
+        const glm::dvec3 localForward = localForwardDirection(localUp);
+        glm::dvec3 localRight = glm::cross(localForward, localUp);
+        if (glm::dot(localRight, localRight) < 1.0e-10) localRight = safeEast(localUp);
+        else localRight = glm::normalize(localRight);
+
+        if (flightMode_) {
+            glm::dvec3 move = localForward * input.forward + localRight * input.right + localUp * input.vertical;
+            const double moveLength = glm::length(move);
+            if (moveLength > 1.0) move /= moveLength;
+            const double targetSpeed = input.sprint ? 1200.0 : 320.0;
+            const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
+            localVelocity_ += (desired - localVelocity_) * (1.0 - std::exp(-6.0 * dt));
+            localPosition_ += localVelocity_ * dt;
+            grounded_ = false;
+        } else {
+            const bool wasGrounded = grounded_;
+            if (wasGrounded && input.vertical > 0.5) {
+                localVelocity_ += localUp * (input.sprint ? 28.0 : 14.0);
+                grounded_ = false;
+            }
+
+            if (wasGrounded && input.vertical <= 0.5) {
+                glm::dvec3 desiredTangent = localForward * input.forward + localRight * input.right;
+                const double desiredLength = glm::length(desiredTangent);
+                if (desiredLength > 1.0) desiredTangent /= desiredLength;
+                const double targetSpeed = input.sprint ? 26.0 : 9.0;
+                desiredTangent *= targetSpeed;
+
+                const glm::dvec3 radial = localUp * glm::dot(localVelocity_, localUp);
+                glm::dvec3 tangent = localVelocity_ - radial;
+                const double response = 1.0 - std::exp(-(desiredLength > 1.0e-8 ? 18.0 : 14.0) * dt);
+                tangent += (desiredTangent - tangent) * response;
+                localVelocity_ = radial + tangent;
+            }
+
+            if (celestialSystem_ != nullptr) {
+                localVelocity_ += physicsFrame_.gravityAcceleration(
+                    *celestialSystem_, *body, localPosition_, localVelocity_) * dt;
+            }
+            localPosition_ += localVelocity_ * dt;
+
+            // Ground state comes ONLY from surface contact. Merely being in a planet physics bubble
+            // never enables walking, which prevents the old "walking around Earth in space" bug.
+            const glm::dvec3 direction = safeNormalize(localPosition_);
+            const double minimumRadius = localMinimumEyeRadius(*body, direction);
+            const double radius = glm::length(localPosition_);
+            grounded_ = false;
+            if (radius <= minimumRadius) {
+                localPosition_ = direction * minimumRadius;
+                const double radialSpeed = glm::dot(localVelocity_, direction);
+                if (radialSpeed < 0.0) localVelocity_ -= direction * radialSpeed;
+                grounded_ = true;
+            }
+        }
+
+        syncWorldStateFromLocal(*body);
+
+        // Crossing the precision bubble boundary is a pure coordinate handoff. There is no speed
+        // reset and no gravity switch: the exact inertial velocity is preserved for interplanetary
+        // flight, then another planet can independently become the next local physics frame.
+        if (celestialSystem_ != nullptr) {
+            const CelestialBody* owner = celestialSystem_->physicsReferenceBodyAt(position_);
+            if (owner == nullptr || owner->id != physicsFrameBodyId_) leavePhysicsFrame();
+        }
+        return;
+    }
+
+    if (celestialSystem_ != nullptr) {
+        const glm::dvec3 localUp = up();
+        const glm::dvec3 forward = forwardDirection();
+        glm::dvec3 right = glm::cross(forward, localUp);
+        if (glm::dot(right, right) < 1.0e-10) right = safeEast(localUp);
+        else right = glm::normalize(right);
+
+        if (flightMode_) {
+            glm::dvec3 move = forward * input.forward + right * input.right + localUp * input.vertical;
+            const double moveLength = glm::length(move);
+            if (moveLength > 1.0) move /= moveLength;
+            const double targetSpeed = input.sprint ? 1600.0 : 420.0;
+            const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
+            velocity_ += (desired - velocity_) * (1.0 - std::exp(-6.0 * dt));
+        } else {
+            // EVA/free-flight without creative thrusters: no spherical WASD locomotion. Gravity is
+            // simply the vector sum of whatever finite fields actually reach this point.
+            velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
+        }
+        position_ += velocity_ * dt;
+
+        if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) {
+            enterPhysicsFrame(*newFrame);
+        }
+        return;
+    }
+
+    // Standalone single-planet compatibility path used by low-level tests and tools.
+    const glm::dvec3 localUp = safeNormalize(position_);
     const glm::dvec3 forward = forwardDirection();
     glm::dvec3 right = glm::cross(forward, localUp);
     if (glm::dot(right, right) < 1.0e-10) right = safeEast(localUp);
     else right = glm::normalize(right);
 
-    grounded_ = false;
-    glm::dvec3 candidate = position_;
-
-    if (celestialSystem_ != nullptr) {
-        if (frameBody != nullptr) {
-            const glm::dvec3 frameVelocity = celestialSurfaceVelocity(*frameBody, position_);
-            glm::dvec3 relativeVelocity = velocity_ - frameVelocity;
-
-            if (flightMode_) {
-                glm::dvec3 moveDirection = forward * input.forward + right * input.right + localUp * input.vertical;
-                const double moveLength = glm::length(moveDirection);
-                if (moveLength > 1.0) moveDirection /= moveLength;
-                const double targetSpeed = input.sprint ? 1200.0 : 320.0;
-                const glm::dvec3 desiredRelative = moveLength > 1.0e-8
-                    ? moveDirection * targetSpeed
-                    : glm::dvec3{};
-                const double response = 1.0 - std::exp(-(moveLength > 1.0e-8 ? 8.0 : 5.0) * dt);
-                relativeVelocity += (desiredRelative - relativeVelocity) * response;
-                candidate += relativeVelocity * dt;
-            } else {
-                relativeVelocity += localGameplayGravity(*frameBody, position_) * dt;
-
-                const glm::dvec3 east = safeEast(localUp);
-                const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
-                const glm::dvec3 tangentForward = safeNormalize(
-                    std::cos(heading_) * north + std::sin(heading_) * east,
-                    north);
-                const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, localUp), east);
-                const double walkSpeed = input.sprint ? 26.0 : 9.0;
-                candidate += (tangentForward * input.forward + tangentRight * input.right) * walkSpeed * dt;
-
-                const double verticalAcceleration = input.sprint ? 95.0 : 36.0;
-                relativeVelocity += localUp * input.vertical * verticalAcceleration * dt;
-                candidate += relativeVelocity * dt;
-            }
-
-            velocity_ = celestialSurfaceVelocity(*frameBody, candidate) + relativeVelocity;
-        } else if (flightMode_) {
-            glm::dvec3 moveDirection = forward * input.forward + right * input.right + localUp * input.vertical;
-            const double moveLength = glm::length(moveDirection);
-            if (moveLength > 1.0) moveDirection /= moveLength;
-            const double targetSpeed = input.sprint ? 1600.0 : 420.0;
-            const glm::dvec3 desiredVelocity = moveLength > 1.0e-8 ? moveDirection * targetSpeed : glm::dvec3{};
-            velocity_ += (desiredVelocity - velocity_) * (1.0 - std::exp(-6.0 * dt));
-            candidate += velocity_ * dt;
-        } else {
-            velocity_ += celestialSystem_->gameplayGravityAccelerationAt(position_) * dt;
-            const glm::dvec3 accelerationDirection = forward * input.forward + right * input.right + localUp * input.vertical;
-            const double accelerationLength = glm::length(accelerationDirection);
-            if (accelerationLength > 1.0e-8) {
-                velocity_ += (accelerationDirection / std::max(1.0, accelerationLength))
-                    * (input.sprint ? 80.0 : 32.0) * dt;
-            }
-            candidate += velocity_ * dt;
-        }
-
-        for (const auto& bodyValue : celestialSystem_->bodies()) {
-            glm::dvec3 offset = candidate - bodyValue.position;
-            double distance = glm::length(offset);
-            if (distance <= 1.0e-9) {
-                offset = {0.0, 1.0, 0.0};
-                distance = 1.0;
-            }
-            const glm::dvec3 direction = safeNormalize(offset);
-            const double minimumRadius = bodyValue.type == CelestialBodyType::Star
-                ? bodyValue.radiusMeters + eyeHeight_
-                : minimumEyeRadius(bodyValue, direction);
-            if (distance >= minimumRadius) continue;
-
-            candidate = bodyValue.position + direction * minimumRadius;
-            const glm::dvec3 surfaceVelocity = celestialSurfaceVelocity(bodyValue, candidate);
-            glm::dvec3 relativeVelocity = velocity_ - surfaceVelocity;
-            const double inwardSpeed = glm::dot(relativeVelocity, direction);
-            if (inwardSpeed < 0.0) relativeVelocity -= direction * inwardSpeed;
-
-            if (!flightMode_) {
-                const glm::dvec3 relativeNormal = direction * glm::dot(relativeVelocity, direction);
-                glm::dvec3 relativeTangent = relativeVelocity - relativeNormal;
-                relativeTangent *= std::exp(-12.0 * dt);
-                velocity_ = surfaceVelocity + relativeNormal + relativeTangent;
-                grounded_ = bodyValue.type != CelestialBodyType::Star;
-            } else {
-                velocity_ = surfaceVelocity + relativeVelocity;
-            }
-        }
+    if (flightMode_) {
+        glm::dvec3 move = forward * input.forward + right * input.right + localUp * input.vertical;
+        const double moveLength = glm::length(move);
+        if (moveLength > 1.0) move /= moveLength;
+        const double speed = input.sprint ? 70.0 : 28.0;
+        velocity_ = moveLength > 1.0e-8 ? move * speed : glm::dvec3{};
+        position_ += velocity_ * dt;
+        grounded_ = false;
     } else {
-        if (flightMode_) {
-            glm::dvec3 moveDirection = forward * input.forward + right * input.right + localUp * input.vertical;
-            const double moveLength = glm::length(moveDirection);
-            if (moveLength > 1.0) moveDirection /= moveLength;
-            const double targetSpeed = input.sprint ? 220.0 : 70.0;
-            const glm::dvec3 desiredVelocity = moveLength > 1.0e-8 ? moveDirection * targetSpeed : glm::dvec3{};
-            velocity_ += (desiredVelocity - velocity_) * (1.0 - std::exp(-8.0 * dt));
-            candidate += velocity_ * dt;
-        } else {
-            const glm::dvec3 east = safeEast(localUp);
-            const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
-            const glm::dvec3 tangentForward = safeNormalize(std::cos(heading_) * north + std::sin(heading_) * east, north);
-            const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, localUp), east);
-            const double tangentSpeed = input.sprint ? 34.0 : 12.0;
-            candidate += (tangentForward * input.forward + tangentRight * input.right) * tangentSpeed * dt;
-
-            const double altitudeScale = 1.0 + std::max(0.0, altitude()) / 80.0;
-            const double verticalSpeed = (input.sprint ? 70.0 : 28.0) * std::min(altitudeScale, 20.0);
-            candidate += localUp * input.vertical * verticalSpeed * dt;
-
-            const glm::dvec3 direction = safeNormalize(candidate);
-            const double minimumRadius = planetSurfaceRadius(*planet_, direction) + eyeHeight_;
-            const double radius = std::max(glm::length(candidate), minimumRadius);
-            candidate = direction * radius;
-        }
+        const glm::dvec3 east = safeEast(localUp);
+        const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
+        const glm::dvec3 tangentForward = safeNormalize(
+            std::cos(heading_) * north + std::sin(heading_) * east,
+            north);
+        const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, localUp), east);
+        const double tangentSpeed = input.sprint ? 34.0 : 12.0;
+        position_ += (tangentForward * input.forward + tangentRight * input.right) * tangentSpeed * dt;
+        const glm::dvec3 direction = safeNormalize(position_);
+        const double minimumRadius = planetSurfaceRadius(*planet_, direction) + eyeHeight_;
+        position_ = direction * std::max(glm::length(position_), minimumRadius);
+        velocity_ = {};
+        grounded_ = true;
     }
-
-    position_ = candidate;
-    rememberLocalFrame(referenceBody(position_));
 }
 
 glm::mat4 PlanetCamera::viewProjection(float aspectRatio) const {
