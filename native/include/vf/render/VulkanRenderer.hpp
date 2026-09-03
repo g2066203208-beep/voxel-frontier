@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <volk.h>
 
 #include "vf/world/PlanetSurface.hpp"
@@ -28,7 +29,11 @@ public:
     void drawFrame(
         const glm::vec3& clearColor,
         const glm::mat4& viewProjection,
-        const glm::dvec3& cameraPosition);
+        const glm::dvec3& cameraPosition,
+        const glm::vec3& sunDirectionToLight = glm::vec3{0.38F, 0.83F, 0.41F},
+        const glm::vec3& sunLinearColor = glm::vec3{1.0F},
+        float sunIntensity = 2.2F,
+        const glm::dquat& staticObjectRotation = glm::dquat{1.0, 0.0, 0.0, 0.0});
     void requestResize() noexcept { resizeRequested_ = true; }
 
     [[nodiscard]] const std::string& gpuName() const noexcept { return gpuName_; }
