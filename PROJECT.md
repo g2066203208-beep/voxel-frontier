@@ -1,84 +1,60 @@
-# Voxel Frontier — RPG Sandbox Roadmap
+# Voxel Frontier — Roadmap
 
-## Engineering baseline — DONE
-- TypeScript strict mode
-- Vite production bundling
-- Three.js renderer isolated from world data
-- Core / render / systems / UI / world modules
-- GitHub Actions type-check/build gate
+## Engine migration — CURRENT
 
-## Phase 0 — Browser voxel foundation — DONE
-- Procedural voxel terrain
-- First-person controller
-- Collision and gravity
-- Raycast targeting
-- Block break/place
-- Static web build
+The project is migrating from the original prototype renderer/world representation to a high-performance browser-native engine stack:
 
-## Phase 1 — Survival + destruction + building — CURRENT
-### Completed in Alpha 0.3
-- Health / hunger / stamina
-- Stamina-limited sprint
-- Starvation, healing, fall damage, death and respawn
-- Block hardness and hold-to-break progress
-- Physical item drops and proximity pickup
-- Typed inventory counts
-- Food item and consumption
-- Material-consuming building
-- Placement validity preview
-- Day/night lighting cycle
+- C++23 core
+- WebAssembly SIMD
+- contiguous chunk storage
+- greedy meshing
+- 3D DDA voxel traversal
+- raw WebGPU/WGSL rendering
+- TypeScript browser/UI layer
 
-### Next hardening tasks
-- Chunk streaming and dirty-chunk remeshing
-- Seeded world generation
-- Save/load persistence
-- Texture atlas and original art direction
-- Step climbing and improved collision
-- Worker-based terrain/mesh generation
+### Completed foundation
+- C++23 chunk terrain generation
+- C++ greedy mesher
+- C++ DDA voxel traversal
+- Emscripten WebAssembly release build
+- SIMD compilation gate
+- TypeScript ↔ WASM bridge
+- raw WebGPU chunk renderer
+- streamed chunk manager
+- first-person next-engine preview
+- strict native/WASM/web CI gates
+- automatic WASM packaging in Pages deployment
 
-## Phase 2 — RPG survival systems
-- Full inventory window and item stacks
-- Crafting and recipes
-- Tools, mining efficiency and durability
-- Weapons, armor and equipment slots
-- Damage types and status effects
-- Experience, character level and skill progression
-- Weather and temperature exposure
+### Next engine hardening
+- move chunk generation/meshing to Web Workers
+- chunk-neighbor halo support and boundary-face removal
+- world-space DDA across streamed chunks
+- dirty owner/neighbor chunk updates for edits on chunk borders
+- robust capsule/AABB player collision and step climbing
+- frustum/distance culling
+- GPU render-bundle/indirect-draw experiments where measurements justify them
+- texture atlas, material layers and ambient occlusion
+- browser frame-time benchmark gate
 
-## Phase 3 — Living world
-- Neutral and hostile creatures
-- Combat AI and pathfinding
-- Loot tables
-- Biomes
-- Resource distribution
-- Structures, camps and dungeons
+## Gameplay migration
 
-## Phase 4 — RPG content
-- NPCs and factions
-- Dialogue
-- Quests
-- Traders and economy
-- Villages and cities
-- Procedural points of interest
-- Boss encounters
+After the next engine reaches stable rendering/streaming performance, migrate gameplay systems onto it in this order:
 
-## Phase 5 — Large sandbox systems
-- Vehicles and mounts
-- Machines and power systems
-- Farming
-- Base defense
-- World events
+1. block targeting, destruction and placement
+2. full collision and fall damage
+3. inventory and item drops
+4. survival stats and day/night
+5. crafting, tools and equipment
+6. creatures and combat
+7. character progression
+8. biomes, structures, villages and dungeons
+9. vehicles, machines and large sandbox systems
+10. multiplayer and persistent shared worlds
 
-## Phase 6 — Extensibility
-- Data-driven block/item/entity registry
-- Versioned extension API
-- Content-pack loading
-- Manifest validation
-- Sandboxed permissions and compatibility gates
+## Extensibility
 
-## Phase 7 — Online
-- Authoritative multiplayer server
-- Player persistence
-- Shared worlds
-- Server-side combat/state validation
-- Extension compatibility handshake
+- data-driven block/item/entity registry
+- versioned extension API
+- content-pack loader
+- manifest validation
+- compatibility and permission gates
