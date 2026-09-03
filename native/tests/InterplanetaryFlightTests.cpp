@@ -35,6 +35,7 @@ void testCreativeFlightIsExplicitAndGravityIndependent() {
         / vf::CelestialSystem::kGravitationalConstant;
     home.gameplaySurfaceGravityMps2 = 5.0;
     home.gravityInfluenceRadiusMeters = 180.0;
+    home.physicsBubbleRadiusMeters = 240.0;
     const auto homeId = celestial.addBody(home);
 
     vf::CelestialBody destination{};
@@ -79,6 +80,49 @@ void testCreativeFlightIsExplicitAndGravityIndependent() {
     toggle.toggleFlight = true;
     camera.update(toggle, 1.0 / 60.0);
     require(!camera.flightMode(), "a second double-space event must disable creative flight");
+}
+
+void testCreativeFlightCanLandOnSolidGround() {
+    vf::PlanetDefinition terrain{};
+    terrain.radius = 100.0;
+    terrain.maxElevation = 0.0;
+    terrain.atmosphereHeight = 20.0;
+
+    vf::CelestialSystem celestial;
+    vf::CelestialBody planet{};
+    planet.radiusMeters = terrain.radius;
+    planet.massKg = 9.81 * terrain.radius * terrain.radius
+        / vf::CelestialSystem::kGravitationalConstant;
+    planet.gameplaySurfaceGravityMps2 = 9.81;
+    planet.gravityInfluenceRadiusMeters = 300.0;
+    planet.physicsBubbleRadiusMeters = 400.0;
+    const auto planetId = celestial.addBody(planet);
+
+    vf::PlanetCamera camera{terrain, &celestial, planetId};
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+    require(camera.flightMode(), "creative landing test must enter flight mode");
+
+    vf::PlanetMovementInput rise{};
+    rise.vertical = 1.0;
+    for (int i = 0; i < 24; ++i) camera.update(rise, 1.0 / 60.0);
+    require(camera.altitude() > 10.0, "landing test must first leave the surface");
+
+    vf::PlanetMovementInput descend{};
+    descend.vertical = -1.0;
+    for (int i = 0; i < 120; ++i) camera.update(descend, 1.0 / 60.0);
+    require(camera.altitude() >= 1.749 && camera.altitude() <= 1.755,
+        "creative Ctrl descent must stop at the physical eye-height surface instead of tunnelling through the planet");
+
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+    require(!camera.flightMode(), "second double-space event must leave creative flight after landing");
+
+    vf::PlanetMovementInput idle{};
+    camera.update(idle, 1.0 / 60.0);
+    require(camera.grounded(),
+        "leaving creative flight while touching ground must transition immediately to Grounded");
 }
 
 void testPlanetaryPhysicsReferenceIsIndependentFromGravity() {
@@ -213,16 +257,18 @@ void testZeroGInsidePhysicsBubbleCannotWalkAroundPlanet() {
     toggle.toggleFlight = true;
     camera.update(toggle, 1.0 / 60.0);
 
+    // Use ordinary creative speed and stop while still inside the intentionally larger precision
+    // bubble. The previous regression accidentally flew past the 500 m bubble before asserting it.
     vf::PlanetMovementInput rise{};
     rise.vertical = 1.0;
-    rise.sprint = true;
-    for (int i = 0; i < 90; ++i) camera.update(rise, 1.0 / 60.0);
-    require(camera.altitude() > 100.0, "test player must reach the zero-g region above the authored gravity cutoff");
+    for (int i = 0; i < 30; ++i) camera.update(rise, 1.0 / 60.0);
+    vf::PlanetMovementInput idle{};
+    for (int i = 0; i < 45; ++i) camera.update(idle, 1.0 / 60.0);
+
+    require(camera.altitude() > 85.0,
+        "test player must reach the zero-g region above the authored gravity cutoff");
     require(camera.inPlanetPhysicsFrame(),
         "zero-g player may remain in the planet precision bubble without being surface-bound");
-
-    vf::PlanetMovementInput idle{};
-    for (int i = 0; i < 120; ++i) camera.update(idle, 1.0 / 60.0);
 
     toggle.toggleFlight = true;
     camera.update(toggle, 1.0 / 60.0);
@@ -249,6 +295,7 @@ void testZeroGInsidePhysicsBubbleCannotWalkAroundPlanet() {
 
 int main() {
     testCreativeFlightIsExplicitAndGravityIndependent();
+    testCreativeFlightCanLandOnSolidGround();
     testPlanetaryPhysicsReferenceIsIndependentFromGravity();
     testGroundedPlayerHasNoOrbitalFrameJitter();
     testZeroGInsidePhysicsBubbleCannotWalkAroundPlanet();
