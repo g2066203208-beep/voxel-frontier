@@ -4,7 +4,6 @@
 #include <array>
 #include <cmath>
 #include <limits>
-#include <vector>
 
 #include <glm/common.hpp>
 #include <glm/geometric.hpp>
@@ -159,7 +158,8 @@ void setSingleContact(
     ContactManifold& manifold) noexcept {
     const double radius = std::max(0.0, sphere.radius);
     const glm::dvec3 extents = glm::max(absVector(box.halfExtents), glm::dvec3{1.0e-9});
-    const glm::dquat inverseRotation = glm::conjugate(glm::normalize(boxPose.orientation));
+    const glm::dquat orientation = glm::normalize(boxPose.orientation);
+    const glm::dquat inverseRotation = glm::conjugate(orientation);
     const glm::dvec3 localCenter = inverseRotation * (spherePose.position - boxPose.position);
     const glm::dvec3 localClosest = glm::clamp(localCenter, -extents, extents);
     const glm::dvec3 boxToSphereLocal = localCenter - localClosest;
@@ -189,9 +189,9 @@ void setSingleContact(
         feature = static_cast<std::uint32_t>(axis * 2 + (sign > 0.0 ? 1 : 0));
     }
 
-    const glm::dvec3 normalBoxToSphere = safeNormalize(glm::normalize(boxPose.orientation) * normalBoxToSphereLocal);
+    const glm::dvec3 normalBoxToSphere = safeNormalize(orientation * normalBoxToSphereLocal);
     const glm::dvec3 normalSphereToBox = -normalBoxToSphere;
-    const glm::dvec3 pointOnBox = boxPose.position + glm::normalize(boxPose.orientation) * contactLocal;
+    const glm::dvec3 pointOnBox = boxPose.position + orientation * contactLocal;
     const glm::dvec3 pointOnSphere = spherePose.position + normalSphereToBox * radius;
     setSingleContact(manifold, normalSphereToBox, 0.5 * (pointOnBox + pointOnSphere), penetration, feature);
     return true;
@@ -293,35 +293,42 @@ struct SatResult {
     return true;
 }
 
+struct ClippedPolygon {
+    std::array<glm::dvec3, 8> points{};
+    std::size_t count{};
+};
+
 void clipPolygonAgainstSidePlane(
-    std::vector<glm::dvec3>& polygon,
+    ClippedPolygon& polygon,
     const glm::dvec3& faceCenter,
     const glm::dvec3& planeNormal,
-    double limit) {
-    if (polygon.empty()) return;
+    double limit) noexcept {
+    if (polygon.count == 0) return;
 
-    std::vector<glm::dvec3> output;
-    output.reserve(polygon.size() + 2U);
-    glm::dvec3 previous = polygon.back();
+    ClippedPolygon output{};
+    glm::dvec3 previous = polygon.points[polygon.count - 1];
     double previousDistance = glm::dot(previous - faceCenter, planeNormal) - limit;
     bool previousInside = previousDistance <= kContactTolerance;
 
-    for (const glm::dvec3& current : polygon) {
+    for (std::size_t i = 0; i < polygon.count; ++i) {
+        const glm::dvec3 current = polygon.points[i];
         const double currentDistance = glm::dot(current - faceCenter, planeNormal) - limit;
         const bool currentInside = currentDistance <= kContactTolerance;
         if (currentInside != previousInside) {
             const double denominator = previousDistance - currentDistance;
-            if (std::abs(denominator) > kEpsilon) {
+            if (std::abs(denominator) > kEpsilon && output.count < output.points.size()) {
                 const double t = std::clamp(previousDistance / denominator, 0.0, 1.0);
-                output.push_back(previous + (current - previous) * t);
+                output.points[output.count++] = previous + (current - previous) * t;
             }
         }
-        if (currentInside) output.push_back(current);
+        if (currentInside && output.count < output.points.size()) {
+            output.points[output.count++] = current;
+        }
         previous = current;
         previousDistance = currentDistance;
         previousInside = currentInside;
     }
-    polygon = std::move(output);
+    polygon = output;
 }
 
 void buildBoxFaceContacts(
@@ -333,7 +340,7 @@ void buildBoxFaceContacts(
     const glm::dvec3& referenceOutwardNormal,
     const glm::dvec3& manifoldNormalAtoB,
     std::uint32_t featurePrefix,
-    ContactManifold& manifold) {
+    ContactManifold& manifold) noexcept {
     const auto refAxes = boxAxes(referencePose);
     const auto incAxes = boxAxes(incidentPose);
     const glm::dvec3 refExtents = glm::max(absVector(reference.halfExtents), glm::dvec3{1.0e-9});
@@ -368,12 +375,12 @@ void buildBoxFaceContacts(
     const glm::dvec3 incidentTangent1 = incAxes[incidentTangentIndex1]
         * component(incExtents, incidentTangentIndex1);
 
-    std::vector<glm::dvec3> polygon{
-        incidentFaceCenter + incidentTangent0 + incidentTangent1,
-        incidentFaceCenter - incidentTangent0 + incidentTangent1,
-        incidentFaceCenter - incidentTangent0 - incidentTangent1,
-        incidentFaceCenter + incidentTangent0 - incidentTangent1,
-    };
+    ClippedPolygon polygon{};
+    polygon.count = 4;
+    polygon.points[0] = incidentFaceCenter + incidentTangent0 + incidentTangent1;
+    polygon.points[1] = incidentFaceCenter - incidentTangent0 + incidentTangent1;
+    polygon.points[2] = incidentFaceCenter - incidentTangent0 - incidentTangent1;
+    polygon.points[3] = incidentFaceCenter + incidentTangent0 - incidentTangent1;
 
     clipPolygonAgainstSidePlane(polygon, refFaceCenter, refTangent0, refTangentExtent0);
     clipPolygonAgainstSidePlane(polygon, refFaceCenter, -refTangent0, refTangentExtent0);
@@ -382,8 +389,8 @@ void buildBoxFaceContacts(
 
     manifold.normal = safeNormalize(manifoldNormalAtoB);
     manifold.pointCount = 0;
-    for (std::size_t i = 0; i < polygon.size() && manifold.pointCount < manifold.points.size(); ++i) {
-        const glm::dvec3& incidentPoint = polygon[i];
+    for (std::size_t i = 0; i < polygon.count && manifold.pointCount < manifold.points.size(); ++i) {
+        const glm::dvec3 incidentPoint = polygon.points[i];
         const double separation = glm::dot(incidentPoint - refFaceCenter, referenceOutwardNormal);
         if (separation > kContactTolerance) continue;
         const double penetration = std::max(0.0, -separation);
@@ -402,7 +409,7 @@ void buildBoxFaceContacts(
     const ShapePose& poseA,
     const CollisionShape& b,
     const ShapePose& poseB,
-    ContactManifold& manifold) {
+    ContactManifold& manifold) noexcept {
     const glm::dvec3 extentsA = glm::max(absVector(a.halfExtents), glm::dvec3{1.0e-9});
     const glm::dvec3 extentsB = glm::max(absVector(b.halfExtents), glm::dvec3{1.0e-9});
     const auto axesA = boxAxes(poseA);
