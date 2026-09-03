@@ -354,7 +354,7 @@ void buildBoxFaceContacts(
     const glm::dvec3 refTangent0 = refAxes[refTangentIndex0];
     const glm::dvec3 refTangent1 = refAxes[refTangentIndex1];
     const double refTangentExtent0 = component(refExtents, refTangentIndex0);
-    const double refTangentExtent1 = component(refExtents, refTangentIndexIndex1);
+    const double refTangentExtent1 = component(refExtents, refTangentIndex1);
     const glm::dvec3 refFaceCenter = referencePose.position
         + referenceOutwardNormal * component(refExtents, referenceAxisIndex);
 
