@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <glm/geometric.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace vf {
 namespace {
@@ -56,16 +57,24 @@ constexpr double kPi = 3.14159265358979323846;
 PhysicsPlayground::PhysicsPlayground(
     PhysicsWorld& physics,
     const PlanetDefinition& planet,
-    const glm::dvec3& centerDirection)
-    : physics_(&physics), planet_(&planet), centerDirection_(safeNormalize(centerDirection)) {
-    up_ = centerDirection_;
-    const glm::dvec3 reference = std::abs(up_.y) < 0.9
+    const glm::dvec3& centerDirectionLocal,
+    const glm::dvec3& planetOriginWorld,
+    const glm::dquat& planetOrientationWorld)
+    : physics_(&physics),
+      planet_(&planet),
+      planetOriginWorld_(planetOriginWorld),
+      planetOrientationWorld_(glm::normalize(planetOrientationWorld)),
+      centerDirectionLocal_(safeNormalize(centerDirectionLocal)) {
+    const glm::dvec3 localUp = centerDirectionLocal_;
+    const glm::dvec3 localReference = std::abs(localUp.y) < 0.9
         ? glm::dvec3{0.0, 1.0, 0.0}
         : glm::dvec3{1.0, 0.0, 0.0};
-    east_ = safeNormalize(glm::cross(reference, up_), {1.0, 0.0, 0.0});
-    north_ = safeNormalize(glm::cross(up_, east_), {0.0, 0.0, 1.0});
+    const glm::dvec3 localEast = safeNormalize(glm::cross(localReference, localUp), {1.0, 0.0, 0.0});
+    const glm::dvec3 localNorth = safeNormalize(glm::cross(localUp, localEast), {0.0, 0.0, 1.0});
+    up_ = safeNormalize(planetOrientationWorld_ * localUp, localUp);
+    east_ = safeNormalize(planetOrientationWorld_ * localEast, localEast);
+    north_ = safeNormalize(planetOrientationWorld_ * localNorth, localNorth);
 
-    // Spring station: an elevated ceiling anchor and a massive payload visibly oscillate.
     springAnchor_ = physics_->createRigidBody(makeStaticBody(surfacePoint(-7.0, 0.0, 8.5)));
     auto springPayloadDesc = makeDynamicSphere(surfacePoint(-7.0, 0.0, 4.0), 18.0, 0.65);
     springPayloadDesc.material.restitution = 0.08;
@@ -80,7 +89,6 @@ PhysicsPlayground::PhysicsPlayground(
     spring.breakForceN = 16000.0;
     (void)physics_->createSpringDamperConstraint(spring);
 
-    // Motorized hinge station: the collision primitive matches the visible primary rotor blade.
     const glm::dvec3 motorBase = surfacePoint(0.0, 0.0, 0.2);
     motorAnchor_ = physics_->createRigidBody(makeStaticBody(motorBase + up_ * 2.8, 0.03));
     auto rotorDesc = makeDynamicSphere(motorBase + up_ * 3.3, 12.0, 0.07);
@@ -104,7 +112,6 @@ PhysicsPlayground::PhysicsPlayground(
     motorHinge.breakTorqueNm = 1800.0;
     (void)physics_->createHingeConstraint(motorHinge);
 
-    // Gear station: one powered shaft drives the neighboring shaft at a real angular ratio.
     const glm::dvec3 gearBaseA = surfacePoint(7.0, -0.5, 0.2);
     const glm::dvec3 gearBaseB = surfacePoint(10.0, -0.5, 0.2);
     gearAnchorA_ = physics_->createRigidBody(makeStaticBody(gearBaseA + up_ * 2.5, 0.03));
@@ -150,7 +157,6 @@ PhysicsPlayground::PhysicsPlayground(
     gear.breakTorqueNm = 900.0;
     (void)physics_->createGearConstraint(gear);
 
-    // Atmospheric buoyancy: a light sealed envelope rises from displaced air.
     auto balloonDesc = makeDynamicSphere(surfacePoint(14.0, 2.5, 2.1), 2.2, 0.85);
     balloonDesc.material.restitution = 0.05;
     balloonDesc.aerodynamics.dragCoefficient = 0.48;
@@ -160,7 +166,6 @@ PhysicsPlayground::PhysicsPlayground(
     balloonDesc.buoyancy.displacedVolume = 3.6;
     balloon_ = physics_->createRigidBody(balloonDesc);
 
-    // A small pile proves mass, gravity, collision, restitution, friction and rolling resistance visually.
     for (int i = 0; i < 5; ++i) {
         auto desc = makeDynamicSphere(
             surfacePoint(-1.5 + 1.0 * static_cast<double>(i), 6.0, 7.0 + static_cast<double>(i) * 1.8),
@@ -172,15 +177,13 @@ PhysicsPlayground::PhysicsPlayground(
     }
 
     tree_.rootPosition = surfacePoint(-13.0, 3.5, 0.05);
-    tree_.localUp = safeNormalize(tree_.rootPosition);
+    tree_.localUp = safeNormalize(tree_.rootPosition - planetOriginWorld_);
     tree_.fallDirection = north_ + east_ * 0.35;
     tree_.trunkLength = 6.8;
     tree_.trunkRadius = 0.28;
     tree_.trunkMass = 360.0;
     tree_.dragCoefficient = 1.1;
 
-    // XPBD rope demonstration: one end is fixed to the ground, the rope makes a full turn
-    // around the tree trunk with finite radius, and its other end is tied to a real rigid payload.
     ropeGroundAnchor_ = tree_.rootPosition - east_ * 2.6 + tree_.localUp * 0.18;
     const glm::dvec3 loopCenter = tree_.rootPosition + tree_.localUp * 1.25;
     constexpr int loopSegments = 24;
@@ -224,15 +227,53 @@ PhysicsPlayground::PhysicsPlayground(
     visibleBodyIds_.insert(visibleBodyIds_.end(), fallingBodies_.begin(), fallingBodies_.end());
 }
 
+void PhysicsPlayground::syncPlanetFrame(
+    const glm::dvec3& planetOriginWorld,
+    const glm::dquat& planetOrientationWorld) {
+    const glm::dquat oldOrientation = glm::normalize(planetOrientationWorld_);
+    const glm::dquat newOrientation = glm::normalize(planetOrientationWorld);
+    const glm::dquat deltaRotation = glm::normalize(newOrientation * glm::conjugate(oldOrientation));
+    const glm::dvec3 oldOrigin = planetOriginWorld_;
+
+    const auto transformPoint = [&](const glm::dvec3& point) {
+        return planetOriginWorld + deltaRotation * (point - oldOrigin);
+    };
+    const auto rotateVector = [&](const glm::dvec3& vector) {
+        return deltaRotation * vector;
+    };
+
+    tree_.rootPosition = transformPoint(tree_.rootPosition);
+    tree_.localUp = safeNormalize(rotateVector(tree_.localUp), tree_.localUp);
+    tree_.fallDirection = safeNormalize(rotateVector(tree_.fallDirection), tree_.fallDirection);
+    ropeGroundAnchor_ = transformPoint(ropeGroundAnchor_);
+
+    for (auto& particle : rope_.particles()) {
+        particle.position = transformPoint(particle.position);
+        particle.previousPosition = transformPoint(particle.previousPosition);
+        particle.velocity = rotateVector(particle.velocity);
+    }
+    if (rope_.initialized()) rope_.setPinnedPosition(0U, ropeGroundAnchor_);
+
+    up_ = safeNormalize(rotateVector(up_), up_);
+    east_ = safeNormalize(rotateVector(east_), east_);
+    north_ = safeNormalize(rotateVector(north_), north_);
+    planetOriginWorld_ = planetOriginWorld;
+    planetOrientationWorld_ = newOrientation;
+}
+
 glm::dvec3 PhysicsPlayground::surfacePoint(
     double eastMeters,
     double northMeters,
     double heightMeters) const {
     const double radius = std::max(1.0, planet_->radius);
-    const glm::dvec3 direction = safeNormalize(
-        centerDirection_ + east_ * (eastMeters / radius) + north_ * (northMeters / radius),
-        centerDirection_);
-    return direction * (planetSurfaceRadius(*planet_, direction) + heightMeters);
+    const glm::dquat inverseOrientation = glm::conjugate(glm::normalize(planetOrientationWorld_));
+    const glm::dvec3 localEast = safeNormalize(inverseOrientation * east_, {1.0, 0.0, 0.0});
+    const glm::dvec3 localNorth = safeNormalize(inverseOrientation * north_, {0.0, 0.0, 1.0});
+    const glm::dvec3 directionLocal = safeNormalize(
+        centerDirectionLocal_ + localEast * (eastMeters / radius) + localNorth * (northMeters / radius),
+        centerDirectionLocal_);
+    const glm::dvec3 localPoint = directionLocal * (planetSurfaceRadius(*planet_, directionLocal) + heightMeters);
+    return planetOriginWorld_ + planetOrientationWorld_ * localPoint;
 }
 
 bool PhysicsPlayground::isSpecialBody(std::uint32_t id) const noexcept {
@@ -243,7 +284,6 @@ bool PhysicsPlayground::isSpecialBody(std::uint32_t id) const noexcept {
 void PhysicsPlayground::update(double deltaSeconds) {
     elapsedSeconds_ += std::clamp(deltaSeconds, 0.0, 0.05);
 
-    // Demonstration cut begins after the player has had time to see the standing tree.
     if (elapsedSeconds_ >= 4.0 && elapsedSeconds_ <= 7.4 && tree_.cutFraction < 0.70) {
         tree_.applyCut(deltaSeconds * 0.22, north_ + east_ * 0.35);
     }
@@ -280,7 +320,6 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
     const glm::vec3 ropeColor{0.72F, 0.55F, 0.31F};
     const glm::vec3 ropePayloadColor{0.55F, 0.24F, 0.72F};
 
-    // Spring mast + current spring line + payload.
     if (const auto* anchor = physics_->body(springAnchor_)) {
         const glm::dvec3 foot = surfacePoint(-7.0, 0.0, 0.1);
         appendDebugRod(mesh, foot, anchor->position, 0.10, steel);
@@ -318,7 +357,8 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
 
     if (const auto* balloon = physics_->body(balloon_)) {
         appendDebugSphere(mesh, balloon->position, balloon->collisionShape.radius, balloonColor, 9U, 14U);
-        const glm::dvec3 tetherEnd = balloon->position - safeNormalize(balloon->position) * 1.35;
+        const glm::dvec3 tetherEnd = balloon->position
+            - safeNormalize(balloon->position - planetOriginWorld_) * 1.35;
         appendDebugRod(mesh, balloon->position, tetherEnd, 0.025, {0.42F, 0.28F, 0.16F});
     }
 
@@ -335,6 +375,7 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
 
     const auto ropeParticles = rope_.particles();
     for (std::size_t i = 0; i + 1U < ropeParticles.size(); ++i) {
+        if (rope_.linkBroken(i)) continue;
         appendDebugRod(
             mesh,
             ropeParticles[i].position,
