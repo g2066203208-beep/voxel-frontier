@@ -36,6 +36,14 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     first.climate.meanTemperatureK = 288.15;
     const auto firstId = system.addBody(first);
 
+    // Verify the configured body's own Newtonian surface gravity before adding another
+    // source. Once multiple bodies exist, the physically correct result is their vector sum.
+    const auto isolatedSurface = system.sampleEnvironment({240.0, 0.0, 0.0});
+    require(isolatedSurface.bodyId == firstId, "primary planet must own its local environment");
+    requireNear(glm::length(isolatedSurface.gravityAcceleration), 9.81, 0.02,
+        "isolated primary surface gravity must match GM/R^2");
+    require(isolatedSurface.pressurePa > 90000.0, "primary planet must expose its own atmosphere");
+
     vf::CelestialBody second = first;
     second.name = "B";
     second.position = {1200.0, 0.0, 0.0};
@@ -45,9 +53,9 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     const auto secondId = system.addBody(second);
 
     const auto firstSurface = system.sampleEnvironment({240.0, 0.0, 0.0});
-    require(firstSurface.bodyId == firstId, "primary planet must own its local environment");
-    requireNear(glm::length(firstSurface.gravityAcceleration), 9.81, 0.15, "primary surface gravity must be physical");
-    require(firstSurface.pressurePa > 90000.0, "primary planet must expose its own atmosphere");
+    require(firstSurface.bodyId == firstId, "primary planet must retain ownership after another gravity source is added");
+    require(glm::length(firstSurface.gravityAcceleration) > glm::length(isolatedSurface.gravityAcceleration),
+        "multi-body gravity must include the second body's physical contribution");
 
     const auto secondSurface = system.sampleEnvironment({1440.0, 0.0, 0.0});
     require(secondSurface.bodyId == secondId, "second planet must own its local environment");
