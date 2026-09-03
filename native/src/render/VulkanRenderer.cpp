@@ -96,6 +96,7 @@ VulkanRenderer::VulkanRenderer(SDL_Window* window) : window_(window) {
     createDevice();
     createCommands();
     createSyncObjects();
+    createSceneDescriptors();
     createSwapchain();
     createSwapchainResources();
 }
@@ -107,6 +108,7 @@ VulkanRenderer::~VulkanRenderer() {
     destroyMesh();
     destroySwapchainResources();
     destroySwapchain();
+    destroySceneDescriptors();
 
     for (std::uint32_t i = 0; i < kFramesInFlight; ++i) {
         if (inFlight_[i] != VK_NULL_HANDLE) vkDestroyFence(device_, inFlight_[i], nullptr);
@@ -296,11 +298,100 @@ void VulkanRenderer::createSyncObjects() {
 
     for (std::uint32_t i = 0; i < kFramesInFlight; ++i) {
         if (vkCreateSemaphore(device_, &semaphoreInfo, nullptr, &imageAvailable_[i]) != VK_SUCCESS ||
-            vkCreateSemaphore(device_, &semaphoreInfo, nullptr, &renderFinished_[i]) != VK_SUCCESS ||
+            vkCreateSemaphore(device_, &renderFinished_[i], nullptr, &renderFinished_[i]) != VK_SUCCESS ||
             vkCreateFence(device_, &fenceInfo, nullptr, &inFlight_[i]) != VK_SUCCESS) {
             fail("Failed to create Vulkan synchronization objects");
         }
     }
+}
+
+void VulkanRenderer::createSceneDescriptors() {
+    VkDescriptorSetLayoutBinding binding{};
+    binding.binding = 0;
+    binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    binding.descriptorCount = 1;
+    binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo{};
+    layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &binding;
+    VkResult result = vkCreateDescriptorSetLayout(device_, &layoutInfo, nullptr, &sceneDescriptorSetLayout_);
+    if (result != VK_SUCCESS) fail("vkCreateDescriptorSetLayout(scene) failed", result);
+
+    VkDescriptorPoolSize poolSize{};
+    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize.descriptorCount = kFramesInFlight;
+    VkDescriptorPoolCreateInfo poolInfo{};
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.maxSets = kFramesInFlight;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+    result = vkCreateDescriptorPool(device_, &poolInfo, nullptr, &sceneDescriptorPool_);
+    if (result != VK_SUCCESS) fail("vkCreateDescriptorPool(scene) failed", result);
+
+    std::array<VkDescriptorSetLayout, kFramesInFlight> layouts{};
+    layouts.fill(sceneDescriptorSetLayout_);
+    VkDescriptorSetAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = sceneDescriptorPool_;
+    allocInfo.descriptorSetCount = kFramesInFlight;
+    allocInfo.pSetLayouts = layouts.data();
+    result = vkAllocateDescriptorSets(device_, &allocInfo, sceneDescriptorSets_.data());
+    if (result != VK_SUCCESS) fail("vkAllocateDescriptorSets(scene) failed", result);
+
+    for (std::uint32_t frame = 0; frame < kFramesInFlight; ++frame) {
+        createBuffer(
+            sizeof(SceneUniform),
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            sceneUniformBuffers_[frame],
+            sceneUniformMemory_[frame]);
+        result = vkMapMemory(device_, sceneUniformMemory_[frame], 0, sizeof(SceneUniform), 0, &mappedSceneUniforms_[frame]);
+        if (result != VK_SUCCESS) fail("vkMapMemory(scene uniform) failed", result);
+
+        VkDescriptorBufferInfo bufferInfo{};
+        bufferInfo.buffer = sceneUniformBuffers_[frame];
+        bufferInfo.offset = 0;
+        bufferInfo.range = sizeof(SceneUniform);
+        VkWriteDescriptorSet write{};
+        write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        write.dstSet = sceneDescriptorSets_[frame];
+        write.dstBinding = 0;
+        write.descriptorCount = 1;
+        write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        write.pBufferInfo = &bufferInfo;
+        vkUpdateDescriptorSets(device_, 1, &write, 0, nullptr);
+    }
+}
+
+void VulkanRenderer::destroySceneDescriptors() noexcept {
+    for (std::uint32_t frame = 0; frame < kFramesInFlight; ++frame) {
+        if (mappedSceneUniforms_[frame] != nullptr && sceneUniformMemory_[frame] != VK_NULL_HANDLE) {
+            vkUnmapMemory(device_, sceneUniformMemory_[frame]);
+        }
+        mappedSceneUniforms_[frame] = nullptr;
+        if (sceneUniformBuffers_[frame] != VK_NULL_HANDLE) vkDestroyBuffer(device_, sceneUniformBuffers_[frame], nullptr);
+        if (sceneUniformMemory_[frame] != VK_NULL_HANDLE) vkFreeMemory(device_, sceneUniformMemory_[frame], nullptr);
+        sceneUniformBuffers_[frame] = VK_NULL_HANDLE;
+        sceneUniformMemory_[frame] = VK_NULL_HANDLE;
+    }
+    if (sceneDescriptorPool_ != VK_NULL_HANDLE) vkDestroyDescriptorPool(device_, sceneDescriptorPool_, nullptr);
+    sceneDescriptorPool_ = VK_NULL_HANDLE;
+    if (sceneDescriptorSetLayout_ != VK_NULL_HANDLE) vkDestroyDescriptorSetLayout(device_, sceneDescriptorSetLayout_, nullptr);
+    sceneDescriptorSetLayout_ = VK_NULL_HANDLE;
+}
+
+void VulkanRenderer::updateSceneUniform(std::uint32_t frame) noexcept {
+    if (frame >= kFramesInFlight || mappedSceneUniforms_[frame] == nullptr) return;
+    SceneUniform uniform{};
+    if (localFogVolume_.enabled()) {
+        uniform.fogCenterRadius = glm::vec4(glm::vec3(localFogVolume_.center), static_cast<float>(localFogVolume_.radiusMeters));
+        uniform.fogColorExtinction = glm::vec4(
+            glm::clamp(localFogVolume_.scatteringColor, glm::vec3{0.0F}, glm::vec3{1.0F}),
+            static_cast<float>(std::max(0.0, localFogVolume_.extinctionPerMeter)));
+    }
+    std::memcpy(mappedSceneUniforms_[frame], &uniform, sizeof(uniform));
 }
 
 void VulkanRenderer::createSwapchain() {
@@ -518,7 +609,7 @@ void VulkanRenderer::createDepthResources() {
     result = vkAllocateMemory(device_, &allocInfo, nullptr, &depthMemory_);
     if (result != VK_SUCCESS) fail("vkAllocateMemory(depth) failed", result);
     result = vkBindImageMemory(device_, depthImage_, depthMemory_, 0);
-    if (result != VK_SUCCESS) fail("vkBindImageMemory(depth) failed", result);
+    if (result != VK_SUCCESS) fail("vkBindImageMemory failed", result);
 
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -626,6 +717,8 @@ void VulkanRenderer::createGraphicsPipeline() {
 
     VkPipelineLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    layoutInfo.setLayoutCount = 1;
+    layoutInfo.pSetLayouts = &sceneDescriptorSetLayout_;
     layoutInfo.pushConstantRangeCount = 1;
     layoutInfo.pPushConstantRanges = &pushRange;
     VkResult result = vkCreatePipelineLayout(device_, &layoutInfo, nullptr, &pipelineLayout_);
@@ -809,9 +902,8 @@ void VulkanRenderer::drawFrame(
     VkResult result = vkWaitForFences(device_, 1, &inFlight_[frame], VK_TRUE, UINT64_MAX);
     if (result != VK_SUCCESS) fail("vkWaitForFences failed", result);
 
-    // This frame's fence proves the GPU is no longer reading this frame-owned dynamic mesh.
-    // HOST_COHERENT memory plus the subsequent queue submission makes these host writes visible.
     uploadDynamicMeshForFrame(frame);
+    updateSceneUniform(frame);
 
     std::uint32_t imageIndex = 0;
     result = vkAcquireNextImageKHR(device_, swapchain_, UINT64_MAX, imageAvailable_[frame], VK_NULL_HANDLE, &imageIndex);
@@ -910,6 +1002,15 @@ void VulkanRenderer::drawFrame(
     VkRect2D scissor{{0, 0}, swapchainExtent_};
     vkCmdSetScissor(commandBuffers_[frame], 0, 1, &scissor);
     vkCmdBindPipeline(commandBuffers_[frame], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline_);
+    vkCmdBindDescriptorSets(
+        commandBuffers_[frame],
+        VK_PIPELINE_BIND_POINT_GRAPHICS,
+        pipelineLayout_,
+        0,
+        1,
+        &sceneDescriptorSets_[frame],
+        0,
+        nullptr);
 
     PushConstants push{};
     push.viewProjection = viewProjection;
@@ -930,12 +1031,8 @@ void VulkanRenderer::drawFrame(
         sizeof(PushConstants),
         &push);
 
-    // Static planet vertices live in body-local coordinates; one quaternion in push constants
-    // rotates the entire world without rebuilding or re-uploading tens of thousands of vertices.
     drawBoundMesh(commandBuffers_[frame], vertexBuffer_, indexBuffer_, indexCount_);
 
-    // Dynamic debug/celestial geometry is already emitted in world space, so reset only the
-    // object rotation before drawing it. Lighting remains the same real star for both passes.
     push.objectRotation = {0.0F, 0.0F, 0.0F, 1.0F};
     vkCmdPushConstants(
         commandBuffers_[frame],
