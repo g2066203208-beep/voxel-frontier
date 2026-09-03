@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <cmath>
 
-#include <glm/gtx/rotate_vector.hpp>
-
 namespace vf {
 namespace {
 
