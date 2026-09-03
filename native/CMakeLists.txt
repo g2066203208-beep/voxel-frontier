@@ -164,6 +164,10 @@ if(VF_BUILD_TESTS)
     target_link_libraries(vf_planet_physics_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_planet_physics_tests COMMAND vf_planet_physics_tests)
 
+    add_executable(vf_camera_input_tests tests/CameraInputTests.cpp)
+    target_link_libraries(vf_camera_input_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_camera_input_tests COMMAND vf_camera_input_tests)
+
     add_executable(vf_collision_geometry_tests tests/CollisionGeometryTests.cpp)
     target_link_libraries(vf_collision_geometry_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_collision_geometry_tests COMMAND vf_collision_geometry_tests)
