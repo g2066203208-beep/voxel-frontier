@@ -112,9 +112,9 @@ if(VF_BUILD_RUNTIME)
     add_custom_command(
         OUTPUT "${VF_SHADER_HEADER}"
         COMMAND ${CMAKE_COMMAND}
-            -DVERT="${VF_VERTEX_SPV}"
-            -DFRAG="${VF_FRAGMENT_SPV}"
-            -DOUT="${VF_SHADER_HEADER}"
+            "-DVERT=${VF_VERTEX_SPV}"
+            "-DFRAG=${VF_FRAGMENT_SPV}"
+            "-DOUT=${VF_SHADER_HEADER}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
         DEPENDS "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
         VERBATIM
