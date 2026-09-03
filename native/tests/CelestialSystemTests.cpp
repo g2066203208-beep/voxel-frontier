@@ -1,3 +1,4 @@
+#include "vf/physics/PhysicsWorld.hpp"
 #include "vf/world/CelestialSystem.hpp"
 
 #include <cmath>
@@ -140,6 +141,48 @@ void testDipoleMagneticFieldFallsWithDistance() {
     requireNear(twiceRadius / surface, 1.0 / 8.0, 0.002, "dipole field must follow inverse-cube distance scaling");
 }
 
+void testRotatingSurfaceTransfersTangentialVelocityToRigidBody() {
+    vf::PlanetDefinition terrain{};
+    terrain.radius = 100.0;
+    terrain.maxElevation = 0.0;
+
+    vf::CelestialSystem celestial;
+    vf::CelestialBody planet{};
+    planet.radiusMeters = terrain.radius;
+    planet.massKg = 9.81 * planet.radiusMeters * planet.radiusMeters
+        / vf::CelestialSystem::kGravitationalConstant;
+    planet.spinAxis = {0.0, 1.0, 0.0};
+    planet.spinRateRadPerSecond = 0.01;
+    const auto planetId = celestial.addBody(planet);
+
+    vf::PhysicsEnvironment environment{};
+    environment.planet = terrain;
+    environment.celestialSystem = &celestial;
+    environment.primaryCelestialBodyId = planetId;
+    environment.ocean.enabled = false;
+    environment.atmosphere.seaLevelPressurePa = 0.0;
+    vf::PhysicsWorld physics{environment};
+
+    vf::RigidBodyDesc desc{};
+    desc.position = {101.0, 0.0, 0.0};
+    desc.mass = 1.0;
+    desc.collisionShape = vf::CollisionShape::sphere(1.0);
+    desc.linearDamping = 0.0;
+    desc.angularDamping = 0.0;
+    desc.material.friction = 1.0;
+    desc.material.restitution = 0.0;
+    desc.aerodynamics.referenceArea = 0.0;
+    const auto bodyId = physics.createRigidBody(desc);
+
+    for (int i = 0; i < 240; ++i) physics.stepFixed();
+    const auto* body = physics.body(bodyId);
+    require(body != nullptr, "rotating-surface rigid body must remain accessible");
+    require(std::abs(body->linearVelocity.z) > 0.20,
+        "ground friction must transfer non-zero tangential velocity from omega-cross-r surface motion");
+    require(glm::length(body->position) >= 100.999,
+        "moving celestial surface contact must still prevent penetration");
+}
+
 } // namespace
 
 int main() {
@@ -147,6 +190,7 @@ int main() {
     testAtmosphereFadesToVacuum();
     testSpinAndBoundOrbit();
     testDipoleMagneticFieldFallsWithDistance();
+    testRotatingSurfaceTransfersTangentialVelocityToRigidBody();
     std::cout << "vf_celestial_system_tests: PASS\n";
     return 0;
 }
