@@ -101,7 +101,7 @@ void testLocalSolveRemovesLargeSurfaceVelocityThenRestoresIt() {
     payload.position = {1101.0, 0.0, 0.0};
     payload.mass = 1.0;
     payload.collisionShape = vf::CollisionShape::sphere(1.0);
-    payload.linearVelocity = {}; // authored as at-rest-on-the-ground
+    payload.linearVelocity = {};
     payload.angularVelocity = {};
     payload.linearDamping = 0.0;
     payload.angularDamping = 0.0;
@@ -150,7 +150,10 @@ void testRelativeGravityRemovesOnlyCommonOrbitalAcceleration() {
 
     const double starAtSurface = vf::CelestialSystem::kGravitationalConstant * star.massKg / (1100.0 * 1100.0);
     const double starAtPlanet = vf::CelestialSystem::kGravitationalConstant * star.massKg / (1000.0 * 1000.0);
-    const double expectedX = -9.81 + (starAtSurface - starAtPlanet);
+    // The point is on the far side of the planet from the star. Both stellar accelerations point
+    // toward -X, but the planet center is pulled slightly harder; after subtracting common-mode
+    // frame acceleration the residual tide therefore points +X.
+    const double expectedX = -9.81 + (starAtPlanet - starAtSurface);
     requireNear(relative.x, expectedX, 1.0e-8,
         "local planet frame must subtract common parent acceleration but preserve real tidal difference");
     requireNear(relative.y, 0.0, 1.0e-10, "relative frame gravity must not invent transverse acceleration");
