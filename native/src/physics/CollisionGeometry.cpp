@@ -1,4 +1,5 @@
 #include "vf/physics/CollisionGeometry.hpp"
+#include "vf/physics/GjkEpa.hpp"
 
 #include <algorithm>
 #include <array>
@@ -637,10 +638,11 @@ bool collideShapes(
         return boxBox(a, poseA, b, poseB, manifold);
     }
 
-    // Box/capsule and future arbitrary convex pairs deliberately fall through.
-    // They will share supportPoint() through GJK + EPA rather than getting an
-    // approximate pair-specific shortcut.
-    return false;
+    // Remaining support-mapped convex pairs share one general GJK + EPA path.
+    // At v5 this principally activates Box/Capsule in production; future convex
+    // hull types plug into the same supportPoint() contract rather than adding
+    // pair-specific approximations.
+    return collideConvexGjkEpa(a, poseA, b, poseB, manifold);
 }
 
 } // namespace vf
