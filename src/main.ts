@@ -1,6 +1,4 @@
 import './styles.css';
-import { Game } from './core/Game';
-import { NextEnginePreview } from './next/NextEnginePreview';
 
 function requireElement<T extends HTMLElement>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -12,10 +10,17 @@ const canvas = requireElement<HTMLCanvasElement>('#game');
 const playButton = requireElement<HTMLButtonElement>('#play-button');
 const status = requireElement<HTMLElement>('#status');
 
+async function bootCompatibilityEngine(): Promise<void> {
+  const { Game } = await import('./core/Game');
+  const game = new Game(canvas, playButton);
+  game.start();
+}
+
 async function boot(): Promise<void> {
   const nextRequested = new URLSearchParams(window.location.search).get('engine') === 'next';
   if (nextRequested) {
     try {
+      const { NextEnginePreview } = await import('./next/NextEnginePreview');
       const next = await NextEnginePreview.create(canvas, playButton);
       if (next) {
         next.start();
@@ -28,8 +33,7 @@ async function boot(): Promise<void> {
     }
   }
 
-  const game = new Game(canvas, playButton);
-  game.start();
+  await bootCompatibilityEngine();
 }
 
 void boot();
