@@ -26,6 +26,7 @@ add_library(vf_engine STATIC
     src/physics/PhysicsWorld.cpp
     src/physics/Broadphase.cpp
     src/physics/CollisionGeometry.cpp
+    src/physics/GjkEpa.cpp
     src/physics/AerodynamicSurface.cpp
     src/physics/ShallowWater.cpp
     src/physics/TreePhysics.cpp
@@ -161,6 +162,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_collision_geometry_tests tests/CollisionGeometryTests.cpp)
     target_link_libraries(vf_collision_geometry_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_collision_geometry_tests COMMAND vf_collision_geometry_tests)
+
+    add_executable(vf_gjk_epa_tests tests/GjkEpaTests.cpp)
+    target_link_libraries(vf_gjk_epa_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_gjk_epa_tests COMMAND vf_gjk_epa_tests)
 
     add_executable(vf_contact_solver_tests tests/ContactSolverTests.cpp)
     target_link_libraries(vf_contact_solver_tests PRIVATE vf_engine glm::glm)
