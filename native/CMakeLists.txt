@@ -211,6 +211,10 @@ if(VF_BUILD_TESTS)
     target_link_libraries(vf_celestial_surface_frames_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_celestial_surface_frames_tests COMMAND vf_celestial_surface_frames_tests)
 
+    add_executable(vf_interplanetary_flight_tests tests/InterplanetaryFlightTests.cpp)
+    target_link_libraries(vf_interplanetary_flight_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_interplanetary_flight_tests COMMAND vf_interplanetary_flight_tests)
+
     add_executable(vf_spectral_optics_tests tests/SpectralOpticsTests.cpp)
     target_link_libraries(vf_spectral_optics_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_spectral_optics_tests COMMAND vf_spectral_optics_tests)
