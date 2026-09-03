@@ -298,7 +298,7 @@ void VulkanRenderer::createSyncObjects() {
 
     for (std::uint32_t i = 0; i < kFramesInFlight; ++i) {
         if (vkCreateSemaphore(device_, &semaphoreInfo, nullptr, &imageAvailable_[i]) != VK_SUCCESS ||
-            vkCreateSemaphore(device_, &renderFinished_[i], nullptr, &renderFinished_[i]) != VK_SUCCESS ||
+            vkCreateSemaphore(device_, &semaphoreInfo, nullptr, &renderFinished_[i]) != VK_SUCCESS ||
             vkCreateFence(device_, &fenceInfo, nullptr, &inFlight_[i]) != VK_SUCCESS) {
             fail("Failed to create Vulkan synchronization objects");
         }
@@ -577,7 +577,7 @@ void VulkanRenderer::createBuffer(
 
     result = vkAllocateMemory(device_, &allocInfo, nullptr, &memory);
     if (result != VK_SUCCESS) fail("vkAllocateMemory(buffer) failed", result);
-    result = vkBindBufferMemory(device_, buffer, memory, 0);
+    result = vkBindBufferMemory(device_, buffer, 0, memory);
     if (result != VK_SUCCESS) fail("vkBindBufferMemory failed", result);
 }
 
@@ -609,7 +609,7 @@ void VulkanRenderer::createDepthResources() {
     result = vkAllocateMemory(device_, &allocInfo, nullptr, &depthMemory_);
     if (result != VK_SUCCESS) fail("vkAllocateMemory(depth) failed", result);
     result = vkBindImageMemory(device_, depthImage_, depthMemory_, 0);
-    if (result != VK_SUCCESS) fail("vkBindImageMemory failed", result);
+    if (result != VK_SUCCESS) fail("vkBindImageMemory(depth) failed", result);
 
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
