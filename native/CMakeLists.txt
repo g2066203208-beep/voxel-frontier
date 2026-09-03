@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.5.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.6.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,7 +10,7 @@ include(FetchContent)
 option(VF_BUILD_RUNTIME "Build the native desktop runtime" ON)
 option(VF_BUILD_TESTS "Build native engine tests" ON)
 
-# Header-only graphics math. Pin the current stable GLM 1.0 line.
+# Header-only graphics math. Keep this dependency pinned for reproducible CI.
 set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(
     glm
@@ -21,13 +21,11 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glm)
 
 add_library(vf_engine STATIC
-    src/core/Engine.cpp
-    src/world/Chunk.cpp
-    src/world/World.cpp
     src/world/PlanetSurface.cpp
     src/player/PlanetCamera.cpp
     src/physics/PhysicsWorld.cpp
     src/physics/Broadphase.cpp
+    src/physics/CollisionGeometry.cpp
     src/physics/AerodynamicSurface.cpp
     src/physics/ShallowWater.cpp
     src/physics/TreePhysics.cpp
@@ -158,9 +156,14 @@ endif()
 
 if(VF_BUILD_TESTS)
     enable_testing()
-    add_executable(vf_engine_tests tests/EngineTests.cpp)
-    target_link_libraries(vf_engine_tests PRIVATE vf_engine glm::glm)
-    add_test(NAME vf_engine_tests COMMAND vf_engine_tests)
+
+    add_executable(vf_planet_physics_tests tests/PlanetPhysicsTests.cpp)
+    target_link_libraries(vf_planet_physics_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_planet_physics_tests COMMAND vf_planet_physics_tests)
+
+    add_executable(vf_collision_geometry_tests tests/CollisionGeometryTests.cpp)
+    target_link_libraries(vf_collision_geometry_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_collision_geometry_tests COMMAND vf_collision_geometry_tests)
 
     add_executable(vf_gas_chamber_tests tests/GasChamberTests.cpp)
     target_link_libraries(vf_gas_chamber_tests PRIVATE vf_engine)
