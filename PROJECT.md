@@ -71,8 +71,8 @@
 
 ## Phase 6 — Extensibility
 - Data-driven block/item/entity registry
-- Versioned Mod API
-- ZIP mod-pack loader
+- Versioned extension API
+- Content-pack loading
 - Manifest validation
 - Sandboxed permissions and compatibility gates
 
@@ -81,4 +81,4 @@
 - Player persistence
 - Shared worlds
 - Server-side combat/state validation
-- Mod compatibility handshake
+- Extension compatibility handshake
