@@ -10,6 +10,9 @@
 
 namespace vf {
 
+// Game-first celestial physics: coherent gravity/orbit/spin/environment behavior with
+// tiny CPU cost. Expensive ephemeris, global CFD and full-field plasma simulation are
+// deliberately out of scope; visible/gameplay behavior must remain physically plausible.
 enum class CelestialBodyType : std::uint8_t {
     Star,
     Planet,
