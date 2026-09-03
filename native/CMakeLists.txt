@@ -27,7 +27,10 @@ endif()
 
 if(VF_BUILD_RUNTIME)
     # Thin platform layer only. SDL does not provide our renderer/world/physics/gameplay.
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
     set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+    set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
     set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
     FetchContent_Declare(
         SDL3
@@ -64,7 +67,7 @@ if(VF_BUILD_RUNTIME)
     target_include_directories(voxel_frontier PRIVATE include)
     target_link_libraries(voxel_frontier PRIVATE
         vf_engine
-        SDL3::SDL3
+        SDL3::SDL3-static
         Vulkan::Headers
         volk::volk
     )
