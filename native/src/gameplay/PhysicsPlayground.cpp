@@ -23,19 +23,19 @@ namespace {
     desc.motionType = MotionType::Static;
     desc.position = position;
     desc.mass = 0.0;
-    desc.collisionRadius = radius;
+    desc.collisionShape = CollisionShape::sphere(radius);
     desc.aerodynamics.referenceArea = 0.0;
     return desc;
 }
 
-[[nodiscard]] RigidBodyDesc makeDynamicBody(
+[[nodiscard]] RigidBodyDesc makeDynamicSphere(
     const glm::dvec3& position,
     double mass,
     double radius) {
     RigidBodyDesc desc{};
     desc.position = position;
     desc.mass = mass;
-    desc.collisionRadius = radius;
+    desc.collisionShape = CollisionShape::sphere(radius);
     const double inertia = std::max(0.001, 0.4 * mass * radius * radius);
     desc.inertiaDiagonal = {inertia, inertia, inertia};
     desc.material.friction = 0.62;
@@ -64,7 +64,7 @@ PhysicsPlayground::PhysicsPlayground(
 
     // Spring station: an elevated ceiling anchor and a massive payload visibly oscillate.
     springAnchor_ = physics_->createRigidBody(makeStaticBody(surfacePoint(-7.0, 0.0, 8.5)));
-    auto springPayloadDesc = makeDynamicBody(surfacePoint(-7.0, 0.0, 4.0), 18.0, 0.65);
+    auto springPayloadDesc = makeDynamicSphere(surfacePoint(-7.0, 0.0, 4.0), 18.0, 0.65);
     springPayloadDesc.material.restitution = 0.08;
     springPayload_ = physics_->createRigidBody(springPayloadDesc);
     SpringDamperConstraintDesc spring{};
@@ -77,11 +77,13 @@ PhysicsPlayground::PhysicsPlayground(
     spring.breakForceN = 16000.0;
     (void)physics_->createSpringDamperConstraint(spring);
 
-    // Motorized hinge station: the rotor body spins because the joint transmits torque.
+    // Motorized hinge station: the collision primitive now matches the rendered
+    // primary rotor blade instead of pretending the whole mechanism is a tiny sphere.
     const glm::dvec3 motorBase = surfacePoint(0.0, 0.0, 0.2);
     motorAnchor_ = physics_->createRigidBody(makeStaticBody(motorBase + up_ * 2.8, 0.03));
-    auto rotorDesc = makeDynamicBody(motorBase + up_ * 3.3, 12.0, 0.07);
-    rotorDesc.inertiaDiagonal = {5.0, 1.6, 5.0};
+    auto rotorDesc = makeDynamicSphere(motorBase + up_ * 3.3, 12.0, 0.07);
+    rotorDesc.collisionShape = CollisionShape::box({2.35, 0.10, 0.24});
+    rotorDesc.inertiaDiagonal = {0.2704, 22.3204, 22.13};
     rotorDesc.aerodynamics.referenceArea = 0.0;
     motorRotor_ = physics_->createRigidBody(rotorDesc);
     HingeConstraintDesc motorHinge{};
@@ -106,11 +108,13 @@ PhysicsPlayground::PhysicsPlayground(
     gearAnchorA_ = physics_->createRigidBody(makeStaticBody(gearBaseA + up_ * 2.5, 0.03));
     gearAnchorB_ = physics_->createRigidBody(makeStaticBody(gearBaseB + up_ * 2.5, 0.03));
 
-    auto gearRotorDescA = makeDynamicBody(gearBaseA + up_ * 3.0, 10.0, 0.06);
+    auto gearRotorDescA = makeDynamicSphere(gearBaseA + up_ * 3.0, 10.0, 0.06);
+    gearRotorDescA.collisionShape = CollisionShape::box({1.15, 0.09, 0.20});
     gearRotorDescA.inertiaDiagonal = {4.0, 1.4, 4.0};
     gearRotorDescA.aerodynamics.referenceArea = 0.0;
     auto gearRotorDescB = gearRotorDescA;
     gearRotorDescB.position = gearBaseB + up_ * 3.0;
+    gearRotorDescB.collisionShape = CollisionShape::box({0.82, 0.09, 0.18});
     gearRotorB_ = physics_->createRigidBody(gearRotorDescB);
     gearRotorA_ = physics_->createRigidBody(gearRotorDescA);
 
@@ -145,7 +149,7 @@ PhysicsPlayground::PhysicsPlayground(
     (void)physics_->createGearConstraint(gear);
 
     // Atmospheric buoyancy: a light sealed envelope rises from displaced air, not a scripted animation.
-    auto balloonDesc = makeDynamicBody(surfacePoint(14.0, 2.5, 2.1), 2.2, 0.85);
+    auto balloonDesc = makeDynamicSphere(surfacePoint(14.0, 2.5, 2.1), 2.2, 0.85);
     balloonDesc.material.restitution = 0.05;
     balloonDesc.aerodynamics.dragCoefficient = 0.48;
     balloonDesc.aerodynamics.referenceArea = 2.3;
@@ -156,7 +160,7 @@ PhysicsPlayground::PhysicsPlayground(
 
     // A small pile proves mass, gravity, collision, restitution, friction and rolling resistance visually.
     for (int i = 0; i < 5; ++i) {
-        auto desc = makeDynamicBody(
+        auto desc = makeDynamicSphere(
             surfacePoint(-1.5 + 1.0 * static_cast<double>(i), 6.0, 7.0 + static_cast<double>(i) * 1.8),
             3.0 + static_cast<double>(i) * 2.0,
             0.45 + 0.05 * static_cast<double>(i));
@@ -234,7 +238,7 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
     if (const auto* anchor = physics_->body(springAnchor_); anchor != nullptr) {
         if (const auto* payload = physics_->body(springPayload_); payload != nullptr) {
             appendDebugRod(mesh, anchor->position, payload->position, 0.045, springColor);
-            appendDebugSphere(mesh, payload->position, payload->collisionRadius, payloadColor, 7U, 12U);
+            appendDebugSphere(mesh, payload->position, payload->collisionShape.radius, payloadColor, 7U, 12U);
         }
     }
 
@@ -248,7 +252,8 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
         appendDebugSphere(mesh, rotor->position, 0.22, steel, 5U, 8U);
     }
 
-    // Gear shafts. Cross-bars make opposite/ratio rotation easy to see even before textured gear teeth exist.
+    // Cross-bars make opposite/ratio rotation easy to see. Collision currently uses
+    // the primary bar; a later compound-shape layer will make both bars authoritative.
     if (const auto* anchor = physics_->body(gearAnchorA_)) {
         appendDebugRod(mesh, surfacePoint(7.0, -0.5, 0.1), anchor->position, 0.10, steel);
     }
@@ -265,7 +270,7 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
     }
 
     if (const auto* balloon = physics_->body(balloon_)) {
-        appendDebugSphere(mesh, balloon->position, balloon->collisionRadius, balloonColor, 9U, 14U);
+        appendDebugSphere(mesh, balloon->position, balloon->collisionShape.radius, balloonColor, 9U, 14U);
         const glm::dvec3 tetherEnd = balloon->position - safeNormalize(balloon->position) * 1.35;
         appendDebugRod(mesh, balloon->position, tetherEnd, 0.025, {0.42F, 0.28F, 0.16F});
     }
@@ -275,7 +280,7 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
         if (body == nullptr) continue;
         const float f = static_cast<float>(i) / static_cast<float>(std::max<std::size_t>(1U, fallingBodies_.size() - 1U));
         const glm::vec3 color{0.35F + 0.45F * f, 0.35F, 0.82F - 0.35F * f};
-        appendDebugSphere(mesh, body->position, body->collisionRadius, color, 7U, 10U);
+        appendDebugSphere(mesh, body->position, body->collisionShape.radius, color, 7U, 10U);
     }
 
     appendDebugRod(mesh, tree_.rootPosition, tree_.tipPosition(), tree_.trunkRadius, treeColor);

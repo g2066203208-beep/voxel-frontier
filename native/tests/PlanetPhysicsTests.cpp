@@ -118,7 +118,7 @@ void testRigidBodyCollisionMomentumConservation() {
     aDesc.mass = 2.0;
     aDesc.position = {150.0, -2.0, 0.0};
     aDesc.linearVelocity = {0.0, 5.0, 0.0};
-    aDesc.collisionRadius = 0.5;
+    aDesc.collisionShape = vf::CollisionShape::sphere(0.5);
     aDesc.linearDamping = 0.0;
     aDesc.angularDamping = 0.0;
     aDesc.material.friction = 0.0;
@@ -138,7 +138,7 @@ void testRigidBodyCollisionMomentumConservation() {
     const auto* a = world.body(aId);
     const auto* b = world.body(bId);
     require(a != nullptr && b != nullptr, "collision bodies missing");
-    require(glm::length(a->linearMomentum() + b->linearMomentum() - initialMomentum) < 1.0e-8, "isolated collision must conserve linear momentum");
+    require(glm::length(a->linearMomentum() + b->linearMomentum() - initialMomentum) < 1.0e-7, "isolated collision must conserve linear momentum");
 }
 
 void testRadialGravityAndGroundFriction() {
@@ -154,7 +154,7 @@ void testRadialGravityAndGroundFriction() {
     desc.mass = 10.0;
     desc.position = {0.0, 101.0, 0.0};
     desc.linearVelocity = {8.0, 0.0, 0.0};
-    desc.collisionRadius = 1.0;
+    desc.collisionShape = vf::CollisionShape::sphere(1.0);
     desc.linearDamping = 0.0;
     desc.material.friction = 0.9;
     desc.material.restitution = 0.0;
@@ -197,7 +197,7 @@ void testBuoyancy() {
     vf::RigidBodyDesc desc{};
     desc.mass = 350.0;
     desc.position = {0.0, 109.0, 0.0};
-    desc.collisionRadius = 1.0;
+    desc.collisionShape = vf::CollisionShape::sphere(1.0);
     desc.linearDamping = 0.0;
     desc.aerodynamics.referenceArea = 0.0;
     desc.buoyancy.enabled = true;

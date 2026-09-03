@@ -1,12 +1,15 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <span>
+#include <unordered_map>
 #include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "vf/physics/CollisionGeometry.hpp"
 #include "vf/physics/ConstraintTypes.hpp"
 #include "vf/world/PlanetSurface.hpp"
 
@@ -48,7 +51,7 @@ struct RigidBodyDesc {
     glm::dvec3 linearVelocity{};
     glm::dvec3 angularVelocity{};
     glm::dvec3 inertiaDiagonal{1.0};
-    double collisionRadius{0.5};
+    CollisionShape collisionShape{CollisionShape::sphere(0.5)};
     double linearDamping{0.01};
     double angularDamping{0.02};
     PhysicsMaterial material{};
@@ -69,7 +72,7 @@ struct RigidBody {
     glm::dvec3 inverseInertiaDiagonal{1.0};
     glm::dvec3 accumulatedForce{};
     glm::dvec3 accumulatedTorque{};
-    double collisionRadius{0.5};
+    CollisionShape collisionShape{CollisionShape::sphere(0.5)};
     double linearDamping{0.01};
     double angularDamping{0.02};
     PhysicsMaterial material{};
@@ -82,6 +85,7 @@ struct RigidBody {
     [[nodiscard]] double kineticEnergy() const noexcept;
     [[nodiscard]] glm::dmat3 worldInverseInertia() const noexcept;
     [[nodiscard]] glm::dvec3 velocityAtPoint(const glm::dvec3& worldPoint) const noexcept;
+    [[nodiscard]] ShapePose shapePose() const noexcept { return {position, orientation}; }
 
     void addForce(const glm::dvec3& force) noexcept;
     void addTorque(const glm::dvec3& torque) noexcept;
@@ -175,9 +179,26 @@ public:
     [[nodiscard]] double simulationTime() const noexcept { return simulationTime_; }
     [[nodiscard]] std::uint64_t stepIndex() const noexcept { return stepIndex_; }
     [[nodiscard]] std::size_t lastBroadphaseCandidateCount() const noexcept { return lastBroadphaseCandidateCount_; }
+    [[nodiscard]] std::size_t lastContactPointCount() const noexcept { return lastContactPointCount_; }
     [[nodiscard]] std::size_t activeConstraintCount() const noexcept;
 
 private:
+    struct CachedContactPoint {
+        glm::dvec3 localAnchorA{};
+        glm::dvec3 localAnchorB{};
+        double accumulatedNormalImpulse{};
+        glm::dvec3 accumulatedTangentImpulse{};
+        std::uint32_t featureId{};
+    };
+
+    struct CachedContactManifold {
+        std::uint32_t bodyA{};
+        std::uint32_t bodyB{};
+        glm::dvec3 normal{1.0, 0.0, 0.0};
+        std::array<CachedContactPoint, 4> points{};
+        std::uint8_t pointCount{};
+    };
+
     void applyEnvironmentForces(RigidBody& body);
     void applySpringDamperForces();
     void integrateBody(RigidBody& body);
@@ -192,6 +213,7 @@ private:
     std::vector<SpringDamperConstraint> springDamperConstraints_;
     std::vector<HingeConstraint> hingeConstraints_;
     std::vector<GearConstraint> gearConstraints_;
+    std::unordered_map<std::uint64_t, CachedContactManifold> contactCache_;
     std::uint32_t nextBodyId_{1};
     std::uint32_t nextConstraintId_{1};
     double fixedDeltaSeconds_{1.0 / 120.0};
@@ -199,6 +221,7 @@ private:
     double simulationTime_{};
     std::uint64_t stepIndex_{};
     std::size_t lastBroadphaseCandidateCount_{};
+    std::size_t lastContactPointCount_{};
 };
 
 } // namespace vf

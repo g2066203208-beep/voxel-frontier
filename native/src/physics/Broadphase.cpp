@@ -8,17 +8,12 @@ namespace {
 
 struct Proxy {
     std::size_t index{};
-    double minX{};
-    double maxX{};
-    double minY{};
-    double maxY{};
-    double minZ{};
-    double maxZ{};
+    Aabb bounds{};
 };
 
 [[nodiscard]] bool overlapsYZ(const Proxy& a, const Proxy& b) noexcept {
-    return a.minY <= b.maxY && a.maxY >= b.minY
-        && a.minZ <= b.maxZ && a.maxZ >= b.minZ;
+    return a.bounds.minimum.y <= b.bounds.maximum.y && a.bounds.maximum.y >= b.bounds.minimum.y
+        && a.bounds.minimum.z <= b.bounds.maximum.z && a.bounds.maximum.z >= b.bounds.minimum.z;
 }
 
 } // namespace
@@ -29,20 +24,11 @@ std::vector<BroadphasePair> buildSweepAndPrunePairs(std::span<const RigidBody> b
 
     for (std::size_t i = 0; i < bodies.size(); ++i) {
         const auto& body = bodies[i];
-        const double r = std::max(0.0, body.collisionRadius);
-        proxies.push_back({
-            i,
-            body.position.x - r,
-            body.position.x + r,
-            body.position.y - r,
-            body.position.y + r,
-            body.position.z - r,
-            body.position.z + r,
-        });
+        proxies.push_back({i, computeWorldAabb(body.collisionShape, body.shapePose())});
     }
 
     std::stable_sort(proxies.begin(), proxies.end(), [](const Proxy& a, const Proxy& b) {
-        if (a.minX != b.minX) return a.minX < b.minX;
+        if (a.bounds.minimum.x != b.bounds.minimum.x) return a.bounds.minimum.x < b.bounds.minimum.x;
         return a.index < b.index;
     });
 
@@ -52,7 +38,7 @@ std::vector<BroadphasePair> buildSweepAndPrunePairs(std::span<const RigidBody> b
 
     for (const auto& proxy : proxies) {
         std::erase_if(active, [&](const Proxy* candidate) {
-            return candidate->maxX < proxy.minX;
+            return candidate->bounds.maximum.x < proxy.bounds.minimum.x;
         });
 
         for (const Proxy* candidate : active) {
