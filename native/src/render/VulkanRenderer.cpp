@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstddef>
 #include <cstring>
 #include <limits>
@@ -22,10 +23,20 @@ namespace {
 struct PushConstants {
     glm::mat4 viewProjection{1.0F};
     glm::vec4 cameraPosition{0.0F};
-    glm::vec4 sunDirection{-0.45F, -0.75F, -0.35F, 0.0F};
+    glm::vec4 sunDirection{0.38F, 0.83F, 0.41F, 0.0F};
+    glm::vec4 sunColorIntensity{1.0F, 1.0F, 1.0F, 2.2F};
+    glm::vec4 objectRotation{0.0F, 0.0F, 0.0F, 1.0F};
 };
 
 static_assert(sizeof(PushConstants) <= 128U, "planet push constants must fit the Vulkan minimum guarantee");
+
+[[nodiscard]] glm::vec3 safeNormalizeFloat(
+    const glm::vec3& value,
+    const glm::vec3& fallback = {0.38F, 0.83F, 0.41F}) noexcept {
+    const float lengthSquared = glm::dot(value, value);
+    if (lengthSquared <= 1.0e-10F) return glm::normalize(fallback);
+    return value / std::sqrt(lengthSquared);
+}
 
 [[noreturn]] void fail(const std::string& message, VkResult result = VK_SUCCESS) {
     if (result == VK_SUCCESS) throw std::runtime_error(message);
@@ -786,7 +797,11 @@ void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
 void VulkanRenderer::drawFrame(
     const glm::vec3& clearColor,
     const glm::mat4& viewProjection,
-    const glm::dvec3& cameraPosition) {
+    const glm::dvec3& cameraPosition,
+    const glm::vec3& sunDirectionToLight,
+    const glm::vec3& sunLinearColor,
+    float sunIntensity,
+    const glm::dquat& staticObjectRotation) {
     if (resizeRequested_) recreateSwapchain();
     if (swapchain_ == VK_NULL_HANDLE || graphicsPipeline_ == VK_NULL_HANDLE) return;
 
@@ -899,7 +914,14 @@ void VulkanRenderer::drawFrame(
     PushConstants push{};
     push.viewProjection = viewProjection;
     push.cameraPosition = glm::vec4(glm::vec3(cameraPosition), 1.0F);
-    push.sunDirection = glm::vec4(-0.38F, -0.83F, -0.41F, 0.0F);
+    push.sunDirection = glm::vec4(safeNormalizeFloat(sunDirectionToLight), 0.0F);
+    push.sunColorIntensity = glm::vec4(glm::max(sunLinearColor, glm::vec3{0.0F}), std::max(0.0F, sunIntensity));
+    const glm::dquat normalizedRotation = glm::normalize(staticObjectRotation);
+    push.objectRotation = glm::vec4(
+        static_cast<float>(normalizedRotation.x),
+        static_cast<float>(normalizedRotation.y),
+        static_cast<float>(normalizedRotation.z),
+        static_cast<float>(normalizedRotation.w));
     vkCmdPushConstants(
         commandBuffers_[frame],
         pipelineLayout_,
@@ -908,7 +930,20 @@ void VulkanRenderer::drawFrame(
         sizeof(PushConstants),
         &push);
 
+    // Static planet vertices live in body-local coordinates; one quaternion in push constants
+    // rotates the entire world without rebuilding or re-uploading tens of thousands of vertices.
     drawBoundMesh(commandBuffers_[frame], vertexBuffer_, indexBuffer_, indexCount_);
+
+    // Dynamic debug/celestial geometry is already emitted in world space, so reset only the
+    // object rotation before drawing it. Lighting remains the same real star for both passes.
+    push.objectRotation = {0.0F, 0.0F, 0.0F, 1.0F};
+    vkCmdPushConstants(
+        commandBuffers_[frame],
+        pipelineLayout_,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        0,
+        sizeof(PushConstants),
+        &push);
     const auto& dynamicMesh = dynamicMeshes_[frame];
     drawBoundMesh(
         commandBuffers_[frame],
