@@ -1,71 +1,56 @@
 # Voxel Frontier
 
-原创浏览器大型 RPG 体素沙盒游戏。
+原创大型 PC 体素 RPG 沙盒游戏。
 
-## 技术主线
+## 正式技术主线
 
-- C++23：高性能体素世界与核心算法
-- WebAssembly + SIMD：浏览器原生核心
-- WebGPU + WGSL：新一代 GPU 渲染路径
-- TypeScript：浏览器、UI、输入与应用层
-- Vite：网页构建
-- GitHub Actions + GitHub Pages：自动编译、测试与部署
+- C++23：游戏与引擎主体
+- Vulkan 1.4：自研图形与 GPU 计算后端
+- SDL3：仅负责窗口、输入、手柄、音频等平台接入
+- CMake：原生工程构建
+- GitHub Actions：Windows/Linux 自动编译与测试
 
-## 新引擎架构
+正式版不再以浏览器为运行目标。游戏世界、渲染、资源系统、任务调度、物理、AI、存档、网络和玩法系统均沿自研原生引擎路线开发。
 
-```text
-Browser / TypeScript
-        │
-        ├─ UI / Input / App
-        │
-        ▼
-C++23 Engine Core
-        │
-        ├─ contiguous chunks
-        ├─ terrain generation
-        ├─ greedy meshing
-        └─ 3D DDA voxel traversal
-        │
-        ▼
-WebAssembly + SIMD
-        │
-        ▼
-WebGPU / WGSL
-```
-
-新引擎使用 `16 × 64 × 16` 连续内存 Chunk，并逐步替换旧版按字符串坐标存储、整世界重建的原型架构。方块修改采用局部 dirty-chunk 重建路线。
-
-## 当前新引擎预览
-
-部署后，在游戏地址后加：
+## 当前原生工程
 
 ```text
-?engine=next
+native/
+├─ include/vf/
+│  ├─ core/       # 引擎主循环
+│  ├─ platform/   # SDL3 平台层
+│  ├─ render/     # Vulkan 原生渲染器
+│  └─ world/      # Chunk / World
+├─ src/
+│  ├─ app/
+│  ├─ core/
+│  ├─ platform/
+│  ├─ render/
+│  └─ world/
+└─ tests/
 ```
 
-即可进入 C++/WASM + WebGPU 新引擎预览。当前预览优先验证 Chunk 流式加载、网格生成和 GPU 渲染性能；完整生存、背包、建造/破坏、战斗等玩法继续迁移。
+当前底座已经采用 `32 × 32 × 32` 连续内存 Chunk，支持确定性世界生成、正确负坐标映射、局部 Dirty Chunk 与边界邻居失效传播。Windows 运行时直接生成 `voxel_frontier.exe`。
 
-## 自动质量门禁
+## 第一阶段目标
 
-新引擎改动必须同时通过：
+1. 原生 Vulkan 窗口与稳定帧循环
+2. 多线程 Chunk 流式生成
+3. Greedy Meshing / Meshlet 数据
+4. GPU 顶点与索引缓冲管理
+5. 深度、相机、Shader 与视锥裁剪
+6. 第一人称移动与碰撞
+7. 方块破坏、放置与局部重网格
+8. 性能 Profiler 与自动帧时间门禁
 
-- C++23 原生正确性与性能测试
-- Emscripten C++ → WebAssembly SIMD Release 编译
-- TypeScript strict + WebGPU 网页集成构建
+基础性能稳定后，再向生存、背包、合成、战斗、NPC、城市、车辆和多人世界扩展。
 
-生产部署会自动编译 C++、打包 `.wasm`，随后构建网页并发布，不需要玩家本机安装编译环境。
+## Windows 构建
 
-## 本地网页开发
-
-```bash
-npm install
-npm run dev
+```powershell
+cmake -S native -B build/native -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+cmake --build build/native --config Release --parallel
+ctest --test-dir build/native -C Release --output-on-failure
 ```
 
-正式构建：
-
-```bash
-npm run build
-```
-
-更详细的引擎说明见 `ENGINE.md`。
+VS Code 已配置 `native` 为 CMake 工程源目录。详细说明见 `native/README.md`。
