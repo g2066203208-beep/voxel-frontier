@@ -3,8 +3,8 @@
 #include <cstdint>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
+#include "vf/world/CelestialPhysicsFrame.hpp"
 #include "vf/world/CelestialSystem.hpp"
 #include "vf/world/PlanetSurface.hpp"
 
@@ -34,35 +34,45 @@ public:
     [[nodiscard]] const glm::dvec3& velocity() const noexcept { return velocity_; }
     [[nodiscard]] bool grounded() const noexcept { return grounded_; }
     [[nodiscard]] bool flightMode() const noexcept { return flightMode_; }
+    [[nodiscard]] bool inPlanetPhysicsFrame() const noexcept { return inPhysicsFrame_; }
+    [[nodiscard]] std::uint32_t physicsFrameBodyId() const noexcept { return physicsFrameBodyId_; }
     [[nodiscard]] glm::dvec3 up() const;
     [[nodiscard]] glm::dvec3 forwardDirection() const;
     [[nodiscard]] double altitude() const;
 
 private:
-    [[nodiscard]] const CelestialBody* referenceBody(const glm::dvec3& position) const noexcept;
-    [[nodiscard]] double minimumEyeRadius(const CelestialBody& body, const glm::dvec3& direction) const noexcept;
-    void rememberLocalFrame(const CelestialBody* bodyValue) noexcept;
+    [[nodiscard]] const CelestialBody* physicsFrameBody() const noexcept;
+    [[nodiscard]] double localMinimumEyeRadius(
+        const CelestialBody& body,
+        const glm::dvec3& localDirection) const noexcept;
+    [[nodiscard]] glm::dvec3 localForwardDirection(const glm::dvec3& localUp) const noexcept;
+
+    void enterPhysicsFrame(const CelestialBody& body) noexcept;
+    void leavePhysicsFrame() noexcept;
+    void syncWorldStateFromLocal(const CelestialBody& body) noexcept;
 
     const PlanetDefinition* planet_{};
     const CelestialSystem* celestialSystem_{};
     std::uint32_t primaryCelestialBodyId_{};
+
+    // Public/render state is always inertial world space. While a nearby planet physics frame is
+    // active, the authoritative simulation state is localPosition_/localVelocity_ and these values
+    // are reconstructed after each update. This mirrors KSP's separation between sim space and the
+    // low-speed local physics space.
     glm::dvec3 position_{};
     glm::dvec3 velocity_{};
+
+    std::uint32_t physicsFrameBodyId_{};
+    CelestialPhysicsFrame physicsFrame_{};
+    glm::dvec3 localPosition_{};
+    glm::dvec3 localVelocity_{};
+    bool inPhysicsFrame_{};
+
     double heading_{0.0};
     double pitch_{-0.18};
     double eyeHeight_{1.75};
     bool grounded_{};
     bool flightMode_{};
-
-    // Character motion inside a planetary SOI is solved relative to the moving planet frame.
-    // These values store the previous celestial pose so each render frame can carry the player by
-    // the exact orbit/spin delta before local walk/jump/creative-flight motion is integrated.
-    std::uint32_t localFrameBodyId_{};
-    glm::dvec3 previousFramePosition_{};
-    glm::dvec3 previousFrameLinearVelocity_{};
-    glm::dvec3 previousFrameAngularVelocity_{};
-    glm::dquat previousFrameOrientation_{1.0, 0.0, 0.0, 0.0};
-    bool localFrameInitialized_{};
 };
 
 } // namespace vf
