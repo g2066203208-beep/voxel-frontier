@@ -2,6 +2,7 @@
   "name": "voxel-frontier",
   "private": true,
   "version": "0.3.0",
+  "description": "Browser-based voxel RPG sandbox built with TypeScript, Three.js and Vite.",
   "type": "module",
   "scripts": {
     "dev": "vite",
