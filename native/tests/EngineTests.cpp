@@ -1,11 +1,16 @@
 #include "vf/core/Engine.hpp"
+#include "vf/player/PlanetCamera.hpp"
 #include "vf/world/Chunk.hpp"
+#include "vf/world/PlanetSurface.hpp"
 #include "vf/world/World.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <string_view>
+
+#include <glm/geometric.hpp>
 
 namespace {
 
@@ -55,6 +60,57 @@ void testBoundaryDirtyPropagation() {
     require(neighbor.dirty(), "loaded neighboring chunk should be dirty for border edit");
 }
 
+void testCubeSphereProjection() {
+    for (std::uint32_t face = 0; face < 6U; ++face) {
+        for (double u : {-1.0, -0.25, 0.0, 0.75, 1.0}) {
+            for (double v : {-1.0, 0.0, 1.0}) {
+                const auto direction = vf::cubeSphereDirection(face, u, v);
+                require(std::abs(glm::length(direction) - 1.0) < 1.0e-12, "cube-sphere direction must be normalized");
+            }
+        }
+    }
+}
+
+void testPlanetSurfaceDeterminism() {
+    vf::PlanetDefinition definition{};
+    definition.seed = 99;
+    definition.radius = 200.0;
+    definition.maxElevation = 20.0;
+
+    const auto a = vf::buildPlanetSurface(definition, 12U);
+    const auto b = vf::buildPlanetSurface(definition, 12U);
+    require(a.vertices.size() == 6U * 13U * 13U, "planet vertex count mismatch");
+    require(a.indices.size() == 6U * 12U * 12U * 6U, "planet index count mismatch");
+    require(a.vertices.size() == b.vertices.size() && a.indices == b.indices, "planet topology must be deterministic");
+
+    for (std::size_t i = 0; i < a.vertices.size(); i += 37U) {
+        const auto& va = a.vertices[i];
+        const auto& vb = b.vertices[i];
+        require(glm::length(va.position - vb.position) < 1.0e-6F, "planet positions must be deterministic");
+        const double radius = glm::length(glm::dvec3{va.position});
+        require(radius >= definition.radius - definition.maxElevation - 1.0e-3, "planet vertex fell below height bound");
+        require(radius <= definition.radius + definition.maxElevation + 1.0e-3, "planet vertex exceeded height bound");
+    }
+}
+
+void testRadialCamera() {
+    vf::PlanetDefinition definition{};
+    definition.radius = 240.0;
+    definition.maxElevation = 18.0;
+    vf::PlanetCamera camera{definition};
+    const double initialAltitude = camera.altitude();
+    require(initialAltitude >= 1.70 && initialAltitude <= 1.80, "camera must spawn at eye height over terrain");
+
+    vf::PlanetMovementInput ascend{};
+    ascend.vertical = 1.0;
+    ascend.sprint = true;
+    camera.update(ascend, 0.5);
+    require(camera.altitude() > initialAltitude + 5.0, "camera ascend should increase planetary altitude");
+
+    const auto localUp = camera.up();
+    require(std::abs(glm::length(localUp) - 1.0) < 1.0e-12, "radial up must remain normalized");
+}
+
 void testBootstrapAndTiming() {
     const auto start = std::chrono::steady_clock::now();
     vf::Engine engine{42};
@@ -67,7 +123,7 @@ void testBootstrapAndTiming() {
     require(engine.frameIndex() == 1, "engine frame counter failed");
     require(engine.elapsedSeconds() > 0.0, "engine elapsed time failed");
 
-    std::cout << "benchmark: generated 75 x 32^3 chunks in " << elapsed.count() << " ms\n";
+    std::cout << "legacy benchmark: generated 75 x 32^3 chunks in " << elapsed.count() << " ms\n";
 }
 
 } // namespace
@@ -77,6 +133,9 @@ int main() {
     testNegativeWorldCoordinates();
     testDeterministicGeneration();
     testBoundaryDirtyPropagation();
+    testCubeSphereProjection();
+    testPlanetSurfaceDeterminism();
+    testRadialCamera();
     testBootstrapAndTiming();
     std::cout << "vf_native_engine_tests: PASS\n";
     return 0;
