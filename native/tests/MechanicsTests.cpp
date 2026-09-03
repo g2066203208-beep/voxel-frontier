@@ -38,7 +38,7 @@ void require(bool condition, std::string_view message) {
     desc.position = position;
     desc.mass = 2.0;
     desc.inertiaDiagonal = {1.0, 1.0, 1.0};
-    desc.collisionRadius = 0.1;
+    desc.collisionShape = vf::CollisionShape::sphere(0.1);
     desc.linearDamping = 0.0;
     desc.angularDamping = 0.0;
     desc.aerodynamics.referenceArea = 0.0;
@@ -49,11 +49,11 @@ void testSweepAndPruneRejectsFarPairs() {
     vf::PhysicsWorld world{isolatedEnvironment()};
     for (int i = 0; i < 100; ++i) {
         auto desc = dynamicBody({1000.0 + static_cast<double>(i) * 5.0, 0.0, 0.0});
-        desc.collisionRadius = 0.25;
+        desc.collisionShape = vf::CollisionShape::sphere(0.25);
         (void)world.createRigidBody(desc);
     }
     auto overlap = dynamicBody({1000.2, 0.0, 0.0});
-    overlap.collisionRadius = 0.25;
+    overlap.collisionShape = vf::CollisionShape::sphere(0.25);
     (void)world.createRigidBody(overlap);
 
     const auto pairs = vf::buildSweepAndPrunePairs(world.bodies());
@@ -113,7 +113,7 @@ void testHingeMotorDrivesAngularSpeed() {
     const auto anchor = world.createRigidBody(anchorDesc);
 
     auto rotorDesc = dynamicBody({1000.0, 1.0, 0.0});
-    rotorDesc.collisionRadius = 0.05;
+    rotorDesc.collisionShape = vf::CollisionShape::sphere(0.05);
     const auto rotor = world.createRigidBody(rotorDesc);
 
     vf::HingeConstraintDesc hinge{};
