@@ -103,14 +103,16 @@ void applyThermalEnergy(
         }
 
         if (state.phase == MatterPhase::Liquid) {
-            state.liquidFraction = 1.0;
+            if (state.liquidFraction <= 0.0 || state.liquidFraction > 1.0) state.liquidFraction = 1.0;
+            else state.liquidFraction = std::clamp(state.liquidFraction, 0.0, 1.0);
+            state.vaporFraction = std::clamp(state.vaporFraction, 0.0, 1.0);
             if (energy > 0.0) {
                 if (state.temperatureK < material.boilingPointK) {
                     sensibleHeat(material, massKg, material.boilingPointK, energy, state);
                     continue;
                 }
                 const double latent = massKg * std::max(1.0, material.latentHeatVaporizationJPerKg);
-                const double remainingFraction = 1.0 - std::clamp(state.vaporFraction, 0.0, 1.0);
+                const double remainingFraction = 1.0 - state.vaporFraction;
                 const double consume = std::min(energy, latent * remainingFraction);
                 state.vaporFraction += consume / latent;
                 energy -= consume;
@@ -128,10 +130,8 @@ void applyThermalEnergy(
                 continue;
             }
             const double latent = massKg * std::max(1.0, material.latentHeatFusionJPerKg);
-            const double frozenFraction = 1.0 - state.liquidFraction;
-            const double remainingToFreeze = 1.0 - frozenFraction;
             const double available = -energy;
-            const double consume = std::min(available, latent * remainingToFreeze);
+            const double consume = std::min(available, latent * state.liquidFraction);
             state.liquidFraction -= consume / latent;
             energy += consume;
             if (state.liquidFraction <= 1.0e-9) {
@@ -144,7 +144,8 @@ void applyThermalEnergy(
         }
 
         // Gas phase.
-        state.vaporFraction = 1.0;
+        if (state.vaporFraction <= 0.0 || state.vaporFraction > 1.0) state.vaporFraction = 1.0;
+        else state.vaporFraction = std::clamp(state.vaporFraction, 0.0, 1.0);
         if (energy >= 0.0) {
             const double capacity = massKg * std::max(1.0, material.specificHeatJPerKgK);
             state.temperatureK += energy / capacity;
