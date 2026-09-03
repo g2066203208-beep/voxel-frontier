@@ -479,10 +479,11 @@ bool collideConvexGjkEpa(
         return false;
     }
 
+    // The Minkowski difference is constructed as A - B. EPA orients the closest
+    // polytope face outward from the origin, which directly yields the engine's
+    // A -> B penetration normal. Do not re-orient using pose origins: arbitrary
+    // convex geometry can be offset from its pose origin.
     const bool hit = runEpa(a, poseA, b, poseB, simplex, manifold, localDiagnostics);
-    if (hit && glm::dot(manifold.normal, poseB.position - poseA.position) < 0.0) {
-        manifold.normal = -manifold.normal;
-    }
     if (diagnostics) *diagnostics = localDiagnostics;
     return hit;
 }
