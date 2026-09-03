@@ -63,11 +63,16 @@ void testRadialCamera() {
     const double initialAltitude = camera.altitude();
     require(initialAltitude >= 1.70 && initialAltitude <= 1.80, "camera must spawn at eye height over terrain");
 
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+    require(camera.flightMode(), "explicit flight-toggle event must enable creative flight");
+
     vf::PlanetMovementInput ascend{};
     ascend.vertical = 1.0;
     ascend.sprint = true;
     camera.update(ascend, 0.05);
-    require(camera.altitude() > initialAltitude + 3.0, "camera ascend should increase planetary altitude");
+    require(camera.altitude() > initialAltitude + 3.0, "creative-flight ascend should increase planetary altitude");
     require(std::abs(glm::length(camera.up()) - 1.0) < 1.0e-12, "radial up must remain normalized");
 }
 
@@ -81,6 +86,8 @@ void testGroundedCameraCoRotatesWithCelestialSurface() {
     planet.radiusMeters = definition.radius;
     planet.massKg = 9.81 * planet.radiusMeters * planet.radiusMeters
         / vf::CelestialSystem::kGravitationalConstant;
+    planet.gameplaySurfaceGravityMps2 = 9.81;
+    planet.gravityInfluenceRadiusMeters = 900.0;
     planet.spinAxis = {0.0, 1.0, 0.0};
     planet.spinRateRadPerSecond = 0.01;
     const auto planetId = celestial.addBody(planet);
@@ -207,6 +214,8 @@ void testRigidBodyLandsOnSecondaryCelestialBody() {
     primary.radiusMeters = primaryTerrain.radius;
     primary.massKg = 9.81 * primary.radiusMeters * primary.radiusMeters
         / vf::CelestialSystem::kGravitationalConstant;
+    primary.gameplaySurfaceGravityMps2 = 9.81;
+    primary.gravityInfluenceRadiusMeters = 300.0;
     const auto primaryId = celestial.addBody(primary);
 
     vf::CelestialBody moon{};
@@ -214,6 +223,8 @@ void testRigidBodyLandsOnSecondaryCelestialBody() {
     moon.radiusMeters = 30.0;
     moon.massKg = 2.0 * moon.radiusMeters * moon.radiusMeters
         / vf::CelestialSystem::kGravitationalConstant;
+    moon.gameplaySurfaceGravityMps2 = 2.0;
+    moon.gravityInfluenceRadiusMeters = 100.0;
     moon.position = {600.0, 0.0, 0.0};
     const auto moonId = celestial.addBody(moon);
 
@@ -307,14 +318,17 @@ void testShallowWaterConservation() {
 
 void testTreeFallsAfterCut() {
     vf::TreePhysics tree{};
-    tree.trunkLength = 9.0;
-    tree.trunkMass = 320.0;
-    tree.applyCut(0.62, {1.0, 0.0, 0.0});
-    require(tree.state == vf::TreeState::Hinging, "sufficient cut should release hinge motion");
+    tree.rootPosition = {0.0, 100.0, 0.0};
+    tree.localUp = {0.0, 1.0, 0.0};
+    tree.fallDirection = {1.0, 0.0, 0.0};
+    tree.trunkLength = 7.5;
+    tree.trunkRadius = 0.25;
+    tree.trunkMass = 300.0;
+    tree.applyCut(0.8, {1.0, 0.0, 0.0});
 
-    for (int i = 0; i < 360; ++i) tree.step(1.0 / 120.0, 9.81, {8.0, 0.0, 0.0}, 1.225);
-    require(tree.hingeAngleRadians > 0.1, "cut tree should rotate under gravity and wind");
-    require(tree.tipPosition().x > 0.1, "tree tip should move toward preferred fall direction");
+    for (int i = 0; i < 240; ++i) tree.step(1.0 / 120.0, 9.81, {3.0, 0.0, 0.0}, 1.2);
+    require(tree.hingeAngleRadians > 0.25, "tree should rotate after a deep cut");
+    require(tree.tipPosition().x > 1.0, "tree tip should move in fall direction");
 }
 
 } // namespace
@@ -332,6 +346,6 @@ int main() {
     testBuoyancy();
     testShallowWaterConservation();
     testTreeFallsAfterCut();
-    std::cout << "Planet physics tests passed\n";
+    std::cout << "vf_planet_physics_tests: PASS\n";
     return 0;
 }
