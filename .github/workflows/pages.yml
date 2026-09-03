@@ -1,11 +1,8 @@
-name: Build and Deploy Voxel Frontier
+name: Legacy Browser Prototype
 
+# The browser build is retained only as a historical prototype.
+# Production development and CI now target the native C++ desktop engine.
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -13,16 +10,12 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -30,10 +23,9 @@ jobs:
           node-version: '22'
 
       - name: Configure GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
-      - name: Build C++23 engine to WebAssembly SIMD
+      - name: Build legacy C++ WebAssembly engine
         run: |
           docker run --rm \
             -v "$PWD:/src" \
@@ -43,34 +35,25 @@ jobs:
           mkdir -p public/engine
           cp build/wasm/vf_engine.js public/engine/vf_engine.js
           cp build/wasm/vf_engine.wasm public/engine/vf_engine.wasm
-          test -s public/engine/vf_engine.js
-          test -s public/engine/vf_engine.wasm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Type-check and build web client
+      - name: Build legacy web client
         run: npm run build
 
-      - name: Verify native engine is packaged
-        run: |
-          test -s dist/engine/vf_engine.js
-          test -s dist/engine/vf_engine.wasm
-
-      - name: Upload production bundle
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy legacy prototype
         id: deployment
         uses: actions/deploy-pages@v4
