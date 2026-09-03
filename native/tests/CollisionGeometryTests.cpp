@@ -34,6 +34,7 @@ void testAabbs() {
     require(std::abs(half.x - 0.5) < 1.0e-9, "rotated box AABB X extent incorrect");
     require(std::abs(half.y - 1.0) < 1.0e-9, "rotated box AABB Y extent incorrect");
     require(std::abs(half.z - 2.0) < 1.0e-9, "rotated box AABB Z extent incorrect");
+    require(std::abs(vf::collisionBoundingRadius(box) - std::sqrt(5.25)) < 1.0e-12, "box bounding radius incorrect");
 }
 
 void testSphereSphere() {
@@ -69,6 +70,18 @@ void testCapsules() {
     require(manifold.points[0].penetration > 0.19 && manifold.points[0].penetration < 0.21, "capsule/capsule penetration incorrect");
 }
 
+void testBoxFaceManifold() {
+    const auto box = vf::CollisionShape::box({1.0, 1.0, 1.0});
+    vf::ContactManifold manifold{};
+    require(vf::collideShapes(box, {}, box, {{1.8, 0.0, 0.0}, {}}, manifold), "face-overlapping boxes must collide");
+    require(manifold.pointCount == 4, "face/face OBB contact should clip to four manifold points");
+    require(manifold.normal.x > 0.999, "face manifold normal must point A to B");
+    for (std::uint8_t i = 0; i < manifold.pointCount; ++i) {
+        require(std::abs(manifold.points[i].penetration - 0.2) < 1.0e-6, "face manifold penetration incorrect");
+        require(manifold.points[i].featureId != 0U, "face manifold point must carry stable feature identity");
+    }
+}
+
 void testOrientedBoxesSat() {
     const auto box = vf::CollisionShape::box({1.0, 0.5, 0.75});
     vf::ShapePose a{};
@@ -79,7 +92,7 @@ void testOrientedBoxesSat() {
 
     vf::ContactManifold manifold{};
     require(vf::collideShapes(box, a, box, b, manifold), "rotated OBBs should overlap under SAT");
-    require(manifold.pointCount == 1, "current OBB SAT must emit representative contact");
+    require(manifold.pointCount >= 1 && manifold.pointCount <= 4, "rotated OBB manifold point count invalid");
     require(manifold.points[0].penetration > 0.0, "OBB penetration must be positive");
     require(glm::dot(manifold.normal, b.position - a.position) > 0.0, "OBB normal must point A to B");
 
@@ -105,6 +118,7 @@ int main() {
     testSphereSphere();
     testSphereBox();
     testCapsules();
+    testBoxFaceManifold();
     testOrientedBoxesSat();
     testSupportMapping();
     std::cout << "Collision geometry tests passed\n";
