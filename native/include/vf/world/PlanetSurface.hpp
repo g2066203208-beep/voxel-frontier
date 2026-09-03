@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace vf {
 
@@ -39,5 +40,12 @@ void appendCelestialProxy(
     double radius,
     std::uint32_t subdivisionsPerFace,
     const glm::vec3& color);
+void appendCelestialBodyProxy(
+    PlanetMesh& mesh,
+    const glm::dvec3& center,
+    const glm::dquat& orientation,
+    double radius,
+    std::uint32_t subdivisionsPerFace,
+    const glm::vec3& baseColor);
 
 } // namespace vf
