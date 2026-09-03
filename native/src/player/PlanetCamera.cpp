@@ -62,9 +62,6 @@ namespace {
     return smooth01((influence - distance) / std::max(1.0e-6, influence - radius));
 }
 
-// Local character physics excludes the common orbital acceleration because the player's world
-// position is explicitly carried by the celestial frame delta before this acceleration is solved.
-// Only gravity relative to the current planet belongs in the local walk/jump controller.
 [[nodiscard]] glm::dvec3 localGameplayGravity(
     const CelestialBody& body,
     const glm::dvec3& worldPosition) noexcept {
@@ -145,9 +142,14 @@ void PlanetCamera::rememberLocalFrame(const CelestialBody* bodyValue) noexcept {
 }
 
 glm::dvec3 PlanetCamera::up() const {
+    if (celestialSystem_ == nullptr) {
+        // Legacy/single-planet mode still has a spherical local world centered at the origin.
+        return safeNormalize(position_);
+    }
     if (const auto* bodyValue = referenceBody(position_)) {
         return safeNormalize(position_ - bodyValue->position);
     }
+    // Only true interplanetary free space uses a stable inertial up.
     return {0.0, 1.0, 0.0};
 }
 
@@ -190,9 +192,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
 
     const CelestialBody* frameBody = referenceBody(position_);
 
-    // Carry the character by the exact celestial pose delta first. This is the moving-platform
-    // part of the controller: the planet may travel metres in one render frame in the inertial
-    // system, but the local character sees only their small motion relative to the ground.
     if (frameBody != nullptr && localFrameInitialized_ && localFrameBodyId_ == frameBody->id) {
         const glm::dvec3 oldPosition = position_;
         const glm::dquat currentOrientation = glm::normalize(frameBody->orientation);
@@ -234,9 +233,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             glm::dvec3 relativeVelocity = velocity_ - frameVelocity;
 
             if (flightMode_) {
-                // Minecraft-style creative flight is planet-local while inside an SOI, so idle
-                // flight genuinely hovers over the same patch of ground. Leaving the SOI simply
-                // carries the already reconstructed world velocity into inertial space.
                 glm::dvec3 moveDirection = forward * input.forward + right * input.right + localUp * input.vertical;
                 const double moveLength = glm::length(moveDirection);
                 if (moveLength > 1.0) moveDirection /= moveLength;
@@ -266,8 +262,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
 
             velocity_ = celestialSurfaceVelocity(*frameBody, candidate) + relativeVelocity;
         } else if (flightMode_) {
-            // Outside every planetary SOI, creative flight becomes ordinary camera-space inertial
-            // travel. No hidden home-planet frame remains attached to the player.
             glm::dvec3 moveDirection = forward * input.forward + right * input.right + localUp * input.vertical;
             const double moveLength = glm::length(moveDirection);
             if (moveLength > 1.0) moveDirection /= moveLength;
@@ -286,9 +280,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             candidate += velocity_ * dt;
         }
 
-        // Celestial bodies are real collision volumes. The contact response always uses the
-        // contacted body's point velocity, which is the same moving-platform velocity convention
-        // used by the local-frame character controller above.
         for (const auto& bodyValue : celestialSystem_->bodies()) {
             glm::dvec3 offset = candidate - bodyValue.position;
             double distance = glm::length(offset);
