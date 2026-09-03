@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.1.0 LANGUAGES CXX)
+project(VoxelFrontierNative VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,6 +26,9 @@ else()
 endif()
 
 if(VF_BUILD_RUNTIME)
+    # Thin platform layer only. SDL does not provide our renderer/world/physics/gameplay.
+    set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+    set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
     FetchContent_Declare(
         SDL3
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
@@ -34,10 +37,21 @@ if(VF_BUILD_RUNTIME)
     )
     FetchContent_MakeAvailable(SDL3)
 
+    # Pin Vulkan headers and volk to the same published Vulkan 1.4 revision.
+    set(VULKAN_HEADERS_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
+    set(VULKAN_HEADERS_ENABLE_MODULE OFF CACHE BOOL "" FORCE)
+    FetchContent_Declare(
+        VulkanHeaders
+        GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
+        GIT_TAG v1.4.350
+        GIT_SHALLOW TRUE
+    )
+    FetchContent_MakeAvailable(VulkanHeaders)
+
     FetchContent_Declare(
         volk
         GIT_REPOSITORY https://github.com/zeux/volk.git
-        GIT_TAG 1.4.304
+        GIT_TAG 1.4.350
         GIT_SHALLOW TRUE
     )
     FetchContent_MakeAvailable(volk)
@@ -48,11 +62,18 @@ if(VF_BUILD_RUNTIME)
         src/render/VulkanRenderer.cpp
     )
     target_include_directories(voxel_frontier PRIVATE include)
-    target_link_libraries(voxel_frontier PRIVATE vf_engine SDL3::SDL3 volk)
-    target_compile_definitions(voxel_frontier PRIVATE SDL_MAIN_USE_CALLBACKS=0)
+    target_link_libraries(voxel_frontier PRIVATE
+        vf_engine
+        SDL3::SDL3
+        Vulkan::Headers
+        volk::volk
+    )
+    target_compile_definitions(voxel_frontier PRIVATE VK_NO_PROTOTYPES)
 
-    if(WIN32)
-        set_property(TARGET voxel_frontier PROPERTY WIN32_EXECUTABLE FALSE)
+    if(MSVC)
+        target_compile_options(voxel_frontier PRIVATE /W4 /permissive- /EHsc)
+    else()
+        target_compile_options(voxel_frontier PRIVATE -Wall -Wextra -Wpedantic)
     endif()
 endif()
 
