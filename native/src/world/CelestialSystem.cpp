@@ -30,26 +30,14 @@ constexpr double kEpsilon = 1.0e-9;
     return x * x * (3.0 - 2.0 * x);
 }
 
-// A body that orbits a parent is itself in an accelerating reference frame. Objects near that
-// body must inherit the same common-mode orbital acceleration or they will slowly shear away from
-// the moving planet even when their local gravity/contact state is otherwise correct. We add only
-// the acceleration of the declared parent chain at each body's center; we intentionally do not
-// apply the distant parent's full position-dependent field to every surface prop. That keeps local
-// gameplay stable while preserving the actual large-scale orbit.
-[[nodiscard]] glm::dvec3 orbitalFrameAcceleration(
-    const CelestialSystem& system,
-    const CelestialBody& bodyValue,
-    std::uint32_t depth = 0U) noexcept {
-    if (bodyValue.orbitParentId == 0U || depth >= 8U) return {};
-    const CelestialBody* parent = system.body(bodyValue.orbitParentId);
-    if (parent == nullptr || parent == &bodyValue || parent->massKg <= 0.0) return {};
+[[nodiscard]] double surfaceGravityOf(const CelestialBody& body) noexcept {
+    const double radius = std::max(0.1, body.radiusMeters);
+    if (body.gameplaySurfaceGravityMps2 > 0.0) return body.gameplaySurfaceGravityMps2;
+    return CelestialSystem::kGravitationalConstant * body.massKg / (radius * radius);
+}
 
-    const glm::dvec3 delta = parent->position - bodyValue.position;
-    const double distanceSquared = std::max(glm::dot(delta, delta), 1.0);
-    const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
-    const glm::dvec3 direct = delta
-        * (CelestialSystem::kGravitationalConstant * parent->massKg * inverseDistance / distanceSquared);
-    return direct + orbitalFrameAcceleration(system, *parent, depth + 1U);
+[[nodiscard]] glm::dvec3 angularVelocityOf(const CelestialBody& body) noexcept {
+    return safeNormalize(body.spinAxis) * body.spinRateRadPerSecond;
 }
 
 } // namespace
@@ -57,18 +45,33 @@ constexpr double kEpsilon = 1.0e-9;
 std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
     if (bodyValue.id == 0U) bodyValue.id = nextBodyId_++;
     else nextBodyId_ = std::max(nextBodyId_, bodyValue.id + 1U);
+
     bodyValue.radiusMeters = std::max(0.1, bodyValue.radiusMeters);
     bodyValue.massKg = std::max(0.0, bodyValue.massKg);
     bodyValue.orientation = glm::normalize(bodyValue.orientation);
     bodyValue.spinAxis = safeNormalize(bodyValue.spinAxis);
     bodyValue.gameplaySurfaceGravityMps2 = std::max(0.0, bodyValue.gameplaySurfaceGravityMps2);
-    if (bodyValue.gravityInfluenceRadiusMeters > 0.0) {
-        bodyValue.gravityInfluenceRadiusMeters = std::max(
-            bodyValue.radiusMeters * 1.05,
-            bodyValue.gravityInfluenceRadiusMeters);
-    }
+    bodyValue.gravityFalloffPower = std::max(2.0, bodyValue.gravityFalloffPower);
+    bodyValue.gravityCutoffAccelerationMps2 = std::max(1.0e-4, bodyValue.gravityCutoffAccelerationMps2);
     bodyValue.atmosphere.heightMeters = std::max(0.0, bodyValue.atmosphere.heightMeters);
     bodyValue.atmosphere.scaleHeightMeters = std::max(1.0, bodyValue.atmosphere.scaleHeightMeters);
+
+    const double atmosphereTop = bodyValue.radiusMeters
+        + (bodyValue.atmosphere.enabled ? bodyValue.atmosphere.heightMeters : 0.0);
+    if (bodyValue.gravityFalloffStartRadiusMeters <= bodyValue.radiusMeters) {
+        bodyValue.gravityFalloffStartRadiusMeters = std::max(bodyValue.radiusMeters, atmosphereTop);
+    }
+    if (bodyValue.gravityInfluenceRadiusMeters > 0.0) {
+        bodyValue.gravityInfluenceRadiusMeters = std::max(
+            bodyValue.gravityFalloffStartRadiusMeters * 1.001,
+            bodyValue.gravityInfluenceRadiusMeters);
+    }
+    if (bodyValue.physicsBubbleRadiusMeters > 0.0) {
+        bodyValue.physicsBubbleRadiusMeters = std::max(
+            bodyValue.radiusMeters * 1.05,
+            bodyValue.physicsBubbleRadiusMeters);
+    }
+
     bodies_.push_back(std::move(bodyValue));
     return bodies_.back().id;
 }
@@ -105,8 +108,9 @@ void CelestialSystem::updateOrbit(CelestialBody& celestialBody, double deltaSeco
     const glm::dvec3 acceleration = offset
         * (kGravitationalConstant * parent->massKg * inverseDistance / distanceSquared);
 
-    // Parent-only symplectic Euler keeps compressed game orbits stable and O(N). The local
-    // gameplay frame gets the same parent acceleration through gameplayGravityAccelerationAt().
+    // Celestial motion lives in the high-precision inertial simulation. Nearby gameplay physics
+    // runs in planet-centered physics spaces and therefore does not need to carry this large
+    // orbital velocity through every contact solve.
     celestialBody.linearVelocity += acceleration * deltaSeconds;
     celestialBody.position += celestialBody.linearVelocity * deltaSeconds;
 }
@@ -160,6 +164,117 @@ void CelestialSystem::updateClimateAndWeather(CelestialBody& celestialBody, doub
     celestialBody.weather.windMultiplier = 0.75 + 1.45 * celestialBody.weather.stormIntensity;
 }
 
+double CelestialSystem::gravityCutoffRadius(const CelestialBody& celestialBody) const noexcept {
+    if (celestialBody.type == CelestialBodyType::Star) {
+        return std::numeric_limits<double>::infinity();
+    }
+
+    const double radius = std::max(0.1, celestialBody.radiusMeters);
+    const double start = std::max(radius, celestialBody.gravityFalloffStartRadiusMeters);
+    if (celestialBody.gravityInfluenceRadiusMeters > start) {
+        return celestialBody.gravityInfluenceRadiusMeters;
+    }
+
+    const double gSurface = surfaceGravityOf(celestialBody);
+    const double gAtStart = gSurface * (radius * radius) / (start * start);
+    const double cutoffG = std::max(1.0e-4, celestialBody.gravityCutoffAccelerationMps2);
+    if (gAtStart <= cutoffG) return start * 1.001;
+
+    return start * std::pow(
+        gAtStart / cutoffG,
+        1.0 / std::max(2.0, celestialBody.gravityFalloffPower));
+}
+
+double CelestialSystem::gravityMagnitudeFromBody(
+    const CelestialBody& celestialBody,
+    const glm::dvec3& worldPosition) const noexcept {
+    if (celestialBody.massKg <= 0.0) return 0.0;
+
+    const double radius = std::max(0.1, celestialBody.radiusMeters);
+    const double distance = glm::length(worldPosition - celestialBody.position);
+
+    if (celestialBody.type == CelestialBodyType::Star) {
+        const double r = std::max(distance, radius * 0.20);
+        return kGravitationalConstant * celestialBody.massKg / (r * r);
+    }
+
+    const double gSurface = surfaceGravityOf(celestialBody);
+    if (distance < radius) {
+        // A linear interior field is stable for caves/cores and avoids a singularity at the center.
+        return gSurface * std::max(0.01, distance / radius);
+    }
+
+    const double start = std::max(radius, celestialBody.gravityFalloffStartRadiusMeters);
+    const double cutoff = gravityCutoffRadius(celestialBody);
+    if (distance >= cutoff) return 0.0;
+
+    double magnitude = 0.0;
+    if (distance <= start) {
+        const double ratio = radius / std::max(distance, radius);
+        magnitude = gSurface * ratio * ratio;
+    } else {
+        const double gAtStart = gSurface * (radius * radius) / (start * start);
+        magnitude = gAtStart * std::pow(
+            start / distance,
+            std::max(2.0, celestialBody.gravityFalloffPower));
+    }
+
+    // Do not snap from a measurable acceleration to exactly zero in one centimetre. The final 15%
+    // of the authored gravity well is smoothly faded to zero; this preserves stable transitions
+    // while still giving an Astroneer/Space-Engineers-like finite zero-g region.
+    const double fadeStart = start + (cutoff - start) * 0.85;
+    if (cutoff > fadeStart && distance > fadeStart) {
+        magnitude *= smooth01((cutoff - distance) / (cutoff - fadeStart));
+    }
+    return std::max(0.0, magnitude);
+}
+
+glm::dvec3 CelestialSystem::gravityFromSource(
+    const CelestialBody& celestialBody,
+    const glm::dvec3& worldPosition) const noexcept {
+    const double magnitude = gravityMagnitudeFromBody(celestialBody, worldPosition);
+    if (magnitude <= 0.0) return {};
+    return safeNormalize(celestialBody.position - worldPosition, {0.0, -1.0, 0.0}) * magnitude;
+}
+
+glm::dvec3 CelestialSystem::gameplayBodyGravity(
+    const CelestialBody& celestialBody,
+    const glm::dvec3& worldPosition) const noexcept {
+    return gravityFromSource(celestialBody, worldPosition);
+}
+
+glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
+    glm::dvec3 total{};
+    for (const auto& source : bodies_) total += gravityFromSource(source, worldPosition);
+    return total;
+}
+
+glm::dvec3 CelestialSystem::gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
+    return gameplayGravityAccelerationAt(worldPosition);
+}
+
+glm::dvec3 CelestialSystem::gravityAccelerationRelativeTo(
+    std::uint32_t frameBodyId,
+    const glm::dvec3& worldPosition) const noexcept {
+    const CelestialBody* frameBody = body(frameBodyId);
+    if (frameBody == nullptr) return gravityAccelerationAt(worldPosition);
+
+    glm::dvec3 relative{};
+    for (const auto& source : bodies_) {
+        if (source.id == frameBodyId) {
+            // Keep the frame body's own radial gravity. Its center is the origin of this local
+            // physics frame, so subtracting its center field would be meaningless.
+            relative += gravityFromSource(source, worldPosition);
+            continue;
+        }
+
+        // Remove only the external source's common-mode acceleration at the frame origin. The
+        // remaining difference is the real tidal acceleration experienced inside the local frame.
+        relative += gravityFromSource(source, worldPosition) - gravityFromSource(source, frameBody->position);
+    }
+    return relative;
+}
+
 glm::dvec3 CelestialSystem::physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
     glm::dvec3 total{};
     for (const auto& source : bodies_) {
@@ -173,81 +288,56 @@ glm::dvec3 CelestialSystem::physicalGravityAccelerationAt(const glm::dvec3& worl
     return total;
 }
 
-double CelestialSystem::gameplayInfluenceWeight(
+bool CelestialSystem::insideAtmosphere(
     const CelestialBody& celestialBody,
     const glm::dvec3& worldPosition) const noexcept {
-    if (celestialBody.type == CelestialBodyType::Star || celestialBody.massKg <= 0.0) return 0.0;
-    const double radius = std::max(0.1, celestialBody.radiusMeters);
-    const double influence = celestialBody.gravityInfluenceRadiusMeters > radius
-        ? celestialBody.gravityInfluenceRadiusMeters
-        : radius * 4.0;
-    const double distance = glm::length(worldPosition - celestialBody.position);
-    if (distance <= radius) return 1.0;
-    if (distance >= influence) return 0.0;
-    return smooth01((influence - distance) / std::max(1.0e-6, influence - radius));
+    if (!celestialBody.atmosphere.enabled || celestialBody.atmosphere.heightMeters <= 0.0) return false;
+    return glm::length(worldPosition - celestialBody.position)
+        <= celestialBody.radiusMeters + celestialBody.atmosphere.heightMeters;
 }
 
-glm::dvec3 CelestialSystem::gameplayBodyGravity(
-    const CelestialBody& celestialBody,
-    const glm::dvec3& worldPosition) const noexcept {
-    if (celestialBody.type == CelestialBodyType::Star || celestialBody.massKg <= 0.0) return {};
-    const glm::dvec3 delta = celestialBody.position - worldPosition;
-    const double radius = std::max(0.1, celestialBody.radiusMeters);
-    const double surfaceGravity = celestialBody.gameplaySurfaceGravityMps2 > 0.0
-        ? celestialBody.gameplaySurfaceGravityMps2
-        : kGravitationalConstant * celestialBody.massKg / (radius * radius);
-    const double weight = gameplayInfluenceWeight(celestialBody, worldPosition);
-    return safeNormalize(delta, {0.0, -1.0, 0.0}) * surfaceGravity * weight;
-}
-
-glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
-    glm::dvec3 blendedPlanetGravity{};
-    double totalWeight = 0.0;
-
-    for (const auto& source : bodies_) {
-        if (source.type == CelestialBodyType::Star) continue;
-        const double influence = gameplayInfluenceWeight(source, worldPosition);
-        if (influence <= 0.0) continue;
-
-        const double blendWeight = influence * influence;
-        const glm::dvec3 localGravity = gameplayBodyGravity(source, worldPosition);
-        const glm::dvec3 frameAcceleration = orbitalFrameAcceleration(*this, source);
-        blendedPlanetGravity += (localGravity + frameAcceleration) * blendWeight;
-        totalWeight += blendWeight;
-    }
-
-    if (totalWeight > kEpsilon) return blendedPlanetGravity / totalWeight;
-
-    // Outside all planetary SOIs, the actual stars provide weak large-scale inverse-square
-    // attraction. Inside a planetary SOI the same parent acceleration is supplied as common-mode
-    // frame acceleration above, while the planet owns local surface gravity.
-    glm::dvec3 stellarGravity{};
-    for (const auto& source : bodies_) {
-        if (source.type != CelestialBodyType::Star || source.massKg <= 0.0) continue;
-        const glm::dvec3 delta = source.position - worldPosition;
-        const double distanceSquared = std::max(glm::dot(delta, delta), source.radiusMeters * source.radiusMeters);
-        const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
-        stellarGravity += delta * (kGravitationalConstant * source.massKg * inverseDistance / distanceSquared);
-    }
-    return stellarGravity;
-}
-
-glm::dvec3 CelestialSystem::gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
-    return gameplayGravityAccelerationAt(worldPosition);
-}
-
-const CelestialBody* CelestialSystem::gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept {
+const CelestialBody* CelestialSystem::gravityReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept {
     const CelestialBody* best = nullptr;
-    double bestWeight = 0.0;
+    double bestGravity = 0.0;
     for (const auto& source : bodies_) {
         if (source.type == CelestialBodyType::Star) continue;
-        const double weight = gameplayInfluenceWeight(source, worldPosition);
-        if (weight > bestWeight) {
-            bestWeight = weight;
+        const double gravity = gravityMagnitudeFromBody(source, worldPosition);
+        if (gravity > bestGravity) {
+            bestGravity = gravity;
             best = &source;
         }
     }
     return best;
+}
+
+const CelestialBody* CelestialSystem::physicsReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept {
+    const CelestialBody* best = nullptr;
+    double bestNormalizedDistance = std::numeric_limits<double>::infinity();
+
+    for (const auto& source : bodies_) {
+        if (source.type == CelestialBodyType::Star) continue;
+        const double atmosphereTop = source.radiusMeters
+            + (source.atmosphere.enabled ? source.atmosphere.heightMeters : 0.0);
+        const double defaultBubble = std::max(
+            gravityCutoffRadius(source) * 1.20,
+            atmosphereTop * 1.35);
+        const double bubble = source.physicsBubbleRadiusMeters > source.radiusMeters
+            ? source.physicsBubbleRadiusMeters
+            : defaultBubble;
+        const double distance = glm::length(worldPosition - source.position);
+        if (distance > bubble) continue;
+
+        const double normalized = distance / std::max(1.0, bubble);
+        if (normalized < bestNormalizedDistance) {
+            bestNormalizedDistance = normalized;
+            best = &source;
+        }
+    }
+    return best;
+}
+
+const CelestialBody* CelestialSystem::gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept {
+    return physicsReferenceBodyAt(worldPosition);
 }
 
 const CelestialBody* CelestialSystem::dominantBodyAt(const glm::dvec3& worldPosition) const noexcept {
@@ -275,7 +365,9 @@ double CelestialSystem::signedSurfaceDistance(
 glm::dvec3 CelestialSystem::magneticFieldAt(
     const CelestialBody& celestialBody,
     const glm::dvec3& worldPosition) const noexcept {
-    if (!celestialBody.magneticField.enabled || celestialBody.magneticField.equatorialSurfaceFieldTesla <= 0.0) return {};
+    if (!celestialBody.magneticField.enabled
+        || celestialBody.magneticField.equatorialSurfaceFieldTesla <= 0.0) return {};
+
     const glm::dvec3 offset = worldPosition - celestialBody.position;
     const double radius = std::max(glm::length(offset), celestialBody.radiusMeters * 0.25);
     const glm::dvec3 rHat = safeNormalize(offset);
@@ -291,17 +383,17 @@ CelestialEnvironmentSample CelestialSystem::sampleEnvironment(const glm::dvec3& 
     sample.gravityAcceleration = gravityAccelerationAt(worldPosition);
 
     const CelestialBody* environmentBody = nullptr;
-    double bestSurfaceDistance = std::numeric_limits<double>::infinity();
+    double bestAltitude = std::numeric_limits<double>::infinity();
     for (const auto& candidate : bodies_) {
-        if (candidate.type == CelestialBodyType::Star) continue;
+        if (candidate.type == CelestialBodyType::Star || !insideAtmosphere(candidate, worldPosition)) continue;
         const double altitude = signedSurfaceDistance(candidate, worldPosition);
-        const double influenceHeight = std::max(candidate.atmosphere.heightMeters, candidate.radiusMeters * 0.20);
-        if (altitude <= influenceHeight && std::abs(altitude) < bestSurfaceDistance) {
+        if (altitude < bestAltitude) {
+            bestAltitude = altitude;
             environmentBody = &candidate;
-            bestSurfaceDistance = std::abs(altitude);
         }
     }
-    if (environmentBody == nullptr) environmentBody = gameplayReferenceBodyAt(worldPosition);
+
+    if (environmentBody == nullptr) environmentBody = gravityReferenceBodyAt(worldPosition);
     if (environmentBody == nullptr) {
         sample.temperatureK = 2.725;
         return sample;
@@ -315,7 +407,7 @@ CelestialEnvironmentSample CelestialSystem::sampleEnvironment(const glm::dvec3& 
     sample.precipitationRateMmPerHour = environmentBody->weather.precipitationRateMmPerHour;
 
     const auto& atmosphere = environmentBody->atmosphere;
-    if (!atmosphere.enabled || sample.altitudeMeters > atmosphere.heightMeters) {
+    if (!insideAtmosphere(*environmentBody, worldPosition)) {
         sample.temperatureK = 2.725;
         return sample;
     }
@@ -330,15 +422,23 @@ CelestialEnvironmentSample CelestialSystem::sampleEnvironment(const glm::dvec3& 
     sample.densityKgPerM3 = sample.pressurePa / (specificGasConstant * sample.temperatureK);
 
     const glm::dvec3 outward = safeNormalize(worldPosition - environmentBody->position);
-    glm::dvec3 wind = environmentBody->orientation * atmosphere.prevailingWind;
-    wind -= outward * glm::dot(wind, outward);
+    glm::dvec3 localWind = environmentBody->orientation * atmosphere.prevailingWind;
+    localWind -= outward * glm::dot(localWind, outward);
     const glm::dvec3 reference = std::abs(outward.y) < 0.9
         ? glm::dvec3{0.0, 1.0, 0.0}
         : glm::dvec3{1.0, 0.0, 0.0};
     const glm::dvec3 tangent = safeNormalize(glm::cross(reference, outward), {1.0, 0.0, 0.0});
-    const double gust = std::sin(simulationTime_ * 0.11 + glm::dot(worldPosition, tangent) * 0.006 + environmentBody->id)
+    const double gust = std::sin(
+        simulationTime_ * 0.11 + glm::dot(worldPosition, tangent) * 0.006 + environmentBody->id)
         * (1.2 + 5.0 * environmentBody->weather.stormIntensity);
-    sample.windVelocity = (wind + tangent * gust) * environmentBody->weather.windMultiplier;
+    localWind = (localWind + tangent * gust) * environmentBody->weather.windMultiplier;
+
+    // Atmosphere co-moves with its planet before local weather is added. Global/inertial callers
+    // therefore see correct relative air speed; a planet-centered physics proxy simply has zero
+    // translational velocity and gets the same formula for free.
+    sample.windVelocity = environmentBody->linearVelocity
+        + glm::cross(angularVelocityOf(*environmentBody), worldPosition - environmentBody->position)
+        + localWind;
     return sample;
 }
 
