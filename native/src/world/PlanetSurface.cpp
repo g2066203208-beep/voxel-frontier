@@ -29,6 +29,10 @@ namespace {
 }
 
 [[nodiscard]] glm::vec3 proxyColor(const glm::vec3& baseColor, const glm::dvec3& localDirection) {
+    // Negative colors are an internal atmosphere-shell marker. Preserve them exactly instead of
+    // clamping to black; the shared fragment shader decodes -color as scattering tint+density.
+    if (baseColor.x < 0.0F || baseColor.y < 0.0F || baseColor.z < 0.0F) return baseColor;
+
     // Cheap body-fixed surface variation makes axial rotation readable without textures.
     // The pattern is evaluated in local coordinates and therefore rotates with orientation.
     const double bands = 0.5 + 0.5 * std::sin(localDirection.y * 17.0 + localDirection.x * 5.0);
@@ -157,6 +161,23 @@ void appendCelestialBodyProxy(
     const glm::dquat normalizedOrientation = glm::normalize(orientation);
     for (std::uint32_t face = 0; face < 6U; ++face) {
         appendFace(mesh, nullptr, center, &normalizedOrientation, radius, face, subdivisionsPerFace, &baseColor);
+    }
+}
+
+void appendAtmosphereProxy(
+    PlanetMesh& mesh,
+    const glm::dvec3& center,
+    double outerRadius,
+    std::uint32_t subdivisionsPerFace,
+    const glm::vec3& scatteringColor,
+    float opticalStrength) {
+    if (subdivisionsPerFace < 2U) throw std::invalid_argument("atmosphere subdivisions must be >= 2");
+    const glm::vec3 tint = glm::clamp(scatteringColor, glm::vec3{0.01F}, glm::vec3{1.0F});
+    const float strength = std::clamp(opticalStrength, 0.02F, 1.0F);
+    const glm::vec3 encoded = -(tint * strength);
+    const glm::dquat identity{1.0, 0.0, 0.0, 0.0};
+    for (std::uint32_t face = 0; face < 6U; ++face) {
+        appendFace(mesh, nullptr, center, &identity, outerRadius, face, subdivisionsPerFace, &encoded);
     }
 }
 
