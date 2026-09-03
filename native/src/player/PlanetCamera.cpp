@@ -26,6 +26,20 @@ namespace {
     return glm::normalize(east);
 }
 
+[[nodiscard]] glm::dvec3 bodyLocalDirection(
+    const CelestialBody& body,
+    const glm::dvec3& worldDirection) noexcept {
+    return safeNormalize(glm::conjugate(glm::normalize(body.orientation)) * safeNormalize(worldDirection));
+}
+
+[[nodiscard]] glm::dvec3 celestialSurfaceVelocity(
+    const CelestialBody& body,
+    const glm::dvec3& worldPoint) noexcept {
+    const glm::dvec3 spinAxis = safeNormalize(body.spinAxis);
+    const glm::dvec3 angularVelocity = spinAxis * body.spinRateRadPerSecond;
+    return body.linearVelocity + glm::cross(angularVelocity, worldPoint - body.position);
+}
+
 } // namespace
 
 PlanetCamera::PlanetCamera(
@@ -36,10 +50,13 @@ PlanetCamera::PlanetCamera(
       celestialSystem_(celestialSystem),
       primaryCelestialBodyId_(primaryCelestialBodyId) {
     const glm::dvec3 startDirection = glm::normalize(glm::dvec3{0.72, 0.52, 0.46});
-    const double surface = planetSurfaceRadius(planet, startDirection);
+    double surface = planetSurfaceRadius(planet, startDirection);
     glm::dvec3 center{};
     if (celestialSystem_ != nullptr && primaryCelestialBodyId_ != 0U) {
-        if (const auto* primary = celestialSystem_->body(primaryCelestialBodyId_)) center = primary->position;
+        if (const auto* primary = celestialSystem_->body(primaryCelestialBodyId_)) {
+            center = primary->position;
+            surface = planetSurfaceRadius(planet, bodyLocalDirection(*primary, startDirection));
+        }
     }
     position_ = center + startDirection * (surface + eyeHeight_);
 }
@@ -66,7 +83,7 @@ double PlanetCamera::minimumEyeRadius(
     const CelestialBody& bodyValue,
     const glm::dvec3& direction) const noexcept {
     if (bodyValue.id == primaryCelestialBodyId_ && planet_ != nullptr) {
-        return planetSurfaceRadius(*planet_, direction) + eyeHeight_;
+        return planetSurfaceRadius(*planet_, bodyLocalDirection(bodyValue, direction)) + eyeHeight_;
     }
     return bodyValue.radiusMeters + eyeHeight_;
 }
@@ -83,7 +100,7 @@ double PlanetCamera::altitude() const {
         const glm::dvec3 offset = position_ - bodyValue->position;
         const glm::dvec3 direction = safeNormalize(offset);
         const double surfaceRadius = bodyValue->id == primaryCelestialBodyId_ && planet_ != nullptr
-            ? planetSurfaceRadius(*planet_, direction)
+            ? planetSurfaceRadius(*planet_, bodyLocalDirection(*bodyValue, direction))
             : bodyValue->radiusMeters;
         return glm::length(offset) - surfaceRadius;
     }
@@ -123,7 +140,7 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
 
     grounded_ = false;
     if (celestialSystem_ != nullptr) {
-        // The camera remains intentionally lightweight, but radial motion is now genuinely
+        // The camera remains intentionally lightweight, but radial motion is genuinely
         // gravity-driven. Space/Ctrl act as local thrusters instead of teleporting vertically.
         velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
         const double verticalAcceleration = input.sprint ? 70.0 : 28.0;
@@ -133,20 +150,34 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         if (speed > 220.0) velocity_ *= 220.0 / speed;
         candidate += velocity_ * dt;
 
-        // Collision against every small set of celestial bodies is O(N) with N usually < 10,
-        // far cheaper than a broadphase and guarantees that a secondary planet is never decorative.
+        // Small celestial-body counts make an O(N) surface test far cheaper than maintaining a
+        // second broadphase. Primary terrain is evaluated in body-local coordinates so mountains
+        // rotate with the planet instead of remaining frozen in inertial space.
         for (const auto& bodyValue : celestialSystem_->bodies()) {
             if (bodyValue.type == CelestialBodyType::Star) continue;
             glm::dvec3 offset = candidate - bodyValue.position;
-            const double distance = glm::length(offset);
-            if (distance <= 1.0e-9) offset = {0.0, 1.0, 0.0};
+            double distance = glm::length(offset);
+            if (distance <= 1.0e-9) {
+                offset = {0.0, 1.0, 0.0};
+                distance = 1.0;
+            }
             const glm::dvec3 direction = safeNormalize(offset);
             const double minimumRadius = minimumEyeRadius(bodyValue, direction);
             if (distance >= minimumRadius) continue;
 
             candidate = bodyValue.position + direction * minimumRadius;
-            const double inwardSpeed = glm::dot(velocity_, direction);
-            if (inwardSpeed < 0.0) velocity_ -= direction * inwardSpeed;
+            const glm::dvec3 surfaceVelocity = celestialSurfaceVelocity(bodyValue, candidate);
+            glm::dvec3 relativeVelocity = velocity_ - surfaceVelocity;
+            const double inwardSpeed = glm::dot(relativeVelocity, direction);
+            if (inwardSpeed < 0.0) relativeVelocity -= direction * inwardSpeed;
+
+            // Ground friction makes a resting camera co-rotate/co-orbit with the surface while
+            // preserving responsive direct tangent movement. This is intentionally cheaper than a
+            // full character solver and will later be replaced by the physical capsule controller.
+            const glm::dvec3 relativeNormal = direction * glm::dot(relativeVelocity, direction);
+            glm::dvec3 relativeTangent = relativeVelocity - relativeNormal;
+            relativeTangent *= std::exp(-12.0 * dt);
+            velocity_ = surfaceVelocity + relativeNormal + relativeTangent;
             grounded_ = true;
         }
     } else {
