@@ -59,7 +59,18 @@ void testPlaygroundProducesMovingGeometry() {
     }
     const auto movedMesh = playground.buildDebugMesh();
     requireValidIndices(movedMesh);
-    require(movedMesh.vertices.size() == initialMesh.vertices.size(), "playground topology should stay stable for inexpensive streaming");
+
+    // The mesh used to be required to keep an identical vertex count forever. That became an
+    // incorrect contract once rope links can physically fracture: a broken link must disappear
+    // visually instead of leaving a fake connecting rod. Stable unbroken scenes keep topology;
+    // a fractured rope is allowed to shrink it, but never to create unexplained extra geometry.
+    if (playground.rope().brokenLinkCount() == 0U) {
+        require(movedMesh.vertices.size() == initialMesh.vertices.size(),
+            "unbroken playground topology should remain stable for inexpensive streaming");
+    } else {
+        require(movedMesh.vertices.size() < initialMesh.vertices.size(),
+            "physical rope fracture must remove visible link geometry instead of drawing across the break");
+    }
 
     bool positionChanged = false;
     const std::size_t sampleCount = std::min(initialMesh.vertices.size(), movedMesh.vertices.size());
