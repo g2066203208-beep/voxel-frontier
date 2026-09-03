@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.9.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.9.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -41,6 +41,7 @@ add_library(vf_engine STATIC
     src/physics/CelestialSurfaceFrames.cpp
     src/render/PhysicsDebugMesh.cpp
     src/gameplay/PhysicsPlayground.cpp
+    src/gameplay/PhysicsInteraction.cpp
 )
 
 target_include_directories(vf_engine PUBLIC include)
@@ -215,6 +216,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_interplanetary_flight_tests tests/InterplanetaryFlightTests.cpp)
     target_link_libraries(vf_interplanetary_flight_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_interplanetary_flight_tests COMMAND vf_interplanetary_flight_tests)
+
+    add_executable(vf_gameplay_interaction_tests tests/GameplayInteractionTests.cpp)
+    target_link_libraries(vf_gameplay_interaction_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_gameplay_interaction_tests COMMAND vf_gameplay_interaction_tests)
 
     add_executable(vf_sparse_universe_catalog_tests tests/SparseUniverseCatalogTests.cpp)
     target_link_libraries(vf_sparse_universe_catalog_tests PRIVATE vf_engine glm::glm)
