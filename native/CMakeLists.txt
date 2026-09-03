@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.2.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.3.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,6 +26,9 @@ add_library(vf_engine STATIC
     src/world/World.cpp
     src/world/PlanetSurface.cpp
     src/player/PlanetCamera.cpp
+    src/physics/PhysicsWorld.cpp
+    src/physics/ShallowWater.cpp
+    src/physics/TreePhysics.cpp
 )
 
 target_include_directories(vf_engine PUBLIC include)
