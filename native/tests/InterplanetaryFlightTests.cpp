@@ -43,7 +43,8 @@ void testCreativeFlightIsExplicitAndGravityIndependent() {
         / vf::CelestialSystem::kGravitationalConstant;
     destination.gameplaySurfaceGravityMps2 = 2.0;
     destination.gravityInfluenceRadiusMeters = 120.0;
-    celestial.addBody(destination);
+    const auto destinationId = celestial.addBody(destination);
+    require(destinationId != 0U, "destination body must be registered");
 
     vf::PlanetCamera camera{terrain, &celestial, homeId};
     require(!camera.flightMode(), "camera must spawn with creative flight disabled");
@@ -58,6 +59,15 @@ void testCreativeFlightIsExplicitAndGravityIndependent() {
     for (int i = 0; i < 180; ++i) camera.update(idle, 1.0 / 60.0);
     require(glm::length(camera.position() - hoverStart) < 0.15,
         "creative flight must bypass planetary gravity so an idle player can hover");
+
+    // First rise clear of the ground. The default camera pitch looks slightly downward, so asking
+    // W to drive through the terrain is correctly blocked by collision and is not a valid forward-
+    // flight test. Minecraft-like creative flight lets Space lift first, then W travel freely.
+    vf::PlanetMovementInput rise{};
+    rise.vertical = 1.0;
+    rise.sprint = true;
+    for (int i = 0; i < 20; ++i) camera.update(rise, 1.0 / 60.0);
+    require(camera.altitude() > 15.0, "creative flight Space must quickly clear the surface");
 
     const glm::dvec3 forwardBefore = camera.forwardDirection();
     vf::PlanetMovementInput thrust{};
