@@ -42,11 +42,13 @@ constexpr double kPi = 3.14159265358979323846;
     desc.collisionShape = CollisionShape::sphere(radius);
     const double inertia = std::max(0.001, 0.4 * mass * radius * radius);
     desc.inertiaDiagonal = {inertia, inertia, inertia};
-    desc.material.friction = 0.62;
-    desc.material.restitution = 0.22;
-    desc.material.rollingResistance = 0.012;
-    desc.linearDamping = 0.015;
-    desc.angularDamping = 0.025;
+
+    // Everyday loose props should come to rest instead of behaving like rubber test particles.
+    desc.material.friction = 0.82;
+    desc.material.restitution = 0.015;
+    desc.material.rollingResistance = 0.085;
+    desc.linearDamping = 0.055;
+    desc.angularDamping = 0.085;
     desc.aerodynamics.dragCoefficient = 0.47;
     desc.aerodynamics.referenceArea = kPi * radius * radius;
     return desc;
@@ -75,20 +77,22 @@ PhysicsPlayground::PhysicsPlayground(
     east_ = safeNormalize(planetOrientationWorld_ * localEast, localEast);
     north_ = safeNormalize(planetOrientationWorld_ * localNorth, localNorth);
 
+    // Spring payload: visibly supported by a real spring, so its height is mechanically explained.
     springAnchor_ = physics_->createRigidBody(makeStaticBody(surfacePoint(-7.0, 0.0, 8.5)));
     auto springPayloadDesc = makeDynamicSphere(surfacePoint(-7.0, 0.0, 4.0), 18.0, 0.65);
-    springPayloadDesc.material.restitution = 0.08;
+    springPayloadDesc.material.restitution = 0.0;
     springPayload_ = physics_->createRigidBody(springPayloadDesc);
     SpringDamperConstraintDesc spring{};
     spring.bodyA = springAnchor_;
     spring.bodyB = springPayload_;
     spring.restLength = 2.7;
     spring.stiffnessNPerM = 260.0;
-    spring.dampingNsPerM = 48.0;
+    spring.dampingNsPerM = 64.0;
     spring.maxForceN = 8000.0;
     spring.breakForceN = 16000.0;
     (void)physics_->createSpringDamperConstraint(spring);
 
+    // Motor rotor and gears are supported by explicit static shafts/hinges.
     const glm::dvec3 motorBase = surfacePoint(0.0, 0.0, 0.2);
     motorAnchor_ = physics_->createRigidBody(makeStaticBody(motorBase + up_ * 2.8, 0.03));
     auto rotorDesc = makeDynamicSphere(motorBase + up_ * 3.3, 12.0, 0.07);
@@ -157,25 +161,41 @@ PhysicsPlayground::PhysicsPlayground(
     gear.breakTorqueNm = 900.0;
     (void)physics_->createGearConstraint(gear);
 
-    auto balloonDesc = makeDynamicSphere(surfacePoint(14.0, 2.5, 2.1), 2.2, 0.85);
-    balloonDesc.material.restitution = 0.05;
+    // Balloon is now physically tethered to a visible ground anchor rather than hovering with a
+    // decorative dangling line.
+    const glm::dvec3 balloonGround = surfacePoint(14.0, 2.5, 0.12);
+    balloonAnchor_ = physics_->createRigidBody(makeStaticBody(balloonGround, 0.12));
+    auto balloonDesc = makeDynamicSphere(surfacePoint(14.0, 2.5, 4.65), 2.2, 0.85);
+    balloonDesc.material.restitution = 0.0;
     balloonDesc.aerodynamics.dragCoefficient = 0.48;
     balloonDesc.aerodynamics.referenceArea = 2.3;
     balloonDesc.buoyancy.enabled = true;
     balloonDesc.buoyancy.displaceAtmosphere = true;
     balloonDesc.buoyancy.displacedVolume = 3.6;
     balloon_ = physics_->createRigidBody(balloonDesc);
+    DistanceConstraintDesc balloonTether{};
+    balloonTether.bodyA = balloonAnchor_;
+    balloonTether.bodyB = balloon_;
+    balloonTether.restLength = 4.55;
+    balloonTether.maxForceN = 9000.0;
+    balloonTether.breakForceN = 18000.0;
+    balloonTether.baumgarte = 0.20;
+    (void)physics_->createDistanceConstraint(balloonTether);
 
+    // Loose interaction props begin ON the ground. They are no longer an unexplained stack of
+    // airborne regression particles.
     for (int i = 0; i < 5; ++i) {
+        const double radius = 0.45 + 0.05 * static_cast<double>(i);
         auto desc = makeDynamicSphere(
-            surfacePoint(-1.5 + 1.0 * static_cast<double>(i), 6.0, 7.0 + static_cast<double>(i) * 1.8),
+            surfacePoint(-1.5 + 1.25 * static_cast<double>(i), 6.0, radius + 0.025),
             3.0 + static_cast<double>(i) * 2.0,
-            0.45 + 0.05 * static_cast<double>(i));
-        desc.material.restitution = 0.30 - 0.035 * static_cast<double>(i);
+            radius);
         const auto id = physics_->createRigidBody(desc);
         fallingBodies_.push_back(id);
     }
 
+    // Tree starts healthy and standing. It only falls when a future gameplay cut action actually
+    // changes cutFraction; the old timed self-destruction made the scene look broken.
     tree_.rootPosition = surfacePoint(-13.0, 3.5, 0.05);
     tree_.localUp = safeNormalize(tree_.rootPosition - planetOriginWorld_);
     tree_.fallDirection = north_ + east_ * 0.35;
@@ -202,7 +222,7 @@ PhysicsPlayground::PhysicsPlayground(
     ropePoints.push_back(ropePayloadPosition);
 
     auto ropePayloadDesc = makeDynamicSphere(ropePayloadPosition, 7.0, 0.34);
-    ropePayloadDesc.material.restitution = 0.08;
+    ropePayloadDesc.material.restitution = 0.0;
     ropePayloadDesc.aerodynamics.referenceArea = 0.18;
     ropePayload_ = physics_->createRigidBody(ropePayloadDesc);
 
@@ -210,7 +230,7 @@ PhysicsPlayground::PhysicsPlayground(
     ropeMaterial.radiusMeters = ropeRadius;
     ropeMaterial.stretchComplianceMPerN = 2.0e-7;
     ropeMaterial.bendComplianceMPerN = 1.4e-3;
-    ropeMaterial.damping = 0.035;
+    ropeMaterial.damping = 0.045;
     ropeMaterial.friction = 0.72;
     ropeMaterial.dragCoefficient = 1.15;
     ropeMaterial.breakingStrain = 0.45;
@@ -284,10 +304,6 @@ bool PhysicsPlayground::isSpecialBody(std::uint32_t id) const noexcept {
 void PhysicsPlayground::update(double deltaSeconds) {
     elapsedSeconds_ += std::clamp(deltaSeconds, 0.0, 0.05);
 
-    if (elapsedSeconds_ >= 4.0 && elapsedSeconds_ <= 7.4 && tree_.cutFraction < 0.70) {
-        tree_.applyCut(deltaSeconds * 0.22, north_ + east_ * 0.35);
-    }
-
     const glm::dvec3 trunkMidpoint = tree_.rootPosition + tree_.localUp * (0.5 * tree_.trunkLength);
     const AtmosphereSample atmosphere = physics_->environment().sampleAtmosphere(
         trunkMidpoint,
@@ -306,8 +322,8 @@ void PhysicsPlayground::update(double deltaSeconds) {
 
 PlanetMesh PhysicsPlayground::buildDebugMesh() const {
     PlanetMesh mesh{};
-    mesh.vertices.reserve(3200U);
-    mesh.indices.reserve(7200U);
+    mesh.vertices.reserve(3400U);
+    mesh.indices.reserve(7600U);
 
     const glm::vec3 steel{0.38F, 0.43F, 0.48F};
     const glm::vec3 motorColor{0.93F, 0.55F, 0.10F};
@@ -357,9 +373,10 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
 
     if (const auto* balloon = physics_->body(balloon_)) {
         appendDebugSphere(mesh, balloon->position, balloon->collisionShape.radius, balloonColor, 9U, 14U);
-        const glm::dvec3 tetherEnd = balloon->position
-            - safeNormalize(balloon->position - planetOriginWorld_) * 1.35;
-        appendDebugRod(mesh, balloon->position, tetherEnd, 0.025, {0.42F, 0.28F, 0.16F});
+        if (const auto* anchor = physics_->body(balloonAnchor_)) {
+            appendDebugSphere(mesh, anchor->position, 0.16, steel, 5U, 8U);
+            appendDebugRod(mesh, anchor->position, balloon->position, 0.025, {0.42F, 0.28F, 0.16F});
+        }
     }
 
     for (std::size_t i = 0; i < fallingBodies_.size(); ++i) {
