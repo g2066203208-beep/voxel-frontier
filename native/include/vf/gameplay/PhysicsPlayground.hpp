@@ -53,6 +53,7 @@ private:
     std::uint32_t gearAnchorB_{};
     std::uint32_t gearRotorA_{};
     std::uint32_t gearRotorB_{};
+    std::uint32_t balloonAnchor_{};
     std::uint32_t balloon_{};
     std::uint32_t ropePayload_{};
     std::vector<std::uint32_t> fallingBodies_;
