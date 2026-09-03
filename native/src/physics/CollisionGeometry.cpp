@@ -1,8 +1,10 @@
 #include "vf/physics/CollisionGeometry.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
+#include <vector>
 
 #include <glm/common.hpp>
 #include <glm/geometric.hpp>
@@ -13,6 +15,7 @@ namespace {
 
 constexpr double kEpsilon = 1.0e-9;
 constexpr double kSatEpsilon = 1.0e-8;
+constexpr double kContactTolerance = 1.0e-7;
 
 [[nodiscard]] glm::dvec3 safeNormalize(
     const glm::dvec3& value,
@@ -30,15 +33,17 @@ constexpr double kSatEpsilon = 1.0e-8;
     return axis == 0 ? value.x : (axis == 1 ? value.y : value.z);
 }
 
-[[nodiscard]] glm::dvec3 boxAxis(const ShapePose& pose, int axis) noexcept {
-    const glm::dmat3 rotation = glm::mat3_cast(pose.orientation);
-    return safeNormalize(rotation[axis], axis == 0 ? glm::dvec3{1.0, 0.0, 0.0}
-        : axis == 1 ? glm::dvec3{0.0, 1.0, 0.0}
-                    : glm::dvec3{0.0, 0.0, 1.0});
+[[nodiscard]] std::array<glm::dvec3, 3> boxAxes(const ShapePose& pose) noexcept {
+    const glm::dmat3 rotation = glm::mat3_cast(glm::normalize(pose.orientation));
+    return {
+        safeNormalize(rotation[0], {1.0, 0.0, 0.0}),
+        safeNormalize(rotation[1], {0.0, 1.0, 0.0}),
+        safeNormalize(rotation[2], {0.0, 0.0, 1.0}),
+    };
 }
 
 [[nodiscard]] glm::dvec3 capsuleAxis(const ShapePose& pose) noexcept {
-    return safeNormalize(pose.orientation * glm::dvec3{0.0, 1.0, 0.0}, {0.0, 1.0, 0.0});
+    return safeNormalize(glm::normalize(pose.orientation) * glm::dvec3{0.0, 1.0, 0.0}, {0.0, 1.0, 0.0});
 }
 
 void capsuleSegment(
@@ -117,10 +122,11 @@ void setSingleContact(
     ContactManifold& manifold,
     const glm::dvec3& normal,
     const glm::dvec3& position,
-    double penetration) noexcept {
+    double penetration,
+    std::uint32_t featureId = 0U) noexcept {
     manifold.normal = safeNormalize(normal);
     manifold.pointCount = 1;
-    manifold.points[0] = ContactPoint{position, std::max(0.0, penetration), 0.0, {}};
+    manifold.points[0] = ContactPoint{position, std::max(0.0, penetration), featureId};
 }
 
 [[nodiscard]] bool sphereSphere(
@@ -162,6 +168,7 @@ void setSingleContact(
     glm::dvec3 normalBoxToSphereLocal{};
     glm::dvec3 contactLocal = localClosest;
     double penetration = 0.0;
+    std::uint32_t feature = 0U;
 
     if (distanceSquared > kEpsilon) {
         if (distanceSquared >= radius * radius) return false;
@@ -179,13 +186,14 @@ void setSingleContact(
         contactLocal = localCenter;
         contactLocal[axis] = sign * component(extents, axis);
         penetration = radius + component(distances, axis);
+        feature = static_cast<std::uint32_t>(axis * 2 + (sign > 0.0 ? 1 : 0));
     }
 
-    const glm::dvec3 normalBoxToSphere = safeNormalize(boxPose.orientation * normalBoxToSphereLocal);
+    const glm::dvec3 normalBoxToSphere = safeNormalize(glm::normalize(boxPose.orientation) * normalBoxToSphereLocal);
     const glm::dvec3 normalSphereToBox = -normalBoxToSphere;
-    const glm::dvec3 pointOnBox = boxPose.position + boxPose.orientation * contactLocal;
+    const glm::dvec3 pointOnBox = boxPose.position + glm::normalize(boxPose.orientation) * contactLocal;
     const glm::dvec3 pointOnSphere = spherePose.position + normalSphereToBox * radius;
-    setSingleContact(manifold, normalSphereToBox, 0.5 * (pointOnBox + pointOnSphere), penetration);
+    setSingleContact(manifold, normalSphereToBox, 0.5 * (pointOnBox + pointOnSphere), penetration, feature);
     return true;
 }
 
@@ -250,17 +258,156 @@ void setSingleContact(
     return true;
 }
 
+enum class SatAxisKind : std::uint8_t {
+    FaceA,
+    FaceB,
+    EdgeEdge,
+};
+
+struct SatResult {
+    double overlap{std::numeric_limits<double>::infinity()};
+    glm::dvec3 normal{1.0, 0.0, 0.0};
+    SatAxisKind kind{SatAxisKind::FaceA};
+    int axisA{};
+    int axisB{};
+};
+
+[[nodiscard]] bool updateSatResult(
+    SatResult& result,
+    double overlap,
+    const glm::dvec3& axis,
+    const glm::dvec3& centerDelta,
+    SatAxisKind kind,
+    int axisA,
+    int axisB) noexcept {
+    if (overlap < 0.0) return false;
+    if (overlap >= result.overlap) return true;
+
+    glm::dvec3 normal = safeNormalize(axis);
+    if (glm::dot(normal, centerDelta) < 0.0) normal = -normal;
+    result.overlap = overlap;
+    result.normal = normal;
+    result.kind = kind;
+    result.axisA = axisA;
+    result.axisB = axisB;
+    return true;
+}
+
+void clipPolygonAgainstSidePlane(
+    std::vector<glm::dvec3>& polygon,
+    const glm::dvec3& faceCenter,
+    const glm::dvec3& planeNormal,
+    double limit) {
+    if (polygon.empty()) return;
+
+    std::vector<glm::dvec3> output;
+    output.reserve(polygon.size() + 2U);
+    glm::dvec3 previous = polygon.back();
+    double previousDistance = glm::dot(previous - faceCenter, planeNormal) - limit;
+    bool previousInside = previousDistance <= kContactTolerance;
+
+    for (const glm::dvec3& current : polygon) {
+        const double currentDistance = glm::dot(current - faceCenter, planeNormal) - limit;
+        const bool currentInside = currentDistance <= kContactTolerance;
+        if (currentInside != previousInside) {
+            const double denominator = previousDistance - currentDistance;
+            if (std::abs(denominator) > kEpsilon) {
+                const double t = std::clamp(previousDistance / denominator, 0.0, 1.0);
+                output.push_back(previous + (current - previous) * t);
+            }
+        }
+        if (currentInside) output.push_back(current);
+        previous = current;
+        previousDistance = currentDistance;
+        previousInside = currentInside;
+    }
+    polygon = std::move(output);
+}
+
+void buildBoxFaceContacts(
+    const CollisionShape& reference,
+    const ShapePose& referencePose,
+    int referenceAxisIndex,
+    const CollisionShape& incident,
+    const ShapePose& incidentPose,
+    const glm::dvec3& referenceOutwardNormal,
+    const glm::dvec3& manifoldNormalAtoB,
+    std::uint32_t featurePrefix,
+    ContactManifold& manifold) {
+    const auto refAxes = boxAxes(referencePose);
+    const auto incAxes = boxAxes(incidentPose);
+    const glm::dvec3 refExtents = glm::max(absVector(reference.halfExtents), glm::dvec3{1.0e-9});
+    const glm::dvec3 incExtents = glm::max(absVector(incident.halfExtents), glm::dvec3{1.0e-9});
+
+    const int refTangentIndex0 = (referenceAxisIndex + 1) % 3;
+    const int refTangentIndex1 = (referenceAxisIndex + 2) % 3;
+    const glm::dvec3 refTangent0 = refAxes[refTangentIndex0];
+    const glm::dvec3 refTangent1 = refAxes[refTangentIndex1];
+    const double refTangentExtent0 = component(refExtents, refTangentIndex0);
+    const double refTangentExtent1 = component(refExtents, refTangentIndex1);
+    const glm::dvec3 refFaceCenter = referencePose.position
+        + referenceOutwardNormal * component(refExtents, referenceAxisIndex);
+
+    int incidentAxisIndex = 0;
+    double bestAlignment = std::abs(glm::dot(incAxes[0], referenceOutwardNormal));
+    for (int axis = 1; axis < 3; ++axis) {
+        const double alignment = std::abs(glm::dot(incAxes[axis], referenceOutwardNormal));
+        if (alignment > bestAlignment) {
+            bestAlignment = alignment;
+            incidentAxisIndex = axis;
+        }
+    }
+
+    const double incidentFaceSign = glm::dot(incAxes[incidentAxisIndex], referenceOutwardNormal) > 0.0 ? -1.0 : 1.0;
+    const glm::dvec3 incidentFaceCenter = incidentPose.position
+        + incAxes[incidentAxisIndex] * (incidentFaceSign * component(incExtents, incidentAxisIndex));
+    const int incidentTangentIndex0 = (incidentAxisIndex + 1) % 3;
+    const int incidentTangentIndex1 = (incidentAxisIndex + 2) % 3;
+    const glm::dvec3 incidentTangent0 = incAxes[incidentTangentIndex0]
+        * component(incExtents, incidentTangentIndex0);
+    const glm::dvec3 incidentTangent1 = incAxes[incidentTangentIndex1]
+        * component(incExtents, incidentTangentIndex1);
+
+    std::vector<glm::dvec3> polygon{
+        incidentFaceCenter + incidentTangent0 + incidentTangent1,
+        incidentFaceCenter - incidentTangent0 + incidentTangent1,
+        incidentFaceCenter - incidentTangent0 - incidentTangent1,
+        incidentFaceCenter + incidentTangent0 - incidentTangent1,
+    };
+
+    clipPolygonAgainstSidePlane(polygon, refFaceCenter, refTangent0, refTangentExtent0);
+    clipPolygonAgainstSidePlane(polygon, refFaceCenter, -refTangent0, refTangentExtent0);
+    clipPolygonAgainstSidePlane(polygon, refFaceCenter, refTangent1, refTangentExtent1);
+    clipPolygonAgainstSidePlane(polygon, refFaceCenter, -refTangent1, refTangentExtent1);
+
+    manifold.normal = safeNormalize(manifoldNormalAtoB);
+    manifold.pointCount = 0;
+    for (std::size_t i = 0; i < polygon.size() && manifold.pointCount < manifold.points.size(); ++i) {
+        const glm::dvec3& incidentPoint = polygon[i];
+        const double separation = glm::dot(incidentPoint - refFaceCenter, referenceOutwardNormal);
+        if (separation > kContactTolerance) continue;
+        const double penetration = std::max(0.0, -separation);
+        const glm::dvec3 referencePoint = incidentPoint - referenceOutwardNormal * separation;
+        const glm::dvec3 contactPoint = 0.5 * (incidentPoint + referencePoint);
+        const std::uint32_t featureId = featurePrefix
+            | (static_cast<std::uint32_t>(referenceAxisIndex & 0x3) << 8U)
+            | (static_cast<std::uint32_t>(incidentAxisIndex & 0x3) << 4U)
+            | static_cast<std::uint32_t>(i & 0xFU);
+        manifold.points[manifold.pointCount++] = ContactPoint{contactPoint, penetration, featureId};
+    }
+}
+
 [[nodiscard]] bool boxBox(
     const CollisionShape& a,
     const ShapePose& poseA,
     const CollisionShape& b,
     const ShapePose& poseB,
-    ContactManifold& manifold) noexcept {
+    ContactManifold& manifold) {
     const glm::dvec3 extentsA = glm::max(absVector(a.halfExtents), glm::dvec3{1.0e-9});
     const glm::dvec3 extentsB = glm::max(absVector(b.halfExtents), glm::dvec3{1.0e-9});
+    const auto axesA = boxAxes(poseA);
+    const auto axesB = boxAxes(poseB);
 
-    std::array<glm::dvec3, 3> axesA{boxAxis(poseA, 0), boxAxis(poseA, 1), boxAxis(poseA, 2)};
-    std::array<glm::dvec3, 3> axesB{boxAxis(poseB, 0), boxAxis(poseB, 1), boxAxis(poseB, 2)};
     double rotation[3][3]{};
     double absRotation[3][3]{};
     for (int i = 0; i < 3; ++i) {
@@ -271,29 +418,19 @@ void setSingleContact(
     }
 
     const glm::dvec3 centerDelta = poseB.position - poseA.position;
-    double t[3]{
+    const double t[3]{
         glm::dot(centerDelta, axesA[0]),
         glm::dot(centerDelta, axesA[1]),
         glm::dot(centerDelta, axesA[2]),
     };
 
-    double minimumOverlap = std::numeric_limits<double>::infinity();
-    glm::dvec3 minimumAxis{1.0, 0.0, 0.0};
-    auto testAxis = [&](const glm::dvec3& worldAxis, double signedDistance, double radiusA, double radiusB) noexcept {
-        const double overlap = radiusA + radiusB - std::abs(signedDistance);
-        if (overlap < 0.0) return false;
-        if (overlap < minimumOverlap) {
-            minimumOverlap = overlap;
-            minimumAxis = safeNormalize(worldAxis) * (signedDistance >= 0.0 ? 1.0 : -1.0);
-        }
-        return true;
-    };
-
+    SatResult sat{};
     for (int i = 0; i < 3; ++i) {
         const double rb = extentsB.x * absRotation[i][0]
             + extentsB.y * absRotation[i][1]
             + extentsB.z * absRotation[i][2];
-        if (!testAxis(axesA[i], t[i], component(extentsA, i), rb)) return false;
+        const double overlap = component(extentsA, i) + rb - std::abs(t[i]);
+        if (!updateSatResult(sat, overlap, axesA[i], centerDelta, SatAxisKind::FaceA, i, -1)) return false;
     }
 
     for (int j = 0; j < 3; ++j) {
@@ -303,14 +440,15 @@ void setSingleContact(
         const double ra = extentsA.x * absRotation[0][j]
             + extentsA.y * absRotation[1][j]
             + extentsA.z * absRotation[2][j];
-        if (!testAxis(axesB[j], signedDistance, ra, component(extentsB, j))) return false;
+        const double overlap = ra + component(extentsB, j) - std::abs(signedDistance);
+        if (!updateSatResult(sat, overlap, axesB[j], centerDelta, SatAxisKind::FaceB, -1, j)) return false;
     }
 
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
-            const glm::dvec3 axis = glm::cross(axesA[i], axesB[j]);
-            const double axisLengthSquared = glm::dot(axis, axis);
-            if (axisLengthSquared <= 1.0e-12) continue;
+            const glm::dvec3 crossAxis = glm::cross(axesA[i], axesB[j]);
+            const double axisLength = glm::length(crossAxis);
+            if (axisLength <= 1.0e-8) continue;
             const int i1 = (i + 1) % 3;
             const int i2 = (i + 2) % 3;
             const int j1 = (j + 1) % 3;
@@ -320,15 +458,35 @@ void setSingleContact(
             const double rb = component(extentsB, j1) * absRotation[i][j2]
                 + component(extentsB, j2) * absRotation[i][j1];
             const double signedDistance = t[i2] * rotation[i1][j] - t[i1] * rotation[i2][j];
-            if (!testAxis(axis, signedDistance, ra, rb)) return false;
+            const double overlapUnnormalized = ra + rb - std::abs(signedDistance);
+            if (overlapUnnormalized < 0.0) return false;
+            const double overlap = overlapUnnormalized / axisLength;
+            if (!updateSatResult(sat, overlap, crossAxis, centerDelta, SatAxisKind::EdgeEdge, i, j)) return false;
         }
     }
 
-    if (!std::isfinite(minimumOverlap)) return false;
-    if (glm::dot(minimumAxis, centerDelta) < 0.0) minimumAxis = -minimumAxis;
-    const glm::dvec3 pointA = supportPoint(a, poseA, minimumAxis);
-    const glm::dvec3 pointB = supportPoint(b, poseB, -minimumAxis);
-    setSingleContact(manifold, minimumAxis, 0.5 * (pointA + pointB), minimumOverlap);
+    if (!std::isfinite(sat.overlap)) return false;
+    if (sat.kind == SatAxisKind::FaceA) {
+        buildBoxFaceContacts(a, poseA, sat.axisA, b, poseB, sat.normal, sat.normal, 0x10000U, manifold);
+    } else if (sat.kind == SatAxisKind::FaceB) {
+        buildBoxFaceContacts(b, poseB, sat.axisB, a, poseA, -sat.normal, sat.normal, 0x20000U, manifold);
+    } else {
+        const glm::dvec3 pointA = supportPoint(a, poseA, sat.normal);
+        const glm::dvec3 pointB = supportPoint(b, poseB, -sat.normal);
+        setSingleContact(
+            manifold,
+            sat.normal,
+            0.5 * (pointA + pointB),
+            sat.overlap,
+            0x30000U | (static_cast<std::uint32_t>(sat.axisA & 0x3) << 4U)
+                | static_cast<std::uint32_t>(sat.axisB & 0x3));
+    }
+
+    if (manifold.empty()) {
+        const glm::dvec3 pointA = supportPoint(a, poseA, sat.normal);
+        const glm::dvec3 pointB = supportPoint(b, poseB, -sat.normal);
+        setSingleContact(manifold, sat.normal, 0.5 * (pointA + pointB), sat.overlap, 0x3FFFFU);
+    }
     return true;
 }
 
@@ -371,6 +529,18 @@ bool Aabb::overlaps(const Aabb& other) const noexcept {
         && minimum.z <= other.maximum.z && maximum.z >= other.minimum.z;
 }
 
+double collisionBoundingRadius(const CollisionShape& shape) noexcept {
+    switch (shape.type) {
+    case CollisionShapeType::Sphere:
+        return std::max(0.0, shape.radius);
+    case CollisionShapeType::Box:
+        return glm::length(glm::max(absVector(shape.halfExtents), glm::dvec3{0.0}));
+    case CollisionShapeType::Capsule:
+        return std::max(0.0, shape.radius) + std::max(0.0, shape.halfHeight);
+    }
+    return 0.0;
+}
+
 Aabb computeWorldAabb(const CollisionShape& shape, const ShapePose& pose) noexcept {
     glm::dvec3 worldHalfExtents{};
     switch (shape.type) {
@@ -401,11 +571,12 @@ glm::dvec3 supportPoint(
     const ShapePose& pose,
     const glm::dvec3& direction) noexcept {
     const glm::dvec3 worldDirection = safeNormalize(direction);
+    const glm::dquat orientation = glm::normalize(pose.orientation);
     switch (shape.type) {
     case CollisionShapeType::Sphere:
         return pose.position + worldDirection * std::max(0.0, shape.radius);
     case CollisionShapeType::Box: {
-        const glm::dquat inverseRotation = glm::conjugate(glm::normalize(pose.orientation));
+        const glm::dquat inverseRotation = glm::conjugate(orientation);
         const glm::dvec3 localDirection = inverseRotation * worldDirection;
         const glm::dvec3 extents = glm::max(absVector(shape.halfExtents), glm::dvec3{0.0});
         const glm::dvec3 localPoint{
@@ -413,7 +584,7 @@ glm::dvec3 supportPoint(
             localDirection.y >= 0.0 ? extents.y : -extents.y,
             localDirection.z >= 0.0 ? extents.z : -extents.z,
         };
-        return pose.position + pose.orientation * localPoint;
+        return pose.position + orientation * localPoint;
     }
     case CollisionShapeType::Capsule: {
         const glm::dvec3 axis = capsuleAxis(pose);
@@ -459,9 +630,9 @@ bool collideShapes(
         return boxBox(a, poseA, b, poseB, manifold);
     }
 
-    // Box/capsule and future general convex pairs deliberately fall through here.
-    // They will use the same supportPoint() API through GJK + EPA rather than an
-    // approximate ad-hoc test.
+    // Box/capsule and future arbitrary convex pairs deliberately fall through.
+    // They will share supportPoint() through GJK + EPA rather than getting an
+    // approximate pair-specific shortcut.
     return false;
 }
 
