@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.6.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.7.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -161,6 +161,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_collision_geometry_tests tests/CollisionGeometryTests.cpp)
     target_link_libraries(vf_collision_geometry_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_collision_geometry_tests COMMAND vf_collision_geometry_tests)
+
+    add_executable(vf_contact_solver_tests tests/ContactSolverTests.cpp)
+    target_link_libraries(vf_contact_solver_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_contact_solver_tests COMMAND vf_contact_solver_tests)
 
     add_executable(vf_gas_chamber_tests tests/GasChamberTests.cpp)
     target_link_libraries(vf_gas_chamber_tests PRIVATE vf_engine)
