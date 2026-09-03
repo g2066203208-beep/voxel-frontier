@@ -23,6 +23,8 @@ public:
     VulkanRenderer& operator=(const VulkanRenderer&) = delete;
 
     void uploadPlanetMesh(const PlanetMesh& mesh);
+    void setDynamicMesh(const PlanetMesh& mesh);
+    void clearDynamicMesh();
     void drawFrame(
         const glm::vec3& clearColor,
         const glm::mat4& viewProjection,
@@ -32,9 +34,22 @@ public:
     [[nodiscard]] const std::string& gpuName() const noexcept { return gpuName_; }
     [[nodiscard]] std::uint32_t apiVersion() const noexcept { return apiVersion_; }
     [[nodiscard]] std::uint64_t triangleCount() const noexcept { return static_cast<std::uint64_t>(indexCount_ / 3U); }
+    [[nodiscard]] std::uint64_t dynamicTriangleCount() const noexcept { return static_cast<std::uint64_t>(pendingDynamicIndices_.size() / 3U); }
 
 private:
     static constexpr std::uint32_t kFramesInFlight = 2;
+
+    struct DynamicFrameMesh {
+        VkBuffer vertexBuffer{VK_NULL_HANDLE};
+        VkDeviceMemory vertexMemory{VK_NULL_HANDLE};
+        VkBuffer indexBuffer{VK_NULL_HANDLE};
+        VkDeviceMemory indexMemory{VK_NULL_HANDLE};
+        void* mappedVertices{};
+        void* mappedIndices{};
+        VkDeviceSize vertexCapacityBytes{};
+        VkDeviceSize indexCapacityBytes{};
+        std::uint32_t indexCount{};
+    };
 
     void createInstance();
     void createSurface();
@@ -52,6 +67,10 @@ private:
     void createDepthResources();
     void createGraphicsPipeline();
     void destroyMesh() noexcept;
+    void destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept;
+    void ensureDynamicFrameCapacity(DynamicFrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes);
+    void uploadDynamicMeshForFrame(std::uint32_t frame);
+    void drawBoundMesh(VkCommandBuffer commandBuffer, VkBuffer vertexBuffer, VkBuffer indexBuffer, std::uint32_t indexCount);
 
     void createBuffer(
         VkDeviceSize size,
@@ -93,6 +112,10 @@ private:
     VkBuffer indexBuffer_{VK_NULL_HANDLE};
     VkDeviceMemory indexMemory_{VK_NULL_HANDLE};
     std::uint32_t indexCount_{};
+
+    std::vector<PlanetVertex> pendingDynamicVertices_;
+    std::vector<std::uint32_t> pendingDynamicIndices_;
+    std::array<DynamicFrameMesh, kFramesInFlight> dynamicMeshes_{};
 
     VkCommandPool commandPool_{VK_NULL_HANDLE};
     std::array<VkCommandBuffer, kFramesInFlight> commandBuffers_{};
