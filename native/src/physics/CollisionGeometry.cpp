@@ -6,7 +6,7 @@
 
 #include <glm/common.hpp>
 #include <glm/geometric.hpp>
-#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace vf {
 namespace {
