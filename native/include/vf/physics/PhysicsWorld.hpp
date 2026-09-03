@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "vf/physics/ConstraintTypes.hpp"
 #include "vf/world/PlanetSurface.hpp"
 
 namespace vf {
@@ -79,11 +80,15 @@ struct RigidBody {
 
     [[nodiscard]] glm::dvec3 linearMomentum() const noexcept;
     [[nodiscard]] double kineticEnergy() const noexcept;
+    [[nodiscard]] glm::dmat3 worldInverseInertia() const noexcept;
+    [[nodiscard]] glm::dvec3 velocityAtPoint(const glm::dvec3& worldPoint) const noexcept;
 
     void addForce(const glm::dvec3& force) noexcept;
     void addTorque(const glm::dvec3& torque) noexcept;
     void addForceAtPoint(const glm::dvec3& force, const glm::dvec3& worldPoint) noexcept;
     void applyLinearImpulse(const glm::dvec3& impulse) noexcept;
+    void applyAngularImpulse(const glm::dvec3& angularImpulse) noexcept;
+    void applyImpulseAtPoint(const glm::dvec3& impulse, const glm::dvec3& worldPoint) noexcept;
     void wake() noexcept;
 };
 
@@ -147,28 +152,53 @@ public:
     [[nodiscard]] std::span<RigidBody> bodies() noexcept { return bodies_; }
     [[nodiscard]] std::span<const RigidBody> bodies() const noexcept { return bodies_; }
 
+    [[nodiscard]] std::uint32_t createDistanceConstraint(const DistanceConstraintDesc& desc);
+    [[nodiscard]] std::uint32_t createSpringDamperConstraint(const SpringDamperConstraintDesc& desc);
+    [[nodiscard]] std::uint32_t createHingeConstraint(const HingeConstraintDesc& desc);
+    [[nodiscard]] std::uint32_t createGearConstraint(const GearConstraintDesc& desc);
+
+    [[nodiscard]] std::span<DistanceConstraint> distanceConstraints() noexcept { return distanceConstraints_; }
+    [[nodiscard]] std::span<const DistanceConstraint> distanceConstraints() const noexcept { return distanceConstraints_; }
+    [[nodiscard]] std::span<SpringDamperConstraint> springDamperConstraints() noexcept { return springDamperConstraints_; }
+    [[nodiscard]] std::span<const SpringDamperConstraint> springDamperConstraints() const noexcept { return springDamperConstraints_; }
+    [[nodiscard]] std::span<HingeConstraint> hingeConstraints() noexcept { return hingeConstraints_; }
+    [[nodiscard]] std::span<const HingeConstraint> hingeConstraints() const noexcept { return hingeConstraints_; }
+    [[nodiscard]] std::span<GearConstraint> gearConstraints() noexcept { return gearConstraints_; }
+    [[nodiscard]] std::span<const GearConstraint> gearConstraints() const noexcept { return gearConstraints_; }
+
     void advance(double frameDeltaSeconds);
     void stepFixed();
 
     [[nodiscard]] const PhysicsEnvironment& environment() const noexcept { return environment_; }
     [[nodiscard]] PhysicsEnvironment& environment() noexcept { return environment_; }
     [[nodiscard]] double fixedDeltaSeconds() const noexcept { return fixedDeltaSeconds_; }
+    [[nodiscard]] double simulationTime() const noexcept { return simulationTime_; }
     [[nodiscard]] std::uint64_t stepIndex() const noexcept { return stepIndex_; }
+    [[nodiscard]] std::size_t lastBroadphaseCandidateCount() const noexcept { return lastBroadphaseCandidateCount_; }
+    [[nodiscard]] std::size_t activeConstraintCount() const noexcept;
 
 private:
     void applyEnvironmentForces(RigidBody& body);
+    void applySpringDamperForces();
     void integrateBody(RigidBody& body);
     void solvePlanetContact(RigidBody& body);
     void solveBodyContacts();
+    void solveMechanicalConstraints();
     void updateSleeping(RigidBody& body);
 
     PhysicsEnvironment environment_{};
     std::vector<RigidBody> bodies_;
+    std::vector<DistanceConstraint> distanceConstraints_;
+    std::vector<SpringDamperConstraint> springDamperConstraints_;
+    std::vector<HingeConstraint> hingeConstraints_;
+    std::vector<GearConstraint> gearConstraints_;
     std::uint32_t nextBodyId_{1};
+    std::uint32_t nextConstraintId_{1};
     double fixedDeltaSeconds_{1.0 / 120.0};
     double accumulator_{};
     double simulationTime_{};
     std::uint64_t stepIndex_{};
+    std::size_t lastBroadphaseCandidateCount_{};
 };
 
 } // namespace vf
