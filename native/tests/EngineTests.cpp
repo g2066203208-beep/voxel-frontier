@@ -104,8 +104,8 @@ void testRadialCamera() {
     vf::PlanetMovementInput ascend{};
     ascend.vertical = 1.0;
     ascend.sprint = true;
-    camera.update(ascend, 0.5);
-    require(camera.altitude() > initialAltitude + 5.0, "camera ascend should increase planetary altitude");
+    camera.update(ascend, 0.05);
+    require(camera.altitude() > initialAltitude + 3.0, "camera ascend should increase planetary altitude");
 
     const auto localUp = camera.up();
     require(std::abs(glm::length(localUp) - 1.0) < 1.0e-12, "radial up must remain normalized");
