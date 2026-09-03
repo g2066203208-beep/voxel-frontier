@@ -31,6 +31,7 @@ public:
     [[nodiscard]] const glm::dvec3& position() const noexcept { return position_; }
     [[nodiscard]] const glm::dvec3& velocity() const noexcept { return velocity_; }
     [[nodiscard]] bool grounded() const noexcept { return grounded_; }
+    [[nodiscard]] bool flightMode() const noexcept { return flightMode_; }
     [[nodiscard]] glm::dvec3 up() const;
     [[nodiscard]] glm::dvec3 forwardDirection() const;
     [[nodiscard]] double altitude() const;
@@ -48,6 +49,7 @@ private:
     double pitch_{-0.18};
     double eyeHeight_{1.75};
     bool grounded_{};
+    bool flightMode_{};
 };
 
 } // namespace vf
