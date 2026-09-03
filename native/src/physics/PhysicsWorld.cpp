@@ -3,16 +3,28 @@
 #include "vf/physics/Broadphase.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
 namespace vf {
 namespace {
 
 constexpr double kPi = 3.1415926535897932384626433832795;
 constexpr double kEpsilon = 1.0e-9;
+
+// Contact tolerances follow the scale used by Erin Catto's current 3D Box3D
+// implementation: 5 mm linear slop, 10x slop contact recycle distance, 1 m/s
+// restitution threshold and a bounded 3 m/s penetration recovery speed.
+constexpr double kLinearSlop = 0.005;
+constexpr double kContactRecycleDistance = 0.05;
+constexpr double kRestitutionThreshold = 1.0;
+constexpr double kMaxContactPushSpeed = 3.0;
+constexpr double kContactBaumgarte = 0.20;
+constexpr std::uint32_t kContactSolverIterations = 10;
 
 [[nodiscard]] glm::dvec3 safeNormalize(
     const glm::dvec3& value,
@@ -48,12 +60,29 @@ constexpr double kEpsilon = 1.0e-9;
     return std::clamp(capVolume / sphereVolume, 0.0, 1.0);
 }
 
+[[nodiscard]] double submergedFractionForCurrentBuoyancyModel(
+    const CollisionShape& shape,
+    double centerDepthBelowSurface) noexcept {
+    if (shape.type == CollisionShapeType::Sphere) {
+        return sphereSubmergedFraction(shape.radius, centerDepthBelowSurface);
+    }
+
+    // Non-spherical hulls intentionally do not reuse a bounding sphere here: that
+    // would invent displaced volume and suppress real roll/pitch moments. Boats,
+    // tanks and airships will use distributed sample volumes in the buoyancy layer.
+    return 0.0;
+}
+
 [[nodiscard]] double combineFriction(double a, double b) noexcept {
     return std::sqrt(std::max(0.0, a) * std::max(0.0, b));
 }
 
 [[nodiscard]] glm::dvec3 worldAnchor(const RigidBody& body, const glm::dvec3& localAnchor) noexcept {
     return body.position + body.orientation * localAnchor;
+}
+
+[[nodiscard]] glm::dvec3 localAnchor(const RigidBody& body, const glm::dvec3& worldPoint) noexcept {
+    return glm::conjugate(glm::normalize(body.orientation)) * (worldPoint - body.position);
 }
 
 [[nodiscard]] glm::dvec3 worldAxis(const RigidBody& body, const glm::dvec3& localAxis) noexcept {
@@ -81,9 +110,40 @@ constexpr double kEpsilon = 1.0e-9;
     return std::max(inverseEffectiveMass, kEpsilon);
 }
 
+[[nodiscard]] double effectiveMassAgainstStatic(
+    const RigidBody& body,
+    const glm::dvec3& point,
+    const glm::dvec3& direction) noexcept {
+    double inverseEffectiveMass = body.inverseMass;
+    if (body.motionType == MotionType::Dynamic) {
+        const glm::dvec3 r = point - body.position;
+        const glm::dvec3 angular = body.worldInverseInertia() * glm::cross(r, direction);
+        inverseEffectiveMass += glm::dot(glm::cross(angular, r), direction);
+    }
+    return std::max(inverseEffectiveMass, kEpsilon);
+}
+
 [[nodiscard]] double angularInverseMassAlong(const RigidBody& body, const glm::dvec3& axis) noexcept {
     if (body.motionType != MotionType::Dynamic) return 0.0;
     return glm::dot(axis, body.worldInverseInertia() * axis);
+}
+
+[[nodiscard]] std::uint64_t contactPairKey(std::uint32_t a, std::uint32_t b) noexcept {
+    const std::uint32_t low = std::min(a, b);
+    const std::uint32_t high = std::max(a, b);
+    return (static_cast<std::uint64_t>(low) << 32U) | static_cast<std::uint64_t>(high);
+}
+
+[[nodiscard]] CollisionShape sanitizeShape(const CollisionShape& shape) noexcept {
+    switch (shape.type) {
+    case CollisionShapeType::Sphere:
+        return CollisionShape::sphere(shape.radius);
+    case CollisionShapeType::Box:
+        return CollisionShape::box(shape.halfExtents);
+    case CollisionShapeType::Capsule:
+        return CollisionShape::capsule(shape.radius, shape.halfHeight);
+    }
+    return CollisionShape::sphere(0.5);
 }
 
 } // namespace
@@ -232,7 +292,7 @@ std::uint32_t PhysicsWorld::createRigidBody(const RigidBodyDesc& desc) {
     newBody.inverseInertiaDiagonal = desc.motionType == MotionType::Dynamic
         ? glm::dvec3{1.0 / newBody.inertiaDiagonal.x, 1.0 / newBody.inertiaDiagonal.y, 1.0 / newBody.inertiaDiagonal.z}
         : glm::dvec3{};
-    newBody.collisionRadius = std::max(0.001, desc.collisionRadius);
+    newBody.collisionShape = sanitizeShape(desc.collisionShape);
     newBody.linearDamping = std::max(0.0, desc.linearDamping);
     newBody.angularDamping = std::max(0.0, desc.angularDamping);
     newBody.material = desc.material;
@@ -446,7 +506,7 @@ void PhysicsWorld::applyEnvironmentForces(RigidBody& rigidBody) {
     if (!rigidBody.buoyancy.enabled || !environment_.ocean.enabled || rigidBody.buoyancy.displacedVolume <= 0.0) return;
     const double radialDistance = glm::length(rigidBody.position);
     const double centerDepth = environment_.ocean.surfaceRadius - radialDistance;
-    const double submergedFraction = sphereSubmergedFraction(rigidBody.collisionRadius, centerDepth);
+    const double submergedFraction = submergedFractionForCurrentBuoyancyModel(rigidBody.collisionShape, centerDepth);
     if (submergedFraction <= 0.0) return;
 
     const glm::dvec3 outward = safeNormalize(rigidBody.position);
@@ -497,31 +557,47 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
     const double distance = glm::length(rigidBody.position);
     if (distance <= kEpsilon) return;
 
-    const glm::dvec3 normal = rigidBody.position / distance;
-    const double surfaceRadius = planetSurfaceRadius(environment_.planet, normal);
-    const double minimumCenterRadius = surfaceRadius + rigidBody.collisionRadius;
-    const double penetration = minimumCenterRadius - distance;
+    glm::dvec3 normal = rigidBody.position / distance;
+    double surfaceRadius = planetSurfaceRadius(environment_.planet, normal);
+    glm::dvec3 contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
+    double penetration = surfaceRadius - glm::dot(contactPoint, normal);
     if (penetration <= 0.0) return;
 
+    // Terrain is an effectively infinite static constraint. Correct the center once to
+    // prevent deep terrain tunnelling, then solve normal/friction impulses at the real
+    // support point so boxes/capsules receive physically meaningful angular impulses.
     rigidBody.position += normal * penetration;
-    const double normalVelocity = glm::dot(rigidBody.linearVelocity, normal);
+    normal = safeNormalize(rigidBody.position);
+    surfaceRadius = planetSurfaceRadius(environment_.planet, normal);
+    contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
+
+    const double normalVelocity = glm::dot(rigidBody.velocityAtPoint(contactPoint), normal);
     double normalImpulseMagnitude = 0.0;
     if (normalVelocity < 0.0) {
-        normalImpulseMagnitude = -(1.0 + std::clamp(rigidBody.material.restitution, 0.0, 1.0))
-            * normalVelocity / rigidBody.inverseMass;
-        rigidBody.applyLinearImpulse(normal * normalImpulseMagnitude);
+        const double restitution = std::clamp(rigidBody.material.restitution, 0.0, 1.0);
+        const double targetSeparationSpeed = normalVelocity < -kRestitutionThreshold
+            ? -restitution * normalVelocity
+            : 0.0;
+        const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, normal);
+        normalImpulseMagnitude = (targetSeparationSpeed - normalVelocity) / inverseEffectiveMass;
+        if (normalImpulseMagnitude > 0.0) {
+            rigidBody.applyImpulseAtPoint(normal * normalImpulseMagnitude, contactPoint);
+        }
     }
 
-    const glm::dvec3 tangentVelocity = rigidBody.linearVelocity - normal * glm::dot(rigidBody.linearVelocity, normal);
+    const glm::dvec3 pointVelocity = rigidBody.velocityAtPoint(contactPoint);
+    glm::dvec3 tangentVelocity = pointVelocity - normal * glm::dot(pointVelocity, normal);
     const double tangentSpeed = glm::length(tangentVelocity);
     if (tangentSpeed > 1.0e-7) {
+        const glm::dvec3 tangent = tangentVelocity / tangentSpeed;
         const double supportingImpulse = std::max(
             normalImpulseMagnitude,
             rigidBody.mass * environment_.gravityMagnitude(rigidBody.position) * fixedDeltaSeconds_);
         const double maxFrictionImpulse = std::max(0.0, rigidBody.material.friction) * supportingImpulse;
-        const double stopImpulse = tangentSpeed / rigidBody.inverseMass;
+        const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, tangent);
+        const double stopImpulse = tangentSpeed / inverseEffectiveMass;
         const double frictionImpulse = std::min(stopImpulse, maxFrictionImpulse);
-        rigidBody.applyLinearImpulse(-(tangentVelocity / tangentSpeed) * frictionImpulse);
+        rigidBody.applyImpulseAtPoint(-tangent * frictionImpulse, contactPoint);
     }
 
     const double rollingFactor = std::exp(
@@ -530,55 +606,198 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
 }
 
 void PhysicsWorld::solveBodyContacts() {
+    struct SolverPoint {
+        glm::dvec3 position{};
+        glm::dvec3 localAnchorA{};
+        glm::dvec3 localAnchorB{};
+        double penetration{};
+        double accumulatedNormalImpulse{};
+        glm::dvec3 accumulatedTangentImpulse{};
+        double velocityBias{};
+        std::uint32_t featureId{};
+    };
+
+    struct SolverManifold {
+        std::size_t bodyIndexA{};
+        std::size_t bodyIndexB{};
+        std::uint64_t cacheKey{};
+        glm::dvec3 normal{1.0, 0.0, 0.0};
+        std::array<SolverPoint, 4> points{};
+        std::uint8_t pointCount{};
+        double friction{};
+    };
+
     const std::vector<BroadphasePair> pairs = buildSweepAndPrunePairs(bodies_);
     lastBroadphaseCandidateCount_ = pairs.size();
+    lastContactPointCount_ = 0;
+
+    std::vector<SolverManifold> manifolds;
+    manifolds.reserve(pairs.size());
+    const double recycleDistanceSquared = kContactRecycleDistance * kContactRecycleDistance;
 
     for (const auto& pair : pairs) {
-        RigidBody& a = bodies_[pair.bodyIndexA];
-        RigidBody& b = bodies_[pair.bodyIndexB];
+        std::size_t indexA = pair.bodyIndexA;
+        std::size_t indexB = pair.bodyIndexB;
+        if (bodies_[indexA].id > bodies_[indexB].id) std::swap(indexA, indexB);
+        RigidBody& a = bodies_[indexA];
+        RigidBody& b = bodies_[indexB];
+        if (a.inverseMass + b.inverseMass <= 0.0) continue;
 
-        const glm::dvec3 delta = b.position - a.position;
-        const double distanceSquared = glm::dot(delta, delta);
-        const double radius = a.collisionRadius + b.collisionRadius;
-        if (distanceSquared >= radius * radius) continue;
+        ContactManifold geometry{};
+        if (!collideShapes(a.collisionShape, a.shapePose(), b.collisionShape, b.shapePose(), geometry)) continue;
+        if (geometry.empty()) continue;
 
-        const double distance = std::sqrt(std::max(distanceSquared, 1.0e-12));
-        const glm::dvec3 normal = distance > 1.0e-6 ? delta / distance : glm::dvec3{1.0, 0.0, 0.0};
-        const double inverseMassSum = a.inverseMass + b.inverseMass;
-        if (inverseMassSum <= 0.0) continue;
+        SolverManifold solver{};
+        solver.bodyIndexA = indexA;
+        solver.bodyIndexB = indexB;
+        solver.cacheKey = contactPairKey(a.id, b.id);
+        solver.normal = safeNormalize(geometry.normal, safeNormalize(b.position - a.position, {1.0, 0.0, 0.0}));
+        solver.friction = combineFriction(a.material.friction, b.material.friction);
+        solver.pointCount = geometry.pointCount;
 
-        const double penetration = radius - distance;
-        const double correctionMagnitude = std::max(0.0, penetration - 1.0e-4) * 0.8 / inverseMassSum;
-        const glm::dvec3 correction = normal * correctionMagnitude;
-        if (a.motionType == MotionType::Dynamic) a.position -= correction * a.inverseMass;
-        if (b.motionType == MotionType::Dynamic) b.position += correction * b.inverseMass;
+        const auto cachedIt = contactCache_.find(solver.cacheKey);
+        const CachedContactManifold* cached = cachedIt != contactCache_.end() ? &cachedIt->second : nullptr;
+        const bool cacheNormalCompatible = cached != nullptr && glm::dot(cached->normal, solver.normal) > 0.85;
+        const double restitution = std::min(
+            std::clamp(a.material.restitution, 0.0, 1.0),
+            std::clamp(b.material.restitution, 0.0, 1.0));
 
-        glm::dvec3 relativeVelocity = b.linearVelocity - a.linearVelocity;
-        const double normalVelocity = glm::dot(relativeVelocity, normal);
-        double normalImpulseMagnitude = 0.0;
-        if (normalVelocity < 0.0) {
-            const double restitution = std::min(
-                std::clamp(a.material.restitution, 0.0, 1.0),
-                std::clamp(b.material.restitution, 0.0, 1.0));
-            normalImpulseMagnitude = -(1.0 + restitution) * normalVelocity / inverseMassSum;
-            const glm::dvec3 impulse = normal * normalImpulseMagnitude;
-            if (a.motionType == MotionType::Dynamic) a.applyLinearImpulse(-impulse);
-            if (b.motionType == MotionType::Dynamic) b.applyLinearImpulse(impulse);
+        for (std::uint8_t i = 0; i < solver.pointCount; ++i) {
+            SolverPoint& point = solver.points[i];
+            point.position = geometry.points[i].position;
+            point.penetration = geometry.points[i].penetration;
+            point.featureId = geometry.points[i].featureId;
+            point.localAnchorA = localAnchor(a, point.position);
+            point.localAnchorB = localAnchor(b, point.position);
+
+            if (cacheNormalCompatible) {
+                int bestMatch = -1;
+                for (std::uint8_t oldIndex = 0; oldIndex < cached->pointCount; ++oldIndex) {
+                    if (cached->points[oldIndex].featureId == point.featureId) {
+                        bestMatch = static_cast<int>(oldIndex);
+                        break;
+                    }
+                }
+
+                if (bestMatch < 0) {
+                    double bestDistanceSquared = std::numeric_limits<double>::infinity();
+                    for (std::uint8_t oldIndex = 0; oldIndex < cached->pointCount; ++oldIndex) {
+                        const glm::dvec3 deltaA = cached->points[oldIndex].localAnchorA - point.localAnchorA;
+                        const glm::dvec3 deltaB = cached->points[oldIndex].localAnchorB - point.localAnchorB;
+                        const double distanceSquared = glm::dot(deltaA, deltaA) + glm::dot(deltaB, deltaB);
+                        if (distanceSquared < bestDistanceSquared) {
+                            bestDistanceSquared = distanceSquared;
+                            bestMatch = static_cast<int>(oldIndex);
+                        }
+                    }
+                    if (bestDistanceSquared > 2.0 * recycleDistanceSquared) bestMatch = -1;
+                }
+
+                if (bestMatch >= 0) {
+                    const CachedContactPoint& previous = cached->points[static_cast<std::size_t>(bestMatch)];
+                    point.accumulatedNormalImpulse = std::max(0.0, previous.accumulatedNormalImpulse);
+                    point.accumulatedTangentImpulse = previous.accumulatedTangentImpulse
+                        - solver.normal * glm::dot(previous.accumulatedTangentImpulse, solver.normal);
+                }
+            }
+
+            const glm::dvec3 relativeVelocity = b.velocityAtPoint(point.position) - a.velocityAtPoint(point.position);
+            const double initialNormalVelocity = glm::dot(relativeVelocity, solver.normal);
+            const double penetrationError = std::max(0.0, point.penetration - kLinearSlop);
+            const double pushSpeed = std::min(
+                kMaxContactPushSpeed,
+                kContactBaumgarte * penetrationError / fixedDeltaSeconds_);
+            point.velocityBias = pushSpeed;
+            if (initialNormalVelocity < -kRestitutionThreshold) {
+                point.velocityBias = std::max(point.velocityBias, -restitution * initialNormalVelocity);
+            }
         }
 
-        relativeVelocity = b.linearVelocity - a.linearVelocity;
-        glm::dvec3 tangent = relativeVelocity - normal * glm::dot(relativeVelocity, normal);
-        const double tangentSpeed = glm::length(tangent);
-        if (tangentSpeed > 1.0e-7 && normalImpulseMagnitude > 0.0) {
-            tangent /= tangentSpeed;
-            double tangentImpulse = -glm::dot(relativeVelocity, tangent) / inverseMassSum;
-            const double friction = combineFriction(a.material.friction, b.material.friction);
-            const double limit = friction * normalImpulseMagnitude;
-            tangentImpulse = std::clamp(tangentImpulse, -limit, limit);
-            const glm::dvec3 frictionImpulse = tangent * tangentImpulse;
-            if (a.motionType == MotionType::Dynamic) a.applyLinearImpulse(-frictionImpulse);
-            if (b.motionType == MotionType::Dynamic) b.applyLinearImpulse(frictionImpulse);
+        lastContactPointCount_ += solver.pointCount;
+        manifolds.push_back(solver);
+    }
+
+    // Warm starting is intentionally applied before the iterative solve. It preserves
+    // the previous fixed step's converged impulses and is critical for stable resting
+    // stacks at real-time iteration counts.
+    for (auto& manifold : manifolds) {
+        RigidBody& a = bodies_[manifold.bodyIndexA];
+        RigidBody& b = bodies_[manifold.bodyIndexB];
+        for (std::uint8_t i = 0; i < manifold.pointCount; ++i) {
+            SolverPoint& point = manifold.points[i];
+            const double frictionLimit = manifold.friction * point.accumulatedNormalImpulse;
+            point.accumulatedTangentImpulse = clampMagnitude(point.accumulatedTangentImpulse, frictionLimit);
+            const glm::dvec3 impulse = manifold.normal * point.accumulatedNormalImpulse
+                + point.accumulatedTangentImpulse;
+            if (glm::dot(impulse, impulse) <= 1.0e-20) continue;
+            a.applyImpulseAtPoint(-impulse, point.position);
+            b.applyImpulseAtPoint(impulse, point.position);
         }
+    }
+
+    for (std::uint32_t iteration = 0; iteration < kContactSolverIterations; ++iteration) {
+        for (auto& manifold : manifolds) {
+            RigidBody& a = bodies_[manifold.bodyIndexA];
+            RigidBody& b = bodies_[manifold.bodyIndexB];
+
+            for (std::uint8_t i = 0; i < manifold.pointCount; ++i) {
+                SolverPoint& point = manifold.points[i];
+                glm::dvec3 relativeVelocity = b.velocityAtPoint(point.position) - a.velocityAtPoint(point.position);
+                const double normalVelocity = glm::dot(relativeVelocity, manifold.normal);
+                const double inverseNormalMass = effectiveMassAlong(
+                    a, b, point.position, point.position, manifold.normal);
+                const double normalLambda = (point.velocityBias - normalVelocity) / inverseNormalMass;
+                const double oldNormalImpulse = point.accumulatedNormalImpulse;
+                point.accumulatedNormalImpulse = std::max(0.0, oldNormalImpulse + normalLambda);
+                const double deltaNormalImpulse = point.accumulatedNormalImpulse - oldNormalImpulse;
+                if (std::abs(deltaNormalImpulse) > 1.0e-12) {
+                    const glm::dvec3 impulse = manifold.normal * deltaNormalImpulse;
+                    a.applyImpulseAtPoint(-impulse, point.position);
+                    b.applyImpulseAtPoint(impulse, point.position);
+                }
+
+                relativeVelocity = b.velocityAtPoint(point.position) - a.velocityAtPoint(point.position);
+                glm::dvec3 tangentVelocity = relativeVelocity
+                    - manifold.normal * glm::dot(relativeVelocity, manifold.normal);
+                const double tangentSpeed = glm::length(tangentVelocity);
+                if (tangentSpeed <= 1.0e-8) continue;
+
+                const glm::dvec3 tangent = tangentVelocity / tangentSpeed;
+                const double inverseTangentMass = effectiveMassAlong(
+                    a, b, point.position, point.position, tangent);
+                const double tangentLambda = -glm::dot(relativeVelocity, tangent) / inverseTangentMass;
+                const glm::dvec3 oldTangentImpulse = point.accumulatedTangentImpulse;
+                glm::dvec3 candidate = oldTangentImpulse + tangent * tangentLambda;
+                const double frictionLimit = manifold.friction * point.accumulatedNormalImpulse;
+                candidate = clampMagnitude(candidate, frictionLimit);
+                point.accumulatedTangentImpulse = candidate;
+                const glm::dvec3 deltaTangentImpulse = candidate - oldTangentImpulse;
+                if (glm::dot(deltaTangentImpulse, deltaTangentImpulse) > 1.0e-20) {
+                    a.applyImpulseAtPoint(-deltaTangentImpulse, point.position);
+                    b.applyImpulseAtPoint(deltaTangentImpulse, point.position);
+                }
+            }
+        }
+    }
+
+    contactCache_.clear();
+    contactCache_.reserve(std::max<std::size_t>(contactCache_.bucket_count(), manifolds.size()));
+    for (const auto& manifold : manifolds) {
+        const RigidBody& a = bodies_[manifold.bodyIndexA];
+        const RigidBody& b = bodies_[manifold.bodyIndexB];
+        CachedContactManifold cached{};
+        cached.bodyA = a.id;
+        cached.bodyB = b.id;
+        cached.normal = manifold.normal;
+        cached.pointCount = manifold.pointCount;
+        for (std::uint8_t i = 0; i < manifold.pointCount; ++i) {
+            cached.points[i].localAnchorA = manifold.points[i].localAnchorA;
+            cached.points[i].localAnchorB = manifold.points[i].localAnchorB;
+            cached.points[i].accumulatedNormalImpulse = manifold.points[i].accumulatedNormalImpulse;
+            cached.points[i].accumulatedTangentImpulse = manifold.points[i].accumulatedTangentImpulse;
+            cached.points[i].featureId = manifold.points[i].featureId;
+        }
+        contactCache_.emplace(manifold.cacheKey, cached);
     }
 }
 
