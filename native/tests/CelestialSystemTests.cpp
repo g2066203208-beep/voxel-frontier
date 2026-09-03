@@ -42,8 +42,8 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     const glm::dvec3 primarySurfacePoint{240.0, 0.0, 0.0};
     const auto isolatedSurface = system.sampleEnvironment(primarySurfacePoint);
     require(isolatedSurface.bodyId == firstId, "primary planet must own its local environment");
-    requireNear(glm::length(system.gameplayGravityAccelerationAt(primarySurfacePoint)), 9.81, 0.02,
-        "isolated primary gameplay surface gravity must match configured surface gravity");
+    requireNear(glm::length(system.gravityAccelerationAt(primarySurfacePoint)), 9.81, 0.02,
+        "default world gravity must match configured gameplay surface gravity");
     require(isolatedSurface.pressurePa > 90000.0, "primary planet must expose its own atmosphere");
 
     vf::CelestialBody second = first;
@@ -59,10 +59,7 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     const auto firstSurface = system.sampleEnvironment(primarySurfacePoint);
     require(firstSurface.bodyId == firstId, "primary planet must retain ownership after another gravity source is added");
 
-    // Raw physical gravity remains available for diagnostics/orbital reasoning and must still be
-    // the exact vector superposition of all massive bodies. Gameplay SOI gravity is deliberately
-    // a separate query so compressed-scale planets do not trap the player forever.
-    const glm::dvec3 physicalGravity = system.gravityAccelerationAt(primarySurfacePoint);
+    const glm::dvec3 physicalGravity = system.physicalGravityAccelerationAt(primarySurfacePoint);
     const double primaryAcceleration = vf::CelestialSystem::kGravitationalConstant
         * first.massKg / (first.radiusMeters * first.radiusMeters);
     const double secondDistance = second.position.x - primarySurfacePoint.x;
@@ -70,13 +67,13 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
         * second.massKg / (secondDistance * secondDistance);
     const double expectedX = -primaryAcceleration + secondaryAcceleration;
     requireNear(physicalGravity.x, expectedX, 1.0e-6,
-        "raw multi-body gravity must equal vector superposition of both bodies");
+        "explicit physical gravity must equal vector superposition of both bodies");
     require(std::abs(physicalGravity.y) < 1.0e-10 && std::abs(physicalGravity.z) < 1.0e-10,
         "collinear two-body physical gravity must remain collinear");
 
-    const glm::dvec3 gameplayAtPrimary = system.gameplayGravityAccelerationAt(primarySurfacePoint);
+    const glm::dvec3 gameplayAtPrimary = system.gravityAccelerationAt(primarySurfacePoint);
     require(gameplayAtPrimary.x < -9.0,
-        "inside the primary SOI, gameplay gravity must remain owned by the primary instead of being cancelled by a distant planet");
+        "inside the primary SOI, default game gravity must remain owned by the primary instead of being cancelled by a distant planet");
     require(system.gameplayReferenceBodyAt(primarySurfacePoint)->id == firstId,
         "gameplay reference body must be primary inside its SOI");
 
@@ -134,7 +131,7 @@ void testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace() {
     const glm::dvec3 midpoint{500.0, 0.0, 0.0};
     require(system.gameplayReferenceBodyAt(midpoint) == nullptr,
         "space outside every planetary SOI must not secretly belong to the primary planet");
-    require(glm::length(system.gameplayGravityAccelerationAt(midpoint)) < 1.0e-9,
+    require(glm::length(system.gravityAccelerationAt(midpoint)) < 1.0e-9,
         "without a star, free interplanetary space outside SOIs must have negligible gameplay gravity");
 }
 
@@ -194,6 +191,8 @@ void testRotatingSurfaceTransfersTangentialVelocityToRigidBody() {
     planet.radiusMeters = terrain.radius;
     planet.massKg = 9.81 * planet.radiusMeters * planet.radiusMeters
         / vf::CelestialSystem::kGravitationalConstant;
+    planet.gameplaySurfaceGravityMps2 = 9.81;
+    planet.gravityInfluenceRadiusMeters = 400.0;
     planet.spinAxis = {0.0, 1.0, 0.0};
     planet.spinRateRadPerSecond = 0.01;
     const auto planetId = celestial.addBody(planet);
