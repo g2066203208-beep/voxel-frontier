@@ -4,14 +4,18 @@ on:
   push:
     branches:
       - main
-      - engine/native-cpp-vulkan
   pull_request:
     branches:
       - main
     paths:
       - 'native/**'
+      - 'docs/**'
+      - 'PROJECT.md'
+      - 'README.md'
+      - 'scripts/**'
       - '.github/workflows/native-desktop.yml'
       - '.vscode/**'
+      - '.gitignore'
   workflow_dispatch:
 
 concurrency:

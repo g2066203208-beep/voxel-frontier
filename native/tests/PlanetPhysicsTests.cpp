@@ -1,13 +1,9 @@
-#include "vf/core/Engine.hpp"
 #include "vf/physics/PhysicsWorld.hpp"
 #include "vf/physics/ShallowWater.hpp"
 #include "vf/physics/TreePhysics.hpp"
 #include "vf/player/PlanetCamera.hpp"
-#include "vf/world/Chunk.hpp"
 #include "vf/world/PlanetSurface.hpp"
-#include "vf/world/World.hpp"
 
-#include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -18,49 +14,12 @@
 namespace {
 
 [[noreturn]] void fail(std::string_view message) {
-    std::cerr << "TEST FAILURE: " << message << '\n';
+    std::cerr << "PLANET PHYSICS TEST FAILURE: " << message << '\n';
     std::exit(1);
 }
 
 void require(bool condition, std::string_view message) {
     if (!condition) fail(message);
-}
-
-void testChunkStorage() {
-    vf::Chunk chunk{{1, -2, 3}};
-    require(chunk.get(4, 5, 6) == static_cast<vf::BlockId>(vf::Block::Air), "new chunk must be air");
-    chunk.clearDirty();
-    chunk.set(4, 5, 6, static_cast<vf::BlockId>(vf::Block::Stone));
-    require(chunk.get(4, 5, 6) == static_cast<vf::BlockId>(vf::Block::Stone), "chunk set/get mismatch");
-    require(chunk.dirty(), "edited chunk must become dirty");
-}
-
-void testNegativeWorldCoordinates() {
-    require(vf::World::floorDiv(-1, vf::kChunkEdge) == -1, "floorDiv(-1) must map to previous chunk");
-    require(vf::World::floorDiv(-32, vf::kChunkEdge) == -1, "floorDiv exact negative boundary failed");
-    require(vf::World::floorDiv(-33, vf::kChunkEdge) == -2, "floorDiv below negative boundary failed");
-    require(vf::World::positiveMod(-1, vf::kChunkEdge) == 31, "positiveMod(-1) failed");
-    require(vf::World::positiveMod(-32, vf::kChunkEdge) == 0, "positiveMod negative boundary failed");
-}
-
-void testDeterministicGeneration() {
-    vf::World a{123456789ULL};
-    vf::World b{123456789ULL};
-    auto& ca = a.ensureChunk({-3, 1, 7});
-    auto& cb = b.ensureChunk({-3, 1, 7});
-    require(ca.blocks() == cb.blocks(), "same seed and coord must generate identical chunk data");
-}
-
-void testBoundaryDirtyPropagation() {
-    vf::World world{7};
-    auto& owner = world.ensureChunk({0, 1, 0});
-    auto& neighbor = world.ensureChunk({1, 1, 0});
-    owner.clearDirty();
-    neighbor.clearDirty();
-
-    world.setBlock(31, 40, 0, static_cast<vf::BlockId>(vf::Block::Air));
-    require(owner.dirty(), "owner chunk should be dirty after edit");
-    require(neighbor.dirty(), "loaded neighboring chunk should be dirty for border edit");
 }
 
 void testCubeSphereProjection() {
@@ -109,9 +68,7 @@ void testRadialCamera() {
     ascend.sprint = true;
     camera.update(ascend, 0.05);
     require(camera.altitude() > initialAltitude + 3.0, "camera ascend should increase planetary altitude");
-
-    const auto localUp = camera.up();
-    require(std::abs(glm::length(localUp) - 1.0) < 1.0e-12, "radial up must remain normalized");
+    require(std::abs(glm::length(camera.up()) - 1.0) < 1.0e-12, "radial up must remain normalized");
 }
 
 vf::PhysicsEnvironment makeVacuumPhysicsEnvironment() {
@@ -128,7 +85,7 @@ vf::PhysicsEnvironment makeVacuumPhysicsEnvironment() {
 }
 
 void testFixedStepAndMomentum() {
-    auto environment = makeVacuumPhysicsEnvironment();
+    const auto environment = makeVacuumPhysicsEnvironment();
     vf::PhysicsWorld worldA{environment};
     vf::PhysicsWorld worldB{environment};
 
@@ -149,12 +106,12 @@ void testFixedStepAndMomentum() {
     const auto* a = worldA.body(aId);
     const auto* b = worldB.body(bId);
     require(a != nullptr && b != nullptr, "fixed-step bodies missing");
-    require(glm::length(a->position - b->position) < 1.0e-12, "fixed-step integration must be frame-rate independent for equal elapsed time");
+    require(glm::length(a->position - b->position) < 1.0e-12, "fixed-step integration must be frame-rate independent");
     require(glm::length(a->linearMomentum() - glm::dvec3{12.0, -8.0, 2.0}) < 1.0e-10, "linear momentum must equal mass times velocity");
 }
 
 void testRigidBodyCollisionMomentumConservation() {
-    auto environment = makeVacuumPhysicsEnvironment();
+    const auto environment = makeVacuumPhysicsEnvironment();
     vf::PhysicsWorld world{environment};
 
     vf::RigidBodyDesc aDesc{};
@@ -181,8 +138,7 @@ void testRigidBodyCollisionMomentumConservation() {
     const auto* a = world.body(aId);
     const auto* b = world.body(bId);
     require(a != nullptr && b != nullptr, "collision bodies missing");
-    const glm::dvec3 finalMomentum = a->linearMomentum() + b->linearMomentum();
-    require(glm::length(finalMomentum - initialMomentum) < 1.0e-8, "isolated body collision must conserve linear momentum");
+    require(glm::length(a->linearMomentum() + b->linearMomentum() - initialMomentum) < 1.0e-8, "isolated collision must conserve linear momentum");
 }
 
 void testRadialGravityAndGroundFriction() {
@@ -209,7 +165,7 @@ void testRadialGravityAndGroundFriction() {
     const auto* body = world.body(id);
     require(body != nullptr, "friction body missing");
     require(glm::length(body->linearVelocity) < 8.0, "ground friction should remove tangential speed");
-    require(glm::length(body->position) >= 100.999, "planet contact must prevent penetration below terrain");
+    require(glm::length(body->position) >= 100.999, "planet contact must prevent terrain penetration");
 }
 
 void testAtmospherePressureDensityAndWind() {
@@ -221,13 +177,13 @@ void testAtmospherePressureDensityAndWind() {
     const auto sea = environment.sampleAtmosphere({0.0, 1000.0, 0.0}, 12.0);
     const auto high = environment.sampleAtmosphere({0.0, 1500.0, 0.0}, 12.0);
 
-    require(sea.temperatureK > high.temperatureK, "temperature should decrease with altitude in the tropospheric model");
+    require(sea.temperatureK > high.temperatureK, "temperature should decrease with altitude");
     require(sea.pressurePa > high.pressurePa, "air pressure should decrease with altitude");
     require(sea.densityKgPerM3 > high.densityKgPerM3, "air density should decrease with altitude");
-    require(glm::length(sea.windVelocity) > 0.1, "wind field should produce non-zero local air velocity");
+    require(glm::length(sea.windVelocity) > 0.1, "wind field should be non-zero");
 }
 
-void testBuoyancyAndGasChamberPrinciple() {
+void testBuoyancy() {
     vf::PhysicsEnvironment environment{};
     environment.planet.radius = 100.0;
     environment.planet.maxElevation = 0.0;
@@ -253,10 +209,10 @@ void testBuoyancyAndGasChamberPrinciple() {
     for (int i = 0; i < 12; ++i) world.stepFixed();
     const auto* body = world.body(id);
     require(body != nullptr, "buoyant body missing");
-    require(glm::dot(body->linearVelocity, glm::normalize(body->position)) > 0.0, "displaced water should create net upward buoyancy when mass is low enough");
+    require(glm::dot(body->linearVelocity, glm::normalize(body->position)) > 0.0, "water displacement should create net upward motion");
 }
 
-void testShallowWaterFlowsDownhillAndConservesVolume() {
+void testShallowWaterConservation() {
     vf::ShallowWaterGrid water{4, 1, 1.0};
     water.cell(0, 0).bedElevation = 2.0;
     water.cell(1, 0).bedElevation = 1.0;
@@ -266,8 +222,8 @@ void testShallowWaterFlowsDownhillAndConservesVolume() {
     const double initialVolume = water.totalWaterVolume();
 
     for (int i = 0; i < 240; ++i) water.step(1.0 / 120.0, 9.81);
-    require(water.cell(3, 0).waterDepth > 0.0, "water should propagate from high hydraulic head toward lower terrain");
-    require(std::abs(water.totalWaterVolume() - initialVolume) < 1.0e-9, "closed shallow-water grid must conserve water volume");
+    require(water.cell(3, 0).waterDepth > 0.0, "water should propagate downhill");
+    require(std::abs(water.totalWaterVolume() - initialVolume) < 1.0e-9, "closed grid must conserve water volume");
 }
 
 void testTreeFallsAfterCut() {
@@ -275,35 +231,16 @@ void testTreeFallsAfterCut() {
     tree.trunkLength = 9.0;
     tree.trunkMass = 320.0;
     tree.applyCut(0.62, {1.0, 0.0, 0.0});
-    require(tree.state == vf::TreeState::Hinging, "sufficient cut should release tree into hinge motion");
+    require(tree.state == vf::TreeState::Hinging, "sufficient cut should release hinge motion");
 
     for (int i = 0; i < 360; ++i) tree.step(1.0 / 120.0, 9.81, {8.0, 0.0, 0.0}, 1.225);
-    require(tree.hingeAngleRadians > 0.1, "cut tree should rotate under gravity and wind instead of remaining upright");
+    require(tree.hingeAngleRadians > 0.1, "cut tree should rotate under gravity and wind");
     require(tree.tipPosition().x > 0.1, "tree tip should move toward preferred fall direction");
-}
-
-void testBootstrapAndTiming() {
-    const auto start = std::chrono::steady_clock::now();
-    vf::Engine engine{42};
-    engine.bootstrap();
-    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::steady_clock::now() - start);
-
-    require(engine.world().loadedChunkCount() == 75, "bootstrap should load 5x5x3 chunks");
-    engine.tick(1.0 / 60.0);
-    require(engine.frameIndex() == 1, "engine frame counter failed");
-    require(engine.elapsedSeconds() > 0.0, "engine elapsed time failed");
-
-    std::cout << "legacy benchmark: generated 75 x 32^3 chunks in " << elapsed.count() << " ms\n";
 }
 
 } // namespace
 
 int main() {
-    testChunkStorage();
-    testNegativeWorldCoordinates();
-    testDeterministicGeneration();
-    testBoundaryDirtyPropagation();
     testCubeSphereProjection();
     testPlanetSurfaceDeterminism();
     testRadialCamera();
@@ -311,10 +248,9 @@ int main() {
     testRigidBodyCollisionMomentumConservation();
     testRadialGravityAndGroundFriction();
     testAtmospherePressureDensityAndWind();
-    testBuoyancyAndGasChamberPrinciple();
-    testShallowWaterFlowsDownhillAndConservesVolume();
+    testBuoyancy();
+    testShallowWaterConservation();
     testTreeFallsAfterCut();
-    testBootstrapAndTiming();
-    std::cout << "vf_native_engine_tests: PASS\n";
+    std::cout << "Planet physics tests passed\n";
     return 0;
 }

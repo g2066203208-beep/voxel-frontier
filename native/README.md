@@ -1,57 +1,46 @@
 # Voxel Frontier Native Engine
 
-Voxel Frontier is moving to a fully custom native desktop engine. No Unreal Engine, Unity, Godot, Three.js or browser runtime is part of the production path.
+`native/` is the only production engine/runtime path.
 
-## Production stack
+## Stack
 
-- C++23 game/engine code
-- SDL 3.4.14 only as a thin OS/window/input/gamepad/audio platform layer
-- Vulkan 1.4 headers + volk 1.4.350 as the explicit GPU API/loader layer
-- CMake build system
-- Direct native Windows executable
+- C++23
+- SDL3 as a thin platform layer
+- Vulkan + volk + Vulkan-Headers
+- Slang compiled to embedded SPIR-V at build time
+- GLM for math
+- CMake
 
-SDL is not used as a scene, world, physics, gameplay or rendering engine. Those systems belong to Voxel Frontier.
+No browser runtime or third-party scene/physics engine is part of production.
 
-## Engine ownership
+## Current subsystems
 
-The project will implement its own:
+```text
+include/vf + src/
+  gameplay/    physics playground and gameplay-side physical systems
+  physics/     rigid bodies, broadphase, constraints, aero, water, gas, trees, collision geometry
+  platform/    SDL3 window/input platform adapter
+  player/      spherical-planet camera/controller (temporary non-rigidbody player)
+  render/      Vulkan renderer and debug/physics geometry
+  world/       procedural spherical triangle-surface planet
+```
 
-- engine loop and timing
-- memory arenas and allocators
-- task/job scheduler
-- streamed region/chunk world
-- voxel compression and palettes
-- terrain/biome generation
-- greedy/meshlet voxel meshing
-- renderer and resource lifetime management
-- GPU-driven culling and indirect drawing
-- player controller and collision
-- physics needed by gameplay
-- entity/component model
-- AI/pathfinding
-- inventory/crafting/combat/RPG systems
-- save format and async streaming
-- networking protocol and authoritative server
-- tooling/profiling/debug overlays required by the project
+The old flat voxel `Chunk/World/Engine` bootstrap has been removed. Natural terrain is now the spherical triangle-surface path described in `../docs/TERRAIN_ARCHITECTURE.md`.
 
-## Current milestone
+## Collision evolution
 
-The first native milestone establishes a deterministic, testable foundation before gameplay content is migrated:
+The active rigid-body world still uses sphere contacts while collision v3 is integrated. The new `CollisionGeometry` layer is intentionally isolated and regression-tested first:
 
-1. 32×32×32 contiguous chunks
-2. correct negative world/chunk coordinate mapping
-3. dirty-chunk and neighbor invalidation
-4. deterministic seeded terrain
-5. SDL3 native window lifecycle
-6. Vulkan 1.3+ device/surface/swapchain path with Vulkan 1.4 preferred
-7. explicit synchronization and direct swapchain presentation
-8. Linux core tests + Windows runtime compilation in GitHub Actions
+- sphere, oriented box and capsule shape descriptions
+- exact world AABB calculation for those primitives
+- support mapping for future GJK/EPA
+- sphere/sphere, sphere/box, sphere/capsule and capsule/capsule narrowphase
+- 15-axis oriented-box SAT
+- contact-manifold data structure with capacity for four contacts
 
-The next milestone adds the real voxel render path: asynchronous chunk jobs, greedy meshing, GPU vertex/index buffers, camera matrices, depth buffer, shader pipeline, frustum culling and first-person movement.
+The integration order is deliberate: validate shape geometry first, then replace sphere-only broadphase bounds and body contact generation, then add persistent manifold caching/warm starting, then add general convex GJK/EPA. This follows the same broadphase -> narrowphase -> manifold -> iterative-solver separation used by mature real-time rigid-body engines.
 
-## Windows build
-
-From the repository root:
+## Build
 
 ```powershell
 cmake -S native -B build/native -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -59,4 +48,4 @@ cmake --build build/native --config Release --parallel
 ctest --test-dir build/native -C Release --output-on-failure
 ```
 
-The executable is named `voxel_frontier.exe`.
+Executable: `voxel_frontier.exe`.
