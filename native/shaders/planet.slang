@@ -54,6 +54,14 @@ float3 fresnelSchlick(float voH, float3 f0)
     return f0 + (1.0 - f0) * grazing;
 }
 
+float screenDoorNoise(float2 pixel)
+{
+    // Stable per-pixel hash used only for atmosphere coverage. This gives a cheap screen-door
+    // transparency without changing the Vulkan blend/depth pipeline used by opaque geometry.
+    float2 p = floor(pixel);
+    return frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453);
+}
+
 [shader("vertex")]
 VertexOutput vertexMain(VertexInput input)
 {
@@ -72,9 +80,37 @@ VertexOutput vertexMain(VertexInput input)
 float4 fragmentMain(VertexOutput input) : SV_Target
 {
     float3 n = normalize(input.normal);
-    // CPU supplies world-space direction from the shaded region toward the actual star.
     float3 l = normalize(gPush.sunDirection.xyz);
     float3 v = normalize(-input.relativePosition);
+
+    // Negative vertex color is an internal marker for a participating atmosphere shell.
+    // The shell is not a fake skybox: it occupies an actual finite spherical volume. From space
+    // this branch produces a grazing-angle Rayleigh/Mie-like rim; from inside the atmosphere the
+    // CPU sky model supplies the full-screen background instead, so shells can be omitted there.
+    if (input.color.x < 0.0 || input.color.y < 0.0 || input.color.z < 0.0)
+    {
+        float3 packed = max(-input.color, 0.0);
+        float opticalStrength = max(max(packed.x, packed.y), packed.z);
+        float3 tint = packed / max(opticalStrength, 1.0e-4);
+
+        float grazing = pow(saturate(1.0 - abs(dot(n, v))), 0.58);
+        float forwardScatter = pow(saturate(dot(l, -v) * 0.5 + 0.5), 5.0);
+        float sunFacing = saturate(dot(n, l) * 0.5 + 0.5);
+        float coverage = saturate(opticalStrength * (0.05 + 0.92 * grazing));
+
+        // Screen-door transparency: discard most face-on shell fragments so opaque planet
+        // surfaces remain visible, while grazing rays build a bright atmospheric limb.
+        if (screenDoorNoise(input.position.xy) > coverage) discard;
+
+        float3 stellar = max(gPush.sunColorIntensity.rgb, 0.0)
+            * max(gPush.sunColorIntensity.a, 0.0);
+        float3 scatter = tint
+            * (0.07 + 0.72 * grazing + 0.20 * forwardScatter)
+            * (0.35 + 0.65 * sunFacing)
+            * max(stellar, float3(0.08, 0.08, 0.08));
+        return float4(scatter, 1.0);
+    }
+
     float3 h = normalize(l + v);
 
     float noL = saturate(dot(n, l));
