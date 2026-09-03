@@ -12,6 +12,10 @@ on:
       - '.github/workflows/native-desktop.yml'
       - '.vscode/**'
 
+concurrency:
+  group: native-desktop-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   core-tests:
     runs-on: ubuntu-24.04
