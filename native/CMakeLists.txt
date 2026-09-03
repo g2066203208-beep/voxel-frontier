@@ -37,6 +37,7 @@ add_library(vf_engine STATIC
     src/physics/MaterialPhysics.cpp
     src/physics/GasVolume.cpp
     src/physics/RopeXpbd.cpp
+    src/physics/CelestialSurfaceFrames.cpp
     src/render/PhysicsDebugMesh.cpp
     src/gameplay/PhysicsPlayground.cpp
 )
@@ -205,6 +206,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_celestial_system_tests tests/CelestialSystemTests.cpp)
     target_link_libraries(vf_celestial_system_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_celestial_system_tests COMMAND vf_celestial_system_tests)
+
+    add_executable(vf_celestial_surface_frames_tests tests/CelestialSurfaceFramesTests.cpp)
+    target_link_libraries(vf_celestial_surface_frames_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_celestial_surface_frames_tests COMMAND vf_celestial_surface_frames_tests)
 
     add_executable(vf_spectral_optics_tests tests/SpectralOpticsTests.cpp)
     target_link_libraries(vf_spectral_optics_tests PRIVATE vf_engine glm::glm)
