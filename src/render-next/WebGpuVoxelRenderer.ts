@@ -85,7 +85,6 @@ export class WebGpuVoxelRenderer {
   private readonly canvas: HTMLCanvasElement;
   private readonly device: GPUDevice;
   private readonly context: GPUCanvasContext;
-  private readonly format: GPUTextureFormat;
   private readonly pipeline: GPURenderPipeline;
   private readonly cameraBuffer: GPUBuffer;
   private readonly cameraBindGroup: GPUBindGroup;
@@ -102,7 +101,6 @@ export class WebGpuVoxelRenderer {
     this.canvas = canvas;
     this.device = device;
     this.context = context;
-    this.format = format;
 
     const shader = device.createShaderModule({ label: 'Voxel Frontier WGSL', code: SHADER });
     const cameraLayout = device.createBindGroupLayout({
@@ -182,14 +180,22 @@ export class WebGpuVoxelRenderer {
       size: Math.max(4, mesh.vertexBytes.byteLength),
       usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
     });
-    if (mesh.vertexBytes.byteLength > 0) this.device.queue.writeBuffer(vertexBuffer, 0, mesh.vertexBytes);
+    if (mesh.vertexBytes.byteLength > 0) {
+      const vertexCopy = new Uint8Array(mesh.vertexBytes.byteLength);
+      vertexCopy.set(mesh.vertexBytes);
+      this.device.queue.writeBuffer(vertexBuffer, 0, vertexCopy);
+    }
 
     const indexBuffer = this.device.createBuffer({
       label: 'chunk index buffer',
       size: Math.max(4, mesh.indices.byteLength),
       usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST
     });
-    if (mesh.indices.byteLength > 0) this.device.queue.writeBuffer(indexBuffer, 0, mesh.indices);
+    if (mesh.indices.byteLength > 0) {
+      const indexCopy = new Uint32Array(mesh.indices.length);
+      indexCopy.set(mesh.indices);
+      this.device.queue.writeBuffer(indexBuffer, 0, indexCopy);
+    }
 
     const uniformBuffer = this.device.createBuffer({
       label: 'chunk origin uniform',
