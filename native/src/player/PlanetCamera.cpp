@@ -112,8 +112,6 @@ glm::dvec3 PlanetCamera::up() const {
             || (celestialSystem_ != nullptr && celestialSystem_->insideAtmosphere(*body, position_))) {
             return safeNormalize(body->orientation * localUp);
         }
-        // A large precision bubble may extend beyond the gravity well. Remaining in that bubble is
-        // only a coordinate choice; deep zero-g must not retain a spherical walking "up".
         return {0.0, 1.0, 0.0};
     }
 
@@ -168,15 +166,11 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     heading_ += input.mouseDx * mouseSensitivity;
     pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.52, 1.52);
 
-    // The local coordinates are authoritative while a planet precision frame is active. Rebuilding
-    // world state from them carries the character through the planet's latest orbit and spin pose
-    // without asking collision resolution to chase a fast-moving floor.
     if (const auto* body = physicsFrameBody()) syncWorldStateFromLocal(*body);
 
     if (celestialSystem_ != nullptr) {
         const CelestialBody* desiredFrame = celestialSystem_->physicsReferenceBodyAt(position_);
         if (inPhysicsFrame_ && (desiredFrame == nullptr || desiredFrame->id != physicsFrameBodyId_)) {
-            // position_/velocity_ already contain the exact inertial handoff velocity.
             leavePhysicsFrame();
             if (desiredFrame != nullptr) enterPhysicsFrame(*desiredFrame);
         } else if (!inPhysicsFrame_ && desiredFrame != nullptr) {
@@ -208,16 +202,23 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
             localVelocity_ += (desired - localVelocity_) * (1.0 - std::exp(-6.0 * dt));
             localPosition_ += localVelocity_ * dt;
+
+            // Creative flight ignores gravity, not solid ground. Downward flight now lands on the
+            // same collision surface used by walking/jumping instead of tunnelling through a planet.
+            const glm::dvec3 direction = safeNormalize(localPosition_, localUp);
+            const double minimumRadius = localMinimumEyeRadius(*body, direction);
+            const double radius = glm::length(localPosition_);
+            if (radius <= minimumRadius) {
+                localPosition_ = direction * minimumRadius;
+                const double radialSpeed = glm::dot(localVelocity_, direction);
+                if (radialSpeed < 0.0) localVelocity_ -= direction * radialSpeed;
+            }
             grounded_ = false;
         } else {
             const bool wasGrounded = grounded_;
             const bool jumping = wasGrounded && input.vertical > 0.5;
 
             if (wasGrounded && !jumping) {
-                // Ground contact is a holonomic support constraint. Gravity, centrifugal and
-                // Coriolis terms are balanced by support/friction while the character is standing;
-                // integrating those free-flight accelerations here was the source of the remaining
-                // planet-local drift. Only intentional tangent locomotion is integrated on ground.
                 glm::dvec3 desiredTangent = localForward * input.forward + localRight * input.right;
                 const double desiredLength = glm::length(desiredTangent);
                 if (desiredLength > 1.0) desiredTangent /= desiredLength;
@@ -235,7 +236,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
                 localVelocity_ -= newDirection * glm::dot(localVelocity_, newDirection);
                 grounded_ = true;
             } else {
-                // Jumping and all already-airborne motion use the full rotating-frame dynamics.
                 if (jumping) {
                     localVelocity_ += localUp * (input.sprint ? 28.0 : 14.0);
                     grounded_ = false;
@@ -247,8 +247,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
                 }
                 localPosition_ += localVelocity_ * dt;
 
-                // Ground state comes ONLY from actual surface contact. Merely being inside the
-                // planet's precision bubble never enables spherical walking.
                 const glm::dvec3 direction = safeNormalize(localPosition_, localUp);
                 const double minimumRadius = localMinimumEyeRadius(*body, direction);
                 const double radius = glm::length(localPosition_);
@@ -264,8 +262,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
 
         syncWorldStateFromLocal(*body);
 
-        // The bubble boundary is a coordinate handoff only. It does not switch gravity or reset
-        // velocity; interplanetary flight keeps the inherited orbital/spin momentum exactly.
         if (celestialSystem_ != nullptr) {
             const CelestialBody* owner = celestialSystem_->physicsReferenceBodyAt(position_);
             if (owner == nullptr || owner->id != physicsFrameBodyId_) leavePhysicsFrame();
@@ -288,8 +284,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
             velocity_ += (desired - velocity_) * (1.0 - std::exp(-6.0 * dt));
         } else {
-            // EVA/free-flight: no sphere-tangent WASD locomotion. Only finite physical gameplay
-            // gravity fields accelerate an unpowered character here.
             velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
         }
         position_ += velocity_ * dt;
@@ -300,7 +294,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         return;
     }
 
-    // Standalone single-planet compatibility path used by low-level tests and tools.
     const glm::dvec3 localUp = safeNormalize(position_);
     const glm::dvec3 forward = forwardDirection();
     glm::dvec3 right = glm::cross(forward, localUp);
@@ -314,6 +307,9 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         const double speed = input.sprint ? 70.0 : 28.0;
         velocity_ = moveLength > 1.0e-8 ? move * speed : glm::dvec3{};
         position_ += velocity_ * dt;
+        const glm::dvec3 direction = safeNormalize(position_);
+        const double minimumRadius = planetSurfaceRadius(*planet_, direction) + eyeHeight_;
+        if (glm::length(position_) < minimumRadius) position_ = direction * minimumRadius;
         grounded_ = false;
     } else {
         const glm::dvec3 east = safeEast(localUp);
