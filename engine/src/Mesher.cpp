@@ -1,5 +1,6 @@
 #include "vf/Mesher.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
