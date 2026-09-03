@@ -63,6 +63,8 @@ bool SdlPlatform::pumpEvents() {
     input_.mouseDx = 0.0F;
     input_.mouseDy = 0.0F;
     input_.toggleFlight = false;
+    input_.leftPressed = false;
+    input_.rightPressed = false;
 
     SDL_Event event{};
     while (SDL_PollEvent(&event)) {
@@ -79,22 +81,34 @@ bool SdlPlatform::pumpEvents() {
                 input_.mouseDy += event.motion.yrel;
             }
             break;
-        case SDL_EVENT_MOUSE_BUTTON_DOWN:
-            if (!input_.mouseCaptured) setMouseCaptured(true);
+        case SDL_EVENT_MOUSE_BUTTON_DOWN: {
+            const bool wasCaptured = input_.mouseCaptured;
+            if (!wasCaptured) {
+                // The click that re-captures the mouse is not also a gameplay action.
+                setMouseCaptured(true);
+                break;
+            }
+            if (event.button.button == SDL_BUTTON_LEFT) input_.leftPressed = true;
+            if (event.button.button == SDL_BUTTON_RIGHT) input_.rightPressed = true;
             break;
+        }
         case SDL_EVENT_KEY_DOWN:
-            if (!event.key.repeat && event.key.key == SDLK_ESCAPE) {
+            if (!event.key.repeat && event.key.scancode == SDL_SCANCODE_ESCAPE) {
                 setMouseCaptured(!input_.mouseCaptured);
             }
-            if (!event.key.repeat && event.key.key == SDLK_SPACE) {
-                constexpr std::uint64_t kDoubleTapWindowMilliseconds = 300U;
-                const std::uint64_t now = SDL_GetTicks();
-                if (lastSpacePressMilliseconds_ != 0U
-                    && now - lastSpacePressMilliseconds_ <= kDoubleTapWindowMilliseconds) {
+            if (!event.key.repeat && event.key.scancode == SDL_SCANCODE_SPACE) {
+                // Use the physical SDL scancode rather than the layout-dependent keycode. SDL3
+                // timestamps key events in nanoseconds, so the double tap is deterministic even if
+                // a frame stalls between the two presses.
+                constexpr std::uint64_t kDoubleTapWindowNanoseconds = 360000000ULL;
+                const std::uint64_t now = event.key.timestamp;
+                if (lastSpacePressNanoseconds_ != 0U
+                    && now > lastSpacePressNanoseconds_
+                    && now - lastSpacePressNanoseconds_ <= kDoubleTapWindowNanoseconds) {
                     input_.toggleFlight = true;
-                    lastSpacePressMilliseconds_ = 0U;
+                    lastSpacePressNanoseconds_ = 0U;
                 } else {
-                    lastSpacePressMilliseconds_ = now;
+                    lastSpacePressNanoseconds_ = now;
                 }
             }
             break;
