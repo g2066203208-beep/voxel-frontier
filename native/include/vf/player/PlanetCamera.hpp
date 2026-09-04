@@ -30,8 +30,6 @@ public:
 
     void update(const PlanetMovementInput& input, double dt);
 
-    // A CharacterVirtual-style controller can own translation while PlanetCamera keeps view
-    // orientation, flight-mode transitions and celestial reference-frame bookkeeping.
     void setExternalWorldState(
         const glm::dvec3& worldPosition,
         const glm::dvec3& worldVelocity,
@@ -67,6 +65,9 @@ private:
     void enterPhysicsFrame(const CelestialBody& body) noexcept;
     void leavePhysicsFrame() noexcept;
     void syncWorldStateFromLocal(const CelestialBody& body) noexcept;
+    void captureFreeAttitude(const CelestialBody& body) noexcept;
+    void alignLocalAnglesToFreeAttitude(const CelestialBody& body) noexcept;
+    void rotateFreeAttitude(double mouseDx, double mouseDy) noexcept;
 
     const PlanetDefinition* planet_{};
     const CelestialSystem* celestialSystem_{};
@@ -80,6 +81,13 @@ private:
     glm::dvec3 localPosition_{};
     glm::dvec3 localVelocity_{};
     bool inPhysicsFrame_{};
+
+    // While attached to a planet the view is expressed relative to local radial up. When the
+    // camera leaves that reference frame we preserve the exact current world attitude and then
+    // rotate it inertially, avoiding the old radial-up -> global-Y snap at the edge of space.
+    glm::dvec3 freeForward_{0.0, 0.0, -1.0};
+    glm::dvec3 freeUp_{0.0, 1.0, 0.0};
+    bool freeAttitudeValid_{};
 
     double heading_{0.0};
     double pitch_{-0.18};
