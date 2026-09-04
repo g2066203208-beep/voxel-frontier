@@ -1,5 +1,6 @@
 #include "vf/player/PlanetCamera.hpp"
 
+#include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <string_view>
@@ -107,6 +108,30 @@ void testAMovesToCameraLeftInFlight() {
         "A / negative-right input must move in camera-left direction");
 }
 
+void testHighLatitudeTravelDoesNotRebuildHeadingBasis() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 1000.0;
+    planet.maxElevation = 0.0;
+    planet.atmosphereHeight = 100.0;
+    vf::PlanetCamera camera{planet};
+
+    auto moveToLatitude = [&](double degrees) {
+        const double radians = degrees * 3.14159265358979323846 / 180.0;
+        const glm::dvec3 direction{std::cos(radians), std::sin(radians), 0.0};
+        camera.setExternalWorldState(direction * (planet.radius + 1.75), {}, true);
+        camera.update({}, 1.0 / 60.0);
+        return camera.forwardDirection();
+    };
+
+    glm::dvec3 previous = moveToLatitude(64.0);
+    for (double latitude : {65.0, 66.0, 67.0, 68.0, 69.0, 70.0}) {
+        const glm::dvec3 current = moveToLatitude(latitude);
+        require(glm::dot(previous, current) > 0.995,
+            "surface travel through the old high-latitude basis switch must not spin the camera");
+        previous = current;
+    }
+}
+
 void testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection() {
     vf::PlanetDefinition planet{};
     planet.radius = 1000.0;
@@ -168,6 +193,69 @@ void testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection() {
     require(leftFrame, "test camera must actually cross the authored planet physics bubble");
 }
 
+void testSpaceReentryDoesNotSnapAtPhysicsFrameBoundary() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 6371000.0;
+    planet.maxElevation = 0.0;
+    planet.atmosphereHeight = 100000.0;
+
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.type = vf::CelestialBodyType::Planet;
+    body.radiusMeters = planet.radius;
+    body.massKg = 5.9722e24;
+    body.gameplaySurfaceGravityMps2 = 9.80665;
+    body.gravityFalloffStartRadiusMeters = planet.radius + planet.atmosphereHeight;
+    body.gravityInfluenceRadiusMeters = planet.radius + 900000.0;
+    body.physicsBubbleRadiusMeters = planet.radius + 1300000.0;
+    body.atmosphere.enabled = true;
+    body.atmosphere.heightMeters = planet.atmosphereHeight;
+    const std::uint32_t id = system.addBody(body);
+
+    vf::PlanetCamera camera{planet, &system, id};
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+
+    const glm::dvec3 radial = glm::normalize(camera.position());
+    camera.setExternalWorldState(radial * (planet.radius + 1500000.0), {}, false);
+    camera.update({}, 1.0 / 60.0);
+    require(!camera.inPlanetPhysicsFrame(), "test camera must begin re-entry from inertial space");
+
+    vf::PlanetMovementInput tilt{};
+    tilt.mouseDy = -180.0;
+    tilt.mouseDx = 75.0;
+    camera.update(tilt, 1.0 / 60.0);
+    const glm::dvec3 beforeForward = camera.forwardDirection();
+    const glm::dvec3 beforeUp = camera.up();
+
+    camera.setExternalWorldState(radial * (planet.radius + 1200000.0), {}, false);
+    camera.update({}, 1.0 / 60.0);
+    require(camera.inPlanetPhysicsFrame(), "test camera must re-enter the planet physics bubble");
+    require(glm::dot(beforeForward, camera.forwardDirection()) > 0.99999,
+        "entering a planet physics frame at orbital altitude must not rotate forward view");
+    require(glm::dot(beforeUp, camera.up()) > 0.99999,
+        "entering a planet physics frame at orbital altitude must not snap camera up");
+
+    camera.setExternalWorldState(radial * (planet.radius + 250000.0), {}, false);
+    const glm::dvec3 beforeBlendUp = camera.up();
+    const glm::dvec3 beforeBlendForward = camera.forwardDirection();
+    glm::dvec3 desiredUp = radial - beforeBlendForward * glm::dot(radial, beforeBlendForward);
+    desiredUp = glm::normalize(desiredUp);
+    const double initialAlignment = glm::dot(beforeBlendUp, desiredUp);
+
+    camera.update({}, 1.0 / 60.0);
+    require(glm::dot(beforeBlendUp, camera.up()) > 0.995,
+        "first atmospheric horizon-alignment frame must be gradual rather than a landing snap");
+
+    for (int i = 0; i < 180; ++i) camera.update({}, 1.0 / 60.0);
+    const glm::dvec3 finalForward = camera.forwardDirection();
+    glm::dvec3 finalDesiredUp = radial - finalForward * glm::dot(radial, finalForward);
+    finalDesiredUp = glm::normalize(finalDesiredUp);
+    require(glm::dot(camera.up(), finalDesiredUp) > initialAlignment + 0.05,
+        "descending into the atmosphere must smoothly converge camera up toward the local horizon");
+}
+
 } // namespace
 
 int main() {
@@ -177,7 +265,9 @@ int main() {
     testFlightSpeedUsesLogarithmicWheelSteps();
     testDMovesToCameraRightInFlight();
     testAMovesToCameraLeftInFlight();
+    testHighLatitudeTravelDoesNotRebuildHeadingBasis();
     testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection();
+    testSpaceReentryDoesNotSnapAtPhysicsFrameBoundary();
     std::cout << "vf_camera_input_tests: PASS\n";
     return 0;
 }
