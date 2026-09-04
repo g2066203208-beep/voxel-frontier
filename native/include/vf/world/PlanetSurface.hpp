@@ -18,12 +18,18 @@ struct PlanetDefinition {
 struct PlanetVertex {
     glm::vec3 position{};
     glm::vec3 normal{};
+    // Literal RGB stays in [0, 1] for debug/celestial proxy meshes. The primary planet builder
+    // also uses this existing three-float channel as a compact procedural-material payload so the
+    // Vulkan vertex ABI stays unchanged while terrain, bark, foliage and rocks receive distinct
+    // shader materials. See native/shaders/planet.slang.
     glm::vec3 color{};
 };
 
 struct PlanetMesh {
     std::vector<PlanetVertex> vertices;
     std::vector<std::uint32_t> indices;
+    std::uint32_t treeCount{0U};
+    std::uint32_t rockCount{0U};
 
     [[nodiscard]] std::uint64_t triangleCount() const noexcept {
         return static_cast<std::uint64_t>(indices.size() / 3U);
