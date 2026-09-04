@@ -143,6 +143,12 @@ struct PhysicsEnvironment {
     const CelestialSystem* celestialSystem{};
     std::uint32_t primaryCelestialBodyId{};
 
+    // When non-zero this PhysicsWorld is expressed in a planet/moon rotating local frame. The
+    // celestial proxy in celestialSystem should then be centered at the local origin with zero
+    // translational/spin velocity. Coriolis and centrifugal accelerations are applied here instead
+    // of making the contact solver chase a moving/rotating planet surface.
+    glm::dvec3 rotatingFrameAngularVelocity{};
+
     [[nodiscard]] double gravityMagnitude(const glm::dvec3& position) const noexcept;
     [[nodiscard]] glm::dvec3 gravityAcceleration(const glm::dvec3& position) const noexcept;
     [[nodiscard]] AtmosphereSample sampleAtmosphere(const glm::dvec3& position, double timeSeconds) const noexcept;

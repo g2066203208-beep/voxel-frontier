@@ -9,9 +9,6 @@
 
 namespace {
 
-// SPIR-V 1.x binary constants from the Khronos SPIR-V unified specification / headers.
-// Keeping these four values local avoids adding SPIRV-Headers as a second dependency
-// just for a tiny runtime-contract regression test.
 constexpr std::uint32_t kSpirvMagicNumber = 0x07230203U;
 constexpr std::uint16_t kSpirvOpEntryPoint = 15U;
 constexpr std::uint32_t kSpirvExecutionModelVertex = 0U;
@@ -26,10 +23,7 @@ void require(bool condition, std::string_view message) {
     if (!condition) fail(message);
 }
 
-[[nodiscard]] std::uint32_t loadWord(
-    const unsigned char* bytes,
-    std::size_t byteCount,
-    std::size_t wordIndex) {
+[[nodiscard]] std::uint32_t loadWord(const unsigned char* bytes, std::size_t byteCount, std::size_t wordIndex) {
     const std::size_t byteOffset = wordIndex * 4U;
     require(byteOffset + 4U <= byteCount, "SPIR-V word read exceeds module size");
     return static_cast<std::uint32_t>(bytes[byteOffset])
@@ -38,10 +32,7 @@ void require(bool condition, std::string_view message) {
         | (static_cast<std::uint32_t>(bytes[byteOffset + 3U]) << 24U);
 }
 
-[[nodiscard]] std::string readLiteralString(
-    const unsigned char* bytes,
-    std::size_t beginByte,
-    std::size_t endByte) {
+[[nodiscard]] std::string readLiteralString(const unsigned char* bytes, std::size_t beginByte, std::size_t endByte) {
     require(beginByte < endByte, "SPIR-V entry-point string has no storage");
     std::string value;
     for (std::size_t i = beginByte; i < endByte; ++i) {
@@ -66,14 +57,12 @@ void validateEntryPoint(
     std::size_t instructionWord = 5U;
     std::uint32_t entryPointCount = 0U;
     bool foundExpected = false;
-
     while (instructionWord < moduleWordCount) {
         const std::uint32_t instruction = loadWord(bytes, byteCount, instructionWord);
         const std::uint16_t wordCount = static_cast<std::uint16_t>(instruction >> 16U);
         const std::uint16_t opcode = static_cast<std::uint16_t>(instruction & 0xFFFFU);
         require(wordCount > 0U, "SPIR-V instruction has zero word count");
         require(instructionWord + wordCount <= moduleWordCount, "SPIR-V instruction exceeds module bounds");
-
         if (opcode == kSpirvOpEntryPoint) {
             require(wordCount >= 4U, "OpEntryPoint instruction is truncated");
             ++entryPointCount;
@@ -81,32 +70,33 @@ void validateEntryPoint(
             const std::size_t nameBegin = (instructionWord + 3U) * 4U;
             const std::size_t instructionEnd = (instructionWord + wordCount) * 4U;
             const std::string name = readLiteralString(bytes, nameBegin, instructionEnd);
-            if (executionModel == expectedExecutionModel && name == expectedName) {
-                foundExpected = true;
-            }
+            if (executionModel == expectedExecutionModel && name == expectedName) foundExpected = true;
         }
-
         instructionWord += wordCount;
     }
-
     require(entryPointCount == 1U, "each embedded stage module must contain exactly one OpEntryPoint");
-    require(foundExpected, "embedded SPIR-V OpEntryPoint does not match Vulkan pipeline pName/stage contract");
+    require(foundExpected, "embedded SPIR-V OpEntryPoint does not match Vulkan pipeline contract");
 }
 
 } // namespace
 
 int main() {
-    validateEntryPoint(
-        vf::shaders::kPlanetVertexSpv,
-        vf::shaders::kPlanetVertexSpvSize,
-        kSpirvExecutionModelVertex,
-        "vertexMain");
-    validateEntryPoint(
-        vf::shaders::kPlanetFragmentSpv,
-        vf::shaders::kPlanetFragmentSpvSize,
-        kSpirvExecutionModelFragment,
-        "fragmentMain");
-
-    std::cout << "Shader SPIR-V entry-point contract tests passed\n";
+    validateEntryPoint(vf::shaders::kPlanetVertexSpv, vf::shaders::kPlanetVertexSpvSize,
+        kSpirvExecutionModelVertex, "vertexMain");
+    validateEntryPoint(vf::shaders::kOpaqueFragmentSpv, vf::shaders::kOpaqueFragmentSpvSize,
+        kSpirvExecutionModelFragment, "opaqueFragmentMain");
+    validateEntryPoint(vf::shaders::kTransparentFragmentSpv, vf::shaders::kTransparentFragmentSpvSize,
+        kSpirvExecutionModelFragment, "transparentFragmentMain");
+    validateEntryPoint(vf::shaders::kShadowVertexSpv, vf::shaders::kShadowVertexSpvSize,
+        kSpirvExecutionModelVertex, "shadowVertexMain");
+    validateEntryPoint(vf::shaders::kShadowFragmentSpv, vf::shaders::kShadowFragmentSpvSize,
+        kSpirvExecutionModelFragment, "shadowFragmentMain");
+    validateEntryPoint(vf::shaders::kFullscreenVertexSpv, vf::shaders::kFullscreenVertexSpvSize,
+        kSpirvExecutionModelVertex, "fullscreenVertexMain");
+    validateEntryPoint(vf::shaders::kSkyFragmentSpv, vf::shaders::kSkyFragmentSpvSize,
+        kSpirvExecutionModelFragment, "skyFragmentMain");
+    validateEntryPoint(vf::shaders::kHudFragmentSpv, vf::shaders::kHudFragmentSpvSize,
+        kSpirvExecutionModelFragment, "hudFragmentMain");
+    std::cout << "All production shader SPIR-V entry-point contracts passed\n";
     return 0;
 }

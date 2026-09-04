@@ -89,24 +89,27 @@ Already implemented foundations:
 - radial planetary gravity;
 - atmosphere temperature/pressure/density/wind;
 - sweep-and-prune broadphase;
-- sphere contacts and friction/restitution;
+- sphere / box / capsule / convex collision geometry and GJK/EPA support;
+- persistent contact solving with friction/restitution;
 - springs, distance constraints, hinges, motors, gears and break limits;
 - local aerodynamic surfaces with angle-of-attack/stall behavior;
 - shallow-water transport and buoyancy foundations;
 - ideal-gas chamber foundations;
-- physically driven tree-fall model;
-- visible Vulkan physics playground.
+- XPBD rope physics;
+- capsule character controller with radial gravity, slopes, steps and jumping.
 
-Collision v3 is now being developed as a clean broadphase -> narrowphase -> persistent-manifold -> iterative-solver pipeline, using Jolt/Bullet/PhysX and Erin Catto's solver work as engineering references. See `docs/PHYSICS_ARCHITECTURE.md`.
+Special-case demo systems are not production architecture. The obsolete tree-only simulator and standalone physics playground have been removed from the authoritative source tree; future vegetation/destruction must use generic material/fracture plus rigid-body systems.
+
+See `docs/PHYSICS_ARCHITECTURE.md` for the lower-level solver design.
 
 ## Near-term technical order
 
-1. finish shape-aware collision: sphere / box / capsule -> convex GJK/EPA;
-2. persistent 1–4 point contact manifolds and warm-started contact impulses;
-3. physical player capsule with sweep/slide, slopes and steps;
+1. finish and harden shape-aware contacts, manifold persistence and CCD/shape casts;
+2. eliminate terrain-streaming GPU stalls and move toward persistent/double-buffered terrain resources;
+3. hierarchical patch/clipmap terrain streaming with seam-safe incremental updates;
 4. authoritative rendered water + multipoint hull buoyancy/torque;
 5. gas chambers connected to real compartments, flooding and variable buoyancy;
-6. interactive cutting/fracture -> tree/log rigid bodies;
+6. generic material cutting/fracture -> rigid-body fragments, without object-specific physics hacks;
 7. reusable instanced rigid-body rendering instead of CPU rebuilding debug geometry;
 8. slider/ball/fixed/6-DOF constraints, clutch/differential, wheel/suspension/tire models;
 9. propellers/rotors/control surfaces and vehicle/aircraft physical systems;
@@ -116,7 +119,7 @@ Collision v3 is now being developed as a clean broadphase -> narrowphase -> pers
 
 ### Spherical planet runtime
 
-Current runtime already has a finite smooth spherical planet, radial motion basis, camera-relative Vulkan rendering, ground-to-space altitude traversal and a second real celestial proxy. Remaining work is hierarchical patch LOD, seam-safe streaming and production physical player movement.
+Current runtime already has a finite smooth spherical planet, radial movement, a physical capsule character controller, camera-relative Vulkan rendering, ground-to-space altitude traversal and multiple real celestial bodies. Remaining work is hierarchical patch LOD, seam-safe streaming, production water and large-scale world content.
 
 ### Sculptable terrain
 
