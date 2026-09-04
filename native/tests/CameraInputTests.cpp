@@ -220,19 +220,19 @@ void testSpaceReentryBlendsHorizonAlongDescent() {
     toggle.toggleFlight = true;
     camera.update(toggle, 1.0 / 60.0);
 
-    const glm::dvec3 radial = glm::normalize(camera.position());
-    camera.setExternalWorldState(radial * (planet.radius + 1500000.0), {}, false);
+    const glm::dvec3 departureRadial = glm::normalize(camera.position());
+    camera.setExternalWorldState(departureRadial * (planet.radius + 1500000.0), {}, false);
     camera.update({}, 1.0 / 60.0);
     require(!camera.inPlanetPhysicsFrame(), "test camera must begin re-entry from inertial space");
 
-    vf::PlanetMovementInput tilt{};
-    tilt.mouseDy = -260.0;
-    tilt.mouseDx = 110.0;
-    camera.update(tilt, 1.0 / 60.0);
+    const glm::dvec3 orbitTangent = glm::normalize(glm::cross(departureRadial, glm::dvec3{0.0, 1.0, 0.0}));
+    constexpr double orbitalAngle = 0.90;
+    const glm::dvec3 reentryRadial = glm::normalize(
+        departureRadial * std::cos(orbitalAngle) + orbitTangent * std::sin(orbitalAngle));
+
     const glm::dvec3 beforeFrameForward = camera.forwardDirection();
     const glm::dvec3 beforeFrameUp = camera.up();
-
-    camera.setExternalWorldState(radial * (planet.radius + 1200000.0), {}, false);
+    camera.setExternalWorldState(reentryRadial * (planet.radius + 1200000.0), {}, false);
     camera.update({}, 1.0 / 60.0);
     require(camera.inPlanetPhysicsFrame(), "test camera must re-enter the planet physics bubble");
     require(glm::dot(beforeFrameForward, camera.forwardDirection()) > 0.99999,
@@ -242,20 +242,22 @@ void testSpaceReentryBlendsHorizonAlongDescent() {
 
     auto horizonAlignment = [&]() {
         const glm::dvec3 forward = camera.forwardDirection();
-        glm::dvec3 desiredUp = radial - forward * glm::dot(radial, forward);
+        glm::dvec3 desiredUp = reentryRadial - forward * glm::dot(reentryRadial, forward);
         if (glm::dot(desiredUp, desiredUp) <= 1.0e-10) return 0.0;
         desiredUp = glm::normalize(desiredUp);
         return glm::dot(camera.up(), desiredUp);
     };
 
     const double initialAlignment = horizonAlignment();
+    require(initialAlignment < 0.90,
+        "orbital test geometry must begin with a meaningful local-horizon mismatch");
     glm::dvec3 previousUp = camera.up();
     constexpr std::array<double, 6> descentAltitudes{
         290000.0, 240000.0, 180000.0, 120000.0, 70000.0, 30000.0,
     };
 
     for (double altitudeMeters : descentAltitudes) {
-        camera.setExternalWorldState(radial * (planet.radius + altitudeMeters), {}, false);
+        camera.setExternalWorldState(reentryRadial * (planet.radius + altitudeMeters), {}, false);
         for (int frame = 0; frame < 20; ++frame) {
             camera.update({}, 1.0 / 60.0);
             const glm::dvec3 currentUp = camera.up();
@@ -265,11 +267,10 @@ void testSpaceReentryBlendsHorizonAlongDescent() {
         }
     }
 
-    const double finalAlignment = horizonAlignment();
-    require(finalAlignment >= initialAlignment - 1.0e-6,
-        "descent horizon alignment must never drift farther away from the local horizon");
-    require(finalAlignment > 0.995,
-        "low-atmosphere camera up must finish aligned to the local horizon without a snap");
+    require(horizonAlignment() > initialAlignment + 0.10,
+        "a full orbital-to-low-atmosphere descent must visibly converge toward the local horizon");
+    require(horizonAlignment() > 0.95,
+        "low-atmosphere camera up must finish strongly aligned to the local horizon");
 }
 
 } // namespace
