@@ -23,6 +23,7 @@ void appendFace(
     const glm::vec3* constantColor) {
     const std::uint32_t stride = subdivisions + 1U;
     const std::uint32_t baseVertex = static_cast<std::uint32_t>(mesh.vertices.size());
+    const std::uint32_t firstIndex = static_cast<std::uint32_t>(mesh.indices.size());
     const double cell = 2.0 / static_cast<double>(subdivisions);
 
     mesh.vertices.reserve(mesh.vertices.size() + static_cast<std::size_t>(stride) * stride);
@@ -84,6 +85,11 @@ void appendFace(
             }
         }
     }
+
+    if (definition != nullptr) {
+        const std::uint32_t indexCount = static_cast<std::uint32_t>(mesh.indices.size()) - firstIndex;
+        detail::appendDrawRange(mesh, firstIndex, indexCount, PlanetDrawClass::TerrainPatch);
+    }
 }
 
 } // namespace
@@ -91,12 +97,12 @@ void appendFace(
 glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
     glm::dvec3 cube{};
     switch (face) {
-    case 0: cube = {1.0, v, -u}; break;   // +X
-    case 1: cube = {-1.0, v, u}; break;   // -X
-    case 2: cube = {u, 1.0, -v}; break;   // +Y
-    case 3: cube = {u, -1.0, v}; break;   // -Y
-    case 4: cube = {u, v, 1.0}; break;    // +Z
-    case 5: cube = {-u, v, -1.0}; break;  // -Z
+    case 0: cube = {1.0, v, -u}; break;
+    case 1: cube = {-1.0, v, u}; break;
+    case 2: cube = {u, 1.0, -v}; break;
+    case 3: cube = {u, -1.0, v}; break;
+    case 4: cube = {u, v, 1.0}; break;
+    case 5: cube = {-u, v, -1.0}; break;
     default: throw std::out_of_range("cubeSphereDirection face must be 0..5");
     }
     return glm::normalize(cube);
@@ -104,10 +110,6 @@ glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
 
 double planetHeight(const PlanetDefinition& definition, const glm::dvec3& directionInput) {
     const glm::dvec3 d = glm::normalize(directionInput);
-
-    // 3D noise evaluated on the unit direction is seam-free over the sphere. Broad fBm creates
-    // continents/valleys; a ridged octave creates mountain chains; a smaller octave shapes the
-    // low-poly facets without turning the planet into high-frequency static.
     const double broad = detail::centeredFbm(
         definition.seed ^ 0x3C6EF372FE94F82BULL,
         d * 2.15 + glm::dvec3{2.7, -1.9, 4.1},
@@ -142,22 +144,23 @@ PlanetMesh buildPlanetSurface(const PlanetDefinition& definition, std::uint32_t 
     if (subdivisionsPerFace < 2U) throw std::invalid_argument("planet subdivisions must be >= 2");
 
     PlanetMesh mesh;
+    mesh.horizonOccluderRadius = static_cast<float>(std::max(0.0, definition.radius - definition.maxElevation));
     for (std::uint32_t face = 0; face < 6U; ++face) {
         appendFace(mesh, &definition, glm::dvec3{0.0}, nullptr, definition.radius, face, subdivisionsPerFace, nullptr);
     }
 
     // Ecology and visible ocean are tied to the high-detail planetary surface LOD. Low-resolution
-    // meshes remain terrain-only for fast tests/proxies; the runtime 64x64 face mesh receives the
-    // deterministic trees, rocks and a deliberately coarser faceted ocean.
+    // meshes remain terrain-only for fast tests/proxies.
     constexpr std::uint32_t kWorldDetailMinSubdivisionsPerFace = 24U;
     if (subdivisionsPerFace >= kWorldDetailMinSubdivisionsPerFace) {
         const auto treePlacements = detail::scatterTrees(mesh, definition);
         detail::scatterRocks(mesh, definition, treePlacements);
 
-        // Main.cpp's authoritative physical ocean currently uses radius - 6 m. Keeping the visible
-        // mean sea surface identical prevents the renderer and buoyancy/ocean queries disagreeing.
+        // Main.cpp's authoritative physical ocean uses radius - 6 m. Keep the visible mean sea
+        // surface identical. 36 subdivisions preserve broad water facets while reducing base ocean
+        // topology by 19% versus 40 before dry-cell rejection is even applied.
         constexpr double kMeanSeaLevelBelowReferenceMeters = 6.0;
-        constexpr std::uint32_t kOceanSubdivisionsPerFace = 40U;
+        constexpr std::uint32_t kOceanSubdivisionsPerFace = 36U;
         appendOceanSurface(
             mesh,
             definition,
