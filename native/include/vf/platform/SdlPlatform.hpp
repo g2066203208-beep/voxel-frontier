@@ -23,6 +23,7 @@ struct PlatformInput {
     bool mouseCaptured{true};
     float mouseDx{};
     float mouseDy{};
+    double flightSpeedSteps{};
 };
 
 class SdlPlatform final {
