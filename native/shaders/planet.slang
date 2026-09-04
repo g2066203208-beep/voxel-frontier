@@ -17,16 +17,13 @@ struct VertexOutput
 struct PushConstants
 {
     float4x4 viewProj;
-    // xyz = camera position, w = normalized atmospheric density [0, 1].
     float4 cameraPosition;
-    // xyz = direction to sun, w = solar elevation [-1, 1].
     float4 sunDirection;
     float4 sunColorIntensity;
     float4 objectRotation;
 };
 
 [[vk::push_constant]] ConstantBuffer<PushConstants> gPush;
-
 static const float PI = 3.14159265358979323846;
 
 float3 rotateByQuaternion(float3 v, float4 q)
@@ -101,16 +98,13 @@ float3 toneMapFilmic(float3 x)
     return saturate((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14));
 }
 
-float3 atmosphereSky(float solarElevation, float atmosphereDensity)
+float3 atmosphereSky(float solarElevation, float density)
 {
     float daylight = smoothstep(-0.12, 0.18, solarElevation);
     float twilight = saturate(1.0 - abs(solarElevation + 0.045) / 0.24);
-    float3 nightSky = float3(0.010, 0.018, 0.035);
-    float3 daySky = float3(0.23, 0.48, 0.72);
-    float3 duskSky = float3(0.62, 0.31, 0.16);
-    float3 sky = lerp(nightSky, daySky, daylight);
-    sky = lerp(sky, duskSky, twilight * (1.0 - daylight * 0.55));
-    return lerp(float3(0.015, 0.020, 0.028), sky, atmosphereDensity);
+    float3 sky = lerp(float3(0.010, 0.018, 0.035), float3(0.23, 0.48, 0.72), daylight);
+    sky = lerp(sky, float3(0.62, 0.31, 0.16), twilight * (1.0 - daylight * 0.55));
+    return lerp(float3(0.015, 0.020, 0.028), sky, density);
 }
 
 [shader("vertex")]
@@ -143,10 +137,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 flatNormal = normalize(cross(ddx(input.relativePosition), ddy(input.relativePosition)));
     if (dot(flatNormal, smoothNormal) < 0.0) flatNormal = -flatNormal;
     float3 n = proceduralMaterial ? flatNormal : smoothNormal;
-    float localRadius2 = dot(input.localPosition, input.localPosition);
-    float3 surfaceUp = localRadius2 > 1.0e-8
-        ? normalize(rotateByQuaternion(input.localPosition, gPush.objectRotation))
-        : float3(0.0, 1.0, 0.0);
+    float localRadius = max(length(input.localPosition), 1.0);
+    float3 surfaceUp = normalize(rotateByQuaternion(input.localPosition, gPush.objectRotation));
 
     float3 baseColor = input.surfaceData;
     float roughness = 0.62;
@@ -204,14 +196,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float cellSeed = hash21(floor(barkCell));
         float fissure = smoothstep(0.43, 0.49, abs(localCell.x + (cellSeed - 0.5) * 0.18));
         float micro = hash31(floor(float3(u * 25.0, vCoord * 4.0, 3.0)));
-
-        float3 darkBark = float3(0.060, 0.020, 0.006);
-        float3 bark = float3(0.28, 0.105, 0.022);
-        float3 warmRidge = float3(0.42, 0.205, 0.055);
-        baseColor = lerp(darkBark, bark, 0.45 + 0.48 * warp);
-        baseColor = lerp(baseColor, warmRidge, fibre * 0.11);
-        baseColor *= 1.0 - fissure * 0.27;
-        baseColor *= 0.96 + micro * 0.06;
+        baseColor = lerp(float3(0.060, 0.020, 0.006), float3(0.28, 0.105, 0.022), 0.45 + 0.48 * warp);
+        baseColor = lerp(baseColor, float3(0.42, 0.205, 0.055), fibre * 0.11);
+        baseColor *= (1.0 - fissure * 0.27) * (0.96 + micro * 0.06);
         roughness = saturate(0.78 + fissure * 0.10 + micro * 0.05);
         f0 = float3(0.024, 0.021, 0.017);
         materialAO = 0.82 - fissure * 0.12;
@@ -223,12 +210,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float macro = valueNoise3(input.localPosition * 0.18 + variation * 9.0);
         float faceBreakup = hash31(floor(n * 17.0 + variation * 29.0));
         float upFacing = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
-
-        float3 deepGreen = float3(0.022, 0.135, 0.018);
-        float3 leafGreen = float3(0.085, 0.34, 0.036);
-        float3 sunGreen = float3(0.36, 0.56, 0.10);
-        baseColor = lerp(deepGreen, leafGreen, 0.42 + 0.50 * macro);
-        baseColor = lerp(baseColor, sunGreen, upFacing * (0.12 + canopyHeight * 0.15));
+        baseColor = lerp(float3(0.022, 0.135, 0.018), float3(0.085, 0.34, 0.036), 0.42 + 0.50 * macro);
+        baseColor = lerp(baseColor, float3(0.36, 0.56, 0.10), upFacing * (0.12 + canopyHeight * 0.15));
         baseColor *= 0.96 + (faceBreakup - 0.5) * 0.07;
         roughness = 0.91;
         f0 = float3(0.021, 0.024, 0.017);
@@ -242,15 +225,11 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float macro = valueNoise3(input.localPosition * (0.13 + variation * 0.04) + variation * 13.0);
         float grains = hash31(floor(input.localPosition * 0.72 + 5.0));
         float strata = 0.5 + 0.5 * sin(strataCoord * 5.0 + macro * 2.2);
-        float lichenNoise = hash31(floor(input.localPosition * 0.30 + float3(-8.0, 2.0, 4.0)));
         float faceUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
+        float lichenNoise = hash31(floor(input.localPosition * 0.30 + float3(-8.0, 2.0, 4.0)));
         float lichen = smoothstep(0.88, 0.96, lichenNoise) * (0.35 + 0.65 * faceUp);
-
-        float3 coolRock = float3(0.28, 0.30, 0.30);
-        float3 warmRock = float3(0.39, 0.31, 0.22);
-        float3 darkSeam = float3(0.18, 0.16, 0.13);
-        baseColor = lerp(coolRock, warmRock, variation * 0.52 + macro * 0.34);
-        baseColor = lerp(baseColor, darkSeam, (1.0 - strata) * 0.13);
+        baseColor = lerp(float3(0.28, 0.30, 0.30), float3(0.39, 0.31, 0.22), variation * 0.52 + macro * 0.34);
+        baseColor = lerp(baseColor, float3(0.18, 0.16, 0.13), (1.0 - strata) * 0.13);
         baseColor *= 0.94 + grains * 0.09;
         baseColor = lerp(baseColor, float3(0.25, 0.34, 0.12), lichen * 0.16);
         roughness = 0.84 + grains * 0.11;
@@ -264,15 +243,10 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float macro = valueNoise3(input.localPosition * 0.040 + float3(1.7, -3.4, 6.2));
         float micro = hash31(floor(input.localPosition * 0.20 + float3(-5.3, 2.1, 8.7)));
         float foamNoise = hash31(floor(input.localPosition * 0.33 + shoreVariation * 17.0));
-
-        float3 shallows = float3(0.040, 0.42, 0.46);
-        float3 shelf = float3(0.020, 0.22, 0.34);
-        float3 deep = float3(0.008, 0.050, 0.125);
-        baseColor = lerp(shallows, shelf, smoothstep(0.04, 0.34, waterDepth));
-        baseColor = lerp(baseColor, deep, smoothstep(0.30, 0.92, waterDepth));
+        baseColor = lerp(float3(0.040, 0.42, 0.46), float3(0.020, 0.22, 0.34), smoothstep(0.04, 0.34, waterDepth));
+        baseColor = lerp(baseColor, float3(0.008, 0.050, 0.125), smoothstep(0.30, 0.92, waterDepth));
         baseColor *= 0.95 + (macro - 0.5) * 0.08;
         baseColor += float3(0.010, 0.024, 0.032) * micro;
-
         float shoreBand = 1.0 - smoothstep(0.018, 0.16 + shoreVariation * 0.035, waterDepth);
         float brokenFoam = smoothstep(0.56, 0.78, foamNoise + shoreVariation * 0.10);
         foamMask = shoreBand * brokenFoam;
@@ -288,28 +262,25 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float noV = saturate(dot(n, v));
     float noH = saturate(dot(n, h));
     float voH = saturate(dot(v, h));
-
     float d = distributionGGX(noH, roughness);
     float g = geometrySchlickGGX(noV, roughness) * geometrySchlickGGX(noL, roughness);
     float3 f = fresnelSchlick(voH, f0);
     float3 specular = (d * g * f) / max(4.0 * noV * noL, 1.0e-4);
     float3 diffuse = (1.0 - f) * max(baseColor, 0.0) / PI;
 
-    float atmosphereDensity = saturate(gPush.cameraPosition.w);
-    float solarElevation = clamp(gPush.sunDirection.w, -1.0, 1.0);
+    // Derive the atmosphere from geometry instead of adding uniforms/descriptors.
+    float cameraRadius = length(gPush.cameraPosition.xyz);
+    float cameraAltitude = max(0.0, cameraRadius - localRadius);
+    float atmosphereDensity = proceduralMaterial ? exp(-cameraAltitude / 72.0) : 0.0;
+    float solarElevation = dot(surfaceUp, l);
     float daylight = smoothstep(-0.10, 0.16, solarElevation);
     float twilight = saturate(1.0 - abs(solarElevation + 0.04) / 0.22);
     float3 skyColor = atmosphereSky(solarElevation, atmosphereDensity);
-    float3 horizonColor = lerp(
-        float3(0.16, 0.24, 0.31),
-        float3(0.78, 0.40, 0.20),
-        twilight * 0.72);
+    float3 horizonColor = lerp(float3(0.16, 0.24, 0.31), float3(0.78, 0.40, 0.20), twilight * 0.72);
     horizonColor = lerp(float3(0.03, 0.045, 0.065), horizonColor, atmosphereDensity);
 
-    float3 stellarRadiance = max(gPush.sunColorIntensity.rgb, 0.0)
-        * max(gPush.sunColorIntensity.a, 0.0);
-    float3 warmSunTint = lerp(float3(1.0, 0.56, 0.32), float3(1.0, 0.96, 0.88), daylight);
-    stellarRadiance *= warmSunTint;
+    float3 stellarRadiance = max(gPush.sunColorIntensity.rgb, 0.0) * max(gPush.sunColorIntensity.a, 0.0);
+    stellarRadiance *= lerp(float3(1.0, 0.56, 0.32), float3(1.0, 0.96, 0.88), daylight);
     float3 direct = (diffuse + specular) * noL * stellarRadiance;
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
@@ -317,37 +288,39 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 groundBounceColor = float3(0.18, 0.15, 0.085);
     if (terrainMaterial || foliageMaterial) groundBounceColor = float3(0.12, 0.20, 0.065);
     if (oceanMaterial) groundBounceColor = float3(0.025, 0.08, 0.11);
-    float3 groundAmbient = groundBounceColor * (0.05 + 0.16 * (1.0 - hemiUp));
-    float3 indirect = max(baseColor, 0.0) * (skyAmbient + groundAmbient) * materialAO;
+    float3 indirect = max(baseColor, 0.0)
+        * (skyAmbient + groundBounceColor * (0.05 + 0.16 * (1.0 - hemiUp)))
+        * materialAO;
 
     if (foliageTransmission > 0.0)
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
-        float transmission = backLit * (0.08 + 0.14 * edgeLit) * daylight;
-        direct += baseColor * float3(0.50, 0.78, 0.18) * transmission;
+        direct += baseColor * float3(0.50, 0.78, 0.18)
+            * backLit * (0.08 + 0.14 * edgeLit) * daylight;
     }
 
     float3 color = direct + indirect;
-
     if (oceanMaterial)
     {
         float grazing = pow(1.0 - noV, 4.0);
         float3 reflectedSky = lerp(horizonColor, skyColor, 0.38 + 0.62 * hemiUp);
-        float3 skyReflection = reflectedSky * (0.12 + 0.88 * grazing);
-        float3 deepFill = baseColor * (0.11 + 0.10 * waterDepth);
-        float3 foamLight = float3(0.42, 0.49, 0.44) * foamMask * (0.40 + 0.60 * noL);
-        color += skyReflection + deepFill + foamLight;
+        color += reflectedSky * (0.12 + 0.88 * grazing);
+        color += baseColor * (0.11 + 0.10 * waterDepth);
+        color += float3(0.42, 0.49, 0.44) * foamMask * (0.40 + 0.60 * noL);
     }
 
-    // Analytic distance + horizon haze. No 3D volume texture, ray march or extra render pass.
-    float viewDistance = length(input.relativePosition);
-    float3 viewRay = normalize(input.relativePosition);
-    float horizonView = 1.0 - saturate(abs(dot(viewRay, surfaceUp)));
-    float fogDistance = 1.0 - exp(-viewDistance * 0.0034 * atmosphereDensity);
-    float fogFactor = saturate(fogDistance * (0.62 + 0.38 * horizonView * horizonView));
-    float3 fogColor = lerp(skyColor, horizonColor, 0.55 + 0.35 * horizonView);
-    color = lerp(color, fogColor, fogFactor * 0.88);
+    // Cheap analytic mist: no volume texture, no ray march and no extra render pass.
+    if (proceduralMaterial)
+    {
+        float viewDistance = length(input.relativePosition);
+        float3 viewRay = normalize(input.relativePosition);
+        float horizonView = 1.0 - saturate(abs(dot(viewRay, surfaceUp)));
+        float fogDistance = 1.0 - exp(-viewDistance * 0.0034 * atmosphereDensity);
+        float fogFactor = saturate(fogDistance * (0.62 + 0.38 * horizonView * horizonView));
+        float3 fogColor = lerp(skyColor, horizonColor, 0.55 + 0.35 * horizonView);
+        color = lerp(color, fogColor, fogFactor * 0.88);
+    }
 
     color = toneMapFilmic(color);
     float luminance = dot(color, float3(0.2126, 0.7152, 0.0722));
