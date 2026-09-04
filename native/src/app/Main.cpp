@@ -13,6 +13,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <exception>
 #include <future>
 #include <iomanip>
@@ -99,6 +100,7 @@ int main() {
         planet.atmosphereHeight = 100000.0;
         constexpr double opticalAtmosphereHeight = 145000.0;
         constexpr double opticalRayleighScaleHeight = 10200.0;
+        const bool softwareCapture = std::getenv("VF_SOFTWARE_CAPTURE") != nullptr;
 
         vf::CelestialSystem celestial;
 
@@ -163,6 +165,72 @@ int main() {
         if (initialAster == nullptr) throw std::runtime_error("Aster failed to initialize");
         vf::CelestialPhysicsFrame asterFrame{asterId};
 
+        // CI capture uses the actual game renderer but moves the camera to a deterministic coastal
+        // overlook. A low-discrepancy spherical search finds a real generated coast for this seed;
+        // it does not inject a fake test mesh or alter normal gameplay spawn state.
+        if (softwareCapture) {
+            constexpr std::uint32_t kCaptureCandidates = 320U;
+            constexpr double kGoldenAngle = 2.39996322972865332;
+            constexpr double kCoastProbeMeters = 160000.0;
+            double bestScore = -1.0e30;
+            glm::dvec3 bestCoast{0.72, 0.52, 0.46};
+            glm::dvec3 bestLandHeading = stableTangent(bestCoast);
+
+            for (std::uint32_t i = 0; i < kCaptureCandidates; ++i) {
+                const double u = (static_cast<double>(i) + 0.5)
+                    / static_cast<double>(kCaptureCandidates);
+                const double y = 1.0 - 2.0 * u;
+                const double radial = std::sqrt(std::max(0.0, 1.0 - y * y));
+                const double azimuth = kGoldenAngle * static_cast<double>(i);
+                const glm::dvec3 direction{
+                    radial * std::cos(azimuth), y, radial * std::sin(azimuth)};
+                const glm::dvec3 east = stableTangent(direction);
+                const glm::dvec3 north = safeNormalize(glm::cross(direction, east));
+                const std::array<glm::dvec3, 4> headings{{east, -east, north, -north}};
+                const vf::PlanetTerrainSample center = vf::samplePlanetTerrain(planet, direction);
+
+                for (const glm::dvec3& heading : headings) {
+                    const double angularProbe = kCoastProbeMeters / planet.radius;
+                    const glm::dvec3 landDirection = safeNormalize(direction + heading * angularProbe);
+                    const glm::dvec3 seaDirection = safeNormalize(direction - heading * angularProbe);
+                    const vf::PlanetTerrainSample land = vf::samplePlanetTerrain(planet, landDirection);
+                    const vf::PlanetTerrainSample sea = vf::samplePlanetTerrain(planet, seaDirection);
+                    const bool hasLand = land.elevationMeters > 180.0;
+                    const bool hasSea = sea.elevationMeters < -80.0;
+                    const double coastBonus = hasLand && hasSea ? 12000.0 : 0.0;
+                    const double relief = std::clamp(land.elevationMeters, 0.0, 5000.0) * 0.9
+                        + std::clamp(-sea.elevationMeters, 0.0, 7000.0) * 0.32;
+                    const double morphology = land.mountain * 1800.0 + land.plateau * 650.0;
+                    const double centerPenalty = std::min(std::abs(center.elevationMeters), 5000.0) * 0.08;
+                    const double score = coastBonus + relief + morphology - centerPenalty;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestCoast = direction;
+                        bestLandHeading = heading;
+                    }
+                }
+            }
+
+            const glm::dvec3 cameraDirection = safeNormalize(
+                bestCoast - bestLandHeading * (130000.0 / planet.radius), bestCoast);
+            const glm::dvec3 targetDirection = safeNormalize(
+                bestCoast + bestLandHeading * (90000.0 / planet.radius), bestCoast);
+            const glm::dvec3 cameraPlanet = cameraDirection
+                * (vf::planetSurfaceRadius(planet, cameraDirection) + 52000.0);
+            const glm::dvec3 targetPlanet = targetDirection
+                * (vf::planetSurfaceRadius(planet, targetDirection) + 900.0);
+            const glm::dvec3 localForward = safeNormalize(targetPlanet - cameraPlanet, bestLandHeading);
+            const glm::dvec3 worldPosition = asterFrame.toWorldPosition(*initialAster, cameraPlanet);
+            const glm::dvec3 worldVelocity = asterFrame.toWorldVelocity(*initialAster, cameraPlanet, {});
+            camera.setExternalWorldPose(
+                worldPosition,
+                worldVelocity,
+                initialAster->orientation * localForward,
+                initialAster->orientation * cameraDirection,
+                false,
+                true);
+        }
+
         const glm::dquat initialInverseAster = glm::conjugate(glm::normalize(initialAster->orientation));
         const glm::dvec3 initialCameraPlanet = initialInverseAster * (camera.position() - initialAster->position);
         const glm::dvec3 patchUp = safeNormalize(initialCameraPlanet);
@@ -204,7 +272,7 @@ int main() {
         }
 
         glm::dvec3 lodCenterDirection = patchUp;
-        auto buildTerrainLod = [&](const glm::dvec3& centerDirection) {
+        auto buildTerrainLod = [&](const glm::dvec3& centerDirection, std::uint32_t qualityTier) {
             vf::PlanetMesh mesh{};
             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
             const glm::dvec3 centerEast = stableTangent(centerUp);
@@ -217,15 +285,25 @@ int main() {
                 double terrainBaseInset;
                 double terrainEdgeInset;
             };
-            // Nested regular grids follow the geometry-clipmap principle: dense near the player,
-            // progressively cheaper outwards, with hollow coarser levels instead of duplicating the
-            // full inner area. The next renderer milestone moves displacement itself to the GPU;
-            // this CPU bridge already avoids recomputing fine normals where they cannot be seen.
+
+            // Screen-space value, not player speed alone, decides how much geometry is worth
+            // synthesizing. At extreme flight speed/high altitude the player cannot resolve a 200 m
+            // local grid, so rebuilding it is pure CPU waste. These four quality tiers retain the
+            // same physical height function and patch extents while reducing only tessellation.
+            constexpr std::array<std::array<std::uint32_t, 4>, 4> resolutions{{
+                {{192U, 128U, 80U, 48U}},
+                {{128U, 92U, 60U, 36U}},
+                {{80U, 56U, 38U, 26U}},
+                {{48U, 34U, 24U, 16U}},
+            }};
+            constexpr std::array<std::uint32_t, 4> oceanResolutions{{96U, 72U, 48U, 32U}};
+            qualityTier = std::min<std::uint32_t>(qualityTier, 3U);
+            const auto& r = resolutions[qualityTier];
             const std::array<Ring, 4> rings{{
-                {22000.0, 0.0, 220U, 0.0, 1.5},
-                {190000.0, 20000.0, 180U, 1.0, 8.0},
-                {950000.0, 170000.0, 144U, 7.0, 42.0},
-                {2600000.0, 850000.0, 96U, 34.0, 160.0},
+                {22000.0, 0.0, r[0], 0.0, 1.5},
+                {190000.0, 20000.0, r[1], 1.0, 8.0},
+                {950000.0, 170000.0, r[2], 7.0, 42.0},
+                {2600000.0, 850000.0, r[3], 34.0, 160.0},
             }};
 
             for (const Ring& ring : rings) {
@@ -242,10 +320,10 @@ int main() {
                                 + centerNorth * (northMeters / planet.radius),
                             centerUp);
                         const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, direction);
-                        // A full finite-difference normal performs three additional procedural height
-                        // queries. Keep it for the nearest ring; distant rings use their radial normal,
-                        // which is visually indistinguishable at their screen-space triangle size.
-                        const glm::dvec3 normalPlanet = ring.inner <= 0.0
+                        // Finite-difference normals cost three additional full procedural samples.
+                        // Keep them only in the high-detail near ring. Fast/high-altitude tiers use
+                        // the radial normal because the resulting triangles are sub-pixel anyway.
+                        const glm::dvec3 normalPlanet = qualityTier == 0U && ring.inner <= 0.0
                             ? vf::planetSurfaceNormal(planet, direction)
                             : direction;
                         const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
@@ -278,16 +356,14 @@ int main() {
                 }
             }
 
-            // Water is deliberately one continuous local geoid patch, not one transparent square per
-            // terrain LOD. The old four overlapping water rings were the source of the visible square
-            // bands: alpha blending accumulated twice in every overlap strip. A single patch removes
-            // those internal LOD boundaries entirely; the coarse planet ocean proxy only takes over
-            // far beyond the local patch.
+            // One continuous local geoid patch replaces the old transparent ocean-per-LOD stack.
+            // Because this surface is geometrically smooth, 256x256 was unnecessary tessellation;
+            // its screen-space resolution now follows the same quality tier as terrain streaming.
             vf::PlanetMesh localOcean = vf::buildOceanSurfacePatch(
                 planet,
                 centerUp,
                 1200000.0,
-                256U,
+                oceanResolutions[qualityTier],
                 0.0);
             for (auto& vertex : localOcean.vertices) {
                 vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
@@ -302,8 +378,8 @@ int main() {
             constexpr double proxyInset = 240.0;
             for (auto& vertex : proxy.vertices) {
                 glm::dvec3 p = glm::dvec3(vertex.position);
-                const double r = glm::length(p);
-                if (r > proxyInset + 1.0) p *= (r - proxyInset) / r;
+                const double radius = glm::length(p);
+                if (radius > proxyInset + 1.0) p *= (radius - proxyInset) / radius;
                 vertex.position = glm::vec3(toSurfacePoint(p));
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
             }
@@ -318,9 +394,15 @@ int main() {
             return mesh;
         };
 
-        vf::PlanetMesh staticTerrain = buildTerrainLod(lodCenterDirection);
+        std::uint32_t currentTerrainQuality = 0U;
+        vf::PlanetMesh staticTerrain = buildTerrainLod(lodCenterDirection, currentTerrainQuality);
         renderer.uploadPlanetMesh(staticTerrain);
-        std::future<std::pair<glm::dvec3, vf::PlanetMesh>> terrainBuildFuture{};
+        struct TerrainBuildResult {
+            glm::dvec3 direction{};
+            std::uint32_t quality{};
+            vf::PlanetMesh mesh{};
+        };
+        std::future<TerrainBuildResult> terrainBuildFuture{};
         bool terrainBuildInFlight = false;
 
         // Local rotating planet frame for high-quality ground physics while CelestialSystem remains
@@ -357,17 +439,19 @@ int main() {
         characterSettings.maxSlopeAngleRadians = glm::radians(50.0);
         characterSettings.stepHeight = 0.45;
         vf::CharacterController character{physics, characterSettings};
-        character.resetFromEye(initialCameraPlanet, {}, true);
+        character.resetFromEye(initialCameraPlanet, {}, !softwareCapture);
 
         std::cout << "Voxel Frontier Earthlike planet runtime\n";
         std::cout << "Generic structural damage | Earthlike relief | continuous ocean geoid\n";
-        std::cout << "Async terrain synthesis | speed-aware streaming | software-render screenshot gate\n";
+        std::cout << "Async terrain synthesis | adaptive tessellation | software-render screenshot gate\n" << std::flush;
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
         double diagnosticsTime = 0.0;
         std::uint64_t diagnosticsFrames = 0;
         double lodCooldown = 0.0;
+        std::uint32_t captureFrames = 0U;
+        bool captureReadyLogged = false;
 
         while (platform.pumpEvents()) {
             const auto now = Clock::now();
@@ -448,9 +532,9 @@ int main() {
             const glm::dvec3 upSurface = safeNormalize(
                 toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
 
-            // CPU synthesis stays asynchronous, but high flight speed no longer asks the worker to
-            // rebuild a multi-million-metre window every few kilometres. The update distance grows
-            // with travel speed, matching the motion-coherent update principle of geometry clipmaps.
+            // CPU synthesis stays asynchronous. Update radius and tessellation both scale with
+            // motion/altitude: high-speed travel neither rebuilds every few kilometres nor asks the
+            // worker to generate close-range geometry that cannot contribute a visible pixel.
             lodCooldown = std::max(0.0, lodCooldown - dt);
             const double altitude = camera.altitude();
             if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0) {
@@ -467,33 +551,49 @@ int main() {
                 const double prefetchThreshold = threshold
                     * (camera.flightSpeedMps() > 5000.0 ? 0.72 : 0.42);
 
-                if (!terrainBuildInFlight && lodCooldown <= 0.0 && arcDistance > prefetchThreshold) {
+                std::uint32_t desiredQuality = 0U;
+                const double speed = camera.flightMode() ? camera.flightSpeedMps() : 0.0;
+                if (altitude > 120000.0 || speed > 5000.0) desiredQuality = 1U;
+                if (altitude > 280000.0 || speed > 25000.0) desiredQuality = 2U;
+                if (altitude > 500000.0 || speed > 120000.0) desiredQuality = 3U;
+                const bool qualityMismatch = desiredQuality != currentTerrainQuality;
+
+                if (!terrainBuildInFlight && lodCooldown <= 0.0
+                    && (arcDistance > prefetchThreshold || qualityMismatch)) {
                     const glm::dvec3 requestedDirection = cameraDirection;
-                    terrainBuildFuture = std::async(std::launch::async, [&, requestedDirection]() {
-                        return std::make_pair(requestedDirection, buildTerrainLod(requestedDirection));
-                    });
+                    const std::uint32_t requestedQuality = desiredQuality;
+                    terrainBuildFuture = std::async(
+                        std::launch::async,
+                        [&, requestedDirection, requestedQuality]() {
+                            return TerrainBuildResult{
+                                requestedDirection,
+                                requestedQuality,
+                                buildTerrainLod(requestedDirection, requestedQuality)};
+                        });
                     terrainBuildInFlight = true;
                 }
 
                 if (terrainBuildInFlight
                     && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
                         == std::future_status::ready) {
-                    auto completed = terrainBuildFuture.get();
+                    TerrainBuildResult completed = terrainBuildFuture.get();
                     terrainBuildInFlight = false;
-                    const glm::dvec3 currentDirection = safeNormalize(cameraPlanet, completed.first);
+                    const glm::dvec3 currentDirection = safeNormalize(cameraPlanet, completed.direction);
                     const double staleDistance = std::acos(std::clamp(
-                        glm::dot(currentDirection, completed.first), -1.0, 1.0)) * planet.radius;
+                        glm::dot(currentDirection, completed.direction), -1.0, 1.0)) * planet.radius;
                     const double acceptanceDistance = std::max(
                         threshold * 1.15,
                         camera.flightMode() ? camera.flightSpeedMps() * 0.30 : 0.0);
 
-                    // A result that the player has already outrun is never copied into both Vulkan
-                    // frame buffers. Discard it and let the next request target the current position.
-                    if (staleDistance <= acceptanceDistance) {
-                        lodCenterDirection = completed.first;
-                        staticTerrain = std::move(completed.second);
+                    // Do not upload a patch the camera already outran, nor a quality tier made stale
+                    // by a large speed/altitude change while the worker was building it.
+                    if (staleDistance <= acceptanceDistance && completed.quality == desiredQuality) {
+                        lodCenterDirection = completed.direction;
+                        currentTerrainQuality = completed.quality;
+                        staticTerrain = std::move(completed.mesh);
                         renderer.uploadPlanetMesh(staticTerrain);
-                        lodCooldown = camera.flightSpeedMps() > 5000.0 ? 0.35 : 0.12;
+                        lodCooldown = currentTerrainQuality >= 2U ? 0.50
+                            : (camera.flightSpeedMps() > 5000.0 ? 0.35 : 0.12);
                     } else {
                         lodCooldown = 0.0;
                     }
@@ -506,7 +606,7 @@ int main() {
                 toSurfaceVector(inverseAster * sunWorldDirection), {0.3, 0.8, -0.2});
 
             vf::PlanetMesh dynamicMesh{};
-            if (currentCinder != nullptr) {
+            if (!softwareCapture && currentCinder != nullptr) {
                 const glm::dvec3 cinderDirection = safeNormalize(
                     currentCinder->position - camera.position());
                 const glm::dvec3 cinderSurfaceDirection = safeNormalize(
@@ -568,6 +668,14 @@ int main() {
 
             renderer.drawFrame(viewProjection, cameraSurface, renderEnvironment);
 
+            if (softwareCapture && !captureReadyLogged) {
+                ++captureFrames;
+                if (captureFrames >= 18U && !terrainBuildInFlight) {
+                    std::cout << "VF_CAPTURE_READY\n" << std::flush;
+                    captureReadyLogged = true;
+                }
+            }
+
             diagnosticsTime += dt;
             ++diagnosticsFrames;
             if (diagnosticsTime >= 0.5) {
@@ -584,6 +692,7 @@ int main() {
                       << " | ALT " << std::setprecision(2) << camera.altitude() / 1000.0 << " km"
                       << " | " << (overOcean ? "OCEAN" : "LAND")
                       << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")
+                      << " Q" << currentTerrainQuality
                       << " | tris " << renderer.triangleCount() << '+'
                       << renderer.dynamicTriangleCount()
                       << " | FPS " << std::setprecision(0) << fps;
