@@ -82,9 +82,10 @@ struct PlateSeed {
     plate.center = seededDirection(seed, 100U + i * 11U);
     plate.eulerPole = seededDirection(seed, 500U + i * 13U);
     plate.speed = 0.35 + 0.65 * seedUnit(seed, 800U + i * 17U);
-    // Roughly one third of the spherical plate cells start as buoyant continental crust. The
-    // resulting exposed land fraction is then shaped by shelf transitions and regional relief.
-    plate.continental = seedUnit(seed, 1200U + i * 19U) > 0.66;
+    // Earth is an ocean-dominated planet (NOAA: about 71% water coverage). A smaller population of
+    // buoyant continental plate cells, combined with shelves and plate-boundary deformation, keeps
+    // the default seed near that large-scale land/ocean balance without hard-coding coastlines.
+    plate.continental = seedUnit(seed, 1200U + i * 19U) > 0.82;
     return plate;
 }
 
@@ -304,11 +305,17 @@ PlanetTerrainSample samplePlanetTerrain(
     const double collisionWeight = plates.primary.continental && plates.secondary.continental
         ? 1.0
         : (plates.primary.continental || plates.secondary.continental ? 0.82 : 0.45);
-    const double mountain = std::pow(std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0), 1.15);
+    const double mountain = std::pow(
+        std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0),
+        1.15);
     elevation += maxLand * 0.72 * mountain;
 
-    const double trenchWeight = (!plates.primary.continental || !plates.secondary.continental) ? 1.0 : 0.20;
-    const double trench = std::pow(std::clamp(plates.convergence * oceanness * trenchWeight, 0.0, 1.0), 1.30);
+    const double trenchWeight = (!plates.primary.continental || !plates.secondary.continental)
+        ? 1.0
+        : 0.20;
+    const double trench = std::pow(
+        std::clamp(plates.convergence * oceanness * trenchWeight, 0.0, 1.0),
+        1.30);
     elevation -= maxOcean * 0.42 * trench;
 
     // Broad interior uplift gives plateau provinces without turning every convergent boundary into a
@@ -333,14 +340,19 @@ PlanetTerrainSample samplePlanetTerrain(
     }
     const double arcVolcano = plates.convergence * plates.boundary
         * (0.25 + 0.75 * std::max(landness, 0.35 * oceanness));
-    const double volcano = std::clamp(std::max(hotspotVolcano, arcVolcano * 0.72), 0.0, 1.0);
+    const double volcano = std::clamp(
+        std::max(hotspotVolcano, arcVolcano * 0.72),
+        0.0,
+        1.0);
     elevation += maxLand * 0.36 * volcano;
 
-    // Cheap authoritative drainage proxy. Visible close-range patches can refine this with local
-    // flow accumulation, but this low-cost valley field keeps physics/collision height deterministic
-    // from (seed, position) and biases channels away from high divides and steep orogenic cores.
-    const double basinA = 1.0 - std::abs(std::sin(w.x * 19.0 + w.y * 9.0 - w.z * 15.0 + p7));
-    const double basinB = 1.0 - std::abs(std::sin(w.z * 17.0 - w.x * 11.0 + w.y * 6.0 + p3));
+    // Cheap authoritative drainage proxy. Visible close-range patches can later refine this with
+    // local DEM flow accumulation, but this low-cost valley field keeps collision/physics height
+    // deterministic from (seed, position) and biases channels away from active orogenic cores.
+    const double basinA = 1.0 - std::abs(
+        std::sin(w.x * 19.0 + w.y * 9.0 - w.z * 15.0 + p7));
+    const double basinB = 1.0 - std::abs(
+        std::sin(w.z * 17.0 - w.x * 11.0 + w.y * 6.0 + p3));
     const double channelField = std::max(basinA, basinB);
     const double river = std::pow(smooth01(0.965, 0.999, channelField), 1.6)
         * landness
