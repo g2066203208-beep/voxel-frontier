@@ -60,13 +60,24 @@ private:
     [[nodiscard]] double localMinimumEyeRadius(
         const CelestialBody& body,
         const glm::dvec3& localDirection) const noexcept;
-    [[nodiscard]] glm::dvec3 localForwardDirection(const glm::dvec3& localUp) const noexcept;
+    [[nodiscard]] glm::dvec3 currentSurfaceUpWorld() const noexcept;
+    [[nodiscard]] double surfaceAttitudeInfluence() const noexcept;
 
     void enterPhysicsFrame(const CelestialBody& body) noexcept;
     void leavePhysicsFrame() noexcept;
     void syncWorldStateFromLocal(const CelestialBody& body) noexcept;
-    void captureFreeAttitude(const CelestialBody& body) noexcept;
-    void alignLocalAnglesToFreeAttitude(const CelestialBody& body) noexcept;
+
+    // View attitude is authoritative in world space in every reference frame. Surface travel only
+    // parallel-transports this attitude as the local gravity-up changes; it never rebuilds heading
+    // from a global latitude/longitude basis. That removes the pole/high-latitude singularity and
+    // also means entering/leaving a celestial physics frame cannot itself snap the camera.
+    void initializeViewAttitude(const glm::dvec3& surfaceUpWorld) noexcept;
+    void transportViewAttitude(const glm::dvec3& surfaceUpWorld, double influence) noexcept;
+    void alignViewUpToSurface(const glm::dvec3& surfaceUpWorld, double influence, double dt) noexcept;
+    void rotateSurfaceAttitude(
+        double mouseDx,
+        double mouseDy,
+        const glm::dvec3& surfaceUpWorld) noexcept;
     void rotateFreeAttitude(double mouseDx, double mouseDy) noexcept;
 
     const PlanetDefinition* planet_{};
@@ -82,15 +93,12 @@ private:
     glm::dvec3 localVelocity_{};
     bool inPhysicsFrame_{};
 
-    // While attached to a planet the view is expressed relative to local radial up. When the
-    // camera leaves that reference frame we preserve the exact current world attitude and then
-    // rotate it inertially, avoiding the old radial-up -> global-Y snap at the edge of space.
-    glm::dvec3 freeForward_{0.0, 0.0, -1.0};
-    glm::dvec3 freeUp_{0.0, 1.0, 0.0};
-    bool freeAttitudeValid_{};
+    glm::dvec3 viewForward_{0.0, 0.0, -1.0};
+    glm::dvec3 viewUp_{0.0, 1.0, 0.0};
+    glm::dvec3 transportedSurfaceUp_{0.0, 1.0, 0.0};
+    bool viewAttitudeValid_{};
+    bool surfaceTransportValid_{};
 
-    double heading_{0.0};
-    double pitch_{-0.18};
     double eyeHeight_{1.75};
     double creativeFlightSpeedMps_{320.0};
     bool grounded_{};
