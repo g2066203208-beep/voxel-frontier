@@ -225,8 +225,6 @@ void testSpaceReentryBlendsHorizonAlongDescent() {
     camera.update({}, 1.0 / 60.0);
     require(!camera.inPlanetPhysicsFrame(), "test camera must begin re-entry from inertial space");
 
-    // Give inertial space a deliberately rolled/pitched attitude so the descent has something
-    // meaningful to blend back toward the local horizon.
     vf::PlanetMovementInput tilt{};
     tilt.mouseDy = -260.0;
     tilt.mouseDx = 110.0;
@@ -267,8 +265,11 @@ void testSpaceReentryBlendsHorizonAlongDescent() {
         }
     }
 
-    require(horizonAlignment() > initialAlignment + 0.10,
-        "a full orbital-to-low-atmosphere descent must visibly converge toward the local horizon");
+    const double finalAlignment = horizonAlignment();
+    require(finalAlignment >= initialAlignment - 1.0e-6,
+        "descent horizon alignment must never drift farther away from the local horizon");
+    require(finalAlignment > 0.995,
+        "low-atmosphere camera up must finish aligned to the local horizon without a snap");
 }
 
 } // namespace
