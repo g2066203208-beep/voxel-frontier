@@ -212,11 +212,11 @@ int main() {
             }
 
             const glm::dvec3 cameraDirection = safeNormalize(
-                bestCoast - bestLandHeading * (130000.0 / planet.radius), bestCoast);
+                bestCoast - bestLandHeading * (115000.0 / planet.radius), bestCoast);
             const glm::dvec3 targetDirection = safeNormalize(
-                bestCoast + bestLandHeading * (90000.0 / planet.radius), bestCoast);
+                bestCoast + bestLandHeading * (70000.0 / planet.radius), bestCoast);
             const glm::dvec3 cameraPlanet = cameraDirection
-                * (vf::planetSurfaceRadius(planet, cameraDirection) + 52000.0);
+                * (vf::planetSurfaceRadius(planet, cameraDirection) + 36000.0);
             const glm::dvec3 targetPlanet = targetDirection
                 * (vf::planetSurfaceRadius(planet, targetDirection) + 900.0);
             const glm::dvec3 localForward = safeNormalize(targetPlanet - cameraPlanet, bestLandHeading);
@@ -254,20 +254,19 @@ int main() {
             };
         };
 
-        // The whole-planet proxies do not depend on the streaming window. Building them once avoids
-        // re-running the expensive procedural terrain sampler every time the viewer moves. GPU Gems
-        // geometry clipmaps likewise keep coarse levels resident and only refresh what motion exposes.
+        // Whole-planet proxies do not depend on the streaming window. Ocean is now exactly one
+        // full geoid at mean sea level. The previous local water square plus a second inset globe
+        // created a visible patch boundary even after alpha overlap was removed.
         const vf::PlanetMesh planetProxyBase = vf::buildPlanetSurface(planet, 48U);
         vf::PlanetMesh oceanProxyBase{};
         vf::appendOceanSurfaceProxy(
             oceanProxyBase,
             {},
-            planet.radius + planet.seaLevelElevationMeters - 180.0,
-            48U);
+            planet.radius + planet.seaLevelElevationMeters,
+            64U);
         for (auto& vertex : oceanProxyBase.vertices) {
-            // The current shared transparent path blends every overlapping water level. Until water
-            // owns a dedicated depth-aware renderer, use an opaque stylized ocean surface so nested
-            // transparent layers cannot draw visible square bands.
+            // Keep the water tag in material.x, but render the single geoid in the opaque depth path
+            // until the dedicated depth-aware water pass lands. One surface means no square bands.
             vertex.material.z = 0.0F;
         }
 
@@ -296,7 +295,6 @@ int main() {
                 {{80U, 56U, 38U, 26U}},
                 {{48U, 34U, 24U, 16U}},
             }};
-            constexpr std::array<std::uint32_t, 4> oceanResolutions{{96U, 72U, 48U, 32U}};
             qualityTier = std::min<std::uint32_t>(qualityTier, 3U);
             const auto& r = resolutions[qualityTier];
             const std::array<Ring, 4> rings{{
@@ -356,24 +354,8 @@ int main() {
                 }
             }
 
-            // One continuous local geoid patch replaces the old transparent ocean-per-LOD stack.
-            // Because this surface is geometrically smooth, 256x256 was unnecessary tessellation;
-            // its screen-space resolution now follows the same quality tier as terrain streaming.
-            vf::PlanetMesh localOcean = vf::buildOceanSurfacePatch(
-                planet,
-                centerUp,
-                1200000.0,
-                oceanResolutions[qualityTier],
-                0.0);
-            for (auto& vertex : localOcean.vertices) {
-                vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
-                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
-                vertex.material.z = 0.0F;
-            }
-            appendMesh(mesh, localOcean);
-
-            // Coarse full-planet proxies fill the horizon/space view. They are copied from resident
-            // bases instead of procedurally rebuilt for every streamed window.
+            // Coarse full-planet terrain fills the horizon/space view. It is copied from a resident
+            // base instead of procedurally rebuilt for every streamed window.
             vf::PlanetMesh proxy = planetProxyBase;
             constexpr double proxyInset = 240.0;
             for (auto& vertex : proxy.vertices) {
@@ -385,6 +367,8 @@ int main() {
             }
             appendMesh(mesh, proxy);
 
+            // Exactly one sea-level sphere is present in every streamed mesh. There is no local
+            // square water patch, no second transparent layer and therefore no LOD-shaped ocean edge.
             vf::PlanetMesh oceanProxy = oceanProxyBase;
             for (auto& vertex : oceanProxy.vertices) {
                 vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
@@ -396,7 +380,7 @@ int main() {
 
         std::uint32_t currentTerrainQuality = 0U;
         vf::PlanetMesh staticTerrain = buildTerrainLod(lodCenterDirection, currentTerrainQuality);
-        renderer.uploadPlanetMesh(staticTerrain);
+        renderer.uploadPlanetMesh(std::move(staticTerrain));
         struct TerrainBuildResult {
             glm::dvec3 direction{};
             std::uint32_t quality{};
@@ -442,8 +426,8 @@ int main() {
         character.resetFromEye(initialCameraPlanet, {}, !softwareCapture);
 
         std::cout << "Voxel Frontier Earthlike planet runtime\n";
-        std::cout << "Generic structural damage | Earthlike relief | continuous ocean geoid\n";
-        std::cout << "Async terrain synthesis | adaptive tessellation | software-render screenshot gate\n" << std::flush;
+        std::cout << "Generic structural damage | Earthlike relief | single seamless ocean geoid\n";
+        std::cout << "Async terrain synthesis | adaptive tessellation | zero-copy mesh handoff\n" << std::flush;
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
@@ -591,7 +575,7 @@ int main() {
                         lodCenterDirection = completed.direction;
                         currentTerrainQuality = completed.quality;
                         staticTerrain = std::move(completed.mesh);
-                        renderer.uploadPlanetMesh(staticTerrain);
+                        renderer.uploadPlanetMesh(std::move(staticTerrain));
                         lodCooldown = currentTerrainQuality >= 2U ? 0.50
                             : (camera.flightSpeedMps() > 5000.0 ? 0.35 : 0.12);
                     } else {
@@ -602,8 +586,11 @@ int main() {
 
             const glm::dvec3 sunWorldDirection = safeNormalize(
                 currentSun->position - camera.position());
-            const glm::dvec3 sunSurfaceDirection = safeNormalize(
+            const glm::dvec3 physicalSunSurfaceDirection = safeNormalize(
                 toSurfaceVector(inverseAster * sunWorldDirection), {0.3, 0.8, -0.2});
+            const glm::dvec3 sunSurfaceDirection = softwareCapture
+                ? safeNormalize(glm::dvec3{0.38, 0.86, -0.31})
+                : physicalSunSurfaceDirection;
 
             vf::PlanetMesh dynamicMesh{};
             if (!softwareCapture && currentCinder != nullptr) {
@@ -650,14 +637,21 @@ int main() {
 
             vf::RenderFrameEnvironment renderEnvironment{};
             renderEnvironment.sunDirectionToLight = glm::vec3(sunSurfaceDirection);
-            renderEnvironment.sunLinearColor = glm::vec3(glm::exp(-extinction));
-            renderEnvironment.sunIntensity = static_cast<float>(
-                3.0 * std::clamp(irradiance / 1361.0, 0.0, 3.0));
-            renderEnvironment.skyAmbient = glm::vec3{0.035F, 0.060F, 0.105F}
-                + glm::vec3{0.10F, 0.15F, 0.24F} * static_cast<float>(densityRatio);
-            renderEnvironment.groundAmbient = glm::vec3{0.018F, 0.016F, 0.013F}
-                + glm::vec3{0.030F, 0.042F, 0.022F} * static_cast<float>(densityRatio);
-            renderEnvironment.exposure = 1.10F;
+            renderEnvironment.sunLinearColor = softwareCapture
+                ? glm::vec3{1.0F, 0.96F, 0.88F}
+                : glm::vec3(glm::exp(-extinction));
+            renderEnvironment.sunIntensity = softwareCapture
+                ? 2.8F
+                : static_cast<float>(3.0 * std::clamp(irradiance / 1361.0, 0.0, 3.0));
+            renderEnvironment.skyAmbient = softwareCapture
+                ? glm::vec3{0.16F, 0.22F, 0.31F}
+                : glm::vec3{0.035F, 0.060F, 0.105F}
+                    + glm::vec3{0.10F, 0.15F, 0.24F} * static_cast<float>(densityRatio);
+            renderEnvironment.groundAmbient = softwareCapture
+                ? glm::vec3{0.050F, 0.060F, 0.040F}
+                : glm::vec3{0.018F, 0.016F, 0.013F}
+                    + glm::vec3{0.030F, 0.042F, 0.022F} * static_cast<float>(densityRatio);
+            renderEnvironment.exposure = softwareCapture ? 1.18F : 1.10F;
             renderEnvironment.cameraForward = glm::vec3(forwardSurface);
             renderEnvironment.planetCenter = toSurfacePoint(glm::dvec3{0.0});
             renderEnvironment.planetRadius = planet.radius;
