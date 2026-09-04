@@ -35,7 +35,6 @@ PlanetCamera::PlanetCamera(
       celestialSystem_(celestialSystem),
       primaryCelestialBodyId_(primaryCelestialBodyId) {
     const glm::dvec3 startDirection = safeNormalize({0.72, 0.52, 0.46});
-
     if (celestialSystem_ != nullptr && primaryCelestialBodyId_ != 0U) {
         if (const auto* primary = celestialSystem_->body(primaryCelestialBodyId_)) {
             physicsFrameBodyId_ = primary->id;
@@ -49,7 +48,6 @@ PlanetCamera::PlanetCamera(
             return;
         }
     }
-
     const double surface = planetSurfaceRadius(planet, startDirection);
     position_ = startDirection * (surface + eyeHeight_);
     velocity_ = {};
@@ -61,12 +59,9 @@ const CelestialBody* PlanetCamera::physicsFrameBody() const noexcept {
     return celestialSystem_->body(physicsFrameBodyId_);
 }
 
-double PlanetCamera::localMinimumEyeRadius(
-    const CelestialBody& body,
-    const glm::dvec3& localDirection) const noexcept {
-    if (body.id == primaryCelestialBodyId_ && planet_ != nullptr) {
+double PlanetCamera::localMinimumEyeRadius(const CelestialBody& body, const glm::dvec3& localDirection) const noexcept {
+    if (body.id == primaryCelestialBodyId_ && planet_ != nullptr)
         return planetSurfaceRadius(*planet_, safeNormalize(localDirection)) + eyeHeight_;
-    }
     return body.radiusMeters + eyeHeight_;
 }
 
@@ -74,11 +69,8 @@ glm::dvec3 PlanetCamera::localForwardDirection(const glm::dvec3& localUp) const 
     const glm::dvec3 east = safeEast(localUp);
     const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
     const glm::dvec3 tangentForward = safeNormalize(
-        std::cos(heading_) * north + std::sin(heading_) * east,
-        north);
-    return safeNormalize(
-        std::cos(pitch_) * tangentForward + std::sin(pitch_) * localUp,
-        tangentForward);
+        std::cos(heading_) * north + std::sin(heading_) * east, north);
+    return safeNormalize(std::cos(pitch_) * tangentForward + std::sin(pitch_) * localUp, tangentForward);
 }
 
 void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
@@ -106,15 +98,12 @@ glm::dvec3 PlanetCamera::up() const {
     if (const auto* body = physicsFrameBody()) {
         const glm::dvec3 localUp = safeNormalize(localPosition_);
         const double localGravity = celestialSystem_ != nullptr
-            ? celestialSystem_->gravityMagnitudeFromBody(*body, position_)
-            : 0.0;
+            ? celestialSystem_->gravityMagnitudeFromBody(*body, position_) : 0.0;
         if (grounded_ || localGravity > 0.10
-            || (celestialSystem_ != nullptr && celestialSystem_->insideAtmosphere(*body, position_))) {
+            || (celestialSystem_ != nullptr && celestialSystem_->insideAtmosphere(*body, position_)))
             return safeNormalize(body->orientation * localUp);
-        }
         return {0.0, 1.0, 0.0};
     }
-
     if (celestialSystem_ == nullptr) return safeNormalize(position_);
     return {0.0, 1.0, 0.0};
 }
@@ -125,11 +114,9 @@ double PlanetCamera::altitude() const {
         if (distance <= 1.0e-9) return -body->radiusMeters;
         const glm::dvec3 direction = localPosition_ / distance;
         const double surface = body->id == primaryCelestialBodyId_ && planet_ != nullptr
-            ? planetSurfaceRadius(*planet_, direction)
-            : body->radiusMeters;
+            ? planetSurfaceRadius(*planet_, direction) : body->radiusMeters;
         return distance - surface;
     }
-
     if (celestialSystem_ != nullptr) {
         double closest = std::numeric_limits<double>::infinity();
         for (const auto& body : celestialSystem_->bodies()) {
@@ -138,7 +125,6 @@ double PlanetCamera::altitude() const {
         }
         return closest;
     }
-
     const glm::dvec3 direction = safeNormalize(position_);
     return glm::length(position_) - planetSurfaceRadius(*planet_, direction);
 }
@@ -148,13 +134,11 @@ glm::dvec3 PlanetCamera::forwardDirection() const {
         const glm::dvec3 localUp = safeNormalize(localPosition_);
         return safeNormalize(body->orientation * localForwardDirection(localUp));
     }
-
     const glm::dvec3 localUp = up();
     const glm::dvec3 east = safeEast(localUp);
     const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
     const glm::dvec3 tangentForward = safeNormalize(
-        std::cos(heading_) * north + std::sin(heading_) * east,
-        north);
+        std::cos(heading_) * north + std::sin(heading_) * east, north);
     return safeNormalize(std::cos(pitch_) * tangentForward + std::sin(pitch_) * localUp, tangentForward);
 }
 
@@ -169,20 +153,17 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     if (std::abs(input.flightSpeedSteps) > 1.0e-9) {
         creativeFlightSpeedMps_ = std::clamp(
             creativeFlightSpeedMps_ * std::pow(2.0, input.flightSpeedSteps * 0.5),
-            25.0,
+            1.0,
             2000000.0);
     }
 
     if (const auto* body = physicsFrameBody()) syncWorldStateFromLocal(*body);
-
     if (celestialSystem_ != nullptr) {
         const CelestialBody* desiredFrame = celestialSystem_->physicsReferenceBodyAt(position_);
         if (inPhysicsFrame_ && (desiredFrame == nullptr || desiredFrame->id != physicsFrameBodyId_)) {
             leavePhysicsFrame();
             if (desiredFrame != nullptr) enterPhysicsFrame(*desiredFrame);
-        } else if (!inPhysicsFrame_ && desiredFrame != nullptr) {
-            enterPhysicsFrame(*desiredFrame);
-        }
+        } else if (!inPhysicsFrame_ && desiredFrame != nullptr) enterPhysicsFrame(*desiredFrame);
     }
 
     if (input.toggleFlight) {
@@ -209,7 +190,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
             localVelocity_ += (desired - localVelocity_) * (1.0 - std::exp(-7.0 * dt));
             localPosition_ += localVelocity_ * dt;
-
             const glm::dvec3 direction = safeNormalize(localPosition_, localUp);
             const double minimumRadius = localMinimumEyeRadius(*body, direction);
             const double radius = glm::length(localPosition_);
@@ -222,19 +202,16 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         } else {
             const bool wasGrounded = grounded_;
             const bool jumping = wasGrounded && input.vertical > 0.5;
-
             if (wasGrounded && !jumping) {
                 glm::dvec3 desiredTangent = localForward * input.forward + localRight * input.right;
                 const double desiredLength = glm::length(desiredTangent);
                 if (desiredLength > 1.0) desiredTangent /= desiredLength;
                 desiredTangent *= input.sprint ? 26.0 : 9.0;
-
                 glm::dvec3 tangent = localVelocity_ - localUp * glm::dot(localVelocity_, localUp);
                 const double response = 1.0 - std::exp(-(desiredLength > 1.0e-8 ? 18.0 : 14.0) * dt);
                 tangent += (desiredTangent - tangent) * response;
                 localVelocity_ = tangent;
                 localPosition_ += tangent * dt;
-
                 const glm::dvec3 newDirection = safeNormalize(localPosition_, localUp);
                 const double minimumRadius = localMinimumEyeRadius(*body, newDirection);
                 localPosition_ = newDirection * minimumRadius;
@@ -245,13 +222,10 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
                     localVelocity_ += localUp * (input.sprint ? 28.0 : 14.0);
                     grounded_ = false;
                 }
-
-                if (celestialSystem_ != nullptr) {
+                if (celestialSystem_ != nullptr)
                     localVelocity_ += physicsFrame_.gravityAcceleration(
                         *celestialSystem_, *body, localPosition_, localVelocity_) * dt;
-                }
                 localPosition_ += localVelocity_ * dt;
-
                 const glm::dvec3 direction = safeNormalize(localPosition_, localUp);
                 const double minimumRadius = localMinimumEyeRadius(*body, direction);
                 const double radius = glm::length(localPosition_);
@@ -266,7 +240,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         }
 
         syncWorldStateFromLocal(*body);
-
         if (celestialSystem_ != nullptr) {
             const CelestialBody* owner = celestialSystem_->physicsReferenceBodyAt(position_);
             if (owner == nullptr || owner->id != physicsFrameBodyId_) leavePhysicsFrame();
@@ -280,7 +253,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         glm::dvec3 right = glm::cross(forward, localUp);
         if (glm::dot(right, right) < 1.0e-10) right = safeEast(localUp);
         else right = glm::normalize(right);
-
         if (flightMode_) {
             glm::dvec3 move = forward * input.forward + right * input.right + localUp * input.vertical;
             const double moveLength = glm::length(move);
@@ -288,14 +260,9 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
             velocity_ += (desired - velocity_) * (1.0 - std::exp(-7.0 * dt));
-        } else {
-            velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
-        }
+        } else velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
         position_ += velocity_ * dt;
-
-        if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) {
-            enterPhysicsFrame(*newFrame);
-        }
+        if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) enterPhysicsFrame(*newFrame);
         return;
     }
 
@@ -304,7 +271,6 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     glm::dvec3 right = glm::cross(forward, localUp);
     if (glm::dot(right, right) < 1.0e-10) right = safeEast(localUp);
     else right = glm::normalize(right);
-
     if (flightMode_) {
         glm::dvec3 move = forward * input.forward + right * input.right + localUp * input.vertical;
         const double moveLength = glm::length(move);
@@ -320,8 +286,7 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         const glm::dvec3 east = safeEast(localUp);
         const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
         const glm::dvec3 tangentForward = safeNormalize(
-            std::cos(heading_) * north + std::sin(heading_) * east,
-            north);
+            std::cos(heading_) * north + std::sin(heading_) * east, north);
         const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, localUp), east);
         const double tangentSpeed = input.sprint ? 34.0 : 12.0;
         position_ += (tangentForward * input.forward + tangentRight * input.right) * tangentSpeed * dt;
@@ -335,16 +300,11 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
 
 glm::mat4 PlanetCamera::viewProjection(float aspectRatio) const {
     aspectRatio = std::max(aspectRatio, 0.1F);
-    const glm::dvec3 look = forwardDirection();
-    const glm::dvec3 localUp = up();
-
     const glm::vec3 eye{0.0F};
-    const glm::vec3 target = glm::vec3(look);
-    const glm::vec3 upVector = glm::vec3(localUp);
+    const glm::vec3 target = glm::vec3(forwardDirection());
+    const glm::vec3 upVector = glm::vec3(up());
     const glm::mat4 view = glm::lookAtRH(eye, target, upVector);
-
-    glm::mat4 projection = glm::perspectiveRH_ZO(
-        glm::radians(68.0F), aspectRatio, 0.05F, 50000000.0F);
+    glm::mat4 projection = glm::perspectiveRH_ZO(glm::radians(68.0F), aspectRatio, 0.05F, 50000000.0F);
     projection[1][1] *= -1.0F;
     return projection * view;
 }
