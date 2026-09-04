@@ -1,9 +1,11 @@
 #include "vf/gameplay/PhysicsInteraction.hpp"
 #include "vf/physics/PhysicsWorld.hpp"
 #include "vf/platform/SdlPlatform.hpp"
+#include "vf/player/CharacterController.hpp"
 #include "vf/player/PlanetCamera.hpp"
 #include "vf/render/PhysicsDebugMesh.hpp"
 #include "vf/render/VulkanRenderer.hpp"
+#include "vf/world/CelestialPhysicsFrame.hpp"
 #include "vf/world/CelestialSystem.hpp"
 #include "vf/world/PlanetSurface.hpp"
 
@@ -78,12 +80,11 @@ struct PropVisual {
         glm::vec3(safeNormalize(forward, {0.0, 0.0, -1.0})),
         glm::vec3(safeNormalize(up)));
 
-    // Infinite reversed-Z projection for the metre-to-planetary-scale depth range.
     constexpr float nearPlane = 0.05F;
     const float f = 1.0F / std::tan(glm::radians(68.0F) * 0.5F);
     glm::mat4 projection{0.0F};
     projection[0][0] = f / aspect;
-    projection[1][1] = -f; // Vulkan viewport convention.
+    projection[1][1] = -f;
     projection[2][3] = -1.0F;
     projection[3][2] = nearPlane;
     return projection * view;
@@ -93,7 +94,7 @@ struct PropVisual {
 
 int main() {
     try {
-        vf::SdlPlatform platform{"Voxel Frontier — Physical Planet Rendering R1", 1600, 900};
+        vf::SdlPlatform platform{"Voxel Frontier — Physical Planet R2 Character Controller", 1600, 900};
         vf::VulkanRenderer renderer{platform.window()};
 
         vf::PlanetDefinition planet{};
@@ -163,6 +164,7 @@ int main() {
         vf::PlanetCamera camera{planet, &celestial, asterId};
         const vf::CelestialBody* initialAster = celestial.body(asterId);
         if (initialAster == nullptr) throw std::runtime_error("Aster failed to initialize");
+        vf::CelestialPhysicsFrame asterFrame{asterId};
 
         const glm::dquat initialInverseAster = glm::conjugate(glm::normalize(initialAster->orientation));
         const glm::dvec3 initialCameraPlanet = initialInverseAster * (camera.position() - initialAster->position);
@@ -186,11 +188,13 @@ int main() {
                 glm::dot(planetVector, patchZ),
             };
         };
-        const auto toPlanetPoint = [&](const glm::dvec3& surfacePoint) {
-            return patchOriginPlanet + patchEast * surfacePoint.x + patchUp * surfacePoint.y + patchZ * surfacePoint.z;
+        const glm::dmat3 surfaceFromPlanet{
+            toSurfaceVector({1.0, 0.0, 0.0}),
+            toSurfaceVector({0.0, 1.0, 0.0}),
+            toSurfaceVector({0.0, 0.0, 1.0}),
         };
+        const glm::dquat surfaceFromPlanetRotation = glm::normalize(glm::quat_cast(surfaceFromPlanet));
 
-        // Render and rigid-body contact now share this same analytical planet height source.
         const auto planetSurfaceAtOffset = [&](double eastMeters, double zMeters) {
             const glm::dvec3 direction = safeNormalize(
                 patchUp + patchEast * (eastMeters / planet.radius) + patchZ * (zMeters / planet.radius), patchUp);
@@ -255,8 +259,6 @@ int main() {
                 }
             }
 
-            // Full-body proxy lives just underneath streamed rings. It preserves a continuous
-            // planet silhouette in orbit instead of exposing a floating square tile.
             vf::PlanetMesh proxy = vf::buildPlanetSurface(planet, 48U);
             constexpr double proxyInset = 240.0;
             for (auto& vertex : proxy.vertices) {
@@ -274,21 +276,17 @@ int main() {
         vf::PlanetMesh staticTerrain = buildTerrainLod(lodCenterDirection);
         renderer.uploadPlanetMesh(staticTerrain);
 
-        // Local rigid-body world uses the exact same procedural PlanetDefinition, not a 44 m box floor.
+        // Planet-local physics is now centered on the planet in double precision. Rendering stays
+        // camera-relative, so metre contacts and 6371 km coordinates no longer fight each other.
         vf::CelestialSystem localGravitySystem;
         vf::CelestialBody localGravityBody = aster;
-        localGravityBody.position = toSurfacePoint(glm::dvec3{0.0});
+        localGravityBody.position = {};
         localGravityBody.linearVelocity = {};
         localGravityBody.orbitParentId = 0U;
         localGravityBody.spinRateRadPerSecond = 0.0;
+        localGravityBody.orientation = {1.0, 0.0, 0.0, 0.0};
         localGravityBody.atmosphere.enabled = false;
         localGravityBody.weather.windMultiplier = 0.0;
-        const glm::dmat3 surfaceFromPlanet{
-            toSurfaceVector({1.0, 0.0, 0.0}),
-            toSurfaceVector({0.0, 1.0, 0.0}),
-            toSurfaceVector({0.0, 0.0, 1.0}),
-        };
-        localGravityBody.orientation = glm::normalize(glm::quat_cast(surfaceFromPlanet));
         const std::uint32_t localGravityId = localGravitySystem.addBody(localGravityBody);
 
         vf::PhysicsEnvironment environment{};
@@ -304,10 +302,9 @@ int main() {
         vf::PhysicsInteraction interaction{physics};
 
         const glm::dvec3 pickupGroundPlanet = planetSurfaceAtOffset(0.0, 4.0);
-        const glm::dvec3 pickupNormal = safeNormalize(toSurfaceVector(
-            vf::planetSurfaceNormal(planet, safeNormalize(pickupGroundPlanet))));
-        glm::dvec3 pickupX = glm::dvec3{1.0, 0.0, 0.0};
-        pickupX = safeNormalize(pickupX - pickupNormal * glm::dot(pickupX, pickupNormal), {1.0, 0.0, 0.0});
+        const glm::dvec3 pickupNormal = safeNormalize(
+            vf::planetSurfaceNormal(planet, safeNormalize(pickupGroundPlanet)));
+        glm::dvec3 pickupX = safeEast(pickupNormal);
         const glm::dvec3 pickupZ = safeNormalize(glm::cross(pickupX, pickupNormal), {0.0, 0.0, 1.0});
         const glm::dquat pickupOrientation = glm::normalize(glm::quat_cast(glm::dmat3{pickupX, pickupNormal, pickupZ}));
 
@@ -329,15 +326,18 @@ int main() {
         }};
 
         std::vector<PropVisual> props;
-        props.reserve(specs.size());
+        props.reserve(specs.size() + 2U);
         for (const auto& spec : specs) {
             const glm::dvec3 groundPlanet = planetSurfaceAtOffset(spec.x, spec.z);
-            const glm::dvec3 normal = safeNormalize(toSurfaceVector(
-                vf::planetSurfaceNormal(planet, safeNormalize(groundPlanet))));
+            const glm::dvec3 normal = safeNormalize(
+                vf::planetSurfaceNormal(planet, safeNormalize(groundPlanet)));
+            glm::dvec3 tangentX = safeEast(normal);
+            const glm::dvec3 tangentZ = safeNormalize(glm::cross(tangentX, normal), {0.0, 0.0, 1.0});
+            const glm::dquat orientation = glm::normalize(glm::quat_cast(glm::dmat3{tangentX, normal, tangentZ}));
             vf::RigidBodyDesc desc{};
             desc.mass = spec.mass;
-            desc.position = toSurfacePoint(groundPlanet) + normal * (spec.half.y + 0.035);
-            desc.orientation = pickupOrientation;
+            desc.position = groundPlanet + normal * (spec.half.y + 0.035);
+            desc.orientation = orientation;
             desc.collisionShape = vf::CollisionShape::box(spec.half);
             desc.inertiaDiagonal = boxInertia(desc.mass, spec.half);
             desc.material.friction = spec.friction;
@@ -349,9 +349,34 @@ int main() {
             props.push_back({physics.createRigidBody(desc), spec.half, spec.color, spec.material});
         }
 
-        std::cout << "Voxel Frontier physical rendering rebuild R1\n";
-        std::cout << "Aster: 6371 km | atmosphere: 100 km | streamed terrain rings + full proxy\n";
-        std::cout << "Real shadow depth pass | alpha transmissive glass | analytic atmosphere | reversed-Z\n";
+        const auto addStaticTestBox = [&](double x, double z, const glm::dvec3& half, const glm::vec3& color) {
+            const glm::dvec3 groundPlanet = planetSurfaceAtOffset(x, z);
+            const glm::dvec3 normal = safeNormalize(vf::planetSurfaceNormal(planet, safeNormalize(groundPlanet)));
+            const glm::dvec3 tangentX = safeEast(normal);
+            const glm::dvec3 tangentZ = safeNormalize(glm::cross(tangentX, normal), {0.0, 0.0, 1.0});
+            vf::RigidBodyDesc desc{};
+            desc.motionType = vf::MotionType::Static;
+            desc.mass = 0.0;
+            desc.position = groundPlanet + normal * half.y;
+            desc.orientation = glm::normalize(glm::quat_cast(glm::dmat3{tangentX, normal, tangentZ}));
+            desc.collisionShape = vf::CollisionShape::box(half);
+            desc.aerodynamics.referenceArea = 0.0;
+            props.push_back({physics.createRigidBody(desc), half, color, {0.0F, 0.88F, 0.0F, 0.0F}});
+        };
+        addStaticTestBox(3.2, 6.5, {1.2, 0.18, 0.75}, {0.42F, 0.43F, 0.40F});
+        addStaticTestBox(5.8, 10.0, {1.8, 1.35, 0.30}, {0.38F, 0.39F, 0.42F});
+
+        vf::CharacterControllerSettings characterSettings{};
+        characterSettings.walkSpeed = 9.0;
+        characterSettings.sprintSpeed = 18.0;
+        characterSettings.maxSlopeAngleRadians = glm::radians(50.0);
+        characterSettings.stepHeight = 0.45;
+        vf::CharacterController character{physics, characterSettings};
+        character.resetFromEye(initialCameraPlanet, {}, true);
+
+        std::cout << "Voxel Frontier physical planet R2\n";
+        std::cout << "CharacterVirtual-style capsule | 50 deg slope | 0.45 m step | stick-to-floor\n";
+        std::cout << "Planet-centered double physics | streamed terrain | physical shadows/glass/atmosphere\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
@@ -369,7 +394,6 @@ int main() {
             const auto* currentCinder = celestial.body(cinderId);
             const auto* currentSun = celestial.body(sunId);
             if (currentAster == nullptr || currentSun == nullptr) continue;
-            // Acceptance scene has genuinely zero authored weather wind on every frame.
             currentAster->atmosphere.prevailingWind = {};
             currentAster->weather.windMultiplier = 0.0;
             currentAster->weather.stormIntensity = 0.0;
@@ -385,23 +409,59 @@ int main() {
             movement.flightSpeedSteps = input.flightSpeedSteps;
             movement.sprint = input.sprint;
             movement.toggleFlight = input.toggleFlight;
-            camera.update(movement, dt);
 
-            const glm::dquat inverseAster = glm::conjugate(glm::normalize(currentAster->orientation));
-            const glm::dvec3 cameraPlanet = inverseAster * (camera.position() - currentAster->position);
+            const bool wasFlightMode = camera.flightMode();
+            camera.update(movement, dt);
+            physics.advance(dt);
+
+            glm::dquat inverseAster = glm::conjugate(glm::normalize(currentAster->orientation));
+            glm::dvec3 cameraPlanet = inverseAster * (camera.position() - currentAster->position);
+            glm::dvec3 localCameraVelocity = asterFrame.toLocalVelocity(*currentAster, camera.position(), camera.velocity());
+
+            if (camera.physicsFrameBodyId() == asterId) {
+                if (camera.flightMode()) {
+                    character.resetFromEye(cameraPlanet, localCameraVelocity, false);
+                } else {
+                    if (wasFlightMode) character.resetFromEye(cameraPlanet, localCameraVelocity, false);
+                    const glm::dvec3 forwardPlanet = safeNormalize(inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
+                    const glm::dvec3 gravityUp = character.up();
+                    const glm::dvec3 tangentForward = safeNormalize(
+                        forwardPlanet - gravityUp * glm::dot(forwardPlanet, gravityUp),
+                        patchZ);
+                    const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, gravityUp), patchEast);
+
+                    vf::CharacterControllerInput characterInput{};
+                    characterInput.forward = tangentForward;
+                    characterInput.right = tangentRight;
+                    characterInput.forwardAxis = movement.forward;
+                    characterInput.rightAxis = movement.right;
+                    characterInput.jump = input.ascend && !input.toggleFlight;
+                    characterInput.sprint = input.sprint;
+                    character.update(characterInput, dt);
+
+                    const glm::dvec3 worldEye = asterFrame.toWorldPosition(*currentAster, character.eyePosition());
+                    const glm::dvec3 worldVelocity = asterFrame.toWorldVelocity(
+                        *currentAster, character.eyePosition(), character.linearVelocity());
+                    camera.setExternalWorldState(worldEye, worldVelocity, character.grounded());
+                    inverseAster = glm::conjugate(glm::normalize(currentAster->orientation));
+                    cameraPlanet = inverseAster * (camera.position() - currentAster->position);
+                }
+            }
+
             const glm::dvec3 cameraSurface = toSurfacePoint(cameraPlanet);
-            const glm::dvec3 forwardSurface = safeNormalize(toSurfaceVector(inverseAster * camera.forwardDirection()), {0.0, 0.0, -1.0});
+            const glm::dvec3 forwardPlanet = safeNormalize(inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
+            const glm::dvec3 forwardSurface = safeNormalize(toSurfaceVector(forwardPlanet), {0.0, 0.0, -1.0});
             const glm::dvec3 upSurface = safeNormalize(toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
 
             if (camera.physicsFrameBodyId() == asterId) {
                 vf::PhysicsInteractionInput interactionInput{};
                 interactionInput.rightPressed = input.rightPressed;
                 interactionInput.leftPressed = input.leftPressed;
-                interaction.update(cameraSurface, forwardSurface, interactionInput, dt);
-            } else if (interaction.holding()) interaction.drop();
-            physics.advance(dt);
+                interaction.update(cameraPlanet, forwardPlanet, interactionInput, dt);
+            } else if (interaction.holding()) {
+                interaction.drop();
+            }
 
-            // Recenter the multiscale terrain long before the innermost ring can reveal an edge.
             lodCooldown = std::max(0.0, lodCooldown - dt);
             const double altitude = camera.altitude();
             if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0 && lodCooldown <= 0.0) {
@@ -424,10 +484,11 @@ int main() {
             for (const auto& prop : props) {
                 const vf::RigidBody* body = physics.body(prop.bodyId);
                 if (body == nullptr) continue;
-                vf::appendDebugBox(dynamicMesh, body->position, body->orientation, prop.halfExtents, prop.color, prop.material);
+                const glm::dvec3 renderPosition = toSurfacePoint(body->position);
+                const glm::dquat renderOrientation = glm::normalize(surfaceFromPlanetRotation * body->orientation);
+                vf::appendDebugBox(dynamicMesh, renderPosition, renderOrientation, prop.halfExtents, prop.color, prop.material);
             }
 
-            // A real second celestial proxy remains a finite object; stars/sun are handled in sky rendering.
             if (currentCinder != nullptr) {
                 const glm::dvec3 cinderDirection = safeNormalize(currentCinder->position - camera.position());
                 const glm::dvec3 cinderSurfaceDirection = safeNormalize(toSurfaceVector(inverseAster * cinderDirection));
@@ -480,18 +541,19 @@ int main() {
                 double maxAngular = 0.0;
                 for (const auto& prop : props) {
                     const vf::RigidBody* body = physics.body(prop.bodyId);
-                    if (body == nullptr) continue;
+                    if (body == nullptr || body->motionType != vf::MotionType::Dynamic) continue;
                     if (body->sleeping) ++sleeping;
                     maxLinear = std::max(maxLinear, glm::length(body->linearVelocity));
                     maxAngular = std::max(maxAngular, glm::length(body->angularVelocity));
                 }
                 const double fps = static_cast<double>(diagnosticsFrames) / diagnosticsTime;
                 std::ostringstream title;
-                title << "Voxel Frontier R1 | "
-                      << (camera.flightMode() ? "FLIGHT" : (camera.grounded() ? "GROUNDED" : "AIRBORNE"))
+                title << "Voxel Frontier R2 | "
+                      << (camera.flightMode() ? "FLIGHT" : (character.grounded() ? "CAPSULE-GROUNDED" : "CAPSULE-AIR"))
                       << " | SPEED " << std::fixed << std::setprecision(0) << camera.flightSpeedMps() << " m/s"
                       << " | ALT " << std::setprecision(2) << camera.altitude() / 1000.0 << " km"
-                      << " | WIND OFF | sleeping " << sleeping << '/' << props.size()
+                      << " | SLOPE<=50 | STEP 0.45m"
+                      << " | WIND OFF | sleeping " << sleeping << '/' << specs.size()
                       << " | vMax " << std::setprecision(3) << maxLinear
                       << " | wMax " << maxAngular
                       << " | " << (interaction.holding() ? "HOLDING" : "HANDS FREE")
