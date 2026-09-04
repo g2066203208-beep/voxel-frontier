@@ -1,8 +1,9 @@
 #include "vf/world/PlanetSurface.hpp"
+#include "vf/world/detail/PlanetGenerationInternal.hpp"
 
 #include <algorithm>
-#include <array>
 #include <cmath>
+#include <cstdint>
 #include <stdexcept>
 
 #include <glm/geometric.hpp>
@@ -10,32 +11,6 @@
 namespace vf {
 
 namespace {
-
-[[nodiscard]] double seedPhase(std::uint64_t seed, std::uint64_t channel) {
-    std::uint64_t x = seed + 0x9E3779B97F4A7C15ULL * (channel + 1ULL);
-    x ^= x >> 30U;
-    x *= 0xBF58476D1CE4E5B9ULL;
-    x ^= x >> 27U;
-    x *= 0x94D049BB133111EBULL;
-    x ^= x >> 31U;
-    return static_cast<double>(x & 0xFFFFFFULL) / static_cast<double>(0xFFFFFFULL) * 6.283185307179586;
-}
-
-[[nodiscard]] glm::vec3 terrainColor(double normalizedHeight) {
-    if (normalizedHeight < -0.28) return {0.34F, 0.45F, 0.30F};
-    if (normalizedHeight < 0.18) return {0.24F, 0.56F, 0.24F};
-    if (normalizedHeight < 0.52) return {0.42F, 0.40F, 0.30F};
-    return {0.76F, 0.78F, 0.72F};
-}
-
-[[nodiscard]] glm::vec3 proxyColor(const glm::vec3& baseColor, const glm::dvec3& localDirection) {
-    // Cheap body-fixed surface variation makes axial rotation readable without textures.
-    // The pattern is evaluated in local coordinates and therefore rotates with orientation.
-    const double bands = 0.5 + 0.5 * std::sin(localDirection.y * 17.0 + localDirection.x * 5.0);
-    const double patches = 0.5 + 0.5 * std::sin(localDirection.x * 11.0 - localDirection.z * 13.0);
-    const float scale = static_cast<float>(0.68 + 0.20 * bands + 0.12 * patches);
-    return glm::clamp(baseColor * scale, glm::vec3{0.0F}, glm::vec3{1.0F});
-}
 
 void appendFace(
     PlanetMesh& mesh,
@@ -48,14 +23,30 @@ void appendFace(
     const glm::vec3* constantColor) {
     const std::uint32_t stride = subdivisions + 1U;
     const std::uint32_t baseVertex = static_cast<std::uint32_t>(mesh.vertices.size());
+    const double cell = 2.0 / static_cast<double>(subdivisions);
 
     mesh.vertices.reserve(mesh.vertices.size() + static_cast<std::size_t>(stride) * stride);
     mesh.indices.reserve(mesh.indices.size() + static_cast<std::size_t>(subdivisions) * subdivisions * 6U);
 
     for (std::uint32_t y = 0; y <= subdivisions; ++y) {
-        const double v = -1.0 + 2.0 * static_cast<double>(y) / static_cast<double>(subdivisions);
         for (std::uint32_t x = 0; x <= subdivisions; ++x) {
-            const double u = -1.0 + 2.0 * static_cast<double>(x) / static_cast<double>(subdivisions);
+            double u = -1.0 + 2.0 * static_cast<double>(x) / static_cast<double>(subdivisions);
+            double v = -1.0 + 2.0 * static_cast<double>(y) / static_cast<double>(subdivisions);
+
+            // Interior vertex jitter breaks the obvious square-grid silhouette while keeping cube-face
+            // edges exact, so neighboring faces remain watertight. The renderer shades each triangle
+            // with a derivative face normal, exposing deliberate low-poly facets rather than smoothing them.
+            if (definition != nullptr
+                && x > 0U && x < subdivisions
+                && y > 0U && y < subdivisions) {
+                const std::uint64_t key = static_cast<std::uint64_t>(face) * 0x100000000ULL
+                    + static_cast<std::uint64_t>(y) * stride + x;
+                u += detail::randomSigned(definition->seed ^ 0x243F6A8885A308D3ULL, key) * cell * 0.18;
+                v += detail::randomSigned(definition->seed ^ 0x13198A2E03707344ULL, key) * cell * 0.18;
+                u = std::clamp(u, -1.0, 1.0);
+                v = std::clamp(v, -1.0, 1.0);
+            }
+
             const glm::dvec3 localDirection = cubeSphereDirection(face, u, v);
             const glm::dvec3 worldDirection = orientation
                 ? glm::normalize((*orientation) * localDirection)
@@ -70,8 +61,8 @@ void appendFace(
             vertex.position = glm::vec3(world);
             vertex.normal = glm::vec3(worldDirection);
             vertex.color = constantColor
-                ? proxyColor(*constantColor, localDirection)
-                : terrainColor(normalizedHeight);
+                ? detail::proxyColor(*constantColor, localDirection)
+                : detail::terrainMaterialData(*definition, localDirection, normalizedHeight);
             mesh.vertices.push_back(vertex);
         }
     }
@@ -82,7 +73,15 @@ void appendFace(
             const std::uint32_t i1 = i0 + 1U;
             const std::uint32_t i2 = i0 + stride;
             const std::uint32_t i3 = i2 + 1U;
-            mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
+            const std::uint64_t key = static_cast<std::uint64_t>(face) * 0x100000000ULL
+                + static_cast<std::uint64_t>(y) * subdivisions + x;
+            const bool flipDiagonal = definition != nullptr
+                && detail::random01(definition->seed ^ 0xA4093822299F31D0ULL, key) > 0.5;
+            if (flipDiagonal) {
+                mesh.indices.insert(mesh.indices.end(), {i0, i2, i3, i0, i3, i1});
+            } else {
+                mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
+            }
         }
     }
 }
@@ -105,21 +104,33 @@ glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
 
 double planetHeight(const PlanetDefinition& definition, const glm::dvec3& directionInput) {
     const glm::dvec3 d = glm::normalize(directionInput);
-    const double p0 = seedPhase(definition.seed, 0);
-    const double p1 = seedPhase(definition.seed, 1);
-    const double p2 = seedPhase(definition.seed, 2);
-    const double p3 = seedPhase(definition.seed, 3);
 
-    const double continental =
-        std::sin(d.x * 3.7 + p0) * 0.38 +
-        std::sin(d.y * 4.9 + d.z * 2.1 + p1) * 0.31 +
-        std::cos(d.z * 5.3 - d.x * 1.7 + p2) * 0.22;
-    const double ridges = 1.0 - std::abs(std::sin((d.x * 10.0 + d.y * 8.0 - d.z * 6.0) + p3));
-    const double detail =
-        std::sin(d.x * 21.0 + d.z * 17.0 + p1) *
-        std::cos(d.y * 19.0 - d.x * 11.0 + p2) * 0.12;
+    // 3D noise evaluated on the unit direction is seam-free over the sphere. Broad fBm creates
+    // continents/valleys; a ridged octave creates mountain chains; a smaller octave shapes the
+    // low-poly facets without turning the planet into high-frequency static.
+    const double broad = detail::centeredFbm(
+        definition.seed ^ 0x3C6EF372FE94F82BULL,
+        d * 2.15 + glm::dvec3{2.7, -1.9, 4.1},
+        5U);
+    const double ridgeNoise = detail::valueNoise3(
+        definition.seed ^ 0xBB67AE8584CAA73BULL,
+        d * 5.1 + glm::dvec3{-3.2, 1.4, 2.6});
+    const double ridged = 1.0 - std::abs(ridgeNoise * 2.0 - 1.0);
+    const double fineDetail = detail::centeredFbm(
+        definition.seed ^ 0xA54FF53A5F1D36F1ULL,
+        d * 10.8 + glm::dvec3{0.7, 3.8, -2.4},
+        3U);
+    const double basin = detail::centeredFbm(
+        definition.seed ^ 0x510E527FADE682D1ULL,
+        d * 1.25,
+        3U);
 
-    const double shape = std::clamp(continental + ridges * 0.28 + detail, -1.0, 1.0);
+    double shape = broad * 0.58
+        + (ridged - 0.48) * 0.34
+        + fineDetail * 0.12
+        + basin * 0.10;
+    if (shape < 0.0) shape *= 0.86;
+    shape = std::clamp(shape, -1.0, 1.0);
     return shape * definition.maxElevation;
 }
 
@@ -133,6 +144,14 @@ PlanetMesh buildPlanetSurface(const PlanetDefinition& definition, std::uint32_t 
     PlanetMesh mesh;
     for (std::uint32_t face = 0; face < 6U; ++face) {
         appendFace(mesh, &definition, glm::dvec3{0.0}, nullptr, definition.radius, face, subdivisionsPerFace, nullptr);
+    }
+
+    // Ecology is tied to the high-detail planetary surface LOD. Low-resolution meshes remain
+    // terrain-only; the runtime 64x64 face mesh receives the deterministic tree/rock layer.
+    constexpr std::uint32_t kEcologyMinSubdivisionsPerFace = 24U;
+    if (subdivisionsPerFace >= kEcologyMinSubdivisionsPerFace) {
+        const auto treePlacements = detail::scatterTrees(mesh, definition);
+        detail::scatterRocks(mesh, definition, treePlacements);
     }
     return mesh;
 }
