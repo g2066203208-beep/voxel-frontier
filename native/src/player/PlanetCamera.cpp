@@ -76,14 +76,11 @@ glm::dvec3 PlanetCamera::localForwardDirection(const glm::dvec3& localUp) const 
 
 void PlanetCamera::captureFreeAttitude(const CelestialBody& body) noexcept {
     const glm::dvec3 localUp = safeNormalize(localPosition_);
-    glm::dvec3 forward = safeNormalize(body.orientation * localForwardDirection(localUp), {0.0, 0.0, -1.0});
-    glm::dvec3 upVector = safeNormalize(body.orientation * localUp, {0.0, 1.0, 0.0});
-    glm::dvec3 right = glm::cross(forward, upVector);
-    if (glm::dot(right, right) < 1.0e-12) right = safeEast(upVector);
-    else right = glm::normalize(right);
-    upVector = safeNormalize(glm::cross(right, forward), upVector);
-    freeForward_ = forward;
-    freeUp_ = upVector;
+    // Preserve the exact pair used by the planetary camera. The local radial up is intentionally
+    // not forced perpendicular to the pitched forward vector: glm::lookAtRH accepts that pair and
+    // derives its own orthonormal basis. Re-orthogonalizing here caused the visible snap at handoff.
+    freeForward_ = safeNormalize(body.orientation * localForwardDirection(localUp), {0.0, 0.0, -1.0});
+    freeUp_ = safeNormalize(body.orientation * localUp, {0.0, 1.0, 0.0});
     freeAttitudeValid_ = true;
 }
 
@@ -115,13 +112,12 @@ void PlanetCamera::rotateFreeAttitude(double mouseDx, double mouseDy) noexcept {
     const glm::dvec3 candidateForward = safeNormalize(pitchRotation * freeForward_, freeForward_);
     const glm::dvec3 candidateUp = safeNormalize(pitchRotation * freeUp_, freeUp_);
 
-    // Avoid the lookAt singularity without imposing a world-space up direction in deep space.
-    if (std::abs(glm::dot(candidateForward, candidateUp)) < 0.9995) {
+    // Rotate the complete attitude pair rigidly. This preserves the exact camera roll/up relation
+    // captured at the reference-frame boundary instead of snapping it to a reconstructed basis.
+    if (glm::length2(glm::cross(candidateForward, candidateUp)) > 1.0e-10) {
         freeForward_ = candidateForward;
         freeUp_ = candidateUp;
     }
-    right = safeNormalize(glm::cross(freeForward_, freeUp_), right);
-    freeUp_ = safeNormalize(glm::cross(right, freeForward_), freeUp_);
 }
 
 void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
@@ -151,8 +147,6 @@ void PlanetCamera::syncWorldStateFromLocal(const CelestialBody& body) noexcept {
 
 glm::dvec3 PlanetCamera::up() const {
     if (const auto* body = physicsFrameBody()) {
-        // Keep radial orientation for the whole local planetary frame. When that frame is exited,
-        // leavePhysicsFrame captures this exact vector as the inertial free-space up vector.
         return safeNormalize(body->orientation * safeNormalize(localPosition_));
     }
     if (celestialSystem_ != nullptr && freeAttitudeValid_) return safeNormalize(freeUp_);
