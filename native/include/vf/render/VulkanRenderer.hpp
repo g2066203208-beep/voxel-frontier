@@ -33,9 +33,7 @@ public:
         const glm::vec3& sunDirectionToLight = glm::vec3{0.38F, 0.83F, 0.41F},
         const glm::vec3& sunLinearColor = glm::vec3{1.0F},
         float sunIntensity = 2.2F,
-        const glm::dquat& staticObjectRotation = glm::dquat{1.0, 0.0, 0.0, 0.0},
-        float atmosphereDensity = 1.0F,
-        float solarElevation = 0.7F);
+        const glm::dquat& staticObjectRotation = glm::dquat{1.0, 0.0, 0.0, 0.0});
     void requestResize() noexcept { resizeRequested_ = true; }
 
     [[nodiscard]] const std::string& gpuName() const noexcept { return gpuName_; }
@@ -120,7 +118,6 @@ private:
 
     VkPipelineLayout pipelineLayout_{VK_NULL_HANDLE};
     VkPipeline graphicsPipeline_{VK_NULL_HANDLE};
-    VkPipeline skyPipeline_{VK_NULL_HANDLE};
 
     VkBuffer vertexBuffer_{VK_NULL_HANDLE};
     VkDeviceMemory vertexMemory_{VK_NULL_HANDLE};
