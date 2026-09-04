@@ -186,6 +186,23 @@ int main() {
             };
         };
 
+        // The whole-planet proxies do not depend on the streaming window. Building them once avoids
+        // re-running the expensive procedural terrain sampler every time the viewer moves. GPU Gems
+        // geometry clipmaps likewise keep coarse levels resident and only refresh what motion exposes.
+        const vf::PlanetMesh planetProxyBase = vf::buildPlanetSurface(planet, 48U);
+        vf::PlanetMesh oceanProxyBase{};
+        vf::appendOceanSurfaceProxy(
+            oceanProxyBase,
+            {},
+            planet.radius + planet.seaLevelElevationMeters - 180.0,
+            48U);
+        for (auto& vertex : oceanProxyBase.vertices) {
+            // The current shared transparent path blends every overlapping water level. Until water
+            // owns a dedicated depth-aware renderer, use an opaque stylized ocean surface so nested
+            // transparent layers cannot draw visible square bands.
+            vertex.material.z = 0.0F;
+        }
+
         glm::dvec3 lodCenterDirection = patchUp;
         auto buildTerrainLod = [&](const glm::dvec3& centerDirection) {
             vf::PlanetMesh mesh{};
@@ -202,7 +219,8 @@ int main() {
             };
             // Nested regular grids follow the geometry-clipmap principle: dense near the player,
             // progressively cheaper outwards, with hollow coarser levels instead of duplicating the
-            // full inner area.
+            // full inner area. The next renderer milestone moves displacement itself to the GPU;
+            // this CPU bridge already avoids recomputing fine normals where they cannot be seen.
             const std::array<Ring, 4> rings{{
                 {22000.0, 0.0, 220U, 0.0, 1.5},
                 {190000.0, 20000.0, 180U, 1.0, 8.0},
@@ -224,7 +242,12 @@ int main() {
                                 + centerNorth * (northMeters / planet.radius),
                             centerUp);
                         const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, direction);
-                        const glm::dvec3 normalPlanet = vf::planetSurfaceNormal(planet, direction);
+                        // A full finite-difference normal performs three additional procedural height
+                        // queries. Keep it for the nearest ring; distant rings use their radial normal,
+                        // which is visually indistinguishable at their screen-space triangle size.
+                        const glm::dvec3 normalPlanet = ring.inner <= 0.0
+                            ? vf::planetSurfaceNormal(planet, direction)
+                            : direction;
                         const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
                         const double edgeBlend = std::clamp((edge - 0.88) / 0.12, 0.0, 1.0);
                         glm::dvec3 worldPoint = direction * (planet.radius + terrain.elevationMeters);
@@ -253,54 +276,29 @@ int main() {
                         mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
                     }
                 }
-
-                // Ocean uses the same nested topology at a constant sea-level geoid. It can exist
-                // underneath land because opaque terrain depth rejects it there; this removes costly
-                // coastline triangulation while leaving a continuous, crack-free water surface.
-                const std::uint32_t oceanBase = static_cast<std::uint32_t>(mesh.vertices.size());
-                for (std::uint32_t y = 0; y <= ring.resolution; ++y) {
-                    const double fy = static_cast<double>(y) / static_cast<double>(ring.resolution);
-                    const double northMeters = -ring.half + 2.0 * ring.half * fy;
-                    for (std::uint32_t x = 0; x <= ring.resolution; ++x) {
-                        const double fx = static_cast<double>(x) / static_cast<double>(ring.resolution);
-                        const double eastMeters = -ring.half + 2.0 * ring.half * fx;
-                        const glm::dvec3 direction = safeNormalize(
-                            centerUp + centerEast * (eastMeters / planet.radius)
-                                + centerNorth * (northMeters / planet.radius),
-                            centerUp);
-                        const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
-                        const double edgeBlend = std::clamp((edge - 0.88) / 0.12, 0.0, 1.0);
-                        const double oceanInset = ring.terrainBaseInset * 0.12
-                            + edgeBlend * ring.terrainEdgeInset * 0.05;
-                        const glm::dvec3 waterPoint = direction
-                            * (planet.radius + planet.seaLevelElevationMeters - oceanInset);
-                        vf::PlanetVertex vertex{};
-                        vertex.position = glm::vec3(toSurfacePoint(waterPoint));
-                        vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(direction)));
-                        vertex.color = {0.018F, 0.145F, 0.255F};
-                        vertex.material = {-1.0F, 0.055F, 0.72F, 0.0F};
-                        mesh.vertices.push_back(vertex);
-                    }
-                }
-                for (std::uint32_t y = 0; y < ring.resolution; ++y) {
-                    const double cy = -ring.half + 2.0 * ring.half
-                        * (static_cast<double>(y) + 0.5) / ring.resolution;
-                    for (std::uint32_t x = 0; x < ring.resolution; ++x) {
-                        const double cx = -ring.half + 2.0 * ring.half
-                            * (static_cast<double>(x) + 0.5) / ring.resolution;
-                        if (ring.inner > 0.0 && std::max(std::abs(cx), std::abs(cy)) < ring.inner) continue;
-                        const std::uint32_t i0 = oceanBase + y * stride + x;
-                        const std::uint32_t i1 = i0 + 1U;
-                        const std::uint32_t i2 = i0 + stride;
-                        const std::uint32_t i3 = i2 + 1U;
-                        mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
-                    }
-                }
             }
 
-            // Coarse full-planet proxies fill the horizon/space view. They are inset behind the
-            // active clipmap window so transitions are hidden by the higher-resolution rings.
-            vf::PlanetMesh proxy = vf::buildPlanetSurface(planet, 48U);
+            // Water is deliberately one continuous local geoid patch, not one transparent square per
+            // terrain LOD. The old four overlapping water rings were the source of the visible square
+            // bands: alpha blending accumulated twice in every overlap strip. A single patch removes
+            // those internal LOD boundaries entirely; the coarse planet ocean proxy only takes over
+            // far beyond the local patch.
+            vf::PlanetMesh localOcean = vf::buildOceanSurfacePatch(
+                planet,
+                centerUp,
+                1200000.0,
+                256U,
+                0.0);
+            for (auto& vertex : localOcean.vertices) {
+                vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
+                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+                vertex.material.z = 0.0F;
+            }
+            appendMesh(mesh, localOcean);
+
+            // Coarse full-planet proxies fill the horizon/space view. They are copied from resident
+            // bases instead of procedurally rebuilt for every streamed window.
+            vf::PlanetMesh proxy = planetProxyBase;
             constexpr double proxyInset = 240.0;
             for (auto& vertex : proxy.vertices) {
                 glm::dvec3 p = glm::dvec3(vertex.position);
@@ -311,12 +309,7 @@ int main() {
             }
             appendMesh(mesh, proxy);
 
-            vf::PlanetMesh oceanProxy{};
-            vf::appendOceanSurfaceProxy(
-                oceanProxy,
-                {},
-                planet.radius + planet.seaLevelElevationMeters - 180.0,
-                48U);
+            vf::PlanetMesh oceanProxy = oceanProxyBase;
             for (auto& vertex : oceanProxy.vertices) {
                 vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
@@ -368,7 +361,7 @@ int main() {
 
         std::cout << "Voxel Frontier Earthlike planet runtime\n";
         std::cout << "Generic structural damage | Earthlike relief | continuous ocean geoid\n";
-        std::cout << "Async terrain synthesis | smooth inertial camera | 145 km optical atmosphere\n";
+        std::cout << "Async terrain synthesis | speed-aware streaming | software-render screenshot gate\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
@@ -455,19 +448,24 @@ int main() {
             const glm::dvec3 upSurface = safeNormalize(
                 toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
 
-            // CPU synthesis is asynchronous. The renderer owns the GPU-side streaming policy, so a
-            // completed terrain window can be handed over without making the simulation thread wait
-            // for procedural generation.
+            // CPU synthesis stays asynchronous, but high flight speed no longer asks the worker to
+            // rebuild a multi-million-metre window every few kilometres. The update distance grows
+            // with travel speed, matching the motion-coherent update principle of geometry clipmaps.
             lodCooldown = std::max(0.0, lodCooldown - dt);
             const double altitude = camera.altitude();
             if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0) {
                 const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
                 const double arcDistance = std::acos(std::clamp(
                     glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
-                const double threshold = altitude < 20000.0 ? 8000.0
+                const double baseThreshold = altitude < 20000.0 ? 8000.0
                     : (altitude < 100000.0 ? 40000.0
                     : (altitude < 350000.0 ? 120000.0 : 350000.0));
-                const double prefetchThreshold = threshold * 0.42;
+                const double flightStreamingDistance = camera.flightMode()
+                    ? std::clamp(camera.flightSpeedMps() * 0.65, 0.0, 1300000.0)
+                    : 0.0;
+                const double threshold = std::max(baseThreshold, flightStreamingDistance);
+                const double prefetchThreshold = threshold
+                    * (camera.flightSpeedMps() > 5000.0 ? 0.72 : 0.42);
 
                 if (!terrainBuildInFlight && lodCooldown <= 0.0 && arcDistance > prefetchThreshold) {
                     const glm::dvec3 requestedDirection = cameraDirection;
@@ -482,10 +480,23 @@ int main() {
                         == std::future_status::ready) {
                     auto completed = terrainBuildFuture.get();
                     terrainBuildInFlight = false;
-                    lodCenterDirection = completed.first;
-                    staticTerrain = std::move(completed.second);
-                    renderer.uploadPlanetMesh(staticTerrain);
-                    lodCooldown = 0.12;
+                    const glm::dvec3 currentDirection = safeNormalize(cameraPlanet, completed.first);
+                    const double staleDistance = std::acos(std::clamp(
+                        glm::dot(currentDirection, completed.first), -1.0, 1.0)) * planet.radius;
+                    const double acceptanceDistance = std::max(
+                        threshold * 1.15,
+                        camera.flightMode() ? camera.flightSpeedMps() * 0.30 : 0.0);
+
+                    // A result that the player has already outrun is never copied into both Vulkan
+                    // frame buffers. Discard it and let the next request target the current position.
+                    if (staleDistance <= acceptanceDistance) {
+                        lodCenterDirection = completed.first;
+                        staticTerrain = std::move(completed.second);
+                        renderer.uploadPlanetMesh(staticTerrain);
+                        lodCooldown = camera.flightSpeedMps() > 5000.0 ? 0.35 : 0.12;
+                    } else {
+                        lodCooldown = 0.0;
+                    }
                 }
             }
 
@@ -565,7 +576,7 @@ int main() {
                     planet, safeNormalize(cameraPlanet, patchUp));
                 const bool overOcean = terrainBelow.submerged(planet);
                 std::ostringstream title;
-                title << "Voxel Frontier R3 | "
+                title << "Voxel Frontier R4 | "
                       << (camera.flightMode() ? "FLIGHT"
                           : (character.grounded() ? "CAPSULE-GROUNDED" : "CAPSULE-AIR"))
                       << " | SPEED " << std::fixed << std::setprecision(0)
