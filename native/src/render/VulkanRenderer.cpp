@@ -549,7 +549,7 @@ void VulkanRenderer::createBuffer(
     if (result != VK_SUCCESS) fail("vkCreateBuffer failed", result);
 
     VkMemoryRequirements requirements{};
-    vkGetBufferMemoryRequirements(buffer, &requirements);
+    vkGetBufferMemoryRequirements(device_, buffer, &requirements);
 
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -590,7 +590,7 @@ void VulkanRenderer::createDepthResources() {
     result = vkAllocateMemory(device_, &allocInfo, nullptr, &depthMemory_);
     if (result != VK_SUCCESS) fail("vkAllocateMemory(depth) failed", result);
     result = vkBindImageMemory(device_, depthImage_, depthMemory_, 0);
-    if (result != VK_SUCCESS) fail("vkBindImageMemory(depth) failed", result);
+    if (result != VK_SUCCESS) fail("vkBindImageMemory failed", result);
 
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
