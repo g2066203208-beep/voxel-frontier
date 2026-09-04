@@ -166,6 +166,13 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     heading_ += input.mouseDx * mouseSensitivity;
     pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.52, 1.52);
 
+    if (std::abs(input.flightSpeedSteps) > 1.0e-9) {
+        creativeFlightSpeedMps_ = std::clamp(
+            creativeFlightSpeedMps_ * std::pow(2.0, input.flightSpeedSteps * 0.5),
+            25.0,
+            2000000.0);
+    }
+
     if (const auto* body = physicsFrameBody()) syncWorldStateFromLocal(*body);
 
     if (celestialSystem_ != nullptr) {
@@ -198,13 +205,11 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             glm::dvec3 move = localForward * input.forward + localRight * input.right + localUp * input.vertical;
             const double moveLength = glm::length(move);
             if (moveLength > 1.0) move /= moveLength;
-            const double targetSpeed = input.sprint ? 1200.0 : 320.0;
+            const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
-            localVelocity_ += (desired - localVelocity_) * (1.0 - std::exp(-6.0 * dt));
+            localVelocity_ += (desired - localVelocity_) * (1.0 - std::exp(-7.0 * dt));
             localPosition_ += localVelocity_ * dt;
 
-            // Creative flight ignores gravity, not solid ground. Downward flight now lands on the
-            // same collision surface used by walking/jumping instead of tunnelling through a planet.
             const glm::dvec3 direction = safeNormalize(localPosition_, localUp);
             const double minimumRadius = localMinimumEyeRadius(*body, direction);
             const double radius = glm::length(localPosition_);
@@ -280,9 +285,9 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             glm::dvec3 move = forward * input.forward + right * input.right + localUp * input.vertical;
             const double moveLength = glm::length(move);
             if (moveLength > 1.0) move /= moveLength;
-            const double targetSpeed = input.sprint ? 1600.0 : 420.0;
+            const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
-            velocity_ += (desired - velocity_) * (1.0 - std::exp(-6.0 * dt));
+            velocity_ += (desired - velocity_) * (1.0 - std::exp(-7.0 * dt));
         } else {
             velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
         }
@@ -304,7 +309,7 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         glm::dvec3 move = forward * input.forward + right * input.right + localUp * input.vertical;
         const double moveLength = glm::length(move);
         if (moveLength > 1.0) move /= moveLength;
-        const double speed = input.sprint ? 70.0 : 28.0;
+        const double speed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
         velocity_ = moveLength > 1.0e-8 ? move * speed : glm::dvec3{};
         position_ += velocity_ * dt;
         const glm::dvec3 direction = safeNormalize(position_);
@@ -339,7 +344,7 @@ glm::mat4 PlanetCamera::viewProjection(float aspectRatio) const {
     const glm::mat4 view = glm::lookAtRH(eye, target, upVector);
 
     glm::mat4 projection = glm::perspectiveRH_ZO(
-        glm::radians(68.0F), aspectRatio, 0.05F, 2000000.0F);
+        glm::radians(68.0F), aspectRatio, 0.05F, 50000000.0F);
     projection[1][1] *= -1.0F;
     return projection * view;
 }
