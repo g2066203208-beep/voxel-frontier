@@ -13,7 +13,11 @@ SdlPlatform::SdlPlatform(std::string_view title, std::int32_t width, std::int32_
     SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "0");
     SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, "1");
 
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD | SDL_INIT_AUDIO))
+    // The current native runtime has no audio device/stream yet. Initializing SDL audio here made
+    // the renderer depend on a completely unrelated hardware subsystem and prevented headless
+    // software-Vulkan visual validation. Add SDL_INIT_AUDIO only when the audio system owns an
+    // actual device lifecycle; video/events/gamepad are the subsystems used by this platform layer.
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
         throw std::runtime_error(std::string{"SDL_Init failed: "} + SDL_GetError());
 
     window_ = SDL_CreateWindow(
