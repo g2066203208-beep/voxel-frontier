@@ -26,60 +26,85 @@ void require(bool condition, std::string_view message) {
 void testMouseRightTurnsCameraRight() {
     const vf::PlanetDefinition planet{};
     vf::PlanetCamera camera{planet};
-
     const glm::dvec3 before = tangentForward(camera);
     const glm::dvec3 right = glm::normalize(glm::cross(before, camera.up()));
-
     vf::PlanetMovementInput input{};
     input.mouseDx = 100.0;
     camera.update(input, 1.0 / 60.0);
-
-    const glm::dvec3 after = tangentForward(camera);
-    require(glm::dot(after, right) > 0.1,
-        "positive camera mouse X must rotate the view toward camera-right");
+    require(glm::dot(tangentForward(camera), right) > 0.1,
+        "positive camera mouse X must rotate view toward camera-right");
 }
 
 void testMouseLeftTurnsCameraLeft() {
     const vf::PlanetDefinition planet{};
     vf::PlanetCamera camera{planet};
-
     const glm::dvec3 before = tangentForward(camera);
     const glm::dvec3 right = glm::normalize(glm::cross(before, camera.up()));
-
     vf::PlanetMovementInput input{};
     input.mouseDx = -100.0;
     camera.update(input, 1.0 / 60.0);
-
-    const glm::dvec3 after = tangentForward(camera);
-    require(glm::dot(after, right) < -0.1,
-        "negative camera mouse X must rotate the view toward camera-left");
+    require(glm::dot(tangentForward(camera), right) < -0.1,
+        "negative camera mouse X must rotate view toward camera-left");
 }
 
 void testVerticalMouseDirectionRemainsConventional() {
     const vf::PlanetDefinition planet{};
     vf::PlanetCamera camera{planet};
     const double beforeVertical = glm::dot(camera.forwardDirection(), camera.up());
-
     vf::PlanetMovementInput input{};
     input.mouseDy = 100.0;
     camera.update(input, 1.0 / 60.0);
-
-    const double afterVertical = glm::dot(camera.forwardDirection(), camera.up());
-    require(afterVertical < beforeVertical,
-        "positive SDL mouse Y (mouse down) must pitch the view downward");
+    require(glm::dot(camera.forwardDirection(), camera.up()) < beforeVertical,
+        "positive SDL mouse Y must pitch the view downward");
 }
 
 void testFlightSpeedUsesLogarithmicWheelSteps() {
     const vf::PlanetDefinition planet{};
     vf::PlanetCamera camera{planet};
     const double before = camera.flightSpeedMps();
-
     vf::PlanetMovementInput input{};
     input.flightSpeedSteps = 2.0;
     camera.update(input, 1.0 / 60.0);
-
     require(camera.flightSpeedMps() > before * 1.99 && camera.flightSpeedMps() < before * 2.01,
         "two positive wheel steps must double creative flight speed");
+
+    input = {};
+    input.flightSpeedSteps = -40.0;
+    camera.update(input, 1.0 / 60.0);
+    require(camera.flightSpeedMps() >= 0.999 && camera.flightSpeedMps() <= 1.001,
+        "creative flight must allow a 1 m/s inspection speed without going below it");
+}
+
+void testDMovesToCameraRightInFlight() {
+    const vf::PlanetDefinition planet{};
+    vf::PlanetCamera camera{planet};
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+
+    const glm::dvec3 start = camera.position();
+    const glm::dvec3 right = glm::normalize(glm::cross(camera.forwardDirection(), camera.up()));
+    vf::PlanetMovementInput d{};
+    d.right = 1.0;
+    for (int i = 0; i < 12; ++i) camera.update(d, 1.0 / 60.0);
+    require(glm::dot(camera.position() - start, right) > 1.0,
+        "D / positive-right input must move in camera-right direction");
+}
+
+void testAMovesToCameraLeftInFlight() {
+    const vf::PlanetDefinition planet{};
+    vf::PlanetCamera camera{planet};
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+
+    const glm::dvec3 start = camera.position();
+    const glm::dvec3 right = glm::normalize(glm::cross(camera.forwardDirection(), camera.up()));
+    vf::PlanetMovementInput a{};
+    a.right = -1.0;
+    for (int i = 0; i < 12; ++i) camera.update(a, 1.0 / 60.0);
+    require(glm::dot(camera.position() - start, right) < -1.0,
+        "A / negative-right input must move in camera-left direction");
 }
 
 } // namespace
@@ -89,6 +114,8 @@ int main() {
     testMouseLeftTurnsCameraLeft();
     testVerticalMouseDirectionRemainsConventional();
     testFlightSpeedUsesLogarithmicWheelSteps();
+    testDMovesToCameraRightInFlight();
+    testAMovesToCameraLeftInFlight();
     std::cout << "vf_camera_input_tests: PASS\n";
     return 0;
 }
