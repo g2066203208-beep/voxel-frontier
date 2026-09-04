@@ -24,6 +24,17 @@ struct SurfaceFrame {
     glm::dvec3 up{0.0, 1.0, 0.0};
 };
 
+struct LandformProfile {
+    // Broad semantic fields in [0,1]. They describe why terrain exists before fine noise is added.
+    double continent{0.5};
+    double mountainBelt{0.0};
+    double valleyCorridor{0.0};
+    double basin{0.0};
+    double plateau{0.0};
+    double forestCore{0.0};
+    double talusField{0.0};
+};
+
 struct LocalVertex {
     glm::dvec3 position{};
     glm::vec3 material{};
@@ -45,14 +56,17 @@ struct Placement {
 [[nodiscard]] double seedPhase(std::uint64_t seed, std::uint64_t channel) noexcept;
 [[nodiscard]] double valueNoise3(std::uint64_t seed, const glm::dvec3& p) noexcept;
 [[nodiscard]] double centeredFbm(std::uint64_t seed, const glm::dvec3& p, unsigned octaves) noexcept;
+[[nodiscard]] LandformProfile semanticLandform(const PlanetDefinition&, const glm::dvec3&) noexcept;
 [[nodiscard]] double terrainMoisture(const PlanetDefinition&, const glm::dvec3&) noexcept;
 [[nodiscard]] double terrainTemperature(const PlanetDefinition&, const glm::dvec3&, double normalizedHeight) noexcept;
 [[nodiscard]] glm::vec3 terrainMaterialData(const PlanetDefinition&, const glm::dvec3&, double normalizedHeight) noexcept;
 [[nodiscard]] glm::vec3 proxyColor(const glm::vec3&, const glm::dvec3&);
 [[nodiscard]] SurfaceFrame frameForDirection(const glm::dvec3&);
+[[nodiscard]] std::uint32_t dominantCubeFace(const glm::dvec3&) noexcept;
 [[nodiscard]] glm::dvec3 transformLocalPoint(const glm::dvec3&, const glm::dvec3&, const SurfaceFrame&, double yaw, double leanEast, double leanNorth) noexcept;
 [[nodiscard]] glm::dvec3 transformLocalVector(const glm::dvec3&, const SurfaceFrame&, double yaw, double leanEast, double leanNorth) noexcept;
 void appendLocalMesh(PlanetMesh&, const LocalMesh&, const glm::dvec3&, const SurfaceFrame&, double yaw, double leanEast, double leanNorth);
+void appendDrawRange(PlanetMesh&, std::uint32_t firstIndex, std::uint32_t indexCount, PlanetDrawClass, float representativeRadius = 0.0F);
 void appendTriangle(LocalMesh&, std::uint32_t, std::uint32_t, std::uint32_t);
 void appendQuadBest(LocalMesh&, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t);
 [[nodiscard]] LocalMesh buildStylizedTree(std::uint64_t seed);

@@ -24,6 +24,7 @@ add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
     src/world/OceanSurface.cpp
     src/world/PlanetProcedural.cpp
+    src/world/PlanetVisibility.cpp
     src/world/ProceduralTree.cpp
     src/world/PlanetEcology.cpp
     src/world/CelestialSystem.cpp
@@ -105,13 +106,15 @@ if(VF_BUILD_RUNTIME)
     set(VF_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
     set(VF_VERTEX_SPV "${VF_GENERATED_DIR}/planet.vert.spv")
     set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
+    set(VF_SKY_VERTEX_SPV "${VF_GENERATED_DIR}/sky.vert.spv")
+    set(VF_SKY_FRAGMENT_SPV "${VF_GENERATED_DIR}/sky.frag.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
     # Slang renames SPIR-V entry points to "main" by default. The Vulkan runtime
-    # explicitly requests vertexMain/fragmentMain in VkPipelineShaderStageCreateInfo,
-    # so preserve those source names in the generated OpEntryPoint instructions.
+    # explicitly requests source entry names in VkPipelineShaderStageCreateInfo,
+    # so preserve those names in the generated OpEntryPoint instructions.
     add_custom_command(
-        OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}"
+        OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SKY_VERTEX_SPV}" "${VF_SKY_FRAGMENT_SPV}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry vertexMain -stage vertex -fvk-use-entrypoint-name
@@ -119,7 +122,13 @@ if(VF_BUILD_RUNTIME)
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry fragmentMain -stage fragment -fvk-use-entrypoint-name
                 -matrix-layout-column-major -O2 -o "${VF_FRAGMENT_SPV}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/sky.slang"
+                -target spirv -entry skyVertexMain -stage vertex -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_SKY_VERTEX_SPV}"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/sky.slang"
+                -target spirv -entry skyFragmentMain -stage fragment -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_SKY_FRAGMENT_SPV}"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/sky.slang"
         VERBATIM
     )
 
@@ -128,9 +137,11 @@ if(VF_BUILD_RUNTIME)
         COMMAND ${CMAKE_COMMAND}
             "-DVERT=${VF_VERTEX_SPV}"
             "-DFRAG=${VF_FRAGMENT_SPV}"
+            "-DSKY_VERT=${VF_SKY_VERTEX_SPV}"
+            "-DSKY_FRAG=${VF_SKY_FRAGMENT_SPV}"
             "-DOUT=${VF_SHADER_HEADER}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
-        DEPENDS "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
+        DEPENDS "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SKY_VERTEX_SPV}" "${VF_SKY_FRAGMENT_SPV}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
         VERBATIM
     )
 
@@ -214,6 +225,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_electromagnetic_radiation_tests tests/ElectromagneticRadiationTests.cpp)
     target_link_libraries(vf_electromagnetic_radiation_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_electromagnetic_radiation_tests COMMAND vf_electromagnetic_radiation_tests)
+
+    add_executable(vf_planet_render_batch_tests tests/PlanetRenderBatchTests.cpp)
+    target_link_libraries(vf_planet_render_batch_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_planet_render_batch_tests COMMAND vf_planet_render_batch_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests

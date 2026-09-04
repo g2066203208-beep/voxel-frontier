@@ -104,11 +104,94 @@ namespace vf::detail {
     return fbm3(seed, p, octaves) * 2.0 - 1.0;
 }
 
+[[nodiscard]] glm::dvec3 seededUnitVector(std::uint64_t seed, std::uint64_t channel) noexcept {
+    glm::dvec3 v{
+        randomSigned(seed, channel + 0U),
+        randomSigned(seed, channel + 1U),
+        randomSigned(seed, channel + 2U),
+    };
+    const double lengthSquared = glm::dot(v, v);
+    if (lengthSquared <= 1.0e-12) return {0.0, 1.0, 0.0};
+    return v / std::sqrt(lengthSquared);
+}
+
+[[nodiscard]] double gaussianFalloff(double x, double sigma) noexcept {
+    const double safeSigma = std::max(1.0e-6, sigma);
+    const double normalized = x / safeSigma;
+    return std::exp(-normalized * normalized);
+}
+
+[[nodiscard]] LandformProfile semanticLandform(
+    const PlanetDefinition& definition,
+    const glm::dvec3& directionInput) noexcept {
+    const glm::dvec3 d = glm::normalize(directionInput);
+    const glm::dvec3 ridgeNormal = seededUnitVector(definition.seed ^ 0x5A17C9E3D4B286F1ULL, 600U);
+    const glm::dvec3 valleyNormal = seededUnitVector(definition.seed ^ 0xA55A6A6D9C27F2C5ULL, 620U);
+    const glm::dvec3 basinCenter = seededUnitVector(definition.seed ^ 0xB7E151628AED2A6BULL, 640U);
+
+    const double continentNoise = 0.5 + 0.5 * centeredFbm(
+        definition.seed ^ 0x6A09E667F3BCC909ULL,
+        d * 1.35 + glm::dvec3{1.7, -2.1, 0.9},
+        3U);
+    const double mountainDistance = std::abs(glm::dot(d, ridgeNormal));
+    const double ridgeModulator = 0.62 + 0.38 * valueNoise3(
+        definition.seed ^ 0xBB67AE8584CAA73BULL,
+        d * 4.2 + glm::dvec3{-1.0, 2.7, 3.8});
+    const double mountainBelt = std::clamp(gaussianFalloff(mountainDistance, 0.115) * ridgeModulator, 0.0, 1.0);
+
+    const double valleyDistance = std::abs(glm::dot(d, valleyNormal));
+    const double valleyModulator = 0.55 + 0.45 * valueNoise3(
+        definition.seed ^ 0x3C6EF372FE94F82BULL,
+        d * 3.5 + glm::dvec3{4.4, -3.1, 0.6});
+    const double valleyCorridor = std::clamp(gaussianFalloff(valleyDistance, 0.082) * valleyModulator, 0.0, 1.0);
+
+    const double basinDot = std::clamp(glm::dot(d, basinCenter), -1.0, 1.0);
+    const double basinAngle = std::acos(basinDot);
+    const double basin = gaussianFalloff(basinAngle, 0.34);
+
+    const double plateauNoise = valueNoise3(
+        definition.seed ^ 0x510E527FADE682D1ULL,
+        d * 2.35 + glm::dvec3{-4.0, 1.2, 2.5});
+    const double plateau = smoothCurve((plateauNoise - 0.56) / 0.30);
+
+    const double forestField = 0.5 + 0.5 * centeredFbm(
+        definition.seed ^ 0x8CB92BA72F3D8DD7ULL,
+        d * 3.9 + glm::dvec3{2.3, 5.1, -1.7},
+        2U);
+    const double forestCore = smoothCurve((forestField - 0.42) / 0.42);
+
+    const double talusNoise = valueNoise3(
+        definition.seed ^ 0x94D049BB133111EBULL,
+        d * 7.2 + glm::dvec3{-2.0, 6.2, 1.1});
+    const double talusField = std::clamp(
+        mountainBelt * (0.45 + 0.55 * talusNoise)
+            + valleyCorridor * 0.18,
+        0.0,
+        1.0);
+
+    return {
+        continentNoise,
+        mountainBelt,
+        valleyCorridor,
+        basin,
+        plateau,
+        forestCore,
+        talusField,
+    };
+}
+
 [[nodiscard]] double terrainMoisture(const PlanetDefinition& definition, const glm::dvec3& directionInput) noexcept {
     const glm::dvec3 d = glm::normalize(directionInput);
-    const double broad = centeredFbm(definition.seed ^ 0x2B992DDFA23249D6ULL, d * 3.2, 4U);
-    const double pockets = centeredFbm(definition.seed ^ 0x9E3779B185EBCA87ULL, d * 7.6, 3U);
-    return std::clamp(0.54 + broad * 0.31 + pockets * 0.15, 0.0, 1.0);
+    const LandformProfile landform = semanticLandform(definition, d);
+    const double broad = centeredFbm(definition.seed ^ 0x2B992DDFA23249D6ULL, d * 3.2, 3U);
+    const double pockets = centeredFbm(definition.seed ^ 0x9E3779B185EBCA87ULL, d * 7.6, 2U);
+    return std::clamp(
+        0.49 + broad * 0.25 + pockets * 0.10
+            + landform.valleyCorridor * 0.22
+            + landform.basin * 0.18
+            - landform.mountainBelt * 0.09,
+        0.0,
+        1.0);
 }
 
 [[nodiscard]] double terrainTemperature(
@@ -117,7 +200,7 @@ namespace vf::detail {
     double normalizedHeight) noexcept {
     const glm::dvec3 d = glm::normalize(directionInput);
     const double latitude = std::abs(d.y);
-    const double weather = centeredFbm(definition.seed ^ 0xDB4F0B9175AE2165ULL, d * 4.5, 3U);
+    const double weather = centeredFbm(definition.seed ^ 0xDB4F0B9175AE2165ULL, d * 4.5, 2U);
     return std::clamp(1.02 - latitude * 0.78 - std::max(0.0, normalizedHeight) * 0.46 + weather * 0.08, 0.0, 1.0);
 }
 

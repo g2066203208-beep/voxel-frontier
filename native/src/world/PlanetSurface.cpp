@@ -23,6 +23,7 @@ void appendFace(
     const glm::vec3* constantColor) {
     const std::uint32_t stride = subdivisions + 1U;
     const std::uint32_t baseVertex = static_cast<std::uint32_t>(mesh.vertices.size());
+    const std::uint32_t firstIndex = static_cast<std::uint32_t>(mesh.indices.size());
     const double cell = 2.0 / static_cast<double>(subdivisions);
 
     mesh.vertices.reserve(mesh.vertices.size() + static_cast<std::size_t>(stride) * stride);
@@ -33,9 +34,6 @@ void appendFace(
             double u = -1.0 + 2.0 * static_cast<double>(x) / static_cast<double>(subdivisions);
             double v = -1.0 + 2.0 * static_cast<double>(y) / static_cast<double>(subdivisions);
 
-            // Interior vertex jitter breaks the obvious square-grid silhouette while keeping cube-face
-            // edges exact, so neighboring faces remain watertight. The renderer shades each triangle
-            // with a derivative face normal, exposing deliberate low-poly facets rather than smoothing them.
             if (definition != nullptr
                 && x > 0U && x < subdivisions
                 && y > 0U && y < subdivisions) {
@@ -84,6 +82,11 @@ void appendFace(
             }
         }
     }
+
+    if (definition != nullptr) {
+        const std::uint32_t indexCount = static_cast<std::uint32_t>(mesh.indices.size()) - firstIndex;
+        detail::appendDrawRange(mesh, firstIndex, indexCount, PlanetDrawClass::TerrainPatch);
+    }
 }
 
 } // namespace
@@ -91,12 +94,12 @@ void appendFace(
 glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
     glm::dvec3 cube{};
     switch (face) {
-    case 0: cube = {1.0, v, -u}; break;   // +X
-    case 1: cube = {-1.0, v, u}; break;   // -X
-    case 2: cube = {u, 1.0, -v}; break;   // +Y
-    case 3: cube = {u, -1.0, v}; break;   // -Y
-    case 4: cube = {u, v, 1.0}; break;    // +Z
-    case 5: cube = {-u, v, -1.0}; break;  // -Z
+    case 0: cube = {1.0, v, -u}; break;
+    case 1: cube = {-1.0, v, u}; break;
+    case 2: cube = {u, 1.0, -v}; break;
+    case 3: cube = {u, -1.0, v}; break;
+    case 4: cube = {u, v, 1.0}; break;
+    case 5: cube = {-u, v, -1.0}; break;
     default: throw std::out_of_range("cubeSphereDirection face must be 0..5");
     }
     return glm::normalize(cube);
@@ -104,32 +107,43 @@ glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
 
 double planetHeight(const PlanetDefinition& definition, const glm::dvec3& directionInput) {
     const glm::dvec3 d = glm::normalize(directionInput);
+    const detail::LandformProfile landform = detail::semanticLandform(definition, d);
 
-    // 3D noise evaluated on the unit direction is seam-free over the sphere. Broad fBm creates
-    // continents/valleys; a ridged octave creates mountain chains; a smaller octave shapes the
-    // low-poly facets without turning the planet into high-frequency static.
-    const double broad = detail::centeredFbm(
-        definition.seed ^ 0x3C6EF372FE94F82BULL,
-        d * 2.15 + glm::dvec3{2.7, -1.9, 4.1},
-        5U);
-    const double ridgeNoise = detail::valueNoise3(
+    // V4 terrain is semantic-first: a continental field establishes land/sea, a deterministic
+    // great-circle mountain belt builds long ridges, a second corridor carves valleys, and a
+    // localized basin creates a lake/lowland catchment. Fine noise is subordinate to those forms.
+    const double ridgeDetailNoise = detail::valueNoise3(
         definition.seed ^ 0xBB67AE8584CAA73BULL,
-        d * 5.1 + glm::dvec3{-3.2, 1.4, 2.6});
-    const double ridged = 1.0 - std::abs(ridgeNoise * 2.0 - 1.0);
+        d * 6.0 + glm::dvec3{-3.2, 1.4, 2.6});
+    const double ridgeDetail = 1.0 - std::abs(ridgeDetailNoise * 2.0 - 1.0);
     const double fineDetail = detail::centeredFbm(
         definition.seed ^ 0xA54FF53A5F1D36F1ULL,
-        d * 10.8 + glm::dvec3{0.7, 3.8, -2.4},
-        3U);
-    const double basin = detail::centeredFbm(
-        definition.seed ^ 0x510E527FADE682D1ULL,
-        d * 1.25,
-        3U);
+        d * 10.2 + glm::dvec3{0.7, 3.8, -2.4},
+        2U);
 
-    double shape = broad * 0.58
-        + (ridged - 0.48) * 0.34
-        + fineDetail * 0.12
-        + basin * 0.10;
-    if (shape < 0.0) shape *= 0.86;
+    double shape = (landform.continent - 0.50) * 1.06;
+    shape += landform.mountainBelt * (0.24 + 0.22 * ridgeDetail);
+    shape += landform.plateau * 0.11 * (0.45 + 0.55 * landform.continent);
+    shape -= landform.valleyCorridor * (0.10 + 0.12 * (1.0 - landform.mountainBelt));
+    shape -= landform.basin * 0.26;
+    shape += fineDetail * (0.045 + 0.055 * landform.mountainBelt);
+
+    // The authoritative ocean is radius-6m. Compress relief near that level to create readable
+    // shelves, beaches and broader shore transitions instead of a noisy contour line.
+    if (definition.maxElevation > 0.0) {
+        const double seaLevelNormalized = -6.0 / definition.maxElevation;
+        const double distanceToSea = std::abs(shape - seaLevelNormalized);
+        const double coast = 1.0 - std::clamp(distanceToSea / 0.17, 0.0, 1.0);
+        const double coastSmooth = coast * coast * (3.0 - 2.0 * coast);
+        shape = seaLevelNormalized + (shape - seaLevelNormalized) * (1.0 - coastSmooth * 0.52);
+
+        // Where the mountain belt reaches a coast, retain a few stronger polygonal bluff faces so
+        // every shore does not become a soft beach.
+        const double coastalBluff = coastSmooth * landform.mountainBelt
+            * std::clamp((ridgeDetailNoise - 0.58) / 0.30, 0.0, 1.0);
+        shape += coastalBluff * 0.075;
+    }
+
     shape = std::clamp(shape, -1.0, 1.0);
     return shape * definition.maxElevation;
 }
@@ -142,22 +156,18 @@ PlanetMesh buildPlanetSurface(const PlanetDefinition& definition, std::uint32_t 
     if (subdivisionsPerFace < 2U) throw std::invalid_argument("planet subdivisions must be >= 2");
 
     PlanetMesh mesh;
+    mesh.horizonOccluderRadius = static_cast<float>(std::max(0.0, definition.radius - definition.maxElevation));
     for (std::uint32_t face = 0; face < 6U; ++face) {
         appendFace(mesh, &definition, glm::dvec3{0.0}, nullptr, definition.radius, face, subdivisionsPerFace, nullptr);
     }
 
-    // Ecology and visible ocean are tied to the high-detail planetary surface LOD. Low-resolution
-    // meshes remain terrain-only for fast tests/proxies; the runtime 64x64 face mesh receives the
-    // deterministic trees, rocks and a deliberately coarser faceted ocean.
     constexpr std::uint32_t kWorldDetailMinSubdivisionsPerFace = 24U;
     if (subdivisionsPerFace >= kWorldDetailMinSubdivisionsPerFace) {
         const auto treePlacements = detail::scatterTrees(mesh, definition);
         detail::scatterRocks(mesh, definition, treePlacements);
 
-        // Main.cpp's authoritative physical ocean currently uses radius - 6 m. Keeping the visible
-        // mean sea surface identical prevents the renderer and buoyancy/ocean queries disagreeing.
         constexpr double kMeanSeaLevelBelowReferenceMeters = 6.0;
-        constexpr std::uint32_t kOceanSubdivisionsPerFace = 40U;
+        constexpr std::uint32_t kOceanSubdivisionsPerFace = 36U;
         appendOceanSurface(
             mesh,
             definition,

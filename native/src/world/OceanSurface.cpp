@@ -40,6 +40,7 @@ void appendOceanSurface(
 
     for (std::uint32_t face = 0; face < 6U; ++face) {
         const std::uint32_t baseVertex = static_cast<std::uint32_t>(mesh.vertices.size());
+        const std::uint32_t faceFirstIndex = static_cast<std::uint32_t>(mesh.indices.size());
         mesh.vertices.reserve(mesh.vertices.size() + static_cast<std::size_t>(stride) * stride);
         mesh.indices.reserve(mesh.indices.size()
             + static_cast<std::size_t>(subdivisionsPerFace) * subdivisionsPerFace * 6U);
@@ -48,10 +49,6 @@ void appendOceanSurface(
             for (std::uint32_t x = 0; x <= subdivisionsPerFace; ++x) {
                 double u = -1.0 + 2.0 * static_cast<double>(x) / static_cast<double>(subdivisionsPerFace);
                 double v = -1.0 + 2.0 * static_cast<double>(y) / static_cast<double>(subdivisionsPerFace);
-
-                // Keep cube-face edges exact so all six ocean patches meet watertight. Interior
-                // points receive a restrained tangent jitter: large purposeful facets, not a
-                // perfectly repeated square grid and not random high-frequency triangulation.
                 if (x > 0U && x < subdivisionsPerFace && y > 0U && y < subdivisionsPerFace) {
                     const std::uint64_t key = static_cast<std::uint64_t>(face) * 0x100000000ULL
                         + static_cast<std::uint64_t>(y) * stride + x;
@@ -100,6 +97,14 @@ void appendOceanSurface(
                 const std::uint32_t i1 = i0 + 1U;
                 const std::uint32_t i2 = i0 + stride;
                 const std::uint32_t i3 = i2 + 1U;
+                const float deepestCorner = std::max({
+                    mesh.vertices[i0].color.y,
+                    mesh.vertices[i1].color.y,
+                    mesh.vertices[i2].color.y,
+                    mesh.vertices[i3].color.y,
+                });
+                if (deepestCorner <= 1.0e-5F) continue;
+
                 const std::uint64_t key = static_cast<std::uint64_t>(face) * 0x100000000ULL
                     + static_cast<std::uint64_t>(y) * subdivisionsPerFace + x;
                 const bool flip = detail::random01(
@@ -112,6 +117,9 @@ void appendOceanSurface(
                 }
             }
         }
+
+        const std::uint32_t faceIndexCount = static_cast<std::uint32_t>(mesh.indices.size()) - faceFirstIndex;
+        detail::appendDrawRange(mesh, faceFirstIndex, faceIndexCount, PlanetDrawClass::OceanPatch);
     }
 
     mesh.oceanIndexCount = static_cast<std::uint32_t>(mesh.indices.size()) - mesh.oceanFirstIndex;
