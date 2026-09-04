@@ -46,6 +46,13 @@ float3 agxContrastApprox(float3 x)
         - 0.00232;
 }
 
+float3 agxPunchyLook(float3 v)
+{
+    float luma = dot(v, float3(0.2126, 0.7152, 0.0722));
+    v = pow(max(v, 0.0), 1.24);
+    return float3(luma, luma, luma) + 1.20 * (v - float3(luma, luma, luma));
+}
+
 float3 toneMapAgX(float3 color)
 {
     const float minEv = -12.47393;
@@ -54,16 +61,15 @@ float3 toneMapAgX(float3 color)
     v = clamp(log2(max(v, 1.0e-10)), minEv, maxEv);
     v = (v - minEv) / (maxEv - minEv);
     v = agxContrastApprox(v);
+    v = agxPunchyLook(v);
     v = agxOutset(v);
-    float luma = dot(v, float3(0.2126, 0.7152, 0.0722));
-    v = lerp(float3(luma, luma, luma), v, 0.96);
+    v = pow(max(v, 0.0), 2.2);
     return saturate(v);
 }
 
 [shader("vertex")]
 SkyVertexOutput skyVertexMain(uint vertexId : SV_VertexID)
 {
-    // Single fullscreen triangle: three generated vertices, no vertex/index buffer fetch.
     float2 p = vertexId == 0 ? float2(-1.0, -1.0)
         : (vertexId == 1 ? float2(3.0, -1.0) : float2(-1.0, 3.0));
     SkyVertexOutput output;
@@ -79,9 +85,6 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     float solarElevation = clamp(gPush.sunDirection.w, -1.0, 1.0);
     float daylight = smoothstep(-0.10, 0.18, solarElevation);
     float twilight = 1.0 - smoothstep(0.02, 0.36, abs(solarElevation + 0.035));
-
-    // Deliberately analytical sky: no cubemap, volume texture, ray marching or cloud texture.
-    // The sharper zenith-to-horizon density curve adds aerial depth without making the image busy.
     float horizonAmount = pow(saturate(1.0 - input.uv.y), 1.36);
     float horizonVeil = pow(horizonAmount, 2.15);
 
@@ -98,16 +101,30 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     sky = lerp(sky, horizon, smoothstep(0.40, 1.0, horizonAmount));
     sky = lerp(sky, twilightWarm, twilight * horizonVeil * 0.66);
 
-    // Haze lifts only the lowest atmosphere. The upper sky stays saturated, creating the same
-    // warm-horizon / cool-zenith separation that also drives terrain ambient reflections.
     float3 hazeColor = lerp(float3(0.37, 0.50, 0.60), float3(0.72, 0.42, 0.24), twilight * 0.72);
     float haze = atmosphere * horizonVeil;
     sky = lerp(sky, hazeColor, haze * (0.17 + 0.20 * daylight));
 
-    // Broad low-cost solar atmosphere glow. It is a vertical scattering band, not a fake image
-    // texture, and therefore adds no sampling cost or temporal noise.
-    sky += twilightWarm * twilight * horizonVeil * 0.095;
-    sky *= 0.82 + 0.30 * daylight + 0.055 * atmosphere;
+    // Project the real sun direction through the existing camera matrix. No texture, mesh or new
+    // push constant is required, and the halo remains locked to the actual light direction.
+    float4 sunClip = mul(gPush.viewProj, float4(normalize(gPush.sunDirection.xyz), 0.0));
+    float sunInFront = sunClip.w > 1.0e-5 ? 1.0 : 0.0;
+    float2 sunNdc = sunClip.xy / max(abs(sunClip.w), 1.0e-5);
+    float2 sunUv = sunNdc * 0.5 + 0.5;
+    float aspect = max(abs(gPush.viewProj[1][1] / max(abs(gPush.viewProj[0][0]), 1.0e-5)), 1.0);
+    float2 sunDelta = input.uv - sunUv;
+    sunDelta.x *= aspect;
+    float sunDistance = length(sunDelta);
+    float sunAboveHorizon = smoothstep(-0.03, 0.05, solarElevation);
+    float sunVisible = sunInFront * sunAboveHorizon;
 
-    return float4(toneMapAgX(sky * 1.03), 1.0);
+    float sunDisk = 1.0 - smoothstep(0.0045, 0.0105, sunDistance);
+    float innerGlow = exp(-sunDistance * 45.0);
+    float outerGlow = exp(-sunDistance * 13.0);
+    float3 sunTint = lerp(float3(1.0, 0.48, 0.18), float3(1.0, 0.93, 0.72), daylight);
+    sky += sunTint * sunVisible * (sunDisk * 3.2 + innerGlow * 0.52 + outerGlow * 0.11 * atmosphere);
+
+    sky += twilightWarm * twilight * horizonVeil * 0.085;
+    sky *= 0.82 + 0.30 * daylight + 0.055 * atmosphere;
+    return float4(toneMapAgX(sky), 1.0);
 }
