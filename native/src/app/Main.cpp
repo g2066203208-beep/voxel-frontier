@@ -107,7 +107,7 @@ void appendDirectionalBoxShadow(
     const double denominator = glm::dot(lightRay, normal);
     if (denominator >= -0.02) return;
 
-    glm::dvec3 tangentX = safeNormalize(glm::cross(
+    const glm::dvec3 tangentX = safeNormalize(glm::cross(
         std::abs(normal.y) < 0.9 ? glm::dvec3{0.0, 1.0, 0.0} : glm::dvec3{1.0, 0.0, 0.0},
         normal), {1.0, 0.0, 0.0});
     const glm::dvec3 tangentY = safeNormalize(glm::cross(normal, tangentX), {0.0, 0.0, 1.0});
@@ -190,7 +190,6 @@ void appendHud(
     vf::appendDebugRod(mesh, center + up * gap, center + up * outer, thickness, white);
     vf::appendDebugRod(mesh, center - up * gap, center - up * outer, thickness, white);
 
-    // Logarithmic 25 m/s -> 2,000,000 m/s speed bar at the lower-right of the reticle.
     const double minLog = std::log10(25.0);
     const double maxLog = std::log10(2000000.0);
     const double value = std::clamp((std::log10(std::max(25.0, flightSpeedMps)) - minLog) / (maxLog - minLog), 0.0, 1.0);
@@ -283,7 +282,9 @@ int main() {
         const glm::dvec3 initialCameraPlanet = initialInverseAster * (camera.position() - initialAster->position);
         const glm::dvec3 patchUp = safeNormalize(initialCameraPlanet);
         const glm::dvec3 patchEast = safeEast(patchUp);
-        const glm::dvec3 patchNorth = safeNormalize(glm::cross(patchUp, patchEast), {0.0, 0.0, 1.0});
+        // Right-handed surface frame: X=east, Y=up, Z=cross(X,Y). Heading zero points toward
+        // local -Z, matching glm::lookAtRH and eliminating the old mirrored A/D + mouse hacks.
+        const glm::dvec3 patchZ = safeNormalize(glm::cross(patchEast, patchUp), {0.0, 0.0, -1.0});
         const glm::dvec3 patchOriginPlanet = patchUp * vf::planetSurfaceRadius(planet, patchUp);
 
         const auto toSurfacePoint = [&](const glm::dvec3& planetPoint) {
@@ -291,27 +292,27 @@ int main() {
             return glm::dvec3{
                 glm::dot(delta, patchEast),
                 glm::dot(delta, patchUp),
-                glm::dot(delta, patchNorth),
+                glm::dot(delta, patchZ),
             };
         };
         const auto toSurfaceVector = [&](const glm::dvec3& planetVector) {
             return glm::dvec3{
                 glm::dot(planetVector, patchEast),
                 glm::dot(planetVector, patchUp),
-                glm::dot(planetVector, patchNorth),
+                glm::dot(planetVector, patchZ),
             };
         };
         const auto toPlanetPoint = [&](const glm::dvec3& surfacePoint) {
             return patchOriginPlanet
                 + patchEast * surfacePoint.x
                 + patchUp * surfacePoint.y
-                + patchNorth * surfacePoint.z;
+                + patchZ * surfacePoint.z;
         };
-        const auto planetSurfaceAtOffset = [&](double eastMeters, double northMeters) {
+        const auto planetSurfaceAtOffset = [&](double eastMeters, double zMeters) {
             const glm::dvec3 direction = safeNormalize(
                 patchUp
                     + patchEast * (eastMeters / planet.radius)
-                    + patchNorth * (northMeters / planet.radius),
+                    + patchZ * (zMeters / planet.radius),
                 patchUp);
             return direction * vf::planetSurfaceRadius(planet, direction);
         };
@@ -326,15 +327,15 @@ int main() {
 
         for (std::uint32_t y = 0; y <= terrainResolution; ++y) {
             const double fy = static_cast<double>(y) / static_cast<double>(terrainResolution);
-            const double northMeters = -terrainHalfExtent + 2.0 * terrainHalfExtent * fy;
+            const double zMeters = -terrainHalfExtent + 2.0 * terrainHalfExtent * fy;
             for (std::uint32_t x = 0; x <= terrainResolution; ++x) {
                 const double fx = static_cast<double>(x) / static_cast<double>(terrainResolution);
                 const double eastMeters = -terrainHalfExtent + 2.0 * terrainHalfExtent * fx;
-                const glm::dvec3 planetPoint = planetSurfaceAtOffset(eastMeters, northMeters);
+                const glm::dvec3 planetPoint = planetSurfaceAtOffset(eastMeters, zMeters);
                 const glm::dvec3 direction = safeNormalize(planetPoint);
                 glm::dvec3 surfacePosition = toSurfacePoint(planetPoint);
                 const glm::dvec3 surfaceNormal = safeNormalize(toSurfaceVector(vf::planetSurfaceNormal(planet, direction)));
-                const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / terrainHalfExtent;
+                const double edge = std::max(std::abs(eastMeters), std::abs(zMeters)) / terrainHalfExtent;
                 const double blend = std::clamp((edge - 0.82) / 0.18, 0.0, 1.0);
                 surfacePosition -= surfaceNormal * (proxyInsetMeters * blend);
                 const double normalizedHeight = vf::planetHeight(planet, direction) / planet.maxElevation;
@@ -359,8 +360,6 @@ int main() {
             }
         }
 
-        // Whole-planet far proxy: same procedural height function, only ~7k triangles. It is inset
-        // slightly so the high-detail patch wins nearby, and the edge blends down to it smoothly.
         vf::PlanetMesh fullPlanetProxy = vf::buildPlanetSurface(planet, 24U);
         for (auto& vertex : fullPlanetProxy.vertices) {
             glm::dvec3 p = glm::dvec3(vertex.position);
@@ -371,8 +370,6 @@ int main() {
         }
         appendMesh(staticTerrain, fullPlanetProxy);
 
-        // Blue atmospheric limb visible both from the ground and from orbit. Its current shell
-        // shader is density-inspired but still cheaper than the final Bruneton/Hillaire LUT pass.
         vf::appendAtmosphereProxy(
             staticTerrain,
             toSurfacePoint(glm::dvec3{0.0}),
@@ -415,8 +412,8 @@ int main() {
         for (int z = -tileRadius; z <= tileRadius; ++z) {
             for (int x = -tileRadius; x <= tileRadius; ++x) {
                 const double eastMeters = static_cast<double>(x) * tileSpacing;
-                const double northMeters = 5.0 + static_cast<double>(z) * tileSpacing;
-                const glm::dvec3 planetPoint = planetSurfaceAtOffset(eastMeters, northMeters);
+                const double zMeters = 5.0 + static_cast<double>(z) * tileSpacing;
+                const glm::dvec3 planetPoint = planetSurfaceAtOffset(eastMeters, zMeters);
                 const glm::dvec3 direction = safeNormalize(planetPoint);
                 const glm::dvec3 normal = safeNormalize(toSurfaceVector(vf::planetSurfaceNormal(planet, direction)));
                 glm::dvec3 tileX = glm::dvec3{1.0, 0.0, 0.0};
@@ -510,9 +507,7 @@ int main() {
             const auto& input = platform.input();
             vf::PlanetMovementInput movement{};
             movement.forward = (input.forward ? 1.0 : 0.0) - (input.backward ? 1.0 : 0.0);
-            // Hardware acceptance showed A/D reversed after the camera-yaw correction. Keep the
-            // camera basis untouched and correct only the semantic input sign here.
-            movement.right = (input.left ? 1.0 : 0.0) - (input.right ? 1.0 : 0.0);
+            movement.right = (input.right ? 1.0 : 0.0) - (input.left ? 1.0 : 0.0);
             movement.vertical = (input.ascend ? 1.0 : 0.0) - (input.descend ? 1.0 : 0.0);
             movement.mouseDx = input.mouseCaptured ? static_cast<double>(input.mouseDx) : 0.0;
             movement.mouseDy = input.mouseCaptured ? static_cast<double>(input.mouseDy) : 0.0;
@@ -524,7 +519,7 @@ int main() {
             const glm::dquat inverseAster = glm::conjugate(glm::normalize(currentAster->orientation));
             const glm::dvec3 cameraPlanet = inverseAster * (camera.position() - currentAster->position);
             const glm::dvec3 cameraSurface = toSurfacePoint(cameraPlanet);
-            const glm::dvec3 forwardSurface = safeNormalize(toSurfaceVector(inverseAster * camera.forwardDirection()), {0.0, 0.0, 1.0});
+            const glm::dvec3 forwardSurface = safeNormalize(toSurfaceVector(inverseAster * camera.forwardDirection()), {0.0, 0.0, -1.0});
             const glm::dvec3 upSurface = safeNormalize(toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
 
             if (camera.physicsFrameBodyId() == asterId) {
@@ -540,7 +535,7 @@ int main() {
 
             const glm::dvec3 sunWorldDirection = safeNormalize(currentSun->position - camera.position());
             const glm::dvec3 sunPlanetDirection = inverseAster * sunWorldDirection;
-            const glm::dvec3 sunSurfaceDirection = safeNormalize(toSurfaceVector(sunPlanetDirection), {0.3, 0.8, 0.2});
+            const glm::dvec3 sunSurfaceDirection = safeNormalize(toSurfaceVector(sunPlanetDirection), {0.3, 0.8, -0.2});
 
             vf::PlanetMesh dynamicMesh{};
 
@@ -602,12 +597,10 @@ int main() {
                 vf::appendDebugSphere(dynamicMesh, cameraSurface + cinderSurfaceDirection * visualDistance, visualRadius, {0.62F, 0.30F, 0.22F}, 7U, 12U);
             }
 
-            // Dense but cheap star catalogue: metadata-only directions rendered as tiny low-poly
-            // proxies. No collision, terrain, atmosphere or per-star simulation is instantiated.
             for (int i = 0; i < 320; ++i) {
                 const double a = 0.754877666 * static_cast<double>(i + 1);
                 const double b = 1.324717957 * static_cast<double>(i + 3);
-                glm::dvec3 inertialDirection = safeNormalize({
+                const glm::dvec3 inertialDirection = safeNormalize({
                     std::sin(a * 4.7 + b),
                     std::sin(b * 3.1 - a * 0.7) * (0.58 + 0.42 * std::sin(a)),
                     std::cos(a * 2.9 + b * 1.7),
@@ -647,7 +640,6 @@ int main() {
             const glm::dvec3 skyLinear = rayleighCoeff * rayleighPhase * 0.82 + mieCoeff * miePhase * 0.18;
             const glm::vec3 sky = glm::vec3(glm::clamp(skyLinear, glm::dvec3{0.0}, glm::dvec3{1.0}));
 
-            // Atmospheric attenuation of direct sunlight: long horizon paths remove blue first.
             const double sunElevation = glm::dot(camera.up(), sunWorldDirection);
             const double airMass = densityRatio / std::max(0.055, sunElevation + 0.12);
             const glm::dvec3 extinction = glm::dvec3{0.14, 0.32, 0.72} * std::max(0.0, airMass);
