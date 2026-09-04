@@ -40,6 +40,8 @@ public:
     [[nodiscard]] std::uint32_t apiVersion() const noexcept { return apiVersion_; }
     [[nodiscard]] std::uint64_t triangleCount() const noexcept { return static_cast<std::uint64_t>(indexCount_ / 3U); }
     [[nodiscard]] std::uint64_t dynamicTriangleCount() const noexcept { return static_cast<std::uint64_t>(pendingDynamicIndices_.size() / 3U); }
+    [[nodiscard]] std::uint32_t visibleStaticRangeCount() const noexcept { return visibleStaticRangeCount_; }
+    [[nodiscard]] std::uint64_t submittedStaticTriangleCount() const noexcept { return submittedStaticTriangleCount_; }
 
 private:
     static constexpr std::uint32_t kFramesInFlight = 2;
@@ -75,7 +77,12 @@ private:
     void destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept;
     void ensureDynamicFrameCapacity(DynamicFrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes);
     void uploadDynamicMeshForFrame(std::uint32_t frame);
-    void drawBoundMesh(VkCommandBuffer commandBuffer, VkBuffer vertexBuffer, VkBuffer indexBuffer, std::uint32_t indexCount);
+    void drawBoundMesh(
+        VkCommandBuffer commandBuffer,
+        VkBuffer vertexBuffer,
+        VkBuffer indexBuffer,
+        std::uint32_t indexCount,
+        std::uint32_t firstIndex = 0U);
 
     void createBuffer(
         VkDeviceSize size,
@@ -117,6 +124,10 @@ private:
     VkBuffer indexBuffer_{VK_NULL_HANDLE};
     VkDeviceMemory indexMemory_{VK_NULL_HANDLE};
     std::uint32_t indexCount_{};
+    std::vector<PlanetDrawRange> staticDrawRanges_;
+    float horizonOccluderRadius_{0.0F};
+    std::uint32_t visibleStaticRangeCount_{0U};
+    std::uint64_t submittedStaticTriangleCount_{0U};
 
     std::vector<PlanetVertex> pendingDynamicVertices_;
     std::vector<std::uint32_t> pendingDynamicIndices_;
