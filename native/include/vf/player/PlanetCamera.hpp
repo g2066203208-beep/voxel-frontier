@@ -30,6 +30,13 @@ public:
 
     void update(const PlanetMovementInput& input, double dt);
 
+    // A CharacterVirtual-style controller can own translation while PlanetCamera keeps view
+    // orientation, flight-mode transitions and celestial reference-frame bookkeeping.
+    void setExternalWorldState(
+        const glm::dvec3& worldPosition,
+        const glm::dvec3& worldVelocity,
+        bool grounded) noexcept;
+
     [[nodiscard]] glm::mat4 viewProjection(float aspectRatio) const;
     [[nodiscard]] const glm::dvec3& position() const noexcept { return position_; }
     [[nodiscard]] const glm::dvec3& velocity() const noexcept { return velocity_; }
