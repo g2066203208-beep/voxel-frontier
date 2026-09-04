@@ -10,7 +10,6 @@ include(FetchContent)
 option(VF_BUILD_RUNTIME "Build the native desktop runtime" ON)
 option(VF_BUILD_TESTS "Build native engine tests" ON)
 
-# Header-only graphics math. Keep this dependency pinned for reproducible CI.
 set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(
     glm
@@ -86,7 +85,6 @@ if(VF_BUILD_RUNTIME)
     )
     FetchContent_MakeAvailable(volk)
 
-    # Slang is a build-time shader compiler only. SPIR-V is embedded into the executable.
     if(WIN32)
         FetchContent_Declare(
             slang_bin
@@ -108,13 +106,11 @@ if(VF_BUILD_RUNTIME)
     set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
     set(VF_SKY_VERTEX_SPV "${VF_GENERATED_DIR}/sky.vert.spv")
     set(VF_SKY_FRAGMENT_SPV "${VF_GENERATED_DIR}/sky.frag.spv")
+    set(VF_SHADOW_VERTEX_SPV "${VF_GENERATED_DIR}/shadow.vert.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
-    # Slang renames SPIR-V entry points to "main" by default. The Vulkan runtime
-    # explicitly requests source entry names in VkPipelineShaderStageCreateInfo,
-    # so preserve those names in the generated OpEntryPoint instructions.
     add_custom_command(
-        OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SKY_VERTEX_SPV}" "${VF_SKY_FRAGMENT_SPV}"
+        OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SKY_VERTEX_SPV}" "${VF_SKY_FRAGMENT_SPV}" "${VF_SHADOW_VERTEX_SPV}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry vertexMain -stage vertex -fvk-use-entrypoint-name
@@ -128,7 +124,13 @@ if(VF_BUILD_RUNTIME)
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/sky.slang"
                 -target spirv -entry skyFragmentMain -stage fragment -fvk-use-entrypoint-name
                 -matrix-layout-column-major -O2 -o "${VF_SKY_FRAGMENT_SPV}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/sky.slang"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/shadow.slang"
+                -target spirv -entry shadowVertexMain -stage vertex -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_SHADOW_VERTEX_SPV}"
+        DEPENDS
+            "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+            "${CMAKE_CURRENT_SOURCE_DIR}/shaders/sky.slang"
+            "${CMAKE_CURRENT_SOURCE_DIR}/shaders/shadow.slang"
         VERBATIM
     )
 
@@ -139,9 +141,16 @@ if(VF_BUILD_RUNTIME)
             "-DFRAG=${VF_FRAGMENT_SPV}"
             "-DSKY_VERT=${VF_SKY_VERTEX_SPV}"
             "-DSKY_FRAG=${VF_SKY_FRAGMENT_SPV}"
+            "-DSHADOW_VERT=${VF_SHADOW_VERTEX_SPV}"
             "-DOUT=${VF_SHADER_HEADER}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
-        DEPENDS "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SKY_VERTEX_SPV}" "${VF_SKY_FRAGMENT_SPV}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
+        DEPENDS
+            "${VF_VERTEX_SPV}"
+            "${VF_FRAGMENT_SPV}"
+            "${VF_SKY_VERTEX_SPV}"
+            "${VF_SKY_FRAGMENT_SPV}"
+            "${VF_SHADOW_VERTEX_SPV}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
         VERBATIM
     )
 

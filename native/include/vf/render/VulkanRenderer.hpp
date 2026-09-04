@@ -45,6 +45,7 @@ public:
 
 private:
     static constexpr std::uint32_t kFramesInFlight = 2;
+    static constexpr std::uint32_t kShadowMapSize = 512U;
 
     struct DynamicFrameMesh {
         VkBuffer vertexBuffer{VK_NULL_HANDLE};
@@ -72,6 +73,8 @@ private:
     void recreateSwapchain();
 
     void createDepthResources();
+    void createShadowResources();
+    void destroyShadowResources() noexcept;
     void createGraphicsPipeline();
     void destroyMesh() noexcept;
     void destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept;
@@ -116,8 +119,19 @@ private:
     VkDeviceMemory depthMemory_{VK_NULL_HANDLE};
     VkImageView depthImageView_{VK_NULL_HANDLE};
 
+    VkImage shadowImage_{VK_NULL_HANDLE};
+    VkDeviceMemory shadowMemory_{VK_NULL_HANDLE};
+    VkImageView shadowImageView_{VK_NULL_HANDLE};
+    VkSampler shadowSampler_{VK_NULL_HANDLE};
+    VkDescriptorSetLayout shadowDescriptorSetLayout_{VK_NULL_HANDLE};
+    VkDescriptorPool shadowDescriptorPool_{VK_NULL_HANDLE};
+    VkDescriptorSet shadowDescriptorSet_{VK_NULL_HANDLE};
+    bool shadowInitialized_{false};
+
     VkPipelineLayout pipelineLayout_{VK_NULL_HANDLE};
     VkPipeline graphicsPipeline_{VK_NULL_HANDLE};
+    VkPipeline skyPipeline_{VK_NULL_HANDLE};
+    VkPipeline shadowPipeline_{VK_NULL_HANDLE};
 
     VkBuffer vertexBuffer_{VK_NULL_HANDLE};
     VkDeviceMemory vertexMemory_{VK_NULL_HANDLE};
