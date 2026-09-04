@@ -15,6 +15,17 @@ struct SDL_Window;
 
 namespace vf {
 
+struct LocalFogVolume {
+    glm::dvec3 center{};
+    double radiusMeters{};
+    glm::vec3 scatteringColor{0.82F, 0.86F, 0.90F};
+    double extinctionPerMeter{};
+
+    [[nodiscard]] bool enabled() const noexcept {
+        return radiusMeters > 0.0 && extinctionPerMeter > 0.0;
+    }
+};
+
 class VulkanRenderer final {
 public:
     explicit VulkanRenderer(SDL_Window* window);
@@ -26,6 +37,8 @@ public:
     void uploadPlanetMesh(const PlanetMesh& mesh);
     void setDynamicMesh(const PlanetMesh& mesh);
     void clearDynamicMesh();
+    void setLocalFogVolume(const LocalFogVolume& volume) noexcept { localFogVolume_ = volume; }
+    void clearLocalFogVolume() noexcept { localFogVolume_ = {}; }
     void drawFrame(
         const glm::vec3& clearColor,
         const glm::mat4& viewProjection,
@@ -56,12 +69,20 @@ private:
         std::uint32_t indexCount{};
     };
 
+    struct SceneUniform {
+        glm::vec4 fogCenterRadius{};
+        glm::vec4 fogColorExtinction{};
+    };
+
     void createInstance();
     void createSurface();
     void selectPhysicalDevice();
     void createDevice();
     void createCommands();
     void createSyncObjects();
+    void createSceneDescriptors();
+    void destroySceneDescriptors() noexcept;
+    void updateSceneUniform(std::uint32_t frame) noexcept;
 
     void createSwapchain();
     void createSwapchainResources();
@@ -108,6 +129,14 @@ private:
     VkImage depthImage_{VK_NULL_HANDLE};
     VkDeviceMemory depthMemory_{VK_NULL_HANDLE};
     VkImageView depthImageView_{VK_NULL_HANDLE};
+
+    VkDescriptorSetLayout sceneDescriptorSetLayout_{VK_NULL_HANDLE};
+    VkDescriptorPool sceneDescriptorPool_{VK_NULL_HANDLE};
+    std::array<VkDescriptorSet, kFramesInFlight> sceneDescriptorSets_{};
+    std::array<VkBuffer, kFramesInFlight> sceneUniformBuffers_{};
+    std::array<VkDeviceMemory, kFramesInFlight> sceneUniformMemory_{};
+    std::array<void*, kFramesInFlight> mappedSceneUniforms_{};
+    LocalFogVolume localFogVolume_{};
 
     VkPipelineLayout pipelineLayout_{VK_NULL_HANDLE};
     VkPipeline graphicsPipeline_{VK_NULL_HANDLE};

@@ -4,11 +4,14 @@
 
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 #include <glm/geometric.hpp>
 
 namespace vf {
 namespace {
+
+constexpr double kPi = 3.14159265358979323846;
 
 [[nodiscard]] glm::dvec3 safeNormalize(
     const glm::dvec3& value,
@@ -44,7 +47,7 @@ namespace {
     desc.linearDamping = 0.015;
     desc.angularDamping = 0.025;
     desc.aerodynamics.dragCoefficient = 0.47;
-    desc.aerodynamics.referenceArea = 3.14159265358979323846 * radius * radius;
+    desc.aerodynamics.referenceArea = kPi * radius * radius;
     return desc;
 }
 
@@ -77,8 +80,7 @@ PhysicsPlayground::PhysicsPlayground(
     spring.breakForceN = 16000.0;
     (void)physics_->createSpringDamperConstraint(spring);
 
-    // Motorized hinge station: the collision primitive now matches the rendered
-    // primary rotor blade instead of pretending the whole mechanism is a tiny sphere.
+    // Motorized hinge station: the collision primitive matches the visible primary rotor blade.
     const glm::dvec3 motorBase = surfacePoint(0.0, 0.0, 0.2);
     motorAnchor_ = physics_->createRigidBody(makeStaticBody(motorBase + up_ * 2.8, 0.03));
     auto rotorDesc = makeDynamicSphere(motorBase + up_ * 3.3, 12.0, 0.07);
@@ -148,7 +150,7 @@ PhysicsPlayground::PhysicsPlayground(
     gear.breakTorqueNm = 900.0;
     (void)physics_->createGearConstraint(gear);
 
-    // Atmospheric buoyancy: a light sealed envelope rises from displaced air, not a scripted animation.
+    // Atmospheric buoyancy: a light sealed envelope rises from displaced air.
     auto balloonDesc = makeDynamicSphere(surfacePoint(14.0, 2.5, 2.1), 2.2, 0.85);
     balloonDesc.material.restitution = 0.05;
     balloonDesc.aerodynamics.dragCoefficient = 0.48;
@@ -169,11 +171,6 @@ PhysicsPlayground::PhysicsPlayground(
         fallingBodies_.push_back(id);
     }
 
-    visibleBodyIds_ = {
-        springPayload_, motorRotor_, gearRotorA_, gearRotorB_, balloon_,
-    };
-    visibleBodyIds_.insert(visibleBodyIds_.end(), fallingBodies_.begin(), fallingBodies_.end());
-
     tree_.rootPosition = surfacePoint(-13.0, 3.5, 0.05);
     tree_.localUp = safeNormalize(tree_.rootPosition);
     tree_.fallDirection = north_ + east_ * 0.35;
@@ -181,6 +178,50 @@ PhysicsPlayground::PhysicsPlayground(
     tree_.trunkRadius = 0.28;
     tree_.trunkMass = 360.0;
     tree_.dragCoefficient = 1.1;
+
+    // XPBD rope demonstration: one end is fixed to the ground, the rope makes a full turn
+    // around the tree trunk with finite radius, and its other end is tied to a real rigid payload.
+    ropeGroundAnchor_ = tree_.rootPosition - east_ * 2.6 + tree_.localUp * 0.18;
+    const glm::dvec3 loopCenter = tree_.rootPosition + tree_.localUp * 1.25;
+    constexpr int loopSegments = 24;
+    const double ropeRadius = 0.045;
+    const double loopRadius = tree_.trunkRadius + ropeRadius + 0.08;
+    std::vector<glm::dvec3> ropePoints;
+    ropePoints.reserve(static_cast<std::size_t>(loopSegments) + 4U);
+    ropePoints.push_back(ropeGroundAnchor_);
+    for (int i = 0; i <= loopSegments; ++i) {
+        const double angle = kPi + 2.0 * kPi * static_cast<double>(i) / static_cast<double>(loopSegments);
+        ropePoints.push_back(loopCenter
+            + east_ * (std::cos(angle) * loopRadius)
+            + north_ * (std::sin(angle) * loopRadius));
+    }
+    const glm::dvec3 ropePayloadPosition = tree_.rootPosition - east_ * 2.7 + tree_.localUp * 2.1;
+    ropePoints.push_back(ropePayloadPosition);
+
+    auto ropePayloadDesc = makeDynamicSphere(ropePayloadPosition, 7.0, 0.34);
+    ropePayloadDesc.material.restitution = 0.08;
+    ropePayloadDesc.aerodynamics.referenceArea = 0.18;
+    ropePayload_ = physics_->createRigidBody(ropePayloadDesc);
+
+    RopeMaterial ropeMaterial{};
+    ropeMaterial.radiusMeters = ropeRadius;
+    ropeMaterial.stretchComplianceMPerN = 2.0e-7;
+    ropeMaterial.bendComplianceMPerN = 1.4e-3;
+    ropeMaterial.damping = 0.035;
+    ropeMaterial.friction = 0.72;
+    ropeMaterial.dragCoefficient = 1.15;
+    ropeMaterial.breakingStrain = 0.45;
+    ropeMaterial.maxTensionN = 5000.0;
+    ropeMaterial.selfCollision = true;
+    rope_.initialize(std::move(ropePoints), 2.8, ropeMaterial);
+    rope_.pinParticle(0U, ropeGroundAnchor_);
+    rope_.attachParticleToRigidBody(rope_.particles().size() - 1U, ropePayload_);
+    rope_.addCapsuleCollider({tree_.rootPosition, tree_.tipPosition(), tree_.trunkRadius, 0.85});
+
+    visibleBodyIds_ = {
+        springPayload_, motorRotor_, gearRotorA_, gearRotorB_, balloon_, ropePayload_,
+    };
+    visibleBodyIds_.insert(visibleBodyIds_.end(), fallingBodies_.begin(), fallingBodies_.end());
 }
 
 glm::dvec3 PhysicsPlayground::surfacePoint(
@@ -195,7 +236,8 @@ glm::dvec3 PhysicsPlayground::surfacePoint(
 }
 
 bool PhysicsPlayground::isSpecialBody(std::uint32_t id) const noexcept {
-    return id == motorRotor_ || id == gearRotorA_ || id == gearRotorB_ || id == springPayload_ || id == balloon_;
+    return id == motorRotor_ || id == gearRotorA_ || id == gearRotorB_
+        || id == springPayload_ || id == balloon_ || id == ropePayload_;
 }
 
 void PhysicsPlayground::update(double deltaSeconds) {
@@ -206,20 +248,26 @@ void PhysicsPlayground::update(double deltaSeconds) {
         tree_.applyCut(deltaSeconds * 0.22, north_ + east_ * 0.35);
     }
 
+    const glm::dvec3 trunkMidpoint = tree_.rootPosition + tree_.localUp * (0.5 * tree_.trunkLength);
     const AtmosphereSample atmosphere = physics_->environment().sampleAtmosphere(
-        tree_.rootPosition + tree_.localUp * (0.5 * tree_.trunkLength),
+        trunkMidpoint,
         physics_->simulationTime());
     tree_.step(
         deltaSeconds,
         physics_->environment().gravityMagnitude(tree_.rootPosition),
         atmosphere.windVelocity,
         atmosphere.densityKgPerM3);
+
+    rope_.clearCapsuleColliders();
+    rope_.addCapsuleCollider({tree_.rootPosition, tree_.tipPosition(), tree_.trunkRadius, 0.85});
+    const glm::dvec3 gravity = physics_->environment().gravityAcceleration(trunkMidpoint);
+    rope_.step(deltaSeconds, gravity, atmosphere.windVelocity, atmosphere.densityKgPerM3, physics_);
 }
 
 PlanetMesh PhysicsPlayground::buildDebugMesh() const {
     PlanetMesh mesh{};
-    mesh.vertices.reserve(1600U);
-    mesh.indices.reserve(3600U);
+    mesh.vertices.reserve(3200U);
+    mesh.indices.reserve(7200U);
 
     const glm::vec3 steel{0.38F, 0.43F, 0.48F};
     const glm::vec3 motorColor{0.93F, 0.55F, 0.10F};
@@ -229,6 +277,8 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
     const glm::vec3 payloadColor{0.36F, 0.78F, 0.48F};
     const glm::vec3 balloonColor{0.96F, 0.73F, 0.18F};
     const glm::vec3 treeColor{0.40F, 0.22F, 0.08F};
+    const glm::vec3 ropeColor{0.72F, 0.55F, 0.31F};
+    const glm::vec3 ropePayloadColor{0.55F, 0.24F, 0.72F};
 
     // Spring mast + current spring line + payload.
     if (const auto* anchor = physics_->body(springAnchor_)) {
@@ -242,7 +292,6 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
         }
     }
 
-    // Motor mast and a long rotor blade whose orientation comes directly from the rigid body quaternion.
     const glm::dvec3 motorFoot = surfacePoint(0.0, 0.0, 0.1);
     if (const auto* anchor = physics_->body(motorAnchor_)) {
         appendDebugRod(mesh, motorFoot, anchor->position, 0.12, steel);
@@ -252,8 +301,6 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
         appendDebugSphere(mesh, rotor->position, 0.22, steel, 5U, 8U);
     }
 
-    // Cross-bars make opposite/ratio rotation easy to see. Collision currently uses
-    // the primary bar; a later compound-shape layer will make both bars authoritative.
     if (const auto* anchor = physics_->body(gearAnchorA_)) {
         appendDebugRod(mesh, surfacePoint(7.0, -0.5, 0.1), anchor->position, 0.10, steel);
     }
@@ -285,6 +332,20 @@ PlanetMesh PhysicsPlayground::buildDebugMesh() const {
 
     appendDebugRod(mesh, tree_.rootPosition, tree_.tipPosition(), tree_.trunkRadius, treeColor);
     appendDebugSphere(mesh, tree_.tipPosition(), 0.75, {0.18F, 0.48F, 0.15F}, 6U, 10U);
+
+    const auto ropeParticles = rope_.particles();
+    for (std::size_t i = 0; i + 1U < ropeParticles.size(); ++i) {
+        appendDebugRod(
+            mesh,
+            ropeParticles[i].position,
+            ropeParticles[i + 1U].position,
+            rope_.material().radiusMeters,
+            ropeColor);
+    }
+    if (const auto* payload = physics_->body(ropePayload_)) {
+        appendDebugSphere(mesh, payload->position, payload->collisionShape.radius, ropePayloadColor, 7U, 11U);
+    }
+    appendDebugSphere(mesh, ropeGroundAnchor_, 0.13, steel, 5U, 8U);
 
     return mesh;
 }

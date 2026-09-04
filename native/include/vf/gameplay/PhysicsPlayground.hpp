@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "vf/physics/PhysicsWorld.hpp"
+#include "vf/physics/RopeXpbd.hpp"
 #include "vf/physics/TreePhysics.hpp"
 #include "vf/world/PlanetSurface.hpp"
 
@@ -23,6 +24,7 @@ public:
 
     [[nodiscard]] std::size_t visibleBodyCount() const noexcept { return visibleBodyIds_.size(); }
     [[nodiscard]] const TreePhysics& tree() const noexcept { return tree_; }
+    [[nodiscard]] const RopeXpbd& rope() const noexcept { return rope_; }
 
 private:
     [[nodiscard]] glm::dvec3 surfacePoint(double eastMeters, double northMeters, double heightMeters) const;
@@ -44,10 +46,13 @@ private:
     std::uint32_t gearRotorA_{};
     std::uint32_t gearRotorB_{};
     std::uint32_t balloon_{};
+    std::uint32_t ropePayload_{};
     std::vector<std::uint32_t> fallingBodies_;
     std::vector<std::uint32_t> visibleBodyIds_;
 
     TreePhysics tree_{};
+    RopeXpbd rope_{};
+    glm::dvec3 ropeGroundAnchor_{};
     double elapsedSeconds_{};
 };
 

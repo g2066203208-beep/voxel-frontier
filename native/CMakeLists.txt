@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.8.0 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.9.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -34,6 +34,11 @@ add_library(vf_engine STATIC
     src/physics/GasChamber.cpp
     src/physics/SpectralOptics.cpp
     src/physics/ElectromagneticRadiation.cpp
+    src/physics/MaterialPhysics.cpp
+    src/physics/StructuralDamage.cpp
+    src/physics/StructuralAssembly.cpp
+    src/physics/GasVolume.cpp
+    src/physics/RopeXpbd.cpp
     src/render/PhysicsDebugMesh.cpp
     src/gameplay/PhysicsPlayground.cpp
 )
@@ -103,9 +108,6 @@ if(VF_BUILD_RUNTIME)
     set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
-    # Slang renames SPIR-V entry points to "main" by default. The Vulkan runtime
-    # explicitly requests vertexMain/fragmentMain in VkPipelineShaderStageCreateInfo,
-    # so preserve those source names in the generated OpEntryPoint instructions.
     add_custom_command(
         OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
@@ -210,6 +212,26 @@ if(VF_BUILD_TESTS)
     add_executable(vf_electromagnetic_radiation_tests tests/ElectromagneticRadiationTests.cpp)
     target_link_libraries(vf_electromagnetic_radiation_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_electromagnetic_radiation_tests COMMAND vf_electromagnetic_radiation_tests)
+
+    add_executable(vf_material_physics_tests tests/MaterialPhysicsTests.cpp)
+    target_link_libraries(vf_material_physics_tests PRIVATE vf_engine)
+    add_test(NAME vf_material_physics_tests COMMAND vf_material_physics_tests)
+
+    add_executable(vf_structural_damage_tests tests/StructuralDamageTests.cpp)
+    target_link_libraries(vf_structural_damage_tests PRIVATE vf_engine)
+    add_test(NAME vf_structural_damage_tests COMMAND vf_structural_damage_tests)
+
+    add_executable(vf_structural_assembly_tests tests/StructuralAssemblyTests.cpp)
+    target_link_libraries(vf_structural_assembly_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_structural_assembly_tests COMMAND vf_structural_assembly_tests)
+
+    add_executable(vf_gas_volume_tests tests/GasVolumeTests.cpp)
+    target_link_libraries(vf_gas_volume_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_gas_volume_tests COMMAND vf_gas_volume_tests)
+
+    add_executable(vf_rope_xpbd_tests tests/RopeXpbdTests.cpp)
+    target_link_libraries(vf_rope_xpbd_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_rope_xpbd_tests COMMAND vf_rope_xpbd_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests
