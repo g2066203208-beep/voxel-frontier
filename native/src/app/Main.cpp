@@ -1,4 +1,3 @@
-#include "vf/gameplay/PhysicsInteraction.hpp"
 #include "vf/physics/PhysicsWorld.hpp"
 #include "vf/platform/SdlPlatform.hpp"
 #include "vf/player/CharacterController.hpp"
@@ -20,7 +19,6 @@
 #include <iostream>
 #include <sstream>
 #include <utility>
-#include <vector>
 
 #include <glm/common.hpp>
 #include <glm/ext/matrix_transform.hpp>
@@ -39,23 +37,20 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     return value / std::sqrt(lengthSquared);
 }
 
-[[nodiscard]] glm::dvec3 safeEast(const glm::dvec3& up) noexcept {
-    const glm::dvec3 reference = std::abs(up.y) < 0.92
-        ? glm::dvec3{0.0, 1.0, 0.0}
-        : glm::dvec3{1.0, 0.0, 0.0};
+// Degenerate fallback only. Camera heading continuity itself is owned by PlanetCamera and is
+// parallel-transported over the sphere; terrain patch construction is free to pick a stable local
+// tangent because its vertices are converted back into the fixed render frame before upload.
+[[nodiscard]] glm::dvec3 stableTangent(const glm::dvec3& upInput) noexcept {
+    const glm::dvec3 up = safeNormalize(upInput);
+    const glm::dvec3 a = glm::abs(up);
+    glm::dvec3 reference{1.0, 0.0, 0.0};
+    if (a.y <= a.x && a.y <= a.z) reference = {0.0, 1.0, 0.0};
+    else if (a.z <= a.x && a.z <= a.y) reference = {0.0, 0.0, 1.0};
     return safeNormalize(glm::cross(reference, up), {1.0, 0.0, 0.0});
 }
 
 [[nodiscard]] double circularOrbitSpeed(double parentMassKg, double radiusMeters) {
     return std::sqrt(vf::CelestialSystem::kGravitationalConstant * parentMassKg / std::max(1.0, radiusMeters));
-}
-
-[[nodiscard]] glm::dvec3 boxInertia(double mass, const glm::dvec3& halfExtents) {
-    return {
-        mass * (halfExtents.y * halfExtents.y + halfExtents.z * halfExtents.z) / 3.0,
-        mass * (halfExtents.x * halfExtents.x + halfExtents.z * halfExtents.z) / 3.0,
-        mass * (halfExtents.x * halfExtents.x + halfExtents.y * halfExtents.y) / 3.0,
-    };
 }
 
 void appendMesh(vf::PlanetMesh& destination, const vf::PlanetMesh& source) {
@@ -64,13 +59,6 @@ void appendMesh(vf::PlanetMesh& destination, const vf::PlanetMesh& source) {
     destination.indices.reserve(destination.indices.size() + source.indices.size());
     for (const std::uint32_t index : source.indices) destination.indices.push_back(base + index);
 }
-
-struct PropVisual {
-    std::uint32_t bodyId{};
-    glm::dvec3 halfExtents{};
-    glm::vec3 color{};
-    glm::vec4 material{};
-};
 
 [[nodiscard]] glm::mat4 makeReverseZViewProjection(
     const glm::dvec3& forward,
@@ -96,15 +84,20 @@ struct PropVisual {
 
 int main() {
     try {
-        vf::SdlPlatform platform{"Voxel Frontier — Physical Planet R2 Character Controller", 1600, 900};
+        vf::SdlPlatform platform{"Voxel Frontier — Earthlike Planet + Ocean", 1600, 900};
         vf::VulkanRenderer renderer{platform.window()};
 
+        // Earth-scale gameplay planet. Relief is deterministic procedural morphology rather than a
+        // literal GIS copy: continents, shelves, abyssal basins, trenches, mountains, plateaus,
+        // volcanic hotspots and river valleys all come from one authoritative height query.
         vf::PlanetDefinition planet{};
         planet.seed = 0x71A9F20DULL;
         planet.radius = 6371000.0;
-        planet.maxElevation = 8500.0;
-        planet.atmosphereHeight = 100000.0; // physical weather/aerodynamic atmosphere
-        constexpr double opticalAtmosphereHeight = 145000.0; // smooth low-density visual fade into space
+        planet.maxElevation = 8850.0;
+        planet.seaLevelElevationMeters = 0.0;
+        planet.maxOceanDepthMeters = 11000.0;
+        planet.atmosphereHeight = 100000.0;
+        constexpr double opticalAtmosphereHeight = 145000.0;
         constexpr double opticalRayleighScaleHeight = 10200.0;
 
         vf::CelestialSystem celestial;
@@ -173,7 +166,7 @@ int main() {
         const glm::dquat initialInverseAster = glm::conjugate(glm::normalize(initialAster->orientation));
         const glm::dvec3 initialCameraPlanet = initialInverseAster * (camera.position() - initialAster->position);
         const glm::dvec3 patchUp = safeNormalize(initialCameraPlanet);
-        const glm::dvec3 patchEast = safeEast(patchUp);
+        const glm::dvec3 patchEast = stableTangent(patchUp);
         const glm::dvec3 patchZ = safeNormalize(glm::cross(patchEast, patchUp), {0.0, 0.0, -1.0});
         const glm::dvec3 patchOriginPlanet = patchUp * vf::planetSurfaceRadius(planet, patchUp);
 
@@ -192,37 +185,34 @@ int main() {
                 glm::dot(planetVector, patchZ),
             };
         };
-        const glm::dmat3 surfaceFromPlanet{
-            toSurfaceVector({1.0, 0.0, 0.0}),
-            toSurfaceVector({0.0, 1.0, 0.0}),
-            toSurfaceVector({0.0, 0.0, 1.0}),
-        };
-        const glm::dquat surfaceFromPlanetRotation = glm::normalize(glm::quat_cast(surfaceFromPlanet));
-
-        const auto planetSurfaceAtOffset = [&](double eastMeters, double zMeters) {
-            const glm::dvec3 direction = safeNormalize(
-                patchUp + patchEast * (eastMeters / planet.radius) + patchZ * (zMeters / planet.radius), patchUp);
-            return direction * vf::planetSurfaceRadius(planet, direction);
-        };
 
         glm::dvec3 lodCenterDirection = patchUp;
         auto buildTerrainLod = [&](const glm::dvec3& centerDirection) {
             vf::PlanetMesh mesh{};
             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
-            const glm::dvec3 centerEast = safeEast(centerUp);
+            const glm::dvec3 centerEast = stableTangent(centerUp);
             const glm::dvec3 centerNorth = safeNormalize(glm::cross(centerUp, centerEast), patchZ);
 
-            struct Ring { double half; double inner; std::uint32_t resolution; double baseInset; double edgeInset; };
+            struct Ring {
+                double half;
+                double inner;
+                std::uint32_t resolution;
+                double terrainBaseInset;
+                double terrainEdgeInset;
+            };
+            // Nested regular grids follow the geometry-clipmap principle: dense near the player,
+            // progressively cheaper outwards, with hollow coarser levels instead of duplicating the
+            // full inner area.
             const std::array<Ring, 4> rings{{
-                {20000.0, 0.0, 200U, 0.0, 1.5},
-                {180000.0, 18000.0, 180U, 1.0, 8.0},
-                {900000.0, 160000.0, 144U, 7.0, 40.0},
-                {2500000.0, 820000.0, 96U, 32.0, 150.0},
+                {22000.0, 0.0, 220U, 0.0, 1.5},
+                {190000.0, 20000.0, 180U, 1.0, 8.0},
+                {950000.0, 170000.0, 144U, 7.0, 42.0},
+                {2600000.0, 850000.0, 96U, 34.0, 160.0},
             }};
 
             for (const Ring& ring : rings) {
                 const std::uint32_t stride = ring.resolution + 1U;
-                const std::uint32_t base = static_cast<std::uint32_t>(mesh.vertices.size());
+                const std::uint32_t terrainBase = static_cast<std::uint32_t>(mesh.vertices.size());
                 for (std::uint32_t y = 0; y <= ring.resolution; ++y) {
                     const double fy = static_cast<double>(y) / static_cast<double>(ring.resolution);
                     const double northMeters = -ring.half + 2.0 * ring.half * fy;
@@ -230,31 +220,76 @@ int main() {
                         const double fx = static_cast<double>(x) / static_cast<double>(ring.resolution);
                         const double eastMeters = -ring.half + 2.0 * ring.half * fx;
                         const glm::dvec3 direction = safeNormalize(
-                            centerUp + centerEast * (eastMeters / planet.radius) + centerNorth * (northMeters / planet.radius), centerUp);
-                        glm::dvec3 worldPoint = direction * vf::planetSurfaceRadius(planet, direction);
+                            centerUp + centerEast * (eastMeters / planet.radius)
+                                + centerNorth * (northMeters / planet.radius),
+                            centerUp);
+                        const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, direction);
                         const glm::dvec3 normalPlanet = vf::planetSurfaceNormal(planet, direction);
                         const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
                         const double edgeBlend = std::clamp((edge - 0.88) / 0.12, 0.0, 1.0);
-                        worldPoint -= normalPlanet * (ring.baseInset + edgeBlend * ring.edgeInset);
-                        const double normalizedHeight = vf::planetHeight(planet, direction) / planet.maxElevation;
+                        glm::dvec3 worldPoint = direction * (planet.radius + terrain.elevationMeters);
+                        worldPoint -= normalPlanet * (ring.terrainBaseInset + edgeBlend * ring.terrainEdgeInset);
+
                         vf::PlanetVertex vertex{};
                         vertex.position = glm::vec3(toSurfacePoint(worldPoint));
                         vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(normalPlanet)));
-                        if (normalizedHeight < -0.15) vertex.color = {0.14F, 0.25F, 0.13F};
-                        else if (normalizedHeight < 0.20) vertex.color = {0.18F, 0.39F, 0.16F};
-                        else if (normalizedHeight < 0.58) vertex.color = {0.34F, 0.33F, 0.25F};
-                        else vertex.color = {0.61F, 0.63F, 0.60F};
-                        vertex.material = {0.0F, normalizedHeight > 0.55 ? 0.86F : 0.94F, 0.0F, 0.0F};
+                        vertex.color = vf::planetTerrainColor(planet, terrain);
+                        vertex.material = vf::planetTerrainMaterial(planet, terrain);
                         mesh.vertices.push_back(vertex);
                     }
                 }
 
                 for (std::uint32_t y = 0; y < ring.resolution; ++y) {
-                    const double cy = -ring.half + 2.0 * ring.half * (static_cast<double>(y) + 0.5) / ring.resolution;
+                    const double cy = -ring.half + 2.0 * ring.half
+                        * (static_cast<double>(y) + 0.5) / ring.resolution;
                     for (std::uint32_t x = 0; x < ring.resolution; ++x) {
-                        const double cx = -ring.half + 2.0 * ring.half * (static_cast<double>(x) + 0.5) / ring.resolution;
+                        const double cx = -ring.half + 2.0 * ring.half
+                            * (static_cast<double>(x) + 0.5) / ring.resolution;
                         if (ring.inner > 0.0 && std::max(std::abs(cx), std::abs(cy)) < ring.inner) continue;
-                        const std::uint32_t i0 = base + y * stride + x;
+                        const std::uint32_t i0 = terrainBase + y * stride + x;
+                        const std::uint32_t i1 = i0 + 1U;
+                        const std::uint32_t i2 = i0 + stride;
+                        const std::uint32_t i3 = i2 + 1U;
+                        mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
+                    }
+                }
+
+                // Ocean uses the same nested topology at a constant sea-level geoid. It can exist
+                // underneath land because opaque terrain depth rejects it there; this removes costly
+                // coastline triangulation while leaving a continuous, crack-free water surface.
+                const std::uint32_t oceanBase = static_cast<std::uint32_t>(mesh.vertices.size());
+                for (std::uint32_t y = 0; y <= ring.resolution; ++y) {
+                    const double fy = static_cast<double>(y) / static_cast<double>(ring.resolution);
+                    const double northMeters = -ring.half + 2.0 * ring.half * fy;
+                    for (std::uint32_t x = 0; x <= ring.resolution; ++x) {
+                        const double fx = static_cast<double>(x) / static_cast<double>(ring.resolution);
+                        const double eastMeters = -ring.half + 2.0 * ring.half * fx;
+                        const glm::dvec3 direction = safeNormalize(
+                            centerUp + centerEast * (eastMeters / planet.radius)
+                                + centerNorth * (northMeters / planet.radius),
+                            centerUp);
+                        const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
+                        const double edgeBlend = std::clamp((edge - 0.88) / 0.12, 0.0, 1.0);
+                        const double oceanInset = ring.terrainBaseInset * 0.12
+                            + edgeBlend * ring.terrainEdgeInset * 0.05;
+                        const glm::dvec3 waterPoint = direction
+                            * (planet.radius + planet.seaLevelElevationMeters - oceanInset);
+                        vf::PlanetVertex vertex{};
+                        vertex.position = glm::vec3(toSurfacePoint(waterPoint));
+                        vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(direction)));
+                        vertex.color = {0.018F, 0.145F, 0.255F};
+                        vertex.material = {-1.0F, 0.055F, 0.72F, 0.0F};
+                        mesh.vertices.push_back(vertex);
+                    }
+                }
+                for (std::uint32_t y = 0; y < ring.resolution; ++y) {
+                    const double cy = -ring.half + 2.0 * ring.half
+                        * (static_cast<double>(y) + 0.5) / ring.resolution;
+                    for (std::uint32_t x = 0; x < ring.resolution; ++x) {
+                        const double cx = -ring.half + 2.0 * ring.half
+                            * (static_cast<double>(x) + 0.5) / ring.resolution;
+                        if (ring.inner > 0.0 && std::max(std::abs(cx), std::abs(cy)) < ring.inner) continue;
+                        const std::uint32_t i0 = oceanBase + y * stride + x;
                         const std::uint32_t i1 = i0 + 1U;
                         const std::uint32_t i2 = i0 + stride;
                         const std::uint32_t i3 = i2 + 1U;
@@ -263,6 +298,8 @@ int main() {
                 }
             }
 
+            // Coarse full-planet proxies fill the horizon/space view. They are inset behind the
+            // active clipmap window so transitions are hidden by the higher-resolution rings.
             vf::PlanetMesh proxy = vf::buildPlanetSurface(planet, 48U);
             constexpr double proxyInset = 240.0;
             for (auto& vertex : proxy.vertices) {
@@ -271,9 +308,20 @@ int main() {
                 if (r > proxyInset + 1.0) p *= (r - proxyInset) / r;
                 vertex.position = glm::vec3(toSurfacePoint(p));
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
-                vertex.material = {0.0F, 0.93F, 0.0F, 0.0F};
             }
             appendMesh(mesh, proxy);
+
+            vf::PlanetMesh oceanProxy{};
+            vf::appendOceanSurfaceProxy(
+                oceanProxy,
+                {},
+                planet.radius + planet.seaLevelElevationMeters - 180.0,
+                48U);
+            for (auto& vertex : oceanProxy.vertices) {
+                vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
+                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+            }
+            appendMesh(mesh, oceanProxy);
             return mesh;
         };
 
@@ -282,6 +330,8 @@ int main() {
         std::future<std::pair<glm::dvec3, vf::PlanetMesh>> terrainBuildFuture{};
         bool terrainBuildInFlight = false;
 
+        // Local rotating planet frame for high-quality ground physics while CelestialSystem remains
+        // authoritative for the actual moving body in the solar-system frame.
         vf::CelestialSystem localGravitySystem;
         vf::CelestialBody localGravityBody = aster;
         localGravityBody.position = {};
@@ -301,74 +351,12 @@ int main() {
         environment.atmosphere.prevailingWind = {};
         environment.atmosphere.gustAmplitude = 0.0;
         environment.weather.windMultiplier = 0.0;
-        environment.ocean.enabled = false;
+        environment.ocean.enabled = true;
+        environment.ocean.surfaceRadius = planet.radius + planet.seaLevelElevationMeters;
+        environment.ocean.densityKgPerM3 = 1025.0;
+        environment.ocean.viscosityPaS = 0.00108;
+        environment.ocean.meanCurrent = {};
         vf::PhysicsWorld physics{environment};
-        vf::PhysicsInteraction interaction{physics};
-
-        const glm::dvec3 pickupGroundPlanet = planetSurfaceAtOffset(0.0, 4.0);
-        const glm::dvec3 pickupNormal = safeNormalize(
-            vf::planetSurfaceNormal(planet, safeNormalize(pickupGroundPlanet)));
-        glm::dvec3 pickupX = safeEast(pickupNormal);
-        const glm::dvec3 pickupZ = safeNormalize(glm::cross(pickupX, pickupNormal), {0.0, 0.0, 1.0});
-        const glm::dquat pickupOrientation = glm::normalize(glm::quat_cast(glm::dmat3{pickupX, pickupNormal, pickupZ}));
-
-        struct PropSpec {
-            double x;
-            double z;
-            glm::dvec3 half;
-            double mass;
-            double friction;
-            glm::vec3 color;
-            glm::vec4 material;
-        };
-        const std::array<PropSpec, 5> specs{{
-            {0.0, 4.0, {0.60, 0.60, 0.60}, 12.0, 0.86, {0.32F, 0.35F, 0.38F}, {0.0F, 0.90F, 0.0F, 0.0F}},
-            {-1.7, 5.2, {0.70, 0.45, 0.50}, 7.0, 0.80, {0.48F, 0.25F, 0.10F}, {0.0F, 0.66F, 0.0F, 0.0F}},
-            {1.7, 5.2, {0.62, 0.48, 0.52}, 18.0, 0.58, {0.56F, 0.60F, 0.66F}, {1.0F, 0.18F, 0.0F, 0.0F}},
-            {-1.0, 7.0, {0.48, 0.72, 0.48}, 9.0, 0.46, {0.10F, 0.43F, 0.92F}, {0.0F, 0.07F, 0.94F, 0.0F}},
-            {1.0, 7.0, {0.48, 0.72, 0.48}, 9.0, 0.46, {0.96F, 0.50F, 0.12F}, {0.0F, 0.08F, 0.92F, 0.0F}},
-        }};
-
-        std::vector<PropVisual> props;
-        props.reserve(specs.size() + 2U);
-        for (const auto& spec : specs) {
-            const glm::dvec3 groundPlanet = planetSurfaceAtOffset(spec.x, spec.z);
-            const glm::dvec3 normal = safeNormalize(
-                vf::planetSurfaceNormal(planet, safeNormalize(groundPlanet)));
-            glm::dvec3 tangentX = safeEast(normal);
-            const glm::dvec3 tangentZ = safeNormalize(glm::cross(tangentX, normal), {0.0, 0.0, 1.0});
-            const glm::dquat orientation = glm::normalize(glm::quat_cast(glm::dmat3{tangentX, normal, tangentZ}));
-            vf::RigidBodyDesc desc{};
-            desc.mass = spec.mass;
-            desc.position = groundPlanet + normal * (spec.half.y + 0.035);
-            desc.orientation = orientation;
-            desc.collisionShape = vf::CollisionShape::box(spec.half);
-            desc.inertiaDiagonal = boxInertia(desc.mass, spec.half);
-            desc.material.friction = spec.friction;
-            desc.material.restitution = 0.0;
-            desc.material.rollingResistance = 0.12;
-            desc.linearDamping = 0.09;
-            desc.angularDamping = 0.16;
-            desc.aerodynamics.referenceArea = 0.0;
-            props.push_back({physics.createRigidBody(desc), spec.half, spec.color, spec.material});
-        }
-
-        const auto addStaticTestBox = [&](double x, double z, const glm::dvec3& half, const glm::vec3& color) {
-            const glm::dvec3 groundPlanet = planetSurfaceAtOffset(x, z);
-            const glm::dvec3 normal = safeNormalize(vf::planetSurfaceNormal(planet, safeNormalize(groundPlanet)));
-            const glm::dvec3 tangentX = safeEast(normal);
-            const glm::dvec3 tangentZ = safeNormalize(glm::cross(tangentX, normal), {0.0, 0.0, 1.0});
-            vf::RigidBodyDesc desc{};
-            desc.motionType = vf::MotionType::Static;
-            desc.mass = 0.0;
-            desc.position = groundPlanet + normal * half.y;
-            desc.orientation = glm::normalize(glm::quat_cast(glm::dmat3{tangentX, normal, tangentZ}));
-            desc.collisionShape = vf::CollisionShape::box(half);
-            desc.aerodynamics.referenceArea = 0.0;
-            props.push_back({physics.createRigidBody(desc), half, color, {0.0F, 0.88F, 0.0F, 0.0F}});
-        };
-        addStaticTestBox(3.2, 6.5, {1.2, 0.18, 0.75}, {0.42F, 0.43F, 0.40F});
-        addStaticTestBox(5.8, 10.0, {1.8, 1.35, 0.30}, {0.38F, 0.39F, 0.42F});
 
         vf::CharacterControllerSettings characterSettings{};
         characterSettings.walkSpeed = 9.0;
@@ -378,9 +366,9 @@ int main() {
         vf::CharacterController character{physics, characterSettings};
         character.resetFromEye(initialCameraPlanet, {}, true);
 
-        std::cout << "Voxel Frontier physical planet R2\n";
-        std::cout << "CharacterVirtual-style capsule | 50 deg slope | 0.45 m step | stick-to-floor\n";
-        std::cout << "Async terrain prefetch | smooth inertial space attitude | 145 km optical atmosphere\n";
+        std::cout << "Voxel Frontier Earthlike planet runtime\n";
+        std::cout << "Generic structural damage | Earthlike relief | continuous ocean geoid\n";
+        std::cout << "Async terrain synthesis | smooth inertial camera | 145 km optical atmosphere\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
@@ -390,7 +378,10 @@ int main() {
 
         while (platform.pumpEvents()) {
             const auto now = Clock::now();
-            const double dt = std::clamp(std::chrono::duration<double>(now - previous).count(), 1.0 / 500.0, 0.05);
+            const double dt = std::clamp(
+                std::chrono::duration<double>(now - previous).count(),
+                1.0 / 500.0,
+                0.05);
             previous = now;
             celestial.step(dt);
 
@@ -420,19 +411,22 @@ int main() {
 
             glm::dquat inverseAster = glm::conjugate(glm::normalize(currentAster->orientation));
             glm::dvec3 cameraPlanet = inverseAster * (camera.position() - currentAster->position);
-            glm::dvec3 localCameraVelocity = asterFrame.toLocalVelocity(*currentAster, camera.position(), camera.velocity());
+            glm::dvec3 localCameraVelocity = asterFrame.toLocalVelocity(
+                *currentAster, camera.position(), camera.velocity());
 
             if (camera.physicsFrameBodyId() == asterId) {
                 if (camera.flightMode()) {
                     character.resetFromEye(cameraPlanet, localCameraVelocity, false);
                 } else {
                     if (wasFlightMode) character.resetFromEye(cameraPlanet, localCameraVelocity, false);
-                    const glm::dvec3 forwardPlanet = safeNormalize(inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
+                    const glm::dvec3 forwardPlanet = safeNormalize(
+                        inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
                     const glm::dvec3 gravityUp = character.up();
                     const glm::dvec3 tangentForward = safeNormalize(
                         forwardPlanet - gravityUp * glm::dot(forwardPlanet, gravityUp),
                         patchZ);
-                    const glm::dvec3 tangentRight = safeNormalize(glm::cross(tangentForward, gravityUp), patchEast);
+                    const glm::dvec3 tangentRight = safeNormalize(
+                        glm::cross(tangentForward, gravityUp), patchEast);
 
                     vf::CharacterControllerInput characterInput{};
                     characterInput.forward = tangentForward;
@@ -443,7 +437,8 @@ int main() {
                     characterInput.sprint = input.sprint;
                     character.update(characterInput, dt);
 
-                    const glm::dvec3 worldEye = asterFrame.toWorldPosition(*currentAster, character.eyePosition());
+                    const glm::dvec3 worldEye = asterFrame.toWorldPosition(
+                        *currentAster, character.eyePosition());
                     const glm::dvec3 worldVelocity = asterFrame.toWorldVelocity(
                         *currentAster, character.eyePosition(), character.linearVelocity());
                     camera.setExternalWorldState(worldEye, worldVelocity, character.grounded());
@@ -453,28 +448,25 @@ int main() {
             }
 
             const glm::dvec3 cameraSurface = toSurfacePoint(cameraPlanet);
-            const glm::dvec3 forwardPlanet = safeNormalize(inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
-            const glm::dvec3 forwardSurface = safeNormalize(toSurfaceVector(forwardPlanet), {0.0, 0.0, -1.0});
-            const glm::dvec3 upSurface = safeNormalize(toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
+            const glm::dvec3 forwardPlanet = safeNormalize(
+                inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
+            const glm::dvec3 forwardSurface = safeNormalize(
+                toSurfaceVector(forwardPlanet), {0.0, 0.0, -1.0});
+            const glm::dvec3 upSurface = safeNormalize(
+                toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
 
-            if (camera.physicsFrameBodyId() == asterId) {
-                vf::PhysicsInteractionInput interactionInput{};
-                interactionInput.rightPressed = input.rightPressed;
-                interactionInput.leftPressed = input.leftPressed;
-                interaction.update(cameraPlanet, forwardPlanet, interactionInput, dt);
-            } else if (interaction.holding()) {
-                interaction.drop();
-            }
-
-            // Build the next terrain window on a worker thread before the current window gets near
-            // its recenter threshold. The render thread never waits for noise/mesh synthesis.
+            // CPU synthesis is asynchronous. The renderer owns the GPU-side streaming policy, so a
+            // completed terrain window can be handed over without making the simulation thread wait
+            // for procedural generation.
             lodCooldown = std::max(0.0, lodCooldown - dt);
             const double altitude = camera.altitude();
             if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0) {
                 const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
-                const double arcDistance = std::acos(std::clamp(glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
+                const double arcDistance = std::acos(std::clamp(
+                    glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
                 const double threshold = altitude < 20000.0 ? 8000.0
-                    : (altitude < 100000.0 ? 40000.0 : (altitude < 350000.0 ? 120000.0 : 350000.0));
+                    : (altitude < 100000.0 ? 40000.0
+                    : (altitude < 350000.0 ? 120000.0 : 350000.0));
                 const double prefetchThreshold = threshold * 0.42;
 
                 if (!terrainBuildInFlight && lodCooldown <= 0.0 && arcDistance > prefetchThreshold) {
@@ -486,7 +478,8 @@ int main() {
                 }
 
                 if (terrainBuildInFlight
-                    && terrainBuildFuture.wait_for(std::chrono::milliseconds{0}) == std::future_status::ready) {
+                    && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
+                        == std::future_status::ready) {
                     auto completed = terrainBuildFuture.get();
                     terrainBuildInFlight = false;
                     lodCenterDirection = completed.first;
@@ -496,47 +489,59 @@ int main() {
                 }
             }
 
-            const glm::dvec3 sunWorldDirection = safeNormalize(currentSun->position - camera.position());
-            const glm::dvec3 sunSurfaceDirection = safeNormalize(toSurfaceVector(inverseAster * sunWorldDirection), {0.3, 0.8, -0.2});
+            const glm::dvec3 sunWorldDirection = safeNormalize(
+                currentSun->position - camera.position());
+            const glm::dvec3 sunSurfaceDirection = safeNormalize(
+                toSurfaceVector(inverseAster * sunWorldDirection), {0.3, 0.8, -0.2});
 
             vf::PlanetMesh dynamicMesh{};
-            for (const auto& prop : props) {
-                const vf::RigidBody* body = physics.body(prop.bodyId);
-                if (body == nullptr) continue;
-                const glm::dvec3 renderPosition = toSurfacePoint(body->position);
-                const glm::dquat renderOrientation = glm::normalize(surfaceFromPlanetRotation * body->orientation);
-                vf::appendDebugBox(dynamicMesh, renderPosition, renderOrientation, prop.halfExtents, prop.color, prop.material);
-            }
-
             if (currentCinder != nullptr) {
-                const glm::dvec3 cinderDirection = safeNormalize(currentCinder->position - camera.position());
-                const glm::dvec3 cinderSurfaceDirection = safeNormalize(toSurfaceVector(inverseAster * cinderDirection));
+                const glm::dvec3 cinderDirection = safeNormalize(
+                    currentCinder->position - camera.position());
+                const glm::dvec3 cinderSurfaceDirection = safeNormalize(
+                    toSurfaceVector(inverseAster * cinderDirection));
                 const double distance = glm::length(currentCinder->position - camera.position());
-                const double angularRadius = std::asin(std::clamp(currentCinder->radiusMeters / std::max(distance, currentCinder->radiusMeters), 0.0, 0.20));
+                const double angularRadius = std::asin(std::clamp(
+                    currentCinder->radiusMeters / std::max(distance, currentCinder->radiusMeters),
+                    0.0,
+                    0.20));
                 constexpr double visualDistance = 25000000.0;
-                const double visualRadius = std::max(1800.0, std::tan(angularRadius) * visualDistance);
-                vf::appendDebugSphere(dynamicMesh, cameraSurface + cinderSurfaceDirection * visualDistance,
-                    visualRadius, {0.62F, 0.30F, 0.22F}, 9U, 16U, {0.0F, 0.82F, 0.0F, 0.0F});
+                const double visualRadius = std::max(
+                    1800.0, std::tan(angularRadius) * visualDistance);
+                vf::appendDebugSphere(
+                    dynamicMesh,
+                    cameraSurface + cinderSurfaceDirection * visualDistance,
+                    visualRadius,
+                    {0.62F, 0.30F, 0.22F},
+                    9U,
+                    16U,
+                    {0.0F, 0.82F, 0.0F, 0.0F});
             }
             renderer.setDynamicMesh(dynamicMesh);
 
             const auto [width, height] = platform.drawableSize();
-            const float aspect = height > 0 ? static_cast<float>(width) / static_cast<float>(height) : 16.0F / 9.0F;
-            const glm::mat4 viewProjection = makeReverseZViewProjection(forwardSurface, upSurface, aspect);
+            const float aspect = height > 0
+                ? static_cast<float>(width) / static_cast<float>(height)
+                : 16.0F / 9.0F;
+            const glm::mat4 viewProjection = makeReverseZViewProjection(
+                forwardSurface, upSurface, aspect);
 
             const auto atmosphere = celestial.sampleEnvironment(camera.position());
             const double densityRatio = std::clamp(atmosphere.densityKgPerM3 / 1.225, 0.0, 1.2);
-            const double physicalSunDistance = glm::length(currentSun->position - camera.position());
+            const double physicalSunDistance = glm::length(
+                currentSun->position - camera.position());
             const double irradiance = currentSun->luminosityWatts
                 / (4.0 * kPi * std::max(1.0, physicalSunDistance * physicalSunDistance));
             const double sunElevation = glm::dot(camera.up(), sunWorldDirection);
             const double airMass = densityRatio / std::max(0.065, sunElevation + 0.14);
-            const glm::dvec3 extinction = glm::dvec3{0.10, 0.22, 0.48} * std::max(0.0, airMass);
+            const glm::dvec3 extinction = glm::dvec3{0.10, 0.22, 0.48}
+                * std::max(0.0, airMass);
 
             vf::RenderFrameEnvironment renderEnvironment{};
             renderEnvironment.sunDirectionToLight = glm::vec3(sunSurfaceDirection);
             renderEnvironment.sunLinearColor = glm::vec3(glm::exp(-extinction));
-            renderEnvironment.sunIntensity = static_cast<float>(3.0 * std::clamp(irradiance / 1361.0, 0.0, 3.0));
+            renderEnvironment.sunIntensity = static_cast<float>(
+                3.0 * std::clamp(irradiance / 1361.0, 0.0, 3.0));
             renderEnvironment.skyAmbient = glm::vec3{0.035F, 0.060F, 0.105F}
                 + glm::vec3{0.10F, 0.15F, 0.24F} * static_cast<float>(densityRatio);
             renderEnvironment.groundAmbient = glm::vec3{0.018F, 0.016F, 0.013F}
@@ -555,29 +560,21 @@ int main() {
             diagnosticsTime += dt;
             ++diagnosticsFrames;
             if (diagnosticsTime >= 0.5) {
-                std::size_t sleeping = 0;
-                double maxLinear = 0.0;
-                double maxAngular = 0.0;
-                for (const auto& prop : props) {
-                    const vf::RigidBody* body = physics.body(prop.bodyId);
-                    if (body == nullptr || body->motionType != vf::MotionType::Dynamic) continue;
-                    if (body->sleeping) ++sleeping;
-                    maxLinear = std::max(maxLinear, glm::length(body->linearVelocity));
-                    maxAngular = std::max(maxAngular, glm::length(body->angularVelocity));
-                }
                 const double fps = static_cast<double>(diagnosticsFrames) / diagnosticsTime;
+                const vf::PlanetTerrainSample terrainBelow = vf::samplePlanetTerrain(
+                    planet, safeNormalize(cameraPlanet, patchUp));
+                const bool overOcean = terrainBelow.submerged(planet);
                 std::ostringstream title;
-                title << "Voxel Frontier R2 | "
-                      << (camera.flightMode() ? "FLIGHT" : (character.grounded() ? "CAPSULE-GROUNDED" : "CAPSULE-AIR"))
-                      << " | SPEED " << std::fixed << std::setprecision(0) << camera.flightSpeedMps() << " m/s"
+                title << "Voxel Frontier R3 | "
+                      << (camera.flightMode() ? "FLIGHT"
+                          : (character.grounded() ? "CAPSULE-GROUNDED" : "CAPSULE-AIR"))
+                      << " | SPEED " << std::fixed << std::setprecision(0)
+                      << camera.flightSpeedMps() << " m/s"
                       << " | ALT " << std::setprecision(2) << camera.altitude() / 1000.0 << " km"
-                      << " | SLOPE<=50 | STEP 0.45m"
+                      << " | " << (overOcean ? "OCEAN" : "LAND")
                       << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")
-                      << " | WIND OFF | sleeping " << sleeping << '/' << specs.size()
-                      << " | vMax " << std::setprecision(3) << maxLinear
-                      << " | wMax " << maxAngular
-                      << " | " << (interaction.holding() ? "HOLDING" : "HANDS FREE")
-                      << " | tris " << renderer.triangleCount() << '+' << renderer.dynamicTriangleCount()
+                      << " | tris " << renderer.triangleCount() << '+'
+                      << renderer.dynamicTriangleCount()
                       << " | FPS " << std::setprecision(0) << fps;
                 platform.setWindowTitle(title.str());
                 diagnosticsTime = 0.0;
