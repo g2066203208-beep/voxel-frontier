@@ -100,7 +100,10 @@ void PlanetCamera::alignLocalAnglesToFreeAttitude(const CelestialBody& body) noe
 void PlanetCamera::rotateFreeAttitude(double mouseDx, double mouseDy) noexcept {
     if (!freeAttitudeValid_) return;
     constexpr double mouseSensitivity = 0.0022;
-    const double yaw = mouseDx * mouseSensitivity;
+    // Planet-local heading uses positive mouse X for camera-right. GLM's right-handed angleAxis
+    // around +up has the opposite sign for a conventional forward direction, so negate mouse X
+    // here to preserve one input convention across the planet -> inertial-space handoff.
+    const double yaw = -mouseDx * mouseSensitivity;
     const glm::dquat yawRotation = glm::angleAxis(yaw, safeNormalize(freeUp_));
     freeForward_ = safeNormalize(yawRotation * freeForward_, freeForward_);
 
