@@ -107,6 +107,52 @@ void testAMovesToCameraLeftInFlight() {
         "A / negative-right input must move in camera-left direction");
 }
 
+void testPlanetToSpaceAttitudeIsContinuous() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 1000.0;
+    planet.maxElevation = 0.0;
+    planet.atmosphereHeight = 80.0;
+
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.type = vf::CelestialBodyType::Planet;
+    body.radiusMeters = planet.radius;
+    body.massKg = 5.0e15;
+    body.gameplaySurfaceGravityMps2 = 9.81;
+    body.gravityFalloffStartRadiusMeters = 1080.0;
+    body.gravityInfluenceRadiusMeters = 1120.0;
+    body.physicsBubbleRadiusMeters = 1120.0;
+    body.atmosphere.enabled = true;
+    body.atmosphere.heightMeters = 80.0;
+    const std::uint32_t id = system.addBody(body);
+
+    vf::PlanetCamera camera{planet, &system, id};
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    toggle.flightSpeedSteps = 8.0; // 5120 m/s inspection escape for a tiny test planet.
+    camera.update(toggle, 1.0 / 60.0);
+
+    glm::dvec3 previousForward = camera.forwardDirection();
+    glm::dvec3 previousUp = camera.up();
+    bool leftFrame = false;
+    for (int i = 0; i < 40; ++i) {
+        vf::PlanetMovementInput climb{};
+        climb.vertical = 1.0;
+        camera.update(climb, 1.0 / 120.0);
+        if (!camera.inPlanetPhysicsFrame()) {
+            leftFrame = true;
+            require(glm::dot(previousForward, camera.forwardDirection()) > 0.999,
+                "leaving the planet physics frame must preserve forward viewing attitude");
+            require(glm::dot(previousUp, camera.up()) > 0.999,
+                "leaving the planet physics frame must preserve camera up without a global-Y snap");
+            break;
+        }
+        previousForward = camera.forwardDirection();
+        previousUp = camera.up();
+    }
+    require(leftFrame, "test camera must actually cross the authored planet physics bubble");
+}
+
 } // namespace
 
 int main() {
@@ -116,6 +162,7 @@ int main() {
     testFlightSpeedUsesLogarithmicWheelSteps();
     testDMovesToCameraRightInFlight();
     testAMovesToCameraLeftInFlight();
+    testPlanetToSpaceAttitudeIsContinuous();
     std::cout << "vf_camera_input_tests: PASS\n";
     return 0;
 }
