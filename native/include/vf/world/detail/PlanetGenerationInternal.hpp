@@ -50,9 +50,11 @@ struct Placement {
 [[nodiscard]] glm::vec3 terrainMaterialData(const PlanetDefinition&, const glm::dvec3&, double normalizedHeight) noexcept;
 [[nodiscard]] glm::vec3 proxyColor(const glm::vec3&, const glm::dvec3&);
 [[nodiscard]] SurfaceFrame frameForDirection(const glm::dvec3&);
+[[nodiscard]] std::uint32_t dominantCubeFace(const glm::dvec3&) noexcept;
 [[nodiscard]] glm::dvec3 transformLocalPoint(const glm::dvec3&, const glm::dvec3&, const SurfaceFrame&, double yaw, double leanEast, double leanNorth) noexcept;
 [[nodiscard]] glm::dvec3 transformLocalVector(const glm::dvec3&, const SurfaceFrame&, double yaw, double leanEast, double leanNorth) noexcept;
 void appendLocalMesh(PlanetMesh&, const LocalMesh&, const glm::dvec3&, const SurfaceFrame&, double yaw, double leanEast, double leanNorth);
+void appendDrawRange(PlanetMesh&, std::uint32_t firstIndex, std::uint32_t indexCount, PlanetDrawClass, float representativeRadius = 0.0F);
 void appendTriangle(LocalMesh&, std::uint32_t, std::uint32_t, std::uint32_t);
 void appendQuadBest(LocalMesh&, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t);
 [[nodiscard]] LocalMesh buildStylizedTree(std::uint64_t seed);
