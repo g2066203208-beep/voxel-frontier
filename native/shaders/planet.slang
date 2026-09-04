@@ -3,6 +3,7 @@ struct VertexInput
     float3 position : POSITION;
     float3 normal : NORMAL;
     float3 color : COLOR0;
+    float4 material : TEXCOORD0;
 };
 
 struct VertexOutput
@@ -10,25 +11,44 @@ struct VertexOutput
     float4 position : SV_Position;
     float3 normal : TEXCOORD0;
     float3 color : TEXCOORD1;
-    float3 relativePosition : TEXCOORD2;
+    float4 material : TEXCOORD2;
+    float3 relativePosition : TEXCOORD3;
+    float4 shadowPosition : TEXCOORD4;
 };
 
 struct ShadowVertexOutput
 {
     float4 position : SV_Position;
-    float skipOccluder : TEXCOORD0;
+    float transmission : TEXCOORD0;
+    float emissive : TEXCOORD1;
+};
+
+struct FullscreenOutput
+{
+    float4 position : SV_Position;
+    float2 uv : TEXCOORD0;
 };
 
 struct PushConstants
 {
-    float4x4 viewProj;
-    float4 cameraPosition;
-    float4 sunDirection;
-    float4 sunColorIntensity;
-    float4 objectRotation;
+    float4x4 matrix;
+    float4 data0;
+    float4 data1;
+    float4 data2;
+    float4 data3;
+};
+
+struct SceneUniforms
+{
+    float4x4 lightViewProjection;
+    float4 skyAmbientExposure;
+    float4 groundAmbientShadowTexel;
 };
 
 [[vk::push_constant]] ConstantBuffer<PushConstants> gPush;
+[[vk::binding(0, 0)]] ConstantBuffer<SceneUniforms> gScene;
+[[vk::binding(1, 0)]] Texture2D<float> gShadowMap;
+[[vk::binding(2, 0)]] SamplerState gShadowSampler;
 
 static const float PI = 3.14159265358979323846;
 
@@ -40,42 +60,59 @@ float3 rotateByQuaternion(float3 v, float4 q)
 
 float distributionGGX(float noH, float roughness)
 {
-    float a = roughness * roughness;
+    float a = max(roughness * roughness, 0.0025);
     float a2 = a * a;
-    float denominator = noH * noH * (a2 - 1.0) + 1.0;
-    return a2 / max(PI * denominator * denominator, 1.0e-5);
+    float d = noH * noH * (a2 - 1.0) + 1.0;
+    return a2 / max(PI * d * d, 1.0e-6);
 }
 
 float geometrySchlickGGX(float noX, float roughness)
 {
     float r = roughness + 1.0;
-    float k = (r * r) * 0.125;
+    float k = r * r * 0.125;
     return noX / max(noX * (1.0 - k) + k, 1.0e-5);
 }
 
-float3 fresnelSchlick(float voH, float3 f0)
+float3 fresnelSchlick(float cosTheta, float3 f0)
 {
-    float grazing = pow(saturate(1.0 - voH), 5.0);
+    float grazing = pow(1.0 - saturate(cosTheta), 5.0);
     return f0 + (1.0 - f0) * grazing;
 }
 
-float screenDoorNoise(float2 pixel)
+float3 acesFitted(float3 x)
 {
-    float2 p = floor(pixel);
-    return frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453);
+    float3 a = x * (2.51 * x + 0.03);
+    float3 b = x * (2.43 * x + 0.59) + 0.14;
+    return saturate(a / max(b, 1.0e-5));
+}
+
+float hash21(float2 p)
+{
+    float3 p3 = frac(float3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return frac((p3.x + p3.y) * p3.z);
+}
+
+float hash31(float3 p)
+{
+    p = frac(p * 0.1031);
+    p += dot(p, p.yzx + 33.33);
+    return frac((p.x + p.y) * p.z);
 }
 
 [shader("vertex")]
 VertexOutput vertexMain(VertexInput input)
 {
     VertexOutput output;
-    float3 worldPosition = rotateByQuaternion(input.position, gPush.objectRotation);
-    float3 worldNormal = rotateByQuaternion(input.normal, gPush.objectRotation);
-    float3 relativePosition = worldPosition - gPush.cameraPosition.xyz;
-    output.position = mul(gPush.viewProj, float4(relativePosition, 1.0));
+    float3 worldPosition = rotateByQuaternion(input.position, gPush.data3);
+    float3 worldNormal = normalize(rotateByQuaternion(input.normal, gPush.data3));
+    float3 relativePosition = worldPosition - gPush.data0.xyz;
+    output.position = mul(gPush.matrix, float4(relativePosition, 1.0));
     output.relativePosition = relativePosition;
     output.normal = worldNormal;
     output.color = input.color;
+    output.material = input.material;
+    output.shadowPosition = mul(gScene.lightViewProjection, float4(relativePosition, 1.0));
     return output;
 }
 
@@ -83,128 +120,299 @@ VertexOutput vertexMain(VertexInput input)
 ShadowVertexOutput shadowVertexMain(VertexInput input)
 {
     ShadowVertexOutput output;
-    float3 worldPosition = rotateByQuaternion(input.position, gPush.objectRotation);
-    float3 relativePosition = worldPosition - gPush.cameraPosition.xyz;
-    output.position = mul(gPush.viewProj, float4(relativePosition, 1.0));
-    float marker = min(min(input.color.x, input.color.y), input.color.z);
-    bool atmosphere = input.color.x < 0.0 || input.color.y < 0.0 || input.color.z < 0.0;
-    bool transmissive = marker > 3.5 && marker < 7.5;
-    bool emissive = marker > 7.5;
-    output.skipOccluder = (atmosphere || transmissive || emissive) ? 1.0 : 0.0;
+    float3 worldPosition = rotateByQuaternion(input.position, gPush.data3);
+    float3 relativePosition = worldPosition - gPush.data0.xyz;
+    output.position = mul(gPush.matrix, float4(relativePosition, 1.0));
+    output.transmission = input.material.z;
+    output.emissive = input.material.w;
     return output;
 }
 
 [shader("fragment")]
 void shadowFragmentMain(ShadowVertexOutput input)
 {
-    if (input.skipOccluder > 0.5) discard;
+    // Transparent and emissive geometry does not become an opaque black occluder.
+    if (input.transmission > 0.02 || input.emissive > 0.5) discard;
 }
 
-[shader("fragment")]
-float4 fragmentMain(VertexOutput input) : SV_Target
+float shadowVisibility(float4 lightClip, float noL)
+{
+    if (lightClip.w <= 0.0) return 1.0;
+    float3 ndc = lightClip.xyz / lightClip.w;
+    float2 uv = ndc.xy * 0.5 + 0.5;
+    uv.y = 1.0 - uv.y;
+    if (any(uv < 0.0) || any(uv > 1.0) || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
+
+    float texel = max(gScene.groundAmbientShadowTexel.w, 1.0 / 4096.0);
+    float bias = max(0.00025, 0.0012 * (1.0 - noL));
+    float visible = 0.0;
+    [unroll]
+    for (int y = -1; y <= 1; ++y)
+    {
+        [unroll]
+        for (int x = -1; x <= 1; ++x)
+        {
+            float stored = gShadowMap.SampleLevel(gShadowSampler, uv + float2(x, y) * texel, 0.0);
+            visible += ndc.z - bias <= stored ? 1.0 : 0.0;
+        }
+    }
+    return visible / 9.0;
+}
+
+float3 evaluatePbr(VertexOutput input, bool transparent)
 {
     float3 n = normalize(input.normal);
-    float3 l = normalize(gPush.sunDirection.xyz);
+    float3 l = normalize(gPush.data1.xyz);
     float3 v = normalize(-input.relativePosition);
-
-    if (input.color.x < 0.0 || input.color.y < 0.0 || input.color.z < 0.0)
-    {
-        float3 packed = max(-input.color, 0.0);
-        float opticalStrength = max(max(packed.x, packed.y), packed.z);
-        float3 tint = packed / max(opticalStrength, 1.0e-4);
-        float grazing = pow(saturate(1.0 - abs(dot(n, v))), 0.55);
-        float forwardScatter = pow(saturate(dot(l, -v) * 0.5 + 0.5), 6.0);
-        float sunFacing = saturate(dot(n, l) * 0.5 + 0.5);
-        float coverage = saturate(opticalStrength * (0.025 + 0.95 * grazing));
-        if (screenDoorNoise(input.position.xy) > coverage) discard;
-        float3 stellar = max(gPush.sunColorIntensity.rgb, 0.0)
-            * max(gPush.sunColorIntensity.a, 0.0);
-        float3 scatter = tint
-            * (0.035 + 0.78 * grazing + 0.22 * forwardScatter)
-            * (0.28 + 0.72 * sunFacing)
-            * max(stellar, float3(0.06, 0.06, 0.06));
-        return float4(scatter, 1.0);
-    }
-
-    // Zero-descriptor material encoding used only by this hardware acceptance build:
-    // [0,1] stone/terrain, +1 wood, +2 metal, +4 colored glass, +8 emissive/HUD/star.
-    float3 encoded = input.color;
-    float marker = min(min(encoded.x, encoded.y), encoded.z);
-    float3 baseColor = saturate(encoded);
-    float metallic = 0.0;
-    float roughness = 0.92;
-    float transmission = 0.0;
-    float emissive = 0.0;
-
-    if (marker > 7.5)
-    {
-        baseColor = saturate(encoded - 8.0);
-        roughness = 0.35;
-        emissive = 16.0;
-    }
-    else if (marker > 3.5)
-    {
-        baseColor = saturate(encoded - 4.0);
-        roughness = 0.055;
-        transmission = 0.90;
-    }
-    else if (marker > 1.5)
-    {
-        baseColor = saturate(encoded - 2.0);
-        metallic = 1.0;
-        roughness = 0.14;
-    }
-    else if (marker > 0.95)
-    {
-        baseColor = saturate(encoded - 1.0);
-        roughness = 0.70;
-    }
-
     float3 h = normalize(l + v);
+
+    float metallic = saturate(input.material.x);
+    float roughness = clamp(input.material.y, 0.045, 1.0);
+    float transmission = saturate(input.material.z);
+    float emissive = max(input.material.w, 0.0);
+    float3 baseColor = max(input.color, 0.0);
+
     float noL = saturate(dot(n, l));
-    float noV = saturate(dot(n, v));
+    float noV = max(saturate(dot(n, v)), 1.0e-4);
     float noH = saturate(dot(n, h));
     float voH = saturate(dot(v, h));
 
     float3 f0 = lerp(float3(0.04, 0.04, 0.04), baseColor, metallic);
+    float3 f = fresnelSchlick(voH, f0);
     float d = distributionGGX(noH, roughness);
     float g = geometrySchlickGGX(noV, roughness) * geometrySchlickGGX(noL, roughness);
-    float3 f = fresnelSchlick(voH, f0);
-    float3 specular = (d * g * f) / max(4.0 * noV * max(noL, 1.0e-4), 1.0e-4);
+    float3 specular = d * g * f / max(4.0 * noV * max(noL, 1.0e-4), 1.0e-4);
     float3 kd = (1.0 - f) * (1.0 - metallic) * (1.0 - transmission);
     float3 diffuse = kd * baseColor / PI;
 
-    float3 stellarRadiance = max(gPush.sunColorIntensity.rgb, 0.0)
-        * max(gPush.sunColorIntensity.a, 0.0);
-    float3 direct = (diffuse + specular) * noL * stellarRadiance;
+    float shadow = shadowVisibility(input.shadowPosition, noL);
+    float3 stellar = max(gPush.data2.rgb, 0.0) * max(gPush.data2.a, 0.0);
+    float3 direct = (diffuse + specular) * noL * stellar * shadow;
 
-    // Environment contribution is always present. Back-facing faces and cast-shadow surfaces
-    // retain diffuse sky irradiance, warm terrain bounce and roughness-dependent specular IBL
-    // instead of collapsing to pure black.
     float skyWeight = saturate(n.y * 0.5 + 0.5);
-    float3 skyRadiance = lerp(float3(0.020, 0.017, 0.014), float3(0.13, 0.21, 0.36), skyWeight);
-    float3 groundBounce = float3(0.070, 0.052, 0.032) * saturate(-n.y * 0.5 + 0.5);
+    float3 skyIrradiance = max(gScene.skyAmbientExposure.rgb, 0.0) * (0.28 + 0.72 * skyWeight);
+    float3 groundIrradiance = max(gScene.groundAmbientShadowTexel.rgb, 0.0)
+        * saturate(-n.y * 0.5 + 0.5);
+    float3 ambientDiffuse = baseColor * (skyIrradiance + groundIrradiance) * (1.0 - metallic) * (1.0 - transmission);
+
     float3 r = reflect(-v, n);
     float reflectionSky = saturate(r.y * 0.5 + 0.5);
-    float3 reflectionColor = lerp(float3(0.032, 0.026, 0.021), float3(0.22, 0.34, 0.54), reflectionSky);
-    float3 ambientDiffuse = baseColor * (skyRadiance + groundBounce) * (1.0 - metallic) * (1.0 - transmission);
-    float3 ambientSpecular = reflectionColor * f * (1.0 - roughness * 0.84);
+    float3 reflectionColor = lerp(
+        max(gScene.groundAmbientShadowTexel.rgb, float3(0.004, 0.004, 0.004)),
+        max(gScene.skyAmbientExposure.rgb, float3(0.008, 0.012, 0.02)),
+        reflectionSky);
+    float3 ambientSpecular = reflectionColor * f * (1.0 - 0.72 * roughness);
 
-    if (transmission > 0.0)
+    if (transparent)
     {
-        float fresnelAmount = saturate(max(max(f.x, f.y), f.z));
-        // Thin-volume colored-glass preview: view-angle Fresnel reflection plus Beer-like tinting
-        // of the environment seen through the pane. The ground transmission footprint is emitted
-        // separately from the exact projected box silhouette in Main.cpp.
-        float viewThickness = 1.0 / max(abs(dot(n, v)), 0.18);
-        float3 absorptionTint = pow(max(baseColor, float3(0.02, 0.02, 0.02)), viewThickness * 0.55);
-        float3 transmitted = lerp(reflectionColor, skyRadiance, 0.62)
-            * absorptionTint * transmission;
-        float coverage = saturate(0.12 + 0.38 * fresnelAmount + 0.10 * (1.0 - transmission));
-        if (screenDoorNoise(input.position.xy) > coverage) discard;
-        return float4(direct * 0.28 + ambientSpecular * 2.6 + transmitted * (1.0 - fresnelAmount), 1.0);
+        // Thin transmissive solid approximation: Fresnel reflection + environment transmission.
+        // The framebuffer blend supplies the already-lit scene behind the pane; absorption controls
+        // the transmitted tint without stochastic screen-door holes.
+        float cosV = max(abs(dot(n, v)), 0.12);
+        float path = 1.0 / cosV;
+        float3 absorption = max(0.04, 1.0 - baseColor) * 0.72;
+        float3 transmittance = exp(-absorption * path);
+        float fresnelAmount = saturate(max(f.x, max(f.y, f.z)));
+        float3 glassLighting = ambientSpecular * 2.2 + direct * 0.18;
+        glassLighting += baseColor * 0.018;
+        glassLighting += transmittance * (1.0 - fresnelAmount) * 0.08;
+        return glassLighting;
     }
 
-    float3 emission = baseColor * emissive;
-    return float4(direct + ambientDiffuse + ambientSpecular + emission, 1.0);
+    return direct + ambientDiffuse + ambientSpecular + baseColor * emissive;
+}
+
+[shader("fragment")]
+float4 opaqueFragmentMain(VertexOutput input) : SV_Target
+{
+    if (input.material.z > 0.02) discard;
+    float exposure = max(gScene.skyAmbientExposure.a, 0.01);
+    float3 linearColor = evaluatePbr(input, false) * exposure;
+    return float4(acesFitted(linearColor), 1.0);
+}
+
+[shader("fragment")]
+float4 transparentFragmentMain(VertexOutput input) : SV_Target
+{
+    float transmission = saturate(input.material.z);
+    if (transmission <= 0.02) discard;
+
+    float3 n = normalize(input.normal);
+    float3 v = normalize(-input.relativePosition);
+    float ior = 1.50;
+    float f0Scalar = ((ior - 1.0) / (ior + 1.0));
+    f0Scalar *= f0Scalar;
+    float fresnel = f0Scalar + (1.0 - f0Scalar) * pow(1.0 - saturate(abs(dot(n, v))), 5.0);
+    float opticalOpacity = saturate((1.0 - transmission) * 0.48 + fresnel * 0.72 + 0.025);
+
+    float exposure = max(gScene.skyAmbientExposure.a, 0.01);
+    float3 linearColor = evaluatePbr(input, true) * exposure;
+    float3 color = acesFitted(linearColor);
+    return float4(color, opticalOpacity);
+}
+
+[shader("vertex")]
+FullscreenOutput fullscreenVertexMain(uint vertexId : SV_VertexID)
+{
+    FullscreenOutput output;
+    float2 p = vertexId == 0 ? float2(-1.0, -1.0)
+        : (vertexId == 1 ? float2(3.0, -1.0) : float2(-1.0, 3.0));
+    output.position = float4(p, 0.0, 1.0);
+    output.uv = p * float2(0.5, -0.5) + 0.5;
+    return output;
+}
+
+bool raySphere(float3 origin, float3 direction, float radius, out float nearT, out float farT)
+{
+    float b = dot(origin, direction);
+    float c = dot(origin, origin) - radius * radius;
+    float h = b * b - c;
+    if (h < 0.0)
+    {
+        nearT = 0.0;
+        farT = 0.0;
+        return false;
+    }
+    h = sqrt(h);
+    nearT = -b - h;
+    farT = -b + h;
+    return farT >= 0.0;
+}
+
+float densityAtRadius(float radius, float groundRadius, float scaleHeight)
+{
+    return exp(-max(0.0, radius - groundRadius) / max(scaleHeight, 1.0));
+}
+
+float sunOpticalDepth(float3 point, float3 sunDir, float atmosphereRadius, float groundRadius, float scaleHeight)
+{
+    float t0, t1;
+    if (!raySphere(point, sunDir, atmosphereRadius, t0, t1)) return 0.0;
+    float ground0, ground1;
+    if (raySphere(point, sunDir, groundRadius, ground0, ground1) && ground1 > 0.001 && ground0 > 0.0)
+        return 1.0e8;
+
+    float stepLength = max(t1, 0.0) / 4.0;
+    float opticalDepth = 0.0;
+    [unroll]
+    for (int i = 0; i < 4; ++i)
+    {
+        float t = (i + 0.5) * stepLength;
+        opticalDepth += densityAtRadius(length(point + sunDir * t), groundRadius, scaleHeight) * stepLength;
+    }
+    return opticalDepth;
+}
+
+float3 reconstructWorldRay(float2 uv)
+{
+    float2 ndc = float2(uv.x * 2.0 - 1.0, 1.0 - uv.y * 2.0);
+    // Reversed-Z infinite projection: z=1 samples the near plane. The inverse VP maps it to
+    // camera-relative world coordinates, so normalization gives the correct view ray.
+    float4 p = mul(gPush.matrix, float4(ndc, 1.0, 1.0));
+    return normalize(p.xyz / max(abs(p.w), 1.0e-7));
+}
+
+float3 proceduralStars(float3 ray)
+{
+    // Stable angular cells: rare high-threshold impulses produce a dense Milky-Way-like field
+    // without ever introducing full-screen stochastic dither.
+    float3 cell = floor(ray * 1450.0);
+    float h = hash31(cell);
+    float star = smoothstep(0.9968, 0.9999, h);
+    float galactic = pow(saturate(1.0 - abs(ray.y * 0.72 + ray.z * 0.24)), 5.0);
+    star += smoothstep(0.9982, 0.99995, hash31(cell * 0.43 + 17.0)) * galactic * 0.75;
+    float temperature = hash31(cell + 91.7);
+    float3 tint = lerp(float3(1.0, 0.70, 0.48), float3(0.65, 0.80, 1.0), temperature);
+    return tint * star * (0.55 + 2.8 * pow(h, 24.0));
+}
+
+[shader("fragment")]
+float4 skyFragmentMain(FullscreenOutput input) : SV_Target
+{
+    float3 ray = reconstructWorldRay(input.uv);
+    float3 cameraPlanet = gPush.data0.xyz;
+    float3 sunDir = normalize(gPush.data1.xyz);
+    float groundRadius = max(gPush.data2.x, 1.0);
+    float atmosphereRadius = groundRadius + max(gPush.data2.y, 1.0);
+    float scaleHeight = max(gPush.data2.z, 100.0);
+    float mieScale = max(gPush.data2.w, 0.0);
+    float exposure = max(gPush.data3.x, 0.01);
+
+    float atmoNear, atmoFar;
+    bool hitsAtmosphere = raySphere(cameraPlanet, ray, atmosphereRadius, atmoNear, atmoFar);
+    float groundNear, groundFar;
+    bool hitsGround = raySphere(cameraPlanet, ray, groundRadius, groundNear, groundFar)
+        && groundFar > 0.0 && groundNear > 0.0;
+
+    float3 background = float3(0.00035, 0.00045, 0.00075) + proceduralStars(ray);
+    float sunAngularRadius = 0.004675;
+    float sunDisc = smoothstep(cos(sunAngularRadius * 1.15), cos(sunAngularRadius * 0.85), dot(ray, sunDir));
+    if (!hitsGround) background += gPush.data3.yzw * sunDisc * 18.0;
+
+    if (!hitsAtmosphere)
+        return float4(acesFitted(background * exposure), 1.0);
+
+    float startT = max(atmoNear, 0.0);
+    float endT = max(atmoFar, startT);
+    if (hitsGround) endT = min(endT, groundNear);
+    if (endT <= startT)
+        return float4(acesFitted(background * exposure), 1.0);
+
+    const float3 betaR = float3(5.802e-6, 13.558e-6, 33.100e-6);
+    float betaM = 21.0e-6 * mieScale;
+    float mu = dot(ray, sunDir);
+    float rayleighPhase = 3.0 * (1.0 + mu * mu) / (16.0 * PI);
+    float g = 0.76;
+    float miePhase = (1.0 - g * g)
+        / max(4.0 * PI * pow(1.0 + g * g - 2.0 * g * mu, 1.5), 1.0e-5);
+
+    float segment = (endT - startT) / 8.0;
+    float opticalView = 0.0;
+    float3 scattering = 0.0;
+    float3 transmittance = 1.0;
+    [unroll]
+    for (int i = 0; i < 8; ++i)
+    {
+        float t = startT + (i + 0.5) * segment;
+        float3 samplePoint = cameraPlanet + ray * t;
+        float density = densityAtRadius(length(samplePoint), groundRadius, scaleHeight);
+        float sunDepth = sunOpticalDepth(samplePoint, sunDir, atmosphereRadius, groundRadius, scaleHeight);
+        if (sunDepth > 1.0e7) continue;
+
+        opticalView += density * segment;
+        float3 extinction = betaR * (opticalView + sunDepth) + betaM * (opticalView + sunDepth);
+        float3 lightTransmittance = exp(-extinction);
+        float3 source = (betaR * rayleighPhase + betaM * miePhase) * density;
+        scattering += source * lightTransmittance * segment * gPush.data3.yzw;
+    }
+
+    transmittance = exp(-(betaR + betaM) * opticalView);
+    float3 color = scattering * 17.0;
+    if (!hitsGround) color += background * transmittance;
+    else color += float3(0.008, 0.009, 0.007) * transmittance;
+
+    return float4(acesFitted(color * exposure), 1.0);
+}
+
+[shader("fragment")]
+float4 hudFragmentMain(FullscreenOutput input) : SV_Target
+{
+    float2 sizePx = max(gPush.data0.xy, float2(1.0, 1.0));
+    float2 p = input.position.xy - sizePx * 0.5;
+    float2 ap = abs(p);
+
+    float crossHorizontal = step(ap.y, 1.2) * step(4.0, ap.x) * step(ap.x, 11.0);
+    float crossVertical = step(ap.x, 1.2) * step(4.0, ap.y) * step(ap.y, 11.0);
+    float centerDot = 1.0 - step(1.15, length(p));
+    float crosshair = saturate(crossHorizontal + crossVertical + centerDot);
+
+    float speedNorm = saturate(gPush.data0.z);
+    float2 barOrigin = float2(sizePx.x * 0.5 + 34.0, sizePx.y * 0.5 - 50.0);
+    float2 bp = input.position.xy - barOrigin;
+    float outline = step(abs(bp.x), 3.0) * step(abs(bp.y - 40.0), 42.0);
+    float fill = step(abs(bp.x), 1.45) * step(0.0, bp.y) * step(bp.y, 80.0 * speedNorm);
+
+    float alpha = saturate(crosshair * 0.96 + outline * 0.35 + fill * 0.85);
+    float3 color = lerp(float3(0.94, 0.96, 1.0), float3(0.42, 0.78, 1.0), fill);
+    return float4(color, alpha);
 }
