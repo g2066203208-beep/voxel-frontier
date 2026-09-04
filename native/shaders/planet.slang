@@ -359,7 +359,13 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     horizonColor = lerp(float3(0.024, 0.037, 0.062), horizonColor, atmosphereDensity);
 
     float3 stellarRadiance = max(gPush.sunColorIntensity.rgb, 0.0) * max(gPush.sunColorIntensity.a, 0.0);
-    stellarRadiance *= lerp(float3(1.0, 0.48, 0.24), float3(1.0, 0.95, 0.86), daylight);
+    // The reference HDRI is explicitly a low warm sunset. Keep daylight visibility and color
+    // temperature separate: a sun can still be visible while becoming progressively warmer near
+    // the horizon. This avoids the old behavior where low-angle sunlight turned white too early.
+    float sunWarmth = 1.0 - smoothstep(0.045, 0.38, solarElevation);
+    float3 neutralSun = float3(1.0, 0.95, 0.86);
+    float3 lowSun = float3(1.0, 0.49, 0.23);
+    stellarRadiance *= lerp(neutralSun, lowSun, sunWarmth * 0.88);
     float shadowNoL = saturate(dot(smoothNormal, l));
     float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, shadowNoL, l, smoothNormal);
     float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.10 * shadow;
@@ -407,11 +413,16 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float3 viewRay = normalize(input.relativePosition);
         float horizonView = 1.0 - saturate(abs(dot(viewRay, surfaceUp)));
         float extinction = 0.00245 * atmosphereDensity * (0.72 + 0.95 * horizonView * horizonView);
-        float fogFactor = saturate(1.0 - exp(-viewDistance * extinction));
+        // Match Blender Mist Pass semantics more closely: the near field stays crisp, then depth
+        // separation starts beyond a defined distance. This prevents the entire frame from being
+        // washed by haze while retaining a strong blue atmospheric layer in the distance.
+        const float fogStartMeters = 28.0;
+        float fogTravel = max(0.0, viewDistance - fogStartMeters);
+        float fogFactor = saturate(1.0 - exp(-fogTravel * extinction));
         float3 fogColor = lerp(skyColor, horizonColor, 0.40 + 0.48 * horizonView);
         float fogLuma = dot(fogColor, float3(0.2126, 0.7152, 0.0722));
-        fogColor = lerp(fogColor, float3(fogLuma, fogLuma, fogLuma), fogFactor * 0.10);
-        color = lerp(color, fogColor, fogFactor * 0.88);
+        fogColor = lerp(fogColor, float3(fogLuma, fogLuma, fogLuma), fogFactor * 0.08);
+        color = lerp(color, fogColor, fogFactor * 0.92);
     }
 
     return float4(toneMapAgX(color), 1.0);
