@@ -3,7 +3,6 @@
 #include <cstdint>
 
 #include <glm/glm.hpp>
-#include <glm/gtx/norm.hpp>
 
 #include "vf/world/CelestialPhysicsFrame.hpp"
 #include "vf/world/CelestialSystem.hpp"
