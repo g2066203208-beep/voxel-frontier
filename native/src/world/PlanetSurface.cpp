@@ -146,12 +146,23 @@ PlanetMesh buildPlanetSurface(const PlanetDefinition& definition, std::uint32_t 
         appendFace(mesh, &definition, glm::dvec3{0.0}, nullptr, definition.radius, face, subdivisionsPerFace, nullptr);
     }
 
-    // Ecology is tied to the high-detail planetary surface LOD. Low-resolution meshes remain
-    // terrain-only; the runtime 64x64 face mesh receives the deterministic tree/rock layer.
-    constexpr std::uint32_t kEcologyMinSubdivisionsPerFace = 24U;
-    if (subdivisionsPerFace >= kEcologyMinSubdivisionsPerFace) {
+    // Ecology and visible ocean are tied to the high-detail planetary surface LOD. Low-resolution
+    // meshes remain terrain-only for fast tests/proxies; the runtime 64x64 face mesh receives the
+    // deterministic trees, rocks and a deliberately coarser faceted ocean.
+    constexpr std::uint32_t kWorldDetailMinSubdivisionsPerFace = 24U;
+    if (subdivisionsPerFace >= kWorldDetailMinSubdivisionsPerFace) {
         const auto treePlacements = detail::scatterTrees(mesh, definition);
         detail::scatterRocks(mesh, definition, treePlacements);
+
+        // Main.cpp's authoritative physical ocean currently uses radius - 6 m. Keeping the visible
+        // mean sea surface identical prevents the renderer and buoyancy/ocean queries disagreeing.
+        constexpr double kMeanSeaLevelBelowReferenceMeters = 6.0;
+        constexpr std::uint32_t kOceanSubdivisionsPerFace = 40U;
+        appendOceanSurface(
+            mesh,
+            definition,
+            definition.radius - kMeanSeaLevelBelowReferenceMeters,
+            kOceanSubdivisionsPerFace);
     }
     return mesh;
 }
