@@ -264,8 +264,6 @@ bool CharacterController::stickToGround(
     const glm::dvec3 gravityUp = gravityUpAt(ioPosition);
     const double maxDrop = settings_.stickToFloorDistance;
 
-    // First probe the analytical terrain. Because the planet surface is smooth and radial,
-    // a short down cast can be evaluated directly without allocating a triangle mesh query.
     {
         const PhysicsEnvironment& environment = world_->environment();
         const CelestialBody* body = primaryBody(environment);
@@ -293,8 +291,6 @@ bool CharacterController::stickToGround(
         }
     }
 
-    // Then probe rigid bodies, including moving platforms, by shifting the capsule down and
-    // depenetrating it back to the first supporting surface.
     const glm::dvec3 probePosition = ioPosition - gravityUp * maxDrop;
     const ShapePose probePose = {probePosition, capsuleOrientation(gravityUp)};
     for (RigidBody& body : world_->bodies()) {
@@ -366,7 +362,8 @@ void CharacterController::moveWithCollisions(const glm::dvec3& displacement) {
                 position_ = steppedPosition;
                 velocity_ = steppedVelocity;
                 ResolveResult support{};
-                (void)stickToGround(position_, velocity_, support);
+                if (glm::dot(velocity_, gravityUpAt(position_)) <= 0.05)
+                    (void)stickToGround(position_, velocity_, support);
                 if (support.supported) latestSupport = support;
                 continue;
             }
@@ -377,7 +374,8 @@ void CharacterController::moveWithCollisions(const glm::dvec3& displacement) {
         if (resolved.supported) latestSupport = resolved;
     }
 
-    if (!latestSupport.supported) {
+    const double upwardSpeed = glm::dot(velocity_, gravityUpAt(position_));
+    if (!latestSupport.supported && upwardSpeed <= 0.05) {
         ResolveResult support{};
         if (stickToGround(position_, velocity_, support)) latestSupport = support;
     }
