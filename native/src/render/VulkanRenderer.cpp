@@ -347,15 +347,15 @@ void VulkanRenderer::createCommands() {
     poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     poolInfo.queueFamilyIndex = queueFamilyIndex_;
     VkResult result = vkCreateCommandPool(device_, &poolInfo, nullptr, &commandPool_);
-    if (result != VK_SUCCESS) fail("vkCreateCommandPool failed", result);
+    if (result != VK_SUCCESS) fail("Failed to create Vulkan command pool", result);
 
-    VkCommandBufferAllocateInfo allocInfo{};
-    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    allocInfo.commandPool = commandPool_;
-    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount = kFramesInFlight;
-    result = vkAllocateCommandBuffers(device_, &allocInfo, commandBuffers_.data());
-    if (result != VK_SUCCESS) fail("vkAllocateCommandBuffers failed", result);
+    VkCommandBufferAllocateInfo allocateInfo{};
+    allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocateInfo.commandPool = commandPool_;
+    allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocateInfo.commandBufferCount = static_cast<std::uint32_t>(commandBuffers_.size());
+    result = vkAllocateCommandBuffers(device_, &allocateInfo, commandBuffers_.data());
+    if (result != VK_SUCCESS) fail("Failed to allocate Vulkan command buffers", result);
 }
 
 void VulkanRenderer::createSyncObjects() {
@@ -590,7 +590,7 @@ void VulkanRenderer::createDepthResources() {
     result = vkAllocateMemory(device_, &allocInfo, nullptr, &depthMemory_);
     if (result != VK_SUCCESS) fail("vkAllocateMemory(depth) failed", result);
     result = vkBindImageMemory(device_, depthImage_, depthMemory_, 0);
-    if (result != VK_SUCCESS) fail("vkBindImageMemory failed", result);
+    if (result != VK_SUCCESS) fail("vkBindImageMemory(depth) failed", result);
 
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
