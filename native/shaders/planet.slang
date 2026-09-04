@@ -86,6 +86,71 @@ float3 acesFitted(float3 x)
     return saturate(a / max(b, 1.0e-5));
 }
 
+float luminance709(float3 color)
+{
+    return dot(color, float3(0.2126, 0.7152, 0.0722));
+}
+
+// Procedural art direction only: no LUT, texture, HDRI or authored palette asset.
+// The structure follows the lesson from SNOWFLOW's public aerial-perspective implementation:
+// distance reduces contrast, hue converges toward the sky, and the sun-facing horizon warms.
+float3 stylizedSkyPalette(float3 viewDir, float3 sunDir)
+{
+    viewDir = normalize(viewDir);
+    sunDir = normalize(sunDir);
+    float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.65);
+    float zenith = saturate(viewDir.y * 0.88 + 0.12);
+    float sunFacing = pow(saturate(dot(viewDir, sunDir)), 4.0);
+    float lowSun = 1.0 - smoothstep(0.22, 0.68, sunDir.y);
+    float daylight = smoothstep(-0.12, 0.16, sunDir.y);
+
+    float3 nightZenith = float3(0.018, 0.027, 0.060);
+    float3 nightHorizon = float3(0.075, 0.070, 0.115);
+    float3 dayZenith = float3(0.18, 0.43, 0.72);
+    float3 dayHorizon = float3(0.62, 0.69, 0.72);
+    float3 zenithColor = lerp(nightZenith, dayZenith, daylight);
+    float3 horizonColor = lerp(nightHorizon, dayHorizon, daylight);
+    float3 color = lerp(horizonColor, zenithColor, zenith);
+
+    float3 sunset = float3(1.00, 0.43, 0.20);
+    float warm = horizon * sunFacing * lowSun * smoothstep(-0.18, 0.12, sunDir.y);
+    return lerp(color, sunset, saturate(warm * 0.92));
+}
+
+float3 stylizedWarmCoolGrade(float3 color)
+{
+    color = max(color, 0.0);
+    float y = luminance709(color);
+    float3 saturated = lerp(float3(y, y, y), color, 1.14);
+    float highlight = smoothstep(0.20, 0.82, y);
+    float3 coolShadow = float3(0.91, 0.98, 1.10);
+    float3 warmLight = float3(1.07, 1.015, 0.93);
+    return max(saturated * lerp(coolShadow, warmLight, highlight), 0.0);
+}
+
+float3 applyStylizedAerial(float3 color, VertexOutput input, float strength)
+{
+    float distanceMeters = length(input.relativePosition);
+    if (distanceMeters <= 350.0 || strength <= 0.0) return color;
+
+    float3 viewDir = input.relativePosition / max(distanceMeters, 1.0e-4);
+    float3 sunDir = normalize(gPush.data1.xyz);
+    float cameraAltitude = max(gPush.data0.y, 0.0);
+
+    // Near-surface haze is strong; it naturally disappears as the camera leaves the atmosphere.
+    // Clamp the path because the physical atmosphere has finite thickness: a star millions of
+    // kilometres away should not accumulate millions of kilometres of ground fog.
+    float atmospherePresence = exp(-cameraAltitude / 90000.0);
+    float effectiveDistance = min(max(distanceMeters - 350.0, 0.0), 180000.0);
+    float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.35);
+    float density = 2.25e-5 * (0.30 + 0.70 * horizon);
+    float extinction = 1.0 - exp(-effectiveDistance * density);
+    extinction = saturate(extinction * atmospherePresence * strength);
+
+    float3 haze = stylizedSkyPalette(viewDir, sunDir);
+    return lerp(color, haze, extinction);
+}
+
 float hash21(float2 p)
 {
     float3 p3 = frac(float3(p.xyx) * 0.1031);
@@ -131,7 +196,6 @@ ShadowVertexOutput shadowVertexMain(VertexInput input)
 [shader("fragment")]
 void shadowFragmentMain(ShadowVertexOutput input)
 {
-    // Transparent and emissive geometry does not become an opaque black occluder.
     if (input.transmission > 0.02 || input.emissive > 0.5) discard;
 }
 
@@ -139,9 +203,6 @@ float shadowVisibility(float4 lightClip, float noL)
 {
     if (lightClip.w <= 0.0) return 1.0;
     float3 ndc = lightClip.xyz / lightClip.w;
-    // The light projection is already converted to Vulkan's Y convention on the CPU.
-    // Sampling the rendered depth image uses the same normalized coordinates; flipping Y here
-    // a second time mirrors the shadow map and visibly detaches shadows from their casters.
     float2 uv = ndc.xy * 0.5 + 0.5;
     if (any(uv < 0.0) || any(uv > 1.0) || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
 
@@ -207,9 +268,6 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
 
     if (transparent)
     {
-        // Thin transmissive solid approximation: Fresnel reflection + environment transmission.
-        // The framebuffer blend supplies the already-lit scene behind the pane; absorption controls
-        // the transmitted tint without stochastic screen-door holes.
         float cosV = max(abs(dot(n, v)), 0.12);
         float path = 1.0 / cosV;
         float3 absorption = max(0.04, 1.0 - baseColor) * 0.72;
@@ -230,6 +288,8 @@ float4 opaqueFragmentMain(VertexOutput input) : SV_Target
     if (input.material.z > 0.02) discard;
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
     float3 linearColor = evaluatePbr(input, false) * exposure;
+    linearColor = applyStylizedAerial(linearColor, input, 1.0);
+    linearColor = stylizedWarmCoolGrade(linearColor);
     return float4(acesFitted(linearColor), 1.0);
 }
 
@@ -249,7 +309,8 @@ float4 transparentFragmentMain(VertexOutput input) : SV_Target
 
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
     float3 linearColor = evaluatePbr(input, true) * exposure;
-    float3 color = acesFitted(linearColor);
+    linearColor = applyStylizedAerial(linearColor, input, 0.46);
+    float3 color = acesFitted(stylizedWarmCoolGrade(linearColor));
     return float4(color, opticalOpacity);
 }
 
@@ -308,16 +369,12 @@ float sunOpticalDepth(float3 point, float3 sunDir, float atmosphereRadius, float
 float3 reconstructWorldRay(float2 uv)
 {
     float2 ndc = float2(uv.x * 2.0 - 1.0, 1.0 - uv.y * 2.0);
-    // Reversed-Z infinite projection: z=1 samples the near plane. The inverse VP maps it to
-    // camera-relative world coordinates, so normalization gives the correct view ray.
     float4 p = mul(gPush.matrix, float4(ndc, 1.0, 1.0));
     return normalize(p.xyz / max(abs(p.w), 1.0e-7));
 }
 
 float3 proceduralStars(float3 ray)
 {
-    // Stable angular cells: rare high-threshold impulses produce a dense Milky-Way-like field
-    // without ever introducing full-screen stochastic dither.
     float3 cell = floor(ray * 1450.0);
     float h = hash31(cell);
     float star = smoothstep(0.9968, 0.9999, h);
@@ -393,7 +450,14 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
     if (!hitsGround) color += background * transmittance;
     else color += float3(0.008, 0.009, 0.007) * transmittance;
 
-    return float4(acesFitted(color * exposure), 1.0);
+    // Preserve the physically coherent scattering result, then art-direct only the dense lower
+    // atmosphere. The weight naturally vanishes in high atmosphere/space, so orbital views keep
+    // their real black-space contrast while ground scenes gain Firewatch-like readable layers.
+    float localDensity = densityAtRadius(length(cameraPlanet), groundRadius, scaleHeight);
+    float styleWeight = saturate(localDensity * 0.38);
+    color = lerp(color, stylizedSkyPalette(ray, sunDir), styleWeight);
+
+    return float4(acesFitted(stylizedWarmCoolGrade(color) * exposure), 1.0);
 }
 
 [shader("fragment")]
