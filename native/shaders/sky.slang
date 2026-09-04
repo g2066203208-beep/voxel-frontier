@@ -17,6 +17,39 @@ struct SkyVertexOutput
     float2 uv : TEXCOORD0;
 };
 
+float hash21(float2 p)
+{
+    float3 p3 = frac(float3(p.x, p.y, p.x) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return frac((p3.x + p3.y) * p3.z);
+}
+
+float valueNoise2(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash21(i);
+    float b = hash21(i + float2(1.0, 0.0));
+    float c = hash21(i + float2(0.0, 1.0));
+    float d = hash21(i + float2(1.0, 1.0));
+    return lerp(lerp(a, b, f.x), lerp(c, d, f.x), f.y);
+}
+
+float broadCloudField(float2 uv)
+{
+    // Deliberately only two low-frequency layers. The goal is large HDRI-like cloud masses, not
+    // high-frequency procedural speckle. This costs no texture memory or extra descriptors.
+    float2 p = float2(uv.x * 2.15, uv.y * 4.10);
+    float n0 = valueNoise2(p + float2(1.7, -0.4));
+    float n1 = valueNoise2(p * 1.73 + float2(-2.4, 3.1));
+    float macro = n0 * 0.70 + n1 * 0.30;
+    float ribbon = 0.5 + 0.5 * sin(uv.x * 7.0 + uv.y * 12.0 + macro * 2.1);
+    float body = smoothstep(0.51, 0.72, macro * 0.82 + ribbon * 0.18);
+    float skyBand = smoothstep(0.12, 0.27, uv.y) * (1.0 - smoothstep(0.82, 0.98, uv.y));
+    return body * skyBand;
+}
+
 float3 agxInset(float3 v)
 {
     return float3(
@@ -118,11 +151,25 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     float sunAboveHorizon = smoothstep(-0.03, 0.05, solarElevation);
     float sunVisible = sunInFront * sunAboveHorizon;
 
+    // Analytical substitute for the tutorial scene's large sunset HDRI: broad partly-cloudy masses
+    // modulate sky luminance, while remaining continuous enough that the low-poly image never turns
+    // into high-frequency visual noise.
+    float cloudMask = broadCloudField(input.uv) * daylight;
+    float cloudSun = exp(-sunDistance * 5.5) * sunVisible;
+    float cloudHorizonWarmth = twilight * (0.30 + 0.70 * horizonAmount) + cloudSun * 0.36;
+    float3 cloudCool = lerp(float3(0.26, 0.34, 0.47), float3(0.47, 0.55, 0.63), daylight);
+    float3 cloudWarm = float3(0.78, 0.48, 0.28);
+    float3 cloudColor = lerp(cloudCool, cloudWarm, saturate(cloudHorizonWarmth));
+    float cloudOpacity = cloudMask * (0.16 + 0.26 * atmosphere);
+    sky = lerp(sky, cloudColor * (0.70 + 0.30 * daylight), cloudOpacity);
+
     float sunDisk = 1.0 - smoothstep(0.0045, 0.0105, sunDistance);
     float innerGlow = exp(-sunDistance * 45.0);
     float outerGlow = exp(-sunDistance * 13.0);
+    float airGlow = exp(-sunDistance * 6.0);
     float3 sunTint = lerp(float3(1.0, 0.48, 0.18), float3(1.0, 0.93, 0.72), daylight);
-    sky += sunTint * sunVisible * (sunDisk * 3.2 + innerGlow * 0.52 + outerGlow * 0.11 * atmosphere);
+    sky += sunTint * sunVisible
+        * (sunDisk * 3.2 + innerGlow * 0.52 + outerGlow * 0.11 * atmosphere + airGlow * 0.045 * atmosphere);
 
     sky += twilightWarm * twilight * horizonVeil * 0.085;
     sky *= 0.82 + 0.30 * daylight + 0.055 * atmosphere;
