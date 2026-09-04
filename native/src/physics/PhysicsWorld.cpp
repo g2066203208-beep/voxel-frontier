@@ -141,6 +141,15 @@ constexpr std::uint32_t kContactSolverIterations = 10;
     return glm::dot(axis, body.worldInverseInertia() * axis);
 }
 
+void applySolverImpulseAtPoint(
+    RigidBody& body,
+    const glm::dvec3& impulse,
+    const glm::dvec3& worldPoint) noexcept {
+    if (body.motionType != MotionType::Dynamic || body.inverseMass <= 0.0) return;
+    body.linearVelocity += impulse * body.inverseMass;
+    body.angularVelocity += body.worldInverseInertia() * glm::cross(worldPoint - body.position, impulse);
+}
+
 [[nodiscard]] std::uint64_t contactPairKey(std::uint32_t a, std::uint32_t b) noexcept {
     const std::uint32_t low = std::min(a, b);
     const std::uint32_t high = std::max(a, b);
@@ -671,7 +680,7 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
         const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, normal);
         normalImpulseMagnitude = (targetSeparationSpeed - normalVelocity) / inverseEffectiveMass;
         if (normalImpulseMagnitude > 0.0) {
-            rigidBody.applyImpulseAtPoint(normal * normalImpulseMagnitude, contactPoint);
+            applySolverImpulseAtPoint(rigidBody, normal * normalImpulseMagnitude, contactPoint);
         }
     }
 
@@ -687,7 +696,7 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
         const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, tangent);
         const double stopImpulse = tangentSpeed / inverseEffectiveMass;
         const double frictionImpulse = std::min(stopImpulse, maxFrictionImpulse);
-        rigidBody.applyImpulseAtPoint(-tangent * frictionImpulse, contactPoint);
+        applySolverImpulseAtPoint(rigidBody, -tangent * frictionImpulse, contactPoint);
     }
 
     const double rollingFactor = std::exp(
@@ -732,6 +741,11 @@ void PhysicsWorld::solveBodyContacts() {
         RigidBody& a = bodies_[indexA];
         RigidBody& b = bodies_[indexB];
         if (a.inverseMass + b.inverseMass <= 0.0) continue;
+        const bool aDormant = a.motionType == MotionType::Static
+            || (a.motionType == MotionType::Dynamic && a.sleeping);
+        const bool bDormant = b.motionType == MotionType::Static
+            || (b.motionType == MotionType::Dynamic && b.sleeping);
+        if (aDormant && bDormant) continue;
 
         ContactManifold geometry{};
         if (!collideShapes(a.collisionShape, a.shapePose(), b.collisionShape, b.shapePose(), geometry)) continue;
@@ -817,8 +831,8 @@ void PhysicsWorld::solveBodyContacts() {
             const glm::dvec3 impulse = manifold.normal * point.accumulatedNormalImpulse
                 + point.accumulatedTangentImpulse;
             if (glm::dot(impulse, impulse) <= 1.0e-20) continue;
-            a.applyImpulseAtPoint(-impulse, point.position);
-            b.applyImpulseAtPoint(impulse, point.position);
+            applySolverImpulseAtPoint(a, -impulse, point.position);
+            applySolverImpulseAtPoint(b, impulse, point.position);
         }
     }
 
@@ -839,8 +853,8 @@ void PhysicsWorld::solveBodyContacts() {
                 const double deltaNormalImpulse = point.accumulatedNormalImpulse - oldNormalImpulse;
                 if (std::abs(deltaNormalImpulse) > 1.0e-12) {
                     const glm::dvec3 impulse = manifold.normal * deltaNormalImpulse;
-                    a.applyImpulseAtPoint(-impulse, point.position);
-                    b.applyImpulseAtPoint(impulse, point.position);
+                    applySolverImpulseAtPoint(a, -impulse, point.position);
+                    applySolverImpulseAtPoint(b, impulse, point.position);
                 }
 
                 relativeVelocity = b.velocityAtPoint(point.position) - a.velocityAtPoint(point.position);
@@ -860,8 +874,8 @@ void PhysicsWorld::solveBodyContacts() {
                 point.accumulatedTangentImpulse = candidate;
                 const glm::dvec3 deltaTangentImpulse = candidate - oldTangentImpulse;
                 if (glm::dot(deltaTangentImpulse, deltaTangentImpulse) > 1.0e-20) {
-                    a.applyImpulseAtPoint(-deltaTangentImpulse, point.position);
-                    b.applyImpulseAtPoint(deltaTangentImpulse, point.position);
+                    applySolverImpulseAtPoint(a, -deltaTangentImpulse, point.position);
+                    applySolverImpulseAtPoint(b, deltaTangentImpulse, point.position);
                 }
             }
         }
