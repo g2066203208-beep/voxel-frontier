@@ -15,9 +15,11 @@
 #include <cmath>
 #include <cstdint>
 #include <exception>
+#include <future>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #include <glm/common.hpp>
@@ -101,7 +103,9 @@ int main() {
         planet.seed = 0x71A9F20DULL;
         planet.radius = 6371000.0;
         planet.maxElevation = 8500.0;
-        planet.atmosphereHeight = 100000.0;
+        planet.atmosphereHeight = 100000.0; // physical weather/aerodynamic atmosphere
+        constexpr double opticalAtmosphereHeight = 145000.0; // smooth low-density visual fade into space
+        constexpr double opticalRayleighScaleHeight = 10200.0;
 
         vf::CelestialSystem celestial;
 
@@ -275,9 +279,9 @@ int main() {
 
         vf::PlanetMesh staticTerrain = buildTerrainLod(lodCenterDirection);
         renderer.uploadPlanetMesh(staticTerrain);
+        std::future<std::pair<glm::dvec3, vf::PlanetMesh>> terrainBuildFuture{};
+        bool terrainBuildInFlight = false;
 
-        // Planet-local physics is now centered on the planet in double precision. Rendering stays
-        // camera-relative, so metre contacts and 6371 km coordinates no longer fight each other.
         vf::CelestialSystem localGravitySystem;
         vf::CelestialBody localGravityBody = aster;
         localGravityBody.position = {};
@@ -376,7 +380,7 @@ int main() {
 
         std::cout << "Voxel Frontier physical planet R2\n";
         std::cout << "CharacterVirtual-style capsule | 50 deg slope | 0.45 m step | stick-to-floor\n";
-        std::cout << "Planet-centered double physics | streamed terrain | physical shadows/glass/atmosphere\n";
+        std::cout << "Async terrain prefetch | smooth inertial space attitude | 145 km optical atmosphere\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
@@ -462,18 +466,33 @@ int main() {
                 interaction.drop();
             }
 
+            // Build the next terrain window on a worker thread before the current window gets near
+            // its recenter threshold. The render thread never waits for noise/mesh synthesis.
             lodCooldown = std::max(0.0, lodCooldown - dt);
             const double altitude = camera.altitude();
-            if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0 && lodCooldown <= 0.0) {
+            if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0) {
                 const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
                 const double arcDistance = std::acos(std::clamp(glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
                 const double threshold = altitude < 20000.0 ? 8000.0
                     : (altitude < 100000.0 ? 40000.0 : (altitude < 350000.0 ? 120000.0 : 350000.0));
-                if (arcDistance > threshold) {
-                    lodCenterDirection = cameraDirection;
-                    staticTerrain = buildTerrainLod(lodCenterDirection);
+                const double prefetchThreshold = threshold * 0.42;
+
+                if (!terrainBuildInFlight && lodCooldown <= 0.0 && arcDistance > prefetchThreshold) {
+                    const glm::dvec3 requestedDirection = cameraDirection;
+                    terrainBuildFuture = std::async(std::launch::async, [&, requestedDirection]() {
+                        return std::make_pair(requestedDirection, buildTerrainLod(requestedDirection));
+                    });
+                    terrainBuildInFlight = true;
+                }
+
+                if (terrainBuildInFlight
+                    && terrainBuildFuture.wait_for(std::chrono::milliseconds{0}) == std::future_status::ready) {
+                    auto completed = terrainBuildFuture.get();
+                    terrainBuildInFlight = false;
+                    lodCenterDirection = completed.first;
+                    staticTerrain = std::move(completed.second);
                     renderer.uploadPlanetMesh(staticTerrain);
-                    lodCooldown = 0.45;
+                    lodCooldown = 0.12;
                 }
             }
 
@@ -526,9 +545,9 @@ int main() {
             renderEnvironment.cameraForward = glm::vec3(forwardSurface);
             renderEnvironment.planetCenter = toSurfacePoint(glm::dvec3{0.0});
             renderEnvironment.planetRadius = planet.radius;
-            renderEnvironment.atmosphereHeight = planet.atmosphereHeight;
-            renderEnvironment.atmosphereScaleHeight = aster.atmosphere.scaleHeightMeters;
-            renderEnvironment.mieScale = 0.85F;
+            renderEnvironment.atmosphereHeight = opticalAtmosphereHeight;
+            renderEnvironment.atmosphereScaleHeight = opticalRayleighScaleHeight;
+            renderEnvironment.mieScale = 0.78F;
             renderEnvironment.flightSpeedMps = static_cast<float>(camera.flightSpeedMps());
 
             renderer.drawFrame(viewProjection, cameraSurface, renderEnvironment);
@@ -553,6 +572,7 @@ int main() {
                       << " | SPEED " << std::fixed << std::setprecision(0) << camera.flightSpeedMps() << " m/s"
                       << " | ALT " << std::setprecision(2) << camera.altitude() / 1000.0 << " km"
                       << " | SLOPE<=50 | STEP 0.45m"
+                      << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")
                       << " | WIND OFF | sleeping " << sleeping << '/' << specs.size()
                       << " | vMax " << std::setprecision(3) << maxLinear
                       << " | wMax " << maxAngular
