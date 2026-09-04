@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(VoxelFrontierNative VERSION 0.9.1 LANGUAGES C CXX)
+project(VoxelFrontierNative VERSION 0.9.2 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -105,26 +105,53 @@ if(VF_BUILD_RUNTIME)
 
     set(VF_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
     set(VF_VERTEX_SPV "${VF_GENERATED_DIR}/planet.vert.spv")
-    set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
+    set(VF_OPAQUE_FRAGMENT_SPV "${VF_GENERATED_DIR}/opaque.frag.spv")
+    set(VF_TRANSPARENT_FRAGMENT_SPV "${VF_GENERATED_DIR}/transparent.frag.spv")
     set(VF_SHADOW_VERTEX_SPV "${VF_GENERATED_DIR}/shadow.vert.spv")
     set(VF_SHADOW_FRAGMENT_SPV "${VF_GENERATED_DIR}/shadow.frag.spv")
+    set(VF_FULLSCREEN_VERTEX_SPV "${VF_GENERATED_DIR}/fullscreen.vert.spv")
+    set(VF_SKY_FRAGMENT_SPV "${VF_GENERATED_DIR}/sky.frag.spv")
+    set(VF_HUD_FRAGMENT_SPV "${VF_GENERATED_DIR}/hud.frag.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
+    set(VF_SHADER_OUTPUTS
+        "${VF_VERTEX_SPV}"
+        "${VF_OPAQUE_FRAGMENT_SPV}"
+        "${VF_TRANSPARENT_FRAGMENT_SPV}"
+        "${VF_SHADOW_VERTEX_SPV}"
+        "${VF_SHADOW_FRAGMENT_SPV}"
+        "${VF_FULLSCREEN_VERTEX_SPV}"
+        "${VF_SKY_FRAGMENT_SPV}"
+        "${VF_HUD_FRAGMENT_SPV}"
+    )
+
     add_custom_command(
-        OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SHADOW_VERTEX_SPV}" "${VF_SHADOW_FRAGMENT_SPV}"
+        OUTPUT ${VF_SHADER_OUTPUTS}
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry vertexMain -stage vertex -fvk-use-entrypoint-name
                 -matrix-layout-column-major -O2 -o "${VF_VERTEX_SPV}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
-                -target spirv -entry fragmentMain -stage fragment -fvk-use-entrypoint-name
-                -matrix-layout-column-major -O2 -o "${VF_FRAGMENT_SPV}"
+                -target spirv -entry opaqueFragmentMain -stage fragment -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_OPAQUE_FRAGMENT_SPV}"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+                -target spirv -entry transparentFragmentMain -stage fragment -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_TRANSPARENT_FRAGMENT_SPV}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry shadowVertexMain -stage vertex -fvk-use-entrypoint-name
                 -matrix-layout-column-major -O2 -o "${VF_SHADOW_VERTEX_SPV}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry shadowFragmentMain -stage fragment -fvk-use-entrypoint-name
                 -matrix-layout-column-major -O2 -o "${VF_SHADOW_FRAGMENT_SPV}"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+                -target spirv -entry fullscreenVertexMain -stage vertex -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_FULLSCREEN_VERTEX_SPV}"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+                -target spirv -entry skyFragmentMain -stage fragment -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_SKY_FRAGMENT_SPV}"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+                -target spirv -entry hudFragmentMain -stage fragment -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_HUD_FRAGMENT_SPV}"
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
         VERBATIM
     )
@@ -133,12 +160,16 @@ if(VF_BUILD_RUNTIME)
         OUTPUT "${VF_SHADER_HEADER}"
         COMMAND ${CMAKE_COMMAND}
             "-DVERT=${VF_VERTEX_SPV}"
-            "-DFRAG=${VF_FRAGMENT_SPV}"
+            "-DOPAQUE_FRAG=${VF_OPAQUE_FRAGMENT_SPV}"
+            "-DTRANSPARENT_FRAG=${VF_TRANSPARENT_FRAGMENT_SPV}"
             "-DSHADOW_VERT=${VF_SHADOW_VERTEX_SPV}"
             "-DSHADOW_FRAG=${VF_SHADOW_FRAGMENT_SPV}"
+            "-DFULLSCREEN_VERT=${VF_FULLSCREEN_VERTEX_SPV}"
+            "-DSKY_FRAG=${VF_SKY_FRAGMENT_SPV}"
+            "-DHUD_FRAG=${VF_HUD_FRAGMENT_SPV}"
             "-DOUT=${VF_SHADER_HEADER}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
-        DEPENDS "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SHADOW_VERTEX_SPV}" "${VF_SHADOW_FRAGMENT_SPV}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
+        DEPENDS ${VF_SHADER_OUTPUTS} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
         VERBATIM
     )
 
