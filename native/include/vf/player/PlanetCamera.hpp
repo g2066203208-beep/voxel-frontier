@@ -35,7 +35,15 @@ public:
     void setExternalWorldState(
         const glm::dvec3& worldPosition,
         const glm::dvec3& worldVelocity,
-        bool grounded) noexcept;
+        bool grounded) noexcept {
+        position_ = worldPosition;
+        velocity_ = worldVelocity;
+        grounded_ = grounded;
+        if (const CelestialBody* body = physicsFrameBody()) {
+            localPosition_ = physicsFrame_.toLocalPosition(*body, worldPosition);
+            localVelocity_ = physicsFrame_.toLocalVelocity(*body, worldPosition, worldVelocity);
+        }
+    }
 
     [[nodiscard]] glm::mat4 viewProjection(float aspectRatio) const;
     [[nodiscard]] const glm::dvec3& position() const noexcept { return position_; }
