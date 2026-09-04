@@ -95,19 +95,61 @@ float3 fresnelSchlick(float voH, float3 f0)
     return f0 + (1.0 - f0) * grazing;
 }
 
-float3 toneMapFilmic(float3 x)
+float3 agxInset(float3 v)
 {
-    x = max(x, 0.0);
-    return saturate((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14));
+    return float3(
+        0.842479062253094 * v.x + 0.0784335999999992 * v.y + 0.0792237451477643 * v.z,
+        0.0423282422610123 * v.x + 0.878468636469772 * v.y + 0.0791661274605434 * v.z,
+        0.0423756549057051 * v.x + 0.0784336 * v.y + 0.879142973793104 * v.z);
+}
+
+float3 agxOutset(float3 v)
+{
+    return float3(
+        1.19687900512017 * v.x - 0.0980208811401368 * v.y - 0.0990297440797205 * v.z,
+       -0.0528968517574562 * v.x + 1.15190312990417 * v.y - 0.0989611768448433 * v.z,
+       -0.0529716355144438 * v.x - 0.0980434501171241 * v.y + 1.15107367264116 * v.z);
+}
+
+float3 agxContrastApprox(float3 x)
+{
+    float3 x2 = x * x;
+    float3 x4 = x2 * x2;
+    return 15.5 * x4 * x2
+        - 40.14 * x4 * x
+        + 31.96 * x4
+        - 6.868 * x2 * x
+        + 0.4298 * x2
+        + 0.1191 * x
+        - 0.00232;
+}
+
+float3 toneMapAgX(float3 color)
+{
+    // Minimal analytical AgX path. The swapchain is sRGB, so this returns display-linear values
+    // and leaves the final sRGB encoding to the Vulkan attachment conversion.
+    const float minEv = -12.47393;
+    const float maxEv = 4.026069;
+    float3 v = agxInset(max(color, 0.0));
+    v = clamp(log2(max(v, 1.0e-10)), minEv, maxEv);
+    v = (v - minEv) / (maxEv - minEv);
+    v = agxContrastApprox(v);
+    v = agxOutset(v);
+
+    // Very small saturation restraint keeps stylized colors rich while preventing neon clipping.
+    float luma = dot(v, float3(0.2126, 0.7152, 0.0722));
+    v = lerp(float3(luma, luma, luma), v, 0.96);
+    return saturate(v);
 }
 
 float3 atmosphereSky(float solarElevation, float density)
 {
     float daylight = smoothstep(-0.12, 0.18, solarElevation);
     float twilight = saturate(1.0 - abs(solarElevation + 0.045) / 0.24);
-    float3 sky = lerp(float3(0.008, 0.015, 0.032), float3(0.17, 0.38, 0.68), daylight);
-    sky = lerp(sky, float3(0.70, 0.30, 0.12), twilight * (1.0 - daylight * 0.50));
-    return lerp(float3(0.012, 0.018, 0.028), sky, density);
+    float3 zenith = lerp(float3(0.008, 0.014, 0.032), float3(0.12, 0.31, 0.62), daylight);
+    float3 warm = float3(0.74, 0.30, 0.105);
+    zenith = lerp(zenith, warm, twilight * (1.0 - daylight * 0.58) * 0.62);
+    return lerp(float3(0.012, 0.018, 0.028), zenith, density);
 }
 
 void shadowBasis(float3 lightDirection, out float3 right, out float3 up)
@@ -134,25 +176,32 @@ float shadowTap(float2 uv, float receiverDepth, float bias, float2 offset)
     return receiverDepth - bias <= storedDepth ? 1.0 : 0.0;
 }
 
-float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection)
+float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection, float3 receiverNormal)
 {
     float3 right;
     float3 up;
     shadowBasis(lightDirection, right, up);
     float2 snapOffset = stableShadowOffset(right, up);
-    float sx = dot(relativePosition, right) + snapOffset.x;
-    float sy = dot(relativePosition, up) + snapOffset.y;
-    float sz = dot(relativePosition, lightDirection);
+
+    // Blender-style shadow-terminator idea adapted to the low-poly runtime: shift the receiver a
+    // few centimetres along a smooth normal at grazing light angles. This preserves faceted direct
+    // lighting but avoids an abrupt self-shadow break on coarse polygons.
+    float normalOffsetMeters = lerp(0.075, 0.012, noL);
+    float3 shifted = relativePosition + normalize(receiverNormal) * normalOffsetMeters;
+
+    float sx = dot(shifted, right) + snapOffset.x;
+    float sy = dot(shifted, up) + snapOffset.y;
+    float sz = dot(shifted, lightDirection);
     if (abs(sx) >= kShadowHalfExtent || abs(sy) >= kShadowHalfExtent || abs(sz) >= kShadowDepthRange * 0.5)
         return 1.0;
 
     float2 uv = float2(sx, sy) / (2.0 * kShadowHalfExtent) + 0.5;
     float receiverDepth = saturate(0.5 - sz / kShadowDepthRange);
-    float bias = lerp(0.00070, 0.00190, 1.0 - noL);
+    float bias = lerp(0.00072, 0.00185, 1.0 - noL);
 
-    // Fixed tent PCF: stable under motion, no temporal/random grain. 4/2/1 weights yield sixteen
-    // effective levels instead of the old coarse 0/25/50/75/100% staircase.
-    const float radius = 1.15;
+    // Deterministic tent PCF. Glancing angles get a slightly wider footprint without temporal
+    // jitter, so shadow edges remain coherent instead of turning into moving grain.
+    float radius = lerp(1.55, 1.02, noL);
     float visibility = 0.0;
     visibility += shadowTap(uv, receiverDepth, bias, float2( 0.0,  0.0)) * 4.0;
     visibility += shadowTap(uv, receiverDepth, bias, float2(-radius,  0.0)) * 2.0;
@@ -164,7 +213,7 @@ float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection
     visibility += shadowTap(uv, receiverDepth, bias, float2(-radius,  radius));
     visibility += shadowTap(uv, receiverDepth, bias, float2( radius,  radius));
     visibility *= 1.0 / 16.0;
-    return lerp(0.30, 1.0, visibility);
+    return lerp(0.12, 1.0, visibility);
 }
 
 [shader("vertex")]
@@ -238,8 +287,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(grass, soil, soilMask);
         baseColor = lerp(baseColor, lerp(stone, coldStone, 1.0 - temperature), rockMask);
         baseColor = lerp(baseColor, snow, snowMask);
-        roughness = lerp(0.96, 0.80, rockMask);
-        f0 = float3(0.027, 0.029, 0.028);
+        roughness = lerp(0.95, 0.72, rockMask);
+        f0 = lerp(float3(0.024, 0.026, 0.025), float3(0.040, 0.039, 0.037), rockMask);
         materialAO = lerp(0.74, 1.0, faceUp);
     }
     else if (barkMaterial)
@@ -252,8 +301,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(float3(0.045, 0.015, 0.005), float3(0.24, 0.080, 0.018), 0.46 + 0.44 * warp);
         baseColor = lerp(baseColor, float3(0.38, 0.16, 0.038), fibre * 0.10);
         baseColor *= 1.0 - fissure * 0.22;
-        roughness = 0.88 + fissure * 0.06;
-        f0 = float3(0.022, 0.019, 0.015);
+        roughness = 0.93 + fissure * 0.04;
+        f0 = float3(0.020, 0.018, 0.015);
         materialAO = 0.78 - fissure * 0.10;
     }
     else if (foliageMaterial)
@@ -264,8 +313,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float upFacing = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
         baseColor = lerp(float3(0.018, 0.105, 0.014), float3(0.066, 0.30, 0.030), 0.44 + 0.46 * macro);
         baseColor = lerp(baseColor, float3(0.34, 0.53, 0.080), upFacing * (0.08 + canopyHeight * 0.15));
-        roughness = 0.92;
-        f0 = float3(0.019, 0.022, 0.016);
+        roughness = 0.82;
+        f0 = float3(0.026, 0.030, 0.021);
         materialAO = lerp(0.47, 0.91, canopyHeight) * lerp(0.82, 1.0, upFacing);
         foliageTransmission = 1.0;
     }
@@ -281,8 +330,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(float3(0.25, 0.26, 0.265), float3(0.35, 0.285, 0.205), variation * 0.50 + macro * 0.30);
         baseColor = lerp(baseColor, float3(0.16, 0.145, 0.125), (1.0 - strata) * 0.12);
         baseColor = lerp(baseColor, float3(0.22, 0.30, 0.11), lichen * 0.12);
-        roughness = 0.84;
-        f0 = float3(0.034, 0.032, 0.030);
+        roughness = lerp(0.70, 0.82, faceUp);
+        f0 = float3(0.040, 0.038, 0.035);
         materialAO = lerp(0.66, 1.0, faceUp);
     }
     else if (oceanMaterial)
@@ -303,7 +352,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         foamMask = shoreBand * smoothstep(0.64, 0.82, foamFlow);
         baseColor = lerp(baseColor, float3(0.79, 0.92, 0.88), foamMask * 0.82);
         f0 = float3(0.0204, 0.0204, 0.0204);
-        roughness = lerp(0.14, 0.052, smoothstep(0.10, 0.82, waterDepth));
+        roughness = lerp(0.115, 0.038, smoothstep(0.08, 0.80, waterDepth));
     }
 
     float3 l = normalize(gPush.sunDirection.xyz);
@@ -326,39 +375,56 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float daylight = smoothstep(-0.10, 0.16, solarElevation);
     float twilight = saturate(1.0 - abs(solarElevation + 0.04) / 0.22);
     float3 skyColor = atmosphereSky(solarElevation, atmosphereDensity);
-    float3 horizonColor = lerp(float3(0.13, 0.22, 0.31), float3(0.86, 0.36, 0.14), twilight * 0.78);
-    horizonColor = lerp(float3(0.025, 0.038, 0.060), horizonColor, atmosphereDensity);
+    float3 horizonColor = lerp(float3(0.11, 0.20, 0.31), float3(0.88, 0.34, 0.12), twilight * 0.78);
+    horizonColor = lerp(float3(0.024, 0.037, 0.062), horizonColor, atmosphereDensity);
 
     float3 stellarRadiance = max(gPush.sunColorIntensity.rgb, 0.0) * max(gPush.sunColorIntensity.a, 0.0);
-    stellarRadiance *= lerp(float3(1.0, 0.50, 0.27), float3(1.0, 0.95, 0.86), daylight);
-    float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, noL, l);
-    float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.12 * shadow;
+    stellarRadiance *= lerp(float3(1.0, 0.48, 0.24), float3(1.0, 0.95, 0.86), daylight);
+
+    // Preserve faceted lighting while using the smoother vertex normal only for receiver bias.
+    float shadowNoL = saturate(dot(smoothNormal, l));
+    float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, shadowNoL, l, smoothNormal);
+    float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.10 * shadow;
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
-    float3 skyAmbient = skyColor * (0.10 + 0.26 * hemiUp);
+    float3 ambientDirectionColor = lerp(horizonColor, skyColor, 0.22 + 0.78 * hemiUp);
+    float3 skyAmbient = ambientDirectionColor * (0.095 + 0.265 * hemiUp);
     float3 groundBounceColor = float3(0.16, 0.125, 0.060);
     if (terrainMaterial || foliageMaterial) groundBounceColor = float3(0.09, 0.17, 0.050);
     if (oceanMaterial) groundBounceColor = float3(0.018, 0.065, 0.095);
     float3 indirect = max(baseColor, 0.0)
-        * (skyAmbient + groundBounceColor * (0.035 + 0.105 * (1.0 - hemiUp)))
+        * (skyAmbient + groundBounceColor * (0.032 + 0.100 * (1.0 - hemiUp)))
         * materialAO;
+
+    // Cheap analytical environment specular makes roughness visible even away from the direct-sun
+    // highlight. No cubemap/IBL texture is needed: the same sky/horizon model drives the response.
+    float envGrazing = pow(1.0 - noV, 5.0);
+    float3 envFresnel = f0 + (1.0 - f0) * envGrazing;
+    float gloss = 1.0 - roughness;
+    float envWeight = gloss * gloss * (0.16 + 0.30 * hemiUp) * materialAO;
+    float3 environmentSpecular = ambientDirectionColor * envFresnel * envWeight;
 
     if (foliageTransmission > 0.0)
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
-        float transmissionShadow = lerp(shadow, 1.0, 0.24);
-        direct += baseColor * float3(0.64, 0.86, 0.16)
-            * backLit * (0.09 + 0.15 * edgeLit) * daylight * transmissionShadow;
+        float transmissionShadow = lerp(shadow, 1.0, 0.22);
+        direct += baseColor * float3(0.56, 0.76, 0.14)
+            * backLit * (0.085 + 0.145 * edgeLit) * daylight * transmissionShadow;
     }
 
     float3 color = direct + indirect;
-    if (oceanMaterial)
+    if (!oceanMaterial)
+    {
+        color += environmentSpecular;
+    }
+    else
     {
         float grazing = pow(1.0 - noV, 4.0);
-        float3 reflectedSky = lerp(horizonColor, skyColor, 0.30 + 0.70 * hemiUp);
-        color += reflectedSky * (0.18 + 1.02 * grazing);
-        color += baseColor * (0.08 + 0.08 * waterDepth);
+        float3 reflectedSky = lerp(horizonColor, skyColor, 0.24 + 0.76 * hemiUp);
+        float deepReflection = 0.24 + waterDepth * 0.18;
+        color += reflectedSky * (deepReflection + 1.08 * grazing);
+        color += baseColor * (0.07 + 0.07 * waterDepth);
         color += float3(0.55, 0.62, 0.54) * foamMask * (0.45 + 0.55 * noL);
     }
 
@@ -367,11 +433,16 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float viewDistance = length(input.relativePosition);
         float3 viewRay = normalize(input.relativePosition);
         float horizonView = 1.0 - saturate(abs(dot(viewRay, surfaceUp)));
-        float fogDistance = 1.0 - exp(-viewDistance * 0.0032 * atmosphereDensity);
-        float fogFactor = saturate(fogDistance * (0.54 + 0.62 * horizonView * horizonView));
-        float3 fogColor = lerp(skyColor, horizonColor, 0.48 + 0.42 * horizonView);
-        color = lerp(color, fogColor, fogFactor * 0.84);
+        float extinction = 0.00245 * atmosphereDensity * (0.72 + 0.95 * horizonView * horizonView);
+        float fogFactor = saturate(1.0 - exp(-viewDistance * extinction));
+        float3 fogColor = lerp(skyColor, horizonColor, 0.40 + 0.48 * horizonView);
+        float fogLuma = dot(fogColor, float3(0.2126, 0.7152, 0.0722));
+        fogColor = lerp(fogColor, float3(fogLuma, fogLuma, fogLuma), fogFactor * 0.10);
+        color = lerp(color, fogColor, fogFactor * 0.88);
     }
 
-    return float4(toneMapFilmic(color), 1.0);
+    // Mild exposure compensation before AgX keeps mid-tones full without clipping warm highlights.
+    float exposure = lerp(0.98, 1.08, daylight);
+    color *= exposure;
+    return float4(toneMapAgX(color), 1.0);
 }
