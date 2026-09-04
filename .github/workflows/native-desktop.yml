@@ -50,7 +50,7 @@ jobs:
           sudo apt-get install -y \
             mesa-vulkan-drivers vulkan-tools xvfb imagemagick \
             libx11-dev libxext-dev libxrandr-dev libxcursor-dev \
-            libxi-dev libxfixes-dev libxss-dev libxkbcommon-dev
+            libxi-dev libxfixes-dev libxss-dev libxtst-dev libxkbcommon-dev
 
       - name: Configure Linux runtime
         run: cmake -S native -B build/software -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
