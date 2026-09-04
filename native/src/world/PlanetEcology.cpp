@@ -3,11 +3,27 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <vector>
 
 #include <glm/geometric.hpp>
 
 namespace vf::detail {
+
+namespace {
+
+struct TreeInstance {
+    Placement placement{};
+    std::uint64_t seed{};
+};
+
+struct RockInstance {
+    Placement placement{};
+    std::uint64_t seed{};
+    double radius{};
+};
+
+} // namespace
 
 [[nodiscard]] LocalMesh buildLowPolyRock(std::uint64_t seed, double radius) {
     constexpr double phi = 1.6180339887498948482;
@@ -100,6 +116,7 @@ namespace vf::detail {
         190.0));
     const std::uint64_t candidateCount = static_cast<std::uint64_t>(targetCount) * 44ULL;
     std::vector<Placement> accepted;
+    std::array<std::vector<TreeInstance>, 6> byFace{};
     accepted.reserve(targetCount);
 
     for (std::uint64_t candidate = 0; candidate < candidateCount && accepted.size() < targetCount; ++candidate) {
@@ -117,7 +134,6 @@ namespace vf::detail {
         const double moisture = terrainMoisture(definition, direction);
         const double temperature = terrainTemperature(definition, direction, normalizedHeight);
         if (moisture < 0.36 || temperature < 0.38) continue;
-
         const double slopeCos = surfaceSlopeCosine(definition, direction);
         if (slopeCos < 0.89) continue;
 
@@ -138,17 +154,30 @@ namespace vf::detail {
         const double clearance = 7.0 + sizeClass * 4.4;
         if (!separatedFrom(direction, clearance, definition.radius, accepted)) continue;
 
-        accepted.push_back({direction, clearance});
+        Placement placement{direction, clearance};
+        accepted.push_back(placement);
         const std::uint64_t treeSeed = hashChannel(definition.seed ^ 0xD6E8FEB86659FD93ULL, candidate);
-        const LocalMesh tree = buildStylizedTree(treeSeed);
-        const SurfaceFrame frame = frameForDirection(direction);
-        const double surfaceRadius = planetSurfaceRadius(definition, direction);
-        const glm::dvec3 origin = direction * (surfaceRadius - 0.045);
-        const double yaw = seedPhase(treeSeed, 300U);
-        const double leanEast = randomSigned(treeSeed, 301U) * 0.035;
-        const double leanNorth = randomSigned(treeSeed, 302U) * 0.035;
-        appendLocalMesh(mesh, tree, origin, frame, yaw, leanEast, leanNorth);
-        ++mesh.treeCount;
+        byFace[dominantCubeFace(direction)].push_back({placement, treeSeed});
+    }
+
+    for (auto& faceInstances : byFace) {
+        if (faceInstances.empty()) continue;
+        const std::uint32_t firstIndex = static_cast<std::uint32_t>(mesh.indices.size());
+        for (const TreeInstance& instance : faceInstances) {
+            const LocalMesh tree = buildStylizedTree(instance.seed);
+            const SurfaceFrame frame = frameForDirection(instance.placement.direction);
+            const double surfaceRadius = planetSurfaceRadius(definition, instance.placement.direction);
+            const glm::dvec3 origin = instance.placement.direction * (surfaceRadius - 0.045);
+            const double yaw = seedPhase(instance.seed, 300U);
+            const double leanEast = randomSigned(instance.seed, 301U) * 0.035;
+            const double leanNorth = randomSigned(instance.seed, 302U) * 0.035;
+            appendLocalMesh(mesh, tree, origin, frame, yaw, leanEast, leanNorth);
+            ++mesh.treeCount;
+        }
+        const std::uint32_t count = static_cast<std::uint32_t>(mesh.indices.size()) - firstIndex;
+        // About half the crown diameter. If an entire face batch is sub-pixel at distance, none of
+        // its individual trees can contribute meaningful silhouette detail.
+        appendDrawRange(mesh, firstIndex, count, PlanetDrawClass::TreeBatch, 3.0F);
     }
     return accepted;
 }
@@ -163,6 +192,7 @@ void scatterRocks(
         520.0));
     const std::uint64_t candidateCount = static_cast<std::uint64_t>(targetCount) * 34ULL;
     std::vector<Placement> accepted;
+    std::array<std::vector<RockInstance>, 6> byFace{};
     accepted.reserve(targetCount);
 
     for (std::uint64_t candidate = 0; candidate < candidateCount && accepted.size() < targetCount; ++candidate) {
@@ -208,18 +238,29 @@ void scatterRocks(
         }
         if (overlapsTree) continue;
 
-        accepted.push_back({direction, clearance});
+        Placement placement{direction, clearance};
+        accepted.push_back(placement);
         const std::uint64_t rockSeed = hashChannel(definition.seed ^ 0x94D049BB133111EBULL, candidate);
         const double rockRadius = 0.34 + std::pow(sizeClass, 1.7) * 1.15;
-        const LocalMesh rock = buildLowPolyRock(rockSeed, rockRadius);
-        const SurfaceFrame frame = frameForDirection(direction);
-        const double surfaceRadius = planetSurfaceRadius(definition, direction);
-        const glm::dvec3 origin = direction * (surfaceRadius - rockRadius * 0.13);
-        const double yaw = seedPhase(rockSeed, 400U);
-        const double leanEast = randomSigned(rockSeed, 401U) * 0.12;
-        const double leanNorth = randomSigned(rockSeed, 402U) * 0.12;
-        appendLocalMesh(mesh, rock, origin, frame, yaw, leanEast, leanNorth);
-        ++mesh.rockCount;
+        byFace[dominantCubeFace(direction)].push_back({placement, rockSeed, rockRadius});
+    }
+
+    for (auto& faceInstances : byFace) {
+        if (faceInstances.empty()) continue;
+        const std::uint32_t firstIndex = static_cast<std::uint32_t>(mesh.indices.size());
+        for (const RockInstance& instance : faceInstances) {
+            const LocalMesh rock = buildLowPolyRock(instance.seed, instance.radius);
+            const SurfaceFrame frame = frameForDirection(instance.placement.direction);
+            const double surfaceRadius = planetSurfaceRadius(definition, instance.placement.direction);
+            const glm::dvec3 origin = instance.placement.direction * (surfaceRadius - instance.radius * 0.13);
+            const double yaw = seedPhase(instance.seed, 400U);
+            const double leanEast = randomSigned(instance.seed, 401U) * 0.12;
+            const double leanNorth = randomSigned(instance.seed, 402U) * 0.12;
+            appendLocalMesh(mesh, rock, origin, frame, yaw, leanEast, leanNorth);
+            ++mesh.rockCount;
+        }
+        const std::uint32_t count = static_cast<std::uint32_t>(mesh.indices.size()) - firstIndex;
+        appendDrawRange(mesh, firstIndex, count, PlanetDrawClass::RockBatch, 0.85F);
     }
 }
 
