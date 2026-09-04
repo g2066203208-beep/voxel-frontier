@@ -45,7 +45,7 @@ float broadCloudField(float2 uv)
     float n1 = valueNoise2(p * 1.73 + float2(-2.4, 3.1));
     float macro = n0 * 0.70 + n1 * 0.30;
     float ribbon = 0.5 + 0.5 * sin(uv.x * 7.0 + uv.y * 12.0 + macro * 2.1);
-    float body = smoothstep(0.51, 0.72, macro * 0.82 + ribbon * 0.18);
+    float body = smoothstep(0.50, 0.70, macro * 0.82 + ribbon * 0.18);
     float skyBand = smoothstep(0.12, 0.27, uv.y) * (1.0 - smoothstep(0.82, 0.98, uv.y));
     return body * skyBand;
 }
@@ -156,12 +156,17 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     // into high-frequency visual noise.
     float cloudMask = broadCloudField(input.uv) * daylight;
     float cloudSun = exp(-sunDistance * 5.5) * sunVisible;
-    float cloudHorizonWarmth = twilight * (0.30 + 0.70 * horizonAmount) + cloudSun * 0.36;
-    float3 cloudCool = lerp(float3(0.26, 0.34, 0.47), float3(0.47, 0.55, 0.63), daylight);
-    float3 cloudWarm = float3(0.78, 0.48, 0.28);
+    float cloudHorizonWarmth = twilight * (0.30 + 0.70 * horizonAmount) + cloudSun * 0.42;
+    float3 cloudCool = lerp(float3(0.20, 0.27, 0.39), float3(0.32, 0.40, 0.50), daylight);
+    float3 cloudWarm = float3(0.82, 0.50, 0.27);
     float3 cloudColor = lerp(cloudCool, cloudWarm, saturate(cloudHorizonWarmth));
-    float cloudOpacity = cloudMask * (0.16 + 0.26 * atmosphere);
-    sky = lerp(sky, cloudColor * (0.70 + 0.30 * daylight), cloudOpacity);
+    float cloudOpacity = cloudMask * (0.26 + 0.30 * atmosphere);
+    sky = lerp(sky, cloudColor * (0.78 + 0.22 * daylight), cloudOpacity);
+
+    // A very soft bright rim near the sun makes the cloud mass read as volume without a volumetric
+    // pass. It is intentionally broad and weak, so it cannot create sparkly or fragmented edges.
+    float cloudRim = cloudMask * cloudSun * (1.0 - cloudMask * 0.45);
+    sky += lerp(float3(0.28, 0.34, 0.40), twilightWarm, twilight * 0.75) * cloudRim * 0.16;
 
     float sunDisk = 1.0 - smoothstep(0.0045, 0.0105, sunDistance);
     float innerGlow = exp(-sunDistance * 45.0);
