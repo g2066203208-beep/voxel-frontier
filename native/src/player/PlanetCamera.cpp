@@ -123,9 +123,9 @@ double PlanetCamera::surfaceAttitudeInfluence() const noexcept {
         return 0.0;
     }
 
-    // Earth-like bodies stay strongly horizon-relative in the lower atmosphere, then smoothly
-    // release that influence across several atmosphere heights. Reference-frame boundaries are
-    // deliberately unrelated to this blend, so entering/leaving a physics bubble cannot snap view.
+    // Camera horizon behavior is based on altitude, never on a reference-frame ownership edge.
+    // The lower atmosphere remains horizon-relative, then the constraint fades smoothly to free
+    // inertial attitude over several atmosphere heights.
     const double fadeStart = std::max(250.0, atmosphereHeight * 0.20);
     const double fadeEnd = std::max(fadeStart + 750.0, atmosphereHeight * 3.0);
     if (localAltitude <= fadeStart) return 1.0;
@@ -141,7 +141,12 @@ void PlanetCamera::initializeViewAttitude(const glm::dvec3& surfaceUpWorldInput)
     viewForward_ = safeNormalize(
         std::cos(initialPitch) * north + std::sin(initialPitch) * surfaceUp,
         north);
-    viewUp_ = surfaceUp;
+
+    // Store a real camera-up vector rather than the raw gravity-up hint. glm::lookAt would project
+    // a non-orthogonal up internally; keeping the state orthonormal here avoids a hidden one-frame
+    // correction when the camera later starts blending back toward a planetary horizon.
+    const glm::dvec3 projectedUp = surfaceUp - viewForward_ * glm::dot(surfaceUp, viewForward_);
+    viewUp_ = safeNormalize(projectedUp, surfaceUp);
     transportedSurfaceUp_ = surfaceUp;
     viewAttitudeValid_ = true;
     surfaceTransportValid_ = true;
@@ -181,15 +186,16 @@ void PlanetCamera::alignViewUpToSurface(
     const glm::dvec3 desiredProjected = surfaceUp - forward * glm::dot(surfaceUp, forward);
     if (glm::dot(desiredProjected, desiredProjected) <= 1.0e-10) return;
     const glm::dvec3 desiredUp = glm::normalize(desiredProjected);
+    const glm::dvec3 currentUp = safeNormalize(viewUp_, desiredUp);
 
-    glm::dvec3 currentProjected = viewUp_ - forward * glm::dot(viewUp_, forward);
-    currentProjected = safeNormalize(currentProjected, desiredUp);
-    const glm::dquat correction = shortestArcRotation(currentProjected, desiredUp);
+    // Both currentUp and desiredUp are perpendicular to forward, so this is a pure, gradual roll
+    // correction around the sight axis. Forward itself never jumps during atmospheric alignment.
+    const glm::dquat correction = shortestArcRotation(currentUp, desiredUp);
     const double rate = (grounded_ ? 14.0 : 5.0) * influence;
     const double alpha = 1.0 - std::exp(-rate * dt);
     const glm::dquat applied = glm::normalize(glm::slerp(
         glm::dquat{1.0, 0.0, 0.0, 0.0}, correction, alpha));
-    viewUp_ = safeNormalize(applied * currentProjected, desiredUp);
+    viewUp_ = safeNormalize(applied * currentUp, desiredUp);
 }
 
 void PlanetCamera::rotateSurfaceAttitude(
@@ -213,6 +219,7 @@ void PlanetCamera::rotateSurfaceAttitude(
     const double targetPitch = std::clamp(currentPitch - mouseDy * mouseSensitivity, -1.52, 1.52);
     const glm::dquat pitchRotation = glm::angleAxis(targetPitch - currentPitch, right);
     viewForward_ = safeNormalize(pitchRotation * viewForward_, viewForward_);
+    viewUp_ = safeNormalize(pitchRotation * viewUp_, viewUp_);
 }
 
 void PlanetCamera::rotateFreeAttitude(double mouseDx, double mouseDy) noexcept {
@@ -243,8 +250,8 @@ void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
     inPhysicsFrame_ = true;
     grounded_ = false;
 
-    // Establish only a transport baseline. Do not mutate viewForward_/viewUp_ here: reference-frame
-    // ownership is a precision/physics concern, not a camera-mode switch.
+    // Reference-frame ownership is only a precision/physics concern. It may establish the next
+    // surface-transport baseline, but it never changes the current camera attitude.
     transportedSurfaceUp_ = safeNormalize(body.orientation * safeNormalize(localPosition_), viewUp_);
     surfaceTransportValid_ = true;
 }
@@ -264,9 +271,12 @@ void PlanetCamera::syncWorldStateFromLocal(const CelestialBody& body) noexcept {
 
 glm::dvec3 PlanetCamera::up() const {
     if (viewAttitudeValid_) return safeNormalize(viewUp_);
-    if (const auto* body = physicsFrameBody())
-        return safeNormalize(body->orientation * safeNormalize(localPosition_));
-    if (celestialSystem_ == nullptr) return safeNormalize(position_);
+    if (const auto* body = physicsFrameBody()) {
+        const glm::dvec3 radial = safeNormalize(body->orientation * safeNormalize(localPosition_));
+        const glm::dvec3 forward = forwardDirection();
+        return safeNormalize(radial - forward * glm::dot(radial, forward), radial);
+    }
+    if (celestialSystem_ == nullptr) return stablePerpendicular(forwardDirection());
     return {0.0, 1.0, 0.0};
 }
 
@@ -320,7 +330,7 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         }
     }
 
-    if (const auto* body = physicsFrameBody()) {
+    if (physicsFrameBody() != nullptr) {
         const glm::dvec3 surfaceUpWorld = currentSurfaceUpWorld();
         const double influence = surfaceAttitudeInfluence();
         transportViewAttitude(surfaceUpWorld, influence);
