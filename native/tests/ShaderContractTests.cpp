@@ -9,7 +9,6 @@
 
 namespace {
 
-// SPIR-V 1.x binary constants from the Khronos SPIR-V unified specification / headers.
 constexpr std::uint32_t kSpirvMagicNumber = 0x07230203U;
 constexpr std::uint16_t kSpirvOpEntryPoint = 15U;
 constexpr std::uint32_t kSpirvExecutionModelVertex = 0U;
@@ -114,6 +113,11 @@ int main() {
         vf::shaders::kSkyFragmentSpvSize,
         kSpirvExecutionModelFragment,
         "skyFragmentMain");
+    validateEntryPoint(
+        vf::shaders::kShadowVertexSpv,
+        vf::shaders::kShadowVertexSpvSize,
+        kSpirvExecutionModelVertex,
+        "shadowVertexMain");
 
     std::cout << "Shader SPIR-V entry-point contract tests passed\n";
     return 0;
