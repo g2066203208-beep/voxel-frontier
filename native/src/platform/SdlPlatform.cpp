@@ -8,6 +8,11 @@
 namespace vf {
 
 SdlPlatform::SdlPlatform(std::string_view title, std::int32_t width, std::int32_t height) {
+    // SDL3 normally hides the hardware cursor in relative mode. For this FPS acceptance build we
+    // intentionally keep a centered crosshair cursor visible while still using raw relative motion.
+    SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "1");
+    SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, "1");
+
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD | SDL_INIT_AUDIO)) {
         throw std::runtime_error(std::string{"SDL_Init failed: "} + SDL_GetError());
     }
@@ -23,10 +28,17 @@ SdlPlatform::SdlPlatform(std::string_view title, std::int32_t width, std::int32_
         throw std::runtime_error("SDL_CreateWindow failed: " + error);
     }
 
+    crosshairCursor_ = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR);
+    if (crosshairCursor_ != nullptr) SDL_SetCursor(crosshairCursor_);
+
     setMouseCaptured(true);
 }
 
 SdlPlatform::~SdlPlatform() {
+    if (crosshairCursor_ != nullptr) {
+        SDL_DestroyCursor(crosshairCursor_);
+        crosshairCursor_ = nullptr;
+    }
     if (window_) SDL_DestroyWindow(window_);
     SDL_Quit();
 }
@@ -37,6 +49,7 @@ void SdlPlatform::setMouseCaptured(bool captured) {
         if (!SDL_SetWindowRelativeMouseMode(window_, captured)) {
             SDL_Log("SDL_SetWindowRelativeMouseMode failed: %s", SDL_GetError());
         }
+        if (captured && crosshairCursor_ != nullptr) SDL_SetCursor(crosshairCursor_);
     }
 }
 
@@ -94,7 +107,10 @@ bool SdlPlatform::pumpEvents() {
             break;
         case SDL_EVENT_MOUSE_MOTION:
             if (input_.mouseCaptured) {
-                input_.mouseDx += event.motion.xrel;
+                // The spherical camera basis uses positive yaw for a visual left turn. Negating
+                // SDL's positive-right xrel restores the standard FPS convention:
+                // mouse right -> look right, mouse left -> look left.
+                input_.mouseDx -= event.motion.xrel;
                 input_.mouseDy += event.motion.yrel;
             }
             break;
