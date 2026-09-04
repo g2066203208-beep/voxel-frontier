@@ -7,6 +7,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/geometric.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace vf {
 namespace {
@@ -73,16 +74,70 @@ glm::dvec3 PlanetCamera::localForwardDirection(const glm::dvec3& localUp) const 
     return safeNormalize(std::cos(pitch_) * tangentForward + std::sin(pitch_) * localUp, tangentForward);
 }
 
+void PlanetCamera::captureFreeAttitude(const CelestialBody& body) noexcept {
+    const glm::dvec3 localUp = safeNormalize(localPosition_);
+    glm::dvec3 forward = safeNormalize(body.orientation * localForwardDirection(localUp), {0.0, 0.0, -1.0});
+    glm::dvec3 upVector = safeNormalize(body.orientation * localUp, {0.0, 1.0, 0.0});
+    glm::dvec3 right = glm::cross(forward, upVector);
+    if (glm::dot(right, right) < 1.0e-12) right = safeEast(upVector);
+    else right = glm::normalize(right);
+    upVector = safeNormalize(glm::cross(right, forward), upVector);
+    freeForward_ = forward;
+    freeUp_ = upVector;
+    freeAttitudeValid_ = true;
+}
+
+void PlanetCamera::alignLocalAnglesToFreeAttitude(const CelestialBody& body) noexcept {
+    if (!freeAttitudeValid_) return;
+    const glm::dvec3 localUp = safeNormalize(localPosition_);
+    const glm::dquat inverse = glm::conjugate(glm::normalize(body.orientation));
+    const glm::dvec3 localForward = safeNormalize(inverse * freeForward_, {0.0, 0.0, -1.0});
+    pitch_ = std::clamp(std::asin(std::clamp(glm::dot(localForward, localUp), -1.0, 1.0)), -1.52, 1.52);
+    glm::dvec3 tangent = localForward - localUp * glm::dot(localForward, localUp);
+    tangent = safeNormalize(tangent, {0.0, 0.0, 1.0});
+    const glm::dvec3 east = safeEast(localUp);
+    const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
+    heading_ = std::atan2(glm::dot(tangent, east), glm::dot(tangent, north));
+}
+
+void PlanetCamera::rotateFreeAttitude(double mouseDx, double mouseDy) noexcept {
+    if (!freeAttitudeValid_) return;
+    constexpr double mouseSensitivity = 0.0022;
+    const double yaw = mouseDx * mouseSensitivity;
+    const glm::dquat yawRotation = glm::angleAxis(yaw, safeNormalize(freeUp_));
+    freeForward_ = safeNormalize(yawRotation * freeForward_, freeForward_);
+
+    glm::dvec3 right = glm::cross(freeForward_, freeUp_);
+    if (glm::dot(right, right) < 1.0e-12) right = safeEast(freeUp_);
+    else right = glm::normalize(right);
+    const double pitchDelta = -mouseDy * mouseSensitivity;
+    const glm::dquat pitchRotation = glm::angleAxis(pitchDelta, right);
+    const glm::dvec3 candidateForward = safeNormalize(pitchRotation * freeForward_, freeForward_);
+    const glm::dvec3 candidateUp = safeNormalize(pitchRotation * freeUp_, freeUp_);
+
+    // Avoid the lookAt singularity without imposing a world-space up direction in deep space.
+    if (std::abs(glm::dot(candidateForward, candidateUp)) < 0.9995) {
+        freeForward_ = candidateForward;
+        freeUp_ = candidateUp;
+    }
+    right = safeNormalize(glm::cross(freeForward_, freeUp_), right);
+    freeUp_ = safeNormalize(glm::cross(right, freeForward_), freeUp_);
+}
+
 void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
     physicsFrameBodyId_ = body.id;
     physicsFrame_.setBodyId(body.id);
     localPosition_ = physicsFrame_.toLocalPosition(body, position_);
     localVelocity_ = physicsFrame_.toLocalVelocity(body, position_, velocity_);
+    if (freeAttitudeValid_) alignLocalAnglesToFreeAttitude(body);
     inPhysicsFrame_ = true;
     grounded_ = false;
 }
 
 void PlanetCamera::leavePhysicsFrame() noexcept {
+    if (celestialSystem_ != nullptr && physicsFrameBodyId_ != 0U) {
+        if (const CelestialBody* body = celestialSystem_->body(physicsFrameBodyId_)) captureFreeAttitude(*body);
+    }
     inPhysicsFrame_ = false;
     physicsFrameBodyId_ = 0U;
     physicsFrame_.setBodyId(0U);
@@ -96,14 +151,11 @@ void PlanetCamera::syncWorldStateFromLocal(const CelestialBody& body) noexcept {
 
 glm::dvec3 PlanetCamera::up() const {
     if (const auto* body = physicsFrameBody()) {
-        const glm::dvec3 localUp = safeNormalize(localPosition_);
-        const double localGravity = celestialSystem_ != nullptr
-            ? celestialSystem_->gravityMagnitudeFromBody(*body, position_) : 0.0;
-        if (grounded_ || localGravity > 0.10
-            || (celestialSystem_ != nullptr && celestialSystem_->insideAtmosphere(*body, position_)))
-            return safeNormalize(body->orientation * localUp);
-        return {0.0, 1.0, 0.0};
+        // Keep radial orientation for the whole local planetary frame. When that frame is exited,
+        // leavePhysicsFrame captures this exact vector as the inertial free-space up vector.
+        return safeNormalize(body->orientation * safeNormalize(localPosition_));
     }
+    if (celestialSystem_ != nullptr && freeAttitudeValid_) return safeNormalize(freeUp_);
     if (celestialSystem_ == nullptr) return safeNormalize(position_);
     return {0.0, 1.0, 0.0};
 }
@@ -134,6 +186,7 @@ glm::dvec3 PlanetCamera::forwardDirection() const {
         const glm::dvec3 localUp = safeNormalize(localPosition_);
         return safeNormalize(body->orientation * localForwardDirection(localUp));
     }
+    if (celestialSystem_ != nullptr && freeAttitudeValid_) return safeNormalize(freeForward_, {0.0, 0.0, -1.0});
     const glm::dvec3 localUp = up();
     const glm::dvec3 east = safeEast(localUp);
     const glm::dvec3 north = safeNormalize(glm::cross(localUp, east), {0.0, 0.0, 1.0});
@@ -147,8 +200,15 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     dt = std::min(dt, 0.05);
 
     constexpr double mouseSensitivity = 0.0022;
-    heading_ += input.mouseDx * mouseSensitivity;
-    pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.52, 1.52);
+    if (inPhysicsFrame_) {
+        heading_ += input.mouseDx * mouseSensitivity;
+        pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.52, 1.52);
+    } else if (celestialSystem_ != nullptr && freeAttitudeValid_) {
+        rotateFreeAttitude(input.mouseDx, input.mouseDy);
+    } else {
+        heading_ += input.mouseDx * mouseSensitivity;
+        pitch_ = std::clamp(pitch_ - input.mouseDy * mouseSensitivity, -1.52, 1.52);
+    }
 
     if (std::abs(input.flightSpeedSteps) > 1.0e-9) {
         creativeFlightSpeedMps_ = std::clamp(
@@ -163,7 +223,9 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         if (inPhysicsFrame_ && (desiredFrame == nullptr || desiredFrame->id != physicsFrameBodyId_)) {
             leavePhysicsFrame();
             if (desiredFrame != nullptr) enterPhysicsFrame(*desiredFrame);
-        } else if (!inPhysicsFrame_ && desiredFrame != nullptr) enterPhysicsFrame(*desiredFrame);
+        } else if (!inPhysicsFrame_ && desiredFrame != nullptr) {
+            enterPhysicsFrame(*desiredFrame);
+        }
     }
 
     if (input.toggleFlight) {
@@ -260,7 +322,9 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
             velocity_ += (desired - velocity_) * (1.0 - std::exp(-7.0 * dt));
-        } else velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
+        } else {
+            velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
+        }
         position_ += velocity_ * dt;
         if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) enterPhysicsFrame(*newFrame);
         return;
