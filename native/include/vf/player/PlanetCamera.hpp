@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <cstdint>
 
 #include <glm/glm.hpp>
@@ -41,6 +42,38 @@ public:
             localPosition_ = physicsFrame_.toLocalPosition(*body, worldPosition);
             localVelocity_ = physicsFrame_.toLocalVelocity(*body, worldPosition, worldVelocity);
         }
+    }
+
+    // Generic teleport/cinematic pose setter. It keeps position, local celestial-frame state and
+    // camera attitude coherent in one operation, so tests/cinematics do not need to poke private
+    // yaw/pitch state or rebuild a heading from a global latitude/longitude frame.
+    void setExternalWorldPose(
+        const glm::dvec3& worldPosition,
+        const glm::dvec3& worldVelocity,
+        const glm::dvec3& worldForward,
+        const glm::dvec3& worldUpHint,
+        bool grounded,
+        bool flightMode) noexcept {
+        setExternalWorldState(worldPosition, worldVelocity, grounded);
+        const auto safeUnit = [](const glm::dvec3& value, const glm::dvec3& fallback) noexcept {
+            const double lengthSquared = glm::dot(value, value);
+            return lengthSquared > 1.0e-18 ? value / std::sqrt(lengthSquared) : fallback;
+        };
+
+        viewForward_ = safeUnit(worldForward, viewForward_);
+        const glm::dvec3 upHint = safeUnit(worldUpHint, viewUp_);
+        glm::dvec3 projectedUp = upHint - viewForward_ * glm::dot(upHint, viewForward_);
+        if (glm::dot(projectedUp, projectedUp) <= 1.0e-18) {
+            const glm::dvec3 reference = std::abs(viewForward_.y) < 0.9
+                ? glm::dvec3{0.0, 1.0, 0.0}
+                : glm::dvec3{1.0, 0.0, 0.0};
+            projectedUp = reference - viewForward_ * glm::dot(reference, viewForward_);
+        }
+        viewUp_ = safeUnit(projectedUp, viewUp_);
+        transportedSurfaceUp_ = upHint;
+        viewAttitudeValid_ = true;
+        surfaceTransportValid_ = true;
+        flightMode_ = flightMode;
     }
 
     [[nodiscard]] glm::mat4 viewProjection(float aspectRatio) const;
