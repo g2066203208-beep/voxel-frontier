@@ -10,7 +10,7 @@ struct VertexOutput
     float4 position : SV_Position;
     float3 normal : TEXCOORD0;
     // Backward-compatible channel: literal RGB for proxies/debug, packed procedural surface data
-    // for primary terrain, bark, foliage and rocks.
+    // for primary terrain, bark, foliage, rocks and ocean.
     float3 surfaceData : TEXCOORD1;
     float3 relativePosition : TEXCOORD2;
     float3 localPosition : TEXCOORD3;
@@ -161,8 +161,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     bool terrainMaterial = marker > 1.0;
     bool barkMaterial = marker < -0.5 && marker > -1.5;
     bool foliageMaterial = marker <= -1.5 && marker > -2.5;
-    bool rockMaterial = marker <= -2.5;
-    bool proceduralMaterial = terrainMaterial || barkMaterial || foliageMaterial || rockMaterial;
+    bool rockMaterial = marker <= -2.5 && marker > -3.5;
+    bool oceanMaterial = marker <= -3.5;
+    bool proceduralMaterial = terrainMaterial || barkMaterial || foliageMaterial || rockMaterial || oceanMaterial;
 
     float3 smoothNormal = normalize(input.normal);
     float3 flatNormal = normalize(cross(ddx(input.relativePosition), ddy(input.relativePosition)));
@@ -176,6 +177,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 baseColor = input.surfaceData;
     float roughness = 0.62;
     float3 f0 = float3(0.04, 0.04, 0.04);
+    float foamMask = 0.0;
+    float waterDepth = 0.0;
 
     if (terrainMaterial)
     {
@@ -272,6 +275,31 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         roughness = 0.88 + grains * 0.06;
         f0 = float3(0.032, 0.030, 0.028);
     }
+    else if (oceanMaterial)
+    {
+        waterDepth = saturate(input.surfaceData.y);
+        float shoreVariation = saturate(input.surfaceData.z);
+        float macro = fbm3(input.localPosition * 0.045 + float3(1.7, -3.4, 6.2));
+        float micro = fbm3(input.localPosition * 0.19 + float3(-5.3, 2.1, 8.7));
+        float foamNoise = fbm3(input.localPosition * 0.31 + shoreVariation * 13.0);
+
+        float3 shallows = float3(0.055, 0.47, 0.50);
+        float3 shelf = float3(0.025, 0.255, 0.37);
+        float3 deep = float3(0.010, 0.075, 0.155);
+        baseColor = lerp(shallows, shelf, smoothstep(0.04, 0.34, waterDepth));
+        baseColor = lerp(baseColor, deep, smoothstep(0.30, 0.92, waterDepth));
+        baseColor *= 0.94 + (macro - 0.5) * 0.10;
+        baseColor += float3(0.015, 0.035, 0.045) * micro;
+
+        float shoreBand = 1.0 - smoothstep(0.018, 0.16 + shoreVariation * 0.035, waterDepth);
+        float brokenFoam = smoothstep(0.47, 0.70, foamNoise + shoreVariation * 0.12);
+        foamMask = shoreBand * brokenFoam;
+        baseColor = lerp(baseColor, float3(0.72, 0.88, 0.86), foamMask * 0.82);
+
+        // Water IOR ~1.333 => normal-incidence dielectric reflectance near 0.020.
+        f0 = float3(0.0204, 0.0204, 0.0204);
+        roughness = lerp(0.22, 0.13, smoothstep(0.12, 0.85, waterDepth));
+    }
 
     float3 l = normalize(gPush.sunDirection.xyz);
     float3 v = normalize(-input.relativePosition);
@@ -292,11 +320,22 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         * max(gPush.sunColorIntensity.a, 0.0);
     float3 direct = (diffuse + specular) * noL * stellarRadiance;
 
-    // Stylized low-poly fill remains subtle but material-aware. It preserves face readability in
-    // shadow without tinting the black vacuum background.
     float hemi = proceduralMaterial
         ? (0.030 + 0.018 * saturate(dot(n, surfaceUp) * 0.5 + 0.5))
         : 0.012;
     float3 indirect = max(baseColor, 0.0) * hemi;
+
+    if (oceanMaterial)
+    {
+        // Stylized Fresnel reflection without a reflection texture: grazing facets lift toward a
+        // cool sky tint while the real star still drives the GGX glint. This keeps the material
+        // texture-free and makes the large low-poly planes readable at distance.
+        float grazing = pow(1.0 - noV, 4.0);
+        float3 skyReflection = float3(0.10, 0.23, 0.30) * (0.35 + 0.65 * grazing);
+        float3 deepFill = baseColor * (0.15 + 0.09 * waterDepth);
+        float3 foamLight = float3(0.26, 0.31, 0.28) * foamMask * (0.45 + 0.55 * noL);
+        return float4(direct + indirect + skyReflection + deepFill + foamLight, 1.0);
+    }
+
     return float4(direct + indirect, 1.0);
 }
