@@ -39,6 +39,9 @@ public:
     VulkanRenderer(const VulkanRenderer&) = delete;
     VulkanRenderer& operator=(const VulkanRenderer&) = delete;
 
+    // Queues the newest static world mesh. Each in-flight frame owns its own mapped buffers and
+    // adopts the newest generation only after that frame's fence is signaled; terrain recentering
+    // therefore never calls vkDeviceWaitIdle or destroys a buffer still used by the GPU.
     void uploadPlanetMesh(const PlanetMesh& mesh);
     void setDynamicMesh(const PlanetMesh& mesh);
     void clearDynamicMesh();
@@ -51,14 +54,18 @@ public:
 
     [[nodiscard]] const std::string& gpuName() const noexcept { return gpuName_; }
     [[nodiscard]] std::uint32_t apiVersion() const noexcept { return apiVersion_; }
-    [[nodiscard]] std::uint64_t triangleCount() const noexcept { return static_cast<std::uint64_t>(indexCount_ / 3U); }
-    [[nodiscard]] std::uint64_t dynamicTriangleCount() const noexcept { return static_cast<std::uint64_t>(pendingDynamicIndices_.size() / 3U); }
+    [[nodiscard]] std::uint64_t triangleCount() const noexcept {
+        return static_cast<std::uint64_t>(pendingStaticIndices_.size() / 3U);
+    }
+    [[nodiscard]] std::uint64_t dynamicTriangleCount() const noexcept {
+        return static_cast<std::uint64_t>(pendingDynamicIndices_.size() / 3U);
+    }
 
 private:
     static constexpr std::uint32_t kFramesInFlight = 2;
     static constexpr std::uint32_t kShadowMapSize = 2048;
 
-    struct DynamicFrameMesh {
+    struct FrameMesh {
         VkBuffer vertexBuffer{VK_NULL_HANDLE};
         VkDeviceMemory vertexMemory{VK_NULL_HANDLE};
         VkBuffer indexBuffer{VK_NULL_HANDLE};
@@ -108,11 +115,15 @@ private:
     void createPipelines();
     void destroyPipelines() noexcept;
 
-    void destroyMesh() noexcept;
-    void destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept;
-    void ensureDynamicFrameCapacity(DynamicFrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes);
+    void destroyFrameMesh(FrameMesh& mesh) noexcept;
+    void ensureFrameCapacity(FrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes);
+    void uploadStaticMeshForFrame(std::uint32_t frame);
     void uploadDynamicMeshForFrame(std::uint32_t frame);
-    void drawBoundMesh(VkCommandBuffer commandBuffer, VkBuffer vertexBuffer, VkBuffer indexBuffer, std::uint32_t indexCount);
+    void drawBoundMesh(
+        VkCommandBuffer commandBuffer,
+        VkBuffer vertexBuffer,
+        VkBuffer indexBuffer,
+        std::uint32_t indexCount);
 
     void createBuffer(
         VkDeviceSize size,
@@ -127,7 +138,9 @@ private:
         VkImage& image,
         VkDeviceMemory& memory,
         VkImageView& view);
-    [[nodiscard]] std::uint32_t findMemoryType(std::uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
+    [[nodiscard]] std::uint32_t findMemoryType(
+        std::uint32_t typeFilter,
+        VkMemoryPropertyFlags properties) const;
     [[nodiscard]] std::uint32_t findGraphicsPresentQueue(VkPhysicalDevice device) const;
     [[nodiscard]] bool supportsSwapchain(VkPhysicalDevice device) const;
 
@@ -162,15 +175,15 @@ private:
     VkPipeline skyPipeline_{VK_NULL_HANDLE};
     VkPipeline hudPipeline_{VK_NULL_HANDLE};
 
-    VkBuffer vertexBuffer_{VK_NULL_HANDLE};
-    VkDeviceMemory vertexMemory_{VK_NULL_HANDLE};
-    VkBuffer indexBuffer_{VK_NULL_HANDLE};
-    VkDeviceMemory indexMemory_{VK_NULL_HANDLE};
-    std::uint32_t indexCount_{};
+    std::vector<PlanetVertex> pendingStaticVertices_;
+    std::vector<std::uint32_t> pendingStaticIndices_;
+    std::uint64_t staticMeshGeneration_{};
+    std::array<std::uint64_t, kFramesInFlight> staticMeshGenerationByFrame_{};
+    std::array<FrameMesh, kFramesInFlight> staticMeshes_{};
 
     std::vector<PlanetVertex> pendingDynamicVertices_;
     std::vector<std::uint32_t> pendingDynamicIndices_;
-    std::array<DynamicFrameMesh, kFramesInFlight> dynamicMeshes_{};
+    std::array<FrameMesh, kFramesInFlight> dynamicMeshes_{};
 
     VkCommandPool commandPool_{VK_NULL_HANDLE};
     std::array<VkCommandBuffer, kFramesInFlight> commandBuffers_{};
