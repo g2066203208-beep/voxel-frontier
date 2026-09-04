@@ -111,10 +111,10 @@ struct RockInstance {
 
 [[nodiscard]] std::vector<Placement> scatterTrees(PlanetMesh& mesh, const PlanetDefinition& definition) {
     const std::uint32_t targetCount = static_cast<std::uint32_t>(std::clamp(
-        definition.radius * 0.64,
-        96.0,
-        190.0));
-    const std::uint64_t candidateCount = static_cast<std::uint64_t>(targetCount) * 44ULL;
+        definition.radius * 0.72,
+        110.0,
+        210.0));
+    const std::uint64_t candidateCount = static_cast<std::uint64_t>(targetCount) * 52ULL;
     std::vector<Placement> accepted;
     std::array<std::vector<TreeInstance>, 6> byFace{};
     accepted.reserve(targetCount);
@@ -129,34 +129,52 @@ struct RockInstance {
         const double normalizedHeight = definition.maxElevation > 0.0
             ? elevation / definition.maxElevation
             : 0.0;
-        if (normalizedHeight < -0.16 || normalizedHeight > 0.40) continue;
+        if (normalizedHeight < -0.12 || normalizedHeight > 0.42) continue;
 
+        const LandformProfile landform = semanticLandform(definition, direction);
         const double moisture = terrainMoisture(definition, direction);
         const double temperature = terrainTemperature(definition, direction, normalizedHeight);
-        if (moisture < 0.36 || temperature < 0.38) continue;
+        if (moisture < 0.34 || temperature < 0.36) continue;
         const double slopeCos = surfaceSlopeCosine(definition, direction);
-        if (slopeCos < 0.89) continue;
+        if (slopeCos < 0.885) continue;
 
-        const double grove = 0.5 + 0.5 * centeredFbm(
-            definition.seed ^ 0x8CB92BA72F3D8DD7ULL,
-            direction * 5.2,
-            3U);
-        const double density = std::clamp(
-            (moisture - 0.28) * 1.35
-                * (temperature - 0.26) * 1.28
-                * (0.52 + 0.72 * grove)
-                * (1.0 - std::max(0.0, normalizedHeight - 0.15) * 1.6),
+        // Forests now have a readable hierarchy: dense cores, softer edges and true openings.
+        // Valley/basin moisture raises the core probability; exposed mountain belts break it apart.
+        const double edgeNoise = 0.5 + 0.5 * centeredFbm(
+            definition.seed ^ 0xD1B54A32D192ED03ULL,
+            direction * 7.0,
+            2U);
+        const double forestStructure = std::clamp(
+            landform.forestCore * 0.88
+                + landform.valleyCorridor * 0.18
+                + landform.basin * 0.14
+                - landform.mountainBelt * 0.22
+                + (edgeNoise - 0.5) * 0.16,
             0.0,
-            0.93);
+            1.0);
+        const double habitat = std::clamp(
+            (moisture - 0.27) * 1.45
+                * (temperature - 0.25) * 1.25
+                * (1.0 - std::max(0.0, normalizedHeight - 0.16) * 1.7),
+            0.0,
+            1.0);
+        const double density = std::clamp(habitat * (0.10 + forestStructure * 1.02), 0.0, 0.96);
         if (random01(definition.seed ^ 0xA24BAED4963EE407ULL, candidate) > density) continue;
 
+        // Dense forest cores can pack closer; edges deliberately open up. This creates groves and
+        // clearings instead of an even Poisson blanket.
         const double sizeClass = random01(definition.seed ^ 0x9FB21C651E98DF25ULL, candidate);
-        const double clearance = 7.0 + sizeClass * 4.4;
+        const double clearance = std::clamp(
+            11.8 - forestStructure * 5.4 + sizeClass * 2.2,
+            5.4,
+            13.5);
         if (!separatedFrom(direction, clearance, definition.radius, accepted)) continue;
 
         Placement placement{direction, clearance};
         accepted.push_back(placement);
-        const std::uint64_t treeSeed = hashChannel(definition.seed ^ 0xD6E8FEB86659FD93ULL, candidate);
+        const std::uint64_t treeSeed = hashChannel(
+            definition.seed ^ 0xD6E8FEB86659FD93ULL,
+            candidate ^ static_cast<std::uint64_t>(forestStructure * 4096.0));
         byFace[dominantCubeFace(direction)].push_back({placement, treeSeed});
     }
 
@@ -175,8 +193,6 @@ struct RockInstance {
             ++mesh.treeCount;
         }
         const std::uint32_t count = static_cast<std::uint32_t>(mesh.indices.size()) - firstIndex;
-        // About half the crown diameter. If an entire face batch is sub-pixel at distance, none of
-        // its individual trees can contribute meaningful silhouette detail.
         appendDrawRange(mesh, firstIndex, count, PlanetDrawClass::TreeBatch, 3.0F);
     }
     return accepted;
@@ -187,10 +203,10 @@ void scatterRocks(
     const PlanetDefinition& definition,
     const std::vector<Placement>& treePlacements) {
     const std::uint32_t targetCount = static_cast<std::uint32_t>(std::clamp(
-        definition.radius * 1.60,
+        definition.radius * 1.55,
         220.0,
-        520.0));
-    const std::uint64_t candidateCount = static_cast<std::uint64_t>(targetCount) * 34ULL;
+        500.0));
+    const std::uint64_t candidateCount = static_cast<std::uint64_t>(targetCount) * 38ULL;
     std::vector<Placement> accepted;
     std::array<std::vector<RockInstance>, 6> byFace{};
     accepted.reserve(targetCount);
@@ -205,31 +221,35 @@ void scatterRocks(
         const double normalizedHeight = definition.maxElevation > 0.0
             ? elevation / definition.maxElevation
             : 0.0;
-        if (normalizedHeight < -0.20) continue;
+        if (normalizedHeight < -0.18) continue;
 
+        const LandformProfile landform = semanticLandform(definition, direction);
         const double slopeCos = surfaceSlopeCosine(definition, direction);
-        if (slopeCos < 0.76) continue;
+        if (slopeCos < 0.73) continue;
         const double moisture = terrainMoisture(definition, direction);
-        const double brokenGround = 0.5 + 0.5 * centeredFbm(
+        const double clusterNoise = 0.5 + 0.5 * centeredFbm(
             definition.seed ^ 0xB5AD4ECEDA1CE2A9ULL,
-            direction * 9.0,
-            3U);
+            direction * 8.0,
+            2U);
         const double rockiness = std::clamp(
-            0.16
-                + std::max(0.0, normalizedHeight) * 0.60
-                + (1.0 - slopeCos) * 1.30
-                + (1.0 - moisture) * 0.20
-                + brokenGround * 0.22,
-            0.08,
-            0.90);
+            0.06
+                + landform.talusField * 0.74
+                + std::max(0.0, normalizedHeight) * 0.24
+                + (1.0 - slopeCos) * 0.70
+                + (1.0 - moisture) * 0.12
+                + clusterNoise * 0.14,
+            0.04,
+            0.92);
         if (random01(definition.seed ^ 0xC2B2AE3D27D4EB4FULL, candidate) > rockiness) continue;
 
         const double sizeClass = random01(definition.seed ^ 0x165667B19E3779F9ULL, candidate);
-        const double clearance = 2.4 + sizeClass * 2.9;
+        const double clusterStrength = std::clamp(landform.talusField * 0.8 + clusterNoise * 0.2, 0.0, 1.0);
+        const double clearance = std::clamp(4.6 - clusterStrength * 2.1 + sizeClass * 1.6, 2.2, 6.0);
         if (!separatedFrom(direction, clearance, definition.radius, accepted)) continue;
+
         bool overlapsTree = false;
         for (const auto& tree : treePlacements) {
-            const double required = tree.clearanceMeters * 0.52 + clearance * 0.35;
+            const double required = tree.clearanceMeters * 0.48 + clearance * 0.30;
             const double cosineThreshold = std::cos(required / std::max(definition.radius, 1.0));
             if (glm::dot(direction, tree.direction) > cosineThreshold) {
                 overlapsTree = true;
@@ -241,7 +261,7 @@ void scatterRocks(
         Placement placement{direction, clearance};
         accepted.push_back(placement);
         const std::uint64_t rockSeed = hashChannel(definition.seed ^ 0x94D049BB133111EBULL, candidate);
-        const double rockRadius = 0.34 + std::pow(sizeClass, 1.7) * 1.15;
+        const double rockRadius = 0.28 + std::pow(sizeClass, 1.55) * (0.95 + clusterStrength * 0.48);
         byFace[dominantCubeFace(direction)].push_back({placement, rockSeed, rockRadius});
     }
 
