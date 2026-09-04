@@ -122,8 +122,8 @@ VulkanRenderer::VulkanRenderer(SDL_Window* window) : window_(window) {
 
 VulkanRenderer::~VulkanRenderer() {
     if (device_ != VK_NULL_HANDLE) vkDeviceWaitIdle(device_);
-    for (auto& dynamicMesh : dynamicMeshes_) destroyDynamicFrameMesh(dynamicMesh);
-    destroyMesh();
+    for (auto& mesh : staticMeshes_) destroyFrameMesh(mesh);
+    for (auto& mesh : dynamicMeshes_) destroyFrameMesh(mesh);
     destroySwapchainResources();
     destroySwapchain();
     destroyDescriptorResources();
@@ -134,7 +134,8 @@ VulkanRenderer::~VulkanRenderer() {
     }
     if (commandPool_ != VK_NULL_HANDLE) vkDestroyCommandPool(device_, commandPool_, nullptr);
     if (device_ != VK_NULL_HANDLE) vkDestroyDevice(device_, nullptr);
-    if (surface_ != VK_NULL_HANDLE && instance_ != VK_NULL_HANDLE) SDL_Vulkan_DestroySurface(instance_, surface_, nullptr);
+    if (surface_ != VK_NULL_HANDLE && instance_ != VK_NULL_HANDLE)
+        SDL_Vulkan_DestroySurface(instance_, surface_, nullptr);
     if (instance_ != VK_NULL_HANDLE) vkDestroyInstance(instance_, nullptr);
     volkFinalize();
 }
@@ -150,14 +151,15 @@ void VulkanRenderer::createInstance() {
 
     Uint32 extensionCount = 0;
     const char* const* extensions = SDL_Vulkan_GetInstanceExtensions(&extensionCount);
-    if (!extensions || extensionCount == 0) throw std::runtime_error(std::string{"SDL Vulkan extensions unavailable: "} + SDL_GetError());
+    if (!extensions || extensionCount == 0)
+        throw std::runtime_error(std::string{"SDL Vulkan extensions unavailable: "} + SDL_GetError());
 
     VkApplicationInfo app{};
     app.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     app.pApplicationName = "Voxel Frontier";
-    app.applicationVersion = VK_MAKE_API_VERSION(0, 0, 9, 2);
+    app.applicationVersion = VK_MAKE_API_VERSION(0, 0, 9, 3);
     app.pEngineName = "Voxel Frontier Native Engine";
-    app.engineVersion = VK_MAKE_API_VERSION(0, 0, 9, 2);
+    app.engineVersion = VK_MAKE_API_VERSION(0, 0, 9, 3);
     app.apiVersion = apiVersion_;
 
     VkInstanceCreateInfo info{};
@@ -239,7 +241,8 @@ void VulkanRenderer::selectPhysicalDevice() {
             gpuName_ = properties.deviceName;
         }
     }
-    if (physicalDevice_ == VK_NULL_HANDLE) fail("No GPU satisfies Vulkan 1.3 + dynamic rendering + synchronization2 + swapchain");
+    if (physicalDevice_ == VK_NULL_HANDLE)
+        fail("No GPU satisfies Vulkan 1.3 + dynamic rendering + synchronization2 + swapchain");
 }
 
 void VulkanRenderer::createDevice() {
@@ -303,7 +306,8 @@ void VulkanRenderer::createSyncObjects() {
 void VulkanRenderer::createSwapchain() {
     int pixelWidth = 0;
     int pixelHeight = 0;
-    if (!SDL_GetWindowSizeInPixels(window_, &pixelWidth, &pixelHeight) || pixelWidth <= 0 || pixelHeight <= 0) return;
+    if (!SDL_GetWindowSizeInPixels(window_, &pixelWidth, &pixelHeight)
+        || pixelWidth <= 0 || pixelHeight <= 0) return;
 
     VkSurfaceCapabilitiesKHR capabilities{};
     VkResult result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice_, surface_, &capabilities);
@@ -317,7 +321,8 @@ void VulkanRenderer::createSwapchain() {
     vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice_, surface_, &formatCount, formats.data());
     VkSurfaceFormatKHR chosen = formats.front();
     for (const auto& format : formats) {
-        if (format.format == VK_FORMAT_B8G8R8A8_SRGB && format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+        if (format.format == VK_FORMAT_B8G8R8A8_SRGB
+            && format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
             chosen = format;
             break;
         }
@@ -328,14 +333,21 @@ void VulkanRenderer::createSwapchain() {
     std::vector<VkPresentModeKHR> presentModes(presentCount);
     vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice_, surface_, &presentCount, presentModes.data());
     VkPresentModeKHR present = VK_PRESENT_MODE_FIFO_KHR;
-    if (std::find(presentModes.begin(), presentModes.end(), VK_PRESENT_MODE_MAILBOX_KHR) != presentModes.end())
-        present = VK_PRESENT_MODE_MAILBOX_KHR;
+    if (std::find(presentModes.begin(), presentModes.end(), VK_PRESENT_MODE_MAILBOX_KHR)
+        != presentModes.end()) present = VK_PRESENT_MODE_MAILBOX_KHR;
 
     VkExtent2D extent{};
-    if (capabilities.currentExtent.width != std::numeric_limits<std::uint32_t>::max()) extent = capabilities.currentExtent;
-    else {
-        extent.width = std::clamp(static_cast<std::uint32_t>(pixelWidth), capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-        extent.height = std::clamp(static_cast<std::uint32_t>(pixelHeight), capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+    if (capabilities.currentExtent.width != std::numeric_limits<std::uint32_t>::max()) {
+        extent = capabilities.currentExtent;
+    } else {
+        extent.width = std::clamp(
+            static_cast<std::uint32_t>(pixelWidth),
+            capabilities.minImageExtent.width,
+            capabilities.maxImageExtent.width);
+        extent.height = std::clamp(
+            static_cast<std::uint32_t>(pixelHeight),
+            capabilities.minImageExtent.height,
+            capabilities.maxImageExtent.height);
     }
 
     std::uint32_t imageCount = capabilities.minImageCount + 1U;
@@ -392,7 +404,9 @@ void VulkanRenderer::createSwapchainResources() {
 void VulkanRenderer::destroySwapchainResources() noexcept {
     destroyPipelines();
     destroyMainDepthResources();
-    for (VkImageView view : swapchainImageViews_) if (view != VK_NULL_HANDLE) vkDestroyImageView(device_, view, nullptr);
+    for (VkImageView view : swapchainImageViews_) {
+        if (view != VK_NULL_HANDLE) vkDestroyImageView(device_, view, nullptr);
+    }
     swapchainImageViews_.clear();
 }
 
@@ -407,6 +421,8 @@ void VulkanRenderer::destroySwapchain() noexcept {
 
 void VulkanRenderer::recreateSwapchain() {
     if (device_ == VK_NULL_HANDLE) return;
+    // Window resize is exceptional and must retire swapchain images before destroying them.
+    // Terrain streaming never enters this path.
     vkDeviceWaitIdle(device_);
     destroySwapchainResources();
     destroySwapchain();
@@ -414,11 +430,14 @@ void VulkanRenderer::recreateSwapchain() {
     createSwapchainResources();
 }
 
-std::uint32_t VulkanRenderer::findMemoryType(std::uint32_t typeFilter, VkMemoryPropertyFlags properties) const {
+std::uint32_t VulkanRenderer::findMemoryType(
+    std::uint32_t typeFilter,
+    VkMemoryPropertyFlags properties) const {
     VkPhysicalDeviceMemoryProperties memory{};
     vkGetPhysicalDeviceMemoryProperties(physicalDevice_, &memory);
     for (std::uint32_t i = 0; i < memory.memoryTypeCount; ++i) {
-        if ((typeFilter & (1U << i)) != 0U && (memory.memoryTypes[i].propertyFlags & properties) == properties) return i;
+        if ((typeFilter & (1U << i)) != 0U
+            && (memory.memoryTypes[i].propertyFlags & properties) == properties) return i;
     }
     fail("No suitable Vulkan memory type found");
 }
@@ -493,8 +512,15 @@ void VulkanRenderer::createDepthImage(
 }
 
 void VulkanRenderer::createMainDepthResources() {
-    for (auto& depth : depthFrames_)
-        createDepthImage(swapchainExtent_.width, swapchainExtent_.height, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, depth.image, depth.memory, depth.view);
+    for (auto& depth : depthFrames_) {
+        createDepthImage(
+            swapchainExtent_.width,
+            swapchainExtent_.height,
+            VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+            depth.image,
+            depth.memory,
+            depth.view);
+    }
 }
 
 void VulkanRenderer::destroyMainDepthResources() noexcept {
@@ -508,20 +534,29 @@ void VulkanRenderer::destroyMainDepthResources() noexcept {
 
 void VulkanRenderer::createShadowResources() {
     for (auto& shadow : shadowFrames_) {
-        createDepthImage(kShadowMapSize, kShadowMapSize,
+        createDepthImage(
+            kShadowMapSize,
+            kShadowMapSize,
             VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-            shadow.depthImage, shadow.depthMemory, shadow.depthView);
-        createBuffer(sizeof(SceneUniforms), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            shadow.depthImage,
+            shadow.depthMemory,
+            shadow.depthView);
+        createBuffer(
+            sizeof(SceneUniforms),
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            shadow.uniformBuffer, shadow.uniformMemory);
-        const VkResult result = vkMapMemory(device_, shadow.uniformMemory, 0, sizeof(SceneUniforms), 0, &shadow.mappedUniform);
+            shadow.uniformBuffer,
+            shadow.uniformMemory);
+        const VkResult result = vkMapMemory(
+            device_, shadow.uniformMemory, 0, sizeof(SceneUniforms), 0, &shadow.mappedUniform);
         if (result != VK_SUCCESS) fail("vkMapMemory(scene uniform) failed", result);
     }
 }
 
 void VulkanRenderer::destroyShadowResources() noexcept {
     for (auto& shadow : shadowFrames_) {
-        if (shadow.mappedUniform != nullptr && shadow.uniformMemory != VK_NULL_HANDLE) vkUnmapMemory(device_, shadow.uniformMemory);
+        if (shadow.mappedUniform != nullptr && shadow.uniformMemory != VK_NULL_HANDLE)
+            vkUnmapMemory(device_, shadow.uniformMemory);
         if (shadow.uniformBuffer != VK_NULL_HANDLE) vkDestroyBuffer(device_, shadow.uniformBuffer, nullptr);
         if (shadow.uniformMemory != VK_NULL_HANDLE) vkFreeMemory(device_, shadow.uniformMemory, nullptr);
         if (shadow.depthView != VK_NULL_HANDLE) vkDestroyImageView(device_, shadow.depthView, nullptr);
@@ -533,7 +568,8 @@ void VulkanRenderer::destroyShadowResources() noexcept {
 
 void VulkanRenderer::createDescriptorResources() {
     std::array<VkDescriptorSetLayoutBinding, 3> bindings{};
-    bindings[0] = {0U, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1U, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, nullptr};
+    bindings[0] = {0U, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1U,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, nullptr};
     bindings[1] = {1U, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1U, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr};
     bindings[2] = {2U, VK_DESCRIPTOR_TYPE_SAMPLER, 1U, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr};
     VkDescriptorSetLayoutCreateInfo layout{};
@@ -609,7 +645,8 @@ void VulkanRenderer::createDescriptorResources() {
         writes[2].descriptorCount = 1;
         writes[2].descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
         writes[2].pImageInfo = &samplerInfo;
-        vkUpdateDescriptorSets(device_, static_cast<std::uint32_t>(writes.size()), writes.data(), 0, nullptr);
+        vkUpdateDescriptorSets(
+            device_, static_cast<std::uint32_t>(writes.size()), writes.data(), 0, nullptr);
     }
 }
 
@@ -619,7 +656,8 @@ void VulkanRenderer::destroyDescriptorResources() noexcept {
     sceneDescriptorPool_ = VK_NULL_HANDLE;
     if (shadowSampler_ != VK_NULL_HANDLE) vkDestroySampler(device_, shadowSampler_, nullptr);
     shadowSampler_ = VK_NULL_HANDLE;
-    if (sceneDescriptorSetLayout_ != VK_NULL_HANDLE) vkDestroyDescriptorSetLayout(device_, sceneDescriptorSetLayout_, nullptr);
+    if (sceneDescriptorSetLayout_ != VK_NULL_HANDLE)
+        vkDestroyDescriptorSetLayout(device_, sceneDescriptorSetLayout_, nullptr);
     sceneDescriptorSetLayout_ = VK_NULL_HANDLE;
 }
 
@@ -640,10 +678,14 @@ void VulkanRenderer::createPipelines() {
 
     VkVertexInputBindingDescription binding{0U, sizeof(PlanetVertex), VK_VERTEX_INPUT_RATE_VERTEX};
     std::array<VkVertexInputAttributeDescription, 4> attributes{};
-    attributes[0] = {0U, 0U, VK_FORMAT_R32G32B32_SFLOAT, static_cast<std::uint32_t>(offsetof(PlanetVertex, position))};
-    attributes[1] = {1U, 0U, VK_FORMAT_R32G32B32_SFLOAT, static_cast<std::uint32_t>(offsetof(PlanetVertex, normal))};
-    attributes[2] = {2U, 0U, VK_FORMAT_R32G32B32_SFLOAT, static_cast<std::uint32_t>(offsetof(PlanetVertex, color))};
-    attributes[3] = {3U, 0U, VK_FORMAT_R32G32B32A32_SFLOAT, static_cast<std::uint32_t>(offsetof(PlanetVertex, material))};
+    attributes[0] = {0U, 0U, VK_FORMAT_R32G32B32_SFLOAT,
+        static_cast<std::uint32_t>(offsetof(PlanetVertex, position))};
+    attributes[1] = {1U, 0U, VK_FORMAT_R32G32B32_SFLOAT,
+        static_cast<std::uint32_t>(offsetof(PlanetVertex, normal))};
+    attributes[2] = {2U, 0U, VK_FORMAT_R32G32B32_SFLOAT,
+        static_cast<std::uint32_t>(offsetof(PlanetVertex, color))};
+    attributes[3] = {3U, 0U, VK_FORMAT_R32G32B32A32_SFLOAT,
+        static_cast<std::uint32_t>(offsetof(PlanetVertex, material))};
     VkPipelineVertexInputStateCreateInfo vertexInput{};
     vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInput.vertexBindingDescriptionCount = 1;
@@ -686,7 +728,8 @@ void VulkanRenderer::createPipelines() {
     shadowDepth.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 
     VkPipelineColorBlendAttachmentState opaqueBlend{};
-    opaqueBlend.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    opaqueBlend.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT
+        | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     VkPipelineColorBlendAttachmentState alphaBlend = opaqueBlend;
     alphaBlend.blendEnable = VK_TRUE;
     alphaBlend.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
@@ -711,14 +754,22 @@ void VulkanRenderer::createPipelines() {
     rendering.pColorAttachmentFormats = &swapchainFormat_;
     rendering.depthAttachmentFormat = depthFormat_;
 
-    const VkShaderModule sceneVertex = createShaderModule(device_, shaders::kPlanetVertexSpv, shaders::kPlanetVertexSpvSize);
-    const VkShaderModule opaqueFragment = createShaderModule(device_, shaders::kOpaqueFragmentSpv, shaders::kOpaqueFragmentSpvSize);
-    const VkShaderModule transparentFragment = createShaderModule(device_, shaders::kTransparentFragmentSpv, shaders::kTransparentFragmentSpvSize);
-    const VkShaderModule shadowVertex = createShaderModule(device_, shaders::kShadowVertexSpv, shaders::kShadowVertexSpvSize);
-    const VkShaderModule shadowFragment = createShaderModule(device_, shaders::kShadowFragmentSpv, shaders::kShadowFragmentSpvSize);
-    const VkShaderModule fullscreenVertex = createShaderModule(device_, shaders::kFullscreenVertexSpv, shaders::kFullscreenVertexSpvSize);
-    const VkShaderModule skyFragment = createShaderModule(device_, shaders::kSkyFragmentSpv, shaders::kSkyFragmentSpvSize);
-    const VkShaderModule hudFragment = createShaderModule(device_, shaders::kHudFragmentSpv, shaders::kHudFragmentSpvSize);
+    const VkShaderModule sceneVertex = createShaderModule(
+        device_, shaders::kPlanetVertexSpv, shaders::kPlanetVertexSpvSize);
+    const VkShaderModule opaqueFragment = createShaderModule(
+        device_, shaders::kOpaqueFragmentSpv, shaders::kOpaqueFragmentSpvSize);
+    const VkShaderModule transparentFragment = createShaderModule(
+        device_, shaders::kTransparentFragmentSpv, shaders::kTransparentFragmentSpvSize);
+    const VkShaderModule shadowVertex = createShaderModule(
+        device_, shaders::kShadowVertexSpv, shaders::kShadowVertexSpvSize);
+    const VkShaderModule shadowFragment = createShaderModule(
+        device_, shaders::kShadowFragmentSpv, shaders::kShadowFragmentSpvSize);
+    const VkShaderModule fullscreenVertex = createShaderModule(
+        device_, shaders::kFullscreenVertexSpv, shaders::kFullscreenVertexSpvSize);
+    const VkShaderModule skyFragment = createShaderModule(
+        device_, shaders::kSkyFragmentSpv, shaders::kSkyFragmentSpvSize);
+    const VkShaderModule hudFragment = createShaderModule(
+        device_, shaders::kHudFragmentSpv, shaders::kHudFragmentSpvSize);
 
     auto makeStage = [](VkShaderStageFlagBits stage, VkShaderModule module, const char* name) {
         VkPipelineShaderStageCreateInfo info{};
@@ -729,8 +780,11 @@ void VulkanRenderer::createPipelines() {
         return info;
     };
 
-    auto createColorPipeline = [&](VkPipeline& pipeline, VkShaderModule vert, const char* vertName,
-                                   VkShaderModule frag, const char* fragName,
+    auto createColorPipeline = [&](VkPipeline& pipeline,
+                                   VkShaderModule vert,
+                                   const char* vertName,
+                                   VkShaderModule frag,
+                                   const char* fragName,
                                    VkPipelineVertexInputStateCreateInfo* vi,
                                    VkPipelineDepthStencilStateCreateInfo* ds,
                                    VkPipelineColorBlendAttachmentState* attachment,
@@ -755,17 +809,22 @@ void VulkanRenderer::createPipelines() {
         info.pColorBlendState = &localBlend;
         info.pDynamicState = &dynamic;
         info.layout = pipelineLayout;
-        const VkResult createResult = vkCreateGraphicsPipelines(device_, VK_NULL_HANDLE, 1, &info, nullptr, &pipeline);
+        const VkResult createResult = vkCreateGraphicsPipelines(
+            device_, VK_NULL_HANDLE, 1, &info, nullptr, &pipeline);
         if (createResult != VK_SUCCESS) fail("vkCreateGraphicsPipelines(color) failed", createResult);
     };
 
-    createColorPipeline(opaquePipeline_, sceneVertex, "vertexMain", opaqueFragment, "opaqueFragmentMain",
+    createColorPipeline(
+        opaquePipeline_, sceneVertex, "vertexMain", opaqueFragment, "opaqueFragmentMain",
         &vertexInput, &reverseDepth, &opaqueBlend, scenePipelineLayout_);
-    createColorPipeline(transparentPipeline_, sceneVertex, "vertexMain", transparentFragment, "transparentFragmentMain",
+    createColorPipeline(
+        transparentPipeline_, sceneVertex, "vertexMain", transparentFragment, "transparentFragmentMain",
         &vertexInput, &transparentDepth, &alphaBlend, scenePipelineLayout_);
-    createColorPipeline(skyPipeline_, fullscreenVertex, "fullscreenVertexMain", skyFragment, "skyFragmentMain",
+    createColorPipeline(
+        skyPipeline_, fullscreenVertex, "fullscreenVertexMain", skyFragment, "skyFragmentMain",
         &emptyVertexInput, &noDepth, &opaqueBlend, fullscreenPipelineLayout_);
-    createColorPipeline(hudPipeline_, fullscreenVertex, "fullscreenVertexMain", hudFragment, "hudFragmentMain",
+    createColorPipeline(
+        hudPipeline_, fullscreenVertex, "fullscreenVertexMain", hudFragment, "hudFragmentMain",
         &emptyVertexInput, &noDepth, &alphaBlend, fullscreenPipelineLayout_);
 
     VkPipelineRenderingCreateInfo shadowRendering{};
@@ -796,40 +855,42 @@ void VulkanRenderer::createPipelines() {
     shadowInfo.pColorBlendState = &noColorBlend;
     shadowInfo.pDynamicState = &dynamic;
     shadowInfo.layout = scenePipelineLayout_;
-    result = vkCreateGraphicsPipelines(device_, VK_NULL_HANDLE, 1, &shadowInfo, nullptr, &shadowPipeline_);
+    result = vkCreateGraphicsPipelines(
+        device_, VK_NULL_HANDLE, 1, &shadowInfo, nullptr, &shadowPipeline_);
     if (result != VK_SUCCESS) fail("vkCreateGraphicsPipelines(shadow) failed", result);
 
-    for (VkShaderModule module : {sceneVertex, opaqueFragment, transparentFragment, shadowVertex, shadowFragment,
-                                  fullscreenVertex, skyFragment, hudFragment})
+    for (VkShaderModule module : {
+            sceneVertex,
+            opaqueFragment,
+            transparentFragment,
+            shadowVertex,
+            shadowFragment,
+            fullscreenVertex,
+            skyFragment,
+            hudFragment}) {
         vkDestroyShaderModule(device_, module, nullptr);
+    }
 }
 
 void VulkanRenderer::destroyPipelines() noexcept {
-    for (VkPipeline* pipeline : {&opaquePipeline_, &transparentPipeline_, &shadowPipeline_, &skyPipeline_, &hudPipeline_}) {
+    for (VkPipeline* pipeline : {
+            &opaquePipeline_, &transparentPipeline_, &shadowPipeline_, &skyPipeline_, &hudPipeline_}) {
         if (*pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device_, *pipeline, nullptr);
         *pipeline = VK_NULL_HANDLE;
     }
-    if (scenePipelineLayout_ != VK_NULL_HANDLE) vkDestroyPipelineLayout(device_, scenePipelineLayout_, nullptr);
+    if (scenePipelineLayout_ != VK_NULL_HANDLE)
+        vkDestroyPipelineLayout(device_, scenePipelineLayout_, nullptr);
     scenePipelineLayout_ = VK_NULL_HANDLE;
-    if (fullscreenPipelineLayout_ != VK_NULL_HANDLE) vkDestroyPipelineLayout(device_, fullscreenPipelineLayout_, nullptr);
+    if (fullscreenPipelineLayout_ != VK_NULL_HANDLE)
+        vkDestroyPipelineLayout(device_, fullscreenPipelineLayout_, nullptr);
     fullscreenPipelineLayout_ = VK_NULL_HANDLE;
 }
 
-void VulkanRenderer::destroyMesh() noexcept {
-    if (indexBuffer_ != VK_NULL_HANDLE) vkDestroyBuffer(device_, indexBuffer_, nullptr);
-    if (indexMemory_ != VK_NULL_HANDLE) vkFreeMemory(device_, indexMemory_, nullptr);
-    if (vertexBuffer_ != VK_NULL_HANDLE) vkDestroyBuffer(device_, vertexBuffer_, nullptr);
-    if (vertexMemory_ != VK_NULL_HANDLE) vkFreeMemory(device_, vertexMemory_, nullptr);
-    indexBuffer_ = VK_NULL_HANDLE;
-    indexMemory_ = VK_NULL_HANDLE;
-    vertexBuffer_ = VK_NULL_HANDLE;
-    vertexMemory_ = VK_NULL_HANDLE;
-    indexCount_ = 0;
-}
-
-void VulkanRenderer::destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept {
-    if (mesh.mappedVertices != nullptr && mesh.vertexMemory != VK_NULL_HANDLE) vkUnmapMemory(device_, mesh.vertexMemory);
-    if (mesh.mappedIndices != nullptr && mesh.indexMemory != VK_NULL_HANDLE) vkUnmapMemory(device_, mesh.indexMemory);
+void VulkanRenderer::destroyFrameMesh(FrameMesh& mesh) noexcept {
+    if (mesh.mappedVertices != nullptr && mesh.vertexMemory != VK_NULL_HANDLE)
+        vkUnmapMemory(device_, mesh.vertexMemory);
+    if (mesh.mappedIndices != nullptr && mesh.indexMemory != VK_NULL_HANDLE)
+        vkUnmapMemory(device_, mesh.indexMemory);
     if (mesh.indexBuffer != VK_NULL_HANDLE) vkDestroyBuffer(device_, mesh.indexBuffer, nullptr);
     if (mesh.indexMemory != VK_NULL_HANDLE) vkFreeMemory(device_, mesh.indexMemory, nullptr);
     if (mesh.vertexBuffer != VK_NULL_HANDLE) vkDestroyBuffer(device_, mesh.vertexBuffer, nullptr);
@@ -837,21 +898,74 @@ void VulkanRenderer::destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept {
     mesh = {};
 }
 
-void VulkanRenderer::ensureDynamicFrameCapacity(DynamicFrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes) {
+void VulkanRenderer::ensureFrameCapacity(
+    FrameMesh& mesh,
+    VkDeviceSize vertexBytes,
+    VkDeviceSize indexBytes) {
     if (vertexBytes <= mesh.vertexCapacityBytes && indexBytes <= mesh.indexCapacityBytes) return;
-    const VkDeviceSize vertexCapacity = growCapacity(mesh.vertexCapacityBytes, vertexBytes, 64U * 1024U);
-    const VkDeviceSize indexCapacity = growCapacity(mesh.indexCapacityBytes, indexBytes, 32U * 1024U);
-    destroyDynamicFrameMesh(mesh);
-    createBuffer(vertexCapacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, mesh.vertexBuffer, mesh.vertexMemory);
-    createBuffer(indexCapacity, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, mesh.indexBuffer, mesh.indexMemory);
-    VkResult result = vkMapMemory(device_, mesh.vertexMemory, 0, vertexCapacity, 0, &mesh.mappedVertices);
-    if (result != VK_SUCCESS) fail("vkMapMemory(dynamic vertex) failed", result);
-    result = vkMapMemory(device_, mesh.indexMemory, 0, indexCapacity, 0, &mesh.mappedIndices);
-    if (result != VK_SUCCESS) fail("vkMapMemory(dynamic index) failed", result);
+
+    const VkDeviceSize vertexCapacity = growCapacity(
+        mesh.vertexCapacityBytes, vertexBytes, 256U * 1024U);
+    const VkDeviceSize indexCapacity = growCapacity(
+        mesh.indexCapacityBytes, indexBytes, 128U * 1024U);
+
+    // This method is called only after the owning frame fence has signaled, so destroying and
+    // replacing this frame's buffers cannot invalidate another in-flight command buffer.
+    destroyFrameMesh(mesh);
+    createBuffer(
+        vertexCapacity,
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        mesh.vertexBuffer,
+        mesh.vertexMemory);
+    createBuffer(
+        indexCapacity,
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        mesh.indexBuffer,
+        mesh.indexMemory);
+
+    VkResult result = vkMapMemory(
+        device_, mesh.vertexMemory, 0, vertexCapacity, 0, &mesh.mappedVertices);
+    if (result != VK_SUCCESS) fail("vkMapMemory(frame vertex) failed", result);
+    result = vkMapMemory(
+        device_, mesh.indexMemory, 0, indexCapacity, 0, &mesh.mappedIndices);
+    if (result != VK_SUCCESS) fail("vkMapMemory(frame index) failed", result);
     mesh.vertexCapacityBytes = vertexCapacity;
     mesh.indexCapacityBytes = indexCapacity;
+}
+
+void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
+    if (mesh.vertices.empty() || mesh.indices.empty()) fail("Cannot upload an empty planet mesh");
+    pendingStaticVertices_ = mesh.vertices;
+    pendingStaticIndices_ = mesh.indices;
+    ++staticMeshGeneration_;
+    if (staticMeshGeneration_ == 0U) {
+        staticMeshGeneration_ = 1U;
+        staticMeshGenerationByFrame_.fill(0U);
+    }
+}
+
+void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
+    if (staticMeshGenerationByFrame_[frame] == staticMeshGeneration_) return;
+    auto& mesh = staticMeshes_[frame];
+    if (pendingStaticVertices_.empty() || pendingStaticIndices_.empty()) {
+        mesh.indexCount = 0U;
+        staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
+        return;
+    }
+
+    const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(
+        pendingStaticVertices_.size() * sizeof(PlanetVertex));
+    const VkDeviceSize indexBytes = static_cast<VkDeviceSize>(
+        pendingStaticIndices_.size() * sizeof(std::uint32_t));
+    ensureFrameCapacity(mesh, vertexBytes, indexBytes);
+    std::memcpy(
+        mesh.mappedVertices, pendingStaticVertices_.data(), static_cast<std::size_t>(vertexBytes));
+    std::memcpy(
+        mesh.mappedIndices, pendingStaticIndices_.data(), static_cast<std::size_t>(indexBytes));
+    mesh.indexCount = static_cast<std::uint32_t>(pendingStaticIndices_.size());
+    staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
 }
 
 void VulkanRenderer::setDynamicMesh(const PlanetMesh& mesh) {
@@ -867,45 +981,31 @@ void VulkanRenderer::clearDynamicMesh() {
 void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
     auto& mesh = dynamicMeshes_[frame];
     if (pendingDynamicVertices_.empty() || pendingDynamicIndices_.empty()) {
-        mesh.indexCount = 0;
+        mesh.indexCount = 0U;
         return;
     }
-    const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(pendingDynamicVertices_.size() * sizeof(PlanetVertex));
-    const VkDeviceSize indexBytes = static_cast<VkDeviceSize>(pendingDynamicIndices_.size() * sizeof(std::uint32_t));
-    ensureDynamicFrameCapacity(mesh, vertexBytes, indexBytes);
-    std::memcpy(mesh.mappedVertices, pendingDynamicVertices_.data(), static_cast<std::size_t>(vertexBytes));
-    std::memcpy(mesh.mappedIndices, pendingDynamicIndices_.data(), static_cast<std::size_t>(indexBytes));
+    const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(
+        pendingDynamicVertices_.size() * sizeof(PlanetVertex));
+    const VkDeviceSize indexBytes = static_cast<VkDeviceSize>(
+        pendingDynamicIndices_.size() * sizeof(std::uint32_t));
+    ensureFrameCapacity(mesh, vertexBytes, indexBytes);
+    std::memcpy(
+        mesh.mappedVertices, pendingDynamicVertices_.data(), static_cast<std::size_t>(vertexBytes));
+    std::memcpy(
+        mesh.mappedIndices, pendingDynamicIndices_.data(), static_cast<std::size_t>(indexBytes));
     mesh.indexCount = static_cast<std::uint32_t>(pendingDynamicIndices_.size());
 }
 
-void VulkanRenderer::drawBoundMesh(VkCommandBuffer commandBuffer, VkBuffer vertexBuffer, VkBuffer indexBuffer, std::uint32_t indexCount) {
+void VulkanRenderer::drawBoundMesh(
+    VkCommandBuffer commandBuffer,
+    VkBuffer vertexBuffer,
+    VkBuffer indexBuffer,
+    std::uint32_t indexCount) {
     if (vertexBuffer == VK_NULL_HANDLE || indexBuffer == VK_NULL_HANDLE || indexCount == 0U) return;
     constexpr VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, &offset);
     vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
     vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
-}
-
-void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
-    if (mesh.vertices.empty() || mesh.indices.empty()) fail("Cannot upload an empty planet mesh");
-    vkDeviceWaitIdle(device_);
-    destroyMesh();
-    const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(mesh.vertices.size() * sizeof(PlanetVertex));
-    const VkDeviceSize indexBytes = static_cast<VkDeviceSize>(mesh.indices.size() * sizeof(std::uint32_t));
-    createBuffer(vertexBytes, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vertexBuffer_, vertexMemory_);
-    createBuffer(indexBytes, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, indexBuffer_, indexMemory_);
-    void* mapped = nullptr;
-    VkResult result = vkMapMemory(device_, vertexMemory_, 0, vertexBytes, 0, &mapped);
-    if (result != VK_SUCCESS) fail("vkMapMemory(vertex) failed", result);
-    std::memcpy(mapped, mesh.vertices.data(), static_cast<std::size_t>(vertexBytes));
-    vkUnmapMemory(device_, vertexMemory_);
-    result = vkMapMemory(device_, indexMemory_, 0, indexBytes, 0, &mapped);
-    if (result != VK_SUCCESS) fail("vkMapMemory(index) failed", result);
-    std::memcpy(mapped, mesh.indices.data(), static_cast<std::size_t>(indexBytes));
-    vkUnmapMemory(device_, indexMemory_);
-    indexCount_ = static_cast<std::uint32_t>(mesh.indices.size());
 }
 
 void VulkanRenderer::drawFrame(
@@ -919,23 +1019,37 @@ void VulkanRenderer::drawFrame(
     const std::uint32_t frame = frameIndex_ % kFramesInFlight;
     VkResult result = vkWaitForFences(device_, 1, &inFlight_[frame], VK_TRUE, UINT64_MAX);
     if (result != VK_SUCCESS) fail("vkWaitForFences failed", result);
+
+    // The frame fence is the ownership gate for both static and dynamic mapped buffers. Static
+    // terrain updates are therefore incremental across the two frames in flight, with no global
+    // GPU idle and no use-after-free risk.
+    uploadStaticMeshForFrame(frame);
     uploadDynamicMeshForFrame(frame);
+    const auto& staticMesh = staticMeshes_[frame];
+    const auto& dynamic = dynamicMeshes_[frame];
 
     std::uint32_t imageIndex = 0;
-    result = vkAcquireNextImageKHR(device_, swapchain_, UINT64_MAX, imageAvailable_[frame], VK_NULL_HANDLE, &imageIndex);
+    result = vkAcquireNextImageKHR(
+        device_, swapchain_, UINT64_MAX, imageAvailable_[frame], VK_NULL_HANDLE, &imageIndex);
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
         recreateSwapchain();
         return;
     }
-    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) fail("vkAcquireNextImageKHR failed", result);
+    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+        fail("vkAcquireNextImageKHR failed", result);
     vkResetFences(device_, 1, &inFlight_[frame]);
     vkResetCommandBuffer(commandBuffers_[frame], 0);
 
-    const glm::mat4 shadowVP = makeShadowViewProjection(environment.sunDirectionToLight, environment.cameraForward);
+    const glm::mat4 shadowVP = makeShadowViewProjection(
+        environment.sunDirectionToLight, environment.cameraForward);
     SceneUniforms scene{};
     scene.lightViewProjection = shadowVP;
-    scene.skyAmbientExposure = glm::vec4(glm::max(environment.skyAmbient, glm::vec3{0.0F}), std::max(environment.exposure, 0.01F));
-    scene.groundAmbientShadowTexel = glm::vec4(glm::max(environment.groundAmbient, glm::vec3{0.0F}), 1.0F / static_cast<float>(kShadowMapSize));
+    scene.skyAmbientExposure = glm::vec4(
+        glm::max(environment.skyAmbient, glm::vec3{0.0F}),
+        std::max(environment.exposure, 0.01F));
+    scene.groundAmbientShadowTexel = glm::vec4(
+        glm::max(environment.groundAmbient, glm::vec3{0.0F}),
+        1.0F / static_cast<float>(kShadowMapSize));
     std::memcpy(shadowFrames_[frame].mappedUniform, &scene, sizeof(scene));
 
     VkCommandBuffer command = commandBuffers_[frame];
@@ -945,11 +1059,11 @@ void VulkanRenderer::drawFrame(
     result = vkBeginCommandBuffer(command, &begin);
     if (result != VK_SUCCESS) fail("vkBeginCommandBuffer failed", result);
 
-    // Shadow depth pass: real scene depth from the directional light, no painted footprint polygons.
     VkImageMemoryBarrier2 shadowToAttachment{};
     shadowToAttachment.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
     shadowToAttachment.srcStageMask = VK_PIPELINE_STAGE_2_NONE;
-    shadowToAttachment.dstStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
+    shadowToAttachment.dstStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT
+        | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
     shadowToAttachment.dstAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     shadowToAttachment.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     shadowToAttachment.newLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
@@ -978,30 +1092,46 @@ void VulkanRenderer::drawFrame(
     shadowRendering.layerCount = 1;
     shadowRendering.pDepthAttachment = &shadowDepthAttachment;
     vkCmdBeginRendering(command, &shadowRendering);
-    VkViewport shadowViewport{0.0F, 0.0F, static_cast<float>(kShadowMapSize), static_cast<float>(kShadowMapSize), 0.0F, 1.0F};
+    VkViewport shadowViewport{
+        0.0F, 0.0F,
+        static_cast<float>(kShadowMapSize),
+        static_cast<float>(kShadowMapSize),
+        0.0F, 1.0F};
     VkRect2D shadowScissor{{0, 0}, {kShadowMapSize, kShadowMapSize}};
     vkCmdSetViewport(command, 0, 1, &shadowViewport);
     vkCmdSetScissor(command, 0, 1, &shadowScissor);
     vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, shadowPipeline_);
-    vkCmdBindDescriptorSets(command, VK_PIPELINE_BIND_POINT_GRAPHICS, scenePipelineLayout_, 0, 1,
+    vkCmdBindDescriptorSets(
+        command, VK_PIPELINE_BIND_POINT_GRAPHICS, scenePipelineLayout_, 0, 1,
         &shadowFrames_[frame].descriptorSet, 0, nullptr);
 
     PushConstants push{};
     push.matrix = shadowVP;
     push.data0 = glm::vec4(glm::vec3(cameraPosition), 1.0F);
     const glm::dquat rotation = glm::normalize(staticObjectRotation);
-    push.data3 = {static_cast<float>(rotation.x), static_cast<float>(rotation.y), static_cast<float>(rotation.z), static_cast<float>(rotation.w)};
-    vkCmdPushConstants(command, scenePipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push), &push);
-    drawBoundMesh(command, vertexBuffer_, indexBuffer_, indexCount_);
+    push.data3 = {
+        static_cast<float>(rotation.x),
+        static_cast<float>(rotation.y),
+        static_cast<float>(rotation.z),
+        static_cast<float>(rotation.w)};
+    vkCmdPushConstants(
+        command, scenePipelineLayout_,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        0, sizeof(push), &push);
+    drawBoundMesh(
+        command, staticMesh.vertexBuffer, staticMesh.indexBuffer, staticMesh.indexCount);
     push.data3 = {0.0F, 0.0F, 0.0F, 1.0F};
-    vkCmdPushConstants(command, scenePipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push), &push);
-    const auto& dynamic = dynamicMeshes_[frame];
+    vkCmdPushConstants(
+        command, scenePipelineLayout_,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        0, sizeof(push), &push);
     drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.indexCount);
     vkCmdEndRendering(command);
 
     VkImageMemoryBarrier2 shadowToRead{};
     shadowToRead.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
-    shadowToRead.srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
+    shadowToRead.srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT
+        | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
     shadowToRead.srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     shadowToRead.dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT;
     shadowToRead.dstAccessMask = VK_ACCESS_2_SHADER_SAMPLED_READ_BIT;
@@ -1014,13 +1144,14 @@ void VulkanRenderer::drawFrame(
     dependency.pImageMemoryBarriers = &shadowToRead;
     vkCmdPipelineBarrier2(command, &dependency);
 
-    // Main color + per-frame reversed-Z depth target.
     VkImageMemoryBarrier2 colorBarrier{};
     colorBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
     colorBarrier.srcStageMask = VK_PIPELINE_STAGE_2_NONE;
     colorBarrier.dstStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
     colorBarrier.dstAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
-    colorBarrier.oldLayout = imageInitialized_[imageIndex] ? VK_IMAGE_LAYOUT_PRESENT_SRC_KHR : VK_IMAGE_LAYOUT_UNDEFINED;
+    colorBarrier.oldLayout = imageInitialized_[imageIndex]
+        ? VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+        : VK_IMAGE_LAYOUT_UNDEFINED;
     colorBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     colorBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     colorBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
@@ -1032,7 +1163,8 @@ void VulkanRenderer::drawFrame(
     VkImageMemoryBarrier2 depthBarrier{};
     depthBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
     depthBarrier.srcStageMask = VK_PIPELINE_STAGE_2_NONE;
-    depthBarrier.dstStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
+    depthBarrier.dstStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT
+        | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
     depthBarrier.dstAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     depthBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     depthBarrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
@@ -1070,55 +1202,96 @@ void VulkanRenderer::drawFrame(
     rendering.pDepthAttachment = &depthAttachment;
     vkCmdBeginRendering(command, &rendering);
 
-    VkViewport mainViewport{0.0F, 0.0F, static_cast<float>(swapchainExtent_.width), static_cast<float>(swapchainExtent_.height), 0.0F, 1.0F};
+    VkViewport mainViewport{
+        0.0F,
+        0.0F,
+        static_cast<float>(swapchainExtent_.width),
+        static_cast<float>(swapchainExtent_.height),
+        0.0F,
+        1.0F};
     VkRect2D mainScissor{{0, 0}, swapchainExtent_};
     vkCmdSetViewport(command, 0, 1, &mainViewport);
     vkCmdSetScissor(command, 0, 1, &mainScissor);
-    vkCmdBindDescriptorSets(command, VK_PIPELINE_BIND_POINT_GRAPHICS, fullscreenPipelineLayout_, 0, 1,
+    vkCmdBindDescriptorSets(
+        command, VK_PIPELINE_BIND_POINT_GRAPHICS, fullscreenPipelineLayout_, 0, 1,
         &shadowFrames_[frame].descriptorSet, 0, nullptr);
 
-    // Physically motivated analytic atmosphere replaces the noisy dither shell and flat clear color.
     vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, skyPipeline_);
     PushConstants skyPush{};
     skyPush.matrix = glm::inverse(viewProjection);
     skyPush.data0 = glm::vec4(glm::vec3(cameraPosition - environment.planetCenter), 1.0F);
     skyPush.data1 = glm::vec4(safeNormalizeFloat(environment.sunDirectionToLight), 0.0F);
-    skyPush.data2 = {static_cast<float>(environment.planetRadius), static_cast<float>(environment.atmosphereHeight),
-                     static_cast<float>(environment.atmosphereScaleHeight), std::max(environment.mieScale, 0.0F)};
-    const glm::vec3 sunRadiance = glm::max(environment.sunLinearColor, glm::vec3{0.0F}) * std::max(environment.sunIntensity, 0.0F);
-    skyPush.data3 = {std::max(environment.exposure, 0.01F), sunRadiance.r, sunRadiance.g, sunRadiance.b};
-    vkCmdPushConstants(command, fullscreenPipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(skyPush), &skyPush);
+    skyPush.data2 = {
+        static_cast<float>(environment.planetRadius),
+        static_cast<float>(environment.atmosphereHeight),
+        static_cast<float>(environment.atmosphereScaleHeight),
+        std::max(environment.mieScale, 0.0F)};
+    const glm::vec3 sunRadiance = glm::max(environment.sunLinearColor, glm::vec3{0.0F})
+        * std::max(environment.sunIntensity, 0.0F);
+    skyPush.data3 = {
+        std::max(environment.exposure, 0.01F),
+        sunRadiance.r,
+        sunRadiance.g,
+        sunRadiance.b};
+    vkCmdPushConstants(
+        command, fullscreenPipelineLayout_,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        0, sizeof(skyPush), &skyPush);
     vkCmdDraw(command, 3, 1, 0, 0);
 
     auto drawScenePass = [&](VkPipeline pipeline) {
         vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vkCmdBindDescriptorSets(command, VK_PIPELINE_BIND_POINT_GRAPHICS, scenePipelineLayout_, 0, 1,
+        vkCmdBindDescriptorSets(
+            command, VK_PIPELINE_BIND_POINT_GRAPHICS, scenePipelineLayout_, 0, 1,
             &shadowFrames_[frame].descriptorSet, 0, nullptr);
         PushConstants scenePush{};
         scenePush.matrix = viewProjection;
         scenePush.data0 = glm::vec4(glm::vec3(cameraPosition), 1.0F);
         scenePush.data1 = glm::vec4(safeNormalizeFloat(environment.sunDirectionToLight), 0.0F);
-        scenePush.data2 = glm::vec4(glm::max(environment.sunLinearColor, glm::vec3{0.0F}), std::max(environment.sunIntensity, 0.0F));
-        scenePush.data3 = {static_cast<float>(rotation.x), static_cast<float>(rotation.y), static_cast<float>(rotation.z), static_cast<float>(rotation.w)};
-        vkCmdPushConstants(command, scenePipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(scenePush), &scenePush);
-        drawBoundMesh(command, vertexBuffer_, indexBuffer_, indexCount_);
+        scenePush.data2 = glm::vec4(
+            glm::max(environment.sunLinearColor, glm::vec3{0.0F}),
+            std::max(environment.sunIntensity, 0.0F));
+        scenePush.data3 = {
+            static_cast<float>(rotation.x),
+            static_cast<float>(rotation.y),
+            static_cast<float>(rotation.z),
+            static_cast<float>(rotation.w)};
+        vkCmdPushConstants(
+            command, scenePipelineLayout_,
+            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+            0, sizeof(scenePush), &scenePush);
+        drawBoundMesh(
+            command, staticMesh.vertexBuffer, staticMesh.indexBuffer, staticMesh.indexCount);
         scenePush.data3 = {0.0F, 0.0F, 0.0F, 1.0F};
-        vkCmdPushConstants(command, scenePipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(scenePush), &scenePush);
+        vkCmdPushConstants(
+            command, scenePipelineLayout_,
+            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+            0, sizeof(scenePush), &scenePush);
         drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.indexCount);
     };
 
     drawScenePass(opaquePipeline_);
     drawScenePass(transparentPipeline_);
 
-    // True screen-space HUD: never depth tested, never hidden behind terrain or glass.
     vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, hudPipeline_);
-    vkCmdBindDescriptorSets(command, VK_PIPELINE_BIND_POINT_GRAPHICS, fullscreenPipelineLayout_, 0, 1,
+    vkCmdBindDescriptorSets(
+        command, VK_PIPELINE_BIND_POINT_GRAPHICS, fullscreenPipelineLayout_, 0, 1,
         &shadowFrames_[frame].descriptorSet, 0, nullptr);
     PushConstants hudPush{};
-    const float speedNorm = std::clamp((std::log10(std::max(1.0F, environment.flightSpeedMps)) - 0.0F)
-        / (std::log10(2000000.0F) - 0.0F), 0.0F, 1.0F);
-    hudPush.data0 = {static_cast<float>(swapchainExtent_.width), static_cast<float>(swapchainExtent_.height), speedNorm, 0.0F};
-    vkCmdPushConstants(command, fullscreenPipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(hudPush), &hudPush);
+    const float speedNorm = std::clamp(
+        (std::log10(std::max(1.0F, environment.flightSpeedMps))
+            / std::log10(2000000.0F)),
+        0.0F,
+        1.0F);
+    hudPush.data0 = {
+        static_cast<float>(swapchainExtent_.width),
+        static_cast<float>(swapchainExtent_.height),
+        speedNorm,
+        0.0F};
+    vkCmdPushConstants(
+        command, fullscreenPipelineLayout_,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        0, sizeof(hudPush), &hudPush);
     vkCmdDraw(command, 3, 1, 0, 0);
     vkCmdEndRendering(command);
 
@@ -1172,7 +1345,9 @@ void VulkanRenderer::drawFrame(
     const VkResult presentResult = vkQueuePresentKHR(graphicsQueue_, &present);
     imageInitialized_[imageIndex] = true;
     ++frameIndex_;
-    if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR || resizeRequested_) {
+    if (presentResult == VK_ERROR_OUT_OF_DATE_KHR
+        || presentResult == VK_SUBOPTIMAL_KHR
+        || resizeRequested_) {
         recreateSwapchain();
         return;
     }
