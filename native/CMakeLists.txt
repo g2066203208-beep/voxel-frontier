@@ -25,6 +25,7 @@ add_library(vf_engine STATIC
     src/world/CelestialPhysicsFrame.cpp
     src/world/SparseUniverseCatalog.cpp
     src/player/PlanetCamera.cpp
+    src/player/CharacterController.cpp
     src/physics/PhysicsWorld.cpp
     src/physics/Broadphase.cpp
     src/physics/CollisionGeometry.cpp
@@ -213,6 +214,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_camera_input_tests tests/CameraInputTests.cpp)
     target_link_libraries(vf_camera_input_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_camera_input_tests COMMAND vf_camera_input_tests)
+
+    add_executable(vf_character_controller_tests tests/CharacterControllerTests.cpp)
+    target_link_libraries(vf_character_controller_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_character_controller_tests COMMAND vf_character_controller_tests)
 
     add_executable(vf_collision_geometry_tests tests/CollisionGeometryTests.cpp)
     target_link_libraries(vf_collision_geometry_tests PRIVATE vf_engine glm::glm)
