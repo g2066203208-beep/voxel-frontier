@@ -87,7 +87,7 @@ jobs:
           xvfb-run -a -s '-screen 0 1600x900x24' bash -lc '
             set -euo pipefail
             export VK_ICD_FILENAMES="'"$icd"'"
-            "'"$exe"'" > artifact/software-render.log 2>&1 &
+            stdbuf -oL -eL "'"$exe"'" > artifact/software-render.log 2>&1 &
             pid=$!
             trap "kill $pid 2>/dev/null || true" EXIT
             ready=0
