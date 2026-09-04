@@ -106,10 +106,12 @@ if(VF_BUILD_RUNTIME)
     set(VF_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
     set(VF_VERTEX_SPV "${VF_GENERATED_DIR}/planet.vert.spv")
     set(VF_FRAGMENT_SPV "${VF_GENERATED_DIR}/planet.frag.spv")
+    set(VF_SHADOW_VERTEX_SPV "${VF_GENERATED_DIR}/shadow.vert.spv")
+    set(VF_SHADOW_FRAGMENT_SPV "${VF_GENERATED_DIR}/shadow.frag.spv")
     set(VF_SHADER_HEADER "${VF_GENERATED_DIR}/PlanetShaders.hpp")
 
     add_custom_command(
-        OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}"
+        OUTPUT "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SHADOW_VERTEX_SPV}" "${VF_SHADOW_FRAGMENT_SPV}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${VF_GENERATED_DIR}"
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry vertexMain -stage vertex -fvk-use-entrypoint-name
@@ -117,6 +119,12 @@ if(VF_BUILD_RUNTIME)
         COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
                 -target spirv -entry fragmentMain -stage fragment -fvk-use-entrypoint-name
                 -matrix-layout-column-major -O2 -o "${VF_FRAGMENT_SPV}"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+                -target spirv -entry shadowVertexMain -stage vertex -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_SHADOW_VERTEX_SPV}"
+        COMMAND "${SLANGC_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
+                -target spirv -entry shadowFragmentMain -stage fragment -fvk-use-entrypoint-name
+                -matrix-layout-column-major -O2 -o "${VF_SHADOW_FRAGMENT_SPV}"
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shaders/planet.slang"
         VERBATIM
     )
@@ -126,9 +134,11 @@ if(VF_BUILD_RUNTIME)
         COMMAND ${CMAKE_COMMAND}
             "-DVERT=${VF_VERTEX_SPV}"
             "-DFRAG=${VF_FRAGMENT_SPV}"
+            "-DSHADOW_VERT=${VF_SHADOW_VERTEX_SPV}"
+            "-DSHADOW_FRAG=${VF_SHADOW_FRAGMENT_SPV}"
             "-DOUT=${VF_SHADER_HEADER}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
-        DEPENDS "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
+        DEPENDS "${VF_VERTEX_SPV}" "${VF_FRAGMENT_SPV}" "${VF_SHADOW_VERTEX_SPV}" "${VF_SHADOW_FRAGMENT_SPV}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedShaders.cmake"
         VERBATIM
     )
 
