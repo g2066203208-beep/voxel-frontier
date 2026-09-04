@@ -1,5 +1,6 @@
 {
   "cmake.sourceDirectory": "${workspaceFolder}/native",
+  "cmake.cmakePath": "C:\\Program Files\\CMake\\bin\\cmake.exe",
   "cmake.useCMakePresets": "always",
   "cmake.configureOnOpen": false,
   "git.autofetch": true,
