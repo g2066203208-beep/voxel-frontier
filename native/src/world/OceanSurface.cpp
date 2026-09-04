@@ -2,6 +2,7 @@
 #include "vf/world/detail/PlanetGenerationInternal.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdint>
 #include <stdexcept>
@@ -24,6 +25,19 @@ void appendOceanSurface(
     const std::uint32_t stride = subdivisionsPerFace + 1U;
     const double cell = 2.0 / static_cast<double>(subdivisionsPerFace);
 
+    const std::array<glm::dvec3, 3> waveDirections{
+        glm::normalize(glm::dvec3{0.82, 0.18, 0.54}),
+        glm::normalize(glm::dvec3{-0.28, 0.91, 0.31}),
+        glm::normalize(glm::dvec3{0.47, -0.39, 0.79}),
+    };
+    const std::array<double, 3> waveAmplitude{0.34, 0.17, 0.085};
+    const std::array<double, 3> waveFrequency{0.125, 0.215, 0.355};
+    const std::array<double, 3> wavePhase{
+        detail::seedPhase(definition.seed, 610U),
+        detail::seedPhase(definition.seed, 611U),
+        detail::seedPhase(definition.seed, 612U),
+    };
+
     for (std::uint32_t face = 0; face < 6U; ++face) {
         const std::uint32_t baseVertex = static_cast<std::uint32_t>(mesh.vertices.size());
         mesh.vertices.reserve(mesh.vertices.size() + static_cast<std::size_t>(stride) * stride);
@@ -36,9 +50,8 @@ void appendOceanSurface(
                 double v = -1.0 + 2.0 * static_cast<double>(y) / static_cast<double>(subdivisionsPerFace);
 
                 // Keep cube-face edges exact so all six ocean patches meet watertight. Interior
-                // points receive only a small tangent jitter; animated waves come from the vertex
-                // shader. This breaks obvious row/column repetition while preserving large,
-                // intentional low-poly water faces.
+                // points receive a restrained tangent jitter: large purposeful facets, not a
+                // perfectly repeated square grid and not random high-frequency triangulation.
                 if (x > 0U && x < subdivisionsPerFace && y > 0U && y < subdivisionsPerFace) {
                     const std::uint64_t key = static_cast<std::uint64_t>(face) * 0x100000000ULL
                         + static_cast<std::uint64_t>(y) * stride + x;
@@ -49,6 +62,18 @@ void appendOceanSurface(
                 }
 
                 const glm::dvec3 direction = cubeSphereDirection(face, u, v);
+                const glm::dvec3 basePoint = direction * oceanSurfaceRadius;
+                double waveHeight = 0.0;
+                for (std::size_t wave = 0; wave < waveDirections.size(); ++wave) {
+                    const double phase = glm::dot(basePoint, waveDirections[wave]) * waveFrequency[wave]
+                        + wavePhase[wave];
+                    waveHeight += std::sin(phase) * waveAmplitude[wave];
+                }
+                waveHeight += detail::centeredFbm(
+                    definition.seed ^ 0xD1310BA698DFB5ACULL,
+                    direction * 8.0,
+                    3U) * 0.075;
+
                 const double terrainElevation = planetHeight(definition, direction);
                 const double waterDepthMeters = std::max(0.0, seaElevation - terrainElevation);
                 const double normalizedDepth = std::clamp(waterDepthMeters / 18.0, 0.0, 1.0);
@@ -58,7 +83,7 @@ void appendOceanSurface(
                     3U);
 
                 PlanetVertex vertex{};
-                vertex.position = glm::vec3(direction * oceanSurfaceRadius);
+                vertex.position = glm::vec3(direction * (oceanSurfaceRadius + waveHeight));
                 vertex.normal = glm::vec3(direction);
                 vertex.color = {
                     detail::kOceanMaterialMarker,
