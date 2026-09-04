@@ -108,9 +108,9 @@ bool SdlPlatform::pumpEvents() {
             break;
         case SDL_EVENT_MOUSE_MOTION:
             if (input_.mouseCaptured) {
-                // This sign is hardware-verified for the current spherical camera convention:
-                // mouse right -> look right, mouse left -> look left.
-                input_.mouseDx -= event.motion.xrel;
+                // Surface rendering now uses a true right-handed local frame, so SDL's native
+                // convention is used directly: positive xrel means mouse/right-look to the right.
+                input_.mouseDx += event.motion.xrel;
                 input_.mouseDy += event.motion.yrel;
             }
             break;
