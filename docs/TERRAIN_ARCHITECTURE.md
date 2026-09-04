@@ -24,20 +24,21 @@ The game generator intentionally models the first-order causal relationships tha
 - convergent boundaries preferentially create mountain belts on continental crust and trenches where oceanic crust participates;
 - divergent oceanic boundaries are raised into mid-ocean ridges;
 - continental crust sits higher than oceanic crust, with a smooth shelf/slope transition around sea level;
+- the default Earthlike preset is ocean-dominated to stay near Earth's observed ~71% ocean coverage, without copying Earth's actual coastline;
 - plate-interior broad uplift creates plateaus/basins;
 - volcanic relief combines convergent volcanic arcs with deterministic mantle-hotspot proxies;
 - small multi-scale roughness is subordinate to tectonic morphology and may not decide where continents, ridges or trenches exist;
-- close-range river networks are refined from downhill terrain drainage/flow accumulation rather than allowed to run uphill.
+- the current global-authority river field is a cheap deterministic valley proxy; close-range river/canyon refinement is planned to use downhill DEM flow direction/accumulation so water networks cannot run uphill.
 
 This is a **game-optimized geological surrogate**, not a reconstruction of the real present-day Earth. The target is scientific plausibility, readable gameplay and deterministic performance.
 
 ### External scientific anchors
 
 - USGS, *This Dynamic Earth — Understanding Plate Motions*: divergent boundaries and seafloor spreading create mid-ocean ridges; convergent plate interactions are associated with mountain building and subduction-zone morphology. https://pubs.usgs.gov/gip/dynamic/understanding.html
-- USGS, *This Dynamic Earth — Developing the Theory*: earthquakes/volcanism concentrate along trenches and submarine mountain systems, and the global mid-ocean ridge is a major tectonic landform. https://pubs.usgs.gov/gip/dynamic/developing.html
+- NOAA Ocean Exploration, *What are the different types of plate tectonic boundaries?*: divergent boundaries create new crust; convergent boundaries can buckle plate edges into mountain ranges or bend one plate into a deep seafloor trench. https://oceanexplorer.noaa.gov/ocean-fact/plate-boundaries/
 - NOAA Ocean Exploration, *What is a mid-ocean ridge?*: mid-ocean ridges occur along divergent plate boundaries where new ocean floor is created. https://oceanexplorer.noaa.gov/ocean-fact/mid-ocean-ridge/
-- NOAA, *Ocean Floor Features*: continental shelf/slope, abyssal plain, mid-ocean ridge and ocean trench are treated as distinct large-scale bathymetric provinces. https://oceanservice.noaa.gov/education/tutorial_currents/05conveyor1.html (background collection) and NOAA Ocean Exploration resources.
-- O'Callaghan & Mark (1984) D8 drainage concept, subsequently used widely for DEM flow direction/accumulation: water routes to the steepest lower neighboring cell; accumulated contributing area is used to extract drainage networks.
+- NOAA Ocean Service, *How many oceans are there?*: the global ocean covers about 71% of Earth's surface. https://oceanservice.noaa.gov/facts/howmanyoceans.html
+- O'Callaghan & Mark (1984), *The extraction of drainage networks from digital elevation data*: foundation for D8-style DEM drainage extraction; the close-range hydrology refinement should route flow to lower terrain and use contributing area to identify channels.
 
 ## Why not pure polygon mesh as world truth?
 
