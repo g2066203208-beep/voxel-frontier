@@ -3,7 +3,6 @@ struct VertexInput
     float3 position : POSITION;
     float3 normal : NORMAL;
     float3 color : COLOR0;
-    float4 material : TEXCOORD0;
 };
 
 struct VertexOutput
@@ -12,7 +11,6 @@ struct VertexOutput
     float3 normal : TEXCOORD0;
     float3 color : TEXCOORD1;
     float3 relativePosition : TEXCOORD2;
-    float4 material : TEXCOORD3;
 };
 
 struct PushConstants
@@ -72,7 +70,6 @@ VertexOutput vertexMain(VertexInput input)
     output.relativePosition = relativePosition;
     output.normal = worldNormal;
     output.color = input.color;
-    output.material = input.material;
     return output;
 }
 
@@ -83,8 +80,6 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 l = normalize(gPush.sunDirection.xyz);
     float3 v = normalize(-input.relativePosition);
 
-    // Negative RGB is reserved for the atmosphere shell. The shell is still a cheap preview,
-    // but its optical density now varies with viewing angle rather than being an opaque blue skin.
     if (input.color.x < 0.0 || input.color.y < 0.0 || input.color.z < 0.0)
     {
         float3 packed = max(-input.color, 0.0);
@@ -104,11 +99,32 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         return float4(scatter, 1.0);
     }
 
-    float3 baseColor = saturate(input.color);
-    float metallic = saturate(input.material.x);
-    float roughness = clamp(input.material.y, 0.045, 1.0);
-    float transmission = saturate(input.material.z);
-    float emissive = max(input.material.w, 0.0);
+    // Temporary material classes encoded in RGB for this acceptance branch only:
+    // [0,1]=stone/terrain, +1=wood, +2=metal, +4=glass, +8=emissive star.
+    float3 encoded = input.color;
+    float marker = min(min(encoded.x, encoded.y), encoded.z);
+    float3 baseColor = saturate(encoded);
+    float metallic = 0.0;
+    float roughness = 0.90;
+    float transmission = 0.0;
+    float emissive = 0.0;
+
+    if (marker > 7.5) {
+        baseColor = saturate(encoded - 8.0);
+        roughness = 0.32;
+        emissive = 22.0;
+    } else if (marker > 3.5) {
+        baseColor = saturate(encoded - 4.0);
+        roughness = 0.055;
+        transmission = 0.92;
+    } else if (marker > 1.5) {
+        baseColor = saturate(encoded - 2.0);
+        metallic = 1.0;
+        roughness = 0.13;
+    } else if (marker > 0.95) {
+        baseColor = saturate(encoded - 1.0);
+        roughness = 0.72;
+    }
 
     float3 h = normalize(l + v);
     float noL = saturate(dot(n, l));
@@ -128,27 +144,24 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         * max(gPush.sunColorIntensity.a, 0.0);
     float3 direct = (diffuse + specular) * noL * stellarRadiance;
 
-    // Low-cost image-based-lighting approximation. It intentionally keeps back-facing surfaces
-    // readable: sky hemisphere, ground bounce and Fresnel reflection all contribute even when
-    // noL == 0. This replaces the previous "unlit side = black plastic" look.
+    // Environment lighting: sky hemisphere + warm ground bounce + view-dependent reflection.
+    // Back faces therefore remain readable instead of becoming pure black.
     float skyWeight = saturate(n.y * 0.5 + 0.5);
-    float3 skyRadiance = lerp(float3(0.025, 0.020, 0.016), float3(0.13, 0.20, 0.34), skyWeight);
-    float3 groundBounce = float3(0.055, 0.045, 0.032) * saturate(-n.y * 0.5 + 0.5);
+    float3 skyRadiance = lerp(float3(0.022, 0.019, 0.016), float3(0.14, 0.22, 0.36), skyWeight);
+    float3 groundBounce = float3(0.060, 0.047, 0.031) * saturate(-n.y * 0.5 + 0.5);
     float3 r = reflect(-v, n);
     float reflectionSky = saturate(r.y * 0.5 + 0.5);
-    float3 reflectionColor = lerp(float3(0.035, 0.028, 0.022), float3(0.18, 0.27, 0.46), reflectionSky);
+    float3 reflectionColor = lerp(float3(0.036, 0.030, 0.025), float3(0.20, 0.31, 0.50), reflectionSky);
     float3 ambientDiffuse = baseColor * (skyRadiance + groundBounce) * (1.0 - metallic) * (1.0 - transmission);
     float3 ambientSpecular = reflectionColor * f * (1.0 - roughness * 0.82);
 
     if (transmission > 0.0)
     {
-        // Thin-glass BTDF preview using the same material payload that will feed the proper
-        // transmission/volume pass. Fresnel controls reflection; baseColor tints transmitted light.
         float fresnelAmount = saturate(max(max(f.x, f.y), f.z));
-        float3 transmitted = lerp(reflectionColor, skyRadiance, 0.55) * baseColor * transmission;
-        float coverage = saturate(0.13 + 0.30 * fresnelAmount + 0.14 * (1.0 - transmission));
+        float3 transmitted = lerp(reflectionColor, skyRadiance, 0.62) * baseColor * transmission;
+        float coverage = saturate(0.10 + 0.34 * fresnelAmount + 0.09 * (1.0 - transmission));
         if (screenDoorNoise(input.position.xy) > coverage) discard;
-        return float4(direct + ambientSpecular * 2.4 + transmitted * (1.0 - fresnelAmount), 1.0);
+        return float4(direct + ambientSpecular * 2.5 + transmitted * (1.0 - fresnelAmount), 1.0);
     }
 
     float3 emission = baseColor * emissive;
