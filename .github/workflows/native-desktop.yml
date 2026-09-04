@@ -38,6 +38,67 @@ jobs:
       - name: Run correctness tests
         run: ctest --test-dir build/core --verbose --output-on-failure
 
+  software-render-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install software Vulkan screenshot dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mesa-vulkan-drivers vulkan-tools xvfb imagemagick
+
+      - name: Configure Linux runtime
+        run: cmake -S native -B build/software -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
+
+      - name: Build Linux runtime and Slang shaders
+        run: cmake --build build/software --parallel
+
+      - name: Run with Mesa Lavapipe and capture a real rendered frame
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact
+          exe="$(find build/software -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$exe"
+          icd="$(find /usr/share/vulkan/icd.d -type f \( -name 'lvp_icd*.json' -o -name '*lavapipe*.json' \) | head -n 1)"
+          test -n "$icd"
+          echo "Using software Vulkan ICD: $icd"
+          export VK_ICD_FILENAMES="$icd"
+          xvfb-run -a -s '-screen 0 1600x900x24' bash -lc '
+            set -euo pipefail
+            export VK_ICD_FILENAMES="'"$icd"'"
+            "'"$exe"'" > artifact/software-render.log 2>&1 &
+            pid=$!
+            trap "kill $pid 2>/dev/null || true" EXIT
+            ready=0
+            for i in $(seq 1 90); do
+              sleep 1
+              if grep -q "Voxel Frontier Earthlike planet runtime" artifact/software-render.log; then
+                ready=1
+                break
+              fi
+              if ! kill -0 $pid 2>/dev/null; then
+                cat artifact/software-render.log
+                exit 1
+              fi
+            done
+            test "$ready" -eq 1
+            sleep 4
+            import -window root artifact/software-render.png
+            identify artifact/software-render.png
+          '
+
+      - name: Upload software-render screenshot
+        uses: actions/upload-artifact@v5
+        with:
+          name: voxel-frontier-software-render
+          path: |
+            artifact/software-render.png
+            artifact/software-render.log
+          if-no-files-found: error
+
   windows-runtime:
     runs-on: windows-2025
     steps:
