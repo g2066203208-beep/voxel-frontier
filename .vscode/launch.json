@@ -10,7 +10,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "console": "internalConsole",
+      "externalConsole": false,
       "preLaunchTask": "VF: Build Debug"
     },
     {
@@ -22,7 +22,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "console": "internalConsole",
+      "externalConsole": false,
       "preLaunchTask": "VF: Build Release"
     }
   ]

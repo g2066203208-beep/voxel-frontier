@@ -2,72 +2,20 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "VF: Configure Debug",
-      "type": "process",
-      "command": "C:\\Program Files\\CMake\\bin\\cmake.exe",
-      "args": ["--preset", "windows-debug"],
-      "options": { "cwd": "${workspaceFolder}/native" },
-      "problemMatcher": []
-    },
-    {
       "label": "VF: Build Debug",
       "type": "process",
       "command": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-      "args": [
-        "-NoProfile",
-        "-ExecutionPolicy", "Bypass",
-        "-File", "${workspaceFolder}\\scripts\\build-game.ps1",
-        "-Configuration", "Debug"
-      ],
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\build-game.ps1", "-Configuration", "Debug"],
       "options": { "cwd": "${workspaceFolder}" },
       "group": { "kind": "build", "isDefault": true },
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "label": "VF: Test Debug",
-      "type": "process",
-      "command": "C:\\Program Files\\CMake\\bin\\ctest.exe",
-      "args": ["--preset", "windows-debug"],
-      "options": { "cwd": "${workspaceFolder}/native" },
-      "dependsOn": ["VF: Build Debug"],
-      "dependsOrder": "sequence",
-      "problemMatcher": []
-    },
-    {
-      "label": "VF: Run Debug",
-      "type": "shell",
-      "command": "${workspaceFolder}\\build\\vscode-windows\\Debug\\voxel_frontier.exe",
-      "dependsOn": ["VF: Build Debug"],
-      "dependsOrder": "sequence",
-      "problemMatcher": []
-    },
-    {
-      "label": "VF: Configure Release",
-      "type": "process",
-      "command": "C:\\Program Files\\CMake\\bin\\cmake.exe",
-      "args": ["--preset", "windows-release"],
-      "options": { "cwd": "${workspaceFolder}/native" },
       "problemMatcher": []
     },
     {
       "label": "VF: Build Release",
       "type": "process",
       "command": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-      "args": [
-        "-NoProfile",
-        "-ExecutionPolicy", "Bypass",
-        "-File", "${workspaceFolder}\\scripts\\build-game.ps1",
-        "-Configuration", "Release"
-      ],
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\build-game.ps1", "-Configuration", "Release"],
       "options": { "cwd": "${workspaceFolder}" },
-      "problemMatcher": []
-    },
-    {
-      "label": "VF: Run Release",
-      "type": "shell",
-      "command": "${workspaceFolder}\\build\\vscode-windows\\Release\\voxel_frontier.exe",
-      "dependsOn": ["VF: Build Release"],
-      "dependsOrder": "sequence",
       "problemMatcher": []
     }
   ]

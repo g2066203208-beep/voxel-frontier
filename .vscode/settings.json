@@ -6,8 +6,5 @@
   "git.autofetch": true,
   "git.autofetchPeriod": 180,
   "git.showProgress": true,
-  "files.exclude": {
-    "**/build": true,
-    "**/out": true
-  }
+  "files.exclude": { "**/build": true, "**/out": true }
 }
