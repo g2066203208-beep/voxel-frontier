@@ -87,13 +87,14 @@ jobs:
           xvfb-run -a -s '-screen 0 1600x900x24' bash -lc '
             set -euo pipefail
             export VK_ICD_FILENAMES="'"$icd"'"
+            export VF_SOFTWARE_CAPTURE=1
             stdbuf -oL -eL "'"$exe"'" > artifact/software-render.log 2>&1 &
             pid=$!
             trap "kill $pid 2>/dev/null || true" EXIT
             ready=0
-            for i in $(seq 1 90); do
+            for i in $(seq 1 120); do
               sleep 1
-              if grep -q "Voxel Frontier Earthlike planet runtime" artifact/software-render.log; then
+              if grep -q "VF_CAPTURE_READY" artifact/software-render.log; then
                 ready=1
                 break
               fi
@@ -103,7 +104,7 @@ jobs:
               fi
             done
             test "$ready" -eq 1
-            sleep 4
+            sleep 1
             import -window root artifact/software-render.png
             identify artifact/software-render.png
           '
