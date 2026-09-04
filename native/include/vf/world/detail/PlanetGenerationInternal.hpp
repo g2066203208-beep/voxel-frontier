@@ -16,6 +16,7 @@ inline constexpr float kTerrainMaterialMarker = 1.25F;
 inline constexpr float kBarkMaterialMarker = -1.0F;
 inline constexpr float kFoliageMaterialMarker = -2.0F;
 inline constexpr float kRockMaterialMarker = -3.0F;
+inline constexpr float kOceanMaterialMarker = -4.0F;
 
 struct SurfaceFrame {
     glm::dvec3 east{1.0, 0.0, 0.0};
