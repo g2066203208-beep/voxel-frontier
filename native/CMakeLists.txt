@@ -24,6 +24,7 @@ add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
     src/world/OceanSurface.cpp
     src/world/PlanetProcedural.cpp
+    src/world/PlanetVisibility.cpp
     src/world/ProceduralTree.cpp
     src/world/PlanetEcology.cpp
     src/world/CelestialSystem.cpp
