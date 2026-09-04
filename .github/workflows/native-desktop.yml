@@ -47,7 +47,10 @@ jobs:
       - name: Install software Vulkan screenshot dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y mesa-vulkan-drivers vulkan-tools xvfb imagemagick
+          sudo apt-get install -y \
+            mesa-vulkan-drivers vulkan-tools xvfb imagemagick \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev \
+            libxi-dev libxfixes-dev libxss-dev libxkbcommon-dev
 
       - name: Configure Linux runtime
         run: cmake -S native -B build/software -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
