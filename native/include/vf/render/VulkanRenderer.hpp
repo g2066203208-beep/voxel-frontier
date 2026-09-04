@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -43,6 +44,24 @@ public:
     // adopts the newest generation only after that frame's fence is signaled; terrain recentering
     // therefore never calls vkDeviceWaitIdle or destroys a buffer still used by the GPU.
     void uploadPlanetMesh(const PlanetMesh& mesh);
+
+    // Streaming workers hand ownership of freshly generated meshes to the renderer. Moving the
+    // vectors avoids a multi-megabyte main-thread copy exactly when high-speed terrain recentering
+    // completes, which otherwise appears as a visible hitch even though synthesis itself is async.
+    void uploadPlanetMesh(PlanetMesh&& mesh) {
+        if (mesh.vertices.empty() || mesh.indices.empty()) {
+            uploadPlanetMesh(static_cast<const PlanetMesh&>(mesh));
+            return;
+        }
+        pendingStaticVertices_ = std::move(mesh.vertices);
+        pendingStaticIndices_ = std::move(mesh.indices);
+        ++staticMeshGeneration_;
+        if (staticMeshGeneration_ == 0U) {
+            staticMeshGeneration_ = 1U;
+            staticMeshGenerationByFrame_.fill(0U);
+        }
+    }
+
     void setDynamicMesh(const PlanetMesh& mesh);
     void clearDynamicMesh();
     void drawFrame(
