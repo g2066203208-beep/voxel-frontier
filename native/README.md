@@ -43,8 +43,10 @@ The current native core includes:
 - spherical planetary gravity and finite gameplay gravity fields
 - per-body atmosphere/weather/magnetic/environment samples
 - shallow water, buoyancy and gas helpers
-- XPBD rope and tree physics
+- XPBD rope physics
 - low-cost spectral optics and electromagnetic/radiation helpers
 - double-precision celestial orbit/spin state with planet-local precision frames
+
+The old tree-specific prototype and its standalone physics playground were removed from the authoritative source tree. Future vegetation, cutting and destruction must be built on the generic material/fracture and rigid-body systems rather than reintroducing a special-case tree simulator.
 
 The preview branch remains a test branch until hardware behavior is verified in the actual Windows/Vulkan runtime.
