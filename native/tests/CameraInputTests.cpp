@@ -36,7 +36,7 @@ void testMouseRightTurnsCameraRight() {
 
     const glm::dvec3 after = tangentForward(camera);
     require(glm::dot(after, right) > 0.1,
-        "positive SDL mouse X must rotate the view toward camera-right");
+        "positive camera mouse X must rotate the view toward camera-right");
 }
 
 void testMouseLeftTurnsCameraLeft() {
@@ -52,7 +52,7 @@ void testMouseLeftTurnsCameraLeft() {
 
     const glm::dvec3 after = tangentForward(camera);
     require(glm::dot(after, right) < -0.1,
-        "negative SDL mouse X must rotate the view toward camera-left");
+        "negative camera mouse X must rotate the view toward camera-left");
 }
 
 void testVerticalMouseDirectionRemainsConventional() {
@@ -69,12 +69,26 @@ void testVerticalMouseDirectionRemainsConventional() {
         "positive SDL mouse Y (mouse down) must pitch the view downward");
 }
 
+void testFlightSpeedUsesLogarithmicWheelSteps() {
+    const vf::PlanetDefinition planet{};
+    vf::PlanetCamera camera{planet};
+    const double before = camera.flightSpeedMps();
+
+    vf::PlanetMovementInput input{};
+    input.flightSpeedSteps = 2.0;
+    camera.update(input, 1.0 / 60.0);
+
+    require(camera.flightSpeedMps() > before * 1.99 && camera.flightSpeedMps() < before * 2.01,
+        "two positive wheel steps must double creative flight speed");
+}
+
 } // namespace
 
 int main() {
     testMouseRightTurnsCameraRight();
     testMouseLeftTurnsCameraLeft();
     testVerticalMouseDirectionRemainsConventional();
+    testFlightSpeedUsesLogarithmicWheelSteps();
     std::cout << "vf_camera_input_tests: PASS\n";
     return 0;
 }
