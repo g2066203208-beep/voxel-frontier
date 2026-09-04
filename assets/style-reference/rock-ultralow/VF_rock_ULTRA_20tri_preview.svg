@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#84999c"/><stop offset="1" stop-color="#d8cdb2"/></linearGradient><filter id="blur"><feGaussianBlur stdDeviation="18"/></filter></defs>
+<rect width="1000" height="700" fill="url(#bg)"/>
+<ellipse cx="510" cy="575" rx="260" ry="55" fill="#28312e" opacity=".22" filter="url(#blur)"/>
+<polygon points="369.6,446.6 454.9,548.9 323.8,513.9" fill="rgb(171,159,137)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="407.1,371.4 323.8,513.9 454.9,548.9" fill="rgb(188,172,144)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="407.1,371.4 369.6,446.6 323.8,513.9" fill="rgb(162,152,135)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="454.9,548.9 555.1,547.6 572.8,473.4" fill="rgb(180,166,143)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="454.9,548.9 572.8,473.4 369.6,446.6" fill="rgb(159,151,137)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="369.6,446.6 572.8,473.4 500.6,349.0" fill="rgb(176,161,136)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="369.6,446.6 500.6,349.0 407.1,371.4" fill="rgb(204,184,149)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="407.1,371.4 500.6,349.0 477.9,264.4" fill="rgb(205,185,149)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="500.6,349.0 572.8,473.4 646.2,365.9" fill="rgb(218,193,151)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="572.8,473.4 555.1,547.6 674.8,507.0" fill="rgb(184,168,141)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="572.8,473.4 674.8,507.0 646.2,365.9" fill="rgb(220,195,151)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="646.2,365.9 674.8,507.0 723.5,444.5" fill="rgb(199,179,146)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="555.1,547.6 654.8,568.4 674.8,507.0" fill="rgb(162,152,137)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="555.1,547.6 454.9,548.9 654.8,568.4" fill="rgb(158,150,137)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="654.8,568.4 723.5,444.5 674.8,507.0" fill="rgb(183,167,141)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="500.6,349.0 646.2,365.9 560.8,277.3" fill="rgb(221,196,153)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="500.6,349.0 560.8,277.3 477.9,264.4" fill="rgb(211,190,152)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="477.9,264.4 560.8,277.3 529.2,202.2" fill="rgb(218,195,155)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="560.8,277.3 646.2,365.9 633.5,284.4" fill="rgb(212,190,151)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<polygon points="560.8,277.3 633.5,284.4 529.2,202.2" fill="rgb(222,198,157)" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+<text x="32" y="45" fill="#fff" font-family="system-ui,sans-serif" font-size="20" font-weight="700">Voxel Frontier · Canonical Ultra-Low-Poly Rock</text>
+<text x="32" y="72" fill="#f5f2e8" font-family="system-ui,sans-serif" font-size="15">12 control vertices · 20 triangles · flat facets · zero image textures</text>
+</svg>
