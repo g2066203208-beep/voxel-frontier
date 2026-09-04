@@ -12,6 +12,7 @@ struct GasVolumeState {
     double condensedFogMassKg{};
     double temperatureK{293.15};
     double dryGasMolarMassKgPerMol{0.0289644};
+    double heatCapacityRatio{1.4};
     double fogMassExtinctionM2PerKg{140.0};
 };
 
@@ -23,6 +24,8 @@ struct GasLeak {
     double externalDensityKgPerM3{1.225};
 };
 
+[[nodiscard]] double gasMassKg(const GasVolumeState& gas) noexcept;
+[[nodiscard]] double gasMoles(const GasVolumeState& gas) noexcept;
 [[nodiscard]] double gasDensityKgPerM3(const GasVolumeState& gas) noexcept;
 [[nodiscard]] double gasPressurePa(const GasVolumeState& gas) noexcept;
 [[nodiscard]] double waterVaporPartialPressurePa(const GasVolumeState& gas) noexcept;
@@ -31,7 +34,12 @@ struct GasLeak {
 [[nodiscard]] double fogMassDensityKgPerM3(const GasVolumeState& gas) noexcept;
 [[nodiscard]] double fogExtinctionPerMeter(const GasVolumeState& gas) noexcept;
 [[nodiscard]] double fogTransmittance(const GasVolumeState& gas, double pathLengthMeters) noexcept;
+[[nodiscard]] double gasPistonForceN(const GasVolumeState& gas, double externalPressurePa, double pistonAreaM2) noexcept;
+[[nodiscard]] double gasNetBuoyantLiftN(const GasVolumeState& gas, double ambientDensityKgPerM3,
+    double gravityMagnitude, double envelopeMassKg = 0.0) noexcept;
 
+void setGasVolumeIsothermal(GasVolumeState& gas, double newVolumeM3) noexcept;
+void setGasVolumeAdiabatic(GasVolumeState& gas, double newVolumeM3) noexcept;
 void addHeatToGas(GasVolumeState& gas, double heatJoules, double effectiveSpecificHeatJPerKgK = 1005.0) noexcept;
 void stepCondensationAndFog(GasVolumeState& gas, double deltaSeconds) noexcept;
 void stepGasLeak(GasVolumeState& gas, const GasLeak& leak, double deltaSeconds) noexcept;
