@@ -8,8 +8,8 @@
 namespace vf {
 
 SdlPlatform::SdlPlatform(std::string_view title, std::int32_t width, std::int32_t height) {
-    // SDL3 normally hides the hardware cursor in relative mode. For this FPS acceptance build we
-    // intentionally keep a centered crosshair cursor visible while still using raw relative motion.
+    // Keep a hardware crosshair as a fallback. The runtime also renders its own centered HUD
+    // reticle so relative-mode visibility differences across drivers cannot hide the aim point.
     SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "1");
     SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, "1");
 
@@ -92,6 +92,7 @@ void SdlPlatform::refreshKeyboardState() {
 bool SdlPlatform::pumpEvents() {
     input_.mouseDx = 0.0F;
     input_.mouseDy = 0.0F;
+    input_.flightSpeedSteps = 0.0;
     input_.toggleFlight = false;
     input_.leftPressed = false;
     input_.rightPressed = false;
@@ -107,12 +108,14 @@ bool SdlPlatform::pumpEvents() {
             break;
         case SDL_EVENT_MOUSE_MOTION:
             if (input_.mouseCaptured) {
-                // The spherical camera basis uses positive yaw for a visual left turn. Negating
-                // SDL's positive-right xrel restores the standard FPS convention:
+                // This sign is hardware-verified for the current spherical camera convention:
                 // mouse right -> look right, mouse left -> look left.
                 input_.mouseDx -= event.motion.xrel;
                 input_.mouseDy += event.motion.yrel;
             }
+            break;
+        case SDL_EVENT_MOUSE_WHEEL:
+            if (input_.mouseCaptured) input_.flightSpeedSteps += static_cast<double>(event.wheel.y);
             break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN: {
             const bool wasCaptured = input_.mouseCaptured;
@@ -134,9 +137,6 @@ bool SdlPlatform::pumpEvents() {
         }
     }
 
-    // Continuous movement and the Space rising edge come from the same physical-key state.
-    // This avoids event timestamp/layout differences and makes Minecraft-style double-tap flight
-    // deterministic even if the frame containing the key event stalls.
     refreshKeyboardState();
     return true;
 }
