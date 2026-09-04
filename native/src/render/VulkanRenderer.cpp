@@ -96,7 +96,6 @@ static_assert(sizeof(PushConstants) <= 128U, "planet push constants must fit the
     const glm::vec4 r1 = matrixRow(viewProjection, 1);
     const glm::vec4 r2 = matrixRow(viewProjection, 2);
     const glm::vec4 r3 = matrixRow(viewProjection, 3);
-    // Vulkan clip depth is 0..w, therefore near = row2 and far = row3-row2.
     return {
         normalizedPlane(r3 + r0),
         normalizedPlane(r3 - r0),
@@ -134,9 +133,6 @@ static_assert(sizeof(PushConstants) <= 128U, "planet push constants must fit the
 
     if (!sphereIntersectsFrustum(frustumPlanes, relativeCenter, range.boundsRadius)) return false;
 
-    // Conservative planetary horizon rejection. For every point x in the batch sphere,
-    // dot(camera,x) <= dot(camera,center)+|camera|*batchRadius. If even that maximum lies
-    // behind the guaranteed-solid inner sphere, no ray from the camera can see the batch.
     const double cameraDistance = glm::length(cameraPosition);
     const double innerRadius = static_cast<double>(horizonOccluderRadius);
     if (innerRadius > 0.0 && cameraDistance > innerRadius + 0.5) {
@@ -146,9 +142,6 @@ static_assert(sizeof(PushConstants) <= 128U, "planet push constants must fit the
         if (maximumDot < conservativeInnerRadius * conservativeInnerRadius) return false;
     }
 
-    // Whole-batch sub-pixel rejection is only enabled for semantic small assets. We use the
-    // closest possible point on the batch sphere, so a face-spanning tree/rock batch is never
-    // discarded just because its center is far away.
     if (range.representativeRadius > 0.0F && viewportHeight > 0U) {
         const double closestDistance = std::max(1.0, glm::length(relativeCenterD) - rangeRadius);
         const glm::vec4 row1 = matrixRow(viewProjection, 1);
@@ -232,7 +225,7 @@ void VulkanRenderer::createInstance() {
     createInfo.enabledExtensionCount = extensionCount;
     createInfo.ppEnabledExtensionNames = extensions;
 
-    const VkResult result = vkCreateInstance(instance_ == VK_NULL_HANDLE ? device_ : device_, &createInfo, nullptr, &instance_);
+    const VkResult result = vkCreateInstance(&createInfo, nullptr, &instance_);
     if (result != VK_SUCCESS) fail("vkCreateInstance failed", result);
     volkLoadInstance(instance_);
 }
@@ -556,7 +549,7 @@ void VulkanRenderer::createBuffer(
     if (result != VK_SUCCESS) fail("vkCreateBuffer failed", result);
 
     VkMemoryRequirements requirements{};
-    vkGetBufferMemoryRequirements(device_, buffer, &requirements);
+    vkGetBufferMemoryRequirements(buffer, &requirements);
 
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -699,7 +692,7 @@ void VulkanRenderer::createGraphicsPipeline() {
     };
     VkPipelineDynamicStateCreateInfo dynamicState{};
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-    dynamicState.dynamicStateCount = static_cast<std::uint32_t>(std::size(dynamicStates));
+    dynamicState.dynamicStateCount = 3U;
     dynamicState.pDynamicStates = dynamicStates;
 
     VkPushConstantRange pushRange{};
@@ -1023,7 +1016,6 @@ void VulkanRenderer::drawFrame(
     const auto frustumPlanes = extractFrustumPlanes(viewProjection);
 
     if (staticDrawRanges_.empty()) {
-        // Legacy/proxy fallback.
         vkCmdSetCullMode(commandBuffers_[frame], VK_CULL_MODE_BACK_BIT);
         drawBoundMesh(commandBuffers_[frame], vertexBuffer_, indexBuffer_, indexCount_);
         visibleStaticRangeCount_ = indexCount_ > 0U ? 1U : 0U;
@@ -1032,7 +1024,7 @@ void VulkanRenderer::drawFrame(
         constexpr VkDeviceSize offset = 0;
         vkCmdBindVertexBuffers(commandBuffers_[frame], 0, 1, &vertexBuffer_, &offset);
         vkCmdBindIndexBuffer(commandBuffers_[frame], indexBuffer_, 0, VK_INDEX_TYPE_UINT32);
-        VkCullModeFlags activeCullMode = VK_CULL_MODE_FLAG_BITS_MAX_ENUM;
+        VkCullModeFlags activeCullMode = ~VkCullModeFlags{0U};
 
         for (const PlanetDrawRange& range : staticDrawRanges_) {
             if (!rangeVisible(
@@ -1059,8 +1051,6 @@ void VulkanRenderer::drawFrame(
         }
     }
 
-    // Dynamic debug/celestial geometry can be open or intentionally double-sided, so keep it
-    // uncullled. Static natural assets above are closed and use true back-face culling.
     push.objectRotation = {0.0F, 0.0F, 0.0F, 1.0F};
     vkCmdPushConstants(
         commandBuffers_[frame],
@@ -1133,7 +1123,7 @@ void VulkanRenderer::drawFrame(
     presentInfo.pSwapchains = &swapchain_;
     presentInfo.pImageIndices = &imageIndex;
 
-    const VkResult presentResult = vkQueuePresentKHR(graphicsQueue_, 1, &presentInfo);
+    const VkResult presentResult = vkQueuePresentKHR(graphicsQueue_, &presentInfo);
     imageInitialized_[imageIndex] = true;
     ++frameIndex_;
 
