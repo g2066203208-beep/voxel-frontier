@@ -107,7 +107,7 @@ void testAMovesToCameraLeftInFlight() {
         "A / negative-right input must move in camera-left direction");
 }
 
-void testPlanetToSpaceAttitudeIsContinuous() {
+void testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection() {
     vf::PlanetDefinition planet{};
     planet.radius = 1000.0;
     planet.maxElevation = 0.0;
@@ -145,6 +145,21 @@ void testPlanetToSpaceAttitudeIsContinuous() {
                 "leaving the planet physics frame must preserve forward viewing attitude");
             require(glm::dot(previousUp, camera.up()) > 0.999,
                 "leaving the planet physics frame must preserve camera up without a global-Y snap");
+
+            const glm::dvec3 spaceForward = camera.forwardDirection();
+            const glm::dvec3 spaceRight = glm::normalize(glm::cross(spaceForward, camera.up()));
+
+            vf::PlanetMovementInput lookRight{};
+            lookRight.mouseDx = 100.0;
+            camera.update(lookRight, 1.0 / 60.0);
+            require(glm::dot(camera.forwardDirection(), spaceRight) > 0.1,
+                "positive mouse X must still rotate camera-right after entering inertial space");
+
+            vf::PlanetMovementInput lookLeft{};
+            lookLeft.mouseDx = -200.0;
+            camera.update(lookLeft, 1.0 / 60.0);
+            require(glm::dot(camera.forwardDirection(), spaceRight) < -0.1,
+                "negative mouse X must still rotate camera-left after entering inertial space");
             break;
         }
         previousForward = camera.forwardDirection();
@@ -162,7 +177,7 @@ int main() {
     testFlightSpeedUsesLogarithmicWheelSteps();
     testDMovesToCameraRightInFlight();
     testAMovesToCameraLeftInFlight();
-    testPlanetToSpaceAttitudeIsContinuous();
+    testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection();
     std::cout << "vf_camera_input_tests: PASS\n";
     return 0;
 }
