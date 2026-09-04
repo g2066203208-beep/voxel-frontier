@@ -20,6 +20,15 @@ struct PlanetDefinition {
 struct PlanetTerrainSample {
     double elevationMeters{};
     double continentalness{};
+
+    // Game-optimized plate-tectonic diagnostics. These are deterministic fields derived from
+    // seeded spherical plate cells and their relative tangential motion; they are not a claim to
+    // reproduce Earth's actual present-day plate map.
+    double plateBoundary{};
+    double convergence{};
+    double divergence{};
+    double oceanRidge{};
+
     double mountain{};
     double plateau{};
     double trench{};
