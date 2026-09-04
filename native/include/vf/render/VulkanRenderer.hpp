@@ -15,6 +15,22 @@ struct SDL_Window;
 
 namespace vf {
 
+struct RenderFrameEnvironment {
+    glm::vec3 sunDirectionToLight{0.38F, 0.83F, 0.41F};
+    glm::vec3 sunLinearColor{1.0F};
+    float sunIntensity{2.2F};
+    glm::vec3 skyAmbient{0.10F, 0.16F, 0.26F};
+    glm::vec3 groundAmbient{0.035F, 0.030F, 0.024F};
+    float exposure{1.0F};
+    glm::vec3 cameraForward{0.0F, 0.0F, -1.0F};
+    glm::dvec3 planetCenter{};
+    double planetRadius{6371000.0};
+    double atmosphereHeight{100000.0};
+    double atmosphereScaleHeight{8500.0};
+    float mieScale{1.0F};
+    float flightSpeedMps{1.0F};
+};
+
 class VulkanRenderer final {
 public:
     explicit VulkanRenderer(SDL_Window* window);
@@ -27,12 +43,9 @@ public:
     void setDynamicMesh(const PlanetMesh& mesh);
     void clearDynamicMesh();
     void drawFrame(
-        const glm::vec3& clearColor,
         const glm::mat4& viewProjection,
         const glm::dvec3& cameraPosition,
-        const glm::vec3& sunDirectionToLight = glm::vec3{0.38F, 0.83F, 0.41F},
-        const glm::vec3& sunLinearColor = glm::vec3{1.0F},
-        float sunIntensity = 2.2F,
+        const RenderFrameEnvironment& environment,
         const glm::dquat& staticObjectRotation = glm::dquat{1.0, 0.0, 0.0, 0.0});
     void requestResize() noexcept { resizeRequested_ = true; }
 
@@ -43,7 +56,7 @@ public:
 
 private:
     static constexpr std::uint32_t kFramesInFlight = 2;
-    static constexpr std::uint32_t kShadowMapSize = 1536;
+    static constexpr std::uint32_t kShadowMapSize = 2048;
 
     struct DynamicFrameMesh {
         VkBuffer vertexBuffer{VK_NULL_HANDLE};
@@ -57,6 +70,12 @@ private:
         std::uint32_t indexCount{};
     };
 
+    struct DepthFrameResources {
+        VkImage image{VK_NULL_HANDLE};
+        VkDeviceMemory memory{VK_NULL_HANDLE};
+        VkImageView view{VK_NULL_HANDLE};
+    };
+
     struct ShadowFrameResources {
         VkImage depthImage{VK_NULL_HANDLE};
         VkDeviceMemory depthMemory{VK_NULL_HANDLE};
@@ -65,7 +84,6 @@ private:
         VkDeviceMemory uniformMemory{VK_NULL_HANDLE};
         void* mappedUniform{};
         VkDescriptorSet descriptorSet{VK_NULL_HANDLE};
-        bool initialized{};
     };
 
     void createInstance();
@@ -81,11 +99,15 @@ private:
     void destroySwapchain() noexcept;
     void recreateSwapchain();
 
-    void createDepthResources();
+    void createMainDepthResources();
+    void destroyMainDepthResources() noexcept;
     void createShadowResources();
     void destroyShadowResources() noexcept;
-    void createGraphicsPipeline();
-    void createShadowPipeline();
+    void createDescriptorResources();
+    void destroyDescriptorResources() noexcept;
+    void createPipelines();
+    void destroyPipelines() noexcept;
+
     void destroyMesh() noexcept;
     void destroyDynamicFrameMesh(DynamicFrameMesh& mesh) noexcept;
     void ensureDynamicFrameCapacity(DynamicFrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes);
@@ -98,9 +120,14 @@ private:
         VkMemoryPropertyFlags memoryProperties,
         VkBuffer& buffer,
         VkDeviceMemory& memory);
-    [[nodiscard]] std::uint32_t findMemoryType(
-        std::uint32_t typeFilter,
-        VkMemoryPropertyFlags properties) const;
+    void createDepthImage(
+        std::uint32_t width,
+        std::uint32_t height,
+        VkImageUsageFlags usage,
+        VkImage& image,
+        VkDeviceMemory& memory,
+        VkImageView& view);
+    [[nodiscard]] std::uint32_t findMemoryType(std::uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
     [[nodiscard]] std::uint32_t findGraphicsPresentQueue(VkPhysicalDevice device) const;
     [[nodiscard]] bool supportsSwapchain(VkPhysicalDevice device) const;
 
@@ -120,18 +147,20 @@ private:
     std::vector<bool> imageInitialized_;
 
     VkFormat depthFormat_{VK_FORMAT_D32_SFLOAT};
-    VkImage depthImage_{VK_NULL_HANDLE};
-    VkDeviceMemory depthMemory_{VK_NULL_HANDLE};
-    VkImageView depthImageView_{VK_NULL_HANDLE};
+    std::array<DepthFrameResources, kFramesInFlight> depthFrames_{};
 
     VkDescriptorSetLayout sceneDescriptorSetLayout_{VK_NULL_HANDLE};
     VkDescriptorPool sceneDescriptorPool_{VK_NULL_HANDLE};
     VkSampler shadowSampler_{VK_NULL_HANDLE};
     std::array<ShadowFrameResources, kFramesInFlight> shadowFrames_{};
 
-    VkPipelineLayout pipelineLayout_{VK_NULL_HANDLE};
-    VkPipeline graphicsPipeline_{VK_NULL_HANDLE};
+    VkPipelineLayout scenePipelineLayout_{VK_NULL_HANDLE};
+    VkPipelineLayout fullscreenPipelineLayout_{VK_NULL_HANDLE};
+    VkPipeline opaquePipeline_{VK_NULL_HANDLE};
+    VkPipeline transparentPipeline_{VK_NULL_HANDLE};
     VkPipeline shadowPipeline_{VK_NULL_HANDLE};
+    VkPipeline skyPipeline_{VK_NULL_HANDLE};
+    VkPipeline hudPipeline_{VK_NULL_HANDLE};
 
     VkBuffer vertexBuffer_{VK_NULL_HANDLE};
     VkDeviceMemory vertexMemory_{VK_NULL_HANDLE};
