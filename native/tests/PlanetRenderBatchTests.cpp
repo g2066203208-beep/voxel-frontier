@@ -47,8 +47,8 @@ int main() {
         coveredIndices += range.indexCount;
         switch (range.drawClass) {
         case vf::PlanetDrawClass::TerrainPatch: ++terrainRanges; break;
-        case vf::PlanetDrawClass::TreePatch: ++treeRanges; break;
-        case vf::PlanetDrawClass::RockPatch: ++rockRanges; break;
+        case vf::PlanetDrawClass::TreeBatch: ++treeRanges; break;
+        case vf::PlanetDrawClass::RockBatch: ++rockRanges; break;
         case vf::PlanetDrawClass::OceanPatch: ++oceanRanges; break;
         }
     }
