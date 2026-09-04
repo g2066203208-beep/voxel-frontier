@@ -5,6 +5,7 @@
 #include <utility>
 
 struct SDL_Window;
+struct SDL_Cursor;
 
 namespace vf {
 
@@ -45,6 +46,7 @@ private:
     void updateSpaceDoubleTap(bool spaceDown);
 
     SDL_Window* window_{};
+    SDL_Cursor* crosshairCursor_{};
     bool resized_{true};
     PlatformInput input_{};
     bool spaceWasDown_{};
