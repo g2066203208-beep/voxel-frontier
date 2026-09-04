@@ -3,6 +3,8 @@ struct VertexInput
     float3 position : POSITION;
     float3 normal : NORMAL;
     float3 color : COLOR0;
+    // x=metallic, y=roughness, z=transmission, w=emissive strength.
+    float4 material : TEXCOORD0;
 };
 
 struct VertexOutput
@@ -11,6 +13,13 @@ struct VertexOutput
     float3 normal : TEXCOORD0;
     float3 color : TEXCOORD1;
     float3 relativePosition : TEXCOORD2;
+    float4 material : TEXCOORD3;
+};
+
+struct ShadowVertexOutput
+{
+    float4 position : SV_Position;
+    float skipOccluder : TEXCOORD0;
 };
 
 struct PushConstants
@@ -22,9 +31,19 @@ struct PushConstants
     float4 objectRotation;
 };
 
+struct ShadowUniforms
+{
+    // Transforms camera-relative surface-space positions into the directional light clip space.
+    float4x4 lightViewProj;
+};
+
 [[vk::push_constant]] ConstantBuffer<PushConstants> gPush;
+[[vk::binding(0, 0)]] Texture2D<float> gShadowMap;
+[[vk::binding(1, 0)]] SamplerState gShadowSampler;
+[[vk::binding(2, 0)]] ConstantBuffer<ShadowUniforms> gShadow;
 
 static const float PI = 3.14159265358979323846;
+static const float SHADOW_TEXEL = 1.0 / 1536.0;
 
 float3 rotateByQuaternion(float3 v, float4 q)
 {
@@ -59,6 +78,32 @@ float screenDoorNoise(float2 pixel)
     return frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453);
 }
 
+float shadowVisibility(float3 relativePosition, float3 normal, float3 lightDirection)
+{
+    float4 clip = mul(gShadow.lightViewProj, float4(relativePosition, 1.0));
+    if (clip.w <= 1.0e-6) return 1.0;
+    float3 ndc = clip.xyz / clip.w;
+    float2 uv = ndc.xy * 0.5 + 0.5;
+    if (uv.x <= 0.0 || uv.x >= 1.0 || uv.y <= 0.0 || uv.y >= 1.0 || ndc.z <= 0.0 || ndc.z >= 1.0)
+        return 1.0;
+
+    float noL = saturate(dot(normal, lightDirection));
+    float bias = max(0.00010, 0.00065 * (1.0 - noL));
+    float currentDepth = ndc.z - bias;
+    float visibility = 0.0;
+    const float2 offsets[4] = {
+        float2(-0.5, -0.5), float2(0.5, -0.5),
+        float2(-0.5, 0.5), float2(0.5, 0.5)
+    };
+    [unroll]
+    for (int i = 0; i < 4; ++i)
+    {
+        float storedDepth = gShadowMap.SampleLevel(gShadowSampler, uv + offsets[i] * SHADOW_TEXEL, 0.0);
+        visibility += currentDepth <= storedDepth ? 1.0 : 0.0;
+    }
+    return visibility * 0.25;
+}
+
 [shader("vertex")]
 VertexOutput vertexMain(VertexInput input)
 {
@@ -70,7 +115,28 @@ VertexOutput vertexMain(VertexInput input)
     output.relativePosition = relativePosition;
     output.normal = worldNormal;
     output.color = input.color;
+    output.material = input.material;
     return output;
+}
+
+[shader("vertex")]
+ShadowVertexOutput shadowVertexMain(VertexInput input)
+{
+    ShadowVertexOutput output;
+    float3 worldPosition = rotateByQuaternion(input.position, gPush.objectRotation);
+    float3 relativePosition = worldPosition - gPush.cameraPosition.xyz;
+    output.position = mul(gPush.viewProj, float4(relativePosition, 1.0));
+    // Atmosphere, transmissive glass and emissive HUD/celestial proxies do not block the opaque
+    // directional shadow depth map. Glass gets its tinted transmission footprint separately.
+    bool atmosphere = input.color.x < 0.0 || input.color.y < 0.0 || input.color.z < 0.0;
+    output.skipOccluder = (atmosphere || input.material.z > 0.50 || input.material.w > 1.0) ? 1.0 : 0.0;
+    return output;
+}
+
+[shader("fragment")]
+void shadowFragmentMain(ShadowVertexOutput input)
+{
+    if (input.skipOccluder > 0.5) discard;
 }
 
 [shader("fragment")]
@@ -99,32 +165,11 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         return float4(scatter, 1.0);
     }
 
-    // Temporary material classes encoded in RGB for this acceptance branch only:
-    // [0,1]=stone/terrain, +1=wood, +2=metal, +4=glass, +8=emissive star.
-    float3 encoded = input.color;
-    float marker = min(min(encoded.x, encoded.y), encoded.z);
-    float3 baseColor = saturate(encoded);
-    float metallic = 0.0;
-    float roughness = 0.90;
-    float transmission = 0.0;
-    float emissive = 0.0;
-
-    if (marker > 7.5) {
-        baseColor = saturate(encoded - 8.0);
-        roughness = 0.32;
-        emissive = 22.0;
-    } else if (marker > 3.5) {
-        baseColor = saturate(encoded - 4.0);
-        roughness = 0.055;
-        transmission = 0.92;
-    } else if (marker > 1.5) {
-        baseColor = saturate(encoded - 2.0);
-        metallic = 1.0;
-        roughness = 0.13;
-    } else if (marker > 0.95) {
-        baseColor = saturate(encoded - 1.0);
-        roughness = 0.72;
-    }
+    float3 baseColor = saturate(input.color);
+    float metallic = saturate(input.material.x);
+    float roughness = clamp(input.material.y, 0.045, 1.0);
+    float transmission = saturate(input.material.z);
+    float emissive = max(input.material.w, 0.0);
 
     float3 h = normalize(l + v);
     float noL = saturate(dot(n, l));
@@ -140,12 +185,14 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 kd = (1.0 - f) * (1.0 - metallic) * (1.0 - transmission);
     float3 diffuse = kd * baseColor / PI;
 
+    float visibility = shadowVisibility(input.relativePosition, n, l);
     float3 stellarRadiance = max(gPush.sunColorIntensity.rgb, 0.0)
         * max(gPush.sunColorIntensity.a, 0.0);
-    float3 direct = (diffuse + specular) * noL * stellarRadiance;
+    float3 direct = (diffuse + specular) * noL * stellarRadiance * visibility;
 
-    // Environment lighting: sky hemisphere + warm ground bounce + view-dependent reflection.
-    // Back faces therefore remain readable instead of becoming pure black.
+    // Sky hemisphere + warm ground bounce + image-based-reflection approximation. Opaque shadowing
+    // only removes direct solar light; diffuse sky/ground environment remains, so shadows and
+    // back-facing surfaces never collapse to featureless black.
     float skyWeight = saturate(n.y * 0.5 + 0.5);
     float3 skyRadiance = lerp(float3(0.022, 0.019, 0.016), float3(0.14, 0.22, 0.36), skyWeight);
     float3 groundBounce = float3(0.060, 0.047, 0.031) * saturate(-n.y * 0.5 + 0.5);
