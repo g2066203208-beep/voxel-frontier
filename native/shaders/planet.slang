@@ -139,8 +139,10 @@ float shadowVisibility(float4 lightClip, float noL)
 {
     if (lightClip.w <= 0.0) return 1.0;
     float3 ndc = lightClip.xyz / lightClip.w;
+    // The light projection is already converted to Vulkan's Y convention on the CPU.
+    // Sampling the rendered depth image uses the same normalized coordinates; flipping Y here
+    // a second time mirrors the shadow map and visibly detaches shadows from their casters.
     float2 uv = ndc.xy * 0.5 + 0.5;
-    uv.y = 1.0 - uv.y;
     if (any(uv < 0.0) || any(uv > 1.0) || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
 
     float texel = max(gScene.groundAmbientShadowTexel.w, 1.0 / 4096.0);
