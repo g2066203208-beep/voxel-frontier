@@ -24,7 +24,13 @@ struct PushConstants
 };
 
 [[vk::push_constant]] ConstantBuffer<PushConstants> gPush;
+[[vk::binding(0, 0)]] Texture2D<float> gShadowMap;
+[[vk::binding(1, 0)]] SamplerState gShadowSampler;
+
 static const float PI = 3.14159265358979323846;
+static const float kShadowHalfExtent = 72.0;
+static const float kShadowDepthRange = 180.0;
+static const float2 kShadowTexel = float2(1.0 / 512.0, 1.0 / 512.0);
 
 float3 rotateByQuaternion(float3 v, float4 q)
 {
@@ -107,6 +113,39 @@ float3 atmosphereSky(float solarElevation, float density)
     return lerp(float3(0.012, 0.018, 0.028), sky, density);
 }
 
+void shadowBasis(float3 lightDirection, out float3 right, out float3 up)
+{
+    float3 helper = abs(lightDirection.y) < 0.94
+        ? float3(0.0, 1.0, 0.0)
+        : float3(1.0, 0.0, 0.0);
+    right = normalize(cross(helper, lightDirection));
+    up = normalize(cross(lightDirection, right));
+}
+
+float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection)
+{
+    float3 right;
+    float3 up;
+    shadowBasis(lightDirection, right, up);
+    float sx = dot(relativePosition, right);
+    float sy = dot(relativePosition, up);
+    float sz = dot(relativePosition, lightDirection);
+    if (abs(sx) >= kShadowHalfExtent || abs(sy) >= kShadowHalfExtent || abs(sz) >= kShadowDepthRange * 0.5)
+        return 1.0;
+
+    float2 uv = float2(sx, sy) / (2.0 * kShadowHalfExtent) + 0.5;
+    float receiverDepth = saturate(0.5 - sz / kShadowDepthRange);
+    float bias = lerp(0.00055, 0.00165, 1.0 - noL);
+    float visibility = 0.0;
+    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2(-0.5, -0.5), 0.0) ? 1.0 : 0.0;
+    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2( 0.5, -0.5), 0.0) ? 1.0 : 0.0;
+    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2(-0.5,  0.5), 0.0) ? 1.0 : 0.0;
+    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2( 0.5,  0.5), 0.0) ? 1.0 : 0.0;
+    visibility *= 0.25;
+    // Do not crush the low-poly planes to black. Sky/bounce illumination remains unshadowed below.
+    return lerp(0.24, 1.0, visibility);
+}
+
 [shader("vertex")]
 VertexOutput vertexMain(VertexInput input)
 {
@@ -158,7 +197,6 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float macro = valueNoise3(input.localPosition * 0.023 + float3(3.2, -5.7, 1.9));
         float meso = cellNoise3(input.localPosition * 0.105 + float3(-7.1, 2.3, 4.8));
         float mineral = cellNoise3(input.localPosition * 0.28 + float3(4.0, 8.0, -6.0));
-
         float3 dryGrass = float3(0.20, 0.27, 0.095);
         float3 meadow = float3(0.12, 0.36, 0.075);
         float3 lushGrass = float3(0.055, 0.29, 0.055);
@@ -166,7 +204,6 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float3 stone = float3(0.30, 0.30, 0.28);
         float3 coldStone = float3(0.38, 0.40, 0.41);
         float3 snow = float3(0.74, 0.77, 0.75);
-
         float3 grass = lerp(dryGrass, lushGrass, moisture);
         grass = lerp(grass, meadow, saturate((temperature - 0.35) * 1.45));
         grass *= 0.88 + macro * 0.19;
@@ -176,7 +213,6 @@ float4 fragmentMain(VertexOutput input) : SV_Target
             + max(0.0, meso - 0.74) * 0.62);
         float snowMask = smoothstep(0.58, 0.84, normalizedHeight)
             * (1.0 - smoothstep(0.22, 0.62, temperature));
-
         baseColor = lerp(grass, soil * (0.88 + meso * 0.16), soilMask);
         baseColor = lerp(baseColor, lerp(stone, coldStone, 1.0 - temperature), rockMask);
         baseColor = lerp(baseColor, snow * (0.94 + mineral * 0.07), snowMask);
@@ -280,7 +316,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float3 stellarRadiance = max(gPush.sunColorIntensity.rgb, 0.0) * max(gPush.sunColorIntensity.a, 0.0);
     stellarRadiance *= lerp(float3(1.0, 0.50, 0.27), float3(1.0, 0.95, 0.86), daylight);
-    float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.12;
+    float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, noL, l);
+    float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.12 * shadow;
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
     float3 skyAmbient = skyColor * (0.10 + 0.26 * hemiUp);
@@ -295,8 +332,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
+        float transmissionShadow = lerp(shadow, 1.0, 0.28);
         direct += baseColor * float3(0.64, 0.86, 0.16)
-            * backLit * (0.09 + 0.16 * edgeLit) * daylight;
+            * backLit * (0.09 + 0.16 * edgeLit) * daylight * transmissionShadow;
     }
 
     float3 color = direct + indirect;
