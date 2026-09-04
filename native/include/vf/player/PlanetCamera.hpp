@@ -69,7 +69,7 @@ private:
     double heading_{0.0};
     double pitch_{-0.18};
     double eyeHeight_{1.75};
-    double creativeFlightSpeedMps_{2500.0};
+    double creativeFlightSpeedMps_{320.0};
     bool grounded_{};
     bool flightMode_{};
 };
