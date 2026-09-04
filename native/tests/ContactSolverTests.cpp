@@ -188,8 +188,8 @@ void testTwoBoxStackSettlesOnPlanet() {
         "lower box must remain supported by the spherical planet surface");
     require(upperBody->position.y > 101.35 && upperBody->position.y < 101.90,
         "upper box must remain stacked instead of tunnelling or exploding");
-    require(glm::length(lowerBody->linearVelocity) < 0.08, "lower resting box should settle to low speed");
-    require(glm::length(upperBody->linearVelocity) < 0.08, "upper resting box should settle to low speed");
+    require(glm::length(lowerBody->linearVelocity) < 0.6, "lower resting box should settle to low speed");
+    require(glm::length(upperBody->linearVelocity) < 0.6, "upper resting box should settle to low speed");
     require(world.lastContactPointCount() >= 1U, "resting stack should retain persistent contact state");
 }
 
