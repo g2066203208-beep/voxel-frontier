@@ -16,6 +16,7 @@ struct PlanetMovementInput {
     double vertical{};
     double mouseDx{};
     double mouseDy{};
+    double flightSpeedSteps{};
     bool sprint{};
     bool toggleFlight{};
 };
@@ -36,6 +37,7 @@ public:
     [[nodiscard]] bool flightMode() const noexcept { return flightMode_; }
     [[nodiscard]] bool inPlanetPhysicsFrame() const noexcept { return inPhysicsFrame_; }
     [[nodiscard]] std::uint32_t physicsFrameBodyId() const noexcept { return physicsFrameBodyId_; }
+    [[nodiscard]] double flightSpeedMps() const noexcept { return creativeFlightSpeedMps_; }
     [[nodiscard]] glm::dvec3 up() const;
     [[nodiscard]] glm::dvec3 forwardDirection() const;
     [[nodiscard]] double altitude() const;
@@ -55,10 +57,6 @@ private:
     const CelestialSystem* celestialSystem_{};
     std::uint32_t primaryCelestialBodyId_{};
 
-    // Public/render state is always inertial world space. While a nearby planet physics frame is
-    // active, the authoritative simulation state is localPosition_/localVelocity_ and these values
-    // are reconstructed after each update. This mirrors KSP's separation between sim space and the
-    // low-speed local physics space.
     glm::dvec3 position_{};
     glm::dvec3 velocity_{};
 
@@ -71,6 +69,7 @@ private:
     double heading_{0.0};
     double pitch_{-0.18};
     double eyeHeight_{1.75};
+    double creativeFlightSpeedMps_{2500.0};
     bool grounded_{};
     bool flightMode_{};
 };
