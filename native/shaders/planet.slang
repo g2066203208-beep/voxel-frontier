@@ -30,7 +30,9 @@ struct PushConstants
 static const float PI = 3.14159265358979323846;
 static const float kShadowHalfExtent = 72.0;
 static const float kShadowDepthRange = 180.0;
-static const float2 kShadowTexel = float2(1.0 / 512.0, 1.0 / 512.0);
+static const float kShadowResolution = 512.0;
+static const float2 kShadowTexel = float2(1.0 / kShadowResolution, 1.0 / kShadowResolution);
+static const float kShadowWorldTexel = (2.0 * kShadowHalfExtent) / kShadowResolution;
 
 float3 rotateByQuaternion(float3 v, float4 q)
 {
@@ -70,11 +72,6 @@ float valueNoise3(float3 p)
     float x01 = lerp(n001, n101, f.x);
     float x11 = lerp(n011, n111, f.x);
     return lerp(lerp(x00, x10, f.y), lerp(x01, x11, f.y), f.z);
-}
-
-float cellNoise3(float3 p)
-{
-    return hash31(floor(p));
 }
 
 float distributionGGX(float noH, float roughness)
@@ -122,28 +119,52 @@ void shadowBasis(float3 lightDirection, out float3 right, out float3 up)
     up = normalize(cross(lightDirection, right));
 }
 
+float2 stableShadowOffset(float3 right, float3 up)
+{
+    float2 cameraPlane = float2(
+        dot(gPush.cameraPosition.xyz, right),
+        dot(gPush.cameraPosition.xyz, up));
+    float2 snapped = round(cameraPlane / kShadowWorldTexel) * kShadowWorldTexel;
+    return cameraPlane - snapped;
+}
+
+float shadowTap(float2 uv, float receiverDepth, float bias, float2 offset)
+{
+    float storedDepth = gShadowMap.SampleLevel(gShadowSampler, uv + offset * kShadowTexel, 0.0);
+    return receiverDepth - bias <= storedDepth ? 1.0 : 0.0;
+}
+
 float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection)
 {
     float3 right;
     float3 up;
     shadowBasis(lightDirection, right, up);
-    float sx = dot(relativePosition, right);
-    float sy = dot(relativePosition, up);
+    float2 snapOffset = stableShadowOffset(right, up);
+    float sx = dot(relativePosition, right) + snapOffset.x;
+    float sy = dot(relativePosition, up) + snapOffset.y;
     float sz = dot(relativePosition, lightDirection);
     if (abs(sx) >= kShadowHalfExtent || abs(sy) >= kShadowHalfExtent || abs(sz) >= kShadowDepthRange * 0.5)
         return 1.0;
 
     float2 uv = float2(sx, sy) / (2.0 * kShadowHalfExtent) + 0.5;
     float receiverDepth = saturate(0.5 - sz / kShadowDepthRange);
-    float bias = lerp(0.00055, 0.00165, 1.0 - noL);
+    float bias = lerp(0.00070, 0.00190, 1.0 - noL);
+
+    // Fixed tent PCF: stable under motion, no temporal/random grain. 4/2/1 weights yield sixteen
+    // effective levels instead of the old coarse 0/25/50/75/100% staircase.
+    const float radius = 1.15;
     float visibility = 0.0;
-    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2(-0.5, -0.5), 0.0) ? 1.0 : 0.0;
-    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2( 0.5, -0.5), 0.0) ? 1.0 : 0.0;
-    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2(-0.5,  0.5), 0.0) ? 1.0 : 0.0;
-    visibility += receiverDepth - bias <= gShadowMap.SampleLevel(gShadowSampler, uv + kShadowTexel * float2( 0.5,  0.5), 0.0) ? 1.0 : 0.0;
-    visibility *= 0.25;
-    // Do not crush the low-poly planes to black. Sky/bounce illumination remains unshadowed below.
-    return lerp(0.24, 1.0, visibility);
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.0,  0.0)) * 4.0;
+    visibility += shadowTap(uv, receiverDepth, bias, float2(-radius,  0.0)) * 2.0;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( radius,  0.0)) * 2.0;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.0, -radius)) * 2.0;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.0,  radius)) * 2.0;
+    visibility += shadowTap(uv, receiverDepth, bias, float2(-radius, -radius));
+    visibility += shadowTap(uv, receiverDepth, bias, float2( radius, -radius));
+    visibility += shadowTap(uv, receiverDepth, bias, float2(-radius,  radius));
+    visibility += shadowTap(uv, receiverDepth, bias, float2( radius,  radius));
+    visibility *= 1.0 / 16.0;
+    return lerp(0.30, 1.0, visibility);
 }
 
 [shader("vertex")]
@@ -194,9 +215,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float temperature = saturate((marker - 1.25) / 0.35);
         float faceUp = saturate(dot(n, surfaceUp));
         float slope = 1.0 - faceUp;
-        float macro = valueNoise3(input.localPosition * 0.023 + float3(3.2, -5.7, 1.9));
-        float meso = cellNoise3(input.localPosition * 0.105 + float3(-7.1, 2.3, 4.8));
-        float mineral = cellNoise3(input.localPosition * 0.28 + float3(4.0, 8.0, -6.0));
+        float macro = valueNoise3(input.localPosition * 0.018 + float3(3.2, -5.7, 1.9));
+
         float3 dryGrass = float3(0.20, 0.27, 0.095);
         float3 meadow = float3(0.12, 0.36, 0.075);
         float3 lushGrass = float3(0.055, 0.29, 0.055);
@@ -204,91 +224,86 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float3 stone = float3(0.30, 0.30, 0.28);
         float3 coldStone = float3(0.38, 0.40, 0.41);
         float3 snow = float3(0.74, 0.77, 0.75);
+
         float3 grass = lerp(dryGrass, lushGrass, moisture);
         grass = lerp(grass, meadow, saturate((temperature - 0.35) * 1.45));
-        grass *= 0.88 + macro * 0.19;
-        float soilMask = saturate(smoothstep(0.14, 0.44, normalizedHeight) * (0.70 - moisture * 0.30));
-        float rockMask = saturate(smoothstep(0.06, 0.31, slope)
-            + smoothstep(0.34, 0.64, normalizedHeight) * 0.82
-            + max(0.0, meso - 0.74) * 0.62);
-        float snowMask = smoothstep(0.58, 0.84, normalizedHeight)
-            * (1.0 - smoothstep(0.22, 0.62, temperature));
-        baseColor = lerp(grass, soil * (0.88 + meso * 0.16), soilMask);
+        grass *= 0.93 + (macro - 0.5) * 0.10;
+        float soilMask = saturate(smoothstep(0.16, 0.46, normalizedHeight) * (0.68 - moisture * 0.28));
+        float rockMask = saturate(
+            smoothstep(0.09, 0.34, slope)
+            + smoothstep(0.38, 0.68, normalizedHeight) * 0.78);
+        float snowMask = smoothstep(0.60, 0.86, normalizedHeight)
+            * (1.0 - smoothstep(0.24, 0.64, temperature));
+
+        baseColor = lerp(grass, soil, soilMask);
         baseColor = lerp(baseColor, lerp(stone, coldStone, 1.0 - temperature), rockMask);
-        baseColor = lerp(baseColor, snow * (0.94 + mineral * 0.07), snowMask);
-        baseColor *= 0.94 + (mineral - 0.5) * 0.08;
-        roughness = lerp(0.96, 0.78, rockMask);
+        baseColor = lerp(baseColor, snow, snowMask);
+        roughness = lerp(0.96, 0.80, rockMask);
         f0 = float3(0.027, 0.029, 0.028);
-        materialAO = lerp(0.70, 1.0, faceUp);
+        materialAO = lerp(0.74, 1.0, faceUp);
     }
     else if (barkMaterial)
     {
         float u = input.surfaceData.y;
         float vCoord = input.surfaceData.z;
-        float warp = cellNoise3(float3(u * 5.0, vCoord * 0.72, input.localPosition.z * 0.10));
-        float fibre = 0.5 + 0.5 * sin((u + (warp - 0.5) * 0.035) * 6.2831853 * 7.0);
-        float2 barkCell = float2(u * 7.0, vCoord * 0.95);
-        float2 localCell = frac(barkCell) - 0.5;
-        float cellSeed = hash21(floor(barkCell));
-        float fissure = smoothstep(0.43, 0.49, abs(localCell.x + (cellSeed - 0.5) * 0.18));
-        float micro = hash31(floor(float3(u * 25.0, vCoord * 4.0, 3.0)));
-        baseColor = lerp(float3(0.040, 0.013, 0.004), float3(0.23, 0.075, 0.016), 0.42 + 0.50 * warp);
-        baseColor = lerp(baseColor, float3(0.40, 0.17, 0.040), fibre * 0.12);
-        baseColor *= (1.0 - fissure * 0.34) * (0.94 + micro * 0.08);
-        roughness = saturate(0.82 + fissure * 0.09 + micro * 0.05);
+        float warp = valueNoise3(float3(u * 3.5, vCoord * 0.52, input.localPosition.z * 0.075));
+        float fibre = 0.5 + 0.5 * sin((u + (warp - 0.5) * 0.025) * 6.2831853 * 5.0);
+        float fissure = smoothstep(0.86, 0.96, 0.5 + 0.5 * sin(u * 6.2831853 * 6.0 + warp * 2.0));
+        baseColor = lerp(float3(0.045, 0.015, 0.005), float3(0.24, 0.080, 0.018), 0.46 + 0.44 * warp);
+        baseColor = lerp(baseColor, float3(0.38, 0.16, 0.038), fibre * 0.10);
+        baseColor *= 1.0 - fissure * 0.22;
+        roughness = 0.88 + fissure * 0.06;
         f0 = float3(0.022, 0.019, 0.015);
-        materialAO = 0.76 - fissure * 0.14;
+        materialAO = 0.78 - fissure * 0.10;
     }
     else if (foliageMaterial)
     {
         float variation = input.surfaceData.y;
         float canopyHeight = saturate(input.surfaceData.z);
-        float macro = valueNoise3(input.localPosition * 0.18 + variation * 9.0);
-        float faceBreakup = hash31(floor(n * 17.0 + variation * 29.0));
+        float macro = valueNoise3(input.localPosition * 0.115 + variation * 7.0);
         float upFacing = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
-        baseColor = lerp(float3(0.014, 0.095, 0.012), float3(0.060, 0.29, 0.028), 0.40 + 0.52 * macro);
-        baseColor = lerp(baseColor, float3(0.38, 0.57, 0.085), upFacing * (0.10 + canopyHeight * 0.18));
-        baseColor *= 0.94 + (faceBreakup - 0.5) * 0.10;
+        baseColor = lerp(float3(0.018, 0.105, 0.014), float3(0.066, 0.30, 0.030), 0.44 + 0.46 * macro);
+        baseColor = lerp(baseColor, float3(0.34, 0.53, 0.080), upFacing * (0.08 + canopyHeight * 0.15));
         roughness = 0.92;
         f0 = float3(0.019, 0.022, 0.016);
-        materialAO = lerp(0.43, 0.90, canopyHeight) * lerp(0.78, 1.0, upFacing);
+        materialAO = lerp(0.47, 0.91, canopyHeight) * lerp(0.82, 1.0, upFacing);
         foliageTransmission = 1.0;
     }
     else if (rockMaterial)
     {
         float variation = input.surfaceData.y;
         float strataCoord = input.surfaceData.z;
-        float macro = valueNoise3(input.localPosition * (0.13 + variation * 0.04) + variation * 13.0);
-        float grains = hash31(floor(input.localPosition * 0.72 + 5.0));
-        float strata = 0.5 + 0.5 * sin(strataCoord * 5.0 + macro * 2.2);
+        float macro = valueNoise3(input.localPosition * (0.095 + variation * 0.025) + variation * 11.0);
+        float strata = 0.5 + 0.5 * sin(strataCoord * 4.0 + macro * 1.6);
         float faceUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
-        float lichenNoise = hash31(floor(input.localPosition * 0.30 + float3(-8.0, 2.0, 4.0)));
-        float lichen = smoothstep(0.88, 0.96, lichenNoise) * (0.35 + 0.65 * faceUp);
-        baseColor = lerp(float3(0.24, 0.25, 0.255), float3(0.36, 0.28, 0.19), variation * 0.52 + macro * 0.36);
-        baseColor = lerp(baseColor, float3(0.14, 0.125, 0.105), (1.0 - strata) * 0.16);
-        baseColor *= 0.91 + grains * 0.13;
-        baseColor = lerp(baseColor, float3(0.22, 0.30, 0.105), lichen * 0.18);
-        roughness = 0.78 + grains * 0.15;
-        f0 = float3(0.036, 0.033, 0.030);
-        materialAO = lerp(0.62, 1.0, faceUp);
+        float lichen = smoothstep(0.78, 0.94, valueNoise3(input.localPosition * 0.18 + float3(-8.0, 2.0, 4.0)))
+            * (0.30 + 0.70 * faceUp);
+        baseColor = lerp(float3(0.25, 0.26, 0.265), float3(0.35, 0.285, 0.205), variation * 0.50 + macro * 0.30);
+        baseColor = lerp(baseColor, float3(0.16, 0.145, 0.125), (1.0 - strata) * 0.12);
+        baseColor = lerp(baseColor, float3(0.22, 0.30, 0.11), lichen * 0.12);
+        roughness = 0.84;
+        f0 = float3(0.034, 0.032, 0.030);
+        materialAO = lerp(0.66, 1.0, faceUp);
     }
     else if (oceanMaterial)
     {
         waterDepth = saturate(input.surfaceData.y);
         float shoreVariation = saturate(input.surfaceData.z);
-        float macro = valueNoise3(input.localPosition * 0.040 + float3(1.7, -3.4, 6.2));
-        float micro = hash31(floor(input.localPosition * 0.20 + float3(-5.3, 2.1, 8.7)));
-        float foamNoise = hash31(floor(input.localPosition * 0.33 + shoreVariation * 17.0));
+        float macro = valueNoise3(input.localPosition * 0.032 + float3(1.7, -3.4, 6.2));
         baseColor = lerp(float3(0.025, 0.48, 0.52), float3(0.012, 0.20, 0.34), smoothstep(0.03, 0.30, waterDepth));
         baseColor = lerp(baseColor, float3(0.004, 0.034, 0.105), smoothstep(0.28, 0.90, waterDepth));
-        baseColor *= 0.93 + (macro - 0.5) * 0.10;
-        baseColor += float3(0.010, 0.026, 0.036) * micro;
-        float shoreBand = 1.0 - smoothstep(0.015, 0.15 + shoreVariation * 0.035, waterDepth);
-        float brokenFoam = smoothstep(0.53, 0.76, foamNoise + shoreVariation * 0.11);
-        foamMask = shoreBand * brokenFoam;
-        baseColor = lerp(baseColor, float3(0.79, 0.92, 0.88), foamMask * 0.90);
+        baseColor *= 0.96 + (macro - 0.5) * 0.06;
+
+        float shoreBand = 1.0 - smoothstep(0.018, 0.15 + shoreVariation * 0.030, waterDepth);
+        float foamFlow = 0.5 + 0.5 * sin(
+            input.localPosition.x * 0.34
+            + input.localPosition.z * 0.27
+            + macro * 2.6
+            + shoreVariation * 6.2831853);
+        foamMask = shoreBand * smoothstep(0.64, 0.82, foamFlow);
+        baseColor = lerp(baseColor, float3(0.79, 0.92, 0.88), foamMask * 0.82);
         f0 = float3(0.0204, 0.0204, 0.0204);
-        roughness = lerp(0.14, 0.050, smoothstep(0.10, 0.82, waterDepth));
+        roughness = lerp(0.14, 0.052, smoothstep(0.10, 0.82, waterDepth));
     }
 
     float3 l = normalize(gPush.sunDirection.xyz);
@@ -332,9 +347,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
-        float transmissionShadow = lerp(shadow, 1.0, 0.28);
+        float transmissionShadow = lerp(shadow, 1.0, 0.24);
         direct += baseColor * float3(0.64, 0.86, 0.16)
-            * backLit * (0.09 + 0.16 * edgeLit) * daylight * transmissionShadow;
+            * backLit * (0.09 + 0.15 * edgeLit) * daylight * transmissionShadow;
     }
 
     float3 color = direct + indirect;
@@ -358,9 +373,5 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         color = lerp(color, fogColor, fogFactor * 0.84);
     }
 
-    color = toneMapFilmic(color);
-    float luminance = dot(color, float3(0.2126, 0.7152, 0.0722));
-    color = lerp(luminance.xxx, color, 1.11);
-    color = pow(saturate(color), float3(0.94, 0.94, 0.94));
-    return float4(color, 1.0);
+    return float4(toneMapFilmic(color), 1.0);
 }

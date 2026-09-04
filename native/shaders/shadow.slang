@@ -18,6 +18,8 @@ struct PushConstants
 
 static const float kShadowHalfExtent = 72.0;
 static const float kShadowDepthRange = 180.0;
+static const float kShadowResolution = 512.0;
+static const float kShadowWorldTexel = (2.0 * kShadowHalfExtent) / kShadowResolution;
 
 float3 rotateByQuaternion(float3 v, float4 q)
 {
@@ -34,6 +36,15 @@ void shadowBasis(float3 lightDirection, out float3 right, out float3 up)
     up = normalize(cross(lightDirection, right));
 }
 
+float2 stableShadowOffset(float3 right, float3 up)
+{
+    float2 cameraPlane = float2(
+        dot(gPush.cameraPosition.xyz, right),
+        dot(gPush.cameraPosition.xyz, up));
+    float2 snapped = round(cameraPlane / kShadowWorldTexel) * kShadowWorldTexel;
+    return cameraPlane - snapped;
+}
+
 [shader("vertex")]
 float4 shadowVertexMain(VertexInput input) : SV_Position
 {
@@ -43,10 +54,10 @@ float4 shadowVertexMain(VertexInput input) : SV_Position
     float3 right;
     float3 up;
     shadowBasis(l, right, up);
+    float2 snapOffset = stableShadowOffset(right, up);
 
-    float x = dot(relative, right) / kShadowHalfExtent;
-    float y = dot(relative, up) / kShadowHalfExtent;
-    // Directional-light depth: points toward the light are closer and therefore receive smaller depth.
+    float x = (dot(relative, right) + snapOffset.x) / kShadowHalfExtent;
+    float y = (dot(relative, up) + snapOffset.y) / kShadowHalfExtent;
     float depth = saturate(0.5 - dot(relative, l) / kShadowDepthRange);
     return float4(x, y, depth, 1.0);
 }

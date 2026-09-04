@@ -34,13 +34,19 @@ void appendFace(
             double u = -1.0 + 2.0 * static_cast<double>(x) / static_cast<double>(subdivisions);
             double v = -1.0 + 2.0 * static_cast<double>(y) / static_cast<double>(subdivisions);
 
+            // Small deterministic irregularity breaks a perfect grid without turning every cell into
+            // its own visual event. Larger jitter was measured to worsen diagonal crease noise in
+            // low-poly terrain, so V5 keeps this deliberately subtle.
             if (definition != nullptr
                 && x > 0U && x < subdivisions
                 && y > 0U && y < subdivisions) {
                 const std::uint64_t key = static_cast<std::uint64_t>(face) * 0x100000000ULL
                     + static_cast<std::uint64_t>(y) * stride + x;
-                u += detail::randomSigned(definition->seed ^ 0x243F6A8885A308D3ULL, key) * cell * 0.18;
-                v += detail::randomSigned(definition->seed ^ 0x13198A2E03707344ULL, key) * cell * 0.18;
+                constexpr double kCoherentJitterFraction = 0.07;
+                u += detail::randomSigned(definition->seed ^ 0x243F6A8885A308D3ULL, key)
+                    * cell * kCoherentJitterFraction;
+                v += detail::randomSigned(definition->seed ^ 0x13198A2E03707344ULL, key)
+                    * cell * kCoherentJitterFraction;
                 u = std::clamp(u, -1.0, 1.0);
                 v = std::clamp(v, -1.0, 1.0);
             }
@@ -109,16 +115,15 @@ double planetHeight(const PlanetDefinition& definition, const glm::dvec3& direct
     const glm::dvec3 d = glm::normalize(directionInput);
     const detail::LandformProfile landform = detail::semanticLandform(definition, d);
 
-    // V4 terrain is semantic-first: a continental field establishes land/sea, a deterministic
-    // great-circle mountain belt builds long ridges, a second corridor carves valleys, and a
-    // localized basin creates a lake/lowland catchment. Fine noise is subordinate to those forms.
+    // Semantic forms carry the image: continent, mountain belt, valley, plateau and basin. Fine
+    // displacement is intentionally subordinate so the terrain reads as broad designed planes.
     const double ridgeDetailNoise = detail::valueNoise3(
         definition.seed ^ 0xBB67AE8584CAA73BULL,
-        d * 6.0 + glm::dvec3{-3.2, 1.4, 2.6});
+        d * 5.6 + glm::dvec3{-3.2, 1.4, 2.6});
     const double ridgeDetail = 1.0 - std::abs(ridgeDetailNoise * 2.0 - 1.0);
     const double fineDetail = detail::centeredFbm(
         definition.seed ^ 0xA54FF53A5F1D36F1ULL,
-        d * 10.2 + glm::dvec3{0.7, 3.8, -2.4},
+        d * 8.8 + glm::dvec3{0.7, 3.8, -2.4},
         2U);
 
     double shape = (landform.continent - 0.50) * 1.06;
@@ -126,7 +131,7 @@ double planetHeight(const PlanetDefinition& definition, const glm::dvec3& direct
     shape += landform.plateau * 0.11 * (0.45 + 0.55 * landform.continent);
     shape -= landform.valleyCorridor * (0.10 + 0.12 * (1.0 - landform.mountainBelt));
     shape -= landform.basin * 0.26;
-    shape += fineDetail * (0.045 + 0.055 * landform.mountainBelt);
+    shape += fineDetail * (0.028 + 0.040 * landform.mountainBelt);
 
     // The authoritative ocean is radius-6m. Compress relief near that level to create readable
     // shelves, beaches and broader shore transitions instead of a noisy contour line.
@@ -137,8 +142,6 @@ double planetHeight(const PlanetDefinition& definition, const glm::dvec3& direct
         const double coastSmooth = coast * coast * (3.0 - 2.0 * coast);
         shape = seaLevelNormalized + (shape - seaLevelNormalized) * (1.0 - coastSmooth * 0.52);
 
-        // Where the mountain belt reaches a coast, retain a few stronger polygonal bluff faces so
-        // every shore does not become a soft beach.
         const double coastalBluff = coastSmooth * landform.mountainBelt
             * std::clamp((ridgeDetailNoise - 0.58) / 0.30, 0.0, 1.0);
         shape += coastalBluff * 0.075;
@@ -157,8 +160,14 @@ PlanetMesh buildPlanetSurface(const PlanetDefinition& definition, std::uint32_t 
 
     PlanetMesh mesh;
     mesh.horizonOccluderRadius = static_cast<float>(std::max(0.0, definition.radius - definition.maxElevation));
+
+    // Physics continues to query the analytic height function directly; this only limits visual
+    // tessellation. 44 instead of the runtime-requested 64 cuts base terrain triangles by ~53%
+    // and makes each polygon plane visually meaningful rather than producing triangle confetti.
+    constexpr std::uint32_t kMaxCoherentTerrainSubdivisions = 44U;
+    const std::uint32_t terrainSubdivisions = std::min(subdivisionsPerFace, kMaxCoherentTerrainSubdivisions);
     for (std::uint32_t face = 0; face < 6U; ++face) {
-        appendFace(mesh, &definition, glm::dvec3{0.0}, nullptr, definition.radius, face, subdivisionsPerFace, nullptr);
+        appendFace(mesh, &definition, glm::dvec3{0.0}, nullptr, definition.radius, face, terrainSubdivisions, nullptr);
     }
 
     constexpr std::uint32_t kWorldDetailMinSubdivisionsPerFace = 24U;
@@ -167,7 +176,7 @@ PlanetMesh buildPlanetSurface(const PlanetDefinition& definition, std::uint32_t 
         detail::scatterRocks(mesh, definition, treePlacements);
 
         constexpr double kMeanSeaLevelBelowReferenceMeters = 6.0;
-        constexpr std::uint32_t kOceanSubdivisionsPerFace = 36U;
+        constexpr std::uint32_t kOceanSubdivisionsPerFace = 32U;
         appendOceanSurface(
             mesh,
             definition,

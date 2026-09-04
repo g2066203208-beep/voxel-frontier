@@ -24,6 +24,8 @@ int main() {
     std::uint32_t treeRanges = 0U;
     std::uint32_t rockRanges = 0U;
     std::uint32_t oceanRanges = 0U;
+    std::uint64_t terrainTriangles = 0U;
+    std::uint64_t oceanTriangles = 0U;
 
     for (const auto& range : mesh.drawRanges) {
         if (range.indexCount == 0U || (range.indexCount % 3U) != 0U) {
@@ -46,10 +48,20 @@ int main() {
         previousEnd = range.firstIndex + range.indexCount;
         coveredIndices += range.indexCount;
         switch (range.drawClass) {
-        case vf::PlanetDrawClass::TerrainPatch: ++terrainRanges; break;
-        case vf::PlanetDrawClass::TreeBatch: ++treeRanges; break;
-        case vf::PlanetDrawClass::RockBatch: ++rockRanges; break;
-        case vf::PlanetDrawClass::OceanPatch: ++oceanRanges; break;
+        case vf::PlanetDrawClass::TerrainPatch:
+            ++terrainRanges;
+            terrainTriangles += range.indexCount / 3U;
+            break;
+        case vf::PlanetDrawClass::TreeBatch:
+            ++treeRanges;
+            break;
+        case vf::PlanetDrawClass::RockBatch:
+            ++rockRanges;
+            break;
+        case vf::PlanetDrawClass::OceanPatch:
+            ++oceanRanges;
+            oceanTriangles += range.indexCount / 3U;
+            break;
         }
     }
 
@@ -66,13 +78,16 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    // The ocean generator intentionally omits cells whose four corners are safely buried under
-    // terrain, so a populated ocean must contain fewer triangles than a full 36x36x6 sphere.
-    constexpr std::uint64_t fullOceanTriangles = 36ULL * 36ULL * 2ULL * 6ULL;
-    std::uint64_t oceanTriangles = 0U;
-    for (const auto& range : mesh.drawRanges) {
-        if (range.drawClass == vf::PlanetDrawClass::OceanPatch) oceanTriangles += range.indexCount / 3U;
+    // Runtime may request 64 subdivisions, but the V5 visual terrain budget deliberately caps
+    // rendering at 44 per cube face. Physics remains analytic and is not reduced by this LOD.
+    constexpr std::uint64_t coherentTerrainTriangles = 44ULL * 44ULL * 2ULL * 6ULL;
+    if (terrainTriangles != coherentTerrainTriangles) {
+        std::cerr << "coherent terrain triangle budget regressed\n";
+        return EXIT_FAILURE;
     }
+
+    // Ocean is capped at 32 per face and also omits cells whose four corners are buried under land.
+    constexpr std::uint64_t fullOceanTriangles = 32ULL * 32ULL * 2ULL * 6ULL;
     if (oceanTriangles == 0U || oceanTriangles >= fullOceanTriangles) {
         std::cerr << "ocean dry-cell triangle rejection is not active\n";
         return EXIT_FAILURE;
@@ -83,6 +98,7 @@ int main() {
               << " trees=" << treeRanges
               << " rocks=" << rockRanges
               << " ocean=" << oceanRanges
+              << " terrain_triangles=" << terrainTriangles
               << " ocean_triangles=" << oceanTriangles
               << " total_triangles=" << mesh.triangleCount() << '\n';
     return EXIT_SUCCESS;
