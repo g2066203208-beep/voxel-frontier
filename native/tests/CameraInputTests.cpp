@@ -51,12 +51,14 @@ void testMouseLeftTurnsCameraLeft() {
 void testVerticalMouseDirectionRemainsConventional() {
     const vf::PlanetDefinition planet{};
     vf::PlanetCamera camera{planet};
-    const double beforeVertical = glm::dot(camera.forwardDirection(), camera.up());
+    const glm::dvec3 physicalUpBefore = glm::normalize(camera.position());
+    const double beforeVertical = glm::dot(camera.forwardDirection(), physicalUpBefore);
     vf::PlanetMovementInput input{};
     input.mouseDy = 100.0;
     camera.update(input, 1.0 / 60.0);
-    require(glm::dot(camera.forwardDirection(), camera.up()) < beforeVertical,
-        "positive SDL mouse Y must pitch the view downward");
+    const glm::dvec3 physicalUpAfter = glm::normalize(camera.position());
+    require(glm::dot(camera.forwardDirection(), physicalUpAfter) < beforeVertical,
+        "positive SDL mouse Y must pitch the view downward relative to the physical horizon");
 }
 
 void testFlightSpeedUsesLogarithmicWheelSteps() {
@@ -154,7 +156,7 @@ void testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection() {
     vf::PlanetCamera camera{planet, &system, id};
     vf::PlanetMovementInput toggle{};
     toggle.toggleFlight = true;
-    toggle.flightSpeedSteps = 8.0; // 5120 m/s inspection escape for a tiny test planet.
+    toggle.flightSpeedSteps = 8.0;
     camera.update(toggle, 1.0 / 60.0);
 
     glm::dvec3 previousForward = camera.forwardDirection();
