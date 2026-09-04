@@ -32,7 +32,6 @@ add_library(vf_engine STATIC
     src/physics/GjkEpa.cpp
     src/physics/AerodynamicSurface.cpp
     src/physics/ShallowWater.cpp
-    src/physics/TreePhysics.cpp
     src/physics/GasChamber.cpp
     src/physics/SpectralOptics.cpp
     src/physics/ElectromagneticRadiation.cpp
@@ -41,7 +40,6 @@ add_library(vf_engine STATIC
     src/physics/RopeXpbd.cpp
     src/physics/CelestialSurfaceFrames.cpp
     src/render/PhysicsDebugMesh.cpp
-    src/gameplay/PhysicsPlayground.cpp
     src/gameplay/PhysicsInteraction.cpp
 )
 
