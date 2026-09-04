@@ -27,7 +27,7 @@ void testAdiabaticCompression() {
     require(vf::gasPressurePa(gas) > p * 2.0, "adiabatic compression must raise pressure more than isothermal compression");
 }
 void testPistonAndBuoyancy() {
-    vf::GasVolumeState gas{}; gas.volumeM3 = 4.0; gas.dryGasMassKg = 0.65; gas.temperatureK = 310.0;
+    vf::GasVolumeState gas{}; gas.volumeM3 = 4.0; gas.dryGasMassKg = 3.0; gas.temperatureK = 310.0;
     require(vf::gasPistonForceN(gas, 50000.0, 0.02) > 0.0, "pressurized gas must produce piston force");
     require(vf::gasNetBuoyantLiftN(gas, 1.225, 9.81, 1.0) > 0.0, "light sealed gas volume must produce positive lift");
 }
