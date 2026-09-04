@@ -9,9 +9,6 @@
 
 namespace {
 
-// SPIR-V 1.x binary constants from the Khronos SPIR-V unified specification / headers.
-// Keeping these four values local avoids adding SPIRV-Headers as a second dependency
-// just for a tiny runtime-contract regression test.
 constexpr std::uint32_t kSpirvMagicNumber = 0x07230203U;
 constexpr std::uint16_t kSpirvOpEntryPoint = 15U;
 constexpr std::uint32_t kSpirvExecutionModelVertex = 0U;
@@ -81,9 +78,7 @@ void validateEntryPoint(
             const std::size_t nameBegin = (instructionWord + 3U) * 4U;
             const std::size_t instructionEnd = (instructionWord + wordCount) * 4U;
             const std::string name = readLiteralString(bytes, nameBegin, instructionEnd);
-            if (executionModel == expectedExecutionModel && name == expectedName) {
-                foundExpected = true;
-            }
+            if (executionModel == expectedExecutionModel && name == expectedName) foundExpected = true;
         }
 
         instructionWord += wordCount;
@@ -106,6 +101,16 @@ int main() {
         vf::shaders::kPlanetFragmentSpvSize,
         kSpirvExecutionModelFragment,
         "fragmentMain");
+    validateEntryPoint(
+        vf::shaders::kShadowVertexSpv,
+        vf::shaders::kShadowVertexSpvSize,
+        kSpirvExecutionModelVertex,
+        "shadowVertexMain");
+    validateEntryPoint(
+        vf::shaders::kShadowFragmentSpv,
+        vf::shaders::kShadowFragmentSpvSize,
+        kSpirvExecutionModelFragment,
+        "shadowFragmentMain");
 
     std::cout << "Shader SPIR-V entry-point contract tests passed\n";
     return 0;
