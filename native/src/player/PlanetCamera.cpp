@@ -114,7 +114,8 @@ void PlanetCamera::rotateFreeAttitude(double mouseDx, double mouseDy) noexcept {
 
     // Rotate the complete attitude pair rigidly. This preserves the exact camera roll/up relation
     // captured at the reference-frame boundary instead of snapping it to a reconstructed basis.
-    if (glm::length2(glm::cross(candidateForward, candidateUp)) > 1.0e-10) {
+    const glm::dvec3 candidateRight = glm::cross(candidateForward, candidateUp);
+    if (glm::dot(candidateRight, candidateRight) > 1.0e-10) {
         freeForward_ = candidateForward;
         freeUp_ = candidateUp;
     }
