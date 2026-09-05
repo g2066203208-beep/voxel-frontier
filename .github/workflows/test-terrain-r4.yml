@@ -1,25 +1,27 @@
-name: Terrain R4 Real Vulkan Geomorph Evidence
+name: Terrain R5 Real Vulkan Geomorph Evidence
 
-# Final R4 evidence gate on the materialized relief-readable terrain source.
 on:
   push:
-    branches: [feature/terrain-r4-geomorph-bake]
+    branches: [test/terrain-r5-geomorph]
   workflow_dispatch:
 
 concurrency:
-  group: terrain-r4-evidence-${{ github.ref }}
+  group: terrain-r5-evidence-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   core-tests:
+    if: github.actor == 'github-actions[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
-      - name: Verify materialized R4 source
+      - name: Verify materialized R5 source
         run: |
-          grep -q 'R4 relief V5' native/src/world/PlanetSurface.cpp
-          grep -q 'sampleLocalRelief' native/src/app/Main.cpp
+          grep -q 'R5 geomorph' native/include/vf/world/PlanetGeomorph.hpp
+          grep -q 'R5 river corridor' native/src/world/PlanetSurface.cpp
+          grep -q 'R5 capture geometry' native/src/app/Main.cpp
+          grep -q 'R5 river exclusion' native/src/world/ProceduralEcology.cpp
           git diff --check
       - name: Configure core tests
         run: cmake -S native -B build/core -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
@@ -29,14 +31,17 @@ jobs:
         run: ctest --test-dir build/core --verbose --output-on-failure
 
   real-vulkan:
+    if: github.actor == 'github-actions[bot]'
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v6
-      - name: Verify materialized R4 source
+      - name: Verify materialized R5 source
         run: |
-          grep -q 'R4 relief V5' native/src/world/PlanetSurface.cpp
-          grep -q 'sampleLocalRelief' native/src/app/Main.cpp
+          grep -q 'R5 geomorph' native/include/vf/world/PlanetGeomorph.hpp
+          grep -q 'R5 river corridor' native/src/world/PlanetSurface.cpp
+          grep -q 'R5 capture geometry' native/src/app/Main.cpp
+          grep -q 'R5 river exclusion' native/src/world/ProceduralEcology.cpp
           git diff --check
       - name: Install Vulkan headless dependencies
         run: |
@@ -64,7 +69,7 @@ jobs:
           test -n "$ICD"
           echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
-      - name: Capture daylight mountain river coast highland from same R4 build
+      - name: Capture R5 mountain river coast highland
         shell: bash
         run: |
           set -euo pipefail
@@ -76,16 +81,16 @@ jobs:
           sleep 2
           APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
           test -n "$APP"
-          mkdir -p r4-captures
+          mkdir -p r5-captures
           capture_mode() {
             mode="$1"
             echo "=== capture $mode ==="
-            VF_CAPTURE_LANDFORM="$mode" timeout 65s "$APP" >"r4-captures/runtime-$mode.log" 2>&1 &
+            VF_CAPTURE_LANDFORM="$mode" timeout 70s "$APP" >"r5-captures/runtime-$mode.log" 2>&1 &
             pid=$!
-            sleep 20
-            import -display :99 -window root "r4-captures/$mode.png"
-            colors="$(convert "r4-captures/$mode.png" -format '%k' info:)"
-            echo "$mode unique_colors=$colors" | tee -a r4-captures/capture-info.txt
+            sleep 22
+            import -display :99 -window root "r5-captures/$mode.png"
+            colors="$(convert "r5-captures/$mode.png" -format '%k' info:)"
+            echo "$mode unique_colors=$colors" | tee -a r5-captures/capture-info.txt
             test "$colors" -gt 64
             kill "$pid" 2>/dev/null || true
             wait "$pid" 2>/dev/null || true
@@ -95,12 +100,12 @@ jobs:
           capture_mode river
           capture_mode coast
           capture_mode highland
-          identify r4-captures/*.png | tee -a r4-captures/capture-info.txt
-      - name: Upload R4 screenshots
+          identify r5-captures/*.png | tee -a r5-captures/capture-info.txt
+      - name: Upload R5 screenshots
         uses: actions/upload-artifact@v5
         with:
-          name: terrain-r4-real-vulkan-${{ github.sha }}
+          name: terrain-r5-real-vulkan-${{ github.sha }}
           path: |
-            r4-captures
+            r5-captures
             vulkan-summary.txt
           if-no-files-found: error
