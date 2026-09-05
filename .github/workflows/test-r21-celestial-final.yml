@@ -67,7 +67,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export SDL_VIDEODRIVER=x11 DISPLAY=:99 VF_CELESTIAL_TIME_SCALE=120
+          # Static evidence uses real-time 1x so Aster cannot rotate the selected terrain out of
+          # the camera while CI waits for the expensive global bake. Gameplay still defaults to 120x.
+          export SDL_VIDEODRIVER=x11 DISPLAY=:99 VF_CELESTIAL_TIME_SCALE=1
           Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb.log 2>&1 &
           XVFB_PID=$!
           trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
