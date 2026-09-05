@@ -25,7 +25,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            ninja-build curl unzip xvfb imagemagick \
+            ninja-build curl unzip xvfb imagemagick xdotool \
             mesa-vulkan-drivers vulkan-tools \
             libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
             libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
@@ -70,16 +70,45 @@ jobs:
 
           APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
           test -n "$APP"
-          timeout 32s "$APP" >runtime.log 2>&1 &
+          timeout 45s "$APP" >runtime.log 2>&1 &
           RUN_PID=$!
 
-          # Give the async terrain/ecology mesh and Vulkan pipelines time to settle before capture.
+          # Let async terrain/ecology and the Vulkan pipelines settle before the baseline frame.
           sleep 18
-          import -display :99 -window root capture.png
-          identify capture.png | tee capture-info.txt
-          COLORS="$(convert capture.png -format '%k' info:)"
-          echo "Unique colors: $COLORS" | tee -a capture-info.txt
+          import -display :99 -window root capture-ground.png
+          identify capture-ground.png | tee capture-info.txt
+          COLORS="$(convert capture-ground.png -format '%k' info:)"
+          echo "Ground unique colors: $COLORS" | tee -a capture-info.txt
           test "$COLORS" -gt 64
+
+          # Exercise actual keyboard-driven ground traversal before a second frame. This is not a
+          # replacement for collision unit tests; it gives a persistent visual regression view after
+          # CharacterController has moved across the streamed procedural surface.
+          WINDOW="$(xdotool search --name 'Voxel Frontier' 2>/dev/null | head -n 1 || true)"
+          if [ -n "$WINDOW" ]; then
+            xdotool keydown --window "$WINDOW" w || true
+            sleep 2
+            xdotool keyup --window "$WINDOW" w || true
+            sleep 1
+          fi
+          import -display :99 -window root capture-traversal.png
+
+          # Optional aerial evidence: double-tap Space (the game's real flight-mode input), ascend,
+          # and pitch the camera down. Input injection is best-effort because Lavapipe/Xvfb drivers
+          # differ, but the capture itself always remains the real Vulkan framebuffer.
+          if [ -n "$WINDOW" ]; then
+            xdotool key --window "$WINDOW" space || true
+            sleep 0.14
+            xdotool key --window "$WINDOW" space || true
+            sleep 0.6
+            xdotool keydown --window "$WINDOW" space || true
+            sleep 2
+            xdotool keyup --window "$WINDOW" space || true
+            xdotool mousemove_relative -- 0 260 || true
+            sleep 1
+          fi
+          import -display :99 -window root capture-aerial.png
+          identify capture-traversal.png capture-aerial.png | tee -a capture-info.txt
 
           kill "$RUN_PID" 2>/dev/null || true
           sleep 1
@@ -90,7 +119,9 @@ jobs:
         with:
           name: real-vulkan-frame-${{ github.sha }}
           path: |
-            capture.png
+            capture-ground.png
+            capture-traversal.png
+            capture-aerial.png
             capture-info.txt
             runtime.log
             vulkan-summary.txt
