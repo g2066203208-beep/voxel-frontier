@@ -550,26 +550,46 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xA5A3564E27F8862FULL, w, 82.0, 4));
     const double rangeRidgeC = 1.0 - std::abs(fbmSurface(
         definition.seed ^ 0x9E3779B185EBCA87ULL, w, 210.0, 3));
-    const double rangeMask = smooth01(0.08, 0.68, geomorph.mountain) * geomorphLandness;
-    const double ridgeCoreA = std::pow(smooth01(0.34, 0.88, rangeRidgeA), 2.0);
-    const double ridgeCoreB = std::pow(smooth01(0.38, 0.90, rangeRidgeB), 1.75);
-    const double ridgeCoreC = std::pow(smooth01(0.44, 0.92, rangeRidgeC), 1.55);
-    // Zero-centred reconstruction: ridge cores rise while inter-range corridors are cut down.
-    // This produces an actual mountain profile instead of raising the entire belt as one plateau.
+    const double rangeMask = smooth01(0.07, 0.66, geomorph.mountain) * geomorphLandness;
+    const double ridgeCoreA = std::pow(smooth01(0.30, 0.86, rangeRidgeA), 2.15);
+    const double ridgeCoreB = std::pow(smooth01(0.34, 0.88, rangeRidgeB), 1.90);
+    const double ridgeCoreC = std::pow(smooth01(0.40, 0.91, rangeRidgeC), 1.65);
+
+    // R4 relief V5: the global geomorph bake owns the mountain-belt location.  These
+    // signed bands reconstruct crests AND inter-range valleys instead of lifting a whole
+    // orogenic province into one high slab.
     const double rangeRelief = rangeMask * (
-        0.175 * (ridgeCoreA - 0.30)
-        + 0.105 * (ridgeCoreB - 0.27)
-        + 0.055 * (ridgeCoreC - 0.23));
+        0.260 * (ridgeCoreA - 0.42)
+        + 0.160 * (ridgeCoreB - 0.38)
+        + 0.090 * (ridgeCoreC - 0.34));
+    const double interRangeValley = rangeMask * std::pow(
+        1.0 - std::clamp(std::max(ridgeCoreA, ridgeCoreB * 0.72), 0.0, 1.0), 2.2);
     elevation += maxLand * rangeRelief;
+    elevation -= maxLand * 0.085 * interRangeValley;
+
+    // Post-bake highland authority: elevated continental interiors that are not mountain
+    // cores.  This is what the plateau/highland capture and material logic now query.
+    const double globalHighland = geomorphLandness
+        * smooth01(900.0, 2400.0, geomorph.elevationMeters)
+        * (1.0 - smooth01(0.22, 0.68, geomorph.mountain));
 
     // Hydrology remains the placement authority for valleys.  A narrow deterministic
     // sub-channel only sharpens the coarse baked river corridor; it cannot create a river
     // where the discharge bake has none.
     const double channelRefineNoise = 1.0 - std::abs(fbmSurface(
         definition.seed ^ 0xC2B2AE3D27D4EB4FULL, w, 260.0, 3));
-    const double channelCore = geomorph.river
-        * smooth01(0.55, 0.88, channelRefineNoise) * geomorphLandness;
-    elevation -= maxLand * (0.040 * geomorph.incision + 0.065 * channelCore);
+    const double riverAuthority = std::pow(std::clamp(geomorph.river, 0.0, 1.0), 1.18)
+        * geomorphLandness;
+    const double channelCore = std::pow(std::clamp(geomorph.river, 0.0, 1.0), 1.72)
+        * (0.76 + 0.24 * smooth01(0.42, 0.88, channelRefineNoise)) * geomorphLandness;
+    const double uplandCarve = smooth01(260.0, 2200.0, geomorph.elevationMeters);
+
+    // The Priority-Flood/discharge bake remains authoritative for placement.  Near-field
+    // reconstruction resolves its broad corridor into a visible valley floor and a narrower
+    // river core instead of inventing sine-wave channels elsewhere.
+    elevation -= riverAuthority * (75.0 + 510.0 * uplandCarve);
+    elevation -= channelCore * (45.0 + 230.0 * uplandCarve);
+    elevation -= geomorph.incision * (55.0 + 240.0 * uplandCarve);
 
     // Give hydrologically low coastal margins a readable land/sea break without changing
     // the global coastline authority.  Rugged margins expose a short escarpment, while flat
@@ -606,10 +626,10 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.divergence = plates.divergence;
     sample.oceanRidge = oceanRidge;
     sample.mountain = std::max(mountain, geomorph.mountain);
-    sample.plateau = plateau;
+    sample.plateau = std::max(plateau, globalHighland);
     sample.trench = trench;
     sample.volcano = volcano;
-    sample.river = std::max(geomorph.river * 0.48, channelCore);
+    sample.river = std::max(geomorph.river * 0.44, channelCore);
     sample.hills = hills;
     sample.canyon = std::max(canyon, geomorph.incision);
     sample.dunes = dunes;
@@ -647,13 +667,13 @@ glm::vec3 planetTerrainColor(
         surfaceClass = 8; // hydrology-driven river core
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
+    } else if (sample.mountain > 0.24 || sample.canyon > 0.20
+        || sample.coastalCliff > 0.30 || sample.elevationMeters > 2500.0) {
+        surfaceClass = 1; // exposed rock
     } else if (sample.wetland > 0.34) {
         surfaceClass = 4; // wet mud
     } else if (sample.dunes > 0.36 || sample.aridity > 0.72) {
         surfaceClass = 2; // sand
-    } else if (sample.mountain > 0.24 || sample.canyon > 0.20
-        || sample.coastalCliff > 0.30 || sample.elevationMeters > 2500.0) {
-        surfaceClass = 1; // exposed rock
     } else if (sample.moisture > 0.22 && sample.aridity < 0.72) {
         surfaceClass = 0; // grassland
     }
@@ -680,16 +700,16 @@ glm::vec4 planetTerrainMaterial(
     } else if (sample.river > 0.60) {
         surfaceClass = 8;
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
-        surfaceClass = 5;
-    } else if (sample.wetland > 0.34) {
-        surfaceClass = 4;
-    } else if (sample.dunes > 0.36 || sample.aridity > 0.72) {
-        surfaceClass = 2;
+        surfaceClass = 5; // snow/ice
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20
         || sample.coastalCliff > 0.30 || sample.elevationMeters > 2500.0) {
         surfaceClass = 1;
+    } else if (sample.wetland > 0.34) {
+        surfaceClass = 4; // wet mud
+    } else if (sample.dunes > 0.36 || sample.aridity > 0.72) {
+        surfaceClass = 2; // sand
     } else if (sample.moisture > 0.22 && sample.aridity < 0.72) {
-        surfaceClass = 0;
+        surfaceClass = 0; // grassland
     }
 
     float roughness = 0.90F;
