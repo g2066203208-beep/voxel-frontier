@@ -92,9 +92,9 @@ float luminance709(float3 color)
     return dot(color, float3(0.2126, 0.7152, 0.0722));
 }
 
-// Procedural art direction only: no LUT, texture, HDRI or authored palette asset.
-// The structure follows the lesson from SNOWFLOW's public aerial-perspective implementation:
-// distance reduces contrast, hue converges toward the sky, and the sun-facing horizon warms.
+// Procedural art direction only: no LUT, texture, HDRI or copied authored palette asset. Large
+// warm/cool masses are intentionally stronger than fine noise so the low-poly silhouettes stay
+// readable instead of becoming photorealistic surface clutter.
 float3 stylizedSkyPalette(float3 viewDir, float3 sunDir)
 {
     viewDir = normalize(viewDir);
@@ -107,8 +107,8 @@ float3 stylizedSkyPalette(float3 viewDir, float3 sunDir)
 
     float3 nightZenith = float3(0.018, 0.027, 0.060);
     float3 nightHorizon = float3(0.075, 0.070, 0.115);
-    float3 dayZenith = float3(0.18, 0.43, 0.72);
-    float3 dayHorizon = float3(0.62, 0.69, 0.72);
+    float3 dayZenith = float3(0.20, 0.46, 0.74);
+    float3 dayHorizon = float3(0.68, 0.72, 0.70);
     float3 zenithColor = lerp(nightZenith, dayZenith, daylight);
     float3 horizonColor = lerp(nightHorizon, dayHorizon, daylight);
     float3 color = lerp(horizonColor, zenithColor, zenith);
@@ -138,9 +138,6 @@ float3 applyStylizedAerial(float3 color, VertexOutput input, float strength)
     float3 sunDir = normalize(gPush.data1.xyz);
     float cameraAltitude = max(gPush.data0.w, 0.0);
 
-    // Near-surface haze is strong; it naturally disappears as the camera leaves the atmosphere.
-    // Clamp the path because the physical atmosphere has finite thickness: a star millions of
-    // kilometres away should not accumulate millions of kilometres of ground fog.
     float atmospherePresence = exp(-cameraAltitude / 90000.0);
     float effectiveDistance = min(max(distanceMeters - 350.0, 0.0), 180000.0);
     float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.35);
@@ -165,7 +162,6 @@ float hash31(float3 p)
     p += dot(p, p.yzx + 33.33);
     return frac((p.x + p.y) * p.z);
 }
-
 
 float valueNoise2(float2 p)
 {
@@ -230,17 +226,18 @@ float shadowVisibility(float4 lightClip, float noL)
     if (any(uv < 0.0) || any(uv > 1.0) || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
 
     float texel = max(gScene.groundAmbientShadowTexel.w, 1.0 / 4096.0);
-    float bias = max(0.00025, 0.0012 * (1.0 - noL));
+    float bias = max(0.00022, 0.0011 * (1.0 - noL));
+    static const float2 offsets[9] = {
+        float2(0.0, 0.0),
+        float2(0.84, 0.18), float2(0.36, 0.79), float2(-0.48, 0.72), float2(-0.86, 0.10),
+        float2(-0.54, -0.66), float2(0.14, -0.88), float2(0.73, -0.54), float2(1.00, 0.02),
+    };
     float visible = 0.0;
     [unroll]
-    for (int y = -1; y <= 1; ++y)
+    for (int i = 0; i < 9; ++i)
     {
-        [unroll]
-        for (int x = -1; x <= 1; ++x)
-        {
-            float stored = gShadowMap.SampleLevel(gShadowSampler, uv + float2(x, y) * texel, 0.0);
-            visible += ndc.z - bias <= stored ? 1.0 : 0.0;
-        }
+        float stored = gShadowMap.SampleLevel(gShadowSampler, uv + offsets[i] * texel, 0.0);
+        visible += ndc.z - bias <= stored ? 1.0 : 0.0;
     }
     return visible / 9.0;
 }
@@ -253,26 +250,51 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     float3 h = normalize(l + v);
 
     bool waterMaterial = input.material.x < -0.5;
-    bool terrainMaterial = !waterMaterial && input.material.w < -0.5;
+    float materialTag = input.material.w;
+    bool terrainMaterial = !waterMaterial && materialTag < -0.5 && materialTag > -1.5;
+    bool foliageMaterial = !waterMaterial && materialTag <= -1.5 && materialTag > -2.5;
+    bool barkMaterial = !waterMaterial && materialTag <= -2.5 && materialTag > -3.5;
+    bool rockMaterial = !waterMaterial && materialTag <= -3.5 && materialTag > -4.5;
+
     float metallic = waterMaterial ? 0.0 : saturate(input.material.x);
     float roughness = waterMaterial ? 0.065 : clamp(input.material.y, 0.045, 1.0);
-    float transmission = saturate(input.material.z);
+    float transmission = transparent ? saturate(input.material.z) : 0.0;
     float emissive = max(input.material.w, 0.0);
     float3 baseColor = max(input.color, 0.0);
 
     if (terrainMaterial)
     {
-        // Object-space noise stays attached to the planet as it rotates/recenters. Large color
-        // masses dominate; mid-scale variation enriches them; fine grain is deliberately weak.
+        // Gradient/triplanar-inspired procedural variation: broad color blocks first, medium-scale
+        // enrichment second, and very little fine grain. This keeps the low-poly terrain readable.
         float2 q = input.objectPosition.xz;
-        float macro = terrainFbm2(q * 0.0045);
-        float medium = terrainFbm2(q * 0.0145 + 31.7);
-        float fine = valueNoise2(q * 0.045 + 8.9);
-        float value = (macro - 0.5) * 0.18 + (medium - 0.5) * 0.085 + (fine - 0.5) * 0.028;
+        float macro = terrainFbm2(q * 0.0038);
+        float medium = terrainFbm2(q * 0.0125 + 31.7);
+        float fine = valueNoise2(q * 0.043 + 8.9);
+        float value = (macro - 0.5) * 0.20 + (medium - 0.5) * 0.078 + (fine - 0.5) * 0.022;
         float warmPatch = smoothstep(0.58, 0.84, macro);
+        float localSlope = saturate(1.0 - n.y);
         baseColor *= 1.0 + value;
-        baseColor = lerp(baseColor, baseColor * float3(1.035, 1.005, 0.945), warmPatch * 0.18);
-        roughness = clamp(roughness + (medium - 0.5) * 0.055, 0.62, 0.98);
+        baseColor = lerp(baseColor, baseColor * float3(1.045, 1.005, 0.930), warmPatch * 0.20);
+        baseColor = lerp(baseColor, baseColor * float3(0.88, 0.91, 0.89), smoothstep(0.32, 0.72, localSlope) * 0.24);
+        roughness = clamp(roughness + (medium - 0.5) * 0.050, 0.64, 0.98);
+    }
+    else if (foliageMaterial)
+    {
+        float crown = terrainFbm2(input.objectPosition.xz * 0.075 + input.objectPosition.y * 0.011);
+        baseColor *= 0.93 + crown * 0.14;
+        roughness = max(roughness, 0.86);
+    }
+    else if (barkMaterial)
+    {
+        float barkVariation = valueNoise2(input.objectPosition.xz * 0.22 + input.objectPosition.y * 0.035);
+        baseColor *= 0.90 + barkVariation * 0.16;
+        roughness = max(roughness, 0.91);
+    }
+    else if (rockMaterial)
+    {
+        float rockVariation = terrainFbm2(input.objectPosition.xz * 0.055 + 13.0);
+        baseColor *= 0.90 + rockVariation * 0.16;
+        roughness = clamp(roughness, 0.76, 0.94);
     }
 
     if (waterMaterial)
@@ -284,7 +306,8 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
         n = normalize(n + float3(waveSlope.x, 0.0, waveSlope.y) * 0.055);
     }
 
-    float noL = saturate(dot(n, l));
+    float rawNoL = dot(n, l);
+    float noL = saturate(rawNoL);
     float noV = max(saturate(dot(n, v)), 1.0e-4);
     float noH = saturate(dot(n, h));
     float voH = saturate(dot(v, h));
@@ -301,11 +324,27 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     float3 stellar = max(gPush.data2.rgb, 0.0) * max(gPush.data2.a, 0.0);
     float3 direct = (diffuse + specular) * noL * stellar * shadow;
 
+    // teadrinker's public foliage shader uses a continuous front/side/back Lambert response rather
+    // than letting leaf cards go black at 90/180 degrees. Here the same principle is deliberately
+    // low-energy: geometric shadowing remains authoritative, and back-light adds only crown volume.
+    if (foliageMaterial)
+    {
+        float wrappedNoL = saturate((rawNoL + 0.24) / 1.24);
+        direct = (diffuse * wrappedNoL + specular * noL) * stellar * shadow;
+        float backLit = pow(saturate(-rawNoL), 1.45);
+        float edgeLit = pow(1.0 - noV, 2.0);
+        float transmissionVisibility = lerp(shadow, 1.0, 0.18);
+        direct += baseColor * float3(0.46, 0.72, 0.16)
+            * backLit * (0.028 + 0.060 * edgeLit)
+            * stellar * transmissionVisibility;
+    }
+
     float skyWeight = saturate(n.y * 0.5 + 0.5);
     float3 skyIrradiance = max(gScene.skyAmbientExposure.rgb, 0.0) * (0.28 + 0.72 * skyWeight);
     float3 groundIrradiance = max(gScene.groundAmbientShadowTexel.rgb, 0.0)
         * saturate(-n.y * 0.5 + 0.5);
     float3 ambientDiffuse = baseColor * (skyIrradiance + groundIrradiance) * (1.0 - metallic) * (1.0 - transmission);
+    if (foliageMaterial) ambientDiffuse *= 1.05;
 
     float3 r = reflect(-v, n);
     float reflectionSky = saturate(r.y * 0.5 + 0.5);
@@ -350,7 +389,9 @@ float4 opaqueFragmentMain(VertexOutput input) : SV_Target
     if (input.material.z > 0.02) discard;
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
     float3 linearColor = evaluatePbr(input, false) * exposure;
-    linearColor = applyStylizedAerial(linearColor, input, 1.0);
+    float materialTag = input.material.w;
+    float hazeStrength = materialTag <= -1.5 && materialTag > -4.5 ? 0.90 : 1.0;
+    linearColor = applyStylizedAerial(linearColor, input, hazeStrength);
     linearColor = stylizedWarmCoolGrade(linearColor);
     return float4(acesFitted(linearColor), 1.0);
 }
@@ -374,8 +415,6 @@ float4 transparentFragmentMain(VertexOutput input) : SV_Target
         ? saturate(0.66 + fresnel * 0.32)
         : saturate((1.0 - transmission) * 0.48 + fresnel * 0.72 + 0.025);
 
-    // Keep only one effective water representation at walking altitude. The local patch fades out
-    // as the global geoid fades in, preventing transparent-shell stacking and horizon banding.
     if (waterMaterial)
     {
         float cameraAltitude = max(gPush.data0.w, 0.0);
@@ -529,9 +568,6 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
     if (!hitsGround) color += background * transmittance;
     else color += float3(0.008, 0.009, 0.007) * transmittance;
 
-    // Preserve the physically coherent scattering result, then art-direct only the dense lower
-    // atmosphere. The weight naturally vanishes in high atmosphere/space, so orbital views keep
-    // their real black-space contrast while ground scenes gain Firewatch-like readable layers.
     float localDensity = densityAtRadius(length(cameraPlanet), groundRadius, scaleHeight);
     float styleWeight = saturate(localDensity * 0.38);
     color = lerp(color, stylizedSkyPalette(ray, sunDir), styleWeight);
