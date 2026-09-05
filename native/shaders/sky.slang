@@ -17,6 +17,8 @@ struct SkyVertexOutput
     float2 uv : TEXCOORD0;
 };
 
+static const float kExposureScale = 1.4640857; // 2^0.55, shared with planet.slang
+
 float hash21(float2 p)
 {
     float3 p3 = frac(float3(p.x, p.y, p.x) * 0.1031);
@@ -138,8 +140,6 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     float haze = atmosphere * horizonVeil;
     sky = lerp(sky, hazeColor, haze * (0.17 + 0.20 * daylight));
 
-    // Project the real sun direction through the existing camera matrix. No texture, mesh or new
-    // push constant is required, and the halo remains locked to the actual light direction.
     float4 sunClip = mul(gPush.viewProj, float4(normalize(gPush.sunDirection.xyz), 0.0));
     float sunInFront = sunClip.w > 1.0e-5 ? 1.0 : 0.0;
     float2 sunNdc = sunClip.xy / max(abs(sunClip.w), 1.0e-5);
@@ -151,9 +151,6 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     float sunAboveHorizon = smoothstep(-0.03, 0.05, solarElevation);
     float sunVisible = sunInFront * sunAboveHorizon;
 
-    // Analytical substitute for the tutorial scene's large sunset HDRI: broad partly-cloudy masses
-    // modulate sky luminance, while remaining continuous enough that the low-poly image never turns
-    // into high-frequency visual noise.
     float cloudMask = broadCloudField(input.uv) * daylight;
     float cloudSun = exp(-sunDistance * 5.5) * sunVisible;
     float cloudHorizonWarmth = twilight * (0.30 + 0.70 * horizonAmount) + cloudSun * 0.42;
@@ -163,8 +160,6 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     float cloudOpacity = cloudMask * (0.26 + 0.30 * atmosphere);
     sky = lerp(sky, cloudColor * (0.78 + 0.22 * daylight), cloudOpacity);
 
-    // A very soft bright rim near the sun makes the cloud mass read as volume without a volumetric
-    // pass. It is intentionally broad and weak, so it cannot create sparkly or fragmented edges.
     float cloudRim = cloudMask * cloudSun * (1.0 - cloudMask * 0.45);
     sky += lerp(float3(0.28, 0.34, 0.40), twilightWarm, twilight * 0.75) * cloudRim * 0.16;
 
@@ -178,5 +173,5 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
 
     sky += twilightWarm * twilight * horizonVeil * 0.085;
     sky *= 0.82 + 0.30 * daylight + 0.055 * atmosphere;
-    return float4(toneMapAgX(sky), 1.0);
+    return float4(toneMapAgX(sky * kExposureScale), 1.0);
 }
