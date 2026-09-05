@@ -544,53 +544,52 @@ PlanetTerrainSample samplePlanetTerrain(
     // band-limited range structure *inside that authority mask* instead of bilinearly
     // stretching each bake texel into a smooth ramp.  These wavelengths form range mass,
     // sub-ranges and valley shoulders; walking-scale noise remains a separate layer below.
-    // R7 mountain refinement: the R6 screenshot finally produced a recognisable range, but
-    // its shortest band could change almost two vertical kilometres across only a few km and
-    // read as a wall. Keep the tectonic authority, broaden the summit shoulder and reduce the
-    // highest-frequency amplitude so ridges remain dramatic without heightfield cliffs.
+    // R8 mountain hierarchy: restore the strong R6 macro relief, but place almost all of the
+    // vertical range in 12-30 km shoulders and keep the ~6 km band subordinate. This gives a
+    // recognisable massif/valley silhouette without the kilometre-high wall artefacts seen in R6.
     const double rangeRidgeA = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xD6E8FEB86659FD93ULL, w, 220.0, 5));
+        definition.seed ^ 0xD6E8FEB86659FD93ULL, w, 240.0, 5));
     const double rangeRidgeB = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xA5A3564E27F8862FULL, w, 540.0, 4));
+        definition.seed ^ 0xA5A3564E27F8862FULL, w, 520.0, 4));
     const double rangeRidgeC = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0x9E3779B185EBCA87ULL, w, 1050.0, 3));
+        definition.seed ^ 0x9E3779B185EBCA87ULL, w, 980.0, 3));
     const double rangeMask = smooth01(0.05, 0.56, geomorph.mountain) * geomorphLandness;
-    const double ridgeCoreA = std::pow(smooth01(0.24, 0.86, rangeRidgeA), 1.68);
-    const double ridgeCoreB = std::pow(smooth01(0.29, 0.89, rangeRidgeB), 1.62);
-    const double ridgeCoreC = std::pow(smooth01(0.34, 0.93, rangeRidgeC), 1.48);
+    const double ridgeCoreA = std::pow(smooth01(0.26, 0.87, rangeRidgeA), 1.92);
+    const double ridgeCoreB = std::pow(smooth01(0.31, 0.90, rangeRidgeB), 1.84);
+    const double ridgeCoreC = std::pow(smooth01(0.40, 0.94, rangeRidgeC), 1.70);
     const double rangeShoulder = rangeMask * smooth01(
-        0.18, 0.68, std::max(ridgeCoreA, ridgeCoreB * 0.82));
+        0.20, 0.70, std::max(ridgeCoreA, ridgeCoreB * 0.86));
     const double summitCore = rangeMask * std::pow(
-        std::clamp(std::max(ridgeCoreB, ridgeCoreC * 0.86), 0.0, 1.0), 1.82);
+        std::clamp(0.58 * ridgeCoreA + 0.42 * ridgeCoreB, 0.0, 1.0), 2.05);
     const double rangeRelief = rangeMask * (
-        0.132 * (ridgeCoreA - 0.30)
-        + 0.078 * (ridgeCoreB - 0.27)
-        + 0.034 * (ridgeCoreC - 0.23));
+        0.152 * (ridgeCoreA - 0.31)
+        + 0.088 * (ridgeCoreB - 0.28)
+        + 0.018 * (ridgeCoreC - 0.24));
     const double interRangeValley = rangeMask * std::pow(
-        1.0 - std::clamp(std::max(ridgeCoreA, ridgeCoreB * 0.80), 0.0, 1.0), 2.0);
-    elevation += maxLand * (rangeRelief + 0.032 * rangeShoulder + 0.142 * summitCore);
-    elevation -= maxLand * 0.052 * interRangeValley;
+        1.0 - std::clamp(std::max(ridgeCoreA, ridgeCoreB * 0.82), 0.0, 1.0), 2.2);
+    elevation += maxLand * (rangeRelief + 0.040 * rangeShoulder + 0.170 * summitCore);
+    elevation -= maxLand * 0.060 * interRangeValley;
 
-    // R7 plateau refinement: build a broad elevated tableland first, then a narrower flat
-    // interior. The transition belt is deliberately wider than a mountain ridge so the edge
-    // reads as an escarpment/bench rather than another rounded hill or a numerical wall.
+    // R8 plateau hierarchy: use a much broader province mask, a nearly level inner table and
+    // a distinct transition bench. The previous R7 target often selected the legacy plateau mask,
+    // so the exported plateau authority below is now this post-bake terrace only.
     const double globalHighland = geomorphLandness
-        * smooth01(780.0, 2200.0, geomorph.elevationMeters)
-        * (1.0 - smooth01(0.18, 0.62, geomorph.mountain));
+        * smooth01(720.0, 2100.0, geomorph.elevationMeters)
+        * (1.0 - smooth01(0.20, 0.64, geomorph.mountain));
     const double plateauMacro = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x4A7484AA6EA6E483ULL, w, 72.0, 4);
+        definition.seed ^ 0x4A7484AA6EA6E483ULL, w, 46.0, 4);
     const double plateauMeso = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x5CB0A9DCBD41FBD4ULL, w, 190.0, 3);
-    const double plateauSignal = plateauMacro * 0.78 + plateauMeso * 0.22;
-    const double plateauTerrace = globalHighland * smooth01(0.47, 0.60, plateauSignal);
-    const double plateauBody = globalHighland * smooth01(0.56, 0.70, plateauSignal);
-    const double plateauRim = std::clamp(plateauTerrace - plateauBody * 0.72, 0.0, 1.0);
+        definition.seed ^ 0x5CB0A9DCBD41FBD4ULL, w, 118.0, 3);
+    const double plateauSignal = plateauMacro * 0.82 + plateauMeso * 0.18;
+    const double plateauTerrace = globalHighland * smooth01(0.48, 0.61, plateauSignal);
+    const double plateauBody = globalHighland * smooth01(0.60, 0.72, plateauSignal);
+    const double plateauRim = std::clamp(plateauTerrace - plateauBody * 0.78, 0.0, 1.0);
     const double plateauTopNoise = fbmSurface(
-        definition.seed ^ 0x76F988DA831153B5ULL, w, 260.0, 2);
-    const double plateauShelf = 2180.0 + 170.0 * plateauTopNoise;
-    const double plateauBlend = 0.84 * plateauTerrace;
+        definition.seed ^ 0x76F988DA831153B5ULL, w, 210.0, 2);
+    const double plateauShelf = 2320.0 + 90.0 * plateauTopNoise;
+    const double plateauBlend = 0.94 * plateauTerrace;
     elevation = elevation * (1.0 - plateauBlend) + plateauShelf * plateauBlend;
-    elevation += maxLand * (0.014 * plateauRim + 0.010 * plateauBody);
+    elevation += maxLand * (0.030 * plateauRim + 0.006 * plateauBody);
 
     // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while
     // `geomorph.channel` is reconstructed from the actual downhill receiver graph and owns
@@ -611,12 +610,14 @@ PlanetTerrainSample samplePlanetTerrain(
     // the global coastline authority.  Rugged margins expose a short escarpment, while flat
     // margins remain beaches/floodplains.
     const double globalCoastBand = geomorphLandness
-        * (1.0 - smooth01(70.0, 620.0, std::abs(geomorph.elevationMeters)));
+        * (1.0 - smooth01(55.0, 520.0, std::abs(geomorph.elevationMeters)));
     const double globalCoastRugged = globalCoastBand
-        * smooth01(0.44, 0.84, rangeRidgeB);
-    const double coastEscarpment = globalCoastRugged
-        * (0.62 + 0.38 * smooth01(0.34, 0.86, rangeRidgeA));
-    elevation += maxLand * 0.058 * coastEscarpment;
+        * smooth01(0.40, 0.82, rangeRidgeB);
+    const double coastEscarpment = std::pow(globalCoastRugged, 1.22)
+        * (0.64 + 0.36 * smooth01(0.32, 0.84, rangeRidgeA));
+    // R8 rugged coast: a short, localised 0.5-0.8 km escarpment is allowed at selected rocky
+    // margins, while low-energy margins remain beaches/floodplains.
+    elevation += maxLand * 0.086 * coastEscarpment;
 
     // Walking-scale geometry. Frequencies now span tens of kilometres down to a few
     // hundred metres; the new ~4 m innermost clipmap can actually resolve them.
@@ -644,7 +645,7 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.divergence = plates.divergence;
     sample.oceanRidge = oceanRidge;
     sample.mountain = std::max(mountain, geomorph.mountain);
-    sample.plateau = std::max(plateau, plateauTerrace);
+    sample.plateau = plateauTerrace;
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = channelCore;
