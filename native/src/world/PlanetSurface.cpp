@@ -580,16 +580,19 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0x4A7484AA6EA6E483ULL, w, 46.0, 4);
     const double plateauMeso = 0.5 + 0.5 * fbmSurface(
         definition.seed ^ 0x5CB0A9DCBD41FBD4ULL, w, 118.0, 3);
-    const double plateauSignal = plateauMacro * 0.82 + plateauMeso * 0.18;
-    const double plateauTerrace = globalHighland * smooth01(0.48, 0.61, plateauSignal);
-    const double plateauBody = globalHighland * smooth01(0.60, 0.72, plateauSignal);
-    const double plateauRim = std::clamp(plateauTerrace - plateauBody * 0.78, 0.0, 1.0);
+    // R10 tableland profile: a broad bench, a flatter interior and a finite escarpment belt.
+    // Keep C1 transitions (no hard steps), but let the interior converge much more strongly to
+    // one shelf elevation so a plateau is not visually indistinguishable from rolling upland.
+    const double plateauSignal = plateauMacro * 0.84 + plateauMeso * 0.16;
+    const double plateauTerrace = globalHighland * smooth01(0.49, 0.595, plateauSignal);
+    const double plateauBody = globalHighland * smooth01(0.605, 0.695, plateauSignal);
+    const double plateauRim = std::clamp(plateauTerrace - plateauBody * 0.82, 0.0, 1.0);
     const double plateauTopNoise = fbmSurface(
-        definition.seed ^ 0x76F988DA831153B5ULL, w, 210.0, 2);
-    const double plateauShelf = 2580.0 + 75.0 * plateauTopNoise;
-    const double plateauBlend = 0.94 * plateauTerrace;
+        definition.seed ^ 0x76F988DA831153B5ULL, w, 175.0, 2);
+    const double plateauShelf = 2620.0 + 34.0 * plateauTopNoise;
+    const double plateauBlend = std::clamp(0.78 * plateauTerrace + 0.20 * plateauBody, 0.0, 0.975);
     elevation = elevation * (1.0 - plateauBlend) + plateauShelf * plateauBlend;
-    elevation += maxLand * (0.030 * plateauRim + 0.006 * plateauBody);
+    elevation += maxLand * (0.026 * plateauRim + 0.003 * plateauBody);
 
     // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while
     // `geomorph.channel` is reconstructed from the actual downhill receiver graph and owns
@@ -633,7 +636,7 @@ PlanetTerrainSample samplePlanetTerrain(
     // still damped detail with the obsolete pre-bake `plateau` mask, re-wrinkling the flat top.
     const double detailDamp = geomorphLandness
         * (1.0 - 0.72 * std::max(wetland, geomorph.floodplain))
-        * (1.0 - 0.88 * std::clamp(std::max(plateau, plateauTerrace), 0.0, 1.0));
+        * (1.0 - 0.95 * std::clamp(std::max(plateau, plateauTerrace), 0.0, 1.0));
     elevation += maxLand * detailDamp
         * (0.0100 * local + 0.0038 * micro + 0.0062 * fine + 0.0018 * ultra);
 

@@ -131,12 +131,12 @@ struct LocalReliefStats {
             double captureScore = readableDaylight * 1.8;
 
             if (captureMode == "mountain") {
-                if (terrain.mountain < 0.20 || aboveSea < 2600.0 || aboveSea > 5200.0) continue;
-                const LocalReliefStats r = sampleLocalRelief(planet, d, 26000.0);
+                if (terrain.mountain < 0.22 || aboveSea < 3000.0 || aboveSea > 5000.0) continue;
+                const LocalReliefStats r = sampleLocalRelief(planet, d, 30000.0);
                 const double relief = r.maxElevation - r.minElevation;
-                if (relief < 1700.0 || relief > 4300.0) continue;
-                captureScore += terrain.mountain * 4.8 + relief / 360.0
-                    + aboveSea / 4600.0 + terrain.canyon * 0.4;
+                if (relief < 2200.0 || relief > 4800.0 || r.minElevation > 1800.0) continue;
+                captureScore += terrain.mountain * 4.3 + relief / 300.0
+                    + std::max(0.0, 1800.0 - r.minElevation) / 600.0;
             } else if (captureMode == "river") {
                 if (terrain.river < 0.22 || aboveSea < 240.0 || aboveSea > 1500.0) continue;
                 const LocalReliefStats r = sampleLocalRelief(planet, d, 7000.0);
@@ -145,22 +145,24 @@ struct LocalReliefStats {
                 captureScore += terrain.river * 7.0 + valleyDepth / 100.0
                     + terrain.canyon * 1.4;
             } else if (captureMode == "coast") {
-                if (aboveSea < 320.0 || aboveSea > 1350.0 || terrain.coastalCliff < 0.26) continue;
-                const LocalReliefStats r = sampleLocalRelief(planet, d, 10000.0);
+                if (aboveSea < 120.0 || aboveSea > 680.0 || terrain.coastalCliff < 0.20) continue;
+                const LocalReliefStats r = sampleLocalRelief(planet, d, 7000.0);
                 const double relief = r.maxElevation - r.minElevation;
-                if (r.minElevation > -8.0 || relief < 560.0) continue;
-                captureScore += terrain.coastalCliff * 7.6 + relief / 118.0
-                    + aboveSea / 720.0;
+                if (r.minElevation > -6.0 || relief < 340.0) continue;
+                const double cliffHeightPreference = 1.0
+                    - std::clamp(std::abs(aboveSea - 360.0) / 360.0, 0.0, 1.0);
+                captureScore += terrain.coastalCliff * 6.8 + relief / 105.0
+                    + cliffHeightPreference * 3.5;
             } else if (captureMode == "highland") {
-                if (terrain.plateau < 0.40 || terrain.plateau > 0.92
-                    || aboveSea < 1900.0 || aboveSea > 3000.0) continue;
-                const LocalReliefStats r = sampleLocalRelief(planet, d, 26000.0);
+                if (terrain.plateau < 0.48 || terrain.plateau > 0.88
+                    || aboveSea < 2150.0 || aboveSea > 2950.0) continue;
+                const LocalReliefStats r = sampleLocalRelief(planet, d, 18000.0);
                 const double relief = r.maxElevation - r.minElevation;
-                if (relief < 650.0 || relief > 2500.0) continue;
+                if (relief < 520.0 || relief > 2200.0 || r.minElevation > 2050.0) continue;
                 const double edgePreference = 1.0
-                    - std::clamp(std::abs(terrain.plateau - 0.68) / 0.28, 0.0, 1.0);
-                captureScore += edgePreference * 5.0 + terrain.plateau * 3.2
-                    + std::min(relief, 2200.0) / 620.0 - terrain.mountain * 1.8;
+                    - std::clamp(std::abs(terrain.plateau - 0.66) / 0.22, 0.0, 1.0);
+                captureScore += edgePreference * 6.0 + terrain.plateau * 2.8
+                    + std::min(relief, 1800.0) / 500.0 - terrain.mountain * 2.2;
             }
 
             if (captureScore > bestScore) {
@@ -206,13 +208,13 @@ struct LocalReliefStats {
     const glm::dvec3 target = safeNormalize(targetDirectionInput);
     const glm::dvec3 east = stableTangent(target);
     const glm::dvec3 north = safeNormalize(glm::cross(target, east), {0.0, 0.0, 1.0});
-    // R9 capture visibility: the R8 geometry had enough measured relief, but 20-40 km
-    // standoff plus atmosphere compressed it into the horizon. Use close oblique/aerial evidence,
-    // keep river cameras beside the channel, and put the coast camera safely above open water.
-    const std::array<double, 5> mountainRadii{7000.0, 9000.0, 12000.0, 15000.0, 19000.0};
-    const std::array<double, 5> highlandRadii{12000.0, 18000.0, 26000.0, 36000.0, 50000.0};
-    const std::array<double, 5> coastRadii{2200.0, 3000.0, 4200.0, 5600.0, 7600.0};
-    const std::array<double, 5> riverRadii{500.0, 800.0, 1200.0, 1800.0, 2600.0};
+    // R10 evidence geometry: choose baselines that expose vertical relief. Mountain cameras
+    // search for a genuinely lower valley; highland cameras sit below the bench edge; coast
+    // cameras stay offshore but close enough that the escarpment occupies the frame.
+    const std::array<double, 6> mountainRadii{10000.0, 13000.0, 16000.0, 19000.0, 23000.0, 28000.0};
+    const std::array<double, 6> highlandRadii{5000.0, 7000.0, 9000.0, 12000.0, 15000.0, 19000.0};
+    const std::array<double, 6> coastRadii{1200.0, 1700.0, 2300.0, 3000.0, 3800.0, 4800.0};
+    const std::array<double, 6> riverRadii{500.0, 800.0, 1200.0, 1800.0, 2600.0, 3400.0};
     const auto& radii = mode == "mountain" ? mountainRadii
         : (mode == "highland" ? highlandRadii : (mode == "coast" ? coastRadii : riverRadii));
     const double targetElevation = vf::planetHeight(planet, target);
@@ -231,26 +233,28 @@ struct LocalReliefStats {
             double score = 0.0;
             if (mode == "coast") {
                 if (!terrain.submerged(planet)) continue;
-                score = std::abs(terrain.elevationMeters + 18.0) * 0.08
-                    + std::abs(standOffMeters - 3200.0) * 0.026;
+                score = std::abs(terrain.elevationMeters + 12.0) * 0.10
+                    + std::abs(standOffMeters - 2300.0) * 0.034;
             } else if (mode == "river") {
                 if (terrain.submerged(planet) || terrain.river > 0.10 || terrain.elevationMeters < 120.0) continue;
                 score = std::abs(terrain.elevationMeters - targetElevation) * 0.12
                     + terrain.river * 2600.0
                     + std::abs(standOffMeters - 1200.0) * 0.042;
             } else if (mode == "mountain") {
-                if (terrain.submerged(planet)) continue;
+                if (terrain.submerged(planet) || terrain.elevationMeters > 1750.0) continue;
                 const double drop = targetElevation - terrain.elevationMeters;
-                score = std::abs(drop - 1450.0) * 0.68
-                    + terrain.mountain * 720.0
-                    + std::abs(standOffMeters - 11000.0) * 0.032;
+                if (drop < 1500.0) continue;
+                score = std::abs(drop - 2300.0) * 0.48
+                    + terrain.mountain * 850.0
+                    + std::abs(standOffMeters - 17000.0) * 0.026;
             } else {
-                if (terrain.submerged(planet)) continue;
+                if (terrain.submerged(planet) || terrain.elevationMeters > 2050.0) continue;
                 const double drop = targetElevation - terrain.elevationMeters;
-                score = std::abs(drop - 1150.0) * 0.70
-                    + terrain.mountain * 900.0
-                    + terrain.plateau * 160.0
-                    + std::abs(standOffMeters - 26000.0) * 0.020;
+                if (drop < 500.0) continue;
+                score = std::abs(drop - 900.0) * 0.60
+                    + terrain.mountain * 980.0
+                    + terrain.plateau * 520.0
+                    + std::abs(standOffMeters - 10000.0) * 0.032;
             }
             if (score < bestScore) {
                 bestScore = score;
@@ -260,8 +264,8 @@ struct LocalReliefStats {
         }
     }
     if (!foundVantage || glm::dot(best, target) > 0.9999995) {
-        const double fallbackMeters = mode == "coast" ? 3200.0
-            : (mode == "river" ? 1200.0 : (mode == "highland" ? 26000.0 : 11000.0));
+        const double fallbackMeters = mode == "coast" ? 2300.0
+            : (mode == "river" ? 1200.0 : (mode == "highland" ? 10000.0 : 17000.0));
         const double angular = fallbackMeters / std::max(1.0, planet.radius);
         best = safeNormalize(target + east * angular, target);
     }
@@ -385,11 +389,11 @@ int main() {
         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
         if (!captureMode.empty()) {
-            const double targetLift = captureMode == "mountain" ? 120.0
-                : (captureMode == "highland" ? 45.0 : (captureMode == "coast" ? 100.0 : 18.0));
-            const double cameraLift = captureMode == "mountain" ? 520.0
-                : (captureMode == "highland" ? 520.0
-                : (captureMode == "coast" ? 340.0 : 210.0));
+            const double targetLift = captureMode == "mountain" ? 180.0
+                : (captureMode == "highland" ? 80.0 : (captureMode == "coast" ? 90.0 : 18.0));
+            const double cameraLift = captureMode == "mountain" ? 180.0
+                : (captureMode == "highland" ? 135.0
+                : (captureMode == "coast" ? 115.0 : 210.0));
             const glm::dvec3 targetPlanet = featureDirection
                 * (vf::planetSurfaceRadius(planet, featureDirection) + targetLift);
             const double localSurface = vf::planetSurfaceRadius(planet, spawnDirection);
