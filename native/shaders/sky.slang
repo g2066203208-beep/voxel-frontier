@@ -79,11 +79,10 @@ float3 agxContrastApprox(float3 x)
         - 0.00232;
 }
 
-float3 agxPunchyLook(float3 v)
+float3 agxStylizedLook(float3 v)
 {
     float luma = dot(v, float3(0.2126, 0.7152, 0.0722));
-    v = pow(max(v, 0.0), 1.24);
-    return float3(luma, luma, luma) + 1.20 * (v - float3(luma, luma, luma));
+    return float3(luma, luma, luma) + 1.06 * (v - float3(luma, luma, luma));
 }
 
 float3 toneMapAgX(float3 color)
@@ -94,7 +93,7 @@ float3 toneMapAgX(float3 color)
     v = clamp(log2(max(v, 1.0e-10)), minEv, maxEv);
     v = (v - minEv) / (maxEv - minEv);
     v = agxContrastApprox(v);
-    v = agxPunchyLook(v);
+    v = agxStylizedLook(v);
     v = agxOutset(v);
     v = pow(max(v, 0.0), 2.2);
     return saturate(v);
