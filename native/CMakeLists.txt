@@ -195,7 +195,7 @@ endif()
 if(VF_BUILD_TESTS)
     enable_testing()
     foreach(test_name IN ITEMS
-        planet_physics camera_input character_controller collision_geometry convex_hull gjk_epa contact_solver mechanics
+        planet_physics terrain_landforms camera_input character_controller collision_geometry convex_hull gjk_epa contact_solver mechanics
         physics_mesh celestial_system celestial_physics_frame celestial_surface_frames interplanetary_flight gameplay_interaction
         sparse_universe_catalog spectral_optics electromagnetic_radiation material_physics gas_volume rope_xpbd structural_damage)
         string(REPLACE "_" ";" test_words "${test_name}")
@@ -204,6 +204,9 @@ if(VF_BUILD_TESTS)
     add_executable(vf_planet_physics_tests tests/PlanetPhysicsTests.cpp)
     target_link_libraries(vf_planet_physics_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_planet_physics_tests COMMAND vf_planet_physics_tests)
+    add_executable(vf_terrain_landform_tests tests/TerrainLandformTests.cpp)
+    target_link_libraries(vf_terrain_landform_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_terrain_landform_tests COMMAND vf_terrain_landform_tests)
     add_executable(vf_camera_input_tests tests/CameraInputTests.cpp)
     target_link_libraries(vf_camera_input_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_camera_input_tests COMMAND vf_camera_input_tests)
