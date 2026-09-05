@@ -19,17 +19,20 @@ struct SurfaceRenderFrame {
 };
 
 struct ProceduralEcologySettings {
-    double treeRadiusMeters{2600.0};
-    double treeCellMeters{88.0};
-    std::uint32_t maxTrees{420U};
+    // Dense enough to read as a forest from walking height, but bounded so every asynchronous
+    // terrain rebuild has a predictable CPU/GPU budget. Stable grid cells keep the same props after
+    // streaming instead of respawning a new random forest around the camera.
+    double treeRadiusMeters{2200.0};
+    double treeCellMeters{58.0};
+    std::uint32_t maxTrees{760U};
 
-    double rockRadiusMeters{1900.0};
-    double rockCellMeters{64.0};
-    std::uint32_t maxRocks{300U};
+    double rockRadiusMeters{1500.0};
+    double rockCellMeters{54.0};
+    std::uint32_t maxRocks{360U};
 
-    double grassRadiusMeters{520.0};
-    double grassCellMeters{18.0};
-    std::uint32_t maxGrassClumps{900U};
+    double grassRadiusMeters{620.0};
+    double grassCellMeters{14.0};
+    std::uint32_t maxGrassClumps{1500U};
 };
 
 // Builds only near-field visual ecology. Placement is derived from stable render-frame grid cells and
