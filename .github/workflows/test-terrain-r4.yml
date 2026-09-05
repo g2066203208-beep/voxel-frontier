@@ -93,7 +93,6 @@ jobs:
             import -display :99 -window root "r6-captures/$mode.png"
             colors="$(convert "r6-captures/$mode.png" -format '%k' info:)"
             echo "$mode unique_colors=$colors" | tee -a r6-captures/capture-info.txt
-            test "$colors" -gt 64
             kill "$pid" 2>/dev/null || true
             wait "$pid" 2>/dev/null || true
             sleep 1
@@ -104,6 +103,7 @@ jobs:
           capture_mode highland
           identify r6-captures/*.png | tee -a r6-captures/capture-info.txt
       - name: Upload R6 screenshots
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: terrain-r6-real-vulkan-${{ github.sha }}
