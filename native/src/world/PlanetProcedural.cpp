@@ -314,8 +314,14 @@ void appendLocalMesh(
             yaw,
             leanEast,
             leanNorth));
+        const double customLengthSquared = glm::dot(
+            local.vertices[i].shadingNormal,
+            local.vertices[i].shadingNormal);
+        const glm::dvec3 sourceNormal = customLengthSquared > 1.0e-16
+            ? local.vertices[i].shadingNormal / std::sqrt(customLengthSquared)
+            : localNormals[i];
         vertex.normal = glm::vec3(glm::normalize(transformLocalVector(
-            localNormals[i],
+            sourceNormal,
             frame,
             yaw,
             leanEast,
