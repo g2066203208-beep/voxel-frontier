@@ -84,6 +84,20 @@ PlanetCamera::PlanetCamera(
     initializeViewAttitude(startDirection);
 }
 
+void PlanetCamera::setViewDirection(
+    const glm::dvec3& forwardInput,
+    const glm::dvec3& upHintInput) noexcept {
+    viewForward_ = safeNormalize(forwardInput, viewForward_);
+    const glm::dvec3 upHint = safeNormalize(upHintInput, currentSurfaceUpWorld());
+    glm::dvec3 right = glm::cross(viewForward_, upHint);
+    if (glm::dot(right, right) <= 1.0e-12) right = stablePerpendicular(viewForward_);
+    right = safeNormalize(right, stablePerpendicular(viewForward_));
+    viewUp_ = safeNormalize(glm::cross(right, viewForward_), upHint);
+    transportedSurfaceUp_ = upHint;
+    viewAttitudeValid_ = true;
+    surfaceTransportValid_ = true;
+}
+
 const CelestialBody* PlanetCamera::physicsFrameBody() const noexcept {
     if (!inPhysicsFrame_ || celestialSystem_ == nullptr || physicsFrameBodyId_ == 0U) return nullptr;
     return celestialSystem_->body(physicsFrameBodyId_);

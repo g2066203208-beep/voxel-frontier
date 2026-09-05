@@ -33,6 +33,10 @@ public:
 
     void update(const PlanetMovementInput& input, double dt);
 
+    void setViewDirection(
+        const glm::dvec3& forward,
+        const glm::dvec3& upHint) noexcept;
+
     void setExternalWorldState(
         const glm::dvec3& worldPosition,
         const glm::dvec3& worldVelocity,

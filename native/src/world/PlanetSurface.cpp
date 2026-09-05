@@ -539,6 +539,42 @@ PlanetTerrainSample samplePlanetTerrain(
     elevation = geomorph.elevationMeters;
     const double geomorphLandness = smooth01(-80.0, 220.0, geomorph.elevationMeters);
 
+    // The global 512x256 process bake owns where mountain belts and drainage basins live,
+    // but on an Earth-radius sphere one bake texel spans tens of kilometres.  Reconstruct
+    // band-limited range structure *inside that authority mask* instead of bilinearly
+    // stretching each bake texel into a smooth ramp.  These wavelengths form range mass,
+    // sub-ranges and valley shoulders; walking-scale noise remains a separate layer below.
+    const double rangeRidgeA = 1.0 - std::abs(fbmSurface(
+        definition.seed ^ 0xD6E8FEB86659FD93ULL, w, 34.0, 5));
+    const double rangeRidgeB = 1.0 - std::abs(fbmSurface(
+        definition.seed ^ 0xA5A3564E27F8862FULL, w, 82.0, 4));
+    const double rangeRidgeC = 1.0 - std::abs(fbmSurface(
+        definition.seed ^ 0x9E3779B185EBCA87ULL, w, 210.0, 3));
+    const double rangeMask = smooth01(0.10, 0.72, geomorph.mountain) * geomorphLandness;
+    const double rangeMass = rangeMask * (0.32 + 0.68 * smooth01(0.30, 0.82, rangeRidgeA));
+    const double rangeShoulders = rangeMask * smooth01(0.36, 0.86, rangeRidgeB);
+    const double rangeFaces = rangeMask * smooth01(0.42, 0.90, rangeRidgeC);
+    elevation += maxLand * (0.075 * rangeMask + 0.145 * rangeMass
+        + 0.085 * rangeShoulders + 0.040 * rangeFaces);
+
+    // Hydrology remains the placement authority for valleys.  A narrow deterministic
+    // sub-channel only sharpens the coarse baked river corridor; it cannot create a river
+    // where the discharge bake has none.
+    const double channelRefineNoise = 1.0 - std::abs(fbmSurface(
+        definition.seed ^ 0xC2B2AE3D27D4EB4FULL, w, 260.0, 3));
+    const double channelCore = geomorph.river
+        * smooth01(0.58, 0.91, channelRefineNoise) * geomorphLandness;
+    elevation -= maxLand * (0.030 * geomorph.incision + 0.045 * channelCore);
+
+    // Give hydrologically low coastal margins a readable land/sea break without changing
+    // the global coastline authority.  Rugged margins expose a short escarpment, while flat
+    // margins remain beaches/floodplains.
+    const double globalCoastBand = geomorphLandness
+        * (1.0 - smooth01(90.0, 680.0, std::abs(geomorph.elevationMeters)));
+    const double globalCoastRugged = globalCoastBand
+        * smooth01(0.46, 0.86, rangeRidgeB);
+    elevation += maxLand * 0.032 * globalCoastRugged;
+
     // Walking-scale geometry. Frequencies now span tens of kilometres down to a few
     // hundred metres; the new ~4 m innermost clipmap can actually resolve them.
     const double local = fbmSurface(
@@ -572,7 +608,7 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.hills = hills;
     sample.canyon = std::max(canyon, geomorph.incision);
     sample.dunes = dunes;
-    sample.coastalCliff = coastalCliff;
+    sample.coastalCliff = std::max(coastalCliff, globalCoastRugged);
     sample.wetland = std::max(wetland, geomorph.floodplain);
     sample.glacier = glacier;
     sample.aridity = aridity;

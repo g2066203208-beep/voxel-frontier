@@ -88,7 +88,11 @@ constexpr double kPi = 3.1415926535897932384626433832795;
         const double aboveSea = terrain.elevationMeters - planet.seaLevelElevationMeters;
         if (!captureMode.empty()) {
             if (terrain.submerged(planet) || aboveSea < 15.0) continue;
-            double captureScore = -std::numeric_limits<double>::infinity();
+            const double sunElevation = glm::dot(d, sunDirection);
+            if (sunElevation < 0.42 || sunElevation > 0.94) continue;
+            const double readableDaylight = 1.0
+                - std::clamp(std::abs(sunElevation - 0.66) / 0.30, 0.0, 1.0);
+            double captureScore = readableDaylight * 1.65;
             if (captureMode == "mountain")
                 captureScore = terrain.mountain * 5.0 + aboveSea / 2200.0 + terrain.canyon * 0.8;
             else if (captureMode == "river")
@@ -131,6 +135,41 @@ constexpr double kPi = 3.1415926535897932384626433832795;
         }
     }
     return safeNormalize(best, preferred);
+}
+
+[[nodiscard]] glm::dvec3 findCaptureVantageDirection(
+    const vf::PlanetDefinition& planet,
+    const glm::dvec3& targetDirectionInput,
+    std::string_view mode) {
+    const glm::dvec3 target = safeNormalize(targetDirectionInput);
+    const glm::dvec3 east = stableTangent(target);
+    const glm::dvec3 north = safeNormalize(glm::cross(target, east), {0.0, 0.0, 1.0});
+    double standOffMeters = 6500.0;
+    if (mode == "mountain") standOffMeters = 14000.0;
+    else if (mode == "river") standOffMeters = 4200.0;
+    else if (mode == "coast") standOffMeters = 6500.0;
+    else if (mode == "highland") standOffMeters = 12000.0;
+    const double angular = standOffMeters / std::max(1.0, planet.radius);
+
+    glm::dvec3 best = target;
+    double bestScore = std::numeric_limits<double>::infinity();
+    for (int i = 0; i < 24; ++i) {
+        const double a = 2.0 * kPi * static_cast<double>(i) / 24.0;
+        const glm::dvec3 d = safeNormalize(
+            target + east * (std::cos(a) * angular) + north * (std::sin(a) * angular), target);
+        const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, d);
+        if (terrain.submerged(planet) && mode != "coast") continue;
+        const double targetElevation = vf::planetHeight(planet, target);
+        const double heightPenalty = terrain.elevationMeters - targetElevation;
+        const double wetPenalty = terrain.submerged(planet) ? 800.0 : 0.0;
+        const double ruggedPenalty = terrain.mountain * 420.0 + terrain.canyon * 180.0;
+        const double score = heightPenalty + wetPenalty + ruggedPenalty;
+        if (score < bestScore) {
+            bestScore = score;
+            best = d;
+        }
+    }
+    return safeNormalize(best, target);
 }
 
 void appendMesh(vf::PlanetMesh& destination, const vf::PlanetMesh& source) {
@@ -240,9 +279,27 @@ int main() {
 
         const glm::dvec3 initialSunDirectionPlanet = safeNormalize(
             sun.position - aster.position, {1.0, 0.0, 0.0});
-        const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet, initialSunDirectionPlanet);
+        const glm::dvec3 featureDirection = findPlayableSpawnDirection(planet, initialSunDirectionPlanet);
+        const char* captureEnv = std::getenv("VF_CAPTURE_LANDFORM");
+        const std::string_view captureMode = captureEnv != nullptr
+            ? std::string_view{captureEnv} : std::string_view{};
+        const glm::dvec3 spawnDirection = captureMode.empty()
+            ? featureDirection
+            : findCaptureVantageDirection(planet, featureDirection, captureMode);
         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
+        if (!captureMode.empty()) {
+            const glm::dvec3 targetPlanet = featureDirection
+                * (vf::planetSurfaceRadius(planet, featureDirection)
+                    + (captureMode == "mountain" || captureMode == "highland" ? 650.0 : 120.0));
+            const glm::dvec3 cameraPlanet = spawnDirection
+                * (vf::planetSurfaceRadius(planet, spawnDirection) + 1.75);
+            const glm::dvec3 targetWorld = aster.position + aster.orientation * targetPlanet;
+            const glm::dvec3 cameraWorld = aster.position + aster.orientation * cameraPlanet;
+            camera.setViewDirection(
+                targetWorld - cameraWorld,
+                safeNormalize(aster.orientation * spawnDirection));
+        }
         std::cout << "Spawn land elevation: " << std::fixed << std::setprecision(1)
                   << spawnTerrain.elevationMeters << " m\n";
         const vf::CelestialBody* initialAster = celestial.body(asterId);
