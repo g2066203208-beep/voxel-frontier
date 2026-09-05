@@ -170,8 +170,6 @@ struct PlateSeed {
 }
 
 [[nodiscard]] glm::dvec3 plateVelocityAt(const PlateSeed& plate, const glm::dvec3& direction) noexcept {
-    // A rigid tectonic plate moves on the sphere as rotation around an Euler pole. Magnitudes here
-    // are normalized gameplay units; only relative sign/direction is used for boundary morphology.
     return glm::cross(plate.eulerPole, direction) * plate.speed;
 }
 
@@ -204,8 +202,6 @@ struct PlateField {
     }
 
     const double scoreGap = std::max(0.0, bestScore - secondScore);
-    // On a spherical Voronoi plate map, equal scores identify a cell boundary. A finite smooth band
-    // turns that topological boundary into a game-scale deformation zone rather than a razor line.
     const double boundary = 1.0 - smooth01(0.004, 0.060, scoreGap);
 
     glm::dvec3 boundaryNormal = second.center - best.center;
@@ -296,7 +292,6 @@ void appendOceanFace(
             vertex.position = glm::vec3(center + direction * radius);
             vertex.normal = glm::vec3(direction);
             vertex.color = {0.020F, 0.205F, 0.315F};
-            // Negative metallic tags the shared transparent path as water rather than glass.
             vertex.material = {-1.0F, 0.055F, 0.72F, 0.0F};
             mesh.vertices.push_back(vertex);
         }
@@ -353,7 +348,7 @@ PlanetTerrainSample samplePlanetTerrain(
     const double macro = (
         std::sin(w.x * 2.05 + p0) * 0.45
         + std::sin(w.y * 2.60 + w.z * 1.35 + p1) * 0.30
-        + std::cos(w.z * 2.25 - w.x * 1.45 + p2) * 0.25) / 1.0;
+        + std::cos(w.z * 2.25 - w.x * 1.45 + p2) * 0.25);
 
     const double primaryCrust = plates.primary.continental ? 0.43 : -0.48;
     const double secondaryCrust = plates.secondary.continental ? 0.43 : -0.48;
@@ -367,8 +362,6 @@ PlanetTerrainSample samplePlanetTerrain(
     const double maxLand = std::max(0.0, definition.maxElevation);
     const double maxOcean = resolvedOceanDepth(definition);
 
-    // Continental crust rides higher; oceanic crust forms deep basins. The smooth transition around
-    // sea level produces a continental shelf/slope instead of a vertical procedural coastline.
     const double deepOcean = smooth01(0.08, 0.62, -continentalness);
     const double shelfZone = 1.0 - smooth01(0.02, 0.34, std::abs(continentalness));
     double elevation = 0.0;
@@ -376,9 +369,6 @@ PlanetTerrainSample samplePlanetTerrain(
     elevation += maxLand * (0.035 + 0.11 * std::pow(landness, 1.35)) * landness;
     elevation += maxOcean * 0.12 * shelfZone * oceanness;
 
-    // Divergent oceanic boundaries create elevated mid-ocean ridges; convergent boundaries create
-    // mountain belts on buoyant crust and trenches on subducting oceanic crust. These are the main
-    // first-order relations from plate tectonics, compressed into a deterministic game field.
     const double oceanRidge = plates.divergence * oceanness;
     elevation += maxOcean * 0.38 * oceanRidge;
 
@@ -398,8 +388,6 @@ PlanetTerrainSample samplePlanetTerrain(
         1.30);
     elevation -= maxOcean * 0.42 * trench;
 
-    // Broad interior uplift gives plateau provinces without turning every convergent boundary into a
-    // needle ridge. Keeping this away from active boundaries also makes basins and plains readable.
     const double plateauField = 0.5 + 0.5
         * std::sin(w.x * 3.4 - w.z * 2.5 + p5)
         * std::cos(w.y * 3.0 + w.x * 1.2 + p2);
@@ -407,8 +395,6 @@ PlanetTerrainSample samplePlanetTerrain(
         * landness * (1.0 - 0.72 * plates.boundary) * (1.0 - 0.45 * mountain);
     elevation += maxLand * 0.27 * plateau;
 
-    // Hotspots plus convergent arcs produce volcanic topography. Hotspot positions are seeded, but
-    // once the planet seed is fixed the result is completely deterministic.
     double hotspotVolcano = 0.0;
     for (std::uint64_t i = 0; i < 9U; ++i) {
         const glm::dvec3 hotspot = seededDirection(definition.seed, 2000U + i * 7U);
@@ -426,9 +412,9 @@ PlanetTerrainSample samplePlanetTerrain(
         1.0);
     elevation += maxLand * 0.36 * volcano;
 
-    // Cheap authoritative drainage proxy. Visible close-range patches can later refine this with
-    // local DEM flow accumulation, but this low-cost valley field keeps collision/physics height
-    // deterministic from (seed, position) and biases channels away from active orogenic cores.
+    // Hydrology first cuts broad valleys. Narrower canyon and wetland masks below are subordinate
+    // geomorphology passes, following WorldEngine's useful ordering of tectonics -> erosion ->
+    // hydrology -> biome/surface classification.
     const double basinA = 1.0 - std::abs(
         std::sin(w.x * 19.0 + w.y * 9.0 - w.z * 15.0 + p7));
     const double basinB = 1.0 - std::abs(
@@ -441,28 +427,126 @@ PlanetTerrainSample samplePlanetTerrain(
         * smooth01(0.0, 0.22, continentalness);
     elevation -= maxLand * 0.035 * river;
 
-    // Seamless 3D fBm is evaluated on the normalized sphere, so there are no longitude/cube-face
-    // seams. Regional and local bands are deliberately strong enough to create readable rolling
-    // country at human scale, while still remaining far below the tectonic mountain/trench signal.
-    // This gives the walking camera real silhouettes for trees, rocks and atmospheric layering
-    // instead of a visually flat continental interior.
+    // Seamless 3-D sphere noise. Frequencies form nested geomorphic scales rather than one generic
+    // roughness layer: continental hills, local relief, rock-scale variation and fine material grain.
+    // The ridged/cellular-like masks reuse the mature compositional ideas exposed by FastNoiseLite
+    // while retaining Voxel Frontier's own deterministic spherical value-noise implementation.
+    const double climate = fbmSurface(definition.seed ^ 0x510E527FADE682D1ULL, w, 26.0, 4);
     const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3);
+    const double hillNoise = fbmSurface(definition.seed ^ 0x1F83D9ABFB41BD6BULL, w, 1350.0, 3);
     const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
+    const double canyonNoise = fbmSurface(definition.seed ^ 0x5BE0CD19137E2179ULL, w, 8200.0, 3);
+    const double duneNoise = fbmSurface(definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 26000.0, 2);
     const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
     const double fine = fbmSurface(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2);
+
+    const double latitude = std::abs(d.y);
+    const double coastProximity = 1.0 - smooth01(0.025, 0.30, std::abs(continentalness));
+    const double interior = smooth01(0.10, 0.48, continentalness);
+    const double subtropicalBand = smooth01(0.10, 0.30, latitude)
+        * (1.0 - smooth01(0.56, 0.78, latitude));
+    const double climateDry = 0.5 + 0.5 * climate;
+    const double aridity = std::clamp(
+        subtropicalBand * (0.32 + 0.68 * climateDry)
+            * (0.58 + 0.42 * interior)
+            * (1.0 - 0.72 * river),
+        0.0,
+        1.0);
+    const double moisture = std::clamp(
+        0.42 + (0.5 - climate) * 0.34
+            + coastProximity * 0.22
+            + river * 0.58
+            - aridity * 0.62,
+        0.0,
+        1.0);
+
+    const double hillField = 0.5 + 0.5 * hillNoise;
+    const double hills = smooth01(0.38, 0.77, hillField)
+        * landness
+        * (1.0 - 0.72 * mountain)
+        * (1.0 - 0.36 * plateau)
+        * (1.0 - 0.45 * coastProximity);
+
+    // Coastal cliffs require a coast plus some local/tectonic ruggedness. This keeps beaches and
+    // cliffs as different landforms rather than making every shoreline vertical.
+    const double coastalRuggedness = std::clamp(
+        0.20 + plates.boundary * 0.48 + std::abs(local) * 0.78,
+        0.0,
+        1.0);
+    const double coastalCliff = coastProximity * landness
+        * smooth01(0.42, 0.82, coastalRuggedness)
+        * (1.0 - 0.78 * river);
+
+    // A narrow ridged mask cuts canyon networks into dry elevated interiors. It is intentionally
+    // subordinate to the existing river field: broad drainage decides where valleys are; this adds
+    // the steep incised morphology visible at human scale.
+    const double canyonRidge = 1.0 - std::abs(canyonNoise);
+    const double elevatedInterior = std::clamp(
+        0.30 + 0.55 * plateau + 0.35 * hills + 0.25 * interior,
+        0.0,
+        1.0);
+    const double canyon = smooth01(0.76, 0.965, canyonRidge)
+        * aridity
+        * landness
+        * elevatedInterior
+        * (1.0 - 0.48 * mountain)
+        * (1.0 - 0.55 * river);
+
+    // Dunes are low-relief and restricted to dry, non-mountainous low/intermediate land. The field
+    // varies smoothly so it reads as dune country rather than high-frequency terrain noise.
+    const double duneRegion = smooth01(0.46, 0.78, 0.5 + 0.5 * climate)
+        * aridity
+        * landness
+        * (1.0 - 0.88 * mountain)
+        * (1.0 - 0.72 * plateau)
+        * (1.0 - 0.72 * canyon)
+        * (1.0 - 0.62 * coastProximity);
+    const double dunes = std::clamp(duneRegion, 0.0, 1.0);
+
+    const double provisionalAboveSea = std::max(0.0, elevation);
+    const double lowland = 1.0 - smooth01(90.0, 420.0, provisionalAboveSea);
+    const double wetland = std::clamp(
+        landness * lowland * (1.0 - aridity)
+            * (0.46 * moisture + 0.72 * river + 0.25 * coastProximity),
+        0.0,
+        1.0);
+
+    const double polar = smooth01(0.70, 0.91, latitude);
+    const double highIce = smooth01(2500.0, 4700.0, provisionalAboveSea)
+        * smooth01(0.36, 0.78, latitude);
+    const double glacier = std::clamp(
+        landness * std::max(polar * (0.45 + 0.55 * mountain), highIce)
+            * (1.0 - 0.50 * volcano),
+        0.0,
+        1.0);
+
     const double ridged = 1.0 - std::abs(local);
     const double protectedDrainage = 1.0 - 0.74 * river;
+    const double iceSmoothing = 1.0 - 0.62 * glacier;
     const double landRelief = (
         regional * (0.0085 + 0.0090 * mountain + 0.0048 * plateau)
-        + local * (0.0031 + 0.0050 * mountain)
+        + hillNoise * (0.0042 * hills)
+        + local * (0.0031 + 0.0050 * mountain + 0.0014 * coastalCliff)
         + micro * (0.00115 + 0.00060 * mountain)
         + fine * 0.00030
         + (ridged - 0.5) * 0.0024 * mountain)
-        * protectedDrainage;
+        * protectedDrainage * iceSmoothing;
     elevation += maxLand * landRelief * landness;
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
+
+    // Distinct terrain-form displacement. The amplitudes stay well below tectonic relief but are
+    // large enough to affect silhouettes AND authoritative collision, not merely shader color.
+    elevation += maxLand * 0.012 * coastalCliff * (0.35 + 0.65 * std::max(0.0, local));
+    elevation -= maxLand * 0.020 * canyon * (0.55 + 0.45 * canyonRidge);
+    elevation += maxLand * 0.0016 * dunes * duneNoise;
+    if (wetland > 0.0 && elevation > 45.0) {
+        elevation -= (elevation - 45.0) * std::clamp(wetland * 0.52, 0.0, 0.52);
+    }
+    elevation += maxLand * 0.0035 * glacier * (0.55 + 0.45 * regional);
+
     const double surfaceDetail = std::clamp(
-        0.42 * regional + 0.28 * local + 0.20 * micro + 0.10 * fine,
+        0.32 * regional + 0.22 * hillNoise + 0.20 * local
+            + 0.14 * micro + 0.07 * fine + 0.05 * duneNoise,
         -1.0,
         1.0);
 
@@ -485,6 +569,14 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = river;
+    sample.hills = hills;
+    sample.canyon = canyon;
+    sample.dunes = dunes;
+    sample.coastalCliff = coastalCliff;
+    sample.wetland = wetland;
+    sample.glacier = glacier;
+    sample.aridity = aridity;
+    sample.moisture = moisture;
     sample.surfaceDetail = surfaceDetail;
     sample.oceanDepthMeters = std::max(
         0.0,
@@ -524,22 +616,36 @@ glm::vec3 planetTerrainColor(
     const double aboveSea = sample.elevationMeters - definition.seaLevelElevationMeters;
     const double highland = smooth01(900.0, 3100.0, aboveSea);
     const double alpine = smooth01(3000.0, 4700.0, aboveSea);
-    const double beach = 1.0 - smooth01(18.0, 95.0, aboveSea);
+    const double beach = (1.0 - smooth01(18.0, 95.0, aboveSea))
+        * (1.0 - 0.92 * sample.coastalCliff);
     const double rockiness = std::clamp(
-        0.72 * sample.mountain + 0.34 * sample.volcano + 0.24 * highland,
+        0.72 * sample.mountain + 0.34 * sample.volcano + 0.24 * highland
+            + 0.58 * sample.coastalCliff + 0.38 * sample.canyon,
         0.0,
         1.0);
 
     const glm::vec3 meadowA{0.145F, 0.325F, 0.105F};
     const glm::vec3 meadowB{0.265F, 0.425F, 0.155F};
     glm::vec3 color = mix3(meadowA, meadowB, 0.5 + 0.5 * sample.surfaceDetail);
+
+    // Climate / geomorphology color masses. Large regions change first; noisy variation remains
+    // subordinate so the low-poly terrain reads as designed landforms rather than TV static.
+    color = mix3(color, {0.43F, 0.38F, 0.20F}, sample.aridity * 0.62);
+    color = mix3(color, {0.68F, 0.52F, 0.25F}, sample.dunes * 0.88);
+    color = mix3(color, {0.19F, 0.255F, 0.105F}, sample.wetland * 0.82);
+    color = mix3(color, {0.56F, 0.28F, 0.13F}, sample.canyon * 0.84);
+    color = mix3(color, {0.34F, 0.32F, 0.29F}, sample.coastalCliff * 0.76);
     color = mix3(color, {0.39F, 0.34F, 0.23F}, sample.plateau * 0.58 + highland * 0.22);
-    color = mix3(color, {0.37F, 0.36F, 0.34F}, rockiness * 0.78);
+    color = mix3(color, {0.37F, 0.36F, 0.34F}, rockiness * 0.72);
     color = mix3(color, {0.22F, 0.19F, 0.17F}, sample.volcano * 0.72);
-    color = mix3(color, {0.13F, 0.30F, 0.13F}, sample.river * 0.72);
+    color = mix3(color, {0.10F, 0.285F, 0.125F}, sample.river * 0.72);
     color = mix3(color, {0.64F, 0.56F, 0.37F}, beach * 0.92);
-    const double snow = alpine * std::clamp(0.42 + 0.74 * sample.mountain, 0.0, 1.0);
-    color = mix3(color, {0.80F, 0.82F, 0.80F}, snow);
+
+    const double snow = std::clamp(
+        alpine * (0.34 + 0.70 * sample.mountain) + sample.glacier,
+        0.0,
+        1.0);
+    color = mix3(color, {0.79F, 0.84F, 0.86F}, snow * 0.94);
     return glm::clamp(color * variation, glm::vec3{0.0F}, glm::vec3{1.0F});
 }
 
@@ -550,13 +656,18 @@ glm::vec4 planetTerrainMaterial(
     const double aboveSea = sample.elevationMeters - definition.seaLevelElevationMeters;
     const double highland = smooth01(1200.0, 3800.0, aboveSea);
     const double rockiness = std::clamp(
-        0.68 * sample.mountain + 0.40 * sample.volcano + 0.24 * highland,
+        0.68 * sample.mountain + 0.40 * sample.volcano + 0.24 * highland
+            + 0.46 * sample.coastalCliff + 0.32 * sample.canyon,
         0.0,
         1.0);
     const float roughness = static_cast<float>(std::clamp(
-        0.91 - 0.17 * rockiness + 0.035 * sample.surfaceDetail,
-        0.66,
-        0.96));
+        0.91 - 0.17 * rockiness
+            + 0.050 * sample.dunes
+            - 0.055 * sample.wetland
+            - 0.065 * sample.glacier
+            + 0.030 * sample.surfaceDetail,
+        0.58,
+        0.98));
     return {0.0F, roughness, 0.0F, -1.0F};
 }
 
