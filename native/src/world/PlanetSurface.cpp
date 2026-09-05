@@ -430,19 +430,40 @@ PlanetTerrainSample samplePlanetTerrain(
         * smooth01(0.38, 0.86, mountain);
     elevation += maxLand * 0.270 * std::pow(summitGate, 3.2);
 
-    // Climate authority. It affects surface processes/materials, not the existence of the
-    // macro relief itself.
-    const double latitude = std::abs(d.y);
+    // R21 ORBIT-COUPLED CLIMATE. This is deliberately a reduced-order climate closure, not
+    // a fake latitude biome switch. Stellar flux enters through radiative-equilibrium T~F^(1/4),
+    // axial tilt changes high-latitude seasonality, and the Held-Hou rotation scaling widens the
+    // Hadley/subtropical dry belt on slower rotators. ROCKE-3D is the validation reference for
+    // the direction of these dependencies; a full GCM is intentionally outside a terrain query.
+    const double latitude = std::abs(d.y); // |sin(geographic latitude)|
     const double climateNoise = fbmSurface(
         definition.seed ^ 0x1F83D9ABFB41BD6BULL, w, 5.2, 4);
-    const double subtropicalBand = smooth01(0.10, 0.30, latitude)
-        * (1.0 - smooth01(0.56, 0.78, latitude));
+    const double fluxRatio = std::clamp(definition.meanStellarIrradianceWm2 / 1361.0, 0.08, 5.0);
+    const double absorbedRatio = std::max(0.04,
+        fluxRatio * (1.0 - std::clamp(definition.bondAlbedo, 0.0, 0.92)) / (1.0 - 0.306));
+    const double thermalRatio = std::pow(absorbedRatio, 0.25)
+        * std::clamp(definition.greenhouseFactor / 1.12, 0.35, 2.4);
+    const double rotationRatio = std::clamp(
+        definition.siderealRotationPeriodSeconds / 86164.0905, 0.12, 16.0);
+    const double hadleyWidth = std::clamp(std::sqrt(rotationRatio), 0.52, 2.15);
+    const double dryLatitudeRadians = std::clamp(
+        (26.0 * kPi / 180.0) * hadleyWidth, 13.0 * kPi / 180.0, 55.0 * kPi / 180.0);
+    const double dryCenter = std::sin(dryLatitudeRadians);
+    const double dryWidth = 0.13 + 0.045 * std::clamp(hadleyWidth - 1.0, -0.5, 1.0);
+    const double subtropicalBand = std::exp(
+        -std::pow((latitude - dryCenter) / std::max(0.07, dryWidth), 2.0));
+    const double tiltStrength = std::clamp(
+        std::sin(std::clamp(definition.axialTiltRadians, 0.0, 0.5 * kPi)), 0.0, 1.0);
+    const double polarSeasonality = smooth01(0.58, 0.96, latitude) * tiltStrength;
+    const double heatDrying = smooth01(1.02, 1.42, thermalRatio);
     const double aridity = std::clamp(
-        subtropicalBand * (0.52 + 0.48 * (0.5 + 0.5 * climateNoise))
-            * (0.58 + 0.42 * interior),
+        subtropicalBand * (0.50 + 0.50 * (0.5 + 0.5 * climateNoise))
+            * (0.55 + 0.45 * interior) * (0.86 + 0.34 * heatDrying)
+            - polarSeasonality * 0.08,
         0.0, 1.0);
     const double moisture = std::clamp(
-        0.50 - climateNoise * 0.28 + coastProximity * 0.28 - aridity * 0.56,
+        0.50 - climateNoise * 0.27 + coastProximity * 0.30 - aridity * 0.58
+            + std::clamp(thermalRatio - 0.82, -0.25, 0.25) * 0.13,
         0.0, 1.0);
 
     // Rolling hills are a floor, not a rare mask. This is the layer Trial 6 was missing:
@@ -524,9 +545,12 @@ PlanetTerrainSample samplePlanetTerrain(
     const double dunes = smooth01(0.48, 0.78, duneRegion);
     elevation += maxLand * 0.0022 * dunes * duneWave;
 
-    const double glacier = smooth01(0.58, 0.79, latitude)
-        * smooth01(1700.0, 3600.0, elevation)
-        * smooth01(0.34, 0.72, moisture) * landness;
+    const double climateCold = std::clamp(
+        (1.08 - thermalRatio) * 1.35 + latitude * (0.58 + 0.25 * (1.0 - polarSeasonality)),
+        0.0, 1.0);
+    const double glacier = smooth01(0.52, 0.82, climateCold)
+        * smooth01(1450.0, 3350.0, elevation)
+        * smooth01(0.30, 0.70, moisture) * landness;
     elevation += maxLand * 0.006 * glacier
         * (1.0 - std::abs(fbmSurface(
             definition.seed ^ 0x6C44198C4A475817ULL, w, 62.0, 4)));
@@ -608,20 +632,27 @@ PlanetTerrainSample samplePlanetTerrain(
     // Boundary-parallel folds. Absolute sine is used only as a sub-grid fold profile; the
     // baked mountain field remains the spatial gate. Domain warp and along-strike modulation
     // prevent railway-track regularity while preserving a coherent mountain-system direction.
+    // R21 corrected Earth-scale wavelengths: ~47 km main folds, ~18 km parallel ranges,
+    // ~6.7 km spurs and ~3.1 km high-ridge detail. All remain gated by the baked orogen field.
     const double foldA = 1.0 - std::abs(std::sin(
-        across * 430.0 + along * 21.0 + foldWarpA * 3.6));
+        across * 850.0 + along * 31.0 + foldWarpA * 4.0));
     const double foldB = 1.0 - std::abs(std::sin(
-        across * 920.0 - along * 47.0 + foldWarpA * 5.2 + foldWarpB * 1.8));
+        across * 2200.0 - along * 83.0 + foldWarpA * 6.1 + foldWarpB * 2.2));
     const double foldC = 1.0 - std::abs(std::sin(
-        across * 1840.0 + along * 103.0 + foldWarpB * 4.4));
-    const double mainCrest = std::pow(smooth01(0.38, 0.90,
-        foldA * (0.70 + 0.38 * alongBreak)), 1.38);
-    const double branchCrest = std::pow(smooth01(0.40, 0.92,
-        foldB * (0.66 + 0.44 * alongBreak)), 1.58);
-    const double spurCrest = std::pow(smooth01(0.44, 0.94,
-        foldC * (0.62 + 0.48 * alongBreak)), 1.78);
+        across * 6000.0 + along * 211.0 + foldWarpB * 5.4));
+    const double foldD = 1.0 - std::abs(std::sin(
+        across * 12800.0 - along * 470.0 + foldWarpB * 7.0));
+    const double mainCrest = std::pow(smooth01(0.40, 0.91,
+        foldA * (0.70 + 0.38 * alongBreak)), 1.45);
+    const double branchCrest = std::pow(smooth01(0.42, 0.93,
+        foldB * (0.66 + 0.44 * alongBreak)), 1.68);
+    const double spurCrest = std::pow(smooth01(0.46, 0.95,
+        foldC * (0.62 + 0.48 * alongBreak)), 1.90);
+    const double detailCrest = std::pow(smooth01(0.50, 0.965,
+        foldD * (0.58 + 0.50 * alongBreak)), 2.15);
     const double crestEnvelope = std::clamp(std::max(
-        mainCrest, std::max(0.86 * branchCrest, 0.70 * spurCrest)), 0.0, 1.0);
+        mainCrest, std::max(0.88 * branchCrest,
+            std::max(0.72 * spurCrest, 0.46 * detailCrest))), 0.0, 1.0);
     const double processValley = processMountainGate
         * std::pow(1.0 - crestEnvelope, 1.55)
         * (0.48 + 0.72 * std::clamp(geomorph.incision, 0.0, 1.0));
@@ -630,11 +661,12 @@ PlanetTerrainSample samplePlanetTerrain(
         * (0.60 + 0.55 * alongBreak);
 
     elevation += processMountainGate * hardnessTerm
-        * (940.0 * (mainCrest - 0.16)
-            + 590.0 * (branchCrest - 0.11)
-            + 290.0 * (spurCrest - 0.08));
-    elevation += summitCrown * hardnessTerm * 1280.0;
-    elevation -= processValley * (760.0 + 260.0 * (1.0 - substrateHardness));
+        * (760.0 * (mainCrest - 0.15)
+            + 520.0 * (branchCrest - 0.10)
+            + 300.0 * (spurCrest - 0.065)
+            + 115.0 * (detailCrest - 0.045));
+    elevation += summitCrown * hardnessTerm * 1120.0;
+    elevation -= processValley * (900.0 + 300.0 * (1.0 - substrateHardness));
 
     // Collision tablelands use a sharper but still C1-continuous residual profile. Their
     // altitude remains whatever tectonic uplift/erosion produced; only the unresolved caprock
@@ -642,10 +674,11 @@ PlanetTerrainSample samplePlanetTerrain(
     // legible from lowland without reinstating the old fixed-2700m shelf.
     const double plateauTopNoise = fbmSurface(
         definition.seed ^ 0xBB67AE8584CAA73BULL, w, 220.0, 3);
-    elevation += processPlateauInner * (820.0 + 260.0 * hardnessTerm);
-    elevation += processPlateauEdge * (360.0 + 240.0 * hardnessTerm);
-    elevation -= processPlateauFoot * (170.0 + 90.0 * (1.0 - substrateHardness));
-    elevation += processPlateauInner * plateauTopNoise * 36.0;
+    // R21 tableland cross-section: broad quiet cap, finite resistant rim, then a real lower foot.
+    elevation += processPlateauInner * (620.0 + 180.0 * hardnessTerm);
+    elevation += processPlateauEdge * (470.0 + 250.0 * hardnessTerm);
+    elevation -= processPlateauFoot * (390.0 + 120.0 * (1.0 - substrateHardness));
+    elevation += processPlateauInner * plateauTopNoise * 24.0;
 
     // Stable interiors keep restrained rolling relief; floodplains and tableland tops remain quiet.
     const double processHillGate = geomorphLandness
@@ -691,25 +724,29 @@ PlanetTerrainSample samplePlanetTerrain(
     elevation = std::clamp(elevation, -maxOcean, maxLand);
 
     PlanetTerrainSample sample{};
-    sample.elevationMeters = elevation;
-    sample.continentalness = geomorph.continentalness;
-    sample.plateBoundary = plates.boundary;
-    sample.convergence = plates.convergence;
-    sample.divergence = plates.divergence;
-    sample.oceanRidge = oceanRidge;
-    sample.mountain = std::clamp(std::max(bakedMountain, processMountainGate * crestEnvelope), 0.0, 1.0);
-    sample.plateau = std::clamp(std::max(bakedTableland, processPlateauInner), 0.0, 1.0);
-    sample.trench = trench;
-    sample.volcano = volcano;
-    sample.river = channelCore;
-    sample.hills = std::clamp(processHillGate * (0.5 + 0.5 * processHillA), 0.0, 1.0);
-    sample.canyon = std::max({canyon, geomorph.incision, processValley});
-    sample.dunes = dunes;
-    sample.coastalCliff = std::clamp(std::max(coastEscarpment, coastalRock), 0.0, 1.0);
-    sample.wetland = std::max(wetland, geomorph.floodplain);
-    sample.glacier = glacier;
-    sample.aridity = aridity;
-    sample.moisture = moisture;
+    const auto normalizedMask = [](double value) noexcept {
+        return std::isfinite(value) ? std::clamp(value, 0.0, 1.0) : 0.0;
+    };
+    sample.elevationMeters = std::isfinite(elevation) ? elevation : definition.seaLevelElevationMeters;
+    sample.continentalness = std::isfinite(geomorph.continentalness)
+        ? std::clamp(geomorph.continentalness, -1.0, 1.0) : 0.0;
+    sample.plateBoundary = normalizedMask(plates.boundary);
+    sample.convergence = normalizedMask(plates.convergence);
+    sample.divergence = normalizedMask(plates.divergence);
+    sample.oceanRidge = normalizedMask(oceanRidge);
+    sample.mountain = normalizedMask(std::max(bakedMountain, processMountainGate * crestEnvelope));
+    sample.plateau = normalizedMask(std::max(bakedTableland, processPlateauInner));
+    sample.trench = normalizedMask(trench);
+    sample.volcano = normalizedMask(volcano);
+    sample.river = normalizedMask(channelCore);
+    sample.hills = normalizedMask(processHillGate * (0.5 + 0.5 * processHillA));
+    sample.canyon = normalizedMask(std::max({canyon, geomorph.incision, processValley}));
+    sample.dunes = normalizedMask(dunes);
+    sample.coastalCliff = normalizedMask(std::max(coastEscarpment, coastalRock));
+    sample.wetland = normalizedMask(std::max(wetland, geomorph.floodplain));
+    sample.glacier = normalizedMask(glacier);
+    sample.aridity = normalizedMask(aridity);
+    sample.moisture = normalizedMask(moisture);
     sample.surfaceDetail = std::clamp(
         0.42 * (0.5 + 0.5 * local)
             + 0.28 * (0.5 + 0.5 * micro)

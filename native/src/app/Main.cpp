@@ -491,6 +491,12 @@ int main() {
         planet.seaLevelElevationMeters = 0.0;
         planet.maxOceanDepthMeters = 11000.0;
         planet.atmosphereHeight = 100000.0;
+        planet.meanStellarIrradianceWm2 = 1361.0;
+        planet.siderealRotationPeriodSeconds = 86164.0905;
+        planet.axialTiltRadians = 23.4393 * kPi / 180.0;
+        planet.orbitalEccentricity = 0.01671123;
+        planet.bondAlbedo = 0.306;
+        planet.greenhouseFactor = 1.12;
         constexpr double opticalAtmosphereHeight = 145000.0;
         constexpr double opticalRayleighScaleHeight = 10200.0;
 
@@ -507,22 +513,38 @@ int main() {
         sun.luminosityWatts = 3.828e26;
         const std::uint32_t sunId = celestial.addBody(sun);
 
-        constexpr double asterOrbitRadius = 149597870700.0;
+        // R21 Earth-Moon-Sun physical baseline. Values come from NASA/JPL references recorded in
+        // docs/CELESTIAL_PHYSICS_REFERENCES_R21.md. Keplerian elements create the epoch state;
+        // CelestialSystem then propagates all massive bodies with Newtonian N-body gravity.
+        constexpr double earthMassKg = 5.97217e24;
+        constexpr double earthMeanRadiusM = 6371008.4;
+        constexpr double earthTilt = 23.4393 * kPi / 180.0;
+        constexpr double earthSiderealSeconds = 86164.0905;
+        vf::KeplerianElements earthOrbit{};
+        earthOrbit.semiMajorAxisMeters = 149598262000.0;
+        earthOrbit.eccentricity = 0.01671123;
+        earthOrbit.inclinationRadians = 0.0;
+        earthOrbit.meanAnomalyRadians = 0.0; // authored epoch phase; physical scale is unchanged
+        const vf::OrbitalState earthState = vf::keplerianState(
+            earthOrbit,
+            vf::CelestialSystem::kGravitationalConstant * (sun.massKg + earthMassKg));
+
         vf::CelestialBody aster{};
         aster.type = vf::CelestialBodyType::Planet;
         aster.name = "Aster";
-        aster.radiusMeters = planet.radius;
-        aster.massKg = 5.9722e24;
+        aster.radiusMeters = earthMeanRadiusM;
+        aster.massKg = earthMassKg;
         aster.gameplaySurfaceGravityMps2 = 9.80665;
-        aster.gravityFalloffStartRadiusMeters = planet.radius + planet.atmosphereHeight;
+        aster.gravityFalloffStartRadiusMeters = earthMeanRadiusM + planet.atmosphereHeight;
         aster.gravityFalloffPower = 7.0;
-        aster.gravityInfluenceRadiusMeters = planet.radius + 900000.0;
-        aster.physicsBubbleRadiusMeters = planet.radius + 1300000.0;
-        aster.position = {-asterOrbitRadius, 0.0, 0.0};
+        aster.gravityInfluenceRadiusMeters = earthMeanRadiusM + 900000.0;
+        aster.physicsBubbleRadiusMeters = earthMeanRadiusM + 1300000.0;
+        aster.position = sun.position + earthState.position;
+        aster.linearVelocity = sun.linearVelocity + earthState.velocity;
         aster.orbitParentId = sunId;
-        aster.linearVelocity = {0.0, 0.0, -circularOrbitSpeed(sun.massKg, asterOrbitRadius)};
-        aster.spinAxis = {0.0, 1.0, 0.0};
-        aster.spinRateRadPerSecond = 2.0 * kPi / 86164.0905;
+        aster.spinAxis = safeNormalize({std::sin(earthTilt), std::cos(earthTilt), 0.0});
+        aster.orientation = glm::angleAxis(-earthTilt, glm::dvec3{0.0, 0.0, 1.0});
+        aster.spinRateRadPerSecond = 2.0 * kPi / earthSiderealSeconds;
         aster.visibleAlbedo = {0.20, 0.42, 0.18};
         aster.atmosphere.enabled = true;
         aster.atmosphere.heightMeters = planet.atmosphereHeight;
@@ -535,8 +557,44 @@ int main() {
         aster.atmosphere.prevailingWind = {};
         aster.weather.windMultiplier = 0.0;
         aster.weather.stormIntensity = 0.0;
+        aster.climate.bondAlbedo = planet.bondAlbedo;
+        aster.climate.greenhouseFactor = planet.greenhouseFactor;
         const std::uint32_t asterId = celestial.addBody(aster);
 
+        constexpr double lunarMassKg = 7.34767309245735e22;
+        constexpr double lunarRadiusM = 1737400.0;
+        constexpr double lunarSiderealSeconds = 27.321661 * 86400.0;
+        constexpr double lunarInclination = 5.145 * kPi / 180.0;
+        vf::KeplerianElements lunarOrbit{};
+        lunarOrbit.semiMajorAxisMeters = 384400000.0;
+        lunarOrbit.eccentricity = 0.0549;
+        lunarOrbit.inclinationRadians = lunarInclination;
+        lunarOrbit.meanAnomalyRadians = 1.15; // authored epoch phase
+        const vf::OrbitalState lunarState = vf::keplerianState(
+            lunarOrbit,
+            vf::CelestialSystem::kGravitationalConstant * (earthMassKg + lunarMassKg));
+
+        vf::CelestialBody luna{};
+        luna.type = vf::CelestialBodyType::Moon;
+        luna.name = "Luna";
+        luna.radiusMeters = lunarRadiusM;
+        luna.massKg = lunarMassKg;
+        luna.gameplaySurfaceGravityMps2 = 1.624;
+        luna.gravityFalloffStartRadiusMeters = lunarRadiusM;
+        luna.gravityFalloffPower = 6.0;
+        luna.gravityInfluenceRadiusMeters = lunarRadiusM + 420000.0;
+        luna.physicsBubbleRadiusMeters = lunarRadiusM + 650000.0;
+        luna.orbitParentId = asterId;
+        luna.position = aster.position + lunarState.position;
+        luna.linearVelocity = aster.linearVelocity + lunarState.velocity;
+        luna.spinAxis = safeNormalize({0.0, std::cos(lunarInclination), std::sin(lunarInclination)});
+        luna.spinRateRadPerSecond = 2.0 * kPi / lunarSiderealSeconds; // synchronous sidereal spin
+        luna.orientation = glm::angleAxis(-6.68 * kPi / 180.0, glm::dvec3{0.0, 0.0, 1.0});
+        luna.visibleAlbedo = {0.33, 0.32, 0.30};
+        const std::uint32_t lunaId = celestial.addBody(luna);
+
+        // Keep a Mars-like second planet as an interplanetary target; it participates in the same
+        // N-body solution instead of moving on a scripted circle.
         constexpr double cinderOrbitRadius = 227939200000.0;
         vf::CelestialBody cinder{};
         cinder.type = vf::CelestialBodyType::Planet;
@@ -551,6 +609,28 @@ int main() {
         cinder.linearVelocity = {-circularOrbitSpeed(sun.massKg, cinderOrbitRadius), 0.0, 0.0};
         cinder.visibleAlbedo = {0.62, 0.30, 0.22};
         const std::uint32_t cinderId = celestial.addBody(cinder);
+
+        // Shift into the actual system barycentric frame. This removes arbitrary center-of-mass
+        // translation while preserving every relative state and total momentum.
+        double systemMass = 0.0;
+        glm::dvec3 barycenter{};
+        glm::dvec3 barycentricVelocity{};
+        for (const auto& body : celestial.bodies()) {
+            systemMass += body.massKg;
+            barycenter += body.position * body.massKg;
+            barycentricVelocity += body.linearVelocity * body.massKg;
+        }
+        if (systemMass > 0.0) {
+            barycenter /= systemMass;
+            barycentricVelocity /= systemMass;
+            for (auto& body : celestial.bodies()) {
+                body.position -= barycenter;
+                body.linearVelocity -= barycentricVelocity;
+            }
+        }
+        if (const auto* storedAster = celestial.body(asterId)) {
+            planet.meanStellarIrradianceWm2 = celestial.stellarIrradianceAt(*storedAster);
+        }
 
         const glm::dvec3 initialSunDirectionPlanet = safeNormalize(
             sun.position - aster.position, {1.0, 0.0, 0.0});
@@ -852,6 +932,15 @@ int main() {
         double diagnosticsTime = 0.0;
         std::uint64_t diagnosticsFrames = 0;
         double lodCooldown = 0.0;
+        // Uniform simulation-time acceleration: 120x gives a ~12-minute terrestrial sidereal day
+        // while preserving every physical period ratio. Override with VF_CELESTIAL_TIME_SCALE.
+        double celestialTimeScale = 120.0;
+        if (const char* scaleEnv = std::getenv("VF_CELESTIAL_TIME_SCALE")) {
+            char* end = nullptr;
+            const double parsed = std::strtod(scaleEnv, &end);
+            if (end != scaleEnv && std::isfinite(parsed) && parsed > 0.0)
+                celestialTimeScale = std::clamp(parsed, 0.01, 20000.0);
+        }
 
         while (platform.pumpEvents()) {
             const auto now = Clock::now();
@@ -860,10 +949,11 @@ int main() {
                 1.0 / 500.0,
                 0.05);
             previous = now;
-            celestial.step(dt);
+            celestial.step(dt * celestialTimeScale);
 
             auto* currentAster = celestial.body(asterId);
             const auto* currentCinder = celestial.body(cinderId);
+            const auto* currentMoon = celestial.body(lunaId);
             const auto* currentSun = celestial.body(sunId);
             if (currentAster == nullptr || currentSun == nullptr) continue;
             currentAster->atmosphere.prevailingWind = {};
@@ -986,27 +1076,44 @@ int main() {
                 toSurfaceVector(inverseAster * sunWorldDirection), {0.3, 0.8, -0.2});
 
             vf::PlanetMesh dynamicMesh{};
-            if (currentCinder != nullptr) {
-                const glm::dvec3 cinderDirection = safeNormalize(
-                    currentCinder->position - camera.position());
-                const glm::dvec3 cinderSurfaceDirection = safeNormalize(
-                    toSurfaceVector(inverseAster * cinderDirection));
-                const double distance = glm::length(currentCinder->position - camera.position());
+            const auto appendAngularBody = [&](const vf::CelestialBody& body,
+                                                const glm::vec3& color,
+                                                double visualDistance,
+                                                double minVisualRadius,
+                                                float emissive,
+                                                unsigned rings,
+                                                unsigned segments) {
+                const glm::dvec3 worldDelta = body.position - camera.position();
+                const double distance = glm::length(worldDelta);
+                if (distance <= body.radiusMeters * 1.001) return;
+                const glm::dvec3 bodyDirection = safeNormalize(worldDelta);
+                const glm::dvec3 surfaceDirection = safeNormalize(
+                    toSurfaceVector(inverseAster * bodyDirection));
                 const double angularRadius = std::asin(std::clamp(
-                    currentCinder->radiusMeters / std::max(distance, currentCinder->radiusMeters),
-                    0.0,
-                    0.20));
-                constexpr double visualDistance = 25000000.0;
+                    body.radiusMeters / distance, 0.0, 0.35));
                 const double visualRadius = std::max(
-                    1800.0, std::tan(angularRadius) * visualDistance);
+                    minVisualRadius, std::tan(angularRadius) * visualDistance);
                 vf::appendDebugSphere(
                     dynamicMesh,
-                    cameraSurface + cinderSurfaceDirection * visualDistance,
+                    cameraSurface + surfaceDirection * visualDistance,
                     visualRadius,
-                    {0.62F, 0.30F, 0.22F},
-                    9U,
-                    16U,
-                    {0.0F, 0.82F, 0.0F, 0.0F});
+                    color,
+                    rings,
+                    segments,
+                    {0.0F, emissive > 0.5F ? 0.22F : 0.94F, 0.0F, emissive});
+            };
+
+            // The local meshes are angular-size-preserving render proxies only. Their angular
+            // radius comes from each body's real physical radius / instantaneous N-body distance.
+            appendAngularBody(*currentSun, {1.0F, 0.79F, 0.49F},
+                30000000.0, 24000.0, 5.0F, 24U, 48U);
+            if (currentMoon != nullptr) {
+                appendAngularBody(*currentMoon, {0.39F, 0.385F, 0.37F},
+                    18000000.0, 12000.0, 0.0F, 28U, 48U);
+            }
+            if (currentCinder != nullptr) {
+                appendAngularBody(*currentCinder, {0.62F, 0.30F, 0.22F},
+                    25000000.0, 1800.0, 0.0F, 9U, 16U);
             }
             renderer.setDynamicMesh(dynamicMesh);
 
@@ -1064,6 +1171,10 @@ int main() {
                       << " | ALT " << std::setprecision(2) << camera.altitude() / 1000.0 << " km"
                       << " | " << (overOcean ? "OCEAN" : "LAND")
                       << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")
+                      << " | TIME x" << std::setprecision(0) << celestialTimeScale
+                      << " | MOON " << std::setprecision(0)
+                      << (currentMoon ? glm::length(currentMoon->position - currentAster->position) / 1000.0 : 0.0)
+                      << " km"
                       << " | tris " << renderer.triangleCount() << '+'
                       << renderer.dynamicTriangleCount()
                       << " | FPS " << std::setprecision(0) << fps;

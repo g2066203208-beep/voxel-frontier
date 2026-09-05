@@ -15,6 +15,15 @@ struct PlanetDefinition {
     double atmosphereHeight{120.0};
     double seaLevelElevationMeters{};
     double maxOceanDepthMeters{};
+
+    // R21 orbital/climate forcing. Terrain generation consumes these physical inputs so a newly
+    // authored planet does not receive an Earth climate merely because it uses an Earth-like seed.
+    double meanStellarIrradianceWm2{1361.0};
+    double siderealRotationPeriodSeconds{86164.0905};
+    double axialTiltRadians{0.40909280422232897}; // 23.4393 deg
+    double orbitalEccentricity{0.01671123};
+    double bondAlbedo{0.306};
+    double greenhouseFactor{1.12};
 };
 
 struct PlanetTerrainSample {

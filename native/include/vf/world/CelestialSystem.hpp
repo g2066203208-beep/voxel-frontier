@@ -19,6 +19,26 @@ enum class CelestialBodyType : std::uint8_t {
     Moon,
 };
 
+// Classical osculating elements are used only to create an inertial position/velocity at an
+// authored epoch. Once initialized, CelestialSystem integrates the Newtonian N-body trajectory.
+struct KeplerianElements {
+    double semiMajorAxisMeters{};
+    double eccentricity{};
+    double inclinationRadians{};
+    double longitudeAscendingNodeRadians{};
+    double argumentPeriapsisRadians{};
+    double meanAnomalyRadians{};
+};
+
+struct OrbitalState {
+    glm::dvec3 position{};
+    glm::dvec3 velocity{};
+};
+
+[[nodiscard]] OrbitalState keplerianState(
+    const KeplerianElements& elements,
+    double gravitationalParameterM3PerS2) noexcept;
+
 struct CelestialAtmosphere {
     bool enabled{};
     double heightMeters{};

@@ -40,7 +40,58 @@ constexpr double kEpsilon = 1.0e-9;
     return safeNormalize(body.spinAxis) * body.spinRateRadPerSecond;
 }
 
+[[nodiscard]] glm::dvec3 standardToGameAxes(const glm::dvec3& v) noexcept {
+    // Classical orbital formulae use Z as the reference-plane normal. Voxel Frontier uses Y-up.
+    return {v.x, v.z, v.y};
+}
+
 } // namespace
+
+OrbitalState keplerianState(
+    const KeplerianElements& elements,
+    double gravitationalParameterM3PerS2) noexcept {
+    OrbitalState result{};
+    const double mu = std::max(1.0e-12, gravitationalParameterM3PerS2);
+    const double a = std::max(1.0, elements.semiMajorAxisMeters);
+    const double e = std::clamp(elements.eccentricity, 0.0, 0.999999);
+    const double M = std::remainder(elements.meanAnomalyRadians, 2.0 * kPi);
+
+    // Newton solve of Kepler's equation M = E - e sin(E).
+    double E = e < 0.8 ? M : (M >= 0.0 ? kPi : -kPi);
+    for (int i = 0; i < 16; ++i) {
+        const double f = E - e * std::sin(E) - M;
+        const double fp = std::max(1.0e-10, 1.0 - e * std::cos(E));
+        const double dE = f / fp;
+        E -= dE;
+        if (std::abs(dE) < 1.0e-13) break;
+    }
+
+    const double root = std::sqrt(std::max(0.0, 1.0 - e * e));
+    const double denom = std::max(1.0e-12, 1.0 - e * std::cos(E));
+    const double n = std::sqrt(mu / (a * a * a));
+    const glm::dvec3 rPerifocal{a * (std::cos(E) - e), a * root * std::sin(E), 0.0};
+    const glm::dvec3 vPerifocal{
+        -a * n * std::sin(E) / denom,
+        a * n * root * std::cos(E) / denom,
+        0.0};
+
+    const double O = elements.longitudeAscendingNodeRadians;
+    const double i = elements.inclinationRadians;
+    const double w = elements.argumentPeriapsisRadians;
+    const double cO = std::cos(O), sO = std::sin(O);
+    const double ci = std::cos(i), si = std::sin(i);
+    const double cw = std::cos(w), sw = std::sin(w);
+
+    // Q = R3(Omega) R1(i) R3(omega), standard Z-normal celestial frame.
+    const glm::dmat3 Q{
+        {cO * cw - sO * sw * ci, sO * cw + cO * sw * ci, sw * si},
+        {-cO * sw - sO * cw * ci, -sO * sw + cO * cw * ci, cw * si},
+        {sO * si, -cO * si, ci},
+    };
+    result.position = standardToGameAxes(Q * rPerifocal);
+    result.velocity = standardToGameAxes(Q * vPerifocal);
+    return result;
+}
 
 std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
     if (bodyValue.id == 0U) bodyValue.id = nextBodyId_++;
@@ -87,14 +138,47 @@ const CelestialBody* CelestialSystem::body(std::uint32_t id) const noexcept {
 }
 
 void CelestialSystem::step(double deltaSeconds) {
-    if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0) return;
-    const double dt = std::min(deltaSeconds, 60.0);
-    for (auto& celestialBody : bodies_) updateOrbit(celestialBody, dt);
-    for (auto& celestialBody : bodies_) {
-        updateSpin(celestialBody, dt);
-        updateClimateAndWeather(celestialBody, dt);
+    if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0 || bodies_.empty()) return;
+
+    // R21 Newtonian N-body propagation. JPL's ephemeris documentation stresses that real bodies
+    // follow perturbed trajectories, not immutable ellipses. A kick-drift-kick velocity-Verlet
+    // integrator preserves bound orbital energy far better than the old sequential parent-only
+    // Euler pull while remaining cheap for the handful of gameplay-scale celestial bodies.
+    double remaining = std::min(deltaSeconds, 86400.0 * 4.0);
+    constexpr double maxSubstep = 60.0;
+    std::vector<glm::dvec3> acceleration(bodies_.size());
+
+    auto evaluateAccelerations = [&]() {
+        std::fill(acceleration.begin(), acceleration.end(), glm::dvec3{});
+        for (std::size_t i = 0; i < bodies_.size(); ++i) {
+            for (std::size_t j = i + 1; j < bodies_.size(); ++j) {
+                const glm::dvec3 delta = bodies_[j].position - bodies_[i].position;
+                const double r2 = std::max(glm::dot(delta, delta), 1.0);
+                const double invR = 1.0 / std::sqrt(r2);
+                const double invR3 = invR / r2;
+                const glm::dvec3 directionTerm = delta * invR3;
+                acceleration[i] += directionTerm * (kGravitationalConstant * bodies_[j].massKg);
+                acceleration[j] -= directionTerm * (kGravitationalConstant * bodies_[i].massKg);
+            }
+        }
+    };
+
+    while (remaining > 1.0e-12) {
+        const double h = std::min(remaining, maxSubstep);
+        evaluateAccelerations();
+        for (std::size_t i = 0; i < bodies_.size(); ++i) {
+            bodies_[i].linearVelocity += acceleration[i] * (0.5 * h);
+            bodies_[i].position += bodies_[i].linearVelocity * h;
+        }
+        evaluateAccelerations();
+        for (std::size_t i = 0; i < bodies_.size(); ++i) {
+            bodies_[i].linearVelocity += acceleration[i] * (0.5 * h);
+            updateSpin(bodies_[i], h);
+            updateClimateAndWeather(bodies_[i], h);
+        }
+        simulationTime_ += h;
+        remaining -= h;
     }
-    simulationTime_ += dt;
 }
 
 void CelestialSystem::updateOrbit(CelestialBody& celestialBody, double deltaSeconds) {

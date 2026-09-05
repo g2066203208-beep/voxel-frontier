@@ -164,6 +164,23 @@ void testSpinAndBoundOrbit() {
         "planet spin must evolve orientation");
 }
 
+void testKeplerianStateEnergyIdentity() {
+    constexpr double mu = 3.98600435507e14;
+    vf::KeplerianElements elements{};
+    elements.semiMajorAxisMeters = 7000000.0;
+    elements.eccentricity = 0.12;
+    elements.inclinationRadians = 0.41;
+    elements.longitudeAscendingNodeRadians = 0.83;
+    elements.argumentPeriapsisRadians = 1.17;
+    elements.meanAnomalyRadians = 0.64;
+    const vf::OrbitalState state = vf::keplerianState(elements, mu);
+    const double r = glm::length(state.position);
+    const double v2 = glm::dot(state.velocity, state.velocity);
+    const double specificEnergy = 0.5 * v2 - mu / r;
+    requireNear(specificEnergy, -mu / (2.0 * elements.semiMajorAxisMeters), 0.05,
+        "Keplerian state must satisfy the vis-viva specific-energy identity");
+}
+
 void testDipoleMagneticFieldFallsWithDistance() {
     vf::CelestialSystem system;
     vf::CelestialBody planet{};
@@ -232,6 +249,7 @@ int main() {
     testAtmosphereFadesToVacuum();
     testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace();
     testSpinAndBoundOrbit();
+    testKeplerianStateEnergyIdentity();
     testDipoleMagneticFieldFallsWithDistance();
     testRotatingSurfaceTransfersTangentialVelocityToRigidBody();
     std::cout << "vf_celestial_system_tests: PASS\n";
