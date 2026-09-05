@@ -47,7 +47,6 @@ constexpr std::size_t kPlateCount = 14U;
     return x * x * (3.0 - 2.0 * x);
 }
 
-
 [[nodiscard]] double quintic(double x) noexcept {
     x = std::clamp(x, 0.0, 1.0);
     return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
@@ -443,8 +442,10 @@ PlanetTerrainSample samplePlanetTerrain(
     elevation -= maxLand * 0.035 * river;
 
     // Seamless 3D fBm is evaluated on the normalized sphere, so there are no longitude/cube-face
-    // seams.  It adds the human-scale relief that the old ~40 km trigonometric residual could not
-    // provide, while remaining much smaller than the tectonic mountain/trench signal.
+    // seams. Regional and local bands are deliberately strong enough to create readable rolling
+    // country at human scale, while still remaining far below the tectonic mountain/trench signal.
+    // This gives the walking camera real silhouettes for trees, rocks and atmospheric layering
+    // instead of a visually flat continental interior.
     const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3);
     const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
     const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
@@ -452,11 +453,11 @@ PlanetTerrainSample samplePlanetTerrain(
     const double ridged = 1.0 - std::abs(local);
     const double protectedDrainage = 1.0 - 0.74 * river;
     const double landRelief = (
-        regional * (0.0030 + 0.0065 * mountain + 0.0028 * plateau)
-        + local * (0.0016 + 0.0040 * mountain)
-        + micro * (0.00105 + 0.00055 * mountain)
-        + fine * 0.00034
-        + (ridged - 0.5) * 0.0022 * mountain)
+        regional * (0.0085 + 0.0090 * mountain + 0.0048 * plateau)
+        + local * (0.0031 + 0.0050 * mountain)
+        + micro * (0.00115 + 0.00060 * mountain)
+        + fine * 0.00030
+        + (ridged - 0.5) * 0.0024 * mountain)
         * protectedDrainage;
     elevation += maxLand * landRelief * landness;
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
@@ -529,8 +530,8 @@ glm::vec3 planetTerrainColor(
         0.0,
         1.0);
 
-    const glm::vec3 meadowA{0.18F, 0.38F, 0.145F};
-    const glm::vec3 meadowB{0.29F, 0.46F, 0.18F};
+    const glm::vec3 meadowA{0.145F, 0.325F, 0.105F};
+    const glm::vec3 meadowB{0.265F, 0.425F, 0.155F};
     glm::vec3 color = mix3(meadowA, meadowB, 0.5 + 0.5 * sample.surfaceDetail);
     color = mix3(color, {0.39F, 0.34F, 0.23F}, sample.plateau * 0.58 + highland * 0.22);
     color = mix3(color, {0.37F, 0.36F, 0.34F}, rockiness * 0.78);
