@@ -550,12 +550,17 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xA5A3564E27F8862FULL, w, 82.0, 4));
     const double rangeRidgeC = 1.0 - std::abs(fbmSurface(
         definition.seed ^ 0x9E3779B185EBCA87ULL, w, 210.0, 3));
-    const double rangeMask = smooth01(0.10, 0.72, geomorph.mountain) * geomorphLandness;
-    const double rangeMass = rangeMask * (0.32 + 0.68 * smooth01(0.30, 0.82, rangeRidgeA));
-    const double rangeShoulders = rangeMask * smooth01(0.36, 0.86, rangeRidgeB);
-    const double rangeFaces = rangeMask * smooth01(0.42, 0.90, rangeRidgeC);
-    elevation += maxLand * (0.075 * rangeMask + 0.145 * rangeMass
-        + 0.085 * rangeShoulders + 0.040 * rangeFaces);
+    const double rangeMask = smooth01(0.08, 0.68, geomorph.mountain) * geomorphLandness;
+    const double ridgeCoreA = std::pow(smooth01(0.34, 0.88, rangeRidgeA), 2.0);
+    const double ridgeCoreB = std::pow(smooth01(0.38, 0.90, rangeRidgeB), 1.75);
+    const double ridgeCoreC = std::pow(smooth01(0.44, 0.92, rangeRidgeC), 1.55);
+    // Zero-centred reconstruction: ridge cores rise while inter-range corridors are cut down.
+    // This produces an actual mountain profile instead of raising the entire belt as one plateau.
+    const double rangeRelief = rangeMask * (
+        0.175 * (ridgeCoreA - 0.30)
+        + 0.105 * (ridgeCoreB - 0.27)
+        + 0.055 * (ridgeCoreC - 0.23));
+    elevation += maxLand * rangeRelief;
 
     // Hydrology remains the placement authority for valleys.  A narrow deterministic
     // sub-channel only sharpens the coarse baked river corridor; it cannot create a river
@@ -563,8 +568,8 @@ PlanetTerrainSample samplePlanetTerrain(
     const double channelRefineNoise = 1.0 - std::abs(fbmSurface(
         definition.seed ^ 0xC2B2AE3D27D4EB4FULL, w, 260.0, 3));
     const double channelCore = geomorph.river
-        * smooth01(0.58, 0.91, channelRefineNoise) * geomorphLandness;
-    elevation -= maxLand * (0.030 * geomorph.incision + 0.045 * channelCore);
+        * smooth01(0.55, 0.88, channelRefineNoise) * geomorphLandness;
+    elevation -= maxLand * (0.040 * geomorph.incision + 0.065 * channelCore);
 
     // Give hydrologically low coastal margins a readable land/sea break without changing
     // the global coastline authority.  Rugged margins expose a short escarpment, while flat
@@ -604,7 +609,7 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.plateau = plateau;
     sample.trench = trench;
     sample.volcano = volcano;
-    sample.river = geomorph.river;
+    sample.river = std::max(geomorph.river * 0.48, channelCore);
     sample.hills = hills;
     sample.canyon = std::max(canyon, geomorph.incision);
     sample.dunes = dunes;
@@ -638,7 +643,9 @@ glm::vec3 planetTerrainColor(
     int surfaceClass = 3; // soil
     if (sample.submerged(definition)) {
         surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7; // shelf sand / seabed rock
-    } else if (sample.glacier > 0.38 || sample.elevationMeters > 3900.0) {
+    } else if (sample.river > 0.60) {
+        surfaceClass = 8; // hydrology-driven river core
+    } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
     } else if (sample.wetland > 0.34) {
         surfaceClass = 4; // wet mud
@@ -647,7 +654,7 @@ glm::vec3 planetTerrainColor(
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20
         || sample.coastalCliff > 0.30 || sample.elevationMeters > 2500.0) {
         surfaceClass = 1; // exposed rock
-    } else if (sample.moisture > 0.34 && sample.aridity < 0.66) {
+    } else if (sample.moisture > 0.22 && sample.aridity < 0.72) {
         surfaceClass = 0; // grassland
     }
 
@@ -659,6 +666,7 @@ glm::vec3 planetTerrainColor(
     case 5: return {0.875F, 0.905F, 0.925F}; // snow/ice
     case 6: return {0.790F, 0.690F, 0.455F}; // beach/shelf sand
     case 7: return {0.205F, 0.220F, 0.215F}; // seabed rock
+    case 8: return {0.035F, 0.205F, 0.310F}; // river water
     default: return {0.345F, 0.205F, 0.100F}; // soil
     }
 }
@@ -669,7 +677,9 @@ glm::vec4 planetTerrainMaterial(
     int surfaceClass = 3;
     if (sample.submerged(definition)) {
         surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7;
-    } else if (sample.glacier > 0.38 || sample.elevationMeters > 3900.0) {
+    } else if (sample.river > 0.60) {
+        surfaceClass = 8;
+    } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5;
     } else if (sample.wetland > 0.34) {
         surfaceClass = 4;
@@ -678,7 +688,7 @@ glm::vec4 planetTerrainMaterial(
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20
         || sample.coastalCliff > 0.30 || sample.elevationMeters > 2500.0) {
         surfaceClass = 1;
-    } else if (sample.moisture > 0.34 && sample.aridity < 0.66) {
+    } else if (sample.moisture > 0.22 && sample.aridity < 0.72) {
         surfaceClass = 0;
     }
 
@@ -687,9 +697,10 @@ glm::vec4 planetTerrainMaterial(
     else if (surfaceClass == 2 || surfaceClass == 6) roughness = 0.92F;
     else if (surfaceClass == 4) roughness = 0.96F;
     else if (surfaceClass == 5) roughness = 0.76F;
+    else if (surfaceClass == 8) roughness = 0.20F;
 
     // x is filled by mesh construction with true radial slope; z remains transmission=0.
-    // w is a categorical material tag: -10 grass, -11 rock ... -17 seabed.
+    // w is a categorical material tag: -10 grass ... -17 seabed, -18 river.
     return {0.0F, roughness, 0.0F, -10.0F - static_cast<float>(surfaceClass)};
 }
 

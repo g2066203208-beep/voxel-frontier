@@ -36,6 +36,10 @@ public:
     void setViewDirection(
         const glm::dvec3& forward,
         const glm::dvec3& upHint) noexcept;
+    void setFlightMode(bool enabled) noexcept {
+        flightMode_ = enabled;
+        if (enabled) grounded_ = false;
+    }
 
     void setExternalWorldState(
         const glm::dvec3& worldPosition,

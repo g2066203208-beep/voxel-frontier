@@ -180,11 +180,14 @@ struct Field {
                 const double broad = fbm(seed ^ 0x510E527FADE682D1ULL, d, 4.2, 5);
                 const double province = fbm(seed ^ 0x6A09E667F3BCC909ULL, d, 11.0, 4);
                 const double orogen = std::pow(std::clamp(conv * land, 0.0, 1.0), 1.05);
-                const double range = orogen * (0.45 + 0.55 * smooth01(0.28, 0.80, ridge));
+                const double ridgeCore = std::pow(smooth01(0.34, 0.88, ridge), 1.65);
+                const double range = orogen * (0.16 + 0.84 * ridgeCore);
 
                 double h = 0.0;
                 h += land * (280.0 + 720.0 * broad + 420.0 * province);
-                h += range * (2400.0 + 3200.0 * smooth01(0.30, 0.88, ridge));
+                // Orogenic belts get modest broad uplift, while high elevation is concentrated
+                // on ridge cores. This avoids the previous several-kilometre-tall smooth slab.
+                h += orogen * 850.0 + range * (900.0 + 3600.0 * ridgeCore);
                 h += land * smooth01(0.55, 0.83, 0.5 + 0.5 * fbm(seed ^ 0xBB67AE8584CAA73BULL, d, 5.8, 4)) * 900.0;
                 h -= ocean * (2900.0 + 2700.0 * smooth01(0.05, 0.65, -cont));
                 h += ocean * div * (900.0 + 1300.0 * ridge);
