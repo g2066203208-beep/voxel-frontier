@@ -6,6 +6,9 @@ on:
       - work/r23-astrotime-hydrology-preview
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
   group: r23-preview-${{ github.ref }}
   cancel-in-progress: true
@@ -17,6 +20,22 @@ jobs:
     steps:
       - name: Checkout R23 source
         uses: actions/checkout@v6
+
+      - name: Promote R23 runtime integration into tracked Main.cpp once
+        shell: bash
+        run: |
+          if grep -q '#include "vf/world/AstroTime.hpp"' native/src/app/Main.cpp; then
+            echo 'R23 runtime wiring is already tracked in source.'
+          else
+            python3 .github/scripts/r23_preview_patch.py
+            python3 .github/scripts/r23_preview_target_patch.py
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add native/src/app/Main.cpp
+            git commit -m 'R23: integrate AstroTime hydrology and Moon runtime into Main.cpp'
+            git push origin HEAD:work/r23-astrotime-hydrology-preview
+            echo 'Tracked source promoted; a fresh CI run will validate the committed source.'
+          fi
 
       - name: Install Vulkan X11 and build dependencies
         run: |
@@ -41,10 +60,14 @@ jobs:
           echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
           "$SLANGC" -version
 
-      - name: Apply R23 production-preview integration
+      - name: Confirm R23 runtime is native tracked source
+        shell: bash
         run: |
-          python3 .github/scripts/r23_preview_patch.py
-          python3 .github/scripts/r23_preview_target_patch.py
+          grep -q '#include "vf/world/AstroTime.hpp"' native/src/app/Main.cpp
+          grep -q 'CelestialSimulationClock' native/src/app/Main.cpp
+          grep -q 'RegionalHydrology' native/src/app/Main.cpp
+          grep -q 'currentMoon' native/src/app/Main.cpp
+          git diff --exit-code -- native/src/app/Main.cpp
 
       - name: Configure full C++23 Vulkan runtime and tests
         run: cmake -S native -B build/r23 -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -106,11 +129,13 @@ jobs:
       - name: Checkout R23 source
         uses: actions/checkout@v6
 
-      - name: Apply the same R23 integration used by Vulkan evidence
+      - name: Ensure tracked R23 source is present
         shell: pwsh
         run: |
-          python .github/scripts/r23_preview_patch.py
-          python .github/scripts/r23_preview_target_patch.py
+          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch '#include "vf/world/AstroTime.hpp"' -Quiet)) {
+            python .github/scripts/r23_preview_patch.py
+            python .github/scripts/r23_preview_target_patch.py
+          }
 
       - name: Configure Windows x64 runtime
         run: cmake -S native -B build/windows-r23 -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -129,9 +154,9 @@ jobs:
           New-Item -ItemType Directory -Force artifact | Out-Null
           Copy-Item $exe.FullName artifact/voxel_frontier-r23.exe
           @"
-          R23 preview branch: work/r23-astrotime-hydrology-preview
+          R23 source branch: work/r23-astrotime-hydrology-preview
           Features: fixed AstroTime stepping, real N-body moon, regional Priority-Flood hydrology incision.
-          This executable is built from the exact same patched source used for real Vulkan screenshot evidence.
+          Runtime wiring is committed directly in native/src/app/Main.cpp.
           "@ | Set-Content artifact/README.txt
 
       - name: Upload Windows R23 preview
