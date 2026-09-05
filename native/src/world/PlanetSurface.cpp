@@ -584,13 +584,14 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xBA7C9045F12C7F99ULL, w, 21000.0, 3);
     const double ultra = fbmSurface(
         definition.seed ^ 0x24A19947B3916CF7ULL, w, 98000.0, 2);
-    // R17 terminal detail only. These amplitudes are intentionally metre-scale and may not
-    // move mountain systems, drainage divides or plateau provinces produced by the global bake.
+    // R17 walkable micro-relief floor. The macro silhouette remains exclusively owned by
+    // GlobalGeomorph; these bounded terminal amplitudes only restore metre/deca-metre slope
+    // variation needed for natural ground traversal without rebuilding mountain systems.
     const double detailDamp = geomorphLandness
         * (1.0 - 0.80 * std::max(wetland, geomorph.floodplain))
         * (1.0 - 0.70 * bakedTableland);
     elevation += maxLand * detailDamp
-        * (0.0024 * local + 0.0010 * micro + 0.00045 * fine + 0.00012 * ultra);
+        * (0.0045 * local + 0.0018 * micro + 0.00065 * fine + 0.00015 * ultra);
 
     elevation = std::clamp(elevation, -maxOcean, maxLand);
 
