@@ -1,12 +1,12 @@
-name: Terrain R5 Real Vulkan Geomorph Evidence
+name: Terrain R6 Real Vulkan Landform Evidence
 
 on:
   push:
-    branches: [test/terrain-r5-geomorph]
+    branches: [test/terrain-r6-geomorph]
   workflow_dispatch:
 
 concurrency:
-  group: terrain-r5-evidence-${{ github.ref }}
+  group: terrain-r6-evidence-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -15,12 +15,14 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
-      - name: Verify materialized R5 source
+      - name: Verify materialized R6 source
         run: |
           grep -q 'R5 geomorph' native/include/vf/world/PlanetGeomorph.hpp
           grep -q 'R5 river corridor' native/src/world/PlanetSurface.cpp
-          grep -q 'R5 capture geometry' native/src/app/Main.cpp
           grep -q 'R5 river exclusion' native/src/world/ProceduralEcology.cpp
+          grep -q 'R6 mountain shape' native/src/world/PlanetSurface.cpp
+          grep -q 'R6 plateau shape' native/src/world/PlanetSurface.cpp
+          grep -q 'R6 capture geometry' native/src/app/Main.cpp
           git diff --check
       - name: Configure core tests
         run: cmake -S native -B build/core -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
@@ -34,12 +36,14 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v6
-      - name: Verify materialized R5 source
+      - name: Verify materialized R6 source
         run: |
           grep -q 'R5 geomorph' native/include/vf/world/PlanetGeomorph.hpp
           grep -q 'R5 river corridor' native/src/world/PlanetSurface.cpp
-          grep -q 'R5 capture geometry' native/src/app/Main.cpp
           grep -q 'R5 river exclusion' native/src/world/ProceduralEcology.cpp
+          grep -q 'R6 mountain shape' native/src/world/PlanetSurface.cpp
+          grep -q 'R6 plateau shape' native/src/world/PlanetSurface.cpp
+          grep -q 'R6 capture geometry' native/src/app/Main.cpp
           git diff --check
       - name: Install Vulkan headless dependencies
         run: |
@@ -67,7 +71,7 @@ jobs:
           test -n "$ICD"
           echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
-      - name: Capture R5 mountain river coast highland
+      - name: Capture R6 mountain river coast highland
         shell: bash
         run: |
           set -euo pipefail
@@ -79,16 +83,16 @@ jobs:
           sleep 2
           APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
           test -n "$APP"
-          mkdir -p r5-captures
+          mkdir -p r6-captures
           capture_mode() {
             mode="$1"
             echo "=== capture $mode ==="
-            VF_CAPTURE_LANDFORM="$mode" timeout 70s "$APP" >"r5-captures/runtime-$mode.log" 2>&1 &
+            VF_CAPTURE_LANDFORM="$mode" timeout 70s "$APP" >"r6-captures/runtime-$mode.log" 2>&1 &
             pid=$!
             sleep 22
-            import -display :99 -window root "r5-captures/$mode.png"
-            colors="$(convert "r5-captures/$mode.png" -format '%k' info:)"
-            echo "$mode unique_colors=$colors" | tee -a r5-captures/capture-info.txt
+            import -display :99 -window root "r6-captures/$mode.png"
+            colors="$(convert "r6-captures/$mode.png" -format '%k' info:)"
+            echo "$mode unique_colors=$colors" | tee -a r6-captures/capture-info.txt
             test "$colors" -gt 64
             kill "$pid" 2>/dev/null || true
             wait "$pid" 2>/dev/null || true
@@ -98,12 +102,12 @@ jobs:
           capture_mode river
           capture_mode coast
           capture_mode highland
-          identify r5-captures/*.png | tee -a r5-captures/capture-info.txt
-      - name: Upload R5 screenshots
+          identify r6-captures/*.png | tee -a r6-captures/capture-info.txt
+      - name: Upload R6 screenshots
         uses: actions/upload-artifact@v5
         with:
-          name: terrain-r5-real-vulkan-${{ github.sha }}
+          name: terrain-r6-real-vulkan-${{ github.sha }}
           path: |
-            r5-captures
+            r6-captures
             vulkan-summary.txt
           if-no-files-found: error
