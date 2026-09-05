@@ -57,11 +57,12 @@ constexpr double kPi = 3.1415926535897932384626433832795;
 PlanetCamera::PlanetCamera(
     const PlanetDefinition& planet,
     const CelestialSystem* celestialSystem,
-    std::uint32_t primaryCelestialBodyId)
+    std::uint32_t primaryCelestialBodyId,
+    const glm::dvec3& startDirectionInput)
     : planet_(&planet),
       celestialSystem_(celestialSystem),
       primaryCelestialBodyId_(primaryCelestialBodyId) {
-    const glm::dvec3 startDirection = safeNormalize({0.72, 0.52, 0.46});
+    const glm::dvec3 startDirection = safeNormalize(startDirectionInput, {0.72, 0.52, 0.46});
     if (celestialSystem_ != nullptr && primaryCelestialBodyId_ != 0U) {
         if (const auto* primary = celestialSystem_->body(primaryCelestialBodyId_)) {
             physicsFrameBodyId_ = primary->id;

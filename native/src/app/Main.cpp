@@ -17,6 +17,7 @@
 #include <future>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <utility>
 
@@ -51,6 +52,51 @@ constexpr double kPi = 3.1415926535897932384626433832795;
 
 [[nodiscard]] double circularOrbitSpeed(double parentMassKg, double radiusMeters) {
     return std::sqrt(vf::CelestialSystem::kGravitationalConstant * parentMassKg / std::max(1.0, radiusMeters));
+}
+
+
+[[nodiscard]] glm::dvec3 findPlayableSpawnDirection(const vf::PlanetDefinition& planet) {
+    // Deterministic Fibonacci-sphere scan. This does not alter the terrain seed: it only chooses a
+    // gentle, inland point on the already-authoritative V7 planet so the first frame demonstrates
+    // terrain rather than dropping the player into the global ocean.
+    constexpr std::uint32_t sampleCount = 1536U;
+    constexpr double goldenAngle = 2.39996322972865332223;
+    const glm::dvec3 preferred = safeNormalize({0.72, 0.52, 0.46});
+    glm::dvec3 best = preferred;
+    double bestScore = -std::numeric_limits<double>::infinity();
+    bool found = false;
+
+    for (std::uint32_t i = 0; i < sampleCount; ++i) {
+        const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5)
+            / static_cast<double>(sampleCount);
+        const double radial = std::sqrt(std::max(0.0, 1.0 - y * y));
+        const double a = goldenAngle * static_cast<double>(i);
+        const glm::dvec3 d{std::cos(a) * radial, y, std::sin(a) * radial};
+        const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, d);
+        const double aboveSea = terrain.elevationMeters - planet.seaLevelElevationMeters;
+        if (aboveSea < 80.0 || terrain.submerged(planet)) continue;
+        if (terrain.mountain > 0.62 || terrain.volcano > 0.68 || terrain.trench > 0.05) continue;
+
+        const glm::dvec3 normal = vf::planetSurfaceNormal(planet, d);
+        const double radialAlignment = glm::dot(normal, d);
+        if (radialAlignment < 0.955) continue;
+
+        const double altitudePreference = 1.0 - std::clamp(std::abs(aboveSea - 420.0) / 2200.0, 0.0, 1.0);
+        const double oldRegionPreference = 0.5 + 0.5 * glm::dot(d, preferred);
+        const double score = radialAlignment * 2.4
+            + altitudePreference * 0.75
+            + oldRegionPreference * 0.20
+            + terrain.plateau * 0.10
+            + terrain.river * 0.08
+            - terrain.mountain * 0.70
+            - terrain.volcano * 0.80;
+        if (!found || score > bestScore) {
+            bestScore = score;
+            best = d;
+            found = true;
+        }
+    }
+    return safeNormalize(best, preferred);
 }
 
 void appendMesh(vf::PlanetMesh& destination, const vf::PlanetMesh& source) {
@@ -158,7 +204,11 @@ int main() {
         cinder.visibleAlbedo = {0.62, 0.30, 0.22};
         const std::uint32_t cinderId = celestial.addBody(cinder);
 
-        vf::PlanetCamera camera{planet, &celestial, asterId};
+        const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet);
+        const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
+        vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
+        std::cout << "Spawn land elevation: " << std::fixed << std::setprecision(1)
+                  << spawnTerrain.elevationMeters << " m\n";
         const vf::CelestialBody* initialAster = celestial.body(asterId);
         if (initialAster == nullptr) throw std::runtime_error("Aster failed to initialize");
         vf::CelestialPhysicsFrame asterFrame{asterId};
@@ -205,7 +255,7 @@ int main() {
             // use only centimetre/metre-class depth bias: the old 160 m edge sink made the LOD
             // boundary itself visible from altitude.
             const std::array<Ring, 5> rings{{
-                {4096.0,       0.0, 256U, 0.00, 0.12},
+                {4096.0,       0.0, 320U, 0.00, 0.10},
                 {24576.0,   3600.0, 192U, 0.12, 0.42},
                 {131072.0, 22000.0, 160U, 0.38, 0.95},
                 {655360.0,118000.0, 128U, 0.95, 2.80},
@@ -294,6 +344,7 @@ int main() {
             for (auto& vertex : oceanProxy.vertices) {
                 vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+                vertex.material.w = -20.0F;
             }
             appendMesh(mesh, oceanProxy);
             return mesh;

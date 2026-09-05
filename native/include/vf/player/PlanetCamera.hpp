@@ -26,7 +26,8 @@ public:
     explicit PlanetCamera(
         const PlanetDefinition& planet,
         const CelestialSystem* celestialSystem = nullptr,
-        std::uint32_t primaryCelestialBodyId = 0U);
+        std::uint32_t primaryCelestialBodyId = 0U,
+        const glm::dvec3& startDirection = glm::dvec3{0.72, 0.52, 0.46});
 
     void update(const PlanetMovementInput& input, double dt);
 

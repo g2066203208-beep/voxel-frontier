@@ -14,6 +14,7 @@ struct VertexOutput
     float4 material : TEXCOORD2;
     float3 relativePosition : TEXCOORD3;
     float4 shadowPosition : TEXCOORD4;
+    float3 objectPosition : TEXCOORD5;
 };
 
 struct ShadowVertexOutput
@@ -165,6 +166,27 @@ float hash31(float3 p)
     return frac((p.x + p.y) * p.z);
 }
 
+
+float valueNoise2(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash21(i);
+    float b = hash21(i + float2(1.0, 0.0));
+    float c = hash21(i + float2(0.0, 1.0));
+    float d = hash21(i + float2(1.0, 1.0));
+    return lerp(lerp(a, b, f.x), lerp(c, d, f.x), f.y);
+}
+
+float terrainFbm2(float2 p)
+{
+    float n = valueNoise2(p) * 0.58;
+    n += valueNoise2(p * 2.07 + 19.37) * 0.28;
+    n += valueNoise2(p * 4.21 - 7.11) * 0.14;
+    return n;
+}
+
 [shader("vertex")]
 VertexOutput vertexMain(VertexInput input)
 {
@@ -178,6 +200,7 @@ VertexOutput vertexMain(VertexInput input)
     output.color = input.color;
     output.material = input.material;
     output.shadowPosition = mul(gScene.lightViewProjection, float4(relativePosition, 1.0));
+    output.objectPosition = input.position;
     return output;
 }
 
@@ -230,16 +253,31 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     float3 h = normalize(l + v);
 
     bool waterMaterial = input.material.x < -0.5;
+    bool terrainMaterial = !waterMaterial && input.material.w < -0.5;
     float metallic = waterMaterial ? 0.0 : saturate(input.material.x);
     float roughness = waterMaterial ? 0.065 : clamp(input.material.y, 0.045, 1.0);
     float transmission = saturate(input.material.z);
     float emissive = max(input.material.w, 0.0);
     float3 baseColor = max(input.color, 0.0);
 
+    if (terrainMaterial)
+    {
+        // Object-space noise stays attached to the planet as it rotates/recenters. Large color
+        // masses dominate; mid-scale variation enriches them; fine grain is deliberately weak.
+        float2 q = input.objectPosition.xz;
+        float macro = terrainFbm2(q * 0.0045);
+        float medium = terrainFbm2(q * 0.0145 + 31.7);
+        float fine = valueNoise2(q * 0.045 + 8.9);
+        float value = (macro - 0.5) * 0.18 + (medium - 0.5) * 0.085 + (fine - 0.5) * 0.028;
+        float warmPatch = smoothstep(0.58, 0.84, macro);
+        baseColor *= 1.0 + value;
+        baseColor = lerp(baseColor, baseColor * float3(1.035, 1.005, 0.945), warmPatch * 0.18);
+        roughness = clamp(roughness + (medium - 0.5) * 0.055, 0.62, 0.98);
+    }
+
     if (waterMaterial)
     {
-        float3 stablePosition = input.relativePosition + gPush.data0.xyz;
-        float2 p = stablePosition.xz * 0.00135;
+        float2 p = input.objectPosition.xz * 0.00175;
         float2 waveSlope = float2(
             sin(p.x * 1.00 + p.y * 0.57) + 0.48 * sin(p.x * 2.31 - p.y * 1.73),
             cos(p.y * 1.07 - p.x * 0.61) + 0.44 * cos(p.y * 2.19 + p.x * 1.51));
@@ -284,7 +322,7 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
             float cosV = max(abs(dot(n, v)), 0.05);
             float fresnelWater = 0.02037 + (1.0 - 0.02037) * pow(1.0 - saturate(cosV), 5.0);
             float3 reflected = stylizedSkyPalette(reflect(-v, n), l);
-            float3 shallowScatter = baseColor * (0.20 + 0.32 * saturate(n.y * 0.5 + 0.5));
+            float3 shallowScatter = baseColor * (0.58 + 0.28 * saturate(n.y * 0.5 + 0.5));
             float3 sunGlint = specular * stellar * noL * shadow * 0.48;
             return shallowScatter * (1.0 - fresnelWater)
                 + reflected * fresnelWater * 1.18
@@ -330,16 +368,21 @@ float4 transparentFragmentMain(VertexOutput input) : SV_Target
     float f0Scalar = ((ior - 1.0) / (ior + 1.0));
     f0Scalar *= f0Scalar;
     float fresnel = f0Scalar + (1.0 - f0Scalar) * pow(1.0 - saturate(abs(dot(n, v))), 5.0);
+    if (waterMaterial && dot(n, v) <= 0.015) discard;
+
     float opticalOpacity = waterMaterial
-        ? saturate(0.24 + fresnel * 0.70)
+        ? saturate(0.66 + fresnel * 0.32)
         : saturate((1.0 - transmission) * 0.48 + fresnel * 0.72 + 0.025);
 
-    // -10 marks the one high-resolution local ocean patch.  Fade it before its finite patch edge
-    // reaches the geometric horizon; the single global geoid remains underneath at all altitudes.
-    if (waterMaterial && input.material.w < -9.0)
+    // Keep only one effective water representation at walking altitude. The local patch fades out
+    // as the global geoid fades in, preventing transparent-shell stacking and horizon banding.
+    if (waterMaterial)
     {
-        float localOceanFade = 1.0 - smoothstep(12000.0, 30000.0, max(gPush.data0.w, 0.0));
-        opticalOpacity *= localOceanFade;
+        float cameraAltitude = max(gPush.data0.w, 0.0);
+        if (input.material.w < -19.0)
+            opticalOpacity *= smoothstep(18000.0, 34000.0, cameraAltitude);
+        else if (input.material.w < -9.0)
+            opticalOpacity *= 1.0 - smoothstep(14000.0, 30000.0, cameraAltitude);
         if (opticalOpacity < 0.004) discard;
     }
 

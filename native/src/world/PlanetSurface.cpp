@@ -296,7 +296,7 @@ void appendOceanFace(
             PlanetVertex vertex{};
             vertex.position = glm::vec3(center + direction * radius);
             vertex.normal = glm::vec3(direction);
-            vertex.color = {0.018F, 0.145F, 0.255F};
+            vertex.color = {0.020F, 0.205F, 0.315F};
             // Negative metallic tags the shared transparent path as water rather than glass.
             vertex.material = {-1.0F, 0.055F, 0.72F, 0.0F};
             mesh.vertices.push_back(vertex);
@@ -447,19 +447,21 @@ PlanetTerrainSample samplePlanetTerrain(
     // provide, while remaining much smaller than the tectonic mountain/trench signal.
     const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3);
     const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
-    const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 13500.0, 2);
+    const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
+    const double fine = fbmSurface(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2);
     const double ridged = 1.0 - std::abs(local);
     const double protectedDrainage = 1.0 - 0.74 * river;
     const double landRelief = (
         regional * (0.0030 + 0.0065 * mountain + 0.0028 * plateau)
         + local * (0.0016 + 0.0040 * mountain)
-        + micro * 0.00075
+        + micro * (0.00105 + 0.00055 * mountain)
+        + fine * 0.00034
         + (ridged - 0.5) * 0.0022 * mountain)
         * protectedDrainage;
     elevation += maxLand * landRelief * landness;
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
     const double surfaceDetail = std::clamp(
-        0.52 * regional + 0.34 * local + 0.14 * micro,
+        0.42 * regional + 0.28 * local + 0.20 * micro + 0.10 * fine,
         -1.0,
         1.0);
 
@@ -543,7 +545,7 @@ glm::vec3 planetTerrainColor(
 glm::vec4 planetTerrainMaterial(
     const PlanetDefinition& definition,
     const PlanetTerrainSample& sample) noexcept {
-    if (sample.submerged(definition)) return {0.0F, 0.91F, 0.0F, 0.0F};
+    if (sample.submerged(definition)) return {0.0F, 0.91F, 0.0F, -1.0F};
     const double aboveSea = sample.elevationMeters - definition.seaLevelElevationMeters;
     const double highland = smooth01(1200.0, 3800.0, aboveSea);
     const double rockiness = std::clamp(
@@ -554,7 +556,7 @@ glm::vec4 planetTerrainMaterial(
         0.91 - 0.17 * rockiness + 0.035 * sample.surfaceDetail,
         0.66,
         0.96));
-    return {0.0F, roughness, 0.0F, 0.0F};
+    return {0.0F, roughness, 0.0F, -1.0F};
 }
 
 glm::dvec3 planetSurfaceNormal(
@@ -672,7 +674,7 @@ PlanetMesh buildOceanSurfacePatch(
             PlanetVertex vertex{};
             vertex.position = glm::vec3(direction * radius);
             vertex.normal = glm::vec3(direction);
-            vertex.color = {0.018F, 0.145F, 0.255F};
+            vertex.color = {0.020F, 0.205F, 0.315F};
             vertex.material = {-1.0F, 0.055F, 0.72F, 0.0F};
             mesh.vertices.push_back(vertex);
         }
