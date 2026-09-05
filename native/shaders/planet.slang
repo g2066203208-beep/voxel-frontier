@@ -288,23 +288,24 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
 
         if (terrainClass == 0) // GRASS
         {
-            baseColor = float3(0.095, 0.365, 0.060);
-            baseColor *= 0.94 + coarse * 0.08;
-            baseColor += step(0.82, fine) * 0.012 * float3(0.40, 0.80, 0.24);
+            // R13 terrain readability: restrained olive grass, no neon blanket.
+            baseColor = float3(0.115, 0.300, 0.055);
+            baseColor *= 0.88 + coarse * 0.18;
+            baseColor += step(0.84, fine) * 0.010 * float3(0.30, 0.56, 0.16);
             roughness = 0.94;
         }
         else if (terrainClass == 1) // ROCK
         {
             float fracture = step(0.82, fine);
-            baseColor = float3(0.335, 0.325, 0.305) * (0.91 + coarse * 0.13);
-            baseColor = lerp(baseColor, float3(0.19, 0.185, 0.175), fracture * 0.34);
+            baseColor = float3(0.235, 0.225, 0.210) * (0.84 + coarse * 0.24);
+            baseColor = lerp(baseColor, float3(0.115, 0.110, 0.105), fracture * 0.46);
             roughness = 0.82;
         }
         else if (terrainClass == 2) // DRY SAND / DUNE
         {
             float ripple = 0.5 + 0.5 * sin(
                 input.objectPosition.x * 0.11 + input.objectPosition.z * 0.075 + coarse * 4.0);
-            baseColor = float3(0.735, 0.565, 0.300) * (0.90 + ripple * 0.15);
+            baseColor = float3(0.675, 0.505, 0.270) * (0.88 + ripple * 0.18);
             roughness = 0.91;
         }
         else if (terrainClass == 3) // SOIL
@@ -454,7 +455,10 @@ float4 opaqueFragmentMain(VertexOutput input) : SV_Target
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
     float3 linearColor = evaluatePbr(input, false) * exposure;
     float materialTag = input.material.w;
-    float hazeStrength = materialTag <= -1.5 && materialTag > -4.5 ? 0.90 : 1.0;
+    // R13 terrain readability: retain terrain contrast through aerial perspective.
+    bool terrainTag = materialTag <= -9.5 && materialTag > -19.5;
+    float hazeStrength = terrainTag ? 0.56
+        : (materialTag <= -1.5 && materialTag > -4.5 ? 0.88 : 1.0);
     linearColor = applyStylizedAerial(linearColor, input, hazeStrength);
     linearColor = stylizedWarmCoolGrade(linearColor);
     return float4(acesFitted(linearColor), 1.0);
