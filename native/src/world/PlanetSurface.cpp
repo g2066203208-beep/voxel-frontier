@@ -572,21 +572,32 @@ PlanetTerrainSample samplePlanetTerrain(
     const double globalHighland = geomorphLandness
         * smooth01(720.0, 2100.0, geomorph.elevationMeters)
         * (1.0 - smooth01(0.20, 0.64, geomorph.mountain));
-    // R13 tableland: narrower C1 rim and a nearly level inner table create a readable top+scarp.
+    // R14 plateau authority: suitability only decides WHERE a tableland may exist; once a
+    // province is selected its inner core receives full flattening authority. R13 multiplied the
+    // profile by a soft highland gate, which diluted the shelf and turned it back into rolling hills.
+    const double plateauSuitability = smooth01(0.32, 0.72, globalHighland);
     const double plateauMacro = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x4A7484AA6EA6E483ULL, w, 92.0, 4);
+        definition.seed ^ 0x4A7484AA6EA6E483ULL, w, 180.0, 4);
     const double plateauMeso = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x5CB0A9DCBD41FBD4ULL, w, 260.0, 3);
-    const double plateauSignal = plateauMacro * 0.88 + plateauMeso * 0.12;
-    const double plateauTerrace = globalHighland * smooth01(0.535, 0.595, plateauSignal);
-    const double plateauBody = globalHighland * smooth01(0.615, 0.665, plateauSignal);
-    const double plateauRim = std::clamp(plateauTerrace - plateauBody * 0.72, 0.0, 1.0);
+        definition.seed ^ 0x5CB0A9DCBD41FBD4ULL, w, 620.0, 3);
+    const double plateauSignal = plateauMacro * 0.86 + plateauMeso * 0.14;
+    const double plateauProvince = smooth01(0.545, 0.595, plateauSignal);
+    const double plateauCore = smooth01(0.625, 0.665, plateauSignal);
+    const double plateauTerrace = plateauSuitability * plateauProvince;
+    const double plateauBody = plateauSuitability * plateauCore;
+    const double plateauRim = plateauSuitability
+        * std::clamp(plateauProvince - plateauCore * 0.72, 0.0, 1.0);
     const double plateauTopNoise = fbmSurface(
-        definition.seed ^ 0x76F988DA831153B5ULL, w, 210.0, 2);
-    const double plateauShelf = 2680.0 + 14.0 * plateauTopNoise;
-    const double plateauBlend = std::clamp(0.80 * plateauTerrace + 0.195 * plateauBody, 0.0, 0.995);
+        definition.seed ^ 0x76F988DA831153B5ULL, w, 250.0, 2);
+    const double plateauShelf = 2700.0 + 10.0 * plateauTopNoise;
+    // Full authority on the inner table, C1 blend only across the finite rim.
+    const double coreBlend = smooth01(0.18, 0.72, plateauBody);
+    const double terraceBlend = smooth01(0.16, 0.74, plateauTerrace) * (1.0 - coreBlend);
+    const double plateauBlend = std::clamp(coreBlend * 0.999 + terraceBlend * 0.78, 0.0, 0.999);
     elevation = elevation * (1.0 - plateauBlend) + plateauShelf * plateauBlend;
-    elevation += maxLand * (0.043 * plateauRim + 0.0012 * plateauBody);
+    // Resistant caprock makes the rim read as an escarpment instead of a grassy swell.
+    elevation += 290.0 * plateauRim + 18.0 * plateauBody;
+
 
     // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while
     // `geomorph.channel` is reconstructed from the actual downhill receiver graph and owns
@@ -606,16 +617,19 @@ PlanetTerrainSample samplePlanetTerrain(
     // Give hydrologically low coastal margins a readable land/sea break without changing
     // the global coastline authority.  Rugged margins expose a short escarpment, while flat
     // margins remain beaches/floodplains.
-    // R13 coast profiles: independent resistance field makes both real rocky cliffs and low beaches.
-    const double globalCoastBand = geomorphLandness
-        * (1.0 - smooth01(70.0, 640.0, std::abs(geomorph.elevationMeters)));
+    // R14 coast authority: distinguish low-energy beach/floodplain margins from resistant
+    // rock coasts using an independent hardness-like field. The rocky profile is confined to the
+    // first few hundred metres of positive coastal relief so it produces an actual sea cliff,
+    // not a ten-kilometre green ramp.
+    const double coastLandSide = smooth01(-30.0, 85.0, geomorph.elevationMeters)
+        * (1.0 - smooth01(260.0, 620.0, geomorph.elevationMeters));
     const double coastResistanceNoise = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x91E10DA5C79E7B1DULL, w, 185.0, 4);
-    const double rockyCoast = globalCoastBand * smooth01(0.54, 0.76, coastResistanceNoise)
-        * (1.0 - 0.62 * std::clamp(geomorph.floodplain, 0.0, 1.0));
-    const double coastEscarpment = std::pow(rockyCoast, 1.18)
-        * (0.72 + 0.28 * smooth01(0.38, 0.82, rangeRidgeB));
-    elevation += maxLand * 0.062 * coastEscarpment;
+        definition.seed ^ 0x91E10DA5C79E7B1DULL, w, 235.0, 4);
+    const double hardCoast = coastLandSide * smooth01(0.52, 0.72, coastResistanceNoise)
+        * (1.0 - 0.72 * std::clamp(geomorph.floodplain, 0.0, 1.0));
+    const double coastEscarpment = std::pow(std::clamp(hardCoast, 0.0, 1.0), 1.12);
+    elevation += 430.0 * coastEscarpment;
+
 
     // Walking-scale geometry. Frequencies now span tens of kilometres down to a few
     // hundred metres; the new ~4 m innermost clipmap can actually resolve them.
@@ -631,7 +645,7 @@ PlanetTerrainSample samplePlanetTerrain(
     // still damped detail with the obsolete pre-bake `plateau` mask, re-wrinkling the flat top.
     const double detailDamp = geomorphLandness
         * (1.0 - 0.72 * std::max(wetland, geomorph.floodplain))
-        * (1.0 - 0.975 * std::clamp(std::max(plateau, plateauBody), 0.0, 1.0));
+        * (1.0 - 0.992 * std::clamp(std::max(plateau, plateauBody), 0.0, 1.0));
     elevation += maxLand * detailDamp
         * (0.0100 * local + 0.0038 * micro + 0.0062 * fine + 0.0018 * ultra);
 
@@ -645,7 +659,7 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.divergence = plates.divergence;
     sample.oceanRidge = oceanRidge;
     sample.mountain = std::max(mountain, geomorph.mountain);
-    sample.plateau = std::clamp(std::max(plateauBody, plateauRim * 0.86), 0.0, 1.0);
+    sample.plateau = std::clamp(std::max(plateauBody, plateauRim * 0.92), 0.0, 1.0);
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = channelCore;
@@ -684,6 +698,8 @@ glm::vec3 planetTerrainColor(
         surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7; // shelf sand / seabed rock
     } else if (sample.river > 0.44) {
         surfaceClass = 8; // hydrology-driven river core
+    } else if (sample.river > 0.10) {
+        surfaceClass = 4; // saturated river bank / floodplain mud
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20
@@ -717,7 +733,9 @@ glm::vec4 planetTerrainMaterial(
     if (sample.submerged(definition)) {
         surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7;
     } else if (sample.river > 0.44) {
-        surfaceClass = 8;
+        surfaceClass = 8; // hydrology-driven river core
+    } else if (sample.river > 0.10) {
+        surfaceClass = 4; // saturated river bank / floodplain mud
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20

@@ -289,8 +289,8 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
         if (terrainClass == 0) // GRASS
         {
             // R13 terrain readability: restrained olive grass, no neon blanket.
-            baseColor = float3(0.115, 0.300, 0.055);
-            baseColor *= 0.88 + coarse * 0.18;
+            baseColor = float3(0.095, 0.245, 0.045);
+            baseColor *= 0.86 + coarse * 0.20;
             baseColor += step(0.84, fine) * 0.010 * float3(0.30, 0.56, 0.16);
             roughness = 0.94;
         }
@@ -426,12 +426,14 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
             float cosV = max(abs(dot(n, v)), 0.05);
             float fresnelWater = 0.02037 + (1.0 - 0.02037) * pow(1.0 - saturate(cosV), 5.0);
             float3 reflected = stylizedSkyPalette(reflect(-v, n), l);
-            float3 shallowScatter = baseColor * (0.58 + 0.28 * saturate(n.y * 0.5 + 0.5));
-            float3 sunGlint = specular * stellar * noL * shadow * 0.48;
-            return shallowScatter * (1.0 - fresnelWater)
-                + reflected * fresnelWater * 1.18
+            // R14 water readability: keep a saturated blue body under bright sky instead of
+            // letting atmospheric reflection bleach the entire near-shore surface white.
+            float3 shallowScatter = baseColor * (0.86 + 0.22 * saturate(n.y * 0.5 + 0.5));
+            float3 sunGlint = specular * stellar * noL * shadow * 0.32;
+            return shallowScatter * (1.0 - fresnelWater * 0.55)
+                + reflected * fresnelWater * 0.62
                 + sunGlint
-                + ambientSpecular * 0.55;
+                + ambientSpecular * 0.35;
         }
 
         float cosV = max(abs(dot(n, v)), 0.12);
@@ -480,7 +482,7 @@ float4 transparentFragmentMain(VertexOutput input) : SV_Target
     if (waterMaterial && dot(n, v) <= 0.015) discard;
 
     float opticalOpacity = waterMaterial
-        ? saturate(0.66 + fresnel * 0.32)
+        ? saturate(0.86 + fresnel * 0.11)
         : saturate((1.0 - transmission) * 0.48 + fresnel * 0.72 + 0.025);
 
     if (waterMaterial)

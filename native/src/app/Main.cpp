@@ -106,7 +106,7 @@ struct LocalReliefStats {
     // of hiding the terrain and vegetation on the night side of the planet.
     const char* captureEnv = std::getenv("VF_CAPTURE_LANDFORM");
     const std::string_view captureMode = captureEnv != nullptr ? std::string_view{captureEnv} : std::string_view{};
-    const std::uint32_t sampleCount = captureMode.empty() ? 2048U : 8192U;
+    const std::uint32_t sampleCount = captureMode.empty() ? 2048U : 24576U;
     constexpr double goldenAngle = 2.39996322972865332223;
     const glm::dvec3 preferred = safeNormalize({0.72, 0.52, 0.46});
     const glm::dvec3 sunDirection = safeNormalize(sunDirectionInput, {1.0, 0.0, 0.0});
@@ -145,23 +145,22 @@ struct LocalReliefStats {
                 captureScore += terrain.river * 7.0 + valleyDepth / 100.0
                     + terrain.canyon * 1.4;
             } else if (captureMode == "coast") {
-                if (aboveSea < 90.0 || aboveSea > 1400.0 || terrain.coastalCliff < 0.14) continue;
-                const LocalReliefStats r = sampleLocalRelief(planet, d, 9000.0);
+                if (aboveSea < 100.0 || aboveSea > 850.0 || terrain.coastalCliff < 0.10) continue;
+                // Target must genuinely border ocean within ~2 km; no more inland "coast" shots.
+                const LocalReliefStats r = sampleLocalRelief(planet, d, 1800.0);
                 const double relief = r.maxElevation - r.minElevation;
-                if (r.minElevation > 5.0 || relief < 300.0) continue;
-                const double cliffHeightPreference = 1.0
-                    - std::clamp(std::abs(aboveSea - 420.0) / 900.0, 0.0, 1.0);
-                captureScore += terrain.coastalCliff * 7.2 + relief / 120.0
-                    + cliffHeightPreference * 2.8;
+                if (r.minElevation > -2.0 || relief < 140.0) continue;
+                captureScore += terrain.coastalCliff * 8.5 + relief / 80.0
+                    - std::abs(aboveSea - 420.0) / 420.0;
             } else if (captureMode == "highland") {
-                if (terrain.plateau < 0.34 || aboveSea < 1750.0 || aboveSea > 3100.0) continue;
-                const LocalReliefStats r = sampleLocalRelief(planet, d, 24000.0);
+                if (terrain.plateau < 0.42 || aboveSea < 2250.0 || aboveSea > 3050.0) continue;
+                // A useful plateau target must expose its edge within a few kilometres.
+                const LocalReliefStats r = sampleLocalRelief(planet, d, 7000.0);
                 const double relief = r.maxElevation - r.minElevation;
-                if (relief < 450.0 || relief > 2600.0) continue;
-                const double edgePreference = 1.0
-                    - std::clamp(std::abs(terrain.plateau - 0.64) / 0.30, 0.0, 1.0);
-                captureScore += edgePreference * 5.0 + terrain.plateau * 4.0
-                    + std::min(relief, 2200.0) / 620.0 - terrain.mountain * 1.8;
+                if (relief < 500.0 || relief > 2600.0) continue;
+                const double edgePreference = std::clamp((aboveSea - r.minElevation) / 900.0, 0.0, 1.0);
+                captureScore += edgePreference * 7.5 + terrain.plateau * 4.5
+                    + relief / 520.0 - terrain.mountain * 2.6;
             }
 
             if (captureScore > bestScore) {
@@ -276,8 +275,8 @@ struct LocalReliefStats {
     // R12 apparent-prominence evidence: visual quality is governed by angular prominence.
     // Search multiple baselines, then explicitly reward vertical drop per metre of stand-off.
     const std::array<double, 7> mountainRadii{5000.0, 7000.0, 9000.0, 12000.0, 15000.0, 19000.0, 24000.0};
-    const std::array<double, 7> highlandRadii{2800.0, 4000.0, 5500.0, 7000.0, 9000.0, 12000.0, 16000.0};
-    const std::array<double, 7> coastRadii{450.0, 650.0, 850.0, 1100.0, 1400.0, 1800.0, 2400.0};
+    const std::array<double, 7> highlandRadii{2200.0, 3200.0, 4500.0, 6000.0, 8000.0, 10500.0, 14000.0};
+    const std::array<double, 7> coastRadii{350.0, 500.0, 700.0, 900.0, 1200.0, 1600.0, 2000.0};
     const std::array<double, 7> riverRadii{450.0, 700.0, 1000.0, 1400.0, 2000.0, 2800.0, 3600.0};
     const auto& radii = mode == "mountain" ? mountainRadii
         : (mode == "highland" ? highlandRadii : (mode == "coast" ? coastRadii : riverRadii));
@@ -297,8 +296,8 @@ struct LocalReliefStats {
             double score = 0.0;
             if (mode == "coast") {
                 if (!terrain.submerged(planet)) continue;
-                score = std::abs(terrain.elevationMeters + 10.0) * 0.08
-                    + std::abs(standOffMeters - 850.0) * 0.055;
+                score = std::abs(terrain.elevationMeters + 8.0) * 0.05
+                    + std::abs(standOffMeters - 700.0) * 0.080;
             } else if (mode == "river") {
                 if (terrain.submerged(planet) || terrain.river > 0.12 || terrain.elevationMeters < 100.0) continue;
                 score = std::abs(terrain.elevationMeters - targetElevation) * 0.11
@@ -313,14 +312,14 @@ struct LocalReliefStats {
                     + terrain.mountain * 520.0
                     + std::abs(standOffMeters - 9000.0) * 0.020;
             } else {
-                if (terrain.submerged(planet) || terrain.plateau > 0.42) continue;
+                if (terrain.submerged(planet) || terrain.plateau > 0.20) continue;
                 const double drop = targetElevation - terrain.elevationMeters;
-                if (drop < 280.0) continue;
+                if (drop < 380.0) continue;
                 const double apparent = std::atan2(drop, std::max(1.0, standOffMeters));
-                score = -apparent * 10000.0
-                    + terrain.mountain * 900.0
-                    + terrain.plateau * 900.0
-                    + std::abs(standOffMeters - 5500.0) * 0.022;
+                score = -apparent * 13000.0
+                    + terrain.mountain * 1400.0
+                    + terrain.plateau * 2200.0
+                    + std::abs(standOffMeters - 4500.0) * 0.018;
             }
             if (score < bestScore) {
                 bestScore = score;
@@ -376,8 +375,8 @@ struct LocalReliefStats {
         }
     }
     if (!foundVantage || glm::dot(best, target) > 0.9999995) {
-        const double fallbackMeters = mode == "coast" ? 850.0
-            : (mode == "river" ? 1000.0 : (mode == "highland" ? 5500.0 : 9000.0));
+        const double fallbackMeters = mode == "coast" ? 700.0
+            : (mode == "river" ? 1000.0 : (mode == "highland" ? 4500.0 : 9000.0));
         const double angular = fallbackMeters / std::max(1.0, planet.radius);
         best = safeNormalize(target + east * angular, target);
     }
@@ -601,12 +600,14 @@ int main() {
             // R12 clipmap density: keep ~5.3 m cells for a full kilometre around the
             // camera so shoreline intersections, rocks and local relief do not fall onto the old
             // 19-110 m grids. Outer rings remain progressively cheaper.
+            // R14 mid-distance density: 5-20 km mountain silhouettes were visibly faceted on
+            // the 228 m grid. Spend vertices in rings two/three where ground-level relief is read.
             const std::array<Ring, 7> rings{{
                 {1024.0,        0.0, 384U},   // 5.33 m cell, 2.05 km fine window
-                {4096.0,      960.0, 224U},   // 36.6 m cell
-                {16384.0,    3900.0, 144U},   // 227.6 m cell
-                {65536.0,   15600.0,  96U},   // 1.37 km cell
-                {196608.0,  62000.0,  64U},   // 6.14 km cell
+                {4096.0,      960.0, 256U},   // 32.0 m cell
+                {16384.0,    3900.0, 256U},   // 128 m cell
+                {65536.0,   15600.0, 160U},   // 819 m cell
+                {196608.0,  62000.0,  80U},   // 4.92 km cell
                 {786432.0, 186000.0,  48U},   // 32.8 km cell
                 {2600000.0,740000.0, 40U},   // 130 km orbital support
             }};
