@@ -27,17 +27,6 @@ constexpr double kEpsilon = 1.0e-9;
     return std::clamp(value, 0.0, 1.0);
 }
 
-[[nodiscard]] double smooth01(double value) noexcept {
-    const double x = saturate(value);
-    return x * x * (3.0 - 2.0 * x);
-}
-
-[[nodiscard]] double surfaceGravityOf(const CelestialBody& body) noexcept {
-    const double radius = std::max(0.1, body.radiusMeters);
-    if (body.gameplaySurfaceGravityMps2 > 0.0) return body.gameplaySurfaceGravityMps2;
-    return CelestialSystem::kGravitationalConstant * body.massKg / (radius * radius);
-}
-
 [[nodiscard]] glm::dvec3 angularVelocityOf(const CelestialBody& body) noexcept {
     return safeNormalize(body.spinAxis) * body.spinRateRadPerSecond;
 }
@@ -123,7 +112,7 @@ std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
     }
     if (bodyValue.gravityInfluenceRadiusMeters > 0.0) {
         bodyValue.gravityInfluenceRadiusMeters = std::max(
-            bodyValue.gravityFalloffStartRadiusMeters * 1.001,
+            bodyValue.radiusMeters * 1.001,
             bodyValue.gravityInfluenceRadiusMeters);
     }
     if (bodyValue.physicsBubbleRadiusMeters > 0.0) {
@@ -149,9 +138,8 @@ const CelestialBody* CelestialSystem::body(std::uint32_t id) const noexcept {
 void CelestialSystem::step(double deltaSeconds) {
     if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0 || bodies_.empty()) return;
 
-    // Preserve the existing production hitch/time-warp safety contract: one runtime call advances
-    // at most 60 simulated seconds. Within that bounded interval, use a symmetric kick-drift-kick
-    // velocity-Verlet step so every massive body contributes to every other body's trajectory.
+    // The caller (AstroTime/CelestialSimulationClock) supplies bounded fixed substeps. Keep an
+    // additional 60 s safety cap here so a direct caller cannot accidentally integrate a huge dt.
     const double dt = std::min(deltaSeconds, 60.0);
     std::vector<glm::dvec3> acceleration(bodies_.size());
 
@@ -207,52 +195,27 @@ double CelestialSystem::stellarIrradianceAt(const CelestialBody& target) const n
 void CelestialSystem::updateClimateAndWeather(CelestialBody& celestialBody, double deltaSeconds) noexcept {
     if (celestialBody.type == CelestialBodyType::Star) return;
 
+    // Keep only a slowly varying global radiative-equilibrium diagnostic here. Local temperature,
+    // humidity, cloud, precipitation and wind belong to PlanetClimateGrid, where they are forced by
+    // local solar zenith angle, heat capacity, pressure gradients and Coriolis acceleration. R24
+    // intentionally removes the old sin(simulationTime) weather oscillator.
     const double irradiance = stellarIrradianceAt(celestialBody);
-    if (irradiance > 0.0) {
-        const double absorbed = irradiance * (1.0 - saturate(celestialBody.climate.bondAlbedo));
-        const double equilibrium = std::pow(
-            std::max(0.0, absorbed) / (4.0 * kStefanBoltzmann), 0.25)
-            * std::max(0.1, celestialBody.climate.greenhouseFactor);
-        const double response = std::max(1.0, celestialBody.climate.thermalResponseSeconds);
-        const double blend = 1.0 - std::exp(-deltaSeconds / response);
-        celestialBody.climate.meanTemperatureK += (equilibrium - celestialBody.climate.meanTemperatureK) * blend;
-    }
-
-    const double bodyPhase = static_cast<double>(celestialBody.id) * 1.731;
-    const double slow = std::sin(simulationTime_ * 0.00045 + bodyPhase);
-    const double faster = std::sin(simulationTime_ * 0.0017 + bodyPhase * 0.47);
-    const double humidityTarget = saturate(0.48 + 0.22 * slow);
-    const double cloudTarget = saturate(0.18 + 0.55 * humidityTarget + 0.18 * faster);
-    const double stormTarget = saturate((cloudTarget - 0.62) * 2.4 + 0.15 * faster);
-    const double weatherBlend = 1.0 - std::exp(-deltaSeconds / 120.0);
-    celestialBody.weather.humidity += (humidityTarget - celestialBody.weather.humidity) * weatherBlend;
-    celestialBody.weather.cloudCover += (cloudTarget - celestialBody.weather.cloudCover) * weatherBlend;
-    celestialBody.weather.stormIntensity += (stormTarget - celestialBody.weather.stormIntensity) * weatherBlend;
-    celestialBody.weather.precipitationRateMmPerHour = 18.0
-        * celestialBody.weather.stormIntensity
-        * saturate((celestialBody.weather.humidity - 0.60) / 0.40);
-    celestialBody.weather.windMultiplier = 0.75 + 1.45 * celestialBody.weather.stormIntensity;
+    if (irradiance <= 0.0) return;
+    const double absorbed = irradiance * (1.0 - saturate(celestialBody.climate.bondAlbedo));
+    const double equilibrium = std::pow(
+        std::max(0.0, absorbed) / (4.0 * kStefanBoltzmann), 0.25)
+        * std::max(0.1, celestialBody.climate.greenhouseFactor);
+    const double response = std::max(1.0, celestialBody.climate.thermalResponseSeconds);
+    const double blend = 1.0 - std::exp(-deltaSeconds / response);
+    celestialBody.climate.meanTemperatureK += (equilibrium - celestialBody.climate.meanTemperatureK) * blend;
 }
 
 double CelestialSystem::gravityCutoffRadius(const CelestialBody& celestialBody) const noexcept {
-    if (celestialBody.type == CelestialBodyType::Star) {
-        return std::numeric_limits<double>::infinity();
-    }
-
-    const double radius = std::max(0.1, celestialBody.radiusMeters);
-    const double start = std::max(radius, celestialBody.gravityFalloffStartRadiusMeters);
-    if (celestialBody.gravityInfluenceRadiusMeters > start) {
+    // Compatibility query only. R24 no longer cuts off physical gravity. Legacy authored
+    // gravityInfluenceRadiusMeters may still be used as a reference-frame/streaming hint.
+    if (celestialBody.gravityInfluenceRadiusMeters > celestialBody.radiusMeters)
         return celestialBody.gravityInfluenceRadiusMeters;
-    }
-
-    const double gSurface = surfaceGravityOf(celestialBody);
-    const double gAtStart = gSurface * (radius * radius) / (start * start);
-    const double cutoffG = std::max(1.0e-4, celestialBody.gravityCutoffAccelerationMps2);
-    if (gAtStart <= cutoffG) return start * 1.001;
-
-    return start * std::pow(
-        gAtStart / cutoffG,
-        1.0 / std::max(2.0, celestialBody.gravityFalloffPower));
+    return std::numeric_limits<double>::infinity();
 }
 
 double CelestialSystem::gravityMagnitudeFromBody(
@@ -262,41 +225,14 @@ double CelestialSystem::gravityMagnitudeFromBody(
 
     const double radius = std::max(0.1, celestialBody.radiusMeters);
     const double distance = glm::length(worldPosition - celestialBody.position);
+    if (distance <= 1.0e-12) return 0.0;
 
-    if (celestialBody.type == CelestialBodyType::Star) {
-        const double r = std::max(distance, radius * 0.20);
-        return kGravitationalConstant * celestialBody.massKg / (r * r);
-    }
-
-    const double gSurface = surfaceGravityOf(celestialBody);
     if (distance < radius) {
-        // A linear interior field is stable for caves/cores and avoids a singularity at the center.
-        return gSurface * std::max(0.01, distance / radius);
+        // Uniform-density sphere interior: g(r)=GM r/R^3. It is finite and reaches zero at center.
+        return kGravitationalConstant * celestialBody.massKg * distance
+            / (radius * radius * radius);
     }
-
-    const double start = std::max(radius, celestialBody.gravityFalloffStartRadiusMeters);
-    const double cutoff = gravityCutoffRadius(celestialBody);
-    if (distance >= cutoff) return 0.0;
-
-    double magnitude = 0.0;
-    if (distance <= start) {
-        const double ratio = radius / std::max(distance, radius);
-        magnitude = gSurface * ratio * ratio;
-    } else {
-        const double gAtStart = gSurface * (radius * radius) / (start * start);
-        magnitude = gAtStart * std::pow(
-            start / distance,
-            std::max(2.0, celestialBody.gravityFalloffPower));
-    }
-
-    // Do not snap from a measurable acceleration to exactly zero in one centimetre. The final 15%
-    // of the authored gravity well is smoothly faded to zero; this preserves stable transitions
-    // while still giving an Astroneer/Space-Engineers-like finite zero-g region.
-    const double fadeStart = start + (cutoff - start) * 0.85;
-    if (cutoff > fadeStart && distance > fadeStart) {
-        magnitude *= smooth01((cutoff - distance) / (cutoff - fadeStart));
-    }
-    return std::max(0.0, magnitude);
+    return kGravitationalConstant * celestialBody.massKg / (distance * distance);
 }
 
 glm::dvec3 CelestialSystem::gravityFromSource(
@@ -332,29 +268,19 @@ glm::dvec3 CelestialSystem::gravityAccelerationRelativeTo(
     glm::dvec3 relative{};
     for (const auto& source : bodies_) {
         if (source.id == frameBodyId) {
-            // Keep the frame body's own radial gravity. Its center is the origin of this local
-            // physics frame, so subtracting its center field would be meaningless.
             relative += gravityFromSource(source, worldPosition);
             continue;
         }
-
-        // Remove only the external source's common-mode acceleration at the frame origin. The
-        // remaining difference is the real tidal acceleration experienced inside the local frame.
-        relative += gravityFromSource(source, worldPosition) - gravityFromSource(source, frameBody->position);
+        // Remove external common-mode acceleration at the frame origin, retaining true tides.
+        relative += gravityFromSource(source, worldPosition)
+            - gravityFromSource(source, frameBody->position);
     }
     return relative;
 }
 
 glm::dvec3 CelestialSystem::physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
     glm::dvec3 total{};
-    for (const auto& source : bodies_) {
-        if (source.massKg <= 0.0) continue;
-        const glm::dvec3 delta = source.position - worldPosition;
-        const double minimumDistance = std::max(1.0, source.radiusMeters * 0.20);
-        const double distanceSquared = std::max(glm::dot(delta, delta), minimumDistance * minimumDistance);
-        const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
-        total += delta * (kGravitationalConstant * source.massKg * inverseDistance / distanceSquared);
-    }
+    for (const auto& source : bodies_) total += gravityFromSource(source, worldPosition);
     return total;
 }
 
@@ -388,15 +314,14 @@ const CelestialBody* CelestialSystem::physicsReferenceBodyAt(const glm::dvec3& w
         if (source.type == CelestialBodyType::Star) continue;
         const double atmosphereTop = source.radiusMeters
             + (source.atmosphere.enabled ? source.atmosphere.heightMeters : 0.0);
-        const double defaultBubble = std::max(
-            gravityCutoffRadius(source) * 1.20,
-            atmosphereTop * 1.35);
-        const double bubble = source.physicsBubbleRadiusMeters > source.radiusMeters
-            ? source.physicsBubbleRadiusMeters
-            : defaultBubble;
+        double bubble = source.physicsBubbleRadiusMeters;
+        if (bubble <= source.radiusMeters && source.gravityInfluenceRadiusMeters > source.radiusMeters)
+            bubble = source.gravityInfluenceRadiusMeters;
+        if (bubble <= source.radiusMeters) bubble = atmosphereTop * 1.35;
+        bubble = std::max(bubble, source.radiusMeters * 1.05);
+
         const double distance = glm::length(worldPosition - source.position);
         if (distance > bubble) continue;
-
         const double normalized = distance / std::max(1.0, bubble);
         if (normalized < bestNormalizedDistance) {
             bestNormalizedDistance = normalized;
@@ -415,9 +340,7 @@ const CelestialBody* CelestialSystem::dominantBodyAt(const glm::dvec3& worldPosi
     double bestAcceleration = -1.0;
     for (const auto& source : bodies_) {
         if (source.massKg <= 0.0) continue;
-        const glm::dvec3 delta = source.position - worldPosition;
-        const double distanceSquared = std::max(glm::dot(delta, delta), 1.0);
-        const double acceleration = kGravitationalConstant * source.massKg / distanceSquared;
+        const double acceleration = gravityMagnitudeFromBody(source, worldPosition);
         if (acceleration > bestAcceleration) {
             bestAcceleration = acceleration;
             best = &source;
@@ -494,18 +417,10 @@ CelestialEnvironmentSample CelestialSystem::sampleEnvironment(const glm::dvec3& 
     const glm::dvec3 outward = safeNormalize(worldPosition - environmentBody->position);
     glm::dvec3 localWind = environmentBody->orientation * atmosphere.prevailingWind;
     localWind -= outward * glm::dot(localWind, outward);
-    const glm::dvec3 reference = std::abs(outward.y) < 0.9
-        ? glm::dvec3{0.0, 1.0, 0.0}
-        : glm::dvec3{1.0, 0.0, 0.0};
-    const glm::dvec3 tangent = safeNormalize(glm::cross(reference, outward), {1.0, 0.0, 0.0});
-    const double gust = std::sin(
-        simulationTime_ * 0.11 + glm::dot(worldPosition, tangent) * 0.006 + environmentBody->id)
-        * (1.2 + 5.0 * environmentBody->weather.stormIntensity);
-    localWind = (localWind + tangent * gust) * environmentBody->weather.windMultiplier;
+    localWind *= environmentBody->weather.windMultiplier;
 
-    // Atmosphere co-moves with its planet before local weather is added. Global/inertial callers
-    // therefore see correct relative air speed; a planet-centered physics proxy simply has zero
-    // translational velocity and gets the same formula for free.
+    // Atmosphere co-moves with its planet. PlanetClimateGrid may replace localWind with a solved
+    // body-local climate sample in the local PhysicsEnvironment; no synthetic sine gust is added.
     sample.windVelocity = environmentBody->linearVelocity
         + glm::cross(angularVelocityOf(*environmentBody), worldPosition - environmentBody->position)
         + localWind;
