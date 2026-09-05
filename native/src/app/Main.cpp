@@ -202,10 +202,11 @@ struct LocalReliefStats {
     const glm::dvec3 target = safeNormalize(targetDirectionInput);
     const glm::dvec3 east = stableTangent(target);
     const glm::dvec3 north = safeNormalize(glm::cross(target, east), {0.0, 0.0, 1.0});
-    const std::array<double, 5> mountainRadii{42000.0, 65000.0, 90000.0, 125000.0, 165000.0};
-    const std::array<double, 5> highlandRadii{26000.0, 42000.0, 62000.0, 85000.0, 115000.0};
-    const std::array<double, 5> coastRadii{7000.0, 11000.0, 17000.0, 24000.0, 32000.0};
-    const std::array<double, 5> riverRadii{3200.0, 5200.0, 7800.0, 11000.0, 15500.0};
+    // R5 capture geometry: close low-angle evidence stays inside useful terrain LODs.
+    const std::array<double, 5> mountainRadii{18000.0, 26000.0, 38000.0, 52000.0, 70000.0};
+    const std::array<double, 5> highlandRadii{12000.0, 18000.0, 26000.0, 36000.0, 50000.0};
+    const std::array<double, 5> coastRadii{1800.0, 3000.0, 4500.0, 6500.0, 9000.0};
+    const std::array<double, 5> riverRadii{1200.0, 1800.0, 2600.0, 3600.0, 5200.0};
     const auto& radii = mode == "mountain" ? mountainRadii
         : (mode == "highland" ? highlandRadii : (mode == "coast" ? coastRadii : riverRadii));
     const double targetElevation = vf::planetHeight(planet, target);
@@ -223,17 +224,23 @@ struct LocalReliefStats {
             double score = 0.0;
             if (mode == "coast") {
                 if (!terrain.submerged(planet)) continue;
-                score = std::abs(terrain.elevationMeters + 45.0) * 0.08
-                    + std::abs(standOffMeters - 15000.0) * 0.015;
+                score = std::abs(terrain.elevationMeters + 30.0) * 0.06
+                    + std::abs(standOffMeters - 4500.0) * 0.020;
             } else if (mode == "river") {
+                if (terrain.submerged(planet) || terrain.river > 0.16) continue;
+                score = std::abs(terrain.elevationMeters - targetElevation) * 0.18
+                    + terrain.river * 2200.0
+                    + std::abs(standOffMeters - 2600.0) * 0.035;
+            } else if (mode == "mountain") {
                 if (terrain.submerged(planet)) continue;
-                score = -terrain.elevationMeters + terrain.river * 900.0
-                    + std::abs(standOffMeters - 7800.0) * 0.025;
+                score = terrain.elevationMeters * 1.35
+                    + terrain.mountain * 1350.0
+                    + std::abs(standOffMeters - 32000.0) * 0.014;
             } else {
                 if (terrain.submerged(planet)) continue;
-                score = terrain.elevationMeters - targetElevation
-                    + terrain.mountain * 480.0
-                    + standOffMeters * (mode == "mountain" ? 0.003 : 0.005);
+                score = terrain.elevationMeters * 0.95
+                    + terrain.mountain * 1050.0
+                    + std::abs(standOffMeters - 24000.0) * 0.018;
             }
             if (score < bestScore) {
                 bestScore = score;
@@ -361,11 +368,11 @@ int main() {
         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
         if (!captureMode.empty()) {
-            const double targetLift = captureMode == "mountain" ? 950.0
-                : (captureMode == "highland" ? 520.0 : (captureMode == "coast" ? 130.0 : 80.0));
-            const double cameraLift = captureMode == "mountain" ? 3200.0
-                : (captureMode == "highland" ? 2400.0
-                : (captureMode == "coast" ? 1050.0 : 760.0));
+            const double targetLift = captureMode == "mountain" ? 420.0
+                : (captureMode == "highland" ? 180.0 : (captureMode == "coast" ? 85.0 : 28.0));
+            const double cameraLift = captureMode == "mountain" ? 220.0
+                : (captureMode == "highland" ? 240.0
+                : (captureMode == "coast" ? 95.0 : 90.0));
             const glm::dvec3 targetPlanet = featureDirection
                 * (vf::planetSurfaceRadius(planet, featureDirection) + targetLift);
             const double localSurface = vf::planetSurfaceRadius(planet, spawnDirection);

@@ -495,6 +495,8 @@ PlanetMesh buildProceduralEcology(
             const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 18.0 || aboveSea > 2550.0) return;
+            // R5 river exclusion: a hydrology channel is water, not fertile ground under water.
+            if (c.terrain.river > 0.16 || c.terrain.wetland > 0.82) return;
             if (c.radialAlignment < 0.935 || c.terrain.mountain > 0.76 || c.terrain.volcano > 0.72) return;
             const double forestSuitability = std::clamp(
                 0.27
@@ -543,6 +545,7 @@ PlanetMesh buildProceduralEcology(
             const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 7.0 || aboveSea > 2200.0) return;
+            if (c.terrain.river > 0.28) return;
             if (c.radialAlignment < 0.955 || c.terrain.mountain > 0.62 || c.terrain.volcano > 0.58) return;
             const double grassSuitability = std::clamp(
                 0.30 + 0.22 * (1.0 - c.terrain.mountain) + 0.16 * c.terrain.river,

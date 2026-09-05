@@ -21,6 +21,7 @@ struct GlobalGeomorphSample {
     double continentalness{};
     double mountain{};
     double river{};
+    double channel{};
     double floodplain{};
     double incision{};
 };
@@ -111,11 +112,12 @@ struct Field {
     std::vector<float> river;
     std::vector<float> floodplain;
     std::vector<float> incision;
+    std::vector<int> receiver;
 
     explicit Field(std::uint64_t s, double r, double maxElev)
         : seed(s), radius(r), maxElevation(maxElev),
           elevation(kCount), continental(kCount), mountain(kCount), river(kCount),
-          floodplain(kCount), incision(kCount) {
+          floodplain(kCount), incision(kCount), receiver(kCount, -1) {
         bake();
     }
 
@@ -180,15 +182,20 @@ struct Field {
                 const double broad = fbm(seed ^ 0x510E527FADE682D1ULL, d, 4.2, 5);
                 const double province = fbm(seed ^ 0x6A09E667F3BCC909ULL, d, 11.0, 4);
                 const double orogen = std::pow(std::clamp(conv * land, 0.0, 1.0), 1.05);
-                const double ridgeCore = std::pow(smooth01(0.34, 0.88, ridge), 1.65);
-                const double range = orogen * (0.16 + 0.84 * ridgeCore);
+                const double ridgeCore = std::pow(smooth01(0.34, 0.88, ridge), 1.82);
+                const double range = orogen * (0.08 + 0.92 * ridgeCore);
+                const double interRangeTrough = orogen * std::pow(1.0 - ridgeCore, 1.75);
 
                 double h = 0.0;
-                h += land * (280.0 + 720.0 * broad + 420.0 * province);
-                // Orogenic belts get modest broad uplift, while high elevation is concentrated
-                // on ridge cores. This avoids the previous several-kilometre-tall smooth slab.
-                h += orogen * 850.0 + range * (900.0 + 3600.0 * ridgeCore);
-                h += land * smooth01(0.55, 0.83, 0.5 + 0.5 * fbm(seed ^ 0xBB67AE8584CAA73BULL, d, 5.8, 4)) * 900.0;
+                h += land * (260.0 + 680.0 * broad + 380.0 * province);
+                // R5 geomorph: convergent belts are signed ridge-and-valley systems. Broad
+                // tectonic uplift stays modest; most elevation is concentrated on ridge cores,
+                // while inter-range troughs are explicitly lowered so a mountain belt reads as
+                // peaks separated by valleys instead of one kilometre-scale table.
+                h += orogen * 520.0
+                    + range * (1250.0 + 5000.0 * std::pow(ridgeCore, 1.30))
+                    - interRangeTrough * 720.0;
+                h += land * smooth01(0.55, 0.83, 0.5 + 0.5 * fbm(seed ^ 0xBB67AE8584CAA73BULL, d, 5.8, 4)) * 720.0;
                 h -= ocean * (2900.0 + 2700.0 * smooth01(0.05, 0.65, -cont));
                 h += ocean * div * (900.0 + 1300.0 * ridge);
                 h -= ocean * conv * 1700.0;
@@ -197,7 +204,7 @@ struct Field {
                 base[id] = static_cast<float>(h);
                 filled[id] = static_cast<float>(h);
                 continental[id] = static_cast<float>(cont);
-                mountain[id] = static_cast<float>(std::clamp(range, 0.0, 1.0));
+                mountain[id] = static_cast<float>(std::clamp(orogen * (0.12 + 0.88 * ridgeCore), 0.0, 1.0));
                 const double wet = std::clamp((1.0 - std::abs(d.y)) * 0.55 + 0.45 * (0.5 + 0.5 * fbm(seed ^ 0x1F83D9ABFB41BD6BULL, d, 4.0, 3)), 0.05, 1.0);
                 rainfall[id] = static_cast<float>(wet);
             }
@@ -241,7 +248,7 @@ struct Field {
         std::iota(order.begin(), order.end(), 0);
         std::sort(order.begin(), order.end(), [&](int a, int b) { return filled[a] > filled[b]; });
         std::vector<double> discharge(kCount, 0.0);
-        std::vector<int> receiver(kCount, -1);
+        std::fill(receiver.begin(), receiver.end(), -1);
         std::vector<float> localSlope(kCount, 0.0F);
         for (int i = 0; i < kCount; ++i) discharge[i] = std::max(0.01F, rainfall[i]);
 
@@ -340,6 +347,62 @@ struct Field {
         s.river = std::clamp(bilinear(river,d), 0.0, 1.0);
         s.floodplain = std::clamp(bilinear(floodplain,d), 0.0, 1.0);
         s.incision = std::clamp(bilinear(incision,d), 0.0, 1.0);
+
+        // R5 geomorph: the 512x256 field chooses the real drainage graph, but a grid cell is
+        // tens of kilometres wide on an Earth-sized sphere. Reconstruct the centerline from
+        // each wet cell to its actual downhill receiver and measure geodesic distance to those
+        // flow segments. The result is a continuous sub-kilometre-to-kilometre river core while
+        // the broad `river` field remains available only for valley/floodplain shaping.
+        const glm::dvec3 q = glm::normalize(d);
+        const glm::dvec3 ref = std::abs(q.y) < 0.88
+            ? glm::dvec3{0.0, 1.0, 0.0}
+            : glm::dvec3{1.0, 0.0, 0.0};
+        const glm::dvec3 east = glm::normalize(glm::cross(ref, q));
+        const glm::dvec3 north = glm::normalize(glm::cross(q, east));
+        auto localMeters = [&](const glm::dvec3& pInput) {
+            const glm::dvec3 p = glm::normalize(pInput);
+            const double c = std::clamp(glm::dot(q, p), -1.0, 1.0);
+            const double angle = std::acos(c);
+            glm::dvec3 tangent = p - q * c;
+            const double tl = glm::length(tangent);
+            if (tl < 1.0e-12 || angle < 1.0e-12) return glm::dvec2{0.0};
+            tangent /= tl;
+            return glm::dvec2{glm::dot(tangent, east), glm::dot(tangent, north)}
+                * (angle * radius);
+        };
+
+        const double lon = std::atan2(q.z, q.x);
+        const double lat = std::asin(std::clamp(q.y, -1.0, 1.0));
+        const double gx = (lon + kPi) / (2.0 * kPi) * kWidth - 0.5;
+        const double gy = (lat + 0.5 * kPi) / kPi * kHeight - 0.5;
+        const int cx = static_cast<int>(std::floor(gx));
+        const int cy = static_cast<int>(std::floor(gy));
+        double channel = 0.0;
+        for (int oy = -2; oy <= 2; ++oy) {
+            const int sy = cy + oy;
+            if (sy < 0 || sy >= kHeight) continue;
+            for (int ox = -2; ox <= 2; ++ox) {
+                const int sx = cx + ox;
+                const int id = index(sx, sy);
+                const int rid = receiver[id];
+                const double strength = std::clamp(static_cast<double>(river[id]), 0.0, 1.0);
+                if (rid < 0 || strength < 0.30) continue;
+                const int rx = rid % kWidth;
+                const int ry = rid / kWidth;
+                const glm::dvec2 a = localMeters(directionAt(sx, sy));
+                const glm::dvec2 b = localMeters(directionAt(rx, ry));
+                const glm::dvec2 ab = b - a;
+                const double ab2 = glm::dot(ab, ab);
+                const double t = ab2 > 1.0
+                    ? std::clamp(-glm::dot(a, ab) / ab2, 0.0, 1.0)
+                    : 0.0;
+                const double distance = glm::length(a + ab * t);
+                const double halfWidth = 90.0 + 620.0 * std::pow(strength, 1.80);
+                const double core = 1.0 - smooth01(halfWidth * 0.32, halfWidth, distance);
+                channel = std::max(channel, core * (0.58 + 0.42 * strength));
+            }
+        }
+        s.channel = std::clamp(channel, 0.0, 1.0);
         return s;
     }
 };

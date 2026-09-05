@@ -573,32 +573,31 @@ PlanetTerrainSample samplePlanetTerrain(
         * smooth01(900.0, 2400.0, geomorph.elevationMeters)
         * (1.0 - smooth01(0.22, 0.68, geomorph.mountain));
 
-    // Hydrology remains the placement authority for valleys.  A narrow deterministic
-    // sub-channel only sharpens the coarse baked river corridor; it cannot create a river
-    // where the discharge bake has none.
-    const double channelRefineNoise = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xC2B2AE3D27D4EB4FULL, w, 260.0, 3));
-    const double riverAuthority = std::pow(std::clamp(geomorph.river, 0.0, 1.0), 1.18)
+    // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while
+    // `geomorph.channel` is reconstructed from the actual downhill receiver graph and owns
+    // the visible watercourse. This prevents a single coarse hydrology texel from becoming
+    // a blue plain tens of kilometres wide.
+    const double channelTexture = 0.5 + 0.5 * fbmSurface(
+        definition.seed ^ 0xC2B2AE3D27D4EB4FULL, w, 420.0, 3);
+    const double riverAuthority = std::pow(std::clamp(geomorph.river, 0.0, 1.0), 1.26)
         * geomorphLandness;
-    const double channelCore = std::pow(std::clamp(geomorph.river, 0.0, 1.0), 1.72)
-        * (0.76 + 0.24 * smooth01(0.42, 0.88, channelRefineNoise)) * geomorphLandness;
+    const double channelCore = std::pow(std::clamp(geomorph.channel, 0.0, 1.0), 0.88)
+        * (0.90 + 0.10 * channelTexture) * geomorphLandness;
     const double uplandCarve = smooth01(260.0, 2200.0, geomorph.elevationMeters);
-
-    // The Priority-Flood/discharge bake remains authoritative for placement.  Near-field
-    // reconstruction resolves its broad corridor into a visible valley floor and a narrower
-    // river core instead of inventing sine-wave channels elsewhere.
-    elevation -= riverAuthority * (75.0 + 510.0 * uplandCarve);
-    elevation -= channelCore * (45.0 + 230.0 * uplandCarve);
-    elevation -= geomorph.incision * (55.0 + 240.0 * uplandCarve);
+    elevation -= riverAuthority * (45.0 + 300.0 * uplandCarve);
+    elevation -= channelCore * (12.0 + 68.0 * uplandCarve);
+    elevation -= geomorph.incision * (35.0 + 175.0 * uplandCarve);
 
     // Give hydrologically low coastal margins a readable land/sea break without changing
     // the global coastline authority.  Rugged margins expose a short escarpment, while flat
     // margins remain beaches/floodplains.
     const double globalCoastBand = geomorphLandness
-        * (1.0 - smooth01(90.0, 680.0, std::abs(geomorph.elevationMeters)));
+        * (1.0 - smooth01(70.0, 620.0, std::abs(geomorph.elevationMeters)));
     const double globalCoastRugged = globalCoastBand
-        * smooth01(0.46, 0.86, rangeRidgeB);
-    elevation += maxLand * 0.032 * globalCoastRugged;
+        * smooth01(0.44, 0.84, rangeRidgeB);
+    const double coastEscarpment = globalCoastRugged
+        * (0.62 + 0.38 * smooth01(0.34, 0.86, rangeRidgeA));
+    elevation += maxLand * 0.058 * coastEscarpment;
 
     // Walking-scale geometry. Frequencies now span tens of kilometres down to a few
     // hundred metres; the new ~4 m innermost clipmap can actually resolve them.
@@ -629,11 +628,11 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.plateau = std::max(plateau, globalHighland);
     sample.trench = trench;
     sample.volcano = volcano;
-    sample.river = std::max(geomorph.river * 0.44, channelCore);
+    sample.river = channelCore;
     sample.hills = hills;
     sample.canyon = std::max(canyon, geomorph.incision);
     sample.dunes = dunes;
-    sample.coastalCliff = std::max(coastalCliff, globalCoastRugged);
+    sample.coastalCliff = std::max(coastalCliff, coastEscarpment);
     sample.wetland = std::max(wetland, geomorph.floodplain);
     sample.glacier = glacier;
     sample.aridity = aridity;
@@ -663,7 +662,7 @@ glm::vec3 planetTerrainColor(
     int surfaceClass = 3; // soil
     if (sample.submerged(definition)) {
         surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7; // shelf sand / seabed rock
-    } else if (sample.river > 0.60) {
+    } else if (sample.river > 0.44) {
         surfaceClass = 8; // hydrology-driven river core
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
@@ -697,7 +696,7 @@ glm::vec4 planetTerrainMaterial(
     int surfaceClass = 3;
     if (sample.submerged(definition)) {
         surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7;
-    } else if (sample.river > 0.60) {
+    } else if (sample.river > 0.44) {
         surfaceClass = 8;
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
