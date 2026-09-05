@@ -690,6 +690,8 @@ double planetSurfaceRadius(const PlanetDefinition& definition, const glm::dvec3&
     return definition.radius + planetHeight(definition, direction);
 }
 
+// R15 plateau material semantics: level highlands keep biome material; rock exposure follows
+// mountain/canyon/cliff/slope authority rather than a blanket 2.5 km altitude threshold.
 glm::vec3 planetTerrainColor(
     const PlanetDefinition& definition,
     const PlanetTerrainSample& sample) noexcept {
@@ -703,7 +705,7 @@ glm::vec3 planetTerrainColor(
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20
-        || sample.coastalCliff > 0.16 || sample.elevationMeters > 2500.0) {
+        || sample.coastalCliff > 0.16 || sample.elevationMeters > 4800.0) {
         surfaceClass = 1; // exposed rock
     } else if (sample.wetland > 0.34) {
         surfaceClass = 4; // wet mud
@@ -739,7 +741,7 @@ glm::vec4 planetTerrainMaterial(
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20
-        || sample.coastalCliff > 0.30 || sample.elevationMeters > 2500.0) {
+        || sample.coastalCliff > 0.30 || sample.elevationMeters > 4800.0) {
         surfaceClass = 1;
     } else if (sample.wetland > 0.34) {
         surfaceClass = 4; // wet mud
