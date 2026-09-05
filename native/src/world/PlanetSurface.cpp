@@ -589,10 +589,13 @@ PlanetTerrainSample samplePlanetTerrain(
     const double plateauRim = std::clamp(plateauTerrace - plateauBody * 0.82, 0.0, 1.0);
     const double plateauTopNoise = fbmSurface(
         definition.seed ^ 0x76F988DA831153B5ULL, w, 175.0, 2);
-    const double plateauShelf = 2620.0 + 34.0 * plateauTopNoise;
-    const double plateauBlend = std::clamp(0.78 * plateauTerrace + 0.20 * plateauBody, 0.0, 0.975);
+    // R12 visual authority: the inner tableland converges tightly to one shelf while the
+    // transition belt retains a finite erosional escarpment. This produces a readable top plane
+    // without introducing a discontinuous height step.
+    const double plateauShelf = 2660.0 + 20.0 * plateauTopNoise;
+    const double plateauBlend = std::clamp(0.74 * plateauTerrace + 0.255 * plateauBody, 0.0, 0.992);
     elevation = elevation * (1.0 - plateauBlend) + plateauShelf * plateauBlend;
-    elevation += maxLand * (0.026 * plateauRim + 0.003 * plateauBody);
+    elevation += maxLand * (0.032 * plateauRim + 0.002 * plateauBody);
 
     // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while
     // `geomorph.channel` is reconstructed from the actual downhill receiver graph and owns
@@ -692,7 +695,7 @@ glm::vec3 planetTerrainColor(
     } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {
         surfaceClass = 5; // snow/ice
     } else if (sample.mountain > 0.24 || sample.canyon > 0.20
-        || sample.coastalCliff > 0.30 || sample.elevationMeters > 2500.0) {
+        || sample.coastalCliff > 0.16 || sample.elevationMeters > 2500.0) {
         surfaceClass = 1; // exposed rock
     } else if (sample.wetland > 0.34) {
         surfaceClass = 4; // wet mud

@@ -273,13 +273,12 @@ struct LocalReliefStats {
     const glm::dvec3 target = safeNormalize(targetDirectionInput);
     const glm::dvec3 east = stableTangent(target);
     const glm::dvec3 north = safeNormalize(glm::cross(target, east), {0.0, 0.0, 1.0});
-    // R10 evidence geometry: choose baselines that expose vertical relief. Mountain cameras
-    // search for a genuinely lower valley; highland cameras sit below the bench edge; coast
-    // cameras stay offshore but close enough that the escarpment occupies the frame.
-    const std::array<double, 6> mountainRadii{10000.0, 13000.0, 16000.0, 19000.0, 23000.0, 28000.0};
-    const std::array<double, 6> highlandRadii{5000.0, 7000.0, 9000.0, 12000.0, 15000.0, 19000.0};
-    const std::array<double, 6> coastRadii{1200.0, 1700.0, 2300.0, 3000.0, 3800.0, 4800.0};
-    const std::array<double, 6> riverRadii{500.0, 800.0, 1200.0, 1800.0, 2600.0, 3400.0};
+    // R12 apparent-prominence evidence: visual quality is governed by angular prominence.
+    // Search multiple baselines, then explicitly reward vertical drop per metre of stand-off.
+    const std::array<double, 7> mountainRadii{5000.0, 7000.0, 9000.0, 12000.0, 15000.0, 19000.0, 24000.0};
+    const std::array<double, 7> highlandRadii{2800.0, 4000.0, 5500.0, 7000.0, 9000.0, 12000.0, 16000.0};
+    const std::array<double, 7> coastRadii{450.0, 650.0, 850.0, 1100.0, 1400.0, 1800.0, 2400.0};
+    const std::array<double, 7> riverRadii{450.0, 700.0, 1000.0, 1400.0, 2000.0, 2800.0, 3600.0};
     const auto& radii = mode == "mountain" ? mountainRadii
         : (mode == "highland" ? highlandRadii : (mode == "coast" ? coastRadii : riverRadii));
     const double targetElevation = vf::planetHeight(planet, target);
@@ -298,28 +297,30 @@ struct LocalReliefStats {
             double score = 0.0;
             if (mode == "coast") {
                 if (!terrain.submerged(planet)) continue;
-                score = std::abs(terrain.elevationMeters + 12.0) * 0.10
-                    + std::abs(standOffMeters - 2300.0) * 0.034;
+                score = std::abs(terrain.elevationMeters + 10.0) * 0.08
+                    + std::abs(standOffMeters - 850.0) * 0.055;
             } else if (mode == "river") {
-                if (terrain.submerged(planet) || terrain.river > 0.10 || terrain.elevationMeters < 120.0) continue;
-                score = std::abs(terrain.elevationMeters - targetElevation) * 0.12
+                if (terrain.submerged(planet) || terrain.river > 0.12 || terrain.elevationMeters < 100.0) continue;
+                score = std::abs(terrain.elevationMeters - targetElevation) * 0.11
                     + terrain.river * 2600.0
-                    + std::abs(standOffMeters - 1200.0) * 0.042;
+                    + std::abs(standOffMeters - 1000.0) * 0.040;
             } else if (mode == "mountain") {
-                if (terrain.submerged(planet) || terrain.elevationMeters > 1750.0) continue;
+                if (terrain.submerged(planet)) continue;
                 const double drop = targetElevation - terrain.elevationMeters;
-                if (drop < 1500.0) continue;
-                score = std::abs(drop - 2300.0) * 0.48
-                    + terrain.mountain * 850.0
-                    + std::abs(standOffMeters - 17000.0) * 0.026;
+                if (drop < 700.0) continue;
+                const double apparent = std::atan2(drop, std::max(1.0, standOffMeters));
+                score = -apparent * 12000.0
+                    + terrain.mountain * 520.0
+                    + std::abs(standOffMeters - 9000.0) * 0.020;
             } else {
-                if (terrain.submerged(planet) || terrain.elevationMeters > 2050.0) continue;
+                if (terrain.submerged(planet) || terrain.plateau > 0.42) continue;
                 const double drop = targetElevation - terrain.elevationMeters;
-                if (drop < 500.0) continue;
-                score = std::abs(drop - 900.0) * 0.60
-                    + terrain.mountain * 980.0
-                    + terrain.plateau * 520.0
-                    + std::abs(standOffMeters - 10000.0) * 0.032;
+                if (drop < 280.0) continue;
+                const double apparent = std::atan2(drop, std::max(1.0, standOffMeters));
+                score = -apparent * 10000.0
+                    + terrain.mountain * 900.0
+                    + terrain.plateau * 900.0
+                    + std::abs(standOffMeters - 5500.0) * 0.022;
             }
             if (score < bestScore) {
                 bestScore = score;
@@ -375,8 +376,8 @@ struct LocalReliefStats {
         }
     }
     if (!foundVantage || glm::dot(best, target) > 0.9999995) {
-        const double fallbackMeters = mode == "coast" ? 3500.0
-            : (mode == "river" ? 1800.0 : (mode == "highland" ? 14000.0 : 22000.0));
+        const double fallbackMeters = mode == "coast" ? 850.0
+            : (mode == "river" ? 1000.0 : (mode == "highland" ? 5500.0 : 9000.0));
         const double angular = fallbackMeters / std::max(1.0, planet.radius);
         best = safeNormalize(target + east * angular, target);
     }
@@ -500,11 +501,11 @@ int main() {
         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
         if (!captureMode.empty()) {
-            const double targetLift = captureMode == "mountain" ? 180.0
-                : (captureMode == "highland" ? 80.0 : (captureMode == "coast" ? 90.0 : 18.0));
-            const double cameraLift = captureMode == "mountain" ? 180.0
-                : (captureMode == "highland" ? 135.0
-                : (captureMode == "coast" ? 115.0 : 210.0));
+            const double targetLift = captureMode == "mountain" ? 120.0
+                : (captureMode == "highland" ? 45.0 : (captureMode == "coast" ? 70.0 : 18.0));
+            const double cameraLift = captureMode == "mountain" ? 120.0
+                : (captureMode == "highland" ? 105.0
+                : (captureMode == "coast" ? 45.0 : 180.0));
             const glm::dvec3 targetPlanet = featureDirection
                 * (vf::planetSurfaceRadius(planet, featureDirection) + targetLift);
             const double localSurface = vf::planetSurfaceRadius(planet, spawnDirection);
@@ -519,9 +520,17 @@ int main() {
             camera.setViewDirection(
                 targetWorld - cameraWorld,
                 safeNormalize(aster.orientation * spawnDirection));
+            // R12 apparent-prominence evidence diagnostic.
+            const double captureDistance = std::acos(std::clamp(
+                glm::dot(featureDirection, spawnDirection), -1.0, 1.0)) * planet.radius;
+            const double captureDrop = vf::planetHeight(planet, featureDirection)
+                - (visualBase - planet.radius);
             std::cout << "Capture target elevation: " << vf::planetHeight(planet, featureDirection)
                       << " m | camera surface: " << (visualBase - planet.radius)
-                      << " m | lift: " << cameraLift << " m\n";
+                      << " m | lift: " << cameraLift
+                      << " m | stand-off: " << captureDistance
+                      << " m | apparent-deg: " << glm::degrees(std::atan2(captureDrop, std::max(1.0, captureDistance)))
+                      << "\n";
         }
         std::cout << "Spawn land elevation: " << std::fixed << std::setprecision(1)
                   << spawnTerrain.elevationMeters << " m\n";
@@ -589,14 +598,17 @@ int main() {
             // Seven nested rings. The innermost grid is ~4 m/cell instead of 25.6 m/cell.
             // Total sampled vertices stay below the old implementation because outer rings get
             // progressively cheaper; screen-space detail is spent where the player can see it.
+            // R12 clipmap density: keep ~5.3 m cells for a full kilometre around the
+            // camera so shoreline intersections, rocks and local relief do not fall onto the old
+            // 19-110 m grids. Outer rings remain progressively cheaper.
             const std::array<Ring, 7> rings{{
-                {384.0,        0.0, 192U},   // 4.0 m cell
-                {1536.0,     360.0, 160U},   // 19.2 m cell
-                {6144.0,    1450.0, 112U},   // 109.7 m cell
-                {24576.0,   5800.0,  80U},   // 614.4 m cell
-                {98304.0,  23200.0,  64U},   // 3.07 km cell
-                {393216.0, 93000.0,  48U},   // 16.4 km cell
-                {2600000.0,370000.0, 40U},   // 130 km orbital support
+                {1024.0,        0.0, 384U},   // 5.33 m cell, 2.05 km fine window
+                {4096.0,      960.0, 224U},   // 36.6 m cell
+                {16384.0,    3900.0, 144U},   // 227.6 m cell
+                {65536.0,   15600.0,  96U},   // 1.37 km cell
+                {196608.0,  62000.0,  64U},   // 6.14 km cell
+                {786432.0, 186000.0,  48U},   // 32.8 km cell
+                {2600000.0,740000.0, 40U},   // 130 km orbital support
             }};
 
             for (std::size_t ringIndex = 0; ringIndex < rings.size(); ++ringIndex) {
@@ -841,8 +853,8 @@ int main() {
                 const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
                 const double arcDistance = std::acos(std::clamp(
                     glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
-                // Refresh before the 384 m inner ring morph region.
-                const double threshold = altitude < 20000.0 ? 600.0
+                // R12: refresh well before the expanded 1.024 km fine ring morph region.
+                const double threshold = altitude < 20000.0 ? 1450.0
                     : (altitude < 100000.0 ? 4000.0
                     : (altitude < 350000.0 ? 25000.0 : 120000.0));
                 const double prefetchThreshold = threshold * 0.42;
