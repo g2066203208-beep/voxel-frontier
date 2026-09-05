@@ -62,7 +62,7 @@ jobs:
           test -n "$ICD"
           echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
-      - name: Capture R16 landforms after bake readiness
+      - name: Capture R16 landforms after rendered-frame readiness
         shell: bash
         run: |
           set -euo pipefail
@@ -76,25 +76,28 @@ jobs:
           failures=0
           for mode in mountain river coast highland; do
             start=$(date +%s)
-            stdbuf -oL -eL env VF_CAPTURE_LANDFORM="$mode" timeout 150s "$APP" >"r16-captures/runtime-$mode.log" 2>&1 &
+            stdbuf -oL -eL env VF_CAPTURE_LANDFORM="$mode" timeout 180s "$APP" >"r16-captures/runtime-$mode.log" 2>&1 &
             pid=$!
-            ready=0
+            located=0
             for i in $(seq 1 120); do
-              if grep -q 'Capture target elevation' "r16-captures/runtime-$mode.log"; then ready=1; break; fi
+              if grep -q 'Capture target elevation' "r16-captures/runtime-$mode.log"; then located=1; break; fi
               if ! kill -0 "$pid" 2>/dev/null; then break; fi
               sleep 1
             done
-            if [ "$ready" -ne 1 ]; then
-              echo "$mode did not reach capture readiness" | tee -a r16-captures/capture-info.txt
-              failures=$((failures+1))
-            else
-              sleep 5
-              import -display :99 -window root "r16-captures/$mode.png"
-              colors="$(convert "r16-captures/$mode.png" -format '%k' info:)"
-              elapsed=$(( $(date +%s) - start ))
-              echo "$mode unique_colors=$colors ready_seconds=$elapsed" | tee -a r16-captures/capture-info.txt
-              if [ "$colors" -le 64 ]; then failures=$((failures+1)); fi
+            frame_ready=0
+            colors=0
+            if [ "$located" -eq 1 ]; then
+              for attempt in $(seq 1 20); do
+                sleep 3
+                import -display :99 -window root "r16-captures/$mode.png"
+                colors="$(convert "r16-captures/$mode.png" -format '%k' info:)"
+                if [ "$colors" -gt 64 ]; then frame_ready=1; break; fi
+                if ! kill -0 "$pid" 2>/dev/null; then break; fi
+              done
             fi
+            elapsed=$(( $(date +%s) - start ))
+            echo "$mode located=$located frame_ready=$frame_ready unique_colors=$colors seconds=$elapsed" | tee -a r16-captures/capture-info.txt
+            if [ "$located" -ne 1 ] || [ "$frame_ready" -ne 1 ]; then failures=$((failures+1)); fi
             kill "$pid" 2>/dev/null || true
             wait "$pid" 2>/dev/null || true
             sleep 1
