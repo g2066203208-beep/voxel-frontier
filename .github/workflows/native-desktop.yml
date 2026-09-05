@@ -68,3 +68,88 @@ jobs:
           name: voxel-frontier-windows-x64
           path: artifact/voxel_frontier.exe
           if-no-files-found: error
+
+  linux-vulkan-frame-capture:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact V7 source
+        uses: actions/checkout@v6
+
+      - name: Install headless Vulkan and X11 capture dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Linux Vulkan runtime
+        run: cmake -S native -B build/linux-runtime -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
+
+      - name: Build Linux Vulkan runtime
+        run: cmake --build build/linux-runtime --parallel
+
+      - name: Verify Lavapipe Vulkan device
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Run real V7 Vulkan frame and capture X11 framebuffer
+        shell: bash
+        run: |
+          set -euo pipefail
+          export SDL_VIDEODRIVER=x11
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 2
+
+          APP="$(find build/linux-runtime -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          echo "Launching: $APP"
+          set +e
+          timeout 18s "$APP" >runtime.log 2>&1 &
+          RUN_PID=$!
+          set -e
+          sleep 10
+
+          import -display :99 -window root capture.png
+          identify capture.png | tee capture-info.txt
+          COLORS="$(convert capture.png -format '%k' info:)"
+          echo "Unique colors: $COLORS" | tee -a capture-info.txt
+          test "$COLORS" -gt 16
+
+          kill "$RUN_PID" 2>/dev/null || true
+          sleep 1
+          echo '--- runtime log ---'
+          cat runtime.log || true
+
+      - name: Upload real Vulkan capture
+        uses: actions/upload-artifact@v5
+        with:
+          name: v7-real-vulkan-frame
+          path: |
+            capture.png
+            capture-info.txt
+            runtime.log
+            vulkan-summary.txt
+            xvfb.log
+          if-no-files-found: error
