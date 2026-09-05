@@ -19,6 +19,27 @@ enum class CelestialBodyType : std::uint8_t {
     Moon,
 };
 
+// Classical osculating elements are an authoring/initial-state representation only. Runtime
+// celestial motion is integrated in Cartesian inertial space so multiple massive bodies can
+// perturb each other instead of being locked to immutable parent-only ellipses.
+struct KeplerianElements {
+    double semiMajorAxisMeters{};
+    double eccentricity{};
+    double inclinationRadians{};
+    double longitudeAscendingNodeRadians{};
+    double argumentPeriapsisRadians{};
+    double meanAnomalyRadians{};
+};
+
+struct OrbitalState {
+    glm::dvec3 position{};
+    glm::dvec3 velocity{};
+};
+
+[[nodiscard]] OrbitalState keplerianState(
+    const KeplerianElements& elements,
+    double gravitationalParameterM3PerS2) noexcept;
+
 struct CelestialAtmosphere {
     bool enabled{};
     double heightMeters{};
@@ -164,7 +185,6 @@ public:
     [[nodiscard]] double simulationTime() const noexcept { return simulationTime_; }
 
 private:
-    void updateOrbit(CelestialBody& body, double deltaSeconds);
     void updateSpin(CelestialBody& body, double deltaSeconds) noexcept;
     void updateClimateAndWeather(CelestialBody& body, double deltaSeconds) noexcept;
 

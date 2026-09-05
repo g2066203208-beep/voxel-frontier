@@ -7,6 +7,12 @@ on:
     paths:
       - 'native/**'
       - '.github/workflows/visual-vulkan.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'native/**'
+      - '.github/workflows/visual-vulkan.yml'
   workflow_dispatch:
 
 concurrency:
@@ -18,7 +24,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
-      - name: Checkout exact main commit
+      - name: Checkout change under test
         uses: actions/checkout@v6
 
       - name: Install headless Vulkan and X11 dependencies

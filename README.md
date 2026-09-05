@@ -1,71 +1,79 @@
 # Voxel Frontier
 
-Voxel Frontier is an original native PC sandbox/RPG built around finite spherical planets, seamless ground-to-space traversal, procedural triangle-surface terrain and a shared physically based simulation.
+Voxel Frontier is an original native PC sandbox/RPG built around finite spherical planets, seamless ground-to-space traversal, procedural triangle-surface terrain, and a shared physically based simulation.
 
 ## Production stack
 
 - C++23 for engine and gameplay
-- Vulkan 1.4-class explicit rendering path (1.3 minimum runtime path where required)
+- Vulkan explicit rendering
 - SDL3 only for platform/window/input/audio access
-- Slang -> embedded SPIR-V shaders
+- Slang -> SPIR-V shaders
 - CMake native builds
-- GitHub Actions Linux correctness gates + Windows executable build/tests
+- GitHub Actions Linux correctness gates, Windows executable build/tests, and real Vulkan visual regression
 
-There is no production browser, TypeScript, Three.js, WebGPU, WebAssembly, Unity, Unreal or Godot runtime path in this repository anymore. Historical browser/WASM prototypes were removed after the native migration became authoritative.
+There is no production browser, TypeScript, Three.js, WebGPU, WebAssembly, Unity, Unreal, or Godot runtime path in this repository. Historical browser/WASM prototypes were removed after the native migration became authoritative.
 
 ## World architecture
 
-The rendered natural world is not a block-voxel surface.
+The rendered natural world is not a visible block-voxel surface.
 
 ```text
-Planet
- -> procedural spherical surface patches
- -> explicit vertices / triangle mesh
+Universe
+ -> star system
+ -> finite spherical planet
+ -> hierarchical procedural surface patches
+ -> explicit indexed triangle geometry
  -> Vulkan rendering
 
-Local excavations / caves / destructive terrain
- -> sparse local signed-distance data
- -> surface extraction
+Local caves / overhangs / excavation / destructive edits
+ -> sparse local SDF or density edits
+ -> seam-safe local surface extraction
  -> triangle mesh
 ```
 
-See `docs/TERRAIN_ARCHITECTURE.md`.
+Untouched planetary terrain remains procedural and deterministic. Expensive volumetric data is reserved for places where true 3D topology is required rather than filling the whole planet with voxels.
+
+See `PROJECT.md` and `docs/TERRAIN_ARCHITECTURE.md`.
 
 ## Physics architecture
 
-The project owns a custom fixed-step physics stack. The current runtime already contains:
+The project owns a custom fixed-step physics stack. The current runtime contains:
 
 - 120 Hz fixed simulation stepping
-- rigid-body mass, inertia, momentum, force, torque and impulses
-- radial altitude-aware planetary gravity
-- sphere contacts, restitution, Coulomb-style friction and sleeping
+- rigid-body mass, inertia, momentum, force, torque, and impulses
+- radial planetary gravity plus planet-centered local physics frames
+- atmosphere temperature, pressure, density, wind, and gust state
 - sweep-and-prune broadphase
-- distance, spring-damper, hinge, motor and gear constraints
+- sphere, oriented box, capsule, and general convex collision support
+- GJK/EPA narrowphase and persistent contact solving
+- friction, restitution, sleeping, and stable terrain contact
+- distance, spring-damper, hinge, motor, and gear constraints
 - break force / break torque limits
-- atmosphere temperature, pressure, density and deterministic wind/gust state
 - aerodynamic body forces and local aerodynamic surfaces with angle-of-attack/stall behavior
-- shallow-water transport and fluid buoyancy/drag foundations
+- shallow-water and buoyancy/drag foundations
 - ideal-gas chamber / pneumatic foundations
-- physically driven tree-hinge fall model
-- visible in-world physics playground
+- XPBD rope foundations
+- radial-gravity capsule character controller with slopes, steps, and jumping
+- celestial spin, atmosphere/climate coupling, and bounded Newtonian N-body orbital propagation
+- Keplerian orbital elements -> Cartesian inertial initial-state conversion for authored celestial systems
 
-Collision v3 adds an isolated, testable shape/narrowphase foundation for sphere, oriented box and capsule primitives, AABB generation, support mapping and 15-axis OBB SAT. General convex GJK/EPA and persistent multi-point manifolds are the next integration layer rather than ad-hoc approximate collision code.
+Old tree-only physics demos and standalone in-world physics playground code are not production architecture. Vegetation, fracture, destruction, machines, and vehicles are expected to use the shared generic rigid-body/material/constraint systems.
 
-See `docs/PHYSICS_ARCHITECTURE.md`.
+See `docs/PHYSICS_ARCHITECTURE.md` and `docs/CELESTIAL_DYNAMICS_REFERENCES.md`.
 
 ## Repository layout
 
 ```text
-.github/workflows/    native CI only
+.github/workflows/    permanent native CI / visual regression
 .vscode/              native CMake launch/tasks/settings
 native/
   include/vf/         public engine interfaces
   src/                native engine/runtime implementation
   shaders/            Slang shaders
   tests/              Release-active regression tests
-docs/                 authoritative architecture documents
+docs/                 authoritative architecture / evidence documents
 scripts/              Windows bootstrap/run helpers
-PROJECT.md             product/technical direction
+PROJECT.md             product and technical direction
 ```
 
 ## Windows build
@@ -77,3 +85,7 @@ ctest --test-dir build/native -C Release --output-on-failure
 ```
 
 The executable is `voxel_frontier.exe`.
+
+## CI evidence
+
+Pull requests targeting `main` run native correctness checks. Changes under `native/**` also run the real Vulkan visual regression path, which builds the Linux runtime against Lavapipe/Xvfb and uploads ground, traversal, and aerial framebuffer captures as workflow artifacts. This keeps visual proof attached to production changes instead of relying on one-off experiment workflows.
