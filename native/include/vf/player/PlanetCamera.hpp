@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <cstdint>
 
 #include <glm/glm.hpp>
@@ -44,6 +45,44 @@ public:
             localPosition_ = physicsFrame_.toLocalPosition(*body, worldPosition);
             localVelocity_ = physicsFrame_.toLocalVelocity(*body, worldPosition, worldVelocity);
         }
+    }
+
+    // Deterministic view hook used by real-framebuffer regression capture and editor/debug tools.
+    // It changes view attitude only; it never teleports the camera or alters celestial/physics state.
+    // Production input immediately continues from this attitude, which makes the hook safe for
+    // fixed-camera Sun/Moon sequences without adding a separate fake rendering path.
+    void setViewDirectionWorld(
+        const glm::dvec3& forwardInput,
+        const glm::dvec3& upHintInput) noexcept {
+        const double forwardLengthSquared = glm::dot(forwardInput, forwardInput);
+        if (forwardLengthSquared <= 1.0e-18) return;
+        const glm::dvec3 forward = forwardInput / std::sqrt(forwardLengthSquared);
+
+        glm::dvec3 upHint = upHintInput;
+        double upLengthSquared = glm::dot(upHint, upHint);
+        if (upLengthSquared <= 1.0e-18) upHint = {0.0, 1.0, 0.0};
+        else upHint /= std::sqrt(upLengthSquared);
+
+        glm::dvec3 right = glm::cross(forward, upHint);
+        double rightLengthSquared = glm::dot(right, right);
+        if (rightLengthSquared <= 1.0e-18) {
+            const glm::dvec3 fallback = std::abs(forward.y) < 0.92
+                ? glm::dvec3{0.0, 1.0, 0.0}
+                : glm::dvec3{1.0, 0.0, 0.0};
+            right = glm::cross(forward, fallback);
+            rightLengthSquared = glm::dot(right, right);
+            if (rightLengthSquared <= 1.0e-18) return;
+        }
+        right /= std::sqrt(rightLengthSquared);
+        glm::dvec3 up = glm::cross(right, forward);
+        const double upSquared = glm::dot(up, up);
+        if (upSquared <= 1.0e-18) return;
+        up /= std::sqrt(upSquared);
+
+        viewForward_ = forward;
+        viewUp_ = up;
+        viewAttitudeValid_ = true;
+        surfaceTransportValid_ = false;
     }
 
     [[nodiscard]] glm::mat4 viewProjection(float aspectRatio) const;

@@ -1,0 +1,151 @@
+name: R23 AstroTime Hydrology Preview
+
+on:
+  push:
+    branches:
+      - work/r23-astrotime-hydrology-preview
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r23-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout tracked R23 source
+        uses: actions/checkout@v6
+
+      - name: Confirm R23 runtime is committed source
+        shell: bash
+        run: |
+          grep -q '#include "vf/world/AstroTime.hpp"' native/src/app/Main.cpp
+          grep -q 'CelestialSimulationClock' native/src/app/Main.cpp
+          grep -q 'RegionalHydrology' native/src/app/Main.cpp
+          grep -q 'currentMoon' native/src/app/Main.cpp
+          git diff --exit-code
+
+      - name: Install Vulkan X11 and build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure full C++23 Vulkan runtime and tests
+        run: cmake -S native -B build/r23 -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build R23 runtime and engine tests
+        run: cmake --build build/r23 --parallel
+
+      - name: Run existing engine correctness suite
+        run: ctest --test-dir build/r23 --verbose --output-on-failure
+
+      - name: Compile and run R23 foundation smoke
+        run: |
+          c++ -std=c++23 -O2 -Wall -Wextra -Wpedantic \
+            -I native/include -I build/r23/_deps/glm-src \
+            .github/scripts/r23_foundation_smoke.cpp \
+            build/r23/libvf_engine.a -pthread \
+            -o build/r23/r23_foundation_smoke
+          build/r23/r23_foundation_smoke | tee r23-foundation-smoke.txt
+
+      - name: Verify real Lavapipe Vulkan device
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture eight geomorph regions plus Sun and Moon motion
+        shell: bash
+        run: |
+          APP="$(find build/r23 -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p r23-evidence
+          bash .github/scripts/r23_capture.sh "$APP" r23-evidence
+          cp r23-foundation-smoke.txt vulkan-summary.txt r23-evidence/
+
+      - name: Preserve diagnostics after any capture failure
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p r23-evidence
+          cp -f r23-foundation-smoke.txt r23-evidence/ 2>/dev/null || true
+          cp -f vulkan-summary.txt r23-evidence/ 2>/dev/null || true
+          printf 'workflow_sha=%s\nworkflow_run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" \
+            > r23-evidence/workflow-source.txt
+
+      - name: Upload all real Vulkan evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r23-real-vulkan-evidence-${{ github.sha }}
+          path: r23-evidence/**
+          if-no-files-found: warn
+          retention-days: 30
+
+  windows-preview:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - name: Checkout tracked R23 source
+        uses: actions/checkout@v6
+
+      - name: Confirm committed R23 runtime wiring
+        shell: pwsh
+        run: |
+          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch '#include "vf/world/AstroTime.hpp"' -Quiet)) { throw 'AstroTime wiring missing from tracked Main.cpp' }
+          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch 'RegionalHydrology' -Quiet)) { throw 'Hydrology wiring missing from tracked Main.cpp' }
+          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch 'currentMoon' -Quiet)) { throw 'Moon runtime wiring missing from tracked Main.cpp' }
+
+      - name: Configure Windows x64 runtime
+        run: cmake -S native -B build/windows-r23 -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Windows preview
+        run: cmake --build build/windows-r23 --config Release --parallel
+
+      - name: Run Windows correctness tests
+        run: ctest --test-dir build/windows-r23 -C Release --verbose --output-on-failure
+
+      - name: Stage testable executable
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path build/windows-r23 -Recurse -Filter voxel_frontier.exe | Select-Object -First 1
+          if (-not $exe) { throw 'voxel_frontier.exe was not produced' }
+          New-Item -ItemType Directory -Force artifact | Out-Null
+          Copy-Item $exe.FullName artifact/voxel_frontier-r23.exe
+          @"
+          R23 source branch: work/r23-astrotime-hydrology-preview
+          Runtime wiring is committed directly in native/src/app/Main.cpp.
+          No build-time source patching is used.
+          "@ | Set-Content artifact/README.txt
+
+      - name: Upload Windows R23 preview
+        uses: actions/upload-artifact@v5
+        with:
+          name: voxel-frontier-r23-windows-x64-${{ github.sha }}
+          path: artifact/**
+          if-no-files-found: error
+          retention-days: 30

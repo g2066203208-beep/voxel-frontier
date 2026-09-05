@@ -4,9 +4,11 @@
 #include "vf/player/PlanetCamera.hpp"
 #include "vf/render/PhysicsDebugMesh.hpp"
 #include "vf/render/VulkanRenderer.hpp"
+#include "vf/world/AstroTime.hpp"
 #include "vf/world/CelestialPhysicsFrame.hpp"
 #include "vf/world/CelestialSystem.hpp"
 #include "vf/world/PlanetSurface.hpp"
+#include "vf/world/RegionalHydrology.hpp"
 #include "vf/world/ProceduralEcology.hpp"
 
 #include <algorithm>
@@ -14,12 +16,15 @@
 #include <chrono>
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <exception>
 #include <future>
 #include <iomanip>
 #include <iostream>
 #include <limits>
 #include <sstream>
+#include <string>
+#include <string_view>
 #include <utility>
 
 #include <glm/common.hpp>
@@ -73,6 +78,64 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     glm::dvec3 best = preferred;
     double bestScore = -std::numeric_limits<double>::infinity();
     bool found = false;
+
+    if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET"); targetEnv != nullptr && *targetEnv != '\0') {
+        const std::string_view target{targetEnv};
+        constexpr std::uint32_t evidenceSamples = 16384U;
+        glm::dvec3 evidenceBest = preferred;
+        double evidenceScore = -std::numeric_limits<double>::infinity();
+        bool evidenceFound = false;
+        for (std::uint32_t i = 0; i < evidenceSamples; ++i) {
+            const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5)
+                / static_cast<double>(evidenceSamples);
+            const double radial = std::sqrt(std::max(0.0, 1.0 - y * y));
+            const double a = goldenAngle * static_cast<double>(i);
+            const glm::dvec3 d{std::cos(a) * radial, y, std::sin(a) * radial};
+            const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, d);
+            const double aboveSea = terrain.elevationMeters - planet.seaLevelElevationMeters;
+            const double sunElevation = glm::dot(d, sunDirection);
+            if (aboveSea < 8.0 || terrain.submerged(planet) || sunElevation < 0.10) continue;
+
+            const double height01 = std::clamp(aboveSea / std::max(1.0, planet.maxElevation), 0.0, 1.0);
+            double score = -1.0e9;
+            if (target == "mountain") {
+                score = terrain.mountain * 3.4 + height01 * 1.8 + terrain.plateBoundary * 0.4;
+            } else if (target == "highland") {
+                score = terrain.plateau * 2.6 + terrain.hills * 1.3 + height01 * 0.8
+                    - terrain.mountain * 0.7;
+            } else if (target == "canyon") {
+                score = terrain.canyon * 3.6 + terrain.aridity * 0.8 + terrain.hills * 0.5
+                    + height01 * 0.4;
+            } else if (target == "coast") {
+                score = terrain.coastalCliff * 4.0 + terrain.plateBoundary * 0.6
+                    - height01 * 0.3;
+            } else if (target == "dunes") {
+                score = terrain.dunes * 3.5 + terrain.aridity * 1.3
+                    - terrain.mountain * 0.8;
+            } else if (target == "wetland") {
+                score = terrain.wetland * 4.0 + terrain.moisture * 0.7
+                    - height01 * 0.8;
+            } else if (target == "glacier") {
+                score = terrain.glacier * 4.0 + height01 * 0.6;
+            } else if (target == "volcano") {
+                score = terrain.volcano * 4.0 + height01 * 0.4;
+            } else if (target == "hydrology" || target == "river") {
+                // Prefer a broad elevated but non-glaciated drainage province. The R23 regional
+                // Priority-Flood bake then determines the actual channels from DEM topology.
+                score = terrain.hills * 1.5 + terrain.plateau * 1.3 + terrain.moisture * 0.5
+                    + height01 * 0.8 - terrain.mountain * 0.9 - terrain.glacier * 1.2;
+            }
+            if (!evidenceFound || score > evidenceScore) {
+                evidenceFound = true;
+                evidenceScore = score;
+                evidenceBest = d;
+            }
+        }
+        if (evidenceFound) {
+            std::cout << "R23 terrain target: " << target << " score=" << evidenceScore << '\n';
+            return safeNormalize(evidenceBest, preferred);
+        }
+    }
 
     for (std::uint32_t i = 0; i < sampleCount; ++i) {
         const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5)
@@ -159,6 +222,12 @@ int main() {
         constexpr double opticalRayleighScaleHeight = 10200.0;
 
         vf::CelestialSystem celestial;
+        double celestialTimeScale = 1.0;
+        if (const char* scaleEnv = std::getenv("VF_CELESTIAL_TIME_SCALE"); scaleEnv != nullptr) {
+            try { celestialTimeScale = std::clamp(std::stod(scaleEnv), 0.0, 200000.0); }
+            catch (...) { celestialTimeScale = 1.0; }
+        }
+        vf::CelestialSimulationClock celestialClock{{60.0, celestialTimeScale, 4096U}};
 
         vf::CelestialBody sun{};
         sun.type = vf::CelestialBodyType::Star;
@@ -221,6 +290,70 @@ int main() {
         const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet, initialSunDirectionPlanet);
         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
+
+        constexpr double moonOrbitRadius = 384400000.0;
+        vf::CelestialBody luna{};
+        luna.type = vf::CelestialBodyType::Moon;
+        luna.name = "Luna";
+        luna.radiusMeters = 1737400.0;
+        luna.massKg = 7.342e22;
+        luna.orbitParentId = asterId;
+        const glm::dvec3 moonRadial = safeNormalize(
+            camera.forwardDirection() + camera.up() * 0.34,
+            stableTangent(spawnDirection));
+        glm::dvec3 moonTangent = glm::cross(moonRadial, camera.up());
+        if (glm::dot(moonTangent, moonTangent) < 1.0e-12) moonTangent = stableTangent(moonRadial);
+        moonTangent = safeNormalize(moonTangent, stableTangent(moonRadial));
+        luna.position = aster.position + moonRadial * moonOrbitRadius;
+        luna.linearVelocity = aster.linearVelocity
+            + moonTangent * circularOrbitSpeed(aster.massKg, moonOrbitRadius);
+        luna.spinAxis = aster.spinAxis;
+        luna.spinRateRadPerSecond = 2.0 * kPi / (27.321661 * 86400.0);
+        luna.visibleAlbedo = {0.62, 0.64, 0.68};
+        const std::uint32_t moonId = celestial.addBody(luna);
+
+        // Deterministic evidence camera. This remains the real PlanetCamera and the real Vulkan
+        // renderer; only its initial pose is selected explicitly so CI cannot accidentally stare at
+        // empty sky after synthetic mouse input. Production runs do not set this environment flag.
+        if (const char* aerialEnv = std::getenv("VF_CAPTURE_AERIAL");
+            aerialEnv != nullptr && std::string_view{aerialEnv} == "1") {
+            double aerialAltitude = 5200.0;
+            if (const char* altitudeEnv = std::getenv("VF_CAPTURE_ALTITUDE_METERS");
+                altitudeEnv != nullptr && *altitudeEnv != '\0') {
+                try { aerialAltitude = std::clamp(std::stod(altitudeEnv), 800.0, 18000.0); }
+                catch (...) { aerialAltitude = 5200.0; }
+            }
+            const double localSurfaceRadius = vf::planetSurfaceRadius(planet, spawnDirection);
+            const glm::dvec3 localOffset = spawnDirection * (localSurfaceRadius + aerialAltitude);
+            const glm::dvec3 worldOffset = aster.orientation * localOffset;
+            const glm::dvec3 worldUp = safeNormalize(worldOffset, spawnDirection);
+            const glm::dvec3 angularVelocity = safeNormalize(aster.spinAxis, {0.0, 1.0, 0.0})
+                * aster.spinRateRadPerSecond;
+            camera.setExternalWorldState(
+                aster.position + worldOffset,
+                aster.linearVelocity + glm::cross(angularVelocity, worldOffset),
+                false);
+            const glm::dvec3 tangent = stableTangent(worldUp);
+            camera.setViewDirectionWorld(
+                safeNormalize(tangent * 0.58 - worldUp * 0.82, -worldUp),
+                worldUp);
+            std::cout << "R23 deterministic aerial camera altitude="
+                      << aerialAltitude << " m\n";
+        }
+
+        if (const char* celestialTargetEnv = std::getenv("VF_CELESTIAL_TARGET");
+            celestialTargetEnv != nullptr && *celestialTargetEnv != '\0') {
+            const std::string_view celestialTarget{celestialTargetEnv};
+            if (celestialTarget == "sun") {
+                camera.setViewDirectionWorld(
+                    sun.position - camera.position(), camera.up());
+                std::cout << "R23 celestial target: sun\n";
+            } else if (celestialTarget == "moon") {
+                camera.setViewDirectionWorld(
+                    luna.position - camera.position(), camera.up());
+                std::cout << "R23 celestial target: moon\n";
+            }
+        }
         std::cout << "Spawn land elevation: " << std::fixed << std::setprecision(1)
                   << spawnTerrain.elevationMeters << " m\n";
         const vf::CelestialBody* initialAster = celestial.body(asterId);
@@ -262,6 +395,13 @@ int main() {
             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
             const glm::dvec3 centerEast = stableTangent(centerUp);
             const glm::dvec3 centerNorth = safeNormalize(glm::cross(centerUp, centerEast), patchZ);
+            vf::RegionalHydrologyConfig hydroConfig{};
+            hydroConfig.resolution = 129U;
+            hydroConfig.halfExtentMeters = 150000.0;
+            hydroConfig.maxIncisionMeters = 320.0;
+            hydroConfig.riverHeadAccumulationFraction = 0.0014;
+            hydroConfig.fullChannelAccumulationFraction = 0.030;
+            const vf::RegionalHydrology hydrology{planet, centerUp, hydroConfig};
 
             struct Ring {
                 double half;
@@ -297,6 +437,10 @@ int main() {
                         const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, direction);
                         glm::dvec3 normalPlanet = vf::planetSurfaceNormal(planet, direction);
                         double elevation = terrain.elevationMeters;
+                        if (ring.half <= hydroConfig.halfExtentMeters * 1.05) {
+                            const vf::RegionalHydrologySample hydro = hydrology.sample(direction);
+                            elevation -= hydro.incisionMeters;
+                        }
 
                         if (ringIndex + 1U < rings.size()) {
                             const Ring& nextRing = rings[ringIndex + 1U];
@@ -449,10 +593,13 @@ int main() {
                 1.0 / 500.0,
                 0.05);
             previous = now;
-            celestial.step(dt);
+            celestialClock.advance(dt, [&](double astroDt) {
+                celestial.step(astroDt);
+            });
 
             auto* currentAster = celestial.body(asterId);
             const auto* currentCinder = celestial.body(cinderId);
+            const auto* currentMoon = celestial.body(moonId);
             const auto* currentSun = celestial.body(sunId);
             if (currentAster == nullptr || currentSun == nullptr) continue;
             currentAster->atmosphere.prevailingWind = {};
@@ -561,6 +708,27 @@ int main() {
                 toSurfaceVector(inverseAster * sunWorldDirection), {0.3, 0.8, -0.2});
 
             vf::PlanetMesh dynamicMesh{};
+            if (currentMoon != nullptr) {
+                const glm::dvec3 moonDirection = safeNormalize(
+                    currentMoon->position - camera.position());
+                const glm::dvec3 moonSurfaceDirection = safeNormalize(
+                    toSurfaceVector(inverseAster * moonDirection));
+                const double moonDistance = glm::length(currentMoon->position - camera.position());
+                const double moonAngularRadius = std::asin(std::clamp(
+                    currentMoon->radiusMeters / std::max(moonDistance, currentMoon->radiusMeters),
+                    0.0, 0.20));
+                constexpr double moonVisualDistance = 17000000.0;
+                const double moonVisualRadius = std::max(
+                    1400.0, std::tan(moonAngularRadius) * moonVisualDistance);
+                vf::appendDebugSphere(
+                    dynamicMesh,
+                    cameraSurface + moonSurfaceDirection * moonVisualDistance,
+                    moonVisualRadius,
+                    {0.72F, 0.74F, 0.78F},
+                    14U,
+                    24U,
+                    {0.0F, 0.88F, 0.0F, 0.0F});
+            }
             if (currentCinder != nullptr) {
                 const glm::dvec3 cinderDirection = safeNormalize(
                     currentCinder->position - camera.position());
