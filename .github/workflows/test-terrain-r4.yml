@@ -1,6 +1,6 @@
 name: Terrain R4 Real Vulkan Geomorph Evidence
 
-# Trigger materializer V5; final evidence will be retriggered on generated R4 source.
+# R4 evidence gate: apply the candidate relief patch in-place, then compile, test and capture it.
 on:
   push:
     branches: [feature/terrain-r4-geomorph-bake]
@@ -16,6 +16,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
+      - name: Apply candidate R4 relief source
+        run: |
+          python3 .github/scripts/r4_relief_patch.py
+          git diff --check
+          grep -q 'R4 relief V5' native/src/world/PlanetSurface.cpp
+          grep -q 'sampleLocalRelief' native/src/app/Main.cpp
       - name: Configure core tests
         run: cmake -S native -B build/core -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
       - name: Build core tests
@@ -28,6 +34,12 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
+      - name: Apply candidate R4 relief source
+        run: |
+          python3 .github/scripts/r4_relief_patch.py
+          git diff --check
+          grep -q 'R4 relief V5' native/src/world/PlanetSurface.cpp
+          grep -q 'sampleLocalRelief' native/src/app/Main.cpp
       - name: Install Vulkan headless dependencies
         run: |
           sudo apt-get update
@@ -86,11 +98,13 @@ jobs:
           capture_mode coast
           capture_mode highland
           identify r4-captures/*.png | tee -a r4-captures/capture-info.txt
-      - name: Upload R4 screenshots
+      - name: Upload R4 screenshots and verified source
         uses: actions/upload-artifact@v5
         with:
           name: terrain-r4-real-vulkan-${{ github.sha }}
           path: |
             r4-captures
             vulkan-summary.txt
+            native/src/world/PlanetSurface.cpp
+            native/src/app/Main.cpp
           if-no-files-found: error
