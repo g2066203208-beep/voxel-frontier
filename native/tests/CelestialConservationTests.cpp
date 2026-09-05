@@ -76,7 +76,7 @@ void testLongHorizonCircularTwoBodyConservation() {
     primary.radiusMeters = 1000.0;
     primary.position = {-secondaryMass / combinedMass * separation, 0.0, 0.0};
     primary.linearVelocity = {0.0, 0.0, -secondaryMass / combinedMass * relativeSpeed};
-    system.addBody(primary);
+    const auto primaryId = system.addBody(primary);
 
     vf::CelestialBody secondary{};
     secondary.type = vf::CelestialBodyType::Planet;
@@ -85,7 +85,8 @@ void testLongHorizonCircularTwoBodyConservation() {
     secondary.radiusMeters = 100.0;
     secondary.position = {primaryMass / combinedMass * separation, 0.0, 0.0};
     secondary.linearVelocity = {0.0, 0.0, primaryMass / combinedMass * relativeSpeed};
-    system.addBody(secondary);
+    const auto secondaryId = system.addBody(secondary);
+    require(primaryId != secondaryId, "conservation bodies must receive distinct ids");
 
     const double initialEnergy = totalMechanicalEnergy(system);
     const glm::dvec3 initialMomentum = totalMomentum(system);
@@ -126,7 +127,7 @@ void testThreeBodyBarycentreFollowsTotalMomentum() {
     star.name = "three-body-star";
     star.massKg = 1.0e22;
     star.radiusMeters = 1000.0;
-    system.addBody(star);
+    const auto starId = system.addBody(star);
 
     vf::CelestialBody planet{};
     planet.type = vf::CelestialBodyType::Planet;
@@ -137,7 +138,7 @@ void testThreeBodyBarycentreFollowsTotalMomentum() {
     const double planetSpeed = std::sqrt(
         vf::CelestialSystem::kGravitationalConstant * star.massKg / glm::length(planet.position));
     planet.linearVelocity = {0.0, 0.0, planetSpeed};
-    system.addBody(planet);
+    const auto planetId = system.addBody(planet);
 
     vf::CelestialBody moon{};
     moon.type = vf::CelestialBodyType::Moon;
@@ -148,7 +149,9 @@ void testThreeBodyBarycentreFollowsTotalMomentum() {
     const double moonRelativeSpeed = std::sqrt(
         vf::CelestialSystem::kGravitationalConstant * planet.massKg / 2.0e5);
     moon.linearVelocity = planet.linearVelocity + glm::dvec3{0.0, 0.0, moonRelativeSpeed};
-    system.addBody(moon);
+    const auto moonId = system.addBody(moon);
+    require(starId != planetId && starId != moonId && planetId != moonId,
+        "three-body conservation fixture must receive distinct ids");
 
     const glm::dvec3 initialMomentum = totalMomentum(system);
     const glm::dvec3 initialBarycentre = barycentre(system);
