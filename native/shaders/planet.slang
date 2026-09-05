@@ -28,14 +28,14 @@ struct PushConstants
 [[vk::binding(1, 0)]] SamplerState gShadowSampler;
 
 static const float PI = 3.14159265358979323846;
-static const float kShadowHalfExtent = 72.0;
+static const float kShadowHalfExtent = 48.0;
 static const float kShadowDepthRange = 180.0;
-static const float kShadowResolution = 512.0;
+static const float kShadowResolution = 1024.0;
 static const float2 kShadowTexel = float2(1.0 / kShadowResolution, 1.0 / kShadowResolution);
 static const float kShadowWorldTexel = (2.0 * kShadowHalfExtent) / kShadowResolution;
-// Visible sky RGB is display-oriented, not radiometrically calibrated. Scale its irradiance
-// independently so fully sun-shadowed outdoor surfaces still receive a plausible sky hemisphere.
-static const float kEnvironmentIrradiance = 4.20;
+// Environment energy is independent from visible sky RGB, but deliberately stays below the
+// previous washed-out pass: indirect light preserves color in shadow without erasing form.
+static const float kEnvironmentIrradiance = 2.65;
 static const float kExposureScale = 1.4640857; // 2^0.55
 
 float3 rotateByQuaternion(float3 v, float4 q)
@@ -92,8 +92,7 @@ float3 fresnelSchlick(float voH, float3 f0)
     return f0 + (1.0 - f0) * grazing;
 }
 
-// Jimenez et al. 2016 GTAO multi-bounce approximation. AO is visibility, not black paint:
-// bright diffuse surfaces return some of the energy that a one-bounce AO term would discard.
+// Jimenez et al. GTAO multi-bounce: AO remains environment visibility instead of black paint.
 float3 multiBounceAO(float3 albedo, float ao)
 {
     float3 a = 2.0404 * albedo - 0.3324;
@@ -131,9 +130,8 @@ float3 agxContrastApprox(float3 x)
         - 0.00232;
 }
 
-float3 agxPunchyLook(float3 v)
+float3 agxStylizedLook(float3 v)
 {
-    // Do not darken mids after AgX. Keep only a subtle saturation lift for the stylized palette.
     float luma = dot(v, float3(0.2126, 0.7152, 0.0722));
     return float3(luma, luma, luma) + 1.06 * (v - float3(luma, luma, luma));
 }
@@ -146,7 +144,7 @@ float3 toneMapAgX(float3 color)
     v = clamp(log2(max(v, 1.0e-10)), minEv, maxEv);
     v = (v - minEv) / (maxEv - minEv);
     v = agxContrastApprox(v);
-    v = agxPunchyLook(v);
+    v = agxStylizedLook(v);
     v = agxOutset(v);
     v = pow(max(v, 0.0), 2.2);
     return saturate(v);
@@ -188,7 +186,10 @@ float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection
     float3 up;
     shadowBasis(lightDirection, right, up);
     float2 snapOffset = stableShadowOffset(right, up);
-    float normalOffsetMeters = lerp(0.080, 0.012, noL);
+
+    // High-density map allows a much smaller receiver offset and bias. This restores fine tree
+    // self-shadow instead of erasing it with the old coarse-map acne compensation.
+    float normalOffsetMeters = lerp(0.045, 0.008, noL);
     float3 shifted = relativePosition + normalize(receiverNormal) * normalOffsetMeters;
     float sx = dot(shifted, right) + snapOffset.x;
     float sy = dot(shifted, up) + snapOffset.y;
@@ -198,27 +199,24 @@ float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection
 
     float2 uv = float2(sx, sy) / (2.0 * kShadowHalfExtent) + 0.5;
     float receiverDepth = saturate(0.5 - sz / kShadowDepthRange);
-    float bias = lerp(0.00072, 0.00185, 1.0 - noL);
+    float bias = lerp(0.00028, 0.00085, 1.0 - noL);
     float centerDepth = gShadowMap.SampleLevel(gShadowSampler, uv, 0.0);
     float blockerGap = max(receiverDepth - bias - centerDepth, 0.0) * kShadowDepthRange;
-    float blockerSoftness = saturate(blockerGap / 8.0);
-    float radius = lerp(0.92, 1.85, blockerSoftness) * lerp(1.35, 1.0, noL);
+    float radius = lerp(0.65, 1.35, saturate(blockerGap / 5.0)) * lerp(1.15, 1.0, noL);
 
+    // Deterministic circular kernel. The old square/tent pattern made low-poly silhouettes read as
+    // a grid; this only removes shadow-map aliasing and never acts like an artistic Gaussian blur.
     float visibility = 0.0;
-    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.0,  0.0)) * 4.0;
-    visibility += shadowTap(uv, receiverDepth, bias, float2(-radius,  0.0)) * 2.0;
-    visibility += shadowTap(uv, receiverDepth, bias, float2( radius,  0.0)) * 2.0;
-    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.0, -radius)) * 2.0;
-    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.0,  radius)) * 2.0;
-    visibility += shadowTap(uv, receiverDepth, bias, float2(-radius, -radius));
-    visibility += shadowTap(uv, receiverDepth, bias, float2( radius, -radius));
-    visibility += shadowTap(uv, receiverDepth, bias, float2(-radius,  radius));
-    visibility += shadowTap(uv, receiverDepth, bias, float2( radius,  radius));
-    visibility *= 1.0 / 16.0;
-
-    float contact = (1.0 - smoothstep(0.0, 1.8, blockerGap)) * (1.0 - visibility);
-    float shadowFloor = lerp(0.18, 0.105, contact);
-    return lerp(shadowFloor, 1.0, visibility);
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.000,  0.000) * radius) * 4.0;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.000, -1.000) * radius) * 1.5;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.707, -0.707) * radius) * 1.5;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 1.000,  0.000) * radius) * 1.5;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.707,  0.707) * radius) * 1.5;
+    visibility += shadowTap(uv, receiverDepth, bias, float2( 0.000,  1.000) * radius) * 1.5;
+    visibility += shadowTap(uv, receiverDepth, bias, float2(-0.707,  0.707) * radius) * 1.5;
+    visibility += shadowTap(uv, receiverDepth, bias, float2(-1.000,  0.000) * radius) * 1.5;
+    visibility += shadowTap(uv, receiverDepth, bias, float2(-0.707, -0.707) * radius) * 1.5;
+    return visibility * (1.0 / 16.0);
 }
 
 [shader("vertex")]
@@ -256,6 +254,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 n = proceduralMaterial ? flatNormal : smoothNormal;
     if (terrainMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.08));
     if (rockMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.12));
+    // smoothNormal contains the CPU-generated whole-canopy proxy normal for foliage.
     if (foliageMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.74));
     if (barkMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.08));
     if (oceanMaterial)
@@ -304,7 +303,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, snow, snowMask);
         roughness = lerp(0.95, 0.72, rockMask);
         f0 = lerp(float3(0.024, 0.026, 0.025), float3(0.040, 0.039, 0.037), rockMask);
-        materialAO = lerp(0.84, 1.0, faceUp);
+        materialAO = lerp(0.82, 1.0, faceUp);
     }
     else if (barkMaterial)
     {
@@ -318,7 +317,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor *= 1.0 - fissure * 0.18;
         roughness = 0.93 + fissure * 0.04;
         f0 = float3(0.020, 0.018, 0.015);
-        materialAO = 0.90 - fissure * 0.035;
+        materialAO = 0.86 - fissure * 0.045;
     }
     else if (foliageMaterial)
     {
@@ -330,7 +329,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, float3(0.38, 0.57, 0.10), upFacing * (0.09 + canopyHeight * 0.16));
         roughness = 0.82;
         f0 = float3(0.026, 0.030, 0.021);
-        materialAO = lerp(0.92, 1.0, canopyHeight) * lerp(0.985, 1.0, upFacing);
+        // Keep meaningful crown occlusion; multi-bounce AO below prevents it becoming black paint.
+        materialAO = lerp(0.82, 0.97, canopyHeight) * lerp(0.95, 1.0, upFacing);
         foliageTransmission = 1.0;
     }
     else if (rockMaterial)
@@ -346,7 +346,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, float3(0.24, 0.32, 0.12), lichen * 0.10);
         roughness = lerp(0.70, 0.82, faceUp);
         f0 = float3(0.040, 0.038, 0.035);
-        materialAO = lerp(0.82, 1.0, faceUp);
+        materialAO = lerp(0.78, 1.0, faceUp);
     }
     else if (oceanMaterial)
     {
@@ -398,32 +398,32 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float shadowNoL = saturate(dot(smoothNormal, l));
     float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, shadowNoL, l, smoothNormal);
-    if (foliageMaterial) shadow = lerp(shadow, 1.0, 0.34);
-    float lightingNoL = foliageMaterial ? saturate((dot(n, l) + 0.14) / 1.14) : noL;
+    // Wrap diffuse is a foliage BRDF choice, not a shadow override: self-shadow remains intact.
+    float lightingNoL = foliageMaterial ? saturate((dot(n, l) + 0.12) / 1.12) : noL;
     float3 direct = (diffuse + specular) * lightingNoL * stellarRadiance * 1.12 * shadow;
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
     float3 ambientDirectionColor = lerp(horizonColor, skyColor, 0.18 + 0.82 * hemiUp);
-    float3 skyAmbient = ambientDirectionColor * kEnvironmentIrradiance * (0.28 + 0.48 * hemiUp);
+    float3 skyAmbient = ambientDirectionColor * kEnvironmentIrradiance * (0.18 + 0.34 * hemiUp);
     float3 groundBounceColor = float3(0.16, 0.125, 0.060);
-    if (terrainMaterial) groundBounceColor = float3(0.12, 0.23, 0.065);
-    if (foliageMaterial) groundBounceColor = float3(0.16, 0.30, 0.075);
+    if (terrainMaterial) groundBounceColor = float3(0.10, 0.205, 0.055);
+    if (foliageMaterial) groundBounceColor = float3(0.12, 0.24, 0.060);
     if (oceanMaterial) groundBounceColor = float3(0.018, 0.065, 0.095);
 
     float3 diffuseVisibility = multiBounceAO(saturate(baseColor), materialAO);
-    float groundWeight = 0.12 + 0.28 * (1.0 - hemiUp);
-    if (foliageMaterial) groundWeight += 0.12;
+    float groundWeight = 0.08 + 0.16 * (1.0 - hemiUp);
+    if (foliageMaterial) groundWeight += 0.05;
     float3 firstBounce = max(baseColor, 0.0) * (skyAmbient + groundBounceColor * groundWeight);
-    float3 localBounceTint = lerp(groundBounceColor, max(baseColor, 0.0), foliageMaterial ? 0.42 : 0.22);
-    float localBounceWeight = foliageMaterial ? 0.22 : 0.080;
+    float3 localBounceTint = lerp(groundBounceColor, max(baseColor, 0.0), foliageMaterial ? 0.38 : 0.20);
+    float localBounceWeight = foliageMaterial ? 0.08 : 0.035;
     float3 secondaryBounce = max(baseColor, 0.0) * localBounceTint * localBounceWeight;
     float3 indirect = (firstBounce + secondaryBounce) * diffuseVisibility;
 
     float3 reflectedDir = normalize(reflect(-v, n));
     float reflectedUp = saturate(dot(reflectedDir, surfaceUp) * 0.5 + 0.5);
-    float3 reflectedEnvironment = lerp(horizonColor, skyColor, smoothstep(0.10, 0.90, reflectedUp)) * 1.35;
+    float3 reflectedEnvironment = lerp(horizonColor, skyColor, smoothstep(0.10, 0.90, reflectedUp)) * 1.25;
     float broadCloud = smoothstep(0.48, 0.72, valueNoise3(reflectedDir * 2.25 + float3(4.3, -2.1, 7.6)));
-    reflectedEnvironment *= lerp(1.0, 0.74, broadCloud * daylight);
+    reflectedEnvironment *= lerp(1.0, 0.76, broadCloud * daylight);
 
     float mirrorDot = saturate(dot(reflectedDir, l));
     float broadSunReflection = pow(mirrorDot, 18.0);
@@ -433,15 +433,17 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float envGrazing = pow(1.0 - noV, 5.0);
     float3 envFresnel = f0 + (1.0 - f0) * envGrazing;
-    float envWeight = gloss * gloss * (0.18 + 0.34 * hemiUp) * materialAO;
+    float envWeight = gloss * gloss * (0.16 + 0.30 * hemiUp) * materialAO;
     float3 environmentSpecular = reflectedEnvironment * envFresnel * envWeight;
 
     if (foliageTransmission > 0.0)
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
-        float transmissionShadow = lerp(shadow, 1.0, 0.45);
-        direct += baseColor * float3(0.60, 0.82, 0.16) * backLit * (0.13 + 0.19 * edgeLit) * daylight * transmissionShadow;
+        // Transmission is the only foliage term allowed to recover some blocked sun.
+        float transmissionVisibility = lerp(shadow, 1.0, 0.28);
+        direct += baseColor * float3(0.58, 0.80, 0.16) * backLit
+            * (0.065 + 0.105 * edgeLit) * daylight * transmissionVisibility;
     }
 
     float3 color = direct + indirect;
