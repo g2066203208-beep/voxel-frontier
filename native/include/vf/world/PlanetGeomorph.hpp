@@ -312,7 +312,6 @@ struct Field {
         std::vector<float> rawCC(kCount, 0.0F);
         std::vector<float> uplift(kCount, 0.0F);
         std::vector<float> plateauDrive(kCount, 0.0F);
-        std::vector<float> plateauDrive(kCount, 0.0F);
 
         for (int face = 0; face < kFaces; ++face) {
             for (int y = 0; y < kRes; ++y) {
