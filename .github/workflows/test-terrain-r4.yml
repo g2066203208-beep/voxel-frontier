@@ -1,6 +1,6 @@
 name: Terrain R4 Real Vulkan Geomorph Evidence
 
-# R4 evidence gate. Capture framing is supplied by the runtime itself so CI never moves the camera.
+# Final R4 evidence gate on materialized peak/valley + explicit-surface source.
 on:
   push:
     branches: [feature/terrain-r4-geomorph-bake]
