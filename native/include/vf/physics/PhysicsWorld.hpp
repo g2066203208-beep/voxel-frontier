@@ -11,8 +11,11 @@
 
 #include "vf/physics/CollisionGeometry.hpp"
 #include "vf/physics/ConstraintTypes.hpp"
+#include "vf/physics/OceanSpectrum.hpp"
 #include "vf/world/CelestialSystem.hpp"
+#include "vf/world/PlanetClimateGrid.hpp"
 #include "vf/world/PlanetSurface.hpp"
+#include "vf/world/PlanetSurfaceAuthority.hpp"
 
 namespace vf {
 
@@ -103,8 +106,8 @@ struct AtmosphereDefinition {
     double molarMassKgPerMol{0.0289644};
     double lapseRateKPerM{0.0065};
     double universalGasConstant{8.314462618};
-    glm::dvec3 prevailingWind{7.0, 0.0, 2.0};
-    double gustAmplitude{4.0};
+    glm::dvec3 prevailingWind{};
+    double gustAmplitude{};
     double gustSpatialScale{180.0};
     double gustTimeScale{0.08};
     double temperatureOffsetK{};
@@ -143,14 +146,22 @@ struct PhysicsEnvironment {
     const CelestialSystem* celestialSystem{};
     std::uint32_t primaryCelestialBodyId{};
 
-    // When non-zero this PhysicsWorld is expressed in a planet/moon rotating local frame. The
-    // celestial proxy in celestialSystem should then be centered at the local origin with zero
-    // translational/spin velocity. Coriolis and centrifugal accelerations are applied here instead
-    // of making the contact solver chase a moving/rotating planet surface.
+    // R24 authority pointers. These are immutable/read-mostly fields owned by the runtime and may be
+    // shared by renderer, collision, ecology and climate without copying a second fake planet.
+    const PlanetSurfaceAuthority* surfaceAuthority{};
+    const PlanetClimateGrid* climateGrid{};
+    const OceanSpectrum* oceanSpectrum{};
+
+    // When non-zero this PhysicsWorld is expressed in a planet/moon rotating local frame. Coriolis
+    // and centrifugal accelerations are applied here instead of making the contact solver chase a
+    // moving/rotating celestial mesh.
     glm::dvec3 rotatingFrameAngularVelocity{};
 
     [[nodiscard]] double gravityMagnitude(const glm::dvec3& position) const noexcept;
     [[nodiscard]] glm::dvec3 gravityAcceleration(const glm::dvec3& position) const noexcept;
+    [[nodiscard]] double solidSurfaceRadius(const glm::dvec3& direction) const noexcept;
+    [[nodiscard]] glm::dvec3 solidSurfaceNormal(const glm::dvec3& direction) const noexcept;
+    [[nodiscard]] double oceanSurfaceRadiusAt(const glm::dvec3& position, double timeSeconds) const noexcept;
     [[nodiscard]] AtmosphereSample sampleAtmosphere(const glm::dvec3& position, double timeSeconds) const noexcept;
     [[nodiscard]] glm::dvec3 fluidVelocity(const glm::dvec3& position, double timeSeconds) const noexcept;
 };
