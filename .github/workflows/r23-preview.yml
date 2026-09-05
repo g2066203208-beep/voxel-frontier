@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: r23-preview-${{ github.ref }}
@@ -18,24 +18,17 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
-      - name: Checkout R23 source
+      - name: Checkout tracked R23 source
         uses: actions/checkout@v6
 
-      - name: Promote R23 runtime integration into tracked Main.cpp once
+      - name: Confirm R23 runtime is committed source
         shell: bash
         run: |
-          if grep -q '#include "vf/world/AstroTime.hpp"' native/src/app/Main.cpp; then
-            echo 'R23 runtime wiring is already tracked in source.'
-          else
-            python3 .github/scripts/r23_preview_patch.py
-            python3 .github/scripts/r23_preview_target_patch.py
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add native/src/app/Main.cpp
-            git commit -m 'R23: integrate AstroTime hydrology and Moon runtime into Main.cpp'
-            git push origin HEAD:work/r23-astrotime-hydrology-preview
-            echo 'Tracked source promoted; a fresh CI run will validate the committed source.'
-          fi
+          grep -q '#include "vf/world/AstroTime.hpp"' native/src/app/Main.cpp
+          grep -q 'CelestialSimulationClock' native/src/app/Main.cpp
+          grep -q 'RegionalHydrology' native/src/app/Main.cpp
+          grep -q 'currentMoon' native/src/app/Main.cpp
+          git diff --exit-code
 
       - name: Install Vulkan X11 and build dependencies
         run: |
@@ -59,15 +52,6 @@ jobs:
           test -n "$SLANGC"
           echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
           "$SLANGC" -version
-
-      - name: Confirm R23 runtime is native tracked source
-        shell: bash
-        run: |
-          grep -q '#include "vf/world/AstroTime.hpp"' native/src/app/Main.cpp
-          grep -q 'CelestialSimulationClock' native/src/app/Main.cpp
-          grep -q 'RegionalHydrology' native/src/app/Main.cpp
-          grep -q 'currentMoon' native/src/app/Main.cpp
-          git diff --exit-code -- native/src/app/Main.cpp
 
       - name: Configure full C++23 Vulkan runtime and tests
         run: cmake -S native -B build/r23 -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -126,16 +110,15 @@ jobs:
     runs-on: windows-2025
     timeout-minutes: 30
     steps:
-      - name: Checkout R23 source
+      - name: Checkout tracked R23 source
         uses: actions/checkout@v6
 
-      - name: Ensure tracked R23 source is present
+      - name: Confirm committed R23 runtime wiring
         shell: pwsh
         run: |
-          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch '#include "vf/world/AstroTime.hpp"' -Quiet)) {
-            python .github/scripts/r23_preview_patch.py
-            python .github/scripts/r23_preview_target_patch.py
-          }
+          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch '#include "vf/world/AstroTime.hpp"' -Quiet)) { throw 'AstroTime wiring missing from tracked Main.cpp' }
+          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch 'RegionalHydrology' -Quiet)) { throw 'Hydrology wiring missing from tracked Main.cpp' }
+          if (-not (Select-String -Path native/src/app/Main.cpp -SimpleMatch 'currentMoon' -Quiet)) { throw 'Moon runtime wiring missing from tracked Main.cpp' }
 
       - name: Configure Windows x64 runtime
         run: cmake -S native -B build/windows-r23 -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -155,8 +138,8 @@ jobs:
           Copy-Item $exe.FullName artifact/voxel_frontier-r23.exe
           @"
           R23 source branch: work/r23-astrotime-hydrology-preview
-          Features: fixed AstroTime stepping, real N-body moon, regional Priority-Flood hydrology incision.
           Runtime wiring is committed directly in native/src/app/Main.cpp.
+          No build-time source patching is used.
           "@ | Set-Content artifact/README.txt
 
       - name: Upload Windows R23 preview
