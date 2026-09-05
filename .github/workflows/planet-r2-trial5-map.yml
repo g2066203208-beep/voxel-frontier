@@ -1,0 +1,89 @@
+name: Planet R2 Trial 5 Map
+
+on:
+  push:
+    branches: [feature/planet-scale-r2]
+  workflow_dispatch:
+
+jobs:
+  audit-map:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install compiler and image tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ libglm-dev imagemagick
+      - name: Apply R2 trial 5
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('native/src/world/PlanetSurface.cpp'); s=p.read_text()
+          s=s.replace('constexpr std::size_t kPlateCount = 14U;', 'constexpr std::size_t kPlateCount = 20U;')
+          s=s.replace('const double boundary = 1.0 - smooth01(0.004, 0.060, scoreGap);', 'const double boundary = 1.0 - smooth01(0.004, 0.022, scoreGap);')
+          old='''    const double primaryCrust = plates.primary.continental ? 0.43 : -0.48;\n    const double secondaryCrust = plates.secondary.continental ? 0.43 : -0.48;\n    const double boundaryCrustBlend = plates.boundary * 0.28;\n    const double crustBase = primaryCrust * (1.0 - boundaryCrustBlend)\n        + secondaryCrust * boundaryCrustBlend;\n    const double continentalness = std::clamp(crustBase + macro * 0.30, -1.0, 1.0);\n\n    const double landness = smooth01(-0.02, 0.20, continentalness);'''
+          new='''    // Earthlike R2: continental crust is independent of plate ownership. Plates move/deform\n    // crust provinces instead of each plate being globally labelled as land or ocean.\n    const double crustMacro = fbmSurface(definition.seed ^ 0x243F6A8885A308D3ULL, w, 3.15, 4);\n    const double crustMeso = fbmSurface(definition.seed ^ 0x13198A2E03707344ULL, w, 7.8, 3);\n    const double crustCoast = fbmSurface(definition.seed ^ 0xA4093822299F31D0ULL, w, 21.0, 2);\n    const double continentalness = std::clamp(\n        crustMacro * 0.78 + crustMeso * 0.27 + crustCoast * 0.09 + macro * 0.14 - 0.098,\n        -1.0, 1.0);\n    const double landness = smooth01(-0.010, 0.082, continentalness);'''
+          assert old in s; s=s.replace(old,new)
+          s=s.replace('elevation -= maxOcean * (0.24 + 0.42 * deepOcean) * oceanness;', 'elevation -= maxOcean * (0.295 + 0.410 * deepOcean) * oceanness;')
+          s=s.replace('elevation += maxLand * (0.035 + 0.11 * std::pow(landness, 1.35)) * landness;', 'elevation += maxLand * (0.012 + 0.060 * std::pow(landness, 1.35)) * landness;')
+          s=s.replace('elevation += maxOcean * 0.12 * shelfZone * oceanness;', 'elevation += maxOcean * 0.110 * shelfZone * oceanness;')
+          s=s.replace('elevation += maxOcean * 0.38 * oceanRidge;', 'elevation += maxOcean * 0.320 * oceanRidge;')
+          old='''    const double collisionWeight = plates.primary.continental && plates.secondary.continental\n        ? 1.0\n        : (plates.primary.continental || plates.secondary.continental ? 0.82 : 0.45);\n    const double mountain = std::pow(\n        std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0),\n        1.15);\n    elevation += maxLand * 0.72 * mountain;'''
+          new='''    const double collisionWeight = 0.58 + 0.42 * landness;\n    const double orogenDrive = std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0);\n    const double mountain = std::pow(orogenDrive, 1.52);\n    // Long mountain belts use the broad term. 7–8 km class summits require an exceptionally high\n    // local orogenic drive and therefore occupy a tiny fraction of the belt instead of its whole area.\n    const double summit = smooth01(0.972, 0.998, orogenDrive);\n    elevation += maxLand * (0.27 * mountain + 0.48 * std::pow(summit, 5.0));'''
+          assert old in s; s=s.replace(old,new)
+          s=s.replace('elevation -= maxOcean * 0.42 * trench;', 'elevation -= maxOcean * 0.460 * trench;')
+          s=s.replace('elevation += maxLand * 0.27 * plateau;', 'elevation += maxLand * 0.095 * plateau;')
+          s=s.replace('elevation += maxLand * 0.36 * volcano;', 'elevation += maxLand * (0.12 * volcano + 0.34 * std::pow(smooth01(0.92, 0.995, volcano), 5.0));')
+          s=s.replace('elevation -= maxLand * 0.035 * river;', 'elevation -= maxLand * 0.020 * river;')
+          s=s.replace('w, 720.0, 3)', 'w, 95.0, 4)').replace('w, 1350.0, 3)', 'w, 520.0, 3)').replace('w, 3200.0, 3)', 'w, 2100.0, 3)').replace('w, 8200.0, 3)', 'w, 6100.0, 3)')
+          s=s.replace('regional * (0.0085 + 0.0090 * mountain + 0.0048 * plateau)', 'regional * (0.0100 + 0.0120 * mountain + 0.0040 * plateau)')
+          s=s.replace('hillNoise * (0.0042 * hills)', 'hillNoise * (0.0115 * hills)').replace('local * (0.0031 + 0.0050 * mountain + 0.0014 * coastalCliff)', 'local * (0.0024 + 0.0100 * mountain + 0.0020 * coastalCliff)').replace('(ridged - 0.5) * 0.0024 * mountain', '(ridged - 0.5) * 0.0060 * mountain')
+          s=s.replace('elevation += maxLand * 0.012 * coastalCliff', 'elevation += maxLand * 0.015 * coastalCliff').replace('elevation -= maxLand * 0.020 * canyon', 'elevation -= maxLand * 0.030 * canyon').replace('elevation += maxLand * 0.0016 * dunes * duneNoise;', 'elevation += maxLand * 0.0024 * dunes * duneNoise;').replace('elevation += maxLand * 0.0035 * glacier', 'elevation += maxLand * 0.0040 * glacier')
+          p.write_text(s)
+          PY
+      - name: Compile whole-planet audit and map generator
+        shell: bash
+        run: |
+          cat >/tmp/map.cpp <<'CPP'
+          #include "vf/world/PlanetSurface.hpp"
+          #include <algorithm>
+          #include <array>
+          #include <cmath>
+          #include <cstdint>
+          #include <fstream>
+          #include <iomanip>
+          #include <iostream>
+          #include <queue>
+          #include <vector>
+          #include <glm/glm.hpp>
+          namespace { constexpr double pi=3.14159265358979323846; double quant(std::vector<double> v,double f){std::sort(v.begin(),v.end());double p=f*(v.size()-1);size_t i=(size_t)std::floor(p),j=std::min(i+1,v.size()-1);return v[i]+(v[j]-v[i])*(p-i);} unsigned char c8(double x){return (unsigned char)std::clamp((int)std::lround(x),0,255);} }
+          int main(){
+            vf::PlanetDefinition p{};p.seed=0x71A9F20DULL;p.radius=6371000;p.maxElevation=8850;p.maxOceanDepthMeters=11000;
+            constexpr uint32_t N=500000;constexpr double ga=2.3999632297286533;uint64_t nl=0,no=0,n4=0,n6=0,n7=0,n8=0;double ds=0;std::vector<double>L,O;
+            for(uint32_t i=0;i<N;++i){double y=1-2*(i+.5)/N,r=sqrt(std::max(0.,1-y*y)),a=ga*i;auto s=vf::samplePlanetTerrain(p,{cos(a)*r,y,sin(a)*r});if(s.elevationMeters>=0){nl++;L.push_back(s.elevationMeters);n4+=s.elevationMeters>=4000;n6+=s.elevationMeters>=6000;n7+=s.elevationMeters>=7000;n8+=s.elevationMeters>=8000;}else{no++;O.push_back(-s.elevationMeters);ds-=s.elevationMeters;}}
+            std::cout<<std::fixed<<std::setprecision(5)<<"land_fraction="<<(double)nl/N<<"\nocean_fraction="<<(double)no/N<<"\nocean_mean_depth_m="<<ds/no<<"\nocean_p50="<<quant(O,.5)<<"\nocean_p90="<<quant(O,.9)<<"\nocean_p99="<<quant(O,.99)<<"\nocean_max="<<quant(O,1)<<"\nland_p50="<<quant(L,.5)<<"\nland_p90="<<quant(L,.9)<<"\nland_p99="<<quant(L,.99)<<"\nland_p999="<<quant(L,.999)<<"\nland_max="<<quant(L,1)<<"\nland_ge4km_fraction="<<(double)n4/nl<<"\nland_ge6km_fraction="<<(double)n6/nl<<"\nland_ge7km_fraction="<<(double)n7/nl<<"\nland_ge8km_fraction="<<(double)n8/nl<<"\n";
+            constexpr int W=2048,H=1024; std::ofstream ppm("planet-r2-hypsometric.ppm",std::ios::binary); ppm<<"P6\n"<<W<<" "<<H<<"\n255\n";
+            for(int y=0;y<H;++y){double lat=0.5*pi-pi*(y+.5)/H,cl=cos(lat),sl=sin(lat);for(int x=0;x<W;++x){double lon=-pi+2*pi*(x+.5)/W;auto s=vf::samplePlanetTerrain(p,{cl*cos(lon),sl,cl*sin(lon)});double e=s.elevationMeters;double R,G,B;if(e<0){double d=std::clamp(-e/11000.0,0.0,1.0);double shelf=std::clamp((-e)/800.0,0.0,1.0);R=16-8*d;G=92-50*d+22*(1-shelf);B=150+72*(1-d);}else{double h=std::clamp(e/8850.0,0.0,1.0);if(e<800){double t=e/800.0;R=55+65*t;G=125+35*t;B=55+25*t;}else if(e<2500){double t=(e-800)/1700.0;R=120+45*t;G=160-55*t;B=80-15*t;}else if(e<5000){double t=(e-2500)/2500.0;R=165+45*t;G=105+65*t;B=65+75*t;}else{double t=(e-5000)/3850.0;R=210+45*t;G=170+85*t;B=140+115*t;} if(s.glacier>.35){double t=std::clamp(s.glacier,0.0,1.0);R=R*(1-t)+230*t;G=G*(1-t)+242*t;B=B*(1-t)+246*t;}}
+              if(s.plateBoundary>.72){R=std::min(255.0,R+22*s.plateBoundary);G*=0.94;}
+              unsigned char rgb[3]{c8(R),c8(G),c8(B)};ppm.write((char*)rgb,3);
+            }} ppm.close();
+            constexpr int CW=360,CH=180;std::vector<unsigned char> land(CW*CH),seen(CW*CH);std::vector<double> area(CW*CH);double dl=2*pi/CW;for(int yy=0;yy<CH;++yy){double l0=-pi/2+pi*yy/CH,l1=-pi/2+pi*(yy+1)/CH,lat=(l0+l1)/2,c=cos(lat),sy=sin(lat),ar=p.radius*p.radius*dl*(sin(l1)-sin(l0))/1e6;for(int xx=0;xx<CW;++xx){double lo=-pi+2*pi*(xx+.5)/CW;int z=yy*CW+xx;land[z]=vf::samplePlanetTerrain(p,{c*cos(lo),sy,c*sin(lo)}).elevationMeters>=0;area[z]=ar;}}std::array<int,8>dx{-1,0,1,-1,1,-1,0,1},dy{-1,-1,-1,0,0,1,1,1};std::vector<double>C;for(int y=0;y<CH;++y)for(int x=0;x<CW;++x){int st=y*CW+x;if(!land[st]||seen[st])continue;double ar=0;std::queue<std::pair<int,int>>q;q.push({x,y});seen[st]=1;while(!q.empty()){auto [cx,cy]=q.front();q.pop();int z=cy*CW+cx;ar+=area[z];for(int n=0;n<8;++n){int nx=(cx+dx[n]+CW)%CW,ny=cy+dy[n];if(ny<0||ny>=CH)continue;int ni=ny*CW+nx;if(land[ni]&&!seen[ni]){seen[ni]=1;q.push({nx,ny});}}}C.push_back(ar);}std::sort(C.begin(),C.end(),std::greater<double>());std::cout<<"components="<<C.size()<<"\n";for(size_t i=0;i<std::min<size_t>(15,C.size());++i)std::cout<<"component_"<<i+1<<"_million_km2="<<C[i]/1e6<<"\n";
+          }
+          CPP
+          g++ -std=c++23 -O2 -I native/include /tmp/map.cpp native/src/world/PlanetSurface.cpp -o /tmp/map
+      - name: Run audit and render map
+        run: |
+          /tmp/map | tee trial5-report.txt
+          convert planet-r2-hypsometric.ppm planet-r2-hypsometric.png
+          identify planet-r2-hypsometric.png
+      - name: Upload trial evidence
+        uses: actions/upload-artifact@v5
+        with:
+          name: planet-r2-trial5-map-${{ github.sha }}
+          path: |
+            trial5-report.txt
+            planet-r2-hypsometric.png
+            native/src/world/PlanetSurface.cpp
+          retention-days: 30
