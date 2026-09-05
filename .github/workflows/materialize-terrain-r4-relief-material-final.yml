@@ -1,0 +1,146 @@
+name: Materialize Terrain R4 Peak Valley Material Finalization
+
+on:
+  push:
+    branches: [feature/terrain-r4-geomorph-bake]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Build real peak-valley relief, river material and evidence camera
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          # Global geomorph bake: reduce broad orogenic slab uplift and concentrate relief into ridges.
+          g = Path('native/include/vf/world/PlanetGeomorph.hpp')
+          gs = g.read_text()
+          old = '''                const double orogen = std::pow(std::clamp(conv * land, 0.0, 1.0), 1.05);\n                const double range = orogen * (0.45 + 0.55 * smooth01(0.28, 0.80, ridge));\n\n                double h = 0.0;\n                h += land * (280.0 + 720.0 * broad + 420.0 * province);\n                h += range * (2400.0 + 3200.0 * smooth01(0.30, 0.88, ridge));'''
+          new = '''                const double orogen = std::pow(std::clamp(conv * land, 0.0, 1.0), 1.05);\n                const double ridgeCore = std::pow(smooth01(0.34, 0.88, ridge), 1.65);\n                const double range = orogen * (0.16 + 0.84 * ridgeCore);\n\n                double h = 0.0;\n                h += land * (280.0 + 720.0 * broad + 420.0 * province);\n                // Orogenic belts get modest broad uplift, while high elevation is concentrated\n                // on ridge cores. This avoids the previous several-kilometre-tall smooth slab.\n                h += orogen * 850.0 + range * (900.0 + 3600.0 * ridgeCore);'''
+          if old in gs:
+              gs = gs.replace(old,new,1)
+          elif 'const double ridgeCore' not in gs:
+              raise SystemExit('geomorph mountain block not found')
+          g.write_text(gs)
+
+          # Planet surface: replace all-positive refinement with peak-and-valley relief.
+          p = Path('native/src/world/PlanetSurface.cpp')
+          ps = p.read_text()
+          old = '''    const double rangeMask = smooth01(0.10, 0.72, geomorph.mountain) * geomorphLandness;\n    const double rangeMass = rangeMask * (0.32 + 0.68 * smooth01(0.30, 0.82, rangeRidgeA));\n    const double rangeShoulders = rangeMask * smooth01(0.36, 0.86, rangeRidgeB);\n    const double rangeFaces = rangeMask * smooth01(0.42, 0.90, rangeRidgeC);\n    elevation += maxLand * (0.075 * rangeMask + 0.145 * rangeMass\n        + 0.085 * rangeShoulders + 0.040 * rangeFaces);'''
+          new = '''    const double rangeMask = smooth01(0.08, 0.68, geomorph.mountain) * geomorphLandness;\n    const double ridgeCoreA = std::pow(smooth01(0.34, 0.88, rangeRidgeA), 2.0);\n    const double ridgeCoreB = std::pow(smooth01(0.38, 0.90, rangeRidgeB), 1.75);\n    const double ridgeCoreC = std::pow(smooth01(0.44, 0.92, rangeRidgeC), 1.55);\n    // Zero-centred reconstruction: ridge cores rise while inter-range corridors are cut down.\n    // This produces an actual mountain profile instead of raising the entire belt as one plateau.\n    const double rangeRelief = rangeMask * (\n        0.175 * (ridgeCoreA - 0.30)\n        + 0.105 * (ridgeCoreB - 0.27)\n        + 0.055 * (ridgeCoreC - 0.23));\n    elevation += maxLand * rangeRelief;'''
+          if old in ps:
+              ps = ps.replace(old,new,1)
+          elif 'const double rangeRelief' not in ps:
+              raise SystemExit('surface mountain block not found')
+
+          old = '''    const double channelCore = geomorph.river\n        * smooth01(0.58, 0.91, channelRefineNoise) * geomorphLandness;\n    elevation -= maxLand * (0.030 * geomorph.incision + 0.045 * channelCore);'''
+          new = '''    const double channelCore = geomorph.river\n        * smooth01(0.55, 0.88, channelRefineNoise) * geomorphLandness;\n    elevation -= maxLand * (0.040 * geomorph.incision + 0.065 * channelCore);'''
+          if old in ps:
+              ps = ps.replace(old,new,1)
+          ps = ps.replace('    sample.river = geomorph.river;',
+                          '    sample.river = std::max(geomorph.river * 0.48, channelCore);',1)
+
+          # Material authority: river is a distinct class; snow is not a blanket altitude wash.
+          ps = ps.replace('''    if (sample.submerged(definition)) {\n        surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7; // shelf sand / seabed rock\n    } else if (sample.glacier > 0.38 || sample.elevationMeters > 3900.0) {\n        surfaceClass = 5; // snow/ice''',
+          '''    if (sample.submerged(definition)) {\n        surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7; // shelf sand / seabed rock\n    } else if (sample.river > 0.60) {\n        surfaceClass = 8; // hydrology-driven river core\n    } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {\n        surfaceClass = 5; // snow/ice''',1)
+          ps = ps.replace('''    } else if (sample.moisture > 0.34 && sample.aridity < 0.66) {\n        surfaceClass = 0; // grassland''',
+                          '''    } else if (sample.moisture > 0.22 && sample.aridity < 0.72) {\n        surfaceClass = 0; // grassland''',1)
+          ps = ps.replace('''    case 7: return {0.205F, 0.220F, 0.215F}; // seabed rock\n    default: return {0.345F, 0.205F, 0.100F}; // soil''',
+                          '''    case 7: return {0.205F, 0.220F, 0.215F}; // seabed rock\n    case 8: return {0.035F, 0.205F, 0.310F}; // river water\n    default: return {0.345F, 0.205F, 0.100F}; // soil''',1)
+
+          # Repeat class changes in planetTerrainMaterial.
+          material_old = '''    if (sample.submerged(definition)) {\n        surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7;\n    } else if (sample.glacier > 0.38 || sample.elevationMeters > 3900.0) {\n        surfaceClass = 5;'''
+          material_new = '''    if (sample.submerged(definition)) {\n        surfaceClass = sample.oceanDepthMeters < 260.0 ? 6 : 7;\n    } else if (sample.river > 0.60) {\n        surfaceClass = 8;\n    } else if (sample.glacier > 0.38 || sample.elevationMeters > 6200.0) {\n        surfaceClass = 5;'''
+          if material_old in ps:
+              ps = ps.replace(material_old, material_new,1)
+          ps = ps.replace('''    } else if (sample.moisture > 0.34 && sample.aridity < 0.66) {\n        surfaceClass = 0;\n    }\n\n    float roughness = 0.90F;''',
+                          '''    } else if (sample.moisture > 0.22 && sample.aridity < 0.72) {\n        surfaceClass = 0;\n    }\n\n    float roughness = 0.90F;''',1)
+          ps = ps.replace('''    else if (surfaceClass == 5) roughness = 0.76F;''',
+                          '''    else if (surfaceClass == 5) roughness = 0.76F;\n    else if (surfaceClass == 8) roughness = 0.20F;''',1)
+          ps = ps.replace('// w is a categorical material tag: -10 grass, -11 rock ... -17 seabed.',
+                          '// w is a categorical material tag: -10 grass ... -17 seabed, -18 river.')
+          p.write_text(ps)
+
+          # Shader: add river class and make categories visually clean instead of noisy mud.
+          sh = Path('native/shaders/planet.slang')
+          ss = sh.read_text()
+          ss = ss.replace('materialTag <= -9.5 && materialTag > -18.5',
+                          'materialTag <= -9.5 && materialTag > -19.5',1)
+          ss = ss.replace('int terrainClass = int(clamp(round(-materialTag - 10.0), 0.0, 7.0));',
+                          'int terrainClass = int(clamp(round(-materialTag - 10.0), 0.0, 8.0));',1)
+          ss = ss.replace('''        if (radialSlope > 0.145 && terrainClass != 5)\n            terrainClass = 1; // steep faces expose rock, regardless of biome colour''',
+                          '''        if (radialSlope > 0.145 && terrainClass != 8\n            && (terrainClass != 5 || radialSlope > 0.22))\n            terrainClass = 1; // steep faces expose rock; snow keeps only gentler caps''',1)
+          ss = ss.replace('''            baseColor = float3(0.105, 0.330, 0.070);\n            baseColor *= 0.86 + coarse * 0.22;\n            baseColor += (step(0.76, fine) * 0.030 - step(grain, 0.08) * 0.015)\n                * float3(0.55, 1.00, 0.38);''',
+                          '''            baseColor = float3(0.095, 0.365, 0.060);\n            baseColor *= 0.94 + coarse * 0.08;\n            baseColor += step(0.82, fine) * 0.012 * float3(0.40, 0.80, 0.24);''',1)
+          ss = ss.replace('''            baseColor = float3(0.315, 0.300, 0.275) * (0.82 + coarse * 0.30);\n            baseColor = lerp(baseColor, float3(0.17, 0.165, 0.155), fracture * 0.48);''',
+                          '''            baseColor = float3(0.335, 0.325, 0.305) * (0.91 + coarse * 0.13);\n            baseColor = lerp(baseColor, float3(0.19, 0.185, 0.175), fracture * 0.34);''',1)
+          ss = ss.replace('''            baseColor = float3(0.345, 0.205, 0.100) * (0.84 + coarse * 0.25);\n            baseColor *= 0.94 + grain * 0.10;''',
+                          '''            baseColor = float3(0.370, 0.225, 0.105) * (0.94 + coarse * 0.08);\n            baseColor *= 0.98 + grain * 0.04;''',1)
+          seabed = '''        else // SEABED ROCK\n        {\n            baseColor = float3(0.205, 0.220, 0.215) * (0.84 + coarse * 0.20);\n            roughness = 0.88;\n        }'''
+          river = '''        else if (terrainClass == 7) // SEABED ROCK\n        {\n            baseColor = float3(0.205, 0.220, 0.215) * (0.90 + coarse * 0.10);\n            roughness = 0.88;\n        }\n        else // HYDROLOGY-DRIVEN RIVER CORE\n        {\n            float flowGlint = 0.5 + 0.5 * sin(input.objectPosition.x * 0.035 + input.objectPosition.z * 0.052);\n            baseColor = lerp(float3(0.025, 0.155, 0.235), float3(0.055, 0.275, 0.355), flowGlint * 0.22);\n            roughness = 0.20;\n        }'''
+          if seabed in ss:
+              ss = ss.replace(seabed,river,1)
+          elif 'HYDROLOGY-DRIVEN RIVER CORE' not in ss:
+              raise SystemExit('shader seabed branch not found')
+          sh.write_text(ss)
+
+          # Camera debug API: deterministic aerial evidence positions do not fall back to character physics.
+          h = Path('native/include/vf/player/PlanetCamera.hpp')
+          hs = h.read_text()
+          if 'void setFlightMode(' not in hs:
+              anchor = '''    void setViewDirection(\n        const glm::dvec3& forward,\n        const glm::dvec3& upHint) noexcept;\n'''
+              repl = anchor + '''    void setFlightMode(bool enabled) noexcept {\n        flightMode_ = enabled;\n        if (enabled) grounded_ = false;\n    }\n'''
+              if anchor not in hs: raise SystemExit('camera view declaration not found')
+              hs = hs.replace(anchor,repl,1)
+          h.write_text(hs)
+
+          # Main: target proper highland, search multiple stand-off radii, and elevate the evidence camera.
+          m = Path('native/src/app/Main.cpp')
+          ms = m.read_text()
+          ms = ms.replace('''            if (captureMode == "mountain")\n                captureScore = terrain.mountain * 5.0 + aboveSea / 2200.0 + terrain.canyon * 0.8;''',
+                          '''            if (captureMode == "mountain")\n                captureScore += terrain.mountain * 5.4 + aboveSea / 3600.0 + terrain.canyon * 0.7;''',1)
+          ms = ms.replace('''            else if (captureMode == "river")\n                captureScore = terrain.river * 6.0 + terrain.canyon * 1.8 - std::max(0.0, aboveSea - 1800.0) / 1800.0;''',
+                          '''            else if (captureMode == "river")\n                captureScore += terrain.river * 7.0 + terrain.canyon * 2.0 - std::max(0.0, aboveSea - 1500.0) / 1500.0;''',1)
+          ms = ms.replace('''            else if (captureMode == "coast")\n                captureScore = terrain.coastalCliff * 5.0 - std::abs(aboveSea - 80.0) / 600.0 + terrain.mountain * 0.4;''',
+                          '''            else if (captureMode == "coast")\n                captureScore += terrain.coastalCliff * 5.8 - std::abs(aboveSea - 70.0) / 500.0 + terrain.mountain * 0.25;''',1)
+          ms = ms.replace('''            else if (captureMode == "highland")\n                captureScore = terrain.plateau * 4.0 + terrain.mountain * 1.6 + aboveSea / 2600.0;''',
+                          '''            else if (captureMode == "highland")\n                captureScore += terrain.plateau * 5.5 - terrain.mountain * 1.4\n                    - std::abs(aboveSea - 2400.0) / 1700.0;''',1)
+
+          start = ms.find('[[nodiscard]] glm::dvec3 findCaptureVantageDirection(')
+          end = ms.find('\nvoid appendMesh(', start)
+          if start < 0 or end < 0: raise SystemExit('capture vantage helper not found')
+          new_helper = '''[[nodiscard]] glm::dvec3 findCaptureVantageDirection(\n    const vf::PlanetDefinition& planet,\n    const glm::dvec3& targetDirectionInput,\n    std::string_view mode) {\n    const glm::dvec3 target = safeNormalize(targetDirectionInput);\n    const glm::dvec3 east = stableTangent(target);\n    const glm::dvec3 north = safeNormalize(glm::cross(target, east), {0.0, 0.0, 1.0});\n    const std::array<double, 5> mountainRadii{18000.0, 26000.0, 36000.0, 50000.0, 68000.0};\n    const std::array<double, 5> localRadii{2800.0, 4500.0, 7000.0, 10000.0, 14000.0};\n    const auto& radii = (mode == "mountain" || mode == "highland") ? mountainRadii : localRadii;\n    const double targetElevation = vf::planetHeight(planet, target);\n    glm::dvec3 best = target;\n    double bestScore = std::numeric_limits<double>::infinity();\n    for (double standOffMeters : radii) {\n        const double angular = standOffMeters / std::max(1.0, planet.radius);\n        for (int i = 0; i < 32; ++i) {\n            const double a = 2.0 * kPi * static_cast<double>(i) / 32.0;\n            const glm::dvec3 d = safeNormalize(\n                target + east * (std::cos(a) * angular) + north * (std::sin(a) * angular), target);\n            const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, d);\n            double score = terrain.elevationMeters - targetElevation\n                + terrain.mountain * 520.0 + terrain.canyon * 160.0;\n            if (mode == "coast") {\n                // Prefer a seaward viewing direction so water and shoreline share the frame.\n                score = terrain.submerged(planet)\n                    ? -2200.0 + std::abs(terrain.elevationMeters) * 0.05 + standOffMeters * 0.01\n                    : 900.0 + terrain.elevationMeters;\n            } else if (terrain.submerged(planet)) {\n                continue;\n            }\n            if (score < bestScore) { bestScore = score; best = d; }\n        }\n    }\n    return safeNormalize(best, target);\n}\n'''
+          ms = ms[:start] + new_helper + ms[end:]
+
+          old_camera = '''        vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};\n        if (!captureMode.empty()) {\n            const glm::dvec3 targetPlanet = featureDirection\n                * (vf::planetSurfaceRadius(planet, featureDirection)\n                    + (captureMode == "mountain" || captureMode == "highland" ? 650.0 : 120.0));\n            const glm::dvec3 cameraPlanet = spawnDirection\n                * (vf::planetSurfaceRadius(planet, spawnDirection) + 1.75);\n            const glm::dvec3 targetWorld = aster.position + aster.orientation * targetPlanet;\n            const glm::dvec3 cameraWorld = aster.position + aster.orientation * cameraPlanet;\n            camera.setViewDirection(\n                targetWorld - cameraWorld,\n                safeNormalize(aster.orientation * spawnDirection));\n        }'''
+          new_camera = '''        vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};\n        if (!captureMode.empty()) {\n            const double targetLift = captureMode == "mountain" ? 900.0\n                : (captureMode == "highland" ? 420.0 : 90.0);\n            const double cameraLift = captureMode == "mountain" ? 1400.0\n                : (captureMode == "highland" ? 1200.0\n                : (captureMode == "coast" ? 650.0 : 420.0));\n            const glm::dvec3 targetPlanet = featureDirection\n                * (vf::planetSurfaceRadius(planet, featureDirection) + targetLift);\n            const double localSurface = vf::planetSurfaceRadius(planet, spawnDirection);\n            const double visualBase = captureMode == "coast"\n                ? std::max(localSurface, planet.radius + planet.seaLevelElevationMeters)\n                : localSurface;\n            const glm::dvec3 cameraPlanet = spawnDirection * (visualBase + cameraLift);\n            const glm::dvec3 targetWorld = aster.position + aster.orientation * targetPlanet;\n            const glm::dvec3 cameraWorld = aster.position + aster.orientation * cameraPlanet;\n            camera.setFlightMode(true);\n            camera.setExternalWorldState(cameraWorld, aster.linearVelocity, false);\n            camera.setViewDirection(\n                targetWorld - cameraWorld,\n                safeNormalize(aster.orientation * spawnDirection));\n            std::cout << "Capture target elevation: " << vf::planetHeight(planet, featureDirection)\n                      << " m | camera surface: " << (visualBase - planet.radius)\n                      << " m | lift: " << cameraLift << " m\\n";\n        }'''
+          if old_camera not in ms: raise SystemExit('capture camera block not found')
+          ms = ms.replace(old_camera,new_camera,1)
+          m.write_text(ms)
+          PY
+
+      - name: Verify final R4 markers
+        run: |
+          grep -q 'const double ridgeCore' native/include/vf/world/PlanetGeomorph.hpp
+          grep -q 'const double rangeRelief' native/src/world/PlanetSurface.cpp
+          grep -q 'surfaceClass = 8' native/src/world/PlanetSurface.cpp
+          grep -q 'HYDROLOGY-DRIVEN RIVER CORE' native/shaders/planet.slang
+          grep -q 'setFlightMode' native/include/vf/player/PlanetCamera.hpp
+          grep -q 'Capture target elevation' native/src/app/Main.cpp
+      - name: Commit same-version R4 correction
+        run: |
+          git config user.name 'Voxel Frontier CI'
+          git config user.email 'actions@users.noreply.github.com'
+          git add native
+          git commit -m 'terrain: shape R4 mountain valleys and explicit surface classes'
+          git push origin HEAD:feature/terrain-r4-geomorph-bake
