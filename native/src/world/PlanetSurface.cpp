@@ -549,9 +549,14 @@ PlanetTerrainSample samplePlanetTerrain(
     const double bakedHighland = geomorphLandness
         * smooth01(850.0, 2450.0, geomorph.elevationMeters)
         * (1.0 - 0.70 * smooth01(0.20, 0.72, bakedMountain));
-    const double bakedTableland = bakedHighland
-        * (1.0 - 0.72 * std::clamp(geomorph.incision, 0.0, 1.0));
-    const double bakedCoast = coastProximity * geomorphLandness
+    const double bakedTableland = std::clamp(std::max(
+        geomorph.plateau,
+        bakedHighland * (1.0 - 0.72 * std::clamp(geomorph.incision, 0.0, 1.0)) * 0.45),
+        0.0, 1.0);
+    // Coast semantics must follow the baked DEM itself. R17 still used the obsolete analytic
+    // pre-bake continentalness field, which could label inland terrain as coast after authority cleanup.
+    const double bakedCoast = geomorphLandness
+        * (1.0 - smooth01(80.0, 620.0, std::abs(geomorph.elevationMeters)))
         * (1.0 - 0.82 * std::clamp(geomorph.floodplain, 0.0, 1.0));
 
     // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while

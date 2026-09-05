@@ -21,6 +21,7 @@ struct GlobalGeomorphSample {
     double elevationMeters{};
     double continentalness{};
     double mountain{};
+    double plateau{};
     double river{};
     double channel{};
     double floodplain{};
@@ -33,13 +34,16 @@ namespace geomorph_detail {
 // cube-sphere authority -> tectonic uplift forcing -> per-step Priority-Flood ->
 // MFD routing -> stream-power erosion/deposition -> thermal talus relaxation.
 // We intentionally keep the implementation native/C++ and deterministic for Voxel Frontier.
-constexpr int kRes = 128;
+// R18: match the mature erosion reference's 256^2 cubemap process grid. At Earth radius this
+// puts the global process cell near the 40 km class instead of R16/R17's ~80 km class; local
+// clipmaps still refine the baked field continuously down to metre scale.
+constexpr int kRes = 256;
 constexpr int kFaces = 6;
 constexpr int kFaceCells = kRes * kRes;
 constexpr int kCount = kFaces * kFaceCells;
 constexpr double kPi = 3.1415926535897932384626433832795;
 constexpr int kPlateCount = 24;
-constexpr int kErosionSteps = 30;
+constexpr int kErosionSteps = 60;
 constexpr double kMfdPower = 6.0;
 
 inline double smooth01(double a, double b, double v) noexcept {
@@ -196,6 +200,7 @@ struct Field {
     std::vector<float> elevation;
     std::vector<float> continental;
     std::vector<float> mountain;
+    std::vector<float> plateau;
     std::vector<float> river;
     std::vector<float> floodplain;
     std::vector<float> incision;
@@ -205,7 +210,7 @@ struct Field {
     explicit Field(std::uint64_t s, double r, double maxElev)
         : seed(s), radius(r), maxElevation(maxElev),
           neighbors(kCount), neighborCount(kCount, 0U), elevation(kCount), continental(kCount),
-          mountain(kCount), river(kCount), floodplain(kCount), incision(kCount), hardness(kCount),
+          mountain(kCount), plateau(kCount), river(kCount), floodplain(kCount), incision(kCount), hardness(kCount),
           receiver(kCount, -1) {
         buildNeighborTable();
         bake();
@@ -306,6 +311,7 @@ struct Field {
         std::vector<float> rawDiv(kCount, 0.0F);
         std::vector<float> rawCC(kCount, 0.0F);
         std::vector<float> uplift(kCount, 0.0F);
+        std::vector<float> plateauDrive(kCount, 0.0F);
 
         for (int face = 0; face < kFaces; ++face) {
             for (int y = 0; y < kRes; ++y) {
@@ -369,15 +375,31 @@ struct Field {
         // cells before erosion so the uplifted landmass is regional, not a one-cell wall.
         std::vector<float> convSpread = rawConv;
         std::vector<float> ccSpread = rawCC;
-        spreadMax(neighbors, neighborCount, convSpread, 10, 0.82F);
-        spreadMax(neighbors, neighborCount, ccSpread, 13, 0.86F);
+        // R18 process-scale orogeny. The doubled grid resolution makes these 8/14-cell
+        // spreads roughly 300-550 km wide on Earth: regional belts rather than continent-wide
+        // blankets. Ridged fields modulate the UPLIFT FORCING before erosion, never the final DEM.
+        spreadMax(neighbors, neighborCount, convSpread, 8, 0.80F);
+        spreadMax(neighbors, neighborCount, ccSpread, 14, 0.88F);
 
         for (int i = 0; i < kCount; ++i) {
             const glm::dvec3 d = directionAt(i / kFaceCells, i % kRes, (i % kFaceCells) / kRes);
             const double paleo = std::pow(ridged(seed ^ 0xB7E151628AED2A6BULL, d, 2.6, 4), 2.6);
             const double land = smooth01(-0.03, 0.10, continental[i]);
+            const double primaryRidge = std::pow(ridged(seed ^ 0xD6E8FEB86659FD93ULL, d, 11.0, 4), 1.55);
+            const double branchRidge = std::pow(ridged(seed ^ 0xA5A3564E27F8862FULL, d, 29.0, 3), 1.70);
+            const double activeOrogen = convSpread[i]
+                * (0.66 + 0.42 * primaryRidge + 0.18 * branchRidge);
+            // Continental collision has a broad, resistant interior shoulder. It participates in
+            // uplift and erosion rather than being flattened to an arbitrary post-bake altitude.
+            const double collisionInterior = ccSpread[i]
+                * (1.0 - 0.48 * static_cast<double>(rawConv[i]));
+            plateauDrive[i] = static_cast<float>(std::clamp(land * collisionInterior, 0.0, 1.0));
             uplift[i] = static_cast<float>(std::clamp(
-                land * (0.70 * convSpread[i] + 0.75 * ccSpread[i] + 0.18 * paleo), 0.0, 1.0));
+                land * (0.74 * activeOrogen + 0.86 * collisionInterior + 0.18 * paleo), 0.0, 1.0));
+            hardness[i] = static_cast<float>(std::clamp(
+                static_cast<double>(hardness[i]) + 0.16 * primaryRidge * convSpread[i]
+                    + 0.20 * plateauDrive[i],
+                0.0, 1.0));
         }
 
         std::vector<std::uint8_t> ocean(kCount, 0U);
@@ -395,7 +417,9 @@ struct Field {
         std::vector<float> buf(kCount);
         std::vector<float> lastFilled(kCount);
 
-        constexpr double upliftRateMeters = 62.0;
+        // 60 process iterations, close to the mature reference. Total maximum tectonic lift is
+        // ~3.1 km before differential erosion, enough for coherent ranges without a post-bake peak stamp.
+        constexpr double upliftRateMeters = 52.0;
         constexpr double dt = 0.0048;
         constexpr double k0 = 0.34;
         constexpr double mExp = 0.45;
@@ -475,7 +499,9 @@ struct Field {
                 buf = work;
                 for (int id = 0; id < kCount; ++id) {
                     if (ocean[id]) continue;
-                    const double talus = 105.0 * (0.72 + 0.56 * hardness[id]);
+                    // Same physical talus angle as the 128 grid: neighbour spacing halves at R18.
+                    const double talus = (105.0 * 128.0 / static_cast<double>(kRes))
+                        * (0.72 + 0.56 * hardness[id]);
                     for (std::uint8_t k = 0; k < neighborCount[id]; ++k) {
                         const int n = neighbors[id][k];
                         const double excess = static_cast<double>(work[id] - work[n]) - talus;
@@ -550,8 +576,9 @@ struct Field {
                 const int n = mfdNeighbor[id][k];
                 slope += static_cast<double>(mfdWeight[id][k]) * std::max(0.0, static_cast<double>(filled[id] - filled[n]));
             }
-            const double riverMask = smooth01(0.40, 0.84, qNorm);
-            const double lowSlope = 1.0 - smooth01(35.0, 280.0, slope);
+            const double riverMask = smooth01(0.32, 0.74, qNorm);
+            const double slopeScale = 128.0 / static_cast<double>(kRes);
+            const double lowSlope = 1.0 - smooth01(35.0 * slopeScale, 280.0 * slopeScale, slope);
             river[id] = static_cast<float>(riverMask);
             floodplain[id] = static_cast<float>(riverMask * lowSlope);
             const double expectedUplifted = static_cast<double>(h0[id]) + upliftRateMeters * kErosionSteps * uplift[id];
@@ -565,8 +592,21 @@ struct Field {
                 localMax = std::max(localMax, elevation[neighbors[id][k]]);
             }
             const double relief = static_cast<double>(localMax - localMin);
+            const double reliefMountain = smooth01(240.0, 1800.0, relief);
+            const double activeFront = std::clamp(
+                0.82 * static_cast<double>(convSpread[id])
+                    + 0.28 * static_cast<double>(rawConv[id]), 0.0, 1.0);
             mountain[id] = static_cast<float>(std::clamp(
-                0.72 * uplift[id] + 0.45 * smooth01(450.0, 2600.0, relief), 0.0, 1.0));
+                0.68 * activeFront + 0.52 * reliefMountain
+                    - 0.22 * static_cast<double>(plateauDrive[id]),
+                0.0, 1.0));
+            const double broadLevel = 1.0 - smooth01(650.0, 2300.0, relief);
+            plateau[id] = static_cast<float>(std::clamp(
+                static_cast<double>(plateauDrive[id])
+                    * smooth01(900.0, 2200.0, static_cast<double>(elevation[id]))
+                    * (0.32 + 0.68 * broadLevel)
+                    * (1.0 - 0.62 * static_cast<double>(incision[id])),
+                0.0, 1.0));
 
             // Depositional broadening is geometry, not just a material label.
             elevation[id] += static_cast<float>(floodplain[id] * 22.0);
@@ -599,6 +639,7 @@ struct Field {
         s.elevationMeters = sampleBilinear(elevation, q);
         s.continentalness = std::clamp(sampleBilinear(continental, q), -1.0, 1.0);
         s.mountain = std::clamp(sampleBilinear(mountain, q), 0.0, 1.0);
+        s.plateau = std::clamp(sampleBilinear(plateau, q), 0.0, 1.0);
         s.river = std::clamp(sampleBilinear(river, q), 0.0, 1.0);
         s.floodplain = std::clamp(sampleBilinear(floodplain, q), 0.0, 1.0);
         s.incision = std::clamp(sampleBilinear(incision, q), 0.0, 1.0);
