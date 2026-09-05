@@ -23,6 +23,8 @@ struct PlanetMovementInput {
 
 class PlanetCamera final {
 public:
+    // startDirection is initialization-only; the existing V7 movement, attitude transport and
+    // celestial reference-frame behavior remain authoritative after construction.
     explicit PlanetCamera(
         const PlanetDefinition& planet,
         const CelestialSystem* celestialSystem = nullptr,
