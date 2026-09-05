@@ -1,0 +1,32 @@
+name: Materialize Terrain R20 Tectonic Folds
+
+on:
+  push:
+    branches: [test/terrain-r20-tectonic-folds]
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Apply R20 source patch
+        run: python3 .github/scripts/materialize_terrain_r20.py
+      - name: Verify R20 markers
+        run: |
+          grep -q 'R20 TECTONIC FOLD CASCADE' native/src/world/PlanetSurface.cpp
+          grep -q 'glm::dvec3 boundaryNormal{};' native/src/world/PlanetSurface.cpp
+          grep -q 'summitDeficit > 320.0' native/src/app/Main.cpp
+          git diff --check
+      - name: Commit materialized source
+        run: |
+          rm .github/scripts/materialize_terrain_r20.py .github/workflows/materialize-terrain-r20.yml
+          git config user.name 'Voxel Frontier CI'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'terrain: materialize R20 tectonic fold cascade [skip ci]'
+          git push origin HEAD:test/terrain-r20-tectonic-folds
