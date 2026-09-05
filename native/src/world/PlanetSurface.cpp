@@ -539,65 +539,20 @@ PlanetTerrainSample samplePlanetTerrain(
     elevation = geomorph.elevationMeters;
     const double geomorphLandness = smooth01(-80.0, 220.0, geomorph.elevationMeters);
 
-    // R13 connected orogen structure. The global geomorph bake owns where an orogen exists;
-    // this layer reconstructs coherent spines, branch ridges and interfluve valleys inside it.
-    // Macro silhouette is tectonic + ridged + erosion-like dissection, not high-frequency noise.
-    const double rangeRidgeA = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xD6E8FEB86659FD93ULL, w, 118.0, 5));
-    const double rangeRidgeB = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xA5A3564E27F8862FULL, w, 310.0, 4));
-    const double rangeRidgeC = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0x9E3779B185EBCA87ULL, w, 760.0, 3));
-    const double valleyNoise = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0xC13FA9A902A6328FULL, w, 420.0, 4);
-    const double rangeMask = smooth01(0.035, 0.48, geomorph.mountain) * geomorphLandness;
-    const double majorSpine = std::pow(smooth01(0.40, 0.84, rangeRidgeA), 1.55);
-    const double branchSpine = std::pow(smooth01(0.47, 0.88, rangeRidgeB), 1.80);
-    const double summitTeeth = std::pow(smooth01(0.56, 0.93, rangeRidgeC), 2.05);
-    const double branchAuthority = majorSpine * (0.38 + 0.62 * branchSpine);
-    const double summitAuthority = branchAuthority * (0.46 + 0.54 * summitTeeth);
-    const double broadMass = rangeMask * std::pow(smooth01(0.16, 0.72, majorSpine), 1.15);
-    const double ridgeMass = rangeMask * branchAuthority;
-    const double summitMass = rangeMask * summitAuthority;
-    elevation += maxLand * (0.090 * broadMass + 0.105 * ridgeMass + 0.105 * summitMass);
-    const double interfluve = rangeMask
-        * std::pow(1.0 - std::clamp(std::max(majorSpine, branchSpine * 0.88), 0.0, 1.0), 1.60);
-    const double dendriticCut = interfluve
-        * std::pow(smooth01(0.48, 0.90, valleyNoise), 1.25);
-    elevation -= maxLand * (0.078 * interfluve + 0.050 * dendriticCut);
-
-    // R8 plateau hierarchy: use a much broader province mask, a nearly level inner table and
-    // a distinct transition bench. The previous R7 target often selected the legacy plateau mask,
-    // so the exported plateau authority below is now this post-bake terrace only.
-    const double globalHighland = geomorphLandness
-        * smooth01(720.0, 2100.0, geomorph.elevationMeters)
-        * (1.0 - smooth01(0.20, 0.64, geomorph.mountain));
-    // R14 plateau authority: suitability only decides WHERE a tableland may exist; once a
-    // province is selected its inner core receives full flattening authority. R13 multiplied the
-    // profile by a soft highland gate, which diluted the shelf and turned it back into rolling hills.
-    const double plateauSuitability = smooth01(0.32, 0.72, globalHighland);
-    const double plateauMacro = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x4A7484AA6EA6E483ULL, w, 180.0, 4);
-    const double plateauMeso = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x5CB0A9DCBD41FBD4ULL, w, 620.0, 3);
-    const double plateauSignal = plateauMacro * 0.86 + plateauMeso * 0.14;
-    const double plateauProvince = smooth01(0.545, 0.595, plateauSignal);
-    const double plateauCore = smooth01(0.625, 0.665, plateauSignal);
-    const double plateauTerrace = plateauSuitability * plateauProvince;
-    const double plateauBody = plateauSuitability * plateauCore;
-    const double plateauRim = plateauSuitability
-        * std::clamp(plateauProvince - plateauCore * 0.72, 0.0, 1.0);
-    const double plateauTopNoise = fbmSurface(
-        definition.seed ^ 0x76F988DA831153B5ULL, w, 250.0, 2);
-    const double plateauShelf = 2700.0 + 10.0 * plateauTopNoise;
-    // Full authority on the inner table, C1 blend only across the finite rim.
-    const double coreBlend = smooth01(0.18, 0.72, plateauBody);
-    const double terraceBlend = smooth01(0.16, 0.74, plateauTerrace) * (1.0 - coreBlend);
-    const double plateauBlend = std::clamp(coreBlend * 0.999 + terraceBlend * 0.78, 0.0, 0.999);
-    elevation = elevation * (1.0 - plateauBlend) + plateauShelf * plateauBlend;
-    // Resistant caprock makes the rim read as an escarpment instead of a grassy swell.
-    elevation += 290.0 * plateauRim + 18.0 * plateauBody;
-
+    // R17 SINGLE MACRO AUTHORITY.
+    // R16's cube-sphere tectonics + iterative Priority-Flood/MFD erosion bake is the only
+    // source allowed to change continent / mountain / plateau / coast macro elevation here.
+    // Older R13/R14 ridged-noise mountain reconstruction and forced 2700 m plateau shelves
+    // were deliberately removed because they overwrote the physically-conditioned DEM.
+    // We retain only semantic masks derived from the baked field for materials/ecology/capture.
+    const double bakedMountain = std::clamp(geomorph.mountain, 0.0, 1.0);
+    const double bakedHighland = geomorphLandness
+        * smooth01(850.0, 2450.0, geomorph.elevationMeters)
+        * (1.0 - 0.70 * smooth01(0.20, 0.72, bakedMountain));
+    const double bakedTableland = bakedHighland
+        * (1.0 - 0.72 * std::clamp(geomorph.incision, 0.0, 1.0));
+    const double bakedCoast = coastProximity * geomorphLandness
+        * (1.0 - 0.82 * std::clamp(geomorph.floodplain, 0.0, 1.0));
 
     // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while
     // `geomorph.channel` is reconstructed from the actual downhill receiver graph and owns
@@ -610,25 +565,13 @@ PlanetTerrainSample samplePlanetTerrain(
     const double channelCore = std::pow(std::clamp(geomorph.channel, 0.0, 1.0), 0.88)
         * (0.90 + 0.10 * channelTexture) * geomorphLandness;
     const double uplandCarve = smooth01(260.0, 2200.0, geomorph.elevationMeters);
-    elevation -= riverAuthority * (45.0 + 300.0 * uplandCarve);
-    elevation -= channelCore * (12.0 + 68.0 * uplandCarve);
-    elevation -= geomorph.incision * (35.0 + 175.0 * uplandCarve);
+    elevation -= riverAuthority * (18.0 + 90.0 * uplandCarve);
+    elevation -= channelCore * (8.0 + 34.0 * uplandCarve);
+    elevation -= geomorph.incision * (10.0 + 55.0 * uplandCarve);
 
-    // Give hydrologically low coastal margins a readable land/sea break without changing
-    // the global coastline authority.  Rugged margins expose a short escarpment, while flat
-    // margins remain beaches/floodplains.
-    // R14 coast authority: distinguish low-energy beach/floodplain margins from resistant
-    // rock coasts using an independent hardness-like field. The rocky profile is confined to the
-    // first few hundred metres of positive coastal relief so it produces an actual sea cliff,
-    // not a ten-kilometre green ramp.
-    const double coastLandSide = smooth01(-30.0, 85.0, geomorph.elevationMeters)
-        * (1.0 - smooth01(260.0, 620.0, geomorph.elevationMeters));
-    const double coastResistanceNoise = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x91E10DA5C79E7B1DULL, w, 235.0, 4);
-    const double hardCoast = coastLandSide * smooth01(0.52, 0.72, coastResistanceNoise)
-        * (1.0 - 0.72 * std::clamp(geomorph.floodplain, 0.0, 1.0));
-    const double coastEscarpment = std::pow(std::clamp(hardCoast, 0.0, 1.0), 1.12);
-    elevation += 430.0 * coastEscarpment;
+    // R17 coast semantics only: coast shape itself stays in the baked DEM.
+    // No post-bake 430 m extrusion is allowed to create artificial coastal walls.
+    const double coastEscarpment = bakedCoast;
 
 
     // Walking-scale geometry. Frequencies now span tens of kilometres down to a few
@@ -641,13 +584,13 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xBA7C9045F12C7F99ULL, w, 21000.0, 3);
     const double ultra = fbmSurface(
         definition.seed ^ 0x24A19947B3916CF7ULL, w, 98000.0, 2);
-    // R9 plateau detail suppression: R8 correctly built a post-bake tableland but this stage
-    // still damped detail with the obsolete pre-bake `plateau` mask, re-wrinkling the flat top.
+    // R17 terminal detail only. These amplitudes are intentionally metre-scale and may not
+    // move mountain systems, drainage divides or plateau provinces produced by the global bake.
     const double detailDamp = geomorphLandness
-        * (1.0 - 0.72 * std::max(wetland, geomorph.floodplain))
-        * (1.0 - 0.992 * std::clamp(std::max(plateau, plateauBody), 0.0, 1.0));
+        * (1.0 - 0.80 * std::max(wetland, geomorph.floodplain))
+        * (1.0 - 0.70 * bakedTableland);
     elevation += maxLand * detailDamp
-        * (0.0100 * local + 0.0038 * micro + 0.0062 * fine + 0.0018 * ultra);
+        * (0.0024 * local + 0.0010 * micro + 0.00045 * fine + 0.00012 * ultra);
 
     elevation = std::clamp(elevation, -maxOcean, maxLand);
 
@@ -658,15 +601,15 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.convergence = plates.convergence;
     sample.divergence = plates.divergence;
     sample.oceanRidge = oceanRidge;
-    sample.mountain = std::max(mountain, geomorph.mountain);
-    sample.plateau = std::clamp(std::max(plateauBody, plateauRim * 0.92), 0.0, 1.0);
+    sample.mountain = bakedMountain;
+    sample.plateau = std::clamp(bakedTableland, 0.0, 1.0);
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = channelCore;
     sample.hills = hills;
     sample.canyon = std::max(canyon, geomorph.incision);
     sample.dunes = dunes;
-    sample.coastalCliff = std::max(coastalCliff, coastEscarpment);
+    sample.coastalCliff = std::clamp(coastEscarpment, 0.0, 1.0);
     sample.wetland = std::max(wetland, geomorph.floodplain);
     sample.glacier = glacier;
     sample.aridity = aridity;
