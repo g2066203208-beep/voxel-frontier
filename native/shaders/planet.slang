@@ -33,10 +33,7 @@ static const float kShadowDepthRange = 180.0;
 static const float kShadowResolution = 512.0;
 static const float2 kShadowTexel = float2(1.0 / kShadowResolution, 1.0 / kShadowResolution);
 static const float kShadowWorldTexel = (2.0 * kShadowHalfExtent) / kShadowResolution;
-// The reference scene uses an HDR sky for lighting. Display sky RGB and world irradiance are not
-// the same quantity; keep the lighting energy explicit rather than brightening the visible sky.
 static const float kEnvironmentIrradiance = 2.35;
-// Blender-style pre-view-transform exposure, calibrated on the unchanged V7 test scene.
 static const float kExposureScale = 1.4640857; // 2^0.55
 
 float3 rotateByQuaternion(float3 v, float4 q)
@@ -277,16 +274,16 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float faceUp = saturate(dot(n, surfaceUp));
         float slope = 1.0 - faceUp;
         float macro = valueNoise3(input.localPosition * 0.018 + float3(3.2, -5.7, 1.9));
-        float3 dryGrass = float3(0.20, 0.27, 0.095);
-        float3 meadow = float3(0.12, 0.36, 0.075);
-        float3 lushGrass = float3(0.055, 0.29, 0.055);
-        float3 soil = float3(0.27, 0.18, 0.078);
-        float3 stone = float3(0.30, 0.30, 0.28);
-        float3 coldStone = float3(0.38, 0.40, 0.41);
-        float3 snow = float3(0.74, 0.77, 0.75);
+        float3 dryGrass = float3(0.24, 0.33, 0.12);
+        float3 meadow = float3(0.15, 0.42, 0.09);
+        float3 lushGrass = float3(0.075, 0.34, 0.065);
+        float3 soil = float3(0.30, 0.205, 0.085);
+        float3 stone = float3(0.32, 0.32, 0.30);
+        float3 coldStone = float3(0.40, 0.42, 0.43);
+        float3 snow = float3(0.76, 0.79, 0.77);
         float3 grass = lerp(dryGrass, lushGrass, moisture);
         grass = lerp(grass, meadow, saturate((temperature - 0.35) * 1.45));
-        grass *= 0.93 + (macro - 0.5) * 0.10;
+        grass *= 0.95 + (macro - 0.5) * 0.08;
         float soilMask = saturate(smoothstep(0.16, 0.46, normalizedHeight) * (0.68 - moisture * 0.28));
         float rockMask = saturate(smoothstep(0.09, 0.34, slope) + smoothstep(0.38, 0.68, normalizedHeight) * 0.78);
         float snowMask = smoothstep(0.60, 0.86, normalizedHeight) * (1.0 - smoothstep(0.24, 0.64, temperature));
@@ -295,7 +292,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, snow, snowMask);
         roughness = lerp(0.95, 0.72, rockMask);
         f0 = lerp(float3(0.024, 0.026, 0.025), float3(0.040, 0.039, 0.037), rockMask);
-        materialAO = lerp(0.78, 1.0, faceUp);
+        materialAO = lerp(0.80, 1.0, faceUp);
     }
     else if (barkMaterial)
     {
@@ -304,53 +301,53 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float warp = valueNoise3(float3(u * 3.5, vCoord * 0.52, input.localPosition.z * 0.075));
         float fibre = 0.5 + 0.5 * sin((u + (warp - 0.5) * 0.025) * 6.2831853 * 5.0);
         float fissure = smoothstep(0.86, 0.96, 0.5 + 0.5 * sin(u * 6.2831853 * 6.0 + warp * 2.0));
-        baseColor = lerp(float3(0.045, 0.015, 0.005), float3(0.24, 0.080, 0.018), 0.46 + 0.44 * warp);
-        baseColor = lerp(baseColor, float3(0.38, 0.16, 0.038), fibre * 0.10);
-        baseColor *= 1.0 - fissure * 0.22;
+        baseColor = lerp(float3(0.065, 0.022, 0.007), float3(0.30, 0.105, 0.024), 0.48 + 0.42 * warp);
+        baseColor = lerp(baseColor, float3(0.42, 0.18, 0.045), fibre * 0.11);
+        baseColor *= 1.0 - fissure * 0.18;
         roughness = 0.93 + fissure * 0.04;
         f0 = float3(0.020, 0.018, 0.015);
-        materialAO = 0.82 - fissure * 0.08;
+        materialAO = 0.84 - fissure * 0.07;
     }
     else if (foliageMaterial)
     {
         float variation = input.surfaceData.y;
         float canopyHeight = saturate(input.surfaceData.z);
-        float macro = valueNoise3(input.localPosition * 0.115 + variation * 7.0);
+        float macro = valueNoise3(input.localPosition * 0.105 + variation * 6.0);
         float upFacing = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
-        baseColor = lerp(float3(0.018, 0.105, 0.014), float3(0.066, 0.30, 0.030), 0.44 + 0.46 * macro);
-        baseColor = lerp(baseColor, float3(0.34, 0.53, 0.080), upFacing * (0.08 + canopyHeight * 0.15));
+        baseColor = lerp(float3(0.030, 0.145, 0.020), float3(0.095, 0.36, 0.045), 0.46 + 0.42 * macro);
+        baseColor = lerp(baseColor, float3(0.38, 0.57, 0.10), upFacing * (0.09 + canopyHeight * 0.16));
         roughness = 0.82;
         f0 = float3(0.026, 0.030, 0.021);
-        materialAO = lerp(0.60, 0.95, canopyHeight) * lerp(0.88, 1.0, upFacing);
+        materialAO = lerp(0.64, 0.96, canopyHeight) * lerp(0.90, 1.0, upFacing);
         foliageTransmission = 1.0;
     }
     else if (rockMaterial)
     {
         float variation = input.surfaceData.y;
         float strataCoord = input.surfaceData.z;
-        float macro = valueNoise3(input.localPosition * (0.095 + variation * 0.025) + variation * 11.0);
-        float strata = 0.5 + 0.5 * sin(strataCoord * 4.0 + macro * 1.6);
+        float macro = valueNoise3(input.localPosition * (0.090 + variation * 0.022) + variation * 11.0);
+        float strata = 0.5 + 0.5 * sin(strataCoord * 4.0 + macro * 1.5);
         float faceUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
-        float lichen = smoothstep(0.78, 0.94, valueNoise3(input.localPosition * 0.18 + float3(-8.0, 2.0, 4.0))) * (0.30 + 0.70 * faceUp);
-        baseColor = lerp(float3(0.25, 0.26, 0.265), float3(0.35, 0.285, 0.205), variation * 0.50 + macro * 0.30);
-        baseColor = lerp(baseColor, float3(0.16, 0.145, 0.125), (1.0 - strata) * 0.12);
-        baseColor = lerp(baseColor, float3(0.22, 0.30, 0.11), lichen * 0.12);
+        float lichen = smoothstep(0.80, 0.95, valueNoise3(input.localPosition * 0.16 + float3(-8.0, 2.0, 4.0))) * (0.30 + 0.70 * faceUp);
+        baseColor = lerp(float3(0.27, 0.28, 0.285), float3(0.38, 0.31, 0.225), variation * 0.48 + macro * 0.28);
+        baseColor = lerp(baseColor, float3(0.18, 0.16, 0.135), (1.0 - strata) * 0.10);
+        baseColor = lerp(baseColor, float3(0.24, 0.32, 0.12), lichen * 0.10);
         roughness = lerp(0.70, 0.82, faceUp);
         f0 = float3(0.040, 0.038, 0.035);
-        materialAO = lerp(0.72, 1.0, faceUp);
+        materialAO = lerp(0.74, 1.0, faceUp);
     }
     else if (oceanMaterial)
     {
         waterDepth = saturate(input.surfaceData.y);
         float shoreVariation = saturate(input.surfaceData.z);
         float macro = valueNoise3(input.localPosition * 0.032 + float3(1.7, -3.4, 6.2));
-        baseColor = lerp(float3(0.025, 0.48, 0.52), float3(0.012, 0.20, 0.34), smoothstep(0.03, 0.30, waterDepth));
-        baseColor = lerp(baseColor, float3(0.004, 0.034, 0.105), smoothstep(0.28, 0.90, waterDepth));
-        baseColor *= 0.96 + (macro - 0.5) * 0.06;
+        baseColor = lerp(float3(0.030, 0.50, 0.54), float3(0.014, 0.23, 0.37), smoothstep(0.03, 0.30, waterDepth));
+        baseColor = lerp(baseColor, float3(0.005, 0.045, 0.125), smoothstep(0.28, 0.90, waterDepth));
+        baseColor *= 0.97 + (macro - 0.5) * 0.05;
         float shoreBand = 1.0 - smoothstep(0.018, 0.15 + shoreVariation * 0.030, waterDepth);
         float foamFlow = 0.5 + 0.5 * sin(input.localPosition.x * 0.34 + input.localPosition.z * 0.27 + macro * 2.6 + shoreVariation * 6.2831853);
         foamMask = shoreBand * smoothstep(0.64, 0.82, foamFlow);
-        baseColor = lerp(baseColor, float3(0.79, 0.92, 0.88), foamMask * 0.82);
+        baseColor = lerp(baseColor, float3(0.82, 0.94, 0.90), foamMask * 0.82);
         f0 = float3(0.0204, 0.0204, 0.0204);
         roughness = lerp(0.105, 0.032, smoothstep(0.08, 0.80, waterDepth));
     }
