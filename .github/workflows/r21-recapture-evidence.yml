@@ -2,7 +2,8 @@ name: R21 Full Terrain And Celestial Motion Evidence
 
 on:
   push:
-    branches: [work/r21-recapture-evidence]
+    branches:
+      - work/r21-recapture-evidence
   workflow_dispatch:
 
 concurrency:
@@ -14,19 +15,24 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 80
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Install Vulkan headless dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick mesa-vulkan-drivers vulkan-tools \
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick mesa-vulkan-drivers vulkan-tools \
             libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
-            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev libdrm-dev libgbm-dev \
-            libegl1-mesa-dev libgl1-mesa-dev libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
 
       - name: Install Slang compiler
         run: |
-          curl -L --fail --retry 3 https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip -o /tmp/slang.zip
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
           mkdir -p "$HOME/slang"
           unzip -q /tmp/slang.zip -d "$HOME/slang"
           SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
@@ -34,132 +40,16 @@ jobs:
           echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
           "$SLANGC" -version
 
-      - name: Patch evidence-only target search and overview camera
-        shell: bash
+      - name: Patch evidence-only target search and camera
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('native/src/app/Main.cpp')
-          s = p.read_text()
-
-          # R21's production terrain fields already include many more landforms than its four old
-          # evidence modes. Add an evidence-only early selector for the missing visible classes.
-          marker = '''    bool found = false;\n\n    for (std::uint32_t i = 0; i < sampleCount; ++i) {'''
-          inserted = '''    bool found = false;
-
-    // Evidence-only extension: select the actual high-valued procedural field for every visible
-    // geomorph class instead of renaming arbitrary terrain. The original production generator is
-    // unchanged; this only chooses where the CI camera is placed.
-    const bool extendedCaptureMode = captureMode == "hills" || captureMode == "canyon"
-        || captureMode == "dunes" || captureMode == "wetland" || captureMode == "glacier"
-        || captureMode == "volcano" || captureMode == "arid" || captureMode == "lowland";
-    if (extendedCaptureMode) {
-        for (std::uint32_t i = 0; i < sampleCount; ++i) {
-            const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5)
-                / static_cast<double>(sampleCount);
-            const double radial = std::sqrt(std::max(0.0, 1.0 - y * y));
-            const double a = goldenAngle * static_cast<double>(i);
-            const glm::dvec3 d{std::cos(a) * radial, y, std::sin(a) * radial};
-            const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, d);
-            const double aboveSea = terrain.elevationMeters - planet.seaLevelElevationMeters;
-            if (terrain.submerged(planet) || aboveSea < 4.0) continue;
-            const double sunElevation = glm::dot(d, sunDirection);
-            if (sunElevation < 0.10) continue;
-            double score = sunElevation * 0.35;
-
-            if (captureMode == "hills") {
-                if (terrain.hills < 0.18 || aboveSea > 2600.0) continue;
-                score += terrain.hills * 13.0 - terrain.mountain * 4.5
-                    - std::abs(aboveSea - 850.0) / 1400.0;
-            } else if (captureMode == "canyon") {
-                if (terrain.canyon < 0.14 || aboveSea > 3000.0) continue;
-                score += terrain.canyon * 15.0 + terrain.river * 3.0
-                    + terrain.hills * 1.5 - terrain.plateau * 1.5;
-            } else if (captureMode == "dunes") {
-                if (terrain.dunes < 0.15 || terrain.aridity < 0.45 || aboveSea > 1800.0) continue;
-                score += terrain.dunes * 15.0 + terrain.aridity * 5.0 - terrain.moisture * 5.0;
-            } else if (captureMode == "wetland") {
-                if (terrain.wetland < 0.12 || terrain.moisture < 0.48 || aboveSea > 800.0) continue;
-                score += terrain.wetland * 15.0 + terrain.moisture * 5.0
-                    - std::abs(aboveSea - 180.0) / 500.0;
-            } else if (captureMode == "glacier") {
-                if (terrain.glacier < 0.10) continue;
-                score += terrain.glacier * 18.0 + aboveSea / 2400.0 - terrain.aridity * 2.0;
-            } else if (captureMode == "volcano") {
-                if (terrain.volcano < 0.16) continue;
-                score += terrain.volcano * 19.0 + terrain.mountain * 2.0 + aboveSea / 3000.0;
-            } else if (captureMode == "arid") {
-                if (terrain.aridity < 0.58 || terrain.moisture > 0.48 || aboveSea > 2200.0) continue;
-                score += terrain.aridity * 12.0 + terrain.dunes * 3.0 - terrain.moisture * 8.0;
-            } else if (captureMode == "lowland") {
-                if (aboveSea < 25.0 || aboveSea > 650.0 || terrain.mountain > 0.16
-                    || terrain.canyon > 0.14 || terrain.plateau > 0.32) continue;
-                score += 5.0 - terrain.mountain * 8.0 - terrain.canyon * 6.0
-                    - terrain.hills * 2.5 - std::abs(aboveSea - 260.0) / 400.0;
-            }
-
-            if (!found || score > bestScore) {
-                bestScore = score;
-                best = d;
-                found = true;
-            }
-        }
-        if (found) return safeNormalize(best, preferred);
-    }
-
-    for (std::uint32_t i = 0; i < sampleCount; ++i) {'''
-          if marker not in s:
-              raise SystemExit('spawn selector insertion point not found')
-          s = s.replace(marker, inserted, 1)
-
-          old_spawn = '''        const glm::dvec3 spawnDirection = !celestialCaptureMode.empty()
-            ? celestialSpawnDirection
-            : (captureMode.empty() ? featureDirection
-                : findCaptureVantageDirection(planet, featureDirection, captureMode));'''
-          new_spawn = '''        const bool legacyLandformVantage = captureMode == "mountain" || captureMode == "river"
-            || captureMode == "coast" || captureMode == "highland";
-        const double evidenceStandOffMeters = captureMode == "mountain" ? 12000.0
-            : (captureMode == "volcano" || captureMode == "glacier" || captureMode == "canyon" ? 9000.0
-            : (captureMode == "highland" ? 10000.0 : 6000.0));
-        const glm::dvec3 evidenceVantageDirection = safeNormalize(
-            featureDirection + stableTangent(featureDirection)
-                * (evidenceStandOffMeters / std::max(1.0, planet.radius)),
-            featureDirection);
-        const glm::dvec3 spawnDirection = !celestialCaptureMode.empty()
-            ? celestialSpawnDirection
-            : (captureMode.empty() ? featureDirection
-                : (legacyLandformVantage
-                    ? findCaptureVantageDirection(planet, featureDirection, captureMode)
-                    : evidenceVantageDirection));'''
-          if old_spawn not in s:
-              raise SystemExit('spawn vantage block not found')
-          s = s.replace(old_spawn, new_spawn, 1)
-
-          old_camera = '''            const double cameraLift = captureMode == "mountain" ? 120.0
-                : (captureMode == "highland" ? 105.0
-                : (captureMode == "coast" ? 45.0 : 180.0));'''
-          new_camera = '''            // Evidence-only overview altitude. Production gameplay camera behavior is untouched.
-            const double cameraLift = captureMode == "mountain" ? 5500.0
-                : (captureMode == "volcano" ? 4800.0
-                : (captureMode == "glacier" ? 4200.0
-                : (captureMode == "highland" ? 3200.0
-                : (captureMode == "canyon" ? 3000.0
-                : (captureMode == "hills" ? 2400.0
-                : (captureMode == "dunes" || captureMode == "arid" ? 1900.0
-                : (captureMode == "coast" || captureMode == "river" ? 1600.0
-                : (captureMode == "wetland" || captureMode == "lowland" ? 1300.0 : 1800.0)))))))));'''
-          if old_camera not in s:
-              raise SystemExit('camera lift block not found')
-          s = s.replace(old_camera, new_camera, 1)
-
-          p.write_text(s)
-          PY
+          python3 .github/scripts/r21_full_evidence_patch.py
           git diff --check
           git diff -- native/src/app/Main.cpp
 
       - name: Build real Vulkan runtime
         run: |
-          cmake -S native -B build/visual -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
+          cmake -S native -B build/visual -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
           cmake --build build/visual --parallel
 
       - name: Verify Lavapipe Vulkan device
@@ -169,110 +59,9 @@ jobs:
           echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
 
-      - name: Capture twelve terrain and geomorphology classes
-        shell: bash
+      - name: Capture twelve landforms and celestial motion sequences
         run: |
-          set -euo pipefail
-          export SDL_VIDEODRIVER=x11 DISPLAY=:99 VF_CELESTIAL_TIME_SCALE=1
-          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb-landforms.log 2>&1 &
-          XVFB_PID=$!
-          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
-          sleep 2
-          APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
-          test -n "$APP"
-          mkdir -p recapture/terrain
-
-          capture_landform() {
-            local mode="$1"
-            local log="recapture/terrain/${mode}.log"
-            stdbuf -oL -eL env VF_CAPTURE_LANDFORM="$mode" "$APP" >"$log" 2>&1 &
-            local pid=$!
-            local ready=0
-            for t in $(seq 1 75); do
-              sleep 2
-              if grep -q 'Capture target elevation' "$log"; then ready=1; break; fi
-              kill -0 "$pid" 2>/dev/null || break
-            done
-            test "$ready" -eq 1
-            sleep 6
-            import -display :99 -window root "recapture/terrain/${mode}.png"
-            local colors
-            colors="$(convert "recapture/terrain/${mode}.png" -format '%k' info:)"
-            echo "${mode} unique_colors=${colors}" | tee -a recapture/terrain/capture-info.txt
-            test "$colors" -gt 64
-            kill "$pid" 2>/dev/null || true
-            wait "$pid" 2>/dev/null || true
-            sleep 1
-          }
-
-          for mode in mountain highland coast river hills canyon dunes wetland glacier volcano arid lowland; do
-            capture_landform "$mode"
-          done
-
-          montage \
-            recapture/terrain/mountain.png recapture/terrain/highland.png recapture/terrain/coast.png \
-            recapture/terrain/river.png recapture/terrain/hills.png recapture/terrain/canyon.png \
-            recapture/terrain/dunes.png recapture/terrain/wetland.png recapture/terrain/glacier.png \
-            recapture/terrain/volcano.png recapture/terrain/arid.png recapture/terrain/lowland.png \
-            -tile 3x4 -geometry 533x300+0+0 recapture/terrain/terrain-12-montage.png
-          identify recapture/terrain/*.png | tee -a recapture/terrain/capture-info.txt
-          grep -hE 'Capture target elevation|Spawn land elevation:' recapture/terrain/*.log \
-            > recapture/terrain/terrain-physics.txt || true
-          cat recapture/terrain/terrain-physics.txt
-
-      - name: Capture Sun and Moon motion sequences
-        shell: bash
-        run: |
-          set -euo pipefail
-          export SDL_VIDEODRIVER=x11 DISPLAY=:99
-          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb-celestial.log 2>&1 &
-          XVFB_PID=$!
-          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
-          sleep 2
-          APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
-          test -n "$APP"
-          mkdir -p recapture/celestial
-
-          capture_sequence() {
-            local sky="$1"
-            local log="recapture/celestial/${sky}.log"
-            stdbuf -oL -eL env VF_CAPTURE_CELESTIAL="$sky" VF_CELESTIAL_TIME_SCALE=3600 "$APP" >"$log" 2>&1 &
-            local pid=$!
-            local ready=0
-            for t in $(seq 1 75); do
-              sleep 2
-              if grep -q "Celestial capture: ${sky}" "$log"; then ready=1; break; fi
-              kill -0 "$pid" 2>/dev/null || break
-            done
-            test "$ready" -eq 1
-            sleep 3
-            for i in 0 1 2 3 4 5; do
-              import -display :99 -window root "recapture/celestial/${sky}-${i}.png"
-              sleep 1.5
-            done
-            kill "$pid" 2>/dev/null || true
-            wait "$pid" 2>/dev/null || true
-
-            montage recapture/celestial/${sky}-0.png recapture/celestial/${sky}-1.png \
-                    recapture/celestial/${sky}-2.png recapture/celestial/${sky}-3.png \
-                    recapture/celestial/${sky}-4.png recapture/celestial/${sky}-5.png \
-                    -tile 3x2 -geometry 533x300+0+0 "recapture/celestial/${sky}-motion-montage.png"
-            convert -delay 45 -loop 0 recapture/celestial/${sky}-0.png recapture/celestial/${sky}-1.png \
-                    recapture/celestial/${sky}-2.png recapture/celestial/${sky}-3.png \
-                    recapture/celestial/${sky}-4.png recapture/celestial/${sky}-5.png \
-                    "recapture/celestial/${sky}-motion.gif"
-            compare -metric AE recapture/celestial/${sky}-0.png recapture/celestial/${sky}-5.png \
-                    "recapture/celestial/${sky}-first-last-diff.png" \
-                    2>"recapture/celestial/${sky}-first-last-ae.txt" || true
-          }
-
-          capture_sequence sun
-          capture_sequence moon
-          identify recapture/celestial/*.png | tee recapture/celestial/capture-info.txt
-          grep -hE 'Celestial capture:|Aster-Sun distance:|Aster-Luna distance:' recapture/celestial/*.log \
-            > recapture/celestial/physics-summary.txt || true
-          cat recapture/celestial/physics-summary.txt
-          cat recapture/celestial/*-first-last-ae.txt
+          bash .github/scripts/r21_full_evidence_capture.sh
 
       - name: Upload complete visual evidence
         if: always()
@@ -282,7 +71,6 @@ jobs:
           path: |
             recapture
             vulkan-summary.txt
-            xvfb-landforms.log
-            xvfb-celestial.log
+            xvfb-full-evidence.log
           if-no-files-found: error
           retention-days: 30
