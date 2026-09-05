@@ -19,7 +19,7 @@ jobs:
       - name: Install Vulkan headless dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick xdotool mesa-vulkan-drivers vulkan-tools \
+          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick mesa-vulkan-drivers vulkan-tools \
             libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
             libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev libdrm-dev libgbm-dev \
             libegl1-mesa-dev libgl1-mesa-dev libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
@@ -34,6 +34,27 @@ jobs:
           echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
           "$SLANGC" -version
 
+      - name: Patch evidence-only landform camera altitude
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('native/src/app/Main.cpp')
+          s = p.read_text()
+          old = '''            const double cameraLift = captureMode == "mountain" ? 120.0
+                : (captureMode == "highland" ? 105.0
+                : (captureMode == "coast" ? 45.0 : 180.0));'''
+          new = '''            // Evidence-only overview camera: the old near-surface values hid kilometre-scale
+            // relief behind the local horizon. Production gameplay camera behavior is untouched.
+            const double cameraLift = captureMode == "mountain" ? 5500.0
+                : (captureMode == "highland" ? 3000.0
+                : (captureMode == "coast" ? 1500.0 : 1500.0));'''
+          if old not in s:
+              raise SystemExit('landform camera block not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+          git diff -- native/src/app/Main.cpp
+
       - name: Build real Vulkan runtime
         run: |
           cmake -S native -B build/visual -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
@@ -46,7 +67,7 @@ jobs:
           echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
 
-      - name: Recapture landforms with aerial oblique views
+      - name: Capture kilometre-scale landforms
         shell: bash
         run: |
           set -euo pipefail
@@ -59,56 +80,40 @@ jobs:
           test -n "$APP"
           mkdir -p recapture
 
-          wait_for_target() {
-            local log="$1"
-            for t in $(seq 1 60); do
-              sleep 2
-              grep -q 'Capture target elevation' "$log" && return 0
-            done
-            return 1
-          }
-
           capture_landform() {
-            local mode="$1" forward_s="$2" up_s="$3" pitch="$4"
+            local mode="$1"
             local log="recapture/${mode}.log"
             stdbuf -oL -eL env VF_CAPTURE_LANDFORM="$mode" "$APP" >"$log" 2>&1 &
             local pid=$!
-            wait_for_target "$log"
-            sleep 5
-            local window
-            window="$(xdotool search --name 'Voxel Frontier' 2>/dev/null | head -n 1 || true)"
-            if [ -n "$window" ]; then
-              xdotool windowactivate --sync "$window" || true
-              if [ "$forward_s" != "0" ]; then
-                xdotool keydown --window "$window" w || true
-                sleep "$forward_s"
-                xdotool keyup --window "$window" w || true
-              fi
-              if [ "$up_s" != "0" ]; then
-                xdotool keydown --window "$window" space || true
-                sleep "$up_s"
-                xdotool keyup --window "$window" space || true
-              fi
-              xdotool mousemove_relative -- 0 "$pitch" || true
+            local ready=0
+            for t in $(seq 1 70); do
               sleep 2
-            fi
-            import -display :99 -window root "recapture/${mode}-aerial.png"
-            convert "recapture/${mode}-aerial.png" -format "${mode} unique_colors=%k\n" info: | tee -a recapture/capture-info.txt
+              if grep -q 'Capture target elevation' "$log"; then ready=1; break; fi
+              kill -0 "$pid" 2>/dev/null || break
+            done
+            test "$ready" -eq 1
+            sleep 7
+            import -display :99 -window root "recapture/${mode}-overview.png"
+            local colors
+            colors="$(convert "recapture/${mode}-overview.png" -format '%k' info:)"
+            echo "${mode} unique_colors=${colors}" | tee -a recapture/capture-info.txt
+            test "$colors" -gt 64
             kill "$pid" 2>/dev/null || true
             wait "$pid" 2>/dev/null || true
             sleep 1
           }
 
-          capture_landform mountain 10 5 180
-          capture_landform highland 5 4 170
-          capture_landform coast 0 3 210
-          capture_landform river 1 3 190
+          capture_landform mountain
+          capture_landform highland
+          capture_landform coast
+          capture_landform river
 
-          montage recapture/mountain-aerial.png recapture/highland-aerial.png \
-                  recapture/coast-aerial.png recapture/river-aerial.png \
+          montage recapture/mountain-overview.png recapture/highland-overview.png \
+                  recapture/coast-overview.png recapture/river-overview.png \
                   -tile 2x2 -geometry 800x450+0+0 recapture/terrain-montage.png
-          identify recapture/*-aerial.png recapture/terrain-montage.png | tee -a recapture/capture-info.txt
+          identify recapture/*-overview.png recapture/terrain-montage.png | tee -a recapture/capture-info.txt
           grep -hE 'Capture target elevation|Spawn land elevation:' recapture/*.log > recapture/terrain-physics.txt || true
+          cat recapture/terrain-physics.txt
 
       - name: Capture physical celestial motion at two times
         shell: bash
@@ -123,17 +128,17 @@ jobs:
           test -n "$APP"
           mkdir -p recapture
 
-          # At 3600x and a nominal 60 Hz frame loop, each CelestialSystem call advances about 60 s,
-          # staying at the integrator's intended maximum substep. We capture the SAME camera before
-          # and roughly two simulated hours later, so any sky displacement is generated by the real
-          # rotating/orbiting celestial state rather than by two separately authored camera angles.
+          # Same physical camera, same physical Sun, two times. At 3600x a nominal 60 Hz frame
+          # advances about 60 simulated seconds per call, matching the R21 integrator substep bound.
           stdbuf -oL -eL env VF_CAPTURE_CELESTIAL=sun VF_CELESTIAL_TIME_SCALE=3600 "$APP" >recapture/sun-motion.log 2>&1 &
           pid=$!
-          for t in $(seq 1 60); do
+          ready=0
+          for t in $(seq 1 70); do
             sleep 2
-            grep -q 'Celestial capture: sun' recapture/sun-motion.log && break
+            if grep -q 'Celestial capture: sun' recapture/sun-motion.log; then ready=1; break; fi
             kill -0 "$pid" 2>/dev/null || break
           done
+          test "$ready" -eq 1
           sleep 3
           import -display :99 -window root recapture/sun-t0.png
           sleep 2
