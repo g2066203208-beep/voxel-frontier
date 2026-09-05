@@ -256,6 +256,18 @@ int main() {
             };
         };
 
+        // Build the orbital proxy once. Rebuilding a full 96x96x6 planet every few
+        // kilometres was pure waste and delayed the near-field high-resolution refresh.
+        vf::PlanetMesh orbitalProxy = vf::buildPlanetSurface(planet, 128U);
+        constexpr double orbitalProxyInset = 24.0;
+        for (auto& vertex : orbitalProxy.vertices) {
+            glm::dvec3 p = glm::dvec3(vertex.position);
+            const double r = glm::length(p);
+            if (r > orbitalProxyInset + 1.0) p *= (r - orbitalProxyInset) / r;
+            vertex.position = glm::vec3(toSurfacePoint(p));
+            vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+        }
+
         glm::dvec3 lodCenterDirection = patchUp;
         auto buildTerrainLod = [&](const glm::dvec3& centerDirection) {
             vf::PlanetMesh mesh{};
@@ -272,12 +284,17 @@ int main() {
             // each outer ring is hollow and the fine edge morphs onto positions sampled on the next
             // coarser grid. This follows mature clipmap seam handling instead of hiding cracks with
             // metre-scale vertical skirts/insets.
-            const std::array<Ring, 5> rings{{
-                {4096.0,       0.0, 320U},
-                {24576.0,   3900.0, 192U},
-                {131072.0, 23500.0, 160U},
-                {655360.0,126000.0, 128U},
-                {2600000.0,630000.0,104U},
+            // Seven nested rings. The innermost grid is ~4 m/cell instead of 25.6 m/cell.
+            // Total sampled vertices stay below the old implementation because outer rings get
+            // progressively cheaper; screen-space detail is spent where the player can see it.
+            const std::array<Ring, 7> rings{{
+                {384.0,        0.0, 192U},   // 4.0 m cell
+                {1536.0,     360.0, 160U},   // 19.2 m cell
+                {6144.0,    1450.0, 112U},   // 109.7 m cell
+                {24576.0,   5800.0,  80U},   // 614.4 m cell
+                {98304.0,  23200.0,  64U},   // 3.07 km cell
+                {393216.0, 93000.0,  48U},   // 16.4 km cell
+                {2600000.0,370000.0, 40U},   // 130 km orbital support
             }};
 
             for (std::size_t ringIndex = 0; ringIndex < rings.size(); ++ringIndex) {
@@ -303,7 +320,7 @@ int main() {
                             const double nextCell = 2.0 * nextRing.half
                                 / static_cast<double>(nextRing.resolution);
                             const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
-                            const double morph = smooth01((edge - 0.78) / 0.20);
+                            const double morph = smooth01((edge - 0.72) / 0.24);
                             if (morph > 0.0) {
                                 const double snappedEast = std::round(eastMeters / nextCell) * nextCell;
                                 const double snappedNorth = std::round(northMeters / nextCell) * nextCell;
@@ -327,6 +344,8 @@ int main() {
                         vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(normalPlanet)));
                         vertex.color = vf::planetTerrainColor(planet, terrain);
                         vertex.material = vf::planetTerrainMaterial(planet, terrain);
+                        vertex.material.x = static_cast<float>(std::clamp(
+                            1.0 - glm::dot(normalPlanet, direction), 0.0, 1.0));
                         mesh.vertices.push_back(vertex);
                     }
                 }
@@ -351,18 +370,8 @@ int main() {
             // queries, so trees/rocks/grass move with streaming without changing identity or height.
             appendMesh(mesh, vf::buildProceduralEcology(planet, centerUp, surfaceFrame));
 
-            // The orbital proxy is still deliberately cheaper than the local clipmaps, but 96
-            // subdivisions removes the giant polygon blocks visible in V7's 48-subdivision Earth.
-            vf::PlanetMesh proxy = vf::buildPlanetSurface(planet, 96U);
-            constexpr double proxyInset = 24.0;
-            for (auto& vertex : proxy.vertices) {
-                glm::dvec3 p = glm::dvec3(vertex.position);
-                const double r = glm::length(p);
-                if (r > proxyInset + 1.0) p *= (r - proxyInset) / r;
-                vertex.position = glm::vec3(toSurfacePoint(p));
-                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
-            }
-            appendMesh(mesh, proxy);
+            // Cached whole-planet proxy: no expensive global re-sampling on every local stream update.
+            appendMesh(mesh, orbitalProxy);
 
             // Water has exactly two representations, never five stacked transparent squares:
             // a high-resolution local patch and one global geoid shell. The shader cross-fades them
@@ -530,9 +539,10 @@ int main() {
                 const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
                 const double arcDistance = std::acos(std::clamp(
                     glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
-                const double threshold = altitude < 20000.0 ? 8000.0
-                    : (altitude < 100000.0 ? 40000.0
-                    : (altitude < 350000.0 ? 120000.0 : 350000.0));
+                // Refresh before the 384 m inner ring morph region.
+                const double threshold = altitude < 20000.0 ? 600.0
+                    : (altitude < 100000.0 ? 4000.0
+                    : (altitude < 350000.0 ? 25000.0 : 120000.0));
                 const double prefetchThreshold = threshold * 0.42;
 
                 if (!terrainBuildInFlight && lodCooldown <= 0.0 && arcDistance > prefetchThreshold) {

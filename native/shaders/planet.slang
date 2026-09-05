@@ -183,6 +183,16 @@ float terrainFbm2(float2 p)
     return n;
 }
 
+float triplanarTerrainNoise(float3 p, float3 normal, float scale)
+{
+    float3 w = pow(abs(normal), 4.0);
+    w /= max(w.x + w.y + w.z, 1.0e-5);
+    float nx = valueNoise2(p.yz * scale + 11.7);
+    float ny = valueNoise2(p.xz * scale - 23.1);
+    float nz = valueNoise2(p.xy * scale + 37.3);
+    return nx * w.x + ny * w.y + nz * w.z;
+}
+
 [shader("vertex")]
 VertexOutput vertexMain(VertexInput input)
 {
@@ -251,12 +261,12 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
 
     bool waterMaterial = input.material.x < -0.5;
     float materialTag = input.material.w;
-    bool terrainMaterial = !waterMaterial && materialTag < -0.5 && materialTag > -1.5;
+    bool terrainMaterial = !waterMaterial && materialTag <= -9.5 && materialTag > -18.5;
     bool foliageMaterial = !waterMaterial && materialTag <= -1.5 && materialTag > -2.5;
     bool barkMaterial = !waterMaterial && materialTag <= -2.5 && materialTag > -3.5;
     bool rockMaterial = !waterMaterial && materialTag <= -3.5 && materialTag > -4.5;
 
-    float metallic = waterMaterial ? 0.0 : saturate(input.material.x);
+    float metallic = (waterMaterial || terrainMaterial) ? 0.0 : saturate(input.material.x);
     float roughness = waterMaterial ? 0.065 : clamp(input.material.y, 0.045, 1.0);
     float transmission = transparent ? saturate(input.material.z) : 0.0;
     float emissive = max(input.material.w, 0.0);
@@ -264,19 +274,67 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
 
     if (terrainMaterial)
     {
-        // Gradient/triplanar-inspired procedural variation: broad color blocks first, medium-scale
-        // enrichment second, and very little fine grain. This keeps the low-poly terrain readable.
-        float2 q = input.objectPosition.xz;
-        float macro = terrainFbm2(q * 0.0038);
-        float medium = terrainFbm2(q * 0.0125 + 31.7);
-        float fine = valueNoise2(q * 0.043 + 8.9);
-        float value = (macro - 0.5) * 0.20 + (medium - 0.5) * 0.078 + (fine - 0.5) * 0.022;
-        float warmPatch = smoothstep(0.58, 0.84, macro);
-        float localSlope = saturate(1.0 - n.y);
-        baseColor *= 1.0 + value;
-        baseColor = lerp(baseColor, baseColor * float3(1.045, 1.005, 0.930), warmPatch * 0.20);
-        baseColor = lerp(baseColor, baseColor * float3(0.88, 0.91, 0.89), smoothstep(0.32, 0.72, localSlope) * 0.24);
-        roughness = clamp(roughness + (medium - 0.5) * 0.050, 0.64, 0.98);
+        // CPU encodes a true planet-relative slope in material.x. This fixes the old
+        // n.y bug, which treated the global Y axis as "up" on an entire spherical planet.
+        float radialSlope = saturate(input.material.x);
+        int terrainClass = int(clamp(round(-materialTag - 10.0), 0.0, 7.0));
+        if (radialSlope > 0.145 && terrainClass != 5)
+            terrainClass = 1; // steep faces expose rock, regardless of biome colour
+
+        float coarse = triplanarTerrainNoise(input.objectPosition, n, 0.055);
+        float fine = triplanarTerrainNoise(input.objectPosition, n, 0.220);
+        float grain = hash31(floor(input.objectPosition * 0.42));
+
+        if (terrainClass == 0) // GRASS
+        {
+            baseColor = float3(0.105, 0.330, 0.070);
+            baseColor *= 0.86 + coarse * 0.22;
+            baseColor += (step(0.76, fine) * 0.030 - step(grain, 0.08) * 0.015)
+                * float3(0.55, 1.00, 0.38);
+            roughness = 0.94;
+        }
+        else if (terrainClass == 1) // ROCK
+        {
+            float fracture = step(0.82, fine);
+            baseColor = float3(0.315, 0.300, 0.275) * (0.82 + coarse * 0.30);
+            baseColor = lerp(baseColor, float3(0.17, 0.165, 0.155), fracture * 0.48);
+            roughness = 0.82;
+        }
+        else if (terrainClass == 2) // DRY SAND / DUNE
+        {
+            float ripple = 0.5 + 0.5 * sin(
+                input.objectPosition.x * 0.11 + input.objectPosition.z * 0.075 + coarse * 4.0);
+            baseColor = float3(0.735, 0.565, 0.300) * (0.90 + ripple * 0.15);
+            roughness = 0.91;
+        }
+        else if (terrainClass == 3) // SOIL
+        {
+            baseColor = float3(0.345, 0.205, 0.100) * (0.84 + coarse * 0.25);
+            baseColor *= 0.94 + grain * 0.10;
+            roughness = 0.95;
+        }
+        else if (terrainClass == 4) // WET MUD
+        {
+            baseColor = float3(0.175, 0.155, 0.095) * (0.91 + coarse * 0.10);
+            roughness = 0.97;
+        }
+        else if (terrainClass == 5) // SNOW / ICE
+        {
+            baseColor = float3(0.875, 0.905, 0.925) * (0.94 + fine * 0.08);
+            roughness = 0.76;
+        }
+        else if (terrainClass == 6) // BEACH / SHELF SAND
+        {
+            float shell = step(0.91, grain) * 0.035;
+            baseColor = float3(0.790, 0.690, 0.455) * (0.93 + coarse * 0.10);
+            baseColor += shell;
+            roughness = 0.92;
+        }
+        else // SEABED ROCK
+        {
+            baseColor = float3(0.205, 0.220, 0.215) * (0.84 + coarse * 0.20);
+            roughness = 0.88;
+        }
     }
     else if (foliageMaterial)
     {
