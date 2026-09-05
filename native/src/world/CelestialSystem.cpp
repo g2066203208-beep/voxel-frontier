@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <utility>
+#include <vector>
 
 #include <glm/geometric.hpp>
 
@@ -40,7 +42,65 @@ constexpr double kEpsilon = 1.0e-9;
     return safeNormalize(body.spinAxis) * body.spinRateRadPerSecond;
 }
 
+[[nodiscard]] glm::dvec3 standardToGameAxes(const glm::dvec3& value) noexcept {
+    // Classical orbital formulae use Z as the reference-plane normal. Voxel Frontier is Y-up.
+    return {value.x, value.z, value.y};
+}
+
 } // namespace
+
+OrbitalState keplerianState(
+    const KeplerianElements& elements,
+    double gravitationalParameterM3PerS2) noexcept {
+    OrbitalState result{};
+    const double mu = std::max(1.0e-12, gravitationalParameterM3PerS2);
+    const double a = std::max(1.0, elements.semiMajorAxisMeters);
+    const double e = std::clamp(elements.eccentricity, 0.0, 0.999999);
+    const double meanAnomaly = std::remainder(elements.meanAnomalyRadians, 2.0 * kPi);
+
+    // Solve Kepler's equation M = E - e sin(E) for eccentric anomaly E.
+    double eccentricAnomaly = e < 0.8 ? meanAnomaly : (meanAnomaly >= 0.0 ? kPi : -kPi);
+    for (int iteration = 0; iteration < 16; ++iteration) {
+        const double residual = eccentricAnomaly - e * std::sin(eccentricAnomaly) - meanAnomaly;
+        const double derivative = std::max(1.0e-10, 1.0 - e * std::cos(eccentricAnomaly));
+        const double delta = residual / derivative;
+        eccentricAnomaly -= delta;
+        if (std::abs(delta) < 1.0e-13) break;
+    }
+
+    const double eccentricityRoot = std::sqrt(std::max(0.0, 1.0 - e * e));
+    const double denominator = std::max(1.0e-12, 1.0 - e * std::cos(eccentricAnomaly));
+    const double meanMotion = std::sqrt(mu / (a * a * a));
+    const glm::dvec3 perifocalPosition{
+        a * (std::cos(eccentricAnomaly) - e),
+        a * eccentricityRoot * std::sin(eccentricAnomaly),
+        0.0};
+    const glm::dvec3 perifocalVelocity{
+        -a * meanMotion * std::sin(eccentricAnomaly) / denominator,
+        a * meanMotion * eccentricityRoot * std::cos(eccentricAnomaly) / denominator,
+        0.0};
+
+    const double ascendingNode = elements.longitudeAscendingNodeRadians;
+    const double inclination = elements.inclinationRadians;
+    const double periapsis = elements.argumentPeriapsisRadians;
+    const double cO = std::cos(ascendingNode);
+    const double sO = std::sin(ascendingNode);
+    const double ci = std::cos(inclination);
+    const double si = std::sin(inclination);
+    const double cw = std::cos(periapsis);
+    const double sw = std::sin(periapsis);
+
+    // Q = R3(Omega) R1(i) R3(omega). GLM matrices are column-major.
+    const glm::dmat3 perifocalToInertial{
+        {cO * cw - sO * sw * ci, sO * cw + cO * sw * ci, sw * si},
+        {-cO * sw - sO * cw * ci, -sO * sw + cO * cw * ci, cw * si},
+        {sO * si, -cO * si, ci},
+    };
+
+    result.position = standardToGameAxes(perifocalToInertial * perifocalPosition);
+    result.velocity = standardToGameAxes(perifocalToInertial * perifocalVelocity);
+    return result;
+}
 
 std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
     if (bodyValue.id == 0U) bodyValue.id = nextBodyId_++;
@@ -87,32 +147,42 @@ const CelestialBody* CelestialSystem::body(std::uint32_t id) const noexcept {
 }
 
 void CelestialSystem::step(double deltaSeconds) {
-    if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0) return;
+    if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0 || bodies_.empty()) return;
+
+    // Preserve the existing production hitch/time-warp safety contract: one runtime call advances
+    // at most 60 simulated seconds. Within that bounded interval, use a symmetric kick-drift-kick
+    // velocity-Verlet step so every massive body contributes to every other body's trajectory.
     const double dt = std::min(deltaSeconds, 60.0);
-    for (auto& celestialBody : bodies_) updateOrbit(celestialBody, dt);
-    for (auto& celestialBody : bodies_) {
-        updateSpin(celestialBody, dt);
-        updateClimateAndWeather(celestialBody, dt);
+    std::vector<glm::dvec3> acceleration(bodies_.size());
+
+    const auto evaluateAccelerations = [&]() {
+        std::fill(acceleration.begin(), acceleration.end(), glm::dvec3{});
+        for (std::size_t i = 0; i < bodies_.size(); ++i) {
+            for (std::size_t j = i + 1; j < bodies_.size(); ++j) {
+                const glm::dvec3 separation = bodies_[j].position - bodies_[i].position;
+                const double distanceSquared = std::max(glm::dot(separation, separation), 1.0);
+                const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
+                const double inverseDistanceCubed = inverseDistance / distanceSquared;
+                const glm::dvec3 radialTerm = separation * inverseDistanceCubed;
+                acceleration[i] += radialTerm * (kGravitationalConstant * bodies_[j].massKg);
+                acceleration[j] -= radialTerm * (kGravitationalConstant * bodies_[i].massKg);
+            }
+        }
+    };
+
+    evaluateAccelerations();
+    for (std::size_t i = 0; i < bodies_.size(); ++i) {
+        bodies_[i].linearVelocity += acceleration[i] * (0.5 * dt);
+        bodies_[i].position += bodies_[i].linearVelocity * dt;
+    }
+
+    evaluateAccelerations();
+    for (std::size_t i = 0; i < bodies_.size(); ++i) {
+        bodies_[i].linearVelocity += acceleration[i] * (0.5 * dt);
+        updateSpin(bodies_[i], dt);
+        updateClimateAndWeather(bodies_[i], dt);
     }
     simulationTime_ += dt;
-}
-
-void CelestialSystem::updateOrbit(CelestialBody& celestialBody, double deltaSeconds) {
-    if (celestialBody.orbitParentId == 0U) return;
-    const CelestialBody* parent = body(celestialBody.orbitParentId);
-    if (parent == nullptr || parent == &celestialBody || parent->massKg <= 0.0) return;
-
-    const glm::dvec3 offset = parent->position - celestialBody.position;
-    const double distanceSquared = std::max(glm::dot(offset, offset), 1.0);
-    const double inverseDistance = 1.0 / std::sqrt(distanceSquared);
-    const glm::dvec3 acceleration = offset
-        * (kGravitationalConstant * parent->massKg * inverseDistance / distanceSquared);
-
-    // Celestial motion lives in the high-precision inertial simulation. Nearby gameplay physics
-    // runs in planet-centered physics spaces and therefore does not need to carry this large
-    // orbital velocity through every contact solve.
-    celestialBody.linearVelocity += acceleration * deltaSeconds;
-    celestialBody.position += celestialBody.linearVelocity * deltaSeconds;
 }
 
 void CelestialSystem::updateSpin(CelestialBody& celestialBody, double deltaSeconds) noexcept {
