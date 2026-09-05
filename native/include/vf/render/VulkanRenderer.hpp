@@ -45,7 +45,7 @@ public:
 
 private:
     static constexpr std::uint32_t kFramesInFlight = 2;
-    static constexpr std::uint32_t kShadowMapSize = 512U;
+    static constexpr std::uint32_t kShadowMapSize = 1024U;
 
     struct DynamicFrameMesh {
         VkBuffer vertexBuffer{VK_NULL_HANDLE};
