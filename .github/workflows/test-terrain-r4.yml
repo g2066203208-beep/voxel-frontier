@@ -1,6 +1,6 @@
 name: Terrain R4 Real Vulkan Geomorph Evidence
 
-# Trigger materializer V4; final evidence will be retriggered on generated R4 source.
+# Trigger materializer V5; final evidence will be retriggered on generated R4 source.
 on:
   push:
     branches: [feature/terrain-r4-geomorph-bake]
