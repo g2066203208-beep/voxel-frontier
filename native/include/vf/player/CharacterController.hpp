@@ -13,17 +13,22 @@ struct CharacterControllerSettings {
     double radius{0.36};
     double halfHeight{0.54};
     double eyeHeight{1.75};
-    double contactOffset{0.035};
+    // Jolt CharacterVirtual keeps an explicit character padding and predictive-contact distance.
+    // Our analytical terrain equivalent uses a slightly larger contact shell so the visible capsule
+    // never needs to sink through the procedural surface before recovery begins.
+    double contactOffset{0.045};
     double maxSlopeAngleRadians{0.8726646259971648}; // 50 degrees
     double stepHeight{0.45};
-    double stickToFloorDistance{0.22};
+    double stickToFloorDistance{0.30};
     double walkSpeed{9.0};
     double sprintSpeed{18.0};
     double jumpSpeed{6.2};
     double groundAcceleration{28.0};
     double airAcceleration{7.0};
-    double maxMoveSubstep{0.20};
-    std::uint32_t maxDepenetrationIterations{8U};
+    // 8 cm keeps a fast 18 m/s sprint and ordinary falls from skipping thin floors while still
+    // remaining cheap. moveWithCollisions also clamps this against the contact shell at runtime.
+    double maxMoveSubstep{0.08};
+    std::uint32_t maxDepenetrationIterations{12U};
     double characterMassKg{75.0};
     double maxPushImpulseNs{160.0};
 };
