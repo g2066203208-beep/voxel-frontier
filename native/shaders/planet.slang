@@ -33,6 +33,11 @@ static const float kShadowDepthRange = 180.0;
 static const float kShadowResolution = 512.0;
 static const float2 kShadowTexel = float2(1.0 / kShadowResolution, 1.0 / kShadowResolution);
 static const float kShadowWorldTexel = (2.0 * kShadowHalfExtent) / kShadowResolution;
+// The reference scene uses an HDR sky for lighting. Display sky RGB and world irradiance are not
+// the same quantity; keep the lighting energy explicit rather than brightening the visible sky.
+static const float kEnvironmentIrradiance = 2.35;
+// Blender-style pre-view-transform exposure, calibrated on the unchanged V7 test scene.
+static const float kExposureScale = 1.4640857; // 2^0.55
 
 float3 rotateByQuaternion(float3 v, float4 q)
 {
@@ -378,8 +383,6 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 neutralSun = float3(1.0, 0.95, 0.86);
     float3 lowSun = float3(1.0, 0.49, 0.23);
     float3 sunTint = lerp(neutralSun, lowSun, sunWarmth * 0.88);
-    // Preserve most of the solar luminance while changing its chromaticity. HDRI sunsets are warm,
-    // not simply dim orange multipliers; otherwise the whole world collapses into black shadow.
     float tintLuma = dot(sunTint, float3(0.2126, 0.7152, 0.0722));
     float energyCompensation = lerp(1.0, 0.78 / max(tintLuma, 0.22), sunWarmth * 0.62);
     stellarRadiance *= sunTint * energyCompensation;
@@ -390,9 +393,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
     float3 ambientDirectionColor = lerp(horizonColor, skyColor, 0.18 + 0.82 * hemiUp);
-    // EEVEE treats World lighting as indirect illumination. Keep enough world energy in the
-    // shadows so the low-poly forms remain colorful instead of turning black under a low sun.
-    float3 skyAmbient = ambientDirectionColor * (0.155 + 0.345 * hemiUp);
+    float3 skyAmbient = ambientDirectionColor * kEnvironmentIrradiance * (0.155 + 0.345 * hemiUp);
     float3 groundBounceColor = float3(0.16, 0.125, 0.060);
     if (terrainMaterial || foliageMaterial) groundBounceColor = float3(0.09, 0.17, 0.050);
     if (oceanMaterial) groundBounceColor = float3(0.018, 0.065, 0.095);
@@ -400,7 +401,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float3 reflectedDir = normalize(reflect(-v, n));
     float reflectedUp = saturate(dot(reflectedDir, surfaceUp) * 0.5 + 0.5);
-    float3 reflectedEnvironment = lerp(horizonColor, skyColor, smoothstep(0.10, 0.90, reflectedUp));
+    float3 reflectedEnvironment = lerp(horizonColor, skyColor, smoothstep(0.10, 0.90, reflectedUp)) * 1.35;
     float broadCloud = smoothstep(0.48, 0.72, valueNoise3(reflectedDir * 2.25 + float3(4.3, -2.1, 7.6)));
     reflectedEnvironment *= lerp(1.0, 0.74, broadCloud * daylight);
 
@@ -459,5 +460,5 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         color = lerp(color, fogColor, fogFactor * 0.90);
     }
 
-    return float4(toneMapAgX(color), 1.0);
+    return float4(toneMapAgX(color * kExposureScale), 1.0);
 }
