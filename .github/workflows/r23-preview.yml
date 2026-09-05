@@ -76,15 +76,27 @@ jobs:
         run: |
           APP="$(find build/r23 -type f -name voxel_frontier -perm -111 | head -n 1)"
           test -n "$APP"
+          mkdir -p r23-evidence
           bash .github/scripts/r23_capture.sh "$APP" r23-evidence
           cp r23-foundation-smoke.txt vulkan-summary.txt r23-evidence/
 
-      - name: Upload all real Vulkan evidence
+      - name: Preserve diagnostics after any capture failure
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p r23-evidence
+          cp -f r23-foundation-smoke.txt r23-evidence/ 2>/dev/null || true
+          cp -f vulkan-summary.txt r23-evidence/ 2>/dev/null || true
+          printf 'workflow_sha=%s\nworkflow_run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" \
+            > r23-evidence/workflow-source.txt
+
+      - name: Upload all real Vulkan evidence even on failure
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: r23-real-vulkan-evidence-${{ github.sha }}
           path: r23-evidence/**
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
 
   windows-preview:
