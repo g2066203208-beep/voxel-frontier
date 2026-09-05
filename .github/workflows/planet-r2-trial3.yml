@@ -1,0 +1,59 @@
+name: Planet R2 Trial 3
+
+on:
+  push:
+    branches: [feature/planet-scale-r2]
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ libglm-dev
+      - name: Apply R2 trial 3
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('native/src/world/PlanetSurface.cpp'); s=p.read_text()
+          s=s.replace('constexpr std::size_t kPlateCount = 14U;', 'constexpr std::size_t kPlateCount = 20U;')
+          s=s.replace('const double boundary = 1.0 - smooth01(0.004, 0.060, scoreGap);', 'const double boundary = 1.0 - smooth01(0.004, 0.022, scoreGap);')
+          old='''    const double primaryCrust = plates.primary.continental ? 0.43 : -0.48;\n    const double secondaryCrust = plates.secondary.continental ? 0.43 : -0.48;\n    const double boundaryCrustBlend = plates.boundary * 0.28;\n    const double crustBase = primaryCrust * (1.0 - boundaryCrustBlend)\n        + secondaryCrust * boundaryCrustBlend;\n    const double continentalness = std::clamp(crustBase + macro * 0.30, -1.0, 1.0);\n\n    const double landness = smooth01(-0.02, 0.20, continentalness);'''
+          new='''    // Earthlike R2: crust provinces are independent of lithospheric plate ownership.\n    const double crustMacro = fbmSurface(definition.seed ^ 0x243F6A8885A308D3ULL, w, 3.15, 4);\n    const double crustMeso = fbmSurface(definition.seed ^ 0x13198A2E03707344ULL, w, 7.8, 3);\n    const double crustCoast = fbmSurface(definition.seed ^ 0xA4093822299F31D0ULL, w, 21.0, 2);\n    const double continentalness = std::clamp(\n        crustMacro * 0.78 + crustMeso * 0.27 + crustCoast * 0.09 + macro * 0.14 - 0.111,\n        -1.0, 1.0);\n    const double landness = smooth01(-0.010, 0.082, continentalness);'''
+          assert old in s; s=s.replace(old,new)
+          s=s.replace('elevation -= maxOcean * (0.24 + 0.42 * deepOcean) * oceanness;', 'elevation -= maxOcean * (0.295 + 0.410 * deepOcean) * oceanness;')
+          s=s.replace('elevation += maxLand * (0.035 + 0.11 * std::pow(landness, 1.35)) * landness;', 'elevation += maxLand * (0.012 + 0.060 * std::pow(landness, 1.35)) * landness;')
+          s=s.replace('elevation += maxOcean * 0.12 * shelfZone * oceanness;', 'elevation += maxOcean * 0.110 * shelfZone * oceanness;')
+          s=s.replace('elevation += maxOcean * 0.38 * oceanRidge;', 'elevation += maxOcean * 0.320 * oceanRidge;')
+          old='''    const double collisionWeight = plates.primary.continental && plates.secondary.continental\n        ? 1.0\n        : (plates.primary.continental || plates.secondary.continental ? 0.82 : 0.45);\n    const double mountain = std::pow(\n        std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0),\n        1.15);\n    elevation += maxLand * 0.72 * mountain;'''
+          new='''    const double collisionWeight = 0.58 + 0.42 * landness;\n    const double mountain = std::pow(\n        std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0), 1.34);\n    elevation += maxLand * (0.40 * mountain + 0.34 * std::pow(mountain, 12.0));'''
+          assert old in s; s=s.replace(old,new)
+          s=s.replace('elevation -= maxOcean * 0.42 * trench;', 'elevation -= maxOcean * 0.460 * trench;')
+          s=s.replace('elevation += maxLand * 0.27 * plateau;', 'elevation += maxLand * 0.125 * plateau;')
+          s=s.replace('elevation += maxLand * 0.36 * volcano;', 'elevation += maxLand * (0.17 * volcano + 0.12 * std::pow(volcano, 10.0));')
+          s=s.replace('elevation -= maxLand * 0.035 * river;', 'elevation -= maxLand * 0.020 * river;')
+          s=s.replace('w, 720.0, 3)', 'w, 95.0, 4)').replace('w, 1350.0, 3)', 'w, 520.0, 3)').replace('w, 3200.0, 3)', 'w, 2100.0, 3)').replace('w, 8200.0, 3)', 'w, 6100.0, 3)')
+          s=s.replace('regional * (0.0085 + 0.0090 * mountain + 0.0048 * plateau)', 'regional * (0.0100 + 0.0120 * mountain + 0.0040 * plateau)')
+          s=s.replace('hillNoise * (0.0042 * hills)', 'hillNoise * (0.0115 * hills)').replace('local * (0.0031 + 0.0050 * mountain + 0.0014 * coastalCliff)', 'local * (0.0024 + 0.0100 * mountain + 0.0020 * coastalCliff)').replace('(ridged - 0.5) * 0.0024 * mountain', '(ridged - 0.5) * 0.0060 * mountain')
+          s=s.replace('elevation += maxLand * 0.012 * coastalCliff', 'elevation += maxLand * 0.015 * coastalCliff').replace('elevation -= maxLand * 0.020 * canyon', 'elevation -= maxLand * 0.030 * canyon').replace('elevation += maxLand * 0.0016 * dunes * duneNoise;', 'elevation += maxLand * 0.0024 * dunes * duneNoise;').replace('elevation += maxLand * 0.0035 * glacier', 'elevation += maxLand * 0.0040 * glacier')
+          p.write_text(s)
+          PY
+      - name: Compile and run audit
+        shell: bash
+        run: |
+          sed -n '/cat >\/tmp\/a.cpp/,/CPP/p' .github/workflows/planet-r2-trial2.yml | sed '1d;$d' > /tmp/a.cpp
+          g++ -std=c++23 -O2 -I native/include /tmp/a.cpp native/src/world/PlanetSurface.cpp -o /tmp/a
+          /tmp/a | tee trial3-report.txt
+      - name: Upload trial
+        uses: actions/upload-artifact@v5
+        with:
+          name: planet-r2-trial3-${{ github.sha }}
+          path: |
+            trial3-report.txt
+            native/src/world/PlanetSurface.cpp
+          retention-days: 30
