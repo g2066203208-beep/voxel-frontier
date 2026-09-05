@@ -34,6 +34,19 @@ struct PlanetTerrainSample {
     double trench{};
     double volcano{};
     double river{};
+
+    // Subordinate geomorphology/climate fields. The generation order follows the useful structure
+    // seen in WorldEngine: first tectonic elevation, then climate/erosion/hydrology-derived surface
+    // forms. All values are deterministic [0,1] masks used by geometry, materials and ecology.
+    double hills{};
+    double canyon{};
+    double dunes{};
+    double coastalCliff{};
+    double wetland{};
+    double glacier{};
+    double aridity{};
+    double moisture{};
+
     // Seamless deterministic sub-regional detail used by both geometry and procedural material.
     // This remains subordinate to the plate/continental morphology above.
     double surfaceDetail{};
