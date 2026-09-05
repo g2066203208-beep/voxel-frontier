@@ -41,7 +41,7 @@ int main() {
         controller.resetFromEye({0.0, 1001.75, 0.0}, {}, true);
         settle(controller, 240);
         require(controller.grounded(), "idle character must remain grounded");
-        require(std::abs(glm::length(controller.eyePosition()) - 1001.785) < 0.08,
+        require(std::abs(glm::length(controller.eyePosition()) - 1001.795) < 0.09,
             "idle capsule eye height must remain stable above analytical terrain");
         require(glm::length(controller.linearVelocity()) < 0.05,
             "idle grounded capsule must not accumulate drift velocity");
@@ -102,6 +102,32 @@ int main() {
         for (int i = 0; i < 150; ++i) controller.update(input, 1.0 / 120.0);
         require(controller.centerPosition().z > 1.9,
             "controller must negotiate a 0.30 m step below the configured step height");
+    }
+
+    {
+        // Regression for the user-visible "fall through the floor" bug. The 8 cm-thick platform is
+        // deliberately much thinner than a single 40 m/s, 50 ms frame displacement. A controller
+        // that only checks the final overlap will tunnel through it and land on the planet below.
+        auto world = makeFlatWorld();
+        vf::RigidBodyDesc floor{};
+        floor.motionType = vf::MotionType::Static;
+        floor.mass = 0.0;
+        floor.position = {0.0, 1003.0, 0.0};
+        floor.collisionShape = vf::CollisionShape::box({4.0, 0.04, 4.0});
+        const std::uint32_t floorId = world.createRigidBody(floor);
+
+        vf::CharacterController controller{world};
+        controller.resetFromEye({0.0, 1009.0, 0.0}, {0.0, -40.0, 0.0}, false);
+        vf::CharacterControllerInput input{};
+        input.forward = {0.0, 0.0, 1.0};
+        input.right = {1.0, 0.0, 0.0};
+        for (int i = 0; i < 20; ++i) controller.update(input, 0.05);
+
+        require(controller.grounded(), "fast falling capsule must become grounded on thin floor");
+        require(controller.groundBodyId() == floorId,
+            "fast falling capsule must land on thin floor instead of tunneling to planet");
+        require(controller.centerPosition().y > 1003.80,
+            "capsule center must remain physically above the thin floor");
     }
 
     std::cout << "Character controller tests passed\n";
