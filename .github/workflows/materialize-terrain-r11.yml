@@ -1,0 +1,34 @@
+name: Materialize Terrain R11 Robust Capture
+
+on:
+  push:
+    branches: [test/terrain-r11-robust-capture]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Apply R11 source patch
+        run: python3 .github/scripts/materialize_terrain_r11.py
+      - name: Verify R11 markers
+        run: |
+          grep -q 'R11 relaxed capture fallback' native/src/app/Main.cpp
+          grep -q 'R11 relaxed vantage fallback' native/src/app/Main.cpp
+          grep -q 'R10 tableland profile' native/src/world/PlanetSurface.cpp
+          git diff --check
+      - name: Commit materialized R11 source
+        shell: bash
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name 'Voxel Frontier CI'
+          git config user.email 'actions@users.noreply.github.com'
+          git add native/src/app/Main.cpp
+          git commit -m 'terrain: materialize R11 robust capture [skip ci]'
+          git push origin HEAD:test/terrain-r11-robust-capture
