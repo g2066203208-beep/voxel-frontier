@@ -76,7 +76,7 @@ jobs:
           failures=0
           for mode in mountain river coast highland; do
             start=$(date +%s)
-            VF_CAPTURE_LANDFORM="$mode" timeout 150s "$APP" >"r16-captures/runtime-$mode.log" 2>&1 &
+            stdbuf -oL -eL env VF_CAPTURE_LANDFORM="$mode" timeout 150s "$APP" >"r16-captures/runtime-$mode.log" 2>&1 &
             pid=$!
             ready=0
             for i in $(seq 1 120); do
