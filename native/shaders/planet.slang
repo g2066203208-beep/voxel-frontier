@@ -244,7 +244,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float3 n = proceduralMaterial ? flatNormal : smoothNormal;
     if (terrainMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.08));
     if (rockMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.12));
-    if (foliageMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.36));
+    // Foliage smoothNormal is a canopy-proxy transferred normal, not an ordinary topology average.
+    // Keep enough face normal to retain a low-poly silhouette language without fragmenting light.
+    if (foliageMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.74));
     if (barkMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.08));
     if (oceanMaterial)
     {
@@ -318,7 +320,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, float3(0.38, 0.57, 0.10), upFacing * (0.09 + canopyHeight * 0.16));
         roughness = 0.82;
         f0 = float3(0.026, 0.030, 0.021);
-        materialAO = lerp(0.64, 0.96, canopyHeight) * lerp(0.90, 1.0, upFacing);
+        // Treat AO as environment visibility, not a second black shadow painted into the crown.
+        materialAO = lerp(0.78, 0.98, canopyHeight) * lerp(0.94, 1.0, upFacing);
         foliageTransmission = 1.0;
     }
     else if (rockMaterial)
@@ -386,6 +389,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float shadowNoL = saturate(dot(smoothNormal, l));
     float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, shadowNoL, l, smoothNormal);
+    // Leaves transmit/scatter a small fraction of blocked sunlight. Lift only foliage reception;
+    // the shadow caster geometry and shadows cast onto terrain remain untouched.
+    if (foliageMaterial) shadow = lerp(shadow, 1.0, 0.16);
     float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.12 * shadow;
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
@@ -417,7 +423,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
-        float transmissionShadow = lerp(shadow, 1.0, 0.24);
+        float transmissionShadow = lerp(shadow, 1.0, 0.18);
         direct += baseColor * float3(0.60, 0.80, 0.15) * backLit * (0.095 + 0.155 * edgeLit) * daylight * transmissionShadow;
     }
 
