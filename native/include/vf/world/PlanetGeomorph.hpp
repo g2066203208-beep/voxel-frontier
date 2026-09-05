@@ -4,6 +4,7 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <limits>
 #include <memory>
 #include <mutex>
 #include <numeric>
@@ -28,10 +29,18 @@ struct GlobalGeomorphSample {
 
 namespace geomorph_detail {
 
-constexpr int kWidth = 512;
-constexpr int kHeight = 256;
-constexpr int kCount = kWidth * kHeight;
+// R16 is an adaptation of the architecture used by owenyuwono/demiurge (MIT):
+// cube-sphere authority -> tectonic uplift forcing -> per-step Priority-Flood ->
+// MFD routing -> stream-power erosion/deposition -> thermal talus relaxation.
+// We intentionally keep the implementation native/C++ and deterministic for Voxel Frontier.
+constexpr int kRes = 128;
+constexpr int kFaces = 6;
+constexpr int kFaceCells = kRes * kRes;
+constexpr int kCount = kFaces * kFaceCells;
 constexpr double kPi = 3.1415926535897932384626433832795;
+constexpr int kPlateCount = 24;
+constexpr int kErosionSteps = 30;
+constexpr double kMfdPower = 6.0;
 
 inline double smooth01(double a, double b, double v) noexcept {
     if (b <= a) return v >= b ? 1.0 : 0.0;
@@ -79,12 +88,29 @@ inline double valueNoise3(std::uint64_t seed, const glm::dvec3& p) noexcept {
 }
 
 inline double fbm(std::uint64_t seed, const glm::dvec3& d, double frequency, int octaves) noexcept {
-    double sum = 0.0, amp = 1.0, norm = 0.0;
+    double sum = 0.0;
+    double amp = 1.0;
+    double norm = 0.0;
     for (int i = 0; i < octaves; ++i) {
         sum += valueNoise3(mix64(seed + static_cast<std::uint64_t>(i) * 37ULL), d * frequency) * amp;
         norm += amp;
         amp *= 0.5;
-        frequency *= 2.03;
+        frequency *= 2.0;
+    }
+    return norm > 0.0 ? sum / norm : 0.0;
+}
+
+inline double ridged(std::uint64_t seed, const glm::dvec3& d, double frequency, int octaves) noexcept {
+    double sum = 0.0;
+    double amp = 1.0;
+    double norm = 0.0;
+    for (int i = 0; i < octaves; ++i) {
+        const double n = valueNoise3(mix64(seed + static_cast<std::uint64_t>(i) * 53ULL), d * frequency);
+        const double r = 1.0 - std::abs(n);
+        sum += r * r * amp;
+        norm += amp;
+        amp *= 0.5;
+        frequency *= 2.0;
     }
     return norm > 0.0 ? sum / norm : 0.0;
 }
@@ -96,267 +122,488 @@ inline glm::dvec3 seededDirection(std::uint64_t seed, std::uint64_t channel) noe
     return {std::cos(a) * r, y, std::sin(a) * r};
 }
 
+inline int cellIndex(int face, int x, int y) noexcept {
+    return face * kFaceCells + std::clamp(y, 0, kRes - 1) * kRes + std::clamp(x, 0, kRes - 1);
+}
+
+inline glm::dvec3 cubeDirection(int face, double u, double v) noexcept {
+    glm::dvec3 p{};
+    switch (face) {
+    case 0: p = { 1.0, v, -u}; break;
+    case 1: p = {-1.0, v,  u}; break;
+    case 2: p = { u, 1.0, -v}; break;
+    case 3: p = { u,-1.0,  v}; break;
+    case 4: p = { u, v,  1.0}; break;
+    default:p = {-u, v, -1.0}; break;
+    }
+    return glm::normalize(p);
+}
+
+inline glm::dvec3 directionAt(int face, int x, int y) noexcept {
+    const double u = -1.0 + 2.0 * (static_cast<double>(x) + 0.5) / static_cast<double>(kRes);
+    const double v = -1.0 + 2.0 * (static_cast<double>(y) + 0.5) / static_cast<double>(kRes);
+    return cubeDirection(face, u, v);
+}
+
+struct CubeCoord { int face{}; double u{}; double v{}; };
+
+inline CubeCoord toCube(const glm::dvec3& input) noexcept {
+    const glm::dvec3 d = glm::normalize(input);
+    const double ax = std::abs(d.x), ay = std::abs(d.y), az = std::abs(d.z);
+    CubeCoord c{};
+    if (ax >= ay && ax >= az) {
+        if (d.x >= 0.0) { c.face = 0; c.u = -d.z / ax; c.v = d.y / ax; }
+        else            { c.face = 1; c.u =  d.z / ax; c.v = d.y / ax; }
+    } else if (ay >= ax && ay >= az) {
+        if (d.y >= 0.0) { c.face = 2; c.u = d.x / ay; c.v = -d.z / ay; }
+        else            { c.face = 3; c.u = d.x / ay; c.v =  d.z / ay; }
+    } else {
+        if (d.z >= 0.0) { c.face = 4; c.u =  d.x / az; c.v = d.y / az; }
+        else            { c.face = 5; c.u = -d.x / az; c.v = d.y / az; }
+    }
+    c.u = std::clamp(c.u, -1.0, 1.0);
+    c.v = std::clamp(c.v, -1.0, 1.0);
+    return c;
+}
+
+inline int nearestCell(const glm::dvec3& d) noexcept {
+    const CubeCoord c = toCube(d);
+    const int x = std::clamp(static_cast<int>((c.u + 1.0) * 0.5 * kRes), 0, kRes - 1);
+    const int y = std::clamp(static_cast<int>((c.v + 1.0) * 0.5 * kRes), 0, kRes - 1);
+    return cellIndex(c.face, x, y);
+}
+
+inline glm::dvec3 directionForExtendedCell(int face, int x, int y) noexcept {
+    const double u = -1.0 + 2.0 * (static_cast<double>(x) + 0.5) / static_cast<double>(kRes);
+    const double v = -1.0 + 2.0 * (static_cast<double>(y) + 0.5) / static_cast<double>(kRes);
+    return cubeDirection(face, u, v);
+}
+
 struct Plate {
     glm::dvec3 center{};
     glm::dvec3 pole{};
     double speed{};
+    double baseElevation{};
+    bool continental{};
 };
 
 struct Field {
     std::uint64_t seed{};
     double radius{};
     double maxElevation{};
+    std::vector<std::array<int,8>> neighbors;
+    std::vector<std::uint8_t> neighborCount;
     std::vector<float> elevation;
     std::vector<float> continental;
     std::vector<float> mountain;
     std::vector<float> river;
     std::vector<float> floodplain;
     std::vector<float> incision;
+    std::vector<float> hardness;
     std::vector<int> receiver;
 
     explicit Field(std::uint64_t s, double r, double maxElev)
         : seed(s), radius(r), maxElevation(maxElev),
-          elevation(kCount), continental(kCount), mountain(kCount), river(kCount),
-          floodplain(kCount), incision(kCount), receiver(kCount, -1) {
+          neighbors(kCount), neighborCount(kCount, 0U), elevation(kCount), continental(kCount),
+          mountain(kCount), river(kCount), floodplain(kCount), incision(kCount), hardness(kCount),
+          receiver(kCount, -1) {
+        buildNeighborTable();
         bake();
     }
 
-    static int index(int x, int y) noexcept {
-        x %= kWidth;
-        if (x < 0) x += kWidth;
-        y = std::clamp(y, 0, kHeight - 1);
-        return y * kWidth + x;
+    void buildNeighborTable() {
+        for (int face = 0; face < kFaces; ++face) {
+            for (int y = 0; y < kRes; ++y) {
+                for (int x = 0; x < kRes; ++x) {
+                    const int id = cellIndex(face, x, y);
+                    std::uint8_t count = 0;
+                    for (int dy = -1; dy <= 1; ++dy) {
+                        for (int dx = -1; dx <= 1; ++dx) {
+                            if (dx == 0 && dy == 0) continue;
+                            const int ni = nearestCell(directionForExtendedCell(face, x + dx, y + dy));
+                            if (ni == id) continue;
+                            bool duplicate = false;
+                            for (std::uint8_t n = 0; n < count; ++n) duplicate = duplicate || neighbors[id][n] == ni;
+                            if (!duplicate && count < 8U) neighbors[id][count++] = ni;
+                        }
+                    }
+                    neighborCount[id] = count;
+                }
+            }
+        }
     }
 
-    static glm::dvec3 directionAt(int x, int y) noexcept {
-        const double lon = -kPi + (static_cast<double>(x) + 0.5) * (2.0 * kPi / kWidth);
-        const double lat = -0.5 * kPi + (static_cast<double>(y) + 0.5) * (kPi / kHeight);
-        const double c = std::cos(lat);
-        return {c * std::cos(lon), std::sin(lat), c * std::sin(lon)};
+    static void spreadMax(
+        const std::vector<std::array<int,8>>& neigh,
+        const std::vector<std::uint8_t>& counts,
+        std::vector<float>& field,
+        int passes,
+        float decay) {
+        std::vector<float> tmp(field.size());
+        for (int pass = 0; pass < passes; ++pass) {
+            tmp = field;
+            for (std::size_t i = 0; i < field.size(); ++i) {
+                float best = field[i];
+                for (std::uint8_t n = 0; n < counts[i]; ++n) best = std::max(best, field[neigh[i][n]] * decay);
+                tmp[i] = best;
+            }
+            field.swap(tmp);
+        }
+    }
+
+    void priorityFlood(const std::vector<float>& h, std::vector<float>& filled, const std::vector<std::uint8_t>& ocean) const {
+        using Node = std::pair<float,int>;
+        std::priority_queue<Node, std::vector<Node>, std::greater<Node>> heap;
+        filled = h;
+        std::vector<std::uint8_t> queued(kCount, 0U);
+        std::vector<std::uint8_t> processed(kCount, 0U);
+        int seedCount = 0;
+        for (int i = 0; i < kCount; ++i) {
+            if (ocean[i]) {
+                heap.push({h[i], i});
+                queued[i] = 1U;
+                ++seedCount;
+            }
+        }
+        if (seedCount == 0) {
+            const auto it = std::min_element(h.begin(), h.end());
+            const int id = static_cast<int>(std::distance(h.begin(), it));
+            heap.push({*it, id});
+            queued[id] = 1U;
+        }
+        std::uint64_t floodOrder = 0;
+        while (!heap.empty()) {
+            const auto [e, id] = heap.top(); heap.pop();
+            if (processed[id]) continue;
+            processed[id] = 1U;
+            ++floodOrder;
+            for (std::uint8_t k = 0; k < neighborCount[id]; ++k) {
+                const int n = neighbors[id][k];
+                if (processed[n]) continue;
+                const float raised = std::max(filled[n], e + static_cast<float>(1.0e-7 * static_cast<double>(floodOrder)));
+                if (raised > filled[n]) filled[n] = raised;
+                if (!queued[n]) {
+                    queued[n] = 1U;
+                    heap.push({filled[n], n});
+                }
+            }
+        }
     }
 
     void bake() {
-        constexpr int kPlateCount = 20;
         std::array<Plate, kPlateCount> plates{};
         for (int i = 0; i < kPlateCount; ++i) {
             plates[i].center = seededDirection(seed, 100U + static_cast<std::uint64_t>(i) * 11U);
-            plates[i].pole = seededDirection(seed, 500U + static_cast<std::uint64_t>(i) * 13U);
-            plates[i].speed = 0.35 + 0.65 * unit01(seed, 900U + static_cast<std::uint64_t>(i) * 17U);
+            plates[i].pole = seededDirection(seed, 600U + static_cast<std::uint64_t>(i) * 13U);
+            plates[i].speed = 0.38 + 0.72 * unit01(seed, 1100U + static_cast<std::uint64_t>(i) * 17U);
+            plates[i].baseElevation = unit01(seed, 1700U + static_cast<std::uint64_t>(i) * 19U) * 2.0 - 1.0;
+            plates[i].continental = unit01(seed, 2300U + static_cast<std::uint64_t>(i) * 23U) < 0.42;
         }
 
-        std::vector<float> base(kCount, 0.0F);
-        std::vector<float> filled(kCount, 0.0F);
+        std::vector<float> h0(kCount, 0.0F);
         std::vector<float> rainfall(kCount, 0.0F);
+        std::vector<float> rawConv(kCount, 0.0F);
+        std::vector<float> rawDiv(kCount, 0.0F);
+        std::vector<float> rawCC(kCount, 0.0F);
+        std::vector<float> uplift(kCount, 0.0F);
 
-        for (int y = 0; y < kHeight; ++y) {
-            for (int x = 0; x < kWidth; ++x) {
-                const int id = index(x,y);
-                const glm::dvec3 d = directionAt(x,y);
-                const double macro = fbm(seed ^ 0x243F6A8885A308D3ULL, d, 1.15, 5);
-                const double meso = fbm(seed ^ 0x13198A2E03707344ULL, d, 2.9, 4);
-                const double coast = fbm(seed ^ 0xA4093822299F31D0ULL, d, 7.5, 3);
-                const double cont = std::clamp(macro * 0.82 + meso * 0.25 + coast * 0.07 - 0.075, -1.0, 1.0);
-                const double land = smooth01(-0.035, 0.075, cont);
-                const double ocean = 1.0 - land;
+        for (int face = 0; face < kFaces; ++face) {
+            for (int y = 0; y < kRes; ++y) {
+                for (int x = 0; x < kRes; ++x) {
+                    const int id = cellIndex(face, x, y);
+                    const glm::dvec3 d = directionAt(face, x, y);
+                    double best = -2.0, second = -2.0;
+                    int bi = 0, si = 1;
+                    for (int p = 0; p < kPlateCount; ++p) {
+                        const double score = glm::dot(d, plates[p].center);
+                        if (score > best) { second = best; si = bi; best = score; bi = p; }
+                        else if (score > second) { second = score; si = p; }
+                    }
 
-                double best = -2.0, second = -2.0;
-                int bi = 0, si = 1;
-                for (int i = 0; i < kPlateCount; ++i) {
-                    const double s = glm::dot(d, plates[i].center);
-                    if (s > best) { second = best; si = bi; best = s; bi = i; }
-                    else if (s > second) { second = s; si = i; }
+                    const double gap = std::max(0.0, best - second);
+                    const double boundary = 1.0 - smooth01(0.004, 0.085, gap);
+                    glm::dvec3 normal = plates[si].center - plates[bi].center;
+                    normal -= d * glm::dot(normal, d);
+                    const double nl = glm::length(normal);
+                    normal = nl > 1.0e-9 ? normal / nl : glm::dvec3{1.0, 0.0, 0.0};
+                    const glm::dvec3 va = glm::cross(plates[bi].pole, d) * plates[bi].speed;
+                    const glm::dvec3 vb = glm::cross(plates[si].pole, d) * plates[si].speed;
+                    const double separation = glm::dot(vb - va, normal);
+                    const double convergence = boundary * smooth01(0.018, 0.52, -separation);
+                    const double divergence = boundary * smooth01(0.018, 0.52, separation);
+                    rawConv[id] = static_cast<float>(convergence);
+                    rawDiv[id] = static_cast<float>(divergence);
+                    rawCC[id] = static_cast<float>(convergence * (plates[bi].continental && plates[si].continental ? 1.0 : 0.0));
+
+                    const double macro = fbm(seed ^ 0x243F6A8885A308D3ULL, d, 1.15, 5);
+                    const double meso = fbm(seed ^ 0x13198A2E03707344ULL, d, 2.7, 4);
+                    const double coast = fbm(seed ^ 0xA4093822299F31D0ULL, d, 6.0, 3);
+                    const double plateBias = plates[bi].continental ? 0.26 : -0.36;
+                    const double cont = std::clamp(plateBias + macro * 0.58 + meso * 0.22 + coast * 0.06, -1.0, 1.0);
+                    continental[id] = static_cast<float>(cont);
+                    const double land = smooth01(-0.045, 0.090, cont);
+                    const double interior = smooth01(0.05, 0.42, cont);
+                    const double ocean = 1.0 - land;
+
+                    const double und = fbm(seed ^ 0x510E527FADE682D1ULL, d, 3.5, 4);
+                    const double basin = fbm(seed ^ 0x6A09E667F3BCC909ULL, d, 0.72, 3);
+                    const double deep = smooth01(0.08, 0.72, -cont);
+                    double h = land * (120.0 + 780.0 * interior + 520.0 * und + 260.0 * basin);
+                    h -= ocean * (3000.0 + 2500.0 * deep);
+                    h += ocean * divergence * (750.0 + 1250.0 * ridged(seed ^ 0xD1310BA698DFB5ACULL, d, 8.0, 4));
+                    h -= ocean * convergence * 1350.0;
+                    h += plates[bi].baseElevation * (land * 180.0 + ocean * 260.0);
+                    h0[id] = static_cast<float>(std::clamp(h, -11000.0, 4200.0));
+
+                    const double hardNoise = 0.5 + 0.5 * fbm(seed ^ 0x91E10DA5C79E7B1DULL, d, 8.5, 4);
+                    hardness[id] = static_cast<float>(std::clamp(0.18 + 0.50 * hardNoise + 0.25 * convergence + 0.12 * divergence, 0.0, 1.0));
+                    const double latitudeWet = std::clamp(1.0 - std::abs(d.y) * 0.72, 0.0, 1.0);
+                    const double rainNoise = 0.5 + 0.5 * fbm(seed ^ 0x1F83D9ABFB41BD6BULL, d, 4.2, 3);
+                    rainfall[id] = static_cast<float>(std::clamp(0.08 + 0.55 * latitudeWet + 0.37 * rainNoise, 0.05, 1.0));
                 }
-                const double gap = std::max(0.0, best - second);
-                const double boundary = 1.0 - smooth01(0.008, 0.095, gap);
-                glm::dvec3 n = plates[si].center - plates[bi].center;
-                n -= d * glm::dot(n,d);
-                const double nl = glm::length(n);
-                if (nl > 1.0e-9) n /= nl; else n = {1.0,0.0,0.0};
-                const glm::dvec3 vb = glm::cross(plates[bi].pole, d) * plates[bi].speed;
-                const glm::dvec3 vs = glm::cross(plates[si].pole, d) * plates[si].speed;
-                const double separation = glm::dot(vs - vb, n);
-                const double conv = boundary * smooth01(0.025, 0.62, -separation);
-                const double div = boundary * smooth01(0.025, 0.62, separation);
-
-                const double ridge = 1.0 - std::abs(fbm(seed ^ 0x3C6EF372FE94F82BULL, d, 9.0, 4));
-                const double broad = fbm(seed ^ 0x510E527FADE682D1ULL, d, 4.2, 5);
-                const double province = fbm(seed ^ 0x6A09E667F3BCC909ULL, d, 11.0, 4);
-                const double orogen = std::pow(std::clamp(conv * land, 0.0, 1.0), 1.05);
-                const double ridgeCore = std::pow(smooth01(0.34, 0.88, ridge), 1.82);
-                const double range = orogen * (0.08 + 0.92 * ridgeCore);
-                const double interRangeTrough = orogen * std::pow(1.0 - ridgeCore, 1.75);
-
-                double h = 0.0;
-                h += land * (260.0 + 680.0 * broad + 380.0 * province);
-                // R5 geomorph: convergent belts are signed ridge-and-valley systems. Broad
-                // tectonic uplift stays modest; most elevation is concentrated on ridge cores,
-                // while inter-range troughs are explicitly lowered so a mountain belt reads as
-                // peaks separated by valleys instead of one kilometre-scale table.
-                h += orogen * 520.0
-                    + range * (1250.0 + 5000.0 * std::pow(ridgeCore, 1.30))
-                    - interRangeTrough * 720.0;
-                h += land * smooth01(0.55, 0.83, 0.5 + 0.5 * fbm(seed ^ 0xBB67AE8584CAA73BULL, d, 5.8, 4)) * 720.0;
-                h -= ocean * (2900.0 + 2700.0 * smooth01(0.05, 0.65, -cont));
-                h += ocean * div * (900.0 + 1300.0 * ridge);
-                h -= ocean * conv * 1700.0;
-                h = std::clamp(h, -11000.0, std::max(5000.0, maxElevation));
-
-                base[id] = static_cast<float>(h);
-                filled[id] = static_cast<float>(h);
-                continental[id] = static_cast<float>(cont);
-                mountain[id] = static_cast<float>(std::clamp(orogen * (0.12 + 0.88 * ridgeCore), 0.0, 1.0));
-                const double wet = std::clamp((1.0 - std::abs(d.y)) * 0.55 + 0.45 * (0.5 + 0.5 * fbm(seed ^ 0x1F83D9ABFB41BD6BULL, d, 4.0, 3)), 0.05, 1.0);
-                rainfall[id] = static_cast<float>(wet);
             }
         }
 
-        using Node = std::pair<float,int>;
-        std::priority_queue<Node, std::vector<Node>, std::greater<Node>> pq;
-        std::vector<std::uint8_t> seen(kCount, 0U);
-        int oceanSeeds = 0;
+        // Demiurge terrainSampler uses active convergence decaying behind the front and a
+        // separate CC-collision plateau term. Spread the boundary forcing over several cubemap
+        // cells before erosion so the uplifted landmass is regional, not a one-cell wall.
+        std::vector<float> convSpread = rawConv;
+        std::vector<float> ccSpread = rawCC;
+        spreadMax(neighbors, neighborCount, convSpread, 10, 0.82F);
+        spreadMax(neighbors, neighborCount, ccSpread, 13, 0.86F);
+
         for (int i = 0; i < kCount; ++i) {
-            if (base[i] <= 0.0F) {
-                pq.push({base[i], i});
-                seen[i] = 1U;
-                ++oceanSeeds;
-            }
-        }
-        if (oceanSeeds == 0) {
-            const auto it = std::min_element(base.begin(), base.end());
-            const int id = static_cast<int>(std::distance(base.begin(), it));
-            pq.push({*it,id}); seen[id] = 1U;
+            const glm::dvec3 d = directionAt(i / kFaceCells, i % kRes, (i % kFaceCells) / kRes);
+            const double paleo = std::pow(ridged(seed ^ 0xB7E151628AED2A6BULL, d, 2.6, 4), 2.6);
+            const double land = smooth01(-0.03, 0.10, continental[i]);
+            uplift[i] = static_cast<float>(std::clamp(
+                land * (0.70 * convSpread[i] + 0.75 * ccSpread[i] + 0.18 * paleo), 0.0, 1.0));
         }
 
-        static constexpr int dx[8] = {-1,0,1,-1,1,-1,0,1};
-        static constexpr int dy[8] = {-1,-1,-1,0,0,1,1,1};
-        while (!pq.empty()) {
-            const auto [e,id] = pq.top(); pq.pop();
-            const int x = id % kWidth, y = id / kWidth;
-            for (int k = 0; k < 8; ++k) {
-                const int ny = y + dy[k];
-                if (ny < 0 || ny >= kHeight) continue;
-                const int ni = index(x + dx[k], ny);
-                if (seen[ni]) continue;
-                seen[ni] = 1U;
-                const float raised = std::max(base[ni], e + 0.02F);
-                filled[ni] = raised;
-                pq.push({raised, ni});
-            }
-        }
+        std::vector<std::uint8_t> ocean(kCount, 0U);
+        for (int i = 0; i < kCount; ++i) ocean[i] = h0[i] < 0.0F ? 1U : 0U;
 
+        std::vector<float> work = h0;
+        std::vector<float> filled(kCount);
         std::vector<int> order(kCount);
         std::iota(order.begin(), order.end(), 0);
-        std::sort(order.begin(), order.end(), [&](int a, int b) { return filled[a] > filled[b]; });
+        std::vector<std::array<int,8>> mfdNeighbor(kCount);
+        std::vector<std::array<float,8>> mfdWeight(kCount);
+        std::vector<std::uint8_t> mfdCount(kCount, 0U);
         std::vector<double> discharge(kCount, 0.0);
-        std::fill(receiver.begin(), receiver.end(), -1);
-        std::vector<float> localSlope(kCount, 0.0F);
-        for (int i = 0; i < kCount; ++i) discharge[i] = std::max(0.01F, rainfall[i]);
+        std::vector<double> sediment(kCount, 0.0);
+        std::vector<float> buf(kCount);
+        std::vector<float> lastFilled(kCount);
 
-        for (int id : order) {
-            if (base[id] <= 0.0F) continue;
-            const int x = id % kWidth, y = id / kWidth;
-            float bestDrop = 0.0F;
-            int bestN = -1;
-            for (int k = 0; k < 8; ++k) {
-                const int ny = y + dy[k];
-                if (ny < 0 || ny >= kHeight) continue;
-                const int ni = index(x + dx[k], ny);
-                const float drop = filled[id] - filled[ni];
-                if (drop > bestDrop) { bestDrop = drop; bestN = ni; }
+        constexpr double upliftRateMeters = 62.0;
+        constexpr double dt = 0.0048;
+        constexpr double k0 = 0.34;
+        constexpr double mExp = 0.45;
+        constexpr double depositionG = 1.45;
+        constexpr double dhClamp = 22.0;
+
+        for (int step = 0; step < kErosionSteps; ++step) {
+            for (int i = 0; i < kCount; ++i) {
+                if (!ocean[i]) work[i] += static_cast<float>(upliftRateMeters * uplift[i]);
             }
-            receiver[id] = bestN;
-            localSlope[id] = bestDrop;
-            if (bestN >= 0) discharge[bestN] += discharge[id];
+
+            priorityFlood(work, filled, ocean);
+            lastFilled = filled;
+            std::sort(order.begin(), order.end(), [&](int a, int b) {
+                if (filled[a] != filled[b]) return filled[a] > filled[b];
+                return a > b;
+            });
+
+            std::fill(mfdCount.begin(), mfdCount.end(), 0U);
+            for (int id = 0; id < kCount; ++id) {
+                if (ocean[id]) continue;
+                double sumW = 0.0;
+                std::array<double,8> raw{};
+                std::uint8_t count = 0;
+                for (std::uint8_t k = 0; k < neighborCount[id]; ++k) {
+                    const int n = neighbors[id][k];
+                    if (filled[n] < filled[id] || (filled[n] == filled[id] && n < id)) {
+                        const double slope = std::max(1.0e-6, static_cast<double>(filled[id] - filled[n]));
+                        const double rw = std::pow(slope, kMfdPower);
+                        raw[count] = rw;
+                        mfdNeighbor[id][count] = n;
+                        sumW += rw;
+                        ++count;
+                    }
+                }
+                if (count == 0 || sumW < 1.0e-24) continue;
+                mfdCount[id] = count;
+                for (std::uint8_t k = 0; k < count; ++k) mfdWeight[id][k] = static_cast<float>(raw[k] / sumW);
+            }
+
+            for (int i = 0; i < kCount; ++i) discharge[i] = rainfall[i];
+            for (const int id : order) {
+                if (ocean[id]) continue;
+                for (std::uint8_t k = 0; k < mfdCount[id]; ++k) {
+                    const int n = mfdNeighbor[id][k];
+                    if (!ocean[n]) discharge[n] += discharge[id] * static_cast<double>(mfdWeight[id][k]);
+                }
+            }
+
+            std::fill(sediment.begin(), sediment.end(), 0.0);
+            buf = work;
+            for (const int id : order) {
+                if (ocean[id]) continue;
+                double slope = 0.0;
+                for (std::uint8_t k = 0; k < mfdCount[id]; ++k) {
+                    const int n = mfdNeighbor[id][k];
+                    slope += static_cast<double>(mfdWeight[id][k]) * std::max(0.0, static_cast<double>(filled[id] - filled[n]));
+                }
+                const double erodibility = 1.0 + 1.1 * (0.5 - static_cast<double>(hardness[id]));
+                const double erosionRate = dt * k0 * erodibility
+                    * std::pow(std::max(0.05, discharge[id]), mExp)
+                    * std::max(0.20, slope);
+                const double deposition = dt * depositionG * sediment[id] / std::max(0.05, discharge[id]);
+                double dh = std::clamp(deposition - erosionRate, -dhClamp, dhClamp);
+                if (mfdCount[id] == 0) dh = std::max(dh, -3.0);
+                buf[id] = static_cast<float>(work[id] + dh);
+                const double outSediment = std::max(0.0, sediment[id] + erosionRate - deposition);
+                for (std::uint8_t k = 0; k < mfdCount[id]; ++k) {
+                    const int n = mfdNeighbor[id][k];
+                    if (!ocean[n]) sediment[n] += outSediment * static_cast<double>(mfdWeight[id][k]);
+                }
+            }
+            work.swap(buf);
+
+            // Three talus passes per uplift/erosion step, matching the mature bake structure.
+            for (int thermal = 0; thermal < 3; ++thermal) {
+                buf = work;
+                for (int id = 0; id < kCount; ++id) {
+                    if (ocean[id]) continue;
+                    const double talus = 105.0 * (0.72 + 0.56 * hardness[id]);
+                    for (std::uint8_t k = 0; k < neighborCount[id]; ++k) {
+                        const int n = neighbors[id][k];
+                        const double excess = static_cast<double>(work[id] - work[n]) - talus;
+                        if (excess <= 0.0) continue;
+                        const double transfer = excess * 0.0012;
+                        buf[id] -= static_cast<float>(transfer);
+                        buf[n] += static_cast<float>(transfer);
+                    }
+                }
+                work.swap(buf);
+            }
         }
 
+        // Final hydrology after the uplift/erode loop. It supplies both the broad valley mask and
+        // the dominant receiver used to reconstruct a narrow sub-grid river centerline at query time.
+        priorityFlood(work, filled, ocean);
+        std::sort(order.begin(), order.end(), [&](int a, int b) {
+            if (filled[a] != filled[b]) return filled[a] > filled[b];
+            return a > b;
+        });
+        std::fill(mfdCount.begin(), mfdCount.end(), 0U);
+        std::fill(receiver.begin(), receiver.end(), -1);
+        for (int id = 0; id < kCount; ++id) {
+            if (ocean[id]) continue;
+            double sumW = 0.0;
+            std::array<double,8> raw{};
+            std::uint8_t count = 0;
+            for (std::uint8_t k = 0; k < neighborCount[id]; ++k) {
+                const int n = neighbors[id][k];
+                if (filled[n] < filled[id] || (filled[n] == filled[id] && n < id)) {
+                    const double slope = std::max(1.0e-6, static_cast<double>(filled[id] - filled[n]));
+                    const double rw = std::pow(slope, kMfdPower);
+                    raw[count] = rw;
+                    mfdNeighbor[id][count] = n;
+                    sumW += rw;
+                    ++count;
+                }
+            }
+            if (count == 0 || sumW < 1.0e-24) continue;
+            mfdCount[id] = count;
+            double bestW = -1.0;
+            int bestReceiver = -1;
+            for (std::uint8_t k = 0; k < count; ++k) {
+                const double w = raw[k] / sumW;
+                mfdWeight[id][k] = static_cast<float>(w);
+                if (w > bestW) { bestW = w; bestReceiver = mfdNeighbor[id][k]; }
+            }
+            receiver[id] = bestReceiver;
+        }
+
+        for (int i = 0; i < kCount; ++i) discharge[i] = rainfall[i];
+        for (const int id : order) {
+            if (ocean[id]) continue;
+            for (std::uint8_t k = 0; k < mfdCount[id]; ++k) {
+                const int n = mfdNeighbor[id][k];
+                if (!ocean[n]) discharge[n] += discharge[id] * static_cast<double>(mfdWeight[id][k]);
+            }
+        }
         double maxQ = 1.0;
         for (double q : discharge) maxQ = std::max(maxQ, q);
         const double logMaxQ = std::log1p(maxQ);
-        elevation = base;
 
+        elevation = work;
         for (int id = 0; id < kCount; ++id) {
-            if (base[id] <= 0.0F) continue;
-            const double q = std::log1p(discharge[id]) / logMaxQ;
-            const double r = smooth01(0.34, 0.79, q);
-            const double s = smooth01(3.0, 240.0, static_cast<double>(localSlope[id]));
-            const double carve = r * (90.0 + 620.0 * s);
-            elevation[id] = static_cast<float>(elevation[id] - carve);
-            river[id] = static_cast<float>(r);
-            incision[id] = static_cast<float>(std::clamp(carve / 700.0, 0.0, 1.0));
-            floodplain[id] = static_cast<float>(r * (1.0 - s));
-            elevation[id] += static_cast<float>(floodplain[id] * 55.0);
-        }
-
-        // Two conservative thermal-relaxation passes. This is deliberately far weaker than the
-        // hydraulic incision: it removes grid-scale spikes without erasing range silhouettes.
-        std::vector<float> scratch = elevation;
-        for (int pass = 0; pass < 2; ++pass) {
-            scratch = elevation;
-            for (int y = 1; y < kHeight - 1; ++y) {
-                for (int x = 0; x < kWidth; ++x) {
-                    const int id = index(x,y);
-                    if (elevation[id] <= 0.0F) continue;
-                    float mean = 0.0F;
-                    for (int k = 0; k < 8; ++k) mean += elevation[index(x+dx[k], y+dy[k])];
-                    mean *= 0.125F;
-                    const float delta = mean - elevation[id];
-                    if (std::abs(delta) > 180.0F) scratch[id] += delta * 0.08F;
-                }
+            if (ocean[id]) {
+                elevation[id] = std::clamp(elevation[id], -11000.0F, -2.0F);
+                continue;
             }
-            elevation.swap(scratch);
-        }
-
-        // Widen only the visibility mask of major valleys, not the hydraulic authority itself.
-        std::vector<float> riverWide = river;
-        for (int y = 1; y < kHeight - 1; ++y) {
-            for (int x = 0; x < kWidth; ++x) {
-                const int id = index(x,y);
-                float nmax = river[id];
-                for (int k = 0; k < 8; ++k) nmax = std::max(nmax, river[index(x+dx[k], y+dy[k])]);
-                riverWide[id] = std::max(river[id], nmax * 0.58F);
+            const double qNorm = std::log1p(discharge[id]) / logMaxQ;
+            double slope = 0.0;
+            for (std::uint8_t k = 0; k < mfdCount[id]; ++k) {
+                const int n = mfdNeighbor[id][k];
+                slope += static_cast<double>(mfdWeight[id][k]) * std::max(0.0, static_cast<double>(filled[id] - filled[n]));
             }
+            const double riverMask = smooth01(0.40, 0.84, qNorm);
+            const double lowSlope = 1.0 - smooth01(35.0, 280.0, slope);
+            river[id] = static_cast<float>(riverMask);
+            floodplain[id] = static_cast<float>(riverMask * lowSlope);
+            const double expectedUplifted = static_cast<double>(h0[id]) + upliftRateMeters * kErosionSteps * uplift[id];
+            const double cut = std::max(0.0, expectedUplifted - static_cast<double>(elevation[id]));
+            incision[id] = static_cast<float>(std::clamp(cut / 1500.0, 0.0, 1.0));
+
+            float localMin = elevation[id];
+            float localMax = elevation[id];
+            for (std::uint8_t k = 0; k < neighborCount[id]; ++k) {
+                localMin = std::min(localMin, elevation[neighbors[id][k]]);
+                localMax = std::max(localMax, elevation[neighbors[id][k]]);
+            }
+            const double relief = static_cast<double>(localMax - localMin);
+            mountain[id] = static_cast<float>(std::clamp(
+                0.72 * uplift[id] + 0.45 * smooth01(450.0, 2600.0, relief), 0.0, 1.0));
+
+            // Depositional broadening is geometry, not just a material label.
+            elevation[id] += static_cast<float>(floodplain[id] * 22.0);
+            elevation[id] = std::clamp(elevation[id], -11000.0F, static_cast<float>(std::max(5000.0, maxElevation)));
         }
-        river.swap(riverWide);
     }
 
     template <typename Vec>
-    static double bilinear(const Vec& values, const glm::dvec3& d) noexcept {
-        const glm::dvec3 n = glm::normalize(d);
-        const double lon = std::atan2(n.z, n.x);
-        const double lat = std::asin(std::clamp(n.y, -1.0, 1.0));
-        double fx = (lon + kPi) / (2.0 * kPi) * kWidth - 0.5;
-        double fy = (lat + 0.5 * kPi) / kPi * kHeight - 0.5;
-        const int x0 = static_cast<int>(std::floor(fx));
-        const int y0 = static_cast<int>(std::floor(fy));
-        const double tx = fx - std::floor(fx);
-        const double ty = fy - std::floor(fy);
-        const int yA = std::clamp(y0, 0, kHeight-1);
-        const int yB = std::clamp(y0+1, 0, kHeight-1);
-        const double a = static_cast<double>(values[index(x0,yA)]);
-        const double b = static_cast<double>(values[index(x0+1,yA)]);
-        const double c = static_cast<double>(values[index(x0,yB)]);
-        const double e = static_cast<double>(values[index(x0+1,yB)]);
-        return (a + (b-a)*tx) * (1.0-ty) + (c + (e-c)*tx) * ty;
+    double sampleBilinear(const Vec& values, const glm::dvec3& direction) const noexcept {
+        const CubeCoord c = toCube(direction);
+        const double gx = (c.u + 1.0) * 0.5 * kRes - 0.5;
+        const double gy = (c.v + 1.0) * 0.5 * kRes - 0.5;
+        const int x0 = static_cast<int>(std::floor(gx));
+        const int y0 = static_cast<int>(std::floor(gy));
+        const double tx = gx - std::floor(gx);
+        const double ty = gy - std::floor(gy);
+        auto corner = [&](int x, int y) -> double {
+            return static_cast<double>(values[nearestCell(directionForExtendedCell(c.face, x, y))]);
+        };
+        const double a = corner(x0, y0);
+        const double b = corner(x0 + 1, y0);
+        const double d = corner(x0, y0 + 1);
+        const double e = corner(x0 + 1, y0 + 1);
+        return (a + (b - a) * tx) * (1.0 - ty) + (d + (e - d) * tx) * ty;
     }
 
-    GlobalGeomorphSample sample(const glm::dvec3& d) const noexcept {
+    GlobalGeomorphSample sample(const glm::dvec3& input) const noexcept {
+        const glm::dvec3 q = glm::normalize(input);
         GlobalGeomorphSample s{};
-        s.elevationMeters = bilinear(elevation,d);
-        s.continentalness = bilinear(continental,d);
-        s.mountain = std::clamp(bilinear(mountain,d), 0.0, 1.0);
-        s.river = std::clamp(bilinear(river,d), 0.0, 1.0);
-        s.floodplain = std::clamp(bilinear(floodplain,d), 0.0, 1.0);
-        s.incision = std::clamp(bilinear(incision,d), 0.0, 1.0);
+        s.elevationMeters = sampleBilinear(elevation, q);
+        s.continentalness = std::clamp(sampleBilinear(continental, q), -1.0, 1.0);
+        s.mountain = std::clamp(sampleBilinear(mountain, q), 0.0, 1.0);
+        s.river = std::clamp(sampleBilinear(river, q), 0.0, 1.0);
+        s.floodplain = std::clamp(sampleBilinear(floodplain, q), 0.0, 1.0);
+        s.incision = std::clamp(sampleBilinear(incision, q), 0.0, 1.0);
 
-        // R5 geomorph: the 512x256 field chooses the real drainage graph, but a grid cell is
-        // tens of kilometres wide on an Earth-sized sphere. Reconstruct the centerline from
-        // each wet cell to its actual downhill receiver and measure geodesic distance to those
-        // flow segments. The result is a continuous sub-kilometre-to-kilometre river core while
-        // the broad `river` field remains available only for valley/floodplain shaping.
-        const glm::dvec3 q = glm::normalize(d);
-        const glm::dvec3 ref = std::abs(q.y) < 0.88
-            ? glm::dvec3{0.0, 1.0, 0.0}
-            : glm::dvec3{1.0, 0.0, 0.0};
+        const glm::dvec3 ref = std::abs(q.y) < 0.88 ? glm::dvec3{0.0, 1.0, 0.0} : glm::dvec3{1.0, 0.0, 0.0};
         const glm::dvec3 east = glm::normalize(glm::cross(ref, q));
         const glm::dvec3 north = glm::normalize(glm::cross(q, east));
         auto localMeters = [&](const glm::dvec3& pInput) {
@@ -367,39 +614,38 @@ struct Field {
             const double tl = glm::length(tangent);
             if (tl < 1.0e-12 || angle < 1.0e-12) return glm::dvec2{0.0};
             tangent /= tl;
-            return glm::dvec2{glm::dot(tangent, east), glm::dot(tangent, north)}
-                * (angle * radius);
+            return glm::dvec2{glm::dot(tangent, east), glm::dot(tangent, north)} * (angle * radius);
         };
 
-        const double lon = std::atan2(q.z, q.x);
-        const double lat = std::asin(std::clamp(q.y, -1.0, 1.0));
-        const double gx = (lon + kPi) / (2.0 * kPi) * kWidth - 0.5;
-        const double gy = (lat + 0.5 * kPi) / kPi * kHeight - 0.5;
+        const CubeCoord cc = toCube(q);
+        const double gx = (cc.u + 1.0) * 0.5 * kRes - 0.5;
+        const double gy = (cc.v + 1.0) * 0.5 * kRes - 0.5;
         const int cx = static_cast<int>(std::floor(gx));
         const int cy = static_cast<int>(std::floor(gy));
         double channel = 0.0;
         for (int oy = -2; oy <= 2; ++oy) {
-            const int sy = cy + oy;
-            if (sy < 0 || sy >= kHeight) continue;
             for (int ox = -2; ox <= 2; ++ox) {
-                const int sx = cx + ox;
-                const int id = index(sx, sy);
+                const int id = nearestCell(directionForExtendedCell(cc.face, cx + ox, cy + oy));
                 const int rid = receiver[id];
                 const double strength = std::clamp(static_cast<double>(river[id]), 0.0, 1.0);
-                if (rid < 0 || strength < 0.30) continue;
-                const int rx = rid % kWidth;
-                const int ry = rid / kWidth;
-                const glm::dvec2 a = localMeters(directionAt(sx, sy));
-                const glm::dvec2 b = localMeters(directionAt(rx, ry));
+                if (rid < 0 || strength < 0.28) continue;
+                const int faceA = id / kFaceCells;
+                const int remA = id % kFaceCells;
+                const int ax = remA % kRes;
+                const int ay = remA / kRes;
+                const int faceB = rid / kFaceCells;
+                const int remB = rid % kFaceCells;
+                const int bx = remB % kRes;
+                const int by = remB / kRes;
+                const glm::dvec2 a = localMeters(directionAt(faceA, ax, ay));
+                const glm::dvec2 b = localMeters(directionAt(faceB, bx, by));
                 const glm::dvec2 ab = b - a;
                 const double ab2 = glm::dot(ab, ab);
-                const double t = ab2 > 1.0
-                    ? std::clamp(-glm::dot(a, ab) / ab2, 0.0, 1.0)
-                    : 0.0;
+                const double t = ab2 > 1.0 ? std::clamp(-glm::dot(a, ab) / ab2, 0.0, 1.0) : 0.0;
                 const double distance = glm::length(a + ab * t);
-                const double halfWidth = 90.0 + 620.0 * std::pow(strength, 1.80);
-                const double core = 1.0 - smooth01(halfWidth * 0.32, halfWidth, distance);
-                channel = std::max(channel, core * (0.58 + 0.42 * strength));
+                const double halfWidth = 80.0 + 520.0 * std::pow(strength, 1.75);
+                const double core = 1.0 - smooth01(halfWidth * 0.28, halfWidth, distance);
+                channel = std::max(channel, core * (0.54 + 0.46 * strength));
             }
         }
         s.channel = std::clamp(channel, 0.0, 1.0);
@@ -408,15 +654,22 @@ struct Field {
 };
 
 inline std::shared_ptr<const Field> fieldFor(std::uint64_t seed, double radius, double maxElevation) {
-    struct Cache { std::mutex mutex; std::unordered_map<std::uint64_t, std::shared_ptr<const Field>> map; };
+    struct Cache {
+        std::mutex mutex;
+        std::unordered_map<std::uint64_t, std::shared_ptr<const Field>> map;
+    };
     static Cache cache;
-    const std::uint64_t key = mix64(seed ^ static_cast<std::uint64_t>(radius) ^ (static_cast<std::uint64_t>(maxElevation) << 1U));
+    const std::uint64_t key = mix64(seed
+        ^ static_cast<std::uint64_t>(radius)
+        ^ (static_cast<std::uint64_t>(maxElevation) << 1U));
     thread_local std::uint64_t tlsKey = 0;
     thread_local std::shared_ptr<const Field> tlsField;
     if (tlsField && tlsKey == key) return tlsField;
     std::lock_guard<std::mutex> lock(cache.mutex);
     auto it = cache.map.find(key);
-    if (it == cache.map.end()) it = cache.map.emplace(key, std::make_shared<Field>(seed, radius, maxElevation)).first;
+    if (it == cache.map.end()) {
+        it = cache.map.emplace(key, std::make_shared<Field>(seed, radius, maxElevation)).first;
+    }
     tlsKey = key;
     tlsField = it->second;
     return tlsField;
