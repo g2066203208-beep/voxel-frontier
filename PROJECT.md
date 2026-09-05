@@ -159,6 +159,19 @@ Current runtime already has a finite smooth spherical planet, radial movement, a
 - structures/anomalies;
 - authoritative multiplayer.
 
+## Mandatory test evidence
+
+Every runtime test round must leave reviewable evidence in the repository and must show the user the screenshots even when the visual result is poor or the round fails.
+
+- Use only real framebuffer captures from the tested Vulkan runtime. Never use generated/concept images as test evidence.
+- Store each round under `docs/evidence/<round-or-commit>/` with the exact screenshots, capture metadata and relevant runtime/Vulkan logs.
+- Terrain/geomorphology work must capture the actual landform(s) under test from a camera that makes the morphology readable; failed/flat/bad framing is still preserved rather than hidden.
+- Celestial-motion work must capture a time sequence or before/after frames from a fixed camera so movement can be visually verified; a single Sun/Moon frame is not motion evidence.
+- Evidence is part of the test deliverable, not an optional presentation step. A code result without the requested screenshots is incomplete.
+- CI artifacts may supplement repository evidence, but artifact-only screenshots do not replace committed evidence for a test round the user is expected to review.
+
+See `docs/evidence/README.md` for the evidence layout.
+
 ## Repository rule
 
 Keep only the authoritative production path and documentation in `main`. Superseded experiments belong in Git history or dedicated archival tags/branches, not as dead parallel engines in the working tree.
