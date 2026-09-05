@@ -131,12 +131,13 @@ struct LocalReliefStats {
             double captureScore = readableDaylight * 1.8;
 
             if (captureMode == "mountain") {
-                if (terrain.mountain < 0.18 || aboveSea < 2500.0 || aboveSea > 5200.0) continue;
-                const LocalReliefStats r = sampleLocalRelief(planet, d, 30000.0);
+                if (terrain.mountain < 0.20 || aboveSea < 2800.0 || aboveSea > 6200.0) continue;
+                const LocalReliefStats r = sampleLocalRelief(planet, d, 26000.0);
                 const double relief = r.maxElevation - r.minElevation;
-                if (relief < 1500.0 || relief > 4800.0) continue;
-                captureScore += terrain.mountain * 5.0 + relief / 340.0
-                    + aboveSea / 5000.0;
+                const double summitDeficit = r.maxElevation - aboveSea;
+                if (relief < 1800.0 || relief > 5600.0 || summitDeficit > 320.0) continue;
+                captureScore += terrain.mountain * 5.5 + relief / 280.0
+                    + aboveSea / 4300.0 - summitDeficit / 260.0;
             } else if (captureMode == "river") {
                 if (terrain.river < 0.22 || aboveSea < 240.0 || aboveSea > 1500.0) continue;
                 const LocalReliefStats r = sampleLocalRelief(planet, d, 7000.0);
@@ -153,14 +154,15 @@ struct LocalReliefStats {
                 captureScore += terrain.coastalCliff * 8.5 + relief / 80.0
                     - std::abs(aboveSea - 420.0) / 420.0;
             } else if (captureMode == "highland") {
-                if (terrain.plateau < 0.42 || aboveSea < 2250.0 || aboveSea > 3050.0) continue;
-                // A useful plateau target must expose its edge within a few kilometres.
-                const LocalReliefStats r = sampleLocalRelief(planet, d, 7000.0);
+                if (terrain.plateau < 0.44 || aboveSea < 2100.0 || aboveSea > 5000.0) continue;
+                // R20 plateau target must have genuinely lower terrain inside a 20 km annulus.
+                // This selects the cap near an escarpment instead of the featureless interior.
+                const LocalReliefStats r = sampleLocalRelief(planet, d, 20000.0);
                 const double relief = r.maxElevation - r.minElevation;
-                if (relief < 500.0 || relief > 2600.0) continue;
-                const double edgePreference = std::clamp((aboveSea - r.minElevation) / 900.0, 0.0, 1.0);
-                captureScore += edgePreference * 7.5 + terrain.plateau * 4.5
-                    + relief / 520.0 - terrain.mountain * 2.6;
+                const double edgeDrop = aboveSea - r.minElevation;
+                if (edgeDrop < 750.0 || relief < 850.0 || relief > 3600.0) continue;
+                captureScore += std::clamp(edgeDrop / 1100.0, 0.0, 2.0) * 8.0
+                    + terrain.plateau * 5.0 + relief / 600.0 - terrain.mountain * 2.8;
             }
 
             if (captureScore > bestScore) {
@@ -293,17 +295,21 @@ struct LocalReliefStats {
                     score = terrain.coastalCliff * 10.0 + relief / 70.0
                         - std::abs(h - 360.0) / 420.0;
                 } else if (captureMode == "highland") {
-                    const LocalReliefStats r = sampleLocalRelief(planet, d, 7000.0);
+                    const LocalReliefStats r = sampleLocalRelief(planet, d, 20000.0);
                     const double relief = r.maxElevation - r.minElevation;
-                    if (terrain.plateau < 0.38 || h < 2100.0 || h > 3150.0
-                        || relief < 420.0) continue;
-                    score = terrain.plateau * 8.0 + relief / 420.0
-                        + std::clamp((h - r.minElevation) / 1000.0, 0.0, 2.0) * 3.0;
+                    const double edgeDrop = h - r.minElevation;
+                    if (terrain.plateau < 0.42 || h < 2000.0 || h > 5200.0
+                        || edgeDrop < 700.0 || relief < 800.0) continue;
+                    score = terrain.plateau * 8.0 + edgeDrop / 220.0 + relief / 520.0
+                        - terrain.mountain * 2.0;
                 } else if (captureMode == "mountain") {
-                    const LocalReliefStats r = sampleLocalRelief(planet, d, 18000.0);
+                    const LocalReliefStats r = sampleLocalRelief(planet, d, 22000.0);
                     const double relief = r.maxElevation - r.minElevation;
-                    if (terrain.mountain < 0.10 || h < 2400.0 || relief < 1200.0) continue;
-                    score = terrain.mountain * 7.0 + relief / 300.0 + h / 2400.0;
+                    const double summitDeficit = r.maxElevation - h;
+                    if (terrain.mountain < 0.14 || h < 2700.0 || relief < 1700.0
+                        || summitDeficit > 260.0) continue;
+                    score = terrain.mountain * 7.0 + relief / 250.0 + h / 2100.0
+                        - summitDeficit / 180.0;
                 } else {
                     score = terrain.river * 8.0 + terrain.canyon * 1.5;
                 }
@@ -387,8 +393,8 @@ struct LocalReliefStats {
     if (!foundVantage) {
         // R11 relaxed vantage fallback: search a wider annulus before ever using an unchecked
         // geometric offset. Mountain/highland cameras remain on land; coast cameras prefer water.
-        const std::array<double, 8> relaxedRadii{3000.0, 6000.0, 10000.0, 15000.0,
-            22000.0, 30000.0, 40000.0, 52000.0};
+        const std::array<double, 8> relaxedRadii{2500.0, 4500.0, 7000.0, 10000.0,
+            14000.0, 19000.0, 26000.0, 34000.0};
         for (double standOffMeters : relaxedRadii) {
             const double angular = standOffMeters / std::max(1.0, planet.radius);
             for (int i = 0; i < 64; ++i) {
@@ -412,11 +418,12 @@ struct LocalReliefStats {
                 } else if (mode == "highland") {
                     if (terrain.submerged(planet)) continue;
                     const double drop = targetElevation - terrain.elevationMeters;
-                    if (drop < 260.0) continue;
-                    score = std::abs(drop - 850.0) * 0.30
-                        + terrain.plateau * 1400.0
-                        + terrain.mountain * 1100.0
-                        + std::abs(standOffMeters - 7000.0) * 0.020;
+                    if (drop < 600.0) continue;
+                    const double apparent = std::atan2(drop, std::max(1.0, standOffMeters));
+                    score = -apparent * 15000.0
+                        + terrain.plateau * 1800.0
+                        + terrain.mountain * 1200.0
+                        + std::abs(standOffMeters - 11000.0) * 0.014;
                 } else {
                     if (terrain.submerged(planet)) continue;
                     score = terrain.river * 2200.0

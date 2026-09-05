@@ -180,6 +180,7 @@ struct PlateField {
     double boundary{};
     double convergence{};
     double divergence{};
+    glm::dvec3 boundaryNormal{};
 };
 
 [[nodiscard]] PlateField samplePlateField(std::uint64_t seed, const glm::dvec3& directionInput) noexcept {
@@ -221,7 +222,7 @@ struct PlateField {
     const double separationRate = glm::dot(relativeVelocity, boundaryNormal);
     const double divergence = boundary * smooth01(0.04, 0.72, separationRate);
     const double convergence = boundary * smooth01(0.04, 0.72, -separationRate);
-    return {best, second, boundary, convergence, divergence};
+    return {best, second, boundary, convergence, divergence, boundaryNormal};
 }
 
 [[nodiscard]] glm::vec3 proxyColor(const glm::vec3& baseColor, const glm::dvec3& localDirection) {
@@ -578,69 +579,91 @@ PlanetTerrainSample samplePlanetTerrain(
     // No post-bake 430 m extrusion is allowed to create artificial coastal walls.
     const double coastEscarpment = bakedCoast;
 
-    // R19 DEMIURGE PROCESS CASCADE. The 256^2 process bake remains the sole macro authority.
-    // These bands reconstruct terrain BELOW the global process-cell scale, following the upstream
-    // terrainSampler pattern: tectonic ruggedness, substrate hardness, plateau resistance and
-    // erosion state modulate query-time ridged/FBM detail. Noise never decides where a mountain,
-    // plateau or coast exists; baked process fields do.
+    // R20 TECTONIC FOLD CASCADE. The 256^2 / 60-step process bake still owns every
+    // continent, orogenic belt, plateau province and drainage basin. Query-time geometry now
+    // reconstructs the unresolved 2-80 km spectrum *along the local compression geometry*.
+    // The fold direction comes from the two actual competing plate centres, not from a random
+    // mountain mask, so parallel ranges and intervening valleys follow the tectonic belt.
     const double substrateHardness = std::clamp(geomorph.hardness, 0.0, 1.0);
-    const double hardnessTerm = 0.72 + 0.56 * substrateHardness;
-    const double processPlateauCore = smooth01(0.22, 0.62, bakedTableland);
-    const double processPlateauInner = smooth01(0.52, 0.86, bakedTableland);
-    const double processPlateauEdge = std::clamp(processPlateauCore - 0.82 * processPlateauInner, 0.0, 1.0);
-    const double processMountainGate = smooth01(0.08, 0.70, bakedMountain)
-        * (1.0 - 0.72 * processPlateauInner) * geomorphLandness;
+    const double hardnessTerm = 0.70 + 0.64 * substrateHardness;
+    const double processPlateauCore = smooth01(0.30, 0.52, bakedTableland);
+    const double processPlateauInner = smooth01(0.48, 0.67, bakedTableland);
+    const double processPlateauEdge = std::clamp(processPlateauCore - processPlateauInner, 0.0, 1.0);
+    const double processPlateauFoot = smooth01(0.12, 0.31, bakedTableland)
+        * (1.0 - processPlateauCore);
+    const double processMountainGate = smooth01(0.07, 0.62, bakedMountain)
+        * (1.0 - 0.78 * processPlateauInner) * geomorphLandness;
 
-    // Orogen cascade: ~35 km primary ranges, ~12 km secondary ridges and ~4-5 km spurs.
-    // Positive interfluves and negative valleys are both present, so the belt reads as a mountain
-    // system rather than a raised carpet. Incision strengthens valleys; hard rock preserves ridges.
-    const double orogenA = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xD6E8FEB86659FD93ULL, w, 180.0, 5));
-    const double orogenB = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xA5A3564E27F8862FULL, w, 520.0, 4));
-    const double orogenC = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0x9E3779B97F4A7C15ULL, w, 1400.0, 3));
-    const double spineA = std::pow(smooth01(0.30, 0.88, orogenA), 1.55);
-    const double spineB = std::pow(smooth01(0.32, 0.90, orogenB), 1.70);
-    const double spineC = std::pow(smooth01(0.36, 0.92, orogenC), 1.85);
-    const double interfluve = std::clamp(std::max(spineA, std::max(0.82 * spineB, 0.66 * spineC)), 0.0, 1.0);
-    const double processValley = processMountainGate * std::pow(1.0 - interfluve, 1.85)
-        * (0.30 + 0.70 * std::clamp(geomorph.incision, 0.0, 1.0));
-    elevation += processMountainGate * hardnessTerm
-        * (620.0 * (spineA - 0.24) + 360.0 * (spineB - 0.20) + 180.0 * (spineC - 0.16));
-    elevation += processMountainGate * hardnessTerm
-        * 760.0 * std::pow(std::max(spineB, 0.92 * spineC), 2.45);
-    elevation -= processValley * 620.0;
+    const glm::dvec3 foldNormal = safeNormalize(plates.boundaryNormal, tangentAxis(d));
+    const glm::dvec3 foldTangent = safeNormalize(glm::cross(d, foldNormal), tangentAxis(d));
+    const double across = glm::dot(w, foldNormal);
+    const double along = glm::dot(w, foldTangent);
+    const double foldWarpA = fbmSurface(
+        definition.seed ^ 0x6C8E9CF570932BD5ULL, w, 38.0, 4);
+    const double foldWarpB = fbmSurface(
+        definition.seed ^ 0xDA3E39CB94B95BDBULL, w, 110.0, 3);
+    const double alongBreak = 0.5 + 0.5 * fbmSurface(
+        definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 95.0, 4);
 
-    // Collision tablelands: sharpen a baked plateau mask into a resistant cap-rock shoulder,
-    // while preserving a genuinely broad, quiet top. This is relative residual relief, never a
-    // forced world altitude, so different plateaus still sit at different elevations.
+    // Boundary-parallel folds. Absolute sine is used only as a sub-grid fold profile; the
+    // baked mountain field remains the spatial gate. Domain warp and along-strike modulation
+    // prevent railway-track regularity while preserving a coherent mountain-system direction.
+    const double foldA = 1.0 - std::abs(std::sin(
+        across * 430.0 + along * 21.0 + foldWarpA * 3.6));
+    const double foldB = 1.0 - std::abs(std::sin(
+        across * 920.0 - along * 47.0 + foldWarpA * 5.2 + foldWarpB * 1.8));
+    const double foldC = 1.0 - std::abs(std::sin(
+        across * 1840.0 + along * 103.0 + foldWarpB * 4.4));
+    const double mainCrest = std::pow(smooth01(0.38, 0.90,
+        foldA * (0.70 + 0.38 * alongBreak)), 1.38);
+    const double branchCrest = std::pow(smooth01(0.40, 0.92,
+        foldB * (0.66 + 0.44 * alongBreak)), 1.58);
+    const double spurCrest = std::pow(smooth01(0.44, 0.94,
+        foldC * (0.62 + 0.48 * alongBreak)), 1.78);
+    const double crestEnvelope = std::clamp(std::max(
+        mainCrest, std::max(0.86 * branchCrest, 0.70 * spurCrest)), 0.0, 1.0);
+    const double processValley = processMountainGate
+        * std::pow(1.0 - crestEnvelope, 1.55)
+        * (0.48 + 0.72 * std::clamp(geomorph.incision, 0.0, 1.0));
+    const double summitCrown = processMountainGate
+        * std::pow(std::max(branchCrest, 0.92 * spurCrest), 2.65)
+        * (0.60 + 0.55 * alongBreak);
+
+    elevation += processMountainGate * hardnessTerm
+        * (940.0 * (mainCrest - 0.16)
+            + 590.0 * (branchCrest - 0.11)
+            + 290.0 * (spurCrest - 0.08));
+    elevation += summitCrown * hardnessTerm * 1280.0;
+    elevation -= processValley * (760.0 + 260.0 * (1.0 - substrateHardness));
+
+    // Collision tablelands use a sharper but still C1-continuous residual profile. Their
+    // altitude remains whatever tectonic uplift/erosion produced; only the unresolved caprock
+    // shoulder is reconstructed. Outside the cap, a shallow foot-zone drop makes the escarpment
+    // legible from lowland without reinstating the old fixed-2700m shelf.
     const double plateauTopNoise = fbmSurface(
-        definition.seed ^ 0xBB67AE8584CAA73BULL, w, 240.0, 3);
-    elevation += processPlateauInner * (520.0 + 170.0 * hardnessTerm);
-    elevation += processPlateauEdge * (260.0 + 180.0 * hardnessTerm);
-    elevation += processPlateauInner * plateauTopNoise * 48.0;
+        definition.seed ^ 0xBB67AE8584CAA73BULL, w, 220.0, 3);
+    elevation += processPlateauInner * (820.0 + 260.0 * hardnessTerm);
+    elevation += processPlateauEdge * (360.0 + 240.0 * hardnessTerm);
+    elevation -= processPlateauFoot * (170.0 + 90.0 * (1.0 - substrateHardness));
+    elevation += processPlateauInner * plateauTopNoise * 36.0;
 
-    // Stable interiors retain rolling relief instead of becoming a billiard table after the
-    // coarse erosion bake. Unlike R13, this is explicitly suppressed inside active orogens and
-    // plateau tops, matching Demiurge's HILL_FLOOR / ruggedness-cascade role.
+    // Stable interiors keep restrained rolling relief; floodplains and tableland tops remain quiet.
     const double processHillGate = geomorphLandness
-        * (1.0 - 0.78 * processMountainGate)
-        * (1.0 - 0.72 * processPlateauInner)
-        * (1.0 - 0.70 * std::clamp(geomorph.floodplain, 0.0, 1.0));
+        * (1.0 - 0.86 * processMountainGate)
+        * (1.0 - 0.82 * processPlateauInner)
+        * (1.0 - 0.76 * std::clamp(geomorph.floodplain, 0.0, 1.0));
     const double processHillA = fbmSurface(
-        definition.seed ^ 0x5BE0CD19137E2179ULL, w, 190.0, 5);
+        definition.seed ^ 0x5BE0CD19137E2179ULL, w, 175.0, 5);
     const double processHillB = fbmSurface(
-        definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 720.0, 4);
-    elevation += processHillGate * (150.0 * processHillA + 62.0 * processHillB);
+        definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 640.0, 4);
+    elevation += processHillGate * (175.0 * processHillA + 72.0 * processHillB);
 
-    // Hard rocky coasts preserve short escarpments; soft coasts remain low and depositional.
-    // The coast location still comes from the baked DEM, only its sub-grid cross-section changes.
+    // Hard rocky coasts keep an erosional headland; soft coasts remain depositional slopes.
     const double coastRockNoise = 0.5 + 0.5 * fbmSurface(
-        definition.seed ^ 0x082EFA98EC4E6C89ULL, w, 260.0, 3);
-    const double coastalRock = bakedCoast * smooth01(0.48, 0.76, coastRockNoise)
-        * smooth01(0.42, 0.82, substrateHardness);
-    elevation += coastalRock * 230.0;
+        definition.seed ^ 0x082EFA98EC4E6C89ULL, w, 240.0, 3);
+    const double coastalRock = bakedCoast * smooth01(0.44, 0.74, coastRockNoise)
+        * smooth01(0.38, 0.78, substrateHardness);
+    elevation += coastalRock * 300.0;
 
     // Walking-scale geometry. Frequencies now span tens of kilometres down to a few
     // hundred metres; the new ~4 m innermost clipmap can actually resolve them.
@@ -674,8 +697,8 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.convergence = plates.convergence;
     sample.divergence = plates.divergence;
     sample.oceanRidge = oceanRidge;
-    sample.mountain = bakedMountain;
-    sample.plateau = std::clamp(std::max(bakedTableland, processPlateauCore), 0.0, 1.0);
+    sample.mountain = std::clamp(std::max(bakedMountain, processMountainGate * crestEnvelope), 0.0, 1.0);
+    sample.plateau = std::clamp(std::max(bakedTableland, processPlateauInner), 0.0, 1.0);
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = channelCore;
