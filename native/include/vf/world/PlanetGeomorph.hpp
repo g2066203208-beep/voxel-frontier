@@ -26,6 +26,7 @@ struct GlobalGeomorphSample {
     double channel{};
     double floodplain{};
     double incision{};
+    double hardness{};
 };
 
 namespace geomorph_detail {
@@ -643,6 +644,7 @@ struct Field {
         s.river = std::clamp(sampleBilinear(river, q), 0.0, 1.0);
         s.floodplain = std::clamp(sampleBilinear(floodplain, q), 0.0, 1.0);
         s.incision = std::clamp(sampleBilinear(incision, q), 0.0, 1.0);
+        s.hardness = std::clamp(sampleBilinear(hardness, q), 0.0, 1.0);
 
         const glm::dvec3 ref = std::abs(q.y) < 0.88 ? glm::dvec3{0.0, 1.0, 0.0} : glm::dvec3{1.0, 0.0, 0.0};
         const glm::dvec3 east = glm::normalize(glm::cross(ref, q));

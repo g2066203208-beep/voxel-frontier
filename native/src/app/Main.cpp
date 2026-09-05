@@ -328,9 +328,9 @@ struct LocalReliefStats {
     const glm::dvec3 north = safeNormalize(glm::cross(target, east), {0.0, 0.0, 1.0});
     // R12 apparent-prominence evidence: visual quality is governed by angular prominence.
     // Search multiple baselines, then explicitly reward vertical drop per metre of stand-off.
-    const std::array<double, 7> mountainRadii{5000.0, 7000.0, 9000.0, 12000.0, 15000.0, 19000.0, 24000.0};
-    const std::array<double, 7> highlandRadii{2200.0, 3200.0, 4500.0, 6000.0, 8000.0, 10500.0, 14000.0};
-    const std::array<double, 7> coastRadii{350.0, 500.0, 700.0, 900.0, 1200.0, 1600.0, 2000.0};
+    const std::array<double, 7> mountainRadii{3500.0, 5000.0, 7000.0, 9000.0, 12000.0, 16000.0, 22000.0};
+    const std::array<double, 7> highlandRadii{3000.0, 4500.0, 6500.0, 9000.0, 12000.0, 17000.0, 24000.0};
+    const std::array<double, 7> coastRadii{700.0, 1000.0, 1400.0, 1800.0, 2400.0, 3200.0, 4200.0};
     const std::array<double, 7> riverRadii{450.0, 700.0, 1000.0, 1400.0, 2000.0, 2800.0, 3600.0};
     const auto& radii = mode == "mountain" ? mountainRadii
         : (mode == "highland" ? highlandRadii : (mode == "coast" ? coastRadii : riverRadii));
@@ -350,8 +350,8 @@ struct LocalReliefStats {
             double score = 0.0;
             if (mode == "coast") {
                 if (!terrain.submerged(planet)) continue;
-                score = std::abs(terrain.elevationMeters + 8.0) * 0.05
-                    + std::abs(standOffMeters - 700.0) * 0.080;
+                score = std::abs(terrain.elevationMeters + 12.0) * 0.04
+                    + std::abs(standOffMeters - 1800.0) * 0.050;
             } else if (mode == "river") {
                 if (terrain.submerged(planet) || terrain.river > 0.12 || terrain.elevationMeters < 100.0) continue;
                 score = std::abs(terrain.elevationMeters - targetElevation) * 0.11
@@ -360,20 +360,22 @@ struct LocalReliefStats {
             } else if (mode == "mountain") {
                 if (terrain.submerged(planet)) continue;
                 const double drop = targetElevation - terrain.elevationMeters;
-                if (drop < 700.0) continue;
+                if (drop < 900.0) continue;
                 const double apparent = std::atan2(drop, std::max(1.0, standOffMeters));
-                score = -apparent * 12000.0
-                    + terrain.mountain * 520.0
-                    + std::abs(standOffMeters - 9000.0) * 0.020;
+                if (apparent < glm::radians(7.0)) continue;
+                score = -apparent * 18000.0
+                    + terrain.mountain * 420.0
+                    + std::abs(standOffMeters - 7000.0) * 0.018;
             } else {
-                if (terrain.submerged(planet) || terrain.plateau > 0.20) continue;
+                if (terrain.submerged(planet) || terrain.plateau > 0.18) continue;
                 const double drop = targetElevation - terrain.elevationMeters;
-                if (drop < 380.0) continue;
+                if (drop < 500.0) continue;
                 const double apparent = std::atan2(drop, std::max(1.0, standOffMeters));
-                score = -apparent * 13000.0
-                    + terrain.mountain * 1400.0
-                    + terrain.plateau * 2200.0
-                    + std::abs(standOffMeters - 4500.0) * 0.018;
+                if (apparent < glm::radians(4.0)) continue;
+                score = -apparent * 17000.0
+                    + terrain.mountain * 1500.0
+                    + terrain.plateau * 2600.0
+                    + std::abs(standOffMeters - 8000.0) * 0.016;
             }
             if (score < bestScore) {
                 bestScore = score;
