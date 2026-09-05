@@ -1,4 +1,5 @@
 #include "vf/world/PlanetSurface.hpp"
+#include "vf/world/PlanetGeomorph.hpp"
 
 #include <algorithm>
 #include <array>
@@ -529,6 +530,15 @@ PlanetTerrainSample samplePlanetTerrain(
         * (1.0 - std::abs(fbmSurface(
             definition.seed ^ 0x6C44198C4A475817ULL, w, 62.0, 4)));
 
+    // R4 macro authority: a globally baked DEM is hydrologically conditioned with
+    // Priority-Flood, downhill discharge accumulation, hydraulic incision and conservative
+    // thermal relaxation. The old analytic sin()-river remains diagnostic only; it no longer
+    // controls the actual terrain elevation.
+    const GlobalGeomorphSample geomorph = sampleGlobalGeomorph(
+        definition.seed, definition.radius, definition.maxElevation, d);
+    elevation = geomorph.elevationMeters;
+    const double geomorphLandness = smooth01(-80.0, 220.0, geomorph.elevationMeters);
+
     // Walking-scale geometry. Frequencies now span tens of kilometres down to a few
     // hundred metres; the new ~4 m innermost clipmap can actually resolve them.
     const double local = fbmSurface(
@@ -539,8 +549,9 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xBA7C9045F12C7F99ULL, w, 21000.0, 3);
     const double ultra = fbmSurface(
         definition.seed ^ 0x24A19947B3916CF7ULL, w, 98000.0, 2);
-    const double detailDamp = landness
-        * (1.0 - 0.72 * wetland) * (1.0 - 0.52 * plateau);
+    const double detailDamp = geomorphLandness
+        * (1.0 - 0.72 * std::max(wetland, geomorph.floodplain))
+        * (1.0 - 0.52 * plateau);
     elevation += maxLand * detailDamp
         * (0.0100 * local + 0.0032 * micro + 0.00115 * fine + 0.00036 * ultra);
 
@@ -548,21 +559,21 @@ PlanetTerrainSample samplePlanetTerrain(
 
     PlanetTerrainSample sample{};
     sample.elevationMeters = elevation;
-    sample.continentalness = continentalness;
+    sample.continentalness = geomorph.continentalness;
     sample.plateBoundary = plates.boundary;
     sample.convergence = plates.convergence;
     sample.divergence = plates.divergence;
     sample.oceanRidge = oceanRidge;
-    sample.mountain = mountain;
+    sample.mountain = std::max(mountain, geomorph.mountain);
     sample.plateau = plateau;
     sample.trench = trench;
     sample.volcano = volcano;
-    sample.river = river;
+    sample.river = geomorph.river;
     sample.hills = hills;
-    sample.canyon = canyon;
+    sample.canyon = std::max(canyon, geomorph.incision);
     sample.dunes = dunes;
     sample.coastalCliff = coastalCliff;
-    sample.wetland = wetland;
+    sample.wetland = std::max(wetland, geomorph.floodplain);
     sample.glacier = glacier;
     sample.aridity = aridity;
     sample.moisture = moisture;

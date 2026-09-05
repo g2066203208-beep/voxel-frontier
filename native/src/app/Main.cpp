@@ -14,12 +14,14 @@
 #include <chrono>
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <exception>
 #include <future>
 #include <iomanip>
 #include <iostream>
 #include <limits>
 #include <sstream>
+#include <string_view>
 #include <utility>
 
 #include <glm/common.hpp>
@@ -73,6 +75,8 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     glm::dvec3 best = preferred;
     double bestScore = -std::numeric_limits<double>::infinity();
     bool found = false;
+    const char* captureEnv = std::getenv("VF_CAPTURE_LANDFORM");
+    const std::string_view captureMode = captureEnv != nullptr ? std::string_view{captureEnv} : std::string_view{};
 
     for (std::uint32_t i = 0; i < sampleCount; ++i) {
         const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5)
@@ -82,6 +86,24 @@ constexpr double kPi = 3.1415926535897932384626433832795;
         const glm::dvec3 d{std::cos(a) * radial, y, std::sin(a) * radial};
         const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, d);
         const double aboveSea = terrain.elevationMeters - planet.seaLevelElevationMeters;
+        if (!captureMode.empty()) {
+            if (terrain.submerged(planet) || aboveSea < 15.0) continue;
+            double captureScore = -std::numeric_limits<double>::infinity();
+            if (captureMode == "mountain")
+                captureScore = terrain.mountain * 5.0 + aboveSea / 2200.0 + terrain.canyon * 0.8;
+            else if (captureMode == "river")
+                captureScore = terrain.river * 6.0 + terrain.canyon * 1.8 - std::max(0.0, aboveSea - 1800.0) / 1800.0;
+            else if (captureMode == "coast")
+                captureScore = terrain.coastalCliff * 5.0 - std::abs(aboveSea - 80.0) / 600.0 + terrain.mountain * 0.4;
+            else if (captureMode == "highland")
+                captureScore = terrain.plateau * 4.0 + terrain.mountain * 1.6 + aboveSea / 2600.0;
+            if (captureScore > bestScore) {
+                bestScore = captureScore;
+                best = d;
+                found = true;
+            }
+            continue;
+        }
         if (aboveSea < 80.0 || terrain.submerged(planet)) continue;
         if (terrain.mountain > 0.64 || terrain.volcano > 0.68 || terrain.trench > 0.05) continue;
 
