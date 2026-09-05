@@ -586,7 +586,7 @@ PlanetTerrainSample samplePlanetTerrain(
     const double plateauRim = std::clamp(plateauTerrace - plateauBody * 0.78, 0.0, 1.0);
     const double plateauTopNoise = fbmSurface(
         definition.seed ^ 0x76F988DA831153B5ULL, w, 210.0, 2);
-    const double plateauShelf = 2320.0 + 90.0 * plateauTopNoise;
+    const double plateauShelf = 2580.0 + 75.0 * plateauTopNoise;
     const double plateauBlend = 0.94 * plateauTerrace;
     elevation = elevation * (1.0 - plateauBlend) + plateauShelf * plateauBlend;
     elevation += maxLand * (0.030 * plateauRim + 0.006 * plateauBody);
@@ -629,9 +629,11 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xBA7C9045F12C7F99ULL, w, 21000.0, 3);
     const double ultra = fbmSurface(
         definition.seed ^ 0x24A19947B3916CF7ULL, w, 98000.0, 2);
+    // R9 plateau detail suppression: R8 correctly built a post-bake tableland but this stage
+    // still damped detail with the obsolete pre-bake `plateau` mask, re-wrinkling the flat top.
     const double detailDamp = geomorphLandness
         * (1.0 - 0.72 * std::max(wetland, geomorph.floodplain))
-        * (1.0 - 0.52 * plateau);
+        * (1.0 - 0.88 * std::clamp(std::max(plateau, plateauTerrace), 0.0, 1.0));
     elevation += maxLand * detailDamp
         * (0.0100 * local + 0.0038 * micro + 0.0062 * fine + 0.0018 * ultra);
 
