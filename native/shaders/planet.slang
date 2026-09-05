@@ -1,205 +1,60 @@
-struct VertexInput
+// V15 keeps the complete V14 shader library (physical atmosphere, vertex ABI, shadow pass and HUD)
+// as its base and overrides only the three art-facing fragment entry points.  This prevents the
+// rendering pass from ever replacing the newer Earth-scale renderer with an older small-planet ABI.
+#define opaqueFragmentMain v14OpaqueFragmentMain
+#define transparentFragmentMain v14TransparentFragmentMain
+#define skyFragmentMain v14SkyFragmentMain
+#include "planet_v14_base.slang"
+#undef opaqueFragmentMain
+#undef transparentFragmentMain
+#undef skyFragmentMain
+
+float3 agxInsetV15(float3 v)
 {
-    float3 position : POSITION;
-    float3 normal : NORMAL;
-    float3 color : COLOR0;
-    float4 material : TEXCOORD0;
-};
-
-struct VertexOutput
-{
-    float4 position : SV_Position;
-    float3 normal : TEXCOORD0;
-    float3 color : TEXCOORD1;
-    float4 material : TEXCOORD2;
-    float3 relativePosition : TEXCOORD3;
-    float4 shadowPosition : TEXCOORD4;
-};
-
-struct ShadowVertexOutput
-{
-    float4 position : SV_Position;
-    float transmission : TEXCOORD0;
-    float emissive : TEXCOORD1;
-};
-
-struct FullscreenOutput
-{
-    float4 position : SV_Position;
-    float2 uv : TEXCOORD0;
-};
-
-struct PushConstants
-{
-    float4x4 matrix;
-    float4 data0;
-    float4 data1;
-    float4 data2;
-    float4 data3;
-};
-
-struct SceneUniforms
-{
-    float4x4 lightViewProjection;
-    float4 skyAmbientExposure;
-    float4 groundAmbientShadowTexel;
-};
-
-[[vk::push_constant]] ConstantBuffer<PushConstants> gPush;
-[[vk::binding(0, 0)]] ConstantBuffer<SceneUniforms> gScene;
-[[vk::binding(1, 0)]] Texture2D<float> gShadowMap;
-[[vk::binding(2, 0)]] SamplerState gShadowSampler;
-
-static const float PI = 3.14159265358979323846;
-
-float3 rotateByQuaternion(float3 v, float4 q)
-{
-    float3 t = 2.0 * cross(q.xyz, v);
-    return v + q.w * t + cross(q.xyz, t);
+    return float3(
+        0.842479062253094 * v.x + 0.0784335999999992 * v.y + 0.0792237451477643 * v.z,
+        0.0423282422610123 * v.x + 0.878468636469772 * v.y + 0.0791661274605434 * v.z,
+        0.0423756549057051 * v.x + 0.0784336 * v.y + 0.879142973793104 * v.z);
 }
 
-float distributionGGX(float noH, float roughness)
+float3 agxOutsetV15(float3 v)
 {
-    float a = max(roughness * roughness, 0.0025);
-    float a2 = a * a;
-    float d = noH * noH * (a2 - 1.0) + 1.0;
-    return a2 / max(PI * d * d, 1.0e-6);
+    return float3(
+        1.19687900512017 * v.x - 0.0980208811401368 * v.y - 0.0990297440797205 * v.z,
+       -0.0528968517574562 * v.x + 1.15190312990417 * v.y - 0.0989611768448433 * v.z,
+       -0.0529716355144438 * v.x - 0.0980434501171241 * v.y + 1.15107367264116 * v.z);
 }
 
-float geometrySchlickGGX(float noX, float roughness)
+float3 agxContrastV15(float3 x)
 {
-    float r = roughness + 1.0;
-    float k = r * r * 0.125;
-    return noX / max(noX * (1.0 - k) + k, 1.0e-5);
+    float3 x2 = x * x;
+    float3 x4 = x2 * x2;
+    return 15.5 * x4 * x2
+        - 40.14 * x4 * x
+        + 31.96 * x4
+        - 6.868 * x2 * x
+        + 0.4298 * x2
+        + 0.1191 * x
+        - 0.00232;
 }
 
-float3 fresnelSchlick(float cosTheta, float3 f0)
+float3 toneMapAgXV15(float3 color)
 {
-    float grazing = pow(1.0 - saturate(cosTheta), 5.0);
-    return f0 + (1.0 - f0) * grazing;
+    const float minEv = -12.47393;
+    const float maxEv = 4.026069;
+    float3 v = agxInsetV15(max(color, 0.0));
+    v = clamp(log2(max(v, 1.0e-10)), minEv, maxEv);
+    v = (v - minEv) / (maxEv - minEv);
+    v = agxContrastV15(v);
+    float luma = luminance709(v);
+    v = float3(luma, luma, luma) + 1.06 * (v - float3(luma, luma, luma));
+    v = agxOutsetV15(v);
+    // Filament/Blender-style display-linear output; the Vulkan sRGB attachment performs the final
+    // electro-optical encoding.
+    return saturate(pow(max(v, 0.0), 2.2));
 }
 
-float3 acesFitted(float3 x)
-{
-    float3 a = x * (2.51 * x + 0.03);
-    float3 b = x * (2.43 * x + 0.59) + 0.14;
-    return saturate(a / max(b, 1.0e-5));
-}
-
-float luminance709(float3 color)
-{
-    return dot(color, float3(0.2126, 0.7152, 0.0722));
-}
-
-// Procedural art direction only: no LUT, texture, HDRI or authored palette asset.
-// The structure follows the lesson from SNOWFLOW's public aerial-perspective implementation:
-// distance reduces contrast, hue converges toward the sky, and the sun-facing horizon warms.
-float3 stylizedSkyPalette(float3 viewDir, float3 sunDir)
-{
-    viewDir = normalize(viewDir);
-    sunDir = normalize(sunDir);
-    float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.65);
-    float zenith = saturate(viewDir.y * 0.88 + 0.12);
-    float sunFacing = pow(saturate(dot(viewDir, sunDir)), 4.0);
-    float lowSun = 1.0 - smoothstep(0.22, 0.68, sunDir.y);
-    float daylight = smoothstep(-0.12, 0.16, sunDir.y);
-
-    float3 nightZenith = float3(0.018, 0.027, 0.060);
-    float3 nightHorizon = float3(0.075, 0.070, 0.115);
-    float3 dayZenith = float3(0.18, 0.43, 0.72);
-    float3 dayHorizon = float3(0.62, 0.69, 0.72);
-    float3 zenithColor = lerp(nightZenith, dayZenith, daylight);
-    float3 horizonColor = lerp(nightHorizon, dayHorizon, daylight);
-    float3 color = lerp(horizonColor, zenithColor, zenith);
-
-    float3 sunset = float3(1.00, 0.43, 0.20);
-    float warm = horizon * sunFacing * lowSun * smoothstep(-0.18, 0.12, sunDir.y);
-    return lerp(color, sunset, saturate(warm * 0.92));
-}
-
-float3 stylizedWarmCoolGrade(float3 color)
-{
-    color = max(color, 0.0);
-    float y = luminance709(color);
-    float3 saturated = lerp(float3(y, y, y), color, 1.14);
-    float highlight = smoothstep(0.20, 0.82, y);
-    float3 coolShadow = float3(0.91, 0.98, 1.10);
-    float3 warmLight = float3(1.07, 1.015, 0.93);
-    return max(saturated * lerp(coolShadow, warmLight, highlight), 0.0);
-}
-
-float3 applyStylizedAerial(float3 color, VertexOutput input, float strength)
-{
-    float distanceMeters = length(input.relativePosition);
-    if (distanceMeters <= 350.0 || strength <= 0.0) return color;
-
-    float3 viewDir = input.relativePosition / max(distanceMeters, 1.0e-4);
-    float3 sunDir = normalize(gPush.data1.xyz);
-    float cameraAltitude = max(gPush.data0.y, 0.0);
-
-    // Near-surface haze is strong; it naturally disappears as the camera leaves the atmosphere.
-    // Clamp the path because the physical atmosphere has finite thickness: a star millions of
-    // kilometres away should not accumulate millions of kilometres of ground fog.
-    float atmospherePresence = exp(-cameraAltitude / 90000.0);
-    float effectiveDistance = min(max(distanceMeters - 350.0, 0.0), 180000.0);
-    float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.35);
-    float density = 2.25e-5 * (0.30 + 0.70 * horizon);
-    float extinction = 1.0 - exp(-effectiveDistance * density);
-    extinction = saturate(extinction * atmospherePresence * strength);
-
-    float3 haze = stylizedSkyPalette(viewDir, sunDir);
-    return lerp(color, haze, extinction);
-}
-
-float hash21(float2 p)
-{
-    float3 p3 = frac(float3(p.xyx) * 0.1031);
-    p3 += dot(p3, p3.yzx + 33.33);
-    return frac((p3.x + p3.y) * p3.z);
-}
-
-float hash31(float3 p)
-{
-    p = frac(p * 0.1031);
-    p += dot(p, p.yzx + 33.33);
-    return frac((p.x + p.y) * p.z);
-}
-
-[shader("vertex")]
-VertexOutput vertexMain(VertexInput input)
-{
-    VertexOutput output;
-    float3 worldPosition = rotateByQuaternion(input.position, gPush.data3);
-    float3 worldNormal = normalize(rotateByQuaternion(input.normal, gPush.data3));
-    float3 relativePosition = worldPosition - gPush.data0.xyz;
-    output.position = mul(gPush.matrix, float4(relativePosition, 1.0));
-    output.relativePosition = relativePosition;
-    output.normal = worldNormal;
-    output.color = input.color;
-    output.material = input.material;
-    output.shadowPosition = mul(gScene.lightViewProjection, float4(relativePosition, 1.0));
-    return output;
-}
-
-[shader("vertex")]
-ShadowVertexOutput shadowVertexMain(VertexInput input)
-{
-    ShadowVertexOutput output;
-    float3 worldPosition = rotateByQuaternion(input.position, gPush.data3);
-    float3 relativePosition = worldPosition - gPush.data0.xyz;
-    output.position = mul(gPush.matrix, float4(relativePosition, 1.0));
-    output.transmission = input.material.z;
-    output.emissive = input.material.w;
-    return output;
-}
-
-[shader("fragment")]
-void shadowFragmentMain(ShadowVertexOutput input)
-{
-    if (input.transmission > 0.02 || input.emissive > 0.5) discard;
-}
-
-float shadowVisibility(float4 lightClip, float noL)
+float shadowVisibilityCircularV15(float4 lightClip, float noL)
 {
     if (lightClip.w <= 0.0) return 1.0;
     float3 ndc = lightClip.xyz / lightClip.w;
@@ -207,79 +62,122 @@ float shadowVisibility(float4 lightClip, float noL)
     if (any(uv < 0.0) || any(uv > 1.0) || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
 
     float texel = max(gScene.groundAmbientShadowTexel.w, 1.0 / 4096.0);
-    float bias = max(0.00025, 0.0012 * (1.0 - noL));
+    float bias = max(0.00018, 0.00088 * (1.0 - noL));
+    const float2 taps[9] = {
+        float2(0.0, 0.0),
+        float2(0.0, -0.82), float2(0.58, -0.58), float2(0.82, 0.0), float2(0.58, 0.58),
+        float2(0.0, 0.82), float2(-0.58, 0.58), float2(-0.82, 0.0), float2(-0.58, -0.58)
+    };
+    const float weights[9] = {4.0, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5};
     float visible = 0.0;
     [unroll]
-    for (int y = -1; y <= 1; ++y)
+    for (int i = 0; i < 9; ++i)
     {
-        [unroll]
-        for (int x = -1; x <= 1; ++x)
-        {
-            float stored = gShadowMap.SampleLevel(gShadowSampler, uv + float2(x, y) * texel, 0.0);
-            visible += ndc.z - bias <= stored ? 1.0 : 0.0;
-        }
+        float stored = gShadowMap.SampleLevel(gShadowSampler, uv + taps[i] * texel, 0.0);
+        visible += (ndc.z - bias <= stored ? 1.0 : 0.0) * weights[i];
     }
-    return visible / 9.0;
+    return visible * (1.0 / 16.0);
 }
 
-float3 evaluatePbr(VertexOutput input, bool transparent)
+float3 multiBounceAOV15(float3 albedo, float ao)
+{
+    float3 a = 2.0404 * albedo - 0.3324;
+    float3 b = -4.7951 * albedo + 0.6417;
+    float3 c = 2.7552 * albedo + 0.6903;
+    return max(float3(ao, ao, ao), ((ao * a + b) * ao + c) * ao);
+}
+
+float3 evaluateOpaqueV15(VertexOutput input)
 {
     float3 n = normalize(input.normal);
     float3 l = normalize(gPush.data1.xyz);
     float3 v = normalize(-input.relativePosition);
     float3 h = normalize(l + v);
-
     float metallic = saturate(input.material.x);
     float roughness = clamp(input.material.y, 0.045, 1.0);
-    float transmission = saturate(input.material.z);
-    float emissive = max(input.material.w, 0.0);
     float3 baseColor = max(input.color, 0.0);
+    bool water = input.material.x < -0.5;
+    bool foliage = input.material.w < -0.5 && input.material.w > -1.5;
+    bool bark = input.material.w <= -1.5 && input.material.w > -2.5;
+    bool rock = input.material.w <= -2.5 && input.material.w > -3.5;
 
-    float noL = saturate(dot(n, l));
+    float rawNoL = dot(n, l);
+    float noL = saturate(rawNoL);
     float noV = max(saturate(dot(n, v)), 1.0e-4);
     float noH = saturate(dot(n, h));
     float voH = saturate(dot(v, h));
+    float skyWeight = saturate(n.y * 0.5 + 0.5);
+    float groundWeight = saturate(-n.y * 0.5 + 0.5);
+    float3 skyIrradiance = max(gScene.skyAmbientExposure.rgb, 0.0) * (0.36 + 0.64 * skyWeight);
+    float3 groundIrradiance = max(gScene.groundAmbientShadowTexel.rgb, 0.0) * (0.28 + 0.72 * groundWeight);
+    float3 stellar = max(gPush.data2.rgb, 0.0) * max(gPush.data2.a, 0.0);
+
+    if (water)
+    {
+        float3 reflectedDir = normalize(reflect(-v, n));
+        float3 environment = stylizedSkyPalette(reflectedDir, l);
+        float waterFresnel = 0.0204 + (1.0 - 0.0204) * pow(1.0 - noV, 5.0);
+        float broadSun = pow(saturate(dot(reflectedDir, l)), 22.0);
+        float tightSun = pow(saturate(dot(reflectedDir, l)), 110.0);
+        float horizon = 1.0 - saturate(abs(n.y));
+        float3 shallow = float3(0.025, 0.34, 0.42);
+        float3 deep = float3(0.010, 0.075, 0.20);
+        float3 body = lerp(deep, shallow, 0.24 + 0.42 * skyWeight);
+        float3 color = lerp(body, environment, saturate(waterFresnel * 1.10));
+        color += stellar * (broadSun * 0.055 + tightSun * 0.19);
+        color += float3(0.020, 0.045, 0.050) * horizon;
+        return color;
+    }
 
     float3 f0 = lerp(float3(0.04, 0.04, 0.04), baseColor, metallic);
+    if (foliage) f0 = float3(0.026, 0.030, 0.021);
+    if (bark) f0 = float3(0.020, 0.018, 0.015);
+    if (rock) f0 = float3(0.040, 0.038, 0.035);
     float3 f = fresnelSchlick(voH, f0);
     float d = distributionGGX(noH, roughness);
-    float g = geometrySchlickGGX(noV, roughness) * geometrySchlickGGX(noL, roughness);
+    float g = geometrySchlickGGX(noV, roughness) * geometrySchlickGGX(max(noL, 1.0e-4), roughness);
     float3 specular = d * g * f / max(4.0 * noV * max(noL, 1.0e-4), 1.0e-4);
-    float3 kd = (1.0 - f) * (1.0 - metallic) * (1.0 - transmission);
-    float3 diffuse = kd * baseColor / PI;
+    float3 diffuse = (1.0 - f) * (1.0 - metallic) * baseColor / PI;
+    float shadow = shadowVisibilityCircularV15(input.shadowPosition, noL);
 
-    float shadow = shadowVisibility(input.shadowPosition, noL);
-    float3 stellar = max(gPush.data2.rgb, 0.0) * max(gPush.data2.a, 0.0);
-    float3 direct = (diffuse + specular) * noL * stellar * shadow;
+    // Foliage uses the transferred canopy normal as one coherent lighting volume.  Wrap diffuse
+    // softens only the N.L terminator; shadow remains a real, independent visibility term.
+    float lightingNoL = foliage ? saturate((rawNoL + 0.12) / 1.12) : noL;
+    float3 direct = (diffuse + specular) * lightingNoL * stellar * shadow;
 
-    float skyWeight = saturate(n.y * 0.5 + 0.5);
-    float3 skyIrradiance = max(gScene.skyAmbientExposure.rgb, 0.0) * (0.28 + 0.72 * skyWeight);
-    float3 groundIrradiance = max(gScene.groundAmbientShadowTexel.rgb, 0.0)
-        * saturate(-n.y * 0.5 + 0.5);
-    float3 ambientDiffuse = baseColor * (skyIrradiance + groundIrradiance) * (1.0 - metallic) * (1.0 - transmission);
+    float ao = 0.88;
+    if (foliage) ao = 0.83 + 0.13 * skyWeight;
+    else if (bark) ao = 0.87;
+    else if (rock) ao = 0.80 + 0.18 * skyWeight;
+    else ao = 0.84 + 0.14 * skyWeight;
+    float3 visibility = multiBounceAOV15(saturate(baseColor), ao);
+    float3 ambient = baseColor
+        * (skyIrradiance * (foliage ? 1.20 : 1.0)
+            + groundIrradiance * (foliage ? 1.45 : 1.0))
+        * (1.0 - metallic)
+        * visibility;
 
     float3 r = reflect(-v, n);
     float reflectionSky = saturate(r.y * 0.5 + 0.5);
     float3 reflectionColor = lerp(
         max(gScene.groundAmbientShadowTexel.rgb, float3(0.004, 0.004, 0.004)),
-        max(gScene.skyAmbientExposure.rgb, float3(0.008, 0.012, 0.02)),
+        max(gScene.skyAmbientExposure.rgb, float3(0.008, 0.012, 0.020)),
         reflectionSky);
-    float3 ambientSpecular = reflectionColor * f * (1.0 - 0.72 * roughness);
+    float envGloss = (1.0 - roughness) * (1.0 - roughness);
+    float3 ambientSpecular = reflectionColor * fresnelSchlick(noV, f0) * envGloss * (0.18 + 0.28 * skyWeight);
 
-    if (transparent)
+    if (foliage)
     {
-        float cosV = max(abs(dot(n, v)), 0.12);
-        float path = 1.0 / cosV;
-        float3 absorption = max(0.04, 1.0 - baseColor) * 0.72;
-        float3 transmittance = exp(-absorption * path);
-        float fresnelAmount = saturate(max(f.x, max(f.y, f.z)));
-        float3 glassLighting = ambientSpecular * 2.2 + direct * 0.18;
-        glassLighting += baseColor * 0.018;
-        glassLighting += transmittance * (1.0 - fresnelAmount) * 0.08;
-        return glassLighting;
+        // Godot/SpeedTree-style broad leaf transmission: light blocked by geometry still remains a
+        // shadow; a separate back-light term models light passing through thin foliage.
+        float backLit = saturate(dot(-n, l));
+        float edgeLit = pow(1.0 - noV, 2.0);
+        float transmissionVisibility = lerp(shadow, 1.0, 0.28);
+        direct += baseColor * float3(0.58, 0.80, 0.16)
+            * backLit * (0.060 + 0.105 * edgeLit) * stellar * transmissionVisibility;
     }
 
-    return direct + ambientDiffuse + ambientSpecular + baseColor * emissive;
+    return direct + ambient + ambientSpecular + baseColor * max(input.material.w, 0.0);
 }
 
 [shader("fragment")]
@@ -287,10 +185,10 @@ float4 opaqueFragmentMain(VertexOutput input) : SV_Target
 {
     if (input.material.z > 0.02) discard;
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
-    float3 linearColor = evaluatePbr(input, false) * exposure;
+    float3 linearColor = evaluateOpaqueV15(input) * exposure;
     linearColor = applyStylizedAerial(linearColor, input, 1.0);
     linearColor = stylizedWarmCoolGrade(linearColor);
-    return float4(acesFitted(linearColor), 1.0);
+    return float4(toneMapAgXV15(linearColor), 1.0);
 }
 
 [shader("fragment")]
@@ -298,91 +196,17 @@ float4 transparentFragmentMain(VertexOutput input) : SV_Target
 {
     float transmission = saturate(input.material.z);
     if (transmission <= 0.02) discard;
-
     float3 n = normalize(input.normal);
     float3 v = normalize(-input.relativePosition);
     float ior = 1.50;
-    float f0Scalar = ((ior - 1.0) / (ior + 1.0));
-    f0Scalar *= f0Scalar;
-    float fresnel = f0Scalar + (1.0 - f0Scalar) * pow(1.0 - saturate(abs(dot(n, v))), 5.0);
+    float f0 = (ior - 1.0) / (ior + 1.0);
+    f0 *= f0;
+    float fresnel = f0 + (1.0 - f0) * pow(1.0 - saturate(abs(dot(n, v))), 5.0);
     float opticalOpacity = saturate((1.0 - transmission) * 0.48 + fresnel * 0.72 + 0.025);
-
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
     float3 linearColor = evaluatePbr(input, true) * exposure;
     linearColor = applyStylizedAerial(linearColor, input, 0.46);
-    float3 color = acesFitted(stylizedWarmCoolGrade(linearColor));
-    return float4(color, opticalOpacity);
-}
-
-[shader("vertex")]
-FullscreenOutput fullscreenVertexMain(uint vertexId : SV_VertexID)
-{
-    FullscreenOutput output;
-    float2 p = vertexId == 0 ? float2(-1.0, -1.0)
-        : (vertexId == 1 ? float2(3.0, -1.0) : float2(-1.0, 3.0));
-    output.position = float4(p, 0.0, 1.0);
-    output.uv = p * float2(0.5, -0.5) + 0.5;
-    return output;
-}
-
-bool raySphere(float3 origin, float3 direction, float radius, out float nearT, out float farT)
-{
-    float b = dot(origin, direction);
-    float c = dot(origin, origin) - radius * radius;
-    float h = b * b - c;
-    if (h < 0.0)
-    {
-        nearT = 0.0;
-        farT = 0.0;
-        return false;
-    }
-    h = sqrt(h);
-    nearT = -b - h;
-    farT = -b + h;
-    return farT >= 0.0;
-}
-
-float densityAtRadius(float radius, float groundRadius, float scaleHeight)
-{
-    return exp(-max(0.0, radius - groundRadius) / max(scaleHeight, 1.0));
-}
-
-float sunOpticalDepth(float3 point, float3 sunDir, float atmosphereRadius, float groundRadius, float scaleHeight)
-{
-    float t0, t1;
-    if (!raySphere(point, sunDir, atmosphereRadius, t0, t1)) return 0.0;
-    float ground0, ground1;
-    if (raySphere(point, sunDir, groundRadius, ground0, ground1) && ground1 > 0.001 && ground0 > 0.0)
-        return 1.0e8;
-
-    float stepLength = max(t1, 0.0) / 4.0;
-    float opticalDepth = 0.0;
-    [unroll]
-    for (int i = 0; i < 4; ++i)
-    {
-        float t = (i + 0.5) * stepLength;
-        opticalDepth += densityAtRadius(length(point + sunDir * t), groundRadius, scaleHeight) * stepLength;
-    }
-    return opticalDepth;
-}
-
-float3 reconstructWorldRay(float2 uv)
-{
-    float2 ndc = float2(uv.x * 2.0 - 1.0, 1.0 - uv.y * 2.0);
-    float4 p = mul(gPush.matrix, float4(ndc, 1.0, 1.0));
-    return normalize(p.xyz / max(abs(p.w), 1.0e-7));
-}
-
-float3 proceduralStars(float3 ray)
-{
-    float3 cell = floor(ray * 1450.0);
-    float h = hash31(cell);
-    float star = smoothstep(0.9968, 0.9999, h);
-    float galactic = pow(saturate(1.0 - abs(ray.y * 0.72 + ray.z * 0.24)), 5.0);
-    star += smoothstep(0.9982, 0.99995, hash31(cell * 0.43 + 17.0)) * galactic * 0.75;
-    float temperature = hash31(cell + 91.7);
-    float3 tint = lerp(float3(1.0, 0.70, 0.48), float3(0.65, 0.80, 1.0), temperature);
-    return tint * star * (0.55 + 2.8 * pow(h, 24.0));
+    return float4(toneMapAgXV15(stylizedWarmCoolGrade(linearColor)), opticalOpacity);
 }
 
 [shader("fragment")]
@@ -407,28 +231,24 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
     float sunAngularRadius = 0.004675;
     float sunDisc = smoothstep(cos(sunAngularRadius * 1.15), cos(sunAngularRadius * 0.85), dot(ray, sunDir));
     if (!hitsGround) background += gPush.data3.yzw * sunDisc * 18.0;
-
-    if (!hitsAtmosphere)
-        return float4(acesFitted(background * exposure), 1.0);
+    if (!hitsAtmosphere) return float4(toneMapAgXV15(background * exposure), 1.0);
 
     float startT = max(atmoNear, 0.0);
     float endT = max(atmoFar, startT);
     if (hitsGround) endT = min(endT, groundNear);
-    if (endT <= startT)
-        return float4(acesFitted(background * exposure), 1.0);
+    if (endT <= startT) return float4(toneMapAgXV15(background * exposure), 1.0);
 
     const float3 betaR = float3(5.802e-6, 13.558e-6, 33.100e-6);
     float betaM = 21.0e-6 * mieScale;
     float mu = dot(ray, sunDir);
     float rayleighPhase = 3.0 * (1.0 + mu * mu) / (16.0 * PI);
-    float g = 0.76;
-    float miePhase = (1.0 - g * g)
-        / max(4.0 * PI * pow(1.0 + g * g - 2.0 * g * mu, 1.5), 1.0e-5);
+    float anisotropy = 0.76;
+    float miePhase = (1.0 - anisotropy * anisotropy)
+        / max(4.0 * PI * pow(1.0 + anisotropy * anisotropy - 2.0 * anisotropy * mu, 1.5), 1.0e-5);
 
     float segment = (endT - startT) / 8.0;
     float opticalView = 0.0;
     float3 scattering = 0.0;
-    float3 transmittance = 1.0;
     [unroll]
     for (int i = 0; i < 8; ++i)
     {
@@ -437,7 +257,6 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
         float density = densityAtRadius(length(samplePoint), groundRadius, scaleHeight);
         float sunDepth = sunOpticalDepth(samplePoint, sunDir, atmosphereRadius, groundRadius, scaleHeight);
         if (sunDepth > 1.0e7) continue;
-
         opticalView += density * segment;
         float3 extinction = betaR * (opticalView + sunDepth) + betaM * (opticalView + sunDepth);
         float3 lightTransmittance = exp(-extinction);
@@ -445,40 +264,14 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
         scattering += source * lightTransmittance * segment * gPush.data3.yzw;
     }
 
-    transmittance = exp(-(betaR + betaM) * opticalView);
+    float3 transmittance = exp(-(betaR + betaM) * opticalView);
     float3 color = scattering * 17.0;
     if (!hitsGround) color += background * transmittance;
     else color += float3(0.008, 0.009, 0.007) * transmittance;
 
-    // Preserve the physically coherent scattering result, then art-direct only the dense lower
-    // atmosphere. The weight naturally vanishes in high atmosphere/space, so orbital views keep
-    // their real black-space contrast while ground scenes gain Firewatch-like readable layers.
     float localDensity = densityAtRadius(length(cameraPlanet), groundRadius, scaleHeight);
     float styleWeight = saturate(localDensity * 0.38);
     color = lerp(color, stylizedSkyPalette(ray, sunDir), styleWeight);
-
-    return float4(acesFitted(stylizedWarmCoolGrade(color) * exposure), 1.0);
-}
-
-[shader("fragment")]
-float4 hudFragmentMain(FullscreenOutput input) : SV_Target
-{
-    float2 sizePx = max(gPush.data0.xy, float2(1.0, 1.0));
-    float2 p = input.position.xy - sizePx * 0.5;
-    float2 ap = abs(p);
-
-    float crossHorizontal = step(ap.y, 1.2) * step(4.0, ap.x) * step(ap.x, 11.0);
-    float crossVertical = step(ap.x, 1.2) * step(4.0, ap.y) * step(ap.y, 11.0);
-    float centerDot = 1.0 - step(1.15, length(p));
-    float crosshair = saturate(crossHorizontal + crossVertical + centerDot);
-
-    float speedNorm = saturate(gPush.data0.z);
-    float2 barOrigin = float2(sizePx.x * 0.5 + 34.0, sizePx.y * 0.5 - 50.0);
-    float2 bp = input.position.xy - barOrigin;
-    float outline = step(abs(bp.x), 3.0) * step(abs(bp.y - 40.0), 42.0);
-    float fill = step(abs(bp.x), 1.45) * step(0.0, bp.y) * step(bp.y, 80.0 * speedNorm);
-
-    float alpha = saturate(crosshair * 0.96 + outline * 0.35 + fill * 0.85);
-    float3 color = lerp(float3(0.94, 0.96, 1.0), float3(0.42, 0.78, 1.0), fill);
-    return float4(color, alpha);
+    color = stylizedWarmCoolGrade(color);
+    return float4(toneMapAgXV15(color * exposure), 1.0);
 }
