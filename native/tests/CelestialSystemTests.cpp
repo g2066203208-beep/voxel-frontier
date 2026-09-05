@@ -159,9 +159,52 @@ void testSpinAndBoundOrbit() {
     const auto* evolved = system.body(planetId);
     require(evolved != nullptr, "orbiting body must remain accessible");
     const double radius = glm::length(evolved->position - system.body(starId)->position);
-    require(radius > 900.0 && radius < 1100.0, "cheap symplectic orbit must remain bound over the smoke interval");
+    require(radius > 900.0 && radius < 1100.0, "velocity-Verlet orbit must remain bound over the smoke interval");
     require(std::abs(glm::dot(initialOrientation, evolved->orientation)) < 0.999,
         "planet spin must evolve orientation");
+}
+
+void testKeplerianStateEnergyIdentity() {
+    constexpr double mu = 3.98600435507e14;
+    vf::KeplerianElements elements{};
+    elements.semiMajorAxisMeters = 7000000.0;
+    elements.eccentricity = 0.12;
+    elements.inclinationRadians = 0.41;
+    elements.longitudeAscendingNodeRadians = 0.83;
+    elements.argumentPeriapsisRadians = 1.17;
+    elements.meanAnomalyRadians = 0.64;
+
+    const vf::OrbitalState state = vf::keplerianState(elements, mu);
+    const double radius = glm::length(state.position);
+    const double speedSquared = glm::dot(state.velocity, state.velocity);
+    const double specificEnergy = 0.5 * speedSquared - mu / radius;
+    requireNear(specificEnergy, -mu / (2.0 * elements.semiMajorAxisMeters), 0.05,
+        "Keplerian state must satisfy the vis-viva specific-energy identity");
+}
+
+void testNBodyStepMovesBothMassiveBodies() {
+    vf::CelestialSystem system;
+
+    vf::CelestialBody left{};
+    left.type = vf::CelestialBodyType::Star;
+    left.radiusMeters = 10.0;
+    left.massKg = 1.0e15;
+    left.position = {-500.0, 0.0, 0.0};
+    const auto leftId = system.addBody(left);
+
+    vf::CelestialBody right = left;
+    right.position = {500.0, 0.0, 0.0};
+    const auto rightId = system.addBody(right);
+
+    system.step(1.0);
+
+    const auto* movedLeft = system.body(leftId);
+    const auto* movedRight = system.body(rightId);
+    require(movedLeft != nullptr && movedRight != nullptr, "both N-body sources must remain accessible");
+    require(movedLeft->position.x > -500.0, "left massive body must accelerate toward right body");
+    require(movedRight->position.x < 500.0, "right massive body must accelerate toward left body");
+    requireNear(movedLeft->position.x + movedRight->position.x, 0.0, 1.0e-9,
+        "equal-mass pair must preserve its barycenter during the symmetric step");
 }
 
 void testDipoleMagneticFieldFallsWithDistance() {
@@ -232,6 +275,8 @@ int main() {
     testAtmosphereFadesToVacuum();
     testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace();
     testSpinAndBoundOrbit();
+    testKeplerianStateEnergyIdentity();
+    testNBodyStepMovesBothMassiveBodies();
     testDipoleMagneticFieldFallsWithDistance();
     testRotatingSurfaceTransfersTangentialVelocityToRigidBody();
     std::cout << "vf_celestial_system_tests: PASS\n";
