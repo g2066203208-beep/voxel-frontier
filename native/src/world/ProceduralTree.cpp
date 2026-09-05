@@ -299,8 +299,10 @@ struct TreeRecipe {
         }
     }
 
-    // Six overlapping 20-triangle crown masses. Branch tips are intentionally buried inside the
-    // canopy so the tree reads as a compact stylized broadleaf instead of thin bare whips.
+    // Six overlapping 20-triangle crown masses provide the visible low-poly silhouette. Lighting
+    // does NOT inherit those six disconnected topologies directly: Blender Normal Edit / Data
+    // Transfer style proxy normals make the whole canopy read as one softly lit volume while a
+    // smaller cluster-normal contribution preserves deliberate lobe structure.
     constexpr double phi = 1.6180339887498948482;
     const std::array<glm::dvec3, 12> icoBase{
         glm::dvec3{-1.0, phi, 0.0}, glm::dvec3{1.0, phi, 0.0},
@@ -325,17 +327,44 @@ struct TreeRecipe {
         trunkCenters[8] + glm::dvec3{-0.34, 0.15, recipe.trunkHeight * 0.09},
         trunkCenters[8] + glm::dvec3{0.35, 0.10, recipe.trunkHeight * 0.06},
     };
-
+    std::array<glm::dvec3, 6> crownScales{};
+    glm::dvec3 canopyCenter{0.0};
+    const double baseRadius = recipe.trunkHeight * 0.235 * recipe.crownScale;
     for (unsigned cluster = 0; cluster < crownCenters.size(); ++cluster) {
         crownCenters[cluster].x += randomSigned(seed, 100U + cluster * 3U + 0U) * 0.18;
         crownCenters[cluster].y += randomSigned(seed, 100U + cluster * 3U + 1U) * 0.18;
         crownCenters[cluster].z += randomSigned(seed, 100U + cluster * 3U + 2U) * 0.12;
-        const double baseRadius = recipe.trunkHeight * 0.235 * recipe.crownScale;
-        const glm::dvec3 scale{
+        crownScales[cluster] = {
             baseRadius * (0.92 + random01(seed, 140U + cluster * 3U + 0U) * 0.22),
             baseRadius * (0.82 + random01(seed, 140U + cluster * 3U + 1U) * 0.22),
             baseRadius * (0.70 + random01(seed, 140U + cluster * 3U + 2U) * 0.18),
         };
+        canopyCenter += crownCenters[cluster];
+    }
+    canopyCenter /= static_cast<double>(crownCenters.size());
+
+    glm::dvec3 canopyExtent{0.25};
+    for (unsigned cluster = 0; cluster < crownCenters.size(); ++cluster) {
+        const glm::dvec3 offset = crownCenters[cluster] - canopyCenter;
+        canopyExtent.x = std::max(canopyExtent.x, std::abs(offset.x) + crownScales[cluster].x * 1.10);
+        canopyExtent.y = std::max(canopyExtent.y, std::abs(offset.y) + crownScales[cluster].y * 1.10);
+        canopyExtent.z = std::max(canopyExtent.z, std::abs(offset.z) + crownScales[cluster].z * 1.14);
+    }
+
+    const auto ellipsoidNormal = [](const glm::dvec3& offset, const glm::dvec3& radii) {
+        glm::dvec3 normal{
+            offset.x / std::max(radii.x * radii.x, 1.0e-8),
+            offset.y / std::max(radii.y * radii.y, 1.0e-8),
+            offset.z / std::max(radii.z * radii.z, 1.0e-8),
+        };
+        const double lengthSquared = glm::dot(normal, normal);
+        return lengthSquared > 1.0e-16
+            ? normal / std::sqrt(lengthSquared)
+            : glm::dvec3{0.0, 0.0, 1.0};
+    };
+
+    for (unsigned cluster = 0; cluster < crownCenters.size(); ++cluster) {
+        const glm::dvec3 scale = crownScales[cluster];
         const std::uint32_t base = static_cast<std::uint32_t>(tree.vertices.size());
         for (unsigned i = 0; i < icoBase.size(); ++i) {
             const glm::dvec3 unit = glm::normalize(icoBase[i]);
@@ -346,10 +375,15 @@ struct TreeRecipe {
                 unit.z * scale.z * irregularity,
             };
             if (unit.z < 0.0) p.z -= baseRadius * 0.06;
+
+            const glm::dvec3 canopyNormal = ellipsoidNormal(p - canopyCenter, canopyExtent);
+            const glm::dvec3 clusterNormal = ellipsoidNormal(p - crownCenters[cluster], scale);
+            const glm::dvec3 transferredNormal = glm::normalize(canopyNormal * 0.74 + clusterNormal * 0.26);
             tree.vertices.push_back({
                 p,
                 {kFoliageMaterialMarker, static_cast<float>(random01(seed, 220U + cluster)),
                  static_cast<float>(unit.z * 0.5 + 0.5)},
+                transferredNormal,
             });
         }
         for (const auto& face : icoFaces) {

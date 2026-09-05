@@ -16,9 +16,9 @@ struct PushConstants
 
 [[vk::push_constant]] ConstantBuffer<PushConstants> gPush;
 
-static const float kShadowHalfExtent = 72.0;
+static const float kShadowHalfExtent = 48.0;
 static const float kShadowDepthRange = 180.0;
-static const float kShadowResolution = 512.0;
+static const float kShadowResolution = 1024.0;
 static const float kShadowWorldTexel = (2.0 * kShadowHalfExtent) / kShadowResolution;
 
 float3 rotateByQuaternion(float3 v, float4 q)

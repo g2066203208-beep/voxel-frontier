@@ -1,9 +1,7 @@
 struct PushConstants
 {
     float4x4 viewProj;
-    // xyz = camera position, w = normalized local atmosphere density [0,1].
     float4 cameraPosition;
-    // xyz = direction toward the sun, w = local solar elevation cosine [-1,1].
     float4 sunDirection;
     float4 sunColorIntensity;
     float4 objectRotation;
@@ -17,16 +15,93 @@ struct SkyVertexOutput
     float2 uv : TEXCOORD0;
 };
 
-float3 filmicToneMap(float3 x)
+static const float kExposureScale = 1.4640857; // 2^0.55
+
+float hash21(float2 p)
 {
-    x = max(x, 0.0);
-    return saturate((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14));
+    float3 p3 = frac(float3(p.x, p.y, p.x) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return frac((p3.x + p3.y) * p3.z);
+}
+
+float valueNoise2(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash21(i);
+    float b = hash21(i + float2(1.0, 0.0));
+    float c = hash21(i + float2(0.0, 1.0));
+    float d = hash21(i + float2(1.0, 1.0));
+    return lerp(lerp(a, b, f.x), lerp(c, d, f.x), f.y);
+}
+
+float broadCloudField(float2 uv)
+{
+    // Industrial Sunset 02 is explicitly partly cloudy with medium-contrast natural light. Keep
+    // only two low-frequency layers so the clouds form large masses rather than noisy fragments.
+    float2 p = float2(uv.x * 2.15, uv.y * 4.10);
+    float n0 = valueNoise2(p + float2(1.7, -0.4));
+    float n1 = valueNoise2(p * 1.73 + float2(-2.4, 3.1));
+    float macro = n0 * 0.72 + n1 * 0.28;
+    float ribbon = 0.5 + 0.5 * sin(uv.x * 6.2 + uv.y * 10.5 + macro * 1.85);
+    float body = smoothstep(0.43, 0.64, macro * 0.88 + ribbon * 0.12);
+    float skyBand = smoothstep(0.10, 0.24, uv.y) * (1.0 - smoothstep(0.84, 0.985, uv.y));
+    return body * skyBand;
+}
+
+float3 agxInset(float3 v)
+{
+    return float3(
+        0.842479062253094 * v.x + 0.0784335999999992 * v.y + 0.0792237451477643 * v.z,
+        0.0423282422610123 * v.x + 0.878468636469772 * v.y + 0.0791661274605434 * v.z,
+        0.0423756549057051 * v.x + 0.0784336 * v.y + 0.879142973793104 * v.z);
+}
+
+float3 agxOutset(float3 v)
+{
+    return float3(
+        1.19687900512017 * v.x - 0.0980208811401368 * v.y - 0.0990297440797205 * v.z,
+       -0.0528968517574562 * v.x + 1.15190312990417 * v.y - 0.0989611768448433 * v.z,
+       -0.0529716355144438 * v.x - 0.0980434501171241 * v.y + 1.15107367264116 * v.z);
+}
+
+float3 agxContrastApprox(float3 x)
+{
+    float3 x2 = x * x;
+    float3 x4 = x2 * x2;
+    return 15.5 * x4 * x2
+        - 40.14 * x4 * x
+        + 31.96 * x4
+        - 6.868 * x2 * x
+        + 0.4298 * x2
+        + 0.1191 * x
+        - 0.00232;
+}
+
+float3 agxStylizedLook(float3 v)
+{
+    float luma = dot(v, float3(0.2126, 0.7152, 0.0722));
+    return float3(luma, luma, luma) + 1.06 * (v - float3(luma, luma, luma));
+}
+
+float3 toneMapAgX(float3 color)
+{
+    const float minEv = -12.47393;
+    const float maxEv = 4.026069;
+    float3 v = agxInset(max(color, 0.0));
+    v = clamp(log2(max(v, 1.0e-10)), minEv, maxEv);
+    v = (v - minEv) / (maxEv - minEv);
+    v = agxContrastApprox(v);
+    v = agxStylizedLook(v);
+    v = agxOutset(v);
+    v = pow(max(v, 0.0), 2.2);
+    return saturate(v);
 }
 
 [shader("vertex")]
 SkyVertexOutput skyVertexMain(uint vertexId : SV_VertexID)
 {
-    // Single fullscreen triangle: three generated vertices, no vertex/index buffer fetch.
     float2 p = vertexId == 0 ? float2(-1.0, -1.0)
         : (vertexId == 1 ? float2(3.0, -1.0) : float2(-1.0, 3.0));
     SkyVertexOutput output;
@@ -42,33 +117,58 @@ float4 skyFragmentMain(SkyVertexOutput input) : SV_Target
     float solarElevation = clamp(gPush.sunDirection.w, -1.0, 1.0);
     float daylight = smoothstep(-0.10, 0.18, solarElevation);
     float twilight = 1.0 - smoothstep(0.02, 0.36, abs(solarElevation + 0.035));
-    float night = 1.0 - daylight;
+    float horizonAmount = pow(saturate(1.0 - input.uv.y), 1.36);
+    float horizonVeil = pow(horizonAmount, 2.15);
 
-    // uv.y is screen height. Low screen area acts as the horizon because this is a deliberately
-    // cheap art-direction pass rather than a ray-marched atmosphere.
-    float horizonAmount = pow(saturate(1.0 - input.uv.y), 1.55);
-    float zenithAmount = 1.0 - horizonAmount;
-
-    float3 zenithDay = float3(0.12, 0.34, 0.58);
-    float3 horizonDay = float3(0.48, 0.62, 0.66);
-    float3 zenithNight = float3(0.012, 0.020, 0.052);
-    float3 horizonNight = float3(0.035, 0.050, 0.082);
-    float3 twilightWarm = float3(0.90, 0.38, 0.16);
+    float3 zenithDay = float3(0.075, 0.25, 0.56);
+    float3 midDay = float3(0.19, 0.43, 0.69);
+    float3 horizonDay = float3(0.47, 0.60, 0.66);
+    float3 zenithNight = float3(0.010, 0.017, 0.050);
+    float3 horizonNight = float3(0.030, 0.045, 0.080);
+    float3 twilightWarm = float3(0.94, 0.34, 0.105);
 
     float3 zenith = lerp(zenithNight, zenithDay, daylight);
     float3 horizon = lerp(horizonNight, horizonDay, daylight);
-    horizon = lerp(horizon, twilightWarm, twilight * 0.72);
+    float3 sky = lerp(zenith, midDay, smoothstep(0.05, 0.52, horizonAmount) * daylight * 0.42);
+    sky = lerp(sky, horizon, smoothstep(0.40, 1.0, horizonAmount));
+    sky = lerp(sky, twilightWarm, twilight * horizonVeil * 0.66);
 
-    float3 sky = lerp(zenith, horizon, horizonAmount);
-    // Atmospheric density fades the clear-sky saturation and lifts the horizon without needing
-    // any volume texture or ray marching.
-    float haze = atmosphere * horizonAmount;
-    sky = lerp(sky, float3(0.55, 0.61, 0.61), haze * (0.16 + 0.20 * daylight));
+    float3 hazeColor = lerp(float3(0.37, 0.50, 0.60), float3(0.72, 0.42, 0.24), twilight * 0.72);
+    float haze = atmosphere * horizonVeil;
+    sky = lerp(sky, hazeColor, haze * (0.17 + 0.20 * daylight));
 
-    // Tiny sun-height-dependent glow band. This is not a fake sun disk; it only shapes the
-    // horizon color relationship so the world receives a coherent warm/cool atmosphere.
-    sky += twilightWarm * twilight * horizonAmount * 0.11;
-    sky *= 0.78 + 0.34 * daylight + 0.06 * atmosphere;
+    float4 sunClip = mul(gPush.viewProj, float4(normalize(gPush.sunDirection.xyz), 0.0));
+    float sunInFront = sunClip.w > 1.0e-5 ? 1.0 : 0.0;
+    float2 sunNdc = sunClip.xy / max(abs(sunClip.w), 1.0e-5);
+    float2 sunUv = sunNdc * 0.5 + 0.5;
+    float aspect = max(abs(gPush.viewProj[1][1] / max(abs(gPush.viewProj[0][0]), 1.0e-5)), 1.0);
+    float2 sunDelta = input.uv - sunUv;
+    sunDelta.x *= aspect;
+    float sunDistance = length(sunDelta);
+    float sunAboveHorizon = smoothstep(-0.03, 0.05, solarElevation);
+    float sunVisible = sunInFront * sunAboveHorizon;
 
-    return float4(filmicToneMap(sky), 1.0);
+    float cloudMask = broadCloudField(input.uv) * daylight;
+    float cloudSun = exp(-sunDistance * 5.2) * sunVisible;
+    float cloudHorizonWarmth = twilight * (0.30 + 0.70 * horizonAmount) + cloudSun * 0.46;
+    float3 cloudCool = lerp(float3(0.18, 0.25, 0.37), float3(0.33, 0.41, 0.51), daylight);
+    float3 cloudWarm = float3(0.84, 0.51, 0.28);
+    float3 cloudColor = lerp(cloudCool, cloudWarm, saturate(cloudHorizonWarmth));
+    float cloudOpacity = cloudMask * (0.34 + 0.38 * atmosphere);
+    sky = lerp(sky, cloudColor * (0.78 + 0.22 * daylight), cloudOpacity);
+
+    float cloudRim = cloudMask * cloudSun * (1.0 - cloudMask * 0.42);
+    sky += lerp(float3(0.30, 0.36, 0.43), twilightWarm, twilight * 0.78) * cloudRim * 0.20;
+
+    float sunDisk = 1.0 - smoothstep(0.0045, 0.0105, sunDistance);
+    float innerGlow = exp(-sunDistance * 45.0);
+    float outerGlow = exp(-sunDistance * 13.0);
+    float airGlow = exp(-sunDistance * 6.0);
+    float3 sunTint = lerp(float3(1.0, 0.48, 0.18), float3(1.0, 0.93, 0.72), daylight);
+    sky += sunTint * sunVisible
+        * (sunDisk * 3.2 + innerGlow * 0.52 + outerGlow * 0.11 * atmosphere + airGlow * 0.045 * atmosphere);
+
+    sky += twilightWarm * twilight * horizonVeil * 0.085;
+    sky *= 0.82 + 0.30 * daylight + 0.055 * atmosphere;
+    return float4(toneMapAgX(sky * kExposureScale), 1.0);
 }
