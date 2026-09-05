@@ -1,0 +1,116 @@
+name: Terrain R3 Real Vulkan Evidence
+
+on:
+  push:
+    branches: [feature/terrain-r3-open-source-rebuild]
+  workflow_dispatch:
+
+concurrency:
+  group: terrain-r3-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Configure C++23 engine core
+        run: cmake -S native -B build/core -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
+      - name: Build core tests
+        run: cmake --build build/core --parallel
+      - name: Run correctness tests
+        run: ctest --test-dir build/core --verbose --output-on-failure
+
+  real-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Vulkan headless dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+      - name: Configure and build real Vulkan runtime
+        run: |
+          cmake -S native -B build/visual -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
+          cmake --build build/visual --parallel
+      - name: Verify Lavapipe Vulkan device
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+      - name: Capture spawn, streamed traversal and aerial terrain
+        shell: bash
+        run: |
+          set -euo pipefail
+          export SDL_VIDEODRIVER=x11
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 2
+          APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          timeout 85s "$APP" >runtime.log 2>&1 &
+          RUN_PID=$!
+          sleep 22
+          import -display :99 -window root capture-r3-spawn.png
+          WINDOW="$(xdotool search --name 'Voxel Frontier' 2>/dev/null | head -n 1 || true)"
+          if [ -n "$WINDOW" ]; then
+            xdotool windowfocus "$WINDOW" || true
+            xdotool keydown --window "$WINDOW" shift w || true
+            sleep 20
+            xdotool keyup --window "$WINDOW" w shift || true
+            sleep 4
+          fi
+          import -display :99 -window root capture-r3-streamed.png
+          if [ -n "$WINDOW" ]; then
+            xdotool key --window "$WINDOW" space || true
+            sleep 0.15
+            xdotool key --window "$WINDOW" space || true
+            sleep 0.8
+            xdotool keydown --window "$WINDOW" space || true
+            sleep 5
+            xdotool keyup --window "$WINDOW" space || true
+            xdotool mousemove_relative -- 0 -180 || true
+            sleep 2
+          fi
+          import -display :99 -window root capture-r3-aerial.png
+          for f in capture-r3-spawn.png capture-r3-streamed.png capture-r3-aerial.png; do
+            COLORS="$(convert "$f" -format '%k' info:)"
+            echo "$f unique_colors=$COLORS" | tee -a capture-info.txt
+            test "$COLORS" -gt 64
+          done
+          identify capture-r3-spawn.png capture-r3-streamed.png capture-r3-aerial.png | tee -a capture-info.txt
+          kill "$RUN_PID" 2>/dev/null || true
+          cat runtime.log || true
+      - name: Upload R3 real Vulkan screenshots
+        uses: actions/upload-artifact@v5
+        with:
+          name: terrain-r3-real-vulkan-${{ github.sha }}
+          path: |
+            capture-r3-spawn.png
+            capture-r3-streamed.png
+            capture-r3-aerial.png
+            capture-info.txt
+            runtime.log
+            vulkan-summary.txt
+          if-no-files-found: error
