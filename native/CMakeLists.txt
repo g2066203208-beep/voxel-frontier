@@ -21,6 +21,7 @@ FetchContent_MakeAvailable(glm)
 
 add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
+    src/world/ProceduralEcology.cpp
     src/world/CelestialSystem.cpp
     src/world/CelestialPhysicsFrame.cpp
     src/world/SparseUniverseCatalog.cpp
