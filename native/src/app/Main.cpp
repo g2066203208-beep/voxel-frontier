@@ -7,6 +7,7 @@
 #include "vf/world/CelestialPhysicsFrame.hpp"
 #include "vf/world/CelestialSystem.hpp"
 #include "vf/world/PlanetSurface.hpp"
+#include "vf/world/ProceduralEcology.hpp"
 
 #include <algorithm>
 #include <array>
@@ -38,6 +39,11 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     return value / std::sqrt(lengthSquared);
 }
 
+[[nodiscard]] double smooth01(double value) noexcept {
+    const double t = std::clamp(value, 0.0, 1.0);
+    return t * t * (3.0 - 2.0 * t);
+}
+
 // Degenerate fallback only. Camera heading continuity itself is owned by PlanetCamera and is
 // parallel-transported over the sphere; terrain patch construction is free to pick a stable local
 // tangent because its vertices are converted back into the fixed render frame before upload.
@@ -54,14 +60,16 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     return std::sqrt(vf::CelestialSystem::kGravitationalConstant * parentMassKg / std::max(1.0, radiusMeters));
 }
 
-
-[[nodiscard]] glm::dvec3 findPlayableSpawnDirection(const vf::PlanetDefinition& planet) {
-    // Deterministic Fibonacci-sphere scan. This does not alter the terrain seed: it only chooses a
-    // gentle, inland point on the already-authoritative V7 planet so the first frame demonstrates
-    // terrain rather than dropping the player into the global ocean.
-    constexpr std::uint32_t sampleCount = 1536U;
+[[nodiscard]] glm::dvec3 findPlayableSpawnDirection(
+    const vf::PlanetDefinition& planet,
+    const glm::dvec3& sunDirectionInput) {
+    // Deterministic Fibonacci-sphere scan. The terrain seed remains untouched; this only chooses a
+    // gentle inland point whose initial sun elevation gives a readable warm daylight scene instead
+    // of hiding the terrain and vegetation on the night side of the planet.
+    constexpr std::uint32_t sampleCount = 2048U;
     constexpr double goldenAngle = 2.39996322972865332223;
     const glm::dvec3 preferred = safeNormalize({0.72, 0.52, 0.46});
+    const glm::dvec3 sunDirection = safeNormalize(sunDirectionInput, {1.0, 0.0, 0.0});
     glm::dvec3 best = preferred;
     double bestScore = -std::numeric_limits<double>::infinity();
     bool found = false;
@@ -75,21 +83,25 @@ constexpr double kPi = 3.1415926535897932384626433832795;
         const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, d);
         const double aboveSea = terrain.elevationMeters - planet.seaLevelElevationMeters;
         if (aboveSea < 80.0 || terrain.submerged(planet)) continue;
-        if (terrain.mountain > 0.62 || terrain.volcano > 0.68 || terrain.trench > 0.05) continue;
+        if (terrain.mountain > 0.64 || terrain.volcano > 0.68 || terrain.trench > 0.05) continue;
 
         const glm::dvec3 normal = vf::planetSurfaceNormal(planet, d);
         const double radialAlignment = glm::dot(normal, d);
-        if (radialAlignment < 0.955) continue;
+        if (radialAlignment < 0.952) continue;
 
-        const double altitudePreference = 1.0 - std::clamp(std::abs(aboveSea - 420.0) / 2200.0, 0.0, 1.0);
+        const double sunElevation = glm::dot(d, sunDirection);
+        if (sunElevation < 0.24 || sunElevation > 0.82) continue;
+        const double warmDaylight = 1.0 - std::clamp(std::abs(sunElevation - 0.48) / 0.34, 0.0, 1.0);
+        const double altitudePreference = 1.0 - std::clamp(std::abs(aboveSea - 460.0) / 2200.0, 0.0, 1.0);
         const double oldRegionPreference = 0.5 + 0.5 * glm::dot(d, preferred);
         const double score = radialAlignment * 2.4
-            + altitudePreference * 0.75
-            + oldRegionPreference * 0.20
+            + warmDaylight * 1.15
+            + altitudePreference * 0.70
+            + oldRegionPreference * 0.14
             + terrain.plateau * 0.10
             + terrain.river * 0.08
-            - terrain.mountain * 0.70
-            - terrain.volcano * 0.80;
+            - terrain.mountain * 0.68
+            - terrain.volcano * 0.78;
         if (!found || score > bestScore) {
             bestScore = score;
             best = d;
@@ -204,7 +216,9 @@ int main() {
         cinder.visibleAlbedo = {0.62, 0.30, 0.22};
         const std::uint32_t cinderId = celestial.addBody(cinder);
 
-        const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet);
+        const glm::dvec3 initialSunDirectionPlanet = safeNormalize(
+            sun.position - aster.position, {1.0, 0.0, 0.0});
+        const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet, initialSunDirectionPlanet);
         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
         std::cout << "Spawn land elevation: " << std::fixed << std::setprecision(1)
@@ -219,6 +233,12 @@ int main() {
         const glm::dvec3 patchEast = stableTangent(patchUp);
         const glm::dvec3 patchZ = safeNormalize(glm::cross(patchEast, patchUp), {0.0, 0.0, -1.0});
         const glm::dvec3 patchOriginPlanet = patchUp * vf::planetSurfaceRadius(planet, patchUp);
+        const vf::SurfaceRenderFrame surfaceFrame{
+            patchOriginPlanet,
+            patchEast,
+            patchUp,
+            patchZ,
+        };
 
         const auto toSurfacePoint = [&](const glm::dvec3& planetPoint) {
             const glm::dvec3 delta = planetPoint - patchOriginPlanet;
@@ -247,22 +267,21 @@ int main() {
                 double half;
                 double inner;
                 std::uint32_t resolution;
-                double terrainBaseInset;
-                double terrainEdgeInset;
             };
-            // Concentric clipmap windows keep V7's deterministic spherical surface authority, but
-            // reserve real vertex density for walking scale.  Adjacent levels overlap slightly and
-            // use only centimetre/metre-class depth bias: the old 160 m edge sink made the LOD
-            // boundary itself visible from altitude.
+            // Geometry-clipmap style nested windows. The inner ring keeps walking-scale density;
+            // each outer ring is hollow and the fine edge morphs onto positions sampled on the next
+            // coarser grid. This follows mature clipmap seam handling instead of hiding cracks with
+            // metre-scale vertical skirts/insets.
             const std::array<Ring, 5> rings{{
-                {4096.0,       0.0, 320U, 0.00, 0.10},
-                {24576.0,   3600.0, 192U, 0.12, 0.42},
-                {131072.0, 22000.0, 160U, 0.38, 0.95},
-                {655360.0,118000.0, 128U, 0.95, 2.80},
-                {2600000.0,590000.0,104U, 2.80, 9.00},
+                {4096.0,       0.0, 320U},
+                {24576.0,   3900.0, 192U},
+                {131072.0, 23500.0, 160U},
+                {655360.0,126000.0, 128U},
+                {2600000.0,630000.0,104U},
             }};
 
-            for (const Ring& ring : rings) {
+            for (std::size_t ringIndex = 0; ringIndex < rings.size(); ++ringIndex) {
+                const Ring& ring = rings[ringIndex];
                 const std::uint32_t stride = ring.resolution + 1U;
                 const std::uint32_t terrainBase = static_cast<std::uint32_t>(mesh.vertices.size());
                 for (std::uint32_t y = 0; y <= ring.resolution; ++y) {
@@ -276,12 +295,33 @@ int main() {
                                 + centerNorth * (northMeters / planet.radius),
                             centerUp);
                         const vf::PlanetTerrainSample terrain = vf::samplePlanetTerrain(planet, direction);
-                        const glm::dvec3 normalPlanet = vf::planetSurfaceNormal(planet, direction);
-                        const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
-                        const double edgeBlend = std::clamp((edge - 0.88) / 0.12, 0.0, 1.0);
-                        glm::dvec3 worldPoint = direction * (planet.radius + terrain.elevationMeters);
-                        worldPoint -= normalPlanet * (ring.terrainBaseInset + edgeBlend * ring.terrainEdgeInset);
+                        glm::dvec3 normalPlanet = vf::planetSurfaceNormal(planet, direction);
+                        double elevation = terrain.elevationMeters;
 
+                        if (ringIndex + 1U < rings.size()) {
+                            const Ring& nextRing = rings[ringIndex + 1U];
+                            const double nextCell = 2.0 * nextRing.half
+                                / static_cast<double>(nextRing.resolution);
+                            const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
+                            const double morph = smooth01((edge - 0.78) / 0.20);
+                            if (morph > 0.0) {
+                                const double snappedEast = std::round(eastMeters / nextCell) * nextCell;
+                                const double snappedNorth = std::round(northMeters / nextCell) * nextCell;
+                                const glm::dvec3 coarseDirection = safeNormalize(
+                                    centerUp + centerEast * (snappedEast / planet.radius)
+                                        + centerNorth * (snappedNorth / planet.radius),
+                                    direction);
+                                const vf::PlanetTerrainSample coarseTerrain = vf::samplePlanetTerrain(
+                                    planet, coarseDirection);
+                                const glm::dvec3 coarseNormal = vf::planetSurfaceNormal(planet, coarseDirection);
+                                elevation += (coarseTerrain.elevationMeters - elevation) * morph;
+                                normalPlanet = safeNormalize(
+                                    normalPlanet * (1.0 - morph) + coarseNormal * morph,
+                                    normalPlanet);
+                            }
+                        }
+
+                        const glm::dvec3 worldPoint = direction * (planet.radius + elevation);
                         vf::PlanetVertex vertex{};
                         vertex.position = glm::vec3(toSurfacePoint(worldPoint));
                         vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(normalPlanet)));
@@ -305,12 +345,14 @@ int main() {
                         mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
                     }
                 }
-
             }
+
+            // Near-field ecology is rebuilt from stable grid-cell IDs and authoritative terrain
+            // queries, so trees/rocks/grass move with streaming without changing identity or height.
+            appendMesh(mesh, vf::buildProceduralEcology(planet, centerUp, surfaceFrame));
 
             // The orbital proxy is still deliberately cheaper than the local clipmaps, but 96
             // subdivisions removes the giant polygon blocks visible in V7's 48-subdivision Earth.
-            // Only a small radial inset is needed because the local rings already overlap.
             vf::PlanetMesh proxy = vf::buildPlanetSurface(planet, 96U);
             constexpr double proxyInset = 24.0;
             for (auto& vertex : proxy.vertices) {
@@ -323,9 +365,8 @@ int main() {
             appendMesh(mesh, proxy);
 
             // Water has exactly two representations, never five stacked transparent squares:
-            // a high-resolution local patch (smooth to the ~20 km altitude horizon) and one global
-            // geoid shell slightly behind it.  The fragment shader fades the local patch before its
-            // square boundary can enter the visible horizon.
+            // a high-resolution local patch and one global geoid shell. The shader cross-fades them
+            // by altitude before the local square boundary can enter the visible horizon.
             vf::PlanetMesh localOcean = vf::buildOceanSurfacePatch(
                 planet, centerUp, 520000.0, 256U, 0.0);
             for (auto& vertex : localOcean.vertices) {
@@ -393,7 +434,7 @@ int main() {
 
         std::cout << "Voxel Frontier Earthlike planet runtime\n";
         std::cout << "Generic structural damage | Earthlike relief | continuous ocean geoid\n";
-        std::cout << "Async terrain synthesis | smooth inertial camera | 145 km optical atmosphere\n";
+        std::cout << "Async terrain synthesis | morphing clipmaps | deterministic stylized ecology\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
@@ -590,7 +631,7 @@ int main() {
                     planet, safeNormalize(cameraPlanet, patchUp));
                 const bool overOcean = terrainBelow.submerged(planet);
                 std::ostringstream title;
-                title << "Voxel Frontier R3 | "
+                title << "Voxel Frontier R4 | "
                       << (camera.flightMode() ? "FLIGHT"
                           : (character.grounded() ? "CAPSULE-GROUNDED" : "CAPSULE-AIR"))
                       << " | SPEED " << std::fixed << std::setprecision(0)
