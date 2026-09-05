@@ -32,6 +32,19 @@ void require(bool condition, std::string_view message) {
     return environment;
 }
 
+[[nodiscard]] vf::PhysicsEnvironment flatPlanetEnvironment() {
+    vf::PhysicsEnvironment environment{};
+    environment.planet.radius = 100.0;
+    environment.planet.maxElevation = 0.0;
+    environment.surfaceGravity = 9.81;
+    environment.atmosphere.pressureScale = 0.0;
+    environment.atmosphere.gustAmplitude = 0.0;
+    environment.atmosphere.prevailingWind = {};
+    environment.weather.windMultiplier = 0.0;
+    environment.ocean.enabled = false;
+    return environment;
+}
+
 [[nodiscard]] vf::RigidBodyDesc sphereBody(const glm::dvec3& position, double radius = 0.25) {
     vf::RigidBodyDesc desc{};
     desc.position = position;
@@ -126,16 +139,38 @@ void testOffCenterImpactCreatesAngularResponse() {
         "off-center contact impulse must create angular velocity instead of only changing center velocity");
 }
 
+void testSingleBoxSleepsAndStopsCreepingOnPlanet() {
+    vf::PhysicsWorld world{flatPlanetEnvironment()};
+    auto resting = boxBody({0.0, 100.53, 0.0}, {0.5, 0.5, 0.5}, 12.0);
+    resting.material.friction = 0.86;
+    resting.material.rollingResistance = 0.12;
+    resting.linearDamping = 0.09;
+    resting.angularDamping = 0.16;
+    const auto id = world.createRigidBody(resting);
+
+    for (int step = 0; step < 720; ++step) world.stepFixed();
+    const auto* settled = world.body(id);
+    require(settled != nullptr, "resting body missing");
+    require(settled->sleeping,
+        "a supported idle prop must enter sleep instead of being re-awakened by its own contact impulses");
+    require(glm::length(settled->linearVelocity) < 1.0e-10,
+        "a sleeping prop must have zero linear jitter");
+    require(glm::length(settled->angularVelocity) < 1.0e-10,
+        "a sleeping prop must have zero angular jitter");
+
+    const glm::dvec3 lockedPosition = settled->position;
+    const glm::dquat lockedOrientation = settled->orientation;
+    for (int step = 0; step < 720; ++step) world.stepFixed();
+    const auto* stillSettled = world.body(id);
+    require(stillSettled != nullptr, "resting body missing after hold interval");
+    require(glm::length(stillSettled->position - lockedPosition) < 1.0e-9,
+        "sleeping prop must not creep across the ground over time");
+    require(std::abs(glm::dot(stillSettled->orientation, lockedOrientation)) > 1.0 - 1.0e-12,
+        "sleeping prop orientation must remain locked instead of visibly trembling");
+}
+
 void testTwoBoxStackSettlesOnPlanet() {
-    vf::PhysicsEnvironment environment{};
-    environment.planet.radius = 100.0;
-    environment.planet.maxElevation = 0.0;
-    environment.surfaceGravity = 9.81;
-    environment.atmosphere.pressureScale = 0.0;
-    environment.atmosphere.gustAmplitude = 0.0;
-    environment.atmosphere.prevailingWind = {};
-    environment.ocean.enabled = false;
-    vf::PhysicsWorld world{environment};
+    vf::PhysicsWorld world{flatPlanetEnvironment()};
 
     auto lower = boxBody({0.0, 100.52, 0.0}, {0.5, 0.5, 0.5}, 4.0);
     lower.material.friction = 0.8;
@@ -164,6 +199,7 @@ int main() {
     testBroadphaseUsesOrientedShapeAabb();
     testFaceContactProducesFourSolverPoints();
     testOffCenterImpactCreatesAngularResponse();
+    testSingleBoxSleepsAndStopsCreepingOnPlanet();
     testTwoBoxStackSettlesOnPlanet();
     std::cout << "vf_contact_solver_tests: PASS\n";
     return 0;
