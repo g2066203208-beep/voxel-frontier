@@ -1,0 +1,135 @@
+name: R21 Final Celestial Terrain Evidence
+
+on:
+  push:
+    branches: [test/terrain-r21-celestial]
+  workflow_dispatch:
+
+concurrency:
+  group: r21-final-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify scientific implementation markers
+        run: |
+          grep -q 'Newtonian N-body propagation' native/src/world/CelestialSystem.cpp
+          grep -q 'testKeplerianStateEnergyIdentity' native/tests/CelestialSystemTests.cpp
+          grep -q 'R21 ORBIT-COUPLED CLIMATE' native/src/world/PlanetSurface.cpp
+          grep -q 'R21 CELESTIAL EVIDENCE CAMERA' native/src/app/Main.cpp
+          git diff --check
+      - run: cmake -S native -B build/core -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
+      - run: cmake --build build/core --parallel
+      - run: ctest --test-dir build/core --verbose --output-on-failure
+
+  real-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify scientific implementation markers
+        run: |
+          grep -q 'Newtonian N-body propagation' native/src/world/CelestialSystem.cpp
+          grep -q 'R21 ORBIT-COUPLED CLIMATE' native/src/world/PlanetSurface.cpp
+          grep -q 'R21 CELESTIAL EVIDENCE CAMERA' native/src/app/Main.cpp
+          git diff --check
+      - name: Install Vulkan headless dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev libdrm-dev libgbm-dev \
+            libegl1-mesa-dev libgl1-mesa-dev libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+      - name: Build Vulkan runtime
+        run: |
+          cmake -S native -B build/visual -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
+          cmake --build build/visual --parallel
+      - name: Verify Vulkan device
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+      - name: Capture terrain and physical celestial bodies
+        shell: bash
+        run: |
+          set -euo pipefail
+          export SDL_VIDEODRIVER=x11 DISPLAY=:99 VF_CELESTIAL_TIME_SCALE=120
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 2
+          APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
+          mkdir -p r21-final
+          failures=0
+
+          capture_ready_frame() {
+            local out="$1"
+            local log="$2"
+            for attempt in $(seq 1 16); do
+              sleep 3
+              import -display :99 -window root "$out"
+              local colors
+              colors="$(convert "$out" -format '%k' info:)"
+              if [ "$colors" -gt 64 ]; then
+                echo "$(basename "$out") unique_colors=$colors" | tee -a r21-final/capture-info.txt
+                return 0
+              fi
+            done
+            echo "$(basename "$out") failed to render a nontrivial frame" | tee -a r21-final/capture-info.txt
+            return 1
+          }
+
+          for mode in mountain river coast highland; do
+            stdbuf -oL -eL env VF_CAPTURE_LANDFORM="$mode" "$APP" >"r21-final/runtime-$mode.log" 2>&1 &
+            pid=$!
+            for t in $(seq 1 50); do
+              sleep 2
+              grep -q 'Capture target elevation' "r21-final/runtime-$mode.log" && break
+              kill -0 "$pid" 2>/dev/null || break
+            done
+            capture_ready_frame "r21-final/$mode.png" "r21-final/runtime-$mode.log" || failures=$((failures+1))
+            kill "$pid" 2>/dev/null || true
+            wait "$pid" 2>/dev/null || true
+          done
+
+          for sky in sun moon; do
+            stdbuf -oL -eL env VF_CAPTURE_CELESTIAL="$sky" "$APP" >"r21-final/runtime-$sky.log" 2>&1 &
+            pid=$!
+            for t in $(seq 1 50); do
+              sleep 2
+              grep -q 'Celestial capture:' "r21-final/runtime-$sky.log" && break
+              kill -0 "$pid" 2>/dev/null || break
+            done
+            capture_ready_frame "r21-final/$sky.png" "r21-final/runtime-$sky.log" || failures=$((failures+1))
+            kill "$pid" 2>/dev/null || true
+            wait "$pid" 2>/dev/null || true
+          done
+
+          identify r21-final/*.png | tee -a r21-final/capture-info.txt
+          grep -hE 'Capture target elevation|Celestial capture:|Aster-Sun distance:|Aster-Luna distance:|Spawn land elevation:' r21-final/runtime-*.log > r21-final/physics-summary.txt || true
+          cat r21-final/physics-summary.txt
+          test "$failures" -eq 0
+      - name: Upload final R21 evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r21-final-celestial-terrain-${{ github.sha }}
+          path: |
+            r21-final
+            vulkan-summary.txt
+            xvfb.log
+          if-no-files-found: warn
