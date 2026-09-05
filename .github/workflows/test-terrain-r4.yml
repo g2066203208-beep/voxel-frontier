@@ -1,6 +1,6 @@
 name: Terrain R4 Real Vulkan Geomorph Evidence
 
-# R4 evidence gate: run on the corrected geomorph source, no terrain parameters are changed here.
+# R4 evidence gate. Capture framing is supplied by the runtime itself so CI never moves the camera.
 on:
   push:
     branches: [feature/terrain-r4-geomorph-bake]
@@ -31,7 +31,7 @@ jobs:
       - name: Install Vulkan headless dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick xdotool mesa-vulkan-drivers vulkan-tools \
+          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick mesa-vulkan-drivers vulkan-tools \
             libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
             libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev libdrm-dev libgbm-dev \
             libegl1-mesa-dev libgl1-mesa-dev libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
@@ -54,7 +54,7 @@ jobs:
           test -n "$ICD"
           echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
-      - name: Capture mountain river coast highland from same R4 build
+      - name: Capture daylight mountain river coast highland from same R4 build
         shell: bash
         run: |
           set -euo pipefail
@@ -73,12 +73,6 @@ jobs:
             VF_CAPTURE_LANDFORM="$mode" timeout 65s "$APP" >"r4-captures/runtime-$mode.log" 2>&1 &
             pid=$!
             sleep 20
-            win="$(xdotool search --name 'Voxel Frontier' 2>/dev/null | tail -n 1 || true)"
-            if [ -n "$win" ]; then
-              xdotool mousemove --window "$win" 800 450 || true
-              xdotool mousemove_relative -- 0 -110 || true
-              sleep 1
-            fi
             import -display :99 -window root "r4-captures/$mode.png"
             colors="$(convert "r4-captures/$mode.png" -format '%k' info:)"
             echo "$mode unique_colors=$colors" | tee -a r4-captures/capture-info.txt
