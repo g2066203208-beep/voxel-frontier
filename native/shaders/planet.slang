@@ -150,18 +150,14 @@ float3 atmosphereSky(float solarElevation, float density)
 
 void shadowBasis(float3 lightDirection, out float3 right, out float3 up)
 {
-    float3 helper = abs(lightDirection.y) < 0.94
-        ? float3(0.0, 1.0, 0.0)
-        : float3(1.0, 0.0, 0.0);
+    float3 helper = abs(lightDirection.y) < 0.94 ? float3(0.0, 1.0, 0.0) : float3(1.0, 0.0, 0.0);
     right = normalize(cross(helper, lightDirection));
     up = normalize(cross(lightDirection, right));
 }
 
 float2 stableShadowOffset(float3 right, float3 up)
 {
-    float2 cameraPlane = float2(
-        dot(gPush.cameraPosition.xyz, right),
-        dot(gPush.cameraPosition.xyz, up));
+    float2 cameraPlane = float2(dot(gPush.cameraPosition.xyz, right), dot(gPush.cameraPosition.xyz, up));
     float2 snapped = round(cameraPlane / kShadowWorldTexel) * kShadowWorldTexel;
     return cameraPlane - snapped;
 }
@@ -178,8 +174,6 @@ float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection
     float3 up;
     shadowBasis(lightDirection, right, up);
     float2 snapOffset = stableShadowOffset(right, up);
-
-    // Blender's Shadow Terminator Normal Offset idea: shift the receiver most at grazing light.
     float normalOffsetMeters = lerp(0.080, 0.012, noL);
     float3 shifted = relativePosition + normalize(receiverNormal) * normalOffsetMeters;
     float sx = dot(shifted, right) + snapOffset.x;
@@ -191,9 +185,6 @@ float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection
     float2 uv = float2(sx, sy) / (2.0 * kShadowHalfExtent) + 0.5;
     float receiverDepth = saturate(0.5 - sz / kShadowDepthRange);
     float bias = lerp(0.00072, 0.00185, 1.0 - noL);
-
-    // PCSS-lite blocker estimate from the already available shadow map. Near blockers stay tight and
-    // dark; farther blockers get a wider penumbra. No extra pass or random samples are required.
     float centerDepth = gShadowMap.SampleLevel(gShadowSampler, uv, 0.0);
     float blockerGap = max(receiverDepth - bias - centerDepth, 0.0) * kShadowDepthRange;
     float blockerSoftness = saturate(blockerGap / 8.0);
@@ -212,7 +203,7 @@ float shadowVisibility(float3 relativePosition, float noL, float3 lightDirection
     visibility *= 1.0 / 16.0;
 
     float contact = (1.0 - smoothstep(0.0, 1.8, blockerGap)) * (1.0 - visibility);
-    float shadowFloor = lerp(0.14, 0.055, contact);
+    float shadowFloor = lerp(0.18, 0.105, contact);
     return lerp(shadowFloor, 1.0, visibility);
 }
 
@@ -248,10 +239,6 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float localRadius = max(length(input.localPosition), 1.0);
     float3 surfaceUp = normalize(rotateByQuaternion(input.localPosition, gPush.objectRotation));
-
-    // Material-specific normal strategy. Keep the silhouette and planar low-poly language, but do
-    // not force every material to shade as the same faceted object. This mirrors the reference:
-    // terrain/rock remain planar, foliage has broad continuous light, water is optically smooth.
     float3 n = proceduralMaterial ? flatNormal : smoothNormal;
     if (terrainMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.08));
     if (rockMaterial) n = normalize(lerp(flatNormal, smoothNormal, 0.12));
@@ -264,12 +251,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float3 bitangent = normalize(cross(surfaceUp, tangent));
         float x = dot(input.localPosition, tangent);
         float y = dot(input.localPosition, bitangent);
-        float slopeX = cos(x * 0.22 + y * 0.07) * 0.070
-            + cos(x * 0.43 - y * 0.19 + 1.7) * 0.030
-            + cos(x * 0.12 + y * 0.37 - 0.8) * 0.020;
-        float slopeY = cos(y * 0.20 - x * 0.08 + 0.9) * 0.060
-            + cos(y * 0.39 + x * 0.16 - 2.0) * 0.028
-            + cos(y * 0.14 - x * 0.31 + 0.4) * 0.018;
+        float slopeX = cos(x * 0.22 + y * 0.07) * 0.070 + cos(x * 0.43 - y * 0.19 + 1.7) * 0.030 + cos(x * 0.12 + y * 0.37 - 0.8) * 0.020;
+        float slopeY = cos(y * 0.20 - x * 0.08 + 0.9) * 0.060 + cos(y * 0.39 + x * 0.16 - 2.0) * 0.028 + cos(y * 0.14 - x * 0.31 + 0.4) * 0.018;
         n = normalize(surfaceUp - tangent * slopeX - bitangent * slopeY);
     }
 
@@ -307,7 +290,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, snow, snowMask);
         roughness = lerp(0.95, 0.72, rockMask);
         f0 = lerp(float3(0.024, 0.026, 0.025), float3(0.040, 0.039, 0.037), rockMask);
-        materialAO = lerp(0.74, 1.0, faceUp);
+        materialAO = lerp(0.78, 1.0, faceUp);
     }
     else if (barkMaterial)
     {
@@ -321,7 +304,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor *= 1.0 - fissure * 0.22;
         roughness = 0.93 + fissure * 0.04;
         f0 = float3(0.020, 0.018, 0.015);
-        materialAO = 0.78 - fissure * 0.10;
+        materialAO = 0.82 - fissure * 0.08;
     }
     else if (foliageMaterial)
     {
@@ -333,7 +316,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, float3(0.34, 0.53, 0.080), upFacing * (0.08 + canopyHeight * 0.15));
         roughness = 0.82;
         f0 = float3(0.026, 0.030, 0.021);
-        materialAO = lerp(0.50, 0.92, canopyHeight) * lerp(0.84, 1.0, upFacing);
+        materialAO = lerp(0.60, 0.95, canopyHeight) * lerp(0.88, 1.0, upFacing);
         foliageTransmission = 1.0;
     }
     else if (rockMaterial)
@@ -349,7 +332,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, float3(0.22, 0.30, 0.11), lichen * 0.12);
         roughness = lerp(0.70, 0.82, faceUp);
         f0 = float3(0.040, 0.038, 0.035);
-        materialAO = lerp(0.66, 1.0, faceUp);
+        materialAO = lerp(0.72, 1.0, faceUp);
     }
     else if (oceanMaterial)
     {
@@ -394,43 +377,50 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     float sunWarmth = 1.0 - smoothstep(0.045, 0.38, solarElevation);
     float3 neutralSun = float3(1.0, 0.95, 0.86);
     float3 lowSun = float3(1.0, 0.49, 0.23);
-    stellarRadiance *= lerp(neutralSun, lowSun, sunWarmth * 0.88);
+    float3 sunTint = lerp(neutralSun, lowSun, sunWarmth * 0.88);
+    // Preserve most of the solar luminance while changing its chromaticity. HDRI sunsets are warm,
+    // not simply dim orange multipliers; otherwise the whole world collapses into black shadow.
+    float tintLuma = dot(sunTint, float3(0.2126, 0.7152, 0.0722));
+    float energyCompensation = lerp(1.0, 0.78 / max(tintLuma, 0.22), sunWarmth * 0.62);
+    stellarRadiance *= sunTint * energyCompensation;
 
     float shadowNoL = saturate(dot(smoothNormal, l));
     float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, shadowNoL, l, smoothNormal);
-    float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.10 * shadow;
+    float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.12 * shadow;
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
-    float3 ambientDirectionColor = lerp(horizonColor, skyColor, 0.22 + 0.78 * hemiUp);
-    float3 skyAmbient = ambientDirectionColor * (0.095 + 0.265 * hemiUp);
+    float3 ambientDirectionColor = lerp(horizonColor, skyColor, 0.18 + 0.82 * hemiUp);
+    // EEVEE treats World lighting as indirect illumination. Keep enough world energy in the
+    // shadows so the low-poly forms remain colorful instead of turning black under a low sun.
+    float3 skyAmbient = ambientDirectionColor * (0.155 + 0.345 * hemiUp);
     float3 groundBounceColor = float3(0.16, 0.125, 0.060);
     if (terrainMaterial || foliageMaterial) groundBounceColor = float3(0.09, 0.17, 0.050);
     if (oceanMaterial) groundBounceColor = float3(0.018, 0.065, 0.095);
-    float3 indirect = max(baseColor, 0.0) * (skyAmbient + groundBounceColor * (0.032 + 0.100 * (1.0 - hemiUp))) * materialAO;
+    float3 indirect = max(baseColor, 0.0) * (skyAmbient + groundBounceColor * (0.045 + 0.130 * (1.0 - hemiUp))) * materialAO;
 
-    // Cheap environment response using the actual reflected direction. This gives roughness/F0 a
-    // visible role away from the direct sun highlight and makes water inherit the sky instead of
-    // behaving like a glossy blue floor.
     float3 reflectedDir = normalize(reflect(-v, n));
     float reflectedUp = saturate(dot(reflectedDir, surfaceUp) * 0.5 + 0.5);
     float3 reflectedEnvironment = lerp(horizonColor, skyColor, smoothstep(0.10, 0.90, reflectedUp));
     float broadCloud = smoothstep(0.48, 0.72, valueNoise3(reflectedDir * 2.25 + float3(4.3, -2.1, 7.6)));
-    reflectedEnvironment *= lerp(1.0, 0.72, broadCloud * daylight);
-    float sunMirror = pow(saturate(dot(reflectedDir, l)), lerp(18.0, 140.0, 1.0 - roughness));
-    reflectedEnvironment += stellarRadiance * sunMirror * (0.022 + 0.12 * (1.0 - roughness));
+    reflectedEnvironment *= lerp(1.0, 0.74, broadCloud * daylight);
+
+    float mirrorDot = saturate(dot(reflectedDir, l));
+    float broadSunReflection = pow(mirrorDot, 18.0);
+    float tightSunReflection = pow(mirrorDot, 96.0);
+    float gloss = 1.0 - roughness;
+    reflectedEnvironment += stellarRadiance * (broadSunReflection * 0.030 + tightSunReflection * 0.115) * (0.25 + 0.75 * gloss);
 
     float envGrazing = pow(1.0 - noV, 5.0);
     float3 envFresnel = f0 + (1.0 - f0) * envGrazing;
-    float gloss = 1.0 - roughness;
-    float envWeight = gloss * gloss * (0.16 + 0.30 * hemiUp) * materialAO;
+    float envWeight = gloss * gloss * (0.18 + 0.34 * hemiUp) * materialAO;
     float3 environmentSpecular = reflectedEnvironment * envFresnel * envWeight;
 
     if (foliageTransmission > 0.0)
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
-        float transmissionShadow = lerp(shadow, 1.0, 0.22);
-        direct += baseColor * float3(0.56, 0.76, 0.14) * backLit * (0.085 + 0.145 * edgeLit) * daylight * transmissionShadow;
+        float transmissionShadow = lerp(shadow, 1.0, 0.24);
+        direct += baseColor * float3(0.60, 0.80, 0.15) * backLit * (0.095 + 0.155 * edgeLit) * daylight * transmissionShadow;
     }
 
     float3 color = direct + indirect;
@@ -441,11 +431,12 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     else
     {
         float waterFresnel = 0.0204 + (1.0 - 0.0204) * pow(1.0 - noV, 5.0);
-        float depthTransmission = lerp(0.58, 0.18, waterDepth);
-        color = lerp(baseColor * depthTransmission, reflectedEnvironment, saturate(waterFresnel * 1.08));
-        color += environmentSpecular * 1.35;
-        color += baseColor * (0.055 + 0.050 * waterDepth);
-        color += float3(0.55, 0.62, 0.54) * foamMask * (0.45 + 0.55 * noL);
+        float depthTransmission = lerp(0.72, 0.28, waterDepth);
+        color = lerp(baseColor * depthTransmission, reflectedEnvironment, saturate(waterFresnel * 1.12));
+        color += environmentSpecular * 1.45;
+        color += stellarRadiance * (broadSunReflection * 0.050 + tightSunReflection * 0.16);
+        color += baseColor * (0.070 + 0.055 * waterDepth);
+        color += float3(0.55, 0.62, 0.54) * foamMask * (0.48 + 0.52 * noL);
     }
 
     if (proceduralMaterial)
@@ -463,10 +454,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         float3 warmAir = lerp(float3(0.72, 0.40, 0.18), float3(1.0, 0.70, 0.38), daylight);
         float scatterWeight = forwardScatter * fogFactor * (0.18 + 0.46 * sunWarmth) * horizonView;
         fogColor = lerp(fogColor, warmAir, saturate(scatterWeight));
-
         float fogLuma = dot(fogColor, float3(0.2126, 0.7152, 0.0722));
         fogColor = lerp(fogColor, float3(fogLuma, fogLuma, fogLuma), fogFactor * 0.06);
-        color = lerp(color, fogColor, fogFactor * 0.92);
+        color = lerp(color, fogColor, fogFactor * 0.90);
     }
 
     return float4(toneMapAgX(color), 1.0);
