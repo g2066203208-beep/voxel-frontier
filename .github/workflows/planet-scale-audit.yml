@@ -1,0 +1,190 @@
+name: Planet Scale Audit
+
+on:
+  push:
+    branches:
+      - audit/planet-scale-r1
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install audit dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ libglm-dev
+      - name: Build exact terrain sampler audit
+        shell: bash
+        run: |
+          cat > /tmp/PlanetScaleAudit.cpp <<'CPP'
+          #include "vf/world/PlanetSurface.hpp"
+          #include <algorithm>
+          #include <array>
+          #include <cmath>
+          #include <cstdint>
+          #include <iomanip>
+          #include <iostream>
+          #include <queue>
+          #include <vector>
+          #include <glm/glm.hpp>
+
+          namespace {
+          constexpr double pi = 3.1415926535897932384626433832795;
+          double quantile(std::vector<double> values, double q) {
+              if (values.empty()) return 0.0;
+              std::sort(values.begin(), values.end());
+              const double p = std::clamp(q, 0.0, 1.0) * static_cast<double>(values.size() - 1);
+              const std::size_t i = static_cast<std::size_t>(std::floor(p));
+              const std::size_t j = std::min(i + 1, values.size() - 1);
+              return values[i] + (values[j] - values[i]) * (p - static_cast<double>(i));
+          }
+          }
+
+          int main() {
+              vf::PlanetDefinition planet{};
+              planet.seed = 0x71A9F20DULL;
+              planet.radius = 6371000.0;
+              planet.maxElevation = 8850.0;
+              planet.seaLevelElevationMeters = 0.0;
+              planet.maxOceanDepthMeters = 11000.0;
+              planet.atmosphereHeight = 100000.0;
+
+              constexpr std::uint32_t N = 500000U;
+              constexpr double goldenAngle = 2.39996322972865332223;
+              std::uint64_t landCount = 0, oceanCount = 0;
+              double oceanDepthSum = 0.0;
+              std::vector<double> landElev, oceanDepth;
+              landElev.reserve(N / 3U);
+              oceanDepth.reserve(N * 2U / 3U);
+              std::array<double, 13> cover{};
+              std::array<double, 13> maxMask{};
+
+              for (std::uint32_t i = 0; i < N; ++i) {
+                  const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5) / static_cast<double>(N);
+                  const double r = std::sqrt(std::max(0.0, 1.0 - y * y));
+                  const double a = goldenAngle * static_cast<double>(i);
+                  const glm::dvec3 d{std::cos(a) * r, y, std::sin(a) * r};
+                  const auto s = vf::samplePlanetTerrain(planet, d);
+                  if (s.elevationMeters >= 0.0) {
+                      ++landCount;
+                      landElev.push_back(s.elevationMeters);
+                  } else {
+                      ++oceanCount;
+                      const double depth = -s.elevationMeters;
+                      oceanDepthSum += depth;
+                      oceanDepth.push_back(depth);
+                  }
+                  const std::array<double,13> m{
+                      s.mountain,s.plateau,s.trench,s.volcano,s.river,s.hills,s.canyon,
+                      s.dunes,s.coastalCliff,s.wetland,s.glacier,s.oceanRidge,s.plateBoundary};
+                  for (std::size_t k=0;k<m.size();++k) {
+                      if (m[k] > 0.50) cover[k] += 1.0;
+                      maxMask[k] = std::max(maxMask[k], m[k]);
+                  }
+              }
+
+              const double landFraction = static_cast<double>(landCount) / N;
+              const double oceanFraction = static_cast<double>(oceanCount) / N;
+              const double sphereAreaKm2 = 4.0 * pi * planet.radius * planet.radius / 1.0e6;
+              std::cout << std::fixed << std::setprecision(4);
+              std::cout << "radius_km=" << planet.radius/1000.0 << "\n";
+              std::cout << "diameter_km=" << 2.0*planet.radius/1000.0 << "\n";
+              std::cout << "surface_area_million_km2=" << sphereAreaKm2/1.0e6 << "\n";
+              std::cout << "land_fraction=" << landFraction << "\n";
+              std::cout << "ocean_fraction=" << oceanFraction << "\n";
+              std::cout << "land_area_million_km2=" << sphereAreaKm2*landFraction/1.0e6 << "\n";
+              std::cout << "ocean_area_million_km2=" << sphereAreaKm2*oceanFraction/1.0e6 << "\n";
+              std::cout << "ocean_mean_depth_m=" << (oceanCount?oceanDepthSum/oceanCount:0.0) << "\n";
+              std::cout << "ocean_depth_p50_m=" << quantile(oceanDepth,0.50) << "\n";
+              std::cout << "ocean_depth_p90_m=" << quantile(oceanDepth,0.90) << "\n";
+              std::cout << "ocean_depth_p99_m=" << quantile(oceanDepth,0.99) << "\n";
+              std::cout << "ocean_depth_max_sample_m=" << quantile(oceanDepth,1.0) << "\n";
+              std::cout << "land_elev_p50_m=" << quantile(landElev,0.50) << "\n";
+              std::cout << "land_elev_p90_m=" << quantile(landElev,0.90) << "\n";
+              std::cout << "land_elev_p99_m=" << quantile(landElev,0.99) << "\n";
+              std::cout << "land_elev_max_sample_m=" << quantile(landElev,1.0) << "\n";
+
+              const std::array<const char*,13> names{
+                  "mountain","plateau","trench","volcano","river","hills","canyon",
+                  "dunes","coastal_cliff","wetland","glacier","ocean_ridge","plate_boundary"};
+              for (std::size_t k=0;k<names.size();++k) {
+                  std::cout << names[k] << "_coverage_gt_0_5=" << cover[k]/N << "\n";
+                  std::cout << names[k] << "_max=" << maxMask[k] << "\n";
+              }
+
+              // Coarse connected-component audit for continent-scale landmasses.
+              constexpr int W=360, H=180;
+              std::vector<unsigned char> land(W*H,0), seen(W*H,0);
+              std::vector<double> cellArea(W*H,0.0);
+              const double dlon = 2.0*pi/W;
+              for (int yy=0;yy<H;++yy) {
+                  const double lat0=-0.5*pi + pi*yy/H;
+                  const double lat1=-0.5*pi + pi*(yy+1)/H;
+                  const double lat=0.5*(lat0+lat1);
+                  const double c=std::cos(lat), sy=std::sin(lat);
+                  const double area=planet.radius*planet.radius*dlon*(std::sin(lat1)-std::sin(lat0))/1.0e6;
+                  for (int xx=0;xx<W;++xx) {
+                      const double lon=-pi + 2.0*pi*(xx+0.5)/W;
+                      const glm::dvec3 d{c*std::cos(lon), sy, c*std::sin(lon)};
+                      const int idx=yy*W+xx;
+                      land[idx]=vf::samplePlanetTerrain(planet,d).elevationMeters>=0.0?1:0;
+                      cellArea[idx]=area;
+                  }
+              }
+              std::vector<double> comps;
+              const std::array<int,8> dx{-1,0,1,-1,1,-1,0,1};
+              const std::array<int,8> dy{-1,-1,-1,0,0,1,1,1};
+              for (int sy=0;sy<H;++sy) for(int sx=0;sx<W;++sx) {
+                  const int start=sy*W+sx;
+                  if(!land[start]||seen[start]) continue;
+                  double area=0.0;
+                  std::queue<std::pair<int,int>> q;
+                  q.push({sx,sy}); seen[start]=1;
+                  while(!q.empty()) {
+                      auto [x,y]=q.front(); q.pop();
+                      const int idx=y*W+x; area+=cellArea[idx];
+                      for(int n=0;n<8;++n) {
+                          int nx=(x+dx[n]+W)%W, ny=y+dy[n];
+                          if(ny<0||ny>=H) continue;
+                          const int ni=ny*W+nx;
+                          if(land[ni]&&!seen[ni]) { seen[ni]=1; q.push({nx,ny}); }
+                      }
+                  }
+                  comps.push_back(area);
+              }
+              std::sort(comps.begin(),comps.end(),std::greater<double>());
+              std::size_t gt1m=0,gt100k=0;
+              for(double a:comps){ if(a>=1.0e6)++gt1m; if(a>=1.0e5)++gt100k; }
+              std::cout << "land_components_1deg=" << comps.size() << "\n";
+              std::cout << "land_components_ge_1m_km2=" << gt1m << "\n";
+              std::cout << "land_components_ge_100k_km2=" << gt100k << "\n";
+              for(std::size_t i=0;i<std::min<std::size_t>(10,comps.size());++i)
+                  std::cout << "land_component_" << (i+1) << "_million_km2=" << comps[i]/1.0e6 << "\n";
+
+              const std::array<double,8> f{26,720,1350,3200,8200,26000,52000,125000};
+              const std::array<const char*,8> fn{"climate","regional","hill","local","canyon","dune","micro","fine"};
+              for(std::size_t i=0;i<f.size();++i)
+                  std::cout << "noise_" << fn[i] << "_base_wavelength_km=" << 2.0*pi*planet.radius/f[i]/1000.0 << "\n";
+              return 0;
+          }
+          CPP
+          g++ -std=c++23 -O2 -I native/include /tmp/PlanetScaleAudit.cpp native/src/world/PlanetSurface.cpp -o /tmp/planet_scale_audit
+      - name: Run full planet audit
+        run: |
+          /tmp/planet_scale_audit | tee planet-scale-report.txt
+          printf '\n--- interior model scan ---\n' >> planet-scale-report.txt
+          if grep -RniE 'inner.?core|outer.?core|mantle|crustThickness|coreRadius|mantleDepth' native/include native/src >> planet-scale-report.txt; then
+            true
+          else
+            echo 'NO_EXPLICIT_PLANET_INTERIOR_LAYER_MODEL_FOUND' >> planet-scale-report.txt
+          fi
+      - name: Upload audit report
+        uses: actions/upload-artifact@v5
+        with:
+          name: planet-scale-audit-${{ github.sha }}
+          path: planet-scale-report.txt
+          if-no-files-found: error
+          retention-days: 30
