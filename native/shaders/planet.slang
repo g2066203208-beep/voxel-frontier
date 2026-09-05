@@ -33,7 +33,7 @@ static const float kShadowDepthRange = 180.0;
 static const float kShadowResolution = 512.0;
 static const float2 kShadowTexel = float2(1.0 / kShadowResolution, 1.0 / kShadowResolution);
 static const float kShadowWorldTexel = (2.0 * kShadowHalfExtent) / kShadowResolution;
-static const float kEnvironmentIrradiance = 2.35;
+static const float kEnvironmentIrradiance = 2.85;
 static const float kExposureScale = 1.4640857; // 2^0.55
 
 float3 rotateByQuaternion(float3 v, float4 q)
@@ -90,6 +90,16 @@ float3 fresnelSchlick(float voH, float3 f0)
     return f0 + (1.0 - f0) * grazing;
 }
 
+// Jimenez et al. 2016 GTAO multi-bounce approximation. AO is visibility, not black paint:
+// bright diffuse surfaces return some of the energy that a one-bounce AO term would discard.
+float3 multiBounceAO(float3 albedo, float ao)
+{
+    float3 a = 2.0404 * albedo - 0.3324;
+    float3 b = -4.7951 * albedo + 0.6417;
+    float3 c = 2.7552 * albedo + 0.6903;
+    return max(float3(ao, ao, ao), ((ao * a + b) * ao + c) * ao);
+}
+
 float3 agxInset(float3 v)
 {
     return float3(
@@ -121,9 +131,11 @@ float3 agxContrastApprox(float3 x)
 
 float3 agxPunchyLook(float3 v)
 {
+    // Keep only a restrained art look after AgX. The previous 1.24/1.20 pair crushed foliage
+    // midtones and made indirect-lit surfaces look unnaturally black.
     float luma = dot(v, float3(0.2126, 0.7152, 0.0722));
-    v = pow(max(v, 0.0), 1.24);
-    return float3(luma, luma, luma) + 1.20 * (v - float3(luma, luma, luma));
+    v = pow(max(v, 0.0), 1.08);
+    return float3(luma, luma, luma) + 1.08 * (v - float3(luma, luma, luma));
 }
 
 float3 toneMapAgX(float3 color)
@@ -294,7 +306,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, snow, snowMask);
         roughness = lerp(0.95, 0.72, rockMask);
         f0 = lerp(float3(0.024, 0.026, 0.025), float3(0.040, 0.039, 0.037), rockMask);
-        materialAO = lerp(0.80, 1.0, faceUp);
+        materialAO = lerp(0.82, 1.0, faceUp);
     }
     else if (barkMaterial)
     {
@@ -308,7 +320,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor *= 1.0 - fissure * 0.18;
         roughness = 0.93 + fissure * 0.04;
         f0 = float3(0.020, 0.018, 0.015);
-        materialAO = 0.84 - fissure * 0.07;
+        materialAO = 0.88 - fissure * 0.04;
     }
     else if (foliageMaterial)
     {
@@ -320,8 +332,9 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, float3(0.38, 0.57, 0.10), upFacing * (0.09 + canopyHeight * 0.16));
         roughness = 0.82;
         f0 = float3(0.026, 0.030, 0.021);
-        // Treat AO as environment visibility, not a second black shadow painted into the crown.
-        materialAO = lerp(0.78, 0.98, canopyHeight) * lerp(0.94, 1.0, upFacing);
+        // AO is environment visibility. The old 0.64 floor double-darkened foliage that was
+        // already receiving real self-shadow from the directional shadow map.
+        materialAO = lerp(0.88, 1.0, canopyHeight) * lerp(0.97, 1.0, upFacing);
         foliageTransmission = 1.0;
     }
     else if (rockMaterial)
@@ -337,7 +350,7 @@ float4 fragmentMain(VertexOutput input) : SV_Target
         baseColor = lerp(baseColor, float3(0.24, 0.32, 0.12), lichen * 0.10);
         roughness = lerp(0.70, 0.82, faceUp);
         f0 = float3(0.040, 0.038, 0.035);
-        materialAO = lerp(0.74, 1.0, faceUp);
+        materialAO = lerp(0.80, 1.0, faceUp);
     }
     else if (oceanMaterial)
     {
@@ -389,18 +402,31 @@ float4 fragmentMain(VertexOutput input) : SV_Target
 
     float shadowNoL = saturate(dot(smoothNormal, l));
     float shadow = oceanMaterial ? 1.0 : shadowVisibility(input.relativePosition, shadowNoL, l, smoothNormal);
-    // Leaves transmit/scatter a small fraction of blocked sunlight. Lift only foliage reception;
-    // the shadow caster geometry and shadows cast onto terrain remain untouched.
-    if (foliageMaterial) shadow = lerp(shadow, 1.0, 0.16);
-    float3 direct = (diffuse + specular) * noL * stellarRadiance * 1.12 * shadow;
+    // Leaves are translucent/scattering aggregates, not opaque rocks. Preserve real self-shadow,
+    // but return part of blocked direct energy through leaf transmission and sub-canopy scatter.
+    if (foliageMaterial) shadow = lerp(shadow, 1.0, 0.22);
+    float lightingNoL = foliageMaterial ? saturate((dot(n, l) + 0.10) / 1.10) : noL;
+    float3 direct = (diffuse + specular) * lightingNoL * stellarRadiance * 1.12 * shadow;
 
     float hemiUp = saturate(dot(n, surfaceUp) * 0.5 + 0.5);
     float3 ambientDirectionColor = lerp(horizonColor, skyColor, 0.18 + 0.82 * hemiUp);
-    float3 skyAmbient = ambientDirectionColor * kEnvironmentIrradiance * (0.155 + 0.345 * hemiUp);
+    float3 skyAmbient = ambientDirectionColor * kEnvironmentIrradiance * (0.19 + 0.38 * hemiUp);
     float3 groundBounceColor = float3(0.16, 0.125, 0.060);
-    if (terrainMaterial || foliageMaterial) groundBounceColor = float3(0.09, 0.17, 0.050);
+    if (terrainMaterial) groundBounceColor = float3(0.11, 0.21, 0.060);
+    if (foliageMaterial) groundBounceColor = float3(0.13, 0.27, 0.070);
     if (oceanMaterial) groundBounceColor = float3(0.018, 0.065, 0.095);
-    float3 indirect = max(baseColor, 0.0) * (skyAmbient + groundBounceColor * (0.045 + 0.130 * (1.0 - hemiUp))) * materialAO;
+
+    // Approximate the missing near-field diffuse bounce without a full GI volume yet. The
+    // multi-bounce AO term is color aware; a secondary ground/near-surface bounce keeps shadowed
+    // foliage green instead of turning it into a black cutout.
+    float3 diffuseVisibility = multiBounceAO(saturate(baseColor), materialAO);
+    float groundWeight = 0.070 + 0.205 * (1.0 - hemiUp);
+    if (foliageMaterial) groundWeight += 0.085;
+    float3 firstBounce = max(baseColor, 0.0) * (skyAmbient + groundBounceColor * groundWeight);
+    float3 localBounceTint = lerp(groundBounceColor, max(baseColor, 0.0), foliageMaterial ? 0.42 : 0.22);
+    float localBounceWeight = foliageMaterial ? 0.18 : 0.075;
+    float3 secondaryBounce = max(baseColor, 0.0) * localBounceTint * localBounceWeight;
+    float3 indirect = (firstBounce + secondaryBounce) * diffuseVisibility;
 
     float3 reflectedDir = normalize(reflect(-v, n));
     float reflectedUp = saturate(dot(reflectedDir, surfaceUp) * 0.5 + 0.5);
@@ -423,8 +449,8 @@ float4 fragmentMain(VertexOutput input) : SV_Target
     {
         float backLit = saturate(dot(-n, l));
         float edgeLit = pow(1.0 - noV, 2.0);
-        float transmissionShadow = lerp(shadow, 1.0, 0.18);
-        direct += baseColor * float3(0.60, 0.80, 0.15) * backLit * (0.095 + 0.155 * edgeLit) * daylight * transmissionShadow;
+        float transmissionShadow = lerp(shadow, 1.0, 0.38);
+        direct += baseColor * float3(0.60, 0.82, 0.16) * backLit * (0.115 + 0.175 * edgeLit) * daylight * transmissionShadow;
     }
 
     float3 color = direct + indirect;
