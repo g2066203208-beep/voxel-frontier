@@ -15,6 +15,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: Normalize R14 source anchors
+        run: python3 .github/scripts/prepare_r14_anchor.py
       - name: Apply R14 patch
         run: python3 .github/scripts/materialize_terrain_r14.py
       - name: Verify R14 markers
