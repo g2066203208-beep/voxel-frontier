@@ -584,14 +584,14 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xBA7C9045F12C7F99ULL, w, 21000.0, 3);
     const double ultra = fbmSurface(
         definition.seed ^ 0x24A19947B3916CF7ULL, w, 98000.0, 2);
-    // R17 walkable micro-relief floor. The macro silhouette remains exclusively owned by
-    // GlobalGeomorph; these bounded terminal amplitudes only restore metre/deca-metre slope
-    // variation needed for natural ground traversal without rebuilding mountain systems.
+    // R17 walkable micro-relief floor v2. Macro silhouette remains exclusively owned by
+    // GlobalGeomorph. Most terminal relief is kept in the broad local/micro bands; fine and
+    // ultra bands stay strongly bounded so they cannot recreate the former noisy mountain skin.
     const double detailDamp = geomorphLandness
         * (1.0 - 0.80 * std::max(wetland, geomorph.floodplain))
         * (1.0 - 0.70 * bakedTableland);
     elevation += maxLand * detailDamp
-        * (0.0045 * local + 0.0018 * micro + 0.00065 * fine + 0.00015 * ultra);
+        * (0.0075 * local + 0.0028 * micro + 0.0010 * fine + 0.00020 * ultra);
 
     elevation = std::clamp(elevation, -maxOcean, maxLand);
 
