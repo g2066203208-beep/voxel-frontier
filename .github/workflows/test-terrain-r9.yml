@@ -1,0 +1,100 @@
+name: Terrain R9 Real Vulkan Landform Gate
+
+on:
+  push:
+    branches: [test/terrain-r9-geomorph]
+  workflow_dispatch:
+
+concurrency:
+  group: terrain-r9-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify R9 source
+        run: |
+          grep -q 'R8 mountain hierarchy' native/src/world/PlanetSurface.cpp
+          grep -q 'R8 plateau hierarchy' native/src/world/PlanetSurface.cpp
+          grep -q 'R9 plateau detail suppression' native/src/world/PlanetSurface.cpp
+          grep -q 'R9 capture visibility' native/src/app/Main.cpp
+          git diff --check
+      - run: cmake -S native -B build/core -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
+      - run: cmake --build build/core --parallel
+      - run: ctest --test-dir build/core --verbose --output-on-failure
+
+  real-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify R9 source
+        run: |
+          grep -q 'R9 plateau detail suppression' native/src/world/PlanetSurface.cpp
+          grep -q 'R9 capture visibility' native/src/app/Main.cpp
+          git diff --check
+      - name: Install Vulkan headless dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev libdrm-dev libgbm-dev \
+            libegl1-mesa-dev libgl1-mesa-dev libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+      - name: Build Vulkan runtime
+        run: |
+          cmake -S native -B build/visual -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
+          cmake --build build/visual --parallel
+      - name: Verify Vulkan device
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+      - name: Capture R9 landforms
+        shell: bash
+        run: |
+          set -euo pipefail
+          export SDL_VIDEODRIVER=x11 DISPLAY=:99
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 2
+          APP="$(find build/visual -type f -name voxel_frontier -perm -111 | head -n 1)"
+          mkdir -p r9-captures
+          failures=0
+          for mode in mountain river coast highland; do
+            VF_CAPTURE_LANDFORM="$mode" timeout 65s "$APP" >"r9-captures/runtime-$mode.log" 2>&1 &
+            pid=$!
+            sleep 16
+            import -display :99 -window root "r9-captures/$mode.png"
+            colors="$(convert "r9-captures/$mode.png" -format '%k' info:)"
+            echo "$mode unique_colors=$colors" | tee -a r9-captures/capture-info.txt
+            if [ "$colors" -le 64 ]; then failures=$((failures+1)); fi
+            kill "$pid" 2>/dev/null || true
+            wait "$pid" 2>/dev/null || true
+            sleep 1
+          done
+          identify r9-captures/*.png | tee -a r9-captures/capture-info.txt
+          test "$failures" -eq 0
+      - name: Upload R9 evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: terrain-r9-real-vulkan-${{ github.sha }}
+          path: |
+            r9-captures
+            vulkan-summary.txt
+            xvfb.log
+          if-no-files-found: warn
