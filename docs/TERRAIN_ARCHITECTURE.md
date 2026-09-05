@@ -13,6 +13,33 @@ The authoritative terrain representation is hybrid:
 3. **Surface extraction** — local SDF/density data is converted to smooth triangle meshes; no visible cubes.
 4. **Persistent edits** — store sparse edit operations / sparse field bricks, never a dense voxel grid for an entire planet.
 
+## Scientific morphology model
+
+The default Earthlike world is **seeded and deterministic, not unstructured random noise**. Randomness is used only to choose reproducible initial conditions (plate cell centers, Euler poles, crust class, hotspots and residual detail phases). Once `planetSeed` is fixed, `(seed, position)` always returns the same terrain.
+
+The game generator intentionally models the first-order causal relationships that dominate Earth-scale morphology while avoiding a real-time geological simulation:
+
+- spherical Voronoi-like plate cells approximate tectonic plates;
+- each plate has a seeded Euler pole, so its surface velocity is tangential rigid rotation (`v ~ omega x r`);
+- convergent boundaries preferentially create mountain belts on continental crust and trenches where oceanic crust participates;
+- divergent oceanic boundaries are raised into mid-ocean ridges;
+- continental crust sits higher than oceanic crust, with a smooth shelf/slope transition around sea level;
+- the default Earthlike preset is ocean-dominated to stay near Earth's observed ~71% ocean coverage, without copying Earth's actual coastline;
+- plate-interior broad uplift creates plateaus/basins;
+- volcanic relief combines convergent volcanic arcs with deterministic mantle-hotspot proxies;
+- small multi-scale roughness is subordinate to tectonic morphology and may not decide where continents, ridges or trenches exist;
+- the current global-authority river field is a cheap deterministic valley proxy; close-range river/canyon refinement is planned to use downhill DEM flow direction/accumulation so water networks cannot run uphill.
+
+This is a **game-optimized geological surrogate**, not a reconstruction of the real present-day Earth. The target is scientific plausibility, readable gameplay and deterministic performance.
+
+### External scientific anchors
+
+- USGS, *This Dynamic Earth — Understanding Plate Motions*: divergent boundaries and seafloor spreading create mid-ocean ridges; convergent plate interactions are associated with mountain building and subduction-zone morphology. https://pubs.usgs.gov/gip/dynamic/understanding.html
+- NOAA Ocean Exploration, *What are the different types of plate tectonic boundaries?*: divergent boundaries create new crust; convergent boundaries can buckle plate edges into mountain ranges or bend one plate into a deep seafloor trench. https://oceanexplorer.noaa.gov/ocean-fact/plate-boundaries/
+- NOAA Ocean Exploration, *What is a mid-ocean ridge?*: mid-ocean ridges occur along divergent plate boundaries where new ocean floor is created. https://oceanexplorer.noaa.gov/ocean-fact/mid-ocean-ridge/
+- NOAA Ocean Service, *How many oceans are there?*: the global ocean covers about 71% of Earth's surface. https://oceanservice.noaa.gov/facts/howmanyoceans.html
+- O'Callaghan & Mark (1984), *The extraction of drainage networks from digital elevation data*: foundation for D8-style DEM drainage extraction; the close-range hydrology refinement should route flow to lower terrain and use contributing area to identify channels.
+
 ## Why not pure polygon mesh as world truth?
 
 A pure surface triangle mesh is excellent for rendering and planet-scale LOD, but arbitrary digging, tunnels, arches, undercuts and terrain addition require dynamic topology surgery, spatial remeshing and robust collision updates. That is substantially harder to make stable than editing a local implicit field.
@@ -37,12 +64,13 @@ Our implementation follows the smooth interpretation only.
 - cube-sphere or ellipsoidal surface patches
 - quadtree/clipmap LOD driven by screen-space error
 - shared regular patch topology where possible
-- GPU procedural displacement from deterministic terrain functions
+- deterministic tectonic/morphology displacement
 - indexed triangle or mesh-shader output
 
 ### Local high-detail surface
 - high-resolution surface patches
 - collision mesh / height query
+- local hydrology refinement for rivers/canyons
 - no dense global volume
 
 ### Local 3D/deformable zones
@@ -51,10 +79,18 @@ Our implementation follows the smooth interpretation only.
 - smooth surface extraction using Dual Contouring / Marching Cubes family
 - multiresolution transitions must be crack-free (Transvoxel-style transition cells or equivalent seam strategy)
 
+## Ocean model
+
+The ocean uses one mean sea-level geoid shared by rendering and physics. Terrain continues underneath the water, so continental shelves, slopes, abyssal basins, mid-ocean ridges, seamounts and trenches remain real terrain rather than a flat ocean floor.
+
+Rendering may draw a continuous water shell under land because opaque terrain depth hides it; this is much cheaper than rebuilding coastline polygons every terrain update. Near the player, the same water material path can add waves, foam, refraction and shore interaction without changing the authoritative bathymetry.
+
+Physics uses seawater density/viscosity and a sea-level surface for buoyancy. Local rivers/lakes use the same fluid/material system instead of separate special-purpose water physics.
+
 ## Meshing preference
 
 For the first playable:
-- planet surface: regular indexed patch mesh generated from procedural displacement;
+- planet surface: regular indexed patch mesh generated from deterministic displacement;
 - local volumetric terrain: start with a correct smooth isosurface extractor;
 - evaluate Dual Contouring as the preferred long-term path for better feature preservation and potentially more compact topology;
 - keep Marching Cubes as a simpler fallback/reference implementation;
@@ -81,7 +117,8 @@ A future GPU-friendly sparse hierarchy may borrow ideas from OpenVDB/NanoVDB, bu
 - GPU-driven indirect drawing where measurements justify it;
 - task/mesh shader path where supported, with indexed fallback;
 - far geometry complexity proportional to projected screen size, not physical planet detail;
-- strict CPU/GPU/upload/memory budgets per frame.
+- strict CPU/GPU/upload/memory budgets per frame;
+- no device-wide GPU idle in normal terrain streaming.
 
 ## Non-negotiable visual rule
 

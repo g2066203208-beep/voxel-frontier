@@ -1,9 +1,11 @@
-#include "vf/gameplay/PhysicsPlayground.hpp"
+#include "vf/physics/PhysicsWorld.hpp"
 #include "vf/render/PhysicsDebugMesh.hpp"
 
 #include <cstdlib>
 #include <iostream>
 #include <string_view>
+
+#include <glm/geometric.hpp>
 
 namespace {
 
@@ -34,49 +36,63 @@ void testPrimitiveBuilders() {
     require(mesh.triangleCount() > 100U, "primitive builder should produce meaningful visible geometry");
 }
 
-void testPlaygroundProducesMovingGeometry() {
-    vf::PlanetDefinition planet{};
-    planet.radius = 240.0;
-    planet.maxElevation = 22.0;
-    planet.atmosphereHeight = 120.0;
-
+void testGenericRigidBodyProducesMovingGeometry() {
     vf::PhysicsEnvironment environment{};
-    environment.planet = planet;
-    environment.surfaceGravity = 9.81;
+    environment.planet.radius = 100.0;
+    environment.planet.maxElevation = 0.0;
+    environment.surfaceGravity = 0.0;
+    environment.atmosphere.seaLevelPressurePa = 0.0;
+    environment.atmosphere.gustAmplitude = 0.0;
+    environment.atmosphere.prevailingWind = {};
     environment.ocean.enabled = false;
-    environment.atmosphere.prevailingWind = {6.0, 0.0, 2.0};
     vf::PhysicsWorld physics{environment};
-    vf::PhysicsPlayground playground{physics, planet, glm::normalize(glm::dvec3{0.72, 0.52, 0.46})};
 
-    const auto initialMesh = playground.buildDebugMesh();
+    vf::RigidBodyDesc desc{};
+    desc.mass = 8.0;
+    desc.position = {150.0, 0.0, 0.0};
+    desc.linearVelocity = {0.0, 3.0, 0.0};
+    desc.collisionShape = vf::CollisionShape::box({0.5, 0.8, 0.4});
+    desc.linearDamping = 0.0;
+    desc.angularDamping = 0.0;
+    desc.aerodynamics.referenceArea = 0.0;
+    const std::uint32_t id = physics.createRigidBody(desc);
+
+    const auto* initialBody = physics.body(id);
+    require(initialBody != nullptr, "generic rigid body should exist");
+    vf::PlanetMesh initialMesh{};
+    vf::appendDebugBox(initialMesh, initialBody->position, initialBody->orientation,
+        {0.5, 0.8, 0.4}, {0.35F, 0.55F, 0.82F});
     requireValidIndices(initialMesh);
-    require(physics.bodies().size() >= 14U, "playground should instantiate multiple mechanical and environmental bodies");
-    require(physics.activeConstraintCount() >= 5U, "playground should instantiate spring, hinge and gear constraints");
 
-    for (int frame = 0; frame < 240; ++frame) {
-        physics.advance(1.0 / 60.0);
-        playground.update(1.0 / 60.0);
-    }
-    const auto movedMesh = playground.buildDebugMesh();
+    for (int frame = 0; frame < 120; ++frame) physics.advance(1.0 / 60.0);
+
+    const auto* movedBody = physics.body(id);
+    require(movedBody != nullptr, "generic rigid body should survive simulation");
+    require(glm::length(movedBody->position - desc.position) > 1.0,
+        "generic physics body should move without a special-case playground controller");
+
+    vf::PlanetMesh movedMesh{};
+    vf::appendDebugBox(movedMesh, movedBody->position, movedBody->orientation,
+        {0.5, 0.8, 0.4}, {0.35F, 0.55F, 0.82F});
     requireValidIndices(movedMesh);
-    require(movedMesh.vertices.size() == initialMesh.vertices.size(), "playground topology should stay stable for inexpensive streaming");
+    require(movedMesh.vertices.size() == initialMesh.vertices.size(),
+        "generic rigid-body render topology should stay stable while its pose changes");
 
     bool positionChanged = false;
-    const std::size_t sampleCount = std::min(initialMesh.vertices.size(), movedMesh.vertices.size());
-    for (std::size_t i = 0; i < sampleCount; i += 17U) {
-        if (glm::length(movedMesh.vertices[i].position - initialMesh.vertices[i].position) > 0.01F) {
+    for (std::size_t i = 0; i < initialMesh.vertices.size(); ++i) {
+        if (glm::length(movedMesh.vertices[i].position - initialMesh.vertices[i].position) > 0.5F) {
             positionChanged = true;
             break;
         }
     }
-    require(positionChanged, "physics playground geometry must actually move after simulation advances");
+    require(positionChanged, "debug geometry should follow authoritative rigid-body motion");
 }
 
 } // namespace
 
 int main() {
     testPrimitiveBuilders();
-    testPlaygroundProducesMovingGeometry();
+    testGenericRigidBodyProducesMovingGeometry();
     std::cout << "vf_physics_mesh_tests: PASS\n";
     return 0;
 }

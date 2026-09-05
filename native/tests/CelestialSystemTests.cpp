@@ -30,6 +30,8 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     first.name = "A";
     first.radiusMeters = 240.0;
     first.massKg = 9.81 * first.radiusMeters * first.radiusMeters / vf::CelestialSystem::kGravitationalConstant;
+    first.gameplaySurfaceGravityMps2 = 9.81;
+    first.gravityInfluenceRadiusMeters = 600.0;
     first.atmosphere.enabled = true;
     first.atmosphere.heightMeters = 120.0;
     first.atmosphere.surfacePressurePa = 101325.0;
@@ -40,14 +42,16 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     const glm::dvec3 primarySurfacePoint{240.0, 0.0, 0.0};
     const auto isolatedSurface = system.sampleEnvironment(primarySurfacePoint);
     require(isolatedSurface.bodyId == firstId, "primary planet must own its local environment");
-    requireNear(glm::length(isolatedSurface.gravityAcceleration), 9.81, 0.02,
-        "isolated primary surface gravity must match GM/R^2");
+    requireNear(glm::length(system.gravityAccelerationAt(primarySurfacePoint)), 9.81, 0.02,
+        "default world gravity must match configured gameplay surface gravity");
     require(isolatedSurface.pressurePa > 90000.0, "primary planet must expose its own atmosphere");
 
     vf::CelestialBody second = first;
     second.name = "B";
     second.position = {1200.0, 0.0, 0.0};
     second.massKg *= 0.38;
+    second.gameplaySurfaceGravityMps2 = 3.7;
+    second.gravityInfluenceRadiusMeters = 420.0;
     second.atmosphere.surfacePressurePa = 600.0;
     second.climate.meanTemperatureK = 220.0;
     const auto secondId = system.addBody(second);
@@ -55,17 +59,23 @@ void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
     const auto firstSurface = system.sampleEnvironment(primarySurfacePoint);
     require(firstSurface.bodyId == firstId, "primary planet must retain ownership after another gravity source is added");
 
+    const glm::dvec3 physicalGravity = system.physicalGravityAccelerationAt(primarySurfacePoint);
     const double primaryAcceleration = vf::CelestialSystem::kGravitationalConstant
         * first.massKg / (first.radiusMeters * first.radiusMeters);
     const double secondDistance = second.position.x - primarySurfacePoint.x;
     const double secondaryAcceleration = vf::CelestialSystem::kGravitationalConstant
         * second.massKg / (secondDistance * secondDistance);
     const double expectedX = -primaryAcceleration + secondaryAcceleration;
-    requireNear(firstSurface.gravityAcceleration.x, expectedX, 1.0e-6,
-        "multi-body gravity must equal the vector superposition of both bodies");
-    require(std::abs(firstSurface.gravityAcceleration.y) < 1.0e-10
-        && std::abs(firstSurface.gravityAcceleration.z) < 1.0e-10,
-        "collinear two-body gravity must remain collinear");
+    requireNear(physicalGravity.x, expectedX, 1.0e-6,
+        "explicit physical gravity must equal vector superposition of both bodies");
+    require(std::abs(physicalGravity.y) < 1.0e-10 && std::abs(physicalGravity.z) < 1.0e-10,
+        "collinear two-body physical gravity must remain collinear");
+
+    const glm::dvec3 gameplayAtPrimary = system.gravityAccelerationAt(primarySurfacePoint);
+    require(gameplayAtPrimary.x < -9.0,
+        "inside the primary SOI, default game gravity must remain owned by the primary instead of being cancelled by a distant planet");
+    require(system.gameplayReferenceBodyAt(primarySurfacePoint)->id == firstId,
+        "gameplay reference body must be primary inside its SOI");
 
     const auto secondSurface = system.sampleEnvironment({1440.0, 0.0, 0.0});
     require(secondSurface.bodyId == secondId, "second planet must own its local environment");
@@ -93,6 +103,36 @@ void testAtmosphereFadesToVacuum() {
     require(surface.pressurePa > high.pressurePa, "pressure must fall with altitude");
     require(vacuum.pressurePa == 0.0 && vacuum.densityKgPerM3 == 0.0,
         "outside the atmosphere must be vacuum");
+}
+
+void testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace() {
+    vf::CelestialSystem system;
+
+    vf::CelestialBody a{};
+    a.radiusMeters = 100.0;
+    a.massKg = 9.81 * 100.0 * 100.0 / vf::CelestialSystem::kGravitationalConstant;
+    a.gameplaySurfaceGravityMps2 = 9.81;
+    a.gravityInfluenceRadiusMeters = 300.0;
+    const auto aId = system.addBody(a);
+
+    vf::CelestialBody b{};
+    b.radiusMeters = 60.0;
+    b.position = {1000.0, 0.0, 0.0};
+    b.massKg = 3.0 * 60.0 * 60.0 / vf::CelestialSystem::kGravitationalConstant;
+    b.gameplaySurfaceGravityMps2 = 3.0;
+    b.gravityInfluenceRadiusMeters = 220.0;
+    const auto bId = system.addBody(b);
+
+    require(system.gameplayReferenceBodyAt({150.0, 0.0, 0.0})->id == aId,
+        "A must own points inside A SOI");
+    require(system.gameplayReferenceBodyAt({940.0, 0.0, 0.0})->id == bId,
+        "B must own points inside B SOI");
+
+    const glm::dvec3 midpoint{500.0, 0.0, 0.0};
+    require(system.gameplayReferenceBodyAt(midpoint) == nullptr,
+        "space outside every planetary SOI must not secretly belong to the primary planet");
+    require(glm::length(system.gravityAccelerationAt(midpoint)) < 1.0e-9,
+        "without a star, free interplanetary space outside SOIs must have negligible gameplay gravity");
 }
 
 void testSpinAndBoundOrbit() {
@@ -151,6 +191,8 @@ void testRotatingSurfaceTransfersTangentialVelocityToRigidBody() {
     planet.radiusMeters = terrain.radius;
     planet.massKg = 9.81 * planet.radiusMeters * planet.radiusMeters
         / vf::CelestialSystem::kGravitationalConstant;
+    planet.gameplaySurfaceGravityMps2 = 9.81;
+    planet.gravityInfluenceRadiusMeters = 400.0;
     planet.spinAxis = {0.0, 1.0, 0.0};
     planet.spinRateRadPerSecond = 0.01;
     const auto planetId = celestial.addBody(planet);
@@ -188,6 +230,7 @@ void testRotatingSurfaceTransfersTangentialVelocityToRigidBody() {
 int main() {
     testSurfaceGravityAndAtmosphereBelongToEachPlanet();
     testAtmosphereFadesToVacuum();
+    testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace();
     testSpinAndBoundOrbit();
     testDipoleMagneticFieldFallsWithDistance();
     testRotatingSurfaceTransfersTangentialVelocityToRigidBody();

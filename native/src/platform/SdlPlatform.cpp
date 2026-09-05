@@ -8,21 +8,26 @@
 namespace vf {
 
 SdlPlatform::SdlPlatform(std::string_view title, std::int32_t width, std::int32_t height) {
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD | SDL_INIT_AUDIO)) {
+    // The visible reticle is rendered in a dedicated Vulkan screen-space HUD pass. Keeping an OS
+    // cursor visible in relative mode caused driver-dependent duplicate/warped crosshairs.
+    SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "0");
+    SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, "1");
+
+    // The current native runtime has no audio device/stream yet. Initializing SDL audio here made
+    // the renderer depend on a completely unrelated hardware subsystem and prevented headless
+    // software-Vulkan visual validation. Add SDL_INIT_AUDIO only when the audio system owns an
+    // actual device lifecycle; video/events/gamepad are the subsystems used by this platform layer.
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
         throw std::runtime_error(std::string{"SDL_Init failed: "} + SDL_GetError());
-    }
 
     window_ = SDL_CreateWindow(
-        std::string{title}.c_str(),
-        width,
-        height,
+        std::string{title}.c_str(), width, height,
         SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
     if (!window_) {
         const std::string error = SDL_GetError();
         SDL_Quit();
         throw std::runtime_error("SDL_CreateWindow failed: " + error);
     }
-
     setMouseCaptured(true);
 }
 
@@ -33,18 +38,40 @@ SdlPlatform::~SdlPlatform() {
 
 void SdlPlatform::setMouseCaptured(bool captured) {
     input_.mouseCaptured = captured;
-    if (window_) {
-        if (!SDL_SetWindowRelativeMouseMode(window_, captured)) {
-            SDL_Log("SDL_SetWindowRelativeMouseMode failed: %s", SDL_GetError());
+    if (!window_) return;
+    if (!SDL_SetWindowRelativeMouseMode(window_, captured))
+        SDL_Log("SDL_SetWindowRelativeMouseMode failed: %s", SDL_GetError());
+    if (captured) SDL_HideCursor();
+    else SDL_ShowCursor();
+}
+
+void SdlPlatform::updateSpaceDoubleTap(bool spaceDown) {
+    if (!spaceDown) {
+        suppressSpaceUntilRelease_ = false;
+        spaceWasDown_ = false;
+        return;
+    }
+
+    if (!spaceWasDown_) {
+        constexpr std::uint64_t kDoubleTapWindowNanoseconds = 420000000ULL;
+        const std::uint64_t now = SDL_GetTicksNS();
+        if (lastSpacePressNanoseconds_ != 0U
+            && now >= lastSpacePressNanoseconds_
+            && now - lastSpacePressNanoseconds_ <= kDoubleTapWindowNanoseconds) {
+            input_.toggleFlight = true;
+            suppressSpaceUntilRelease_ = true;
+            lastSpacePressNanoseconds_ = 0U;
+        } else {
+            lastSpacePressNanoseconds_ = now;
         }
     }
+    spaceWasDown_ = true;
 }
 
 void SdlPlatform::refreshKeyboardState() {
     int keyCount = 0;
     const bool* keys = SDL_GetKeyboardState(&keyCount);
     if (!keys || keyCount <= 0) return;
-
     const auto down = [keys, keyCount](SDL_Scancode code) {
         const int index = static_cast<int>(code);
         return index >= 0 && index < keyCount && keys[index];
@@ -55,13 +82,19 @@ void SdlPlatform::refreshKeyboardState() {
     input_.left = down(SDL_SCANCODE_A);
     input_.right = down(SDL_SCANCODE_D);
     input_.sprint = down(SDL_SCANCODE_LSHIFT) || down(SDL_SCANCODE_RSHIFT);
-    input_.ascend = down(SDL_SCANCODE_SPACE);
+    const bool spaceDown = down(SDL_SCANCODE_SPACE);
+    updateSpaceDoubleTap(spaceDown);
+    input_.ascend = spaceDown && !suppressSpaceUntilRelease_;
     input_.descend = down(SDL_SCANCODE_LCTRL) || down(SDL_SCANCODE_RCTRL);
 }
 
 bool SdlPlatform::pumpEvents() {
     input_.mouseDx = 0.0F;
     input_.mouseDy = 0.0F;
+    input_.flightSpeedSteps = 0.0;
+    input_.toggleFlight = false;
+    input_.leftPressed = false;
+    input_.rightPressed = false;
 
     SDL_Event event{};
     while (SDL_PollEvent(&event)) {
@@ -78,13 +111,20 @@ bool SdlPlatform::pumpEvents() {
                 input_.mouseDy += event.motion.yrel;
             }
             break;
+        case SDL_EVENT_MOUSE_WHEEL:
+            if (input_.mouseCaptured) input_.flightSpeedSteps += static_cast<double>(event.wheel.y);
+            break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
-            if (!input_.mouseCaptured) setMouseCaptured(true);
+            if (!input_.mouseCaptured) {
+                setMouseCaptured(true);
+                break;
+            }
+            if (event.button.button == SDL_BUTTON_LEFT) input_.leftPressed = true;
+            if (event.button.button == SDL_BUTTON_RIGHT) input_.rightPressed = true;
             break;
         case SDL_EVENT_KEY_DOWN:
-            if (!event.key.repeat && event.key.key == SDLK_ESCAPE) {
+            if (!event.key.repeat && event.key.scancode == SDL_SCANCODE_ESCAPE)
                 setMouseCaptured(!input_.mouseCaptured);
-            }
             break;
         default:
             break;

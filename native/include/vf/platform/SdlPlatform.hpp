@@ -16,9 +16,13 @@ struct PlatformInput {
     bool sprint{};
     bool ascend{};
     bool descend{};
+    bool toggleFlight{};
+    bool leftPressed{};
+    bool rightPressed{};
     bool mouseCaptured{true};
     float mouseDx{};
     float mouseDy{};
+    double flightSpeedSteps{};
 };
 
 class SdlPlatform final {
@@ -39,10 +43,14 @@ public:
 private:
     void setMouseCaptured(bool captured);
     void refreshKeyboardState();
+    void updateSpaceDoubleTap(bool spaceDown);
 
     SDL_Window* window_{};
     bool resized_{true};
     PlatformInput input_{};
+    bool spaceWasDown_{};
+    bool suppressSpaceUntilRelease_{};
+    std::uint64_t lastSpacePressNanoseconds_{};
 };
 
 } // namespace vf
