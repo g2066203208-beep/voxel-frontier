@@ -553,7 +553,7 @@ PlanetTerrainSample samplePlanetTerrain(
         * (1.0 - 0.72 * std::max(wetland, geomorph.floodplain))
         * (1.0 - 0.52 * plateau);
     elevation += maxLand * detailDamp
-        * (0.0100 * local + 0.0032 * micro + 0.00115 * fine + 0.00036 * ultra);
+        * (0.0100 * local + 0.0038 * micro + 0.0062 * fine + 0.0018 * ultra);
 
     elevation = std::clamp(elevation, -maxOcean, maxLand);
 
