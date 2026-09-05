@@ -1,8 +1,11 @@
 #include "vf/player/CharacterController.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+
+#include <glm/geometric.hpp>
 
 namespace {
 
@@ -128,6 +131,75 @@ int main() {
             "fast falling capsule must land on thin floor instead of tunneling to planet");
         require(controller.centerPosition().y > 1003.80,
             "capsule center must remain physically above the thin floor");
+    }
+
+    {
+        // Regression for terrain-side penetration. Find a real procedural land slope, place the
+        // capsule directly on it, then walk across it. The old single center-ray terrain test could
+        // let the slope enter through the lower hemisphere even though the center ray was clear.
+        vf::PhysicsEnvironment environment{};
+        environment.planet.seed = 0x71A9F20DULL;
+        environment.planet.radius = 6371000.0;
+        environment.planet.maxElevation = 8850.0;
+        environment.planet.maxOceanDepthMeters = 11000.0;
+        environment.surfaceGravity = 9.80665;
+        environment.atmosphere.prevailingWind = {};
+        environment.atmosphere.gustAmplitude = 0.0;
+        environment.weather.windMultiplier = 0.0;
+        environment.ocean.enabled = false;
+        vf::PhysicsWorld world{environment};
+
+        glm::dvec3 slopeDirection{1.0, 0.0, 0.0};
+        glm::dvec3 slopeNormal{1.0, 0.0, 0.0};
+        bool foundSlope = false;
+        for (std::uint32_t face = 0; face < 6U && !foundSlope; ++face) {
+            for (int y = 0; y <= 36 && !foundSlope; ++y) {
+                for (int x = 0; x <= 36; ++x) {
+                    const double u = -1.0 + 2.0 * static_cast<double>(x) / 36.0;
+                    const double v = -1.0 + 2.0 * static_cast<double>(y) / 36.0;
+                    const glm::dvec3 d = vf::cubeSphereDirection(face, u, v);
+                    const auto terrain = vf::samplePlanetTerrain(environment.planet, d);
+                    if (terrain.submerged(environment.planet)
+                        || terrain.elevationMeters < 120.0
+                        || terrain.elevationMeters > 2600.0
+                        || terrain.canyon > 0.55
+                        || terrain.coastalCliff > 0.65) continue;
+                    const glm::dvec3 normal = vf::planetSurfaceNormal(environment.planet, d);
+                    const double alignment = glm::dot(normal, d);
+                    if (alignment > 0.80 && alignment < 0.975) {
+                        slopeDirection = d;
+                        slopeNormal = normal;
+                        foundSlope = true;
+                        break;
+                    }
+                }
+            }
+        }
+        require(foundSlope, "test planet must expose a walkable non-flat procedural slope");
+
+        const double surfaceRadius = vf::planetSurfaceRadius(environment.planet, slopeDirection);
+        const glm::dvec3 surfacePoint = slopeDirection * surfaceRadius;
+        vf::CharacterController controller{world};
+        controller.resetFromEye(surfacePoint + slopeDirection * 1.75, {}, true);
+        settle(controller, 180);
+        require(controller.grounded(), "capsule must settle on procedural slope without falling through");
+
+        glm::dvec3 tangent = glm::cross(slopeNormal, slopeDirection);
+        if (glm::length(tangent) < 1.0e-8) tangent = glm::cross(slopeDirection, glm::dvec3{0.0, 1.0, 0.0});
+        tangent = glm::normalize(tangent);
+        vf::CharacterControllerInput input{};
+        input.forward = tangent;
+        input.right = glm::normalize(glm::cross(tangent, slopeDirection));
+        input.forwardAxis = 0.65;
+        for (int i = 0; i < 180; ++i) controller.update(input, 1.0 / 120.0);
+        settle(controller, 60);
+
+        const glm::dvec3 finalDirection = glm::normalize(controller.centerPosition());
+        const double finalSurface = vf::planetSurfaceRadius(environment.planet, finalDirection);
+        const double radialBottom = glm::length(controller.centerPosition())
+            - (controller.settings().halfHeight + controller.settings().radius);
+        require(radialBottom >= finalSurface - 0.10,
+            "lower capsule must remain above authoritative procedural terrain after slope traversal");
     }
 
     std::cout << "Character controller tests passed\n";
