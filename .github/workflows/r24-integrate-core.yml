@@ -1,0 +1,39 @@
+name: R24 Integrate Core Source
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_integrate_core.py'
+      - '.github/workflows/r24-integrate-core.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-and-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: work/r24-unified-planetary-physics
+      - name: Apply R24 source integration
+        run: python3 .github/scripts/r24_integrate_core.py
+      - name: Configure C++23 core tests
+        run: cmake -S native -B native/build-r24-core -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+      - name: Build core tests
+        run: cmake --build native/build-r24-core --parallel 2
+      - name: Run core tests
+        run: ctest --test-dir native/build-r24-core --output-on-failure
+      - name: Commit integrated source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native/CMakeLists.txt native/src/physics/PhysicsWorld.cpp native/src/player/CharacterController.cpp native/include/vf/player/CharacterController.hpp native/tests/CelestialSystemTests.cpp
+          if git diff --cached --quiet; then
+            echo 'No source changes to commit.'
+          else
+            git commit -m 'R24: integrate unified surface climate water and physical gravity runtime core'
+            git push origin HEAD:work/r24-unified-planetary-physics
+          fi
