@@ -21,6 +21,8 @@ FetchContent_MakeAvailable(glm)
 
 add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
+    src/world/PlanetSurfaceAuthority.cpp
+    src/world/PlanetClimateGrid.cpp
     src/world/ProceduralEcology.cpp
     src/world/CelestialSystem.cpp
     src/world/CelestialPhysicsFrame.cpp
@@ -33,6 +35,7 @@ add_library(vf_engine STATIC
     src/physics/GjkEpa.cpp
     src/physics/AerodynamicSurface.cpp
     src/physics/ShallowWater.cpp
+    src/physics/OceanSpectrum.cpp
     src/physics/SpectralOptics.cpp
     src/physics/ElectromagneticRadiation.cpp
     src/physics/MaterialPhysics.cpp
@@ -197,7 +200,7 @@ if(VF_BUILD_TESTS)
     foreach(test_name IN ITEMS
         planet_physics terrain_landforms camera_input character_controller collision_geometry convex_hull gjk_epa contact_solver mechanics
         physics_mesh celestial_system celestial_physics_frame celestial_surface_frames interplanetary_flight gameplay_interaction
-        sparse_universe_catalog spectral_optics electromagnetic_radiation material_physics gas_volume rope_xpbd structural_damage)
+        sparse_universe_catalog spectral_optics electromagnetic_radiation material_physics gas_volume rope_xpbd structural_damage r24_physical_planet)
         string(REPLACE "_" ";" test_words "${test_name}")
     endforeach()
 
@@ -267,6 +270,9 @@ if(VF_BUILD_TESTS)
     add_executable(vf_structural_damage_tests tests/StructuralDamageTests.cpp)
     target_link_libraries(vf_structural_damage_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_structural_damage_tests COMMAND vf_structural_damage_tests)
+    add_executable(vf_r24_physical_planet_tests tests/R24PhysicalPlanetTests.cpp)
+    target_link_libraries(vf_r24_physical_planet_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_r24_physical_planet_tests COMMAND vf_r24_physical_planet_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests tests/ShaderContractTests.cpp "${VF_SHADER_HEADER}")
