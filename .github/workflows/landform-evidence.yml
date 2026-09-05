@@ -1,0 +1,299 @@
+name: Landform Evidence Audit
+
+on:
+  push:
+    branches:
+      - audit/landform-evidence-r1
+    paths:
+      - 'native/**'
+      - '.github/workflows/landform-evidence.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: landform-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v6
+
+      - name: Install headless Vulkan and X11 dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Inject capture-only landform locator and aerial camera
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          main = Path('native/src/app/Main.cpp')
+          s = main.read_text()
+          s = s.replace('#include <cstdint>\n', '#include <cstdint>\n#include <cstdlib>\n#include <string>\n#include <string_view>\n')
+          marker = 'void appendMesh(vf::PlanetMesh& destination, const vf::PlanetMesh& source) {'
+          helper = r'''
+          [[nodiscard]] double captureLandformScore(
+              const vf::PlanetTerrainSample& sample,
+              std::string_view name) noexcept {
+              if (name == "hills") return sample.hills;
+              if (name == "canyon") return sample.canyon;
+              if (name == "dunes") return sample.dunes;
+              if (name == "coastal_cliff") return sample.coastalCliff;
+              if (name == "wetland") return sample.wetland;
+              if (name == "glacier") return sample.glacier;
+              if (name == "mountain") return sample.mountain;
+              if (name == "plateau") return sample.plateau;
+              if (name == "volcano") return sample.volcano;
+              if (name == "river") return sample.river;
+              if (name == "trench") return sample.trench;
+              if (name == "ocean_ridge") return sample.oceanRidge;
+              return -1.0;
+          }
+
+          [[nodiscard]] glm::dvec3 findCaptureDirection(
+              const vf::PlanetDefinition& planet,
+              std::string_view name,
+              const glm::dvec3& sunDirectionInput) {
+              constexpr int grid = 112;
+              const glm::dvec3 sunDirection = safeNormalize(sunDirectionInput, {1.0, 0.0, 0.0});
+              glm::dvec3 best{1.0, 0.0, 0.0};
+              double bestScore = -std::numeric_limits<double>::infinity();
+              vf::PlanetTerrainSample bestSample{};
+              for (std::uint32_t face = 0; face < 6U; ++face) {
+                  for (int y = 0; y <= grid; ++y) {
+                      for (int x = 0; x <= grid; ++x) {
+                          const double u = -1.0 + 2.0 * static_cast<double>(x) / static_cast<double>(grid);
+                          const double v = -1.0 + 2.0 * static_cast<double>(y) / static_cast<double>(grid);
+                          const glm::dvec3 d = vf::cubeSphereDirection(face, u, v);
+                          const vf::PlanetTerrainSample sample = vf::samplePlanetTerrain(planet, d);
+                          const bool underwaterFeature = name == "trench" || name == "ocean_ridge";
+                          if (underwaterFeature != sample.submerged(planet)) continue;
+                          double score = captureLandformScore(sample, name);
+                          const double daylight = std::clamp(glm::dot(d, sunDirection) * 0.5 + 0.5, 0.0, 1.0);
+                          score += daylight * 0.035;
+                          if (score > bestScore) {
+                              bestScore = score;
+                              best = d;
+                              bestSample = sample;
+                          }
+                      }
+                  }
+              }
+              std::cout << "CAPTURE_TARGET " << name
+                        << " score=" << bestScore
+                        << " elev=" << bestSample.elevationMeters
+                        << " mountain=" << bestSample.mountain
+                        << " plateau=" << bestSample.plateau
+                        << " volcano=" << bestSample.volcano
+                        << " river=" << bestSample.river
+                        << " hills=" << bestSample.hills
+                        << " canyon=" << bestSample.canyon
+                        << " dunes=" << bestSample.dunes
+                        << " cliff=" << bestSample.coastalCliff
+                        << " wetland=" << bestSample.wetland
+                        << " glacier=" << bestSample.glacier
+                        << " trench=" << bestSample.trench
+                        << " ridge=" << bestSample.oceanRidge << '\n';
+              return safeNormalize(best);
+          }
+
+          '''
+          if marker not in s:
+              raise SystemExit('Main.cpp appendMesh marker not found')
+          s = s.replace(marker, helper + marker, 1)
+          old = '''        const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet, initialSunDirectionPlanet);'''
+          new = '''        const char* captureLandformEnv = std::getenv("VF_CAPTURE_LANDFORM");
+                  const std::string captureLandform = captureLandformEnv ? captureLandformEnv : "";
+                  const glm::dvec3 spawnDirection = captureLandform.empty()
+                      ? findPlayableSpawnDirection(planet, initialSunDirectionPlanet)
+                      : findCaptureDirection(planet, captureLandform, initialSunDirectionPlanet);'''
+          if old not in s:
+              raise SystemExit('Main.cpp spawn marker not found')
+          s = s.replace(old, new, 1)
+
+          # For underwater morphology evidence only, hide both ocean representations so the actual
+          # seabed geometry is visible. Normal game captures keep the ocean unchanged.
+          water_start = '            // Water has exactly two representations, never five stacked transparent squares:'
+          water_end = '            appendMesh(mesh, oceanProxy);'
+          a = s.find(water_start)
+          b = s.find(water_end, a)
+          if a < 0 or b < 0:
+              raise SystemExit('Main.cpp water block not found')
+          b += len(water_end)
+          block = s[a:b]
+          wrapped = '            if (std::getenv("VF_CAPTURE_HIDE_OCEAN") == nullptr) {\n' + block + '\n            }'
+          s = s[:a] + wrapped + s[b:]
+          main.write_text(s)
+
+          camera = Path('native/src/player/PlanetCamera.cpp')
+          s = camera.read_text()
+          s = s.replace('#include <cmath>\n', '#include <cmath>\n#include <cstdlib>\n')
+          old = '''    const glm::dvec3 startDirection = safeNormalize(startDirectionInput, {0.72, 0.52, 0.46});
+              if (celestialSystem_ != nullptr && primaryCelestialBodyId_ != 0U) {'''
+          new = '''    const glm::dvec3 startDirection = safeNormalize(startDirectionInput, {0.72, 0.52, 0.46});
+              const bool captureAerial = std::getenv("VF_CAPTURE_AERIAL") != nullptr;
+              double captureAltitude = 900.0;
+              if (const char* text = std::getenv("VF_CAPTURE_ALTITUDE"))
+                  captureAltitude = std::max(80.0, std::atof(text));
+              if (celestialSystem_ != nullptr && primaryCelestialBodyId_ != 0U) {'''
+          if old not in s:
+              raise SystemExit('PlanetCamera constructor marker not found')
+          s = s.replace(old, new, 1)
+          old = '''            const double surface = planetSurfaceRadius(planet, startDirection);
+                      localPosition_ = startDirection * (surface + eyeHeight_);
+                      localVelocity_ = {};
+                      grounded_ = true;
+                      syncWorldStateFromLocal(*primary);
+                      initializeViewAttitude(primary->orientation * startDirection);
+                      return;'''
+          new = '''            const double surface = planetSurfaceRadius(planet, startDirection);
+                      localPosition_ = startDirection * (surface + (captureAerial ? captureAltitude : eyeHeight_));
+                      localVelocity_ = {};
+                      grounded_ = !captureAerial;
+                      flightMode_ = captureAerial;
+                      syncWorldStateFromLocal(*primary);
+                      const glm::dvec3 surfaceUpWorld = safeNormalize(primary->orientation * startDirection);
+                      initializeViewAttitude(surfaceUpWorld);
+                      if (captureAerial) {
+                          glm::dvec3 horizontal = viewForward_ - surfaceUpWorld * glm::dot(viewForward_, surfaceUpWorld);
+                          horizontal = safeNormalize(horizontal, stablePerpendicular(surfaceUpWorld));
+                          viewForward_ = safeNormalize(horizontal * 0.54 - surfaceUpWorld * 0.84, horizontal);
+                          const glm::dvec3 projectedUp = surfaceUpWorld - viewForward_ * glm::dot(surfaceUpWorld, viewForward_);
+                          viewUp_ = safeNormalize(projectedUp, surfaceUpWorld);
+                      }
+                      return;'''
+          if old not in s:
+              raise SystemExit('PlanetCamera primary initialization block not found')
+          s = s.replace(old, new, 1)
+          camera.write_text(s)
+          PY
+
+      - name: Configure runtime and tests
+        run: cmake -S native -B build/audit -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build runtime and tests
+        run: cmake --build build/audit --parallel
+
+      - name: Run terrain and collision regression tests
+        run: |
+          ctest --test-dir build/audit --output-on-failure -R 'vf_(terrain_landform|character_controller)_tests' | tee unit-tests.txt
+
+      - name: Record streaming mismatch audit
+        run: |
+          python3 - <<'PY' | tee streaming-audit.txt
+          inner_half = 4096.0
+          morph_start = inner_half * 0.78
+          ground_prefetch = 8000.0 * 0.42
+          tree_radius = 1800.0
+          print(f'inner morph starts at {morph_start:.2f} m from LOD center')
+          print(f'ground terrain rebuild request starts at {ground_prefetch:.2f} m')
+          print(f'tree ecology generation radius is {tree_radius:.2f} m')
+          print(f'render/physics danger band before rebuild: {ground_prefetch-morph_start:.2f} m')
+          print(f'possible player distance beyond tree coverage before rebuild: {ground_prefetch-tree_radius:.2f} m')
+          if ground_prefetch > morph_start:
+              print('AUDIT_FAIL: player can enter LOD morph geometry before a rebuild is even requested; renderer can diverge from authoritative collision height.')
+          if ground_prefetch > tree_radius:
+              print('AUDIT_FAIL: player can outrun the generated ecology window while terrain streaming still considers the current LOD center valid.')
+          PY
+
+      - name: Verify Lavapipe Vulkan device
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture every implemented landform from real Vulkan framebuffer
+        shell: bash
+        run: |
+          set -euo pipefail
+          export SDL_VIDEODRIVER=x11
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 2
+
+          APP="$(find build/audit -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p landforms logs
+
+          capture_one() {
+            local name="$1"
+            local altitude="$2"
+            local hide_ocean="$3"
+            echo "=== CAPTURE $name altitude=$altitude hide_ocean=$hide_ocean ==="
+            if [ "$hide_ocean" = "1" ]; then
+              VF_CAPTURE_HIDE_OCEAN=1 VF_CAPTURE_LANDFORM="$name" VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE="$altitude" \
+                timeout 28s "$APP" >"logs/$name.log" 2>&1 &
+            else
+              VF_CAPTURE_LANDFORM="$name" VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE="$altitude" \
+                timeout 28s "$APP" >"logs/$name.log" 2>&1 &
+            fi
+            local pid=$!
+            sleep 12
+            import -display :99 -window root "landforms/$name.png"
+            identify "landforms/$name.png"
+            convert "landforms/$name.png" -gravity NorthWest -pointsize 28 \
+              -fill white -undercolor '#00000099' -annotate +18+18 "$name" "landforms/$name-labeled.png"
+            kill "$pid" 2>/dev/null || true
+            wait "$pid" 2>/dev/null || true
+            grep 'CAPTURE_TARGET' "logs/$name.log" || true
+            sleep 1
+          }
+
+          capture_one hills 700 0
+          capture_one canyon 900 0
+          capture_one dunes 650 0
+          capture_one coastal_cliff 1100 0
+          capture_one wetland 650 0
+          capture_one glacier 1400 0
+          capture_one mountain 2600 0
+          capture_one plateau 1900 0
+          capture_one volcano 2200 0
+          capture_one river 800 0
+          capture_one trench 2600 1
+          capture_one ocean_ridge 2600 1
+
+          montage landforms/*-labeled.png -tile 3x4 -geometry 800x450+8+8 landforms/contact-sheet.png
+          identify landforms/contact-sheet.png | tee capture-info.txt
+          cat logs/*.log | grep 'CAPTURE_TARGET' | tee landform-targets.txt || true
+
+      - name: Upload landform evidence
+        uses: actions/upload-artifact@v5
+        with:
+          name: landform-evidence-${{ github.sha }}
+          path: |
+            landforms/*.png
+            logs/*.log
+            landform-targets.txt
+            streaming-audit.txt
+            unit-tests.txt
+            capture-info.txt
+            vulkan-summary.txt
+            xvfb.log
+          if-no-files-found: error
+          retention-days: 30
