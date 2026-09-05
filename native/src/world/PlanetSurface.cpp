@@ -544,34 +544,49 @@ PlanetTerrainSample samplePlanetTerrain(
     // band-limited range structure *inside that authority mask* instead of bilinearly
     // stretching each bake texel into a smooth ramp.  These wavelengths form range mass,
     // sub-ranges and valley shoulders; walking-scale noise remains a separate layer below.
+    // R6 mountain shape: R5 proved that 190-1200 km ridges still read as one giant slope
+    // from a player camera. Reconstruct the tectonic authority at 20-160 km wavelengths so
+    // individual massifs, passes and inter-range valleys exist inside the same orogenic belt.
     const double rangeRidgeA = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xD6E8FEB86659FD93ULL, w, 34.0, 5));
+        definition.seed ^ 0xD6E8FEB86659FD93ULL, w, 260.0, 5));
     const double rangeRidgeB = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0xA5A3564E27F8862FULL, w, 82.0, 4));
+        definition.seed ^ 0xA5A3564E27F8862FULL, w, 760.0, 4));
     const double rangeRidgeC = 1.0 - std::abs(fbmSurface(
-        definition.seed ^ 0x9E3779B185EBCA87ULL, w, 210.0, 3));
-    const double rangeMask = smooth01(0.07, 0.66, geomorph.mountain) * geomorphLandness;
-    const double ridgeCoreA = std::pow(smooth01(0.30, 0.86, rangeRidgeA), 2.15);
-    const double ridgeCoreB = std::pow(smooth01(0.34, 0.88, rangeRidgeB), 1.90);
-    const double ridgeCoreC = std::pow(smooth01(0.40, 0.91, rangeRidgeC), 1.65);
-
-    // R4 relief V5: the global geomorph bake owns the mountain-belt location.  These
-    // signed bands reconstruct crests AND inter-range valleys instead of lifting a whole
-    // orogenic province into one high slab.
+        definition.seed ^ 0x9E3779B185EBCA87ULL, w, 1900.0, 3));
+    const double rangeMask = smooth01(0.05, 0.56, geomorph.mountain) * geomorphLandness;
+    const double ridgeCoreA = std::pow(smooth01(0.28, 0.86, rangeRidgeA), 2.00);
+    const double ridgeCoreB = std::pow(smooth01(0.32, 0.89, rangeRidgeB), 1.92);
+    const double ridgeCoreC = std::pow(smooth01(0.38, 0.93, rangeRidgeC), 1.72);
+    const double summitCore = rangeMask * std::pow(
+        std::clamp(std::max(ridgeCoreB, ridgeCoreC * 0.92), 0.0, 1.0), 2.35);
     const double rangeRelief = rangeMask * (
-        0.260 * (ridgeCoreA - 0.42)
-        + 0.160 * (ridgeCoreB - 0.38)
-        + 0.090 * (ridgeCoreC - 0.34));
+        0.160 * (ridgeCoreA - 0.30)
+        + 0.100 * (ridgeCoreB - 0.26)
+        + 0.060 * (ridgeCoreC - 0.22));
     const double interRangeValley = rangeMask * std::pow(
-        1.0 - std::clamp(std::max(ridgeCoreA, ridgeCoreB * 0.72), 0.0, 1.0), 2.2);
-    elevation += maxLand * rangeRelief;
-    elevation -= maxLand * 0.085 * interRangeValley;
+        1.0 - std::clamp(std::max(ridgeCoreA, ridgeCoreB * 0.82), 0.0, 1.0), 2.0);
+    elevation += maxLand * (rangeRelief + 0.220 * summitCore);
+    elevation -= maxLand * 0.075 * interRangeValley;
 
-    // Post-bake highland authority: elevated continental interiors that are not mountain
-    // cores.  This is what the plateau/highland capture and material logic now query.
+    // R6 plateau shape: a highland must have a broad top and a readable escarpment.
+    // Continental-elevation authority still decides where highlands may exist; a regional
+    // band-limited mask then flattens only their interiors toward a shelf level and leaves
+    // a comparatively sharp rim at the mask boundary.
     const double globalHighland = geomorphLandness
         * smooth01(900.0, 2400.0, geomorph.elevationMeters)
         * (1.0 - smooth01(0.22, 0.68, geomorph.mountain));
+    const double plateauMacro = 0.5 + 0.5 * fbmSurface(
+        definition.seed ^ 0x4A7484AA6EA6E483ULL, w, 120.0, 4);
+    const double plateauMeso = 0.5 + 0.5 * fbmSurface(
+        definition.seed ^ 0x5CB0A9DCBD41FBD4ULL, w, 330.0, 3);
+    const double plateauSignal = plateauMacro * 0.74 + plateauMeso * 0.26;
+    const double plateauBody = globalHighland * smooth01(0.57, 0.69, plateauSignal);
+    const double plateauTopNoise = fbmSurface(
+        definition.seed ^ 0x76F988DA831153B5ULL, w, 520.0, 2);
+    const double plateauShelf = 2350.0 + 260.0 * plateauTopNoise;
+    const double plateauBlend = 0.72 * plateauBody;
+    elevation = elevation * (1.0 - plateauBlend) + plateauShelf * plateauBlend;
+    elevation += maxLand * 0.030 * plateauBody;
 
     // R5 river corridor: the Priority-Flood/discharge bake owns the broad valley, while
     // `geomorph.channel` is reconstructed from the actual downhill receiver graph and owns
@@ -625,7 +640,7 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.divergence = plates.divergence;
     sample.oceanRidge = oceanRidge;
     sample.mountain = std::max(mountain, geomorph.mountain);
-    sample.plateau = std::max(plateau, globalHighland);
+    sample.plateau = std::max(plateau, plateauBody);
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = channelCore;
