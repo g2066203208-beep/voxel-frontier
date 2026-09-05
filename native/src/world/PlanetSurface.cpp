@@ -47,6 +47,87 @@ constexpr std::size_t kPlateCount = 14U;
     return x * x * (3.0 - 2.0 * x);
 }
 
+
+[[nodiscard]] double quintic(double x) noexcept {
+    x = std::clamp(x, 0.0, 1.0);
+    return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
+}
+
+[[nodiscard]] std::uint64_t latticeBits(
+    std::uint64_t seed,
+    std::int64_t x,
+    std::int64_t y,
+    std::int64_t z) noexcept {
+    std::uint64_t h = seed ^ 0xD6E8FEB86659FD93ULL;
+    h ^= static_cast<std::uint64_t>(x) * 0x9E3779B185EBCA87ULL;
+    h ^= static_cast<std::uint64_t>(y) * 0xC2B2AE3D27D4EB4FULL;
+    h ^= static_cast<std::uint64_t>(z) * 0x165667B19E3779F9ULL;
+    h ^= h >> 29U;
+    h *= 0x94D049BB133111EBULL;
+    h ^= h >> 31U;
+    return h;
+}
+
+[[nodiscard]] double latticeValue(
+    std::uint64_t seed,
+    std::int64_t x,
+    std::int64_t y,
+    std::int64_t z) noexcept {
+    const std::uint64_t bits = latticeBits(seed, x, y, z);
+    const double unit = static_cast<double>(bits & 0xFFFFFFULL)
+        / static_cast<double>(0xFFFFFFULL);
+    return unit * 2.0 - 1.0;
+}
+
+[[nodiscard]] double valueNoise3(
+    std::uint64_t seed,
+    const glm::dvec3& p) noexcept {
+    const auto x0 = static_cast<std::int64_t>(std::floor(p.x));
+    const auto y0 = static_cast<std::int64_t>(std::floor(p.y));
+    const auto z0 = static_cast<std::int64_t>(std::floor(p.z));
+    const double tx = quintic(p.x - static_cast<double>(x0));
+    const double ty = quintic(p.y - static_cast<double>(y0));
+    const double tz = quintic(p.z - static_cast<double>(z0));
+
+    const auto lerpD = [](double a, double b, double t) noexcept {
+        return a + (b - a) * t;
+    };
+
+    const double n000 = latticeValue(seed, x0,     y0,     z0);
+    const double n100 = latticeValue(seed, x0 + 1, y0,     z0);
+    const double n010 = latticeValue(seed, x0,     y0 + 1, z0);
+    const double n110 = latticeValue(seed, x0 + 1, y0 + 1, z0);
+    const double n001 = latticeValue(seed, x0,     y0,     z0 + 1);
+    const double n101 = latticeValue(seed, x0 + 1, y0,     z0 + 1);
+    const double n011 = latticeValue(seed, x0,     y0 + 1, z0 + 1);
+    const double n111 = latticeValue(seed, x0 + 1, y0 + 1, z0 + 1);
+
+    const double nx00 = lerpD(n000, n100, tx);
+    const double nx10 = lerpD(n010, n110, tx);
+    const double nx01 = lerpD(n001, n101, tx);
+    const double nx11 = lerpD(n011, n111, tx);
+    return lerpD(lerpD(nx00, nx10, ty), lerpD(nx01, nx11, ty), tz);
+}
+
+[[nodiscard]] double fbmSurface(
+    std::uint64_t seed,
+    const glm::dvec3& direction,
+    double baseFrequency,
+    int octaves) noexcept {
+    double amplitude = 1.0;
+    double frequency = baseFrequency;
+    double sum = 0.0;
+    double normalization = 0.0;
+    for (int octave = 0; octave < octaves; ++octave) {
+        const std::uint64_t octaveSeed = seedBits(seed, 4000U + static_cast<std::uint64_t>(octave) * 29U);
+        sum += valueNoise3(octaveSeed, direction * frequency) * amplitude;
+        normalization += amplitude;
+        frequency *= 2.07;
+        amplitude *= 0.48;
+    }
+    return normalization > 0.0 ? sum / normalization : 0.0;
+}
+
 [[nodiscard]] double resolvedOceanDepth(const PlanetDefinition& definition) noexcept {
     return std::max(0.0, definition.maxOceanDepthMeters > 0.0
         ? definition.maxOceanDepthMeters
@@ -361,15 +442,26 @@ PlanetTerrainSample samplePlanetTerrain(
         * smooth01(0.0, 0.22, continentalness);
     elevation -= maxLand * 0.035 * river;
 
-    // Multi-scale residual roughness is intentionally subordinate to the tectonic morphology. It
-    // supplies local ridges/valleys and abyssal hills without deciding where continents or trenches
-    // exist.
-    const double regional = std::sin(w.x * 190.0 + w.z * 157.0 + p4)
-        * std::cos(w.y * 173.0 - w.x * 117.0 + p5);
-    const double local = std::sin(w.x * 1030.0 + w.y * 730.0 + p2)
-        * std::cos(w.z * 910.0 - w.x * 570.0 + p1);
-    elevation += maxLand * (0.018 * regional + 0.006 * local) * landness;
-    elevation += maxOcean * (0.006 * regional + 0.002 * local) * oceanness;
+    // Seamless 3D fBm is evaluated on the normalized sphere, so there are no longitude/cube-face
+    // seams.  It adds the human-scale relief that the old ~40 km trigonometric residual could not
+    // provide, while remaining much smaller than the tectonic mountain/trench signal.
+    const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3);
+    const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
+    const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 13500.0, 2);
+    const double ridged = 1.0 - std::abs(local);
+    const double protectedDrainage = 1.0 - 0.74 * river;
+    const double landRelief = (
+        regional * (0.0030 + 0.0065 * mountain + 0.0028 * plateau)
+        + local * (0.0016 + 0.0040 * mountain)
+        + micro * 0.00075
+        + (ridged - 0.5) * 0.0022 * mountain)
+        * protectedDrainage;
+    elevation += maxLand * landRelief * landness;
+    elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
+    const double surfaceDetail = std::clamp(
+        0.52 * regional + 0.34 * local + 0.14 * micro,
+        -1.0,
+        1.0);
 
     const double minElevation = definition.seaLevelElevationMeters - maxOcean;
     const double maxElevation = definition.seaLevelElevationMeters + maxLand;
@@ -390,6 +482,7 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = river;
+    sample.surfaceDetail = surfaceDetail;
     sample.oceanDepthMeters = std::max(
         0.0,
         definition.seaLevelElevationMeters - elevation);
@@ -407,38 +500,61 @@ double planetSurfaceRadius(const PlanetDefinition& definition, const glm::dvec3&
 glm::vec3 planetTerrainColor(
     const PlanetDefinition& definition,
     const PlanetTerrainSample& sample) noexcept {
+    const auto mix3 = [](const glm::vec3& a, const glm::vec3& b, double t) noexcept {
+        return glm::mix(a, b, static_cast<float>(std::clamp(t, 0.0, 1.0)));
+    };
+    const float variation = static_cast<float>(0.92 + 0.14 * (0.5 + 0.5 * sample.surfaceDetail));
+
     if (sample.submerged(definition)) {
         const double depthScale = resolvedOceanDepth(definition) > 0.0
             ? std::clamp(sample.oceanDepthMeters / resolvedOceanDepth(definition), 0.0, 1.0)
             : 0.0;
-        if (sample.trench > 0.50) return {0.060F, 0.065F, 0.080F};
-        if (sample.oceanRidge > 0.48) return {0.18F, 0.20F, 0.19F};
-        if (depthScale < 0.035) return {0.58F, 0.52F, 0.36F};
-        if (depthScale < 0.22) return {0.30F, 0.34F, 0.28F};
-        return {0.12F, 0.15F, 0.16F};
+        glm::vec3 seabed = mix3(
+            {0.43F, 0.43F, 0.32F},
+            {0.10F, 0.14F, 0.15F},
+            smooth01(0.025, 0.55, depthScale));
+        seabed = mix3(seabed, {0.19F, 0.20F, 0.19F}, sample.oceanRidge * 0.70);
+        seabed = mix3(seabed, {0.055F, 0.060F, 0.074F}, sample.trench * 0.82);
+        return glm::clamp(seabed * variation, glm::vec3{0.0F}, glm::vec3{1.0F});
     }
+
     const double aboveSea = sample.elevationMeters - definition.seaLevelElevationMeters;
-    if (aboveSea < 35.0) return {0.64F, 0.58F, 0.39F};
-    if (sample.river > 0.55) return {0.14F, 0.31F, 0.15F};
-    if (sample.volcano > 0.62) return {0.20F, 0.18F, 0.17F};
-    if (sample.mountain > 0.55) {
-        return aboveSea > 4200.0
-            ? glm::vec3{0.78F, 0.80F, 0.79F}
-            : glm::vec3{0.37F, 0.35F, 0.32F};
-    }
-    if (sample.plateau > 0.55) return {0.45F, 0.37F, 0.25F};
-    if (aboveSea > 3600.0) return {0.61F, 0.62F, 0.59F};
-    if (aboveSea > 1600.0) return {0.35F, 0.36F, 0.25F};
-    return {0.19F, 0.38F, 0.16F};
+    const double highland = smooth01(900.0, 3100.0, aboveSea);
+    const double alpine = smooth01(3000.0, 4700.0, aboveSea);
+    const double beach = 1.0 - smooth01(18.0, 95.0, aboveSea);
+    const double rockiness = std::clamp(
+        0.72 * sample.mountain + 0.34 * sample.volcano + 0.24 * highland,
+        0.0,
+        1.0);
+
+    const glm::vec3 meadowA{0.18F, 0.38F, 0.145F};
+    const glm::vec3 meadowB{0.29F, 0.46F, 0.18F};
+    glm::vec3 color = mix3(meadowA, meadowB, 0.5 + 0.5 * sample.surfaceDetail);
+    color = mix3(color, {0.39F, 0.34F, 0.23F}, sample.plateau * 0.58 + highland * 0.22);
+    color = mix3(color, {0.37F, 0.36F, 0.34F}, rockiness * 0.78);
+    color = mix3(color, {0.22F, 0.19F, 0.17F}, sample.volcano * 0.72);
+    color = mix3(color, {0.13F, 0.30F, 0.13F}, sample.river * 0.72);
+    color = mix3(color, {0.64F, 0.56F, 0.37F}, beach * 0.92);
+    const double snow = alpine * std::clamp(0.42 + 0.74 * sample.mountain, 0.0, 1.0);
+    color = mix3(color, {0.80F, 0.82F, 0.80F}, snow);
+    return glm::clamp(color * variation, glm::vec3{0.0F}, glm::vec3{1.0F});
 }
 
 glm::vec4 planetTerrainMaterial(
     const PlanetDefinition& definition,
     const PlanetTerrainSample& sample) noexcept {
-    if (sample.submerged(definition)) return {0.0F, 0.96F, 0.0F, 0.0F};
-    if (sample.volcano > 0.62) return {0.0F, 0.92F, 0.0F, 0.0F};
-    if (sample.mountain > 0.50) return {0.0F, 0.84F, 0.0F, 0.0F};
-    return {0.0F, 0.94F, 0.0F, 0.0F};
+    if (sample.submerged(definition)) return {0.0F, 0.91F, 0.0F, 0.0F};
+    const double aboveSea = sample.elevationMeters - definition.seaLevelElevationMeters;
+    const double highland = smooth01(1200.0, 3800.0, aboveSea);
+    const double rockiness = std::clamp(
+        0.68 * sample.mountain + 0.40 * sample.volcano + 0.24 * highland,
+        0.0,
+        1.0);
+    const float roughness = static_cast<float>(std::clamp(
+        0.91 - 0.17 * rockiness + 0.035 * sample.surfaceDetail,
+        0.66,
+        0.96));
+    return {0.0F, roughness, 0.0F, 0.0F};
 }
 
 glm::dvec3 planetSurfaceNormal(

@@ -135,7 +135,7 @@ float3 applyStylizedAerial(float3 color, VertexOutput input, float strength)
 
     float3 viewDir = input.relativePosition / max(distanceMeters, 1.0e-4);
     float3 sunDir = normalize(gPush.data1.xyz);
-    float cameraAltitude = max(gPush.data0.y, 0.0);
+    float cameraAltitude = max(gPush.data0.w, 0.0);
 
     // Near-surface haze is strong; it naturally disappears as the camera leaves the atmosphere.
     // Clamp the path because the physical atmosphere has finite thickness: a star millions of
@@ -229,11 +229,22 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     float3 v = normalize(-input.relativePosition);
     float3 h = normalize(l + v);
 
-    float metallic = saturate(input.material.x);
-    float roughness = clamp(input.material.y, 0.045, 1.0);
+    bool waterMaterial = input.material.x < -0.5;
+    float metallic = waterMaterial ? 0.0 : saturate(input.material.x);
+    float roughness = waterMaterial ? 0.065 : clamp(input.material.y, 0.045, 1.0);
     float transmission = saturate(input.material.z);
     float emissive = max(input.material.w, 0.0);
     float3 baseColor = max(input.color, 0.0);
+
+    if (waterMaterial)
+    {
+        float3 stablePosition = input.relativePosition + gPush.data0.xyz;
+        float2 p = stablePosition.xz * 0.00135;
+        float2 waveSlope = float2(
+            sin(p.x * 1.00 + p.y * 0.57) + 0.48 * sin(p.x * 2.31 - p.y * 1.73),
+            cos(p.y * 1.07 - p.x * 0.61) + 0.44 * cos(p.y * 2.19 + p.x * 1.51));
+        n = normalize(n + float3(waveSlope.x, 0.0, waveSlope.y) * 0.055);
+    }
 
     float noL = saturate(dot(n, l));
     float noV = max(saturate(dot(n, v)), 1.0e-4);
@@ -268,6 +279,19 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
 
     if (transparent)
     {
+        if (waterMaterial)
+        {
+            float cosV = max(abs(dot(n, v)), 0.05);
+            float fresnelWater = 0.02037 + (1.0 - 0.02037) * pow(1.0 - saturate(cosV), 5.0);
+            float3 reflected = stylizedSkyPalette(reflect(-v, n), l);
+            float3 shallowScatter = baseColor * (0.20 + 0.32 * saturate(n.y * 0.5 + 0.5));
+            float3 sunGlint = specular * stellar * noL * shadow * 0.48;
+            return shallowScatter * (1.0 - fresnelWater)
+                + reflected * fresnelWater * 1.18
+                + sunGlint
+                + ambientSpecular * 0.55;
+        }
+
         float cosV = max(abs(dot(n, v)), 0.12);
         float path = 1.0 / cosV;
         float3 absorption = max(0.04, 1.0 - baseColor) * 0.72;
@@ -301,15 +325,27 @@ float4 transparentFragmentMain(VertexOutput input) : SV_Target
 
     float3 n = normalize(input.normal);
     float3 v = normalize(-input.relativePosition);
-    float ior = 1.50;
+    bool waterMaterial = input.material.x < -0.5;
+    float ior = waterMaterial ? 1.333 : 1.50;
     float f0Scalar = ((ior - 1.0) / (ior + 1.0));
     f0Scalar *= f0Scalar;
     float fresnel = f0Scalar + (1.0 - f0Scalar) * pow(1.0 - saturate(abs(dot(n, v))), 5.0);
-    float opticalOpacity = saturate((1.0 - transmission) * 0.48 + fresnel * 0.72 + 0.025);
+    float opticalOpacity = waterMaterial
+        ? saturate(0.24 + fresnel * 0.70)
+        : saturate((1.0 - transmission) * 0.48 + fresnel * 0.72 + 0.025);
+
+    // -10 marks the one high-resolution local ocean patch.  Fade it before its finite patch edge
+    // reaches the geometric horizon; the single global geoid remains underneath at all altitudes.
+    if (waterMaterial && input.material.w < -9.0)
+    {
+        float localOceanFade = 1.0 - smoothstep(12000.0, 30000.0, max(gPush.data0.w, 0.0));
+        opticalOpacity *= localOceanFade;
+        if (opticalOpacity < 0.004) discard;
+    }
 
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
     float3 linearColor = evaluatePbr(input, true) * exposure;
-    linearColor = applyStylizedAerial(linearColor, input, 0.46);
+    linearColor = applyStylizedAerial(linearColor, input, waterMaterial ? 0.30 : 0.46);
     float3 color = acesFitted(stylizedWarmCoolGrade(linearColor));
     return float4(color, opticalOpacity);
 }

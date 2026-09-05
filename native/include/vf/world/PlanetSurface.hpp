@@ -34,6 +34,9 @@ struct PlanetTerrainSample {
     double trench{};
     double volcano{};
     double river{};
+    // Seamless deterministic sub-regional detail used by both geometry and procedural material.
+    // This remains subordinate to the plate/continental morphology above.
+    double surfaceDetail{};
     double oceanDepthMeters{};
 
     [[nodiscard]] bool submerged(const PlanetDefinition& definition) const noexcept {

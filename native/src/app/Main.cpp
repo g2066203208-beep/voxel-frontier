@@ -200,14 +200,16 @@ int main() {
                 double terrainBaseInset;
                 double terrainEdgeInset;
             };
-            // Nested regular grids follow the geometry-clipmap principle: dense near the player,
-            // progressively cheaper outwards, with hollow coarser levels instead of duplicating the
-            // full inner area.
-            const std::array<Ring, 4> rings{{
-                {22000.0, 0.0, 220U, 0.0, 1.5},
-                {190000.0, 20000.0, 180U, 1.0, 8.0},
-                {950000.0, 170000.0, 144U, 7.0, 42.0},
-                {2600000.0, 850000.0, 96U, 34.0, 160.0},
+            // Concentric clipmap windows keep V7's deterministic spherical surface authority, but
+            // reserve real vertex density for walking scale.  Adjacent levels overlap slightly and
+            // use only centimetre/metre-class depth bias: the old 160 m edge sink made the LOD
+            // boundary itself visible from altitude.
+            const std::array<Ring, 5> rings{{
+                {4096.0,       0.0, 256U, 0.00, 0.12},
+                {24576.0,   3600.0, 192U, 0.12, 0.42},
+                {131072.0, 22000.0, 160U, 0.38, 0.95},
+                {655360.0,118000.0, 128U, 0.95, 2.80},
+                {2600000.0,590000.0,104U, 2.80, 9.00},
             }};
 
             for (const Ring& ring : rings) {
@@ -254,54 +256,13 @@ int main() {
                     }
                 }
 
-                // Ocean uses the same nested topology at a constant sea-level geoid. It can exist
-                // underneath land because opaque terrain depth rejects it there; this removes costly
-                // coastline triangulation while leaving a continuous, crack-free water surface.
-                const std::uint32_t oceanBase = static_cast<std::uint32_t>(mesh.vertices.size());
-                for (std::uint32_t y = 0; y <= ring.resolution; ++y) {
-                    const double fy = static_cast<double>(y) / static_cast<double>(ring.resolution);
-                    const double northMeters = -ring.half + 2.0 * ring.half * fy;
-                    for (std::uint32_t x = 0; x <= ring.resolution; ++x) {
-                        const double fx = static_cast<double>(x) / static_cast<double>(ring.resolution);
-                        const double eastMeters = -ring.half + 2.0 * ring.half * fx;
-                        const glm::dvec3 direction = safeNormalize(
-                            centerUp + centerEast * (eastMeters / planet.radius)
-                                + centerNorth * (northMeters / planet.radius),
-                            centerUp);
-                        const double edge = std::max(std::abs(eastMeters), std::abs(northMeters)) / ring.half;
-                        const double edgeBlend = std::clamp((edge - 0.88) / 0.12, 0.0, 1.0);
-                        const double oceanInset = ring.terrainBaseInset * 0.12
-                            + edgeBlend * ring.terrainEdgeInset * 0.05;
-                        const glm::dvec3 waterPoint = direction
-                            * (planet.radius + planet.seaLevelElevationMeters - oceanInset);
-                        vf::PlanetVertex vertex{};
-                        vertex.position = glm::vec3(toSurfacePoint(waterPoint));
-                        vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(direction)));
-                        vertex.color = {0.018F, 0.145F, 0.255F};
-                        vertex.material = {-1.0F, 0.055F, 0.72F, 0.0F};
-                        mesh.vertices.push_back(vertex);
-                    }
-                }
-                for (std::uint32_t y = 0; y < ring.resolution; ++y) {
-                    const double cy = -ring.half + 2.0 * ring.half
-                        * (static_cast<double>(y) + 0.5) / ring.resolution;
-                    for (std::uint32_t x = 0; x < ring.resolution; ++x) {
-                        const double cx = -ring.half + 2.0 * ring.half
-                            * (static_cast<double>(x) + 0.5) / ring.resolution;
-                        if (ring.inner > 0.0 && std::max(std::abs(cx), std::abs(cy)) < ring.inner) continue;
-                        const std::uint32_t i0 = oceanBase + y * stride + x;
-                        const std::uint32_t i1 = i0 + 1U;
-                        const std::uint32_t i2 = i0 + stride;
-                        const std::uint32_t i3 = i2 + 1U;
-                        mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
-                    }
-                }
             }
 
-            // Coarse full-planet proxies fill the horizon/space view. They are inset behind the
-            // active clipmap window so transitions are hidden by the higher-resolution rings.
-            vf::PlanetMesh proxy = vf::buildPlanetSurface(planet, 48U);
-            constexpr double proxyInset = 240.0;
+            // The orbital proxy is still deliberately cheaper than the local clipmaps, but 96
+            // subdivisions removes the giant polygon blocks visible in V7's 48-subdivision Earth.
+            // Only a small radial inset is needed because the local rings already overlap.
+            vf::PlanetMesh proxy = vf::buildPlanetSurface(planet, 96U);
+            constexpr double proxyInset = 24.0;
             for (auto& vertex : proxy.vertices) {
                 glm::dvec3 p = glm::dvec3(vertex.position);
                 const double r = glm::length(p);
@@ -311,12 +272,25 @@ int main() {
             }
             appendMesh(mesh, proxy);
 
+            // Water has exactly two representations, never five stacked transparent squares:
+            // a high-resolution local patch (smooth to the ~20 km altitude horizon) and one global
+            // geoid shell slightly behind it.  The fragment shader fades the local patch before its
+            // square boundary can enter the visible horizon.
+            vf::PlanetMesh localOcean = vf::buildOceanSurfacePatch(
+                planet, centerUp, 520000.0, 256U, 0.0);
+            for (auto& vertex : localOcean.vertices) {
+                vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
+                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+                vertex.material.w = -10.0F;
+            }
+            appendMesh(mesh, localOcean);
+
             vf::PlanetMesh oceanProxy{};
             vf::appendOceanSurfaceProxy(
                 oceanProxy,
                 {},
-                planet.radius + planet.seaLevelElevationMeters - 180.0,
-                48U);
+                planet.radius + planet.seaLevelElevationMeters - 1.5,
+                128U);
             for (auto& vertex : oceanProxy.vertices) {
                 vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));

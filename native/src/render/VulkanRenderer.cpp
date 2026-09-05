@@ -1246,7 +1246,10 @@ void VulkanRenderer::drawFrame(
             &shadowFrames_[frame].descriptorSet, 0, nullptr);
         PushConstants scenePush{};
         scenePush.matrix = viewProjection;
-        scenePush.data0 = glm::vec4(glm::vec3(cameraPosition), 1.0F);
+        const double cameraAltitude = glm::length(cameraPosition - environment.planetCenter)
+            - environment.planetRadius;
+        scenePush.data0 = glm::vec4(
+            glm::vec3(cameraPosition), static_cast<float>(cameraAltitude));
         scenePush.data1 = glm::vec4(safeNormalizeFloat(environment.sunDirectionToLight), 0.0F);
         scenePush.data2 = glm::vec4(
             glm::max(environment.sunLinearColor, glm::vec3{0.0F}),
