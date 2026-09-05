@@ -1,5 +1,6 @@
 name: Terrain R4 Real Vulkan Geomorph Evidence
 
+# R4 evidence gate: run on the corrected geomorph source, no terrain parameters are changed here.
 on:
   push:
     branches: [feature/terrain-r4-geomorph-bake]
