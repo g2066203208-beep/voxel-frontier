@@ -12,7 +12,7 @@ namespace vf {
 namespace {
 
 constexpr double kPi = 3.1415926535897932384626433832795;
-constexpr std::size_t kPlateCount = 14U;
+constexpr std::size_t kPlateCount = 20U;
 
 [[nodiscard]] std::uint64_t seedBits(std::uint64_t seed, std::uint64_t channel) noexcept {
     std::uint64_t x = seed + 0x9E3779B97F4A7C15ULL * (channel + 1ULL);
@@ -181,7 +181,15 @@ struct PlateField {
     double divergence{};
 };
 
-[[nodiscard]] PlateField samplePlateField(std::uint64_t seed, const glm::dvec3& direction) noexcept {
+[[nodiscard]] PlateField samplePlateField(std::uint64_t seed, const glm::dvec3& directionInput) noexcept {
+    const glm::dvec3 direction = safeNormalize(directionInput);
+    const glm::dvec3 rawWarp{
+        fbmSurface(seed ^ 0x6A09E667F3BCC909ULL, direction, 2.8, 3),
+        fbmSurface(seed ^ 0xBB67AE8584CAA73BULL, direction, 2.8, 3),
+        fbmSurface(seed ^ 0x3C6EF372FE94F82BULL, direction, 2.8, 3)};
+    const glm::dvec3 tangentWarp = rawWarp - direction * glm::dot(rawWarp, direction);
+    // ~0-250 km nominal lateral bending on an Earth-radius sphere.
+    const glm::dvec3 plateDirection = safeNormalize(direction + tangentWarp * 0.030, direction);
     double bestScore = -std::numeric_limits<double>::infinity();
     double secondScore = -std::numeric_limits<double>::infinity();
     PlateSeed best{};
@@ -189,7 +197,7 @@ struct PlateField {
 
     for (std::size_t i = 0; i < kPlateCount; ++i) {
         const PlateSeed plate = makePlate(seed, i);
-        const double score = glm::dot(direction, plate.center);
+        const double score = glm::dot(plateDirection, plate.center);
         if (score > bestScore) {
             secondScore = bestScore;
             second = best;
@@ -202,7 +210,7 @@ struct PlateField {
     }
 
     const double scoreGap = std::max(0.0, bestScore - secondScore);
-    const double boundary = 1.0 - smooth01(0.004, 0.060, scoreGap);
+    const double boundary = 1.0 - smooth01(0.006, 0.040, scoreGap);
 
     glm::dvec3 boundaryNormal = second.center - best.center;
     boundaryNormal -= direction * glm::dot(boundaryNormal, direction);
@@ -350,14 +358,17 @@ PlanetTerrainSample samplePlanetTerrain(
         + std::sin(w.y * 2.60 + w.z * 1.35 + p1) * 0.30
         + std::cos(w.z * 2.25 - w.x * 1.45 + p2) * 0.25);
 
-    const double primaryCrust = plates.primary.continental ? 0.43 : -0.48;
-    const double secondaryCrust = plates.secondary.continental ? 0.43 : -0.48;
-    const double boundaryCrustBlend = plates.boundary * 0.28;
-    const double crustBase = primaryCrust * (1.0 - boundaryCrustBlend)
-        + secondaryCrust * boundaryCrustBlend;
-    const double continentalness = std::clamp(crustBase + macro * 0.30, -1.0, 1.0);
-
-    const double landness = smooth01(-0.02, 0.20, continentalness);
+    // Continental crust and tectonic plates are separate authorities. A plate can carry both
+    // continental and oceanic lithosphere; plate motion only deforms the crust field.
+    const double crustMacro = fbmSurface(definition.seed ^ 0x243F6A8885A308D3ULL, w, 3.15, 4);
+    const double crustMeso = fbmSurface(definition.seed ^ 0x13198A2E03707344ULL, w, 7.8, 3);
+    const double crustCoast = fbmSurface(definition.seed ^ 0xA4093822299F31D0ULL, w, 21.0, 2);
+    const double islandArcNoise = fbmSurface(definition.seed ^ 0x082EFA98EC4E6C89ULL, w, 38.0, 3);
+    const double continentalness = std::clamp(
+        crustMacro * 0.78 + crustMeso * 0.27 + crustCoast * 0.09 + macro * 0.14
+            + islandArcNoise * plates.convergence * 0.055 - 0.098,
+        -1.0, 1.0);
+    const double landness = smooth01(-0.010, 0.082, continentalness);
     const double oceanness = 1.0 - landness;
     const double maxLand = std::max(0.0, definition.maxElevation);
     const double maxOcean = resolvedOceanDepth(definition);
@@ -365,20 +376,22 @@ PlanetTerrainSample samplePlanetTerrain(
     const double deepOcean = smooth01(0.08, 0.62, -continentalness);
     const double shelfZone = 1.0 - smooth01(0.02, 0.34, std::abs(continentalness));
     double elevation = 0.0;
-    elevation -= maxOcean * (0.24 + 0.42 * deepOcean) * oceanness;
-    elevation += maxLand * (0.035 + 0.11 * std::pow(landness, 1.35)) * landness;
-    elevation += maxOcean * 0.12 * shelfZone * oceanness;
+    elevation -= maxOcean * (0.295 + 0.410 * deepOcean) * oceanness;
+    elevation += maxLand * (0.012 + 0.060 * std::pow(landness, 1.35)) * landness;
+    elevation += maxOcean * 0.110 * shelfZone * oceanness;
 
     const double oceanRidge = plates.divergence * oceanness;
-    elevation += maxOcean * 0.38 * oceanRidge;
+    elevation += maxOcean * 0.320 * oceanRidge;
 
-    const double collisionWeight = plates.primary.continental && plates.secondary.continental
-        ? 1.0
-        : (plates.primary.continental || plates.secondary.continental ? 0.82 : 0.45);
-    const double mountain = std::pow(
-        std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0),
-        1.15);
-    elevation += maxLand * 0.72 * mountain;
+    const double collisionWeight = 0.58 + 0.42 * landness;
+    const double orogenDrive = std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0);
+    const double mountain = std::pow(orogenDrive, 1.60);
+    // Mountain systems remain broad and continuous, but very high summits are selected by an
+    // independent 150-300 km along-belt field so an entire plate boundary cannot become an 8 km wall.
+    const double peakField = 0.5 + 0.5 * fbmSurface(
+        definition.seed ^ 0x452821E638D01377ULL, w, 150.0, 3);
+    const double summitGate = smooth01(0.78, 0.94, peakField) * smooth01(0.975, 0.9995, orogenDrive);
+    elevation += maxLand * (0.245 * mountain + 0.47 * std::pow(summitGate, 4.0));
 
     const double trenchWeight = (!plates.primary.continental || !plates.secondary.continental)
         ? 1.0
@@ -386,14 +399,14 @@ PlanetTerrainSample samplePlanetTerrain(
     const double trench = std::pow(
         std::clamp(plates.convergence * oceanness * trenchWeight, 0.0, 1.0),
         1.30);
-    elevation -= maxOcean * 0.42 * trench;
+    elevation -= maxOcean * 0.460 * trench;
 
     const double plateauField = 0.5 + 0.5
         * std::sin(w.x * 3.4 - w.z * 2.5 + p5)
         * std::cos(w.y * 3.0 + w.x * 1.2 + p2);
     const double plateau = smooth01(0.68, 0.91, plateauField)
         * landness * (1.0 - 0.72 * plates.boundary) * (1.0 - 0.45 * mountain);
-    elevation += maxLand * 0.27 * plateau;
+    elevation += maxLand * 0.095 * plateau;
 
     double hotspotVolcano = 0.0;
     for (std::uint64_t i = 0; i < 9U; ++i) {
@@ -410,7 +423,7 @@ PlanetTerrainSample samplePlanetTerrain(
         std::max(hotspotVolcano, arcVolcano * 0.72),
         0.0,
         1.0);
-    elevation += maxLand * 0.36 * volcano;
+    elevation += maxLand * (0.12 * volcano + 0.30 * std::pow(smooth01(0.955, 0.999, volcano), 6.0));
 
     // Hydrology first cuts broad valleys. Narrower canyon and wetland masks below are subordinate
     // geomorphology passes, following WorldEngine's useful ordering of tectonics -> erosion ->
@@ -425,17 +438,17 @@ PlanetTerrainSample samplePlanetTerrain(
         * (1.0 - 0.86 * mountain)
         * (1.0 - 0.50 * plates.boundary)
         * smooth01(0.0, 0.22, continentalness);
-    elevation -= maxLand * 0.035 * river;
+    elevation -= maxLand * 0.020 * river;
 
     // Seamless 3-D sphere noise. Frequencies form nested geomorphic scales rather than one generic
     // roughness layer: continental hills, local relief, rock-scale variation and fine material grain.
     // The ridged/cellular-like masks reuse the mature compositional ideas exposed by FastNoiseLite
     // while retaining Voxel Frontier's own deterministic spherical value-noise implementation.
     const double climate = fbmSurface(definition.seed ^ 0x510E527FADE682D1ULL, w, 26.0, 4);
-    const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3);
-    const double hillNoise = fbmSurface(definition.seed ^ 0x1F83D9ABFB41BD6BULL, w, 1350.0, 3);
-    const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
-    const double canyonNoise = fbmSurface(definition.seed ^ 0x5BE0CD19137E2179ULL, w, 8200.0, 3);
+    const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 95.0, 4);
+    const double hillNoise = fbmSurface(definition.seed ^ 0x1F83D9ABFB41BD6BULL, w, 520.0, 3);
+    const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 2100.0, 3);
+    const double canyonNoise = fbmSurface(definition.seed ^ 0x5BE0CD19137E2179ULL, w, 6100.0, 3);
     const double duneNoise = fbmSurface(definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 26000.0, 2);
     const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
     const double fine = fbmSurface(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2);
@@ -524,25 +537,25 @@ PlanetTerrainSample samplePlanetTerrain(
     const double protectedDrainage = 1.0 - 0.74 * river;
     const double iceSmoothing = 1.0 - 0.62 * glacier;
     const double landRelief = (
-        regional * (0.0085 + 0.0090 * mountain + 0.0048 * plateau)
-        + hillNoise * (0.0042 * hills)
-        + local * (0.0031 + 0.0050 * mountain + 0.0014 * coastalCliff)
+        regional * (0.0100 + 0.0120 * mountain + 0.0040 * plateau)
+        + hillNoise * (0.0115 * hills)
+        + local * (0.0024 + 0.0100 * mountain + 0.0020 * coastalCliff)
         + micro * (0.00115 + 0.00060 * mountain)
         + fine * 0.00030
-        + (ridged - 0.5) * 0.0024 * mountain)
+        + (ridged - 0.5) * 0.0060 * mountain)
         * protectedDrainage * iceSmoothing;
     elevation += maxLand * landRelief * landness;
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
 
     // Distinct terrain-form displacement. The amplitudes stay well below tectonic relief but are
     // large enough to affect silhouettes AND authoritative collision, not merely shader color.
-    elevation += maxLand * 0.012 * coastalCliff * (0.35 + 0.65 * std::max(0.0, local));
-    elevation -= maxLand * 0.020 * canyon * (0.55 + 0.45 * canyonRidge);
-    elevation += maxLand * 0.0016 * dunes * duneNoise;
+    elevation += maxLand * 0.015 * coastalCliff * (0.35 + 0.65 * std::max(0.0, local));
+    elevation -= maxLand * 0.030 * canyon * (0.55 + 0.45 * canyonRidge);
+    elevation += maxLand * 0.0024 * dunes * duneNoise;
     if (wetland > 0.0 && elevation > 45.0) {
         elevation -= (elevation - 45.0) * std::clamp(wetland * 0.52, 0.0, 0.52);
     }
-    elevation += maxLand * 0.0035 * glacier * (0.55 + 0.45 * regional);
+    elevation += maxLand * 0.0040 * glacier * (0.55 + 0.45 * regional);
 
     const double surfaceDetail = std::clamp(
         0.32 * regional + 0.22 * hillNoise + 0.20 * local
