@@ -38,6 +38,10 @@ struct LandformProfile {
 struct LocalVertex {
     glm::dvec3 position{};
     glm::vec3 material{};
+    // Optional artist/procedural shading normal. Zero means "derive from topology". This keeps
+    // the GPU PlanetVertex ABI unchanged while allowing foliage to use Blender-style radial/data-
+    // transfer normals instead of inheriting the faceted crown topology as its lighting volume.
+    glm::dvec3 shadingNormal{};
 };
 
 struct LocalMesh {
