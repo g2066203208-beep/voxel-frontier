@@ -9,6 +9,7 @@
 #include "vf/world/CelestialSystem.hpp"
 #include "vf/world/PlanetSurface.hpp"
 #include "vf/world/PlanetSurfaceAuthority.hpp"
+#include "vf/world/PlanetaryBodySystem.hpp"
 #include "vf/world/PlanetLodMeshBuilder.hpp"
 #include "vf/world/RegionalHydrology.hpp"
 #include "vf/world/ProceduralEcology.hpp"
@@ -225,7 +226,8 @@ int main() {
         constexpr double opticalAtmosphereHeight = 145000.0;
         constexpr double opticalRayleighScaleHeight = 10200.0;
 
-        vf::CelestialSystem celestial;
+        vf::PlanetaryBodySystem planetaryBodies;
+        vf::CelestialSystem& celestial = planetaryBodies.celestial();
         // Gameplay clock is accelerated by default so real self-rotation and orbital motion
         // are visible during play. Physical periods remain unchanged in simulation seconds.
         double celestialTimeScale = 240.0;
@@ -275,9 +277,21 @@ int main() {
         aster.atmosphere.prevailingWind = {};
         aster.weather.windMultiplier = 0.0;
         aster.weather.stormIntensity = 0.0;
-        const std::uint32_t asterId = celestial.addBody(aster);
-        vf::PlanetClimateGrid climateGrid{planet, {}, aster.spinRateRadPerSecond};
-        vf::OceanSpectrum oceanSpectrum{};
+        vf::PlanetaryBodyDescriptor asterDescriptor{};
+        asterDescriptor.celestial = aster;
+        asterDescriptor.solidSurface = true;
+        asterDescriptor.terrain = planet;
+        asterDescriptor.climateEnabled = true;
+        asterDescriptor.oceanEnabled = true;
+        const std::uint32_t asterId = planetaryBodies.addBody(std::move(asterDescriptor));
+        auto* asterSurface = planetaryBodies.surface(asterId);
+        auto* asterClimate = planetaryBodies.climate(asterId);
+        auto* asterOcean = planetaryBodies.ocean(asterId);
+        if (asterSurface == nullptr || asterClimate == nullptr || asterOcean == nullptr)
+            throw std::runtime_error("Aster planetary services failed to initialize");
+        vf::PlanetSurfaceAuthority& surfaceAuthority = *asterSurface;
+        vf::PlanetClimateGrid& climateGrid = *asterClimate;
+        vf::OceanSpectrum& oceanSpectrum = *asterOcean;
 
         constexpr double cinderOrbitRadius = 227939200000.0;
         vf::CelestialBody cinder{};
@@ -462,7 +476,8 @@ int main() {
             };
         };
 
-        vf::PlanetSurfaceAuthority surfaceAuthority{planet};
+        // SurfaceAuthority is owned by PlanetaryBodySystem; hydrology is attached to the same
+        // object later, so render, collision, ecology and environment altitude cannot diverge.
 
         // Whole-planet view uses a smooth, physically displaced cube-sphere instead of leaving a
         // near-ground quadtree frozen in space. This is substantially cheaper than rendering the
@@ -600,18 +615,9 @@ int main() {
                 0.05);
             previous = now;
             celestialClock.advance(dt, [&](double astroDt) {
-                celestial.step(astroDt);
-                const auto* climateAster = celestial.body(asterId);
-                const auto* climateSun = celestial.body(sunId);
-                if (climateAster != nullptr && climateSun != nullptr) {
-                    const glm::dvec3 toSunWorld = safeNormalize(climateSun->position - climateAster->position);
-                    const glm::dvec3 toSunBody = safeNormalize(
-                        glm::conjugate(glm::normalize(climateAster->orientation)) * toSunWorld);
-                    const double starDistance = glm::length(climateSun->position - climateAster->position);
-                    const double stellarIrradiance = climateSun->luminosityWatts
-                        / (4.0 * kPi * std::max(1.0, starDistance * starDistance));
-                    climateGrid.step(astroDt, toSunBody, stellarIrradiance);
-                }
+                // One authoritative step advances N-body/spin plus every registered planetary
+                // service on the same bounded simulated-time sequence.
+                planetaryBodies.step(astroDt);
             });
 
             auto* currentAster = celestial.body(asterId);
