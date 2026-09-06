@@ -1,0 +1,164 @@
+name: R24.3 Terrain Globe Motion Repair
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_3_repair_terrain_globes_motion.py'
+      - '.github/workflows/r24-3-terrain-globe-motion.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-3-terrain-globe-motion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout tracked R24.2 source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: work/r24-unified-planetary-physics
+
+      - name: Stage R24.3 production repair
+        run: |
+          python3 .github/scripts/r24_3_repair_terrain_globes_motion.py
+          git diff --check
+          grep -q 'AirlessCratered' native/include/vf/world/PlanetSurface.hpp
+          grep -q 'sampleAirlessCrateredTerrain' native/src/world/PlanetSurface.cpp
+          grep -q 'celestialViewMode == "earth-globe"' native/src/app/Main.cpp
+          grep -q 'testAirlessMoonUsesCrateredThreeDimensionalRelief' native/tests/R24PhysicalPlanetTests.cpp
+
+      - name: Install proven SDL3 Vulkan X11 dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure C++23 Vulkan runtime and tests
+        run: cmake -S native -B build/r24-3 -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build R24.3
+        run: cmake --build build/r24-3 --parallel 2
+
+      - name: Run full correctness suite
+        run: ctest --test-dir build/r24-3 --verbose --output-on-failure
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture mandatory real R24.3 framebuffers
+        run: |
+          APP="$(find build/r24-3 -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_2_capture.sh
+          .github/scripts/r24_2_capture.sh "$APP" r24-3-evidence
+          cp vulkan-summary.txt r24-3-evidence/
+
+          # Extra terrain proof: capture non-glacial canyon/highland views from the same real runtime.
+          export SDL_VIDEODRIVER=x11
+          export DISPLAY=:98
+          Xvfb :98 -screen 0 1600x900x24 -nolisten tcp >r24-3-evidence/logs/xvfb-extra.log 2>&1 &
+          XPID=$!
+          trap 'kill $XPID 2>/dev/null || true' EXIT
+          sleep 2
+          for mode in canyon highland; do
+            VF_TERRAIN_TARGET="$mode" VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=6500 VF_CELESTIAL_TIME_SCALE=1 \
+              timeout 90s "$APP" >"r24-3-evidence/logs/${mode}-extra.log" 2>&1 &
+            PID=$!
+            WIN=""
+            for i in $(seq 1 90); do
+              WIN="$(xdotool search --name 'Voxel Frontier' 2>/dev/null | head -n 1 || true)"
+              [[ -n "$WIN" ]] && break
+              sleep 0.5
+            done
+            sleep 2
+            import -display :98 -window root "r24-3-evidence/terrain/${mode}-aerial-6p5km.png" || true
+            kill "$PID" 2>/dev/null || true
+            wait "$PID" 2>/dev/null || true
+            sleep 1
+          done
+          kill "$XPID" 2>/dev/null || true
+          trap - EXIT
+          montage r24-3-evidence/terrain/*.png -tile 2x -geometry 800x450+6+6 \
+            r24-3-evidence/terrain/r24-3-terrain-all-montage.png || true
+
+      - name: Commit tested production source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native
+          if git diff --cached --quiet; then
+            echo 'No production source delta.'
+          else
+            git commit -m 'R24.3: repair Earth terrain cratered Moon globes and visible celestial motion'
+            git push origin HEAD:work/r24-unified-planetary-physics
+          fi
+
+      - name: Preserve diagnostics on every outcome
+        if: always()
+        run: |
+          mkdir -p r24-3-evidence
+          cp -f vulkan-summary.txt r24-3-evidence/ 2>/dev/null || true
+          git diff -- native > r24-3-evidence/tested-source.patch 2>/dev/null || true
+          printf 'workflow_sha=%s\nworkflow_run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > r24-3-evidence/workflow-source.txt
+
+      - name: Upload every framebuffer even when ugly or broken
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-3-real-vulkan-evidence-${{ github.sha }}
+          path: r24-3-evidence/**
+          if-no-files-found: warn
+          retention-days: 30
+
+  windows-build:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - name: Checkout tracked R24.2 source
+        uses: actions/checkout@v6
+        with:
+          ref: work/r24-unified-planetary-physics
+
+      - name: Stage identical R24.3 production repair
+        shell: pwsh
+        run: |
+          python .github/scripts/r24_3_repair_terrain_globes_motion.py
+          git diff --check
+
+      - name: Configure Windows x64
+        run: cmake -S native -B build/r24-3-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Windows x64
+        run: cmake --build build/r24-3-win --config Release --parallel 2
+
+      - name: Test Windows x64
+        run: ctest --test-dir build/r24-3-win -C Release --output-on-failure
