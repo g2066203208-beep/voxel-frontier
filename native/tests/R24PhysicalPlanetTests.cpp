@@ -1,6 +1,7 @@
 #include "vf/physics/OceanSpectrum.hpp"
 #include "vf/world/PlanetClimateGrid.hpp"
 #include "vf/world/PlanetSurfaceAuthority.hpp"
+#include "vf/world/CelestialSystem.hpp"
 
 #include <cmath>
 #include <cstdlib>
@@ -124,6 +125,80 @@ void testOceanSpectrumHasTargetVarianceAndMoves() {
         "physics ocean surface must evolve in time rather than being a static material normal");
 }
 
+
+void testEarthMoonPhysicalScaleRotationAndRevolution() {
+    constexpr double earthRadius = 6371000.0;
+    constexpr double moonRadius = 1737400.0;
+    constexpr double distance = 384400000.0;
+    constexpr double earthMass = 5.9722e24;
+    constexpr double moonMass = 7.342e22;
+    constexpr double pi = 3.14159265358979323846;
+
+    const double moonAngularDiameter = 2.0 * std::atan(moonRadius / distance) * 180.0 / pi;
+    const double earthAngularDiameterFromMoon = 2.0 * std::atan(earthRadius / distance) * 180.0 / pi;
+    require(moonAngularDiameter > 0.50 && moonAngularDiameter < 0.54,
+        "physical Moon must subtend about half a degree from Earth");
+    require(earthAngularDiameterFromMoon > 1.85 && earthAngularDiameterFromMoon < 1.95,
+        "physical Earth must subtend about 1.9 degrees from the Moon");
+
+    vf::PlanetDefinition earthDefinition{};
+    earthDefinition.radius = earthRadius;
+    earthDefinition.maxElevation = 8850.0;
+    earthDefinition.maxOceanDepthMeters = 11000.0;
+    const vf::PlanetMesh globe = vf::buildPlanetGlobeSurface(earthDefinition, 12U, 1.0);
+    require(!globe.vertices.empty() && !globe.indices.empty(),
+        "distant globe must contain real displaced 3-D geometry");
+    for (std::size_t i = 0; i < globe.vertices.size(); i += 37U) {
+        const glm::dvec3 p = glm::dvec3(globe.vertices[i].position);
+        const glm::dvec3 n = glm::dvec3(globe.vertices[i].normal);
+        require(std::abs(glm::length(n) - 1.0) < 1.0e-5,
+            "planet-scale globe normals must stay unit length and smooth");
+        require(glm::length(p) > earthRadius - 12000.0 && glm::length(p) < earthRadius + 10000.0,
+            "planet-scale globe must preserve physical relief rather than exaggerated chunks");
+    }
+
+    vf::CelestialSystem system;
+    vf::CelestialBody earth{};
+    earth.type = vf::CelestialBodyType::Planet;
+    earth.radiusMeters = earthRadius;
+    earth.massKg = earthMass;
+    earth.spinAxis = {0.0, 1.0, 0.0};
+    earth.spinRateRadPerSecond = 2.0 * pi / 86164.0905;
+
+    vf::CelestialBody moon{};
+    moon.type = vf::CelestialBodyType::Moon;
+    moon.radiusMeters = moonRadius;
+    moon.massKg = moonMass;
+    moon.spinAxis = {0.0, 1.0, 0.0};
+    moon.spinRateRadPerSecond = 2.0 * pi / (27.321661 * 86400.0);
+
+    const double totalMass = earthMass + moonMass;
+    const double relativeSpeed = std::sqrt(vf::CelestialSystem::kGravitationalConstant * totalMass / distance);
+    earth.position = {-distance * moonMass / totalMass, 0.0, 0.0};
+    moon.position = {distance * earthMass / totalMass, 0.0, 0.0};
+    earth.linearVelocity = {0.0, 0.0, relativeSpeed * moonMass / totalMass};
+    moon.linearVelocity = {0.0, 0.0, -relativeSpeed * earthMass / totalMass};
+
+    const auto earthId = system.addBody(earth);
+    const auto moonId = system.addBody(moon);
+    const glm::dvec3 initialRelative = system.body(moonId)->position - system.body(earthId)->position;
+    const glm::dquat initialEarthOrientation = system.body(earthId)->orientation;
+
+    constexpr int sixHoursInMinuteSteps = 360;
+    for (int i = 0; i < sixHoursInMinuteSteps; ++i) system.step(60.0);
+
+    const auto* movedEarth = system.body(earthId);
+    const auto* movedMoon = system.body(moonId);
+    const glm::dvec3 finalRelative = movedMoon->position - movedEarth->position;
+    const double separationError = std::abs(glm::length(finalRelative) - distance) / distance;
+    require(separationError < 2.0e-4,
+        "Earth-Moon two-body separation must remain stable over a six-hour integration window");
+    require(glm::dot(glm::normalize(initialRelative), glm::normalize(finalRelative)) < 0.9995,
+        "Moon must visibly revolve around Earth over simulated time");
+    require(std::abs(glm::dot(initialEarthOrientation, movedEarth->orientation)) < 0.999,
+        "Earth orientation must change from physical self-rotation");
+}
+
 } // namespace
 
 int main() {
@@ -131,6 +206,7 @@ int main() {
     testHydrologyAuthorityFadesBeforeRegionalGridEdge();
     testClimateRespondsToSunAndCreatesPressureGradientWind();
     testOceanSpectrumHasTargetVarianceAndMoves();
+    testEarthMoonPhysicalScaleRotationAndRevolution();
     std::cout << "vf_r24_physical_planet_tests: PASS\n";
     return 0;
 }

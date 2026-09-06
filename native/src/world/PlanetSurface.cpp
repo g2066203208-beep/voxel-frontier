@@ -711,6 +711,52 @@ PlanetMesh buildPlanetSurface(
     return mesh;
 }
 
+PlanetMesh buildPlanetGlobeSurface(
+    const PlanetDefinition& definition,
+    std::uint32_t subdivisionsPerFace,
+    double reliefScale) {
+    if (subdivisionsPerFace < 2U)
+        throw std::invalid_argument("planet globe subdivisions must be >= 2");
+    reliefScale = std::clamp(reliefScale, 0.0, 1.0);
+
+    PlanetMesh mesh{};
+    const std::uint32_t stride = subdivisionsPerFace + 1U;
+    for (std::uint32_t face = 0; face < 6U; ++face) {
+        const std::uint32_t base = static_cast<std::uint32_t>(mesh.vertices.size());
+        for (std::uint32_t y = 0; y <= subdivisionsPerFace; ++y) {
+            const double v = -1.0 + 2.0 * static_cast<double>(y)
+                / static_cast<double>(subdivisionsPerFace);
+            for (std::uint32_t x = 0; x <= subdivisionsPerFace; ++x) {
+                const double u = -1.0 + 2.0 * static_cast<double>(x)
+                    / static_cast<double>(subdivisionsPerFace);
+                const glm::dvec3 direction = cubeSphereDirection(face, u, v);
+                const PlanetTerrainSample terrain = samplePlanetTerrain(definition, direction);
+                const double scaledElevation = definition.seaLevelElevationMeters
+                    + (terrain.elevationMeters - definition.seaLevelElevationMeters) * reliefScale;
+                PlanetVertex vertex{};
+                vertex.position = glm::vec3(direction * (definition.radius + scaledElevation));
+                // Planet-scale view must read as a smooth sphere. The geometry is still truly
+                // displaced in 3-D; only the distant shading normal is radial. Near-surface LOD
+                // continues using the real terrain gradient normal.
+                vertex.normal = glm::vec3(direction);
+                vertex.color = planetTerrainColor(definition, terrain);
+                vertex.material = planetTerrainMaterial(definition, terrain);
+                mesh.vertices.push_back(vertex);
+            }
+        }
+        for (std::uint32_t y = 0; y < subdivisionsPerFace; ++y) {
+            for (std::uint32_t x = 0; x < subdivisionsPerFace; ++x) {
+                const std::uint32_t i0 = base + y * stride + x;
+                const std::uint32_t i1 = i0 + 1U;
+                const std::uint32_t i2 = i0 + stride;
+                const std::uint32_t i3 = i2 + 1U;
+                mesh.indices.insert(mesh.indices.end(), {i0, i2, i1, i1, i2, i3});
+            }
+        }
+    }
+    return mesh;
+}
+
 PlanetMesh buildPlanetSurfacePatch(
     const PlanetDefinition& definition,
     const glm::dvec3& centerDirectionInput,

@@ -90,6 +90,10 @@ struct PlanetMesh {
     const glm::dvec3& direction);
 
 [[nodiscard]] PlanetMesh buildPlanetSurface(const PlanetDefinition& definition, std::uint32_t subdivisionsPerFace);
+[[nodiscard]] PlanetMesh buildPlanetGlobeSurface(
+    const PlanetDefinition& definition,
+    std::uint32_t subdivisionsPerFace,
+    double reliefScale = 1.0);
 [[nodiscard]] PlanetMesh buildPlanetSurfacePatch(
     const PlanetDefinition& definition,
     const glm::dvec3& centerDirection,

@@ -225,10 +225,12 @@ int main() {
         constexpr double opticalRayleighScaleHeight = 10200.0;
 
         vf::CelestialSystem celestial;
-        double celestialTimeScale = 1.0;
+        // Gameplay clock is accelerated by default so real self-rotation and orbital motion
+        // are visible during play. Physical periods remain unchanged in simulation seconds.
+        double celestialTimeScale = 240.0;
         if (const char* scaleEnv = std::getenv("VF_CELESTIAL_TIME_SCALE"); scaleEnv != nullptr) {
             try { celestialTimeScale = std::clamp(std::stod(scaleEnv), 0.0, 200000.0); }
-            catch (...) { celestialTimeScale = 1.0; }
+            catch (...) { celestialTimeScale = 240.0; }
         }
         vf::CelestialSimulationClock celestialClock{{60.0, celestialTimeScale, 4096U}};
 
@@ -303,6 +305,9 @@ int main() {
         luna.name = "Luna";
         luna.radiusMeters = 1737400.0;
         luna.massKg = 7.342e22;
+        luna.gameplaySurfaceGravityMps2 = 1.624;
+        luna.gravityInfluenceRadiusMeters = luna.radiusMeters + 450000.0;
+        luna.physicsBubbleRadiusMeters = luna.radiusMeters + 900000.0;
         luna.orbitParentId = asterId;
         constexpr double moonInclination = 5.145 * kPi / 180.0;
         constexpr double moonEpochPhase = 1.07;
@@ -316,7 +321,7 @@ int main() {
             -moonNode * std::sin(moonEpochPhase) + moonQuadrature * std::cos(moonEpochPhase));
         luna.position = aster.position + moonRadial * moonOrbitRadius;
         luna.linearVelocity = aster.linearVelocity
-            + moonTangent * circularOrbitSpeed(aster.massKg, moonOrbitRadius);
+            + moonTangent * circularOrbitSpeed(aster.massKg + luna.massKg, moonOrbitRadius);
         luna.spinAxis = aster.spinAxis;
         luna.spinRateRadPerSecond = 2.0 * kPi / (27.321661 * 86400.0);
         luna.visibleAlbedo = {0.62, 0.64, 0.68};
@@ -324,16 +329,33 @@ int main() {
         vf::PlanetDefinition moonSurfaceDefinition{};
         moonSurfaceDefinition.seed = 0x4C554E415F523234ULL;
         moonSurfaceDefinition.radius = luna.radiusMeters;
-        moonSurfaceDefinition.maxElevation = 9000.0;
-        moonSurfaceDefinition.seaLevelElevationMeters = -2500.0;
-        moonSurfaceDefinition.maxOceanDepthMeters = 0.0;
+        // Lunar relief is kept at physical kilometre scale relative to a 1,737.4 km radius.
+        // The previous 32x32 whole-sphere mesh made the Moon itself visibly polygonal. Keep a cheap
+        // far mesh and a much smoother near mesh; both retain real radial displacement.
+        moonSurfaceDefinition.maxElevation = 5200.0;
+        moonSurfaceDefinition.seaLevelElevationMeters = -900.0;
+        moonSurfaceDefinition.maxOceanDepthMeters = 7200.0;
         moonSurfaceDefinition.atmosphereHeight = 0.0;
-        vf::PlanetMesh moonSurfaceMesh = vf::buildPlanetSurface(moonSurfaceDefinition, 32U);
-        for (auto& vertex : moonSurfaceMesh.vertices) {
-            const float shade = 0.50F + 0.16F * std::abs(vertex.normal.y);
-            vertex.color = {shade, shade * 0.99F, shade * 0.97F};
-            vertex.material = {0.0F, 0.92F, 0.0F, -1.0F};
-        }
+        vf::PlanetMesh moonSurfaceMeshFar = vf::buildPlanetGlobeSurface(
+            moonSurfaceDefinition, 24U, 0.58);
+        vf::PlanetMesh moonSurfaceMeshNear = vf::buildPlanetGlobeSurface(
+            moonSurfaceDefinition, 80U, 0.58);
+        const auto styleMoon = [&](vf::PlanetMesh& mesh) {
+            for (auto& vertex : mesh.vertices) {
+                const double radius = glm::length(glm::dvec3(vertex.position));
+                const double relief = std::clamp(
+                    (radius - luna.radiusMeters) / 5200.0, -1.0, 1.0);
+                const glm::dvec3 d = safeNormalize(glm::dvec3(vertex.position));
+                const double marePattern = 0.5 + 0.5 * std::sin(
+                    d.x * 9.0 + d.y * 5.0 - d.z * 7.0);
+                const float shade = static_cast<float>(std::clamp(
+                    0.43 + 0.055 * relief - 0.035 * marePattern, 0.30, 0.56));
+                vertex.color = {shade, shade * 0.985F, shade * 0.955F};
+                vertex.material = {0.0F, 0.94F, 0.0F, -1.0F};
+            }
+        };
+        styleMoon(moonSurfaceMeshFar);
+        styleMoon(moonSurfaceMeshNear);
 
         // Deterministic evidence camera. This remains the real PlanetCamera and the real Vulkan
         // renderer; only its initial pose is selected explicitly so CI cannot accidentally stare at
@@ -379,6 +401,46 @@ int main() {
             }
         }
         const bool trackMoonEvidence = celestialTargetMode == "moon";
+
+        std::string celestialViewMode{};
+        if (const char* viewEnv = std::getenv("VF_CELESTIAL_VIEW");
+            viewEnv != nullptr && *viewEnv != '\0') {
+            celestialViewMode = viewEnv;
+            if (celestialViewMode == "earth-globe") {
+                const glm::dvec3 observerDirection = safeNormalize({0.44, 0.28, 0.85});
+                const glm::dvec3 observerOffset = observerDirection * 24000000.0;
+                camera.setExternalWorldState(
+                    aster.position + observerOffset, aster.linearVelocity, false);
+                camera.setViewDirectionWorld(-observerOffset, observerDirection);
+                std::cout << "R24.2 view: earth-globe distance_km=24000\n";
+            } else if (celestialViewMode == "moon-globe") {
+                const glm::dvec3 observerDirection = safeNormalize({0.38, 0.31, 0.87});
+                const glm::dvec3 observerOffset = observerDirection * 6200000.0;
+                camera.setExternalWorldState(
+                    luna.position + observerOffset, luna.linearVelocity, false);
+                camera.setViewDirectionWorld(-observerOffset, observerDirection);
+                std::cout << "R24.2 view: moon-globe distance_km=6200\n";
+            } else if (celestialViewMode == "earth-from-moon") {
+                const glm::dvec3 moonToEarth = safeNormalize(aster.position - luna.position);
+                const glm::dvec3 observerOffset = moonToEarth * (luna.radiusMeters + 2400.0);
+                const glm::dvec3 lunarAngularVelocity = safeNormalize(luna.spinAxis)
+                    * luna.spinRateRadPerSecond;
+                camera.setExternalWorldState(
+                    luna.position + observerOffset,
+                    luna.linearVelocity + glm::cross(lunarAngularVelocity, observerOffset),
+                    false);
+                camera.setViewDirectionWorld(
+                    aster.position - camera.position(), moonToEarth);
+                std::cout << "R24.2 view: earth-from-moon near-side surface\n";
+            } else if (celestialViewMode == "earth-moon-system") {
+                const glm::dvec3 observerOffset = moonOrbitNormal * 760000000.0;
+                camera.setExternalWorldState(
+                    aster.position + observerOffset, aster.linearVelocity, false);
+                camera.setViewDirectionWorld(-observerOffset, moonRadial);
+                std::cout << "R24.2 view: earth-moon-system observer_km=760000\n";
+            }
+        }
+
         std::cout << "Spawn land elevation: " << std::fixed << std::setprecision(1)
                   << spawnTerrain.elevationMeters << " m\n";
         const vf::CelestialBody* initialAster = celestial.body(asterId);
@@ -415,6 +477,22 @@ int main() {
         };
 
         vf::PlanetSurfaceAuthority surfaceAuthority{planet};
+
+        // Whole-planet view uses a smooth, physically displaced cube-sphere instead of leaving a
+        // near-ground quadtree frozen in space. This is substantially cheaper than rendering the
+        // full adaptive hemisphere and prevents the planet silhouette from becoming chunky.
+        vf::PlanetMesh earthGlobeMesh = vf::buildPlanetGlobeSurface(planet, 96U, 1.0);
+        vf::PlanetMesh earthGlobeOcean{};
+        vf::appendOceanSurfaceProxy(
+            earthGlobeOcean, {}, planet.radius + planet.seaLevelElevationMeters - 1.5, 96U);
+        appendMesh(earthGlobeMesh, earthGlobeOcean);
+        for (auto& vertex : earthGlobeMesh.vertices) {
+            const glm::dvec3 pPlanet = glm::dvec3(vertex.position);
+            const glm::dvec3 nPlanet = safeNormalize(glm::dvec3(vertex.normal));
+            vertex.position = glm::vec3(toSurfacePoint(pPlanet));
+            vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(nPlanet)));
+        }
+
         glm::dvec3 lodCenterDirection = patchUp;
         struct TerrainBuildResult {
             glm::dvec3 centerDirection{};
@@ -436,12 +514,12 @@ int main() {
             vf::PlanetSurfaceAuthority buildSurface{planet};
             buildSurface.setHydrology(hydrology);
             vf::PlanetLodConfig lodConfig{};
-            lodConfig.patchResolution = 12U;
+            lodConfig.patchResolution = 10U;
             lodConfig.maxDepth = 16U;
-            lodConfig.maxLeafPatches = 3200U;
+            lodConfig.maxLeafPatches = 1600U;
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewportHeightPixels = 900.0;
-            lodConfig.targetScreenErrorPixels = 2.8;
+            lodConfig.targetScreenErrorPixels = 3.4;
             lodConfig.horizonMarginRadians = 0.018;
             lodConfig.skirtDepthMeters = 6.0;
 
@@ -459,7 +537,7 @@ int main() {
 
             vf::PlanetMesh oceanProxy{};
             vf::appendOceanSurfaceProxy(
-                oceanProxy, {}, planet.radius + planet.seaLevelElevationMeters - 1.5, 160U);
+                oceanProxy, {}, planet.radius + planet.seaLevelElevationMeters - 1.5, 96U);
             for (auto& vertex : oceanProxy.vertices) {
                 vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
@@ -472,8 +550,10 @@ int main() {
         TerrainBuildResult initialTerrain = buildTerrainLod(lodCenterDirection, initialCameraPlanet);
         surfaceAuthority.setHydrology(initialTerrain.hydrology);
         vf::PlanetLodStats currentLodStats = initialTerrain.stats;
-        vf::PlanetMesh staticTerrain = std::move(initialTerrain.mesh);
-        renderer.uploadPlanetMesh(staticTerrain);
+        vf::PlanetMesh nearTerrain = std::move(initialTerrain.mesh);
+        bool usingDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
+            || camera.altitude() > 900000.0;
+        renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeMesh : nearTerrain);
         std::future<TerrainBuildResult> terrainBuildFuture{};
         bool terrainBuildInFlight = false;
 
@@ -520,7 +600,9 @@ int main() {
 
         std::cout << "Voxel Frontier R24 adaptive physical planet runtime\n";
         std::cout << "Generic structural damage | Earthlike relief | continuous ocean geoid\n";
-        std::cout << "SSE cube-sphere quadtree | unified surface authority | deterministic stylized ecology\n";
+        std::cout << "SSE cube-sphere quadtree | smooth distant globes | deterministic stylized ecology\n";
+        std::cout << "Earth-Moon physical scale: Rearth=6371 km Rmoon=1737.4 km distance=384400 km"
+                  << " | celestial time scale=" << celestialTimeScale << "x\n";
 
         using Clock = std::chrono::steady_clock;
         auto previous = Clock::now();
@@ -635,6 +717,14 @@ int main() {
             // for procedural generation.
             lodCooldown = std::max(0.0, lodCooldown - dt);
             const double altitude = camera.altitude();
+            const bool wantsDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
+                || altitude > 900000.0;
+            if (wantsDistantEarthGlobe != usingDistantEarthGlobe) {
+                usingDistantEarthGlobe = wantsDistantEarthGlobe;
+                renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeMesh : nearTerrain);
+                std::cout << "R24.2 Earth renderer mode: "
+                          << (usingDistantEarthGlobe ? "smooth-globe" : "adaptive-terrain") << '\n';
+            }
             if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0) {
                 const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
                 const double arcDistance = std::acos(std::clamp(
@@ -663,8 +753,8 @@ int main() {
                     lodCenterDirection = completed.centerDirection;
                     surfaceAuthority.setHydrology(completed.hydrology);
                     currentLodStats = completed.stats;
-                    staticTerrain = std::move(completed.mesh);
-                    renderer.uploadPlanetMesh(staticTerrain);
+                    nearTerrain = std::move(completed.mesh);
+                    if (!usingDistantEarthGlobe) renderer.uploadPlanetMesh(nearTerrain);
                     lodCooldown = 0.12;
                 }
             }
@@ -676,7 +766,10 @@ int main() {
 
             vf::PlanetMesh dynamicMesh{};
             if (currentMoon != nullptr) {
-                vf::PlanetMesh moonMesh = moonSurfaceMesh;
+                const double moonCameraDistance = glm::length(currentMoon->position - camera.position());
+                const vf::PlanetMesh& moonSource = moonCameraDistance < 12000000.0
+                    ? moonSurfaceMeshNear : moonSurfaceMeshFar;
+                vf::PlanetMesh moonMesh = moonSource;
                 const glm::dvec3 moonRelativeWorld = currentMoon->position - currentAster->position;
                 for (auto& vertex : moonMesh.vertices) {
                     const glm::dvec3 moonBodyPoint = currentMoon->orientation * glm::dvec3(vertex.position);
