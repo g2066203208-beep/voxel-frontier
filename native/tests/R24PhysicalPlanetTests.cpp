@@ -45,6 +45,33 @@ void testSurfaceAuthorityKeepsHydrologyInCollisionHeight() {
         "surface authority must apply the exact hydrology incision used by rendering/physics");
 }
 
+void testHydrologyAuthorityFadesBeforeRegionalGridEdge() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 6371000.0;
+    planet.maxElevation = 8850.0;
+    planet.maxOceanDepthMeters = 11000.0;
+    planet.seed = 0x71A9F20DULL;
+    const glm::dvec3 center = glm::normalize(glm::dvec3{0.72, 0.52, 0.46});
+    glm::dvec3 east = glm::normalize(glm::cross(glm::dvec3{0.0, 1.0, 0.0}, center));
+    if (glm::length(east) < 0.5) east = glm::normalize(glm::cross(glm::dvec3{1.0, 0.0, 0.0}, center));
+
+    vf::RegionalHydrologyConfig config{};
+    config.resolution = 65U;
+    config.halfExtentMeters = 45000.0;
+    config.maxIncisionMeters = 320.0;
+    auto hydro = std::make_shared<vf::RegionalHydrology>(planet, center, config);
+    vf::PlanetSurfaceAuthority authority{planet};
+    authority.setHydrology(hydro);
+
+    const double outsideArc = config.halfExtentMeters * 0.97;
+    const double angle = outsideArc / planet.radius;
+    const glm::dvec3 outsideDirection = glm::normalize(center * std::cos(angle) + east * std::sin(angle));
+    const double authorityElevation = authority.elevationMeters(outsideDirection);
+    const double globalElevation = vf::samplePlanetTerrain(planet, outsideDirection).elevationMeters;
+    require(std::abs(authorityElevation - globalElevation) < 1.0e-7,
+        "regional hydrology must return to the global surface before the square DEM boundary");
+}
+
 void testClimateRespondsToSunAndCreatesPressureGradientWind() {
     vf::PlanetDefinition planet{};
     planet.radius = 6371000.0;
@@ -101,6 +128,7 @@ void testOceanSpectrumHasTargetVarianceAndMoves() {
 
 int main() {
     testSurfaceAuthorityKeepsHydrologyInCollisionHeight();
+    testHydrologyAuthorityFadesBeforeRegionalGridEdge();
     testClimateRespondsToSunAndCreatesPressureGradientWind();
     testOceanSpectrumHasTargetVarianceAndMoves();
     std::cout << "vf_r24_physical_planet_tests: PASS\n";

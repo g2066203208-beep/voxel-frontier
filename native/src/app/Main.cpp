@@ -135,7 +135,7 @@ constexpr double kPi = 3.1415926535897932384626433832795;
             }
         }
         if (evidenceFound) {
-            std::cout << "R23 terrain target: " << target << " score=" << evidenceScore << '\n';
+            std::cout << "R24 terrain target: " << target << " score=" << evidenceScore << '\n';
             return safeNormalize(evidenceBest, preferred);
         }
     }
@@ -343,7 +343,7 @@ int main() {
             double aerialAltitude = 5200.0;
             if (const char* altitudeEnv = std::getenv("VF_CAPTURE_ALTITUDE_METERS");
                 altitudeEnv != nullptr && *altitudeEnv != '\0') {
-                try { aerialAltitude = std::clamp(std::stod(altitudeEnv), 800.0, 18000.0); }
+                try { aerialAltitude = std::clamp(std::stod(altitudeEnv), 800.0, 80000.0); }
                 catch (...) { aerialAltitude = 5200.0; }
             }
             const double localSurfaceRadius = vf::planetSurfaceRadius(planet, spawnDirection);
@@ -360,23 +360,25 @@ int main() {
             camera.setViewDirectionWorld(
                 safeNormalize(tangent * 0.78 - worldUp * 0.625, -worldUp),
                 worldUp);
-            std::cout << "R23 deterministic aerial camera altitude="
+            std::cout << "R24 deterministic aerial camera altitude="
                       << aerialAltitude << " m\n";
         }
 
+        std::string celestialTargetMode{};
         if (const char* celestialTargetEnv = std::getenv("VF_CELESTIAL_TARGET");
             celestialTargetEnv != nullptr && *celestialTargetEnv != '\0') {
-            const std::string_view celestialTarget{celestialTargetEnv};
-            if (celestialTarget == "sun") {
+            celestialTargetMode = celestialTargetEnv;
+            if (celestialTargetMode == "sun") {
                 camera.setViewDirectionWorld(
                     sun.position - camera.position(), camera.up());
-                std::cout << "R23 celestial target: sun\n";
-            } else if (celestialTarget == "moon") {
+                std::cout << "R24 celestial evidence target: sun\n";
+            } else if (celestialTargetMode == "moon") {
                 camera.setViewDirectionWorld(
                     luna.position - camera.position(), camera.up());
-                std::cout << "R23 celestial target: moon\n";
+                std::cout << "R24 celestial evidence target: moon (physical radius/distance)\n";
             }
         }
+        const bool trackMoonEvidence = celestialTargetMode == "moon";
         std::cout << "Spawn land elevation: " << std::fixed << std::setprecision(1)
                   << spawnTerrain.elevationMeters << " m\n";
         const vf::CelestialBody* initialAster = celestial.body(asterId);
@@ -611,6 +613,15 @@ int main() {
                 }
             }
 
+            // CI/test-only tracking lens: VF_CELESTIAL_TARGET=moon continuously points the
+            // ordinary production camera at the actual integrated Moon position. It does not move,
+            // resize or substitute the Moon; it prevents surface-attitude transport from drifting a
+            // six-pixel physical lunar disc out of the evidence frame while accelerated time runs.
+            if (trackMoonEvidence && currentMoon != nullptr) {
+                camera.setViewDirectionWorld(
+                    currentMoon->position - camera.position(), camera.up());
+            }
+
             const glm::dvec3 cameraSurface = toSurfacePoint(cameraPlanet);
             const glm::dvec3 forwardPlanet = safeNormalize(
                 inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
@@ -762,6 +773,26 @@ int main() {
                       << renderer.dynamicTriangleCount()
                       << " | FPS " << std::setprecision(0) << fps;
                 platform.setWindowTitle(title.str());
+                if (trackMoonEvidence && currentMoon != nullptr) {
+                    const glm::dvec3 moonDirectionWorld = safeNormalize(
+                        currentMoon->position - camera.position());
+                    const double alignment = std::clamp(
+                        glm::dot(camera.forwardDirection(), moonDirectionWorld), -1.0, 1.0);
+                    const double angularErrorDegrees = std::acos(alignment) * 180.0 / kPi;
+                    const double moonDistanceMeters = glm::length(
+                        currentMoon->position - camera.position());
+                    const double angularRadiusRadians = std::asin(std::clamp(
+                        currentMoon->radiusMeters / std::max(moonDistanceMeters, currentMoon->radiusMeters),
+                        0.0, 1.0));
+                    const double focalPixels = static_cast<double>(height)
+                        / (2.0 * std::tan(glm::radians(68.0) * 0.5));
+                    const double apparentDiameterPixels = 2.0 * std::tan(angularRadiusRadians) * focalPixels;
+                    std::cout << "R24 moon evidence: distance_km="
+                              << moonDistanceMeters / 1000.0
+                              << " angular_error_deg=" << angularErrorDegrees
+                              << " apparent_diameter_px=" << apparentDiameterPixels
+                              << " dynamic_tris=" << renderer.dynamicTriangleCount() << '\n';
+                }
                 diagnosticsTime = 0.0;
                 diagnosticsFrames = 0;
             }

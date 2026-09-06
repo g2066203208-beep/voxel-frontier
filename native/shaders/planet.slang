@@ -138,15 +138,21 @@ float3 applyStylizedAerial(float3 color, VertexOutput input, float strength)
     float3 sunDir = normalize(gPush.data1.xyz);
     float cameraAltitude = max(gPush.data0.w, 0.0);
 
-    float atmospherePresence = exp(-cameraAltitude / 90000.0);
-    float effectiveDistance = min(max(distanceMeters - 350.0, 0.0), 180000.0);
-    float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.35);
-    float density = 2.25e-5 * (0.30 + 0.70 * horizon);
-    float extinction = 1.0 - exp(-effectiveDistance * density);
-    extinction = saturate(extinction * atmospherePresence * strength);
+    // Compact single-segment optical-depth approximation. The coefficients match the Rayleigh
+    // values already used by skyFragmentMain; 8.5 km is the runtime atmosphere scale height.
+    // Unlike the previous scalar lerp, wavelength-dependent transmittance preserves ridge and
+    // valley luminance contrast while the blue channel scatters more strongly with distance.
+    float densityRatio = exp(-cameraAltitude / 8500.0);
+    float effectiveDistance = min(max(distanceMeters - 350.0, 0.0), 220000.0);
+    float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.15);
+    float opticalLength = effectiveDistance * densityRatio * (0.55 + 0.45 * horizon) * strength;
+    const float3 betaR = float3(5.802e-6, 13.558e-6, 33.100e-6);
+    const float betaM = 4.0e-6;
+    float3 transmittance = exp(-(betaR + betaM) * opticalLength);
 
     float3 haze = stylizedSkyPalette(viewDir, sunDir);
-    return lerp(color, haze, extinction);
+    float3 inscatter = haze * (1.0 - transmittance);
+    return color * transmittance + inscatter;
 }
 
 float hash21(float2 p)
@@ -390,7 +396,10 @@ float4 opaqueFragmentMain(VertexOutput input) : SV_Target
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
     float3 linearColor = evaluatePbr(input, false) * exposure;
     float materialTag = input.material.w;
-    float hazeStrength = materialTag <= -1.5 && materialTag > -4.5 ? 0.90 : 1.0;
+    // Terrain needs enough atmospheric perspective to read planet scale, but not so much that
+    // 10--100 km mountain chains disappear. Near-field ecology can take slightly stronger haze.
+    float hazeStrength = materialTag < -0.5 && materialTag > -1.5 ? 0.58
+        : (materialTag <= -1.5 && materialTag > -4.5 ? 0.72 : 0.66);
     linearColor = applyStylizedAerial(linearColor, input, hazeStrength);
     linearColor = stylizedWarmCoolGrade(linearColor);
     return float4(acesFitted(linearColor), 1.0);
