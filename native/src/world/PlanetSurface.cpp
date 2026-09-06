@@ -307,6 +307,80 @@ void appendOceanFace(
     }
 }
 
+
+[[nodiscard]] PlanetTerrainSample sampleAirlessCrateredTerrain(
+    const PlanetDefinition& definition,
+    const glm::dvec3& directionInput) noexcept {
+    const glm::dvec3 d = safeNormalize(directionInput);
+    const double maxRelief = std::max(100.0, definition.maxElevation);
+
+    // Airless-body morphology: broad ancient basins + impact craters + small regolith roughness.
+    // All displacement is radial 3-D geometry. Crater profiles use a depressed bowl, raised ejecta
+    // rim and (for larger impacts) a subdued central peak; there is no ocean/plate/river mask.
+    const double basinNoise = fbmSurface(
+        definition.seed ^ 0xA1F1E55B0D4C7A31ULL, d, 7.0, 3);
+    const double regionalNoise = fbmSurface(
+        definition.seed ^ 0x5EEDC0FFEE123451ULL, d, 42.0, 3);
+    const double regolithNoise = fbmSurface(
+        definition.seed ^ 0xC8A7E4D19B20536FULL, d, 520.0, 3);
+
+    double elevation = maxRelief * (
+        basinNoise * 0.075
+        + regionalNoise * 0.028
+        + regolithNoise * 0.0065);
+    double craterMask = 0.0;
+    double rimMask = 0.0;
+
+    constexpr std::uint64_t craterCount = 44U;
+    for (std::uint64_t i = 0; i < craterCount; ++i) {
+        const glm::dvec3 center = seededDirection(
+            definition.seed ^ 0x9E3779B97F4A7C15ULL, 12000U + i * 17U);
+        const double sizeUnit = seedUnit(definition.seed ^ 0xD1B54A32D192ED03ULL, 14000U + i * 23U);
+        // Chord-space radius avoids an acos per crater sample. The distribution produces many
+        // small/medium craters and only a few basin-scale impacts.
+        const double radiusChord = 0.007 + 0.145 * std::pow(sizeUnit, 2.65);
+        const double chord = std::sqrt(std::max(
+            0.0, 2.0 - 2.0 * std::clamp(glm::dot(d, center), -1.0, 1.0)));
+        const double r = chord / radiusChord;
+        if (r >= 1.42) continue;
+
+        const double sizeScale = std::pow(radiusChord / 0.152, 0.72);
+        const double depth = maxRelief * (0.035 + 0.31 * sizeScale);
+        double bowl = 0.0;
+        if (r < 1.0) {
+            const double q = 1.0 - r * r;
+            bowl = -depth * q * q;
+            craterMask = std::max(craterMask, q);
+        }
+        const double rimX = (r - 1.0) / 0.105;
+        const double rim = depth * 0.18 * std::exp(-rimX * rimX);
+        rimMask = std::max(rimMask, std::clamp(rim / std::max(1.0, depth * 0.18), 0.0, 1.0));
+
+        double centralPeak = 0.0;
+        if (radiusChord > 0.055 && r < 0.34) {
+            const double peakX = r / 0.16;
+            centralPeak = depth * 0.085 * std::exp(-peakX * peakX);
+        }
+        elevation += bowl + rim + centralPeak;
+    }
+
+    elevation = std::clamp(elevation, -maxRelief * 0.88, maxRelief);
+    PlanetTerrainSample sample{};
+    sample.elevationMeters = elevation;
+    sample.continentalness = 1.0;
+    sample.mountain = rimMask;
+    sample.canyon = craterMask;
+    sample.hills = std::clamp(0.5 + 0.5 * regionalNoise, 0.0, 1.0);
+    sample.aridity = 1.0;
+    sample.moisture = 0.0;
+    sample.surfaceDetail = std::clamp(
+        0.48 * regionalNoise + 0.30 * regolithNoise + 0.22 * (rimMask - craterMask),
+        -1.0,
+        1.0);
+    sample.oceanDepthMeters = 0.0;
+    return sample;
+}
+
 } // namespace
 
 glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
@@ -326,6 +400,8 @@ glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
 PlanetTerrainSample samplePlanetTerrain(
     const PlanetDefinition& definition,
     const glm::dvec3& directionInput) {
+    if (definition.surfacePreset == PlanetSurfacePreset::AirlessCratered)
+        return sampleAirlessCrateredTerrain(definition, directionInput);
     const glm::dvec3 d = safeNormalize(directionInput);
     const PlateField plates = samplePlateField(definition.seed, d);
 
@@ -378,7 +454,14 @@ PlanetTerrainSample samplePlanetTerrain(
     const double mountain = std::pow(
         std::clamp(plates.convergence * landness * collisionWeight, 0.0, 1.0),
         1.15);
-    elevation += maxLand * 0.72 * mountain;
+    const double mountainFold = 0.5 + 0.5 * std::sin(
+        w.x * 11.0 - w.z * 8.0 + w.y * 5.0 + p6);
+    const double mountainRidge = 1.0 - std::abs(std::sin(
+        w.z * 15.0 + w.x * 7.0 - w.y * 4.0 + p4));
+    const double mountainReliefFactor = 0.30
+        + 0.16 * mountainFold
+        + 0.13 * std::pow(std::clamp(mountainRidge, 0.0, 1.0), 1.7);
+    elevation += maxLand * mountain * mountainReliefFactor;
 
     const double trenchWeight = (!plates.primary.continental || !plates.secondary.continental)
         ? 1.0
@@ -393,7 +476,7 @@ PlanetTerrainSample samplePlanetTerrain(
         * std::cos(w.y * 3.0 + w.x * 1.2 + p2);
     const double plateau = smooth01(0.68, 0.91, plateauField)
         * landness * (1.0 - 0.72 * plates.boundary) * (1.0 - 0.45 * mountain);
-    elevation += maxLand * 0.27 * plateau;
+    elevation += maxLand * 0.16 * plateau;
 
     double hotspotVolcano = 0.0;
     for (std::uint64_t i = 0; i < 9U; ++i) {
@@ -410,7 +493,7 @@ PlanetTerrainSample samplePlanetTerrain(
         std::max(hotspotVolcano, arcVolcano * 0.72),
         0.0,
         1.0);
-    elevation += maxLand * 0.36 * volcano;
+    elevation += maxLand * 0.24 * volcano;
 
     // Hydrology first cuts broad valleys. Narrower canyon and wetland masks below are subordinate
     // geomorphology passes, following WorldEngine's useful ordering of tectonics -> erosion ->
@@ -512,7 +595,7 @@ PlanetTerrainSample samplePlanetTerrain(
         1.0);
 
     const double polar = smooth01(0.70, 0.91, latitude);
-    const double highIce = smooth01(2500.0, 4700.0, provisionalAboveSea)
+    const double highIce = smooth01(3600.0, 5800.0, provisionalAboveSea)
         * smooth01(0.36, 0.78, latitude);
     const double glacier = std::clamp(
         landness * std::max(polar * (0.45 + 0.55 * mountain), highIce)
@@ -595,6 +678,19 @@ double planetSurfaceRadius(const PlanetDefinition& definition, const glm::dvec3&
 glm::vec3 planetTerrainColor(
     const PlanetDefinition& definition,
     const PlanetTerrainSample& sample) noexcept {
+    if (definition.surfacePreset == PlanetSurfacePreset::AirlessCratered) {
+        const double heightNorm = definition.maxElevation > 0.0
+            ? std::clamp(sample.elevationMeters / definition.maxElevation, -1.0, 1.0)
+            : 0.0;
+        const float value = static_cast<float>(std::clamp(
+            0.43 + 0.055 * heightNorm
+                + 0.060 * sample.surfaceDetail
+                + 0.035 * sample.mountain
+                - 0.055 * sample.canyon,
+            0.24,
+            0.62));
+        return {value, value * 0.985F, value * 0.955F};
+    }
     const auto mix3 = [](const glm::vec3& a, const glm::vec3& b, double t) noexcept {
         return glm::mix(a, b, static_cast<float>(std::clamp(t, 0.0, 1.0)));
     };
@@ -652,6 +748,8 @@ glm::vec3 planetTerrainColor(
 glm::vec4 planetTerrainMaterial(
     const PlanetDefinition& definition,
     const PlanetTerrainSample& sample) noexcept {
+    if (definition.surfacePreset == PlanetSurfacePreset::AirlessCratered)
+        return {0.0F, 0.94F, 0.0F, -1.0F};
     if (sample.submerged(definition)) return {0.0F, 0.91F, 0.0F, -1.0F};
     const double aboveSea = sample.elevationMeters - definition.seaLevelElevationMeters;
     const double highland = smooth01(1200.0, 3800.0, aboveSea);
@@ -739,8 +837,21 @@ PlanetMesh buildPlanetGlobeSurface(
                 // displaced in 3-D; only the distant shading normal is radial. Near-surface LOD
                 // continues using the real terrain gradient normal.
                 vertex.normal = glm::vec3(direction);
-                vertex.color = planetTerrainColor(definition, terrain);
-                vertex.material = planetTerrainMaterial(definition, terrain);
+                if (definition.surfacePreset == PlanetSurfacePreset::Earthlike
+                    && terrain.submerged(definition)) {
+                    const double depthScale = resolvedOceanDepth(definition) > 0.0
+                        ? std::clamp(terrain.oceanDepthMeters / resolvedOceanDepth(definition), 0.0, 1.0)
+                        : 0.0;
+                    const glm::vec3 shallow{0.025F, 0.285F, 0.430F};
+                    const glm::vec3 deep{0.006F, 0.055F, 0.125F};
+                    vertex.color = glm::mix(
+                        shallow, deep,
+                        static_cast<float>(smooth01(0.05, 0.72, depthScale)));
+                    vertex.material = {0.0F, 0.76F, 0.0F, -1.0F};
+                } else {
+                    vertex.color = planetTerrainColor(definition, terrain);
+                    vertex.material = planetTerrainMaterial(definition, terrain);
+                }
                 mesh.vertices.push_back(vertex);
             }
         }

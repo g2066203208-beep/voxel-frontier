@@ -199,6 +199,68 @@ void testEarthMoonPhysicalScaleRotationAndRevolution() {
         "Earth orientation must change from physical self-rotation");
 }
 
+
+void testAirlessMoonUsesCrateredThreeDimensionalRelief() {
+    vf::PlanetDefinition moon{};
+    moon.seed = 0x4C554E415F523234ULL;
+    moon.radius = 1737400.0;
+    moon.maxElevation = 7000.0;
+    moon.atmosphereHeight = 0.0;
+    moon.surfacePreset = vf::PlanetSurfacePreset::AirlessCratered;
+
+    double minimum = 1.0e30;
+    double maximum = -1.0e30;
+    double maxCrater = 0.0;
+    double maxRim = 0.0;
+    for (int i = 0; i < 4096; ++i) {
+        const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5) / 4096.0;
+        const double r = std::sqrt(std::max(0.0, 1.0 - y * y));
+        const double a = 2.3999632297286533 * static_cast<double>(i);
+        const glm::dvec3 d{std::cos(a) * r, y, std::sin(a) * r};
+        const auto sample = vf::samplePlanetTerrain(moon, d);
+        minimum = std::min(minimum, sample.elevationMeters);
+        maximum = std::max(maximum, sample.elevationMeters);
+        maxCrater = std::max(maxCrater, sample.canyon);
+        maxRim = std::max(maxRim, sample.mountain);
+        require(sample.oceanDepthMeters == 0.0, "airless Moon must never create an ocean field");
+        require(sample.moisture == 0.0, "airless Moon must never create terrestrial moisture");
+    }
+    require(maximum - minimum > 1800.0,
+        "Moon surface must contain true kilometre-scale radial 3-D relief");
+    require(maxCrater > 0.45 && maxRim > 0.25,
+        "Moon sampling must contain both crater bowls and raised impact rims");
+}
+
+void testEarthlikeMountainsDoNotCollapseIntoMaxElevationPlateau() {
+    vf::PlanetDefinition earth{};
+    earth.seed = 0x71A9F20DULL;
+    earth.radius = 6371000.0;
+    earth.maxElevation = 8850.0;
+    earth.maxOceanDepthMeters = 11000.0;
+
+    int mountainSamples = 0;
+    int clampedSamples = 0;
+    double minimumMountainElevation = 1.0e30;
+    double maximumMountainElevation = -1.0e30;
+    for (int i = 0; i < 8192; ++i) {
+        const double y = 1.0 - 2.0 * (static_cast<double>(i) + 0.5) / 8192.0;
+        const double r = std::sqrt(std::max(0.0, 1.0 - y * y));
+        const double a = 2.3999632297286533 * static_cast<double>(i);
+        const glm::dvec3 d{std::cos(a) * r, y, std::sin(a) * r};
+        const auto sample = vf::samplePlanetTerrain(earth, d);
+        if (sample.mountain < 0.48 || sample.submerged(earth)) continue;
+        ++mountainSamples;
+        minimumMountainElevation = std::min(minimumMountainElevation, sample.elevationMeters);
+        maximumMountainElevation = std::max(maximumMountainElevation, sample.elevationMeters);
+        if (sample.elevationMeters > earth.maxElevation - 1.0) ++clampedSamples;
+    }
+    require(mountainSamples > 10, "terrain seed must expose enough mountain samples for regression testing");
+    require(maximumMountainElevation - minimumMountainElevation > 900.0,
+        "mountain belts must retain vertical hierarchy instead of becoming one flat cap");
+    require(clampedSamples * 5 < mountainSamples,
+        "fewer than 20 percent of sampled mountain cells may saturate at maxElevation");
+}
+
 } // namespace
 
 int main() {
@@ -207,6 +269,8 @@ int main() {
     testClimateRespondsToSunAndCreatesPressureGradientWind();
     testOceanSpectrumHasTargetVarianceAndMoves();
     testEarthMoonPhysicalScaleRotationAndRevolution();
+    testAirlessMoonUsesCrateredThreeDimensionalRelief();
+    testEarthlikeMountainsDoNotCollapseIntoMaxElevationPlateau();
     std::cout << "vf_r24_physical_planet_tests: PASS\n";
     return 0;
 }

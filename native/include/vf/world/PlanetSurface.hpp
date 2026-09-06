@@ -8,6 +8,11 @@
 
 namespace vf {
 
+enum class PlanetSurfacePreset : std::uint8_t {
+    Earthlike,
+    AirlessCratered,
+};
+
 struct PlanetDefinition {
     std::uint64_t seed{0xA57F0A11ULL};
     double radius{240.0};
@@ -15,6 +20,7 @@ struct PlanetDefinition {
     double atmosphereHeight{120.0};
     double seaLevelElevationMeters{};
     double maxOceanDepthMeters{};
+    PlanetSurfacePreset surfacePreset{PlanetSurfacePreset::Earthlike};
 };
 
 struct PlanetTerrainSample {
