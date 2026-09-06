@@ -134,11 +134,16 @@ old_tail = '''    const auto* body = celestial.body(planetId);
         "W input in zero-g must not become spherical surface walking merely because a planet physics frame is active");'''
 new_tail = '''    const auto* body = celestial.body(planetId);
     require(body != nullptr, "near-space test planet must exist");
-    const double altitudeBefore = camera.altitude();
+    const auto radialSpeed = [&]() {
+        const glm::dvec3 radial = glm::normalize(camera.position() - body->position);
+        return glm::dot(camera.velocity() - body->linearVelocity, radial);
+    };
+    const double outwardSpeedBefore = radialSpeed();
     vf::PlanetMovementInput idleBallistic{};
     for (int i = 0; i < 60; ++i) camera.update(idleBallistic, 1.0 / 60.0);
-    require(camera.altitude() < altitudeBefore - 0.1,
-        "disabling creative flight must reveal persistent physical gravity even inside a precision bubble");'''
+    const double outwardSpeedAfter = radialSpeed();
+    require(outwardSpeedAfter < outwardSpeedBefore - 0.05,
+        "disabling creative flight must make radial velocity decelerate under persistent physical gravity inside a precision bubble");'''
 t = replace_once(t, old_tail, new_tail, 'ballistic tail')
 t = replace_once(
     t,
@@ -147,4 +152,4 @@ t = replace_once(
     'ballistic invocation')
 p.write_text(t, encoding='utf-8')
 
-print('R24 compatibility tests updated for physical gravity and explicit wind')
+print('R24 compatibility tests updated for physical gravity, radial deceleration, and explicit wind')
