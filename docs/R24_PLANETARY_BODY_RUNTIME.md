@@ -19,12 +19,36 @@ allowed to diverge.
 An ocean cannot exist as a detached render-only water service. If `oceanEnabled` is requested,
 `PlanetaryBodySystem` guarantees a solid `PlanetSurfaceAuthority` is also created.
 
+## Live R24 runtime ownership
+
+The production `native/src/app/Main.cpp` path now constructs one `PlanetaryBodySystem` and aliases
+its contained `CelestialSystem` for lower-level consumers that still require celestial access.
+Aster is registered once through `PlanetaryBodyDescriptor`; its surface authority, climate grid and
+ocean spectrum are retrieved from that registry instead of being separately constructed in the
+application layer.
+
+The accelerated astronomical callback now calls only:
+
+```cpp
+planetaryBodies.step(astroDt);
+```
+
+The previous duplicate path that manually called `celestial.step()`, recomputed stellar direction /
+irradiance in `Main.cpp`, and then separately called `climateGrid.step()` has been removed. This is
+important because orbital/spin state and planet-service forcing now advance on exactly the same
+bounded simulated-time sequence.
+
+The migration was accepted only after a Windows 2025 full native configuration built the Vulkan
+runtime and all tests, ran the complete CTest suite, and verified that `voxel_frontier.exe` existed.
+The one-shot migration workflow/script are intentionally removed after that verified commit; normal
+R24 pushes remain covered by the permanent `Native Desktop Engine` Linux-core + Windows-runtime CI.
+
 ## Time integration
 
 `PlanetClimateGrid::step()` deliberately bounds one numerical update to at most 600 simulated
 seconds for stability. Passing a multi-hour `deltaSeconds` once would therefore lose climate time.
 
-`PlanetaryBodySystem::step()` now owns the cross-service synchronization policy:
+`PlanetaryBodySystem::step()` owns the cross-service synchronization policy:
 
 ```text
 requested simulated interval
@@ -71,4 +95,5 @@ without planet services.
 - an ocean descriptor cannot create water without an authoritative surface.
 
 The R24 celestial GitHub Actions workflow runs this test as part of the complete core CTest suite and
-again inside the explicit R24 celestial/planetary gate set.
+again inside the explicit R24 celestial/planetary gate set. The permanent Native Desktop workflow
+also runs on `work/r24-unified-planetary-physics`, including a real Windows/Vulkan executable build.
