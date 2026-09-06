@@ -8,8 +8,11 @@ on:
       - 'native/include/vf/world/**'
       - 'native/src/world/**'
       - 'native/tests/CelestialSystemTests.cpp'
+      - 'native/tests/PlanetaryBodySystemTests.cpp'
+      - 'native/CMakeLists.txt'
       - 'native/README.md'
       - 'docs/R24_CELESTIAL_ARCHITECTURE.md'
+      - 'docs/R24_PLANETARY_BODY_RUNTIME.md'
       - '.github/workflows/r24-celestial-architecture.yml'
   workflow_dispatch:
 
@@ -36,7 +39,7 @@ jobs:
       - name: Run complete core regression suite
         run: ctest --test-dir build/r24-celestial --verbose --output-on-failure
 
-      - name: Re-run celestial and interplanetary gates explicitly
+      - name: Re-run celestial and planetary gates explicitly
         run: >-
           ctest --test-dir build/r24-celestial --verbose --output-on-failure
-          -R 'vf_(celestial_system|celestial_physics_frame|celestial_surface_frames|interplanetary_flight|r24_physical_planet)_tests'
+          -R 'vf_(celestial_system|celestial_physics_frame|celestial_surface_frames|interplanetary_flight|planetary_body_system|r24_physical_planet)_tests'

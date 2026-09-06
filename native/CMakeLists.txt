@@ -203,7 +203,8 @@ if(VF_BUILD_TESTS)
     foreach(test_name IN ITEMS
         planet_physics terrain_landforms camera_input character_controller collision_geometry convex_hull gjk_epa contact_solver mechanics
         physics_mesh celestial_system celestial_physics_frame celestial_surface_frames interplanetary_flight gameplay_interaction
-        sparse_universe_catalog spectral_optics electromagnetic_radiation material_physics gas_volume rope_xpbd structural_damage r24_physical_planet)
+        sparse_universe_catalog spectral_optics electromagnetic_radiation material_physics gas_volume rope_xpbd structural_damage
+        planetary_body_system r24_physical_planet)
         string(REPLACE "_" ";" test_words "${test_name}")
     endforeach()
 
@@ -273,6 +274,9 @@ if(VF_BUILD_TESTS)
     add_executable(vf_structural_damage_tests tests/StructuralDamageTests.cpp)
     target_link_libraries(vf_structural_damage_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_structural_damage_tests COMMAND vf_structural_damage_tests)
+    add_executable(vf_planetary_body_system_tests tests/PlanetaryBodySystemTests.cpp)
+    target_link_libraries(vf_planetary_body_system_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_planetary_body_system_tests COMMAND vf_planetary_body_system_tests)
     add_executable(vf_r24_physical_planet_tests tests/R24PhysicalPlanetTests.cpp)
     target_link_libraries(vf_r24_physical_planet_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_r24_physical_planet_tests COMMAND vf_r24_physical_planet_tests)

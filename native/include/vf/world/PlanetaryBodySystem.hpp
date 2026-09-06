@@ -25,14 +25,15 @@ struct PlanetaryBodyRuntime {
     std::uint32_t bodyId{};
     bool solidSurface{};
     bool oceanEnabled{};
+    PlanetDefinition terrain{};
     std::unique_ptr<PlanetSurfaceAuthority> surface{};
     std::unique_ptr<PlanetClimateGrid> climate{};
     std::unique_ptr<OceanSpectrum> ocean{};
 };
 
-// One registry owns every celestial body and, for solid bodies, the exact same surface/climate/water
-// services used at orbital distance and at walking distance. Moon is not a debug sphere class and a
-// planet is not a special-case main world; both are CelestialBody + optional planetary services.
+// Authoritative registry for a celestial body and all optional planet-scale services that belong to
+// that same physical object. A moon is not a debug sphere and the primary planet is not a special
+// application-only world: both are CelestialBody plus optional surface/climate/ocean services.
 class PlanetaryBodySystem final {
 public:
     [[nodiscard]] std::uint32_t addBody(PlanetaryBodyDescriptor descriptor);
@@ -42,16 +43,28 @@ public:
 
     [[nodiscard]] PlanetaryBodyRuntime* runtime(std::uint32_t bodyId) noexcept;
     [[nodiscard]] const PlanetaryBodyRuntime* runtime(std::uint32_t bodyId) const noexcept;
+
     [[nodiscard]] PlanetSurfaceAuthority* surface(std::uint32_t bodyId) noexcept;
     [[nodiscard]] const PlanetSurfaceAuthority* surface(std::uint32_t bodyId) const noexcept;
     [[nodiscard]] PlanetClimateGrid* climate(std::uint32_t bodyId) noexcept;
+    [[nodiscard]] const PlanetClimateGrid* climate(std::uint32_t bodyId) const noexcept;
     [[nodiscard]] OceanSpectrum* ocean(std::uint32_t bodyId) noexcept;
+    [[nodiscard]] const OceanSpectrum* ocean(std::uint32_t bodyId) const noexcept;
 
-    // Advances N-body/spin state, then advances each enabled climate using the strongest star
-    // direction and the sum of stellar irradiances. Fixed-step policy remains owned by AstroTime.
+    // Unified environment query. CelestialSystem supplies gravity/magnetism/orbital atmosphere
+    // ownership; a registered solid surface replaces spherical altitude with authoritative terrain,
+    // and PlanetClimateGrid replaces fallback atmosphere/weather with the causal local solution.
+    [[nodiscard]] CelestialEnvironmentSample sampleEnvironment(
+        const glm::dvec3& worldPosition) const noexcept;
+
+    // Advances celestial N-body/spin and all registered local climate fields on the same bounded
+    // simulated-time substeps. Direct large calls therefore cannot lose climate time or apply one
+    // final solar direction to an entire multi-hour interval.
     void step(double deltaSeconds);
 
 private:
+    void stepPlanetServices(double deltaSeconds);
+
     CelestialSystem celestial_{};
     std::vector<std::unique_ptr<PlanetaryBodyRuntime>> runtimes_{};
 };
