@@ -277,6 +277,7 @@ void testAtmosphere() {
     e.planet.atmosphereHeight = 2000;
     e.surfaceGravity = 9.81;
     e.weather.stormIntensity = .6;
+    e.atmosphere.prevailingWind = {7.0, 0.0, 2.0};
     auto sea = e.sampleAtmosphere({0, 1000, 0}, 12);
     auto high = e.sampleAtmosphere({0, 1500, 0}, 12);
     require(sea.temperatureK > high.temperatureK

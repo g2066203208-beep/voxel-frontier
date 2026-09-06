@@ -130,9 +130,9 @@ void testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace() {
 
     const glm::dvec3 midpoint{500.0, 0.0, 0.0};
     require(system.gameplayReferenceBodyAt(midpoint) == nullptr,
-        "space outside every planetary SOI must not secretly belong to the primary planet");
-    require(glm::length(system.gravityAccelerationAt(midpoint)) < 1.0e-9,
-        "without a star, free interplanetary space outside SOIs must have negligible gameplay gravity");
+        "space outside every physics bubble must remain in the inertial frame");
+    require(glm::length(system.gravityAccelerationAt(midpoint)) > 1.0e-6,
+        "leaving a reference-frame bubble must not delete Newtonian gravity");
 }
 
 void testSpinAndBoundOrbit() {

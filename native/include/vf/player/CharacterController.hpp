@@ -20,11 +20,11 @@ struct CharacterControllerSettings {
     double maxSlopeAngleRadians{0.8726646259971648}; // 50 degrees
     double stepHeight{0.45};
     double stickToFloorDistance{0.30};
-    double walkSpeed{9.0};
-    double sprintSpeed{18.0};
-    double jumpSpeed{6.2};
-    double groundAcceleration{28.0};
-    double airAcceleration{7.0};
+    double walkSpeed{4.8};
+    double sprintSpeed{8.2};
+    double jumpSpeed{4.7};
+    double groundAcceleration{38.0};
+    double airAcceleration{1.6};
     // 8 cm keeps a fast 18 m/s sprint and ordinary falls from skipping thin floors while still
     // remaining cheap. moveWithCollisions also clamps this against the contact shell at runtime.
     double maxMoveSubstep{0.08};

@@ -155,9 +155,11 @@ void testPlanetaryPhysicsReferenceIsIndependentFromGravity() {
     require(nearHome != nullptr && nearHome->id == homeId,
         "home planet must own its nearby precision physics space");
     require(zeroGButStillLocal != nullptr && zeroGButStillLocal->id == homeId,
-        "a precision physics bubble may extend beyond the planet's gravity cutoff");
-    require(celestial.gravityReferenceBodyAt({350.0, 0.0, 0.0}) == nullptr,
-        "zero-g inside a physics bubble must not still be labelled as planetary gravity");
+        "a precision physics bubble is allowed to extend independently of force magnitude");
+    require(celestial.gravityReferenceBodyAt({350.0, 0.0, 0.0}) != nullptr,
+        "physical Newtonian gravity must persist independently of the precision bubble");
+    require(glm::length(celestial.gravityAccelerationAt({350.0, 0.0, 0.0})) > 1.0e-6,
+        "reference-frame policy must never zero the physical force field");
     require(between == nullptr,
         "interplanetary space outside every physics bubble must use inertial world simulation");
     require(nearDestination != nullptr && nearDestination->id == destinationId,
@@ -233,7 +235,7 @@ void testGroundedPlayerHasNoOrbitalFrameJitter() {
         "idle player must remain over the same local surface patch instead of lagging behind the moving planet");
 }
 
-void testZeroGInsidePhysicsBubbleCannotWalkAroundPlanet() {
+void testPhysicalGravityInsidePhysicsBubbleRemainsBallistic() {
     vf::PlanetDefinition terrain{};
     terrain.radius = 100.0;
     terrain.maxElevation = 0.0;
@@ -266,29 +268,27 @@ void testZeroGInsidePhysicsBubbleCannotWalkAroundPlanet() {
     for (int i = 0; i < 45; ++i) camera.update(idle, 1.0 / 60.0);
 
     require(camera.altitude() > 85.0,
-        "test player must reach the zero-g region above the authored gravity cutoff");
+        "test player must reach near-space while remaining inside the precision bubble");
     require(camera.inPlanetPhysicsFrame(),
-        "zero-g player may remain in the planet precision bubble without being surface-bound");
+        "near-space player may remain in the planet precision bubble without being surface-bound");
 
     toggle.toggleFlight = true;
     camera.update(toggle, 1.0 / 60.0);
     require(!camera.flightMode() && !camera.grounded(),
-        "turning off creative flight in near space must produce an airborne/free-flight state");
+        "turning off creative flight in near space must produce a ballistic airborne state");
 
     const auto* body = celestial.body(planetId);
-    require(body != nullptr, "zero-g test planet must exist");
-    const glm::dvec3 beforeLocal = glm::conjugate(glm::normalize(body->orientation))
-        * (camera.position() - body->position);
-    const glm::dvec3 beforeDirection = glm::normalize(beforeLocal);
-
-    vf::PlanetMovementInput forward{};
-    forward.forward = 1.0;
-    for (int i = 0; i < 120; ++i) camera.update(forward, 1.0 / 60.0);
-
-    const glm::dvec3 afterLocal = glm::conjugate(glm::normalize(body->orientation))
-        * (camera.position() - body->position);
-    require(glm::length(glm::normalize(afterLocal) - beforeDirection) < 1.0e-4,
-        "W input in zero-g must not become spherical surface walking merely because a planet physics frame is active");
+    require(body != nullptr, "near-space test planet must exist");
+    const auto radialSpeed = [&]() {
+        const glm::dvec3 radial = glm::normalize(camera.position() - body->position);
+        return glm::dot(camera.velocity() - body->linearVelocity, radial);
+    };
+    const double outwardSpeedBefore = radialSpeed();
+    vf::PlanetMovementInput idleBallistic{};
+    for (int i = 0; i < 60; ++i) camera.update(idleBallistic, 1.0 / 60.0);
+    const double outwardSpeedAfter = radialSpeed();
+    require(outwardSpeedAfter < outwardSpeedBefore - 0.05,
+        "disabling creative flight must make radial velocity decelerate under persistent physical gravity inside a precision bubble");
 }
 
 } // namespace
@@ -298,7 +298,7 @@ int main() {
     testCreativeFlightCanLandOnSolidGround();
     testPlanetaryPhysicsReferenceIsIndependentFromGravity();
     testGroundedPlayerHasNoOrbitalFrameJitter();
-    testZeroGInsidePhysicsBubbleCannotWalkAroundPlanet();
+    testPhysicalGravityInsidePhysicsBubbleRemainsBallistic();
     std::cout << "vf_interplanetary_flight_tests: PASS\n";
     return 0;
 }

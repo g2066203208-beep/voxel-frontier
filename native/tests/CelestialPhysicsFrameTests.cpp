@@ -62,7 +62,7 @@ void testSurfaceRestIsZeroLocalVelocity() {
         "a building, parked rover or resting item must have zero velocity in planet physics space");
 }
 
-void testFiniteGravityBecomesZeroWithoutWaitingForAnotherPlanet() {
+void testPhysicalGravityPersistsOutsideReferenceBubble() {
     vf::CelestialSystem system;
     vf::CelestialBody planet{};
     planet.radiusMeters = 6000.0;
@@ -71,21 +71,22 @@ void testFiniteGravityBecomesZeroWithoutWaitingForAnotherPlanet() {
     planet.gameplaySurfaceGravityMps2 = 9.81;
     planet.atmosphere.enabled = true;
     planet.atmosphere.heightMeters = 1100.0;
-    planet.gravityFalloffStartRadiusMeters = 7100.0;
-    planet.gravityFalloffPower = 10.0;
-    planet.gravityCutoffAccelerationMps2 = 0.05;
-    planet.gravityInfluenceRadiusMeters = 11000.0;
+    planet.gravityInfluenceRadiusMeters = 11000.0; // legacy bubble hint only
+    planet.physicsBubbleRadiusMeters = 11000.0;
     const auto planetId = system.addBody(planet);
-    (void)planetId;
 
     const glm::dvec3 atmosphereTop{7100.0, 0.0, 0.0};
     const glm::dvec3 deepSpace{12000.0, 0.0, 0.0};
     require(system.gravityMagnitudeFromBody(*system.body(planetId), atmosphereTop) > 1.0,
-        "leaving atmosphere must not unrealistically delete gravity at the exact atmosphere boundary");
-    requireNear(glm::length(system.gravityAccelerationAt(deepSpace)), 0.0, 1.0e-12,
-        "planet gravity must become true zero beyond its finite gameplay gravity well");
-    require(system.gravityReferenceBodyAt(deepSpace) == nullptr,
-        "zero-g space must not remain owned by the old planet gravity state");
+        "leaving atmosphere must not delete physical gravity");
+    const double expected = vf::CelestialSystem::kGravitationalConstant * planet.massKg
+        / glm::dot(deepSpace, deepSpace);
+    requireNear(glm::length(system.gravityAccelerationAt(deepSpace)), expected, expected * 1.0e-12,
+        "gravity outside the physics bubble must remain Newtonian inverse-square");
+    require(system.physicsReferenceBodyAt(deepSpace) == nullptr,
+        "reference-frame bubble may end without changing the gravity law");
+    require(system.gravityReferenceBodyAt(deepSpace) != nullptr,
+        "gravitational dominance and reference-frame ownership are different concepts");
 }
 
 void testRotatingFrameIncludesCentrifugalAcceleration() {
@@ -115,7 +116,7 @@ void testRotatingFrameIncludesCentrifugalAcceleration() {
 int main() {
     testWorldLocalRoundTripPreservesState();
     testSurfaceRestIsZeroLocalVelocity();
-    testFiniteGravityBecomesZeroWithoutWaitingForAnotherPlanet();
+    testPhysicalGravityPersistsOutsideReferenceBubble();
     testRotatingFrameIncludesCentrifugalAcceleration();
     std::cout << "vf_celestial_physics_frame_tests: PASS\n";
     return 0;

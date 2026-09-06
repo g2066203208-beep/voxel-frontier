@@ -161,11 +161,13 @@ CharacterController::ResolveResult CharacterController::resolveTerrain(
         double surfaceRadius = 0.0;
         if (body != nullptr) {
             const glm::dvec3 localDirection = bodyLocalDirection(*body, radialDirection);
-            surfaceRadius = planetSurfaceRadius(environment.planet, localDirection);
-            sample.normal = bodyWorldNormal(*body, environment.planet, radialDirection);
+            surfaceRadius = environment.solidSurfaceRadius(localDirection);
+            sample.normal = safeNormalize(
+                glm::normalize(body->orientation) * environment.solidSurfaceNormal(localDirection),
+                radialDirection);
         } else {
-            surfaceRadius = planetSurfaceRadius(environment.planet, radialDirection);
-            sample.normal = planetSurfaceNormal(environment.planet, radialDirection);
+            surfaceRadius = environment.solidSurfaceRadius(radialDirection);
+            sample.normal = environment.solidSurfaceNormal(radialDirection);
         }
         sample.surfacePoint = center + radialDirection * surfaceRadius;
         sample.gap = glm::dot(probePoint - sample.surfacePoint, sample.normal);

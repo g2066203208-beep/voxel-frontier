@@ -26,6 +26,8 @@ constexpr double kMaxContactPushSpeed = 3.0;
 constexpr double kContactBaumgarte = 0.20;
 constexpr std::uint32_t kContactSolverIterations = 10;
 
+[[nodiscard]] glm::dvec3 primaryOceanCenter(const PhysicsEnvironment& environment) noexcept;
+
 [[nodiscard]] glm::dvec3 safeNormalize(
     const glm::dvec3& value,
     const glm::dvec3& fallback = {0.0, 1.0, 0.0}) noexcept {
@@ -66,24 +68,104 @@ constexpr std::uint32_t kContactSolverIterations = 10;
     if (radius <= kEpsilon) return centerDepthBelowSurface > 0.0 ? 1.0 : 0.0;
     if (centerDepthBelowSurface <= -radius) return 0.0;
     if (centerDepthBelowSurface >= radius) return 1.0;
-
     const double capHeight = std::clamp(centerDepthBelowSurface + radius, 0.0, 2.0 * radius);
     const double capVolume = kPi * capHeight * capHeight * (radius - capHeight / 3.0);
     const double sphereVolume = (4.0 / 3.0) * kPi * radius * radius * radius;
     return std::clamp(capVolume / sphereVolume, 0.0, 1.0);
 }
 
-[[nodiscard]] double submergedFractionForCurrentBuoyancyModel(
-    const CollisionShape& shape,
-    double centerDepthBelowSurface) noexcept {
-    if (shape.type == CollisionShapeType::Sphere) {
-        return sphereSubmergedFraction(shape.radius, centerDepthBelowSurface);
-    }
+struct BuoyancyVolumeSample {
+    double fraction{};
+    glm::dvec3 centerOfBuoyancy{};
+};
 
-    // Non-spherical hulls intentionally do not reuse a bounding sphere here: that
-    // would invent displaced volume and suppress real roll/pitch moments. Boats,
-    // tanks and airships will use distributed sample volumes in the buoyancy layer.
-    return 0.0;
+[[nodiscard]] std::pair<glm::dvec3, glm::dvec3> localShapeBounds(const CollisionShape& shape) noexcept {
+    switch (shape.type) {
+    case CollisionShapeType::Sphere:
+        return {-glm::dvec3{shape.radius}, glm::dvec3{shape.radius}};
+    case CollisionShapeType::Box:
+        return {-shape.halfExtents, shape.halfExtents};
+    case CollisionShapeType::Capsule: {
+        const glm::dvec3 extent{shape.radius, shape.halfHeight + shape.radius, shape.radius};
+        return {-extent, extent};
+    }
+    case CollisionShapeType::ConvexHull:
+        if (shape.convexHullData) return {shape.convexHullData->localMinimum, shape.convexHullData->localMaximum};
+        break;
+    }
+    return {-glm::dvec3{0.5}, glm::dvec3{0.5}};
+}
+
+[[nodiscard]] bool pointInsideLocalShape(const CollisionShape& shape, const glm::dvec3& p) noexcept {
+    switch (shape.type) {
+    case CollisionShapeType::Sphere:
+        return glm::dot(p, p) <= shape.radius * shape.radius;
+    case CollisionShapeType::Box:
+        return std::abs(p.x) <= shape.halfExtents.x
+            && std::abs(p.y) <= shape.halfExtents.y
+            && std::abs(p.z) <= shape.halfExtents.z;
+    case CollisionShapeType::Capsule: {
+        const double segmentY = std::clamp(p.y, -shape.halfHeight, shape.halfHeight);
+        const glm::dvec3 delta = p - glm::dvec3{0.0, segmentY, 0.0};
+        return glm::dot(delta, delta) <= shape.radius * shape.radius;
+    }
+    case CollisionShapeType::ConvexHull: {
+        if (!shape.convexHullData || shape.convexHullData->points.empty()) return false;
+        // A support-function interior test. A point in a convex set must lie behind every support
+        // plane. Fourteen well-separated directions are deterministic and avoid pretending the
+        // hull's AABB is displaced fluid volume; exact CAD buoyancy can later provide tetrahedra.
+        static const std::array<glm::dvec3, 14> directions{{
+            {1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{0,0,1},{0,0,-1},
+            {1,1,1},{1,1,-1},{1,-1,1},{-1,1,1},
+            {-1,-1,1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}}};
+        for (glm::dvec3 d : directions) {
+            d = safeNormalize(d);
+            double support = -std::numeric_limits<double>::infinity();
+            for (const glm::dvec3& q : shape.convexHullData->points)
+                support = std::max(support, glm::dot(q, d));
+            if (glm::dot(p, d) > support + 1.0e-7) return false;
+        }
+        return true;
+    }
+    }
+    return false;
+}
+
+[[nodiscard]] BuoyancyVolumeSample sampleSubmergedVolume(
+    const RigidBody& body,
+    const PhysicsEnvironment& environment,
+    double timeSeconds) noexcept {
+    BuoyancyVolumeSample result{};
+    const auto [minimum, maximum] = localShapeBounds(body.collisionShape);
+    constexpr int samplesPerAxis = 5;
+    int insideCount = 0;
+    int submergedCount = 0;
+    glm::dvec3 submergedSum{};
+    const glm::dvec3 oceanCenter = primaryOceanCenter(environment);
+
+    for (int z = 0; z < samplesPerAxis; ++z) {
+        for (int y = 0; y < samplesPerAxis; ++y) {
+            for (int x = 0; x < samplesPerAxis; ++x) {
+                const glm::dvec3 t{
+                    (static_cast<double>(x) + 0.5) / samplesPerAxis,
+                    (static_cast<double>(y) + 0.5) / samplesPerAxis,
+                    (static_cast<double>(z) + 0.5) / samplesPerAxis};
+                const glm::dvec3 local = minimum + (maximum - minimum) * t;
+                if (!pointInsideLocalShape(body.collisionShape, local)) continue;
+                ++insideCount;
+                const glm::dvec3 world = body.position + body.orientation * local;
+                const double radialDistance = glm::length(world - oceanCenter);
+                if (radialDistance <= environment.oceanSurfaceRadiusAt(world, timeSeconds)) {
+                    ++submergedCount;
+                    submergedSum += world;
+                }
+            }
+        }
+    }
+    if (insideCount == 0 || submergedCount == 0) return result;
+    result.fraction = static_cast<double>(submergedCount) / static_cast<double>(insideCount);
+    result.centerOfBuoyancy = submergedSum / static_cast<double>(submergedCount);
+    return result;
 }
 
 [[nodiscard]] double combineFriction(double a, double b) noexcept {
@@ -256,7 +338,75 @@ glm::dvec3 PhysicsEnvironment::gravityAcceleration(const glm::dvec3& position) c
     return -outward * gravityMagnitude(position);
 }
 
+double PhysicsEnvironment::solidSurfaceRadius(const glm::dvec3& direction) const noexcept {
+    return surfaceAuthority != nullptr
+        ? surfaceAuthority->surfaceRadius(direction)
+        : planetSurfaceRadius(planet, direction);
+}
+
+glm::dvec3 PhysicsEnvironment::solidSurfaceNormal(const glm::dvec3& direction) const noexcept {
+    return surfaceAuthority != nullptr
+        ? surfaceAuthority->surfaceNormal(direction)
+        : planetSurfaceNormal(planet, direction);
+}
+
+double PhysicsEnvironment::oceanSurfaceRadiusAt(
+    const glm::dvec3& position,
+    double timeSeconds) const noexcept {
+    if (!ocean.enabled) return -std::numeric_limits<double>::infinity();
+    if (oceanSpectrum == nullptr) return ocean.surfaceRadius;
+
+    const glm::dvec3 center = primaryOceanCenter(*this);
+    glm::dvec3 local = position - center;
+    const CelestialBody* primary = nullptr;
+    if (celestialSystem != nullptr && primaryCelestialBodyId != 0U)
+        primary = celestialSystem->body(primaryCelestialBodyId);
+    if (primary != nullptr) local = glm::conjugate(glm::normalize(primary->orientation)) * local;
+    const glm::dvec3 outward = safeNormalize(local);
+    const double latitude = std::asin(std::clamp(outward.y, -1.0, 1.0));
+    const double longitude = std::atan2(outward.z, outward.x);
+    const double radius = std::max(1.0, planet.radius);
+    const glm::dvec2 tangentCoordinates{
+        radius * longitude * std::max(0.05, std::cos(latitude)),
+        radius * latitude};
+    const OceanSurfaceSample wave = oceanSpectrum->sample(
+        tangentCoordinates, timeSeconds, std::max(0.1, gravityMagnitude(position)));
+    return ocean.surfaceRadius + wave.heightMeters;
+}
+
 AtmosphereSample PhysicsEnvironment::sampleAtmosphere(const glm::dvec3& position, double timeSeconds) const noexcept {
+    (void)timeSeconds;
+    if (climateGrid != nullptr) {
+        const glm::dvec3 center = primaryOceanCenter(*this);
+        const glm::dvec3 offset = position - center;
+        const double radius = glm::length(offset);
+        if (radius <= kEpsilon) return {};
+        glm::dvec3 bodyLocalDirectionValue = offset / radius;
+        const CelestialBody* primary = nullptr;
+        if (celestialSystem != nullptr && primaryCelestialBodyId != 0U)
+            primary = celestialSystem->body(primaryCelestialBodyId);
+        if (primary != nullptr)
+            bodyLocalDirectionValue = bodyLocalDirection(*primary, bodyLocalDirectionValue);
+        const double altitude = std::max(0.0, radius - solidSurfaceRadius(bodyLocalDirectionValue));
+        if (planet.atmosphereHeight > 0.0 && altitude > planet.atmosphereHeight) {
+            AtmosphereSample vacuum{};
+            vacuum.temperatureK = 2.725;
+            return vacuum;
+        }
+        const PlanetClimateSample climate = climateGrid->sample(bodyLocalDirectionValue, altitude);
+        AtmosphereSample sample{};
+        sample.temperatureK = climate.temperatureK;
+        sample.pressurePa = climate.pressurePa;
+        sample.densityKgPerM3 = climate.densityKgPerM3;
+        sample.windVelocity = climate.windBodyLocalMps;
+        if (primary != nullptr) {
+            sample.windVelocity = primary->linearVelocity
+                + celestialSurfaceVelocity(*primary, position) - primary->linearVelocity
+                + primary->orientation * climate.windBodyLocalMps;
+        }
+        return sample;
+    }
+
     if (celestialSystem != nullptr) {
         const auto celestialSample = celestialSystem->sampleEnvironment(position);
         AtmosphereSample sample{};
@@ -269,11 +419,14 @@ AtmosphereSample PhysicsEnvironment::sampleAtmosphere(const glm::dvec3& position
 
     AtmosphereSample sample{};
     const double altitude = std::max(0.0, glm::length(position) - planet.radius);
+    if (planet.atmosphereHeight > 0.0 && altitude > planet.atmosphereHeight) {
+        sample.temperatureK = 2.725;
+        return sample;
+    }
     const auto& model = atmosphere;
     const double baseTemperature = std::max(120.0, model.seaLevelTemperatureK + model.temperatureOffsetK);
     const double lapse = std::max(0.0, model.lapseRateKPerM);
     sample.temperatureK = std::max(120.0, baseTemperature - lapse * altitude);
-
     const double g = std::max(0.01, gravityMagnitude(position));
     const double basePressure = std::max(0.0, model.seaLevelPressurePa * model.pressureScale);
     if (lapse > 1.0e-8) {
@@ -284,39 +437,52 @@ AtmosphereSample PhysicsEnvironment::sampleAtmosphere(const glm::dvec3& position
         const double specificGasConstant = model.universalGasConstant / model.molarMassKgPerMol;
         sample.pressurePa = basePressure * std::exp(-g * altitude / (specificGasConstant * sample.temperatureK));
     }
-
     const double specificGasConstant = model.universalGasConstant / model.molarMassKgPerMol;
     sample.densityKgPerM3 = sample.temperatureK > 0.0
         ? sample.pressurePa / (specificGasConstant * sample.temperatureK)
         : 0.0;
-
     const glm::dvec3 outward = safeNormalize(position);
     glm::dvec3 tangentWind = model.prevailingWind - outward * glm::dot(model.prevailingWind, outward);
-    const glm::dvec3 reference = std::abs(outward.y) < 0.9 ? glm::dvec3{0.0, 1.0, 0.0} : glm::dvec3{1.0, 0.0, 0.0};
-    const glm::dvec3 tangentA = safeNormalize(glm::cross(reference, outward), {1.0, 0.0, 0.0});
-    const glm::dvec3 tangentB = safeNormalize(glm::cross(outward, tangentA), {0.0, 0.0, 1.0});
-    const double spatialScale = std::max(1.0, model.gustSpatialScale);
-    const double phaseA = glm::dot(position, tangentA) / spatialScale + timeSeconds * model.gustTimeScale;
-    const double phaseB = glm::dot(position, tangentB) / (spatialScale * 0.67) - timeSeconds * model.gustTimeScale * 1.37;
-    const double gustStrength = model.gustAmplitude * (1.0 + 1.8 * std::clamp(weather.stormIntensity, 0.0, 1.0));
-    const glm::dvec3 gust = tangentA * std::sin(phaseA) * gustStrength + tangentB * std::cos(phaseB) * gustStrength * 0.55;
     const double altitudeFade = planet.atmosphereHeight > 0.0
         ? std::exp(-altitude / std::max(1.0, planet.atmosphereHeight * 1.5))
         : 1.0;
-    sample.windVelocity = (tangentWind + gust) * weather.windMultiplier * altitudeFade;
+    sample.windVelocity = tangentWind * weather.windMultiplier * altitudeFade;
     return sample;
 }
 
 glm::dvec3 PhysicsEnvironment::fluidVelocity(const glm::dvec3& position, double timeSeconds) const noexcept {
     if (!ocean.enabled) return {};
     const glm::dvec3 center = primaryOceanCenter(*this);
-    const glm::dvec3 localPosition = position - center;
+    glm::dvec3 localPosition = position - center;
+    const CelestialBody* primary = nullptr;
+    if (celestialSystem != nullptr && primaryCelestialBodyId != 0U)
+        primary = celestialSystem->body(primaryCelestialBodyId);
+    if (primary != nullptr)
+        localPosition = glm::conjugate(glm::normalize(primary->orientation)) * localPosition;
     const glm::dvec3 outward = safeNormalize(localPosition);
-    glm::dvec3 tangent = ocean.meanCurrent - outward * glm::dot(ocean.meanCurrent, outward);
-    const glm::dvec3 reference = std::abs(outward.y) < 0.9 ? glm::dvec3{0.0, 1.0, 0.0} : glm::dvec3{1.0, 0.0, 0.0};
-    const glm::dvec3 waveDirection = safeNormalize(glm::cross(reference, outward), {1.0, 0.0, 0.0});
-    tangent += waveDirection * (0.35 * std::sin(timeSeconds * 0.55 + glm::dot(localPosition, waveDirection) * 0.025));
-    return tangent;
+    const glm::dvec3 east = safeNormalize(glm::dvec3{-outward.z, 0.0, outward.x}, {1.0, 0.0, 0.0});
+    const glm::dvec3 north = safeNormalize(glm::cross(outward, east), {0.0, 0.0, 1.0});
+    glm::dvec3 localVelocity = ocean.meanCurrent - outward * glm::dot(ocean.meanCurrent, outward);
+
+    if (oceanSpectrum != nullptr) {
+        const double latitude = std::asin(std::clamp(outward.y, -1.0, 1.0));
+        const double longitude = std::atan2(outward.z, outward.x);
+        const double radius = std::max(1.0, planet.radius);
+        const glm::dvec2 tangentCoordinates{
+            radius * longitude * std::max(0.05, std::cos(latitude)),
+            radius * latitude};
+        const OceanSurfaceSample wave = oceanSpectrum->sample(
+            tangentCoordinates, timeSeconds, std::max(0.1, gravityMagnitude(position)));
+        localVelocity += east * wave.tangentVelocityMps.x
+            + north * wave.tangentVelocityMps.y
+            + outward * wave.verticalVelocityMps;
+    }
+
+    if (primary == nullptr) return localVelocity;
+    const glm::dvec3 worldOffset = position - primary->position;
+    const glm::dvec3 omega = safeNormalize(primary->spinAxis) * primary->spinRateRadPerSecond;
+    return primary->linearVelocity + glm::cross(omega, worldOffset)
+        + primary->orientation * localVelocity;
 }
 
 PhysicsWorld::PhysicsWorld(PhysicsEnvironment environment) : environment_(std::move(environment)) {}
@@ -546,26 +712,31 @@ void PhysicsWorld::applyEnvironmentForces(RigidBody& rigidBody) {
             * (atmosphereSample.densityKgPerM3 * rigidBody.buoyancy.displacedVolume * gravity);
     }
 
-    if (!rigidBody.buoyancy.enabled || !environment_.ocean.enabled || rigidBody.buoyancy.displacedVolume <= 0.0) return;
+    if (!rigidBody.buoyancy.enabled || !environment_.ocean.enabled
+        || rigidBody.buoyancy.displacedVolume <= 0.0 || gravity <= 0.0) return;
+
+    const BuoyancyVolumeSample submerged = sampleSubmergedVolume(
+        rigidBody, environment_, simulationTime_);
+    if (submerged.fraction <= 0.0) return;
+
     const glm::dvec3 oceanCenter = primaryOceanCenter(environment_);
-    const glm::dvec3 oceanOffset = rigidBody.position - oceanCenter;
-    const double radialDistance = glm::length(oceanOffset);
-    const double centerDepth = environment_.ocean.surfaceRadius - radialDistance;
-    const double submergedFraction = submergedFractionForCurrentBuoyancyModel(rigidBody.collisionShape, centerDepth);
-    if (submergedFraction <= 0.0) return;
+    const glm::dvec3 outward = safeNormalize(submerged.centerOfBuoyancy - oceanCenter);
+    const double displacedVolume = rigidBody.buoyancy.displacedVolume * submerged.fraction;
+    const glm::dvec3 buoyancyForce = outward
+        * (environment_.ocean.densityKgPerM3 * displacedVolume * gravity);
+    rigidBody.addForceAtPoint(buoyancyForce, submerged.centerOfBuoyancy);
 
-    const glm::dvec3 outward = safeNormalize(oceanOffset);
-    const double displacedVolume = rigidBody.buoyancy.displacedVolume * submergedFraction;
-    rigidBody.accumulatedForce += outward * (environment_.ocean.densityKgPerM3 * displacedVolume * gravity);
-
-    const glm::dvec3 relativeWaterVelocity = rigidBody.linearVelocity - environment_.fluidVelocity(rigidBody.position, simulationTime_);
+    const glm::dvec3 relativeWaterVelocity = rigidBody.velocityAtPoint(submerged.centerOfBuoyancy)
+        - environment_.fluidVelocity(submerged.centerOfBuoyancy, simulationTime_);
     const double waterSpeed = glm::length(relativeWaterVelocity);
     if (waterSpeed > 1.0e-5) {
         const double waterDrag = 0.5 * environment_.ocean.densityKgPerM3 * waterSpeed * waterSpeed
             * std::max(0.0, rigidBody.buoyancy.fluidDragCoefficient)
             * std::max(0.0, rigidBody.buoyancy.fluidReferenceArea)
-            * submergedFraction;
-        rigidBody.accumulatedForce -= (relativeWaterVelocity / waterSpeed) * waterDrag;
+            * submerged.fraction;
+        rigidBody.addForceAtPoint(
+            -(relativeWaterVelocity / waterSpeed) * waterDrag,
+            submerged.centerOfBuoyancy);
     }
 }
 
@@ -601,60 +772,68 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
     if (rigidBody.motionType != MotionType::Dynamic || rigidBody.sleeping) return;
 
     glm::dvec3 bodyCenter{};
-    double surfaceRadius = 0.0;
     bool useProceduralPrimary = false;
     const CelestialBody* contactCelestialBody = nullptr;
+    double nearestSurfaceGap = std::numeric_limits<double>::infinity();
 
     if (environment_.celestialSystem != nullptr) {
-        double nearestSurfaceGap = std::numeric_limits<double>::infinity();
-        double nearestRadius = 0.0;
-
         for (const auto& celestialBody : environment_.celestialSystem->bodies()) {
             if (celestialBody.type == CelestialBodyType::Star) continue;
             const glm::dvec3 offset = rigidBody.position - celestialBody.position;
             const double distance = glm::length(offset);
-            const glm::dvec3 worldDirection = safeNormalize(offset);
+            if (distance <= kEpsilon) continue;
+            const glm::dvec3 radial = offset / distance;
             const bool procedural = celestialBody.id == environment_.primaryCelestialBodyId;
-            const double candidateRadius = procedural
-                ? planetSurfaceRadius(environment_.planet, bodyLocalDirection(celestialBody, worldDirection))
+            const double radius = procedural
+                ? environment_.solidSurfaceRadius(bodyLocalDirection(celestialBody, radial))
                 : celestialBody.radiusMeters;
-            const double gap = std::abs(distance - candidateRadius);
+            const double gap = std::abs(distance - radius);
             if (gap < nearestSurfaceGap) {
                 nearestSurfaceGap = gap;
                 contactCelestialBody = &celestialBody;
-                nearestRadius = candidateRadius;
+                useProceduralPrimary = procedural;
             }
         }
-
         if (contactCelestialBody == nullptr) return;
         bodyCenter = contactCelestialBody->position;
-        surfaceRadius = nearestRadius;
-        useProceduralPrimary = contactCelestialBody->id == environment_.primaryCelestialBodyId;
     }
 
-    glm::dvec3 offset = rigidBody.position - bodyCenter;
-    const double distance = glm::length(offset);
-    if (distance <= kEpsilon) return;
-
-    glm::dvec3 normal = offset / distance;
-    if (environment_.celestialSystem == nullptr) {
-        surfaceRadius = planetSurfaceRadius(environment_.planet, normal);
-        useProceduralPrimary = true;
-    } else if (useProceduralPrimary && contactCelestialBody != nullptr) {
-        surfaceRadius = planetSurfaceRadius(environment_.planet, bodyLocalDirection(*contactCelestialBody, normal));
+    glm::dvec3 radial = safeNormalize(rigidBody.position - bodyCenter);
+    double surfaceRadius = 0.0;
+    glm::dvec3 normal = radial;
+    if (useProceduralPrimary || environment_.celestialSystem == nullptr) {
+        const glm::dvec3 localDirection = contactCelestialBody != nullptr
+            ? bodyLocalDirection(*contactCelestialBody, radial)
+            : radial;
+        surfaceRadius = environment_.solidSurfaceRadius(localDirection);
+        const glm::dvec3 localNormal = environment_.solidSurfaceNormal(localDirection);
+        normal = contactCelestialBody != nullptr
+            ? safeNormalize(contactCelestialBody->orientation * localNormal, radial)
+            : localNormal;
+    } else {
+        surfaceRadius = contactCelestialBody->radiusMeters;
     }
 
+    glm::dvec3 surfacePoint = bodyCenter + radial * surfaceRadius;
     glm::dvec3 contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
-    double penetration = surfaceRadius - glm::dot(contactPoint - bodyCenter, normal);
+    double penetration = -glm::dot(contactPoint - surfacePoint, normal);
     if (penetration <= 0.0) return;
 
     rigidBody.position += normal * penetration;
-    normal = safeNormalize(rigidBody.position - bodyCenter);
-    if (useProceduralPrimary) {
-        surfaceRadius = contactCelestialBody != nullptr
-            ? planetSurfaceRadius(environment_.planet, bodyLocalDirection(*contactCelestialBody, normal))
-            : planetSurfaceRadius(environment_.planet, normal);
+    radial = safeNormalize(rigidBody.position - bodyCenter, radial);
+    if (useProceduralPrimary || environment_.celestialSystem == nullptr) {
+        const glm::dvec3 localDirection = contactCelestialBody != nullptr
+            ? bodyLocalDirection(*contactCelestialBody, radial)
+            : radial;
+        surfaceRadius = environment_.solidSurfaceRadius(localDirection);
+        const glm::dvec3 localNormal = environment_.solidSurfaceNormal(localDirection);
+        normal = contactCelestialBody != nullptr
+            ? safeNormalize(contactCelestialBody->orientation * localNormal, radial)
+            : localNormal;
+    } else {
+        normal = radial;
     }
+    surfacePoint = bodyCenter + radial * surfaceRadius;
     contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
 
     const glm::dvec3 surfaceVelocity = contactCelestialBody != nullptr
@@ -666,17 +845,16 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
     if (normalVelocity < 0.0) {
         const double restitution = std::clamp(rigidBody.material.restitution, 0.0, 1.0);
         const double targetSeparationSpeed = normalVelocity < -kRestitutionThreshold
-            ? -restitution * normalVelocity
-            : 0.0;
+            ? -restitution * normalVelocity : 0.0;
         const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, normal);
         normalImpulseMagnitude = (targetSeparationSpeed - normalVelocity) / inverseEffectiveMass;
-        if (normalImpulseMagnitude > 0.0) {
+        if (normalImpulseMagnitude > 0.0)
             rigidBody.applyImpulseAtPoint(normal * normalImpulseMagnitude, contactPoint);
-        }
     }
 
     relativePointVelocity = rigidBody.velocityAtPoint(contactPoint) - surfaceVelocity;
-    glm::dvec3 tangentVelocity = relativePointVelocity - normal * glm::dot(relativePointVelocity, normal);
+    const glm::dvec3 tangentVelocity = relativePointVelocity
+        - normal * glm::dot(relativePointVelocity, normal);
     const double tangentSpeed = glm::length(tangentVelocity);
     if (tangentSpeed > 1.0e-7) {
         const glm::dvec3 tangent = tangentVelocity / tangentSpeed;
@@ -686,13 +864,12 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
         const double maxFrictionImpulse = std::max(0.0, rigidBody.material.friction) * supportingImpulse;
         const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, tangent);
         const double stopImpulse = tangentSpeed / inverseEffectiveMass;
-        const double frictionImpulse = std::min(stopImpulse, maxFrictionImpulse);
-        rigidBody.applyImpulseAtPoint(-tangent * frictionImpulse, contactPoint);
+        rigidBody.applyImpulseAtPoint(
+            -tangent * std::min(stopImpulse, maxFrictionImpulse), contactPoint);
     }
 
-    const double rollingFactor = std::exp(
+    rigidBody.angularVelocity *= std::exp(
         -std::max(0.0, rigidBody.material.rollingResistance) * 30.0 * fixedDeltaSeconds_);
-    rigidBody.angularVelocity *= rollingFactor;
 }
 
 void PhysicsWorld::solveBodyContacts() {
