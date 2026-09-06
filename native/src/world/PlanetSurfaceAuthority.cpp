@@ -24,6 +24,11 @@ namespace {
     return safeNormalize(glm::cross(reference, up), {1.0, 0.0, 0.0});
 }
 
+[[nodiscard]] double smooth01(double value) noexcept {
+    const double t = std::clamp(value, 0.0, 1.0);
+    return t * t * (3.0 - 2.0 * t);
+}
+
 } // namespace
 
 PlanetSurfaceAuthority::PlanetSurfaceAuthority(PlanetDefinition planet) noexcept
@@ -42,16 +47,19 @@ std::shared_ptr<const RegionalHydrology> PlanetSurfaceAuthority::hydrology() con
     return hydrology_.load(std::memory_order_acquire);
 }
 
-bool PlanetSurfaceAuthority::hydrologyCovers(
+double PlanetSurfaceAuthority::hydrologyWeight(
     const RegionalHydrology& hydro,
     const glm::dvec3& directionInput) const noexcept {
-    if (hydro.empty() || planet_.radius <= 0.0) return false;
+    if (hydro.empty() || planet_.radius <= 0.0) return 0.0;
     const glm::dvec3 direction = safeNormalize(directionInput, hydro.centerDirection());
     const double cosine = std::clamp(glm::dot(direction, hydro.centerDirection()), -1.0, 1.0);
     const double arcMeters = std::acos(cosine) * planet_.radius;
-    // RegionalHydrology is a tangent-plane square. sqrt(2) preserves its corners while the
-    // actual sample() call still returns zero outside the exact local grid.
-    return arcMeters <= hydro.halfExtentMeters() * 1.4142135623730951;
+    const double halfExtent = std::max(1.0, hydro.halfExtentMeters());
+    const double fadeStart = halfExtent * 0.72;
+    const double fadeEnd = halfExtent * 0.94;
+    if (arcMeters >= fadeEnd) return 0.0;
+    if (arcMeters <= fadeStart) return 1.0;
+    return 1.0 - smooth01((arcMeters - fadeStart) / std::max(1.0, fadeEnd - fadeStart));
 }
 
 PlanetTerrainSample PlanetSurfaceAuthority::sample(const glm::dvec3& directionInput) const noexcept {
@@ -59,20 +67,28 @@ PlanetTerrainSample PlanetSurfaceAuthority::sample(const glm::dvec3& directionIn
     PlanetTerrainSample terrain = samplePlanetTerrain(planet_, direction);
 
     const auto hydro = hydrology();
-    if (hydro && hydrologyCovers(*hydro, direction)) {
-        const RegionalHydrologySample drainage = hydro->sample(direction);
-        terrain.elevationMeters -= drainage.incisionMeters;
-        // Inside a hydrology-authoritative region, river identity comes from drainage topology,
-        // not from the legacy pointwise river mask. This is the first step toward one causal chain.
-        terrain.river = drainage.channelStrength;
-        terrain.wetland = std::clamp(
-            std::max(terrain.wetland * 0.35,
-                drainage.depositionPotential * 0.72 + drainage.lakePotential * 0.90),
-            0.0,
-            1.0);
-        terrain.oceanDepthMeters = std::max(
-            0.0,
-            planet_.seaLevelElevationMeters - terrain.elevationMeters);
+    if (hydro) {
+        const double weight = hydrologyWeight(*hydro, direction);
+        if (weight > 0.0) {
+            const RegionalHydrologySample drainage = hydro->sample(direction);
+            terrain.elevationMeters -= drainage.incisionMeters * weight;
+            terrain.river = std::clamp(
+                terrain.river * (1.0 - weight) + drainage.channelStrength * weight,
+                0.0,
+                1.0);
+            const double hydrologyWetland = std::clamp(
+                drainage.depositionPotential * 0.72 + drainage.lakePotential * 0.90,
+                0.0,
+                1.0);
+            terrain.wetland = std::clamp(
+                terrain.wetland * (1.0 - 0.65 * weight)
+                    + hydrologyWetland * weight,
+                0.0,
+                1.0);
+            terrain.oceanDepthMeters = std::max(
+                0.0,
+                planet_.seaLevelElevationMeters - terrain.elevationMeters);
+        }
     }
     return terrain;
 }

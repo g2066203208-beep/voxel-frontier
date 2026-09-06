@@ -27,7 +27,10 @@ public:
     [[nodiscard]] glm::dvec3 surfaceNormal(const glm::dvec3& direction) const noexcept;
 
 private:
-    [[nodiscard]] bool hydrologyCovers(
+    // A tangent-plane hydrology bake is square, but its square edge must never become a world-space
+    // terrain seam. Consume an inscribed circular core and fade its process fields to the global
+    // geomorphology before the grid boundary is reached.
+    [[nodiscard]] double hydrologyWeight(
         const RegionalHydrology& hydrology,
         const glm::dvec3& direction) const noexcept;
 
