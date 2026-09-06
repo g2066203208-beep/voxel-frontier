@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - work/r24-unified-planetary-physics
   pull_request:
     branches:
       - main
