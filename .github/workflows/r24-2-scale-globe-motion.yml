@@ -32,7 +32,7 @@ jobs:
       - name: Install Vulkan X11 and capture dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build g++ libx11-dev libxext-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libwayland-dev libxkbcommon-dev wayland-protocols libvulkan-dev vulkan-tools mesa-vulkan-drivers xvfb xdotool imagemagick curl unzip
+          sudo apt-get install -y cmake ninja-build g++ libx11-dev libxext-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxss-dev libwayland-dev libxkbcommon-dev wayland-protocols libvulkan-dev vulkan-tools mesa-vulkan-drivers xvfb xdotool imagemagick curl unzip
 
       - name: Install Slang compiler
         run: |
