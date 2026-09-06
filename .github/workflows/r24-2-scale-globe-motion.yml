@@ -1,0 +1,116 @@
+name: R24.2 Physical Scale Globe Motion
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_2_fix_scale_globes_motion.py'
+      - '.github/scripts/r24_2_capture.sh'
+      - '.github/workflows/r24-2-scale-globe-motion.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  linux-vulkan-evidence:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout R24.2 branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: work/r24-unified-planetary-physics
+
+      - name: Stage R24.2 physical scale and globe fixes
+        run: |
+          python3 .github/scripts/r24_2_fix_scale_globes_motion.py
+          git diff --check
+          grep -q 'buildPlanetGlobeSurface' native/src/app/Main.cpp
+          grep -q 'earth-from-moon' native/src/app/Main.cpp
+          grep -q 'testEarthMoonPhysicalScaleRotationAndRevolution' native/tests/R24PhysicalPlanetTests.cpp
+
+      - name: Install Vulkan X11 and capture dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++ libx11-dev libxext-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libwayland-dev libxkbcommon-dev wayland-protocols libvulkan-dev vulkan-tools mesa-vulkan-drivers xvfb xdotool imagemagick curl unzip
+
+      - name: Install Slang compiler
+        run: |
+          curl -L --retry 3 -o /tmp/slang.zip https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64.zip
+          unzip -q /tmp/slang.zip -d /tmp/slang
+          SLANGC=$(find /tmp/slang -type f -name slangc | head -n 1)
+          test -n "$SLANGC"
+          chmod +x "$SLANGC"
+          sudo ln -sf "$SLANGC" /usr/local/bin/slangc
+          slangc -version
+
+      - name: Configure C++23 Vulkan runtime
+        run: cmake -S native -B native/build-r24-2 -G Ninja -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build runtime and tests
+        run: cmake --build native/build-r24-2 --parallel 2
+
+      - name: Run full native test suite
+        run: ctest --test-dir native/build-r24-2 --output-on-failure
+
+      - name: Verify real Vulkan device
+        run: |
+          vulkaninfo --summary | tee vulkan-summary.txt
+          grep -Ei 'llvmpipe|lavapipe|Mesa' vulkan-summary.txt || true
+
+      - name: Capture mandatory real framebuffer evidence
+        run: |
+          chmod +x .github/scripts/r24_2_capture.sh
+          .github/scripts/r24_2_capture.sh native/build-r24-2/voxel_frontier r24-2-evidence
+
+      - name: Commit tested production source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native
+          if git diff --cached --quiet; then
+            echo 'No production source changes to commit.'
+          else
+            git commit -m 'R24.2: fix physical Earth Moon scale globes performance and motion'
+            git push origin HEAD:work/r24-unified-planetary-physics
+          fi
+
+      - name: Preserve diagnostics after every outcome
+        if: always()
+        run: |
+          mkdir -p r24-2-evidence
+          cp -f vulkan-summary.txt r24-2-evidence/ 2>/dev/null || true
+          git diff -- native > r24-2-evidence/tested-source.patch 2>/dev/null || true
+          printf 'workflow_sha=%s\nworkflow_run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > r24-2-evidence/workflow-source.txt
+
+      - name: Upload every framebuffer even when bad
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-2-real-vulkan-evidence-${{ github.sha }}
+          path: r24-2-evidence/**
+          if-no-files-found: warn
+          retention-days: 30
+
+  windows-build:
+    runs-on: windows-2025
+    steps:
+      - name: Checkout R24.2 branch
+        uses: actions/checkout@v6
+        with:
+          ref: work/r24-unified-planetary-physics
+
+      - name: Stage identical R24.2 source
+        shell: pwsh
+        run: |
+          python .github/scripts/r24_2_fix_scale_globes_motion.py
+          git diff --check
+
+      - name: Configure Windows x64
+        run: cmake -S native -B native/build-r24-2-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Windows x64
+        run: cmake --build native/build-r24-2-win --config Release --parallel 2
+
+      - name: Test Windows x64
+        run: ctest --test-dir native/build-r24-2-win -C Release --output-on-failure
