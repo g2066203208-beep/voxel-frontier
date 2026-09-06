@@ -7,13 +7,19 @@ on:
       - '.github/scripts/r24_2_fix_scale_globes_motion.py'
       - '.github/scripts/r24_2_capture.sh'
       - '.github/workflows/r24-2-scale-globe-motion.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: r24-2-scale-globe-motion-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   linux-vulkan-evidence:
     runs-on: ubuntu-24.04
+    timeout-minutes: 45
     steps:
       - name: Checkout R24.2 branch
         uses: actions/checkout@v6
@@ -32,36 +38,48 @@ jobs:
       - name: Install Vulkan X11 and capture dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build g++ libx11-dev libxext-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxss-dev libwayland-dev libxkbcommon-dev wayland-protocols libvulkan-dev vulkan-tools mesa-vulkan-drivers xvfb xdotool imagemagick curl unzip
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
 
       - name: Install Slang compiler
         run: |
-          curl -L --retry 3 -o /tmp/slang.zip https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64.zip
-          unzip -q /tmp/slang.zip -d /tmp/slang
-          SLANGC=$(find /tmp/slang -type f -name slangc | head -n 1)
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
           test -n "$SLANGC"
-          chmod +x "$SLANGC"
-          sudo ln -sf "$SLANGC" /usr/local/bin/slangc
-          slangc -version
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
 
       - name: Configure C++23 Vulkan runtime
-        run: cmake -S native -B native/build-r24-2 -G Ninja -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S native -B build/r24-2 -G Ninja -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
 
       - name: Build runtime and tests
-        run: cmake --build native/build-r24-2 --parallel 2
+        run: cmake --build build/r24-2 --parallel 2
 
       - name: Run full native test suite
-        run: ctest --test-dir native/build-r24-2 --output-on-failure
+        run: ctest --test-dir build/r24-2 --verbose --output-on-failure
 
-      - name: Verify real Vulkan device
+      - name: Verify real Lavapipe Vulkan device
         run: |
-          vulkaninfo --summary | tee vulkan-summary.txt
-          grep -Ei 'llvmpipe|lavapipe|Mesa' vulkan-summary.txt || true
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
 
       - name: Capture mandatory real framebuffer evidence
         run: |
+          APP="$(find build/r24-2 -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
           chmod +x .github/scripts/r24_2_capture.sh
-          .github/scripts/r24_2_capture.sh native/build-r24-2/voxel_frontier r24-2-evidence
+          .github/scripts/r24_2_capture.sh "$APP" r24-2-evidence
 
       - name: Commit tested production source
         run: |
@@ -94,6 +112,7 @@ jobs:
 
   windows-build:
     runs-on: windows-2025
+    timeout-minutes: 45
     steps:
       - name: Checkout R24.2 branch
         uses: actions/checkout@v6
@@ -107,10 +126,10 @@ jobs:
           git diff --check
 
       - name: Configure Windows x64
-        run: cmake -S native -B native/build-r24-2-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+        run: cmake -S native -B build/r24-2-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
 
       - name: Build Windows x64
-        run: cmake --build native/build-r24-2-win --config Release --parallel 2
+        run: cmake --build build/r24-2-win --config Release --parallel 2
 
       - name: Test Windows x64
-        run: ctest --test-dir native/build-r24-2-win -C Release --output-on-failure
+        run: ctest --test-dir build/r24-2-win -C Release --output-on-failure
