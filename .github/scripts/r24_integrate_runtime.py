@@ -17,14 +17,12 @@ once(
     'R24 surface/LOD includes')
 once('#include <limits>\n#include <sstream>', '#include <limits>\n#include <memory>\n#include <sstream>', 'memory include')
 
-# Physical obliquity: the orbital reference plane is XZ and +Y is its normal.
 once(
     '        aster.spinAxis = {0.0, 1.0, 0.0};',
     '        constexpr double asterObliquity = 23.439281 * kPi / 180.0;\n'
     '        aster.spinAxis = safeNormalize({std::sin(asterObliquity), std::cos(asterObliquity), 0.0});',
     'Aster obliquity')
 
-# Climate/ocean are now persistent world services rather than unused core classes.
 once(
     '        const std::uint32_t asterId = celestial.addBody(aster);',
     '        const std::uint32_t asterId = celestial.addBody(aster);\n'
@@ -32,8 +30,6 @@ once(
     '        vf::OceanSpectrum oceanSpectrum{};',
     'climate and ocean services')
 
-# The Moon orbit is deterministic and camera-independent. 5.145 degrees is the orbital inclination
-# used by the Earth-Moon reference profile; phase is simply this procedural system epoch.
 old_moon = '''        const glm::dvec3 moonRadial = safeNormalize(
             camera.forwardDirection() + camera.up() * 0.34,
             stableTangent(spawnDirection));
@@ -58,8 +54,6 @@ new_moon = '''        constexpr double moonInclination = 5.145 * kPi / 180.0;
             + moonTangent * circularOrbitSpeed(aster.massKg, moonOrbitRadius);'''
 once(old_moon, new_moon, 'camera-independent Moon orbit')
 
-# Give Luna its own true-radius procedural solid mesh. It will be transformed at true orbital
-# distance each frame rather than replaced by the old 17,000 km visual proxy sphere.
 once(
     '        const std::uint32_t moonId = celestial.addBody(luna);',
     '''        const std::uint32_t moonId = celestial.addBody(luna);
@@ -78,7 +72,6 @@ once(
         }''',
     'Moon physical surface mesh')
 
-# Less top-down evidence camera: oblique terrain silhouettes and the horizon stay visible.
 once(
     '                safeNormalize(tangent * 0.58 - worldUp * 0.82, -worldUp),',
     '                safeNormalize(tangent * 0.78 - worldUp * 0.625, -worldUp),',
@@ -132,12 +125,8 @@ new_lod = '''        vf::PlanetSurfaceAuthority surfaceAuthority{planet};
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
             }
 
-            // Near-field ecology still streams by stable cells. Terrain itself is no longer a
-            // concentric square; the quadtree covers the visible sphere according to projected error.
             appendMesh(result.mesh, vf::buildProceduralEcology(planet, centerUp, surfaceFrame));
 
-            // One global geoid avoids another visible local-ocean square boundary. Fine wave motion
-            // is supplied by OceanSpectrum to physics; the renderer receives that spectrum next.
             vf::PlanetMesh oceanProxy{};
             vf::appendOceanSurfaceProxy(
                 oceanProxy, {}, planet.radius + planet.seaLevelElevationMeters - 1.5, 160U);
@@ -161,7 +150,6 @@ new_lod = '''        vf::PlanetSurfaceAuthority surfaceAuthority{planet};
 '''
 t = t[:start] + new_lod + t[end:]
 
-# Physics, climate, visible terrain and water all read the same R24 authorities.
 once(
     '        environment.primaryCelestialBodyId = localGravityId;\n        environment.atmosphere.prevailingWind = {};',
     '        environment.primaryCelestialBodyId = localGravityId;\n'
@@ -171,13 +159,11 @@ once(
     '        environment.atmosphere.prevailingWind = {};',
     'physics authority pointers')
 
-# The defaults in CharacterControllerSettings are now the authored Earthlike movement profile.
 once(
     '        characterSettings.walkSpeed = 9.0;\n        characterSettings.sprintSpeed = 18.0;',
     '        characterSettings.walkSpeed = 4.8;\n        characterSettings.sprintSpeed = 8.2;\n        characterSettings.jumpSpeed = 4.7;\n        characterSettings.airAcceleration = 1.6;',
     'Earthlike character movement')
 
-# Step physical climate from the same accelerated celestial clock.
 once(
     '''            celestialClock.advance(dt, [&](double astroDt) {
                 celestial.step(astroDt);
@@ -198,38 +184,39 @@ once(
             });''',
     'climate clock integration')
 
-old_async = '''                    const glm::dvec3 requestedDirection = cameraDirection;
+once(
+    '''                    const glm::dvec3 requestedDirection = cameraDirection;
                     terrainBuildFuture = std::async(std::launch::async, [&, requestedDirection]() {
                         return std::make_pair(requestedDirection, buildTerrainLod(requestedDirection));
                     });
-                    terrainBuildInFlight = true;'''
-new_async = '''                    const glm::dvec3 requestedDirection = cameraDirection;
+                    terrainBuildInFlight = true;''',
+    '''                    const glm::dvec3 requestedDirection = cameraDirection;
                     const glm::dvec3 requestedCameraPlanet = cameraPlanet;
                     terrainBuildFuture = std::async(
                         std::launch::async,
                         [&, requestedDirection, requestedCameraPlanet]() {
                             return buildTerrainLod(requestedDirection, requestedCameraPlanet);
                         });
-                    terrainBuildInFlight = true;'''
-once(old_async, new_async, 'adaptive async request')
+                    terrainBuildInFlight = true;''',
+    'adaptive async request')
 
-old_ready = '''                    auto completed = terrainBuildFuture.get();
+once(
+    '''                    auto completed = terrainBuildFuture.get();
                     terrainBuildInFlight = false;
                     lodCenterDirection = completed.first;
                     staticTerrain = std::move(completed.second);
                     renderer.uploadPlanetMesh(staticTerrain);
-                    lodCooldown = 0.12;'''
-new_ready = '''                    TerrainBuildResult completed = terrainBuildFuture.get();
+                    lodCooldown = 0.12;''',
+    '''                    TerrainBuildResult completed = terrainBuildFuture.get();
                     terrainBuildInFlight = false;
                     lodCenterDirection = completed.centerDirection;
                     surfaceAuthority.setHydrology(completed.hydrology);
                     currentLodStats = completed.stats;
                     staticTerrain = std::move(completed.mesh);
                     renderer.uploadPlanetMesh(staticTerrain);
-                    lodCooldown = 0.12;'''
-once(old_ready, new_ready, 'adaptive async completion')
+                    lodCooldown = 0.12;''',
+    'adaptive async completion')
 
-# Render Luna at its real center/radius with its real body rotation; remove the fake visual distance.
 moon_dynamic_start = t.find('            if (currentMoon != nullptr) {\n')
 moon_dynamic_end = t.find('            if (currentCinder != nullptr) {\n', moon_dynamic_start)
 if moon_dynamic_start < 0 or moon_dynamic_end < 0:
@@ -250,7 +237,6 @@ new_moon_dynamic = '''            if (currentMoon != nullptr) {
 '''
 t = t[:moon_dynamic_start] + new_moon_dynamic + t[moon_dynamic_end:]
 
-# Rendering now consumes the climate grid instead of the old static celestial atmosphere sample.
 once(
     '''            const auto atmosphere = celestial.sampleEnvironment(camera.position());
             const double densityRatio = std::clamp(atmosphere.densityKgPerM3 / 1.225, 0.0, 1.2);''',
@@ -259,7 +245,6 @@ once(
             const double densityRatio = std::clamp(climateSample.densityKgPerM3 / 1.225, 0.0, 1.2);''',
     'render climate sample')
 
-# Surface target below the camera must use the same hydrology-authoritative query as collision.
 once(
     '''                const vf::PlanetTerrainSample terrainBelow = vf::samplePlanetTerrain(
                     planet, safeNormalize(cameraPlanet, patchUp));''',
@@ -267,17 +252,13 @@ once(
                     safeNormalize(cameraPlanet, patchUp));''',
     'diagnostic surface authority')
 
-# Expose LOD state in the actual window title for screenshots/log inspection.
 once(
-    '''                      << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")
-                      << " | tris " << renderer.triangleCount() << '+' ''',
-    '''                      << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")
-                      << " | QLOD " << currentLodStats.leafPatches << "/L" << currentLodStats.deepestLevel
-                      << " | cell " << std::setprecision(1) << currentLodStats.nearestCellMeters << "m"
-                      << " | tris " << renderer.triangleCount() << '+' ''',
+    '                      << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")\n',
+    '                      << " | STREAM " << (terrainBuildInFlight ? "BUILD" : "READY")\n'
+    '                      << " | QLOD " << currentLodStats.leafPatches << "/L" << currentLodStats.deepestLevel\n'
+    '                      << " | cell " << std::setprecision(1) << currentLodStats.nearestCellMeters << "m"\n',
     'LOD diagnostics title')
 
-# Production log strings should identify the actual R24 adaptive runtime.
 once('        std::cout << "Voxel Frontier Earthlike planet runtime\\n";',
      '        std::cout << "Voxel Frontier R24 adaptive physical planet runtime\\n";',
      'runtime banner')
