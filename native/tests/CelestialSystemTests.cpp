@@ -7,6 +7,7 @@
 #include <string_view>
 
 #include <glm/geometric.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace {
 
@@ -21,6 +22,14 @@ void require(bool condition, std::string_view message) {
 
 void requireNear(double actual, double expected, double tolerance, std::string_view message) {
     if (std::abs(actual - expected) > tolerance) fail(message);
+}
+
+void requireVecNear(
+    const glm::dvec3& actual,
+    const glm::dvec3& expected,
+    double tolerance,
+    std::string_view message) {
+    if (glm::length(actual - expected) > tolerance) fail(message);
 }
 
 void testSurfaceGravityAndAtmosphereBelongToEachPlanet() {
@@ -224,6 +233,175 @@ void testDipoleMagneticFieldFallsWithDistance() {
     requireNear(twiceRadius / surface, 1.0 / 8.0, 0.002, "dipole field must follow inverse-cube distance scaling");
 }
 
+void testReferenceFrameHierarchyComposesRotationAndVelocity() {
+    vf::ReferenceFrameSystem frames;
+
+    vf::ReferenceFrame root{};
+    root.name = "root";
+    root.localPosition = {100.0, -20.0, 5.0};
+    root.localVelocity = {1.0, 2.0, 3.0};
+    root.localRotation = glm::angleAxis(0.5, glm::dvec3{0.0, 1.0, 0.0});
+    root.localAngularVelocity = {0.0, 0.25, 0.0};
+    const auto rootId = frames.addFrame(root);
+
+    vf::ReferenceFrame child{};
+    child.name = "child";
+    child.parentId = rootId;
+    child.localPosition = {10.0, 2.0, -3.0};
+    child.localVelocity = {0.5, 0.0, 2.0};
+    const auto childId = frames.addFrame(child);
+
+    const auto state = frames.worldState(childId);
+    require(state.valid, "nested reference frame must resolve to a valid world state");
+
+    const glm::dvec3 expectedOffset = root.localRotation * child.localPosition;
+    const glm::dvec3 expectedPosition = root.localPosition + expectedOffset;
+    const glm::dvec3 expectedVelocity = root.localVelocity
+        + glm::cross(root.localAngularVelocity, expectedOffset)
+        + root.localRotation * child.localVelocity;
+    requireVecNear(state.position, expectedPosition, 1.0e-10,
+        "child world position must include parent rotation and translation");
+    requireVecNear(state.velocity, expectedVelocity, 1.0e-10,
+        "child world velocity must include parent translation, rotation and omega-cross-r");
+
+    const glm::dvec3 localPoint{2.0, -1.0, 4.0};
+    const glm::dvec3 localVelocity{-0.5, 1.0, 0.25};
+    const glm::dvec3 worldPoint = frames.toWorldPosition(childId, localPoint);
+    const glm::dvec3 worldVelocity = frames.toWorldVelocity(childId, localPoint, localVelocity);
+    requireVecNear(frames.toLocalPosition(childId, worldPoint), localPoint, 1.0e-10,
+        "reference-frame position round-trip must be lossless at gameplay scales");
+    requireVecNear(frames.toLocalVelocity(childId, worldPoint, worldVelocity), localVelocity, 1.0e-10,
+        "reference-frame velocity round-trip must preserve rotating-frame kinematics");
+}
+
+void testCelestialReferenceFramesFollowOrbitHierarchy() {
+    vf::CelestialSystem system;
+
+    vf::CelestialBody star{};
+    star.type = vf::CelestialBodyType::Star;
+    star.name = "Helion";
+    star.position = {-1000.0, 5.0, 10.0};
+    star.linearVelocity = {0.0, 0.0, 1.0};
+    star.massKg = 0.0;
+    const auto starId = system.addBody(star);
+
+    vf::CelestialBody planet{};
+    planet.name = "Aster";
+    planet.position = {-800.0, 15.0, 20.0};
+    planet.linearVelocity = {0.0, 0.0, 3.0};
+    planet.massKg = 0.0;
+    planet.orbitParentId = starId;
+    const auto planetId = system.addBody(planet);
+
+    vf::CelestialBody moon{};
+    moon.type = vf::CelestialBodyType::Moon;
+    moon.name = "Cinder";
+    moon.position = {-760.0, 17.0, 25.0};
+    moon.linearVelocity = {0.0, 0.0, 3.5};
+    moon.massKg = 0.0;
+    moon.orbitParentId = planetId;
+    const auto moonId = system.addBody(moon);
+
+    const auto* storedStar = system.body(starId);
+    const auto* storedPlanet = system.body(planetId);
+    const auto* storedMoon = system.body(moonId);
+    require(storedStar != nullptr && storedPlanet != nullptr && storedMoon != nullptr,
+        "hierarchical celestial bodies must remain accessible");
+    require(storedStar->referenceFrameId != 0U
+        && storedPlanet->referenceFrameId != 0U
+        && storedMoon->referenceFrameId != 0U,
+        "every celestial body must receive a runtime inertial reference frame");
+
+    const auto* planetFrame = system.referenceFrames().frame(storedPlanet->referenceFrameId);
+    const auto* moonFrame = system.referenceFrames().frame(storedMoon->referenceFrameId);
+    require(planetFrame != nullptr && moonFrame != nullptr,
+        "planet and moon reference frames must exist");
+    require(planetFrame->parentId == storedStar->referenceFrameId,
+        "planet inertial frame must be parented to the star frame");
+    require(moonFrame->parentId == storedPlanet->referenceFrameId,
+        "moon inertial frame must be parented to the planet frame");
+
+    requireVecNear(
+        system.referenceFrames().worldPosition(storedPlanet->referenceFrameId),
+        storedPlanet->position,
+        1.0e-10,
+        "planet hierarchical frame must reconstruct inertial world position");
+    requireVecNear(
+        system.referenceFrames().worldVelocity(storedMoon->referenceFrameId),
+        storedMoon->linearVelocity,
+        1.0e-10,
+        "moon hierarchical frame must reconstruct inertial world velocity");
+
+    system.step(120.0);
+    storedPlanet = system.body(planetId);
+    storedMoon = system.body(moonId);
+    requireVecNear(
+        system.referenceFrames().worldPosition(storedPlanet->referenceFrameId),
+        storedPlanet->position,
+        1.0e-9,
+        "planet frame must stay synchronized after celestial integration");
+    requireVecNear(
+        system.referenceFrames().worldPosition(storedMoon->referenceFrameId),
+        storedMoon->position,
+        1.0e-9,
+        "moon frame must stay synchronized after celestial integration");
+}
+
+void testUniverseTimeMultiRateSchedulingAndPrecision() {
+    vf::UniverseTimeConfig config{};
+    config.physicsStepSeconds = 0.01;
+    config.gameplayStepSeconds = 0.02;
+    config.weatherStepSeconds = 1.0;
+    config.climateStepSeconds = 5.0;
+    vf::UniverseTime time{config};
+
+    vf::AstroTime epoch{};
+    epoch.wholeSeconds = 9000000000LL;
+    epoch.fractionalSeconds = 0.25;
+    time.reset(epoch);
+    time.advance(10.0);
+
+    require(time.time().wholeSeconds == 9000000010LL,
+        "UniverseTime must retain integer astronomical epoch seconds");
+    requireNear(time.time().fractionalSeconds, 0.25, 1.0e-12,
+        "UniverseTime must retain fractional epoch precision");
+    require(time.consumePhysicsTicks() == 1000U,
+        "10 simulated seconds must yield 1000 100-Hz physics ticks");
+    require(time.consumeGameplayTicks() == 500U,
+        "10 simulated seconds must yield 500 50-Hz gameplay ticks");
+    require(time.consumeWeatherTicks() == 10U,
+        "10 simulated seconds must yield ten 1-second weather ticks");
+    require(time.consumeClimateTicks() == 2U,
+        "10 simulated seconds must yield two 5-second climate ticks");
+    requireNear(time.pendingPhysicsSeconds(), 0.0, 1.0e-10,
+        "exact tick consumption must not leave an artificial physics remainder");
+}
+
+void testLargeCelestialStepConsumesAllSimulatedTime() {
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.name = "ClockBody";
+    body.massKg = 0.0;
+    body.spinAxis = {0.0, 1.0, 0.0};
+    body.spinRateRadPerSecond = 0.01;
+    const auto bodyId = system.addBody(body);
+    const glm::dquat initialOrientation = system.body(bodyId)->orientation;
+
+    system.step(600.0);
+
+    requireNear(system.simulationTime(), 600.0, 1.0e-9,
+        "CelestialSystem must consume the complete delta instead of clamping and discarding after 60 seconds");
+    const auto* evolved = system.body(bodyId);
+    require(evolved != nullptr, "large-step body must remain accessible");
+    require(std::abs(glm::dot(initialOrientation, evolved->orientation)) < 0.999,
+        "spin integration must advance across all internal large-step substeps");
+    requireVecNear(
+        system.referenceFrames().worldPosition(evolved->referenceFrameId),
+        evolved->position,
+        1.0e-10,
+        "reference-frame synchronization must survive multi-substep updates");
+}
+
 void testRotatingSurfaceTransfersTangentialVelocityToRigidBody() {
     vf::PlanetDefinition terrain{};
     terrain.radius = 100.0;
@@ -260,11 +438,11 @@ void testRotatingSurfaceTransfersTangentialVelocityToRigidBody() {
     const auto bodyId = physics.createRigidBody(desc);
 
     for (int i = 0; i < 240; ++i) physics.stepFixed();
-    const auto* body = physics.body(bodyId);
-    require(body != nullptr, "rotating-surface rigid body must remain accessible");
-    require(std::abs(body->linearVelocity.z) > 0.20,
+    const auto* bodyState = physics.body(bodyId);
+    require(bodyState != nullptr, "rotating-surface rigid body must remain accessible");
+    require(std::abs(bodyState->linearVelocity.z) > 0.20,
         "ground friction must transfer non-zero tangential velocity from omega-cross-r surface motion");
-    require(glm::length(body->position) >= 100.999,
+    require(glm::length(bodyState->position) >= 100.999,
         "moving celestial surface contact must still prevent penetration");
 }
 
@@ -278,6 +456,10 @@ int main() {
     testKeplerianStateEnergyIdentity();
     testNBodyStepMovesBothMassiveBodies();
     testDipoleMagneticFieldFallsWithDistance();
+    testReferenceFrameHierarchyComposesRotationAndVelocity();
+    testCelestialReferenceFramesFollowOrbitHierarchy();
+    testUniverseTimeMultiRateSchedulingAndPrecision();
+    testLargeCelestialStepConsumesAllSimulatedTime();
     testRotatingSurfaceTransfersTangentialVelocityToRigidBody();
     std::cout << "vf_celestial_system_tests: PASS\n";
     return 0;

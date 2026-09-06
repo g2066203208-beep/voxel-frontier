@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -47,7 +48,6 @@ OrbitalState keplerianState(
     const double e = std::clamp(elements.eccentricity, 0.0, 0.999999);
     const double meanAnomaly = std::remainder(elements.meanAnomalyRadians, 2.0 * kPi);
 
-    // Solve Kepler's equation M = E - e sin(E) for eccentric anomaly E.
     double eccentricAnomaly = e < 0.8 ? meanAnomaly : (meanAnomaly >= 0.0 ? kPi : -kPi);
     for (int iteration = 0; iteration < 16; ++iteration) {
         const double residual = eccentricAnomaly - e * std::sin(eccentricAnomaly) - meanAnomaly;
@@ -79,7 +79,6 @@ OrbitalState keplerianState(
     const double cw = std::cos(periapsis);
     const double sw = std::sin(periapsis);
 
-    // Q = R3(Omega) R1(i) R3(omega). GLM matrices are column-major.
     const glm::dmat3 perifocalToInertial{
         {cO * cw - sO * sw * ci, sO * cw + cO * sw * ci, sw * si},
         {-cO * sw - sO * cw * ci, -sO * sw + cO * cw * ci, cw * si},
@@ -95,6 +94,8 @@ std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
     if (bodyValue.id == 0U) bodyValue.id = nextBodyId_++;
     else nextBodyId_ = std::max(nextBodyId_, bodyValue.id + 1U);
 
+    // Reference-frame ids are runtime handles, never authored/copy-propagated content.
+    bodyValue.referenceFrameId = 0U;
     bodyValue.radiusMeters = std::max(0.1, bodyValue.radiusMeters);
     bodyValue.massKg = std::max(0.0, bodyValue.massKg);
     bodyValue.orientation = glm::normalize(bodyValue.orientation);
@@ -122,6 +123,7 @@ std::uint32_t CelestialSystem::addBody(CelestialBody bodyValue) {
     }
 
     bodies_.push_back(std::move(bodyValue));
+    syncReferenceFrames();
     return bodies_.back().id;
 }
 
@@ -135,14 +137,10 @@ const CelestialBody* CelestialSystem::body(std::uint32_t id) const noexcept {
     return nullptr;
 }
 
-void CelestialSystem::step(double deltaSeconds) {
-    if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0 || bodies_.empty()) return;
+void CelestialSystem::integrateOrbitalSubstep(double deltaSeconds) {
+    if (bodies_.empty() || deltaSeconds <= 0.0) return;
 
-    // The caller (AstroTime/CelestialSimulationClock) supplies bounded fixed substeps. Keep an
-    // additional 60 s safety cap here so a direct caller cannot accidentally integrate a huge dt.
-    const double dt = std::min(deltaSeconds, 60.0);
     std::vector<glm::dvec3> acceleration(bodies_.size());
-
     const auto evaluateAccelerations = [&]() {
         std::fill(acceleration.begin(), acceleration.end(), glm::dvec3{});
         for (std::size_t i = 0; i < bodies_.size(); ++i) {
@@ -160,17 +158,83 @@ void CelestialSystem::step(double deltaSeconds) {
 
     evaluateAccelerations();
     for (std::size_t i = 0; i < bodies_.size(); ++i) {
-        bodies_[i].linearVelocity += acceleration[i] * (0.5 * dt);
-        bodies_[i].position += bodies_[i].linearVelocity * dt;
+        bodies_[i].linearVelocity += acceleration[i] * (0.5 * deltaSeconds);
+        bodies_[i].position += bodies_[i].linearVelocity * deltaSeconds;
     }
 
     evaluateAccelerations();
     for (std::size_t i = 0; i < bodies_.size(); ++i) {
-        bodies_[i].linearVelocity += acceleration[i] * (0.5 * dt);
-        updateSpin(bodies_[i], dt);
-        updateClimateAndWeather(bodies_[i], dt);
+        bodies_[i].linearVelocity += acceleration[i] * (0.5 * deltaSeconds);
     }
-    simulationTime_ += dt;
+}
+
+void CelestialSystem::step(double deltaSeconds) {
+    if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0 || bodies_.empty()) return;
+
+    // Unlike the old clamp-only implementation, every simulated second is consumed. Very large
+    // caller deltas are split into bounded Verlet steps so direct callers cannot silently lose the
+    // remainder after 60 s. Normal runtime use still arrives pre-bounded from CelestialSimulationClock.
+    double remaining = deltaSeconds;
+    const double endTolerance = 1.0e-12 * std::max(1.0, deltaSeconds);
+    while (remaining > endTolerance) {
+        const double dt = std::min(remaining, kMaxOrbitalSubstepSeconds);
+        integrateOrbitalSubstep(dt);
+        for (auto& celestialBody : bodies_) updateSpin(celestialBody, dt);
+
+        timeSystem_.advance(dt);
+
+        const std::size_t climateTicks = timeSystem_.consumeClimateTicks();
+        for (std::size_t tick = 0; tick < climateTicks; ++tick) {
+            for (auto& celestialBody : bodies_)
+                updateGlobalClimate(celestialBody, timeSystem_.config().climateStepSeconds);
+        }
+
+        const std::size_t weatherTicks = timeSystem_.consumeWeatherTicks();
+        if (weatherTicks > 0U) {
+            for (auto& celestialBody : bodies_) updateWeatherDiagnostics(celestialBody);
+        }
+
+        syncReferenceFrames();
+        remaining -= dt;
+        if (remaining < endTolerance) remaining = 0.0;
+    }
+}
+
+void CelestialSystem::syncReferenceFrames() {
+    // First make sure every body owns one stable runtime frame id. Then wire parent ids and update
+    // parent-relative translation/velocity. Orbital reference frames intentionally stay inertial:
+    // planet spin belongs to CelestialPhysicsFrame, otherwise a moon orbit would rotate every day.
+    for (auto& celestialBody : bodies_) {
+        if (celestialBody.referenceFrameId != 0U
+            && referenceFrames_.frame(celestialBody.referenceFrameId) != nullptr) continue;
+
+        ReferenceFrame frameValue{};
+        frameValue.name = celestialBody.name.empty()
+            ? "celestial_" + std::to_string(celestialBody.id) + "_inertial"
+            : celestialBody.name + "_inertial";
+        celestialBody.referenceFrameId = referenceFrames_.addFrame(std::move(frameValue));
+    }
+
+    for (auto& celestialBody : bodies_) {
+        ReferenceFrame* frameValue = referenceFrames_.frame(celestialBody.referenceFrameId);
+        if (frameValue == nullptr) continue;
+
+        const CelestialBody* parent = nullptr;
+        if (celestialBody.orbitParentId != 0U && celestialBody.orbitParentId != celestialBody.id)
+            parent = body(celestialBody.orbitParentId);
+
+        if (parent != nullptr && parent->referenceFrameId != 0U) {
+            frameValue->parentId = parent->referenceFrameId;
+            frameValue->localPosition = celestialBody.position - parent->position;
+            frameValue->localVelocity = celestialBody.linearVelocity - parent->linearVelocity;
+        } else {
+            frameValue->parentId = 0U;
+            frameValue->localPosition = celestialBody.position;
+            frameValue->localVelocity = celestialBody.linearVelocity;
+        }
+        frameValue->localRotation = {1.0, 0.0, 0.0, 0.0};
+        frameValue->localAngularVelocity = {};
+    }
 }
 
 void CelestialSystem::updateSpin(CelestialBody& celestialBody, double deltaSeconds) noexcept {
@@ -192,13 +256,11 @@ double CelestialSystem::stellarIrradianceAt(const CelestialBody& target) const n
     return irradiance;
 }
 
-void CelestialSystem::updateClimateAndWeather(CelestialBody& celestialBody, double deltaSeconds) noexcept {
+void CelestialSystem::updateGlobalClimate(CelestialBody& celestialBody, double deltaSeconds) noexcept {
     if (celestialBody.type == CelestialBodyType::Star) return;
 
-    // Keep only a slowly varying global radiative-equilibrium diagnostic here. Local temperature,
-    // humidity, cloud, precipitation and wind belong to PlanetClimateGrid, where they are forced by
-    // local solar zenith angle, heat capacity, pressure gradients and Coriolis acceleration. R24
-    // intentionally removes the old sin(simulationTime) weather oscillator.
+    // This is only the global radiative-equilibrium diagnostic. Local weather is solved by
+    // PlanetClimateGrid from solar zenith, pressure gradients, moisture and Coriolis forcing.
     const double irradiance = stellarIrradianceAt(celestialBody);
     if (irradiance <= 0.0) return;
     const double absorbed = irradiance * (1.0 - saturate(celestialBody.climate.bondAlbedo));
@@ -208,6 +270,19 @@ void CelestialSystem::updateClimateAndWeather(CelestialBody& celestialBody, doub
     const double response = std::max(1.0, celestialBody.climate.thermalResponseSeconds);
     const double blend = 1.0 - std::exp(-deltaSeconds / response);
     celestialBody.climate.meanTemperatureK += (equilibrium - celestialBody.climate.meanTemperatureK) * blend;
+}
+
+void CelestialSystem::updateWeatherDiagnostics(CelestialBody& celestialBody) noexcept {
+    if (celestialBody.type == CelestialBodyType::Star) return;
+    // Keep authored/fallback values numerically sane without inventing a clock-driven fake weather
+    // cycle. PlanetClimateGrid is the authoritative dynamic local weather field.
+    celestialBody.weather.humidity = saturate(celestialBody.weather.humidity);
+    celestialBody.weather.cloudCover = saturate(celestialBody.weather.cloudCover);
+    celestialBody.weather.stormIntensity = saturate(celestialBody.weather.stormIntensity);
+    celestialBody.weather.precipitationRateMmPerHour = std::max(
+        0.0,
+        celestialBody.weather.precipitationRateMmPerHour);
+    celestialBody.weather.windMultiplier = std::max(0.0, celestialBody.weather.windMultiplier);
 }
 
 double CelestialSystem::gravityCutoffRadius(const CelestialBody& celestialBody) const noexcept {
@@ -228,7 +303,6 @@ double CelestialSystem::gravityMagnitudeFromBody(
     if (distance <= 1.0e-12) return 0.0;
 
     if (distance < radius) {
-        // Uniform-density sphere interior: g(r)=GM r/R^3. It is finite and reaches zero at center.
         return kGravitationalConstant * celestialBody.massKg * distance
             / (radius * radius * radius);
     }
@@ -243,20 +317,18 @@ glm::dvec3 CelestialSystem::gravityFromSource(
     return safeNormalize(celestialBody.position - worldPosition, {0.0, -1.0, 0.0}) * magnitude;
 }
 
-glm::dvec3 CelestialSystem::gameplayBodyGravity(
-    const CelestialBody& celestialBody,
-    const glm::dvec3& worldPosition) const noexcept {
-    return gravityFromSource(celestialBody, worldPosition);
-}
-
-glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
+glm::dvec3 CelestialSystem::physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
     glm::dvec3 total{};
     for (const auto& source : bodies_) total += gravityFromSource(source, worldPosition);
     return total;
 }
 
+glm::dvec3 CelestialSystem::gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
+    return physicalGravityAccelerationAt(worldPosition);
+}
+
 glm::dvec3 CelestialSystem::gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
-    return gameplayGravityAccelerationAt(worldPosition);
+    return physicalGravityAccelerationAt(worldPosition);
 }
 
 glm::dvec3 CelestialSystem::gravityAccelerationRelativeTo(
@@ -271,17 +343,10 @@ glm::dvec3 CelestialSystem::gravityAccelerationRelativeTo(
             relative += gravityFromSource(source, worldPosition);
             continue;
         }
-        // Remove external common-mode acceleration at the frame origin, retaining true tides.
         relative += gravityFromSource(source, worldPosition)
             - gravityFromSource(source, frameBody->position);
     }
     return relative;
-}
-
-glm::dvec3 CelestialSystem::physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept {
-    glm::dvec3 total{};
-    for (const auto& source : bodies_) total += gravityFromSource(source, worldPosition);
-    return total;
 }
 
 bool CelestialSystem::insideAtmosphere(
@@ -419,8 +484,6 @@ CelestialEnvironmentSample CelestialSystem::sampleEnvironment(const glm::dvec3& 
     localWind -= outward * glm::dot(localWind, outward);
     localWind *= environmentBody->weather.windMultiplier;
 
-    // Atmosphere co-moves with its planet. PlanetClimateGrid may replace localWind with a solved
-    // body-local climate sample in the local PhysicsEnvironment; no synthetic sine gust is added.
     sample.windVelocity = environmentBody->linearVelocity
         + glm::cross(angularVelocityOf(*environmentBody), worldPosition - environmentBody->position)
         + localWind;

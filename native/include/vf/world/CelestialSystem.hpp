@@ -1,5 +1,8 @@
 #pragma once
 
+#include "vf/world/ReferenceFrame.hpp"
+#include "vf/world/UniverseTime.hpp"
+
 #include <cstdint>
 #include <span>
 #include <string>
@@ -10,18 +13,16 @@
 
 namespace vf {
 
-// Game-first celestial physics: coherent gravity/orbit/spin/environment behavior with
-// tiny CPU cost. Expensive ephemeris, global CFD and full-field plasma simulation are
-// deliberately out of scope; visible/gameplay behavior must remain physically plausible.
+// Game-first celestial physics: coherent gravity/orbit/spin/environment behavior with tiny CPU
+// cost. Runtime motion is integrated in double-precision inertial space. Hierarchical inertial
+// reference frames mirror the authored orbit-parent graph, while CelestialPhysicsFrame owns the
+// separate rotating body-fixed frame used by nearby rigid-body simulation.
 enum class CelestialBodyType : std::uint8_t {
     Star,
     Planet,
     Moon,
 };
 
-// Classical osculating elements are an authoring/initial-state representation only. Runtime
-// celestial motion is integrated in Cartesian inertial space so multiple massive bodies can
-// perturb each other instead of being locked to immutable parent-only ellipses.
 struct KeplerianElements {
     double semiMajorAxisMeters{};
     double eccentricity{};
@@ -77,6 +78,11 @@ struct CelestialMagneticField {
 struct CelestialBody {
     std::uint32_t id{};
     std::uint32_t orbitParentId{};
+
+    // Runtime-owned frame id. It is created and synchronized by CelestialSystem from orbitParentId;
+    // authored callers should leave this zero. The frame is inertial/translated, not body-fixed.
+    std::uint32_t referenceFrameId{};
+
     CelestialBodyType type{CelestialBodyType::Planet};
     std::string name{};
     double radiusMeters{100.0};
@@ -89,26 +95,17 @@ struct CelestialBody {
     double luminosityWatts{};
     glm::dvec3 visibleAlbedo{0.45, 0.48, 0.52};
 
-    // Gravity and coordinate/reference-frame ranges are intentionally independent.
-    // A player can be in a planet-centered precision/physics bubble while already in zero-g,
-    // and being inside a gravity field never means the character is allowed to "walk in space".
     double gameplaySurfaceGravityMps2{};
 
-    // Radius where the fast outer-space falloff begins. Zero chooses the top of the atmosphere
-    // (or the solid radius for airless bodies). Between the solid surface and this radius the
-    // magnitude follows inverse-square gravity. Beyond it a configurable high-power tail gives a
-    // Space-Engineers/Astroneer-like finite game gravity well without a hard discontinuity.
+    // Legacy authored gravity-well fields are retained for compatibility and for choosing local
+    // streaming/physics ownership radii. R24 physical acceleration itself remains Newtonian and is
+    // never hard-cut to zero at these distances.
     double gravityFalloffStartRadiusMeters{};
     double gravityFalloffPower{6.0};
     double gravityCutoffAccelerationMps2{0.05};
-
-    // Optional explicit hard outer reach. Zero derives it from falloffStart/falloffPower/cutoff-g.
-    // Kept for authored worlds and backwards compatibility with existing content.
     double gravityInfluenceRadiusMeters{};
 
-    // Coordinate/nearby-physics ownership radius. This is NOT a gravity cutoff and NOT a walking
-    // state. It exists so nearby players/props/vehicles can run in a low-speed planet-centered
-    // physics space while the celestial simulation remains in double-precision inertial space.
+    // Nearby coordinate/physics ownership radius. It is independent from physical gravity.
     double physicsBubbleRadiusMeters{};
 
     CelestialAtmosphere atmosphere{};
@@ -135,6 +132,7 @@ class CelestialSystem final {
 public:
     static constexpr double kGravitationalConstant = 6.67430e-11;
     static constexpr double kStefanBoltzmann = 5.670374419e-8;
+    static constexpr double kMaxOrbitalSubstepSeconds = 60.0;
 
     [[nodiscard]] std::uint32_t addBody(CelestialBody body);
     [[nodiscard]] CelestialBody* body(std::uint32_t id) noexcept;
@@ -142,23 +140,23 @@ public:
     [[nodiscard]] std::span<CelestialBody> bodies() noexcept { return bodies_; }
     [[nodiscard]] std::span<const CelestialBody> bodies() const noexcept { return bodies_; }
 
+    // deltaSeconds is already simulated time. Large calls are fully consumed using <=60 s orbital
+    // substeps; no remainder is discarded. Wall-clock scaling belongs to CelestialSimulationClock.
     void step(double deltaSeconds);
 
-    // Inertial game-world gravity. Planet/moon fields have a finite game reach, stars keep their
-    // inverse-square long-range field. Multiple overlapping fields add as vectors; there is never
-    // an artificial "wait until the next planet then switch gravity" rule.
+    [[nodiscard]] ReferenceFrameSystem& referenceFrames() noexcept { return referenceFrames_; }
+    [[nodiscard]] const ReferenceFrameSystem& referenceFrames() const noexcept { return referenceFrames_; }
+    [[nodiscard]] UniverseTime& timeSystem() noexcept { return timeSystem_; }
+    [[nodiscard]] const UniverseTime& timeSystem() const noexcept { return timeSystem_; }
+
+    // Unified R24 physical gravity. Legacy gameplay naming remains as compatibility aliases so old
+    // movement code keeps building while all callers observe the same Newtonian vector field.
     [[nodiscard]] glm::dvec3 gravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] glm::dvec3 gameplayGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
 
-    // Apparent gravity inside a translating planet-centered physics frame. External common-mode
-    // acceleration at the frame origin is subtracted, leaving local gravity plus only real tidal
-    // differences. This is the KSP-style separation needed to stop an orbiting ground from shaking
-    // every rigid body while preserving correct free-flight when the object leaves the frame.
     [[nodiscard]] glm::dvec3 gravityAccelerationRelativeTo(
         std::uint32_t frameBodyId,
         const glm::dvec3& worldPosition) const noexcept;
-
-    // Explicit full GM/r^2 vector superposition for orbital diagnostics, validation and tools.
     [[nodiscard]] glm::dvec3 physicalGravityAccelerationAt(const glm::dvec3& worldPosition) const noexcept;
 
     [[nodiscard]] double gravityMagnitudeFromBody(
@@ -171,33 +169,32 @@ public:
 
     [[nodiscard]] const CelestialBody* gravityReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] const CelestialBody* physicsReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
-
-    // Compatibility alias for older callers. New movement code should explicitly choose either
-    // gravityReferenceBodyAt() or physicsReferenceBodyAt() instead of conflating the concepts.
     [[nodiscard]] const CelestialBody* gameplayReferenceBodyAt(const glm::dvec3& worldPosition) const noexcept;
-
     [[nodiscard]] const CelestialBody* dominantBodyAt(const glm::dvec3& worldPosition) const noexcept;
+
     [[nodiscard]] double signedSurfaceDistance(const CelestialBody& body, const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] CelestialEnvironmentSample sampleEnvironment(const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] glm::dvec3 magneticFieldAt(const CelestialBody& body, const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] double stellarIrradianceAt(const CelestialBody& body) const noexcept;
 
-    [[nodiscard]] double simulationTime() const noexcept { return simulationTime_; }
+    [[nodiscard]] double simulationTime() const noexcept { return timeSystem_.secondsApprox(); }
+    [[nodiscard]] const AstroTime& simulationEpoch() const noexcept { return timeSystem_.time(); }
 
 private:
+    void integrateOrbitalSubstep(double deltaSeconds);
+    void syncReferenceFrames();
     void updateSpin(CelestialBody& body, double deltaSeconds) noexcept;
-    void updateClimateAndWeather(CelestialBody& body, double deltaSeconds) noexcept;
+    void updateGlobalClimate(CelestialBody& body, double deltaSeconds) noexcept;
+    void updateWeatherDiagnostics(CelestialBody& body) noexcept;
 
-    [[nodiscard]] glm::dvec3 gameplayBodyGravity(
-        const CelestialBody& body,
-        const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] glm::dvec3 gravityFromSource(
         const CelestialBody& body,
         const glm::dvec3& worldPosition) const noexcept;
 
     std::vector<CelestialBody> bodies_;
     std::uint32_t nextBodyId_{1};
-    double simulationTime_{};
+    ReferenceFrameSystem referenceFrames_{};
+    UniverseTime timeSystem_{};
 };
 
 } // namespace vf

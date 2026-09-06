@@ -1,0 +1,42 @@
+name: R24 Celestial Architecture
+
+on:
+  push:
+    branches:
+      - work/r24-unified-planetary-physics
+    paths:
+      - 'native/include/vf/world/**'
+      - 'native/src/world/**'
+      - 'native/tests/CelestialSystemTests.cpp'
+      - 'native/README.md'
+      - 'docs/R24_CELESTIAL_ARCHITECTURE.md'
+      - '.github/workflows/r24-celestial-architecture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r24-celestial-architecture-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-regression:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout R24
+        uses: actions/checkout@v6
+
+      - name: Configure core-only C++23 build
+        run: cmake -S native -B build/r24-celestial -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=OFF -DVF_BUILD_TESTS=ON
+
+      - name: Build complete core test suite
+        run: cmake --build build/r24-celestial --parallel 2
+
+      - name: Run complete core regression suite
+        run: ctest --test-dir build/r24-celestial --verbose --output-on-failure
+
+      - name: Re-run celestial and interplanetary gates explicitly
+        run: >-
+          ctest --test-dir build/r24-celestial --verbose --output-on-failure
+          -R 'vf_(celestial_system|celestial_physics_frame|celestial_surface_frames|interplanetary_flight|r24_physical_planet)_tests'
