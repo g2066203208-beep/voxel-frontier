@@ -43,6 +43,14 @@ import {
   bakeVfSnowCartoon,
   bakeVfIceCartoon,
 } from "./vf-recipes/vf-cartoon-world-v2.js";
+import {
+  bakeVfBasaltPainted,
+  bakeVfGranitePainted,
+  bakeVfDirtPainted,
+  bakeVfBarkPainted,
+  bakeVfSnowPainted,
+  bakeVfIcePainted,
+} from "./vf-recipes/vf-painted-wilderness.js";
 
 type Preset =
   | "stylizedCellRock" | "volcanicRock" | "simpleRock"
@@ -52,7 +60,9 @@ type Preset =
   | "vfBasaltCartoonWorld" | "vfGraniteCartoon" | "vfDirtCartoon" | "vfBarkCartoon"
   | "vfSandstoneCartoon" | "vfLimestoneCartoon" | "vfGravelCartoon" | "vfSandCartoon"
   | "vfWetMudCartoon" | "vfWoodPlankCartoon" | "vfIronOreCartoon" | "vfCopperOreCartoon"
-  | "vfCoalCartoon" | "vfSnowCartoon" | "vfIceCartoon";
+  | "vfCoalCartoon" | "vfSnowCartoon" | "vfIceCartoon"
+  | "vfBasaltPainted" | "vfGranitePainted" | "vfDirtPainted" | "vfBarkPainted"
+  | "vfSnowPainted" | "vfIcePainted";
 
 type Request = {
   name: string;
@@ -108,6 +118,12 @@ function bakeOne(req: Request) {
   else if (req.preset === "vfCoalCartoon") material = bakeVfCoalCartoon(req.resolution, req.params);
   else if (req.preset === "vfSnowCartoon") material = bakeVfSnowCartoon(req.resolution, req.params);
   else if (req.preset === "vfIceCartoon") material = bakeVfIceCartoon(req.resolution, req.params);
+  else if (req.preset === "vfBasaltPainted") material = bakeVfBasaltPainted(req.resolution, req.params);
+  else if (req.preset === "vfGranitePainted") material = bakeVfGranitePainted(req.resolution, req.params);
+  else if (req.preset === "vfDirtPainted") material = bakeVfDirtPainted(req.resolution, req.params);
+  else if (req.preset === "vfBarkPainted") material = bakeVfBarkPainted(req.resolution, req.params);
+  else if (req.preset === "vfSnowPainted") material = bakeVfSnowPainted(req.resolution, req.params);
+  else if (req.preset === "vfIcePainted") material = bakeVfIcePainted(req.resolution, req.params);
   else throw new Error(`Unsupported preset: ${String(req.preset)}`);
 
   const problems = validateMaterial(material);
