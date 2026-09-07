@@ -1,0 +1,10 @@
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/ground-spin-0-attempt-1.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/ground-spin-0-attempt-2.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/ground-spin-0-attempt-3.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/ground-spin-0-attempt-4.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/contact-ground-attempt-1.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/contact-ground-attempt-2.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/contact-ground-attempt-3.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/before-attempt-1.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/before-attempt-2.png colors=1
+WARN low-information framebuffer retained: r24-celestial-terrain-evidence/failed-captures/before-attempt-3.png colors=1
