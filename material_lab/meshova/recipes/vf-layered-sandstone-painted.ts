@@ -24,6 +24,7 @@ const C=(x:number)=>Math.max(0,Math.min(1,x));
 const L=(a:number,b:number,t:number)=>a+(b-a)*t;
 const M=(a:RGB,b:RGB,t:number):RGB=>[L(a[0],b[0],t),L(a[1],b[1],t),L(a[2],b[2],t)];
 const S=(x:number)=>{const t=C(x);return t*t*(3-2*t)};
+const G=(x:number)=>Math.exp(-(x*x));
 
 function hash(seed:number,a:number,b=0,c=0){
   let h=(seed|0)^Math.imul((a|0)+0x9e3779b9,0x85ebca6b)^Math.imul((b|0)+0x7f4a7c15,0xc2b2ae35)^Math.imul((c|0)+0x165667b1,0x27d4eb2d);
@@ -38,7 +39,7 @@ function fbm(u:number,v:number,seed:number){
   }
   return sum/Math.max(norm,1e-6);
 }
-function qBand(y:number,center:number,width:number){return Math.exp(-((y-center)/Math.max(width,1e-5))**2)}
+function qBand(y:number,center:number,width:number){return G((y-center)/Math.max(width,1e-5))}
 function palette(t:number,warm:number):RGB{
   const shadow:RGB=[.31,.145,.085];
   const mid:RGB=[.62,.325,.155];
@@ -117,14 +118,14 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
       h+=topLip*.012+lowerLip*.004;
 
       let crack=0;
-      if(slab.crackL)crack+=Math.exp(-((ux-.018)/.010)**2)*S((.95-vy)/.82);
-      if(slab.crackR)crack+=Math.exp(-((ux-.982)/.010)**2)*S((.90-vy)/.80);
+      if(slab.crackL)crack+=G((ux-.018)/.010)*S((.95-vy)/.82);
+      if(slab.crackR)crack+=G((ux-.982)/.010)*S((.90-vy)/.80);
       if(slab.centerCrack){
         const wobble=(fbm(u*1.7,v*1.3,seed+bi*47+si*79))*0.030;
-        crack+=Math.exp(-((ux-(slab.crackPos+wobble))/.011)**2)*S((vy-.10)/.24)*S((.95-vy)/.25);
+        crack+=G((ux-(slab.crackPos+wobble))/.011)*S((vy-.10)/.24)*S((.95-vy)/.25);
       }
       const seamU=Math.min(u,1-u),seamV=Math.min(v,1-v);
-      const tileCrack=Math.max(Math.exp(-(seamU/.010)**2)*.72,Math.exp(-(seamV/.010)**2)*.72);
+      const tileCrack=Math.max(G(seamU/.010)*.72,G(seamV/.010)*.72);
       crack=Math.max(crack,tileCrack);
 
       let strata=0;
@@ -132,15 +133,15 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         const pos=slab.strata[k]+Math.sin((u*1.7+bi*.23+k*.37)*TAU)*.012;
         strata+=qBand(vy,pos,.010+.004*k);
       }
-      const chipL=slab.chipL>.64?Math.exp(-((ux-.07)/.055)**2)*Math.exp(-((vy-.84)/.11)**2):0;
-      const chipR=slab.chipR>.67?Math.exp(-((ux-.93)/.060)**2)*Math.exp(-((vy-.18)/.12)**2):0;
+      const chipL=slab.chipL>.64?G((ux-.07)/.055)*G((vy-.84)/.11):0;
+      const chipR=slab.chipR>.67?G((ux-.93)/.060)*G((vy-.18)/.12):0;
       const chip=(chipL+chipR)*chipStrength;
       h-=crack*.085*relief+chip*.030*relief;
       h+=(strata*.0035 + fbm(u*2.6,v*2.0,seed+401)*.006)*relief;
       h=.50+(h-.50)*relief;
 
       const cavity=C(crack*.78+(1-bevel)*.30+chip*.28);
-      let t=C(.48+slab.hue+(h-.47)*1.25+(1-vy)*.10);
+      const t=C(.48+slab.hue+(h-.47)*1.25+(1-vy)*.10);
       let col=palette(t,slab.warm*.62+topLip*.35);
       const faceWarm=C(bevel*.32+topLip*.24+(1-vy)*.08);
       col=M(col,[.985,.80,.49],faceWarm*.22);
