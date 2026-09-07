@@ -10,18 +10,12 @@ def replace_once(path: str, old: str, new: str) -> None:
     p.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
-# Remove the obsolete top-down camera override. The production view matrix is now explicitly
-# framed around the surface-anchored contact probe each frame.
-replace_once(
-    "native/src/app/Main.cpp",
-    """        if (const char* shadowEnv = std::getenv(\"VF_CAPTURE_SHADOW_CONTACT\");\n            shadowEnv != nullptr && std::string_view{shadowEnv} == \"1\") {\n            const glm::dvec3 groundUp = camera.up();\n            const glm::dvec3 tangentForward = safeNormalize(\n                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),\n                stableTangent(groundUp));\n            camera.setViewDirectionWorld(\n                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),\n                groundUp);\n            std::cout << \"R24 capture shadow-contact downward view\\n\";\n        }\n\n""",
-    "",
-)
-
+# The initial focused patch already removed the obsolete top-down camera override and inserted a
+# surface-anchored production shadow probe. Refine only the probe placement/framing here.
 replace_once(
     "native/src/app/Main.cpp",
     """                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);\n                const glm::dvec3 tangentPlanet = safeNormalize(\n                    forwardPlanet - cameraDirectionPlanet * glm::dot(forwardPlanet, cameraDirectionPlanet),\n                    patchZ);\n                const glm::dvec3 probeDirection = safeNormalize(\n                    cameraDirectionPlanet + tangentPlanet * (11.0 / planet.radius),\n                    cameraDirectionPlanet);\n""",
-    """                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);\n                const glm::dvec3 sunPlanetDirection = safeNormalize(\n                    inverseAster * sunWorldDirection, patchEast);\n                const glm::dvec3 sunHorizontalPlanet = safeNormalize(\n                    sunPlanetDirection\n                        - cameraDirectionPlanet * glm::dot(sunPlanetDirection, cameraDirectionPlanet),\n                    patchEast);\n                // Place the probe sideways relative to the incoming sunlight. Its cast shadow then\n                // travels across the image instead of directly behind the object from the camera.\n                const glm::dvec3 placementTangentPlanet = safeNormalize(\n                    glm::cross(cameraDirectionPlanet, sunHorizontalPlanet), patchZ);\n                const glm::dvec3 probeDirection = safeNormalize(\n                    cameraDirectionPlanet + placementTangentPlanet * (10.0 / planet.radius),\n                    cameraDirectionPlanet);\n""",
+    """                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);\n                const glm::dvec3 sunPlanetDirection = safeNormalize(\n                    inverseAster * sunWorldDirection, patchEast);\n                const glm::dvec3 sunHorizontalPlanet = safeNormalize(\n                    sunPlanetDirection\n                        - cameraDirectionPlanet * glm::dot(sunPlanetDirection, cameraDirectionPlanet),\n                    patchEast);\n                // Place the probe sideways relative to incoming sunlight so its cast shadow runs\n                // across the image instead of disappearing behind the caster from the camera.\n                const glm::dvec3 placementTangentPlanet = safeNormalize(\n                    glm::cross(cameraDirectionPlanet, sunHorizontalPlanet), patchZ);\n                const glm::dvec3 probeDirection = safeNormalize(\n                    cameraDirectionPlanet + placementTangentPlanet * (10.0 / planet.radius),\n                    cameraDirectionPlanet);\n""",
 )
 
 replace_once(
