@@ -105,10 +105,10 @@ private:
     [[nodiscard]] glm::dvec3 currentSurfaceUpWorld() const noexcept;
     [[nodiscard]] double surfaceAttitudeInfluence() const noexcept;
 
-    // Apply the exact body-orientation delta before any surface parallel transport. Position and
-    // velocity already live in the body's rotating frame; without the matching attitude delta the
-    // camera loses the spin component about local-up and a stationary player sees terrain yaw.
-    void inheritPhysicsFrameRotation(const CelestialBody& body) noexcept;
+    // Position and velocity always use the rotating body frame while owned by it. View attitude is
+    // only co-rotated near the surface: 100% when grounded, fading to inertial attitude with the
+    // existing horizon influence. This keeps terrain fixed underfoot without dragging orbital views.
+    void inheritPhysicsFrameRotation(const CelestialBody& body, double influence) noexcept;
     void enterPhysicsFrame(const CelestialBody& body) noexcept;
     void leavePhysicsFrame() noexcept;
     void syncWorldStateFromLocal(const CelestialBody& body) noexcept;
