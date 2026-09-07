@@ -7,6 +7,13 @@ import { bakeVfPainterlyBark, type VfPainterlyBarkParams } from "./vf-recipes/vf
 import { bakeVfPainterlyLeavesBundle, type VfPainterlyLeavesParams } from "./vf-recipes/vf-painterly-leaves.js";
 import { bakeVfPainterlySnow, type VfPainterlySnowParams } from "./vf-recipes/vf-painterly-snow.js";
 import { bakeVfPainterlyWater, type VfPainterlyWaterParams } from "./vf-recipes/vf-painterly-water.js";
+import {
+  bakeVf3DGrass,
+  bakeVf3DMoss,
+  bakeVf3DFur,
+  bakeVf3DFire,
+  type Vf3DShowcaseParams,
+} from "./vf-recipes/vf-3d-material-showcase.js";
 import { applySurfaceLayers, type SurfaceLayerState } from "./vf-recipes/vf-surface-layers.js";
 import {
   DEFAULT_SURFACE_CONTEXT,
@@ -24,26 +31,10 @@ import {
 
 const PRODUCTION_STYLE_ID="VF_PAINTERLY_PLANETARY_V1";
 const SAFE_NAME=/^[a-z0-9][a-z0-9_-]{1,79}$/;
-type ProductionPreset="vfLayeredSandstonePainted"|"vfPainterlyDirt"|"vfPainterlyBark"|"vfPainterlyLeaves"|"vfPainterlySnow"|"vfPainterlyWater";
+type ProductionPreset="vfLayeredSandstonePainted"|"vfPainterlyDirt"|"vfPainterlyBark"|"vfPainterlyLeaves"|"vfPainterlySnow"|"vfPainterlyWater"|"vf3DGrass"|"vf3DMoss"|"vf3DFur"|"vf3DFire";
 type Profile="stylized"|"signature";
-type SurfaceContextInput={
-  weather?:Partial<WeatherContext>;
-  exposure?:Partial<ExposureContext>;
-  environment?:Partial<EnvironmentContext>;
-  interaction?:Partial<SurfaceInteractionContext>;
-  material?:Partial<SurfaceMaterialTraits>;
-};
-type Request={
-  name:string;
-  resolution:number;
-  preset:ProductionPreset;
-  profile?:Profile;
-  params:Record<string,unknown>;
-  layers?:SurfaceLayerState;
-  context?:SurfaceContextInput;
-  previousLayers?:Partial<AdaptiveSurfaceState>;
-  deltaSeconds?:number;
-};
+type SurfaceContextInput={weather?:Partial<WeatherContext>;exposure?:Partial<ExposureContext>;environment?:Partial<EnvironmentContext>;interaction?:Partial<SurfaceInteractionContext>;material?:Partial<SurfaceMaterialTraits>;};
+type Request={name:string;resolution:number;preset:ProductionPreset;profile?:Profile;params:Record<string,unknown>;layers?:SurfaceLayerState;context?:SurfaceContextInput;previousLayers?:Partial<AdaptiveSurfaceState>;deltaSeconds?:number;};
 type Envelope=Request|{materials:Request[]};
 type BakeResult={material:Material;masks?:Readonly<Record<string,unknown>>};
 type PresetBaker=(resolution:number,params:Record<string,unknown>)=>BakeResult;
@@ -55,6 +46,10 @@ const PRODUCTION_PRESETS:Readonly<Record<ProductionPreset,PresetBaker>>={
   vfPainterlyLeaves:(resolution,params)=>bakeVfPainterlyLeavesBundle(resolution,params as VfPainterlyLeavesParams),
   vfPainterlySnow:(resolution,params)=>({material:bakeVfPainterlySnow(resolution,params as VfPainterlySnowParams)}),
   vfPainterlyWater:(resolution,params)=>bakeVfPainterlyWater(resolution,params as VfPainterlyWaterParams),
+  vf3DGrass:(resolution,params)=>bakeVf3DGrass(resolution,params as Vf3DShowcaseParams),
+  vf3DMoss:(resolution,params)=>bakeVf3DMoss(resolution,params as Vf3DShowcaseParams),
+  vf3DFur:(resolution,params)=>bakeVf3DFur(resolution,params as Vf3DShowcaseParams),
+  vf3DFire:(resolution,params)=>bakeVf3DFire(resolution,params as Vf3DShowcaseParams),
 };
 
 function validateRequest(req:Request){
@@ -69,27 +64,10 @@ function validateRequest(req:Request){
   if(req.previousLayers&&!req.context)throw new Error(`${req.name}: previousLayers requires adaptive context`);
   if(req.deltaSeconds!==undefined&&(!Number.isFinite(req.deltaSeconds)||req.deltaSeconds<0))throw new Error(`${req.name}: invalid deltaSeconds`);
 }
-
-function buildContext(req:Request):SurfaceContext{
-  const input=req.context??{};
-  return{
-    weather:{...DEFAULT_SURFACE_CONTEXT.weather,...(input.weather??{})},
-    exposure:{...DEFAULT_SURFACE_CONTEXT.exposure,...(input.exposure??{})},
-    environment:{...DEFAULT_SURFACE_CONTEXT.environment,...(input.environment??{})},
-    interaction:{...DEFAULT_SURFACE_CONTEXT.interaction,...(input.interaction??{})},
-    material:{...materialTraitsForPreset(req.preset),...(input.material??{})},
-  };
-}
-
-function resolveLayers(req:Request):SurfaceLayerState{
-  if(!req.context)return req.layers??{};
-  const previous:AdaptiveSurfaceState={...EMPTY_SURFACE_STATE,...(req.previousLayers??{})};
-  return resolveAdaptiveSurfaceState(previous,buildContext(req),req.deltaSeconds??1);
-}
-
+function buildContext(req:Request):SurfaceContext{const input=req.context??{};return{weather:{...DEFAULT_SURFACE_CONTEXT.weather,...(input.weather??{})},exposure:{...DEFAULT_SURFACE_CONTEXT.exposure,...(input.exposure??{})},environment:{...DEFAULT_SURFACE_CONTEXT.environment,...(input.environment??{})},interaction:{...DEFAULT_SURFACE_CONTEXT.interaction,...(input.interaction??{})},material:{...materialTraitsForPreset(req.preset),...(input.material??{})}};}
+function resolveLayers(req:Request):SurfaceLayerState{if(!req.context)return req.layers??{};const previous:AdaptiveSurfaceState={...EMPTY_SURFACE_STATE,...(req.previousLayers??{})};return resolveAdaptiveSurfaceState(previous,buildContext(req),req.deltaSeconds??1);}
 function bakeOne(req:Request){
-  validateRequest(req);
-  const baker=PRODUCTION_PRESETS[req.preset],base=baker(req.resolution,req.params),seed=Number(req.params.seed??1),resolvedLayers=resolveLayers(req);
+  validateRequest(req);const baker=PRODUCTION_PRESETS[req.preset],base=baker(req.resolution,req.params),seed=Number(req.params.seed??1),resolvedLayers=resolveLayers(req);
   const layered=applySurfaceLayers(base.material,resolvedLayers,Number.isFinite(seed)?seed:1,req.preset),material=layered.material,masks={...(base.masks??{}),...layered.masks};
   const problems=validateMaterial(material);if(problems.length>0)throw new Error(`${req.name}: ${problems.join("; ")}`);
   const out=path.resolve(process.cwd(),"out","vf-materials",req.name);mkdirSync(out,{recursive:true});const exported=exportPBR(material,req.name);
@@ -99,6 +77,5 @@ function bakeOne(req:Request){
   const manifest={generator:"wellingfeng/Meshova + voxel-frontier production recipes",generatorCommit:process.env.MESHOVA_COMMIT??"unknown",styleId:PRODUCTION_STYLE_ID,deterministic:true,proceduralSourceOnly:true,seamlessByConstruction:true,material:req.name,resolution:req.resolution,profile:req.profile??"signature",preset:req.preset,adaptiveSurfaceContext:Boolean(req.context),surfaceContext:req.context??null,deltaSeconds:req.context?(req.deltaSeconds??1):null,resolvedLayers,pbrFiles:Object.keys(exported.files).sort(),maskFiles:Object.keys(masks).map(name=>`${req.name}_mask-${name}.png`).sort()};
   writeFileSync(path.join(out,"manifest.json"),JSON.stringify(manifest,null,2));console.log(JSON.stringify({ok:true,output:out,...manifest},null,2));return manifest;
 }
-
 const requestPath=process.argv[2]??"vf-request.json",envelope=JSON.parse(readFileSync(requestPath,"utf8")) as Envelope,requests="materials" in envelope?envelope.materials:[envelope];
 if(!Array.isArray(requests)||requests.length===0)throw new Error("No materials requested");const names=new Set<string>();for(const req of requests){if(!req.name||names.has(req.name))throw new Error(`Invalid or duplicate material name: ${String(req.name)}`);names.add(req.name);}const manifests=requests.map(bakeOne);console.log(JSON.stringify({ok:true,styleId:PRODUCTION_STYLE_ID,materialCount:manifests.length,materials:manifests.map(m=>m.material)},null,2));
