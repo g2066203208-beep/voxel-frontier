@@ -1,0 +1,175 @@
+name: R24 Epic Landscape
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_epic_landscape.py'
+      - '.github/scripts/r24_epic_landscape_capture.sh'
+      - '.github/workflows/r24-epic-landscape.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-epic-landscape-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-native:
+    runs-on: windows-2025
+    timeout-minutes: 55
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Apply gameplay-first epic landscape migration
+        run: python .github/scripts/r24_epic_landscape.py
+
+      - name: Validate generated source
+        shell: pwsh
+        run: |
+          git diff --check
+          Select-String -Path native/src/world/PlanetSurface.cpp -Pattern 'epicOrogeny' -Quiet | Out-Null
+          Select-String -Path native/src/world/PlanetSurface.cpp -Pattern 'Mega-abyss' -Quiet | Out-Null
+          Select-String -Path native/src/world/PlanetLodMeshBuilder.cpp -Pattern 'priority_queue' -Quiet | Out-Null
+          Select-String -Path native/include/vf/world/PlanetSurface.hpp -Pattern 'double abyss' -Quiet | Out-Null
+
+      - name: Configure Windows runtime
+        run: cmake -S native -B build/r24-epic-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Windows runtime
+        run: cmake --build build/r24-epic-win --config Release --parallel
+
+      - name: Run full Windows tests
+        run: ctest --test-dir build/r24-epic-win -C Release --verbose --output-on-failure
+
+  linux-vulkan:
+    needs: windows-native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+          ref: ${{ github.sha }}
+
+      - name: Apply gameplay-first epic landscape migration
+        run: python3 .github/scripts/r24_epic_landscape.py
+
+      - name: Validate production geometry and LOD changes
+        run: |
+          git diff --check
+          grep -q 'planet.maxElevation = 30000.0' native/src/app/Main.cpp
+          grep -q 'epicOrogeny' native/src/world/PlanetSurface.cpp
+          grep -q 'Mega-abyss' native/src/world/PlanetSurface.cpp
+          grep -q 'sample.abyss = abyss' native/src/world/PlanetSurface.cpp
+          grep -q 'std::priority_queue' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'mountainLocalRelief > 4500.0' native/tests/TerrainLandformTests.cpp
+          grep -q 'maxElevation > 15000.0' native/tests/TerrainLandformTests.cpp
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure
+        run: cmake -S native -B build/r24-epic -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build/r24-epic --parallel 2
+
+      - name: Run full native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-epic --verbose --output-on-failure 2>&1 | tee r24-epic-ctest.log
+
+      - name: Gate spectacular physical geometry
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-epic --verbose --output-on-failure \
+            -R 'vf_terrain_landform_tests' 2>&1 | tee r24-epic-focused.log
+          grep -q 'mountain_local_relief_m=' r24-epic-focused.log
+          grep -q 'abyss=' r24-epic-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture actual epic terrain in production renderer
+        shell: bash
+        run: |
+          APP="$(find build/r24-epic -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-epic-landscape-evidence
+
+      - name: Preserve exact evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-epic-landscape-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-epic-landscape-evidence ]]; then
+            cp -a r24-epic-landscape-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-epic-ctest.log ]] && cp -f r24-epic-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-epic-focused.log ]] && cp -f r24-epic-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-epic-landscape-${{ github.run_id }}
+          path: |
+            r24-epic-landscape-evidence/**
+            r24-epic-ctest.log
+            r24-epic-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested epic landscape
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "feat(r24): make mountains canyons and abyss spectacular"
+          git reset --hard HEAD
+          git clean -fd build/r24-epic || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
