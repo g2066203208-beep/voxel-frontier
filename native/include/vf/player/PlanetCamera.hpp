@@ -105,6 +105,10 @@ private:
     [[nodiscard]] glm::dvec3 currentSurfaceUpWorld() const noexcept;
     [[nodiscard]] double surfaceAttitudeInfluence() const noexcept;
 
+    // Apply the exact body-orientation delta before any surface parallel transport. Position and
+    // velocity already live in the body's rotating frame; without the matching attitude delta the
+    // camera loses the spin component about local-up and a stationary player sees terrain yaw.
+    void inheritPhysicsFrameRotation(const CelestialBody& body) noexcept;
     void enterPhysicsFrame(const CelestialBody& body) noexcept;
     void leavePhysicsFrame() noexcept;
     void syncWorldStateFromLocal(const CelestialBody& body) noexcept;
@@ -140,6 +144,9 @@ private:
     glm::dvec3 transportedSurfaceUp_{0.0, 1.0, 0.0};
     bool viewAttitudeValid_{};
     bool surfaceTransportValid_{};
+
+    glm::dquat trackedPhysicsFrameOrientation_{1.0, 0.0, 0.0, 0.0};
+    bool trackedPhysicsFrameOrientationValid_{};
 
     double eyeHeight_{1.75};
     double creativeFlightSpeedMps_{320.0};
