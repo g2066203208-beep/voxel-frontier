@@ -700,6 +700,8 @@ int main() {
         const glm::dquat initialInverseAster = glm::conjugate(glm::normalize(initialAster->orientation));
         const glm::dvec3 initialCameraPlanet = initialInverseAster * (camera.position() - initialAster->position);
         const glm::dvec3 patchUp = safeNormalize(initialCameraPlanet);
+        const glm::dvec3 initialViewForwardPlanet = safeNormalize(
+            initialInverseAster * camera.forwardDirection(), stableTangent(patchUp));
         const glm::dvec3 patchEast = stableTangent(patchUp);
         const glm::dvec3 patchZ = safeNormalize(glm::cross(patchEast, patchUp), {0.0, 0.0, -1.0});
         const glm::dvec3 patchOriginPlanet = patchUp * vf::planetSurfaceRadius(planet, patchUp);
@@ -741,8 +743,10 @@ int main() {
         }
 
         glm::dvec3 lodCenterDirection = patchUp;
+        glm::dvec3 lodViewForwardDirection = initialViewForwardPlanet;
         struct TerrainBuildResult {
             glm::dvec3 centerDirection{};
+            glm::dvec3 viewForwardDirection{};
             vf::PlanetMesh mesh{};
             std::shared_ptr<const vf::RegionalHydrology> hydrology{};
             vf::PlanetLodStats stats{};
@@ -753,6 +757,7 @@ int main() {
         auto buildTerrainLod = [&](
             const glm::dvec3& centerDirection,
             const glm::dvec3& cameraPlanetLocal,
+            const glm::dvec3& viewForwardPlanetLocal,
             std::shared_ptr<const vf::RegionalHydrology> reusableHydrology = {}) {
             const auto buildStarted = std::chrono::steady_clock::now();
             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
@@ -793,9 +798,15 @@ int main() {
             lodConfig.maxDepth = 20U;
             // Low-altitude detail is no longer a binary square. The builder uses a camera-centred
             // geodesic transition band so physical cell size grows continuously with distance.
-            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 3600U
-                : (buildAltitude < 150000.0 ? 1900U : 850U);
+            // The old budget covered essentially the whole horizon ring although only one camera
+            // frustum can contribute pixels. Keep the same local SSE/cell rules but budget the
+            // widened 200-degree prefetch cone instead of a 360-degree high-detail ring.
+            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1500U
+                : (buildAltitude < 150000.0 ? 800U : 380U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
+            lodConfig.viewForwardPlanetLocal = safeNormalize(
+                viewForwardPlanetLocal, stableTangent(centerUp));
+            lodConfig.viewConeHalfAngleRadians = glm::radians(100.0);
             lodConfig.viewportHeightPixels = 900.0;
             lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 2.8
                 : (buildAltitude < 150000.0 ? 4.2 : 6.5);
@@ -809,6 +820,7 @@ int main() {
 
             TerrainBuildResult result{};
             result.centerDirection = centerUp;
+            result.viewForwardDirection = lodConfig.viewForwardPlanetLocal;
             result.hydrology = hydrology;
             result.reusedHydrology = canReuseHydrology;
             result.mesh = vf::buildAdaptivePlanetSurface(
@@ -846,10 +858,13 @@ int main() {
             return result;
         };
 
-        TerrainBuildResult initialTerrain = buildTerrainLod(lodCenterDirection, initialCameraPlanet, {});
+        TerrainBuildResult initialTerrain = buildTerrainLod(
+            lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet, {});
         std::cout << "R24 PERF terrain_build_ms=" << initialTerrain.buildMilliseconds
                   << " vertices=" << initialTerrain.mesh.vertices.size()
                   << " indices=" << initialTerrain.mesh.indices.size()
+                  << " leaf_patches=" << initialTerrain.stats.leafPatches
+                  << " culled_nodes=" << initialTerrain.stats.culledNodes
                   << " hydrology_reused=" << (initialTerrain.reusedHydrology ? 1 : 0) << '\n';
         surfaceAuthority.setHydrology(initialTerrain.hydrology);
         if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET");
@@ -995,6 +1010,8 @@ int main() {
         std::uint64_t diagnosticsFrames = 0;
         double diagnosticsMaxFrameMilliseconds = 0.0;
         double lodCooldown = 0.0;
+        double dynamicSceneAccumulator = 1.0;
+        constexpr double kDynamicSceneCadenceSeconds = 0.10;
 
         while (platform.pumpEvents()) {
             const auto now = Clock::now();
@@ -1168,15 +1185,28 @@ int main() {
                           << " speed_mps=" << localSurfaceSpeed << '\n';
             }
 
-            if (streaming.requestBuild) {
+            const double viewTurnRadians = std::acos(std::clamp(
+                glm::dot(
+                    safeNormalize(forwardPlanet, lodViewForwardDirection),
+                    safeNormalize(lodViewForwardDirection, forwardPlanet)),
+                -1.0, 1.0));
+            const bool viewPrefetchExpired = viewTurnRadians > glm::radians(28.0)
+                && camera.physicsFrameBodyId() == asterId
+                && !terrainBuildInFlight
+                && lodCooldown <= 0.0;
+            if (streaming.requestBuild || viewPrefetchExpired) {
                 const glm::dvec3 requestedDirection = cameraDirection;
                 const glm::dvec3 requestedCameraPlanet = cameraPlanet;
+                const glm::dvec3 requestedViewForward = forwardPlanet;
                 const auto reusableHydrology = surfaceAuthority.hydrology();
                 terrainBuildFuture = std::async(
                     std::launch::async,
-                    [&, requestedDirection, requestedCameraPlanet, reusableHydrology]() {
+                    [&, requestedDirection, requestedCameraPlanet, requestedViewForward, reusableHydrology]() {
                         return buildTerrainLod(
-                            requestedDirection, requestedCameraPlanet, reusableHydrology);
+                            requestedDirection,
+                            requestedCameraPlanet,
+                            requestedViewForward,
+                            reusableHydrology);
                     });
                 terrainBuildInFlight = true;
             }
@@ -1191,6 +1221,7 @@ int main() {
                     glm::dot(directionNow, completed.centerDirection), -1.0, 1.0)) * planet.radius;
                 if (staleArcDistance <= streaming.staleAcceptanceMeters) {
                     lodCenterDirection = completed.centerDirection;
+                    lodViewForwardDirection = completed.viewForwardDirection;
                     surfaceAuthority.setHydrology(completed.hydrology);
                     currentLodStats = completed.stats;
                     nearTerrain = std::move(completed.mesh);
@@ -1198,6 +1229,8 @@ int main() {
                     std::cout << "R24 PERF terrain_build_ms=" << completed.buildMilliseconds
                               << " vertices=" << nearTerrain.vertices.size()
                               << " indices=" << nearTerrain.indices.size()
+                              << " leaf_patches=" << completed.stats.leafPatches
+                              << " culled_nodes=" << completed.stats.culledNodes
                               << " hydrology_reused=" << (completed.reusedHydrology ? 1 : 0)
                               << '\n';
 
@@ -1227,6 +1260,9 @@ int main() {
 
             glm::dvec3 frameForwardSurface = forwardSurface;
             glm::dvec3 frameUpSurface = upSurface;
+            dynamicSceneAccumulator += dt;
+            const bool refreshDynamicScene = shadowContactCapture
+                || dynamicSceneAccumulator >= kDynamicSceneCadenceSeconds;
             vf::PlanetMesh dynamicMesh{};
             if (shadowContactCapture) {
                 // Deterministic contact probe rendered through the *production* shadow-map pass.
@@ -1292,7 +1328,7 @@ int main() {
                     forwardSurface);
                 frameUpSurface = upSurface;
             }
-            if (currentMoon != nullptr) {
+            if (refreshDynamicScene && currentMoon != nullptr) {
                 const double moonCameraDistance = glm::length(currentMoon->position - camera.position());
                 const double asterObserverAltitude = std::max(
                     0.0, glm::length(camera.position() - currentAster->position)
@@ -1314,7 +1350,7 @@ int main() {
                 }
                 appendMesh(dynamicMesh, moonMesh);
             }
-            if (currentCinder != nullptr) {
+            if (refreshDynamicScene && currentCinder != nullptr) {
                 const glm::dvec3 cinderDirection = safeNormalize(
                     currentCinder->position - camera.position());
                 const glm::dvec3 cinderSurfaceDirection = safeNormalize(
@@ -1336,7 +1372,10 @@ int main() {
                     16U,
                     {0.0F, 0.82F, 0.0F, 0.0F});
             }
-            renderer.setDynamicMesh(dynamicMesh);
+            if (refreshDynamicScene) {
+                renderer.setDynamicMesh(dynamicMesh);
+                dynamicSceneAccumulator = 0.0;
+            }
 
             const auto [width, height] = platform.drawableSize();
             const float aspect = height > 0
@@ -1378,6 +1417,7 @@ int main() {
             renderEnvironment.atmosphereScaleHeight = opticalRayleighScaleHeight;
             renderEnvironment.mieScale = 0.78F;
             renderEnvironment.flightSpeedMps = static_cast<float>(camera.flightSpeedMps());
+            renderEnvironment.dynamicShadowCasters = shadowContactCapture;
 
             renderer.drawFrame(viewProjection, cameraSurface, renderEnvironment);
 

@@ -82,6 +82,51 @@ struct NodeMetric {
     const PlanetLodConfig& config) noexcept {
     const PlanetDefinition& planet = surface.planet();
     const NodeGeometry geometry = geometryFor(node, planet.radius);
+    const double radius = std::max(1.0, planet.radius);
+    const double cameraRadius = glm::length(camera);
+    const glm::dvec3 cameraDirection = safeNormalize(camera, geometry.centerDirection);
+
+    // Visibility is geometry-only and therefore cheap. The old order paid one center terrain sample
+    // plus eight relief samples even for nodes that were behind the player or below the horizon.
+    // Reject first, then spend procedural/hydrology work only on nodes that can enter the prefetch
+    // cone. This mirrors tile-selection systems such as Cesium Native.
+    double horizonAngle = 3.14159265358979323846;
+    if (cameraRadius > radius + 1.0) {
+        horizonAngle = std::acos(std::clamp(radius / cameraRadius, 0.0, 1.0));
+    }
+    const double cameraSeparation = angleBetween(cameraDirection, geometry.centerDirection);
+    bool visible = cameraSeparation
+        <= horizonAngle + geometry.angularRadius + config.horizonMarginRadians;
+
+    const glm::dvec3 baseCenterPosition = geometry.centerDirection * radius;
+    const glm::dvec3 toCenter = baseCenterPosition - camera;
+    const double baseCenterDistance = glm::length(toCenter);
+    if (visible && config.viewConeHalfAngleRadians < 3.14159265358979323846 - 1.0e-6
+        && glm::dot(config.viewForwardPlanetLocal, config.viewForwardPlanetLocal) > 1.0e-16
+        && baseCenterDistance > 1.0) {
+        const glm::dvec3 viewForward = safeNormalize(config.viewForwardPlanetLocal);
+        const double conservativeBoundingRadius = 0.55 * geometry.spanMeters
+            + std::max(0.0, planet.maxElevation)
+            + std::max(0.0, planet.maxOceanDepthMeters);
+        const double apparentRadius = baseCenterDistance <= conservativeBoundingRadius
+            ? 1.5707963267948966
+            : std::asin(std::clamp(
+                conservativeBoundingRadius / baseCenterDistance, 0.0, 1.0));
+        const double viewSeparation = angleBetween(viewForward, toCenter);
+        visible = viewSeparation <= config.viewConeHalfAngleRadians + apparentRadius;
+    }
+    if (!visible) {
+        return {
+            geometry.centerDirection,
+            geometry.angularRadius,
+            geometry.spanMeters,
+            baseCenterDistance,
+            0.0,
+            0.0,
+            false,
+        };
+    }
+
     const PlanetTerrainSample centerTerrain = surface.sample(geometry.centerDirection);
 
     const double uc = node.u0 + 0.5 * node.size;
@@ -113,9 +158,6 @@ struct NodeMetric {
         cellMeters * config.flatTerrainErrorFraction,
         reliefSignal * config.reliefErrorScale);
 
-    const double radius = std::max(1.0, planet.radius);
-    const double cameraRadius = glm::length(camera);
-    const glm::dvec3 cameraDirection = safeNormalize(camera, geometry.centerDirection);
     const double centerSurfaceRadius = radius + centerTerrain.elevationMeters;
     const double centerDistance = glm::length(
         camera - geometry.centerDirection * centerSurfaceRadius);
@@ -129,13 +171,6 @@ struct NodeMetric {
         centerDistance - geometry.spanMeters * 0.55 - radialReliefRadius);
     const double screenError = geometricError / conservativeDistance * focalPixels;
 
-    double horizonAngle = 3.14159265358979323846;
-    if (cameraRadius > radius + 1.0) {
-        horizonAngle = std::acos(std::clamp(radius / cameraRadius, 0.0, 1.0));
-    }
-    const double cameraSeparation = angleBetween(cameraDirection, geometry.centerDirection);
-    const bool visible = cameraSeparation
-        <= horizonAngle + geometry.angularRadius + config.horizonMarginRadians;
     return {
         geometry.centerDirection,
         geometry.angularRadius,
@@ -147,12 +182,20 @@ struct NodeMetric {
     };
 }
 
+struct PatchScratch {
+    std::vector<glm::dvec3> directions{};
+    std::vector<glm::dvec3> positions{};
+    std::vector<PlanetTerrainSample> terrainSamples{};
+    std::vector<std::uint32_t> edge{};
+};
+
 void appendPatch(
     PlanetMesh& mesh,
     const Node& node,
     const PlanetSurfaceAuthority& surface,
     const PlanetLodConfig& config,
-    PlanetLodStats* stats) {
+    PlanetLodStats* stats,
+    PatchScratch& scratch) {
     const std::uint32_t resolution = std::max(2U, config.patchResolution);
     const std::uint32_t stride = resolution + 1U;
     const std::uint32_t base = static_cast<std::uint32_t>(mesh.vertices.size());
@@ -162,9 +205,12 @@ void appendPatch(
     // Each authoritative terrain point is sampled exactly once for this patch. Normals are then
     // reconstructed from the already sampled mesh grid, avoiding the old sampleSurface() path that
     // performed two extra full procedural/hydrology queries per vertex just to estimate a normal.
-    std::vector<glm::dvec3> directions(pointCount);
-    std::vector<glm::dvec3> positions(pointCount);
-    std::vector<PlanetTerrainSample> terrainSamples(pointCount);
+    auto& directions = scratch.directions;
+    auto& positions = scratch.positions;
+    auto& terrainSamples = scratch.terrainSamples;
+    directions.resize(pointCount);
+    positions.resize(pointCount);
+    terrainSamples.resize(pointCount);
 
     for (std::uint32_t y = 0; y <= resolution; ++y) {
         const double fy = static_cast<double>(y) / static_cast<double>(resolution);
@@ -235,7 +281,8 @@ void appendPatch(
                 mesh.indices.insert(mesh.indices.end(), {a, sa, b, b, sa, sb});
             }
         };
-        std::vector<std::uint32_t> edge;
+        auto& edge = scratch.edge;
+        edge.clear();
         edge.reserve(stride);
         for (std::uint32_t x = 0; x <= resolution; ++x) edge.push_back(base + x);
         appendEdge(edge);
@@ -289,6 +336,8 @@ PlanetMesh buildAdaptivePlanetSurface(
         std::max(config.nearFieldCellMeters, config.transitionFarCellMeters),
         config.nearFieldCellMeters,
         5000.0);
+    config.viewConeHalfAngleRadians = std::clamp(
+        config.viewConeHalfAngleRadians, 0.25, 3.14159265358979323846);
 
     PlanetLodStats localStats{};
     localStats.nearestCellMeters = std::numeric_limits<double>::infinity();
@@ -313,7 +362,10 @@ PlanetMesh buildAdaptivePlanetSurface(
         ++localStats.evaluatedNodes;
         localStats.maximumEstimatedErrorMeters = std::max(
             localStats.maximumEstimatedErrorMeters, metric.geometricErrorMeters);
-        if (!metric.aboveHorizon) return -1.0;
+        if (!metric.aboveHorizon) {
+            ++localStats.culledNodes;
+            return -1.0;
+        }
 
         double priority = metric.screenErrorPixels
             / std::max(0.001, config.targetScreenErrorPixels);
@@ -392,8 +444,13 @@ PlanetMesh buildAdaptivePlanetSurface(
         6U * config.patchResolution * config.patchResolution
         + (config.skirtDepthMeters > 0.0 ? 24U * config.patchResolution : 0U)));
 
+    PatchScratch scratch{};
+    scratch.directions.reserve(baseVerticesPerPatch);
+    scratch.positions.reserve(baseVerticesPerPatch);
+    scratch.terrainSamples.reserve(baseVerticesPerPatch);
+    scratch.edge.reserve(config.patchResolution + 1U);
     for (const Node& node : leaves)
-        appendPatch(mesh, node, surface, config, &localStats);
+        appendPatch(mesh, node, surface, config, &localStats, scratch);
     localStats.leafPatches = leaves.size();
     if (!std::isfinite(localStats.nearestCellMeters)) localStats.nearestCellMeters = 0.0;
     if (stats) *stats = localStats;

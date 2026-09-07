@@ -425,17 +425,25 @@ struct SurfaceCandidate {
     double z) {
     SurfaceCandidate candidate{};
     const glm::dvec3 direction = planetDirectionFromRenderXZ(frame, x, z);
-    candidate.terrain = surfaceAuthority != nullptr
-        ? surfaceAuthority->sample(direction)
-        : samplePlanetTerrain(planet, direction);
-    const glm::dvec3 normalPlanet = surfaceAuthority != nullptr
-        ? surfaceAuthority->surfaceNormal(direction)
-        : planetSurfaceNormal(planet, direction);
-    const double surfaceRadius = surfaceAuthority != nullptr
-        ? surfaceAuthority->surfaceRadius(direction)
-        : planet.radius + candidate.terrain.elevationMeters;
+    glm::dvec3 normalPlanet{};
+    double surfaceRadius{};
+    if (surfaceAuthority != nullptr) {
+        // PlanetSurfaceAuthority already exposes a coherent combined query specifically so callers
+        // that need classification + position + normal do not independently resample the same
+        // expensive procedural/hydrology center point. Ecology used to do exactly that via
+        // sample() + surfaceNormal() + surfaceRadius(). Keep one authoritative combined query.
+        const PlanetSurfaceSample surface = surfaceAuthority->sampleSurface(direction);
+        candidate.terrain = surface.terrain;
+        normalPlanet = surface.normal;
+        surfaceRadius = surface.radiusMeters;
+        candidate.renderPoint = toRenderPoint(frame, surface.position);
+    } else {
+        candidate.terrain = samplePlanetTerrain(planet, direction);
+        normalPlanet = planetSurfaceNormal(planet, direction);
+        surfaceRadius = planet.radius + candidate.terrain.elevationMeters;
+        candidate.renderPoint = toRenderPoint(frame, direction * surfaceRadius);
+    }
     candidate.radialAlignment = glm::dot(normalPlanet, direction);
-    candidate.renderPoint = toRenderPoint(frame, direction * surfaceRadius);
     candidate.up = safeNormalize(toRenderVector(frame, normalPlanet));
     candidate.east = safeNormalize(toRenderVector(frame, safeNormalize(glm::cross(glm::dvec3{0.0, 1.0, 0.0}, direction), frame.tangentX)), frame.tangentX);
     if (std::abs(glm::dot(candidate.east, candidate.up)) > 0.96) {
@@ -504,6 +512,10 @@ PlanetMesh buildProceduralEcology(
         1000U,
         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
             if (treeCount >= settings.maxTrees) return;
+            const double forestRoll = random01(planet.seed, ix, iz, 1010U);
+            // forestSuitability is clamped to <= 0.68 below. A roll above that can never survive,
+            // so reject it before any terrain/hydrology query without changing a single accepted tree.
+            if (forestRoll > 0.68) return;
             const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 18.0 || aboveSea > 2550.0) return;
@@ -515,7 +527,7 @@ PlanetMesh buildProceduralEcology(
                 + 0.08 * (1.0 - std::abs(c.terrain.surfaceDetail)),
                 0.12,
                 0.68);
-            if (random01(planet.seed, ix, iz, 1010U) > forestSuitability) return;
+            if (forestRoll > forestSuitability) return;
             appendTree(mesh, c.renderPoint, c.up, c.east, c.north, planet.seed, ix, iz);
             ++treeCount;
         });
@@ -530,6 +542,10 @@ PlanetMesh buildProceduralEcology(
         2000U,
         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
             if (rockCount >= settings.maxRocks) return;
+            const double rockRoll = random01(planet.seed, ix, iz, 2010U);
+            // rockSuitability is clamped to <= 0.62. Preserve exact deterministic placement while
+            // skipping impossible candidates before the expensive surface-normal query.
+            if (rockRoll > 0.62) return;
             const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 8.0) return;
@@ -539,7 +555,7 @@ PlanetMesh buildProceduralEcology(
                 + 0.22 * c.terrain.volcano + 0.08 * std::abs(c.terrain.surfaceDetail),
                 0.08,
                 0.62);
-            if (random01(planet.seed, ix, iz, 2010U) > rockSuitability) return;
+            if (rockRoll > rockSuitability) return;
             appendRock(mesh, c.renderPoint, c.up, c.east, c.north, planet.seed, ix, iz);
             ++rockCount;
         });
@@ -554,6 +570,10 @@ PlanetMesh buildProceduralEcology(
         3000U,
         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
             if (grassCount >= settings.maxGrassClumps) return;
+            const double grassRoll = random01(planet.seed, ix, iz, 3010U);
+            // grassSuitability is clamped to <= 0.70. Early rejection is therefore bit-for-bit
+            // equivalent for placement decisions but avoids needless terrain/hydrology work.
+            if (grassRoll > 0.70) return;
             const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 7.0 || aboveSea > 2200.0) return;
@@ -562,7 +582,7 @@ PlanetMesh buildProceduralEcology(
                 0.30 + 0.22 * (1.0 - c.terrain.mountain) + 0.16 * c.terrain.river,
                 0.24,
                 0.70);
-            if (random01(planet.seed, ix, iz, 3010U) > grassSuitability) return;
+            if (grassRoll > grassSuitability) return;
             appendGrassClump(mesh, c.renderPoint, c.up, c.east, c.north, planet.seed, ix, iz);
             ++grassCount;
         });

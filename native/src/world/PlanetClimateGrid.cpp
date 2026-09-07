@@ -48,13 +48,16 @@ void PlanetClimateGrid::reset(
     lonBands_ = std::clamp<std::uint32_t>(config_.longitudeBands, 16U, 256U);
     spinRateRadPerSecond_ = std::isfinite(spinRateRadPerSecond) ? spinRateRadPerSecond : 0.0;
     cells_.assign(static_cast<std::size_t>(latBands_) * lonBands_, {});
+    terrainSamples_.assign(cells_.size(), {});
 
     for (std::uint32_t lat = 0; lat < latBands_; ++lat) {
         const double latitude = latitudeAt(lat);
         const double polar = std::abs(std::sin(latitude));
         for (std::uint32_t lon = 0; lon < lonBands_; ++lon) {
-            PlanetClimateCell& cell = cells_[index(lat, lon)];
-            const PlanetTerrainSample terrain = samplePlanetTerrain(planet_, directionAt(lat, lon));
+            const std::size_t cellIndex = index(lat, lon);
+            PlanetClimateCell& cell = cells_[cellIndex];
+            terrainSamples_[cellIndex] = samplePlanetTerrain(planet_, directionAt(lat, lon));
+            const PlanetTerrainSample& terrain = terrainSamples_[cellIndex];
             const bool ocean = terrain.submerged(planet_);
             cell.temperatureK = 300.0 - 42.0 * polar * polar
                 - std::max(0.0, terrain.elevationMeters - planet_.seaLevelElevationMeters) * config_.lapseRateKPerM;
@@ -133,7 +136,7 @@ void PlanetClimateGrid::step(
             PlanetClimateCell next = center;
 
             const glm::dvec3 direction = directionAt(lat, lon);
-            const PlanetTerrainSample terrain = samplePlanetTerrain(planet_, direction);
+            const PlanetTerrainSample& terrain = terrainSamples_[index(lat, lon)];
             const bool ocean = terrain.submerged(planet_);
             const double mu = std::max(0.0, glm::dot(direction, sunDirection));
 

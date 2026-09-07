@@ -236,19 +236,21 @@ float shadowVisibility(float4 lightClip, float noL)
     // the 480 m orthographic shadow range; the old grazing-angle term reached ~14 cm and produced
     // visible peter-panning under trees and props.
     float bias = 0.000012 + 0.000055 * (1.0 - saturate(noL));
-    static const float2 offsets[9] = {
+    // Five-tap rotated cross: the 2048 contact map already provides sub-quarter-metre texels in
+    // its 250 m box. This keeps a soft footprint while cutting receiver texture fetches by 44%.
+    static const float2 offsets[5] = {
         float2(0.0, 0.0),
-        float2(0.84, 0.18), float2(0.36, 0.79), float2(-0.48, 0.72), float2(-0.86, 0.10),
-        float2(-0.54, -0.66), float2(0.14, -0.88), float2(0.73, -0.54), float2(1.00, 0.02),
+        float2(0.82, 0.24), float2(-0.24, 0.82),
+        float2(-0.82, -0.24), float2(0.24, -0.82),
     };
     float visible = 0.0;
     [unroll]
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         float stored = gShadowMap.SampleLevel(gShadowSampler, uv + offsets[i] * texel, 0.0);
         visible += ndc.z - bias <= stored ? 1.0 : 0.0;
     }
-    return visible / 9.0;
+    return visible * 0.2;
 }
 
 float3 evaluatePbr(VertexOutput input, bool transparent)
@@ -277,9 +279,8 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
         // enrichment second, and very little fine grain. This keeps the low-poly terrain readable.
         float2 q = input.objectPosition.xz;
         float macro = terrainFbm2(q * 0.0038);
-        float medium = terrainFbm2(q * 0.0125 + 31.7);
-        float fine = valueNoise2(q * 0.043 + 8.9);
-        float value = (macro - 0.5) * 0.20 + (medium - 0.5) * 0.078 + (fine - 0.5) * 0.022;
+        float medium = valueNoise2(q * 0.0125 + 31.7);
+        float value = (macro - 0.5) * 0.20 + (medium - 0.5) * 0.082;
         float warmPatch = smoothstep(0.58, 0.84, macro);
         float localSlope = saturate(1.0 - n.y);
         baseColor *= 1.0 + value;
@@ -289,7 +290,7 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     }
     else if (foliageMaterial)
     {
-        float crown = terrainFbm2(input.objectPosition.xz * 0.075 + input.objectPosition.y * 0.011);
+        float crown = valueNoise2(input.objectPosition.xz * 0.075 + input.objectPosition.y * 0.011);
         baseColor *= 0.93 + crown * 0.14;
         roughness = max(roughness, 0.86);
     }
@@ -301,7 +302,7 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     }
     else if (rockMaterial)
     {
-        float rockVariation = terrainFbm2(input.objectPosition.xz * 0.055 + 13.0);
+        float rockVariation = valueNoise2(input.objectPosition.xz * 0.055 + 13.0);
         baseColor *= 0.90 + rockVariation * 0.16;
         roughness = clamp(roughness, 0.76, 0.94);
     }
@@ -329,7 +330,9 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     float3 kd = (1.0 - f) * (1.0 - metallic) * (1.0 - transmission);
     float3 diffuse = kd * baseColor / PI;
 
-    float shadow = shadowVisibility(input.shadowPosition, noL);
+    float shadow = (noL > 0.0001 || foliageMaterial)
+        ? shadowVisibility(input.shadowPosition, noL)
+        : 1.0;
     float3 stellar = max(gPush.data2.rgb, 0.0) * max(gPush.data2.a, 0.0);
     float3 direct = (diffuse + specular) * noL * stellar * shadow;
 
@@ -485,10 +488,12 @@ float sunOpticalDepth(float3 point, float3 sunDir, float atmosphereRadius, float
     if (raySphere(point, sunDir, groundRadius, ground0, ground1) && ground1 > 0.001 && ground0 > 0.0)
         return 1.0e8;
 
-    float stepLength = max(t1, 0.0) / 4.0;
+    // Runtime fast path: midpoint integration with two solar samples. The next renderer stage
+    // replaces this per-pixel integral with a precomputed transmittance LUT.
+    float stepLength = max(t1, 0.0) / 2.0;
     float opticalDepth = 0.0;
     [unroll]
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         float t = (i + 0.5) * stepLength;
         opticalDepth += densityAtRadius(length(point + sunDir * t), groundRadius, scaleHeight) * stepLength;
@@ -545,16 +550,17 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
     float sinRadius = max(sin(sunAngularRadius), 1.0e-5);
     float2 solarPlane = float2(dot(ray, sunRight), dot(ray, sunUp)) / sinRadius;
     float solarR = length(solarPlane);
-    float solarAngle = atan2(solarPlane.y, solarPlane.x);
-
-    float coronaEnvelope = exp(-max(solarR - 1.0, 0.0) * 4.8) * smoothstep(1.85, 0.92, solarR);
-    float coronaRays = 0.55 + 0.45 * terrainFbm2(float2(solarAngle * 3.2, solarR * 2.7) + 41.0);
-    float prominenceRadius = 1.055 + 0.050 * sin(solarAngle * 5.0 + 0.7)
-        + 0.025 * sin(solarAngle * 11.0 - 1.2);
-    float prominence = exp(-abs(solarR - prominenceRadius) * 48.0)
-        * pow(saturate(0.55 + 0.45 * sin(solarAngle * 7.0 + 2.3)), 5.0)
-        * smoothstep(0.96, 1.01, solarR) * smoothstep(1.18, 1.03, solarR);
+    // Corona FBM/atan/trigonometry used to execute for every full-screen pixel even though the
+    // result contributes only within 1.85 apparent solar radii. Keep identical art inside the mask.
     if (!hitsGround && solarR < 1.85) {
+        float solarAngle = atan2(solarPlane.y, solarPlane.x);
+        float coronaEnvelope = exp(-max(solarR - 1.0, 0.0) * 4.8) * smoothstep(1.85, 0.92, solarR);
+        float coronaRays = 0.55 + 0.45 * terrainFbm2(float2(solarAngle * 3.2, solarR * 2.7) + 41.0);
+        float prominenceRadius = 1.055 + 0.050 * sin(solarAngle * 5.0 + 0.7)
+            + 0.025 * sin(solarAngle * 11.0 - 1.2);
+        float prominence = exp(-abs(solarR - prominenceRadius) * 48.0)
+            * pow(saturate(0.55 + 0.45 * sin(solarAngle * 7.0 + 2.3)), 5.0)
+            * smoothstep(0.96, 1.01, solarR) * smoothstep(1.18, 1.03, solarR);
         background += float3(0.72, 0.16, 0.018) * coronaEnvelope * coronaRays * 0.42;
         background += float3(1.00, 0.10, 0.010) * prominence * 1.35;
     }
@@ -597,12 +603,15 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
     float miePhase = (1.0 - g * g)
         / max(4.0 * PI * pow(1.0 + g * g - 2.0 * g * mu, 1.5), 1.0e-5);
 
-    float segment = (endT - startT) / 8.0;
+    // Four view samples x two sun samples instead of the old 8x4 nested integral. Coefficients,
+    // phase functions and midpoint integration stay physical; this is an immediate GPU rescue until
+    // the Hillaire-style Transmittance / MultipleScattering / SkyView / AerialPerspective LUT path.
+    float segment = (endT - startT) / 4.0;
     float opticalView = 0.0;
     float3 scattering = 0.0;
     float3 transmittance = 1.0;
     [unroll]
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         float t = startT + (i + 0.5) * segment;
         float3 samplePoint = cameraPlanet + ray * t;

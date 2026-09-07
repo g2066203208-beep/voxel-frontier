@@ -757,6 +757,9 @@ void VulkanRenderer::createPipelines() {
     noDepth.depthWriteEnable = VK_FALSE;
     VkPipelineDepthStencilStateCreateInfo transparentDepth = reverseDepth;
     transparentDepth.depthWriteEnable = VK_FALSE;
+    VkPipelineDepthStencilStateCreateInfo skyDepth = reverseDepth;
+    skyDepth.depthWriteEnable = VK_FALSE;
+    skyDepth.depthCompareOp = VK_COMPARE_OP_EQUAL;
     VkPipelineDepthStencilStateCreateInfo shadowDepth{};
     shadowDepth.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     shadowDepth.depthTestEnable = VK_TRUE;
@@ -858,7 +861,7 @@ void VulkanRenderer::createPipelines() {
         &vertexInput, &transparentDepth, &alphaBlend, scenePipelineLayout_);
     createColorPipeline(
         skyPipeline_, fullscreenVertex, "fullscreenVertexMain", skyFragment, "skyFragmentMain",
-        &emptyVertexInput, &noDepth, &opaqueBlend, fullscreenPipelineLayout_);
+        &emptyVertexInput, &skyDepth, &opaqueBlend, fullscreenPipelineLayout_);
     createColorPipeline(
         hudPipeline_, fullscreenVertex, "fullscreenVertexMain", hudFragment, "hudFragmentMain",
         &emptyVertexInput, &noDepth, &alphaBlend, fullscreenPipelineLayout_);
@@ -1022,6 +1025,11 @@ void VulkanRenderer::setDynamicMesh(const PlanetMesh& mesh) {
         pendingDynamicIndices_,
         pendingDynamicOpaqueIndexCount_,
         pendingDynamicTransparentIndexCount_);
+    ++dynamicMeshGeneration_;
+    if (dynamicMeshGeneration_ == 0U) {
+        dynamicMeshGeneration_ = 1U;
+        dynamicMeshGenerationByFrame_.fill(0U);
+    }
 }
 
 void VulkanRenderer::clearDynamicMesh() {
@@ -1029,14 +1037,21 @@ void VulkanRenderer::clearDynamicMesh() {
     pendingDynamicIndices_.clear();
     pendingDynamicOpaqueIndexCount_ = 0U;
     pendingDynamicTransparentIndexCount_ = 0U;
+    ++dynamicMeshGeneration_;
+    if (dynamicMeshGeneration_ == 0U) {
+        dynamicMeshGeneration_ = 1U;
+        dynamicMeshGenerationByFrame_.fill(0U);
+    }
 }
 
 void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
+    if (dynamicMeshGenerationByFrame_[frame] == dynamicMeshGeneration_) return;
     auto& mesh = dynamicMeshes_[frame];
     if (pendingDynamicVertices_.empty() || pendingDynamicIndices_.empty()) {
         mesh.indexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
+        dynamicMeshGenerationByFrame_[frame] = dynamicMeshGeneration_;
         return;
     }
     const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(
@@ -1051,6 +1066,7 @@ void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
     mesh.indexCount = static_cast<std::uint32_t>(pendingDynamicIndices_.size());
     mesh.opaqueIndexCount = pendingDynamicOpaqueIndexCount_;
     mesh.transparentIndexCount = pendingDynamicTransparentIndexCount_;
+    dynamicMeshGenerationByFrame_[frame] = dynamicMeshGeneration_;
 }
 
 void VulkanRenderer::drawBoundMesh(
@@ -1183,7 +1199,9 @@ void VulkanRenderer::drawFrame(
         command, scenePipelineLayout_,
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
         0, sizeof(push), &push);
-    drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.opaqueIndexCount, 0U);
+    if (environment.dynamicShadowCasters) {
+        drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.opaqueIndexCount, 0U);
+    }
     vkCmdEndRendering(command);
 
     VkImageMemoryBarrier2 shadowToRead{};
@@ -1274,31 +1292,6 @@ void VulkanRenderer::drawFrame(
         command, VK_PIPELINE_BIND_POINT_GRAPHICS, fullscreenPipelineLayout_, 0, 1,
         &shadowFrames_[frame].descriptorSet, 0, nullptr);
 
-    vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, skyPipeline_);
-    PushConstants skyPush{};
-    skyPush.matrix = glm::inverse(viewProjection);
-    skyPush.data0 = glm::vec4(glm::vec3(cameraPosition - environment.planetCenter), 1.0F);
-    skyPush.data1 = glm::vec4(
-        safeNormalizeFloat(environment.sunDirectionToLight),
-        std::clamp(environment.sunAngularRadiusRadians, 0.0001F, 1.45F));
-    skyPush.data2 = {
-        static_cast<float>(environment.planetRadius),
-        static_cast<float>(environment.atmosphereHeight),
-        static_cast<float>(environment.atmosphereScaleHeight),
-        std::max(environment.mieScale, 0.0F)};
-    const glm::vec3 sunRadiance = glm::max(environment.sunLinearColor, glm::vec3{0.0F})
-        * std::max(environment.sunIntensity, 0.0F);
-    skyPush.data3 = {
-        std::max(environment.exposure, 0.01F),
-        sunRadiance.r,
-        sunRadiance.g,
-        sunRadiance.b};
-    vkCmdPushConstants(
-        command, fullscreenPipelineLayout_,
-        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-        0, sizeof(skyPush), &skyPush);
-    vkCmdDraw(command, 3, 1, 0, 0);
-
     auto drawScenePass = [&](VkPipeline pipeline, bool transparentPass) {
         vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vkCmdBindDescriptorSets(
@@ -1339,7 +1332,35 @@ void VulkanRenderer::drawFrame(
         drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamicCount, dynamicFirst);
     };
 
+    // Depth-first ordering: fill reverse-Z with opaque terrain, then shade sky only in pixels
+    // that are still at the exact clear depth. Transparent water/glass blends over the completed
+    // opaque+sky background afterwards.
     drawScenePass(opaquePipeline_, false);
+    vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, skyPipeline_);
+    PushConstants skyPush{};
+    skyPush.matrix = glm::inverse(viewProjection);
+    skyPush.data0 = glm::vec4(glm::vec3(cameraPosition - environment.planetCenter), 1.0F);
+    skyPush.data1 = glm::vec4(
+        safeNormalizeFloat(environment.sunDirectionToLight),
+        std::clamp(environment.sunAngularRadiusRadians, 0.0001F, 1.45F));
+    skyPush.data2 = {
+        static_cast<float>(environment.planetRadius),
+        static_cast<float>(environment.atmosphereHeight),
+        static_cast<float>(environment.atmosphereScaleHeight),
+        std::max(environment.mieScale, 0.0F)};
+    const glm::vec3 sunRadiance = glm::max(environment.sunLinearColor, glm::vec3{0.0F})
+        * std::max(environment.sunIntensity, 0.0F);
+    skyPush.data3 = {
+        std::max(environment.exposure, 0.01F),
+        sunRadiance.r,
+        sunRadiance.g,
+        sunRadiance.b};
+    vkCmdPushConstants(
+        command, fullscreenPipelineLayout_,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        0, sizeof(skyPush), &skyPush);
+    vkCmdDraw(command, 3, 1, 0, 0);
+
     drawScenePass(transparentPipeline_, true);
 
     vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, hudPipeline_);

@@ -19,6 +19,12 @@ struct PlanetLodConfig {
     double horizonMarginRadians{0.012};
     double skirtDepthMeters{3.0};
 
+    // View-aware streaming. A value of pi disables the view cone. The cone is deliberately wider
+    // than the camera frustum so rapid mouse turns consume prefetched tiles instead of revealing
+    // holes, while terrain far behind the player is not synthesized at full SSE detail.
+    glm::dvec3 viewForwardPlanetLocal{};
+    double viewConeHalfAngleRadians{3.14159265358979323846};
+
     // A patch's projected error is no longer assumed to be its full cell width. Flat terrain gets a
     // conservative fraction of that grid error, while actual center/corner relief raises the error
     // and therefore preserves extra detail in mountains, canyons and hydrology-incised terrain.
@@ -41,6 +47,7 @@ struct PlanetLodConfig {
 struct PlanetLodStats {
     std::size_t leafPatches{};
     std::size_t evaluatedNodes{};
+    std::size_t culledNodes{};
     std::uint32_t deepestLevel{};
     double nearestCellMeters{};
     double maximumEstimatedErrorMeters{};

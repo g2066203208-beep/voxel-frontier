@@ -30,6 +30,9 @@ struct RenderFrameEnvironment {
     double atmosphereScaleHeight{8500.0};
     float mieScale{1.0F};
     float flightSpeedMps{1.0F};
+    // Remote moons/planets are visual dynamic meshes but cannot cast a meaningful shadow into the
+    // 250 m local contact-shadow volume. CI can opt the dedicated contact probe back in.
+    bool dynamicShadowCasters{false};
 };
 
 class VulkanRenderer final {
@@ -191,6 +194,8 @@ private:
     std::vector<std::uint32_t> pendingDynamicIndices_;
     std::uint32_t pendingDynamicOpaqueIndexCount_{};
     std::uint32_t pendingDynamicTransparentIndexCount_{};
+    std::uint64_t dynamicMeshGeneration_{};
+    std::array<std::uint64_t, kFramesInFlight> dynamicMeshGenerationByFrame_{};
     std::array<FrameMesh, kFramesInFlight> dynamicMeshes_{};
 
     VkCommandPool commandPool_{VK_NULL_HANDLE};

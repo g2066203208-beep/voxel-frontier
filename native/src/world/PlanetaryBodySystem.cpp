@@ -172,27 +172,44 @@ CelestialEnvironmentSample PlanetaryBodySystem::sampleEnvironment(
 }
 
 void PlanetaryBodySystem::stepPlanetServices(double deltaSeconds) {
+    // The fastest PlanetClimateGrid process has an hours-scale time constant (precipitation is
+    // 21,600 s by default) and the grid is only 7.5 degrees wide in longitude. Updating it at the
+    // 0.25 s celestial fixed step used by 240x gameplay time is massive oversampling. A 300 s
+    // simulated-time cadence is still far finer than the climate grid/process scales while cutting
+    // hundreds of redundant global sweeps per real second. Accumulated time is never discarded.
+    constexpr double kClimateServiceStepSeconds = 300.0;
     for (auto& runtimeValue : runtimes_) {
         if (!runtimeValue->climate) continue;
+        runtimeValue->climateAccumulatorSeconds += deltaSeconds;
+        if (runtimeValue->climateAccumulatorSeconds + 1.0e-12 < kClimateServiceStepSeconds)
+            continue;
+
         const CelestialBody* bodyValue = celestial_.body(runtimeValue->bodyId);
         if (bodyValue == nullptr) continue;
-
-        double totalIrradiance = 0.0;
-        const glm::dvec3 strongestDirection = strongestStarDirectionBodyLocal(
-            celestial_,
-            *bodyValue,
-            totalIrradiance);
-        runtimeValue->climate->step(deltaSeconds, strongestDirection, totalIrradiance);
+        while (runtimeValue->climateAccumulatorSeconds + 1.0e-12
+            >= kClimateServiceStepSeconds) {
+            double totalIrradiance = 0.0;
+            const glm::dvec3 strongestDirection = strongestStarDirectionBodyLocal(
+                celestial_,
+                *bodyValue,
+                totalIrradiance);
+            runtimeValue->climate->step(
+                kClimateServiceStepSeconds, strongestDirection, totalIrradiance);
+            runtimeValue->climateAccumulatorSeconds -= kClimateServiceStepSeconds;
+            if (runtimeValue->climateAccumulatorSeconds < 0.0
+                && runtimeValue->climateAccumulatorSeconds > -1.0e-9) {
+                runtimeValue->climateAccumulatorSeconds = 0.0;
+            }
+        }
     }
 }
 
 void PlanetaryBodySystem::step(double deltaSeconds) {
     if (!std::isfinite(deltaSeconds) || deltaSeconds <= 0.0) return;
 
-    // Keep planet services synchronized with the same bounded celestial substeps. This avoids the
-    // old behavior where CelestialSystem advanced a large interval while PlanetClimateGrid clamped
-    // its one call to 600 s and silently lost the rest. It also samples solar direction throughout
-    // the interval instead of applying only the final star direction to all elapsed climate time.
+    // Orbital integration remains tightly bounded. Slow planet services accumulate these exact
+    // simulated substeps and consume them on their own cadence, preserving time without coupling
+    // climate cost to render FPS or accelerated orbital step count.
     double remaining = deltaSeconds;
     const double tolerance = 1.0e-12 * std::max(1.0, deltaSeconds);
     while (remaining > tolerance) {

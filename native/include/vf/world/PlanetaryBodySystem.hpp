@@ -29,6 +29,9 @@ struct PlanetaryBodyRuntime {
     std::unique_ptr<PlanetSurfaceAuthority> surface{};
     std::unique_ptr<PlanetClimateGrid> climate{};
     std::unique_ptr<OceanSpectrum> ocean{};
+    // Multi-rate world simulation: orbital integration can run at sub-second cadence while the
+    // 24x48 global climate grid advances on a much slower simulated-time service cadence.
+    double climateAccumulatorSeconds{};
 };
 
 // Authoritative registry for a celestial body and all optional planet-scale services that belong to
@@ -57,9 +60,9 @@ public:
     [[nodiscard]] CelestialEnvironmentSample sampleEnvironment(
         const glm::dvec3& worldPosition) const noexcept;
 
-    // Advances celestial N-body/spin and all registered local climate fields on the same bounded
-    // simulated-time substeps. Direct large calls therefore cannot lose climate time or apply one
-    // final solar direction to an entire multi-hour interval.
+    // Advances celestial N-body/spin on bounded orbital substeps. Slow planet services use their
+    // own accumulated simulated-time cadence; a render frame therefore never pays for a full global
+    // climate sweep once per orbital substep under time acceleration.
     void step(double deltaSeconds);
 
 private:

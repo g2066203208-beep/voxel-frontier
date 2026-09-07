@@ -92,6 +92,10 @@ private:
     std::uint32_t lonBands_{};
     double spinRateRadPerSecond_{};
     std::vector<PlanetClimateCell> cells_;
+    // Terrain/land/ocean/glacier classification is immutable for a PlanetDefinition. Climate used
+    // to resynthesize the full procedural planet for every grid cell on every climate step. Cache
+    // those samples once at reset so the dynamic solver only advances atmospheric state.
+    std::vector<PlanetTerrainSample> terrainSamples_;
 };
 
 } // namespace vf
