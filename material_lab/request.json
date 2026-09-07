@@ -1,7 +1,7 @@
 {
   "materials": [
     {
-      "name": "vf_style_A_realistic_basalt",
+      "name": "vf_compare_realistic_basalt",
       "resolution": 1536,
       "profile": "realistic",
       "preset": "vfBasalt",
@@ -18,54 +18,22 @@
       }
     },
     {
-      "name": "vf_style_B_light_vf_basalt",
-      "resolution": 1536,
-      "profile": "signature",
-      "preset": "vfBasalt",
-      "params": {
-        "seed": 240914,
-        "fractureStrength": 0.45,
-        "poreDensity": 0.018,
-        "weathering": 0.14,
-        "roughnessBias": 0.010,
-        "normalStrength": 10.8,
-        "macroRelief": 1.02,
-        "mesoRelief": 1.14,
-        "edgeBreakup": 0.96
-      }
-    },
-    {
-      "name": "vf_style_C_signature_basalt",
-      "resolution": 1536,
-      "profile": "signature",
-      "preset": "vfBasalt",
-      "params": {
-        "seed": 240914,
-        "fractureStrength": 0.52,
-        "poreDensity": 0.021,
-        "weathering": 0.18,
-        "roughnessBias": -0.005,
-        "normalStrength": 14.0,
-        "macroRelief": 1.18,
-        "mesoRelief": 1.42,
-        "edgeBreakup": 1.16
-      }
-    },
-    {
-      "name": "vf_style_D_strong_vf_basalt",
+      "name": "vf_compare_cartoon_basalt",
       "resolution": 1536,
       "profile": "stylized",
-      "preset": "vfBasalt",
+      "preset": "vfBasaltCartoon",
       "params": {
         "seed": 240914,
-        "fractureStrength": 0.66,
-        "poreDensity": 0.030,
-        "weathering": 0.25,
-        "roughnessBias": -0.020,
-        "normalStrength": 14.0,
-        "macroRelief": 1.46,
-        "mesoRelief": 1.78,
-        "edgeBreakup": 1.46
+        "fractureStrength": 0.64,
+        "poreDensity": 0.024,
+        "weathering": 0.26,
+        "roughnessBias": 0.015,
+        "macroRelief": 1.42,
+        "mesoRelief": 1.62,
+        "edgeBreakup": 1.30,
+        "paletteSteps": 4,
+        "blockiness": 6,
+        "stylizedNormalStrength": 16.5
       }
     }
   ]
