@@ -245,7 +245,7 @@ void PlanetCamera::rotateFreeAttitude(double mouseDx, double mouseDy) noexcept {
     }
 }
 
-void PlanetCamera::inheritPhysicsFrameRotation(const CelestialBody& body) noexcept {
+void PlanetCamera::inheritPhysicsFrameRotation(const CelestialBody& body, double influence) noexcept {
     const glm::dquat current = glm::normalize(body.orientation);
     if (!trackedPhysicsFrameOrientationValid_) {
         trackedPhysicsFrameOrientation_ = current;
@@ -255,12 +255,19 @@ void PlanetCamera::inheritPhysicsFrameRotation(const CelestialBody& body) noexce
 
     const glm::dquat previous = glm::normalize(trackedPhysicsFrameOrientation_);
     const glm::dquat delta = glm::normalize(current * glm::conjugate(previous));
-    if (viewAttitudeValid_) {
-        viewForward_ = safeNormalize(delta * viewForward_, viewForward_);
-        viewUp_ = safeNormalize(delta * viewUp_, viewUp_);
-    }
+    influence = std::clamp(influence, 0.0, 1.0);
+
+    // transportedSurfaceUp_ is geometric frame state, so it always follows the full body delta.
+    // The view basis itself follows only the near-surface fraction; otherwise a camera hundreds of
+    // kilometres high but still inside the precision bubble would be incorrectly dragged by spin.
     if (surfaceTransportValid_)
         transportedSurfaceUp_ = safeNormalize(delta * transportedSurfaceUp_, transportedSurfaceUp_);
+    if (viewAttitudeValid_ && influence > 1.0e-8) {
+        const glm::dquat applied = glm::normalize(glm::slerp(
+            glm::dquat{1.0, 0.0, 0.0, 0.0}, delta, influence));
+        viewForward_ = safeNormalize(applied * viewForward_, viewForward_);
+        viewUp_ = safeNormalize(applied * viewUp_, viewUp_);
+    }
 
     trackedPhysicsFrameOrientation_ = current;
 }
@@ -337,11 +344,10 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     dt = std::min(dt, 0.05);
 
     if (const auto* body = physicsFrameBody()) {
-        // CelestialSystem advances before the player update. Position/velocity are already stored in
-        // this rotating body frame, so rotate the camera basis by the exact same body delta first.
-        // This preserves local heading under self-rotation and prevents a stationary surface from
-        // appearing to yaw beneath the player.
-        inheritPhysicsFrameRotation(*body);
+        // CelestialSystem advances before the player update. Position/velocity are stored in the
+        // rotating body frame, while view attitude transitions from body-fixed near the ground to
+        // inertial at altitude using the same horizon influence already used everywhere else.
+        inheritPhysicsFrameRotation(*body, surfaceAttitudeInfluence());
         syncWorldStateFromLocal(*body);
     }
     if (celestialSystem_ != nullptr) {
