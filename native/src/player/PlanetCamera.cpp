@@ -74,6 +74,8 @@ PlanetCamera::PlanetCamera(
             grounded_ = true;
             syncWorldStateFromLocal(*primary);
             initializeViewAttitude(primary->orientation * startDirection);
+            trackedPhysicsFrameOrientation_ = glm::normalize(primary->orientation);
+            trackedPhysicsFrameOrientationValid_ = true;
             return;
         }
     }
@@ -243,6 +245,26 @@ void PlanetCamera::rotateFreeAttitude(double mouseDx, double mouseDy) noexcept {
     }
 }
 
+void PlanetCamera::inheritPhysicsFrameRotation(const CelestialBody& body) noexcept {
+    const glm::dquat current = glm::normalize(body.orientation);
+    if (!trackedPhysicsFrameOrientationValid_) {
+        trackedPhysicsFrameOrientation_ = current;
+        trackedPhysicsFrameOrientationValid_ = true;
+        return;
+    }
+
+    const glm::dquat previous = glm::normalize(trackedPhysicsFrameOrientation_);
+    const glm::dquat delta = glm::normalize(current * glm::conjugate(previous));
+    if (viewAttitudeValid_) {
+        viewForward_ = safeNormalize(delta * viewForward_, viewForward_);
+        viewUp_ = safeNormalize(delta * viewUp_, viewUp_);
+    }
+    if (surfaceTransportValid_)
+        transportedSurfaceUp_ = safeNormalize(delta * transportedSurfaceUp_, transportedSurfaceUp_);
+
+    trackedPhysicsFrameOrientation_ = current;
+}
+
 void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
     physicsFrameBodyId_ = body.id;
     physicsFrame_.setBodyId(body.id);
@@ -255,6 +277,8 @@ void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
     // surface-transport baseline, but it never changes the current camera attitude.
     transportedSurfaceUp_ = safeNormalize(body.orientation * safeNormalize(localPosition_), viewUp_);
     surfaceTransportValid_ = true;
+    trackedPhysicsFrameOrientation_ = glm::normalize(body.orientation);
+    trackedPhysicsFrameOrientationValid_ = true;
 }
 
 void PlanetCamera::leavePhysicsFrame() noexcept {
@@ -263,6 +287,7 @@ void PlanetCamera::leavePhysicsFrame() noexcept {
     physicsFrame_.setBodyId(0U);
     grounded_ = false;
     surfaceTransportValid_ = false;
+    trackedPhysicsFrameOrientationValid_ = false;
 }
 
 void PlanetCamera::syncWorldStateFromLocal(const CelestialBody& body) noexcept {
@@ -311,7 +336,14 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     if (dt <= 0.0) return;
     dt = std::min(dt, 0.05);
 
-    if (const auto* body = physicsFrameBody()) syncWorldStateFromLocal(*body);
+    if (const auto* body = physicsFrameBody()) {
+        // CelestialSystem advances before the player update. Position/velocity are already stored in
+        // this rotating body frame, so rotate the camera basis by the exact same body delta first.
+        // This preserves local heading under self-rotation and prevents a stationary surface from
+        // appearing to yaw beneath the player.
+        inheritPhysicsFrameRotation(*body);
+        syncWorldStateFromLocal(*body);
+    }
     if (celestialSystem_ != nullptr) {
         const CelestialBody* desiredFrame = celestialSystem_->physicsReferenceBodyAt(position_);
         if (inPhysicsFrame_ && (desiredFrame == nullptr || desiredFrame->id != physicsFrameBodyId_)) {
