@@ -23,7 +23,7 @@ const PRODUCTION_PRESETS: Readonly<Record<ProductionPreset, PresetBaker>> = {
   vfPainterlyBark: (resolution, params) => ({ material: bakeVfPainterlyBark(resolution, params as VfPainterlyBarkParams) }),
   vfPainterlyLeaves: (resolution, params) => ({ material: bakeVfPainterlyLeaves(resolution, params as VfPainterlyLeavesParams) }),
   vfPainterlySnow: (resolution, params) => ({ material: bakeVfPainterlySnow(resolution, params as VfPainterlySnowParams) }),
-  vfPainterlyWater: (resolution, params) => ({ material: bakeVfPainterlyWater(resolution, params as VfPainterlyWaterParams) }),
+  vfPainterlyWater: (resolution, params) => bakeVfPainterlyWater(resolution, params as VfPainterlyWaterParams),
 };
 
 function validateRequest(req:Request){
