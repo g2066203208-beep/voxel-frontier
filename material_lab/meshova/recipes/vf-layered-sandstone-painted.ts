@@ -123,19 +123,8 @@ function buildSlabs(seed:number,rows:number,minSlabs:number,maxSlabs:number,crac
     ));
   }
 
-  // Small broken debris only near polar regions, matching the reference's busy top/bottom silhouette.
-  for(let side=0;side<2;side++){
-    for(let k=0;k<10;k++){
-      const cy=(side===0?.095:.905)+(hash(seed,120+side,k,1)-.5)*.115;
-      const cx=(k+.25+hash(seed,120+side,k,2)*.62)/10;
-      slabs.push(makeSlab(
-        seed,120+side,k,cx,cy,.035+hash(seed,120+side,k,3)*.045,
-        .032+hash(seed,120+side,k,4)*.048,
-        .455+hash(seed,120+side,k,5)*.060,
-        .045+hash(seed,120+side,k,6)*.055,0,false,true,
-      ));
-    }
-  }
+  // v9 cleanup: no independent polar rubble slabs. The reference silhouette is now
+  // produced only by attached hero/support boulders, eliminating tiny floating chips.
   return slabs;
 }
 
@@ -204,18 +193,17 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         if(s.crack){
           const lineX=s.crackX+s.crackTilt*y+fbm(u*1.2,v*1.2,seed+si*31)*.018;
           const yr=S((y-s.crackY0)/.18)*S((s.crackY1-y)/.18);
+          // v9 cleanup: a single naturally meandering crack only. The old artificial
+          // cross-branch was removed because it created the visible '+' engraving.
           crack=G((x-lineX)/(s.macro?.023:.030))*yr;
-          if(s.macro){
-            const branch=G((y-.03-x*.48)/.050)*G((x-(s.crackX+.08))/.30);
-            crack=Math.max(crack,branch*.48);
-          }
           surf-=crack*(s.macro?.112:.065)*relief;
         }
 
         const chip1=s.chip>.42?G((x-s.chipX)/(s.macro?.15:.18))*G((y-s.chipY)/(s.macro?.18:.22)):0;
-        const chip2=s.chip>.68?G((x-s.chipX2)/(s.macro?.13:.17))*G((y-s.chipY2)/(s.macro?.16:.20)):0;
-        const chip=(chip1+chip2*.78)*chipStrength;
-        surf-=chip*(s.macro?.092:s.rubble?.075:.048);
+        const chip2=s.chip>.72?G((x-s.chipX2)/(s.macro?.13:.17))*G((y-s.chipY2)/(s.macro?.16:.20)):0;
+        // Keep edge wear, but soften the secondary notch so it cannot sever a tiny island.
+        const chip=(chip1+chip2*.42)*chipStrength;
+        surf-=chip*(s.macro?.078:s.rubble?.060:.045);
 
         let strata=0;
         for(let k=0;k<s.strata.length;k++){
@@ -225,10 +213,8 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         }
         surf+=strata*.0035;
 
-        // Sparse carved cuts break the broad face without turning it into noise.
-        const cutA=G((x*.72+y*.44-.20)/.085)*G((x+.16)/.72);
-        const cutB=G((x*.56-y*.62+.26)/.100)*G((x-.10)/.74);
-        surf-=(cutA*.60+cutB*.42)*(s.macro?.034:.009);
+        // v9 cleanup: remove the pair of crossing decorative cut equations entirely.
+        // Facet boundaries + geological cracks now provide all linework.
 
         surf=.50+(surf-.50)*relief;
         if(surf>bestH){
