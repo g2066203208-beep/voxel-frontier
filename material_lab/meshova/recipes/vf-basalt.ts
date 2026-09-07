@@ -17,6 +17,10 @@ export type VfBasaltParams = {
 const TAU = Math.PI * 2;
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 const smooth = (x: number) => x * x * (3 - 2 * x);
+const smootherstep = (x: number) => {
+  const t = clamp01(x);
+  return t * t * t * (t * (t * 6 - 15) + 10);
+};
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const mixRgb = (a: RGB, b: RGB, t: number): RGB => [
   lerp(a[0], b[0], t),
@@ -35,14 +39,15 @@ function hash01(x: number, y: number, seed: number, salt = 0): number {
   return (h >>> 0) / 0xffffffff;
 }
 
+/** Periodic value noise. Lattice coordinates wrap so every derived channel tiles. */
 function pnoise(u: number, v: number, frequency: number, seed: number): number {
   const f = Math.max(1, frequency | 0);
   const px = u * f;
   const py = v * f;
   const x0 = Math.floor(px);
   const y0 = Math.floor(py);
-  const tx = smooth(px - x0);
-  const ty = smooth(py - y0);
+  const tx = smootherstep(px - x0);
+  const ty = smootherstep(py - y0);
   const wrap = (n: number) => ((n % f) + f) % f;
   const ax = wrap(x0);
   const bx = wrap(x0 + 1);
@@ -65,11 +70,11 @@ function pfbm(u: number, v: number, base: number, octaves: number, seed: number)
     weight += amplitude;
     amplitude *= 0.5;
   }
-  return sum / weight;
+  return sum / Math.max(weight, 1e-6);
 }
 
 function sparsePores(u: number, v: number, seed: number, density: number): number {
-  const cells = 28;
+  const cells = 24;
   const px = u * cells;
   const py = v * cells;
   const baseX = Math.floor(px);
@@ -82,10 +87,10 @@ function sparsePores(u: number, v: number, seed: number, density: number): numbe
       const wx = ((cx % cells) + cells) % cells;
       const wy = ((cy % cells) + cells) % cells;
       if (hash01(wx, wy, seed, 1) >= density) continue;
-      const jx = 0.5 + (hash01(wx, wy, seed, 2) - 0.5) * 0.76;
-      const jy = 0.5 + (hash01(wx, wy, seed, 3) - 0.5) * 0.76;
-      const radius = 0.075 + hash01(wx, wy, seed, 4) * 0.105;
-      const aspect = 0.55 + hash01(wx, wy, seed, 5) * 0.5;
+      const jx = 0.5 + (hash01(wx, wy, seed, 2) - 0.5) * 0.78;
+      const jy = 0.5 + (hash01(wx, wy, seed, 3) - 0.5) * 0.78;
+      const radius = 0.10 + hash01(wx, wy, seed, 4) * 0.18;
+      const aspect = 0.48 + hash01(wx, wy, seed, 5) * 0.52;
       const angle = hash01(wx, wy, seed, 6) * TAU;
       const cosine = Math.cos(angle);
       const sine = Math.sin(angle);
@@ -94,92 +99,106 @@ function sparsePores(u: number, v: number, seed: number, density: number): numbe
       const rx = dx * cosine - dy * sine;
       const ry = dx * sine + dy * cosine;
       const d = Math.hypot(rx / radius, ry / (radius * aspect));
-      const pore = 1 - smooth(clamp01((d - 0.48) / 0.52));
+      const pore = 1 - smooth(clamp01((d - 0.42) / 0.58));
       if (pore > mask) mask = pore;
     }
   }
   return mask;
 }
 
+function ridgeBand(value: number, center: number, halfWidth: number): number {
+  return 1 - smooth(clamp01((Math.abs(value - center) - halfWidth * 0.18) / halfWidth));
+}
+
 function makeSampler(params: VfBasaltParams) {
   const seed = Math.round(params.seed ?? 240911);
-  const fractureStrength = clamp01(params.fractureStrength ?? 0.42);
-  const poreDensity = Math.max(0, Math.min(0.1, params.poreDensity ?? 0.015));
+  const fractureStrength = clamp01(params.fractureStrength ?? 0.46);
+  const poreDensity = Math.max(0, Math.min(0.12, params.poreDensity ?? 0.018));
   const weathering = clamp01(params.weathering ?? 0.22);
   const roughnessBias = Math.max(-0.18, Math.min(0.18, params.roughnessBias ?? 0.015));
   const normalStrength = Math.max(0.2, Math.min(10, params.normalStrength ?? 5.0));
 
   const sample = (u: number, v: number) => {
-    const warpU = (pfbm(u, v, 2, 3, seed + 11) - 0.5) * 0.095;
-    const warpV = (pfbm(u, v, 2, 3, seed + 23) - 0.5) * 0.095;
+    const warpU = (pfbm(u, v, 2, 3, seed + 11) - 0.5) * 0.09;
+    const warpV = (pfbm(u, v, 2, 3, seed + 23) - 0.5) * 0.09;
     const du = u + warpU;
     const dv = v + warpV;
 
     const macro = pfbm(du, dv, 2, 4, seed + 101);
     const meso = pfbm(du, dv, 8, 3, seed + 211);
-    const micro = pfbm(du, dv, 36, 2, seed + 307);
-    const grain = pnoise(du, dv, 112, seed + 401);
-    const fineGrain = pnoise(du, dv, 181, seed + 409);
+    const micro = pfbm(du, dv, 30, 2, seed + 307);
+    const grain = pnoise(du, dv, 92, seed + 401);
+    const microGrain = pnoise(du, dv, 157, seed + 409);
 
-    // Shorter, thinner, more fragmented cracks than V04's long mathematical curves.
-    const bendA = (pnoise(du, dv, 7, seed + 503) - 0.5) * 2.15;
-    const bendB = (pnoise(du, dv, 11, seed + 509) - 0.5) * 1.85;
-    const phaseA = hash01(1, 1, seed, 10) * TAU;
-    const phaseB = hash01(2, 2, seed, 11) * TAU;
-    const fieldA = Math.sin((du * 4.2 + dv * 2.35) * TAU + phaseA + bendA)
-      + 0.32 * Math.sin((-du * 2.1 + dv * 5.4) * TAU + phaseB);
-    const fieldB = Math.sin((du * 6.1 - dv * 3.65) * TAU + phaseB * 0.73 + bendB);
-    const rawA = 1 - smooth(clamp01((Math.abs(fieldA) - 0.008) / 0.058));
-    const rawB = 1 - smooth(clamp01((Math.abs(fieldB) - 0.006) / 0.045));
-    const gateA = smooth(clamp01((pnoise(du, dv, 6, seed + 601) - 0.52) / 0.21));
-    const gateB = smooth(clamp01((pnoise(du, dv, 9, seed + 607) - 0.56) / 0.2));
-
-    // Fine discontinuous weathering fissures follow a noisy contour instead of a periodic sine.
-    const contour = Math.abs(pfbm(du, dv, 14, 2, seed + 613) - 0.5);
-    const rawC = 1 - smooth(clamp01((contour - 0.004) / 0.026));
-    const gateC = smooth(clamp01((pnoise(du, dv, 10, seed + 617) - 0.62) / 0.18));
-    const fracture = clamp01(
-      Math.max(rawA * gateA, rawB * gateB * 0.62, rawC * gateC * 0.32) * fractureStrength,
-    );
+    // Three fracture scales from independent warped ridges. The previous long sinusoidal
+    // curves are gone: primary faults are sparse, branches are thinner, hairlines only
+    // emerge in weathered patches.
+    const faultField = pnoise(du + (meso - 0.5) * 0.035, dv, 5, seed + 503);
+    const branchField = pnoise(du, dv + (macro - 0.5) * 0.045, 11, seed + 509);
+    const hairField = pnoise(du + (micro - 0.5) * 0.018, dv, 21, seed + 521);
+    const primaryGate = smooth(clamp01((pnoise(du, dv, 3, seed + 601) - 0.43) / 0.27));
+    const branchGate = smooth(clamp01((pnoise(du, dv, 6, seed + 607) - 0.49) / 0.22));
+    const weatherGate = smooth(clamp01((pnoise(du, dv, 4, seed + 613) - 0.52) / 0.24));
+    const primary = ridgeBand(faultField, 0.50, 0.047) * primaryGate;
+    const secondary = ridgeBand(branchField, 0.50, 0.026) * branchGate * (0.38 + primary * 0.62);
+    const hairline = ridgeBand(hairField, 0.50, 0.014) * weatherGate * 0.32;
+    const fracture = clamp01(Math.max(primary, secondary * 0.78, hairline) * fractureStrength);
 
     const pores = sparsePores(du, dv, seed + 701, poreDensity);
-    const pinholes = smooth(clamp01((pnoise(du, dv, 90, seed + 809) - 0.86) / 0.1)) * 0.18;
+    const microPitA = smooth(clamp01((pnoise(du, dv, 73, seed + 809) - 0.835) / 0.10));
+    const microPitB = smooth(clamp01((pnoise(du, dv, 137, seed + 811) - 0.885) / 0.075));
+    const pinholes = clamp01(microPitA * 0.30 + microPitB * 0.22);
+
+    const brightMineral = smooth(clamp01((grain - 0.84) / 0.13))
+      * smooth(clamp01((microGrain - 0.58) / 0.30));
+    const darkMineral = smooth(clamp01((0.17 - grain) / 0.14)) * 0.75;
 
     const height = clamp01(
-      0.5
-      + (macro - 0.5) * 0.4
-      + (meso - 0.5) * 0.17
-      + (micro - 0.5) * 0.06
+      0.50
+      + (macro - 0.5) * 0.42
+      + (meso - 0.5) * 0.20
+      + (micro - 0.5) * 0.065
       + (grain - 0.5) * 0.022
-      + (fineGrain - 0.5) * 0.008
-      - fracture * 0.14
-      - pores * 0.2
-      - pinholes * 0.018,
+      + (microGrain - 0.5) * 0.009
+      + brightMineral * 0.010
+      - darkMineral * 0.008
+      - primary * fractureStrength * 0.27
+      - secondary * fractureStrength * 0.12
+      - hairline * 0.035
+      - pores * 0.31
+      - pinholes * 0.032,
     );
 
-    const tone = clamp01(0.22 + macro * 0.5 + meso * 0.2 + micro * 0.08);
-    let color = mixRgb([0.06, 0.064, 0.067], [0.195, 0.2, 0.195], tone);
-    const oxideGate = smooth(clamp01((pnoise(du, dv, 6, seed + 907) - 0.56) / 0.23));
-    const oxide = clamp01((fracture * oxideGate + pores * 0.22) * weathering * 0.25);
-    color = mixRgb(color, [0.255, 0.15, 0.082], oxide);
-    const dark = clamp01(1 - fracture * 0.22 - pores * 0.32 - pinholes * 0.05);
-    const mineral = 0.94 + grain * 0.08 + fineGrain * 0.035;
+    const tone = clamp01(0.10 + macro * 0.50 + meso * 0.24 + micro * 0.11 + grain * 0.05);
+    let color = mixRgb([0.032, 0.036, 0.040], [0.175, 0.181, 0.178], tone);
+    color = mixRgb(color, [0.255, 0.262, 0.252], brightMineral * 0.16);
+    color = mixRgb(color, [0.018, 0.022, 0.026], darkMineral * 0.30);
+
+    const oxideGate = smooth(clamp01((pnoise(du, dv, 5, seed + 907) - 0.50) / 0.25));
+    const oxide = clamp01((primary * oxideGate + secondary * 0.26 + pores * 0.24) * weathering * 0.30);
+    color = mixRgb(color, [0.245, 0.132, 0.066], oxide);
+
+    const cavityDark = clamp01(1 - primary * 0.30 - secondary * 0.18 - pores * 0.50 - pinholes * 0.09);
+    const grainTone = 0.955 + grain * 0.075 + microGrain * 0.025;
     color = [
-      clamp01(color[0] * dark * mineral),
-      clamp01(color[1] * dark * mineral),
-      clamp01(color[2] * dark * mineral),
+      clamp01(color[0] * cavityDark * grainTone),
+      clamp01(color[1] * cavityDark * grainTone),
+      clamp01(color[2] * cavityDark * grainTone),
     ];
 
     const roughness = clamp01(
-      0.7 + roughnessBias
-      + (micro - 0.5) * 0.15
-      + (grain - 0.5) * 0.08
-      + fracture * 0.11
-      + pores * 0.15
-      + pinholes * 0.05
+      0.70 + roughnessBias
+      + (micro - 0.5) * 0.17
+      + (microGrain - 0.5) * 0.08
+      + primary * 0.16
+      + secondary * 0.10
+      + pores * 0.21
+      + pinholes * 0.09
+      + darkMineral * 0.05
+      - brightMineral * 0.10
       - height * 0.035,
     );
-    const ao = clamp01(1 - fracture * 0.25 - pores * 0.48 - pinholes * 0.08);
+    const ao = clamp01(1 - primary * 0.36 - secondary * 0.18 - pores * 0.62 - pinholes * 0.13);
     return { color, height, roughness, ao };
   };
   return { sample, normalStrength };
