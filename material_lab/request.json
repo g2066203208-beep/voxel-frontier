@@ -1,63 +1,63 @@
 {
   "materials": [
     {
-      "name": "vf_weathered_basalt_08",
+      "name": "vf_weathered_basalt_09",
       "resolution": 2048,
       "profile": "signature",
       "preset": "vfBasalt",
       "params": {
-        "seed": 240913,
-        "fractureStrength": 0.54,
-        "poreDensity": 0.020,
-        "weathering": 0.20,
-        "roughnessBias": 0.010,
-        "normalStrength": 7.6,
-        "macroRelief": 1.16,
-        "mesoRelief": 1.32,
-        "edgeBreakup": 1.10
+        "seed": 240914,
+        "fractureStrength": 0.52,
+        "poreDensity": 0.021,
+        "weathering": 0.18,
+        "roughnessBias": -0.005,
+        "normalStrength": 10.8,
+        "macroRelief": 1.18,
+        "mesoRelief": 1.38,
+        "edgeBreakup": 1.16
       }
     },
     {
-      "name": "vf_granite_01",
+      "name": "vf_granite_02",
       "resolution": 1536,
       "profile": "signature",
       "preset": "vfGranite",
       "params": {
-        "seed": 310401,
-        "grainScale": 19,
-        "quartz": 0.30,
-        "feldspar": 0.47,
-        "mica": 0.12,
-        "relief": 1.08,
-        "normalStrength": 7.2
+        "seed": 310402,
+        "grainScale": 23,
+        "quartz": 0.29,
+        "feldspar": 0.49,
+        "mica": 0.10,
+        "relief": 1.18,
+        "normalStrength": 11.5
       }
     },
     {
-      "name": "vf_dirt_01",
+      "name": "vf_dirt_02",
       "resolution": 1536,
       "profile": "signature",
       "preset": "vfDirt",
       "params": {
-        "seed": 420501,
-        "clodScale": 7,
-        "pebbleDensity": 0.17,
-        "moisture": 0.16,
-        "relief": 1.10,
-        "normalStrength": 8.0
+        "seed": 420502,
+        "clodScale": 9,
+        "pebbleDensity": 0.22,
+        "moisture": 0.12,
+        "relief": 1.22,
+        "normalStrength": 12.0
       }
     },
     {
-      "name": "vf_bark_01",
+      "name": "vf_bark_02",
       "resolution": 1536,
       "profile": "signature",
       "preset": "vfBark",
       "params": {
-        "seed": 530601,
-        "ridgeScale": 11,
-        "fissureScale": 4.6,
-        "age": 0.62,
-        "relief": 1.10,
-        "normalStrength": 8.6
+        "seed": 530602,
+        "ridgeScale": 8.2,
+        "fissureScale": 4.0,
+        "age": 0.68,
+        "relief": 1.24,
+        "normalStrength": 11.6
       }
     }
   ]
