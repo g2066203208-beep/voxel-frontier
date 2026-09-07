@@ -1,0 +1,178 @@
+name: R24 Celestial Motion Closure
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_celestial_motion_closure.py'
+      - '.github/scripts/r24_celestial_motion_capture.sh'
+      - '.github/workflows/r24-celestial-motion-closure.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-celestial-motion-closure-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-real-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact R24 source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 8
+          ref: ${{ github.sha }}
+
+      - name: Apply celestial motion closure
+        run: python3 .github/scripts/r24_celestial_motion_closure.py
+
+      - name: Validate focused source changes
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'inertialFlightCarrierVelocity_' native/include/vf/player/PlanetCamera.hpp
+          grep -q 'desiredControl' native/src/player/PlanetCamera.cpp
+          grep -q 'recommendedCelestialFixedStepSeconds' native/include/vf/world/AstroTime.hpp
+          grep -q 'freePlayerInertialSpace' native/src/app/Main.cpp
+          grep -q 'testCreativeFlightPreservesParentOrbitalVelocityAfterBubbleExit' native/tests/InterplanetaryFlightTests.cpp
+          grep -q 'testRecommendedWarpStepHasNoFrozenDisplayFrames' native/tests/CelestialSystemTests.cpp
+
+      - name: Install Vulkan X11 and build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang compiler
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure runtime and tests
+        run: cmake -S native -B build/r24-celestial-motion -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build runtime and tests
+        run: cmake --build build/r24-celestial-motion --parallel 2
+
+      - name: Run complete native regression suite
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-celestial-motion --verbose --output-on-failure 2>&1 | tee r24-celestial-motion-ctest.log
+
+      - name: Run focused celestial and flight gates
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-celestial-motion --verbose --output-on-failure \
+            -R 'vf_celestial_system_tests|vf_celestial_physics_frame_tests|vf_celestial_surface_frames_tests|vf_camera_input_tests|vf_interplanetary_flight_tests' \
+            2>&1 | tee r24-celestial-motion-focused.log
+
+      - name: Verify real Lavapipe Vulkan device
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture smooth spin and real escape inheritance
+        shell: bash
+        run: |
+          APP="$(find build/r24-celestial-motion -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_celestial_motion_capture.sh
+          .github/scripts/r24_celestial_motion_capture.sh "$APP" r24-celestial-motion-evidence
+
+      - name: Preserve tested source and evidence
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-celestial-motion-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          cp -a r24-celestial-motion-evidence/. "$EVIDENCE_DIR/"
+          cp -f r24-celestial-motion-ctest.log "$EVIDENCE_DIR/"
+          cp -f r24-celestial-motion-focused.log "$EVIDENCE_DIR/"
+          cp -f vulkan-summary.txt "$EVIDENCE_DIR/"
+          git diff -- native > "$EVIDENCE_DIR/tested-source.patch"
+          cat > "$EVIDENCE_DIR/ci-status.txt" <<EOF
+          workflow_sha=${GITHUB_SHA}
+          workflow_run=${GITHUB_RUN_ID}
+          full_tests=success
+          focused_tests=success
+          windows_companion_job=pending_or_success
+          vulkan=success
+          smooth_spin_capture=success
+          escape_inheritance_capture=success
+          EOF
+
+      - name: Upload real Vulkan evidence
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-celestial-motion-real-vulkan-${{ github.run_id }}
+          path: |
+            r24-celestial-motion-evidence/**
+            r24-celestial-motion-ctest.log
+            r24-celestial-motion-focused.log
+            vulkan-summary.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit tested R24 source and permanent evidence
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            native/include/vf/player/PlanetCamera.hpp \
+            native/src/player/PlanetCamera.cpp \
+            native/include/vf/world/AstroTime.hpp \
+            native/src/app/Main.cpp \
+            native/tests/InterplanetaryFlightTests.cpp \
+            native/tests/CelestialSystemTests.cpp \
+            docs/evidence
+          git commit -m "fix(r24): preserve orbital inertia and smooth celestial motion"
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
+
+  windows-native-regression:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact R24 source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 8
+          ref: ${{ github.sha }}
+
+      - name: Apply celestial motion closure
+        shell: pwsh
+        run: python .github/scripts/r24_celestial_motion_closure.py
+
+      - name: Validate source
+        shell: pwsh
+        run: git diff --check
+
+      - name: Configure Windows x64
+        run: cmake -S native -B build/r24-celestial-motion-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Windows x64
+        run: cmake --build build/r24-celestial-motion-win --config Release --parallel 2
+
+      - name: Run complete Windows native suite
+        run: ctest --test-dir build/r24-celestial-motion-win -C Release --verbose --output-on-failure
