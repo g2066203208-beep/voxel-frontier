@@ -1,0 +1,124 @@
+diff --git a/native/include/vf/player/PlanetCamera.hpp b/native/include/vf/player/PlanetCamera.hpp
+index 7cb3dcd..355e393 100644
+--- a/native/include/vf/player/PlanetCamera.hpp
++++ b/native/include/vf/player/PlanetCamera.hpp
+@@ -1,6 +1,7 @@
+ #pragma once
+ 
+ #include <cmath>
++#include <algorithm>
+ #include <cstdint>
+ 
+ #include <glm/glm.hpp>
+@@ -93,6 +94,17 @@ public:
+     [[nodiscard]] bool inPlanetPhysicsFrame() const noexcept { return inPhysicsFrame_; }
+     [[nodiscard]] std::uint32_t physicsFrameBodyId() const noexcept { return physicsFrameBodyId_; }
+     [[nodiscard]] double flightSpeedMps() const noexcept { return creativeFlightSpeedMps_; }
++    void setFlightMode(bool enabled) noexcept {
++        flightMode_ = enabled;
++        grounded_ = false;
++        if (enabled) {
++            if (inPhysicsFrame_) localVelocity_ = {};
++            else velocity_ = {};
++        }
++    }
++    void setCreativeFlightSpeedMps(double speedMetersPerSecond) noexcept {
++        creativeFlightSpeedMps_ = std::clamp(speedMetersPerSecond, 1.0, 2000000.0);
++    }
+     [[nodiscard]] glm::dvec3 up() const;
+     [[nodiscard]] glm::dvec3 forwardDirection() const;
+     [[nodiscard]] double altitude() const;
+diff --git a/native/src/app/Main.cpp b/native/src/app/Main.cpp
+index fd55f26..a4cd04c 100644
+--- a/native/src/app/Main.cpp
++++ b/native/src/app/Main.cpp
+@@ -317,6 +317,19 @@ int main() {
+         const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet, initialSunDirectionPlanet);
+         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
+         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
++        const bool captureHighSpeed = [] {
++            const char* value = std::getenv("VF_CAPTURE_HIGH_SPEED");
++            return value != nullptr && std::string_view{value} == "1";
++        }();
++        const bool runtimeDiagnosticsStdout = [] {
++            const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
++            return value != nullptr && std::string_view{value} == "1";
++        }();
++        if (captureHighSpeed) {
++            camera.setFlightMode(true);
++            camera.setCreativeFlightSpeedMps(500000.0);
++            std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
++        }
+ 
+         constexpr double moonOrbitRadius = 384400000.0;
+         vf::CelestialBody luna{};
+@@ -390,6 +403,18 @@ int main() {
+                       << aerialAltitude << " m\n";
+         }
+ 
++        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
++            shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
++            const glm::dvec3 groundUp = camera.up();
++            const glm::dvec3 tangentForward = safeNormalize(
++                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
++                stableTangent(groundUp));
++            camera.setViewDirectionWorld(
++                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
++                groundUp);
++            std::cout << "R24 capture shadow-contact downward view\n";
++        }
++
+         std::string celestialTargetMode{};
+         if (const char* celestialTargetEnv = std::getenv("VF_CELESTIAL_TARGET");
+             celestialTargetEnv != nullptr && *celestialTargetEnv != '\0') {
+@@ -892,6 +917,8 @@ int main() {
+                       << renderer.dynamicTriangleCount()
+                       << " | FPS " << std::setprecision(0) << fps;
+                 platform.setWindowTitle(title.str());
++                if (runtimeDiagnosticsStdout)
++                    std::cout << "R24 DIAG | " << title.str() << '\n';
+                 if (trackMoonEvidence && currentMoon != nullptr) {
+                     const glm::dvec3 moonDirectionWorld = safeNormalize(
+                         currentMoon->position - camera.position());
+diff --git a/native/tests/R24RuntimeStabilityTests.cpp b/native/tests/R24RuntimeStabilityTests.cpp
+index 41a16bf..b6bd61f 100644
+--- a/native/tests/R24RuntimeStabilityTests.cpp
++++ b/native/tests/R24RuntimeStabilityTests.cpp
+@@ -1,4 +1,5 @@
+ #include "vf/physics/PhysicsWorld.hpp"
++#include "vf/player/PlanetCamera.hpp"
+ #include "vf/world/TerrainStreamingPolicy.hpp"
+ 
+ #include <cmath>
+@@ -40,6 +41,23 @@ vf::RigidBodyDesc testBody(const glm::dvec3& position, const glm::dvec3& velocit
+     return body;
+ }
+ 
++
++void testCreativeFlightConfigurationUsesProductionLimits() {
++    vf::PlanetDefinition planet{};
++    planet.radius = 1000.0;
++    planet.maxElevation = 0.0;
++    vf::PlanetCamera camera{planet};
++    camera.setFlightMode(true);
++    camera.setCreativeFlightSpeedMps(500000.0);
++    require(camera.flightMode(), "runtime/editor flight configuration must enable the production flight path");
++    require(!camera.grounded(), "enabling flight must release the grounded state");
++    require(std::abs(camera.flightSpeedMps() - 500000.0) < 1.0e-9,
++        "configured high-speed capture must use the same production speed value");
++    camera.setCreativeFlightSpeedMps(9.0e9);
++    require(std::abs(camera.flightSpeedMps() - 2000000.0) < 1.0e-9,
++        "runtime/editor speed configuration must preserve the production 2,000 km/s clamp");
++}
++
+ void testCentrifugalAccelerationInRotatingLocalWorld() {
+     auto environment = inertialTestEnvironment();
+     environment.rotatingFrameAngularVelocity = {0.0, 0.0, 1.0};
+@@ -96,6 +114,7 @@ void testStaleWindowFallsBackUntilFreshBuildArrives() {
+ } // namespace
+ 
+ int main() {
++    testCreativeFlightConfigurationUsesProductionLimits();
+     testCentrifugalAccelerationInRotatingLocalWorld();
+     testCoriolisAccelerationInRotatingLocalWorld();
+     testHighSpeedTransitForcesCheapGlobeAndNoBuild();

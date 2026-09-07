@@ -1,0 +1,46 @@
+ground-spin-0.png attempt=1 colors=1
+ground-spin-0.png attempt=2 colors=1
+ground-spin-0.png attempt=3 colors=1
+ground-spin-0.png attempt=4 colors=1
+ground-spin-0.png attempt=5 colors=1
+ground-spin-0.png attempt=6 colors=27716
+r24-stability-evidence/ground/ground-spin-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 280195B 0.000u 0:00.000
+ground-spin-1.png attempt=1 colors=29657
+r24-stability-evidence/ground/ground-spin-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 282059B 0.000u 0:00.000
+ground-spin-2.png attempt=1 colors=30968
+r24-stability-evidence/ground/ground-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 281244B 0.000u 0:00.000
+ground-spin-3.png attempt=1 colors=32038
+r24-stability-evidence/ground/ground-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 281138B 0.000u 0:00.000
+ground-spin-4.png attempt=1 colors=31563
+r24-stability-evidence/ground/ground-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 280399B 0.000u 0:00.000
+ground-spin-5.png attempt=1 colors=30120
+r24-stability-evidence/ground/ground-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 279325B 0.000u 0:00.000
+contact-ground.png attempt=1 colors=1
+contact-ground.png attempt=2 colors=1
+contact-ground.png attempt=3 colors=1
+contact-ground.png attempt=4 colors=1
+contact-ground.png attempt=5 colors=212
+r24-stability-evidence/shadows/contact-ground.png PNG 1600x900 1600x900+0+0 8-bit sRGB 213c 51890B 0.000u 0:00.000
+earth-spin-0.png attempt=1 colors=17498
+r24-stability-evidence/space/earth-spin-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 199859B 0.000u 0:00.000
+earth-spin-1.png attempt=1 colors=24054
+r24-stability-evidence/space/earth-spin-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 203552B 0.000u 0:00.000
+earth-spin-2.png attempt=1 colors=30473
+r24-stability-evidence/space/earth-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 209385B 0.000u 0:00.000
+earth-spin-3.png attempt=1 colors=35533
+r24-stability-evidence/space/earth-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 212094B 0.000u 0:00.000
+earth-spin-4.png attempt=1 colors=37910
+r24-stability-evidence/space/earth-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 209911B 0.000u 0:00.000
+earth-spin-5.png attempt=1 colors=35262
+r24-stability-evidence/space/earth-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 206689B 0.000u 0:00.000
+before.png attempt=1 colors=1
+before.png attempt=2 colors=1
+before.png attempt=3 colors=1
+before.png attempt=4 colors=27427
+r24-stability-evidence/high-speed/before.png PNG 1600x900 1600x900+0+0 8-bit sRGB 279481B 0.000u 0:00.000
+transit.png attempt=1 colors=5372
+r24-stability-evidence/high-speed/transit.png PNG 1600x900 1600x900+0+0 8-bit sRGB 236642B 0.000u 0:00.000
+transit-late.png attempt=1 colors=4073
+r24-stability-evidence/high-speed/transit-late.png PNG 1600x900 1600x900+0+0 8-bit sRGB 153980B 0.000u 0:00.000
+after.png attempt=1 colors=4300
+r24-stability-evidence/high-speed/after.png PNG 1600x900 1600x900+0+0 8-bit sRGB 375042B 0.000u 0:00.000

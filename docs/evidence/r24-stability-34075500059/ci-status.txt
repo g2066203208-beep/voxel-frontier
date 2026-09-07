@@ -1,0 +1,8 @@
+workflow_sha=9705205e3b055ce5a41ad8f94ce377ce8b0d1948
+workflow_run=34075500059
+configure=success
+build=success
+tests=success
+stability_test=success
+vulkan=success
+capture=success

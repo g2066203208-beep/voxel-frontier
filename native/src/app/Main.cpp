@@ -317,6 +317,19 @@ int main() {
         const glm::dvec3 spawnDirection = findPlayableSpawnDirection(planet, initialSunDirectionPlanet);
         const vf::PlanetTerrainSample spawnTerrain = vf::samplePlanetTerrain(planet, spawnDirection);
         vf::PlanetCamera camera{planet, &celestial, asterId, spawnDirection};
+        const bool captureHighSpeed = [] {
+            const char* value = std::getenv("VF_CAPTURE_HIGH_SPEED");
+            return value != nullptr && std::string_view{value} == "1";
+        }();
+        const bool runtimeDiagnosticsStdout = [] {
+            const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
+            return value != nullptr && std::string_view{value} == "1";
+        }();
+        if (captureHighSpeed) {
+            camera.setFlightMode(true);
+            camera.setCreativeFlightSpeedMps(500000.0);
+            std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
+        }
 
         constexpr double moonOrbitRadius = 384400000.0;
         vf::CelestialBody luna{};
@@ -388,6 +401,18 @@ int main() {
                 worldUp);
             std::cout << "R24 deterministic aerial camera altitude="
                       << aerialAltitude << " m\n";
+        }
+
+        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
+            shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
+            const glm::dvec3 groundUp = camera.up();
+            const glm::dvec3 tangentForward = safeNormalize(
+                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
+                stableTangent(groundUp));
+            camera.setViewDirectionWorld(
+                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
+                groundUp);
+            std::cout << "R24 capture shadow-contact downward view\n";
         }
 
         std::string celestialTargetMode{};
@@ -892,6 +917,8 @@ int main() {
                       << renderer.dynamicTriangleCount()
                       << " | FPS " << std::setprecision(0) << fps;
                 platform.setWindowTitle(title.str());
+                if (runtimeDiagnosticsStdout)
+                    std::cout << "R24 DIAG | " << title.str() << '\n';
                 if (trackMoonEvidence && currentMoon != nullptr) {
                     const glm::dvec3 moonDirectionWorld = safeNormalize(
                         currentMoon->position - camera.position());

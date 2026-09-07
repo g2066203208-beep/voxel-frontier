@@ -1,4 +1,5 @@
 #include "vf/physics/PhysicsWorld.hpp"
+#include "vf/player/PlanetCamera.hpp"
 #include "vf/world/TerrainStreamingPolicy.hpp"
 
 #include <cmath>
@@ -38,6 +39,23 @@ vf::RigidBodyDesc testBody(const glm::dvec3& position, const glm::dvec3& velocit
     body.angularDamping = 0.0;
     body.aerodynamics.referenceArea = 0.0;
     return body;
+}
+
+
+void testCreativeFlightConfigurationUsesProductionLimits() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 1000.0;
+    planet.maxElevation = 0.0;
+    vf::PlanetCamera camera{planet};
+    camera.setFlightMode(true);
+    camera.setCreativeFlightSpeedMps(500000.0);
+    require(camera.flightMode(), "runtime/editor flight configuration must enable the production flight path");
+    require(!camera.grounded(), "enabling flight must release the grounded state");
+    require(std::abs(camera.flightSpeedMps() - 500000.0) < 1.0e-9,
+        "configured high-speed capture must use the same production speed value");
+    camera.setCreativeFlightSpeedMps(9.0e9);
+    require(std::abs(camera.flightSpeedMps() - 2000000.0) < 1.0e-9,
+        "runtime/editor speed configuration must preserve the production 2,000 km/s clamp");
 }
 
 void testCentrifugalAccelerationInRotatingLocalWorld() {
@@ -96,6 +114,7 @@ void testStaleWindowFallsBackUntilFreshBuildArrives() {
 } // namespace
 
 int main() {
+    testCreativeFlightConfigurationUsesProductionLimits();
     testCentrifugalAccelerationInRotatingLocalWorld();
     testCoriolisAccelerationInRotatingLocalWorld();
     testHighSpeedTransitForcesCheapGlobeAndNoBuild();
