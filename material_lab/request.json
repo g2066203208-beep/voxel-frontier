@@ -1,8 +1,10 @@
 {
   "materials": [
-    {"name":"vf_dynamic_basalt_dry","resolution":1024,"profile":"stylized","preset":"vfBasaltPainted","params":{"seed":240914,"fractureStrength":0.50,"poreDensity":0.018,"weathering":0.16,"macroRelief":1.18,"mesoRelief":1.18,"edgeBreakup":0.95,"paintScale":1.05,"normalStrength":10.5,"normalRadius":5,"wetness":0.0,"frost":0.0,"snowCoverage":0.0}},
-    {"name":"vf_dynamic_basalt_wet","resolution":1024,"profile":"stylized","preset":"vfBasaltPainted","params":{"seed":240914,"fractureStrength":0.50,"poreDensity":0.018,"weathering":0.16,"macroRelief":1.18,"mesoRelief":1.18,"edgeBreakup":0.95,"paintScale":1.05,"normalStrength":10.5,"normalRadius":5,"wetness":0.90,"frost":0.0,"snowCoverage":0.0}},
-    {"name":"vf_dynamic_basalt_frost","resolution":1024,"profile":"stylized","preset":"vfBasaltPainted","params":{"seed":240914,"fractureStrength":0.50,"poreDensity":0.018,"weathering":0.16,"macroRelief":1.18,"mesoRelief":1.18,"edgeBreakup":0.95,"paintScale":1.05,"normalStrength":10.5,"normalRadius":5,"wetness":0.15,"frost":0.72,"snowCoverage":0.0}},
-    {"name":"vf_dynamic_basalt_snow","resolution":1024,"profile":"stylized","preset":"vfBasaltPainted","params":{"seed":240914,"fractureStrength":0.50,"poreDensity":0.018,"weathering":0.16,"macroRelief":1.18,"mesoRelief":1.18,"edgeBreakup":0.95,"paintScale":1.05,"normalStrength":10.5,"normalRadius":5,"wetness":0.04,"frost":0.58,"snowCoverage":0.84,"snowDepth":0.60}}
+    {"name":"vf_painted_strong_basalt_01","resolution":1024,"profile":"stylized","preset":"vfBasaltPainted","params":{"seed":240914,"fractureStrength":0.44,"poreDensity":0.012,"weathering":0.14,"macroRelief":1.08,"mesoRelief":0.90,"edgeBreakup":0.72,"paintScale":1.18,"normalStrength":7.4,"normalRadius":9}},
+    {"name":"vf_painted_strong_granite_01","resolution":1024,"profile":"stylized","preset":"vfGranitePainted","params":{"seed":310402,"grainScale":18,"quartz":0.30,"feldspar":0.46,"mica":0.08,"relief":1.00,"paintScale":1.16,"normalStrength":7.0,"normalRadius":9}},
+    {"name":"vf_painted_strong_dirt_01","resolution":1024,"profile":"stylized","preset":"vfDirtPainted","params":{"seed":420503,"clodScale":7,"pebbleDensity":0.08,"moisture":0.03,"relief":1.02,"paintScale":1.20,"normalStrength":6.6,"normalRadius":10}},
+    {"name":"vf_painted_strong_bark_01","resolution":1024,"profile":"stylized","preset":"vfBarkPainted","params":{"seed":530603,"ridgeScale":5.0,"fissureScale":2.7,"age":0.66,"relief":1.08,"paintScale":1.18,"normalStrength":7.8,"normalRadius":8}},
+    {"name":"vf_painted_strong_snow_01","resolution":1024,"profile":"stylized","preset":"vfSnowPainted","params":{"seed":700102,"relief":1.00,"paintScale":1.24,"normalStrength":5.6,"normalRadius":11}},
+    {"name":"vf_painted_strong_ice_01","resolution":1024,"profile":"stylized","preset":"vfIcePainted","params":{"seed":710201,"relief":0.98,"paintScale":1.20,"normalStrength":5.2,"normalRadius":11}}
   ]
 }
