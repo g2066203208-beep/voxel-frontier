@@ -54,6 +54,20 @@ constexpr double kPi = 3.1415926535897932384626433832795;
     return t * t * (3.0 - 2.0 * t);
 }
 
+// Gameplay presentation only. Luna keeps its physical radius, mass, gravity and 384,400 km
+// orbit. Near Aster's surface the visible disc is enlarged for composition/readability; the
+// presentation smoothly returns to the physical 1x radius in high orbit and always returns to
+// 1x while actually approaching Luna, so landing/navigation geometry remains truthful.
+[[nodiscard]] double gameplayMoonVisualScale(
+    double asterAltitudeMeters,
+    double moonDistanceMeters) noexcept {
+    const double surfaceWeight = 1.0 - smooth01(
+        (std::max(0.0, asterAltitudeMeters) - 250000.0) / 2750000.0);
+    const double farFromMoonWeight = smooth01(
+        (std::max(0.0, moonDistanceMeters) - 12000000.0) / 18000000.0);
+    return 1.0 + 3.0 * surfaceWeight * farFromMoonWeight;
+}
+
 // Degenerate fallback only. Camera heading continuity itself is owned by PlanetCamera and is
 // parallel-transported over the sphere; terrain patch construction is free to pick a stable local
 // tangent because its vertices are converted back into the fixed render frame before upload.
@@ -86,7 +100,7 @@ constexpr double kPi = 3.1415926535897932384626433832795;
 
     if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET"); targetEnv != nullptr && *targetEnv != '\0') {
         const std::string_view target{targetEnv};
-        constexpr std::uint32_t evidenceSamples = 16384U;
+        constexpr std::uint32_t evidenceSamples = 4096U;
         glm::dvec3 evidenceBest = preferred;
         double evidenceScore = -std::numeric_limits<double>::infinity();
         bool evidenceFound = false;
@@ -104,8 +118,19 @@ constexpr double kPi = 3.1415926535897932384626433832795;
             const double height01 = std::clamp(aboveSea / std::max(1.0, planet.maxElevation), 0.0, 1.0);
             double score = -1.0e9;
             if (target == "mountain") {
-                score = terrain.mountain * 3.6 + height01 * 1.1 + terrain.plateBoundary * 0.35
-                    - terrain.glacier * 2.2 - std::abs(d.y) * 0.55;
+                score = terrain.mountain * 4.4
+                    + (1.0 - std::abs(height01 - 0.38)) * 1.25
+                    + terrain.plateBoundary * 0.35
+                    - terrain.glacier * 2.8
+                    - std::max(0.0, height01 - 0.65) * 2.4
+                    - std::abs(d.y) * 0.45;
+            } else if (target == "rift") {
+                score = terrain.rift * 4.8 + terrain.divergence * 1.35
+                    + terrain.plateBoundary * 0.55 + height01 * 0.25
+                    - terrain.glacier * 1.4 - terrain.mountain * 0.45;
+            } else if (target == "alluvial") {
+                score = terrain.alluvialFan * 4.4 + terrain.river * 1.2
+                    + terrain.moisture * 0.45 - height01 * 0.50;
             } else if (target == "highland") {
                 score = terrain.plateau * 2.6 + terrain.hills * 1.3 + height01 * 0.8
                     - terrain.mountain * 0.7;
@@ -138,7 +163,7 @@ constexpr double kPi = 3.1415926535897932384626433832795;
             }
         }
         if (evidenceFound) {
-            std::cout << "R24 terrain target: " << target << " score=" << evidenceScore << '\n';
+            std::cout << "R24 terrain target: " << target << " score=" << evidenceScore << std::endl;
             return safeNormalize(evidenceBest, preferred);
         }
     }
@@ -403,9 +428,58 @@ int main() {
                 aster.position + worldOffset,
                 aster.linearVelocity + glm::cross(angularVelocity, worldOffset),
                 false);
-            const glm::dvec3 tangent = stableTangent(worldUp);
+            glm::dvec3 localEvidenceTangent = stableTangent(spawnDirection);
+            if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET");
+                targetEnv != nullptr && *targetEnv != '\0') {
+                const glm::dvec3 localBitangent = safeNormalize(
+                    glm::cross(spawnDirection, localEvidenceTangent),
+                    stableTangent(spawnDirection));
+                const double centerElevation = vf::samplePlanetTerrain(
+                    planet, spawnDirection).elevationMeters;
+                double bestContrast = -1.0;
+                glm::dvec3 bestTangent = localEvidenceTangent;
+                constexpr int directionCount = 16;
+                constexpr double probeDistanceMeters = 18000.0;
+                for (int i = 0; i < directionCount; ++i) {
+                    const double angle = 2.0 * kPi * static_cast<double>(i)
+                        / static_cast<double>(directionCount);
+                    const glm::dvec3 candidateTangent = safeNormalize(
+                        localEvidenceTangent * std::cos(angle)
+                            + localBitangent * std::sin(angle),
+                        localEvidenceTangent);
+                    const glm::dvec3 probeDirection = safeNormalize(
+                        spawnDirection
+                            + candidateTangent * (probeDistanceMeters / planet.radius),
+                        spawnDirection);
+                    const vf::PlanetTerrainSample probe = vf::samplePlanetTerrain(
+                        planet, probeDirection);
+                    const double contrast = std::abs(probe.elevationMeters - centerElevation);
+                    if (contrast > bestContrast) {
+                        bestContrast = contrast;
+                        bestTangent = candidateTangent;
+                    }
+                }
+                localEvidenceTangent = bestTangent;
+                std::cout << "R24 terrain evidence view: contrast_m=" << bestContrast
+                          << std::endl;
+            }
+            const glm::dvec3 worldEvidenceTangent = safeNormalize(
+                aster.orientation * localEvidenceTangent,
+                stableTangent(worldUp));
+            double downwardWeight = 0.34;
+            if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET");
+                targetEnv != nullptr && *targetEnv != '\0') {
+                const std::string_view target{targetEnv};
+                if (target == "mountain") downwardWeight = 0.27;
+                else if (target == "rift") downwardWeight = 0.31;
+                else if (target == "hydrology" || target == "river") downwardWeight = 0.38;
+            }
+            const double tangentWeight = std::sqrt(std::max(
+                0.0, 1.0 - downwardWeight * downwardWeight));
             camera.setViewDirectionWorld(
-                safeNormalize(tangent * 0.78 - worldUp * 0.625, -worldUp),
+                safeNormalize(
+                    worldEvidenceTangent * tangentWeight - worldUp * downwardWeight,
+                    -worldUp),
                 worldUp);
             std::cout << "R24 deterministic aerial camera altitude="
                       << aerialAltitude << " m\n";
@@ -621,22 +695,22 @@ int main() {
             vf::PlanetSurfaceAuthority buildSurface{planet};
             buildSurface.setHydrology(hydrology);
             vf::PlanetLodConfig lodConfig{};
-            lodConfig.patchResolution = 10U;
+            lodConfig.patchResolution = buildAltitude < 25000.0 ? 12U : 10U;
             lodConfig.maxDepth = 20U;
-            // The contact zone is processed first by PlanetLodMeshBuilder. Keep enough budget for
-            // metre-scale feet/prop geometry but stop distant low-altitude SSE from saturating the
-            // old 6000-leaf ceiling every frame.
-            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 3600U
-                : (buildAltitude < 150000.0 ? 1600U : 700U);
+            // Low-altitude detail is no longer a binary square. The builder uses a camera-centred
+            // geodesic transition band so physical cell size grows continuously with distance.
+            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 4400U
+                : (buildAltitude < 150000.0 ? 2200U : 900U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewportHeightPixels = 900.0;
-            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 3.6
-                : (buildAltitude < 150000.0 ? 5.0 : 8.0);
-            // Contact detail is deliberately local: trees, placed objects and the character need
-            // fine geometry nearby; distant terrain can use screen-space error alone.
-            lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 160.0 : 0.0;
+            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 2.8
+                : (buildAltitude < 150000.0 ? 4.2 : 6.5);
+            lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 1.0 : 0.0;
             lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0 : 24.0;
-            lodConfig.horizonMarginRadians = 0.018;
+            lodConfig.detailTransitionStartMeters = 180.0;
+            lodConfig.detailTransitionEndMeters = 32000.0;
+            lodConfig.transitionFarCellMeters = 180.0;
+            lodConfig.horizonMarginRadians = 0.020;
             lodConfig.skirtDepthMeters = 6.0;
 
             TerrainBuildResult result{};
@@ -1028,12 +1102,18 @@ int main() {
             }
             if (currentMoon != nullptr) {
                 const double moonCameraDistance = glm::length(currentMoon->position - camera.position());
+                const double asterObserverAltitude = std::max(
+                    0.0, glm::length(camera.position() - currentAster->position)
+                        - currentAster->radiusMeters);
+                const double moonVisualScale = gameplayMoonVisualScale(
+                    asterObserverAltitude, moonCameraDistance);
                 const vf::PlanetMesh& moonSource = moonCameraDistance < 12000000.0
                     ? moonSurfaceMeshNear : moonSurfaceMeshFar;
                 vf::PlanetMesh moonMesh = moonSource;
                 const glm::dvec3 moonRelativeWorld = currentMoon->position - currentAster->position;
                 for (auto& vertex : moonMesh.vertices) {
-                    const glm::dvec3 moonBodyPoint = currentMoon->orientation * glm::dvec3(vertex.position);
+                    const glm::dvec3 moonBodyPoint = currentMoon->orientation
+                        * (glm::dvec3(vertex.position) * moonVisualScale);
                     const glm::dvec3 pointAsterLocal = inverseAster * (moonRelativeWorld + moonBodyPoint);
                     const glm::dvec3 normalAsterLocal = inverseAster
                         * (currentMoon->orientation * glm::dvec3(vertex.normal));
@@ -1147,10 +1227,6 @@ int main() {
                 platform.setWindowTitle(title.str());
                 if (runtimeDiagnosticsStdout)
                     std::cout << "R24 DIAG | " << title.str() << '\n';
-                if (runtimeDiagnosticsStdout)
-                    std::cout << "R24 DIAG | " << title.str() << '\n';
-                if (runtimeDiagnosticsStdout)
-                    std::cout << "R24 DIAG | " << title.str() << '\n';
                 if (trackMoonEvidence && currentMoon != nullptr) {
                     const glm::dvec3 moonDirectionWorld = safeNormalize(
                         currentMoon->position - camera.position());
@@ -1165,10 +1241,18 @@ int main() {
                     const double focalPixels = static_cast<double>(height)
                         / (2.0 * std::tan(glm::radians(68.0) * 0.5));
                     const double apparentDiameterPixels = 2.0 * std::tan(angularRadiusRadians) * focalPixels;
+                    const double asterObserverAltitude = std::max(
+                        0.0, glm::length(camera.position() - currentAster->position)
+                            - currentAster->radiusMeters);
+                    const double moonVisualScale = gameplayMoonVisualScale(
+                        asterObserverAltitude, moonDistanceMeters);
                     std::cout << "R24 moon evidence: distance_km="
                               << moonDistanceMeters / 1000.0
                               << " angular_error_deg=" << angularErrorDegrees
                               << " apparent_diameter_px=" << apparentDiameterPixels
+                              << " visual_scale=" << moonVisualScale
+                              << " visual_apparent_diameter_px="
+                              << apparentDiameterPixels * moonVisualScale
                               << " dynamic_tris=" << renderer.dynamicTriangleCount() << '\n';
                 }
                 diagnosticsTime = 0.0;

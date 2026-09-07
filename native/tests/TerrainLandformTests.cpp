@@ -25,6 +25,9 @@ int main() {
 
     double maxHills = 0.0;
     double maxCanyon = 0.0;
+    double maxRift = 0.0;
+    double maxShear = 0.0;
+    double maxAlluvial = 0.0;
     double maxDunes = 0.0;
     double maxCliff = 0.0;
     double maxWetland = 0.0;
@@ -44,8 +47,9 @@ int main() {
                 const auto sample = vf::samplePlanetTerrain(planet, vf::cubeSphereDirection(face, u, v));
 
                 const double masks[] = {
-                    sample.hills, sample.canyon, sample.dunes, sample.coastalCliff,
-                    sample.wetland, sample.glacier, sample.aridity, sample.moisture,
+                    sample.hills, sample.canyon, sample.rift, sample.shear, sample.alluvialFan,
+                    sample.dunes, sample.coastalCliff, sample.wetland, sample.glacier,
+                    sample.aridity, sample.moisture,
                 };
                 for (double mask : masks) {
                     require(std::isfinite(mask) && mask >= 0.0 && mask <= 1.0,
@@ -54,6 +58,9 @@ int main() {
 
                 maxHills = std::max(maxHills, sample.hills);
                 maxCanyon = std::max(maxCanyon, sample.canyon);
+                maxRift = std::max(maxRift, sample.rift);
+                maxShear = std::max(maxShear, sample.shear);
+                maxAlluvial = std::max(maxAlluvial, sample.alluvialFan);
                 maxDunes = std::max(maxDunes, sample.dunes);
                 maxCliff = std::max(maxCliff, sample.coastalCliff);
                 maxWetland = std::max(maxWetland, sample.wetland);
@@ -71,6 +78,9 @@ int main() {
     require(sawLand && sawOcean, "Earth seed must retain both land and ocean");
     require(maxHills > 0.18, "Earth seed must contain rolling-hill provinces");
     require(maxCanyon > 0.015, "Earth seed must contain incised canyon terrain");
+    require(maxRift > 0.015, "Earth seed must contain divergent continental rifts");
+    require(maxShear > 0.015, "Earth seed must contain transform-boundary shear terrain");
+    require(maxAlluvial > 0.005, "Earth seed must contain lowland alluvial deposition");
     require(maxDunes > 0.015, "Earth seed must contain dune terrain");
     require(maxCliff > 0.035, "Earth seed must contain coastal cliffs");
     require(maxWetland > 0.020, "Earth seed must contain lowland wetland terrain");
@@ -85,6 +95,9 @@ int main() {
     std::cout << "Terrain landform tests passed"
               << " | hills=" << maxHills
               << " canyon=" << maxCanyon
+              << " rift=" << maxRift
+              << " shear=" << maxShear
+              << " alluvial=" << maxAlluvial
               << " dunes=" << maxDunes
               << " cliff=" << maxCliff
               << " wetland=" << maxWetland

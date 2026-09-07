@@ -179,6 +179,7 @@ struct PlateField {
     double boundary{};
     double convergence{};
     double divergence{};
+    double shear{};
 };
 
 [[nodiscard]] PlateField samplePlateField(std::uint64_t seed, const glm::dvec3& direction) noexcept {
@@ -212,7 +213,11 @@ struct PlateField {
     const double separationRate = glm::dot(relativeVelocity, boundaryNormal);
     const double divergence = boundary * smooth01(0.04, 0.72, separationRate);
     const double convergence = boundary * smooth01(0.04, 0.72, -separationRate);
-    return {best, second, boundary, convergence, divergence};
+    const glm::dvec3 boundaryTangent = safeNormalize(
+        glm::cross(direction, boundaryNormal), tangentAxis(direction));
+    const double slipRate = std::abs(glm::dot(relativeVelocity, boundaryTangent));
+    const double shear = boundary * smooth01(0.04, 0.72, slipRate);
+    return {best, second, boundary, convergence, divergence, shear};
 }
 
 [[nodiscard]] glm::vec3 proxyColor(const glm::vec3& baseColor, const glm::dvec3& localDirection) {
@@ -448,6 +453,24 @@ PlanetTerrainSample samplePlanetTerrain(
     const double oceanRidge = plates.divergence * oceanness;
     elevation += maxOcean * 0.38 * oceanRidge;
 
+    // Continental extension produces a narrow graben and uplifted shoulders instead of a generic
+    // noisy depression. The mask comes from the signed relative velocity of adjacent plates.
+    const double riftAxis = 1.0 - std::abs(std::sin(
+        w.x * 10.5 + w.z * 8.0 - w.y * 6.0 + p7));
+    const double rift = std::pow(
+        std::clamp(plates.divergence * landness, 0.0, 1.0), 1.08)
+        * (0.28 + 0.72 * std::pow(std::clamp(riftAxis, 0.0, 1.0), 1.6));
+    const double riftShoulder = plates.divergence * landness
+        * (1.0 - std::clamp(riftAxis, 0.0, 1.0))
+        * (0.55 + 0.45 * (0.5 + 0.5 * std::sin(w.y * 13.0 - w.x * 7.0 + p3)));
+    elevation -= maxLand * 0.24 * rift;
+    elevation += maxLand * 0.085 * riftShoulder;
+
+    // Transform boundaries are expressed as opposing scarps along the boundary tangent. They do
+    // not create or destroy crustal area, so the displacement is signed around zero.
+    const double transformWave = std::sin(w.x * 17.0 + w.z * 13.0 - w.y * 9.0 + p2);
+    elevation += maxLand * 0.035 * plates.shear * landness * transformWave;
+
     const double collisionWeight = plates.primary.continental && plates.secondary.continental
         ? 1.0
         : (plates.primary.continental || plates.secondary.continental ? 0.82 : 0.45);
@@ -458,9 +481,11 @@ PlanetTerrainSample samplePlanetTerrain(
         w.x * 11.0 - w.z * 8.0 + w.y * 5.0 + p6);
     const double mountainRidge = 1.0 - std::abs(std::sin(
         w.z * 15.0 + w.x * 7.0 - w.y * 4.0 + p4));
-    const double mountainReliefFactor = 0.30
-        + 0.16 * mountainFold
-        + 0.13 * std::pow(std::clamp(mountainRidge, 0.0, 1.0), 1.7);
+    const double mountainBackbone = std::pow(
+        std::clamp(mountainRidge, 0.0, 1.0), 1.45);
+    const double mountainReliefFactor = 0.36
+        + 0.19 * mountainFold
+        + 0.20 * mountainBackbone;
     elevation += maxLand * mountain * mountainReliefFactor;
 
     const double trenchWeight = (!plates.primary.continental || !plates.secondary.continental)
@@ -594,6 +619,15 @@ PlanetTerrainSample samplePlanetTerrain(
         0.0,
         1.0);
 
+    // Material eroded from steep source provinces is deposited after the terrain reaches lowland.
+    // This is a bounded game-scale transport proxy: source strength is mountain/rift relief, the
+    // river field transports it, and only low moist ground can retain an alluvial fan/plain.
+    const double alluvialFan = std::clamp(
+        landness * lowland * (1.0 - 0.45 * aridity)
+            * (0.58 * river + 0.26 * mountain * moisture + 0.16 * rift * moisture),
+        0.0,
+        1.0);
+
     const double polar = smooth01(0.70, 0.91, latitude);
     const double highIce = smooth01(3600.0, 5800.0, provisionalAboveSea)
         * smooth01(0.36, 0.78, latitude);
@@ -607,12 +641,12 @@ PlanetTerrainSample samplePlanetTerrain(
     const double protectedDrainage = 1.0 - 0.74 * river;
     const double iceSmoothing = 1.0 - 0.62 * glacier;
     const double landRelief = (
-        regional * (0.0085 + 0.0090 * mountain + 0.0048 * plateau)
+        regional * (0.0085 + 0.0180 * mountain + 0.0048 * plateau)
         + hillNoise * (0.0042 * hills)
-        + local * (0.0031 + 0.0050 * mountain + 0.0014 * coastalCliff)
-        + micro * (0.00115 + 0.00060 * mountain)
+        + local * (0.0031 + 0.0100 * mountain + 0.0014 * coastalCliff)
+        + micro * (0.00115 + 0.00120 * mountain)
         + fine * 0.00030
-        + (ridged - 0.5) * 0.0024 * mountain)
+        + (ridged - 0.5) * 0.0052 * mountain)
         * protectedDrainage * iceSmoothing;
     elevation += maxLand * landRelief * landness;
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
@@ -625,6 +659,7 @@ PlanetTerrainSample samplePlanetTerrain(
     if (wetland > 0.0 && elevation > 45.0) {
         elevation -= (elevation - 45.0) * std::clamp(wetland * 0.52, 0.0, 0.52);
     }
+    elevation += maxLand * 0.0045 * alluvialFan * (0.35 + 0.65 * (0.5 + 0.5 * regional));
     elevation += maxLand * 0.0035 * glacier * (0.55 + 0.45 * regional);
 
     const double surfaceDetail = std::clamp(
@@ -646,12 +681,15 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.plateBoundary = plates.boundary;
     sample.convergence = plates.convergence;
     sample.divergence = plates.divergence;
+    sample.shear = plates.shear;
+    sample.rift = rift;
     sample.oceanRidge = oceanRidge;
     sample.mountain = mountain;
     sample.plateau = plateau;
     sample.trench = trench;
     sample.volcano = volcano;
     sample.river = river;
+    sample.alluvialFan = alluvialFan;
     sample.hills = hills;
     sample.canyon = canyon;
     sample.dunes = dunes;
@@ -716,7 +754,8 @@ glm::vec3 planetTerrainColor(
         * (1.0 - 0.92 * sample.coastalCliff);
     const double rockiness = std::clamp(
         0.72 * sample.mountain + 0.34 * sample.volcano + 0.24 * highland
-            + 0.58 * sample.coastalCliff + 0.38 * sample.canyon,
+            + 0.58 * sample.coastalCliff + 0.38 * sample.canyon
+            + 0.34 * sample.rift + 0.22 * sample.shear,
         0.0,
         1.0);
 
@@ -730,6 +769,8 @@ glm::vec3 planetTerrainColor(
     color = mix3(color, {0.68F, 0.52F, 0.25F}, sample.dunes * 0.88);
     color = mix3(color, {0.19F, 0.255F, 0.105F}, sample.wetland * 0.82);
     color = mix3(color, {0.56F, 0.28F, 0.13F}, sample.canyon * 0.84);
+    color = mix3(color, {0.47F, 0.255F, 0.145F}, sample.rift * 0.82);
+    color = mix3(color, {0.31F, 0.37F, 0.18F}, sample.alluvialFan * 0.72);
     color = mix3(color, {0.34F, 0.32F, 0.29F}, sample.coastalCliff * 0.76);
     color = mix3(color, {0.39F, 0.34F, 0.23F}, sample.plateau * 0.58 + highland * 0.22);
     color = mix3(color, {0.37F, 0.36F, 0.34F}, rockiness * 0.72);

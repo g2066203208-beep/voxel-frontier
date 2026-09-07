@@ -29,6 +29,13 @@ struct PlanetLodConfig {
     // to projected SSE. Zero nearFieldRadiusMeters disables this constraint for distant globes.
     double nearFieldRadiusMeters{0.0};
     double nearFieldCellMeters{4.0};
+
+    // When nearFieldRadiusMeters is non-zero, render detail no longer ends at a hard radius.
+    // Cell size increases continuously across this camera-centred geodesic band, which removes the
+    // visible square where a high-detail quadtree island used to meet coarse regional terrain.
+    double detailTransitionStartMeters{180.0};
+    double detailTransitionEndMeters{32000.0};
+    double transitionFarCellMeters{180.0};
 };
 
 struct PlanetLodStats {

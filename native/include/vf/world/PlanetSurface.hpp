@@ -33,6 +33,8 @@ struct PlanetTerrainSample {
     double plateBoundary{};
     double convergence{};
     double divergence{};
+    double shear{};
+    double rift{};
     double oceanRidge{};
 
     double mountain{};
@@ -40,6 +42,7 @@ struct PlanetTerrainSample {
     double trench{};
     double volcano{};
     double river{};
+    double alluvialFan{};
 
     // Subordinate geomorphology/climate fields. The generation order follows the useful structure
     // seen in WorldEngine: first tectonic elevation, then climate/erosion/hydrology-derived surface

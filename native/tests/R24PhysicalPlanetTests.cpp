@@ -161,8 +161,11 @@ void testNearFieldLodEnforcesContactScaleCells() {
     config.maxLeafPatches = 256U;
     config.viewportHeightPixels = 720.0;
     config.targetScreenErrorPixels = 12.0; // intentionally loose: near-field rule must dominate
-    config.nearFieldRadiusMeters = 60.0;
+    config.nearFieldRadiusMeters = 1.0; // enables continuous camera-centred detail transition
     config.nearFieldCellMeters = 2.5;
+    config.detailTransitionStartMeters = 8.0;
+    config.detailTransitionEndMeters = 180.0;
+    config.transitionFarCellMeters = 18.0;
     config.skirtDepthMeters = 1.0;
 
     const glm::dvec3 cameraDirection = glm::normalize(glm::dvec3{0.71, 0.49, 0.51});

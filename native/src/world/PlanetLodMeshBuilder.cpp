@@ -30,6 +30,11 @@ struct Node {
     return std::acos(std::clamp(glm::dot(safeNormalize(a), safeNormalize(b)), -1.0, 1.0));
 }
 
+[[nodiscard]] double smooth01(double value) noexcept {
+    const double t = std::clamp(value, 0.0, 1.0);
+    return t * t * (3.0 - 2.0 * t);
+}
+
 struct NodeGeometry {
     glm::dvec3 centerDirection{};
     std::array<glm::dvec3, 4> corners{};
@@ -78,23 +83,31 @@ struct NodeMetric {
     const NodeGeometry geometry = geometryFor(node, planet.radius);
     const PlanetTerrainSample centerTerrain = surface.sample(geometry.centerDirection);
 
-    std::array<double, 4> elevations{};
+    const double uc = node.u0 + 0.5 * node.size;
+    const double vc = node.v0 + 0.5 * node.size;
+    const std::array<glm::dvec3, 8> reliefProbes{{
+        geometry.corners[0], geometry.corners[1], geometry.corners[2], geometry.corners[3],
+        cubeSphereDirection(node.face, uc, node.v0),
+        cubeSphereDirection(node.face, uc, node.v0 + node.size),
+        cubeSphereDirection(node.face, node.u0, vc),
+        cubeSphereDirection(node.face, node.u0 + node.size, vc),
+    }};
     double elevationMin = std::numeric_limits<double>::infinity();
     double elevationMax = -std::numeric_limits<double>::infinity();
     double elevationMean = 0.0;
-    for (std::size_t i = 0; i < geometry.corners.size(); ++i) {
-        elevations[i] = surface.sample(geometry.corners[i]).elevationMeters;
-        elevationMin = std::min(elevationMin, elevations[i]);
-        elevationMax = std::max(elevationMax, elevations[i]);
-        elevationMean += elevations[i];
+    for (const glm::dvec3& probe : reliefProbes) {
+        const double elevation = surface.sample(probe).elevationMeters;
+        elevationMin = std::min(elevationMin, elevation);
+        elevationMax = std::max(elevationMax, elevation);
+        elevationMean += elevation;
     }
-    elevationMean /= static_cast<double>(elevations.size());
+    elevationMean /= static_cast<double>(reliefProbes.size());
 
     const double cellMeters = geometry.spanMeters
         / static_cast<double>(std::max(2U, config.patchResolution));
     const double reliefSignal = std::max(
         std::abs(centerTerrain.elevationMeters - elevationMean),
-        0.25 * std::max(0.0, elevationMax - elevationMin));
+        0.40 * std::max(0.0, elevationMax - elevationMin));
     const double geometricError = std::max(
         cellMeters * config.flatTerrainErrorFraction,
         reliefSignal * config.reliefErrorScale);
@@ -262,6 +275,16 @@ PlanetMesh buildAdaptivePlanetSurface(
     config.reliefErrorScale = std::clamp(config.reliefErrorScale, 0.5, 4.0);
     config.nearFieldRadiusMeters = std::clamp(config.nearFieldRadiusMeters, 0.0, 50000.0);
     config.nearFieldCellMeters = std::clamp(config.nearFieldCellMeters, 0.5, 500.0);
+    config.detailTransitionStartMeters = std::clamp(
+        config.detailTransitionStartMeters, 0.0, 200000.0);
+    config.detailTransitionEndMeters = std::clamp(
+        std::max(config.detailTransitionStartMeters + 1.0, config.detailTransitionEndMeters),
+        config.detailTransitionStartMeters + 1.0,
+        500000.0);
+    config.transitionFarCellMeters = std::clamp(
+        std::max(config.nearFieldCellMeters, config.transitionFarCellMeters),
+        config.nearFieldCellMeters,
+        5000.0);
 
     PlanetLodStats localStats{};
     localStats.nearestCellMeters = std::numeric_limits<double>::infinity();
@@ -296,11 +319,31 @@ PlanetMesh buildAdaptivePlanetSurface(
             && leaves.size() + pending.size() + 4U < config.maxLeafPatches;
         const double nodeCellMeters = metric.spanMeters
             / static_cast<double>(std::max(2U, config.patchResolution));
-        const bool overlapsNearField = config.nearFieldRadiusMeters > 0.0
-            && metric.distanceMeters <= config.nearFieldRadiusMeters + metric.spanMeters * 0.72;
-        const bool forceContactScale = overlapsNearField
-            && nodeCellMeters > config.nearFieldCellMeters;
-        if (canSplit && (forceContactScale
+        bool forceSmoothDetail = false;
+        if (config.nearFieldRadiusMeters > 0.0) {
+            const double radius = std::max(1.0, surface.planet().radius);
+            const glm::dvec3 cameraDirection = safeNormalize(
+                cameraPlanetLocal, metric.centerDirection);
+            const double surfaceDistanceMeters = angleBetween(
+                cameraDirection, metric.centerDirection) * radius;
+            const double cameraAltitudeMeters = std::max(
+                0.0, glm::length(cameraPlanetLocal) - radius);
+            const double effectiveDistanceMeters = std::sqrt(
+                surfaceDistanceMeters * surfaceDistanceMeters
+                    + 0.20 * cameraAltitudeMeters * cameraAltitudeMeters);
+            const double transitionSpan = std::max(
+                1.0, config.detailTransitionEndMeters - config.detailTransitionStartMeters);
+            const double transitionT = smooth01(
+                (effectiveDistanceMeters - config.detailTransitionStartMeters) / transitionSpan);
+            const double nearCell = std::max(0.5, config.nearFieldCellMeters);
+            const double farCell = std::max(nearCell, config.transitionFarCellMeters);
+            const double desiredCellMeters = std::exp(
+                std::log(nearCell) * (1.0 - transitionT)
+                    + std::log(farCell) * transitionT);
+            forceSmoothDetail = effectiveDistanceMeters <= config.detailTransitionEndMeters
+                && nodeCellMeters > desiredCellMeters * 1.08;
+        }
+        if (canSplit && (forceSmoothDetail
             || metric.screenErrorPixels > config.targetScreenErrorPixels)) {
             const double half = node.size * 0.5;
             const std::uint32_t depth = node.depth + 1U;

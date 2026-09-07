@@ -1,0 +1,32 @@
+=== MOON ===
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381254.4 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381254.6 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381254.8 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381255.0 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381255.1 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381255.3 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381255.5 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381255.7 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381255.9 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 4384/L20 | cell 1.2m | tris 2253684+9696 | FPS 20
+R24 moon evidence: distance_km=381256.1 angular_error_deg=0.0 apparent_diameter_px=6.1 visual_scale=4.0 visual_apparent_diameter_px=24.3 dynamic_tris=9696
+=== MOUNTAIN ===
+R24 terrain target: mountain score=5.23817
+R24 terrain evidence view: contrast_m=217.054
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.50 km | LAND | STREAM READY | QLOD 4386/L19 | cell 2.8m | tris 1824296+9696 | FPS 22
+=== RIFT ===
+R24 terrain target: rift score=3.616
+R24 terrain evidence view: contrast_m=98.6277
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 3.50 km | LAND | STREAM READY | QLOD 4384/L19 | cell 2.8m | tris 2252864+9696 | FPS 22
+=== HYDROLOGY ===
+R24 terrain target: hydrology score=2.00639
+R24 terrain evidence view: contrast_m=263.707
