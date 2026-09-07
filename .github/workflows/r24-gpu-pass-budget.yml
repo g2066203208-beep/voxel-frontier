@@ -1,0 +1,185 @@
+name: R24 GPU Pass Budget
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_gpu_pass_budget.py'
+      - '.github/workflows/r24-gpu-pass-budget.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-gpu-pass-budget-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Apply GPU pass budget materializer
+        run: python3 .github/scripts/r24_gpu_pass_budget.py
+
+      - name: Validate source contracts
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'kTimestampQueryCount = 8U' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'readTimestampQueries' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'VK_QUERY_TYPE_TIMESTAMP' native/src/render/VulkanRenderer.cpp
+          grep -q 'vkCmdWriteTimestamp2' native/src/render/VulkanRenderer.cpp
+          grep -q 'R24 GPU pass_ms shadow=' native/src/render/VulkanRenderer.cpp
+          grep -q 'raster.cullMode = VK_CULL_MODE_BACK_BIT' native/src/render/VulkanRenderer.cpp
+          grep -q 'raster.cullMode = VK_CULL_MODE_NONE' native/src/render/VulkanRenderer.cpp
+          grep -q 'timestampValidBits' native/src/render/VulkanRenderer.cpp
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-gpu-pass -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-gpu-pass --parallel 2
+
+      - name: Run all native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-gpu-pass --verbose --output-on-failure 2>&1 | tee r24-gpu-pass-ctest.log
+
+      - name: Gate physical terrain and shader contracts
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-gpu-pass --verbose --output-on-failure \
+            -R 'vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests|vf_shader_contract_tests' \
+            2>&1 | tee r24-gpu-pass-focused.log
+          grep -q 'vf_planetary_body_system_tests: PASS' r24-gpu-pass-focused.log
+          grep -q 'vf_r24_runtime_stability_tests: PASS' r24-gpu-pass-focused.log
+          grep -q 'Terrain landform tests passed' r24-gpu-pass-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-gpu-pass-focused.log
+          grep -q 'All production shader SPIR-V entry-point contracts passed' r24-gpu-pass-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real Vulkan scenes with GPU pass timing
+        shell: bash
+        run: |
+          APP="$(find build/r24-gpu-pass -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-gpu-pass-evidence
+
+      - name: Gate screenshots and GPU pass evidence
+        shell: bash
+        run: |
+          test -s r24-gpu-pass-evidence/r24-epic-landscape-overview.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('r24-gpu-pass-evidence/logs')
+          pattern = re.compile(
+              r'R24 GPU pass_ms shadow=([0-9.]+) opaque=([0-9.]+) '
+              r'sky=([0-9.]+) transparent=([0-9.]+) total_profiled=([0-9.]+)')
+          rows = []
+          for log in root.glob('*.log'):
+              if log.name.startswith('xvfb'):
+                  continue
+              text = log.read_text(encoding='utf-8', errors='replace')
+              found = pattern.findall(text)
+              if not found:
+                  raise SystemExit(f'no GPU pass timing in {log.name}')
+              values = tuple(map(float, found[-1]))
+              rows.append((log.stem, *values))
+              print('GPU_PASS', rows[-1])
+          if len(rows) < 4:
+              raise SystemExit(f'expected four timed scenes, got {len(rows)}')
+          if any(r[-1] <= 0.0 for r in rows):
+              raise SystemExit('profiled GPU total must be positive')
+          # This is llvmpipe in CI, so do not encode a fake hardware FPS threshold. The purpose of
+          # this gate is to prove the production profiler works and screenshots survive culling.
+          mean_shadow = sum(r[1] for r in rows) / len(rows)
+          mean_opaque = sum(r[2] for r in rows) / len(rows)
+          mean_sky = sum(r[3] for r in rows) / len(rows)
+          mean_transparent = sum(r[4] for r in rows) / len(rows)
+          print('GPU_PASS_MEAN', 'shadow=', mean_shadow, 'opaque=', mean_opaque,
+                'sky=', mean_sky, 'transparent=', mean_transparent)
+          PY
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-gpu-pass-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-gpu-pass-evidence ]]; then
+            cp -a r24-gpu-pass-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-gpu-pass-ctest.log ]] && cp -f r24-gpu-pass-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-gpu-pass-focused.log ]] && cp -f r24-gpu-pass-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-gpu-pass-${{ github.run_id }}
+          path: |
+            r24-gpu-pass-evidence/**
+            r24-gpu-pass-ctest.log
+            r24-gpu-pass-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote measured GPU pass optimization
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "perf(r24): cull opaque backfaces and measure GPU passes"
+          git reset --hard HEAD
+          git clean -fd build/r24-gpu-pass || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
