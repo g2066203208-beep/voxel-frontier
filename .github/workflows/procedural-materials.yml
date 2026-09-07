@@ -48,7 +48,8 @@ jobs:
             vf-painterly-dirt.ts \
             vf-painterly-leaves.ts \
             vf-painterly-snow.ts \
-            vf-painterly-water.ts | sort)
+            vf-painterly-water.ts \
+            vf-surface-layers.ts | sort)
           actual=$(find material_lab/meshova/recipes -maxdepth 1 -type f -name '*.ts' -printf '%f\n' | sort)
           if [[ "$actual" != "$expected" ]]; then
             echo "Production recipe directory differs from approved source set." >&2
@@ -80,19 +81,29 @@ jobs:
           }
           presets = [m.get("preset") for m in materials]
           modes = {m.get("params", {}).get("mode") for m in materials}
+          names = {m.get("name", "") for m in materials}
           production = len(materials) == 6 and set(presets) == allowed
           water_showcase = (
               len(materials) == 4
               and set(presets) == {"vfPainterlyWater"}
               and modes == {"calm", "windy", "foam", "shallow"}
           )
-          if not (production or water_showcase):
-              raise SystemExit("Request must be either the exact six production masters or the exact four-state water showcase")
+          layer_showcase_names = {
+              "vf_layer_sandstone_dry",
+              "vf_layer_sandstone_snow_half",
+              "vf_layer_sandstone_snow_full",
+              "vf_layer_sandstone_wet",
+              "vf_layer_water_rain",
+              "vf_layer_leaves_cutout",
+          }
+          layer_showcase = len(materials) == 6 and names == layer_showcase_names
+          if not (production or water_showcase or layer_showcase):
+              raise SystemExit("Request must be production-six, water-showcase, or exact surface-layer showcase")
           for item in materials:
               name = item.get("name", "")
               if any(token in name.lower() for token in ("reference", "test", "draft", "final", "_v1", "_v2", "_v3", "_v4", "_v5", "_v6", "_v7", "_v8", "_v9")):
                   raise SystemExit(f"Unstable production/showcase material name: {name}")
-          print("water-showcase" if water_showcase else "production-six")
+          print("layer-showcase" if layer_showcase else ("water-showcase" if water_showcase else "production-six"))
           PY
 
       - name: Install preview tools
@@ -134,7 +145,8 @@ jobs:
             vf-painterly-dirt.ts \
             vf-painterly-leaves.ts \
             vf-painterly-snow.ts \
-            vf-painterly-water.ts; do
+            vf-painterly-water.ts \
+            vf-surface-layers.ts; do
             cp "material_lab/meshova/recipes/$file" ".cache/Meshova/examples/vf-recipes/$file"
           done
 
@@ -172,6 +184,26 @@ jobs:
             done
             grep -q 'VF_PAINTERLY_PLANETARY_V1' "$dir/manifest.json"
           done < <(find build/generated-materials -mindepth 1 -maxdepth 1 -type d | sort)
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('build/generated-materials')
+          req=json.loads(Path('material_lab/request.json').read_text())
+          for item in req.get('materials',[req]):
+              d=root/item['name']; n=item['name']; preset=item['preset']; layers=item.get('layers',{})
+              def need(key):
+                  p=d/f'{n}_mask-{key}.png'
+                  if not p.is_file(): raise SystemExit(f'Missing semantic mask: {p}')
+              if preset=='vfPainterlyLeaves': need('opacity')
+              if preset=='vfPainterlyWater':
+                  for k in ('foam','transmission','refraction','glint'): need(k)
+              if layers.get('snowCoverage',0)>0: need('snowCoverage')
+              if layers.get('wetness',0)>0:
+                  need('wetness'); need('puddles')
+              if layers.get('rainIntensity',0)>0 and preset=='vfPainterlyWater': need('rainRipples')
+          PY
+
           mapfile -t pngs < <(find build/generated-materials -type f -name '*.png' | sort)
           sha256sum "${pngs[@]}" > build/generated-materials/SHA256SUMS.txt
 
@@ -180,6 +212,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 material_lab/preview/render_material_previews.py build/generated-materials
+          python3 material_lab/preview/render_layer_diagnostics.py build/generated-materials
           expected_count=$(python3 - <<'PY'
           import json
           from pathlib import Path
@@ -211,9 +244,10 @@ jobs:
             echo
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Style: \`$VF_STYLE_ID\`"
-            echo '- Allowed requests: exact six-category production set OR exact four-state water showcase'
-            echo '- Water fields: foam / transmission / refraction / glint'
+            echo '- Allowed requests: production-six, water-showcase, or surface-layer showcase'
+            echo '- Surface layers: snow coverage/depth, wetness/puddles, rain ripples'
+            echo '- Foliage: true opacity alpha-cutout mask'
+            echo '- Water fields: foam / transmission / refraction / glint / optional rainRipples'
             echo '- Source: procedural code only; raster source assets rejected'
-            echo '- Production recipe directory: exact allow-list enforced'
             echo '- Every material: PBR maps + true-Height displaced studio sphere'
           } >> "$GITHUB_STEP_SUMMARY"
