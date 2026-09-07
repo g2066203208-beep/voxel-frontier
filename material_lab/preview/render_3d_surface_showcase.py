@@ -34,7 +34,7 @@ def relabel(im,name,subtitle):
     out=im.convert("RGB");dr=ImageDraw.Draw(out)
     try:f1=ImageFont.truetype("DejaVuSans.ttf",27);f2=ImageFont.truetype("DejaVuSans.ttf",18)
     except:f1=ImageFont.load_default();f2=f1
-    dr.rounded_rectangle((28,26,900,104),radius=18,fill=(18,18,20));dr.text((48,40),name,fill=(245,245,245),font=f1);dr.text((48,74),subtitle,fill=(190,195,200),font=f2)
+    dr.rounded_rectangle((28,26,930,104),radius=18,fill=(18,18,20));dr.text((48,40),name,fill=(245,245,245),font=f1);dr.text((48,74),subtitle,fill=(190,195,200),font=f2)
     return out
 
 def render_grass(d,name,base):
@@ -82,24 +82,32 @@ def render_fur(d,name,base):
     return relabel(out,name,"procedural strand/shell fur · flow field · length variation")
 
 def flame_poly(bx,by,tx,ty,w,curve):
-    dx,dy=unit(tx-bx,ty-by);sx,sy=-dy,dx;mx=bx+(tx-bx)*.55+sx*curve;my=by+(ty-by)*.55+sy*curve
-    return [(bx-sx*w,by-sy*w),(mx-sx*w*.58,my-sy*w*.58),(tx,ty),(mx+sx*w*.58,my+sy*w*.58),(bx+sx*w,by+sy*w)]
+    dx,dy=unit(tx-bx,ty-by);sx,sy=-dy,dx;mx=bx+(tx-bx)*.50+sx*curve;my=by+(ty-by)*.50+sy*curve
+    return [(bx-sx*w,by-sy*w),(mx-sx*w*.72,my-sy*w*.72),(tx,ty),(mx+sx*w*.72,my+sy*w*.72),(bx+sx*w,by+sy*w)]
 
 def render_fire(d,name,base):
     den,lng,heat,smoke,sparks=(load_mask(d,name,k) for k in ("flameDensity","flameHeight","heatDistortion","smoke","sparks"))
-    im=base.convert("RGBA");glow=Image.new("RGBA",im.size,(0,0,0,0));outer=Image.new("RGBA",im.size,(0,0,0,0));inner=Image.new("RGBA",im.size,(0,0,0,0));dg=ImageDraw.Draw(glow,"RGBA");do=ImageDraw.Draw(outer,"RGBA");di=ImageDraw.Draw(inner,"RGBA")
-    for z,x,y,r0,r1,r2 in points(44021,1500):
+    im=base.convert("RGBA")
+    halo=Image.new("RGBA",im.size,(0,0,0,0));dh=ImageDraw.Draw(halo,"RGBA")
+    dh.ellipse((CX-R*1.03,CY-R*1.03,CX+R*1.03,CY+R*1.03),fill=(255,62,0,58))
+    dh.ellipse((CX-R*.93,CY-R*.93,CX+R*.93,CY+R*.93),fill=(255,125,10,48))
+    halo=halo.filter(ImageFilter.GaussianBlur(22))
+    im=Image.alpha_composite(im,halo)
+    glow=Image.new("RGBA",im.size,(0,0,0,0));outer=Image.new("RGBA",im.size,(0,0,0,0));inner=Image.new("RGBA",im.size,(0,0,0,0));dg=ImageDraw.Draw(glow,"RGBA");do=ImageDraw.Draw(outer,"RGBA");di=ImageDraw.Draw(inner,"RGBA")
+    for z,x,y,r0,r1,r2 in points(44021,900):
         u,v=uv_from_normal(x,y,z);f=sample(den,u,v)
-        if r0>f*.23:continue
-        h=sample(heat,u,v);L=28+90*sample(lng,u,v)*(0.72+0.28*r2);bx=CX+R*x;by=CY-R*y
-        dx,dy=unit(x*.20+.44*h+(r1-.5)*.18,-1.0-y*.08);tx=bx+dx*L;ty=by+dy*L;w=5+10*f*(.55+.45*z);curve=(r2-.5)*18
-        poly=flame_poly(bx,by,tx,ty,w,curve);dg.polygon(poly,fill=(255,72,0,90));do.polygon(poly,fill=(242,63,0,135+int(80*z)))
-        inner_poly=flame_poly(bx+(tx-bx)*.18,by+(ty-by)*.18,tx,ty,w*.46,curve*.45);di.polygon(inner_poly,fill=(255,151,18,185+int(60*z)))
-        core_poly=flame_poly(bx+(tx-bx)*.45,by+(ty-by)*.45,tx,ty,w*.18,curve*.15);di.polygon(core_poly,fill=(255,237,107,225))
-        if sample(sparks,u,v)>.68 and r2>.68:di.ellipse((tx-2.0,ty-2.0,tx+2.0,ty+2.0),fill=(255,219,90,230))
-        if sample(smoke,u,v)>.58 and r1>.82:dg.ellipse((tx-10,ty-26,tx+10,ty-4),fill=(50,45,42,42))
-    g1=glow.filter(ImageFilter.GaussianBlur(18));g2=glow.filter(ImageFilter.GaussianBlur(6));out=Image.alpha_composite(Image.alpha_composite(Image.alpha_composite(Image.alpha_composite(im,g1),g2),outer),inner)
-    return relabel(out,name,"procedural emissive flame volume · tongues · glow · smoke · sparks")
+        if r0>f*.34:continue
+        h=sample(heat,u,v);baseL=sample(lng,u,v);L=48+118*baseL*(.74+.26*r2);bx=CX+R*x;by=CY-R*y
+        dx,dy=unit(x*.14+.36*h+(r1-.5)*.22,-1.0-y*.05);tx=bx+dx*L;ty=by+dy*L;w=10+18*f*(.62+.38*z);curve=(r2-.5)*28
+        poly=flame_poly(bx,by,tx,ty,w,curve);dg.polygon(poly,fill=(255,55,0,118));do.polygon(poly,fill=(237,52,0,150+int(70*z)))
+        inner_poly=flame_poly(bx+(tx-bx)*.10,by+(ty-by)*.10,tx,ty,w*.58,curve*.50);di.polygon(inner_poly,fill=(255,132,12,205+int(35*z)))
+        core_poly=flame_poly(bx+(tx-bx)*.38,by+(ty-by)*.38,tx,ty,w*.24,curve*.16);di.polygon(core_poly,fill=(255,234,103,238))
+        if sample(sparks,u,v)>.66 and r2>.66:
+            for k in range(2):
+                ox=(r1-.5)*18+k*4;oy=-8-k*9;di.ellipse((tx+ox-2,ty+oy-2,tx+ox+2,ty+oy+2),fill=(255,220,92,235))
+        if sample(smoke,u,v)>.56 and r1>.80:dg.ellipse((tx-14,ty-34,tx+14,ty-4),fill=(46,42,40,46))
+    g1=glow.filter(ImageFilter.GaussianBlur(26));g2=glow.filter(ImageFilter.GaussianBlur(9));out=Image.alpha_composite(Image.alpha_composite(Image.alpha_composite(Image.alpha_composite(im,g1),g2),outer),inner)
+    return relabel(out,name,"procedural emissive flame envelope · broad tongues · glow · smoke · sparks")
 
 def process(d):
     manifest=json.loads((d/"manifest.json").read_text());preset=manifest.get("preset");name=manifest.get("material")
