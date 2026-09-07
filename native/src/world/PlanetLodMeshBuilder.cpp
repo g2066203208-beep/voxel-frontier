@@ -140,6 +140,14 @@ void appendPatch(
     const std::uint32_t stride = resolution + 1U;
     const std::uint32_t base = static_cast<std::uint32_t>(mesh.vertices.size());
     const PlanetDefinition& planet = surface.planet();
+    const std::size_t pointCount = static_cast<std::size_t>(stride) * stride;
+
+    // Each authoritative terrain point is sampled exactly once for this patch. Normals are then
+    // reconstructed from the already sampled mesh grid, avoiding the old sampleSurface() path that
+    // performed two extra full procedural/hydrology queries per vertex just to estimate a normal.
+    std::vector<glm::dvec3> directions(pointCount);
+    std::vector<glm::dvec3> positions(pointCount);
+    std::vector<PlanetTerrainSample> terrainSamples(pointCount);
 
     for (std::uint32_t y = 0; y <= resolution; ++y) {
         const double fy = static_cast<double>(y) / static_cast<double>(resolution);
@@ -147,16 +155,37 @@ void appendPatch(
         for (std::uint32_t x = 0; x <= resolution; ++x) {
             const double fx = static_cast<double>(x) / static_cast<double>(resolution);
             const double u = node.u0 + node.size * fx;
-            const glm::dvec3 direction = cubeSphereDirection(node.face, u, v);
-            const PlanetSurfaceSample surfaceSample = surface.sampleSurface(direction);
+            const std::size_t index = static_cast<std::size_t>(y) * stride + x;
+            directions[index] = cubeSphereDirection(node.face, u, v);
+            terrainSamples[index] = surface.sample(directions[index]);
+            positions[index] = directions[index]
+                * (planet.radius + terrainSamples[index].elevationMeters);
+        }
+    }
+
+    for (std::uint32_t y = 0; y <= resolution; ++y) {
+        const std::uint32_t y0 = y > 0U ? y - 1U : y;
+        const std::uint32_t y1 = y < resolution ? y + 1U : y;
+        for (std::uint32_t x = 0; x <= resolution; ++x) {
+            const std::uint32_t x0 = x > 0U ? x - 1U : x;
+            const std::uint32_t x1 = x < resolution ? x + 1U : x;
+            const std::size_t index = static_cast<std::size_t>(y) * stride + x;
+            const glm::dvec3 du = positions[static_cast<std::size_t>(y) * stride + x1]
+                - positions[static_cast<std::size_t>(y) * stride + x0];
+            const glm::dvec3 dv = positions[static_cast<std::size_t>(y1) * stride + x]
+                - positions[static_cast<std::size_t>(y0) * stride + x];
+            glm::dvec3 normal = safeNormalize(glm::cross(du, dv), directions[index]);
+            if (glm::dot(normal, directions[index]) < 0.0) normal = -normal;
+
             PlanetVertex vertex{};
-            vertex.position = glm::vec3(surfaceSample.position);
-            vertex.normal = glm::vec3(surfaceSample.normal);
-            vertex.color = planetTerrainColor(planet, surfaceSample.terrain);
-            vertex.material = planetTerrainMaterial(planet, surfaceSample.terrain);
+            vertex.position = glm::vec3(positions[index]);
+            vertex.normal = glm::vec3(normal);
+            vertex.color = planetTerrainColor(planet, terrainSamples[index]);
+            vertex.material = planetTerrainMaterial(planet, terrainSamples[index]);
             mesh.vertices.push_back(vertex);
         }
     }
+
     for (std::uint32_t y = 0; y < resolution; ++y) {
         for (std::uint32_t x = 0; x < resolution; ++x) {
             const std::uint32_t i0 = base + y * stride + x;
