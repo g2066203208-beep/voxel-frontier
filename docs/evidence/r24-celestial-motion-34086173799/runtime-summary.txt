@@ -1,0 +1,143 @@
+=== accelerated vector/quaternion spin ===
+R24.2 view: earth-globe distance_km=24000
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+=== escape inheritance ===
+R24 escape inheritance armed: boundary_margin_km=5 parent_orbit_mps=29785.1
+R24 escape inheritance: frame=aster distance_km=7666.1 inherited_orbit_mps=24751.0 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=aster distance_km=7667.7 inherited_orbit_mps=26252.6 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=aster distance_km=7668.8 inherited_orbit_mps=27310.8 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=aster distance_km=7669.5 inherited_orbit_mps=28056.5 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=aster distance_km=7670.1 inherited_orbit_mps=28582.0 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=aster distance_km=7670.5 inherited_orbit_mps=28952.2 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=aster distance_km=7670.7 inherited_orbit_mps=29213.2 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=aster distance_km=7670.9 inherited_orbit_mps=29397.1 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7671.1 inherited_orbit_mps=29526.6 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7671.2 inherited_orbit_mps=29526.6 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7671.3 inherited_orbit_mps=29526.6 transverse_relative_mps=81.7 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1300.33 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1300.33 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1300.33 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 22
+R24 escape inheritance: frame=inertial distance_km=7671.5 inherited_orbit_mps=16325.1 transverse_relative_mps=13237.9 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7671.6 inherited_orbit_mps=7022.2 transverse_relative_mps=22602.1 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7671.7 inherited_orbit_mps=13668.0 transverse_relative_mps=15911.9 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7671.9 inherited_orbit_mps=18351.3 transverse_relative_mps=11197.5 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7672.0 inherited_orbit_mps=21651.5 transverse_relative_mps=7875.3 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7672.1 inherited_orbit_mps=23977.1 transverse_relative_mps=5534.3 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7672.3 inherited_orbit_mps=25616.0 transverse_relative_mps=3884.7 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7672.4 inherited_orbit_mps=26770.8 transverse_relative_mps=2722.3 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7672.5 inherited_orbit_mps=27584.7 transverse_relative_mps=1903.4 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7672.7 inherited_orbit_mps=28158.2 transverse_relative_mps=1326.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7672.8 inherited_orbit_mps=28562.3 transverse_relative_mps=920.4 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1301.82 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1301.82 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1301.82 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7673.0 inherited_orbit_mps=28847.1 transverse_relative_mps=634.7 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7673.1 inherited_orbit_mps=29047.8 transverse_relative_mps=434.2 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7673.2 inherited_orbit_mps=29189.2 transverse_relative_mps=294.1 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7673.4 inherited_orbit_mps=29288.8 transverse_relative_mps=197.4 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7673.5 inherited_orbit_mps=29359.1 transverse_relative_mps=132.5 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7673.6 inherited_orbit_mps=29408.6 transverse_relative_mps=92.0 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7673.8 inherited_orbit_mps=29443.4 transverse_relative_mps=71.0 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7673.9 inherited_orbit_mps=29468.0 transverse_relative_mps=64.1 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7674.0 inherited_orbit_mps=29485.3 transverse_relative_mps=64.7 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7674.2 inherited_orbit_mps=29497.5 transverse_relative_mps=67.9 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7674.3 inherited_orbit_mps=29506.1 transverse_relative_mps=71.3 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1303.30 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1303.30 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1303.30 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7674.4 inherited_orbit_mps=29512.2 transverse_relative_mps=74.3 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7674.6 inherited_orbit_mps=29516.5 transverse_relative_mps=76.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7674.7 inherited_orbit_mps=29519.5 transverse_relative_mps=78.3 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7674.8 inherited_orbit_mps=29521.6 transverse_relative_mps=79.5 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7675.0 inherited_orbit_mps=29523.1 transverse_relative_mps=80.4 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7675.1 inherited_orbit_mps=29524.1 transverse_relative_mps=81.1 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7675.2 inherited_orbit_mps=29524.9 transverse_relative_mps=81.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7675.4 inherited_orbit_mps=29525.4 transverse_relative_mps=81.9 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7675.5 inherited_orbit_mps=29525.8 transverse_relative_mps=82.1 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7675.6 inherited_orbit_mps=29526.0 transverse_relative_mps=82.3 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7675.8 inherited_orbit_mps=29526.2 transverse_relative_mps=82.4 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1304.78 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1304.78 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1304.78 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7675.9 inherited_orbit_mps=29526.3 transverse_relative_mps=82.5 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7676.1 inherited_orbit_mps=29526.4 transverse_relative_mps=82.5 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7676.2 inherited_orbit_mps=29526.5 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7676.3 inherited_orbit_mps=29526.5 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7676.5 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7676.6 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7676.7 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7676.9 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7677.0 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7677.1 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7677.3 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1306.27 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1306.27 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1306.27 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7677.4 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7677.5 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7677.7 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7677.8 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7677.9 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7678.1 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7678.2 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7678.3 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7678.5 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7678.6 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7678.8 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1307.75 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1307.75 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1307.75 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7678.9 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7679.0 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7679.2 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7679.3 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7679.4 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7679.6 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7679.7 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7679.8 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7680.0 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7680.1 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7680.2 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1309.24 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1309.24 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1309.24 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7680.4 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7680.5 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7680.6 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7680.8 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7680.9 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7681.0 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7681.2 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7681.3 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7681.5 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7681.6 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7681.7 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1310.72 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1310.72 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1310.72 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7681.9 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.0 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.1 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.3 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.4 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.5 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.7 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.8 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7682.9 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7683.1 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7683.2 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1312.21 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1312.21 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 45000 m/s | ALT 1312.21 km | LAND | STREAM READY | QLOD 694/L7 | cell 11806.8m | tris 110592+9696 | FPS 20
+R24 escape inheritance: frame=inertial distance_km=7683.3 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7683.5 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7683.6 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7683.7 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7683.9 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7684.0 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0
+R24 escape inheritance: frame=inertial distance_km=7684.1 inherited_orbit_mps=29526.6 transverse_relative_mps=82.6 effective_time_scale=1.0

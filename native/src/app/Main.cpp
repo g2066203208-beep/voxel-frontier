@@ -236,8 +236,8 @@ int main() {
             try { celestialTimeScale = std::clamp(std::stod(scaleEnv), 0.0, 200000.0); }
             catch (...) { celestialTimeScale = 240.0; }
         }
-        const double celestialFixedStepSeconds = celestialTimeScale <= 1000.0 ? 5.0
-            : (celestialTimeScale <= 20000.0 ? 15.0 : 60.0);
+        const double celestialFixedStepSeconds =
+            vf::recommendedCelestialFixedStepSeconds(celestialTimeScale);
         vf::CelestialSimulationClock celestialClock{{
             celestialFixedStepSeconds, celestialTimeScale, 4096U}};
 
@@ -323,6 +323,10 @@ int main() {
         }();
         const bool runtimeDiagnosticsStdout = [] {
             const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
+            return value != nullptr && std::string_view{value} == "1";
+        }();
+        const bool captureEscapeInheritance = [] {
+            const char* value = std::getenv("VF_CAPTURE_ESCAPE_INHERITANCE");
             return value != nullptr && std::string_view{value} == "1";
         }();
         if (captureHighSpeed) {
@@ -474,6 +478,28 @@ int main() {
         const vf::CelestialBody* initialAster = celestial.body(asterId);
         if (initialAster == nullptr) throw std::runtime_error("Aster failed to initialize");
         vf::CelestialPhysicsFrame asterFrame{asterId};
+
+        if (captureEscapeInheritance) {
+            // Start only five kilometres inside the real precision-bubble boundary. The camera is
+            // still owned by Aster, so the outward local velocity is converted through the same
+            // CelestialPhysicsFrame used by production flight: orbital velocity + omega x r are
+            // inherited automatically at the exact handoff to inertial space.
+            const glm::dvec3 escapeDirection = spawnDirection;
+            const double localRadius = std::max(
+                planet.radius + 1000.0, initialAster->physicsBubbleRadiusMeters - 5000.0);
+            const glm::dvec3 localPosition = escapeDirection * localRadius;
+            const glm::dvec3 localVelocity = escapeDirection * 45000.0;
+            camera.setExternalWorldState(
+                asterFrame.toWorldPosition(*initialAster, localPosition),
+                asterFrame.toWorldVelocity(*initialAster, localPosition, localVelocity),
+                false);
+            camera.setFlightMode(true);
+            camera.setCreativeFlightSpeedMps(45000.0);
+            camera.setViewDirectionWorld(
+                initialAster->position - camera.position(), camera.up());
+            std::cout << "R24 escape inheritance armed: boundary_margin_km=5"
+                      << " parent_orbit_mps=" << glm::length(initialAster->linearVelocity) << '\n';
+        }
 
         const glm::dquat initialInverseAster = glm::conjugate(glm::normalize(initialAster->orientation));
         const glm::dvec3 initialCameraPlanet = initialInverseAster * (camera.position() - initialAster->position);
@@ -648,9 +674,21 @@ int main() {
                 1.0 / 500.0,
                 0.05);
             previous = now;
+
+            // Surface gameplay may use accelerated day/orbit time. Free inertial player space may
+            // not: until all free-space rigid bodies participate in a global time-warp integrator,
+            // running planets at 240x while the player advances at 1x is physically impossible and
+            // makes the parent planet shoot away. External evidence views are camera tools, not a
+            // free player, so they retain the requested acceleration.
+            const bool freePlayerInertialSpace = camera.physicsFrameBodyId() == 0U
+                && celestialViewMode.empty();
+            const double effectiveCelestialTimeScale = freePlayerInertialSpace
+                ? 1.0
+                : celestialTimeScale;
+            celestialClock.setTimeScale(effectiveCelestialTimeScale);
             celestialClock.advance(dt, [&](double astroDt) {
-                // One authoritative step advances N-body/spin plus every registered planetary
-                // service on the same bounded simulated-time sequence.
+                // One authoritative step advances double-precision N-body vectors and quaternion
+                // spin on the same bounded simulated-time sequence.
                 planetaryBodies.step(astroDt);
             });
 
@@ -737,6 +775,22 @@ int main() {
             if (trackMoonEvidence && currentMoon != nullptr) {
                 camera.setViewDirectionWorld(
                     currentMoon->position - camera.position(), camera.up());
+            }
+
+            if (captureEscapeInheritance && runtimeDiagnosticsStdout) {
+                const glm::dvec3 orbitDirection = safeNormalize(
+                    currentAster->linearVelocity, {0.0, 0.0, -1.0});
+                const glm::dvec3 relativePosition = camera.position() - currentAster->position;
+                const glm::dvec3 radial = safeNormalize(relativePosition, spawnDirection);
+                const glm::dvec3 relativeVelocity = camera.velocity() - currentAster->linearVelocity;
+                const glm::dvec3 transverseRelative = relativeVelocity
+                    - radial * glm::dot(relativeVelocity, radial);
+                std::cout << "R24 escape inheritance: frame="
+                          << (camera.physicsFrameBodyId() == asterId ? "aster" : "inertial")
+                          << " distance_km=" << glm::length(relativePosition) / 1000.0
+                          << " inherited_orbit_mps=" << glm::dot(camera.velocity(), orbitDirection)
+                          << " transverse_relative_mps=" << glm::length(transverseRelative)
+                          << " effective_time_scale=" << effectiveCelestialTimeScale << '\n';
             }
 
             const glm::dvec3 cameraSurface = toSurfacePoint(cameraPlanet);

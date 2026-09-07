@@ -1,0 +1,7 @@
+workflow_sha=7950305320baab4dafd0821a0b79deff700d3bb8
+workflow_run=34086173799
+full_tests=success
+focused_tests=success
+vulkan=success
+smooth_spin_capture=success
+escape_inheritance_capture=success

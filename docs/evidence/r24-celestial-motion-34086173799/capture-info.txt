@@ -1,0 +1,38 @@
+earth-0.png attempt=1 colors=1
+earth-0.png attempt=2 colors=1
+earth-0.png attempt=3 colors=17070
+r24-celestial-motion-evidence/space-spin/earth-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 199328B 0.000u 0:00.000
+earth-1.png attempt=1 colors=18492
+r24-celestial-motion-evidence/space-spin/earth-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 200637B 0.000u 0:00.000
+earth-2.png attempt=1 colors=21223
+r24-celestial-motion-evidence/space-spin/earth-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 201466B 0.000u 0:00.000
+earth-3.png attempt=1 colors=23298
+r24-celestial-motion-evidence/space-spin/earth-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 203325B 0.000u 0:00.000
+earth-4.png attempt=1 colors=26097
+r24-celestial-motion-evidence/space-spin/earth-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 205021B 0.000u 0:00.000
+earth-5.png attempt=1 colors=28473
+r24-celestial-motion-evidence/space-spin/earth-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 207747B 0.000u 0:00.000
+earth-6.png attempt=1 colors=30489
+r24-celestial-motion-evidence/space-spin/earth-6.png PNG 1600x900 1600x900+0+0 8-bit sRGB 210280B 0.000u 0:00.000
+earth-7.png attempt=1 colors=32944
+r24-celestial-motion-evidence/space-spin/earth-7.png PNG 1600x900 1600x900+0+0 8-bit sRGB 210992B 0.000u 0:00.000
+before.png attempt=1 colors=1
+before.png attempt=2 colors=1
+before.png attempt=3 colors=51661
+r24-celestial-motion-evidence/escape/before.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.51458MiB 0.000u 0:00.000
+after-0.png attempt=1 colors=51675
+r24-celestial-motion-evidence/escape/after-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.51566MiB 0.000u 0:00.000
+after-1.png attempt=1 colors=51590
+r24-celestial-motion-evidence/escape/after-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.51555MiB 0.000u 0:00.000
+after-2.png attempt=1 colors=51568
+r24-celestial-motion-evidence/escape/after-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.51422MiB 0.000u 0:00.000
+after-3.png attempt=1 colors=51648
+r24-celestial-motion-evidence/escape/after-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.51551MiB 0.000u 0:00.000
+after-4.png attempt=1 colors=51615
+r24-celestial-motion-evidence/escape/after-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.5147MiB 0.000u 0:00.000
+after-5.png attempt=1 colors=51619
+r24-celestial-motion-evidence/escape/after-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.51596MiB 0.000u 0:00.000
+after-6.png attempt=1 colors=51648
+r24-celestial-motion-evidence/escape/after-6.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.5149MiB 0.000u 0:00.000
+after-7.png attempt=1 colors=51605
+r24-celestial-motion-evidence/escape/after-7.png PNG 1600x900 1600x900+0+0 8-bit sRGB 1.51533MiB 0.000u 0:00.000

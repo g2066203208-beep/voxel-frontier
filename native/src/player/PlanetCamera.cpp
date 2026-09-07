@@ -286,9 +286,21 @@ void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
     surfaceTransportValid_ = true;
     trackedPhysicsFrameOrientation_ = glm::normalize(body.orientation);
     trackedPhysicsFrameOrientationValid_ = true;
+    // The rotating local frame is now authoritative; any old free-space carrier is stale.
+    inertialFlightCarrierValid_ = false;
+    inertialFlightCarrierVelocity_ = {};
+    inertialFlightControlVelocity_ = {};
 }
 
 void PlanetCamera::leavePhysicsFrame() noexcept {
+    // syncWorldStateFromLocal() has already produced the exact inertial velocity, including
+    // body.linearVelocity + omega x r + local relative velocity. Preserve it as the creative-flight
+    // carrier instead of letting free-space controls damp the whole world velocity toward zero.
+    if (flightMode_) {
+        inertialFlightCarrierVelocity_ = velocity_;
+        inertialFlightControlVelocity_ = {};
+        inertialFlightCarrierValid_ = true;
+    }
     inPhysicsFrame_ = false;
     physicsFrameBodyId_ = 0U;
     physicsFrame_.setBodyId(0U);
@@ -360,14 +372,7 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         }
     }
 
-    if (input.toggleFlight) {
-        flightMode_ = !flightMode_;
-        grounded_ = false;
-        if (flightMode_) {
-            if (inPhysicsFrame_) localVelocity_ = {};
-            else velocity_ = {};
-        }
-    }
+    if (input.toggleFlight) setFlightMode(!flightMode_);
 
     if (physicsFrameBody() != nullptr) {
         const glm::dvec3 surfaceUpWorld = currentSurfaceUpWorld();
@@ -485,13 +490,24 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
         if (glm::dot(right, right) < 1.0e-10) right = stablePerpendicular(cameraUp);
         else right = glm::normalize(right);
         if (flightMode_) {
+            if (!inertialFlightCarrierValid_) {
+                inertialFlightCarrierVelocity_ = velocity_;
+                inertialFlightControlVelocity_ = {};
+                inertialFlightCarrierValid_ = true;
+            }
             glm::dvec3 move = forward * input.forward + right * input.right + cameraUp * input.vertical;
             const double moveLength = glm::length(move);
             if (moveLength > 1.0) move /= moveLength;
             const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
-            const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
-            velocity_ += (desired - velocity_) * (1.0 - std::exp(-7.0 * dt));
+            const glm::dvec3 desiredControl = moveLength > 1.0e-8
+                ? move * targetSpeed
+                : glm::dvec3{};
+            inertialFlightControlVelocity_ +=
+                (desiredControl - inertialFlightControlVelocity_) * (1.0 - std::exp(-7.0 * dt));
+            velocity_ = inertialFlightCarrierVelocity_ + inertialFlightControlVelocity_;
         } else {
+            inertialFlightCarrierValid_ = false;
+            inertialFlightControlVelocity_ = {};
             velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
         }
         position_ += velocity_ * dt;

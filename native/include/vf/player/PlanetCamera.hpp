@@ -96,11 +96,19 @@ public:
     [[nodiscard]] double flightSpeedMps() const noexcept { return creativeFlightSpeedMps_; }
 
     void setFlightMode(bool enabled) noexcept {
+        if (flightMode_ == enabled) return;
         flightMode_ = enabled;
         grounded_ = false;
-        if (enabled) {
-            if (inPhysicsFrame_) localVelocity_ = {};
-            else velocity_ = {};
+        if (enabled && !inPhysicsFrame_) {
+            // Creative controls are relative to the inertial carrier inherited from the frame we
+            // just left. Never zero the absolute world velocity: that would erase a planet's
+            // ~30 km/s orbital velocity and make the planet visibly fly away from the player.
+            inertialFlightCarrierVelocity_ = velocity_;
+            inertialFlightControlVelocity_ = {};
+            inertialFlightCarrierValid_ = true;
+        } else if (!enabled) {
+            inertialFlightCarrierValid_ = false;
+            inertialFlightControlVelocity_ = {};
         }
     }
 
@@ -153,6 +161,13 @@ private:
     glm::dvec3 localPosition_{};
     glm::dvec3 localVelocity_{};
     bool inPhysicsFrame_{};
+
+    // Outside every rotating-body precision frame, creative controls operate relative to this
+    // inertial carrier. The carrier includes parent orbital velocity, body-spin tangential velocity
+    // and any already-existing escape velocity at the exact frame handoff.
+    glm::dvec3 inertialFlightCarrierVelocity_{};
+    glm::dvec3 inertialFlightControlVelocity_{};
+    bool inertialFlightCarrierValid_{};
 
     glm::dvec3 viewForward_{0.0, 0.0, -1.0};
     glm::dvec3 viewUp_{0.0, 1.0, 0.0};

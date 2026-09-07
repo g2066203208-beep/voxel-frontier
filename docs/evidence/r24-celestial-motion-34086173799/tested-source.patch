@@ -1,0 +1,338 @@
+diff --git a/native/include/vf/player/PlanetCamera.hpp b/native/include/vf/player/PlanetCamera.hpp
+index 1a905b5..5f62f2c 100644
+--- a/native/include/vf/player/PlanetCamera.hpp
++++ b/native/include/vf/player/PlanetCamera.hpp
+@@ -96,11 +96,19 @@ public:
+     [[nodiscard]] double flightSpeedMps() const noexcept { return creativeFlightSpeedMps_; }
+ 
+     void setFlightMode(bool enabled) noexcept {
++        if (flightMode_ == enabled) return;
+         flightMode_ = enabled;
+         grounded_ = false;
+-        if (enabled) {
+-            if (inPhysicsFrame_) localVelocity_ = {};
+-            else velocity_ = {};
++        if (enabled && !inPhysicsFrame_) {
++            // Creative controls are relative to the inertial carrier inherited from the frame we
++            // just left. Never zero the absolute world velocity: that would erase a planet's
++            // ~30 km/s orbital velocity and make the planet visibly fly away from the player.
++            inertialFlightCarrierVelocity_ = velocity_;
++            inertialFlightControlVelocity_ = {};
++            inertialFlightCarrierValid_ = true;
++        } else if (!enabled) {
++            inertialFlightCarrierValid_ = false;
++            inertialFlightControlVelocity_ = {};
+         }
+     }
+ 
+@@ -154,6 +162,13 @@ private:
+     glm::dvec3 localVelocity_{};
+     bool inPhysicsFrame_{};
+ 
++    // Outside every rotating-body precision frame, creative controls operate relative to this
++    // inertial carrier. The carrier includes parent orbital velocity, body-spin tangential velocity
++    // and any already-existing escape velocity at the exact frame handoff.
++    glm::dvec3 inertialFlightCarrierVelocity_{};
++    glm::dvec3 inertialFlightControlVelocity_{};
++    bool inertialFlightCarrierValid_{};
++
+     glm::dvec3 viewForward_{0.0, 0.0, -1.0};
+     glm::dvec3 viewUp_{0.0, 1.0, 0.0};
+     glm::dvec3 transportedSurfaceUp_{0.0, 1.0, 0.0};
+diff --git a/native/include/vf/world/AstroTime.hpp b/native/include/vf/world/AstroTime.hpp
+index c90709f..c743344 100644
+--- a/native/include/vf/world/AstroTime.hpp
++++ b/native/include/vf/world/AstroTime.hpp
+@@ -58,6 +58,15 @@ struct AstroTime {
+     }
+ };
+ 
++[[nodiscard]] inline double recommendedCelestialFixedStepSeconds(double timeScale) noexcept {
++    if (!std::isfinite(timeScale) || timeScale <= 0.0) return 1.0 / 120.0;
++    if (timeScale <= 4.0) return 1.0 / 120.0;
++    if (timeScale <= 240.0) return 0.25;
++    if (timeScale <= 1000.0) return 1.0;
++    if (timeScale <= 20000.0) return 5.0;
++    return 30.0;
++}
++
+ struct CelestialClockConfig {
+     // Major-body symplectic/Verlet work remains on a bounded fixed step. 60 s is small enough for
+     // an Earth/Moon-like hierarchy while still being inexpensive compared with render/terrain work.
+diff --git a/native/src/app/Main.cpp b/native/src/app/Main.cpp
+index e4ff4af..49828de 100644
+--- a/native/src/app/Main.cpp
++++ b/native/src/app/Main.cpp
+@@ -236,8 +236,8 @@ int main() {
+             try { celestialTimeScale = std::clamp(std::stod(scaleEnv), 0.0, 200000.0); }
+             catch (...) { celestialTimeScale = 240.0; }
+         }
+-        const double celestialFixedStepSeconds = celestialTimeScale <= 1000.0 ? 5.0
+-            : (celestialTimeScale <= 20000.0 ? 15.0 : 60.0);
++        const double celestialFixedStepSeconds =
++            vf::recommendedCelestialFixedStepSeconds(celestialTimeScale);
+         vf::CelestialSimulationClock celestialClock{{
+             celestialFixedStepSeconds, celestialTimeScale, 4096U}};
+ 
+@@ -325,6 +325,10 @@ int main() {
+             const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
+             return value != nullptr && std::string_view{value} == "1";
+         }();
++        const bool captureEscapeInheritance = [] {
++            const char* value = std::getenv("VF_CAPTURE_ESCAPE_INHERITANCE");
++            return value != nullptr && std::string_view{value} == "1";
++        }();
+         if (captureHighSpeed) {
+             camera.setFlightMode(true);
+             camera.setCreativeFlightSpeedMps(500000.0);
+@@ -475,6 +479,28 @@ int main() {
+         if (initialAster == nullptr) throw std::runtime_error("Aster failed to initialize");
+         vf::CelestialPhysicsFrame asterFrame{asterId};
+ 
++        if (captureEscapeInheritance) {
++            // Start only five kilometres inside the real precision-bubble boundary. The camera is
++            // still owned by Aster, so the outward local velocity is converted through the same
++            // CelestialPhysicsFrame used by production flight: orbital velocity + omega x r are
++            // inherited automatically at the exact handoff to inertial space.
++            const glm::dvec3 escapeDirection = spawnDirection;
++            const double localRadius = std::max(
++                planet.radius + 1000.0, initialAster->physicsBubbleRadiusMeters - 5000.0);
++            const glm::dvec3 localPosition = escapeDirection * localRadius;
++            const glm::dvec3 localVelocity = escapeDirection * 45000.0;
++            camera.setExternalWorldState(
++                asterFrame.toWorldPosition(*initialAster, localPosition),
++                asterFrame.toWorldVelocity(*initialAster, localPosition, localVelocity),
++                false);
++            camera.setFlightMode(true);
++            camera.setCreativeFlightSpeedMps(45000.0);
++            camera.setViewDirectionWorld(
++                initialAster->position - camera.position(), camera.up());
++            std::cout << "R24 escape inheritance armed: boundary_margin_km=5"
++                      << " parent_orbit_mps=" << glm::length(initialAster->linearVelocity) << '\n';
++        }
++
+         const glm::dquat initialInverseAster = glm::conjugate(glm::normalize(initialAster->orientation));
+         const glm::dvec3 initialCameraPlanet = initialInverseAster * (camera.position() - initialAster->position);
+         const glm::dvec3 patchUp = safeNormalize(initialCameraPlanet);
+@@ -648,9 +674,21 @@ int main() {
+                 1.0 / 500.0,
+                 0.05);
+             previous = now;
++
++            // Surface gameplay may use accelerated day/orbit time. Free inertial player space may
++            // not: until all free-space rigid bodies participate in a global time-warp integrator,
++            // running planets at 240x while the player advances at 1x is physically impossible and
++            // makes the parent planet shoot away. External evidence views are camera tools, not a
++            // free player, so they retain the requested acceleration.
++            const bool freePlayerInertialSpace = camera.physicsFrameBodyId() == 0U
++                && celestialViewMode.empty();
++            const double effectiveCelestialTimeScale = freePlayerInertialSpace
++                ? 1.0
++                : celestialTimeScale;
++            celestialClock.setTimeScale(effectiveCelestialTimeScale);
+             celestialClock.advance(dt, [&](double astroDt) {
+-                // One authoritative step advances N-body/spin plus every registered planetary
+-                // service on the same bounded simulated-time sequence.
++                // One authoritative step advances double-precision N-body vectors and quaternion
++                // spin on the same bounded simulated-time sequence.
+                 planetaryBodies.step(astroDt);
+             });
+ 
+@@ -739,6 +777,22 @@ int main() {
+                     currentMoon->position - camera.position(), camera.up());
+             }
+ 
++            if (captureEscapeInheritance && runtimeDiagnosticsStdout) {
++                const glm::dvec3 orbitDirection = safeNormalize(
++                    currentAster->linearVelocity, {0.0, 0.0, -1.0});
++                const glm::dvec3 relativePosition = camera.position() - currentAster->position;
++                const glm::dvec3 radial = safeNormalize(relativePosition, spawnDirection);
++                const glm::dvec3 relativeVelocity = camera.velocity() - currentAster->linearVelocity;
++                const glm::dvec3 transverseRelative = relativeVelocity
++                    - radial * glm::dot(relativeVelocity, radial);
++                std::cout << "R24 escape inheritance: frame="
++                          << (camera.physicsFrameBodyId() == asterId ? "aster" : "inertial")
++                          << " distance_km=" << glm::length(relativePosition) / 1000.0
++                          << " inherited_orbit_mps=" << glm::dot(camera.velocity(), orbitDirection)
++                          << " transverse_relative_mps=" << glm::length(transverseRelative)
++                          << " effective_time_scale=" << effectiveCelestialTimeScale << '\n';
++            }
++
+             const glm::dvec3 cameraSurface = toSurfacePoint(cameraPlanet);
+             const glm::dvec3 forwardPlanet = safeNormalize(
+                 inverseAster * camera.forwardDirection(), {0.0, 0.0, -1.0});
+diff --git a/native/src/player/PlanetCamera.cpp b/native/src/player/PlanetCamera.cpp
+index 0a59cc1..07b5204 100644
+--- a/native/src/player/PlanetCamera.cpp
++++ b/native/src/player/PlanetCamera.cpp
+@@ -286,9 +286,21 @@ void PlanetCamera::enterPhysicsFrame(const CelestialBody& body) noexcept {
+     surfaceTransportValid_ = true;
+     trackedPhysicsFrameOrientation_ = glm::normalize(body.orientation);
+     trackedPhysicsFrameOrientationValid_ = true;
++    // The rotating local frame is now authoritative; any old free-space carrier is stale.
++    inertialFlightCarrierValid_ = false;
++    inertialFlightCarrierVelocity_ = {};
++    inertialFlightControlVelocity_ = {};
+ }
+ 
+ void PlanetCamera::leavePhysicsFrame() noexcept {
++    // syncWorldStateFromLocal() has already produced the exact inertial velocity, including
++    // body.linearVelocity + omega x r + local relative velocity. Preserve it as the creative-flight
++    // carrier instead of letting free-space controls damp the whole world velocity toward zero.
++    if (flightMode_) {
++        inertialFlightCarrierVelocity_ = velocity_;
++        inertialFlightControlVelocity_ = {};
++        inertialFlightCarrierValid_ = true;
++    }
+     inPhysicsFrame_ = false;
+     physicsFrameBodyId_ = 0U;
+     physicsFrame_.setBodyId(0U);
+@@ -360,14 +372,7 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
+         }
+     }
+ 
+-    if (input.toggleFlight) {
+-        flightMode_ = !flightMode_;
+-        grounded_ = false;
+-        if (flightMode_) {
+-            if (inPhysicsFrame_) localVelocity_ = {};
+-            else velocity_ = {};
+-        }
+-    }
++    if (input.toggleFlight) setFlightMode(!flightMode_);
+ 
+     if (physicsFrameBody() != nullptr) {
+         const glm::dvec3 surfaceUpWorld = currentSurfaceUpWorld();
+@@ -485,13 +490,24 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
+         if (glm::dot(right, right) < 1.0e-10) right = stablePerpendicular(cameraUp);
+         else right = glm::normalize(right);
+         if (flightMode_) {
++            if (!inertialFlightCarrierValid_) {
++                inertialFlightCarrierVelocity_ = velocity_;
++                inertialFlightControlVelocity_ = {};
++                inertialFlightCarrierValid_ = true;
++            }
+             glm::dvec3 move = forward * input.forward + right * input.right + cameraUp * input.vertical;
+             const double moveLength = glm::length(move);
+             if (moveLength > 1.0) move /= moveLength;
+             const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
+-            const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
+-            velocity_ += (desired - velocity_) * (1.0 - std::exp(-7.0 * dt));
++            const glm::dvec3 desiredControl = moveLength > 1.0e-8
++                ? move * targetSpeed
++                : glm::dvec3{};
++            inertialFlightControlVelocity_ +=
++                (desiredControl - inertialFlightControlVelocity_) * (1.0 - std::exp(-7.0 * dt));
++            velocity_ = inertialFlightCarrierVelocity_ + inertialFlightControlVelocity_;
+         } else {
++            inertialFlightCarrierValid_ = false;
++            inertialFlightControlVelocity_ = {};
+             velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
+         }
+         position_ += velocity_ * dt;
+diff --git a/native/tests/CelestialSystemTests.cpp b/native/tests/CelestialSystemTests.cpp
+index b2a0479..8c0a175 100644
+--- a/native/tests/CelestialSystemTests.cpp
++++ b/native/tests/CelestialSystemTests.cpp
+@@ -173,6 +173,33 @@ void testSpinAndBoundOrbit() {
+         "planet spin must evolve orientation");
+ }
+ 
++
++void testRecommendedWarpStepHasNoFrozenDisplayFrames() {
++    constexpr double scale = 240.0;
++    const double stepSeconds = vf::recommendedCelestialFixedStepSeconds(scale);
++    require(stepSeconds <= 0.25,
++        "240x gameplay time must use a sub-second celestial integration step");
++
++    vf::CelestialSimulationClock clock{{stepSeconds, scale, 4096U}};
++    vf::CelestialSystem system;
++    vf::CelestialBody body{};
++    body.radiusMeters = 10.0;
++    body.massKg = 1.0e10;
++    body.spinAxis = glm::normalize(glm::dvec3{0.2, 0.96, 0.1});
++    body.spinRateRadPerSecond = 0.02;
++    const auto id = system.addBody(body);
++
++    for (int frame = 0; frame < 120; ++frame) {
++        const glm::dquat before = system.body(id)->orientation;
++        const std::size_t steps = clock.advance(1.0 / 60.0, [&](double dt) { system.step(dt); });
++        require(steps > 0U,
++            "240x celestial motion must not freeze for a display frame and then jump later");
++        const glm::dquat after = system.body(id)->orientation;
++        require(std::abs(glm::dot(before, after)) < 0.999999999,
++            "quaternion spin must evolve continuously on every accelerated display frame");
++    }
++}
++
+ void testKeplerianStateEnergyIdentity() {
+     constexpr double mu = 3.98600435507e14;
+     vf::KeplerianElements elements{};
+@@ -453,6 +480,7 @@ int main() {
+     testAtmosphereFadesToVacuum();
+     testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace();
+     testSpinAndBoundOrbit();
++    testRecommendedWarpStepHasNoFrozenDisplayFrames();
+     testKeplerianStateEnergyIdentity();
+     testNBodyStepMovesBothMassiveBodies();
+     testDipoleMagneticFieldFallsWithDistance();
+diff --git a/native/tests/InterplanetaryFlightTests.cpp b/native/tests/InterplanetaryFlightTests.cpp
+index 383a97a..86ca5c4 100644
+--- a/native/tests/InterplanetaryFlightTests.cpp
++++ b/native/tests/InterplanetaryFlightTests.cpp
+@@ -82,6 +82,47 @@ void testCreativeFlightIsExplicitAndGravityIndependent() {
+     require(!camera.flightMode(), "a second double-space event must disable creative flight");
+ }
+ 
++
++void testCreativeFlightPreservesParentOrbitalVelocityAfterBubbleExit() {
++    vf::PlanetDefinition terrain{};
++    terrain.radius = 100.0;
++    terrain.maxElevation = 0.0;
++    terrain.atmosphereHeight = 20.0;
++
++    vf::CelestialSystem celestial;
++    vf::CelestialBody home{};
++    home.name = "MovingHome";
++    home.radiusMeters = terrain.radius;
++    home.massKg = 9.81 * 100.0 * 100.0 / vf::CelestialSystem::kGravitationalConstant;
++    home.physicsBubbleRadiusMeters = 135.0;
++    home.linearVelocity = {0.0, 0.0, -30000.0};
++    home.spinAxis = {0.0, 1.0, 0.0};
++    home.spinRateRadPerSecond = 0.01;
++    const auto homeId = celestial.addBody(home);
++
++    vf::PlanetCamera camera{terrain, &celestial, homeId};
++    camera.setFlightMode(true);
++    camera.setCreativeFlightSpeedMps(1200.0);
++
++    vf::PlanetMovementInput rise{};
++    rise.vertical = 1.0;
++    rise.sprint = true;
++    for (int frame = 0; frame < 120 && camera.inPlanetPhysicsFrame(); ++frame)
++        camera.update(rise, 1.0 / 60.0);
++    require(!camera.inPlanetPhysicsFrame(),
++        "creative escape test must cross the moving planet precision-bubble boundary");
++
++    const double inheritedBefore = -camera.velocity().z;
++    require(inheritedBefore > 29000.0,
++        "frame handoff must initially include the parent's 30 km/s orbital carrier velocity");
++
++    vf::PlanetMovementInput idle{};
++    for (int frame = 0; frame < 180; ++frame) camera.update(idle, 1.0 / 60.0);
++    const double inheritedAfter = -camera.velocity().z;
++    require(inheritedAfter > 0.98 * inheritedBefore,
++        "idle free-space creative flight must preserve inherited orbital velocity instead of damping absolute world velocity toward zero");
++}
++
+ void testCreativeFlightCanLandOnSolidGround() {
+     vf::PlanetDefinition terrain{};
+     terrain.radius = 100.0;
+@@ -295,6 +336,7 @@ void testPhysicalGravityInsidePhysicsBubbleRemainsBallistic() {
+ 
+ int main() {
+     testCreativeFlightIsExplicitAndGravityIndependent();
++    testCreativeFlightPreservesParentOrbitalVelocityAfterBubbleExit();
+     testCreativeFlightCanLandOnSolidGround();
+     testPlanetaryPhysicsReferenceIsIndependentFromGravity();
+     testGroundedPlayerHasNoOrbitalFrameJitter();

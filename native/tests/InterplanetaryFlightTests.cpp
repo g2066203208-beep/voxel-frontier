@@ -82,6 +82,47 @@ void testCreativeFlightIsExplicitAndGravityIndependent() {
     require(!camera.flightMode(), "a second double-space event must disable creative flight");
 }
 
+
+void testCreativeFlightPreservesParentOrbitalVelocityAfterBubbleExit() {
+    vf::PlanetDefinition terrain{};
+    terrain.radius = 100.0;
+    terrain.maxElevation = 0.0;
+    terrain.atmosphereHeight = 20.0;
+
+    vf::CelestialSystem celestial;
+    vf::CelestialBody home{};
+    home.name = "MovingHome";
+    home.radiusMeters = terrain.radius;
+    home.massKg = 9.81 * 100.0 * 100.0 / vf::CelestialSystem::kGravitationalConstant;
+    home.physicsBubbleRadiusMeters = 135.0;
+    home.linearVelocity = {0.0, 0.0, -30000.0};
+    home.spinAxis = {0.0, 1.0, 0.0};
+    home.spinRateRadPerSecond = 0.01;
+    const auto homeId = celestial.addBody(home);
+
+    vf::PlanetCamera camera{terrain, &celestial, homeId};
+    camera.setFlightMode(true);
+    camera.setCreativeFlightSpeedMps(1200.0);
+
+    vf::PlanetMovementInput rise{};
+    rise.vertical = 1.0;
+    rise.sprint = true;
+    for (int frame = 0; frame < 120 && camera.inPlanetPhysicsFrame(); ++frame)
+        camera.update(rise, 1.0 / 60.0);
+    require(!camera.inPlanetPhysicsFrame(),
+        "creative escape test must cross the moving planet precision-bubble boundary");
+
+    const double inheritedBefore = -camera.velocity().z;
+    require(inheritedBefore > 29000.0,
+        "frame handoff must initially include the parent's 30 km/s orbital carrier velocity");
+
+    vf::PlanetMovementInput idle{};
+    for (int frame = 0; frame < 180; ++frame) camera.update(idle, 1.0 / 60.0);
+    const double inheritedAfter = -camera.velocity().z;
+    require(inheritedAfter > 0.98 * inheritedBefore,
+        "idle free-space creative flight must preserve inherited orbital velocity instead of damping absolute world velocity toward zero");
+}
+
 void testCreativeFlightCanLandOnSolidGround() {
     vf::PlanetDefinition terrain{};
     terrain.radius = 100.0;
@@ -295,6 +336,7 @@ void testPhysicalGravityInsidePhysicsBubbleRemainsBallistic() {
 
 int main() {
     testCreativeFlightIsExplicitAndGravityIndependent();
+    testCreativeFlightPreservesParentOrbitalVelocityAfterBubbleExit();
     testCreativeFlightCanLandOnSolidGround();
     testPlanetaryPhysicsReferenceIsIndependentFromGravity();
     testGroundedPlayerHasNoOrbitalFrameJitter();

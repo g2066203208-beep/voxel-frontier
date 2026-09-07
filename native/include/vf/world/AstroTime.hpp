@@ -58,6 +58,15 @@ struct AstroTime {
     }
 };
 
+[[nodiscard]] inline double recommendedCelestialFixedStepSeconds(double timeScale) noexcept {
+    if (!std::isfinite(timeScale) || timeScale <= 0.0) return 1.0 / 120.0;
+    if (timeScale <= 4.0) return 1.0 / 120.0;
+    if (timeScale <= 240.0) return 0.25;
+    if (timeScale <= 1000.0) return 1.0;
+    if (timeScale <= 20000.0) return 5.0;
+    return 30.0;
+}
+
 struct CelestialClockConfig {
     // Major-body symplectic/Verlet work remains on a bounded fixed step. 60 s is small enough for
     // an Earth/Moon-like hierarchy while still being inexpensive compared with render/terrain work.

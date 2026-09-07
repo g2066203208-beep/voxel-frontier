@@ -173,6 +173,33 @@ void testSpinAndBoundOrbit() {
         "planet spin must evolve orientation");
 }
 
+
+void testRecommendedWarpStepHasNoFrozenDisplayFrames() {
+    constexpr double scale = 240.0;
+    const double stepSeconds = vf::recommendedCelestialFixedStepSeconds(scale);
+    require(stepSeconds <= 0.25,
+        "240x gameplay time must use a sub-second celestial integration step");
+
+    vf::CelestialSimulationClock clock{{stepSeconds, scale, 4096U}};
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.radiusMeters = 10.0;
+    body.massKg = 1.0e10;
+    body.spinAxis = glm::normalize(glm::dvec3{0.2, 0.96, 0.1});
+    body.spinRateRadPerSecond = 0.02;
+    const auto id = system.addBody(body);
+
+    for (int frame = 0; frame < 120; ++frame) {
+        const glm::dquat before = system.body(id)->orientation;
+        const std::size_t steps = clock.advance(1.0 / 60.0, [&](double dt) { system.step(dt); });
+        require(steps > 0U,
+            "240x celestial motion must not freeze for a display frame and then jump later");
+        const glm::dquat after = system.body(id)->orientation;
+        require(std::abs(glm::dot(before, after)) < 0.999999999,
+            "quaternion spin must evolve continuously on every accelerated display frame");
+    }
+}
+
 void testKeplerianStateEnergyIdentity() {
     constexpr double mu = 3.98600435507e14;
     vf::KeplerianElements elements{};
@@ -453,6 +480,7 @@ int main() {
     testAtmosphereFadesToVacuum();
     testGameplaySphereOfInfluenceAllowsFreeInterplanetarySpace();
     testSpinAndBoundOrbit();
+    testRecommendedWarpStepHasNoFrozenDisplayFrames();
     testKeplerianStateEnergyIdentity();
     testNBodyStepMovesBothMassiveBodies();
     testDipoleMagneticFieldFallsWithDistance();
