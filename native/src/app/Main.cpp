@@ -343,6 +343,19 @@ int main() {
             camera.setCreativeFlightSpeedMps(500000.0);
             std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
         }
+        const bool captureHighSpeed = [] {
+            const char* value = std::getenv("VF_CAPTURE_HIGH_SPEED");
+            return value != nullptr && std::string_view{value} == "1";
+        }();
+        const bool runtimeDiagnosticsStdout = [] {
+            const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
+            return value != nullptr && std::string_view{value} == "1";
+        }();
+        if (captureHighSpeed) {
+            camera.setFlightMode(true);
+            camera.setCreativeFlightSpeedMps(500000.0);
+            std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
+        }
 
         constexpr double moonOrbitRadius = 384400000.0;
         vf::CelestialBody luna{};
@@ -425,6 +438,18 @@ int main() {
             // The per-frame capture probe below is placed on PlanetSurfaceAuthority and the camera
             // is aimed at its base from ordinary eye height, exposing even centimetre-scale gaps.
             std::cout << "R24 capture shadow-contact low-angle production view\n";
+        }
+
+        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
+            shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
+            const glm::dvec3 groundUp = camera.up();
+            const glm::dvec3 tangentForward = safeNormalize(
+                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
+                stableTangent(groundUp));
+            camera.setViewDirectionWorld(
+                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
+                groundUp);
+            std::cout << "R24 capture shadow-contact downward view\n";
         }
 
         if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
@@ -979,6 +1004,8 @@ int main() {
                       << renderer.dynamicTriangleCount()
                       << " | FPS " << std::setprecision(0) << fps;
                 platform.setWindowTitle(title.str());
+                if (runtimeDiagnosticsStdout)
+                    std::cout << "R24 DIAG | " << title.str() << '\n';
                 if (runtimeDiagnosticsStdout)
                     std::cout << "R24 DIAG | " << title.str() << '\n';
                 if (runtimeDiagnosticsStdout)

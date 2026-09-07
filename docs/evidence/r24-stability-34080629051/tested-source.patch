@@ -1,0 +1,82 @@
+diff --git a/native/include/vf/player/PlanetCamera.hpp b/native/include/vf/player/PlanetCamera.hpp
+index a44368d..898eb7a 100644
+--- a/native/include/vf/player/PlanetCamera.hpp
++++ b/native/include/vf/player/PlanetCamera.hpp
+@@ -3,6 +3,7 @@
+ #include <cmath>
+ #include <algorithm>
+ #include <algorithm>
++#include <algorithm>
+ #include <cstdint>
+ 
+ #include <glm/glm.hpp>
+@@ -117,6 +118,17 @@ public:
+     void setCreativeFlightSpeedMps(double speedMetersPerSecond) noexcept {
+         creativeFlightSpeedMps_ = std::clamp(speedMetersPerSecond, 1.0, 2000000.0);
+     }
++    void setFlightMode(bool enabled) noexcept {
++        flightMode_ = enabled;
++        grounded_ = false;
++        if (enabled) {
++            if (inPhysicsFrame_) localVelocity_ = {};
++            else velocity_ = {};
++        }
++    }
++    void setCreativeFlightSpeedMps(double speedMetersPerSecond) noexcept {
++        creativeFlightSpeedMps_ = std::clamp(speedMetersPerSecond, 1.0, 2000000.0);
++    }
+     [[nodiscard]] glm::dvec3 up() const;
+     [[nodiscard]] glm::dvec3 forwardDirection() const;
+     [[nodiscard]] double altitude() const;
+diff --git a/native/src/app/Main.cpp b/native/src/app/Main.cpp
+index eff36a4..5ebd18a 100644
+--- a/native/src/app/Main.cpp
++++ b/native/src/app/Main.cpp
+@@ -343,6 +343,19 @@ int main() {
+             camera.setCreativeFlightSpeedMps(500000.0);
+             std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
+         }
++        const bool captureHighSpeed = [] {
++            const char* value = std::getenv("VF_CAPTURE_HIGH_SPEED");
++            return value != nullptr && std::string_view{value} == "1";
++        }();
++        const bool runtimeDiagnosticsStdout = [] {
++            const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
++            return value != nullptr && std::string_view{value} == "1";
++        }();
++        if (captureHighSpeed) {
++            camera.setFlightMode(true);
++            camera.setCreativeFlightSpeedMps(500000.0);
++            std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
++        }
+ 
+         constexpr double moonOrbitRadius = 384400000.0;
+         vf::CelestialBody luna{};
+@@ -439,6 +452,18 @@ int main() {
+             std::cout << "R24 capture shadow-contact downward view\n";
+         }
+ 
++        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
++            shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
++            const glm::dvec3 groundUp = camera.up();
++            const glm::dvec3 tangentForward = safeNormalize(
++                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
++                stableTangent(groundUp));
++            camera.setViewDirectionWorld(
++                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
++                groundUp);
++            std::cout << "R24 capture shadow-contact downward view\n";
++        }
++
+         std::string celestialTargetMode{};
+         if (const char* celestialTargetEnv = std::getenv("VF_CELESTIAL_TARGET");
+             celestialTargetEnv != nullptr && *celestialTargetEnv != '\0') {
+@@ -983,6 +1008,8 @@ int main() {
+                     std::cout << "R24 DIAG | " << title.str() << '\n';
+                 if (runtimeDiagnosticsStdout)
+                     std::cout << "R24 DIAG | " << title.str() << '\n';
++                if (runtimeDiagnosticsStdout)
++                    std::cout << "R24 DIAG | " << title.str() << '\n';
+                 if (trackMoonEvidence && currentMoon != nullptr) {
+                     const glm::dvec3 moonDirectionWorld = safeNormalize(
+                         currentMoon->position - camera.position());
