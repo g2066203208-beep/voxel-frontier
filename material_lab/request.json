@@ -1,25 +1,25 @@
 {
   "materials": [
     {
-      "name":"vf_faceted_painted_basalt_02",
+      "name":"vf_faceted_painted_basalt_03",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfBasaltPainted",
-      "params":{"seed":240914,"cells":5,"jitter":0.78,"heightLevels":5,"crackWidth":0.070,"crackDepth":0.80,"bevel":0.100,"distortion":0.38,"damage":0.44,"microDetail":0.015,"normalStrength":9.0,"anisotropy":0.42,"facetStrength":0.95,"strokeStrength":0.22}
+      "params":{"seed":240914,"cells":4,"jitter":0.76,"heightLevels":4,"crackWidth":0.052,"crackDepth":0.76,"bevel":0.085,"distortion":0.20,"damage":0.42,"microDetail":0.010,"normalStrength":9.4,"anisotropy":0.48,"facetStrength":1.00,"strokeStrength":0.26}
     },
     {
-      "name":"vf_faceted_painted_granite_02",
+      "name":"vf_faceted_painted_granite_03",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfGranitePainted",
-      "params":{"seed":310402,"cells":5,"jitter":0.74,"heightLevels":4,"crackWidth":0.062,"crackDepth":0.70,"bevel":0.115,"distortion":0.32,"damage":0.38,"microDetail":0.020,"normalStrength":8.6,"anisotropy":0.36,"facetStrength":0.86,"strokeStrength":0.20}
+      "params":{"seed":310402,"cells":4,"jitter":0.72,"heightLevels":4,"crackWidth":0.048,"crackDepth":0.66,"bevel":0.095,"distortion":0.18,"damage":0.36,"microDetail":0.012,"normalStrength":9.0,"anisotropy":0.42,"facetStrength":0.92,"strokeStrength":0.24}
     },
     {
-      "name":"vf_faceted_painted_dirt_02",
+      "name":"vf_faceted_painted_dirt_03",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfDirtPainted",
-      "params":{"seed":420503,"cells":5,"jitter":0.82,"heightLevels":4,"crackWidth":0.055,"crackDepth":0.56,"bevel":0.135,"distortion":0.42,"damage":0.26,"microDetail":0.012,"normalStrength":7.7,"anisotropy":0.28,"facetStrength":0.60,"strokeStrength":0.18}
+      "params":{"seed":420503,"cells":5,"jitter":0.80,"heightLevels":4,"crackWidth":0.045,"crackDepth":0.50,"bevel":0.105,"distortion":0.24,"damage":0.22,"microDetail":0.010,"normalStrength":8.0,"anisotropy":0.32,"facetStrength":0.66,"strokeStrength":0.21}
     }
   ]
 }
