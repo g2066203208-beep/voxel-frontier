@@ -1,25 +1,11 @@
 {
   "materials": [
     {
-      "name":"vf_reference_sandstone_A",
+      "name":"vf_reference_sandstone_v6",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfLayeredSandstonePainted",
-      "params":{"seed":771204,"bands":8,"minSlabs":3,"maxSlabs":5,"crackChance":0.22,"chipStrength":0.62,"relief":1.18,"normalStrength":9.6}
-    },
-    {
-      "name":"vf_reference_sandstone_B",
-      "resolution":1024,
-      "profile":"stylized",
-      "preset":"vfLayeredSandstonePainted",
-      "params":{"seed":771231,"bands":7,"minSlabs":3,"maxSlabs":4,"crackChance":0.18,"chipStrength":0.74,"relief":1.32,"normalStrength":10.2}
-    },
-    {
-      "name":"vf_reference_sandstone_C",
-      "resolution":1024,
-      "profile":"stylized",
-      "preset":"vfLayeredSandstonePainted",
-      "params":{"seed":771266,"bands":9,"minSlabs":3,"maxSlabs":5,"crackChance":0.24,"chipStrength":0.58,"relief":1.22,"normalStrength":9.8}
+      "params":{"seed":771231,"bands":7,"minSlabs":3,"maxSlabs":4,"crackChance":0.18,"chipStrength":0.82,"relief":1.38,"normalStrength":10.8}
     }
   ]
 }
