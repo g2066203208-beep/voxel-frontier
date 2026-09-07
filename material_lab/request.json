@@ -1,19 +1,19 @@
 {
   "materials": [
-    {"name":"vf_cartoon_basalt_01","resolution":1024,"profile":"stylized","preset":"vfBasaltCartoonWorld","params":{"seed":240914,"fractureStrength":0.62,"poreDensity":0.024,"weathering":0.22,"macroRelief":1.34,"mesoRelief":1.52,"edgeBreakup":1.24,"paletteSteps":5,"blockiness":5.8,"stylizedNormalStrength":16.0}},
-    {"name":"vf_cartoon_granite_01","resolution":1024,"profile":"stylized","preset":"vfGraniteCartoon","params":{"seed":310402,"grainScale":23,"quartz":0.29,"feldspar":0.49,"mica":0.10,"relief":1.20,"paletteSteps":5,"blockiness":4.8,"stylizedNormalStrength":14.5}},
-    {"name":"vf_cartoon_dirt_01","resolution":1024,"profile":"stylized","preset":"vfDirtCartoon","params":{"seed":420503,"clodScale":9,"pebbleDensity":0.20,"moisture":0.08,"relief":1.24,"paletteSteps":5,"blockiness":5.5,"stylizedNormalStrength":15.0}},
-    {"name":"vf_cartoon_bark_01","resolution":1024,"profile":"stylized","preset":"vfBarkCartoon","params":{"seed":530603,"ridgeScale":6.8,"fissureScale":3.4,"age":0.72,"relief":1.34,"paletteSteps":5,"blockiness":4.6,"stylizedNormalStrength":15.8}},
-    {"name":"vf_cartoon_sandstone_01","resolution":1024,"profile":"stylized","preset":"vfSandstoneCartoon","params":{"seed":610102,"relief":1.20,"paletteSteps":5,"blockiness":5.2,"stylizedNormalStrength":14.2}},
-    {"name":"vf_cartoon_limestone_01","resolution":1024,"profile":"stylized","preset":"vfLimestoneCartoon","params":{"seed":620201,"relief":1.14,"paletteSteps":5,"blockiness":5.0,"stylizedNormalStrength":13.8}},
-    {"name":"vf_cartoon_gravel_01","resolution":1024,"profile":"stylized","preset":"vfGravelCartoon","params":{"seed":630302,"relief":1.22,"paletteSteps":5,"blockiness":4.4,"stylizedNormalStrength":17.0}},
-    {"name":"vf_cartoon_sand_01","resolution":1024,"profile":"stylized","preset":"vfSandCartoon","params":{"seed":640401,"relief":1.12,"paletteSteps":5,"blockiness":6.0,"stylizedNormalStrength":12.0}},
-    {"name":"vf_cartoon_wet_mud_01","resolution":1024,"profile":"stylized","preset":"vfWetMudCartoon","params":{"seed":650501,"relief":1.22,"paletteSteps":5,"blockiness":5.2,"stylizedNormalStrength":14.5}},
-    {"name":"vf_cartoon_wood_plank_01","resolution":1024,"profile":"stylized","preset":"vfWoodPlankCartoon","params":{"seed":660602,"relief":1.18,"paletteSteps":5,"blockiness":4.8,"stylizedNormalStrength":14.5}},
-    {"name":"vf_cartoon_iron_ore_01","resolution":1024,"profile":"stylized","preset":"vfIronOreCartoon","params":{"seed":670702,"relief":1.20,"paletteSteps":5,"blockiness":4.8,"stylizedNormalStrength":15.0}},
-    {"name":"vf_cartoon_copper_ore_01","resolution":1024,"profile":"stylized","preset":"vfCopperOreCartoon","params":{"seed":680802,"relief":1.20,"paletteSteps":5,"blockiness":4.8,"stylizedNormalStrength":15.0}},
-    {"name":"vf_cartoon_coal_01","resolution":1024,"profile":"stylized","preset":"vfCoalCartoon","params":{"seed":690901,"relief":1.20,"paletteSteps":5,"blockiness":5.0,"stylizedNormalStrength":15.8}},
-    {"name":"vf_cartoon_snow_01","resolution":1024,"profile":"stylized","preset":"vfSnowCartoon","params":{"seed":700102,"relief":1.16,"paletteSteps":4,"blockiness":6.5,"stylizedNormalStrength":11.5}},
-    {"name":"vf_cartoon_ice_01","resolution":1024,"profile":"stylized","preset":"vfIceCartoon","params":{"seed":710201,"relief":1.08,"paletteSteps":5,"blockiness":6.0,"stylizedNormalStrength":10.8}}
+    {"name":"vf_cartoon_basalt_02","resolution":1024,"profile":"stylized","preset":"vfBasaltCartoonWorld","params":{"seed":240914,"fractureStrength":0.62,"poreDensity":0.024,"weathering":0.22,"macroRelief":1.34,"mesoRelief":1.52,"edgeBreakup":1.24,"paletteSteps":5,"blockiness":4.2,"stylizedNormalStrength":16.0}},
+    {"name":"vf_cartoon_granite_02","resolution":1024,"profile":"stylized","preset":"vfGraniteCartoon","params":{"seed":310402,"grainScale":23,"quartz":0.29,"feldspar":0.49,"mica":0.10,"relief":1.20,"paletteSteps":6,"blockiness":3.1,"stylizedNormalStrength":15.0}},
+    {"name":"vf_cartoon_dirt_02","resolution":1024,"profile":"stylized","preset":"vfDirtCartoon","params":{"seed":420503,"clodScale":9,"pebbleDensity":0.20,"moisture":0.08,"relief":1.24,"paletteSteps":5,"blockiness":4.0,"stylizedNormalStrength":15.0}},
+    {"name":"vf_cartoon_bark_02","resolution":1024,"profile":"stylized","preset":"vfBarkCartoon","params":{"seed":530603,"ridgeScale":6.8,"fissureScale":3.4,"age":0.72,"relief":1.34,"paletteSteps":5,"blockiness":3.5,"stylizedNormalStrength":16.0}},
+    {"name":"vf_cartoon_sandstone_02","resolution":1024,"profile":"stylized","preset":"vfSandstoneCartoon","params":{"seed":610102,"relief":1.20,"paletteSteps":5,"blockiness":3.8,"stylizedNormalStrength":15.0}},
+    {"name":"vf_cartoon_limestone_02","resolution":1024,"profile":"stylized","preset":"vfLimestoneCartoon","params":{"seed":620201,"relief":1.14,"paletteSteps":5,"blockiness":3.8,"stylizedNormalStrength":15.0}},
+    {"name":"vf_cartoon_gravel_02","resolution":1024,"profile":"stylized","preset":"vfGravelCartoon","params":{"seed":630302,"relief":1.22,"paletteSteps":6,"blockiness":3.3,"stylizedNormalStrength":18.0}},
+    {"name":"vf_cartoon_sand_02","resolution":1024,"profile":"stylized","preset":"vfSandCartoon","params":{"seed":640401,"relief":1.12,"paletteSteps":5,"blockiness":4.2,"stylizedNormalStrength":15.0}},
+    {"name":"vf_cartoon_wet_mud_02","resolution":1024,"profile":"stylized","preset":"vfWetMudCartoon","params":{"seed":650501,"relief":1.22,"paletteSteps":5,"blockiness":3.8,"stylizedNormalStrength":16.0}},
+    {"name":"vf_cartoon_wood_plank_02","resolution":1024,"profile":"stylized","preset":"vfWoodPlankCartoon","params":{"seed":660602,"relief":1.18,"paletteSteps":6,"blockiness":3.4,"stylizedNormalStrength":15.0}},
+    {"name":"vf_cartoon_iron_ore_02","resolution":1024,"profile":"stylized","preset":"vfIronOreCartoon","params":{"seed":670702,"relief":1.20,"paletteSteps":5,"blockiness":3.5,"stylizedNormalStrength":16.0}},
+    {"name":"vf_cartoon_copper_ore_02","resolution":1024,"profile":"stylized","preset":"vfCopperOreCartoon","params":{"seed":680802,"relief":1.20,"paletteSteps":5,"blockiness":3.5,"stylizedNormalStrength":16.0}},
+    {"name":"vf_cartoon_coal_02","resolution":1024,"profile":"stylized","preset":"vfCoalCartoon","params":{"seed":690901,"relief":1.20,"paletteSteps":5,"blockiness":3.7,"stylizedNormalStrength":16.0}},
+    {"name":"vf_cartoon_snow_02","resolution":1024,"profile":"stylized","preset":"vfSnowCartoon","params":{"seed":700102,"relief":1.16,"paletteSteps":4,"blockiness":4.2,"stylizedNormalStrength":15.0}},
+    {"name":"vf_cartoon_ice_02","resolution":1024,"profile":"stylized","preset":"vfIceCartoon","params":{"seed":710201,"relief":1.08,"paletteSteps":5,"blockiness":4.0,"stylizedNormalStrength":14.0}}
   ]
 }
