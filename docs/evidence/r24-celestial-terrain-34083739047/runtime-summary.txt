@@ -1,0 +1,81 @@
+=== ground spin log ===
+Earth-Moon physical scale: Rearth=6371 km Rmoon=1737.4 km distance=384400 km | celestial time scale=7200.0x
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9696 | FPS 22
+=== shadow contact log ===
+R24 capture shadow-contact low-angle production view
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9708 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9708 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9708 | FPS 22
+R24 shadow-contact probe base_y=-0.5 center_y=1.0 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9708 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9708 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 2243960+9708 | FPS 20
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+R24 shadow-contact probe base_y=-0.6 center_y=0.9 half_height=1.5
+=== high speed log ===
+R24 capture high-speed initial_speed_mps=500000
+Earth-Moon physical scale: Rearth=6371 km Rmoon=1737.4 km distance=384400 km | celestial time scale=1.0x
+R24 Earth renderer mode: smooth-globe speed_mps=581558.0
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | LAND | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 0.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 3.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 3.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 3.00 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 4.36 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 4.36 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | FLIGHT | SPEED 500000 m/s | ALT 4.36 km | OCEAN | STREAM READY | QLOD 5982/L20 | cell 1.4m | tris 110592+9696 | FPS 20
+=== earth spin log ===
+R24.2 view: earth-globe distance_km=24000
+Earth-Moon physical scale: Rearth=6371 km Rmoon=1737.4 km distance=384400 km | celestial time scale=7200.0x
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 22
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
+R24 DIAG | Voxel Frontier R4 | CAPSULE-GROUNDED | SPEED 320 m/s | ALT 17629.00 km | OCEAN | STREAM READY | QLOD 100/L3 | cell 162169.5m | tris 110592+9696 | FPS 20
