@@ -1,9 +1,7 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
-#include <algorithm>
-#include <algorithm>
-#include <algorithm>
 #include <cstdint>
 
 #include <glm/glm.hpp>
@@ -96,6 +94,7 @@ public:
     [[nodiscard]] bool inPlanetPhysicsFrame() const noexcept { return inPhysicsFrame_; }
     [[nodiscard]] std::uint32_t physicsFrameBodyId() const noexcept { return physicsFrameBodyId_; }
     [[nodiscard]] double flightSpeedMps() const noexcept { return creativeFlightSpeedMps_; }
+
     void setFlightMode(bool enabled) noexcept {
         flightMode_ = enabled;
         grounded_ = false;
@@ -104,31 +103,11 @@ public:
             else velocity_ = {};
         }
     }
+
     void setCreativeFlightSpeedMps(double speedMetersPerSecond) noexcept {
         creativeFlightSpeedMps_ = std::clamp(speedMetersPerSecond, 1.0, 2000000.0);
     }
-    void setFlightMode(bool enabled) noexcept {
-        flightMode_ = enabled;
-        grounded_ = false;
-        if (enabled) {
-            if (inPhysicsFrame_) localVelocity_ = {};
-            else velocity_ = {};
-        }
-    }
-    void setCreativeFlightSpeedMps(double speedMetersPerSecond) noexcept {
-        creativeFlightSpeedMps_ = std::clamp(speedMetersPerSecond, 1.0, 2000000.0);
-    }
-    void setFlightMode(bool enabled) noexcept {
-        flightMode_ = enabled;
-        grounded_ = false;
-        if (enabled) {
-            if (inPhysicsFrame_) localVelocity_ = {};
-            else velocity_ = {};
-        }
-    }
-    void setCreativeFlightSpeedMps(double speedMetersPerSecond) noexcept {
-        creativeFlightSpeedMps_ = std::clamp(speedMetersPerSecond, 1.0, 2000000.0);
-    }
+
     [[nodiscard]] glm::dvec3 up() const;
     [[nodiscard]] glm::dvec3 forwardDirection() const;
     [[nodiscard]] double altitude() const;
