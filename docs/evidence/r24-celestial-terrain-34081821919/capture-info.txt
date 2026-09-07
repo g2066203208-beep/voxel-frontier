@@ -1,0 +1,52 @@
+ground-spin-0.png attempt=1 colors=1
+ground-spin-0.png attempt=2 colors=1
+ground-spin-0.png attempt=3 colors=27549
+r24-celestial-terrain-evidence/ground/ground-spin-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 287932B 0.000u 0:00.000
+ground-spin-1.png attempt=1 colors=29539
+r24-celestial-terrain-evidence/ground/ground-spin-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 292329B 0.000u 0:00.000
+ground-spin-2.png attempt=1 colors=30868
+r24-celestial-terrain-evidence/ground/ground-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 290702B 0.000u 0:00.000
+ground-spin-3.png attempt=1 colors=32318
+r24-celestial-terrain-evidence/ground/ground-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 292245B 0.000u 0:00.000
+ground-spin-4.png attempt=1 colors=32150
+r24-celestial-terrain-evidence/ground/ground-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 290020B 0.000u 0:00.000
+ground-spin-5.png attempt=1 colors=31032
+r24-celestial-terrain-evidence/ground/ground-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 288423B 0.000u 0:00.000
+contact-cycle-0.png attempt=1 colors=1
+contact-cycle-0.png attempt=2 colors=25052
+r24-celestial-terrain-evidence/shadows/contact-cycle-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 414398B 0.000u 0:00.000
+contact-cycle-1.png attempt=1 colors=31251
+r24-celestial-terrain-evidence/shadows/contact-cycle-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 390335B 0.000u 0:00.000
+contact-cycle-2.png attempt=1 colors=29547
+r24-celestial-terrain-evidence/shadows/contact-cycle-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 331636B 0.000u 0:00.000
+contact-cycle-3.png attempt=1 colors=28803
+r24-celestial-terrain-evidence/shadows/contact-cycle-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 341369B 0.000u 0:00.000
+contact-cycle-4.png attempt=1 colors=27170
+r24-celestial-terrain-evidence/shadows/contact-cycle-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 431213B 0.000u 0:00.000
+contact-cycle-5.png attempt=1 colors=24877
+r24-celestial-terrain-evidence/shadows/contact-cycle-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 432701B 0.000u 0:00.000
+contact-cycle-6.png attempt=1 colors=22645
+r24-celestial-terrain-evidence/shadows/contact-cycle-6.png PNG 1600x900 1600x900+0+0 8-bit sRGB 429979B 0.000u 0:00.000
+contact-cycle-7.png attempt=1 colors=20264
+r24-celestial-terrain-evidence/shadows/contact-cycle-7.png PNG 1600x900 1600x900+0+0 8-bit sRGB 414909B 0.000u 0:00.000
+earth-spin-0.png attempt=1 colors=18500
+r24-celestial-terrain-evidence/space/earth-spin-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 200530B 0.000u 0:00.000
+earth-spin-1.png attempt=1 colors=25451
+r24-celestial-terrain-evidence/space/earth-spin-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 205437B 0.000u 0:00.000
+earth-spin-2.png attempt=1 colors=31198
+r24-celestial-terrain-evidence/space/earth-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 209686B 0.000u 0:00.000
+earth-spin-3.png attempt=1 colors=35865
+r24-celestial-terrain-evidence/space/earth-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 211021B 0.000u 0:00.000
+earth-spin-4.png attempt=1 colors=37790
+r24-celestial-terrain-evidence/space/earth-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 209442B 0.000u 0:00.000
+earth-spin-5.png attempt=1 colors=34845
+r24-celestial-terrain-evidence/space/earth-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 206442B 0.000u 0:00.000
+before.png attempt=1 colors=1
+before.png attempt=2 colors=27549
+r24-celestial-terrain-evidence/high-speed/before.png PNG 1600x900 1600x900+0+0 8-bit sRGB 287946B 0.000u 0:00.000
+transit.png attempt=1 colors=5417
+r24-celestial-terrain-evidence/high-speed/transit.png PNG 1600x900 1600x900+0+0 8-bit sRGB 245685B 0.000u 0:00.000
+transit-late.png attempt=1 colors=4239
+r24-celestial-terrain-evidence/high-speed/transit-late.png PNG 1600x900 1600x900+0+0 8-bit sRGB 162117B 0.000u 0:00.000
+after.png attempt=1 colors=4506
+r24-celestial-terrain-evidence/high-speed/after.png PNG 1600x900 1600x900+0+0 8-bit sRGB 379486B 0.000u 0:00.000
