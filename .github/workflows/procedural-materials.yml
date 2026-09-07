@@ -78,14 +78,21 @@ jobs:
               "vfPainterlySnow",
               "vfPainterlyWater",
           }
-          if len(materials) != 6:
-              raise SystemExit(f"Expected exactly six category masters, got {len(materials)}")
-          if {m.get("preset") for m in materials} != allowed:
-              raise SystemExit("Production request must contain exactly the six approved master presets")
+          presets = [m.get("preset") for m in materials]
+          modes = {m.get("params", {}).get("mode") for m in materials}
+          production = len(materials) == 6 and set(presets) == allowed
+          water_showcase = (
+              len(materials) == 4
+              and set(presets) == {"vfPainterlyWater"}
+              and modes == {"calm", "windy", "foam", "shallow"}
+          )
+          if not (production or water_showcase):
+              raise SystemExit("Request must be either the exact six production masters or the exact four-state water showcase")
           for item in materials:
               name = item.get("name", "")
               if any(token in name.lower() for token in ("reference", "test", "draft", "final", "_v1", "_v2", "_v3", "_v4", "_v5", "_v6", "_v7", "_v8", "_v9")):
-                  raise SystemExit(f"Unstable production material name: {name}")
+                  raise SystemExit(f"Unstable production/showcase material name: {name}")
+          print("water-showcase" if water_showcase else "production-six")
           PY
 
       - name: Install preview tools
@@ -146,8 +153,15 @@ jobs:
           test -d "$src"
           mkdir -p build/generated-materials
           cp -R "$src"/* build/generated-materials/
+          expected_count=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('material_lab/request.json').read_text())
+          print(len(r.get('materials',[r])))
+          PY
+          )
           material_count=$(find build/generated-materials -mindepth 1 -maxdepth 1 -type d | wc -l)
-          test "$material_count" -eq 6 || { echo "Expected 6 material directories, got $material_count" >&2; exit 1; }
+          test "$material_count" -eq "$expected_count" || { echo "Expected $expected_count material directories, got $material_count" >&2; exit 1; }
           while IFS= read -r dir; do
             name=$(basename "$dir")
             for suffix in baseColor normal roughness height ao metallic; do
@@ -166,9 +180,17 @@ jobs:
         run: |
           set -euo pipefail
           python3 material_lab/preview/render_material_previews.py build/generated-materials
+          expected_count=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('material_lab/request.json').read_text())
+          print(len(r.get('materials',[r])))
+          PY
+          )
           mapfile -t spheres < <(find build/generated-materials -type f -name 'preview-sphere.png' | sort)
-          test ${#spheres[@]} -eq 6
-          montage "${spheres[@]}" -thumbnail 720x720 -tile 3x -geometry +18+18 -background '#202020' build/material-spheres-overview.png
+          test ${#spheres[@]} -eq "$expected_count"
+          if [[ "$expected_count" -le 4 ]]; then tile="2x"; else tile="3x"; fi
+          montage "${spheres[@]}" -thumbnail 720x720 -tile "$tile" -geometry +18+18 -background '#202020' build/material-spheres-overview.png
 
       - name: Upload PBR material library
         uses: actions/upload-artifact@v4
@@ -189,7 +211,8 @@ jobs:
             echo
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Style: \`$VF_STYLE_ID\`"
-            echo '- Production set: sandstone / dirt / bark / leaves / snow / water'
+            echo '- Allowed requests: exact six-category production set OR exact four-state water showcase'
+            echo '- Water fields: foam / transmission / refraction / glint'
             echo '- Source: procedural code only; raster source assets rejected'
             echo '- Production recipe directory: exact allow-list enforced'
             echo '- Every material: PBR maps + true-Height displaced studio sphere'
