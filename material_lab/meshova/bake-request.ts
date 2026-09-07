@@ -26,12 +26,33 @@ import {
   bakeVfSnow,
   bakeVfIce,
 } from "./vf-recipes/vf-world-surfaces.js";
+import {
+  bakeVfBasaltCartoonWorld,
+  bakeVfGraniteCartoon,
+  bakeVfDirtCartoon,
+  bakeVfBarkCartoon,
+  bakeVfSandstoneCartoon,
+  bakeVfLimestoneCartoon,
+  bakeVfGravelCartoon,
+  bakeVfSandCartoon,
+  bakeVfWetMudCartoon,
+  bakeVfWoodPlankCartoon,
+  bakeVfIronOreCartoon,
+  bakeVfCopperOreCartoon,
+  bakeVfCoalCartoon,
+  bakeVfSnowCartoon,
+  bakeVfIceCartoon,
+} from "./vf-recipes/vf-cartoon-world.js";
 
 type Preset =
   | "stylizedCellRock" | "volcanicRock" | "simpleRock"
   | "vfBasalt" | "vfBasaltCartoon" | "vfGranite" | "vfDirt" | "vfBark"
   | "vfSandstone" | "vfLimestone" | "vfGravel" | "vfSand" | "vfWetMud"
-  | "vfWoodPlank" | "vfIronOre" | "vfCopperOre" | "vfCoal" | "vfSnow" | "vfIce";
+  | "vfWoodPlank" | "vfIronOre" | "vfCopperOre" | "vfCoal" | "vfSnow" | "vfIce"
+  | "vfBasaltCartoonWorld" | "vfGraniteCartoon" | "vfDirtCartoon" | "vfBarkCartoon"
+  | "vfSandstoneCartoon" | "vfLimestoneCartoon" | "vfGravelCartoon" | "vfSandCartoon"
+  | "vfWetMudCartoon" | "vfWoodPlankCartoon" | "vfIronOreCartoon" | "vfCopperOreCartoon"
+  | "vfCoalCartoon" | "vfSnowCartoon" | "vfIceCartoon";
 
 type Request = {
   name: string;
@@ -72,6 +93,21 @@ function bakeOne(req: Request) {
   else if (req.preset === "vfCoal") material = bakeVfCoal(req.resolution, req.params);
   else if (req.preset === "vfSnow") material = bakeVfSnow(req.resolution, req.params);
   else if (req.preset === "vfIce") material = bakeVfIce(req.resolution, req.params);
+  else if (req.preset === "vfBasaltCartoonWorld") material = bakeVfBasaltCartoonWorld(req.resolution, req.params);
+  else if (req.preset === "vfGraniteCartoon") material = bakeVfGraniteCartoon(req.resolution, req.params);
+  else if (req.preset === "vfDirtCartoon") material = bakeVfDirtCartoon(req.resolution, req.params);
+  else if (req.preset === "vfBarkCartoon") material = bakeVfBarkCartoon(req.resolution, req.params);
+  else if (req.preset === "vfSandstoneCartoon") material = bakeVfSandstoneCartoon(req.resolution, req.params);
+  else if (req.preset === "vfLimestoneCartoon") material = bakeVfLimestoneCartoon(req.resolution, req.params);
+  else if (req.preset === "vfGravelCartoon") material = bakeVfGravelCartoon(req.resolution, req.params);
+  else if (req.preset === "vfSandCartoon") material = bakeVfSandCartoon(req.resolution, req.params);
+  else if (req.preset === "vfWetMudCartoon") material = bakeVfWetMudCartoon(req.resolution, req.params);
+  else if (req.preset === "vfWoodPlankCartoon") material = bakeVfWoodPlankCartoon(req.resolution, req.params);
+  else if (req.preset === "vfIronOreCartoon") material = bakeVfIronOreCartoon(req.resolution, req.params);
+  else if (req.preset === "vfCopperOreCartoon") material = bakeVfCopperOreCartoon(req.resolution, req.params);
+  else if (req.preset === "vfCoalCartoon") material = bakeVfCoalCartoon(req.resolution, req.params);
+  else if (req.preset === "vfSnowCartoon") material = bakeVfSnowCartoon(req.resolution, req.params);
+  else if (req.preset === "vfIceCartoon") material = bakeVfIceCartoon(req.resolution, req.params);
   else throw new Error(`Unsupported preset: ${String(req.preset)}`);
 
   const problems = validateMaterial(material);
