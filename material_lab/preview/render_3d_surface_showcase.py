@@ -6,25 +6,31 @@ they were not true 3D material validation. This pass now only overrides the
 approved sandstone master with a real radial Height displacement whose scale is
 fitted from the generated Height distribution.
 
-Sandstone displacement policy:
-  median = 0 sigma
-  +1 sigma ~= +14% radius
-  +2 sigma ~= +28% radius
-  +3 sigma ~= +42% radius
+Sandstone displacement policy (truncated normal-like):
+  mean outward displacement = +18% radius
+  one sigma in displacement = 7.5%
+  +1 sigma ~= +25.5%
+  +2 sigma ~= +33.0%
+  +3 sigma ~= +40.5%
   positive tail cap = +44%
-  negative tail cap = -4%
+  minimum support displacement = +10%
+
+This keeps the whole rock mass proud of the base sphere while reserving the
+40%+ relief for rare macro blocks. Geometry displacement uses a low-pass copy
+of Height so micro detail stays in Normal/PBR rather than becoming silhouette noise.
 """
 from pathlib import Path
 import json, math, sys
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("build/generated-materials")
 S = 1000
 CX, CY, R = 500.0, 465.0, 300.0
-OUT_PER_SIGMA = 0.14
+MEAN_OUT = 0.18
+DISP_SIGMA = 0.075
+MIN_OUT = 0.10
 MAX_OUT = 0.44
-MAX_IN = 0.04
 ITERATIONS = 9
 
 
@@ -60,27 +66,22 @@ def sphere_uv(n):
 
 
 def displacement_stats(height):
-    # Fit a truncated normal-like z scale to the actual generated Height field.
-    # P99.5 is treated as +3 sigma, so rare peaks reach ~42% without lifting
-    # every slab by the same amount.
+    # P99.5 is mapped to +3 sigma. The same symmetric Height sigma is used on
+    # both sides so lower support slabs do not collapse into a deep belt.
     h50 = float(np.percentile(height, 50.0))
     h005 = float(np.percentile(height, 0.5))
     h995 = float(np.percentile(height, 99.5))
-    sigma_pos = max((h995 - h50) / 3.0, 0.012)
-    sigma_neg = max((h50 - h005) / 2.0, 0.012)
-    return h50, sigma_pos, sigma_neg, h005, h995
+    sigma_h = max((h995 - h50) / 3.0, 0.012)
+    return h50, sigma_h, h005, h995
 
 
-def sigma_displacement(h, h50, sigma_pos, sigma_neg):
-    zp = np.maximum((h - h50) / sigma_pos, 0.0)
-    zn = np.maximum((h50 - h) / sigma_neg, 0.0)
-    outward = np.minimum(zp * OUT_PER_SIGMA, MAX_OUT)
-    inward = np.minimum(zn * (MAX_IN / 2.0), MAX_IN)
-    return outward - inward
+def sigma_displacement(h, h50, sigma_h):
+    z = (h - h50) / sigma_h
+    return np.clip(MEAN_OUT + z * DISP_SIGMA, MIN_OUT, MAX_OUT)
 
 
 def displaced_geometry(sx, sy, height, stats):
-    h50, sigma_pos, sigma_neg, _, _ = stats
+    h50, sigma_h, _, _ = stats
     qx, qy = sx.copy(), sy.copy()
     disp = np.zeros_like(sx, dtype=np.float32)
     for _ in range(ITERATIONS):
@@ -89,7 +90,7 @@ def displaced_geometry(sx, sy, height, stats):
         n = norm(np.stack([qx, qy, qz], -1))
         u, v = sphere_uv(n)
         hs = bilinear(height, u, v)
-        disp = sigma_displacement(hs, h50, sigma_pos, sigma_neg)
+        disp = sigma_displacement(hs, h50, sigma_h)
         radial = 1.0 + disp
         qx = sx / radial; qy = sy / radial
     q2 = qx * qx + qy * qy
@@ -114,12 +115,15 @@ def render_sandstone(d: Path, name: str):
     normal = np.asarray(Image.open(d / f"{name}_normal.png").convert("RGB"), dtype=np.float32) / 255.0
     rough = np.asarray(Image.open(d / f"{name}_roughness.png").convert("L"), dtype=np.float32) / 255.0
     ao = np.asarray(Image.open(d / f"{name}_ao.png").convert("L"), dtype=np.float32) / 255.0
-    height = np.asarray(Image.open(d / f"{name}_height.png").convert("L"), dtype=np.float32) / 255.0
+    height_img = Image.open(d / f"{name}_height.png").convert("L")
+    height = np.asarray(height_img, dtype=np.float32) / 255.0
+    # Low-frequency copy only for geometry silhouette; PBR normals keep full detail.
+    height_geom = np.asarray(height_img.filter(ImageFilter.GaussianBlur(radius=5.0)), dtype=np.float32) / 255.0
 
-    stats = displacement_stats(height)
+    stats = displacement_stats(height_geom)
     yy, xx = np.mgrid[0:S, 0:S]
     sx = (xx - CX) / R; sy = (CY - yy) / R
-    ng, mask, r2, disp = displaced_geometry(sx, sy, height, stats)
+    ng, mask, r2, disp = displaced_geometry(sx, sy, height_geom, stats)
     u, v = sphere_uv(ng)
 
     bc = bilinear(base, u, v)
@@ -131,7 +135,6 @@ def render_sandstone(d: Path, name: str):
     b = norm(np.cross(ng, t))
     n = norm(t * nt[..., 0:1] + b * nt[..., 1:2] + ng * np.maximum(nt[..., 2:3], .08))
 
-    # Painterly studio lighting: broad warm key, cool fill, warm lower bounce.
     color = bc * (.20 + .34 * aa[..., None])
     lights = [
         (norm(np.array([[[-.62, .68, .39]]], np.float32))[0, 0], 2.35, np.array([1.00, .91, .80], np.float32)),
@@ -141,15 +144,13 @@ def render_sandstone(d: Path, name: str):
     view = np.array([0, 0, 1], np.float32)
     for light, intensity, tint in lights:
         ndl = np.clip((n * light).sum(-1), 0, 1)
-        # Broad diffuse plus restrained rough-stone highlight.
         color += bc * ndl[..., None] * intensity * tint * .50
-        hvec = (light + view); hvec = hvec / max(np.linalg.norm(hvec), 1e-6)
+        hvec = light + view; hvec = hvec / max(np.linalg.norm(hvec), 1e-6)
         ndh = np.clip((n * hvec).sum(-1), 0, 1)
         shininess = 5.0 + 40.0 * (1 - rr)
         spec = np.power(ndh, shininess) * (.025 + .09 * (1 - rr))
         color += spec[..., None] * tint * intensity
 
-    # Slight cool ambient on upward/camera-facing planes preserves the established palette.
     color += np.clip(n[..., 1], 0, 1)[..., None] * np.array([.045, .060, .075], np.float32)
     color *= .88 + .12 * aa[..., None]
 
@@ -168,25 +169,28 @@ def render_sandstone(d: Path, name: str):
         f1 = ImageFont.truetype("DejaVuSans.ttf", 27); f2 = ImageFont.truetype("DejaVuSans.ttf", 18)
     except Exception:
         f1 = ImageFont.load_default(); f2 = f1
-    draw.rounded_rectangle((28, 26, 930, 104), radius=18, fill=(18, 18, 20))
+    draw.rounded_rectangle((28, 26, 950, 104), radius=18, fill=(18, 18, 20))
     draw.text((48, 40), name, fill=(245, 245, 245), font=f1)
-    draw.text((48, 74), "Gaussian Height · 1sigma=14% · 2sigma=28% · 3sigma=42% · cap=44%", fill=(190, 195, 200), font=f2)
+    draw.text((48, 74), "Normal Height · mean=18% · sigma=7.5% · 3sigma=40.5% · cap=44%", fill=(190, 195, 200), font=f2)
     out.save(d / "preview-sphere.png")
     out.save(d / "preview-gaussian-height.png")
 
-    h50, sigma_pos, sigma_neg, h005, h995 = stats
+    h50, sigma_h, h005, h995 = stats
     visible_disp = disp[mask]
     audit = {
-        "distribution": "truncated-normal-zscore",
+        "distribution": "truncated-normal-zscore-with-positive-mean",
         "medianHeight": h50,
-        "positiveSigmaHeight": sigma_pos,
-        "negativeSigmaHeight": sigma_neg,
+        "sigmaHeight": sigma_h,
         "heightP00_5": h005,
         "heightP99_5": h995,
-        "outwardPerSigma": OUT_PER_SIGMA,
+        "meanOutward": MEAN_OUT,
+        "displacementSigma": DISP_SIGMA,
+        "threeSigmaOutward": MEAN_OUT + 3 * DISP_SIGMA,
+        "minOutward": MIN_OUT,
         "maxOutward": MAX_OUT,
-        "maxInward": MAX_IN,
+        "geometryHeightLowPassRadiusPx": 5.0,
         "actualDisplacementMin": float(np.min(visible_disp)),
+        "actualDisplacementP16": float(np.percentile(visible_disp, 16)),
         "actualDisplacementP50": float(np.percentile(visible_disp, 50)),
         "actualDisplacementP84": float(np.percentile(visible_disp, 84)),
         "actualDisplacementP97_7": float(np.percentile(visible_disp, 97.7)),
