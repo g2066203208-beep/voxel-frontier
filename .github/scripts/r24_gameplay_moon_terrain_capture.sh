@@ -68,7 +68,6 @@ capture_failure_frame() {
   [[ -s "$tmp" ]] && echo "preserved failure framebuffer: $tmp" || true
 }
 
-# Gameplay Moon: physical orbit/gravity are unchanged, only the surface-view presentation is 4x.
 start_app "$OUT/logs/moon.log" \
   VF_CELESTIAL_TARGET=moon VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
 for _ in $(seq 1 140); do
@@ -128,7 +127,6 @@ capture_terrain() {
     return 21
   fi
 
-  # Give the async hydrology/LOD build time to publish the selected province before taking evidence.
   sleep 3.0
   if ! capture_valid "$output"; then
     echo "terrain framebuffer stayed invalid: ${target}" >&2
@@ -140,10 +138,10 @@ capture_terrain() {
   stop_app
 }
 
-# Three independent causal provinces, selected from the actual deterministic planet field.
-capture_terrain mountain 9000 "$OUT/terrain/convergent-mountain.png"
-capture_terrain rift 7000 "$OUT/terrain/divergent-rift.png"
-capture_terrain hydrology 6000 "$OUT/terrain/river-basin.png"
+# Low, oblique views preserve kilometre-scale relief instead of flattening it into a top-down patch.
+capture_terrain mountain 4500 "$OUT/terrain/convergent-mountain.png"
+capture_terrain rift 3500 "$OUT/terrain/divergent-rift.png"
+capture_terrain hydrology 3000 "$OUT/terrain/river-basin.png"
 
 montage \
   "$OUT/moon/gameplay-moon.png" \
@@ -156,11 +154,11 @@ montage \
   echo '=== MOON ==='
   grep -E 'moon evidence|Fatal error' "$OUT/logs/moon.log" | tail -20 || true
   echo '=== MOUNTAIN ==='
-  grep -E 'terrain target|QLOD|Fatal error' "$OUT/logs/mountain.log" | tail -20 || true
+  grep -E 'terrain target|terrain evidence view|QLOD|Fatal error' "$OUT/logs/mountain.log" | tail -20 || true
   echo '=== RIFT ==='
-  grep -E 'terrain target|QLOD|Fatal error' "$OUT/logs/rift.log" | tail -20 || true
+  grep -E 'terrain target|terrain evidence view|QLOD|Fatal error' "$OUT/logs/rift.log" | tail -20 || true
   echo '=== HYDROLOGY ==='
-  grep -E 'terrain target|QLOD|Fatal error' "$OUT/logs/hydrology.log" | tail -20 || true
+  grep -E 'terrain target|terrain evidence view|QLOD|Fatal error' "$OUT/logs/hydrology.log" | tail -20 || true
 } > "$OUT/runtime-summary.txt"
 
 echo "R24 gameplay Moon + causal terrain capture complete"
