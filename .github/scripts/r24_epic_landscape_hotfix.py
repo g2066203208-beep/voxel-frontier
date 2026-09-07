@@ -28,6 +28,16 @@ replace_once(
     """    const glm::dvec3 dEastPlus = safeNormalize(d + east * angularStep, d);\n    const glm::dvec3 dEastMinus = safeNormalize(d - east * angularStep, d);\n    const glm::dvec3 dNorthPlus = safeNormalize(d + north * angularStep, d);\n    const glm::dvec3 dNorthMinus = safeNormalize(d - north * angularStep, d);\n    const glm::dvec3 pEastPlus = dEastPlus * planetSurfaceRadius(definition, dEastPlus);\n    const glm::dvec3 pEastMinus = dEastMinus * planetSurfaceRadius(definition, dEastMinus);\n    const glm::dvec3 pNorthPlus = dNorthPlus * planetSurfaceRadius(definition, dNorthPlus);\n    const glm::dvec3 pNorthMinus = dNorthMinus * planetSurfaceRadius(definition, dNorthMinus);\n    glm::dvec3 normal = safeNormalize(\n        glm::cross(pEastPlus - pEastMinus, pNorthPlus - pNorthMinus), d);\n    if (glm::dot(normal, d) < 0.0) normal = -normal;\n""",
 )
 
+# The epic generator can legitimately compute raw summits above the configured gameplay ceiling.
+# A hard clamp would turn those summits into broad, perfectly flat mesas. Compress positive relief
+# smoothly as it approaches maxLand instead: the surface asymptotically approaches 98.5% of the
+# ceiling while preserving peak/ridge/valley ordering and leaving negative canyon/abyss relief alone.
+replace_once(
+    surface,
+    """    const double minElevation = definition.seaLevelElevationMeters - maxOcean;\n    const double maxElevation = definition.seaLevelElevationMeters + maxLand;\n    elevation = std::clamp(\n        elevation + definition.seaLevelElevationMeters,\n        minElevation,\n        maxElevation);\n""",
+    """    if (maxLand > 0.0 && elevation > 0.0) {\n        constexpr double softCeilingFraction = 0.985;\n        constexpr double compressionScale = 0.78;\n        elevation = maxLand * softCeilingFraction * std::tanh(\n            elevation / (maxLand * compressionScale));\n    }\n    const double minElevation = definition.seaLevelElevationMeters - maxOcean;\n    const double maxElevation = definition.seaLevelElevationMeters + maxLand;\n    elevation = std::clamp(\n        elevation + definition.seaLevelElevationMeters,\n        minElevation,\n        maxElevation);\n""",
+)
+
 # The historical 0.35 radial-dot threshold encoded a maximum slope of about 69.5 degrees.
 # Gameplay-first cliffs and abyss walls are intentionally steeper than that. The invariant we
 # actually need is: finite unit normal, never inward-facing. Keep the test strict on that property.
@@ -38,4 +48,4 @@ replace_once(
     """    require(glm::dot(snapshot.normal, direction) > 1.0e-6,\n        \"surface snapshot normal must remain outward-facing even on near-vertical epic relief\");\n""",
 )
 
-print("R24 epic landscape normal hotfix applied")
+print("R24 epic landscape normal/peak hierarchy hotfix applied")
