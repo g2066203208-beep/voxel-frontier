@@ -1,37 +1,40 @@
 #!/usr/bin/env python3
-"""Specialized geometry validation pass.
+"""Sandstone macro-geometry validation pass.
 
-The old PIL line/polygon grass/fur/fire mock previews were intentionally removed:
-they were not true 3D material validation. This pass now only overrides the
-approved sandstone master with a real radial Height displacement whose scale is
-fitted from the generated Height distribution.
+This pass overrides only the approved sandstone master preview.  The material
+textures remain fully procedural.  Geometry uses a periodic low-pass copy of
+Height so large rock masses drive silhouette while micro detail remains in the
+Normal/PBR channels.
 
-Sandstone displacement policy (truncated normal-like):
-  mean outward displacement = +18% radius
-  one sigma in displacement = 7.5%
-  +1 sigma ~= +25.5%
-  +2 sigma ~= +33.0%
-  +3 sigma ~= +40.5%
-  positive tail cap = +44%
-  minimum support displacement = +10%
+Continuous rock-shell policy:
+  baseline/median outward shell ~= +22% radius
+  positive sigma ~= 7% radius
+  +3 sigma ~= +43% radius
+  positive cap = +44%
+  negative deviations are compressed to 20% strength
+  hard minimum shell = +16%
 
-This keeps the whole rock mass proud of the base sphere while reserving the
-40%+ relief for rare macro blocks. Geometry displacement uses a low-pass copy
-of Height so micro detail stays in Normal/PBR rather than becoming silhouette noise.
+The asymmetric lower tail is intentional: high blocks grow outward while low
+support strata remain part of one continuous rock mass instead of opening a
+large waist trench.
 """
 from pathlib import Path
-import json, math, sys
+import json, sys
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("build/generated-materials")
 S = 1000
-CX, CY, R = 500.0, 465.0, 300.0
-MEAN_OUT = 0.18
-DISP_SIGMA = 0.075
-MIN_OUT = 0.10
+CX, CY, R = 500.0, 465.0, 285.0
+MEAN_OUT = 0.22
+POS_SIGMA = 0.07
+NEG_SIGMA_SCALE = 0.20
+MIN_OUT = 0.16
 MAX_OUT = 0.44
-ITERATIONS = 9
+ITERATIONS = 10
+MACRO_SIGMA_PX = 18.0
+MID_SIGMA_PX = 6.0
+MACRO_WEIGHT = 0.78
 
 
 def srgb_to_linear(x):
@@ -65,19 +68,34 @@ def sphere_uv(n):
     return u, v
 
 
+def periodic_gaussian(tex, sigma_px):
+    """Periodic Gaussian convolution in Fourier space; preserves tile seams."""
+    h, w = tex.shape
+    fy = np.fft.fftfreq(h)[:, None]
+    fx = np.fft.fftfreq(w)[None, :]
+    kernel = np.exp(-2.0 * (np.pi ** 2) * (sigma_px ** 2) * (fx * fx + fy * fy))
+    return np.fft.ifft2(np.fft.fft2(tex) * kernel).real.astype(np.float32)
+
+
+def geometry_height(height):
+    macro = periodic_gaussian(height, MACRO_SIGMA_PX)
+    mid = periodic_gaussian(height, MID_SIGMA_PX)
+    return (macro * MACRO_WEIGHT + mid * (1.0 - MACRO_WEIGHT)).astype(np.float32)
+
+
 def displacement_stats(height):
-    # P99.5 is mapped to +3 sigma. The same symmetric Height sigma is used on
-    # both sides so lower support slabs do not collapse into a deep belt.
     h50 = float(np.percentile(height, 50.0))
     h005 = float(np.percentile(height, 0.5))
     h995 = float(np.percentile(height, 99.5))
-    sigma_h = max((h995 - h50) / 3.0, 0.012)
+    sigma_h = max((h995 - h50) / 3.0, 0.010)
     return h50, sigma_h, h005, h995
 
 
 def sigma_displacement(h, h50, sigma_h):
     z = (h - h50) / sigma_h
-    return np.clip(MEAN_OUT + z * DISP_SIGMA, MIN_OUT, MAX_OUT)
+    pos = np.maximum(z, 0.0) * POS_SIGMA
+    neg = np.minimum(z, 0.0) * POS_SIGMA * NEG_SIGMA_SCALE
+    return np.clip(MEAN_OUT + pos + neg, MIN_OUT, MAX_OUT)
 
 
 def displaced_geometry(sx, sy, height, stats):
@@ -105,7 +123,7 @@ def studio_bg():
     top = np.array([.78, .81, .85], np.float32)[None, None, :]
     bot = np.array([.16, .18, .20], np.float32)[None, None, :]
     bg = np.repeat(top * (1 - gy) + bot * gy, S, axis=1)
-    shadow = np.exp(-(((xx - CX) / (R * 1.0)) ** 2 + ((yy - (CY + R * 1.43)) / (R * .16)) ** 2) * 2.5)
+    shadow = np.exp(-(((xx - CX) / (R * 1.10)) ** 2 + ((yy - (CY + R * 1.62)) / (R * .17)) ** 2) * 2.5)
     bg *= 1 - .30 * shadow[..., None]
     return np.clip(bg, 0, 1)
 
@@ -115,10 +133,8 @@ def render_sandstone(d: Path, name: str):
     normal = np.asarray(Image.open(d / f"{name}_normal.png").convert("RGB"), dtype=np.float32) / 255.0
     rough = np.asarray(Image.open(d / f"{name}_roughness.png").convert("L"), dtype=np.float32) / 255.0
     ao = np.asarray(Image.open(d / f"{name}_ao.png").convert("L"), dtype=np.float32) / 255.0
-    height_img = Image.open(d / f"{name}_height.png").convert("L")
-    height = np.asarray(height_img, dtype=np.float32) / 255.0
-    # Low-frequency copy only for geometry silhouette; PBR normals keep full detail.
-    height_geom = np.asarray(height_img.filter(ImageFilter.GaussianBlur(radius=5.0)), dtype=np.float32) / 255.0
+    height = np.asarray(Image.open(d / f"{name}_height.png").convert("L"), dtype=np.float32) / 255.0
+    height_geom = geometry_height(height)
 
     stats = displacement_stats(height_geom)
     yy, xx = np.mgrid[0:S, 0:S]
@@ -153,7 +169,6 @@ def render_sandstone(d: Path, name: str):
 
     color += np.clip(n[..., 1], 0, 1)[..., None] * np.array([.045, .060, .075], np.float32)
     color *= .88 + .12 * aa[..., None]
-
     c = np.clip(color * 1.04, 0, None)
     a1, b1, c1, d1, e1 = 2.51, .03, 2.43, .59, .14
     c = (c * (a1 * c + b1)) / (c * (c1 * c + d1) + e1)
@@ -169,27 +184,31 @@ def render_sandstone(d: Path, name: str):
         f1 = ImageFont.truetype("DejaVuSans.ttf", 27); f2 = ImageFont.truetype("DejaVuSans.ttf", 18)
     except Exception:
         f1 = ImageFont.load_default(); f2 = f1
-    draw.rounded_rectangle((28, 26, 950, 104), radius=18, fill=(18, 18, 20))
+    draw.rounded_rectangle((28, 26, 970, 104), radius=18, fill=(18, 18, 20))
     draw.text((48, 40), name, fill=(245, 245, 245), font=f1)
-    draw.text((48, 74), "Normal Height · mean=18% · sigma=7.5% · 3sigma=40.5% · cap=44%", fill=(190, 195, 200), font=f2)
+    draw.text((48, 74), "continuous Gaussian rock shell · mean 22% · +3sigma 43% · cap 44%", fill=(190, 195, 200), font=f2)
     out.save(d / "preview-sphere.png")
     out.save(d / "preview-gaussian-height.png")
 
     h50, sigma_h, h005, h995 = stats
     visible_disp = disp[mask]
     audit = {
-        "distribution": "truncated-normal-zscore-with-positive-mean",
-        "medianHeight": h50,
-        "sigmaHeight": sigma_h,
-        "heightP00_5": h005,
-        "heightP99_5": h995,
+        "distribution": "asymmetric-truncated-normal-over-continuous-shell",
+        "medianGeometryHeight": h50,
+        "sigmaGeometryHeight": sigma_h,
+        "geometryHeightP00_5": h005,
+        "geometryHeightP99_5": h995,
         "meanOutward": MEAN_OUT,
-        "displacementSigma": DISP_SIGMA,
-        "threeSigmaOutward": MEAN_OUT + 3 * DISP_SIGMA,
+        "positiveDisplacementSigma": POS_SIGMA,
+        "negativeSigmaScale": NEG_SIGMA_SCALE,
+        "threeSigmaOutward": MEAN_OUT + 3 * POS_SIGMA,
         "minOutward": MIN_OUT,
         "maxOutward": MAX_OUT,
-        "geometryHeightLowPassRadiusPx": 5.0,
+        "macroGaussianSigmaPx": MACRO_SIGMA_PX,
+        "midGaussianSigmaPx": MID_SIGMA_PX,
+        "macroWeight": MACRO_WEIGHT,
         "actualDisplacementMin": float(np.min(visible_disp)),
+        "actualDisplacementP05": float(np.percentile(visible_disp, 5)),
         "actualDisplacementP16": float(np.percentile(visible_disp, 16)),
         "actualDisplacementP50": float(np.percentile(visible_disp, 50)),
         "actualDisplacementP84": float(np.percentile(visible_disp, 84)),
@@ -201,13 +220,10 @@ def render_sandstone(d: Path, name: str):
 
 def process(d: Path):
     manifest_path = d / "manifest.json"
-    if not manifest_path.is_file():
-        return
+    if not manifest_path.is_file(): return
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("preset") != "vfLayeredSandstonePainted":
-        return
-    name = manifest.get("material") or d.name
-    render_sandstone(d, name)
+    if manifest.get("preset") != "vfLayeredSandstonePainted": return
+    render_sandstone(d, manifest.get("material") or d.name)
 
 
 for directory in sorted(p for p in ROOT.iterdir() if p.is_dir()):
