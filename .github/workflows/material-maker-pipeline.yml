@@ -44,6 +44,7 @@ jobs:
             xvfb \
             mesa-vulkan-drivers \
             vulkan-tools \
+            libvulkan1 \
             libgl1 \
             libx11-6 \
             libxcursor1 \
@@ -62,7 +63,6 @@ jobs:
           curl --fail --location --retry 4 --retry-delay 2 "$MM_URL" -o .cache/material-maker/mm.tar.gz
           echo "$MM_ARCHIVE_SHA256  .cache/material-maker/mm.tar.gz" | sha256sum --check --strict
           tar -xzf .cache/material-maker/mm.tar.gz -C .cache/material-maker
-          find .cache/material-maker -maxdepth 3 -type f -print
 
       - name: Locate Material Maker executable
         id: mm
@@ -74,7 +74,10 @@ jobs:
             echo "Material Maker executable not found" >&2
             exit 1
           fi
+          MM_DIR="$(dirname "$MM_BIN")"
+          [[ -f "$MM_DIR/examples/rock.ptex" ]] || { echo "Bundled upstream rock.ptex missing" >&2; exit 1; }
           echo "bin=$MM_BIN" >> "$GITHUB_OUTPUT"
+          echo "dir=$MM_DIR" >> "$GITHUB_OUTPUT"
           echo "Material Maker executable: $MM_BIN"
 
       - name: Verify software Vulkan
@@ -83,12 +86,39 @@ jobs:
           set -euo pipefail
           vulkaninfo --summary | sed -n '1,120p'
 
-      - name: Bake procedural PBR materials
+      - name: Smoke-test Material Maker with bundled upstream recipe
         shell: bash
         env:
           MM_BIN: ${{ steps.mm.outputs.bin }}
+          MM_DIR: ${{ steps.mm.outputs.dir }}
+          LIBGL_ALWAYS_SOFTWARE: "1"
+          AUDIODEV: "null"
+        run: |
+          set -euo pipefail
+          smoke_out="$(realpath -m build/material-maker-smoke)"
+          mkdir -p "$smoke_out"
+          (
+            cd "$MM_DIR"
+            xvfb-run -a "./$(basename "$MM_BIN")" \
+              --rendering-driver vulkan \
+              --export-material \
+              -o "$smoke_out" \
+              --output-file "upstream_rock" \
+              "$MM_DIR/examples/rock.ptex"
+          )
+          mapfile -t smoke_pngs < <(find "$smoke_out" -type f -name '*.png' | sort)
+          echo "Upstream smoke test generated ${#smoke_pngs[@]} PNG files"
+          find "$smoke_out" -type f -maxdepth 2 -print | sort
+          [[ ${#smoke_pngs[@]} -ge 3 ]] || { echo "Bundled upstream recipe did not export a PBR map set" >&2; exit 1; }
+
+      - name: Bake repository procedural PBR materials
+        shell: bash
+        env:
+          MM_BIN: ${{ steps.mm.outputs.bin }}
+          MM_DIR: ${{ steps.mm.outputs.dir }}
           REQUESTED_RECIPE: ${{ inputs.recipe }}
           LIBGL_ALWAYS_SOFTWARE: "1"
+          AUDIODEV: "null"
         run: |
           set -euo pipefail
           mkdir -p "$OUT_ROOT"
@@ -104,7 +134,6 @@ jobs:
             [[ -f "${RECIPES[0]}" ]] || { echo "Requested recipe does not exist: ${RECIPES[0]}" >&2; exit 1; }
           fi
 
-          MM_DIR="$(dirname "$MM_BIN")"
           MM_EXE="./$(basename "$MM_BIN")"
 
           for recipe in "${RECIPES[@]}"; do
@@ -117,7 +146,7 @@ jobs:
             (
               cd "$MM_DIR"
               xvfb-run -a "$MM_EXE" \
-                --rendering-method gl_compatibility \
+                --rendering-driver vulkan \
                 --export-material \
                 -o "$out_abs" \
                 --output-file "$name" \
@@ -170,6 +199,7 @@ jobs:
             echo "- Generator: Material Maker $MM_VERSION"
             echo "- Source commit: \`$GITHUB_SHA\`"
             echo '- Method: deterministic procedural node graphs; no neural image generation'
+            echo '- CI graphics: Mesa software Vulkan on GitHub-hosted Ubuntu runner'
             echo
             echo '### Files'
             echo '```text'
