@@ -140,7 +140,8 @@ void testRealSpinKeepsGroundRenderHeadingFixedForSixHours() {
     const auto* initialBody = system.body(id);
     require(initialBody != nullptr, "real-spin camera planet must exist");
 
-    const glm::dquat initialInverse = glm::conjugate(glm::normalize(initialBody->orientation));
+    const glm::dquat initialOrientation = glm::normalize(initialBody->orientation);
+    const glm::dquat initialInverse = glm::conjugate(initialOrientation);
     const glm::dvec3 initialRenderForward = glm::normalize(initialInverse * camera.forwardDirection());
     const glm::dvec3 initialRenderUp = glm::normalize(initialInverse * camera.up());
     const glm::dvec3 initialLocalPosition = initialInverse * (camera.position() - initialBody->position);
@@ -169,7 +170,7 @@ void testRealSpinKeepsGroundRenderHeadingFixedForSixHours() {
 
     const auto* finalBody = system.body(id);
     require(finalBody != nullptr, "real-spin camera planet must still exist after integration");
-    require(std::abs(glm::dot(initialBody->orientation, finalBody->orientation)) < 0.95,
+    require(std::abs(glm::dot(initialOrientation, glm::normalize(finalBody->orientation))) < 0.95,
         "six simulated hours must produce a substantial physical planet self-rotation");
 }
 
