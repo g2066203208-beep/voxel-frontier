@@ -4,7 +4,7 @@ on:
   push:
     branches: [work/r24-unified-planetary-physics]
     paths:
-      - '.github/scripts/r24_stabilize_runtime.py'
+      - '.github/scripts/r24_stability_round2.py'
       - '.github/scripts/r24_stability_capture.sh'
       - '.github/workflows/r24-stability-evidence.yml'
   workflow_dispatch:
@@ -27,14 +27,14 @@ jobs:
           fetch-depth: 0
           ref: work/r24-unified-planetary-physics
 
-      - name: Stage R24 stabilization source and tests
+      - name: Stage R24 round2 source and tests
         run: |
-          python3 .github/scripts/r24_stabilize_runtime.py
+          python3 .github/scripts/r24_stability_round2.py
           git diff --check
-          grep -q 'decideTerrainStreaming' native/src/app/Main.cpp
-          grep -q 'rotatingFrameAngularVelocity' native/src/app/Main.cpp
-          grep -q 'surfaceAuthority' native/src/world/ProceduralEcology.cpp
-          grep -q 'vf_r24_runtime_stability_tests' native/CMakeLists.txt
+          grep -q 'VF_CAPTURE_HIGH_SPEED' native/src/app/Main.cpp
+          grep -q 'VF_CAPTURE_SHADOW_CONTACT' native/src/app/Main.cpp
+          grep -q 'setCreativeFlightSpeedMps' native/include/vf/player/PlanetCamera.hpp
+          grep -q 'testCreativeFlightConfigurationUsesProductionLimits' native/tests/R24RuntimeStabilityTests.cpp
           git diff --stat
 
       - name: Install Vulkan X11 and capture dependencies
@@ -80,7 +80,7 @@ jobs:
           set -o pipefail
           ctest --test-dir build/r24-stability --verbose --output-on-failure 2>&1 | tee r24-stability-ctest.log
 
-      - name: Re-run new R24 stability gate explicitly
+      - name: Re-run R24 stability gates explicitly
         id: stability_test
         if: steps.build.outcome == 'success'
         continue-on-error: true
@@ -144,7 +144,7 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No staged production/evidence changes.'
           else
-            git commit -m "R24: stabilize surface shadows celestial cadence and high-speed streaming [run ${GITHUB_RUN_ID}]"
+            git commit -m "R24: round2 harden visual evidence and high-speed proof [run ${GITHUB_RUN_ID}]"
             git push origin HEAD:work/r24-unified-planetary-physics
           fi
 
@@ -181,10 +181,10 @@ jobs:
         with:
           ref: work/r24-unified-planetary-physics
 
-      - name: Stage identical stabilization source
+      - name: Stage identical round2 source
         shell: pwsh
         run: |
-          python .github/scripts/r24_stabilize_runtime.py
+          python .github/scripts/r24_stability_round2.py
           git diff --check
 
       - name: Configure Windows x64
