@@ -1,11 +1,11 @@
 {
   "materials": [
     {
-      "name":"vf_reference_sandstone_v6",
+      "name":"vf_reference_sandstone_v7",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfLayeredSandstonePainted",
-      "params":{"seed":771231,"bands":7,"minSlabs":3,"maxSlabs":4,"crackChance":0.18,"chipStrength":0.82,"relief":1.38,"normalStrength":10.8}
+      "params":{"seed":771231,"bands":6,"minSlabs":2,"maxSlabs":4,"crackChance":0.19,"chipStrength":0.86,"relief":1.44,"normalStrength":11.2}
     }
   ]
 }
