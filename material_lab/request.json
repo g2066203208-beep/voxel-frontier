@@ -1,7 +1,7 @@
 {
   "materials": [
     {
-      "name":"vf_reference_sandstone_v11",
+      "name":"vf_reference_sandstone_v12",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfLayeredSandstonePainted",
