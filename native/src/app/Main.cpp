@@ -542,15 +542,17 @@ int main() {
             buildSurface.setHydrology(hydrology);
             vf::PlanetLodConfig lodConfig{};
             lodConfig.patchResolution = 10U;
-            lodConfig.maxDepth = 18U;
+            lodConfig.maxDepth = 20U;
             lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 6000U
                 : (buildAltitude < 150000.0 ? 1800U : 700U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewportHeightPixels = 900.0;
             lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 1.8
                 : (buildAltitude < 150000.0 ? 4.5 : 8.0);
-            lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 1800.0 : 0.0;
-            lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 4.0 : 24.0;
+            // Contact detail is deliberately local. Refining kilometres of terrain to metre
+            // scale wastes the patch budget and can still leave the actual feet/prop area coarse.
+            lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 240.0 : 0.0;
+            lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0 : 24.0;
             lodConfig.horizonMarginRadians = 0.018;
             lodConfig.skirtDepthMeters = 6.0;
 

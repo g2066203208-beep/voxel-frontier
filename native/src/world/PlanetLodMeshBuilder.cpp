@@ -253,7 +253,7 @@ PlanetMesh buildAdaptivePlanetSurface(
     PlanetLodStats* stats) {
     PlanetLodConfig config = configInput;
     config.patchResolution = std::clamp<std::uint32_t>(config.patchResolution, 4U, 64U);
-    config.maxDepth = std::clamp<std::uint32_t>(config.maxDepth, 1U, 18U);
+    config.maxDepth = std::clamp<std::uint32_t>(config.maxDepth, 1U, 20U);
     config.maxLeafPatches = std::clamp<std::size_t>(config.maxLeafPatches, 64U, 20000U);
     config.targetScreenErrorPixels = std::clamp(config.targetScreenErrorPixels, 0.5, 12.0);
     config.viewportHeightPixels = std::max(64.0, config.viewportHeightPixels);
@@ -265,10 +265,21 @@ PlanetMesh buildAdaptivePlanetSurface(
 
     PlanetLodStats localStats{};
     localStats.nearestCellMeters = std::numeric_limits<double>::infinity();
+    const auto approximateNodeDistance = [&](const Node& node) noexcept {
+        const NodeGeometry geometry = geometryFor(node, surface.planet().radius);
+        return glm::length(cameraPlanetLocal
+            - geometry.centerDirection * surface.planet().radius);
+    };
+
     std::vector<Node> pending;
     pending.reserve(config.maxLeafPatches * 2U);
-    for (std::uint32_t face = 0; face < 6U; ++face)
-        pending.push_back({face, 0U, -1.0, -1.0, 2.0});
+    std::array<Node, 6> roots{};
+    for (std::uint32_t face = 0; face < roots.size(); ++face)
+        roots[face] = {face, 0U, -1.0, -1.0, 2.0};
+    std::sort(roots.begin(), roots.end(), [&](const Node& a, const Node& b) {
+        return approximateNodeDistance(a) > approximateNodeDistance(b);
+    });
+    for (const Node& root : roots) pending.push_back(root);
 
     std::vector<Node> leaves;
     leaves.reserve(config.maxLeafPatches);
@@ -293,10 +304,16 @@ PlanetMesh buildAdaptivePlanetSurface(
             || metric.screenErrorPixels > config.targetScreenErrorPixels)) {
             const double half = node.size * 0.5;
             const std::uint32_t depth = node.depth + 1U;
-            pending.push_back({node.face, depth, node.u0, node.v0, half});
-            pending.push_back({node.face, depth, node.u0 + half, node.v0, half});
-            pending.push_back({node.face, depth, node.u0, node.v0 + half, half});
-            pending.push_back({node.face, depth, node.u0 + half, node.v0 + half, half});
+            std::array<Node, 4> children{{
+                {node.face, depth, node.u0, node.v0, half},
+                {node.face, depth, node.u0 + half, node.v0, half},
+                {node.face, depth, node.u0, node.v0 + half, half},
+                {node.face, depth, node.u0 + half, node.v0 + half, half},
+            }};
+            std::sort(children.begin(), children.end(), [&](const Node& a, const Node& b) {
+                return approximateNodeDistance(a) > approximateNodeDistance(b);
+            });
+            for (const Node& child : children) pending.push_back(child);
         } else {
             leaves.push_back(node);
         }

@@ -158,10 +158,10 @@ void testNearFieldLodEnforcesContactScaleCells() {
     vf::PlanetLodConfig config{};
     config.patchResolution = 8U;
     config.maxDepth = 9U;
-    config.maxLeafPatches = 4096U;
+    config.maxLeafPatches = 256U;
     config.viewportHeightPixels = 720.0;
     config.targetScreenErrorPixels = 12.0; // intentionally loose: near-field rule must dominate
-    config.nearFieldRadiusMeters = 180.0;
+    config.nearFieldRadiusMeters = 60.0;
     config.nearFieldCellMeters = 2.5;
     config.skirtDepthMeters = 1.0;
 
