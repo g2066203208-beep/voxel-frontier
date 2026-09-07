@@ -106,19 +106,24 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import re
-          root=Path('r24-performance-rescue-evidence/logs')
-          rows=[]
-          for log in root.glob('*.log'):
-              text=log.read_text(encoding='utf-8', errors='replace')
-              found=re.findall(r'R24 PERF terrain_build_ms=([0-9.]+) vertices=([0-9]+) indices=([0-9]+) hydrology_reused=([01])', text)
+          root = Path('r24-performance-rescue-evidence/logs')
+          expected = ['mountain.log', 'rift.log', 'canyon.log', 'abyss.log']
+          rows = []
+          pattern = re.compile(r'R24 PERF terrain_build_ms=([0-9.]+) vertices=([0-9]+) indices=([0-9]+) hydrology_reused=([01])')
+          for name in expected:
+              log = root / name
+              if not log.is_file():
+                  raise SystemExit(f'{name}: missing terrain runtime log')
+              text = log.read_text(encoding='utf-8', errors='replace')
+              found = pattern.findall(text)
               if not found:
-                  raise SystemExit(f'{log.name}: missing performance diagnostics')
-              ms, verts, inds, reused=found[-1]
+                  raise SystemExit(f'{name}: missing performance diagnostics')
+              ms, verts, inds, reused = found[-1]
               rows.append((log.stem, float(ms), int(verts), int(inds), int(reused)))
           for row in rows:
               print('PERF', row)
-          if not rows:
-              raise SystemExit('no performance rows found')
+          if len(rows) != 4:
+              raise SystemExit(f'expected 4 terrain performance rows, got {len(rows)}')
           PY
 
       - name: Preserve evidence
