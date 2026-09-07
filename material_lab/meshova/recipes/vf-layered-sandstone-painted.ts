@@ -27,7 +27,7 @@ function buildSlabs(seed:number,rows:number,minSlabs:number,maxSlabs:number,crac
   const slabs:Slab[]=[];const rowStep=1/rows;
   for(let r=0;r<rows;r++){
     const n=minSlabs+Math.floor(hash(seed,r,10)*(maxSlabs-minSlabs+1));const raw:number[]=[];let total=0;
-    for(let i=0;i<n;i++){let w=.62+hash(seed,r,i,11)*1.15;raw.push(w);total+=w;}
+    for(let i=0;i<n;i++){const w=.62+hash(seed,r,i,11)*1.15;raw.push(w);total+=w;}
     const overlap=.035+hash(seed,r,12)*.035;let cursor=hash(seed,r,13)*.18-.09;
     for(let i=0;i<n;i++){
       const frac=raw[i]/total,w=frac+overlap,cx=cursor+frac*.5;cursor+=frac;
@@ -35,8 +35,7 @@ function buildSlabs(seed:number,rows:number,minSlabs:number,maxSlabs:number,crac
       slabs.push(makeSlab(seed,r,i,cx,(r+.5)/rows+(hash(seed,r,i,15)-.5)*rowStep*.36,w*.57,hh,.420+(hash(seed,r,i,16)-.5)*.065+central*.018+(r%3===1?.010:0),.050+hash(seed,r,i,17)*.068,crackChance,false));
     }
   }
-  // Designed macro boulders: reference-like large masses spanning roughly 1.5 rows.
-  const anchors:[[number,number],[number,number],[number,number],[number,number],[number,number],[number,number]]=[[​.57,.50],[.28,.43],[.79,.39],[.42,.67],[.71,.68],[.18,.61]];
+  const anchors:[[number,number],[number,number],[number,number],[number,number],[number,number],[number,number]]=[[.57,.50],[.28,.43],[.79,.39],[.42,.67],[.71,.68],[.18,.61]];
   for(let m=0;m<anchors.length;m++){
     const [ax,ay]=anchors[m];const cx=ax+(hash(seed,90,m,1)-.5)*.07,cy=ay+(hash(seed,90,m,2)-.5)*.07;
     const hw=.125+hash(seed,90,m,3)*.075,hh=rowStep*(.78+hash(seed,90,m,4)*.58);
