@@ -25,6 +25,17 @@ Shared visual rules:
 - roughness is semantic to the material category, not random noise;
 - every category has its own procedural shape grammar rather than recoloring the rock generator.
 
+### Reference guardrail
+
+`VF_PAINTERLY_PLANETARY_V1` uses **The Long Dark** only as an art-direction reference for the qualities we want to preserve: moving-concept-art readability, hand-painted imperfection, simplified shape/color/line, and large angular environmental masses. We do **not** copy its textures or assets.
+
+Voxel Frontier keeps its own signature on top of those principles:
+
+- sandstone uses oversized interlocking strata, thick chamfered shoulders, narrow ink-dark fractures, warm ochre faces and restrained cool-violet shadow planes;
+- bark uses irregular calligraphic vertical ridges, compressed seams, localized peel/scar accents and sparse knot distortion rather than tiled bark plates;
+- dirt reads as continuous ground mass with broad hand-painted warm/cool planes, shallow compacted terraces and sparse erosion/furrow marks rather than pebble noise or Voronoi cells;
+- displacement must create a readable silhouette at material-sphere scale without producing paper-thin fins, floating layers or self-intersection-like spikes.
+
 ## Approved six-category master set
 
 The first production master set is intentionally small and stable:
