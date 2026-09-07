@@ -41,8 +41,10 @@ jobs:
           test -s material_lab/README.md
           test -s material_lab/meshova/bake-request.ts
           test -s material_lab/tests/surface-context.spec.ts
+          test -s material_lab/preview/render_3d_surface_showcase.py
 
           expected=$(printf '%s\n' \
+            vf-3d-material-showcase.ts \
             vf-layered-sandstone-painted.ts \
             vf-painterly-bark.ts \
             vf-painterly-core.ts \
@@ -73,7 +75,7 @@ jobs:
           from pathlib import Path
           request = json.loads(Path("material_lab/request.json").read_text())
           materials = request.get("materials", [request])
-          allowed = {
+          base_allowed = {
               "vfLayeredSandstonePainted",
               "vfPainterlyDirt",
               "vfPainterlyBark",
@@ -81,15 +83,12 @@ jobs:
               "vfPainterlySnow",
               "vfPainterlyWater",
           }
+          showcase3d = {"vf3DGrass","vf3DMoss","vf3DFur","vf3DFire"}
           presets = [m.get("preset") for m in materials]
           modes = {m.get("params", {}).get("mode") for m in materials}
           names = {m.get("name", "") for m in materials}
-          production = len(materials) == 6 and set(presets) == allowed
-          water_showcase = (
-              len(materials) == 4
-              and set(presets) == {"vfPainterlyWater"}
-              and modes == {"calm", "windy", "foam", "shallow"}
-          )
+          production = len(materials) == 6 and set(presets) == base_allowed
+          water_showcase = len(materials) == 4 and set(presets) == {"vfPainterlyWater"} and modes == {"calm", "windy", "foam", "shallow"}
           layer_showcase_names = {
               "vf_layer_sandstone_dry",
               "vf_layer_sandstone_snow_half",
@@ -99,13 +98,14 @@ jobs:
               "vf_layer_leaves_cutout",
           }
           layer_showcase = len(materials) == 6 and names == layer_showcase_names
-          if not (production or water_showcase or layer_showcase):
-              raise SystemExit("Request must be production-six, water-showcase, or exact surface-layer showcase")
+          surface3d_showcase = len(materials) == 4 and set(presets) == showcase3d
+          if not (production or water_showcase or layer_showcase or surface3d_showcase):
+              raise SystemExit("Request must be production-six, water-showcase, exact surface-layer showcase, or exact 3D material showcase")
           for item in materials:
               name = item.get("name", "")
               if any(token in name.lower() for token in ("reference", "test", "draft", "final", "_v1", "_v2", "_v3", "_v4", "_v5", "_v6", "_v7", "_v8", "_v9")):
                   raise SystemExit(f"Unstable production/showcase material name: {name}")
-          print("layer-showcase" if layer_showcase else ("water-showcase" if water_showcase else "production-six"))
+          print("3d-showcase" if surface3d_showcase else ("layer-showcase" if layer_showcase else ("water-showcase" if water_showcase else "production-six")))
           PY
 
       - name: Install preview tools
@@ -148,6 +148,7 @@ jobs:
           cp material_lab/meshova/bake-request.ts .cache/Meshova/examples/vf-bake-request.ts
           mkdir -p .cache/Meshova/examples/vf-recipes
           for file in \
+            vf-3d-material-showcase.ts \
             vf-layered-sandstone-painted.ts \
             vf-painterly-bark.ts \
             vf-painterly-core.ts \
@@ -200,6 +201,12 @@ jobs:
           from pathlib import Path
           root=Path('build/generated-materials')
           req=json.loads(Path('material_lab/request.json').read_text())
+          required={
+            'vf3DGrass':('bladeDensity','bladeLength','bladeBend'),
+            'vf3DMoss':('mossDensity','mossHeight','tuftVariation'),
+            'vf3DFur':('strandDensity','strandLength','strandBend','strandVariation'),
+            'vf3DFire':('flameDensity','flameHeight','heatDistortion','smoke','sparks'),
+          }
           for item in req.get('materials',[req]):
               d=root/item['name']; n=item['name']; preset=item['preset']; layers=item.get('layers',{})
               def need(key):
@@ -208,9 +215,9 @@ jobs:
               if preset=='vfPainterlyLeaves': need('opacity')
               if preset=='vfPainterlyWater':
                   for k in ('foam','transmission','refraction','glint'): need(k)
+              for k in required.get(preset,()): need(k)
               if layers.get('snowCoverage',0)>0: need('snowCoverage')
-              if layers.get('wetness',0)>0:
-                  need('wetness'); need('puddles')
+              if layers.get('wetness',0)>0: need('wetness'); need('puddles')
               if layers.get('rainIntensity',0)>0 and preset=='vfPainterlyWater': need('rainRipples')
           PY
 
@@ -223,6 +230,7 @@ jobs:
           set -euo pipefail
           python3 material_lab/preview/render_material_previews.py build/generated-materials
           python3 material_lab/preview/render_layer_diagnostics.py build/generated-materials
+          python3 material_lab/preview/render_3d_surface_showcase.py build/generated-materials
           expected_count=$(python3 - <<'PY'
           import json
           from pathlib import Path
@@ -255,9 +263,10 @@ jobs:
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Style: \`$VF_STYLE_ID\`"
             echo '- Adaptive resolver inputs: weather / exposure / environment / material traits / player+prop interactions / previous state / dt'
+            echo '- 3D showcase: grass blades / moss tufts / fur strands / emissive flame volume'
             echo '- Surface layers: snow coverage/depth/compaction, wetness/puddles, rain ripples'
             echo '- Foliage: true opacity alpha-cutout mask'
             echo '- Water fields: foam / transmission / refraction / glint / optional rainRipples'
             echo '- Source: procedural code only; raster source assets rejected'
-            echo '- Every material: PBR maps + true-Height displaced studio sphere'
+            echo '- Every material: PBR maps + true-Height displaced studio sphere; 3D presets receive procedural geometry/volume preview pass'
           } >> "$GITHUB_STEP_SUMMARY"
