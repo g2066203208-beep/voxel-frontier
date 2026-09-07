@@ -108,16 +108,15 @@ stop_app
 montage "$OUT"/ground/ground-spin-{0,1,2,3,4,5}.png -tile 3x2 -geometry 800x450+6+6 \
   "$OUT/ground/ground-spin-montage.png"
 
-# 2) Low-angle contact-shadow proof. A deterministic production-rendered box is placed with
-# its bottom face exactly on PlanetSurfaceAuthority. Side views expose peter-panning directly.
+# 2) Contact-shadow proof. The deterministic orange probe's lower face is exactly on
+# PlanetSurfaceAuthority and it is rendered by the production shadow-map pass. Sweep accelerated
+# daylight across a full set of sun azimuths instead of relying on one unlucky view-aligned shadow.
 start_app "$OUT/logs/shadow-contact.log" \
-  VF_CELESTIAL_TIME_SCALE=1 VF_CAPTURE_SHADOW_CONTACT=1 VF_RUNTIME_DIAGNOSTICS=1
-capture_frame "$OUT/shadows/contact-side.png" 512 40
-sleep 1.0
-capture_frame "$OUT/shadows/contact-side-late.png" 512 20
+  VF_CELESTIAL_TIME_SCALE=7200 VF_CAPTURE_SHADOW_CONTACT=1 VF_RUNTIME_DIAGNOSTICS=1
+capture_sequence "$OUT/shadows/contact-cycle" 8
 stop_app
-montage "$OUT/shadows/contact-side.png" "$OUT/shadows/contact-side-late.png" \
-  -tile 2x1 -geometry 800x450+6+6 "$OUT/shadows/contact-side-montage.png"
+montage "$OUT"/shadows/contact-cycle-{0,1,2,3,4,5,6,7}.png \
+  -tile 4x2 -geometry 800x450+6+6 "$OUT/shadows/contact-cycle-montage.png"
 
 # 3) External inertial observer: planet self-rotation must remain visible, not be disabled to fix
 # the surface observer. The accelerated sequence makes rotational continuity easy to inspect.
@@ -170,14 +169,14 @@ set -e
   echo "=== ground spin log ==="
   grep -E 'R24 DIAG|Earth renderer mode|terrain stale build|Fatal error|Earth-Moon physical scale' "$OUT/logs/ground-spin.log" || true
   echo "=== shadow contact log ==="
-  grep -E 'shadow-contact|R24 DIAG|Fatal error' "$OUT/logs/shadow-contact.log" || true
+  grep -E 'shadow-contact|shadow-contact probe|R24 DIAG|Fatal error' "$OUT/logs/shadow-contact.log" || true
   echo "=== high speed log ==="
   grep -E 'capture high-speed|R24 DIAG|Earth renderer mode|terrain stale build|Fatal error|Earth-Moon physical scale' "$OUT/logs/high-speed.log" || true
   echo "=== earth spin log ==="
   grep -E 'R24\.2 view|R24 DIAG|Earth renderer mode|Fatal error|Earth-Moon physical scale' "$OUT/logs/earth-spin.log" || true
 } > "$OUT/runtime-summary.txt"
 
-montage "$OUT/ground/ground-spin-montage.png" "$OUT/shadows/contact-side-montage.png" \
+montage "$OUT/ground/ground-spin-montage.png" "$OUT/shadows/contact-cycle-montage.png" \
         "$OUT/space/earth-spin-montage.png" "$OUT/high-speed/transit.png" \
         -tile 2x2 -geometry 800x450+6+6 "$OUT/r24-stability-overview.png"
 
@@ -185,9 +184,9 @@ cat > "$OUT/README.txt" <<'EOF'
 R24 runtime stability evidence — real Vulkan framebuffer only
 
 - ground/ground-spin-*.png: accelerated planet rotation while the player remains on the surface.
-  Terrain and local props should remain fixed relative to the camera; lighting/shadows may change.
-- shadows/contact-side*.png: low-angle production shadow-map proof; the orange probe's bottom
-  face is placed exactly on PlanetSurfaceAuthority, making any contact gap directly visible.
+- shadows/contact-cycle-*.png: the production-rendered orange probe has its lower face exactly on
+  PlanetSurfaceAuthority; accelerated daylight sweeps the real shadow over multiple azimuths so the
+  contact origin can be inspected without hiding the shadow behind the caster.
 - space/earth-spin-*.png: inertial external observer; physical planet self-rotation remains visible.
 - high-speed/*.png: production PlanetCamera flight plus real SDL forward input at a configured
   500 km/s target; runtime-summary must prove smooth-globe fallback.
