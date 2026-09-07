@@ -543,15 +543,18 @@ int main() {
             vf::PlanetLodConfig lodConfig{};
             lodConfig.patchResolution = 10U;
             lodConfig.maxDepth = 20U;
-            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 6000U
-                : (buildAltitude < 150000.0 ? 1800U : 700U);
+            // The contact zone is processed first by PlanetLodMeshBuilder. Keep enough budget for
+            // metre-scale feet/prop geometry but stop distant low-altitude SSE from saturating the
+            // old 6000-leaf ceiling every frame.
+            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 3600U
+                : (buildAltitude < 150000.0 ? 1600U : 700U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewportHeightPixels = 900.0;
-            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 1.8
-                : (buildAltitude < 150000.0 ? 4.5 : 8.0);
-            // Contact detail is deliberately local. Refining kilometres of terrain to metre
-            // scale wastes the patch budget and can still leave the actual feet/prop area coarse.
-            lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 240.0 : 0.0;
+            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 3.6
+                : (buildAltitude < 150000.0 ? 5.0 : 8.0);
+            // Contact detail is deliberately local: trees, placed objects and the character need
+            // fine geometry nearby; distant terrain can use screen-space error alone.
+            lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 160.0 : 0.0;
             lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0 : 24.0;
             lodConfig.horizonMarginRadians = 0.018;
             lodConfig.skirtDepthMeters = 6.0;
