@@ -873,11 +873,18 @@ int main() {
                 // terrain/collision, so any visible gap is a shadow-bias error rather than a
                 // placement ambiguity. This geometry exists only when the CI capture flag is set.
                 const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);
-                const glm::dvec3 tangentPlanet = safeNormalize(
-                    forwardPlanet - cameraDirectionPlanet * glm::dot(forwardPlanet, cameraDirectionPlanet),
-                    patchZ);
+                const glm::dvec3 sunPlanetDirection = safeNormalize(
+                    inverseAster * sunWorldDirection, patchEast);
+                const glm::dvec3 sunHorizontalPlanet = safeNormalize(
+                    sunPlanetDirection
+                        - cameraDirectionPlanet * glm::dot(sunPlanetDirection, cameraDirectionPlanet),
+                    patchEast);
+                // Put the proof object sideways to sunlight so its shadow cannot hide directly
+                // behind the caster from the camera. This affects capture mode only.
+                const glm::dvec3 placementTangentPlanet = safeNormalize(
+                    glm::cross(cameraDirectionPlanet, sunHorizontalPlanet), patchZ);
                 const glm::dvec3 probeDirection = safeNormalize(
-                    cameraDirectionPlanet + tangentPlanet * (11.0 / planet.radius),
+                    cameraDirectionPlanet + placementTangentPlanet * (10.0 / planet.radius),
                     cameraDirectionPlanet);
                 const vf::PlanetSurfaceSample probeSurface = surfaceAuthority.sampleSurface(probeDirection);
                 const glm::dvec3 probeBase = toSurfacePoint(probeSurface.position);
@@ -895,7 +902,14 @@ int main() {
                 vf::appendDebugBox(
                     dynamicMesh, probeCenter, probeOrientation, probeHalfExtents,
                     {0.88F, 0.43F, 0.12F}, {0.0F, 0.72F, 0.0F, 0.0F});
-                frameForwardSurface = safeNormalize(probeCenter - cameraSurface, forwardSurface);
+                const glm::dvec3 shadowDirectionSurface = safeNormalize(
+                    -(sunSurfaceDirection
+                        - probeUp * glm::dot(sunSurfaceDirection, probeUp)),
+                    {1.0, 0.0, 0.0});
+                // Aim between the caster base and the first metres of shadow. The screenshot must
+                // contain the exact object-ground junction and the shadow origin in the same frame.
+                const glm::dvec3 proofTarget = probeCenter + shadowDirectionSurface * 3.5;
+                frameForwardSurface = safeNormalize(proofTarget - cameraSurface, forwardSurface);
                 frameUpSurface = upSurface;
                 if (runtimeDiagnosticsStdout) {
                     std::cout << "R24 shadow-contact probe base_y=" << probeBase.y
