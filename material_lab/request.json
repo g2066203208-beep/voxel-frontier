@@ -1,7 +1,7 @@
 {
   "materials": [
     {
-      "name": "vf_weathered_basalt_09",
+      "name": "vf_weathered_basalt_10",
       "resolution": 2048,
       "profile": "signature",
       "preset": "vfBasalt",
@@ -11,14 +11,14 @@
         "poreDensity": 0.021,
         "weathering": 0.18,
         "roughnessBias": -0.005,
-        "normalStrength": 10.8,
+        "normalStrength": 14.0,
         "macroRelief": 1.18,
-        "mesoRelief": 1.38,
+        "mesoRelief": 1.42,
         "edgeBreakup": 1.16
       }
     },
     {
-      "name": "vf_granite_02",
+      "name": "vf_granite_03",
       "resolution": 1536,
       "profile": "signature",
       "preset": "vfGranite",
@@ -28,36 +28,36 @@
         "quartz": 0.29,
         "feldspar": 0.49,
         "mica": 0.10,
-        "relief": 1.18,
-        "normalStrength": 11.5
+        "relief": 1.20,
+        "normalStrength": 13.5
       }
     },
     {
-      "name": "vf_dirt_02",
+      "name": "vf_dirt_03",
       "resolution": 1536,
       "profile": "signature",
       "preset": "vfDirt",
       "params": {
-        "seed": 420502,
+        "seed": 420503,
         "clodScale": 9,
-        "pebbleDensity": 0.22,
-        "moisture": 0.12,
-        "relief": 1.22,
-        "normalStrength": 12.0
+        "pebbleDensity": 0.20,
+        "moisture": 0.08,
+        "relief": 1.24,
+        "normalStrength": 14.0
       }
     },
     {
-      "name": "vf_bark_02",
+      "name": "vf_bark_03",
       "resolution": 1536,
       "profile": "signature",
       "preset": "vfBark",
       "params": {
-        "seed": 530602,
-        "ridgeScale": 8.2,
-        "fissureScale": 4.0,
-        "age": 0.68,
-        "relief": 1.24,
-        "normalStrength": 11.6
+        "seed": 530603,
+        "ridgeScale": 6.8,
+        "fissureScale": 3.4,
+        "age": 0.72,
+        "relief": 1.34,
+        "normalStrength": 13.2
       }
     }
   ]
