@@ -330,32 +330,6 @@ int main() {
             camera.setCreativeFlightSpeedMps(500000.0);
             std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
         }
-        const bool captureHighSpeed = [] {
-            const char* value = std::getenv("VF_CAPTURE_HIGH_SPEED");
-            return value != nullptr && std::string_view{value} == "1";
-        }();
-        const bool runtimeDiagnosticsStdout = [] {
-            const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
-            return value != nullptr && std::string_view{value} == "1";
-        }();
-        if (captureHighSpeed) {
-            camera.setFlightMode(true);
-            camera.setCreativeFlightSpeedMps(500000.0);
-            std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
-        }
-        const bool captureHighSpeed = [] {
-            const char* value = std::getenv("VF_CAPTURE_HIGH_SPEED");
-            return value != nullptr && std::string_view{value} == "1";
-        }();
-        const bool runtimeDiagnosticsStdout = [] {
-            const char* value = std::getenv("VF_RUNTIME_DIAGNOSTICS");
-            return value != nullptr && std::string_view{value} == "1";
-        }();
-        if (captureHighSpeed) {
-            camera.setFlightMode(true);
-            camera.setCreativeFlightSpeedMps(500000.0);
-            std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
-        }
 
         constexpr double moonOrbitRadius = 384400000.0;
         vf::CelestialBody luna{};
