@@ -32,13 +32,13 @@ type Knot = {
 };
 
 function buildRibbons(seed: number, ridgeScale: number): BarkRibbon[] {
-  const count = Math.max(8, Math.min(12, Math.round(10 * ridgeScale)));
+  const count = Math.max(11, Math.min(16, Math.round(13 * ridgeScale)));
   const out: BarkRibbon[] = [];
   for (let i = 0; i < count; i++) {
     out.push({
       cx: (i + 0.5 + (hash(seed, i, 0) - 0.5) * 0.22) / count,
-      width: (0.52 + hash(seed, i, 6) * 0.22) / count,
-      lift: 0.078 + hash(seed, i, 7) * 0.036,
+      width: (0.48 + hash(seed, i, 6) * 0.20) / count,
+      lift: 0.052 + hash(seed, i, 7) * 0.022,
       warm: hash(seed, i, 8),
       cool: hash(seed, i, 18),
       lean: (hash(seed, i, 19) - 0.5) * 0.018,
@@ -84,14 +84,14 @@ export function bakeVfPainterlyBark(size: number, p: VfPainterlyBarkParams = {})
   const height = makeTexture(size, size, 1);
   const ao = makeTexture(size, size, 1);
 
-  const fissureCol: RGB = [0.032, 0.009, 0.012];
-  const deep: RGB = [0.082, 0.024, 0.022];
-  const shadow: RGB = [0.145, 0.047, 0.038];
-  const mid: RGB = [0.34, 0.112, 0.052];
-  const light: RGB = [0.61, 0.285, 0.105];
-  const gold: RGB = [0.83, 0.48, 0.19];
-  const cool: RGB = [0.14, 0.055, 0.092];
-  const scarLight: RGB = [0.74, 0.39, 0.145];
+  const fissureCol: RGB = [0.028, 0.008, 0.011];
+  const deep: RGB = [0.068, 0.021, 0.020];
+  const shadow: RGB = [0.115, 0.039, 0.030];
+  const mid: RGB = [0.275, 0.087, 0.038];
+  const light: RGB = [0.49, 0.205, 0.075];
+  const gold: RGB = [0.68, 0.355, 0.125];
+  const cool: RGB = [0.105, 0.038, 0.065];
+  const scarLight: RGB = [0.61, 0.285, 0.098];
 
   for (let py = 0; py < size; py++) {
     const v = 1 - (py + 0.5) / size;
@@ -132,7 +132,8 @@ export function bakeVfPainterlyBark(size: number, p: VfPainterlyBarkParams = {})
           ribbon.width *
           (0.84 + 0.20 * (0.5 + 0.5 * Math.sin(TAU * (2 * v + hash(seed, id, 12)))));
         const dx = wrapDelta(u - center);
-        const q0 = Math.abs(dx) / Math.max(width, 1e-6);
+        const signedQ = dx / Math.max(width, 1e-6);
+        const q0 = Math.abs(signedQ);
         const edgeNoise = periodicField(u, v, seed + 310 + id * 19, 3);
         const q = Math.max(0, q0 + edgeNoise * 0.075 * (0.35 + q0));
         const plate = S((1.10 - q) / 0.21);
@@ -141,8 +142,10 @@ export function bakeVfPainterlyBark(size: number, p: VfPainterlyBarkParams = {})
 
         let crossBreak = 0;
         for (let bi = 0; bi < ribbon.breaks.length; bi++) {
-          const widthY = 0.015 + hash(seed, id, bi, 32) * 0.007;
-          crossBreak = Math.max(crossBreak, G(wrapDelta(v - ribbon.breaks[bi]) / widthY));
+          const widthY = 0.010 + hash(seed, id, bi, 32) * 0.007;
+          const breakX = (hash(seed, id, bi, 33) - 0.5) * 0.72;
+          const localBreak = G(wrapDelta(v - ribbon.breaks[bi]) / widthY) * G((signedQ - breakX) / 0.42);
+          crossBreak = Math.max(crossBreak, localBreak);
         }
         crossBreak *= G(q / 0.80);
 
@@ -168,22 +171,25 @@ export function bakeVfPainterlyBark(size: number, p: VfPainterlyBarkParams = {})
         }
       }
 
-      const seam = (1 - S((best - second) / 0.055)) * S((0.64 - best) / 0.24);
+      const seam = (1 - S((best - second) / 0.036)) * S((0.56 - best) / 0.18);
       const side = C(0.5 - bestDx / Math.max(bestWidth * 1.35, 1e-6));
       const fiberPhase =
         TAU * (42 * u + 4 * v + hash(seed, bestId, 13)) +
         periodicField(u, v, seed + 590 + bestId * 11, 2) * 0.7;
       const fiber = (0.5 + 0.5 * Math.sin(fiberPhase) - 0.5) * best;
+      const microPhase = TAU * (31 * u + 2 * v + hash(seed, bestId, 611)) + periodicField(u, v, seed + 620 + bestId * 13, 2) * 0.48;
+      const microFissure = Math.pow(C(0.5 + 0.5 * Math.sin(microPhase)), 18) * best * S((0.90 - bestQ) / 0.30);
       const grain = periodicField(u, v, seed + 710 + bestId * 17, 4);
       const planeWash = periodicField(u, v, seed + 830 + bestId * 23, 2);
 
       let h =
-        0.435 +
+        0.452 +
         relief *
           (best * bestRibbon.lift +
             best * best * 0.022 -
-            seam * 0.042 -
-            bestBreak * 0.032 +
+            seam * 0.020 -
+            bestBreak * 0.020 -
+            microFissure * 0.007 +
             fiber * 0.009 +
             (side - 0.5) * best * 0.006 +
             knotRing * 0.022 -
@@ -195,20 +201,20 @@ export function bakeVfPainterlyBark(size: number, p: VfPainterlyBarkParams = {})
       col = M(col, gold, C((side - 0.48) * 0.22 * best + bestRibbon.warm * 0.055 * best));
       col = M(col, cool, C((0.54 - side) * 0.16 * best + bestRibbon.cool * 0.035 * best));
       col = M(col, deep, C(bestBreak * 0.38 + seam * 0.34));
-      col = M(col, fissureCol, C(seam * 0.88 + (1 - best) * 0.24));
+      col = M(col, fissureCol, C(seam * 0.72 + (1 - best) * 0.16 + microFissure * 0.42));
       col = M(col, scarLight, C(knotScar * 0.34 + knotRing * 0.10));
       col = M(col, grain > 0 ? gold : cool, Math.abs(grain) * 0.035 * best);
       col = M(col, planeWash > 0 ? [0.67, 0.31, 0.11] : [0.17, 0.045, 0.035], Math.abs(planeWash) * 0.045 * best);
 
       const dryFiber = Math.pow(C(0.5 + 0.5 * Math.sin(fiberPhase + bestRibbon.warm * TAU)), 7) * best;
-      col = M(col, [0.79, 0.43, 0.17], dryFiber * 0.045);
+      col = M(col, [0.70, 0.345, 0.115], dryFiber * 0.035);
 
       baseColor.data[j] = C(col[0]);
       baseColor.data[j + 1] = C(col[1]);
       baseColor.data[j + 2] = C(col[2]);
       height.data[i] = h;
-      roughness.data[i] = C(0.79 + seam * 0.13 + bestBreak * 0.07 + knotCore * 0.04 - best * 0.035 + Math.abs(grain) * 0.025);
-      ao.data[i] = C(1 - seam * 0.42 - bestBreak * 0.18 - knotCore * 0.16);
+      roughness.data[i] = C(0.82 + seam * 0.10 + bestBreak * 0.055 + microFissure * 0.04 + knotCore * 0.04 - best * 0.028 + Math.abs(grain) * 0.022);
+      ao.data[i] = C(1 - seam * 0.30 - bestBreak * 0.12 - microFissure * 0.06 - knotCore * 0.14);
     }
   }
 
