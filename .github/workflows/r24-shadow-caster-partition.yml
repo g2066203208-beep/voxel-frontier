@@ -1,0 +1,212 @@
+name: R24 Local Shadow Caster Partition
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_shadow_caster_partition.py'
+      - '.github/workflows/r24-shadow-caster-partition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-shadow-caster-partition-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 production commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Materialize local shadow caster partition
+        run: python3 .github/scripts/r24_shadow_caster_partition.py
+
+      - name: Validate source contracts
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'shadowCasterIndexCount' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'pendingStaticShadowCasterIndexCount_' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'partitionMeshIndicesForRenderPasses' native/src/render/VulkanRenderer.cpp
+          grep -q 'TriangleClass::OpaqueReceiver' native/src/render/VulkanRenderer.cpp
+          grep -q 'R24 PERF shadow_caster_indices=' native/src/render/VulkanRenderer.cpp
+          grep -q 'staticMesh.shadowCasterIndexCount' native/src/render/VulkanRenderer.cpp
+          grep -q 'terrain = terrain && cornerIsTerrain' native/src/render/VulkanRenderer.cpp
+          ! grep -q 'staticMesh.vertexBuffer, staticMesh.indexBuffer, staticMesh.opaqueIndexCount, 0U);' native/src/render/VulkanRenderer.cpp
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-shadow -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-shadow --parallel 2
+
+      - name: Run full native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-shadow --verbose --output-on-failure 2>&1 | tee r24-shadow-ctest.log
+
+      - name: Gate physical and shader regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-shadow --verbose --output-on-failure \
+            -R 'vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests|vf_shader_contract_tests' \
+            2>&1 | tee r24-shadow-focused.log
+          grep -q 'vf_planetary_body_system_tests: PASS' r24-shadow-focused.log
+          grep -q 'vf_r24_runtime_stability_tests: PASS' r24-shadow-focused.log
+          grep -q 'Terrain landform tests passed' r24-shadow-focused.log
+          grep -q 'All production shader SPIR-V entry-point contracts passed' r24-shadow-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real Vulkan evidence
+        shell: bash
+        run: |
+          APP="$(find build/r24-shadow -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-shadow-caster-evidence
+
+      - name: Gate local shadow submission and runtime
+        shell: bash
+        run: |
+          test -s r24-shadow-caster-evidence/r24-epic-landscape-overview.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, statistics
+
+          logs = [p for p in Path('r24-shadow-caster-evidence/logs').glob('*.log') if not p.name.startswith('xvfb')]
+          shadow_pattern = re.compile(r'R24 PERF shadow_caster_indices=(\d+) opaque_indices=(\d+) shadow_reduction=([0-9.]+)')
+          fps_pattern = re.compile(r'R24 DIAG \| .*?STREAM READY.*?\| FPS ([0-9.]+)')
+          terrain_pattern = re.compile(
+              r'R24 PERF terrain_build_ms=([0-9.]+) vertices=([0-9]+) indices=([0-9]+) '
+              r'leaf_patches=([0-9]+) culled_nodes=([0-9]+) hydrology_reused=([01])')
+
+          worst_ratio = 0.0
+          total_shadow = 0
+          total_opaque = 0
+          ready_fps = []
+          terrain_rows = []
+          seen_logs = 0
+          for log in logs:
+              text = log.read_text(encoding='utf-8', errors='replace')
+              shadow_rows = shadow_pattern.findall(text)
+              if shadow_rows:
+                  seen_logs += 1
+                  caster, opaque, reduction = shadow_rows[-1]
+                  caster, opaque = int(caster), int(opaque)
+                  ratio = caster / max(opaque, 1)
+                  worst_ratio = max(worst_ratio, ratio)
+                  total_shadow += caster
+                  total_opaque += opaque
+                  print('SHADOW_PARTITION', log.stem, 'casters=', caster, 'opaque=', opaque,
+                        'ratio=', round(ratio, 5), 'reduction=', reduction)
+              fps = [float(v) for v in fps_pattern.findall(text)]
+              if fps:
+                  ready_fps.extend(fps[-3:])
+                  print('READY_FPS', log.stem, fps[-3:])
+              terrain = terrain_pattern.findall(text)
+              if terrain:
+                  terrain_rows.append((log.stem,) + tuple(terrain[-1]))
+
+          if seen_logs < 4:
+              raise SystemExit(f'expected shadow partition telemetry in four scenes, got {seen_logs}')
+          if total_opaque <= 0:
+              raise SystemExit('no opaque geometry observed')
+          aggregate_ratio = total_shadow / total_opaque
+          print('SHADOW_SUMMARY aggregate_ratio=', aggregate_ratio, 'worst_ratio=', worst_ratio,
+                'submitted=', total_shadow, 'opaque=', total_opaque)
+          # A local contact map should never re-submit most of the planet mesh. This is intentionally
+          # loose enough to retain dense ecology/prop scenes while proving the million-index terrain
+          # receiver range has actually left the caster pass.
+          if aggregate_ratio >= 0.35 or worst_ratio >= 0.50:
+              raise SystemExit(f'local shadow caster partition too broad: aggregate={aggregate_ratio:.3f} worst={worst_ratio:.3f}')
+          if not ready_fps:
+              raise SystemExit('missing steady-state runtime FPS telemetry')
+          median_fps = statistics.median(ready_fps)
+          print('SOFTWARE_VULKAN_READY_FPS median=', median_fps, 'samples=', ready_fps)
+          # Lavapipe is CPU software Vulkan and runner-dependent; this is only a catastrophic
+          # regression guard. The previous validated steady-frame rescue measured 20-22 FPS.
+          if median_fps < 15.0:
+              raise SystemExit(f'software Vulkan steady frame regressed badly: median {median_fps:.1f} FPS')
+          print('TERRAIN_ROWS', terrain_rows)
+          PY
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-shadow-caster-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-shadow-caster-evidence ]]; then
+            cp -a r24-shadow-caster-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-shadow-ctest.log ]] && cp -f r24-shadow-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-shadow-focused.log ]] && cp -f r24-shadow-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-shadow-caster-${{ github.run_id }}
+          path: |
+            r24-shadow-caster-evidence/**
+            r24-shadow-ctest.log
+            r24-shadow-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote validated local shadow partition
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "perf(r24): restrict contact shadows to local object casters"
+          git reset --hard HEAD
+          git clean -fd build/r24-shadow || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
