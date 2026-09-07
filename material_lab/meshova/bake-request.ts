@@ -12,8 +12,26 @@ import { bakeVfBasalt } from "./vf-recipes/vf-basalt.js";
 import { bakeVfGranite } from "./vf-recipes/vf-granite.js";
 import { bakeVfDirt } from "./vf-recipes/vf-dirt.js";
 import { bakeVfBark } from "./vf-recipes/vf-bark.js";
+import {
+  bakeVfSandstone,
+  bakeVfLimestone,
+  bakeVfGravel,
+  bakeVfSand,
+  bakeVfWetMud,
+  bakeVfWoodPlank,
+  bakeVfIronOre,
+  bakeVfCopperOre,
+  bakeVfCoal,
+  bakeVfSnow,
+  bakeVfIce,
+} from "./vf-recipes/vf-world-surfaces.js";
 
-type Preset = "stylizedCellRock" | "volcanicRock" | "simpleRock" | "vfBasalt" | "vfGranite" | "vfDirt" | "vfBark";
+type Preset =
+  | "stylizedCellRock" | "volcanicRock" | "simpleRock"
+  | "vfBasalt" | "vfGranite" | "vfDirt" | "vfBark"
+  | "vfSandstone" | "vfLimestone" | "vfGravel" | "vfSand" | "vfWetMud"
+  | "vfWoodPlank" | "vfIronOre" | "vfCopperOre" | "vfCoal" | "vfSnow" | "vfIce";
+
 type Request = {
   name: string;
   resolution: number;
@@ -37,17 +55,22 @@ function bakeOne(req: Request) {
     material = materialFromFields(req.resolution, BILIBILI_MATERIALS.volcanicRock(req.params));
   } else if (req.preset === "simpleRock") {
     material = materialFromFields(req.resolution, BILIBILI_MATERIALS.simpleRock(req.params));
-  } else if (req.preset === "vfBasalt") {
-    material = bakeVfBasalt(req.resolution, req.params);
-  } else if (req.preset === "vfGranite") {
-    material = bakeVfGranite(req.resolution, req.params);
-  } else if (req.preset === "vfDirt") {
-    material = bakeVfDirt(req.resolution, req.params);
-  } else if (req.preset === "vfBark") {
-    material = bakeVfBark(req.resolution, req.params);
-  } else {
-    throw new Error(`Unsupported preset: ${String(req.preset)}`);
-  }
+  } else if (req.preset === "vfBasalt") material = bakeVfBasalt(req.resolution, req.params);
+  else if (req.preset === "vfGranite") material = bakeVfGranite(req.resolution, req.params);
+  else if (req.preset === "vfDirt") material = bakeVfDirt(req.resolution, req.params);
+  else if (req.preset === "vfBark") material = bakeVfBark(req.resolution, req.params);
+  else if (req.preset === "vfSandstone") material = bakeVfSandstone(req.resolution, req.params);
+  else if (req.preset === "vfLimestone") material = bakeVfLimestone(req.resolution, req.params);
+  else if (req.preset === "vfGravel") material = bakeVfGravel(req.resolution, req.params);
+  else if (req.preset === "vfSand") material = bakeVfSand(req.resolution, req.params);
+  else if (req.preset === "vfWetMud") material = bakeVfWetMud(req.resolution, req.params);
+  else if (req.preset === "vfWoodPlank") material = bakeVfWoodPlank(req.resolution, req.params);
+  else if (req.preset === "vfIronOre") material = bakeVfIronOre(req.resolution, req.params);
+  else if (req.preset === "vfCopperOre") material = bakeVfCopperOre(req.resolution, req.params);
+  else if (req.preset === "vfCoal") material = bakeVfCoal(req.resolution, req.params);
+  else if (req.preset === "vfSnow") material = bakeVfSnow(req.resolution, req.params);
+  else if (req.preset === "vfIce") material = bakeVfIce(req.resolution, req.params);
+  else throw new Error(`Unsupported preset: ${String(req.preset)}`);
 
   const problems = validateMaterial(material);
   if (problems.length > 0) throw new Error(`${req.name}: ${problems.join("; ")}`);
