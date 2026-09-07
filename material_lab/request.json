@@ -1,19 +1,64 @@
 {
-  "name": "vf_weathered_basalt_08",
-  "engine": "meshova",
-  "upstream_commit": "129f5130c02581dcd53b2cb334136985946e3df0",
-  "resolution": 2048,
-  "profile": "realistic",
-  "preset": "vfBasalt",
-  "params": {
-    "seed": 240913,
-    "fractureStrength": 0.54,
-    "poreDensity": 0.020,
-    "weathering": 0.20,
-    "roughnessBias": 0.010,
-    "normalStrength": 7.6,
-    "macroRelief": 1.16,
-    "mesoRelief": 1.32,
-    "edgeBreakup": 1.10
-  }
+  "materials": [
+    {
+      "name": "vf_weathered_basalt_08",
+      "resolution": 2048,
+      "profile": "signature",
+      "preset": "vfBasalt",
+      "params": {
+        "seed": 240913,
+        "fractureStrength": 0.54,
+        "poreDensity": 0.020,
+        "weathering": 0.20,
+        "roughnessBias": 0.010,
+        "normalStrength": 7.6,
+        "macroRelief": 1.16,
+        "mesoRelief": 1.32,
+        "edgeBreakup": 1.10
+      }
+    },
+    {
+      "name": "vf_granite_01",
+      "resolution": 1536,
+      "profile": "signature",
+      "preset": "vfGranite",
+      "params": {
+        "seed": 310401,
+        "grainScale": 19,
+        "quartz": 0.30,
+        "feldspar": 0.47,
+        "mica": 0.12,
+        "relief": 1.08,
+        "normalStrength": 7.2
+      }
+    },
+    {
+      "name": "vf_dirt_01",
+      "resolution": 1536,
+      "profile": "signature",
+      "preset": "vfDirt",
+      "params": {
+        "seed": 420501,
+        "clodScale": 7,
+        "pebbleDensity": 0.17,
+        "moisture": 0.16,
+        "relief": 1.10,
+        "normalStrength": 8.0
+      }
+    },
+    {
+      "name": "vf_bark_01",
+      "resolution": 1536,
+      "profile": "signature",
+      "preset": "vfBark",
+      "params": {
+        "seed": 530601,
+        "ridgeScale": 11,
+        "fissureScale": 4.6,
+        "age": 0.62,
+        "relief": 1.10,
+        "normalStrength": 8.6
+      }
+    }
+  ]
 }
