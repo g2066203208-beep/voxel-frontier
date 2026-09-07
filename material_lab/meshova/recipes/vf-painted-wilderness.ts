@@ -57,11 +57,12 @@ function painterField(u:number,v:number,scale:number){
   return C((a*.46+b*.34+c*.20-.5)*(.30*scale)+.5);
 }
 
+// Very broad wind-aligned drift field: intentionally avoids cellular/spot noise.
 function weatherField(u:number,v:number){
-  const a=Math.sin((u*2+v*3)*TAU+.65)*.5+.5;
-  const b=Math.sin((u*5-v*2)*TAU+1.70)*.5+.5;
-  const c=Math.sin((u*3+v*5)*TAU+2.35)*.5+.5;
-  return C(a*.48+b*.32+c*.20);
+  const sweep=Math.sin((u*.72+v*1.08+Math.sin((u+.17)*TAU)*.075)*TAU+.45)*.5+.5;
+  const cross=Math.sin((u*1.18-v*.44)*TAU+1.55)*.5+.5;
+  const broad=Math.sin((u*.48+v*.62)*TAU+2.20)*.5+.5;
+  return C(sweep*.62+cross*.23+broad*.15);
 }
 
 function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
@@ -76,8 +77,8 @@ function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
       const sc:RGB=[sample(src.baseColor,u,v,0),sample(src.baseColor,u,v,1),sample(src.baseColor,u,v,2)];
       const sh=sample(src.height,u,v,0),sa=src.ao?sample(src.ao,u,v,0):1,sr=sample(src.roughness,u,v,0);
       const h0=(sample(src.height,u+.012,v,0)+sample(src.height,u-.012,v,0)+sample(src.height,u,v+.012,0)+sample(src.height,u,v-.012,0)+sh*2)/6;
-      let h=C(.5+(h0-.5)*cfg.hGain);height.data[i]=h;
-      let a=C(1-(1-sa)*cfg.ao);ao.data[i]=a;
+      let h=C(.5+(h0-.5)*cfg.hGain);
+      let a=C(1-(1-sa)*cfg.ao);
       const pf=painterField(u,v,paintScale);
       const localLum=lum(sc);let t=C((localLum-cfg.lo)/Math.max(1e-5,cfg.hi-cfg.lo));
       t=C(t+(h-.5)*.24+(pf-.5)*.16-(1-a)*.07);
@@ -99,24 +100,32 @@ function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
 
       if(k==="basalt"&&(wet>0||frost>0||snow>0)){
         const wf=weatherField(u,v),cavity=C(1-a);
-        const wetPool=C(wet*(.58+.42*S(C((cavity-.02)/.24)))*(.76+.24*(1-wf)));
-        col=M(col,[.030,.050,.070],wetPool*.34);
-        r=L(r,.24,wetPool*.78);
 
-        const frostMask=C(frost*S(C((h-.42)/.36))*(.64+.36*wf)*(1-wetPool*.35));
-        col=M(col,[.625,.745,.840],frostMask*.72);
-        col=M(col,[.790,.835,.865],frostMask*S(C((wf-.58)/.30))*.22);
-        r=L(r,.86,frostMask*.82);
-        h=C(h+frostMask*.018);
-        a=C(L(a,1,frostMask*.22));
+        // Rain: broad darkening + much lower roughness, strongest in cavities.
+        const wetPool=C(wet*(.66+.34*S(C((cavity-.015)/.22)))*(.88+.12*(1-wf)));
+        col=M(col,[.018,.034,.052],wetPool*.50);
+        r=L(r,.14,wetPool*.84);
 
-        const snowField=C(wf*.58+h*.42),threshold=L(.86,.20,snow);
-        const snowMask=C(S(C((snowField-threshold)/.22))*snow);
-        const snowCol=M([.405,.575,.745],[.955,.950,.905],C(.36+h*.46+wf*.18));
-        col=M(col,snowCol,snowMask*.96);
-        r=L(r,.88,snowMask*.90);
-        h=C(h+snowMask*(.028+.070*snowDepth));
-        a=C(L(a,1,snowMask*.68));
+        // Frost: thin cool glaze, not white paint. Exposed/high faces receive slightly more.
+        const exposed=.48+.52*S(C((h-.34)/.50));
+        const frostMask=C(frost*exposed*(.88+.12*wf)*(1-wetPool*.28));
+        col=M(col,[.455,.610,.735],frostMask*.48);
+        col=M(col,[.700,.770,.815],frostMask*S(C((wf-.58)/.34))*.10);
+        r=L(r,.82,frostMask*.70);
+        h=C(h+frostMask*.010);
+        a=C(L(a,1,frostMask*.16));
+
+        // Snow: a thin dusting plus broad wind-drift bands. No cellular holes/spots.
+        const drift=C(h*.56+wf*.44);
+        const threshold=L(.76,.36,snow);
+        const thick=C(S(C((drift-threshold)/.18))*snow);
+        const dust=C(S(C((snow-.52)/.34))*.24);
+        const snowMask=C(dust+(1-dust)*thick);
+        const snowCol=M([.390,.555,.720],[.955,.945,.895],C(.32+h*.48+wf*.20));
+        col=M(col,snowCol,snowMask*.94);
+        r=L(r,.89,snowMask*.88);
+        h=C(h+snowMask*(.020+.058*snowDepth)*(.72+.28*thick));
+        a=C(L(a,1,snowMask*.58));
       }
 
       bc.data[j]=C(col[0]);bc.data[j+1]=C(col[1]);bc.data[j+2]=C(col[2]);
