@@ -403,16 +403,15 @@ int main() {
                       << aerialAltitude << " m\n";
         }
 
-        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
-            shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
-            const glm::dvec3 groundUp = camera.up();
-            const glm::dvec3 tangentForward = safeNormalize(
-                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
-                stableTangent(groundUp));
-            camera.setViewDirectionWorld(
-                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
-                groundUp);
-            std::cout << "R24 capture shadow-contact downward view\n";
+        const bool shadowContactCapture = [] {
+            const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
+            return shadowEnv != nullptr && std::string_view{shadowEnv} == "1";
+        }();
+        if (shadowContactCapture) {
+            // Do not use the old near-vertical evidence camera: it hid the exact contact point.
+            // The per-frame capture probe below is placed on PlanetSurfaceAuthority and the camera
+            // is aimed at its base from ordinary eye height, exposing even centimetre-scale gaps.
+            std::cout << "R24 capture shadow-contact low-angle production view\n";
         }
 
         std::string celestialTargetMode{};
@@ -815,7 +814,45 @@ int main() {
             const glm::dvec3 sunSurfaceDirection = safeNormalize(
                 toSurfaceVector(inverseAster * sunWorldDirection), {0.3, 0.8, -0.2});
 
+            glm::dvec3 frameForwardSurface = forwardSurface;
+            glm::dvec3 frameUpSurface = upSurface;
             vf::PlanetMesh dynamicMesh{};
+            if (shadowContactCapture) {
+                // Deterministic contact probe rendered through the *production* shadow-map pass.
+                // Its lower face is exactly tangent to the same authoritative surface used by
+                // terrain/collision, so any visible gap is a shadow-bias error rather than a
+                // placement ambiguity. This geometry exists only when the CI capture flag is set.
+                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);
+                const glm::dvec3 tangentPlanet = safeNormalize(
+                    forwardPlanet - cameraDirectionPlanet * glm::dot(forwardPlanet, cameraDirectionPlanet),
+                    patchZ);
+                const glm::dvec3 probeDirection = safeNormalize(
+                    cameraDirectionPlanet + tangentPlanet * (11.0 / planet.radius),
+                    cameraDirectionPlanet);
+                const vf::PlanetSurfaceSample probeSurface = surfaceAuthority.sampleSurface(probeDirection);
+                const glm::dvec3 probeBase = toSurfacePoint(probeSurface.position);
+                const glm::dvec3 probeUp = safeNormalize(
+                    toSurfaceVector(probeSurface.normal), {0.0, 1.0, 0.0});
+                const glm::dvec3 localY{0.0, 1.0, 0.0};
+                const double upDot = std::clamp(glm::dot(localY, probeUp), -1.0, 1.0);
+                glm::dquat probeOrientation{1.0, 0.0, 0.0, 0.0};
+                if (upDot < 0.999999) {
+                    const glm::dvec3 axis = safeNormalize(glm::cross(localY, probeUp), {1.0, 0.0, 0.0});
+                    probeOrientation = glm::angleAxis(std::acos(upDot), axis);
+                }
+                const glm::dvec3 probeHalfExtents{0.75, 1.50, 0.75};
+                const glm::dvec3 probeCenter = probeBase + probeUp * probeHalfExtents.y;
+                vf::appendDebugBox(
+                    dynamicMesh, probeCenter, probeOrientation, probeHalfExtents,
+                    {0.88F, 0.43F, 0.12F}, {0.0F, 0.72F, 0.0F, 0.0F});
+                frameForwardSurface = safeNormalize(probeCenter - cameraSurface, forwardSurface);
+                frameUpSurface = upSurface;
+                if (runtimeDiagnosticsStdout) {
+                    std::cout << "R24 shadow-contact probe base_y=" << probeBase.y
+                              << " center_y=" << probeCenter.y
+                              << " half_height=" << probeHalfExtents.y << '\n';
+                }
+            }
             if (currentMoon != nullptr) {
                 const double moonCameraDistance = glm::length(currentMoon->position - camera.position());
                 const vf::PlanetMesh& moonSource = moonCameraDistance < 12000000.0
@@ -861,7 +898,7 @@ int main() {
                 ? static_cast<float>(width) / static_cast<float>(height)
                 : 16.0F / 9.0F;
             const glm::mat4 viewProjection = makeReverseZViewProjection(
-                forwardSurface, upSurface, aspect);
+                frameForwardSurface, frameUpSurface, aspect);
 
             const vf::PlanetClimateSample climateSample = climateGrid.sample(
                 safeNormalize(cameraPlanet, patchUp), std::max(0.0, camera.altitude()));
@@ -885,7 +922,7 @@ int main() {
             renderEnvironment.groundAmbient = glm::vec3{0.018F, 0.016F, 0.013F}
                 + glm::vec3{0.030F, 0.042F, 0.022F} * static_cast<float>(densityRatio);
             renderEnvironment.exposure = 1.10F;
-            renderEnvironment.cameraForward = glm::vec3(forwardSurface);
+            renderEnvironment.cameraForward = glm::vec3(frameForwardSurface);
             renderEnvironment.planetCenter = toSurfacePoint(glm::dvec3{0.0});
             renderEnvironment.planetRadius = planet.radius;
             renderEnvironment.atmosphereHeight = opticalAtmosphereHeight;

@@ -837,8 +837,11 @@ void VulkanRenderer::createPipelines() {
     VkPipelineRasterizationStateCreateInfo shadowRaster = raster;
     shadowRaster.cullMode = VK_CULL_MODE_BACK_BIT;
     shadowRaster.depthBiasEnable = VK_TRUE;
-    shadowRaster.depthBiasConstantFactor = 0.55F;
-    shadowRaster.depthBiasSlopeFactor = 1.00F;
+    // Keep caster bias deliberately small. The previous values visibly separated long
+    // low-sun shadows from tree/prop contact points (classic peter-panning). Receiver-side bias
+    // below handles the remaining acne with a tightly bounded physical-scale offset.
+    shadowRaster.depthBiasConstantFactor = 0.18F;
+    shadowRaster.depthBiasSlopeFactor = 0.45F;
     VkPipelineColorBlendStateCreateInfo noColorBlend{};
     noColorBlend.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     VkGraphicsPipelineCreateInfo shadowInfo{};

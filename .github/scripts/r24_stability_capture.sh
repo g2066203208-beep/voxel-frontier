@@ -108,11 +108,16 @@ stop_app
 montage "$OUT"/ground/ground-spin-{0,1,2,3,4,5}.png -tile 3x2 -geometry 800x450+6+6 \
   "$OUT/ground/ground-spin-montage.png"
 
-# 2) Deterministic downward production-camera view for contact-shadow and ecology placement.
+# 2) Low-angle contact-shadow proof. A deterministic production-rendered box is placed with
+# its bottom face exactly on PlanetSurfaceAuthority. Side views expose peter-panning directly.
 start_app "$OUT/logs/shadow-contact.log" \
   VF_CELESTIAL_TIME_SCALE=1 VF_CAPTURE_SHADOW_CONTACT=1 VF_RUNTIME_DIAGNOSTICS=1
-capture_frame "$OUT/shadows/contact-ground.png"
+capture_frame "$OUT/shadows/contact-side.png" 512 40
+sleep 1.0
+capture_frame "$OUT/shadows/contact-side-late.png" 512 20
 stop_app
+montage "$OUT/shadows/contact-side.png" "$OUT/shadows/contact-side-late.png" \
+  -tile 2x1 -geometry 800x450+6+6 "$OUT/shadows/contact-side-montage.png"
 
 # 3) External inertial observer: planet self-rotation must remain visible, not be disabled to fix
 # the surface observer. The accelerated sequence makes rotational continuity easy to inspect.
@@ -172,7 +177,7 @@ set -e
   grep -E 'R24\.2 view|R24 DIAG|Earth renderer mode|Fatal error|Earth-Moon physical scale' "$OUT/logs/earth-spin.log" || true
 } > "$OUT/runtime-summary.txt"
 
-montage "$OUT/ground/ground-spin-montage.png" "$OUT/shadows/contact-ground.png" \
+montage "$OUT/ground/ground-spin-montage.png" "$OUT/shadows/contact-side-montage.png" \
         "$OUT/space/earth-spin-montage.png" "$OUT/high-speed/transit.png" \
         -tile 2x2 -geometry 800x450+6+6 "$OUT/r24-stability-overview.png"
 
@@ -181,7 +186,8 @@ R24 runtime stability evidence — real Vulkan framebuffer only
 
 - ground/ground-spin-*.png: accelerated planet rotation while the player remains on the surface.
   Terrain and local props should remain fixed relative to the camera; lighting/shadows may change.
-- shadows/contact-ground.png: downward ordinary-time contact-shadow/ecology placement inspection.
+- shadows/contact-side*.png: low-angle production shadow-map proof; the orange probe's bottom
+  face is placed exactly on PlanetSurfaceAuthority, making any contact gap directly visible.
 - space/earth-spin-*.png: inertial external observer; physical planet self-rotation remains visible.
 - high-speed/*.png: production PlanetCamera flight plus real SDL forward input at a configured
   500 km/s target; runtime-summary must prove smooth-globe fallback.
