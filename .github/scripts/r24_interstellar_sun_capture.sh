@@ -41,16 +41,16 @@ capture() {
   return 1
 }
 
-# Ground observer: real physical Moon at 384,400 km, no proxy resize. Wait until the runtime has
-# emitted the physical apparent-size diagnostic before taking the proof frame; the previous capture
-# could succeed in <0.5 s, kill the app, and then fail the diagnostic gate despite a valid frame.
+# Ground observer: real physical Moon at 384,400 km, no proxy resize. Capture the framebuffer first
+# so a slow llvmpipe diagnostic cannot erase visual evidence, then keep the runtime alive long enough
+# to emit the physical apparent-size gate. On a real GPU the diagnostic normally arrives quickly.
 start_app "$OUT/logs/moon.log" VF_CELESTIAL_TARGET=moon VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
-for _ in $(seq 1 30); do
+capture "$OUT/moon/ground-moon.png"
+for _ in $(seq 1 120); do
   grep -q 'R24 moon evidence:' "$OUT/logs/moon.log" && break
   sleep .25
 done
 grep -q 'R24 moon evidence:' "$OUT/logs/moon.log"
-capture "$OUT/moon/ground-moon.png"
 stop_app
 awk '/R24 moon evidence:/ {for(i=1;i<=NF;i++) if($i~/^apparent_diameter_px=/){split($i,a,"="); if(a[2]+0>=5.0) ok=1}} END{exit !ok}' "$OUT/logs/moon.log"
 
@@ -58,7 +58,7 @@ awk '/R24 moon evidence:/ {for(i=1;i<=NF;i++) if($i~/^apparent_diameter_px=/){sp
 # the physically located Sun. Wait until production runtime reports arrival within 0.9 solar radii
 # above the photosphere, then capture the live procedural Sun shader.
 start_app "$OUT/logs/sun-transit.log" VF_CAPTURE_SUN_TRANSIT=1 VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
-for _ in $(seq 1 80); do
+for _ in $(seq 1 120); do
   grep -q 'R24 SUN_TRANSIT_ARRIVED' "$OUT/logs/sun-transit.log" && break
   sleep .5
 done
