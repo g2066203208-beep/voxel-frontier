@@ -1080,6 +1080,18 @@ void VulkanRenderer::destroyFrameMesh(FrameMesh& mesh) noexcept {
         vkUnmapMemory(device_, mesh.vertexMemory);
     if (mesh.mappedIndices != nullptr && mesh.indexMemory != VK_NULL_HANDLE)
         vkUnmapMemory(device_, mesh.indexMemory);
+    if (mesh.mappedUploadVertices != nullptr && mesh.uploadVertexMemory != VK_NULL_HANDLE)
+        vkUnmapMemory(device_, mesh.uploadVertexMemory);
+    if (mesh.mappedUploadIndices != nullptr && mesh.uploadIndexMemory != VK_NULL_HANDLE)
+        vkUnmapMemory(device_, mesh.uploadIndexMemory);
+    if (mesh.uploadIndexBuffer != VK_NULL_HANDLE)
+        vkDestroyBuffer(device_, mesh.uploadIndexBuffer, nullptr);
+    if (mesh.uploadIndexMemory != VK_NULL_HANDLE)
+        vkFreeMemory(device_, mesh.uploadIndexMemory, nullptr);
+    if (mesh.uploadVertexBuffer != VK_NULL_HANDLE)
+        vkDestroyBuffer(device_, mesh.uploadVertexBuffer, nullptr);
+    if (mesh.uploadVertexMemory != VK_NULL_HANDLE)
+        vkFreeMemory(device_, mesh.uploadVertexMemory, nullptr);
     if (mesh.indexBuffer != VK_NULL_HANDLE) vkDestroyBuffer(device_, mesh.indexBuffer, nullptr);
     if (mesh.indexMemory != VK_NULL_HANDLE) vkFreeMemory(device_, mesh.indexMemory, nullptr);
     if (mesh.vertexBuffer != VK_NULL_HANDLE) vkDestroyBuffer(device_, mesh.vertexBuffer, nullptr);
@@ -1120,6 +1132,58 @@ void VulkanRenderer::ensureFrameCapacity(
     result = vkMapMemory(
         device_, mesh.indexMemory, 0, indexCapacity, 0, &mesh.mappedIndices);
     if (result != VK_SUCCESS) fail("vkMapMemory(frame index) failed", result);
+    mesh.vertexCapacityBytes = vertexCapacity;
+    mesh.indexCapacityBytes = indexCapacity;
+}
+
+void VulkanRenderer::ensureStaticFrameCapacity(
+    FrameMesh& mesh,
+    VkDeviceSize vertexBytes,
+    VkDeviceSize indexBytes) {
+    if (mesh.deviceLocalStatic
+        && vertexBytes <= mesh.vertexCapacityBytes
+        && indexBytes <= mesh.indexCapacityBytes) return;
+
+    const VkDeviceSize vertexCapacity = growCapacity(
+        mesh.vertexCapacityBytes, vertexBytes, 256U * 1024U);
+    const VkDeviceSize indexCapacity = growCapacity(
+        mesh.indexCapacityBytes, indexBytes, 128U * 1024U);
+
+    // Khronos' recommended static-geometry path: CPU-visible staging -> DEVICE_LOCAL draw buffers.
+    // The caller owns this frame slot only after its fence signals, so replacement is race-free.
+    destroyFrameMesh(mesh);
+    createBuffer(
+        vertexCapacity,
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        mesh.vertexBuffer,
+        mesh.vertexMemory);
+    createBuffer(
+        indexCapacity,
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        mesh.indexBuffer,
+        mesh.indexMemory);
+    createBuffer(
+        vertexCapacity,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        mesh.uploadVertexBuffer,
+        mesh.uploadVertexMemory);
+    createBuffer(
+        indexCapacity,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        mesh.uploadIndexBuffer,
+        mesh.uploadIndexMemory);
+
+    VkResult result = vkMapMemory(
+        device_, mesh.uploadVertexMemory, 0, vertexCapacity, 0, &mesh.mappedUploadVertices);
+    if (result != VK_SUCCESS) fail("vkMapMemory(static staging vertex) failed", result);
+    result = vkMapMemory(
+        device_, mesh.uploadIndexMemory, 0, indexCapacity, 0, &mesh.mappedUploadIndices);
+    if (result != VK_SUCCESS) fail("vkMapMemory(static staging index) failed", result);
+    mesh.deviceLocalStatic = true;
     mesh.vertexCapacityBytes = vertexCapacity;
     mesh.indexCapacityBytes = indexCapacity;
 }
@@ -1166,11 +1230,12 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
         pending->vertices.size() * sizeof(PlanetVertex));
     const VkDeviceSize indexBytes = static_cast<VkDeviceSize>(
         pending->indices.size() * sizeof(std::uint32_t));
-    ensureFrameCapacity(mesh, vertexBytes, indexBytes);
+    ensureStaticFrameCapacity(mesh, vertexBytes, indexBytes);
     std::memcpy(
-        mesh.mappedVertices, pending->vertices.data(), static_cast<std::size_t>(vertexBytes));
+        mesh.mappedUploadVertices, pending->vertices.data(), static_cast<std::size_t>(vertexBytes));
     std::memcpy(
-        mesh.mappedIndices, pending->indices.data(), static_cast<std::size_t>(indexBytes));
+        mesh.mappedUploadIndices, pending->indices.data(), static_cast<std::size_t>(indexBytes));
+    mesh.uploadPending = true;
     mesh.indexCount = static_cast<std::uint32_t>(pending->indices.size());
     mesh.shadowCasterIndexCount = pending->shadowCasterIndexCount;
     mesh.opaqueIndexCount = pending->opaqueIndexCount;
@@ -1265,7 +1330,7 @@ void VulkanRenderer::drawFrame(
     // GPU idle and no use-after-free risk.
     uploadStaticMeshForFrame(frame);
     uploadDynamicMeshForFrame(frame);
-    const auto& staticMesh = staticMeshes_[frame];
+    auto& staticMesh = staticMeshes_[frame];
     const auto& dynamic = dynamicMeshes_[frame];
 
     std::uint32_t imageIndex = 0;
@@ -1302,6 +1367,35 @@ void VulkanRenderer::drawFrame(
         vkCmdResetQueryPool(command, timestampQueryPools_[frame], 0U, kTimestampQueryCount);
         vkCmdWriteTimestamp2(
             command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 0U);
+    }
+
+    if (staticMesh.uploadPending) {
+        VkBufferCopy vertexCopy{};
+        vertexCopy.size = static_cast<VkDeviceSize>(
+            pendingStaticMesh_ ? pendingStaticMesh_->vertices.size() * sizeof(PlanetVertex) : 0U);
+        VkBufferCopy indexCopy{};
+        indexCopy.size = static_cast<VkDeviceSize>(
+            pendingStaticMesh_ ? pendingStaticMesh_->indices.size() * sizeof(std::uint32_t) : 0U);
+        if (vertexCopy.size > 0U && indexCopy.size > 0U) {
+            vkCmdCopyBuffer(
+                command, staticMesh.uploadVertexBuffer, staticMesh.vertexBuffer, 1U, &vertexCopy);
+            vkCmdCopyBuffer(
+                command, staticMesh.uploadIndexBuffer, staticMesh.indexBuffer, 1U, &indexCopy);
+
+            VkMemoryBarrier2 uploadBarrier{};
+            uploadBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2;
+            uploadBarrier.srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
+            uploadBarrier.srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT;
+            uploadBarrier.dstStageMask = VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT;
+            uploadBarrier.dstAccessMask = VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT
+                | VK_ACCESS_2_INDEX_READ_BIT;
+            VkDependencyInfo uploadDependency{};
+            uploadDependency.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO;
+            uploadDependency.memoryBarrierCount = 1U;
+            uploadDependency.pMemoryBarriers = &uploadBarrier;
+            vkCmdPipelineBarrier2(command, &uploadDependency);
+        }
+        staticMesh.uploadPending = false;
     }
 
     VkImageMemoryBarrier2 shadowToAttachment{};

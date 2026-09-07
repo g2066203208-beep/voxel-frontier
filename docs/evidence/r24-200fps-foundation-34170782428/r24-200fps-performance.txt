@@ -1,0 +1,6 @@
+opaque_mean_of_scenes_ms=28.840250
+sky_mean_of_scenes_ms=20.644750
+profiled_total_mean_ms=54.610250
+hardware_target_ms=5.000000
+hardware_target_fps=200
+ci_device=llvmpipe_software_vulkan_not_hardware_fps

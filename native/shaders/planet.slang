@@ -15,6 +15,9 @@ struct VertexOutput
     float3 relativePosition : TEXCOORD3;
     float4 shadowPosition : TEXCOORD4;
     float3 objectPosition : TEXCOORD5;
+    float terrainMacro : TEXCOORD6;
+    float3 terrainAerialTransmittance : TEXCOORD7;
+    float3 terrainAerialInscatter : TEXCOORD8;
 };
 
 struct ShadowVertexOutput
@@ -203,6 +206,36 @@ VertexOutput vertexMain(VertexInput input)
     output.material = input.material;
     output.shadowPosition = mul(gScene.lightViewProjection, float4(relativePosition, 1.0));
     output.objectPosition = input.position;
+
+    const bool terrainMaterial = input.material.w < -0.5 && input.material.w > -1.5;
+    output.terrainMacro = terrainMaterial ? valueNoise2(input.position.xz * 0.0032) : 0.5;
+    output.terrainAerialTransmittance = float3(1.0, 1.0, 1.0);
+    output.terrainAerialInscatter = float3(0.0, 0.0, 0.0);
+    if (terrainMaterial)
+    {
+        // Same optical model as the former fragment path, evaluated once per terrain vertex.
+        // Planet LOD cells are much smaller than the 350 m haze onset and atmospheric scale,
+        // so perspective-correct interpolation preserves the continuous appearance while removing
+        // length/normalize/pow/exp work from every covered terrain pixel.
+        float distanceMeters = length(relativePosition);
+        if (distanceMeters > 350.0)
+        {
+            float3 viewDir = relativePosition / max(distanceMeters, 1.0e-4);
+            float3 sunDir = normalize(gPush.data1.xyz);
+            float cameraAltitude = max(gPush.data0.w, 0.0);
+            float densityRatio = exp(-cameraAltitude / 8500.0);
+            float effectiveDistance = min(max(distanceMeters - 350.0, 0.0), 220000.0);
+            float horizon = pow(saturate(1.0 - abs(viewDir.y)), 1.15);
+            float opticalLength = effectiveDistance * densityRatio
+                * (0.55 + 0.45 * horizon) * 0.58;
+            const float3 betaR = float3(5.802e-6, 13.558e-6, 33.100e-6);
+            const float betaM = 4.0e-6;
+            float3 transmittance = exp(-(betaR + betaM) * opticalLength);
+            float3 haze = stylizedSkyPalette(viewDir, sunDir);
+            output.terrainAerialTransmittance = transmittance;
+            output.terrainAerialInscatter = haze * (1.0 - transmittance);
+        }
+    }
     return output;
 }
 
@@ -261,7 +294,7 @@ float3 evaluateTerrainFast(VertexOutput input)
 
     // PlanetSurface/LodMeshBuilder already bakes biome/elevation variation into vertex.color. One
     // broad sample prevents flat color blocks without rebuilding multi-octave material noise.
-    float macro = valueNoise2(input.objectPosition.xz * 0.0032);
+    float macro = input.terrainMacro;
     float localSlope = saturate(1.0 - n.y);
     baseColor *= 0.95 + macro * 0.10;
     baseColor = lerp(
@@ -422,11 +455,18 @@ float4 opaqueFragmentMain(VertexOutput input) : SV_Target
     float3 linearColor = (terrainMaterial
         ? evaluateTerrainFast(input)
         : evaluatePbr(input, false)) * exposure;
-    // Terrain needs enough atmospheric perspective to read planet scale, but not so much that
-    // 10--100 km mountain chains disappear. Near-field ecology can take slightly stronger haze.
-    float hazeStrength = materialTag < -0.5 && materialTag > -1.5 ? 0.58
-        : (materialTag <= -1.5 && materialTag > -4.5 ? 0.72 : 0.66);
-    linearColor = applyStylizedAerial(linearColor, input, hazeStrength);
+    // Terrain uses the identical atmospheric model evaluated at vertices. Ecology/rocks retain the
+    // fragment path because their triangles are larger relative to local silhouettes.
+    if (terrainMaterial)
+    {
+        linearColor = linearColor * input.terrainAerialTransmittance
+            + input.terrainAerialInscatter;
+    }
+    else
+    {
+        float hazeStrength = materialTag <= -1.5 && materialTag > -4.5 ? 0.72 : 0.66;
+        linearColor = applyStylizedAerial(linearColor, input, hazeStrength);
+    }
     linearColor = stylizedWarmCoolGrade(linearColor);
     return float4(acesFitted(linearColor), 1.0);
 }

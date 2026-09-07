@@ -96,8 +96,18 @@ private:
         VkDeviceMemory vertexMemory{VK_NULL_HANDLE};
         VkBuffer indexBuffer{VK_NULL_HANDLE};
         VkDeviceMemory indexMemory{VK_NULL_HANDLE};
+        // Static terrain is consumed from DEVICE_LOCAL memory. The per-frame upload buffers are
+        // only transfer sources, preserving fence ownership without forcing a global GPU idle.
+        VkBuffer uploadVertexBuffer{VK_NULL_HANDLE};
+        VkDeviceMemory uploadVertexMemory{VK_NULL_HANDLE};
+        VkBuffer uploadIndexBuffer{VK_NULL_HANDLE};
+        VkDeviceMemory uploadIndexMemory{VK_NULL_HANDLE};
         void* mappedVertices{};
         void* mappedIndices{};
+        void* mappedUploadVertices{};
+        void* mappedUploadIndices{};
+        bool deviceLocalStatic{};
+        bool uploadPending{};
         VkDeviceSize vertexCapacityBytes{};
         VkDeviceSize indexCapacityBytes{};
         std::uint32_t indexCount{};
@@ -151,6 +161,7 @@ private:
 
     void destroyFrameMesh(FrameMesh& mesh) noexcept;
     void ensureFrameCapacity(FrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes);
+    void ensureStaticFrameCapacity(FrameMesh& mesh, VkDeviceSize vertexBytes, VkDeviceSize indexBytes);
     void uploadStaticMeshForFrame(std::uint32_t frame);
     void uploadDynamicMeshForFrame(std::uint32_t frame);
     void drawBoundMesh(
