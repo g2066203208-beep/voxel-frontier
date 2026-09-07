@@ -1,0 +1,122 @@
+name: Procedural Materials Lab
+
+on:
+  push:
+    branches:
+      - work/procedural-materials
+    paths:
+      - material_lab/**
+      - .github/workflows/procedural-materials.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: procedural-materials-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      MESHOVA_COMMIT: "129f5130c02581dcd53b2cb334136985946e3df0"
+
+    steps:
+      - name: Checkout material branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install preview tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends imagemagick
+
+      - name: Checkout pinned Meshova
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/wellingfeng/Meshova.git .cache/Meshova
+          cd .cache/Meshova
+          git checkout --detach "$MESHOVA_COMMIT"
+          test "$(git rev-parse HEAD)" = "$MESHOVA_COMMIT"
+
+      - name: Install Meshova dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          cd .cache/Meshova
+          pnpm install --frozen-lockfile
+
+      - name: Inject GPT-controlled material request
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp material_lab/request.json .cache/Meshova/vf-request.json
+          cp material_lab/meshova/bake-request.ts .cache/Meshova/examples/vf-bake-request.ts
+
+      - name: Bake deterministic PBR maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .cache/Meshova
+          MESHOVA_COMMIT="$MESHOVA_COMMIT" pnpm tsx examples/vf-bake-request.ts vf-request.json
+
+      - name: Validate and package outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=".cache/Meshova/out/vf-materials"
+          test -d "$src"
+          mkdir -p build/generated-materials
+          cp -R "$src"/* build/generated-materials/
+
+          mapfile -t pngs < <(find build/generated-materials -type f -name '*.png' | sort)
+          if [[ ${#pngs[@]} -lt 6 ]]; then
+            echo "Expected a complete PBR material set; found ${#pngs[@]} PNG files" >&2
+            exit 1
+          fi
+
+          printf '%s\n' "${pngs[@]}" | head -n 6 > build/preview-inputs.txt
+          mapfile -t preview_pngs < build/preview-inputs.txt
+          montage "${preview_pngs[@]}" \
+            -thumbnail 768x768 \
+            -tile 3x2 \
+            -geometry +16+16 \
+            -background '#202020' \
+            build/material-preview.png
+
+          sha256sum "${pngs[@]}" > build/generated-materials/SHA256SUMS.txt
+          find build/generated-materials -type f -maxdepth 3 -printf '%P\n' | sort
+
+      - name: Upload PBR material pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: vf-procedural-materials-${{ github.run_id }}
+          path: |
+            build/generated-materials/
+            build/material-preview.png
+            build/preview-inputs.txt
+          if-no-files-found: error
+          compression-level: 6
+          retention-days: 30
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo '## Procedural Materials Lab'
+            echo
+            echo "- Branch: \`work/procedural-materials\`"
+            echo "- Meshova commit: \`$MESHOVA_COMMIT\`"
+            echo '- Source: deterministic procedural program, not AI image generation'
+            echo '- Outputs: PBR PNG maps + semantic masks + contact-sheet preview + SHA-256 manifest'
+          } >> "$GITHUB_STEP_SUMMARY"
