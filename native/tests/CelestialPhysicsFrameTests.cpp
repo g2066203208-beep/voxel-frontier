@@ -1,3 +1,4 @@
+#include "vf/player/PlanetCamera.hpp"
 #include "vf/world/CelestialPhysicsFrame.hpp"
 #include "vf/world/CelestialSystem.hpp"
 
@@ -7,6 +8,7 @@
 #include <string_view>
 
 #include <glm/geometric.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace {
 
@@ -111,6 +113,118 @@ void testRotatingFrameIncludesCentrifugalAcceleration() {
         "rotating planet-local physics must include centrifugal acceleration rather than dragging airborne bodies");
 }
 
+void testRealSpinKeepsGroundRenderHeadingFixedForSixHours() {
+    constexpr double pi = 3.14159265358979323846;
+    vf::PlanetDefinition definition{};
+    definition.radius = 6371000.0;
+    definition.maxElevation = 0.0;
+    definition.atmosphereHeight = 100000.0;
+
+    vf::CelestialSystem system;
+    vf::CelestialBody planet{};
+    planet.type = vf::CelestialBodyType::Planet;
+    planet.radiusMeters = definition.radius;
+    planet.massKg = 5.9722e24;
+    planet.gameplaySurfaceGravityMps2 = 9.80665;
+    planet.gravityFalloffStartRadiusMeters = definition.radius + definition.atmosphereHeight;
+    planet.gravityInfluenceRadiusMeters = definition.radius + 900000.0;
+    planet.physicsBubbleRadiusMeters = definition.radius + 1300000.0;
+    planet.atmosphere.enabled = true;
+    planet.atmosphere.heightMeters = definition.atmosphereHeight;
+    planet.spinAxis = glm::normalize(glm::dvec3{0.18, 0.97, 0.11});
+    planet.spinRateRadPerSecond = 2.0 * pi / 86164.0905;
+    const auto id = system.addBody(planet);
+
+    const glm::dvec3 spawn = glm::normalize(glm::dvec3{0.72, 0.52, 0.46});
+    vf::PlanetCamera camera{definition, &system, id, spawn};
+    const auto* initialBody = system.body(id);
+    require(initialBody != nullptr, "real-spin camera planet must exist");
+
+    const glm::dquat initialInverse = glm::conjugate(glm::normalize(initialBody->orientation));
+    const glm::dvec3 initialRenderForward = glm::normalize(initialInverse * camera.forwardDirection());
+    const glm::dvec3 initialRenderUp = glm::normalize(initialInverse * camera.up());
+    const glm::dvec3 initialLocalPosition = initialInverse * (camera.position() - initialBody->position);
+
+    // Main.cpp advances celestial time first, then updates the camera. Reproduce that exact order
+    // for six simulated hours at one-minute celestial steps. A grounded observer should see the
+    // landscape remain fixed while the inertial body orientation changes by roughly a quarter turn.
+    for (int minute = 0; minute < 360; ++minute) {
+        system.step(60.0);
+        camera.update({}, 1.0 / 120.0);
+
+        const auto* body = system.body(id);
+        require(body != nullptr, "real-spin camera planet disappeared");
+        const glm::dquat inverse = glm::conjugate(glm::normalize(body->orientation));
+        const glm::dvec3 renderForward = glm::normalize(inverse * camera.forwardDirection());
+        const glm::dvec3 renderUp = glm::normalize(inverse * camera.up());
+        const glm::dvec3 localPosition = inverse * (camera.position() - body->position);
+
+        require(glm::dot(initialRenderForward, renderForward) > 0.999999999,
+            "Main render-frame forward must stay fixed for a grounded observer while the planet spins");
+        require(glm::dot(initialRenderUp, renderUp) > 0.999999999,
+            "Main render-frame up must stay fixed for a grounded observer while the planet spins");
+        require(glm::length(localPosition - initialLocalPosition) < 1.0e-5,
+            "grounded observer must not drift in body-local position during real spin integration");
+    }
+
+    const auto* finalBody = system.body(id);
+    require(finalBody != nullptr, "real-spin camera planet must still exist after integration");
+    require(std::abs(glm::dot(initialBody->orientation, finalBody->orientation)) < 0.95,
+        "six simulated hours must produce a substantial physical planet self-rotation");
+}
+
+void testRealSpinLeavesHighAltitudeViewInertialInsidePhysicsBubble() {
+    constexpr double pi = 3.14159265358979323846;
+    vf::PlanetDefinition definition{};
+    definition.radius = 6371000.0;
+    definition.maxElevation = 0.0;
+    definition.atmosphereHeight = 100000.0;
+
+    vf::CelestialSystem system;
+    vf::CelestialBody planet{};
+    planet.type = vf::CelestialBodyType::Planet;
+    planet.radiusMeters = definition.radius;
+    planet.massKg = 5.9722e24;
+    planet.gameplaySurfaceGravityMps2 = 9.80665;
+    planet.gravityFalloffStartRadiusMeters = definition.radius + definition.atmosphereHeight;
+    planet.gravityInfluenceRadiusMeters = definition.radius + 900000.0;
+    planet.physicsBubbleRadiusMeters = definition.radius + 1300000.0;
+    planet.atmosphere.enabled = true;
+    planet.atmosphere.heightMeters = definition.atmosphereHeight;
+    planet.spinAxis = glm::normalize(glm::dvec3{-0.21, 0.94, 0.27});
+    planet.spinRateRadPerSecond = 2.0 * pi / 86164.0905;
+    const auto id = system.addBody(planet);
+
+    const glm::dvec3 radial = glm::normalize(glm::dvec3{0.63, 0.44, 0.64});
+    vf::PlanetCamera camera{definition, &system, id, radial};
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+
+    const auto* body = system.body(id);
+    require(body != nullptr, "high-altitude real-spin planet must exist");
+    vf::CelestialPhysicsFrame frame{id};
+    const glm::dvec3 localHigh = radial * (definition.radius + 400000.0);
+    camera.setExternalWorldState(
+        frame.toWorldPosition(*body, localHigh),
+        frame.toWorldVelocity(*body, localHigh, {}),
+        false);
+    camera.update({}, 1.0 / 120.0);
+    require(camera.inPlanetPhysicsFrame(),
+        "400 km observer must remain inside the precision physics bubble for this integration test");
+
+    const glm::dvec3 initialWorldForward = camera.forwardDirection();
+    const glm::dvec3 initialWorldUp = camera.up();
+    for (int minute = 0; minute < 360; ++minute) {
+        system.step(60.0);
+        camera.update({}, 1.0 / 120.0);
+        require(glm::dot(initialWorldForward, camera.forwardDirection()) > 0.999999999,
+            "high-altitude forward must remain inertial while the body rotates inside the precision bubble");
+        require(glm::dot(initialWorldUp, camera.up()) > 0.999999999,
+            "high-altitude up must remain inertial while the body rotates inside the precision bubble");
+    }
+}
+
 } // namespace
 
 int main() {
@@ -118,6 +232,8 @@ int main() {
     testSurfaceRestIsZeroLocalVelocity();
     testPhysicalGravityPersistsOutsideReferenceBubble();
     testRotatingFrameIncludesCentrifugalAcceleration();
+    testRealSpinKeepsGroundRenderHeadingFixedForSixHours();
+    testRealSpinLeavesHighAltitudeViewInertialInsidePhysicsBubble();
     std::cout << "vf_celestial_physics_frame_tests: PASS\n";
     return 0;
 }
