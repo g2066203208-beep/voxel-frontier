@@ -42,6 +42,7 @@ jobs:
           test -s material_lab/README.md
           test -s material_lab/meshova/bake-request.ts
           test -s material_lab/meshova/recipes/vf-layered-sandstone-painted.ts
+          test -s material_lab/meshova/recipes/vf-painterly-masters.ts
 
           raster_sources=$(find material_lab -type f \
             \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.tga' \) \
@@ -68,7 +69,14 @@ jobs:
 
           request = json.loads(Path("material_lab/request.json").read_text())
           materials = request.get("materials", [request])
-          allowed = {"vfLayeredSandstonePainted"}
+          allowed = {
+              "vfLayeredSandstonePainted",
+              "vfPainterlyDirt",
+              "vfPainterlyBark",
+              "vfPainterlyLeaves",
+              "vfPainterlySnow",
+              "vfPainterlyWater",
+          }
           for item in materials:
               preset = item.get("preset")
               name = item.get("name", "")
@@ -113,6 +121,8 @@ jobs:
           mkdir -p .cache/Meshova/examples/vf-recipes
           cp material_lab/meshova/recipes/vf-layered-sandstone-painted.ts \
             .cache/Meshova/examples/vf-recipes/vf-layered-sandstone-painted.ts
+          cp material_lab/meshova/recipes/vf-painterly-masters.ts \
+            .cache/Meshova/examples/vf-recipes/vf-painterly-masters.ts
 
       - name: Bake deterministic PBR material library
         shell: bash
@@ -161,7 +171,7 @@ jobs:
           test ${#spheres[@]} -gt 0
           montage "${spheres[@]}" \
             -thumbnail 720x720 \
-            -tile 2x \
+            -tile 3x \
             -geometry +18+18 \
             -background '#202020' \
             build/material-spheres-overview.png
