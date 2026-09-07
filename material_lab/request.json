@@ -5,21 +5,21 @@
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfLayeredSandstonePainted",
-      "params": {"seed":771231,"bands":5,"minSlabs":2,"maxSlabs":3,"crackChance":0.17,"chipStrength":0.92,"relief":1.62,"normalStrength":13.2}
+      "params": {"seed":771231,"bands":5,"minSlabs":2,"maxSlabs":3,"crackChance":0.17,"chipStrength":0.92,"relief":1.20,"normalStrength":13.0}
     },
     {
       "name": "vf_painterly_dirt_master",
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfPainterlyDirt",
-      "params": {"seed":182031,"relief":1.36,"normalStrength":10.6,"moisture":0.14}
+      "params": {"seed":182031,"relief":1.24,"normalStrength":10.2,"moisture":0.14}
     },
     {
       "name": "vf_painterly_bark_master",
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfPainterlyBark",
-      "params": {"seed":275903,"relief":1.48,"normalStrength":12.2,"ridgeScale":1.0}
+      "params": {"seed":275903,"relief":1.36,"normalStrength":11.8,"ridgeScale":1.0}
     },
     {
       "name": "vf_painterly_leaves_master",

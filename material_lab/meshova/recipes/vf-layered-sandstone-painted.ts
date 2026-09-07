@@ -33,7 +33,7 @@ function makeBlock(seed:number,row:number,id:number,cx:number,cy:number,hw:numbe
     cx:(cx+2)%1, cy:(cy+2)%1, hw, hh,
     angle:(hash(seed,row,id,5)-.5)*(macro?.22:.14),
     base, lift, warm:hash(seed,row,id,6), cool:hash(seed,row,id,7), macro,
-    bevel:macro?.125:.100,
+    bevel:macro?.18:.15,
     strata,
     crack:hash(seed,row,id,8)<crackChance,
     crackX:(hash(seed,row,id,9)-.5)*.34,
@@ -103,7 +103,7 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
   const maxSlabs=Math.max(minSlabs,Math.min(4,Math.floor(p.maxSlabs??3)));
   const crackChance=C(p.crackChance??.17);
   const chipStrength=C(p.chipStrength??.92);
-  const relief=Math.max(.75,Math.min(1.8,p.relief??1.62));
+  const relief=Math.max(.75,Math.min(1.8,p.relief??1.20));
   const normalStrength=Math.max(2,Math.min(20,p.normalStrength??12.8));
   const blocks=buildBlocks(seed,bands,minSlabs,maxSlabs,crackChance);
 
@@ -122,42 +122,43 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         const dx=wrapDelta(u-q.cx),dy=wrapDelta(v-q.cy);
         const ca=Math.cos(q.angle),sa=Math.sin(q.angle);
         const rx=dx*ca+dy*sa, ry=-dx*sa+dy*ca;
-        if(Math.abs(rx)>q.hw*1.12||Math.abs(ry)>q.hh*1.12)continue;
+        if(Math.abs(rx)>q.hw*1.14||Math.abs(ry)>q.hh*1.14)continue;
         const x=rx/Math.max(q.hw,1e-6), y=ry/Math.max(q.hh,1e-6);
-        const shape=blockShape(x,y)+periodicField(x*.23+id*.11,y*.23-id*.09,seed+id*29,2)*.018;
-        if(shape>1.035)continue;
+        const shape=blockShape(x,y)+periodicField(x*.23+id*.11,y*.23-id*.09,seed+id*29,2)*.016;
+        if(shape>1.04)continue;
         const edge=S((1-shape)/q.bevel);
-        const plateau=S((1-shape)/(q.bevel*.56));
+        // Thick chamfered shoulder: the block rises over a broad band instead of a near-vertical height step.
+        const body=S((1-shape)/(q.bevel*1.35));
 
         let top=-99,secondPlane=-99;
         for(const [a,b,c] of q.planes){
           const plane=a*x+b*y+c;
           if(plane>top){secondPlane=top;top=plane;}else if(plane>secondPlane)secondPlane=plane;
         }
-        const facet=(top*.070)+(top-secondPlane)*.032;
-        const hardFacet=Math.round(facet/.018)*.018;
+        const facet=(top*.045)+(top-secondPlane)*.020;
+        const hardFacet=Math.round(facet/.015)*.015*body;
 
         let strata=0;
         for(let k=0;k<q.strata.length;k++){
           const s=q.strata[k]+Math.sin((x*.55+q.warm+k*.17)*TAU)*.014;
-          const lip=G((y-s)/(.026+k*.002))*plateau;
-          strata+=lip*(y>s?.012:-.006);
+          const lip=G((y-s)/(.028+k*.002))*body;
+          strata+=lip*(y>s?.010:-.005);
         }
-        const topShelf=G((y-.62)/.11)*plateau*(q.macro?.030:.015);
-        const lowerCut=G((y+.72)/.10)*plateau*(q.macro?.024:.012);
+        const topShelf=G((y-.62)/.13)*body*(q.macro?.020:.010);
+        const lowerCut=G((y+.72)/.12)*body*(q.macro?.016:.008);
 
         let crack=0;
         if(q.crack){
           const line=q.crackX+q.crackTilt*y+periodicField(u,v,seed+id*41,2)*.010;
-          crack=G((x-line)/(q.macro?.014:.018))*S((y+.76)/.13)*S((.78-y)/.13);
+          crack=G((x-line)/(q.macro?.014:.018))*S((y+.76)/.13)*S((.78-y)/.13)*body;
         }
-        const chip=q.chip>.52?G((x-q.chipX)/(q.macro?.095:.12))*G((y-q.chipY)/(q.macro?.12:.15))*chipStrength:0;
+        const chip=q.chip>.52?G((x-q.chipX)/(q.macro?.105:.13))*G((y-q.chipY)/(q.macro?.13:.16))*chipStrength*body:0;
 
-        let surf=q.base+q.lift*(.18+.82*plateau)+hardFacet+strata+topShelf-lowerCut;
-        surf+=q.macro?periodicField(x*.31+q.cx,y*.31+q.cy,seed+id*53,2)*.010:0;
-        surf-=crack*(q.macro?.145:.085);
-        surf-=chip*(q.macro?.075:.042);
-        surf-=(1-edge)*(q.macro?.030:.018);
+        let surf=q.base+q.lift*(.12+.88*body)+hardFacet+strata+topShelf-lowerCut;
+        surf+=q.macro?periodicField(x*.31+q.cx,y*.31+q.cy,seed+id*53,2)*.008*body:0;
+        surf-=crack*(q.macro?.115:.072);
+        surf-=chip*(q.macro?.060:.036);
+        surf-=(1-edge)*(q.macro?.018:.012);
         surf=.5+(surf-.5)*relief;
 
         if(surf>best){
@@ -166,25 +167,25 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
       }
 
       const overlap=C((best-second)/.050);
-      const seam=C((1-overlap)*.72+(bestId<0?.38:0));
-      const cavity=C(seam*.55+(1-bestEdge)*.22+bestCrack*.92+bestChip*.46);
+      const seam=C((1-overlap)*.65+(bestId<0?.30:0));
+      const cavity=C(seam*.45+(1-bestEdge)*.18+bestCrack*.92+bestChip*.42);
       let col:RGB=[.25,.105,.067];
       let rr=.82,aa=.84;
       if(bestId>=0){
         const q=blocks[bestId];
-        const planeLight=C(.48+bestFacet*4.0-by*.08+bx*.025);
-        col=M(mid,light,C(.30+(best-.48)*1.85));
-        col=M(col,ochre,C(planeLight*.19+q.warm*.07));
-        col=M(col,cool,C((.52-planeLight)*.24+q.cool*.055));
-        col=M(col,cream,C(bestStrata*2.9+Math.max(0,bestFacet)*.18));
-        col=M(col,deep,C(cavity*.50));
-        col=M(col,ink,C(bestCrack*.96+seam*.22));
+        const planeLight=C(.48+bestFacet*5.0-by*.08+bx*.025);
+        col=M(mid,light,C(.30+(best-.48)*1.75));
+        col=M(col,ochre,C(planeLight*.20+q.warm*.07));
+        col=M(col,cool,C((.52-planeLight)*.26+q.cool*.055));
+        col=M(col,cream,C(bestStrata*3.0+Math.max(0,bestFacet)*.20));
+        col=M(col,deep,C(cavity*.46));
+        col=M(col,ink,C(bestCrack*.96+seam*.18));
         const wash=periodicField(u,v,seed+920+bestId*17,2);
-        col=M(col,wash>0?ochre:cool,Math.abs(wash)*.055*bestEdge);
-        rr=C(.70+(1-bestEdge)*.13+bestCrack*.19+bestChip*.08+seam*.06-bestStrata*.05);
-        aa=C(1-cavity*.43-bestCrack*.14);
+        col=M(col,wash>0?ochre:cool,Math.abs(wash)*.060*bestEdge);
+        rr=C(.70+(1-bestEdge)*.12+bestCrack*.20+bestChip*.08+seam*.05-bestStrata*.05);
+        aa=C(1-cavity*.40-bestCrack*.14);
       }else{
-        col=M(mid,cool,.18);col=M(col,deep,seam*.38);rr=.88;aa=.80;
+        col=M(mid,cool,.18);col=M(col,deep,seam*.34);rr=.88;aa=.82;
       }
 
       baseColor.data[j]=C(col[0]);baseColor.data[j+1]=C(col[1]);baseColor.data[j+2]=C(col[2]);
