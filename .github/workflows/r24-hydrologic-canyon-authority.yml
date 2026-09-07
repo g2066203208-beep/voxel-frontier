@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/scripts/r24_hydrologic_canyon_authority.py'
       - '.github/scripts/r24_fix_hydrologic_canyon_codegen.py'
+      - '.github/scripts/r24_calibrate_hydrologic_stream_power.py'
       - '.github/workflows/r24-hydrologic-canyon-authority.yml'
   workflow_dispatch:
 
@@ -33,15 +34,20 @@ jobs:
       - name: Repair generated C++ newline literal
         run: python .github/scripts/r24_fix_hydrologic_canyon_codegen.py
 
+      - name: Calibrate stream power from routed DEM
+        run: python .github/scripts/r24_calibrate_hydrologic_stream_power.py
+
       - name: Validate generated production source
         shell: pwsh
         run: |
           git diff --check
-          Select-String -Path native/include/vf/world/RegionalHydrology.hpp -Pattern 'streamPower = areaPower \* normalizedSlope' -Quiet | Out-Null
+          Select-String -Path native/include/vf/world/RegionalHydrology.hpp -Pattern 'calibrateStreamPowerReference' -Quiet | Out-Null
+          Select-String -Path native/include/vf/world/RegionalHydrology.hpp -Pattern 'weightedStreamPower' -Quiet | Out-Null
           Select-String -Path native/src/world/PlanetSurfaceAuthority.cpp -Pattern 'hydrologicCanyon' -Quiet | Out-Null
           Select-String -Path native/src/app/Main.cpp -Pattern 'R24 hydrologic canyon view' -Quiet | Out-Null
           Select-String -Path native/CMakeLists.txt -Pattern 'vf_r24_hydrologic_canyon_tests' -Quiet | Out-Null
           if (Select-String -Path native/src/world/PlanetSurface.cpp -Pattern '0\.060 \* canyon' -Quiet) { throw 'legacy procedural canyon excavation still present' }
+          if (Select-String -Path native/include/vf/world/RegionalHydrology.hpp -Pattern 'slope / 0\.075' -Quiet) { throw 'legacy hard-coded stream-power slope scale still present' }
 
       - name: Configure Windows runtime
         run: cmake -S native -B build/r24-hydro-canyon-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -69,14 +75,19 @@ jobs:
       - name: Repair generated C++ newline literal
         run: python3 .github/scripts/r24_fix_hydrologic_canyon_codegen.py
 
+      - name: Calibrate stream power from routed DEM
+        run: python3 .github/scripts/r24_calibrate_hydrologic_stream_power.py
+
       - name: Validate production changes
         run: |
           git diff --check
-          grep -q 'streamPower = areaPower \* normalizedSlope' native/include/vf/world/RegionalHydrology.hpp
+          grep -q 'calibrateStreamPowerReference' native/include/vf/world/RegionalHydrology.hpp
+          grep -q 'weightedStreamPower' native/include/vf/world/RegionalHydrology.hpp
           grep -q 'hydrologicCanyon' native/src/world/PlanetSurfaceAuthority.cpp
           grep -q 'R24 hydrologic canyon view' native/src/app/Main.cpp
           grep -q 'vf_r24_hydrologic_canyon_tests' native/CMakeLists.txt
           ! grep -q '0.060 \* canyon' native/src/world/PlanetSurface.cpp
+          ! grep -q 'slope / 0.075' native/include/vf/world/RegionalHydrology.hpp
           grep -q 'weightedFineRidge' native/src/world/PlanetSurface.cpp
           grep -q 'radialReliefRadius' native/src/world/PlanetLodMeshBuilder.cpp
 
