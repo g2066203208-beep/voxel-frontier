@@ -236,21 +236,20 @@ float shadowVisibility(float4 lightClip, float noL)
     // the 480 m orthographic shadow range; the old grazing-angle term reached ~14 cm and produced
     // visible peter-panning under trees and props.
     float bias = 0.000012 + 0.000055 * (1.0 - saturate(noL));
-    // Five-tap rotated cross: the 2048 contact map already provides sub-quarter-metre texels in
-    // its 250 m box. This keeps a soft footprint while cutting receiver texture fetches by 44%.
-    static const float2 offsets[5] = {
-        float2(0.0, 0.0),
-        float2(0.82, 0.24), float2(-0.24, 0.82),
-        float2(-0.82, -0.24), float2(0.24, -0.82),
+    // Three-tap line PCF matches the 1024 / 250 m local contact map (~24 cm/texel). Terrain
+    // pixels outside this volume already early-return above; inside it, three fetches are enough to
+    // soften the local tree/prop footprint without paying five texture reads per receiver pixel.
+    static const float2 offsets[3] = {
+        float2(0.0, 0.0), float2(0.78, 0.31), float2(-0.78, -0.31),
     };
     float visible = 0.0;
     [unroll]
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < 3; ++i)
     {
         float stored = gShadowMap.SampleLevel(gShadowSampler, uv + offsets[i] * texel, 0.0);
         visible += ndc.z - bias <= stored ? 1.0 : 0.0;
     }
-    return visible * 0.2;
+    return visible / 3.0;
 }
 
 float3 evaluatePbr(VertexOutput input, bool transparent)
@@ -275,35 +274,37 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
 
     if (terrainMaterial)
     {
-        // Gradient/triplanar-inspired procedural variation: broad color blocks first, medium-scale
-        // enrichment second, and very little fine grain. This keeps the low-poly terrain readable.
+        // PlanetSurface/LodMeshBuilder already bakes biome/elevation variation into vertex.color.
+        // The old fragment path then recomputed one 3-octave FBM plus a second value-noise field on
+        // every terrain pixel (16 hash evaluations before PBR). Keep one broad value-noise sample
+        // for gentle breakup and let slope + the authored vertex palette carry the rest.
         float2 q = input.objectPosition.xz;
-        float macro = terrainFbm2(q * 0.0038);
-        float medium = valueNoise2(q * 0.0125 + 31.7);
-        float value = (macro - 0.5) * 0.20 + (medium - 0.5) * 0.082;
-        float warmPatch = smoothstep(0.58, 0.84, macro);
+        float macro = valueNoise2(q * 0.0032);
         float localSlope = saturate(1.0 - n.y);
-        baseColor *= 1.0 + value;
-        baseColor = lerp(baseColor, baseColor * float3(1.045, 1.005, 0.930), warmPatch * 0.20);
-        baseColor = lerp(baseColor, baseColor * float3(0.88, 0.91, 0.89), smoothstep(0.32, 0.72, localSlope) * 0.24);
-        roughness = clamp(roughness + (medium - 0.5) * 0.050, 0.64, 0.98);
+        baseColor *= 0.95 + macro * 0.10;
+        baseColor = lerp(
+            baseColor, baseColor * float3(1.035, 1.005, 0.945),
+            smoothstep(0.62, 0.86, macro) * 0.14);
+        baseColor = lerp(
+            baseColor, baseColor * float3(0.89, 0.92, 0.90),
+            smoothstep(0.32, 0.72, localSlope) * 0.24);
+        roughness = clamp(roughness + (macro - 0.5) * 0.035, 0.64, 0.98);
     }
     else if (foliageMaterial)
     {
-        float crown = valueNoise2(input.objectPosition.xz * 0.075 + input.objectPosition.y * 0.011);
-        baseColor *= 0.93 + crown * 0.14;
+        // Crown geometry/vertex color already varies deterministically on the CPU. Avoid another
+        // four-hash value-noise lookup per leaf fragment.
+        baseColor *= 0.97 + 0.055 * saturate(n.y * 0.5 + 0.5);
         roughness = max(roughness, 0.86);
     }
     else if (barkMaterial)
     {
-        float barkVariation = valueNoise2(input.objectPosition.xz * 0.22 + input.objectPosition.y * 0.035);
-        baseColor *= 0.90 + barkVariation * 0.16;
+        baseColor *= 0.96 + 0.045 * saturate(abs(n.y));
         roughness = max(roughness, 0.91);
     }
     else if (rockMaterial)
     {
-        float rockVariation = valueNoise2(input.objectPosition.xz * 0.055 + 13.0);
-        baseColor *= 0.90 + rockVariation * 0.16;
+        baseColor *= 0.94 + 0.075 * saturate(n.y * 0.5 + 0.5);
         roughness = clamp(roughness, 0.76, 0.94);
     }
 

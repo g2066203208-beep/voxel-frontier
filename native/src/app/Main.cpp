@@ -741,15 +741,19 @@ int main() {
             vertex.position = glm::vec3(toSurfacePoint(pPlanet));
             vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(nPlanet)));
         }
+        const auto earthGlobeRenderMesh = std::make_shared<const vf::PreparedPlanetMesh>(
+            vf::preparePlanetMesh(std::move(earthGlobeMesh), true));
 
         glm::dvec3 lodCenterDirection = patchUp;
         glm::dvec3 lodViewForwardDirection = initialViewForwardPlanet;
         struct TerrainBuildResult {
             glm::dvec3 centerDirection{};
             glm::dvec3 viewForwardDirection{};
-            vf::PlanetMesh mesh{};
+            std::shared_ptr<const vf::PreparedPlanetMesh> renderMesh{};
             std::shared_ptr<const vf::RegionalHydrology> hydrology{};
             vf::PlanetLodStats stats{};
+            std::size_t meshVertices{};
+            std::size_t meshIndices{};
             double buildMilliseconds{};
             bool reusedHydrology{};
         };
@@ -801,20 +805,24 @@ int main() {
             // The old budget covered essentially the whole horizon ring although only one camera
             // frustum can contribute pixels. Keep the same local SSE/cell rules but budget the
             // widened 200-degree prefetch cone instead of a 360-degree high-detail ring.
-            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1500U
-                : (buildAltitude < 150000.0 ? 800U : 380U);
+            // Cesium-style view/SSE selection should spend geometry on pixels, not a huge
+            // behind-camera prefetch ring. The 156-degree cone still exceeds the ~100-degree
+            // horizontal gameplay FOV by ~28 degrees per side, while turn-triggered async prefetch
+            // refreshes at 28 degrees. Reduce the hard leaf ceiling as a second safety net.
+            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1100U
+                : (buildAltitude < 150000.0 ? 650U : 320U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewForwardPlanetLocal = safeNormalize(
                 viewForwardPlanetLocal, stableTangent(centerUp));
-            lodConfig.viewConeHalfAngleRadians = glm::radians(100.0);
+            lodConfig.viewConeHalfAngleRadians = glm::radians(78.0);
             lodConfig.viewportHeightPixels = 900.0;
-            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 2.8
-                : (buildAltitude < 150000.0 ? 4.2 : 6.5);
+            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 3.4
+                : (buildAltitude < 150000.0 ? 4.8 : 7.2);
             lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 1.0 : 0.0;
             lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0 : 24.0;
             lodConfig.detailTransitionStartMeters = 180.0;
-            lodConfig.detailTransitionEndMeters = 85000.0;
-            lodConfig.transitionFarCellMeters = 420.0;
+            lodConfig.detailTransitionEndMeters = 65000.0;
+            lodConfig.transitionFarCellMeters = 520.0;
             lodConfig.horizonMarginRadians = 0.020;
             lodConfig.skirtDepthMeters = 6.0;
 
@@ -823,7 +831,7 @@ int main() {
             result.viewForwardDirection = lodConfig.viewForwardPlanetLocal;
             result.hydrology = hydrology;
             result.reusedHydrology = canReuseHydrology;
-            result.mesh = vf::buildAdaptivePlanetSurface(
+            vf::PlanetMesh renderMesh = vf::buildAdaptivePlanetSurface(
                 buildSurface, cameraPlanetLocal, lodConfig, &result.stats);
 
             // PlanetLodMeshBuilder already emits the authoritative hydrology-displaced position and
@@ -831,7 +839,7 @@ int main() {
             // sampleSurface() for every generated vertex a second time, and sampleSurface() itself
             // performs four additional terrain/hydrology samples for a central-difference normal.
             // Transform the already authoritative mesh directly into the fixed render frame.
-            for (auto& vertex : result.mesh.vertices) {
+            for (auto& vertex : renderMesh.vertices) {
                 const glm::dvec3 precisePlanet = glm::dvec3(vertex.position);
                 const glm::dvec3 preciseNormal = safeNormalize(
                     glm::dvec3(vertex.normal), safeNormalize(precisePlanet, centerUp));
@@ -840,7 +848,7 @@ int main() {
             }
 
             if (buildAltitude < 30000.0) {
-                appendMesh(result.mesh, vf::buildProceduralEcology(
+                appendMesh(renderMesh, vf::buildProceduralEcology(
                     planet, centerUp, surfaceFrame, {}, &buildSurface));
             }
 
@@ -852,7 +860,13 @@ int main() {
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
                 vertex.material.w = -20.0F;
             }
-            appendMesh(result.mesh, oceanProxy);
+            appendMesh(renderMesh, oceanProxy);
+            result.meshVertices = renderMesh.vertices.size();
+            result.meshIndices = renderMesh.indices.size();
+            // Critical frame-pacing change: material binning and vector ownership transfer occur on
+            // this terrain worker. Main-thread adoption later is only a shared_ptr assignment.
+            result.renderMesh = std::make_shared<const vf::PreparedPlanetMesh>(
+                vf::preparePlanetMesh(std::move(renderMesh), true));
             result.buildMilliseconds = std::chrono::duration<double, std::milli>(
                 std::chrono::steady_clock::now() - buildStarted).count();
             return result;
@@ -861,8 +875,8 @@ int main() {
         TerrainBuildResult initialTerrain = buildTerrainLod(
             lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet, {});
         std::cout << "R24 PERF terrain_build_ms=" << initialTerrain.buildMilliseconds
-                  << " vertices=" << initialTerrain.mesh.vertices.size()
-                  << " indices=" << initialTerrain.mesh.indices.size()
+                  << " vertices=" << initialTerrain.meshVertices
+                  << " indices=" << initialTerrain.meshIndices
                   << " leaf_patches=" << initialTerrain.stats.leafPatches
                   << " culled_nodes=" << initialTerrain.stats.culledNodes
                   << " hydrology_reused=" << (initialTerrain.reusedHydrology ? 1 : 0) << '\n';
@@ -961,10 +975,10 @@ int main() {
             std::cout << "R24 moon ground observer authoritative_surface=1\n";
         }
         vf::PlanetLodStats currentLodStats = initialTerrain.stats;
-        vf::PlanetMesh nearTerrain = std::move(initialTerrain.mesh);
+        std::shared_ptr<const vf::PreparedPlanetMesh> nearTerrain = std::move(initialTerrain.renderMesh);
         bool usingDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
             || camera.altitude() > 900000.0;
-        renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeMesh : nearTerrain);
+        renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeRenderMesh : nearTerrain);
         std::future<TerrainBuildResult> terrainBuildFuture{};
         bool terrainBuildInFlight = false;
 
@@ -1009,19 +1023,21 @@ int main() {
         double diagnosticsTime = 0.0;
         std::uint64_t diagnosticsFrames = 0;
         double diagnosticsMaxFrameMilliseconds = 0.0;
+        double diagnosticsMaxRenderMilliseconds = 0.0;
         double lodCooldown = 0.0;
         double dynamicSceneAccumulator = 1.0;
         constexpr double kDynamicSceneCadenceSeconds = 0.10;
 
         while (platform.pumpEvents()) {
             const auto now = Clock::now();
-            const double dt = std::clamp(
-                std::chrono::duration<double>(now - previous).count(),
-                1.0 / 500.0,
-                0.05);
+            const double rawFrameSeconds = std::max(
+                0.0, std::chrono::duration<double>(now - previous).count());
+            const double dt = std::clamp(rawFrameSeconds, 1.0 / 500.0, 0.05);
             previous = now;
+            // Never hide a hitch by reporting the simulation clamp as frame time. Physics/camera
+            // still receive <=50 ms for stability; performance diagnostics record wall time.
             diagnosticsMaxFrameMilliseconds = std::max(
-                diagnosticsMaxFrameMilliseconds, dt * 1000.0);
+                diagnosticsMaxFrameMilliseconds, rawFrameSeconds * 1000.0);
 
             // Surface gameplay may use accelerated day/orbit time. Free inertial player space may
             // not: until all free-space rigid bodies participate in a global time-warp integrator,
@@ -1179,7 +1195,7 @@ int main() {
 
             if (streaming.useDistantGlobe != usingDistantEarthGlobe) {
                 usingDistantEarthGlobe = streaming.useDistantGlobe;
-                renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeMesh : nearTerrain);
+                renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeRenderMesh : nearTerrain);
                 std::cout << "R24 Earth renderer mode: "
                           << (usingDistantEarthGlobe ? "smooth-globe" : "adaptive-terrain")
                           << " speed_mps=" << localSurfaceSpeed << '\n';
@@ -1224,11 +1240,11 @@ int main() {
                     lodViewForwardDirection = completed.viewForwardDirection;
                     surfaceAuthority.setHydrology(completed.hydrology);
                     currentLodStats = completed.stats;
-                    nearTerrain = std::move(completed.mesh);
+                    nearTerrain = std::move(completed.renderMesh);
                     lodCooldown = 0.12;
                     std::cout << "R24 PERF terrain_build_ms=" << completed.buildMilliseconds
-                              << " vertices=" << nearTerrain.vertices.size()
-                              << " indices=" << nearTerrain.indices.size()
+                              << " vertices=" << completed.meshVertices
+                              << " indices=" << completed.meshIndices
                               << " leaf_patches=" << completed.stats.leafPatches
                               << " culled_nodes=" << completed.stats.culledNodes
                               << " hydrology_reused=" << (completed.reusedHydrology ? 1 : 0)
@@ -1419,7 +1435,11 @@ int main() {
             renderEnvironment.flightSpeedMps = static_cast<float>(camera.flightSpeedMps());
             renderEnvironment.dynamicShadowCasters = shadowContactCapture;
 
+            const auto renderStarted = Clock::now();
             renderer.drawFrame(viewProjection, cameraSurface, renderEnvironment);
+            diagnosticsMaxRenderMilliseconds = std::max(
+                diagnosticsMaxRenderMilliseconds,
+                std::chrono::duration<double, std::milli>(Clock::now() - renderStarted).count());
 
             if (captureSunTransit && runtimeDiagnosticsStdout) {
                 const double sunClearance = std::max(
@@ -1435,7 +1455,7 @@ int main() {
                     std::cout << "R24 SUN_TRANSIT_ARRIVED\n";
             }
 
-            diagnosticsTime += dt;
+            diagnosticsTime += rawFrameSeconds;
             ++diagnosticsFrames;
             if (diagnosticsTime >= 0.5) {
                 const double fps = static_cast<double>(diagnosticsFrames) / diagnosticsTime;
@@ -1456,6 +1476,7 @@ int main() {
                       << " | tris " << renderer.triangleCount() << '+'
                       << renderer.dynamicTriangleCount()
                       << " | maxms " << std::setprecision(1) << diagnosticsMaxFrameMilliseconds
+                      << " | renderms " << diagnosticsMaxRenderMilliseconds
                       << " | FPS " << std::setprecision(0) << fps;
                 platform.setWindowTitle(title.str());
                 if (runtimeDiagnosticsStdout)
@@ -1491,6 +1512,7 @@ int main() {
                 diagnosticsTime = 0.0;
                 diagnosticsFrames = 0;
                 diagnosticsMaxFrameMilliseconds = 0.0;
+                diagnosticsMaxRenderMilliseconds = 0.0;
             }
         }
 

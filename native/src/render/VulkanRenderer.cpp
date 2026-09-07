@@ -166,6 +166,22 @@ void partitionMeshIndicesForRenderPasses(
 
 } // namespace
 
+PreparedPlanetMesh preparePlanetMesh(PlanetMesh mesh, bool excludeTerrainFromLocalShadow) {
+    if (mesh.vertices.empty() || mesh.indices.empty())
+        fail("Cannot prepare an empty planet mesh");
+
+    PreparedPlanetMesh prepared{};
+    partitionMeshIndicesForRenderPasses(
+        mesh,
+        excludeTerrainFromLocalShadow,
+        prepared.indices,
+        prepared.shadowCasterIndexCount,
+        prepared.opaqueIndexCount,
+        prepared.transparentIndexCount);
+    prepared.vertices = std::move(mesh.vertices);
+    return prepared;
+}
+
 VulkanRenderer::VulkanRenderer(SDL_Window* window) : window_(window) {
     if (!window_) throw std::invalid_argument("VulkanRenderer requires a valid SDL window");
     const VkResult volkResult = volkInitialize();
@@ -1003,22 +1019,22 @@ void VulkanRenderer::ensureFrameCapacity(
 }
 
 void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
-    if (mesh.vertices.empty() || mesh.indices.empty()) fail("Cannot upload an empty planet mesh");
-    pendingStaticVertices_ = mesh.vertices;
-    partitionMeshIndicesForRenderPasses(
-        mesh,
-        true,
-        pendingStaticIndices_,
-        pendingStaticShadowCasterIndexCount_,
-        pendingStaticOpaqueIndexCount_,
-        pendingStaticTransparentIndexCount_);
+    // Compatibility path for infrequent callers. Production R24 streaming uses the prepared
+    // shared_ptr overload so this copy/classification never executes at a terrain handoff.
+    uploadPlanetMesh(std::make_shared<PreparedPlanetMesh>(preparePlanetMesh(PlanetMesh{mesh}, true)));
+}
+
+void VulkanRenderer::uploadPlanetMesh(std::shared_ptr<const PreparedPlanetMesh> mesh) {
+    if (!mesh || mesh->vertices.empty() || mesh->indices.empty())
+        fail("Cannot upload an empty prepared planet mesh");
+    pendingStaticMesh_ = std::move(mesh);
     SDL_Log(
         "R24 PERF shadow_caster_indices=%u opaque_indices=%u shadow_reduction=%.3f",
-        pendingStaticShadowCasterIndexCount_,
-        pendingStaticOpaqueIndexCount_,
-        pendingStaticOpaqueIndexCount_ > 0U
-            ? 1.0 - static_cast<double>(pendingStaticShadowCasterIndexCount_)
-                / static_cast<double>(pendingStaticOpaqueIndexCount_)
+        pendingStaticMesh_->shadowCasterIndexCount,
+        pendingStaticMesh_->opaqueIndexCount,
+        pendingStaticMesh_->opaqueIndexCount > 0U
+            ? 1.0 - static_cast<double>(pendingStaticMesh_->shadowCasterIndexCount)
+                / static_cast<double>(pendingStaticMesh_->opaqueIndexCount)
             : 1.0);
     ++staticMeshGeneration_;
     if (staticMeshGeneration_ == 0U) {
@@ -1030,7 +1046,8 @@ void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
 void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     if (staticMeshGenerationByFrame_[frame] == staticMeshGeneration_) return;
     auto& mesh = staticMeshes_[frame];
-    if (pendingStaticVertices_.empty() || pendingStaticIndices_.empty()) {
+    const std::shared_ptr<const PreparedPlanetMesh> pending = pendingStaticMesh_;
+    if (!pending || pending->vertices.empty() || pending->indices.empty()) {
         mesh.indexCount = 0U;
         mesh.shadowCasterIndexCount = 0U;
         mesh.opaqueIndexCount = 0U;
@@ -1040,18 +1057,18 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     }
 
     const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(
-        pendingStaticVertices_.size() * sizeof(PlanetVertex));
+        pending->vertices.size() * sizeof(PlanetVertex));
     const VkDeviceSize indexBytes = static_cast<VkDeviceSize>(
-        pendingStaticIndices_.size() * sizeof(std::uint32_t));
+        pending->indices.size() * sizeof(std::uint32_t));
     ensureFrameCapacity(mesh, vertexBytes, indexBytes);
     std::memcpy(
-        mesh.mappedVertices, pendingStaticVertices_.data(), static_cast<std::size_t>(vertexBytes));
+        mesh.mappedVertices, pending->vertices.data(), static_cast<std::size_t>(vertexBytes));
     std::memcpy(
-        mesh.mappedIndices, pendingStaticIndices_.data(), static_cast<std::size_t>(indexBytes));
-    mesh.indexCount = static_cast<std::uint32_t>(pendingStaticIndices_.size());
-    mesh.shadowCasterIndexCount = pendingStaticShadowCasterIndexCount_;
-    mesh.opaqueIndexCount = pendingStaticOpaqueIndexCount_;
-    mesh.transparentIndexCount = pendingStaticTransparentIndexCount_;
+        mesh.mappedIndices, pending->indices.data(), static_cast<std::size_t>(indexBytes));
+    mesh.indexCount = static_cast<std::uint32_t>(pending->indices.size());
+    mesh.shadowCasterIndexCount = pending->shadowCasterIndexCount;
+    mesh.opaqueIndexCount = pending->opaqueIndexCount;
+    mesh.transparentIndexCount = pending->transparentIndexCount;
     staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
 }
 

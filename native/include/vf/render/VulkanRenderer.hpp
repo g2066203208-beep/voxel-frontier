@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -35,6 +36,22 @@ struct RenderFrameEnvironment {
     bool dynamicShadowCasters{false};
 };
 
+// CPU render preparation is intentionally detached from Vulkan object ownership. Terrain workers
+// can classify triangles into [shadow casters | opaque receivers | transparent] while they are
+// already off the render thread. The render thread then adopts this immutable payload by shared_ptr
+// instead of copying tens of megabytes and rescanning every triangle at a streaming boundary.
+struct PreparedPlanetMesh {
+    std::vector<PlanetVertex> vertices{};
+    std::vector<std::uint32_t> indices{};
+    std::uint32_t shadowCasterIndexCount{};
+    std::uint32_t opaqueIndexCount{};
+    std::uint32_t transparentIndexCount{};
+};
+
+[[nodiscard]] PreparedPlanetMesh preparePlanetMesh(
+    PlanetMesh mesh,
+    bool excludeTerrainFromLocalShadow = true);
+
 class VulkanRenderer final {
 public:
     explicit VulkanRenderer(SDL_Window* window);
@@ -47,6 +64,7 @@ public:
     // adopts the newest generation only after that frame's fence is signaled; terrain recentering
     // therefore never calls vkDeviceWaitIdle or destroys a buffer still used by the GPU.
     void uploadPlanetMesh(const PlanetMesh& mesh);
+    void uploadPlanetMesh(std::shared_ptr<const PreparedPlanetMesh> mesh);
     void setDynamicMesh(const PlanetMesh& mesh);
     void clearDynamicMesh();
     void drawFrame(
@@ -59,7 +77,9 @@ public:
     [[nodiscard]] const std::string& gpuName() const noexcept { return gpuName_; }
     [[nodiscard]] std::uint32_t apiVersion() const noexcept { return apiVersion_; }
     [[nodiscard]] std::uint64_t triangleCount() const noexcept {
-        return static_cast<std::uint64_t>(pendingStaticIndices_.size() / 3U);
+        return pendingStaticMesh_
+            ? static_cast<std::uint64_t>(pendingStaticMesh_->indices.size() / 3U)
+            : 0U;
     }
     [[nodiscard]] std::uint64_t dynamicTriangleCount() const noexcept {
         return static_cast<std::uint64_t>(pendingDynamicIndices_.size() / 3U);
@@ -67,7 +87,9 @@ public:
 
 private:
     static constexpr std::uint32_t kFramesInFlight = 2;
-    static constexpr std::uint32_t kShadowMapSize = 2048;
+    // A 250 m contact-shadow box at 1024 gives ~24 cm texels before PCF. That is sufficient for
+    // tree/prop grounding while quartering depth-raster pixels versus the previous 2048 map.
+    static constexpr std::uint32_t kShadowMapSize = 1024;
 
     struct FrameMesh {
         VkBuffer vertexBuffer{VK_NULL_HANDLE};
@@ -186,11 +208,7 @@ private:
     VkPipeline skyPipeline_{VK_NULL_HANDLE};
     VkPipeline hudPipeline_{VK_NULL_HANDLE};
 
-    std::vector<PlanetVertex> pendingStaticVertices_;
-    std::vector<std::uint32_t> pendingStaticIndices_;
-    std::uint32_t pendingStaticShadowCasterIndexCount_{};
-    std::uint32_t pendingStaticOpaqueIndexCount_{};
-    std::uint32_t pendingStaticTransparentIndexCount_{};
+    std::shared_ptr<const PreparedPlanetMesh> pendingStaticMesh_{};
     std::uint64_t staticMeshGeneration_{};
     std::array<std::uint64_t, kFramesInFlight> staticMeshGenerationByFrame_{};
     std::array<FrameMesh, kFramesInFlight> staticMeshes_{};
