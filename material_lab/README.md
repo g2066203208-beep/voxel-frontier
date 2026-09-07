@@ -28,10 +28,12 @@ For rock materials:
 - micro detail is restrained; silhouette and macro relief must read first;
 - roughness is mostly matte and semantic, with variation only where the material state calls for it.
 
-The current approved reference implementation is:
+The current approved production implementation is:
 
+- style: `VF_PAINTERLY_PLANETARY_V1`
 - preset: `vfLayeredSandstonePainted`
 - master request: `vf_painted_layered_sandstone_master`
+- production recipe: `material_lab/meshova/recipes/vf-layered-sandstone-painted.ts`
 
 ## Repository architecture
 
@@ -39,20 +41,17 @@ The current approved reference implementation is:
   - deterministic production bake request;
   - uses stable material names, never experiment suffixes such as `v7`, `v12`, `final2`, etc.
 - `material_lab/meshova/bake-request.ts`
-  - production preset whitelist;
-  - only explicitly approved style presets may be exposed here.
-- `material_lab/meshova/recipes/vf-layered-sandstone-painted.ts`
-  - approved painterly layered-rock reference generator.
-- `material_lab/meshova/recipes/vf-basalt.ts`
-- `material_lab/meshova/recipes/vf-granite.ts`
-- `material_lab/meshova/recipes/vf-dirt.ts`
-- `material_lab/meshova/recipes/vf-bark.ts`
-- `material_lab/meshova/recipes/vf-world-surfaces.ts`
-  - internal procedural geology/surface building blocks retained for future migration;
-  - these are **not production style presets** until they are rebuilt to the locked painterly standard and explicitly registered.
+  - explicit production preset whitelist;
+  - rejected and experimental styles cannot be invoked through the production baker.
+- `material_lab/meshova/recipes/`
+  - contains only production-approved recipe source;
+  - rejected cartoon, realistic, draft, backup, and legacy material implementations are removed from the active tree and remain recoverable only through Git history.
 - `material_lab/preview/render_material_previews.py`
   - deterministic standard preview renderer;
-  - reads real PBR maps and real Height displacement.
+  - reads real PBR maps and real Height displacement;
+  - displacement behavior is selected from manifest preset metadata, never guessed from material filenames.
+- `.github/workflows/procedural-materials.yml`
+  - enforces source hygiene, production preset allowlisting, required PBR outputs, dimensions, style manifest, deterministic previews, and artifact packaging.
 
 ## Hygiene rules
 
@@ -66,7 +65,7 @@ Forbidden production-source patterns include:
 - `*backup*`
 - `*old*`
 - version-suffixed experiment recipe files such as `*-v2.ts`
-- committed PNG/JPG texture source assets inside `material_lab/`
+- committed PNG/JPG/WebP/TGA texture source assets inside `material_lab/`
 
 Experiments belong in Git history or a temporary external work area. Once a direction is rejected, its source is removed from the active material tree.
 
@@ -81,7 +80,10 @@ It must first satisfy the locked visual contract, then be added deliberately to 
 3. render with the standard displaced material sphere;
 4. inspect macro silhouette, cracks, floating fragments, seams, and PBR response;
 5. only after visual approval, register the preset in `bake-request.ts`;
-6. keep the stable production name free of iteration/version suffixes.
+6. extend the CI allowlist at the same time;
+7. keep the stable production name free of iteration/version suffixes.
+
+No rejected prototype may remain registered beside production materials.
 
 ## Runtime direction
 
