@@ -42,6 +42,38 @@ def ggx_specular(N,V,L,rough,F0):
     F=F0+(1.0-F0)*np.power(1.0-vdh,5.0)
     return (D*G/np.maximum(4.0*ndv*ndl,1e-5))[...,None]*F, ndl
 
+def sphere_uv(Ng):
+    u=(0.5+np.arctan2(Ng[...,2],Ng[...,0])/(2*np.pi))*2.10
+    v=(0.5-np.arcsin(np.clip(Ng[...,1],-1,1))/np.pi)*2.10
+    return u,v
+
+def displaced_geometry(sx,sy,height,amp=0.19,iterations=5):
+    """Approximate radial displacement by iteratively solving projected radius.
+    This makes Height affect silhouette and macro form instead of only the normal map.
+    """
+    qx=sx.copy(); qy=sy.copy()
+    valid=np.ones_like(sx,dtype=bool)
+    h05=float(np.percentile(height,5)); h50=float(np.percentile(height,50)); h95=float(np.percentile(height,95))
+    hspan=max(h95-h05,0.08)
+    sampled=np.full_like(sx,h50,dtype=np.float32)
+    for _ in range(iterations):
+        q2=qx*qx+qy*qy
+        valid=q2<=1.08
+        qz=np.sqrt(np.clip(1-q2,0,1))
+        Ng=np.stack([qx,qy,qz],axis=-1)
+        Ng/=np.maximum(np.linalg.norm(Ng,axis=-1,keepdims=True),1e-6)
+        u,v=sphere_uv(Ng)
+        sampled=bilinear(height,u,v)
+        hd=np.clip((sampled-h50)/hspan,-0.75,0.75)
+        radial=np.clip(1.0+amp*hd,0.86,1.16)
+        qx=sx/radial; qy=sy/radial
+    q2=qx*qx+qy*qy
+    mask=q2<=1.0
+    qz=np.sqrt(np.clip(1-q2,0,1))
+    Ng=np.stack([qx,qy,qz],axis=-1)
+    Ng/=np.maximum(np.linalg.norm(Ng,axis=-1,keepdims=True),1e-6)
+    return Ng,mask,q2,sampled
+
 def render_sphere(d:Path,name:str,out:Path):
     base_srgb=np.asarray(Image.open(d/f"{name}_baseColor.png").convert("RGB").resize((1024,1024),Image.Resampling.LANCZOS),dtype=np.float32)/255
     base=srgb_to_linear(base_srgb)
@@ -49,16 +81,26 @@ def render_sphere(d:Path,name:str,out:Path):
     rough=np.asarray(Image.open(d/f"{name}_roughness.png").convert("L").resize((1024,1024),Image.Resampling.LANCZOS),dtype=np.float32)/255
     ao=np.asarray(Image.open(d/f"{name}_ao.png").convert("L").resize((1024,1024),Image.Resampling.LANCZOS),dtype=np.float32)/255
     metal=np.asarray(Image.open(d/f"{name}_metallic.png").convert("L").resize((1024,1024),Image.Resampling.LANCZOS),dtype=np.float32)/255
-    S=1000; cx=S*.5; cy=S*.465; R=S*.34
-    yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R; r2=sx*sx+sy*sy
-    sz=np.zeros_like(sx,dtype=np.float32); mask=r2<=1; sz[mask]=np.sqrt(np.clip(1-r2[mask],0,1))
-    Ng=np.stack([sx,sy,sz],axis=-1); Ng/=np.maximum(np.linalg.norm(Ng,axis=-1,keepdims=True),1e-6)
-    u=(0.5+np.arctan2(Ng[...,2],Ng[...,0])/(2*np.pi))*2.10
-    v=(0.5-np.arcsin(np.clip(Ng[...,1],-1,1))/np.pi)*2.10
+    height=np.asarray(Image.open(d/f"{name}_height.png").convert("L").resize((1024,1024),Image.Resampling.LANCZOS),dtype=np.float32)/255
+
+    S=1000; cx=S*.5; cy=S*.465; R=S*.315
+    yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R
+    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=0.205,iterations=5)
+    u,v=sphere_uv(Ng)
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
+
     T=np.stack([-Ng[...,2],np.zeros_like(sx),Ng[...,0]],axis=-1); T/=np.maximum(np.linalg.norm(T,axis=-1,keepdims=True),1e-6)
     B=np.cross(Ng,T); B/=np.maximum(np.linalg.norm(B,axis=-1,keepdims=True),1e-6)
     N=T*nt[...,0:1]+B*nt[...,1:2]+Ng*np.maximum(nt[...,2:3],0.06); N/=np.maximum(np.linalg.norm(N,axis=-1,keepdims=True),1e-6)
+
+    # Height-derived macro normal reinforcement so large facets read clearly.
+    eps=1.0/1024.0
+    hL=bilinear(height,u-eps,v); hR=bilinear(height,u+eps,v); hD=bilinear(height,u,v-eps); hU=bilinear(height,u,v+eps)
+    gx=(hR-hL)*4.2; gy=(hU-hD)*4.2
+    HN=T*(-gx[...,None])+B*(-gy[...,None])+Ng
+    HN/=np.maximum(np.linalg.norm(HN,axis=-1,keepdims=True),1e-6)
+    N=norm(N*.68+HN*.32)
+
     V=np.array([0,0,1],np.float32)
     up=np.clip(N[...,1],-1,1)
     sky=np.array([.72,.88,1.12],np.float32); ground=np.array([.36,.29,.23],np.float32)
@@ -85,16 +127,19 @@ def render_sphere(d:Path,name:str,out:Path):
     color += fres*(.012+.025*(1-rr)[...,None])*np.array([.58,.70,.88],np.float32)
     color*=.91+.09*aa[...,None]
     c=np.clip(color*1.08,0,None); a,b,c1,d1,e=2.51,.03,2.43,.59,.14; c=(c*(a*c+b))/(c*(c1*c+d1)+e); c=linear_to_srgb(np.clip(c,0,1))
+
     gy=np.linspace(0,1,S)[:,None,None]; top=np.array([.73,.76,.80],np.float32)[None,None,:]; bot=np.array([.17,.19,.21],np.float32)[None,None,:]
     bg=np.repeat(top*(1-gy)+bot*gy,S,axis=1); floor_y=int(S*.78); fm=np.clip((yy-floor_y)/(S*.14),0,1)
     bg=bg*(1-fm[...,None]*.40)+np.array([.20,.195,.19],np.float32)*fm[...,None]*.40
-    shadow=np.exp(-(((xx-cx)/(R*.78))**2+((yy-(cy+R))/(R*.12))**2)*2.5); bg*=1-.34*shadow[...,None]
-    edge=np.clip((1-r2)*R*.9,0,1)[...,None]; img=bg*(1-edge)+c*edge
+    shadow=np.exp(-(((xx-cx)/(R*.86))**2+((yy-(cy+R*1.03))/(R*.14))**2)*2.35); bg*=1-.36*shadow[...,None]
+    edge=np.clip((1-r2)*R*.88,0,1)[...,None]
+    edge*=mask[...,None].astype(np.float32)
+    img=bg*(1-edge)+c*edge
     out_im=Image.fromarray((np.clip(img,0,1)*255).astype(np.uint8),"RGB")
     draw=ImageDraw.Draw(out_im)
     try: f1=ImageFont.truetype("DejaVuSans.ttf",27); f2=ImageFont.truetype("DejaVuSans.ttf",18)
     except: f1=ImageFont.load_default(); f2=f1
-    draw.rounded_rectangle((28,26,610,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),"real CI PBR · calibrated GGX studio sphere",fill=(190,195,200),font=f2)
+    draw.rounded_rectangle((28,26,650,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),"true Height displacement · calibrated GGX studio sphere",fill=(190,195,200),font=f2)
     out_im.save(out)
 
 def contact_sheet(d:Path,name:str,out:Path):
