@@ -1,5 +1,7 @@
 #pragma once
 
+#include "vf/world/ReferenceFrame.hpp"
+
 #include <cstdint>
 
 #include <glm/glm.hpp>
@@ -14,6 +16,10 @@ struct CelestialBody;
 // planet/moon physics space. Static terrain and buildings are stationary in this frame; dynamic
 // bodies carry only their local speeds, so contact solvers never need to resolve a planet's
 // hundreds-of-metres-per-second orbital motion or tens-of-metres-per-second surface rotation.
+//
+// R24 exposes the rotating body through the same ReferenceFrameWorldState contract used by the
+// general frame graph. Orbital frames remain inertial; this body-fixed state is the child transform
+// that owns daily spin, so moons never inherit a planet's daily rotation.
 class CelestialPhysicsFrame final {
 public:
     CelestialPhysicsFrame() = default;
@@ -22,12 +28,21 @@ public:
     void setBodyId(std::uint32_t celestialBodyId) noexcept { celestialBodyId_ = celestialBodyId; }
     [[nodiscard]] std::uint32_t bodyId() const noexcept { return celestialBodyId_; }
 
+    [[nodiscard]] ReferenceFrameWorldState worldState(const CelestialBody& body) const noexcept;
+
     [[nodiscard]] glm::dvec3 toLocalPosition(
         const CelestialBody& body,
         const glm::dvec3& worldPosition) const noexcept;
     [[nodiscard]] glm::dvec3 toWorldPosition(
         const CelestialBody& body,
         const glm::dvec3& localPosition) const noexcept;
+
+    [[nodiscard]] glm::dvec3 toLocalDirection(
+        const CelestialBody& body,
+        const glm::dvec3& worldDirection) const noexcept;
+    [[nodiscard]] glm::dvec3 toWorldDirection(
+        const CelestialBody& body,
+        const glm::dvec3& localDirection) const noexcept;
 
     [[nodiscard]] glm::dquat toLocalOrientation(
         const CelestialBody& body,

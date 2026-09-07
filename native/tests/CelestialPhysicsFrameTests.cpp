@@ -25,6 +25,37 @@ void requireNear(double actual, double expected, double tolerance, std::string_v
     if (std::abs(actual - expected) > tolerance) fail(message);
 }
 
+void testBodyFixedWorldStateMatchesPhysicalBodyAndMovesSkyLocally() {
+    vf::CelestialBody planet{};
+    planet.id = 42U;
+    planet.position = {1.2e8, -3.0e6, 8.0e7};
+    planet.linearVelocity = {-1250.0, 28.0, 29750.0};
+    planet.spinAxis = glm::normalize(glm::dvec3{0.31, 0.91, -0.27});
+    planet.spinRateRadPerSecond = 7.2921150e-5;
+    planet.orientation = glm::normalize(glm::angleAxis(0.83, planet.spinAxis));
+
+    vf::CelestialPhysicsFrame frame{planet.id};
+    const vf::ReferenceFrameWorldState state = frame.worldState(planet);
+    require(state.valid, "body-fixed reference state must be valid for finite celestial input");
+    require(glm::length(state.position - planet.position) < 1.0e-9,
+        "body-fixed frame origin must equal the physical body center");
+    require(glm::length(state.velocity - planet.linearVelocity) < 1.0e-9,
+        "body-fixed frame translation velocity must equal the physical body velocity");
+    require(std::abs(std::abs(glm::dot(state.rotation, planet.orientation)) - 1.0) < 1.0e-12,
+        "body-fixed frame rotation must equal the physical spin orientation");
+    require(glm::length(state.angularVelocity - planet.spinAxis * planet.spinRateRadPerSecond) < 1.0e-12,
+        "body-fixed frame angular velocity must expose the actual celestial spin vector");
+
+    const glm::dvec3 inertialStarDirection = glm::normalize(glm::dvec3{0.48, 0.17, -0.86});
+    const glm::dvec3 localBefore = glm::normalize(frame.toLocalDirection(planet, inertialStarDirection));
+    planet.orientation = glm::normalize(glm::angleAxis(0.35, planet.spinAxis) * planet.orientation);
+    const glm::dvec3 localAfter = glm::normalize(frame.toLocalDirection(planet, inertialStarDirection));
+    require(glm::dot(localBefore, localAfter) < 0.9999,
+        "an inertial star direction must move through the rotating local sky while terrain stays body-fixed");
+    require(glm::length(frame.toWorldDirection(planet, localAfter) - inertialStarDirection) < 1.0e-12,
+        "local/world sky direction conversion must remain exactly reversible");
+}
+
 void testWorldLocalRoundTripPreservesState() {
     vf::CelestialBody planet{};
     planet.id = 7U;
@@ -73,7 +104,7 @@ void testPhysicalGravityPersistsOutsideReferenceBubble() {
     planet.gameplaySurfaceGravityMps2 = 9.81;
     planet.atmosphere.enabled = true;
     planet.atmosphere.heightMeters = 1100.0;
-    planet.gravityInfluenceRadiusMeters = 11000.0; // legacy bubble hint only
+    planet.gravityInfluenceRadiusMeters = 11000.0;
     planet.physicsBubbleRadiusMeters = 11000.0;
     const auto planetId = system.addBody(planet);
 
@@ -146,9 +177,6 @@ void testRealSpinKeepsGroundRenderHeadingFixedForSixHours() {
     const glm::dvec3 initialRenderUp = glm::normalize(initialInverse * camera.up());
     const glm::dvec3 initialLocalPosition = initialInverse * (camera.position() - initialBody->position);
 
-    // Main.cpp advances celestial time first, then updates the camera. Reproduce that exact order
-    // for six simulated hours at one-minute celestial steps. A grounded observer should see the
-    // landscape remain fixed while the inertial body orientation changes by roughly a quarter turn.
     for (int minute = 0; minute < 360; ++minute) {
         system.step(60.0);
         camera.update({}, 1.0 / 120.0);
@@ -229,6 +257,7 @@ void testRealSpinLeavesHighAltitudeViewInertialInsidePhysicsBubble() {
 } // namespace
 
 int main() {
+    testBodyFixedWorldStateMatchesPhysicalBodyAndMovesSkyLocally();
     testWorldLocalRoundTripPreservesState();
     testSurfaceRestIsZeroLocalVelocity();
     testPhysicalGravityPersistsOutsideReferenceBubble();
