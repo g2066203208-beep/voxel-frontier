@@ -15,18 +15,18 @@ trap '[[ -n "${RUN_PID:-}" ]] && kill "$RUN_PID" 2>/dev/null || true; kill "$XVF
 sleep 2
 
 wait_window() {
-  for _ in $(seq 1 140); do
+  for _ in $(seq 1 180); do
     local w
     w="$(xdotool search --name 'Voxel Frontier' 2>/dev/null | head -n1 || true)"
     [[ -n "$w" ]] && { echo "$w"; return 0; }
-    sleep 0.4
+    sleep 0.35
   done
   return 1
 }
 
 start_app() {
   local log="$1"; shift
-  env "$@" timeout 90s "$APP" >"$log" 2>&1 &
+  env "$@" timeout 150s "$APP" >"$log" 2>&1 &
   RUN_PID=$!
   ACTIVE_WINDOW="$(wait_window)"
   xdotool windowfocus "$ACTIVE_WINDOW" 2>/dev/null || true
@@ -45,8 +45,8 @@ capture_valid() {
   local path="$1"
   local stem
   stem="$(basename "${path%.png}")"
-  for i in $(seq 1 40); do
-    sleep .35
+  for i in $(seq 1 50); do
+    sleep .30
     local tmp="$OUT/frame.png"
     import -display :99 -window root "$tmp"
     local colors
@@ -61,15 +61,31 @@ capture_valid() {
   return 1
 }
 
+capture_failure_frame() {
+  local stem="$1"
+  local tmp="$OUT/failed-captures/${stem}-runtime-failure.png"
+  import -display :99 -window root "$tmp" 2>/dev/null || true
+  [[ -s "$tmp" ]] && echo "preserved failure framebuffer: $tmp" || true
+}
+
 # Gameplay Moon: physical orbit/gravity are unchanged, only the surface-view presentation is 4x.
 start_app "$OUT/logs/moon.log" \
   VF_CELESTIAL_TARGET=moon VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
-for _ in $(seq 1 100); do
+for _ in $(seq 1 140); do
   grep -q 'R24 moon evidence:' "$OUT/logs/moon.log" && break
-  sleep .3
+  sleep .25
 done
-grep -q 'R24 moon evidence:' "$OUT/logs/moon.log"
-capture_valid "$OUT/moon/gameplay-moon.png"
+if ! grep -q 'R24 moon evidence:' "$OUT/logs/moon.log"; then
+  capture_failure_frame moon-timeout
+  tail -80 "$OUT/logs/moon.log" || true
+  stop_app
+  exit 11
+fi
+capture_valid "$OUT/moon/gameplay-moon.png" || {
+  capture_failure_frame moon-invalid
+  stop_app
+  exit 12
+}
 stop_app
 python3 - "$OUT/logs/moon.log" <<'PY'
 import re, sys
@@ -88,16 +104,39 @@ capture_terrain() {
   local altitude="$2"
   local output="$3"
   local log="$OUT/logs/${target}.log"
+  echo "starting causal terrain capture target=${target} altitude_m=${altitude}"
   start_app "$log" \
     VF_TERRAIN_TARGET="$target" VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS="$altitude" \
     VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
-  for _ in $(seq 1 120); do
-    grep -q "R24 terrain target: ${target}" "$log" && break
-    sleep .3
+
+  local ready=0
+  for _ in $(seq 1 300); do
+    if grep -q "R24 terrain target: ${target}" "$log"; then
+      ready=1
+      break
+    fi
+    if grep -q 'Fatal error' "$log"; then
+      break
+    fi
+    sleep .25
   done
-  grep -q "R24 terrain target: ${target}" "$log"
-  sleep 2.5
-  capture_valid "$output"
+  if [[ "$ready" -ne 1 ]]; then
+    echo "terrain target did not become ready: ${target}" >&2
+    capture_failure_frame "${target}-timeout"
+    tail -100 "$log" || true
+    stop_app
+    return 21
+  fi
+
+  # Give the async hydrology/LOD build time to publish the selected province before taking evidence.
+  sleep 3.0
+  if ! capture_valid "$output"; then
+    echo "terrain framebuffer stayed invalid: ${target}" >&2
+    capture_failure_frame "${target}-invalid"
+    tail -100 "$log" || true
+    stop_app
+    return 22
+  fi
   stop_app
 }
 
