@@ -483,9 +483,11 @@ PlanetTerrainSample samplePlanetTerrain(
         w.z * 15.0 + w.x * 7.0 - w.y * 4.0 + p4));
     const double mountainBackbone = std::pow(
         std::clamp(mountainRidge, 0.0, 1.0), 1.45);
-    const double mountainReliefFactor = 0.36
-        + 0.19 * mountainFold
-        + 0.20 * mountainBackbone;
+    // WorldEngine/platec-style ordering: plate convergence carries the macro uplift first.
+    // Ridge noise below is subordinate detail, never another full-amplitude mountain range.
+    const double mountainReliefFactor = 0.16
+        + 0.10 * mountainFold
+        + 0.08 * mountainBackbone;
     elevation += maxLand * mountain * mountainReliefFactor;
 
     const double trenchWeight = (!plates.primary.continental || !plates.secondary.continental)
@@ -543,8 +545,10 @@ PlanetTerrainSample samplePlanetTerrain(
     const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3);
     const double hillNoise = fbmSurface(definition.seed ^ 0x1F83D9ABFB41BD6BULL, w, 1350.0, 3);
     const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
-    const double canyonNoise = fbmSurface(definition.seed ^ 0x5BE0CD19137E2179ULL, w, 8200.0, 3);
-    const double abyssNoise = fbmSurface(definition.seed ^ 0x243F6A8885A308D3ULL, w, 3600.0, 4);
+    // Incision fields deliberately stay below the rock/material octave band. Very high-frequency
+    // displacement at kilometre amplitudes creates needles rather than drainage-shaped terrain.
+    const double canyonNoise = fbmSurface(definition.seed ^ 0x5BE0CD19137E2179ULL, w, 4200.0, 3);
+    const double abyssNoise = fbmSurface(definition.seed ^ 0x243F6A8885A308D3ULL, w, 900.0, 3);
     const double duneNoise = fbmSurface(definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 26000.0, 2);
     const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
     const double fine = fbmSurface(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2);
@@ -602,15 +606,17 @@ PlanetTerrainSample samplePlanetTerrain(
         * smooth01(0.42, 0.82, coastalRuggedness)
         * (1.0 - 0.78 * river);
 
-    // A narrow ridged mask cuts canyon networks into dry elevated interiors. It is intentionally
-    // subordinate to the existing river field: broad drainage decides where valleys are; this adds
-    // the steep incised morphology visible at human scale.
+    // Canyon incision follows a broad shoulder plus a narrower core. This mirrors the staged
+    // terrain -> erosion ordering used by WorldEngine: drainage-scale morphology shapes the valley,
+    // while the narrower ridge field only sharpens the inner channel instead of cutting a wall.
     const double canyonRidge = 1.0 - std::abs(canyonNoise);
+    const double canyonShoulder = smooth01(0.50, 0.90, canyonRidge);
+    const double canyonCore = smooth01(0.76, 0.965, canyonRidge);
     const double elevatedInterior = std::clamp(
         0.30 + 0.55 * plateau + 0.35 * hills + 0.25 * interior,
         0.0,
         1.0);
-    const double canyon = smooth01(0.76, 0.965, canyonRidge)
+    const double canyon = canyonShoulder
         * aridity
         * landness
         * elevatedInterior
@@ -627,13 +633,15 @@ PlanetTerrainSample samplePlanetTerrain(
             std::cos(width * 2.8),
             std::cos(width * 0.30),
             glm::dot(d, throat));
-        seededAbyss = std::max(seededAbyss, std::pow(throatMask, 2.15));
+        // A lower exponent widens the transition zone so mega-throats read as kilometre-scale bowls
+        // instead of cylindrical cut-outs when sampled by the runtime mesh.
+        seededAbyss = std::max(seededAbyss, std::pow(throatMask, 1.45));
     }
-    const double fractureAbyss = smooth01(0.78, 0.985, canyonRidge)
-        * elevatedInterior * (0.42 + 0.58 * std::abs(abyssNoise));
-    const double riftAbyss = rift * (0.38 + 0.62 * std::abs(riftFaultFine));
+    const double fractureAbyss = smooth01(0.72, 0.96, canyonRidge)
+        * elevatedInterior * (0.52 + 0.48 * std::abs(abyssNoise));
+    const double riftAbyss = rift * (0.55 + 0.45 * std::abs(riftFault));
     const double abyss = std::clamp(
-        landness * std::max({seededAbyss, 0.82 * fractureAbyss, 0.62 * riftAbyss}),
+        landness * std::max({seededAbyss, 0.34 * fractureAbyss, 0.28 * riftAbyss}),
         0.0,
         1.0);
 
@@ -678,27 +686,27 @@ PlanetTerrainSample samplePlanetTerrain(
     const double protectedDrainage = 1.0 - 0.74 * river;
     const double iceSmoothing = 1.0 - 0.62 * glacier;
 
-    // A convergent plate boundary must produce relief, not merely altitude. Convert nested FBM into
-    // a ridged multifractal-like signed profile: narrow high crests, broad saddles and carved
-    // intermontane valleys. The amplitude is intentionally kilometre-scale inside strong orogeny
-    // but fades continuously to zero away from convergent continental boundaries.
-    const double orogenySignal = std::clamp(
-        0.68 * orogenyRidge + 0.32 * orogenyFine, -1.0, 1.0);
-    const double alpineRidge = std::pow(
-        std::clamp(1.0 - std::abs(orogenySignal), 0.0, 1.0), 1.50);
-    const double alpineValley = std::pow(
-        std::clamp(std::abs(orogenySignal) - 0.16, 0.0, 1.0), 1.35);
+    // FastNoiseLite's weighted ridged fractal attenuates later octaves according to the previous
+    // ridge response. Apply the same compositional idea here: a broad orogenic envelope controls
+    // primary ridges, and primary ridges control the fine ridge band. This keeps the 75 km mountain
+    // mass dominant while preventing 8-26 km noise from receiving a second 10+ km displacement.
     const double orogenyMask = smooth01(0.035, 0.62, mountain);
-    const double alpineSignedRelief =
-        1.28 * alpineRidge - 0.50 - 0.24 * alpineValley
-        + 0.24 * orogenyBroad + 0.14 * orogenyFine;
+    const double broadUplift = smooth01(-0.35, 0.55, orogenyBroad);
+    const double primaryRidge = std::pow(
+        std::clamp(1.0 - std::abs(orogenyRidge), 0.0, 1.0), 1.65);
+    const double fineRidge = std::pow(
+        std::clamp(1.0 - std::abs(orogenyFine), 0.0, 1.0), 1.90);
+    const double weightedPrimaryRidge = primaryRidge * (0.30 + 0.70 * broadUplift);
+    const double weightedFineRidge = fineRidge * weightedPrimaryRidge;
+    const double intermontaneValley = smooth01(0.52, 0.90, std::abs(orogenyRidge))
+        * (0.30 + 0.70 * broadUplift);
 
     // Divergent continental boundaries receive a separate fault-block profile. This creates real
     // graben/horst relief at 8-25 km scales on top of the broad rift depression and shoulders.
     const double riftFaultRidge = std::pow(
         std::clamp(1.0 - std::abs(riftFault), 0.0, 1.0), 1.45);
     const double riftFaultProfile =
-        (riftFaultRidge - 0.46) + 0.24 * riftFaultFine;
+        (riftFaultRidge - 0.46) + 0.08 * riftFaultFine;
     const double riftReliefMask = smooth01(0.025, 0.52, plates.divergence * landness);
 
     const double landRelief = (
@@ -710,26 +718,32 @@ PlanetTerrainSample samplePlanetTerrain(
         + (ridged - 0.5) * 0.0052 * mountain)
         * protectedDrainage * iceSmoothing;
     elevation += maxLand * landRelief * landness;
-    const double epicOrogeny = std::clamp(
-        alpineSignedRelief + 0.42 * (1.0 - std::abs(orogenyFine)) - 0.18,
-        -1.25,
-        1.55);
-    elevation += maxLand * 0.420 * orogenyMask * epicOrogeny
-        * protectedDrainage * iceSmoothing;
-    elevation += maxLand * 0.165 * riftReliefMask * riftFaultProfile;
-    elevation -= maxLand * 0.145 * rift
-        * (0.50 + 0.50 * std::abs(riftFaultFine));
+    // Scale-separated orogeny: most vertical energy lives in the broad plate-driven envelope;
+    // progressively finer ridges receive progressively smaller amplitudes, like a weighted fractal.
+    const double terrainWeathering = protectedDrainage * iceSmoothing;
+    elevation += maxLand * 0.155 * orogenyMask * (broadUplift - 0.18)
+        * terrainWeathering;
+    elevation += maxLand * 0.082 * orogenyMask * (weightedPrimaryRidge - 0.28)
+        * terrainWeathering;
+    elevation += maxLand * 0.015 * orogenyMask * (weightedFineRidge - 0.18)
+        * terrainWeathering;
+    elevation -= maxLand * 0.028 * orogenyMask * intermontaneValley
+        * terrainWeathering;
+    elevation += maxLand * 0.065 * riftReliefMask * riftFaultProfile;
+    elevation -= maxLand * 0.045 * rift
+        * (0.72 + 0.28 * std::abs(riftFault));
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
 
     // Distinct terrain-form displacement. The amplitudes stay well below tectonic relief but are
     // large enough to affect silhouettes AND authoritative collision, not merely shader color.
     elevation += maxLand * 0.012 * coastalCliff * (0.35 + 0.65 * std::max(0.0, local));
-    elevation -= maxLand * 0.105 * canyon * (0.45 + 0.55 * canyonRidge);
-    // Mega-abyss / cavern throats are deliberately beyond terrestrial scale. A strong throat can
-    // descend ten kilometres or more from its surrounding rim, producing a landmark visible from
-    // high-altitude flight. The smooth radial/noise mask avoids a hard circular cut.
-    elevation -= maxLand * 0.385 * abyss
-        * (0.62 + 0.38 * std::abs(abyssNoise));
+    // A broad canyon shoulder carries most incision. The narrow core deepens the channel without
+    // turning every high-frequency crest into a vertical wall.
+    elevation -= maxLand * 0.060 * canyon * (0.58 + 0.42 * canyonCore);
+    // Mega-abyss remains a deliberately non-terrestrial landmark, but its vertical profile is now
+    // controlled by a low-frequency modulation and a broad radial throat rather than fracture noise.
+    elevation -= maxLand * 0.270 * abyss
+        * (0.78 + 0.22 * std::abs(abyssNoise));
     elevation += maxLand * 0.0016 * dunes * duneNoise;
     if (wetland > 0.0 && elevation > 45.0) {
         elevation -= (elevation - 45.0) * std::clamp(wetland * 0.52, 0.0, 0.52);
