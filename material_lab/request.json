@@ -1,25 +1,25 @@
 {
   "materials": [
     {
-      "name":"vf_faceted_painted_basalt_01",
+      "name":"vf_faceted_painted_basalt_02",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfBasaltPainted",
-      "params":{"seed":240914,"cells":7,"jitter":0.88,"heightLevels":5,"crackWidth":0.095,"crackDepth":0.78,"bevel":0.145,"distortion":0.82,"damage":0.34,"microDetail":0.045,"normalStrength":8.4}
+      "params":{"seed":240914,"cells":5,"jitter":0.78,"heightLevels":5,"crackWidth":0.070,"crackDepth":0.80,"bevel":0.100,"distortion":0.38,"damage":0.44,"microDetail":0.015,"normalStrength":9.0,"anisotropy":0.42,"facetStrength":0.95,"strokeStrength":0.22}
     },
     {
-      "name":"vf_faceted_painted_granite_01",
+      "name":"vf_faceted_painted_granite_02",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfGranitePainted",
-      "params":{"seed":310402,"cells":7,"jitter":0.84,"heightLevels":4,"crackWidth":0.082,"crackDepth":0.68,"bevel":0.165,"distortion":0.72,"damage":0.30,"microDetail":0.065,"normalStrength":8.0}
+      "params":{"seed":310402,"cells":5,"jitter":0.74,"heightLevels":4,"crackWidth":0.062,"crackDepth":0.70,"bevel":0.115,"distortion":0.32,"damage":0.38,"microDetail":0.020,"normalStrength":8.6,"anisotropy":0.36,"facetStrength":0.86,"strokeStrength":0.20}
     },
     {
-      "name":"vf_faceted_painted_dirt_01",
+      "name":"vf_faceted_painted_dirt_02",
       "resolution":1024,
       "profile":"stylized",
       "preset":"vfDirtPainted",
-      "params":{"seed":420503,"cells":6,"jitter":0.90,"heightLevels":4,"crackWidth":0.072,"crackDepth":0.58,"bevel":0.190,"distortion":0.88,"damage":0.24,"microDetail":0.035,"normalStrength":7.2}
+      "params":{"seed":420503,"cells":5,"jitter":0.82,"heightLevels":4,"crackWidth":0.055,"crackDepth":0.56,"bevel":0.135,"distortion":0.42,"damage":0.26,"microDetail":0.012,"normalStrength":7.7,"anisotropy":0.28,"facetStrength":0.60,"strokeStrength":0.18}
     }
   ]
 }
