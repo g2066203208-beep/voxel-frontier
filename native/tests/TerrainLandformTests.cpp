@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <iostream>
 
+#include <glm/geometric.hpp>
+
 namespace {
 
 void require(bool condition, const char* message) {
@@ -38,13 +40,18 @@ int main() {
     double maxElevation = -1.0e30;
     bool sawLand = false;
     bool sawOcean = false;
+    glm::dvec3 mountainProbeDirection{0.0, 1.0, 0.0};
+    glm::dvec3 riftProbeDirection{0.0, 1.0, 0.0};
+    double mountainProbeScore = -1.0e30;
+    double riftProbeScore = -1.0e30;
 
     for (std::uint32_t face = 0; face < 6U; ++face) {
         for (int y = 0; y <= 72; ++y) {
             for (int x = 0; x <= 72; ++x) {
                 const double u = -1.0 + 2.0 * static_cast<double>(x) / 72.0;
                 const double v = -1.0 + 2.0 * static_cast<double>(y) / 72.0;
-                const auto sample = vf::samplePlanetTerrain(planet, vf::cubeSphereDirection(face, u, v));
+                const glm::dvec3 direction = vf::cubeSphereDirection(face, u, v);
+                const auto sample = vf::samplePlanetTerrain(planet, direction);
 
                 const double masks[] = {
                     sample.hills, sample.canyon, sample.rift, sample.shear, sample.alluvialFan,
@@ -71,6 +78,23 @@ int main() {
                 maxElevation = std::max(maxElevation, sample.elevationMeters);
                 sawLand = sawLand || sample.elevationMeters > 100.0;
                 sawOcean = sawOcean || sample.elevationMeters < -500.0;
+
+                if (sample.elevationMeters > 150.0 && sample.glacier < 0.55) {
+                    const double mountainScore = sample.mountain * 2.0
+                        + sample.convergence * 0.55
+                        - sample.glacier * 0.80
+                        - std::max(0.0, (sample.elevationMeters - 8000.0) / 2000.0);
+                    if (mountainScore > mountainProbeScore) {
+                        mountainProbeScore = mountainScore;
+                        mountainProbeDirection = direction;
+                    }
+                    const double riftScore = sample.rift * 2.0 + sample.divergence * 0.65
+                        - sample.mountain * 0.30;
+                    if (riftScore > riftProbeScore) {
+                        riftProbeScore = riftScore;
+                        riftProbeDirection = direction;
+                    }
+                }
             }
         }
     }
@@ -92,6 +116,40 @@ int main() {
     require(maxElevation <= planet.maxElevation + 1.0e-6,
         "new landforms must respect configured elevation clamp");
 
+    const auto localRelief = [&](const glm::dvec3& centerInput, double radiusMeters) {
+        const glm::dvec3 center = glm::normalize(centerInput);
+        const glm::dvec3 reference = std::abs(center.y) < 0.88
+            ? glm::dvec3{0.0, 1.0, 0.0}
+            : glm::dvec3{1.0, 0.0, 0.0};
+        const glm::dvec3 tangent = glm::normalize(glm::cross(reference, center));
+        const glm::dvec3 bitangent = glm::normalize(glm::cross(center, tangent));
+        double localMin = vf::samplePlanetTerrain(planet, center).elevationMeters;
+        double localMax = localMin;
+        constexpr int azimuthSamples = 32;
+        for (int ring = 1; ring <= 3; ++ring) {
+            const double ringRadius = radiusMeters * static_cast<double>(ring) / 3.0;
+            for (int i = 0; i < azimuthSamples; ++i) {
+                const double angle = 6.28318530717958647692 * static_cast<double>(i)
+                    / static_cast<double>(azimuthSamples);
+                const glm::dvec3 outward = tangent * std::cos(angle)
+                    + bitangent * std::sin(angle);
+                const glm::dvec3 direction = glm::normalize(
+                    center + outward * (ringRadius / planet.radius));
+                const double elevation = vf::samplePlanetTerrain(planet, direction).elevationMeters;
+                localMin = std::min(localMin, elevation);
+                localMax = std::max(localMax, elevation);
+            }
+        }
+        return localMax - localMin;
+    };
+
+    const double mountainLocalRelief = localRelief(mountainProbeDirection, 28000.0);
+    const double riftLocalRelief = localRelief(riftProbeDirection, 24000.0);
+    require(mountainLocalRelief > 850.0,
+        "convergent mountain provinces must contain >850 m real 3-D relief within 28 km");
+    require(riftLocalRelief > 260.0,
+        "continental rifts must contain >260 m real 3-D fault relief within 24 km");
+
     std::cout << "Terrain landform tests passed"
               << " | hills=" << maxHills
               << " canyon=" << maxCanyon
@@ -101,6 +159,8 @@ int main() {
               << " dunes=" << maxDunes
               << " cliff=" << maxCliff
               << " wetland=" << maxWetland
-              << " glacier=" << maxGlacier << '\n';
+              << " glacier=" << maxGlacier
+              << " mountain_local_relief_m=" << mountainLocalRelief
+              << " rift_local_relief_m=" << riftLocalRelief << '\n';
     return 0;
 }

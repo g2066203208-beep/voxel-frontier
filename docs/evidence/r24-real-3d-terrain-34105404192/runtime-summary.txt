@@ -1,0 +1,9 @@
+=== MOUNTAIN ===
+R24 terrain target: mountain score=9.11523
+R24 terrain evidence view: contrast_m=12769.4
+=== RIFT ===
+R24 terrain target: rift score=5.08231
+R24 terrain evidence view: contrast_m=751.494
+=== HYDROLOGY ===
+R24 terrain target: hydrology score=2.00639
+R24 terrain evidence view: contrast_m=263.707

@@ -116,18 +116,44 @@ constexpr double kPi = 3.1415926535897932384626433832795;
             if (aboveSea < 8.0 || terrain.submerged(planet) || sunElevation < 0.10) continue;
 
             const double height01 = std::clamp(aboveSea / std::max(1.0, planet.maxElevation), 0.0, 1.0);
+            double localReliefMeters = 0.0;
+            const bool needsReliefProbe =
+                (target == "mountain" && terrain.mountain > 0.16)
+                || (target == "rift" && terrain.rift > 0.015);
+            if (needsReliefProbe) {
+                const glm::dvec3 tangentA = stableTangent(d);
+                const glm::dvec3 tangentB = safeNormalize(
+                    glm::cross(d, tangentA), stableTangent(d));
+                constexpr double reliefProbeDistanceMeters = 18000.0;
+                constexpr int reliefProbeDirections = 8;
+                for (int probeIndex = 0; probeIndex < reliefProbeDirections; ++probeIndex) {
+                    const double probeAngle = 2.0 * kPi * static_cast<double>(probeIndex)
+                        / static_cast<double>(reliefProbeDirections);
+                    const glm::dvec3 probeTangent = safeNormalize(
+                        tangentA * std::cos(probeAngle) + tangentB * std::sin(probeAngle),
+                        tangentA);
+                    const glm::dvec3 probeDirection = safeNormalize(
+                        d + probeTangent * (reliefProbeDistanceMeters / planet.radius), d);
+                    const double probeElevation = vf::samplePlanetTerrain(
+                        planet, probeDirection).elevationMeters;
+                    localReliefMeters = std::max(
+                        localReliefMeters, std::abs(probeElevation - terrain.elevationMeters));
+                }
+            }
+
             double score = -1.0e9;
             if (target == "mountain") {
-                score = terrain.mountain * 4.4
-                    + (1.0 - std::abs(height01 - 0.38)) * 1.25
-                    + terrain.plateBoundary * 0.35
-                    - terrain.glacier * 2.8
-                    - std::max(0.0, height01 - 0.65) * 2.4
-                    - std::abs(d.y) * 0.45;
+                const double reliefScore = std::clamp(localReliefMeters / 900.0, 0.0, 2.8);
+                score = terrain.mountain * 3.4 + reliefScore * 2.3
+                    + terrain.plateBoundary * 0.30
+                    - terrain.glacier * 2.6
+                    - std::max(0.0, height01 - 0.78) * 2.0
+                    - std::abs(d.y) * 0.35;
             } else if (target == "rift") {
-                score = terrain.rift * 4.8 + terrain.divergence * 1.35
-                    + terrain.plateBoundary * 0.55 + height01 * 0.25
-                    - terrain.glacier * 1.4 - terrain.mountain * 0.45;
+                const double reliefScore = std::clamp(localReliefMeters / 420.0, 0.0, 2.6);
+                score = terrain.rift * 3.7 + terrain.divergence * 1.10
+                    + reliefScore * 2.0 + terrain.plateBoundary * 0.35
+                    - terrain.glacier * 1.2 - terrain.mountain * 0.35;
             } else if (target == "alluvial") {
                 score = terrain.alluvialFan * 4.4 + terrain.river * 1.2
                     + terrain.moisture * 0.45 - height01 * 0.50;
@@ -470,9 +496,9 @@ int main() {
             if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET");
                 targetEnv != nullptr && *targetEnv != '\0') {
                 const std::string_view target{targetEnv};
-                if (target == "mountain") downwardWeight = 0.27;
-                else if (target == "rift") downwardWeight = 0.31;
-                else if (target == "hydrology" || target == "river") downwardWeight = 0.38;
+                if (target == "mountain") downwardWeight = 0.17;
+                else if (target == "rift") downwardWeight = 0.22;
+                else if (target == "hydrology" || target == "river") downwardWeight = 0.30;
             }
             const double tangentWeight = std::sqrt(std::max(
                 0.0, 1.0 - downwardWeight * downwardWeight));

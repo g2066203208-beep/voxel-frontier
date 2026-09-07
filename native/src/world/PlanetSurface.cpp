@@ -548,6 +548,22 @@ PlanetTerrainSample samplePlanetTerrain(
     const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
     const double fine = fbmSurface(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2);
 
+    // Orogenic/fault morphology uses separate deterministic bands rather than reusing the tiny
+    // material-detail amplitudes below. On an Earth-size sphere these frequencies correspond to
+    // broad mountain massifs (~75 km), primary ridges (~26 km), secondary ridges (~8.5 km), and
+    // rift scarps in the same human-visible range. They displace the same authoritative geometry
+    // consumed by collision, ecology and rendering; this is not normal-map or colour-only detail.
+    const double orogenyBroad = fbmSurface(
+        definition.seed ^ 0x9B05688C2B3E6C1FULL, w, 540.0, 4);
+    const double orogenyRidge = fbmSurface(
+        definition.seed ^ 0x1D9ABF5A7C4E21B3ULL, w, 1550.0, 4);
+    const double orogenyFine = fbmSurface(
+        definition.seed ^ 0xC13FA9A902A6328FULL, w, 4700.0, 3);
+    const double riftFault = fbmSurface(
+        definition.seed ^ 0x91E10DA5C79E7B1DULL, w, 1800.0, 3);
+    const double riftFaultFine = fbmSurface(
+        definition.seed ^ 0xD192E819D6EF5218ULL, w, 5200.0, 3);
+
     const double latitude = std::abs(d.y);
     const double coastProximity = 1.0 - smooth01(0.025, 0.30, std::abs(continentalness));
     const double interior = smooth01(0.10, 0.48, continentalness);
@@ -640,6 +656,30 @@ PlanetTerrainSample samplePlanetTerrain(
     const double ridged = 1.0 - std::abs(local);
     const double protectedDrainage = 1.0 - 0.74 * river;
     const double iceSmoothing = 1.0 - 0.62 * glacier;
+
+    // A convergent plate boundary must produce relief, not merely altitude. Convert nested FBM into
+    // a ridged multifractal-like signed profile: narrow high crests, broad saddles and carved
+    // intermontane valleys. The amplitude is intentionally kilometre-scale inside strong orogeny
+    // but fades continuously to zero away from convergent continental boundaries.
+    const double orogenySignal = std::clamp(
+        0.68 * orogenyRidge + 0.32 * orogenyFine, -1.0, 1.0);
+    const double alpineRidge = std::pow(
+        std::clamp(1.0 - std::abs(orogenySignal), 0.0, 1.0), 1.50);
+    const double alpineValley = std::pow(
+        std::clamp(std::abs(orogenySignal) - 0.16, 0.0, 1.0), 1.35);
+    const double orogenyMask = smooth01(0.035, 0.62, mountain);
+    const double alpineSignedRelief =
+        1.28 * alpineRidge - 0.50 - 0.24 * alpineValley
+        + 0.24 * orogenyBroad + 0.14 * orogenyFine;
+
+    // Divergent continental boundaries receive a separate fault-block profile. This creates real
+    // graben/horst relief at 8-25 km scales on top of the broad rift depression and shoulders.
+    const double riftFaultRidge = std::pow(
+        std::clamp(1.0 - std::abs(riftFault), 0.0, 1.0), 1.45);
+    const double riftFaultProfile =
+        (riftFaultRidge - 0.46) + 0.24 * riftFaultFine;
+    const double riftReliefMask = smooth01(0.025, 0.52, plates.divergence * landness);
+
     const double landRelief = (
         regional * (0.0085 + 0.0180 * mountain + 0.0048 * plateau)
         + hillNoise * (0.0042 * hills)
@@ -649,6 +689,11 @@ PlanetTerrainSample samplePlanetTerrain(
         + (ridged - 0.5) * 0.0052 * mountain)
         * protectedDrainage * iceSmoothing;
     elevation += maxLand * landRelief * landness;
+    elevation += maxLand * 0.170 * orogenyMask * alpineSignedRelief
+        * protectedDrainage * iceSmoothing;
+    elevation += maxLand * 0.070 * riftReliefMask * riftFaultProfile;
+    elevation -= maxLand * 0.045 * rift
+        * (0.50 + 0.50 * std::abs(riftFaultFine));
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
 
     // Distinct terrain-form displacement. The amplitudes stay well below tectonic relief but are
