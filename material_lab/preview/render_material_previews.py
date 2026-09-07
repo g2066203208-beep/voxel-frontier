@@ -59,8 +59,8 @@ def displaced_geometry(sx,sy,height,amp=0.080,iterations=5):
         Ng/=np.maximum(np.linalg.norm(Ng,axis=-1,keepdims=True),1e-6)
         u,v=sphere_uv(Ng)
         sampled=bilinear(height,u,v)
-        hd=np.clip((sampled-h50)/hspan,-0.75,0.75)
-        radial=np.clip(1.0+amp*hd,0.93,1.07)
+        hd=np.clip((sampled-h50)/hspan,-0.82,0.82)
+        radial=np.clip(1.0+amp*hd,1.0-amp*.95,1.0+amp*.95)
         qx=sx/radial; qy=sy/radial
     q2=qx*qx+qy*qy
     mask=q2<=1.0
@@ -80,7 +80,8 @@ def render_sphere(d:Path,name:str,out:Path):
 
     S=1000; cx=S*.5; cy=S*.465; R=S*.325
     yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R
-    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=0.080,iterations=5)
+    displacement_amp=.130 if name.startswith("vf_reference_sandstone") else .080
+    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=displacement_amp,iterations=6)
     u,v=sphere_uv(Ng)
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
 
