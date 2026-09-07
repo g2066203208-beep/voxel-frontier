@@ -1,8 +1,10 @@
 #include "vf/physics/OceanSpectrum.hpp"
 #include "vf/world/PlanetClimateGrid.hpp"
+#include "vf/world/PlanetLodMeshBuilder.hpp"
 #include "vf/world/PlanetSurfaceAuthority.hpp"
 #include "vf/world/CelestialSystem.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -46,6 +48,30 @@ void testSurfaceAuthorityKeepsHydrologyInCollisionHeight() {
         "surface authority must apply the exact hydrology incision used by rendering/physics");
 }
 
+void testSurfaceSnapshotMatchesAuthoritativeHeightAndNormal() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 6371000.0;
+    planet.maxElevation = 8850.0;
+    planet.maxOceanDepthMeters = 11000.0;
+    planet.seed = 0x71A9F20DULL;
+    const glm::dvec3 direction = glm::normalize(glm::dvec3{0.61, 0.43, -0.66});
+
+    vf::PlanetSurfaceAuthority authority{planet};
+    const vf::PlanetSurfaceSample snapshot = authority.sampleSurface(direction);
+    const vf::PlanetTerrainSample terrain = authority.sample(direction);
+    require(std::isfinite(snapshot.radiusMeters), "surface snapshot radius must stay finite");
+    require(std::abs(snapshot.terrain.elevationMeters - terrain.elevationMeters) < 1.0e-9,
+        "surface snapshot must share the exact authoritative center terrain sample");
+    require(std::abs(snapshot.radiusMeters - (planet.radius + terrain.elevationMeters)) < 1.0e-8,
+        "surface snapshot radius must equal planet radius plus authoritative elevation");
+    require(glm::length(snapshot.position - direction * snapshot.radiusMeters) < 1.0e-6,
+        "surface snapshot position must lie on its reported radius");
+    require(std::abs(glm::length(snapshot.normal) - 1.0) < 1.0e-9,
+        "surface snapshot normal must remain unit length");
+    require(glm::dot(snapshot.normal, direction) > 0.35,
+        "surface snapshot normal must remain outward-facing even on steep procedural relief");
+}
+
 void testHydrologyAuthorityFadesBeforeRegionalGridEdge() {
     vf::PlanetDefinition planet{};
     planet.radius = 6371000.0;
@@ -71,6 +97,53 @@ void testHydrologyAuthorityFadesBeforeRegionalGridEdge() {
     const double globalElevation = vf::samplePlanetTerrain(planet, outsideDirection).elevationMeters;
     require(std::abs(authorityElevation - globalElevation) < 1.0e-7,
         "regional hydrology must return to the global surface before the square DEM boundary");
+}
+
+void testAdaptiveTerrainLodProducesBoundedFiniteSurface() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 6371000.0;
+    planet.maxElevation = 8850.0;
+    planet.maxOceanDepthMeters = 11000.0;
+    planet.seed = 0x71A9F20DULL;
+    vf::PlanetSurfaceAuthority authority{planet};
+
+    vf::PlanetLodConfig config{};
+    config.patchResolution = 6U;
+    config.maxDepth = 8U;
+    config.maxLeafPatches = 128U;
+    config.viewportHeightPixels = 720.0;
+    config.targetScreenErrorPixels = 5.0;
+    config.skirtDepthMeters = 4.0;
+    config.flatTerrainErrorFraction = 0.58;
+    config.reliefErrorScale = 1.45;
+
+    const glm::dvec3 cameraDirection = glm::normalize(glm::dvec3{0.72, 0.52, 0.46});
+    const glm::dvec3 camera = cameraDirection * (planet.radius + 8000.0);
+    vf::PlanetLodStats stats{};
+    const vf::PlanetMesh mesh = vf::buildAdaptivePlanetSurface(authority, camera, config, &stats);
+
+    require(!mesh.vertices.empty() && !mesh.indices.empty(),
+        "adaptive terrain LOD must produce visible surface geometry");
+    require(stats.leafPatches > 0U && stats.leafPatches <= config.maxLeafPatches,
+        "adaptive terrain LOD must obey its leaf budget");
+    require(stats.deepestLevel <= config.maxDepth,
+        "adaptive terrain LOD must obey its maximum depth");
+    require(stats.evaluatedNodes >= stats.leafPatches,
+        "adaptive terrain LOD diagnostics must count every selected leaf evaluation");
+    require(stats.maximumEstimatedErrorMeters > 0.0,
+        "terrain-sensitive LOD must report a positive geometric error estimate");
+    require(stats.nearestCellMeters > 0.0 && std::isfinite(stats.nearestCellMeters),
+        "adaptive terrain LOD must report a finite physical cell scale");
+
+    for (std::size_t i = 0; i < mesh.vertices.size(); i += 23U) {
+        const auto& vertex = mesh.vertices[i];
+        const glm::dvec3 p = glm::dvec3(vertex.position);
+        const glm::dvec3 n = glm::dvec3(vertex.normal);
+        require(std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z),
+            "adaptive terrain vertex positions must remain finite");
+        require(std::abs(glm::length(n) - 1.0) < 2.0e-4,
+            "adaptive terrain snapshot normals must stay normalized");
+    }
 }
 
 void testClimateRespondsToSunAndCreatesPressureGradientWind() {
@@ -124,7 +197,6 @@ void testOceanSpectrumHasTargetVarianceAndMoves() {
     require(std::abs(a.heightMeters - b.heightMeters) > 1.0e-5,
         "physics ocean surface must evolve in time rather than being a static material normal");
 }
-
 
 void testEarthMoonPhysicalScaleRotationAndRevolution() {
     constexpr double earthRadius = 6371000.0;
@@ -199,7 +271,6 @@ void testEarthMoonPhysicalScaleRotationAndRevolution() {
         "Earth orientation must change from physical self-rotation");
 }
 
-
 void testAirlessMoonUsesCrateredThreeDimensionalRelief() {
     vf::PlanetDefinition moon{};
     moon.seed = 0x4C554E415F523234ULL;
@@ -265,7 +336,9 @@ void testEarthlikeMountainsDoNotCollapseIntoMaxElevationPlateau() {
 
 int main() {
     testSurfaceAuthorityKeepsHydrologyInCollisionHeight();
+    testSurfaceSnapshotMatchesAuthoritativeHeightAndNormal();
     testHydrologyAuthorityFadesBeforeRegionalGridEdge();
+    testAdaptiveTerrainLodProducesBoundedFiniteSurface();
     testClimateRespondsToSunAndCreatesPressureGradientWind();
     testOceanSpectrumHasTargetVarianceAndMoves();
     testEarthMoonPhysicalScaleRotationAndRevolution();

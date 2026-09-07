@@ -18,12 +18,20 @@ struct PlanetLodConfig {
     double targetScreenErrorPixels{2.0};
     double horizonMarginRadians{0.012};
     double skirtDepthMeters{3.0};
+
+    // A patch's projected error is no longer assumed to be its full cell width. Flat terrain gets a
+    // conservative fraction of that grid error, while actual center/corner relief raises the error
+    // and therefore preserves extra detail in mountains, canyons and hydrology-incised terrain.
+    double flatTerrainErrorFraction{0.60};
+    double reliefErrorScale{1.35};
 };
 
 struct PlanetLodStats {
     std::size_t leafPatches{};
+    std::size_t evaluatedNodes{};
     std::uint32_t deepestLevel{};
     double nearestCellMeters{};
+    double maximumEstimatedErrorMeters{};
 };
 
 // Cube-sphere quadtree selected by projected screen-space error. This replaces R23's five giant

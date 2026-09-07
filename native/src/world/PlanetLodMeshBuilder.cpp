@@ -30,49 +30,104 @@ struct Node {
     return std::acos(std::clamp(glm::dot(safeNormalize(a), safeNormalize(b)), -1.0, 1.0));
 }
 
+struct NodeGeometry {
+    glm::dvec3 centerDirection{};
+    std::array<glm::dvec3, 4> corners{};
+    double angularRadius{};
+    double spanMeters{};
+};
+
+[[nodiscard]] NodeGeometry geometryFor(
+    const Node& node,
+    double planetRadius) noexcept {
+    NodeGeometry geometry{};
+    const double uc = node.u0 + 0.5 * node.size;
+    const double vc = node.v0 + 0.5 * node.size;
+    geometry.centerDirection = cubeSphereDirection(node.face, uc, vc);
+    geometry.corners = {{
+        cubeSphereDirection(node.face, node.u0, node.v0),
+        cubeSphereDirection(node.face, node.u0 + node.size, node.v0),
+        cubeSphereDirection(node.face, node.u0, node.v0 + node.size),
+        cubeSphereDirection(node.face, node.u0 + node.size, node.v0 + node.size),
+    }};
+    for (const auto& corner : geometry.corners) {
+        geometry.angularRadius = std::max(
+            geometry.angularRadius,
+            angleBetween(geometry.centerDirection, corner));
+    }
+    geometry.spanMeters = 2.0 * geometry.angularRadius * std::max(1.0, planetRadius);
+    return geometry;
+}
+
 struct NodeMetric {
     glm::dvec3 centerDirection{};
     double angularRadius{};
     double spanMeters{};
     double distanceMeters{};
+    double geometricErrorMeters{};
     double screenErrorPixels{};
     bool aboveHorizon{};
 };
 
 [[nodiscard]] NodeMetric metricFor(
     const Node& node,
-    const PlanetDefinition& planet,
+    const PlanetSurfaceAuthority& surface,
     const glm::dvec3& camera,
     const PlanetLodConfig& config) noexcept {
-    const double uc = node.u0 + 0.5 * node.size;
-    const double vc = node.v0 + 0.5 * node.size;
-    const glm::dvec3 center = cubeSphereDirection(node.face, uc, vc);
-    const std::array<glm::dvec3, 4> corners{{
-        cubeSphereDirection(node.face, node.u0, node.v0),
-        cubeSphereDirection(node.face, node.u0 + node.size, node.v0),
-        cubeSphereDirection(node.face, node.u0, node.v0 + node.size),
-        cubeSphereDirection(node.face, node.u0 + node.size, node.v0 + node.size),
-    }};
-    double angularRadius = 0.0;
-    for (const auto& corner : corners) angularRadius = std::max(angularRadius, angleBetween(center, corner));
+    const PlanetDefinition& planet = surface.planet();
+    const NodeGeometry geometry = geometryFor(node, planet.radius);
+    const PlanetTerrainSample centerTerrain = surface.sample(geometry.centerDirection);
+
+    std::array<double, 4> elevations{};
+    double elevationMin = std::numeric_limits<double>::infinity();
+    double elevationMax = -std::numeric_limits<double>::infinity();
+    double elevationMean = 0.0;
+    for (std::size_t i = 0; i < geometry.corners.size(); ++i) {
+        elevations[i] = surface.sample(geometry.corners[i]).elevationMeters;
+        elevationMin = std::min(elevationMin, elevations[i]);
+        elevationMax = std::max(elevationMax, elevations[i]);
+        elevationMean += elevations[i];
+    }
+    elevationMean /= static_cast<double>(elevations.size());
+
+    const double cellMeters = geometry.spanMeters
+        / static_cast<double>(std::max(2U, config.patchResolution));
+    const double reliefSignal = std::max(
+        std::abs(centerTerrain.elevationMeters - elevationMean),
+        0.25 * std::max(0.0, elevationMax - elevationMin));
+    const double geometricError = std::max(
+        cellMeters * config.flatTerrainErrorFraction,
+        reliefSignal * config.reliefErrorScale);
+
     const double radius = std::max(1.0, planet.radius);
-    const double span = 2.0 * angularRadius * radius;
     const double cameraRadius = glm::length(camera);
-    const glm::dvec3 cameraDirection = safeNormalize(camera, center);
-    const double centerDistance = glm::length(camera - center * radius);
-    const double cellMeters = span / static_cast<double>(std::max(2U, config.patchResolution));
+    const glm::dvec3 cameraDirection = safeNormalize(camera, geometry.centerDirection);
+    const double centerSurfaceRadius = radius + centerTerrain.elevationMeters;
+    const double centerDistance = glm::length(
+        camera - geometry.centerDirection * centerSurfaceRadius);
     const double focalPixels = config.viewportHeightPixels
         / (2.0 * std::tan(std::max(0.1, config.verticalFovRadians) * 0.5));
-    const double conservativeDistance = std::max(1.0, centerDistance - span * 0.55);
-    const double screenError = cellMeters / conservativeDistance * focalPixels;
+    const double conservativeDistance = std::max(
+        1.0,
+        centerDistance - geometry.spanMeters * 0.55);
+    const double screenError = geometricError / conservativeDistance * focalPixels;
 
     double horizonAngle = 3.14159265358979323846;
     if (cameraRadius > radius + 1.0) {
         horizonAngle = std::acos(std::clamp(radius / cameraRadius, 0.0, 1.0));
     }
-    const double cameraSeparation = angleBetween(cameraDirection, center);
-    const bool visible = cameraSeparation <= horizonAngle + angularRadius + config.horizonMarginRadians;
-    return {center, angularRadius, span, centerDistance, screenError, visible};
+    const double cameraSeparation = angleBetween(cameraDirection, geometry.centerDirection);
+    const bool visible = cameraSeparation
+        <= horizonAngle + geometry.angularRadius + config.horizonMarginRadians;
+    return {
+        geometry.centerDirection,
+        geometry.angularRadius,
+        geometry.spanMeters,
+        centerDistance,
+        geometricError,
+        screenError,
+        visible,
+    };
 }
 
 void appendPatch(
@@ -80,8 +135,7 @@ void appendPatch(
     const Node& node,
     const PlanetSurfaceAuthority& surface,
     const PlanetLodConfig& config,
-    PlanetLodStats* stats,
-    const glm::dvec3& cameraPlanetLocal) {
+    PlanetLodStats* stats) {
     const std::uint32_t resolution = std::max(2U, config.patchResolution);
     const std::uint32_t stride = resolution + 1U;
     const std::uint32_t base = static_cast<std::uint32_t>(mesh.vertices.size());
@@ -94,12 +148,12 @@ void appendPatch(
             const double fx = static_cast<double>(x) / static_cast<double>(resolution);
             const double u = node.u0 + node.size * fx;
             const glm::dvec3 direction = cubeSphereDirection(node.face, u, v);
-            const PlanetTerrainSample terrain = surface.sample(direction);
+            const PlanetSurfaceSample surfaceSample = surface.sampleSurface(direction);
             PlanetVertex vertex{};
-            vertex.position = glm::vec3(direction * (planet.radius + terrain.elevationMeters));
-            vertex.normal = glm::vec3(surface.surfaceNormal(direction));
-            vertex.color = planetTerrainColor(planet, terrain);
-            vertex.material = planetTerrainMaterial(planet, terrain);
+            vertex.position = glm::vec3(surfaceSample.position);
+            vertex.normal = glm::vec3(surfaceSample.normal);
+            vertex.color = planetTerrainColor(planet, surfaceSample.terrain);
+            vertex.material = planetTerrainMaterial(planet, surfaceSample.terrain);
             mesh.vertices.push_back(vertex);
         }
     }
@@ -140,20 +194,23 @@ void appendPatch(
         for (std::uint32_t x = 0; x <= resolution; ++x) edge.push_back(base + x);
         appendEdge(edge);
         edge.clear();
-        for (std::uint32_t y = 0; y <= resolution; ++y) edge.push_back(base + y * stride + resolution);
+        for (std::uint32_t y = 0; y <= resolution; ++y)
+            edge.push_back(base + y * stride + resolution);
         appendEdge(edge);
         edge.clear();
-        for (std::uint32_t x = 0; x <= resolution; ++x) edge.push_back(base + resolution * stride + (resolution - x));
+        for (std::uint32_t x = 0; x <= resolution; ++x)
+            edge.push_back(base + resolution * stride + (resolution - x));
         appendEdge(edge);
         edge.clear();
-        for (std::uint32_t y = 0; y <= resolution; ++y) edge.push_back(base + (resolution - y) * stride);
+        for (std::uint32_t y = 0; y <= resolution; ++y)
+            edge.push_back(base + (resolution - y) * stride);
         appendEdge(edge);
     }
 
     if (stats) {
         stats->deepestLevel = std::max(stats->deepestLevel, node.depth);
-        const NodeMetric metric = metricFor(node, planet, cameraPlanetLocal, config);
-        const double cell = metric.spanMeters / static_cast<double>(std::max(2U, resolution));
+        const NodeGeometry geometry = geometryFor(node, planet.radius);
+        const double cell = geometry.spanMeters / static_cast<double>(std::max(2U, resolution));
         stats->nearestCellMeters = std::min(stats->nearestCellMeters, cell);
     }
 }
@@ -172,19 +229,26 @@ PlanetMesh buildAdaptivePlanetSurface(
     config.targetScreenErrorPixels = std::clamp(config.targetScreenErrorPixels, 0.5, 12.0);
     config.viewportHeightPixels = std::max(64.0, config.viewportHeightPixels);
     config.skirtDepthMeters = std::clamp(config.skirtDepthMeters, 0.0, 30.0);
+    config.flatTerrainErrorFraction = std::clamp(config.flatTerrainErrorFraction, 0.20, 1.0);
+    config.reliefErrorScale = std::clamp(config.reliefErrorScale, 0.5, 4.0);
 
     PlanetLodStats localStats{};
     localStats.nearestCellMeters = std::numeric_limits<double>::infinity();
     std::vector<Node> pending;
     pending.reserve(config.maxLeafPatches * 2U);
-    for (std::uint32_t face = 0; face < 6U; ++face) pending.push_back({face, 0U, -1.0, -1.0, 2.0});
+    for (std::uint32_t face = 0; face < 6U; ++face)
+        pending.push_back({face, 0U, -1.0, -1.0, 2.0});
 
     std::vector<Node> leaves;
     leaves.reserve(config.maxLeafPatches);
     while (!pending.empty()) {
         const Node node = pending.back();
         pending.pop_back();
-        const NodeMetric metric = metricFor(node, surface.planet(), cameraPlanetLocal, config);
+        const NodeMetric metric = metricFor(node, surface, cameraPlanetLocal, config);
+        ++localStats.evaluatedNodes;
+        localStats.maximumEstimatedErrorMeters = std::max(
+            localStats.maximumEstimatedErrorMeters,
+            metric.geometricErrorMeters);
         if (!metric.aboveHorizon) continue;
         const bool canSplit = node.depth < config.maxDepth
             && leaves.size() + pending.size() + 4U < config.maxLeafPatches;
@@ -201,8 +265,18 @@ PlanetMesh buildAdaptivePlanetSurface(
     }
 
     PlanetMesh mesh{};
+    const std::size_t baseVerticesPerPatch = static_cast<std::size_t>(config.patchResolution + 1U)
+        * static_cast<std::size_t>(config.patchResolution + 1U);
+    const std::size_t skirtVerticesPerPatch = config.skirtDepthMeters > 0.0
+        ? static_cast<std::size_t>(4U * (config.patchResolution + 1U))
+        : 0U;
+    mesh.vertices.reserve(leaves.size() * (baseVerticesPerPatch + skirtVerticesPerPatch));
+    mesh.indices.reserve(leaves.size() * static_cast<std::size_t>(
+        6U * config.patchResolution * config.patchResolution
+        + (config.skirtDepthMeters > 0.0 ? 24U * config.patchResolution : 0U)));
+
     for (const Node& node : leaves)
-        appendPatch(mesh, node, surface, config, &localStats, cameraPlanetLocal);
+        appendPatch(mesh, node, surface, config, &localStats);
     localStats.leafPatches = leaves.size();
     if (!std::isfinite(localStats.nearestCellMeters)) localStats.nearestCellMeters = 0.0;
     if (stats) *stats = localStats;

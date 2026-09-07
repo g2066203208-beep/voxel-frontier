@@ -93,16 +93,16 @@ PlanetTerrainSample PlanetSurfaceAuthority::sample(const glm::dvec3& directionIn
     return terrain;
 }
 
-double PlanetSurfaceAuthority::elevationMeters(const glm::dvec3& direction) const noexcept {
-    return sample(direction).elevationMeters;
-}
-
-double PlanetSurfaceAuthority::surfaceRadius(const glm::dvec3& direction) const noexcept {
-    return planet_.radius + elevationMeters(direction);
-}
-
-glm::dvec3 PlanetSurfaceAuthority::surfaceNormal(const glm::dvec3& directionInput) const noexcept {
+PlanetSurfaceSample PlanetSurfaceAuthority::sampleSurface(
+    const glm::dvec3& directionInput) const noexcept {
+    PlanetSurfaceSample result{};
     const glm::dvec3 d = safeNormalize(directionInput);
+    result.terrain = sample(d);
+    result.radiusMeters = planet_.radius + result.terrain.elevationMeters;
+    result.position = d * result.radiusMeters;
+
+    // Only two neighbouring authority samples are required. The old call pattern often evaluated
+    // the center terrain again inside surfaceNormal() and then once more in surfaceRadius().
     const glm::dvec3 east = tangentAxis(d);
     const glm::dvec3 north = safeNormalize(glm::cross(d, east), {0.0, 0.0, 1.0});
     const double angularStep = std::clamp(
@@ -111,12 +111,26 @@ glm::dvec3 PlanetSurfaceAuthority::surfaceNormal(const glm::dvec3& directionInpu
         2.0e-3);
     const glm::dvec3 dEast = safeNormalize(d + east * angularStep, d);
     const glm::dvec3 dNorth = safeNormalize(d + north * angularStep, d);
-    const glm::dvec3 p0 = d * surfaceRadius(d);
-    const glm::dvec3 pEast = dEast * surfaceRadius(dEast);
-    const glm::dvec3 pNorth = dNorth * surfaceRadius(dNorth);
-    glm::dvec3 normal = safeNormalize(glm::cross(pEast - p0, pNorth - p0), d);
-    if (glm::dot(normal, d) < 0.0) normal = -normal;
-    return normal;
+    const PlanetTerrainSample terrainEast = sample(dEast);
+    const PlanetTerrainSample terrainNorth = sample(dNorth);
+    const glm::dvec3 pEast = dEast * (planet_.radius + terrainEast.elevationMeters);
+    const glm::dvec3 pNorth = dNorth * (planet_.radius + terrainNorth.elevationMeters);
+    result.normal = safeNormalize(
+        glm::cross(pEast - result.position, pNorth - result.position), d);
+    if (glm::dot(result.normal, d) < 0.0) result.normal = -result.normal;
+    return result;
+}
+
+double PlanetSurfaceAuthority::elevationMeters(const glm::dvec3& direction) const noexcept {
+    return sample(direction).elevationMeters;
+}
+
+double PlanetSurfaceAuthority::surfaceRadius(const glm::dvec3& direction) const noexcept {
+    return planet_.radius + elevationMeters(direction);
+}
+
+glm::dvec3 PlanetSurfaceAuthority::surfaceNormal(const glm::dvec3& direction) const noexcept {
+    return sampleSurface(direction).normal;
 }
 
 } // namespace vf
