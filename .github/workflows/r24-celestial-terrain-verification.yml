@@ -52,7 +52,9 @@ jobs:
           grep -q 'approximateNodeDistance' native/src/world/PlanetLodMeshBuilder.cpp
           grep -q 'std::array<Node, 4> children' native/src/world/PlanetLodMeshBuilder.cpp
           grep -q '1U, 20U' native/src/world/PlanetLodMeshBuilder.cpp
-          grep -q 'nearFieldRadiusMeters = buildAltitude < 25000.0 ? 240.0' native/src/app/Main.cpp
+          grep -q 'maxLeafPatches = buildAltitude < 25000.0 ? 3600U' native/src/app/Main.cpp
+          grep -q 'nearFieldRadiusMeters = buildAltitude < 25000.0 ? 160.0' native/src/app/Main.cpp
+          grep -q 'nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0' native/src/app/Main.cpp
           grep -q 'preciseSurface = buildSurface.sampleSurface' native/src/app/Main.cpp
           test "$(grep -c 'R24 capture shadow-contact downward view' native/src/app/Main.cpp || true)" -eq 0
           grep -q 'testGroundedCameraCoRotatesWithPlanetWithoutTerrainYaw' native/tests/CameraInputTests.cpp
@@ -117,6 +119,21 @@ jobs:
           chmod +x .github/scripts/r24_stability_capture.sh
           .github/scripts/r24_stability_capture.sh "$APP" r24-celestial-terrain-evidence
 
+      - name: Gate rendered ground-contact precision
+        shell: bash
+        run: |
+          LOG='r24-celestial-terrain-evidence/logs/shadow-contact.log'
+          test -s "$LOG"
+          CELL="$(grep -oE 'cell [0-9]+([.][0-9]+)?m' "$LOG" | tail -n 1 | awk '{gsub(/m/, "", $2); print $2}')"
+          LEAVES="$(grep -oE 'QLOD [0-9]+/' "$LOG" | tail -n 1 | tr -cd '0-9')"
+          test -n "$CELL"
+          test -n "$LEAVES"
+          echo "Rendered contact LOD: cell=${CELL}m leaves=${LEAVES}"
+          awk -v cell="$CELL" 'BEGIN { exit !(cell <= 3.2) }'
+          test "$LEAVES" -le 3600
+          test -s r24-celestial-terrain-evidence/shadows/contact-cycle-montage.png
+          test -s r24-celestial-terrain-evidence/shadows/contact-cycle-7.png
+
       - name: Preserve permanent evidence for this exact commit
         shell: bash
         run: |
@@ -133,6 +150,8 @@ jobs:
           full_tests=success
           focused_tests=success
           vulkan=success
+          contact_lod_cell_max_m=3.2
+          contact_lod_leaf_max=3600
           capture=success
           EOF
 
