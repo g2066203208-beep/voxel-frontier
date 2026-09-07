@@ -5,16 +5,42 @@
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfLayeredSandstonePainted",
-      "params": {
-        "seed": 771231,
-        "bands": 5,
-        "minSlabs": 2,
-        "maxSlabs": 3,
-        "crackChance": 0.17,
-        "chipStrength": 0.92,
-        "relief": 1.64,
-        "normalStrength": 12.0
-      }
+      "params": {"seed":771231,"bands":5,"minSlabs":2,"maxSlabs":3,"crackChance":0.17,"chipStrength":0.92,"relief":1.64,"normalStrength":12.0}
+    },
+    {
+      "name": "vf_painterly_dirt_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyDirt",
+      "params": {"seed":182031,"relief":1.18,"normalStrength":9.4,"moisture":0.16}
+    },
+    {
+      "name": "vf_painterly_bark_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyBark",
+      "params": {"seed":275903,"relief":1.34,"normalStrength":11.3,"ridgeScale":1.0}
+    },
+    {
+      "name": "vf_painterly_leaves_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyLeaves",
+      "params": {"seed":391477,"relief":1.06,"normalStrength":8.5,"density":1.0}
+    },
+    {
+      "name": "vf_painterly_snow_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlySnow",
+      "params": {"seed":447101,"relief":0.98,"normalStrength":6.7,"windStrength":0.85}
+    },
+    {
+      "name": "vf_painterly_water_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyWater",
+      "params": {"seed":553819,"relief":0.42,"normalStrength":5.2,"waveScale":1.0,"roughness":0.085}
     }
   ]
 }
