@@ -47,8 +47,13 @@ jobs:
           git diff --check HEAD^
           grep -q 'sampleSurface' native/include/vf/world/PlanetSurfaceAuthority.hpp
           grep -q 'reliefErrorScale' native/include/vf/world/PlanetLodMeshBuilder.hpp
+          grep -q 'nearFieldRadiusMeters' native/include/vf/world/PlanetLodMeshBuilder.hpp
+          grep -q 'forceContactScale' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'preciseSurface = buildSurface.sampleSurface' native/src/app/Main.cpp
+          test "$(grep -c 'R24 capture shadow-contact downward view' native/src/app/Main.cpp || true)" -eq 0
           grep -q 'testGroundedCameraCoRotatesWithPlanetWithoutTerrainYaw' native/tests/CameraInputTests.cpp
           grep -q 'testAdaptiveTerrainLodProducesBoundedFiniteSurface' native/tests/R24PhysicalPlanetTests.cpp
+          grep -q 'testNearFieldLodEnforcesContactScaleCells' native/tests/R24PhysicalPlanetTests.cpp
 
       - name: Install Vulkan X11 and build dependencies
         run: |
