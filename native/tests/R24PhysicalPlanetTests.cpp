@@ -146,6 +146,34 @@ void testAdaptiveTerrainLodProducesBoundedFiniteSurface() {
     }
 }
 
+
+void testNearFieldLodEnforcesContactScaleCells() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 1000.0;
+    planet.maxElevation = 30.0;
+    planet.maxOceanDepthMeters = 40.0;
+    planet.seed = 0x51A7C0DEULL;
+    vf::PlanetSurfaceAuthority authority{planet};
+
+    vf::PlanetLodConfig config{};
+    config.patchResolution = 8U;
+    config.maxDepth = 9U;
+    config.maxLeafPatches = 4096U;
+    config.viewportHeightPixels = 720.0;
+    config.targetScreenErrorPixels = 12.0; // intentionally loose: near-field rule must dominate
+    config.nearFieldRadiusMeters = 180.0;
+    config.nearFieldCellMeters = 2.5;
+    config.skirtDepthMeters = 1.0;
+
+    const glm::dvec3 cameraDirection = glm::normalize(glm::dvec3{0.71, 0.49, 0.51});
+    const glm::dvec3 camera = cameraDirection * (planet.radius + 12.0);
+    vf::PlanetLodStats stats{};
+    const vf::PlanetMesh mesh = vf::buildAdaptivePlanetSurface(authority, camera, config, &stats);
+    require(!mesh.vertices.empty(), "near-field contact LOD must produce geometry");
+    require(stats.nearestCellMeters <= config.nearFieldCellMeters * 1.05,
+        "near-field LOD must refine physical cell size even when projected SSE is permissive");
+}
+
 void testClimateRespondsToSunAndCreatesPressureGradientWind() {
     vf::PlanetDefinition planet{};
     planet.radius = 6371000.0;
@@ -339,6 +367,7 @@ int main() {
     testSurfaceSnapshotMatchesAuthoritativeHeightAndNormal();
     testHydrologyAuthorityFadesBeforeRegionalGridEdge();
     testAdaptiveTerrainLodProducesBoundedFiniteSurface();
+    testNearFieldLodEnforcesContactScaleCells();
     testClimateRespondsToSunAndCreatesPressureGradientWind();
     testOceanSpectrumHasTargetVarianceAndMoves();
     testEarthMoonPhysicalScaleRotationAndRevolution();

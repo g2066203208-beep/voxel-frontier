@@ -414,30 +414,6 @@ int main() {
             std::cout << "R24 capture shadow-contact low-angle production view\n";
         }
 
-        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
-            shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
-            const glm::dvec3 groundUp = camera.up();
-            const glm::dvec3 tangentForward = safeNormalize(
-                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
-                stableTangent(groundUp));
-            camera.setViewDirectionWorld(
-                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
-                groundUp);
-            std::cout << "R24 capture shadow-contact downward view\n";
-        }
-
-        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
-            shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
-            const glm::dvec3 groundUp = camera.up();
-            const glm::dvec3 tangentForward = safeNormalize(
-                camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
-                stableTangent(groundUp));
-            camera.setViewDirectionWorld(
-                safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
-                groundUp);
-            std::cout << "R24 capture shadow-contact downward view\n";
-        }
-
         std::string celestialTargetMode{};
         if (const char* celestialTargetEnv = std::getenv("VF_CELESTIAL_TARGET");
             celestialTargetEnv != nullptr && *celestialTargetEnv != '\0') {
@@ -566,13 +542,15 @@ int main() {
             buildSurface.setHydrology(hydrology);
             vf::PlanetLodConfig lodConfig{};
             lodConfig.patchResolution = 10U;
-            lodConfig.maxDepth = 16U;
-            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1600U
-                : (buildAltitude < 150000.0 ? 900U : 500U);
+            lodConfig.maxDepth = 18U;
+            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 6000U
+                : (buildAltitude < 150000.0 ? 1800U : 700U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewportHeightPixels = 900.0;
-            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 3.4
-                : (buildAltitude < 150000.0 ? 5.0 : 8.0);
+            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 1.8
+                : (buildAltitude < 150000.0 ? 4.5 : 8.0);
+            lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 1800.0 : 0.0;
+            lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 4.0 : 24.0;
             lodConfig.horizonMarginRadians = 0.018;
             lodConfig.skirtDepthMeters = 6.0;
 
@@ -582,8 +560,11 @@ int main() {
             result.mesh = vf::buildAdaptivePlanetSurface(
                 buildSurface, cameraPlanetLocal, lodConfig, &result.stats);
             for (auto& vertex : result.mesh.vertices) {
-                vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
-                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+                const glm::dvec3 approximatePlanet = glm::dvec3(vertex.position);
+                const glm::dvec3 vertexDirection = safeNormalize(approximatePlanet, centerUp);
+                const vf::PlanetSurfaceSample preciseSurface = buildSurface.sampleSurface(vertexDirection);
+                vertex.position = glm::vec3(toSurfacePoint(preciseSurface.position));
+                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(preciseSurface.normal)));
             }
 
             if (buildAltitude < 30000.0) {

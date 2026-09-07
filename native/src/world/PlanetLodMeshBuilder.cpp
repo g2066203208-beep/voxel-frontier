@@ -260,6 +260,8 @@ PlanetMesh buildAdaptivePlanetSurface(
     config.skirtDepthMeters = std::clamp(config.skirtDepthMeters, 0.0, 30.0);
     config.flatTerrainErrorFraction = std::clamp(config.flatTerrainErrorFraction, 0.20, 1.0);
     config.reliefErrorScale = std::clamp(config.reliefErrorScale, 0.5, 4.0);
+    config.nearFieldRadiusMeters = std::clamp(config.nearFieldRadiusMeters, 0.0, 50000.0);
+    config.nearFieldCellMeters = std::clamp(config.nearFieldCellMeters, 0.5, 500.0);
 
     PlanetLodStats localStats{};
     localStats.nearestCellMeters = std::numeric_limits<double>::infinity();
@@ -281,7 +283,14 @@ PlanetMesh buildAdaptivePlanetSurface(
         if (!metric.aboveHorizon) continue;
         const bool canSplit = node.depth < config.maxDepth
             && leaves.size() + pending.size() + 4U < config.maxLeafPatches;
-        if (canSplit && metric.screenErrorPixels > config.targetScreenErrorPixels) {
+        const double nodeCellMeters = metric.spanMeters
+            / static_cast<double>(std::max(2U, config.patchResolution));
+        const bool overlapsNearField = config.nearFieldRadiusMeters > 0.0
+            && metric.distanceMeters <= config.nearFieldRadiusMeters + metric.spanMeters * 0.72;
+        const bool forceContactScale = overlapsNearField
+            && nodeCellMeters > config.nearFieldCellMeters;
+        if (canSplit && (forceContactScale
+            || metric.screenErrorPixels > config.targetScreenErrorPixels)) {
             const double half = node.size * 0.5;
             const std::uint32_t depth = node.depth + 1U;
             pending.push_back({node.face, depth, node.u0, node.v0, half});

@@ -24,6 +24,11 @@ struct PlanetLodConfig {
     // and therefore preserves extra detail in mountains, canyons and hydrology-incised terrain.
     double flatTerrainErrorFraction{0.60};
     double reliefErrorScale{1.35};
+
+    // Ground contact, footsteps and prop placement need a physical cell-size guarantee in addition
+    // to projected SSE. Zero nearFieldRadiusMeters disables this constraint for distant globes.
+    double nearFieldRadiusMeters{0.0};
+    double nearFieldCellMeters{4.0};
 };
 
 struct PlanetLodStats {
