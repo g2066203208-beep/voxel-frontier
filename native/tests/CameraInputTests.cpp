@@ -186,6 +186,50 @@ void testGroundedCameraCoRotatesWithPlanetWithoutTerrainYaw() {
     }
 }
 
+void testHighAltitudeCameraRemainsInertialInsidePhysicsBubble() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 6371000.0;
+    planet.maxElevation = 0.0;
+    planet.atmosphereHeight = 100000.0;
+
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.type = vf::CelestialBodyType::Planet;
+    body.radiusMeters = planet.radius;
+    body.massKg = 5.9722e24;
+    body.gameplaySurfaceGravityMps2 = 9.80665;
+    body.gravityFalloffStartRadiusMeters = planet.radius + planet.atmosphereHeight;
+    body.gravityInfluenceRadiusMeters = planet.radius + 900000.0;
+    body.physicsBubbleRadiusMeters = planet.radius + 1300000.0;
+    body.atmosphere.enabled = true;
+    body.atmosphere.heightMeters = planet.atmosphereHeight;
+    body.spinAxis = glm::normalize(glm::dvec3{0.17, 0.96, -0.22});
+    const std::uint32_t id = system.addBody(body);
+
+    const glm::dvec3 radial = glm::normalize(glm::dvec3{0.63, 0.44, 0.64});
+    vf::PlanetCamera camera{planet, &system, id, radial};
+    vf::PlanetMovementInput toggle{};
+    toggle.toggleFlight = true;
+    camera.update(toggle, 1.0 / 60.0);
+    camera.setExternalWorldState(radial * (planet.radius + 400000.0), {}, false);
+    camera.update({}, 1.0 / 60.0);
+    require(camera.inPlanetPhysicsFrame(),
+        "400 km camera must remain inside the precision/physics ownership bubble for this regression");
+
+    const glm::dvec3 beforeForward = camera.forwardDirection();
+    const glm::dvec3 beforeUp = camera.up();
+    vf::CelestialBody* rotatingBody = system.body(id);
+    require(rotatingBody != nullptr, "high-altitude rotating-frame test body must exist");
+    rotatingBody->orientation = glm::normalize(
+        glm::angleAxis(0.65, body.spinAxis) * rotatingBody->orientation);
+
+    camera.update({}, 1.0 / 120.0);
+    require(glm::dot(beforeForward, camera.forwardDirection()) > 0.999999,
+        "above the surface-attitude fade, camera forward must remain inertial even inside the physics bubble");
+    require(glm::dot(beforeUp, camera.up()) > 0.999999,
+        "above the surface-attitude fade, camera up must remain inertial even inside the physics bubble");
+}
+
 void testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection() {
     vf::PlanetDefinition planet{};
     planet.radius = 1000.0;
@@ -334,6 +378,7 @@ int main() {
     testAMovesToCameraLeftInFlight();
     testHighLatitudeTravelDoesNotRebuildHeadingBasis();
     testGroundedCameraCoRotatesWithPlanetWithoutTerrainYaw();
+    testHighAltitudeCameraRemainsInertialInsidePhysicsBubble();
     testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection();
     testSpaceReentryBlendsHorizonAlongDescent();
     std::cout << "vf_camera_input_tests: PASS\n";
