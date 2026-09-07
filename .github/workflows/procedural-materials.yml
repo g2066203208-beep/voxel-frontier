@@ -22,6 +22,7 @@ jobs:
     timeout-minutes: 30
     env:
       MESHOVA_COMMIT: "129f5130c02581dcd53b2cb334136985946e3df0"
+      PNPM_VERSION: "10.15.1"
 
     steps:
       - name: Checkout material branch
@@ -53,6 +54,8 @@ jobs:
         run: |
           set -euo pipefail
           corepack enable
+          corepack prepare "pnpm@$PNPM_VERSION" --activate
+          pnpm --version
           cd .cache/Meshova
           pnpm install --frozen-lockfile
 
@@ -117,6 +120,7 @@ jobs:
             echo
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Meshova commit: \`$MESHOVA_COMMIT\`"
+            echo "- pnpm: \`$PNPM_VERSION\`"
             echo '- Source: deterministic procedural program, not AI image generation'
             echo '- Outputs: PBR PNG maps + semantic masks + contact-sheet preview + SHA-256 manifest'
           } >> "$GITHUB_STEP_SUMMARY"
