@@ -2,6 +2,8 @@
 set -euo pipefail
 
 # R24 contact-shadow gate: this run must visibly include caster base + receiver + shadow origin.
+# This rerun follows cleanup of duplicated capture state in Main.cpp; a green workflow is not enough
+# unless the low-angle Vulkan frames visibly show the shadow beginning at the caster-ground contact.
 APP="${1:-}"
 OUT="${2:-r24-stability-evidence}"
 if [[ -z "$APP" || ! -x "$APP" ]]; then
