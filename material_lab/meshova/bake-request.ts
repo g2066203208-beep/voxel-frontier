@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { exportPBR, textureToPNG, validateMaterial, type Material } from "../src/index.js";
+import { exportPBR, heightToNormal, textureToPNG, validateMaterial, type Material } from "../src/index.js";
 import { bakeVfLayeredSandstonePainted, type VfLayeredSandstoneParams } from "./vf-recipes/vf-layered-sandstone-painted.js";
 import { bakeVfPainterlyDirt, type VfPainterlyDirtParams } from "./vf-recipes/vf-painterly-dirt.js";
 import { bakeVfPainterlyBark, type VfPainterlyBarkParams } from "./vf-recipes/vf-painterly-bark.js";
@@ -31,6 +31,8 @@ import {
 
 const PRODUCTION_STYLE_ID="VF_PAINTERLY_PLANETARY_V1";
 const SAFE_NAME=/^[a-z0-9][a-z0-9_-]{1,79}$/;
+const TAU=Math.PI*2;
+const C=(x:number)=>Math.max(0,Math.min(1,x));
 type ProductionPreset="vfLayeredSandstonePainted"|"vfPainterlyDirt"|"vfPainterlyBark"|"vfPainterlyLeaves"|"vfPainterlySnow"|"vfPainterlyWater"|"vf3DGrass"|"vf3DMoss"|"vf3DFur"|"vf3DFire";
 type Profile="stylized"|"signature";
 type SurfaceContextInput={weather?:Partial<WeatherContext>;exposure?:Partial<ExposureContext>;environment?:Partial<EnvironmentContext>;interaction?:Partial<SurfaceInteractionContext>;material?:Partial<SurfaceMaterialTraits>;};
@@ -39,8 +41,65 @@ type Envelope=Request|{materials:Request[]};
 type BakeResult={material:Material;masks?:Readonly<Record<string,unknown>>};
 type PresetBaker=(resolution:number,params:Record<string,unknown>)=>BakeResult;
 
+/**
+ * Converts the old broad dark backing regions into attached sandstone support
+ * mass.  Narrow true cracks are preserved by their near-black colour, while
+ * only the low Height + non-black background field is lifted.  This prevents
+ * a 40% macro displacement from exposing a fake hollow waist around the sphere.
+ */
+function closeSandstoneShell(material:Material,size:number,seed:number,normalStrength:number):Material{
+  const height=material.height.data;
+  const base=material.baseColor.data;
+  const rough=material.roughness.data;
+  const ao=material.ao.data;
+  const phase=((seed>>>0)%997)/997;
+  for(let y=0;y<size;y++){
+    const v=(y+.5)/size;
+    for(let x=0;x<size;x++){
+      const u=(x+.5)/size;
+      const i=y*size+x,j=i*3;
+      const h=height[i];
+      const r=base[j],g=base[j+1],b=base[j+2];
+      // Broad backing is ~[.285,.105,.04] at h~.39-.42.  Real cracks are
+      // substantially darker, so keep them untouched.
+      const notTrueCrack=r>.11&&g>.028;
+      const closure=C((.452-h)/.060)*(notTrueCrack?1:0);
+      if(closure<=0)continue;
+
+      // Seamless low-frequency sandstone support: integer-frequency periodic
+      // fields guarantee the closure itself tiles exactly.
+      const f1=Math.sin(TAU*(2*u+1*v+phase));
+      const f2=Math.sin(TAU*(3*u-2*v+phase*.73+.17));
+      const f3=Math.cos(TAU*(1*u+3*v-phase*.41+.31));
+      const field=(f1*.52+f2*.30+f3*.18);
+      const supportH=.485+field*.018;
+      height[i]=Math.max(h,h*(1-closure)+supportH*closure);
+
+      const light=C(.50+field*.24);
+      const sr=.43+.18*light;
+      const sg=.17+.13*light;
+      const sb=.052+.055*light;
+      // Keep a little of the original backing colour at closure fringes so the
+      // support mass reads as recessed rock rather than a pasted flat patch.
+      const colorMix=closure*.88;
+      base[j]=r*(1-colorMix)+sr*colorMix;
+      base[j+1]=g*(1-colorMix)+sg*colorMix;
+      base[j+2]=b*(1-colorMix)+sb*colorMix;
+      rough[i]=rough[i]*(1-closure*.72)+(.72+Math.abs(field)*.055)*(closure*.72);
+      ao[i]=Math.max(ao[i],.80+closure*.10);
+    }
+  }
+  return {...material,normal:heightToNormal(material.height,Math.max(1,Math.min(20,normalStrength)),true)};
+}
+
 const PRODUCTION_PRESETS:Readonly<Record<ProductionPreset,PresetBaker>>={
-  vfLayeredSandstonePainted:(resolution,params)=>({material:bakeVfLayeredSandstonePainted(resolution,params as VfLayeredSandstoneParams)}),
+  vfLayeredSandstonePainted:(resolution,params)=>{
+    const p=params as VfLayeredSandstoneParams;
+    const raw=bakeVfLayeredSandstonePainted(resolution,p);
+    const seed=Number(p.seed??771231);
+    const strength=Number(p.normalStrength??12.4);
+    return{material:closeSandstoneShell(raw,resolution,Number.isFinite(seed)?seed:771231,Number.isFinite(strength)?strength:12.4)};
+  },
   vfPainterlyDirt:(resolution,params)=>({material:bakeVfPainterlyDirt(resolution,params as VfPainterlyDirtParams)}),
   vfPainterlyBark:(resolution,params)=>({material:bakeVfPainterlyBark(resolution,params as VfPainterlyBarkParams)}),
   vfPainterlyLeaves:(resolution,params)=>bakeVfPainterlyLeavesBundle(resolution,params as VfPainterlyLeavesParams),
@@ -74,7 +133,7 @@ function bakeOne(req:Request){
   for(const[filename,bytes]of Object.entries(exported.files))writeFileSync(path.join(out,filename),bytes);
   for(const[maskName,mask]of Object.entries(masks))writeFileSync(path.join(out,`${req.name}_mask-${maskName}.png`),textureToPNG(mask as never));
   writeFileSync(path.join(out,"request.json"),JSON.stringify(req,null,2));
-  const manifest={generator:"wellingfeng/Meshova + voxel-frontier production recipes",generatorCommit:process.env.MESHOVA_COMMIT??"unknown",styleId:PRODUCTION_STYLE_ID,deterministic:true,proceduralSourceOnly:true,seamlessByConstruction:true,material:req.name,resolution:req.resolution,profile:req.profile??"signature",preset:req.preset,adaptiveSurfaceContext:Boolean(req.context),surfaceContext:req.context??null,deltaSeconds:req.context?(req.deltaSeconds??1):null,resolvedLayers,pbrFiles:Object.keys(exported.files).sort(),maskFiles:Object.keys(masks).map(name=>`${req.name}_mask-${name}.png`).sort()};
+  const manifest={generator:"wellingfeng/Meshova + voxel-frontier production recipes",generatorCommit:process.env.MESHOVA_COMMIT??"unknown",styleId:PRODUCTION_STYLE_ID,deterministic:true,proceduralSourceOnly:true,seamlessByConstruction:true,material:req.name,resolution:req.resolution,profile:req.profile??"signature",preset:req.preset,sandstoneContinuousShellClosure:req.preset==="vfLayeredSandstonePainted",adaptiveSurfaceContext:Boolean(req.context),surfaceContext:req.context??null,deltaSeconds:req.context?(req.deltaSeconds??1):null,resolvedLayers,pbrFiles:Object.keys(exported.files).sort(),maskFiles:Object.keys(masks).map(name=>`${req.name}_mask-${name}.png`).sort()};
   writeFileSync(path.join(out,"manifest.json"),JSON.stringify(manifest,null,2));console.log(JSON.stringify({ok:true,output:out,...manifest},null,2));return manifest;
 }
 const requestPath=process.argv[2]??"vf-request.json",envelope=JSON.parse(readFileSync(requestPath,"utf8")) as Envelope,requests="materials" in envelope?envelope.materials:[envelope];
