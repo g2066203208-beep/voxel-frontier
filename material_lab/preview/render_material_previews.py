@@ -1,10 +1,34 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import json
 import sys, math
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("build/generated-materials")
+
+DEFAULT_DISPLACEMENT = {
+    "amp": .080,
+    "iterations": 5,
+    "hd_min": -.82,
+    "hd_max": .82,
+}
+PRESET_DISPLACEMENT = {
+    "vfLayeredSandstonePainted": {
+        "amp": .230,
+        "iterations": 7,
+        "hd_min": -.18,
+        "hd_max": .96,
+    },
+}
+
+def preview_displacement_profile(material_dir: Path):
+    manifest_path = material_dir / "manifest.json"
+    if not manifest_path.is_file():
+        raise RuntimeError(f"Missing manifest: {manifest_path}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    preset = manifest.get("preset")
+    return PRESET_DISPLACEMENT.get(preset, DEFAULT_DISPLACEMENT)
 
 def srgb_to_linear(x):
     return np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4)
@@ -80,12 +104,14 @@ def render_sphere(d:Path,name:str,out:Path):
 
     S=1000; cx=S*.5; cy=S*.465; R=S*.325
     yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R
-    sandstone=name.startswith("vf_reference_sandstone")
-    displacement_amp=.230 if sandstone else .080
-    displacement_iterations=7 if sandstone else 5
-    hd_min=-.18 if sandstone else -.82
-    hd_max=.96 if sandstone else .82
-    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=displacement_amp,iterations=displacement_iterations,hd_min=hd_min,hd_max=hd_max)
+    displacement=preview_displacement_profile(d)
+    Ng,mask,r2,hh=displaced_geometry(
+        sx,sy,height,
+        amp=displacement["amp"],
+        iterations=displacement["iterations"],
+        hd_min=displacement["hd_min"],
+        hd_max=displacement["hd_max"],
+    )
     u,v=sphere_uv(Ng)
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
 
