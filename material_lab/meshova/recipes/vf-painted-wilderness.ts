@@ -20,11 +20,11 @@ const S=(x:number)=>{const t=C(x);return t*t*(3-2*t);};
 const lum=(c:RGB)=>c[0]*.24+c[1]*.68+c[2]*.08;
 
 const CFG:Record<Kind,Cfg>={
-  basalt:{shadow:[.035,.050,.070],mid:[.105,.115,.120],light:[.220,.205,.175],accent:[.270,.135,.075],lo:.025,hi:.245,paint:4.8,hGain:1.08,rough:[.70,.78,.86],n:10.5,r:5,ao:1.12,accentAmt:.10},
-  granite:{shadow:[.090,.085,.100],mid:[.205,.175,.165],light:[.430,.390,.330],accent:[.500,.245,.195],lo:.050,hi:.470,paint:4.4,hGain:1.04,rough:[.66,.76,.84],n:9.8,r:5,ao:1.10,accentAmt:.14},
-  dirt:{shadow:[.075,.045,.035],mid:[.215,.105,.055],light:[.425,.245,.120],accent:[.520,.315,.165],lo:.025,hi:.360,paint:4.6,hGain:1.05,rough:[.76,.84,.90],n:9.5,r:5,ao:1.14,accentAmt:.09},
-  bark:{shadow:[.050,.035,.040],mid:[.165,.080,.045],light:[.330,.185,.095],accent:[.470,.250,.120],lo:.020,hi:.300,paint:4.2,hGain:1.08,rough:[.74,.82,.89],n:10.8,r:4,ao:1.18,accentAmt:.10},
-  snow:{shadow:[.430,.540,.680],mid:[.735,.800,.860],light:[.965,.955,.905],accent:[.760,.620,.610],lo:.400,hi:.995,paint:5.2,hGain:1.03,rough:[.76,.84,.91],n:7.8,r:6,ao:1.06,accentAmt:.035},
+  basalt:{shadow:[.055,.070,.095],mid:[.145,.150,.150],light:[.300,.265,.215],accent:[.360,.170,.085],lo:.025,hi:.245,paint:4.8,hGain:1.08,rough:[.70,.78,.86],n:10.5,r:5,ao:1.10,accentAmt:.12},
+  granite:{shadow:[.095,.100,.125],mid:[.225,.190,.180],light:[.465,.420,.355],accent:[.535,.265,.205],lo:.050,hi:.470,paint:4.8,hGain:1.04,rough:[.66,.76,.84],n:9.8,r:5,ao:1.08,accentAmt:.16},
+  dirt:{shadow:[.085,.055,.060],mid:[.235,.115,.060],light:[.455,.270,.135],accent:[.555,.340,.175],lo:.025,hi:.360,paint:4.8,hGain:1.05,rough:[.76,.84,.90],n:9.5,r:5,ao:1.12,accentAmt:.11},
+  bark:{shadow:[.075,.045,.065],mid:[.220,.105,.055],light:[.420,.225,.115],accent:[.555,.300,.145],lo:.020,hi:.300,paint:4.5,hGain:1.08,rough:[.74,.82,.89],n:10.8,r:4,ao:1.15,accentAmt:.13},
+  snow:{shadow:[.360,.505,.700],mid:[.690,.790,.880],light:[.975,.965,.915],accent:[.750,.600,.625],lo:.400,hi:.995,paint:5.4,hGain:1.03,rough:[.76,.84,.91],n:7.8,r:6,ao:1.04,accentAmt:.045},
   ice:{shadow:[.055,.165,.245],mid:[.150,.355,.455],light:[.545,.705,.730],accent:[.660,.510,.430],lo:.055,hi:.630,paint:5.0,hGain:1.02,rough:[.18,.28,.42],n:7.2,r:6,ao:1.05,accentAmt:.04},
 };
 
@@ -54,7 +54,7 @@ function painterField(u:number,v:number,scale:number){
   const a=Math.sin((u*3+v*2)*TAU+.7)*.5+.5;
   const b=Math.sin((u*5-v*3)*TAU+1.8)*.5+.5;
   const c=Math.sin((u*2+v*5)*TAU+2.5)*.5+.5;
-  return C((a*.46+b*.34+c*.20-.5)*(.22*scale)+.5);
+  return C((a*.46+b*.34+c*.20-.5)*(.30*scale)+.5);
 }
 
 function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
@@ -67,21 +67,25 @@ function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
       const u=(x+.5)/size,i=y*size+x,j=i*3;
       const sc:RGB=[sample(src.baseColor,u,v,0),sample(src.baseColor,u,v,1),sample(src.baseColor,u,v,2)];
       const sh=sample(src.height,u,v,0),sa=src.ao?sample(src.ao,u,v,0):1,sr=sample(src.roughness,u,v,0);
-      const h0=(sample(src.height,u+.010,v,0)+sample(src.height,u-.010,v,0)+sample(src.height,u,v+.010,0)+sample(src.height,u,v-.010,0)+sh*2)/6;
+      const h0=(sample(src.height,u+.012,v,0)+sample(src.height,u-.012,v,0)+sample(src.height,u,v+.012,0)+sample(src.height,u,v-.012,0)+sh*2)/6;
       const h=C(.5+(h0-.5)*cfg.hGain);height.data[i]=h;
       const a=C(1-(1-sa)*cfg.ao);ao.data[i]=a;
       const pf=painterField(u,v,paintScale);
       const localLum=lum(sc);let t=C((localLum-cfg.lo)/Math.max(1e-5,cfg.hi-cfg.lo));
-      t=C(t+(h-.5)*.23+(pf-.5)*.10-(1-a)*.08);
+      t=C(t+(h-.5)*.24+(pf-.5)*.16-(1-a)*.07);
       let col=palette(cfg,t);
       const sourceHueScale=Math.max(.0001,localLum);const targetLum=Math.max(.02,lum(col));
       const hue:RGB=[C(sc[0]/sourceHueScale*targetLum),C(sc[1]/sourceHueScale*targetLum),C(sc[2]/sourceHueScale*targetLum)];
-      col=M(col,hue,k==="granite"?.22:.10);
-      const accentGate=S(C((pf-.62)/.28))*S(C((h-.46)/.34));
+      col=M(col,hue,k==="granite"?.10:.07);
+      const accentGate=S(C((pf-.60)/.28))*S(C((h-.44)/.34));
       col=M(col,cfg.accent,accentGate*cfg.accentAmt);
-      if(k==="snow")col=M(col,[.975,.985,.995],S(C((h-.55)/.30))*.32);
+      if(k==="snow"){
+        const cold=S(C((.57-h)/.22))*.48+S(C((.46-pf)/.22))*.16;
+        col=M(col,[.300,.500,.720],C(cold));
+        col=M(col,[.985,.990,.995],S(C((h-.58)/.28))*.32);
+      }
       if(k==="ice")col=M(col,[.070,.285,.390],S(C((1-a-.03)/.30))*.25);
-      const cav=(1-a);col=col.map(q=>C(q*(1-cav*(k==="bark"?.22:.12)))) as RGB;
+      const cav=(1-a);col=col.map(q=>C(q*(1-cav*(k==="bark"?.18:.10)))) as RGB;
       bc.data[j]=col[0];bc.data[j+1]=col[1];bc.data[j+2]=col[2];
       met.data[i]=0;
       let r=sr<.55?cfg.rough[0]:sr<.76?cfg.rough[1]:cfg.rough[2];
