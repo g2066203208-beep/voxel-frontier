@@ -9,7 +9,7 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("build/generated-materia
 
 DEFAULT_DISPLACEMENT={"amp":.080,"iterations":5,"hd_min":-.82,"hd_max":.82}
 PRESET_DISPLACEMENT={
-    "vfLayeredSandstonePainted":{"amp":.230,"iterations":7,"hd_min":-.18,"hd_max":.96},
+    "vfLayeredSandstonePainted":{"amp":.290,"iterations":8,"hd_min":-.14,"hd_max":1.08},
     "vfPainterlyDirt":{"amp":.120,"iterations":6,"hd_min":-.42,"hd_max":.88},
     "vfPainterlyBark":{"amp":.145,"iterations":6,"hd_min":-.38,"hd_max":.92},
     "vfPainterlyLeaves":{"amp":.125,"iterations":6,"hd_min":-.32,"hd_max":.94},
@@ -130,6 +130,7 @@ def render_sphere(d:Path,name:str,out:Path):
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
     T=norm(np.stack([-Ng[...,2],np.zeros_like(sx),Ng[...,0]],-1)); B=norm(np.cross(Ng,T)); N=norm(T*nt[...,0:1]+B*nt[...,1:2]+Ng*np.maximum(nt[...,2:3],.06))
     eps=1/1024; gx=(bilinear(height,u+eps,v)-bilinear(height,u-eps,v))*3.2; gy=(bilinear(height,u,v+eps)-bilinear(height,u,v-eps))*3.2; HN=norm(T*(-gx[...,None])+B*(-gy[...,None])+Ng); N=norm(N*.78+HN*.22)
+    leaf_alpha=None
     if preset=="vfPainterlyWater":
         img=render_water(d,name,Ng,N,nt,rr,u,v,mask,r2,xx,yy,cx,cy,R,params)
         subtitle="transmission · refraction · Fresnel · crest foam · true wave displacement"
@@ -139,12 +140,29 @@ def render_sphere(d:Path,name:str,out:Path):
         for L,intensity,lcol in [(norm(np.array([-.64,.66,.40],np.float32)),8.0,np.array([1,.93,.84],np.float32)),(norm(np.array([.58,.20,.79],np.float32)),3.7,np.array([.72,.84,1],np.float32)),(norm(np.array([-.10,-.84,.53],np.float32)),1.9,np.array([1,.67,.47],np.float32))]:
             spec,ndl=ggx(N,V,L,rr,F0); color+=diffuse*ndl[...,None]*intensity*lcol/math.pi; color+=spec*(.22+.78*np.power(1-rr,1.7))[...,None]*intensity*lcol*.34
         ndv=np.clip(N[...,2],0,1); fres=F0+(1-F0)*np.power(1-ndv[...,None],5); color+=fres*(.012+.025*(1-rr)[...,None])*np.array([.58,.70,.88],np.float32); color*=.91+.09*aa[...,None]
-        c=np.clip(color*1.08,0,None); a,b,c1,d1,e=2.51,.03,2.43,.59,.14; c=(c*(a*c+b))/(c*(c1*c+d1)+e); c=linear_to_srgb(np.clip(c,0,1)); bg=studio_bg(S,cx,cy,R,False); edge=np.clip((1-r2)*R*.90,0,1)[...,None]*mask[...,None].astype(np.float32); img=bg*(1-edge)+c*edge
-        subtitle="true Height displacement · painterly GGX studio sphere"
-    out_im=Image.fromarray((np.clip(img,0,1)*255).astype(np.uint8),"RGB"); draw=ImageDraw.Draw(out_im)
+        c=np.clip(color*1.08,0,None); a,b,c1,d1,e=2.51,.03,2.43,.59,.14; c=(c*(a*c+b))/(c*(c1*c+d1)+e); c=linear_to_srgb(np.clip(c,0,1)); bg=studio_bg(S,cx,cy,R,False)
+        edge=np.clip((1-r2)*R*.90,0,1)*mask.astype(np.float32)
+        if preset=="vfPainterlyLeaves":
+            opacity_tex=load_mask(d,name,"opacity")
+            if opacity_tex is None: raise RuntimeError(f"{name}: leaves require opacity mask")
+            opacity=bilinear(opacity_tex,u,v)
+            cut=np.clip((opacity-.38)/.24,0,1)
+            leaf_alpha=edge*cut
+            coverage=leaf_alpha[...,None]
+            img=bg*(1-coverage)+c*coverage
+            subtitle="true alpha cutout · transparent leaf gaps · painterly PBR"
+        else:
+            coverage=edge[...,None]
+            img=bg*(1-coverage)+c*coverage
+            subtitle="true Height displacement · painterly GGX studio sphere"
+    rgb=(np.clip(img,0,1)*255).astype(np.uint8)
+    out_im=Image.fromarray(rgb,"RGB"); draw=ImageDraw.Draw(out_im)
     try: f1=ImageFont.truetype("DejaVuSans.ttf",27); f2=ImageFont.truetype("DejaVuSans.ttf",18)
     except: f1=ImageFont.load_default(); f2=f1
-    draw.rounded_rectangle((28,26,820,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),subtitle,fill=(190,195,200),font=f2); out_im.save(out)
+    draw.rounded_rectangle((28,26,880,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),subtitle,fill=(190,195,200),font=f2); out_im.save(out)
+    if leaf_alpha is not None:
+        rgba=np.dstack([rgb,(np.clip(leaf_alpha,0,1)*255).astype(np.uint8)])
+        Image.fromarray(rgba,"RGBA").save(d/"preview-sphere-alpha.png")
 
 def contact_sheet(d:Path,name:str,out:Path):
     items=[("Base Color","baseColor"),("Normal","normal"),("Roughness","roughness"),("Height","height"),("AO","ao"),("Metallic","metallic")]; thumb=420; gap=20; label=38; sheet=Image.new("RGB",(3*thumb+4*gap,2*(thumb+label)+3*gap),(24,24,24)); dr=ImageDraw.Draw(sheet)
