@@ -12,7 +12,7 @@ import {
 type Request = {
   name: string;
   resolution: number;
-  preset: "stylizedCellRock" | "volcanicRock";
+  preset: "stylizedCellRock" | "volcanicRock" | "simpleRock";
   profile?: "realistic" | "stylized";
   params: Record<string, unknown>;
 };
@@ -31,6 +31,8 @@ if (req.preset === "stylizedCellRock") {
   masks = result.masks;
 } else if (req.preset === "volcanicRock") {
   material = materialFromFields(req.resolution, BILIBILI_MATERIALS.volcanicRock(req.params));
+} else if (req.preset === "simpleRock") {
+  material = materialFromFields(req.resolution, BILIBILI_MATERIALS.simpleRock(req.params));
 } else {
   throw new Error(`Unsupported preset: ${String(req.preset)}`);
 }
