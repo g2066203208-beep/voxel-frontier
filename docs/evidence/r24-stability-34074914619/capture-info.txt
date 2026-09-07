@@ -1,0 +1,32 @@
+ground-spin-0.png colors=1
+r24-stability-evidence/ground/ground-spin-0.png PNG 1600x900 1600x900+0+0 8-bit Grayscale Gray 2c 313B 0.000u 0:00.000
+ground-spin-1.png colors=1
+r24-stability-evidence/ground/ground-spin-1.png PNG 1600x900 1600x900+0+0 8-bit Grayscale Gray 2c 313B 0.000u 0:00.000
+ground-spin-2.png colors=28253
+r24-stability-evidence/ground/ground-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 286331B 0.000u 0:00.000
+ground-spin-3.png colors=30106
+r24-stability-evidence/ground/ground-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 288502B 0.000u 0:00.000
+ground-spin-4.png colors=31478
+r24-stability-evidence/ground/ground-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 288410B 0.000u 0:00.002
+ground-spin-5.png colors=32121
+r24-stability-evidence/ground/ground-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 288603B 0.000u 0:00.000
+contact-ground.png colors=1
+r24-stability-evidence/shadows/contact-ground.png PNG 1600x900 1600x900+0+0 8-bit Grayscale Gray 2c 313B 0.000u 0:00.000
+earth-spin-0.png colors=23198
+r24-stability-evidence/space/earth-spin-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 203477B 0.000u 0:00.000
+earth-spin-1.png colors=29934
+r24-stability-evidence/space/earth-spin-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 208975B 0.000u 0:00.000
+earth-spin-2.png colors=34805
+r24-stability-evidence/space/earth-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 210563B 0.000u 0:00.000
+earth-spin-3.png colors=37768
+r24-stability-evidence/space/earth-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 210103B 0.000u 0:00.000
+earth-spin-4.png colors=36194
+r24-stability-evidence/space/earth-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 206317B 0.000u 0:00.000
+earth-spin-5.png colors=31146
+r24-stability-evidence/space/earth-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 204236B 0.000u 0:00.000
+before.png colors=1
+r24-stability-evidence/high-speed/before.png PNG 1600x900 1600x900+0+0 8-bit Grayscale Gray 2c 313B 0.000u 0:00.000
+transit.png colors=27903
+r24-stability-evidence/high-speed/transit.png PNG 1600x900 1600x900+0+0 8-bit sRGB 291662B 0.000u 0:00.000
+after.png colors=28205
+r24-stability-evidence/high-speed/after.png PNG 1600x900 1600x900+0+0 8-bit sRGB 293295B 0.000u 0:00.000

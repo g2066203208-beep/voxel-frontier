@@ -1,0 +1,400 @@
+diff --git a/native/CMakeLists.txt b/native/CMakeLists.txt
+index 5f0d5a9..46333f0 100644
+--- a/native/CMakeLists.txt
++++ b/native/CMakeLists.txt
+@@ -280,6 +280,9 @@ if(VF_BUILD_TESTS)
+     add_executable(vf_r24_physical_planet_tests tests/R24PhysicalPlanetTests.cpp)
+     target_link_libraries(vf_r24_physical_planet_tests PRIVATE vf_engine glm::glm)
+     add_test(NAME vf_r24_physical_planet_tests COMMAND vf_r24_physical_planet_tests)
++    add_executable(vf_r24_runtime_stability_tests tests/R24RuntimeStabilityTests.cpp)
++    target_link_libraries(vf_r24_runtime_stability_tests PRIVATE vf_engine glm::glm)
++    add_test(NAME vf_r24_runtime_stability_tests COMMAND vf_r24_runtime_stability_tests)
+ 
+     if(VF_BUILD_RUNTIME)
+         add_executable(vf_shader_contract_tests tests/ShaderContractTests.cpp "${VF_SHADER_HEADER}")
+diff --git a/native/include/vf/world/ProceduralEcology.hpp b/native/include/vf/world/ProceduralEcology.hpp
+index 596eaa0..d340e22 100644
+--- a/native/include/vf/world/ProceduralEcology.hpp
++++ b/native/include/vf/world/ProceduralEcology.hpp
+@@ -8,6 +8,8 @@
+ 
+ namespace vf {
+ 
++class PlanetSurfaceAuthority;
++
+ // Fixed render-local frame used by the Earth-scale runtime. Procedural props are generated directly
+ // in this high-precision local frame, avoiding float precision loss from authoring tiny trees at a
+ // 6,371 km planet radius and transforming them afterwards.
+@@ -43,6 +45,7 @@ struct ProceduralEcologySettings {
+     const PlanetDefinition& planet,
+     const glm::dvec3& centerDirection,
+     const SurfaceRenderFrame& frame,
+-    const ProceduralEcologySettings& settings = {});
++    const ProceduralEcologySettings& settings = {},
++    const PlanetSurfaceAuthority* surfaceAuthority = nullptr);
+ 
+ } // namespace vf
+diff --git a/native/shaders/planet.slang b/native/shaders/planet.slang
+index 0093f12..e0d0275 100644
+--- a/native/shaders/planet.slang
++++ b/native/shaders/planet.slang
+@@ -232,7 +232,9 @@ float shadowVisibility(float4 lightClip, float noL)
+     if (any(uv < 0.0) || any(uv > 1.0) || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
+ 
+     float texel = max(gScene.groundAmbientShadowTexel.w, 1.0 / 4096.0);
+-    float bias = max(0.00022, 0.0011 * (1.0 - noL));
++    // Raster depth bias already handles most acne. Keep receiver bias at centimetre-scale
++    // for the 480 m shadow depth range so contact shadows do not visibly detach.
++    float bias = max(0.00004, 0.00030 * (1.0 - noL));
+     static const float2 offsets[9] = {
+         float2(0.0, 0.0),
+         float2(0.84, 0.18), float2(0.36, 0.79), float2(-0.48, 0.72), float2(-0.86, 0.10),
+diff --git a/native/src/app/Main.cpp b/native/src/app/Main.cpp
+index d7c51a2..fd55f26 100644
+--- a/native/src/app/Main.cpp
++++ b/native/src/app/Main.cpp
+@@ -12,6 +12,7 @@
+ #include "vf/world/PlanetaryBodySystem.hpp"
+ #include "vf/world/PlanetLodMeshBuilder.hpp"
+ #include "vf/world/RegionalHydrology.hpp"
++#include "vf/world/TerrainStreamingPolicy.hpp"
+ #include "vf/world/ProceduralEcology.hpp"
+ 
+ #include <algorithm>
+@@ -235,7 +236,10 @@ int main() {
+             try { celestialTimeScale = std::clamp(std::stod(scaleEnv), 0.0, 200000.0); }
+             catch (...) { celestialTimeScale = 240.0; }
+         }
+-        vf::CelestialSimulationClock celestialClock{{60.0, celestialTimeScale, 4096U}};
++        const double celestialFixedStepSeconds = celestialTimeScale <= 1000.0 ? 5.0
++            : (celestialTimeScale <= 20000.0 ? 15.0 : 60.0);
++        vf::CelestialSimulationClock celestialClock{{
++            celestialFixedStepSeconds, celestialTimeScale, 4096U}};
+ 
+         vf::CelestialBody sun{};
+         sun.type = vf::CelestialBodyType::Star;
+@@ -500,8 +504,10 @@ int main() {
+ 
+         auto buildTerrainLod = [&](const glm::dvec3& centerDirection, const glm::dvec3& cameraPlanetLocal) {
+             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
++            const double buildAltitude = std::max(0.0, glm::length(cameraPlanetLocal) - planet.radius);
+             vf::RegionalHydrologyConfig hydroConfig{};
+-            hydroConfig.resolution = 129U;
++            hydroConfig.resolution = buildAltitude < 25000.0 ? 129U
++                : (buildAltitude < 150000.0 ? 97U : 65U);
+             hydroConfig.halfExtentMeters = 220000.0;
+             hydroConfig.maxIncisionMeters = 420.0;
+             hydroConfig.riverHeadAccumulationFraction = 0.0012;
+@@ -513,10 +519,12 @@ int main() {
+             vf::PlanetLodConfig lodConfig{};
+             lodConfig.patchResolution = 10U;
+             lodConfig.maxDepth = 16U;
+-            lodConfig.maxLeafPatches = 1600U;
++            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1600U
++                : (buildAltitude < 150000.0 ? 900U : 500U);
+             lodConfig.verticalFovRadians = glm::radians(68.0);
+             lodConfig.viewportHeightPixels = 900.0;
+-            lodConfig.targetScreenErrorPixels = 3.4;
++            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 3.4
++                : (buildAltitude < 150000.0 ? 5.0 : 8.0);
+             lodConfig.horizonMarginRadians = 0.018;
+             lodConfig.skirtDepthMeters = 6.0;
+ 
+@@ -530,7 +538,10 @@ int main() {
+                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+             }
+ 
+-            appendMesh(result.mesh, vf::buildProceduralEcology(planet, centerUp, surfaceFrame));
++            if (buildAltitude < 30000.0) {
++                appendMesh(result.mesh, vf::buildProceduralEcology(
++                    planet, centerUp, surfaceFrame, {}, &buildSurface));
++            }
+ 
+             vf::PlanetMesh oceanProxy{};
+             vf::appendOceanSurfaceProxy(
+@@ -554,27 +565,16 @@ int main() {
+         std::future<TerrainBuildResult> terrainBuildFuture{};
+         bool terrainBuildInFlight = false;
+ 
+-        // Local rotating planet frame for high-quality ground physics while CelestialSystem remains
+-        // authoritative for the actual moving body in the solar-system frame.
+-        vf::CelestialSystem localGravitySystem;
+-        vf::CelestialBody localGravityBody = aster;
+-        localGravityBody.position = {};
+-        localGravityBody.linearVelocity = {};
+-        localGravityBody.orbitParentId = 0U;
+-        localGravityBody.spinRateRadPerSecond = 0.0;
+-        localGravityBody.orientation = {1.0, 0.0, 0.0, 0.0};
+-        localGravityBody.atmosphere.enabled = false;
+-        localGravityBody.weather.windMultiplier = 0.0;
+-        const std::uint32_t localGravityId = localGravitySystem.addBody(localGravityBody);
+-
++        // Character/nearby rigid-body physics already runs in Aster body-local coordinates.
++        // Do not fabricate a second CelestialSystem at the origin: use radial local gravity and
++        // explicitly expose the body's rotating-frame angular velocity to PhysicsWorld.
+         vf::PhysicsEnvironment environment{};
+         environment.planet = planet;
+         environment.surfaceGravity = 9.80665;
+-        environment.celestialSystem = &localGravitySystem;
+-        environment.primaryCelestialBodyId = localGravityId;
+         environment.surfaceAuthority = &surfaceAuthority;
+         environment.climateGrid = &climateGrid;
+         environment.oceanSpectrum = &oceanSpectrum;
++        environment.rotatingFrameAngularVelocity = asterFrame.localAngularVelocity(*initialAster);
+         environment.atmosphere.prevailingWind = {};
+         environment.atmosphere.gustAmplitude = 0.0;
+         environment.weather.windMultiplier = 0.0;
+@@ -713,50 +713,75 @@ int main() {
+             const glm::dvec3 upSurface = safeNormalize(
+                 toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
+ 
+-            // CPU synthesis is asynchronous. The renderer owns the GPU-side streaming policy, so a
+-            // completed terrain window can be handed over without making the simulation thread wait
+-            // for procedural generation.
++            // CPU terrain synthesis is asynchronous, but high-speed flight must never queue
++            // kilometre-scale near-field work faster than it can be consumed. A testable policy
++            // switches to the cheap globe during fast transit, prefetches before the old window is
++            // exhausted, and rejects stale completed jobs after a large camera jump.
+             lodCooldown = std::max(0.0, lodCooldown - dt);
+             const double altitude = camera.altitude();
+-            const bool wantsDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
+-                || altitude > 900000.0;
+-            if (wantsDistantEarthGlobe != usingDistantEarthGlobe) {
+-                usingDistantEarthGlobe = wantsDistantEarthGlobe;
++            const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
++            const double arcDistance = std::acos(std::clamp(
++                glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
++            const double localSurfaceSpeed = glm::length(localCameraVelocity);
++            const vf::TerrainStreamingDecision streaming = vf::decideTerrainStreaming({
++                camera.physicsFrameBodyId() == asterId,
++                altitude,
++                localSurfaceSpeed,
++                arcDistance,
++                terrainBuildInFlight,
++                lodCooldown,
++            });
++
++            if (streaming.useDistantGlobe != usingDistantEarthGlobe) {
++                usingDistantEarthGlobe = streaming.useDistantGlobe;
+                 renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeMesh : nearTerrain);
+-                std::cout << "R24.2 Earth renderer mode: "
+-                          << (usingDistantEarthGlobe ? "smooth-globe" : "adaptive-terrain") << '\n';
++                std::cout << "R24 Earth renderer mode: "
++                          << (usingDistantEarthGlobe ? "smooth-globe" : "adaptive-terrain")
++                          << " speed_mps=" << localSurfaceSpeed << '\n';
+             }
+-            if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0) {
+-                const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
+-                const double arcDistance = std::acos(std::clamp(
+-                    glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
+-                const double threshold = altitude < 20000.0 ? 8000.0
+-                    : (altitude < 100000.0 ? 40000.0
+-                    : (altitude < 350000.0 ? 120000.0 : 350000.0));
+-                const double prefetchThreshold = threshold * 0.42;
+-
+-                if (!terrainBuildInFlight && lodCooldown <= 0.0 && arcDistance > prefetchThreshold) {
+-                    const glm::dvec3 requestedDirection = cameraDirection;
+-                    const glm::dvec3 requestedCameraPlanet = cameraPlanet;
+-                    terrainBuildFuture = std::async(
+-                        std::launch::async,
+-                        [&, requestedDirection, requestedCameraPlanet]() {
+-                            return buildTerrainLod(requestedDirection, requestedCameraPlanet);
+-                        });
+-                    terrainBuildInFlight = true;
+-                }
+ 
+-                if (terrainBuildInFlight
+-                    && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
+-                        == std::future_status::ready) {
+-                    TerrainBuildResult completed = terrainBuildFuture.get();
+-                    terrainBuildInFlight = false;
++            if (streaming.requestBuild) {
++                const glm::dvec3 requestedDirection = cameraDirection;
++                const glm::dvec3 requestedCameraPlanet = cameraPlanet;
++                terrainBuildFuture = std::async(
++                    std::launch::async,
++                    [&, requestedDirection, requestedCameraPlanet]() {
++                        return buildTerrainLod(requestedDirection, requestedCameraPlanet);
++                    });
++                terrainBuildInFlight = true;
++            }
++
++            if (terrainBuildInFlight
++                && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
++                    == std::future_status::ready) {
++                TerrainBuildResult completed = terrainBuildFuture.get();
++                terrainBuildInFlight = false;
++                const glm::dvec3 directionNow = safeNormalize(cameraPlanet, completed.centerDirection);
++                const double staleArcDistance = std::acos(std::clamp(
++                    glm::dot(directionNow, completed.centerDirection), -1.0, 1.0)) * planet.radius;
++                if (staleArcDistance <= streaming.staleAcceptanceMeters) {
+                     lodCenterDirection = completed.centerDirection;
+                     surfaceAuthority.setHydrology(completed.hydrology);
+                     currentLodStats = completed.stats;
+                     nearTerrain = std::move(completed.mesh);
+-                    if (!usingDistantEarthGlobe) renderer.uploadPlanetMesh(nearTerrain);
+                     lodCooldown = 0.12;
++
++                    const vf::TerrainStreamingDecision refreshed = vf::decideTerrainStreaming({
++                        camera.physicsFrameBodyId() == asterId,
++                        altitude,
++                        localSurfaceSpeed,
++                        staleArcDistance,
++                        false,
++                        lodCooldown,
++                    });
++                    if (!refreshed.useDistantGlobe) {
++                        renderer.uploadPlanetMesh(nearTerrain);
++                        usingDistantEarthGlobe = false;
++                    }
++                } else {
++                    lodCooldown = 0.0;
++                    std::cout << "R24 terrain stale build discarded: camera_delta_km="
++                              << staleArcDistance / 1000.0 << '\n';
+                 }
+             }
+ 
+diff --git a/native/src/physics/PhysicsWorld.cpp b/native/src/physics/PhysicsWorld.cpp
+index 465b0e2..2ac7edc 100644
+--- a/native/src/physics/PhysicsWorld.cpp
++++ b/native/src/physics/PhysicsWorld.cpp
+@@ -683,6 +683,13 @@ void PhysicsWorld::applyEnvironmentForces(RigidBody& rigidBody) {
+     const double gravity = glm::length(gravityAcceleration);
+     rigidBody.accumulatedForce += rigidBody.mass * gravityAcceleration;
+ 
++    const glm::dvec3 omega = environment_.rotatingFrameAngularVelocity;
++    if (glm::dot(omega, omega) > 1.0e-24) {
++        const glm::dvec3 coriolis = -2.0 * glm::cross(omega, rigidBody.linearVelocity);
++        const glm::dvec3 centrifugal = -glm::cross(omega, glm::cross(omega, rigidBody.position));
++        rigidBody.accumulatedForce += rigidBody.mass * (coriolis + centrifugal);
++    }
++
+     const AtmosphereSample atmosphereSample = environment_.sampleAtmosphere(rigidBody.position, simulationTime_);
+     const glm::dvec3 relativeAirVelocity = rigidBody.linearVelocity - atmosphereSample.windVelocity;
+     const double airSpeed = glm::length(relativeAirVelocity);
+diff --git a/native/src/render/VulkanRenderer.cpp b/native/src/render/VulkanRenderer.cpp
+index 8a6a66c..cc1ae20 100644
+--- a/native/src/render/VulkanRenderer.cpp
++++ b/native/src/render/VulkanRenderer.cpp
+@@ -837,8 +837,8 @@ void VulkanRenderer::createPipelines() {
+     VkPipelineRasterizationStateCreateInfo shadowRaster = raster;
+     shadowRaster.cullMode = VK_CULL_MODE_BACK_BIT;
+     shadowRaster.depthBiasEnable = VK_TRUE;
+-    shadowRaster.depthBiasConstantFactor = 1.25F;
+-    shadowRaster.depthBiasSlopeFactor = 1.75F;
++    shadowRaster.depthBiasConstantFactor = 0.55F;
++    shadowRaster.depthBiasSlopeFactor = 1.00F;
+     VkPipelineColorBlendStateCreateInfo noColorBlend{};
+     noColorBlend.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+     VkGraphicsPipelineCreateInfo shadowInfo{};
+diff --git a/native/src/world/ProceduralEcology.cpp b/native/src/world/ProceduralEcology.cpp
+index fc522bd..ba472fb 100644
+--- a/native/src/world/ProceduralEcology.cpp
++++ b/native/src/world/ProceduralEcology.cpp
+@@ -1,4 +1,5 @@
+ #include "vf/world/ProceduralEcology.hpp"
++#include "vf/world/PlanetSurfaceAuthority.hpp"
+ 
+ #include <algorithm>
+ #include <array>
+@@ -419,16 +420,22 @@ struct SurfaceCandidate {
+ [[nodiscard]] SurfaceCandidate sampleCandidate(
+     const PlanetDefinition& planet,
+     const SurfaceRenderFrame& frame,
++    const PlanetSurfaceAuthority* surfaceAuthority,
+     double x,
+     double z) {
+     SurfaceCandidate candidate{};
+     const glm::dvec3 direction = planetDirectionFromRenderXZ(frame, x, z);
+-    candidate.terrain = samplePlanetTerrain(planet, direction);
+-    const glm::dvec3 normalPlanet = planetSurfaceNormal(planet, direction);
++    candidate.terrain = surfaceAuthority != nullptr
++        ? surfaceAuthority->sample(direction)
++        : samplePlanetTerrain(planet, direction);
++    const glm::dvec3 normalPlanet = surfaceAuthority != nullptr
++        ? surfaceAuthority->surfaceNormal(direction)
++        : planetSurfaceNormal(planet, direction);
++    const double surfaceRadius = surfaceAuthority != nullptr
++        ? surfaceAuthority->surfaceRadius(direction)
++        : planet.radius + candidate.terrain.elevationMeters;
+     candidate.radialAlignment = glm::dot(normalPlanet, direction);
+-    candidate.renderPoint = toRenderPoint(
+-        frame,
+-        direction * (planet.radius + candidate.terrain.elevationMeters));
++    candidate.renderPoint = toRenderPoint(frame, direction * surfaceRadius);
+     candidate.up = safeNormalize(toRenderVector(frame, normalPlanet));
+     candidate.east = safeNormalize(toRenderVector(frame, safeNormalize(glm::cross(glm::dvec3{0.0, 1.0, 0.0}, direction), frame.tangentX)), frame.tangentX);
+     if (std::abs(glm::dot(candidate.east, candidate.up)) > 0.96) {
+@@ -444,12 +451,15 @@ void forStableCells(
+     const SurfaceRenderFrame& frame,
+     const glm::dvec3& centerDirection,
+     const PlanetDefinition& planet,
++    const PlanetSurfaceAuthority* surfaceAuthority,
+     double radius,
+     double cellSize,
+     std::uint64_t channel,
+     Fn&& fn) {
+-    const glm::dvec3 centerPlanet = centerDirection
+-        * (planet.radius + samplePlanetTerrain(planet, centerDirection).elevationMeters);
++    const double centerRadius = surfaceAuthority != nullptr
++        ? surfaceAuthority->surfaceRadius(centerDirection)
++        : planet.radius + samplePlanetTerrain(planet, centerDirection).elevationMeters;
++    const glm::dvec3 centerPlanet = centerDirection * centerRadius;
+     const glm::dvec3 center = toRenderPoint(frame, centerPlanet);
+     const auto centerX = static_cast<std::int64_t>(std::floor(center.x / cellSize));
+     const auto centerZ = static_cast<std::int64_t>(std::floor(center.z / cellSize));
+@@ -476,7 +486,8 @@ PlanetMesh buildProceduralEcology(
+     const PlanetDefinition& planet,
+     const glm::dvec3& centerDirectionInput,
+     const SurfaceRenderFrame& frame,
+-    const ProceduralEcologySettings& settings) {
++    const ProceduralEcologySettings& settings,
++    const PlanetSurfaceAuthority* surfaceAuthority) {
+     PlanetMesh mesh{};
+     const glm::dvec3 centerDirection = safeNormalize(centerDirectionInput, safeNormalize(frame.originPlanet));
+     std::uint32_t treeCount = 0U;
+@@ -487,12 +498,13 @@ PlanetMesh buildProceduralEcology(
+         frame,
+         centerDirection,
+         planet,
++        surfaceAuthority,
+         settings.treeRadiusMeters,
+         settings.treeCellMeters,
+         1000U,
+         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
+             if (treeCount >= settings.maxTrees) return;
+-            const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
++            const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
+             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
+             if (c.terrain.submerged(planet) || aboveSea < 18.0 || aboveSea > 2550.0) return;
+             if (c.radialAlignment < 0.935 || c.terrain.mountain > 0.76 || c.terrain.volcano > 0.72) return;
+@@ -512,12 +524,13 @@ PlanetMesh buildProceduralEcology(
+         frame,
+         centerDirection,
+         planet,
++        surfaceAuthority,
+         settings.rockRadiusMeters,
+         settings.rockCellMeters,
+         2000U,
+         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
+             if (rockCount >= settings.maxRocks) return;
+-            const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
++            const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
+             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
+             if (c.terrain.submerged(planet) || aboveSea < 8.0) return;
+             if (c.radialAlignment < 0.86) return;
+@@ -535,12 +548,13 @@ PlanetMesh buildProceduralEcology(
+         frame,
+         centerDirection,
+         planet,
++        surfaceAuthority,
+         settings.grassRadiusMeters,
+         settings.grassCellMeters,
+         3000U,
+         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
+             if (grassCount >= settings.maxGrassClumps) return;
+-            const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
++            const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
+             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
+             if (c.terrain.submerged(planet) || aboveSea < 7.0 || aboveSea > 2200.0) return;
+             if (c.radialAlignment < 0.955 || c.terrain.mountain > 0.62 || c.terrain.volcano > 0.58) return;

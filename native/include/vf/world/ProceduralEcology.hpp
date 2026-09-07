@@ -8,6 +8,8 @@
 
 namespace vf {
 
+class PlanetSurfaceAuthority;
+
 // Fixed render-local frame used by the Earth-scale runtime. Procedural props are generated directly
 // in this high-precision local frame, avoiding float precision loss from authoring tiny trees at a
 // 6,371 km planet radius and transforming them afterwards.
@@ -43,6 +45,7 @@ struct ProceduralEcologySettings {
     const PlanetDefinition& planet,
     const glm::dvec3& centerDirection,
     const SurfaceRenderFrame& frame,
-    const ProceduralEcologySettings& settings = {});
+    const ProceduralEcologySettings& settings = {},
+    const PlanetSurfaceAuthority* surfaceAuthority = nullptr);
 
 } // namespace vf

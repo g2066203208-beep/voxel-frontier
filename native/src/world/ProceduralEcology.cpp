@@ -1,4 +1,5 @@
 #include "vf/world/ProceduralEcology.hpp"
+#include "vf/world/PlanetSurfaceAuthority.hpp"
 
 #include <algorithm>
 #include <array>
@@ -419,16 +420,22 @@ struct SurfaceCandidate {
 [[nodiscard]] SurfaceCandidate sampleCandidate(
     const PlanetDefinition& planet,
     const SurfaceRenderFrame& frame,
+    const PlanetSurfaceAuthority* surfaceAuthority,
     double x,
     double z) {
     SurfaceCandidate candidate{};
     const glm::dvec3 direction = planetDirectionFromRenderXZ(frame, x, z);
-    candidate.terrain = samplePlanetTerrain(planet, direction);
-    const glm::dvec3 normalPlanet = planetSurfaceNormal(planet, direction);
+    candidate.terrain = surfaceAuthority != nullptr
+        ? surfaceAuthority->sample(direction)
+        : samplePlanetTerrain(planet, direction);
+    const glm::dvec3 normalPlanet = surfaceAuthority != nullptr
+        ? surfaceAuthority->surfaceNormal(direction)
+        : planetSurfaceNormal(planet, direction);
+    const double surfaceRadius = surfaceAuthority != nullptr
+        ? surfaceAuthority->surfaceRadius(direction)
+        : planet.radius + candidate.terrain.elevationMeters;
     candidate.radialAlignment = glm::dot(normalPlanet, direction);
-    candidate.renderPoint = toRenderPoint(
-        frame,
-        direction * (planet.radius + candidate.terrain.elevationMeters));
+    candidate.renderPoint = toRenderPoint(frame, direction * surfaceRadius);
     candidate.up = safeNormalize(toRenderVector(frame, normalPlanet));
     candidate.east = safeNormalize(toRenderVector(frame, safeNormalize(glm::cross(glm::dvec3{0.0, 1.0, 0.0}, direction), frame.tangentX)), frame.tangentX);
     if (std::abs(glm::dot(candidate.east, candidate.up)) > 0.96) {
@@ -444,12 +451,15 @@ void forStableCells(
     const SurfaceRenderFrame& frame,
     const glm::dvec3& centerDirection,
     const PlanetDefinition& planet,
+    const PlanetSurfaceAuthority* surfaceAuthority,
     double radius,
     double cellSize,
     std::uint64_t channel,
     Fn&& fn) {
-    const glm::dvec3 centerPlanet = centerDirection
-        * (planet.radius + samplePlanetTerrain(planet, centerDirection).elevationMeters);
+    const double centerRadius = surfaceAuthority != nullptr
+        ? surfaceAuthority->surfaceRadius(centerDirection)
+        : planet.radius + samplePlanetTerrain(planet, centerDirection).elevationMeters;
+    const glm::dvec3 centerPlanet = centerDirection * centerRadius;
     const glm::dvec3 center = toRenderPoint(frame, centerPlanet);
     const auto centerX = static_cast<std::int64_t>(std::floor(center.x / cellSize));
     const auto centerZ = static_cast<std::int64_t>(std::floor(center.z / cellSize));
@@ -476,7 +486,8 @@ PlanetMesh buildProceduralEcology(
     const PlanetDefinition& planet,
     const glm::dvec3& centerDirectionInput,
     const SurfaceRenderFrame& frame,
-    const ProceduralEcologySettings& settings) {
+    const ProceduralEcologySettings& settings,
+    const PlanetSurfaceAuthority* surfaceAuthority) {
     PlanetMesh mesh{};
     const glm::dvec3 centerDirection = safeNormalize(centerDirectionInput, safeNormalize(frame.originPlanet));
     std::uint32_t treeCount = 0U;
@@ -487,12 +498,13 @@ PlanetMesh buildProceduralEcology(
         frame,
         centerDirection,
         planet,
+        surfaceAuthority,
         settings.treeRadiusMeters,
         settings.treeCellMeters,
         1000U,
         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
             if (treeCount >= settings.maxTrees) return;
-            const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
+            const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 18.0 || aboveSea > 2550.0) return;
             if (c.radialAlignment < 0.935 || c.terrain.mountain > 0.76 || c.terrain.volcano > 0.72) return;
@@ -512,12 +524,13 @@ PlanetMesh buildProceduralEcology(
         frame,
         centerDirection,
         planet,
+        surfaceAuthority,
         settings.rockRadiusMeters,
         settings.rockCellMeters,
         2000U,
         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
             if (rockCount >= settings.maxRocks) return;
-            const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
+            const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 8.0) return;
             if (c.radialAlignment < 0.86) return;
@@ -535,12 +548,13 @@ PlanetMesh buildProceduralEcology(
         frame,
         centerDirection,
         planet,
+        surfaceAuthority,
         settings.grassRadiusMeters,
         settings.grassCellMeters,
         3000U,
         [&](std::int64_t ix, std::int64_t iz, double x, double z) {
             if (grassCount >= settings.maxGrassClumps) return;
-            const SurfaceCandidate c = sampleCandidate(planet, frame, x, z);
+            const SurfaceCandidate c = sampleCandidate(planet, frame, surfaceAuthority, x, z);
             const double aboveSea = c.terrain.elevationMeters - planet.seaLevelElevationMeters;
             if (c.terrain.submerged(planet) || aboveSea < 7.0 || aboveSea > 2200.0) return;
             if (c.radialAlignment < 0.955 || c.terrain.mountain > 0.62 || c.terrain.volcano > 0.58) return;

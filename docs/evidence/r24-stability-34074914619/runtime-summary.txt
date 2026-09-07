@@ -1,0 +1,7 @@
+=== ground spin log ===
+Earth-Moon physical scale: Rearth=6371 km Rmoon=1737.4 km distance=384400 km | celestial time scale=7200.0x
+=== high speed log ===
+Earth-Moon physical scale: Rearth=6371 km Rmoon=1737.4 km distance=384400 km | celestial time scale=1.0x
+=== earth spin log ===
+R24.2 view: earth-globe distance_km=24000
+Earth-Moon physical scale: Rearth=6371 km Rmoon=1737.4 km distance=384400 km | celestial time scale=7200.0x

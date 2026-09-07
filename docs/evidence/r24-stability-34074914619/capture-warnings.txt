@@ -1,0 +1,4 @@
+WARN low-information framebuffer retained: r24-stability-evidence/ground/ground-spin-0.png
+WARN low-information framebuffer retained: r24-stability-evidence/ground/ground-spin-1.png
+WARN low-information framebuffer retained: r24-stability-evidence/shadows/contact-ground.png
+WARN low-information framebuffer retained: r24-stability-evidence/high-speed/before.png

@@ -12,6 +12,7 @@
 #include "vf/world/PlanetaryBodySystem.hpp"
 #include "vf/world/PlanetLodMeshBuilder.hpp"
 #include "vf/world/RegionalHydrology.hpp"
+#include "vf/world/TerrainStreamingPolicy.hpp"
 #include "vf/world/ProceduralEcology.hpp"
 
 #include <algorithm>
@@ -235,7 +236,10 @@ int main() {
             try { celestialTimeScale = std::clamp(std::stod(scaleEnv), 0.0, 200000.0); }
             catch (...) { celestialTimeScale = 240.0; }
         }
-        vf::CelestialSimulationClock celestialClock{{60.0, celestialTimeScale, 4096U}};
+        const double celestialFixedStepSeconds = celestialTimeScale <= 1000.0 ? 5.0
+            : (celestialTimeScale <= 20000.0 ? 15.0 : 60.0);
+        vf::CelestialSimulationClock celestialClock{{
+            celestialFixedStepSeconds, celestialTimeScale, 4096U}};
 
         vf::CelestialBody sun{};
         sun.type = vf::CelestialBodyType::Star;
@@ -500,8 +504,10 @@ int main() {
 
         auto buildTerrainLod = [&](const glm::dvec3& centerDirection, const glm::dvec3& cameraPlanetLocal) {
             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
+            const double buildAltitude = std::max(0.0, glm::length(cameraPlanetLocal) - planet.radius);
             vf::RegionalHydrologyConfig hydroConfig{};
-            hydroConfig.resolution = 129U;
+            hydroConfig.resolution = buildAltitude < 25000.0 ? 129U
+                : (buildAltitude < 150000.0 ? 97U : 65U);
             hydroConfig.halfExtentMeters = 220000.0;
             hydroConfig.maxIncisionMeters = 420.0;
             hydroConfig.riverHeadAccumulationFraction = 0.0012;
@@ -513,10 +519,12 @@ int main() {
             vf::PlanetLodConfig lodConfig{};
             lodConfig.patchResolution = 10U;
             lodConfig.maxDepth = 16U;
-            lodConfig.maxLeafPatches = 1600U;
+            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1600U
+                : (buildAltitude < 150000.0 ? 900U : 500U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewportHeightPixels = 900.0;
-            lodConfig.targetScreenErrorPixels = 3.4;
+            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 3.4
+                : (buildAltitude < 150000.0 ? 5.0 : 8.0);
             lodConfig.horizonMarginRadians = 0.018;
             lodConfig.skirtDepthMeters = 6.0;
 
@@ -530,7 +538,10 @@ int main() {
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
             }
 
-            appendMesh(result.mesh, vf::buildProceduralEcology(planet, centerUp, surfaceFrame));
+            if (buildAltitude < 30000.0) {
+                appendMesh(result.mesh, vf::buildProceduralEcology(
+                    planet, centerUp, surfaceFrame, {}, &buildSurface));
+            }
 
             vf::PlanetMesh oceanProxy{};
             vf::appendOceanSurfaceProxy(
@@ -554,27 +565,16 @@ int main() {
         std::future<TerrainBuildResult> terrainBuildFuture{};
         bool terrainBuildInFlight = false;
 
-        // Local rotating planet frame for high-quality ground physics while CelestialSystem remains
-        // authoritative for the actual moving body in the solar-system frame.
-        vf::CelestialSystem localGravitySystem;
-        vf::CelestialBody localGravityBody = aster;
-        localGravityBody.position = {};
-        localGravityBody.linearVelocity = {};
-        localGravityBody.orbitParentId = 0U;
-        localGravityBody.spinRateRadPerSecond = 0.0;
-        localGravityBody.orientation = {1.0, 0.0, 0.0, 0.0};
-        localGravityBody.atmosphere.enabled = false;
-        localGravityBody.weather.windMultiplier = 0.0;
-        const std::uint32_t localGravityId = localGravitySystem.addBody(localGravityBody);
-
+        // Character/nearby rigid-body physics already runs in Aster body-local coordinates.
+        // Do not fabricate a second CelestialSystem at the origin: use radial local gravity and
+        // explicitly expose the body's rotating-frame angular velocity to PhysicsWorld.
         vf::PhysicsEnvironment environment{};
         environment.planet = planet;
         environment.surfaceGravity = 9.80665;
-        environment.celestialSystem = &localGravitySystem;
-        environment.primaryCelestialBodyId = localGravityId;
         environment.surfaceAuthority = &surfaceAuthority;
         environment.climateGrid = &climateGrid;
         environment.oceanSpectrum = &oceanSpectrum;
+        environment.rotatingFrameAngularVelocity = asterFrame.localAngularVelocity(*initialAster);
         environment.atmosphere.prevailingWind = {};
         environment.atmosphere.gustAmplitude = 0.0;
         environment.weather.windMultiplier = 0.0;
@@ -713,50 +713,75 @@ int main() {
             const glm::dvec3 upSurface = safeNormalize(
                 toSurfaceVector(inverseAster * camera.up()), {0.0, 1.0, 0.0});
 
-            // CPU synthesis is asynchronous. The renderer owns the GPU-side streaming policy, so a
-            // completed terrain window can be handed over without making the simulation thread wait
-            // for procedural generation.
+            // CPU terrain synthesis is asynchronous, but high-speed flight must never queue
+            // kilometre-scale near-field work faster than it can be consumed. A testable policy
+            // switches to the cheap globe during fast transit, prefetches before the old window is
+            // exhausted, and rejects stale completed jobs after a large camera jump.
             lodCooldown = std::max(0.0, lodCooldown - dt);
             const double altitude = camera.altitude();
-            const bool wantsDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
-                || altitude > 900000.0;
-            if (wantsDistantEarthGlobe != usingDistantEarthGlobe) {
-                usingDistantEarthGlobe = wantsDistantEarthGlobe;
+            const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
+            const double arcDistance = std::acos(std::clamp(
+                glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
+            const double localSurfaceSpeed = glm::length(localCameraVelocity);
+            const vf::TerrainStreamingDecision streaming = vf::decideTerrainStreaming({
+                camera.physicsFrameBodyId() == asterId,
+                altitude,
+                localSurfaceSpeed,
+                arcDistance,
+                terrainBuildInFlight,
+                lodCooldown,
+            });
+
+            if (streaming.useDistantGlobe != usingDistantEarthGlobe) {
+                usingDistantEarthGlobe = streaming.useDistantGlobe;
                 renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeMesh : nearTerrain);
-                std::cout << "R24.2 Earth renderer mode: "
-                          << (usingDistantEarthGlobe ? "smooth-globe" : "adaptive-terrain") << '\n';
+                std::cout << "R24 Earth renderer mode: "
+                          << (usingDistantEarthGlobe ? "smooth-globe" : "adaptive-terrain")
+                          << " speed_mps=" << localSurfaceSpeed << '\n';
             }
-            if (camera.physicsFrameBodyId() == asterId && altitude < 800000.0) {
-                const glm::dvec3 cameraDirection = safeNormalize(cameraPlanet, lodCenterDirection);
-                const double arcDistance = std::acos(std::clamp(
-                    glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
-                const double threshold = altitude < 20000.0 ? 8000.0
-                    : (altitude < 100000.0 ? 40000.0
-                    : (altitude < 350000.0 ? 120000.0 : 350000.0));
-                const double prefetchThreshold = threshold * 0.42;
 
-                if (!terrainBuildInFlight && lodCooldown <= 0.0 && arcDistance > prefetchThreshold) {
-                    const glm::dvec3 requestedDirection = cameraDirection;
-                    const glm::dvec3 requestedCameraPlanet = cameraPlanet;
-                    terrainBuildFuture = std::async(
-                        std::launch::async,
-                        [&, requestedDirection, requestedCameraPlanet]() {
-                            return buildTerrainLod(requestedDirection, requestedCameraPlanet);
-                        });
-                    terrainBuildInFlight = true;
-                }
+            if (streaming.requestBuild) {
+                const glm::dvec3 requestedDirection = cameraDirection;
+                const glm::dvec3 requestedCameraPlanet = cameraPlanet;
+                terrainBuildFuture = std::async(
+                    std::launch::async,
+                    [&, requestedDirection, requestedCameraPlanet]() {
+                        return buildTerrainLod(requestedDirection, requestedCameraPlanet);
+                    });
+                terrainBuildInFlight = true;
+            }
 
-                if (terrainBuildInFlight
-                    && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
-                        == std::future_status::ready) {
-                    TerrainBuildResult completed = terrainBuildFuture.get();
-                    terrainBuildInFlight = false;
+            if (terrainBuildInFlight
+                && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
+                    == std::future_status::ready) {
+                TerrainBuildResult completed = terrainBuildFuture.get();
+                terrainBuildInFlight = false;
+                const glm::dvec3 directionNow = safeNormalize(cameraPlanet, completed.centerDirection);
+                const double staleArcDistance = std::acos(std::clamp(
+                    glm::dot(directionNow, completed.centerDirection), -1.0, 1.0)) * planet.radius;
+                if (staleArcDistance <= streaming.staleAcceptanceMeters) {
                     lodCenterDirection = completed.centerDirection;
                     surfaceAuthority.setHydrology(completed.hydrology);
                     currentLodStats = completed.stats;
                     nearTerrain = std::move(completed.mesh);
-                    if (!usingDistantEarthGlobe) renderer.uploadPlanetMesh(nearTerrain);
                     lodCooldown = 0.12;
+
+                    const vf::TerrainStreamingDecision refreshed = vf::decideTerrainStreaming({
+                        camera.physicsFrameBodyId() == asterId,
+                        altitude,
+                        localSurfaceSpeed,
+                        staleArcDistance,
+                        false,
+                        lodCooldown,
+                    });
+                    if (!refreshed.useDistantGlobe) {
+                        renderer.uploadPlanetMesh(nearTerrain);
+                        usingDistantEarthGlobe = false;
+                    }
+                } else {
+                    lodCooldown = 0.0;
+                    std::cout << "R24 terrain stale build discarded: camera_delta_km="
+                              << staleArcDistance / 1000.0 << '\n';
                 }
             }
 

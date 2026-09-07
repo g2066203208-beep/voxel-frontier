@@ -837,8 +837,8 @@ void VulkanRenderer::createPipelines() {
     VkPipelineRasterizationStateCreateInfo shadowRaster = raster;
     shadowRaster.cullMode = VK_CULL_MODE_BACK_BIT;
     shadowRaster.depthBiasEnable = VK_TRUE;
-    shadowRaster.depthBiasConstantFactor = 1.25F;
-    shadowRaster.depthBiasSlopeFactor = 1.75F;
+    shadowRaster.depthBiasConstantFactor = 0.55F;
+    shadowRaster.depthBiasSlopeFactor = 1.00F;
     VkPipelineColorBlendStateCreateInfo noColorBlend{};
     noColorBlend.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     VkGraphicsPipelineCreateInfo shadowInfo{};

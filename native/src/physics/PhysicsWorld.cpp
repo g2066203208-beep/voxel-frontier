@@ -683,6 +683,13 @@ void PhysicsWorld::applyEnvironmentForces(RigidBody& rigidBody) {
     const double gravity = glm::length(gravityAcceleration);
     rigidBody.accumulatedForce += rigidBody.mass * gravityAcceleration;
 
+    const glm::dvec3 omega = environment_.rotatingFrameAngularVelocity;
+    if (glm::dot(omega, omega) > 1.0e-24) {
+        const glm::dvec3 coriolis = -2.0 * glm::cross(omega, rigidBody.linearVelocity);
+        const glm::dvec3 centrifugal = -glm::cross(omega, glm::cross(omega, rigidBody.position));
+        rigidBody.accumulatedForce += rigidBody.mass * (coriolis + centrifugal);
+    }
+
     const AtmosphereSample atmosphereSample = environment_.sampleAtmosphere(rigidBody.position, simulationTime_);
     const glm::dvec3 relativeAirVelocity = rigidBody.linearVelocity - atmosphereSample.windVelocity;
     const double airSpeed = glm::length(relativeAirVelocity);

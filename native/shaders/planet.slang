@@ -232,7 +232,9 @@ float shadowVisibility(float4 lightClip, float noL)
     if (any(uv < 0.0) || any(uv > 1.0) || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
 
     float texel = max(gScene.groundAmbientShadowTexel.w, 1.0 / 4096.0);
-    float bias = max(0.00022, 0.0011 * (1.0 - noL));
+    // Raster depth bias already handles most acne. Keep receiver bias at centimetre-scale
+    // for the 480 m shadow depth range so contact shadows do not visibly detach.
+    float bias = max(0.00004, 0.00030 * (1.0 - noL));
     static const float2 offsets[9] = {
         float2(0.0, 0.0),
         float2(0.84, 0.18), float2(0.36, 0.79), float2(-0.48, 0.72), float2(-0.86, 0.10),
