@@ -1,0 +1,205 @@
+name: R24 200FPS Foundation
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_200fps_foundation.py'
+      - '.github/workflows/r24-200fps-foundation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-200fps-foundation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 production commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 3
+
+      - name: Apply 200 FPS foundation
+        run: python3 .github/scripts/r24_200fps_foundation.py
+
+      - name: Validate optimized source contracts
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' native/src/render/VulkanRenderer.cpp
+          grep -q 'VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT' native/src/render/VulkanRenderer.cpp
+          grep -q 'staticMesh.uploadVertexBuffer' native/src/render/VulkanRenderer.cpp
+          grep -q 'VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT' native/src/render/VulkanRenderer.cpp
+          grep -q 'float terrainMacro : TEXCOORD6' native/shaders/planet.slang
+          grep -q 'terrainAerialTransmittance' native/shaders/planet.slang
+          ! grep -q 'float macro = valueNoise2(input.objectPosition.xz \* 0.0032);' native/shaders/planet.slang
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-200fps -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-200fps --parallel 2
+
+      - name: Run all native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-200fps --verbose --output-on-failure 2>&1 | tee r24-200fps-ctest.log
+
+      - name: Gate physics terrain shader and runtime contracts
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-200fps --verbose --output-on-failure \
+            -R 'vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests|vf_shader_contract_tests' \
+            2>&1 | tee r24-200fps-focused.log
+          grep -q 'vf_planetary_body_system_tests: PASS' r24-200fps-focused.log
+          grep -q 'vf_r24_runtime_stability_tests: PASS' r24-200fps-focused.log
+          grep -q 'Terrain landform tests passed' r24-200fps-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-200fps-focused.log
+          grep -q 'All production shader SPIR-V entry-point contracts passed' r24-200fps-focused.log
+
+      - name: Verify Vulkan device
+        shell: bash
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+          if grep -q 'deviceType.*PHYSICAL_DEVICE_TYPE_CPU' vulkan-summary.txt; then
+            echo 'R24_200FPS_HARDWARE_GATE=UNAVAILABLE_SOFTWARE_VULKAN' | tee hardware-gpu-status.txt
+          else
+            echo 'R24_200FPS_HARDWARE_GATE=AVAILABLE' | tee hardware-gpu-status.txt
+          fi
+
+      - name: Capture real Vulkan production scenes
+        shell: bash
+        run: |
+          APP="$(find build/r24-200fps -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-200fps-evidence
+
+      - name: Gate real images and pass telemetry
+        shell: bash
+        run: |
+          test -s r24-200fps-evidence/r24-epic-landscape-overview.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, statistics
+
+          root = Path('r24-200fps-evidence/logs')
+          pattern = re.compile(
+              r'R24 GPU steady_pass_ms samples=([0-9]+) '
+              r'shadow_mean=([0-9.]+) opaque_mean=([0-9.]+) sky_mean=([0-9.]+) '
+              r'transparent_mean=([0-9.]+) total_mean=([0-9.]+) '
+              r'shadow_max=([0-9.]+) opaque_max=([0-9.]+) sky_max=([0-9.]+) transparent_max=([0-9.]+)')
+          rows = []
+          for name in ('mountain', 'rift', 'canyon', 'abyss'):
+              text = (root / f'{name}.log').read_text(encoding='utf-8', errors='replace')
+              found = pattern.findall(text)
+              if not found:
+                  raise SystemExit(f'{name}: missing steady GPU pass telemetry')
+              values = found[-1]
+              samples = int(values[0])
+              nums = tuple(map(float, values[1:]))
+              row = (name, samples, *nums)
+              rows.append(row)
+              print('FOUNDATION_STEADY', row)
+              if samples < 8:
+                  raise SystemExit(f'{name}: expected >=8 steady samples, got {samples}')
+
+          opaque = [r[3] for r in rows]
+          sky = [r[4] for r in rows]
+          totals = [r[6] for r in rows]
+          summary = {
+              'opaque_mean_of_scenes_ms': statistics.mean(opaque),
+              'sky_mean_of_scenes_ms': statistics.mean(sky),
+              'profiled_total_mean_ms': statistics.mean(totals),
+          }
+          print('FOUNDATION_SUMMARY', summary)
+          Path('r24-200fps-performance.txt').write_text(
+              '\n'.join(f'{k}={v:.6f}' for k, v in summary.items()) + '\n'
+              + 'hardware_target_ms=5.000000\n'
+              + 'hardware_target_fps=200\n'
+              + 'ci_device=llvmpipe_software_vulkan_not_hardware_fps\n',
+              encoding='utf-8')
+          if any(v <= 0.0 for v in totals):
+              raise SystemExit('profiled totals must be positive')
+          PY
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-200fps-foundation-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-200fps-evidence ]]; then
+            cp -a r24-200fps-evidence/. "$EVIDENCE_DIR/"
+          fi
+          for f in r24-200fps-ctest.log r24-200fps-focused.log vulkan-summary.txt hardware-gpu-status.txt r24-200fps-performance.txt; do
+            [[ -f "$f" ]] && cp -f "$f" "$EVIDENCE_DIR/" || true
+          done
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-200fps-foundation-${{ github.run_id }}
+          path: |
+            r24-200fps-evidence/**
+            r24-200fps-ctest.log
+            r24-200fps-focused.log
+            vulkan-summary.txt
+            hardware-gpu-status.txt
+            r24-200fps-performance.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested 200 FPS foundation
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          if ! git diff --cached --quiet; then
+            git commit -m "perf(r24): move terrain hot path onto GPU-local vertex work"
+          fi
+          git reset --hard HEAD
+          git clean -fd build/r24-200fps || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
