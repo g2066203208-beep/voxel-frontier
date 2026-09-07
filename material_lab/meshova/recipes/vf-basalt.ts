@@ -12,6 +12,9 @@ export type VfBasaltParams = {
   weathering?: number;
   roughnessBias?: number;
   normalStrength?: number;
+  macroRelief?: number;
+  mesoRelief?: number;
+  edgeBreakup?: number;
 };
 
 type CrackSegment = {
@@ -22,6 +25,8 @@ type CrackSegment = {
   halfLength: number;
   width: number;
   strength: number;
+  bend: number;
+  phase: number;
 };
 
 const TAU = Math.PI * 2;
@@ -83,6 +88,12 @@ function pfbm(u: number, v: number, base: number, octaves: number, seed: number)
   return sum / Math.max(weight, 1e-6);
 }
 
+function signedSharpen(x: number, exponent: number): number {
+  const centered = (x - 0.5) * 2;
+  const sign = centered < 0 ? -1 : 1;
+  return sign * Math.pow(Math.abs(centered), exponent) * 0.5;
+}
+
 function sparsePores(u: number, v: number, seed: number, density: number): number {
   const cells = 24;
   const px = u * cells;
@@ -109,14 +120,23 @@ function sparsePores(u: number, v: number, seed: number, density: number): numbe
       const rx = dx * cosine - dy * sine;
       const ry = dx * sine + dy * cosine;
       const d = Math.hypot(rx / radius, ry / (radius * aspect));
-      const pore = 1 - smooth(clamp01((d - 0.42) / 0.58));
+      const pore = 1 - smooth(clamp01((d - 0.40) / 0.60));
       if (pore > mask) mask = pore;
     }
   }
   return mask;
 }
 
-function makeSegment(cx: number, cy: number, angle: number, halfLength: number, width: number, strength: number): CrackSegment {
+function makeSegment(
+  cx: number,
+  cy: number,
+  angle: number,
+  halfLength: number,
+  width: number,
+  strength: number,
+  bend = 0,
+  phase = 0,
+): CrackSegment {
   return {
     cx: wrap01(cx),
     cy: wrap01(cy),
@@ -125,6 +145,8 @@ function makeSegment(cx: number, cy: number, angle: number, halfLength: number, 
     halfLength,
     width,
     strength,
+    bend,
+    phase,
   };
 }
 
@@ -132,80 +154,104 @@ function buildFractures(seed: number): CrackSegment[] {
   const segments: CrackSegment[] = [];
   const primary: CrackSegment[] = [];
 
-  // Basalt commonly shows preferred joint families rather than an isotropic closed-cell web.
+  // Two preferred joint families, but finite, sparse and imperfect.
   for (let i = 0; i < 7; i++) {
     const familyAngle = i % 2 === 0 ? 0.30 : 1.83;
-    const jitter = (hash01(i, 1, seed, 100) - 0.5) * 0.62;
+    const jitter = (hash01(i, 1, seed, 100) - 0.5) * 0.66;
     const angle = familyAngle + jitter;
     const segment = makeSegment(
       hash01(i, 2, seed, 101),
       hash01(i, 3, seed, 102),
       angle,
-      0.085 + hash01(i, 4, seed, 103) * 0.085,
-      0.0018 + hash01(i, 5, seed, 104) * 0.0021,
+      0.080 + hash01(i, 4, seed, 103) * 0.090,
+      0.0017 + hash01(i, 5, seed, 104) * 0.0023,
       0.72 + hash01(i, 6, seed, 105) * 0.28,
+      0.65 + hash01(i, 7, seed, 106) * 1.10,
+      hash01(i, 8, seed, 107) * TAU,
     );
     primary.push(segment);
     segments.push(segment);
   }
 
-  // Branches start near primary endpoints and diverge at realistic angles.
-  for (let i = 0; i < 9; i++) {
+  // Branches attach near parent ends and diverge; they inherit a smaller meander.
+  for (let i = 0; i < 10; i++) {
     const parent = primary[i % primary.length];
-    const side = hash01(i, 7, seed, 110) < 0.5 ? -1 : 1;
-    const attach = 0.58 + hash01(i, 8, seed, 111) * 0.34;
+    const side = hash01(i, 9, seed, 110) < 0.5 ? -1 : 1;
+    const attach = 0.54 + hash01(i, 10, seed, 111) * 0.38;
     const px = parent.cx + parent.dx * parent.halfLength * side * attach;
     const py = parent.cy + parent.dy * parent.halfLength * side * attach;
     const parentAngle = Math.atan2(parent.dy, parent.dx);
-    const diverge = (0.42 + hash01(i, 9, seed, 112) * 0.55) * (hash01(i, 10, seed, 113) < 0.5 ? -1 : 1);
+    const diverge = (0.40 + hash01(i, 11, seed, 112) * 0.62)
+      * (hash01(i, 12, seed, 113) < 0.5 ? -1 : 1);
     segments.push(makeSegment(
-      px + (hash01(i, 11, seed, 114) - 0.5) * 0.018,
-      py + (hash01(i, 12, seed, 115) - 0.5) * 0.018,
+      px + (hash01(i, 13, seed, 114) - 0.5) * 0.020,
+      py + (hash01(i, 14, seed, 115) - 0.5) * 0.020,
       parentAngle + diverge,
-      0.030 + hash01(i, 13, seed, 116) * 0.052,
-      0.0010 + hash01(i, 14, seed, 117) * 0.0012,
-      0.38 + hash01(i, 15, seed, 118) * 0.34,
+      0.028 + hash01(i, 15, seed, 116) * 0.055,
+      0.00095 + hash01(i, 16, seed, 117) * 0.00135,
+      0.38 + hash01(i, 17, seed, 118) * 0.36,
+      0.45 + hash01(i, 18, seed, 119) * 0.85,
+      hash01(i, 19, seed, 120) * TAU,
     ));
   }
 
-  // Very fine isolated fissures enrich close-up normal/height without dominating the tile.
-  for (let i = 0; i < 10; i++) {
+  // Fine isolated fissures are shorter and lower amplitude.
+  for (let i = 0; i < 12; i++) {
     const familyAngle = i % 2 === 0 ? 0.28 : 1.88;
-    const angle = familyAngle + (hash01(i, 16, seed, 120) - 0.5) * 0.95;
+    const angle = familyAngle + (hash01(i, 20, seed, 121) - 0.5) * 1.0;
     segments.push(makeSegment(
-      hash01(i, 17, seed, 121),
-      hash01(i, 18, seed, 122),
+      hash01(i, 21, seed, 122),
+      hash01(i, 22, seed, 123),
       angle,
-      0.018 + hash01(i, 19, seed, 123) * 0.035,
-      0.00055 + hash01(i, 20, seed, 124) * 0.00070,
-      0.16 + hash01(i, 21, seed, 125) * 0.18,
+      0.016 + hash01(i, 23, seed, 124) * 0.038,
+      0.00050 + hash01(i, 24, seed, 125) * 0.00078,
+      0.15 + hash01(i, 25, seed, 126) * 0.20,
+      0.25 + hash01(i, 26, seed, 127) * 0.60,
+      hash01(i, 27, seed, 128) * TAU,
     ));
   }
   return segments;
 }
 
-function segmentMask(u: number, v: number, segment: CrackSegment): number {
+function segmentFields(u: number, v: number, segment: CrackSegment, edgeBreakup: number): [number, number] {
   let rx = u - segment.cx;
   let ry = v - segment.cy;
   rx -= Math.round(rx);
   ry -= Math.round(ry);
 
   const along = rx * segment.dx + ry * segment.dy;
-  const cross = Math.abs(-rx * segment.dy + ry * segment.dx);
-  const endStart = segment.halfLength * 0.72;
+  let crossSigned = -rx * segment.dy + ry * segment.dx;
+
+  // Small waviness and local offset break mathematically straight crack silhouettes.
+  const t = along / Math.max(segment.halfLength, 1e-5);
+  const meander = (
+    Math.sin(t * Math.PI * 1.35 + segment.phase)
+    + 0.42 * Math.sin(t * Math.PI * 3.1 + segment.phase * 0.63)
+  ) * segment.width * segment.bend * edgeBreakup;
+  crossSigned -= meander;
+  const cross = Math.abs(crossSigned);
+
+  const endStart = segment.halfLength * 0.70;
   const endFade = Math.max(segment.halfLength - endStart, 1e-5);
   const alongMask = 1 - smooth(clamp01((Math.abs(along) - endStart) / endFade));
-  const crossMask = 1 - smooth(clamp01((cross - segment.width * 0.18) / (segment.width * 0.82)));
-  return clamp01(alongMask * crossMask * segment.strength);
+
+  const core = 1 - smooth(clamp01((cross - segment.width * 0.16) / (segment.width * 0.84)));
+  const outer = 1 - smooth(clamp01((cross - segment.width * 0.70) / (segment.width * 1.90)));
+  const innerForLip = 1 - smooth(clamp01((cross - segment.width * 0.28) / (segment.width * 0.65)));
+  const lip = clamp01((outer - innerForLip) * alongMask * segment.strength);
+  return [clamp01(core * alongMask * segment.strength), lip];
 }
 
 function makeSampler(params: VfBasaltParams) {
-  const seed = Math.round(params.seed ?? 240912);
-  const fractureStrength = clamp01(params.fractureStrength ?? 0.50);
+  const seed = Math.round(params.seed ?? 240913);
+  const fractureStrength = clamp01(params.fractureStrength ?? 0.54);
   const poreDensity = Math.max(0, Math.min(0.12, params.poreDensity ?? 0.020));
-  const weathering = clamp01(params.weathering ?? 0.22);
-  const roughnessBias = Math.max(-0.18, Math.min(0.18, params.roughnessBias ?? 0.015));
-  const normalStrength = Math.max(0.2, Math.min(10, params.normalStrength ?? 5.2));
+  const weathering = clamp01(params.weathering ?? 0.20);
+  const roughnessBias = Math.max(-0.18, Math.min(0.18, params.roughnessBias ?? 0.010));
+  const normalStrength = Math.max(0.2, Math.min(14, params.normalStrength ?? 8.0));
+  const macroRelief = Math.max(0.5, Math.min(1.8, params.macroRelief ?? 1.18));
+  const mesoRelief = Math.max(0.5, Math.min(2.0, params.mesoRelief ?? 1.38));
+  const edgeBreakup = Math.max(0, Math.min(1.8, params.edgeBreakup ?? 1.10));
   const fractures = buildFractures(seed + 5000);
 
   const sample = (u: number, v: number) => {
@@ -216,51 +262,62 @@ function makeSampler(params: VfBasaltParams) {
 
     const macro = pfbm(du, dv, 2, 4, seed + 101);
     const meso = pfbm(du, dv, 8, 3, seed + 211);
+    const mesoSharp = signedSharpen(pnoise(du, dv, 14, seed + 251), 0.62);
+    const ledgeSource = pnoise(du, dv, 11, seed + 263);
+    const ledge = smootherstep((ledgeSource - 0.38) / 0.24) - 0.5;
     const micro = pfbm(du, dv, 30, 2, seed + 307);
     const grain = pnoise(du, dv, 92, seed + 401);
     const microGrain = pnoise(du, dv, 157, seed + 409);
+    const grit = pnoise(du, dv, 233, seed + 419);
 
     let fracture = 0;
+    let fractureLip = 0;
     for (const segment of fractures) {
-      const value = segmentMask(du, dv, segment);
-      if (value > fracture) fracture = value;
+      const [core, lip] = segmentFields(du, dv, segment, edgeBreakup);
+      if (core > fracture) fracture = core;
+      if (lip > fractureLip) fractureLip = lip;
     }
     fracture = clamp01(fracture * fractureStrength);
+    fractureLip = clamp01(fractureLip * fractureStrength);
 
     const pores = sparsePores(du, dv, seed + 701, poreDensity);
     const microPitA = smooth(clamp01((pnoise(du, dv, 73, seed + 809) - 0.835) / 0.10));
     const microPitB = smooth(clamp01((pnoise(du, dv, 137, seed + 811) - 0.885) / 0.075));
-    const pinholes = clamp01(microPitA * 0.30 + microPitB * 0.22);
+    const pinholes = clamp01(microPitA * 0.32 + microPitB * 0.24);
 
-    const brightMineral = smooth(clamp01((grain - 0.84) / 0.13))
-      * smooth(clamp01((microGrain - 0.58) / 0.30));
-    const darkMineral = smooth(clamp01((0.17 - grain) / 0.14)) * 0.75;
+    const brightMineral = smooth(clamp01((grain - 0.82) / 0.14))
+      * smooth(clamp01((microGrain - 0.55) / 0.32));
+    const darkMineral = smooth(clamp01((0.18 - grain) / 0.15)) * 0.72;
+    const mineralRelief = brightMineral * 0.017 - darkMineral * 0.011 + (grit - 0.5) * 0.010;
 
     const height = clamp01(
       0.50
-      + (macro - 0.5) * 0.42
-      + (meso - 0.5) * 0.20
-      + (micro - 0.5) * 0.065
-      + (grain - 0.5) * 0.022
-      + (microGrain - 0.5) * 0.009
-      + brightMineral * 0.010
-      - darkMineral * 0.008
-      - fracture * 0.30
-      - pores * 0.30
-      - pinholes * 0.030,
+      + (macro - 0.5) * 0.46 * macroRelief
+      + (meso - 0.5) * 0.21 * mesoRelief
+      + mesoSharp * 0.115 * mesoRelief
+      + ledge * 0.080 * mesoRelief
+      + (micro - 0.5) * 0.085
+      + (grain - 0.5) * 0.030
+      + (microGrain - 0.5) * 0.014
+      + mineralRelief
+      + fractureLip * 0.070
+      - fracture * 0.34
+      - pores * 0.34
+      - pinholes * 0.042,
     );
 
-    const tone = clamp01(0.11 + macro * 0.50 + meso * 0.24 + micro * 0.10 + grain * 0.05);
-    let color = mixRgb([0.034, 0.038, 0.042], [0.180, 0.186, 0.182], tone);
-    color = mixRgb(color, [0.255, 0.262, 0.252], brightMineral * 0.16);
-    color = mixRgb(color, [0.018, 0.022, 0.026], darkMineral * 0.30);
+    // Weathered basalt: dark neutral gray, but not crushed-to-black albedo.
+    const tone = clamp01(0.16 + macro * 0.45 + meso * 0.22 + micro * 0.09 + grain * 0.055);
+    let color = mixRgb([0.052, 0.057, 0.062], [0.225, 0.232, 0.226], tone);
+    color = mixRgb(color, [0.285, 0.292, 0.278], brightMineral * 0.18);
+    color = mixRgb(color, [0.022, 0.027, 0.031], darkMineral * 0.27);
 
     const oxideGate = smooth(clamp01((pnoise(du, dv, 5, seed + 907) - 0.50) / 0.25));
-    const oxide = clamp01((fracture * oxideGate + pores * 0.22) * weathering * 0.28);
+    const oxide = clamp01((fracture * oxideGate + pores * 0.22 + fractureLip * 0.08) * weathering * 0.26);
     color = mixRgb(color, [0.245, 0.132, 0.066], oxide);
 
-    const cavityDark = clamp01(1 - fracture * 0.34 - pores * 0.50 - pinholes * 0.09);
-    const grainTone = 0.955 + grain * 0.075 + microGrain * 0.025;
+    const cavityDark = clamp01(1 - fracture * 0.30 - pores * 0.43 - pinholes * 0.08);
+    const grainTone = 0.965 + grain * 0.070 + microGrain * 0.025 + (grit - 0.5) * 0.018;
     color = [
       clamp01(color[0] * cavityDark * grainTone),
       clamp01(color[1] * cavityDark * grainTone),
@@ -268,17 +325,19 @@ function makeSampler(params: VfBasaltParams) {
     ];
 
     const roughness = clamp01(
-      0.70 + roughnessBias
-      + (micro - 0.5) * 0.17
-      + (microGrain - 0.5) * 0.08
+      0.69 + roughnessBias
+      + (micro - 0.5) * 0.18
+      + (microGrain - 0.5) * 0.10
+      + (grit - 0.5) * 0.06
       + fracture * 0.18
-      + pores * 0.21
-      + pinholes * 0.09
+      + fractureLip * 0.07
+      + pores * 0.22
+      + pinholes * 0.10
       + darkMineral * 0.05
-      - brightMineral * 0.10
-      - height * 0.035,
+      - brightMineral * 0.11
+      - height * 0.030,
     );
-    const ao = clamp01(1 - fracture * 0.42 - pores * 0.62 - pinholes * 0.13);
+    const ao = clamp01(1 - fracture * 0.42 - pores * 0.62 - pinholes * 0.14 - Math.max(0, -mesoSharp) * 0.08);
     return { color, height, roughness, ao };
   };
   return { sample, normalStrength };
