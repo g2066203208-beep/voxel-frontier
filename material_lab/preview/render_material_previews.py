@@ -14,12 +14,12 @@ DEFAULT_DISPLACEMENT = {
     "hd_max": .82,
 }
 PRESET_DISPLACEMENT = {
-    "vfLayeredSandstonePainted": {
-        "amp": .230,
-        "iterations": 7,
-        "hd_min": -.18,
-        "hd_max": .96,
-    },
+    "vfLayeredSandstonePainted": {"amp": .230, "iterations": 7, "hd_min": -.18, "hd_max": .96},
+    "vfPainterlyDirt": {"amp": .120, "iterations": 6, "hd_min": -.42, "hd_max": .88},
+    "vfPainterlyBark": {"amp": .145, "iterations": 6, "hd_min": -.38, "hd_max": .92},
+    "vfPainterlyLeaves": {"amp": .125, "iterations": 6, "hd_min": -.32, "hd_max": .94},
+    "vfPainterlySnow": {"amp": .105, "iterations": 6, "hd_min": -.28, "hd_max": .84},
+    "vfPainterlyWater": {"amp": .035, "iterations": 5, "hd_min": -.62, "hd_max": .62},
 }
 
 def preview_displacement_profile(material_dir: Path):
@@ -105,13 +105,7 @@ def render_sphere(d:Path,name:str,out:Path):
     S=1000; cx=S*.5; cy=S*.465; R=S*.325
     yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R
     displacement=preview_displacement_profile(d)
-    Ng,mask,r2,hh=displaced_geometry(
-        sx,sy,height,
-        amp=displacement["amp"],
-        iterations=displacement["iterations"],
-        hd_min=displacement["hd_min"],
-        hd_max=displacement["hd_max"],
-    )
+    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=displacement["amp"],iterations=displacement["iterations"],hd_min=displacement["hd_min"],hd_max=displacement["hd_max"])
     u,v=sphere_uv(Ng)
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
 
@@ -163,7 +157,7 @@ def render_sphere(d:Path,name:str,out:Path):
     draw=ImageDraw.Draw(out_im)
     try: f1=ImageFont.truetype("DejaVuSans.ttf",27); f2=ImageFont.truetype("DejaVuSans.ttf",18)
     except: f1=ImageFont.load_default(); f2=f1
-    draw.rounded_rectangle((28,26,650,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),"true Height displacement · faceted GGX studio sphere",fill=(190,195,200),font=f2)
+    draw.rounded_rectangle((28,26,650,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),"true Height displacement · painterly GGX studio sphere",fill=(190,195,200),font=f2)
     out_im.save(out)
 
 def contact_sheet(d:Path,name:str,out:Path):
