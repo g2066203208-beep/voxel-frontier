@@ -131,6 +131,8 @@ private:
     void createDevice();
     void createCommands();
     void createSyncObjects();
+    void destroyTimestampQueries() noexcept;
+    void readTimestampQueries(std::uint32_t frame);
 
     void createSwapchain();
     void createSwapchainResources();
@@ -227,6 +229,17 @@ private:
     std::array<VkSemaphore, kFramesInFlight> imageAvailable_{};
     std::array<VkSemaphore, kFramesInFlight> renderFinished_{};
     std::array<VkFence, kFramesInFlight> inFlight_{};
+
+    // Eight timestamps = [shadow begin/end, opaque begin/end, sky begin/end, transparent begin/end].
+    // Results are read only after this frame slot's fence signals, so profiling never stalls the GPU.
+    static constexpr std::uint32_t kTimestampQueryCount = 8U;
+    std::array<VkQueryPool, kFramesInFlight> timestampQueryPools_{};
+    std::array<bool, kFramesInFlight> timestampQueryWritten_{};
+    float timestampPeriodNanoseconds_{1.0F};
+    std::uint32_t timestampValidBits_{};
+    std::uint64_t timestampMask_{~std::uint64_t{0}};
+    std::uint64_t gpuTimingSamples_{};
+    bool gpuTimestampsSupported_{};
 
     std::uint32_t frameIndex_{};
     std::uint32_t apiVersion_{};

@@ -201,6 +201,7 @@ VulkanRenderer::~VulkanRenderer() {
     if (device_ != VK_NULL_HANDLE) vkDeviceWaitIdle(device_);
     for (auto& mesh : staticMeshes_) destroyFrameMesh(mesh);
     for (auto& mesh : dynamicMeshes_) destroyFrameMesh(mesh);
+    destroyTimestampQueries();
     destroySwapchainResources();
     destroySwapchain();
     destroyDescriptorResources();
@@ -320,6 +321,25 @@ void VulkanRenderer::selectPhysicalDevice() {
     }
     if (physicalDevice_ == VK_NULL_HANDLE)
         fail("No GPU satisfies Vulkan 1.3 + dynamic rendering + synchronization2 + swapchain");
+
+    // Timestamp support is a queue-family property, not a feature bit. Vulkan reports the number
+    // of valid timestamp bits for each queue and timestampPeriod in nanoseconds per tick. Keep the
+    // mask so wraparound on implementations with fewer than 64 valid bits is handled correctly.
+    VkPhysicalDeviceProperties selectedProperties{};
+    vkGetPhysicalDeviceProperties(physicalDevice_, &selectedProperties);
+    timestampPeriodNanoseconds_ = selectedProperties.limits.timestampPeriod;
+    std::uint32_t selectedQueueCount = 0U;
+    vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice_, &selectedQueueCount, nullptr);
+    std::vector<VkQueueFamilyProperties> selectedQueues(selectedQueueCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(
+        physicalDevice_, &selectedQueueCount, selectedQueues.data());
+    if (queueFamilyIndex_ < selectedQueues.size()) {
+        timestampValidBits_ = selectedQueues[queueFamilyIndex_].timestampValidBits;
+        gpuTimestampsSupported_ = timestampValidBits_ != 0U;
+        timestampMask_ = timestampValidBits_ >= 64U
+            ? ~std::uint64_t{0}
+            : ((std::uint64_t{1} << timestampValidBits_) - 1U);
+    }
 }
 
 void VulkanRenderer::createDevice() {
@@ -377,6 +397,64 @@ void VulkanRenderer::createSyncObjects() {
             || vkCreateSemaphore(device_, &semaphore, nullptr, &renderFinished_[i]) != VK_SUCCESS
             || vkCreateFence(device_, &fence, nullptr, &inFlight_[i]) != VK_SUCCESS)
             fail("Failed to create Vulkan synchronization objects");
+    }
+
+    if (gpuTimestampsSupported_) {
+        VkQueryPoolCreateInfo query{};
+        query.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+        query.queryType = VK_QUERY_TYPE_TIMESTAMP;
+        query.queryCount = kTimestampQueryCount;
+        for (auto& pool : timestampQueryPools_) {
+            const VkResult result = vkCreateQueryPool(device_, &query, nullptr, &pool);
+            if (result != VK_SUCCESS) fail("vkCreateQueryPool(timestamp) failed", result);
+        }
+        SDL_Log(
+            "R24 GPU timestamps enabled: valid_bits=%u period_ns=%.6f",
+            timestampValidBits_, timestampPeriodNanoseconds_);
+    }
+}
+
+void VulkanRenderer::destroyTimestampQueries() noexcept {
+    if (device_ == VK_NULL_HANDLE) return;
+    for (auto& pool : timestampQueryPools_) {
+        if (pool != VK_NULL_HANDLE) vkDestroyQueryPool(device_, pool, nullptr);
+        pool = VK_NULL_HANDLE;
+    }
+    timestampQueryWritten_.fill(false);
+}
+
+void VulkanRenderer::readTimestampQueries(std::uint32_t frame) {
+    if (!gpuTimestampsSupported_ || !timestampQueryWritten_[frame]) return;
+    std::array<std::uint64_t, kTimestampQueryCount> ticks{};
+    const VkResult result = vkGetQueryPoolResults(
+        device_,
+        timestampQueryPools_[frame],
+        0U,
+        kTimestampQueryCount,
+        sizeof(ticks),
+        ticks.data(),
+        sizeof(std::uint64_t),
+        VK_QUERY_RESULT_64_BIT);
+    if (result == VK_NOT_READY) return;
+    if (result != VK_SUCCESS) fail("vkGetQueryPoolResults(timestamp) failed", result);
+
+    const auto milliseconds = [&](std::uint32_t begin, std::uint32_t end) {
+        const std::uint64_t delta = (ticks[end] - ticks[begin]) & timestampMask_;
+        return static_cast<double>(delta)
+            * static_cast<double>(timestampPeriodNanoseconds_) / 1.0e6;
+    };
+    const double shadowMs = milliseconds(0U, 1U);
+    const double opaqueMs = milliseconds(2U, 3U);
+    const double skyMs = milliseconds(4U, 5U);
+    const double transparentMs = milliseconds(6U, 7U);
+    ++gpuTimingSamples_;
+    // Log the first measurement immediately for CI/evidence and then once per ~60 samples so a
+    // normal gameplay log is useful without becoming a per-frame I/O bottleneck.
+    if (gpuTimingSamples_ == 1U || (gpuTimingSamples_ % 60U) == 0U) {
+        SDL_Log(
+            "R24 GPU pass_ms shadow=%.3f opaque=%.3f sky=%.3f transparent=%.3f total_profiled=%.3f",
+            shadowMs, opaqueMs, skyMs, transparentMs,
+            shadowMs + opaqueMs + skyMs + transparentMs);
     }
 }
 
@@ -894,9 +972,14 @@ void VulkanRenderer::createPipelines() {
         if (createResult != VK_SUCCESS) fail("vkCreateGraphicsPipelines(color) failed", createResult);
     };
 
+    // All production opaque primitives are cull-safe: terrain and closed rock/tree meshes have
+    // consistent outward winding, while grass explicitly emits both opposite-winding faces. Cull
+    // backfaces before fragment generation; keep water/glass transparent geometry two-sided.
+    raster.cullMode = VK_CULL_MODE_BACK_BIT;
     createColorPipeline(
         opaquePipeline_, sceneVertex, "vertexMain", opaqueFragment, "opaqueFragmentMain",
         &vertexInput, &reverseDepth, &opaqueBlend, scenePipelineLayout_);
+    raster.cullMode = VK_CULL_MODE_NONE;
     createColorPipeline(
         transparentPipeline_, sceneVertex, "vertexMain", transparentFragment, "transparentFragmentMain",
         &vertexInput, &transparentDepth, &alphaBlend, scenePipelineLayout_);
@@ -1152,6 +1235,7 @@ void VulkanRenderer::drawFrame(
     const std::uint32_t frame = frameIndex_ % kFramesInFlight;
     VkResult result = vkWaitForFences(device_, 1, &inFlight_[frame], VK_TRUE, UINT64_MAX);
     if (result != VK_SUCCESS) fail("vkWaitForFences failed", result);
+    readTimestampQueries(frame);
 
     // The frame fence is the ownership gate for both static and dynamic mapped buffers. Static
     // terrain updates are therefore incremental across the two frames in flight, with no global
@@ -1191,6 +1275,11 @@ void VulkanRenderer::drawFrame(
     begin.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     result = vkBeginCommandBuffer(command, &begin);
     if (result != VK_SUCCESS) fail("vkBeginCommandBuffer failed", result);
+    if (gpuTimestampsSupported_) {
+        vkCmdResetQueryPool(command, timestampQueryPools_[frame], 0U, kTimestampQueryCount);
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 0U);
+    }
 
     VkImageMemoryBarrier2 shadowToAttachment{};
     shadowToAttachment.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
@@ -1273,6 +1362,10 @@ void VulkanRenderer::drawFrame(
             0U);
     }
     vkCmdEndRendering(command);
+    if (gpuTimestampsSupported_) {
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 1U);
+    }
 
     VkImageMemoryBarrier2 shadowToRead{};
     shadowToRead.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
@@ -1405,7 +1498,17 @@ void VulkanRenderer::drawFrame(
     // Depth-first ordering: fill reverse-Z with opaque terrain, then shade sky only in pixels
     // that are still at the exact clear depth. Transparent water/glass blends over the completed
     // opaque+sky background afterwards.
+    if (gpuTimestampsSupported_) {
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 2U);
+    }
     drawScenePass(opaquePipeline_, false);
+    if (gpuTimestampsSupported_) {
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 3U);
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 4U);
+    }
     vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, skyPipeline_);
     PushConstants skyPush{};
     skyPush.matrix = glm::inverse(viewProjection);
@@ -1430,8 +1533,18 @@ void VulkanRenderer::drawFrame(
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
         0, sizeof(skyPush), &skyPush);
     vkCmdDraw(command, 3, 1, 0, 0);
+    if (gpuTimestampsSupported_) {
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 5U);
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 6U);
+    }
 
     drawScenePass(transparentPipeline_, true);
+    if (gpuTimestampsSupported_) {
+        vkCmdWriteTimestamp2(
+            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 7U);
+    }
 
     vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, hudPipeline_);
     vkCmdBindDescriptorSets(
@@ -1494,6 +1607,7 @@ void VulkanRenderer::drawFrame(
     submit.pSignalSemaphoreInfos = &signal;
     result = vkQueueSubmit2(graphicsQueue_, 1, &submit, inFlight_[frame]);
     if (result != VK_SUCCESS) fail("vkQueueSubmit2 failed", result);
+    if (gpuTimestampsSupported_) timestampQueryWritten_[frame] = true;
 
     VkPresentInfoKHR present{};
     present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
