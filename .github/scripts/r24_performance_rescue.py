@@ -197,14 +197,10 @@ replace_once(
 
 replace_once(
 '''            previous = now;
-
-            // Surface gameplay may use accelerated day/orbit time.
 ''',
 '''            previous = now;
             diagnosticsMaxFrameMilliseconds = std::max(
                 diagnosticsMaxFrameMilliseconds, dt * 1000.0);
-
-            // Surface gameplay may use accelerated day/orbit time.
 ''',
 'frame stall sample',
 )
