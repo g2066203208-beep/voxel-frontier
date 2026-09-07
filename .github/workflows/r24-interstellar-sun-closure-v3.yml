@@ -1,4 +1,4 @@
-name: R24 Interstellar Sun Closure V3
+name: R24 Interstellar Sun Closure V4
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/scripts/r24_interstellar_sun_hotfix_v2.py'
       - '.github/scripts/r24_interstellar_sun_hotfix_v3.py'
+      - '.github/scripts/r24_interstellar_sun_hotfix_v4.py'
       - '.github/scripts/r24_interstellar_sun_capture.sh'
       - '.github/workflows/r24-interstellar-sun-closure-v3.yml'
   workflow_dispatch:
@@ -14,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: r24-interstellar-sun-v3-${{ github.ref }}
+  group: r24-interstellar-sun-v4-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -26,11 +27,12 @@ jobs:
         with:
           fetch-depth: 20
           ref: ${{ github.sha }}
-      - name: Apply interstellar Sun closure and V3 evidence fix
+      - name: Apply interstellar Sun closure and V4 safety
         run: |
           python3 .github/scripts/r24_interstellar_sun_closure.py
           python3 .github/scripts/r24_interstellar_sun_hotfix_v2.py
           python3 .github/scripts/r24_interstellar_sun_hotfix_v3.py
+          python3 .github/scripts/r24_interstellar_sun_hotfix_v4.py
       - name: Validate generated production source
         run: |
           git diff --check
@@ -39,7 +41,8 @@ jobs:
           grep -q 'R24 SUN_TRANSIT_ARRIVED\\n' native/src/app/Main.cpp
           grep -q 'solarPlane' native/shaders/planet.slang
           grep -q 'R24 moon ground observer' native/src/app/Main.cpp
-          grep -q 'retainedClosingSpeed' native/src/player/PlanetCamera.cpp
+          grep -q 'earliestHit' native/src/player/PlanetCamera.cpp
+          grep -q 'testInterstellarCreativeSweepCannotTunnelThroughStar' native/tests/InterplanetaryFlightTests.cpp
       - name: Install Vulkan X11 build dependencies
         run: |
           sudo apt-get update
@@ -52,19 +55,19 @@ jobs:
           test -n "$SLANGC"
           echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
       - name: Configure Linux runtime and tests
-        run: cmake -S native -B build/r24-interstellar-sun-v3 -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+        run: cmake -S native -B build/r24-interstellar-sun-v4 -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
       - name: Build Linux runtime and tests
-        run: cmake --build build/r24-interstellar-sun-v3 --parallel 2
+        run: cmake --build build/r24-interstellar-sun-v4 --parallel 2
       - name: Run complete Linux native suite
         shell: bash
         run: |
           set -o pipefail
-          ctest --test-dir build/r24-interstellar-sun-v3 --verbose --output-on-failure 2>&1 | tee r24-interstellar-sun-ctest.log
+          ctest --test-dir build/r24-interstellar-sun-v4 --verbose --output-on-failure 2>&1 | tee r24-interstellar-sun-ctest.log
       - name: Run focused interstellar celestial camera and shader gates
         shell: bash
         run: |
           set -o pipefail
-          ctest --test-dir build/r24-interstellar-sun-v3 --verbose --output-on-failure -R 'vf_interplanetary_flight_tests|vf_r24_runtime_stability_tests|vf_camera_input_tests|vf_shader_contract_tests|vf_celestial_system_tests' 2>&1 | tee r24-interstellar-sun-focused.log
+          ctest --test-dir build/r24-interstellar-sun-v4 --verbose --output-on-failure -R 'vf_interplanetary_flight_tests|vf_r24_runtime_stability_tests|vf_camera_input_tests|vf_shader_contract_tests|vf_celestial_system_tests' 2>&1 | tee r24-interstellar-sun-focused.log
       - name: Verify real Lavapipe Vulkan device
         run: |
           ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n1)"
@@ -76,7 +79,7 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          APP="$(find build/r24-interstellar-sun-v3 -type f -name voxel_frontier -perm -111 | head -n1)"
+          APP="$(find build/r24-interstellar-sun-v4 -type f -name voxel_frontier -perm -111 | head -n1)"
           test -n "$APP"
           chmod +x .github/scripts/r24_interstellar_sun_capture.sh
           .github/scripts/r24_interstellar_sun_capture.sh "$APP" r24-interstellar-sun-evidence
@@ -98,6 +101,7 @@ jobs:
           physical_ground_moon=success
           actual_sun_transit=success
           close_sun_framebuffer=success
+          swept_star_safety=success
           local_speed_gate=success
           inertial_warp_gate=success
           EOF
@@ -133,7 +137,7 @@ jobs:
             native/tests/CameraInputTests.cpp \
             native/tests/R24RuntimeStabilityTests.cpp \
             docs/evidence
-          git commit -m 'feat(r24): add guarded interstellar travel and physical close Sun'
+          git commit -m 'feat(r24): add swept interstellar travel and inspectable close Sun'
           git reset --hard HEAD
           git fetch origin work/r24-unified-planetary-physics
           git rebase origin/work/r24-unified-planetary-physics
@@ -147,17 +151,18 @@ jobs:
         with:
           fetch-depth: 20
           ref: ${{ github.sha }}
-      - name: Apply interstellar Sun closure and V3 evidence fix
+      - name: Apply interstellar Sun closure and V4 safety
         shell: pwsh
         run: |
           python .github/scripts/r24_interstellar_sun_closure.py
           python .github/scripts/r24_interstellar_sun_hotfix_v2.py
           python .github/scripts/r24_interstellar_sun_hotfix_v3.py
+          python .github/scripts/r24_interstellar_sun_hotfix_v4.py
       - name: Validate generated source
         run: git diff --check
       - name: Configure Windows x64
-        run: cmake -S native -B build/r24-interstellar-sun-win-v3 -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+        run: cmake -S native -B build/r24-interstellar-sun-win-v4 -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
       - name: Build Windows x64
-        run: cmake --build build/r24-interstellar-sun-win-v3 --config Release --parallel 2
+        run: cmake --build build/r24-interstellar-sun-win-v4 --config Release --parallel 2
       - name: Run complete Windows native suite
-        run: ctest --test-dir build/r24-interstellar-sun-win-v3 -C Release --verbose --output-on-failure
+        run: ctest --test-dir build/r24-interstellar-sun-win-v4 -C Release --verbose --output-on-failure
