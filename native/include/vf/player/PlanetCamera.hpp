@@ -112,8 +112,13 @@ public:
         }
     }
 
+    static constexpr double kSpeedOfLightMps = 299792458.0;
+    static constexpr double kCreativeInterstellarBaseMaxMps = 1024.0 * kSpeedOfLightMps;
+    static constexpr double kCreativeInterstellarSprintMaxMps = 4096.0 * kSpeedOfLightMps;
+
     void setCreativeFlightSpeedMps(double speedMetersPerSecond) noexcept {
-        creativeFlightSpeedMps_ = std::clamp(speedMetersPerSecond, 1.0, 2000000.0);
+        creativeFlightSpeedMps_ = std::clamp(
+            speedMetersPerSecond, 1.0, kCreativeInterstellarBaseMaxMps);
     }
 
     [[nodiscard]] glm::dvec3 up() const;

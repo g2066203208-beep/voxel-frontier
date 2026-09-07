@@ -329,6 +329,10 @@ int main() {
             const char* value = std::getenv("VF_CAPTURE_ESCAPE_INHERITANCE");
             return value != nullptr && std::string_view{value} == "1";
         }();
+        const bool captureSunTransit = [] {
+            const char* value = std::getenv("VF_CAPTURE_SUN_TRANSIT");
+            return value != nullptr && std::string_view{value} == "1";
+        }();
         if (captureHighSpeed) {
             camera.setFlightMode(true);
             camera.setCreativeFlightSpeedMps(500000.0);
@@ -478,6 +482,56 @@ int main() {
         const vf::CelestialBody* initialAster = celestial.body(asterId);
         if (initialAster == nullptr) throw std::runtime_error("Aster failed to initialize");
         vf::CelestialPhysicsFrame asterFrame{asterId};
+        glm::dvec3 moonEvidenceObserverLocalDirection{};
+        bool moonEvidenceObserverPlaced = false;
+        if (trackMoonEvidence) {
+            const glm::dquat inverseInitialAster = glm::conjugate(
+                glm::normalize(initialAster->orientation));
+            const glm::dvec3 moonWorldDirection = safeNormalize(
+                luna.position - initialAster->position, {1.0, 0.0, 0.0});
+            const glm::dvec3 moonLocalDirection = safeNormalize(
+                inverseInitialAster * moonWorldDirection, {1.0, 0.0, 0.0});
+            const glm::dvec3 moonHorizonTangent = stableTangent(moonLocalDirection);
+            constexpr double observerSeparationRadians = 60.0 * kPi / 180.0;
+            moonEvidenceObserverLocalDirection = safeNormalize(
+                moonLocalDirection * std::cos(observerSeparationRadians)
+                    + moonHorizonTangent * std::sin(observerSeparationRadians),
+                moonLocalDirection);
+            const double observerRadius = vf::planetSurfaceRadius(
+                planet, moonEvidenceObserverLocalDirection) + 2.0;
+            const glm::dvec3 observerLocalPosition =
+                moonEvidenceObserverLocalDirection * observerRadius;
+            const glm::dvec3 observerWorldPosition =
+                asterFrame.toWorldPosition(*initialAster, observerLocalPosition);
+            const glm::dvec3 observerWorldUp = safeNormalize(
+                initialAster->orientation * moonEvidenceObserverLocalDirection);
+            camera.setExternalWorldState(
+                observerWorldPosition,
+                asterFrame.toWorldVelocity(
+                    *initialAster, observerLocalPosition, glm::dvec3{}),
+                false);
+            camera.setViewDirectionWorld(luna.position - observerWorldPosition, observerWorldUp);
+            moonEvidenceObserverPlaced = true;
+            std::cout << "R24 moon ground observer: target_elevation_deg=30"
+                      << " surface_offset_m=2\n";
+        }
+
+        if (captureSunTransit) {
+            // Real gameplay transit starts just outside Aster's production precision bubble, keeps
+            // the inherited orbital carrier and then uses ordinary creative-flight input toward the
+            // physically located Sun. No teleport occurs after this initial deterministic CI pose.
+            const glm::dvec3 sunwardWorld = safeNormalize(
+                sun.position - initialAster->position, {1.0, 0.0, 0.0});
+            const double departureRadius = initialAster->physicsBubbleRadiusMeters + 5000.0;
+            const glm::dvec3 departureWorld = initialAster->position + sunwardWorld * departureRadius;
+            camera.setExternalWorldState(departureWorld, initialAster->linearVelocity, false);
+            camera.setFlightMode(true);
+            camera.setCreativeFlightSpeedMps(vf::PlanetCamera::kCreativeInterstellarBaseMaxMps);
+            camera.setViewDirectionWorld(sun.position - departureWorld, camera.up());
+            std::cout << "R24 sun transit armed: base_max_c=1024 sprint_max_c=4096"
+                      << " departure_clearance_km="
+                      << (departureRadius - initialAster->radiusMeters) / 1000.0 << '\n';
+        }
 
         if (captureEscapeInheritance) {
             // Start only five kilometres inside the real precision-bubble boundary. The camera is
@@ -617,6 +671,24 @@ int main() {
 
         TerrainBuildResult initialTerrain = buildTerrainLod(lodCenterDirection, initialCameraPlanet);
         surfaceAuthority.setHydrology(initialTerrain.hydrology);
+        if (moonEvidenceObserverPlaced) {
+            const double exactObserverRadius = surfaceAuthority.surfaceRadius(
+                moonEvidenceObserverLocalDirection) + 2.0;
+            const glm::dvec3 exactObserverLocalPosition =
+                moonEvidenceObserverLocalDirection * exactObserverRadius;
+            const glm::dvec3 exactObserverWorldPosition =
+                asterFrame.toWorldPosition(*initialAster, exactObserverLocalPosition);
+            const glm::dvec3 exactObserverWorldUp = safeNormalize(
+                initialAster->orientation * moonEvidenceObserverLocalDirection);
+            camera.setExternalWorldState(
+                exactObserverWorldPosition,
+                asterFrame.toWorldVelocity(
+                    *initialAster, exactObserverLocalPosition, glm::dvec3{}),
+                false);
+            camera.setViewDirectionWorld(
+                luna.position - exactObserverWorldPosition, exactObserverWorldUp);
+            std::cout << "R24 moon ground observer authoritative_surface=1\n";
+        }
         vf::PlanetLodStats currentLodStats = initialTerrain.stats;
         vf::PlanetMesh nearTerrain = std::move(initialTerrain.mesh);
         bool usingDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
@@ -712,6 +784,15 @@ int main() {
             movement.flightSpeedSteps = input.flightSpeedSteps;
             movement.sprint = input.sprint;
             movement.toggleFlight = input.toggleFlight;
+            if (captureSunTransit) {
+                camera.setViewDirectionWorld(
+                    currentSun->position - camera.position(), camera.up());
+                movement.forward = 1.0;
+                movement.right = 0.0;
+                movement.vertical = 0.0;
+                movement.sprint = true;
+                movement.toggleFlight = false;
+            }
 
             const bool wasFlightMode = camera.flightMode();
             camera.update(movement, dt);
@@ -931,6 +1012,20 @@ int main() {
                               << " half_height=" << probeHalfExtents.y << '\n';
                 }
             }
+            if (trackMoonEvidence && currentMoon != nullptr) {
+                const glm::dvec3 liveMoonWorldDirection = safeNormalize(
+                    currentMoon->position - camera.position());
+                const glm::dvec3 moonSurfaceDirection = safeNormalize(
+                    toSurfaceVector(inverseAster * liveMoonWorldDirection), forwardSurface);
+                glm::dvec3 moonScreenRight = glm::cross(moonSurfaceDirection, upSurface);
+                moonScreenRight = safeNormalize(moonScreenRight, {1.0, 0.0, 0.0});
+                constexpr double moonEvidenceFrameOffset = 3.5 * kPi / 180.0;
+                frameForwardSurface = safeNormalize(
+                    moonSurfaceDirection * std::cos(moonEvidenceFrameOffset)
+                        + moonScreenRight * std::sin(moonEvidenceFrameOffset),
+                    forwardSurface);
+                frameUpSurface = upSurface;
+            }
             if (currentMoon != nullptr) {
                 const double moonCameraDistance = glm::length(currentMoon->position - camera.position());
                 const vf::PlanetMesh& moonSource = moonCameraDistance < 12000000.0
@@ -985,6 +1080,9 @@ int main() {
                 currentSun->position - camera.position());
             const double irradiance = currentSun->luminosityWatts
                 / (4.0 * kPi * std::max(1.0, physicalSunDistance * physicalSunDistance));
+            const double sunAngularRadiusRadians = std::asin(std::clamp(
+                currentSun->radiusMeters / std::max(physicalSunDistance, currentSun->radiusMeters),
+                0.0, 1.0));
             const double sunElevation = glm::dot(camera.up(), sunWorldDirection);
             const double airMass = densityRatio / std::max(0.065, sunElevation + 0.14);
             const glm::dvec3 extinction = glm::dvec3{0.10, 0.22, 0.48}
@@ -995,6 +1093,7 @@ int main() {
             renderEnvironment.sunLinearColor = glm::vec3(glm::exp(-extinction));
             renderEnvironment.sunIntensity = static_cast<float>(
                 3.0 * std::clamp(irradiance / 1361.0, 0.0, 3.0));
+            renderEnvironment.sunAngularRadiusRadians = static_cast<float>(sunAngularRadiusRadians);
             renderEnvironment.skyAmbient = glm::vec3{0.035F, 0.060F, 0.105F}
                 + glm::vec3{0.10F, 0.15F, 0.24F} * static_cast<float>(densityRatio);
             renderEnvironment.groundAmbient = glm::vec3{0.018F, 0.016F, 0.013F}
@@ -1009,6 +1108,20 @@ int main() {
             renderEnvironment.flightSpeedMps = static_cast<float>(camera.flightSpeedMps());
 
             renderer.drawFrame(viewProjection, cameraSurface, renderEnvironment);
+
+            if (captureSunTransit && runtimeDiagnosticsStdout) {
+                const double sunClearance = std::max(
+                    0.0, physicalSunDistance - currentSun->radiusMeters);
+                std::cout << "R24 sun transit: distance_AU="
+                          << physicalSunDistance / 149597870700.0
+                          << " clearance_solar_radii=" << sunClearance / currentSun->radiusMeters
+                          << " speed_c=" << glm::length(camera.velocity())
+                              / vf::PlanetCamera::kSpeedOfLightMps
+                          << " angular_diameter_deg="
+                          << (2.0 * sunAngularRadiusRadians * 180.0 / kPi) << '\n';
+                if (sunClearance <= currentSun->radiusMeters * 1.05)
+                    std::cout << "R24 SUN_TRANSIT_ARRIVED\n";
+            }
 
             diagnosticsTime += dt;
             ++diagnosticsFrames;

@@ -397,10 +397,13 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
     }
 
     if (std::abs(input.flightSpeedSteps) > 1.0e-9) {
+        // Surface flight remains deliberately fine-grained. Once fully inertial, each wheel notch
+        // spans four speed bands so AU/stellar traversal does not require dozens of scroll events.
+        const double speedStepExponent = inPhysicsFrame_ ? 0.5 : 2.0;
         creativeFlightSpeedMps_ = std::clamp(
-            creativeFlightSpeedMps_ * std::pow(2.0, input.flightSpeedSteps * 0.5),
+            creativeFlightSpeedMps_ * std::pow(2.0, input.flightSpeedSteps * speedStepExponent),
             1.0,
-            2000000.0);
+            kCreativeInterstellarBaseMaxMps);
     }
 
     if (const auto* body = physicsFrameBody()) {
@@ -415,7 +418,10 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             glm::dvec3 move = localForward * input.forward + localRight * input.right + localUp * input.vertical;
             const double moveLength = glm::length(move);
             if (moveLength > 1.0) move /= moveLength;
-            const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
+            // Never apply interstellar warp speeds while still inside a rotating body's
+            // precision/terrain frame. This preserves collision and surface traversal stability.
+            const double localCreativeSpeed = std::min(creativeFlightSpeedMps_, 2000000.0);
+            const double targetSpeed = localCreativeSpeed * (input.sprint ? 4.0 : 1.0);
             const glm::dvec3 desired = moveLength > 1.0e-8 ? move * targetSpeed : glm::dvec3{};
             localVelocity_ += (desired - localVelocity_) * (1.0 - std::exp(-7.0 * dt));
             localPosition_ += localVelocity_ * dt;
@@ -498,19 +504,112 @@ void PlanetCamera::update(const PlanetMovementInput& input, double dt) {
             glm::dvec3 move = forward * input.forward + right * input.right + cameraUp * input.vertical;
             const double moveLength = glm::length(move);
             if (moveLength > 1.0) move /= moveLength;
-            const double targetSpeed = creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0);
+            const double requestedSpeed = std::min(
+                creativeFlightSpeedMps_ * (input.sprint ? 4.0 : 1.0),
+                kCreativeInterstellarSprintMaxMps);
+            double targetSpeed = requestedSpeed;
+
+            // Creative interstellar travel is intentionally non-relativistic gameplay warp, but
+            // it must still approach real celestial geometry safely. Limit closing speed against
+            // every body in the current travel direction so a single frame cannot tunnel through
+            // a star/planet. Moving away from a body does not unnecessarily throttle escape.
+            if (moveLength > 1.0e-8 && celestialSystem_ != nullptr) {
+                const glm::dvec3 moveDirection = safeNormalize(move);
+                constexpr double approachHorizonSeconds = 0.75;
+                constexpr double minimumApproachLimitMps = 100000.0;
+                for (const auto& candidate : celestialSystem_->bodies()) {
+                    const glm::dvec3 toBody = candidate.position - position_;
+                    const double centerDistance = glm::length(toBody);
+                    if (centerDistance <= 1.0e-6) continue;
+                    const double closingCosine = glm::dot(moveDirection, toBody / centerDistance);
+                    if (closingCosine <= 0.05) continue;
+                    const double clearance = std::max(0.0, centerDistance - candidate.radiusMeters);
+                    const double safeClosingSpeed = std::max(
+                        minimumApproachLimitMps,
+                        clearance / (approachHorizonSeconds * closingCosine));
+                    targetSpeed = std::min(targetSpeed, safeClosingSpeed);
+                }
+            }
             const glm::dvec3 desiredControl = moveLength > 1.0e-8
                 ? move * targetSpeed
                 : glm::dvec3{};
             inertialFlightControlVelocity_ +=
                 (desiredControl - inertialFlightControlVelocity_) * (1.0 - std::exp(-7.0 * dt));
+            if (moveLength > 1.0e-8) {
+                const glm::dvec3 travelDirection = safeNormalize(move);
+                const double retainedClosingSpeed = glm::dot(
+                    inertialFlightControlVelocity_, travelDirection);
+                if (retainedClosingSpeed > targetSpeed)
+                    inertialFlightControlVelocity_ -= travelDirection
+                        * (retainedClosingSpeed - targetSpeed);
+            }
             velocity_ = inertialFlightCarrierVelocity_ + inertialFlightControlVelocity_;
         } else {
             inertialFlightCarrierValid_ = false;
             inertialFlightControlVelocity_ = {};
             velocity_ += celestialSystem_->gravityAccelerationAt(position_) * dt;
         }
-        position_ += velocity_ * dt;
+        const glm::dvec3 previousPosition = position_;
+        glm::dvec3 proposedPosition = position_ + velocity_ * dt;
+        if (flightMode_) {
+            const glm::dvec3 segment = proposedPosition - previousPosition;
+            const double segmentLengthSquared = glm::dot(segment, segment);
+            if (segmentLengthSquared > 1.0e-12) {
+                double earliestHit = 1.0;
+                const CelestialBody* hitBody = nullptr;
+                double hitSafeRadius = 0.0;
+                for (const auto& candidate : celestialSystem_->bodies()) {
+                    const double safeRadius = candidate.type == CelestialBodyType::Star
+                        ? candidate.radiusMeters * 2.0
+                        : candidate.radiusMeters + std::max(2000.0, candidate.radiusMeters * 0.02);
+                    if (safeRadius <= 0.0) continue;
+                    const glm::dvec3 relativeStart = previousPosition - candidate.position;
+                    const double c = glm::dot(relativeStart, relativeStart) - safeRadius * safeRadius;
+                    if (c <= 0.0) continue;
+                    const double b = glm::dot(relativeStart, segment);
+                    const double discriminant = b * b - segmentLengthSquared * c;
+                    if (discriminant < 0.0) continue;
+                    const double root = (-b - std::sqrt(discriminant)) / segmentLengthSquared;
+                    if (root >= 0.0 && root <= earliestHit) {
+                        earliestHit = root;
+                        hitBody = &candidate;
+                        hitSafeRadius = safeRadius;
+                    }
+                }
+                if (hitBody != nullptr) {
+                    const double backedOffHit = std::max(0.0, earliestHit - 1.0e-7);
+                    proposedPosition = previousPosition + segment * backedOffHit;
+                    const glm::dvec3 contactNormal = safeNormalize(
+                        proposedPosition - hitBody->position, {1.0, 0.0, 0.0});
+                    proposedPosition = hitBody->position + contactNormal * hitSafeRadius;
+                }
+            }
+
+            // Boundary persistence matters just as much as first impact. When the previous frame
+            // already ended exactly on the safety shell, the quadratic sweep starts with c==0 and
+            // has no entering root. Correct any endpoint penetration explicitly and remove only the
+            // inward relative velocity; tangential/orbital motion remains untouched.
+            for (const auto& candidate : celestialSystem_->bodies()) {
+                const double safeRadius = candidate.type == CelestialBodyType::Star
+                    ? candidate.radiusMeters * 2.0
+                    : candidate.radiusMeters + std::max(2000.0, candidate.radiusMeters * 0.02);
+                if (safeRadius <= 0.0) continue;
+                glm::dvec3 relativeEnd = proposedPosition - candidate.position;
+                double endDistance = glm::length(relativeEnd);
+                if (endDistance + 1.0e-6 >= safeRadius) continue;
+                const glm::dvec3 contactNormal = safeNormalize(
+                    relativeEnd, safeNormalize(previousPosition - candidate.position, {1.0, 0.0, 0.0}));
+                proposedPosition = candidate.position + contactNormal * safeRadius;
+                const glm::dvec3 relativeVelocity = velocity_ - candidate.linearVelocity;
+                const double inwardSpeed = glm::dot(relativeVelocity, contactNormal);
+                if (inwardSpeed < 0.0) {
+                    velocity_ -= contactNormal * inwardSpeed;
+                    if (inertialFlightCarrierValid_)
+                        inertialFlightControlVelocity_ = velocity_ - inertialFlightCarrierVelocity_;
+                }
+            }
+        }
+        position_ = proposedPosition;
         if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) enterPhysicsFrame(*newFrame);
         return;
     }

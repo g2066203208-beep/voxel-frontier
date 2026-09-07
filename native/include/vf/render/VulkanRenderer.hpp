@@ -19,6 +19,7 @@ struct RenderFrameEnvironment {
     glm::vec3 sunDirectionToLight{0.38F, 0.83F, 0.41F};
     glm::vec3 sunLinearColor{1.0F};
     float sunIntensity{2.2F};
+    float sunAngularRadiusRadians{0.004675F};
     glm::vec3 skyAmbient{0.10F, 0.16F, 0.26F};
     glm::vec3 groundAmbient{0.035F, 0.030F, 0.024F};
     float exposure{1.0F};

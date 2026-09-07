@@ -534,9 +534,51 @@ float4 skyFragmentMain(FullscreenOutput input) : SV_Target
         && groundFar > 0.0 && groundNear > 0.0;
 
     float3 background = float3(0.00035, 0.00045, 0.00075) + proceduralStars(ray);
-    float sunAngularRadius = 0.004675;
-    float sunDisc = smoothstep(cos(sunAngularRadius * 1.15), cos(sunAngularRadius * 0.85), dot(ray, sunDir));
-    if (!hitsGround) background += gPush.data3.yzw * sunDisc * 18.0;
+
+    // Physical apparent size: at Aster this is ~0.267 deg radius; flying toward Helion expands
+    // the exact same star continuously until the disc fills the view. The surface is procedural
+    // shader detail, not a billboard image: granulation, active cells, sunspots, limb and corona.
+    float sunAngularRadius = clamp(abs(gPush.data1.w), 0.0001, 1.45);
+    float3 helper = abs(sunDir.y) < 0.92 ? float3(0.0, 1.0, 0.0) : float3(1.0, 0.0, 0.0);
+    float3 sunRight = normalize(cross(helper, sunDir));
+    float3 sunUp = normalize(cross(sunDir, sunRight));
+    float sinRadius = max(sin(sunAngularRadius), 1.0e-5);
+    float2 solarPlane = float2(dot(ray, sunRight), dot(ray, sunUp)) / sinRadius;
+    float solarR = length(solarPlane);
+    float solarAngle = atan2(solarPlane.y, solarPlane.x);
+
+    float coronaEnvelope = exp(-max(solarR - 1.0, 0.0) * 4.8) * smoothstep(1.85, 0.92, solarR);
+    float coronaRays = 0.55 + 0.45 * terrainFbm2(float2(solarAngle * 3.2, solarR * 2.7) + 41.0);
+    float prominenceRadius = 1.055 + 0.050 * sin(solarAngle * 5.0 + 0.7)
+        + 0.025 * sin(solarAngle * 11.0 - 1.2);
+    float prominence = exp(-abs(solarR - prominenceRadius) * 48.0)
+        * pow(saturate(0.55 + 0.45 * sin(solarAngle * 7.0 + 2.3)), 5.0)
+        * smoothstep(0.96, 1.01, solarR) * smoothstep(1.18, 1.03, solarR);
+    if (!hitsGround && solarR < 1.85) {
+        background += float3(0.72, 0.16, 0.018) * coronaEnvelope * coronaRays * 0.42;
+        background += float3(1.00, 0.10, 0.010) * prominence * 1.35;
+    }
+
+    if (!hitsGround && solarR <= 1.0) {
+        float solarZ = sqrt(max(0.0, 1.0 - solarR * solarR));
+        float2 sphereUv = solarPlane / max(0.24 + 0.76 * solarZ, 0.16);
+        float granA = terrainFbm2(sphereUv * 34.0 + 5.3);
+        float granB = terrainFbm2(sphereUv * 73.0 - 17.9);
+        float cells = saturate(granA * 0.72 + granB * 0.28);
+        float activeNoise = terrainFbm2(sphereUv * 4.1 + 67.2);
+        float magnetic = terrainFbm2(sphereUv * 8.7 - 29.4);
+        float active = smoothstep(0.63, 0.86, activeNoise) * smoothstep(0.42, 0.78, magnetic);
+        float spots = smoothstep(0.78, 0.94, activeNoise) * smoothstep(0.70, 0.91, 1.0 - magnetic);
+        float limb = pow(saturate(solarZ), 0.34);
+        float3 solarColor = lerp(
+            float3(0.95, 0.22, 0.018),
+            float3(2.15, 0.78, 0.10),
+            saturate(cells * 0.78 + active * 0.42));
+        solarColor *= 0.58 + 0.58 * limb;
+        solarColor = lerp(solarColor, solarColor * float3(0.14, 0.10, 0.08), spots * 0.82);
+        solarColor += float3(1.35, 0.38, 0.055) * active * 0.62;
+        background += solarColor * max(float3(0.62, 0.52, 0.42), gPush.data3.yzw * 0.72);
+    }
 
     if (!hitsAtmosphere)
         return float4(acesFitted(background * exposure), 1.0);

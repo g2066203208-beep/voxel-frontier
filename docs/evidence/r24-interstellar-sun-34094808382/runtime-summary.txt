@@ -1,0 +1,111 @@
+=== MOON ===
+R24 moon ground observer: target_elevation_deg=30 surface_offset_m=2
+R24 moon ground observer authoritative_surface=1
+R24 moon evidence: distance_km=381254.0 angular_error_deg=0.0 apparent_diameter_px=6.1 dynamic_tris=9696
+R24 moon evidence: distance_km=381254.2 angular_error_deg=0.0 apparent_diameter_px=6.1 dynamic_tris=9696
+R24 moon evidence: distance_km=381254.3 angular_error_deg=0.0 apparent_diameter_px=6.1 dynamic_tris=9696
+R24 moon evidence: distance_km=381254.5 angular_error_deg=0.0 apparent_diameter_px=6.1 dynamic_tris=9696
+R24 moon evidence: distance_km=381254.7 angular_error_deg=0.0 apparent_diameter_px=6.1 dynamic_tris=9696
+R24 moon evidence: distance_km=381254.9 angular_error_deg=0.0 apparent_diameter_px=6.1 dynamic_tris=9696
+R24 moon evidence: distance_km=381255.1 angular_error_deg=0.0 apparent_diameter_px=6.1 dynamic_tris=9696
+=== SUN TRANSIT ===
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=0.0 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=0.9 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=1.6 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=2.0 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=2.3 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=2.6 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=2.7 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=2.8 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=2.9 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.0 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.0 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.0 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED
+R24 sun transit: distance_AU=0.0 clearance_solar_radii=1.0 speed_c=3.1 angular_diameter_deg=60.0
+R24 SUN_TRANSIT_ARRIVED

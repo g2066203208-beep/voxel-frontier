@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string_view>
 
+#include <glm/geometric.hpp>
+
 namespace {
 
 [[noreturn]] void fail(std::string_view message) {
@@ -46,16 +48,49 @@ void testCreativeFlightConfigurationUsesProductionLimits() {
     vf::PlanetDefinition planet{};
     planet.radius = 1000.0;
     planet.maxElevation = 0.0;
-    vf::PlanetCamera camera{planet};
-    camera.setFlightMode(true);
-    camera.setCreativeFlightSpeedMps(500000.0);
-    require(camera.flightMode(), "runtime/editor flight configuration must enable the production flight path");
-    require(!camera.grounded(), "enabling flight must release the grounded state");
-    require(std::abs(camera.flightSpeedMps() - 500000.0) < 1.0e-9,
-        "configured high-speed capture must use the same production speed value");
-    camera.setCreativeFlightSpeedMps(9.0e9);
-    require(std::abs(camera.flightSpeedMps() - 2000000.0) < 1.0e-9,
-        "runtime/editor speed configuration must preserve the production 2,000 km/s clamp");
+    planet.atmosphereHeight = 100.0;
+
+    vf::PlanetCamera spaceCamera{planet};
+    spaceCamera.setFlightMode(true);
+    spaceCamera.setCreativeFlightSpeedMps(500000.0);
+    require(spaceCamera.flightMode(),
+        "runtime/editor flight configuration must enable the production flight path");
+    require(!spaceCamera.grounded(), "enabling flight must release the grounded state");
+    require(std::abs(spaceCamera.flightSpeedMps() - 500000.0) < 1.0e-9,
+        "configured ordinary flight speed must use the exact production value");
+
+    spaceCamera.setCreativeFlightSpeedMps(9.0e20);
+    require(std::abs(spaceCamera.flightSpeedMps()
+            - vf::PlanetCamera::kCreativeInterstellarBaseMaxMps) < 1.0,
+        "free-space speed configuration must clamp at the authored 1024c base warp ceiling");
+
+    vf::PlanetMovementInput thrust{};
+    thrust.forward = 1.0;
+    for (int frame = 0; frame < 4; ++frame) spaceCamera.update(thrust, 1.0 / 60.0);
+    require(glm::length(spaceCamera.velocity()) > 2000000.0,
+        "free inertial space must permit travel above the local 2,000 km/s terrain safety band");
+
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.type = vf::CelestialBodyType::Planet;
+    body.radiusMeters = planet.radius;
+    body.massKg = 1.0e12;
+    body.physicsBubbleRadiusMeters = 1.0e12;
+    body.gravityInfluenceRadiusMeters = 1.0e12;
+    const auto bodyId = system.addBody(body);
+
+    vf::PlanetCamera localCamera{planet, &system, bodyId};
+    localCamera.setFlightMode(true);
+    localCamera.setCreativeFlightSpeedMps(vf::PlanetCamera::kCreativeInterstellarBaseMaxMps);
+    require(localCamera.inPlanetPhysicsFrame(),
+        "local production speed gate must remain inside the body precision frame");
+    thrust = {};
+    thrust.forward = 1.0;
+    for (int frame = 0; frame < 240; ++frame) localCamera.update(thrust, 1.0 / 120.0);
+    require(localCamera.inPlanetPhysicsFrame(),
+        "large test physics bubble must keep the local-speed regression body-owned");
+    require(glm::length(localCamera.velocity()) <= 2000000.0 + 1.0,
+        "actual motion inside a body physics frame must preserve the production 2,000 km/s base safety cap");
 }
 
 void testCentrifugalAccelerationInRotatingLocalWorld() {

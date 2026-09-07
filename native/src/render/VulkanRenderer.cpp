@@ -1223,7 +1223,9 @@ void VulkanRenderer::drawFrame(
     PushConstants skyPush{};
     skyPush.matrix = glm::inverse(viewProjection);
     skyPush.data0 = glm::vec4(glm::vec3(cameraPosition - environment.planetCenter), 1.0F);
-    skyPush.data1 = glm::vec4(safeNormalizeFloat(environment.sunDirectionToLight), 0.0F);
+    skyPush.data1 = glm::vec4(
+        safeNormalizeFloat(environment.sunDirectionToLight),
+        std::clamp(environment.sunAngularRadiusRadians, 0.0001F, 1.45F));
     skyPush.data2 = {
         static_cast<float>(environment.planetRadius),
         static_cast<float>(environment.atmosphereHeight),
@@ -1286,7 +1288,7 @@ void VulkanRenderer::drawFrame(
     PushConstants hudPush{};
     const float speedNorm = std::clamp(
         (std::log10(std::max(1.0F, environment.flightSpeedMps))
-            / std::log10(2000000.0F)),
+            / std::log10(3.06987476992e11F)),
         0.0F,
         1.0F);
     hudPush.data0 = {

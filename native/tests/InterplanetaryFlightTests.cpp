@@ -123,6 +123,46 @@ void testCreativeFlightPreservesParentOrbitalVelocityAfterBubbleExit() {
         "idle free-space creative flight must preserve inherited orbital velocity instead of damping absolute world velocity toward zero");
 }
 
+void testCreativeFlightSupportsGuardedInterstellarWarp() {
+    vf::PlanetDefinition terrain{};
+    terrain.radius = 100.0;
+    terrain.maxElevation = 0.0;
+    terrain.atmosphereHeight = 20.0;
+
+    vf::CelestialSystem celestial;
+    vf::CelestialBody home{};
+    home.radiusMeters = terrain.radius;
+    home.physicsBubbleRadiusMeters = 300.0;
+    const auto homeId = celestial.addBody(home);
+
+    vf::CelestialBody star{};
+    star.type = vf::CelestialBodyType::Star;
+    star.radiusMeters = 1.0e6;
+    star.position = {1.0e9, 0.0, 0.0};
+    star.massKg = 1.0e20;
+    const auto starId = celestial.addBody(star);
+    require(starId != 0U, "interstellar warp test star must be registered");
+
+    vf::PlanetCamera camera{terrain, &celestial, homeId};
+    camera.setExternalWorldState({1000.0, 0.0, 0.0}, {}, false);
+    camera.setFlightMode(true);
+    camera.setCreativeFlightSpeedMps(vf::PlanetCamera::kCreativeInterstellarBaseMaxMps);
+    camera.setViewDirectionWorld({1.0, 0.0, 0.0}, {0.0, 1.0, 0.0});
+
+    vf::PlanetMovementInput thrust{};
+    thrust.forward = 1.0;
+    thrust.sprint = true;
+    for (int frame = 0; frame < 8; ++frame) camera.update(thrust, 1.0 / 60.0);
+
+    require(vf::PlanetCamera::kCreativeInterstellarSprintMaxMps
+            >= 4095.0 * vf::PlanetCamera::kSpeedOfLightMps,
+        "creative interstellar travel must expose the intended 4096c sprint envelope");
+    require(camera.velocity().x > 0.25 * vf::PlanetCamera::kSpeedOfLightMps,
+        "free-space creative flight must accelerate into a genuinely interstellar travel band");
+    require(camera.position().x < star.position.x - star.radiusMeters,
+        "forward-body approach governor must prevent a single update sequence tunnelling through the star");
+}
+
 void testCreativeFlightCanLandOnSolidGround() {
     vf::PlanetDefinition terrain{};
     terrain.radius = 100.0;
@@ -332,15 +372,68 @@ void testPhysicalGravityInsidePhysicsBubbleRemainsBallistic() {
         "disabling creative flight must make radial velocity decelerate under persistent physical gravity inside a precision bubble");
 }
 
+
+void testInterstellarCreativeSweepCannotTunnelThroughStar() {
+    vf::PlanetDefinition terrain{};
+    terrain.radius = 100.0;
+    terrain.maxElevation = 0.0;
+    terrain.atmosphereHeight = 10.0;
+
+    vf::CelestialSystem celestial;
+    vf::CelestialBody home{};
+    home.type = vf::CelestialBodyType::Planet;
+    home.radiusMeters = 100.0;
+    home.massKg = 1.0e12;
+    home.physicsBubbleRadiusMeters = 250.0;
+    const auto homeId = celestial.addBody(home);
+
+    vf::CelestialBody star{};
+    star.type = vf::CelestialBodyType::Star;
+    star.radiusMeters = 1000.0;
+    star.massKg = 1.0e20;
+    star.position = {100000.0, 0.0, 0.0};
+    const auto starId = celestial.addBody(star);
+    require(starId != 0U, "swept-star regression requires a registered star");
+
+    vf::PlanetCamera camera{terrain, &celestial, homeId};
+    camera.setExternalWorldState({90000.0, 0.0, 0.0}, {500000.0, 0.0, 0.0}, false);
+    camera.setFlightMode(true);
+    vf::PlanetMovementInput idle{};
+    camera.update(idle, 0.05);
+
+    const auto* liveStar = celestial.body(starId);
+    require(liveStar != nullptr, "swept-star regression star must remain valid");
+    const double firstDistance = glm::length(camera.position() - liveStar->position);
+    require(firstDistance >= liveStar->radiusMeters * 2.0 - 1.0e-3,
+        "creative interstellar sweep must stop outside the 2R stellar inspection envelope");
+
+    // Re-aim from the exact boundary and request more inward travel. This is the c==0 case that the
+    // first V4 implementation missed and that allowed repeated W input to creep inside the Sun.
+    camera.setViewDirectionWorld(liveStar->position - camera.position(), {0.0, 1.0, 0.0});
+    camera.setCreativeFlightSpeedMps(vf::PlanetCamera::kCreativeInterstellarBaseMaxMps);
+    vf::PlanetMovementInput thrust{};
+    thrust.forward = 1.0;
+    thrust.sprint = true;
+    for (int frame = 0; frame < 12; ++frame) camera.update(thrust, 0.05);
+    const double heldDistance = glm::length(camera.position() - liveStar->position);
+    require(heldDistance >= liveStar->radiusMeters * 2.0 - 1.0e-3,
+        "repeated inward warp input must remain outside the persistent 2R stellar safety shell");
+    const glm::dvec3 outward = glm::normalize(camera.position() - liveStar->position);
+    require(glm::dot(camera.velocity() - liveStar->linearVelocity, outward) >= -1.0e-6,
+        "stellar safety shell must remove residual inward velocity after persistent contact");
+}
+
 } // namespace
 
 int main() {
     testCreativeFlightIsExplicitAndGravityIndependent();
     testCreativeFlightPreservesParentOrbitalVelocityAfterBubbleExit();
+    testCreativeFlightSupportsGuardedInterstellarWarp();
     testCreativeFlightCanLandOnSolidGround();
     testPlanetaryPhysicsReferenceIsIndependentFromGravity();
     testGroundedPlayerHasNoOrbitalFrameJitter();
     testPhysicalGravityInsidePhysicsBubbleRemainsBallistic();
+    testInterstellarCreativeSweepCannotTunnelThroughStar();
     std::cout << "vf_interplanetary_flight_tests: PASS\n";
     return 0;
 }

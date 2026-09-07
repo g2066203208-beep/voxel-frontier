@@ -64,20 +64,48 @@ void testVerticalMouseDirectionRemainsConventional() {
 }
 
 void testFlightSpeedUsesLogarithmicWheelSteps() {
-    const vf::PlanetDefinition planet{};
-    vf::PlanetCamera camera{planet};
-    const double before = camera.flightSpeedMps();
+    vf::PlanetDefinition planet{};
+    planet.radius = 1000.0;
+    planet.maxElevation = 0.0;
+    planet.atmosphereHeight = 100.0;
+
+    // A camera with no body owner is an inertial-space camera. Two wheel notches intentionally
+    // jump four octaves (x16), which makes AU-scale travel selectable without dozens of scrolls.
+    vf::PlanetCamera spaceCamera{planet};
+    const double spaceBefore = spaceCamera.flightSpeedMps();
     vf::PlanetMovementInput input{};
     input.flightSpeedSteps = 2.0;
-    camera.update(input, 1.0 / 60.0);
-    require(camera.flightSpeedMps() > before * 1.99 && camera.flightSpeedMps() < before * 2.01,
-        "two positive wheel steps must double creative flight speed");
+    spaceCamera.update(input, 1.0 / 60.0);
+    require(spaceCamera.flightSpeedMps() > spaceBefore * 15.99
+            && spaceCamera.flightSpeedMps() < spaceBefore * 16.01,
+        "two positive wheel steps in inertial space must span sixteen times the creative travel speed");
 
     input = {};
     input.flightSpeedSteps = -40.0;
-    camera.update(input, 1.0 / 60.0);
-    require(camera.flightSpeedMps() >= 0.999 && camera.flightSpeedMps() <= 1.001,
-        "creative flight must allow a 1 m/s inspection speed without going below it");
+    spaceCamera.update(input, 1.0 / 60.0);
+    require(spaceCamera.flightSpeedMps() >= 0.999 && spaceCamera.flightSpeedMps() <= 1.001,
+        "creative flight must still allow a 1 m/s inspection speed without going below it");
+
+    // Inside a real rotating-body ownership frame the original fine speed selection remains:
+    // exactly two wheel notches still double the requested speed.
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.type = vf::CelestialBodyType::Planet;
+    body.radiusMeters = planet.radius;
+    body.massKg = 1.0e12;
+    body.physicsBubbleRadiusMeters = 1.0e12;
+    body.gravityInfluenceRadiusMeters = 1.0e12;
+    const auto bodyId = system.addBody(body);
+    vf::PlanetCamera surfaceCamera{planet, &system, bodyId};
+    require(surfaceCamera.inPlanetPhysicsFrame(),
+        "surface wheel-speed regression must start inside a body physics frame");
+    const double surfaceBefore = surfaceCamera.flightSpeedMps();
+    input = {};
+    input.flightSpeedSteps = 2.0;
+    surfaceCamera.update(input, 1.0 / 60.0);
+    require(surfaceCamera.flightSpeedMps() > surfaceBefore * 1.99
+            && surfaceCamera.flightSpeedMps() < surfaceBefore * 2.01,
+        "two positive wheel steps in a body physics frame must retain the original two-times scaling");
 }
 
 void testDMovesToCameraRightInFlight() {
