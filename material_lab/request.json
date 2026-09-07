@@ -1,32 +1,46 @@
 {
   "materials": [
     {
-      "name": "vf_3d_grass_showcase",
+      "name": "vf_painted_layered_sandstone_master",
       "resolution": 1024,
       "profile": "signature",
-      "preset": "vf3DGrass",
-      "params": {"seed":73117,"density":0.88,"height":0.86,"wind":0.42}
+      "preset": "vfLayeredSandstonePainted",
+      "params": {"seed":771231,"bands":5,"minSlabs":2,"maxSlabs":3,"crackChance":0.17,"chipStrength":0.92,"relief":1.64,"normalStrength":12.0}
     },
     {
-      "name": "vf_3d_moss_showcase",
+      "name": "vf_painterly_dirt_master",
       "resolution": 1024,
       "profile": "signature",
-      "preset": "vf3DMoss",
-      "params": {"seed":55109,"density":0.82,"height":0.68,"wind":0.16}
+      "preset": "vfPainterlyDirt",
+      "params": {"seed":182031,"relief":1.24,"normalStrength":9.8,"moisture":0.14}
     },
     {
-      "name": "vf_3d_fur_showcase",
+      "name": "vf_painterly_bark_master",
       "resolution": 1024,
       "profile": "signature",
-      "preset": "vf3DFur",
-      "params": {"seed":91007,"density":0.94,"height":0.92,"wind":0.28}
+      "preset": "vfPainterlyBark",
+      "params": {"seed":275903,"relief":1.38,"normalStrength":11.7,"ridgeScale":1.0}
     },
     {
-      "name": "vf_3d_fire_showcase",
+      "name": "vf_painterly_leaves_master",
       "resolution": 1024,
       "profile": "signature",
-      "preset": "vf3DFire",
-      "params": {"seed":44021,"density":0.92,"height":0.96,"wind":0.38}
+      "preset": "vfPainterlyLeaves",
+      "params": {"seed":391477,"relief":1.14,"normalStrength":9.1,"density":1.0}
+    },
+    {
+      "name": "vf_painterly_snow_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlySnow",
+      "params": {"seed":447101,"relief":1.08,"normalStrength":7.2,"windStrength":0.85}
+    },
+    {
+      "name": "vf_painterly_water_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyWater",
+      "params": {"seed":553819,"mode":"windy","relief":1.15,"normalStrength":9.4,"waveScale":1.08,"roughness":0.074,"foam":0.44,"transparency":0.84,"refraction":0.84,"glint":0.96}
     }
   ]
 }
