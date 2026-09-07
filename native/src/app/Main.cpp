@@ -752,10 +752,10 @@ int main() {
             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
             const double buildAltitude = std::max(0.0, glm::length(cameraPlanetLocal) - planet.radius);
             vf::RegionalHydrologyConfig hydroConfig{};
-            hydroConfig.resolution = buildAltitude < 25000.0 ? 129U
-                : (buildAltitude < 150000.0 ? 97U : 65U);
+            hydroConfig.resolution = buildAltitude < 25000.0 ? 193U
+                : (buildAltitude < 150000.0 ? 129U : 81U);
             hydroConfig.halfExtentMeters = 220000.0;
-            hydroConfig.maxIncisionMeters = 420.0;
+            hydroConfig.maxIncisionMeters = std::min(3000.0, planet.maxElevation * 0.10);
             hydroConfig.riverHeadAccumulationFraction = 0.0012;
             hydroConfig.fullChannelAccumulationFraction = 0.022;
             auto hydrology = std::make_shared<vf::RegionalHydrology>(planet, centerUp, hydroConfig);
@@ -813,6 +813,81 @@ int main() {
 
         TerrainBuildResult initialTerrain = buildTerrainLod(lodCenterDirection, initialCameraPlanet);
         surfaceAuthority.setHydrology(initialTerrain.hydrology);
+        if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET");
+            targetEnv != nullptr && std::string_view{targetEnv} == "canyon"
+            && initialTerrain.hydrology) {
+            const glm::dvec3 canyonEast = stableTangent(spawnDirection);
+            const glm::dvec3 canyonNorth = safeNormalize(
+                glm::cross(spawnDirection, canyonEast), {0.0, 0.0, 1.0});
+            glm::dvec3 bestCanyonDirection = spawnDirection;
+            double bestIncisionMeters = -1.0;
+            double bestChannelStrength = 0.0;
+            double bestAreaFraction = 0.0;
+            constexpr int canyonRings = 12;
+            constexpr int canyonAzimuths = 64;
+            constexpr double canyonSearchRadiusMeters = 72000.0;
+            for (int ring = 2; ring <= canyonRings; ++ring) {
+                const double radialMeters = canyonSearchRadiusMeters
+                    * static_cast<double>(ring) / static_cast<double>(canyonRings);
+                for (int i = 0; i < canyonAzimuths; ++i) {
+                    const double angle = 2.0 * kPi * static_cast<double>(i)
+                        / static_cast<double>(canyonAzimuths);
+                    const glm::dvec3 tangent = safeNormalize(
+                        canyonEast * std::cos(angle) + canyonNorth * std::sin(angle),
+                        canyonEast);
+                    const glm::dvec3 direction = safeNormalize(
+                        spawnDirection + tangent * (radialMeters / planet.radius),
+                        spawnDirection);
+                    const vf::RegionalHydrologySample drainage = initialTerrain.hydrology->sample(direction);
+                    if (drainage.incisionMeters > bestIncisionMeters) {
+                        bestIncisionMeters = drainage.incisionMeters;
+                        bestChannelStrength = drainage.channelStrength;
+                        bestAreaFraction = drainage.contributingAreaFraction;
+                        bestCanyonDirection = direction;
+                    }
+                }
+            }
+
+            double hydrologicMin = surfaceAuthority.sample(bestCanyonDirection).elevationMeters;
+            double hydrologicMax = hydrologicMin;
+            const glm::dvec3 targetEast = stableTangent(bestCanyonDirection);
+            const glm::dvec3 targetNorth = safeNormalize(
+                glm::cross(bestCanyonDirection, targetEast), canyonNorth);
+            constexpr int reliefRings = 4;
+            constexpr int reliefAzimuths = 48;
+            constexpr double reliefRadiusMeters = 36000.0;
+            for (int ring = 1; ring <= reliefRings; ++ring) {
+                const double radialMeters = reliefRadiusMeters
+                    * static_cast<double>(ring) / static_cast<double>(reliefRings);
+                for (int i = 0; i < reliefAzimuths; ++i) {
+                    const double angle = 2.0 * kPi * static_cast<double>(i)
+                        / static_cast<double>(reliefAzimuths);
+                    const glm::dvec3 tangent = safeNormalize(
+                        targetEast * std::cos(angle) + targetNorth * std::sin(angle),
+                        targetEast);
+                    const glm::dvec3 direction = safeNormalize(
+                        bestCanyonDirection + tangent * (radialMeters / planet.radius),
+                        bestCanyonDirection);
+                    const double elevation = surfaceAuthority.sample(direction).elevationMeters;
+                    hydrologicMin = std::min(hydrologicMin, elevation);
+                    hydrologicMax = std::max(hydrologicMax, elevation);
+                }
+            }
+            const double hydrologicRelief = hydrologicMax - hydrologicMin;
+            const glm::dvec3 targetPlanetPosition =
+                surfaceAuthority.sampleSurface(bestCanyonDirection).position;
+            const glm::dvec3 cameraPlanetPosition = initialInverseAster
+                * (camera.position() - initialAster->position);
+            const glm::dvec3 targetWorldDirection = initialAster->orientation
+                * (targetPlanetPosition - cameraPlanetPosition);
+            const glm::dvec3 cameraWorldUp = safeNormalize(
+                initialAster->orientation * spawnDirection, {0.0, 1.0, 0.0});
+            camera.setViewDirectionWorld(targetWorldDirection, cameraWorldUp);
+            std::cout << "R24 hydrologic canyon view: incision_m=" << bestIncisionMeters
+                      << " channel=" << bestChannelStrength
+                      << " contributing_fraction=" << bestAreaFraction
+                      << " relief_m=" << hydrologicRelief << '\n';
+        }
         if (moonEvidenceObserverPlaced) {
             const double exactObserverRadius = surfaceAuthority.surfaceRadius(
                 moonEvidenceObserverLocalDirection) + 2.0;

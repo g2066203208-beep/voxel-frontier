@@ -535,7 +535,9 @@ PlanetTerrainSample samplePlanetTerrain(
         * (1.0 - 0.86 * mountain)
         * (1.0 - 0.50 * plates.boundary)
         * smooth01(0.0, 0.22, continentalness);
-    elevation -= maxLand * 0.035 * river;
+    // Keep only a shallow global drainage precursor. Kilometre-scale fluvial incision is owned by
+    // RegionalHydrology, whose Priority-Flood/D8 topology guarantees an outflowing channel network.
+    elevation -= maxLand * 0.004 * river;
 
     // Seamless 3-D sphere noise. Frequencies form nested geomorphic scales rather than one generic
     // roughness layer: continental hills, local relief, rock-scale variation and fine material grain.
@@ -737,9 +739,10 @@ PlanetTerrainSample samplePlanetTerrain(
     // Distinct terrain-form displacement. The amplitudes stay well below tectonic relief but are
     // large enough to affect silhouettes AND authoritative collision, not merely shader color.
     elevation += maxLand * 0.012 * coastalCliff * (0.35 + 0.65 * std::max(0.0, local));
-    // A broad canyon shoulder carries most incision. The narrow core deepens the channel without
-    // turning every high-frequency crest into a vertical wall.
-    elevation -= maxLand * 0.060 * canyon * (0.58 + 0.42 * canyonCore);
+    // Canyon is now an erodibility/biome propensity only. Do not excavate it here: the regional
+    // Priority-Flood drainage authority below the runtime camera owns all kilometre-scale canyon
+    // geometry, so canyon floors are necessarily tied to a connected downhill water network.
+    (void)canyonCore;
     // Mega-abyss remains a deliberately non-terrestrial landmark, but its vertical profile is now
     // controlled by a low-frequency modulation and a broad radial throat rather than fracture noise.
     elevation -= maxLand * 0.270 * abyss

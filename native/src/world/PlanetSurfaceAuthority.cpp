@@ -76,6 +76,19 @@ PlanetTerrainSample PlanetSurfaceAuthority::sample(const glm::dvec3& directionIn
                 terrain.river * (1.0 - weight) + drainage.channelStrength * weight,
                 0.0,
                 1.0);
+            const double incisionFraction = std::clamp(
+                drainage.incisionMeters / std::max(1.0, hydro->maxIncisionMeters()),
+                0.0,
+                1.0);
+            const double hydrologicCanyon = std::clamp(
+                drainage.channelStrength * std::sqrt(incisionFraction),
+                0.0,
+                1.0);
+            terrain.canyon = std::clamp(
+                terrain.canyon * (1.0 - 0.92 * weight)
+                    + hydrologicCanyon * weight,
+                0.0,
+                1.0);
             const double hydrologyWetland = std::clamp(
                 drainage.depositionPotential * 0.72 + drainage.lakePotential * 0.90,
                 0.0,
