@@ -5,7 +5,7 @@
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfLayeredSandstonePainted",
-      "params": {"seed":771231,"bands":5,"minSlabs":2,"maxSlabs":3,"crackChance":0.17,"chipStrength":0.92,"relief":1.64,"normalStrength":12.4}
+      "params": {"seed":771231,"bands":5,"minSlabs":2,"maxSlabs":3,"crackChance":0.17,"chipStrength":0.92,"relief":1.74,"normalStrength":12.8}
     },
     {
       "name": "vf_painterly_dirt_master",
