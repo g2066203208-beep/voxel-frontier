@@ -1,0 +1,163 @@
+name: R24 Performance Rescue
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_performance_rescue.py'
+      - '.github/workflows/r24-performance-rescue.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-performance-rescue-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - name: Checkout exact R24 production commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Apply performance rescue
+        run: python3 .github/scripts/r24_performance_rescue.py
+
+      - name: Validate optimization source
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'R24 PERF terrain_build_ms=' native/src/app/Main.cpp
+          grep -q 'canReuseHydrology' native/src/app/Main.cpp
+          grep -q 'reusableHydrology->halfExtentMeters() \* 0.72 - 90000.0' native/src/app/Main.cpp
+          grep -q 'Transform the already authoritative mesh directly' native/src/app/Main.cpp
+          ! grep -A12 'result.mesh = vf::buildAdaptivePlanetSurface' native/src/app/Main.cpp | grep -q 'sampleSurface(vertexDirection)'
+          grep -q 'diagnosticsMaxFrameMilliseconds' native/src/app/Main.cpp
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-perf -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-perf --parallel 2
+
+      - name: Run full native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-perf --verbose --output-on-failure 2>&1 | tee r24-perf-ctest.log
+
+      - name: Gate runtime stability and terrain
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-perf --verbose --output-on-failure \
+            -R 'vf_r24_runtime_stability_tests|vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests' \
+            2>&1 | tee r24-perf-focused.log
+          grep -q 'vf_r24_runtime_stability_tests: PASS' r24-perf-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-perf-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real optimized production terrain
+        shell: bash
+        run: |
+          APP="$(find build/r24-perf -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-performance-rescue-evidence
+
+      - name: Gate performance diagnostics
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('r24-performance-rescue-evidence/logs')
+          rows=[]
+          for log in root.glob('*.log'):
+              text=log.read_text(encoding='utf-8', errors='replace')
+              found=re.findall(r'R24 PERF terrain_build_ms=([0-9.]+) vertices=([0-9]+) indices=([0-9]+) hydrology_reused=([01])', text)
+              if not found:
+                  raise SystemExit(f'{log.name}: missing performance diagnostics')
+              ms, verts, inds, reused=found[-1]
+              rows.append((log.stem, float(ms), int(verts), int(inds), int(reused)))
+          for row in rows:
+              print('PERF', row)
+          if not rows:
+              raise SystemExit('no performance rows found')
+          PY
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-performance-rescue-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-performance-rescue-evidence ]]; then
+            cp -a r24-performance-rescue-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-perf-ctest.log ]] && cp -f r24-perf-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-perf-focused.log ]] && cp -f r24-perf-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-performance-rescue-${{ github.run_id }}
+          path: |
+            r24-performance-rescue-evidence/**
+            r24-perf-ctest.log
+            r24-perf-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested performance rescue
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "perf(r24): eliminate duplicate terrain synthesis work"
+          git reset --hard HEAD
+          git clean -fd build/r24-perf || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
