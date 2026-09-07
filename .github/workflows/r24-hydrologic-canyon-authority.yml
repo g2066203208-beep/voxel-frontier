@@ -1,0 +1,202 @@
+name: R24 Hydrologic Canyon Authority
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_hydrologic_canyon_authority.py'
+      - '.github/workflows/r24-hydrologic-canyon-authority.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-hydrologic-canyon-authority-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-native:
+    runs-on: windows-2025
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact R24 production commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Apply hydrologic canyon authority
+        run: python .github/scripts/r24_hydrologic_canyon_authority.py
+
+      - name: Validate generated production source
+        shell: pwsh
+        run: |
+          git diff --check
+          Select-String -Path native/include/vf/world/RegionalHydrology.hpp -Pattern 'streamPower = areaPower \* normalizedSlope' -Quiet | Out-Null
+          Select-String -Path native/src/world/PlanetSurfaceAuthority.cpp -Pattern 'hydrologicCanyon' -Quiet | Out-Null
+          Select-String -Path native/src/app/Main.cpp -Pattern 'R24 hydrologic canyon view' -Quiet | Out-Null
+          Select-String -Path native/CMakeLists.txt -Pattern 'vf_r24_hydrologic_canyon_tests' -Quiet | Out-Null
+          if (Select-String -Path native/src/world/PlanetSurface.cpp -Pattern '0\.060 \* canyon' -Quiet) { throw 'legacy procedural canyon excavation still present' }
+
+      - name: Configure Windows runtime
+        run: cmake -S native -B build/r24-hydro-canyon-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Windows runtime
+        run: cmake --build build/r24-hydro-canyon-win --config Release --parallel
+
+      - name: Run full Windows tests
+        run: ctest --test-dir build/r24-hydro-canyon-win -C Release --verbose --output-on-failure
+
+  linux-vulkan:
+    needs: windows-native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 95
+    steps:
+      - name: Checkout exact R24 production commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Apply hydrologic canyon authority
+        run: python3 .github/scripts/r24_hydrologic_canyon_authority.py
+
+      - name: Validate production changes
+        run: |
+          git diff --check
+          grep -q 'streamPower = areaPower \* normalizedSlope' native/include/vf/world/RegionalHydrology.hpp
+          grep -q 'hydrologicCanyon' native/src/world/PlanetSurfaceAuthority.cpp
+          grep -q 'R24 hydrologic canyon view' native/src/app/Main.cpp
+          grep -q 'vf_r24_hydrologic_canyon_tests' native/CMakeLists.txt
+          ! grep -q '0.060 \* canyon' native/src/world/PlanetSurface.cpp
+          grep -q 'weightedFineRidge' native/src/world/PlanetSurface.cpp
+          grep -q 'radialReliefRadius' native/src/world/PlanetLodMeshBuilder.cpp
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Linux runtime
+        run: cmake -S native -B build/r24-hydro-canyon -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Linux runtime
+        run: cmake --build build/r24-hydro-canyon --parallel 2
+
+      - name: Run full Linux native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-hydro-canyon --verbose --output-on-failure 2>&1 | tee r24-hydro-canyon-ctest.log
+
+      - name: Gate hydrologic canyon and epic physical geometry
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-hydro-canyon --verbose --output-on-failure \
+            -R 'vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests|vf_r24_runtime_stability_tests' \
+            2>&1 | tee r24-hydro-canyon-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-hydro-canyon-focused.log
+          grep -q 'max_incision_m=' r24-hydro-canyon-focused.log
+          grep -q 'connected_neighbours=' r24-hydro-canyon-focused.log
+          grep -q 'mountain_local_relief_m=' r24-hydro-canyon-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real production hydrologic terrain
+        shell: bash
+        run: |
+          APP="$(find build/r24-hydro-canyon -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-hydrologic-canyon-evidence
+
+      - name: Gate real hydrologic canyon evidence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path('r24-hydrologic-canyon-evidence/logs')
+          text = (root / 'canyon.log').read_text(encoding='utf-8', errors='replace')
+          rows = re.findall(
+              r'R24 hydrologic canyon view: incision_m=([0-9.]+) channel=([0-9.]+) '
+              r'contributing_fraction=([0-9.]+) relief_m=([0-9.]+)', text)
+          if not rows:
+              raise SystemExit('missing real hydrologic canyon diagnostics')
+          incision, channel, contributing, relief = map(float, rows[-1])
+          print(f'hydrologic canyon: incision_m={incision:.1f} channel={channel:.3f} '
+                f'contributing_fraction={contributing:.6f} relief_m={relief:.1f}')
+          if incision < 900.0:
+              raise SystemExit(f'hydrologic canyon incision is too weak: {incision:.1f} m')
+          if channel < 0.35:
+              raise SystemExit(f'canyon target is not on a strong drainage channel: {channel:.3f}')
+          if relief < 2200.0:
+              raise SystemExit(f'hydrologic canyon local relief {relief:.1f} < 2200 m')
+          PY
+
+      - name: Preserve exact evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-hydrologic-canyon-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-hydrologic-canyon-evidence ]]; then
+            cp -a r24-hydrologic-canyon-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-hydro-canyon-ctest.log ]] && cp -f r24-hydro-canyon-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-hydro-canyon-focused.log ]] && cp -f r24-hydro-canyon-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-hydrologic-canyon-${{ github.run_id }}
+          path: |
+            r24-hydrologic-canyon-evidence/**
+            r24-hydro-canyon-ctest.log
+            r24-hydro-canyon-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested hydrologic canyon authority
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "fix(r24): drive canyons from Priority-Flood stream power"
+          git reset --hard HEAD
+          git clean -fd build/r24-hydro-canyon || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
