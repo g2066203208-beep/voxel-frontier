@@ -47,7 +47,7 @@ def sphere_uv(Ng):
     v=(0.5-np.arcsin(np.clip(Ng[...,1],-1,1))/np.pi)*2.10
     return u,v
 
-def displaced_geometry(sx,sy,height,amp=0.080,iterations=5):
+def displaced_geometry(sx,sy,height,amp=0.080,iterations=5,hd_min=-0.82,hd_max=0.82):
     qx=sx.copy(); qy=sy.copy()
     h05=float(np.percentile(height,5)); h50=float(np.percentile(height,50)); h95=float(np.percentile(height,95))
     hspan=max(h95-h05,0.08)
@@ -59,8 +59,8 @@ def displaced_geometry(sx,sy,height,amp=0.080,iterations=5):
         Ng/=np.maximum(np.linalg.norm(Ng,axis=-1,keepdims=True),1e-6)
         u,v=sphere_uv(Ng)
         sampled=bilinear(height,u,v)
-        hd=np.clip((sampled-h50)/hspan,-0.82,0.82)
-        radial=np.clip(1.0+amp*hd,1.0-amp*.95,1.0+amp*.95)
+        hd=np.clip((sampled-h50)/hspan,hd_min,hd_max)
+        radial=np.clip(1.0+amp*hd,1.0+amp*hd_min,1.0+amp*hd_max)
         qx=sx/radial; qy=sy/radial
     q2=qx*qx+qy*qy
     mask=q2<=1.0
@@ -80,9 +80,12 @@ def render_sphere(d:Path,name:str,out:Path):
 
     S=1000; cx=S*.5; cy=S*.465; R=S*.325
     yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R
-    displacement_amp=.190 if name.startswith("vf_reference_sandstone") else .080
-    displacement_iterations=7 if name.startswith("vf_reference_sandstone") else 5
-    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=displacement_amp,iterations=displacement_iterations)
+    sandstone=name.startswith("vf_reference_sandstone")
+    displacement_amp=.190 if sandstone else .080
+    displacement_iterations=7 if sandstone else 5
+    hd_min=-.28 if sandstone else -.82
+    hd_max=.92 if sandstone else .82
+    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=displacement_amp,iterations=displacement_iterations,hd_min=hd_min,hd_max=hd_max)
     u,v=sphere_uv(Ng)
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
 
