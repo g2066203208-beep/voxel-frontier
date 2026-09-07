@@ -15,7 +15,7 @@ trap '[[ -n "${RUN_PID:-}" ]] && kill "$RUN_PID" 2>/dev/null || true; kill "$XVF
 sleep 2
 
 wait_window() {
-  for _ in $(seq 1 180); do
+  for _ in $(seq 1 240); do
     local w
     w="$(xdotool search --name 'Voxel Frontier' 2>/dev/null | head -n1 || true)"
     [[ -n "$w" ]] && { echo "$w"; return 0; }
@@ -26,7 +26,7 @@ wait_window() {
 
 start_app() {
   local log="$1"; shift
-  env "$@" timeout 150s "$APP" >"$log" 2>&1 &
+  env "$@" timeout 180s "$APP" >"$log" 2>&1 &
   RUN_PID=$!
   ACTIVE_WINDOW="$(wait_window)"
   xdotool windowfocus "$ACTIVE_WINDOW" 2>/dev/null || true
@@ -70,7 +70,10 @@ capture_failure_frame() {
 
 start_app "$OUT/logs/moon.log" \
   VF_CELESTIAL_TARGET=moon VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
-for _ in $(seq 1 140); do
+# Smooth camera-centred terrain can spend tens of seconds on a software Vulkan runner during the
+# first authoritative terrain build. Do not turn that expected startup cost into a false visual
+# failure; the runtime itself remains bounded by its 180 s process timeout and diagnostics below.
+for _ in $(seq 1 260); do
   grep -q 'R24 moon evidence:' "$OUT/logs/moon.log" && break
   sleep .25
 done
@@ -109,7 +112,7 @@ capture_terrain() {
     VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
 
   local ready=0
-  for _ in $(seq 1 300); do
+  for _ in $(seq 1 420); do
     if grep -q "R24 terrain target: ${target}" "$log"; then
       ready=1
       break
@@ -152,7 +155,7 @@ montage \
 
 {
   echo '=== MOON ==='
-  grep -E 'moon evidence|Fatal error' "$OUT/logs/moon.log" | tail -20 || true
+  grep -E 'moon evidence|QLOD|Fatal error' "$OUT/logs/moon.log" | tail -20 || true
   echo '=== MOUNTAIN ==='
   grep -E 'terrain target|terrain evidence view|QLOD|Fatal error' "$OUT/logs/mountain.log" | tail -20 || true
   echo '=== RIFT ==='
