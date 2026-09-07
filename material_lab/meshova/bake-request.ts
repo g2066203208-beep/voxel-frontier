@@ -42,7 +42,7 @@ import {
   bakeVfCoalCartoon,
   bakeVfSnowCartoon,
   bakeVfIceCartoon,
-} from "./vf-recipes/vf-cartoon-world.js";
+} from "./vf-recipes/vf-cartoon-world-v2.js";
 
 type Preset =
   | "stylizedCellRock" | "volcanicRock" | "simpleRock"
