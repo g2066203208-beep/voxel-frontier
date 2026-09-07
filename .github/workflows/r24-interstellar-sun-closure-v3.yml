@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/scripts/r24_interstellar_sun_hotfix_v2.py'
       - '.github/scripts/r24_interstellar_sun_hotfix_v3.py'
+      - '.github/scripts/r24_interstellar_sun_capture.sh'
       - '.github/workflows/r24-interstellar-sun-closure-v3.yml'
   workflow_dispatch:
 
