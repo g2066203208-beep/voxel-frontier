@@ -2,9 +2,9 @@ name: R24 Shadow Contact Fix
 
 on:
   push:
-    branches: [work/r24-shadow-contact-fix]
+    branches: [work/r24-unified-planetary-physics]
     paths:
-      - '.github/scripts/r24_shadow_contact_fix.py'
+      - '.github/scripts/r24_shadow_contact_refine.py'
       - '.github/workflows/r24-shadow-contact-fix.yml'
   workflow_dispatch:
 
@@ -17,20 +17,22 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 2
-      - name: Apply focused production shadow fix
-        run: python3 .github/scripts/r24_shadow_contact_fix.py
-      - name: Validate patch
+          fetch-depth: 4
+      - name: Apply low-side contact-shadow framing
+        run: python3 .github/scripts/r24_shadow_contact_refine.py
+      - name: Validate focused patch
         run: |
           git diff --check
+          grep -q 'placementTangentPlanet' native/src/app/Main.cpp
+          grep -q 'shadowDirectionSurface' native/src/app/Main.cpp
           grep -q 'shadowRaster.depthBiasConstantFactor = 0.18F' native/src/render/VulkanRenderer.cpp
           grep -q '0.000012 + 0.000055' native/shaders/planet.slang
-          grep -q 'R24 shadow-contact probe' native/src/app/Main.cpp
-          grep -q 'contact-side.png' .github/scripts/r24_stability_capture.sh
-      - name: Commit focused fix
+          grep -q 'contact-cycle' .github/scripts/r24_stability_capture.sh
+      - name: Commit refinement without overwriting concurrent work
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add native/src/render/VulkanRenderer.cpp native/shaders/planet.slang native/src/app/Main.cpp .github/scripts/r24_stability_capture.sh
-          git commit -m 'fix(r24): anchor production shadows to contact points'
-          git push origin HEAD:work/r24-shadow-contact-fix
+          git add native/src/app/Main.cpp
+          git commit -m 'fix(r24): frame contact-shadow origin from low side angle'
+          git pull --rebase origin work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
