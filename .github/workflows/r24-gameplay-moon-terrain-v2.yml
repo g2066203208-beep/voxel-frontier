@@ -5,6 +5,7 @@ on:
     branches: [work/r24-unified-planetary-physics]
     paths:
       - '.github/scripts/r24_gameplay_moon_terrain_closure_v2.py'
+      - '.github/scripts/r24_gameplay_moon_terrain_capture.sh'
       - '.github/workflows/r24-gameplay-moon-terrain-v2.yml'
   workflow_dispatch:
 
@@ -18,7 +19,7 @@ concurrency:
 jobs:
   linux-real-vulkan:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 70
     steps:
       - name: Checkout exact R24 commit
         uses: actions/checkout@v6
@@ -40,6 +41,7 @@ jobs:
           grep -q 'const double riftAxis' native/src/world/PlanetSurface.cpp
           grep -q 'const double alluvialFan' native/src/world/PlanetSurface.cpp
           grep -q 'Earth seed must contain divergent continental rifts' native/tests/TerrainLandformTests.cpp
+          grep -q 'evidenceSamples = 4096U' native/src/app/Main.cpp
 
       - name: Install dependencies
         run: |
@@ -99,17 +101,23 @@ jobs:
           chmod +x .github/scripts/r24_gameplay_moon_terrain_capture.sh
           .github/scripts/r24_gameplay_moon_terrain_capture.sh "$APP" r24-gameplay-moon-terrain-evidence
 
-      - name: Preserve evidence
+      - name: Preserve evidence even on failure
+        if: always()
+        shell: bash
         run: |
           EVIDENCE_DIR="docs/evidence/r24-gameplay-moon-terrain-${GITHUB_RUN_ID}"
           mkdir -p "$EVIDENCE_DIR"
-          cp -a r24-gameplay-moon-terrain-evidence/. "$EVIDENCE_DIR/"
-          cp -f r24-gameplay-terrain-ctest.log "$EVIDENCE_DIR/"
-          cp -f r24-gameplay-terrain-focused.log "$EVIDENCE_DIR/"
-          cp -f vulkan-summary.txt "$EVIDENCE_DIR/"
-          printf 'workflow_run=%s\nfull_tests=success\nvulkan=success\nmoon_visual_scale=4x_surface\n' "$GITHUB_RUN_ID" > "$EVIDENCE_DIR/ci-status.txt"
+          if [[ -d r24-gameplay-moon-terrain-evidence ]]; then
+            cp -a r24-gameplay-moon-terrain-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-gameplay-terrain-ctest.log ]] && cp -f r24-gameplay-terrain-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-gameplay-terrain-focused.log ]] && cp -f r24-gameplay-terrain-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
 
-      - name: Upload evidence
+      - name: Upload framebuffer and logs even on failure
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: r24-gameplay-moon-terrain-real-vulkan-${{ github.run_id }}
@@ -118,10 +126,11 @@ jobs:
             r24-gameplay-terrain-ctest.log
             r24-gameplay-terrain-focused.log
             vulkan-summary.txt
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
 
       - name: Promote tested source and evidence
+        if: success()
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
