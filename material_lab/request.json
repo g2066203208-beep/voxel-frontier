@@ -1,16 +1,16 @@
 {
-  "name": "vf_weathered_basalt_04",
+  "name": "vf_weathered_basalt_05",
   "engine": "meshova",
   "upstream_commit": "129f5130c02581dcd53b2cb334136985946e3df0",
   "resolution": 2048,
   "profile": "realistic",
   "preset": "vfBasalt",
   "params": {
-    "seed": 240910,
-    "fractureStrength": 0.66,
-    "poreDensity": 0.028,
-    "weathering": 0.30,
-    "roughnessBias": 0.02,
-    "normalStrength": 4.6
+    "seed": 240911,
+    "fractureStrength": 0.42,
+    "poreDensity": 0.015,
+    "weathering": 0.22,
+    "roughnessBias": 0.015,
+    "normalStrength": 5.0
   }
 }
