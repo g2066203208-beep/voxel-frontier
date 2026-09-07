@@ -48,4 +48,26 @@ replace_once(
     """    require(glm::dot(snapshot.normal, direction) > 1.0e-6,\n        \"surface snapshot normal must remain outward-facing even on near-vertical epic relief\");\n""",
 )
 
-print("R24 epic landscape normal/peak hierarchy hotfix applied")
+# Evidence target selection must measure the same physical neighbourhood as the production Vulkan
+# capture gate. The previous selector measured only 18 km and saturated its relief score around
+# 2.5 km, while the final view checked 36 km and required 1.8-4.5 km depending on the landform.
+# That allowed a semantically strong but geometrically too-small target to win. Keep the existing
+# strict thresholds; only candidates that already satisfy them may be framed for visual evidence.
+main = "native/src/app/Main.cpp"
+replace_once(
+    main,
+    """            const double height01 = std::clamp(aboveSea / std::max(1.0, planet.maxElevation), 0.0, 1.0);\n            double localReliefMeters = 0.0;\n            const bool needsReliefProbe =\n                (target == \"mountain\" && terrain.mountain > 0.16)\n                || (target == \"rift\" && terrain.rift > 0.015);\n""",
+    """            const double height01 = std::clamp(aboveSea / std::max(1.0, planet.maxElevation), 0.0, 1.0);\n            double requiredTargetReliefMeters = 0.0;\n            if (target == \"mountain\") requiredTargetReliefMeters = 4500.0;\n            else if (target == \"rift\") requiredTargetReliefMeters = 1800.0;\n            else if (target == \"canyon\") requiredTargetReliefMeters = 2200.0;\n            else if (target == \"abyss\") requiredTargetReliefMeters = 4500.0;\n\n            double localReliefMeters = 0.0;\n            const bool needsReliefProbe = requiredTargetReliefMeters > 0.0\n                && ((target == \"mountain\" && terrain.mountain > 0.16)\n                    || (target == \"rift\" && terrain.rift > 0.015)\n                    || (target == \"canyon\" && terrain.canyon > 0.015)\n                    || (target == \"abyss\" && terrain.abyss > 0.10));\n""",
+)
+replace_once(
+    main,
+    "                constexpr double reliefProbeDistanceMeters = 18000.0;\n",
+    "                constexpr double reliefProbeDistanceMeters = 36000.0;\n",
+)
+replace_once(
+    main,
+    """                    localReliefMeters = std::max(\n                        localReliefMeters, std::abs(probeElevation - terrain.elevationMeters));\n                }\n            }\n\n            double score = -1.0e9;\n""",
+    """                    localReliefMeters = std::max(\n                        localReliefMeters, std::abs(probeElevation - terrain.elevationMeters));\n                }\n            }\n            if (requiredTargetReliefMeters > 0.0\n                && localReliefMeters < requiredTargetReliefMeters) {\n                continue;\n            }\n\n            double score = -1.0e9;\n""",
+)
+
+print("R24 epic landscape normal/peak/evidence alignment hotfix applied")
