@@ -1,0 +1,78 @@
+ground-spin-0.png attempt=1 colors=1
+ground-spin-0.png attempt=2 colors=1
+ground-spin-0.png attempt=3 colors=1
+ground-spin-0.png attempt=4 colors=1
+ground-spin-0.png attempt=5 colors=1
+ground-spin-0.png attempt=6 colors=1
+ground-spin-0.png attempt=7 colors=1
+ground-spin-0.png attempt=8 colors=1
+ground-spin-0.png attempt=9 colors=1
+ground-spin-0.png attempt=10 colors=1
+ground-spin-0.png attempt=11 colors=1
+ground-spin-0.png attempt=12 colors=23008
+r24-celestial-terrain-evidence/ground/ground-spin-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 185844B 0.000u 0:00.000
+ground-spin-1.png attempt=1 colors=23931
+r24-celestial-terrain-evidence/ground/ground-spin-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 185025B 0.000u 0:00.000
+ground-spin-2.png attempt=1 colors=24916
+r24-celestial-terrain-evidence/ground/ground-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 190266B 0.000u 0:00.000
+ground-spin-3.png attempt=1 colors=25706
+r24-celestial-terrain-evidence/ground/ground-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 192484B 0.000u 0:00.000
+ground-spin-4.png attempt=1 colors=26392
+r24-celestial-terrain-evidence/ground/ground-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 196821B 0.000u 0:00.000
+ground-spin-5.png attempt=1 colors=26941
+r24-celestial-terrain-evidence/ground/ground-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 202805B 0.000u 0:00.000
+contact-cycle-0.png attempt=1 colors=1
+contact-cycle-0.png attempt=2 colors=1
+contact-cycle-0.png attempt=3 colors=1
+contact-cycle-0.png attempt=4 colors=1
+contact-cycle-0.png attempt=5 colors=1
+contact-cycle-0.png attempt=6 colors=1
+contact-cycle-0.png attempt=7 colors=1
+contact-cycle-0.png attempt=8 colors=1
+contact-cycle-0.png attempt=9 colors=1
+contact-cycle-0.png attempt=10 colors=23716
+r24-celestial-terrain-evidence/shadows/contact-cycle-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 239525B 0.000u 0:00.000
+contact-cycle-1.png attempt=1 colors=21787
+r24-celestial-terrain-evidence/shadows/contact-cycle-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 223382B 0.000u 0:00.000
+contact-cycle-2.png attempt=1 colors=21125
+r24-celestial-terrain-evidence/shadows/contact-cycle-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 217168B 0.000u 0:00.000
+contact-cycle-3.png attempt=1 colors=20602
+r24-celestial-terrain-evidence/shadows/contact-cycle-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 204709B 0.000u 0:00.000
+contact-cycle-4.png attempt=1 colors=20312
+r24-celestial-terrain-evidence/shadows/contact-cycle-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 205540B 0.000u 0:00.000
+contact-cycle-5.png attempt=1 colors=20212
+r24-celestial-terrain-evidence/shadows/contact-cycle-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 205660B 0.000u 0:00.000
+contact-cycle-6.png attempt=1 colors=20106
+r24-celestial-terrain-evidence/shadows/contact-cycle-6.png PNG 1600x900 1600x900+0+0 8-bit sRGB 202258B 0.000u 0:00.000
+contact-cycle-7.png attempt=1 colors=20224
+r24-celestial-terrain-evidence/shadows/contact-cycle-7.png PNG 1600x900 1600x900+0+0 8-bit sRGB 214022B 0.000u 0:00.000
+earth-spin-0.png attempt=1 colors=17498
+r24-celestial-terrain-evidence/space/earth-spin-0.png PNG 1600x900 1600x900+0+0 8-bit sRGB 199859B 0.000u 0:00.000
+earth-spin-1.png attempt=1 colors=24054
+r24-celestial-terrain-evidence/space/earth-spin-1.png PNG 1600x900 1600x900+0+0 8-bit sRGB 203552B 0.000u 0:00.000
+earth-spin-2.png attempt=1 colors=30473
+r24-celestial-terrain-evidence/space/earth-spin-2.png PNG 1600x900 1600x900+0+0 8-bit sRGB 209385B 0.000u 0:00.000
+earth-spin-3.png attempt=1 colors=35533
+r24-celestial-terrain-evidence/space/earth-spin-3.png PNG 1600x900 1600x900+0+0 8-bit sRGB 212094B 0.000u 0:00.000
+earth-spin-4.png attempt=1 colors=37910
+r24-celestial-terrain-evidence/space/earth-spin-4.png PNG 1600x900 1600x900+0+0 8-bit sRGB 209911B 0.000u 0:00.000
+earth-spin-5.png attempt=1 colors=34851
+r24-celestial-terrain-evidence/space/earth-spin-5.png PNG 1600x900 1600x900+0+0 8-bit sRGB 206434B 0.000u 0:00.000
+before.png attempt=1 colors=1
+before.png attempt=2 colors=1
+before.png attempt=3 colors=1
+before.png attempt=4 colors=1
+before.png attempt=5 colors=1
+before.png attempt=6 colors=1
+before.png attempt=7 colors=1
+before.png attempt=8 colors=1
+before.png attempt=9 colors=1
+before.png attempt=10 colors=1
+before.png attempt=11 colors=23008
+r24-celestial-terrain-evidence/high-speed/before.png PNG 1600x900 1600x900+0+0 8-bit sRGB 185841B 0.000u 0:00.000
+transit.png attempt=1 colors=5382
+r24-celestial-terrain-evidence/high-speed/transit.png PNG 1600x900 1600x900+0+0 8-bit sRGB 236074B 0.000u 0:00.000
+transit-late.png attempt=1 colors=4254
+r24-celestial-terrain-evidence/high-speed/transit-late.png PNG 1600x900 1600x900+0+0 8-bit sRGB 158388B 0.000u 0:00.000
+after.png attempt=1 colors=4433
+r24-celestial-terrain-evidence/high-speed/after.png PNG 1600x900 1600x900+0+0 8-bit sRGB 376807B 0.000u 0:00.000

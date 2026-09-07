@@ -1,0 +1,8 @@
+workflow_sha=d21549850042e4e757941d3f9f663f483cb1b57a
+workflow_run=34084227982
+full_tests=success
+focused_tests=success
+vulkan=success
+contact_lod_cell_max_m=3.2
+contact_lod_leaf_max=3600
+capture=success
