@@ -40,6 +40,10 @@ jobs:
           grep -q 'double alluvialFan{}' native/include/vf/world/PlanetSurface.hpp
           grep -q 'const double riftAxis' native/src/world/PlanetSurface.cpp
           grep -q 'const double alluvialFan' native/src/world/PlanetSurface.cpp
+          grep -q 'mountainBackbone' native/src/world/PlanetSurface.cpp
+          grep -q 'detailTransitionEndMeters' native/include/vf/world/PlanetLodMeshBuilder.hpp
+          grep -q 'effectiveDistanceMeters' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'reliefProbes' native/src/world/PlanetLodMeshBuilder.cpp
           grep -q 'Earth seed must contain divergent continental rifts' native/tests/TerrainLandformTests.cpp
           grep -q 'evidenceSamples = 4096U' native/src/app/Main.cpp
 
@@ -136,7 +140,14 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add native docs/evidence
-          git commit -m "feat(r24): enlarge gameplay Moon and deepen causal terrain"
+          git commit -m "feat(r24): smooth terrain LOD and deepen causal relief"
+          # CMake/dependency probes can touch legacy tracked build-tree entries. They are not part of
+          # the tested production change and previously made rebase fail after the real screenshots
+          # had already passed. Keep the committed native/evidence snapshot, discard only leftover
+          # worktree pollution, then rebase/push that exact tested commit.
+          git reset --hard HEAD
+          git clean -fd build/r24-gameplay-terrain || true
+          git status --short
           git fetch origin work/r24-unified-planetary-physics
           git rebase origin/work/r24-unified-planetary-physics
           git push origin HEAD:work/r24-unified-planetary-physics
