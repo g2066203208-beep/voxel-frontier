@@ -1,10 +1,70 @@
 {
   "materials": [
-    {"name":"vf_painted_strong_basalt_01","resolution":1024,"profile":"stylized","preset":"vfBasaltPainted","params":{"seed":240914,"fractureStrength":0.44,"poreDensity":0.012,"weathering":0.14,"macroRelief":1.08,"mesoRelief":0.90,"edgeBreakup":0.72,"paintScale":1.18,"normalStrength":7.4,"normalRadius":9}},
-    {"name":"vf_painted_strong_granite_01","resolution":1024,"profile":"stylized","preset":"vfGranitePainted","params":{"seed":310402,"grainScale":18,"quartz":0.30,"feldspar":0.46,"mica":0.08,"relief":1.00,"paintScale":1.16,"normalStrength":7.0,"normalRadius":9}},
-    {"name":"vf_painted_strong_dirt_01","resolution":1024,"profile":"stylized","preset":"vfDirtPainted","params":{"seed":420503,"clodScale":7,"pebbleDensity":0.08,"moisture":0.03,"relief":1.02,"paintScale":1.20,"normalStrength":6.6,"normalRadius":10}},
-    {"name":"vf_painted_strong_bark_01","resolution":1024,"profile":"stylized","preset":"vfBarkPainted","params":{"seed":530603,"ridgeScale":5.0,"fissureScale":2.7,"age":0.66,"relief":1.08,"paintScale":1.18,"normalStrength":7.8,"normalRadius":8}},
-    {"name":"vf_painted_strong_snow_01","resolution":1024,"profile":"stylized","preset":"vfSnowPainted","params":{"seed":700102,"relief":1.00,"paintScale":1.24,"normalStrength":5.6,"normalRadius":11}},
-    {"name":"vf_painted_strong_ice_01","resolution":1024,"profile":"stylized","preset":"vfIcePainted","params":{"seed":710201,"relief":0.98,"paintScale":1.20,"normalStrength":5.2,"normalRadius":11}}
+    {
+      "name": "vf_openstyle_basalt_01",
+      "resolution": 1024,
+      "profile": "stylized",
+      "preset": "stylizedCellRock",
+      "params": {
+        "seed": 240914,
+        "cells": 8,
+        "jitter": 0.92,
+        "heightLevels": 5,
+        "crackWidth": 0.105,
+        "crackDepth": 0.88,
+        "bevel": 0.145,
+        "distortion": 0.94,
+        "damage": 0.52,
+        "moss": 0.0,
+        "topMoss": 0.0,
+        "microDetail": 0.06,
+        "rockPalette": [[0.035,0.050,0.080],[0.075,0.095,0.130],[0.155,0.165,0.175],[0.330,0.275,0.215]],
+        "normalStrength": 8.8
+      }
+    },
+    {
+      "name": "vf_openstyle_granite_01",
+      "resolution": 1024,
+      "profile": "stylized",
+      "preset": "stylizedCellRock",
+      "params": {
+        "seed": 310402,
+        "cells": 7,
+        "jitter": 0.86,
+        "heightLevels": 4,
+        "crackWidth": 0.092,
+        "crackDepth": 0.72,
+        "bevel": 0.165,
+        "distortion": 0.76,
+        "damage": 0.38,
+        "moss": 0.0,
+        "topMoss": 0.0,
+        "microDetail": 0.10,
+        "rockPalette": [[0.115,0.110,0.145],[0.205,0.180,0.185],[0.365,0.285,0.255],[0.610,0.500,0.400]],
+        "normalStrength": 8.2
+      }
+    },
+    {
+      "name": "vf_openstyle_sandstone_01",
+      "resolution": 1024,
+      "profile": "stylized",
+      "preset": "stylizedCellRock",
+      "params": {
+        "seed": 510702,
+        "cells": 6,
+        "jitter": 0.78,
+        "heightLevels": 5,
+        "crackWidth": 0.082,
+        "crackDepth": 0.62,
+        "bevel": 0.19,
+        "distortion": 0.68,
+        "damage": 0.46,
+        "moss": 0.0,
+        "topMoss": 0.0,
+        "microDetail": 0.05,
+        "rockPalette": [[0.205,0.115,0.095],[0.360,0.185,0.125],[0.545,0.310,0.180],[0.745,0.515,0.315]],
+        "normalStrength": 7.8
+      }
+    }
   ]
 }
