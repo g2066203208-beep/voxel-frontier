@@ -116,15 +116,23 @@ constexpr double kPi = 3.1415926535897932384626433832795;
             if (aboveSea < 8.0 || terrain.submerged(planet) || sunElevation < 0.10) continue;
 
             const double height01 = std::clamp(aboveSea / std::max(1.0, planet.maxElevation), 0.0, 1.0);
+            double requiredTargetReliefMeters = 0.0;
+            if (target == "mountain") requiredTargetReliefMeters = 4500.0;
+            else if (target == "rift") requiredTargetReliefMeters = 1800.0;
+            else if (target == "canyon") requiredTargetReliefMeters = 2200.0;
+            else if (target == "abyss") requiredTargetReliefMeters = 4500.0;
+
             double localReliefMeters = 0.0;
-            const bool needsReliefProbe =
-                (target == "mountain" && terrain.mountain > 0.16)
-                || (target == "rift" && terrain.rift > 0.015);
+            const bool needsReliefProbe = requiredTargetReliefMeters > 0.0
+                && ((target == "mountain" && terrain.mountain > 0.16)
+                    || (target == "rift" && terrain.rift > 0.015)
+                    || (target == "canyon" && terrain.canyon > 0.015)
+                    || (target == "abyss" && terrain.abyss > 0.10));
             if (needsReliefProbe) {
                 const glm::dvec3 tangentA = stableTangent(d);
                 const glm::dvec3 tangentB = safeNormalize(
                     glm::cross(d, tangentA), stableTangent(d));
-                constexpr double reliefProbeDistanceMeters = 18000.0;
+                constexpr double reliefProbeDistanceMeters = 36000.0;
                 constexpr int reliefProbeDirections = 8;
                 for (int probeIndex = 0; probeIndex < reliefProbeDirections; ++probeIndex) {
                     const double probeAngle = 2.0 * kPi * static_cast<double>(probeIndex)
@@ -139,6 +147,10 @@ constexpr double kPi = 3.1415926535897932384626433832795;
                     localReliefMeters = std::max(
                         localReliefMeters, std::abs(probeElevation - terrain.elevationMeters));
                 }
+            }
+            if (requiredTargetReliefMeters > 0.0
+                && localReliefMeters < requiredTargetReliefMeters) {
+                continue;
             }
 
             double score = -1.0e9;
@@ -163,6 +175,9 @@ constexpr double kPi = 3.1415926535897932384626433832795;
             } else if (target == "canyon") {
                 score = terrain.canyon * 3.6 + terrain.aridity * 0.8 + terrain.hills * 0.5
                     + height01 * 0.4;
+            } else if (target == "abyss") {
+                score = terrain.abyss * 6.2 + terrain.canyon * 1.1 + terrain.rift * 0.55
+                    + height01 * 0.35 - terrain.glacier * 0.55;
             } else if (target == "coast") {
                 score = terrain.coastalCliff * 4.0 + terrain.plateBoundary * 0.6
                     - height01 * 0.3;
@@ -271,10 +286,10 @@ int main() {
         vf::PlanetDefinition planet{};
         planet.seed = 0x71A9F20DULL;
         planet.radius = 6371000.0;
-        planet.maxElevation = 8850.0;
+        planet.maxElevation = 30000.0;
         planet.seaLevelElevationMeters = 0.0;
-        planet.maxOceanDepthMeters = 11000.0;
-        planet.atmosphereHeight = 100000.0;
+        planet.maxOceanDepthMeters = 24000.0;
+        planet.atmosphereHeight = 180000.0;
         constexpr double opticalAtmosphereHeight = 145000.0;
         constexpr double opticalRayleighScaleHeight = 10200.0;
 
@@ -465,7 +480,7 @@ int main() {
                 double bestContrast = -1.0;
                 glm::dvec3 bestTangent = localEvidenceTangent;
                 constexpr int directionCount = 16;
-                constexpr double probeDistanceMeters = 18000.0;
+                constexpr double probeDistanceMeters = 36000.0;
                 for (int i = 0; i < directionCount; ++i) {
                     const double angle = 2.0 * kPi * static_cast<double>(i)
                         / static_cast<double>(directionCount);
@@ -496,9 +511,11 @@ int main() {
             if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET");
                 targetEnv != nullptr && *targetEnv != '\0') {
                 const std::string_view target{targetEnv};
-                if (target == "mountain") downwardWeight = 0.17;
-                else if (target == "rift") downwardWeight = 0.22;
-                else if (target == "hydrology" || target == "river") downwardWeight = 0.30;
+                if (target == "mountain") downwardWeight = 0.10;
+                else if (target == "rift") downwardWeight = 0.18;
+                else if (target == "abyss") downwardWeight = 0.56;
+                else if (target == "canyon") downwardWeight = 0.38;
+                else if (target == "hydrology" || target == "river") downwardWeight = 0.27;
             }
             const double tangentWeight = std::sqrt(std::max(
                 0.0, 1.0 - downwardWeight * downwardWeight));
@@ -725,8 +742,8 @@ int main() {
             lodConfig.maxDepth = 20U;
             // Low-altitude detail is no longer a binary square. The builder uses a camera-centred
             // geodesic transition band so physical cell size grows continuously with distance.
-            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 4400U
-                : (buildAltitude < 150000.0 ? 2200U : 900U);
+            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 3600U
+                : (buildAltitude < 150000.0 ? 1900U : 850U);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewportHeightPixels = 900.0;
             lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 2.8
@@ -734,8 +751,8 @@ int main() {
             lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 1.0 : 0.0;
             lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0 : 24.0;
             lodConfig.detailTransitionStartMeters = 180.0;
-            lodConfig.detailTransitionEndMeters = 32000.0;
-            lodConfig.transitionFarCellMeters = 180.0;
+            lodConfig.detailTransitionEndMeters = 85000.0;
+            lodConfig.transitionFarCellMeters = 420.0;
             lodConfig.horizonMarginRadians = 0.020;
             lodConfig.skirtDepthMeters = 6.0;
 

@@ -1,0 +1,12 @@
+=== MOUNTAIN ===
+R24 terrain target: mountain score=10.0618
+R24 terrain evidence view: contrast_m=31552.7
+=== RIFT ===
+R24 terrain target: rift score=7.19726
+R24 terrain evidence view: contrast_m=5281.13
+=== CANYON ===
+R24 terrain target: canyon score=3.1887
+R24 terrain evidence view: contrast_m=5553.55
+=== ABYSS ===
+R24 terrain target: abyss score=3.05447
+R24 terrain evidence view: contrast_m=6919.07

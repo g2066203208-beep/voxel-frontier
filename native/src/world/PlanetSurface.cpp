@@ -544,6 +544,7 @@ PlanetTerrainSample samplePlanetTerrain(
     const double hillNoise = fbmSurface(definition.seed ^ 0x1F83D9ABFB41BD6BULL, w, 1350.0, 3);
     const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
     const double canyonNoise = fbmSurface(definition.seed ^ 0x5BE0CD19137E2179ULL, w, 8200.0, 3);
+    const double abyssNoise = fbmSurface(definition.seed ^ 0x243F6A8885A308D3ULL, w, 3600.0, 4);
     const double duneNoise = fbmSurface(definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 26000.0, 2);
     const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
     const double fine = fbmSurface(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2);
@@ -616,6 +617,26 @@ PlanetTerrainSample samplePlanetTerrain(
         * (1.0 - 0.48 * mountain)
         * (1.0 - 0.55 * river);
 
+    double seededAbyss = 0.0;
+    for (std::uint64_t i = 0; i < 18U; ++i) {
+        const glm::dvec3 throat = seededDirection(
+            definition.seed ^ 0x13198A2E03707344ULL, 9000U + i * 31U);
+        const double width = 0.010 + 0.030 * seedUnit(
+            definition.seed ^ 0xA4093822299F31D0ULL, 9300U + i * 37U);
+        const double throatMask = smooth01(
+            std::cos(width * 2.8),
+            std::cos(width * 0.30),
+            glm::dot(d, throat));
+        seededAbyss = std::max(seededAbyss, std::pow(throatMask, 2.15));
+    }
+    const double fractureAbyss = smooth01(0.78, 0.985, canyonRidge)
+        * elevatedInterior * (0.42 + 0.58 * std::abs(abyssNoise));
+    const double riftAbyss = rift * (0.38 + 0.62 * std::abs(riftFaultFine));
+    const double abyss = std::clamp(
+        landness * std::max({seededAbyss, 0.82 * fractureAbyss, 0.62 * riftAbyss}),
+        0.0,
+        1.0);
+
     // Dunes are low-relief and restricted to dry, non-mountainous low/intermediate land. The field
     // varies smoothly so it reads as dune country rather than high-frequency terrain noise.
     const double duneRegion = smooth01(0.46, 0.78, 0.5 + 0.5 * climate)
@@ -645,7 +666,7 @@ PlanetTerrainSample samplePlanetTerrain(
         1.0);
 
     const double polar = smooth01(0.70, 0.91, latitude);
-    const double highIce = smooth01(3600.0, 5800.0, provisionalAboveSea)
+    const double highIce = smooth01(12500.0, 22000.0, provisionalAboveSea)
         * smooth01(0.36, 0.78, latitude);
     const double glacier = std::clamp(
         landness * std::max(polar * (0.45 + 0.55 * mountain), highIce)
@@ -689,17 +710,26 @@ PlanetTerrainSample samplePlanetTerrain(
         + (ridged - 0.5) * 0.0052 * mountain)
         * protectedDrainage * iceSmoothing;
     elevation += maxLand * landRelief * landness;
-    elevation += maxLand * 0.170 * orogenyMask * alpineSignedRelief
+    const double epicOrogeny = std::clamp(
+        alpineSignedRelief + 0.42 * (1.0 - std::abs(orogenyFine)) - 0.18,
+        -1.25,
+        1.55);
+    elevation += maxLand * 0.420 * orogenyMask * epicOrogeny
         * protectedDrainage * iceSmoothing;
-    elevation += maxLand * 0.070 * riftReliefMask * riftFaultProfile;
-    elevation -= maxLand * 0.045 * rift
+    elevation += maxLand * 0.165 * riftReliefMask * riftFaultProfile;
+    elevation -= maxLand * 0.145 * rift
         * (0.50 + 0.50 * std::abs(riftFaultFine));
     elevation += maxOcean * (regional * 0.0028 + local * 0.0010) * oceanness;
 
     // Distinct terrain-form displacement. The amplitudes stay well below tectonic relief but are
     // large enough to affect silhouettes AND authoritative collision, not merely shader color.
     elevation += maxLand * 0.012 * coastalCliff * (0.35 + 0.65 * std::max(0.0, local));
-    elevation -= maxLand * 0.020 * canyon * (0.55 + 0.45 * canyonRidge);
+    elevation -= maxLand * 0.105 * canyon * (0.45 + 0.55 * canyonRidge);
+    // Mega-abyss / cavern throats are deliberately beyond terrestrial scale. A strong throat can
+    // descend ten kilometres or more from its surrounding rim, producing a landmark visible from
+    // high-altitude flight. The smooth radial/noise mask avoids a hard circular cut.
+    elevation -= maxLand * 0.385 * abyss
+        * (0.62 + 0.38 * std::abs(abyssNoise));
     elevation += maxLand * 0.0016 * dunes * duneNoise;
     if (wetland > 0.0 && elevation > 45.0) {
         elevation -= (elevation - 45.0) * std::clamp(wetland * 0.52, 0.0, 0.52);
@@ -713,6 +743,12 @@ PlanetTerrainSample samplePlanetTerrain(
         -1.0,
         1.0);
 
+    if (maxLand > 0.0 && elevation > 0.0) {
+        constexpr double softCeilingFraction = 0.985;
+        constexpr double compressionScale = 0.78;
+        elevation = maxLand * softCeilingFraction * std::tanh(
+            elevation / (maxLand * compressionScale));
+    }
     const double minElevation = definition.seaLevelElevationMeters - maxOcean;
     const double maxElevation = definition.seaLevelElevationMeters + maxLand;
     elevation = std::clamp(
@@ -737,6 +773,7 @@ PlanetTerrainSample samplePlanetTerrain(
     sample.alluvialFan = alluvialFan;
     sample.hills = hills;
     sample.canyon = canyon;
+    sample.abyss = abyss;
     sample.dunes = dunes;
     sample.coastalCliff = coastalCliff;
     sample.wetland = wetland;
@@ -793,8 +830,8 @@ glm::vec3 planetTerrainColor(
     }
 
     const double aboveSea = sample.elevationMeters - definition.seaLevelElevationMeters;
-    const double highland = smooth01(900.0, 3100.0, aboveSea);
-    const double alpine = smooth01(3000.0, 4700.0, aboveSea);
+    const double highland = smooth01(2500.0, 9000.0, aboveSea);
+    const double alpine = smooth01(10500.0, 19000.0, aboveSea);
     const double beach = (1.0 - smooth01(18.0, 95.0, aboveSea))
         * (1.0 - 0.92 * sample.coastalCliff);
     const double rockiness = std::clamp(
@@ -865,12 +902,16 @@ glm::dvec3 planetSurfaceNormal(
         2.0 / std::max(1.0, definition.radius),
         1.0e-7,
         2.0e-3);
-    const glm::dvec3 dEast = safeNormalize(d + east * angularStep, d);
-    const glm::dvec3 dNorth = safeNormalize(d + north * angularStep, d);
-    const glm::dvec3 p0 = d * planetSurfaceRadius(definition, d);
-    const glm::dvec3 pEast = dEast * planetSurfaceRadius(definition, dEast);
-    const glm::dvec3 pNorth = dNorth * planetSurfaceRadius(definition, dNorth);
-    glm::dvec3 normal = safeNormalize(glm::cross(pEast - p0, pNorth - p0), d);
+    const glm::dvec3 dEastPlus = safeNormalize(d + east * angularStep, d);
+    const glm::dvec3 dEastMinus = safeNormalize(d - east * angularStep, d);
+    const glm::dvec3 dNorthPlus = safeNormalize(d + north * angularStep, d);
+    const glm::dvec3 dNorthMinus = safeNormalize(d - north * angularStep, d);
+    const glm::dvec3 pEastPlus = dEastPlus * planetSurfaceRadius(definition, dEastPlus);
+    const glm::dvec3 pEastMinus = dEastMinus * planetSurfaceRadius(definition, dEastMinus);
+    const glm::dvec3 pNorthPlus = dNorthPlus * planetSurfaceRadius(definition, dNorthPlus);
+    const glm::dvec3 pNorthMinus = dNorthMinus * planetSurfaceRadius(definition, dNorthMinus);
+    glm::dvec3 normal = safeNormalize(
+        glm::cross(pEastPlus - pEastMinus, pNorthPlus - pNorthMinus), d);
     if (glm::dot(normal, d) < 0.0) normal = -normal;
     return normal;
 }

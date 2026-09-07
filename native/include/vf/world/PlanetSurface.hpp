@@ -49,6 +49,9 @@ struct PlanetTerrainSample {
     // forms. All values are deterministic [0,1] masks used by geometry, materials and ecology.
     double hills{};
     double canyon{};
+    // Gameplay-scale vertical cave throat / mega-sinkhole mask. This remains a normalized
+    // deterministic field; the physical depth is applied to authoritative 3-D surface geometry.
+    double abyss{};
     double dunes{};
     double coastalCliff{};
     double wetland{};

@@ -68,8 +68,8 @@ void testSurfaceSnapshotMatchesAuthoritativeHeightAndNormal() {
         "surface snapshot position must lie on its reported radius");
     require(std::abs(glm::length(snapshot.normal) - 1.0) < 1.0e-9,
         "surface snapshot normal must remain unit length");
-    require(glm::dot(snapshot.normal, direction) > 0.35,
-        "surface snapshot normal must remain outward-facing even on steep procedural relief");
+    require(glm::dot(snapshot.normal, direction) > 1.0e-6,
+        "surface snapshot normal must remain outward-facing even on near-vertical epic relief");
 }
 
 void testHydrologyAuthorityFadesBeforeRegionalGridEdge() {

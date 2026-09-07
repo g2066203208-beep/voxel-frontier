@@ -109,14 +109,24 @@ PlanetSurfaceSample PlanetSurfaceAuthority::sampleSurface(
         2.0 / std::max(1.0, planet_.radius),
         1.0e-7,
         2.0e-3);
-    const glm::dvec3 dEast = safeNormalize(d + east * angularStep, d);
-    const glm::dvec3 dNorth = safeNormalize(d + north * angularStep, d);
-    const PlanetTerrainSample terrainEast = sample(dEast);
-    const PlanetTerrainSample terrainNorth = sample(dNorth);
-    const glm::dvec3 pEast = dEast * (planet_.radius + terrainEast.elevationMeters);
-    const glm::dvec3 pNorth = dNorth * (planet_.radius + terrainNorth.elevationMeters);
+    const glm::dvec3 dEastPlus = safeNormalize(d + east * angularStep, d);
+    const glm::dvec3 dEastMinus = safeNormalize(d - east * angularStep, d);
+    const glm::dvec3 dNorthPlus = safeNormalize(d + north * angularStep, d);
+    const glm::dvec3 dNorthMinus = safeNormalize(d - north * angularStep, d);
+    const PlanetTerrainSample terrainEastPlus = sample(dEastPlus);
+    const PlanetTerrainSample terrainEastMinus = sample(dEastMinus);
+    const PlanetTerrainSample terrainNorthPlus = sample(dNorthPlus);
+    const PlanetTerrainSample terrainNorthMinus = sample(dNorthMinus);
+    const glm::dvec3 pEastPlus = dEastPlus
+        * (planet_.radius + terrainEastPlus.elevationMeters);
+    const glm::dvec3 pEastMinus = dEastMinus
+        * (planet_.radius + terrainEastMinus.elevationMeters);
+    const glm::dvec3 pNorthPlus = dNorthPlus
+        * (planet_.radius + terrainNorthPlus.elevationMeters);
+    const glm::dvec3 pNorthMinus = dNorthMinus
+        * (planet_.radius + terrainNorthMinus.elevationMeters);
     result.normal = safeNormalize(
-        glm::cross(pEast - result.position, pNorth - result.position), d);
+        glm::cross(pEastPlus - pEastMinus, pNorthPlus - pNorthMinus), d);
     if (glm::dot(result.normal, d) < 0.0) result.normal = -result.normal;
     return result;
 }

@@ -22,11 +22,12 @@ int main() {
     vf::PlanetDefinition planet{};
     planet.seed = 0x71A9F20DULL;
     planet.radius = 6371000.0;
-    planet.maxElevation = 8850.0;
-    planet.maxOceanDepthMeters = 11000.0;
+    planet.maxElevation = 30000.0;
+    planet.maxOceanDepthMeters = 24000.0;
 
     double maxHills = 0.0;
     double maxCanyon = 0.0;
+    double maxAbyss = 0.0;
     double maxRift = 0.0;
     double maxShear = 0.0;
     double maxAlluvial = 0.0;
@@ -54,7 +55,7 @@ int main() {
                 const auto sample = vf::samplePlanetTerrain(planet, direction);
 
                 const double masks[] = {
-                    sample.hills, sample.canyon, sample.rift, sample.shear, sample.alluvialFan,
+                    sample.hills, sample.canyon, sample.abyss, sample.rift, sample.shear, sample.alluvialFan,
                     sample.dunes, sample.coastalCliff, sample.wetland, sample.glacier,
                     sample.aridity, sample.moisture,
                 };
@@ -65,6 +66,7 @@ int main() {
 
                 maxHills = std::max(maxHills, sample.hills);
                 maxCanyon = std::max(maxCanyon, sample.canyon);
+                maxAbyss = std::max(maxAbyss, sample.abyss);
                 maxRift = std::max(maxRift, sample.rift);
                 maxShear = std::max(maxShear, sample.shear);
                 maxAlluvial = std::max(maxAlluvial, sample.alluvialFan);
@@ -102,6 +104,7 @@ int main() {
     require(sawLand && sawOcean, "Earth seed must retain both land and ocean");
     require(maxHills > 0.18, "Earth seed must contain rolling-hill provinces");
     require(maxCanyon > 0.015, "Earth seed must contain incised canyon terrain");
+    require(maxAbyss > 0.10, "gameplay planet must contain mega-abyss cave throats");
     require(maxRift > 0.015, "Earth seed must contain divergent continental rifts");
     require(maxShear > 0.015, "Earth seed must contain transform-boundary shear terrain");
     require(maxAlluvial > 0.005, "Earth seed must contain lowland alluvial deposition");
@@ -145,14 +148,17 @@ int main() {
 
     const double mountainLocalRelief = localRelief(mountainProbeDirection, 28000.0);
     const double riftLocalRelief = localRelief(riftProbeDirection, 24000.0);
-    require(mountainLocalRelief > 850.0,
-        "convergent mountain provinces must contain >850 m real 3-D relief within 28 km");
-    require(riftLocalRelief > 260.0,
-        "continental rifts must contain >260 m real 3-D fault relief within 24 km");
+    require(mountainLocalRelief > 4500.0,
+        "epic convergent mountains must contain >4.5 km real 3-D relief within 28 km");
+    require(riftLocalRelief > 1800.0,
+        "epic continental rifts must contain >1.8 km real 3-D fault relief within 24 km");
+    require(maxElevation > 15000.0,
+        "gameplay-first planet must generate mountain summits above 15 km");
 
     std::cout << "Terrain landform tests passed"
               << " | hills=" << maxHills
               << " canyon=" << maxCanyon
+              << " abyss=" << maxAbyss
               << " rift=" << maxRift
               << " shear=" << maxShear
               << " alluvial=" << maxAlluvial

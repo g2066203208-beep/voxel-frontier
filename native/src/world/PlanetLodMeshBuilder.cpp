@@ -4,6 +4,7 @@
 #include <array>
 #include <cmath>
 #include <limits>
+#include <queue>
 #include <vector>
 
 #include <glm/geometric.hpp>
@@ -294,32 +295,25 @@ PlanetMesh buildAdaptivePlanetSurface(
             - geometry.centerDirection * surface.planet().radius);
     };
 
-    std::vector<Node> pending;
-    pending.reserve(config.maxLeafPatches * 2U);
-    std::array<Node, 6> roots{};
-    for (std::uint32_t face = 0; face < roots.size(); ++face)
-        roots[face] = {face, 0U, -1.0, -1.0, 2.0};
-    std::sort(roots.begin(), roots.end(), [&](const Node& a, const Node& b) {
-        return approximateNodeDistance(a) > approximateNodeDistance(b);
-    });
-    for (const Node& root : roots) pending.push_back(root);
+    struct Candidate {
+        Node node{};
+        double priority{};
+    };
+    struct CandidateLess {
+        bool operator()(const Candidate& a, const Candidate& b) const noexcept {
+            return a.priority < b.priority;
+        }
+    };
 
-    std::vector<Node> leaves;
-    leaves.reserve(config.maxLeafPatches);
-    while (!pending.empty()) {
-        const Node node = pending.back();
-        pending.pop_back();
+    const auto priorityFor = [&](const Node& node) noexcept {
         const NodeMetric metric = metricFor(node, surface, cameraPlanetLocal, config);
         ++localStats.evaluatedNodes;
         localStats.maximumEstimatedErrorMeters = std::max(
-            localStats.maximumEstimatedErrorMeters,
-            metric.geometricErrorMeters);
-        if (!metric.aboveHorizon) continue;
-        const bool canSplit = node.depth < config.maxDepth
-            && leaves.size() + pending.size() + 4U < config.maxLeafPatches;
-        const double nodeCellMeters = metric.spanMeters
-            / static_cast<double>(std::max(2U, config.patchResolution));
-        bool forceSmoothDetail = false;
+            localStats.maximumEstimatedErrorMeters, metric.geometricErrorMeters);
+        if (!metric.aboveHorizon) return -1.0;
+
+        double priority = metric.screenErrorPixels
+            / std::max(0.001, config.targetScreenErrorPixels);
         if (config.nearFieldRadiusMeters > 0.0) {
             const double radius = std::max(1.0, surface.planet().radius);
             const glm::dvec3 cameraDirection = safeNormalize(
@@ -340,23 +334,45 @@ PlanetMesh buildAdaptivePlanetSurface(
             const double desiredCellMeters = std::exp(
                 std::log(nearCell) * (1.0 - transitionT)
                     + std::log(farCell) * transitionT);
-            forceSmoothDetail = effectiveDistanceMeters <= config.detailTransitionEndMeters
-                && nodeCellMeters > desiredCellMeters * 1.08;
+            const double nodeCellMeters = metric.spanMeters
+                / static_cast<double>(std::max(2U, config.patchResolution));
+            if (effectiveDistanceMeters <= config.detailTransitionEndMeters
+                && nodeCellMeters > desiredCellMeters * 1.08) {
+                priority = std::max(priority, 1.0 + nodeCellMeters / desiredCellMeters);
+            }
         }
-        if (canSplit && (forceSmoothDetail
-            || metric.screenErrorPixels > config.targetScreenErrorPixels)) {
+        return priority;
+    };
+
+    std::priority_queue<Candidate, std::vector<Candidate>, CandidateLess> pending;
+    for (std::uint32_t face = 0; face < 6U; ++face) {
+        const Node root{face, 0U, -1.0, -1.0, 2.0};
+        const double priority = priorityFor(root);
+        if (priority >= 0.0) pending.push({root, priority});
+    }
+
+    std::vector<Node> leaves;
+    leaves.reserve(config.maxLeafPatches);
+    while (!pending.empty()) {
+        const Candidate candidate = pending.top();
+        pending.pop();
+        const Node node = candidate.node;
+        const bool wantsSplit = candidate.priority > 1.0 && node.depth < config.maxDepth;
+        const bool budgetAllowsSplit = leaves.size() + pending.size() + 4U
+            <= config.maxLeafPatches;
+        if (wantsSplit && budgetAllowsSplit) {
             const double half = node.size * 0.5;
             const std::uint32_t depth = node.depth + 1U;
-            std::array<Node, 4> children{{
+            const std::array<Node, 4> children{{
                 {node.face, depth, node.u0, node.v0, half},
                 {node.face, depth, node.u0 + half, node.v0, half},
                 {node.face, depth, node.u0, node.v0 + half, half},
                 {node.face, depth, node.u0 + half, node.v0 + half, half},
             }};
-            std::sort(children.begin(), children.end(), [&](const Node& a, const Node& b) {
-                return approximateNodeDistance(a) > approximateNodeDistance(b);
-            });
-            for (const Node& child : children) pending.push_back(child);
+            for (const Node& child : children) {
+                const double priority = priorityFor(child);
+                if (priority >= 0.0) pending.push({child, priority});
+            }
         } else {
             leaves.push_back(node);
         }
