@@ -1,0 +1,184 @@
+name: R24 Gameplay Moon Terrain Closure V3
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_gameplay_moon_terrain_closure_v3.py'
+      - '.github/scripts/r24_gameplay_moon_terrain_capture_v3.sh'
+      - '.github/workflows/r24-gameplay-moon-terrain-v3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-gameplay-moon-terrain-v3-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-native-regression:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+          ref: ${{ github.sha }}
+
+      - name: Apply gameplay Moon and causal terrain V3
+        shell: pwsh
+        run: python .github/scripts/r24_gameplay_moon_terrain_closure_v3.py
+
+      - name: Validate generated source
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'gameplayMoonVisualScale' native/src/app/Main.cpp
+          grep -q 'double rift{}' native/include/vf/world/PlanetSurface.hpp
+          grep -q 'double alluvialFan{}' native/include/vf/world/PlanetSurface.hpp
+
+      - name: Configure Windows x64
+        shell: pwsh
+        run: cmake -S native -B build/r24-gameplay-terrain-win -A x64 -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Windows x64
+        shell: pwsh
+        run: cmake --build build/r24-gameplay-terrain-win --config Release --parallel 2
+
+      - name: Run complete Windows native suite
+        shell: pwsh
+        run: ctest --test-dir build/r24-gameplay-terrain-win -C Release --verbose --output-on-failure
+
+  linux-real-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+          ref: ${{ github.sha }}
+
+      - name: Apply gameplay Moon and causal terrain V3
+        run: python3 .github/scripts/r24_gameplay_moon_terrain_closure_v3.py
+
+      - name: Validate generated source
+        run: |
+          git diff --check
+          grep -q 'gameplayMoonVisualScale' native/src/app/Main.cpp
+          grep -q 'visual_apparent_diameter_px' native/src/app/Main.cpp
+          grep -q 'double shear{}' native/include/vf/world/PlanetSurface.hpp
+          grep -q 'double rift{}' native/include/vf/world/PlanetSurface.hpp
+          grep -q 'double alluvialFan{}' native/include/vf/world/PlanetSurface.hpp
+          grep -q 'const double riftAxis' native/src/world/PlanetSurface.cpp
+          grep -q 'const double alluvialFan' native/src/world/PlanetSurface.cpp
+          grep -q 'evidenceSamples = 8192U' native/src/app/Main.cpp
+
+      - name: Install Vulkan X11 and build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Linux runtime and tests
+        run: cmake -S native -B build/r24-gameplay-terrain -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Linux runtime and tests
+        run: cmake --build build/r24-gameplay-terrain --parallel 2
+
+      - name: Run complete Linux native suite
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-gameplay-terrain --verbose --output-on-failure 2>&1 | tee r24-gameplay-terrain-ctest.log
+
+      - name: Run focused terrain tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-gameplay-terrain --verbose --output-on-failure \
+            -R 'vf_terrain_landform_tests|vf_r24_physical_planet_tests|vf_planet_physics_tests' \
+            2>&1 | tee r24-gameplay-terrain-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real gameplay Moon and causal terrain
+        id: capture
+        continue-on-error: true
+        shell: bash
+        run: |
+          APP="$(find build/r24-gameplay-terrain -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_gameplay_moon_terrain_capture_v3.sh
+          .github/scripts/r24_gameplay_moon_terrain_capture_v3.sh "$APP" r24-gameplay-moon-terrain-evidence
+
+      - name: Preserve available evidence even on visual failure
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-gameplay-moon-terrain-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-gameplay-moon-terrain-evidence ]]; then cp -a r24-gameplay-moon-terrain-evidence/. "$EVIDENCE_DIR/"; fi
+          [[ -f r24-gameplay-terrain-ctest.log ]] && cp -f r24-gameplay-terrain-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-gameplay-terrain-focused.log ]] && cp -f r24-gameplay-terrain-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_sha=%s\nworkflow_run=%s\ncapture_outcome=%s\n' \
+            "$GITHUB_SHA" "$GITHUB_RUN_ID" "${{ steps.capture.outcome }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload all available real Vulkan evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-gameplay-moon-terrain-real-vulkan-${{ github.run_id }}
+          path: |
+            r24-gameplay-moon-terrain-evidence/**
+            r24-gameplay-terrain-ctest.log
+            r24-gameplay-terrain-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Require complete visual gate before promotion
+        if: always()
+        shell: bash
+        run: |
+          test "${{ steps.capture.outcome }}" = "success"
+          test -f r24-gameplay-moon-terrain-evidence/moon/gameplay-moon.png
+          test -f r24-gameplay-moon-terrain-evidence/terrain/convergent-mountain.png
+          test -f r24-gameplay-moon-terrain-evidence/terrain/divergent-rift.png
+          test -f r24-gameplay-moon-terrain-evidence/terrain/river-basin.png
+
+      - name: Promote exact tested production source and evidence
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "feat(r24): enlarge gameplay Moon and deepen causal terrain"
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
