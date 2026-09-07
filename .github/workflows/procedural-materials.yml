@@ -40,6 +40,7 @@ jobs:
           set -euo pipefail
           test -s material_lab/README.md
           test -s material_lab/meshova/bake-request.ts
+          test -s material_lab/tests/surface-context.spec.ts
 
           expected=$(printf '%s\n' \
             vf-layered-sandstone-painted.ts \
@@ -49,6 +50,7 @@ jobs:
             vf-painterly-leaves.ts \
             vf-painterly-snow.ts \
             vf-painterly-water.ts \
+            vf-surface-context.ts \
             vf-surface-layers.ts | sort)
           actual=$(find material_lab/meshova/recipes -maxdepth 1 -type f -name '*.ts' -printf '%f\n' | sort)
           if [[ "$actual" != "$expected" ]]; then
@@ -131,6 +133,13 @@ jobs:
           cd .cache/Meshova
           pnpm install --frozen-lockfile
 
+      - name: Test adaptive surface context resolver
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .cache/Meshova
+          pnpm tsx ../../material_lab/tests/surface-context.spec.ts
+
       - name: Inject approved procedural production sources
         shell: bash
         run: |
@@ -146,6 +155,7 @@ jobs:
             vf-painterly-leaves.ts \
             vf-painterly-snow.ts \
             vf-painterly-water.ts \
+            vf-surface-context.ts \
             vf-surface-layers.ts; do
             cp "material_lab/meshova/recipes/$file" ".cache/Meshova/examples/vf-recipes/$file"
           done
@@ -244,8 +254,8 @@ jobs:
             echo
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Style: \`$VF_STYLE_ID\`"
-            echo '- Allowed requests: production-six, water-showcase, or surface-layer showcase'
-            echo '- Surface layers: snow coverage/depth, wetness/puddles, rain ripples'
+            echo '- Adaptive resolver inputs: weather / exposure / environment / material traits / player+prop interactions / previous state / dt'
+            echo '- Surface layers: snow coverage/depth/compaction, wetness/puddles, rain ripples'
             echo '- Foliage: true opacity alpha-cutout mask'
             echo '- Water fields: foam / transmission / refraction / glint / optional rainRipples'
             echo '- Source: procedural code only; raster source assets rejected'
