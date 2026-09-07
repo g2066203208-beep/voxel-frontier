@@ -1,15 +1,15 @@
 {
   "materials": [
-    {"name":"vf_sandstone_01","resolution":1024,"profile":"signature","preset":"vfSandstone","params":{"seed":610101,"relief":1.18,"normalStrength":13.5}},
+    {"name":"vf_sandstone_02","resolution":1024,"profile":"signature","preset":"vfSandstone","params":{"seed":610102,"relief":1.20,"normalStrength":13.8}},
     {"name":"vf_limestone_01","resolution":1024,"profile":"signature","preset":"vfLimestone","params":{"seed":620201,"relief":1.14,"normalStrength":12.8}},
-    {"name":"vf_gravel_01","resolution":1024,"profile":"signature","preset":"vfGravel","params":{"seed":630301,"relief":1.20,"normalStrength":14.0}},
+    {"name":"vf_gravel_02","resolution":1024,"profile":"signature","preset":"vfGravel","params":{"seed":630302,"relief":1.22,"normalStrength":14.0}},
     {"name":"vf_sand_01","resolution":1024,"profile":"signature","preset":"vfSand","params":{"seed":640401,"relief":1.12,"normalStrength":12.5}},
     {"name":"vf_wet_mud_01","resolution":1024,"profile":"signature","preset":"vfWetMud","params":{"seed":650501,"relief":1.22,"normalStrength":13.2}},
-    {"name":"vf_wood_plank_01","resolution":1024,"profile":"signature","preset":"vfWoodPlank","params":{"seed":660601,"relief":1.15,"normalStrength":12.8}},
-    {"name":"vf_iron_ore_01","resolution":1024,"profile":"signature","preset":"vfIronOre","params":{"seed":670701,"relief":1.18,"normalStrength":13.5}},
-    {"name":"vf_copper_ore_01","resolution":1024,"profile":"signature","preset":"vfCopperOre","params":{"seed":680801,"relief":1.18,"normalStrength":13.5}},
+    {"name":"vf_wood_plank_02","resolution":1024,"profile":"signature","preset":"vfWoodPlank","params":{"seed":660602,"relief":1.18,"normalStrength":13.2}},
+    {"name":"vf_iron_ore_02","resolution":1024,"profile":"signature","preset":"vfIronOre","params":{"seed":670702,"relief":1.20,"normalStrength":13.5}},
+    {"name":"vf_copper_ore_02","resolution":1024,"profile":"signature","preset":"vfCopperOre","params":{"seed":680802,"relief":1.20,"normalStrength":13.5}},
     {"name":"vf_coal_01","resolution":1024,"profile":"signature","preset":"vfCoal","params":{"seed":690901,"relief":1.20,"normalStrength":13.8}},
-    {"name":"vf_snow_01","resolution":1024,"profile":"signature","preset":"vfSnow","params":{"seed":700101,"relief":1.10,"normalStrength":11.8}},
+    {"name":"vf_snow_02","resolution":1024,"profile":"signature","preset":"vfSnow","params":{"seed":700102,"relief":1.16,"normalStrength":13.8}},
     {"name":"vf_ice_01","resolution":1024,"profile":"signature","preset":"vfIce","params":{"seed":710201,"relief":1.08,"normalStrength":12.2}}
   ]
 }
