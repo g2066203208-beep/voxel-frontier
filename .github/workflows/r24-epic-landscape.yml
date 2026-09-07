@@ -5,6 +5,7 @@ on:
     branches: [work/r24-unified-planetary-physics]
     paths:
       - '.github/scripts/r24_epic_landscape.py'
+      - '.github/scripts/r24_epic_landscape_hotfix.py'
       - '.github/scripts/r24_epic_landscape_capture.sh'
       - '.github/workflows/r24-epic-landscape.yml'
   workflow_dispatch:
@@ -28,7 +29,9 @@ jobs:
           fetch-depth: 2
 
       - name: Apply gameplay-first epic landscape migration
-        run: python .github/scripts/r24_epic_landscape.py
+        run: |
+          python .github/scripts/r24_epic_landscape.py
+          python .github/scripts/r24_epic_landscape_hotfix.py
 
       - name: Validate generated source
         shell: pwsh
@@ -38,6 +41,7 @@ jobs:
           Select-String -Path native/src/world/PlanetSurface.cpp -Pattern 'Mega-abyss' -Quiet | Out-Null
           Select-String -Path native/src/world/PlanetLodMeshBuilder.cpp -Pattern 'priority_queue' -Quiet | Out-Null
           Select-String -Path native/include/vf/world/PlanetSurface.hpp -Pattern 'double abyss' -Quiet | Out-Null
+          Select-String -Path native/src/world/PlanetSurfaceAuthority.cpp -Pattern 'dEastMinus' -Quiet | Out-Null
 
       - name: Configure Windows runtime
         run: cmake -S native -B build/r24-epic-win -A x64 -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
@@ -60,7 +64,9 @@ jobs:
           ref: ${{ github.sha }}
 
       - name: Apply gameplay-first epic landscape migration
-        run: python3 .github/scripts/r24_epic_landscape.py
+        run: |
+          python3 .github/scripts/r24_epic_landscape.py
+          python3 .github/scripts/r24_epic_landscape_hotfix.py
 
       - name: Validate production geometry and LOD changes
         run: |
@@ -70,6 +76,7 @@ jobs:
           grep -q 'Mega-abyss' native/src/world/PlanetSurface.cpp
           grep -q 'sample.abyss = abyss' native/src/world/PlanetSurface.cpp
           grep -q 'std::priority_queue' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'dEastMinus' native/src/world/PlanetSurfaceAuthority.cpp
           grep -q 'mountainLocalRelief > 4500.0' native/tests/TerrainLandformTests.cpp
           grep -q 'maxElevation > 15000.0' native/tests/TerrainLandformTests.cpp
 
