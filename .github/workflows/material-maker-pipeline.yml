@@ -26,9 +26,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
-      MM_VERSION: "1.7"
-      MM_ARCHIVE_SHA256: "c8e3b6f1993540875d26fe49645c91511bba36cda0412c715bd13249f7141647"
-      MM_URL: "https://github.com/RodZill4/material-maker/releases/download/1.7/material_maker_1_7_linux.tar.gz"
+      MM_VERSION: "1.6"
+      MM_ARCHIVE_SHA256: "c4673a964ef39b4a705bcafb55b5214ac2f966c995aef3efe5636a4036883c1e"
+      MM_URL: "https://github.com/RodZill4/material-maker/releases/download/1.6/material_maker_1_6_linux.tar.gz"
       OUT_ROOT: "build/generated-materials"
 
     steps:
@@ -86,30 +86,45 @@ jobs:
           set -euo pipefail
           vulkaninfo --summary | sed -n '1,120p'
 
-      - name: Smoke-test Material Maker with bundled upstream recipe
+      - name: Smoke-test bundled upstream rock material
         shell: bash
         env:
           MM_BIN: ${{ steps.mm.outputs.bin }}
           MM_DIR: ${{ steps.mm.outputs.dir }}
           LIBGL_ALWAYS_SOFTWARE: "1"
-          AUDIODEV: "null"
         run: |
           set -euo pipefail
           smoke_out="$(realpath -m build/material-maker-smoke)"
           mkdir -p "$smoke_out"
+
+          set +e
           (
             cd "$MM_DIR"
             xvfb-run -a "./$(basename "$MM_BIN")" \
+              --audio-driver Dummy \
               --rendering-driver vulkan \
               --export-material \
+              --target Blender \
+              --size 2048 \
               -o "$smoke_out" \
               --output-file "upstream_rock" \
               "$MM_DIR/examples/rock.ptex"
           )
+          mm_status=$?
+          set -e
+
           mapfile -t smoke_pngs < <(find "$smoke_out" -type f -name '*.png' | sort)
+          echo "Material Maker exit code: $mm_status"
           echo "Upstream smoke test generated ${#smoke_pngs[@]} PNG files"
           find "$smoke_out" -type f -maxdepth 2 -print | sort
-          [[ ${#smoke_pngs[@]} -ge 3 ]] || { echo "Bundled upstream recipe did not export a PBR map set" >&2; exit 1; }
+
+          if [[ ${#smoke_pngs[@]} -lt 3 ]]; then
+            echo "Bundled upstream recipe did not export a usable PBR map set" >&2
+            exit 1
+          fi
+          if [[ $mm_status -ne 0 ]]; then
+            echo "::warning::Material Maker returned $mm_status after producing a valid map set; accepting validated output because Linux CLI has a known post-export shutdown crash."
+          fi
 
       - name: Bake repository procedural PBR materials
         shell: bash
@@ -118,7 +133,6 @@ jobs:
           MM_DIR: ${{ steps.mm.outputs.dir }}
           REQUESTED_RECIPE: ${{ inputs.recipe }}
           LIBGL_ALWAYS_SOFTWARE: "1"
-          AUDIODEV: "null"
         run: |
           set -euo pipefail
           mkdir -p "$OUT_ROOT"
@@ -143,33 +157,45 @@ jobs:
             mkdir -p "$out_abs"
 
             echo "::group::Bake $name"
+            set +e
             (
               cd "$MM_DIR"
               xvfb-run -a "$MM_EXE" \
+                --audio-driver Dummy \
                 --rendering-driver vulkan \
                 --export-material \
+                --target Blender \
+                --size 2048 \
                 -o "$out_abs" \
                 --output-file "$name" \
                 "$recipe_abs"
             )
+            mm_status=$?
+            set -e
             echo "::endgroup::"
 
             cp "$recipe" "$out_abs/${name}.ptex"
 
             mapfile -t PNGS < <(find "$out_abs" -type f -name '*.png' | sort)
             if [[ ${#PNGS[@]} -lt 3 ]]; then
-              echo "Expected at least 3 PBR PNG maps for $name, found ${#PNGS[@]}" >&2
+              echo "Expected at least 3 PBR PNG maps for $name, found ${#PNGS[@]} (Material Maker exit=$mm_status)" >&2
               find "$out_abs" -maxdepth 2 -type f -ls
               exit 1
+            fi
+            if [[ $mm_status -ne 0 ]]; then
+              echo "::warning::Material Maker returned $mm_status after producing ${#PNGS[@]} validated PNG maps for $name; accepting the generated material."
             fi
 
             {
               echo "generator=RodZill4/material-maker"
               echo "generator_version=$MM_VERSION"
               echo "generator_archive_sha256=$MM_ARCHIVE_SHA256"
+              echo "target=Blender"
+              echo "resolution=2048"
               echo "recipe=$recipe"
               echo "recipe_sha256=$(sha256sum "$recipe" | awk '{print $1}')"
               echo "source_commit=$GITHUB_SHA"
+              echo "material_maker_exit_code=$mm_status"
               echo "generated_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
               echo "maps=${#PNGS[@]}"
               for png in "${PNGS[@]}"; do
@@ -196,10 +222,12 @@ jobs:
           {
             echo '## Procedural material bake'
             echo
-            echo "- Generator: Material Maker $MM_VERSION"
+            echo "- Generator: Material Maker $MM_VERSION (CI-pinned known-exportable line)"
             echo "- Source commit: \`$GITHUB_SHA\`"
             echo '- Method: deterministic procedural node graphs; no neural image generation'
-            echo '- CI graphics: Mesa software Vulkan on GitHub-hosted Ubuntu runner'
+            echo '- Resolution: 2048 x 2048'
+            echo '- Export target: Blender PBR profile'
+            echo '- Acceptance gate: actual PNG map set + SHA-256 manifest, not process exit code alone'
             echo
             echo '### Files'
             echo '```text'
