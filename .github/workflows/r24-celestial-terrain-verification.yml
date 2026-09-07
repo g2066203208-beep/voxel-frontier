@@ -49,6 +49,10 @@ jobs:
           grep -q 'reliefErrorScale' native/include/vf/world/PlanetLodMeshBuilder.hpp
           grep -q 'nearFieldRadiusMeters' native/include/vf/world/PlanetLodMeshBuilder.hpp
           grep -q 'forceContactScale' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'approximateNodeDistance' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'std::array<Node, 4> children' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q '1U, 20U' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'nearFieldRadiusMeters = buildAltitude < 25000.0 ? 240.0' native/src/app/Main.cpp
           grep -q 'preciseSurface = buildSurface.sampleSurface' native/src/app/Main.cpp
           test "$(grep -c 'R24 capture shadow-contact downward view' native/src/app/Main.cpp || true)" -eq 0
           grep -q 'testGroundedCameraCoRotatesWithPlanetWithoutTerrainYaw' native/tests/CameraInputTests.cpp
