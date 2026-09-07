@@ -1,0 +1,142 @@
+name: R24 Real 3D Terrain Geometry
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_real_3d_terrain.py'
+      - '.github/scripts/r24_real_3d_terrain_capture.sh'
+      - '.github/workflows/r24-real-3d-terrain.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-real-3d-terrain-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-real-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+          ref: ${{ github.sha }}
+
+      - name: Apply real 3-D terrain geometry migration
+        run: python3 .github/scripts/r24_real_3d_terrain.py
+
+      - name: Validate production source changed geometrically
+        run: |
+          git diff --check
+          grep -q 'orogenyBroad' native/src/world/PlanetSurface.cpp
+          grep -q 'alpineSignedRelief' native/src/world/PlanetSurface.cpp
+          grep -q 'riftFaultProfile' native/src/world/PlanetSurface.cpp
+          grep -q 'mountainLocalRelief > 850.0' native/tests/TerrainLandformTests.cpp
+          grep -q 'riftLocalRelief > 260.0' native/tests/TerrainLandformTests.cpp
+          grep -q 'localReliefMeters / 900.0' native/src/app/Main.cpp
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure
+        run: cmake -S native -B build/r24-real-3d-terrain -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build/r24-real-3d-terrain --parallel 2
+
+      - name: Run full native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-real-3d-terrain --verbose --output-on-failure 2>&1 | tee r24-real-3d-terrain-ctest.log
+
+      - name: Run focused landform geometry test
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-real-3d-terrain --verbose --output-on-failure \
+            -R 'vf_terrain_landform_tests' 2>&1 | tee r24-real-3d-terrain-focused.log
+          grep -q 'mountain_local_relief_m=' r24-real-3d-terrain-focused.log
+          grep -q 'rift_local_relief_m=' r24-real-3d-terrain-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture actual 3-D terrain in production renderer
+        shell: bash
+        run: |
+          APP="$(find build/r24-real-3d-terrain -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_real_3d_terrain_capture.sh
+          .github/scripts/r24_real_3d_terrain_capture.sh "$APP" r24-real-3d-terrain-evidence
+
+      - name: Preserve exact evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-real-3d-terrain-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-real-3d-terrain-evidence ]]; then
+            cp -a r24-real-3d-terrain-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-real-3d-terrain-ctest.log ]] && cp -f r24-real-3d-terrain-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-real-3d-terrain-focused.log ]] && cp -f r24-real-3d-terrain-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-real-3d-terrain-${{ github.run_id }}
+          path: |
+            r24-real-3d-terrain-evidence/**
+            r24-real-3d-terrain-ctest.log
+            r24-real-3d-terrain-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested production terrain
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "feat(r24): add kilometre-scale real 3d terrain relief"
+          git reset --hard HEAD
+          git clean -fd build/r24-real-3d-terrain || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
