@@ -22,7 +22,7 @@ def patch(path: str, old: str, new: str) -> None:
 patch(
     "native/src/player/PlanetCamera.cpp",
     """        position_ += velocity_ * dt;\n        if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) enterPhysicsFrame(*newFrame);\n        return;\n""",
-    """        const glm::dvec3 previousPosition = position_;\n        glm::dvec3 proposedPosition = position_ + velocity_ * dt;\n        if (flightMode_) {\n            const glm::dvec3 segment = proposedPosition - previousPosition;\n            const double segmentLengthSquared = glm::dot(segment, segment);\n            if (segmentLengthSquared > 1.0e-12) {\n                double earliestHit = 1.0;\n                const CelestialBody* hitBody = nullptr;\n                double hitSafeRadius = 0.0;\n                for (const auto& candidate : celestialSystem_->bodies()) {\n                    const double safeRadius = candidate.type == CelestialBodyType::Star\n                        ? candidate.radiusMeters * 2.0\n                        : candidate.radiusMeters + std::max(2000.0, candidate.radiusMeters * 0.02);\n                    if (safeRadius <= 0.0) continue;\n                    const glm::dvec3 relativeStart = previousPosition - candidate.position;\n                    const double c = glm::dot(relativeStart, relativeStart) - safeRadius * safeRadius;\n                    if (c <= 0.0) continue;\n                    const double b = glm::dot(relativeStart, segment);\n                    const double discriminant = b * b - segmentLengthSquared * c;\n                    if (discriminant < 0.0) continue;\n                    const double root = (-b - std::sqrt(discriminant)) / segmentLengthSquared;\n                    if (root >= 0.0 && root <= earliestHit) {\n                        earliestHit = root;\n                        hitBody = &candidate;\n                        hitSafeRadius = safeRadius;\n                    }\n                }\n                if (hitBody != nullptr) {\n                    const double backedOffHit = std::max(0.0, earliestHit - 1.0e-7);\n                    proposedPosition = previousPosition + segment * backedOffHit;\n                    const glm::dvec3 contactNormal = safeNormalize(\n                        proposedPosition - hitBody->position, {1.0, 0.0, 0.0});\n                    // Snap exactly outside the safety sphere to remove floating-point ambiguity at\n                    // AU scale, then remove only inward relative velocity. Tangential/orbital motion\n                    // is preserved so the player can skim around a star instead of being frozen.\n                    proposedPosition = hitBody->position + contactNormal * hitSafeRadius;\n                    const glm::dvec3 relativeVelocity = velocity_ - hitBody->linearVelocity;\n                    const double inwardSpeed = glm::dot(relativeVelocity, contactNormal);\n                    if (inwardSpeed < 0.0) {\n                        velocity_ -= contactNormal * inwardSpeed;\n                        if (inertialFlightCarrierValid_)\n                            inertialFlightControlVelocity_ = velocity_ - inertialFlightCarrierVelocity_;\n                    }\n                }\n            }\n        }\n        position_ = proposedPosition;\n        if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) enterPhysicsFrame(*newFrame);\n        return;\n""",
+    """        const glm::dvec3 previousPosition = position_;\n        glm::dvec3 proposedPosition = position_ + velocity_ * dt;\n        if (flightMode_) {\n            const glm::dvec3 segment = proposedPosition - previousPosition;\n            const double segmentLengthSquared = glm::dot(segment, segment);\n            if (segmentLengthSquared > 1.0e-12) {\n                double earliestHit = 1.0;\n                const CelestialBody* hitBody = nullptr;\n                double hitSafeRadius = 0.0;\n                for (const auto& candidate : celestialSystem_->bodies()) {\n                    const double safeRadius = candidate.type == CelestialBodyType::Star\n                        ? candidate.radiusMeters * 2.0\n                        : candidate.radiusMeters + std::max(2000.0, candidate.radiusMeters * 0.02);\n                    if (safeRadius <= 0.0) continue;\n                    const glm::dvec3 relativeStart = previousPosition - candidate.position;\n                    const double c = glm::dot(relativeStart, relativeStart) - safeRadius * safeRadius;\n                    if (c <= 0.0) continue;\n                    const double b = glm::dot(relativeStart, segment);\n                    const double discriminant = b * b - segmentLengthSquared * c;\n                    if (discriminant < 0.0) continue;\n                    const double root = (-b - std::sqrt(discriminant)) / segmentLengthSquared;\n                    if (root >= 0.0 && root <= earliestHit) {\n                        earliestHit = root;\n                        hitBody = &candidate;\n                        hitSafeRadius = safeRadius;\n                    }\n                }\n                if (hitBody != nullptr) {\n                    const double backedOffHit = std::max(0.0, earliestHit - 1.0e-7);\n                    proposedPosition = previousPosition + segment * backedOffHit;\n                    const glm::dvec3 contactNormal = safeNormalize(\n                        proposedPosition - hitBody->position, {1.0, 0.0, 0.0});\n                    proposedPosition = hitBody->position + contactNormal * hitSafeRadius;\n                }\n            }\n\n            // Boundary persistence matters just as much as first impact. When the previous frame\n            // already ended exactly on the safety shell, the quadratic sweep starts with c==0 and\n            // has no entering root. Correct any endpoint penetration explicitly and remove only the\n            // inward relative velocity; tangential/orbital motion remains untouched.\n            for (const auto& candidate : celestialSystem_->bodies()) {\n                const double safeRadius = candidate.type == CelestialBodyType::Star\n                    ? candidate.radiusMeters * 2.0\n                    : candidate.radiusMeters + std::max(2000.0, candidate.radiusMeters * 0.02);\n                if (safeRadius <= 0.0) continue;\n                glm::dvec3 relativeEnd = proposedPosition - candidate.position;\n                double endDistance = glm::length(relativeEnd);\n                if (endDistance + 1.0e-6 >= safeRadius) continue;\n                const glm::dvec3 contactNormal = safeNormalize(\n                    relativeEnd, safeNormalize(previousPosition - candidate.position, {1.0, 0.0, 0.0}));\n                proposedPosition = candidate.position + contactNormal * safeRadius;\n                const glm::dvec3 relativeVelocity = velocity_ - candidate.linearVelocity;\n                const double inwardSpeed = glm::dot(relativeVelocity, contactNormal);\n                if (inwardSpeed < 0.0) {\n                    velocity_ -= contactNormal * inwardSpeed;\n                    if (inertialFlightCarrierValid_)\n                        inertialFlightControlVelocity_ = velocity_ - inertialFlightCarrierVelocity_;\n                }\n            }\n        }\n        position_ = proposedPosition;\n        if (const auto* newFrame = celestialSystem_->physicsReferenceBodyAt(position_)) enterPhysicsFrame(*newFrame);\n        return;\n""",
 )
 
 # Arrival is intentionally one stellar radius above the photosphere. At this distance the physical
@@ -32,6 +32,15 @@ patch(
     "native/src/app/Main.cpp",
     """                if (sunClearance <= currentSun->radiusMeters * 0.90)\n                    std::cout << \"R24 SUN_TRANSIT_ARRIVED\\n\";\n""",
     """                if (sunClearance <= currentSun->radiusMeters * 1.05)\n                    std::cout << \"R24 SUN_TRANSIT_ARRIVED\\n\";\n""",
+)
+
+# V3 deliberately moved the physical Moon away from the HUD, but the sign put it beside the speed
+# bar on the right. Reverse only the framing offset so the unchanged 6-pixel physical Moon sits to
+# the left of the crosshair. No proxy scaling or fake lunar disc is introduced.
+patch(
+    "native/src/app/Main.cpp",
+    """                    moonSurfaceDirection * std::cos(moonEvidenceFrameOffset)\n                        - moonScreenRight * std::sin(moonEvidenceFrameOffset),\n""",
+    """                    moonSurfaceDirection * std::cos(moonEvidenceFrameOffset)\n                        + moonScreenRight * std::sin(moonEvidenceFrameOffset),\n""",
 )
 
 # Keep close-Sun texture visible after ACES. The former HDR values intentionally overpowered the
@@ -58,7 +67,8 @@ for old, new in replacements.items():
     text = text.replace(old, new, 1)
 shader.write_text(text, encoding="utf-8")
 
-# Regression: a huge inherited inertial carrier must not tunnel through a star in one frame.
+# Regression: a huge inherited inertial carrier must not tunnel through a star in one frame, and a
+# second inward frame from the exact shell must remain outside as well.
 test_path = ROOT / "native/tests/InterplanetaryFlightTests.cpp"
 test_text = test_path.read_text(encoding="utf-8")
 function = r'''void testInterstellarCreativeSweepCannotTunnelThroughStar() {
@@ -84,8 +94,6 @@ function = r'''void testInterstellarCreativeSweepCannotTunnelThroughStar() {
     require(starId != 0U, "swept-star regression requires a registered star");
 
     vf::PlanetCamera camera{terrain, &celestial, homeId};
-    // Place the player well outside the home bubble with an intentionally absurd inherited carrier
-    // that would cross the star and its 2R safety envelope in a single 50 ms frame.
     camera.setExternalWorldState({90000.0, 0.0, 0.0}, {500000.0, 0.0, 0.0}, false);
     camera.setFlightMode(true);
     vf::PlanetMovementInput idle{};
@@ -93,14 +101,32 @@ function = r'''void testInterstellarCreativeSweepCannotTunnelThroughStar() {
 
     const auto* liveStar = celestial.body(starId);
     require(liveStar != nullptr, "swept-star regression star must remain valid");
-    const double distance = glm::length(camera.position() - liveStar->position);
-    require(distance >= liveStar->radiusMeters * 2.0 - 1.0e-3,
+    const double firstDistance = glm::length(camera.position() - liveStar->position);
+    require(firstDistance >= liveStar->radiusMeters * 2.0 - 1.0e-3,
         "creative interstellar sweep must stop outside the 2R stellar inspection envelope");
+
+    // Re-aim from the exact boundary and request more inward travel. This is the c==0 case that the
+    // first V4 implementation missed and that allowed repeated W input to creep inside the Sun.
+    camera.setViewDirectionWorld(liveStar->position - camera.position(), {0.0, 1.0, 0.0});
+    camera.setCreativeFlightSpeedMps(vf::PlanetCamera::kCreativeInterstellarBaseMaxMps);
+    vf::PlanetMovementInput thrust{};
+    thrust.forward = 1.0;
+    thrust.sprint = true;
+    for (int frame = 0; frame < 12; ++frame) camera.update(thrust, 0.05);
+    const double heldDistance = glm::length(camera.position() - liveStar->position);
+    require(heldDistance >= liveStar->radiusMeters * 2.0 - 1.0e-3,
+        "repeated inward warp input must remain outside the persistent 2R stellar safety shell");
     const glm::dvec3 outward = glm::normalize(camera.position() - liveStar->position);
     require(glm::dot(camera.velocity() - liveStar->linearVelocity, outward) >= -1.0e-6,
-        "stellar sweep contact must remove residual inward velocity instead of repeatedly tunnelling");
+        "stellar safety shell must remove residual inward velocity after persistent contact");
 }'''
-if function not in test_text:
+start = test_text.find("void testInterstellarCreativeSweepCannotTunnelThroughStar() {")
+if start >= 0:
+    end = test_text.find("\n} // namespace", start)
+    if end < 0:
+        raise SystemExit("existing swept-star test end anchor missing")
+    test_text = test_text[:start] + function + "\n" + test_text[end:]
+else:
     anchor = "\n} // namespace\n\nint main() {"
     if anchor not in test_text:
         raise SystemExit("interplanetary test namespace anchor missing")
