@@ -38,35 +38,36 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           test -s material_lab/README.md
           test -s material_lab/meshova/bake-request.ts
-          test -s material_lab/meshova/recipes/vf-layered-sandstone-painted.ts
-          test -s material_lab/meshova/recipes/vf-painterly-masters.ts
+
+          expected=$(printf '%s\n' \
+            vf-layered-sandstone-painted.ts \
+            vf-painterly-bark.ts \
+            vf-painterly-core.ts \
+            vf-painterly-dirt.ts \
+            vf-painterly-leaves.ts \
+            vf-painterly-snow.ts \
+            vf-painterly-water.ts | sort)
+          actual=$(find material_lab/meshova/recipes -maxdepth 1 -type f -name '*.ts' -printf '%f\n' | sort)
+          if [[ "$actual" != "$expected" ]]; then
+            echo "Production recipe directory differs from approved source set." >&2
+            echo "EXPECTED:" >&2; echo "$expected" >&2
+            echo "ACTUAL:" >&2; echo "$actual" >&2
+            exit 1
+          fi
 
           raster_sources=$(find material_lab -type f \
-            \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.tga' \) \
-            -print)
+            \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.tga' \) -print)
           if [[ -n "$raster_sources" ]]; then
             echo "Raster source assets are forbidden in material_lab:" >&2
             echo "$raster_sources" >&2
             exit 1
           fi
 
-          legacy_sources=$(find material_lab/meshova/recipes -maxdepth 1 -type f \
-            \( -iname '*cartoon*.ts' -o -iname '*experimental*.ts' -o -iname '*draft*.ts' \
-               -o -iname '*backup*.ts' -o -iname '*old*.ts' -o -iname '*-v[0-9]*.ts' \) \
-            -print)
-          if [[ -n "$legacy_sources" ]]; then
-            echo "Legacy/experimental recipe files are forbidden in the production recipe directory:" >&2
-            echo "$legacy_sources" >&2
-            exit 1
-          fi
-
           python3 - <<'PY'
           import json
           from pathlib import Path
-
           request = json.loads(Path("material_lab/request.json").read_text())
           materials = request.get("materials", [request])
           allowed = {
@@ -77,11 +78,12 @@ jobs:
               "vfPainterlySnow",
               "vfPainterlyWater",
           }
+          if len(materials) != 6:
+              raise SystemExit(f"Expected exactly six category masters, got {len(materials)}")
+          if {m.get("preset") for m in materials} != allowed:
+              raise SystemExit("Production request must contain exactly the six approved master presets")
           for item in materials:
-              preset = item.get("preset")
               name = item.get("name", "")
-              if preset not in allowed:
-                  raise SystemExit(f"Preset is not production-approved: {preset}")
               if any(token in name.lower() for token in ("reference", "test", "draft", "final", "_v1", "_v2", "_v3", "_v4", "_v5", "_v6", "_v7", "_v8", "_v9")):
                   raise SystemExit(f"Unstable production material name: {name}")
           PY
@@ -108,7 +110,6 @@ jobs:
           set -euo pipefail
           corepack enable
           corepack prepare "pnpm@$PNPM_VERSION" --activate
-          pnpm --version
           cd .cache/Meshova
           pnpm install --frozen-lockfile
 
@@ -119,10 +120,16 @@ jobs:
           cp material_lab/request.json .cache/Meshova/vf-request.json
           cp material_lab/meshova/bake-request.ts .cache/Meshova/examples/vf-bake-request.ts
           mkdir -p .cache/Meshova/examples/vf-recipes
-          cp material_lab/meshova/recipes/vf-layered-sandstone-painted.ts \
-            .cache/Meshova/examples/vf-recipes/vf-layered-sandstone-painted.ts
-          cp material_lab/meshova/recipes/vf-painterly-masters.ts \
-            .cache/Meshova/examples/vf-recipes/vf-painterly-masters.ts
+          for file in \
+            vf-layered-sandstone-painted.ts \
+            vf-painterly-bark.ts \
+            vf-painterly-core.ts \
+            vf-painterly-dirt.ts \
+            vf-painterly-leaves.ts \
+            vf-painterly-snow.ts \
+            vf-painterly-water.ts; do
+            cp "material_lab/meshova/recipes/$file" ".cache/Meshova/examples/vf-recipes/$file"
+          done
 
       - name: Bake deterministic PBR material library
         shell: bash
@@ -139,13 +146,8 @@ jobs:
           test -d "$src"
           mkdir -p build/generated-materials
           cp -R "$src"/* build/generated-materials/
-
           material_count=$(find build/generated-materials -mindepth 1 -maxdepth 1 -type d | wc -l)
-          if [[ "$material_count" -lt 1 ]]; then
-            echo "No material directories were generated" >&2
-            exit 1
-          fi
-
+          test "$material_count" -eq 6 || { echo "Expected 6 material directories, got $material_count" >&2; exit 1; }
           while IFS= read -r dir; do
             name=$(basename "$dir")
             for suffix in baseColor normal roughness height ao metallic; do
@@ -154,11 +156,8 @@ jobs:
               dims=$(identify -format '%wx%h' "$file")
               test "$dims" = "1024x1024" || { echo "Unexpected dimensions for $file: $dims" >&2; exit 1; }
             done
-            test -s "$dir/manifest.json"
-            test -s "$dir/request.json"
             grep -q 'VF_PAINTERLY_PLANETARY_V1' "$dir/manifest.json"
           done < <(find build/generated-materials -mindepth 1 -maxdepth 1 -type d | sort)
-
           mapfile -t pngs < <(find build/generated-materials -type f -name '*.png' | sort)
           sha256sum "${pngs[@]}" > build/generated-materials/SHA256SUMS.txt
 
@@ -168,14 +167,8 @@ jobs:
           set -euo pipefail
           python3 material_lab/preview/render_material_previews.py build/generated-materials
           mapfile -t spheres < <(find build/generated-materials -type f -name 'preview-sphere.png' | sort)
-          test ${#spheres[@]} -gt 0
-          montage "${spheres[@]}" \
-            -thumbnail 720x720 \
-            -tile 3x \
-            -geometry +18+18 \
-            -background '#202020' \
-            build/material-spheres-overview.png
-          find build/generated-materials -type f -maxdepth 3 -printf '%P\n' | sort
+          test ${#spheres[@]} -eq 6
+          montage "${spheres[@]}" -thumbnail 720x720 -tile 3x -geometry +18+18 -background '#202020' build/material-spheres-overview.png
 
       - name: Upload PBR material library
         uses: actions/upload-artifact@v4
@@ -196,10 +189,8 @@ jobs:
             echo
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Style: \`$VF_STYLE_ID\`"
-            echo "- Meshova commit: \`$MESHOVA_COMMIT\`"
-            echo "- pnpm: \`$PNPM_VERSION\`"
-            echo '- Production registry: explicit whitelist only'
+            echo '- Production set: sandstone / dirt / bark / leaves / snow / water'
             echo '- Source: procedural code only; raster source assets rejected'
-            echo '- PNG files: CI artifacts for validation, not authored runtime assets'
-            echo '- Every material: six required PBR maps + true-Height displaced studio sphere + tile/map previews'
+            echo '- Production recipe directory: exact allow-list enforced'
+            echo '- Every material: PBR maps + true-Height displaced studio sphere'
           } >> "$GITHUB_STEP_SUMMARY"
