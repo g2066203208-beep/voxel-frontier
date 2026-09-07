@@ -1,0 +1,101 @@
+name: R24 Shadow Contact Refine Apply
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/workflows/r24-shadow-contact-refine-apply.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+      - name: Refine only shadow-contact proof framing
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('native/src/app/Main.cpp')
+          s = p.read_text(encoding='utf-8')
+          def rep(old, new):
+              global s
+              n = s.count(old)
+              if n != 1:
+                  raise SystemExit(f'anchor count={n}: {old[:80]!r}')
+              s = s.replace(old, new, 1)
+
+          rep('''        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");
+              shadowEnv != nullptr && std::string_view{shadowEnv} == "1") {
+              const glm::dvec3 groundUp = camera.up();
+              const glm::dvec3 tangentForward = safeNormalize(
+                  camera.forwardDirection() - groundUp * glm::dot(camera.forwardDirection(), groundUp),
+                  stableTangent(groundUp));
+              camera.setViewDirectionWorld(
+                  safeNormalize(tangentForward * 0.48 - groundUp * 0.88, -groundUp),
+                  groundUp);
+              std::cout << "R24 capture shadow-contact downward view\\n";
+          }
+
+          ''', '')
+
+          rep('''                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);
+                  const glm::dvec3 tangentPlanet = safeNormalize(
+                      forwardPlanet - cameraDirectionPlanet * glm::dot(forwardPlanet, cameraDirectionPlanet),
+                      patchZ);
+                  const glm::dvec3 probeDirection = safeNormalize(
+                      cameraDirectionPlanet + tangentPlanet * (11.0 / planet.radius),
+                      cameraDirectionPlanet);
+          ''', '''                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);
+                  const glm::dvec3 sunPlanetDirection = safeNormalize(
+                      inverseAster * sunWorldDirection, patchEast);
+                  const glm::dvec3 sunHorizontalPlanet = safeNormalize(
+                      sunPlanetDirection
+                          - cameraDirectionPlanet * glm::dot(sunPlanetDirection, cameraDirectionPlanet),
+                      patchEast);
+                  // Put the probe sideways to the horizontal sun vector so its cast shadow crosses
+                  // the image instead of hiding directly behind the caster.
+                  const glm::dvec3 placementTangentPlanet = safeNormalize(
+                      glm::cross(cameraDirectionPlanet, sunHorizontalPlanet), patchZ);
+                  const glm::dvec3 probeDirection = safeNormalize(
+                      cameraDirectionPlanet + placementTangentPlanet * (10.0 / planet.radius),
+                      cameraDirectionPlanet);
+          ''')
+
+          rep('''                vf::appendDebugBox(
+                      dynamicMesh, probeCenter, probeOrientation, probeHalfExtents,
+                      {0.88F, 0.43F, 0.12F}, {0.0F, 0.72F, 0.0F, 0.0F});
+                  frameForwardSurface = safeNormalize(probeCenter - cameraSurface, forwardSurface);
+                  frameUpSurface = upSurface;
+          ''', '''                vf::appendDebugBox(
+                      dynamicMesh, probeCenter, probeOrientation, probeHalfExtents,
+                      {0.88F, 0.43F, 0.12F}, {0.0F, 0.72F, 0.0F, 0.0F});
+                  const glm::dvec3 shadowDirectionSurface = safeNormalize(
+                      -(sunSurfaceDirection
+                          - probeUp * glm::dot(sunSurfaceDirection, probeUp)),
+                      {1.0, 0.0, 0.0});
+                  // Aim between the caster and the first metres of its shadow: the image must
+                  // contain the exact foot contact and a visible unobstructed shadow run.
+                  const glm::dvec3 proofTarget = probeCenter + shadowDirectionSurface * 3.5;
+                  frameForwardSurface = safeNormalize(proofTarget - cameraSurface, forwardSurface);
+                  frameUpSurface = upSurface;
+          ''')
+          p.write_text(s, encoding='utf-8')
+      - name: Validate exact change
+        run: |
+          git diff --check
+          ! grep -q 'shadow-contact downward view' native/src/app/Main.cpp
+          grep -q 'placementTangentPlanet' native/src/app/Main.cpp
+          grep -q 'shadowDirectionSurface' native/src/app/Main.cpp
+      - name: Commit refined framing
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native/src/app/Main.cpp
+          git commit -m 'test(r24): expose exact shadow contact origin in low-angle capture'
+          git push origin HEAD:work/r24-unified-planetary-physics
