@@ -12,7 +12,7 @@
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfPainterlyDirt",
-      "params": {"seed":182031,"relief":1.22,"normalStrength":9.8,"moisture":0.14}
+      "params": {"seed":182031,"relief":1.16,"normalStrength":9.2,"moisture":0.14}
     },
     {
       "name": "vf_painterly_bark_master",
