@@ -59,12 +59,14 @@ jobs:
           cd .cache/Meshova
           pnpm install --frozen-lockfile
 
-      - name: Inject GPT-controlled material request
+      - name: Inject GPT-controlled material request and recipes
         shell: bash
         run: |
           set -euo pipefail
           cp material_lab/request.json .cache/Meshova/vf-request.json
           cp material_lab/meshova/bake-request.ts .cache/Meshova/examples/vf-bake-request.ts
+          mkdir -p .cache/Meshova/examples/vf-recipes
+          cp material_lab/meshova/recipes/*.ts .cache/Meshova/examples/vf-recipes/
 
       - name: Bake deterministic PBR maps
         shell: bash
@@ -121,6 +123,7 @@ jobs:
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Meshova commit: \`$MESHOVA_COMMIT\`"
             echo "- pnpm: \`$PNPM_VERSION\`"
+            echo '- Architecture: generic baker + independent recipe modules'
             echo '- Source: deterministic procedural program, not AI image generation'
-            echo '- Outputs: PBR PNG maps + semantic masks + contact-sheet preview + SHA-256 manifest'
+            echo '- Outputs: PBR PNG maps + optional semantic masks + contact-sheet preview + SHA-256 manifest'
           } >> "$GITHUB_STEP_SUMMARY"
