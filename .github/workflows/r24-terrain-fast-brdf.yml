@@ -1,0 +1,191 @@
+name: R24 Terrain Fast BRDF
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_terrain_fast_brdf.py'
+      - '.github/workflows/r24-terrain-fast-brdf.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-terrain-fast-brdf-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 production commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Apply terrain fast BRDF
+        run: python3 .github/scripts/r24_terrain_fast_brdf.py
+
+      - name: Validate source contracts
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'evaluateTerrainFast' native/shaders/planet.slang
+          grep -q '0.96 / PI' native/shaders/planet.slang
+          grep -q 'terrainMaterial.*evaluateTerrainFast' native/shaders/planet.slang || \
+            grep -q '? evaluateTerrainFast(input)' native/shaders/planet.slang
+          grep -q 'kGpuTimingWarmupSamples = 6U' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'R24 GPU steady_pass_ms samples=' native/src/render/VulkanRenderer.cpp
+          grep -q 'gpuTimingAccumMilliseconds_' native/src/render/VulkanRenderer.cpp
+          grep -q 'gpuTimingMaxMilliseconds_' native/src/render/VulkanRenderer.cpp
+          ! grep -q 'bool terrainMaterial = !waterMaterial' native/shaders/planet.slang
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-fast-brdf -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-fast-brdf --parallel 2
+
+      - name: Run all native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-fast-brdf --verbose --output-on-failure 2>&1 | tee r24-fast-brdf-ctest.log
+
+      - name: Gate physical terrain and shader contracts
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-fast-brdf --verbose --output-on-failure \
+            -R 'vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests|vf_shader_contract_tests' \
+            2>&1 | tee r24-fast-brdf-focused.log
+          grep -q 'vf_planetary_body_system_tests: PASS' r24-fast-brdf-focused.log
+          grep -q 'vf_r24_runtime_stability_tests: PASS' r24-fast-brdf-focused.log
+          grep -q 'Terrain landform tests passed' r24-fast-brdf-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-fast-brdf-focused.log
+          grep -q 'All production shader SPIR-V entry-point contracts passed' r24-fast-brdf-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real Vulkan terrain with steady GPU timing
+        shell: bash
+        run: |
+          APP="$(find build/r24-fast-brdf -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-fast-brdf-evidence
+
+      - name: Gate real images and steady pass telemetry
+        shell: bash
+        run: |
+          test -s r24-fast-brdf-evidence/r24-epic-landscape-overview.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, statistics
+
+          root = Path('r24-fast-brdf-evidence/logs')
+          pattern = re.compile(
+              r'R24 GPU steady_pass_ms samples=([0-9]+) '
+              r'shadow_mean=([0-9.]+) opaque_mean=([0-9.]+) sky_mean=([0-9.]+) '
+              r'transparent_mean=([0-9.]+) total_mean=([0-9.]+) '
+              r'shadow_max=([0-9.]+) opaque_max=([0-9.]+) sky_max=([0-9.]+) transparent_max=([0-9.]+)')
+          rows = []
+          for name in ('mountain', 'rift', 'canyon', 'abyss'):
+              log = root / f'{name}.log'
+              text = log.read_text(encoding='utf-8', errors='replace')
+              found = pattern.findall(text)
+              if not found:
+                  raise SystemExit(f'no steady GPU pass timing in {log.name}')
+              values = found[-1]
+              samples = int(values[0])
+              nums = tuple(map(float, values[1:]))
+              row = (name, samples, *nums)
+              rows.append(row)
+              print('FAST_BRDF_STEADY', row)
+              if samples < 8:
+                  raise SystemExit(f'{name}: expected >=8 steady samples, got {samples}')
+
+          opaque = [r[3] for r in rows]
+          sky = [r[4] for r in rows]
+          totals = [r[6] for r in rows]
+          print('FAST_BRDF_SUMMARY',
+                'opaque_mean_of_scenes=', statistics.mean(opaque),
+                'opaque_median=', statistics.median(opaque),
+                'sky_mean_of_scenes=', statistics.mean(sky),
+                'profiled_total_mean=', statistics.mean(totals))
+          if any(v <= 0.0 for v in totals):
+              raise SystemExit('steady profiled totals must be positive')
+          PY
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-fast-brdf-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-fast-brdf-evidence ]]; then
+            cp -a r24-fast-brdf-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-fast-brdf-ctest.log ]] && cp -f r24-fast-brdf-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-fast-brdf-focused.log ]] && cp -f r24-fast-brdf-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-fast-brdf-${{ github.run_id }}
+          path: |
+            r24-fast-brdf-evidence/**
+            r24-fast-brdf-ctest.log
+            r24-fast-brdf-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested terrain fast BRDF
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "perf(r24): specialize rough terrain lighting and steady GPU metrics"
+          git reset --hard HEAD
+          git clean -fd build/r24-fast-brdf || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
