@@ -1,158 +1,103 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import {
-  BILIBILI_MATERIALS,
-  bakeStylizedCellRock,
   exportPBR,
-  materialFromFields,
   textureToPNG,
   validateMaterial,
+  type Material,
 } from "../src/index.js";
-import { bakeVfBasalt } from "./vf-recipes/vf-basalt.js";
-import { bakeVfBasaltCartoon } from "./vf-recipes/vf-basalt-cartoon.js";
-import { bakeVfGranite } from "./vf-recipes/vf-granite.js";
-import { bakeVfDirt } from "./vf-recipes/vf-dirt.js";
-import { bakeVfBark } from "./vf-recipes/vf-bark.js";
 import {
-  bakeVfSandstone,
-  bakeVfLimestone,
-  bakeVfGravel,
-  bakeVfSand,
-  bakeVfWetMud,
-  bakeVfWoodPlank,
-  bakeVfIronOre,
-  bakeVfCopperOre,
-  bakeVfCoal,
-  bakeVfSnow,
-  bakeVfIce,
-} from "./vf-recipes/vf-world-surfaces.js";
-import {
-  bakeVfBasaltCartoonWorld,
-  bakeVfGraniteCartoon,
-  bakeVfDirtCartoon,
-  bakeVfBarkCartoon,
-  bakeVfSandstoneCartoon,
-  bakeVfLimestoneCartoon,
-  bakeVfGravelCartoon,
-  bakeVfSandCartoon,
-  bakeVfWetMudCartoon,
-  bakeVfWoodPlankCartoon,
-  bakeVfIronOreCartoon,
-  bakeVfCopperOreCartoon,
-  bakeVfCoalCartoon,
-  bakeVfSnowCartoon,
-  bakeVfIceCartoon,
-} from "./vf-recipes/vf-cartoon-world-v2.js";
-import {
-  bakeVfBasaltPainted,
-  bakeVfGranitePainted,
-  bakeVfDirtPainted,
-  bakeVfBarkPainted,
-  bakeVfSnowPainted,
-  bakeVfIcePainted,
-} from "./vf-recipes/vf-painted-wilderness.js";
-import { bakeVfLayeredSandstonePainted } from "./vf-recipes/vf-layered-sandstone-painted.js";
+  bakeVfLayeredSandstonePainted,
+  type VfLayeredSandstoneParams,
+} from "./vf-recipes/vf-layered-sandstone-painted.js";
 
-type Preset =
-  | "stylizedCellRock" | "volcanicRock" | "simpleRock"
-  | "vfBasalt" | "vfBasaltCartoon" | "vfGranite" | "vfDirt" | "vfBark"
-  | "vfSandstone" | "vfLimestone" | "vfGravel" | "vfSand" | "vfWetMud"
-  | "vfWoodPlank" | "vfIronOre" | "vfCopperOre" | "vfCoal" | "vfSnow" | "vfIce"
-  | "vfBasaltCartoonWorld" | "vfGraniteCartoon" | "vfDirtCartoon" | "vfBarkCartoon"
-  | "vfSandstoneCartoon" | "vfLimestoneCartoon" | "vfGravelCartoon" | "vfSandCartoon"
-  | "vfWetMudCartoon" | "vfWoodPlankCartoon" | "vfIronOreCartoon" | "vfCopperOreCartoon"
-  | "vfCoalCartoon" | "vfSnowCartoon" | "vfIceCartoon"
-  | "vfBasaltPainted" | "vfGranitePainted" | "vfDirtPainted" | "vfBarkPainted"
-  | "vfSnowPainted" | "vfIcePainted" | "vfLayeredSandstonePainted";
+const PRODUCTION_STYLE_ID = "VF_PAINTERLY_PLANETARY_V1";
+const SAFE_NAME = /^[a-z0-9][a-z0-9_-]{1,79}$/;
+
+type ProductionPreset = "vfLayeredSandstonePainted";
+type Profile = "stylized" | "signature";
 
 type Request = {
   name: string;
   resolution: number;
-  preset: Preset;
-  profile?: "realistic" | "stylized" | "signature";
+  preset: ProductionPreset;
+  profile?: Profile;
   params: Record<string, unknown>;
 };
 type Envelope = Request | { materials: Request[] };
+type BakeResult = {
+  material: Material;
+  masks?: Readonly<Record<string, unknown>>;
+};
+type PresetBaker = (resolution: number, params: Record<string, unknown>) => BakeResult;
 
-function bakeOne(req: Request) {
-  if (!Number.isInteger(req.resolution) || req.resolution < 16 || req.resolution > 4096) {
+const PRODUCTION_PRESETS: Readonly<Record<ProductionPreset, PresetBaker>> = {
+  vfLayeredSandstonePainted: (resolution, params) => ({
+    material: bakeVfLayeredSandstonePainted(
+      resolution,
+      params as VfLayeredSandstoneParams,
+    ),
+  }),
+};
+
+function validateRequest(req: Request) {
+  if (!SAFE_NAME.test(req.name)) {
+    throw new Error(`Unsafe material name: ${String(req.name)}`);
+  }
+  if (!Number.isInteger(req.resolution) || req.resolution < 64 || req.resolution > 4096) {
     throw new Error(`Invalid resolution for ${req.name}: ${req.resolution}`);
   }
-  let material;
-  let masks: Readonly<Record<string, unknown>> = {};
-  if (req.preset === "stylizedCellRock") {
-    const result = bakeStylizedCellRock(req.resolution, req.params);
-    material = result.material;
-    masks = result.masks;
-  } else if (req.preset === "volcanicRock") {
-    material = materialFromFields(req.resolution, BILIBILI_MATERIALS.volcanicRock(req.params));
-  } else if (req.preset === "simpleRock") {
-    material = materialFromFields(req.resolution, BILIBILI_MATERIALS.simpleRock(req.params));
-  } else if (req.preset === "vfBasalt") material = bakeVfBasalt(req.resolution, req.params);
-  else if (req.preset === "vfBasaltCartoon") material = bakeVfBasaltCartoon(req.resolution, req.params);
-  else if (req.preset === "vfGranite") material = bakeVfGranite(req.resolution, req.params);
-  else if (req.preset === "vfDirt") material = bakeVfDirt(req.resolution, req.params);
-  else if (req.preset === "vfBark") material = bakeVfBark(req.resolution, req.params);
-  else if (req.preset === "vfSandstone") material = bakeVfSandstone(req.resolution, req.params);
-  else if (req.preset === "vfLimestone") material = bakeVfLimestone(req.resolution, req.params);
-  else if (req.preset === "vfGravel") material = bakeVfGravel(req.resolution, req.params);
-  else if (req.preset === "vfSand") material = bakeVfSand(req.resolution, req.params);
-  else if (req.preset === "vfWetMud") material = bakeVfWetMud(req.resolution, req.params);
-  else if (req.preset === "vfWoodPlank") material = bakeVfWoodPlank(req.resolution, req.params);
-  else if (req.preset === "vfIronOre") material = bakeVfIronOre(req.resolution, req.params);
-  else if (req.preset === "vfCopperOre") material = bakeVfCopperOre(req.resolution, req.params);
-  else if (req.preset === "vfCoal") material = bakeVfCoal(req.resolution, req.params);
-  else if (req.preset === "vfSnow") material = bakeVfSnow(req.resolution, req.params);
-  else if (req.preset === "vfIce") material = bakeVfIce(req.resolution, req.params);
-  else if (req.preset === "vfBasaltCartoonWorld") material = bakeVfBasaltCartoonWorld(req.resolution, req.params);
-  else if (req.preset === "vfGraniteCartoon") material = bakeVfGraniteCartoon(req.resolution, req.params);
-  else if (req.preset === "vfDirtCartoon") material = bakeVfDirtCartoon(req.resolution, req.params);
-  else if (req.preset === "vfBarkCartoon") material = bakeVfBarkCartoon(req.resolution, req.params);
-  else if (req.preset === "vfSandstoneCartoon") material = bakeVfSandstoneCartoon(req.resolution, req.params);
-  else if (req.preset === "vfLimestoneCartoon") material = bakeVfLimestoneCartoon(req.resolution, req.params);
-  else if (req.preset === "vfGravelCartoon") material = bakeVfGravelCartoon(req.resolution, req.params);
-  else if (req.preset === "vfSandCartoon") material = bakeVfSandCartoon(req.resolution, req.params);
-  else if (req.preset === "vfWetMudCartoon") material = bakeVfWetMudCartoon(req.resolution, req.params);
-  else if (req.preset === "vfWoodPlankCartoon") material = bakeVfWoodPlankCartoon(req.resolution, req.params);
-  else if (req.preset === "vfIronOreCartoon") material = bakeVfIronOreCartoon(req.resolution, req.params);
-  else if (req.preset === "vfCopperOreCartoon") material = bakeVfCopperOreCartoon(req.resolution, req.params);
-  else if (req.preset === "vfCoalCartoon") material = bakeVfCoalCartoon(req.resolution, req.params);
-  else if (req.preset === "vfSnowCartoon") material = bakeVfSnowCartoon(req.resolution, req.params);
-  else if (req.preset === "vfIceCartoon") material = bakeVfIceCartoon(req.resolution, req.params);
-  else if (req.preset === "vfBasaltPainted") material = bakeVfBasaltPainted(req.resolution, req.params);
-  else if (req.preset === "vfGranitePainted") material = bakeVfGranitePainted(req.resolution, req.params);
-  else if (req.preset === "vfDirtPainted") material = bakeVfDirtPainted(req.resolution, req.params);
-  else if (req.preset === "vfBarkPainted") material = bakeVfBarkPainted(req.resolution, req.params);
-  else if (req.preset === "vfSnowPainted") material = bakeVfSnowPainted(req.resolution, req.params);
-  else if (req.preset === "vfIcePainted") material = bakeVfIcePainted(req.resolution, req.params);
-  else if (req.preset === "vfLayeredSandstonePainted") material = bakeVfLayeredSandstonePainted(req.resolution, req.params);
-  else throw new Error(`Unsupported preset: ${String(req.preset)}`);
+  if (!(req.preset in PRODUCTION_PRESETS)) {
+    throw new Error(`Preset is not production-approved: ${String(req.preset)}`);
+  }
+  if (req.profile && req.profile !== "stylized" && req.profile !== "signature") {
+    throw new Error(`Invalid profile for ${req.name}: ${String(req.profile)}`);
+  }
+  if (!req.params || typeof req.params !== "object" || Array.isArray(req.params)) {
+    throw new Error(`Invalid params for ${req.name}`);
+  }
+}
+
+function bakeOne(req: Request) {
+  validateRequest(req);
+  const baker = PRODUCTION_PRESETS[req.preset];
+  const { material, masks = {} } = baker(req.resolution, req.params);
 
   const problems = validateMaterial(material);
-  if (problems.length > 0) throw new Error(`${req.name}: ${problems.join("; ")}`);
+  if (problems.length > 0) {
+    throw new Error(`${req.name}: ${problems.join("; ")}`);
+  }
 
   const out = path.resolve(process.cwd(), "out", "vf-materials", req.name);
   mkdirSync(out, { recursive: true });
-  const exported = exportPBR(material, req.name);
-  for (const [filename, bytes] of Object.entries(exported.files)) writeFileSync(path.join(out, filename), bytes);
-  for (const [maskName, mask] of Object.entries(masks)) {
-    writeFileSync(path.join(out, `${req.name}_mask-${maskName}.png`), textureToPNG(mask as never));
-  }
-  writeFileSync(path.join(out, "request.json"), JSON.stringify(req, null, 2));
 
-  const custom = req.preset.startsWith("vf");
+  const exported = exportPBR(material, req.name);
+  for (const [filename, bytes] of Object.entries(exported.files)) {
+    writeFileSync(path.join(out, filename), bytes);
+  }
+  for (const [maskName, mask] of Object.entries(masks)) {
+    writeFileSync(
+      path.join(out, `${req.name}_mask-${maskName}.png`),
+      textureToPNG(mask as never),
+    );
+  }
+
+  writeFileSync(path.join(out, "request.json"), JSON.stringify(req, null, 2));
   const manifest = {
-    generator: "wellingfeng/Meshova + voxel-frontier modular recipes",
+    generator: "wellingfeng/Meshova + voxel-frontier production recipes",
     generatorCommit: process.env.MESHOVA_COMMIT ?? "unknown",
+    styleId: PRODUCTION_STYLE_ID,
     deterministic: true,
-    seamlessByConstruction: custom,
-    singlePassCustomBake: custom,
+    proceduralSourceOnly: true,
+    seamlessByConstruction: true,
     material: req.name,
     resolution: req.resolution,
-    profile: req.profile ?? "unspecified",
+    profile: req.profile ?? "signature",
     preset: req.preset,
     pbrFiles: Object.keys(exported.files).sort(),
-    maskFiles: Object.keys(masks).map((name) => `${req.name}_mask-${name}.png`).sort(),
+    maskFiles: Object.keys(masks)
+      .map((name) => `${req.name}_mask-${name}.png`)
+      .sort(),
   };
   writeFileSync(path.join(out, "manifest.json"), JSON.stringify(manifest, null, 2));
   console.log(JSON.stringify({ ok: true, output: out, ...manifest }, null, 2));
@@ -162,11 +107,28 @@ function bakeOne(req: Request) {
 const requestPath = process.argv[2] ?? "vf-request.json";
 const envelope = JSON.parse(readFileSync(requestPath, "utf8")) as Envelope;
 const requests = "materials" in envelope ? envelope.materials : [envelope];
-if (!Array.isArray(requests) || requests.length === 0) throw new Error("No materials requested");
+if (!Array.isArray(requests) || requests.length === 0) {
+  throw new Error("No materials requested");
+}
+
 const names = new Set<string>();
 for (const req of requests) {
-  if (!req.name || names.has(req.name)) throw new Error(`Invalid or duplicate material name: ${req.name}`);
+  if (!req.name || names.has(req.name)) {
+    throw new Error(`Invalid or duplicate material name: ${String(req.name)}`);
+  }
   names.add(req.name);
 }
+
 const manifests = requests.map(bakeOne);
-console.log(JSON.stringify({ ok: true, materialCount: manifests.length, materials: manifests.map((m) => m.material) }, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      ok: true,
+      styleId: PRODUCTION_STYLE_ID,
+      materialCount: manifests.length,
+      materials: manifests.map((m) => m.material),
+    },
+    null,
+    2,
+  ),
+);
