@@ -104,6 +104,12 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add native/src/render/VulkanRenderer.cpp
           git commit -m 'fix(r24): restore continuous terrain rendering after culling regression'
+          # CMake/FetchContent can leave ignored or generated files beneath tracked build trees.
+          # The tested renderer change is already committed above, so discard every uncommitted
+          # build/runtime byproduct before rebasing the production-only commit.
+          git reset --hard HEAD
+          git clean -ffd build/r24-visual-repair native/build-r24-core || true
+          test -z "$(git status --porcelain)"
           git fetch origin work/r24-unified-planetary-physics
           git rebase origin/work/r24-unified-planetary-physics
           git push origin HEAD:work/r24-unified-planetary-physics
