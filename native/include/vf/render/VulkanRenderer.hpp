@@ -76,6 +76,8 @@ private:
         VkDeviceSize vertexCapacityBytes{};
         VkDeviceSize indexCapacityBytes{};
         std::uint32_t indexCount{};
+        std::uint32_t opaqueIndexCount{};
+        std::uint32_t transparentIndexCount{};
     };
 
     struct DepthFrameResources {
@@ -124,7 +126,8 @@ private:
         VkCommandBuffer commandBuffer,
         VkBuffer vertexBuffer,
         VkBuffer indexBuffer,
-        std::uint32_t indexCount);
+        std::uint32_t indexCount,
+        std::uint32_t firstIndex = 0U);
 
     void createBuffer(
         VkDeviceSize size,
@@ -178,12 +181,16 @@ private:
 
     std::vector<PlanetVertex> pendingStaticVertices_;
     std::vector<std::uint32_t> pendingStaticIndices_;
+    std::uint32_t pendingStaticOpaqueIndexCount_{};
+    std::uint32_t pendingStaticTransparentIndexCount_{};
     std::uint64_t staticMeshGeneration_{};
     std::array<std::uint64_t, kFramesInFlight> staticMeshGenerationByFrame_{};
     std::array<FrameMesh, kFramesInFlight> staticMeshes_{};
 
     std::vector<PlanetVertex> pendingDynamicVertices_;
     std::vector<std::uint32_t> pendingDynamicIndices_;
+    std::uint32_t pendingDynamicOpaqueIndexCount_{};
+    std::uint32_t pendingDynamicTransparentIndexCount_{};
     std::array<FrameMesh, kFramesInFlight> dynamicMeshes_{};
 
     VkCommandPool commandPool_{VK_NULL_HANDLE};

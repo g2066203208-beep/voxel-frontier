@@ -90,6 +90,42 @@ static_assert(sizeof(SceneUniforms) == 96U, "scene uniform layout must match Sla
     return capacity;
 }
 
+void partitionMeshIndicesByTransmission(
+    const PlanetMesh& mesh,
+    std::vector<std::uint32_t>& output,
+    std::uint32_t& opaqueIndexCount,
+    std::uint32_t& transparentIndexCount) {
+    if ((mesh.indices.size() % 3U) != 0U)
+        fail("Planet mesh index stream must contain complete triangles");
+    output.clear();
+    output.reserve(mesh.indices.size());
+
+    const auto triangleIsTransparent = [&](std::size_t base) {
+        for (std::size_t corner = 0; corner < 3U; ++corner) {
+            const std::uint32_t index = mesh.indices[base + corner];
+            if (index >= mesh.vertices.size()) fail("Planet mesh index out of range");
+            // material.z is transmission in planet.slang. A triangle touching a transmissive
+            // vertex stays in the transparent pass, matching the previous fragment-discard rule.
+            if (mesh.vertices[index].material.z > 0.02F) return true;
+        }
+        return false;
+    };
+
+    for (std::size_t base = 0; base < mesh.indices.size(); base += 3U) {
+        if (triangleIsTransparent(base)) continue;
+        output.insert(output.end(), {
+            mesh.indices[base], mesh.indices[base + 1U], mesh.indices[base + 2U]});
+    }
+    opaqueIndexCount = static_cast<std::uint32_t>(output.size());
+    for (std::size_t base = 0; base < mesh.indices.size(); base += 3U) {
+        if (!triangleIsTransparent(base)) continue;
+        output.insert(output.end(), {
+            mesh.indices[base], mesh.indices[base + 1U], mesh.indices[base + 2U]});
+    }
+    transparentIndexCount = static_cast<std::uint32_t>(output.size()) - opaqueIndexCount;
+    if (output.size() != mesh.indices.size()) fail("Render pass index partition lost triangles");
+}
+
 [[nodiscard]] glm::mat4 makeShadowViewProjection(const glm::vec3& sunDirection, const glm::vec3& cameraForward) {
     const glm::vec3 light = safeNormalizeFloat(sunDirection);
     const glm::vec3 forward = safeNormalizeFloat(cameraForward, {0.0F, 0.0F, -1.0F});
@@ -941,7 +977,11 @@ void VulkanRenderer::ensureFrameCapacity(
 void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
     if (mesh.vertices.empty() || mesh.indices.empty()) fail("Cannot upload an empty planet mesh");
     pendingStaticVertices_ = mesh.vertices;
-    pendingStaticIndices_ = mesh.indices;
+    partitionMeshIndicesByTransmission(
+        mesh,
+        pendingStaticIndices_,
+        pendingStaticOpaqueIndexCount_,
+        pendingStaticTransparentIndexCount_);
     ++staticMeshGeneration_;
     if (staticMeshGeneration_ == 0U) {
         staticMeshGeneration_ = 1U;
@@ -954,6 +994,8 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     auto& mesh = staticMeshes_[frame];
     if (pendingStaticVertices_.empty() || pendingStaticIndices_.empty()) {
         mesh.indexCount = 0U;
+        mesh.opaqueIndexCount = 0U;
+        mesh.transparentIndexCount = 0U;
         staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
         return;
     }
@@ -968,23 +1010,33 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     std::memcpy(
         mesh.mappedIndices, pendingStaticIndices_.data(), static_cast<std::size_t>(indexBytes));
     mesh.indexCount = static_cast<std::uint32_t>(pendingStaticIndices_.size());
+    mesh.opaqueIndexCount = pendingStaticOpaqueIndexCount_;
+    mesh.transparentIndexCount = pendingStaticTransparentIndexCount_;
     staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
 }
 
 void VulkanRenderer::setDynamicMesh(const PlanetMesh& mesh) {
     pendingDynamicVertices_ = mesh.vertices;
-    pendingDynamicIndices_ = mesh.indices;
+    partitionMeshIndicesByTransmission(
+        mesh,
+        pendingDynamicIndices_,
+        pendingDynamicOpaqueIndexCount_,
+        pendingDynamicTransparentIndexCount_);
 }
 
 void VulkanRenderer::clearDynamicMesh() {
     pendingDynamicVertices_.clear();
     pendingDynamicIndices_.clear();
+    pendingDynamicOpaqueIndexCount_ = 0U;
+    pendingDynamicTransparentIndexCount_ = 0U;
 }
 
 void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
     auto& mesh = dynamicMeshes_[frame];
     if (pendingDynamicVertices_.empty() || pendingDynamicIndices_.empty()) {
         mesh.indexCount = 0U;
+        mesh.opaqueIndexCount = 0U;
+        mesh.transparentIndexCount = 0U;
         return;
     }
     const VkDeviceSize vertexBytes = static_cast<VkDeviceSize>(
@@ -997,18 +1049,21 @@ void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
     std::memcpy(
         mesh.mappedIndices, pendingDynamicIndices_.data(), static_cast<std::size_t>(indexBytes));
     mesh.indexCount = static_cast<std::uint32_t>(pendingDynamicIndices_.size());
+    mesh.opaqueIndexCount = pendingDynamicOpaqueIndexCount_;
+    mesh.transparentIndexCount = pendingDynamicTransparentIndexCount_;
 }
 
 void VulkanRenderer::drawBoundMesh(
     VkCommandBuffer commandBuffer,
     VkBuffer vertexBuffer,
     VkBuffer indexBuffer,
-    std::uint32_t indexCount) {
+    std::uint32_t indexCount,
+    std::uint32_t firstIndex) {
     if (vertexBuffer == VK_NULL_HANDLE || indexBuffer == VK_NULL_HANDLE || indexCount == 0U) return;
     constexpr VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, &offset);
     vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-    vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+    vkCmdDrawIndexed(commandBuffer, indexCount, 1, firstIndex, 0, 0);
 }
 
 void VulkanRenderer::drawFrame(
@@ -1122,13 +1177,13 @@ void VulkanRenderer::drawFrame(
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
         0, sizeof(push), &push);
     drawBoundMesh(
-        command, staticMesh.vertexBuffer, staticMesh.indexBuffer, staticMesh.indexCount);
+        command, staticMesh.vertexBuffer, staticMesh.indexBuffer, staticMesh.opaqueIndexCount, 0U);
     push.data3 = {0.0F, 0.0F, 0.0F, 1.0F};
     vkCmdPushConstants(
         command, scenePipelineLayout_,
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
         0, sizeof(push), &push);
-    drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.indexCount);
+    drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.opaqueIndexCount, 0U);
     vkCmdEndRendering(command);
 
     VkImageMemoryBarrier2 shadowToRead{};
@@ -1244,7 +1299,7 @@ void VulkanRenderer::drawFrame(
         0, sizeof(skyPush), &skyPush);
     vkCmdDraw(command, 3, 1, 0, 0);
 
-    auto drawScenePass = [&](VkPipeline pipeline) {
+    auto drawScenePass = [&](VkPipeline pipeline, bool transparentPass) {
         vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
         vkCmdBindDescriptorSets(
             command, VK_PIPELINE_BIND_POINT_GRAPHICS, scenePipelineLayout_, 0, 1,
@@ -1268,18 +1323,24 @@ void VulkanRenderer::drawFrame(
             command, scenePipelineLayout_,
             VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
             0, sizeof(scenePush), &scenePush);
+        const std::uint32_t staticCount = transparentPass
+            ? staticMesh.transparentIndexCount : staticMesh.opaqueIndexCount;
+        const std::uint32_t staticFirst = transparentPass ? staticMesh.opaqueIndexCount : 0U;
         drawBoundMesh(
-            command, staticMesh.vertexBuffer, staticMesh.indexBuffer, staticMesh.indexCount);
+            command, staticMesh.vertexBuffer, staticMesh.indexBuffer, staticCount, staticFirst);
         scenePush.data3 = {0.0F, 0.0F, 0.0F, 1.0F};
         vkCmdPushConstants(
             command, scenePipelineLayout_,
             VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
             0, sizeof(scenePush), &scenePush);
-        drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.indexCount);
+        const std::uint32_t dynamicCount = transparentPass
+            ? dynamic.transparentIndexCount : dynamic.opaqueIndexCount;
+        const std::uint32_t dynamicFirst = transparentPass ? dynamic.opaqueIndexCount : 0U;
+        drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamicCount, dynamicFirst);
     };
 
-    drawScenePass(opaquePipeline_);
-    drawScenePass(transparentPipeline_);
+    drawScenePass(opaquePipeline_, false);
+    drawScenePass(transparentPipeline_, true);
 
     vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, hudPipeline_);
     vkCmdBindDescriptorSets(
