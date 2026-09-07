@@ -76,7 +76,6 @@ jobs:
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
       - name: Capture physical ground Moon and actual Sun transit
         id: capture
-        continue-on-error: true
         shell: bash
         run: |
           APP="$(find build/r24-interstellar-sun-v4 -type f -name voxel_frontier -perm -111 | head -n1)"
@@ -84,7 +83,6 @@ jobs:
           chmod +x .github/scripts/r24_interstellar_sun_capture.sh
           .github/scripts/r24_interstellar_sun_capture.sh "$APP" r24-interstellar-sun-evidence
       - name: Preserve exact tested source and permanent evidence
-        if: steps.capture.outcome == 'success'
         shell: bash
         run: |
           EVIDENCE_DIR="docs/evidence/r24-interstellar-sun-${GITHUB_RUN_ID}"
@@ -117,11 +115,7 @@ jobs:
             vulkan-summary.txt
           if-no-files-found: warn
           retention-days: 30
-      - name: Fail if visual capture gate failed
-        if: steps.capture.outcome != 'success'
-        run: exit 1
       - name: Promote tested production source and permanent evidence
-        if: steps.capture.outcome == 'success'
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
