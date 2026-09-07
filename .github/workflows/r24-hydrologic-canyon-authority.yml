@@ -5,6 +5,7 @@ on:
     branches: [work/r24-unified-planetary-physics]
     paths:
       - '.github/scripts/r24_hydrologic_canyon_authority.py'
+      - '.github/scripts/r24_fix_hydrologic_canyon_codegen.py'
       - '.github/workflows/r24-hydrologic-canyon-authority.yml'
   workflow_dispatch:
 
@@ -28,6 +29,9 @@ jobs:
 
       - name: Apply hydrologic canyon authority
         run: python .github/scripts/r24_hydrologic_canyon_authority.py
+
+      - name: Repair generated C++ newline literal
+        run: python .github/scripts/r24_fix_hydrologic_canyon_codegen.py
 
       - name: Validate generated production source
         shell: pwsh
@@ -61,6 +65,9 @@ jobs:
 
       - name: Apply hydrologic canyon authority
         run: python3 .github/scripts/r24_hydrologic_canyon_authority.py
+
+      - name: Repair generated C++ newline literal
+        run: python3 .github/scripts/r24_fix_hydrologic_canyon_codegen.py
 
       - name: Validate production changes
         run: |
