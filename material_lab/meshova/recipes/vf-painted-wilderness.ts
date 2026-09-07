@@ -1,53 +1,154 @@
-import { bakeStylizedCellRock, makeTexture, type Material } from "../../src/index.js";
+import { makeTexture, type Material } from "../../src/index.js";
 import { bakeVfBark } from "./vf-bark.js";
 import { bakeVfSnow, bakeVfIce } from "./vf-world-surfaces.js";
 
 type RGB=[number,number,number];
-export type VfPaintedParams={seed?:number;cells?:number;jitter?:number;heightLevels?:number;crackWidth?:number;crackDepth?:number;bevel?:number;distortion?:number;damage?:number;microDetail?:number;normalStrength?:number;[key:string]:unknown};
+export type VfPaintedParams={
+  seed?:number;cells?:number;jitter?:number;heightLevels?:number;crackWidth?:number;crackDepth?:number;
+  bevel?:number;distortion?:number;damage?:number;microDetail?:number;normalStrength?:number;
+  anisotropy?:number;facetStrength?:number;strokeStrength?:number;[key:string]:unknown
+};
 type RockKind="basalt"|"granite"|"dirt";
-type Cfg={shadow:RGB;mid:RGB;light:RGB;edge:RGB;crack:RGB;chip:RGB;cool:RGB;roughBase:number;roughTop:number;roughCrack:number;defaults:{cells:number;jitter:number;heightLevels:number;crackWidth:number;crackDepth:number;bevel:number;distortion:number;damage:number;microDetail:number;normalStrength:number}};
+type Cfg={
+  shadow:RGB;mid:RGB;light:RGB;edge:RGB;crack:RGB;chip:RGB;cool:RGB;
+  roughBase:number;roughTop:number;roughCrack:number;
+  defaults:{cells:number;jitter:number;heightLevels:number;crackWidth:number;crackDepth:number;bevel:number;distortion:number;damage:number;microDetail:number;normalStrength:number;anisotropy:number;facetStrength:number;strokeStrength:number}
+};
+type CellSample={nearest:number;second:number;borderGap:number;localX:number;localY:number;random:number;random2:number;random3:number;random4:number;componentId:number};
+
 const TAU=Math.PI*2;
 const C=(x:number)=>Math.max(0,Math.min(1,x));
 const L=(a:number,b:number,t:number)=>a+(b-a)*t;
 const M=(a:RGB,b:RGB,t:number):RGB=>[L(a[0],b[0],t),L(a[1],b[1],t),L(a[2],b[2],t)];
 const S=(x:number)=>{const t=C(x);return t*t*(3-2*t);};
+const wrap01=(x:number)=>x-Math.floor(x);
+const wrapInt=(x:number,n:number)=>((x%n)+n)%n;
 
 const CFG:Record<RockKind,Cfg>={
-  basalt:{shadow:[.035,.050,.078],mid:[.115,.130,.145],light:[.285,.250,.205],edge:[.620,.470,.300],crack:[.018,.027,.045],chip:[.455,.225,.125],cool:[.055,.085,.145],roughBase:.80,roughTop:.74,roughCrack:.91,defaults:{cells:7,jitter:.88,heightLevels:5,crackWidth:.095,crackDepth:.78,bevel:.145,distortion:.82,damage:.34,microDetail:.045,normalStrength:8.4}},
-  granite:{shadow:[.105,.100,.135],mid:[.245,.205,.198],light:[.515,.425,.350],edge:[.790,.660,.500],crack:[.045,.045,.065],chip:[.600,.325,.255],cool:[.120,.135,.190],roughBase:.77,roughTop:.70,roughCrack:.88,defaults:{cells:7,jitter:.84,heightLevels:4,crackWidth:.082,crackDepth:.68,bevel:.165,distortion:.72,damage:.30,microDetail:.065,normalStrength:8.0}},
-  dirt:{shadow:[.095,.050,.045],mid:[.245,.115,.060],light:[.500,.285,.135],edge:[.700,.470,.245],crack:[.060,.030,.030],chip:[.575,.300,.135],cool:[.125,.075,.095],roughBase:.86,roughTop:.81,roughCrack:.94,defaults:{cells:6,jitter:.90,heightLevels:4,crackWidth:.072,crackDepth:.58,bevel:.190,distortion:.88,damage:.24,microDetail:.035,normalStrength:7.2}}
+  basalt:{shadow:[.032,.046,.072],mid:[.105,.122,.142],light:[.275,.238,.195],edge:[.690,.515,.315],crack:[.014,.023,.038],chip:[.485,.245,.132],cool:[.050,.078,.132],roughBase:.80,roughTop:.73,roughCrack:.92,defaults:{cells:5,jitter:.78,heightLevels:5,crackWidth:.070,crackDepth:.80,bevel:.100,distortion:.38,damage:.44,microDetail:.015,normalStrength:9.0,anisotropy:.42,facetStrength:.95,strokeStrength:.22}},
+  granite:{shadow:[.100,.096,.128],mid:[.238,.202,.195],light:[.535,.438,.355],edge:[.820,.690,.525],crack:[.040,.042,.060],chip:[.640,.355,.275],cool:[.115,.132,.188],roughBase:.77,roughTop:.69,roughCrack:.89,defaults:{cells:5,jitter:.74,heightLevels:4,crackWidth:.062,crackDepth:.70,bevel:.115,distortion:.32,damage:.38,microDetail:.020,normalStrength:8.6,anisotropy:.36,facetStrength:.86,strokeStrength:.20}},
+  dirt:{shadow:[.090,.047,.044],mid:[.235,.108,.057],light:[.505,.292,.140],edge:[.735,.492,.250],crack:[.055,.028,.028],chip:[.610,.320,.145],cool:[.118,.072,.091],roughBase:.87,roughTop:.81,roughCrack:.95,defaults:{cells:5,jitter:.82,heightLevels:4,crackWidth:.055,crackDepth:.56,bevel:.135,distortion:.42,damage:.26,microDetail:.012,normalStrength:7.7,anisotropy:.28,facetStrength:.60,strokeStrength:.18}}
 };
 
 function num(p:VfPaintedParams,key:string,fallback:number){const v=Number(p[key]);return Number.isFinite(v)?v:fallback;}
+function hash01(x:number,y:number,seed:number,salt=0){
+  let h=Math.imul(x,0x1f123bb5)^Math.imul(y,0x5f356495)^Math.imul(seed,0x2c9277b5)^Math.imul(salt,0x27d4eb2d);
+  h=Math.imul(h^(h>>>15),0x2c1b3c6d);h=Math.imul(h^(h>>>12),0x297a2d39);h^=h>>>15;return (h>>>0)/0xffffffff;
+}
+function periodicNoise(u:number,v:number,seed:number,frequency:number){
+  let sum=0,weight=0;
+  for(let o=0;o<3;o++){
+    const f=Math.max(1,Math.round(frequency*2**o));
+    const kx=f+1+Math.floor(hash01(o,1,seed,11)*3),ky=f+1+Math.floor(hash01(o,2,seed,17)*3),phase=hash01(o,3,seed,23)*TAU,a=1/2**o;
+    sum+=Math.sin((u*kx+v*ky)*TAU+phase)*a;
+    sum+=Math.cos((u*ky-v*kx)*TAU+phase*.73)*a*.5;
+    weight+=a*1.5;
+  }
+  return C(sum/Math.max(weight,1e-6)*.5+.5);
+}
+
+function sampleAngularCell(u:number,v:number,cells:number,jitter:number,seed:number,distortion:number,anisotropy:number):CellSample{
+  const warpF=Math.max(1,Math.floor(cells*.55));
+  const wu=wrap01(u+(periodicNoise(u,v,seed+101,warpF)-.5)*distortion/cells);
+  const wv=wrap01(v+(periodicNoise(u,v,seed+211,warpF)-.5)*distortion/cells);
+  const px=wu*cells,py=wv*cells,bx=Math.floor(px),by=Math.floor(py);
+  let nearest=Infinity,second=Infinity,nfx=0,nfy=0,ncx=0,ncy=0;
+  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
+    const rx=bx+ox,ry=by+oy,cx=wrapInt(rx,cells),cy=wrapInt(ry,cells);
+    const fx=rx+.5+(hash01(cx,cy,seed,31)-.5)*jitter,fy=ry+.5+(hash01(cx,cy,seed,47)-.5)*jitter;
+    const dx=px-fx,dy=py-fy;
+    const ang=hash01(cx,cy,seed,53)*TAU,ca=Math.cos(ang),sa=Math.sin(ang);
+    const ax=dx*ca+dy*sa,ay=-dx*sa+dy*ca;
+    const stretch=1+anisotropy*(hash01(cx,cy,seed,59)*2-1);
+    const d=Math.hypot(ax/Math.max(.45,stretch),ay*Math.max(.55,stretch));
+    if(d<nearest){second=nearest;nearest=d;nfx=fx;nfy=fy;ncx=cx;ncy=cy;}else if(d<second)second=d;
+  }
+  return{
+    nearest,second,borderGap:Math.max(0,second-nearest),localX:px-nfx,localY:py-nfy,
+    random:hash01(ncx,ncy,seed,71),random2:hash01(ncx,ncy,seed,89),random3:hash01(ncx,ncy,seed,107),random4:hash01(ncx,ncy,seed,119),componentId:hash01(ncx,ncy,seed,131)
+  };
+}
+
 function palette(cfg:Cfg,t:number):RGB{const x=C(t);return x<.52?M(cfg.shadow,cfg.mid,S(x/.52)):M(cfg.mid,cfg.light,S((x-.52)/.48));}
 
-function bakePaintedFacetedRock(kind:RockKind,size:number,p:VfPaintedParams={}):Material{
-  const cfg=CFG[kind],d=cfg.defaults;
-  const baked=bakeStylizedCellRock(size,{
-    seed:Math.floor(num(p,"seed",kind==="basalt"?240914:kind==="granite"?310402:420503)),
-    cells:Math.max(3,Math.floor(num(p,"cells",d.cells))),jitter:C(num(p,"jitter",d.jitter)),heightLevels:Math.max(2,Math.floor(num(p,"heightLevels",d.heightLevels))),
-    crackWidth:C(num(p,"crackWidth",d.crackWidth)),crackDepth:C(num(p,"crackDepth",d.crackDepth)),bevel:C(num(p,"bevel",d.bevel)),distortion:Math.max(0,Math.min(1.5,num(p,"distortion",d.distortion))),
-    damage:C(num(p,"damage",d.damage)),moss:0,topMoss:0,microDetail:C(num(p,"microDetail",d.microDetail)),normalStrength:Math.max(0,num(p,"normalStrength",d.normalStrength)),
-  });
-  const m=baked.material;if(!m.height)throw new Error(`${kind}: stylized cell rock returned no height`);
-  const bc=makeTexture(size,size,3),rough=makeTexture(size,size,1);rough.data.set(m.roughness.data);
-  const cracks=baked.masks.cracks.data,edges=baked.masks.edges.data,damaged=baked.masks.damagedEdges.data,top=baked.masks.topFaces.data,ids=baked.masks.componentId.data;
-  const h=m.height.data,ao=m.ao.data;
-  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-    const i=y*size+x,j=i*3,u=(x+.5)/size,v=(y+.5)/size;
-    const cr=C(Number.isFinite(cracks[i])?cracks[i]:0),ed=C(Number.isFinite(edges[i])?edges[i]:0),dm=C(Number.isFinite(damaged[i])?damaged[i]:0),tp=C(Number.isFinite(top[i])?top[i]:0),id=C(Number.isFinite(ids[i])?ids[i]:.5),hh=C(Number.isFinite(h[i])?h[i]:.5),cavity=C(1-(Number.isFinite(ao[i])?ao[i]:1));
-    const idWarm=.5+.5*Math.sin((id*1.73+.17)*TAU);let value=C((hh-.22)/.62+(id-.5)*.10);let col=palette(cfg,value);
-    col=M(col,idWarm>.5?cfg.light:cfg.cool,Math.abs(idWarm-.5)*.16);
-    const stroke=.5+.5*Math.sin((u*1.65+v*.95+id*.72)*TAU),broken=.5+.5*Math.sin((u*4.1-v*2.6+id*1.37)*TAU+1.15),paintAmt=(stroke-.5)*.065+(broken-.5)*.025;
-    if(paintAmt>0)col=M(col,cfg.edge,C(paintAmt)*tp*.38);else col=M(col,cfg.cool,C(-paintAmt)*tp*.26);
-    const edgeHighlight=C((ed-cr*.76)*(0.26+.74*tp));col=M(col,cfg.edge,edgeHighlight*.62);col=M(col,cfg.chip,dm*.32);col=M(col,cfg.cool,cavity*.14*(1-cr));col=M(col,cfg.crack,cr*.84);
-    if(kind==="granite"){
-      const quartz=C(S((id-.38)/.42)*tp*(1-cr)),feld=C(S((.63-id)/.38)*tp*(1-cr));col=M(col,[.720,.635,.525],quartz*.14);col=M(col,[.590,.315,.285],feld*.10);
-    }
-    bc.data[j]=C(col[0]);bc.data[j+1]=C(col[1]);bc.data[j+2]=C(col[2]);
-    let r=L(cfg.roughBase,cfg.roughTop,tp*.70);r=L(r,cfg.roughCrack,cr*.88);r=r-dm*.025+edgeHighlight*.015;if(!Number.isFinite(r))r=cfg.roughBase;rough.data[i]=Math.max(.04,Math.min(1,r));
+function localStroke(cell:CellSample,seed:number,strength:number){
+  const a=(cell.random2*.78+.11)*TAU,ca=Math.cos(a),sa=Math.sin(a);
+  const along=cell.localX*ca+cell.localY*sa,cross=-cell.localX*sa+cell.localY*ca;
+  const center=(cell.random3-.5)*.20,width=.030+.050*cell.random4,length=.24+.30*cell.random;
+  const side=1-S((Math.abs(cross-center)-width*.45)/Math.max(width*.75,1e-4));
+  const end=1-S((Math.abs(along)-length*.58)/Math.max(length*.42,1e-4));
+  const breakup=.55+.45*periodicNoise(wrap01(cell.componentId+along*.13),wrap01(cell.random4+cross*.17),seed+701,5);
+  return C(side*end*breakup*strength);
+}
+
+function normalFromHeight(height:ReturnType<typeof makeTexture>,strength:number){
+  const out=makeTexture(height.width,height.height,3),w=height.width,h=height.height,d=height.data;
+  const at=(x:number,y:number)=>d[((y%h+h)%h)*w+((x%w+w)%w)];
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const dx=(at(x+1,y)-at(x-1,y))*strength,dy=(at(x,y+1)-at(x,y-1))*strength;
+    let nx=-dx,ny=dy,nz=1,q=Math.hypot(nx,ny,nz)||1;nx/=q;ny/=q;nz/=q;
+    const i=(y*w+x)*3;out.data[i]=nx*.5+.5;out.data[i+1]=ny*.5+.5;out.data[i+2]=nz*.5+.5;
   }
-  return{baseColor:bc,metallic:m.metallic,roughness:rough,normal:m.normal,ao:m.ao,height:m.height,emission:m.emission};
+  return out;
+}
+
+function bakePaintedFacetedRock(kind:RockKind,size:number,p:VfPaintedParams={}):Material{
+  const cfg=CFG[kind],d=cfg.defaults,seed=Math.floor(num(p,"seed",kind==="basalt"?240914:kind==="granite"?310402:420503));
+  const cells=Math.max(3,Math.floor(num(p,"cells",d.cells))),jitter=C(num(p,"jitter",d.jitter)),levels=Math.max(2,Math.floor(num(p,"heightLevels",d.heightLevels)));
+  const crackWidth=C(num(p,"crackWidth",d.crackWidth)),crackDepth=C(num(p,"crackDepth",d.crackDepth)),bevel=C(num(p,"bevel",d.bevel));
+  const distortion=Math.max(0,Math.min(1.5,num(p,"distortion",d.distortion))),damage=C(num(p,"damage",d.damage)),micro=C(num(p,"microDetail",d.microDetail));
+  const normalStrength=Math.max(0,num(p,"normalStrength",d.normalStrength)),anisotropy=C(num(p,"anisotropy",d.anisotropy)),facetStrength=C(num(p,"facetStrength",d.facetStrength)),strokeStrength=C(num(p,"strokeStrength",d.strokeStrength));
+
+  const bc=makeTexture(size,size,3),met=makeTexture(size,size,1),rough=makeTexture(size,size,1),ao=makeTexture(size,size,1),height=makeTexture(size,size,1),em=makeTexture(size,size,3);
+  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+    const u=(x+.5)/size,v=1-(y+.5)/size,i=y*size+x,j=i*3;
+    const cell=sampleAngularCell(u,v,cells,jitter,seed,distortion,anisotropy);
+    const crack=1-S((cell.borderGap-crackWidth*.38)/Math.max(crackWidth*.62,1e-5));
+    const edge=1-S((cell.borderGap-crackWidth)/Math.max(bevel,1e-5));
+    const damageNoise=periodicNoise(u,v,seed+401,cells*2.1);
+    const damageGate=cell.random3>.42?1:0;
+    const chipped=C(edge*damageGate*S((damageNoise-.52)/.28)*damage);
+
+    const a1=cell.random2*TAU,a2=(cell.random4*.73+.19)*TAU;
+    const p1=(cell.localX*Math.cos(a1)+cell.localY*Math.sin(a1))*.11;
+    const p2=(cell.localX*Math.cos(a2)+cell.localY*Math.sin(a2))*.08-.018;
+    const p3=(-cell.localX*Math.sin(a1)+cell.localY*Math.cos(a1))*.055+.012;
+    const face=Math.max(p1,p2,p3)*facetStrength;
+    const band=Math.round(cell.random*(levels-1))/(levels-1);
+    const base=.35+band*.33;
+    const ridge=Math.max(0,Math.min(1,.50+face*4.5));
+    const topFace=C(.46+band*.42+ridge*.18);
+    const microBreak=(periodicNoise(u,v,seed+503,cells*7)-.5)*.012*micro;
+    let h=C(base+face+microBreak-crack*crackDepth*.34-edge*.035-chipped*.11);
+    const cavity=C(crack*.78+edge*.12+chipped*.18);
+    const aoV=C(1-cavity*.48);
+
+    const idWarm=.5+.5*Math.sin((cell.componentId*1.61+.13)*TAU);
+    let col=palette(cfg,C((h-.19)/.58+(cell.random-.5)*.10));
+    col=M(col,idWarm>.5?cfg.light:cfg.cool,Math.abs(idWarm-.5)*.13);
+
+    const stroke=localStroke(cell,seed,strokeStrength)*(1-crack)*(1-chipped*.45);
+    col=M(col,cfg.edge,stroke*(.35+.50*topFace));
+    const coolWash=C((1-topFace)*.35+cavity*.30);
+    col=M(col,cfg.cool,coolWash*.22);
+
+    const edgeHighlight=C((edge-crack*.82)*(0.22+.78*topFace)*(1-chipped*.65));
+    col=M(col,cfg.edge,edgeHighlight*.70);
+    col=M(col,cfg.chip,chipped*.38);
+    col=M(col,cfg.crack,crack*.88);
+
+    if(kind==="granite"){
+      const quartz=C(S((cell.componentId-.30)/.38)*(1-crack)),feld=C(S((.66-cell.componentId)/.42)*(1-crack));
+      col=M(col,[.735,.650,.535],quartz*.15);col=M(col,[.610,.330,.285],feld*.11);
+    }else if(kind==="dirt"){
+      const dry=C(S((topFace-.58)/.28)*(1-crack));col=M(col,[.610,.375,.185],dry*.08);
+    }
+
+    let r=L(cfg.roughBase,cfg.roughTop,topFace*.72);r=L(r,cfg.roughCrack,crack*.90);r=C(r-chipped*.020+stroke*.012);
+    bc.data[j]=C(col[0]);bc.data[j+1]=C(col[1]);bc.data[j+2]=C(col[2]);met.data[i]=0;rough.data[i]=Math.max(.04,r);ao.data[i]=aoV;height.data[i]=h;em.data[j]=em.data[j+1]=em.data[j+2]=0;
+  }
+  const normal=normalFromHeight(height,normalStrength);
+  return{baseColor:bc,metallic:met,roughness:rough,normal,ao,height,emission:em};
 }
 
 export const bakeVfBasaltPainted=(s:number,p:VfPaintedParams={})=>bakePaintedFacetedRock("basalt",s,p);
