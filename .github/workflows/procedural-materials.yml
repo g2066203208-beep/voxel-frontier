@@ -23,6 +23,7 @@ jobs:
     env:
       MESHOVA_COMMIT: "129f5130c02581dcd53b2cb334136985946e3df0"
       PNPM_VERSION: "10.15.1"
+      VF_STYLE_ID: "VF_PAINTERLY_PLANETARY_V1"
 
     steps:
       - name: Checkout material branch
@@ -32,6 +33,50 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+
+      - name: Enforce material source hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -s material_lab/README.md
+          test -s material_lab/meshova/bake-request.ts
+          test -s material_lab/meshova/recipes/vf-layered-sandstone-painted.ts
+
+          raster_sources=$(find material_lab -type f \
+            \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.tga' \) \
+            -print)
+          if [[ -n "$raster_sources" ]]; then
+            echo "Raster source assets are forbidden in material_lab:" >&2
+            echo "$raster_sources" >&2
+            exit 1
+          fi
+
+          legacy_sources=$(find material_lab/meshova/recipes -maxdepth 1 -type f \
+            \( -iname '*cartoon*.ts' -o -iname '*experimental*.ts' -o -iname '*draft*.ts' \
+               -o -iname '*backup*.ts' -o -iname '*old*.ts' -o -iname '*-v[0-9]*.ts' \) \
+            -print)
+          if [[ -n "$legacy_sources" ]]; then
+            echo "Legacy/experimental recipe files are forbidden in the production recipe directory:" >&2
+            echo "$legacy_sources" >&2
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          request = json.loads(Path("material_lab/request.json").read_text())
+          materials = request.get("materials", [request])
+          allowed = {"vfLayeredSandstonePainted"}
+          for item in materials:
+              preset = item.get("preset")
+              name = item.get("name", "")
+              if preset not in allowed:
+                  raise SystemExit(f"Preset is not production-approved: {preset}")
+              if any(token in name.lower() for token in ("reference", "test", "draft", "final", "_v1", "_v2", "_v3", "_v4", "_v5", "_v6", "_v7", "_v8", "_v9")):
+                  raise SystemExit(f"Unstable production material name: {name}")
+          PY
 
       - name: Install preview tools
         shell: bash
@@ -59,14 +104,15 @@ jobs:
           cd .cache/Meshova
           pnpm install --frozen-lockfile
 
-      - name: Inject GPT-controlled material requests and recipes
+      - name: Inject approved procedural production sources
         shell: bash
         run: |
           set -euo pipefail
           cp material_lab/request.json .cache/Meshova/vf-request.json
           cp material_lab/meshova/bake-request.ts .cache/Meshova/examples/vf-bake-request.ts
           mkdir -p .cache/Meshova/examples/vf-recipes
-          cp material_lab/meshova/recipes/*.ts .cache/Meshova/examples/vf-recipes/
+          cp material_lab/meshova/recipes/vf-layered-sandstone-painted.ts \
+            .cache/Meshova/examples/vf-recipes/vf-layered-sandstone-painted.ts
 
       - name: Bake deterministic PBR material library
         shell: bash
@@ -89,17 +135,24 @@ jobs:
             echo "No material directories were generated" >&2
             exit 1
           fi
+
           while IFS= read -r dir; do
             name=$(basename "$dir")
             for suffix in baseColor normal roughness height ao metallic; do
-              test -s "$dir/${name}_${suffix}.png" || { echo "Missing ${name}_${suffix}.png" >&2; exit 1; }
+              file="$dir/${name}_${suffix}.png"
+              test -s "$file" || { echo "Missing $file" >&2; exit 1; }
+              dims=$(identify -format '%wx%h' "$file")
+              test "$dims" = "1024x1024" || { echo "Unexpected dimensions for $file: $dims" >&2; exit 1; }
             done
+            test -s "$dir/manifest.json"
+            test -s "$dir/request.json"
+            grep -q 'VF_PAINTERLY_PLANETARY_V1' "$dir/manifest.json"
           done < <(find build/generated-materials -mindepth 1 -maxdepth 1 -type d | sort)
 
           mapfile -t pngs < <(find build/generated-materials -type f -name '*.png' | sort)
           sha256sum "${pngs[@]}" > build/generated-materials/SHA256SUMS.txt
 
-      - name: Render real PBR previews for every material
+      - name: Render standardized displaced PBR previews
         shell: bash
         run: |
           set -euo pipefail
@@ -132,9 +185,11 @@ jobs:
             echo '## Procedural Materials Lab'
             echo
             echo "- Branch: \`work/procedural-materials\`"
+            echo "- Style: \`$VF_STYLE_ID\`"
             echo "- Meshova commit: \`$MESHOVA_COMMIT\`"
             echo "- pnpm: \`$PNPM_VERSION\`"
-            echo '- Architecture: batch material library + independent deterministic recipes'
-            echo '- Source: procedural program, not AI image generation'
-            echo '- Every material: PBR maps + standardized studio sphere + 2x2 tile check + map contact sheet'
+            echo '- Production registry: explicit whitelist only'
+            echo '- Source: procedural code only; raster source assets rejected'
+            echo '- PNG files: CI artifacts for validation, not authored runtime assets'
+            echo '- Every material: six required PBR maps + true-Height displaced studio sphere + tile/map previews'
           } >> "$GITHUB_STEP_SUMMARY"
