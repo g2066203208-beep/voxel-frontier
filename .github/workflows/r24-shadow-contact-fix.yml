@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: r24-shadow-contact-fix
+  cancel-in-progress: true
+
 jobs:
   apply:
     runs-on: ubuntu-24.04
@@ -18,13 +22,18 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 4
-      - name: Apply low-side contact-shadow framing
+      - name: Apply near-ground contact repair
         run: python3 .github/scripts/r24_shadow_contact_refine.py
       - name: Validate focused patch
         run: |
           git diff --check
+          test "$(grep -c 'R24 capture shadow-contact downward view' native/src/app/Main.cpp || true)" -eq 0
           grep -q 'placementTangentPlanet' native/src/app/Main.cpp
           grep -q 'shadowDirectionSurface' native/src/app/Main.cpp
+          grep -q 'preciseSurface = buildSurface.sampleSurface' native/src/app/Main.cpp
+          grep -q 'nearFieldRadiusMeters' native/include/vf/world/PlanetLodMeshBuilder.hpp
+          grep -q 'forceContactScale' native/src/world/PlanetLodMeshBuilder.cpp
+          grep -q 'testNearFieldLodEnforcesContactScaleCells' native/tests/R24PhysicalPlanetTests.cpp
           grep -q 'shadowRaster.depthBiasConstantFactor = 0.18F' native/src/render/VulkanRenderer.cpp
           grep -q '0.000012 + 0.000055' native/shaders/planet.slang
           grep -q 'contact-cycle' .github/scripts/r24_stability_capture.sh
@@ -32,7 +41,11 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add native/src/app/Main.cpp
-          git commit -m 'fix(r24): frame contact-shadow origin from low side angle'
+          git add \
+            native/src/app/Main.cpp \
+            native/include/vf/world/PlanetLodMeshBuilder.hpp \
+            native/src/world/PlanetLodMeshBuilder.cpp \
+            native/tests/R24PhysicalPlanetTests.cpp
+          git commit -m 'fix(r24): align near-ground render surface with authoritative contact height'
           git pull --rebase origin work/r24-unified-planetary-physics
           git push origin HEAD:work/r24-unified-planetary-physics
