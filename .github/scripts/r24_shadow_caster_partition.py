@@ -178,14 +178,22 @@ c = replace_once(
 
 c = replace_once(
     c,
-'''        mesh.indexCount = 0U;
+'''    if (pendingStaticVertices_.empty() || pendingStaticIndices_.empty()) {
+        mesh.indexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
+        staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
+        return;
+    }
 ''',
-'''        mesh.indexCount = 0U;
+'''    if (pendingStaticVertices_.empty() || pendingStaticIndices_.empty()) {
+        mesh.indexCount = 0U;
         mesh.shadowCasterIndexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
+        staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
+        return;
+    }
 ''',
     'static empty shadow count')
 
@@ -229,19 +237,24 @@ c = replace_once(
 ''',
     'dynamic clear shadow count')
 
-# The static empty block was replaced above; now replace the remaining dynamic empty block.
 c = replace_once(
     c,
-'''        mesh.indexCount = 0U;
+'''    if (pendingDynamicVertices_.empty() || pendingDynamicIndices_.empty()) {
+        mesh.indexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
         dynamicMeshGenerationByFrame_[frame] = dynamicMeshGeneration_;
+        return;
+    }
 ''',
-'''        mesh.indexCount = 0U;
+'''    if (pendingDynamicVertices_.empty() || pendingDynamicIndices_.empty()) {
+        mesh.indexCount = 0U;
         mesh.shadowCasterIndexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
         dynamicMeshGenerationByFrame_[frame] = dynamicMeshGeneration_;
+        return;
+    }
 ''',
     'dynamic empty shadow count')
 
@@ -272,6 +285,25 @@ c = replace_once(
 ''',
     'static shadow draw range')
 
+c = replace_once(
+    c,
+'''        drawBoundMesh(
+            command,
+            dynamic.vertexBuffer,
+            dynamic.indexBuffer,
+            dynamic.shadowCasterIndexCount,
+            0U);
+''',
+'''        drawBoundMesh(
+            command,
+            dynamic.vertexBuffer,
+            dynamic.indexBuffer,
+            dynamic.shadowCasterIndexCount,
+            0U);
+''',
+    'dynamic shadow draw range already steady') if False else c
+
+# Current steady-frame production still uses opaqueIndexCount for the opt-in dynamic contact probe.
 c = replace_once(
     c,
 '''        drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.opaqueIndexCount, 0U);
