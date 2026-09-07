@@ -5,6 +5,7 @@ on:
     branches: [work/r24-unified-planetary-physics]
     paths:
       - '.github/scripts/r24_interstellar_sun_hotfix_v2.py'
+      - '.github/scripts/r24_interstellar_sun_hotfix_v3.py'
       - '.github/workflows/r24-interstellar-sun-closure-v3.yml'
   workflow_dispatch:
 
@@ -24,10 +25,11 @@ jobs:
         with:
           fetch-depth: 20
           ref: ${{ github.sha }}
-      - name: Apply interstellar Sun closure and split-speed hotfix
+      - name: Apply interstellar Sun closure and V3 evidence fix
         run: |
           python3 .github/scripts/r24_interstellar_sun_closure.py
           python3 .github/scripts/r24_interstellar_sun_hotfix_v2.py
+          python3 .github/scripts/r24_interstellar_sun_hotfix_v3.py
       - name: Validate generated production source
         run: |
           git diff --check
@@ -35,8 +37,8 @@ jobs:
           grep -q 'sunAngularRadiusRadians' native/include/vf/render/VulkanRenderer.hpp
           grep -q 'R24 SUN_TRANSIT_ARRIVED\\n' native/src/app/Main.cpp
           grep -q 'solarPlane' native/shaders/planet.slang
-          grep -q 'sixteen times the creative travel speed' native/tests/CameraInputTests.cpp
-          grep -q '2,000 km/s base safety cap' native/tests/R24RuntimeStabilityTests.cpp
+          grep -q 'R24 moon ground observer' native/src/app/Main.cpp
+          grep -q 'retainedClosingSpeed' native/src/player/PlanetCamera.cpp
       - name: Install Vulkan X11 build dependencies
         run: |
           sudo apt-get update
@@ -69,13 +71,16 @@ jobs:
           echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
           VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
       - name: Capture physical ground Moon and actual Sun transit
+        id: capture
+        continue-on-error: true
         shell: bash
         run: |
           APP="$(find build/r24-interstellar-sun-v3 -type f -name voxel_frontier -perm -111 | head -n1)"
           test -n "$APP"
           chmod +x .github/scripts/r24_interstellar_sun_capture.sh
           .github/scripts/r24_interstellar_sun_capture.sh "$APP" r24-interstellar-sun-evidence
-      - name: Preserve exact tested source and evidence
+      - name: Preserve exact tested source and permanent evidence
+        if: steps.capture.outcome == 'success'
         shell: bash
         run: |
           EVIDENCE_DIR="docs/evidence/r24-interstellar-sun-${GITHUB_RUN_ID}"
@@ -95,7 +100,8 @@ jobs:
           local_speed_gate=success
           inertial_warp_gate=success
           EOF
-      - name: Upload real Vulkan evidence
+      - name: Upload real Vulkan evidence even when a visual gate fails
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: r24-interstellar-sun-real-vulkan-${{ github.run_id }}
@@ -104,9 +110,13 @@ jobs:
             r24-interstellar-sun-ctest.log
             r24-interstellar-sun-focused.log
             vulkan-summary.txt
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
+      - name: Fail if visual capture gate failed
+        if: steps.capture.outcome != 'success'
+        run: exit 1
       - name: Promote tested production source and permanent evidence
+        if: steps.capture.outcome == 'success'
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
@@ -136,11 +146,12 @@ jobs:
         with:
           fetch-depth: 20
           ref: ${{ github.sha }}
-      - name: Apply interstellar Sun closure and split-speed hotfix
+      - name: Apply interstellar Sun closure and V3 evidence fix
         shell: pwsh
         run: |
           python .github/scripts/r24_interstellar_sun_closure.py
           python .github/scripts/r24_interstellar_sun_hotfix_v2.py
+          python .github/scripts/r24_interstellar_sun_hotfix_v3.py
       - name: Validate generated source
         run: git diff --check
       - name: Configure Windows x64
