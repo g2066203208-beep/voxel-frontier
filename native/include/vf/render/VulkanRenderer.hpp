@@ -239,6 +239,10 @@ private:
     std::uint32_t timestampValidBits_{};
     std::uint64_t timestampMask_{~std::uint64_t{0}};
     std::uint64_t gpuTimingSamples_{};
+    static constexpr std::uint64_t kGpuTimingWarmupSamples = 6U;
+    std::uint64_t gpuTimingSteadySamples_{};
+    std::array<double, 4> gpuTimingAccumMilliseconds_{};
+    std::array<double, 4> gpuTimingMaxMilliseconds_{};
     bool gpuTimestampsSupported_{};
 
     std::uint32_t frameIndex_{};

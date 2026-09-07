@@ -252,6 +252,41 @@ float shadowVisibility(float4 lightClip, float noL)
     return visible / 3.0;
 }
 
+float3 evaluateTerrainFast(VertexOutput input)
+{
+    float3 n = normalize(input.normal);
+    float3 l = normalize(gPush.data1.xyz);
+    float noL = saturate(dot(n, l));
+    float3 baseColor = max(input.color, 0.0);
+
+    // PlanetSurface/LodMeshBuilder already bakes biome/elevation variation into vertex.color. One
+    // broad sample prevents flat color blocks without rebuilding multi-octave material noise.
+    float macro = valueNoise2(input.objectPosition.xz * 0.0032);
+    float localSlope = saturate(1.0 - n.y);
+    baseColor *= 0.95 + macro * 0.10;
+    baseColor = lerp(
+        baseColor, baseColor * float3(1.035, 1.005, 0.945),
+        smoothstep(0.62, 0.86, macro) * 0.14);
+    baseColor = lerp(
+        baseColor, baseColor * float3(0.89, 0.92, 0.90),
+        smoothstep(0.32, 0.72, localSlope) * 0.24);
+
+    // Common dielectrics reflect about 4% at normal incidence. For this deliberately high-roughness
+    // terrain path reserve that energy and spend the remaining 96% on a Lambert lobe. This removes
+    // the per-pixel half-vector normalization, Schlick pow, GGX D term, two Smith G terms, reflect
+    // and ambient-specular work from the overwhelmingly largest opaque material.
+    float shadow = noL > 0.0001 ? shadowVisibility(input.shadowPosition, noL) : 1.0;
+    float3 stellar = max(gPush.data2.rgb, 0.0) * max(gPush.data2.a, 0.0);
+    float3 directDiffuse = baseColor * (0.96 / PI) * noL * stellar * shadow;
+
+    float skyWeight = saturate(n.y * 0.5 + 0.5);
+    float3 skyIrradiance = max(gScene.skyAmbientExposure.rgb, 0.0) * (0.28 + 0.72 * skyWeight);
+    float3 groundIrradiance = max(gScene.groundAmbientShadowTexel.rgb, 0.0)
+        * saturate(-n.y * 0.5 + 0.5);
+    float3 ambientDiffuse = baseColor * (skyIrradiance + groundIrradiance) * 0.96;
+    return directDiffuse + ambientDiffuse;
+}
+
 float3 evaluatePbr(VertexOutput input, bool transparent)
 {
     float3 n = normalize(input.normal);
@@ -261,7 +296,6 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
 
     bool waterMaterial = input.material.x < -0.5;
     float materialTag = input.material.w;
-    bool terrainMaterial = !waterMaterial && materialTag < -0.5 && materialTag > -1.5;
     bool foliageMaterial = !waterMaterial && materialTag <= -1.5 && materialTag > -2.5;
     bool barkMaterial = !waterMaterial && materialTag <= -2.5 && materialTag > -3.5;
     bool rockMaterial = !waterMaterial && materialTag <= -3.5 && materialTag > -4.5;
@@ -272,25 +306,7 @@ float3 evaluatePbr(VertexOutput input, bool transparent)
     float emissive = max(input.material.w, 0.0);
     float3 baseColor = max(input.color, 0.0);
 
-    if (terrainMaterial)
-    {
-        // PlanetSurface/LodMeshBuilder already bakes biome/elevation variation into vertex.color.
-        // The old fragment path then recomputed one 3-octave FBM plus a second value-noise field on
-        // every terrain pixel (16 hash evaluations before PBR). Keep one broad value-noise sample
-        // for gentle breakup and let slope + the authored vertex palette carry the rest.
-        float2 q = input.objectPosition.xz;
-        float macro = valueNoise2(q * 0.0032);
-        float localSlope = saturate(1.0 - n.y);
-        baseColor *= 0.95 + macro * 0.10;
-        baseColor = lerp(
-            baseColor, baseColor * float3(1.035, 1.005, 0.945),
-            smoothstep(0.62, 0.86, macro) * 0.14);
-        baseColor = lerp(
-            baseColor, baseColor * float3(0.89, 0.92, 0.90),
-            smoothstep(0.32, 0.72, localSlope) * 0.24);
-        roughness = clamp(roughness + (macro - 0.5) * 0.035, 0.64, 0.98);
-    }
-    else if (foliageMaterial)
+    if (foliageMaterial)
     {
         // Crown geometry/vertex color already varies deterministically on the CPU. Avoid another
         // four-hash value-noise lookup per leaf fragment.
@@ -401,8 +417,11 @@ float4 opaqueFragmentMain(VertexOutput input) : SV_Target
 {
     if (input.material.z > 0.02) discard;
     float exposure = max(gScene.skyAmbientExposure.a, 0.01);
-    float3 linearColor = evaluatePbr(input, false) * exposure;
     float materialTag = input.material.w;
+    const bool terrainMaterial = materialTag < -0.5 && materialTag > -1.5;
+    float3 linearColor = (terrainMaterial
+        ? evaluateTerrainFast(input)
+        : evaluatePbr(input, false)) * exposure;
     // Terrain needs enough atmospheric perspective to read planet scale, but not so much that
     // 10--100 km mountain chains disappear. Near-field ecology can take slightly stronger haze.
     float hazeStrength = materialTag < -0.5 && materialTag > -1.5 ? 0.58

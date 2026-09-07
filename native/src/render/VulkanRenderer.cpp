@@ -448,13 +448,36 @@ void VulkanRenderer::readTimestampQueries(std::uint32_t frame) {
     const double skyMs = milliseconds(4U, 5U);
     const double transparentMs = milliseconds(6U, 7U);
     ++gpuTimingSamples_;
-    // Log the first measurement immediately for CI/evidence and then once per ~60 samples so a
-    // normal gameplay log is useful without becoming a per-frame I/O bottleneck.
-    if (gpuTimingSamples_ == 1U || (gpuTimingSamples_ % 60U) == 0U) {
+
+    // The first frames include static-buffer adoption, pipeline/cache warm-up and software-driver
+    // initialization on CI. They are useful hitch evidence but are not representative steady-state
+    // pass cost. Keep them out of the optimization baseline instead of letting one startup frame
+    // (the old mountain sample exceeded 600 ms) dominate every subsequent decision.
+    if (gpuTimingSamples_ <= kGpuTimingWarmupSamples) return;
+
+    const std::array<double, 4> current{shadowMs, opaqueMs, skyMs, transparentMs};
+    for (std::size_t i = 0; i < current.size(); ++i) {
+        gpuTimingAccumMilliseconds_[i] += current[i];
+        gpuTimingMaxMilliseconds_[i] = std::max(gpuTimingMaxMilliseconds_[i], current[i]);
+    }
+    ++gpuTimingSteadySamples_;
+
+    // Four-scene Vulkan evidence waits four seconds after terrain settles. Logging every eight
+    // steady samples guarantees CI captures a real mean even on llvmpipe while normal gameplay I/O
+    // remains negligible. Means are cumulative after warm-up; maxima preserve intermittent spikes.
+    if ((gpuTimingSteadySamples_ % 8U) == 0U) {
+        const double inv = 1.0 / static_cast<double>(gpuTimingSteadySamples_);
+        const double shadowMean = gpuTimingAccumMilliseconds_[0] * inv;
+        const double opaqueMean = gpuTimingAccumMilliseconds_[1] * inv;
+        const double skyMean = gpuTimingAccumMilliseconds_[2] * inv;
+        const double transparentMean = gpuTimingAccumMilliseconds_[3] * inv;
         SDL_Log(
-            "R24 GPU pass_ms shadow=%.3f opaque=%.3f sky=%.3f transparent=%.3f total_profiled=%.3f",
-            shadowMs, opaqueMs, skyMs, transparentMs,
-            shadowMs + opaqueMs + skyMs + transparentMs);
+            "R24 GPU steady_pass_ms samples=%llu shadow_mean=%.3f opaque_mean=%.3f sky_mean=%.3f transparent_mean=%.3f total_mean=%.3f shadow_max=%.3f opaque_max=%.3f sky_max=%.3f transparent_max=%.3f",
+            static_cast<unsigned long long>(gpuTimingSteadySamples_),
+            shadowMean, opaqueMean, skyMean, transparentMean,
+            shadowMean + opaqueMean + skyMean + transparentMean,
+            gpuTimingMaxMilliseconds_[0], gpuTimingMaxMilliseconds_[1],
+            gpuTimingMaxMilliseconds_[2], gpuTimingMaxMilliseconds_[3]);
     }
 }
 
