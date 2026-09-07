@@ -81,10 +81,10 @@ def render_sphere(d:Path,name:str,out:Path):
     S=1000; cx=S*.5; cy=S*.465; R=S*.325
     yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R
     sandstone=name.startswith("vf_reference_sandstone")
-    displacement_amp=.190 if sandstone else .080
+    displacement_amp=.230 if sandstone else .080
     displacement_iterations=7 if sandstone else 5
-    hd_min=-.28 if sandstone else -.82
-    hd_max=.92 if sandstone else .82
+    hd_min=-.18 if sandstone else -.82
+    hd_max=.96 if sandstone else .82
     Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=displacement_amp,iterations=displacement_iterations,hd_min=hd_min,hd_max=hd_max)
     u,v=sphere_uv(Ng)
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
