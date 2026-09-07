@@ -9,6 +9,7 @@ import {
   validateMaterial,
 } from "../src/index.js";
 import { bakeVfBasalt } from "./vf-recipes/vf-basalt.js";
+import { bakeVfBasaltCartoon } from "./vf-recipes/vf-basalt-cartoon.js";
 import { bakeVfGranite } from "./vf-recipes/vf-granite.js";
 import { bakeVfDirt } from "./vf-recipes/vf-dirt.js";
 import { bakeVfBark } from "./vf-recipes/vf-bark.js";
@@ -28,7 +29,7 @@ import {
 
 type Preset =
   | "stylizedCellRock" | "volcanicRock" | "simpleRock"
-  | "vfBasalt" | "vfGranite" | "vfDirt" | "vfBark"
+  | "vfBasalt" | "vfBasaltCartoon" | "vfGranite" | "vfDirt" | "vfBark"
   | "vfSandstone" | "vfLimestone" | "vfGravel" | "vfSand" | "vfWetMud"
   | "vfWoodPlank" | "vfIronOre" | "vfCopperOre" | "vfCoal" | "vfSnow" | "vfIce";
 
@@ -56,6 +57,7 @@ function bakeOne(req: Request) {
   } else if (req.preset === "simpleRock") {
     material = materialFromFields(req.resolution, BILIBILI_MATERIALS.simpleRock(req.params));
   } else if (req.preset === "vfBasalt") material = bakeVfBasalt(req.resolution, req.params);
+  else if (req.preset === "vfBasaltCartoon") material = bakeVfBasaltCartoon(req.resolution, req.params);
   else if (req.preset === "vfGranite") material = bakeVfGranite(req.resolution, req.params);
   else if (req.preset === "vfDirt") material = bakeVfDirt(req.resolution, req.params);
   else if (req.preset === "vfBark") material = bakeVfBark(req.resolution, req.params);
