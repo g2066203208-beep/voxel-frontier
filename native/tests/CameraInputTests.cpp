@@ -7,6 +7,7 @@
 #include <string_view>
 
 #include <glm/geometric.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace {
 
@@ -132,6 +133,56 @@ void testHighLatitudeTravelDoesNotRebuildHeadingBasis() {
         require(glm::dot(previous, current) > 0.97,
             "surface travel through high latitude and the pole must not rebuild/spin the heading basis");
         previous = current;
+    }
+}
+
+void testGroundedCameraCoRotatesWithPlanetWithoutTerrainYaw() {
+    vf::PlanetDefinition planet{};
+    planet.radius = 6371000.0;
+    planet.maxElevation = 0.0;
+    planet.atmosphereHeight = 100000.0;
+
+    vf::CelestialSystem system;
+    vf::CelestialBody body{};
+    body.type = vf::CelestialBodyType::Planet;
+    body.radiusMeters = planet.radius;
+    body.massKg = 5.9722e24;
+    body.gameplaySurfaceGravityMps2 = 9.80665;
+    body.gravityFalloffStartRadiusMeters = planet.radius + planet.atmosphereHeight;
+    body.gravityInfluenceRadiusMeters = planet.radius + 900000.0;
+    body.physicsBubbleRadiusMeters = planet.radius + 1300000.0;
+    body.atmosphere.enabled = true;
+    body.atmosphere.heightMeters = planet.atmosphereHeight;
+    body.spinAxis = glm::normalize(glm::dvec3{0.31, 0.91, 0.27});
+    const std::uint32_t id = system.addBody(body);
+
+    vf::PlanetCamera camera{planet, &system, id, glm::normalize(glm::dvec3{0.72, 0.52, 0.46})};
+    const vf::CelestialBody* initialBody = system.body(id);
+    require(initialBody != nullptr, "rotating-frame camera test body must exist");
+
+    const glm::dquat initialInverse = glm::conjugate(glm::normalize(initialBody->orientation));
+    const glm::dvec3 initialLocalForward = glm::normalize(initialInverse * camera.forwardDirection());
+    const glm::dvec3 initialLocalUp = glm::normalize(initialInverse * camera.up());
+    const glm::dvec3 initialLocalPosition = initialInverse * (camera.position() - initialBody->position);
+
+    const glm::dquat stepRotation = glm::angleAxis(0.01, body.spinAxis);
+    for (int step = 0; step < 360; ++step) {
+        vf::CelestialBody* rotatingBody = system.body(id);
+        require(rotatingBody != nullptr, "rotating-frame camera test body disappeared");
+        rotatingBody->orientation = glm::normalize(stepRotation * rotatingBody->orientation);
+
+        camera.update({}, 1.0 / 120.0);
+        const glm::dquat inverse = glm::conjugate(glm::normalize(rotatingBody->orientation));
+        const glm::dvec3 localForward = glm::normalize(inverse * camera.forwardDirection());
+        const glm::dvec3 localUp = glm::normalize(inverse * camera.up());
+        const glm::dvec3 localPosition = inverse * (camera.position() - rotatingBody->position);
+
+        require(glm::dot(initialLocalForward, localForward) > 0.999999,
+            "grounded camera heading must remain fixed in the rotating planet frame");
+        require(glm::dot(initialLocalUp, localUp) > 0.999999,
+            "grounded camera up must remain fixed in the rotating planet frame");
+        require(glm::length(localPosition - initialLocalPosition) < 1.0e-6,
+            "stationary grounded camera position must not drift in planet-local coordinates");
     }
 }
 
@@ -282,6 +333,7 @@ int main() {
     testDMovesToCameraRightInFlight();
     testAMovesToCameraLeftInFlight();
     testHighLatitudeTravelDoesNotRebuildHeadingBasis();
+    testGroundedCameraCoRotatesWithPlanetWithoutTerrainYaw();
     testPlanetToSpaceAttitudeIsContinuousAndMouseXKeepsDirection();
     testSpaceReentryBlendsHorizonAlongDescent();
     std::cout << "vf_camera_input_tests: PASS\n";
