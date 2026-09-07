@@ -2,10 +2,78 @@ import { heightToNormal, makeTexture, type Material } from "../../src/index.js";
 
 type RGB=[number,number,number];
 export type VfDirtParams={seed?:number;clodScale?:number;pebbleDensity?:number;moisture?:number;relief?:number;normalStrength?:number;};
-const clamp01=(x:number)=>Math.max(0,Math.min(1,x));const smooth=(x:number)=>x*x*(3-2*x);const lerp=(a:number,b:number,t:number)=>a+(b-a)*t;const mix=(a:RGB,b:RGB,t:number):RGB=>[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
+const TAU=Math.PI*2;
+const clamp01=(x:number)=>Math.max(0,Math.min(1,x));
+const smooth=(x:number)=>x*x*(3-2*x);
+const smoother=(x:number)=>{const t=clamp01(x);return t*t*t*(t*(t*6-15)+10);};
+const lerp=(a:number,b:number,t:number)=>a+(b-a)*t;
+const mix=(a:RGB,b:RGB,t:number):RGB=>[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
+const wrap01=(x:number)=>x-Math.floor(x);
 function hash01(x:number,y:number,seed:number,salt=0){let h=Math.imul(x|0,0x1f123bb5)^Math.imul(y|0,0x5f356495)^Math.imul(seed|0,0x2c9277b5)^Math.imul(salt|0,0x27d4eb2d);h=Math.imul(h^(h>>>15),0x2c1b3c6d);h=Math.imul(h^(h>>>12),0x297a2d39);h^=h>>>15;return(h>>>0)/0xffffffff;}
-function pnoise(u:number,v:number,f:number,seed:number){f=Math.max(1,f|0);const px=u*f,py=v*f,x0=Math.floor(px),y0=Math.floor(py),tx=smooth(px-x0),ty=smooth(py-y0),w=(n:number)=>((n%f)+f)%f;const a=w(x0),b=w(x0+1),c=w(y0),d=w(y0+1);return lerp(lerp(hash01(a,c,seed),hash01(b,c,seed),tx),lerp(hash01(a,d,seed),hash01(b,d,seed),tx),ty);}
-function pfbm(u:number,v:number,b:number,o:number,s:number){let sum=0,w=0,a=1;for(let i=0;i<o;i++){sum+=pnoise(u,v,Math.max(1,Math.round(b*2**i)),s+i*101)*a;w+=a;a*=0.5;}return sum/w;}
-function pebbles(u:number,v:number,seed:number,density:number){const cells=18,px=u*cells,py=v*cells,bx=Math.floor(px),by=Math.floor(py);let best=0,kind=0;for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){const cx=bx+ox,cy=by+oy,wx=((cx%cells)+cells)%cells,wy=((cy%cells)+cells)%cells;if(hash01(wx,wy,seed,1)>density)continue;const jx=0.2+hash01(wx,wy,seed,2)*0.6,jy=0.2+hash01(wx,wy,seed,3)*0.6,r=0.09+hash01(wx,wy,seed,4)*0.11,dx=px-cx-jx,dy=py-cy-jy,d=Math.hypot(dx,dy),m=1-smooth(clamp01((d-r*0.45)/(r*0.55)));if(m>best){best=m;kind=hash01(wx,wy,seed,5);}}return{mask:best,kind};}
-export function bakeVfDirt(size:number,p:VfDirtParams={}):Material{const seed=Math.round(p.seed??420501),clodScale=p.clodScale??7,pebbleDensity=p.pebbleDensity??0.17,moisture=clamp01(p.moisture??0.16),relief=p.relief??1.0,normalStrength=p.normalStrength??8.0;const baseColor=makeTexture(size,size,3),metallic=makeTexture(size,size,1),roughness=makeTexture(size,size,1),ao=makeTexture(size,size,1),height=makeTexture(size,size,1),emission=makeTexture(size,size,3);for(let y=0;y<size;y++){const v=1-(y+0.5)/size;for(let x=0;x<size;x++){const u=(x+0.5)/size;const warpU=(pfbm(u,v,2,3,seed+11)-0.5)*0.05,warpV=(pfbm(u,v,2,3,seed+23)-0.5)*0.05,du=u+warpU,dv=v+warpV;const macro=pfbm(du,dv,2,4,seed+101),clod=pfbm(du,dv,clodScale,3,seed+201),grain=pfbm(du,dv,38,2,seed+301),powder=pnoise(du,dv,121,seed+311),pit=smooth(clamp01((pnoise(du,dv,48,seed+401)-0.82)/0.13)),pb=pebbles(du,dv,seed+500,pebbleDensity);const clodShape=Math.pow(clamp01(clod),1.35);let h=0.46+(macro-0.5)*0.20*relief+(clodShape-0.5)*0.19*relief+(grain-0.5)*0.045*relief+(powder-0.5)*0.012-pit*0.035+pb.mask*0.065;h=clamp01(h);let c=mix([0.16,0.095,0.052],[0.31,0.20,0.105],clamp01(0.30+macro*0.38+clod*0.24+grain*0.08));const damp=moisture*smooth(clamp01((0.55-h)/0.22));c=mix(c,[0.075,0.052,0.035],damp*0.65);if(pb.mask>0){const pc=pb.kind<0.5?[0.27,0.25,0.22] as RGB:[0.16,0.15,0.14] as RGB;c=mix(c,pc,pb.mask*0.72);}const idx=y*size+x,rgb=idx*3;baseColor.data[rgb]=c[0];baseColor.data[rgb+1]=c[1];baseColor.data[rgb+2]=c[2];height.data[idx]=h;roughness.data[idx]=clamp01(0.86+(grain-0.5)*0.10-pb.mask*0.20-damp*0.28);ao.data[idx]=clamp01(1-pit*0.18-(1-clodShape)*0.10);}}
-const normal=heightToNormal(height,normalStrength,true);return{baseColor,metallic,roughness,normal,ao,height,emission};}
+function pnoise(u:number,v:number,f:number,seed:number){f=Math.max(1,f|0);const px=u*f,py=v*f,x0=Math.floor(px),y0=Math.floor(py),tx=smoother(px-x0),ty=smoother(py-y0),w=(n:number)=>((n%f)+f)%f;const a=w(x0),b=w(x0+1),c=w(y0),d=w(y0+1);return lerp(lerp(hash01(a,c,seed),hash01(b,c,seed),tx),lerp(hash01(a,d,seed),hash01(b,d,seed),tx),ty);}
+function pfbm(u:number,v:number,b:number,o:number,s:number){let sum=0,w=0,a=1;for(let i=0;i<o;i++){sum+=pnoise(u,v,Math.max(1,Math.round(b*2**i)),s+i*101)*a;w+=a;a*=.5;}return sum/Math.max(w,1e-6);}
+
+function scatteredStones(u:number,v:number,seed:number,density:number){
+  const cells=21,px=u*cells,py=v*cells,bx=Math.floor(px),by=Math.floor(py);let mask=0,kind=0,edge=0;
+  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
+    const cx=bx+ox,cy=by+oy,wx=((cx%cells)+cells)%cells,wy=((cy%cells)+cells)%cells;
+    if(hash01(wx,wy,seed,1)>density)continue;
+    const jx=.16+hash01(wx,wy,seed,2)*.68,jy=.16+hash01(wx,wy,seed,3)*.68;
+    const ang=hash01(wx,wy,seed,4)*TAU,ca=Math.cos(ang),sa=Math.sin(ang);
+    const rx=px-cx-jx,ry=py-cy-jy,ex=rx*ca-ry*sa,ey=rx*sa+ry*ca;
+    const major=.12+hash01(wx,wy,seed,5)*.19,minor=major*(.52+hash01(wx,wy,seed,6)*.36);
+    const d=Math.hypot(ex/major,ey/minor);
+    const m=1-smooth(clamp01((d-.48)/.52));
+    const e=(1-smooth(clamp01((Math.abs(d-.82)-.06)/.20)))*m;
+    if(m>mask){mask=m;kind=hash01(wx,wy,seed,7);edge=e;}
+  }
+  return{mask,kind,edge};
+}
+
+export function bakeVfDirt(size:number,p:VfDirtParams={}):Material{
+  const seed=Math.round(p.seed??420502),clodScale=Math.max(5,p.clodScale??9),pebbleDensity=clamp01(p.pebbleDensity??.22),moisture=clamp01(p.moisture??.12),relief=p.relief??1.22,normalStrength=p.normalStrength??12.0;
+  const baseColor=makeTexture(size,size,3),metallic=makeTexture(size,size,1),roughness=makeTexture(size,size,1),ao=makeTexture(size,size,1),height=makeTexture(size,size,1),emission=makeTexture(size,size,3);
+  for(let y=0;y<size;y++){
+    const v=1-(y+.5)/size;
+    for(let x=0;x<size;x++){
+      const u=(x+.5)/size;
+      const warpU=(pfbm(u,v,2,3,seed+11)-.5)*.065,warpV=(pfbm(u,v,2,3,seed+23)-.5)*.065;
+      const du=wrap01(u+warpU),dv=wrap01(v+warpV);
+      const macro=pfbm(du,dv,2,4,seed+101);
+      const clod=pfbm(du,dv,clodScale,3,seed+201);
+      const aggregate=pfbm(du,dv,28,3,seed+251);
+      const grain=pfbm(du,dv,62,2,seed+301);
+      const grit=pnoise(du,dv,137,seed+311);
+      const dust=pnoise(du,dv,219,seed+317);
+      const clodPeak=Math.pow(clamp01((clod-.28)/.72),1.45);
+      const clodCrevice=Math.pow(clamp01(1-Math.abs((pfbm(du,dv,14,2,seed+233)-.5)*2)),5.5);
+      const microPit=smooth(clamp01((pnoise(du,dv,79,seed+401)-.81)/.15));
+      const stones=scatteredStones(du,dv,seed+500,pebbleDensity);
+      const h=clamp01(.43+(macro-.5)*.18*relief+(clodPeak-.48)*.19*relief+(aggregate-.5)*.085*relief+(grain-.5)*.050*relief+(grit-.5)*.026+(dust-.5)*.012-clodCrevice*.055-microPit*.035+stones.mask*.095-stones.edge*.016);
+
+      const tone=clamp01(.18+macro*.36+clod*.26+aggregate*.14+grain*.06);
+      let c=mix([.125,.070,.036],[.33,.205,.095],tone);
+      const clayPatch=smooth(clamp01((pfbm(du,dv,5,3,seed+601)-.56)/.25));
+      c=mix(c,[.38,.19,.085],clayPatch*.16);
+      const damp=moisture*smooth(clamp01((.52-h)/.20));
+      c=mix(c,[.067,.046,.030],damp*.78);
+      if(stones.mask>0){
+        const pc:RGB=stones.kind<.34?[.31,.29,.25]:stones.kind<.70?[.19,.18,.16]:[.40,.34,.26];
+        c=mix(c,pc,stones.mask*.80);
+      }
+      const organic=smooth(clamp01((pnoise(du,dv,113,seed+707)-.91)/.07));
+      c=mix(c,[.055,.050,.034],organic*.32);
+
+      let rough=.84+(grain-.5)*.12+(grit-.5)*.07+clodCrevice*.08-damp*.31;
+      rough=lerp(rough,.60,stones.mask*.80);
+      rough=lerp(rough,.72,clayPatch*.18);
+      rough=clamp01(rough);
+      const occ=clamp01(1-clodCrevice*.20-microPit*.25-(1-clodPeak)*.07-stones.edge*.05);
+      const idx=y*size+x,rgb=idx*3;
+      baseColor.data[rgb]=c[0];baseColor.data[rgb+1]=c[1];baseColor.data[rgb+2]=c[2];
+      height.data[idx]=h;roughness.data[idx]=rough;ao.data[idx]=occ;
+    }
+  }
+  const normal=heightToNormal(height,normalStrength,true);
+  return{baseColor,metallic,roughness,normal,ao,height,emission};
+}
