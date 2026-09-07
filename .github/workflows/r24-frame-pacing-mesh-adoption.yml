@@ -1,0 +1,206 @@
+name: R24 Frame Pacing Mesh Adoption
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_frame_pacing_mesh_adoption.py'
+      - '.github/workflows/r24-frame-pacing-mesh-adoption.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-frame-pacing-mesh-adoption-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 production commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Apply frame pacing and mesh adoption rescue
+        run: python3 .github/scripts/r24_frame_pacing_mesh_adoption.py
+
+      - name: Validate optimized source contracts
+        shell: bash
+        run: |
+          git diff --check
+          grep -q 'struct PreparedPlanetMesh' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'pendingStaticMesh_' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'kShadowMapSize = 1024' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'PreparedPlanetMesh preparePlanetMesh' native/src/render/VulkanRenderer.cpp
+          grep -q 'std::shared_ptr<const PreparedPlanetMesh> pending = pendingStaticMesh_' native/src/render/VulkanRenderer.cpp
+          grep -q 'earthGlobeRenderMesh' native/src/app/Main.cpp
+          grep -q 'result.renderMesh = std::make_shared<const vf::PreparedPlanetMesh>' native/src/app/Main.cpp
+          grep -q '1100U' native/src/app/Main.cpp
+          grep -q 'viewConeHalfAngleRadians = glm::radians(78.0)' native/src/app/Main.cpp
+          grep -q 'rawFrameSeconds' native/src/app/Main.cpp
+          grep -q 'renderms' native/src/app/Main.cpp
+          grep -q 'static const float2 offsets\[3\]' native/shaders/planet.slang
+          grep -q 'one broad value-noise sample' native/shaders/planet.slang
+          ! grep -q 'static const float2 offsets\[5\]' native/shaders/planet.slang
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-pacing -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-pacing --parallel 2
+
+      - name: Run all native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-pacing --verbose --output-on-failure 2>&1 | tee r24-pacing-ctest.log
+
+      - name: Gate physical and renderer regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-pacing --verbose --output-on-failure \
+            -R 'vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests|vf_shader_contract_tests' \
+            2>&1 | tee r24-pacing-focused.log
+          grep -q 'vf_planetary_body_system_tests: PASS' r24-pacing-focused.log
+          grep -q 'vf_r24_runtime_stability_tests: PASS' r24-pacing-focused.log
+          grep -q 'Terrain landform tests passed' r24-pacing-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-pacing-focused.log
+          grep -q 'All production shader SPIR-V entry-point contracts passed' r24-pacing-focused.log
+
+      - name: Verify Lavapipe Vulkan
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real frame-paced Vulkan terrain
+        shell: bash
+        run: |
+          APP="$(find build/r24-pacing -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-frame-pacing-evidence
+
+      - name: Gate images geometry and truthful frame telemetry
+        shell: bash
+        run: |
+          test -s r24-frame-pacing-evidence/r24-epic-landscape-overview.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('r24-frame-pacing-evidence/logs')
+          perf = re.compile(
+              r'R24 PERF terrain_build_ms=([0-9.]+) vertices=([0-9]+) indices=([0-9]+) '
+              r'leaf_patches=([0-9]+) culled_nodes=([0-9]+) hydrology_reused=([01])')
+          diag = re.compile(r'R24 DIAG .*?maxms ([0-9.]+) \| renderms ([0-9.]+) \| FPS ([0-9.]+)')
+          rows = []
+          diag_rows = []
+          for log in root.glob('*.log'):
+              if log.name.startswith('xvfb'):
+                  continue
+              text = log.read_text(encoding='utf-8', errors='replace')
+              found = perf.findall(text)
+              if found:
+                  ms, verts, inds, leaves, culled, reused = found[-1]
+                  row = (log.stem, float(ms), int(verts), int(inds), int(leaves), int(culled), int(reused))
+                  rows.append(row)
+                  print('PACING_PERF', row)
+              ds = diag.findall(text)
+              if ds:
+                  maxms, renderms, fps = map(float, ds[-1])
+                  diag_rows.append((log.stem, maxms, renderms, fps))
+                  print('PACING_DIAG', diag_rows[-1])
+
+          if len(rows) < 4:
+              raise SystemExit(f'expected four terrain rows, got {len(rows)}')
+          if len(diag_rows) < 4:
+              raise SystemExit(f'expected truthful frame telemetry for four scenes, got {len(diag_rows)}')
+          max_indices = max(r[3] for r in rows)
+          max_leaves = max(r[4] for r in rows)
+          min_culled = min(r[5] for r in rows)
+          max_build_ms = max(r[1] for r in rows)
+          print('PACING_SUMMARY', 'max_build_ms=', max_build_ms,
+                'max_indices=', max_indices, 'max_leaves=', max_leaves,
+                'min_culled=', min_culled)
+          if max_indices >= 1_850_000:
+              raise SystemExit(f'index budget regression: {max_indices} >= 1,850,000')
+          if max_leaves > 1100:
+              raise SystemExit(f'leaf budget regression: {max_leaves} > 1100')
+          if min_culled <= 0:
+              raise SystemExit('view/horizon culling rejected no nodes')
+          if any(maxms + 1e-6 < renderms for _, maxms, renderms, _ in diag_rows):
+              raise SystemExit('frame wall time cannot be lower than renderer wall time')
+          PY
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-frame-pacing-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-frame-pacing-evidence ]]; then
+            cp -a r24-frame-pacing-evidence/. "$EVIDENCE_DIR/"
+          fi
+          [[ -f r24-pacing-ctest.log ]] && cp -f r24-pacing-ctest.log "$EVIDENCE_DIR/" || true
+          [[ -f r24-pacing-focused.log ]] && cp -f r24-pacing-focused.log "$EVIDENCE_DIR/" || true
+          [[ -f vulkan-summary.txt ]] && cp -f vulkan-summary.txt "$EVIDENCE_DIR/" || true
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-frame-pacing-${{ github.run_id }}
+          path: |
+            r24-frame-pacing-evidence/**
+            r24-pacing-ctest.log
+            r24-pacing-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote frame pacing and async mesh adoption
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          git commit -m "perf(r24): move terrain mesh adoption off the render hot path"
+          git reset --hard HEAD
+          git clean -fd build/r24-pacing || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
