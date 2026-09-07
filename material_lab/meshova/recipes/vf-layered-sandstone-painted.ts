@@ -33,7 +33,7 @@ function makeBlock(seed:number,row:number,id:number,cx:number,cy:number,hw:numbe
     cx:(cx+2)%1, cy:(cy+2)%1, hw, hh,
     angle:(hash(seed,row,id,5)-.5)*(macro?.22:.14),
     base, lift, warm:hash(seed,row,id,6), cool:hash(seed,row,id,7), macro,
-    bevel:macro?.095:.075,
+    bevel:macro?.125:.100,
     strata,
     crack:hash(seed,row,id,8)<crackChance,
     crackX:(hash(seed,row,id,9)-.5)*.34,
@@ -114,7 +114,7 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
     const v=1-(py+.5)/size;
     for(let px=0;px<size;px++){
       const u=(px+.5)/size,i=py*size+px,j=i*3;
-      let best=.462+periodicField(u*.42,v*.42,seed+700,2)*.010;
+      let best=.462+periodicField(u,v,seed+700,2)*.010;
       let second=best-.018,bestId=-1,bestEdge=0,bestCrack=0,bestChip=0,bestFacet=0,bestStrata=0,bx=0,by=0;
 
       for(let id=0;id<blocks.length;id++){
@@ -148,7 +148,7 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
 
         let crack=0;
         if(q.crack){
-          const line=q.crackX+q.crackTilt*y+periodicField(u*1.15,v*1.15,seed+id*41,2)*.010;
+          const line=q.crackX+q.crackTilt*y+periodicField(u,v,seed+id*41,2)*.010;
           crack=G((x-line)/(q.macro?.014:.018))*S((y+.76)/.13)*S((.78-y)/.13);
         }
         const chip=q.chip>.52?G((x-q.chipX)/(q.macro?.095:.12))*G((y-q.chipY)/(q.macro?.12:.15))*chipStrength:0;
@@ -179,7 +179,7 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         col=M(col,cream,C(bestStrata*2.9+Math.max(0,bestFacet)*.18));
         col=M(col,deep,C(cavity*.50));
         col=M(col,ink,C(bestCrack*.96+seam*.22));
-        const wash=periodicField((u+q.cx)*.62,(v+q.cy)*.48,seed+920+bestId*17,2);
+        const wash=periodicField(u,v,seed+920+bestId*17,2);
         col=M(col,wash>0?ochre:cool,Math.abs(wash)*.055*bestEdge);
         rr=C(.70+(1-bestEdge)*.13+bestCrack*.19+bestChip*.08+seam*.06-bestStrata*.05);
         aa=C(1-cavity*.43-bestCrack*.14);

@@ -27,7 +27,7 @@ export function bakeVfPainterlyBark(size:number,p:VfPainterlyBarkParams={}){
         knotRing=Math.max(knotRing,G((r-.72)/.13)*S((1.18-r)/.22));
         knotCore=Math.max(knotCore,G(r/.34));
       }
-      const warp=periodicField(u*.34,v*.55,seed+120,3)*.018+Math.sin(TAU*v*1.15+hash(seed,7)*TAU)*.010+knotWarp;
+      const warp=periodicField(u,v,seed+120,3)*.018+Math.sin(TAU*v+hash(seed,7)*TAU)*.010+knotWarp;
       const coord=(u+warp)*ridgeCount;
       const cellId=((Math.floor(coord)%ridgeCount)+ridgeCount)%ridgeCount;
       const local=coord-Math.floor(coord)-.5;
@@ -41,10 +41,10 @@ export function bakeVfPainterlyBark(size:number,p:VfPainterlyBarkParams={}){
       const splitCenter=(hash(seed,cellId,5)-.5)*.30;
       const splitGate=hash(seed,cellId,6)>.58?G((local-splitCenter)/.025)*G(wrapDelta(v-hash(seed,cellId,7))/.22):0;
       const peel=hash(seed,cellId,8)>.54?G((local-(hash(seed,cellId,9)<.5?-.31:.31))/.085)*G(wrapDelta(v-hash(seed,cellId,10))/.10)*plateau:0;
-      const fiberPhase=TAU*(ridgeCount*2.8*u+2.2*v)+periodicField(u,v,seed+300+cellId*7,2)*.55;
+      const fiberPhase=TAU*(ridgeCount*3*u+2*v)+periodicField(u,v,seed+300+cellId*7,2)*.55;
       const fiber=Math.sin(fiberPhase)*plateau;
       const micro=Math.pow(C(.5+.5*Math.sin(fiberPhase*1.61+hash(seed,cellId,11)*TAU)),23)*plateau;
-      const wash=periodicField(u*.62,v*.45,seed+520+cellId*11,2);
+      const wash=periodicField(u,v,seed+520+cellId*11,2);
 
       let h=.492+relief*(crown-seam*.034-splitGate*.020+peel*.016+knotRing*.012-knotCore*.007+fiber*.0035-micro*.003);
       h=C(h);

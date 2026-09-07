@@ -1,55 +1,55 @@
 import { C, G, M, S, TAU, hash, wrapDelta, periodicField, finalize, makeTexture, type RGB } from "./vf-painterly-core.js";
 
-export type VfPainterlyDirtParams = { seed?: number; normalStrength?: number; relief?: number; moisture?: number };
-type SoilCell={distance:number;boundary:number;id:number;heightBias:number;warm:number;cool:number};
-function soilCell(u:number,v:number,seed:number):SoilCell{
-  const gxCount=5,gyCount=4;const gx=Math.floor(u*gxCount),gy=Math.floor(v*gyCount);
-  let best=99,second=99,bestId=0,bx=0,by=0;
-  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
-    const ix=((gx+ox)%gxCount+gxCount)%gxCount,iy=((gy+oy)%gyCount+gyCount)%gyCount;
-    const cx=(ix+.5+(hash(seed,ix,iy,1)-.5)*.58)/gxCount;
-    const cy=(iy+.5+(hash(seed,ix,iy,2)-.5)*.58)/gyCount;
-    const dx=wrapDelta(u-cx)*gxCount,dy=wrapDelta(v-cy)*gyCount*.88;
-    const d=Math.sqrt(dx*dx+dy*dy);
-    const id=iy*gxCount+ix;
-    if(d<best){second=best;best=d;bestId=id;bx=ix;by=iy;}else if(d<second)second=d;
-  }
-  const boundary=1-S((second-best)/.15);
-  return{distance:best,boundary,id:bestId,heightBias:hash(seed,bx,by,3),warm:hash(seed,bx,by,4),cool:hash(seed,bx,by,5)};
+export type VfPainterlyDirtParams={seed?:number;normalStrength?:number;relief?:number;moisture?:number};
+
+type Furrow={phase:number;lean:number;width:number;depth:number;warm:number};
+function buildFurrows(seed:number):Furrow[]{
+  const out:Furrow[]=[];
+  for(let i=0;i<5;i++)out.push({
+    phase:hash(seed,i,1),lean:(hash(seed,i,2)-.5)*.18,width:.022+hash(seed,i,3)*.020,depth:.012+hash(seed,i,4)*.014,warm:hash(seed,i,5),
+  });
+  return out;
 }
 
 export function bakeVfPainterlyDirt(size:number,p:VfPainterlyDirtParams={}){
-  const seed=Math.floor(p.seed??182031),relief=Math.max(.7,Math.min(1.7,p.relief??1.32)),normalStrength=Math.max(2,Math.min(18,p.normalStrength??10.4)),moisture=C(p.moisture??.14);
-  const baseColor=makeTexture(size,size,3),roughness=makeTexture(size,size,1),height=makeTexture(size,size,1),ao=makeTexture(size,size,1);
-  const ink:RGB=[.035,.020,.026],deep:RGB=[.075,.038,.030],cool:RGB=[.105,.075,.075],mid:RGB=[.255,.115,.052],light:RGB=[.49,.27,.105],ochre:RGB=[.64,.39,.15];
+  const seed=Math.floor(p.seed??182031),relief=Math.max(.7,Math.min(1.7,p.relief??1.34)),normalStrength=Math.max(2,Math.min(18,p.normalStrength??10.4)),moisture=C(p.moisture??.14);
+  const furrows=buildFurrows(seed),baseColor=makeTexture(size,size,3),roughness=makeTexture(size,size,1),height=makeTexture(size,size,1),ao=makeTexture(size,size,1);
+  const ink:RGB=[.036,.020,.024],deep:RGB=[.080,.040,.030],cool:RGB=[.115,.080,.078],mid:RGB=[.255,.112,.050],light:RGB=[.48,.255,.102],ochre:RGB=[.64,.39,.155];
 
   for(let py=0;py<size;py++){
     const v=1-(py+.5)/size;
     for(let px=0;px<size;px++){
       const u=(px+.5)/size,i=py*size+px,j=i*3;
-      const cell=soilCell(u,v,seed+40);
-      const broad=periodicField(u*.62,v*.54,seed+80,3);
-      const directional=periodicField(u*.30+v*.06,v*.34,seed+112,2);
-      const seam=Math.pow(C(cell.boundary),1.65);
-      const cellPlate=(cell.heightBias-.5)*.050;
-      const compressed=S((.62-cell.distance)/.28);
-      const terrace=Math.round((broad*.5+directional*.35)*5)/5*.012;
-      const erosionLine=Math.pow(C(.5+.5*Math.sin(TAU*(1.55*u+.33*v+periodicField(u,v,seed+210,2)*.12))),18);
-      const dryCrack=erosionLine*S((broad+.22)/.55)*(1-moisture);
-      const pebbleEmbed=G(wrapDelta(u-(.18+hash(seed,301)*.64))/.025)*G(wrapDelta(v-(.20+hash(seed,302)*.62))/.020);
+      const broad=periodicField(u,v,seed+80,3);
+      const secondary=periodicField(u,v,seed+112,2);
+      const brush=periodicField(u,v,seed+151,4);
+      const broadPlane=Math.round((broad*.55+secondary*.28)*5)/5;
+      const lowMound=Math.max(0,broad*.65+secondary*.25);
 
-      let h=.492+relief*(cellPlate+broad*.030+directional*.014+compressed*.012+terrace-seam*.034-dryCrack*.010-pebbleEmbed*.009);
+      let furrow=0,furrowWarm=0;
+      for(let k=0;k<furrows.length;k++){
+        const f=furrows[k];
+        const center=(f.phase+f.lean*Math.sin(TAU*v)+Math.sin(TAU*(v*(k%2+1))+hash(seed,k,9)*TAU)*.025)%1;
+        const d=Math.abs(wrapDelta(u-center));
+        const gate=.56+.44*S((Math.sin(TAU*(v*(k+1)+hash(seed,k,10)))+.2)/1.2);
+        const q=G(d/f.width)*gate;
+        if(q>furrow){furrow=q;furrowWarm=f.warm;}
+      }
+      const hairline=Math.pow(C(.5+.5*Math.sin(TAU*(3*u+2*v)+periodicField(u,v,seed+230,2)*.42)),25)*(1-moisture);
+      const pebblePress=G(wrapDelta(u-(.17+hash(seed,301)*.66))/.030)*G(wrapDelta(v-(.19+hash(seed,302)*.62))/.024);
+
+      let h=.492+relief*(broad*.033+secondary*.014+broadPlane*.014+lowMound*.010-furrow*.018-hairline*.006-pebblePress*.008);
       h=C(h);
-      const cavity=C(seam*.72+dryCrack*.46+pebbleEmbed*.28+C(-broad)*.08);
-      let col=M(deep,mid,C(.42+(h-.46)*2.2));
-      col=M(col,light,C(.20+cell.warm*.13+Math.max(0,broad)*.16));
-      col=M(col,ochre,C(Math.max(0,directional)*.10+cell.warm*.045));
-      col=M(col,cool,C(cell.cool*.045+Math.max(0,-broad)*.12));
-      col=M(col,ink,C(seam*.48+dryCrack*.34));
-      col=M(col,[col[0]*.58,col[1]*.60,col[2]*.64],moisture*(.32+cavity*.26));
+      const cavity=C(furrow*.66+hairline*.34+pebblePress*.24+Math.max(0,-broad)*.10);
+      let col=M(deep,mid,C(.42+(h-.46)*2.15));
+      col=M(col,light,C(.12+Math.max(0,broad)*.21+Math.max(0,brush)*.055));
+      col=M(col,ochre,C(Math.max(0,secondary)*.10+furrowWarm*furrow*.035));
+      col=M(col,cool,C(Math.max(0,-broad)*.14+Math.max(0,-brush)*.055));
+      col=M(col,ink,C(furrow*.42+hairline*.30));
+      col=M(col,[col[0]*.58,col[1]*.60,col[2]*.64],moisture*(.30+cavity*.28));
 
       baseColor.data[j]=C(col[0]);baseColor.data[j+1]=C(col[1]);baseColor.data[j+2]=C(col[2]);
-      height.data[i]=h;roughness.data[i]=C(.89-moisture*.22+cavity*.045+Math.abs(broad)*.018);ao.data[i]=C(1-cavity*.28);
+      height.data[i]=h;roughness.data[i]=C(.90-moisture*.23+cavity*.040+Math.abs(brush)*.016);ao.data[i]=C(1-cavity*.27);
     }
   }
   return finalize(size,baseColor,roughness,height,ao,normalStrength);
