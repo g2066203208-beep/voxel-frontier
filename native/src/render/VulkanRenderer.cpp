@@ -90,38 +90,63 @@ static_assert(sizeof(SceneUniforms) == 96U, "scene uniform layout must match Sla
     return capacity;
 }
 
-void partitionMeshIndicesByTransmission(
+void partitionMeshIndicesForRenderPasses(
     const PlanetMesh& mesh,
+    bool excludeTerrainFromLocalShadow,
     std::vector<std::uint32_t>& output,
+    std::uint32_t& shadowCasterIndexCount,
     std::uint32_t& opaqueIndexCount,
     std::uint32_t& transparentIndexCount) {
     if ((mesh.indices.size() % 3U) != 0U)
         fail("Planet mesh index stream must contain complete triangles");
-    output.clear();
-    output.reserve(mesh.indices.size());
 
-    const auto triangleIsTransparent = [&](std::size_t base) {
+    // Classification is paid only when a mesh generation changes. The old implementation scanned
+    // every triangle twice just to split opaque/transparent; classify once, then compact three
+    // contiguous draw ranges. This mirrors meshlet/material-bin renderers without requiring a GPU
+    // driven rewrite in this rescue patch.
+    enum class TriangleClass : std::uint8_t { ShadowCaster, OpaqueReceiver, Transparent };
+    const std::size_t triangleCount = mesh.indices.size() / 3U;
+    std::vector<TriangleClass> classes;
+    classes.reserve(triangleCount);
+
+    for (std::size_t base = 0; base < mesh.indices.size(); base += 3U) {
+        bool transparent = false;
+        bool terrain = true;
         for (std::size_t corner = 0; corner < 3U; ++corner) {
             const std::uint32_t index = mesh.indices[base + corner];
             if (index >= mesh.vertices.size()) fail("Planet mesh index out of range");
-            // material.z is transmission in planet.slang. A triangle touching a transmissive
-            // vertex stays in the transparent pass, matching the previous fragment-discard rule.
-            if (mesh.vertices[index].material.z > 0.02F) return true;
+            const auto& material = mesh.vertices[index].material;
+            // material.z is transmission. material.w == roughly -1 is the terrain semantic used by
+            // planet.slang. Terrain remains fully visible and receives shadows; it simply does not
+            // re-rasterize itself into a tiny 250 m contact-shadow atlas.
+            transparent = transparent || material.z > 0.02F;
+            const bool cornerIsTerrain = material.w < -0.5F && material.w > -1.5F;
+            terrain = terrain && cornerIsTerrain;
         }
-        return false;
+        if (transparent) classes.push_back(TriangleClass::Transparent);
+        else if (excludeTerrainFromLocalShadow && terrain)
+            classes.push_back(TriangleClass::OpaqueReceiver);
+        else
+            classes.push_back(TriangleClass::ShadowCaster);
+    }
+
+    output.clear();
+    output.reserve(mesh.indices.size());
+    const auto appendClass = [&](TriangleClass wanted) {
+        for (std::size_t triangle = 0; triangle < classes.size(); ++triangle) {
+            if (classes[triangle] != wanted) continue;
+            const std::size_t base = triangle * 3U;
+            output.push_back(mesh.indices[base]);
+            output.push_back(mesh.indices[base + 1U]);
+            output.push_back(mesh.indices[base + 2U]);
+        }
     };
 
-    for (std::size_t base = 0; base < mesh.indices.size(); base += 3U) {
-        if (triangleIsTransparent(base)) continue;
-        output.insert(output.end(), {
-            mesh.indices[base], mesh.indices[base + 1U], mesh.indices[base + 2U]});
-    }
+    appendClass(TriangleClass::ShadowCaster);
+    shadowCasterIndexCount = static_cast<std::uint32_t>(output.size());
+    appendClass(TriangleClass::OpaqueReceiver);
     opaqueIndexCount = static_cast<std::uint32_t>(output.size());
-    for (std::size_t base = 0; base < mesh.indices.size(); base += 3U) {
-        if (!triangleIsTransparent(base)) continue;
-        output.insert(output.end(), {
-            mesh.indices[base], mesh.indices[base + 1U], mesh.indices[base + 2U]});
-    }
+    appendClass(TriangleClass::Transparent);
     transparentIndexCount = static_cast<std::uint32_t>(output.size()) - opaqueIndexCount;
     if (output.size() != mesh.indices.size()) fail("Render pass index partition lost triangles");
 }
@@ -980,11 +1005,21 @@ void VulkanRenderer::ensureFrameCapacity(
 void VulkanRenderer::uploadPlanetMesh(const PlanetMesh& mesh) {
     if (mesh.vertices.empty() || mesh.indices.empty()) fail("Cannot upload an empty planet mesh");
     pendingStaticVertices_ = mesh.vertices;
-    partitionMeshIndicesByTransmission(
+    partitionMeshIndicesForRenderPasses(
         mesh,
+        true,
         pendingStaticIndices_,
+        pendingStaticShadowCasterIndexCount_,
         pendingStaticOpaqueIndexCount_,
         pendingStaticTransparentIndexCount_);
+    SDL_Log(
+        "R24 PERF shadow_caster_indices=%u opaque_indices=%u shadow_reduction=%.3f",
+        pendingStaticShadowCasterIndexCount_,
+        pendingStaticOpaqueIndexCount_,
+        pendingStaticOpaqueIndexCount_ > 0U
+            ? 1.0 - static_cast<double>(pendingStaticShadowCasterIndexCount_)
+                / static_cast<double>(pendingStaticOpaqueIndexCount_)
+            : 1.0);
     ++staticMeshGeneration_;
     if (staticMeshGeneration_ == 0U) {
         staticMeshGeneration_ = 1U;
@@ -997,6 +1032,7 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     auto& mesh = staticMeshes_[frame];
     if (pendingStaticVertices_.empty() || pendingStaticIndices_.empty()) {
         mesh.indexCount = 0U;
+        mesh.shadowCasterIndexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
         staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
@@ -1013,6 +1049,7 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     std::memcpy(
         mesh.mappedIndices, pendingStaticIndices_.data(), static_cast<std::size_t>(indexBytes));
     mesh.indexCount = static_cast<std::uint32_t>(pendingStaticIndices_.size());
+    mesh.shadowCasterIndexCount = pendingStaticShadowCasterIndexCount_;
     mesh.opaqueIndexCount = pendingStaticOpaqueIndexCount_;
     mesh.transparentIndexCount = pendingStaticTransparentIndexCount_;
     staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
@@ -1020,9 +1057,11 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
 
 void VulkanRenderer::setDynamicMesh(const PlanetMesh& mesh) {
     pendingDynamicVertices_ = mesh.vertices;
-    partitionMeshIndicesByTransmission(
+    partitionMeshIndicesForRenderPasses(
         mesh,
+        false,
         pendingDynamicIndices_,
+        pendingDynamicShadowCasterIndexCount_,
         pendingDynamicOpaqueIndexCount_,
         pendingDynamicTransparentIndexCount_);
     ++dynamicMeshGeneration_;
@@ -1035,6 +1074,7 @@ void VulkanRenderer::setDynamicMesh(const PlanetMesh& mesh) {
 void VulkanRenderer::clearDynamicMesh() {
     pendingDynamicVertices_.clear();
     pendingDynamicIndices_.clear();
+    pendingDynamicShadowCasterIndexCount_ = 0U;
     pendingDynamicOpaqueIndexCount_ = 0U;
     pendingDynamicTransparentIndexCount_ = 0U;
     ++dynamicMeshGeneration_;
@@ -1049,6 +1089,7 @@ void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
     auto& mesh = dynamicMeshes_[frame];
     if (pendingDynamicVertices_.empty() || pendingDynamicIndices_.empty()) {
         mesh.indexCount = 0U;
+        mesh.shadowCasterIndexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
         dynamicMeshGenerationByFrame_[frame] = dynamicMeshGeneration_;
@@ -1064,6 +1105,7 @@ void VulkanRenderer::uploadDynamicMeshForFrame(std::uint32_t frame) {
     std::memcpy(
         mesh.mappedIndices, pendingDynamicIndices_.data(), static_cast<std::size_t>(indexBytes));
     mesh.indexCount = static_cast<std::uint32_t>(pendingDynamicIndices_.size());
+    mesh.shadowCasterIndexCount = pendingDynamicShadowCasterIndexCount_;
     mesh.opaqueIndexCount = pendingDynamicOpaqueIndexCount_;
     mesh.transparentIndexCount = pendingDynamicTransparentIndexCount_;
     dynamicMeshGenerationByFrame_[frame] = dynamicMeshGeneration_;
@@ -1192,15 +1234,26 @@ void VulkanRenderer::drawFrame(
         command, scenePipelineLayout_,
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
         0, sizeof(push), &push);
+    // Local contact shadows are a small-caster problem. Terrain still receives the result in the
+    // main pass, but only ecology/rocks/props are transformed and rasterized into this 250 m map.
     drawBoundMesh(
-        command, staticMesh.vertexBuffer, staticMesh.indexBuffer, staticMesh.opaqueIndexCount, 0U);
+        command,
+        staticMesh.vertexBuffer,
+        staticMesh.indexBuffer,
+        staticMesh.shadowCasterIndexCount,
+        0U);
     push.data3 = {0.0F, 0.0F, 0.0F, 1.0F};
     vkCmdPushConstants(
         command, scenePipelineLayout_,
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
         0, sizeof(push), &push);
     if (environment.dynamicShadowCasters) {
-        drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamic.opaqueIndexCount, 0U);
+        drawBoundMesh(
+            command,
+            dynamic.vertexBuffer,
+            dynamic.indexBuffer,
+            dynamic.shadowCasterIndexCount,
+            0U);
     }
     vkCmdEndRendering(command);
 

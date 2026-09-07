@@ -79,6 +79,10 @@ private:
         VkDeviceSize vertexCapacityBytes{};
         VkDeviceSize indexCapacityBytes{};
         std::uint32_t indexCount{};
+        // Static indices are ordered [local shadow casters | opaque receivers | transparent].
+        // The main opaque pass still consumes the complete opaque range, while the 250 m contact
+        // shadow map only transforms true local casters instead of millions of terrain triangles.
+        std::uint32_t shadowCasterIndexCount{};
         std::uint32_t opaqueIndexCount{};
         std::uint32_t transparentIndexCount{};
     };
@@ -184,6 +188,7 @@ private:
 
     std::vector<PlanetVertex> pendingStaticVertices_;
     std::vector<std::uint32_t> pendingStaticIndices_;
+    std::uint32_t pendingStaticShadowCasterIndexCount_{};
     std::uint32_t pendingStaticOpaqueIndexCount_{};
     std::uint32_t pendingStaticTransparentIndexCount_{};
     std::uint64_t staticMeshGeneration_{};
@@ -192,6 +197,7 @@ private:
 
     std::vector<PlanetVertex> pendingDynamicVertices_;
     std::vector<std::uint32_t> pendingDynamicIndices_;
+    std::uint32_t pendingDynamicShadowCasterIndexCount_{};
     std::uint32_t pendingDynamicOpaqueIndexCount_{};
     std::uint32_t pendingDynamicTransparentIndexCount_{};
     std::uint64_t dynamicMeshGeneration_{};
