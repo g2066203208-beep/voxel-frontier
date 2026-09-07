@@ -1,15 +1,72 @@
 {
   "materials": [
-    {"name":"vf_sandstone_02","resolution":1024,"profile":"signature","preset":"vfSandstone","params":{"seed":610102,"relief":1.20,"normalStrength":13.8}},
-    {"name":"vf_limestone_01","resolution":1024,"profile":"signature","preset":"vfLimestone","params":{"seed":620201,"relief":1.14,"normalStrength":12.8}},
-    {"name":"vf_gravel_02","resolution":1024,"profile":"signature","preset":"vfGravel","params":{"seed":630302,"relief":1.22,"normalStrength":14.0}},
-    {"name":"vf_sand_01","resolution":1024,"profile":"signature","preset":"vfSand","params":{"seed":640401,"relief":1.12,"normalStrength":12.5}},
-    {"name":"vf_wet_mud_01","resolution":1024,"profile":"signature","preset":"vfWetMud","params":{"seed":650501,"relief":1.22,"normalStrength":13.2}},
-    {"name":"vf_wood_plank_02","resolution":1024,"profile":"signature","preset":"vfWoodPlank","params":{"seed":660602,"relief":1.18,"normalStrength":13.2}},
-    {"name":"vf_iron_ore_02","resolution":1024,"profile":"signature","preset":"vfIronOre","params":{"seed":670702,"relief":1.20,"normalStrength":13.5}},
-    {"name":"vf_copper_ore_02","resolution":1024,"profile":"signature","preset":"vfCopperOre","params":{"seed":680802,"relief":1.20,"normalStrength":13.5}},
-    {"name":"vf_coal_01","resolution":1024,"profile":"signature","preset":"vfCoal","params":{"seed":690901,"relief":1.20,"normalStrength":13.8}},
-    {"name":"vf_snow_02","resolution":1024,"profile":"signature","preset":"vfSnow","params":{"seed":700102,"relief":1.16,"normalStrength":13.8}},
-    {"name":"vf_ice_01","resolution":1024,"profile":"signature","preset":"vfIce","params":{"seed":710201,"relief":1.08,"normalStrength":12.2}}
+    {
+      "name": "vf_style_A_realistic_basalt",
+      "resolution": 1536,
+      "profile": "realistic",
+      "preset": "vfBasalt",
+      "params": {
+        "seed": 240914,
+        "fractureStrength": 0.38,
+        "poreDensity": 0.016,
+        "weathering": 0.10,
+        "roughnessBias": 0.025,
+        "normalStrength": 8.0,
+        "macroRelief": 0.88,
+        "mesoRelief": 0.90,
+        "edgeBreakup": 0.78
+      }
+    },
+    {
+      "name": "vf_style_B_light_vf_basalt",
+      "resolution": 1536,
+      "profile": "signature",
+      "preset": "vfBasalt",
+      "params": {
+        "seed": 240914,
+        "fractureStrength": 0.45,
+        "poreDensity": 0.018,
+        "weathering": 0.14,
+        "roughnessBias": 0.010,
+        "normalStrength": 10.8,
+        "macroRelief": 1.02,
+        "mesoRelief": 1.14,
+        "edgeBreakup": 0.96
+      }
+    },
+    {
+      "name": "vf_style_C_signature_basalt",
+      "resolution": 1536,
+      "profile": "signature",
+      "preset": "vfBasalt",
+      "params": {
+        "seed": 240914,
+        "fractureStrength": 0.52,
+        "poreDensity": 0.021,
+        "weathering": 0.18,
+        "roughnessBias": -0.005,
+        "normalStrength": 14.0,
+        "macroRelief": 1.18,
+        "mesoRelief": 1.42,
+        "edgeBreakup": 1.16
+      }
+    },
+    {
+      "name": "vf_style_D_strong_vf_basalt",
+      "resolution": 1536,
+      "profile": "stylized",
+      "preset": "vfBasalt",
+      "params": {
+        "seed": 240914,
+        "fractureStrength": 0.66,
+        "poreDensity": 0.030,
+        "weathering": 0.25,
+        "roughnessBias": -0.020,
+        "normalStrength": 14.0,
+        "macroRelief": 1.46,
+        "mesoRelief": 1.78,
+        "edgeBreakup": 1.46
+      }
+    }
   ]
 }
