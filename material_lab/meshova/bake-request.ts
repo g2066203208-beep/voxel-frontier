@@ -4,9 +4,12 @@ import {
   BILIBILI_MATERIALS,
   bakeStylizedCellRock,
   exportPBR,
+  heightToNormal,
+  makeTexture,
   materialFromFields,
   textureToPNG,
   validateMaterial,
+  type Material,
 } from "../src/index.js";
 
 type RGB = [number, number, number];
@@ -88,12 +91,10 @@ function fractureMask(u: number, v: number, seed: number): number {
   const warpB = (periodicFbm(wu, wv, seed + 503, 3, 3) - 0.5) * 0.18;
   const phaseA = hash01(1, 1, seed, 601) * TAU;
   const phaseB = hash01(2, 2, seed, 607) * TAU;
-
   const fieldA = Math.sin((wu * 2 + wv) * TAU + phaseA + warpA * TAU)
     + 0.48 * Math.sin((-wu + wv * 3) * TAU + phaseB + warpB * TAU);
   const fieldB = Math.sin((wu * 3 - wv * 2) * TAU + phaseB * 0.71 - warpB * TAU)
     + 0.42 * Math.cos((wu + wv * 4) * TAU + phaseA * 0.53 + warpA * TAU);
-
   const lineA = 1 - smoothstep(0.018, 0.095, Math.abs(fieldA));
   const lineB = 1 - smoothstep(0.014, 0.078, Math.abs(fieldB));
   const gateA = smoothstep(0.43, 0.68, periodicFbm(wu, wv, seed + 701, 1, 4));
@@ -109,7 +110,6 @@ function sparsePores(u: number, v: number, seed: number, density: number): numbe
   const baseX = Math.floor(px);
   const baseY = Math.floor(py);
   let mask = 0;
-
   for (let oy = -1; oy <= 1; oy++) {
     for (let ox = -1; ox <= 1; ox++) {
       const cx = baseX + ox;
@@ -117,7 +117,6 @@ function sparsePores(u: number, v: number, seed: number, density: number): numbe
       const wx = ((cx % cells) + cells) % cells;
       const wy = ((cy % cells) + cells) % cells;
       if (hash01(wx, wy, seed, 901) > density) continue;
-
       const jx = 0.5 + (hash01(wx, wy, seed, 907) - 0.5) * 0.72;
       const jy = 0.5 + (hash01(wx, wy, seed, 911) - 0.5) * 0.72;
       const radius = 0.13 + hash01(wx, wy, seed, 919) * 0.16;
@@ -136,7 +135,7 @@ function sparsePores(u: number, v: number, seed: number, density: number): numbe
   return clamp01(mask);
 }
 
-function buildVfBasaltFields(params: Record<string, unknown>) {
+function createVfBasaltSampler(params: Record<string, unknown>) {
   const seed = Math.round(numberParam(params, "seed", 240910));
   const fractureStrength = clamp01(numberParam(params, "fractureStrength", 0.72));
   const poreDensity = Math.max(0, Math.min(0.18, numberParam(params, "poreDensity", 0.035)));
@@ -188,19 +187,39 @@ function buildVfBasaltFields(params: Record<string, unknown>) {
       - height * 0.045,
     );
     const ao = clamp01(1 - fracture * 0.36 - pores * 0.58 - pinholes * 0.12);
-
     return { color, height, roughness, ao };
   };
+  return { sample, normalStrength };
+}
 
-  return {
-    baseColor: (u: number, v: number): RGB => sample(u, v).color,
-    metallic: () => 0,
-    roughness: (u: number, v: number) => sample(u, v).roughness,
-    ao: (u: number, v: number) => sample(u, v).ao,
-    height: (u: number, v: number) => sample(u, v).height,
-    emission: (): RGB => [0, 0, 0],
-    normalStrength,
-  };
+/** One procedural evaluation per texel writes all scalar/color channels, then normal derives from height. */
+function bakeVfBasalt(size: number, params: Record<string, unknown>): Material {
+  const { sample, normalStrength } = createVfBasaltSampler(params);
+  const baseColor = makeTexture(size, size, 3);
+  const metallic = makeTexture(size, size, 1);
+  const roughness = makeTexture(size, size, 1);
+  const ao = makeTexture(size, size, 1);
+  const height = makeTexture(size, size, 1);
+  const emission = makeTexture(size, size, 3);
+
+  for (let y = 0; y < size; y++) {
+    const v = 1 - (y + 0.5) / size;
+    for (let x = 0; x < size; x++) {
+      const u = (x + 0.5) / size;
+      const value = sample(u, v);
+      const scalar = y * size + x;
+      const rgb = scalar * 3;
+      baseColor.data[rgb] = value.color[0];
+      baseColor.data[rgb + 1] = value.color[1];
+      baseColor.data[rgb + 2] = value.color[2];
+      roughness.data[scalar] = value.roughness;
+      ao.data[scalar] = value.ao;
+      height.data[scalar] = value.height;
+    }
+  }
+
+  const normal = heightToNormal(height, normalStrength, true);
+  return { baseColor, metallic, roughness, normal, ao, height, emission };
 }
 
 const requestPath = process.argv[2] ?? "vf-request.json";
@@ -220,7 +239,7 @@ if (req.preset === "stylizedCellRock") {
 } else if (req.preset === "simpleRock") {
   material = materialFromFields(req.resolution, BILIBILI_MATERIALS.simpleRock(req.params));
 } else if (req.preset === "vfBasalt") {
-  material = materialFromFields(req.resolution, buildVfBasaltFields(req.params));
+  material = bakeVfBasalt(req.resolution, req.params);
 } else {
   throw new Error(`Unsupported preset: ${String(req.preset)}`);
 }
@@ -230,7 +249,6 @@ if (problems.length > 0) throw new Error(problems.join("; "));
 
 const out = path.resolve(process.cwd(), "out", "vf-materials", req.name);
 mkdirSync(out, { recursive: true });
-
 const exported = exportPBR(material, req.name);
 for (const [filename, bytes] of Object.entries(exported.files)) {
   writeFileSync(path.join(out, filename), bytes);
@@ -245,6 +263,7 @@ const manifest = {
   generatorCommit: process.env.MESHOVA_COMMIT ?? "unknown",
   deterministic: true,
   seamlessByConstruction: req.preset === "vfBasalt",
+  singlePassCustomBake: req.preset === "vfBasalt",
   material: req.name,
   resolution: req.resolution,
   profile: req.profile ?? "unspecified",
