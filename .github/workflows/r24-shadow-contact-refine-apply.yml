@@ -21,34 +21,26 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
           p = Path('native/src/app/Main.cpp')
           s = p.read_text(encoding='utf-8')
 
-          def sub1(pattern, replacement, label):
+          def cut_between(start, end, replacement, label):
               global s
-              s2, n = re.subn(pattern, replacement, s, count=1, flags=re.S)
-              if n != 1:
-                  raise SystemExit(f'{label}: expected 1 match, got {n}')
-              s = s2
+              a = s.find(start)
+              if a < 0:
+                  raise SystemExit(f'{label}: start missing')
+              b = s.find(end, a)
+              if b < 0:
+                  raise SystemExit(f'{label}: end missing')
+              s = s[:a] + replacement + s[b:]
 
-          sub1(
-              r'\n\s*if \(const char\* shadowEnv = std::getenv\("VF_CAPTURE_SHADOW_CONTACT"\);\s*'
-              r'shadowEnv != nullptr && std::string_view\{shadowEnv\} == "1"\) \{\s*'
-              r'const glm::dvec3 groundUp = camera\.up\(\);.*?'
-              r'std::cout << "R24 capture shadow-contact downward view\\\\n";\s*\}\s*',
-              '\n\n',
-              'remove obsolete downward camera')
+          old_camera_start = '        if (const char* shadowEnv = std::getenv("VF_CAPTURE_SHADOW_CONTACT");'
+          old_camera_end = '        std::string celestialTargetMode{};'
+          cut_between(old_camera_start, old_camera_end, '', 'remove obsolete downward camera')
 
-          sub1(
-              r'const glm::dvec3 cameraDirectionPlanet = safeNormalize\(cameraPlanet, patchUp\);\s*'
-              r'const glm::dvec3 tangentPlanet = safeNormalize\(\s*'
-              r'forwardPlanet - cameraDirectionPlanet \* glm::dot\(forwardPlanet, cameraDirectionPlanet\),\s*'
-              r'patchZ\);\s*'
-              r'const glm::dvec3 probeDirection = safeNormalize\(\s*'
-              r'cameraDirectionPlanet \+ tangentPlanet \* \(11\.0 / planet\.radius\),\s*'
-              r'cameraDirectionPlanet\);',
-              '''const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);
+          placement_start = '                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);'
+          placement_end = '                const vf::PlanetSurfaceSample probeSurface = surfaceAuthority.sampleSurface(probeDirection);'
+          placement_new = '''                const glm::dvec3 cameraDirectionPlanet = safeNormalize(cameraPlanet, patchUp);
                 const glm::dvec3 sunPlanetDirection = safeNormalize(
                     inverseAster * sunWorldDirection, patchEast);
                 const glm::dvec3 sunHorizontalPlanet = safeNormalize(
@@ -61,15 +53,13 @@ jobs:
                     glm::cross(cameraDirectionPlanet, sunHorizontalPlanet), patchZ);
                 const glm::dvec3 probeDirection = safeNormalize(
                     cameraDirectionPlanet + placementTangentPlanet * (10.0 / planet.radius),
-                    cameraDirectionPlanet);''',
-              'sideways probe placement')
+                    cameraDirectionPlanet);
+'''
+          cut_between(placement_start, placement_end, placement_new, 'sideways probe placement')
 
-          sub1(
-              r'vf::appendDebugBox\(\s*dynamicMesh, probeCenter, probeOrientation, probeHalfExtents,\s*'
-              r'\{0\.88F, 0\.43F, 0\.12F\}, \{0\.0F, 0\.72F, 0\.0F, 0\.0F\}\);\s*'
-              r'frameForwardSurface = safeNormalize\(probeCenter - cameraSurface, forwardSurface\);\s*'
-              r'frameUpSurface = upSurface;',
-              '''vf::appendDebugBox(
+          aim_start = '                vf::appendDebugBox(\n                    dynamicMesh, probeCenter, probeOrientation, probeHalfExtents,'
+          aim_end = '                if (runtimeDiagnosticsStdout) {'
+          aim_new = '''                vf::appendDebugBox(
                     dynamicMesh, probeCenter, probeOrientation, probeHalfExtents,
                     {0.88F, 0.43F, 0.12F}, {0.0F, 0.72F, 0.0F, 0.0F});
                 const glm::dvec3 shadowDirectionSurface = safeNormalize(
@@ -80,8 +70,9 @@ jobs:
                 // the exact foot contact and an unobstructed shadow run.
                 const glm::dvec3 proofTarget = probeCenter + shadowDirectionSurface * 3.5;
                 frameForwardSurface = safeNormalize(proofTarget - cameraSurface, forwardSurface);
-                frameUpSurface = upSurface;''',
-              'contact-origin framing')
+                frameUpSurface = upSurface;
+'''
+          cut_between(aim_start, aim_end, aim_new, 'contact-origin framing')
 
           p.write_text(s, encoding='utf-8')
       - name: Validate exact change
