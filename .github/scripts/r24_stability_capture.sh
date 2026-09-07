@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# R24 contact-shadow gate: this run must visibly include caster base + receiver + shadow origin.
 APP="${1:-}"
 OUT="${2:-r24-stability-evidence}"
 if [[ -z "$APP" || ! -x "$APP" ]]; then
