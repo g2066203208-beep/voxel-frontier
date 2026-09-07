@@ -41,8 +41,15 @@ capture() {
   return 1
 }
 
-# Ground observer: real physical Moon at 384,400 km, no proxy resize.
+# Ground observer: real physical Moon at 384,400 km, no proxy resize. Wait until the runtime has
+# emitted the physical apparent-size diagnostic before taking the proof frame; the previous capture
+# could succeed in <0.5 s, kill the app, and then fail the diagnostic gate despite a valid frame.
 start_app "$OUT/logs/moon.log" VF_CELESTIAL_TARGET=moon VF_CELESTIAL_TIME_SCALE=1 VF_RUNTIME_DIAGNOSTICS=1
+for _ in $(seq 1 30); do
+  grep -q 'R24 moon evidence:' "$OUT/logs/moon.log" && break
+  sleep .25
+done
+grep -q 'R24 moon evidence:' "$OUT/logs/moon.log"
 capture "$OUT/moon/ground-moon.png"
 stop_app
 awk '/R24 moon evidence:/ {for(i=1;i<=NF;i++) if($i~/^apparent_diameter_px=/){split($i,a,"="); if(a[2]+0>=5.0) ok=1}} END{exit !ok}' "$OUT/logs/moon.log"
