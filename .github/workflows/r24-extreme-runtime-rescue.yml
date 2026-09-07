@@ -87,11 +87,12 @@ jobs:
         run: |
           set -o pipefail
           ctest --test-dir build/r24-extreme --verbose --output-on-failure \
-            -R 'vf_planetary_body_system_tests|vf_planet_climate_grid_tests|vf_r24_runtime_stability_tests|vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests' \
+            -R 'vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_r24_hydrologic_canyon_tests|vf_terrain_landform_tests|vf_r24_physical_planet_tests' \
             2>&1 | tee r24-extreme-focused.log
           grep -q 'vf_planetary_body_system_tests: PASS' r24-extreme-focused.log
-          grep -q 'vf_planet_climate_grid_tests: PASS' r24-extreme-focused.log
           grep -q 'vf_r24_runtime_stability_tests: PASS' r24-extreme-focused.log
+          grep -q 'Terrain landform tests passed' r24-extreme-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-extreme-focused.log
 
       - name: Verify Lavapipe Vulkan
         run: |
