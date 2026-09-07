@@ -114,7 +114,6 @@ jobs:
           workflow_run=${GITHUB_RUN_ID}
           full_tests=success
           focused_tests=success
-          windows_companion_job=pending_or_success
           vulkan=success
           smooth_spin_capture=success
           escape_inheritance_capture=success
@@ -146,6 +145,10 @@ jobs:
             native/tests/CelestialSystemTests.cpp \
             docs/evidence
           git commit -m "fix(r24): preserve orbital inertia and smooth celestial motion"
+          # CMake/dependency tooling may leave tracked metadata dirty after a successful test run.
+          # The tested production files are already committed above, so discard only post-commit
+          # workspace residue before rebasing the exact tested commit onto any concurrent R24 head.
+          git reset --hard HEAD
           git fetch origin work/r24-unified-planetary-physics
           git rebase origin/work/r24-unified-planetary-physics
           git push origin HEAD:work/r24-unified-planetary-physics
