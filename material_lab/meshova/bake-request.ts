@@ -33,6 +33,10 @@ const PRODUCTION_STYLE_ID="VF_PAINTERLY_PLANETARY_V1";
 const SAFE_NAME=/^[a-z0-9][a-z0-9_-]{1,79}$/;
 const TAU=Math.PI*2;
 const C=(x:number)=>Math.max(0,Math.min(1,x));
+const S=(x:number)=>{const t=C(x);return t*t*(3-2*t);};
+const W=(x:number)=>x-Math.round(x);
+const MOD=(x:number,m:number)=>((x%m)+m)%m;
+function H(seed:number,a:number,b=0,c=0){let h=(seed|0)^Math.imul((a|0)+0x9e3779b9,0x85ebca6b)^Math.imul((b|0)+0x7f4a7c15,0xc2b2ae35)^Math.imul((c|0)+0x165667b1,0x27d4eb2d);h=Math.imul(h^(h>>>16),0x7feb352d);h=Math.imul(h^(h>>>15),0x846ca68b);h^=h>>>16;return(h>>>0)/0xffffffff;}
 type ProductionPreset="vfLayeredSandstonePainted"|"vfPainterlyDirt"|"vfPainterlyBark"|"vfPainterlyLeaves"|"vfPainterlySnow"|"vfPainterlyWater"|"vf3DGrass"|"vf3DMoss"|"vf3DFur"|"vf3DFire";
 type Profile="stylized"|"signature";
 type SurfaceContextInput={weather?:Partial<WeatherContext>;exposure?:Partial<ExposureContext>;environment?:Partial<EnvironmentContext>;interaction?:Partial<SurfaceInteractionContext>;material?:Partial<SurfaceMaterialTraits>;};
@@ -41,18 +45,35 @@ type Envelope=Request|{materials:Request[]};
 type BakeResult={material:Material;masks?:Readonly<Record<string,unknown>>};
 type PresetBaker=(resolution:number,params:Record<string,unknown>)=>BakeResult;
 
+type SupportCell={distance:number;boundary:number;heightBias:number;warm:number;light:number;};
+function supportCell(u:number,v:number,seed:number):SupportCell{
+  const gxCount=4,gyCount=5;
+  const gx=Math.floor(u*gxCount),gy=Math.floor(v*gyCount);
+  let best=1e9,second=1e9,bx=0,by=0;
+  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
+    const ix=MOD(gx+ox,gxCount),iy=MOD(gy+oy,gyCount);
+    const cx=(ix+.5+(H(seed,ix,iy,1)-.5)*.62)/gxCount;
+    const cy=(iy+.5+(H(seed,ix,iy,2)-.5)*.58)/gyCount;
+    const dx=W(u-cx)*gxCount;
+    const dy=W(v-cy)*gyCount*.82;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if(d<best){second=best;best=d;bx=ix;by=iy;}else if(d<second)second=d;
+  }
+  const boundary=1-S((second-best)/.24);
+  return{distance:best,boundary,heightBias:H(seed,bx,by,3),warm:H(seed,bx,by,4),light:H(seed,bx,by,5)};
+}
+
 /**
- * Converts the old broad dark backing regions into attached sandstone support
- * mass.  Narrow true cracks are preserved by their near-black colour, while
- * only the low Height + non-black background field is lifted.  This prevents
- * a 40% macro displacement from exposing a fake hollow waist around the sphere.
+ * Replaces only the broad low backing field with attached support sandstone.
+ * The support is a periodic jittered Voronoi rock mass, so formerly empty belts
+ * become a few large interlocking blocks with narrow seams. True near-black
+ * cracks inside the authored primary slabs remain untouched.
  */
 function closeSandstoneShell(material:Material,size:number,seed:number,normalStrength:number):Material{
   const height=material.height.data;
   const base=material.baseColor.data;
   const rough=material.roughness.data;
   const ao=material.ao.data;
-  const phase=((seed>>>0)%997)/997;
   for(let y=0;y<size;y++){
     const v=(y+.5)/size;
     for(let x=0;x<size;x++){
@@ -60,36 +81,33 @@ function closeSandstoneShell(material:Material,size:number,seed:number,normalStr
       const i=y*size+x,j=i*3;
       const h=height[i];
       const r=base[j],g=base[j+1],b=base[j+2];
-      // Broad backing is ~[.285,.105,.04] at h~.39-.42.  Real cracks are
-      // substantially darker, so keep them untouched.
       const notTrueCrack=r>.11&&g>.028;
       const closure=C((.452-h)/.060)*(notTrueCrack?1:0);
       if(closure<=0)continue;
 
-      // Seamless low-frequency sandstone support: integer-frequency periodic
-      // fields guarantee the closure itself tiles exactly.
-      const f1=Math.sin(TAU*(2*u+1*v+phase));
-      const f2=Math.sin(TAU*(3*u-2*v+phase*.73+.17));
-      const f3=Math.cos(TAU*(1*u+3*v-phase*.41+.31));
-      const field=(f1*.52+f2*.30+f3*.18);
-      const supportH=.485+field*.018;
+      const cell=supportCell(u,v,seed+811);
+      const interior=1-cell.boundary;
+      const strata=.5+.5*Math.sin(TAU*(9*v+u*.55+cell.warm*.37));
+      const supportH=.472+cell.heightBias*.050+interior*.018-cell.boundary*.010+strata*.0035;
       height[i]=Math.max(h,h*(1-closure)+supportH*closure);
 
-      const light=C(.50+field*.24);
-      const sr=.43+.18*light;
-      const sg=.17+.13*light;
-      const sb=.052+.055*light;
-      // Keep a little of the original backing colour at closure fringes so the
-      // support mass reads as recessed rock rather than a pasted flat patch.
-      const colorMix=closure*.88;
-      base[j]=r*(1-colorMix)+sr*colorMix;
-      base[j+1]=g*(1-colorMix)+sg*colorMix;
-      base[j+2]=b*(1-colorMix)+sb*colorMix;
-      rough[i]=rough[i]*(1-closure*.72)+(.72+Math.abs(field)*.055)*(closure*.72);
-      ao[i]=Math.max(ao[i],.80+closure*.10);
+      const sr=.41+cell.light*.17+cell.warm*.045;
+      const sg=.155+cell.light*.105+cell.warm*.045;
+      const sb=.050+cell.light*.040+cell.warm*.020;
+      const seamShade=1-cell.boundary*.22;
+      const strataLift=strata*.025;
+      const targetR=(sr+strataLift)*seamShade;
+      const targetG=(sg+strataLift*.55)*seamShade;
+      const targetB=(sb+strataLift*.22)*seamShade;
+      const colorMix=closure*.92;
+      base[j]=r*(1-colorMix)+targetR*colorMix;
+      base[j+1]=g*(1-colorMix)+targetG*colorMix;
+      base[j+2]=b*(1-colorMix)+targetB*colorMix;
+      rough[i]=rough[i]*(1-closure*.78)+(.69+cell.boundary*.12+strata*.025)*(closure*.78);
+      ao[i]=Math.max(ao[i],.82-cell.boundary*.09);
     }
   }
-  return {...material,normal:heightToNormal(material.height,Math.max(1,Math.min(20,normalStrength)),true)};
+  return{...material,normal:heightToNormal(material.height,Math.max(1,Math.min(20,normalStrength)),true)};
 }
 
 const PRODUCTION_PRESETS:Readonly<Record<ProductionPreset,PresetBaker>>={
@@ -133,7 +151,7 @@ function bakeOne(req:Request){
   for(const[filename,bytes]of Object.entries(exported.files))writeFileSync(path.join(out,filename),bytes);
   for(const[maskName,mask]of Object.entries(masks))writeFileSync(path.join(out,`${req.name}_mask-${maskName}.png`),textureToPNG(mask as never));
   writeFileSync(path.join(out,"request.json"),JSON.stringify(req,null,2));
-  const manifest={generator:"wellingfeng/Meshova + voxel-frontier production recipes",generatorCommit:process.env.MESHOVA_COMMIT??"unknown",styleId:PRODUCTION_STYLE_ID,deterministic:true,proceduralSourceOnly:true,seamlessByConstruction:true,material:req.name,resolution:req.resolution,profile:req.profile??"signature",preset:req.preset,sandstoneContinuousShellClosure:req.preset==="vfLayeredSandstonePainted",adaptiveSurfaceContext:Boolean(req.context),surfaceContext:req.context??null,deltaSeconds:req.context?(req.deltaSeconds??1):null,resolvedLayers,pbrFiles:Object.keys(exported.files).sort(),maskFiles:Object.keys(masks).map(name=>`${req.name}_mask-${name}.png`).sort()};
+  const manifest={generator:"wellingfeng/Meshova + voxel-frontier production recipes",generatorCommit:process.env.MESHOVA_COMMIT??"unknown",styleId:PRODUCTION_STYLE_ID,deterministic:true,proceduralSourceOnly:true,seamlessByConstruction:true,material:req.name,resolution:req.resolution,profile:req.profile??"signature",preset:req.preset,sandstoneContinuousShellClosure:req.preset==="vfLayeredSandstonePainted",sandstoneSupportGeometry:req.preset==="vfLayeredSandstonePainted"?"periodic-jittered-voronoi":null,adaptiveSurfaceContext:Boolean(req.context),surfaceContext:req.context??null,deltaSeconds:req.context?(req.deltaSeconds??1):null,resolvedLayers,pbrFiles:Object.keys(exported.files).sort(),maskFiles:Object.keys(masks).map(name=>`${req.name}_mask-${name}.png`).sort()};
   writeFileSync(path.join(out,"manifest.json"),JSON.stringify(manifest,null,2));console.log(JSON.stringify({ok:true,output:out,...manifest},null,2));return manifest;
 }
 const requestPath=process.argv[2]??"vf-request.json",envelope=JSON.parse(readFileSync(requestPath,"utf8")) as Envelope,requests="materials" in envelope?envelope.materials:[envelope];
