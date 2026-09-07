@@ -47,25 +47,20 @@ def sphere_uv(Ng):
     v=(0.5-np.arcsin(np.clip(Ng[...,1],-1,1))/np.pi)*2.10
     return u,v
 
-def displaced_geometry(sx,sy,height,amp=0.19,iterations=5):
-    """Approximate radial displacement by iteratively solving projected radius.
-    This makes Height affect silhouette and macro form instead of only the normal map.
-    """
+def displaced_geometry(sx,sy,height,amp=0.115,iterations=5):
     qx=sx.copy(); qy=sy.copy()
-    valid=np.ones_like(sx,dtype=bool)
     h05=float(np.percentile(height,5)); h50=float(np.percentile(height,50)); h95=float(np.percentile(height,95))
     hspan=max(h95-h05,0.08)
     sampled=np.full_like(sx,h50,dtype=np.float32)
     for _ in range(iterations):
         q2=qx*qx+qy*qy
-        valid=q2<=1.08
         qz=np.sqrt(np.clip(1-q2,0,1))
         Ng=np.stack([qx,qy,qz],axis=-1)
         Ng/=np.maximum(np.linalg.norm(Ng,axis=-1,keepdims=True),1e-6)
         u,v=sphere_uv(Ng)
         sampled=bilinear(height,u,v)
         hd=np.clip((sampled-h50)/hspan,-0.75,0.75)
-        radial=np.clip(1.0+amp*hd,0.86,1.16)
+        radial=np.clip(1.0+amp*hd,0.91,1.09)
         qx=sx/radial; qy=sy/radial
     q2=qx*qx+qy*qy
     mask=q2<=1.0
@@ -83,9 +78,9 @@ def render_sphere(d:Path,name:str,out:Path):
     metal=np.asarray(Image.open(d/f"{name}_metallic.png").convert("L").resize((1024,1024),Image.Resampling.LANCZOS),dtype=np.float32)/255
     height=np.asarray(Image.open(d/f"{name}_height.png").convert("L").resize((1024,1024),Image.Resampling.LANCZOS),dtype=np.float32)/255
 
-    S=1000; cx=S*.5; cy=S*.465; R=S*.315
+    S=1000; cx=S*.5; cy=S*.465; R=S*.325
     yy,xx=np.mgrid[0:S,0:S]; sx=(xx-cx)/R; sy=(cy-yy)/R
-    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=0.205,iterations=5)
+    Ng,mask,r2,hh=displaced_geometry(sx,sy,height,amp=0.115,iterations=5)
     u,v=sphere_uv(Ng)
     bc=bilinear(base,u,v); nt=bilinear(normal,u,v)*2-1; rr=np.clip(bilinear(rough,u,v),.035,1); aa=bilinear(ao,u,v); mm=np.clip(bilinear(metal,u,v),0,1)
 
@@ -93,13 +88,12 @@ def render_sphere(d:Path,name:str,out:Path):
     B=np.cross(Ng,T); B/=np.maximum(np.linalg.norm(B,axis=-1,keepdims=True),1e-6)
     N=T*nt[...,0:1]+B*nt[...,1:2]+Ng*np.maximum(nt[...,2:3],0.06); N/=np.maximum(np.linalg.norm(N,axis=-1,keepdims=True),1e-6)
 
-    # Height-derived macro normal reinforcement so large facets read clearly.
     eps=1.0/1024.0
     hL=bilinear(height,u-eps,v); hR=bilinear(height,u+eps,v); hD=bilinear(height,u,v-eps); hU=bilinear(height,u,v+eps)
-    gx=(hR-hL)*4.2; gy=(hU-hD)*4.2
+    gx=(hR-hL)*3.2; gy=(hU-hD)*3.2
     HN=T*(-gx[...,None])+B*(-gy[...,None])+Ng
     HN/=np.maximum(np.linalg.norm(HN,axis=-1,keepdims=True),1e-6)
-    N=norm(N*.68+HN*.32)
+    N=N*.80+HN*.20; N/=np.maximum(np.linalg.norm(N,axis=-1,keepdims=True),1e-6)
 
     V=np.array([0,0,1],np.float32)
     up=np.clip(N[...,1],-1,1)
@@ -131,15 +125,14 @@ def render_sphere(d:Path,name:str,out:Path):
     gy=np.linspace(0,1,S)[:,None,None]; top=np.array([.73,.76,.80],np.float32)[None,None,:]; bot=np.array([.17,.19,.21],np.float32)[None,None,:]
     bg=np.repeat(top*(1-gy)+bot*gy,S,axis=1); floor_y=int(S*.78); fm=np.clip((yy-floor_y)/(S*.14),0,1)
     bg=bg*(1-fm[...,None]*.40)+np.array([.20,.195,.19],np.float32)*fm[...,None]*.40
-    shadow=np.exp(-(((xx-cx)/(R*.86))**2+((yy-(cy+R*1.03))/(R*.14))**2)*2.35); bg*=1-.36*shadow[...,None]
-    edge=np.clip((1-r2)*R*.88,0,1)[...,None]
-    edge*=mask[...,None].astype(np.float32)
+    shadow=np.exp(-(((xx-cx)/(R*.84))**2+((yy-(cy+R*1.025))/(R*.135))**2)*2.45); bg*=1-.35*shadow[...,None]
+    edge=np.clip((1-r2)*R*.90,0,1)[...,None]; edge*=mask[...,None].astype(np.float32)
     img=bg*(1-edge)+c*edge
     out_im=Image.fromarray((np.clip(img,0,1)*255).astype(np.uint8),"RGB")
     draw=ImageDraw.Draw(out_im)
     try: f1=ImageFont.truetype("DejaVuSans.ttf",27); f2=ImageFont.truetype("DejaVuSans.ttf",18)
     except: f1=ImageFont.load_default(); f2=f1
-    draw.rounded_rectangle((28,26,650,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),"true Height displacement · calibrated GGX studio sphere",fill=(190,195,200),font=f2)
+    draw.rounded_rectangle((28,26,650,104),radius=18,fill=(18,18,20)); draw.text((48,40),name,fill=(245,245,245),font=f1); draw.text((48,74),"true Height displacement · faceted GGX studio sphere",fill=(190,195,200),font=f2)
     out_im.save(out)
 
 def contact_sheet(d:Path,name:str,out:Path):
