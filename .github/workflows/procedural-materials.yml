@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends imagemagick
+          sudo apt-get install -y --no-install-recommends imagemagick python3-numpy python3-pil
 
       - name: Checkout pinned Meshova
         shell: bash
@@ -59,7 +59,7 @@ jobs:
           cd .cache/Meshova
           pnpm install --frozen-lockfile
 
-      - name: Inject GPT-controlled material request and recipes
+      - name: Inject GPT-controlled material requests and recipes
         shell: bash
         run: |
           set -euo pipefail
@@ -68,7 +68,7 @@ jobs:
           mkdir -p .cache/Meshova/examples/vf-recipes
           cp material_lab/meshova/recipes/*.ts .cache/Meshova/examples/vf-recipes/
 
-      - name: Bake deterministic PBR maps
+      - name: Bake deterministic PBR material library
         shell: bash
         run: |
           set -euo pipefail
@@ -84,32 +84,43 @@ jobs:
           mkdir -p build/generated-materials
           cp -R "$src"/* build/generated-materials/
 
-          mapfile -t pngs < <(find build/generated-materials -type f -name '*.png' | sort)
-          if [[ ${#pngs[@]} -lt 6 ]]; then
-            echo "Expected a complete PBR material set; found ${#pngs[@]} PNG files" >&2
+          material_count=$(find build/generated-materials -mindepth 1 -maxdepth 1 -type d | wc -l)
+          if [[ "$material_count" -lt 1 ]]; then
+            echo "No material directories were generated" >&2
             exit 1
           fi
+          while IFS= read -r dir; do
+            name=$(basename "$dir")
+            for suffix in baseColor normal roughness height ao metallic; do
+              test -s "$dir/${name}_${suffix}.png" || { echo "Missing ${name}_${suffix}.png" >&2; exit 1; }
+            done
+          done < <(find build/generated-materials -mindepth 1 -maxdepth 1 -type d | sort)
 
-          printf '%s\n' "${pngs[@]}" | head -n 6 > build/preview-inputs.txt
-          mapfile -t preview_pngs < build/preview-inputs.txt
-          montage "${preview_pngs[@]}" \
-            -thumbnail 768x768 \
-            -tile 3x2 \
-            -geometry +16+16 \
-            -background '#202020' \
-            build/material-preview.png
-
+          mapfile -t pngs < <(find build/generated-materials -type f -name '*.png' | sort)
           sha256sum "${pngs[@]}" > build/generated-materials/SHA256SUMS.txt
+
+      - name: Render real PBR previews for every material
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 material_lab/preview/render_material_previews.py build/generated-materials
+          mapfile -t spheres < <(find build/generated-materials -type f -name 'preview-sphere.png' | sort)
+          test ${#spheres[@]} -gt 0
+          montage "${spheres[@]}" \
+            -thumbnail 720x720 \
+            -tile 2x \
+            -geometry +18+18 \
+            -background '#202020' \
+            build/material-spheres-overview.png
           find build/generated-materials -type f -maxdepth 3 -printf '%P\n' | sort
 
-      - name: Upload PBR material pack
+      - name: Upload PBR material library
         uses: actions/upload-artifact@v4
         with:
           name: vf-procedural-materials-${{ github.run_id }}
           path: |
             build/generated-materials/
-            build/material-preview.png
-            build/preview-inputs.txt
+            build/material-spheres-overview.png
           if-no-files-found: error
           compression-level: 6
           retention-days: 30
@@ -123,7 +134,7 @@ jobs:
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Meshova commit: \`$MESHOVA_COMMIT\`"
             echo "- pnpm: \`$PNPM_VERSION\`"
-            echo '- Architecture: generic baker + independent recipe modules'
-            echo '- Source: deterministic procedural program, not AI image generation'
-            echo '- Outputs: PBR PNG maps + optional semantic masks + contact-sheet preview + SHA-256 manifest'
+            echo '- Architecture: batch material library + independent deterministic recipes'
+            echo '- Source: procedural program, not AI image generation'
+            echo '- Every material: PBR maps + standardized studio sphere + 2x2 tile check + map contact sheet'
           } >> "$GITHUB_STEP_SUMMARY"
