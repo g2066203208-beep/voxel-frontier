@@ -477,31 +477,56 @@ int main() {
                     stableTangent(spawnDirection));
                 const double centerElevation = vf::samplePlanetTerrain(
                     planet, spawnDirection).elevationMeters;
+                double highestEvidenceElevation = centerElevation;
                 double bestContrast = -1.0;
                 glm::dvec3 bestTangent = localEvidenceTangent;
                 constexpr int directionCount = 16;
+                constexpr int radialRingCount = 3;
                 constexpr double probeDistanceMeters = 36000.0;
-                for (int i = 0; i < directionCount; ++i) {
-                    const double angle = 2.0 * kPi * static_cast<double>(i)
-                        / static_cast<double>(directionCount);
-                    const glm::dvec3 candidateTangent = safeNormalize(
-                        localEvidenceTangent * std::cos(angle)
-                            + localBitangent * std::sin(angle),
-                        localEvidenceTangent);
-                    const glm::dvec3 probeDirection = safeNormalize(
-                        spawnDirection
-                            + candidateTangent * (probeDistanceMeters / planet.radius),
-                        spawnDirection);
-                    const vf::PlanetTerrainSample probe = vf::samplePlanetTerrain(
-                        planet, probeDirection);
-                    const double contrast = std::abs(probe.elevationMeters - centerElevation);
-                    if (contrast > bestContrast) {
-                        bestContrast = contrast;
-                        bestTangent = candidateTangent;
+                for (int ring = 1; ring <= radialRingCount; ++ring) {
+                    const double ringDistanceMeters = probeDistanceMeters
+                        * static_cast<double>(ring) / static_cast<double>(radialRingCount);
+                    for (int i = 0; i < directionCount; ++i) {
+                        const double angle = 2.0 * kPi * static_cast<double>(i)
+                            / static_cast<double>(directionCount);
+                        const glm::dvec3 candidateTangent = safeNormalize(
+                            localEvidenceTangent * std::cos(angle)
+                                + localBitangent * std::sin(angle),
+                            localEvidenceTangent);
+                        const glm::dvec3 probeDirection = safeNormalize(
+                            spawnDirection
+                                + candidateTangent * (ringDistanceMeters / planet.radius),
+                            spawnDirection);
+                        const vf::PlanetTerrainSample probe = vf::samplePlanetTerrain(
+                            planet, probeDirection);
+                        highestEvidenceElevation = std::max(
+                            highestEvidenceElevation, probe.elevationMeters);
+                        const double contrast = std::abs(
+                            probe.elevationMeters - centerElevation);
+                        if (contrast > bestContrast) {
+                            bestContrast = contrast;
+                            bestTangent = candidateTangent;
+                        }
                     }
                 }
                 localEvidenceTangent = bestTangent;
+
+                // Keep the camera radially above the highest terrain in the evidence neighbourhood.
+                // The environment altitude remains the requested minimum clearance above that rim.
+                const double reliefLiftMeters = std::max(
+                    0.0, highestEvidenceElevation - centerElevation);
+                aerialAltitude += reliefLiftMeters;
+                const glm::dvec3 safeLocalOffset = spawnDirection
+                    * (localSurfaceRadius + aerialAltitude);
+                const glm::dvec3 safeWorldOffset = aster.orientation * safeLocalOffset;
+                camera.setExternalWorldState(
+                    aster.position + safeWorldOffset,
+                    aster.linearVelocity + glm::cross(angularVelocity, safeWorldOffset),
+                    false);
                 std::cout << "R24 terrain evidence view: contrast_m=" << bestContrast
+                          << " highest_elevation_m=" << highestEvidenceElevation
+                          << " center_elevation_m=" << centerElevation
+                          << " relief_lift_m=" << reliefLiftMeters
                           << std::endl;
             }
             const glm::dvec3 worldEvidenceTangent = safeNormalize(

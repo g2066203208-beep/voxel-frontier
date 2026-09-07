@@ -1,0 +1,12 @@
+=== MOUNTAIN ===
+R24 terrain target: mountain score=10.0618
+R24 terrain evidence view: contrast_m=31552.7 highest_elevation_m=26915.7 center_elevation_m=21536.1 relief_lift_m=5379.57
+=== RIFT ===
+R24 terrain target: rift score=7.19726
+R24 terrain evidence view: contrast_m=5281.13 highest_elevation_m=3630.4 center_elevation_m=2777.09 relief_lift_m=853.312
+=== CANYON ===
+R24 terrain target: canyon score=3.1887
+R24 terrain evidence view: contrast_m=5690.98 highest_elevation_m=6118.06 center_elevation_m=427.078 relief_lift_m=5690.98
+=== ABYSS ===
+R24 terrain target: abyss score=3.05447
+R24 terrain evidence view: contrast_m=6919.07 highest_elevation_m=9528.9 center_elevation_m=2609.83 relief_lift_m=6919.07

@@ -121,9 +121,12 @@ struct NodeMetric {
         camera - geometry.centerDirection * centerSurfaceRadius);
     const double focalPixels = config.viewportHeightPixels
         / (2.0 * std::tan(std::max(0.1, config.verticalFovRadians) * 0.5));
+    const double radialReliefRadius = std::max(
+        std::abs(elevationMax - centerTerrain.elevationMeters),
+        std::abs(elevationMin - centerTerrain.elevationMeters));
     const double conservativeDistance = std::max(
         1.0,
-        centerDistance - geometry.spanMeters * 0.55);
+        centerDistance - geometry.spanMeters * 0.55 - radialReliefRadius);
     const double screenError = geometricError / conservativeDistance * focalPixels;
 
     double horizonAngle = 3.14159265358979323846;
