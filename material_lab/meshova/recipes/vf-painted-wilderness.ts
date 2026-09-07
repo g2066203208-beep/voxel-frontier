@@ -9,7 +9,7 @@ type RGB=[number,number,number];
 type Tex={width:number;height:number;channels:number;data:Float32Array};
 type Baker=(size:number,params?:any)=>Material;
 type Kind="basalt"|"granite"|"dirt"|"bark"|"snow"|"ice";
-export type VfPaintedParams={seed?:number;paintScale?:number;normalStrength?:number;normalRadius?:number;[key:string]:unknown};
+export type VfPaintedParams={seed?:number;paintScale?:number;normalStrength?:number;normalRadius?:number;wetness?:number;frost?:number;snowCoverage?:number;snowDepth?:number;[key:string]:unknown};
 type Cfg={shadow:RGB;mid:RGB;light:RGB;accent:RGB;lo:number;hi:number;paint:number;hGain:number;rough:[number,number,number];n:number;r:number;ao:number;accentAmt:number};
 const TAU=Math.PI*2;
 const C=(x:number)=>Math.max(0,Math.min(1,x));
@@ -57,10 +57,18 @@ function painterField(u:number,v:number,scale:number){
   return C((a*.46+b*.34+c*.20-.5)*(.30*scale)+.5);
 }
 
+function weatherField(u:number,v:number){
+  const a=Math.sin((u*2+v*3)*TAU+.65)*.5+.5;
+  const b=Math.sin((u*5-v*2)*TAU+1.70)*.5+.5;
+  const c=Math.sin((u*3+v*5)*TAU+2.35)*.5+.5;
+  return C(a*.48+b*.32+c*.20);
+}
+
 function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
   const cfg=CFG[k],paintScale=Math.max(.65,Math.min(1.5,Number(p.paintScale??1))),ss=Math.max(224,Math.round(size/cfg.paint));
   const src=b(ss,{...p,normalStrength:7});if(!src.height)throw new Error(`${k}: no height`);
   const bc=makeTexture(size,size,3),met=makeTexture(size,size,1),rough=makeTexture(size,size,1),ao=makeTexture(size,size,1),height=makeTexture(size,size,1),em=makeTexture(size,size,3);
+  const wet=C(Number(p.wetness??0)),frost=C(Number(p.frost??0)),snow=C(Number(p.snowCoverage??0)),snowDepth=C(Number(p.snowDepth??.45));
   for(let y=0;y<size;y++){
     const v=1-(y+.5)/size;
     for(let x=0;x<size;x++){
@@ -68,13 +76,13 @@ function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
       const sc:RGB=[sample(src.baseColor,u,v,0),sample(src.baseColor,u,v,1),sample(src.baseColor,u,v,2)];
       const sh=sample(src.height,u,v,0),sa=src.ao?sample(src.ao,u,v,0):1,sr=sample(src.roughness,u,v,0);
       const h0=(sample(src.height,u+.012,v,0)+sample(src.height,u-.012,v,0)+sample(src.height,u,v+.012,0)+sample(src.height,u,v-.012,0)+sh*2)/6;
-      const h=C(.5+(h0-.5)*cfg.hGain);height.data[i]=h;
-      const a=C(1-(1-sa)*cfg.ao);ao.data[i]=a;
+      let h=C(.5+(h0-.5)*cfg.hGain);height.data[i]=h;
+      let a=C(1-(1-sa)*cfg.ao);ao.data[i]=a;
       const pf=painterField(u,v,paintScale);
       const localLum=lum(sc);let t=C((localLum-cfg.lo)/Math.max(1e-5,cfg.hi-cfg.lo));
       t=C(t+(h-.5)*.24+(pf-.5)*.16-(1-a)*.07);
       let col=palette(cfg,t);
-      const sourceHueScale=Math.max(.0001,localLum);const targetLum=Math.max(.02,lum(col));
+      const sourceHueScale=Math.max(.0001,localLum),targetLum=Math.max(.02,lum(col));
       const hue:RGB=[C(sc[0]/sourceHueScale*targetLum),C(sc[1]/sourceHueScale*targetLum),C(sc[2]/sourceHueScale*targetLum)];
       col=M(col,hue,k==="granite"?.10:.07);
       const accentGate=S(C((pf-.60)/.28))*S(C((h-.44)/.34));
@@ -86,11 +94,33 @@ function stylize(k:Kind,size:number,p:VfPaintedParams,b:Baker):Material{
       }
       if(k==="ice")col=M(col,[.070,.285,.390],S(C((1-a-.03)/.30))*.25);
       const cav=(1-a);col=col.map(q=>C(q*(1-cav*(k==="bark"?.18:.10)))) as RGB;
-      bc.data[j]=col[0];bc.data[j+1]=col[1];bc.data[j+2]=col[2];
-      met.data[i]=0;
       let r=sr<.55?cfg.rough[0]:sr<.76?cfg.rough[1]:cfg.rough[2];
       if(k==="ice")r=sr<.28?cfg.rough[0]:sr<.50?cfg.rough[1]:cfg.rough[2];
-      rough.data[i]=r;
+
+      if(k==="basalt"&&(wet>0||frost>0||snow>0)){
+        const wf=weatherField(u,v),cavity=C(1-a);
+        const wetPool=C(wet*(.58+.42*S(C((cavity-.02)/.24)))*(.76+.24*(1-wf)));
+        col=M(col,[.030,.050,.070],wetPool*.34);
+        r=L(r,.24,wetPool*.78);
+
+        const frostMask=C(frost*S(C((h-.42)/.36))*(.64+.36*wf)*(1-wetPool*.35));
+        col=M(col,[.625,.745,.840],frostMask*.72);
+        col=M(col,[.790,.835,.865],frostMask*S(C((wf-.58)/.30))*.22);
+        r=L(r,.86,frostMask*.82);
+        h=C(h+frostMask*.018);
+        a=C(L(a,1,frostMask*.22));
+
+        const snowField=C(wf*.58+h*.42),threshold=L(.86,.20,snow);
+        const snowMask=C(S(C((snowField-threshold)/.22))*snow);
+        const snowCol=M([.405,.575,.745],[.955,.950,.905],C(.36+h*.46+wf*.18));
+        col=M(col,snowCol,snowMask*.96);
+        r=L(r,.88,snowMask*.90);
+        h=C(h+snowMask*(.028+.070*snowDepth));
+        a=C(L(a,1,snowMask*.68));
+      }
+
+      bc.data[j]=C(col[0]);bc.data[j+1]=C(col[1]);bc.data[j+2]=C(col[2]);
+      met.data[i]=0;rough.data[i]=C(r);ao.data[i]=C(a);height.data[i]=C(h);
       em.data[j]=em.data[j+1]=em.data[j+2]=0;
     }
   }
