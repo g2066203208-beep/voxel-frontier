@@ -1,0 +1,217 @@
+name: R24 Fast Water V2 Closure
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_fast_water_v2.py'
+      - '.github/scripts/r24_fast_water_v2_materialize.py'
+      - '.github/workflows/r24-fast-water-v2-closure.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-fast-water-v2-closure-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  closure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 32
+
+      - name: Materialize hardened Fast Water V2
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/r24_fast_water_v2_materialize.py
+          git diff --check
+          grep -q 'R24_FAST_WATER_V2_BINNED' native/shaders/planet.slang
+          grep -q 'waterIndexCount' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'TriangleClass::Water' native/src/render/VulkanRenderer.cpp
+          grep -q 'waterPipeline_' native/src/render/VulkanRenderer.cpp
+          grep -q 'VF_CAPTURE_WATER_VIEW' native/src/app/Main.cpp
+
+      - name: Install toolchain and Vulkan software reference
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Release build
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S native -B build/r24-fast-water-v2 -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+          cmake --build build/r24-fast-water-v2 --parallel 2
+
+      - name: Complete native regression suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p r24-fast-water-v2-evidence
+          ctest --test-dir build/r24-fast-water-v2 --verbose --output-on-failure 2>&1 \
+            | tee r24-fast-water-v2-evidence/ctest.log
+          grep -q '100% tests passed' r24-fast-water-v2-evidence/ctest.log
+
+      - name: Classify Vulkan device and lock CI reference
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee r24-fast-water-v2-evidence/vulkan-summary.txt
+          grep -qi 'llvmpipe' r24-fast-water-v2-evidence/vulkan-summary.txt
+          printf '%s\n' \
+            'PERF_CLASS=CI_SW_RELATIVE_ONLY' \
+            'ABSOLUTE_120FPS_CERTIFICATION=INVALID_ON_SOFTWARE_VULKAN' \
+            > r24-fast-water-v2-evidence/perf-classification.txt
+
+      - name: Start deterministic 1080p display
+        shell: bash
+        run: |
+          set -euo pipefail
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp > r24-fast-water-v2-evidence/xvfb.log 2>&1 &
+          echo $! > /tmp/r24-v2-xvfb.pid
+          sleep 1
+          echo 'DISPLAY=:99' >> "$GITHUB_ENV"
+          echo 'SDL_VIDEODRIVER=x11' >> "$GITHUB_ENV"
+
+      - name: Run open-ocean ABBA
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-fast-water-v2 -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          run_case() {
+            local name="$1" enabled="$2"
+            env \
+              VF_PERF_PROFILE=mainstream_1080p \
+              VF_TERRAIN_TARGET=coast \
+              VF_CAPTURE_AERIAL=1 \
+              VF_CAPTURE_WATER_VIEW=1 \
+              VF_CAPTURE_ALTITUDE_METERS=1200 \
+              VF_RUNTIME_DIAGNOSTICS=1 \
+              VF_CELESTIAL_TIME_SCALE=1 \
+              VF_VELOCITY_AWARE_LOD=1 \
+              VF_PERCEPTUAL_RESIDENCY=1 \
+              VF_FAST_WATER="$enabled" \
+              timeout 28s "$APP" > "r24-fast-water-v2-evidence/${name}.log" 2>&1 &
+            local pid=$!
+            sleep 4
+            import -window root "r24-fast-water-v2-evidence/${name}.png" || true
+            set +e; wait "$pid"; local rc=$?; set -e
+            test "$rc" -eq 0 -o "$rc" -eq 124
+            test -s "r24-fast-water-v2-evidence/${name}.png"
+            identify "r24-fast-water-v2-evidence/${name}.png" | grep -q '1920x1080'
+            grep -q 'R24 WATER_VIEW' "r24-fast-water-v2-evidence/${name}.log"
+            grep -q "R24 FAST_WATER enabled=${enabled}" "r24-fast-water-v2-evidence/${name}.log"
+            grep -q '^R24 BENCHMARK profile=' "r24-fast-water-v2-evidence/${name}.log"
+            grep -q '^R24 GPU steady_pass_ms' "r24-fast-water-v2-evidence/${name}.log"
+            grep -q 'water_indices=' "r24-fast-water-v2-evidence/${name}.log"
+          }
+          run_case A_off 0
+          run_case B_on 1
+          run_case B2_on 1
+          run_case A2_off 0
+
+      - name: Enforce ABBA relative performance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, statistics
+          root=Path('r24-fast-water-v2-evidence')
+          def parse(name):
+              text=(root/f'{name}.log').read_text(encoding='utf-8',errors='replace')
+              bench=[x for x in text.splitlines() if x.startswith('R24 BENCHMARK profile=')][-1]
+              gpu=[x for x in text.splitlines() if x.startswith('R24 GPU steady_pass_ms')][-1]
+              b={k:float(v) for k,v in re.findall(r'(avg_fps|one_percent_low_fps|p99_ms|render_mean_ms)=([0-9.]+)',bench)}
+              g={k:float(v) for k,v in re.findall(r'(shadow_mean|opaque_mean|sky_mean|transparent_mean|total_mean)=([0-9.]+)',gpu)}
+              if len(b)!=4 or len(g)!=5: raise SystemExit(f'incomplete metrics for {name}')
+              return bench,gpu,b,g
+          p={n:parse(n) for n in ('A_off','B_on','B2_on','A2_off')}
+          off=('A_off','A2_off'); on=('B_on','B2_on')
+          avg=lambda names,bucket,key: statistics.mean(p[n][bucket][key] for n in names)
+          of=avg(off,2,'avg_fps'); nf=avg(on,2,'avg_fps')
+          ol=avg(off,2,'one_percent_low_fps'); nl=avg(on,2,'one_percent_low_fps')
+          op=avg(off,2,'p99_ms'); np=avg(on,2,'p99_ms')
+          og=avg(off,3,'transparent_mean'); ng=avg(on,3,'transparent_mean')
+          ot=avg(off,3,'total_mean'); nt=avg(on,3,'total_mean')
+          if ng > og*0.92: raise SystemExit(f'transparent GPU improvement <8%: {og:.3f}->{ng:.3f}')
+          if nt > ot*1.005: raise SystemExit(f'total GPU regression: {ot:.3f}->{nt:.3f}')
+          if nf < of*0.995: raise SystemExit(f'avg FPS regression: {of:.3f}->{nf:.3f}')
+          if nl < ol*0.97: raise SystemExit(f'1% low regression: {ol:.3f}->{nl:.3f}')
+          if np > op*1.03: raise SystemExit(f'p99 regression: {op:.3f}->{np:.3f}')
+          lines=[
+              'R24 FAST WATER V2 CLOSURE ABBA',
+              'PERF_CLASS=CI_SW_RELATIVE_ONLY',
+              'ABSOLUTE_120FPS_CERTIFICATION=INVALID_ON_SOFTWARE_VULKAN',
+              f'off_avg_fps={of:.4f}',f'on_avg_fps={nf:.4f}',f'avg_fps_delta_pct={(nf/of-1)*100:.3f}',
+              f'off_1pct_fps={ol:.4f}',f'on_1pct_fps={nl:.4f}',f'one_percent_low_delta_pct={(nl/ol-1)*100:.3f}',
+              f'off_p99_ms={op:.4f}',f'on_p99_ms={np:.4f}',f'p99_delta_pct={(np/op-1)*100:.3f}',
+              f'off_transparent_gpu_ms={og:.4f}',f'on_transparent_gpu_ms={ng:.4f}',f'transparent_gpu_delta_pct={(ng/og-1)*100:.3f}',
+              f'off_total_gpu_ms={ot:.4f}',f'on_total_gpu_ms={nt:.4f}',f'total_gpu_delta_pct={(nt/ot-1)*100:.3f}',
+          ]
+          for n in p: lines += [f'{n}: {p[n][0]}',f'{n}_gpu: {p[n][1]}']
+          out='\n'.join(lines)+'\n'
+          (root/'README.txt').write_text(out,encoding='utf-8')
+          print(out)
+          PY
+
+      - name: Upload closure evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-fast-water-v2-closure-${{ github.run_id }}
+          path: r24-fast-water-v2-evidence/**
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote actual native runtime only after PASS
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST="docs/evidence/r24-fast-water-v2-${GITHUB_RUN_ID}"
+          mkdir -p "$DEST"
+          cp -a r24-fast-water-v2-evidence/. "$DEST/"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native/shaders/planet.slang native/include/vf/render/VulkanRenderer.hpp \
+            native/src/render/VulkanRenderer.cpp native/src/app/Main.cpp "$DEST"
+          git commit -m 'perf(r24): promote measured Fast Water V2 runtime'
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
+
+      - name: Stop display
+        if: always()
+        shell: bash
+        run: |
+          if test -f /tmp/r24-v2-xvfb.pid; then kill "$(cat /tmp/r24-v2-xvfb.pid)" 2>/dev/null || true; fi
