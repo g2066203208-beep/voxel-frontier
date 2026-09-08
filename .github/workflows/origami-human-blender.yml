@@ -24,10 +24,10 @@ jobs:
           sudo apt-get install -y blender python3-numpy libegl1 libgl1-mesa-dri
           blender --version
 
-      - name: Generate refined original PEAK-like neutral basemesh
+      - name: Generate single-shell PEAK-like neutral basemesh
         run: |
           mkdir -p artifacts/peak-cute-neutral
-          blender --background --python tools/procedural-human/blender/peak_cute_neutral_v14.py -- "$GITHUB_WORKSPACE/artifacts/peak-cute-neutral"
+          blender --background --python tools/procedural-human/blender/peak_cute_neutral_v15.py -- "$GITHUB_WORKSPACE/artifacts/peak-cute-neutral"
           test -s artifacts/peak-cute-neutral/neutral.glb
           test -s artifacts/peak-cute-neutral/neutral-preview.png
           test -s artifacts/peak-cute-neutral/metrics.json
@@ -40,15 +40,19 @@ jobs:
           assert m['neutral_only'] is True
           assert m['male_female_split'] is False
           assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False and m['props'] is False
-          assert 500 <= m['tris'] <= 700, m
-          assert 3.8 <= m['visual_head_ratio'] <= 4.8, m
+          assert m['single_continuous_shell'] is True, m
+          assert m['connected_components'] == 1, m
+          assert m['boundary_edges'] == 0, m
+          assert m['nonmanifold_edges'] == 0, m
+          assert 550 <= m['tris'] <= 850, m
+          assert 3.6 <= m['visual_head_ratio'] <= 4.5, m
           print(json.dumps(m, indent=2))
           PY
 
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
         with:
-          name: peak-cute-neutral-human-v14
+          name: peak-cute-neutral-human-v15
           path: artifacts/peak-cute-neutral/
           if-no-files-found: error
           retention-days: 30
