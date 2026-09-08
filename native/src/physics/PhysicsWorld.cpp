@@ -62,6 +62,81 @@ constexpr std::uint32_t kContactSolverIterations = 10;
     return value * (maxMagnitude / magnitude);
 }
 
+// Return the centroid of the shape feature that supports an external plane in `direction`.
+// A generic support map is allowed to return any extremal point, so boxes historically picked
+// an arbitrary corner even when an entire face was equally valid. Feeding that corner to the
+// planet solver made ordinary resting boxes receive a continuous artificial torque. This helper
+// keeps GJK's supportPoint() contract untouched while choosing the center of tied support
+// features for static-surface contact: face center when a face is flat, edge center when an edge
+// is flat, and the true corner when the body is actually tipped onto a corner.
+[[nodiscard]] glm::dvec3 surfaceSupportCentroid(
+    const CollisionShape& shape,
+    const ShapePose& pose,
+    const glm::dvec3& directionInput) noexcept {
+    const glm::dvec3 direction = safeNormalize(directionInput, {0.0, -1.0, 0.0});
+    const glm::dquat orientation = glm::normalize(pose.orientation);
+
+    switch (shape.type) {
+    case CollisionShapeType::Sphere:
+        return pose.position + direction * std::max(0.0, shape.radius);
+
+    case CollisionShapeType::Box: {
+        const glm::dvec3 localDirection = glm::conjugate(orientation) * direction;
+        const glm::dvec3 extents = glm::max(glm::abs(shape.halfExtents), glm::dvec3{0.0});
+        const double dominant = std::max({
+            std::abs(localDirection.x),
+            std::abs(localDirection.y),
+            std::abs(localDirection.z),
+        });
+        const double tieTolerance = std::max(1.0e-10, dominant * 1.0e-7);
+        const auto supportCoordinate = [tieTolerance](double component, double extent) noexcept {
+            if (std::abs(component) <= tieTolerance) return 0.0;
+            return component > 0.0 ? extent : -extent;
+        };
+        const glm::dvec3 localPoint{
+            supportCoordinate(localDirection.x, extents.x),
+            supportCoordinate(localDirection.y, extents.y),
+            supportCoordinate(localDirection.z, extents.z),
+        };
+        return pose.position + orientation * localPoint;
+    }
+
+    case CollisionShapeType::Capsule: {
+        const glm::dvec3 axis = safeNormalize(orientation * glm::dvec3{0.0, 1.0, 0.0});
+        const double axialProjection = glm::dot(direction, axis);
+        glm::dvec3 segmentCenter = pose.position;
+        if (std::abs(axialProjection) > 1.0e-7) {
+            segmentCenter += axis * std::copysign(std::max(0.0, shape.halfHeight), axialProjection);
+        }
+        return segmentCenter + direction * std::max(0.0, shape.radius);
+    }
+
+    case CollisionShapeType::ConvexHull: {
+        if (!shape.convexHullData || shape.convexHullData->points.empty()) return pose.position;
+        const glm::dvec3 localDirection = glm::conjugate(orientation) * direction;
+        double bestProjection = -std::numeric_limits<double>::infinity();
+        for (const glm::dvec3& point : shape.convexHullData->points) {
+            bestProjection = std::max(bestProjection, glm::dot(point, localDirection));
+        }
+        const double scale = std::max(1.0, shape.convexHullData->boundingRadius);
+        const double tieTolerance = scale * 1.0e-7;
+        glm::dvec3 centroid{};
+        std::size_t tiedCount = 0U;
+        for (const glm::dvec3& point : shape.convexHullData->points) {
+            if (bestProjection - glm::dot(point, localDirection) <= tieTolerance) {
+                centroid += point;
+                ++tiedCount;
+            }
+        }
+        if (tiedCount == 0U) return supportPoint(shape, pose, direction);
+        centroid /= static_cast<double>(tiedCount);
+        return pose.position + orientation * centroid;
+    }
+    }
+
+    return supportPoint(shape, pose, direction);
+}
+
 [[nodiscard]] double sphereSubmergedFraction(double radius, double centerDepthBelowSurface) noexcept {
     if (radius <= kEpsilon) return centerDepthBelowSurface > 0.0 ? 1.0 : 0.0;
     if (centerDepthBelowSurface <= -radius) return 0.0;
@@ -139,6 +214,15 @@ constexpr std::uint32_t kContactSolverIterations = 10;
 [[nodiscard]] double angularInverseMassAlong(const RigidBody& body, const glm::dvec3& axis) noexcept {
     if (body.motionType != MotionType::Dynamic) return 0.0;
     return glm::dot(axis, body.worldInverseInertia() * axis);
+}
+
+void applySolverImpulseAtPoint(
+    RigidBody& body,
+    const glm::dvec3& impulse,
+    const glm::dvec3& worldPoint) noexcept {
+    if (body.motionType != MotionType::Dynamic || body.inverseMass <= 0.0) return;
+    body.linearVelocity += impulse * body.inverseMass;
+    body.angularVelocity += body.worldInverseInertia() * glm::cross(worldPoint - body.position, impulse);
 }
 
 [[nodiscard]] std::uint64_t contactPairKey(std::uint32_t a, std::uint32_t b) noexcept {
@@ -644,7 +728,7 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
         surfaceRadius = planetSurfaceRadius(environment_.planet, bodyLocalDirection(*contactCelestialBody, normal));
     }
 
-    glm::dvec3 contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
+    glm::dvec3 contactPoint = surfaceSupportCentroid(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
     double penetration = surfaceRadius - glm::dot(contactPoint - bodyCenter, normal);
     if (penetration <= 0.0) return;
 
@@ -655,7 +739,7 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
             ? planetSurfaceRadius(environment_.planet, bodyLocalDirection(*contactCelestialBody, normal))
             : planetSurfaceRadius(environment_.planet, normal);
     }
-    contactPoint = supportPoint(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
+    contactPoint = surfaceSupportCentroid(rigidBody.collisionShape, rigidBody.shapePose(), -normal);
 
     const glm::dvec3 surfaceVelocity = contactCelestialBody != nullptr
         ? celestialSurfaceVelocity(*contactCelestialBody, contactPoint)
@@ -671,7 +755,7 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
         const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, normal);
         normalImpulseMagnitude = (targetSeparationSpeed - normalVelocity) / inverseEffectiveMass;
         if (normalImpulseMagnitude > 0.0) {
-            rigidBody.applyImpulseAtPoint(normal * normalImpulseMagnitude, contactPoint);
+            applySolverImpulseAtPoint(rigidBody, normal * normalImpulseMagnitude, contactPoint);
         }
     }
 
@@ -687,7 +771,7 @@ void PhysicsWorld::solvePlanetContact(RigidBody& rigidBody) {
         const double inverseEffectiveMass = effectiveMassAgainstStatic(rigidBody, contactPoint, tangent);
         const double stopImpulse = tangentSpeed / inverseEffectiveMass;
         const double frictionImpulse = std::min(stopImpulse, maxFrictionImpulse);
-        rigidBody.applyImpulseAtPoint(-tangent * frictionImpulse, contactPoint);
+        applySolverImpulseAtPoint(rigidBody, -tangent * frictionImpulse, contactPoint);
     }
 
     const double rollingFactor = std::exp(
@@ -732,6 +816,11 @@ void PhysicsWorld::solveBodyContacts() {
         RigidBody& a = bodies_[indexA];
         RigidBody& b = bodies_[indexB];
         if (a.inverseMass + b.inverseMass <= 0.0) continue;
+        const bool aDormant = a.motionType == MotionType::Static
+            || (a.motionType == MotionType::Dynamic && a.sleeping);
+        const bool bDormant = b.motionType == MotionType::Static
+            || (b.motionType == MotionType::Dynamic && b.sleeping);
+        if (aDormant && bDormant) continue;
 
         ContactManifold geometry{};
         if (!collideShapes(a.collisionShape, a.shapePose(), b.collisionShape, b.shapePose(), geometry)) continue;
@@ -817,8 +906,8 @@ void PhysicsWorld::solveBodyContacts() {
             const glm::dvec3 impulse = manifold.normal * point.accumulatedNormalImpulse
                 + point.accumulatedTangentImpulse;
             if (glm::dot(impulse, impulse) <= 1.0e-20) continue;
-            a.applyImpulseAtPoint(-impulse, point.position);
-            b.applyImpulseAtPoint(impulse, point.position);
+            applySolverImpulseAtPoint(a, -impulse, point.position);
+            applySolverImpulseAtPoint(b, impulse, point.position);
         }
     }
 
@@ -839,8 +928,8 @@ void PhysicsWorld::solveBodyContacts() {
                 const double deltaNormalImpulse = point.accumulatedNormalImpulse - oldNormalImpulse;
                 if (std::abs(deltaNormalImpulse) > 1.0e-12) {
                     const glm::dvec3 impulse = manifold.normal * deltaNormalImpulse;
-                    a.applyImpulseAtPoint(-impulse, point.position);
-                    b.applyImpulseAtPoint(impulse, point.position);
+                    applySolverImpulseAtPoint(a, -impulse, point.position);
+                    applySolverImpulseAtPoint(b, impulse, point.position);
                 }
 
                 relativeVelocity = b.velocityAtPoint(point.position) - a.velocityAtPoint(point.position);
@@ -860,8 +949,8 @@ void PhysicsWorld::solveBodyContacts() {
                 point.accumulatedTangentImpulse = candidate;
                 const glm::dvec3 deltaTangentImpulse = candidate - oldTangentImpulse;
                 if (glm::dot(deltaTangentImpulse, deltaTangentImpulse) > 1.0e-20) {
-                    a.applyImpulseAtPoint(-deltaTangentImpulse, point.position);
-                    b.applyImpulseAtPoint(deltaTangentImpulse, point.position);
+                    applySolverImpulseAtPoint(a, -deltaTangentImpulse, point.position);
+                    applySolverImpulseAtPoint(b, deltaTangentImpulse, point.position);
                 }
             }
         }
