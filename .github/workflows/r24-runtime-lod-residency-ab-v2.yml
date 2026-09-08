@@ -1,0 +1,269 @@
+name: R24 Runtime LOD Residency A-B V2
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - 'native/include/vf/world/VelocityAwareLodPolicy.hpp'
+      - 'native/include/vf/world/PerceptualResidencyPolicy.hpp'
+      - '.github/scripts/r24_integrate_runtime_lod_residency.py'
+      - '.github/scripts/r24_expand_aerial_capture_altitude.py'
+      - '.github/scripts/r24_skip_initial_detail_for_far_residency.py'
+      - '.github/workflows/r24-runtime-lod-residency-ab-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-runtime-lod-residency-v2-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime-ab-v2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 16
+
+      - name: Materialize runtime policies and orbital evidence path
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/r24_integrate_runtime_lod_residency.py
+          python3 .github/scripts/r24_expand_aerial_capture_altitude.py
+          python3 .github/scripts/r24_skip_initial_detail_for_far_residency.py
+          git diff --check
+          grep -q 'R24_RUNTIME_LOD_RESIDENCY_V1' native/src/app/Main.cpp
+          grep -q 'R24_INITIAL_PERCEPTUAL_RESIDENCY_V1' native/src/app/Main.cpp
+          grep -q '2000000.0' native/src/app/Main.cpp
+          grep -q 'requestedMotionLod' native/src/app/Main.cpp
+          grep -q 'initialProxyPreferred' native/src/app/Main.cpp
+
+      - name: Install build and Vulkan dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Configure and build Release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S native -B build/r24-lod-residency-v2 -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+          cmake --build build/r24-lod-residency-v2 --parallel 2
+
+      - name: Run complete native regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p r24-lod-residency-v2-evidence
+          ctest --test-dir build/r24-lod-residency-v2 --verbose --output-on-failure 2>&1 \
+            | tee r24-lod-residency-v2-evidence/ctest.log
+          grep -q '100% tests passed' r24-lod-residency-v2-evidence/ctest.log
+
+      - name: Verify software Vulkan identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary \
+            | tee r24-lod-residency-v2-evidence/vulkan-summary.txt
+          grep -q 'llvmpipe' r24-lod-residency-v2-evidence/vulkan-summary.txt
+
+      - name: Start locked 1080p display
+        shell: bash
+        run: |
+          set -euo pipefail
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp \
+            > r24-lod-residency-v2-evidence/xvfb.log 2>&1 &
+          echo $! > /tmp/r24-xvfb.pid
+          sleep 1
+          echo 'DISPLAY=:99' >> "$GITHUB_ENV"
+          echo 'SDL_VIDEODRIVER=x11' >> "$GITHUB_ENV"
+
+      - name: Run same-binary four-case A-B
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-lod-residency-v2 -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+
+          run_case() {
+            local name="$1"; shift
+            echo "===== CASE $name ====="
+            env \
+              VF_PERF_PROFILE=mainstream_1080p \
+              VF_TERRAIN_TARGET=canyon \
+              VF_RUNTIME_DIAGNOSTICS=1 \
+              VF_CELESTIAL_TIME_SCALE=1 \
+              "$@" \
+              timeout 32s "$APP" > "r24-lod-residency-v2-evidence/${name}.log" 2>&1 &
+            local pid=$!
+            sleep 4
+            import -window root "r24-lod-residency-v2-evidence/${name}.png" || true
+            set +e
+            wait "$pid"
+            local rc=$?
+            set -e
+            cat "r24-lod-residency-v2-evidence/${name}.log"
+            test -s "r24-lod-residency-v2-evidence/${name}.png"
+            test "$rc" -eq 0 -o "$rc" -eq 124
+            grep -q '^R24 BENCHMARK profile=' "r24-lod-residency-v2-evidence/${name}.log"
+          }
+
+          run_case velocity_off \
+            VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=7000 \
+            VF_CAPTURE_HIGH_SPEED=1 VF_CAPTURE_HIGH_SPEED_AUTOPILOT=1 VF_CAPTURE_SPEED_MPS=800 \
+            VF_VELOCITY_AWARE_LOD=0 VF_PERCEPTUAL_RESIDENCY=0
+          run_case velocity_on \
+            VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=7000 \
+            VF_CAPTURE_HIGH_SPEED=1 VF_CAPTURE_HIGH_SPEED_AUTOPILOT=1 VF_CAPTURE_SPEED_MPS=800 \
+            VF_VELOCITY_AWARE_LOD=1 VF_PERCEPTUAL_RESIDENCY=0
+
+          run_case residency_off \
+            VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=450000 \
+            VF_VELOCITY_AWARE_LOD=0 VF_PERCEPTUAL_RESIDENCY=0
+          run_case residency_on \
+            VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=450000 \
+            VF_VELOCITY_AWARE_LOD=0 VF_PERCEPTUAL_RESIDENCY=1
+
+      - name: Parse FPS and enforce runtime feature gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('r24-lod-residency-v2-evidence')
+          cases = ['velocity_off', 'velocity_on', 'residency_off', 'residency_on']
+
+          def parse(name):
+              text = (root / f'{name}.log').read_text(encoding='utf-8', errors='replace')
+              lines = [x for x in text.splitlines() if x.startswith('R24 BENCHMARK profile=')]
+              if not lines:
+                  raise SystemExit(f'{name}: benchmark summary missing')
+              line = lines[-1]
+              vals = {k: float(v) for k, v in re.findall(
+                  r'(avg_fps|one_percent_low_fps|p99_frame_ms|render_mean_ms)=([0-9.]+)', line)}
+              if 'avg_fps' not in vals:
+                  raise SystemExit(f'{name}: avg_fps missing: {line}')
+              builds=[]
+              for x in text.splitlines():
+                  if 'R24 PERF terrain_build_ms=' in x:
+                      d={k:float(v) for k,v in re.findall(
+                          r'(terrain_build_ms|vertices|indices|leaf_patches)=([0-9.]+)',x)}
+                      if d: builds.append(d)
+              modes=[x for x in text.splitlines() if x.startswith('R24 Earth renderer mode:')]
+              initial=[x for x in text.splitlines() if x.startswith('R24 INITIAL RESIDENCY ')]
+              aerial=[x for x in text.splitlines() if x.startswith('R24 deterministic aerial camera altitude=')]
+              return text,line,vals,builds,modes,initial,aerial
+
+          p={n:parse(n) for n in cases}
+          vo,von=p['velocity_off'][2],p['velocity_on'][2]
+          ro,ron=p['residency_off'][2],p['residency_on'][2]
+
+          if von['avg_fps'] < vo['avg_fps'] * 0.98:
+              raise SystemExit(f'velocity LOD FPS regression: {vo["avg_fps"]} -> {von["avg_fps"]}')
+          if ron['avg_fps'] < ro['avg_fps'] * 0.98:
+              raise SystemExit(f'far residency FPS regression: {ro["avg_fps"]} -> {ron["avg_fps"]}')
+
+          if p['velocity_on'][3] and p['velocity_off'][3]:
+              on_leaf=max(x.get('leaf_patches',0) for x in p['velocity_on'][3])
+              off_leaf=max(x.get('leaf_patches',0) for x in p['velocity_off'][3])
+              if on_leaf >= off_leaf:
+                  raise SystemExit(f'velocity LOD did not reduce leaf count: {off_leaf} -> {on_leaf}')
+
+          # Orbital evidence camera must really exceed 400 km; no more 80 km clamp false-positive.
+          if not p['residency_on'][6]:
+              raise SystemExit('residency_on missing aerial altitude evidence')
+          m=re.search(r'altitude=([0-9.]+)', p['residency_on'][6][-1])
+          if not m or float(m.group(1)) < 400000.0:
+              raise SystemExit(f'orbital camera altitude not reached: {p["residency_on"][6][-1]}')
+
+          if not any('smooth-globe' in x for x in p['residency_on'][4]):
+              raise SystemExit('far residency did not select smooth-globe proxy')
+          if not p['residency_on'][5]:
+              raise SystemExit('far residency startup evidence missing')
+          init=p['residency_on'][5][-1]
+          if 'proxy=1' not in init or 'near_terrain_built=0' not in init:
+              raise SystemExit(f'far residency still built detailed terrain at startup: {init}')
+          init_off=p['residency_off'][5][-1] if p['residency_off'][5] else ''
+          if 'near_terrain_built=1' not in init_off:
+              raise SystemExit(f'legacy residency baseline did not build near terrain: {init_off}')
+
+          report=[
+              'R24 RUNTIME LOD/RESIDENCY A-B V2',
+              'device=llvmpipe software Vulkan; FPS deltas are relative regression evidence, not discrete-GPU certification.',
+          ]
+          for n in cases:
+              report.append(f'{n}: {p[n][1]}')
+              report.extend(f'{n}_build: '+ ' '.join(f'{k}={v}' for k,v in b.items()) for b in p[n][3])
+              report.extend(f'{n}_mode: {x}' for x in p[n][4][-3:])
+              report.extend(f'{n}_initial: {x}' for x in p[n][5][-1:])
+              report.extend(f'{n}_aerial: {x}' for x in p[n][6][-1:])
+          report.append(f'velocity_avg_fps_delta_pct={(von["avg_fps"]/vo["avg_fps"]-1)*100:.3f}')
+          report.append(f'residency_avg_fps_delta_pct={(ron["avg_fps"]/ro["avg_fps"]-1)*100:.3f}')
+          out='\n'.join(report)+'\n'
+          (root/'README.txt').write_text(out,encoding='utf-8')
+          print(out)
+          PY
+
+      - name: Upload logs and screenshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-runtime-lod-residency-v2-${{ github.run_id }}
+          path: r24-lod-residency-v2-evidence/**
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote measured runtime integration
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST="docs/evidence/r24-runtime-lod-residency-v2-${GITHUB_RUN_ID}"
+          mkdir -p "$DEST"
+          cp -a r24-lod-residency-v2-evidence/. "$DEST/"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native/src/app/Main.cpp native/include/vf/world/VelocityAwareLodPolicy.hpp "$DEST"
+          git commit -m 'perf(r24): promote measured velocity lod and far residency v2'
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
+
+      - name: Stop display
+        if: always()
+        shell: bash
+        run: |
+          if test -f /tmp/r24-xvfb.pid; then kill "$(cat /tmp/r24-xvfb.pid)" 2>/dev/null || true; fi
