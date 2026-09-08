@@ -127,6 +127,49 @@ constexpr std::size_t kPlateCount = 14U;
     return normalization > 0.0 ? sum / normalization : 0.0;
 }
 
+thread_local double gMinimumTerrainFeatureMeters = 0.0;
+
+struct TerrainFeatureScope {
+    explicit TerrainFeatureScope(double minimumMeters) noexcept
+        : previous(gMinimumTerrainFeatureMeters) {
+        gMinimumTerrainFeatureMeters = std::max(0.0, minimumMeters);
+    }
+    ~TerrainFeatureScope() { gMinimumTerrainFeatureMeters = previous; }
+    double previous{};
+};
+
+[[nodiscard]] double fbmSurfaceBandLimited(
+    std::uint64_t seed,
+    const glm::dvec3& direction,
+    double baseFrequency,
+    int octaves,
+    double planetRadius) noexcept {
+    const double minimumFeature = gMinimumTerrainFeatureMeters;
+    if (minimumFeature <= 0.0) return fbmSurface(seed, direction, baseFrequency, octaves);
+
+    double amplitude = 1.0;
+    double frequency = baseFrequency;
+    double sum = 0.0;
+    double normalization = 0.0;
+    const double circumference = 2.0 * kPi * std::max(1.0, planetRadius);
+    for (int octave = 0; octave < octaves; ++octave) {
+        // Approximate spherical wavelength. Once a band is smaller than the render grid's Nyquist
+        // threshold it cannot form a stable pixel and is deliberately omitted rather than aliased.
+        const double wavelengthMeters = circumference / std::max(1.0, frequency);
+        if (wavelengthMeters >= minimumFeature) {
+            const std::uint64_t octaveSeed = seedBits(
+                seed, 4000U + static_cast<std::uint64_t>(octave) * 29U);
+            sum += valueNoise3(octaveSeed, direction * frequency) * amplitude;
+        }
+        // Keep the original full-band normalization so removing high frequencies behaves as a
+        // true low-pass residual instead of amplifying the remaining coarse octaves.
+        normalization += amplitude;
+        frequency *= 2.07;
+        amplitude *= 0.48;
+    }
+    return normalization > 0.0 ? sum / normalization : 0.0;
+}
+
 [[nodiscard]] double resolvedOceanDepth(const PlanetDefinition& definition) noexcept {
     return std::max(0.0, definition.maxOceanDepthMeters > 0.0
         ? definition.maxOceanDepthMeters
@@ -182,14 +225,54 @@ struct PlateField {
     double shear{};
 };
 
+struct AbyssSeedConstant {
+    glm::dvec3 direction{};
+    double width{};
+};
+
+struct TerrainSeedConstants {
+    std::uint64_t seed{};
+    bool initialized{};
+    std::array<double, 8> phases{};
+    std::array<PlateSeed, kPlateCount> plates{};
+    std::array<glm::dvec3, 9> hotspots{};
+    std::array<AbyssSeedConstant, 18> abysses{};
+};
+
+[[nodiscard]] const TerrainSeedConstants& terrainSeedConstants(std::uint64_t seed) noexcept {
+    // Terrain workers repeatedly sample hundreds of thousands of directions for one planet. Plate
+    // seeds, hotspot directions and abyss throat locations are functions of the planet seed only;
+    // rebuilding them per vertex previously repeated hundreds of sin/cos/hash operations per patch.
+    thread_local TerrainSeedConstants cache{};
+    if (cache.initialized && cache.seed == seed) return cache;
+
+    cache = {};
+    cache.seed = seed;
+    cache.initialized = true;
+    for (std::size_t i = 0; i < cache.phases.size(); ++i)
+        cache.phases[i] = seedPhase(seed, static_cast<std::uint64_t>(i));
+    for (std::size_t i = 0; i < cache.plates.size(); ++i)
+        cache.plates[i] = makePlate(seed, i);
+    for (std::uint64_t i = 0; i < cache.hotspots.size(); ++i)
+        cache.hotspots[i] = seededDirection(seed, 2000U + i * 7U);
+    for (std::uint64_t i = 0; i < cache.abysses.size(); ++i) {
+        cache.abysses[i].direction = seededDirection(
+            seed ^ 0x13198A2E03707344ULL, 9000U + i * 31U);
+        cache.abysses[i].width = 0.010 + 0.030 * seedUnit(
+            seed ^ 0xA4093822299F31D0ULL, 9300U + i * 37U);
+    }
+    return cache;
+}
+
 [[nodiscard]] PlateField samplePlateField(std::uint64_t seed, const glm::dvec3& direction) noexcept {
+    const TerrainSeedConstants& constants = terrainSeedConstants(seed);
     double bestScore = -std::numeric_limits<double>::infinity();
     double secondScore = -std::numeric_limits<double>::infinity();
     PlateSeed best{};
     PlateSeed second{};
 
     for (std::size_t i = 0; i < kPlateCount; ++i) {
-        const PlateSeed plate = makePlate(seed, i);
+        const PlateSeed& plate = constants.plates[i];
         const double score = glm::dot(direction, plate.center);
         if (score > bestScore) {
             secondScore = bestScore;
@@ -402,22 +485,31 @@ glm::dvec3 cubeSphereDirection(std::uint32_t face, double u, double v) {
     return glm::normalize(cube);
 }
 
+PlanetTerrainSample samplePlanetTerrainLod(
+    const PlanetDefinition& definition,
+    const glm::dvec3& directionInput,
+    double minimumFeatureMeters) {
+    TerrainFeatureScope featureScope{minimumFeatureMeters};
+    return samplePlanetTerrain(definition, directionInput);
+}
+
 PlanetTerrainSample samplePlanetTerrain(
     const PlanetDefinition& definition,
     const glm::dvec3& directionInput) {
     if (definition.surfacePreset == PlanetSurfacePreset::AirlessCratered)
         return sampleAirlessCrateredTerrain(definition, directionInput);
     const glm::dvec3 d = safeNormalize(directionInput);
+    const TerrainSeedConstants& seedConstants = terrainSeedConstants(definition.seed);
     const PlateField plates = samplePlateField(definition.seed, d);
 
-    const double p0 = seedPhase(definition.seed, 0U);
-    const double p1 = seedPhase(definition.seed, 1U);
-    const double p2 = seedPhase(definition.seed, 2U);
-    const double p3 = seedPhase(definition.seed, 3U);
-    const double p4 = seedPhase(definition.seed, 4U);
-    const double p5 = seedPhase(definition.seed, 5U);
-    const double p6 = seedPhase(definition.seed, 6U);
-    const double p7 = seedPhase(definition.seed, 7U);
+    const double p0 = seedConstants.phases[0];
+    const double p1 = seedConstants.phases[1];
+    const double p2 = seedConstants.phases[2];
+    const double p3 = seedConstants.phases[3];
+    const double p4 = seedConstants.phases[4];
+    const double p5 = seedConstants.phases[5];
+    const double p6 = seedConstants.phases[6];
+    const double p7 = seedConstants.phases[7];
 
     const glm::dvec3 warp{
         std::sin(d.y * 4.7 + d.z * 3.1 + p4),
@@ -507,7 +599,7 @@ PlanetTerrainSample samplePlanetTerrain(
 
     double hotspotVolcano = 0.0;
     for (std::uint64_t i = 0; i < 9U; ++i) {
-        const glm::dvec3 hotspot = seededDirection(definition.seed, 2000U + i * 7U);
+        const glm::dvec3& hotspot = seedConstants.hotspots[i];
         const double angularMask = smooth01(
             std::cos(0.055),
             std::cos(0.007),
@@ -544,16 +636,16 @@ PlanetTerrainSample samplePlanetTerrain(
     // The ridged/cellular-like masks reuse the mature compositional ideas exposed by FastNoiseLite
     // while retaining Voxel Frontier's own deterministic spherical value-noise implementation.
     const double climate = fbmSurface(definition.seed ^ 0x510E527FADE682D1ULL, w, 26.0, 4);
-    const double regional = fbmSurface(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3);
+    const double regional = fbmSurfaceBandLimited(definition.seed ^ 0x6A09E667F3BCC909ULL, w, 720.0, 3, definition.radius);
     const double hillNoise = fbmSurface(definition.seed ^ 0x1F83D9ABFB41BD6BULL, w, 1350.0, 3);
     const double local = fbmSurface(definition.seed ^ 0xBB67AE8584CAA73BULL, w, 3200.0, 3);
     // Incision fields deliberately stay below the rock/material octave band. Very high-frequency
     // displacement at kilometre amplitudes creates needles rather than drainage-shaped terrain.
     const double canyonNoise = fbmSurface(definition.seed ^ 0x5BE0CD19137E2179ULL, w, 4200.0, 3);
     const double abyssNoise = fbmSurface(definition.seed ^ 0x243F6A8885A308D3ULL, w, 900.0, 3);
-    const double duneNoise = fbmSurface(definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 26000.0, 2);
-    const double micro = fbmSurface(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2);
-    const double fine = fbmSurface(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2);
+    const double duneNoise = fbmSurfaceBandLimited(definition.seed ^ 0xCBBB9D5DC1059ED8ULL, w, 26000.0, 2, definition.radius);
+    const double micro = fbmSurfaceBandLimited(definition.seed ^ 0x3C6EF372FE94F82BULL, w, 52000.0, 2, definition.radius);
+    const double fine = fbmSurfaceBandLimited(definition.seed ^ 0xA54FF53A5F1D36F1ULL, w, 125000.0, 2, definition.radius);
 
     // Orogenic/fault morphology uses separate deterministic bands rather than reusing the tiny
     // material-detail amplitudes below. On an Earth-size sphere these frequencies correspond to
@@ -568,8 +660,8 @@ PlanetTerrainSample samplePlanetTerrain(
         definition.seed ^ 0xC13FA9A902A6328FULL, w, 4700.0, 3);
     const double riftFault = fbmSurface(
         definition.seed ^ 0x91E10DA5C79E7B1DULL, w, 1800.0, 3);
-    const double riftFaultFine = fbmSurface(
-        definition.seed ^ 0xD192E819D6EF5218ULL, w, 5200.0, 3);
+    const double riftFaultFine = fbmSurfaceBandLimited(
+        definition.seed ^ 0xD192E819D6EF5218ULL, w, 5200.0, 3, definition.radius);
 
     const double latitude = std::abs(d.y);
     const double coastProximity = 1.0 - smooth01(0.025, 0.30, std::abs(continentalness));
@@ -627,10 +719,8 @@ PlanetTerrainSample samplePlanetTerrain(
 
     double seededAbyss = 0.0;
     for (std::uint64_t i = 0; i < 18U; ++i) {
-        const glm::dvec3 throat = seededDirection(
-            definition.seed ^ 0x13198A2E03707344ULL, 9000U + i * 31U);
-        const double width = 0.010 + 0.030 * seedUnit(
-            definition.seed ^ 0xA4093822299F31D0ULL, 9300U + i * 37U);
+        const glm::dvec3& throat = seedConstants.abysses[i].direction;
+        const double width = seedConstants.abysses[i].width;
         const double throatMask = smooth01(
             std::cos(width * 2.8),
             std::cos(width * 0.30),

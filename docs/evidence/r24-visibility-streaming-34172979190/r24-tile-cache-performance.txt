@@ -1,0 +1,5 @@
+cold_ms=42.883500
+hot_ms=5.622260
+speedup=7.627450
+policy=visible_tiles_only_plus_persistent_cache
+lod=screen_space_error_plus_distance_band_limit

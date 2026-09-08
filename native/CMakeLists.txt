@@ -25,6 +25,7 @@ add_library(vf_engine STATIC
     src/world/PlanetClimateGrid.cpp
     src/world/PlanetaryBodySystem.cpp
     src/world/PlanetLodMeshBuilder.cpp
+    src/world/PlanetTileCache.cpp
     src/world/ProceduralEcology.cpp
     src/world/CelestialSystem.cpp
     src/world/CelestialLighting.cpp
@@ -286,6 +287,9 @@ if(VF_BUILD_TESTS)
     add_executable(vf_r24_hydrologic_canyon_tests tests/R24HydrologicCanyonTests.cpp)
     target_link_libraries(vf_r24_hydrologic_canyon_tests PRIVATE vf_engine glm::glm)
     add_test(NAME vf_r24_hydrologic_canyon_tests COMMAND vf_r24_hydrologic_canyon_tests)
+    add_executable(vf_planet_tile_streaming_tests tests/PlanetTileStreamingTests.cpp)
+    target_link_libraries(vf_planet_tile_streaming_tests PRIVATE vf_engine glm::glm)
+    add_test(NAME vf_planet_tile_streaming_tests COMMAND vf_planet_tile_streaming_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests tests/ShaderContractTests.cpp "${VF_SHADER_HEADER}")

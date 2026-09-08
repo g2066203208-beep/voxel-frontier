@@ -15,10 +15,25 @@ namespace {
 struct Node {
     std::uint32_t face{};
     std::uint32_t depth{};
+    std::uint32_t x{};
+    std::uint32_t y{};
     double u0{-1.0};
     double v0{-1.0};
     double size{2.0};
 };
+
+[[nodiscard]] PlanetLodTileKey tileKeyFor(
+    const Node& node,
+    std::uint32_t patchResolution) noexcept {
+    return {node.face, node.depth, node.x, node.y, patchResolution};
+}
+
+void appendMeshWithOffset(PlanetMesh& destination, const PlanetMesh& source) {
+    const std::uint32_t base = static_cast<std::uint32_t>(destination.vertices.size());
+    destination.vertices.insert(destination.vertices.end(), source.vertices.begin(), source.vertices.end());
+    destination.indices.reserve(destination.indices.size() + source.indices.size());
+    for (const std::uint32_t index : source.indices) destination.indices.push_back(base + index);
+}
 
 [[nodiscard]] glm::dvec3 safeNormalize(
     const glm::dvec3& value,
@@ -127,7 +142,11 @@ struct NodeMetric {
         };
     }
 
-    const PlanetTerrainSample centerTerrain = surface.sample(geometry.centerDirection);
+    const double nodeCellMeters = geometry.spanMeters
+        / static_cast<double>(std::max(2U, config.patchResolution));
+    const double minimumFeatureMeters = nodeCellMeters * config.minimumFeatureCells;
+    const PlanetTerrainSample centerTerrain = surface.sampleLod(
+        geometry.centerDirection, minimumFeatureMeters);
 
     const double uc = node.u0 + 0.5 * node.size;
     const double vc = node.v0 + 0.5 * node.size;
@@ -142,15 +161,14 @@ struct NodeMetric {
     double elevationMax = -std::numeric_limits<double>::infinity();
     double elevationMean = 0.0;
     for (const glm::dvec3& probe : reliefProbes) {
-        const double elevation = surface.sample(probe).elevationMeters;
+        const double elevation = surface.sampleLod(probe, minimumFeatureMeters).elevationMeters;
         elevationMin = std::min(elevationMin, elevation);
         elevationMax = std::max(elevationMax, elevation);
         elevationMean += elevation;
     }
     elevationMean /= static_cast<double>(reliefProbes.size());
 
-    const double cellMeters = geometry.spanMeters
-        / static_cast<double>(std::max(2U, config.patchResolution));
+    const double cellMeters = nodeCellMeters;
     const double reliefSignal = std::max(
         std::abs(centerTerrain.elevationMeters - elevationMean),
         0.40 * std::max(0.0, elevationMax - elevationMin));
@@ -201,6 +219,9 @@ void appendPatch(
     const std::uint32_t base = static_cast<std::uint32_t>(mesh.vertices.size());
     const PlanetDefinition& planet = surface.planet();
     const std::size_t pointCount = static_cast<std::size_t>(stride) * stride;
+    const NodeGeometry nodeGeometry = geometryFor(node, planet.radius);
+    const double nodeCellMeters = nodeGeometry.spanMeters / static_cast<double>(resolution);
+    const double minimumFeatureMeters = nodeCellMeters * config.minimumFeatureCells;
 
     // Each authoritative terrain point is sampled exactly once for this patch. Normals are then
     // reconstructed from the already sampled mesh grid, avoiding the old sampleSurface() path that
@@ -220,7 +241,8 @@ void appendPatch(
             const double u = node.u0 + node.size * fx;
             const std::size_t index = static_cast<std::size_t>(y) * stride + x;
             directions[index] = cubeSphereDirection(node.face, u, v);
-            terrainSamples[index] = surface.sample(directions[index]);
+            terrainSamples[index] = surface.sampleLod(
+                directions[index], minimumFeatureMeters);
             positions[index] = directions[index]
                 * (planet.radius + terrainSamples[index].elevationMeters);
         }
@@ -314,7 +336,9 @@ PlanetMesh buildAdaptivePlanetSurface(
     const PlanetSurfaceAuthority& surface,
     const glm::dvec3& cameraPlanetLocal,
     const PlanetLodConfig& configInput,
-    PlanetLodStats* stats) {
+    PlanetLodStats* stats,
+    PlanetTileCache* tileCache,
+    std::uint64_t tileEpoch) {
     PlanetLodConfig config = configInput;
     config.patchResolution = std::clamp<std::uint32_t>(config.patchResolution, 4U, 64U);
     config.maxDepth = std::clamp<std::uint32_t>(config.maxDepth, 1U, 20U);
@@ -338,6 +362,7 @@ PlanetMesh buildAdaptivePlanetSurface(
         5000.0);
     config.viewConeHalfAngleRadians = std::clamp(
         config.viewConeHalfAngleRadians, 0.25, 3.14159265358979323846);
+    config.minimumFeatureCells = std::clamp(config.minimumFeatureCells, 1.0, 8.0);
 
     PlanetLodStats localStats{};
     localStats.nearestCellMeters = std::numeric_limits<double>::infinity();
@@ -401,7 +426,7 @@ PlanetMesh buildAdaptivePlanetSurface(
 
     std::priority_queue<Candidate, std::vector<Candidate>, CandidateLess> pending;
     for (std::uint32_t face = 0; face < 6U; ++face) {
-        const Node root{face, 0U, -1.0, -1.0, 2.0};
+        const Node root{face, 0U, 0U, 0U, -1.0, -1.0, 2.0};
         const double priority = priorityFor(root);
         if (priority >= 0.0) pending.push({root, priority});
     }
@@ -418,11 +443,13 @@ PlanetMesh buildAdaptivePlanetSurface(
         if (wantsSplit && budgetAllowsSplit) {
             const double half = node.size * 0.5;
             const std::uint32_t depth = node.depth + 1U;
+            const std::uint32_t childX = node.x * 2U;
+            const std::uint32_t childY = node.y * 2U;
             const std::array<Node, 4> children{{
-                {node.face, depth, node.u0, node.v0, half},
-                {node.face, depth, node.u0 + half, node.v0, half},
-                {node.face, depth, node.u0, node.v0 + half, half},
-                {node.face, depth, node.u0 + half, node.v0 + half, half},
+                {node.face, depth, childX, childY, node.u0, node.v0, half},
+                {node.face, depth, childX + 1U, childY, node.u0 + half, node.v0, half},
+                {node.face, depth, childX, childY + 1U, node.u0, node.v0 + half, half},
+                {node.face, depth, childX + 1U, childY + 1U, node.u0 + half, node.v0 + half, half},
             }};
             for (const Node& child : children) {
                 const double priority = priorityFor(child);
@@ -449,8 +476,37 @@ PlanetMesh buildAdaptivePlanetSurface(
     scratch.positions.reserve(baseVerticesPerPatch);
     scratch.terrainSamples.reserve(baseVerticesPerPatch);
     scratch.edge.reserve(config.patchResolution + 1U);
-    for (const Node& node : leaves)
-        appendPatch(mesh, node, surface, config, &localStats, scratch);
+    for (const Node& node : leaves) {
+        const NodeGeometry geometry = geometryFor(node, surface.planet().radius);
+        const double cell = geometry.spanMeters
+            / static_cast<double>(std::max(2U, config.patchResolution));
+        localStats.deepestLevel = std::max(localStats.deepestLevel, node.depth);
+        localStats.nearestCellMeters = std::min(localStats.nearestCellMeters, cell);
+
+        if (tileCache == nullptr) {
+            appendPatch(mesh, node, surface, config, nullptr, scratch);
+            ++localStats.generatedPatches;
+            continue;
+        }
+
+        const PlanetLodTileKey key = tileKeyFor(node, config.patchResolution);
+        std::shared_ptr<const PlanetMesh> patch = tileCache->find(tileEpoch, key);
+        if (patch) {
+            ++localStats.tileCacheHits;
+        } else {
+            ++localStats.tileCacheMisses;
+            ++localStats.generatedPatches;
+            auto generated = std::make_shared<PlanetMesh>();
+            generated->vertices.reserve(baseVerticesPerPatch + skirtVerticesPerPatch);
+            generated->indices.reserve(static_cast<std::size_t>(
+                6U * config.patchResolution * config.patchResolution
+                + (config.skirtDepthMeters > 0.0 ? 24U * config.patchResolution : 0U)));
+            appendPatch(*generated, node, surface, config, nullptr, scratch);
+            tileCache->insert(tileEpoch, key, generated);
+            patch = std::move(generated);
+        }
+        appendMeshWithOffset(mesh, *patch);
+    }
     localStats.leafPatches = leaves.size();
     if (!std::isfinite(localStats.nearestCellMeters)) localStats.nearestCellMeters = 0.0;
     if (stats) *stats = localStats;

@@ -746,6 +746,9 @@ int main() {
 
         glm::dvec3 lodCenterDirection = patchUp;
         glm::dvec3 lodViewForwardDirection = initialViewForwardPlanet;
+        // Cesium-style persistent CPU tile residency. 512 MiB matches a mature practical default
+        // cache scale while keeping active visible tiles non-evictable by virtue of immediate reuse.
+        vf::PlanetTileCache terrainTileCache{512ULL * 1024ULL * 1024ULL};
         struct TerrainBuildResult {
             glm::dvec3 centerDirection{};
             glm::dvec3 viewForwardDirection{};
@@ -797,6 +800,20 @@ int main() {
 
             vf::PlanetSurfaceAuthority buildSurface{planet};
             buildSurface.setHydrology(hydrology);
+            std::uint64_t tileEpoch = planet.seed ^ 0x9E3779B97F4A7C15ULL;
+            const auto mixEpoch = [&](std::int64_t value) {
+                tileEpoch ^= static_cast<std::uint64_t>(value) + 0x9E3779B97F4A7C15ULL
+                    + (tileEpoch << 6U) + (tileEpoch >> 2U);
+            };
+            if (hydrology) {
+                const glm::dvec3 hc = hydrology->centerDirection();
+                mixEpoch(static_cast<std::int64_t>(hydrology->resolution()));
+                mixEpoch(std::llround(hc.x * 1.0e9));
+                mixEpoch(std::llround(hc.y * 1.0e9));
+                mixEpoch(std::llround(hc.z * 1.0e9));
+                mixEpoch(std::llround(hydrology->halfExtentMeters()));
+                mixEpoch(std::llround(hydrology->maxIncisionMeters()));
+            }
             vf::PlanetLodConfig lodConfig{};
             lodConfig.patchResolution = buildAltitude < 25000.0 ? 12U : 10U;
             lodConfig.maxDepth = 20U;
@@ -832,7 +849,8 @@ int main() {
             result.hydrology = hydrology;
             result.reusedHydrology = canReuseHydrology;
             vf::PlanetMesh renderMesh = vf::buildAdaptivePlanetSurface(
-                buildSurface, cameraPlanetLocal, lodConfig, &result.stats);
+                buildSurface, cameraPlanetLocal, lodConfig, &result.stats,
+                &terrainTileCache, tileEpoch);
 
             // PlanetLodMeshBuilder already emits the authoritative hydrology-displaced position and
             // reconstructs normals from that exact sampled patch grid. The old pass called
@@ -879,6 +897,9 @@ int main() {
                   << " indices=" << initialTerrain.meshIndices
                   << " leaf_patches=" << initialTerrain.stats.leafPatches
                   << " culled_nodes=" << initialTerrain.stats.culledNodes
+                  << " tile_hits=" << initialTerrain.stats.tileCacheHits
+                  << " tile_misses=" << initialTerrain.stats.tileCacheMisses
+                  << " generated_patches=" << initialTerrain.stats.generatedPatches
                   << " hydrology_reused=" << (initialTerrain.reusedHydrology ? 1 : 0) << '\n';
         surfaceAuthority.setHydrology(initialTerrain.hydrology);
         if (const char* targetEnv = std::getenv("VF_TERRAIN_TARGET");
@@ -1241,6 +1262,15 @@ int main() {
                     surfaceAuthority.setHydrology(completed.hydrology);
                     currentLodStats = completed.stats;
                     nearTerrain = std::move(completed.renderMesh);
+                    const vf::PlanetTileCacheStats tileCacheStats = terrainTileCache.stats();
+                    std::cout << "R24 STREAM tile_hits=" << completed.stats.tileCacheHits
+                              << " tile_misses=" << completed.stats.tileCacheMisses
+                              << " generated=" << completed.stats.generatedPatches
+                              << " resident_tiles=" << tileCacheStats.entries
+                              << " resident_mb="
+                              << (static_cast<double>(tileCacheStats.residentBytes)
+                                  / (1024.0 * 1024.0))
+                              << '\n';
                     lodCooldown = 0.12;
                     std::cout << "R24 PERF terrain_build_ms=" << completed.buildMilliseconds
                               << " vertices=" << completed.meshVertices
