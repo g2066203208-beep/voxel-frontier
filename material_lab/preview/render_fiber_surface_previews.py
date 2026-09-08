@@ -30,57 +30,73 @@ def basis(lat,lon):
 
 def project(p):return (CX+p[0]*R,CY-p[1]*R)
 
+def rgba(rgb,a):return tuple(int(max(0,min(1,float(x)))*255) for x in (*rgb,a))
+
 def render_wolf(d,n):
     guard=load_l(d,n,"guardHair");length=load_l(d,n,"strandLength");under=load_l(d,n,"underfur");base=load_rgb(d,n)
     if guard is None or length is None:return
     im=Image.open(d/"preview-sphere.png").convert("RGB");dr=ImageDraw.Draw(im,"RGBA")
-    strokes=[]
-    # Dense short underfur first, then fewer longer guard hairs. Geometry is projected
-    # from actual sphere points so silhouette hairs extend beyond the displaced shell.
-    for iy in range(4,43):
-        lat=-1.33+iy/46*2.66
-        for ix in range(92):
-            lon=-math.pi+ix/92*2*math.pi
-            p,elon,elat=basis(lat,lon)
-            if p[2]<.05:continue
+    candidates=[]
+    for iy in range(8):
+        lat=-1.10+iy/7*2.20
+        for ix in range(14):
+            lon=-math.pi+ix/14*2*math.pi;p,elon,elat=basis(lat,lon)
+            if p[2]<.10:continue
             u=(lon/(2*math.pi)+.5)%1;v=.5-lat/math.pi
             g=float(sample(guard,u,v));uf=float(sample(under,u,v)) if under is not None else .8;ln=float(sample(length,u,v))
-            rnd=hsh(ix,iy,3)
-            if rnd<.30*uf:
-                tang=elon*(hsh(ix,iy,5)-.5)*.018-elat*(.010+.010*hsh(ix,iy,6));q=p*(1.006+.008*uf)+tang
-                strokes.append((float(p[2]),project(p*1.005),project(q),(.58,.56,.53,.38),1))
-            if g>.055 and hsh(ix,iy,7)<min(.92,.20+g*1.55):
-                flow=-elat*(.030+.035*ln)+elon*((hsh(ix,iy,8)-.5)*.030)
-                q=p*(1.015+.035*g)+flow
-                c=np.clip(sample(base,u,v)*1.42+.10,0,1);alpha=int(105+120*min(1,g*1.6));width=1 if g<.34 else 2
-                strokes.append((float(p[2])+.01,project(p*1.004),project(q),(float(c[0]),float(c[1]),float(c[2]),alpha/255),width))
-    strokes.sort(key=lambda s:s[0])
-    for _,a,b,c,w in strokes:
-        rgba=tuple(int(max(0,min(1,x))*255) for x in c)
-        dr.line([a,b],fill=rgba,width=w)
+            score=g*.72+uf*.20+p[2]*.08
+            candidates.append((score,ix,iy,p,elon,elat,u,v,g,uf,ln))
+    candidates.sort(key=lambda q:q[0],reverse=True)
+    plates=[]
+    for _,ix,iy,p,elon,elat,u,v,g,uf,ln in candidates[:12]:
+        # One broad tapered coat sheet replaces dozens of individual hairs.
+        width=.070+.030*hsh(ix,iy,3)
+        length3=.085+.050*ln
+        side=(hsh(ix,iy,4)-.5)*.025
+        root=p*1.006+elon*side
+        flow=-elat*length3+elon*(hsh(ix,iy,5)-.5)*.035
+        tip=(p+flow)*1.025
+        left0=root-elon*width*.52;right0=root+elon*width*.52
+        left1=(root+flow*.58)-elon*width*.62;right1=(root+flow*.58)+elon*width*.62
+        tipL=tip-elon*width*.22;tipR=tip+elon*width*.22
+        pts=[project(left0),project(right0),project(right1),project(tipR),project(tipL),project(left1)]
+        c=np.clip(sample(base,u,v)*1.18+.055,0,1);alpha=.42+.28*g
+        plates.append((float(p[2]),pts,c,alpha))
+    plates.sort(key=lambda q:q[0])
+    for _,pts,c,a in plates:
+        dr.polygon(pts,fill=rgba(c,a))
     im.save(d/"preview-sphere.png")
-    (d/"preview-fiber-metrics.json").write_text(json.dumps({"renderer":"explicit_projected_guard_hair_v1","strokes":len(strokes)},indent=2)+"\n")
+    (d/"preview-fiber-metrics.json").write_text(json.dumps({"renderer":"broad_painterly_wolf_coat_sheets_v2","broadPlates":len(plates),"thinStrands":0},indent=2)+"\n")
 
 def render_moss(d,n):
     dens=load_l(d,n,"mossDensity");height=load_l(d,n,"mossHeight");var=load_l(d,n,"tuftVariation");base=load_rgb(d,n)
     if dens is None or height is None:return
-    im=Image.open(d/"preview-sphere.png").convert("RGB");dr=ImageDraw.Draw(im,"RGBA");strokes=[]
-    for iy in range(4,39):
-        lat=-1.30+iy/42*2.60
-        for ix in range(80):
-            lon=-math.pi+ix/80*2*math.pi;p,elon,elat=basis(lat,lon)
-            if p[2]<.08:continue
+    im=Image.open(d/"preview-sphere.png").convert("RGB");dr=ImageDraw.Draw(im,"RGBA")
+    candidates=[]
+    for iy in range(7):
+        lat=-1.08+iy/6*2.16
+        for ix in range(12):
+            lon=-math.pi+ix/12*2*math.pi;p,elon,elat=basis(lat,lon)
+            if p[2]<.10:continue
             u=(lon/(2*math.pi)+.5)%1;v=.5-lat/math.pi;de=float(sample(dens,u,v));mh=float(sample(height,u,v));vv=float(sample(var,u,v)) if var is not None else .5
-            if hsh(ix,iy,11)>.18+.72*de:continue
-            count=1+(1 if de>.77 and hsh(ix,iy,12)>.40 else 0)
-            for k in range(count):
-                jitter=(hsh(ix,iy,20+k)-.5);tang=elon*jitter*.014+elat*(hsh(ix,iy,24+k)-.5)*.010;q=p*(1.010+.025*mh)+tang
-                c=np.clip(sample(base,u,v)*(.92+.34*vv)+np.array([.05,.08,.005]),0,1);alpha=int(100+110*de)
-                strokes.append((float(p[2]),project(p*1.004),project(q),(float(c[0]),float(c[1]),float(c[2]),alpha/255),1 if mh<.72 else 2))
-    strokes.sort(key=lambda s:s[0])
-    for _,a,b,c,w in strokes:dr.line([a,b],fill=tuple(int(max(0,min(1,x))*255) for x in c),width=w)
+            candidates.append((de*.76+mh*.16+p[2]*.08,ix,iy,p,elon,elat,u,v,de,mh,vv))
+    candidates.sort(key=lambda q:q[0],reverse=True)
+    patches=[]
+    for _,ix,iy,p,elon,elat,u,v,de,mh,vv in candidates[:10]:
+        # Large low cushions overlap into a continuous mat; no grass-like strokes.
+        rx=.075+.035*hsh(ix,iy,10);ry=.060+.030*hsh(ix,iy,11);radial=.010+.025*mh
+        center=p*(1+radial);pts=[]
+        for k in range(12):
+            a=2*math.pi*k/12
+            q=center+elon*math.cos(a)*rx+elat*math.sin(a)*ry
+            pts.append(project(q))
+        c=np.clip(sample(base,u,v)*(.98+.20*vv)+np.array([.035,.055,.0]),0,1);alpha=.34+.34*de
+        patches.append((float(p[2]),pts,c,alpha))
+    patches.sort(key=lambda q:q[0])
+    for _,pts,c,a in patches:
+        dr.polygon(pts,fill=rgba(c,a))
     im.save(d/"preview-sphere.png")
-    (d/"preview-fiber-metrics.json").write_text(json.dumps({"renderer":"explicit_projected_moss_tuft_v1","strokes":len(strokes)},indent=2)+"\n")
+    (d/"preview-fiber-metrics.json").write_text(json.dumps({"renderer":"broad_painterly_moss_cushions_v2","broadPatches":len(patches),"thinStrokes":0},indent=2)+"\n")
 
 def main():
     for d in sorted(p for p in ROOT.iterdir() if p.is_dir()):
