@@ -62,48 +62,60 @@ double PlanetSurfaceAuthority::hydrologyWeight(
     return 1.0 - smooth01((arcMeters - fadeStart) / std::max(1.0, fadeEnd - fadeStart));
 }
 
+PlanetTerrainSample PlanetSurfaceAuthority::applyHydrology(
+    PlanetTerrainSample terrain,
+    const glm::dvec3& directionInput) const noexcept {
+    const auto hydro = hydrology();
+    if (!hydro) return terrain;
+
+    const glm::dvec3 direction = safeNormalize(directionInput);
+    const double weight = hydrologyWeight(*hydro, direction);
+    if (weight <= 0.0) return terrain;
+
+    const RegionalHydrologySample drainage = hydro->sample(direction);
+    terrain.elevationMeters -= drainage.incisionMeters * weight;
+    terrain.river = std::clamp(
+        terrain.river * (1.0 - weight) + drainage.channelStrength * weight,
+        0.0,
+        1.0);
+    const double incisionFraction = std::clamp(
+        drainage.incisionMeters / std::max(1.0, hydro->maxIncisionMeters()),
+        0.0,
+        1.0);
+    const double hydrologicCanyon = std::clamp(
+        drainage.channelStrength * std::sqrt(incisionFraction),
+        0.0,
+        1.0);
+    terrain.canyon = std::clamp(
+        terrain.canyon * (1.0 - 0.92 * weight) + hydrologicCanyon * weight,
+        0.0,
+        1.0);
+    const double hydrologyWetland = std::clamp(
+        drainage.depositionPotential * 0.72 + drainage.lakePotential * 0.90,
+        0.0,
+        1.0);
+    terrain.wetland = std::clamp(
+        terrain.wetland * (1.0 - 0.65 * weight) + hydrologyWetland * weight,
+        0.0,
+        1.0);
+    terrain.oceanDepthMeters = std::max(
+        0.0,
+        planet_.seaLevelElevationMeters - terrain.elevationMeters);
+    return terrain;
+}
+
 PlanetTerrainSample PlanetSurfaceAuthority::sample(const glm::dvec3& directionInput) const noexcept {
     const glm::dvec3 direction = safeNormalize(directionInput);
-    PlanetTerrainSample terrain = samplePlanetTerrain(planet_, direction);
+    return applyHydrology(samplePlanetTerrain(planet_, direction), direction);
+}
 
-    const auto hydro = hydrology();
-    if (hydro) {
-        const double weight = hydrologyWeight(*hydro, direction);
-        if (weight > 0.0) {
-            const RegionalHydrologySample drainage = hydro->sample(direction);
-            terrain.elevationMeters -= drainage.incisionMeters * weight;
-            terrain.river = std::clamp(
-                terrain.river * (1.0 - weight) + drainage.channelStrength * weight,
-                0.0,
-                1.0);
-            const double incisionFraction = std::clamp(
-                drainage.incisionMeters / std::max(1.0, hydro->maxIncisionMeters()),
-                0.0,
-                1.0);
-            const double hydrologicCanyon = std::clamp(
-                drainage.channelStrength * std::sqrt(incisionFraction),
-                0.0,
-                1.0);
-            terrain.canyon = std::clamp(
-                terrain.canyon * (1.0 - 0.92 * weight)
-                    + hydrologicCanyon * weight,
-                0.0,
-                1.0);
-            const double hydrologyWetland = std::clamp(
-                drainage.depositionPotential * 0.72 + drainage.lakePotential * 0.90,
-                0.0,
-                1.0);
-            terrain.wetland = std::clamp(
-                terrain.wetland * (1.0 - 0.65 * weight)
-                    + hydrologyWetland * weight,
-                0.0,
-                1.0);
-            terrain.oceanDepthMeters = std::max(
-                0.0,
-                planet_.seaLevelElevationMeters - terrain.elevationMeters);
-        }
-    }
-    return terrain;
+PlanetTerrainSample PlanetSurfaceAuthority::sampleLod(
+    const glm::dvec3& directionInput,
+    double minimumFeatureMeters) const noexcept {
+    const glm::dvec3 direction = safeNormalize(directionInput);
+    return applyHydrology(
+        samplePlanetTerrainLod(planet_, direction, std::max(0.0, minimumFeatureMeters)),
+        direction);
 }
 
 PlanetSurfaceSample PlanetSurfaceAuthority::sampleSurface(
@@ -114,8 +126,8 @@ PlanetSurfaceSample PlanetSurfaceAuthority::sampleSurface(
     result.radiusMeters = planet_.radius + result.terrain.elevationMeters;
     result.position = d * result.radiusMeters;
 
-    // Only two neighbouring authority samples are required. The old call pattern often evaluated
-    // the center terrain again inside surfaceNormal() and then once more in surfaceRadius().
+    // Gameplay/collision normals always remain full-detail. Render LOD normals are reconstructed
+    // from the already band-limited tile grid inside PlanetLodMeshBuilder.
     const glm::dvec3 east = tangentAxis(d);
     const glm::dvec3 north = safeNormalize(glm::cross(d, east), {0.0, 0.0, 1.0});
     const double angularStep = std::clamp(
