@@ -25,10 +25,10 @@ jobs:
           blender --version
           blender --background --python-expr "import numpy; print('Blender numpy', numpy.__version__)"
 
-      - name: Generate GLB and real Blender render
+      - name: Generate cute anime origami GLB and real Blender render
         run: |
           mkdir -p artifacts/origami-human
-          blender --background --python tools/procedural-human/blender/origami_human_v4.py -- "$GITHUB_WORKSPACE/artifacts/origami-human"
+          blender --background --python tools/procedural-human/blender/origami_human_v5.py -- "$GITHUB_WORKSPACE/artifacts/origami-human"
           test -s artifacts/origami-human/male.glb
           test -s artifacts/origami-human/female.glb
           test -s artifacts/origami-human/male-female-origami.png
