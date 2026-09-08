@@ -32,11 +32,21 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(EnTT)
 
+FetchContent_Declare(
+    concurrentqueue
+    GIT_REPOSITORY https://github.com/cameron314/concurrentqueue.git
+    GIT_TAG v1.0.5
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(concurrentqueue)
+
 add_executable(vf_engine_foundation_tests
     ../tests/EngineFoundationTests.cpp
 )
 target_include_directories(vf_engine_foundation_tests PRIVATE ../include)
-target_link_libraries(vf_engine_foundation_tests PRIVATE Taskflow::Taskflow EnTT::EnTT)
+target_link_libraries(
+    vf_engine_foundation_tests
+    PRIVATE Taskflow::Taskflow EnTT::EnTT concurrentqueue)
 target_compile_features(vf_engine_foundation_tests PRIVATE cxx_std_23)
 
 if(MSVC)
