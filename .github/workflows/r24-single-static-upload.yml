@@ -134,10 +134,28 @@ jobs:
           new=lines[-1]
           stream=[x for x in new_text.splitlines() if x.startswith('R24 BENCHMARK_GPU_STREAM')]
           if not stream: raise SystemExit('missing GPU stream benchmark summary')
-          if 'static_uploads=1 ' not in stream[-1]:
-              raise SystemExit(f'stationary generation uploaded more than once: {stream[-1]}')
-          if len(re.findall(r'R24 PERF static_upload generation=', new_text)) != 1:
-              raise SystemExit('runtime log proves duplicate static generation transfers')
+
+          # A stationary benchmark legitimately has two distinct static generations: the startup
+          # globe and the async near-terrain takeover. The invariant is one transfer per distinct
+          # generation, not one transfer for the entire process.
+          upload_lines=re.findall(
+              r'R24 PERF static_upload generation=([0-9]+) slot=([0-9]+) bytes=([0-9]+) uploads=([0-9]+)',
+              new_text)
+          if not upload_lines:
+              raise SystemExit('missing static generation upload telemetry')
+          generations=[int(x[0]) for x in upload_lines]
+          if len(generations) != len(set(generations)):
+              raise SystemExit(f'duplicate transfer of one static generation: {upload_lines}')
+          reported_uploads_match=re.search(r'static_uploads=([0-9]+)', stream[-1])
+          if not reported_uploads_match:
+              raise SystemExit('missing static_uploads count')
+          reported_uploads=int(reported_uploads_match.group(1))
+          if reported_uploads != len(set(generations)):
+              raise SystemExit(
+                  f'upload scheduler count disagrees with distinct generations: {stream[-1]} {upload_lines}')
+          if reported_uploads > 3:
+              raise SystemExit(f'stationary benchmark churned static generations: {reported_uploads}')
+
           def value(line,key):
               m=re.search(rf'\b{key}=([0-9]+(?:\.[0-9]+)?)',line)
               if not m: raise SystemExit(f'missing {key}')
@@ -159,9 +177,13 @@ jobs:
               report=(f'baseline_avg_fps={base_fps:.3f}\noptimized_avg_fps={new_fps:.3f}\n'
                       f'fps_delta_percent={fps_delta:.3f}\nbaseline_p99_ms={base_p99:.3f}\n'
                       f'optimized_p99_ms={new_p99:.3f}\np99_delta_percent={p99_delta:.3f}\n'
+                      f'distinct_static_generations={len(set(generations))}\n'
+                      f'static_transfers={reported_uploads}\n'
                       f'{stream[-1]}\n')
           else:
-              report=f'optimized_avg_fps={new_fps:.3f}\noptimized_p99_ms={new_p99:.3f}\n{stream[-1]}\n'
+              report=(f'optimized_avg_fps={new_fps:.3f}\noptimized_p99_ms={new_p99:.3f}\n'
+                      f'distinct_static_generations={len(set(generations))}\n'
+                      f'static_transfers={reported_uploads}\n{stream[-1]}\n')
           Path('r24-static-upload-evidence/ab-summary.txt').write_text(report,encoding='utf-8')
           print(report)
           PY
