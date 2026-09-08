@@ -36,5 +36,12 @@ if 'R24_ENGINE_FOUNDATION_V2_MPMC' not in text:
         raise SystemExit('MPMC vf_engine link anchor not found')
     text = text.replace(old_link, new_link, 1)
 
+if 'vf_async_inbox_tests' not in text:
+    anchor = '''    add_executable(vf_engine_foundation_tests tests/EngineFoundationTests.cpp)\n    target_link_libraries(vf_engine_foundation_tests PRIVATE vf_engine Taskflow::Taskflow EnTT::EnTT)\n    add_test(NAME vf_engine_foundation_tests COMMAND vf_engine_foundation_tests)\n\n    if(VF_BUILD_RUNTIME)'''
+    insert = '''    add_executable(vf_engine_foundation_tests tests/EngineFoundationTests.cpp)\n    target_link_libraries(vf_engine_foundation_tests PRIVATE vf_engine Taskflow::Taskflow EnTT::EnTT concurrentqueue)\n    add_test(NAME vf_engine_foundation_tests COMMAND vf_engine_foundation_tests)\n\n    add_executable(vf_async_inbox_tests tests/AsyncInboxTests.cpp)\n    target_link_libraries(vf_async_inbox_tests PRIVATE vf_engine concurrentqueue)\n    add_test(NAME vf_async_inbox_tests COMMAND vf_async_inbox_tests)\n\n    if(VF_BUILD_RUNTIME)'''
+    if anchor not in text:
+        raise SystemExit('async inbox test anchor not found')
+    text = text.replace(anchor, insert, 1)
+
 cmake.write_text(text, encoding='utf-8')
 print('R24 engine foundation V1/V2 integrated into native build')
