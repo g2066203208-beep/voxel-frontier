@@ -45,6 +45,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(EnTT)
 
+# R24_ENGINE_FOUNDATION_V2_MPMC: preallocated lock-free worker result inbox.
+FetchContent_Declare(
+    concurrentqueue
+    GIT_REPOSITORY https://github.com/cameron314/concurrentqueue.git
+    GIT_TAG v1.0.5
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(concurrentqueue)
+
 add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
     src/world/PlanetSurfaceAuthority.cpp
@@ -79,7 +88,7 @@ add_library(vf_engine STATIC
 
 target_include_directories(vf_engine PUBLIC include)
 target_compile_features(vf_engine PUBLIC cxx_std_23)
-target_link_libraries(vf_engine PUBLIC glm::glm Taskflow::Taskflow EnTT::EnTT)
+target_link_libraries(vf_engine PUBLIC glm::glm Taskflow::Taskflow EnTT::EnTT concurrentqueue)
 target_compile_definitions(vf_engine PUBLIC GLM_FORCE_DEPTH_ZERO_TO_ONE GLM_FORCE_RADIANS)
 
 if(MSVC)
@@ -329,8 +338,12 @@ if(VF_BUILD_TESTS)
     add_test(NAME vf_static_mesh_upload_scheduler_tests COMMAND vf_static_mesh_upload_scheduler_tests)
 
     add_executable(vf_engine_foundation_tests tests/EngineFoundationTests.cpp)
-    target_link_libraries(vf_engine_foundation_tests PRIVATE vf_engine Taskflow::Taskflow EnTT::EnTT)
+    target_link_libraries(vf_engine_foundation_tests PRIVATE vf_engine Taskflow::Taskflow EnTT::EnTT concurrentqueue)
     add_test(NAME vf_engine_foundation_tests COMMAND vf_engine_foundation_tests)
+
+    add_executable(vf_async_inbox_tests tests/AsyncInboxTests.cpp)
+    target_link_libraries(vf_async_inbox_tests PRIVATE vf_engine concurrentqueue)
+    add_test(NAME vf_async_inbox_tests COMMAND vf_async_inbox_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests tests/ShaderContractTests.cpp "${VF_SHADER_HEADER}")
