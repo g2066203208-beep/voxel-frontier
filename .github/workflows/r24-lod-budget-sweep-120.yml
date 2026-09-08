@@ -1,0 +1,131 @@
+name: R24 LOD Budget Sweep 120 FPS
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/workflows/r24-lod-budget-sweep-120.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r24-lod-budget-sweep-120-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lod-sweep:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 8
+
+      - name: Materialize current throughput and SkyView plus benchmark LOD override
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/r24_shader_throughput_rescue.py
+          python3 .github/scripts/r24_hillaire_skyview_lut.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('native/src/app/Main.cpp')
+          t=p.read_text(encoding='utf-8')
+          anchor='''            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1100U\n                : (buildAltitude < 150000.0 ? 650U : 320U);\n'''
+          replacement=anchor+'''            if (mainstreamPerfProfile) {\n                if (const char* budgetEnv = std::getenv("VF_PERF_LEAF_BUDGET");\n                    budgetEnv != nullptr && *budgetEnv != '\\0') {\n                    try {\n                        lodConfig.maxLeafPatches = std::clamp(\n                            static_cast<std::uint32_t>(std::stoul(budgetEnv)), 192U, 1600U);\n                    } catch (...) {}\n                }\n            }\n'''
+          if anchor not in t: raise SystemExit('LOD budget anchor changed')
+          t=t.replace(anchor,replacement,1)
+          t=t.replace('            60.0,\n            40U,\n            "mainstream_1080p"}};',
+                      '            120.0,\n            40U,\n            "mainstream_1080p"}};',1)
+          t=t.replace('memory_budget_gib=16 target_fps=60\\n','memory_budget_gib=16 target_fps=120\\n',1)
+          p.write_text(t,encoding='utf-8')
+          PY
+          git diff --check
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build curl unzip xvfb imagemagick mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev libdrm-dev libgbm-dev \
+            libegl1-mesa-dev libgl1-mesa-dev libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip -o /tmp/slang.zip
+          mkdir -p "$HOME/slang" && unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC" && echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Build Release
+        run: |
+          cmake -S native -B build/r24-lod-sweep -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+          cmake --build build/r24-lod-sweep --parallel 2
+          ctest --test-dir build/r24-lod-sweep --output-on-failure -R 'vf_shader_contract_tests|vf_planet_tile_streaming_tests|vf_r24_runtime_stability_tests'
+
+      - name: Select llvmpipe and launch Xvfb
+        shell: bash
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp > /tmp/xvfb-lod.log 2>&1 &
+          echo "XVFB_PID=$!" >> "$GITHUB_ENV"
+          sleep 1
+
+      - name: Sweep 1100 800 600 450 leaves at identical 1080p canyon camera
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-lod-sweep -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p r24-lod-sweep-evidence
+          export DISPLAY=:99 SDL_VIDEODRIVER=x11 VF_PERF_PROFILE=mainstream_1080p
+          export VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=7000 VF_TERRAIN_TARGET=canyon
+          export VF_RUNTIME_DIAGNOSTICS=1 VF_CELESTIAL_TIME_SCALE=0
+          for BUDGET in 1100 800 600 450; do
+            echo "=== LOD budget $BUDGET ==="
+            export VF_PERF_LEAF_BUDGET="$BUDGET"
+            timeout 35s "$APP" > "r24-lod-sweep-evidence/budget-${BUDGET}.log" 2>&1 &
+            PID=$!
+            sleep 5
+            timeout 8s import -display :99 -window root "r24-lod-sweep-evidence/budget-${BUDGET}.png" || true
+            wait "$PID"
+            grep -E 'R24 BENCHMARK profile=|R24 GPU steady_pass_ms|R24 PERF terrain_build_ms=' "r24-lod-sweep-evidence/budget-${BUDGET}.log" | tail -5
+            test -s "r24-lod-sweep-evidence/budget-${BUDGET}.png"
+          done
+
+      - name: Summarize sweep
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          rows=[]
+          for b in (1100,800,600,450):
+              text=Path(f'r24-lod-sweep-evidence/budget-{b}.log').read_text(encoding='utf-8',errors='replace')
+              line=[x for x in text.splitlines() if x.startswith('R24 BENCHMARK profile=')][-1]
+              def v(k):
+                  m=re.search(rf'\b{k}=([0-9]+(?:\.[0-9]+)?)',line)
+                  return float(m.group(1)) if m else float('nan')
+              rows.append((b,v('avg_fps'),v('one_percent_low_fps'),v('p99_ms'),int(v('static_tris_max'))))
+          out='budget,avg_fps,one_percent_low_fps,p99_ms,static_tris\n'
+          out+='\n'.join(f'{b},{fps:.3f},{low:.3f},{p99:.3f},{tris}' for b,fps,low,p99,tris in rows)+'\n'
+          Path('r24-lod-sweep-evidence/sweep.csv').write_text(out,encoding='utf-8')
+          print(out)
+          PY
+          montage r24-lod-sweep-evidence/budget-1100.png r24-lod-sweep-evidence/budget-800.png \
+                  r24-lod-sweep-evidence/budget-600.png r24-lod-sweep-evidence/budget-450.png \
+                  -tile 2x2 -geometry 960x540+4+4 r24-lod-sweep-evidence/lod-sweep-overview.png
+
+      - name: Upload sweep
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-lod-budget-sweep-${{ github.run_id }}
+          path: r24-lod-sweep-evidence/**
+          if-no-files-found: warn
+          retention-days: 30
