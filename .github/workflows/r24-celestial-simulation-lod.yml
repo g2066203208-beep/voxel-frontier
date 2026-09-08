@@ -89,7 +89,7 @@ jobs:
             -R 'vf_celestial_simulation_lod_tests|vf_celestial_system_tests|vf_celestial_physics_frame_tests|vf_celestial_surface_frames_tests|vf_interplanetary_flight_tests|vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_r24_physical_planet_tests|vf_planet_tile_streaming_tests|vf_shader_contract_tests' \
             2>&1 | tee r24-celestial-lod-focused.log
           grep -q 'R24 celestial simulation LOD tests passed' r24-celestial-lod-focused.log
-          grep -q 'Celestial system tests passed' r24-celestial-lod-focused.log
+          grep -q 'vf_celestial_system_tests: PASS' r24-celestial-lod-focused.log
           grep -q 'vf_r24_runtime_stability_tests: PASS' r24-celestial-lod-focused.log
           grep -q 'R24 planet tile streaming tests passed' r24-celestial-lod-focused.log
           grep -q 'All production shader SPIR-V entry-point contracts passed' r24-celestial-lod-focused.log
@@ -139,7 +139,6 @@ jobs:
             test -s "r24-celestial-lod-evidence/logs/$f.log"
             grep -q 'R24 PERF terrain_build_ms=' "r24-celestial-lod-evidence/logs/$f.log"
           done
-          # At least one capture must run long enough to emit the 120-frame production policy line.
           cat r24-celestial-lod-evidence/logs/*.log > r24-celestial-runtime.log
           grep -q 'R24 CELESTIAL dynamic_bodies=1 analytic_bodies=3 nbody_pairs=0 ephemeris_evals=3' \
             r24-celestial-runtime.log
