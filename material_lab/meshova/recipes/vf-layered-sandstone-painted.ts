@@ -73,7 +73,7 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
   }
 
   // Sparse hero outcrops: broad footprint, huge elevation delta, thick shoulders.
-  // These occupy a minority of the texture so the underlying sphere cannot inflate uniformly.
+  // Two of them deliberately straddle periodic seams so real displacement breaks the sphere silhouette.
   const hero:[number,number,number,number,number,number][]=[
     [.57,.53,.215,.175,.505,.310],
     [.27,.46,.155,.145,.485,.255],
@@ -81,6 +81,8 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
     [.39,.73,.175,.145,.490,.265],
     [.73,.72,.165,.145,.485,.250],
     [.56,.27,.165,.120,.480,.235],
+    [.035,.56,.145,.185,.510,.345],
+    [.58,.035,.185,.115,.500,.305],
   ];
   for(let i=0;i<hero.length;i++){
     const [cx,cy,hw,hh,base,lift]=hero[i];
