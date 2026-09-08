@@ -40,20 +40,26 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(concurrentqueue)
 
-add_executable(vf_engine_foundation_tests
-    ../tests/EngineFoundationTests.cpp
-)
+add_executable(vf_engine_foundation_tests ../tests/EngineFoundationTests.cpp)
 target_include_directories(vf_engine_foundation_tests PRIVATE ../include)
 target_link_libraries(
     vf_engine_foundation_tests
     PRIVATE Taskflow::Taskflow EnTT::EnTT concurrentqueue)
 target_compile_features(vf_engine_foundation_tests PRIVATE cxx_std_23)
 
-if(MSVC)
-    target_compile_options(vf_engine_foundation_tests PRIVATE /W4 /permissive- /EHsc)
-else()
-    target_compile_options(vf_engine_foundation_tests PRIVATE -Wall -Wextra -Wpedantic)
-endif()
+add_executable(vf_async_inbox_tests ../tests/AsyncInboxTests.cpp)
+target_include_directories(vf_async_inbox_tests PRIVATE ../include)
+target_link_libraries(vf_async_inbox_tests PRIVATE concurrentqueue)
+target_compile_features(vf_async_inbox_tests PRIVATE cxx_std_23)
+
+foreach(target IN ITEMS vf_engine_foundation_tests vf_async_inbox_tests)
+    if(MSVC)
+        target_compile_options(${target} PRIVATE /W4 /permissive- /EHsc)
+    else()
+        target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
+endforeach()
 
 enable_testing()
 add_test(NAME vf_engine_foundation_tests COMMAND vf_engine_foundation_tests)
+add_test(NAME vf_async_inbox_tests COMMAND vf_async_inbox_tests)
