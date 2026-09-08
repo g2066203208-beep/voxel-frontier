@@ -50,21 +50,23 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
   const rows=Math.max(4,Math.min(6,bands));
   const rowStep=1/rows;
   for(let row=0;row<rows;row++){
-    const count=Math.max(2,Math.min(4,minSlabs+Math.floor(hash(seed,row,101)*(maxSlabs-minSlabs+1))));
+    // Support mass must fill the shell, never read as one or two long horizontal planks.
+    const requested=minSlabs+Math.floor(hash(seed,row,101)*(maxSlabs-minSlabs+1));
+    const count=Math.max(3,Math.min(4,requested+1));
     const raw:number[]=[]; let total=0;
-    for(let i=0;i<count;i++){const w=.78+hash(seed,row,i,102)*.62;raw.push(w);total+=w;}
-    let cursor=-.035+(hash(seed,row,103)-.5)*.04;
+    for(let i=0;i<count;i++){const w=.82+hash(seed,row,i,102)*.48;raw.push(w);total+=w;}
+    let cursor=-.025+(hash(seed,row,103)-.5)*.03;
     for(let i=0;i<count;i++){
       const frac=raw[i]/total;
       const cx=cursor+frac*.5; cursor+=frac;
       out.push(makeBlock(
         seed,row,i,cx,
-        (row+.5)/rows+(hash(seed,row,i,104)-.5)*rowStep*.18,
-        (frac+.025)*.64,
-        rowStep*(.59+hash(seed,row,i,105)*.10),
-        .465+(hash(seed,row,i,106)-.5)*.018,
-        .095+hash(seed,row,i,107)*.035,
-        false,crackChance*.28,
+        (row+.5)/rows+(hash(seed,row,i,104)-.5)*rowStep*.20,
+        (frac+.032)*.60,
+        rowStep*(.62+hash(seed,row,i,105)*.12),
+        .462+(hash(seed,row,i,106)-.5)*.016,
+        .065+hash(seed,row,i,107)*.025,
+        false,crackChance*.24,
       ));
     }
   }
@@ -127,7 +129,6 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         const shape=blockShape(x,y)+periodicField(x*.23+id*.11,y*.23-id*.09,seed+id*29,2)*.016;
         if(shape>1.04)continue;
         const edge=S((1-shape)/q.bevel);
-        // Thick chamfered shoulder: the block rises over a broad band instead of a near-vertical height step.
         const body=S((1-shape)/(q.bevel*1.35));
 
         let top=-99,secondPlane=-99;
