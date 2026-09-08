@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Procedural Human · voxel-frontier</title>
+<link rel="stylesheet" href="./styles.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+</head>
+<body>
+<main class="app">
+  <section class="viewer">
+    <header><div><p class="eyebrow">VOXEL FRONTIER / HUMAN MATH</p><h1>Procedural Human</h1></div><div id="status" class="status">Starting…</div></header>
+    <canvas id="viewport"></canvas>
+    <div id="measurements" class="measurements"></div>
+    <p id="error" class="error" hidden>母版加载失败。请通过 HTTP/HTTPS 打开本页面，并确认 raw.githubusercontent.com 可访问。</p>
+  </section>
+  <aside class="panel">
+    <div class="preset-row"><button id="presetMale">男性母版</button><button id="presetFemale">女性母版</button><button id="reset" class="ghost">中性</button></div>
+    <div class="explain">同一拓扑母版通过连续人体位移场变形。参数修改的是几何函数，而不是切换预制模型。</div>
+    <div id="sliders" class="sliders"></div>
+    <div class="actions"><button id="wire" class="ghost">线框</button><button id="exportObj" class="ghost">导出 OBJ</button><button id="exportGlb">导出 GLB</button></div>
+  </aside>
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
