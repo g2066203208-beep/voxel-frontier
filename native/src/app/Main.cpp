@@ -1,3 +1,4 @@
+#include "vf/app/RuntimeFeatureFlags.hpp"
 #include "vf/physics/PhysicsWorld.hpp"
 #include "vf/perf/PerformanceBenchmark.hpp"
 #include "vf/platform/SdlPlatform.hpp"
@@ -290,6 +291,11 @@ int main() {
             mainstreamPerfProfile ? 1920 : 1600,
             mainstreamPerfProfile ? 1080 : 900};
         vf::VulkanRenderer renderer{platform.window()};
+        // R24_MODULAR_TERRAIN_AB_V1: all heavyweight systems are moving behind explicit
+        // runtime gates. Terrain can be removed from rendering and streaming while the
+        // mathematical planet surface remains authoritative for coordinates/collision.
+        const vf::RuntimeFeatureFlags runtimeFeatures = vf::RuntimeFeatureFlags::fromEnvironment();
+        runtimeFeatures.print();
 
         // Earth-scale gameplay planet. Relief is deterministic procedural morphology rather than a
         // literal GIS copy: continents, shelves, abyssal basins, trenches, mountains, plateaus,
@@ -752,15 +758,18 @@ int main() {
         // Whole-planet view uses a smooth, physically displaced cube-sphere instead of leaving a
         // near-ground quadtree frozen in space. This is substantially cheaper than rendering the
         // full adaptive hemisphere and prevents the planet silhouette from becoming chunky.
-        vf::PlanetMesh earthGlobeMesh = vf::buildPlanetGlobeSurface(planet, 96U, 1.0);
-        for (auto& vertex : earthGlobeMesh.vertices) {
-            const glm::dvec3 pPlanet = glm::dvec3(vertex.position);
-            const glm::dvec3 nPlanet = safeNormalize(glm::dvec3(vertex.normal));
-            vertex.position = glm::vec3(toSurfacePoint(pPlanet));
-            vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(nPlanet)));
+        std::shared_ptr<const vf::PreparedPlanetMesh> earthGlobeRenderMesh{};
+        if (runtimeFeatures.terrainRender) {
+            vf::PlanetMesh earthGlobeMesh = vf::buildPlanetGlobeSurface(planet, 96U, 1.0);
+            for (auto& vertex : earthGlobeMesh.vertices) {
+                const glm::dvec3 pPlanet = glm::dvec3(vertex.position);
+                const glm::dvec3 nPlanet = safeNormalize(glm::dvec3(vertex.normal));
+                vertex.position = glm::vec3(toSurfacePoint(pPlanet));
+                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(nPlanet)));
+            }
+            earthGlobeRenderMesh = std::make_shared<const vf::PreparedPlanetMesh>(
+                vf::preparePlanetMesh(std::move(earthGlobeMesh), true));
         }
-        const auto earthGlobeRenderMesh = std::make_shared<const vf::PreparedPlanetMesh>(
-            vf::preparePlanetMesh(std::move(earthGlobeMesh), true));
 
         glm::dvec3 lodCenterDirection = patchUp;
         glm::dvec3 lodViewForwardDirection = initialViewForwardPlanet;
@@ -911,8 +920,13 @@ int main() {
             return result;
         };
 
-        TerrainBuildResult initialTerrain = buildTerrainLod(
-            lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet, {});
+        TerrainBuildResult initialTerrain{};
+        if (runtimeFeatures.terrainWorkEnabled()) {
+            initialTerrain = buildTerrainLod(
+                lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet, {});
+        } else {
+            std::cout << "R24 TERRAIN_BYPASS render=0 streaming=0 initial_synthesis=0\n";
+        }
         std::cout << "R24 PERF terrain_build_ms=" << initialTerrain.buildMilliseconds
                   << " vertices=" << initialTerrain.meshVertices
                   << " indices=" << initialTerrain.meshIndices
@@ -1020,7 +1034,10 @@ int main() {
         std::shared_ptr<const vf::PreparedPlanetMesh> nearTerrain = std::move(initialTerrain.renderMesh);
         bool usingDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
             || camera.altitude() > 900000.0;
-        renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeRenderMesh : nearTerrain);
+        if (runtimeFeatures.terrainRender)
+            renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeRenderMesh : nearTerrain);
+        else
+            renderer.clearPlanetMesh();
         std::future<TerrainBuildResult> terrainBuildFuture{};
         bool terrainBuildInFlight = false;
 
@@ -1267,7 +1284,8 @@ int main() {
                 lodCooldown,
             });
 
-            if (streaming.useDistantGlobe != usingDistantEarthGlobe) {
+            if (runtimeFeatures.terrainRender
+                && streaming.useDistantGlobe != usingDistantEarthGlobe) {
                 usingDistantEarthGlobe = streaming.useDistantGlobe;
                 renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeRenderMesh : nearTerrain);
                 std::cout << "R24 Earth renderer mode: "
@@ -1284,7 +1302,8 @@ int main() {
                 && camera.physicsFrameBodyId() == asterId
                 && !terrainBuildInFlight
                 && lodCooldown <= 0.0;
-            if (streaming.requestBuild || viewPrefetchExpired) {
+            if (runtimeFeatures.terrainWorkEnabled()
+                && (streaming.requestBuild || viewPrefetchExpired)) {
                 const glm::dvec3 requestedDirection = cameraDirection;
                 const glm::dvec3 requestedCameraPlanet = cameraPlanet;
                 const glm::dvec3 requestedViewForward = forwardPlanet;
@@ -1301,7 +1320,8 @@ int main() {
                 terrainBuildInFlight = true;
             }
 
-            if (terrainBuildInFlight
+            if (runtimeFeatures.terrainWorkEnabled()
+                && terrainBuildInFlight
                 && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
                     == std::future_status::ready) {
                 TerrainBuildResult completed = terrainBuildFuture.get();

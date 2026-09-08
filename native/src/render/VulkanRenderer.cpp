@@ -1218,6 +1218,17 @@ void VulkanRenderer::uploadPlanetMesh(std::shared_ptr<const PreparedPlanetMesh> 
     }
 }
 
+void VulkanRenderer::clearPlanetMesh() {
+    pendingStaticMesh_.reset();
+    ++staticMeshGeneration_;
+    if (staticMeshGeneration_ == 0U) {
+        staticMeshGeneration_ = 1U;
+        staticUploadScheduler_.reset();
+    }
+    SDL_Log("R24 MODULE terrain static mesh cleared generation=%llu",
+        static_cast<unsigned long long>(staticMeshGeneration_));
+}
+
 void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     (void)frame;
     const StaticMeshUploadDecision decision = staticUploadScheduler_.adopt(staticMeshGeneration_);

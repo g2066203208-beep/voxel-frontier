@@ -66,6 +66,8 @@ public:
     // therefore never calls vkDeviceWaitIdle or destroys a buffer still used by the GPU.
     void uploadPlanetMesh(const PlanetMesh& mesh);
     void uploadPlanetMesh(std::shared_ptr<const PreparedPlanetMesh> mesh);
+    // Explicit empty-world state used by runtime module gates and A/B performance tests.
+    void clearPlanetMesh();
     void setDynamicMesh(const PlanetMesh& mesh);
     void clearDynamicMesh();
     void drawFrame(
