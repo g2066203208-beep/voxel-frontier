@@ -1,0 +1,11 @@
+target_profile=Windows11_6core_16GiB_1080p_RTX3060-4060-class
+ci_os=Linux runnervmejwal 6.17.0-1022-azure #22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+ci_logical_cores=4
+ci_memory_kib=16373452
+CPU(s):                                  4
+On-line CPU(s) list:                     0-3
+Model name:                              AMD EPYC 7763 64-Core Processor
+Thread(s) per core:                      2
+Core(s) per socket:                      2
+NUMA node0 CPU(s):                       0-3
+actual_runtime_cpu_limit=4 (runner has fewer than target 6 cores)

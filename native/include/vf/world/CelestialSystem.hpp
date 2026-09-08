@@ -3,6 +3,7 @@
 #include "vf/world/ReferenceFrame.hpp"
 #include "vf/world/UniverseTime.hpp"
 
+#include <cstddef>
 #include <cstdint>
 #include <span>
 #include <string>
@@ -40,6 +41,32 @@ struct OrbitalState {
 [[nodiscard]] OrbitalState keplerianState(
     const KeplerianElements& elements,
     double gravitationalParameterM3PerS2) noexcept;
+
+// Convert a bound Cartesian state into the same classical element convention consumed by
+// keplerianState(). This lets authored physically-correct position/velocity initial conditions
+// switch to ephemeris mode without hand-maintaining a second orbital description.
+[[nodiscard]] bool keplerianElementsFromState(
+    const OrbitalState& state,
+    double gravitationalParameterM3PerS2,
+    KeplerianElements& elements) noexcept;
+
+enum class CelestialOrbitMode : std::uint8_t {
+    // Mutual velocity-Verlet integration. Use this for genuine close encounters / dynamically
+    // interacting massive bodies. This remains the default so existing physics behavior is exact.
+    DynamicNBody,
+    // Stable remote orbit evaluated from absolute simulation epoch. The body remains a Newtonian
+    // gravity source for gameplay queries but does not waste O(N^2) pair integration against other
+    // remote ephemerides every render frame.
+    AnalyticKepler,
+};
+
+struct CelestialSimulationStats {
+    std::size_t dynamicBodies{};
+    std::size_t analyticBodies{};
+    std::uint64_t dynamicSubsteps{};
+    std::uint64_t nbodyPairEvaluations{};
+    std::uint64_t analyticEvaluations{};
+};
 
 struct CelestialAtmosphere {
     bool enabled{};
@@ -92,6 +119,19 @@ struct CelestialBody {
     glm::dquat orientation{1.0, 0.0, 0.0, 0.0};
     glm::dvec3 spinAxis{0.0, 1.0, 0.0};
     double spinRateRadPerSecond{};
+
+    // Simulation LOD. DynamicNBody preserves mutual integration; AnalyticKepler stores one compact
+    // parent-relative ephemeris and evaluates current position/velocity directly from absolute time.
+    CelestialOrbitMode orbitMode{CelestialOrbitMode::DynamicNBody};
+    KeplerianElements analyticOrbit{};
+    double analyticOrbitEpochSeconds{};
+
+    // Self-rotation is also epoch based. orientation is still updated for all existing consumers,
+    // but it is derived from these immutable epoch values instead of accumulating one quaternion
+    // multiply for every accelerated celestial substep.
+    glm::dquat spinEpochOrientation{1.0, 0.0, 0.0, 0.0};
+    double spinEpochSeconds{};
+
     double luminosityWatts{};
     glm::dvec3 visibleAlbedo{0.45, 0.48, 0.52};
 
@@ -140,7 +180,15 @@ public:
     [[nodiscard]] std::span<CelestialBody> bodies() noexcept { return bodies_; }
     [[nodiscard]] std::span<const CelestialBody> bodies() const noexcept { return bodies_; }
 
-    // deltaSeconds is already simulated time. Large calls are fully consumed using <=60 s orbital
+    // Promote a stable authored orbit to an absolute-time ephemeris using its current parent-relative
+    // Cartesian state. Returns false for missing parents, unbound/degenerate states or invalid ids.
+    [[nodiscard]] bool setAnalyticOrbitFromCurrentState(std::uint32_t bodyId) noexcept;
+    void setDynamicNBody(std::uint32_t bodyId) noexcept;
+    [[nodiscard]] const CelestialSimulationStats& lastStepStats() const noexcept {
+        return lastStepStats_;
+    }
+
+    // deltaSeconds is already simulated time. Dynamic close-encounter bodies still use bounded
     // substeps; no remainder is discarded. Wall-clock scaling belongs to CelestialSimulationClock.
     void step(double deltaSeconds);
 
@@ -182,8 +230,9 @@ public:
 
 private:
     void integrateOrbitalSubstep(double deltaSeconds);
+    void evaluateAnalyticOrbitsAt(double absoluteSeconds) noexcept;
     void syncReferenceFrames();
-    void updateSpin(CelestialBody& body, double deltaSeconds) noexcept;
+    void updateSpinsAt(double absoluteSeconds) noexcept;
     void updateGlobalClimate(CelestialBody& body, double deltaSeconds) noexcept;
     void updateWeatherDiagnostics(CelestialBody& body) noexcept;
 
@@ -195,6 +244,7 @@ private:
     std::uint32_t nextBodyId_{1};
     ReferenceFrameSystem referenceFrames_{};
     UniverseTime timeSystem_{};
+    CelestialSimulationStats lastStepStats_{};
 };
 
 } // namespace vf

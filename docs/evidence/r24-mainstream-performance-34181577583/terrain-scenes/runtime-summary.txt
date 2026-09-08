@@ -1,0 +1,46 @@
+=== MOUNTAIN ===
+R24 terrain target: mountain score=10.0618
+R24 terrain evidence view: contrast_m=25282 highest_elevation_m=20324.7 center_elevation_m=15265.4 relief_lift_m=5059.27
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.56 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 175.9 | renderms 175.2 | FPS 12
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.56 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 75.5 | renderms 73.7 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.55 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 76.3 | renderms 72.6 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.55 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 77.5 | renderms 74.3 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.55 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 79.4 | renderms 73.6 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.54 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 80.1 | renderms 73.9 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.53 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 81.5 | renderms 73.6 | FPS 12
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.52 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 108.6 | renderms 101.1 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 13.52 km | LAND | STREAM READY | QLOD 648/L20 | cell 1.7m | tris 300652+0 | maxms 103.8 | renderms 94.2 | FPS 10
+=== RIFT ===
+R24 terrain target: rift score=7.19726
+R24 terrain evidence view: contrast_m=2414.13 highest_elevation_m=3102.44 center_elevation_m=1785.18 relief_lift_m=1317.26
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.32 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 188.9 | renderms 187.8 | FPS 11
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.32 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 76.8 | renderms 73.4 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.31 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 78.1 | renderms 74.2 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.31 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 79.1 | renderms 74.4 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.30 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 79.1 | renderms 73.3 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.30 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 81.4 | renderms 75.7 | FPS 13
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.29 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 109.1 | renderms 98.1 | FPS 11
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.28 km | LAND | STREAM READY | QLOD 1099/L14 | cell 76.7m | tris 552964+9472 | maxms 106.7 | renderms 98.8 | FPS 10
+=== CANYON ===
+R24 terrain target: canyon score=2.76499
+R24 terrain evidence view: contrast_m=2994.91 highest_elevation_m=10659.4 center_elevation_m=7664.49 relief_lift_m=2994.91
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.79 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 212.1 | renderms 211.3 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.79 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 82.9 | renderms 80.4 | FPS 12
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.79 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 84.2 | renderms 80.8 | FPS 12
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.79 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 85.9 | renderms 80.9 | FPS 12
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.78 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 86.5 | renderms 82.6 | FPS 12
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.78 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 87.8 | renderms 81.2 | FPS 12
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.77 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 110.6 | renderms 103.4 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 7.77 km | LAND | STREAM READY | QLOD 1099/L14 | cell 72.7m | tris 535368+64 | maxms 105.4 | renderms 97.9 | FPS 10
+=== ABYSS ===
+R24 terrain target: abyss score=1.16181
+R24 terrain evidence view: contrast_m=6710.38 highest_elevation_m=19354.1 center_elevation_m=18842.9 relief_lift_m=511.138
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.11 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 217.8 | renderms 217.1 | FPS 9
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.11 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 101.4 | renderms 99.0 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.11 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 103.7 | renderms 100.2 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.11 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 102.5 | renderms 99.1 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.10 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 104.1 | renderms 99.6 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.10 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 104.1 | renderms 100.3 | FPS 10
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.10 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 137.1 | renderms 131.1 | FPS 9
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.09 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 130.4 | renderms 122.3 | FPS 8
+R24 DIAG | Voxel Frontier R4 | CAPSULE-AIR | SPEED 320 m/s | ALT 4.09 km | LAND | STREAM READY | QLOD 1099/L15 | cell 41.0m | tris 537748+0 | maxms 130.4 | renderms 124.4 | FPS 8

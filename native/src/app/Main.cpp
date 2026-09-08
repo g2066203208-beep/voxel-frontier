@@ -1,4 +1,5 @@
 #include "vf/physics/PhysicsWorld.hpp"
+#include "vf/perf/PerformanceBenchmark.hpp"
 #include "vf/platform/SdlPlatform.hpp"
 #include "vf/player/CharacterController.hpp"
 #include "vf/player/PlanetCamera.hpp"
@@ -277,7 +278,17 @@ void appendMesh(vf::PlanetMesh& destination, const vf::PlanetMesh& source) {
 
 int main() {
     try {
-        vf::SdlPlatform platform{"Voxel Frontier — Earthlike Planet + Ocean", 1600, 900};
+        const bool mainstreamPerfProfile = [] {
+            const char* value = std::getenv("VF_PERF_PROFILE");
+            return value != nullptr && std::string_view{value} == "mainstream_1080p";
+        }();
+        // August-2026 Steam mainstream baseline: 1080p, 6 CPU cores, 16 GiB system RAM,
+        // RTX 3060/4060-class discrete GPU. CI may run the same profile on Lavapipe, but its FPS is
+        // explicitly labelled software Vulkan and is never reported as a discrete-GPU result.
+        vf::SdlPlatform platform{
+            "Voxel Frontier — Earthlike Planet + Ocean",
+            mainstreamPerfProfile ? 1920 : 1600,
+            mainstreamPerfProfile ? 1080 : 900};
         vf::VulkanRenderer renderer{platform.window()};
 
         // Earth-scale gameplay planet. Relief is deterministic procedural morphology rather than a
@@ -302,10 +313,9 @@ int main() {
             try { celestialTimeScale = std::clamp(std::stod(scaleEnv), 0.0, 200000.0); }
             catch (...) { celestialTimeScale = 240.0; }
         }
-        const double celestialFixedStepSeconds =
-            vf::recommendedCelestialFixedStepSeconds(celestialTimeScale);
-        vf::CelestialSimulationClock celestialClock{{
-            celestialFixedStepSeconds, celestialTimeScale, 4096U}};
+        // Production major-body orbits below use absolute-time ephemerides. This means a 240x
+        // day/orbit scale advances once per display frame without the old sixteen 0.25-s callbacks,
+        // while dynamic N-body mode remains available for explicit close-encounter simulations.
 
         vf::CelestialBody sun{};
         sun.type = vf::CelestialBodyType::Star;
@@ -354,6 +364,8 @@ int main() {
         asterDescriptor.climateEnabled = true;
         asterDescriptor.oceanEnabled = true;
         const std::uint32_t asterId = planetaryBodies.addBody(std::move(asterDescriptor));
+        if (!celestial.setAnalyticOrbitFromCurrentState(asterId))
+            throw std::runtime_error("Aster analytic ephemeris initialization failed");
         auto* asterSurface = planetaryBodies.surface(asterId);
         auto* asterClimate = planetaryBodies.climate(asterId);
         auto* asterOcean = planetaryBodies.ocean(asterId);
@@ -377,6 +389,8 @@ int main() {
         cinder.linearVelocity = {-circularOrbitSpeed(sun.massKg, cinderOrbitRadius), 0.0, 0.0};
         cinder.visibleAlbedo = {0.62, 0.30, 0.22};
         const std::uint32_t cinderId = celestial.addBody(cinder);
+        if (!celestial.setAnalyticOrbitFromCurrentState(cinderId))
+            throw std::runtime_error("Cinder analytic ephemeris initialization failed");
 
         const glm::dvec3 initialSunDirectionPlanet = safeNormalize(
             sun.position - aster.position, {1.0, 0.0, 0.0});
@@ -432,6 +446,8 @@ int main() {
         luna.spinRateRadPerSecond = 2.0 * kPi / (27.321661 * 86400.0);
         luna.visibleAlbedo = {0.62, 0.64, 0.68};
         const std::uint32_t moonId = celestial.addBody(luna);
+        if (!celestial.setAnalyticOrbitFromCurrentState(moonId))
+            throw std::runtime_error("Luna analytic ephemeris initialization failed");
         vf::PlanetDefinition moonSurfaceDefinition{};
         moonSurfaceDefinition.seed = 0x4C554E415F523234ULL;
         moonSurfaceDefinition.radius = luna.radiusMeters;
@@ -443,6 +459,8 @@ int main() {
         moonSurfaceDefinition.maxOceanDepthMeters = 0.0;
         moonSurfaceDefinition.atmosphereHeight = 0.0;
         moonSurfaceDefinition.surfacePreset = vf::PlanetSurfacePreset::AirlessCratered;
+        vf::PlanetMesh moonSurfaceMeshDistant = vf::buildPlanetGlobeSurface(
+            moonSurfaceDefinition, 6U, 1.0);
         vf::PlanetMesh moonSurfaceMeshFar = vf::buildPlanetGlobeSurface(
             moonSurfaceDefinition, 28U, 1.0);
         vf::PlanetMesh moonSurfaceMeshNear = vf::buildPlanetGlobeSurface(
@@ -832,9 +850,12 @@ int main() {
             lodConfig.viewForwardPlanetLocal = safeNormalize(
                 viewForwardPlanetLocal, stableTangent(centerUp));
             lodConfig.viewConeHalfAngleRadians = glm::radians(78.0);
-            lodConfig.viewportHeightPixels = 900.0;
-            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0 ? 3.4
-                : (buildAltitude < 150000.0 ? 4.8 : 7.2);
+            lodConfig.viewportHeightPixels = mainstreamPerfProfile ? 1080.0 : 900.0;
+            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0
+                ? (mainstreamPerfProfile ? 4.08 : 3.4)
+                : (buildAltitude < 150000.0
+                    ? (mainstreamPerfProfile ? 5.76 : 4.8)
+                    : (mainstreamPerfProfile ? 8.64 : 7.2));
             lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 1.0 : 0.0;
             lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0 : 24.0;
             lodConfig.detailTransitionStartMeters = 180.0;
@@ -1048,6 +1069,17 @@ int main() {
         double lodCooldown = 0.0;
         double dynamicSceneAccumulator = 1.0;
         constexpr double kDynamicSceneCadenceSeconds = 0.10;
+        vf::PerformanceBenchmark performanceBenchmark{{
+            mainstreamPerfProfile,
+            2.0,
+            6.0,
+            60.0,
+            40U,
+            "mainstream_1080p"}};
+        if (mainstreamPerfProfile) {
+            std::cout << "R24 BENCHMARK_BEGIN profile=mainstream_1080p resolution=1920x1080"
+                      << " cpu_core_limit=6 memory_budget_gib=16 target_fps=60\n";
+        }
 
         while (platform.pumpEvents()) {
             const auto now = Clock::now();
@@ -1070,12 +1102,19 @@ int main() {
             const double effectiveCelestialTimeScale = freePlayerInertialSpace
                 ? 1.0
                 : celestialTimeScale;
-            celestialClock.setTimeScale(effectiveCelestialTimeScale);
-            celestialClock.advance(dt, [&](double astroDt) {
-                // One authoritative step advances double-precision N-body vectors and quaternion
-                // spin on the same bounded simulated-time sequence.
-                planetaryBodies.step(astroDt);
-            });
+            planetaryBodies.step(dt * effectiveCelestialTimeScale);
+            if (runtimeDiagnosticsStdout) {
+                const vf::CelestialSimulationStats celestialStats = celestial.lastStepStats();
+                static std::uint64_t celestialDiagFrame = 0U;
+                if ((++celestialDiagFrame % 30U) == 0U) {
+                    std::cout << "R24 CELESTIAL dynamic_bodies=" << celestialStats.dynamicBodies
+                              << " analytic_bodies=" << celestialStats.analyticBodies
+                              << " nbody_pairs=" << celestialStats.nbodyPairEvaluations
+                              << " ephemeris_evals=" << celestialStats.analyticEvaluations
+                              << " dynamic_substeps=" << celestialStats.dynamicSubsteps
+                              << '\n';
+                }
+            }
 
             auto* currentAster = celestial.body(asterId);
             const auto* currentCinder = celestial.body(cinderId);
@@ -1375,15 +1414,28 @@ int main() {
                 frameUpSurface = upSurface;
             }
             if (refreshDynamicScene && currentMoon != nullptr) {
-                const double moonCameraDistance = glm::length(currentMoon->position - camera.position());
+                const glm::dvec3 moonToCamera = currentMoon->position - camera.position();
+                const double moonCameraDistance = glm::length(moonToCamera);
+                const glm::dvec3 moonViewDirection = safeNormalize(moonToCamera, camera.forwardDirection());
+                const bool moonPotentiallyVisible = trackMoonEvidence
+                    || glm::dot(camera.forwardDirection(), moonViewDirection) > std::cos(glm::radians(72.0));
                 const double asterObserverAltitude = std::max(
                     0.0, glm::length(camera.position() - currentAster->position)
                         - currentAster->radiusMeters);
                 const double moonVisualScale = gameplayMoonVisualScale(
                     asterObserverAltitude, moonCameraDistance);
-                const vf::PlanetMesh& moonSource = moonCameraDistance < 12000000.0
-                    ? moonSurfaceMeshNear : moonSurfaceMeshFar;
-                vf::PlanetMesh moonMesh = moonSource;
+                const double moonAngularRadius = std::asin(std::clamp(
+                    currentMoon->radiusMeters * moonVisualScale
+                        / std::max(moonCameraDistance, currentMoon->radiusMeters * moonVisualScale),
+                    0.0, 1.0));
+                const double moonFocalPixels = 900.0
+                    / (2.0 * std::tan(glm::radians(68.0) * 0.5));
+                const double moonPixelDiameter = 2.0 * std::tan(moonAngularRadius) * moonFocalPixels;
+                const vf::PlanetMesh& moonSource = moonPixelDiameter >= 180.0
+                    ? moonSurfaceMeshNear
+                    : (moonPixelDiameter >= 8.0 ? moonSurfaceMeshFar : moonSurfaceMeshDistant);
+                vf::PlanetMesh moonMesh{};
+                if (moonPotentiallyVisible) moonMesh = moonSource;
                 const glm::dvec3 moonRelativeWorld = currentMoon->position - currentAster->position;
                 for (auto& vertex : moonMesh.vertices) {
                     const glm::dvec3 moonBodyPoint = currentMoon->orientation
@@ -1399,24 +1451,31 @@ int main() {
             if (refreshDynamicScene && currentCinder != nullptr) {
                 const glm::dvec3 cinderDirection = safeNormalize(
                     currentCinder->position - camera.position());
-                const glm::dvec3 cinderSurfaceDirection = safeNormalize(
-                    toSurfaceVector(inverseAster * cinderDirection));
-                const double distance = glm::length(currentCinder->position - camera.position());
-                const double angularRadius = std::asin(std::clamp(
-                    currentCinder->radiusMeters / std::max(distance, currentCinder->radiusMeters),
-                    0.0,
-                    0.20));
-                constexpr double visualDistance = 25000000.0;
-                const double visualRadius = std::max(
-                    1800.0, std::tan(angularRadius) * visualDistance);
-                vf::appendDebugSphere(
-                    dynamicMesh,
-                    cameraSurface + cinderSurfaceDirection * visualDistance,
-                    visualRadius,
-                    {0.62F, 0.30F, 0.22F},
-                    9U,
-                    16U,
-                    {0.0F, 0.82F, 0.0F, 0.0F});
+                const bool cinderPotentiallyVisible = glm::dot(
+                    camera.forwardDirection(), cinderDirection) > std::cos(glm::radians(72.0));
+                if (cinderPotentiallyVisible) {
+                    const glm::dvec3 cinderSurfaceDirection = safeNormalize(
+                        toSurfaceVector(inverseAster * cinderDirection));
+                    const double distance = glm::length(currentCinder->position - camera.position());
+                    const double angularRadius = std::asin(std::clamp(
+                        currentCinder->radiusMeters / std::max(distance, currentCinder->radiusMeters),
+                        0.0,
+                        0.20));
+                    const double focalPixels = 900.0
+                        / (2.0 * std::tan(glm::radians(68.0) * 0.5));
+                    const double pixelDiameter = 2.0 * std::tan(angularRadius) * focalPixels;
+                    constexpr double visualDistance = 25000000.0;
+                    const double visualRadius = std::max(
+                        1800.0, std::tan(angularRadius) * visualDistance);
+                    vf::appendDebugSphere(
+                        dynamicMesh,
+                        cameraSurface + cinderSurfaceDirection * visualDistance,
+                        visualRadius,
+                        {0.62F, 0.30F, 0.22F},
+                        pixelDiameter >= 20.0 ? 9U : 4U,
+                        pixelDiameter >= 20.0 ? 16U : 8U,
+                        {0.0F, 0.82F, 0.0F, 0.0F});
+                }
             }
             if (refreshDynamicScene) {
                 renderer.setDynamicMesh(dynamicMesh);
@@ -1467,9 +1526,27 @@ int main() {
 
             const auto renderStarted = Clock::now();
             renderer.drawFrame(viewProjection, cameraSurface, renderEnvironment);
+            const double renderWallMilliseconds = std::chrono::duration<double, std::milli>(
+                Clock::now() - renderStarted).count();
             diagnosticsMaxRenderMilliseconds = std::max(
-                diagnosticsMaxRenderMilliseconds,
-                std::chrono::duration<double, std::milli>(Clock::now() - renderStarted).count());
+                diagnosticsMaxRenderMilliseconds, renderWallMilliseconds);
+
+            performanceBenchmark.recordFrame(
+                rawFrameSeconds,
+                renderWallMilliseconds,
+                renderer.triangleCount(),
+                renderer.dynamicTriangleCount(),
+                terrainBuildInFlight);
+            if (performanceBenchmark.complete()) {
+                const auto [benchmarkWidth, benchmarkHeight] = platform.drawableSize();
+                std::cout << performanceBenchmark.formatSummary(
+                    renderer.gpuName(),
+                    static_cast<std::uint32_t>(std::max(0, benchmarkWidth)),
+                    static_cast<std::uint32_t>(std::max(0, benchmarkHeight)),
+                    6U,
+                    16U) << '\n';
+                break;
+            }
 
             if (captureSunTransit && runtimeDiagnosticsStdout) {
                 const double sunClearance = std::max(
