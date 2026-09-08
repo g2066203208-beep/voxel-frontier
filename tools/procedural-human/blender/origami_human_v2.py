@@ -55,10 +55,8 @@ def faceted_loft(name, rings, sides, material, phase=0.0):
     for z, wx, dy, twist in rings:
         for i in range(sides):
             a = phase + twist + 2 * math.pi * i / sides
-            # x = body width, y = front/back depth, z = height.
             verts.append((math.cos(a) * wx, math.sin(a) * dy, z))
     faces = []
-    # side bands
     for r in range(len(rings) - 1):
         a0, b0 = r * sides, (r + 1) * sides
         for i in range(sides):
@@ -68,7 +66,6 @@ def faceted_loft(name, rings, sides, material, phase=0.0):
                 faces.extend(((a,b,d), (b,c,d)))
             else:
                 faces.extend(((a,b,c), (a,c,d)))
-    # caps as fans
     verts.append((0,0,rings[0][0])); bot = len(verts)-1
     verts.append((0,0,rings[-1][0])); top = len(verts)-1
     for i in range(sides):
@@ -79,10 +76,8 @@ def faceted_loft(name, rings, sides, material, phase=0.0):
 
 
 def limb_prism(name, p0, p1, r0, r1, sides, material, squash=.72, twist=.0):
-    """Tapered faceted limb between two anatomical landmarks."""
     p0, p1 = Vector(p0), Vector(p1)
     axis = (p1-p0).normalized()
-    # Stable local frame around limb axis.
     ref = Vector((0,0,1)) if abs(axis.z) < .90 else Vector((0,1,0))
     u = axis.cross(ref).normalized()
     v = axis.cross(u).normalized()
@@ -104,20 +99,13 @@ def limb_prism(name, p0, p1, r0, r1, sides, material, squash=.72, twist=.0):
 
 
 def crystal_head(name, center, hw, depth, height, jaw, material):
-    """Hand-authored low-poly head: crown/brow/cheek/jaw/chin rings + nose wedge.
-
-    Unlike an ico sphere this gives intentional jaw, cheekbone and brow planes.
-    Front points toward camera (-Y).
-    """
     cx,cy,cz=center
-    # 6-point rings: left-front ridge / front center-ish planes / right-front,
-    # and a narrower back skull. The changing width creates cheek and jaw cuts.
     ring_specs=[
-        (-.46, hw*.42*jaw, depth*.62),   # chin
-        (-.30, hw*.72*jaw, depth*.82),   # jaw
-        (-.04, hw,          depth),       # cheek
-        (.18,  hw*.92,      depth*.93),   # brow
-        (.40,  hw*.72,      depth*.80),   # upper skull
+        (-.46, hw*.42*jaw, depth*.62),
+        (-.30, hw*.72*jaw, depth*.82),
+        (-.04, hw,          depth),
+        (.18,  hw*.92,      depth*.93),
+        (.40,  hw*.72,      depth*.80),
     ]
     verts=[]; sides=6; phase=-math.pi/2
     for zf,w,d in ring_specs:
@@ -131,7 +119,6 @@ def crystal_head(name, center, hw, depth, height, jaw, material):
             a,b,c,d=r*sides+i,r*sides+j,(r+1)*sides+j,(r+1)*sides+i
             if (r+i)&1: faces.extend(((a,b,d),(b,c,d)))
             else: faces.extend(((a,b,c),(a,c,d)))
-    # top/bottom caps
     verts.extend(((cx,cy,cz-.50*height),(cx,cy,cz+.48*height)))
     bot,top=len(verts)-2,len(verts)-1
     for i in range(sides):
@@ -140,8 +127,6 @@ def crystal_head(name, center, hw, depth, height, jaw, material):
         k=(len(ring_specs)-1)*sides
         faces.append((top,k+i,k+j))
     head=mesh_object(name,verts,faces,material)
-
-    # Nose/face fold: tiny tetra-like wedge, not a realistic nose.
     nose_z=cz+.02*height
     nverts=[
         (cx-hw*.18,cy-depth*.91,nose_z+height*.12),
@@ -155,7 +140,6 @@ def crystal_head(name, center, hw, depth, height, jaw, material):
 
 def hand_wedge(name, c, sx, sy, sz, material, side=1):
     x,y,z=c
-    # Diamond/wedge fist; deliberately not five fingers.
     verts=[(x-sx,y,z),(x,y-sy,z+sz*.15),(x+sx,y,z),(x,y+sy,z),
            (x,y,z+sz),(x+side*sx*.18,y,z-sz*.72)]
     faces=[(0,1,4),(1,2,4),(2,3,4),(3,0,4),(0,5,1),(1,5,2),(2,5,3),(3,5,0)]
@@ -164,7 +148,6 @@ def hand_wedge(name, c, sx, sy, sz, material, side=1):
 
 def foot_wedge(name, c, w, length, h, material):
     x,y,z=c
-    # Front = -Y. Toe is broader and flatter; heel is narrow.
     verts=[
         (x-w*.34,y+length*.35,z),(x+w*.34,y+length*.35,z),
         (x-w*.54,y-length*.65,z),(x+w*.54,y-length*.65,z),
@@ -177,7 +160,6 @@ def foot_wedge(name, c, w, length, h, material):
 
 
 def params(kind):
-    # Human-readable style parameters. Later these become sliders / JSON inputs.
     if kind=='female':
         return dict(H=1.66, shoulder=.205, chest=.167, waist=.108, hip=.178,
                     depth=.103, limb=.057, neck=.044, head_w=.102, head_h=.225,
@@ -189,13 +171,10 @@ def params(kind):
 
 def build(kind, xoff, material, prefix):
     p=params(kind); s=p['H']/1.80
-    # Key vertical landmarks.
     ankle=.075*s; knee=.50*s; crotch=.865*s; hip=.94*s; waist=1.08*s
     ribs=1.25*s; clav=1.40*s; shoulder_z=1.45*s; neck0=1.47*s; neck1=1.54*s
     head_c=1.66*s
 
-    # Torso: one connected graphic volume, broad shoulder plane -> rib wedge ->
-    # tight waist -> pelvis. 8 sides give a central front ridge + oblique facets.
     torso=faceted_loft(prefix+'Torso',[
         (crotch,p['hip']*.62,p['depth']*.72,-.02),
         (hip,   p['hip'],    p['depth']*.95,.07),
@@ -210,8 +189,6 @@ def build(kind, xoff, material, prefix):
     neck_obj.location.x=xoff
     crystal_head(prefix+'Head',(xoff,0,head_c),p['head_w'],p['head_d'],p['head_h'],p['jaw'],material)
 
-    # Limbs overlap the torso/pelvis very slightly so the silhouette reads as a
-    # single folded sculpture, while still being independent objects for rigging.
     shoulder_x=p['shoulder']*.90
     hip_x=p['hip']*.47
     for side in (-1,1):
@@ -261,8 +238,10 @@ def add_studio():
     scene.render.film_transparent=False
     scene.world.color=(.018,.022,.030)
     scene.render.engine='BLENDER_EEVEE'
-    # Color management: preserve saturated sculpture tones.
-    scene.view_settings.look='Medium High Contrast'
+    try:
+        scene.view_settings.look='AgX - Medium High Contrast'
+    except Exception:
+        pass
 
     bpy.ops.mesh.primitive_plane_add(size=8,location=(0,0,-.003))
     floor=bpy.context.object; floor.name='StudioFloor'; floor.data.materials.append(make_mat('Floor',(.045,.052,.065),.96))
