@@ -12,14 +12,14 @@
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfPainterlyDirt",
-      "params": {"seed":182031,"relief":1.30,"normalStrength":10.8,"moisture":0.14}
+      "params": {"seed":182031,"relief":1.34,"normalStrength":12.2,"moisture":0.14}
     },
     {
       "name": "vf_painterly_bark_master",
       "resolution": 1024,
       "profile": "signature",
       "preset": "vfPainterlyBark",
-      "params": {"seed":275903,"relief":1.42,"normalStrength":12.6,"ridgeScale":1.0}
+      "params": {"seed":275903,"relief":1.34,"normalStrength":13.0,"ridgeScale":1.0}
     },
     {
       "name": "vf_painterly_leaves_master",
@@ -41,6 +41,27 @@
       "profile": "signature",
       "preset": "vfPainterlyWater",
       "params": {"seed":553819,"mode":"windy","relief":1.15,"normalStrength":9.4,"waveScale":1.08,"roughness":0.074,"foam":0.44,"transparency":0.84,"refraction":0.84,"glint":0.96}
+    },
+    {
+      "name": "vf_painterly_stone_wall_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyStoneWall",
+      "params": {"seed":634021,"relief":1.40,"normalStrength":14.0,"stoneScale":1.0,"mortarDepth":1.0}
+    },
+    {
+      "name": "vf_painterly_moss_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyMoss",
+      "params": {"seed":55109,"relief":1.36,"normalStrength":12.0,"density":0.86,"tuftHeight":0.90}
+    },
+    {
+      "name": "vf_painterly_wolf_fur_master",
+      "resolution": 1024,
+      "profile": "signature",
+      "preset": "vfPainterlyWolfFur",
+      "params": {"seed":91007,"relief":1.32,"normalStrength":11.8,"density":0.94,"guardLength":0.90}
     }
   ]
 }
