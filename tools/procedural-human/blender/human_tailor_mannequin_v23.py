@@ -27,7 +27,7 @@ def mat(name,c):
  return m
 
 def fetch_text(url):
- req=urllib.request.Request(url,headers={'User-Agent':'voxel-frontier-human-tailor-v25'})
+ req=urllib.request.Request(url,headers={'User-Agent':'voxel-frontier-human-tailor-v26'})
  return urllib.request.urlopen(req,timeout=60).read().decode('utf-8')
 
 def parse_body(text):
@@ -69,7 +69,6 @@ def build_cropped_surface():
   p=rawV[old];x=(p[WA]-cw)/H;y=(p[DA]-cd)/H;q=(p[UA]-mn[UA])/H
   sx=interp(q,1);sy=interp(q,2)
   if abs(x)>ARM_X_MIN and ARM_Q_MIN<=q<=ARM_Q_MAX:sx=1.0;sy=1.0
-  # Reference mannequin has a slightly larger, simpler head than an adult scan.
   hs=smoothstep(.835,.90,q);x*=sx*(1.0+.065*hs);y*=sy*(1.0+.035*hs)
   V.append((x*TARGET_HEIGHT,y*TARGET_HEIGHT,q*TARGET_HEIGHT));Q.append((x,y,q))
  F=[]
@@ -92,19 +91,40 @@ def close_and_clean(o):
  bm.to_mesh(o.data);bm.free();o.data.validate(verbose=False,clean_customdata=True);o.data.update()
 
 def smooth_faceless_depth(o):
- # Smooth ONLY depth (Y), after QEM. X/Z silhouette, skull, jaw and ears stay human.
- # The selected central front-head patch loses eye/nose/mouth relief without collapsing.
+ # Final game mesh is already low-poly here. Erase facial relief only in depth (Y),
+ # while preserving the human X/Z silhouette, jaw, cranium and ears.
  verts=o.data.vertices;adj=[set() for _ in verts]
  for e in o.data.edges:
   a,b=e.vertices;adj[a].add(b);adj[b].add(a)
- sel={v.index for v in verts if v.co.z>1.445 and v.co.z<1.675 and v.co.y>0.0 and abs(v.co.x)<0.095}
- for _ in range(14):
+ # Wide mid-face mask: eyes, nose, philtrum and mouth. Chin and skull boundary stay untouched.
+ sel={v.index for v in verts if 1.415<v.co.z<1.665 and v.co.y>0.015 and abs(v.co.x)<0.112}
+ # Strong Laplacian depth relaxation with ALL neighbors as anchors. This removes crease memory
+ # much more reliably than smoothing only inside the selected patch.
+ for _ in range(55):
   upd={}
   for i in sel:
-   ns=[j for j in adj[i] if j in sel]
+   ns=list(adj[i])
    if len(ns)>=2:
-    avg=sum(verts[j].co.y for j in ns)/len(ns);upd[i]=verts[i].co.y*.30+avg*.70
+    avg=sum(verts[j].co.y for j in ns)/len(ns)
+    # taper near face-mask boundary so cheeks/jaw join continuously
+    wx=max(0.0,min(1.0,(0.112-abs(verts[i].co.x))/0.035))
+    wz=min(smoothstep(1.415,1.455,verts[i].co.z),1.0-smoothstep(1.625,1.665,verts[i].co.z))
+    w=.82*max(0.0,wx*wz)
+    upd[i]=verts[i].co.y*(1.0-w)+avg*w
   for i,y in upd.items():verts[i].co.y=y
+ # One final band-wise fairing pass: central face should be a clean, gently convex mannequin plane.
+ bands={}
+ for i in sel:
+  k=round(verts[i].co.z/0.018)
+  bands.setdefault(k,[]).append(i)
+ for ids in bands.values():
+  if len(ids)<3:continue
+  cheek=[verts[i].co.y for i in ids if 0.065<abs(verts[i].co.x)<0.112]
+  if not cheek:continue
+  base=sum(cheek)/len(cheek)
+  for i in ids:
+   x=abs(verts[i].co.x);bulge=.006*max(0.0,1.0-(x/0.112)**2)
+   verts[i].co.y=verts[i].co.y*.15+(base+bulge)*.85
  o.data.update();print('FACELESS_SMOOTH_VERTS',len(sel))
 
 def decimate_real_surface(o,target):
@@ -169,4 +189,4 @@ def export():
  clear();o,b,a,t,cut=clean_model();bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o;path=os.path.join(OUT,'neutral-human-waist-up.glb');bpy.ops.export_scene.gltf(filepath=path,export_format='GLB',use_selection=True,export_normals=True);gb,gm,gp=glb_check(path);return b,a,t,gb,gm,gp,cut
 
 b,a,T,gb,gm,gp,cut=export();render('front.png','front');render('side.png','side');render('back.png','back')
-M={'style':'reference-matched-faceless-neutral-lowpoly-tailor-v25','purpose':'player clothing creation mannequin','source':'CC0 MPFB2 body surface via Anny repository','original_human_surface':True,'reference_mannequin_style':True,'faceless':True,'neutral_only':True,'waist_up_only':True,'head':True,'full_arms':True,'legs':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'target_tris':TARGET_TRIS,'waist_cut_z_m':cut,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'real human surface -> neutral/head proportion -> crop/cap -> direct QEM -> depth-only face smoothing -> compact low-poly','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);print('HUMAN_TAILOR_V25_METRICS',json.dumps(M))
+M={'style':'reference-matched-faceless-neutral-lowpoly-tailor-v26','purpose':'player clothing creation mannequin','source':'CC0 MPFB2 body surface via Anny repository','original_human_surface':True,'reference_mannequin_style':True,'faceless':True,'neutral_only':True,'waist_up_only':True,'head':True,'full_arms':True,'legs':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'target_tris':TARGET_TRIS,'waist_cut_z_m':cut,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'real human surface -> neutral/head proportion -> crop/cap -> direct QEM -> strong depth-only faceless fairing -> compact low-poly','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);print('HUMAN_TAILOR_V26_METRICS',json.dumps(M))
