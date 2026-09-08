@@ -1,4 +1,4 @@
-name: Cute Neutral Human Blender
+name: Slice Neutral Human Blender
 
 on:
   push:
@@ -25,28 +25,35 @@ jobs:
           blender --version
           blender --background --python-expr "import numpy; print('Blender numpy', numpy.__version__)"
 
-      - name: Generate cute neutral basemesh GLB and real Blender render
+      - name: Generate slice-driven neutral basemesh and verify real sections
         run: |
-          mkdir -p artifacts/cute-neutral-human
-          blender --background --python tools/procedural-human/blender/cute_neutral_basemesh_v11.py -- "$GITHUB_WORKSPACE/artifacts/cute-neutral-human"
-          test -s artifacts/cute-neutral-human/neutral.glb
-          test -s artifacts/cute-neutral-human/neutral-preview.png
-          test -s artifacts/cute-neutral-human/metrics.json
+          mkdir -p artifacts/slice-neutral-human
+          blender --background --python tools/procedural-human/blender/slice_driven_neutral_v12.py -- "$GITHUB_WORKSPACE/artifacts/slice-neutral-human"
+          test -s artifacts/slice-neutral-human/neutral.glb
+          test -s artifacts/slice-neutral-human/neutral-preview.png
+          test -s artifacts/slice-neutral-human/neutral-slices.png
+          test -s artifacts/slice-neutral-human/slice_profiles.json
+          test -s artifacts/slice-neutral-human/metrics.json
           python3 - <<'PY'
           import json
-          m=json.load(open('artifacts/cute-neutral-human/metrics.json'))
+          m=json.load(open('artifacts/slice-neutral-human/metrics.json'))
+          s=json.load(open('artifacts/slice-neutral-human/slice_profiles.json'))
           assert m['neutral_only'] is True
           assert m['male_female_split'] is False
           assert m['extra_character_geometry'] is False
           assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False and m['props'] is False
-          assert 850 <= m['tris'] <= 1100, m
+          assert 900 <= m['tris'] <= 1200, m
+          assert m['control_slice_count'] >= 16, m
+          assert m['measured_slice_count'] >= 48, m
+          assert len(s['measured_slices']) == m['measured_slice_count']
+          assert m['estimated_volume_m3'] > 0, m
           print(json.dumps(m, indent=2))
           PY
 
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
         with:
-          name: cute-neutral-human-blender
-          path: artifacts/cute-neutral-human/
+          name: slice-neutral-human-blender
+          path: artifacts/slice-neutral-human/
           if-no-files-found: error
           retention-days: 30
