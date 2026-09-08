@@ -5,6 +5,7 @@ on:
     branches: [work/r24-unified-planetary-physics]
     paths:
       - '.github/scripts/r24_hillaire_skyview_lut.py'
+      - '.github/scripts/r24_cached_spherical_skyview.py'
       - '.github/workflows/r24-hillaire-skyview-lut.yml'
   workflow_dispatch:
 
@@ -26,11 +27,12 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 8
 
-      - name: Materialize permanent SkyView architecture and 120 FPS target
+      - name: Materialize cached spherical SkyView V2 and permanent 120 FPS target
         shell: bash
         run: |
           set -euo pipefail
           python3 .github/scripts/r24_hillaire_skyview_lut.py
+          python3 .github/scripts/r24_cached_spherical_skyview.py
           python3 - <<'PY'
           from pathlib import Path
           p = Path('native/src/app/Main.cpp')
@@ -46,16 +48,18 @@ jobs:
           p.write_text(t, encoding='utf-8')
           PY
 
-      - name: Validate source contracts
+      - name: Validate V2 source contracts
         shell: bash
         run: |
           set -euo pipefail
           git diff --check
-          grep -q 'kSkyViewLutWidth = 192' native/include/vf/render/VulkanRenderer.hpp
-          grep -q 'kSkyViewLutHeight = 108' native/include/vf/render/VulkanRenderer.hpp
-          grep -q 'VK_FORMAT_R16G16B16A16_SFLOAT' native/src/render/VulkanRenderer.cpp
-          grep -q 'skyViewPipeline_' native/src/render/VulkanRenderer.cpp
-          grep -q 'skyViewFragmentMain' native/shaders/planet.slang
+          grep -q 'kSkyViewLutWidth = 128' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'kSkyViewLutHeight = 72' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'R24_CACHED_SPHERICAL_SKYVIEW_V2' native/src/render/VulkanRenderer.cpp
+          grep -q 'skyViewNeedsRefresh' native/src/render/VulkanRenderer.cpp
+          grep -q 'R24_CACHED_SPHERICAL_SKYVIEW_V2' native/shaders/planet.slang
+          grep -q 'viewSunCos' native/shaders/planet.slang
+          grep -q 'viewUpCos' native/shaders/planet.slang
           grep -q 'gSkyViewLut.SampleLevel' native/shaders/planet.slang
           grep -q 'VF_SKY_VIEW_FRAGMENT_SPV' native/CMakeLists.txt
           grep -q 'target_fps=120' native/src/app/Main.cpp
@@ -123,13 +127,13 @@ jobs:
           timeout 30s "$APP" > r24-skyview-evidence/benchmark.log 2>&1 &
           APP_PID=$!
           sleep 4
-          import -window root r24-skyview-evidence/mainstream-1080p-skyview.png || true
+          import -window root r24-skyview-evidence/mainstream-1080p-skyview-v2.png || true
           set +e
           wait $APP_PID
           APP_RC=$?
           set -e
           cat r24-skyview-evidence/benchmark.log
-          test -s r24-skyview-evidence/mainstream-1080p-skyview.png
+          test -s r24-skyview-evidence/mainstream-1080p-skyview-v2.png
           test "$APP_RC" -eq 0 -o "$APP_RC" -eq 124
 
       - name: Gate real runtime improvement
@@ -168,15 +172,15 @@ jobs:
           opaque = gv('opaque_mean')
           transparent = gv('transparent_mean')
           shadow = gv('shadow_mean')
-          # Current R24 LOD1100 software-Vulkan reference is 13.878 FPS; the historical
-          # full-resolution atmosphere was ~30 ms in the latest sweep. A permanent LUT
-          # must be a material architectural win, not just pass source-contract checks.
-          if fps < 13.5:
-              raise SystemExit(f'average FPS regressed below current R24 band: {fps:.3f}')
-          if sky > 15.0:
-              raise SystemExit(f'Sky pass remains too expensive after LUT: {sky:.3f} ms')
-          if total > 30.0:
-              raise SystemExit(f'tracked GPU pass total remains too high: {total:.3f} ms')
+          # LOD1100 + old per-frame screen-space LUT was 13.878 FPS / ~30.5 ms sky on the same
+          # software Vulkan class. V2 must demonstrate a large architectural improvement before it
+          # can become production source.
+          if fps < 20.0:
+              raise SystemExit(f'cached SkyView did not materially raise throughput: {fps:.3f} FPS')
+          if sky > 8.0:
+              raise SystemExit(f'steady Sky pass still exceeds a 120-Hz-sized budget: {sky:.3f} ms')
+          if total > 18.0:
+              raise SystemExit(f'tracked GPU passes remain too high after V2: {total:.3f} ms')
           report = (
               f'avg_fps={fps:.3f}\n1pct_low_fps={one:.3f}\np99_ms={p99:.3f}\n'
               f'shadow_mean_ms={shadow:.3f}\nopaque_mean_ms={opaque:.3f}\n'
@@ -192,7 +196,7 @@ jobs:
         if: success()
         shell: bash
         run: |
-          EVIDENCE_DIR="docs/evidence/r24-skyview-120fps-${GITHUB_RUN_ID}"
+          EVIDENCE_DIR="docs/evidence/r24-skyview-v2-120fps-${GITHUB_RUN_ID}"
           mkdir -p "$EVIDENCE_DIR"
           cp -a r24-skyview-evidence/. "$EVIDENCE_DIR/"
           cp -f r24-skyview-ctest.log vulkan-summary.txt hardware-gpu-status.txt r24-skyview-performance.txt "$EVIDENCE_DIR/"
@@ -202,7 +206,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: r24-skyview-120fps-${{ github.run_id }}
+          name: r24-skyview-v2-120fps-${{ github.run_id }}
           path: |
             r24-skyview-evidence/**
             r24-skyview-ctest.log
@@ -212,7 +216,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-      - name: Promote tested source changes
+      - name: Promote tested V2 source changes
         if: success()
         shell: bash
         run: |
@@ -220,7 +224,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add native docs/evidence
           if ! git diff --cached --quiet; then
-            git commit -m "perf(r24): make SkyView LUT permanent for 120fps path"
+            git commit -m "perf(r24): cache spherical SkyView outside steady frame budget"
           fi
           git fetch origin work/r24-unified-planetary-physics
           git rebase origin/work/r24-unified-planetary-physics
