@@ -1,4 +1,4 @@
-name: PEAK Cute Neutral Human Blender
+name: Neutral Tailor Mannequin Blender
 
 on:
   push:
@@ -22,27 +22,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y blender python3-numpy libegl1 libgl1-mesa-dri
           blender --version
-      - name: Generate and validate compact cute single-shell basemesh
+      - name: Generate and validate waist-up neutral tailor mannequin
         run: |
-          mkdir -p artifacts/peak-cute-neutral
-          blender --background --python tools/procedural-human/blender/peak_cute_neutral_v20.py -- "$GITHUB_WORKSPACE/artifacts/peak-cute-neutral"
-          test -s artifacts/peak-cute-neutral/neutral.glb
-          test -s artifacts/peak-cute-neutral/neutral-preview.png
-          test -s artifacts/peak-cute-neutral/neutral-front.png
-          test -s artifacts/peak-cute-neutral/metrics.json
-          test -s artifacts/peak-cute-neutral/section_spec.json
+          mkdir -p artifacts/cartoon-tailor-mannequin
+          blender --background --python tools/procedural-human/blender/cartoon_tailor_mannequin_v21.py -- "$GITHUB_WORKSPACE/artifacts/cartoon-tailor-mannequin"
+          test -s artifacts/cartoon-tailor-mannequin/neutral-waist-up-mannequin.glb
+          test -s artifacts/cartoon-tailor-mannequin/front.png
+          test -s artifacts/cartoon-tailor-mannequin/side.png
+          test -s artifacts/cartoon-tailor-mannequin/back.png
+          test -s artifacts/cartoon-tailor-mannequin/metrics.json
           python3 - <<'PY'
           import json,struct
-          root='artifacts/peak-cute-neutral';m=json.load(open(f'{root}/metrics.json'))
+          root='artifacts/cartoon-tailor-mannequin';m=json.load(open(f'{root}/metrics.json'))
           assert m['original_geometry'] is True and m['external_character_mesh'] is False
           assert m['neutral_only'] is True and m['male_female_split'] is False
+          assert m['waist_up_only'] is True and m['head'] is True and m['full_arms'] is True and m['legs'] is False
           assert not any(m[k] for k in ['hair','face_addons','clothing','props'])
           assert m['single_continuous_shell'] is True
           assert m['connected_components']==1 and m['boundary_edges']==0 and m['nonmanifold_edges']==0
-          assert 800 <= m['tris'] <= 1000, m
-          assert 3.0 <= m['visual_head_ratio'] <= 3.5, m
+          assert 550 <= m['tris'] <= 900, m
           assert m['glb_valid_mesh'] and m['glb_meshes']>0 and m['glb_primitives']>0
-          data=open(f'{root}/neutral.glb','rb').read();assert len(data)>1000 and data[:4]==b'glTF'
+          data=open(f'{root}/neutral-waist-up-mannequin.glb','rb').read();assert len(data)>1000 and data[:4]==b'glTF'
           off=12;doc=None
           while off+8<=len(data):
               ln,typ=struct.unpack_from('<II',data,off);off+=8;chunk=data[off:off+ln];off+=ln
@@ -53,7 +53,7 @@ jobs:
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
         with:
-          name: peak-cute-neutral-human-v20
-          path: artifacts/peak-cute-neutral/
+          name: neutral-tailor-mannequin-v21
+          path: artifacts/cartoon-tailor-mannequin/
           if-no-files-found: error
           retention-days: 30
