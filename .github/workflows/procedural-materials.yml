@@ -42,6 +42,7 @@ jobs:
           test -s material_lab/meshova/bake-request.ts
           test -s material_lab/tests/surface-context.spec.ts
           test -s material_lab/preview/render_3d_surface_showcase.py
+          test -s material_lab/preview/render_sandstone_mesh_preview.py
 
           expected=$(printf '%s\n' \
             vf-3d-material-showcase.ts \
@@ -229,6 +230,10 @@ jobs:
         run: |
           set -euo pipefail
           python3 material_lab/preview/render_material_previews.py build/generated-materials
+          # Sandstone intentionally exceeds the safe range of the legacy inverse
+          # displacement approximation. Replace only that sphere with a real UV
+          # mesh + vertex Height displacement + Z-buffer render.
+          python3 material_lab/preview/render_sandstone_mesh_preview.py build/generated-materials
           python3 material_lab/preview/render_layer_diagnostics.py build/generated-materials
           python3 material_lab/preview/render_3d_surface_showcase.py build/generated-materials
           expected_count=$(python3 - <<'PY'
@@ -268,5 +273,5 @@ jobs:
             echo '- Foliage: true opacity alpha-cutout mask'
             echo '- Water fields: foam / transmission / refraction / glint / optional rainRipples'
             echo '- Source: procedural code only; raster source assets rejected'
-            echo '- Every material: PBR maps + true-Height displaced studio sphere; 3D presets receive procedural geometry/volume preview pass'
+            echo '- Every material: PBR maps + true-Height displaced studio sphere; sandstone extreme relief is verified with a tessellated UV mesh and Z-buffer rather than inverse screen displacement'
           } >> "$GITHUB_STEP_SUMMARY"
