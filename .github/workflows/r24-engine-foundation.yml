@@ -7,6 +7,7 @@ on:
       - 'native/include/vf/core/**'
       - 'native/include/vf/world/WorldPartition.hpp'
       - 'native/tests/EngineFoundationTests.cpp'
+      - 'native/tests/AsyncInboxTests.cpp'
       - 'native/foundation/**'
       - '.github/scripts/r24_promote_engine_foundation.py'
       - '.github/workflows/r24-engine-foundation.yml'
@@ -37,15 +38,21 @@ jobs:
           cmake -S native/foundation -B build/r24-foundation -G Ninja -DCMAKE_BUILD_TYPE=Release
           cmake --build build/r24-foundation --parallel 2
 
-      - name: Run 100k-cell scheduling and streaming stress
+      - name: Run scheduling streaming snapshot and MPMC stress
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p r24-foundation-evidence
           ./build/r24-foundation/vf_engine_foundation_tests \
             | tee r24-foundation-evidence/foundation-stress.log
+          ./build/r24-foundation/vf_async_inbox_tests \
+            | tee r24-foundation-evidence/async-inbox-stress.log
           grep -q '^R24 FOUNDATION STRESS cells=100000 ' r24-foundation-evidence/foundation-stress.log
+          grep -q ' generation_batch=128 mesh_batch=64 upload_batch=5 resident=5$' \
+            r24-foundation-evidence/foundation-stress.log
           grep -q '^R24 ENGINE FOUNDATION PASS$' r24-foundation-evidence/foundation-stress.log
+          grep -q '^R24 ASYNC INBOX PASS producers=4 items=200000 capacity=4096 ' \
+            r24-foundation-evidence/async-inbox-stress.log
 
       - name: Materialize foundation into production native build
         shell: bash
@@ -54,8 +61,11 @@ jobs:
           python3 .github/scripts/r24_promote_engine_foundation.py
           git diff --check
           grep -q 'R24_ENGINE_FOUNDATION_V1' native/CMakeLists.txt
+          grep -q 'R24_ENGINE_FOUNDATION_V2_MPMC' native/CMakeLists.txt
           grep -q 'Taskflow::Taskflow' native/CMakeLists.txt
           grep -q 'EnTT::EnTT' native/CMakeLists.txt
+          grep -q 'concurrentqueue' native/CMakeLists.txt
+          grep -q 'vf_async_inbox_tests' native/CMakeLists.txt
 
       - name: Build production engine core with foundation
         shell: bash
@@ -75,6 +85,7 @@ jobs:
           ctest --test-dir build/r24-foundation-core -N \
             | tee r24-foundation-evidence/test-list.log
           grep -q 'vf_engine_foundation_tests' r24-foundation-evidence/test-list.log
+          grep -q 'vf_async_inbox_tests' r24-foundation-evidence/test-list.log
 
       - name: Build evidence report
         shell: bash
@@ -83,10 +94,13 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import re
-          log = Path('r24-foundation-evidence/foundation-stress.log').read_text()
-          line = next(x for x in log.splitlines() if x.startswith('R24 FOUNDATION STRESS'))
-          values = dict(re.findall(r'(\w+)=([0-9.]+)', line))
-          report = f'''R24 ENGINE FOUNDATION V1\nstatus=PASS\narchitecture=C++23 + Taskflow 4.1.0 + EnTT 4.0.0\nstreaming_model=revisioned priority queues + bounded per-frame drains\nsimulation_model=fixed 120Hz clock + bounded catch-up; render remains uncapped\nstress_cells={values['cells']}\nrequest_ms={values['request_ms']}\ntotal_ms={values['total_ms']}\ngeneration_batch={values['generation_batch']}\nmesh_batch={values['mesh_batch']}\nupload_batch={values['upload_batch']}\nresident={values['resident']}\nacceptance=no unbounded work dispatch; stale worker results rejected; production core regressions pass\n'''
+          foundation = Path('r24-foundation-evidence/foundation-stress.log').read_text()
+          fline = next(x for x in foundation.splitlines() if x.startswith('R24 FOUNDATION STRESS'))
+          f = dict(re.findall(r'(\w+)=([0-9.]+)', fline))
+          inbox = Path('r24-foundation-evidence/async-inbox-stress.log').read_text()
+          iline = next(x for x in inbox.splitlines() if x.startswith('R24 ASYNC INBOX PASS'))
+          i = dict(re.findall(r'(\w+)=([0-9.]+)', iline))
+          report = f'''R24 ENGINE FOUNDATION V2\nstatus=PASS\narchitecture=C++23 + Taskflow 4.1.0 + EnTT 4.0.0 + concurrentqueue 1.0.5\nstreaming_model=single-owner revisioned priority queues + bounded per-frame drains\nworker_result_model=preallocated bounded lock-free MPMC inbox + explicit producer tokens\nframe_data_model=fixed arena + generational handles + bounded SPSC latest-frame snapshot exchange\nsimulation_model=fixed 120Hz clock + bounded catch-up; render remains uncapped\nstress_cells={f['cells']}\nrequest_ms={f['request_ms']}\ntotal_ms={f['total_ms']}\ngeneration_batch={f['generation_batch']}\nmesh_batch={f['mesh_batch']}\nupload_batch={f['upload_batch']}\nresident={f['resident']}\nmpmc_producers={i['producers']}\nmpmc_items={i['items']}\nmpmc_capacity={i['capacity']}\nmpmc_retries={i['retries']}\nmpmc_capacity_drops={i['capacity_drops']}\nmpmc_allocation_pressure_drops={i['allocation_pressure_drops']}\nacceptance=Release gates remain active; no unbounded work dispatch; stale worker results rejected; worker completion cannot mutate authoritative world directly; production core regressions pass\n'''
           Path('r24-foundation-evidence/README.txt').write_text(report)
           print(report)
           PY
@@ -106,11 +120,12 @@ jobs:
           mkdir -p "$DEST"
           cp r24-foundation-evidence/README.txt "$DEST/"
           cp r24-foundation-evidence/foundation-stress.log "$DEST/"
+          cp r24-foundation-evidence/async-inbox-stress.log "$DEST/"
           cp r24-foundation-evidence/test-list.log "$DEST/"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add native/CMakeLists.txt "$DEST"
-          git commit -m 'core(r24): promote validated scalable engine foundation'
+          git commit -m 'core(r24): promote validated scalable engine foundation v2'
           git fetch origin work/r24-unified-planetary-physics
           git rebase origin/work/r24-unified-planetary-physics
           git push origin HEAD:work/r24-unified-planetary-physics
