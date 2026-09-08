@@ -91,7 +91,6 @@ def close_and_clean(o):
  bmesh.ops.remove_doubles(bm,verts=bm.verts,dist=1e-7)
  bmesh.ops.dissolve_degenerate(bm,dist=1e-9,edges=bm.edges)
  bmesh.ops.recalc_face_normals(bm,faces=bm.faces)
- # Triangles are the actual game budget and make QEM deterministic.
  bmesh.ops.triangulate(bm,faces=bm.faces)
  bm.to_mesh(o.data);bm.free();o.data.validate(verbose=False,clean_customdata=True);o.data.update()
 
@@ -99,24 +98,29 @@ def decimate_real_surface(o,target):
  bpy.context.view_layer.objects.active=o;o.select_set(True);before=tris(o)
  d=o.modifiers.new('Human_QEM','DECIMATE');d.decimate_type='COLLAPSE';d.ratio=max(.001,min(1.0,target/max(before,1)));d.use_collapse_triangulate=True
  bpy.ops.object.modifier_apply(modifier=d.name)
- # Tiny planar cleanup, same proven approach as the earlier successful 458-tris human.
  p=o.modifiers.new('Human_PlanarCleanup','DECIMATE');p.decimate_type='DISSOLVE';p.angle_limit=math.radians(1.5);bpy.ops.object.modifier_apply(modifier=p.name)
  for poly in o.data.polygons:poly.use_smooth=False
  o.data.update();return before,tris(o)
 
 def sanitize(o):
- o.data.calc_loop_triangles();verts=[tuple(v.co) for v in o.data.vertices];faces=[];seen=set()
+ # Blender's decimator can leave thousands of orphan vertices that are no longer
+ # referenced by any triangle. Compact to the face-referenced vertex set before
+ # topology validation/export, otherwise every orphan is falsely counted as a
+ # separate connected component.
+ o.data.calc_loop_triangles();all_verts=[tuple(v.co) for v in o.data.vertices];faces=[];seen=set()
  for t in o.data.loop_triangles:
   f=tuple(int(i) for i in t.vertices);key=tuple(sorted(f))
   if len(set(f))<3 or key in seen:continue
   seen.add(key);faces.append(f)
+ used=sorted({i for f in faces for i in f});remap={old:new for new,old in enumerate(used)}
+ verts=[all_verts[i] for i in used];faces=[[remap[i] for i in f] for f in faces]
+ print('SANITIZE_COMPACT',json.dumps({'source_vertices':len(all_verts),'used_vertices':len(verts),'triangles':len(faces)}))
  me=bpy.data.meshes.new('HumanTailorV23ExportMesh');me.from_pydata(verts,[],faces);me.update(calc_edges=True)
  bm=bmesh.new();bm.from_mesh(me);bmesh.ops.remove_doubles(bm,verts=bm.verts,dist=1e-6);bmesh.ops.dissolve_degenerate(bm,dist=1e-8,edges=bm.edges);bmesh.ops.recalc_face_normals(bm,faces=bm.faces)
- # Repair any tiny boundary introduced by aggressive QEM.
  bd=[e for e in bm.edges if e.is_boundary]
  if bd:
   try:bmesh.ops.holes_fill(bm,edges=bd,sides=0)
-  except:pass
+  except Exception as ex:print('FINAL_HOLES_FILL_WARNING',repr(ex))
  bmesh.ops.triangulate(bm,faces=bm.faces);bmesh.ops.recalc_face_normals(bm,faces=bm.faces);bm.to_mesh(me);bm.free();me.update(calc_edges=True)
  n=bpy.data.objects.new('HumanTailorV23Export',me);bpy.context.collection.objects.link(n);n.data.materials.append(mat('NeutralMannequin',(.78,.75,.72)));[setattr(p,'use_smooth',False) for p in n.data.polygons];bpy.data.objects.remove(o,do_unlink=True);return n
 
@@ -157,4 +161,4 @@ def export():
  clear();o,b,a,t,cut=clean_model();bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o;path=os.path.join(OUT,'neutral-human-waist-up.glb');bpy.ops.export_scene.gltf(filepath=path,export_format='GLB',use_selection=True,export_normals=True);gb,gm,gp=glb_check(path);return b,a,t,gb,gm,gp,cut
 
 b,a,T,gb,gm,gp,cut=export();render('front.png','front');render('side.png','side');render('back.png','back')
-M={'style':'human-derived-neutral-lowpoly-tailor-v23','purpose':'player clothing creation mannequin','source':'CC0 MPFB2 body surface via Anny repository','original_human_surface':True,'neutral_only':True,'waist_up_only':True,'head':True,'full_arms':True,'legs':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'target_tris':TARGET_TRIS,'waist_cut_z_m':cut,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'real CC0 human surface -> waist crop -> boundary caps -> direct QEM -> flat low-poly','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);print('HUMAN_TAILOR_V23_METRICS',json.dumps(M))
+M={'style':'human-derived-neutral-lowpoly-tailor-v23','purpose':'player clothing creation mannequin','source':'CC0 MPFB2 body surface via Anny repository','original_human_surface':True,'neutral_only':True,'waist_up_only':True,'head':True,'full_arms':True,'legs':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'target_tris':TARGET_TRIS,'waist_cut_z_m':cut,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'real CC0 human surface -> waist crop -> boundary caps -> direct QEM -> compact used vertices -> flat low-poly','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);print('HUMAN_TAILOR_V23_METRICS',json.dumps(M))
