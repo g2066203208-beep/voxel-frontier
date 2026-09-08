@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
-"""Sandstone macro-geometry validation pass.
+"""Sandstone macro-geometry diagnostic pass.
 
-This pass overrides only the approved sandstone master preview.  The material
-textures remain fully procedural.  Geometry uses a periodic low-pass copy of
-Height so large rock masses drive silhouette while micro detail remains in the
-Normal/PBR channels.
+This legacy diagnostic renders a low-pass Gaussian interpretation of the
+sandstone Height field for comparison/audit only. It MUST NOT overwrite the
+canonical `preview-sphere.png`: extreme sandstone relief is now validated by
+`render_sandstone_mesh_preview.py` using a real tessellated UV sphere, vertex
+Height displacement and a Z-buffer.
 
-Continuous rock-shell policy:
+Continuous rock-shell diagnostic policy:
   baseline/median outward shell ~= +22% radius
   positive sigma ~= 7% radius
   +3 sigma ~= +43% radius
   positive cap = +44%
   negative deviations are compressed to 20% strength
   hard minimum shell = +16%
-
-The asymmetric lower tail is intentional: high blocks grow outward while low
-support strata remain part of one continuous rock mass instead of opening a
-large waist trench.
 """
 from pathlib import Path
 import json, sys
@@ -186,8 +183,8 @@ def render_sandstone(d: Path, name: str):
         f1 = ImageFont.load_default(); f2 = f1
     draw.rounded_rectangle((28, 26, 970, 104), radius=18, fill=(18, 18, 20))
     draw.text((48, 40), name, fill=(245, 245, 245), font=f1)
-    draw.text((48, 74), "continuous Gaussian rock shell · mean 22% · +3sigma 43% · cap 44%", fill=(190, 195, 200), font=f2)
-    out.save(d / "preview-sphere.png")
+    draw.text((48, 74), "legacy Gaussian diagnostic · mean 22% · +3sigma 43% · cap 44%", fill=(190, 195, 200), font=f2)
+    # Diagnostic only. Canonical preview-sphere.png is owned by the true mesh renderer.
     out.save(d / "preview-gaussian-height.png")
 
     h50, sigma_h, h005, h995 = stats
