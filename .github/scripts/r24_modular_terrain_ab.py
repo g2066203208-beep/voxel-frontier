@@ -68,6 +68,15 @@ if "R24_MODULAR_TERRAIN_AB_V1" not in main:
         "stream completion gate",
     )
 
+# A visual/streaming feature gate must never erase gameplay authority. The first A/B version
+# intentionally bypassed every terrain-related build to isolate performance, but that also left
+# RegionalHydrology empty and changed collision/ecology/canyon targeting. Keep the deterministic
+# regional authority alive while bypassing only expensive render mesh synthesis.
+if "R24_SURFACE_AUTHORITY_DECOUPLED_V1" not in main:
+    old = '''        } else {\n            std::cout << "R24 TERRAIN_BYPASS render=0 streaming=0 initial_synthesis=0\\n";\n        }\n        std::cout << "R24 PERF terrain_build_ms=" << initialTerrain.buildMilliseconds\n'''
+    new = '''        } else {\n            // R24_SURFACE_AUTHORITY_DECOUPLED_V1: render/streaming are optional clients.\n            // Collision, geography, hydrology and evidence targeting keep the same authoritative\n            // surface state even when no terrain triangles are ever generated or uploaded.\n            vf::RegionalHydrologyConfig authorityHydroConfig{};\n            const double authorityAltitude = std::max(\n                0.0, glm::length(initialCameraPlanet) - planet.radius);\n            authorityHydroConfig.resolution = authorityAltitude < 25000.0 ? 193U\n                : (authorityAltitude < 150000.0 ? 129U : 81U);\n            authorityHydroConfig.halfExtentMeters = 220000.0;\n            authorityHydroConfig.maxIncisionMeters = std::min(3000.0, planet.maxElevation * 0.10);\n            authorityHydroConfig.riverHeadAccumulationFraction = 0.0012;\n            authorityHydroConfig.fullChannelAccumulationFraction = 0.022;\n            initialTerrain.hydrology = std::make_shared<vf::RegionalHydrology>(\n                planet, safeNormalize(lodCenterDirection, patchUp), authorityHydroConfig);\n            std::cout << "R24 TERRAIN_BYPASS render=0 streaming=0 initial_synthesis=0"\n                      << " surface_authority=1 hydrology=1\\n";\n        }\n        std::cout << "R24 PERF terrain_build_ms=" << initialTerrain.buildMilliseconds\n'''
+    main = replace_once(main, old, new, "surface authority decoupling")
+
 MAIN.write_text(main, encoding="utf-8")
 
 hpp = RENDER_HPP.read_text(encoding="utf-8")
