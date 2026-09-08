@@ -1,4 +1,4 @@
-name: Origami Human Blender
+name: Cute Neutral Human Blender
 
 on:
   push:
@@ -25,28 +25,28 @@ jobs:
           blender --version
           blender --background --python-expr "import numpy; print('Blender numpy', numpy.__version__)"
 
-      - name: Generate retro low-poly body-only GLB and real Blender render
+      - name: Generate cute neutral basemesh GLB and real Blender render
         run: |
-          mkdir -p artifacts/retro-lowpoly-human
-          blender --background --python tools/procedural-human/blender/retro_lowpoly_human_v10.py -- "$GITHUB_WORKSPACE/artifacts/retro-lowpoly-human"
-          test -s artifacts/retro-lowpoly-human/male.glb
-          test -s artifacts/retro-lowpoly-human/female.glb
-          test -s artifacts/retro-lowpoly-human/male-female-retro-lowpoly.png
-          test -s artifacts/retro-lowpoly-human/metrics.json
+          mkdir -p artifacts/cute-neutral-human
+          blender --background --python tools/procedural-human/blender/cute_neutral_basemesh_v11.py -- "$GITHUB_WORKSPACE/artifacts/cute-neutral-human"
+          test -s artifacts/cute-neutral-human/neutral.glb
+          test -s artifacts/cute-neutral-human/neutral-preview.png
+          test -s artifacts/cute-neutral-human/metrics.json
           python3 - <<'PY'
           import json
-          m=json.load(open('artifacts/retro-lowpoly-human/metrics.json'))
+          m=json.load(open('artifacts/cute-neutral-human/metrics.json'))
+          assert m['neutral_only'] is True
+          assert m['male_female_split'] is False
           assert m['extra_character_geometry'] is False
-          assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False
-          assert 700 <= m['male_tris'] <= 900, m
-          assert 700 <= m['female_tris'] <= 900, m
+          assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False and m['props'] is False
+          assert 850 <= m['tris'] <= 1100, m
           print(json.dumps(m, indent=2))
           PY
 
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
         with:
-          name: retro-lowpoly-human-blender
-          path: artifacts/retro-lowpoly-human/
+          name: cute-neutral-human-blender
+          path: artifacts/cute-neutral-human/
           if-no-files-found: error
           retention-days: 30
