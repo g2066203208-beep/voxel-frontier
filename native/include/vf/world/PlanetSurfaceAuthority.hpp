@@ -33,17 +33,26 @@ public:
     [[nodiscard]] std::shared_ptr<const RegionalHydrology> hydrology() const noexcept;
 
     [[nodiscard]] PlanetTerrainSample sample(const glm::dvec3& direction) const noexcept;
+
+    // Rendering-only band-limited query. Hydrology and all broad semantic fields remain attached to
+    // the same authority; only sub-grid procedural displacement bands may be skipped. Gameplay and
+    // collision continue to use sample()/sampleSurface() at full fidelity.
+    [[nodiscard]] PlanetTerrainSample sampleLod(
+        const glm::dvec3& direction,
+        double minimumFeatureMeters) const noexcept;
+
     [[nodiscard]] PlanetSurfaceSample sampleSurface(const glm::dvec3& direction) const noexcept;
     [[nodiscard]] double elevationMeters(const glm::dvec3& direction) const noexcept;
     [[nodiscard]] double surfaceRadius(const glm::dvec3& direction) const noexcept;
     [[nodiscard]] glm::dvec3 surfaceNormal(const glm::dvec3& direction) const noexcept;
 
 private:
-    // A tangent-plane hydrology bake is square, but its square edge must never become a world-space
-    // terrain seam. Consume an inscribed circular core and fade its process fields to the global
-    // geomorphology before the grid boundary is reached.
     [[nodiscard]] double hydrologyWeight(
         const RegionalHydrology& hydrology,
+        const glm::dvec3& direction) const noexcept;
+
+    [[nodiscard]] PlanetTerrainSample applyHydrology(
+        PlanetTerrainSample terrain,
         const glm::dvec3& direction) const noexcept;
 
     PlanetDefinition planet_{};
