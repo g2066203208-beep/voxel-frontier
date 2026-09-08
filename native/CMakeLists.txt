@@ -19,6 +19,32 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 
+# R24_ENGINE_FOUNDATION_V1: production C++ task graph + data-oriented ECS foundation.
+set(TF_BUILD_BENCHMARKS OFF CACHE BOOL "" FORCE)
+set(TF_BUILD_PROFILER OFF CACHE BOOL "" FORCE)
+set(TF_BUILD_CUDA OFF CACHE BOOL "" FORCE)
+set(TF_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(TF_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(TF_BUILD_MODULES OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(
+    Taskflow
+    GIT_REPOSITORY https://github.com/taskflow/taskflow.git
+    GIT_TAG v4.1.0
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(Taskflow)
+
+set(ENTT_INSTALL OFF CACHE BOOL "" FORCE)
+set(ENTT_BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(ENTT_BUILD_TESTBED OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(
+    EnTT
+    GIT_REPOSITORY https://github.com/skypjack/entt.git
+    GIT_TAG v4.0.0
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(EnTT)
+
 add_library(vf_engine STATIC
     src/world/PlanetSurface.cpp
     src/world/PlanetSurfaceAuthority.cpp
@@ -53,7 +79,7 @@ add_library(vf_engine STATIC
 
 target_include_directories(vf_engine PUBLIC include)
 target_compile_features(vf_engine PUBLIC cxx_std_23)
-target_link_libraries(vf_engine PUBLIC glm::glm)
+target_link_libraries(vf_engine PUBLIC glm::glm Taskflow::Taskflow EnTT::EnTT)
 target_compile_definitions(vf_engine PUBLIC GLM_FORCE_DEPTH_ZERO_TO_ONE GLM_FORCE_RADIANS)
 
 if(MSVC)
@@ -301,6 +327,10 @@ if(VF_BUILD_TESTS)
     add_executable(vf_static_mesh_upload_scheduler_tests tests/StaticMeshUploadSchedulerTests.cpp)
     target_link_libraries(vf_static_mesh_upload_scheduler_tests PRIVATE vf_engine)
     add_test(NAME vf_static_mesh_upload_scheduler_tests COMMAND vf_static_mesh_upload_scheduler_tests)
+
+    add_executable(vf_engine_foundation_tests tests/EngineFoundationTests.cpp)
+    target_link_libraries(vf_engine_foundation_tests PRIVATE vf_engine Taskflow::Taskflow EnTT::EnTT)
+    add_test(NAME vf_engine_foundation_tests COMMAND vf_engine_foundation_tests)
 
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests tests/ShaderContractTests.cpp "${VF_SHADER_HEADER}")
