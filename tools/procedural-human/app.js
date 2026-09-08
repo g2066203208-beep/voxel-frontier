@@ -32,7 +32,20 @@ function animate(){resize();controls.update();renderer.render(scene,camera);requ
 function buildUI(){const box=$('#sliders');box.innerHTML='';for(const [key,label,unit,min,max,step] of sliderDefs){const row=document.createElement('label');row.className='slider-row';row.innerHTML=`<div class="slider-head"><span>${label}</span><output id="out-${key}"></output></div><input id="in-${key}" type="range" min="${min}" max="${max}" step="${step}"><small>${unit}</small>`;box.appendChild(row);const input=row.querySelector('input');input.value=state.params[key];input.addEventListener('input',()=>{state.params[key]=Number(input.value);updateOutput(key);rebuild();});updateOutput(key);}}
 function updateOutput(key){const o=$(`#out-${key}`);if(!o)return;const v=state.params[key];o.textContent=key==='heightCm'?`${Math.round(v)} cm`:Number(v).toFixed(2);}
 function syncUI(){for(const [key] of sliderDefs){const i=$(`#in-${key}`);if(i)i.value=state.params[key];updateOutput(key);}}
-function geometryFromModel(model){const pos=new Float32Array(model.faces.length*9);let k=0;for(const f of model.faces)for(const id of f){const v=model.vertices[id];pos[k++]=v[0];pos[k++]=v[1];pos[k++]=v[2];}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.computeVertexNormals();g.computeBoundingSphere();return g;}
+function geometryFromModel(model){
+  const pos=new Float32Array(model.vertices.length*3);
+  let k=0;
+  for(const v of model.vertices){pos[k++]=v[0];pos[k++]=v[1];pos[k++]=v[2];}
+  const IndexArray=model.vertices.length>65535?Uint32Array:Uint16Array;
+  const idx=new IndexArray(model.faces.length*3);k=0;
+  for(const f of model.faces){idx[k++]=f[0];idx[k++]=f[1];idx[k++]=f[2];}
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  g.setIndex(new THREE.BufferAttribute(idx,1));
+  g.computeVertexNormals();
+  g.computeBoundingSphere();
+  return g;
+}
 function rebuild(){if(!state.master)return;state.model=generateHuman(state.master,state.params);const g=geometryFromModel(state.model);if(state.mesh){state.mesh.geometry.dispose();state.mesh.geometry=g;state.mesh.material.wireframe=state.wire;}else{const mat=new THREE.MeshPhysicalMaterial({color:0xc6a88e,roughness:0.72,metalness:0,clearcoat:0.03,side:THREE.DoubleSide});state.mesh=new THREE.Mesh(g,mat);state.mesh.castShadow=true;scene.add(state.mesh);}floor.position.y=-0.003;const m=state.model.measurements;$('#measurements').innerHTML=`<span>身高 <b>${m.heightCm.toFixed(1)} cm</b></span><span>肩宽≈ <b>${m.shoulderWidthCm.toFixed(1)} cm</b></span><span>胸围≈ <b>${m.chestCm.toFixed(1)} cm</b></span><span>腰围≈ <b>${m.waistCm.toFixed(1)} cm</b></span><span>臀围≈ <b>${m.hipCm.toFixed(1)} cm</b></span>`;const basis=state.master.phenotypeBasis;$('#status').textContent=`${state.model.vertices.length.toLocaleString()} vertices · ${state.model.faces.length.toLocaleString()} triangles · ${basis?.targetCount||0} CC0 morph targets · fixed topology`;}
 function applyPreset(name){state.params={...DEFAULT_PARAMS,...PRESETS[name]};syncUI();rebuild();}
 function download(name,blob){const a=document.createElement('a');const u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}
