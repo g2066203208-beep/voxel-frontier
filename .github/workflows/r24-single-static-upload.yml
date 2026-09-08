@@ -1,0 +1,213 @@
+name: R24 Single Static GPU Upload
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_single_static_upload.py'
+      - '.github/workflows/r24-single-static-upload.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-single-static-upload-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-vulkan-ab:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout promoted R24 performance foundation
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 5
+
+      - name: Materialize one static upload per generation
+        run: python3 .github/scripts/r24_single_static_upload.py
+
+      - name: Validate static generation architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          grep -q 'StaticMeshUploadScheduler staticUploadScheduler_' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'staticUploadBytesTotal_' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'staticUploadScheduler_.adopt' native/src/render/VulkanRenderer.cpp
+          grep -q 'staticMeshes_\[staticUploadScheduler_.residentSlot()\]' native/src/render/VulkanRenderer.cpp
+          ! grep -q 'staticMeshGenerationByFrame_' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'R24 PERF static_upload generation=' native/src/render/VulkanRenderer.cpp
+          grep -q 'R24 BENCHMARK_GPU_STREAM static_uploads=' native/src/app/Main.cpp
+          grep -q 'vf_static_mesh_upload_scheduler_tests' native/CMakeLists.txt
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Configure and build Release
+        run: |
+          cmake -S native -B build/r24-static-upload -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+          cmake --build build/r24-static-upload --parallel 2
+
+      - name: Run complete native regression suite
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-static-upload --verbose --output-on-failure 2>&1 | tee r24-static-upload-ctest.log
+
+      - name: Gate scheduler and foundation regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-static-upload --verbose --output-on-failure \
+            -R 'vf_static_mesh_upload_scheduler_tests|vf_performance_benchmark_tests|vf_celestial_simulation_lod_tests|vf_r24_runtime_stability_tests|vf_r24_physical_planet_tests|vf_planet_tile_streaming_tests|vf_r24_hydrologic_canyon_tests|vf_shader_contract_tests' \
+            2>&1 | tee r24-static-upload-focused.log
+          grep -q 'R24 static upload scheduler tests passed generations=3 uploads=3 duplicate_frame_uploads=0' r24-static-upload-focused.log
+          grep -q 'R24 performance benchmark tests passed' r24-static-upload-focused.log
+          grep -q 'R24 celestial simulation LOD tests passed analytic=64 dynamic=1' r24-static-upload-focused.log
+          grep -q 'nbody_pair_evals=0' r24-static-upload-focused.log
+          grep -q 'R24 planet tile streaming tests passed' r24-static-upload-focused.log
+          grep -q 'R24 hydrologic canyon tests passed' r24-static-upload-focused.log
+
+      - name: Verify Vulkan implementation
+        shell: bash
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Run same 1920x1080 Vulkan benchmark after upload optimization
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-static-upload -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p r24-static-upload-evidence
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp > r24-static-upload-evidence/xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 1
+          export DISPLAY=:99 SDL_VIDEODRIVER=x11
+          export VF_PERF_PROFILE=mainstream_1080p
+          export VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=7000 VF_TERRAIN_TARGET=canyon
+          export VF_RUNTIME_DIAGNOSTICS=1 VF_CELESTIAL_TIME_SCALE=1
+          timeout 35s "$APP" > r24-static-upload-evidence/benchmark.log 2>&1 &
+          APP_PID=$!
+          sleep 5
+          import -window root r24-static-upload-evidence/mainstream-1080p-after-static-upload.png || true
+          wait $APP_PID
+          cat r24-static-upload-evidence/benchmark.log
+          test -s r24-static-upload-evidence/mainstream-1080p-after-static-upload.png
+
+      - name: Parse A B frame pacing and static transfer count
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          new_text=Path('r24-static-upload-evidence/benchmark.log').read_text(encoding='utf-8',errors='replace')
+          lines=[x for x in new_text.splitlines() if x.startswith('R24 BENCHMARK profile=')]
+          if not lines: raise SystemExit('missing optimized benchmark summary')
+          new=lines[-1]
+          stream=[x for x in new_text.splitlines() if x.startswith('R24 BENCHMARK_GPU_STREAM')]
+          if not stream: raise SystemExit('missing GPU stream benchmark summary')
+          if 'static_uploads=1 ' not in stream[-1]:
+              raise SystemExit(f'stationary generation uploaded more than once: {stream[-1]}')
+          if len(re.findall(r'R24 PERF static_upload generation=', new_text)) != 1:
+              raise SystemExit('runtime log proves duplicate static generation transfers')
+          def value(line,key):
+              m=re.search(rf'\b{key}=([0-9]+(?:\.[0-9]+)?)',line)
+              if not m: raise SystemExit(f'missing {key}')
+              return float(m.group(1))
+          if 'resolution=1920x1080' not in new or 'valid=1' not in new:
+              raise SystemExit('optimized benchmark profile invalid')
+          new_fps=value(new,'avg_fps'); new_p99=value(new,'p99_ms')
+          if value(new,'streaming_busy_pct') > 5.0:
+              raise SystemExit('stationary scene rebuild regression')
+          baseline_path=Path('docs/evidence/r24-mainstream-performance-34181577583/benchmark-summary.txt')
+          baseline=''
+          if baseline_path.exists():
+              baseline=next((x for x in baseline_path.read_text(encoding='utf-8',errors='replace').splitlines()
+                             if x.startswith('R24 BENCHMARK profile=')),'')
+          if baseline:
+              base_fps=value(baseline,'avg_fps'); base_p99=value(baseline,'p99_ms')
+              fps_delta=(new_fps/base_fps-1.0)*100.0
+              p99_delta=(new_p99/base_p99-1.0)*100.0
+              report=(f'baseline_avg_fps={base_fps:.3f}\noptimized_avg_fps={new_fps:.3f}\n'
+                      f'fps_delta_percent={fps_delta:.3f}\nbaseline_p99_ms={base_p99:.3f}\n'
+                      f'optimized_p99_ms={new_p99:.3f}\np99_delta_percent={p99_delta:.3f}\n'
+                      f'{stream[-1]}\n')
+          else:
+              report=f'optimized_avg_fps={new_fps:.3f}\noptimized_p99_ms={new_p99:.3f}\n{stream[-1]}\n'
+          Path('r24-static-upload-evidence/ab-summary.txt').write_text(report,encoding='utf-8')
+          print(report)
+          PY
+
+      - name: Capture real production terrain views after renderer change
+        shell: bash
+        run: |
+          APP="$(find build/r24-static-upload -type f -name voxel_frontier -perm -111 | head -n 1)"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-static-upload-evidence/terrain-scenes
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-single-static-upload-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          [[ -d r24-static-upload-evidence ]] && cp -a r24-static-upload-evidence/. "$EVIDENCE_DIR/" || true
+          for f in r24-static-upload-ctest.log r24-static-upload-focused.log vulkan-summary.txt; do
+            [[ -f "$f" ]] && cp -f "$f" "$EVIDENCE_DIR/" || true
+          done
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-single-static-upload-${{ github.run_id }}
+          path: |
+            r24-static-upload-evidence/**
+            r24-static-upload-ctest.log
+            r24-static-upload-focused.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested single-upload renderer
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          if ! git diff --cached --quiet; then git commit -m "perf(r24): upload each static terrain generation once"; fi
+          git reset --hard HEAD
+          git clean -fd build/r24-static-upload || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
