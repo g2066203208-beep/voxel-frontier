@@ -11,7 +11,6 @@ ARM_Q_MIN=0.40
 ARM_Q_MAX=0.86
 ARM_X_MIN=0.128
 
-# Mild androgynous shaping. Anatomy is inherited from the real CC0 human surface.
 SLICES=[
  (0.58,0.95,0.97),(0.64,0.96,0.98),(0.70,0.985,0.99),(0.76,1.00,1.00),
  (0.81,0.99,0.99),(0.84,0.97,0.98),(0.87,0.985,0.99),(0.90,1.00,1.00),
@@ -28,7 +27,7 @@ def mat(name,c):
  return m
 
 def fetch_text(url):
- req=urllib.request.Request(url,headers={'User-Agent':'voxel-frontier-human-tailor-v24'})
+ req=urllib.request.Request(url,headers={'User-Agent':'voxel-frontier-human-tailor-v25'})
  return urllib.request.urlopen(req,timeout=60).read().decode('utf-8')
 
 def parse_body(text):
@@ -65,34 +64,18 @@ def interp(q,idx):
 
 def build_cropped_surface():
  rawV,rawF=parse_body(fetch_text(BASE_URL));mn,mx,rg,WA,DA,UA=frame(rawV);H=rg[UA];cw=(mn[WA]+mx[WA])*.5;cd=(mn[DA]+mx[DA])*.5
- used=sorted({i for f in rawF for i in f});R={old:i for i,old in enumerate(used)}
- C=[]
+ used=sorted({i for f in rawF for i in f});R={old:i for i,old in enumerate(used)};V=[];Q=[]
  for old in used:
-  p=rawV[old];C.append([(p[WA]-cw)/H,(p[DA]-cd)/H,(p[UA]-mn[UA])/H])
- # Dynamic head bounds make the faceless operation independent of source scale.
- head=[c for c in C if c[2]>=0.845]
- hx=max(abs(c[0]) for c in head);hy0=min(c[1] for c in head);hy1=max(c[1] for c in head)
- hcy=(hy0+hy1)*.5;hry=(hy1-hy0)*.5;hq0=min(c[2] for c in head);hq1=max(c[2] for c in head);hcq=(hq0+hq1)*.5;hrq=(hq1-hq0)*.5
- V=[];Q=[]
- for x,y,q in C:
+  p=rawV[old];x=(p[WA]-cw)/H;y=(p[DA]-cd)/H;q=(p[UA]-mn[UA])/H
   sx=interp(q,1);sy=interp(q,2)
   if abs(x)>ARM_X_MIN and ARM_Q_MIN<=q<=ARM_Q_MAX:sx=1.0;sy=1.0
-  # Slightly larger mannequin/cartoon head, blended through the jaw so the neck remains anatomical.
-  hs=smoothstep(.835,.89,q);x*=sx*(1.0+.075*hs);y*=sy*(1.0+.045*hs)
-  # Replace the central facial micro-anatomy with a smooth ellipsoidal mannequin face.
-  # Ears, jaw silhouette and cranium remain from the real human surface.
-  if .855<=q<=.985 and y>hcy and abs(x)<hx*.72:
-   nx=x/max(hx*1.075,1e-8);nq=(q-hcq)/max(hrq,1e-8);s=1.0-nx*nx-nq*nq
-   if s>0:
-    target_y=hcy+hry*.88*math.sqrt(s)
-    blend=smoothstep(.855,.88,q)*(1.0-smoothstep(.965,.988,q))
-    y=y*(1.0-blend)+target_y*blend
+  # Reference mannequin has a slightly larger, simpler head than an adult scan.
+  hs=smoothstep(.835,.90,q);x*=sx*(1.0+.065*hs);y*=sy*(1.0+.035*hs)
   V.append((x*TARGET_HEIGHT,y*TARGET_HEIGHT,q*TARGET_HEIGHT));Q.append((x,y,q))
  F=[]
  for f in rawF:
   ids=[R[i] for i in f];qc=sum(Q[i][2] for i in ids)/len(ids);xc=sum(Q[i][0] for i in ids)/len(ids)
-  keep_upper=qc>=CUT_Q;keep_arm=(ARM_Q_MIN<=qc<=ARM_Q_MAX and abs(xc)>=ARM_X_MIN)
-  if keep_upper or keep_arm:F.append(ids)
+  if qc>=CUT_Q or (ARM_Q_MIN<=qc<=ARM_Q_MAX and abs(xc)>=ARM_X_MIN):F.append(ids)
  return V,F,CUT_Q*TARGET_HEIGHT
 
 def make_source():
@@ -108,10 +91,27 @@ def close_and_clean(o):
  bmesh.ops.remove_doubles(bm,verts=bm.verts,dist=1e-7);bmesh.ops.dissolve_degenerate(bm,dist=1e-9,edges=bm.edges);bmesh.ops.recalc_face_normals(bm,faces=bm.faces);bmesh.ops.triangulate(bm,faces=bm.faces)
  bm.to_mesh(o.data);bm.free();o.data.validate(verbose=False,clean_customdata=True);o.data.update()
 
+def smooth_faceless_depth(o):
+ # Smooth ONLY depth (Y), after QEM. X/Z silhouette, skull, jaw and ears stay human.
+ # The selected central front-head patch loses eye/nose/mouth relief without collapsing.
+ verts=o.data.vertices;adj=[set() for _ in verts]
+ for e in o.data.edges:
+  a,b=e.vertices;adj[a].add(b);adj[b].add(a)
+ sel={v.index for v in verts if v.co.z>1.445 and v.co.z<1.675 and v.co.y>0.0 and abs(v.co.x)<0.095}
+ for _ in range(14):
+  upd={}
+  for i in sel:
+   ns=[j for j in adj[i] if j in sel]
+   if len(ns)>=2:
+    avg=sum(verts[j].co.y for j in ns)/len(ns);upd[i]=verts[i].co.y*.30+avg*.70
+  for i,y in upd.items():verts[i].co.y=y
+ o.data.update();print('FACELESS_SMOOTH_VERTS',len(sel))
+
 def decimate_real_surface(o,target):
  bpy.context.view_layer.objects.active=o;o.select_set(True);before=tris(o)
  d=o.modifiers.new('Human_QEM','DECIMATE');d.decimate_type='COLLAPSE';d.ratio=max(.001,min(1.0,target/max(before,1)));d.use_collapse_triangulate=True;bpy.ops.object.modifier_apply(modifier=d.name)
  p=o.modifiers.new('Human_PlanarCleanup','DECIMATE');p.decimate_type='DISSOLVE';p.angle_limit=math.radians(1.5);bpy.ops.object.modifier_apply(modifier=p.name)
+ smooth_faceless_depth(o)
  for poly in o.data.polygons:poly.use_smooth=False
  o.data.update();return before,tris(o)
 
@@ -159,7 +159,6 @@ def studio(view,cut):
  for name,loc,e,size in [('Key',(-3,-4,3.8),950,2.6),('Fill',(3,-3,2.7),350,2.2),('Rim',(0,3,3.3),600,2.0)]:
   ld=bpy.data.lights.new(name,'AREA');ld.energy=e;ld.shape='DISK';ld.size=size;x=bpy.data.objects.new(name,ld);bpy.context.collection.objects.link(x);x.location=loc;x.rotation_euler=(target-Vector(loc)).to_track_quat('-Z','Y').to_euler()
  cd=bpy.data.cameras.new('Camera');cam=bpy.data.objects.new('Camera',cd);bpy.context.collection.objects.link(cam);dist=3.8
- # Source human faces +Y: front camera must therefore sit on +Y.
  cam.location=(0,dist,target.z) if view=='front' else ((dist,0,target.z) if view=='side' else (0,-dist,target.z))
  cam.rotation_euler=(target-Vector(cam.location)).to_track_quat('-Z','Y').to_euler();cd.type='ORTHO';cd.ortho_scale=1.30;sc.camera=cam
 
@@ -170,4 +169,4 @@ def export():
  clear();o,b,a,t,cut=clean_model();bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o;path=os.path.join(OUT,'neutral-human-waist-up.glb');bpy.ops.export_scene.gltf(filepath=path,export_format='GLB',use_selection=True,export_normals=True);gb,gm,gp=glb_check(path);return b,a,t,gb,gm,gp,cut
 
 b,a,T,gb,gm,gp,cut=export();render('front.png','front');render('side.png','side');render('back.png','back')
-M={'style':'reference-matched-faceless-neutral-lowpoly-tailor-v24','purpose':'player clothing creation mannequin','source':'CC0 MPFB2 body surface via Anny repository','original_human_surface':True,'reference_mannequin_style':True,'faceless':True,'neutral_only':True,'waist_up_only':True,'head':True,'full_arms':True,'legs':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'target_tris':TARGET_TRIS,'waist_cut_z_m':cut,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'real human surface -> neutral proportions -> faceless mannequin surface -> waist crop -> cap -> direct QEM -> compact used vertices','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);print('HUMAN_TAILOR_V24_METRICS',json.dumps(M))
+M={'style':'reference-matched-faceless-neutral-lowpoly-tailor-v25','purpose':'player clothing creation mannequin','source':'CC0 MPFB2 body surface via Anny repository','original_human_surface':True,'reference_mannequin_style':True,'faceless':True,'neutral_only':True,'waist_up_only':True,'head':True,'full_arms':True,'legs':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'target_tris':TARGET_TRIS,'waist_cut_z_m':cut,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'real human surface -> neutral/head proportion -> crop/cap -> direct QEM -> depth-only face smoothing -> compact low-poly','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);print('HUMAN_TAILOR_V25_METRICS',json.dumps(M))
