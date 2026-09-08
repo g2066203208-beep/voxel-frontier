@@ -31,9 +31,9 @@ function makeBlock(seed:number,row:number,id:number,cx:number,cy:number,hw:numbe
   ]);
   return {
     cx:(cx+2)%1, cy:(cy+2)%1, hw, hh,
-    angle:(hash(seed,row,id,5)-.5)*(macro?.22:.14),
+    angle:(hash(seed,row,id,5)-.5)*(macro?.24:.15),
     base, lift, warm:hash(seed,row,id,6), cool:hash(seed,row,id,7), macro,
-    bevel:macro?.18:.15,
+    bevel:macro?.235:.165,
     strata,
     crack:hash(seed,row,id,8)<crackChance,
     crackX:(hash(seed,row,id,9)-.5)*.34,
@@ -50,7 +50,7 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
   const rows=Math.max(4,Math.min(6,bands));
   const rowStep=1/rows;
   for(let row=0;row<rows;row++){
-    // Support mass must fill the shell, never read as one or two long horizontal planks.
+    // Low support blocks close holes without raising the whole surface to hero height.
     const requested=minSlabs+Math.floor(hash(seed,row,101)*(maxSlabs-minSlabs+1));
     const count=Math.max(3,Math.min(4,requested+1));
     const raw:number[]=[]; let total=0;
@@ -62,20 +62,27 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
       out.push(makeBlock(
         seed,row,i,cx,
         (row+.5)/rows+(hash(seed,row,i,104)-.5)*rowStep*.20,
-        (frac+.032)*.60,
-        rowStep*(.62+hash(seed,row,i,105)*.12),
-        .462+(hash(seed,row,i,106)-.5)*.016,
-        .065+hash(seed,row,i,107)*.025,
-        false,crackChance*.24,
+        (frac+.030)*.58,
+        rowStep*(.60+hash(seed,row,i,105)*.10),
+        .418+(hash(seed,row,i,106)-.5)*.012,
+        .032+hash(seed,row,i,107)*.022,
+        false,crackChance*.20,
       ));
     }
   }
 
+  // Hero blocks are deliberately much taller than support mass. These must break silhouette.
   const hero:[number,number,number,number,number,number][]=[
-    [.56,.52,.235,.19,.555,.245], [.29,.47,.18,.17,.535,.205], [.81,.45,.17,.17,.525,.195],
-    [.39,.70,.20,.16,.535,.205], [.70,.70,.19,.16,.525,.195], [.16,.65,.14,.17,.515,.175],
-    [.57,.29,.18,.135,.525,.185], [.31,.27,.14,.12,.505,.155], [.82,.27,.135,.12,.505,.15],
-    [.55,.86,.18,.12,.505,.16], [.26,.84,.13,.105,.495,.145], [.82,.84,.13,.105,.495,.145],
+    [.56,.52,.245,.195,.535,.365],
+    [.29,.47,.185,.175,.505,.315],
+    [.81,.45,.175,.175,.500,.300],
+    [.39,.70,.205,.165,.510,.320],
+    [.70,.70,.195,.165,.505,.305],
+    [.16,.65,.145,.175,.485,.270],
+    [.57,.29,.185,.140,.500,.290],
+    [.31,.27,.145,.125,.475,.245],
+    [.82,.27,.140,.125,.475,.235],
+    [.55,.86,.185,.125,.480,.250],
   ];
   for(let i=0;i<hero.length;i++){
     const [cx,cy,hw,hh,base,lift]=hero[i];
@@ -84,9 +91,9 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
       cy+(hash(seed,90,i,2)-.5)*.025,
       hw*(.98+hash(seed,90,i,3)*.10),
       hh*(.98+hash(seed,90,i,4)*.10),
-      base+(hash(seed,90,i,15)-.5)*.018,
-      lift*(.94+hash(seed,90,i,16)*.14),
-      true,crackChance*(i===0?1.55:.9),
+      base+(hash(seed,90,i,15)-.5)*.016,
+      lift*(.95+hash(seed,90,i,16)*.12),
+      true,crackChance*(i===0?1.45:.82),
     ));
   }
   return out;
@@ -103,63 +110,67 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
   const bands=Math.max(4,Math.min(6,Math.floor(p.bands??5)));
   const minSlabs=Math.max(2,Math.floor(p.minSlabs??2));
   const maxSlabs=Math.max(minSlabs,Math.min(4,Math.floor(p.maxSlabs??3)));
-  const crackChance=C(p.crackChance??.17);
-  const chipStrength=C(p.chipStrength??.92);
-  const relief=Math.max(.75,Math.min(1.8,p.relief??1.20));
-  const normalStrength=Math.max(2,Math.min(20,p.normalStrength??12.8));
+  const crackChance=C(p.crackChance??.15);
+  const chipStrength=C(p.chipStrength??.88);
+  const relief=Math.max(.75,Math.min(1.8,p.relief??1.34));
+  const normalStrength=Math.max(2,Math.min(20,p.normalStrength??13.2));
   const blocks=buildBlocks(seed,bands,minSlabs,maxSlabs,crackChance);
 
   const baseColor=makeTexture(size,size,3),roughness=makeTexture(size,size,1),height=makeTexture(size,size,1),ao=makeTexture(size,size,1);
-  const ink:RGB=[.030,.018,.026], deep:RGB=[.075,.045,.052], cool:RGB=[.105,.125,.175], mid:RGB=[.34,.145,.075], light:RGB=[.625,.34,.17], ochre:RGB=[.86,.56,.27], cream:RGB=[.94,.72,.40];
+  const ink:RGB=[.026,.015,.024], deep:RGB=[.065,.040,.052], cool:RGB=[.105,.125,.180], mid:RGB=[.33,.135,.070], light:RGB=[.64,.35,.175], ochre:RGB=[.88,.57,.27], cream:RGB=[.95,.74,.41];
 
   for(let py=0;py<size;py++){
     const v=1-(py+.5)/size;
     for(let px=0;px<size;px++){
       const u=(px+.5)/size,i=py*size+px,j=i*3;
-      let best=.462+periodicField(u,v,seed+700,2)*.010;
-      let second=best-.018,bestId=-1,bestEdge=0,bestCrack=0,bestChip=0,bestFacet=0,bestStrata=0,bx=0,by=0;
+      // The continuous shell stays low. It prevents holes but must never read as the rock silhouette.
+      let best=.405+periodicField(u,v,seed+700,2)*.008;
+      let second=best-.014,bestId=-1,bestEdge=0,bestCrack=0,bestChip=0,bestFacet=0,bestStrata=0,bx=0,by=0;
 
       for(let id=0;id<blocks.length;id++){
         const q=blocks[id];
         const dx=wrapDelta(u-q.cx),dy=wrapDelta(v-q.cy);
         const ca=Math.cos(q.angle),sa=Math.sin(q.angle);
         const rx=dx*ca+dy*sa, ry=-dx*sa+dy*ca;
-        if(Math.abs(rx)>q.hw*1.14||Math.abs(ry)>q.hh*1.14)continue;
+        if(Math.abs(rx)>q.hw*1.18||Math.abs(ry)>q.hh*1.18)continue;
         const x=rx/Math.max(q.hw,1e-6), y=ry/Math.max(q.hh,1e-6);
-        const shape=blockShape(x,y)+periodicField(x*.23+id*.11,y*.23-id*.09,seed+id*29,2)*.016;
-        if(shape>1.04)continue;
+        const shape=blockShape(x,y)+periodicField(x*.23+id*.11,y*.23-id*.09,seed+id*29,2)*.014;
+        if(shape>1.045)continue;
+
         const edge=S((1-shape)/q.bevel);
-        const body=S((1-shape)/(q.bevel*1.35));
+        // Hero shoulders are broad and thick: huge elevation change without paper-thin fins.
+        const body=S((1-shape)/(q.bevel*(q.macro?1.55:1.18)));
 
         let top=-99,secondPlane=-99;
         for(const [a,b,c] of q.planes){
           const plane=a*x+b*y+c;
           if(plane>top){secondPlane=top;top=plane;}else if(plane>secondPlane)secondPlane=plane;
         }
-        const facet=(top*.045)+(top-secondPlane)*.020;
-        const hardFacet=Math.round(facet/.015)*.015*body;
+        const facet=(top*(q.macro?.060:.030))+(top-secondPlane)*(q.macro?.028:.014);
+        const hardFacet=Math.round(facet/(q.macro?.018:.012))*(q.macro?.018:.012)*body;
 
         let strata=0;
         for(let k=0;k<q.strata.length;k++){
-          const s=q.strata[k]+Math.sin((x*.55+q.warm+k*.17)*TAU)*.014;
-          const lip=G((y-s)/(.028+k*.002))*body;
-          strata+=lip*(y>s?.010:-.005);
+          const s=q.strata[k]+Math.sin((x*.55+q.warm+k*.17)*TAU)*.012;
+          const lip=G((y-s)/(.026+k*.002))*body;
+          strata+=lip*(y>s?(q.macro?.014:.007):(q.macro?-.007:-.003));
         }
-        const topShelf=G((y-.62)/.13)*body*(q.macro?.020:.010);
-        const lowerCut=G((y+.72)/.12)*body*(q.macro?.016:.008);
+        const topShelf=G((y-.60)/.13)*body*(q.macro?.032:.009);
+        const lowerCut=G((y+.70)/.12)*body*(q.macro?.022:.007);
 
         let crack=0;
         if(q.crack){
-          const line=q.crackX+q.crackTilt*y+periodicField(u,v,seed+id*41,2)*.010;
-          crack=G((x-line)/(q.macro?.014:.018))*S((y+.76)/.13)*S((.78-y)/.13)*body;
+          const line=q.crackX+q.crackTilt*y+periodicField(u,v,seed+id*41,2)*.009;
+          crack=G((x-line)/(q.macro?.012:.017))*S((y+.76)/.13)*S((.78-y)/.13)*body;
         }
-        const chip=q.chip>.52?G((x-q.chipX)/(q.macro?.105:.13))*G((y-q.chipY)/(q.macro?.13:.16))*chipStrength*body:0;
+        const chip=q.chip>.56?G((x-q.chipX)/(q.macro?.11:.14))*G((y-q.chipY)/(q.macro?.14:.17))*chipStrength*body:0;
 
-        let surf=q.base+q.lift*(.12+.88*body)+hardFacet+strata+topShelf-lowerCut;
-        surf+=q.macro?periodicField(x*.31+q.cx,y*.31+q.cy,seed+id*53,2)*.008*body:0;
-        surf-=crack*(q.macro?.115:.072);
-        surf-=chip*(q.macro?.060:.036);
-        surf-=(1-edge)*(q.macro?.018:.012);
+        let surf=q.base+q.lift*(.045+.955*body)+hardFacet+strata+topShelf-lowerCut;
+        surf+=q.macro?periodicField(x*.31+q.cx,y*.31+q.cy,seed+id*53,2)*.010*body:0;
+        surf-=crack*(q.macro?.145:.050);
+        surf-=chip*(q.macro?.065:.025);
+        // Keep the shoulder thick; only a small edge cut is allowed.
+        surf-=(1-edge)*(q.macro?.010:.007);
         surf=.5+(surf-.5)*relief;
 
         if(surf>best){
@@ -167,26 +178,27 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         }else if(surf>second)second=surf;
       }
 
-      const overlap=C((best-second)/.050);
-      const seam=C((1-overlap)*.65+(bestId<0?.30:0));
-      const cavity=C(seam*.45+(1-bestEdge)*.18+bestCrack*.92+bestChip*.42);
-      let col:RGB=[.25,.105,.067];
-      let rr=.82,aa=.84;
+      const overlap=C((best-second)/.065);
+      const seam=C((1-overlap)*.48+(bestId<0?.18:0));
+      const cavity=C(seam*.34+(1-bestEdge)*.12+bestCrack*.95+bestChip*.34);
+      let col:RGB=[.22,.090,.065];
+      let rr=.84,aa=.86;
       if(bestId>=0){
         const q=blocks[bestId];
-        const planeLight=C(.48+bestFacet*5.0-by*.08+bx*.025);
-        col=M(mid,light,C(.30+(best-.48)*1.75));
-        col=M(col,ochre,C(planeLight*.20+q.warm*.07));
-        col=M(col,cool,C((.52-planeLight)*.26+q.cool*.055));
-        col=M(col,cream,C(bestStrata*3.0+Math.max(0,bestFacet)*.20));
-        col=M(col,deep,C(cavity*.46));
-        col=M(col,ink,C(bestCrack*.96+seam*.18));
+        const planeLight=C(.48+bestFacet*5.8-by*.09+bx*.030);
+        const heroBoost=q.macro?1:0;
+        col=M(mid,light,C(.24+(best-.42)*1.55));
+        col=M(col,ochre,C(planeLight*.22+q.warm*.075+heroBoost*.035));
+        col=M(col,cool,C((.54-planeLight)*.30+q.cool*.060));
+        col=M(col,cream,C(bestStrata*3.5+Math.max(0,bestFacet)*.24));
+        col=M(col,deep,C(cavity*.48));
+        col=M(col,ink,C(bestCrack*.98+seam*.14));
         const wash=periodicField(u,v,seed+920+bestId*17,2);
-        col=M(col,wash>0?ochre:cool,Math.abs(wash)*.060*bestEdge);
-        rr=C(.70+(1-bestEdge)*.12+bestCrack*.20+bestChip*.08+seam*.05-bestStrata*.05);
-        aa=C(1-cavity*.40-bestCrack*.14);
+        col=M(col,wash>0?ochre:cool,Math.abs(wash)*.070*bestEdge);
+        rr=C(.68+(1-bestEdge)*.12+bestCrack*.22+bestChip*.07+seam*.04-bestStrata*.06);
+        aa=C(1-cavity*.44-bestCrack*.16);
       }else{
-        col=M(mid,cool,.18);col=M(col,deep,seam*.34);rr=.88;aa=.82;
+        col=M(deep,cool,.28);rr=.91;aa=.80;
       }
 
       baseColor.data[j]=C(col[0]);baseColor.data[j+1]=C(col[1]);baseColor.data[j+2]=C(col[2]);
