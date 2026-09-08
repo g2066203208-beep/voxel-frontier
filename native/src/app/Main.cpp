@@ -1545,6 +1545,10 @@ int main() {
                     static_cast<std::uint32_t>(std::max(0, benchmarkHeight)),
                     6U,
                     16U) << '\n';
+                std::cout << "R24 BENCHMARK_GPU_STREAM static_uploads="
+                          << renderer.staticUploadCount()
+                          << " static_upload_bytes=" << renderer.staticUploadBytesTotal()
+                          << '\n';
                 break;
             }
 

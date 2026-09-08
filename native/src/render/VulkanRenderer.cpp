@@ -1209,20 +1209,22 @@ void VulkanRenderer::uploadPlanetMesh(std::shared_ptr<const PreparedPlanetMesh> 
     ++staticMeshGeneration_;
     if (staticMeshGeneration_ == 0U) {
         staticMeshGeneration_ = 1U;
-        staticMeshGenerationByFrame_.fill(0U);
+        staticUploadScheduler_.reset();
     }
 }
 
 void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
-    if (staticMeshGenerationByFrame_[frame] == staticMeshGeneration_) return;
-    auto& mesh = staticMeshes_[frame];
+    (void)frame;
+    const StaticMeshUploadDecision decision = staticUploadScheduler_.adopt(staticMeshGeneration_);
+    if (!decision.upload) return;
+
+    auto& mesh = staticMeshes_[decision.slot];
     const std::shared_ptr<const PreparedPlanetMesh> pending = pendingStaticMesh_;
     if (!pending || pending->vertices.empty() || pending->indices.empty()) {
         mesh.indexCount = 0U;
         mesh.shadowCasterIndexCount = 0U;
         mesh.opaqueIndexCount = 0U;
         mesh.transparentIndexCount = 0U;
-        staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
         return;
     }
 
@@ -1240,7 +1242,13 @@ void VulkanRenderer::uploadStaticMeshForFrame(std::uint32_t frame) {
     mesh.shadowCasterIndexCount = pending->shadowCasterIndexCount;
     mesh.opaqueIndexCount = pending->opaqueIndexCount;
     mesh.transparentIndexCount = pending->transparentIndexCount;
-    staticMeshGenerationByFrame_[frame] = staticMeshGeneration_;
+    staticUploadBytesTotal_ += static_cast<std::uint64_t>(vertexBytes + indexBytes);
+    SDL_Log(
+        "R24 PERF static_upload generation=%llu slot=%u bytes=%llu uploads=%llu",
+        static_cast<unsigned long long>(staticMeshGeneration_),
+        decision.slot,
+        static_cast<unsigned long long>(vertexBytes + indexBytes),
+        static_cast<unsigned long long>(staticUploadScheduler_.uploadCount()));
 }
 
 void VulkanRenderer::setDynamicMesh(const PlanetMesh& mesh) {
@@ -1325,12 +1333,12 @@ void VulkanRenderer::drawFrame(
     if (result != VK_SUCCESS) fail("vkWaitForFences failed", result);
     readTimestampQueries(frame);
 
-    // The frame fence is the ownership gate for both static and dynamic mapped buffers. Static
-    // terrain updates are therefore incremental across the two frames in flight, with no global
-    // GPU idle and no use-after-free risk.
+    // Static terrain is immutable once uploaded. A generation transfers once into an alternating
+    // DEVICE_LOCAL slot and both in-flight frames share that resident slot read-only. The current
+    // frame fence plus single-queue submission order make slot reuse safe without vkDeviceWaitIdle.
     uploadStaticMeshForFrame(frame);
     uploadDynamicMeshForFrame(frame);
-    auto& staticMesh = staticMeshes_[frame];
+    auto& staticMesh = staticMeshes_[staticUploadScheduler_.residentSlot()];
     const auto& dynamic = dynamicMeshes_[frame];
 
     std::uint32_t imageIndex = 0;

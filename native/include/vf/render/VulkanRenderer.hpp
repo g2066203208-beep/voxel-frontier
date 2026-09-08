@@ -11,6 +11,7 @@
 #include <volk.h>
 
 #include "vf/world/PlanetSurface.hpp"
+#include "vf/render/StaticMeshUploadScheduler.hpp"
 
 struct SDL_Window;
 
@@ -83,6 +84,12 @@ public:
     }
     [[nodiscard]] std::uint64_t dynamicTriangleCount() const noexcept {
         return static_cast<std::uint64_t>(pendingDynamicIndices_.size() / 3U);
+    }
+    [[nodiscard]] std::uint64_t staticUploadCount() const noexcept {
+        return staticUploadScheduler_.uploadCount();
+    }
+    [[nodiscard]] std::uint64_t staticUploadBytesTotal() const noexcept {
+        return staticUploadBytesTotal_;
     }
 
 private:
@@ -223,7 +230,8 @@ private:
 
     std::shared_ptr<const PreparedPlanetMesh> pendingStaticMesh_{};
     std::uint64_t staticMeshGeneration_{};
-    std::array<std::uint64_t, kFramesInFlight> staticMeshGenerationByFrame_{};
+    StaticMeshUploadScheduler staticUploadScheduler_{};
+    std::uint64_t staticUploadBytesTotal_{};
     std::array<FrameMesh, kFramesInFlight> staticMeshes_{};
 
     std::vector<PlanetVertex> pendingDynamicVertices_;

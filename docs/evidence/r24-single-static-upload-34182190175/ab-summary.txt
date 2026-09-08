@@ -1,0 +1,9 @@
+baseline_avg_fps=8.556
+optimized_avg_fps=8.599
+fps_delta_percent=0.503
+baseline_p99_ms=144.970
+optimized_p99_ms=140.332
+p99_delta_percent=-3.199
+distinct_static_generations=2
+static_transfers=2
+R24 BENCHMARK_GPU_STREAM static_uploads=2 static_upload_bytes=44840584

@@ -298,6 +298,10 @@ if(VF_BUILD_TESTS)
     target_link_libraries(vf_performance_benchmark_tests PRIVATE vf_engine)
     add_test(NAME vf_performance_benchmark_tests COMMAND vf_performance_benchmark_tests)
 
+    add_executable(vf_static_mesh_upload_scheduler_tests tests/StaticMeshUploadSchedulerTests.cpp)
+    target_link_libraries(vf_static_mesh_upload_scheduler_tests PRIVATE vf_engine)
+    add_test(NAME vf_static_mesh_upload_scheduler_tests COMMAND vf_static_mesh_upload_scheduler_tests)
+
     if(VF_BUILD_RUNTIME)
         add_executable(vf_shader_contract_tests tests/ShaderContractTests.cpp "${VF_SHADER_HEADER}")
         add_dependencies(vf_shader_contract_tests vf_shaders)
