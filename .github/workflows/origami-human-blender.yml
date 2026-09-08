@@ -1,4 +1,4 @@
-name: Slice Neutral Human Blender
+name: PEAK Cute Neutral Human Blender
 
 on:
   push:
@@ -23,37 +23,32 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y blender python3-numpy libegl1 libgl1-mesa-dri
           blender --version
-          blender --background --python-expr "import numpy; print('Blender numpy', numpy.__version__)"
 
-      - name: Generate slice-driven neutral basemesh and verify real sections
+      - name: Generate original PEAK-like neutral basemesh
         run: |
-          mkdir -p artifacts/slice-neutral-human
-          blender --background --python tools/procedural-human/blender/slice_driven_neutral_v12.py -- "$GITHUB_WORKSPACE/artifacts/slice-neutral-human"
-          test -s artifacts/slice-neutral-human/neutral.glb
-          test -s artifacts/slice-neutral-human/neutral-preview.png
-          test -s artifacts/slice-neutral-human/neutral-slices.png
-          test -s artifacts/slice-neutral-human/slice_profiles.json
-          test -s artifacts/slice-neutral-human/metrics.json
+          mkdir -p artifacts/peak-cute-neutral
+          blender --background --python tools/procedural-human/blender/peak_cute_neutral_v13.py -- "$GITHUB_WORKSPACE/artifacts/peak-cute-neutral"
+          test -s artifacts/peak-cute-neutral/neutral.glb
+          test -s artifacts/peak-cute-neutral/neutral-preview.png
+          test -s artifacts/peak-cute-neutral/metrics.json
+          test -s artifacts/peak-cute-neutral/section_spec.json
           python3 - <<'PY'
           import json
-          m=json.load(open('artifacts/slice-neutral-human/metrics.json'))
-          s=json.load(open('artifacts/slice-neutral-human/slice_profiles.json'))
+          m=json.load(open('artifacts/peak-cute-neutral/metrics.json'))
+          assert m['original_geometry'] is True
+          assert m['external_character_mesh'] is False
           assert m['neutral_only'] is True
           assert m['male_female_split'] is False
-          assert m['extra_character_geometry'] is False
           assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False and m['props'] is False
-          assert 900 <= m['tris'] <= 1200, m
-          assert m['control_slice_count'] >= 16, m
-          assert m['measured_slice_count'] >= 48, m
-          assert len(s['measured_slices']) == m['measured_slice_count']
-          assert m['estimated_volume_m3'] > 0, m
+          assert 450 <= m['tris'] <= 750, m
+          assert 4.0 <= m['visual_head_ratio'] <= 5.2, m
           print(json.dumps(m, indent=2))
           PY
 
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
         with:
-          name: slice-neutral-human-blender
-          path: artifacts/slice-neutral-human/
+          name: peak-cute-neutral-human-v13
+          path: artifacts/peak-cute-neutral/
           if-no-files-found: error
           retention-days: 30
