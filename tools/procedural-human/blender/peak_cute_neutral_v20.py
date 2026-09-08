@@ -57,7 +57,9 @@ def tr(o):o.data.calc_loop_triangles();return len(o.data.loop_triangles)
 def sm(o,f,it,n):m=o.modifiers.new(n,'SMOOTH');m.factor=f;m.iterations=it;bpy.ops.object.modifier_apply(modifier=m.name)
 def fuse(o):
  bpy.context.view_layer.objects.active=o;o.select_set(True);o.data.remesh_voxel_size=VOXEL;o.data.remesh_voxel_adaptivity=0;bpy.ops.object.voxel_remesh();sm(o,.42,4,'OrganicRelax');before=tr(o);d=o.modifiers.new('LowPoly','DECIMATE');d.decimate_type='COLLAPSE';d.ratio=max(.001,min(1,TARGET/max(before,1)));d.use_collapse_triangulate=True
- try:d.use_symmetry=True;d.symmetry_axis='X'
+ # Symmetry-aware collapse can duplicate seam triangles in Blender 4.0.2.
+ # The scaffold and voxel field are already symmetric, so use ordinary QEM collapse.
+ try:d.use_symmetry=False
  except:pass
  bpy.ops.object.modifier_apply(modifier=d.name);sm(o,.06,1,'FinalRelax');[setattr(p,'use_smooth',True) for p in o.data.polygons];o.data.update();return before,tr(o)
 def topo(o):
@@ -72,22 +74,29 @@ def topo(o):
  d={'connected_components':cc,'boundary_edges':sum(e.is_boundary for e in bm.edges),'nonmanifold_edges':sum(not e.is_manifold for e in bm.edges),'verts':len(bm.verts),'edges':len(bm.edges),'faces':len(bm.faces)};bm.free();return d
 def make():o=raw();b,a=fuse(o);return o,b,a,topo(o)
 def sanitize(o):
- # Decimate can occasionally leave duplicate loop triangles with identical
- # vertex triples. Keep exactly one geometric triangle before rebuilding.
- o.data.validate(verbose=True,clean_customdata=True);o.data.update();o.data.calc_loop_triangles()
- input_count=len(o.data.loop_triangles);verts=[tuple(v.co) for v in o.data.vertices];faces=[];seen=set();degenerate=0;duplicate=0
- for tri in o.data.loop_triangles:
-  f=tuple(int(i) for i in tri.vertices)
-  if len(set(f))<3:
-   degenerate+=1;continue
-  key=tuple(sorted(f))
-  if key in seen:
-   duplicate+=1;continue
-  seen.add(key);faces.append(f)
- me=bpy.data.meshes.new('CuteNeutralV20ExportMesh');me.from_pydata(verts,[],faces);me.update(calc_edges=True)
- bm=bmesh.new();bm.from_mesh(me);bmesh.ops.recalc_face_normals(bm,faces=bm.faces);bm.to_mesh(me);bm.free();me.validate(verbose=True,clean_customdata=True);me.update(calc_edges=True)
+ # Work from topology, not loop/custom-normal data. Weld coincident vertices first,
+ # triangulate once, remove duplicate geometric faces, then recalculate normals.
+ bm=bmesh.new();bm.from_mesh(o.data)
+ input_faces=len(bm.faces);input_verts=len(bm.verts)
+ bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=1e-7)
+ if bm.edges:bmesh.ops.dissolve_degenerate(bm,edges=list(bm.edges),dist=1e-9)
+ if bm.faces:bmesh.ops.triangulate(bm,faces=list(bm.faces),quad_method='BEAUTY',ngon_method='BEAUTY')
+ bm.verts.ensure_lookup_table();bm.verts.index_update();bm.faces.ensure_lookup_table()
+ seen=set();dups=[];deg=[]
+ for f in list(bm.faces):
+  ids=tuple(v.index for v in f.verts)
+  if len(set(ids))<3:
+   deg.append(f);continue
+  key=tuple(sorted(ids))
+  if key in seen:dups.append(f)
+  else:seen.add(key)
+ if deg:bmesh.ops.delete(bm,geom=deg,context='FACES')
+ if dups:bmesh.ops.delete(bm,geom=dups,context='FACES')
+ if bm.faces:bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
+ bm.normal_update()
+ me=bpy.data.meshes.new('CuteNeutralV20ExportMesh');bm.to_mesh(me);bm.free();me.validate(verbose=True,clean_customdata=True);me.update(calc_edges=True)
  n=bpy.data.objects.new('CuteNeutralV20Export',me);bpy.context.collection.objects.link(n);n.data.materials.append(mat('NeutralBody',(.79,.75,.73)));[setattr(p,'use_smooth',True) for p in n.data.polygons]
- print('SANITIZE_TRIANGLES',json.dumps({'input':input_count,'kept':len(faces),'duplicates':duplicate,'degenerate':degenerate}))
+ print('SANITIZE_TOPOLOGY',json.dumps({'input_faces':input_faces,'input_verts':input_verts,'output_faces':len(me.polygons),'output_verts':len(me.vertices),'duplicates_removed':len(dups),'degenerate_removed':len(deg)}))
  bpy.data.objects.remove(o,do_unlink=True);return n
 def glb_check(path):
  data=open(path,'rb').read();assert len(data)>1000 and data[:4]==b'glTF';off=12;doc=None
@@ -105,4 +114,4 @@ def render(name,front=False):clear();o,_,_,_=clean_model();studio(front);bpy.con
 def export():
  clear();o,b,a,t=clean_model();bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o;path=os.path.join(OUT,'neutral.glb');bpy.ops.export_scene.gltf(filepath=path,export_format='GLB',use_selection=True,export_normals=True);gb,gm,gp=glb_check(path);return b,a,t,gb,gm,gp
 b,a,T,gb,gm,gp=export();render('neutral-preview.png');render('neutral-front.png',True)
-M={'style':'compact-cute-neutral-single-shell-v20','inspiration':'simple round scout-like proportions; original geometry','original_geometry':True,'external_character_mesh':False,'neutral_only':True,'male_female_split':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'height_m':HEIGHT,'head_height_m':.410,'visual_head_ratio':round(HEIGHT/.410,3),'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'voxel_size_m':VOXEL,'target_tris':TARGET,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'semantic soft volumes -> one voxel-unioned shell -> relax -> low-poly -> deduplicated fresh triangle mesh -> validated GLB','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);json.dump({'torso':TORSO,'legs':LEGS,'arm_radii':ARMS,'head':{'center':HEAD_CENTER,'radii':HEAD_RADII}},open(os.path.join(OUT,'section_spec.json'),'w'),indent=2);print('CUTE_NEUTRAL_V20_METRICS',json.dumps(M))
+M={'style':'compact-cute-neutral-single-shell-v20','inspiration':'simple round scout-like proportions; original geometry','original_geometry':True,'external_character_mesh':False,'neutral_only':True,'male_female_split':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'height_m':HEIGHT,'head_height_m':.410,'visual_head_ratio':round(HEIGHT/.410,3),'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'voxel_size_m':VOXEL,'target_tris':TARGET,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'semantic soft volumes -> one voxel-unioned shell -> relax -> ordinary QEM low-poly -> welded/triangulated clean mesh -> validated GLB','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);json.dump({'torso':TORSO,'legs':LEGS,'arm_radii':ARMS,'head':{'center':HEAD_CENTER,'radii':HEAD_RADII}},open(os.path.join(OUT,'section_spec.json'),'w'),indent=2);print('CUTE_NEUTRAL_V20_METRICS',json.dumps(M))
