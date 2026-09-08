@@ -7,13 +7,14 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("build/generated-materials")
 
-DEFAULT_DISPLACEMENT={"amp":.080,"iterations":5,"hd_min":-.82,"hd_max":.82}
+DEFAULT_DISPLACEMENT={"amp":.070,"iterations":5,"hd_min":-.72,"hd_max":.76}
 PRESET_DISPLACEMENT={
-    "vfLayeredSandstonePainted":{"amp":.290,"iterations":8,"hd_min":-.14,"hd_max":1.08},
-    "vfPainterlyDirt":{"amp":.120,"iterations":6,"hd_min":-.42,"hd_max":.88},
-    "vfPainterlyBark":{"amp":.145,"iterations":6,"hd_min":-.38,"hd_max":.92},
-    "vfPainterlyLeaves":{"amp":.125,"iterations":6,"hd_min":-.32,"hd_max":.94},
+    "vfLayeredSandstonePainted":{"amp":.155,"iterations":7,"hd_min":-.28,"hd_max":.78},
+    "vfPainterlyDirt":{"amp":.075,"iterations":6,"hd_min":-.42,"hd_max":.76},
+    "vfPainterlyBark":{"amp":.085,"iterations":6,"hd_min":-.42,"hd_max":.78},
+    "vfPainterlyLeaves":{"amp":.045,"iterations":5,"hd_min":-.45,"hd_max":.72},
     "vfPainterlySnow":{"amp":.105,"iterations":6,"hd_min":-.28,"hd_max":.84},
+    "vfPainterlyStoneWall":{"amp":.095,"iterations":6,"hd_min":-.40,"hd_max":.78},
 }
 WATER_DISPLACEMENT={
     "calm":{"amp":.055,"iterations":6,"hd_min":-.55,"hd_max":.72},
