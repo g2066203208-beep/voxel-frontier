@@ -28,7 +28,7 @@ jobs:
       - name: Generate GLB and real Blender render
         run: |
           mkdir -p artifacts/origami-human
-          blender --background --python tools/procedural-human/blender/origami_human_v3.py -- "$GITHUB_WORKSPACE/artifacts/origami-human"
+          blender --background --python tools/procedural-human/blender/origami_human_v4.py -- "$GITHUB_WORKSPACE/artifacts/origami-human"
           test -s artifacts/origami-human/male.glb
           test -s artifacts/origami-human/female.glb
           test -s artifacts/origami-human/male-female-origami.png
