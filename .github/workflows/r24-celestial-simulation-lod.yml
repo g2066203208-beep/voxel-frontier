@@ -1,0 +1,191 @@
+name: R24 Celestial Simulation LOD Foundation
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_celestial_simulation_lod.py'
+      - '.github/workflows/r24-celestial-simulation-lod.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-celestial-simulation-lod-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-release-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 foundation commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 4
+
+      - name: Materialize celestial simulation LOD
+        run: python3 .github/scripts/r24_celestial_simulation_lod.py
+
+      - name: Validate celestial architecture contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          grep -q 'enum class CelestialOrbitMode' native/include/vf/world/CelestialSystem.hpp
+          grep -q 'setAnalyticOrbitFromCurrentState' native/include/vf/world/CelestialSystem.hpp
+          grep -q 'CelestialSimulationStats' native/include/vf/world/CelestialSystem.hpp
+          grep -q 'evaluateAnalyticOrbitsAt' native/src/world/CelestialSystem.cpp
+          grep -q 'nbodyPairEvaluations' native/src/world/CelestialSystem.cpp
+          grep -q 'lastStepStats_.dynamicBodies <= 1U' native/src/world/CelestialSystem.cpp
+          grep -q 'Aster analytic ephemeris initialization failed' native/src/app/Main.cpp
+          grep -q 'moonPixelDiameter' native/src/app/Main.cpp
+          grep -q 'cinderPotentiallyVisible' native/src/app/Main.cpp
+          ! grep -q 'celestialClock.advance' native/src/app/Main.cpp
+          grep -q 'vf_celestial_simulation_lod_tests' native/CMakeLists.txt
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick xdotool \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+          "$SLANGC" -version
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-celestial-lod -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-celestial-lod --parallel 2
+
+      - name: Run all native tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-celestial-lod --verbose --output-on-failure 2>&1 | tee r24-celestial-lod-ctest.log
+
+      - name: Gate dynamic physics analytic hierarchy and runtime contracts
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-celestial-lod --verbose --output-on-failure \
+            -R 'vf_celestial_simulation_lod_tests|vf_celestial_system_tests|vf_celestial_physics_frame_tests|vf_celestial_surface_frames_tests|vf_interplanetary_flight_tests|vf_planetary_body_system_tests|vf_r24_runtime_stability_tests|vf_r24_physical_planet_tests|vf_planet_tile_streaming_tests|vf_shader_contract_tests' \
+            2>&1 | tee r24-celestial-lod-focused.log
+          grep -q 'R24 celestial simulation LOD tests passed' r24-celestial-lod-focused.log
+          grep -q 'Celestial system tests passed' r24-celestial-lod-focused.log
+          grep -q 'vf_r24_runtime_stability_tests: PASS' r24-celestial-lod-focused.log
+          grep -q 'R24 planet tile streaming tests passed' r24-celestial-lod-focused.log
+          grep -q 'All production shader SPIR-V entry-point contracts passed' r24-celestial-lod-focused.log
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('r24-celestial-lod-focused.log').read_text(encoding='utf-8', errors='replace')
+          m=re.search(
+              r'R24 celestial simulation LOD tests passed analytic=([0-9]+) dynamic=([0-9]+) '
+              r'ephemeris_evals=([0-9]+) nbody_pair_evals=([0-9]+) dynamic_substeps=([0-9]+)', text)
+          if not m:
+              raise SystemExit('missing celestial LOD telemetry')
+          analytic,dynamic,evals,pairs,substeps=map(int,m.groups())
+          print('R24_CELESTIAL_LOD',analytic,dynamic,evals,pairs,substeps)
+          if analytic != 64 or evals != 64 or pairs != 0:
+              raise SystemExit('remote analytic bodies leaked into the N-body pair loop')
+          Path('r24-celestial-lod-performance.txt').write_text(
+              f'analytic_bodies={analytic}\ndynamic_bodies={dynamic}\n'
+              f'ephemeris_evaluations={evals}\nnbody_pair_evaluations={pairs}\n'
+              f'dynamic_substeps={substeps}\n'
+              'production_policy=stable_major_bodies_absolute_time_ephemeris\n'
+              'close_encounters=dynamic_nbody_velocity_verlet\n', encoding='utf-8')
+          PY
+
+      - name: Verify Vulkan device
+        shell: bash
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Capture real Vulkan production scenes
+        shell: bash
+        run: |
+          APP="$(find build/r24-celestial-lod -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          chmod +x .github/scripts/r24_epic_landscape_capture.sh
+          .github/scripts/r24_epic_landscape_capture.sh "$APP" r24-celestial-lod-evidence
+
+      - name: Gate real images and production celestial telemetry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s r24-celestial-lod-evidence/r24-epic-landscape-overview.png
+          for f in mountain rift canyon abyss; do
+            test -s "r24-celestial-lod-evidence/logs/$f.log"
+            grep -q 'R24 PERF terrain_build_ms=' "r24-celestial-lod-evidence/logs/$f.log"
+          done
+          # At least one capture must run long enough to emit the 120-frame production policy line.
+          cat r24-celestial-lod-evidence/logs/*.log > r24-celestial-runtime.log
+          grep -q 'R24 CELESTIAL dynamic_bodies=1 analytic_bodies=3 nbody_pairs=0 ephemeris_evals=3' \
+            r24-celestial-runtime.log
+
+      - name: Preserve evidence
+        if: always()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-celestial-simulation-lod-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          if [[ -d r24-celestial-lod-evidence ]]; then
+            cp -a r24-celestial-lod-evidence/. "$EVIDENCE_DIR/"
+          fi
+          for f in r24-celestial-lod-ctest.log r24-celestial-lod-focused.log r24-celestial-lod-performance.txt r24-celestial-runtime.log vulkan-summary.txt; do
+            [[ -f "$f" ]] && cp -f "$f" "$EVIDENCE_DIR/" || true
+          done
+          printf 'workflow_run=%s\nworkflow_sha=%s\njob_status=%s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "${{ job.status }}" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-celestial-simulation-lod-${{ github.run_id }}
+          path: |
+            r24-celestial-lod-evidence/**
+            r24-celestial-lod-ctest.log
+            r24-celestial-lod-focused.log
+            r24-celestial-lod-performance.txt
+            r24-celestial-runtime.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested celestial simulation LOD foundation
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          if ! git diff --cached --quiet; then
+            git commit -m "perf(r24): make remote celestial motion ephemeris-driven"
+          fi
+          git reset --hard HEAD
+          git clean -fd build/r24-celestial-lod || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
