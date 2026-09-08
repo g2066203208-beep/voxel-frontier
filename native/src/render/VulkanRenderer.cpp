@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cmath>
 #include <cstddef>
 #include <cstring>
@@ -530,6 +531,10 @@ void VulkanRenderer::createSwapchain() {
 
     std::uint32_t imageCount = capabilities.minImageCount + 1U;
     if (capabilities.maxImageCount > 0U) imageCount = std::min(imageCount, capabilities.maxImageCount);
+    SDL_Log("R24 WSI present_mode=%s requested_images=%u extent=%ux%u",
+        present == VK_PRESENT_MODE_MAILBOX_KHR ? "MAILBOX" :
+        (present == VK_PRESENT_MODE_IMMEDIATE_KHR ? "IMMEDIATE" : "FIFO"),
+        imageCount, extent.width, extent.height);
 
     VkSwapchainCreateInfoKHR info{};
     info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -1328,8 +1333,12 @@ void VulkanRenderer::drawFrame(
     if (resizeRequested_) recreateSwapchain();
     if (swapchain_ == VK_NULL_HANDLE || opaquePipeline_ == VK_NULL_HANDLE) return;
 
+    // R24_FULL_FRAME_ATTRIBUTION_V1: expose CPU/WSI back-pressure hidden by GPU pass timestamps.
+    using R24RenderClock = std::chrono::steady_clock;
+    const auto r24RenderCpu0 = R24RenderClock::now();
     const std::uint32_t frame = frameIndex_ % kFramesInFlight;
     VkResult result = vkWaitForFences(device_, 1, &inFlight_[frame], VK_TRUE, UINT64_MAX);
+    const auto r24RenderCpu1 = R24RenderClock::now();
     if (result != VK_SUCCESS) fail("vkWaitForFences failed", result);
     readTimestampQueries(frame);
 
@@ -1338,6 +1347,7 @@ void VulkanRenderer::drawFrame(
     // frame fence plus single-queue submission order make slot reuse safe without vkDeviceWaitIdle.
     uploadStaticMeshForFrame(frame);
     uploadDynamicMeshForFrame(frame);
+    const auto r24RenderCpu2 = R24RenderClock::now();
     auto& staticMesh = staticMeshes_[staticUploadScheduler_.residentSlot()];
     const auto& dynamic = dynamicMeshes_[frame];
 
@@ -1350,6 +1360,7 @@ void VulkanRenderer::drawFrame(
     }
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
         fail("vkAcquireNextImageKHR failed", result);
+    const auto r24RenderCpu3 = R24RenderClock::now();
     vkResetFences(device_, 1, &inFlight_[frame]);
     vkResetCommandBuffer(commandBuffers_[frame], 0);
 
@@ -1710,6 +1721,7 @@ void VulkanRenderer::drawFrame(
 
     result = vkEndCommandBuffer(command);
     if (result != VK_SUCCESS) fail("vkEndCommandBuffer failed", result);
+    const auto r24RenderCpu4 = R24RenderClock::now();
 
     VkSemaphoreSubmitInfo wait{};
     wait.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO;
@@ -1732,6 +1744,7 @@ void VulkanRenderer::drawFrame(
     submit.pSignalSemaphoreInfos = &signal;
     result = vkQueueSubmit2(graphicsQueue_, 1, &submit, inFlight_[frame]);
     if (result != VK_SUCCESS) fail("vkQueueSubmit2 failed", result);
+    const auto r24RenderCpu5 = R24RenderClock::now();
     if (gpuTimestampsSupported_) timestampQueryWritten_[frame] = true;
 
     VkPresentInfoKHR present{};
@@ -1742,8 +1755,40 @@ void VulkanRenderer::drawFrame(
     present.pSwapchains = &swapchain_;
     present.pImageIndices = &imageIndex;
     const VkResult presentResult = vkQueuePresentKHR(graphicsQueue_, &present);
+    const auto r24RenderCpu6 = R24RenderClock::now();
     imageInitialized_[imageIndex] = true;
     ++frameIndex_;
+    struct R24RendererCpuTelemetry {
+        std::uint64_t frames{};
+        double fence{}, upload{}, acquire{}, record{}, submit{}, present{}, total{};
+        double maxFence{}, maxAcquire{}, maxPresent{}, maxTotal{};
+    };
+    static R24RendererCpuTelemetry r24{};
+    const auto ms = [](auto a, auto b) {
+        return std::chrono::duration<double, std::milli>(b - a).count();
+    };
+    const double fenceMs = ms(r24RenderCpu0, r24RenderCpu1);
+    const double uploadMs = ms(r24RenderCpu1, r24RenderCpu2);
+    const double acquireMs = ms(r24RenderCpu2, r24RenderCpu3);
+    const double recordMs = ms(r24RenderCpu3, r24RenderCpu4);
+    const double submitMs = ms(r24RenderCpu4, r24RenderCpu5);
+    const double presentMs = ms(r24RenderCpu5, r24RenderCpu6);
+    const double totalMs = ms(r24RenderCpu0, r24RenderCpu6);
+    ++r24.frames;
+    r24.fence += fenceMs; r24.upload += uploadMs; r24.acquire += acquireMs;
+    r24.record += recordMs; r24.submit += submitMs; r24.present += presentMs; r24.total += totalMs;
+    r24.maxFence = std::max(r24.maxFence, fenceMs);
+    r24.maxAcquire = std::max(r24.maxAcquire, acquireMs);
+    r24.maxPresent = std::max(r24.maxPresent, presentMs);
+    r24.maxTotal = std::max(r24.maxTotal, totalMs);
+    if ((r24.frames % 16U) == 0U) {
+        const double inv = 1.0 / static_cast<double>(r24.frames);
+        SDL_Log("R24 RENDER_CPU stage_ms samples=%llu fence_mean=%.3f upload_query_mean=%.3f acquire_mean=%.3f record_mean=%.3f submit_mean=%.3f present_mean=%.3f total_mean=%.3f fence_max=%.3f acquire_max=%.3f present_max=%.3f total_max=%.3f",
+            static_cast<unsigned long long>(r24.frames),
+            r24.fence * inv, r24.upload * inv, r24.acquire * inv, r24.record * inv,
+            r24.submit * inv, r24.present * inv, r24.total * inv,
+            r24.maxFence, r24.maxAcquire, r24.maxPresent, r24.maxTotal);
+    }
     if (presentResult == VK_ERROR_OUT_OF_DATE_KHR
         || presentResult == VK_SUBOPTIMAL_KHR
         || resizeRequested_) {

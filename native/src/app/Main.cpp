@@ -1073,16 +1073,27 @@ int main() {
             mainstreamPerfProfile,
             2.0,
             6.0,
-            60.0,
+            120.0,
             40U,
             "mainstream_1080p"}};
         if (mainstreamPerfProfile) {
             std::cout << "R24 BENCHMARK_BEGIN profile=mainstream_1080p resolution=1920x1080"
-                      << " cpu_core_limit=6 memory_budget_gib=16 target_fps=60\n";
+                      << " cpu_core_limit=6 memory_budget_gib=16 target_fps=120\n";
         }
+
+        // R24_FULL_FRAME_ATTRIBUTION_V1: low-overhead wall-clock attribution.
+        struct R24CpuStageTelemetry {
+            std::uint64_t frames{};
+            double celestial{}, camera{}, physics{}, streaming{}, dynamicScene{}, prep{}, renderer{}, frame{};
+            double maxFrame{};
+        } r24CpuStages;
+        const auto r24Ms = [](Clock::time_point a, Clock::time_point b) {
+            return std::chrono::duration<double, std::milli>(b - a).count();
+        };
 
         while (platform.pumpEvents()) {
             const auto now = Clock::now();
+            const auto r24FrameCpuStart = now;
             const double rawFrameSeconds = std::max(
                 0.0, std::chrono::duration<double>(now - previous).count());
             const double dt = std::clamp(rawFrameSeconds, 1.0 / 500.0, 0.05);
@@ -1103,6 +1114,7 @@ int main() {
                 ? 1.0
                 : celestialTimeScale;
             planetaryBodies.step(dt * effectiveCelestialTimeScale);
+            const auto r24CelestialDone = Clock::now();
             if (runtimeDiagnosticsStdout) {
                 const vf::CelestialSimulationStats celestialStats = celestial.lastStepStats();
                 static std::uint64_t celestialDiagFrame = 0U;
@@ -1148,7 +1160,9 @@ int main() {
 
             const bool wasFlightMode = camera.flightMode();
             camera.update(movement, dt);
+            const auto r24CameraDone = Clock::now();
             physics.advance(dt);
+            const auto r24PhysicsDone = Clock::now();
 
             if (celestialViewMode == "earth-globe") {
                 const glm::dvec3 observerDirection = safeNormalize({0.44, 0.28, 0.85});
@@ -1338,6 +1352,7 @@ int main() {
                 }
             }
 
+            const auto r24StreamingDone = Clock::now();
             const glm::dvec3 sunWorldDirection = safeNormalize(
                 currentSun->position - camera.position());
             const glm::dvec3 sunSurfaceDirection = safeNormalize(
@@ -1482,6 +1497,7 @@ int main() {
                 dynamicSceneAccumulator = 0.0;
             }
 
+            const auto r24DynamicDone = Clock::now();
             const auto [width, height] = platform.drawableSize();
             const float aspect = height > 0
                 ? static_cast<float>(width) / static_cast<float>(height)
@@ -1523,6 +1539,7 @@ int main() {
             renderEnvironment.mieScale = 0.78F;
             renderEnvironment.flightSpeedMps = static_cast<float>(camera.flightSpeedMps());
             renderEnvironment.dynamicShadowCasters = shadowContactCapture;
+            const auto r24PrepDone = Clock::now();
 
             const auto renderStarted = Clock::now();
             renderer.drawFrame(viewProjection, cameraSurface, renderEnvironment);
@@ -1530,6 +1547,31 @@ int main() {
                 Clock::now() - renderStarted).count();
             diagnosticsMaxRenderMilliseconds = std::max(
                 diagnosticsMaxRenderMilliseconds, renderWallMilliseconds);
+            const auto r24RenderDone = Clock::now();
+            r24CpuStages.frames += 1U;
+            r24CpuStages.celestial += r24Ms(r24FrameCpuStart, r24CelestialDone);
+            r24CpuStages.camera += r24Ms(r24CelestialDone, r24CameraDone);
+            r24CpuStages.physics += r24Ms(r24CameraDone, r24PhysicsDone);
+            r24CpuStages.streaming += r24Ms(r24PhysicsDone, r24StreamingDone);
+            r24CpuStages.dynamicScene += r24Ms(r24StreamingDone, r24DynamicDone);
+            r24CpuStages.prep += r24Ms(r24DynamicDone, r24PrepDone);
+            r24CpuStages.renderer += r24Ms(r24PrepDone, r24RenderDone);
+            const double r24WholeFrame = r24Ms(r24FrameCpuStart, r24RenderDone);
+            r24CpuStages.frame += r24WholeFrame;
+            r24CpuStages.maxFrame = std::max(r24CpuStages.maxFrame, r24WholeFrame);
+            if ((r24CpuStages.frames % 16U) == 0U) {
+                const double inv = 1.0 / static_cast<double>(r24CpuStages.frames);
+                std::cout << "R24 CPU stage_ms samples=" << r24CpuStages.frames
+                          << " celestial_mean=" << r24CpuStages.celestial * inv
+                          << " camera_mean=" << r24CpuStages.camera * inv
+                          << " physics_mean=" << r24CpuStages.physics * inv
+                          << " streaming_mean=" << r24CpuStages.streaming * inv
+                          << " dynamic_mean=" << r24CpuStages.dynamicScene * inv
+                          << " prep_mean=" << r24CpuStages.prep * inv
+                          << " renderer_mean=" << r24CpuStages.renderer * inv
+                          << " frame_cpu_mean=" << r24CpuStages.frame * inv
+                          << " frame_cpu_max=" << r24CpuStages.maxFrame << '\n';
+            }
 
             performanceBenchmark.recordFrame(
                 rawFrameSeconds,

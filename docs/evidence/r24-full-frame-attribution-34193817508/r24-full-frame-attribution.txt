@@ -1,0 +1,6 @@
+CI_DEVICE=llvmpipe software Vulkan; relative attribution only, not hardware 120 FPS certification.
+R24 BENCHMARK profile=mainstream_1080p resolution=1920x1080 gpu="llvmpipe (LLVM 20.1.2, 256 bits)" cpu_core_limit=6 memory_budget_gib=16 target_fps=120.000 frames=50 seconds=6.089 avg_fps=8.212 one_percent_low_fps=7.033 frame_mean_ms=121.777 p50_ms=117.535 p95_ms=136.581 p99_ms=142.178 max_ms=143.911 render_mean_ms=115.087 render_p95_ms=130.953 render_max_ms=135.598 streaming_busy_pct=0.000 static_tris_max=535752 dynamic_tris_max=64 valid=1
+R24 CPU stage_ms samples=48 celestial_mean=0.0 camera_mean=0.0 physics_mean=0.0 streaming_mean=3.6 dynamic_mean=0.0 prep_mean=0.0 renderer_mean=128.6 frame_cpu_mean=132.3 frame_cpu_max=701.4
+R24 RENDER_CPU stage_ms samples=48 fence_mean=0.003 upload_query_mean=0.693 acquire_mean=0.004 record_mean=0.028 submit_mean=0.006 present_mean=126.901 total_mean=127.635 fence_max=0.005 acquire_max=0.016 present_max=638.067 total_max=653.777
+R24 GPU steady_pass_ms samples=48 shadow_mean=0.743 opaque_mean=41.343 sky_mean=26.326 transparent_mean=6.153 total_mean=74.565 shadow_max=1.858 opaque_max=48.734 sky_max=33.642 transparent_max=8.184
+R24 WSI present_mode=MAILBOX requested_images=4 extent=1920x1080
