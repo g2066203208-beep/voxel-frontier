@@ -6,14 +6,14 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT=Path(sys.argv[1]) if len(sys.argv)>1 else Path('build/generated-materials')
 OUT_SIZE=1000
-RENDER_SIZE=1400
+RENDER_SIZE=1600
 CFG={
-    'vfLayeredSandstonePainted':{'amp':.42,'lo':-.18,'hi':1.16,'nlat':150,'nlon':300,'geo':.80,'facet':.040,'subtitle':'broad terraced cliff masses · smooth vector silhouette'},
-    'vfPainterlyBark':{'amp':.055,'lo':-.72,'hi':1.04,'nlat':140,'nlon':280,'geo':.62,'facet':0.0,'subtitle':'continuous bark planes · smooth attached ridges'},
-    'vfPainterlyDirt':{'amp':.100,'lo':-.72,'hi':1.02,'nlat':140,'nlon':280,'geo':.60,'facet':0.0,'subtitle':'broad clods and pits · smooth macro relief'},
-    'vfPainterlyStoneWall':{'amp':.175,'lo':-.55,'hi':1.06,'nlat':150,'nlon':300,'geo':.80,'facet':.030,'subtitle':'few broad wall stones · clean recessed mortar'},
-    'vfPainterlyMoss':{'amp':.050,'lo':-.60,'hi':1.06,'nlat':140,'nlon':280,'geo':.78,'facet':0.0,'subtitle':'continuous moss carpet · smooth lifted edge lobes'},
-    'vfPainterlyWolfFur':{'amp':.060,'lo':-.72,'hi':1.06,'nlat':150,'nlon':300,'geo':.76,'facet':0.0,'subtitle':'broad coat planes · smooth silhouette fins'},
+    'vfLayeredSandstonePainted':{'amp':.36,'lo':-.22,'hi':1.12,'nlat':180,'nlon':360,'geo':.86,'facet':0.0,'subtitle':'broad continuous cliff slabs · smooth vector silhouette'},
+    'vfPainterlyBark':{'amp':.105,'lo':-.72,'hi':1.04,'nlat':170,'nlon':340,'geo':.72,'facet':0.0,'subtitle':'continuous bark planes · smooth attached ridges'},
+    'vfPainterlyDirt':{'amp':.135,'lo':-.72,'hi':1.02,'nlat':170,'nlon':340,'geo':.70,'facet':0.0,'subtitle':'broad clods and bowls · smooth macro relief'},
+    'vfPainterlyStoneWall':{'amp':.200,'lo':-.55,'hi':1.06,'nlat':180,'nlon':360,'geo':.86,'facet':0.0,'subtitle':'broad fitted wall stones · clean recessed mortar'},
+    'vfPainterlyMoss':{'amp':.085,'lo':-.60,'hi':1.06,'nlat':170,'nlon':340,'geo':.82,'facet':0.0,'subtitle':'continuous moss cushions · smooth lifted edge lobes'},
+    'vfPainterlyWolfFur':{'amp':.080,'lo':-.72,'hi':1.06,'nlat':180,'nlon':360,'geo':.82,'facet':0.0,'subtitle':'broad coat planes · smooth silhouette fins'},
 }
 
 def srgb_to_linear(x):return np.where(x<=.04045,x/12.92,((x+.055)/1.055)**2.4)
@@ -44,26 +44,26 @@ def sphere_pos(u,v,radius_fn,lift=0.0):
     return np.array([r*cl*math.cos(lon),r*sl,r*cl*math.sin(lon)],np.float32)
 
 def add_ribbon(verts,uvs,tris,radius_fn,u0,v0,du,dv,width,lift,kind='fur',tip_bias=0.0):
-    # Supersampled broad card/fins: five vertices across and seven along the flow.
-    # This keeps the root welded to the shell while eliminating the old folded-paper zig-zag.
+    # Broad smooth cards/fins: seven vertices across and ten along the flow.
+    # The complete root edge is welded to the displaced shell; no thin strand geometry.
     L=math.hypot(du,dv) or 1.0;pu=-dv/L;pv=du/L
-    ts=np.linspace(0.0,1.0,7)
-    sides=(-1.0,-.5,0.0,.5,1.0)
+    ts=np.linspace(0.0,1.0,10)
+    sides=np.linspace(-1.0,1.0,7)
     base=len(verts)
     for t in ts:
         ease=t*t*(3-2*t)
         if kind=='fur':
-            wf=(1-ease)*.90+ease*.28+math.sin(math.pi*t)*.16
-            center=lift*(.10*t+.62*ease)
-            edge=center*(.34+.18*t)
+            wf=(1-ease)*.94+ease*.30+math.sin(math.pi*t)*.18
+            center=lift*(.08*t+.64*ease)
+            edge=center*(.28+.16*t)
         else:
-            wf=.92+math.sin(math.pi*t)*.13-.10*ease
-            center=lift*(.06*t+.30*ease)
-            edge=center*(.38+.10*t)
+            wf=.96+math.sin(math.pi*t)*.15-.11*ease
+            center=lift*(.05*t+.34*ease)
+            edge=center*(.30+.12*t)
         cu=u0+du*t;cv=v0+dv*t;bend=(t*(1-t))*tip_bias;cu+=bend*pu;cv+=bend*pv
         for side in sides:
             off=width*wf*side*.5;uu=cu+pu*off;vv=cv+pv*off
-            crown=(1-abs(side))**1.65;extra=edge+(center-edge)*crown
+            crown=(1-abs(side))**1.55;extra=edge+(center-edge)*crown
             if t==0:extra=0.0
             verts.append(tuple(sphere_pos(uu,vv,radius_fn,extra)));uvs.append((uu%1.0,max(.02,min(.98,vv))))
     cols=len(sides)
@@ -74,21 +74,21 @@ def add_ribbon(verts,uvs,tris,radius_fn,u0,v0,du,dv,width,lift,kind='fur',tip_bi
 
 def add_wolf_cards(verts,uvs,tris,radius_fn):
     body=[
-        (.64,.24, .010,.205,.150,.105,-.010),(.82,.25,-.010,.205,.145,.100,.012),
-        (.69,.45,-.008,.215,.158,.115,.010),(.86,.48,.012,.205,.150,.110,-.012),(.75,.66,-.010,.185,.148,.105,.010),
+        (.64,.24,.010,.205,.165,.105,-.010),(.82,.25,-.010,.205,.160,.100,.012),
+        (.69,.45,-.008,.215,.172,.115,.010),(.86,.48,.012,.205,.165,.110,-.012),(.75,.66,-.010,.185,.160,.105,.010),
     ]
     rim=[
-        (.505,.28,.024,.185,.100,.145,-.014),(.508,.50,.026,.195,.108,.150,.014),(.515,.70,.020,.175,.098,.135,-.010),
-        (.995,.30,-.024,.185,.100,.145,.014),(.992,.52,-.026,.195,.108,.150,-.014),(.985,.71,-.020,.175,.098,.135,.010),
+        (.505,.28,.024,.185,.112,.145,-.014),(.508,.50,.026,.195,.120,.150,.014),(.515,.70,.020,.175,.108,.135,-.010),
+        (.995,.30,-.024,.185,.112,.145,.014),(.992,.52,-.026,.195,.120,.150,-.014),(.985,.71,-.020,.175,.108,.135,.010),
     ]
     for c in body+rim:add_ribbon(verts,uvs,tris,radius_fn,*c[:-1],kind='fur',tip_bias=c[-1])
     return len(body)+len(rim)
 
 def add_moss_cards(verts,uvs,tris,radius_fn):
     cards=[
-        (.58,.25,.020,.120,.215,.080,.010),(.80,.24,-.014,.125,.235,.085,-.012),
-        (.54,.48,.022,.125,.230,.090,-.014),(.76,.46,-.010,.130,.250,.095,.012),
-        (.94,.49,-.020,.115,.205,.085,.014),(.64,.70,.016,.115,.235,.090,.010),(.86,.69,-.014,.115,.230,.085,-.010),
+        (.58,.25,.020,.120,.235,.090,.010),(.80,.24,-.014,.125,.255,.095,-.012),
+        (.54,.48,.022,.125,.250,.100,-.014),(.76,.46,-.010,.130,.270,.105,.012),
+        (.94,.49,-.020,.115,.225,.095,.014),(.64,.70,.016,.115,.255,.100,.010),(.86,.69,-.014,.115,.250,.095,-.010),
     ]
     for c in cards:add_ribbon(verts,uvs,tris,radius_fn,*c[:-1],kind='moss',tip_bias=c[-1])
     return len(cards)
@@ -124,7 +124,8 @@ def main():
             yy,xx=np.mgrid[miny:maxy+1,minx:maxx+1];w0=((by-cy)*(xx-cx)+(cx-bx)*(yy-cy))/den;w1=((cy-ay)*(xx-cx)+(ax-cx)*(yy-cy))/den;w2=1-w0-w1;inside=(w0>=-.001)&(w1>=-.001)&(w2>=-.001)
             zz=w0*tv[0,2]+w1*tv[1,2]+w2*tv[2,2];sub=zbuf[miny:maxy+1,minx:maxx+1];upd=inside&(zz>sub)
             if not np.any(upd):continue
-            sub[upd]=zz[upd];uu=w0*tuv[0,0]+w1*tuv[1,0]+w2*tuv[2,0];vv=w0*tuv[0,1]+w1*tuv[1,1]+w2*tuv[2,1];ou[miny:maxy+1,minx:maxx+1][upd]=uu[upd];ov[miny:maxy+1,minx:maxx+1][upd]=vv[upd];face=np.cross(tv[1]-tv[0],tv[2]-tv[0]);face=face/(np.linalg.norm(face)+1e-8);on[miny:maxy+1,minx:maxx+1][upd]=face
+            sub[upd]=zz[upd];uu=w0*tuv[0,0]+w1*tuv[1,0]+w2*tuv[2,0];vv=w0*tuv[0,1]+w1*tuv[1,1]+w2*tuv[2,1];ou[miny:maxy+1,minx:maxx+1][upd]=uu[upd];ov[miny:maxy+1,minx:maxx+1][upd]=vv[upd]
+            vn=norm(tv);nn=norm(w0[...,None]*vn[0]+w1[...,None]*vn[1]+w2[...,None]*vn[2]);on[miny:maxy+1,minx:maxx+1][upd]=nn[upd]
         mask=zbuf>-1e8;Ng=norm(np.where(mask[...,None],on,np.array([0,0,1],np.float32)));bc=srgb_to_linear(bilinear(base,ou,ov));nt=bilinear(normal_tex,ou,ov)*2-1;rr=np.clip(bilinear(rough,ou,ov),.04,1);aa=bilinear(ao,ou,ov);T=norm(np.stack([-Ng[...,2],np.zeros((S,S),np.float32),Ng[...,0]],-1));Bt=norm(np.cross(Ng,T));Ntex=norm(T*nt[...,0:1]+Bt*nt[...,1:2]+Ng*np.maximum(nt[...,2:3],.08));N=norm(Ng*cfg['geo']+Ntex*(1-cfg['geo']));color=bc*(.21+.28*aa[...,None]);lights=[(np.array([-.58,.72,.38],np.float32),2.55,np.array([1,.82,.62],np.float32)),(np.array([.68,.22,.70],np.float32),.95,np.array([.50,.64,1],np.float32)),(np.array([-.15,-.78,.60],np.float32),.44,np.array([.78,.38,.30],np.float32))];Vcam=np.array([0,0,1],np.float32)
         for L,intensity,lcol in lights:
             L=L/np.linalg.norm(L);ndl=np.clip(np.sum(N*L,axis=-1),0,1);color+=bc*ndl[...,None]*intensity*lcol*.55;H=(L+Vcam)/np.linalg.norm(L+Vcam);ndh=np.clip(np.sum(N*H,axis=-1),0,1);spec=np.power(ndh,4+36*(1-rr))*(1-rr)*.11;color+=spec[...,None]*intensity*lcol
@@ -134,6 +135,6 @@ def main():
         try:f1=ImageFont.truetype('DejaVuSans.ttf',24);f2=ImageFont.truetype('DejaVuSans.ttf',16)
         except:f1=ImageFont.load_default();f2=f1
         draw.rounded_rectangle((28,28,OUT_SIZE-28,105),radius=18,fill=(18,18,20));title='TRUE MESH + MACRO CARDS' if card_count else 'TRUE MESH DISPLACEMENT';draw.text((50,43),f'{n} · {title}',fill='white',font=f1);sub=f"{cfg['subtitle']} · cards {card_count}" if card_count else f"{cfg['subtitle']} · amp {cfg['amp']:.3f}";draw.text((50,72),sub,fill=(205,205,210),font=f2);out.save(d/'preview-sphere.png')
-        metrics={'renderer':'supersampled_vector_edge_mesh_cards_v3','preset':preset,'renderSize':S,'outputSize':OUT_SIZE,'repeatScale':1.0,'displacementAmp':cfg['amp'],'heightP05':float(h05),'heightP50':float(h50),'heightP95':float(h95),'heightSpanP05P95':float(span),'meshLatitudeSegments':nlat,'meshLongitudeSegments':nlon,'macroCards':card_count,'cardCrossSections':5 if card_count else 0,'cardLongitudinalSections':7 if card_count else 0,'cardRootAttachment':'full_edge_flush_to_displaced_surface' if card_count else 'none'};(d/'preview-mesh-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n',encoding='utf-8');count+=1
+        metrics={'renderer':'continuous_vector_height_smooth_vertex_normals_v4','preset':preset,'renderSize':S,'outputSize':OUT_SIZE,'repeatScale':1.0,'displacementAmp':cfg['amp'],'heightP05':float(h05),'heightP50':float(h50),'heightP95':float(h95),'heightSpanP05P95':float(span),'meshLatitudeSegments':nlat,'meshLongitudeSegments':nlon,'macroCards':card_count,'cardCrossSections':7 if card_count else 0,'cardLongitudinalSections':10 if card_count else 0,'cardRootAttachment':'full_edge_flush_to_displaced_surface' if card_count else 'none','heightTerracing':False,'normalInterpolation':'smooth_vertex'};(d/'preview-mesh-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n',encoding='utf-8');count+=1
     print('rendered',count)
 if __name__=='__main__':main()
