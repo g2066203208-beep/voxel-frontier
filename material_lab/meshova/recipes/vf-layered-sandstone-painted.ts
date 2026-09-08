@@ -14,7 +14,7 @@ export type VfLayeredSandstoneParams = {
 type RockBlock = {
   cx:number; cy:number; hw:number; hh:number; angle:number;
   base:number; lift:number; warm:number; cool:number; macro:boolean;
-  bevel:number; strata:number[]; crack:boolean; crackX:number; crackTilt:number;
+  strata:number[]; crack:boolean; crackX:number; crackTilt:number;
   chipX:number; chipY:number; chip:number;
   planes:[number,number,number][];
 };
@@ -25,15 +25,14 @@ function makeBlock(seed:number,row:number,id:number,cx:number,cy:number,hw:numbe
   for(let k=0;k<strataCount;k++) strata.push(-0.58+hash(seed,row,id,40+k)*1.16);
   const planes:[number,number,number][]=[];
   for(let k=0;k<5;k++) planes.push([
-    (hash(seed,row,id,60+k*3)-.5)*1.35,
-    (hash(seed,row,id,61+k*3)-.5)*1.05,
-    (hash(seed,row,id,62+k*3)-.5)*.34,
+    (hash(seed,row,id,60+k*3)-.5)*1.34,
+    (hash(seed,row,id,61+k*3)-.5)*1.04,
+    (hash(seed,row,id,62+k*3)-.5)*.32,
   ]);
   return {
     cx:(cx+2)%1, cy:(cy+2)%1, hw, hh,
-    angle:(hash(seed,row,id,5)-.5)*(macro?.24:.15),
+    angle:(hash(seed,row,id,5)-.5)*(macro?.25:.15),
     base, lift, warm:hash(seed,row,id,6), cool:hash(seed,row,id,7), macro,
-    bevel:macro?.24:.17,
     strata,
     crack:hash(seed,row,id,8)<crackChance,
     crackX:(hash(seed,row,id,9)-.5)*.34,
@@ -50,7 +49,7 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
   const rows=Math.max(4,Math.min(6,bands));
   const rowStep=1/rows;
 
-  // Continuous but deliberately LOW support mass. It closes holes and nothing more.
+  // Low interlocking support mass: closes the material but never becomes the silhouette hero.
   for(let row=0;row<rows;row++){
     const requested=minSlabs+Math.floor(hash(seed,row,101)*(maxSlabs-minSlabs+1));
     const count=Math.max(3,Math.min(4,requested+1));
@@ -72,8 +71,7 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
     }
   }
 
-  // Sparse hero outcrops: broad footprint, huge elevation delta, thick shoulders.
-  // Two of them deliberately straddle periodic seams so real displacement breaks the sphere silhouette.
+  // Sparse giant outcrops. The seam block is intentionally periodic so the real sphere silhouette breaks.
   const hero:[number,number,number,number,number,number][]=[
     [.57,.53,.215,.175,.505,.310],
     [.27,.46,.155,.145,.485,.255],
@@ -81,14 +79,13 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
     [.39,.73,.175,.145,.490,.265],
     [.73,.72,.165,.145,.485,.250],
     [.56,.27,.165,.120,.480,.235],
-    [.035,.56,.145,.185,.510,.345],
-    [.58,.035,.185,.115,.500,.305],
+    [.040,.56,.175,.205,.500,.300],
   ];
   for(let i=0;i<hero.length;i++){
     const [cx,cy,hw,hh,base,lift]=hero[i];
     out.push(makeBlock(seed,90,i,
-      cx+(hash(seed,90,i,1)-.5)*.020,
-      cy+(hash(seed,90,i,2)-.5)*.020,
+      cx+(hash(seed,90,i,1)-.5)*.018,
+      cy+(hash(seed,90,i,2)-.5)*.018,
       hw*(.98+hash(seed,90,i,3)*.08),
       hh*(.98+hash(seed,90,i,4)*.08),
       base+(hash(seed,90,i,15)-.5)*.012,
@@ -101,8 +98,8 @@ function buildBlocks(seed:number,bands:number,minSlabs:number,maxSlabs:number,cr
 
 function blockShape(x:number,y:number){
   const ax=Math.abs(x), ay=Math.abs(y);
-  const chamfer=(ax+ay)*.71;
-  return Math.max(ax*.92,ay*.96,chamfer);
+  // Octagonal/chamfered footprint. Rotation + deterministic distortion keep it from reading as a box.
+  return Math.max(ax*.92,ay*.96,(ax+ay)*.71);
 }
 
 export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstoneParams={}){
@@ -123,7 +120,8 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
     const v=1-(py+.5)/size;
     for(let px=0;px<size;px++){
       const u=(px+.5)/size,i=py*size+px,j=i*3;
-      let best=.404+periodicField(u,v,seed+700,2)*.007;
+      const shell=.404+periodicField(u,v,seed+700,2)*.007;
+      let best=shell;
       let second=best-.012,bestId=-1,bestEdge=0,bestCrack=0,bestChip=0,bestFacet=0,bestStrata=0,bx=0,by=0;
 
       for(let id=0;id<blocks.length;id++){
@@ -131,13 +129,16 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         const dx=wrapDelta(u-q.cx),dy=wrapDelta(v-q.cy);
         const ca=Math.cos(q.angle),sa=Math.sin(q.angle);
         const rx=dx*ca+dy*sa, ry=-dx*sa+dy*ca;
-        if(Math.abs(rx)>q.hw*1.18||Math.abs(ry)>q.hh*1.18)continue;
+        if(Math.abs(rx)>q.hw*1.20||Math.abs(ry)>q.hh*1.20)continue;
         const x=rx/Math.max(q.hw,1e-6), y=ry/Math.max(q.hh,1e-6);
-        const shape=blockShape(x,y)+periodicField(x*.23+id*.11,y*.23-id*.09,seed+id*29,2)*.013;
-        if(shape>1.045)continue;
+        const shape=blockShape(x,y)+periodicField(x*.23+id*.11,y*.23-id*.09,seed+id*29,2)*.012;
+        if(shape>1.05)continue;
 
-        const edge=S((1-shape)/q.bevel);
-        const body=S((1-shape)/(q.bevel*(q.macro?1.62:1.18)));
+        // A LINEAR shoulder is the important change: it is a thick planar bevel, not a soft bubble.
+        // At the outer edge it returns continuously to the low shell, eliminating paper fins.
+        const shoulderWidth=q.macro?.50:.30;
+        const body=C((1.05-shape)/shoulderWidth);
+        const edge=C((1.05-shape)/(q.macro?.16:.11));
 
         let top=-99,secondPlane=-99;
         for(const [a,b,c] of q.planes){
@@ -145,7 +146,8 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
           if(plane>top){secondPlane=top;top=plane;}else if(plane>secondPlane)secondPlane=plane;
         }
         const facet=(top*(q.macro?.050:.024))+(top-secondPlane)*(q.macro?.022:.010);
-        const hardFacet=Math.round(facet/(q.macro?.017:.010))*(q.macro?.017:.010)*body;
+        // Quantized facet levels create large hand-sculpted planes instead of a smooth dome.
+        const hardFacet=Math.round(facet/(q.macro?.018:.010))*(q.macro?.018:.010);
 
         let strata=0;
         for(let k=0;k<q.strata.length;k++){
@@ -163,11 +165,12 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         }
         const chip=q.chip>.58?G((x-q.chipX)/(q.macro?.11:.14))*G((y-q.chipY)/(q.macro?.14:.17))*chipStrength*body:0;
 
-        let surf=q.base+q.lift*(.035+.965*body)+hardFacet+strata+topShelf-lowerCut;
-        surf+=q.macro?periodicField(x*.31+q.cx,y*.31+q.cy,seed+id*53,2)*.008*body:0;
-        surf-=crack*(q.macro?.125:.045);
-        surf-=chip*(q.macro?.055:.022);
-        surf-=(1-edge)*(q.macro?.008:.006);
+        const anchor=q.macro?.425:.405;
+        const target=q.base+q.lift+hardFacet+strata+topShelf-lowerCut+
+          (q.macro?periodicField(x*.31+q.cx,y*.31+q.cy,seed+id*53,2)*.008:0);
+        let surf=anchor+(target-anchor)*body;
+        surf-=crack*(q.macro?.120:.040);
+        surf-=chip*(q.macro?.050:.020);
         surf=.5+(surf-.5)*relief;
 
         if(surf>best){
@@ -176,8 +179,8 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
       }
 
       const overlap=C((best-second)/.070);
-      const seam=C((1-overlap)*.45+(bestId<0?.16:0));
-      const cavity=C(seam*.32+(1-bestEdge)*.11+bestCrack*.95+bestChip*.32);
+      const seam=C((1-overlap)*.40+(bestId<0?.12:0));
+      const cavity=C(seam*.28+(1-bestEdge)*.09+bestCrack*.95+bestChip*.30);
       let col:RGB=[.22,.090,.065];
       let rr=.84,aa=.86;
       if(bestId>=0){
@@ -187,12 +190,12 @@ export function bakeVfLayeredSandstonePainted(size:number,p:VfLayeredSandstonePa
         col=M(col,ochre,C(planeLight*.23+q.warm*.075+(q.macro?.045:0)));
         col=M(col,cool,C((.54-planeLight)*.31+q.cool*.060));
         col=M(col,cream,C(bestStrata*3.6+Math.max(0,bestFacet)*.26));
-        col=M(col,deep,C(cavity*.48));
-        col=M(col,ink,C(bestCrack*.98+seam*.12));
+        col=M(col,deep,C(cavity*.46));
+        col=M(col,ink,C(bestCrack*.98+seam*.10));
         const wash=periodicField(u,v,seed+920+bestId*17,2);
         col=M(col,wash>0?ochre:cool,Math.abs(wash)*.072*bestEdge);
         rr=C(.68+(1-bestEdge)*.12+bestCrack*.22+bestChip*.07+seam*.04-bestStrata*.06);
-        aa=C(1-cavity*.44-bestCrack*.16);
+        aa=C(1-cavity*.42-bestCrack*.16);
       }else{
         col=M(deep,cool,.28);rr=.91;aa=.80;
       }
