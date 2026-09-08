@@ -173,52 +173,71 @@ jobs:
                   raise SystemExit(f'{name}: benchmark summary missing')
               line = lines[-1]
               vals = {k: float(v) for k, v in re.findall(
-                  r'(avg_fps|one_percent_low_fps|p99_frame_ms|render_mean_ms)=([0-9.]+)', line)}
-              if 'avg_fps' not in vals:
-                  raise SystemExit(f'{name}: avg_fps missing: {line}')
+                  r'(avg_fps|one_percent_low_fps|p99_ms|render_mean_ms)=([0-9.]+)', line)}
+              required = {'avg_fps', 'one_percent_low_fps', 'p99_ms', 'render_mean_ms'}
+              if not required.issubset(vals):
+                  raise SystemExit(f'{name}: benchmark fields missing: {line}')
               builds=[]
               for x in text.splitlines():
                   if 'R24 PERF terrain_build_ms=' in x:
                       d={k:float(v) for k,v in re.findall(
                           r'(terrain_build_ms|vertices|indices|leaf_patches)=([0-9.]+)',x)}
                       if d: builds.append(d)
-              modes=[x for x in text.splitlines() if x.startswith('R24 Earth renderer mode:')]
               initial=[x for x in text.splitlines() if x.startswith('R24 INITIAL RESIDENCY ')]
               aerial=[x for x in text.splitlines() if x.startswith('R24 deterministic aerial camera altitude=')]
-              return text,line,vals,builds,modes,initial,aerial
+              bypass=[x for x in text.splitlines() if x.startswith('R24 TERRAIN_BYPASS ')]
+              return text,line,vals,builds,initial,aerial,bypass
 
           p={n:parse(n) for n in cases}
           vo,von=p['velocity_off'][2],p['velocity_on'][2]
           ro,ron=p['residency_off'][2],p['residency_on'][2]
 
-          if von['avg_fps'] < vo['avg_fps'] * 0.98:
-              raise SystemExit(f'velocity LOD FPS regression: {vo["avg_fps"]} -> {von["avg_fps"]}')
-          if ron['avg_fps'] < ro['avg_fps'] * 0.98:
-              raise SystemExit(f'far residency FPS regression: {ro["avg_fps"]} -> {ron["avg_fps"]}')
+          # Velocity-aware LOD must provide a real measured win while preserving pacing.
+          if von['avg_fps'] < vo['avg_fps'] * 1.05:
+              raise SystemExit(f'velocity LOD insufficient FPS gain: {vo["avg_fps"]} -> {von["avg_fps"]}')
+          if von['one_percent_low_fps'] < vo['one_percent_low_fps'] * 0.98:
+              raise SystemExit(f'velocity LOD 1% low regression: {vo["one_percent_low_fps"]} -> {von["one_percent_low_fps"]}')
+          if von['p99_ms'] > vo['p99_ms'] * 1.02:
+              raise SystemExit(f'velocity LOD p99 regression: {vo["p99_ms"]} -> {von["p99_ms"]}')
 
-          if p['velocity_on'][3] and p['velocity_off'][3]:
-              on_leaf=max(x.get('leaf_patches',0) for x in p['velocity_on'][3])
-              off_leaf=max(x.get('leaf_patches',0) for x in p['velocity_off'][3])
-              if on_leaf >= off_leaf:
-                  raise SystemExit(f'velocity LOD did not reduce leaf count: {off_leaf} -> {on_leaf}')
+          if not p['velocity_on'][3] or not p['velocity_off'][3]:
+              raise SystemExit('velocity LOD terrain build evidence missing')
+          on_leaf=min(x.get('leaf_patches',0) for x in p['velocity_on'][3] if x.get('leaf_patches',0) > 0)
+          off_leaf=max(x.get('leaf_patches',0) for x in p['velocity_off'][3])
+          if on_leaf > off_leaf * 0.50:
+              raise SystemExit(f'velocity LOD did not cut leaf count enough: {off_leaf} -> {on_leaf}')
 
-          # Orbital evidence camera must really exceed 400 km; no more 80 km clamp false-positive.
-          if not p['residency_on'][6]:
-              raise SystemExit('residency_on missing aerial altitude evidence')
-          m=re.search(r'altitude=([0-9.]+)', p['residency_on'][6][-1])
-          if not m or float(m.group(1)) < 400000.0:
-              raise SystemExit(f'orbital camera altitude not reached: {p["residency_on"][6][-1]}')
-
-          if not any('smooth-globe' in x for x in p['residency_on'][4]):
-              raise SystemExit('far residency did not select smooth-globe proxy')
+          # Orbital evidence camera must really exceed 400 km; no 80 km clamp false-positive.
           if not p['residency_on'][5]:
+              raise SystemExit('residency_on missing aerial altitude evidence')
+          m=re.search(r'altitude=([0-9.]+)', p['residency_on'][5][-1])
+          if not m or float(m.group(1)) < 400000.0:
+              raise SystemExit(f'orbital camera altitude not reached: {p["residency_on"][5][-1]}')
+
+          # Far residency is proven by resource ownership, not a fragile renderer-mode print.
+          if not p['residency_on'][4]:
               raise SystemExit('far residency startup evidence missing')
-          init=p['residency_on'][5][-1]
+          init=p['residency_on'][4][-1]
           if 'proxy=1' not in init or 'near_terrain_built=0' not in init:
               raise SystemExit(f'far residency still built detailed terrain at startup: {init}')
-          init_off=p['residency_off'][5][-1] if p['residency_off'][5] else ''
-          if 'near_terrain_built=1' not in init_off:
+          init_off=p['residency_off'][4][-1] if p['residency_off'][4] else ''
+          if 'proxy=0' not in init_off or 'near_terrain_built=1' not in init_off:
               raise SystemExit(f'legacy residency baseline did not build near terrain: {init_off}')
+          if not p['residency_on'][6] or 'initial_synthesis=0' not in p['residency_on'][6][-1]:
+              raise SystemExit('far residency did not bypass initial detailed terrain synthesis')
+          if not p['residency_on'][3]:
+              raise SystemExit('far residency terrain build evidence missing')
+          first_on_build=p['residency_on'][3][0]
+          if first_on_build.get('terrain_build_ms',1) != 0 or first_on_build.get('leaf_patches',1) != 0:
+              raise SystemExit(f'far residency still synthesized detailed terrain: {first_on_build}')
+
+          # Proxy residency should materially improve the orbital frame budget.
+          if ron['avg_fps'] < ro['avg_fps'] * 1.25:
+              raise SystemExit(f'far residency insufficient FPS gain: {ro["avg_fps"]} -> {ron["avg_fps"]}')
+          if ron['one_percent_low_fps'] < ro['one_percent_low_fps'] * 1.15:
+              raise SystemExit(f'far residency insufficient 1% low gain: {ro["one_percent_low_fps"]} -> {ron["one_percent_low_fps"]}')
+          if ron['p99_ms'] > ro['p99_ms'] * 0.80:
+              raise SystemExit(f'far residency insufficient p99 reduction: {ro["p99_ms"]} -> {ron["p99_ms"]}')
 
           report=[
               'R24 RUNTIME LOD/RESIDENCY A-B V2',
@@ -227,11 +246,15 @@ jobs:
           for n in cases:
               report.append(f'{n}: {p[n][1]}')
               report.extend(f'{n}_build: '+ ' '.join(f'{k}={v}' for k,v in b.items()) for b in p[n][3])
-              report.extend(f'{n}_mode: {x}' for x in p[n][4][-3:])
-              report.extend(f'{n}_initial: {x}' for x in p[n][5][-1:])
-              report.extend(f'{n}_aerial: {x}' for x in p[n][6][-1:])
+              report.extend(f'{n}_initial: {x}' for x in p[n][4][-1:])
+              report.extend(f'{n}_aerial: {x}' for x in p[n][5][-1:])
+              report.extend(f'{n}_bypass: {x}' for x in p[n][6][-1:])
           report.append(f'velocity_avg_fps_delta_pct={(von["avg_fps"]/vo["avg_fps"]-1)*100:.3f}')
+          report.append(f'velocity_1pct_delta_pct={(von["one_percent_low_fps"]/vo["one_percent_low_fps"]-1)*100:.3f}')
+          report.append(f'velocity_p99_delta_pct={(von["p99_ms"]/vo["p99_ms"]-1)*100:.3f}')
           report.append(f'residency_avg_fps_delta_pct={(ron["avg_fps"]/ro["avg_fps"]-1)*100:.3f}')
+          report.append(f'residency_1pct_delta_pct={(ron["one_percent_low_fps"]/ro["one_percent_low_fps"]-1)*100:.3f}')
+          report.append(f'residency_p99_delta_pct={(ron["p99_ms"]/ro["p99_ms"]-1)*100:.3f}')
           out='\n'.join(report)+'\n'
           (root/'README.txt').write_text(out,encoding='utf-8')
           print(out)
@@ -256,7 +279,10 @@ jobs:
           cp -a r24-lod-residency-v2-evidence/. "$DEST/"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add native/src/app/Main.cpp native/include/vf/world/VelocityAwareLodPolicy.hpp "$DEST"
+          git add native/src/app/Main.cpp \
+            native/include/vf/world/VelocityAwareLodPolicy.hpp \
+            native/include/vf/world/PerceptualResidencyPolicy.hpp \
+            "$DEST"
           git commit -m 'perf(r24): promote measured velocity lod and far residency v2'
           git fetch origin work/r24-unified-planetary-physics
           git rebase origin/work/r24-unified-planetary-physics
