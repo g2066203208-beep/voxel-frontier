@@ -28,16 +28,16 @@ export const DEFAULT_PARAMS = Object.freeze({
 
 export const PRESETS = Object.freeze({
   male: {
-    heightCm: 180, sex: 0.78, shoulderWidth: 0.34, chest: 0.23, waist: 0.05,
-    hips: -0.12, torsoLength: 0.08, legLength: 0.05, armLength: 0.08,
-    bodyFat: -0.12, muscle: 0.30, thigh: 0.12, calf: 0.10,
-    headScale: -0.03, neckWidth: 0.22, chestDepth: 0.12, hipDepth: -0.05
+    heightCm: 180, sex: 0.92, shoulderWidth: 0.12, chest: 0.05, waist: 0.00,
+    hips: -0.03, torsoLength: 0.04, legLength: 0.03, armLength: 0.04,
+    bodyFat: -0.08, muscle: 0.28, thigh: 0.03, calf: 0.04,
+    headScale: -0.02, neckWidth: 0.08, chestDepth: 0.04, hipDepth: -0.02
   },
   female: {
-    heightCm: 166, sex: -0.78, shoulderWidth: -0.16, chest: 0.12, waist: -0.22,
-    hips: 0.30, torsoLength: -0.04, legLength: 0.10, armLength: -0.02,
-    bodyFat: 0.10, muscle: -0.10, thigh: 0.18, calf: 0.03,
-    headScale: 0.02, neckWidth: -0.18, chestDepth: 0.20, hipDepth: 0.16
+    heightCm: 166, sex: -0.92, shoulderWidth: -0.05, chest: 0.02, waist: -0.06,
+    hips: 0.08, torsoLength: -0.02, legLength: 0.05, armLength: -0.01,
+    bodyFat: 0.08, muscle: -0.08, thigh: 0.06, calf: 0.01,
+    headScale: 0.01, neckWidth: -0.06, chestDepth: 0.05, hipDepth: 0.05
   }
 });
 
@@ -51,14 +51,16 @@ function triangulateFace(line) {
 function compactTopology(vertices, faces) {
   const remap = new Map();
   const compactVertices = [];
+  const sourceVertexIds = [];
   const compactFaces = faces.map(face => face.map(oldId => {
     if (!remap.has(oldId)) {
       remap.set(oldId, compactVertices.length);
+      sourceVertexIds.push(oldId);
       compactVertices.push(vertices[oldId]);
     }
     return remap.get(oldId);
   }));
-  return { vertices: compactVertices, faces: compactFaces };
+  return { vertices: compactVertices, faces: compactFaces, sourceVertexIds };
 }
 
 export function parseOBJ(text) {
@@ -86,12 +88,6 @@ export function parseOBJ(text) {
   if (vertices.length < 100 || selectedFaces.length < 100) {
     throw new Error('Master OBJ does not look like a human body mesh.');
   }
-
-  // MakeHuman's base.obj contains many helper groups (skirt, tights, hair,
-  // teeth, eyes, genitals, eyelashes...). They are useful authoring helpers,
-  // but they are not part of the anatomical surface. Keep only the vertices
-  // referenced by the `g body` faces so both rendering and measurements use
-  // one clean, connected human surface.
   return compactTopology(vertices, selectedFaces);
 }
 
@@ -117,7 +113,15 @@ export function canonicalize(parsed) {
     (v[frame.up] - frame.mins[frame.up]) / H,
     (v[frame.depth] - cd) / H
   ]);
-  return { vertices: verts, faces: parsed.faces.map(f => [...f]), sourceFrame: frame };
+  const sourceToCompact = new Map(parsed.sourceVertexIds.map((id,i)=>[id,i]));
+  return {
+    vertices: verts,
+    faces: parsed.faces.map(f => [...f]),
+    sourceVertexIds: [...parsed.sourceVertexIds],
+    sourceToCompact,
+    sourceFrame: frame,
+    phenotypeBasis: null
+  };
 }
 
 function remapHeight(y, p) {
@@ -140,13 +144,13 @@ function remapHeight(y, p) {
   return y;
 }
 
-function deformVertex(v0, p, maxAbsX) {
+function deformVertex(v0, p, maxAbsX, phenotypeDriven) {
   let [x, y, z] = v0;
   y = remapHeight(y, p);
 
-  const sex = clamp(p.sex, -1, 1);
-  const fat = clamp(p.bodyFat, -1, 1);
-  const muscle = clamp(p.muscle, -1, 1);
+  const sex = phenotypeDriven ? 0 : clamp(p.sex, -1, 1);
+  const fat = phenotypeDriven ? 0 : clamp(p.bodyFat, -1, 1);
+  const muscle = phenotypeDriven ? 0 : clamp(p.muscle, -1, 1);
 
   const shoulder = gaussian(y, 0.815, 0.075);
   const chest = gaussian(y, 0.710, 0.105);
@@ -201,9 +205,15 @@ function deformVertex(v0, p, maxAbsX) {
 
 export function generateHuman(master, params = {}) {
   const p = { ...DEFAULT_PARAMS, ...params };
+  const phenotype = master.phenotypeBasis?.evaluate?.(p) || null;
+  const phenotypeDriven = !!phenotype;
+  const basisVertices = master.vertices.map((v,i)=> phenotype ? [
+    v[0]+phenotype[i*3], v[1]+phenotype[i*3+1], v[2]+phenotype[i*3+2]
+  ] : v);
+
   let maxAbsX = 0;
-  for (const v of master.vertices) maxAbsX = Math.max(maxAbsX, Math.abs(v[0]));
-  let vertices = master.vertices.map(v => deformVertex(v, p, maxAbsX));
+  for (const v of basisVertices) maxAbsX = Math.max(maxAbsX, Math.abs(v[0]));
+  let vertices = basisVertices.map(v => deformVertex(v, p, maxAbsX, phenotypeDriven));
 
   let minY = Infinity, maxY = -Infinity;
   for (const v of vertices) { minY = Math.min(minY, v[1]); maxY = Math.max(maxY, v[1]); }
@@ -212,7 +222,7 @@ export function generateHuman(master, params = {}) {
   const s = targetH / Math.max(currentH, 1e-6);
   vertices = vertices.map(v => [v[0] * s, (v[1] - minY) * s, v[2] * s]);
 
-  const result = { vertices, faces: master.faces, params: p };
+  const result = { vertices, faces: master.faces, params: p, phenotypeDriven };
   result.measurements = measureHuman(result);
   return result;
 }
@@ -226,20 +236,35 @@ function percentile(sorted, q) {
 
 function section(vertices, yTarget, tol, torsoLimit) {
   let pts = vertices.filter(v => Math.abs(v[1] - yTarget) <= tol && Math.abs(v[0]) <= torsoLimit);
-  if (pts.length < 20) {
-    pts = vertices.filter(v => Math.abs(v[1] - yTarget) <= tol * 1.8 && Math.abs(v[0]) <= torsoLimit * 1.05);
-  }
+  if (pts.length < 20) pts = vertices.filter(v => Math.abs(v[1] - yTarget) <= tol * 1.8 && Math.abs(v[0]) <= torsoLimit * 1.05);
   const xs = pts.map(v => v[0]).sort((a,b) => a-b);
   const zs = pts.map(v => v[2]).sort((a,b) => a-b);
-  return {
-    width: percentile(xs, 0.98) - percentile(xs, 0.02),
-    depth: percentile(zs, 0.98) - percentile(zs, 0.02)
-  };
+  return { width: percentile(xs,0.98)-percentile(xs,0.02), depth: percentile(zs,0.98)-percentile(zs,0.02) };
 }
 
-function ellipseCirc(width, depth) {
-  const a = Math.max(width, 1e-6) / 2, b = Math.max(depth, 1e-6) / 2;
-  return Math.PI * (3 * (a + b) - Math.sqrt((3*a + b) * (a + 3*b)));
+function edgePlanePoint(a,b,y){
+  const da=a[1]-y, db=b[1]-y;
+  if((da>0&&db>0)||(da<0&&db<0)||Math.abs(da-db)<1e-12) return null;
+  const t=da/(da-db);
+  if(t<-1e-8||t>1+1e-8) return null;
+  return [lerp(a[0],b[0],t),lerp(a[2],b[2],t)];
+}
+
+function meshPlaneCircumference(model,y,torsoLimit){
+  let length=0;
+  for(const f of model.faces){
+    const a=model.vertices[f[0]],b=model.vertices[f[1]],c=model.vertices[f[2]];
+    const pts=[];
+    for(const e of [[a,b],[b,c],[c,a]]){
+      const p=edgePlanePoint(e[0],e[1],y);
+      if(p && !pts.some(q=>Math.hypot(q[0]-p[0],q[1]-p[1])<1e-7)) pts.push(p);
+    }
+    if(pts.length!==2) continue;
+    const mx=(pts[0][0]+pts[1][0])/2;
+    if(Math.abs(mx)>torsoLimit) continue;
+    length+=Math.hypot(pts[1][0]-pts[0][0],pts[1][1]-pts[0][1]);
+  }
+  return length;
 }
 
 export function measureHuman(model) {
@@ -250,27 +275,21 @@ export function measureHuman(model) {
     minX=Math.min(minX,v[0]); maxX=Math.max(maxX,v[0]);
   }
   const H = maxY - minY;
-
-  // Restrict circumference sections to the central torso. The arms can cross
-  // the same Y levels in the MakeHuman rest pose and must never contribute to
-  // chest/waist/hip circumference estimates.
-  const chest = section(vs, minY + H*0.710, H*0.010, H*0.165);
-  const waist = section(vs, minY + H*0.595, H*0.010, H*0.145);
-  const hip = section(vs, minY + H*0.505, H*0.012, H*0.180);
-  const shoulder = section(vs, minY + H*0.805, H*0.012, H*0.185);
+  const chestY=minY+H*0.710, waistY=minY+H*0.595, hipY=minY+H*0.505;
+  const shoulder = section(vs, minY + H*0.805, H*0.010, H*0.185);
 
   return {
     heightCm: H * 100,
     shoulderWidthCm: shoulder.width * 100,
-    chestCm: ellipseCirc(chest.width, chest.depth) * 100,
-    waistCm: ellipseCirc(waist.width, waist.depth) * 100,
-    hipCm: ellipseCirc(hip.width, hip.depth) * 100,
+    chestCm: meshPlaneCircumference(model,chestY,H*0.165) * 100,
+    waistCm: meshPlaneCircumference(model,waistY,H*0.145) * 100,
+    hipCm: meshPlaneCircumference(model,hipY,H*0.180) * 100,
     overallSpanCm: (maxX - minX) * 100
   };
 }
 
 export function toOBJ(model, name='ProceduralHuman') {
-  const out = [`# ${name}`, '# Generated by voxel-frontier Procedural Human v1'];
+  const out = [`# ${name}`, '# Generated by voxel-frontier Procedural Human'];
   for (const v of model.vertices) out.push(`v ${v[0].toFixed(7)} ${v[1].toFixed(7)} ${v[2].toFixed(7)}`);
   for (const f of model.faces) out.push(`f ${f[0]+1} ${f[1]+1} ${f[2]+1}`);
   return out.join('\n');
