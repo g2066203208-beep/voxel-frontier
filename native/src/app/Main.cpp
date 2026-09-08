@@ -895,20 +895,22 @@ int main() {
                 vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(preciseNormal)));
             }
 
-            if (buildAltitude < 30000.0) {
+            if (runtimeFeatures.ecologyRender && buildAltitude < 30000.0) {
                 appendMesh(renderMesh, vf::buildProceduralEcology(
                     planet, centerUp, surfaceFrame, {}, &buildSurface));
             }
 
-            vf::PlanetMesh oceanProxy{};
-            vf::appendOceanSurfaceProxy(
-                oceanProxy, {}, planet.radius + planet.seaLevelElevationMeters - 1.5, 96U);
-            for (auto& vertex : oceanProxy.vertices) {
-                vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
-                vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
-                vertex.material.w = -20.0F;
+            if (runtimeFeatures.waterRender) {
+                vf::PlanetMesh oceanProxy{};
+                vf::appendOceanSurfaceProxy(
+                    oceanProxy, {}, planet.radius + planet.seaLevelElevationMeters - 1.5, 96U);
+                for (auto& vertex : oceanProxy.vertices) {
+                    vertex.position = glm::vec3(toSurfacePoint(glm::dvec3(vertex.position)));
+                    vertex.normal = glm::vec3(safeNormalize(toSurfaceVector(glm::dvec3(vertex.normal))));
+                    vertex.material.w = -20.0F;
+                }
+                appendMesh(renderMesh, oceanProxy);
             }
-            appendMesh(renderMesh, oceanProxy);
             result.meshVertices = renderMesh.vertices.size();
             result.meshIndices = renderMesh.indices.size();
             // Critical frame-pacing change: material binning and vector ownership transfer occur on
@@ -921,7 +923,7 @@ int main() {
         };
 
         TerrainBuildResult initialTerrain{};
-        if (runtimeFeatures.terrainWorkEnabled()) {
+        if (runtimeFeatures.terrainRender) {
             initialTerrain = buildTerrainLod(
                 lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet, {});
         } else {
@@ -1145,7 +1147,9 @@ int main() {
             const double effectiveCelestialTimeScale = freePlayerInertialSpace
                 ? 1.0
                 : celestialTimeScale;
-            planetaryBodies.step(dt * effectiveCelestialTimeScale);
+            // R24_MODULE_ISOLATION_MATRIX_V1: a frozen celestial module leaves the epoch state intact.
+            if (runtimeFeatures.celestialSimulation)
+                planetaryBodies.step(dt * effectiveCelestialTimeScale);
             const auto r24CelestialDone = Clock::now();
             if (runtimeDiagnosticsStdout) {
                 const vf::CelestialSimulationStats celestialStats = celestial.lastStepStats();
@@ -1193,7 +1197,7 @@ int main() {
             const bool wasFlightMode = camera.flightMode();
             camera.update(movement, dt);
             const auto r24CameraDone = Clock::now();
-            physics.advance(dt);
+            if (runtimeFeatures.physicsSimulation) physics.advance(dt);
             const auto r24PhysicsDone = Clock::now();
 
             if (celestialViewMode == "earth-globe") {
@@ -1214,7 +1218,7 @@ int main() {
             glm::dvec3 localCameraVelocity = asterFrame.toLocalVelocity(
                 *currentAster, camera.position(), camera.velocity());
 
-            if (camera.physicsFrameBodyId() == asterId) {
+            if (runtimeFeatures.physicsSimulation && camera.physicsFrameBodyId() == asterId) {
                 if (camera.flightMode()) {
                     character.resetFromEye(cameraPlanet, localCameraVelocity, false);
                 } else {
@@ -1317,7 +1321,7 @@ int main() {
                 && camera.physicsFrameBodyId() == asterId
                 && !terrainBuildInFlight
                 && lodCooldown <= 0.0;
-            if (runtimeFeatures.terrainWorkEnabled()
+            if (runtimeFeatures.terrainStreamingWorkEnabled()
                 && (streaming.requestBuild || viewPrefetchExpired)) {
                 const glm::dvec3 requestedDirection = cameraDirection;
                 const glm::dvec3 requestedCameraPlanet = cameraPlanet;
@@ -1335,7 +1339,7 @@ int main() {
                 terrainBuildInFlight = true;
             }
 
-            if (runtimeFeatures.terrainWorkEnabled()
+            if (runtimeFeatures.terrainStreamingWorkEnabled()
                 && terrainBuildInFlight
                 && terrainBuildFuture.wait_for(std::chrono::milliseconds{0})
                     == std::future_status::ready) {
@@ -1396,8 +1400,8 @@ int main() {
             glm::dvec3 frameForwardSurface = forwardSurface;
             glm::dvec3 frameUpSurface = upSurface;
             dynamicSceneAccumulator += dt;
-            const bool refreshDynamicScene = shadowContactCapture
-                || dynamicSceneAccumulator >= kDynamicSceneCadenceSeconds;
+            const bool refreshDynamicScene = runtimeFeatures.dynamicSceneRender
+                && (shadowContactCapture || dynamicSceneAccumulator >= kDynamicSceneCadenceSeconds);
             vf::PlanetMesh dynamicMesh{};
             if (shadowContactCapture) {
                 // Deterministic contact probe rendered through the *production* shadow-map pass.
@@ -1540,9 +1544,11 @@ int main() {
             const glm::mat4 viewProjection = makeReverseZViewProjection(
                 frameForwardSurface, frameUpSurface, aspect);
 
-            const vf::PlanetClimateSample climateSample = climateGrid.sample(
-                safeNormalize(cameraPlanet, patchUp), std::max(0.0, camera.altitude()));
-            const double densityRatio = std::clamp(climateSample.densityKgPerM3 / 1.225, 0.0, 1.2);
+            const double densityRatio = runtimeFeatures.weatherSimulation
+                ? std::clamp(climateGrid.sample(
+                    safeNormalize(cameraPlanet, patchUp),
+                    std::max(0.0, camera.altitude())).densityKgPerM3 / 1.225, 0.0, 1.2)
+                : 1.0;
             const double physicalSunDistance = glm::length(
                 currentSun->position - camera.position());
             const double irradiance = currentSun->luminosityWatts
@@ -1573,7 +1579,15 @@ int main() {
             renderEnvironment.atmosphereScaleHeight = opticalRayleighScaleHeight;
             renderEnvironment.mieScale = 0.78F;
             renderEnvironment.flightSpeedMps = static_cast<float>(camera.flightSpeedMps());
-            renderEnvironment.dynamicShadowCasters = shadowContactCapture;
+            renderEnvironment.dynamicShadowCasters = shadowContactCapture
+                && runtimeFeatures.dynamicSceneRender && runtimeFeatures.shadowRender;
+            renderEnvironment.geometryEnabled = runtimeFeatures.geometryRender;
+            // The transparent pass is generic infrastructure. Water is removed at mesh-build
+            // time, so disabling water never disables future glass/particles/translucent props.
+            renderEnvironment.transparentEnabled = runtimeFeatures.geometryRender;
+            renderEnvironment.skyEnabled = runtimeFeatures.skyRender;
+            renderEnvironment.shadowsEnabled = runtimeFeatures.shadowRender;
+            renderEnvironment.hudEnabled = runtimeFeatures.uiRender;
             const auto r24PrepDone = Clock::now();
 
             const auto renderStarted = Clock::now();

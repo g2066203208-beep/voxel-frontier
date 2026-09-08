@@ -1384,7 +1384,8 @@ void VulkanRenderer::drawFrame(
         std::max(environment.exposure, 0.01F));
     scene.groundAmbientShadowTexel = glm::vec4(
         glm::max(environment.groundAmbient, glm::vec3{0.0F}),
-        1.0F / static_cast<float>(kShadowMapSize));
+        environment.shadowsEnabled
+            ? 1.0F / static_cast<float>(kShadowMapSize) : -1.0F);
     std::memcpy(shadowFrames_[frame].mappedUniform, &scene, sizeof(scene));
 
     VkCommandBuffer command = commandBuffers_[frame];
@@ -1448,87 +1449,121 @@ void VulkanRenderer::drawFrame(
     dependency.pImageMemoryBarriers = &shadowToAttachment;
     vkCmdPipelineBarrier2(command, &dependency);
 
-    VkRenderingAttachmentInfo shadowDepthAttachment{};
-    shadowDepthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-    shadowDepthAttachment.imageView = shadowFrames_[frame].depthView;
-    shadowDepthAttachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
-    shadowDepthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    shadowDepthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    shadowDepthAttachment.clearValue.depthStencil = {1.0F, 0U};
-    VkRenderingInfo shadowRendering{};
-    shadowRendering.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
-    shadowRendering.renderArea.extent = {kShadowMapSize, kShadowMapSize};
-    shadowRendering.layerCount = 1;
-    shadowRendering.pDepthAttachment = &shadowDepthAttachment;
-    vkCmdBeginRendering(command, &shadowRendering);
-    VkViewport shadowViewport{
-        0.0F, 0.0F,
-        static_cast<float>(kShadowMapSize),
-        static_cast<float>(kShadowMapSize),
-        0.0F, 1.0F};
-    VkRect2D shadowScissor{{0, 0}, {kShadowMapSize, kShadowMapSize}};
-    vkCmdSetViewport(command, 0, 1, &shadowViewport);
-    vkCmdSetScissor(command, 0, 1, &shadowScissor);
-    vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, shadowPipeline_);
-    vkCmdBindDescriptorSets(
-        command, VK_PIPELINE_BIND_POINT_GRAPHICS, scenePipelineLayout_, 0, 1,
-        &shadowFrames_[frame].descriptorSet, 0, nullptr);
-
-    PushConstants push{};
-    push.matrix = shadowVP;
-    push.data0 = glm::vec4(glm::vec3(cameraPosition), 1.0F);
+    // Shared scene transform is renderer-base data, not shadow-module state.
     const glm::dquat rotation = glm::normalize(staticObjectRotation);
-    push.data3 = {
-        static_cast<float>(rotation.x),
-        static_cast<float>(rotation.y),
-        static_cast<float>(rotation.z),
-        static_cast<float>(rotation.w)};
-    vkCmdPushConstants(
-        command, scenePipelineLayout_,
-        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-        0, sizeof(push), &push);
-    // Local contact shadows are a small-caster problem. Terrain still receives the result in the
-    // main pass, but only ecology/rocks/props are transformed and rasterized into this 250 m map.
-    drawBoundMesh(
-        command,
-        staticMesh.vertexBuffer,
-        staticMesh.indexBuffer,
-        staticMesh.shadowCasterIndexCount,
-        0U);
-    push.data3 = {0.0F, 0.0F, 0.0F, 1.0F};
-    vkCmdPushConstants(
-        command, scenePipelineLayout_,
-        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-        0, sizeof(push), &push);
-    if (environment.dynamicShadowCasters) {
-        drawBoundMesh(
-            command,
-            dynamic.vertexBuffer,
-            dynamic.indexBuffer,
-            dynamic.shadowCasterIndexCount,
-            0U);
-    }
-    vkCmdEndRendering(command);
-    if (gpuTimestampsSupported_) {
-        vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 1U);
-    }
 
-    VkImageMemoryBarrier2 shadowToRead{};
-    shadowToRead.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
-    shadowToRead.srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT
-        | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
-    shadowToRead.srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-    shadowToRead.dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT;
-    shadowToRead.dstAccessMask = VK_ACCESS_2_SHADER_SAMPLED_READ_BIT;
-    shadowToRead.oldLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
-    shadowToRead.newLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
-    shadowToRead.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    shadowToRead.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    shadowToRead.image = shadowFrames_[frame].depthImage;
-    shadowToRead.subresourceRange = shadowToAttachment.subresourceRange;
-    dependency.pImageMemoryBarriers = &shadowToRead;
-    vkCmdPipelineBarrier2(command, &dependency);
+    // R24_MODULE_ISOLATION_MATRIX_V1: shadow rasterization is a true optional client.
+    if (environment.shadowsEnabled) {
+            VkRenderingAttachmentInfo shadowDepthAttachment{};
+            shadowDepthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+            shadowDepthAttachment.imageView = shadowFrames_[frame].depthView;
+            shadowDepthAttachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
+            shadowDepthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+            shadowDepthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+            shadowDepthAttachment.clearValue.depthStencil = {1.0F, 0U};
+            VkRenderingInfo shadowRendering{};
+            shadowRendering.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+            shadowRendering.renderArea.extent = {kShadowMapSize, kShadowMapSize};
+            shadowRendering.layerCount = 1;
+            shadowRendering.pDepthAttachment = &shadowDepthAttachment;
+            vkCmdBeginRendering(command, &shadowRendering);
+            VkViewport shadowViewport{
+                0.0F, 0.0F,
+                static_cast<float>(kShadowMapSize),
+                static_cast<float>(kShadowMapSize),
+                0.0F, 1.0F};
+            VkRect2D shadowScissor{{0, 0}, {kShadowMapSize, kShadowMapSize}};
+            vkCmdSetViewport(command, 0, 1, &shadowViewport);
+            vkCmdSetScissor(command, 0, 1, &shadowScissor);
+            vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, shadowPipeline_);
+            vkCmdBindDescriptorSets(
+                command, VK_PIPELINE_BIND_POINT_GRAPHICS, scenePipelineLayout_, 0, 1,
+                &shadowFrames_[frame].descriptorSet, 0, nullptr);
+
+            PushConstants push{};
+            push.matrix = shadowVP;
+            push.data0 = glm::vec4(glm::vec3(cameraPosition), 1.0F);
+            const glm::dquat rotation = glm::normalize(staticObjectRotation);
+            push.data3 = {
+                static_cast<float>(rotation.x),
+                static_cast<float>(rotation.y),
+                static_cast<float>(rotation.z),
+                static_cast<float>(rotation.w)};
+            vkCmdPushConstants(
+                command, scenePipelineLayout_,
+                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+                0, sizeof(push), &push);
+            // Local contact shadows are a small-caster problem. Terrain still receives the result in the
+            // main pass, but only ecology/rocks/props are transformed and rasterized into this 250 m map.
+            drawBoundMesh(
+                command,
+                staticMesh.vertexBuffer,
+                staticMesh.indexBuffer,
+                staticMesh.shadowCasterIndexCount,
+                0U);
+            push.data3 = {0.0F, 0.0F, 0.0F, 1.0F};
+            vkCmdPushConstants(
+                command, scenePipelineLayout_,
+                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+                0, sizeof(push), &push);
+            if (environment.dynamicShadowCasters) {
+                drawBoundMesh(
+                    command,
+                    dynamic.vertexBuffer,
+                    dynamic.indexBuffer,
+                    dynamic.shadowCasterIndexCount,
+                    0U);
+            }
+            vkCmdEndRendering(command);
+            if (gpuTimestampsSupported_) {
+                vkCmdWriteTimestamp2(
+                    command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 1U);
+            }
+
+            VkImageMemoryBarrier2 shadowToRead{};
+            shadowToRead.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
+            shadowToRead.srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT
+                | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
+            shadowToRead.srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+            shadowToRead.dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT;
+            shadowToRead.dstAccessMask = VK_ACCESS_2_SHADER_SAMPLED_READ_BIT;
+            shadowToRead.oldLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
+            shadowToRead.newLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+            shadowToRead.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+            shadowToRead.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+            shadowToRead.image = shadowFrames_[frame].depthImage;
+            shadowToRead.subresourceRange = shadowToAttachment.subresourceRange;
+            dependency.pImageMemoryBarriers = &shadowToRead;
+            vkCmdPipelineBarrier2(command, &dependency);
+
+    } else {
+        if (gpuTimestampsSupported_) {
+            vkCmdWriteTimestamp2(command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
+                timestampQueryPools_[frame], 0U);
+        }
+        VkImageMemoryBarrier2 shadowBypass{};
+        shadowBypass.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
+        shadowBypass.srcStageMask = VK_PIPELINE_STAGE_2_NONE;
+        shadowBypass.dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT;
+        shadowBypass.dstAccessMask = VK_ACCESS_2_SHADER_SAMPLED_READ_BIT;
+        shadowBypass.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        shadowBypass.newLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+        shadowBypass.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        shadowBypass.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        shadowBypass.image = shadowFrames_[frame].depthImage;
+        shadowBypass.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+        shadowBypass.subresourceRange.levelCount = 1;
+        shadowBypass.subresourceRange.layerCount = 1;
+        VkDependencyInfo shadowBypassDependency{};
+        shadowBypassDependency.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO;
+        shadowBypassDependency.imageMemoryBarrierCount = 1;
+        shadowBypassDependency.pImageMemoryBarriers = &shadowBypass;
+        vkCmdPipelineBarrier2(command, &shadowBypassDependency);
+        if (gpuTimestampsSupported_) {
+            vkCmdWriteTimestamp2(command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
+                timestampQueryPools_[frame], 1U);
+        }
+    }
 
     VkImageMemoryBarrier2 colorBarrier{};
     colorBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
@@ -1649,37 +1684,39 @@ void VulkanRenderer::drawFrame(
         vkCmdWriteTimestamp2(
             command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 2U);
     }
-    drawScenePass(opaquePipeline_, false);
+    if (environment.geometryEnabled) drawScenePass(opaquePipeline_, false);
     if (gpuTimestampsSupported_) {
         vkCmdWriteTimestamp2(
             command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 3U);
         vkCmdWriteTimestamp2(
             command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 4U);
     }
-    vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, skyPipeline_);
-    PushConstants skyPush{};
-    skyPush.matrix = glm::inverse(viewProjection);
-    skyPush.data0 = glm::vec4(glm::vec3(cameraPosition - environment.planetCenter), 1.0F);
-    skyPush.data1 = glm::vec4(
-        safeNormalizeFloat(environment.sunDirectionToLight),
-        std::clamp(environment.sunAngularRadiusRadians, 0.0001F, 1.45F));
-    skyPush.data2 = {
-        static_cast<float>(environment.planetRadius),
-        static_cast<float>(environment.atmosphereHeight),
-        static_cast<float>(environment.atmosphereScaleHeight),
-        std::max(environment.mieScale, 0.0F)};
-    const glm::vec3 sunRadiance = glm::max(environment.sunLinearColor, glm::vec3{0.0F})
-        * std::max(environment.sunIntensity, 0.0F);
-    skyPush.data3 = {
-        std::max(environment.exposure, 0.01F),
-        sunRadiance.r,
-        sunRadiance.g,
-        sunRadiance.b};
-    vkCmdPushConstants(
-        command, fullscreenPipelineLayout_,
-        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-        0, sizeof(skyPush), &skyPush);
-    vkCmdDraw(command, 3, 1, 0, 0);
+    if (environment.skyEnabled) {
+            vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, skyPipeline_);
+            PushConstants skyPush{};
+            skyPush.matrix = glm::inverse(viewProjection);
+            skyPush.data0 = glm::vec4(glm::vec3(cameraPosition - environment.planetCenter), 1.0F);
+            skyPush.data1 = glm::vec4(
+                safeNormalizeFloat(environment.sunDirectionToLight),
+                std::clamp(environment.sunAngularRadiusRadians, 0.0001F, 1.45F));
+            skyPush.data2 = {
+                static_cast<float>(environment.planetRadius),
+                static_cast<float>(environment.atmosphereHeight),
+                static_cast<float>(environment.atmosphereScaleHeight),
+                std::max(environment.mieScale, 0.0F)};
+            const glm::vec3 sunRadiance = glm::max(environment.sunLinearColor, glm::vec3{0.0F})
+                * std::max(environment.sunIntensity, 0.0F);
+            skyPush.data3 = {
+                std::max(environment.exposure, 0.01F),
+                sunRadiance.r,
+                sunRadiance.g,
+                sunRadiance.b};
+            vkCmdPushConstants(
+                command, fullscreenPipelineLayout_,
+                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+                0, sizeof(skyPush), &skyPush);
+            vkCmdDraw(command, 3, 1, 0, 0);
+    }
     if (gpuTimestampsSupported_) {
         vkCmdWriteTimestamp2(
             command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 5U);
@@ -1687,32 +1724,34 @@ void VulkanRenderer::drawFrame(
             command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 6U);
     }
 
-    drawScenePass(transparentPipeline_, true);
+    if (environment.transparentEnabled) drawScenePass(transparentPipeline_, true);
     if (gpuTimestampsSupported_) {
         vkCmdWriteTimestamp2(
             command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 7U);
     }
 
-    vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, hudPipeline_);
-    vkCmdBindDescriptorSets(
-        command, VK_PIPELINE_BIND_POINT_GRAPHICS, fullscreenPipelineLayout_, 0, 1,
-        &shadowFrames_[frame].descriptorSet, 0, nullptr);
-    PushConstants hudPush{};
-    const float speedNorm = std::clamp(
-        (std::log10(std::max(1.0F, environment.flightSpeedMps))
-            / std::log10(3.06987476992e11F)),
-        0.0F,
-        1.0F);
-    hudPush.data0 = {
-        static_cast<float>(swapchainExtent_.width),
-        static_cast<float>(swapchainExtent_.height),
-        speedNorm,
-        0.0F};
-    vkCmdPushConstants(
-        command, fullscreenPipelineLayout_,
-        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-        0, sizeof(hudPush), &hudPush);
-    vkCmdDraw(command, 3, 1, 0, 0);
+    if (environment.hudEnabled) {
+            vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, hudPipeline_);
+            vkCmdBindDescriptorSets(
+                command, VK_PIPELINE_BIND_POINT_GRAPHICS, fullscreenPipelineLayout_, 0, 1,
+                &shadowFrames_[frame].descriptorSet, 0, nullptr);
+            PushConstants hudPush{};
+            const float speedNorm = std::clamp(
+                (std::log10(std::max(1.0F, environment.flightSpeedMps))
+                    / std::log10(3.06987476992e11F)),
+                0.0F,
+                1.0F);
+            hudPush.data0 = {
+                static_cast<float>(swapchainExtent_.width),
+                static_cast<float>(swapchainExtent_.height),
+                speedNorm,
+                0.0F};
+            vkCmdPushConstants(
+                command, fullscreenPipelineLayout_,
+                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+                0, sizeof(hudPush), &hudPush);
+            vkCmdDraw(command, 3, 1, 0, 0);
+    }
     vkCmdEndRendering(command);
 
     VkImageMemoryBarrier2 toPresent{};

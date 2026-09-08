@@ -259,6 +259,9 @@ void shadowFragmentMain(ShadowVertexOutput input)
 
 float shadowVisibility(float4 lightClip, float noL)
 {
+    // R24_SHADOW_MODULE_BYPASS_V1: negative texel size means the entire shadow client is off.
+    // Return before any texture access so the renderer can skip shadow rasterization.
+    if (gScene.groundAmbientShadowTexel.w < 0.0) return 1.0;
     if (lightClip.w <= 0.0) return 1.0;
     float3 ndc = lightClip.xyz / lightClip.w;
     float2 uv = ndc.xy * 0.5 + 0.5;

@@ -35,6 +35,12 @@ struct RenderFrameEnvironment {
     // Remote moons/planets are visual dynamic meshes but cannot cast a meaningful shadow into the
     // 250 m local contact-shadow volume. CI can opt the dedicated contact probe back in.
     bool dynamicShadowCasters{false};
+    // R24_MODULE_ISOLATION_MATRIX_V1: independent render-pass gates.
+    bool geometryEnabled{true};
+    bool transparentEnabled{true};
+    bool skyEnabled{true};
+    bool shadowsEnabled{true};
+    bool hudEnabled{true};
 };
 
 // CPU render preparation is intentionally detached from Vulkan object ownership. Terrain workers

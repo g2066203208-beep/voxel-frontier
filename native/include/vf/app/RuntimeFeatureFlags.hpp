@@ -6,17 +6,17 @@
 
 namespace vf {
 
-// R24 modular runtime feature gates.
-//
-// The intent is strict subsystem decoupling: a disabled feature must stop scheduling its
-// expensive work without making unrelated systems disappear. Terrain rendering/synthesis is
-// therefore separate from the mathematical planet surface authority used by collision/gravity.
-// This makes A/B performance isolation possible without changing gameplay coordinates.
+// R24_MODULE_ISOLATION_MATRIX_V1
+// Strict runtime subsystem gates. A disabled module must stop scheduling its own expensive work;
+// mathematical planet/surface authority remains independent so coordinates and test poses do not
+// change merely because a visual client is disabled.
 struct RuntimeFeatureFlags {
+    bool geometryRender{true};
     bool terrainRender{true};
     bool terrainStreaming{true};
     bool waterRender{true};
     bool ecologyRender{true};
+    bool dynamicSceneRender{true};
     bool skyRender{true};
     bool shadowRender{true};
     bool physicsSimulation{true};
@@ -37,10 +37,12 @@ struct RuntimeFeatureFlags {
 
     [[nodiscard]] static RuntimeFeatureFlags fromEnvironment() noexcept {
         RuntimeFeatureFlags flags{};
+        flags.geometryRender = readFlag("VF_MODULE_GEOMETRY", true);
         flags.terrainRender = readFlag("VF_MODULE_TERRAIN", true);
         flags.terrainStreaming = readFlag("VF_MODULE_TERRAIN_STREAMING", true);
         flags.waterRender = readFlag("VF_MODULE_WATER", true);
         flags.ecologyRender = readFlag("VF_MODULE_ECOLOGY", true);
+        flags.dynamicSceneRender = readFlag("VF_MODULE_DYNAMIC_SCENE", true);
         flags.skyRender = readFlag("VF_MODULE_SKY", true);
         flags.shadowRender = readFlag("VF_MODULE_SHADOWS", true);
         flags.physicsSimulation = readFlag("VF_MODULE_PHYSICS", true);
@@ -50,16 +52,19 @@ struct RuntimeFeatureFlags {
         return flags;
     }
 
-    [[nodiscard]] bool terrainWorkEnabled() const noexcept {
+    // Initial static terrain is a render concern. Streaming only controls later rebuild scheduling.
+    [[nodiscard]] bool terrainStreamingWorkEnabled() const noexcept {
         return terrainRender && terrainStreaming;
     }
 
     void print(std::ostream& stream = std::cout) const {
         stream << "R24 MODULES"
+               << " geometry=" << (geometryRender ? 1 : 0)
                << " terrain=" << (terrainRender ? 1 : 0)
                << " terrain_streaming=" << (terrainStreaming ? 1 : 0)
                << " water=" << (waterRender ? 1 : 0)
                << " ecology=" << (ecologyRender ? 1 : 0)
+               << " dynamic_scene=" << (dynamicSceneRender ? 1 : 0)
                << " sky=" << (skyRender ? 1 : 0)
                << " shadows=" << (shadowRender ? 1 : 0)
                << " physics=" << (physicsSimulation ? 1 : 0)
