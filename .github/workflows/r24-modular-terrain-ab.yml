@@ -150,10 +150,12 @@ jobs:
           off_r = last_line('r24-terrain-ab-evidence/terrain-off.log', 'R24 RENDER_CPU stage_ms')
 
           on_fps, off_fps = num(on_b, 'avg_fps'), num(off_b, 'avg_fps')
-          on_render, off_render = num(on_b, 'render_mean'), num(off_b, 'render_mean')
+          on_render, off_render = num(on_b, 'render_mean_ms'), num(off_b, 'render_mean_ms')
           on_opaque, off_opaque = num(on_g, 'opaque_mean'), num(off_g, 'opaque_mean')
+          on_shadow, off_shadow = num(on_g, 'shadow_mean'), num(off_g, 'shadow_mean')
+          on_sky, off_sky = num(on_g, 'sky_mean'), num(off_g, 'sky_mean')
           on_trans, off_trans = num(on_g, 'transparent_mean'), num(off_g, 'transparent_mean')
-          on_present, off_present = num(on_r, 'present'), num(off_r, 'present')
+          on_present, off_present = num(on_r, 'present_mean'), num(off_r, 'present_mean')
           report = '\n'.join([
               'CI_DEVICE=llvmpipe software Vulkan; same-run A/B attribution, not discrete-GPU certification.',
               'TERRAIN_ON  ' + on_b,
@@ -163,7 +165,8 @@ jobs:
               'RENDER_CPU_ON  ' + on_r,
               'RENDER_CPU_OFF ' + off_r,
               f'DELTA avg_fps={off_fps-on_fps:+.3f} fps_ratio={(off_fps/on_fps if on_fps else 0):.3f}x '
-              f'render_mean_ms={off_render-on_render:+.3f} opaque_ms={off_opaque-on_opaque:+.3f} '
+              f'render_mean_ms={off_render-on_render:+.3f} shadow_ms={off_shadow-on_shadow:+.3f} '
+              f'opaque_ms={off_opaque-on_opaque:+.3f} sky_ms={off_sky-on_sky:+.3f} '
               f'transparent_ms={off_trans-on_trans:+.3f} present_ms={off_present-on_present:+.3f}',
           ]) + '\n'
           Path('r24-terrain-ab-report.txt').write_text(report, encoding='utf-8')
