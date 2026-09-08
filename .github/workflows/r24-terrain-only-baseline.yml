@@ -1,0 +1,133 @@
+name: R24 Terrain Only Baseline
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/workflows/r24-terrain-only-baseline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  terrain-only-1080p-vulkan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout current R24 head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb vulkan-tools mesa-vulkan-drivers \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Configure Release runtime
+        run: cmake -S native -B build/r24-terrain-only -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=OFF
+
+      - name: Build Release runtime
+        run: cmake --build build/r24-terrain-only --parallel 2
+
+      - name: Verify software Vulkan backend
+        shell: bash
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee terrain-only-vulkan-summary.txt
+
+      - name: Run 1920x1080 terrain-only baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-terrain-only -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p r24-terrain-only-evidence
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp > r24-terrain-only-evidence/xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 1
+          export DISPLAY=:99
+          export SDL_VIDEODRIVER=x11
+          export VF_PERF_PROFILE=mainstream_1080p
+          export VF_RUNTIME_DIAGNOSTICS=1
+          export VF_CAPTURE_AERIAL=0
+          export VF_MODULE_GEOMETRY=0
+          export VF_MODULE_TERRAIN=1
+          export VF_MODULE_TERRAIN_STREAMING=0
+          export VF_MODULE_WATER=0
+          export VF_MODULE_ECOLOGY=0
+          export VF_MODULE_DYNAMIC_SCENE=0
+          export VF_MODULE_SKY=0
+          export VF_MODULE_SHADOWS=0
+          export VF_MODULE_PHYSICS=0
+          export VF_MODULE_CELESTIAL=0
+          export VF_MODULE_WEATHER=0
+          export VF_MODULE_UI=0
+          set +e
+          timeout 30s "$APP" > r24-terrain-only-evidence/benchmark.log 2>&1
+          STATUS=$?
+          set -e
+          cat r24-terrain-only-evidence/benchmark.log
+          if [[ "$STATUS" -ne 0 ]]; then exit "$STATUS"; fi
+          grep -q 'R24 MODULES geometry=0 terrain=1 terrain_streaming=0 water=0 ecology=0 dynamic_scene=0 sky=0 shadows=0 physics=0 celestial=0 weather=0 ui=0' r24-terrain-only-evidence/benchmark.log
+          grep -q 'R24 BENCHMARK profile=mainstream_1080p resolution=1920x1080' r24-terrain-only-evidence/benchmark.log
+
+      - name: Parse terrain-only frame pacing
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('r24-terrain-only-evidence/benchmark.log').read_text(encoding='utf-8', errors='replace')
+          lines=[x for x in text.splitlines() if x.startswith('R24 BENCHMARK profile=')]
+          if not lines: raise SystemExit('missing benchmark summary')
+          line=lines[-1]
+          print('TERRAIN_ONLY_RESULT '+line)
+          def n(k):
+              m=re.search(rf'\b{k}=([0-9]+(?:\.[0-9]+)?)', line)
+              if not m: raise SystemExit('missing '+k)
+              return float(m.group(1))
+          out=(
+              'profile=terrain_only_1080p\n'
+              + line + '\n'
+              + f'avg_fps={n("avg_fps"):.3f}\n'
+              + f'one_percent_low_fps={n("one_percent_low_fps"):.3f}\n'
+              + f'frame_mean_ms={n("frame_mean_ms"):.3f}\n'
+              + f'p95_ms={n("p95_ms"):.3f}\n'
+              + f'p99_ms={n("p99_ms"):.3f}\n'
+              + f'render_mean_ms={n("render_mean_ms"):.3f}\n'
+              + f'static_tris_max={n("static_tris_max"):.0f}\n')
+          Path('r24-terrain-only-evidence/terrain-only-summary.txt').write_text(out, encoding='utf-8')
+          print(out)
+          PY
+
+      - name: Upload terrain-only evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-terrain-only-baseline-${{ github.run_id }}
+          path: |
+            r24-terrain-only-evidence/**
+            terrain-only-vulkan-summary.txt
+          retention-days: 30
