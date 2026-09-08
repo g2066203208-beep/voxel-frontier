@@ -1,0 +1,43 @@
+name: Origami Human Blender
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/procedural-human/blender/**'
+      - '.github/workflows/origami-human-blender.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Blender headless runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender libegl1-mesa libgl1-mesa-dri
+          blender --version
+
+      - name: Generate GLB and real Blender render
+        run: |
+          mkdir -p artifacts/origami-human
+          blender --background --python tools/procedural-human/blender/origami_human.py -- "$GITHUB_WORKSPACE/artifacts/origami-human"
+          test -s artifacts/origami-human/male.glb
+          test -s artifacts/origami-human/female.glb
+          test -s artifacts/origami-human/male-female-origami.png
+          test -s artifacts/origami-human/metrics.json
+          cat artifacts/origami-human/metrics.json
+
+      - name: Upload Blender output
+        uses: actions/upload-artifact@v4
+        with:
+          name: origami-human-blender
+          path: artifacts/origami-human/
+          if-no-files-found: error
+          retention-days: 30
