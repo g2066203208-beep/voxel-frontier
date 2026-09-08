@@ -2,6 +2,7 @@
 #include "vf/world/PlanetSurfaceAuthority.hpp"
 #include "vf/world/PlanetTileCache.hpp"
 
+#include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -20,6 +21,14 @@ void require(bool condition, const char* message) {
 [[nodiscard]] glm::dvec3 safeNormalize(const glm::dvec3& value) {
     const double l2 = glm::dot(value, value);
     return l2 > 1.0e-18 ? value / std::sqrt(l2) : glm::dvec3{0.0, 1.0, 0.0};
+}
+
+template <typename Fn>
+[[nodiscard]] double measureMilliseconds(Fn&& fn) {
+    const auto start = std::chrono::steady_clock::now();
+    fn();
+    return std::chrono::duration<double, std::milli>(
+        std::chrono::steady_clock::now() - start).count();
 }
 
 } // namespace
@@ -55,10 +64,13 @@ int main() {
     lod.detailTransitionEndMeters = 26000.0;
     lod.transitionFarCellMeters = 850.0;
     lod.skirtDepthMeters = 4.0;
+    lod.minimumFeatureCells = 2.0;
 
     vf::PlanetLodStats first{};
-    const vf::PlanetMesh firstMesh = vf::buildAdaptivePlanetSurface(
-        surface, camera, lod, &first, &cache, 77U);
+    vf::PlanetMesh firstMesh{};
+    const double firstMs = measureMilliseconds([&] {
+        firstMesh = vf::buildAdaptivePlanetSurface(surface, camera, lod, &first, &cache, 77U);
+    });
     require(!firstMesh.vertices.empty() && !firstMesh.indices.empty(),
         "first visible-set build must produce terrain");
     require(first.leafPatches > 0U, "first visible-set build must select leaves");
@@ -68,8 +80,10 @@ int main() {
         "cold cache must not report tile hits");
 
     vf::PlanetLodStats second{};
-    const vf::PlanetMesh secondMesh = vf::buildAdaptivePlanetSurface(
-        surface, camera, lod, &second, &cache, 77U);
+    vf::PlanetMesh secondMesh{};
+    const double secondMs = measureMilliseconds([&] {
+        secondMesh = vf::buildAdaptivePlanetSurface(surface, camera, lod, &second, &cache, 77U);
+    });
     require(secondMesh.vertices.size() == firstMesh.vertices.size()
             && secondMesh.indices.size() == firstMesh.indices.size(),
         "cache reuse must preserve visible geometry size");
@@ -77,6 +91,11 @@ int main() {
         "identical visible-set rebuild must synthesize zero terrain patches");
     require(second.tileCacheHits == second.leafPatches,
         "identical visible-set rebuild must hit every selected tile");
+    // The hot rebuild still assembles the current monolithic renderer payload, so it is not O(1)
+    // yet, but procedural terrain/hydrology synthesis must disappear. Keep this threshold generous
+    // for shared CI while requiring a material speedup before the foundation can promote.
+    require(secondMs < firstMs * 0.60,
+        "hot visible-set rebuild must be materially faster than cold terrain synthesis");
 
     // A modest camera turn should retain substantial overlap. Newly exposed tiles may be generated,
     // but already visible tiles must come from the persistent cache instead of being regenerated.
@@ -107,6 +126,9 @@ int main() {
               << " second_hits=" << second.tileCacheHits
               << " turn_hits=" << third.tileCacheHits
               << " turn_generated=" << third.generatedPatches
+              << " cold_ms=" << firstMs
+              << " hot_ms=" << secondMs
+              << " speedup=" << (firstMs / std::max(0.001, secondMs))
               << " resident_mb=" << (cacheStats.residentBytes / (1024.0 * 1024.0))
               << '\n';
     return 0;
