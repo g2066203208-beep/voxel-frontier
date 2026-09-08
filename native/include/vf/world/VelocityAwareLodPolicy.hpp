@@ -47,19 +47,28 @@ struct VelocityLodDecision {
     return lodSmooth01((value - begin) / (end - begin));
 }
 
-// R24_VELOCITY_AWARE_LOD_V1
-// Perceptual detail policy: faster camera motion increases coverage and look-ahead while reducing
-// geometric precision. Refinement is only allowed after the view remains stable long enough to make
-// the additional geometry perceptible. This prevents high-speed travel from producing expensive
-// fine meshes that leave the screen before the player can inspect them.
+// R24_VELOCITY_AWARE_LOD_V2
+// Perceptual detail policy: faster camera motion increases forward coverage and look-ahead while
+// reducing geometric precision. The speed response is deliberately piecewise: walking/slow flight,
+// vehicle/aircraft speeds and high-speed planetary transit each consume a portion of the motion
+// budget instead of treating 120 m/s as almost stationary next to a 2500 m/s endpoint.
+// Refinement is only allowed after the view remains stable long enough to make the extra geometry
+// perceptible. This prevents high-speed travel from generating expensive fine meshes that leave the
+// screen before the player can inspect them.
 [[nodiscard]] inline VelocityLodDecision decideVelocityAwareLod(
     const VelocityLodInput& input) noexcept {
     const double speed = std::max(0.0, input.linearSpeedMetersPerSecond);
     const double angularSpeed = std::max(0.0, input.angularSpeedRadiansPerSecond);
 
-    // Linear motion covers walking -> vehicles -> atmospheric/planetary transit continuously.
-    const double linearMotion = lodRamp(speed, 8.0, 2500.0);
-    // Rapid camera turns also reduce useful spatial detail even when the camera position is static.
+    // Piecewise perceptual motion response. 120 m/s must already be meaningfully coarser than an
+    // inspecting camera, while the policy still has headroom for aircraft and planetary transit.
+    const double linearMotion = std::clamp(
+        0.22 * lodRamp(speed, 8.0, 120.0)
+        + 0.38 * lodRamp(speed, 120.0, 800.0)
+        + 0.40 * lodRamp(speed, 800.0, 3200.0),
+        0.0,
+        1.0);
+    // Rapid camera turns reduce useful spatial detail even when the camera position is static.
     const double angularMotion = lodRamp(angularSpeed, 0.35, 2.4);
     const double motion = std::max(linearMotion, angularMotion);
 
@@ -82,10 +91,14 @@ struct VelocityLodDecision {
         static_cast<std::size_t>(std::llround(
             static_cast<double>(std::max<std::size_t>(64U, input.baseMaxLeafPatches)) * leafScale)));
 
-    // Spend speed on forward coverage, not precision. High speed sees farther ahead but each cell is
-    // cheaper. A minimum distance avoids tiny prefetch windows at walking speed.
+    // Spend speed on forward coverage, not precision. The baseline coverage itself expands with
+    // motion, so even moderate travel (e.g. 120 m/s) prefetches farther ahead than a stationary
+    // camera. At very high speed, velocity * look-ahead dominates naturally.
     result.prefetchLookAheadSeconds = 0.35 + 1.90 * motion;
-    result.forwardPrefetchMeters = std::max(150.0, speed * result.prefetchLookAheadSeconds);
+    const double motionCoverageFloor = 150.0 * (1.0 + 3.0 * motion);
+    result.forwardPrefetchMeters = std::max(
+        motionCoverageFloor,
+        speed * result.prefetchLookAheadSeconds);
 
     // Hysteresis-by-dwell: a camera that has just decelerated does not instantly trigger expensive
     // refinement. It must remain visually stable first, preventing rebuild thrash near thresholds.
