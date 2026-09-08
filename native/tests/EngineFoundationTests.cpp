@@ -1,5 +1,8 @@
+#include "vf/core/FrameArena.hpp"
 #include "vf/core/FrameBudget.hpp"
 #include "vf/core/FrameClock.hpp"
+#include "vf/core/FrameSnapshotExchange.hpp"
+#include "vf/core/GenerationalHandle.hpp"
 #include "vf/core/TaskGraphScheduler.hpp"
 #include "vf/world/WorldPartition.hpp"
 
@@ -8,7 +11,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <memory_resource>
 #include <stdexcept>
+#include <thread>
+#include <vector>
 
 namespace {
 
@@ -52,6 +58,81 @@ void testFrameBudget() {
     require(!budget.reserveUpload(1U), "upload budget allowed overflow");
     require(budget.reserveEviction(2U), "eviction reservation to budget failed");
     require(!budget.reserveEviction(), "eviction budget allowed overflow");
+}
+
+void testFrameArenaAndHandles() {
+    vf::core::FrameArena<64U * 1024U> arena;
+    std::pmr::vector<std::uint64_t> values{arena.resource()};
+    values.reserve(1024U);
+    for (std::uint64_t i = 0; i < 1024U; ++i) values.push_back(i * i);
+    require(values.size() == 1024U, "frame arena allocation failed");
+    values = std::pmr::vector<std::uint64_t>{arena.resource()};
+    arena.reset();
+    std::pmr::vector<std::uint32_t> reused{arena.resource()};
+    reused.resize(4096U, 7U);
+    require(reused.front() == 7U && reused.back() == 7U, "frame arena reuse failed");
+
+    struct MeshTag {};
+    using MeshHandle = vf::core::GenerationalHandle<MeshTag>;
+    const MeshHandle first{42U, 7U};
+    const MeshHandle stale{42U, 6U};
+    require(first.valid(), "generational handle should be valid");
+    require(first != stale, "generation must distinguish stale handle");
+}
+
+struct SnapshotProbe {
+    std::uint64_t frame{};
+    std::uint64_t checksum{};
+};
+
+void testSnapshotExchange() {
+    vf::core::FrameSnapshotExchange<SnapshotProbe, 3U> exchange;
+    require(exchange.tryPublish({1U, 11U}), "snapshot publish 1 failed");
+    require(exchange.tryPublish({2U, 22U}), "snapshot publish 2 failed");
+    require(exchange.tryPublish({3U, 33U}), "snapshot publish 3 failed");
+    require(!exchange.tryPublish({4U, 44U}), "full snapshot ring should drop instead of blocking");
+    require(exchange.droppedCount() == 1U, "snapshot drop accounting mismatch");
+    SnapshotProbe latest{};
+    require(exchange.tryConsumeLatest(latest), "snapshot consume failed");
+    require(latest.frame == 3U && latest.checksum == 33U, "consumer did not choose newest snapshot");
+    require(exchange.approximateBacklog() == 0U, "snapshot backlog did not clear");
+
+    // Concurrent SPSC stress: producer is allowed to drop under pressure; consumer must never
+    // observe time going backwards or a torn value pair.
+    vf::core::FrameSnapshotExchange<SnapshotProbe, 8U> threaded;
+    constexpr std::uint64_t finalFrame = 200000U;
+    std::atomic<bool> producerDone{false};
+    std::atomic<bool> failed{false};
+    std::atomic<std::uint64_t> lastConsumed{0U};
+    std::thread producer([&] {
+        for (std::uint64_t frame = 1U; frame <= finalFrame; ++frame) {
+            (void)threaded.tryPublish({frame, frame * 0x9E3779B185EBCA87ULL});
+        }
+        producerDone.store(true, std::memory_order_release);
+    });
+    std::thread consumer([&] {
+        SnapshotProbe snapshot{};
+        std::uint64_t previous = 0U;
+        while (!producerDone.load(std::memory_order_acquire) || threaded.approximateBacklog() != 0U) {
+            if (!threaded.tryConsumeLatest(snapshot)) {
+                std::this_thread::yield();
+                continue;
+            }
+            if (snapshot.frame <= previous
+                || snapshot.checksum != snapshot.frame * 0x9E3779B185EBCA87ULL) {
+                failed.store(true, std::memory_order_release);
+                break;
+            }
+            previous = snapshot.frame;
+        }
+        lastConsumed.store(previous, std::memory_order_release);
+    });
+    producer.join();
+    consumer.join();
+    require(!failed.load(), "snapshot exchange observed torn or non-monotonic data");
+    require(lastConsumed.load() > 0U, "snapshot consumer observed no frames");
+    require(threaded.producedCount() + threaded.droppedCount() == finalFrame,
+        "snapshot production/drop accounting mismatch");
 }
 
 void testTaskGraphPhases() {
@@ -136,7 +217,6 @@ void testWorldPartitionStress() {
             partition.completeMeshing(item.entity, item.revision, 96U * 1024U),
             "meshing completion rejected valid worker result");
 
-    // Upload bytes are a hard budget: 512 KiB permits only five 96 KiB chunks.
     auto uploads = partition.drainUploads({64U, 512U * 1024U});
     require(!uploads.empty(), "upload queue received no meshed cells");
     require(uploads.size() == 5U, "upload byte budget did not stop at five 96 KiB chunks");
@@ -150,7 +230,6 @@ void testWorldPartitionStress() {
     require(uploadBytes <= 512U * 1024U, "upload drain exceeded byte budget");
     require(partition.residentCount() == uploads.size(), "resident accounting mismatch");
 
-    // Revision invalidation is tested in isolation so backlog priority cannot select another cell.
     WorldPartition stalePartition;
     const WorldCellKey staleKey{7U, 1, 2, 3, 0U};
     const auto staleEntity = stalePartition.requestCell(staleKey, 10.0F, 1024U, 5U);
@@ -171,7 +250,9 @@ void testWorldPartitionStress() {
               << " generation_batch=" << generation.size()
               << " mesh_batch=" << meshing.size()
               << " upload_batch=" << uploads.size()
-              << " resident=" << partition.residentCount() << '\n';
+              << " resident=" << partition.residentCount()
+              << " snapshot_drops=" << exchange_drops_placeholder
+              << '\n';
 }
 
 } // namespace
@@ -180,6 +261,8 @@ int main() {
     try {
         testFixedStepClock();
         testFrameBudget();
+        testFrameArenaAndHandles();
+        testSnapshotExchange();
         testTaskGraphPhases();
         testWorldPartitionStress();
         std::cout << "R24 ENGINE FOUNDATION PASS\n";
