@@ -28,7 +28,7 @@ jobs:
       - name: Generate retro low-poly body-only GLB and real Blender render
         run: |
           mkdir -p artifacts/retro-lowpoly-human
-          blender --background --python tools/procedural-human/blender/retro_lowpoly_human_v9.py -- "$GITHUB_WORKSPACE/artifacts/retro-lowpoly-human"
+          blender --background --python tools/procedural-human/blender/retro_lowpoly_human_v10.py -- "$GITHUB_WORKSPACE/artifacts/retro-lowpoly-human"
           test -s artifacts/retro-lowpoly-human/male.glb
           test -s artifacts/retro-lowpoly-human/female.glb
           test -s artifacts/retro-lowpoly-human/male-female-retro-lowpoly.png
@@ -38,8 +38,8 @@ jobs:
           m=json.load(open('artifacts/retro-lowpoly-human/metrics.json'))
           assert m['extra_character_geometry'] is False
           assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False
-          assert 650 <= m['male_tris'] <= 850, m
-          assert 650 <= m['female_tris'] <= 850, m
+          assert 700 <= m['male_tris'] <= 900, m
+          assert 700 <= m['female_tris'] <= 900, m
           print(json.dumps(m, indent=2))
           PY
 
