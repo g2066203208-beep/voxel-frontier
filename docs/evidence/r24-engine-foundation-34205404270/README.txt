@@ -1,0 +1,21 @@
+R24 ENGINE FOUNDATION V2
+status=PASS
+architecture=C++23 + Taskflow 4.1.0 + EnTT 4.0.0 + concurrentqueue 1.0.5
+streaming_model=single-owner revisioned priority queues + bounded per-frame drains
+worker_result_model=preallocated bounded lock-free MPMC inbox + explicit producer tokens
+frame_data_model=fixed arena + generational handles + bounded SPSC latest-frame snapshot exchange
+simulation_model=fixed 120Hz clock + bounded catch-up; render remains uncapped
+stress_cells=100000
+request_ms=31.4152
+total_ms=31.8289
+generation_batch=128
+mesh_batch=64
+upload_batch=5
+resident=5
+mpmc_producers=4
+mpmc_items=200000
+mpmc_capacity=4096
+mpmc_retries=568
+mpmc_capacity_drops=568
+mpmc_allocation_pressure_drops=0
+acceptance=Release gates remain active; no unbounded work dispatch; stale worker results rejected; worker completion cannot mutate authoritative world directly; production core regressions pass
