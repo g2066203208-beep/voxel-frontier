@@ -1,0 +1,208 @@
+name: R24 Modular Terrain A-B
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - 'native/include/vf/app/RuntimeFeatureFlags.hpp'
+      - '.github/scripts/r24_modular_terrain_ab.py'
+      - '.github/workflows/r24-modular-terrain-ab.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-modular-terrain-ab-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  terrain-ab:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 80
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 8
+
+      - name: Materialize modular terrain runtime gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/r24_modular_terrain_ab.py
+          git diff --check
+          grep -q 'R24_MODULAR_TERRAIN_AB_V1' native/src/app/Main.cpp
+          grep -q 'clearPlanetMesh' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'VulkanRenderer::clearPlanetMesh' native/src/render/VulkanRenderer.cpp
+          grep -q 'VF_MODULE_TERRAIN' native/include/vf/app/RuntimeFeatureFlags.hpp
+
+      - name: Install build and Vulkan dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Configure and build Release
+        run: |
+          cmake -S native -B build/r24-terrain-ab -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+          cmake --build build/r24-terrain-ab --parallel 2
+
+      - name: Run all native regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-terrain-ab --verbose --output-on-failure 2>&1 | tee r24-terrain-ab-ctest.log
+
+      - name: Verify software Vulkan identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+          grep -q 'llvmpipe' vulkan-summary.txt
+
+      - name: Run locked 1080p terrain ON and OFF A-B
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-terrain-ab -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p r24-terrain-ab-evidence
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp > r24-terrain-ab-evidence/xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 1
+          export DISPLAY=:99 SDL_VIDEODRIVER=x11
+          export VF_PERF_PROFILE=mainstream_1080p
+          export VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=7000
+          export VF_RUNTIME_DIAGNOSTICS=1 VF_CELESTIAL_TIME_SCALE=1
+
+          run_case() {
+            local label="$1"
+            local terrain="$2"
+            export VF_MODULE_TERRAIN="$terrain"
+            export VF_MODULE_TERRAIN_STREAMING="$terrain"
+            timeout 22s "$APP" > "r24-terrain-ab-evidence/${label}.log" 2>&1 &
+            local app_pid=$!
+            sleep 5
+            import -window root "r24-terrain-ab-evidence/${label}.png" || true
+            set +e
+            wait "$app_pid"
+            local rc=$?
+            set -e
+            cat "r24-terrain-ab-evidence/${label}.log"
+            test -s "r24-terrain-ab-evidence/${label}.png"
+            test "$rc" -eq 0 -o "$rc" -eq 124
+            grep -q "R24 MODULES terrain=${terrain}" "r24-terrain-ab-evidence/${label}.log"
+            grep -q '^R24 BENCHMARK profile=' "r24-terrain-ab-evidence/${label}.log"
+            grep -q '^R24 GPU steady_pass_ms' "r24-terrain-ab-evidence/${label}.log"
+          }
+
+          run_case terrain-on 1
+          run_case terrain-off 0
+
+      - name: Compare terrain module cost
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          def last_line(path, prefix):
+              lines = [x for x in Path(path).read_text(encoding='utf-8', errors='replace').splitlines() if x.startswith(prefix)]
+              if not lines:
+                  raise SystemExit(f'missing {prefix} in {path}')
+              return lines[-1]
+
+          def num(line, key):
+              m = re.search(rf'\b{re.escape(key)}=([0-9.+-]+)', line)
+              if not m:
+                  raise SystemExit(f'missing {key}: {line}')
+              return float(m.group(1))
+
+          on_b = last_line('r24-terrain-ab-evidence/terrain-on.log', 'R24 BENCHMARK profile=')
+          off_b = last_line('r24-terrain-ab-evidence/terrain-off.log', 'R24 BENCHMARK profile=')
+          on_g = last_line('r24-terrain-ab-evidence/terrain-on.log', 'R24 GPU steady_pass_ms')
+          off_g = last_line('r24-terrain-ab-evidence/terrain-off.log', 'R24 GPU steady_pass_ms')
+          on_r = last_line('r24-terrain-ab-evidence/terrain-on.log', 'R24 RENDER_CPU stage_ms')
+          off_r = last_line('r24-terrain-ab-evidence/terrain-off.log', 'R24 RENDER_CPU stage_ms')
+
+          on_fps, off_fps = num(on_b, 'avg_fps'), num(off_b, 'avg_fps')
+          on_render, off_render = num(on_b, 'render_mean'), num(off_b, 'render_mean')
+          on_opaque, off_opaque = num(on_g, 'opaque_mean'), num(off_g, 'opaque_mean')
+          on_trans, off_trans = num(on_g, 'transparent_mean'), num(off_g, 'transparent_mean')
+          on_present, off_present = num(on_r, 'present'), num(off_r, 'present')
+          report = '\n'.join([
+              'CI_DEVICE=llvmpipe software Vulkan; same-run A/B attribution, not discrete-GPU certification.',
+              'TERRAIN_ON  ' + on_b,
+              'TERRAIN_OFF ' + off_b,
+              'GPU_ON  ' + on_g,
+              'GPU_OFF ' + off_g,
+              'RENDER_CPU_ON  ' + on_r,
+              'RENDER_CPU_OFF ' + off_r,
+              f'DELTA avg_fps={off_fps-on_fps:+.3f} fps_ratio={(off_fps/on_fps if on_fps else 0):.3f}x '
+              f'render_mean_ms={off_render-on_render:+.3f} opaque_ms={off_opaque-on_opaque:+.3f} '
+              f'transparent_ms={off_trans-on_trans:+.3f} present_ms={off_present-on_present:+.3f}',
+          ]) + '\n'
+          Path('r24-terrain-ab-report.txt').write_text(report, encoding='utf-8')
+          print(report)
+          PY
+
+      - name: Preserve evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          EVIDENCE_DIR="docs/evidence/r24-modular-terrain-ab-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          cp -a r24-terrain-ab-evidence/. "$EVIDENCE_DIR/"
+          cp -f r24-terrain-ab-ctest.log vulkan-summary.txt r24-terrain-ab-report.txt "$EVIDENCE_DIR/"
+          printf 'workflow_run=%s\nworkflow_sha=%s\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-modular-terrain-ab-${{ github.run_id }}
+          path: |
+            r24-terrain-ab-evidence/**
+            r24-terrain-ab-ctest.log
+            vulkan-summary.txt
+            r24-terrain-ab-report.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote modular terrain gate to R24 branch
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          if ! git diff --cached --quiet; then
+            git commit -m 'arch(r24): decouple terrain behind runtime module gate'
+          fi
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
