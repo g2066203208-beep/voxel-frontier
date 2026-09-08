@@ -29,24 +29,15 @@ void testFixedStepClock() {
     const auto b = clock.advance(1.0 / 240.0);
     require(b.simulationSteps == 1U, "two 240 Hz frames should produce one 120 Hz step");
     require(b.interpolationAlpha < 1.0e-9, "fixed-step interpolation remainder should close");
-
     const auto c = clock.advance(1.0 / 60.0);
     require(c.simulationSteps == 2U, "60 Hz wall frame should produce two 120 Hz simulation steps");
-
     const auto d = clock.advance(0.5);
     require(d.acceptedFrameSeconds <= 0.0500001, "wall-time clamp failed");
     require(d.simulationSteps <= 8U, "simulation catch-up bound failed");
 }
 
 void testFrameBudget() {
-    vf::core::FrameBudget budget{{
-        1000.0 / 120.0,
-        0.35,
-        4U,
-        3U,
-        2U,
-        2U,
-        1024U * 1024U}};
+    vf::core::FrameBudget budget{{1000.0 / 120.0, 0.35, 4U, 3U, 2U, 2U, 1024U * 1024U}};
     budget.beginFrame();
     require(budget.reserveGeneration(), "generation reservation 1 failed");
     require(budget.reserveGeneration(3U), "generation reservation to budget failed");
@@ -62,15 +53,18 @@ void testFrameBudget() {
 
 void testFrameArenaAndHandles() {
     vf::core::FrameArena<64U * 1024U> arena;
-    std::pmr::vector<std::uint64_t> values{arena.resource()};
-    values.reserve(1024U);
-    for (std::uint64_t i = 0; i < 1024U; ++i) values.push_back(i * i);
-    require(values.size() == 1024U, "frame arena allocation failed");
-    values = std::pmr::vector<std::uint64_t>{arena.resource()};
+    {
+        std::pmr::vector<std::uint64_t> values{arena.resource()};
+        values.reserve(1024U);
+        for (std::uint64_t i = 0; i < 1024U; ++i) values.push_back(i * i);
+        require(values.size() == 1024U, "frame arena allocation failed");
+    }
     arena.reset();
-    std::pmr::vector<std::uint32_t> reused{arena.resource()};
-    reused.resize(4096U, 7U);
-    require(reused.front() == 7U && reused.back() == 7U, "frame arena reuse failed");
+    {
+        std::pmr::vector<std::uint32_t> reused{arena.resource()};
+        reused.resize(4096U, 7U);
+        require(reused.front() == 7U && reused.back() == 7U, "frame arena reuse failed");
+    }
 
     struct MeshTag {};
     using MeshHandle = vf::core::GenerationalHandle<MeshTag>;
@@ -97,17 +91,14 @@ void testSnapshotExchange() {
     require(latest.frame == 3U && latest.checksum == 33U, "consumer did not choose newest snapshot");
     require(exchange.approximateBacklog() == 0U, "snapshot backlog did not clear");
 
-    // Concurrent SPSC stress: producer is allowed to drop under pressure; consumer must never
-    // observe time going backwards or a torn value pair.
     vf::core::FrameSnapshotExchange<SnapshotProbe, 8U> threaded;
     constexpr std::uint64_t finalFrame = 200000U;
     std::atomic<bool> producerDone{false};
     std::atomic<bool> failed{false};
     std::atomic<std::uint64_t> lastConsumed{0U};
     std::thread producer([&] {
-        for (std::uint64_t frame = 1U; frame <= finalFrame; ++frame) {
+        for (std::uint64_t frame = 1U; frame <= finalFrame; ++frame)
             (void)threaded.tryPublish({frame, frame * 0x9E3779B185EBCA87ULL});
-        }
         producerDone.store(true, std::memory_order_release);
     });
     std::thread consumer([&] {
@@ -140,7 +131,6 @@ void testTaskGraphPhases() {
     std::atomic<int> phase{0};
     std::atomic<int> parallelCount{0};
     std::atomic<bool> failed{false};
-
     scheduler.addTask(vf::core::EnginePhase::Input, "input", [&](auto&) {
         if (phase.load(std::memory_order_acquire) != 0) failed.store(true);
         phase.store(1, std::memory_order_release);
@@ -185,7 +175,6 @@ void testWorldPartitionStress() {
     using namespace vf::world;
     WorldPartition partition;
     constexpr std::size_t cellCount = 100000U;
-
     const auto begin = std::chrono::steady_clock::now();
     for (std::size_t i = 0; i < cellCount; ++i) {
         WorldCellKey key{};
@@ -204,27 +193,22 @@ void testWorldPartitionStress() {
     require(generation.size() == 128U, "generation drain ignored item budget");
     for (std::size_t i = 1; i < generation.size(); ++i)
         require(generation[i - 1U].priority >= generation[i].priority, "generation priority order broken");
-
     for (std::size_t i = 0; i < 64U; ++i)
-        require(
-            partition.completeGeneration(generation[i].entity, generation[i].revision, 48U * 1024U),
+        require(partition.completeGeneration(generation[i].entity, generation[i].revision, 48U * 1024U),
             "generation completion rejected valid worker result");
 
     auto meshing = partition.drainMeshing({64U, 64U * 48U * 1024U});
     require(meshing.size() == 64U, "meshing queue failed to receive generated cells");
     for (const auto& item : meshing)
-        require(
-            partition.completeMeshing(item.entity, item.revision, 96U * 1024U),
+        require(partition.completeMeshing(item.entity, item.revision, 96U * 1024U),
             "meshing completion rejected valid worker result");
 
     auto uploads = partition.drainUploads({64U, 512U * 1024U});
-    require(!uploads.empty(), "upload queue received no meshed cells");
     require(uploads.size() == 5U, "upload byte budget did not stop at five 96 KiB chunks");
     std::size_t uploadBytes = 0U;
     for (const auto& item : uploads) {
         uploadBytes += item.estimatedBytes;
-        require(
-            partition.completeUpload(item.entity, item.revision, 48U * 1024U, item.estimatedBytes),
+        require(partition.completeUpload(item.entity, item.revision, 48U * 1024U, item.estimatedBytes),
             "upload completion rejected valid worker result");
     }
     require(uploadBytes <= 512U * 1024U, "upload drain exceeded byte budget");
@@ -237,8 +221,7 @@ void testWorldPartitionStress() {
     require(staleBatch.size() == 1U, "isolated stale test did not dispatch cell");
     const auto staleRevision = staleBatch.front().revision;
     (void)stalePartition.requestCell(staleKey, 100.0F, 2048U, 6U);
-    require(
-        !stalePartition.completeGeneration(staleEntity, staleRevision, 2048U),
+    require(!stalePartition.completeGeneration(staleEntity, staleRevision, 2048U),
         "stale worker result was incorrectly accepted");
 
     const auto end = std::chrono::steady_clock::now();
@@ -250,9 +233,7 @@ void testWorldPartitionStress() {
               << " generation_batch=" << generation.size()
               << " mesh_batch=" << meshing.size()
               << " upload_batch=" << uploads.size()
-              << " resident=" << partition.residentCount()
-              << " snapshot_drops=" << exchange_drops_placeholder
-              << '\n';
+              << " resident=" << partition.residentCount() << '\n';
 }
 
 } // namespace
