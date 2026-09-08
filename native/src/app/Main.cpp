@@ -15,6 +15,8 @@
 #include "vf/world/PlanetLodMeshBuilder.hpp"
 #include "vf/world/RegionalHydrology.hpp"
 #include "vf/world/TerrainStreamingPolicy.hpp"
+#include "vf/world/VelocityAwareLodPolicy.hpp"
+#include "vf/world/PerceptualResidencyPolicy.hpp"
 #include "vf/world/ProceduralEcology.hpp"
 
 #include <algorithm>
@@ -296,6 +298,18 @@ int main() {
         // mathematical planet surface remains authoritative for coordinates/collision.
         const vf::RuntimeFeatureFlags runtimeFeatures = vf::RuntimeFeatureFlags::fromEnvironment();
         runtimeFeatures.print();
+        // R24_RUNTIME_LOD_RESIDENCY_V1: same binary supports strict A/B gates. These are policy
+        // switches, not module switches: disabling them restores the legacy altitude-only terrain
+        // behavior so CI can measure the exact frame/build cost of each new optimization.
+        const bool velocityAwareLodEnabled = vf::RuntimeFeatureFlags::readFlag(
+            "VF_VELOCITY_AWARE_LOD", true);
+        const bool perceptualResidencyEnabled = vf::RuntimeFeatureFlags::readFlag(
+            "VF_PERCEPTUAL_RESIDENCY", true);
+        const bool highSpeedAutopilot = vf::RuntimeFeatureFlags::readFlag(
+            "VF_CAPTURE_HIGH_SPEED_AUTOPILOT", false);
+        std::cout << "R24 LOD_RESIDENCY velocity=" << (velocityAwareLodEnabled ? 1 : 0)
+                  << " perceptual=" << (perceptualResidencyEnabled ? 1 : 0)
+                  << " autopilot=" << (highSpeedAutopilot ? 1 : 0) << '\n';
 
         // Earth-scale gameplay planet. Relief is deterministic procedural morphology rather than a
         // literal GIS copy: continents, shelves, abyssal basins, trenches, mountains, plateaus,
@@ -419,10 +433,19 @@ int main() {
             const char* value = std::getenv("VF_CAPTURE_SUN_TRANSIT");
             return value != nullptr && std::string_view{value} == "1";
         }();
+        double captureHighSpeedMetersPerSecond = 500000.0;
+        if (const char* speedEnv = std::getenv("VF_CAPTURE_SPEED_MPS");
+            speedEnv != nullptr && *speedEnv != '\0') {
+            char* end = nullptr;
+            const double parsed = std::strtod(speedEnv, &end);
+            if (end != speedEnv && std::isfinite(parsed) && parsed > 0.0)
+                captureHighSpeedMetersPerSecond = parsed;
+        }
         if (captureHighSpeed) {
             camera.setFlightMode(true);
-            camera.setCreativeFlightSpeedMps(500000.0);
-            std::cout << "R24 capture high-speed initial_speed_mps=500000\n";
+            camera.setCreativeFlightSpeedMps(captureHighSpeedMetersPerSecond);
+            std::cout << "R24 capture high-speed initial_speed_mps="
+                      << captureHighSpeedMetersPerSecond << '\n';
         }
 
         constexpr double moonOrbitRadius = 384400000.0;
@@ -480,7 +503,7 @@ int main() {
             double aerialAltitude = 5200.0;
             if (const char* altitudeEnv = std::getenv("VF_CAPTURE_ALTITUDE_METERS");
                 altitudeEnv != nullptr && *altitudeEnv != '\0') {
-                try { aerialAltitude = std::clamp(std::stod(altitudeEnv), 800.0, 80000.0); }
+                try { aerialAltitude = std::clamp(std::stod(altitudeEnv), 800.0, 2000000.0); }
                 catch (...) { aerialAltitude = 5200.0; }
             }
             const double localSurfaceRadius = vf::planetSurfaceRadius(planet, spawnDirection);
@@ -792,6 +815,7 @@ int main() {
             const glm::dvec3& centerDirection,
             const glm::dvec3& cameraPlanetLocal,
             const glm::dvec3& viewForwardPlanetLocal,
+            const vf::VelocityLodDecision& motionLod,
             std::shared_ptr<const vf::RegionalHydrology> reusableHydrology = {}) {
             const auto buildStarted = std::chrono::steady_clock::now();
             const glm::dvec3 centerUp = safeNormalize(centerDirection, patchUp);
@@ -842,7 +866,13 @@ int main() {
                 mixEpoch(std::llround(hydrology->maxIncisionMeters()));
             }
             vf::PlanetLodConfig lodConfig{};
-            lodConfig.patchResolution = buildAltitude < 25000.0 ? 12U : 10U;
+            const std::uint32_t basePatchResolution = buildAltitude < 25000.0 ? 12U : 10U;
+            lodConfig.patchResolution = motionLod.tier == vf::MotionLodTier::Transit ? 6U
+                : (motionLod.tier == vf::MotionLodTier::Fast
+                    ? std::min(basePatchResolution, 8U)
+                    : (motionLod.tier == vf::MotionLodTier::Explore
+                        ? std::min(basePatchResolution, 10U)
+                        : basePatchResolution));
             lodConfig.maxDepth = 20U;
             // Low-altitude detail is no longer a binary square. The builder uses a camera-centred
             // geodesic transition band so physical cell size grows continuously with distance.
@@ -853,23 +883,29 @@ int main() {
             // behind-camera prefetch ring. The 156-degree cone still exceeds the ~100-degree
             // horizontal gameplay FOV by ~28 degrees per side, while turn-triggered async prefetch
             // refreshes at 28 degrees. Reduce the hard leaf ceiling as a second safety net.
-            lodConfig.maxLeafPatches = buildAltitude < 25000.0 ? 1100U
+            const std::size_t altitudeLeafBudget = buildAltitude < 25000.0 ? 1100U
                 : (buildAltitude < 150000.0 ? 650U : 320U);
+            lodConfig.maxLeafPatches = std::min(altitudeLeafBudget, motionLod.maxLeafPatches);
             lodConfig.verticalFovRadians = glm::radians(68.0);
             lodConfig.viewForwardPlanetLocal = safeNormalize(
                 viewForwardPlanetLocal, stableTangent(centerUp));
             lodConfig.viewConeHalfAngleRadians = glm::radians(78.0);
             lodConfig.viewportHeightPixels = mainstreamPerfProfile ? 1080.0 : 900.0;
-            lodConfig.targetScreenErrorPixels = buildAltitude < 25000.0
+            const double altitudeScreenError = buildAltitude < 25000.0
                 ? (mainstreamPerfProfile ? 4.08 : 3.4)
                 : (buildAltitude < 150000.0
                     ? (mainstreamPerfProfile ? 5.76 : 4.8)
                     : (mainstreamPerfProfile ? 8.64 : 7.2));
+            lodConfig.targetScreenErrorPixels = std::max(
+                altitudeScreenError, motionLod.targetScreenErrorPixels);
             lodConfig.nearFieldRadiusMeters = buildAltitude < 25000.0 ? 1.0 : 0.0;
-            lodConfig.nearFieldCellMeters = buildAltitude < 25000.0 ? 3.0 : 24.0;
+            const double altitudeNearCell = buildAltitude < 25000.0 ? 3.0 : 24.0;
+            lodConfig.nearFieldCellMeters = std::max(
+                altitudeNearCell, motionLod.nearFieldCellMeters);
             lodConfig.detailTransitionStartMeters = 180.0;
             lodConfig.detailTransitionEndMeters = 65000.0;
-            lodConfig.transitionFarCellMeters = 520.0;
+            lodConfig.transitionFarCellMeters = std::max(
+                520.0, motionLod.transitionFarCellMeters);
             lodConfig.horizonMarginRadians = 0.020;
             lodConfig.skirtDepthMeters = 6.0;
 
@@ -922,10 +958,34 @@ int main() {
             return result;
         };
 
+        const vf::VelocityLodDecision initialMotionLod = vf::decideVelocityAwareLod({
+            0.0, 0.0, 1.0, mainstreamPerfProfile ? 4.08 : 3.4, 3.0, 1100U, 520.0});
+        // R24_INITIAL_PERCEPTUAL_RESIDENCY_V1: a far/ orbital camera never pays to synthesize
+        // detailed near terrain only to replace it with a macro/globe proxy on the first frame.
+        // Visual range and source residency are independent from startup onward.
+        const double initialAltitudeMeters = std::max(
+            0.0, glm::length(initialCameraPlanet) - planet.radius);
+        const vf::PerceptualResidencyDecision initialTerrainResidency =
+            vf::decidePerceptualResidency({
+                std::max(1.0, initialAltitudeMeters),
+                32000.0,
+                std::max(64.0, initialMotionLod.transitionFarCellMeters),
+                mainstreamPerfProfile ? 1080.0 : 900.0,
+                glm::radians(68.0),
+                initialMotionLod.motionWeight,
+                1.0,
+                12000.0,
+                camera.physicsFrameBodyId() == asterId,
+                false,
+                true,
+            });
+        const bool initialProxyPreferred = perceptualResidencyEnabled
+            && initialTerrainResidency.tier != vf::SceneRepresentationTier::Detailed;
         TerrainBuildResult initialTerrain{};
-        if (runtimeFeatures.terrainRender) {
+        if (runtimeFeatures.terrainRender && !initialProxyPreferred) {
             initialTerrain = buildTerrainLod(
-                lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet, {});
+                lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet,
+                initialMotionLod, {});
         } else {
             // R24_SURFACE_AUTHORITY_DECOUPLED_V1: render/streaming are optional clients.
             // Collision, geography, hydrology and evidence targeting keep the same authoritative
@@ -1049,10 +1109,16 @@ int main() {
         }
         vf::PlanetLodStats currentLodStats = initialTerrain.stats;
         std::shared_ptr<const vf::PreparedPlanetMesh> nearTerrain = std::move(initialTerrain.renderMesh);
-        bool usingDistantEarthGlobe = camera.physicsFrameBodyId() != asterId
+        bool usingDistantEarthGlobe = initialProxyPreferred
+            || camera.physicsFrameBodyId() != asterId
             || camera.altitude() > 900000.0;
-        if (runtimeFeatures.terrainRender)
+        if (runtimeFeatures.terrainRender) {
             renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeRenderMesh : nearTerrain);
+            std::cout << "R24 INITIAL RESIDENCY altitude_m=" << initialAltitudeMeters
+                      << " tier=" << static_cast<int>(initialTerrainResidency.tier)
+                      << " proxy=" << (initialProxyPreferred ? 1 : 0)
+                      << " near_terrain_built=" << (nearTerrain ? 1 : 0) << '\n';
+        }
         else
             renderer.clearPlanetMesh();
         std::future<TerrainBuildResult> terrainBuildFuture{};
@@ -1101,6 +1167,8 @@ int main() {
         double diagnosticsMaxFrameMilliseconds = 0.0;
         double diagnosticsMaxRenderMilliseconds = 0.0;
         double lodCooldown = 0.0;
+        double lodStableViewSeconds = 0.0;
+        glm::dvec3 previousMotionForward = initialViewForwardPlanet;
         double dynamicSceneAccumulator = 1.0;
         constexpr double kDynamicSceneCadenceSeconds = 0.10;
         vf::PerformanceBenchmark performanceBenchmark{{
@@ -1184,6 +1252,15 @@ int main() {
             movement.flightSpeedSteps = input.flightSpeedSteps;
             movement.sprint = input.sprint;
             movement.toggleFlight = input.toggleFlight;
+            if (captureHighSpeed && highSpeedAutopilot) {
+                // Deterministic benchmark/gameplay capture hook: this is real PlanetCamera motion,
+                // not an LOD-only synthetic speed override.
+                movement.forward = 1.0;
+                movement.right = 0.0;
+                movement.vertical = 0.0;
+                movement.sprint = false;
+                movement.toggleFlight = false;
+            }
             if (captureSunTransit) {
                 camera.setViewDirectionWorld(
                     currentSun->position - camera.position(), camera.up());
@@ -1294,6 +1371,50 @@ int main() {
             const double arcDistance = std::acos(std::clamp(
                 glm::dot(cameraDirection, lodCenterDirection), -1.0, 1.0)) * planet.radius;
             const double localSurfaceSpeed = glm::length(localCameraVelocity);
+            const glm::dvec3 normalizedForwardForMotion = safeNormalize(
+                forwardPlanet, previousMotionForward);
+            const double frameTurnRadians = std::acos(std::clamp(
+                glm::dot(normalizedForwardForMotion, safeNormalize(previousMotionForward, normalizedForwardForMotion)),
+                -1.0, 1.0));
+            previousMotionForward = normalizedForwardForMotion;
+            const double angularSpeedRadiansPerSecond = frameTurnRadians / std::max(1.0e-4, dt);
+            if (localSurfaceSpeed < 8.0 && angularSpeedRadiansPerSecond < 0.12)
+                lodStableViewSeconds = std::min(5.0, lodStableViewSeconds + dt);
+            else
+                lodStableViewSeconds = 0.0;
+
+            const double baseScreenError = altitude < 25000.0
+                ? (mainstreamPerfProfile ? 4.08 : 3.4)
+                : (altitude < 150000.0
+                    ? (mainstreamPerfProfile ? 5.76 : 4.8)
+                    : (mainstreamPerfProfile ? 8.64 : 7.2));
+            const double baseNearCell = altitude < 25000.0 ? 3.0 : 24.0;
+            const std::size_t baseLeafBudget = altitude < 25000.0 ? 1100U
+                : (altitude < 150000.0 ? 650U : 320U);
+            const vf::VelocityLodDecision legacyMotionLod = vf::decideVelocityAwareLod({
+                0.0, 0.0, 1.0, baseScreenError, baseNearCell, baseLeafBudget, 520.0});
+            const vf::VelocityLodDecision motionLod = velocityAwareLodEnabled
+                ? vf::decideVelocityAwareLod({
+                    localSurfaceSpeed, angularSpeedRadiansPerSecond, lodStableViewSeconds,
+                    baseScreenError, baseNearCell, baseLeafBudget, 520.0})
+                : legacyMotionLod;
+
+            const vf::PerceptualResidencyDecision terrainResidency = vf::decidePerceptualResidency({
+                std::max(1.0, altitude),
+                32000.0,
+                std::max(64.0, motionLod.transitionFarCellMeters),
+                mainstreamPerfProfile ? 1080.0 : 900.0,
+                glm::radians(68.0),
+                motionLod.motionWeight,
+                1.0,
+                12000.0,
+                camera.physicsFrameBodyId() == asterId,
+                false,
+                true,
+            });
+            const bool perceptualProxyPreferred = perceptualResidencyEnabled
+                && terrainResidency.tier != vf::SceneRepresentationTier::Detailed;
+
             const vf::TerrainStreamingDecision streaming = vf::decideTerrainStreaming({
                 camera.physicsFrameBodyId() == asterId,
                 altitude,
@@ -1303,13 +1424,20 @@ int main() {
                 lodCooldown,
             });
 
+            const bool effectiveUseDistantGlobe = streaming.useDistantGlobe
+                || perceptualProxyPreferred;
             if (runtimeFeatures.terrainRender
-                && streaming.useDistantGlobe != usingDistantEarthGlobe) {
-                usingDistantEarthGlobe = streaming.useDistantGlobe;
+                && effectiveUseDistantGlobe != usingDistantEarthGlobe) {
+                usingDistantEarthGlobe = effectiveUseDistantGlobe;
                 renderer.uploadPlanetMesh(usingDistantEarthGlobe ? earthGlobeRenderMesh : nearTerrain);
                 std::cout << "R24 Earth renderer mode: "
                           << (usingDistantEarthGlobe ? "smooth-globe" : "adaptive-terrain")
-                          << " speed_mps=" << localSurfaceSpeed << '\n';
+                          << " speed_mps=" << localSurfaceSpeed
+                          << " motion=" << motionLod.motionWeight
+                          << " leaf_budget=" << motionLod.maxLeafPatches
+                          << " prefetch_m=" << motionLod.forwardPrefetchMeters
+                          << " residency=" << static_cast<int>(terrainResidency.tier)
+                          << '\n';
             }
 
             const double viewTurnRadians = std::acos(std::clamp(
@@ -1321,19 +1449,32 @@ int main() {
                 && camera.physicsFrameBodyId() == asterId
                 && !terrainBuildInFlight
                 && lodCooldown <= 0.0;
+            const double velocityPrefetchThreshold = std::min(
+                streaming.prefetchThresholdMeters,
+                std::max(500.0,
+                    streaming.recenterThresholdMeters - motionLod.forwardPrefetchMeters));
+            const bool velocityPrefetchExpired = velocityAwareLodEnabled
+                && streaming.detailedSurfaceEligible
+                && arcDistance > velocityPrefetchThreshold
+                && !terrainBuildInFlight
+                && lodCooldown <= 0.0;
             if (runtimeFeatures.terrainStreamingWorkEnabled()
-                && (streaming.requestBuild || viewPrefetchExpired)) {
+                && !perceptualProxyPreferred
+                && (streaming.requestBuild || velocityPrefetchExpired || viewPrefetchExpired)) {
                 const glm::dvec3 requestedDirection = cameraDirection;
                 const glm::dvec3 requestedCameraPlanet = cameraPlanet;
                 const glm::dvec3 requestedViewForward = forwardPlanet;
+                const vf::VelocityLodDecision requestedMotionLod = motionLod;
                 const auto reusableHydrology = surfaceAuthority.hydrology();
                 terrainBuildFuture = std::async(
                     std::launch::async,
-                    [&, requestedDirection, requestedCameraPlanet, requestedViewForward, reusableHydrology]() {
+                    [&, requestedDirection, requestedCameraPlanet, requestedViewForward,
+                        requestedMotionLod, reusableHydrology]() {
                         return buildTerrainLod(
                             requestedDirection,
                             requestedCameraPlanet,
                             requestedViewForward,
+                            requestedMotionLod,
                             reusableHydrology);
                     });
                 terrainBuildInFlight = true;
@@ -1380,7 +1521,7 @@ int main() {
                         false,
                         lodCooldown,
                     });
-                    if (!refreshed.useDistantGlobe) {
+                    if (!refreshed.useDistantGlobe && !perceptualProxyPreferred) {
                         renderer.uploadPlanetMesh(nearTerrain);
                         usingDistantEarthGlobe = false;
                     }
