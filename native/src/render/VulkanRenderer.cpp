@@ -1397,7 +1397,7 @@ void VulkanRenderer::drawFrame(
     if (gpuTimestampsSupported_) {
         vkCmdResetQueryPool(command, timestampQueryPools_[frame], 0U, kTimestampQueryCount);
         vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 0U);
+            command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 0U);
     }
 
     if (staticMesh.uploadPending) {
@@ -1517,7 +1517,7 @@ void VulkanRenderer::drawFrame(
             vkCmdEndRendering(command);
             if (gpuTimestampsSupported_) {
                 vkCmdWriteTimestamp2(
-                    command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 1U);
+                    command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 1U);
             }
 
             VkImageMemoryBarrier2 shadowToRead{};
@@ -1538,7 +1538,7 @@ void VulkanRenderer::drawFrame(
 
     } else {
         if (gpuTimestampsSupported_) {
-            vkCmdWriteTimestamp2(command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
+            vkCmdWriteTimestamp2(command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
                 timestampQueryPools_[frame], 0U);
         }
         VkImageMemoryBarrier2 shadowBypass{};
@@ -1560,7 +1560,7 @@ void VulkanRenderer::drawFrame(
         shadowBypassDependency.pImageMemoryBarriers = &shadowBypass;
         vkCmdPipelineBarrier2(command, &shadowBypassDependency);
         if (gpuTimestampsSupported_) {
-            vkCmdWriteTimestamp2(command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
+            vkCmdWriteTimestamp2(command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
                 timestampQueryPools_[frame], 1U);
         }
     }
@@ -1677,19 +1677,22 @@ void VulkanRenderer::drawFrame(
         drawBoundMesh(command, dynamic.vertexBuffer, dynamic.indexBuffer, dynamicCount, dynamicFirst);
     };
 
+    // R24_GPU_PASS_TIMING_V2_ALL_COMMANDS: diagnostic pass timestamps intentionally use
+    // ALL_COMMANDS boundaries so neighbouring graphics pipeline stages cannot leak into a
+    // named pass interval. Absolute performance certification still requires hardware GPU.
     // Depth-first ordering: fill reverse-Z with opaque terrain, then shade sky only in pixels
     // that are still at the exact clear depth. Transparent water/glass blends over the completed
     // opaque+sky background afterwards.
     if (gpuTimestampsSupported_) {
         vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 2U);
+            command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 2U);
     }
     if (environment.geometryEnabled) drawScenePass(opaquePipeline_, false);
     if (gpuTimestampsSupported_) {
         vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 3U);
+            command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 3U);
         vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 4U);
+            command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 4U);
     }
     if (environment.skyEnabled) {
             vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, skyPipeline_);
@@ -1719,15 +1722,15 @@ void VulkanRenderer::drawFrame(
     }
     if (gpuTimestampsSupported_) {
         vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 5U);
+            command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 5U);
         vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, timestampQueryPools_[frame], 6U);
+            command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 6U);
     }
 
     if (environment.transparentEnabled) drawScenePass(transparentPipeline_, true);
     if (gpuTimestampsSupported_) {
         vkCmdWriteTimestamp2(
-            command, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, timestampQueryPools_[frame], 7U);
+            command, VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, timestampQueryPools_[frame], 7U);
     }
 
     if (environment.hudEnabled) {

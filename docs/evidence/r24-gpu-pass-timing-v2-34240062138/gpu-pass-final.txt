@@ -1,0 +1,1 @@
+R24 GPU steady_pass_ms samples=56 shadow_mean=0.832 opaque_mean=0.127 sky_mean=0.436 transparent_mean=5.936 total_mean=7.330 shadow_max=3.777 opaque_max=0.305 sky_max=0.860 transparent_max=7.428
