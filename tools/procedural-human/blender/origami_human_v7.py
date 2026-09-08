@@ -2,12 +2,69 @@
 # It keeps the same deterministic Blender/CC0 pipeline while pushing the base
 # silhouettes closer to cute anime paper sculpture: larger heads/eyes, shorter
 # bodies, friendlier arm angle, compact hands and chunkier feet.
+#
+# Reliability additions in this wrapper:
+# - source asset cache + retry/backoff so one transient raw.githubusercontent reset
+#   cannot kill the render after GLB export;
+# - manifold paper wedges so bangs/bows export without invalid-mesh warnings.
 import os
 
 HERE=os.path.dirname(os.path.abspath(__file__))
 path=os.path.join(HERE,'origami_human_v6.py')
 with open(path,'r',encoding='utf-8') as f:
     src=f.read()
+
+# Add retry support to the imported V6 source.
+src=src.replace(
+    "import bpy, gzip, json, math, os, sys, urllib.request",
+    "import bpy, gzip, json, math, os, sys, urllib.request, time"
+)
+
+old_fetch="""def fetch_text(url,gz=False):
+    req=urllib.request.Request(url,headers={'User-Agent':'voxel-frontier-anime-origami-v6'})
+    data=urllib.request.urlopen(req,timeout=60).read();
+    if gz: data=gzip.decompress(data)
+    return data.decode('utf-8')
+"""
+new_fetch="""_FETCH_CACHE={}
+def fetch_text(url,gz=False):
+    key=(url,gz)
+    if key in _FETCH_CACHE:
+        return _FETCH_CACHE[key]
+    last=None
+    for attempt in range(5):
+        try:
+            req=urllib.request.Request(url,headers={'User-Agent':'voxel-frontier-anime-origami-v7'})
+            data=urllib.request.urlopen(req,timeout=60).read()
+            if gz: data=gzip.decompress(data)
+            text=data.decode('utf-8')
+            _FETCH_CACHE[key]=text
+            return text
+        except Exception as e:
+            last=e
+            print('FETCH_RETRY',attempt+1,url,type(e).__name__,str(e))
+            time.sleep(1.2*(attempt+1))
+    raise last
+"""
+if old_fetch not in src:
+    raise RuntimeError('V7 fetch patch anchor missing')
+src=src.replace(old_fetch,new_fetch)
+
+# Replace the earlier non-manifold hair/bow wedge by a simple closed bipyramid.
+old_wedge="""def wedge(name,center,scale,rz,m):
+    x,y,z=scale; vs=[(-x,-y,-z*.25),(x,-y,-z*.25),(x,y,-z*.2),(-x,y,-z*.2),(0,-y*.15,z),(0,y*.10,z)]
+    fs=[(0,1,4),(1,2,4),(2,5,4),(2,3,5),(3,0,5),(0,4,5),(0,5,3),(1,2,5)]
+    o=mesh(name,vs,fs,m); o.location=center; o.rotation_euler[2]=rz; return o
+"""
+new_wedge="""def wedge(name,center,scale,rz,m):
+    x,y,z=scale
+    vs=[(-x,-y,0),(x,-y,0),(x,y,0),(-x,y,0),(0,-y*.35,z),(0,y*.35,-z*.38)]
+    fs=[(0,1,4),(1,2,4),(2,3,4),(3,0,4),(1,0,5),(2,1,5),(3,2,5),(0,3,5)]
+    o=mesh(name,vs,fs,m); o.location=center; o.rotation_euler[2]=rz; return o
+"""
+if old_wedge not in src:
+    raise RuntimeError('V7 wedge patch anchor missing')
+src=src.replace(old_wedge,new_wedge)
 
 repls={
     "BODY_TARGET=360":"BODY_TARGET=320",
