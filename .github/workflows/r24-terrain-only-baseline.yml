@@ -72,7 +72,9 @@ jobs:
           export VF_PERF_PROFILE=mainstream_1080p
           export VF_RUNTIME_DIAGNOSTICS=1
           export VF_CAPTURE_AERIAL=0
-          export VF_MODULE_GEOMETRY=0
+          # Geometry is the renderer's master opaque/transparent draw gate, so it must be on
+          # for the terrain mesh to be rasterized. All non-terrain content remains disabled.
+          export VF_MODULE_GEOMETRY=1
           export VF_MODULE_TERRAIN=1
           export VF_MODULE_TERRAIN_STREAMING=0
           export VF_MODULE_WATER=0
@@ -90,7 +92,7 @@ jobs:
           set -e
           cat r24-terrain-only-evidence/benchmark.log
           if [[ "$STATUS" -ne 0 ]]; then exit "$STATUS"; fi
-          grep -q 'R24 MODULES geometry=0 terrain=1 terrain_streaming=0 water=0 ecology=0 dynamic_scene=0 sky=0 shadows=0 physics=0 celestial=0 weather=0 ui=0' r24-terrain-only-evidence/benchmark.log
+          grep -q 'R24 MODULES geometry=1 terrain=1 terrain_streaming=0 water=0 ecology=0 dynamic_scene=0 sky=0 shadows=0 physics=0 celestial=0 weather=0 ui=0' r24-terrain-only-evidence/benchmark.log
           grep -q 'R24 BENCHMARK profile=mainstream_1080p resolution=1920x1080' r24-terrain-only-evidence/benchmark.log
 
       - name: Parse terrain-only frame pacing
