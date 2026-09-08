@@ -10,8 +10,8 @@ CFG={
     "vfPainterlyBark":{"amp":.055,"lo":-.72,"hi":1.04,"nlat":96,"nlon":192,"geo":.43,"facet":.025,"subtitle":"continuous interlocking bark ridges · no open seams"},
     "vfPainterlyDirt":{"amp":.100,"lo":-.72,"hi":1.02,"nlat":96,"nlon":192,"geo":.44,"facet":.030,"subtitle":"clods crumbs pits · tactile granular ground"},
     "vfPainterlyStoneWall":{"amp":.175,"lo":-.55,"hi":1.06,"nlat":84,"nlon":168,"geo":.70,"facet":.34,"subtitle":"few broad sculpted stones · deeply recessed mortar"},
-    "vfPainterlyMoss":{"amp":.100,"lo":-.60,"hi":1.06,"nlat":96,"nlon":192,"geo":.56,"facet":.045,"subtitle":"nine broad overlapping moss mats · no thin shoots"},
-    "vfPainterlyWolfFur":{"amp":.090,"lo":-.72,"hi":1.06,"nlat":110,"nlon":220,"geo":.54,"facet":.040,"subtitle":"broad overlapping coat sheets · no individual hairs"},
+    "vfPainterlyMoss":{"amp":.145,"lo":-.60,"hi":1.06,"nlat":96,"nlon":192,"geo":.64,"facet":.065,"subtitle":"broad overlapping moss mats · continuous surface only"},
+    "vfPainterlyWolfFur":{"amp":.125,"lo":-.72,"hi":1.06,"nlat":110,"nlon":220,"geo":.62,"facet":.070,"subtitle":"broad overlapping coat sheets · continuous surface only"},
 }
 
 def srgb_to_linear(x):return np.where(x<=.04045,x/12.92,((x+.055)/1.055)**2.4)
@@ -23,8 +23,8 @@ def bilinear(tex,u,v):
     return (tex[y0,x0]*(1-tx)+tex[y0,x1]*tx)*(1-ty)+(tex[y1,x0]*(1-tx)+tex[y1,x1]*tx)*ty
 def load_rgb(d,n,s):return np.asarray(Image.open(d/f"{n}_{s}.png").convert("RGB"),dtype=np.float32)/255
 def load_l(d,n,s):return np.asarray(Image.open(d/f"{n}_{s}.png").convert("L"),dtype=np.float32)/255
+
 def main():
-    from PIL import Image
     count=0
     for d in sorted(p for p in ROOT.iterdir() if p.is_dir()):
         mp=d/"manifest.json"
@@ -37,7 +37,11 @@ def main():
         for iy in range(nlat+1):
             lat=-math.pi/2+math.pi*iy/nlat;cl=math.cos(lat);sl=math.sin(lat);v=1-iy/nlat
             for ix in range(nlon+1):
-                u=ix/nlon;hh=float(bilinear(height,np.array(u),np.array(v)));hn=np.clip((hh-h05)/span,cfg["lo"],cfg["hi"]);r=1+cfg["amp"]*hn;lon=-math.pi+2*math.pi*u;verts.append((r*cl*math.cos(lon),r*sl,r*cl*math.sin(lon)));uvs.append((u,v))
+                u=ix/nlon;hh=float(bilinear(height,np.array(u),np.array(v)));hn=np.clip((hh-h05)/span,cfg["lo"],cfg["hi"])
+                # Stylized tactile materials use a small stepped component so broad masses read as designed planes, not scanned noise.
+                q=cfg["facet"]
+                if q>0: hn=(1-q)*hn+q*(round(hn*6)/6)
+                r=1+cfg["amp"]*hn;lon=-math.pi+2*math.pi*u;verts.append((r*cl*math.cos(lon),r*sl,r*cl*math.sin(lon)));uvs.append((u,v))
         verts=np.asarray(verts,np.float32);uvs=np.asarray(uvs,np.float32);tris=[]
         for iy in range(nlat):
             row=nlon+1
@@ -56,6 +60,6 @@ def main():
         mask=zbuf>-1e8;Ng=norm(np.where(mask[...,None],on,np.array([0,0,1],np.float32)));bc=srgb_to_linear(bilinear(base,ou,ov));nt=bilinear(normal_tex,ou,ov)*2-1;rr=np.clip(bilinear(rough,ou,ov),.04,1);aa=bilinear(ao,ou,ov);T=norm(np.stack([-Ng[...,2],np.zeros((S,S),np.float32),Ng[...,0]],-1));Bt=norm(np.cross(Ng,T));Ntex=norm(T*nt[...,0:1]+Bt*nt[...,1:2]+Ng*np.maximum(nt[...,2:3],.08));N=norm(Ng*cfg["geo"]+Ntex*(1-cfg["geo"]));color=bc*(.21+.28*aa[...,None]);lights=[(np.array([-.58,.72,.38],np.float32),2.55,np.array([1,.82,.62],np.float32)),(np.array([.68,.22,.70],np.float32),.95,np.array([.50,.64,1],np.float32)),(np.array([-.15,-.78,.60],np.float32),.44,np.array([.78,.38,.30],np.float32))];Vcam=np.array([0,0,1],np.float32)
         for L,intensity,lcol in lights:
             L=L/np.linalg.norm(L);ndl=np.clip(np.sum(N*L,axis=-1),0,1);color+=bc*ndl[...,None]*intensity*lcol*.55;H=(L+Vcam)/np.linalg.norm(L+Vcam);ndh=np.clip(np.sum(N*H,axis=-1),0,1);spec=np.power(ndh,4+36*(1-rr))*(1-rr)*.11;color+=spec[...,None]*intensity*lcol
-        rim=np.power(1-np.clip(Ng[...,2],0,1),2.2);color+=rim[...,None]*np.array([.065,.085,.145],np.float32);c=np.clip(color*1.03,0,None);A,Bc,Cc,Dd,Ee=2.51,.03,2.43,.59,.14;c=(c*(A*c+Bc))/(c*(Cc*c+Dd)+Ee);c=linear_to_srgb(np.clip(c,0,1));gy=np.linspace(0,1,S,dtype=np.float32)[:,None,None];bg=np.repeat(np.array([.76,.80,.86],np.float32)[None,None,:]*(1-gy)+np.array([.14,.17,.20],np.float32)[None,None,:]*gy,S,axis=1);mimg=Image.fromarray((mask*255).astype(np.uint8),"L").filter(ImageFilter.GaussianBlur(20));shadow=np.roll(np.asarray(mimg,dtype=np.float32)/255,int(S*.11),axis=0)*.18;bg*=1-shadow[...,None];img=np.where(mask[...,None],c,bg);out=Image.fromarray((np.clip(img,0,1)*255).astype(np.uint8),"RGB");draw=ImageDraw.Draw(out);draw.rounded_rectangle((28,28,S-28,105),radius=18,fill=(18,18,20));draw.text((50,43),f"{n} · TRUE MESH DISPLACEMENT",fill="white");draw.text((50,70),f"{cfg['subtitle']} · amp {cfg['amp']:.3f}",fill=(205,205,210));out=out.resize((1000,1000),Image.Resampling.LANCZOS);out.save(d/"preview-sphere.png");metrics={"renderer":"seam_safe_true_uv_mesh_zbuffer_v7","preset":preset,"repeatScale":1.0,"displacementAmp":cfg["amp"],"heightP05":float(h05),"heightP50":float(h50),"heightP95":float(h95),"heightSpanP05P95":float(span),"meshLatitudeSegments":nlat,"meshLongitudeSegments":nlon};(d/"preview-mesh-metrics.json").write_text(json.dumps(metrics,indent=2)+"\n",encoding="utf-8");count+=1
+        rim=np.power(1-np.clip(Ng[...,2],0,1),2.2);color+=rim[...,None]*np.array([.065,.085,.145],np.float32);c=np.clip(color*1.03,0,None);A,Bc,Cc,Dd,Ee=2.51,.03,2.43,.59,.14;c=(c*(A*c+Bc))/(c*(Cc*c+Dd)+Ee);c=linear_to_srgb(np.clip(c,0,1));gy=np.linspace(0,1,S,dtype=np.float32)[:,None,None];bg=np.repeat(np.array([.76,.80,.86],np.float32)[None,None,:]*(1-gy)+np.array([.14,.17,.20],np.float32)[None,None,:]*gy,S,axis=1);mimg=Image.fromarray((mask*255).astype(np.uint8),"L").filter(ImageFilter.GaussianBlur(20));shadow=np.roll(np.asarray(mimg,dtype=np.float32)/255,int(S*.11),axis=0)*.18;bg*=1-shadow[...,None];img=np.where(mask[...,None],c,bg);out=Image.fromarray((np.clip(img,0,1)*255).astype(np.uint8),"RGB");draw=ImageDraw.Draw(out);draw.rounded_rectangle((28,28,S-28,105),radius=18,fill=(18,18,20));draw.text((50,43),f"{n} · TRUE MESH DISPLACEMENT",fill="white");draw.text((50,70),f"{cfg['subtitle']} · amp {cfg['amp']:.3f}",fill=(205,205,210));out=out.resize((1000,1000),Image.Resampling.LANCZOS);out.save(d/"preview-sphere.png");metrics={"renderer":"seam_safe_true_uv_mesh_zbuffer_v8","preset":preset,"repeatScale":1.0,"displacementAmp":cfg["amp"],"heightP05":float(h05),"heightP50":float(h50),"heightP95":float(h95),"heightSpanP05P95":float(span),"meshLatitudeSegments":nlat,"meshLongitudeSegments":nlon};(d/"preview-mesh-metrics.json").write_text(json.dumps(metrics,indent=2)+"\n",encoding="utf-8");count+=1
     print(f"mesh previews rendered: {count}")
 if __name__=="__main__":main()
