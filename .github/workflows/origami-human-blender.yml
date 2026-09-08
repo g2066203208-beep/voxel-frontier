@@ -25,7 +25,7 @@ jobs:
       - name: Generate and validate waist-up neutral tailor mannequin
         run: |
           mkdir -p artifacts/cartoon-tailor-mannequin
-          blender --background --python tools/procedural-human/blender/cartoon_tailor_mannequin_v21.py -- "$GITHUB_WORKSPACE/artifacts/cartoon-tailor-mannequin"
+          blender --background --python tools/procedural-human/blender/cartoon_tailor_mannequin_v22.py -- "$GITHUB_WORKSPACE/artifacts/cartoon-tailor-mannequin"
           test -s artifacts/cartoon-tailor-mannequin/neutral-waist-up-mannequin.glb
           test -s artifacts/cartoon-tailor-mannequin/front.png
           test -s artifacts/cartoon-tailor-mannequin/side.png
@@ -40,7 +40,7 @@ jobs:
           assert not any(m[k] for k in ['hair','face_addons','clothing','props'])
           assert m['single_continuous_shell'] is True
           assert m['connected_components']==1 and m['boundary_edges']==0 and m['nonmanifold_edges']==0
-          assert 550 <= m['tris'] <= 900, m
+          assert 500 <= m['tris'] <= 800, m
           assert m['glb_valid_mesh'] and m['glb_meshes']>0 and m['glb_primitives']>0
           data=open(f'{root}/neutral-waist-up-mannequin.glb','rb').read();assert len(data)>1000 and data[:4]==b'glTF'
           off=12;doc=None
@@ -53,7 +53,7 @@ jobs:
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
         with:
-          name: neutral-tailor-mannequin-v21
+          name: neutral-tailor-mannequin-v22
           path: artifacts/cartoon-tailor-mannequin/
           if-no-files-found: error
           retention-days: 30
