@@ -8,31 +8,29 @@ export function bakeVfPainterlyWolfFur(size:number,p:VfPainterlyWolfFurParams={}
   const charcoal:RGB=[.060,.065,.075],deep:RGB=[.115,.112,.112],cool:RGB=[.225,.235,.245],mid:RGB=[.37,.35,.32],warm:RGB=[.54,.47,.38],cream:RGB=[.77,.73,.65];
   for(let y=0;y<size;y++){const v=1-(y+.5)/size;for(let x=0;x<size;x++){
     const u=(x+.5)/size,i=y*size+x,j=i*3;
-    // Wolves read as two layers: a dense, soft undercoat and longer coarse guard hairs.
-    // Keep the macro body nearly flat; all visible volume comes from narrow directional tufts.
-    const broad=periodicField(u,v,seed+17,3),underNoise=periodicField(u*4.0,v*5.0,seed+43,4),breakup=periodicField(u*6.0,v*7.0,seed+71,3);
-    const flowA=ridgeField(u,v,seed+101,10.5,.33),flowB=ridgeField(u,v,seed+119,19.0,.29),flowC=ridgeField(u,v,seed+137,25.0,.36);
-    const underMask=C(density*(.76+.15*underNoise+.09*broad));
-    const tuftGate=S((flowA*.54+breakup*.24+.22-.28)/.66);
-    const guardCore=Math.pow(C(flowB*.76+flowC*.24),7.0);
-    const guard=C(density*tuftGate*guardCore*(.58+.42*C(.5+.5*breakup)));
-    const fineStrand=Math.pow(C(flowC),10.0)*tuftGate;
-    const rake=.5+.5*Math.sin(TAU*(u*15.0+v*4.2+periodicField(u,v,seed+179,2)*.18));
-    const underRelief=underNoise*.010+(rake-.5)*.005;
-    const guardRelief=guard*.032+fineStrand*.013;
-    let h=.492+relief*(broad*.006+underRelief+guardRelief);h=C(h);
+    // Painterly wolf coat grammar: a few broad overlapping coat sheets carry the form.
+    // Fine individual hairs are intentionally forbidden as the primary read.
+    const broad=periodicField(u,v,seed+17,3),mass=periodicField(u*1.15,v*1.10,seed+43,3),breakup=periodicField(u*1.8,v*1.6,seed+71,3);
+    const sheetA=ridgeField(u,v,seed+101,2.15,.28),sheetB=ridgeField(u,v,seed+119,3.10,.22),sheetC=ridgeField(u,v,seed+137,1.45,-.20);
+    const plateA=S((sheetA-.22)/.70),plateB=S((sheetB-.28)/.62),plateC=S((sheetC-.18)/.72);
+    const underMask=C(density*(.74+.15*broad+.11*mass));
+    const coatSheet=C(Math.max(plateA*.88,plateB*.72,plateC*.62)*(.84+.16*breakup));
+    const overlap=C(Math.min(plateA,plateB)*.55+Math.min(plateA,plateC)*.35);
+    const guard=C(density*(coatSheet*.82+overlap*.18));
+    const shoulder=S((coatSheet-.30)/.66),edge=S((coatSheet-.08)/.30)-S((coatSheet-.72)/.22);
+    let h=.490+relief*(broad*.014+mass*.010+(sheetC-.5)*.018+shoulder*.042+overlap*.018-edge*.006);h=C(h);
 
-    const band=C(.46+.22*broad+.13*underNoise);
+    const band=C(.45+.22*broad+.12*mass);
     let col=M(charcoal,mid,band);
-    col=M(col,warm,C(.10+Math.max(0,broad)*.16));
-    col=M(col,cool,C(.13+Math.max(0,-broad)*.18+Math.max(0,-underNoise)*.10));
-    col=M(col,cream,C(guard*.42+fineStrand*.20));
-    col=M(col,deep,C((1-tuftGate)*.13));
+    col=M(col,warm,C(.11+Math.max(0,broad)*.17+plateA*.09));
+    col=M(col,cool,C(.12+Math.max(0,-broad)*.16+plateC*.10));
+    col=M(col,cream,C(shoulder*.30+overlap*.12));
+    col=M(col,deep,C((1-coatSheet)*.12+edge*.06));
     baseColor.data[j]=C(col[0]);baseColor.data[j+1]=C(col[1]);baseColor.data[j+2]=C(col[2]);
-    height.data[i]=h;roughness.data[i]=C(.87+underMask*.07-guard*.055);ao.data[i]=C(.97-(1-underMask)*.06-guard*.045);
+    height.data[i]=h;roughness.data[i]=C(.88+underMask*.055-shoulder*.040);ao.data[i]=C(.975-edge*.060-overlap*.030);
     underfur.data[i]=underMask;guardHair.data[i]=guard;
-    strandDirection.data[i]=C(.5+.5*Math.sin(TAU*(v*.42+periodicField(u,v,seed+223,2)*.055)));
-    strandLength.data[i]=C(guardLength*(.54+.30*tuftGate+.16*guard));
+    strandDirection.data[i]=C(.5+.5*Math.sin(TAU*(v*.20+periodicField(u,v,seed+223,2)*.045)));
+    strandLength.data[i]=C(guardLength*(.58+.28*shoulder+.14*overlap));
   }}
   return {material:finalize(size,baseColor,roughness,height,ao,normalStrength),masks:{underfur,guardHair,strandDirection,strandLength}};
 }
