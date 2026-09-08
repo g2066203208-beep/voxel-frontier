@@ -1,0 +1,35 @@
+name: R24 Velocity Aware LOD
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - 'native/include/vf/world/VelocityAwareLodPolicy.hpp'
+      - 'native/tests/VelocityAwareLodPolicyTests.cpp'
+      - 'native/foundation/CMakeLists.txt'
+      - '.github/workflows/r24-velocity-aware-lod.yml'
+  workflow_dispatch:
+
+jobs:
+  velocity-lod:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Build foundation harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S native/foundation -B build/r24-velocity-lod -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/r24-velocity-lod --parallel 2
+
+      - name: Verify velocity-aware LOD contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./build/r24-velocity-lod/vf_velocity_aware_lod_tests | tee velocity-lod.log
+          grep -q '^R24 VELOCITY LOD PASS ' velocity-lod.log
