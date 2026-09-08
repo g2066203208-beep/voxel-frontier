@@ -10,8 +10,8 @@ CFG={
     'vfPainterlyBark':{'amp':.055,'lo':-.72,'hi':1.04,'nlat':96,'nlon':192,'geo':.43,'facet':.025,'subtitle':'continuous interlocking bark ridges · no open seams'},
     'vfPainterlyDirt':{'amp':.100,'lo':-.72,'hi':1.02,'nlat':96,'nlon':192,'geo':.44,'facet':.030,'subtitle':'clods crumbs pits · tactile granular ground'},
     'vfPainterlyStoneWall':{'amp':.175,'lo':-.55,'hi':1.06,'nlat':84,'nlon':168,'geo':.70,'facet':.34,'subtitle':'few broad sculpted stones · deeply recessed mortar'},
-    'vfPainterlyMoss':{'amp':.050,'lo':-.60,'hi':1.06,'nlat':96,'nlon':192,'geo':.70,'facet':.035,'subtitle':'broad moss cards · roots flush to surface · lifted carpet lobes'},
-    'vfPainterlyWolfFur':{'amp':.060,'lo':-.72,'hi':1.06,'nlat':110,'nlon':220,'geo':.68,'facet':.045,'subtitle':'broad fur cards · layered coat clumps · silhouette fins'},
+    'vfPainterlyMoss':{'amp':.050,'lo':-.60,'hi':1.06,'nlat':96,'nlon':192,'geo':.70,'facet':.035,'subtitle':'continuous moss carpet · few lifted broad edge lobes'},
+    'vfPainterlyWolfFur':{'amp':.060,'lo':-.72,'hi':1.06,'nlat':110,'nlon':220,'geo':.68,'facet':.045,'subtitle':'five broad coat planes · six silhouette fur fins'},
 }
 
 def srgb_to_linear(x):return np.where(x<=.04045,x/12.92,((x+.055)/1.055)**2.4)
@@ -36,45 +36,56 @@ def sphere_pos(u,v,radius_fn,lift=0.0):
     return np.array([r*cl*math.cos(lon),r*sl,r*cl*math.sin(lon)],np.float32)
 
 def add_ribbon(verts,uvs,tris,radius_fn,u0,v0,du,dv,width,lift,kind='fur',tip_bias=0.0):
-    # Broad folded polygon card: the complete root edge lies on the displaced shell.
-    # Side edges remain close to the shell while a wide center ridge lifts the clump.
+    # Broad folded polygon card. Its entire rear edge lies on the displaced shell.
+    # The card is allowed to rise and cross the silhouette, but never to float free.
     L=math.hypot(du,dv) or 1.0;pu=-dv/L;pv=du/L
     if kind=='fur':
-        ts=[0.0,.34,.70,1.0];widths=[.82,1.00,.70,.08];edge_lifts=[0.0,lift*.08,lift*.28,lift*.58];ridge=[0.0,lift*.25,lift*.52,lift*.72]
+        ts=[0.0,.34,.70,1.0];widths=[.84,1.00,.72,.10];edge_lifts=[0.0,lift*.06,lift*.23,lift*.50];ridge=[0.0,lift*.22,lift*.48,lift*.68]
     else:
-        ts=[0.0,.34,.70,1.0];widths=[.82,1.00,1.02,.78];edge_lifts=[0.0,lift*.08,lift*.22,lift*.36];ridge=[0.0,lift*.16,lift*.30,lift*.38]
+        ts=[0.0,.34,.70,1.0];widths=[.86,1.00,1.03,.80];edge_lifts=[0.0,lift*.05,lift*.14,lift*.25];ridge=[0.0,lift*.10,lift*.21,lift*.28]
     base=len(verts)
     for t,wf,elf,rf in zip(ts,widths,edge_lifts,ridge):
         cu=u0+du*t;cv=v0+dv*t;bend=(t*(1-t))*tip_bias;cu+=bend*pu;cv+=bend*pv
         for side in (-1,0,1):
             off=width*wf*side*.5;uu=cu+pu*off;vv=cv+pv*off;extra=rf if side==0 else elf
-            verts.append(tuple(sphere_pos(uu,vv,radius_fn,extra)))
-            uvs.append((uu%1.0,max(.02,min(.98,vv))))
-    # two broad folded facets per longitudinal segment
+            verts.append(tuple(sphere_pos(uu,vv,radius_fn,extra)));uvs.append((uu%1.0,max(.02,min(.98,vv))))
     for sec in range(len(ts)-1):
         a=base+sec*3;d=a+3
         tris.extend(((a,d,a+1),(a+1,d,d+1),(a+1,d+1,a+2),(a+2,d+1,d+2)))
 
 def add_wolf_cards(verts,uvs,tris,radius_fn):
-    # Deliberately few, broad overlapping cards: coarse painterly coat masses, not strands.
-    cards=[
-        (.515,.31, .020,.175,.078,.115,-.012),(.985,.33,-.020,.175,.078,.115,.012),
-        (.60,.18, .010,.180,.090,.090,-.010),(.74,.16,-.006,.190,.105,.100,.012),(.88,.20,-.014,.180,.092,.090,.010),
-        (.54,.36, .018,.185,.095,.100,-.014),(.68,.34,-.008,.195,.115,.105,.010),(.82,.36, .010,.192,.112,.100,-.008),(.95,.37,-.020,.180,.088,.100,.014),
-        (.58,.54, .014,.190,.108,.105,-.010),(.73,.53,-.012,.205,.120,.115,.014),(.88,.55, .012,.190,.108,.105,-.012),
-        (.63,.72, .010,.165,.100,.095,-.008),(.79,.71,-.008,.170,.108,.100,.010),(.92,.72,-.014,.155,.090,.095,.012),
+    # Five broad body/shoulder planes establish coat direction and volume.
+    body=[
+        (.64,.24, .010,.205,.135,.105,-.010),
+        (.82,.25,-.010,.205,.130,.100,.012),
+        (.69,.45,-.008,.215,.145,.115,.010),
+        (.86,.48, .012,.205,.135,.110,-.012),
+        (.75,.66,-.010,.185,.135,.105,.010),
     ]
-    for c in cards:add_ribbon(verts,uvs,tris,radius_fn,*c[:-1],kind='fur',tip_bias=c[-1])
-    return len(cards)
+    # Six large fins sit just inside the visible rim so the pelt edge breaks the sphere
+    # silhouette in a few decisive clumps instead of becoming a tiled scale pattern.
+    rim=[
+        (.505,.28, .024,.185,.085,.145,-.014),
+        (.508,.50, .026,.195,.092,.150,.014),
+        (.515,.70, .020,.175,.082,.135,-.010),
+        (.995,.30,-.024,.185,.085,.145,.014),
+        (.992,.52,-.026,.195,.092,.150,-.014),
+        (.985,.71,-.020,.175,.082,.135,.010),
+    ]
+    for c in body+rim:add_ribbon(verts,uvs,tris,radius_fn,*c[:-1],kind='fur',tip_bias=c[-1])
+    return len(body)+len(rim)
 
 def add_moss_cards(verts,uvs,tris,radius_fn):
-    # Few, oversized carpet lobes. Each full rear edge is welded visually to the shell;
-    # broad lifted tips create a chunky moss silhouette instead of grass-like strands.
+    # Moss is primarily one continuous height-displaced carpet. Only seven oversized
+    # lobes curl away from the surface, like chunks of a thick mat rather than leaves.
     cards=[
-        (.58,.22,.022,.115,.160,.105,.012),(.78,.20,-.012,.120,.180,.115,-.012),(.94,.27,-.024,.105,.145,.105,.016),
-        (.53,.43,.022,.120,.175,.120,-.014),(.72,.41,-.010,.125,.195,.130,.012),(.90,.45,.014,.118,.180,.120,-.012),
-        (.60,.64,.018,.115,.180,.120,.012),(.80,.62,-.012,.120,.195,.130,-.010),(.96,.66,-.022,.100,.145,.110,.014),
-        (.70,.79,.010,.095,.165,.100,-.010),(.88,.78,-.010,.090,.155,.095,.010),
+        (.58,.25,.020,.120,.200,.080,.010),
+        (.80,.24,-.014,.125,.220,.085,-.012),
+        (.54,.48,.022,.125,.215,.090,-.014),
+        (.76,.46,-.010,.130,.235,.095,.012),
+        (.94,.49,-.020,.115,.190,.085,.014),
+        (.64,.70,.016,.115,.220,.090,.010),
+        (.86,.69,-.014,.115,.215,.085,-.010),
     ]
     for c in cards:add_ribbon(verts,uvs,tris,radius_fn,*c[:-1],kind='moss',tip_bias=c[-1])
     return len(cards)
@@ -114,6 +125,6 @@ def main():
         mask=zbuf>-1e8;Ng=norm(np.where(mask[...,None],on,np.array([0,0,1],np.float32)));bc=srgb_to_linear(bilinear(base,ou,ov));nt=bilinear(normal_tex,ou,ov)*2-1;rr=np.clip(bilinear(rough,ou,ov),.04,1);aa=bilinear(ao,ou,ov);T=norm(np.stack([-Ng[...,2],np.zeros((S,S),np.float32),Ng[...,0]],-1));Bt=norm(np.cross(Ng,T));Ntex=norm(T*nt[...,0:1]+Bt*nt[...,1:2]+Ng*np.maximum(nt[...,2:3],.08));N=norm(Ng*cfg['geo']+Ntex*(1-cfg['geo']));color=bc*(.21+.28*aa[...,None]);lights=[(np.array([-.58,.72,.38],np.float32),2.55,np.array([1,.82,.62],np.float32)),(np.array([.68,.22,.70],np.float32),.95,np.array([.50,.64,1],np.float32)),(np.array([-.15,-.78,.60],np.float32),.44,np.array([.78,.38,.30],np.float32))];Vcam=np.array([0,0,1],np.float32)
         for L,intensity,lcol in lights:
             L=L/np.linalg.norm(L);ndl=np.clip(np.sum(N*L,axis=-1),0,1);color+=bc*ndl[...,None]*intensity*lcol*.55;H=(L+Vcam)/np.linalg.norm(L+Vcam);ndh=np.clip(np.sum(N*H,axis=-1),0,1);spec=np.power(ndh,4+36*(1-rr))*(1-rr)*.11;color+=spec[...,None]*intensity*lcol
-        rim=np.power(1-np.clip(Ng[...,2],0,1),2.2);color+=rim[...,None]*np.array([.065,.085,.145],np.float32);c=np.clip(color*1.03,0,None);A,Bc,Cc,Dd,Ee=2.51,.03,2.43,.59,.14;c=(c*(A*c+Bc))/(c*(Cc*c+Dd)+Ee);c=linear_to_srgb(np.clip(c,0,1));gy=np.linspace(0,1,S,dtype=np.float32)[:,None,None];bg=np.repeat(np.array([.76,.80,.86],np.float32)[None,None,:]*(1-gy)+np.array([.14,.17,.20],np.float32)[None,None,:]*gy,S,axis=1);mimg=Image.fromarray((mask*255).astype(np.uint8),'L').filter(ImageFilter.GaussianBlur(20));shadow=np.roll(np.asarray(mimg,dtype=np.float32)/255,int(S*.11),axis=0)*.18;bg*=1-shadow[...,None];img=np.where(mask[...,None],c,bg);out=Image.fromarray((np.clip(img,0,1)*255).astype(np.uint8),'RGB');draw=ImageDraw.Draw(out);draw.rounded_rectangle((28,28,S-28,105),radius=18,fill=(18,18,20));title='TRUE MESH + MACRO CARDS' if card_count else 'TRUE MESH DISPLACEMENT';draw.text((50,43),f'{n} · {title}',fill='white');sub=f"{cfg['subtitle']} · cards {card_count}" if card_count else f"{cfg['subtitle']} · amp {cfg['amp']:.3f}";draw.text((50,70),sub,fill=(205,205,210));out.save(d/'preview-sphere.png');metrics={'renderer':'seam_safe_true_uv_mesh_zbuffer_macro_cards_v1','preset':preset,'repeatScale':1.0,'displacementAmp':cfg['amp'],'heightP05':float(h05),'heightP50':float(h50),'heightP95':float(h95),'heightSpanP05P95':float(span),'meshLatitudeSegments':nlat,'meshLongitudeSegments':nlon,'macroCards':card_count,'cardRootAttachment':'full_edge_flush_to_displaced_surface' if card_count else 'none'};(d/'preview-mesh-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n',encoding='utf-8');count+=1
+        rimlight=np.power(1-np.clip(Ng[...,2],0,1),2.2);color+=rimlight[...,None]*np.array([.065,.085,.145],np.float32);c=np.clip(color*1.03,0,None);A,Bc,Cc,Dd,Ee=2.51,.03,2.43,.59,.14;c=(c*(A*c+Bc))/(c*(Cc*c+Dd)+Ee);c=linear_to_srgb(np.clip(c,0,1));gy=np.linspace(0,1,S,dtype=np.float32)[:,None,None];bg=np.repeat(np.array([.76,.80,.86],np.float32)[None,None,:]*(1-gy)+np.array([.14,.17,.20],np.float32)[None,None,:]*gy,S,axis=1);mimg=Image.fromarray((mask*255).astype(np.uint8),'L').filter(ImageFilter.GaussianBlur(20));shadow=np.roll(np.asarray(mimg,dtype=np.float32)/255,int(S*.11),axis=0)*.18;bg*=1-shadow[...,None];img=np.where(mask[...,None],c,bg);out=Image.fromarray((np.clip(img,0,1)*255).astype(np.uint8),'RGB');draw=ImageDraw.Draw(out);draw.rounded_rectangle((28,28,S-28,105),radius=18,fill=(18,18,20));title='TRUE MESH + MACRO CARDS' if card_count else 'TRUE MESH DISPLACEMENT';draw.text((50,43),f'{n} · {title}',fill='white');sub=f"{cfg['subtitle']} · cards {card_count}" if card_count else f"{cfg['subtitle']} · amp {cfg['amp']:.3f}";draw.text((50,70),sub,fill=(205,205,210));out.save(d/'preview-sphere.png');metrics={'renderer':'seam_safe_true_uv_mesh_zbuffer_macro_cards_v2','preset':preset,'repeatScale':1.0,'displacementAmp':cfg['amp'],'heightP05':float(h05),'heightP50':float(h50),'heightP95':float(h95),'heightSpanP05P95':float(span),'meshLatitudeSegments':nlat,'meshLongitudeSegments':nlon,'macroCards':card_count,'cardRootAttachment':'full_edge_flush_to_displaced_surface' if card_count else 'none'};(d/'preview-mesh-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n',encoding='utf-8');count+=1
     print('rendered',count)
 if __name__=='__main__':main()
