@@ -1,0 +1,295 @@
+name: R24 Full Module Isolation Matrix
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/scripts/r24_module_isolation_matrix.py'
+      - '.github/scripts/r24_module_isolation_post.py'
+      - '.github/workflows/r24-module-isolation-matrix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-full-module-isolation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  isolate-every-module:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 12
+
+      - name: Materialize strict subsystem gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/r24_module_isolation_matrix.py
+          python3 .github/scripts/r24_module_isolation_post.py
+          git diff --check
+          grep -q 'R24_MODULE_ISOLATION_MATRIX_V1' native/include/vf/app/RuntimeFeatureFlags.hpp
+          grep -q 'R24_MODULE_ISOLATION_MATRIX_V1' native/src/app/Main.cpp
+          grep -q 'R24_MODULE_ISOLATION_MATRIX_V1' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'R24_MODULE_ISOLATION_MATRIX_V1' native/src/render/VulkanRenderer.cpp
+          grep -q 'R24_SHADOW_MODULE_BYPASS_V1' native/shaders/planet.slang
+          grep -q 'if (runtimeFeatures.celestialSimulation)' native/src/app/Main.cpp
+          grep -q 'if (runtimeFeatures.physicsSimulation) physics.advance' native/src/app/Main.cpp
+          grep -q 'if (environment.skyEnabled)' native/src/render/VulkanRenderer.cpp
+          grep -q 'if (environment.hudEnabled)' native/src/render/VulkanRenderer.cpp
+          grep -q 'if (environment.geometryEnabled) drawScenePass' native/src/render/VulkanRenderer.cpp
+
+      - name: Install build and Vulkan dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Configure and build Release
+        run: |
+          cmake -S native -B build/r24-module-matrix -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+          cmake --build build/r24-module-matrix --parallel 2
+
+      - name: Run complete native regression suite
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-module-matrix --verbose --output-on-failure 2>&1 | tee r24-module-matrix-ctest.log
+
+      - name: Verify software Vulkan identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+          grep -q 'llvmpipe' vulkan-summary.txt
+
+      - name: Run ALL-OFF, one-hot, full, and leave-one-out matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-module-matrix -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p r24-module-matrix-evidence
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp > r24-module-matrix-evidence/xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 1
+          export DISPLAY=:99 SDL_VIDEODRIVER=x11
+          export VF_PERF_PROFILE=mainstream_1080p
+          export VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=7000
+          export VF_RUNTIME_DIAGNOSTICS=1 VF_CELESTIAL_TIME_SCALE=1
+
+          all_off() {
+            export VF_MODULE_GEOMETRY=0 VF_MODULE_TERRAIN=0 VF_MODULE_TERRAIN_STREAMING=0
+            export VF_MODULE_WATER=0 VF_MODULE_ECOLOGY=0 VF_MODULE_DYNAMIC_SCENE=0
+            export VF_MODULE_SKY=0 VF_MODULE_SHADOWS=0 VF_MODULE_PHYSICS=0
+            export VF_MODULE_CELESTIAL=0 VF_MODULE_WEATHER=0 VF_MODULE_UI=0
+          }
+          all_on() {
+            export VF_MODULE_GEOMETRY=1 VF_MODULE_TERRAIN=1 VF_MODULE_TERRAIN_STREAMING=1
+            export VF_MODULE_WATER=1 VF_MODULE_ECOLOGY=1 VF_MODULE_DYNAMIC_SCENE=1
+            export VF_MODULE_SKY=1 VF_MODULE_SHADOWS=1 VF_MODULE_PHYSICS=1
+            export VF_MODULE_CELESTIAL=1 VF_MODULE_WEATHER=1 VF_MODULE_UI=1
+          }
+          run_case() {
+            local label="$1"
+            echo "===== MATRIX_CASE $label ====="
+            timeout 18s "$APP" > "r24-module-matrix-evidence/${label}.log" 2>&1
+            local rc=$?
+            if [[ "$rc" -ne 0 && "$rc" -ne 124 ]]; then
+              cat "r24-module-matrix-evidence/${label}.log"
+              return "$rc"
+            fi
+            grep -q '^R24 MODULES' "r24-module-matrix-evidence/${label}.log"
+            grep -q '^R24 BENCHMARK profile=' "r24-module-matrix-evidence/${label}.log"
+            grep -q '^R24 GPU steady_pass_ms' "r24-module-matrix-evidence/${label}.log"
+            tail -n 35 "r24-module-matrix-evidence/${label}.log"
+          }
+
+          all_off; run_case 00-all-off
+
+          all_off; export VF_MODULE_SKY=1; run_case 01-sky-only
+          all_off; export VF_MODULE_UI=1; run_case 02-ui-only
+          all_off; export VF_MODULE_CELESTIAL=1; run_case 03-celestial-only
+          all_off; export VF_MODULE_PHYSICS=1; run_case 04-physics-only
+          all_off; export VF_MODULE_WEATHER=1; run_case 05-weather-only
+          all_off; export VF_MODULE_DYNAMIC_SCENE=1 VF_MODULE_GEOMETRY=1; run_case 06-dynamic-scene-only
+
+          all_off; export VF_MODULE_GEOMETRY=1 VF_MODULE_TERRAIN=1; run_case 07-terrain-static-only
+          all_off; export VF_MODULE_GEOMETRY=1 VF_MODULE_TERRAIN=1 VF_MODULE_TERRAIN_STREAMING=1; run_case 08-terrain-streaming
+          all_off; export VF_MODULE_GEOMETRY=1 VF_MODULE_TERRAIN=1 VF_MODULE_WATER=1; run_case 09-terrain-plus-water
+          all_off; export VF_MODULE_GEOMETRY=1 VF_MODULE_TERRAIN=1 VF_MODULE_ECOLOGY=1; run_case 10-terrain-plus-ecology
+          all_off; export VF_MODULE_GEOMETRY=1 VF_MODULE_TERRAIN=1 VF_MODULE_ECOLOGY=1 VF_MODULE_SHADOWS=1; run_case 11-terrain-ecology-shadows
+
+          all_on; run_case 20-full
+          all_on; export VF_MODULE_SKY=0; run_case 21-full-no-sky
+          all_on; export VF_MODULE_TERRAIN=0 VF_MODULE_TERRAIN_STREAMING=0 VF_MODULE_WATER=0 VF_MODULE_ECOLOGY=0; run_case 22-full-no-terrain-family
+          all_on; export VF_MODULE_WATER=0; run_case 23-full-no-water
+          all_on; export VF_MODULE_ECOLOGY=0; run_case 24-full-no-ecology
+          all_on; export VF_MODULE_SHADOWS=0; run_case 25-full-no-shadows
+          all_on; export VF_MODULE_DYNAMIC_SCENE=0; run_case 26-full-no-dynamic-scene
+          all_on; export VF_MODULE_PHYSICS=0; run_case 27-full-no-physics
+          all_on; export VF_MODULE_CELESTIAL=0; run_case 28-full-no-celestial
+          all_on; export VF_MODULE_WEATHER=0; run_case 29-full-no-weather
+          all_on; export VF_MODULE_UI=0; run_case 30-full-no-ui
+
+          # Three visual sanity checks are enough to prove the gates alter only intended clients.
+          all_off
+          timeout 12s "$APP" > /tmp/all-off-shot.log 2>&1 & PID=$!; sleep 4
+          import -window root r24-module-matrix-evidence/00-all-off.png || true; wait "$PID" || true
+          all_off; export VF_MODULE_GEOMETRY=1 VF_MODULE_TERRAIN=1
+          timeout 12s "$APP" > /tmp/terrain-shot.log 2>&1 & PID=$!; sleep 4
+          import -window root r24-module-matrix-evidence/07-terrain-static-only.png || true; wait "$PID" || true
+          all_on
+          timeout 12s "$APP" > /tmp/full-shot.log 2>&1 & PID=$!; sleep 4
+          import -window root r24-module-matrix-evidence/20-full.png || true; wait "$PID" || true
+          test -s r24-module-matrix-evidence/00-all-off.png
+          test -s r24-module-matrix-evidence/07-terrain-static-only.png
+          test -s r24-module-matrix-evidence/20-full.png
+
+      - name: Build module cost report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import csv, re
+
+          root = Path('r24-module-matrix-evidence')
+          logs = sorted(root.glob('*.log'))
+          def last(prefix, lines):
+              xs = [x for x in lines if x.startswith(prefix)]
+              return xs[-1] if xs else ''
+          def num(line, key, default=float('nan')):
+              m = re.search(rf'\b{re.escape(key)}=([0-9.+-]+)', line)
+              return float(m.group(1)) if m else default
+
+          rows = []
+          for path in logs:
+              if path.name == 'xvfb.log':
+                  continue
+              lines = path.read_text(encoding='utf-8', errors='replace').splitlines()
+              b = last('R24 BENCHMARK profile=', lines)
+              g = last('R24 GPU steady_pass_ms', lines)
+              c = last('R24 CPU stage_ms', lines)
+              r = last('R24 RENDER_CPU stage_ms', lines)
+              if not b:
+                  continue
+              fps = num(b, 'avg_fps')
+              rows.append({
+                  'case': path.stem,
+                  'avg_fps': fps,
+                  'frame_ms_from_fps': 1000.0 / fps if fps > 0 else float('inf'),
+                  'low_1pct_fps': num(b, 'low_1pct_fps'),
+                  'p99_frame_ms': num(b, 'p99_frame_ms'),
+                  'render_mean_ms': num(b, 'render_mean_ms'),
+                  'gpu_shadow_ms': num(g, 'shadow_mean'),
+                  'gpu_opaque_ms': num(g, 'opaque_mean'),
+                  'gpu_sky_ms': num(g, 'sky_mean'),
+                  'gpu_transparent_ms': num(g, 'transparent_mean'),
+                  'cpu_celestial_ms': num(c, 'celestial_mean'),
+                  'cpu_camera_ms': num(c, 'camera_mean'),
+                  'cpu_physics_ms': num(c, 'physics_mean'),
+                  'cpu_streaming_ms': num(c, 'streaming_mean'),
+                  'cpu_dynamic_ms': num(c, 'dynamic_mean'),
+                  'cpu_prep_ms': num(c, 'prep_mean'),
+                  'cpu_renderer_ms': num(c, 'renderer_mean'),
+                  'present_ms': num(r, 'present_mean'),
+              })
+          if not rows:
+              raise SystemExit('no matrix benchmark rows parsed')
+          rows.sort(key=lambda x: x['case'])
+          base = next(x for x in rows if x['case'] == '00-all-off')
+          full = next(x for x in rows if x['case'] == '20-full')
+          for row in rows:
+              row['added_vs_all_off_ms'] = row['frame_ms_from_fps'] - base['frame_ms_from_fps']
+              row['saved_vs_full_ms'] = full['frame_ms_from_fps'] - row['frame_ms_from_fps']
+              row['fps_ratio_vs_all_off'] = row['avg_fps'] / base['avg_fps'] if base['avg_fps'] else 0.0
+
+          fields = list(rows[0].keys())
+          with open('r24-module-matrix.csv', 'w', newline='', encoding='utf-8') as f:
+              w = csv.DictWriter(f, fieldnames=fields)
+              w.writeheader(); w.writerows(rows)
+
+          lines = [
+              'R24 FULL MODULE ISOLATION MATRIX',
+              'CI_DEVICE=llvmpipe software Vulkan; use relative attribution, not discrete-GPU certification.',
+              f"ALL_OFF avg_fps={base['avg_fps']:.3f} frame_ms={base['frame_ms_from_fps']:.3f} render_ms={base['render_mean_ms']:.3f}",
+              f"FULL avg_fps={full['avg_fps']:.3f} frame_ms={full['frame_ms_from_fps']:.3f} render_ms={full['render_mean_ms']:.3f}",
+              '',
+              'case | avg_fps | frame_ms | +ms_vs_all_off | saved_ms_vs_full | shadow | opaque | sky | transparent | cpu_streaming | cpu_physics | cpu_celestial',
+          ]
+          for x in rows:
+              lines.append(
+                  f"{x['case']} | {x['avg_fps']:.3f} | {x['frame_ms_from_fps']:.3f} | "
+                  f"{x['added_vs_all_off_ms']:+.3f} | {x['saved_vs_full_ms']:+.3f} | "
+                  f"{x['gpu_shadow_ms']:.3f} | {x['gpu_opaque_ms']:.3f} | {x['gpu_sky_ms']:.3f} | "
+                  f"{x['gpu_transparent_ms']:.3f} | {x['cpu_streaming_ms']:.3f} | "
+                  f"{x['cpu_physics_ms']:.3f} | {x['cpu_celestial_ms']:.3f}")
+          Path('r24-module-matrix-report.txt').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          print('\n'.join(lines))
+          PY
+
+      - name: Preserve matrix evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          EVIDENCE_DIR="docs/evidence/r24-module-isolation-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          cp -a r24-module-matrix-evidence/. "$EVIDENCE_DIR/"
+          cp -f r24-module-matrix-ctest.log vulkan-summary.txt r24-module-matrix.csv r24-module-matrix-report.txt "$EVIDENCE_DIR/"
+          printf 'workflow_run=%s\nworkflow_sha=%s\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > "$EVIDENCE_DIR/ci-status.txt"
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-module-isolation-${{ github.run_id }}
+          path: |
+            r24-module-matrix-evidence/**
+            r24-module-matrix-ctest.log
+            vulkan-summary.txt
+            r24-module-matrix.csv
+            r24-module-matrix-report.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote verified decoupled runtime to R24
+        if: success()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          if ! git diff --cached --quiet; then
+            git commit -m 'arch(r24): fully decouple runtime modules and record cost matrix'
+          fi
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
