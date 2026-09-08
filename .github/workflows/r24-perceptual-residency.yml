@@ -1,0 +1,47 @@
+name: R24 Perceptual Residency
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - 'native/include/vf/world/PerceptualResidencyPolicy.hpp'
+      - 'native/tests/PerceptualResidencyPolicyTests.cpp'
+      - '.github/workflows/r24-perceptual-residency.yml'
+  workflow_dispatch:
+
+jobs:
+  perceptual-residency:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact R24 commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Build policy gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/r24-perceptual-residency
+          g++ -std=c++23 -O3 -DNDEBUG -Wall -Wextra -Wpedantic \
+            -Inative/include native/tests/PerceptualResidencyPolicyTests.cpp \
+            -o build/r24-perceptual-residency/vf_perceptual_residency_tests
+
+      - name: Verify far scene stays visible without source residency
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./build/r24-perceptual-residency/vf_perceptual_residency_tests \
+            | tee build/r24-perceptual-residency/result.log
+          grep -q '^R24 PERCEPTUAL RESIDENCY PASS ' build/r24-perceptual-residency/result.log
+
+      - name: Enforce architecture contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'R24_PERCEPTUAL_RESIDENCY_V1' native/include/vf/world/PerceptualResidencyPolicy.hpp
+          grep -q 'sourceCellsRequired = false' native/include/vf/world/PerceptualResidencyPolicy.hpp
+          grep -q 'physicsActive = false' native/include/vf/world/PerceptualResidencyPolicy.hpp
+          grep -q 'SceneRepresentationTier::HorizonProxy' native/include/vf/world/PerceptualResidencyPolicy.hpp
