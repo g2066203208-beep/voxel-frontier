@@ -17,54 +17,43 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-
       - name: Install Blender headless runtime
         run: |
           sudo apt-get update
           sudo apt-get install -y blender python3-numpy libegl1 libgl1-mesa-dri
           blender --version
-
-      - name: Generate and validate single-shell PEAK-like neutral basemesh
+      - name: Generate and validate compact cute single-shell basemesh
         run: |
           mkdir -p artifacts/peak-cute-neutral
-          blender --background --python tools/procedural-human/blender/peak_cute_neutral_v19.py -- "$GITHUB_WORKSPACE/artifacts/peak-cute-neutral"
+          blender --background --python tools/procedural-human/blender/peak_cute_neutral_v20.py -- "$GITHUB_WORKSPACE/artifacts/peak-cute-neutral"
           test -s artifacts/peak-cute-neutral/neutral.glb
           test -s artifacts/peak-cute-neutral/neutral-preview.png
           test -s artifacts/peak-cute-neutral/neutral-front.png
           test -s artifacts/peak-cute-neutral/metrics.json
           test -s artifacts/peak-cute-neutral/section_spec.json
           python3 - <<'PY'
-          import json, os, struct
-          root='artifacts/peak-cute-neutral'
-          m=json.load(open(f'{root}/metrics.json'))
-          assert m['original_geometry'] is True
-          assert m['external_character_mesh'] is False
+          import json,struct
+          root='artifacts/peak-cute-neutral';m=json.load(open(f'{root}/metrics.json'))
+          assert m['original_geometry'] is True and m['external_character_mesh'] is False
           assert m['neutral_only'] is True and m['male_female_split'] is False
-          assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False and m['props'] is False
-          assert m['single_continuous_shell'] is True, m
-          assert m['connected_components'] == 1 and m['boundary_edges'] == 0 and m['nonmanifold_edges'] == 0, m
-          assert 820 <= m['tris'] <= 1050, m
-          assert 3.8 <= m['visual_head_ratio'] <= 4.3, m
-          assert m['glb_valid_mesh'] is True and m['glb_primitives'] > 0 and m['glb_meshes'] > 0, m
-          path=f'{root}/neutral.glb'; data=open(path,'rb').read()
-          assert len(data) > 1000 and data[:4] == b'glTF', len(data)
-          off=12; doc=None
-          while off+8 <= len(data):
-              ln,typ=struct.unpack_from('<II',data,off); off+=8
-              chunk=data[off:off+ln]; off+=ln
-              if typ == 0x4E4F534A:
-                  doc=json.loads(chunk.decode('utf-8').rstrip(' \x00'))
-          assert doc and doc.get('meshes'), doc
-          primitives=sum(len(x.get('primitives',[])) for x in doc['meshes'])
-          assert primitives > 0, doc
-          print(json.dumps(m, indent=2))
-          print('GLB bytes',len(data),'meshes',len(doc['meshes']),'primitives',primitives)
+          assert not any(m[k] for k in ['hair','face_addons','clothing','props'])
+          assert m['single_continuous_shell'] is True
+          assert m['connected_components']==1 and m['boundary_edges']==0 and m['nonmanifold_edges']==0
+          assert 800 <= m['tris'] <= 1000, m
+          assert 3.0 <= m['visual_head_ratio'] <= 3.5, m
+          assert m['glb_valid_mesh'] and m['glb_meshes']>0 and m['glb_primitives']>0
+          data=open(f'{root}/neutral.glb','rb').read();assert len(data)>1000 and data[:4]==b'glTF'
+          off=12;doc=None
+          while off+8<=len(data):
+              ln,typ=struct.unpack_from('<II',data,off);off+=8;chunk=data[off:off+ln];off+=ln
+              if typ==0x4E4F534A:doc=json.loads(chunk.decode().rstrip(' \x00'))
+          assert doc and doc.get('meshes') and sum(len(x.get('primitives',[])) for x in doc['meshes'])>0
+          print(json.dumps(m,indent=2));print('GLB bytes',len(data))
           PY
-
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
         with:
-          name: peak-cute-neutral-human-v19
+          name: peak-cute-neutral-human-v20
           path: artifacts/peak-cute-neutral/
           if-no-files-found: error
           retention-days: 30
