@@ -23,7 +23,8 @@ Shared visual rules:
 - broad painted planes and controlled warm/cool variation replace photographic micro-noise;
 - small detached decoration, floating fragments, arbitrary engravings and decorative cross scratches are forbidden;
 - roughness is semantic to the material category, not random noise;
-- every category has its own procedural shape grammar rather than recoloring the rock generator.
+- every category has its own procedural shape grammar rather than recoloring the rock generator;
+- material-sphere review must show tactile 3D relief; a smooth sphere with only shaded texture is a visual failure.
 
 ### Reference guardrail
 
@@ -32,13 +33,17 @@ Shared visual rules:
 Voxel Frontier keeps its own signature on top of those principles:
 
 - sandstone uses oversized interlocking strata, thick chamfered shoulders, narrow ink-dark fractures, warm ochre faces and restrained cool-violet shadow planes;
-- bark uses irregular calligraphic vertical ridges, compressed seams, localized peel/scar accents and sparse knot distortion rather than tiled bark plates;
-- dirt reads as continuous ground mass with broad hand-painted warm/cool planes, shallow compacted terraces and sparse erosion/furrow marks rather than pebble noise or Voronoi cells;
+- bark is one continuous wooden skin: irregular calligraphic vertical ridges, shallow carved furrows, localized peel/scar accents and sparse knot distortion; dark grooves must never read as open gaps through the surface;
+- dirt reads as continuous ground mass with broad hand-painted warm/cool planes plus visible compacted clods, shallow pits, crumbs and sparse erosion marks;
+- stone wall uses irregular proud masonry blocks, broad hand-painted stone faces and clearly recessed but non-black mortar;
+- moss grows as a continuous mat of overlapping cushion colonies and raised soft tufts over a darker substrate;
+- wolf fur combines dense soft underfur with longer directional guard-hair clumps, using cool charcoal/grey-brown/cream banding instead of generic brown fur;
+- leaves, snow and water keep their existing category-specific silhouette language;
 - displacement must create a readable silhouette at material-sphere scale without producing paper-thin fins, floating layers or self-intersection-like spikes.
 
-## Approved six-category master set
+## Approved nine-category master set
 
-The first production master set is intentionally small and stable:
+The production master set is intentionally stable:
 
 - `vf_painted_layered_sandstone_master` -> `vfLayeredSandstonePainted`
 - `vf_painterly_dirt_master` -> `vfPainterlyDirt`
@@ -46,13 +51,16 @@ The first production master set is intentionally small and stable:
 - `vf_painterly_leaves_master` -> `vfPainterlyLeaves`
 - `vf_painterly_snow_master` -> `vfPainterlySnow`
 - `vf_painterly_water_master` -> `vfPainterlyWater`
+- `vf_painterly_stone_wall_master` -> `vfPainterlyStoneWall`
+- `vf_painterly_moss_master` -> `vfPainterlyMoss`
+- `vf_painterly_wolf_fur_master` -> `vfPainterlyWolfFur`
 
 Each is a category baseline, not a final catalog of variants.
 
 ## Repository architecture
 
 - `material_lab/request.json`
-  - deterministic six-master production bake request;
+  - deterministic nine-master production bake request;
   - uses stable material names with no experiment/version suffixes.
 - `material_lab/meshova/bake-request.ts`
   - exact production preset whitelist.
@@ -60,20 +68,23 @@ Each is a category baseline, not a final catalog of variants.
   - shared deterministic periodic fields and PBR finalization only;
   - contains no category-specific art direction.
 - `material_lab/meshova/recipes/vf-layered-sandstone-painted.ts`
-  - approved sculptural layered rock master.
 - `material_lab/meshova/recipes/vf-painterly-dirt.ts`
 - `material_lab/meshova/recipes/vf-painterly-bark.ts`
 - `material_lab/meshova/recipes/vf-painterly-leaves.ts`
 - `material_lab/meshova/recipes/vf-painterly-snow.ts`
 - `material_lab/meshova/recipes/vf-painterly-water.ts`
+- `material_lab/meshova/recipes/vf-painterly-stone-wall.ts`
+- `material_lab/meshova/recipes/vf-painterly-moss.ts`
+- `material_lab/meshova/recipes/vf-painterly-wolf-fur.ts`
   - isolated category recipes so later changes cannot accidentally contaminate another material family.
 - `material_lab/preview/render_material_previews.py`
-  - deterministic studio renderer using real PBR maps and true Height displacement;
-  - per-material displacement behavior is selected by manifest preset metadata.
+  - deterministic studio renderer using real PBR maps and Height displacement.
+- `material_lab/preview/render_sandstone_mesh_preview.py`
+  - true tessellated UV-mesh/Z-buffer preview for the strongly tactile opaque masters, so extreme Height visibly changes silhouette.
 - `.github/workflows/procedural-materials.yml`
   - requires the exact approved recipe file set;
   - rejects raster source assets and unstable production naming;
-  - requires exactly six production masters and all six PBR maps for each.
+  - requires exactly nine production masters and all six core PBR maps for each.
 
 ## Hygiene rules
 
