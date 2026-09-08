@@ -1,0 +1,185 @@
+name: R24 SkyView LUT 120 FPS
+
+on:
+  push:
+    branches: [work/r24-unified-planetary-physics]
+    paths:
+      - '.github/workflows/r24-skyview-lut-120.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r24-skyview-lut-120-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  skyview-lut-benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact staged R24
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 8
+
+      - name: Materialize shader rescue then Hillaire SkyView LUT
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/r24_shader_throughput_rescue.py
+          python3 .github/scripts/r24_hillaire_skyview_lut.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('native/src/app/Main.cpp')
+          t=p.read_text(encoding='utf-8')
+          t=t.replace('            60.0,\n            40U,\n            "mainstream_1080p"}};',
+                      '            120.0,\n            40U,\n            "mainstream_1080p"}};',1)
+          t=t.replace('memory_budget_gib=16 target_fps=60\\n',
+                      'memory_budget_gib=16 target_fps=120\\n',1)
+          p.write_text(t,encoding='utf-8')
+          PY
+
+      - name: Validate architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          grep -q 'R24_SHADER_THROUGHPUT_RESCUE_V1' native/shaders/planet.slang
+          grep -q 'kSkyViewLutWidth = 192' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'kSkyViewLutHeight = 108' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'skyViewPipeline_' native/include/vf/render/VulkanRenderer.hpp
+          grep -q 'VK_FORMAT_R16G16B16A16_SFLOAT' native/src/render/VulkanRenderer.cpp
+          grep -q 'skyViewFragmentMain' native/shaders/planet.slang
+          grep -q 'gSkyViewLut' native/shaders/planet.slang
+          grep -q 'target_fps=120' native/src/app/Main.cpp
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build curl unzip xvfb imagemagick \
+            mesa-vulkan-drivers vulkan-tools \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
+
+      - name: Install Slang
+        run: |
+          curl -L --fail --retry 3 \
+            https://github.com/shader-slang/slang/releases/download/v2026.16.1/slang-2026.16.1-linux-x86_64-glibc-2.28.zip \
+            -o /tmp/slang.zip
+          mkdir -p "$HOME/slang"
+          unzip -q /tmp/slang.zip -d "$HOME/slang"
+          SLANGC="$(find "$HOME/slang" -type f -name slangc -perm -111 | head -n 1)"
+          test -n "$SLANGC"
+          echo "$(dirname "$SLANGC")" >> "$GITHUB_PATH"
+
+      - name: Configure and build Release
+        run: |
+          cmake -S native -B build/r24-skyview -G Ninja -DCMAKE_BUILD_TYPE=Release -DVF_BUILD_RUNTIME=ON -DVF_BUILD_TESTS=ON
+          cmake --build build/r24-skyview --parallel 2
+
+      - name: Run complete native regression suite
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir build/r24-skyview --verbose --output-on-failure 2>&1 | tee r24-skyview-ctest.log
+
+      - name: Verify Vulkan implementation
+        shell: bash
+        run: |
+          ICD="$(find /usr/share/vulkan/icd.d -maxdepth 1 -type f -name '*lvp*.json' | head -n 1)"
+          test -n "$ICD"
+          echo "VK_ICD_FILENAMES=$ICD" >> "$GITHUB_ENV"
+          VK_ICD_FILENAMES="$ICD" vulkaninfo --summary | tee vulkan-summary.txt
+
+      - name: Run fixed 1920x1080 canyon benchmark and capture real frame
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$(find build/r24-skyview -type f -name voxel_frontier -perm -111 | head -n 1)"
+          test -n "$APP"
+          mkdir -p r24-skyview-evidence
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp > r24-skyview-evidence/xvfb.log 2>&1 &
+          XVFB_PID=$!
+          trap 'kill $XVFB_PID 2>/dev/null || true' EXIT
+          sleep 1
+          export DISPLAY=:99 SDL_VIDEODRIVER=x11
+          export VF_PERF_PROFILE=mainstream_1080p
+          export VF_CAPTURE_AERIAL=1 VF_CAPTURE_ALTITUDE_METERS=7000 VF_TERRAIN_TARGET=canyon
+          export VF_RUNTIME_DIAGNOSTICS=1 VF_CELESTIAL_TIME_SCALE=1
+          timeout 35s "$APP" > r24-skyview-evidence/benchmark.log 2>&1 &
+          APP_PID=$!
+          sleep 5
+          timeout 8s import -display :99 -window root r24-skyview-evidence/mainstream-1080p-skyview.png || true
+          wait $APP_PID
+          cat r24-skyview-evidence/benchmark.log
+          test -s r24-skyview-evidence/mainstream-1080p-skyview.png
+          COLORS="$(identify -format '%k' r24-skyview-evidence/mainstream-1080p-skyview.png)"
+          echo "capture_colors=$COLORS"
+          test "$COLORS" -gt 1000
+
+      - name: Gate measured improvement and preserve numbers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('r24-skyview-evidence/benchmark.log').read_text(encoding='utf-8',errors='replace')
+          rows=[x for x in text.splitlines() if x.startswith('R24 BENCHMARK profile=')]
+          if not rows: raise SystemExit('missing benchmark summary')
+          line=rows[-1]
+          def v(k):
+              m=re.search(rf'\b{k}=([0-9]+(?:\.[0-9]+)?)',line)
+              if not m: raise SystemExit(f'missing {k}')
+              return float(m.group(1))
+          if 'resolution=1920x1080' not in line or 'target_fps=120.000' not in line or 'valid=1' not in line:
+              raise SystemExit('benchmark profile is not locked 1080p/120')
+          fps=v('avg_fps'); p99=v('p99_ms'); one=v('one_percent_low_fps')
+          if fps < 9.50: raise SystemExit(f'SkyView LUT did not preserve shader-rescue gain: {fps}')
+          gpu=[x for x in text.splitlines() if x.startswith('R24 GPU steady_pass_ms')]
+          last=gpu[-1] if gpu else ''
+          if last:
+              m=re.search(r'\bsky_mean=([0-9.]+)',last)
+              if m and float(m.group(1)) > 8.0:
+                  raise SystemExit(f'SkyView LUT sky pass remains too expensive: {m.group(1)} ms')
+          out=(f'avg_fps={fps:.3f}\none_percent_low_fps={one:.3f}\np99_ms={p99:.3f}\n'
+               f'fps_vs_promoted_8_599_percent={(fps/8.599-1)*100:.3f}\n{last}\n')
+          Path('r24-skyview-evidence/perf-summary.txt').write_text(out,encoding='utf-8')
+          print(out)
+          PY
+
+      - name: Upload evidence always
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: r24-skyview-lut-${{ github.run_id }}
+          path: |
+            r24-skyview-evidence/**
+            r24-skyview-ctest.log
+            vulkan-summary.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Promote tested throughput plus SkyView LUT
+        if: success()
+        shell: bash
+        run: |
+          EVIDENCE_DIR="docs/evidence/r24-skyview-lut-${GITHUB_RUN_ID}"
+          mkdir -p "$EVIDENCE_DIR"
+          cp -a r24-skyview-evidence/. "$EVIDENCE_DIR/"
+          cp r24-skyview-ctest.log vulkan-summary.txt "$EVIDENCE_DIR/"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native docs/evidence
+          if ! git diff --cached --quiet; then git commit -m "perf(r24): move atmosphere to Hillaire SkyView LUT"; fi
+          git reset --hard HEAD
+          git clean -fd build/r24-skyview || true
+          git fetch origin work/r24-unified-planetary-physics
+          git rebase origin/work/r24-unified-planetary-physics
+          git push origin HEAD:work/r24-unified-planetary-physics
