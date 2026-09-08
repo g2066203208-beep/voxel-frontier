@@ -925,7 +925,22 @@ int main() {
             initialTerrain = buildTerrainLod(
                 lodCenterDirection, initialCameraPlanet, initialViewForwardPlanet, {});
         } else {
-            std::cout << "R24 TERRAIN_BYPASS render=0 streaming=0 initial_synthesis=0\n";
+            // R24_SURFACE_AUTHORITY_DECOUPLED_V1: render/streaming are optional clients.
+            // Collision, geography, hydrology and evidence targeting keep the same authoritative
+            // surface state even when no terrain triangles are ever generated or uploaded.
+            vf::RegionalHydrologyConfig authorityHydroConfig{};
+            const double authorityAltitude = std::max(
+                0.0, glm::length(initialCameraPlanet) - planet.radius);
+            authorityHydroConfig.resolution = authorityAltitude < 25000.0 ? 193U
+                : (authorityAltitude < 150000.0 ? 129U : 81U);
+            authorityHydroConfig.halfExtentMeters = 220000.0;
+            authorityHydroConfig.maxIncisionMeters = std::min(3000.0, planet.maxElevation * 0.10);
+            authorityHydroConfig.riverHeadAccumulationFraction = 0.0012;
+            authorityHydroConfig.fullChannelAccumulationFraction = 0.022;
+            initialTerrain.hydrology = std::make_shared<vf::RegionalHydrology>(
+                planet, safeNormalize(lodCenterDirection, patchUp), authorityHydroConfig);
+            std::cout << "R24 TERRAIN_BYPASS render=0 streaming=0 initial_synthesis=0"
+                      << " surface_authority=1 hydrology=1\n";
         }
         std::cout << "R24 PERF terrain_build_ms=" << initialTerrain.buildMilliseconds
                   << " vertices=" << initialTerrain.meshVertices
