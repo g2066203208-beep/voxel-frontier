@@ -19,7 +19,7 @@ concurrency:
 jobs:
   bake:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       MESHOVA_COMMIT: "129f5130c02581dcd53b2cb334136985946e3df0"
       PNPM_VERSION: "10.15.1"
@@ -44,6 +44,7 @@ jobs:
           test -s material_lab/preview/render_3d_surface_showcase.py
           test -s material_lab/preview/render_sandstone_mesh_preview.py
           test -s material_lab/preview/render_fiber_surface_previews.py
+          test -s material_lab/blender/render_vector_macro_materials.py
 
           expected=$(printf '%s\n' \
             vf-3d-material-showcase.ts \
@@ -121,7 +122,10 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends imagemagick python3-numpy python3-pil
+          sudo apt-get install -y --no-install-recommends \
+            imagemagick python3-numpy python3-pil \
+            blender libegl1 libgl1 libgl1-mesa-dri libglx-mesa0 libgbm1 xvfb xauth
+          blender --version
 
       - name: Checkout pinned Meshova
         shell: bash
@@ -237,20 +241,19 @@ jobs:
           mapfile -t pngs < <(find build/generated-materials -type f -name '*.png' | sort)
           sha256sum "${pngs[@]}" > build/generated-materials/SHA256SUMS.txt
 
-      - name: Render standardized displaced PBR previews
+      - name: Render standardized material previews
         shell: bash
         run: |
           set -euo pipefail
+          # Approved benchmark path. Snow and water remain exactly on this renderer.
           python3 material_lab/preview/render_material_previews.py build/generated-materials
-          # Strongly tactile opaque surfaces are re-rendered on a tessellated UV mesh so
-          # their actual Height changes the silhouette instead of being flattened by the
-          # legacy inverse screen-space approximation.
-          python3 material_lab/preview/render_sandstone_mesh_preview.py build/generated-materials
           python3 material_lab/preview/render_layer_diagnostics.py build/generated-materials
           python3 material_lab/preview/render_3d_surface_showcase.py build/generated-materials
-          # Fur and moss have a second explicit geometry layer driven by semantic masks.
-          # This makes guard hairs and moss tufts visibly extend from the material sphere.
-          python3 material_lab/preview/render_fiber_surface_previews.py build/generated-materials
+
+          # Seven non-benchmark materials use real analytic smooth macro geometry.
+          # This intentionally overwrites only their preview-sphere.png files.
+          xvfb-run -a blender --background --python material_lab/blender/render_vector_macro_materials.py -- build/generated-materials
+
           expected_count=$(python3 - <<'PY'
           import json
           from pathlib import Path
@@ -260,6 +263,8 @@ jobs:
           )
           mapfile -t spheres < <(find build/generated-materials -type f -name 'preview-sphere.png' | sort)
           test ${#spheres[@]} -eq "$expected_count"
+          # Seven rewritten materials must carry the analytic-geometry audit file.
+          test $(find build/generated-materials -type f -name 'preview-vector-geometry.json' | wc -l) -eq 7
           if [[ "$expected_count" -le 4 ]]; then tile="2x"; else tile="3x"; fi
           montage "${spheres[@]}" -thumbnail 720x720 -tile "$tile" -geometry +18+18 -background '#202020' build/material-spheres-overview.png
 
@@ -283,12 +288,8 @@ jobs:
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Style: \`$VF_STYLE_ID\`"
             echo '- Production masters: sandstone / dirt / bark / leaves / snow / water / stone wall / moss / wolf fur'
-            echo '- Adaptive resolver inputs: weather / exposure / environment / material traits / player+prop interactions / previous state / dt'
-            echo '- Surface layers: snow coverage/depth/compaction, wetness/puddles, rain ripples'
-            echo '- Foliage: true opacity alpha-cutout mask'
-            echo '- Water fields: foam / transmission / refraction / glint / optional rainRipples'
-            echo '- Moss fields: density / tuft height / tuft variation + explicit tuft preview geometry'
-            echo '- Wolf fur fields: underfur / guard hair / direction / length + explicit guard-hair preview geometry'
+            echo '- Snow + water: frozen benchmark renderer and original recipe SHA paths'
+            echo '- Other seven: Blender analytic macro geometry, broad smooth attached forms, no quantized height staircases'
+            echo '- Leaves / moss / wolf fur: broad cards/pads only; thin strands forbidden'
             echo '- Source: procedural code only; raster source assets rejected'
-            echo '- Every master outputs PBR maps and a visibly displaced studio material sphere; high-relief opaque surfaces use true tessellated mesh displacement'
           } >> "$GITHUB_STEP_SUMMARY"
