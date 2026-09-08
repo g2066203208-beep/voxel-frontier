@@ -73,10 +73,9 @@ def topo(o):
 def make():o=raw();b,a=fuse(o);return o,b,a,topo(o)
 def sanitize(o):
  # Decimate can occasionally leave duplicate loop triangles with identical
- # vertex triples.  A fresh export mesh must keep exactly one copy of each
- # geometric triangle or it ceases to be a 2-manifold after validation.
+ # vertex triples. Keep exactly one geometric triangle before rebuilding.
  o.data.validate(verbose=True,clean_customdata=True);o.data.update();o.data.calc_loop_triangles()
- verts=[tuple(v.co) for v in o.data.vertices];faces=[];seen=set();degenerate=0;duplicate=0
+ input_count=len(o.data.loop_triangles);verts=[tuple(v.co) for v in o.data.vertices];faces=[];seen=set();degenerate=0;duplicate=0
  for tri in o.data.loop_triangles:
   f=tuple(int(i) for i in tri.vertices)
   if len(set(f))<3:
@@ -87,9 +86,9 @@ def sanitize(o):
   seen.add(key);faces.append(f)
  me=bpy.data.meshes.new('CuteNeutralV20ExportMesh');me.from_pydata(verts,[],faces);me.update(calc_edges=True)
  bm=bmesh.new();bm.from_mesh(me);bmesh.ops.recalc_face_normals(bm,faces=bm.faces);bm.to_mesh(me);bm.free();me.validate(verbose=True,clean_customdata=True);me.update(calc_edges=True)
- n=bpy.data.objects.new('CuteNeutralV20Export',me);bpy.context.collection.objects.link(n);n.data.materials.append(mat('NeutralBody',(.79,.75,.73)));[setattr(p,'use_smooth',True) for p in n.data.polygons];bpy.data.objects.remove(o,do_unlink=True)
- print('SANITIZE_TRIANGLES',json.dumps({'input':len(o.data.loop_triangles) if o.data else None,'kept':len(faces),'duplicates':duplicate,'degenerate':degenerate}))
- return n
+ n=bpy.data.objects.new('CuteNeutralV20Export',me);bpy.context.collection.objects.link(n);n.data.materials.append(mat('NeutralBody',(.79,.75,.73)));[setattr(p,'use_smooth',True) for p in n.data.polygons]
+ print('SANITIZE_TRIANGLES',json.dumps({'input':input_count,'kept':len(faces),'duplicates':duplicate,'degenerate':degenerate}))
+ bpy.data.objects.remove(o,do_unlink=True);return n
 def glb_check(path):
  data=open(path,'rb').read();assert len(data)>1000 and data[:4]==b'glTF';off=12;doc=None
  while off+8<=len(data):
