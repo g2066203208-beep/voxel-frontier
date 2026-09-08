@@ -43,6 +43,7 @@ jobs:
           test -s material_lab/tests/surface-context.spec.ts
           test -s material_lab/preview/render_3d_surface_showcase.py
           test -s material_lab/preview/render_sandstone_mesh_preview.py
+          test -s material_lab/preview/render_fiber_surface_previews.py
 
           expected=$(printf '%s\n' \
             vf-3d-material-showcase.ts \
@@ -247,6 +248,9 @@ jobs:
           python3 material_lab/preview/render_sandstone_mesh_preview.py build/generated-materials
           python3 material_lab/preview/render_layer_diagnostics.py build/generated-materials
           python3 material_lab/preview/render_3d_surface_showcase.py build/generated-materials
+          # Fur and moss have a second explicit geometry layer driven by semantic masks.
+          # This makes guard hairs and moss tufts visibly extend from the material sphere.
+          python3 material_lab/preview/render_fiber_surface_previews.py build/generated-materials
           expected_count=$(python3 - <<'PY'
           import json
           from pathlib import Path
@@ -283,8 +287,8 @@ jobs:
             echo '- Surface layers: snow coverage/depth/compaction, wetness/puddles, rain ripples'
             echo '- Foliage: true opacity alpha-cutout mask'
             echo '- Water fields: foam / transmission / refraction / glint / optional rainRipples'
-            echo '- Moss fields: density / tuft height / tuft variation'
-            echo '- Wolf fur fields: underfur / guard hair / direction / length'
+            echo '- Moss fields: density / tuft height / tuft variation + explicit tuft preview geometry'
+            echo '- Wolf fur fields: underfur / guard hair / direction / length + explicit guard-hair preview geometry'
             echo '- Source: procedural code only; raster source assets rejected'
             echo '- Every master outputs PBR maps and a visibly displaced studio material sphere; high-relief opaque surfaces use true tessellated mesh displacement'
           } >> "$GITHUB_STEP_SUMMARY"
