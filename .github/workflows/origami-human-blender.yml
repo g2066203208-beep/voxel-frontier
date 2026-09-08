@@ -25,15 +25,23 @@ jobs:
           blender --version
           blender --background --python-expr "import numpy; print('Blender numpy', numpy.__version__)"
 
-      - name: Generate chibi anime paper-art GLB and real Blender render
+      - name: Generate anime origami body-only GLB and real Blender render
         run: |
           mkdir -p artifacts/origami-human
-          blender --background --python tools/procedural-human/blender/origami_human_v7.py -- "$GITHUB_WORKSPACE/artifacts/origami-human"
+          blender --background --python tools/procedural-human/blender/origami_human_v8.py -- "$GITHUB_WORKSPACE/artifacts/origami-human"
           test -s artifacts/origami-human/male.glb
           test -s artifacts/origami-human/female.glb
           test -s artifacts/origami-human/male-female-origami.png
           test -s artifacts/origami-human/metrics.json
-          cat artifacts/origami-human/metrics.json
+          python3 - <<'PY'
+          import json
+          m=json.load(open('artifacts/origami-human/metrics.json'))
+          assert m['extra_character_geometry'] is False
+          assert m['hair'] is False and m['face_addons'] is False and m['clothing'] is False
+          assert 400 <= m['male_tris'] <= 600, m
+          assert 400 <= m['female_tris'] <= 600, m
+          print(json.dumps(m, indent=2))
+          PY
 
       - name: Upload Blender output
         uses: actions/upload-artifact@v4
