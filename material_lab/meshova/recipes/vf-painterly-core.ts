@@ -7,6 +7,13 @@ export const L = (a: number, b: number, t: number) => a + (b - a) * t;
 export const M = (a: RGB, b: RGB, t: number): RGB => [L(a[0], b[0], t), L(a[1], b[1], t), L(a[2], b[2], t)];
 export const S = (x: number) => { const t = C(x); return t * t * (3 - 2 * t); };
 export const G = (x: number) => Math.exp(-(x * x));
+export const SM = (a:number,b:number,k=.05) => { if(k<=1e-6)return Math.max(a,b); const h=C(.5+.5*(a-b)/k); return L(b,a,h)+k*h*(1-h); };
+export const softEllipse = (dx:number,dy:number,rx:number,ry:number,feather=.24) => S((1-Math.hypot(dx/Math.max(rx,1e-6),dy/Math.max(ry,1e-6)))/Math.max(feather,1e-4));
+export const softSuperellipse = (dx:number,dy:number,rx:number,ry:number,power=3.2,feather=.20) => {
+  const q=Math.pow(Math.pow(Math.abs(dx)/Math.max(rx,1e-6),power)+Math.pow(Math.abs(dy)/Math.max(ry,1e-6),power),1/power);
+  return S((1-q)/Math.max(feather,1e-4));
+};
+export const bell = (x:number,width:number) => G(x/Math.max(width,1e-6));
 export function hash(seed: number, a: number, b = 0, c = 0) {
   let h = (seed | 0) ^ Math.imul((a | 0) + 0x9e3779b9, 0x85ebca6b) ^ Math.imul((b | 0) + 0x7f4a7c15, 0xc2b2ae35) ^ Math.imul((c | 0) + 0x165667b1, 0x27d4eb2d);
   h = Math.imul(h ^ (h >>> 16), 0x7feb352d); h = Math.imul(h ^ (h >>> 15), 0x846ca68b); h ^= h >>> 16;
