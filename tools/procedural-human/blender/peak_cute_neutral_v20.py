@@ -72,7 +72,24 @@ def topo(o):
  d={'connected_components':cc,'boundary_edges':sum(e.is_boundary for e in bm.edges),'nonmanifold_edges':sum(not e.is_manifold for e in bm.edges),'verts':len(bm.verts),'edges':len(bm.edges),'faces':len(bm.faces)};bm.free();return d
 def make():o=raw();b,a=fuse(o);return o,b,a,topo(o)
 def sanitize(o):
- o.data.calc_loop_triangles();verts=[tuple(v.co) for v in o.data.vertices];faces=[tuple(t.vertices) for t in o.data.loop_triangles];me=bpy.data.meshes.new('CuteNeutralV20ExportMesh');me.from_pydata(verts,[],faces);me.validate(verbose=True,clean_customdata=True);me.update(calc_edges=True);bm=bmesh.new();bm.from_mesh(me);bmesh.ops.recalc_face_normals(bm,faces=bm.faces);bm.to_mesh(me);bm.free();me.update();n=bpy.data.objects.new('CuteNeutralV20Export',me);bpy.context.collection.objects.link(n);n.data.materials.append(mat('NeutralBody',(.79,.75,.73)));[setattr(p,'use_smooth',True) for p in n.data.polygons];bpy.data.objects.remove(o,do_unlink=True);return n
+ # Decimate can occasionally leave duplicate loop triangles with identical
+ # vertex triples.  A fresh export mesh must keep exactly one copy of each
+ # geometric triangle or it ceases to be a 2-manifold after validation.
+ o.data.validate(verbose=True,clean_customdata=True);o.data.update();o.data.calc_loop_triangles()
+ verts=[tuple(v.co) for v in o.data.vertices];faces=[];seen=set();degenerate=0;duplicate=0
+ for tri in o.data.loop_triangles:
+  f=tuple(int(i) for i in tri.vertices)
+  if len(set(f))<3:
+   degenerate+=1;continue
+  key=tuple(sorted(f))
+  if key in seen:
+   duplicate+=1;continue
+  seen.add(key);faces.append(f)
+ me=bpy.data.meshes.new('CuteNeutralV20ExportMesh');me.from_pydata(verts,[],faces);me.update(calc_edges=True)
+ bm=bmesh.new();bm.from_mesh(me);bmesh.ops.recalc_face_normals(bm,faces=bm.faces);bm.to_mesh(me);bm.free();me.validate(verbose=True,clean_customdata=True);me.update(calc_edges=True)
+ n=bpy.data.objects.new('CuteNeutralV20Export',me);bpy.context.collection.objects.link(n);n.data.materials.append(mat('NeutralBody',(.79,.75,.73)));[setattr(p,'use_smooth',True) for p in n.data.polygons];bpy.data.objects.remove(o,do_unlink=True)
+ print('SANITIZE_TRIANGLES',json.dumps({'input':len(o.data.loop_triangles) if o.data else None,'kept':len(faces),'duplicates':duplicate,'degenerate':degenerate}))
+ return n
 def glb_check(path):
  data=open(path,'rb').read();assert len(data)>1000 and data[:4]==b'glTF';off=12;doc=None
  while off+8<=len(data):
@@ -80,7 +97,7 @@ def glb_check(path):
   if typ==0x4E4F534A:doc=json.loads(chunk.decode('utf-8').rstrip(' \x00'))
  assert doc and doc.get('meshes');pr=sum(len(m.get('primitives',[])) for m in doc['meshes']);assert pr>0;return len(data),len(doc['meshes']),pr
 def clean_model():
- o,b,_,_=make();o=sanitize(o);t=topo(o);assert t['connected_components']==1 and t['boundary_edges']==0 and t['nonmanifold_edges']==0;return o,b,tr(o),t
+ o,b,_,_=make();o=sanitize(o);t=topo(o);assert t['connected_components']==1 and t['boundary_edges']==0 and t['nonmanifold_edges']==0,t;return o,b,tr(o),t
 def studio(front=False):
  sc=bpy.context.scene;sc.render.resolution_x=1050;sc.render.resolution_y=1200;sc.render.resolution_percentage=100;sc.render.image_settings.file_format='PNG';sc.render.engine='BLENDER_EEVEE';sc.world.color=(.026,.029,.035);bpy.ops.mesh.primitive_plane_add(size=6,location=(0,0,-.002));bpy.context.object.data.materials.append(mat('Floor',(.075,.08,.09)))
  for n,l,e,z in [('Key',(-3.2,-4.1,4),950,2.7),('Fill',(3,-3,2.5),400,2.4),('Rim',(0,3.2,3.2),650,2.0)]:ld=bpy.data.lights.new(n,'AREA');ld.energy=e;ld.shape='DISK';ld.size=z;x=bpy.data.objects.new(n,ld);bpy.context.collection.objects.link(x);x.location=l;x.rotation_euler=(Vector((0,0,.65))-Vector(l)).to_track_quat('-Z','Y').to_euler()
@@ -89,4 +106,4 @@ def render(name,front=False):clear();o,_,_,_=clean_model();studio(front);bpy.con
 def export():
  clear();o,b,a,t=clean_model();bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o;path=os.path.join(OUT,'neutral.glb');bpy.ops.export_scene.gltf(filepath=path,export_format='GLB',use_selection=True,export_normals=True);gb,gm,gp=glb_check(path);return b,a,t,gb,gm,gp
 b,a,T,gb,gm,gp=export();render('neutral-preview.png');render('neutral-front.png',True)
-M={'style':'compact-cute-neutral-single-shell-v20','inspiration':'simple round scout-like proportions; original geometry','original_geometry':True,'external_character_mesh':False,'neutral_only':True,'male_female_split':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'height_m':HEIGHT,'head_height_m':.410,'visual_head_ratio':round(HEIGHT/.410,3),'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'voxel_size_m':VOXEL,'target_tris':TARGET,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'semantic soft volumes -> one voxel-unioned shell -> relax -> low-poly -> fresh triangle mesh -> validated GLB','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);json.dump({'torso':TORSO,'legs':LEGS,'arm_radii':ARMS,'head':{'center':HEAD_CENTER,'radii':HEAD_RADII}},open(os.path.join(OUT,'section_spec.json'),'w'),indent=2);print('CUTE_NEUTRAL_V20_METRICS',json.dumps(M))
+M={'style':'compact-cute-neutral-single-shell-v20','inspiration':'simple round scout-like proportions; original geometry','original_geometry':True,'external_character_mesh':False,'neutral_only':True,'male_female_split':False,'hair':False,'face_addons':False,'clothing':False,'props':False,'height_m':HEIGHT,'head_height_m':.410,'visual_head_ratio':round(HEIGHT/.410,3),'tris_before_decimate':b,'tris':a,'single_continuous_shell':T['connected_components']==1 and T['boundary_edges']==0 and T['nonmanifold_edges']==0,**T,'voxel_size_m':VOXEL,'target_tris':TARGET,'glb_bytes':gb,'glb_meshes':gm,'glb_primitives':gp,'glb_valid_mesh':gp>0,'topology_method':'semantic soft volumes -> one voxel-unioned shell -> relax -> low-poly -> deduplicated fresh triangle mesh -> validated GLB','blender_version':'.'.join(map(str,bpy.app.version))};json.dump(M,open(os.path.join(OUT,'metrics.json'),'w'),indent=2);json.dump({'torso':TORSO,'legs':LEGS,'arm_radii':ARMS,'head':{'center':HEAD_CENTER,'radii':HEAD_RADII}},open(os.path.join(OUT,'section_spec.json'),'w'),indent=2);print('CUTE_NEUTRAL_V20_METRICS',json.dumps(M))
