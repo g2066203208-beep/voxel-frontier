@@ -51,8 +51,11 @@ jobs:
             vf-painterly-core.ts \
             vf-painterly-dirt.ts \
             vf-painterly-leaves.ts \
+            vf-painterly-moss.ts \
             vf-painterly-snow.ts \
+            vf-painterly-stone-wall.ts \
             vf-painterly-water.ts \
+            vf-painterly-wolf-fur.ts \
             vf-surface-context.ts \
             vf-surface-layers.ts | sort)
           actual=$(find material_lab/meshova/recipes -maxdepth 1 -type f -name '*.ts' -printf '%f\n' | sort)
@@ -83,12 +86,15 @@ jobs:
               "vfPainterlyLeaves",
               "vfPainterlySnow",
               "vfPainterlyWater",
+              "vfPainterlyStoneWall",
+              "vfPainterlyMoss",
+              "vfPainterlyWolfFur",
           }
           showcase3d = {"vf3DGrass","vf3DMoss","vf3DFur","vf3DFire"}
           presets = [m.get("preset") for m in materials]
           modes = {m.get("params", {}).get("mode") for m in materials}
           names = {m.get("name", "") for m in materials}
-          production = len(materials) == 6 and set(presets) == base_allowed
+          production = len(materials) == 9 and set(presets) == base_allowed
           water_showcase = len(materials) == 4 and set(presets) == {"vfPainterlyWater"} and modes == {"calm", "windy", "foam", "shallow"}
           layer_showcase_names = {
               "vf_layer_sandstone_dry",
@@ -101,12 +107,12 @@ jobs:
           layer_showcase = len(materials) == 6 and names == layer_showcase_names
           surface3d_showcase = len(materials) == 4 and set(presets) == showcase3d
           if not (production or water_showcase or layer_showcase or surface3d_showcase):
-              raise SystemExit("Request must be production-six, water-showcase, exact surface-layer showcase, or exact 3D material showcase")
+              raise SystemExit("Request must be production-nine, water-showcase, exact surface-layer showcase, or exact 3D material showcase")
           for item in materials:
               name = item.get("name", "")
               if any(token in name.lower() for token in ("reference", "test", "draft", "final", "_v1", "_v2", "_v3", "_v4", "_v5", "_v6", "_v7", "_v8", "_v9")):
                   raise SystemExit(f"Unstable production/showcase material name: {name}")
-          print("3d-showcase" if surface3d_showcase else ("layer-showcase" if layer_showcase else ("water-showcase" if water_showcase else "production-six")))
+          print("3d-showcase" if surface3d_showcase else ("layer-showcase" if layer_showcase else ("water-showcase" if water_showcase else "production-nine")))
           PY
 
       - name: Install preview tools
@@ -155,8 +161,11 @@ jobs:
             vf-painterly-core.ts \
             vf-painterly-dirt.ts \
             vf-painterly-leaves.ts \
+            vf-painterly-moss.ts \
             vf-painterly-snow.ts \
+            vf-painterly-stone-wall.ts \
             vf-painterly-water.ts \
+            vf-painterly-wolf-fur.ts \
             vf-surface-context.ts \
             vf-surface-layers.ts; do
             cp "material_lab/meshova/recipes/$file" ".cache/Meshova/examples/vf-recipes/$file"
@@ -207,6 +216,8 @@ jobs:
             'vf3DMoss':('mossDensity','mossHeight','tuftVariation'),
             'vf3DFur':('strandDensity','strandLength','strandBend','strandVariation'),
             'vf3DFire':('flameDensity','flameHeight','heatDistortion','smoke','sparks'),
+            'vfPainterlyMoss':('mossDensity','mossHeight','tuftVariation'),
+            'vfPainterlyWolfFur':('underfur','guardHair','strandDirection','strandLength'),
           }
           for item in req.get('materials',[req]):
               d=root/item['name']; n=item['name']; preset=item['preset']; layers=item.get('layers',{})
@@ -230,9 +241,9 @@ jobs:
         run: |
           set -euo pipefail
           python3 material_lab/preview/render_material_previews.py build/generated-materials
-          # Sandstone intentionally exceeds the safe range of the legacy inverse
-          # displacement approximation. Replace only that sphere with a real UV
-          # mesh + vertex Height displacement + Z-buffer render.
+          # Strongly tactile opaque surfaces are re-rendered on a tessellated UV mesh so
+          # their actual Height changes the silhouette instead of being flattened by the
+          # legacy inverse screen-space approximation.
           python3 material_lab/preview/render_sandstone_mesh_preview.py build/generated-materials
           python3 material_lab/preview/render_layer_diagnostics.py build/generated-materials
           python3 material_lab/preview/render_3d_surface_showcase.py build/generated-materials
@@ -267,11 +278,13 @@ jobs:
             echo
             echo "- Branch: \`work/procedural-materials\`"
             echo "- Style: \`$VF_STYLE_ID\`"
+            echo '- Production masters: sandstone / dirt / bark / leaves / snow / water / stone wall / moss / wolf fur'
             echo '- Adaptive resolver inputs: weather / exposure / environment / material traits / player+prop interactions / previous state / dt'
-            echo '- 3D showcase: grass blades / moss tufts / fur strands / emissive flame volume'
             echo '- Surface layers: snow coverage/depth/compaction, wetness/puddles, rain ripples'
             echo '- Foliage: true opacity alpha-cutout mask'
             echo '- Water fields: foam / transmission / refraction / glint / optional rainRipples'
+            echo '- Moss fields: density / tuft height / tuft variation'
+            echo '- Wolf fur fields: underfur / guard hair / direction / length'
             echo '- Source: procedural code only; raster source assets rejected'
-            echo '- Every material: PBR maps + true-Height displaced studio sphere; sandstone extreme relief is verified with a tessellated UV mesh and Z-buffer rather than inverse screen displacement'
+            echo '- Every master outputs PBR maps and a visibly displaced studio material sphere; high-relief opaque surfaces use true tessellated mesh displacement'
           } >> "$GITHUB_STEP_SUMMARY"
