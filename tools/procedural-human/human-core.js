@@ -41,22 +41,58 @@ export const PRESETS = Object.freeze({
   }
 });
 
+function triangulateFace(line) {
+  const ids = line.slice(2).trim().split(/\s+/).map(tok => Number(tok.split('/')[0]) - 1);
+  const tris = [];
+  for (let i = 1; i + 1 < ids.length; i++) tris.push([ids[0], ids[i], ids[i + 1]]);
+  return tris;
+}
+
+function compactTopology(vertices, faces) {
+  const remap = new Map();
+  const compactVertices = [];
+  const compactFaces = faces.map(face => face.map(oldId => {
+    if (!remap.has(oldId)) {
+      remap.set(oldId, compactVertices.length);
+      compactVertices.push(vertices[oldId]);
+    }
+    return remap.get(oldId);
+  }));
+  return { vertices: compactVertices, faces: compactFaces };
+}
+
 export function parseOBJ(text) {
   const vertices = [];
-  const faces = [];
+  const allFaces = [];
+  const bodyFaces = [];
+  let group = '';
+
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
     if (!line || line[0] === '#') continue;
     if (line.startsWith('v ')) {
       const p = line.split(/\s+/);
       vertices.push([Number(p[1]), Number(p[2]), Number(p[3])]);
+    } else if (line.startsWith('g ')) {
+      group = line.slice(2).trim().split(/\s+/)[0] || '';
     } else if (line.startsWith('f ')) {
-      const ids = line.slice(2).trim().split(/\s+/).map(tok => Number(tok.split('/')[0]) - 1);
-      for (let i = 1; i + 1 < ids.length; i++) faces.push([ids[0], ids[i], ids[i + 1]]);
+      const tris = triangulateFace(line);
+      allFaces.push(...tris);
+      if (group === 'body') bodyFaces.push(...tris);
     }
   }
-  if (vertices.length < 100 || faces.length < 100) throw new Error('Master OBJ does not look like a human mesh.');
-  return { vertices, faces };
+
+  const selectedFaces = bodyFaces.length >= 100 ? bodyFaces : allFaces;
+  if (vertices.length < 100 || selectedFaces.length < 100) {
+    throw new Error('Master OBJ does not look like a human body mesh.');
+  }
+
+  // MakeHuman's base.obj contains many helper groups (skirt, tights, hair,
+  // teeth, eyes, genitals, eyelashes...). They are useful authoring helpers,
+  // but they are not part of the anatomical surface. Keep only the vertices
+  // referenced by the `g body` faces so both rendering and measurements use
+  // one clean, connected human surface.
+  return compactTopology(vertices, selectedFaces);
 }
 
 function axisFrame(vertices) {
@@ -190,7 +226,9 @@ function percentile(sorted, q) {
 
 function section(vertices, yTarget, tol, torsoLimit) {
   let pts = vertices.filter(v => Math.abs(v[1] - yTarget) <= tol && Math.abs(v[0]) <= torsoLimit);
-  if (pts.length < 20) pts = vertices.filter(v => Math.abs(v[1] - yTarget) <= tol * 2 && Math.abs(v[0]) <= torsoLimit * 1.15);
+  if (pts.length < 20) {
+    pts = vertices.filter(v => Math.abs(v[1] - yTarget) <= tol * 1.8 && Math.abs(v[0]) <= torsoLimit * 1.05);
+  }
   const xs = pts.map(v => v[0]).sort((a,b) => a-b);
   const zs = pts.map(v => v[2]).sort((a,b) => a-b);
   return {
@@ -207,13 +245,20 @@ function ellipseCirc(width, depth) {
 export function measureHuman(model) {
   const vs = model.vertices;
   let minY=Infinity,maxY=-Infinity,minX=Infinity,maxX=-Infinity;
-  for (const v of vs) { minY=Math.min(minY,v[1]); maxY=Math.max(maxY,v[1]); minX=Math.min(minX,v[0]); maxX=Math.max(maxX,v[0]); }
+  for (const v of vs) {
+    minY=Math.min(minY,v[1]); maxY=Math.max(maxY,v[1]);
+    minX=Math.min(minX,v[0]); maxX=Math.max(maxX,v[0]);
+  }
   const H = maxY - minY;
-  const limit = H * 0.24;
-  const chest = section(vs, minY + H*0.71, H*0.012, limit);
-  const waist = section(vs, minY + H*0.595, H*0.012, limit);
-  const hip = section(vs, minY + H*0.505, H*0.014, limit);
-  const shoulder = section(vs, minY + H*0.805, H*0.015, H*0.30);
+
+  // Restrict circumference sections to the central torso. The arms can cross
+  // the same Y levels in the MakeHuman rest pose and must never contribute to
+  // chest/waist/hip circumference estimates.
+  const chest = section(vs, minY + H*0.710, H*0.010, H*0.165);
+  const waist = section(vs, minY + H*0.595, H*0.010, H*0.145);
+  const hip = section(vs, minY + H*0.505, H*0.012, H*0.180);
+  const shoulder = section(vs, minY + H*0.805, H*0.012, H*0.185);
+
   return {
     heightCm: H * 100,
     shoulderWidthCm: shoulder.width * 100,
