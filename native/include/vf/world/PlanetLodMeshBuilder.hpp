@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vf/world/PlanetSurfaceAuthority.hpp"
+#include "vf/world/PlanetTileCache.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -42,25 +43,37 @@ struct PlanetLodConfig {
     double detailTransitionStartMeters{180.0};
     double detailTransitionEndMeters{32000.0};
     double transitionFarCellMeters{180.0};
+
+    // Nyquist-style procedural band limit for render-only terrain synthesis. A value of 2 means a
+    // procedural feature must span at least two local grid cells before we spend CPU evaluating it.
+    // Near the player this preserves the full authoritative surface; distant tiles stop evaluating
+    // sub-pixel micro/fine displacement that cannot contribute a stable screen sample.
+    double minimumFeatureCells{2.0};
 };
 
 struct PlanetLodStats {
     std::size_t leafPatches{};
     std::size_t evaluatedNodes{};
     std::size_t culledNodes{};
+    std::size_t tileCacheHits{};
+    std::size_t tileCacheMisses{};
+    std::size_t generatedPatches{};
     std::uint32_t deepestLevel{};
     double nearestCellMeters{};
     double maximumEstimatedErrorMeters{};
 };
 
-// Cube-sphere quadtree selected by projected screen-space error. This replaces R23's five giant
-// concentric tangent-plane squares: detail now follows what can affect pixels, while horizon culling
-// prevents work on the hidden side of the planet. Small inward skirts seal T-junctions between leaf
-// depths; they are below the physical surface and never become collision geometry.
+// Cube-sphere quadtree selected by projected screen-space error. Selection is cheap-first:
+// horizon/view-cone rejection occurs before procedural relief probes. When a PlanetTileCache is
+// supplied, only cache-miss leaves synthesize terrain; unchanged visible tiles are reused across
+// camera turns/recenters. tileEpoch isolates meshes whose non-geographic authority (hydrology) has
+// changed without requiring a global cache flush.
 [[nodiscard]] PlanetMesh buildAdaptivePlanetSurface(
     const PlanetSurfaceAuthority& surface,
     const glm::dvec3& cameraPlanetLocal,
     const PlanetLodConfig& config = {},
-    PlanetLodStats* stats = nullptr);
+    PlanetLodStats* stats = nullptr,
+    PlanetTileCache* tileCache = nullptr,
+    std::uint64_t tileEpoch = 0U);
 
 } // namespace vf
