@@ -458,12 +458,21 @@ public:
         Color night={0.018f,0.028f,0.075f,1};
         Color dawn={0.35f,0.19f,0.20f,1};
         Color day={0.32f,0.62f,0.84f,1};
-        if(d<0.28f)return mix(night,dawn,d/0.28f);
-        return mix(dawn,day,(d-0.28f)/0.72f);
+        Color c=d<0.28f?mix(night,dawn,d/0.28f):mix(dawn,day,(d-0.28f)/0.72f);
+        if(save.weather.type==WeatherType::Cloudy)c=mix(c,{0.34f,0.39f,0.45f,1},0.35f);
+        else if(save.weather.type==WeatherType::Rain)c=mix(c,{0.24f,0.31f,0.38f,1},0.55f);
+        else if(save.weather.type==WeatherType::Storm)c=mix(c,{0.12f,0.16f,0.23f,1},0.72f);
+        else if(save.weather.type==WeatherType::Fog)c=mix(c,{0.57f,0.61f,0.62f,1},0.58f);
+        return c;
     }
     float daylight() const {
         float sun=std::sin((save.dayTime-0.25f)*2.f*PI);
-        return 0.18f+0.82f*clamp01((sun+0.10f)/0.85f);
+        float d=0.18f+0.82f*clamp01((sun+0.10f)/0.85f);
+        if(save.weather.type==WeatherType::Cloudy)d*=0.82f;
+        else if(save.weather.type==WeatherType::Rain)d*=0.70f;
+        else if(save.weather.type==WeatherType::Storm)d*=0.52f;
+        else if(save.weather.type==WeatherType::Fog)d*=0.74f;
+        return d;
     }
     std::string timeName() const {
         float h=save.dayTime*24.f;
