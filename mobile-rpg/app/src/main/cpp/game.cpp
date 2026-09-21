@@ -309,7 +309,9 @@ public:
     void onBack(){
         switch(screen){
             case Screen::Game:screen=Screen::Pause;writeSave();break;
-            case Screen::Inventory:screen=Screen::Game;break;
+            case Screen::Inventory:case Screen::Status:screen=Screen::Game;break;
+            case Screen::Dialogue:screen=Screen::Game;break;
+            case Screen::Trade:screen=Screen::Dialogue;break;
             case Screen::Pause:screen=Screen::Game;break;
             case Screen::Saves:case Screen::FaithSelect:case Screen::About:screen=Screen::Main;break;
             case Screen::CharacterCreate:screen=Screen::FaithSelect;break;
@@ -1090,6 +1092,9 @@ public:
             case Screen::About:renderAbout();break;
             case Screen::Game:renderGame();break;
             case Screen::Inventory:renderInventory();break;
+            case Screen::Status:renderStatus();break;
+            case Screen::Dialogue:renderDialogue();break;
+            case Screen::Trade:renderTrade();break;
             case Screen::Pause:renderPause();break;
             case Screen::Death:renderDeath();break;
         }
