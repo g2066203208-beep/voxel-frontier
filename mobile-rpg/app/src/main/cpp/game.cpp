@@ -1373,6 +1373,11 @@ public:
             float dz=right.y*sx+forward.y*(-sy);
             float len=std::sqrt(dx*dx+dz*dz);if(len>1e-4f){dx/=len;dz/=len;facingX=dx;facingZ=dz;}
             float speed=2.75f*(0.60f+0.40f*save.stamina/100.f);
+            speed*=1.f+(float(save.attributes.agility)-5.f)*0.035f;
+            speed*=0.86f+save.needs.mood/100.f*0.20f;
+            if(proceduralRoad(save.seed,int(save.px),int(save.pz)))speed*=1.09f;
+            if(save.weather.type==WeatherType::Storm)speed*=0.88f;
+            else if(save.weather.type==WeatherType::Rain)speed*=0.95f;
             float nx=save.px+dx*speed*dt,nz=save.pz+dz*speed*dt;
             int curH=world.walkHeight(int(save.px),int(save.pz)),newH=world.walkHeight(int(nx),int(nz));
             Block above=world.block(int(nx),newH,int(nz));
@@ -1381,8 +1386,12 @@ public:
                 save.px=std::clamp(nx,1.5f,float(WORLD_SIZE)-2.f);
                 save.pz=std::clamp(nz,1.5f,float(WORLD_SIZE)-2.f);
             }
-            save.stamina=std::max(0.f,save.stamina-dt*2.7f);
-        }else save.stamina=std::min(100.f,save.stamina+dt*5.2f);
+            float fatigue=2.7f*(1.f-(float(save.attributes.vitality)-5.f)*0.025f);
+            save.stamina=std::max(0.f,save.stamina-dt*fatigue);
+        }else{
+            float regen=5.2f*(1.f+(float(save.attributes.vitality)-5.f)*0.04f);
+            save.stamina=std::min(100.f,save.stamina+dt*regen);
+        }
 
         if(!grounded){
             yVel-=9.8f*dt;yOffset+=yVel*dt;
@@ -1390,13 +1399,15 @@ public:
         }
         save.playerYOffset=yOffset;
 
-        save.hunger=std::max(0.f,save.hunger-dt*0.055f);
+        float hungerRate=0.055f*(1.f-(float(save.attributes.vitality)-5.f)*0.018f);
+        save.hunger=std::max(0.f,save.hunger-dt*hungerRate);
         if(save.hunger<=0.01f)save.hp=std::max(0.f,save.hp-dt*2.0f);
 
         save.dayTime+=dt/360.f;
         if(save.dayTime>=1.f){save.dayTime-=1.f;save.day++;if(save.faith!=int(Faith::Godless))save.faithPower=std::min(100.f,save.faithPower+2.f);}
 
-        pickupDrops(dt);updateSlimes(dt);
+        updateWeatherAndNeeds(dt);
+        pickupDrops(dt);updateSlimes(dt);updateCreatures(dt);updateNpcs(dt);
         autosave+=dt;if(autosave>30.f){autosave=0;writeSave();}
 
         if(save.hp<=0){
