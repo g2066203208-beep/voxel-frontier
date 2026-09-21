@@ -586,6 +586,87 @@ public:
         r.billboardRect(p+right*0.19f,0.08f,0.08f,0.39f+bob,right,{0.03f,0.04f,0.045f,1},0.02f);
     }
 
+
+    void drawCreature(const Creature& a,Vec3 right,float light){
+        if(!a.alive)return;
+        Vec3 p=a.pos;
+        float bob=0.035f*std::sin(a.phase);
+        Color body={0.72f,0.67f,0.55f,1};
+        float w=0.72f,h=0.48f;
+        if(a.type==CreatureType::Rabbit){body={0.72f,0.70f,0.68f,1};w=0.54f;h=0.40f;}
+        else if(a.type==CreatureType::Deer){body={0.55f,0.34f,0.18f,1};w=0.86f;h=0.72f;}
+        else {body={0.30f,0.31f,0.34f,1};w=0.82f;h=0.58f;}
+        r.billboardRect(p,w+0.10f,h+0.10f,bob,right,{0.025f,0.03f,0.035f,1},0.012f);
+        r.billboardRect(p,w,h,0.05f+bob,right,mul(body,light));
+        if(a.type==CreatureType::Rabbit){
+            r.billboardRect(p-right*0.13f,0.11f,0.34f,h-0.03f+bob,right,mul(body,light),0.02f);
+            r.billboardRect(p+right*0.13f,0.11f,0.34f,h-0.03f+bob,right,mul(body,light),0.02f);
+        }
+        if(a.type==CreatureType::Deer){
+            r.billboardRect(p-right*0.16f,0.05f,0.36f,0.65f+bob,right,mul({0.30f,0.18f,0.09f,1},light),0.02f);
+            r.billboardRect(p+right*0.16f,0.05f,0.36f,0.65f+bob,right,mul({0.30f,0.18f,0.09f,1},light),0.02f);
+        }
+        r.billboardRect(p-right*0.17f,0.06f,0.06f,0.30f+bob,right,{0.03f,0.035f,0.04f,1},0.03f);
+        r.billboardRect(p+right*0.17f,0.06f,0.06f,0.30f+bob,right,{0.03f,0.035f,0.04f,1},0.03f);
+    }
+
+    Color npcColor(NpcRole role) const {
+        switch(role){
+            case NpcRole::Merchant:return {0.68f,0.42f,0.18f,1};
+            case NpcRole::Guard:return {0.28f,0.39f,0.62f,1};
+            case NpcRole::Lumberjack:return {0.42f,0.30f,0.18f,1};
+            case NpcRole::Farmer:return {0.43f,0.61f,0.24f,1};
+            default:return {0.48f,0.35f,0.57f,1};
+        }
+    }
+
+    void drawNpc(const NpcState& n,Vec3 right,float light){
+        int gx=int(n.x),gz=int(n.z);
+        float gy=float(world.walkHeight(gx,gz));
+        Vec3 c{n.x,gy,n.z};
+        Color sc=mul({0.86f,0.69f,0.53f,1},light),oc=mul(npcColor(n.role),light),outline={0.025f,0.028f,0.032f,1};
+        r.billboardRect(c,0.64f,0.70f,0.50f,right,outline,0.013f);
+        r.billboardRect(c,0.56f,0.62f,0.55f,right,oc);
+        r.billboardRect(c,0.52f,0.54f,1.13f,right,outline,0.014f);
+        r.billboardRect(c,0.44f,0.46f,1.17f,right,sc);
+        Color cap=(n.role==NpcRole::Guard)?Color{0.25f,0.28f,0.34f,1}:Color{0.20f,0.12f,0.07f,1};
+        r.billboardRect(c,0.48f,0.12f,1.53f,right,mul(cap,light),0.018f);
+        r.billboardRect(c-right*0.11f,0.05f,0.05f,1.34f,right,{0.03f,0.04f,0.045f,1},0.022f);
+        r.billboardRect(c+right*0.11f,0.05f,0.05f,1.34f,right,{0.03f,0.04f,0.045f,1},0.022f);
+    }
+
+    void drawProceduralRoad(int x,int z,float light){
+        if(!proceduralRoad(save.seed,x,z))return;
+        int h=world.topSolidY(x,z);
+        if(world.baseHeight(x,z)<=SEA_LEVEL)return;
+        Color road=mul({0.42f,0.34f,0.23f,1},light);
+        float y=float(h)+1.005f;
+        r.quad3({float(x)+0.05f,y,float(z)+0.05f},{float(x)+0.95f,y,float(z)+0.05f},
+                {float(x)+0.95f,y,float(z)+0.95f},{float(x)+0.05f,y,float(z)+0.95f},road);
+    }
+
+    void drawHouse(int x,int z,float light,Color wall){
+        int h=world.walkHeight(x,z);
+        uint8_t all=Renderer3D::Top|Renderer3D::North|Renderer3D::South|Renderer3D::East|Renderer3D::West;
+        for(int dz=0;dz<3;dz++)for(int dx=0;dx<3;dx++){
+            if(dx==1&&dz==0)continue;
+            r.cube(float(x+dx),float(h),float(z+dz),all,mul(wall,light),1.f);
+        }
+        for(int dz=0;dz<3;dz++)for(int dx=0;dx<3;dx++)
+            r.cube(float(x+dx),float(h+1),float(z+dz),all,mul({0.37f,0.18f,0.10f,1},light),1.f);
+    }
+
+    void drawSettlements(float light,int cx,int cz,int radius){
+        auto a=settlementAnchors(save.seed);
+        for(size_t i=0;i<a.size();i++){
+            float dx=float(a[i].x-cx),dz=float(a[i].z-cz);
+            if(dx*dx+dz*dz>float((radius+8)*(radius+8)))continue;
+            drawHouse(a[i].x-3,a[i].z-2,light,{0.55f,0.42f,0.25f,1});
+            if(a[i].size>=1)drawHouse(a[i].x+2,a[i].z+1,light,{0.50f,0.36f,0.23f,1});
+            if(a[i].size>=2)drawHouse(a[i].x-1,a[i].z+4,light,{0.61f,0.48f,0.30f,1});
+        }
+    }
+
     void buildScene(Vec3& right,Vec3& forward,Mat4& mvp){
         mvp=cameraMvp(right,forward);
         float light=daylight();
