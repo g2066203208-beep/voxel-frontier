@@ -763,6 +763,12 @@ public:
         std::string clock=(hour<10?"0":"")+std::to_string(hour)+":00";
         r.text(X(988),Y(61),"时间 "+clock,16*scale(),{0.74f,0.84f,0.93f,1});
         r.text(X(988),Y(91),faithName(save.faith),16*scale(),{0.96f,0.72f,0.22f,1});
+        panel(R(970,136,294,76));
+        int gx=int(save.px),gz=int(save.pz);
+        Biome bio=biomeAt(save.seed,gx,gz,world.baseHeight(gx,gz),world.moisture(gx,gz));
+        std::string wx=std::string(weatherName(save.weather.type))+"  "+std::to_string(int(save.weather.temperatureC))+"C";
+        r.text(X(988),Y(151),wx,15*scale(),{0.88f,0.92f,0.95f,1});
+        r.text(X(988),Y(180),std::string(biomeName(bio))+"  理智 "+std::to_string(int(save.needs.sanity)),14*scale(),{0.72f,0.81f,0.84f,1});
 
         float jx=in.joyId>=0?in.joyBaseX:X(105),jy=in.joyId>=0?in.joyBaseY:Y(610);
         float s=scale();
@@ -780,7 +786,19 @@ public:
         if(button(R(930,455,150,54),"跳跃",true,{0.31f,0.72f,0.39f,1}))jump();
         if(button(R(1095,579,150,54),"背包",true,{0.50f,0.38f,0.72f,1}))screen=Screen::Inventory;
         if(button(R(930,579,150,54),"旋转",true,{0.27f,0.60f,0.91f,1}))save.cameraYaw+=PI*0.5f;
-        if(button(R(1170,145,78,46),"暂停",true,{0.45f,0.49f,0.54f,1})){screen=Screen::Pause;writeSave();}
+        if(button(R(765,579,150,54),"状态",true,{0.33f,0.56f,0.72f,1}))screen=Screen::Status;
+        if(button(R(1170,225,78,46),"暂停",true,{0.45f,0.49f,0.54f,1})){screen=Screen::Pause;writeSave();}
+
+        if(save.weather.type==WeatherType::Rain||save.weather.type==WeatherType::Storm){
+            int lines=save.weather.type==WeatherType::Storm?36:22;
+            for(int i=0;i<lines;i++){
+                float rx=float((i*97+int(weatherFx*180))%1280);
+                float ry=float((i*53+int(weatherFx*260))%720);
+                r.rect(R(rx,ry,2,22),{0.64f,0.78f,0.92f,save.weather.type==WeatherType::Storm?0.40f:0.26f});
+            }
+        }else if(save.weather.type==WeatherType::Fog){
+            r.rect({0,0,float(r.w),float(r.h)},{0.72f,0.76f,0.76f,0.10f});
+        }
 
         drawHotbar();
         if(toastTime>0){
