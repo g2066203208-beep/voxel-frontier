@@ -1,0 +1,36 @@
+{
+  "version": "0.2-puppet-prototype",
+  "canvas": [1080,1920],
+  "design_source": "Python-authored geometry and motion prototype",
+  "replaceable_parts": {
+    "head": ["face_base","ear_l","ear_r","neck","blush_l","blush_r"],
+    "eyes": ["eye_white_l","iris_l","pupil_l","highlight_l","upper_lid_l","eye_white_r","iris_r","pupil_r","highlight_r","upper_lid_r"],
+    "brows": ["brow_l","brow_r"],
+    "mouth": ["mouth_neutral","mouth_smile","mouth_open_s","mouth_open_m","mouth_o"],
+    "hair": ["hair_back_core","hair_back_l1","hair_back_l2","hair_back_r1","hair_back_r2","bang_core","side_lock_l","side_lock_r"],
+    "torso": ["inner_top","cardigan_body","collar_l","collar_r","bow"],
+    "arms": ["upper_arm_l","lower_arm_l","cuff_l","hand_l","upper_arm_r","lower_arm_r","cuff_r","hand_r"],
+    "legs": ["thigh_l","calf_l","sock_l","shoe_l","thigh_r","calf_r","sock_r","shoe_r"],
+    "clothing": ["skirt_back","skirt_front","skirt_side_l","skirt_side_r"],
+    "props": ["phone","bag_charm"]
+  },
+  "motion_baseline": {
+    "idle_sway_deg": 2.4,
+    "idle_sway_period_sec": 4.6,
+    "breath_px": 7,
+    "breath_period_sec": 3.4,
+    "blink_duration_sec": 0.18,
+    "head_follow_x_deg": 9,
+    "head_follow_y_deg": 6,
+    "hair_lag_deg": 5,
+    "wave_shoulder_deg": 38,
+    "wave_elbow_deg": 72,
+    "lean_torso_deg": 18,
+    "squat_hip_drop_px": 190,
+    "squat_thigh_deg": 46,
+    "squat_knee_deg": 78,
+    "turn_body_deg": 24,
+    "stretch_shoulder_deg": 65
+  },
+  "showcase_poses": ["idle","wave","lean","squat","turn","stretch","phone","shy","sit"]
+}
