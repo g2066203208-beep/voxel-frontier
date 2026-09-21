@@ -1266,6 +1266,98 @@ public:
         }
     }
 
+
+    void updateNpcs(float dt){
+        auto anchors=settlementAnchors(save.seed);
+        for(uint32_t i=0;i<save.npcCount&&i<MAX_SAVE_NPCS;i++){
+            NpcState& n=save.npcs[i];
+            n.wanderPhase+=dt*(0.18f+0.002f*float(n.personality.curiosity));
+            const auto& a=anchors[i<6?0:1];
+            float rad=(n.role==NpcRole::Merchant?1.8f:(n.role==NpcRole::Guard?2.8f:4.5f));
+            float tx=float(a.x)+0.5f+std::cos(n.wanderPhase+float(i))*rad;
+            float tz=float(a.z)+0.5f+std::sin(n.wanderPhase*0.83f+float(i))*rad;
+            float dx=tx-n.x,dz=tz-n.z,d=std::sqrt(dx*dx+dz*dz);
+            if(d>0.15f){
+                float sp=(n.role==NpcRole::Guard?0.52f:0.34f)*dt;
+                float nx=n.x+dx/d*sp,nz=n.z+dz/d*sp;
+                if(world.baseHeight(int(nx),int(nz))>SEA_LEVEL){n.x=nx;n.z=nz;}
+            }
+            float weatherMood=(save.weather.type==WeatherType::Storm?-0.030f:(save.weather.type==WeatherType::Rain?-0.012f:0.006f));
+            n.mood=std::clamp(n.mood+weatherMood*dt,20.f,95.f);
+        }
+    }
+
+    void updateCreatures(float dt){
+        bool night=save.dayTime<0.21f||save.dayTime>0.80f;
+        for(auto& a:creatures)if(a.alive){
+            a.phase+=dt*3.1f;a.cooldown=std::max(0.f,a.cooldown-dt);
+            float dx=save.px-a.pos.x,dz=save.pz-a.pos.z,d=std::sqrt(dx*dx+dz*dz);
+            float vx=0,vz=0,speed=0;
+            if(a.type==CreatureType::Wolf){
+                if((night||d<3.2f)&&d<8.5f&&d>0.85f){vx=dx/d;vz=dz/d;speed=0.82f;}
+                else if(d<=0.9f&&a.cooldown<=0){save.hp=std::max(0.f,save.hp-9.f);a.cooldown=1.2f;toast="被狼攻击";toastTime=0.8f;}
+            }else if(d<4.2f&&d>0.2f){
+                vx=-dx/d;vz=-dz/d;speed=a.type==CreatureType::Deer?0.94f:1.05f;
+            }else{
+                vx=std::cos(a.phase*0.37f+float(int(a.type))*1.3f);
+                vz=std::sin(a.phase*0.41f+float(int(a.type))*0.9f);
+                speed=0.13f;
+            }
+            float nx=a.pos.x+vx*speed*dt,nz=a.pos.z+vz*speed*dt;
+            if(world.baseHeight(int(nx),int(nz))>SEA_LEVEL){
+                a.pos.x=nx;a.pos.z=nz;a.pos.y=float(world.walkHeight(int(nx),int(nz)));
+            }
+        }
+    }
+
+    void updateWeatherAndNeeds(float dt){
+        weatherFx+=dt;
+        save.weather.timer-=dt;
+        if(save.weather.timer<=0.f){
+            uint64_t s=save.seed^uint64_t(save.day*971+int(save.dayTime*96.f)*131);
+            save.weather=makeWeather(s,save.day,save.dayTime);
+            toast=std::string("天气变化：")+weatherName(save.weather.type);toastTime=1.4f;
+        }
+        int gx=int(save.px),gz=int(save.pz),h=world.baseHeight(gx,gz);
+        Biome b=biomeAt(save.seed,gx,gz,h,world.moisture(gx,gz));
+        save.weather.temperatureC=ambientTemperature(b,save.dayTime,save.weather.type,h);
+
+        float thirstRate=0.075f;
+        if(b==Biome::Dryland)thirstRate+=0.035f;
+        if(save.weather.temperatureC>28.f)thirstRate+=0.025f;
+        save.needs.thirst=std::max(0.f,save.needs.thirst-dt*thirstRate);
+
+        bool fire=nearBlock(Block::Campfire,3);
+        bool shrine=nearBlock(Block::Shrine,4);
+        float targetTemp=37.f+(save.weather.temperatureC-20.f)*0.018f;
+        if(save.weather.type==WeatherType::Rain)targetTemp-=0.22f;
+        if(save.weather.type==WeatherType::Storm)targetTemp-=0.38f;
+        if(fire)targetTemp+=0.45f;
+        save.needs.bodyTemp += (targetTemp-save.needs.bodyTemp)*dt*0.045f;
+        save.needs.bodyTemp=std::clamp(save.needs.bodyTemp,34.0f,40.0f);
+
+        bool dark=save.dayTime<0.20f||save.dayTime>0.82f;
+        bool lightSource=save.inventory.mainHand()==ItemId::Torch||fire;
+        float sanityRate=0.008f;
+        if(dark&&!lightSource)sanityRate=-0.030f;
+        if(save.weather.type==WeatherType::Storm)sanityRate-=0.025f;
+        if(shrine&&save.faith!=int(Faith::Godless))sanityRate+=0.035f;
+        sanityRate += (float(save.attributes.willpower)-5.f)*0.0025f;
+        save.needs.sanity=std::clamp(save.needs.sanity+sanityRate*dt,0.f,100.f);
+
+        float moodTarget=62.f;
+        moodTarget+=(save.hunger-50.f)*0.18f+(save.needs.thirst-50.f)*0.15f+(save.needs.sanity-50.f)*0.15f;
+        if(save.weather.type==WeatherType::Clear)moodTarget+=4.f;
+        if(save.weather.type==WeatherType::Storm)moodTarget-=8.f;
+        moodTarget+=(float(save.personality.bravery)-50.f)*0.035f;
+        save.needs.mood+= (std::clamp(moodTarget,5.f,95.f)-save.needs.mood)*dt*0.018f;
+
+        if(save.needs.thirst<=0.01f)save.hp=std::max(0.f,save.hp-dt*2.6f);
+        if(save.needs.bodyTemp<35.f||save.needs.bodyTemp>39.f)save.hp=std::max(0.f,save.hp-dt*1.2f);
+        if(save.needs.sanity<15.f)save.stamina=std::max(0.f,save.stamina-dt*0.6f);
+        save.skills.survival+=dt*0.003f;
+    }
+
     void simulate(float dt){
         if(screen==Screen::Splash){splashTime+=dt;return;}
         if(screen!=Screen::Game)return;
