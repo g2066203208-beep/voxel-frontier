@@ -1,6 +1,5 @@
 package com.xiaoqi.companion;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.*;
 import android.os.SystemClock;
@@ -13,653 +12,469 @@ import java.util.Locale;
 import java.util.Random;
 
 public class CompanionView extends View {
-    private static final float VW = 1080f;
-    private static final float VH = 1920f;
-
+    private static final float VW=1080f, VH=1920f;
     private final MainActivity host;
     private final SharedPreferences prefs;
-    private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint stroke = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Random random = new Random();
+    private final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint stroke=new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Random rng=new Random();
 
-    private float scale = 1f, offX = 0f, offY = 0f;
-    private float lookX = 0f, lookY = 0f, targetLookX = 0f, targetLookY = 0f;
-    private float downX, downY;
-    private long downTime = 0, lastTapTime = 0;
-    private boolean downOnHead = false;
-    private long bubbleUntil = 0, waveUntil = 0, petUntil = 0, shyUntil = 0;
-    private long nextAuto = 0;
-    private String bubble = "";
-    private String mood = "平静";
-    private String recent = "";
-    private int affection = 2;
-    private int visits = 0;
-    private int poseMode = 0;
+    enum Pose { IDLE, WAVE, LEAN, SQUAT, TURN, STRETCH, PHONE, SHY, SIT }
 
-    private final RectF chatButton = new RectF(95, 1690, 385, 1800);
-    private final RectF quietButton = new RectF(395, 1690, 685, 1800);
-    private final RectF poseButton = new RectF(695, 1690, 985, 1800);
-    private final RectF headZone = new RectF(330, 485, 750, 910);
-    private final RectF bodyZone = new RectF(345, 900, 735, 1480);
+    static class Rig {
+        float rootY, torsoDeg, headDeg, turn;
+        float lShoulder,lElbow,lWrist,rShoulder,rElbow,rWrist;
+        float lHip,lKnee,rHip,rKnee;
+        float headY, armLift, skirtCompress;
+        float phone, shy, sit;
 
-    public CompanionView(MainActivity context, SharedPreferences prefs) {
-        super(context);
-        this.host = context;
-        this.prefs = prefs;
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        p.setTypeface(Typeface.create("sans", Typeface.NORMAL));
-        stroke.setStyle(Paint.Style.STROKE);
-        stroke.setStrokeCap(Paint.Cap.ROUND);
-        stroke.setStrokeJoin(Paint.Join.ROUND);
-        setFocusable(true);
-        affection = prefs.getInt("affection", 2);
-        visits = prefs.getInt("visits", 0);
-        recent = prefs.getString("recent", "");
+        Rig copy(){
+            Rig q=new Rig();
+            q.rootY=rootY;q.torsoDeg=torsoDeg;q.headDeg=headDeg;q.turn=turn;
+            q.lShoulder=lShoulder;q.lElbow=lElbow;q.lWrist=lWrist;
+            q.rShoulder=rShoulder;q.rElbow=rElbow;q.rWrist=rWrist;
+            q.lHip=lHip;q.lKnee=lKnee;q.rHip=rHip;q.rKnee=rKnee;
+            q.headY=headY;q.armLift=armLift;q.skirtCompress=skirtCompress;
+            q.phone=phone;q.shy=shy;q.sit=sit;
+            return q;
+        }
     }
 
-    public void beginSession() {
-        long now = System.currentTimeMillis();
-        long last = prefs.getLong("last_visit", 0L);
+    static class V { float x,y; V(float x,float y){this.x=x;this.y=y;} }
+
+    private Pose pose=Pose.IDLE, fromPose=Pose.IDLE;
+    private Rig current=new Rig(), startRig=new Rig(), targetRig=new Rig();
+    private long poseStart=0;
+    private float poseDuration=0.55f;
+    private float sc=1f, ox=0, oy=0;
+    private float lookX=0,lookY=0,targetLookX=0,targetLookY=0;
+    private float hairLag=0, sleeveLag=0, skirtLag=0;
+    private float downX,downY; private long downAt=0;
+    private boolean downOnHead=false;
+    private String bubble=""; private long bubbleUntil=0;
+    private String mood="平静"; private String recent="";
+    private int affection=2, visits=0;
+    private long lastTap=0;
+    private int pressed=-1;
+
+    private final String[] labels={"待机","挥手","俯身","蹲下","转身","伸懒腰","拿手机","害羞","坐下"};
+    private final Pose[] poses={Pose.IDLE,Pose.WAVE,Pose.LEAN,Pose.SQUAT,Pose.TURN,Pose.STRETCH,Pose.PHONE,Pose.SHY,Pose.SIT};
+
+    public CompanionView(MainActivity host, SharedPreferences prefs){
+        super(host);
+        this.host=host; this.prefs=prefs;
+        setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+        stroke.setStyle(Paint.Style.STROKE); stroke.setStrokeCap(Paint.Cap.ROUND); stroke.setStrokeJoin(Paint.Join.ROUND);
+        affection=prefs.getInt("affection",2);
+        visits=prefs.getInt("visits",0);
+        recent=prefs.getString("recent","");
+        current=rigFor(Pose.IDLE);
+        targetRig=current.copy();
+    }
+
+    public void beginSession(){
         visits++;
-        Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-
-        String greeting;
-        if (last == 0L) {
-            greeting = "你好。我叫小栖……以后，我可以住在这里吗？";
-            mood = "有点期待";
-        } else if (now - last > 36L * 60L * 60L * 1000L) {
-            greeting = "你回来啦。我还以为今天也见不到你了。";
-            mood = "安心";
-        } else if (hour < 6) {
-            greeting = "这么晚还醒着呀？我陪你一会儿。";
-            mood = "困困的";
-        } else if (hour < 11) {
-            greeting = "早呀。今天也见到你了。";
-            mood = "清醒";
-        } else if (hour < 18) {
-            greeting = "你来了。今天过得怎么样？";
-            mood = "好奇";
-        } else {
-            greeting = "晚上好。忙完了吗？来这里坐一会儿吧。";
-            mood = "放松";
-        }
-
-        if (!recent.isEmpty() && now - last < 72L * 60L * 60L * 1000L && random.nextBoolean()) {
-            String r = recent.length() > 16 ? recent.substring(0, 16) + "…" : recent;
-            greeting = "你回来啦。上次你跟我说“" + r + "”，后来怎么样了？";
-        }
-        showBubble(greeting, 7500);
-        nextAuto = SystemClock.uptimeMillis() + 9000;
+        int h=Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if(h<6) showBubble("这么晚还没睡呀？我陪你一会儿。",5200);
+        else if(h<11) showBubble("早呀。今天也见到你了。",4200);
+        else if(h<18) showBubble("你来了。今天过得怎么样？",4200);
+        else showBubble("晚上好。忙完了吗？",4200);
         persist();
     }
 
-    public void persist() {
-        prefs.edit()
-                .putInt("affection", affection)
-                .putInt("visits", visits)
-                .putString("recent", recent)
-                .putLong("last_visit", System.currentTimeMillis())
-                .apply();
+    public void persist(){
+        prefs.edit().putInt("affection",affection).putInt("visits",visits).putString("recent",recent)
+                .putLong("last_visit",System.currentTimeMillis()).apply();
     }
 
-    public void onUserMessage(String message) {
-        recent = message.length() > 48 ? message.substring(0, 48) : message;
-        String m = message.toLowerCase(Locale.ROOT);
-        String reply;
-
-        if (containsAny(m, "累", "烦", "难受", "压力", "不开心", "焦虑")) {
-            reply = "那今天先别急着把自己整理好。你想说多少就说多少，我在听。";
-            mood = "担心你";
-            affection += 2;
-        } else if (containsAny(m, "开心", "好消息", "成功", "通过", "拿到了", "太好了")) {
-            reply = "真的？那我要替你高兴一会儿。再讲给我听，我想知道细节。";
-            mood = "很开心";
-            affection += 2;
-            waveUntil = SystemClock.uptimeMillis() + 1800;
-        } else if (containsAny(m, "困", "睡觉", "晚安")) {
-            reply = "那就早点休息。手机放远一点也没关系，我明天还在这里。晚安。";
-            mood = "温柔";
-            affection += 1;
-        } else if (containsAny(m, "早安", "早上好")) {
-            reply = "早安。先喝点水再开始今天，好不好？";
-            mood = "精神";
-            affection += 1;
-        } else if (containsAny(m, "想你", "喜欢你", "想见你")) {
-            reply = "……我也会期待你打开这里。只是我刚刚没好意思先说。";
-            mood = "害羞";
-            shyUntil = SystemClock.uptimeMillis() + 3000;
-            affection += 3;
-        } else if (containsAny(m, "谢谢", "感谢")) {
-            reply = "不用谢我呀。朋友之间，本来就可以这样。";
-            mood = "开心";
-            affection += 1;
-        } else {
-            String[] replies = {
-                    "嗯，我在听。你继续说。",
-                    "我记住了。下次你再提到这件事，我应该能接得上。",
-                    "听起来这件事对你挺重要的。你自己现在是什么感觉？",
-                    "我可能还不完全懂，但我想继续听你讲。",
-                    "今天的你和昨天好像有一点不一样。是发生什么了吗？"
-            };
-            reply = replies[random.nextInt(replies.length)];
-            mood = "认真听";
-            affection += 1;
+    public void onUserMessage(String msg){
+        recent=msg.length()>48?msg.substring(0,48):msg;
+        String m=msg.toLowerCase(Locale.ROOT);
+        if(containsAny(m,"累","烦","难受","压力","不开心","焦虑")){
+            mood="担心你"; showBubble("那今天先别急着把自己整理好。你想说多少就说多少，我在听。",7000);
+            affection+=2; setPose(Pose.LEAN);
+        }else if(containsAny(m,"开心","成功","通过","好消息","太好了")){
+            mood="开心"; showBubble("真的？那我要替你高兴一会儿。再讲给我听。",6000);
+            affection+=2; setPose(Pose.WAVE);
+        }else if(containsAny(m,"困","晚安","睡觉")){
+            mood="温柔"; showBubble("那就早点休息。我明天还在这里。晚安。",6000);
+            setPose(Pose.SIT);
+        }else if(containsAny(m,"想你","喜欢你","想见你")){
+            mood="害羞"; showBubble("……我也会期待你打开这里。只是我没好意思先说。",6500);
+            affection+=3; setPose(Pose.SHY);
+        }else{
+            String[] r={"嗯，我在听。你继续说。","我记住了。以后你再提到它，我会接得上。","你说这件事的时候，语气好像变了一点。","我可能还不完全懂，但我想继续听。"};
+            mood="认真听"; showBubble(r[rng.nextInt(r.length)],5500); affection+=1;
         }
-        affection = Math.min(80, affection);
-        showBubble(reply, 8000);
+        affection=Math.min(80,affection); persist();
+    }
+
+    private boolean containsAny(String s,String... ks){for(String k:ks)if(s.contains(k))return true;return false;}
+
+    private Rig rigFor(Pose z){
+        Rig r=new Rig();
+        switch(z){
+            case WAVE:
+                r.rShoulder=-50; r.rElbow=-78; r.rWrist=18; r.torsoDeg=-2; r.headDeg=3; break;
+            case LEAN:
+                r.torsoDeg=18; r.rootY=28; r.headDeg=-7; r.headY=18; r.lShoulder=7; r.rShoulder=-7; break;
+            case SQUAT:
+                r.rootY=190; r.lHip=46; r.rHip=-46; r.lKnee=78; r.rKnee=-78; r.skirtCompress=1; r.torsoDeg=6; r.headDeg=-4; break;
+            case TURN:
+                r.turn=1; r.torsoDeg=-4; r.headDeg=12; r.lShoulder=12; r.rShoulder=-18; break;
+            case STRETCH:
+                r.rootY=-25; r.torsoDeg=-7; r.lShoulder=65; r.rShoulder=-65; r.lElbow=-14; r.rElbow=14; r.headDeg=-5; r.headY=-8; break;
+            case PHONE:
+                r.rShoulder=18; r.rElbow=-88; r.rWrist=-14; r.lShoulder=-8; r.lElbow=38; r.phone=1; r.headDeg=8; r.turn=.25f; break;
+            case SHY:
+                r.lShoulder=-22; r.lElbow=84; r.lWrist=-18; r.rShoulder=15; r.rElbow=-72; r.rWrist=10; r.shy=1; r.headDeg=-8; break;
+            case SIT:
+                r.rootY=130; r.sit=1; r.lHip=72; r.rHip=-72; r.lKnee=92; r.rKnee=-92; r.skirtCompress=.55f; r.torsoDeg=3; break;
+            default: break;
+        }
+        return r;
+    }
+
+    private void setPose(Pose z){
+        if(z==pose && z!=Pose.WAVE)return;
+        fromPose=pose; pose=z;
+        startRig=current.copy(); targetRig=rigFor(z);
+        poseStart=SystemClock.uptimeMillis();
+        poseDuration=(z==Pose.SQUAT||z==Pose.SIT)?0.75f:(z==Pose.LEAN||z==Pose.TURN?0.65f:0.5f);
         performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
-        persist();
     }
 
-    private boolean containsAny(String s, String... keys) {
-        for (String k : keys) if (s.contains(k)) return true;
-        return false;
+    private float ease(float t){
+        t=Math.max(0,Math.min(1,t));
+        return t*t*(3-2*t);
     }
 
-    private void showBubble(String text, long ms) {
-        bubble = text;
-        bubbleUntil = SystemClock.uptimeMillis() + ms;
-        invalidate();
+    private float mix(float a,float b,float t){return a+(b-a)*t;}
+
+    private void updateRig(long now,float t){
+        float u=ease((now-poseStart)/1000f/Math.max(.01f,poseDuration));
+        current.rootY=mix(startRig.rootY,targetRig.rootY,u);
+        current.torsoDeg=mix(startRig.torsoDeg,targetRig.torsoDeg,u);
+        current.headDeg=mix(startRig.headDeg,targetRig.headDeg,u);
+        current.turn=mix(startRig.turn,targetRig.turn,u);
+        current.lShoulder=mix(startRig.lShoulder,targetRig.lShoulder,u);
+        current.lElbow=mix(startRig.lElbow,targetRig.lElbow,u);
+        current.lWrist=mix(startRig.lWrist,targetRig.lWrist,u);
+        current.rShoulder=mix(startRig.rShoulder,targetRig.rShoulder,u);
+        current.rElbow=mix(startRig.rElbow,targetRig.rElbow,u);
+        current.rWrist=mix(startRig.rWrist,targetRig.rWrist,u);
+        current.lHip=mix(startRig.lHip,targetRig.lHip,u); current.lKnee=mix(startRig.lKnee,targetRig.lKnee,u);
+        current.rHip=mix(startRig.rHip,targetRig.rHip,u); current.rKnee=mix(startRig.rKnee,targetRig.rKnee,u);
+        current.headY=mix(startRig.headY,targetRig.headY,u);
+        current.skirtCompress=mix(startRig.skirtCompress,targetRig.skirtCompress,u);
+        current.phone=mix(startRig.phone,targetRig.phone,u);
+        current.shy=mix(startRig.shy,targetRig.shy,u);
+        current.sit=mix(startRig.sit,targetRig.sit,u);
+
+        float idle=(pose==Pose.IDLE)?1f:.30f;
+        current.torsoDeg += (float)Math.sin(t*1.365f)*2.4f*idle;
+        current.headY += (float)Math.sin(t*1.848f)*7f*idle;
+        float targetHair=-(current.torsoDeg+current.headDeg)*.24f-lookX*5f;
+        hairLag += (targetHair-hairLag)*.065f;
+        sleeveLag += ((float)Math.sin(t*2.0f)*2.2f-sleeveLag)*.05f;
+        skirtLag += ((float)Math.sin(t*1.45f)*1.5f-skirtLag)*.04f;
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        scale = Math.min(w / VW, h / VH);
-        offX = (w - VW * scale) * 0.5f;
-        offY = (h - VH * scale) * 0.5f;
+    @Override protected void onSizeChanged(int w,int h,int ow,int oh){
+        sc=Math.min(w/VW,h/VH); ox=(w-VW*sc)*.5f; oy=(h-VH*sc)*.5f;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        long now = SystemClock.uptimeMillis();
-        float t = now / 1000f;
+    @Override protected void onDraw(Canvas c){
+        long now=SystemClock.uptimeMillis(); float t=now/1000f;
+        lookX+=(targetLookX-lookX)*.11f; lookY+=(targetLookY-lookY)*.11f;
+        updateRig(now,t);
 
-        lookX += (targetLookX - lookX) * 0.10f;
-        lookY += (targetLookY - lookY) * 0.10f;
-
-        if (now > nextAuto) {
-            int a = random.nextInt(5);
-            if (a == 0) {
-                mood = "发呆";
-                showBubble("……刚刚发了一会儿呆。你在做什么？", 5000);
-            } else if (a == 1) {
-                waveUntil = now + 1500;
-                mood = "注意到你";
-            } else if (a == 2) {
-                targetLookX = random.nextBoolean() ? -0.55f : 0.55f;
-                targetLookY = -0.15f;
-            } else if (a == 3 && visits > 2) {
-                showBubble("我发现，等你打开这里已经变成一种习惯了。", 5500);
-                mood = "安心";
-            } else {
-                mood = "平静";
-            }
-            nextAuto = now + 9000 + random.nextInt(9000);
-        }
-
-        canvas.save();
-        canvas.translate(offX, offY);
-        canvas.scale(scale, scale);
-
-        drawRoom(canvas, t);
-        drawTopStatus(canvas);
-        drawCompanion(canvas, t, now);
-        if (bubbleUntil > now) drawBubble(canvas);
-        drawBottomActions(canvas);
-
-        canvas.restore();
+        c.save(); c.translate(ox,oy); c.scale(sc,sc);
+        drawRoom(c,t);
+        drawHeader(c);
+        drawPuppet(c,t,now);
+        if(bubbleUntil>now)drawBubble(c);
+        drawTester(c);
+        c.restore();
         postInvalidateOnAnimation();
     }
 
-    private void drawRoom(Canvas c, float t) {
-        Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        boolean night = hour < 6 || hour >= 20;
+    private void drawRoom(Canvas c,float t){
+        int hour=Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        boolean night=hour<6||hour>=20;
+        int a=night?Color.rgb(44,43,66):Color.rgb(247,242,237);
+        int b=night?Color.rgb(89,72,95):Color.rgb(229,216,210);
+        p.setShader(new LinearGradient(0,0,0,VH,a,b,Shader.TileMode.CLAMP)); c.drawRect(0,0,VW,VH,p); p.setShader(null);
 
-        int top = night ? Color.rgb(42, 43, 67) : Color.rgb(246, 241, 234);
-        int bottom = night ? Color.rgb(79, 67, 91) : Color.rgb(232, 220, 211);
-        LinearGradient g = new LinearGradient(0, 0, 0, VH, top, bottom, Shader.TileMode.CLAMP);
-        p.setShader(g);
-        c.drawRect(0, 0, VW, VH, p);
-        p.setShader(null);
+        fill(Color.argb(220,68,61,78)); rr(c,690,160,995,610,30);
+        fill(night?Color.rgb(38,49,82):Color.rgb(170,210,225)); rr(c,712,182,973,588,22);
+        fill(Color.argb(105,255,255,255)); c.drawRect(838,182,847,588,p); c.drawRect(712,385,973,394,p);
+        if(night){fill(Color.rgb(255,237,178));c.drawCircle(905,250,34,p);} else {fill(Color.argb(120,255,255,255));c.drawOval(new RectF(745,245,842,282),p);}
 
-        // Window.
-        fill(Color.argb(220, 72, 62, 83));
-        rr(c, 650, 150, 960, 520, 34);
-        fill(night ? Color.rgb(38, 49, 83) : Color.rgb(170, 210, 224));
-        rr(c, 672, 172, 938, 498, 24);
-        fill(Color.argb(110, 255, 255, 255));
-        c.drawRect(800, 172, 810, 498, p);
-        c.drawRect(672, 330, 938, 340, p);
-        if (night) {
-            fill(Color.rgb(255, 236, 176));
-            c.drawCircle(865, 242, 28, p);
-            fill(Color.argb(210, 245, 240, 220));
-            for (int i = 0; i < 8; i++) {
-                float sx = 700 + (i * 37) % 210;
-                float sy = 210 + (i * 61) % 210;
-                c.drawCircle(sx, sy, 3 + (i % 2), p);
+        fill(night?Color.rgb(94,76,108):Color.rgb(193,166,184));
+        Path q=new Path();q.moveTo(650,125);q.lineTo(715,150);q.lineTo(690,650);q.lineTo(620,665);q.close();c.drawPath(q,p);
+        q=new Path();q.moveTo(1010,125);q.lineTo(970,150);q.lineTo(990,650);q.lineTo(1050,665);q.close();c.drawPath(q,p);
+
+        fill(night?Color.rgb(82,67,72):Color.rgb(132,98,82)); rr(c,75,350,420,378,10);
+        fill(Color.rgb(205,143,127));rr(c,110,285,155,350,5);
+        fill(Color.rgb(121,151,162));rr(c,165,267,215,350,5);
+        fill(Color.rgb(182,166,106));rr(c,225,298,278,350,5);
+
+        fill(Color.rgb(126,91,75));rr(c,140,470,255,585,22);
+        fill(Color.rgb(84,135,99));c.drawOval(new RectF(105,395,205,505),p);c.drawOval(new RectF(190,375,300,500),p);
+
+        fill(night?Color.rgb(75,65,76):Color.rgb(220,204,194)); c.drawRect(0,1250,VW,VH,p);
+        fill(night?Color.rgb(109,88,116):Color.rgb(205,176,187)); c.drawOval(new RectF(115,1325,965,1745),p);
+        fill(Color.argb(28,60,45,70));c.drawOval(new RectF(250,1400,830,1575),p);
+    }
+
+    private void drawHeader(Canvas c){
+        fill(Color.argb(215,255,252,249));rr(c,52,44,1028,180,34);
+        stroke(Color.argb(38,65,53,78),2);c.drawRoundRect(new RectF(52,44,1028,180),34,34,stroke);
+        text(c,"小栖 · 布偶动作原型",88,100,38,Color.rgb(64,54,77),true,Paint.Align.LEFT);
+        text(c,"当前："+labels[pose.ordinal()]+"   /   "+closeness(),88,148,24,Color.rgb(132,113,137),false,Paint.Align.LEFT);
+        fill(Color.rgb(143,126,225));c.drawCircle(952,110,28,p);fill(Color.WHITE);c.drawCircle(944,104,4,p);c.drawCircle(960,104,4,p);
+        stroke(Color.WHITE,3);c.drawArc(new RectF(942,103,962,126),25,130,false,stroke);
+    }
+
+    private String closeness(){
+        if(affection<7)return "初次见面";
+        if(affection<18)return "渐渐熟悉";
+        if(affection<38)return "熟悉的朋友";
+        return "很亲近";
+    }
+
+    private V polar(V o,float len,float deg){
+        double r=Math.toRadians(deg); return new V(o.x+(float)Math.sin(r)*len,o.y+(float)Math.cos(r)*len);
+    }
+
+    private void drawPuppet(Canvas c,float t,long now){
+        float cx=540, rootY=985+current.rootY;
+        float torsoRad=current.torsoDeg;
+        float turn=current.turn;
+        float bodyW=300-48*Math.abs(turn);
+        float bodyScaleX=1f-.18f*Math.abs(turn);
+
+        V hip=new V(cx,rootY+280);
+        V chest=new V(cx+(float)Math.sin(Math.toRadians(torsoRad))*65,rootY);
+        V neck=new V(chest.x+(float)Math.sin(Math.toRadians(torsoRad))*60,chest.y-145);
+        V head=new V(neck.x+(float)Math.sin(Math.toRadians(current.headDeg))*22,neck.y-165+current.headY);
+
+        // shadow
+        fill(Color.argb(45,50,38,61)); c.drawOval(new RectF(cx-250,hip.y+300,cx+250,hip.y+390),p);
+
+        // back hair chunks
+        drawHairBack(c,head,current.headDeg+current.torsoDeg,hairLag);
+
+        // rear skirt panel
+        c.save(); c.rotate(current.torsoDeg*.45f+skirtLag,hip.x,hip.y);
+        fill(Color.rgb(150,138,179)); Path back=new Path();
+        back.moveTo(hip.x-bodyW*.52f,hip.y-110);back.lineTo(hip.x+bodyW*.52f,hip.y-110);
+        back.lineTo(hip.x+230,hip.y+245-70*current.skirtCompress);back.lineTo(hip.x-230,hip.y+245-70*current.skirtCompress);back.close();c.drawPath(back,p);
+        c.restore();
+
+        // legs
+        drawLeg(c,hip,-1,current.lHip,current.lKnee,current.sit);
+        drawLeg(c,hip, 1,current.rHip,current.rKnee,current.sit);
+
+        // torso core
+        c.save(); c.rotate(current.torsoDeg,chest.x,chest.y+100); c.scale(bodyScaleX,1f,chest.x,chest.y+100);
+        fill(Color.rgb(243,233,229)); rr(c,chest.x-110,chest.y-55,chest.x+110,chest.y+265,55);
+        fill(Color.rgb(145,134,187)); Path coat=new Path();
+        coat.moveTo(chest.x-168,chest.y);coat.quadTo(chest.x,chest.y-65,chest.x+168,chest.y);
+        coat.lineTo(chest.x+155,chest.y+300);coat.lineTo(chest.x+58,chest.y+315);
+        coat.lineTo(chest.x+32,chest.y+90);coat.lineTo(chest.x-32,chest.y+90);
+        coat.lineTo(chest.x-58,chest.y+315);coat.lineTo(chest.x-155,chest.y+300);coat.close();c.drawPath(coat,p);
+        // collar
+        fill(Color.rgb(255,248,244)); Path l=new Path();l.moveTo(chest.x-85,chest.y+15);l.lineTo(chest.x-10,chest.y+95);l.lineTo(chest.x-118,chest.y+115);l.close();c.drawPath(l,p);
+        Path r=new Path();r.moveTo(chest.x+85,chest.y+15);r.lineTo(chest.x+10,chest.y+95);r.lineTo(chest.x+118,chest.y+115);r.close();c.drawPath(r,p);
+        fill(Color.rgb(213,142,163)); c.drawCircle(chest.x,chest.y+100,18,p);
+        c.restore();
+
+        // arms
+        V lShould=new V(chest.x-155*bodyScaleX,chest.y+45);
+        V rShould=new V(chest.x+155*bodyScaleX,chest.y+45);
+        drawArm(c,lShould,-1,current.lShoulder,current.lElbow,current.lWrist,current.shy>0.5f,false);
+        drawArm(c,rShould, 1,current.rShoulder,current.rElbow,current.rWrist,false,current.phone>0.5f);
+
+        // neck
+        fill(Color.rgb(247,216,204)); drawCapsule(c,new V(neck.x,neck.y+45),new V(neck.x,neck.y+115),42,Color.rgb(247,216,204));
+
+        // head / face
+        drawHead(c,head,current.headDeg+current.torsoDeg*.35f,turn,t,now);
+
+        // phone (separate prop)
+        if(current.phone>.05f){
+            float px=rShould.x+120,py=rShould.y-78;
+            c.save();c.rotate(-12,px,py);fill(Color.rgb(63,56,76));rr(c,px-34,py-70,px+34,py+70,12);
+            fill(Color.rgb(173,198,208));rr(c,px-28,py-59,px+28,py+48,8);fill(Color.rgb(213,142,163));c.drawCircle(px,py-5,8,p);c.restore();
+        }
+
+        // tiny accessory / charm
+        if(pose==Pose.PHONE){
+            fill(Color.rgb(250,242,232));c.drawCircle(cx+215,rootY+410,24,p);stroke(Color.rgb(83,70,92),3);c.drawCircle(cx+208,rootY+404,2,p);c.drawCircle(cx+222,rootY+404,2,p);
+        }
+    }
+
+    private void drawHairBack(Canvas c,V h,float baseDeg,float lag){
+        c.save();c.rotate(baseDeg*.45f+lag,h.x,h.y);
+        fill(Color.rgb(66,56,79));c.drawOval(new RectF(h.x-205,h.y-235,h.x+205,h.y+260),p);
+        // independent bundles
+        drawHairLock(c,h.x-160,h.y-40,145,34,-8+lag*1.4f,Color.rgb(69,58,82));
+        drawHairLock(c,h.x-95,h.y+15,185,38,-4+lag,Color.rgb(76,63,89));
+        drawHairLock(c,h.x+95,h.y+15,185,38,4+lag,Color.rgb(76,63,89));
+        drawHairLock(c,h.x+160,h.y-40,145,34,8+lag*1.4f,Color.rgb(69,58,82));
+        c.restore();
+    }
+
+    private void drawHairLock(Canvas c,float x,float y,float len,float w,float deg,int color){
+        c.save();c.rotate(deg,x,y);fill(color);Path q=new Path();
+        q.moveTo(x-w,y);q.quadTo(x-w*.6f,y+len*.55f,x,y+len);q.quadTo(x+w*.6f,y+len*.55f,x+w,y);q.close();c.drawPath(q,p);c.restore();
+    }
+
+    private void drawHead(Canvas c,V h,float deg,float turn,float t,long now){
+        c.save();c.rotate(deg,h.x,h.y);c.scale(1f-.10f*Math.abs(turn),1f,h.x,h.y);
+
+        // ears
+        fill(Color.rgb(245,211,199));c.drawOval(new RectF(h.x-177,h.y-20,h.x-125,h.y+70),p);c.drawOval(new RectF(h.x+125,h.y-20,h.x+177,h.y+70),p);
+        // face
+        fill(Color.rgb(252,227,214));c.drawRoundRect(new RectF(h.x-150,h.y-168,h.x+150,h.y+172),118,118,p);
+
+        // blush
+        if(current.shy>.25f){
+            fill(Color.argb((int)(55+90*current.shy),236,138,154));c.drawOval(new RectF(h.x-125,h.y+45,h.x-55,h.y+78),p);c.drawOval(new RectF(h.x+55,h.y+45,h.x+125,h.y+78),p);
+        }
+
+        float blink=(t%4.8f)>4.62f?Math.max(.08f,Math.abs((t%4.8f)-4.71f)/.09f):1f;
+        float ex=lookX*12+turn*9, ey=lookY*8;
+        drawEye(c,h.x-74+ex,h.y-12+ey,blink);drawEye(c,h.x+74+ex,h.y-12+ey,blink);
+
+        stroke(Color.rgb(91,74,99),6);
+        c.drawLine(h.x-104,h.y-64-current.shy*6,h.x-48,h.y-70-current.shy*8,stroke);
+        c.drawLine(h.x+48,h.y-70-current.shy*8,h.x+104,h.y-64-current.shy*6,stroke);
+
+        fill(Color.rgb(225,165,158));c.drawCircle(h.x,h.y+36,4,p);
+        stroke(Color.rgb(149,88,103),5);
+        if(current.shy>.5f)c.drawArc(new RectF(h.x-28,h.y+58,h.x+28,h.y+95),20,140,false,stroke);
+        else c.drawLine(h.x-18,h.y+78,h.x+18,h.y+78,stroke);
+
+        // front hair in separate locks
+        fill(Color.rgb(72,61,84));Path cap=new Path();cap.moveTo(h.x-155,h.y-82);cap.cubicTo(h.x-140,h.y-212,h.x-60,h.y-245,h.x,h.y-225);cap.cubicTo(h.x+95,h.y-252,h.x+158,h.y-174,h.x+158,h.y-72);cap.lineTo(h.x+115,h.y-112);cap.lineTo(h.x+70,h.y-45);cap.lineTo(h.x+23,h.y-123);cap.lineTo(h.x-28,h.y-42);cap.lineTo(h.x-82,h.y-123);cap.lineTo(h.x-128,h.y-48);cap.close();c.drawPath(cap,p);
+        drawHairLock(c,h.x-120,h.y-45,120,25,-12+hairLag*.5f,Color.rgb(76,63,89));
+        drawHairLock(c,h.x+120,h.y-45,120,25,12+hairLag*.5f,Color.rgb(76,63,89));
+        c.restore();
+    }
+
+    private void drawEye(Canvas c,float x,float y,float open){
+        fill(Color.rgb(255,251,249));c.drawOval(new RectF(x-33,y,x+33,y+52*open),p);
+        fill(Color.rgb(104,82,112));c.drawOval(new RectF(x-21,y+7,x+21,y+49*open),p);
+        fill(Color.rgb(48,40,54));c.drawOval(new RectF(x-9,y+16,x+9,y+48*open),p);
+        if(open>.55f){fill(Color.WHITE);c.drawCircle(x+5,y+13,4,p);}
+    }
+
+    private void drawArm(Canvas c,V s,int side,float shoulder,float elbow,float wrist,boolean coverFace,boolean phoneHand){
+        float base=side<0?-8:8;
+        V e=polar(s,190,base+shoulder);
+        V w=polar(e,180,base+shoulder+elbow);
+        if(coverFace){ w=new V(480,700); e=new V(405,850); }
+        drawCapsule(c,s,e,60,Color.rgb(145,134,187));
+        drawCapsule(c,e,w,55,Color.rgb(139,126,179));
+        V hand=polar(w,55,base+shoulder+elbow+wrist);
+        drawCapsule(c,w,hand,38,Color.rgb(250,224,212));
+        // sleeve cuff
+        drawCapsule(c,new V(e.x,e.y),new V(e.x+(w.x-e.x)*.28f,e.y+(w.y-e.y)*.28f),64,Color.rgb(117,105,155));
+        if(phoneHand) fill(Color.rgb(250,224,212));
+    }
+
+    private void drawLeg(Canvas c,V hip,int side,float hipDeg,float kneeDeg,float sit){
+        float sx=hip.x+side*90, sy=hip.y+20;
+        V h=new V(sx,sy);
+        float base=side<0?-4:4;
+        float thighLen=225;
+        float calfLen=220;
+        V k=polar(h,thighLen,base+hipDeg);
+        V a=polar(k,calfLen,base+hipDeg+kneeDeg);
+        if(sit>.5f){
+            k=new V(hip.x+side*165,hip.y+150);
+            a=new V(hip.x+side*245,hip.y+245);
+        }
+        drawCapsule(c,h,k,62,Color.rgb(110,101,143));
+        drawCapsule(c,k,a,55,Color.rgb(239,229,224));
+        V foot=new V(a.x+side*55,a.y+25);
+        drawCapsule(c,a,foot,48,Color.rgb(77,67,90));
+    }
+
+    private void drawCapsule(Canvas c,V a,V b,float radius,int color){
+        float dx=b.x-a.x,dy=b.y-a.y;float len=(float)Math.sqrt(dx*dx+dy*dy);
+        float ang=(float)Math.toDegrees(Math.atan2(dy,dx));
+        c.save();c.translate(a.x,a.y);c.rotate(ang);fill(color);c.drawRoundRect(new RectF(0,-radius,len,radius),radius,radius,p);c.restore();
+    }
+
+    private void drawBubble(Canvas c){
+        fill(Color.argb(238,255,253,250));rr(c,90,220,990,395,32);stroke(Color.argb(35,70,58,82),2);c.drawRoundRect(new RectF(90,220,990,395),32,32,stroke);
+        drawWrapped(c,bubble,130,278,820,31,44,Color.rgb(68,58,79));
+    }
+
+    private void drawTester(Canvas c){
+        fill(Color.argb(220,255,252,249));rr(c,48,1540,1032,1880,38);stroke(Color.argb(35,70,58,82),2);c.drawRoundRect(new RectF(48,1540,1032,1880),38,38,stroke);
+        text(c,"动作测试台（全部都是独立姿态参数，可直接换成最终素材）",78,1590,22,Color.rgb(129,112,134),false,Paint.Align.LEFT);
+        for(int i=0;i<9;i++){
+            int row=i/3,col=i%3;
+            float x=76+col*316,y=1618+row*82;
+            RectF q=new RectF(x,y,x+286,y+64);
+            int bg=(pose==poses[i])?Color.rgb(143,126,225):Color.rgb(247,242,243);
+            fill(bg);c.drawRoundRect(q,24,24,p);
+            stroke(Color.argb(42,68,56,80),2);c.drawRoundRect(q,24,24,stroke);
+            text(c,labels[i],q.centerX(),q.centerY()+9,24,(pose==poses[i])?Color.WHITE:Color.rgb(69,58,79),true,Paint.Align.CENTER);
+        }
+        text(c,"长按头部=摸头 · 拖动屏幕=视线跟随 · 双击头部=害羞",540,1862,18,Color.rgb(146,129,149),false,Paint.Align.CENTER);
+    }
+
+    private void showBubble(String s,long ms){bubble=s;bubbleUntil=SystemClock.uptimeMillis()+ms;invalidate();}
+
+    private void drawWrapped(Canvas c,String s,float x,float y,float maxW,float size,float lineH,int color){
+        p.setTextSize(size);p.setColor(color);p.setTypeface(Typeface.create("sans",Typeface.NORMAL));p.setTextAlign(Paint.Align.LEFT);
+        StringBuilder line=new StringBuilder();float yy=y;
+        for(int i=0;i<s.length();i++){char ch=s.charAt(i);String test=line.toString()+ch;if(p.measureText(test)>maxW&&line.length()>0){c.drawText(line.toString(),x,yy,p);yy+=lineH;line.setLength(0);}line.append(ch);}
+        if(line.length()>0)c.drawText(line.toString(),x,yy,p);
+    }
+
+    private void text(Canvas c,String s,float x,float y,float size,int color,boolean bold,Paint.Align align){
+        p.setShader(null);p.setStyle(Paint.Style.FILL);p.setColor(color);p.setTextSize(size);p.setTextAlign(align);p.setTypeface(Typeface.create("sans",bold?Typeface.BOLD:Typeface.NORMAL));c.drawText(s,x,y,p);
+    }
+    private void fill(int color){p.setShader(null);p.setStyle(Paint.Style.FILL);p.setColor(color);}
+    private void stroke(int color,float width){stroke.setColor(color);stroke.setStrokeWidth(width);stroke.setStyle(Paint.Style.STROKE);}
+    private void rr(Canvas c,float l,float t,float r,float b,float radius){c.drawRoundRect(new RectF(l,t,r,b),radius,radius,p);}
+    private float clamp(float v,float a,float b){return Math.max(a,Math.min(b,v));}
+    private float vx(float x){return (x-ox)/sc;} private float vy(float y){return (y-oy)/sc;}
+
+    @Override public boolean onTouchEvent(MotionEvent e){
+        float x=vx(e.getX()),y=vy(e.getY());long now=SystemClock.uptimeMillis();
+        if(e.getActionMasked()==MotionEvent.ACTION_DOWN){
+            downX=x;downY=y;downAt=now;downOnHead=(x>330&&x<750&&y>440&&y<890);
+            targetLookX=clamp((x-540)/320,-1,1);targetLookY=clamp((y-720)/400,-.8f,.8f);
+            pressed=buttonAt(x,y); return true;
+        }
+        if(e.getActionMasked()==MotionEvent.ACTION_MOVE){
+            targetLookX=clamp((x-540)/320,-1,1);targetLookY=clamp((y-720)/400,-.8f,.8f);return true;
+        }
+        if(e.getActionMasked()==MotionEvent.ACTION_UP){
+            float dx=x-downX,dy=y-downY;float d=(float)Math.sqrt(dx*dx+dy*dy);long held=now-downAt;
+            int hit=buttonAt(x,y);
+            if(d<35&&pressed>=0&&hit==pressed){ setPose(poses[hit]); showBubble("动作："+labels[hit],1800); }
+            else if(d<35&&downOnHead&&held>480){ mood="被摸头"; affection=Math.min(80,affection+1); setPose(Pose.SHY); showBubble("嗯……可以再摸一下。",3600); }
+            else if(d<35&&downOnHead){
+                if(now-lastTap<320){mood="害羞";setPose(Pose.SHY);showBubble("你是故意连续戳我的吧？",3800);}else showBubble("怎么啦？我在。",2600);
+                lastTap=now;
             }
-        } else {
-            fill(Color.argb(120, 255, 255, 255));
-            c.drawOval(new RectF(705, 235, 790, 270), p);
-            c.drawOval(new RectF(835, 395, 915, 425), p);
+            targetLookX=0;targetLookY=0;pressed=-1;persist();return true;
         }
-
-        // Curtain.
-        fill(night ? Color.rgb(91, 72, 102) : Color.rgb(193, 166, 184));
-        Path curtain = new Path();
-        curtain.moveTo(620, 120); curtain.lineTo(675, 145); curtain.lineTo(660, 565);
-        curtain.lineTo(600, 585); curtain.close(); c.drawPath(curtain, p);
-        curtain = new Path();
-        curtain.moveTo(970, 120); curtain.lineTo(930, 145); curtain.lineTo(950, 565);
-        curtain.lineTo(1012, 585); curtain.close(); c.drawPath(curtain, p);
-
-        // Shelf and books.
-        fill(night ? Color.rgb(89, 69, 67) : Color.rgb(136, 101, 83));
-        rr(c, 92, 250, 460, 275, 10);
-        fill(Color.rgb(210, 143, 124)); rr(c, 130, 198, 180, 252, 8);
-        fill(Color.rgb(123, 151, 162)); rr(c, 190, 186, 240, 252, 8);
-        fill(Color.rgb(181, 167, 105)); rr(c, 250, 207, 300, 252, 8);
-        fill(Color.rgb(121, 111, 150)); rr(c, 310, 175, 365, 252, 8);
-
-        // Plant.
-        fill(Color.rgb(126, 90, 73)); rr(c, 135, 355, 260, 470, 20);
-        fill(Color.rgb(85, 135, 98));
-        c.drawOval(new RectF(115, 300, 200, 390), p);
-        c.drawOval(new RectF(185, 280, 280, 380), p);
-        c.drawOval(new RectF(145, 250, 235, 355), p);
-
-        // Floor and rug.
-        fill(night ? Color.rgb(75, 64, 75) : Color.rgb(220, 203, 190));
-        c.drawRect(0, 1180, VW, VH, p);
-        fill(night ? Color.rgb(106, 83, 113) : Color.rgb(207, 174, 184));
-        c.drawOval(new RectF(165, 1280, 915, 1720), p);
-
-        // Small lamp.
-        fill(Color.rgb(113, 83, 72)); rr(c, 825, 915, 930, 1120, 18);
-        fill(night ? Color.rgb(255, 220, 157) : Color.rgb(229, 188, 149));
-        Path shade = new Path();
-        shade.moveTo(780, 900); shade.lineTo(970, 900); shade.lineTo(925, 1020); shade.lineTo(820, 1020); shade.close();
-        c.drawPath(shade, p);
-        if (night) {
-            p.setShader(new RadialGradient(875, 970, 260, Color.argb(75,255,213,140), Color.TRANSPARENT, Shader.TileMode.CLAMP));
-            c.drawCircle(875, 970, 260, p);
-            p.setShader(null);
-        }
-
-        // Floating dust gives the room life.
-        fill(Color.argb(night ? 70 : 55, 255, 244, 225));
-        for (int i = 0; i < 16; i++) {
-            float x = 80 + ((i * 149) % 920);
-            float y = 580 + ((i * 83) % 540) + (float)Math.sin(t * 0.45f + i) * 12f;
-            c.drawCircle(x, y, 2.5f, p);
-        }
-    }
-
-    private void drawTopStatus(Canvas c) {
-        fill(Color.argb(190, 255, 252, 249));
-        rr(c, 54, 52, 1026, 185, 34);
-        stroke(Color.argb(45, 70, 55, 82), 2);
-        c.drawRoundRect(new RectF(54, 52, 1026, 185), 34, 34, stroke);
-
-        text(c, "小栖", 92, 108, 39, Color.rgb(62, 53, 76), true);
-        text(c, "·  " + mood, 185, 106, 27, Color.rgb(126, 109, 135), false);
-        text(c, closenessLabel(), 92, 153, 24, Color.rgb(139, 120, 145), false);
-
-        fill(Color.rgb(142, 123, 239));
-        c.drawCircle(946, 114, 28, p);
-        fill(Color.WHITE);
-        c.drawCircle(938, 108, 4, p);
-        c.drawCircle(954, 108, 4, p);
-        stroke(Color.WHITE, 3);
-        c.drawArc(new RectF(936, 107, 956, 128), 25, 130, false, stroke);
-    }
-
-    private String closenessLabel() {
-        String relation;
-        if (affection < 7) relation = "初次见面";
-        else if (affection < 18) relation = "渐渐熟悉";
-        else if (affection < 38) relation = "熟悉的朋友";
-        else relation = "很亲近";
-        return relation + "  ·  第 " + visits + " 次见面";
-    }
-
-    private void drawCompanion(Canvas c, float t, long now) {
-        float sway = (float)Math.sin(t * 0.82f) * 5f;
-        float breath = (float)Math.sin(t * 2.0f) * 4f;
-        float headTurn = lookX * 4.5f;
-        float baseX = 540 + sway;
-        float baseY = poseMode == 2 ? 1110 : 1035;
-
-        // Shadow/cushion.
-        fill(Color.argb(50, 58, 46, 66));
-        c.drawOval(new RectF(baseX - 230, 1390, baseX + 230, 1480), p);
-        fill(Color.rgb(183, 155, 182));
-        c.drawOval(new RectF(baseX - 185, 1340, baseX + 185, 1445), p);
-
-        // Back hair.
-        c.save();
-        c.rotate(headTurn * 0.75f, baseX, 700);
-        fill(Color.rgb(67, 57, 79));
-        Path hairBack = new Path();
-        hairBack.moveTo(baseX - 182, 650);
-        hairBack.cubicTo(baseX - 170, 485, baseX - 82, 430, baseX, 430);
-        hairBack.cubicTo(baseX + 110, 430, baseX + 182, 510, baseX + 180, 680);
-        hairBack.lineTo(baseX + 135, 890);
-        hairBack.cubicTo(baseX + 55, 935, baseX - 60, 935, baseX - 140, 885);
-        hairBack.close();
-        c.drawPath(hairBack, p);
-        c.restore();
-
-        // Legs behind body.
-        fill(Color.rgb(95, 91, 124));
-        rr(c, baseX - 125, baseY + 210, baseX - 18, baseY + 455, 48);
-        rr(c, baseX + 18, baseY + 210, baseX + 125, baseY + 455, 48);
-        fill(Color.rgb(75, 67, 91));
-        rr(c, baseX - 142, baseY + 390, baseX - 10, baseY + 475, 38);
-        rr(c, baseX + 10, baseY + 390, baseX + 142, baseY + 475, 38);
-
-        // Torso.
-        fill(Color.rgb(149, 135, 190));
-        Path torso = new Path();
-        torso.moveTo(baseX - 152, baseY - 120);
-        torso.quadTo(baseX, baseY - 178 - breath, baseX + 152, baseY - 120);
-        torso.lineTo(baseX + 178, baseY + 275);
-        torso.quadTo(baseX, baseY + 335, baseX - 178, baseY + 275);
-        torso.close();
-        c.drawPath(torso, p);
-
-        // Collar and shirt.
-        fill(Color.rgb(246, 235, 230));
-        Path collarL = new Path();
-        collarL.moveTo(baseX - 80, baseY - 110); collarL.lineTo(baseX - 8, baseY - 26); collarL.lineTo(baseX - 112, baseY + 10); collarL.close();
-        c.drawPath(collarL, p);
-        Path collarR = new Path();
-        collarR.moveTo(baseX + 80, baseY - 110); collarR.lineTo(baseX + 8, baseY - 26); collarR.lineTo(baseX + 112, baseY + 10); collarR.close();
-        c.drawPath(collarR, p);
-        fill(Color.rgb(89, 75, 111));
-        rr(c, baseX - 14, baseY - 22, baseX + 14, baseY + 175, 12);
-
-        // Arms: right arm can wave.
-        float wave = now < waveUntil ? (float)Math.sin((waveUntil - now) / 110.0f) * 32f : 0f;
-        drawArm(c, baseX - 162, baseY - 55, -12f, false);
-        drawArm(c, baseX + 162, baseY - 55, 14f - wave, true);
-
-        // Neck.
-        fill(Color.rgb(250, 218, 203));
-        rr(c, baseX - 48, baseY - 205, baseX + 48, baseY - 85, 24);
-
-        // Head group.
-        float headY = baseY - 430 + breath * 0.35f;
-        c.save();
-        c.rotate(headTurn, baseX, headY);
-
-        // Ears.
-        fill(Color.rgb(247, 212, 198));
-        c.drawOval(new RectF(baseX - 177, headY - 30, baseX - 125, headY + 55), p);
-        c.drawOval(new RectF(baseX + 125, headY - 30, baseX + 177, headY + 55), p);
-
-        // Face.
-        fill(Color.rgb(252, 226, 212));
-        c.drawRoundRect(new RectF(baseX - 150, headY - 170, baseX + 150, headY + 175), 118, 118, p);
-
-        // Blush.
-        if (now < shyUntil || now < petUntil) {
-            fill(Color.argb(105, 238, 137, 147));
-            c.drawOval(new RectF(baseX - 122, headY + 38, baseX - 55, headY + 70), p);
-            c.drawOval(new RectF(baseX + 55, headY + 38, baseX + 122, headY + 70), p);
-        }
-
-        // Eyes track finger.
-        float blinkPhase = (t + 0.7f) % 4.9f;
-        float open = blinkPhase > 4.66f ? Math.max(0.08f, Math.abs(blinkPhase - 4.77f) / 0.11f) : 1f;
-        float ex = lookX * 10f, ey = lookY * 7f;
-        fill(Color.rgb(67, 57, 78));
-        c.drawOval(new RectF(baseX - 91 + ex, headY - 22 + ey, baseX - 55 + ex, headY - 22 + ey + 40 * open), p);
-        c.drawOval(new RectF(baseX + 55 + ex, headY - 22 + ey, baseX + 91 + ex, headY - 22 + ey + 40 * open), p);
-        if (open > 0.55f) {
-            fill(Color.rgb(252, 250, 249));
-            c.drawCircle(baseX - 67 + ex, headY - 12 + ey, 5, p);
-            c.drawCircle(baseX + 79 + ex, headY - 12 + ey, 5, p);
-        }
-
-        // Brows.
-        stroke(Color.rgb(91, 75, 98), 6);
-        c.drawLine(baseX - 100, headY - 63, baseX - 48, headY - 69, stroke);
-        c.drawLine(baseX + 48, headY - 69, baseX + 100, headY - 63, stroke);
-
-        // Nose/mouth.
-        fill(Color.rgb(227, 168, 160));
-        c.drawCircle(baseX, headY + 35, 5, p);
-        stroke(Color.rgb(150, 90, 104), 6);
-        if (now < petUntil) {
-            c.drawArc(new RectF(baseX - 28, headY + 61, baseX + 28, headY + 100), 20, 140, false, stroke);
-        } else {
-            c.drawLine(baseX - 18, headY + 79, baseX + 18, headY + 79, stroke);
-        }
-
-        // Front hair.
-        fill(Color.rgb(72, 61, 84));
-        Path bangs = new Path();
-        bangs.moveTo(baseX - 155, headY - 80);
-        bangs.cubicTo(baseX - 148, headY - 210, baseX - 60, headY - 245, baseX + 10, headY - 225);
-        bangs.cubicTo(baseX + 100, headY - 250, baseX + 160, headY - 175, baseX + 158, headY - 65);
-        bangs.lineTo(baseX + 110, headY - 118);
-        bangs.lineTo(baseX + 72, headY - 42);
-        bangs.lineTo(baseX + 20, headY - 125);
-        bangs.lineTo(baseX - 30, headY - 38);
-        bangs.lineTo(baseX - 82, headY - 122);
-        bangs.lineTo(baseX - 125, headY - 48);
-        bangs.close();
-        c.drawPath(bangs, p);
-
-        c.restore();
-
-        // Pet hearts.
-        if (now < petUntil) {
-            float k = 1f - (petUntil - now) / 1500f;
-            drawHeart(c, baseX + 185, headY - 120 - k * 80, 18, Color.rgb(235, 126, 151));
-            drawHeart(c, baseX - 205, headY - 50 - k * 105, 13, Color.rgb(237, 157, 174));
-        }
-    }
-
-    private void drawArm(Canvas c, float x, float y, float angle, boolean right) {
-        c.save();
-        c.rotate(angle, x, y);
-        fill(Color.rgb(149, 135, 190));
-        float l = right ? x : x - 92;
-        float r = right ? x + 92 : x;
-        rr(c, l, y, r, y + 300, 44);
-        fill(Color.rgb(252, 226, 212));
-        float hx = right ? x + 45 : x - 45;
-        c.drawCircle(hx, y + 294, 42, p);
-        c.restore();
-    }
-
-    private void drawBubble(Canvas c) {
-        fill(Color.argb(235, 255, 253, 250));
-        rr(c, 90, 245, 990, 430, 34);
-        Path tail = new Path();
-        tail.moveTo(505, 430); tail.lineTo(555, 474); tail.lineTo(590, 430); tail.close();
-        c.drawPath(tail, p);
-        stroke(Color.argb(38, 75, 61, 89), 2);
-        c.drawRoundRect(new RectF(90,245,990,430),34,34,stroke);
-        drawWrappedText(c, bubble, 130, 304, 820, 32, 48, Color.rgb(67, 57, 78));
-    }
-
-    private void drawBottomActions(Canvas c) {
-        fill(Color.argb(205, 255, 252, 249));
-        rr(c, 54, 1625, 1026, 1848, 42);
-        stroke(Color.argb(35, 72, 58, 86), 2);
-        c.drawRoundRect(new RectF(54,1625,1026,1848),42,42,stroke);
-
-        pill(c, chatButton, "聊聊天", "○", Color.rgb(142,123,239));
-        pill(c, quietButton, "一起发呆", "…", Color.rgb(182,145,166));
-        pill(c, poseButton, "换个动作", "↻", Color.rgb(111,151,159));
-
-        text(c, "直接摸摸她、戳戳她，或者让她看着你的手指。", 540, 1830, 20, Color.rgb(150,133,151), false, Paint.Align.CENTER);
-    }
-
-    private void pill(Canvas c, RectF r, String label, String icon, int accent) {
-        fill(Color.argb(230, 250, 247, 246));
-        c.drawRoundRect(r, 34, 34, p);
-        stroke(Color.argb(45, 65, 53, 79), 2);
-        c.drawRoundRect(r, 34, 34, stroke);
-        fill(accent);
-        c.drawCircle(r.left + 47, r.centerY(), 25, p);
-        text(c, icon, r.left + 47, r.centerY() + 8, 24, Color.WHITE, true, Paint.Align.CENTER);
-        text(c, label, r.left + 85, r.centerY() + 9, 26, Color.rgb(70, 59, 80), true);
-    }
-
-    private void drawHeart(Canvas c, float x, float y, float s, int color) {
-        fill(color);
-        Path h = new Path();
-        h.moveTo(x, y + s);
-        h.cubicTo(x - s * 1.4f, y, x - s, y - s, x, y - s * 0.25f);
-        h.cubicTo(x + s, y - s, x + s * 1.4f, y, x, y + s);
-        c.drawPath(h, p);
-    }
-
-    private void drawWrappedText(Canvas c, String s, float x, float y, float maxWidth, float size, float lineHeight, int color) {
-        p.setTypeface(Typeface.create("sans", Typeface.NORMAL));
-        p.setTextSize(size);
-        p.setColor(color);
-        p.setTextAlign(Paint.Align.LEFT);
-        StringBuilder line = new StringBuilder();
-        float yy = y;
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            String test = line.toString() + ch;
-            if (p.measureText(test) > maxWidth && line.length() > 0) {
-                c.drawText(line.toString(), x, yy, p);
-                yy += lineHeight;
-                line.setLength(0);
-            }
-            line.append(ch);
-        }
-        if (line.length() > 0) c.drawText(line.toString(), x, yy, p);
-    }
-
-    private void text(Canvas c, String s, float x, float y, float size, int color, boolean bold) {
-        text(c, s, x, y, size, color, bold, Paint.Align.LEFT);
-    }
-
-    private void text(Canvas c, String s, float x, float y, float size, int color, boolean bold, Paint.Align align) {
-        p.setShader(null);
-        p.setStyle(Paint.Style.FILL);
-        p.setColor(color);
-        p.setTextSize(size);
-        p.setTextAlign(align);
-        p.setTypeface(Typeface.create("sans", bold ? Typeface.BOLD : Typeface.NORMAL));
-        c.drawText(s, x, y, p);
-    }
-
-    private void fill(int color) {
-        p.setShader(null);
-        p.setStyle(Paint.Style.FILL);
-        p.setColor(color);
-    }
-
-    private void stroke(int color, float width) {
-        stroke.setColor(color);
-        stroke.setStrokeWidth(width);
-        stroke.setStyle(Paint.Style.STROKE);
-    }
-
-    private void rr(Canvas c, float l, float t, float r, float b, float radius) {
-        c.drawRoundRect(new RectF(l, t, r, b), radius, radius, p);
-    }
-
-    private float clamp(float v, float a, float b) {
-        return Math.max(a, Math.min(b, v));
-    }
-
-    private float vx(float screenX) {
-        return (screenX - offX) / scale;
-    }
-
-    private float vy(float screenY) {
-        return (screenY - offY) / scale;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float x = vx(event.getX());
-        float y = vy(event.getY());
-        long now = SystemClock.uptimeMillis();
-
-        switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
-                downX = x; downY = y; downTime = now;
-                downOnHead = headZone.contains(x, y);
-                targetLookX = clamp((x - 540f) / 310f, -1f, 1f);
-                targetLookY = clamp((y - 760f) / 360f, -0.75f, 0.75f);
-                return true;
-
-            case MotionEvent.ACTION_MOVE:
-                targetLookX = clamp((x - 540f) / 310f, -1f, 1f);
-                targetLookY = clamp((y - 760f) / 360f, -0.75f, 0.75f);
-                return true;
-
-            case MotionEvent.ACTION_UP:
-                float dx = x - downX, dy = y - downY;
-                float dist = (float)Math.sqrt(dx * dx + dy * dy);
-                long held = now - downTime;
-
-                if (dist < 36f) {
-                    if (chatButton.contains(x, y)) {
-                        host.openChat();
-                    } else if (quietButton.contains(x, y)) {
-                        mood = "陪着你";
-                        showBubble("好。那我们什么都不做，就一起待一会儿。", 6000);
-                        affection = Math.min(80, affection + 1);
-                        performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
-                    } else if (poseButton.contains(x, y)) {
-                        poseMode = (poseMode + 1) % 3;
-                        waveUntil = now + 1200;
-                        showBubble(poseMode == 2 ? "这样坐着会不会更像在陪你？" : "换好了。你觉得这样怎么样？", 4500);
-                    } else if (downOnHead && held > 480) {
-                        petUntil = now + 1500;
-                        shyUntil = now + 2300;
-                        mood = "被摸头";
-                        affection = Math.min(80, affection + 2);
-                        showBubble("嗯……可以再摸一下。", 4200);
-                        performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
-                    } else if (headZone.contains(x, y)) {
-                        if (now - lastTapTime < 310) {
-                            shyUntil = now + 2500;
-                            petUntil = now + 1200;
-                            mood = "有点害羞";
-                            showBubble("连续戳我两下……你是故意的吧？", 4500);
-                        } else {
-                            mood = "看着你";
-                            showBubble(random.nextBoolean() ? "怎么啦？我在。" : "你刚刚是在叫我吗？", 4000);
-                        }
-                        affection = Math.min(80, affection + 1);
-                        lastTapTime = now;
-                    } else if (bodyZone.contains(x, y)) {
-                        waveUntil = now + 1600;
-                        mood = "回应你";
-                        showBubble("收到。这个算是我们的打招呼方式吗？", 4200);
-                    } else {
-                        mood = "跟着看";
-                        showBubble("我会看着你点的地方。", 3200);
-                    }
-                }
-
-                targetLookX = 0f;
-                targetLookY = 0f;
-                persist();
-                return true;
-
-            case MotionEvent.ACTION_CANCEL:
-                targetLookX = 0f;
-                targetLookY = 0f;
-                return true;
-        }
+        if(e.getActionMasked()==MotionEvent.ACTION_CANCEL){targetLookX=targetLookY=0;pressed=-1;return true;}
         return true;
+    }
+
+    private int buttonAt(float x,float y){
+        for(int i=0;i<9;i++){int row=i/3,col=i%3;float bx=76+col*316,by=1618+row*82;if(x>=bx&&x<=bx+286&&y>=by&&y<=by+64)return i;}
+        return -1;
     }
 }
