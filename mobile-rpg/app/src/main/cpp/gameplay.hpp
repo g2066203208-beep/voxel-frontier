@@ -276,7 +276,10 @@ struct SaveDataV3 {
     WeatherState weather{};
     uint8_t discoveredSettlements=0;
     int16_t regionalReputation=0;
+    uint16_t followers=0;
+    uint8_t shrineLevel=0;
     uint8_t reservedWorldInfo=0;
+    float devotion=0;
     Inventory inventory{};
     uint32_t npcCount=0;
     std::array<NpcState,MAX_SAVE_NPCS> npcs{};
