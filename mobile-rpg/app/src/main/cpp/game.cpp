@@ -24,7 +24,7 @@ constexpr float PI = 3.14159265358979323846f;
 
 enum class Screen {
     Splash, Main, Saves, FaithSelect, CharacterCreate, Settings, About,
-    Game, Inventory, Pause, Death
+    Game, Inventory, Status, Dialogue, Trade, Pause, Death
 };
 
 struct InputState {
@@ -111,6 +111,9 @@ public:
     int selectedFaith=0;
     int body=0,skin=1,hair=0,outfit=0;
     int quality=1;
+    int selectedNpc=-1;
+    int craftPage=0;
+    float weatherFx=0;
 
     float splashTime=0;
     float accumulator=0;
