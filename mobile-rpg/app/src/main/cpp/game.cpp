@@ -561,6 +561,11 @@ public:
         return "黄昏";
     }
 
+    int seasonIndex() const { return ((save.day-1)/12)%4; }
+    const char* seasonName() const {
+        static const char* s[]={"春","夏","秋","冬"};return s[seasonIndex()];
+    }
+
     Mat4 cameraMvp(Vec3& camRight,Vec3& camForward){
         float yaw=save.cameraYaw;
         Vec3 target{save.px,float(world.walkHeight(int(save.px),int(save.pz)))+1.2f+yOffset*0.25f,save.pz};
@@ -839,7 +844,7 @@ public:
 
         panel(R(970,14,294,114));
         int hour=int(save.dayTime*24.f)%24;
-        std::string t="第 "+std::to_string(save.day)+" 天  "+timeName();
+        std::string t="第 "+std::to_string(save.day)+" 天  "+seasonName()+"季 "+timeName();
         r.text(X(988),Y(31),t,17*scale(),{0.95f,0.96f,0.94f,1});
         std::string clock=(hour<10?"0":"")+std::to_string(hour)+":00";
         r.text(X(988),Y(61),"时间 "+clock,16*scale(),{0.74f,0.84f,0.93f,1});
@@ -1438,6 +1443,8 @@ public:
         int gx=int(save.px),gz=int(save.pz),h=world.baseHeight(gx,gz);
         Biome b=biomeAt(save.seed,gx,gz,h,world.moisture(gx,gz));
         save.weather.temperatureC=ambientTemperature(b,save.dayTime,save.weather.type,h);
+        static const float seasonalOffset[]={0.f,5.5f,-1.5f,-7.0f};
+        save.weather.temperatureC+=seasonalOffset[seasonIndex()];
 
         float thirstRate=0.075f;
         if(b==Biome::Dryland)thirstRate+=0.035f;
