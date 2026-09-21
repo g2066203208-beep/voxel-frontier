@@ -247,6 +247,10 @@ public:
         save.px=float(WORLD_SIZE/2)+0.5f;save.pz=float(WORLD_SIZE/2)+0.5f;
         save.cameraYaw=0.78f;save.dayTime=0.28f;save.day=1;
         save.faithPower=selectedFaith==int(Faith::Mature)?100.f:(selectedFaith==int(Faith::Newborn)?30.f:0.f);
+        save.attributes=randomAttributes(save.seed^0xA551u);
+        save.personality=randomPersonality(save.seed,999);
+        save.needs={100.f,100.f,72.f,37.0f};
+        save.weather=makeWeather(save.seed,save.day,save.dayTime);
         quality=1;
         world.reset(save.seed);
         if(selectedFaith!=int(Faith::Godless)){
@@ -257,8 +261,10 @@ public:
         save.inventory.add(ItemId::Fiber,4);
         save.inventory.add(ItemId::ClothTunic,1);
         save.inventory.equipFrom(2);
-        if(selectedFaith==int(Faith::Mature))save.inventory.add(ItemId::Torch,1);
-        drops.clear();spawnMobs();
+        if(selectedFaith==int(Faith::Mature)){save.inventory.add(ItemId::Torch,1);save.inventory.add(ItemId::Coin,20);}
+        else save.inventory.add(ItemId::Coin,8);
+        initNpcs();
+        drops.clear();resetLivingWorld();
         screen=Screen::Game;toast="世界苏醒";toastTime=2.5f;writeSave();
     }
 
@@ -266,7 +272,7 @@ public:
         SaveDataV3 d{};if(!readSave(i,d))return;
         slot=i;save=d;selectedFaith=save.faith;body=save.body;skin=save.skin;hair=save.hair;outfit=save.outfit;quality=save.quality;
         world.reset(save.seed);world.importEdits(save.edits.data(),save.editCount);world.importHarvest(save.harvest.data(),save.harvestCount);
-        yOffset=save.playerYOffset;yVel=0;grounded=true;drops.clear();spawnMobs();
+        yOffset=save.playerYOffset;yVel=0;grounded=true;drops.clear();resetLivingWorld();
         screen=Screen::Game;toast="欢迎回来";toastTime=1.8f;
     }
 
