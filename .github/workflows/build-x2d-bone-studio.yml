@@ -5,7 +5,7 @@ on:
       - x2d-bone-studio-apk
     paths:
       - '.ci/x2d_v03/**'
-      - '.ci/x2d_v031b/**'
+      - '.ci/x2d_v031/**'
       - '.github/workflows/build-x2d-bone-studio.yml'
   workflow_dispatch: {}
 
@@ -60,7 +60,7 @@ jobs:
       - name: Apply v0.3.1 rig-lock and bone-parenting patch
         shell: bash
         run: |
-          cat .ci/x2d_v031b/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/x2d_v031_patch.zip
+          cat .ci/x2d_v031/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/x2d_v031_patch.zip
           unzip -oq /tmp/x2d_v031_patch.zip -d "$PROJECT_ROOT"
           grep -q 'versionName "0.3.1"' "$PROJECT_ROOT/app/build.gradle"
           grep -q 'reparentSelectedBone' "$PROJECT_ROOT/app/src/main/java/com/openai/x2dbonestudio/RigEditorView.java"
