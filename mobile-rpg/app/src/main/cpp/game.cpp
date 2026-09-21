@@ -710,7 +710,8 @@ public:
                 if(x<0||z<0||x>=WORLD_SIZE||z>=WORLD_SIZE)continue;
                 float dx=float(x-cx),dz=float(z-cz);
                 if(dx*dx+dz*dz>float(radius*radius*1.22f))continue;
-                for(int y=0;y<WORLD_Y;y++){
+                int topY=std::min(WORLD_Y-1,world.topSolidY(x,z)+1);
+                for(int y=0;y<=topY;y++){
                     Block b=world.block(x,y,z);
                     if(b==Block::Air)continue;
                     uint8_t faces=exposedFaces(x,y,z,b);
@@ -730,10 +731,11 @@ public:
                 }
                 drawProceduralRoad(x,z,light);
                 WorldObject o=world.objectAt(x,z);
+                bool detail=dist<float(radius)*0.78f||quality>=2;
                 if(o==WorldObject::Tree)drawTree(x,z,right,light);
-                else if(o==WorldObject::Rock)drawRock(x,z,right,light);
-                else if(o==WorldObject::BerryBush)drawBerry(x,z,right,light);
-                else if(o==WorldObject::GrassTuft)drawGrass(x,z,right,light);
+                else if(detail&&o==WorldObject::Rock)drawRock(x,z,right,light);
+                else if(detail&&o==WorldObject::BerryBush)drawBerry(x,z,right,light);
+                else if(detail&&o==WorldObject::GrassTuft)drawGrass(x,z,right,light);
             }
         }
         drawSettlements(light,cx,cz,radius);
