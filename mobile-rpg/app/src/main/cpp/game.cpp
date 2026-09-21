@@ -24,7 +24,7 @@ constexpr float PI = 3.14159265358979323846f;
 
 enum class Screen {
     Splash, Main, Saves, FaithSelect, CharacterCreate, CharacterProfile, Settings, About,
-    Game, Inventory, Status, Dialogue, Trade, Pause, Death
+    Game, Inventory, Status, Dialogue, Trade, FaithPanel, Pause, Death
 };
 
 struct InputState {
@@ -267,6 +267,9 @@ public:
         }
         save.cameraYaw=0.78f;save.dayTime=0.28f;save.day=1;
         save.faithPower=selectedFaith==int(Faith::Mature)?100.f:(selectedFaith==int(Faith::Newborn)?30.f:0.f);
+        save.followers=selectedFaith==int(Faith::Mature)?1200:(selectedFaith==int(Faith::Newborn)?1:0);
+        save.shrineLevel=selectedFaith==int(Faith::Mature)?3:(selectedFaith==int(Faith::Newborn)?0:0);
+        save.devotion=selectedFaith==int(Faith::Mature)?80.f:(selectedFaith==int(Faith::Newborn)?10.f:0.f);
         save.attributes=randomAttributes(save.seed^0xA551u);
         save.personality=randomPersonality(save.seed,999);
         auto bump=[](uint8_t& v,int d){v=uint8_t(std::clamp<int>(int(v)+d,1,10));};
@@ -335,6 +338,7 @@ public:
             case Screen::Inventory:case Screen::Status:screen=Screen::Game;break;
             case Screen::Dialogue:screen=Screen::Game;break;
             case Screen::Trade:screen=Screen::Dialogue;break;
+            case Screen::FaithPanel:screen=Screen::Game;break;
             case Screen::Pause:screen=Screen::Game;break;
             case Screen::Saves:case Screen::FaithSelect:case Screen::About:screen=Screen::Main;break;
             case Screen::CharacterCreate:screen=Screen::FaithSelect;break;
@@ -1182,6 +1186,7 @@ public:
             case Screen::Status:renderStatus();break;
             case Screen::Dialogue:renderDialogue();break;
             case Screen::Trade:renderTrade();break;
+            case Screen::FaithPanel:renderFaithPanel();break;
             case Screen::Pause:renderPause();break;
             case Screen::Death:renderDeath();break;
         }
