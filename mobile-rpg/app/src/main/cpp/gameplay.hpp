@@ -48,6 +48,7 @@ inline bool isTool(ItemId id){
     return id==ItemId::WoodAxe||id==ItemId::StonePick||id==ItemId::WoodSword||id==ItemId::Torch;
 }
 inline bool isWearable(ItemId id){ return id==ItemId::ClothHat||id==ItemId::ClothTunic; }
+inline bool isConsumable(ItemId id){ return id==ItemId::Berry; }
 inline bool isPlaceable(ItemId id){
     return id==ItemId::DirtBlock||id==ItemId::StoneBlock||id==ItemId::SandBlock||id==ItemId::Workbench||id==ItemId::Campfire;
 }
@@ -107,8 +108,24 @@ struct Inventory {
         for(const auto& s:slots) if(ItemId(s.id)==id) n+=s.count;
         return n;
     }
+    int capacityFor(ItemId id) const {
+        if(id==ItemId::None) return 0;
+        int cap=0;
+        if(isStackable(id)){
+            for(const auto& s:slots){
+                if(ItemId(s.id)==id && s.count<maxStack(id)) cap+=int(maxStack(id)-s.count);
+            }
+        }
+        for(const auto& s:slots){
+            if(s.count==0||ItemId(s.id)==ItemId::None) cap+=int(maxStack(id));
+        }
+        return cap;
+    }
+    bool canAdd(ItemId id,int amount) const {
+        return id!=ItemId::None && amount>0 && capacityFor(id)>=amount;
+    }
     bool add(ItemId id,int amount,uint16_t durability=0){
-        if(id==ItemId::None||amount<=0) return false;
+        if(!canAdd(id,amount)) return false;
         if(durability==0) durability=maxDurability(id);
         if(isStackable(id)){
             for(auto& s:slots) if(ItemId(s.id)==id && s.count<maxStack(id)){
@@ -203,8 +220,12 @@ inline bool canCraft(const Inventory& inv,const Recipe& r,bool nearBench){
 }
 inline bool craft(Inventory& inv,const Recipe& r,bool nearBench){
     if(!canCraft(inv,r,nearBench))return false;
-    inv.remove(r.a,r.aCount); inv.remove(r.b,r.bCount);
-    return inv.add(r.out,r.outCount);
+    Inventory next=inv;
+    if(!next.remove(r.a,r.aCount))return false;
+    if(!next.remove(r.b,r.bCount))return false;
+    if(!next.add(r.out,r.outCount))return false;
+    inv=next;
+    return true;
 }
 
 constexpr uint32_t SAVE_MAGIC_V2=0x46425632u;
