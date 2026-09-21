@@ -213,7 +213,7 @@ public:
         for(uint32_t i=0;i<save.npcCount;i++){
             NpcState n{};
             n.id=i+1;
-            n.role=(i==0)?NpcRole::Merchant:(i==1?NpcRole::Guard:(i==2?NpcRole::Lumberjack:(i==3?NpcRole::Farmer:NpcRole::Villager)));
+            n.role=(i==0||i==7)?NpcRole::Merchant:(i==1?NpcRole::Guard:(i==2?NpcRole::Lumberjack:(i==3?NpcRole::Farmer:NpcRole::Villager)));
             n.personality=randomPersonality(save.seed,n.id);
             const auto& a=anchors[i<6?0:1];
             float ang=float(i)*0.91f;
@@ -1311,15 +1311,21 @@ public:
         for(uint32_t i=0;i<save.npcCount&&i<MAX_SAVE_NPCS;i++){
             NpcState& n=save.npcs[i];
             n.wanderPhase+=dt*(0.18f+0.002f*float(n.personality.curiosity));
-            const auto& a=anchors[i<6?0:1];
-            float rad=(n.role==NpcRole::Merchant?1.8f:(n.role==NpcRole::Guard?2.8f:4.5f));
-            float tx=float(a.x)+0.5f+std::cos(n.wanderPhase+float(i))*rad;
-            float tz=float(a.z)+0.5f+std::sin(n.wanderPhase*0.83f+float(i))*rad;
-            float dx=tx-n.x,dz=tz-n.z,d=std::sqrt(dx*dx+dz*dz);
-            if(d>0.15f){
-                float sp=(n.role==NpcRole::Guard?0.52f:0.34f)*dt;
-                float nx=n.x+dx/d*sp,nz=n.z+dz/d*sp;
-                if(world.baseHeight(int(nx),int(nz))>SEA_LEVEL){n.x=nx;n.z=nz;}
+            if(i==7){
+                float u=0.5f+0.5f*std::sin(n.wanderPhase*0.18f);
+                n.x=float(anchors[0].x)*(1.f-u)+float(anchors[1].x)*u+0.5f;
+                n.z=float(anchors[0].z)*(1.f-u)+float(anchors[1].z)*u+0.5f;
+            }else{
+                const auto& a=anchors[i<6?0:1];
+                float rad=(n.role==NpcRole::Merchant?1.8f:(n.role==NpcRole::Guard?2.8f:4.5f));
+                float tx=float(a.x)+0.5f+std::cos(n.wanderPhase+float(i))*rad;
+                float tz=float(a.z)+0.5f+std::sin(n.wanderPhase*0.83f+float(i))*rad;
+                float dx=tx-n.x,dz=tz-n.z,d=std::sqrt(dx*dx+dz*dz);
+                if(d>0.15f){
+                    float sp=(n.role==NpcRole::Guard?0.52f:0.34f)*dt;
+                    float nx=n.x+dx/d*sp,nz=n.z+dz/d*sp;
+                    if(world.baseHeight(int(nx),int(nz))>SEA_LEVEL){n.x=nx;n.z=nz;}
+                }
             }
             float weatherMood=(save.weather.type==WeatherType::Storm?-0.030f:(save.weather.type==WeatherType::Rain?-0.012f:0.006f));
             n.mood=std::clamp(n.mood+weatherMood*dt,20.f,95.f);
