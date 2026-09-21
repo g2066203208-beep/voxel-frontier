@@ -100,6 +100,20 @@ static Color itemColor(ItemId id){
         case ItemId::Campfire:return {0.88f,0.31f,0.09f,1};
         case ItemId::ClothHat:return {0.50f,0.36f,0.70f,1};
         case ItemId::ClothTunic:return {0.24f,0.52f,0.69f,1};
+        case ItemId::Coin:return {0.92f,0.60f,0.16f,1};
+        case ItemId::WaterFlask:return {0.30f,0.62f,0.85f,1};
+        case ItemId::RawMeat:return {0.72f,0.24f,0.24f,1};
+        case ItemId::CookedMeat:return {0.58f,0.28f,0.16f,1};
+        case ItemId::Seed:return {0.50f,0.58f,0.19f,1};
+        case ItemId::Wheat:return {0.82f,0.68f,0.22f,1};
+        case ItemId::IronBar:return {0.58f,0.64f,0.70f,1};
+        case ItemId::IronAxe:return {0.62f,0.68f,0.74f,1};
+        case ItemId::IronPick:return {0.64f,0.70f,0.76f,1};
+        case ItemId::IronSword:return {0.70f,0.75f,0.80f,1};
+        case ItemId::Furnace:return {0.38f,0.36f,0.34f,1};
+        case ItemId::Chest:return {0.48f,0.29f,0.12f,1};
+        case ItemId::Hoe:return {0.50f,0.34f,0.17f,1};
+        case ItemId::Bread:return {0.78f,0.54f,0.23f,1};
         default:return {0.22f,0.24f,0.26f,1};
     }
 }
