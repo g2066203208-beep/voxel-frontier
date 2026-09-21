@@ -54,6 +54,16 @@ struct Slime {
     bool alive=true;
 };
 
+enum class CreatureType : uint8_t { Rabbit=0, Deer, Wolf };
+struct Creature {
+    CreatureType type=CreatureType::Rabbit;
+    Vec3 pos{};
+    float hp=12;
+    float phase=0;
+    float cooldown=0;
+    bool alive=true;
+};
+
 static Color skinColor(int i){
     static const Color v[]={
         {0.98f,0.82f,0.66f,1},{0.90f,0.70f,0.52f,1},{0.75f,0.54f,0.37f,1},
@@ -128,6 +138,7 @@ public:
 
     std::vector<Drop> drops;
     std::vector<Slime> slimes;
+    std::vector<Creature> creatures;
 
     explicit Game(android_app* a):app(a){ refreshSlots(); }
 
