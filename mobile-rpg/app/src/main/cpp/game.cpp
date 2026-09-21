@@ -1202,6 +1202,25 @@ public:
             if(weapon==ItemId::WoodSword||weapon==ItemId::IronSword)save.inventory.wearMainDurability();
             save.skills.combat+=0.45f;
             if(best->hp<=0){best->alive=false;spawnDrop(ItemId::Berry,1,best->pos+Vec3{0,0.25f,0});toast="击败怪物";toastTime=1.2f;}
+        }else{
+            Creature* prey=nullptr;float cd=999.f;
+            for(auto& a:creatures)if(a.alive){
+                float dx=a.pos.x-save.px,dz=a.pos.z-save.pz,d=std::sqrt(dx*dx+dz*dz);
+                float front=(dx*facingX+dz*facingZ)/(d+1e-4f);
+                if(d<2.25f&&front>0.10f&&d<cd){cd=d;prey=&a;}
+            }
+            if(prey){
+                prey->hp-=dmg;
+                if(weapon==ItemId::WoodSword||weapon==ItemId::IronSword)save.inventory.wearMainDurability();
+                save.skills.combat+=0.35f;
+                if(prey->hp<=0){
+                    prey->alive=false;
+                    int meat=prey->type==CreatureType::Deer?3:(prey->type==CreatureType::Wolf?2:1);
+                    spawnDrop(ItemId::RawMeat,meat,prey->pos+Vec3{0,0.25f,0});
+                    if(prey->type==CreatureType::Rabbit)spawnDrop(ItemId::Fiber,1,prey->pos+Vec3{0.15f,0,0});
+                    toast="获得生肉";toastTime=1.1f;
+                }
+            }
         }
         attackFlash=0.16f;save.stamina=std::max(0.f,save.stamina-4.f);
     }
