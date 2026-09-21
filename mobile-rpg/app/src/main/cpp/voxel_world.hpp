@@ -16,7 +16,7 @@ constexpr int CHUNK_CACHE = 72;
 constexpr int SEA_LEVEL = 6;
 
 enum class Block : uint8_t {
-    Air=0, Grass, Dirt, Stone, Sand, Water, Ore, Workbench, Campfire, Shrine
+    Air=0, Grass, Dirt, Stone, Sand, Water, Ore, Workbench, Campfire, Shrine, Furnace, Chest
 };
 
 enum class WorldObject : uint8_t {
@@ -230,6 +230,8 @@ inline Color blockColor(Block b){
         case Block::Workbench:return {0.48f,0.28f,0.11f,1};
         case Block::Campfire:return {0.72f,0.28f,0.08f,1};
         case Block::Shrine:return {0.68f,0.68f,0.63f,1};
+        case Block::Furnace:return {0.34f,0.34f,0.35f,1};
+        case Block::Chest:return {0.48f,0.29f,0.12f,1};
         default:return {0,0,0,0};
     }
 }
