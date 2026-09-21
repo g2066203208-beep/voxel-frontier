@@ -286,6 +286,8 @@ public:
         if(selectedFaith==int(Faith::Mature)){save.inventory.add(ItemId::Torch,1);save.inventory.add(ItemId::Coin,20);}
         else save.inventory.add(ItemId::Coin,8);
         initNpcs();
+        save.discoveredSettlements=(selectedFaith==int(Faith::Mature))?1u:0u;
+        save.regionalReputation=(selectedFaith==int(Faith::Mature))?8:0;
         drops.clear();resetLivingWorld();
         screen=Screen::Game;toast="世界苏醒";toastTime=2.5f;writeSave();
     }
@@ -981,6 +983,9 @@ public:
         Biome bio=biomeAt(save.seed,gx,gz,world.baseHeight(gx,gz),world.moisture(gx,gz));
         r.text(X(840),Y(430),"当前位置 "+std::string(biomeName(bio)),16*scale(),{0.72f,0.84f,0.76f,1});
         r.text(X(840),Y(468),"铜币 "+std::to_string(save.inventory.count(ItemId::Coin)),16*scale(),{0.96f,0.72f,0.22f,1});
+        int known=((save.discoveredSettlements&1)?1:0)+((save.discoveredSettlements&2)?1:0)+((save.discoveredSettlements&4)?1:0);
+        r.text(X(840),Y(506),"聚落信息 "+std::to_string(known)+"/3",16*scale(),{0.72f,0.84f,0.76f,1});
+        r.text(X(840),Y(544),"地区声望 "+std::to_string(save.regionalReputation),16*scale(),{0.82f,0.78f,0.92f,1});
 
         if(button(R(965,585,150,48),"关闭",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
         r.flushUI();r.present();
@@ -1005,7 +1010,13 @@ public:
             n.mood=std::min(100.f,n.mood+2.f);
             save.skills.social+=0.6f;
             save.needs.mood=std::min(100.f,save.needs.mood+1.2f);
-            toast="关系提升";toastTime=1.f;
+            save.regionalReputation=int16_t(std::clamp<int>(save.regionalReputation+1,-100,100));
+            if(n.role==NpcRole::Merchant){
+                if(!(save.discoveredSettlements&2u)){save.discoveredSettlements|=2u;toast="获得信息：发现另一处聚落";}
+                else if(!(save.discoveredSettlements&4u)){save.discoveredSettlements|=4u;toast="获得信息：发现远方村庄";}
+                else toast="关系提升";
+            }else toast="关系提升";
+            toastTime=1.2f;
         }
         if(button(R(530,430,180,52),"交易",n.role==NpcRole::Merchant,{0.96f,0.72f,0.22f,1}))screen=Screen::Trade;
         if(button(R(750,430,180,52),"离开",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
@@ -1452,6 +1463,11 @@ public:
         if(save.dayTime>=1.f){save.dayTime-=1.f;save.day++;if(save.faith!=int(Faith::Godless))save.faithPower=std::min(100.f,save.faithPower+2.f);}
 
         updateWeatherAndNeeds(dt);
+        auto towns=settlementAnchors(save.seed);
+        for(int i=0;i<3;i++){
+            float dx=float(towns[i].x)+0.5f-save.px,dz=float(towns[i].z)+0.5f-save.pz;
+            if(dx*dx+dz*dz<100.f)save.discoveredSettlements|=uint8_t(1u<<i);
+        }
         pickupDrops(dt);updateSlimes(dt);updateCreatures(dt);updateNpcs(dt);
         autosave+=dt;if(autosave>30.f){autosave=0;writeSave();}
 
