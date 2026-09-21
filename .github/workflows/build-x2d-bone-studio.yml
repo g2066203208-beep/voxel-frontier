@@ -5,7 +5,7 @@ on:
       - x2d-bone-studio-apk
     paths:
       - '.ci/x2d_v03/**'
-      - '.ci/x2d_v031/**'
+      - '.ci/x2d_v031d/**'
       - '.github/workflows/build-x2d-bone-studio.yml'
   workflow_dispatch: {}
 
@@ -16,59 +16,44 @@ jobs:
       ANDROID_HOME: /usr/local/lib/android/sdk
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
-      - name: Install Android SDK 35
+      - name: Android SDK
         shell: bash
         run: |
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-
-      - name: Recreate base Android project
+      - name: Recreate base
         shell: bash
         run: |
           cat .ci/x2d/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/x2d.zip
-          rm -rf /tmp/x2d
-          mkdir -p /tmp/x2d
+          rm -rf /tmp/x2d && mkdir -p /tmp/x2d
           unzip -q /tmp/x2d.zip -d /tmp/x2d
           PROJECT_ROOT="$(dirname "$(find /tmp/x2d -name settings.gradle -type f | head -1)")"
-          test -n "$PROJECT_ROOT"
           test -f "$PROJECT_ROOT/settings.gradle"
           echo "PROJECT_ROOT=$PROJECT_ROOT" >> "$GITHUB_ENV"
-
-      - name: Apply v0.3 interaction redesign
+      - name: Apply v0.3
         shell: bash
         run: |
-          cat .ci/x2d_v03/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/x2d_v03_patch.zip
-          unzip -oq /tmp/x2d_v03_patch.zip -d "$PROJECT_ROOT"
-          test -f "$PROJECT_ROOT/app/src/main/java/com/openai/x2dbonestudio/TimelineView.java"
-          grep -q 'versionName "0.3.0"' "$PROJECT_ROOT/app/build.gradle"
-
-      - name: Apply v0.3.1 rig-lock and bone-parenting patch
+          cat .ci/x2d_v03/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/v03.zip
+          unzip -oq /tmp/v03.zip -d "$PROJECT_ROOT"
+      - name: Apply v0.3.1
         shell: bash
         run: |
-          cat .ci/x2d_v031/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/x2d_v031_patch.zip
-          unzip -oq /tmp/x2d_v031_patch.zip -d "$PROJECT_ROOT"
+          cat .ci/x2d_v031d/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/v031.zip
+          unzip -t /tmp/v031.zip
+          unzip -oq /tmp/v031.zip -d "$PROJECT_ROOT"
           grep -q 'versionName "0.3.1"' "$PROJECT_ROOT/app/build.gradle"
           grep -q 'reparentSelectedBone' "$PROJECT_ROOT/app/src/main/java/com/openai/x2dbonestudio/RigEditorView.java"
-
       - name: Build APK
-        shell: bash
         run: gradle -p "$PROJECT_ROOT" assembleDebug --stacktrace
-
       - name: Verify APK
         shell: bash
         run: |
@@ -77,9 +62,7 @@ jobs:
           cp "$APK" /tmp/X2DBoneStudio-v0.3.1-debug.apk
           unzip -t /tmp/X2DBoneStudio-v0.3.1-debug.apk >/dev/null
           sha256sum /tmp/X2DBoneStudio-v0.3.1-debug.apk
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: X2DBoneStudio-v0.3.1-debug-apk
           path: /tmp/X2DBoneStudio-v0.3.1-debug.apk
