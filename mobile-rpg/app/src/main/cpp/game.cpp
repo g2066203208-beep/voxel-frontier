@@ -925,7 +925,6 @@ static int32_t handle_input(android_app* app,AInputEvent* event){
 } // namespace fb
 
 void android_main(struct android_app* app){
-    app_dummy();
     fb::Game game(app);
     app->userData=&game;
     app->onAppCmd=fb::handle_cmd;
@@ -939,7 +938,7 @@ void android_main(struct android_app* app){
     while(!app->destroyRequested){
         int events=0; android_poll_source* source=nullptr;
         int timeout=game.r.ready?0:-1;
-        while(ALooper_pollAll(timeout,nullptr,&events,reinterpret_cast<void**>(&source))>=0){
+        while(ALooper_pollOnce(timeout,nullptr,&events,reinterpret_cast<void**>(&source))>=0){
             if(source) source->process(app,source);
             if(app->destroyRequested) break;
             timeout=0;
