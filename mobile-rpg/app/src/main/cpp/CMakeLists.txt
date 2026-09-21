@@ -21,6 +21,7 @@ target_link_options(faithbound PRIVATE
 target_link_libraries(faithbound
     native_app_glue
     android
+    jnigraphics
     log
     EGL
     GLESv3)
