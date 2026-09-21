@@ -274,6 +274,9 @@ struct SaveDataV3 {
     Skills skills{};
     Needs needs{};
     WeatherState weather{};
+    uint8_t discoveredSettlements=0;
+    int16_t regionalReputation=0;
+    uint8_t reservedWorldInfo=0;
     Inventory inventory{};
     uint32_t npcCount=0;
     std::array<NpcState,MAX_SAVE_NPCS> npcs{};
