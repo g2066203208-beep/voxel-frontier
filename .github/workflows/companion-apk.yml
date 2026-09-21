@@ -2,7 +2,7 @@ name: Build XiaoQi Companion APK
 
 on:
   push:
-    branches: [ companion-v0.1 ]
+    branches: [ companion-v0.1, companion-v0.2-puppet-prototype ]
     paths:
       - 'companion-app/**'
       - '.github/workflows/companion-apk.yml'
@@ -54,12 +54,12 @@ jobs:
       - name: Collect APK
         run: |
           mkdir -p dist
-          cp companion-app/app/build/outputs/apk/debug/app-debug.apk dist/XiaoQi-Companion-v0.1.apk
-          sha256sum dist/XiaoQi-Companion-v0.1.apk > dist/SHA256.txt
+          cp companion-app/app/build/outputs/apk/debug/app-debug.apk dist/XiaoQi-Companion-v0.2-Puppet.apk
+          sha256sum dist/XiaoQi-Companion-v0.2-Puppet.apk > dist/SHA256.txt
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: XiaoQi-Companion-v0.1
+          name: XiaoQi-Companion-v0.2-Puppet
           path: dist/
           if-no-files-found: error
