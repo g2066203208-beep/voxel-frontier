@@ -1450,7 +1450,12 @@ public:
         if(save.hp<=0){
             if(save.faith==int(Faith::Mature)||(save.faith==int(Faith::Newborn)&&save.faithPower>=10.f)){
                 if(save.faith==int(Faith::Newborn))save.faithPower-=10.f;
-                save.hp=100;save.hunger=65;save.stamina=100;save.px=float(WORLD_SIZE/2)+0.5f;save.pz=float(WORLD_SIZE/2)+0.5f;
+                save.hp=100;save.hunger=65;save.stamina=100;save.needs.thirst=70;save.needs.sanity=75;
+                if(save.faith==int(Faith::Mature)){
+                    auto towns=settlementAnchors(save.seed);save.px=float(towns[0].x)+0.5f;save.pz=float(towns[0].z)+3.5f;
+                }else{
+                    save.px=float(WORLD_SIZE/2)+0.5f;save.pz=float(WORLD_SIZE/2)+0.5f;
+                }
                 yOffset=0;yVel=0;grounded=true;toast="神恩复生";toastTime=2.4f;writeSave();
             }else{
                 if(save.faith==int(Faith::Godless))deleteSlot(slot);
