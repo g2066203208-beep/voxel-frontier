@@ -830,13 +830,17 @@ public:
         r.flushUI();r.present();
     }
 
-    bool nearWorkbench(){
+    bool nearBlock(Block target,int radius=2){
         int px=int(save.px),pz=int(save.pz);
-        for(int z=pz-2;z<=pz+2;z++)for(int x=px-2;x<=px+2;x++){
+        for(int z=pz-radius;z<=pz+radius;z++)for(int x=px-radius;x<=px+radius;x++){
             int y=world.topSolidY(x,z);
-            if(world.block(x,y,z)==Block::Workbench)return true;
+            if(world.block(x,y,z)==target)return true;
         }
         return false;
+    }
+
+    CraftContext craftContext(){
+        return {nearBlock(Block::Workbench),nearBlock(Block::Furnace),nearBlock(Block::Campfire)};
     }
 
     void renderInventory(){
