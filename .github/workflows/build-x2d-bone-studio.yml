@@ -42,23 +42,30 @@ jobs:
           rm -rf /tmp/x2d
           mkdir -p /tmp/x2d
           unzip -q /tmp/x2d.zip -d /tmp/x2d
-          test -f /tmp/x2d/settings.gradle
-          test -f /tmp/x2d/app/build.gradle
+          PROJECT_ROOT="$(dirname "$(find /tmp/x2d -name settings.gradle -type f | head -1)")"
+          test -n "$PROJECT_ROOT"
+          test -f "$PROJECT_ROOT/settings.gradle"
+          test -f "$PROJECT_ROOT/app/build.gradle"
+          echo "PROJECT_ROOT=$PROJECT_ROOT" >> "$GITHUB_ENV"
+          echo "Project root: $PROJECT_ROOT"
 
       - name: Build APK
         shell: bash
-        run: gradle -p /tmp/x2d assembleDebug --stacktrace
+        run: gradle -p "$PROJECT_ROOT" assembleDebug --stacktrace
 
       - name: Verify APK
         shell: bash
         run: |
-          test -s /tmp/x2d/app/build/outputs/apk/debug/app-debug.apk
-          ls -lh /tmp/x2d/app/build/outputs/apk/debug/app-debug.apk
-          sha256sum /tmp/x2d/app/build/outputs/apk/debug/app-debug.apk
+          APK="$PROJECT_ROOT/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          cp "$APK" /tmp/X2DBoneStudio-v0.2-debug.apk
+          ls -lh /tmp/X2DBoneStudio-v0.2-debug.apk
+          sha256sum /tmp/X2DBoneStudio-v0.2-debug.apk
+          unzip -t /tmp/X2DBoneStudio-v0.2-debug.apk >/dev/null
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: X2DBoneStudio-v0.2-debug-apk
-          path: /tmp/x2d/app/build/outputs/apk/debug/app-debug.apk
+          path: /tmp/X2DBoneStudio-v0.2-debug.apk
           if-no-files-found: error
