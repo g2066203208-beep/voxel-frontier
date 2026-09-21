@@ -99,9 +99,9 @@ public:
     android_app* app=nullptr;
     Renderer3D r;
     VoxelWorld world;
-    SaveDataV2 save{};
+    SaveDataV3 save{};
     std::array<bool,3> hasSlot{false,false,false};
-    std::array<SaveDataV2,3> slots{};
+    std::array<SaveDataV3,3> slots{};
     int slot=0;
 
     Screen screen=Screen::Splash;
@@ -137,13 +137,13 @@ public:
 
     std::string path(int i) const {
         std::string p=app->activity->internalDataPath?app->activity->internalDataPath:"";
-        return p+"/faithbound_v2_slot"+std::to_string(i)+".sav";
+        return p+"/faithbound_v3_slot"+std::to_string(i)+".sav";
     }
 
-    bool readSave(int i,SaveDataV2& out){
+    bool readSave(int i,SaveDataV3& out){
         FILE* f=std::fopen(path(i).c_str(),"rb"); if(!f)return false;
-        SaveDataV2 t{};size_t n=std::fread(&t,1,sizeof(t),f);std::fclose(f);
-        if(n!=sizeof(t)||t.magic!=SAVE_MAGIC_V2||t.version!=2)return false;
+        SaveDataV3 t{};size_t n=std::fread(&t,1,sizeof(t),f);std::fclose(f);
+        if(n!=sizeof(t)||t.magic!=SAVE_MAGIC_V3||t.version!=3)return false;
         uint32_t cs=t.checksum;t.checksum=0;
         if(checksumSave(t)!=cs)return false;
         t.checksum=cs;out=t;return true;
@@ -179,7 +179,7 @@ public:
     }
 
     void newWorld(){
-        save=SaveDataV2{};
+        save=SaveDataV3{};
         uint64_t now=uint64_t(std::chrono::high_resolution_clock::now().time_since_epoch().count());
         save.seed=now^(uint64_t(slot+1)*0x9E3779B97F4A7C15ULL);
         save.faith=selectedFaith;save.body=body;save.skin=skin;save.hair=hair;save.outfit=outfit;
@@ -202,7 +202,7 @@ public:
     }
 
     void loadWorld(int i){
-        SaveDataV2 d{};if(!readSave(i,d))return;
+        SaveDataV3 d{};if(!readSave(i,d))return;
         slot=i;save=d;selectedFaith=save.faith;body=save.body;skin=save.skin;hair=save.hair;outfit=save.outfit;quality=save.quality;
         world.reset(save.seed);world.importEdits(save.edits.data(),save.editCount);world.importHarvest(save.harvest.data(),save.harvestCount);
         yOffset=save.playerYOffset;yVel=0;grounded=true;drops.clear();spawnMobs();
