@@ -23,7 +23,7 @@ namespace fb {
 constexpr float PI = 3.14159265358979323846f;
 
 enum class Screen {
-    Splash, Main, Saves, FaithSelect, CharacterCreate, Settings, About,
+    Splash, Main, Saves, FaithSelect, CharacterCreate, CharacterProfile, Settings, About,
     Game, Inventory, Status, Dialogue, Trade, Pause, Death
 };
 
@@ -134,6 +134,8 @@ public:
 
     int selectedFaith=0;
     int body=0,skin=1,hair=0,outfit=0;
+    int talentPreset=0;
+    int personalityPreset=0;
     int quality=1;
     int selectedNpc=-1;
     int craftPage=0;
@@ -325,6 +327,7 @@ public:
             case Screen::Pause:screen=Screen::Game;break;
             case Screen::Saves:case Screen::FaithSelect:case Screen::About:screen=Screen::Main;break;
             case Screen::CharacterCreate:screen=Screen::FaithSelect;break;
+            case Screen::CharacterProfile:screen=Screen::CharacterCreate;break;
             case Screen::Settings:screen=settingsReturn;break;
             case Screen::Death:screen=Screen::Main;break;
             case Screen::Main:ANativeActivity_finish(app->activity);break;
@@ -442,7 +445,7 @@ public:
             uint32_t h=hash32(uint64_t(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
             body=h%2;skin=(h>>3)%6;hair=(h>>7)%6;outfit=(h>>11)%6;
         }
-        if(button(R(875,570,245,58),"进入世界",true,{0.31f,0.72f,0.39f,1}))newWorld();
+        if(button(R(875,570,245,58),"下一步",true,{0.31f,0.72f,0.39f,1}))screen=Screen::CharacterProfile;
         if(button(R(35,630,185,55),"返回",true,{0.45f,0.49f,0.54f,1}))screen=Screen::FaithSelect;
         r.flushUI();r.present();
     }
@@ -1117,6 +1120,7 @@ public:
             case Screen::Saves:renderSaves();break;
             case Screen::FaithSelect:renderFaith();break;
             case Screen::CharacterCreate:renderCharacterCreate();break;
+            case Screen::CharacterProfile:renderCharacterProfile();break;
             case Screen::Settings:renderSettings();break;
             case Screen::About:renderAbout();break;
             case Screen::Game:renderGame();break;
