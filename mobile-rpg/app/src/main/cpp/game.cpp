@@ -918,6 +918,141 @@ public:
         r.flushUI();r.present();
     }
 
+
+    std::string personalitySummary(const Personality& p) const {
+        std::string a=p.bravery>=60?"勇敢":(p.bravery<=40?"胆怯":"谨慎");
+        std::string b=p.sociability>=60?"外向":(p.sociability<=40?"内向":"平和");
+        std::string d=p.discipline>=60?"自律":(p.curiosity>=65?"好奇":"随性");
+        return a+" / "+b+" / "+d;
+    }
+
+    void renderStatus(){
+        Color sky=skyColor(save.dayTime);r.begin(sky);
+        Vec3 right{},forward{};Mat4 mvp{};buildScene(right,forward,mvp);r.flush3D(mvp);
+        r.rect({0,0,float(r.w),float(r.h)},{0.01f,0.015f,0.02f,0.76f});
+        panel(R(105,55,1070,610));
+        r.text(X(140),Y(80),"角色状态",30*scale(),{0.96f,0.72f,0.22f,1});
+
+        r.text(X(145),Y(135),"基础属性",19*scale(),{0.87f,0.90f,0.92f,1});
+        const char* an[]={"力量","敏捷","体质","智力","意志","魅力","幸运"};
+        const int av[]={save.attributes.strength,save.attributes.agility,save.attributes.vitality,save.attributes.intelligence,
+                        save.attributes.willpower,save.attributes.charisma,save.attributes.luck};
+        for(int i=0;i<7;i++){
+            int col=i/4,row=i%4;
+            r.text(X(145+col*170),Y(178+row*43),std::string(an[i])+" "+std::to_string(av[i]),17*scale(),{0.93f,0.94f,0.92f,1});
+        }
+
+        r.text(X(145),Y(380),"性格",19*scale(),{0.87f,0.90f,0.92f,1});
+        r.text(X(145),Y(420),personalitySummary(save.personality),17*scale(),{0.96f,0.72f,0.22f,1});
+        r.text(X(145),Y(458),"勇敢 "+std::to_string(int(save.personality.bravery))+"  社交 "+std::to_string(int(save.personality.sociability)),15*scale(),{0.72f,0.78f,0.81f,1});
+        r.text(X(145),Y(492),"自律 "+std::to_string(int(save.personality.discipline))+"  好奇 "+std::to_string(int(save.personality.curiosity)),15*scale(),{0.72f,0.78f,0.81f,1});
+        r.text(X(145),Y(526),"共情 "+std::to_string(int(save.personality.empathy)),15*scale(),{0.72f,0.78f,0.81f,1});
+
+        r.text(X(535),Y(135),"生存状态",19*scale(),{0.87f,0.90f,0.92f,1});
+        auto stat=[&](int row,const std::string& name,float v,const std::string& unit=""){
+            r.text(X(535),Y(178+row*43),name+" "+std::to_string(int(v))+unit,17*scale(),{0.93f,0.94f,0.92f,1});
+        };
+        stat(0,"生命",save.hp);stat(1,"饥饿",save.hunger);stat(2,"口渴",save.needs.thirst);
+        stat(3,"理智",save.needs.sanity);stat(4,"心情",save.needs.mood);
+        r.text(X(535),Y(393),"体温 "+std::to_string(save.needs.bodyTemp).substr(0,4)+" C",17*scale(),{0.93f,0.94f,0.92f,1});
+        r.text(X(535),Y(436),"天气 "+std::string(weatherName(save.weather.type)),17*scale(),{0.72f,0.84f,0.92f,1});
+        r.text(X(535),Y(479),"环境 "+std::to_string(int(save.weather.temperatureC))+" C  风 "+std::to_string(int(save.weather.wind*100)),16*scale(),{0.72f,0.78f,0.81f,1});
+
+        r.text(X(840),Y(135),"技能",19*scale(),{0.87f,0.90f,0.92f,1});
+        r.text(X(840),Y(178),"采集 "+std::to_string(int(save.skills.gathering)),16*scale(),{0.93f,0.94f,0.92f,1});
+        r.text(X(840),Y(216),"采矿 "+std::to_string(int(save.skills.mining)),16*scale(),{0.93f,0.94f,0.92f,1});
+        r.text(X(840),Y(254),"战斗 "+std::to_string(int(save.skills.combat)),16*scale(),{0.93f,0.94f,0.92f,1});
+        r.text(X(840),Y(292),"制作 "+std::to_string(int(save.skills.crafting)),16*scale(),{0.93f,0.94f,0.92f,1});
+        r.text(X(840),Y(330),"生存 "+std::to_string(int(save.skills.survival)),16*scale(),{0.93f,0.94f,0.92f,1});
+        r.text(X(840),Y(368),"交流 "+std::to_string(int(save.skills.social)),16*scale(),{0.93f,0.94f,0.92f,1});
+        int gx=int(save.px),gz=int(save.pz);
+        Biome bio=biomeAt(save.seed,gx,gz,world.baseHeight(gx,gz),world.moisture(gx,gz));
+        r.text(X(840),Y(430),"当前位置 "+std::string(biomeName(bio)),16*scale(),{0.72f,0.84f,0.76f,1});
+        r.text(X(840),Y(468),"铜币 "+std::to_string(save.inventory.count(ItemId::Coin)),16*scale(),{0.96f,0.72f,0.22f,1});
+
+        if(button(R(965,585,150,48),"关闭",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
+        r.flushUI();r.present();
+    }
+
+    void renderDialogue(){
+        Color sky=skyColor(save.dayTime);r.begin(sky);
+        Vec3 right{},forward{};Mat4 mvp{};buildScene(right,forward,mvp);r.flush3D(mvp);
+        r.rect({0,0,float(r.w),float(r.h)},{0.01f,0.015f,0.02f,0.60f});
+        if(selectedNpc<0||selectedNpc>=int(save.npcCount)){screen=Screen::Game;r.flushUI();r.present();return;}
+        NpcState& n=save.npcs[selectedNpc];
+        panel(R(260,165,760,390));
+        r.text(X(310),Y(205),std::string(roleName(n.role))+"  #"+std::to_string(n.id),26*scale(),{0.96f,0.72f,0.22f,1});
+        r.text(X(310),Y(255),"关系 "+std::to_string(n.relation),18*scale(),{0.84f,0.88f,0.90f,1});
+        r.text(X(310),Y(295),"性格 "+personalitySummary(n.personality),18*scale(),{0.84f,0.88f,0.90f,1});
+        std::string line=n.relation>20?"很高兴又见到你。":(n.relation<-10?"我们最好保持距离。":"旅途还顺利吗？");
+        r.text(X(310),Y(350),line,18*scale(),{0.94f,0.95f,0.93f,1});
+
+        if(button(R(310,430,180,52),"聊天",true,{0.31f,0.72f,0.39f,1})){
+            int gain=1+(save.attributes.charisma>=7?1:0)+(save.personality.empathy>=65?1:0);
+            n.relation=int16_t(std::clamp<int>(n.relation+gain,-100,100));
+            n.mood=std::min(100.f,n.mood+2.f);
+            save.skills.social+=0.6f;
+            save.needs.mood=std::min(100.f,save.needs.mood+1.2f);
+            toast="关系提升";toastTime=1.f;
+        }
+        if(button(R(530,430,180,52),"交易",n.role==NpcRole::Merchant,{0.96f,0.72f,0.22f,1}))screen=Screen::Trade;
+        if(button(R(750,430,180,52),"离开",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
+        r.flushUI();r.present();
+    }
+
+    void buyFromNpc(ItemId id,int basePrice){
+        if(selectedNpc<0||selectedNpc>=int(save.npcCount))return;
+        NpcState& n=save.npcs[selectedNpc];
+        float mod=tradeModifier(save.attributes.charisma,n.relation,n.personality.sociability);
+        int price=std::max(1,int(std::ceil(float(basePrice)*mod)));
+        if(save.inventory.count(ItemId::Coin)<price){toast="铜币不足";toastTime=1.f;return;}
+        if(!save.inventory.add(id,1)){toast="背包已满";toastTime=1.f;return;}
+        save.inventory.remove(ItemId::Coin,price);n.coins+=price;save.skills.social+=0.15f;toast="购买 "+std::string(itemName(id));toastTime=1.f;
+    }
+
+    void sellToNpc(ItemId id,int basePrice){
+        if(selectedNpc<0||selectedNpc>=int(save.npcCount))return;
+        NpcState& n=save.npcs[selectedNpc];
+        if(save.inventory.count(id)<=0){toast="没有物品";toastTime=1.f;return;}
+        float mod=tradeModifier(save.attributes.charisma,n.relation,n.personality.sociability);
+        int price=std::max(1,int(std::floor(float(basePrice)/mod*0.60f)));
+        if(n.coins<price){toast="商人铜币不足";toastTime=1.f;return;}
+        save.inventory.remove(id,1);save.inventory.add(ItemId::Coin,price);n.coins-=price;save.skills.social+=0.12f;toast="出售 "+std::string(itemName(id));toastTime=1.f;
+    }
+
+    void renderTrade(){
+        Color sky=skyColor(save.dayTime);r.begin(sky);
+        Vec3 right{},forward{};Mat4 mvp{};buildScene(right,forward,mvp);r.flush3D(mvp);
+        r.rect({0,0,float(r.w),float(r.h)},{0.01f,0.015f,0.02f,0.70f});
+        if(selectedNpc<0||selectedNpc>=int(save.npcCount)){screen=Screen::Game;r.flushUI();r.present();return;}
+        NpcState& n=save.npcs[selectedNpc];
+        panel(R(190,90,900,540));
+        r.text(X(235),Y(120),"交易",30*scale(),{0.96f,0.72f,0.22f,1});
+        r.text(X(235),Y(165),"你的铜币 "+std::to_string(save.inventory.count(ItemId::Coin))+"   商人 "+std::to_string(n.coins),17*scale(),{0.90f,0.92f,0.93f,1});
+
+        float mod=tradeModifier(save.attributes.charisma,n.relation,n.personality.sociability);
+        struct Offer{ItemId id;int price;};
+        const Offer buy[]={{ItemId::Berry,4},{ItemId::WaterFlask,14},{ItemId::Torch,9},{ItemId::Seed,5},{ItemId::Bread,8}};
+        const Offer sell[]={{ItemId::Wood,3},{ItemId::Stone,3},{ItemId::Ore,9},{ItemId::Fiber,2}};
+
+        r.text(X(235),Y(215),"购买",19*scale(),{0.82f,0.87f,0.89f,1});
+        for(int i=0;i<5;i++){
+            int price=std::max(1,int(std::ceil(float(buy[i].price)*mod)));
+            std::string label=std::string(itemName(buy[i].id))+"  "+std::to_string(price);
+            if(button(R(235,250+i*58,300,48),label,true,{0.31f,0.72f,0.39f,1}))buyFromNpc(buy[i].id,buy[i].price);
+        }
+
+        r.text(X(620),Y(215),"出售",19*scale(),{0.82f,0.87f,0.89f,1});
+        for(int i=0;i<4;i++){
+            int price=std::max(1,int(std::floor(float(sell[i].price)/mod*0.60f)));
+            std::string label=std::string(itemName(sell[i].id))+"  "+std::to_string(price);
+            if(button(R(620,250+i*58,300,48),label,save.inventory.count(sell[i].id)>0,{0.27f,0.60f,0.91f,1}))sellToNpc(sell[i].id,sell[i].price);
+        }
+
+        if(button(R(780,555,140,45),"返回",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Dialogue;
+        r.flushUI();r.present();
+    }
+
     void renderPause(){
         Color sky=skyColor(save.dayTime);r.begin(sky);
         Vec3 right{},forward{};Mat4 mvp{};buildScene(right,forward,mvp);r.flush3D(mvp);
