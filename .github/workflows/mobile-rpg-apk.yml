@@ -1,0 +1,50 @@
+name: Build Faithbound Android APK
+
+on:
+  push:
+    branches: [ mobile-rpg-prototype ]
+    paths:
+      - 'mobile-rpg/**'
+      - '.github/workflows/mobile-rpg-apk.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Install Android native toolchain
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.3.13750724" "cmake;3.22.1"
+
+      - name: Build debug APK
+        working-directory: mobile-rpg
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Collect APK
+        run: |
+          mkdir -p dist
+          cp mobile-rpg/app/build/outputs/apk/debug/app-debug.apk dist/Faithbound-v0.1-alpha.apk
+          sha256sum dist/Faithbound-v0.1-alpha.apk > dist/SHA256.txt
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Faithbound-Android-v0.1
+          path: dist/
+          if-no-files-found: error
