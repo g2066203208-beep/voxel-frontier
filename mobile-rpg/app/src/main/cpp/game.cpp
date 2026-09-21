@@ -1146,6 +1146,48 @@ public:
         r.flushUI();r.present();
     }
 
+
+    void renderFaithPanel(){
+        Color sky=skyColor(save.dayTime);r.begin(sky);
+        Vec3 right{},forward{};Mat4 mvp{};buildScene(right,forward,mvp);r.flush3D(mvp);
+        r.rect({0,0,float(r.w),float(r.h)},{0.015f,0.012f,0.028f,0.68f});
+        panel(R(275,120,730,470));
+        r.textCentered(R(320,150,640,60),"信仰与神龛",32*scale(),{0.96f,0.72f,0.22f,1});
+        r.text(X(345),Y(235),"信仰："+std::string(faithName(save.faith)),19*scale(),{0.91f,0.93f,0.94f,1});
+        r.text(X(345),Y(275),"信徒 "+std::to_string(save.followers),18*scale(),{0.91f,0.93f,0.94f,1});
+        r.text(X(345),Y(315),"神龛等级 "+std::to_string(int(save.shrineLevel)),18*scale(),{0.91f,0.93f,0.94f,1});
+        r.text(X(345),Y(355),"神力 "+std::to_string(int(save.faithPower))+"  虔诚 "+std::to_string(int(save.devotion)),18*scale(),{0.91f,0.93f,0.94f,1});
+
+        if(button(R(650,225,260,48),"祈祷",true,{0.50f,0.38f,0.72f,1})){
+            save.faithPower=std::min(100.f,save.faithPower+3.f);
+            save.devotion=std::min(100.f,save.devotion+1.f);
+            save.needs.sanity=std::min(100.f,save.needs.sanity+6.f);
+            save.needs.mood=std::min(100.f,save.needs.mood+3.f);
+            toast="祈祷完成";toastTime=1.1f;
+        }
+        if(button(R(650,285,260,48),"奉献浆果 x2",save.inventory.count(ItemId::Berry)>=2,{0.31f,0.72f,0.39f,1})){
+            save.inventory.remove(ItemId::Berry,2);save.devotion=std::min(100.f,save.devotion+4.f);save.faithPower=std::min(100.f,save.faithPower+2.f);toast="奉献完成";toastTime=1.f;
+        }
+        if(button(R(650,345,260,48),"奉献木材 x5",save.inventory.count(ItemId::Wood)>=5,{0.31f,0.72f,0.39f,1})){
+            save.inventory.remove(ItemId::Wood,5);save.devotion=std::min(100.f,save.devotion+6.f);save.faithPower=std::min(100.f,save.faithPower+2.f);toast="奉献完成";toastTime=1.f;
+        }
+        int reqDev=20*(int(save.shrineLevel)+1);
+        int reqWood=10*(int(save.shrineLevel)+1);
+        int reqStone=6*(int(save.shrineLevel)+1);
+        bool canUpgrade=save.faith==int(Faith::Newborn)&&save.shrineLevel<3&&save.devotion>=reqDev&&save.inventory.count(ItemId::Wood)>=reqWood&&save.inventory.count(ItemId::Stone)>=reqStone;
+        std::string up="升级祭坛";
+        if(save.faith==int(Faith::Newborn))up+="  木"+std::to_string(reqWood)+" 石"+std::to_string(reqStone);
+        if(button(R(430,425,420,50),up,canUpgrade,{0.96f,0.72f,0.22f,1})){
+            save.inventory.remove(ItemId::Wood,reqWood);save.inventory.remove(ItemId::Stone,reqStone);
+            save.devotion-=float(reqDev);save.shrineLevel++;save.faithPower=std::min(100.f,save.faithPower+12.f);
+            save.followers=uint16_t(std::min<int>(65535,int(save.followers)+2+int(save.shrineLevel)));
+            toast="神龛升级";toastTime=1.5f;
+        }
+        if(save.faith==int(Faith::Mature))r.text(X(430),Y(490),"成熟神已有稳定的神殿与信徒体系",15*scale(),{0.70f,0.76f,0.80f,1});
+        if(button(R(555,525,170,44),"关闭",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
+        r.flushUI();r.present();
+    }
+
     void renderPause(){
         Color sky=skyColor(save.dayTime);r.begin(sky);
         Vec3 right{},forward{};Mat4 mvp{};buildScene(right,forward,mvp);r.flush3D(mvp);
@@ -1210,6 +1252,14 @@ public:
             selectedNpc=npcIdx;
             screen=Screen::Dialogue;
             return;
+        }
+        if(save.faith!=int(Faith::Godless)){
+            bool shrine=false;
+            for(int z=pz-2;z<=pz+2&&!shrine;z++)for(int x=px-2;x<=px+2;x++){
+                int y=world.topSolidY(x,z);
+                if(world.block(x,y,z)==Block::Shrine){shrine=true;break;}
+            }
+            if(shrine){screen=Screen::FaithPanel;return;}
         }
         ItemStack* selected=save.inventory.hotbar();
         if(selected&&selected->count&&ItemId(selected->id)==ItemId::WaterFlask&&selected->durability==0){
