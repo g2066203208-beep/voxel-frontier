@@ -968,6 +968,16 @@ public:
 
     void interact(){
         int px=int(save.px),pz=int(save.pz);
+        float npcBest=999.f;int npcIdx=-1;
+        for(uint32_t i=0;i<save.npcCount&&i<MAX_SAVE_NPCS;i++){
+            float dx=save.npcs[i].x-save.px,dz=save.npcs[i].z-save.pz,d=dx*dx+dz*dz;
+            if(d<npcBest&&d<5.3f){npcBest=d;npcIdx=int(i);}
+        }
+        if(npcIdx>=0){
+            selectedNpc=npcIdx;
+            screen=Screen::Dialogue;
+            return;
+        }
         float best=999;int bx=0,bz=0;WorldObject bo=WorldObject::None;
         for(int z=pz-2;z<=pz+2;z++)for(int x=px-2;x<=px+2;x++){
             WorldObject o=world.objectAt(x,z);if(o==WorldObject::None)continue;
