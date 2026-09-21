@@ -1114,6 +1114,7 @@ public:
         if(selectedNpc<0||selectedNpc>=int(save.npcCount))return;
         NpcState& n=save.npcs[selectedNpc];
         float mod=tradeModifier(save.attributes.charisma,n.relation,n.personality.sociability);
+        mod*=std::max(0.86f,1.f-save.skills.social*0.0025f);
         int price=std::max(1,int(std::ceil(float(basePrice)*mod)));
         if(save.inventory.count(ItemId::Coin)<price){toast="铜币不足";toastTime=1.f;return;}
         if(!save.inventory.add(id,1)){toast="背包已满";toastTime=1.f;return;}
@@ -1125,6 +1126,7 @@ public:
         NpcState& n=save.npcs[selectedNpc];
         if(save.inventory.count(id)<=0){toast="没有物品";toastTime=1.f;return;}
         float mod=tradeModifier(save.attributes.charisma,n.relation,n.personality.sociability);
+        mod*=std::max(0.86f,1.f-save.skills.social*0.0025f);
         int price=std::max(1,int(std::floor(float(basePrice)/mod*0.60f)));
         if(n.coins<price){toast="商人铜币不足";toastTime=1.f;return;}
         save.inventory.remove(id,1);save.inventory.add(ItemId::Coin,price);n.coins-=price;save.skills.social+=0.12f;toast="出售 "+std::string(itemName(id));toastTime=1.f;
@@ -1141,6 +1143,7 @@ public:
         r.text(X(235),Y(165),"你的铜币 "+std::to_string(save.inventory.count(ItemId::Coin))+"   商人 "+std::to_string(n.coins),17*scale(),{0.90f,0.92f,0.93f,1});
 
         float mod=tradeModifier(save.attributes.charisma,n.relation,n.personality.sociability);
+        mod*=std::max(0.86f,1.f-save.skills.social*0.0025f);
         struct Offer{ItemId id;int price;};
         const Offer buy[]={{ItemId::Berry,4},{ItemId::WaterFlask,14},{ItemId::Torch,9},{ItemId::Seed,5},{ItemId::Bread,8}};
         const Offer sell[]={{ItemId::Wood,3},{ItemId::Stone,3},{ItemId::Ore,9},{ItemId::Fiber,2}};
@@ -1294,12 +1297,14 @@ public:
         ItemId tool=save.inventory.mainHand();
         Vec3 p{bx+0.5f,float(world.walkHeight(bx,bz))+0.25f,bz+0.5f};
         if(bo==WorldObject::Tree){
-            int n=tool==ItemId::IronAxe?7:(tool==ItemId::WoodAxe?5:2);spawnDrop(ItemId::Wood,n,p);spawnDrop(ItemId::Fiber,1,p+Vec3{0.18f,0,0});
+            int n=tool==ItemId::IronAxe?7:(tool==ItemId::WoodAxe?5:2);
+            n+=std::min(2,int(save.skills.gathering/12.f));spawnDrop(ItemId::Wood,n,p);spawnDrop(ItemId::Fiber,1,p+Vec3{0.18f,0,0});
             if(tool==ItemId::WoodAxe||tool==ItemId::IronAxe)save.inventory.wearMainDurability();
             save.skills.gathering+=0.55f;
             toast="获得木材";
         }else if(bo==WorldObject::Rock){
-            int n=tool==ItemId::IronPick?7:(tool==ItemId::StonePick?5:1);spawnDrop(ItemId::Stone,n,p);
+            int n=tool==ItemId::IronPick?7:(tool==ItemId::StonePick?5:1);
+            n+=std::min(2,int(save.skills.mining/12.f));spawnDrop(ItemId::Stone,n,p);
             if(tool==ItemId::StonePick||tool==ItemId::IronPick)save.inventory.wearMainDurability();
             save.skills.mining+=0.45f;
             toast="获得石料";
@@ -1357,6 +1362,7 @@ public:
         ItemId weapon=save.inventory.mainHand();
         float dmg=weapon==ItemId::IronSword?29.f:(weapon==ItemId::WoodSword?18.f:7.f);
         dmg*=1.f+(float(save.attributes.strength)-5.f)*0.045f;
+        dmg*=1.f+std::min(0.30f,save.skills.combat*0.006f);
         Slime* best=nullptr;float bd=999;
         for(auto& s:slimes)if(s.alive){
             float dx=s.pos.x-save.px,dz=s.pos.z-save.pz,d=std::sqrt(dx*dx+dz*dz);
