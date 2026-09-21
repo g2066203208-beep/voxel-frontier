@@ -978,17 +978,19 @@ public:
         ItemId tool=save.inventory.mainHand();
         Vec3 p{bx+0.5f,float(world.walkHeight(bx,bz))+0.25f,bz+0.5f};
         if(bo==WorldObject::Tree){
-            int n=tool==ItemId::WoodAxe?5:2;spawnDrop(ItemId::Wood,n,p);spawnDrop(ItemId::Fiber,1,p+Vec3{0.18f,0,0});
-            if(tool==ItemId::WoodAxe)save.inventory.wearMainDurability();
+            int n=tool==ItemId::IronAxe?7:(tool==ItemId::WoodAxe?5:2);spawnDrop(ItemId::Wood,n,p);spawnDrop(ItemId::Fiber,1,p+Vec3{0.18f,0,0});
+            if(tool==ItemId::WoodAxe||tool==ItemId::IronAxe)save.inventory.wearMainDurability();
+            save.skills.gathering+=0.55f;
             toast="获得木材";
         }else if(bo==WorldObject::Rock){
-            int n=tool==ItemId::StonePick?5:1;spawnDrop(ItemId::Stone,n,p);
-            if(tool==ItemId::StonePick)save.inventory.wearMainDurability();
+            int n=tool==ItemId::IronPick?7:(tool==ItemId::StonePick?5:1);spawnDrop(ItemId::Stone,n,p);
+            if(tool==ItemId::StonePick||tool==ItemId::IronPick)save.inventory.wearMainDurability();
+            save.skills.mining+=0.45f;
             toast="获得石料";
         }else if(bo==WorldObject::BerryBush){
-            spawnDrop(ItemId::Berry,3,p);toast="获得浆果";
+            spawnDrop(ItemId::Berry,3,p);save.skills.gathering+=0.25f;toast="获得浆果";
         }else{
-            spawnDrop(ItemId::Fiber,3,p);toast="获得草纤维";
+            spawnDrop(ItemId::Fiber,3,p);save.skills.gathering+=0.25f;toast="获得草纤维";
         }
         world.harvestObject(bx,bz);toastTime=1.3f;save.stamina=std::max(0.f,save.stamina-5.f);
     }
@@ -1005,8 +1007,9 @@ public:
             world.setBlock(tx,y,tz,Block::Air);toast="已拆除";toastTime=1.f;return;
         }
         ItemId tool=save.inventory.mainHand();
-        if((b==Block::Stone||b==Block::Ore)&&tool!=ItemId::StonePick){
-            toast="石块需要石镐";toastTime=1.2f;return;
+        bool pick=(tool==ItemId::StonePick||tool==ItemId::IronPick);
+        if((b==Block::Stone||b==Block::Ore)&&!pick){
+            toast="石块需要镐";toastTime=1.2f;return;
         }
         if(b==Block::Water||b==Block::Air){toast="没有可挖掘方块";toastTime=1.f;return;}
         ItemId it=itemForBlock(b);
@@ -1018,7 +1021,8 @@ public:
         }
         world.setBlock(tx,y,tz,Block::Air);
         spawnDrop(it,1,{tx+0.5f,float(y)+0.8f,tz+0.5f});
-        if(tool==ItemId::StonePick)save.inventory.wearMainDurability();
+        if(tool==ItemId::StonePick||tool==ItemId::IronPick)save.inventory.wearMainDurability();
+        save.skills.mining+=0.55f;
         save.stamina=std::max(0.f,save.stamina-6.f);toast="挖掘成功";toastTime=1.f;
     }
 
@@ -1035,7 +1039,8 @@ public:
 
     void attack(){
         ItemId weapon=save.inventory.mainHand();
-        float dmg=weapon==ItemId::WoodSword?18.f:7.f;
+        float dmg=weapon==ItemId::IronSword?29.f:(weapon==ItemId::WoodSword?18.f:7.f);
+        dmg*=1.f+(float(save.attributes.strength)-5.f)*0.045f;
         Slime* best=nullptr;float bd=999;
         for(auto& s:slimes)if(s.alive){
             float dx=s.pos.x-save.px,dz=s.pos.z-save.pz,d=std::sqrt(dx*dx+dz*dz);
@@ -1044,7 +1049,8 @@ public:
         }
         if(best){
             best->hp-=dmg;
-            if(weapon==ItemId::WoodSword)save.inventory.wearMainDurability();
+            if(weapon==ItemId::WoodSword||weapon==ItemId::IronSword)save.inventory.wearMainDurability();
+            save.skills.combat+=0.45f;
             if(best->hp<=0){best->alive=false;spawnDrop(ItemId::Berry,1,best->pos+Vec3{0,0.25f,0});toast="击败怪物";toastTime=1.2f;}
         }
         attackFlash=0.16f;save.stamina=std::max(0.f,save.stamina-4.f);
@@ -1052,6 +1058,30 @@ public:
 
     void jump(){
         if(grounded&&save.stamina>5.f){grounded=false;yVel=4.8f;save.stamina-=5.f;}
+    }
+
+    void useInventory(int idx){
+        if(idx<0||idx>=Inventory::SLOT_COUNT)return;
+        ItemStack& st=save.inventory.slots[idx];if(!st.count)return;
+        ItemId id=ItemId(st.id);
+        if(id==ItemId::Berry){
+            save.hunger=std::min(100.f,save.hunger+12.f);
+            save.needs.thirst=std::min(100.f,save.needs.thirst+4.f);
+            save.needs.mood=std::min(100.f,save.needs.mood+1.5f);
+        }else if(id==ItemId::CookedMeat){
+            save.hunger=std::min(100.f,save.hunger+34.f);
+            save.hp=std::min(100.f,save.hp+5.f);
+            save.needs.mood=std::min(100.f,save.needs.mood+4.f);
+        }else if(id==ItemId::Bread){
+            save.hunger=std::min(100.f,save.hunger+24.f);
+            save.needs.mood=std::min(100.f,save.needs.mood+2.f);
+        }else if(id==ItemId::WaterFlask){
+            save.needs.thirst=std::min(100.f,save.needs.thirst+55.f);
+            save.stamina=std::min(100.f,save.stamina+6.f);
+        }else return;
+        save.inventory.consumeFromSlot(idx,1);
+        save.skills.survival+=0.35f;
+        toast="使用 "+std::string(itemName(id));toastTime=1.f;
     }
 
     void dropInventory(int idx){
