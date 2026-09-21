@@ -364,7 +364,7 @@ public:
         if(button(R(465,390,350,62),"读取存档",any))screen=Screen::Saves;
         if(button(R(465,470,350,62),"设置",true)) {settingsReturn=Screen::Main;screen=Screen::Settings;}
         if(button(R(465,550,350,62),"关于",true,{0.45f,0.49f,0.54f,1}))screen=Screen::About;
-        r.text(X(24),Y(682),"V0.2  C++20 / GLES3 / VOXEL",std::max(13.f*scale(),11.f),{0.46f,0.53f,0.58f,1});
+        r.text(X(24),Y(682),"V0.3  C++20 / GLES3 / WORLDSIM",std::max(13.f*scale(),11.f),{0.46f,0.53f,0.58f,1});
         r.flushUI();r.present();
     }
 
@@ -466,14 +466,15 @@ public:
 
     void renderAbout(){
         r.begin({0.035f,0.046f,0.060f,1});
-        title("关于","V0.2 体素重构");
+        title("关于","V0.3 世界模拟");
         panel(R(225,190,830,370));
         r.text(X(285),Y(240),"原生安卓 / C++20 / OpenGL ES 3",19*scale(),{0.92f,0.94f,0.95f,1});
         r.text(X(285),Y(290),"3D 体素大世界 + 2D 像素精灵",19*scale(),{0.92f,0.94f,0.95f,1});
         r.text(X(285),Y(340),"分块生成 / 可见面剔除 / LRU 缓存",19*scale(),{0.92f,0.94f,0.95f,1});
         r.text(X(285),Y(390),"背包 / 装备 / 工具 / 制作 / 世界交互",19*scale(),{0.92f,0.94f,0.95f,1});
-        r.text(X(285),Y(440),"昼夜循环 / 生存 / 信仰复活 / 永久死亡",19*scale(),{0.92f,0.94f,0.95f,1});
-        r.text(X(285),Y(495),"开发版：系统与美术将持续扩展",19*scale(),{0.96f,0.72f,0.22f,1});
+        r.text(X(285),Y(440),"属性性格 / 天气生态 / 道路聚落 / NPC交易",19*scale(),{0.92f,0.94f,0.95f,1});
+        r.text(X(285),Y(490),"心情理智 / 信息声望 / 野生动物 / 分级合成",19*scale(),{0.92f,0.94f,0.95f,1});
+        r.text(X(285),Y(530),"开发版：系统与美术将持续扩展",17*scale(),{0.96f,0.72f,0.22f,1});
         if(button(R(35,630,185,55),"返回",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Main;
         r.flushUI();r.present();
     }
@@ -817,6 +818,13 @@ public:
         if(button(R(765,579,150,54),"状态",true,{0.33f,0.56f,0.72f,1}))screen=Screen::Status;
         if(button(R(1170,225,78,46),"暂停",true,{0.45f,0.49f,0.54f,1})){screen=Screen::Pause;writeSave();}
 
+        if(save.needs.sanity<30.f){
+            float a=(30.f-save.needs.sanity)/30.f*0.16f*(0.65f+0.35f*std::sin(weatherFx*2.2f));
+            r.rect({0,0,float(r.w),float(r.h)},{0.12f,0.03f,0.17f,a});
+        }
+        if(save.weather.type==WeatherType::Storm&&std::sin(weatherFx*5.7f)>0.992f){
+            r.rect({0,0,float(r.w),float(r.h)},{0.82f,0.90f,1.f,0.16f});
+        }
         if(save.weather.type==WeatherType::Rain||save.weather.type==WeatherType::Storm){
             int lines=save.weather.type==WeatherType::Storm?36:22;
             for(int i=0;i<lines;i++){
