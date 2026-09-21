@@ -5,6 +5,7 @@ on:
       - x2d-bone-studio-apk
     paths:
       - '.ci/x2d_v03/**'
+      - '.ci/x2d_v031/**'
       - '.github/workflows/build-x2d-bone-studio.yml'
   workflow_dispatch: {}
 
@@ -56,6 +57,14 @@ jobs:
           test -f "$PROJECT_ROOT/app/src/main/java/com/openai/x2dbonestudio/TimelineView.java"
           grep -q 'versionName "0.3.0"' "$PROJECT_ROOT/app/build.gradle"
 
+      - name: Apply v0.3.1 rig-lock and bone-parenting patch
+        shell: bash
+        run: |
+          cat .ci/x2d_v031/p*.b64 | tr -d '\n\r ' | base64 -d > /tmp/x2d_v031_patch.zip
+          unzip -oq /tmp/x2d_v031_patch.zip -d "$PROJECT_ROOT"
+          grep -q 'versionName "0.3.1"' "$PROJECT_ROOT/app/build.gradle"
+          grep -q 'reparentSelectedBone' "$PROJECT_ROOT/app/src/main/java/com/openai/x2dbonestudio/RigEditorView.java"
+
       - name: Build APK
         shell: bash
         run: gradle -p "$PROJECT_ROOT" assembleDebug --stacktrace
@@ -65,13 +74,13 @@ jobs:
         run: |
           APK="$PROJECT_ROOT/app/build/outputs/apk/debug/app-debug.apk"
           test -s "$APK"
-          cp "$APK" /tmp/X2DBoneStudio-v0.3-debug.apk
-          unzip -t /tmp/X2DBoneStudio-v0.3-debug.apk >/dev/null
-          sha256sum /tmp/X2DBoneStudio-v0.3-debug.apk
+          cp "$APK" /tmp/X2DBoneStudio-v0.3.1-debug.apk
+          unzip -t /tmp/X2DBoneStudio-v0.3.1-debug.apk >/dev/null
+          sha256sum /tmp/X2DBoneStudio-v0.3.1-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: X2DBoneStudio-v0.3-debug-apk
-          path: /tmp/X2DBoneStudio-v0.3-debug.apk
+          name: X2DBoneStudio-v0.3.1-debug-apk
+          path: /tmp/X2DBoneStudio-v0.3.1-debug.apk
           if-no-files-found: error
