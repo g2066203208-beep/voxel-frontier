@@ -683,11 +683,19 @@ public:
                     uint8_t faces=exposedFaces(x,y,z,b);
                     if(!faces)continue;
                     Color col=blockColor(b);
+                    Biome bio=biomeAt(save.seed,x,z,world.baseHeight(x,z),world.moisture(x,z));
+                    if(b==Block::Grass){
+                        if(bio==Biome::Forest)col={0.19f,0.49f,0.20f,1};
+                        else if(bio==Biome::Dryland)col={0.48f,0.52f,0.23f,1};
+                        else if(bio==Biome::Highland)col={0.30f,0.48f,0.27f,1};
+                    }
                     float dist=std::sqrt(dx*dx+dz*dz);
                     float fog=clamp01((dist-float(radius)*0.65f)/(float(radius)*0.45f));
-                    col=mix(col,skyColor(save.dayTime),fog*0.35f);
+                    if(save.weather.type==WeatherType::Fog)fog=std::max(fog,0.34f);
+                    col=mix(col,skyColor(save.dayTime),fog*(save.weather.type==WeatherType::Fog?0.58f:0.35f));
                     r.cube(float(x),float(y),float(z),faces,col,light);
                 }
+                drawProceduralRoad(x,z,light);
                 WorldObject o=world.objectAt(x,z);
                 if(o==WorldObject::Tree)drawTree(x,z,right,light);
                 else if(o==WorldObject::Rock)drawRock(x,z,right,light);
@@ -695,8 +703,11 @@ public:
                 else if(o==WorldObject::GrassTuft)drawGrass(x,z,right,light);
             }
         }
+        drawSettlements(light,cx,cz,radius);
+        for(uint32_t i=0;i<save.npcCount&&i<MAX_SAVE_NPCS;i++)drawNpc(save.npcs[i],right,light);
         for(const auto& d:drops)drawDrop(d,right,light);
         for(const auto& s:slimes)drawSlime(s,right,light);
+        for(const auto& a:creatures)drawCreature(a,right,light);
         drawPlayer(right,forward,light);
     }
 
