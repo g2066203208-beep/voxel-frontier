@@ -846,32 +846,35 @@ public:
     void renderInventory(){
         Color sky=skyColor(save.dayTime);r.begin(sky);
         Vec3 right{},forward{};Mat4 mvp{};buildScene(right,forward,mvp);r.flush3D(mvp);
-        r.rect({0,0,float(r.w),float(r.h)},{0.01f,0.015f,0.02f,0.72f});
+        r.rect({0,0,float(r.w),float(r.h)},{0.01f,0.015f,0.02f,0.74f});
 
-        panel(R(110,65,1060,590));
-        r.text(X(145),Y(88),"背包",30*scale(),{0.96f,0.72f,0.22f,1});
-        r.text(X(145),Y(132),"装备栏",19*scale(),{0.86f,0.89f,0.91f,1});
+        panel(R(85,45,1110,620));
+        r.text(X(120),Y(70),"背包",30*scale(),{0.96f,0.72f,0.22f,1});
+        if(button(R(650,70,120,42),"状态",true,{0.34f,0.58f,0.73f,1}))screen=Screen::Status;
+        r.text(X(120),Y(120),"装备栏",18*scale(),{0.86f,0.89f,0.91f,1});
 
         const char* eqName[]={"头部","身体","主手","副手"};
         for(int e=0;e<4;e++){
-            Rect q=R(145,170+e*76,210,62);
+            Rect q=R(120,155+e*72,215,58);
             r.rect(q,{0.05f,0.065f,0.08f,1});r.frame(q,1.5f*scale(),{0.28f,0.33f,0.38f,1});
-            r.text(q.x+10*scale(),q.y+10*scale(),eqName[e],15*scale(),{0.65f,0.70f,0.74f,1});
+            r.text(q.x+10*scale(),q.y+8*scale(),eqName[e],14*scale(),{0.65f,0.70f,0.74f,1});
             auto st=save.inventory.equipment[e];
-            r.text(q.x+72*scale(),q.y+21*scale(),st.count?itemName(ItemId(st.id)):"无",17*scale(),{0.94f,0.95f,0.93f,1});
+            r.text(q.x+72*scale(),q.y+19*scale(),st.count?itemName(ItemId(st.id)):"无",16*scale(),{0.94f,0.95f,0.93f,1});
             if(in.tap&&contains(q,in.tapX,in.tapY)&&st.count){save.inventory.unequip(e);in.tap=false;}
         }
 
-        r.text(X(405),Y(132),"物品",19*scale(),{0.86f,0.89f,0.91f,1});
+        r.text(X(375),Y(120),"物品",18*scale(),{0.86f,0.89f,0.91f,1});
         for(int i=0;i<Inventory::SLOT_COUNT;i++){
             int row=i/6,col=i%6;
-            Rect q=R(405+col*86,170+row*82,72,68);
+            Rect q=R(375+col*75,155+row*66,64,58);
             bool sel=i==save.inventory.selectedInventory;
-            r.rect(q,{0.048f,0.060f,0.075f,1});r.frame(q,(sel?3.f:1.5f)*scale(),sel?Color{0.96f,0.72f,0.22f,1}:Color{0.28f,0.33f,0.38f,1});
+            r.rect(q,{0.048f,0.060f,0.075f,1});
+            r.frame(q,(sel?3.f:1.5f)*scale(),sel?Color{0.96f,0.72f,0.22f,1}:Color{0.28f,0.33f,0.38f,1});
             auto st=save.inventory.slots[i];
             if(st.count){
-                Color ic=itemColor(ItemId(st.id));r.rect({q.x+18*scale(),q.y+13*scale(),36*scale(),31*scale()},ic);
-                r.text(q.x+7*scale(),q.y+48*scale(),std::to_string(st.count),12*scale(),{0.92f,0.94f,0.95f,1});
+                Color ic=itemColor(ItemId(st.id));
+                r.rect({q.x+16*scale(),q.y+9*scale(),32*scale(),27*scale()},ic);
+                if(st.count>1)r.text(q.x+39*scale(),q.y+37*scale(),std::to_string(st.count),11*scale(),{0.95f,0.96f,0.94f,1});
             }
             if(in.tap&&contains(q,in.tapX,in.tapY)){save.inventory.selectedInventory=i;in.tap=false;}
         }
@@ -879,24 +882,39 @@ public:
         int si=save.inventory.selectedInventory;
         if(si>=0&&si<Inventory::SLOT_COUNT&&save.inventory.slots[si].count){
             ItemId id=ItemId(save.inventory.slots[si].id);
-            r.text(X(145),Y(500),"选中："+std::string(itemName(id)),18*scale(),{0.96f,0.72f,0.22f,1});
-            if(button(R(145,535,100,48),"装备",isTool(id)||isWearable(id),{0.31f,0.72f,0.39f,1}))save.inventory.equipFrom(si);
-            if(button(R(255,535,100,48),"丢弃",true,{0.82f,0.26f,0.25f,1}))dropInventory(si);
+            r.text(X(120),Y(485),"选中："+std::string(itemName(id)),17*scale(),{0.96f,0.72f,0.22f,1});
+            if(button(R(120,520,96,45),"装备",isTool(id)||isWearable(id),{0.31f,0.72f,0.39f,1}))save.inventory.equipFrom(si);
+            if(button(R(224,520,96,45),"使用",isFood(id)||isDrink(id),{0.30f,0.61f,0.84f,1}))useInventory(si);
+            if(button(R(120,575,200,45),"丢弃",true,{0.82f,0.26f,0.25f,1}))dropInventory(si);
         }
 
-        r.text(X(930),Y(132),"制作",19*scale(),{0.86f,0.89f,0.91f,1});
-        bool bench=nearWorkbench();
-        for(int i=0;i<RECIPE_COUNT;i++){
-            const Recipe& rec=RECIPES[i];
-            Rect q=R(905,170+i*52,225,44);
-            bool ok=canCraft(save.inventory,rec,bench);
+        r.text(X(860),Y(120),"合成树",18*scale(),{0.86f,0.89f,0.91f,1});
+        CraftContext ctx=craftContext();
+        int per=7;
+        int pages=(RECIPE_COUNT+per-1)/per;
+        craftPage=std::clamp(craftPage,0,std::max(0,pages-1));
+        int begin=craftPage*per,endRecipe=std::min(RECIPE_COUNT,begin+per);
+        for(int idx=begin;idx<endRecipe;idx++){
+            const Recipe& rec=RECIPES[idx];
+            int row=idx-begin;
+            Rect q=R(850,155+row*57,300,48);
+            bool ok=canCraft(save.inventory,rec,ctx);
             std::string name=itemName(rec.out);
             if(button(q,name,ok,ok?Color{0.31f,0.72f,0.39f,1}:Color{0.45f,0.49f,0.54f,1})){
-                if(craft(save.inventory,rec,bench)){toast="制作成功";toastTime=1.3f;}
+                if(craft(save.inventory,rec,ctx)){
+                    save.skills.crafting+=1.0f;
+                    toast="制作成功";toastTime=1.2f;
+                }
             }
         }
-        if(!bench)r.text(X(905),Y(600),"高级配方需要工作台",14*scale(),{0.62f,0.66f,0.69f,1});
-        if(button(R(1000,600,130,44),"关闭",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
+        std::string station="手工";
+        if(ctx.furnace)station="熔炉";
+        else if(ctx.bench)station="工作台";
+        else if(ctx.campfire)station="营火";
+        r.text(X(850),Y(565),"当前："+station,14*scale(),{0.68f,0.74f,0.77f,1});
+        if(button(R(850,595,90,40),"上一页",craftPage>0,{0.45f,0.55f,0.67f,1}))craftPage--;
+        if(button(R(950,595,90,40),"下一页",craftPage<pages-1,{0.45f,0.55f,0.67f,1}))craftPage++;
+        if(button(R(1050,595,100,40),"关闭",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
         r.flushUI();r.present();
     }
 
