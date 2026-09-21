@@ -1118,6 +1118,12 @@ public:
             screen=Screen::Dialogue;
             return;
         }
+        ItemStack* selected=save.inventory.hotbar();
+        if(selected&&selected->count&&ItemId(selected->id)==ItemId::WaterFlask&&selected->durability==0){
+            bool water=false;
+            for(int z=pz-1;z<=pz+1&&!water;z++)for(int x=px-1;x<=px+1;x++)if(world.baseHeight(x,z)<SEA_LEVEL){water=true;break;}
+            if(water){selected->durability=maxDurability(ItemId::WaterFlask);toast="水壶已装满";toastTime=1.1f;return;}
+        }
         float best=999;int bx=0,bz=0;WorldObject bo=WorldObject::None;
         for(int z=pz-2;z<=pz+2;z++)for(int x=px-2;x<=px+2;x++){
             WorldObject o=world.objectAt(x,z);if(o==WorldObject::None)continue;
@@ -1245,8 +1251,12 @@ public:
             save.hunger=std::min(100.f,save.hunger+24.f);
             save.needs.mood=std::min(100.f,save.needs.mood+2.f);
         }else if(id==ItemId::WaterFlask){
+            if(st.durability==0){toast="水壶是空的";toastTime=1.f;return;}
             save.needs.thirst=std::min(100.f,save.needs.thirst+55.f);
             save.stamina=std::min(100.f,save.stamina+6.f);
+            st.durability=0;
+            save.skills.survival+=0.35f;
+            toast="喝水";toastTime=1.f;return;
         }else return;
         save.inventory.consumeFromSlot(idx,1);
         save.skills.survival+=0.35f;
