@@ -151,6 +151,7 @@ public:
     float yOffset=0.f,yVel=0.f;
     bool grounded=true;
     float attackFlash=0;
+    float playerAnim=0;
 
     std::vector<Drop> drops;
     std::vector<Slime> slimes;
@@ -633,17 +634,19 @@ public:
                 {c.x+0.34f,c.y+0.012f,c.z+0.20f},{c.x-0.34f,c.y+0.012f,c.z+0.20f},{0.01f,0.015f,0.02f,0.35f});
         Color sc=mul(skinColor(save.skin),light),hc=mul(hairColor(save.hair),light),oc=mul(outfitColor(save.outfit),light);
         Color outline={0.025f,0.028f,0.032f,1};
-        float bob=grounded?0.f:0.04f;
-        r.billboardRect(c-right*0.14f,0.20f,0.58f,0.03f+bob,right,outline,0.014f);
-        r.billboardRect(c-right*0.14f,0.13f,0.52f,0.06f+bob,right,mul(oc,0.62f));
-        r.billboardRect(c+right*0.14f,0.20f,0.58f,0.03f+bob,right,outline,0.014f);
-        r.billboardRect(c+right*0.14f,0.13f,0.52f,0.06f+bob,right,mul(oc,0.62f));
+        float moveMag=std::sqrt(in.joyX*in.joyX+in.joyY*in.joyY);
+        float walk=(moveMag>0.08f)?std::sin(playerAnim):0.f;
+        float bob=grounded?(moveMag>0.08f?std::abs(walk)*0.035f:0.f):0.04f;
+        r.billboardRect(c-right*0.14f,0.20f,0.58f,0.03f+bob+walk*0.045f,right,outline,0.014f);
+        r.billboardRect(c-right*0.14f,0.13f,0.52f,0.06f+bob+walk*0.045f,right,mul(oc,0.62f));
+        r.billboardRect(c+right*0.14f,0.20f,0.58f,0.03f+bob-walk*0.045f,right,outline,0.014f);
+        r.billboardRect(c+right*0.14f,0.13f,0.52f,0.06f+bob-walk*0.045f,right,mul(oc,0.62f));
         r.billboardRect(c,0.76f,0.76f,0.52f+bob,right,outline,0.014f);
         r.billboardRect(c,0.68f,0.68f,0.56f+bob,right,oc);
-        r.billboardRect(c-right*0.43f,0.18f,0.62f,0.60f+bob,right,outline,0.012f);
-        r.billboardRect(c-right*0.43f,0.12f,0.55f,0.64f+bob,right,sc);
-        r.billboardRect(c+right*0.43f,0.18f,0.62f,0.60f+bob,right,outline,0.012f);
-        r.billboardRect(c+right*0.43f,0.12f,0.55f,0.64f+bob,right,sc);
+        r.billboardRect(c-right*0.43f,0.18f,0.62f,0.60f+bob-walk*0.035f,right,outline,0.012f);
+        r.billboardRect(c-right*0.43f,0.12f,0.55f,0.64f+bob-walk*0.035f,right,sc);
+        r.billboardRect(c+right*0.43f,0.18f,0.62f,0.60f+bob+walk*0.035f,right,outline,0.012f);
+        r.billboardRect(c+right*0.43f,0.12f,0.55f,0.64f+bob+walk*0.035f,right,sc);
         r.billboardRect(c,0.67f,0.66f,1.25f+bob,right,outline,0.016f);
         r.billboardRect(c,0.59f,0.58f,1.29f+bob,right,sc);
         r.billboardRect(c,0.62f,0.20f,1.69f+bob,right,hc,0.018f);
@@ -1569,6 +1572,7 @@ public:
 
         float mag=std::sqrt(in.joyX*in.joyX+in.joyY*in.joyY);
         if(mag>0.08f){
+            playerAnim+=dt*(7.5f+mag*2.f);
             float sx=in.joyX/mag*std::min(1.f,mag),sy=in.joyY/mag*std::min(1.f,mag);
             float yaw=save.cameraYaw;
             Vec2 right{std::cos(yaw),-std::sin(yaw)};
