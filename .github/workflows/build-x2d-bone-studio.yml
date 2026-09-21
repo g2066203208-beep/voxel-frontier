@@ -47,7 +47,85 @@ jobs:
           test -f "$PROJECT_ROOT/settings.gradle"
           test -f "$PROJECT_ROOT/app/build.gradle"
           echo "PROJECT_ROOT=$PROJECT_ROOT" >> "$GITHUB_ENV"
-          echo "Project root: $PROJECT_ROOT"
+
+      - name: Patch system-bar safe area
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("$PROJECT_ROOT/app/src/main/java/com/openai/x2dbonestudio/MainActivity.java")
+          s = p.read_text()
+
+          old = '@Override public void onCreate(Bundle b){super.onCreate(b);buildUi();editor.setProject(project);}'
+          new = '''@Override public void onCreate(Bundle b){
+                  super.onCreate(b);
+                  configureEdgeToEdge();
+                  buildUi();
+                  editor.setProject(project);
+              }'''
+          if old not in s:
+              raise SystemExit("onCreate patch target missing")
+          s = s.replace(old, new)
+
+          needle = '    private int dp(float v){return (int)(v*getResources().getDisplayMetrics().density+0.5f);}\n'
+          insert = '''    private int dp(float v){return (int)(v*getResources().getDisplayMetrics().density+0.5f);}
+
+              private void configureEdgeToEdge(){
+                  Window w=getWindow();
+                  if(Build.VERSION.SDK_INT>=30){
+                      w.setDecorFitsSystemWindows(false);
+                  }else{
+                      w.getDecorView().setSystemUiVisibility(
+                              View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                              View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                              View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                              View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
+                              View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                  }
+                  w.setStatusBarColor(Color.TRANSPARENT);
+                  w.setNavigationBarColor(Color.TRANSPARENT);
+              }
+
+              private void applySafeInsets(final View root){
+                  final int baseL=dp(6),baseT=dp(4),baseR=dp(6),baseB=dp(4);
+                  root.setOnApplyWindowInsetsListener((v,insets)->{
+                      int left=insets.getSystemWindowInsetLeft();
+                      int top=insets.getSystemWindowInsetTop();
+                      int right=insets.getSystemWindowInsetRight();
+                      int bottom=insets.getSystemWindowInsetBottom();
+                      if(Build.VERSION.SDK_INT>=28){
+                          DisplayCutout cutout=insets.getDisplayCutout();
+                          if(cutout!=null){
+                              left=Math.max(left,cutout.getSafeInsetLeft());
+                              top=Math.max(top,cutout.getSafeInsetTop());
+                              right=Math.max(right,cutout.getSafeInsetRight());
+                              bottom=Math.max(bottom,cutout.getSafeInsetBottom());
+                          }
+                      }
+                      if(Build.VERSION.SDK_INT>=29){
+                          Insets mandatory=insets.getMandatorySystemGestureInsets();
+                          left=Math.max(left,mandatory.left);
+                          right=Math.max(right,mandatory.right);
+                          bottom=Math.max(bottom,mandatory.bottom);
+                      }
+                      v.setPadding(baseL+left,baseT+top,baseR+right,baseB+bottom);
+                      return insets;
+                  });
+                  root.post(root::requestApplyInsets);
+              }
+          '''
+          if needle not in s:
+              raise SystemExit("dp patch target missing")
+          s = s.replace(needle, insert)
+
+          old_root = 'LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setPadding(dp(6),dp(4),dp(6),dp(4));root.setBackgroundColor(Color.rgb(245,243,247));'
+          new_root = 'LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(Color.rgb(245,243,247));applySafeInsets(root);'
+          if old_root not in s:
+              raise SystemExit("root patch target missing")
+          s = s.replace(old_root, new_root)
+
+          p.write_text(s)
+          PY
 
       - name: Build APK
         shell: bash
@@ -58,14 +136,14 @@ jobs:
         run: |
           APK="$PROJECT_ROOT/app/build/outputs/apk/debug/app-debug.apk"
           test -s "$APK"
-          cp "$APK" /tmp/X2DBoneStudio-v0.2-debug.apk
-          ls -lh /tmp/X2DBoneStudio-v0.2-debug.apk
-          sha256sum /tmp/X2DBoneStudio-v0.2-debug.apk
-          unzip -t /tmp/X2DBoneStudio-v0.2-debug.apk >/dev/null
+          cp "$APK" /tmp/X2DBoneStudio-v0.2.1-debug.apk
+          ls -lh /tmp/X2DBoneStudio-v0.2.1-debug.apk
+          sha256sum /tmp/X2DBoneStudio-v0.2.1-debug.apk
+          unzip -t /tmp/X2DBoneStudio-v0.2.1-debug.apk >/dev/null
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: X2DBoneStudio-v0.2-debug-apk
-          path: /tmp/X2DBoneStudio-v0.2-debug.apk
+          name: X2DBoneStudio-v0.2.1-debug-apk
+          path: /tmp/X2DBoneStudio-v0.2.1-debug.apk
           if-no-files-found: error
