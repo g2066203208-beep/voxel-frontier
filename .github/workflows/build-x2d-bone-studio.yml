@@ -53,7 +53,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import os\n          p = Path(os.environ["PROJECT_ROOT"]) / "app/src/main/java/com/openai/x2dbonestudio/MainActivity.java"
+          p = Path(__import__("os").environ["PROJECT_ROOT"]) / "app/src/main/java/com/openai/x2dbonestudio/MainActivity.java"
           s = p.read_text()
 
           old = '@Override public void onCreate(Bundle b){super.onCreate(b);buildUi();editor.setProject(project);}'
