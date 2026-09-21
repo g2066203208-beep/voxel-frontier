@@ -259,6 +259,10 @@ public:
         save.seed=now^(uint64_t(slot+1)*0x9E3779B97F4A7C15ULL);
         save.faith=selectedFaith;save.body=body;save.skin=skin;save.hair=hair;save.outfit=outfit;
         save.px=float(WORLD_SIZE/2)+0.5f;save.pz=float(WORLD_SIZE/2)+0.5f;
+        if(selectedFaith==int(Faith::Mature)){
+            auto towns=settlementAnchors(save.seed);
+            save.px=float(towns[0].x)+0.5f;save.pz=float(towns[0].z)+6.5f;
+        }
         save.cameraYaw=0.78f;save.dayTime=0.28f;save.day=1;
         save.faithPower=selectedFaith==int(Faith::Mature)?100.f:(selectedFaith==int(Faith::Newborn)?30.f:0.f);
         save.attributes=randomAttributes(save.seed^0xA551u);
@@ -267,9 +271,13 @@ public:
         save.weather=makeWeather(save.seed,save.day,save.dayTime);
         quality=1;
         world.reset(save.seed);
-        if(selectedFaith!=int(Faith::Godless)){
+        if(selectedFaith==int(Faith::Newborn)){
             int cx=WORLD_SIZE/2,cz=WORLD_SIZE/2;
             world.setBlock(cx,world.walkHeight(cx,cz),cz-2,Block::Shrine);
+        }else if(selectedFaith==int(Faith::Mature)){
+            auto towns=settlementAnchors(save.seed);
+            int sx=towns[0].x,sz=towns[0].z;
+            world.setBlock(sx,world.walkHeight(sx,sz),sz,Block::Shrine);
         }
         save.inventory.add(ItemId::Berry,4);
         save.inventory.add(ItemId::Fiber,4);
