@@ -192,6 +192,53 @@ public:
         }
     }
 
+
+    void initNpcs(){
+        auto anchors=settlementAnchors(save.seed);
+        save.npcCount=8;
+        for(uint32_t i=0;i<save.npcCount;i++){
+            NpcState n{};
+            n.id=i+1;
+            n.role=(i==0)?NpcRole::Merchant:(i==1?NpcRole::Guard:(i==2?NpcRole::Lumberjack:(i==3?NpcRole::Farmer:NpcRole::Villager)));
+            n.personality=randomPersonality(save.seed,n.id);
+            const auto& a=anchors[i<6?0:1];
+            float ang=float(i)*0.91f;
+            float rad=2.0f+float(i%3)*1.25f;
+            n.x=float(a.x)+0.5f+std::cos(ang)*rad;
+            n.z=float(a.z)+0.5f+std::sin(ang)*rad;
+            n.relation=(save.faith==int(Faith::Mature))?8:0;
+            n.coins=25+int((hash32(save.seed^uint64_t(i*731))%55));
+            n.mood=58.f+float((i*7)%24);
+            n.wanderPhase=float(i)*0.7f;
+            save.npcs[i]=n;
+        }
+    }
+
+    void spawnWildlife(){
+        creatures.clear();
+        uint32_t h=hash32(save.seed^0xC0FFEEu);
+        for(int i=0;i<12;i++){
+            float a=float((h>>(i%16))&255)/255.f*2.f*PI+i*0.47f;
+            float d=9.f+float((h>>(i%11))&15);
+            int x=std::clamp(int(save.px+std::cos(a)*d),2,WORLD_SIZE-3);
+            int z=std::clamp(int(save.pz+std::sin(a)*d),2,WORLD_SIZE-3);
+            int hgt=world.baseHeight(x,z);
+            float m=world.moisture(x,z);
+            Biome b=biomeAt(save.seed,x,z,hgt,m);
+            CreatureType type=CreatureType::Rabbit;
+            if((b==Biome::Forest||b==Biome::Plains)&&i%4==0)type=CreatureType::Deer;
+            if((b==Biome::Forest||b==Biome::Highland)&&i%7==0)type=CreatureType::Wolf;
+            float hp=type==CreatureType::Wolf?34.f:(type==CreatureType::Deer?24.f:10.f);
+            creatures.push_back({type,{x+0.5f,float(world.walkHeight(x,z)),z+0.5f},hp,float(i),0.f,true});
+        }
+    }
+
+    void resetLivingWorld(){
+        spawnMobs();
+        spawnWildlife();
+        selectedNpc=-1;
+    }
+
     void newWorld(){
         save=SaveDataV3{};
         uint64_t now=uint64_t(std::chrono::high_resolution_clock::now().time_since_epoch().count());
