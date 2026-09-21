@@ -13,6 +13,7 @@ constexpr int WORLD_SIZE = 512;
 constexpr int WORLD_Y = 32;
 constexpr int CHUNK = 16;
 constexpr int CHUNK_CACHE = 72;
+constexpr int WORLD_CHUNKS = WORLD_SIZE / CHUNK;
 constexpr int SEA_LEVEL = 6;
 
 enum class Block : uint8_t {
@@ -67,12 +68,14 @@ public:
     uint64_t seed=1;
     uint64_t stamp=1;
     std::array<ChunkData,CHUNK_CACHE> cache{};
+    std::array<int16_t,WORLD_CHUNKS*WORLD_CHUNKS> chunkSlots{};
     std::unordered_map<uint32_t,uint8_t> edits;
     std::unordered_set<uint32_t> harvested;
 
     void reset(uint64_t s){
         seed=s?s:1; stamp=1; edits.clear(); harvested.clear();
         for(auto& c:cache)c.valid=false;
+        chunkSlots.fill(int16_t(-1));
     }
 
     static uint32_t key(int x,int y,int z){
@@ -101,10 +104,7 @@ public:
              + 0.32f*valueNoise(seed,float(x)*0.071f,float(z)*0.071f,12);
     }
 
-    Block generatedBlock(int x,int y,int z) const {
-        if(x<0||z<0||x>=WORLD_SIZE||z>=WORLD_SIZE||y<0||y>=WORLD_Y) return Block::Air;
-        int h=baseHeight(x,z);
-        float m=moisture(x,z);
+    Block generatedBlockForHeight(int x,int y,int z,int h) const {
         if(y>h){
             if(y<=SEA_LEVEL) return Block::Water;
             return Block::Air;
@@ -129,25 +129,45 @@ public:
         return Block::Stone;
     }
 
+    Block generatedBlock(int x,int y,int z) const {
+        if(x<0||z<0||x>=WORLD_SIZE||z>=WORLD_SIZE||y<0||y>=WORLD_Y) return Block::Air;
+        return generatedBlockForHeight(x,y,z,baseHeight(x,z));
+    }
+
     void generateChunk(ChunkData& c,int cx,int cz){
         c.valid=true;c.cx=cx;c.cz=cz;c.stamp=stamp;
-        for(int lz=0;lz<CHUNK;lz++) for(int y=0;y<WORLD_Y;y++) for(int lx=0;lx<CHUNK;lx++){
+        for(int lz=0;lz<CHUNK;lz++) for(int lx=0;lx<CHUNK;lx++){
             int x=cx*CHUNK+lx,z=cz*CHUNK+lz;
-            int i=(y*CHUNK+lz)*CHUNK+lx;
-            c.blocks[size_t(i)]=uint8_t(generatedBlock(x,y,z));
+            int h=baseHeight(x,z);
+            for(int y=0;y<WORLD_Y;y++){
+                int i=(y*CHUNK+lz)*CHUNK+lx;
+                c.blocks[size_t(i)]=uint8_t(generatedBlockForHeight(x,y,z,h));
+            }
         }
     }
 
     ChunkData& chunk(int cx,int cz){
         stamp++;
-        for(auto& c:cache) if(c.valid&&c.cx==cx&&c.cz==cz){ c.stamp=stamp; return c; }
-        ChunkData* victim=&cache[0];
-        for(auto& c:cache){
-            if(!c.valid){ victim=&c; break; }
-            if(c.stamp<victim->stamp) victim=&c;
+        const int mapIndex=cz*WORLD_CHUNKS+cx;
+        int cached=int(chunkSlots[size_t(mapIndex)]);
+        if(cached>=0&&cached<CHUNK_CACHE){
+            ChunkData& hit=cache[size_t(cached)];
+            if(hit.valid&&hit.cx==cx&&hit.cz==cz){hit.stamp=stamp;return hit;}
+            chunkSlots[size_t(mapIndex)]=int16_t(-1);
         }
-        generateChunk(*victim,cx,cz);
-        return *victim;
+
+        int victimIndex=0;
+        for(int i=0;i<CHUNK_CACHE;i++){
+            if(!cache[size_t(i)].valid){victimIndex=i;break;}
+            if(cache[size_t(i)].stamp<cache[size_t(victimIndex)].stamp)victimIndex=i;
+        }
+        ChunkData& victim=cache[size_t(victimIndex)];
+        if(victim.valid&&victim.cx>=0&&victim.cz>=0&&victim.cx<WORLD_CHUNKS&&victim.cz<WORLD_CHUNKS){
+            chunkSlots[size_t(victim.cz*WORLD_CHUNKS+victim.cx)]=int16_t(-1);
+        }
+        generateChunk(victim,cx,cz);
+        chunkSlots[size_t(mapIndex)]=int16_t(victimIndex);
+        return victim;
     }
 
     Block block(int x,int y,int z){
