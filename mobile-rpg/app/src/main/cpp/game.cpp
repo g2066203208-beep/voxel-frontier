@@ -713,6 +713,7 @@ public:
                 if(x<0||z<0||x>=WORLD_SIZE||z>=WORLD_SIZE)continue;
                 float dx=float(x-cx),dz=float(z-cz);
                 if(dx*dx+dz*dz>float(radius*radius*1.22f))continue;
+                float dist=std::sqrt(dx*dx+dz*dz);
                 int topY=std::min(WORLD_Y-1,world.topSolidY(x,z)+1);
                 for(int y=0;y<=topY;y++){
                     Block b=world.block(x,y,z);
@@ -726,7 +727,6 @@ public:
                         else if(bio==Biome::Dryland)col={0.48f,0.52f,0.23f,1};
                         else if(bio==Biome::Highland)col={0.30f,0.48f,0.27f,1};
                     }
-                    float dist=std::sqrt(dx*dx+dz*dz);
                     float fog=clamp01((dist-float(radius)*0.65f)/(float(radius)*0.45f));
                     if(save.weather.type==WeatherType::Fog)fog=std::max(fog,0.34f);
                     col=mix(col,skyColor(save.dayTime),fog*(save.weather.type==WeatherType::Fog?0.58f:0.35f));
