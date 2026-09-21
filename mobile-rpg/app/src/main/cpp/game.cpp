@@ -223,6 +223,7 @@ public:
             n.x=float(a.x)+0.5f+std::cos(ang)*rad;
             n.z=float(a.z)+0.5f+std::sin(ang)*rad;
             n.relation=(save.faith==int(Faith::Mature))?8:0;
+            n.faith=(save.faith==int(Faith::Mature)&&i<6)?1:0;
             n.coins=25+int((hash32(save.seed^uint64_t(i*731))%55));
             n.mood=58.f+float((i*7)%24);
             n.wanderPhase=float(i)*0.7f;
