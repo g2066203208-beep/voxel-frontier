@@ -67,6 +67,8 @@ struct NpcState {
     NpcRole role=NpcRole::Villager;
     Personality personality{};
     int16_t relation=0;
+    uint8_t faith=0;
+    uint8_t reserved=0;
     int coins=30;
     float mood=65;
     float wanderPhase=0;
