@@ -1090,6 +1090,23 @@ public:
         }
         if(button(R(530,430,180,52),"交易",n.role==NpcRole::Merchant,{0.96f,0.72f,0.22f,1}))screen=Screen::Trade;
         if(button(R(750,430,180,52),"离开",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
+        bool canPreach=save.faith==int(Faith::Newborn)&&n.faith==0&&n.relation>=3;
+        if(save.faith==int(Faith::Newborn)){
+            std::string label=n.faith?"已皈依":"传教";
+            if(button(R(530,492,180,42),label,canPreach,{0.50f,0.38f,0.72f,1})){
+                float score=float(save.attributes.charisma)*6.f+float(n.relation)+float(save.personality.empathy)*0.28f+save.skills.social*0.35f;
+                float resistance=54.f+float(n.personality.discipline)*0.18f-float(n.personality.curiosity)*0.08f;
+                if(score>=resistance){
+                    n.faith=1;n.relation=int16_t(std::min<int>(100,n.relation+3));
+                    save.followers=uint16_t(std::min<int>(65535,int(save.followers)+1));
+                    save.faithPower=std::min(100.f,save.faithPower+6.f);save.devotion=std::min(100.f,save.devotion+4.f);
+                    save.skills.social+=1.2f;toast="传教成功：新的信徒皈依";toastTime=1.6f;
+                }else{
+                    n.relation=int16_t(std::max<int>(-100,n.relation-2));
+                    toast="对方拒绝皈依";toastTime=1.2f;
+                }
+            }
+        }
         r.flushUI();r.present();
     }
 
