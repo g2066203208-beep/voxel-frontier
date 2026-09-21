@@ -271,7 +271,7 @@ public:
         if(button(R(465,390,350,62),"读取存档",any))screen=Screen::Saves;
         if(button(R(465,470,350,62),"设置",true)) {settingsReturn=Screen::Main;screen=Screen::Settings;}
         if(button(R(465,550,350,62),"关于",true,{0.45f,0.49f,0.54f,1}))screen=Screen::About;
-        r.text(X(24),Y(682),"V0.2  C++20 / GLES3 / VOXEL",std::max(13.f*scale(),11.f),{0.46f,0.53f,0.58f,1});
+        r.text(X(24),Y(682),"V0.3  C++20 / GLES3 / VOXEL",std::max(13.f*scale(),11.f),{0.46f,0.53f,0.58f,1});
         r.flushUI();r.present();
     }
 
@@ -373,7 +373,7 @@ public:
 
     void renderAbout(){
         r.begin({0.035f,0.046f,0.060f,1});
-        title("关于","V0.2 体素重构");
+        title("关于","V0.3 可玩性修复");
         panel(R(225,190,830,370));
         r.text(X(285),Y(240),"原生安卓 / C++20 / OpenGL ES 3",19*scale(),{0.92f,0.94f,0.95f,1});
         r.text(X(285),Y(290),"3D 体素大世界 + 2D 像素精灵",19*scale(),{0.92f,0.94f,0.95f,1});
@@ -589,11 +589,13 @@ public:
         drawBar(30,95,"体力",save.stamina,{0.31f,0.72f,0.39f,1});
 
         panel(R(970,14,294,114));
-        int hour=int(save.dayTime*24.f)%24;
+        int totalMinutes=int(save.dayTime*1440.f)%1440;
+        int hour=totalMinutes/60,minute=totalMinutes%60;
         std::string t="第 "+std::to_string(save.day)+" 天  "+timeName();
         r.text(X(988),Y(31),t,17*scale(),{0.95f,0.96f,0.94f,1});
-        std::string clock=(hour<10?"0":"")+std::to_string(hour)+":00";
-        r.text(X(988),Y(61),"时间 "+clock,16*scale(),{0.74f,0.84f,0.93f,1});
+        char clockBuf[16]{};
+        std::snprintf(clockBuf,sizeof(clockBuf),"%02d:%02d",hour,minute);
+        r.text(X(988),Y(61),"时间 "+std::string(clockBuf),16*scale(),{0.74f,0.84f,0.93f,1});
         r.text(X(988),Y(91),faithName(save.faith),16*scale(),{0.96f,0.72f,0.22f,1});
 
         float jx=in.joyId>=0?in.joyBaseX:X(105),jy=in.joyId>=0?in.joyBaseY:Y(610);
@@ -605,9 +607,11 @@ public:
         if(button(R(1095,455,150,54),"攻击",true,{0.84f,0.28f,0.25f,1}))attack();
         if(button(R(1095,517,150,54),"交互",true,{0.96f,0.72f,0.22f,1}))interact();
         ItemId hi=ItemId(save.inventory.hotbar()->id);
-        std::string digLabel=isPlaceable(hi)?"放置":"挖掘";
+        std::string digLabel=isConsumable(hi)?"食用":(isPlaceable(hi)?"放置":"挖掘");
         if(button(R(930,517,150,54),digLabel,true,{0.27f,0.60f,0.91f,1})){
-            if(isPlaceable(hi))placeSelected();else dig();
+            if(isConsumable(hi))useSelected();
+            else if(isPlaceable(hi))placeSelected();
+            else dig();
         }
         if(button(R(930,455,150,54),"跳跃",true,{0.31f,0.72f,0.39f,1}))jump();
         if(button(R(1095,579,150,54),"背包",true,{0.50f,0.38f,0.72f,1}))screen=Screen::Inventory;
@@ -676,7 +680,14 @@ public:
         if(si>=0&&si<Inventory::SLOT_COUNT&&save.inventory.slots[si].count){
             ItemId id=ItemId(save.inventory.slots[si].id);
             r.text(X(145),Y(500),"选中："+std::string(itemName(id)),18*scale(),{0.96f,0.72f,0.22f,1});
-            if(button(R(145,535,100,48),"装备",isTool(id)||isWearable(id),{0.31f,0.72f,0.39f,1}))save.inventory.equipFrom(si);
+            if(isConsumable(id)){
+                if(button(R(145,535,100,48),"食用",true,{0.31f,0.72f,0.39f,1})){
+                    save.inventory.selectedHotbar=si;
+                    useSelected();
+                }
+            }else if(isTool(id)||isWearable(id)){
+                if(button(R(145,535,100,48),"装备",true,{0.31f,0.72f,0.39f,1}))save.inventory.equipFrom(si);
+            }
             if(button(R(255,535,100,48),"丢弃",true,{0.82f,0.26f,0.25f,1}))dropInventory(si);
         }
 
@@ -689,6 +700,7 @@ public:
             std::string name=itemName(rec.out);
             if(button(q,name,ok,ok?Color{0.31f,0.72f,0.39f,1}:Color{0.45f,0.49f,0.54f,1})){
                 if(craft(save.inventory,rec,bench)){toast="制作成功";toastTime=1.3f;}
+                else{toast="背包空间不足";toastTime=1.3f;}
             }
         }
         if(!bench)r.text(X(905),Y(600),"高级配方需要工作台",14*scale(),{0.62f,0.66f,0.69f,1});
@@ -750,7 +762,8 @@ public:
         for(int z=pz-2;z<=pz+2;z++)for(int x=px-2;x<=px+2;x++){
             WorldObject o=world.objectAt(x,z);if(o==WorldObject::None)continue;
             float dx=x+0.5f-save.px,dz=z+0.5f-save.pz,d=dx*dx+dz*dz;
-            if(d<best&&d<5.f){best=d;bx=x;bz=z;bo=o;}
+            float front=(dx*facingX+dz*facingZ)/(std::sqrt(d)+1e-4f);
+            if(d<best&&d<5.f&&front>0.05f){best=d;bx=x;bz=z;bo=o;}
         }
         if(bo==WorldObject::None){toast="没有可交互目标";toastTime=1.1f;return;}
         ItemId tool=save.inventory.mainHand();
@@ -771,8 +784,27 @@ public:
         world.harvestObject(bx,bz);toastTime=1.3f;save.stamina=std::max(0.f,save.stamina-5.f);
     }
 
+    void useSelected(){
+        ItemStack* st=save.inventory.hotbar();
+        if(!st||!st->count){toast="快捷栏为空";toastTime=1.f;return;}
+        ItemId id=ItemId(st->id);
+        if(id==ItemId::Berry){
+            if(save.hunger>=99.f&&save.hp>=99.f&&save.stamina>=99.f){
+                toast="现在不需要进食";toastTime=1.1f;return;
+            }
+            if(save.inventory.consumeFromSlot(save.inventory.selectedHotbar,1)){
+                save.hunger=std::min(100.f,save.hunger+28.f);
+                save.hp=std::min(100.f,save.hp+4.f);
+                save.stamina=std::min(100.f,save.stamina+8.f);
+                toast="食用浆果";toastTime=1.2f;
+            }
+            return;
+        }
+        toast="这个物品不能直接使用";toastTime=1.1f;
+    }
+
     void targetCell(int& tx,int& tz){
-        tx=int(std::floor(save.px+facingX*1.6f));tz=int(std::floor(save.pz+facingZ*1.6f));
+        tx=int(std::floor(save.px+facingX*1.85f));tz=int(std::floor(save.pz+facingZ*1.85f));
         tx=std::clamp(tx,1,WORLD_SIZE-2);tz=std::clamp(tz,1,WORLD_SIZE-2);
     }
 
@@ -898,6 +930,10 @@ public:
 
         save.hunger=std::max(0.f,save.hunger-dt*0.055f);
         if(save.hunger<=0.01f)save.hp=std::max(0.f,save.hp-dt*2.0f);
+        else if(save.hunger>72.f&&save.hp<100.f){
+            save.hp=std::min(100.f,save.hp+dt*0.35f);
+            save.hunger=std::max(0.f,save.hunger-dt*0.012f);
+        }
 
         save.dayTime+=dt/360.f;
         if(save.dayTime>=1.f){save.dayTime-=1.f;save.day++;if(save.faith!=int(Faith::Godless))save.faithPower=std::min(100.f,save.faithPower+2.f);}
