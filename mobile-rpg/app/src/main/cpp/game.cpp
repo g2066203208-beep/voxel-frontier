@@ -269,6 +269,17 @@ public:
         save.faithPower=selectedFaith==int(Faith::Mature)?100.f:(selectedFaith==int(Faith::Newborn)?30.f:0.f);
         save.attributes=randomAttributes(save.seed^0xA551u);
         save.personality=randomPersonality(save.seed,999);
+        auto bump=[](uint8_t& v,int d){v=uint8_t(std::clamp<int>(int(v)+d,1,10));};
+        if(talentPreset==1){bump(save.attributes.strength,2);bump(save.attributes.vitality,1);}
+        else if(talentPreset==2){bump(save.attributes.agility,2);bump(save.attributes.luck,1);}
+        else if(talentPreset==3){bump(save.attributes.intelligence,2);bump(save.attributes.willpower,1);}
+        else if(talentPreset==4){bump(save.attributes.willpower,2);bump(save.attributes.vitality,1);}
+        else if(talentPreset==5){bump(save.attributes.charisma,2);bump(save.attributes.luck,1);}
+        if(personalityPreset==0)save.personality.bravery=std::max<uint8_t>(save.personality.bravery,78);
+        else if(personalityPreset==1)save.personality.sociability=std::max<uint8_t>(save.personality.sociability,78);
+        else if(personalityPreset==2)save.personality.discipline=std::max<uint8_t>(save.personality.discipline,78);
+        else if(personalityPreset==3)save.personality.curiosity=std::max<uint8_t>(save.personality.curiosity,78);
+        else if(personalityPreset==4)save.personality.empathy=std::max<uint8_t>(save.personality.empathy,78);
         save.needs={100.f,100.f,72.f,37.0f};
         save.weather=makeWeather(save.seed,save.day,save.dayTime);
         quality=1;
@@ -447,6 +458,44 @@ public:
         }
         if(button(R(875,570,245,58),"下一步",true,{0.31f,0.72f,0.39f,1}))screen=Screen::CharacterProfile;
         if(button(R(35,630,185,55),"返回",true,{0.45f,0.49f,0.54f,1}))screen=Screen::FaithSelect;
+        r.flushUI();r.present();
+    }
+
+
+    void renderCharacterProfile(){
+        r.begin({0.035f,0.047f,0.062f,1});
+        title("角色背景","天赋影响初始属性，性格会参与生存与社交");
+        panel(R(120,190,1040,390));
+
+        r.text(X(165),Y(225),"天赋",22*scale(),{0.96f,0.72f,0.22f,1});
+        const char* talents[]={"均衡","强健","灵巧","聪慧","坚韧","口才"};
+        for(int i=0;i<6;i++){
+            int col=i%3,row=i/3;
+            Rect q=R(165+col*190,270+row*70,165,52);
+            Color ac=i==talentPreset?Color{0.31f,0.72f,0.39f,1}:Color{0.34f,0.48f,0.62f,1};
+            if(button(q,talents[i],true,ac))talentPreset=i;
+        }
+
+        r.text(X(755),Y(225),"性格倾向",22*scale(),{0.96f,0.72f,0.22f,1});
+        const char* pers[]={"勇敢","外向","自律","好奇","同理"};
+        for(int i=0;i<5;i++){
+            int col=i%2,row=i/2;
+            Rect q=R(755+col*170,270+row*62,150,46);
+            Color ac=i==personalityPreset?Color{0.50f,0.38f,0.72f,1}:Color{0.34f,0.48f,0.62f,1};
+            if(button(q,pers[i],true,ac))personalityPreset=i;
+        }
+
+        std::string tdesc="均衡发展";
+        if(talentPreset==1)tdesc="力量 +2  体质 +1";
+        else if(talentPreset==2)tdesc="敏捷 +2  幸运 +1";
+        else if(talentPreset==3)tdesc="智力 +2  意志 +1";
+        else if(talentPreset==4)tdesc="意志 +2  体质 +1";
+        else if(talentPreset==5)tdesc="魅力 +2  幸运 +1";
+        r.text(X(165),Y(455),"天赋效果："+tdesc,17*scale(),{0.84f,0.88f,0.90f,1});
+        r.text(X(165),Y(500),"属性上限 10；技能会在采集、战斗、制作与交流中成长",15*scale(),{0.65f,0.72f,0.76f,1});
+
+        if(button(R(760,520,180,48),"返回",true,{0.45f,0.49f,0.54f,1}))screen=Screen::CharacterCreate;
+        if(button(R(955,520,170,48),"进入世界",true,{0.31f,0.72f,0.39f,1}))newWorld();
         r.flushUI();r.present();
     }
 
