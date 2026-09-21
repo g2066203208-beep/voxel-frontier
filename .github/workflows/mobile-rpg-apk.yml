@@ -2,7 +2,7 @@ name: Build Faithbound Android APK
 
 on:
   push:
-    branches: [ mobile-rpg-prototype ]
+    branches: [ mobile-rpg-v2-voxel ]
     paths:
       - 'mobile-rpg/**'
       - '.github/workflows/mobile-rpg-apk.yml'
@@ -54,12 +54,12 @@ jobs:
       - name: Collect APK
         run: |
           mkdir -p dist
-          cp mobile-rpg/app/build/outputs/apk/debug/app-debug.apk dist/Faithbound-v0.1-alpha.apk
-          sha256sum dist/Faithbound-v0.1-alpha.apk > dist/SHA256.txt
+          cp mobile-rpg/app/build/outputs/apk/debug/app-debug.apk dist/Faithbound-v0.2-voxel-alpha.apk
+          sha256sum dist/Faithbound-v0.2-voxel-alpha.apk > dist/SHA256.txt
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Faithbound-Android-v0.1
+          name: Faithbound-Android-v0.2-Voxel
           path: dist/
           if-no-files-found: error
