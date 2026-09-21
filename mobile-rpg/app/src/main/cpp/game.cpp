@@ -1056,7 +1056,7 @@ public:
         int known=((save.discoveredSettlements&1)?1:0)+((save.discoveredSettlements&2)?1:0)+((save.discoveredSettlements&4)?1:0);
         r.text(X(840),Y(506),"聚落信息 "+std::to_string(known)+"/3",16*scale(),{0.72f,0.84f,0.76f,1});
         r.text(X(840),Y(544),"地区声望 "+std::to_string(save.regionalReputation),16*scale(),{0.82f,0.78f,0.92f,1});
-        if(save.faith!=int(Faith::Godless))r.text(X(840),Y(580),"信徒 "+std::to_string(save.followers)+"  神力 "+std::to_string(int(save.faithPower)),15*scale(),{0.96f,0.72f,0.22f,1});
+        if(save.faith!=int(Faith::Godless))r.text(X(535),Y(522),"信徒 "+std::to_string(save.followers)+"  神力 "+std::to_string(int(save.faithPower)),15*scale(),{0.96f,0.72f,0.22f,1});
 
         if(button(R(965,585,150,48),"关闭",true,{0.45f,0.49f,0.54f,1}))screen=Screen::Game;
         r.flushUI();r.present();
