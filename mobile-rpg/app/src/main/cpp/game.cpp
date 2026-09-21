@@ -681,10 +681,7 @@ public:
             ItemId id=ItemId(save.inventory.slots[si].id);
             r.text(X(145),Y(500),"选中："+std::string(itemName(id)),18*scale(),{0.96f,0.72f,0.22f,1});
             if(isConsumable(id)){
-                if(button(R(145,535,100,48),"食用",true,{0.31f,0.72f,0.39f,1})){
-                    save.inventory.selectedHotbar=si;
-                    useSelected();
-                }
+                if(button(R(145,535,100,48),"食用",true,{0.31f,0.72f,0.39f,1}))useSlot(si);
             }else if(isTool(id)||isWearable(id)){
                 if(button(R(145,535,100,48),"装备",true,{0.31f,0.72f,0.39f,1}))save.inventory.equipFrom(si);
             }
@@ -784,15 +781,16 @@ public:
         world.harvestObject(bx,bz);toastTime=1.3f;save.stamina=std::max(0.f,save.stamina-5.f);
     }
 
-    void useSelected(){
-        ItemStack* st=save.inventory.hotbar();
-        if(!st||!st->count){toast="快捷栏为空";toastTime=1.f;return;}
+    void useSlot(int idx){
+        if(idx<0||idx>=Inventory::SLOT_COUNT){toast="无效物品";toastTime=1.f;return;}
+        ItemStack* st=&save.inventory.slots[size_t(idx)];
+        if(!st->count){toast="这一格是空的";toastTime=1.f;return;}
         ItemId id=ItemId(st->id);
         if(id==ItemId::Berry){
             if(save.hunger>=99.f&&save.hp>=99.f&&save.stamina>=99.f){
                 toast="现在不需要进食";toastTime=1.1f;return;
             }
-            if(save.inventory.consumeFromSlot(save.inventory.selectedHotbar,1)){
+            if(save.inventory.consumeFromSlot(idx,1)){
                 save.hunger=std::min(100.f,save.hunger+28.f);
                 save.hp=std::min(100.f,save.hp+4.f);
                 save.stamina=std::min(100.f,save.stamina+8.f);
@@ -802,6 +800,8 @@ public:
         }
         toast="这个物品不能直接使用";toastTime=1.1f;
     }
+
+    void useSelected(){ useSlot(save.inventory.selectedHotbar); }
 
     void targetCell(int& tx,int& tz){
         tx=int(std::floor(save.px+facingX*1.85f));tz=int(std::floor(save.pz+facingZ*1.85f));
