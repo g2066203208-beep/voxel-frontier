@@ -11,8 +11,8 @@ android {
         applicationId 'com.faithbound.game'
         minSdk 26
         targetSdk 35
-        versionCode 1
-        versionName '0.1.0-alpha'
+        versionCode 2
+        versionName '0.2.0-voxel-alpha'
         externalNativeBuild {
             cmake {
                 cppFlags '-std=c++20 -O2 -ffast-math -fno-exceptions -fno-rtti'
@@ -29,15 +29,9 @@ android {
     }
 
     buildTypes {
-        debug {
-            debuggable true
-        }
-        release {
-            minifyEnabled false
-        }
+        debug { debuggable true }
+        release { minifyEnabled false }
     }
 
-    lint {
-        abortOnError false
-    }
+    lint { abortOnError false }
 }
