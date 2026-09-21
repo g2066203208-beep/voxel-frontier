@@ -78,6 +78,8 @@ inline Block blockForItem(ItemId id){
         case ItemId::SandBlock:return Block::Sand;
         case ItemId::Workbench:return Block::Workbench;
         case ItemId::Campfire:return Block::Campfire;
+        case ItemId::Furnace:return Block::Furnace;
+        case ItemId::Chest:return Block::Chest;
         default:return Block::Air;
     }
 }
@@ -89,6 +91,8 @@ inline ItemId itemForBlock(Block b){
         case Block::Ore:return ItemId::Ore;
         case Block::Workbench:return ItemId::Workbench;
         case Block::Campfire:return ItemId::Campfire;
+        case Block::Furnace:return ItemId::Furnace;
+        case Block::Chest:return ItemId::Chest;
         default:return ItemId::None;
     }
 }
