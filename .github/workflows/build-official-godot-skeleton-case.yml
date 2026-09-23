@@ -80,6 +80,10 @@ jobs:
               s += '\n[display]\n'
           if 'window/size/viewport_width' not in s:
               s += 'window/size/viewport_width=1280\nwindow/size/viewport_height=720\nwindow/stretch/mode="canvas_items"\n'
+          if '[rendering]' not in s:
+              s += '\n[rendering]\n'
+          if 'textures/vram_compression/import_etc2_astc' not in s:
+              s += 'textures/vram_compression/import_etc2_astc=true\n'
           p.write_text(s)
           PY
           grep -n 'run/main_scene' /tmp/demo/project.godot
@@ -138,19 +142,6 @@ jobs:
           xvfb-run -a "$GODOT"             --path /tmp/demo             --rendering-method gl_compatibility             --audio-driver Dummy             --write-movie /tmp/out/Godot-Official-Skeleton-Case.avi             --fixed-fps 30             --quit-after 480             --disable-vsync
           ffmpeg -y -i /tmp/out/Godot-Official-Skeleton-Case.avi             -vf "scale=960:-2:flags=lanczos"             -c:v libx264 -pix_fmt yuv420p -movflags +faststart             /tmp/out/Godot-Official-Skeleton-Case.mp4
           test -s /tmp/out/Godot-Official-Skeleton-Case.mp4
-
-      - name: Configure Android export paths
-        shell: bash
-        run: |
-          set -euxo pipefail
-          mkdir -p "$HOME/.config/godot"
-          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
-          [gd_resource format=3]
-
-          [resource]
-          export/android/android_sdk_path = "$ANDROID_HOME"
-          export/android/java_sdk_path = "$JAVA_HOME"
-          EOF
 
       - name: Export Android APK
         shell: bash
