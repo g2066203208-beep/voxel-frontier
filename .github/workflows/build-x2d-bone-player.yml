@@ -3,9 +3,15 @@ on:
   push:
     branches: [x2d-bone-player-apk]
     paths:
-      - 'bone-player/**'
+      - 'bone-player/app/**'
+      - 'bone-player/settings.gradle'
+      - 'bone-player/build.gradle'
+      - 'bone-player/gradle.properties'
       - '.github/workflows/build-x2d-bone-player.yml'
   workflow_dispatch: {}
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -15,6 +21,8 @@ jobs:
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: x2d-bone-player-apk
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -35,11 +43,20 @@ jobs:
         run: |
           APK=bone-player/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
-          cp "$APK" /tmp/X2DBonePlayer-v0.1-debug.apk
-          unzip -t /tmp/X2DBonePlayer-v0.1-debug.apk >/dev/null
-          sha256sum /tmp/X2DBonePlayer-v0.1-debug.apk
+          mkdir -p bone-player/releases
+          cp "$APK" bone-player/releases/X2DBonePlayer-v0.1-debug.apk
+          unzip -t bone-player/releases/X2DBonePlayer-v0.1-debug.apk >/dev/null
+          sha256sum bone-player/releases/X2DBonePlayer-v0.1-debug.apk
+      - name: Commit direct APK
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f bone-player/releases/X2DBonePlayer-v0.1-debug.apk
+          git diff --cached --quiet || git commit -m "build: publish X2D Bone Player v0.1 APK"
+          git push origin HEAD:x2d-bone-player-apk
       - uses: actions/upload-artifact@v4
         with:
           name: X2DBonePlayer-v0.1-debug-apk
-          path: /tmp/X2DBonePlayer-v0.1-debug.apk
+          path: bone-player/releases/X2DBonePlayer-v0.1-debug.apk
           if-no-files-found: error
