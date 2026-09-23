@@ -1,92 +1,70 @@
-name: Build public skeletal-animation examples
+name: Audit public skeletal-animation sources
 on:
   push:
     branches: [x2d-bone-player-apk]
     paths:
       - 'public-rig-pipeline/SOURCES.json'
       - 'public-rig-pipeline/README.md'
-      - 'public-rig-pipeline/build_public_examples.py'
-      - 'public-rig-pipeline/validate_x2d.py'
       - '.github/workflows/build-public-rig-examples.yml'
   workflow_dispatch: {}
 
-permissions:
-  contents: write
-
 jobs:
-  build-examples:
+  audit-sources:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install tools
+      - name: Install archive tools
         shell: bash
         run: |
           sudo apt-get update -y
           sudo apt-get install -y p7zip-full
-          python -m pip install --upgrade pillow
 
       - name: Download original public sources
         shell: bash
         run: |
           set -euxo pipefail
-          mkdir -p public-rig-pipeline/work
-          cd public-rig-pipeline/work
+          rm -rf public-rig-pipeline/audit-work
+          mkdir -p public-rig-pipeline/audit-work
+          cd public-rig-pipeline/audit-work
           curl -fL --retry 4 -A "Mozilla/5.0" -o f.png "https://opengameart.org/sites/default/files/f_1.png"
           curl -fL --retry 4 -A "Mozilla/5.0" -o m.png "https://opengameart.org/sites/default/files/m_3.png"
           curl -fL --retry 4 -A "Mozilla/5.0" -o sprites.7z "https://opengameart.org/sites/default/files/sprites.7z"
           curl -fL --retry 4 -A "Mozilla/5.0" -o archer.zip "https://opengameart.org/sites/default/files/2dpixx_-_archer_for_animation.zip"
+          git clone --depth 1 https://github.com/godotengine/godot-demo-projects.git godot-demo-projects
 
-      - name: Extract and inventory public rig sources
+      - name: Verify source classifications
         shell: bash
         run: |
           set -euxo pipefail
-          cd public-rig-pipeline/work
-          mkdir -p sprites7z archer godot_skeleton
-          7z x -y sprites.7z -osprites7z >/dev/null
+          cd public-rig-pipeline/audit-work
+          mkdir sprites archer
+          7z x -y sprites.7z -osprites >/dev/null
           unzip -oq archer.zip -d archer
-          git clone --depth 1 https://github.com/godotengine/godot-demo-projects.git godot_repo
-          cd godot_repo
-          cp -a 2d/skeleton ../godot_skeleton/project
-          cp LICENSE.md ../godot_skeleton/GODOT_DEMOS_LICENSE.md
 
-      - name: Build APK-importable X2D examples
-        run: python public-rig-pipeline/build_public_examples.py
+          # Asset-only examples: verify they really contain separated parts.
+          test -f archer/head.png
+          test -f archer/torso.png
+          test -f archer/upper_arm_left.png
+          test -f archer/lower_arm_left.png
+          test -f archer/upper_leg_left.png
+          test -f archer/lower_leg_left.png
 
-      - name: Validate generated packages
-        shell: bash
-        run: |
-          python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/CC0_Female_BoneSheet_Wave.x2d.zip
-          python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/CC0_Male_BoneSheet_Idle.x2d.zip
-          python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/Archer_2DPIXX_CC-BY4_DemoRig.x2d.zip
-          echo "---- PUBLIC SOURCE INVENTORY ----"
-          sed -n '1,240p' public-rig-pipeline/out/source_inventory.txt
+          # Native professional animation reference: verify exact Godot rig/animation source exists.
+          test -f godot-demo-projects/2d/skeleton/player/player.tscn
+          test -f godot-demo-projects/2d/skeleton/player/player.gd
+          grep -q 'type="Bone2D"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q 'type="Polygon2D"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q 'bones = \[' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"idle"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"walk"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"run"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"fly"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"fall"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"jump"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"land"' godot-demo-projects/2d/skeleton/player/player.tscn
+          grep -q '&"land_hard"' godot-demo-projects/2d/skeleton/player/player.tscn
 
-      - name: Upload importable examples
-        uses: actions/upload-artifact@v4
-        with:
-          name: X2D-public-importable-examples
-          path: |
-            public-rig-pipeline/out/CC0_Female_BoneSheet_Wave.x2d.zip
-            public-rig-pipeline/out/CC0_Male_BoneSheet_Idle.x2d.zip
-            public-rig-pipeline/out/Archer_2DPIXX_CC-BY4_DemoRig.x2d.zip
-            public-rig-pipeline/out/public_source_inventory.zip
-          if-no-files-found: error
-
-
-      - name: Publish generated ZIPs to branch
-        shell: bash
-        run: |
-          set -euxo pipefail
-          mkdir -p public-rig-pipeline/generated
-          cp public-rig-pipeline/out/*.x2d.zip public-rig-pipeline/generated/
-          cp public-rig-pipeline/out/public_source_inventory.zip public-rig-pipeline/generated/
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public-rig-pipeline/generated
-          if git diff --cached --quiet; then
-            echo "No generated changes"
-          else
-            git commit -m "build: publish validated public X2D examples [skip ci]"
-            git push origin HEAD:x2d-bone-player-apk
-          fi
+          echo "PASS: Godot official Skeleton2D is a native rig+mesh+weights+animation case."
+          echo "PASS: Archer and the body-part sheets are asset references only."
+          echo "No X2D animation package is produced by this audit workflow."
