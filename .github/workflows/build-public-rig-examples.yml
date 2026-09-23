@@ -3,9 +3,15 @@ on:
   push:
     branches: [x2d-bone-player-apk]
     paths:
-      - 'public-rig-pipeline/**'
+      - 'public-rig-pipeline/SOURCES.json'
+      - 'public-rig-pipeline/README.md'
+      - 'public-rig-pipeline/build_public_examples.py'
+      - 'public-rig-pipeline/validate_x2d.py'
       - '.github/workflows/build-public-rig-examples.yml'
   workflow_dispatch: {}
+
+permissions:
+  contents: write
 
 jobs:
   build-examples:
@@ -52,6 +58,7 @@ jobs:
         run: |
           python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/CC0_Female_BoneSheet_Wave.x2d.zip
           python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/CC0_Male_BoneSheet_Idle.x2d.zip
+          python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/Archer_2DPIXX_CC-BY4_DemoRig.x2d.zip
           echo "---- PUBLIC SOURCE INVENTORY ----"
           sed -n '1,240p' public-rig-pipeline/out/source_inventory.txt
 
@@ -62,5 +69,24 @@ jobs:
           path: |
             public-rig-pipeline/out/CC0_Female_BoneSheet_Wave.x2d.zip
             public-rig-pipeline/out/CC0_Male_BoneSheet_Idle.x2d.zip
+            public-rig-pipeline/out/Archer_2DPIXX_CC-BY4_DemoRig.x2d.zip
             public-rig-pipeline/out/public_source_inventory.zip
           if-no-files-found: error
+
+
+      - name: Publish generated ZIPs to branch
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p public-rig-pipeline/generated
+          cp public-rig-pipeline/out/*.x2d.zip public-rig-pipeline/generated/
+          cp public-rig-pipeline/out/public_source_inventory.zip public-rig-pipeline/generated/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public-rig-pipeline/generated
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+          else
+            git commit -m "build: publish validated public X2D examples [skip ci]"
+            git push origin HEAD:x2d-bone-player-apk
+          fi
