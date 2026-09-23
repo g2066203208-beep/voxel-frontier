@@ -1,0 +1,40 @@
+name: Publish Paperchalk Static Preview
+
+on:
+  push:
+    branches:
+      - feature/paperchalk-road-walk
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paperchalk-static-preview
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build web preview
+        run: npm run build
+
+      - name: Publish dist to paperchalk-static
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: paperchalk-static
+          publish_dir: ./dist
+          force_orphan: true
