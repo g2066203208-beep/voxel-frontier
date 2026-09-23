@@ -1,0 +1,198 @@
+name: Build source-authentic Godot Skeleton case APK
+
+on:
+  push:
+    branches: [x2d-bone-player-apk]
+    paths:
+      - 'official-godot-case/**'
+      - '.github/workflows/build-official-godot-skeleton-case.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: x2d-bone-player-apk
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android + render tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          sudo apt-get update -y
+          sudo apt-get install -y unzip xvfb ffmpeg
+
+      - name: Fetch pinned official Godot Skeleton2D demo
+        shell: bash
+        run: |
+          set -euxo pipefail
+          rm -rf /tmp/godot-demo-projects /tmp/demo
+          git clone https://github.com/godotengine/godot-demo-projects.git /tmp/godot-demo-projects
+          git -C /tmp/godot-demo-projects checkout a3b5c113112f77291d5f3d1360f33a882fdc52f7
+          cp -a /tmp/godot-demo-projects/2d/skeleton /tmp/demo
+          cp /tmp/godot-demo-projects/LICENSE.md /tmp/demo/GODOT_DEMOS_LICENSE.md
+          test -f /tmp/demo/player/player.tscn
+          grep -q 'type="Polygon2D"' /tmp/demo/player/player.tscn
+          grep -q 'bones = \[' /tmp/demo/player/player.tscn
+          grep -q '&"idle"' /tmp/demo/player/player.tscn
+          grep -q '&"walk"' /tmp/demo/player/player.tscn
+          grep -q '&"run"' /tmp/demo/player/player.tscn
+          git -C /tmp/godot-demo-projects rev-parse HEAD | tee /tmp/demo/UPSTREAM_COMMIT.txt
+
+      - name: Add showcase controller only
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cp official-godot-case/showcase.gd /tmp/demo/showcase.gd
+          cp official-godot-case/showcase.tscn /tmp/demo/showcase.tscn
+          cp official-godot-case/export_presets.cfg /tmp/demo/export_presets.cfg
+          cp official-godot-case/README.md /tmp/demo/X2D_CASE_README.md
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/demo/project.godot')
+          s=p.read_text()
+          if 'run/main_scene=' in s:
+              import re
+              s=re.sub(r'run/main_scene=.*', 'run/main_scene="res://showcase.tscn"', s, count=1)
+          else:
+              if '[application]' in s:
+                  s=s.replace('[application]', '[application]\nrun/main_scene="res://showcase.tscn"', 1)
+              else:
+                  s='[application]\nrun/main_scene="res://showcase.tscn"\n\n'+s
+          if '[display]' not in s:
+              s += '\n[display]\n'
+          if 'window/size/viewport_width' not in s:
+              s += 'window/size/viewport_width=1280\nwindow/size/viewport_height=720\nwindow/stretch/mode="canvas_items"\n'
+          p.write_text(s)
+          PY
+          grep -n 'run/main_scene' /tmp/demo/project.godot
+
+      - name: Download Godot 4.7.2 editor and export templates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          api='https://api.github.com/repos/godotengine/godot-builds/releases/tags/4.7.2-stable'
+          req=urllib.request.Request(api,headers={
+              'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+              'Accept':'application/vnd.github+json',
+              'User-Agent':'x2d-official-godot-case'
+          })
+          data=json.load(urllib.request.urlopen(req))
+          linux=None; templates=None
+          for a in data['assets']:
+              n=a['name']
+              if n.endswith('_linux.x86_64.zip') and 'mono' not in n.lower():
+                  linux=a['browser_download_url']
+              if n.endswith('_export_templates.tpz'):
+                  templates=a['browser_download_url']
+          if not linux or not templates:
+              raise SystemExit('Godot editor/templates asset not found')
+          urllib.request.urlretrieve(linux,'/tmp/godot.zip')
+          urllib.request.urlretrieve(templates,'/tmp/templates.tpz')
+          PY
+          mkdir -p /tmp/godot-bin
+          unzip -q /tmp/godot.zip -d /tmp/godot-bin
+          GODOT="$(find /tmp/godot-bin -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT"
+          echo "GODOT=$GODOT" >> "$GITHUB_ENV"
+          "$GODOT" --version
+
+          rm -rf /tmp/template-unpack
+          mkdir -p /tmp/template-unpack "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          unzip -q /tmp/templates.tpz -d /tmp/template-unpack
+          cp -a /tmp/template-unpack/templates/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          test -f "$HOME/.local/share/godot/export_templates/4.7.2.stable/android_debug.apk"
+
+      - name: Import project
+        shell: bash
+        run: |
+          set -euxo pipefail
+          xvfb-run -a "$GODOT" --path /tmp/demo --editor --quit --audio-driver Dummy --rendering-method gl_compatibility
+
+      - name: Render authentic clip preview video
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/out
+          xvfb-run -a "$GODOT"             --path /tmp/demo             --rendering-method gl_compatibility             --audio-driver Dummy             --write-movie /tmp/out/Godot-Official-Skeleton-Case.avi             --fixed-fps 30             --quit-after 480             --disable-vsync
+          ffmpeg -y -i /tmp/out/Godot-Official-Skeleton-Case.avi             -vf "scale=960:-2:flags=lanczos"             -c:v libx264 -pix_fmt yuv420p -movflags +faststart             /tmp/out/Godot-Official-Skeleton-Case.mp4
+          test -s /tmp/out/Godot-Official-Skeleton-Case.mp4
+
+      - name: Configure Android export paths
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
+          [gd_resource format=3]
+
+          [resource]
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/java_sdk_path = "$JAVA_HOME"
+          EOF
+
+      - name: Export Android APK
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/out
+          cd /tmp/demo
+          "$GODOT" --headless --path /tmp/demo --export-debug "Android" /tmp/out/X2D-Godot-Official-Skeleton-Case-v0.2.apk
+          test -s /tmp/out/X2D-Godot-Official-Skeleton-Case-v0.2.apk
+          unzip -t /tmp/out/X2D-Godot-Official-Skeleton-Case-v0.2.apk >/dev/null
+          sha256sum /tmp/out/X2D-Godot-Official-Skeleton-Case-v0.2.apk | tee /tmp/out/SHA256.txt
+
+      - name: Package exact pinned source case
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cd /tmp
+          zip -qr /tmp/out/Godot-Official-Skeleton2D-SourceCase-pinned.zip demo             -x 'demo/.godot/*' 'demo/X2D-Godot-Official-Skeleton-Case-v0.2.apk'
+          test -s /tmp/out/Godot-Official-Skeleton2D-SourceCase-pinned.zip
+
+      - name: Publish APK to branch
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p official-godot-case/releases
+          cp /tmp/out/X2D-Godot-Official-Skeleton-Case-v0.2.apk official-godot-case/releases/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f official-godot-case/releases/X2D-Godot-Official-Skeleton-Case-v0.2.apk
+          if git diff --cached --quiet; then
+            echo "No APK change"
+          else
+            git commit -m "build: publish source-authentic Godot Skeleton case APK [skip ci]"
+            git push origin HEAD:x2d-bone-player-apk
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: X2D-Godot-Official-Skeleton-Case-v0.2
+          path: |
+            /tmp/out/X2D-Godot-Official-Skeleton-Case-v0.2.apk
+            /tmp/out/Godot-Official-Skeleton-Case.mp4
+            /tmp/out/Godot-Official-Skeleton2D-SourceCase-pinned.zip
+            /tmp/out/SHA256.txt
+          if-no-files-found: error
