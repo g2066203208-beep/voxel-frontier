@@ -1,0 +1,126 @@
+name: Render Godot Skeleton2D GIF
+
+on:
+  push:
+    branches:
+      - godot-bone-gif-demo
+    paths:
+      - '.github/workflows/render-godot-skeleton2d-gif.yml'
+      - 'experiments/godot-bone-gif/**'
+  workflow_dispatch: {}
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout user repo
+        uses: actions/checkout@v4
+
+      - name: Install runtime packages
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb ffmpeg unzip
+
+      - name: Sparse clone official Godot Skeleton2D demo
+        shell: bash
+        run: |
+          rm -rf /tmp/godot-demo-projects
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/godotengine/godot-demo-projects.git /tmp/godot-demo-projects
+          git -C /tmp/godot-demo-projects sparse-checkout set 2d/skeleton
+          test -f /tmp/godot-demo-projects/2d/skeleton/project.godot
+          echo "DEMO=/tmp/godot-demo-projects/2d/skeleton" >> "$GITHUB_ENV"
+          git -C /tmp/godot-demo-projects rev-parse HEAD | tee /tmp/godot-demo-commit.txt
+
+      - name: Download latest stable Godot Linux editor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          api='https://api.github.com/repos/godotengine/godot-builds/releases/latest'
+          req=urllib.request.Request(api, headers={
+              'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+              'Accept': 'application/vnd.github+json',
+              'User-Agent': 'x2d-github-render'
+          })
+          data=json.load(urllib.request.urlopen(req))
+          candidates=[]
+          for a in data['assets']:
+              n=a['name']
+              if n.endswith('_linux.x86_64.zip') and 'mono' not in n.lower():
+                  candidates.append((n,a['browser_download_url']))
+          if not candidates:
+              raise SystemExit('No stable Godot Linux x86_64 zip found')
+          name,url=candidates[0]
+          print(data['tag_name'], name)
+          urllib.request.urlretrieve(url, '/tmp/godot.zip')
+          open('/tmp/godot-version.txt','w').write(data['tag_name']+'\n')
+          PY
+          rm -rf /tmp/godot-bin
+          mkdir -p /tmp/godot-bin
+          unzip -q /tmp/godot.zip -d /tmp/godot-bin
+          GODOT="$(find /tmp/godot-bin -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT"
+          "$GODOT" --version
+          echo "GODOT=$GODOT" >> "$GITHUB_ENV"
+
+      - name: Make the official rig move automatically
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/godot-demo-projects/2d/skeleton/player/player.gd')
+          s=p.read_text()
+          s=s.replace('var no_move_horizontal_time := 0.0',
+                      'var no_move_horizontal_time := 0.0\nvar github_demo_time := 0.0')
+          old='var direction := Input.get_axis(&"move_left", &"move_right") * WALK_SPEED'
+          new='''github_demo_time += delta
+          var phase := fmod(github_demo_time, 4.0)
+          var auto_axis := 0.0
+          if phase < 1.4:
+              auto_axis = 0.65
+          elif phase < 2.8:
+              auto_axis = -0.65
+          var direction := auto_axis * WALK_SPEED'''
+          if old not in s:
+              raise SystemExit('controller patch target not found')
+          s=s.replace(old,new)
+          p.write_text(s)
+          PY
+          grep -n "github_demo_time\|auto_axis" "$DEMO/player/player.gd"
+
+      - name: Import project once
+        shell: bash
+        run: |
+          xvfb-run -a "$GODOT" --path "$DEMO" --editor --quit --audio-driver Dummy --rendering-method gl_compatibility
+
+      - name: Render deterministic movie from real Skeleton2D animation
+        shell: bash
+        run: |
+          rm -f /tmp/godot_capture.avi
+          xvfb-run -a "$GODOT"             --path "$DEMO"             --rendering-method gl_compatibility             --audio-driver Dummy             --write-movie /tmp/godot_capture.avi             --fixed-fps 24             --quit-after 96             --disable-vsync
+          test -s /tmp/godot_capture.avi
+          ffprobe -v error -show_entries stream=width,height,r_frame_rate,duration -of default=nw=1 /tmp/godot_capture.avi
+
+      - name: Convert capture to GIF
+        shell: bash
+        run: |
+          mkdir -p /tmp/out
+          ffmpeg -y -i /tmp/godot_capture.avi             -vf "fps=12,scale=720:-1:flags=lanczos,palettegen=max_colors=160"             /tmp/out/palette.png
+          ffmpeg -y -i /tmp/godot_capture.avi -i /tmp/out/palette.png             -lavfi "fps=12,scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=3"             /tmp/out/godot_skeleton2d_demo.gif
+          test -s /tmp/out/godot_skeleton2d_demo.gif
+          ls -lh /tmp/out/godot_skeleton2d_demo.gif
+          sha256sum /tmp/out/godot_skeleton2d_demo.gif | tee /tmp/out/SHA256.txt
+          cp /tmp/godot-version.txt /tmp/out/GODOT_VERSION.txt
+          cp /tmp/godot-demo-commit.txt /tmp/out/GODOT_DEMO_COMMIT.txt
+
+      - name: Upload GIF result
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-skeleton2d-gif
+          path: /tmp/out/
+          if-no-files-found: error
