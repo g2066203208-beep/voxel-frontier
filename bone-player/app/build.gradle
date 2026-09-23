@@ -1,0 +1,14 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.openai.x2dboneplayer'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.openai.x2dboneplayer'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0'
+    }
+}
+
