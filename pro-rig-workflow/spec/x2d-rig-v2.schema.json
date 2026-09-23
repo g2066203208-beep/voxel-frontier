@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/x2d-rig-v2.schema.json",
+  "title": "X2D Rig v2",
+  "type": "object",
+  "required": ["format","canvas","bones","slots","animations"],
+  "properties": {
+    "format": {"const": "x2d-rig-v2"},
+    "meta": {"type":"object"},
+    "canvas": {
+      "type":"object",
+      "required":["width","height"],
+      "properties":{
+        "width":{"type":"number","exclusiveMinimum":0},
+        "height":{"type":"number","exclusiveMinimum":0}
+      }
+    },
+    "bones": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["id","x","y","rotation"],
+        "properties":{
+          "id":{"type":"string","minLength":1},
+          "parent":{"type":["string","null"]},
+          "x":{"type":"number"},
+          "y":{"type":"number"},
+          "rotation":{"type":"number"},
+          "scaleX":{"type":"number","default":1},
+          "scaleY":{"type":"number","default":1},
+          "length":{"type":"number","minimum":0}
+        }
+      }
+    },
+    "slots": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["id","bone","attachment","drawOrder"],
+        "properties":{
+          "id":{"type":"string"},
+          "bone":{"type":"string"},
+          "attachment":{"type":["string","null"]},
+          "drawOrder":{"type":"integer"},
+          "blend":{"enum":["normal","add","multiply","screen"]}
+        }
+      }
+    },
+    "attachments": {
+      "type":"object",
+      "additionalProperties":{
+        "oneOf":[
+          {
+            "type":"object",
+            "required":["type","image","pivotX","pivotY"],
+            "properties":{
+              "type":{"const":"region"},
+              "image":{"type":"string"},
+              "pivotX":{"type":"number"},
+              "pivotY":{"type":"number"}
+            }
+          },
+          {
+            "type":"object",
+            "required":["type","image","vertices","triangles","uvs","weights"],
+            "properties":{
+              "type":{"const":"mesh"},
+              "image":{"type":"string"},
+              "vertices":{"type":"array","items":{"type":"number"}},
+              "triangles":{"type":"array","items":{"type":"integer","minimum":0}},
+              "uvs":{"type":"array","items":{"type":"number"}},
+              "weights":{"type":"array"}
+            }
+          }
+        ]
+      }
+    },
+    "constraints": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["id","type"],
+        "properties":{
+          "id":{"type":"string"},
+          "type":{"enum":["ik2","transform","path","aim","spring"]},
+          "bones":{"type":"array","items":{"type":"string"}},
+          "target":{"type":["string","null"]},
+          "mix":{"type":"number","minimum":0,"maximum":1}
+        }
+      }
+    },
+    "skins": {"type":"object"},
+    "animations": {
+      "type":"object",
+      "additionalProperties":{
+        "type":"object",
+        "required":["duration"],
+        "properties":{
+          "duration":{"type":"number","exclusiveMinimum":0},
+          "bones":{"type":"object"},
+          "slots":{"type":"object"},
+          "deform":{"type":"object"},
+          "constraints":{"type":"object"},
+          "drawOrder":{"type":"array"},
+          "events":{"type":"array"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+name: Validate professional X2D rigs
+
+on:
+  push:
+    paths:
+      - 'pro-rig-workflow/**'
+      - 'characters/**/rig/*.json'
+      - '.github/workflows/validate-pro-rig.yml'
+  pull_request:
+    paths:
+      - 'pro-rig-workflow/**'
+      - 'characters/**/rig/*.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate template
+        run: python pro-rig-workflow/tools/validate_rig_v2.py pro-rig-workflow/templates/character/project.x2d.json
+      - name: Validate all character rigs
+        shell: bash
+        run: |
+          shopt -s nullglob globstar
+          for f in characters/**/rig/*.json; do
+            echo "VALIDATE $f"
+            python pro-rig-workflow/tools/validate_rig_v2.py "$f"
+          done
