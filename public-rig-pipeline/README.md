@@ -1,28 +1,74 @@
-# Public 2D Rig Pipeline
+# Public 2D Rig Pipeline — source-authentic only
 
-This folder is the reproducible source-of-truth for the X2D Bone Player examples.
+## Correction
 
-## Rule: no guessed black-box conversion
+The earlier X2D Female/Male/Archer packages contained **pipeline-authored demo keyframes** and, for the sheet-based characters, heuristic part-to-bone mapping. They are **not source-authentic case animations** and must not be used as professional animation references. Those generated packages have been removed from the canonical `generated/` directory.
 
-The pipeline separates five stages:
+From now on this project follows one rule:
 
-1. **SOURCE** — download the original public asset from the recorded URL.
-2. **PARTS** — extract transparent parts without changing the source artwork.
-3. **RIG MAP** — explicit, reviewable bone hierarchy + pivot/rest-pose mapping.
-4. **ANIMATION** — source animation is preserved when it exists; otherwise any added demo motion is explicitly marked `demo_authored`.
-5. **VALIDATE + PACK** — validate hierarchy, cycles, missing images, pivot values and keyframe time range, then create the APK-importable ZIP.
+> A public case may be called an animation case only when the public source itself contains the rig and/or animation data we are reproducing.
 
-The original license and source URL are copied into every generated package.
+## Case classes
 
-## Why Godot is a reference, not silently converted
+### A. Native rig + native animation — valid professional animation reference
+**Godot official Skeleton2D demo**
+- Source: `godotengine/godot-demo-projects/2d/skeleton`
+- License: MIT
+- Native data: Skeleton2D/Bone2D hierarchy, Polygon2D mesh vertices, per-vertex bone weights, AnimationPlayer/AnimationTree.
+- Source animation state names verified from the original project:
+  - idle
+  - walk
+  - run
+  - fly
+  - fall
+  - jump
+  - land
+  - land_hard
+- Rule: preview/export may select or sequence these existing source clips, but must not replace their keyframes with newly authored motion.
 
-The official Godot Skeleton2D demo uses Polygon2D/Skeleton2D deformation and weights. X2D Bone Player v0.1 is a rigid cutout player, so pretending the two formats are equivalent would be wrong. The GitHub pipeline downloads/archives the Godot demo as a native professional reference. A later X2D format revision will add mesh vertices + weights before a lossless importer is enabled.
+### B. Public separated parts but no source rig/animation — asset reference only
+**2DPIXX Archer**
+- Contains actual separated PNGs such as head, torso, upper/lower arms, hands, upper/lower legs, feet, bow and arrows.
+- License: CC BY 4.0.
+- It is valid for studying part separation.
+- It is **not** an animation-reference case unless an original rig/animation file is present.
 
-## Outputs
+**Female+Male Bones Sheet / 2D female and male bone-based sprites**
+- CC0 separated-body-part references.
+- Useful for part boundaries and, where encoded in filenames, pivots.
+- They do not become professional animation examples just because this pipeline can attach bones to them.
 
-- `CC0_Female_BoneSheet_Wave.x2d.zip` — importable into X2D Bone Player.
-- `CC0_Male_BoneSheet_Idle.x2d.zip` — importable into X2D Bone Player.
-- `public_source_inventory.zip` — file inventories for the CC0 pivot archive, Archer source, and Godot official Skeleton2D demo.
-- contact sheets used for QA.
+## Professional pipeline
 
-The generated motion in the first two packages is deliberately simple and is labeled as pipeline-authored. The character art is the public CC0 source.
+1. SOURCE ACQUISITION
+   - Record exact source repository/page, author, license and upstream commit/hash.
+2. SOURCE CLASSIFICATION
+   - asset-only / rig-only / rig+animation.
+3. NATIVE PRESERVATION
+   - Keep the original scene/project data unchanged as the reference.
+4. STRUCTURAL EXTRACTION
+   - Extract exact bones, parents, rest transforms, meshes, UVs, weights, slots/attachments and animation keys from the native source.
+5. LOSSLESS FEATURE GATE
+   - Do not convert to X2D unless the X2D schema supports every feature required by that case.
+6. IMPORT
+   - Import extracted native data without guessing pivots or inventing keyframes.
+7. VALIDATION
+   - Bone count/names/parents, rest transforms, mesh vertex counts, weight sums, animation names/durations/key values.
+8. VISUAL REGRESSION
+   - Render the original native project and the imported X2D result at fixed timestamps and compare images.
+9. EXPORT
+   - Only after structural + visual validation may an importable package be published.
+
+## Current feature gate
+
+X2D Bone Player v0.1 supports rigid sprite attachments and transform keyframes only.
+
+The Godot official Skeleton2D case uses weighted Polygon2D meshes. Therefore a lossless Godot importer is **blocked** until X2D adds:
+- mesh vertices + triangles
+- UVs
+- multiple bone influences per vertex
+- normalized weights
+- rest transforms
+- animation clip names and native keyframes
+
+Until then, the Godot case remains the native correctness oracle and must not be flattened into a fake rigid-rig package.
