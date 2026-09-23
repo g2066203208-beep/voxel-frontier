@@ -1,4 +1,5 @@
 import './styles.css';
+import { bindRoadTransition } from './ui/RoadTransition';
 
 function requireElement<T extends HTMLElement>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -9,6 +10,8 @@ function requireElement<T extends HTMLElement>(selector: string): T {
 const canvas = requireElement<HTMLCanvasElement>('#game');
 const playButton = requireElement<HTMLButtonElement>('#play-button');
 const status = requireElement<HTMLElement>('#status');
+
+bindRoadTransition(playButton);
 
 async function bootCompatibilityEngine(): Promise<void> {
   const { Game } = await import('./core/Game');
