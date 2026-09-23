@@ -41,7 +41,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import json, os, urllib.request
-          api='https://api.github.com/repos/godotengine/godot-builds/releases/latest'
+          api='https://api.github.com/repos/godotengine/godot-builds/releases/tags/4.7.2-stable'
           req=urllib.request.Request(api, headers={
               'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
               'Accept': 'application/vnd.github+json',
