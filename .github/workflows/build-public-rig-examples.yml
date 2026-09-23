@@ -39,9 +39,8 @@ jobs:
           mkdir -p sprites7z archer godot_skeleton
           7z x -y sprites.7z -osprites7z >/dev/null
           unzip -oq archer.zip -d archer
-          git clone --depth 1 --filter=blob:none --sparse https://github.com/godotengine/godot-demo-projects.git godot_repo
+          git clone --depth 1 https://github.com/godotengine/godot-demo-projects.git godot_repo
           cd godot_repo
-          git sparse-checkout set 2d/skeleton LICENSE.md
           cp -a 2d/skeleton ../godot_skeleton/project
           cp LICENSE.md ../godot_skeleton/GODOT_DEMOS_LICENSE.md
 
