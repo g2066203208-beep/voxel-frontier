@@ -1,4 +1,5 @@
-name: Build X2D Bone Player APK
+name: Build X2D Bone Player v0.2 + authentic Godot case
+
 on:
   push:
     branches: [x2d-bone-player-apk]
@@ -7,6 +8,7 @@ on:
       - 'bone-player/settings.gradle'
       - 'bone-player/build.gradle'
       - 'bone-player/gradle.properties'
+      - 'public-rig-pipeline/convert_godot_skeleton.py'
       - '.github/workflows/build-x2d-bone-player.yml'
   workflow_dispatch: {}
 
@@ -16,47 +18,108 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       ANDROID_HOME: /usr/local/lib/android/sdk
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      GODOT_DEMO_COMMIT: a3b5c113112f77291d5f3d1360f33a882fdc52f7
+
     steps:
       - uses: actions/checkout@v4
         with:
           ref: x2d-bone-player-apk
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - name: Install Android SDK 35
         shell: bash
         run: |
+          set -euxo pipefail
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Build
-        run: gradle -p bone-player assembleDebug --stacktrace
-      - name: Verify
+
+      - name: Fetch exact official Godot Skeleton2D source
         shell: bash
         run: |
+          set -euxo pipefail
+          rm -rf /tmp/godot-source /tmp/x2d-out
+          mkdir -p /tmp/godot-source /tmp/x2d-out
+          BASE="https://raw.githubusercontent.com/godotengine/godot-demo-projects/$GODOT_DEMO_COMMIT/2d/skeleton/player"
+          curl -fL --retry 4 -o /tmp/godot-source/player.tscn "$BASE/player.tscn"
+          curl -fL --retry 4 -o /tmp/godot-source/gBot.png "$BASE/gBot.png"
+          grep -q 'type="Bone2D"' /tmp/godot-source/player.tscn
+          grep -q 'type="Polygon2D"' /tmp/godot-source/player.tscn
+          grep -q '&"idle"' /tmp/godot-source/player.tscn
+          grep -q '&"walk"' /tmp/godot-source/player.tscn
+          grep -q '&"run"' /tmp/godot-source/player.tscn
+
+      - name: Convert native Godot rig without inventing keyframes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python public-rig-pipeline/convert_godot_skeleton.py             /tmp/godot-source/player.tscn             /tmp/godot-source/gBot.png             /tmp/x2d-out/GodotOfficialSkeleton2D-source-authentic.x2d.zip
+          unzip -t /tmp/x2d-out/GodotOfficialSkeleton2D-source-authentic.x2d.zip >/dev/null
+          unzip -p /tmp/x2d-out/GodotOfficialSkeleton2D-source-authentic.x2d.zip project.json > /tmp/x2d-out/project.json
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/x2d-out/project.json'))
+          assert p['format']=='x2d-rig-2.0'
+          assert p['source']['sourceAuthenticAnimations'] is True
+          assert p['source']['commit']=='a3b5c113112f77291d5f3d1360f33a882fdc52f7'
+          for name in ['idle','walk','run','fly','fall','jump','land','land_hard']:
+              assert name in p['animations'], name
+          assert len(p['bones']) >= 10
+          assert len(p['meshes']) >= 5
+          assert all(abs(sum(w for _,w in row)-1.0)<1e-4 for m in p['meshes'] for row in m['influences'])
+          print('AUTHENTIC_IMPORT_GATE=PASS')
+          print('bones=',len(p['bones']),'meshes=',len(p['meshes']),'animations=',list(p['animations']))
+          PY
+
+      - name: Embed official import case in APK
+        shell: bash
+        run: |
+          mkdir -p bone-player/app/src/main/assets
+          cp /tmp/x2d-out/GodotOfficialSkeleton2D-source-authentic.x2d.zip              bone-player/app/src/main/assets/GodotOfficialSkeleton2D.x2d.zip
+
+      - name: Build v0.2 APK
+        run: gradle -p bone-player assembleDebug --stacktrace
+
+      - name: Verify APK and package
+        shell: bash
+        run: |
+          set -euxo pipefail
           APK=bone-player/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
           mkdir -p bone-player/releases
-          cp "$APK" bone-player/releases/X2DBonePlayer-v0.1-debug.apk
-          unzip -t bone-player/releases/X2DBonePlayer-v0.1-debug.apk >/dev/null
-          sha256sum bone-player/releases/X2DBonePlayer-v0.1-debug.apk
-      - name: Commit direct APK
+          cp "$APK" bone-player/releases/X2DBonePlayer-v0.2-mesh-weight-debug.apk
+          cp /tmp/x2d-out/GodotOfficialSkeleton2D-source-authentic.x2d.zip              bone-player/releases/GodotOfficialSkeleton2D-source-authentic.x2d.zip
+          unzip -t bone-player/releases/X2DBonePlayer-v0.2-mesh-weight-debug.apk >/dev/null
+          unzip -t bone-player/releases/GodotOfficialSkeleton2D-source-authentic.x2d.zip >/dev/null
+          sha256sum bone-player/releases/X2DBonePlayer-v0.2-mesh-weight-debug.apk                     bone-player/releases/GodotOfficialSkeleton2D-source-authentic.x2d.zip | tee bone-player/releases/v0.2-SHA256.txt
+
+      - name: Publish direct downloads
         shell: bash
         run: |
+          set -euxo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f bone-player/releases/X2DBonePlayer-v0.1-debug.apk
-          git diff --cached --quiet || git commit -m "build: publish X2D Bone Player v0.1 APK"
+          git add -f             bone-player/releases/X2DBonePlayer-v0.2-mesh-weight-debug.apk             bone-player/releases/GodotOfficialSkeleton2D-source-authentic.x2d.zip             bone-player/releases/v0.2-SHA256.txt
+          git diff --cached --quiet || git commit -m "build: publish X2D v0.2 mesh-weight player and authentic case [skip ci]"
           git push origin HEAD:x2d-bone-player-apk
+
       - uses: actions/upload-artifact@v4
         with:
-          name: X2DBonePlayer-v0.1-debug-apk
-          path: bone-player/releases/X2DBonePlayer-v0.1-debug.apk
+          name: X2DBonePlayer-v0.2-source-authentic
+          path: |
+            bone-player/releases/X2DBonePlayer-v0.2-mesh-weight-debug.apk
+            bone-player/releases/GodotOfficialSkeleton2D-source-authentic.x2d.zip
+            bone-player/releases/v0.2-SHA256.txt
           if-no-files-found: error
