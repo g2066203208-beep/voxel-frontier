@@ -68,7 +68,10 @@ def resolve_bone(ref,bones):
     if "Hip/"+ref in bones:return "Hip/"+ref
     cand=[b for b in bones if b.endswith("/"+ref)]
     if len(cand)==1:return cand[0]
-    raise ValueError(f"Cannot resolve mesh bone ref {ref!r}")
+    leaf=ref.split("/")[-1]
+    cand=[b for b in bones if b.split("/")[-1]==leaf]
+    if len(cand)==1:return cand[0]
+    raise ValueError(f"Cannot resolve mesh bone ref {ref!r}; candidates={cand}")
 
 def parse_bones(sections):
     bones={}
