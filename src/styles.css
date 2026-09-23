@@ -146,3 +146,100 @@ kbd { min-width: 76px; padding: 4px 7px; border-radius: 7px; background: #263541
 }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+
+/* Paper-chalk road transition: exactly one dirt road + one traveler. */
+.road-transition {
+  position: absolute;
+  inset: 0;
+  z-index: 120;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(255, 255, 255, .12), transparent 48%),
+    #d8cfbb;
+  transition: opacity 180ms ease, visibility 0s linear 180ms;
+}
+.road-transition.active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 180ms ease;
+}
+.road-transition__paper {
+  position: absolute;
+  inset: 0;
+  opacity: .08;
+  background:
+    repeating-linear-gradient(13deg, rgba(255,255,255,.12) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(-17deg, rgba(65,45,25,.05) 0 1px, transparent 1px 9px);
+}
+.road-transition__ground {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  bottom: 8vh;
+  height: min(18vh, 170px);
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+  background-size: auto 100%;
+  will-change: background-position;
+  filter: saturate(.94) contrast(.98);
+}
+.road-transition__walker-wrap {
+  position: absolute;
+  left: 35%;
+  bottom: 13.9vh;
+  width: min(15vw, 165px);
+  z-index: 2;
+  transform-origin: 50% 100%;
+  animation: road-body-sway 1.18s ease-in-out infinite;
+}
+.road-transition__walker {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 88%;
+  filter: drop-shadow(3px 6px 3px rgba(62,42,22,.18));
+  animation: road-cute-step .56s cubic-bezier(.45,0,.55,1) infinite;
+}
+.road-transition__shadow {
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  width: 54%;
+  height: 9px;
+  z-index: -1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(72,49,27,.17);
+  filter: blur(5px);
+  animation: road-shadow-step .56s ease-in-out infinite;
+}
+@keyframes road-body-sway {
+  0%,100% { transform: translateX(-50%) rotate(-1.25deg); }
+  50% { transform: translateX(-50%) rotate(1.25deg); }
+}
+@keyframes road-cute-step {
+  0%,100% { transform: translateY(0) rotate(-2.4deg) scale(1); }
+  25% { transform: translate(2px,-7px) rotate(.8deg) scale(.985,1.018); }
+  50% { transform: translate(4px,-1px) rotate(2.5deg) scale(1.018,.987); }
+  75% { transform: translate(2px,-6px) rotate(-.5deg) scale(.99,1.014); }
+}
+@keyframes road-shadow-step {
+  0%,50%,100% { transform: translateX(-50%) scaleX(1); opacity:.78; }
+  25%,75% { transform: translateX(-50%) scaleX(.86); opacity:.52; }
+}
+@media (max-width: 760px) {
+  .road-transition__walker-wrap {
+    left: 31%;
+    width: min(28vw, 138px);
+    bottom: 13.6vh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .road-transition__walker-wrap,
+  .road-transition__walker,
+  .road-transition__shadow { animation: none; }
+}
