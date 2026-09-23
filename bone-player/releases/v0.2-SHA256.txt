@@ -1,0 +1,2 @@
+139fc29f90d39bf8529b14d2e238bf2e37308684e4e6b6f891b131eff6bf0c34  bone-player/releases/X2DBonePlayer-v0.2-mesh-weight-debug.apk
+ea2234ae2f8505dca832ad88e16ad9201cf24ed8359cfc6e15fd332a5124ecef  bone-player/releases/GodotOfficialSkeleton2D-source-authentic.x2d.zip
