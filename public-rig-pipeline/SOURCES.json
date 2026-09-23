@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "sources": [
+    {
+      "id": "oga_female_male_bones_sheet",
+      "title": "Female+Male Bones Sheet",
+      "author": "Spring Spring",
+      "license": "CC0-1.0",
+      "page": "https://opengameart.org/content/femalemale-bones-sheet",
+      "files": {
+        "female": "https://opengameart.org/sites/default/files/f_1.png",
+        "male": "https://opengameart.org/sites/default/files/m_3.png"
+      },
+      "use": "Rigid cutout / bone hierarchy reference and importable X2D demo."
+    },
+    {
+      "id": "oga_bone_based_sprites",
+      "title": "2D female and male bone-based sprites",
+      "author": "buttons",
+      "license": "CC0-1.0",
+      "page": "https://opengameart.org/content/2d-female-and-male-bone-based-sprites",
+      "files": {
+        "archive": "https://opengameart.org/sites/default/files/sprites.7z"
+      },
+      "use": "Pivot/file-name reference. Preserved as source inventory; conversion is only enabled after deterministic semantic mapping."
+    },
+    {
+      "id": "oga_archer",
+      "title": "Archer - 2D Character for Animation",
+      "author": "2DPIXX",
+      "license": "CC-BY-4.0",
+      "page": "https://opengameart.org/content/archer-2d-character-for-animation",
+      "files": {
+        "archive": "https://opengameart.org/sites/default/files/2dpixx_-_archer_for_animation.zip"
+      },
+      "use": "Separated-character reference. Attribution is mandatory."
+    },
+    {
+      "id": "godot_skeleton2d_demo",
+      "title": "Godot Skeleton2D Demo",
+      "author": "Andreas Esau / RustyStriker / Godot Foundation",
+      "license": "MIT",
+      "page": "https://github.com/godotengine/godot-demo-projects/tree/master/2d/skeleton",
+      "use": "Professional reference for Skeleton2D, Bone2D, Polygon2D weights and animation. Kept as native Godot reference rather than falsely flattening mesh weights into rigid sprites."
+    }
+  ]
+}

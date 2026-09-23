@@ -1,0 +1,67 @@
+name: Build public skeletal-animation examples
+on:
+  push:
+    branches: [x2d-bone-player-apk]
+    paths:
+      - 'public-rig-pipeline/**'
+      - '.github/workflows/build-public-rig-examples.yml'
+  workflow_dispatch: {}
+
+jobs:
+  build-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y p7zip-full
+          python -m pip install --upgrade pillow
+
+      - name: Download original public sources
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p public-rig-pipeline/work
+          cd public-rig-pipeline/work
+          curl -fL --retry 4 -A "Mozilla/5.0" -o f.png "https://opengameart.org/sites/default/files/f_1.png"
+          curl -fL --retry 4 -A "Mozilla/5.0" -o m.png "https://opengameart.org/sites/default/files/m_3.png"
+          curl -fL --retry 4 -A "Mozilla/5.0" -o sprites.7z "https://opengameart.org/sites/default/files/sprites.7z"
+          curl -fL --retry 4 -A "Mozilla/5.0" -o archer.zip "https://opengameart.org/sites/default/files/2dpixx_-_archer_for_animation.zip"
+
+      - name: Extract and inventory public rig sources
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cd public-rig-pipeline/work
+          mkdir -p sprites7z archer godot_skeleton
+          7z x -y sprites.7z -osprites7z >/dev/null
+          unzip -oq archer.zip -d archer
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/godotengine/godot-demo-projects.git godot_repo
+          cd godot_repo
+          git sparse-checkout set 2d/skeleton LICENSE.md
+          cp -a 2d/skeleton ../godot_skeleton/project
+          cp LICENSE.md ../godot_skeleton/GODOT_DEMOS_LICENSE.md
+
+      - name: Build APK-importable X2D examples
+        run: python public-rig-pipeline/build_public_examples.py
+
+      - name: Validate generated packages
+        shell: bash
+        run: |
+          python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/CC0_Female_BoneSheet_Wave.x2d.zip
+          python public-rig-pipeline/validate_x2d.py public-rig-pipeline/out/CC0_Male_BoneSheet_Idle.x2d.zip
+          echo "---- PUBLIC SOURCE INVENTORY ----"
+          sed -n '1,240p' public-rig-pipeline/out/source_inventory.txt
+
+      - name: Upload importable examples
+        uses: actions/upload-artifact@v4
+        with:
+          name: X2D-public-importable-examples
+          path: |
+            public-rig-pipeline/out/CC0_Female_BoneSheet_Wave.x2d.zip
+            public-rig-pipeline/out/CC0_Male_BoneSheet_Idle.x2d.zip
+            public-rig-pipeline/out/public_source_inventory.zip
+          if-no-files-found: error
