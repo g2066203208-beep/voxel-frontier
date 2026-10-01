@@ -54,6 +54,7 @@ jobs:
             vf-painterly-dirt.ts \
             vf-painterly-leaves.ts \
             vf-painterly-moss.ts \
+            vf-paperworld-grass-turf.ts \
             vf-painterly-snow.ts \
             vf-painterly-stone-wall.ts \
             vf-painterly-water.ts \
@@ -108,13 +109,14 @@ jobs:
           }
           layer_showcase = len(materials) == 6 and names == layer_showcase_names
           surface3d_showcase = len(materials) == 4 and set(presets) == showcase3d
-          if not (production or water_showcase or layer_showcase or surface3d_showcase):
-              raise SystemExit("Request must be production-nine, water-showcase, exact surface-layer showcase, or exact 3D material showcase")
+          paperworld_turf = len(materials) == 1 and presets == ["vfPaperWorldGrassTurf"] and names == {"paperworld_grass_turf"}
+          if not (production or water_showcase or layer_showcase or surface3d_showcase or paperworld_turf):
+              raise SystemExit("Request must be production-nine, water-showcase, exact surface-layer showcase, exact 3D material showcase, or PaperWorld grass turf")
           for item in materials:
               name = item.get("name", "")
               if any(token in name.lower() for token in ("reference", "test", "draft", "final", "_v1", "_v2", "_v3", "_v4", "_v5", "_v6", "_v7", "_v8", "_v9")):
                   raise SystemExit(f"Unstable production/showcase material name: {name}")
-          print("3d-showcase" if surface3d_showcase else ("layer-showcase" if layer_showcase else ("water-showcase" if water_showcase else "production-nine")))
+          print("paperworld-turf" if paperworld_turf else ("3d-showcase" if surface3d_showcase else ("layer-showcase" if layer_showcase else ("water-showcase" if water_showcase else "production-nine"))))
           PY
 
       - name: Install preview tools
@@ -167,6 +169,7 @@ jobs:
             vf-painterly-dirt.ts \
             vf-painterly-leaves.ts \
             vf-painterly-moss.ts \
+            vf-paperworld-grass-turf.ts \
             vf-painterly-snow.ts \
             vf-painterly-stone-wall.ts \
             vf-painterly-water.ts \
@@ -263,8 +266,14 @@ jobs:
           )
           mapfile -t spheres < <(find build/generated-materials -type f -name 'preview-sphere.png' | sort)
           test ${#spheres[@]} -eq "$expected_count"
-          # Seven rewritten materials must carry the analytic-geometry audit file.
-          test $(find build/generated-materials -type f -name 'preview-vector-geometry.json' | wc -l) -eq 7
+          # The stable nine-master production set rewrites seven previews with analytic Blender macro geometry.
+          # PaperWorld turf intentionally stays on the standardized true-Height displaced PBR sphere.
+          vector_count=$(find build/generated-materials -type f -name 'preview-vector-geometry.json' | wc -l)
+          if [[ "$expected_count" -eq 9 ]]; then
+            test "$vector_count" -eq 7
+          else
+            test "$vector_count" -eq 0
+          fi
           if [[ "$expected_count" -le 4 ]]; then tile="2x"; else tile="3x"; fi
           montage "${spheres[@]}" -thumbnail 720x720 -tile "$tile" -geometry +18+18 -background '#202020' build/material-spheres-overview.png
 
