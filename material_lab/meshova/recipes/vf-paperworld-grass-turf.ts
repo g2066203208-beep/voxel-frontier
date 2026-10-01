@@ -1,189 +1,161 @@
 import { heightToNormal } from "../../src/index.js";
-import { C,L,M,S,hash,wrapDelta,periodicField,ridgeField,finalize,makeTexture,type RGB } from "./vf-painterly-core.js";
+import { C, L, makeTexture, type RGB } from "./vf-painterly-core.js";
 
 export type VfPaperWorldGrassTurfParams={
   seed?:number;
   normalStrength?:number;
-  pulpRelief?:number;
-  fiberDensity?:number;
-  fiberLift?:number;
-  fleckAmount?:number;
-  pressWrinkle?:number;
+  relief?:number;
+  fibreStrength?:number;
+  patchStrength?:number;
 };
 
-type FiberSample={mask:number;tone:number};
+type Tex=ReturnType<typeof makeTexture>;
+type RNG=()=>number;
 
-const MOD=(x:number,m:number)=>((x%m)+m)%m;
-
-function quintic(x:number){x=C(x);return x*x*x*(x*(x*6-15)+10);}
-function tileValueNoise(u:number,v:number,seed:number,freq:number){
-  const x=u*freq,y=v*freq,x0=Math.floor(x),y0=Math.floor(y),tx=quintic(x-x0),ty=quintic(y-y0);
-  const sample=(ix:number,iy:number)=>hash(seed,MOD(ix,freq),MOD(iy,freq),97)*2-1;
-  const a=sample(x0,y0),b=sample(x0+1,y0),cc=sample(x0,y0+1),d=sample(x0+1,y0+1);
-  return L(L(a,b,tx),L(cc,d,tx),ty);
+function rng(seed:number):RNG{
+  let s=seed>>>0;
+  return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};
 }
-function tileFbm(u:number,v:number,seed:number,baseFreq:number,octaves:number){
-  let sum=0,norm=0,amp=.58,freq=Math.max(1,Math.floor(baseFreq));
-  for(let i=0;i<octaves;i++){
-    sum+=tileValueNoise(u,v,seed+i*131,freq)*amp;
-    norm+=amp; amp*=.48; freq*=2;
-  }
-  return sum/Math.max(norm,1e-6);
+function mod(x:number,m:number){return ((x%m)+m)%m;}
+function hex(s:string):RGB{
+  const n=parseInt(s.slice(1),16);
+  return[((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255];
 }
-
-function fiberField(u:number,v:number,seed:number,density:number):FiberSample{
-  const grid=36;
-  const gx=Math.floor(u*grid),gy=Math.floor(v*grid);
-  let best=0,tone=.5;
-  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
-    const ix=MOD(gx+ox,grid),iy=MOD(gy+oy,grid);
-    const alive=hash(seed,ix,iy,1);
-    if(alive>density)continue;
-    const cx=(ix+.5+(hash(seed,ix,iy,2)-.5)*.78)/grid;
-    const cy=(iy+.5+(hash(seed,ix,iy,3)-.5)*.78)/grid;
-    const dx=wrapDelta(u-cx)*grid,dy=wrapDelta(v-cy)*grid;
-    const angle=hash(seed,ix,iy,4)*Math.PI*2;
-    const ca=Math.cos(angle),sa=Math.sin(angle);
-    const along=dx*ca+dy*sa,across=-dx*sa+dy*ca;
-    const halfLen=.10+hash(seed,ix,iy,5)*.22;
-    const width=.018+hash(seed,ix,iy,6)*.024;
-    const taper=S((halfLen+.055-Math.abs(along))/.080);
-    const cross=Math.exp(-Math.pow(across/width,2));
-    const m=taper*cross;
-    if(m>best){best=m;tone=hash(seed,ix,iy,7);}
-  }
-  return{mask:C(best),tone};
+function blendRGB(tex:Tex,x:number,y:number,c:RGB,a:number){
+  const xx=mod(x,tex.width),yy=mod(y,tex.height),j=(yy*tex.width+xx)*3;
+  tex.data[j]=L(tex.data[j],c[0],a);
+  tex.data[j+1]=L(tex.data[j+1],c[1],a);
+  tex.data[j+2]=L(tex.data[j+2],c[2],a);
 }
-
-function pulpPatchField(u:number,v:number,seed:number){
-  const grid=6;
-  const gx=Math.floor(u*grid),gy=Math.floor(v*grid);
-  let best=0,second=0;
-  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
-    const ix=MOD(gx+ox,grid),iy=MOD(gy+oy,grid);
-    const cx=(ix+.5+(hash(seed,ix,iy,1)-.5)*.70)/grid;
-    const cy=(iy+.5+(hash(seed,ix,iy,2)-.5)*.70)/grid;
-    const dx=wrapDelta(u-cx)*grid,dy=wrapDelta(v-cy)*grid;
-    const angle=hash(seed,ix,iy,3)*Math.PI*2,ca=Math.cos(angle),sa=Math.sin(angle);
-    const x=dx*ca+dy*sa,y=-dx*sa+dy*ca;
-    const rx=.40+hash(seed,ix,iy,4)*.34,ry=.32+hash(seed,ix,iy,5)*.30;
-    const q=Math.pow(Math.pow(Math.abs(x)/rx,3.2)+Math.pow(Math.abs(y)/ry,3.2),1/3.2);
-    const m=S((1-q)/.46);
-    if(m>best){second=best;best=m}else if(m>second)second=m;
-  }
-  return C(best*.78+second*.22);
+function setHeight(tex:Tex,x:number,y:number,h:number){
+  tex.data[mod(y,tex.height)*tex.width+mod(x,tex.width)]=C(h);
 }
+function fillBase(tex:Tex,c:RGB){
+  for(let i=0;i<tex.width*tex.height;i++){const j=i*3;tex.data[j]=c[0];tex.data[j+1]=c[1];tex.data[j+2]=c[2];}
+}
+function fillScalar(tex:Tex,v:number){tex.data.fill(v);}
 
-function fleckField(u:number,v:number,seed:number,amount:number){
-  const grid=19;
-  const gx=Math.floor(u*grid),gy=Math.floor(v*grid);
-  let best=0;
-  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){
-    const ix=MOD(gx+ox,grid),iy=MOD(gy+oy,grid);
-    if(hash(seed,ix,iy,1)>.18*amount)continue;
-    const cx=(ix+.5+(hash(seed,ix,iy,2)-.5)*.82)/grid;
-    const cy=(iy+.5+(hash(seed,ix,iy,3)-.5)*.82)/grid;
-    const dx=wrapDelta(u-cx)*grid,dy=wrapDelta(v-cy)*grid;
-    const angle=hash(seed,ix,iy,4)*Math.PI*2,ca=Math.cos(angle),sa=Math.sin(angle);
-    const x=dx*ca+dy*sa,y=-dx*sa+dy*ca;
-    const rx=.050+hash(seed,ix,iy,5)*.055,ry=.025+hash(seed,ix,iy,6)*.035;
-    const q=Math.sqrt((x*x)/(rx*rx)+(y*y)/(ry*ry));
-    best=Math.max(best,S((1-q)/.55));
+function drawEllipseColor(tex:Tex,cx:number,cy:number,rx:number,ry:number,angle:number,color:RGB,alpha:number){
+  const ca=Math.cos(angle),sa=Math.sin(angle),rad=Math.ceil(Math.max(rx,ry));
+  for(let yy=Math.floor(cy-rad);yy<=Math.ceil(cy+rad);yy++)for(let xx=Math.floor(cx-rad);xx<=Math.ceil(cx+rad);xx++){
+    const dx=xx+.5-cx,dy=yy+.5-cy;
+    const qx=dx*ca+dy*sa,qy=-dx*sa+dy*ca;
+    if((qx*qx)/(rx*rx)+(qy*qy)/(ry*ry)<=1)blendRGB(tex,xx,yy,color,alpha);
   }
-  return C(best);
+}
+function drawRectColor(tex:Tex,x:number,y:number,w:number,h:number,color:RGB,alpha:number){
+  for(let yy=Math.floor(y);yy<Math.ceil(y+h);yy++)for(let xx=Math.floor(x);xx<Math.ceil(x+w);xx++)blendRGB(tex,xx,yy,color,alpha);
+}
+function drawRectHeight(tex:Tex,x:number,y:number,w:number,h:number,value:number){
+  for(let yy=Math.floor(y);yy<Math.ceil(y+h);yy++)for(let xx=Math.floor(x);xx<Math.ceil(x+w);xx++)setHeight(tex,xx,yy,value);
+}
+function distToSegment(px:number,py:number,x0:number,y0:number,x1:number,y1:number){
+  const vx=x1-x0,vy=y1-y0,wx=px-x0,wy=py-y0;
+  const vv=vx*vx+vy*vy;
+  const t=vv>1e-8?Math.max(0,Math.min(1,(wx*vx+wy*vy)/vv)):0;
+  return Math.hypot(px-(x0+vx*t),py-(y0+vy*t));
+}
+function drawLineColor(tex:Tex,x0:number,y0:number,x1:number,y1:number,width:number,color:RGB,alpha:number){
+  const r=Math.max(.5,width*.5),xmin=Math.floor(Math.min(x0,x1)-r-1),xmax=Math.ceil(Math.max(x0,x1)+r+1),ymin=Math.floor(Math.min(y0,y1)-r-1),ymax=Math.ceil(Math.max(y0,y1)+r+1);
+  for(let y=ymin;y<=ymax;y++)for(let x=xmin;x<=xmax;x++){
+    const d=distToSegment(x+.5,y+.5,x0,y0,x1,y1);
+    if(d<=r+.45){const aa=alpha*C((r+.45-d)/.65);blendRGB(tex,x,y,color,aa);}
+  }
+}
+function drawLineHeight(tex:Tex,x0:number,y0:number,x1:number,y1:number,width:number,value:number){
+  const r=Math.max(.5,width*.5),xmin=Math.floor(Math.min(x0,x1)-r-1),xmax=Math.ceil(Math.max(x0,x1)+r+1),ymin=Math.floor(Math.min(y0,y1)-r-1),ymax=Math.ceil(Math.max(y0,y1)+r+1);
+  for(let y=ymin;y<=ymax;y++)for(let x=xmin;x<=xmax;x++){
+    const d=distToSegment(x+.5,y+.5,x0,y0,x1,y1);
+    if(d<=r+.25){
+      const i=mod(y,tex.height)*tex.width+mod(x,tex.width);
+      const a=C((r+.25-d)/.55);
+      tex.data[i]=L(tex.data[i],value,a);
+    }
+  }
 }
 
 export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfParams={}){
-  const seed=Math.floor(p.seed??314159);
-  const normalStrength=Math.max(2,Math.min(18,p.normalStrength??9.2));
-  const pulpRelief=Math.max(.45,Math.min(1.8,p.pulpRelief??1.0));
-  const fiberDensity=C(p.fiberDensity??.70);
-  const fiberLift=C(p.fiberLift??.58);
-  const fleckAmount=C(p.fleckAmount??.72);
-  const pressWrinkle=C(p.pressWrinkle??.08);
+  const seed=Math.floor(Number(p.seed??731));
+  const normalStrength=Math.max(1,Math.min(20,Number(p.normalStrength??8.0)));
+  const relief=Math.max(.15,Math.min(1.8,Number(p.relief??.68)));
+  const fibreStrength=C(Number(p.fibreStrength??1.0));
+  const patchStrength=C(Number(p.patchStrength??1.0));
+  const r=rng(seed);
 
-  const baseColor=makeTexture(size,size,3);
-  const roughness=makeTexture(size,size,1);
-  const height=makeTexture(size,size,1);
-  const normalHeight=makeTexture(size,size,1);
-  const ao=makeTexture(size,size,1);
+  const color=makeTexture(size,size,3),height=makeTexture(size,size,1),roughness=makeTexture(size,size,1),ao=makeTexture(size,size,1);
+  const metallic=makeTexture(size,size,1),emission=makeTexture(size,size,3);
+  const scale=size/256;
 
-  // Muted olive handmade-paper palette sampled by eye from PaperWorld v12.14.
-  const deep:RGB=[.205,.225,.135];
-  const cool:RGB=[.265,.285,.175];
-  const mid:RGB=[.325,.345,.205];
-  const light:RGB=[.405,.420,.255];
-  const warm:RGB=[.365,.350,.205];
-  const paleFiber:RGB=[.500,.485,.315];
-  const darkFiber:RGB=[.190,.215,.130];
+  // Exact v12.14 green paper family, now baked as real PBR fields.
+  const base=hex("#a9c974");
+  const patches=[hex("#bfd987"),hex("#91b75f"),hex("#b5d379"),hex("#9ec16a")];
+  fillBase(color,base);fillScalar(height,.5);
 
-  for(let y=0;y<size;y++){
-    const v=1-(y+.5)/size;
-    for(let x=0;x<size;x++){
-      const u=(x+.5)/size,i=y*size+x,j=i*3;
-
-      // Three paper-pulp scales: broad dyed cloud, meso felt mass, fine compressed grain.
-      const macro=C(tileFbm(u,v,seed+11,2,4)*.5+.5);
-      const meso=C(tileFbm(u,v,seed+37,6,4)*.5+.5);
-      const fine=C(tileFbm(u,v,seed+73,16,3)*.5+.5);
-      const micro=C(tileFbm(u,v,seed+89,42,3)*.5+.5);
-      const cloud=C(.54*macro+.30*meso+.12*fine+.04*micro);
-
-      // Very weak press wrinkles: structural accent only, never the dominant read.
-      const wr1=ridgeField(u,v,seed+101,2,0.22);
-      const wr2=ridgeField(u,v,seed+139,3,1.68);
-      const pressed=(1-Math.abs(wr1*2-1))*.58+(1-Math.abs(wr2*2-1))*.42;
-
-      const fib=fiberField(u,v,seed+211,.48+.48*fiberDensity);
-      const fleck=fleckField(u,v,seed+331,fleckAmount);
-
-      let col=M(deep,mid,S((cloud-.18)/.66));
-      col=M(col,light,C(Math.max(0,macro-.55)*.17+Math.max(0,meso-.60)*.075));
-      col=M(col,cool,C(Math.max(0,.45-macro)*.105));
-      col=M(col,warm,C(Math.max(0,meso-.58)*.055+pressed*.008));
-      col=M(col,light,C(Math.max(0,fine-.60)*.040));
-      col=M(col,deep,C(Math.max(0,.40-fine)*.030));
-      const fiberTint=fib.tone>.58?paleFiber:darkFiber;
-      col=M(col,fiberTint,fib.mask*(fib.tone>.58?.060:.035));
-      col=M(col,paleFiber,fleck*.070);
-
-      // Height is mostly soft pulp thickness. Fibres are micro relief; wrinkles remain shallow.
-      let h=.500;
-      h+=(macro-.5)*.018*pulpRelief;
-      h+=(meso-.5)*.010*pulpRelief;
-      h+=(fine-.5)*.0036*pulpRelief;
-      h+=(micro-.5)*.0025*pulpRelief;
-      h+=(pressed-.5)*.0022*pressWrinkle;
-      h+=fib.mask*.0017*fiberLift;
-      h+=(fleck-.25)*.0010;
-      h=C(h);
-
-      baseColor.data[j]=C(col[0]);
-      baseColor.data[j+1]=C(col[1]);
-      baseColor.data[j+2]=C(col[2]);
-      height.data[i]=h;
-
-      // A separate micro-height drives Normal only: paper stays geometrically shallow
-      // while felted fibres and compressed pulp still react clearly to grazing light.
-      let nh=.500;
-      nh+=(macro-.5)*.008;
-      nh+=(meso-.5)*.012;
-      nh+=(fine-.5)*.016;
-      nh+=(micro-.5)*.014;
-      nh+=(pressed-.5)*.0015*pressWrinkle;
-      nh+=fib.mask*.0085*fiberLift;
-      nh+=(fleck-.20)*.0035;
-      normalHeight.data[i]=C(nh);
-
-      // Dry absorbent paper: consistently rough, with fibres slightly rougher.
-      roughness.data[i]=C(.962+(micro-.5)*.030+(fine-.5)*.012+fib.mask*.012+fleck*.006-(macro-.5)*.006);
-      const lowPocket=C((.505-h)*22);
-      ao.data[i]=C(.992-lowPocket*.055-fleck*.012);
-    }
+  // v12.14 broad low-frequency pulp clouds.
+  for(let i=0;i<34;i++){
+    const x=r()*size,y=r()*size,rx=(18+r()*54)*scale,ry=(12+r()*38)*scale;
+    const alpha=(.055+r()*.075)*patchStrength;
+    drawEllipseColor(color,x,y,rx,ry,r()*Math.PI,patches[(r()*patches.length)|0],alpha);
   }
 
-  const metallic=makeTexture(size,size,1);
-  const emission=makeTexture(size,size,3);
-  const normal=heightToNormal(normalHeight,normalStrength,true);
-  return {baseColor,metallic,roughness,normal,ao,height,emission};
+  // v12.14 pressed-paper blocks. The same masks drive albedo + Height.
+  for(let i=0;i<30;i++){
+    const w=Math.round((11+r()*34)*scale);
+    const h=Math.round(w*(.72+r()*.56));
+    const x=Math.floor(r()*size-w*.35),y=Math.floor(r()*size-h*.35);
+    const raised=r()>.48;
+    const alpha=(.060+r()*.075)*patchStrength;
+    const blockColor=raised?[224/255,239/255,167/255] as RGB:[64/255,92/255,48/255] as RGB;
+    drawRectColor(color,x,y,w,h,blockColor,alpha);
+    const outer=(raised?(168+(r()*14|0)):(88-(r()*10|0)))/255;
+    const inner=(raised?(218+(r()*24|0)):(40-(r()*18|0)))/255;
+    const currentOuter=.5+(outer-.5)*relief;
+    const currentInner=.5+(inner-.5)*relief;
+    drawRectHeight(height,x,y,w,h,currentOuter);
+    const inset=Math.max(1,Math.round(Math.min(w,h)*.12));
+    drawRectHeight(height,x+inset,y+inset,Math.max(2,w-inset*2),Math.max(2,h-inset*2),currentInner);
+  }
+
+  // v12.14 visible cellulose fibres: short, broken, randomly oriented.
+  for(let i=0;i<620;i++){
+    const x=r()*size,y=r()*size,a=r()*Math.PI,len=(1+r()*7)*scale,w=(.28+r()*.52)*scale;
+    const light=r()>.48;
+    const fibreColor=light?[245/255,250/255,215/255] as RGB:[61/255,42/255,31/255] as RGB;
+    const alpha=(light?.20:.13)*fibreStrength;
+    const x1=x+Math.cos(a)*len,y1=y+Math.sin(a)*len;
+    drawLineColor(color,x,y,x1,y1,w,fibreColor,alpha);
+    const hv=(light?150+(r()*18|0):105+(r()*18|0))/255;
+    const target=.5+(hv-.5)*(.42+.58*fibreStrength)*relief;
+    drawLineHeight(height,x,y,x1,y1,w,target);
+  }
+
+  // Tiny non-uniform pulp flecks from the target-era terrain stock.
+  for(let i=0;i<145;i++){
+    const q=(.35+r()*1.25)*scale,x=r()*size,y=r()*size;
+    const light=r()>.5;
+    const fc=light?hex("#edf1d6"):hex("#536946");
+    const alpha=(.035+r()*.075)*.72;
+    drawRectColor(color,x,y,q,q,fc,alpha);
+  }
+
+  // A few almost invisible large pulp sheets break mathematical repetition.
+  for(let i=0;i<5;i++){
+    const cx=r()*size,cy=r()*size,rx=(45+r()*80)*scale,ry=(36+r()*68)*scale;
+    const light=r()>.5;
+    drawEllipseColor(color,cx,cy,rx,ry,0,light?hex("#dae6b8"):hex("#576f46"),light?.030:.026);
+  }
+
+  // PBR channels derived from the SAME height field, preserving the v12.14 structure.
+  const normal=heightToNormal(height,normalStrength,true);
+  const H=height.data;
+  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+    const i=y*size+x,h=H[i];
+    const xm=mod(x-2,size),xp=mod(x+2,size),ym=mod(y-2,size),yp=mod(y+2,size);
+    const around=(H[y*size+xm]+H[y*size+xp]+H[ym*size+x]+H[yp*size+x])*.25;
+    const cavity=C((around-h)*2.2+(.48-h)*1.45);
+    roughness.data[i]=C(.942-(h-.5)*.085);
+    ao.data[i]=C(1-cavity*.28);
+  }
+
+  return{baseColor:color,metallic,roughness,normal,ao,height,emission};
 }
