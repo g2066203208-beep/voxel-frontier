@@ -10,6 +10,7 @@ import { bakeVfPainterlyWater, type VfPainterlyWaterParams } from "./vf-recipes/
 import { bakeVfPainterlyStoneWall, type VfPainterlyStoneWallParams } from "./vf-recipes/vf-painterly-stone-wall.js";
 import { bakeVfPainterlyMoss, type VfPainterlyMossParams } from "./vf-recipes/vf-painterly-moss.js";
 import { bakeVfPainterlyWolfFur, type VfPainterlyWolfFurParams } from "./vf-recipes/vf-painterly-wolf-fur.js";
+import { bakeVfPaperWorldGrassTurf, type VfPaperWorldGrassTurfParams } from "./vf-recipes/vf-paperworld-grass-turf.js";
 import {
   bakeVf3DGrass,
   bakeVf3DMoss,
@@ -40,7 +41,7 @@ const S=(x:number)=>{const t=C(x);return t*t*(3-2*t);};
 const W=(x:number)=>x-Math.round(x);
 const MOD=(x:number,m:number)=>((x%m)+m)%m;
 function H(seed:number,a:number,b=0,c=0){let h=(seed|0)^Math.imul((a|0)+0x9e3779b9,0x85ebca6b)^Math.imul((b|0)+0x7f4a7c15,0xc2b2ae35)^Math.imul((c|0)+0x165667b1,0x27d4eb2d);h=Math.imul(h^(h>>>16),0x7feb352d);h=Math.imul(h^(h>>>15),0x846ca68b);h^=h>>>16;return(h>>>0)/0xffffffff;}
-type ProductionPreset="vfLayeredSandstonePainted"|"vfPainterlyDirt"|"vfPainterlyBark"|"vfPainterlyLeaves"|"vfPainterlySnow"|"vfPainterlyWater"|"vfPainterlyStoneWall"|"vfPainterlyMoss"|"vfPainterlyWolfFur"|"vf3DGrass"|"vf3DMoss"|"vf3DFur"|"vf3DFire";
+type ProductionPreset="vfLayeredSandstonePainted"|"vfPainterlyDirt"|"vfPainterlyBark"|"vfPainterlyLeaves"|"vfPainterlySnow"|"vfPainterlyWater"|"vfPainterlyStoneWall"|"vfPainterlyMoss"|"vfPainterlyWolfFur"|"vf3DGrass"|"vf3DMoss"|"vf3DFur"|"vf3DFire"|"vfPaperWorldGrassTurf";
 type Profile="stylized"|"signature";
 type SurfaceContextInput={weather?:Partial<WeatherContext>;exposure?:Partial<ExposureContext>;environment?:Partial<EnvironmentContext>;interaction?:Partial<SurfaceInteractionContext>;material?:Partial<SurfaceMaterialTraits>;};
 type Request={name:string;resolution:number;preset:ProductionPreset;profile?:Profile;params:Record<string,unknown>;layers?:SurfaceLayerState;context?:SurfaceContextInput;previousLayers?:Partial<AdaptiveSurfaceState>;deltaSeconds?:number;};
@@ -134,6 +135,7 @@ const PRODUCTION_PRESETS:Readonly<Record<ProductionPreset,PresetBaker>>={
   vfPainterlyStoneWall:(resolution,params)=>({material:bakeVfPainterlyStoneWall(resolution,params as VfPainterlyStoneWallParams)}),
   vfPainterlyMoss:(resolution,params)=>bakeVfPainterlyMoss(resolution,params as VfPainterlyMossParams),
   vfPainterlyWolfFur:(resolution,params)=>bakeVfPainterlyWolfFur(resolution,params as VfPainterlyWolfFurParams),
+  vfPaperWorldGrassTurf:(resolution,params)=>({material:bakeVfPaperWorldGrassTurf(resolution,params as VfPaperWorldGrassTurfParams)}),
   vf3DGrass:(resolution,params)=>bakeVf3DGrass(resolution,params as Vf3DShowcaseParams),
   vf3DMoss:(resolution,params)=>bakeVf3DMoss(resolution,params as Vf3DShowcaseParams),
   vf3DFur:(resolution,params)=>bakeVf3DFur(resolution,params as Vf3DShowcaseParams),
