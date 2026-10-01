@@ -7,12 +7,12 @@
       "preset": "vfPaperWorldGrassTurf",
       "params": {
         "seed": 314159,
-        "normalStrength": 8.4,
+        "normalStrength": 9.2,
         "pulpRelief": 1,
-        "fiberDensity": 0.7,
-        "fiberLift": 0.58,
-        "fleckAmount": 0.72,
-        "pressWrinkle": 0.16
+        "fiberDensity": 0.82,
+        "fiberLift": 0.48,
+        "fleckAmount": 0.68,
+        "pressWrinkle": 0.08
       }
     }
   ]
