@@ -14,6 +14,22 @@ type FiberSample={mask:number;tone:number};
 
 const MOD=(x:number,m:number)=>((x%m)+m)%m;
 
+function quintic(x:number){x=C(x);return x*x*x*(x*(x*6-15)+10);}
+function tileValueNoise(u:number,v:number,seed:number,freq:number){
+  const x=u*freq,y=v*freq,x0=Math.floor(x),y0=Math.floor(y),tx=quintic(x-x0),ty=quintic(y-y0);
+  const sample=(ix:number,iy:number)=>hash(seed,MOD(ix,freq),MOD(iy,freq),97)*2-1;
+  const a=sample(x0,y0),b=sample(x0+1,y0),cc=sample(x0,y0+1),d=sample(x0+1,y0+1);
+  return L(L(a,b,tx),L(cc,d,tx),ty);
+}
+function tileFbm(u:number,v:number,seed:number,baseFreq:number,octaves:number){
+  let sum=0,norm=0,amp=.58,freq=Math.max(1,Math.floor(baseFreq));
+  for(let i=0;i<octaves;i++){
+    sum+=tileValueNoise(u,v,seed+i*131,freq)*amp;
+    norm+=amp; amp*=.48; freq*=2;
+  }
+  return sum/Math.max(norm,1e-6);
+}
+
 function fiberField(u:number,v:number,seed:number,density:number):FiberSample{
   const grid=36;
   const gx=Math.floor(u*grid),gy=Math.floor(v*grid);
@@ -91,13 +107,13 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
   const ao=makeTexture(size,size,1);
 
   // Muted olive handmade-paper palette sampled by eye from PaperWorld v12.14.
-  const deep:RGB=[.175,.215,.105];
-  const cool:RGB=[.245,.285,.145];
-  const mid:RGB=[.305,.345,.165];
-  const light:RGB=[.405,.430,.215];
-  const warm:RGB=[.365,.345,.165];
-  const paleFiber:RGB=[.505,.485,.285];
-  const darkFiber:RGB=[.175,.225,.115];
+  const deep:RGB=[.205,.225,.135];
+  const cool:RGB=[.265,.285,.175];
+  const mid:RGB=[.325,.345,.205];
+  const light:RGB=[.405,.420,.255];
+  const warm:RGB=[.365,.350,.205];
+  const paleFiber:RGB=[.500,.485,.315];
+  const darkFiber:RGB=[.190,.215,.130];
 
   for(let y=0;y<size;y++){
     const v=1-(y+.5)/size;
@@ -105,16 +121,11 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
       const u=(x+.5)/size,i=y*size+x,j=i*3;
 
       // Three paper-pulp scales: broad dyed cloud, meso felt mass, fine compressed grain.
-      const macroA=periodicField(u,v,seed+11,3)*.5+.5;
-      const macroB=periodicField(v,u,seed+23,3)*.5+.5;
-      const macro=C(macroA*.62+macroB*.38);
-      const mesoA=periodicField(u*3,v*3,seed+37,4)*.5+.5;
-      const mesoB=periodicField(v*4,u*4,seed+51,3)*.5+.5;
-      const meso=C(mesoA*.58+mesoB*.42);
-      const fine=periodicField(u*11,v*11,seed+73,3)*.5+.5;
-      const micro=periodicField(u*32,v*32,seed+89,3)*.5+.5;
-      const pulpPatch=pulpPatchField(u,v,seed+157);
-      const cloud=C(.36*macro+.24*meso+.30*pulpPatch+.10*fine);
+      const macro=C(tileFbm(u,v,seed+11,2,4)*.5+.5);
+      const meso=C(tileFbm(u,v,seed+37,6,4)*.5+.5);
+      const fine=C(tileFbm(u,v,seed+73,16,3)*.5+.5);
+      const micro=C(tileFbm(u,v,seed+89,42,3)*.5+.5);
+      const cloud=C(.54*macro+.30*meso+.12*fine+.04*micro);
 
       // Very weak press wrinkles: structural accent only, never the dominant read.
       const wr1=ridgeField(u,v,seed+101,2,0.22);
@@ -125,20 +136,19 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
       const fleck=fleckField(u,v,seed+331,fleckAmount);
 
       let col=M(deep,mid,S((cloud-.18)/.66));
-      col=M(col,light,C(Math.max(0,pulpPatch-.50)*.20+Math.max(0,macro-.58)*.16));
-      col=M(col,cool,C(Math.max(0,.46-macro)*.15));
-      col=M(col,warm,C(Math.max(0,meso-.57)*.065+pressed*.010));
+      col=M(col,light,C(Math.max(0,macro-.55)*.17+Math.max(0,meso-.60)*.075));
+      col=M(col,cool,C(Math.max(0,.45-macro)*.105));
+      col=M(col,warm,C(Math.max(0,meso-.58)*.055+pressed*.008));
       const fiberTint=fib.tone>.58?paleFiber:darkFiber;
-      col=M(col,fiberTint,fib.mask*(fib.tone>.58?.085:.050));
-      col=M(col,paleFiber,fleck*.095);
+      col=M(col,fiberTint,fib.mask*(fib.tone>.58?.060:.035));
+      col=M(col,paleFiber,fleck*.070);
 
       // Height is mostly soft pulp thickness. Fibres are micro relief; wrinkles remain shallow.
       let h=.500;
-      h+=(macro-.5)*.016*pulpRelief;
+      h+=(macro-.5)*.018*pulpRelief;
       h+=(meso-.5)*.010*pulpRelief;
-      h+=(pulpPatch-.5)*.011*pulpRelief;
-      h+=(fine-.5)*.0038*pulpRelief;
-      h+=(micro-.5)*.0022*pulpRelief;
+      h+=(fine-.5)*.0036*pulpRelief;
+      h+=(micro-.5)*.0025*pulpRelief;
       h+=(pressed-.5)*.0022*pressWrinkle;
       h+=fib.mask*.0017*fiberLift;
       h+=(fleck-.25)*.0010;
@@ -150,7 +160,7 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
       height.data[i]=h;
 
       // Dry absorbent paper: consistently rough, with fibres slightly rougher.
-      roughness.data[i]=C(.958+(micro-.5)*.026+(fine-.5)*.012+fib.mask*.014+fleck*.008-(pulpPatch-.5)*.007);
+      roughness.data[i]=C(.962+(micro-.5)*.030+(fine-.5)*.012+fib.mask*.012+fleck*.006-(macro-.5)*.006);
       const lowPocket=C((.505-h)*22);
       ao.data[i]=C(.992-lowPocket*.055-fleck*.012);
     }
