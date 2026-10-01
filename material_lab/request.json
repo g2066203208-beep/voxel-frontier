@@ -1,67 +1,19 @@
 {
   "materials": [
     {
-      "name": "vf_painted_layered_sandstone_master",
+      "name": "paperworld_grass_turf",
       "resolution": 1024,
       "profile": "signature",
-      "preset": "vfLayeredSandstonePainted",
-      "params": {"seed":771231,"bands":5,"minSlabs":2,"maxSlabs":3,"crackChance":0.12,"chipStrength":0.82,"relief":1.34,"normalStrength":14.2}
-    },
-    {
-      "name": "vf_painterly_dirt_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlyDirt",
-      "params": {"seed":182031,"relief":1.34,"normalStrength":12.2,"moisture":0.14}
-    },
-    {
-      "name": "vf_painterly_bark_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlyBark",
-      "params": {"seed":275903,"relief":1.34,"normalStrength":13.0,"ridgeScale":1.0}
-    },
-    {
-      "name": "vf_painterly_leaves_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlyLeaves",
-      "params": {"seed":391477,"relief":1.14,"normalStrength":9.1,"density":1.0}
-    },
-    {
-      "name": "vf_painterly_snow_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlySnow",
-      "params": {"seed":447101,"relief":1.08,"normalStrength":7.2,"windStrength":0.85}
-    },
-    {
-      "name": "vf_painterly_water_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlyWater",
-      "params": {"seed":553819,"mode":"windy","relief":1.15,"normalStrength":9.4,"waveScale":1.08,"roughness":0.074,"foam":0.44,"transparency":0.84,"refraction":0.84,"glint":0.96}
-    },
-    {
-      "name": "vf_painterly_stone_wall_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlyStoneWall",
-      "params": {"seed":634021,"relief":1.40,"normalStrength":14.0,"stoneScale":1.0,"mortarDepth":1.0}
-    },
-    {
-      "name": "vf_painterly_moss_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlyMoss",
-      "params": {"seed":55109,"relief":1.36,"normalStrength":12.0,"density":0.86,"tuftHeight":0.90}
-    },
-    {
-      "name": "vf_painterly_wolf_fur_master",
-      "resolution": 1024,
-      "profile": "signature",
-      "preset": "vfPainterlyWolfFur",
-      "params": {"seed":91007,"relief":1.32,"normalStrength":11.8,"density":0.94,"guardLength":0.90}
+      "preset": "vfPaperWorldGrassTurf",
+      "params": {
+        "seed": 314159,
+        "normalStrength": 8.4,
+        "pulpRelief": 1,
+        "fiberDensity": 0.7,
+        "fiberLift": 0.58,
+        "fleckAmount": 0.72,
+        "pressWrinkle": 0.16
+      }
     }
   ]
 }
