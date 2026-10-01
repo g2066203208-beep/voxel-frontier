@@ -1,3 +1,4 @@
+import { heightToNormal } from "../../src/index.js";
 import { C,L,M,S,hash,wrapDelta,periodicField,ridgeField,finalize,makeTexture,type RGB } from "./vf-painterly-core.js";
 
 export type VfPaperWorldGrassTurfParams={
@@ -104,6 +105,7 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
   const baseColor=makeTexture(size,size,3);
   const roughness=makeTexture(size,size,1);
   const height=makeTexture(size,size,1);
+  const normalHeight=makeTexture(size,size,1);
   const ao=makeTexture(size,size,1);
 
   // Muted olive handmade-paper palette sampled by eye from PaperWorld v12.14.
@@ -139,6 +141,8 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
       col=M(col,light,C(Math.max(0,macro-.55)*.17+Math.max(0,meso-.60)*.075));
       col=M(col,cool,C(Math.max(0,.45-macro)*.105));
       col=M(col,warm,C(Math.max(0,meso-.58)*.055+pressed*.008));
+      col=M(col,light,C(Math.max(0,fine-.60)*.040));
+      col=M(col,deep,C(Math.max(0,.40-fine)*.030));
       const fiberTint=fib.tone>.58?paleFiber:darkFiber;
       col=M(col,fiberTint,fib.mask*(fib.tone>.58?.060:.035));
       col=M(col,paleFiber,fleck*.070);
@@ -159,6 +163,18 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
       baseColor.data[j+2]=C(col[2]);
       height.data[i]=h;
 
+      // A separate micro-height drives Normal only: paper stays geometrically shallow
+      // while felted fibres and compressed pulp still react clearly to grazing light.
+      let nh=.500;
+      nh+=(macro-.5)*.008;
+      nh+=(meso-.5)*.012;
+      nh+=(fine-.5)*.016;
+      nh+=(micro-.5)*.014;
+      nh+=(pressed-.5)*.0015*pressWrinkle;
+      nh+=fib.mask*.0085*fiberLift;
+      nh+=(fleck-.20)*.0035;
+      normalHeight.data[i]=C(nh);
+
       // Dry absorbent paper: consistently rough, with fibres slightly rougher.
       roughness.data[i]=C(.962+(micro-.5)*.030+(fine-.5)*.012+fib.mask*.012+fleck*.006-(macro-.5)*.006);
       const lowPocket=C((.505-h)*22);
@@ -166,5 +182,8 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
     }
   }
 
-  return finalize(size,baseColor,roughness,height,ao,normalStrength);
+  const metallic=makeTexture(size,size,1);
+  const emission=makeTexture(size,size,3);
+  const normal=heightToNormal(normalHeight,normalStrength,true);
+  return {baseColor,metallic,roughness,normal,ao,height,emission};
 }
