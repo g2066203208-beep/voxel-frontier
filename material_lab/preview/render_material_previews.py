@@ -15,6 +15,7 @@ PRESET_DISPLACEMENT={
     "vfPainterlyLeaves":{"amp":.045,"iterations":5,"hd_min":-.45,"hd_max":.72},
     "vfPainterlySnow":{"amp":.105,"iterations":6,"hd_min":-.28,"hd_max":.84},
     "vfPainterlyStoneWall":{"amp":.095,"iterations":6,"hd_min":-.40,"hd_max":.78},
+    "vfPaperWorldGrassTurf":{"amp":.046,"iterations":6,"hd_min":-.62,"hd_max":.68},
 }
 WATER_DISPLACEMENT={
     "calm":{"amp":.055,"iterations":6,"hd_min":-.55,"hd_max":.72},
