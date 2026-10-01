@@ -69,19 +69,19 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
   const baseColor=makeTexture(size,size,3),height=makeTexture(size,size,1),normalHeight=makeTexture(size,size,1),roughness=makeTexture(size,size,1),ao=makeTexture(size,size,1),metallic=makeTexture(size,size,1),emission=makeTexture(size,size,3);
 
   // v12.14 terrain-top palette, slightly exposure-compensated for the PBR material-sphere rig.
-  const base:RGB=[.405,.505,.255];
+  const base:RGB=[.255,.325,.165];
   const pulp:RGB[]=[
-    [.470,.565,.315],
-    [.330,.430,.235],
-    [.445,.535,.295],
-    [.355,.455,.245]
+    [.325,.400,.205],
+    [.205,.285,.145],
+    [.305,.375,.190],
+    [.225,.310,.155]
   ];
   fillRGB(baseColor,base);height.data.fill(.5);normalHeight.data.fill(.5);
 
   // 26 low-contrast handmade-paper pulp patches from v12.14's visible terrain texture.
   for(let i=0;i<26;i++){
     const cx=r()*size,cy=r()*size,rx=(18+r()*48)*scale,ry=(12+r()*34)*scale,verts=12+(r()*7|0);
-    const alpha=(.035+r()*.055)*pulpStrength;
+    const alpha=(.050+r()*.070)*pulpStrength;
     const light=r()>.48;
     const dh=(light?1:-1)*(.0030+r()*.0028)*relief;
     drawSoftIrregularPulp(baseColor,height,cx,cy,rx,ry,verts,r()*Math.PI,pulp[(r()*pulp.length)|0],alpha,dh);
@@ -91,13 +91,13 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
   for(let i=0;i<5;i++){
     const cx=r()*size,cy=r()*size,rx=(45+r()*80)*scale,ry=(36+r()*68)*scale;
     const light=r()>.5;
-    drawSoftIrregularPulp(baseColor,height,cx,cy,rx,ry,9+r()*4|0,r()*Math.PI,light?[.515,.555,.360]:[.285,.350,.205],light?.020:.017,(light?.0018:-.0015)*relief);
+    drawSoftIrregularPulp(baseColor,height,cx,cy,rx,ry,9+r()*4|0,r()*Math.PI,light?[.350,.405,.235]:[.185,.255,.135],light?.020:.017,(light?.0018:-.0015)*relief);
   }
 
   // 760 broken cellulose fibres: the strongest close-up cue in v12.14.
   for(let i=0;i<760;i++){
     const x=r()*size,y=r()*size,a=r()*Math.PI,len=(.7+r()*4.8)*scale,w=(.28+r()*.52)*scale,light=r()>.52;
-    const tone=light?[.610,.650,.470] as RGB:[.250,.315,.205] as RGB;
+    const tone=light?[.430,.475,.300] as RGB:[.165,.225,.125] as RGB;
     const alpha=(.055+r()*.085)*fiberStrength;
     const x1=x+Math.cos(a)*len,y1=y+Math.sin(a)*len;
     drawFiber(baseColor,normalHeight,x,y,x1,y1,w,tone,alpha,(light?.0060:-.0042)*fiberStrength);
@@ -106,7 +106,7 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
   // Sparse tiny pulp flecks.
   for(let i=0;i<145;i++){
     const q=Math.max(1,Math.round((.35+r()*1.25)*scale)),x=Math.floor(r()*size),y=Math.floor(r()*size),light=r()>.5;
-    const tone=light?[.610,.635,.465] as RGB:[.255,.315,.205] as RGB;
+    const tone=light?[.420,.455,.285] as RGB:[.175,.230,.130] as RGB;
     const alpha=(.035+r()*.075)*.78;
     for(let yy=0;yy<q;yy++)for(let xx=0;xx<q;xx++){
       mixRGB(baseColor,x+xx,y+yy,tone,alpha);
@@ -124,7 +124,7 @@ export function bakeVfPaperWorldGrassTurf(size:number,p:VfPaperWorldGrassTurfPar
     const i=y*size+x,h=H[i],xm=mod(x-2,size),xp=mod(x+2,size),ym=mod(y-2,size),yp=mod(y+2,size);
     const around=(H[y*size+xm]+H[y*size+xp]+H[ym*size+x]+H[yp*size+x])*.25;
     const cavity=C((around-h)*6+(.497-h)*7);
-    roughness.data[i]=C(.958-(h-.5)*.70);
+    roughness.data[i]=C(.968-(h-.5)*.60);
     ao.data[i]=C(1-cavity*.16);
   }
   return{baseColor,metallic,roughness,normal,ao,height,emission};
