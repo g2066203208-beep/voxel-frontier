@@ -1,0 +1,5 @@
+research/wind-tower/models/*.cae filter=lfs diff=lfs merge=lfs -text
+research/wind-tower/geometry/*.step filter=lfs diff=lfs merge=lfs -text
+research/wind-tower/logs/*.rec -text
+research/wind-tower/logs/*.jnl -text
+research/wind-tower/inspection/*.gz -text

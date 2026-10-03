@@ -8,3 +8,7 @@ dist/
 Thumbs.db
 test-results/
 playwright-report/
+
+# Manuscripts and original meeting documents remain local.
+/research/**/*.docx
+/research/**/manuscript*
