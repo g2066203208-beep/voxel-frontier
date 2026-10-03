@@ -1,37 +1,10 @@
-# Native CMake/build outputs
-build/
-out/
-cmake-build-*/
-CMakeUserPresets.json
-CMakeCache.txt
-CMakeFiles/
-compile_commands.json
-Testing/
-
-# Compiler/linker artifacts
-*.obj
-*.o
-*.pdb
-*.ilk
-*.idb
-*.exp
-*.lib
-*.dll
-*.exe
-*.so
-*.dylib
-*.a
-
-# Runtime/debug output
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
 *.log
-*.trace
-*.prof
-
-# IDE / OS local state
-.vs/
-.idea/
 .DS_Store
 Thumbs.db
-
-# Keep the shared VS Code project configuration committed.
-.vscode/*.log
+test-results/
+playwright-report/

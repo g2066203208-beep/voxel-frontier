@@ -1,177 +1,44 @@
-# Voxel Frontier — Production Roadmap
+# 论文工作室产品范围
 
-## Core vision
+## 目标
 
-Voxel Frontier is a native C++23 sandbox/RPG with finite spherical planets in a procedurally generated, effectively unbounded universe.
+让研究者在一个项目中整理从论文写作到实验、数据和复盘的全过程。工作台应支持真实编辑与持久保存，让记录、任务和附件能够一起备份与恢复。
 
-Non-negotiable rules:
+## 当前模块
 
-- planets have finite physical size and real spherical surfaces;
-- natural terrain is smooth triangle geometry, not visible block voxels;
-- the player can traverse around a planet and move from ground to atmosphere to space without a loading-screen world swap;
-- local gravity points toward the relevant celestial body;
-- celestial bodies are world objects, not skybox decorations;
-- universe generation is deterministic from coordinates/seeds;
-- cost is bounded by local visibility/LOD/physics activity, not theoretical universe size;
-- terrain editing uses sparse local volumetric/SDF data only where 3D topology is actually required.
+| 模块 | 用途 |
+| --- | --- |
+| 论文 | 组织写作内容并维护论文状态 |
+| 审查 | 记录审查问题与修订进展 |
+| 复盘 | 记录研究经验、结论和后续行动 |
+| 实验 | 保存实验目的、方法、参数及结果 |
+| 步骤 | 管理研究任务和执行进度 |
+| 模型 | 管理建模说明及模型附件 |
+| 数据 | 导入 CSV 并查看、整理数据 |
+| 参考文献 | 管理文献条目并交换 BibTeX 数据 |
 
-## Authoritative production stack
+## 存储与备份
 
-- C++23
-- Vulkan explicit renderer
-- SDL3 thin platform layer
-- Slang -> SPIR-V shaders
-- CMake
-- native Windows executable
-- Linux + Windows CI
+- 项目记录使用浏览器 `localStorage` 持久保存。
+- 附件使用浏览器 `IndexedDB` 保存。
+- JSON 备份包含项目记录和附件，用于手动备份及导入恢复。
+- 工作台属于当前浏览器与网站地址。多设备使用需要手动导出、导入备份。
 
-There is no production TypeScript/Three.js/WebGPU/WebAssembly/browser engine path anymore.
+浏览器存储不是长期归档系统。重要成果应导出到使用者自己管理的存储位置；清除网站数据前先保存备份。
 
-## Spatial and terrain architecture
+## 实现范围
 
-```text
-Universe
- -> Star System
- -> Planet reference frame
- -> Surface patch
- -> Local terrain/deformation field
-```
+本版本使用 Vite 与 TypeScript，以静态站点部署到 GitHub Pages。它提供科研记录与文件管理，不包含后端账户、云同步、AI 调用、真实模型求解或三维渲染。涉及科学有效性的结论和审查由研究者负责填写与判断。
 
-Untouched planetary terrain:
+## 质量要求
 
-```text
-procedural planet function
- -> hierarchical cube-sphere / clipmap-friendly surface patches
- -> explicit indexed triangle geometry / meshlets
- -> Vulkan
-```
+1. 每个模块均可用于实际工作，新增和编辑结果可保存。
+2. 用户内容以文本安全呈现，避免把导入内容当作可执行 HTML。
+3. 数据导入应校验格式并给出可读错误，不应悄悄覆盖有效记录。
+4. 项目备份与恢复覆盖记录及附件。
+5. 构建包含 TypeScript 检查；持续集成运行测试和构建。
+6. 界面支持不同屏幕宽度和键盘操作。
 
-Caves, overhangs, excavation and filling:
+## 后续方向
 
-```text
-procedural base
- + sparse local SDF/density edits
- -> local surface extraction
- -> seam-safe triangle mesh
-```
-
-See `docs/TERRAIN_ARCHITECTURE.md`.
-
-## Multi-scale rendering
-
-1. local: detailed surface mesh + sparse edited volumetric regions;
-2. regional: procedural LOD surface patches;
-3. orbital: low-cost planet proxy;
-4. interplanetary: tiny analytical/proxy body;
-5. stellar/deep-space: batched catalog/cluster representation.
-
-Rendering work should use camera-relative coordinates, horizon/frustum culling, measured Hi-Z/occlusion where useful, indirect draw generation and mesh/task shaders only where hardware measurements justify them.
-
-## Physics vision
-
-The world is one coupled physical graph:
-
-```text
-planet gravity / atmosphere / weather / water
-                  |
-                  v
-rigid bodies -> contacts -> constraints -> machines
-     |              |            |
-     |              |            +-> motors / gears / springs / joints
-     |              +-> friction / impacts / structural loads
-     +-> aero / buoyancy / fluid drag / pressure forces
-```
-
-Already implemented foundations:
-
-- 120 Hz fixed-step rigid-body simulation;
-- mass, inertia, momentum, force, torque and impulses;
-- radial planetary gravity;
-- atmosphere temperature/pressure/density/wind;
-- sweep-and-prune broadphase;
-- sphere / box / capsule / convex collision geometry and GJK/EPA support;
-- persistent contact solving with friction/restitution;
-- springs, distance constraints, hinges, motors, gears and break limits;
-- local aerodynamic surfaces with angle-of-attack/stall behavior;
-- shallow-water transport and buoyancy foundations;
-- ideal-gas chamber foundations;
-- XPBD rope physics;
-- capsule character controller with radial gravity, slopes, steps and jumping.
-
-Special-case demo systems are not production architecture. The obsolete tree-only simulator and standalone physics playground have been removed from the authoritative source tree; future vegetation/destruction must use generic material/fracture plus rigid-body systems.
-
-See `docs/PHYSICS_ARCHITECTURE.md` for the lower-level solver design.
-
-## Near-term technical order
-
-1. finish and harden shape-aware contacts, manifold persistence and CCD/shape casts;
-2. eliminate terrain-streaming GPU stalls and move toward persistent/double-buffered terrain resources;
-3. hierarchical patch/clipmap terrain streaming with seam-safe incremental updates;
-4. authoritative rendered water + multipoint hull buoyancy/torque;
-5. gas chambers connected to real compartments, flooding and variable buoyancy;
-6. generic material cutting/fracture -> rigid-body fragments, without object-specific physics hacks;
-7. reusable instanced rigid-body rendering instead of CPU rebuilding debug geometry;
-8. slider/ball/fixed/6-DOF constraints, clutch/differential, wheel/suspension/tire models;
-9. propellers/rotors/control surfaces and vehicle/aircraft physical systems;
-10. local weather cells, rainfall/catchments and physically coupled environmental gameplay.
-
-## World milestones
-
-### Spherical planet runtime
-
-Current runtime already has a finite smooth spherical planet, radial movement, a physical capsule character controller, camera-relative Vulkan rendering, ground-to-space altitude traversal and multiple real celestial bodies. Remaining work is hierarchical patch LOD, seam-safe streaming, production water and large-scale world content.
-
-### Sculptable terrain
-
-- sparse local SDF/density bricks;
-- persistent CSG/deformation deltas;
-- Dual Contouring / Marching Cubes family evaluation;
-- crack-free multiresolution transitions;
-- caves/overhangs/excavation/filling;
-- localized collision remeshing.
-
-### Interplanetary travel
-
-- multiple finite planets;
-- analytical orbit/rotation state;
-- reference-frame transitions;
-- proxy -> planet LOD -> local terrain approach;
-- seamless landing;
-- persistent edits independent of procedural base terrain.
-
-### Effectively unbounded universe
-
-- deterministic star-sector generation;
-- hierarchical sector streaming;
-- compact unloaded-system metadata;
-- long-distance traversal/warp design;
-- persistent discoveries and edits.
-
-## Gameplay after technical foundations
-
-- terrain/resource interaction;
-- inventory/crafting/tools;
-- survival/oxygen/power/environment;
-- base construction;
-- machines and vehicles;
-- creatures/NPC AI;
-- progression/research;
-- structures/anomalies;
-- authoritative multiplayer.
-
-## Mandatory test evidence
-
-Every runtime test round must leave reviewable evidence in the repository and must show the user the screenshots even when the visual result is poor or the round fails.
-
-- Use only real framebuffer captures from the tested Vulkan runtime. Never use generated/concept images as test evidence.
-- Store each round under `docs/evidence/<round-or-commit>/` with the exact screenshots, capture metadata and relevant runtime/Vulkan logs.
-- Terrain/geomorphology work must capture the actual landform(s) under test from a camera that makes the morphology readable; failed/flat/bad framing is still preserved rather than hidden.
-- Celestial-motion work must capture a time sequence or before/after frames from a fixed camera so movement can be visually verified; a single Sun/Moon frame is not motion evidence.
-- Evidence is part of the test deliverable, not an optional presentation step. A code result without the requested screenshots is incomplete.
-- CI artifacts may supplement repository evidence, but artifact-only screenshots do not replace committed evidence for a test round the user is expected to review.
-
-See `docs/evidence/README.md` for the evidence layout.
-
-## Repository rule
-
-Keep only the authoritative production path and documentation in `main`. Superseded experiments belong in Git history or dedicated archival tags/branches, not as dead parallel engines in the working tree.
+后续可根据实际研究流程扩展更细的实验模板、论文修订版本、数据图表和文献检索。后端同步、AI 辅助、模型求解与三维查看需要独立设计和验证，不作为本版本已实现能力。
