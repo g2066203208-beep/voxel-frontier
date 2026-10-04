@@ -55,3 +55,8 @@
 - 活动目录只保留当前有效workflow与06以后审计；
 - `audit/INDEX.md`、`task_registry.tsv`、`MASTER_RESEARCH_PROTOCOL.md`、`PROJECT_ORGANIZATION.md`与README已同步修复；
 - 新增硬规则：每次产生新结论/新流程时，必须同时执行旧记录替代、修正、去重、归档和交叉引用更新。
+
+
+## 当前正式任务：T020 / G0 baseline闭合
+
+目标：把何泽瑜158 m混塔原型、DTU 10 MW参考机组、正式Abaqus模型和正式OpenFAST模型统一为唯一baseline。G0未通过前，不进入P2.5及后续正式生产计算。
