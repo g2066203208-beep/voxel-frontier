@@ -31,3 +31,18 @@
 - 正式OpenFAST输入
 - 旧M6对应.lin/CSV
 - 若干核心付费全文
+
+
+## 2026-10-04 记录体系复核与回填
+
+本轮检查发现：此前audit/workflow/reference文件已经较完整，但结构化registry中CLAIM/PAR/RUN/FIG表仍未回填。现已完成第一批治理修正：
+
+- 新增 `registry/task_registry.tsv`：把T000–T018各研究步骤、产出、状态和门禁统一登记；
+- 新增 `audit/INDEX.md`：统一索引01–18审计文件；
+- 新增 `workflow/RECORDING_POLICY.md`：规定以后“先登记task，再工作；正式仿真先建Research Card；task结束必须回填registry”；
+- `parameter_registry.tsv` 已回填首批20个关键参数；
+- `claim_evidence.tsv` 已回填首批14条核心论断；
+- `run_registry.tsv` 暂不虚构回填：新MASTER流程下还没有重新执行并入库的正式生产run；
+- `figure_table_registry.tsv` 同理，待正式新baseline图表生成后登记。
+
+当前结论：**高层研究过程记录已经完整；结构化台账正在由“框架已建立”进入“逐项回填”阶段。**
