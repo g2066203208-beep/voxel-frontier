@@ -1,0 +1,1786 @@
+[
+  {
+    "name": "R7_RUN_STATUS.md",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\R7_RUN_STATUS.md",
+    "bytes": 348,
+    "modified": "2026-08-29 17:24:08",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S06.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S06.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 18:05:37",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S06.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S06.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 15:52:38",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S05.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S05.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 18:05:19",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S05.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S05.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 15:52:38",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S04.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S04.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 18:04:54",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S04.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S04.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 15:52:38",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S03.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S03.out.log",
+    "bytes": 1593,
+    "modified": "2026-08-30 13:51:17",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S03.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S03.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 12:11:01",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S02.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S02.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 13:50:01",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S02.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S02.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 12:09:41",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S01.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S01.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 13:50:02",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S01.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_NTM_S01.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 12:09:20",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S06.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S06.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 12:10:53",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S06.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S06.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 10:29:35",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S05.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S05.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 12:09:34",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S05.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S05.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 10:28:35",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S04.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S04.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 12:09:19",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S04.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S04.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 10:28:25",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S03.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S03.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 10:29:34",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S03.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S03.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 08:51:09",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S02.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S02.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 10:28:28",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S02.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S02.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 08:50:39",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S01.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S01.out.log",
+    "bytes": 1593,
+    "modified": "2026-08-30 10:28:21",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S01.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U19p202140_ETM_S01.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 08:50:39",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S06.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S06.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 08:51:04",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S06.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S06.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 07:14:03",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S05.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S05.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 08:50:36",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S05.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S05.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 07:13:43",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S04.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S04.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 08:50:30",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S04.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S04.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 07:13:33",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S03.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S03.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 07:13:32",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S03.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S03.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 05:36:38",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S02.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S02.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 07:13:34",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S02.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S02.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 05:36:38",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S01.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S01.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 07:13:58",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S01.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_NTM_S01.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 05:36:38",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S06.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S06.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 05:36:28",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S06.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S06.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 03:59:22",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S05.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S05.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 05:36:28",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S05.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S05.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 03:59:22",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S04.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S04.out.log",
+    "bytes": 1578,
+    "modified": "2026-08-30 05:36:29",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S04.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S04.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 03:59:22",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S03.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S03.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 03:59:19",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S03.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S03.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 02:22:27",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S02.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S02.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 03:59:14",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S02.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S02.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 02:22:17",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S01.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S01.out.log",
+    "bytes": 1580,
+    "modified": "2026-08-30 03:59:15",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S01.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U11p4_ETM_S01.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 02:22:17",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S06.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S06.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 02:22:09",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S06.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S06.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 00:41:01",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S05.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S05.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 02:22:11",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S05.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S05.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 00:40:51",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S04.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S04.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 02:22:20",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S04.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S04.err.log",
+    "bytes": 0,
+    "modified": "2026-08-30 00:40:51",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S03.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S03.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 00:40:59",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S03.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S03.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 22:55:05",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S02.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S02.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 00:40:42",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S02.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S02.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 22:54:55",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S01.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S01.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-30 00:40:45",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S01.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_NTM_S01.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 22:54:55",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S06.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S06.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-29 22:54:52",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S06.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S06.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 21:04:49",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S05.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S05.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-29 22:54:52",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S05.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S05.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 21:04:39",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S04.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S04.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-29 22:54:56",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S04.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S04.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 21:04:39",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S03.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S03.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-29 21:04:31",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S03.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S03.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 19:09:33",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S02.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S02.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-29 21:04:49",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S02.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S02.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 19:09:33",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S01.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S01.out.log",
+    "bytes": 1595,
+    "modified": "2026-08-29 21:04:36",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S01.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\logs\\U09p343881_ETM_S01.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 19:09:33",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S06.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S06.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 18:05:37",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S06.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S06.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S06.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S06.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 18:05:31",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S06.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S06.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 18:05:36",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S05.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S05.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 18:05:19",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S05.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S05.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S05.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S05.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 18:05:13",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S05.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S05.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 18:05:19",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S04.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S04.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 18:04:54",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S04.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S04.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S04.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S04.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 18:04:47",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S04.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S04.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 18:04:54",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S03.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S03.sum",
+    "bytes": 76735,
+    "modified": "2026-08-30 13:51:17",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S03.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S03.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S03.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S03.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 13:51:10",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S03.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S03.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 13:51:16",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S02.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S02.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 13:50:01",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S02.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S02.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S02.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S02.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 13:49:54",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S02.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S02.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 13:50:01",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S01.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S01.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 13:50:02",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S01.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S01.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S01.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S01.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 13:49:46",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_NTM_S01.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S01.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 13:50:02",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S06.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S06.sum",
+    "bytes": 76876,
+    "modified": "2026-08-30 12:10:53",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S06.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S06.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S06.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S06.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 12:10:47",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S06.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S06.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 12:10:53",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S05.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S05.sum",
+    "bytes": 76876,
+    "modified": "2026-08-30 12:09:32",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S05.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S05.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S05.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S05.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 12:09:25",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S05.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S05.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 12:09:31",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S04.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S04.sum",
+    "bytes": 76876,
+    "modified": "2026-08-30 12:09:19",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S04.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S04.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S04.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S04.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 12:09:13",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S04.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S04.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 12:09:19",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S03.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S03.sum",
+    "bytes": 76876,
+    "modified": "2026-08-30 10:29:34",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S03.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S03.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S03.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S03.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 10:29:29",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S03.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S03.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 10:29:34",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S02.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S02.sum",
+    "bytes": 76876,
+    "modified": "2026-08-30 10:28:28",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S02.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S02.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S02.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S02.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 10:28:22",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S02.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S02.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 10:28:27",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S01.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S01.sum",
+    "bytes": 76874,
+    "modified": "2026-08-30 10:28:21",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S01.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S01.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S01.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S01.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 10:28:15",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U19p202140_ETM_S01.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S01.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 10:28:21",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S06.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S06.sum",
+    "bytes": 76727,
+    "modified": "2026-08-30 08:51:04",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S06.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S06.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S06.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S06.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 08:50:58",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S06.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S06.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 08:51:04",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S05.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S05.sum",
+    "bytes": 76727,
+    "modified": "2026-08-30 08:50:36",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S05.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S05.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S05.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S05.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 08:50:30",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S05.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S05.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 08:50:36",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S04.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S04.sum",
+    "bytes": 76727,
+    "modified": "2026-08-30 08:50:30",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S04.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S04.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S04.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S04.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 08:50:24",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S04.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S04.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 08:50:30",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S03.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S03.sum",
+    "bytes": 76727,
+    "modified": "2026-08-30 07:13:32",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S03.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S03.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S03.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S03.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 07:13:26",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S03.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S03.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 07:13:32",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S02.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S02.sum",
+    "bytes": 76727,
+    "modified": "2026-08-30 07:13:34",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S02.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S02.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S02.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S02.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 07:13:28",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S02.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S02.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 07:13:34",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S01.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S01.sum",
+    "bytes": 76727,
+    "modified": "2026-08-30 07:13:58",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S01.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S01.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S01.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S01.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 07:13:51",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_NTM_S01.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S01.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 07:13:57",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S06.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S06.sum",
+    "bytes": 76866,
+    "modified": "2026-08-30 05:36:28",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S06.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S06.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S06.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S06.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 05:36:23",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S06.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S06.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 05:36:28",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S05.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S05.sum",
+    "bytes": 76866,
+    "modified": "2026-08-30 05:36:28",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S05.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S05.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S05.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S05.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 05:36:22",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S05.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S05.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 05:36:28",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S04.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S04.sum",
+    "bytes": 76864,
+    "modified": "2026-08-30 05:36:29",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S04.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S04.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S04.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S04.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 05:36:23",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S04.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S04.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 05:36:29",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S03.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S03.sum",
+    "bytes": 76866,
+    "modified": "2026-08-30 03:59:19",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S03.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S03.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S03.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S03.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 03:59:14",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S03.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S03.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 03:59:19",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S02.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S02.sum",
+    "bytes": 76866,
+    "modified": "2026-08-30 03:59:14",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S02.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S02.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S02.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S02.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 03:59:09",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S02.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S02.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 03:59:14",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S01.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S01.sum",
+    "bytes": 76866,
+    "modified": "2026-08-30 03:59:15",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S01.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S01.inp",
+    "bytes": 4248,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S01.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S01.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 03:59:09",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U11p4_ETM_S01.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S01.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 03:59:15",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S06.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S06.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 02:22:09",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S06.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S06.inp",
+    "bytes": 4246,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S06.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S06.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 02:22:03",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S06.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S06.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 02:22:09",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S05.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S05.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 02:22:11",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S05.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S05.inp",
+    "bytes": 4246,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S05.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S05.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 02:22:05",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S05.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S05.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 02:22:11",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S04.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S04.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 02:22:20",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S04.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S04.inp",
+    "bytes": 4246,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S04.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S04.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 02:22:15",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S04.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S04.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 02:22:20",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S03.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S03.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 00:40:59",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S03.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S03.inp",
+    "bytes": 4246,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S03.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S03.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 00:40:53",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S03.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S03.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 00:40:59",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S02.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S02.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 00:40:42",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S02.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S02.inp",
+    "bytes": 4246,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S02.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S02.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 00:40:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S02.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S02.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 00:40:42",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S01.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S01.sum",
+    "bytes": 76737,
+    "modified": "2026-08-30 00:40:45",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S01.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S01.inp",
+    "bytes": 4246,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S01.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S01.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-30 00:40:39",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_NTM_S01.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S01.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-30 00:40:45",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S06.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S06.sum",
+    "bytes": 76876,
+    "modified": "2026-08-29 22:54:52",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S06.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S06.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S06.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S06.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-29 22:54:45",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S06.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S06.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-29 22:54:51",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S05.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S05.sum",
+    "bytes": 76876,
+    "modified": "2026-08-29 22:54:52",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S05.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S05.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S05.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S05.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-29 22:54:46",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S05.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S05.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-29 22:54:52",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S04.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S04.sum",
+    "bytes": 76876,
+    "modified": "2026-08-29 22:54:56",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S04.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S04.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S04.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S04.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-29 22:54:50",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S04.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S04.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-29 22:54:56",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S03.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S03.sum",
+    "bytes": 76876,
+    "modified": "2026-08-29 21:04:31",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S03.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S03.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S03.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S03.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-29 21:04:24",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S03.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S03.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-29 21:04:31",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S02.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S02.sum",
+    "bytes": 76876,
+    "modified": "2026-08-29 21:04:49",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S02.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S02.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S02.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S02.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-29 21:04:42",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S02.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S02.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-29 21:04:48",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S01.sum",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S01.sum",
+    "bytes": 76876,
+    "modified": "2026-08-29 21:04:36",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S01.inp",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S01.inp",
+    "bytes": 4247,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S01.dat",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S01.dat",
+    "bytes": 3528249,
+    "modified": "2026-08-29 21:04:30",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "U09p343881_ETM_S01.bts",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S01.bts",
+    "bytes": 436968166,
+    "modified": "2026-08-29 21:04:36",
+    "extension": ".bts",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "run.out.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\run.out.log",
+    "bytes": 772,
+    "modified": "2026-08-29 17:04:55",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "run.err.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\run.err.log",
+    "bytes": 0,
+    "modified": "2026-08-29 17:04:50",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "background_supervisor.log",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\background_supervisor.log",
+    "bytes": 3135,
+    "modified": "2026-08-30 12:11:01",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "A2_TURBSIM_WIND_QC.csv",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\A2_TURBSIM_WIND_QC.csv",
+    "bytes": 5450,
+    "modified": "2026-08-29 17:24:08",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "A1_TURBSIM_FINAL_CASE_MATRIX.csv",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\A1_TURBSIM_FINAL_CASE_MATRIX.csv",
+    "bytes": 3179,
+    "modified": "2026-08-29 17:23:19",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "A0_UREF_FROZEN_LEDGER.csv",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\A0_UREF_FROZEN_LEDGER.csv",
+    "bytes": 263,
+    "modified": "2026-08-29 17:24:08",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  }
+]

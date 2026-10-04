@@ -1,0 +1,2482 @@
+[
+  {
+    "name": "SS_plane_U1_PEAKS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\SS_plane_U1_PEAKS.csv",
+    "bytes": 495,
+    "modified": "2026-09-02 22:00:13",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "RAYLEIGH_FREE_DECAY_RP_HISTORY.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\RAYLEIGH_FREE_DECAY_RP_HISTORY.csv",
+    "bytes": 257538,
+    "modified": "2026-09-02 22:00:13",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "RAYLEIGH_FREE_DECAY_DAMPING_ESTIMATE.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\RAYLEIGH_FREE_DECAY_DAMPING_ESTIMATE.csv",
+    "bytes": 398,
+    "modified": "2026-09-02 22:00:13",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FREE_DECAY_MANIFEST.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\FREE_DECAY_MANIFEST.csv",
+    "bytes": 565,
+    "modified": "2026-09-02 21:40:17",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FA_plane_U3_PEAKS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\FA_plane_U3_PEAKS.csv",
+    "bytes": 513,
+    "modified": "2026-09-02 22:00:13",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.sta",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.sta",
+    "bytes": 273191,
+    "modified": "2026-09-02 21:41:50",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.sim",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.sim",
+    "bytes": 5157950,
+    "modified": "2026-09-02 21:41:56",
+    "extension": ".sim",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.prt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.prt",
+    "bytes": 479264,
+    "modified": "2026-09-02 21:41:51",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.odb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.odb",
+    "bytes": 69048912,
+    "modified": "2026-09-02 21:41:51",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.msg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.msg",
+    "bytes": 755137,
+    "modified": "2026-09-02 21:41:50",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.inp",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.inp",
+    "bytes": 12639858,
+    "modified": "2026-09-02 21:40:17",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.dat",
+    "bytes": 144463,
+    "modified": "2026-09-02 21:41:50",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.com",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.com",
+    "bytes": 3766,
+    "modified": "2026-09-02 21:40:27",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.sim",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.sim",
+    "bytes": 1725050,
+    "modified": "2026-09-02 21:38:22",
+    "extension": ".sim",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.prt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.prt",
+    "bytes": 479264,
+    "modified": "2026-09-02 21:38:19",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.odb_f",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.odb_f",
+    "bytes": 15132244,
+    "modified": "2026-09-02 21:38:15",
+    "extension": ".odb_f",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.odb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.odb",
+    "bytes": 20534428,
+    "modified": "2026-09-02 21:38:17",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.inp",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.inp",
+    "bytes": 12639914,
+    "modified": "2026-09-02 21:38:00",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.env",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.env",
+    "bytes": 20533,
+    "modified": "2026-09-02 21:38:22",
+    "extension": ".env",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.dat",
+    "bytes": 120841,
+    "modified": "2026-09-02 21:38:17",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.com",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.com",
+    "bytes": 3766,
+    "modified": "2026-09-02 21:38:13",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.sim",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.sim",
+    "bytes": 1716846,
+    "modified": "2026-09-02 21:35:35",
+    "extension": ".sim",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.inp",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.inp",
+    "bytes": 12639851,
+    "modified": "2026-09-02 21:35:10",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.env",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.env",
+    "bytes": 20512,
+    "modified": "2026-09-02 21:35:35",
+    "extension": ".env",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.dat",
+    "bytes": 3507,
+    "modified": "2026-09-02 21:35:32",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.com",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.com",
+    "bytes": 3760,
+    "modified": "2026-09-02 21:35:30",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "R7_DAMPING_PROGRESS_20260902.zip",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\R7_DAMPING_PROGRESS_20260902.zip",
+    "bytes": 255291,
+    "modified": "2026-09-02 17:19:21",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "R7_DAMPING_MODAL_FIGURES_AUDIT_20260902_FINAL.zip",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\R7_DAMPING_MODAL_FIGURES_AUDIT_20260902_FINAL.zip",
+    "bytes": 227673,
+    "modified": "2026-09-02 14:39:04",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "R7_DAMPING_EQ18_WEAK_FORM_EVIDENCE_20260902.zip",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\R7_DAMPING_EQ18_WEAK_FORM_EVIDENCE_20260902.zip",
+    "bytes": 1791545,
+    "modified": "2026-09-02 20:53:54",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "R7_DAMPING_CORRECTED_EVIDENCE_20260902.zip",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\R7_DAMPING_CORRECTED_EVIDENCE_20260902.zip",
+    "bytes": 1899774,
+    "modified": "2026-09-02 22:01:13",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "openfast_formal_damping_36case_R2_RAINFLOW_DEL_20260905.zip",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_formal_damping_36case_R2_RAINFLOW_DEL_20260905.zip",
+    "bytes": 1874982,
+    "modified": "2026-09-05 11:10:02",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "openfast_damping_regression_20260903.zip",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903.zip",
+    "bytes": 32755952,
+    "modified": "2026-09-03 16:10:02",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "REGRESSION_IMPACT_VS_6SEED.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\REGRESSION_IMPACT_VS_6SEED.csv",
+    "bytes": 14263,
+    "modified": "2026-09-03 16:07:03",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "REGRESSION_CHANNEL_METRICS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\REGRESSION_CHANNEL_METRICS.csv",
+    "bytes": 5061,
+    "modified": "2026-09-03 16:07:02",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "README.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\README.md",
+    "bytes": 882,
+    "modified": "2026-09-03 16:09:56",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "BASELINE_6SEED_DISPERSION.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\BASELINE_6SEED_DISPERSION.csv",
+    "bytes": 11944,
+    "modified": "2026-09-03 16:07:03",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "REGRESSION_STATUS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\REGRESSION_STATUS.csv",
+    "bytes": 443,
+    "modified": "2026-09-03 12:30:31",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "REGRESSION_OLD_NEW_COMPARISON.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\REGRESSION_OLD_NEW_COMPARISON.csv",
+    "bytes": 10336,
+    "modified": "2026-09-03 16:07:02",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "RUN_COMPLETE.txt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\RUN_COMPLETE.txt",
+    "bytes": 10,
+    "modified": "2026-09-03 12:30:31",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODE_DIRECTION_IDENTIFICATION_CORRECTED.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\MODE_DIRECTION_IDENTIFICATION_CORRECTED.csv",
+    "bytes": 6632,
+    "modified": "2026-09-02 10:36:17",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODE_DIRECTION_IDENTIFICATION.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\MODE_DIRECTION_IDENTIFICATION.csv",
+    "bytes": 2879,
+    "modified": "2026-09-02 10:35:30",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FINAL_FA_SS_MODE_MAP.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\FINAL_FA_SS_MODE_MAP.csv",
+    "bytes": 341,
+    "modified": "2026-09-02 10:41:04",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.sta",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.sta",
+    "bytes": 1123,
+    "modified": "2026-09-01 18:48:12",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.sim",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.sim",
+    "bytes": 2045502,
+    "modified": "2026-09-01 18:48:13",
+    "extension": ".sim",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.prt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.prt",
+    "bytes": 552421,
+    "modified": "2026-09-01 18:48:13",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.odb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.odb",
+    "bytes": 46090388,
+    "modified": "2026-09-01 18:48:12",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.msg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.msg",
+    "bytes": 38454,
+    "modified": "2026-09-01 18:48:12",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.inp",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.inp",
+    "bytes": 17150359,
+    "modified": "2026-09-01 17:12:38",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.dat",
+    "bytes": 128209,
+    "modified": "2026-09-01 18:48:12",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.com",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_FULL_AUDIT.com",
+    "bytes": 3744,
+    "modified": "2026-09-01 18:47:32",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.sta",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.sta",
+    "bytes": 1123,
+    "modified": "2026-09-01 17:01:49",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.sim",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.sim",
+    "bytes": 2045234,
+    "modified": "2026-09-01 17:01:51",
+    "extension": ".sim",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.prt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.prt",
+    "bytes": 474009,
+    "modified": "2026-09-01 17:01:50",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.odb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.odb",
+    "bytes": 46002072,
+    "modified": "2026-09-01 17:01:50",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.msg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.msg",
+    "bytes": 38454,
+    "modified": "2026-09-01 17:01:49",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.inp",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.inp",
+    "bytes": 17147795,
+    "modified": "2026-09-01 17:00:15",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.dat",
+    "bytes": 128118,
+    "modified": "2026-09-01 17:01:49",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.com",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_COMPOSITE_AUDIT.com",
+    "bytes": 3734,
+    "modified": "2026-09-01 17:01:10",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.sta",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.sta",
+    "bytes": 1123,
+    "modified": "2026-09-01 16:51:29",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.sim",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.sim",
+    "bytes": 2042706,
+    "modified": "2026-09-01 16:51:30",
+    "extension": ".sim",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.prt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.prt",
+    "bytes": 474009,
+    "modified": "2026-09-01 16:51:29",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.odb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.odb",
+    "bytes": 46002072,
+    "modified": "2026-09-01 16:51:29",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.msg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.msg",
+    "bytes": 38454,
+    "modified": "2026-09-01 16:51:29",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.inp",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.inp",
+    "bytes": 17147698,
+    "modified": "2026-09-01 16:50:22",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.dat",
+    "bytes": 127473,
+    "modified": "2026-09-01 16:51:29",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_GRAVITY_MODAL_AUDIT.com",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DTU158_GRAVITY_MODAL_AUDIT.com",
+    "bytes": 3714,
+    "modified": "2026-09-01 16:50:49",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DAMPING_MODAL_RESULTS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DAMPING_MODAL_RESULTS.csv",
+    "bytes": 267,
+    "modified": "2026-09-01 18:49:43",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DAMPING_CLOSURE_AUDIT_20260901.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\DAMPING_CLOSURE_AUDIT_20260901.md",
+    "bytes": 3188,
+    "modified": "2026-09-01 18:49:43",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus_composite_modal_damping.html",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_modal_audit_20260901\\abaqus_composite_modal_damping.html",
+    "bytes": 7557,
+    "modified": "2026-09-01 16:53:33",
+    "extension": ".html",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\DTU_10MW_RWT_AeroDyn15.dat",
+    "bytes": 10088,
+    "modified": "2026-08-25 21:36:19",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_ElastoDyn_Blades.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat",
+    "bytes": 12348,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_AeroDyn15_blade.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\DTU_10MW_AeroDyn15_blade.dat",
+    "bytes": 2745,
+    "modified": "2026-08-25 21:30:26",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\DTU_10MW_RWT_AeroDyn15.dat",
+    "bytes": 10088,
+    "modified": "2026-08-25 21:36:19",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_ElastoDyn_Blades.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat",
+    "bytes": 12348,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_AeroDyn15_blade.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\DTU_10MW_AeroDyn15_blade.dat",
+    "bytes": 2745,
+    "modified": "2026-08-25 21:30:26",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "verify_eq18_strong_weak_identity.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\verify_eq18_strong_weak_identity.py",
+    "bytes": 3067,
+    "modified": "2026-09-02 20:27:26",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "SOURCE_FILE_SHA256.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\SOURCE_FILE_SHA256.csv",
+    "bytes": 1172,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "RNA_C2_RECONCILIATION.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\RNA_C2_RECONCILIATION.md",
+    "bytes": 690,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "RNA_C2_RECONCILIATION.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\RNA_C2_RECONCILIATION.csv",
+    "bytes": 525,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "reconcile_rna_c2_mass_properties.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\reconcile_rna_c2_mass_properties.py",
+    "bytes": 2205,
+    "modified": "2026-09-02 20:42:36",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "RAYLEIGH_PARAMETER_METHOD.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\RAYLEIGH_PARAMETER_METHOD.md",
+    "bytes": 410,
+    "modified": "2026-09-02 22:01:12",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "RAYLEIGH_PARAMETER_FIT.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\RAYLEIGH_PARAMETER_FIT.csv",
+    "bytes": 767,
+    "modified": "2026-09-02 22:01:12",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_600_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\Airfoils\\FFA_W3_600_AeroDyn15.dat",
+    "bytes": 6736,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_480_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\Airfoils\\FFA_W3_480_AeroDyn15.dat",
+    "bytes": 12456,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_360_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\Airfoils\\FFA_W3_360_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_301_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\Airfoils\\FFA_W3_301_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_241_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\Airfoils\\FFA_W3_241_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cylinder_Aerodyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Rotor\\Airfoils\\Cylinder_Aerodyn15.dat",
+    "bytes": 10987,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "regression_config.json",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\regression_config.json",
+    "bytes": 261,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "openfast_stdout.log",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\openfast_stdout.log",
+    "bytes": 137172,
+    "modified": "2026-09-03 11:11:30",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ElastoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_RWT_ElastoDyn.dat",
+    "bytes": 27838,
+    "modified": "2026-08-25 21:31:03",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_RWT.sum",
+    "bytes": 21076,
+    "modified": "2026-09-03 10:44:38",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.SrvD.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_RWT.SrvD.sum",
+    "bytes": 14151,
+    "modified": "2026-09-03 10:44:38",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.RO.dbg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_RWT.RO.dbg",
+    "bytes": 34833924,
+    "modified": "2026-09-03 11:11:30",
+    "extension": ".dbg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.outb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_RWT.outb",
+    "bytes": 7088610,
+    "modified": "2026-09-03 11:11:30",
+    "extension": ".outb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.fst",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_RWT.fst",
+    "bytes": 7131,
+    "modified": "2026-08-05 12:06:15",
+    "extension": ".fst",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.ED.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_RWT.ED.sum",
+    "bytes": 103610,
+    "modified": "2026-09-03 10:44:38",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_InflowWind.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\DTU_10MW_InflowWind.dat",
+    "bytes": 6221,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_600_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\Airfoils\\FFA_W3_600_AeroDyn15.dat",
+    "bytes": 6736,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_480_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\Airfoils\\FFA_W3_480_AeroDyn15.dat",
+    "bytes": 12456,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_360_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\Airfoils\\FFA_W3_360_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_301_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\Airfoils\\FFA_W3_301_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_241_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\Airfoils\\FFA_W3_241_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cylinder_Aerodyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\Rotor\\Airfoils\\Cylinder_Aerodyn15.dat",
+    "bytes": 10987,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\DTU_10MW_RWT_AeroDyn15.dat",
+    "bytes": 10088,
+    "modified": "2026-08-25 21:36:19",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_ElastoDyn_Blades.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat",
+    "bytes": 12348,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_AeroDyn15_blade.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\DTU_10MW_AeroDyn15_blade.dat",
+    "bytes": 2745,
+    "modified": "2026-08-25 21:30:26",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.sim",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.sim",
+    "bytes": 2042706,
+    "modified": "2026-09-02 13:57:35",
+    "extension": ".sim",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.prt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.prt",
+    "bytes": 473634,
+    "modified": "2026-09-02 13:57:30",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.odb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.odb",
+    "bytes": 68624764,
+    "modified": "2026-09-02 13:57:30",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.msg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.msg",
+    "bytes": 38483,
+    "modified": "2026-09-02 13:57:29",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.inp",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.inp",
+    "bytes": 12632876,
+    "modified": "2026-09-02 13:54:37",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.dat",
+    "bytes": 133867,
+    "modified": "2026-09-02 13:57:29",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.com",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.com",
+    "bytes": 3736,
+    "modified": "2026-09-02 13:56:22",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HybridTower_v30_LT10K_MODAL_COPY.cae",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HybridTower_v30_LT10K_MODAL_COPY.cae",
+    "bytes": 820625408,
+    "modified": "2026-09-02 13:54:40",
+    "extension": ".cae",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DAMPING_CLOSURE_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DAMPING_CLOSURE_20260902.md",
+    "bytes": 1560,
+    "modified": "2026-09-02 22:00:45",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CORRECTION_AND_SCOPE_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\CORRECTION_AND_SCOPE_20260902.md",
+    "bytes": 1151,
+    "modified": "2026-09-02 17:56:01",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CORRECTED_FILE_SHA256.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\CORRECTED_FILE_SHA256.csv",
+    "bytes": 12179,
+    "modified": "2026-09-02 17:56:03",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "constrained_piecewise_eq18.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\constrained_piecewise_eq18.py",
+    "bytes": 6779,
+    "modified": "2026-09-02 20:51:48",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "compute_eq18_weak_form.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\compute_eq18_weak_form.py",
+    "bytes": 8644,
+    "modified": "2026-09-02 20:26:03",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "compute_eq18_segment_convergence.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\compute_eq18_segment_convergence.py",
+    "bytes": 9355,
+    "modified": "2026-09-02 19:08:32",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "compute_eq18_global_weak_diagnostic.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\compute_eq18_global_weak_diagnostic.py",
+    "bytes": 4083,
+    "modified": "2026-09-02 20:42:55",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C2_ABAQUS_M6_TRANSPORT_VERIFICATION.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\C2_ABAQUS_M6_TRANSPORT_VERIFICATION.csv",
+    "bytes": 432,
+    "modified": "2026-09-02 21:14:11",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C2_ABAQUS_M6_RECONSTRUCTED.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\C2_ABAQUS_M6_RECONSTRUCTED.csv",
+    "bytes": 1484,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C2_ABAQUS_M6_PROVENANCE.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\C2_ABAQUS_M6_PROVENANCE.md",
+    "bytes": 477,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "audit_eq18_interfaces_poly.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\audit_eq18_interfaces_poly.py",
+    "bytes": 2293,
+    "modified": "2026-09-02 20:28:40",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "audit_eq18_interfaces.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\audit_eq18_interfaces.py",
+    "bytes": 2069,
+    "modified": "2026-09-02 19:09:17",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "audit_constrained_reconstruction.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\audit_constrained_reconstruction.py",
+    "bytes": 1151,
+    "modified": "2026-09-02 20:48:38",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus.rpy.6",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\abaqus.rpy.6",
+    "bytes": 6611,
+    "modified": "2026-09-02 13:47:33",
+    "extension": ".6",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus.rpy.5",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\abaqus.rpy.5",
+    "bytes": 1853,
+    "modified": "2026-09-02 13:43:05",
+    "extension": ".5",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus.rpy.4",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\abaqus.rpy.4",
+    "bytes": 1981,
+    "modified": "2026-09-02 13:42:28",
+    "extension": ".4",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus.rpy.3",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\abaqus.rpy.3",
+    "bytes": 1029,
+    "modified": "2026-09-02 13:41:59",
+    "extension": ".3",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus.rpy",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\abaqus.rpy",
+    "bytes": 1100,
+    "modified": "2026-09-02 13:54:37",
+    "extension": ".rpy",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "06_LI2024_EQ18_TRANSCRIPTION.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\06_LI2024_EQ18_TRANSCRIPTION.md",
+    "bytes": 1526,
+    "modified": "2026-09-02 14:06:54",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "04_MODE_SHAPES_RAW.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\04_MODE_SHAPES_RAW.csv",
+    "bytes": 25089,
+    "modified": "2026-09-02 14:01:46",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "03_UNDAMPED_MODAL_FINAL.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\03_UNDAMPED_MODAL_FINAL.csv",
+    "bytes": 3985,
+    "modified": "2026-09-02 14:06:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "03_MODE_DIRECTION_MAPPING.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\03_MODE_DIRECTION_MAPPING.md",
+    "bytes": 672,
+    "modified": "2026-09-02 17:57:54",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "02_MODEL_IDENTITY_DIFF.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\02_MODEL_IDENTITY_DIFF.csv",
+    "bytes": 1118,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "01_MODEL_IDENTITY_AUDIT.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\01_MODEL_IDENTITY_AUDIT.md",
+    "bytes": 3108,
+    "modified": "2026-09-02 21:12:44",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_INPUTS_STATUS_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FORMAL_INPUTS_STATUS_20260902.md",
+    "bytes": 1778,
+    "modified": "2026-09-02 21:11:10",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_EFFECTIVE_EI_SEGMENTS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FORMAL_EFFECTIVE_EI_SEGMENTS.csv",
+    "bytes": 4015,
+    "modified": "2026-09-02 19:08:40",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FINAL_FA_SS_MODE_MAP_CORRECTED.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FINAL_FA_SS_MODE_MAP_CORRECTED.csv",
+    "bytes": 305,
+    "modified": "2026-09-02 17:56:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "SOURCE_FILE_SHA256.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\SOURCE_FILE_SHA256.csv",
+    "bytes": 1172,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_MODEL_AUDIT.json",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\FORMAL_MODEL_AUDIT.json",
+    "bytes": 735472,
+    "modified": "2026-09-02 13:47:33",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ServoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Control\\DTU_10MW_RWT_ServoDyn.dat",
+    "bytes": 12108,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_DISCON.IN",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Control\\DTU_10MW_RWT_DISCON.IN",
+    "bytes": 17600,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".IN",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cp_Ct_Cq_10MW.txt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\Control\\Cp_Ct_Cq_10MW.txt",
+    "bytes": 33009,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C02R3R2_158M_Tower.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_old\\C02R3R2_158M_Tower.dat",
+    "bytes": 17282,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_600_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\Airfoils\\FFA_W3_600_AeroDyn15.dat",
+    "bytes": 6736,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_480_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\Airfoils\\FFA_W3_480_AeroDyn15.dat",
+    "bytes": 12456,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_360_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\Airfoils\\FFA_W3_360_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_301_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\Airfoils\\FFA_W3_301_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_241_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\Airfoils\\FFA_W3_241_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cylinder_Aerodyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Rotor\\Airfoils\\Cylinder_Aerodyn15.dat",
+    "bytes": 10987,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "regression_config.json",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\regression_config.json",
+    "bytes": 296,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "openfast_stdout.log",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\openfast_stdout.log",
+    "bytes": 137168,
+    "modified": "2026-09-03 12:30:31",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ElastoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_RWT_ElastoDyn.dat",
+    "bytes": 27838,
+    "modified": "2026-08-25 21:31:03",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_RWT.sum",
+    "bytes": 21076,
+    "modified": "2026-09-03 12:04:20",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.SrvD.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_RWT.SrvD.sum",
+    "bytes": 14151,
+    "modified": "2026-09-03 12:04:20",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.RO.dbg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_RWT.RO.dbg",
+    "bytes": 34833924,
+    "modified": "2026-09-03 12:30:31",
+    "extension": ".dbg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.outb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_RWT.outb",
+    "bytes": 7088610,
+    "modified": "2026-09-03 12:30:31",
+    "extension": ".outb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.fst",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_RWT.fst",
+    "bytes": 7131,
+    "modified": "2026-08-05 12:06:15",
+    "extension": ".fst",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.ED.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_RWT.ED.sum",
+    "bytes": 103610,
+    "modified": "2026-09-03 12:04:19",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_InflowWind.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\DTU_10MW_InflowWind.dat",
+    "bytes": 6245,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODAL_FIGURE_INDEX.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\MODAL_FIGURE_INDEX.csv",
+    "bytes": 1243,
+    "modified": "2026-09-02 14:34:33",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODAL_FIGURES_README.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\MODAL_FIGURES_README.md",
+    "bytes": 820,
+    "modified": "2026-09-02 14:34:33",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_04_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\HISTORICAL_FORMAL_MODE_04_U_MAGNITUDE.png",
+    "bytes": 21762,
+    "modified": "2026-09-02 14:18:17",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_03_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\HISTORICAL_FORMAL_MODE_03_U_MAGNITUDE.png",
+    "bytes": 21171,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_02_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\HISTORICAL_FORMAL_MODE_02_U_MAGNITUDE.png",
+    "bytes": 21073,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_01_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\HISTORICAL_FORMAL_MODE_01_U_MAGNITUDE.png",
+    "bytes": 21747,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_04_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\CURRENT_COPY_MODE_04_U_MAGNITUDE.png",
+    "bytes": 20636,
+    "modified": "2026-09-02 14:21:51",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_03_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\CURRENT_COPY_MODE_03_U_MAGNITUDE.png",
+    "bytes": 22382,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_02_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\CURRENT_COPY_MODE_02_U_MAGNITUDE.png",
+    "bytes": 22076,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_01_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\figures\\CURRENT_COPY_MODE_01_U_MAGNITUDE.png",
+    "bytes": 19203,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "06_LI2024_EQ18_TRANSCRIPTION.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\06_LI2024_EQ18_TRANSCRIPTION.md",
+    "bytes": 1526,
+    "modified": "2026-09-02 14:06:54",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "04_MODE_SHAPES_RAW.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\04_MODE_SHAPES_RAW.csv",
+    "bytes": 25089,
+    "modified": "2026-09-02 14:01:46",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "03_UNDAMPED_MODAL_FINAL.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\03_UNDAMPED_MODAL_FINAL.csv",
+    "bytes": 3985,
+    "modified": "2026-09-02 14:06:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "03_MODE_DIRECTION_MAPPING.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\03_MODE_DIRECTION_MAPPING.md",
+    "bytes": 512,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "02_MODEL_IDENTITY_DIFF.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\02_MODEL_IDENTITY_DIFF.csv",
+    "bytes": 1118,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "01_MODEL_IDENTITY_AUDIT.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\01_MODEL_IDENTITY_AUDIT.md",
+    "bytes": 3056,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODAL_FIGURE_INDEX.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\MODAL_FIGURE_INDEX.csv",
+    "bytes": 1243,
+    "modified": "2026-09-02 14:34:33",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODAL_FIGURES_README.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\MODAL_FIGURES_README.md",
+    "bytes": 820,
+    "modified": "2026-09-02 14:34:33",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_04_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\HISTORICAL_FORMAL_MODE_04_U_MAGNITUDE.png",
+    "bytes": 21762,
+    "modified": "2026-09-02 14:18:17",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_03_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\HISTORICAL_FORMAL_MODE_03_U_MAGNITUDE.png",
+    "bytes": 21171,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_02_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\HISTORICAL_FORMAL_MODE_02_U_MAGNITUDE.png",
+    "bytes": 21073,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_01_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\HISTORICAL_FORMAL_MODE_01_U_MAGNITUDE.png",
+    "bytes": 21747,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_04_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\CURRENT_COPY_MODE_04_U_MAGNITUDE.png",
+    "bytes": 20636,
+    "modified": "2026-09-02 14:21:51",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_03_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\CURRENT_COPY_MODE_03_U_MAGNITUDE.png",
+    "bytes": 22382,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_02_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\CURRENT_COPY_MODE_02_U_MAGNITUDE.png",
+    "bytes": 22076,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_01_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\figures\\CURRENT_COPY_MODE_01_U_MAGNITUDE.png",
+    "bytes": 19203,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_WEAK_FORM_SCOPE_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_WEAK_FORM_SCOPE_20260902.md",
+    "bytes": 1408,
+    "modified": "2026-09-02 21:12:56",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_WEAK_FORM_RESULTS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_WEAK_FORM_RESULTS.csv",
+    "bytes": 1499,
+    "modified": "2026-09-02 20:26:14",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_STRONG_WEAK_IDENTITY.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_STRONG_WEAK_IDENTITY.csv",
+    "bytes": 1310,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_SEGMENT_CONVERGENCE.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_SEGMENT_CONVERGENCE.csv",
+    "bytes": 10195,
+    "modified": "2026-09-02 19:08:43",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_PROVISIONAL_WALL_EI_CORRECTED.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_PROVISIONAL_WALL_EI_CORRECTED.csv",
+    "bytes": 1280,
+    "modified": "2026-09-02 17:56:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_PROVISIONAL_WALL_EI.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_PROVISIONAL_WALL_EI.csv",
+    "bytes": 1097,
+    "modified": "2026-09-02 16:17:11",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_PROVISIONAL_README.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_PROVISIONAL_README.md",
+    "bytes": 881,
+    "modified": "2026-09-02 19:10:45",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_INTERFACE_CONTINUITY_POLY.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_INTERFACE_CONTINUITY_POLY.csv",
+    "bytes": 20071,
+    "modified": "2026-09-02 20:28:48",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_INTERFACE_CONTINUITY.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_INTERFACE_CONTINUITY.csv",
+    "bytes": 20234,
+    "modified": "2026-09-02 19:09:26",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_GLOBAL_WEAK_DIAGNOSTIC.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_GLOBAL_WEAK_DIAGNOSTIC.csv",
+    "bytes": 1753,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_FINAL_SCOPE_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_FINAL_SCOPE_20260902.md",
+    "bytes": 1244,
+    "modified": "2026-09-02 21:13:13",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONVERGENCE_SUMMARY.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONVERGENCE_SUMMARY.csv",
+    "bytes": 1132,
+    "modified": "2026-09-02 19:08:43",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONSTRAINED_STRONG_WEAK_IDENTITY.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_STRONG_WEAK_IDENTITY.csv",
+    "bytes": 1310,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONSTRAINED_RECONSTRUCTION_SCOPE.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_RECONSTRUCTION_SCOPE.md",
+    "bytes": 787,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONSTRAINED_RECONSTRUCTION_RESULTS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_RECONSTRUCTION_RESULTS.csv",
+    "bytes": 1546,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONSTRAINED_RECONSTRUCTION_RESIDUALS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_RECONSTRUCTION_RESIDUALS.csv",
+    "bytes": 608,
+    "modified": "2026-09-02 20:52:00",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONSTRAINED_MODE_SHAPES.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_MODE_SHAPES.csv",
+    "bytes": 274341,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONSTRAINED_GLOBAL_WEAK_DIAGNOSTIC.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_GLOBAL_WEAK_DIAGNOSTIC.csv",
+    "bytes": 1753,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_CONSTRAINED_CONSTRAINT_RESIDUALS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_CONSTRAINT_RESIDUALS.csv",
+    "bytes": 425,
+    "modified": "2026-09-02 21:13:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.sta",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HYBRID_UNDAMPED_MODAL_20260902.sta",
+    "bytes": 1123,
+    "modified": "2026-09-02 13:57:29",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_SHAPES_BY_ELEVATION.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_FORMAL_MODE_SHAPES_BY_ELEVATION.csv",
+    "bytes": 26648,
+    "modified": "2026-09-02 15:51:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_EI_TABLE.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_FORMAL_EI_TABLE.csv",
+    "bytes": 20025,
+    "modified": "2026-09-02 15:49:15",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_EI_SEGMENTS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_FORMAL_EI_SEGMENTS.csv",
+    "bytes": 19545,
+    "modified": "2026-09-02 15:50:18",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_EI_RAW.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_FORMAL_EI_RAW.csv",
+    "bytes": 13278,
+    "modified": "2026-09-02 15:47:10",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "GATE_STATUS_CORRECTED.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\GATE_STATUS_CORRECTED.csv",
+    "bytes": 864,
+    "modified": "2026-09-02 22:00:29",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "G0_G1_STATUS_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\G0_G1_STATUS_20260902.md",
+    "bytes": 1194,
+    "modified": "2026-09-02 19:10:25",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_RNA_MASS_PROPERTIES.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FORMAL_RNA_MASS_PROPERTIES.csv",
+    "bytes": 312,
+    "modified": "2026-09-02 20:26:14",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_RNA_INTERFACE_MODAL.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FORMAL_RNA_INTERFACE_MODAL.csv",
+    "bytes": 793,
+    "modified": "2026-09-02 20:24:43",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_RNA_ELEMENT_MASS_AUDIT.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FORMAL_RNA_ELEMENT_MASS_AUDIT.csv",
+    "bytes": 2012,
+    "modified": "2026-09-02 20:26:14",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_MODEL_AUDIT.json",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FORMAL_MODEL_AUDIT.json",
+    "bytes": 735472,
+    "modified": "2026-09-02 13:47:33",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_MODE_DIRECTION_AUDIT.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_MODE_DIRECTION_AUDIT.csv",
+    "bytes": 838,
+    "modified": "2026-09-02 15:33:02",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_MODE_04_TOWER_NODE_SHAPES.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_MODE_04_TOWER_NODE_SHAPES.csv",
+    "bytes": 776287,
+    "modified": "2026-09-02 15:33:02",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_MODE_03_TOWER_NODE_SHAPES.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_MODE_03_TOWER_NODE_SHAPES.csv",
+    "bytes": 779380,
+    "modified": "2026-09-02 15:33:02",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_MODE_02_TOWER_NODE_SHAPES.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_MODE_02_TOWER_NODE_SHAPES.csv",
+    "bytes": 785789,
+    "modified": "2026-09-02 15:33:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_MODE_01_TOWER_NODE_SHAPES.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_MODE_01_TOWER_NODE_SHAPES.csv",
+    "bytes": 788958,
+    "modified": "2026-09-02 15:33:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODEL_IDENTITY_CLOSURE_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\MODEL_IDENTITY_CLOSURE_20260902.md",
+    "bytes": 2322,
+    "modified": "2026-09-02 15:38:52",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_MODE_DIRECTION_AUDIT_CORRECTED.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\HISTORICAL_MODE_DIRECTION_AUDIT_CORRECTED.csv",
+    "bytes": 1018,
+    "modified": "2026-09-02 17:56:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODEL_IDENTITY_EVIDENCE.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\MODEL_IDENTITY_EVIDENCE.csv",
+    "bytes": 853,
+    "modified": "2026-09-02 15:34:45",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "package_corrected_evidence.py",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\package_corrected_evidence.py",
+    "bytes": 881,
+    "modified": "2026-09-02 19:07:59",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "SHA256_MANIFEST.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\SHA256_MANIFEST.csv",
+    "bytes": 14526,
+    "modified": "2026-09-03 16:09:57",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C02R3R2_158M_Tower.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\C02R3R2_158M_Tower.dat",
+    "bytes": 17292,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.outb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_RWT.outb",
+    "bytes": 7088610,
+    "modified": "2026-09-03 11:37:51",
+    "extension": ".outb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.fst",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_RWT.fst",
+    "bytes": 7131,
+    "modified": "2026-08-05 12:06:15",
+    "extension": ".fst",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.ED.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_RWT.ED.sum",
+    "bytes": 103610,
+    "modified": "2026-09-03 11:11:30",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_InflowWind.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_InflowWind.dat",
+    "bytes": 6221,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\DTU_10MW_RWT_AeroDyn15.dat",
+    "bytes": 10088,
+    "modified": "2026-08-25 21:36:19",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_ElastoDyn_Blades.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat",
+    "bytes": 12348,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_AeroDyn15_blade.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\DTU_10MW_AeroDyn15_blade.dat",
+    "bytes": 2745,
+    "modified": "2026-08-25 21:30:26",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ServoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Control\\DTU_10MW_RWT_ServoDyn.dat",
+    "bytes": 12108,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_DISCON.IN",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Control\\DTU_10MW_RWT_DISCON.IN",
+    "bytes": 17600,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".IN",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cp_Ct_Cq_10MW.txt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_new\\Control\\Cp_Ct_Cq_10MW.txt",
+    "bytes": 33009,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_RWT.sum",
+    "bytes": 21076,
+    "modified": "2026-09-03 11:11:30",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.SrvD.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_RWT.SrvD.sum",
+    "bytes": 14151,
+    "modified": "2026-09-03 11:11:30",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.RO.dbg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_RWT.RO.dbg",
+    "bytes": 34833924,
+    "modified": "2026-09-03 11:37:51",
+    "extension": ".dbg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "openfast_stdout.log",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\openfast_stdout.log",
+    "bytes": 137172,
+    "modified": "2026-09-03 11:37:51",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ElastoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\DTU_10MW_RWT_ElastoDyn.dat",
+    "bytes": 27838,
+    "modified": "2026-08-25 21:31:03",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "regression_config.json",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\regression_config.json",
+    "bytes": 271,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "SOURCE_FILE_SHA256.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\SOURCE_FILE_SHA256.csv",
+    "bytes": 1172,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODEL_IDENTITY_EVIDENCE.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\MODEL_IDENTITY_EVIDENCE.csv",
+    "bytes": 853,
+    "modified": "2026-09-02 15:34:45",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODEL_IDENTITY_CLOSURE_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\MODEL_IDENTITY_CLOSURE_20260902.md",
+    "bytes": 2322,
+    "modified": "2026-09-02 15:38:52",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_MODE_DIRECTION_AUDIT.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\HISTORICAL_MODE_DIRECTION_AUDIT.csv",
+    "bytes": 838,
+    "modified": "2026-09-02 15:33:02",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_SHAPES_BY_ELEVATION.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\HISTORICAL_FORMAL_MODE_SHAPES_BY_ELEVATION.csv",
+    "bytes": 26648,
+    "modified": "2026-09-02 15:51:27",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_EI_TABLE.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\HISTORICAL_FORMAL_EI_TABLE.csv",
+    "bytes": 20025,
+    "modified": "2026-09-02 15:49:15",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_EI_SEGMENTS.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\HISTORICAL_FORMAL_EI_SEGMENTS.csv",
+    "bytes": 19545,
+    "modified": "2026-09-02 15:50:18",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_EI_RAW.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\HISTORICAL_FORMAL_EI_RAW.csv",
+    "bytes": 13278,
+    "modified": "2026-09-02 15:47:10",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "G0_G1_STATUS_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\G0_G1_STATUS_20260902.md",
+    "bytes": 1111,
+    "modified": "2026-09-02 16:46:16",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_MODEL_AUDIT.json",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\FORMAL_MODEL_AUDIT.json",
+    "bytes": 735472,
+    "modified": "2026-09-02 13:47:33",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FORMAL_INPUTS_STATUS_20260902.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\FORMAL_INPUTS_STATUS_20260902.md",
+    "bytes": 1292,
+    "modified": "2026-09-02 15:51:47",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ServoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Control\\DTU_10MW_RWT_ServoDyn.dat",
+    "bytes": 12108,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_DISCON.IN",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Control\\DTU_10MW_RWT_DISCON.IN",
+    "bytes": 17600,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".IN",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cp_Ct_Cq_10MW.txt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Control\\Cp_Ct_Cq_10MW.txt",
+    "bytes": 33009,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C02R3R2_158M_Tower.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\C02R3R2_158M_Tower.dat",
+    "bytes": 17292,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_600_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\Airfoils\\FFA_W3_600_AeroDyn15.dat",
+    "bytes": 6736,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_480_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\Airfoils\\FFA_W3_480_AeroDyn15.dat",
+    "bytes": 12456,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_360_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\Airfoils\\FFA_W3_360_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_301_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\Airfoils\\FFA_W3_301_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_241_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\Airfoils\\FFA_W3_241_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cylinder_Aerodyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_NTM_S01_new\\Rotor\\Airfoils\\Cylinder_Aerodyn15.dat",
+    "bytes": 10987,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODAL_FIGURE_INDEX.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\MODAL_FIGURE_INDEX.csv",
+    "bytes": 1243,
+    "modified": "2026-09-02 14:34:33",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "MODAL_FIGURES_README.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\MODAL_FIGURES_README.md",
+    "bytes": 820,
+    "modified": "2026-09-02 14:34:33",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_04_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\HISTORICAL_FORMAL_MODE_04_U_MAGNITUDE.png",
+    "bytes": 21762,
+    "modified": "2026-09-02 14:18:17",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_03_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\HISTORICAL_FORMAL_MODE_03_U_MAGNITUDE.png",
+    "bytes": 21171,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_02_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\HISTORICAL_FORMAL_MODE_02_U_MAGNITUDE.png",
+    "bytes": 21073,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "HISTORICAL_FORMAL_MODE_01_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\HISTORICAL_FORMAL_MODE_01_U_MAGNITUDE.png",
+    "bytes": 21747,
+    "modified": "2026-09-02 14:18:16",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_04_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\CURRENT_COPY_MODE_04_U_MAGNITUDE.png",
+    "bytes": 20636,
+    "modified": "2026-09-02 14:21:51",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_03_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\CURRENT_COPY_MODE_03_U_MAGNITUDE.png",
+    "bytes": 22382,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_02_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\CURRENT_COPY_MODE_02_U_MAGNITUDE.png",
+    "bytes": 22076,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "CURRENT_COPY_MODE_01_U_MAGNITUDE.png",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\figures\\CURRENT_COPY_MODE_01_U_MAGNITUDE.png",
+    "bytes": 19203,
+    "modified": "2026-09-02 14:21:50",
+    "extension": ".png",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_PROVISIONAL_WALL_EI.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\EQ18_PROVISIONAL_WALL_EI.csv",
+    "bytes": 1097,
+    "modified": "2026-09-02 16:17:11",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "EQ18_PROVISIONAL_README.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\EQ18_PROVISIONAL_README.md",
+    "bytes": 782,
+    "modified": "2026-09-02 16:53:10",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "06_LI2024_EQ18_TRANSCRIPTION.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\06_LI2024_EQ18_TRANSCRIPTION.md",
+    "bytes": 1526,
+    "modified": "2026-09-02 14:06:54",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "04_MODE_SHAPES_RAW.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\04_MODE_SHAPES_RAW.csv",
+    "bytes": 25089,
+    "modified": "2026-09-02 14:01:46",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "03_UNDAMPED_MODAL_FINAL.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\03_UNDAMPED_MODAL_FINAL.csv",
+    "bytes": 3985,
+    "modified": "2026-09-02 14:06:01",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "03_MODE_DIRECTION_MAPPING.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\03_MODE_DIRECTION_MAPPING.md",
+    "bytes": 512,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "02_MODEL_IDENTITY_DIFF.csv",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\02_MODEL_IDENTITY_DIFF.csv",
+    "bytes": 1118,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "01_MODEL_IDENTITY_AUDIT.md",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\01_MODEL_IDENTITY_AUDIT.md",
+    "bytes": 3056,
+    "modified": "2026-09-02 14:03:53",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.fst",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_RWT.fst",
+    "bytes": 7131,
+    "modified": "2026-08-05 12:06:15",
+    "extension": ".fst",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.ED.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_RWT.ED.sum",
+    "bytes": 103610,
+    "modified": "2026-09-03 11:37:52",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_InflowWind.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_InflowWind.dat",
+    "bytes": 6245,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\DTU_10MW_RWT_AeroDyn15.dat",
+    "bytes": 10088,
+    "modified": "2026-08-25 21:36:19",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_ElastoDyn_Blades.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat",
+    "bytes": 12348,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_AeroDyn15_blade.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\DTU_10MW_AeroDyn15_blade.dat",
+    "bytes": 2745,
+    "modified": "2026-08-25 21:30:26",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ServoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Control\\DTU_10MW_RWT_ServoDyn.dat",
+    "bytes": 12108,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_DISCON.IN",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Control\\DTU_10MW_RWT_DISCON.IN",
+    "bytes": 17600,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".IN",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cp_Ct_Cq_10MW.txt",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Control\\Cp_Ct_Cq_10MW.txt",
+    "bytes": 33009,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C02R3R2_158M_Tower.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\C02R3R2_158M_Tower.dat",
+    "bytes": 17282,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_RWT.sum",
+    "bytes": 21076,
+    "modified": "2026-09-03 11:37:52",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.SrvD.sum",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_RWT.SrvD.sum",
+    "bytes": 14151,
+    "modified": "2026-09-03 11:37:52",
+    "extension": ".sum",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.RO.dbg",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_RWT.RO.dbg",
+    "bytes": 34833924,
+    "modified": "2026-09-03 12:04:19",
+    "extension": ".dbg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT.outb",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_RWT.outb",
+    "bytes": 7088610,
+    "modified": "2026-09-03 12:04:19",
+    "extension": ".outb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "openfast_stdout.log",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\openfast_stdout.log",
+    "bytes": 137172,
+    "modified": "2026-09-03 12:04:19",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_ElastoDyn.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\DTU_10MW_RWT_ElastoDyn.dat",
+    "bytes": 27838,
+    "modified": "2026-08-25 21:31:03",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "regression_config.json",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\regression_config.json",
+    "bytes": 286,
+    "modified": "2026-09-03 10:30:36",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_600_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\Airfoils\\FFA_W3_600_AeroDyn15.dat",
+    "bytes": 6736,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_480_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\Airfoils\\FFA_W3_480_AeroDyn15.dat",
+    "bytes": 12456,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_360_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\Airfoils\\FFA_W3_360_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_301_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\Airfoils\\FFA_W3_301_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "FFA_W3_241_AeroDyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\Airfoils\\FFA_W3_241_AeroDyn15.dat",
+    "bytes": 12455,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Cylinder_Aerodyn15.dat",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_damping_regression_20260903\\U11p4_ETM_S01_old\\Rotor\\Airfoils\\Cylinder_Aerodyn15.dat",
+    "bytes": 10987,
+    "modified": "2023-03-08 11:05:48",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "volume_rayleigh.h",
+    "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\scripts\\addons_core\\cycles\\source\\kernel\\closure\\volume_rayleigh.h",
+    "bytes": 1519,
+    "modified": "2025-06-30 05:35:32",
+    "extension": ".h",
+    "verification": "inventory-only"
+  }
+]

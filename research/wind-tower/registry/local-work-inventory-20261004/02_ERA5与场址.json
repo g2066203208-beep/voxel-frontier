@@ -1,0 +1,946 @@
+[
+  {
+    "name": "Global_Wind_Atlas官方入口.html",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\Global_Wind_Atlas官方入口.html",
+    "bytes": 24283,
+    "modified": "2026-08-04 17:25:53",
+    "extension": ".html",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5官方数据入口.html",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\ERA5官方数据入口.html",
+    "bytes": 433808,
+    "modified": "2026-08-04 17:25:46",
+    "extension": ".html",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_158m_GWA_曲线依据.txt",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\DTU_10MW_RWT_158m_GWA_曲线依据.txt",
+    "bytes": 1261,
+    "modified": "2026-08-04 20:40:55",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_10MW_RWT_158m_GWA.json",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\DTU_10MW_RWT_158m_GWA.json",
+    "bytes": 4055,
+    "modified": "2026-08-04 20:52:25",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "08_DTU10MW_GWA功率曲线依据.txt",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\08_DTU10MW_GWA功率曲线依据.txt",
+    "bytes": 1261,
+    "modified": "2026-08-04 20:40:55",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "07_DTU10MW_158m塔_160m轮毂_GWA自定义机型.json",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\07_DTU10MW_158m塔_160m轮毂_GWA自定义机型.json",
+    "bytes": 4055,
+    "modified": "2026-08-04 20:52:25",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "06_GWA_DTU10MW_160m_AEP报告_0pctLoss.pdf",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\06_GWA_DTU10MW_160m_AEP报告_0pctLoss.pdf",
+    "bytes": 3907353,
+    "modified": "2026-08-04 20:54:56",
+    "extension": ".pdf",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "05_GWA_DTU10MW_160m_AEP渲染图_0pctLoss.tif",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\05_GWA_DTU10MW_160m_AEP渲染图_0pctLoss.tif",
+    "bytes": 922,
+    "modified": "2026-08-04 20:53:43",
+    "extension": ".tif",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "04_GWA_DTU10MW_160m_AEP原始数据_0pctLoss.tif",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\04_GWA_DTU10MW_160m_AEP原始数据_0pctLoss.tif",
+    "bytes": 3399,
+    "modified": "2026-08-04 20:54:20",
+    "extension": ".tif",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "03_GWA_嘉鱼时间变化数据.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\03_GWA_嘉鱼时间变化数据.zip",
+    "bytes": 3029,
+    "modified": "2026-08-04 20:54:15",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "02_GWA_嘉鱼点位风况库_113.925E_30.200N.lib",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\02_GWA_嘉鱼点位风况库_113.925E_30.200N.lib",
+    "bytes": 7344,
+    "modified": "2026-08-04 20:54:25",
+    "extension": ".lib",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "01_GWA_嘉鱼区域边界.geojson",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\01_GWA_嘉鱼区域边界.geojson",
+    "bytes": 197,
+    "modified": "2026-08-04 20:54:22",
+    "extension": ".geojson",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "00_文件清单与使用说明.txt",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\02_GWA_嘉鱼_160m_正式结果\\00_文件清单与使用说明.txt",
+    "bytes": 2796,
+    "modified": "2026-08-04 21:16:32",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "download_era5_jiayu.cpython-312.pyc",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\__pycache__\\download_era5_jiayu.cpython-312.pyc",
+    "bytes": 17997,
+    "modified": "2026-08-04 23:30:43",
+    "extension": ".pyc",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "README_ERA5_Jiayu.md",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\README_ERA5_Jiayu.md",
+    "bytes": 1780,
+    "modified": "2026-08-04 23:14:04",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_100mUV_2015_Q1.nc",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\quarterly\\ERA5_Jiayu_100mUV_2015_Q1.nc",
+    "bytes": 230025,
+    "modified": "2026-08-04 23:27:08",
+    "extension": ".nc",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_jiayu_status.json",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\ERA5_jiayu_status.json",
+    "bytes": 773,
+    "modified": "2026-08-04 23:27:08",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_jiayu_request_definition.json",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\ERA5_jiayu_request_definition.json",
+    "bytes": 437,
+    "modified": "2026-08-04 23:31:42",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_jiayu_download.log",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\ERA5_jiayu_download.log",
+    "bytes": 4645,
+    "modified": "2026-08-04 23:27:08",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_background_stdout.log",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\ERA5_background_stdout.log",
+    "bytes": 1520,
+    "modified": "2026-08-04 23:27:08",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_background_stderr.log",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\ERA5_background_stderr.log",
+    "bytes": 1088,
+    "modified": "2026-08-04 23:27:08",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "download_era5_jiayu.py",
+    "source_locator": "THESIS_ROOT\\DTU\\03_风资源_ERA5_GWA\\01_ERA5_嘉鱼_2015-2025_100mUV\\download_era5_jiayu.py",
+    "bytes": 14068,
+    "modified": "2026-08-04 23:29:15",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2025_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2025_Q4.zip",
+    "bytes": 956378,
+    "modified": "2026-08-06 15:28:24",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2025_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2025_Q3.zip",
+    "bytes": 963160,
+    "modified": "2026-08-06 15:03:28",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2025_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2025_Q2.zip",
+    "bytes": 958418,
+    "modified": "2026-08-06 14:42:44",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2025_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2025_Q1.zip",
+    "bytes": 943734,
+    "modified": "2026-08-06 14:23:56",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2024_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2024_Q4.zip",
+    "bytes": 953567,
+    "modified": "2026-08-06 14:09:14",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2024_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2024_Q3.zip",
+    "bytes": 957636,
+    "modified": "2026-08-06 13:50:31",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2024_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2024_Q2.zip",
+    "bytes": 956157,
+    "modified": "2026-08-06 13:35:52",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2024_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2024_Q1.zip",
+    "bytes": 954494,
+    "modified": "2026-08-06 13:21:04",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2023_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2023_Q4.zip",
+    "bytes": 957512,
+    "modified": "2026-08-06 13:14:29",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2023_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2023_Q3.zip",
+    "bytes": 956492,
+    "modified": "2026-08-06 12:57:36",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2023_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2023_Q2.zip",
+    "bytes": 955915,
+    "modified": "2026-08-06 12:40:52",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2023_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2023_Q1.zip",
+    "bytes": 947236,
+    "modified": "2026-08-06 12:22:11",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2022_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2022_Q4.zip",
+    "bytes": 956544,
+    "modified": "2026-08-06 11:57:23",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2022_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2022_Q3.zip",
+    "bytes": 956170,
+    "modified": "2026-08-06 11:24:25",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2022_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2022_Q2.zip",
+    "bytes": 951586,
+    "modified": "2026-08-06 10:21:12",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2022_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2022_Q1.zip",
+    "bytes": 942707,
+    "modified": "2026-08-06 08:33:35",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2021_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2021_Q4.zip",
+    "bytes": 955525,
+    "modified": "2026-08-06 06:39:52",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2021_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2021_Q3.zip",
+    "bytes": 957332,
+    "modified": "2026-08-06 05:04:23",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2021_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2021_Q2.zip",
+    "bytes": 954758,
+    "modified": "2026-08-06 02:12:11",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2021_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2021_Q1.zip",
+    "bytes": 943767,
+    "modified": "2026-08-06 00:52:50",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2020_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2020_Q4.zip",
+    "bytes": 952240,
+    "modified": "2026-08-05 23:59:34",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2020_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2020_Q3.zip",
+    "bytes": 960772,
+    "modified": "2026-08-05 23:10:22",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2020_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2020_Q2.zip",
+    "bytes": 953773,
+    "modified": "2026-08-05 22:21:16",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2020_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2020_Q1.zip",
+    "bytes": 952618,
+    "modified": "2026-08-05 21:17:59",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2019_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2019_Q4.zip",
+    "bytes": 957683,
+    "modified": "2026-08-05 20:12:46",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2019_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2019_Q3.zip",
+    "bytes": 956144,
+    "modified": "2026-08-05 18:37:08",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2019_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2019_Q2.zip",
+    "bytes": 956152,
+    "modified": "2026-08-05 16:45:22",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2019_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2019_Q1.zip",
+    "bytes": 940465,
+    "modified": "2026-08-05 15:12:14",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2018_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2018_Q4.zip",
+    "bytes": 954791,
+    "modified": "2026-08-05 14:29:12",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2018_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2018_Q3.zip",
+    "bytes": 958710,
+    "modified": "2026-08-05 13:56:17",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2018_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2018_Q2.zip",
+    "bytes": 953369,
+    "modified": "2026-08-05 13:35:34",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2018_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2018_Q1.zip",
+    "bytes": 945687,
+    "modified": "2026-08-05 13:18:51",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2017_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2017_Q4.zip",
+    "bytes": 953001,
+    "modified": "2026-08-05 13:02:13",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2017_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2017_Q3.zip",
+    "bytes": 959542,
+    "modified": "2026-08-05 12:43:34",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2017_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2017_Q2.zip",
+    "bytes": 956324,
+    "modified": "2026-08-05 12:24:51",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2017_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2017_Q1.zip",
+    "bytes": 943760,
+    "modified": "2026-08-05 12:08:11",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2016_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2016_Q4.zip",
+    "bytes": 954265,
+    "modified": "2026-08-05 11:51:34",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2016_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2016_Q3.zip",
+    "bytes": 955224,
+    "modified": "2026-08-05 11:34:56",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2016_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2016_Q2.zip",
+    "bytes": 955964,
+    "modified": "2026-08-05 11:18:19",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2016_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2016_Q1.zip",
+    "bytes": 951172,
+    "modified": "2026-08-05 11:01:39",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2015_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2015_Q4.zip",
+    "bytes": 953767,
+    "modified": "2026-08-05 10:44:56",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2015_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2015_Q3.zip",
+    "bytes": 953264,
+    "modified": "2026-08-05 10:26:09",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2015_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2015_Q2.zip",
+    "bytes": 955973,
+    "modified": "2026-08-05 10:03:28",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2015_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\quarterly\\ERA5_Jiayu_7vars_2015_Q1.zip",
+    "bytes": 943853,
+    "modified": "2026-08-05 09:44:46",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_status.json",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\ERA5_status.json",
+    "bytes": 14997,
+    "modified": "2026-08-06 15:28:24",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_download.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\ERA5_download.log",
+    "bytes": 23679,
+    "modified": "2026-08-06 15:28:24",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "background_stdout.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\background_stdout.log",
+    "bytes": 23679,
+    "modified": "2026-08-06 15:28:24",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "background_stderr.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\background_stderr.log",
+    "bytes": 0,
+    "modified": "2026-08-05 09:23:59",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "background.pid",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2015_2025\\background.pid",
+    "bytes": 7,
+    "modified": "2026-08-05 09:23:59",
+    "extension": ".pid",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "retry_2008Q1_stdout.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\retry_2008Q1_stdout.log",
+    "bytes": 0,
+    "modified": "2026-08-08 17:07:02",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "retry_2008Q1_stderr.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\retry_2008Q1_stderr.log",
+    "bytes": 2840,
+    "modified": "2026-08-08 17:07:46",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2014_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2014_Q4.zip",
+    "bytes": 956415,
+    "modified": "2026-08-06 18:14:59",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2014_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2014_Q3.zip",
+    "bytes": 958775,
+    "modified": "2026-08-06 18:51:58",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2014_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2014_Q2.zip",
+    "bytes": 953975,
+    "modified": "2026-08-06 19:45:11",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2014_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2014_Q1.zip",
+    "bytes": 946015,
+    "modified": "2026-08-06 20:26:13",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2013_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2013_Q4.zip",
+    "bytes": 955113,
+    "modified": "2026-08-06 21:15:25",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2013_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2013_Q3.zip",
+    "bytes": 951828,
+    "modified": "2026-08-06 23:51:57",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2013_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2013_Q2.zip",
+    "bytes": 953971,
+    "modified": "2026-08-07 01:09:26",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2013_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2013_Q1.zip",
+    "bytes": 945864,
+    "modified": "2026-08-07 02:12:39",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2012_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2012_Q4.zip",
+    "bytes": 958605,
+    "modified": "2026-08-07 02:55:44",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2012_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2012_Q3.zip",
+    "bytes": 955323,
+    "modified": "2026-08-07 03:52:55",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2012_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2012_Q2.zip",
+    "bytes": 952583,
+    "modified": "2026-08-07 04:49:55",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2012_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2012_Q1.zip",
+    "bytes": 946183,
+    "modified": "2026-08-07 06:03:10",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2011_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2011_Q4.zip",
+    "bytes": 954978,
+    "modified": "2026-08-07 07:14:26",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2011_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2011_Q3.zip",
+    "bytes": 953218,
+    "modified": "2026-08-07 08:19:33",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2011_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2011_Q2.zip",
+    "bytes": 955738,
+    "modified": "2026-08-07 09:26:43",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2011_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2011_Q1.zip",
+    "bytes": 943734,
+    "modified": "2026-08-07 10:41:57",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2010_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2010_Q4.zip",
+    "bytes": 957113,
+    "modified": "2026-08-07 11:52:38",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2010_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2010_Q3.zip",
+    "bytes": 953983,
+    "modified": "2026-08-07 12:51:43",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2010_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2010_Q2.zip",
+    "bytes": 953951,
+    "modified": "2026-08-07 13:30:43",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2010_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2010_Q1.zip",
+    "bytes": 944265,
+    "modified": "2026-08-07 13:55:36",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2009_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2009_Q4.zip",
+    "bytes": 956961,
+    "modified": "2026-08-07 14:22:23",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2009_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2009_Q3.zip",
+    "bytes": 952999,
+    "modified": "2026-08-07 14:37:07",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2009_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2009_Q2.zip",
+    "bytes": 955450,
+    "modified": "2026-08-07 14:57:50",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2009_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2009_Q1.zip",
+    "bytes": 945098,
+    "modified": "2026-08-07 15:18:38",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2008_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2008_Q4.zip",
+    "bytes": 954513,
+    "modified": "2026-08-07 15:41:29",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2008_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2008_Q3.zip",
+    "bytes": 958992,
+    "modified": "2026-08-07 16:31:11",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2008_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2008_Q2.zip",
+    "bytes": 954421,
+    "modified": "2026-08-07 18:10:53",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2008_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2008_Q1.zip",
+    "bytes": 950466,
+    "modified": "2026-08-08 17:07:46",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2007_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2007_Q4.zip",
+    "bytes": 952408,
+    "modified": "2026-08-07 20:42:05",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2007_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2007_Q3.zip",
+    "bytes": 956119,
+    "modified": "2026-08-07 21:55:26",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2007_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2007_Q2.zip",
+    "bytes": 953651,
+    "modified": "2026-08-07 23:04:44",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2007_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2007_Q1.zip",
+    "bytes": 946209,
+    "modified": "2026-08-08 00:07:57",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2006_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2006_Q4.zip",
+    "bytes": 955662,
+    "modified": "2026-08-08 01:07:13",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2006_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2006_Q3.zip",
+    "bytes": 952911,
+    "modified": "2026-08-08 01:56:14",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2006_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2006_Q2.zip",
+    "bytes": 954703,
+    "modified": "2026-08-08 02:37:06",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2006_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2006_Q1.zip",
+    "bytes": 945255,
+    "modified": "2026-08-08 03:15:53",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2005_Q4.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2005_Q4.zip",
+    "bytes": 954643,
+    "modified": "2026-08-08 04:08:51",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2005_Q3.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2005_Q3.zip",
+    "bytes": 951480,
+    "modified": "2026-08-08 05:02:02",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2005_Q2.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2005_Q2.zip",
+    "bytes": 955009,
+    "modified": "2026-08-08 05:42:55",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_Jiayu_7vars_2005_Q1.zip",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\quarterly\\ERA5_Jiayu_7vars_2005_Q1.zip",
+    "bytes": 941590,
+    "modified": "2026-08-08 06:21:54",
+    "extension": ".zip",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_status.json",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\ERA5_status.json",
+    "bytes": 11082,
+    "modified": "2026-08-08 17:07:46",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "ERA5_download.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\ERA5_download.log",
+    "bytes": 45450,
+    "modified": "2026-08-08 17:07:46",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "background_stdout.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\background_stdout.log",
+    "bytes": 0,
+    "modified": "2026-08-06 17:58:13",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "background_stderr.log",
+    "source_locator": "THESIS_ROOT\\DTU\\ERA5_background_2005_2014\\background_stderr.log",
+    "bytes": 53267,
+    "modified": "2026-08-08 06:21:54",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "Jiayu_Paizhouwan_ERA5_2005_2025.xlsx",
+    "source_locator": "DOWNLOADS\\Jiayu_Paizhouwan_ERA5_2005_2025.xlsx",
+    "bytes": 31793340,
+    "modified": "2026-08-12 10:10:02",
+    "extension": ".xlsx",
+    "verification": "inventory-only"
+  }
+]

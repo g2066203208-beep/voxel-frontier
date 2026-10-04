@@ -1,0 +1,11 @@
+gate,status,note
+G0_MODEL_IDENTITY,PASS,Historical spatial RNA model
+FA_SS_MAPPING,PASS,U1/X=SS; U3/Z=FA
+PT_REINFORCEMENT_IDENTITY,AUDITED,Embedded rebars; PT independent T3D2 with anchor constraints
+RNA_C2_RECONCILIATION,PASS,Authoritative frozen C2 mass/CG reconciled; obsolete 673997.98 metadata excluded
+RNA_M6_TRANSPORT,PASS,Full 6x6 spatial matrix with first-moment coupling transported RA=(0,160,0) to TA=(0,158,0)
+EQ18_FINAL,PASS,Li 2024 Eq18; FORMAL_EFFECTIVE_EI with ordinary rebar included and PT not double-counted
+RAYLEIGH_PARAMETER_FIT,PASS,alpha=0.0634885913260676 s^-1; beta=0.0212358837749239 s
+RAYLEIGH_VALIDATION,PASS,Abaqus modal free-decay R2 completed; first-mode estimates within 0.04 percentage points of Eq18 targets
+DTU158_DAMPING_CLOSURE,PASS,Eq18 plus Rayleigh free-decay validation closed; no OpenFAST or TurbSim rerun performed
+

@@ -1,0 +1,25 @@
+{
+  "C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE": "PASS",
+  "route": "WT-MBD-FE-1 self-developed persistent bridge",
+  "native_cse": "NOT_USED",
+  "native_aerodyn": "NOT_USED",
+  "simpack_model": "chapter3-final-U11p4-ETM-S04-v2/simpack_macro_000.spck",
+  "abaqus_job": "C3_PERSISTENT_0P15",
+  "validation": {
+    "duration_s": 0.15,
+    "macro_dt_s": 0.05,
+    "requests_seen": 3,
+    "simpack_steps_completed": 3,
+    "simpack_returncodes": [0, 0, 0],
+    "abaqus_completed": true,
+    "uamp_loaded": true,
+    "six_component_exchange": true
+  },
+  "resultant_residuals": {
+    "source_to_simpack": "see cosim_exchange_table.csv",
+    "note": "Each exchange record contains the six-component load and Abaqus reaction in the WT-MBD-FE-1 bridge frame."
+  },
+  "evidence_directory": "WT_MBD_FE_SINGLE_0p15/run14",
+  "status_note": "This is a short interface-closure preflight (0.15 s), not the production 600 s coupled run."
+}
+

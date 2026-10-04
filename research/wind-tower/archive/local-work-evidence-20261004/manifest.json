@@ -1,0 +1,98 @@
+[
+  {
+    "source_sha256": "6CAC5EEFAE1BB95397FA74A00907877FB8B253A734AA8B2342C32683957CEBBE",
+    "published_sha256": "13F9ADC1CF4538D06220D4873F92FC3AF07D91BB2D57F0A330F024E82E5EB8DB",
+    "status": "historical-evidence-not-new-validation",
+    "file": "001_C3_FINAL_GATE.json",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\C3_FINAL_GATE.json"
+  },
+  {
+    "source_sha256": "6CAC5EEFAE1BB95397FA74A00907877FB8B253A734AA8B2342C32683957CEBBE",
+    "published_sha256": "13F9ADC1CF4538D06220D4873F92FC3AF07D91BB2D57F0A330F024E82E5EB8DB",
+    "status": "historical-evidence-not-new-validation",
+    "file": "002_C3_FINAL_GATE.json",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\C3_FINAL_GATE.json"
+  },
+  {
+    "source_sha256": "BF597AC8F07473C7DC347DA54991F5E6673F62B331E19794EBCCCDE53E2C7414",
+    "published_sha256": "2E36E07DD0085FF52B724D1EFCCDEF67466FDEEDC727B8B0426C347DC249E169",
+    "status": "historical-evidence-not-new-validation",
+    "file": "003_BTS_FILE_MANIFEST.csv",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\R7_TurbSim_Audit_20260830\\BTS_FILE_MANIFEST.csv"
+  },
+  {
+    "source_sha256": "2845A97113A612B09E1471A8766F852BD11ADCDBAF4F8C639356E675C1D8230F",
+    "published_sha256": "EFCF333841343C72B97B23694C81F3D1AFE27A32E61582308AF8CFD891C1DC08",
+    "status": "historical-evidence-not-new-validation",
+    "file": "004_R2_FORMAL_36CASE_STATUS.csv",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_formal_damping_36case_R2_20260904\\VERIFY_RAINFLOW_DEL_PACKAGE\\R2_FORMAL_36CASE_STATUS.csv"
+  },
+  {
+    "source_sha256": "2845A97113A612B09E1471A8766F852BD11ADCDBAF4F8C639356E675C1D8230F",
+    "published_sha256": "EFCF333841343C72B97B23694C81F3D1AFE27A32E61582308AF8CFD891C1DC08",
+    "status": "historical-evidence-not-new-validation",
+    "file": "005_R2_FORMAL_36CASE_STATUS.csv",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_formal_damping_36case_R2_20260904\\R2_FORMAL_36CASE_STATUS.csv"
+  },
+  {
+    "source_sha256": "2845A97113A612B09E1471A8766F852BD11ADCDBAF4F8C639356E675C1D8230F",
+    "published_sha256": "EFCF333841343C72B97B23694C81F3D1AFE27A32E61582308AF8CFD891C1DC08",
+    "status": "historical-evidence-not-new-validation",
+    "file": "006_R2_FORMAL_36CASE_STATUS.csv",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\openfast_formal_damping_36case_R2_20260904\\PACKAGE_RAINFLOW_DEL_20260905\\R2_FORMAL_36CASE_STATUS.csv"
+  },
+  {
+    "source_sha256": "4875E675677D5669A2CA863D6269ADFB1D1A9FAB9A579EEACC810982E8286717",
+    "published_sha256": "E21F0161342726EE497A73F2743550C3453A136518F1E9E6F4E298DCAA9CBC3F",
+    "status": "historical-evidence-not-new-validation",
+    "file": "007_A1_TURBSIM_FINAL_CASE_MATRIX.csv",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\A1_TURBSIM_FINAL_CASE_MATRIX.csv"
+  },
+  {
+    "source_sha256": "60917F9796D7B45333AD422B4F4913B623F5A37DCAC26F2EB658E5335211132D",
+    "published_sha256": "50D81ECB65553F0CED517464BFF0A73C04AD1D175C7F529BC7DB7FC11E739D18",
+    "status": "historical-evidence-not-new-validation",
+    "file": "008_A0_UREF_FROZEN_LEDGER.csv",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\A0_UREF_FROZEN_LEDGER.csv"
+  },
+  {
+    "source_sha256": "6CAC5EEFAE1BB95397FA74A00907877FB8B253A734AA8B2342C32683957CEBBE",
+    "published_sha256": "13F9ADC1CF4538D06220D4873F92FC3AF07D91BB2D57F0A330F024E82E5EB8DB",
+    "status": "historical-evidence-not-new-validation",
+    "file": "009_C3_FINAL_GATE.json",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\c3read_0906\\C3_FINAL_GATE.json"
+  },
+  {
+    "source_sha256": "A2BD3DC4C72F04660E98FAB16A17167233EC9DE7630B3598E9D42A68FDAAB236",
+    "published_sha256": "36B4042939CEAA1BBEE50658BD4793BDAF4A0302F8E5743BA29970A0791ECCFB",
+    "status": "historical-evidence-not-new-validation",
+    "file": "010_R5C_SIX_COMPONENT_FINAL_GATE.json",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\R5C_SIX_COMPONENT_INERTIAL_NODE_REPLAY_FINAL_20260906_R5\\R5C_SIX_COMPONENT_FINAL_GATE.json"
+  },
+  {
+    "source_sha256": "7348E285F8262959710AA604CCF2FA685EFACA86AF64AB8A65776254D7408DF7",
+    "published_sha256": "DD0913BAA1993E4BEE27D9E8488F7739A46317220ABE56044921F2D0DB7B5F06",
+    "status": "historical-evidence-not-new-validation",
+    "file": "011_DAMPING_CLOSURE_20260902.md",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DAMPING_CLOSURE_20260902.md"
+  },
+  {
+    "source_sha256": "FF25E5EA6072FE96CDDC2595B0C6B3E459194C398D97F08240C66DB75603657E",
+    "published_sha256": "C1798F7E331AB7BA8110E99EC6AD5B72394E01A19FF6D8548FB982EF9FDCDD47",
+    "status": "historical-evidence-not-new-validation",
+    "file": "012_GATE_STATUS_CORRECTED.csv",
+    "transformation": "UTF-8 public copy; local root paths replaced with aliases; trailing newline normalized",
+    "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\GATE_STATUS_CORRECTED.csv"
+  }
+]

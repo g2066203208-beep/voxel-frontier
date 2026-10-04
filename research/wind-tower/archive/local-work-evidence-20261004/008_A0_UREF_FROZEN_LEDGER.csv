@@ -1,0 +1,5 @@
+group,case_code,URef_m_s,identity,source_note
+SITE,U09p343881,9.343881,HubHt ERA5 P95,R7 task document
+RATED,U11p4,11.400000,DTU 10 MW rated/control point,R7 task document
+HIST,U19p202140,19.202140,ERA5 historical HubHt maximum hourly anchor,R7 task document
+

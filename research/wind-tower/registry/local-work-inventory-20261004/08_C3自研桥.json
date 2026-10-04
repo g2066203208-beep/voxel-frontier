@@ -1,0 +1,1058 @@
+[
+  {
+    "name": "SHA256SUMS.txt",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\SHA256SUMS.txt",
+    "bytes": 1649,
+    "modified": "2026-09-06 14:11:56",
+    "extension": ".txt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "uamp_six_dof_external_motion.obj",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\uamp_six_dof_external_motion.obj",
+    "bytes": 15192,
+    "modified": "2026-09-03 11:41:32",
+    "extension": ".obj",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "uamp_macro_trace.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\uamp_macro_trace.log",
+    "bytes": 9726,
+    "modified": "2026-09-06 14:09:14",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_report.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\persistent_cosim_report.json",
+    "bytes": 40876,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "LINK.EXE",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\LINK.EXE",
+    "bytes": 37376,
+    "modified": "2026-09-01 00:41:24",
+    "extension": ".EXE",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\cosim_exchange_table.md",
+    "bytes": 1589,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.csv",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\cosim_exchange_table.csv",
+    "bytes": 3168,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.sta",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\C3_PERSISTENT_0P15.sta",
+    "bytes": 1259,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.odb",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\C3_PERSISTENT_0P15.odb",
+    "bytes": 38203620,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.msg",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\C3_PERSISTENT_0P15.msg",
+    "bytes": 49731,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\C3_PERSISTENT_0P15.log",
+    "bytes": 762,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_HANDOFF.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\C3_HANDOFF.md",
+    "bytes": 765,
+    "modified": "2026-09-06 14:11:14",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_FINAL_GATE.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\C3_FINAL_GATE.json",
+    "bytes": 919,
+    "modified": "2026-09-06 14:11:14",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "run_persistent_cosim.py",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\bridge\\run_persistent_cosim.py",
+    "bytes": 16833,
+    "modified": "2026-09-06 14:01:21",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_coordinator.py",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\bridge\\persistent_cosim_coordinator.py",
+    "bytes": 27856,
+    "modified": "2026-09-06 13:40:43",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "build_abaqus_persistent_tower.py",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\bridge\\build_abaqus_persistent_tower.py",
+    "bytes": 6900,
+    "modified": "2026-09-03 12:53:22",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus_official_tower_endpoint.py",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\bridge\\abaqus_official_tower_endpoint.py",
+    "bytes": 7618,
+    "modified": "2026-09-06 13:30:50",
+    "extension": ".py",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\standardU.dll",
+    "bytes": 11528,
+    "modified": "2026-08-31 23:00:50",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_report.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\persistent_cosim_report.json",
+    "bytes": 10052,
+    "modified": "2026-09-06 13:55:05",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "load_in.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\load_in.dat",
+    "bytes": 116,
+    "modified": "2026-09-06 13:54:16",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\launcher.log",
+    "bytes": 10583,
+    "modified": "2026-09-06 13:55:05",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\cosim_exchange_table.md",
+    "bytes": 883,
+    "modified": "2026-09-06 13:55:05",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.csv",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\cosim_exchange_table.csv",
+    "bytes": 1344,
+    "modified": "2026-09-06 13:55:05",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.sta",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.sta",
+    "bytes": 1051,
+    "modified": "2026-09-06 13:54:56",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.prt",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.prt",
+    "bytes": 413664,
+    "modified": "2026-09-06 13:54:37",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.odb",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.odb",
+    "bytes": 38797312,
+    "modified": "2026-09-06 13:54:56",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.msg",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.msg",
+    "bytes": 36455,
+    "modified": "2026-09-06 13:54:56",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.log",
+    "bytes": 755,
+    "modified": "2026-09-06 13:55:05",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.env",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.env",
+    "bytes": 22948,
+    "modified": "2026-09-06 13:55:05",
+    "extension": ".env",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.dat",
+    "bytes": 125752,
+    "modified": "2026-09-06 13:54:56",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.com",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.com",
+    "bytes": 3463,
+    "modified": "2026-09-06 13:54:25",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\standardU.dll",
+    "bytes": 11528,
+    "modified": "2026-08-31 23:00:50",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_report.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\persistent_cosim_report.json",
+    "bytes": 10052,
+    "modified": "2026-09-06 13:51:05",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "load_in.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\load_in.dat",
+    "bytes": 116,
+    "modified": "2026-09-06 13:51:01",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\launcher.log",
+    "bytes": 10583,
+    "modified": "2026-09-06 13:51:05",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\cosim_exchange_table.md",
+    "bytes": 883,
+    "modified": "2026-09-06 13:51:05",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.csv",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\cosim_exchange_table.csv",
+    "bytes": 1344,
+    "modified": "2026-09-06 13:51:05",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.msg",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\C3_PERSISTENT_0P15.msg",
+    "bytes": 234,
+    "modified": "2026-09-06 13:51:05",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run8\\C3_PERSISTENT_0P15.log",
+    "bytes": 264,
+    "modified": "2026-09-06 13:51:05",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run7\\launcher.log",
+    "bytes": 392,
+    "modified": "2026-09-06 13:48:01",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\standardU.dll",
+    "bytes": 282624,
+    "modified": "2026-09-03 13:44:58",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_report.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\persistent_cosim_report.json",
+    "bytes": 10052,
+    "modified": "2026-09-06 13:45:46",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "load_in.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\load_in.dat",
+    "bytes": 116,
+    "modified": "2026-09-06 13:45:39",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\launcher.log",
+    "bytes": 10583,
+    "modified": "2026-09-06 13:45:46",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\cosim_exchange_table.md",
+    "bytes": 883,
+    "modified": "2026-09-06 13:45:46",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.csv",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\cosim_exchange_table.csv",
+    "bytes": 1344,
+    "modified": "2026-09-06 13:45:46",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.msg",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\C3_PERSISTENT_0P15.msg",
+    "bytes": 234,
+    "modified": "2026-09-06 13:45:46",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run6\\C3_PERSISTENT_0P15.log",
+    "bytes": 264,
+    "modified": "2026-09-06 13:45:46",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run5\\launcher.log",
+    "bytes": 650,
+    "modified": "2026-09-06 13:43:36",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run4\\standardU.dll",
+    "bytes": 282624,
+    "modified": "2026-09-03 13:44:58",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_report.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run4\\persistent_cosim_report.json",
+    "bytes": 10065,
+    "modified": "2026-09-06 13:42:04",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "load_in.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run4\\load_in.dat",
+    "bytes": 116,
+    "modified": "2026-09-06 13:42:04",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run4\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run4\\cosim_exchange_table.md",
+    "bytes": 883,
+    "modified": "2026-09-06 13:42:04",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.csv",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run4\\cosim_exchange_table.csv",
+    "bytes": 1344,
+    "modified": "2026-09-06 13:42:04",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run4\\C3_PERSISTENT_0P15.log",
+    "bytes": 0,
+    "modified": "2026-09-06 13:42:04",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run3\\standardU.dll",
+    "bytes": 282624,
+    "modified": "2026-09-03 13:44:58",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_report.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run3\\persistent_cosim_report.json",
+    "bytes": 10065,
+    "modified": "2026-09-06 13:40:11",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "load_in.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run3\\load_in.dat",
+    "bytes": 116,
+    "modified": "2026-09-06 13:40:11",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run3\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run3\\cosim_exchange_table.md",
+    "bytes": 883,
+    "modified": "2026-09-06 13:40:11",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.csv",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run3\\cosim_exchange_table.csv",
+    "bytes": 1344,
+    "modified": "2026-09-06 13:40:11",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run3\\C3_PERSISTENT_0P15.log",
+    "bytes": 0,
+    "modified": "2026-09-06 13:40:11",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run2\\standardU.dll",
+    "bytes": 282624,
+    "modified": "2026-09-03 13:44:58",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run2\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "uamp_six_dof_external_motion.obj",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\uamp_six_dof_external_motion.obj",
+    "bytes": 15192,
+    "modified": "2026-09-03 11:41:32",
+    "extension": ".obj",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "uamp_macro_trace.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\uamp_macro_trace.log",
+    "bytes": 9726,
+    "modified": "2026-09-06 14:09:14",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "persistent_cosim_report.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\persistent_cosim_report.json",
+    "bytes": 40876,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "load_in.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\load_in.dat",
+    "bytes": 136,
+    "modified": "2026-09-06 14:09:11",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "LINK.EXE",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\LINK.EXE",
+    "bytes": 37376,
+    "modified": "2026-09-01 00:41:24",
+    "extension": ".EXE",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\launcher.log",
+    "bytes": 42312,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\cosim_exchange_table.md",
+    "bytes": 1589,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "cosim_exchange_table.csv",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\cosim_exchange_table.csv",
+    "bytes": 3168,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".csv",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15_coordinator_probe.odb",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15_coordinator_probe.odb",
+    "bytes": 38797312,
+    "modified": "2026-09-06 14:07:38",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.sta",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.sta",
+    "bytes": 1259,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.prt",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.prt",
+    "bytes": 413664,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.odb",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.odb",
+    "bytes": 38203620,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.msg",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.msg",
+    "bytes": 49731,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.log",
+    "bytes": 762,
+    "modified": "2026-09-06 14:09:20",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.dat",
+    "bytes": 131727,
+    "modified": "2026-09-06 14:09:16",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_PERSISTENT_0P15.com",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.com",
+    "bytes": 3511,
+    "modified": "2026-09-06 14:05:38",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "abaqus_request.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\abaqus_request.dat",
+    "bytes": 63,
+    "modified": "2026-09-06 14:09:11",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "test.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\test.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\standardU.dll",
+    "bytes": 279552,
+    "modified": "2026-09-01 21:06:27",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "load_in.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\load_in.dat",
+    "bytes": 15,
+    "modified": "2026-09-06 14:02:32",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.sta",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.sta",
+    "bytes": 1051,
+    "modified": "2026-09-06 14:02:59",
+    "extension": ".sta",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.prt",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.prt",
+    "bytes": 413664,
+    "modified": "2026-09-06 14:02:44",
+    "extension": ".prt",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.odb",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.odb",
+    "bytes": 38797312,
+    "modified": "2026-09-06 14:02:59",
+    "extension": ".odb",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.msg",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.msg",
+    "bytes": 36455,
+    "modified": "2026-09-06 14:02:59",
+    "extension": ".msg",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.log",
+    "bytes": 743,
+    "modified": "2026-09-06 14:03:06",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.env",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.env",
+    "bytes": 21757,
+    "modified": "2026-09-06 14:03:06",
+    "extension": ".env",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.dat",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.dat",
+    "bytes": 125446,
+    "modified": "2026-09-06 14:02:59",
+    "extension": ".dat",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "direct.com",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.com",
+    "bytes": 3433,
+    "modified": "2026-09-06 14:02:41",
+    "extension": ".com",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "uamp_six_dof_external.obj",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run12\\uamp_six_dof_external.obj",
+    "bytes": 11528,
+    "modified": "2026-08-31 23:00:50",
+    "extension": ".obj",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "LINK.EXE",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run12\\LINK.EXE",
+    "bytes": 37376,
+    "modified": "2026-09-01 00:41:24",
+    "extension": ".EXE",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run12\\launcher.log",
+    "bytes": 1358,
+    "modified": "2026-09-06 14:00:16",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run12\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run11\\launcher.log",
+    "bytes": 404,
+    "modified": "2026-09-06 13:58:21",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "launcher.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run10\\launcher.log",
+    "bytes": 481,
+    "modified": "2026-09-06 13:56:25",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "standardU.dll",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run\\standardU.dll",
+    "bytes": 282624,
+    "modified": "2026-09-03 13:44:58",
+    "extension": ".dll",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.manifest.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\DTU_C3_PERSISTENT_0p15.manifest.json",
+    "bytes": 1103,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_C3_PERSISTENT_0p15.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\DTU_C3_PERSISTENT_0p15.inp",
+    "bytes": 5883727,
+    "modified": "2026-09-06 13:37:50",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "simpack_macro_000.spck",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_3STEP_R2\\simpack_macro_000.spck",
+    "bytes": 108711,
+    "modified": "2026-09-06 13:31:05",
+    "extension": ".spck",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "simpack_macro_000.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_3STEP_R2\\simpack_macro_000.json",
+    "bytes": 315,
+    "modified": "2026-09-06 13:34:25",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "official_tower_macro_000.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_3STEP_R2\\abaqus\\official_tower_macro_000.inp",
+    "bytes": 5882416,
+    "modified": "2026-09-06 13:34:25",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "simpack_macro_000.spck",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_3STEP\\simpack_macro_000.spck",
+    "bytes": 108711,
+    "modified": "2026-09-06 13:26:12",
+    "extension": ".spck",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "simpack_macro_000.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_3STEP\\simpack_macro_000.json",
+    "bytes": 315,
+    "modified": "2026-09-06 13:29:25",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "official_tower_macro_000.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_3STEP\\abaqus\\official_tower_macro_000.inp",
+    "bytes": 5882416,
+    "modified": "2026-09-06 13:29:25",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_TOWER_SINGLE_600S_DT5_CSE_TEMPLATE.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU_TOWER_SINGLE_600S_DT5_CSE_TEMPLATE.inp",
+    "bytes": 6016999,
+    "modified": "2026-09-02 20:37:38",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU_RNA_TOWER_C3_COSIM_PREPARED.inp",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU_RNA_TOWER_C3_COSIM_PREPARED.inp",
+    "bytes": 5952669,
+    "modified": "2026-09-06 13:10:27",
+    "extension": ".inp",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE_20S.spck",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE_20S.spck",
+    "bytes": 2424513,
+    "modified": "2026-09-09 10:52:16",
+    "extension": ".spck",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE_20S.licreq.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE_20S.output\\DTU158_RNA_C3_NATIVE_BRIDGE_20S.licreq.log",
+    "bytes": 1448,
+    "modified": "2026-09-09 11:08:19",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE_20S-B_Blade3.fecache",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE_20S.output\\DTU158_RNA_C3_NATIVE_BRIDGE_20S-B_Blade3.fecache",
+    "bytes": 1760260,
+    "modified": "2026-09-09 11:08:16",
+    "extension": ".fecache",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE_20S-B_Blade2.fecache",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE_20S.output\\DTU158_RNA_C3_NATIVE_BRIDGE_20S-B_Blade2.fecache",
+    "bytes": 1760260,
+    "modified": "2026-09-09 11:08:16",
+    "extension": ".fecache",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE_20S-B_Blade1.fecache",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE_20S.output\\DTU158_RNA_C3_NATIVE_BRIDGE_20S-B_Blade1.fecache",
+    "bytes": 1760260,
+    "modified": "2026-09-09 11:08:16",
+    "extension": ".fecache",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE.spck",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE.spck",
+    "bytes": 2424165,
+    "modified": "2026-09-06 13:16:52",
+    "extension": ".spck",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE.licreq.log",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE.output\\DTU158_RNA_C3_NATIVE_BRIDGE.licreq.log",
+    "bytes": 1443,
+    "modified": "2026-09-09 10:52:15",
+    "extension": ".log",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE-B_Blade3.fecache",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE.output\\DTU158_RNA_C3_NATIVE_BRIDGE-B_Blade3.fecache",
+    "bytes": 20,
+    "modified": "2026-09-09 10:47:57",
+    "extension": ".fecache",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE-B_Blade2.fecache",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE.output\\DTU158_RNA_C3_NATIVE_BRIDGE-B_Blade2.fecache",
+    "bytes": 20,
+    "modified": "2026-09-09 10:47:57",
+    "extension": ".fecache",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_NATIVE_BRIDGE-B_Blade1.fecache",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_NATIVE_BRIDGE.output\\DTU158_RNA_C3_NATIVE_BRIDGE-B_Blade1.fecache",
+    "bytes": 20,
+    "modified": "2026-09-09 10:47:57",
+    "extension": ".fecache",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_ABAQUS_BODY7_TEMPLATE.spck",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_ABAQUS_BODY7_TEMPLATE.spck",
+    "bytes": 2489642,
+    "modified": "2026-09-06 13:12:01",
+    "extension": ".spck",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "DTU158_RNA_C3_ABAQUS_BODY7.spck",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\DTU158_RNA_C3_ABAQUS_BODY7.spck",
+    "bytes": 2490910,
+    "modified": "2026-09-06 13:11:31",
+    "extension": ".spck",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_RUN_MANIFEST.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\C3_RUN_MANIFEST.json",
+    "bytes": 11253,
+    "modified": "2026-09-06 13:13:03",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_HANDOFF.md",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\C3_HANDOFF.md",
+    "bytes": 765,
+    "modified": "2026-09-06 14:11:14",
+    "extension": ".md",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_GATE_STATUS.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\C3_GATE_STATUS.json",
+    "bytes": 619,
+    "modified": "2026-09-06 13:13:27",
+    "extension": ".json",
+    "verification": "inventory-only"
+  },
+  {
+    "name": "C3_FINAL_GATE.json",
+    "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\C3_FINAL_GATE.json",
+    "bytes": 919,
+    "modified": "2026-09-06 14:11:14",
+    "extension": ".json",
+    "verification": "inventory-only"
+  }
+]

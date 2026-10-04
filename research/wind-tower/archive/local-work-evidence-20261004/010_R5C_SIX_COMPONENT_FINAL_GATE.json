@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "functions_total": 930,
+  "distributed_functions": 918,
+  "time_points": 12001,
+  "time_end_s": 600.0,
+  "force93_count": 153,
+  "force93_six_component_refs": true,
+  "from_marker_M_Isys": true,
+  "rna_aero6dof_disabled": true,
+  "solver_returncode": 0,
+  "solver_stop_time_s": 600.0,
+  "resultant_closure": [
+    {
+      "component": "FX",
+      "relative_rms_error": 1.7463915791349333e-14,
+      "max_abs_error": 9.918585419654846e-08
+    },
+    {
+      "component": "FY",
+      "relative_rms_error": 5.940034392049194e-14,
+      "max_abs_error": 1.0244548320770264e-08
+    },
+    {
+      "component": "FZ",
+      "relative_rms_error": 1.8864266399175953e-14,
+      "max_abs_error": 1.0099029168486595e-08
+    },
+    {
+      "component": "MX",
+      "relative_rms_error": 3.6251651978407725e-14,
+      "max_abs_error": 3.2487150747328997e-09
+    },
+    {
+      "component": "MY",
+      "relative_rms_error": 1.573638342271963e-13,
+      "max_abs_error": 1.6472768038511276e-08
+    },
+    {
+      "component": "MZ",
+      "relative_rms_error": 1.7373439579048973e-13,
+      "max_abs_error": 1.613807398825884e-08
+    }
+  ],
+  "sbr": "CODEX_WORK\\simpack-mcp-runs\\R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S\\DTU158_RNA_R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S.sbr"
+}

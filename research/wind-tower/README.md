@@ -46,3 +46,7 @@ SHOWTIME 工程包含三组 SHOWTIME 命名模型；不得仅凭上传文件名�
 ## 整篇流程复核（本轮优先）
 
 [七章流程判定与六处衔接修正](audit/27-overall-process-review.md) · [40项逐章研究核查映射](audit/28-chapter-checklist.md)。本轮先审流程，原始结果追索与求解专项暂缓；正式流程及研究状态继续以MASTER和registry为准。原论文与导师Word均不提交。
+
+## 本地工作资料分区入口（T028）
+
+[资产清单与分类](registry/local-work-inventory-20261004/README.md) · [整理范围与检查顺序](audit/34-t028-local-work-inventory.md) · [历史计算证据](archive/local-work-evidence-20261004/README.md)。本次上传不改变T027路线及当前科学状态；大型原始结果仍在本地。
