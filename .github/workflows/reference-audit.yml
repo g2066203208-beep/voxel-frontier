@@ -19,6 +19,8 @@ jobs:
         run: node scripts/check-reference-records.mjs
       - name: Recalculate reported scalar arithmetic
         run: node scripts/sanity-check-reported.mjs
+      - name: Compare exported material declarations
+        run: node scripts/check-material-audit.mjs
       - name: Save audit records
         uses: actions/upload-artifact@v7.0.1
         with:
@@ -26,3 +28,4 @@ jobs:
           path: |
             research/wind-tower/audit/reference-records.json
             public/research/reported-checks.json
+            public/research/material-checks.json
