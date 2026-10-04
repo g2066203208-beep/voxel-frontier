@@ -63,3 +63,7 @@ SHOWTIME 工程包含三组 SHOWTIME 命名模型；不得仅凭上传文件名�
 [传输台账](registry/asset-transfer-20261004/transfer-ledger.json) · [大文件实体/LFS](archive/local-large-assets-20261004/README.md) · [原分包去重映射](registry/asset-transfer-20261004/deduplication-map.json)
 
 此前10 MiB上传排除线已取消。原1614条位置记录去重为887份内容，727条重复项改为引用，不重复存实体。当前补传正在进行，以上台账区分已存在、已上传、待传及失败，不将排队文件算作完成。GitHub当前LFS接口返回单对象2 GiB限制，超限ODB采用可校验分块；不改变本地原件。上方旧段落的10MiB暂缓说明仅为历史批次说明，以本节及传输台账为准。
+
+## DTU基准、软件与场址资料
+
+[分区资产入口](references/baselines-and-site-20261004/README.md) · [整篇工作资产覆盖与缺口](registry/asset-completeness-20261004.md)。官方参考、第三方移植和本论文生产模型分别保存，内容相同的文件使用引用。
