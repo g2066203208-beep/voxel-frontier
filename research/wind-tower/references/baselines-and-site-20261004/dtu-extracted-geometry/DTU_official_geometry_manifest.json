@@ -1,0 +1,76 @@
+{
+  "schema": "dtu-official-geometry-manifest/v1",
+  "source_archive": {
+    "path": "C:\\Thesis_Tower185\\DTU\\dtu-10mw-rwt-master.zip",
+    "bytes": 470428359,
+    "sha256": "49c589e7a4b07b3c9ab5dbb88485b6a29fc36fb6df0524ad734eaa24ec86125d"
+  },
+  "variant": "prebend",
+  "iges": {
+    "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\DTU_10MW_RWT_blade3D_prebend.iges",
+    "bytes": 4428513,
+    "sha256": "eee5e98cc4fbd7e7643e43258ad729d9ea7cb3e1d7753424e16baa8ba0cc4ee0"
+  },
+  "structural_step": {
+    "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\DTU_10MW_refblade_structural.stp",
+    "bytes": 109255247,
+    "sha256": "54bc365ae7ac093e3e413a171680e4c23a690c437fc3a791251547b5c83c0d4c"
+  },
+  "abaqus_structural_files": [
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\refblade_master.inp",
+      "bytes": 773,
+      "sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\refblade_mesh.inp",
+      "bytes": 12547783,
+      "sha256": "0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\refblade_materials.inp",
+      "bytes": 947,
+      "sha256": "6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\refblade_layup.inp",
+      "bytes": 286534,
+      "sha256": "ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\refblade_te_glue.inp",
+      "bytes": 216674,
+      "sha256": "e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\cross_sections.inp",
+      "bytes": 301687,
+      "sha256": "a13ec34aa4af4f28aa8b8572b32417f3c45e2de1ca115cf1e4284a5b207b6b13"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\refblade.cae",
+      "bytes": 28000256,
+      "sha256": "26bada22e42c32549b5f123727a7e5325fd9732a524e9980e4fded85647e11e4"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\refblade.jnl",
+      "bytes": 1889969,
+      "sha256": "7d48e742a04b21204448a8a96edcb0d7f0a356828acea03a39f86afb29c807c9"
+    },
+    {
+      "path": "C:\\Users\\tt\\Documents\\Codex\\simpack-mcp-runs\\dtu-official-assets-20260830\\abaqus_structural\\README.txt",
+      "bytes": 1202,
+      "sha256": "6c5248ecd80f4cbe52ae78da80fe3f665fccda41267afa3987271c91227b3417"
+    }
+  ],
+  "official_source_members": {
+    "iges": "dtu-10mw-rwt-master/geometry/DTU_10MW_RWT_blade3D_prebend.iges",
+    "step_archive": "dtu-10mw-rwt-master/structural_models/ABAQUS/DTU_10MW_refblade_structural.stp.zip",
+    "step_member": "DTU_10MW_refblade_structural.stp"
+  },
+  "notes": [
+    "IGES is official DTU blade geometry for visualization/CAD exchange.",
+    "STEP is the official Abaqus structural-model geometry and excludes prebend.",
+    "Neither file by itself creates a Simpack flexible body or aerodynamic model."
+  ]
+}

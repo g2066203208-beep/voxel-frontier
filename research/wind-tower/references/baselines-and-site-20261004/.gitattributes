@@ -8,3 +8,6 @@
 "runtime-binaries/openfast_x64_v353.exe" filter=lfs diff=lfs merge=lfs -text
 "runtime-binaries/TurbSim.exe" filter=lfs diff=lfs merge=lfs -text
 "runtime-binaries/TurbSim_OpenMP.exe" filter=lfs diff=lfs merge=lfs -text
+"openfast-v330-adaptation/0Linearization/Campbell_Servo/ws10Mode11LinTime1_xy.avi" filter=lfs diff=lfs merge=lfs -text
+"openfast-v330-adaptation/0Linearization/Campbell_Servo/ws10Mode11LinTime1_xz.avi" filter=lfs diff=lfs merge=lfs -text
+"era5-derived-workbook/Jiayu_Paizhouwan_ERA5_2005_2025.xlsx" filter=lfs diff=lfs merge=lfs -text
