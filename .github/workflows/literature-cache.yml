@@ -22,23 +22,15 @@ jobs:
           mkdir -p research/wind-tower/references/open-access
           manifest="research/wind-tower/references/open-access/MANIFEST.tsv"
           prev_manifest="$manifest.prev"
-          if [ -f "$manifest" ]; then cp "$manifest" "$prev_manifest"; else : > "$prev_manifest"; fi
-          printf 'id\tfilename\tstatus\tsha256\tbytes\turl\tlicense\n' > "$manifest"
-          tail -n +2 research/wind-tower/references/open-access-sources.tsv | while IFS=
-      - name: Commit successfully fetched open-access files and manifest
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/wind-tower/references/open-access
-          if git diff --cached --quiet; then
-            echo "No literature cache changes."
+          source_list="research/wind-tower/references/open-access-sources.tsv"
+          if [ -f "$manifest" ]; then
+            cp "$manifest" "$prev_manifest"
           else
-            git commit -m "research: cache verified open-access literature PDFs"
-            git pull --rebase origin main
-            git push
+            : > "$prev_manifest"
           fi
-\t' read -r id filename url license citation; do
+          printf 'id\tfilename\tstatus\tsha256\tbytes\turl\tlicense\n' > "$manifest"
+          while IFS="$(printf '\t')" read -r id filename url license citation; do
+            [ -z "$id" ] && continue
             out="research/wind-tower/references/open-access/$filename"
             tmp="$out.tmp"
             status="download-failed"
@@ -47,6 +39,7 @@ jobs:
             prev_row="$(awk -F '\t' -v key="$id" '$1==key {print; exit}' "$prev_manifest")"
             prev_status="$(printf '%s' "$prev_row" | awk -F '\t' '{print $3}')"
             prev_url="$(printf '%s' "$prev_row" | awk -F '\t' '{print $6}')"
+
             if [ -f "$out" ] && head -c 5 "$out" | grep -q '%PDF-'; then
               sha="$(sha256sum "$out" | awk '{print $1}')"
               bytes="$(wc -c < "$out" | tr -d ' ')"
@@ -67,8 +60,9 @@ jobs:
               rm -f "$tmp"
             fi
             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$id" "$filename" "$status" "$sha" "$bytes" "$url" "$license" >> "$manifest"
-          done
+          done < <(tail -n +2 "$source_list")
           rm -f "$prev_manifest"
+
       - name: Commit successfully fetched open-access files and manifest
         shell: bash
         run: |
