@@ -24,3 +24,16 @@
 3. 任何ResearchGate“可请求全文”不视为已经取得全文。
 4. 任何检索摘要不等于全文阅读。
 5. 任何文献只有在“研究对象、模型、边界条件、步骤、验证指标、关键结果、局限”七项完成笔记后，才进入论文关键论证。
+
+
+## 2026-10-04 新增直接相关文献
+
+|ID|文献|DOI/来源|当前证据等级|与论文关系|下一步|
+|---|---|---|---|---|---|
+|L013|Tan et al., Finite element modelling and design of concrete wind turbine towers subjected to combined compression and bending, Structures 77 (2025) 108811|10.1016/j.istruc.2025.108811；Manchester Research Explorer 提供 CC BY AAM|A候选|水平接缝开裂后的压弯承载、FE试验验证、125组参数研究；直接约束第4章局部机理和第5章参数选择|下载AAM，核对试验对象、FE接触/预应力、参数范围、公式和误差|
+|L014|Tan et al., Torsional behaviour of horizontal joints in prestressed concrete towers for wind turbines, Engineering Structures 336 (2025) 120443|10.1016/j.engstruct.2025.120443；Manchester Research Explorer 提供 CC BY AAM|A候选|水平接缝开裂后的弯扭/扭转机制；支持第4章不能只分析单一弯矩|下载AAM并整理N-M-T作用路径|
+|L015|Study on the compression-bending capacity of horizontal joints in prestressed concrete towers for wind turbines, Structures 72 (2025) 108292|10.1016/j.istruc.2025.108292|B|四个预应力塔试件、压弯、刚度/延性/预应力增量；直接支持接缝机理综述|继续寻找作者公开全文|
+|L016|Wang et al., Numerical Simulation and Fatigue Analysis of the Grout Layer Replacement for Horizontal Joint of Wind Turbine Prestressed Concrete Tower, IJCSM 19 (2025) 68|10.1186/s40069-025-00800-5；Springer OA|A候选|水平接缝灌浆层缺陷/修复与疲劳；作为局部耐久问题方法补充|下载出版PDF；明确与本文无灌浆缺陷基准的边界|
+|L017|Qu et al., Fatigue Life Evaluation of a Steel–Prestressed Concrete Hybrid Tower Under Prestress Relaxation Using a Bidirectionally Coupled Damage Model and Neural Network Surrogate, Buildings 16(19) (2026) 3854|10.3390/buildings16193854；MDPI OA，2026-09-28|A候选|4.55 MW混塔预应力松弛、FE疲劳、损伤耦合与代理模型；对第4章疲劳和第5–6章退化/代理边界非常直接|下载出版PDF；重点核查S–N/损伤定义、风载来源、松弛情景及外推限制|
+
+> 注：L017发表于当前论文审查日前6天，属于必须纳入“最新研究现状”的直接相关工作，但其4.55 MW对象、松弛情景和数据驱动模型不能直接移植到本文10 MW基准。
