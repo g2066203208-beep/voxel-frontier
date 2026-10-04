@@ -39,5 +39,5 @@ T030	P2-P8	global	Q01-Q05	针对T029发现的source gaps补官方文档/直接�
 T031	P3	3	Q02	专项检索ERA5在风能期刊/学位论文中的真实用法并重判U10/U100→161.37m方法	audit/37-t031-era5-wind-energy-literature-survey.md	complete-literature-survey/site-validation-open	G2	新增REF080-REF103与ERA5证据图；P3.1升级为PASS-literature/HOLD-site-validation；固定1/7不作为默认方法
 T032	P1-P8	global	Q01-Q05	对R2Z74历史Word按SHA去重，不上传DOCX，只抽取当前路线可复现方法、比较结果和章节映射	manuscript/reproducibility/	complete-structured-extraction	G0-G10	源SHA与既有governance记录完全一致；已排除Simpack旧路线；benchmark不得自动升级为final
 
-T033	P1-P8	literature	Q01-Q05	把新检索且许可明确的OA论文加入现有GitHub literature-cache，并把付费/许可不明项转入用户下载队列	references/open-access-sources.tsv	in-progress-cache	G0-G10	不重复已有PDF；公共repo只缓存许可明确全文；失败项进入NEED_USER_DOWNLOAD
+T033	P1-P8	literature	Q01-Q05	把新检索且许可明确的OA论文加入现有GitHub literature-cache，并把付费/许可不明项转入用户下载队列	references/open-access-sources.tsv	complete-cache/3-user-download-needed	G0-G10	L060-L072共13项：10项PDF缓存ok；L062/L065/L069自动下载失败；NEED_USER_DOWNLOAD.md已去重刷新
 
