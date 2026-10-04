@@ -1,0 +1,70 @@
+{
+  "section": "abaqus-v30",
+  "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb",
+  "bytes": 10082558876,
+  "sha256": "82042472a7cc3bc3c2c491da51a6f1ec2dc5cdc4fa7ad1ec03909b24e3d53f2e",
+  "git_sha": "ef39601b44732badbffcb0448fdc123b5bb75e90",
+  "existing": null,
+  "status": "multipart-incomplete",
+  "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts",
+  "storage": "git-lfs-multipart",
+  "parts": [
+    {
+      "sha256": "2db3ded2624fffaef4bb77b67ee1db6f70a03abf2987590170cadcfbc5111372",
+      "bytes": 1073741824,
+      "index": 1,
+      "offset": 0,
+      "blob": "f78bea17ad26386938a1e9d9ea8dfd3784e51216",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts/part-0001"
+    },
+    {
+      "sha256": "be4ef8ff2e3745503964154aee70842ac33ee83593604b8f302e0fa0b2f8226d",
+      "bytes": 1073741824,
+      "index": 2,
+      "offset": 1073741824,
+      "blob": "ac8797c73574f7bca450107fc1d08549b74ff2d9",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts/part-0002"
+    },
+    {
+      "sha256": "dbfbcf6abbb9993470210a2fb683a71e2817f5b737eb5e591a2d8ea8d853c366",
+      "bytes": 1073741824,
+      "index": 3,
+      "offset": 2147483648,
+      "blob": "c80085c3a827d6dfcdc1cb3ff13eb470b1075e28",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts/part-0003"
+    },
+    {
+      "sha256": "2b9ee48110900db10b435624588ae05944d2d3f2f5a61e7e1555d793bb78e811",
+      "bytes": 1073741824,
+      "index": 4,
+      "offset": 3221225472,
+      "blob": "70401ceec608a04824e6d7792809445bc35f96da",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts/part-0004"
+    },
+    {
+      "sha256": "fd9a7d39c8a1fc0636060d26d72ae351472d394e551ba967335584e23b0c25db",
+      "bytes": 1073741824,
+      "index": 5,
+      "offset": 4294967296,
+      "blob": "b18e953558dd882cd9d0dead8635ffc263f25735",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts/part-0005"
+    },
+    {
+      "sha256": "f0893d27249a3d2ad4568ca0a910840d51cb522bbc806c5ca79f772f377cf784",
+      "bytes": 1073741824,
+      "index": 6,
+      "offset": 5368709120,
+      "blob": "7114cbc7d1770ef8983a7567d994150a3c55da86",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts/part-0006"
+    },
+    {
+      "sha256": "3fb940377c9e4bd682514ff63cbf5ae9f53497c25fb304c2a63059fe84afb764",
+      "bytes": 1073741824,
+      "index": 7,
+      "offset": 6442450944,
+      "blob": "e3d3eed990d92ee5980bf369ef90b0ae41d98aea",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts/part-0007"
+    }
+  ],
+  "error": "Network connection failed after 4 attempts"
+}

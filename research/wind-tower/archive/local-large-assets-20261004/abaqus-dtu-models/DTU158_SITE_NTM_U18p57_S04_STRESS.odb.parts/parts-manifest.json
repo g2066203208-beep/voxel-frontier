@@ -5,7 +5,7 @@
   "sha256": "996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd",
   "git_sha": "34d9bee55a2c35ebb70a26662a6609c73ed13afc",
   "existing": null,
-  "status": "multipart-incomplete",
+  "status": "uploaded-lfs-multipart",
   "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts",
   "storage": "git-lfs-multipart",
   "parts": [
@@ -16,6 +16,38 @@
       "offset": 0,
       "blob": "e28074be21fdcd501f7835781ef50f53709a8f85",
       "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0001"
+    },
+    {
+      "sha256": "770a085a86e6c5ade18d18e05aba4ec7219092100e76555bff5cdc6e7ed77e00",
+      "bytes": 1073741824,
+      "index": 2,
+      "offset": 1073741824,
+      "blob": "9fdbf3129adfb763724da0b6be2f43a638746990",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0002"
+    },
+    {
+      "sha256": "136443ea2f8b1a28d8969f1278959918ed2816c441be863229e3e1bd79d31ae1",
+      "bytes": 1073741824,
+      "index": 3,
+      "offset": 2147483648,
+      "blob": "3c3b9e1cc79eea754ae0db0a3e3e9e0fd5017cbf",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0003"
+    },
+    {
+      "sha256": "1e21a69bf53d63c35bf99f86996266a2a4542a66866b387a78aeaa93d5de2cc5",
+      "bytes": 1073741824,
+      "index": 4,
+      "offset": 3221225472,
+      "blob": "bd154fc6eaf3c714ec8d261caa9ea978c3abcff9",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0004"
+    },
+    {
+      "sha256": "c1a0e26136178af85fab75e312914331930f4cac32cf51f1f783bcc16992f991",
+      "bytes": 21855544,
+      "index": 5,
+      "offset": 4294967296,
+      "blob": "dbc690e7140ad49c51ef3ac7755b8c0e4a216bd7",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0005"
     }
   ],
   "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"

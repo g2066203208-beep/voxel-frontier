@@ -5,7 +5,7 @@
   "sha256": "0ecf9a55010d970d353609f8b22d05676c5f6239060e8faa2641f4174aeb2692",
   "git_sha": "f6235d356df9e72488968aeacdecf05b9e7a24b7",
   "existing": null,
-  "status": "multipart-incomplete",
+  "status": "uploaded-lfs-multipart",
   "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts",
   "storage": "git-lfs-multipart",
   "parts": [
@@ -16,6 +16,22 @@
       "offset": 0,
       "blob": "1a596ee8af0aec874635a06b67f76136d11c42b5",
       "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0001"
+    },
+    {
+      "sha256": "a6ecbfe551dcbf1518d9a2b4cc8fc1b768f8e84b07ad397d89da49a0b4603d9d",
+      "bytes": 1073741824,
+      "index": 2,
+      "offset": 1073741824,
+      "blob": "e136dd11a3eb5206ba1ad581438db3ccbdb59346",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0002"
+    },
+    {
+      "sha256": "a19d05a1d3f5b09064159c5a92a4684d22b28d9a3183c7545f5f202d47518b96",
+      "bytes": 552713704,
+      "index": 3,
+      "offset": 2147483648,
+      "blob": "97cffd89eccab9312c274e5b6d613b4e6359a500",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0003"
     }
   ],
   "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"

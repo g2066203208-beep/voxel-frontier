@@ -1,0 +1,46 @@
+{
+  "section": "abaqus-dtu-models",
+  "relative_path": "DTU158_SITE_NTM_U18p57_S04.odb",
+  "bytes": 4015916840,
+  "sha256": "bb07aff9b5ed7b5ef277f8208d2834cc472673085d7753bf057f05ecc0959290",
+  "git_sha": "e7d64194807870c0e1f27c98264acc68d48e0ff1",
+  "existing": null,
+  "status": "uploaded-lfs-multipart",
+  "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04.odb.parts",
+  "storage": "git-lfs-multipart",
+  "parts": [
+    {
+      "sha256": "993b8e32a10183c8f3a006a1ffb7289f027b016031337eb5a5c48e9e5510eb26",
+      "bytes": 1073741824,
+      "index": 1,
+      "offset": 0,
+      "blob": "59b924afccd979926980317c50aa4609dc36867d",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04.odb.parts/part-0001"
+    },
+    {
+      "sha256": "4047f098d845d39bd771ce31cd2d9198408fd84dd7bc624c7798c51e4ea2609c",
+      "bytes": 1073741824,
+      "index": 2,
+      "offset": 1073741824,
+      "blob": "cc2573b8711da37f21495fd9a93a036ee0271c79",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04.odb.parts/part-0002"
+    },
+    {
+      "sha256": "4175c7a4a6dc0415837dc9a7a479aad91abdda231530f29a3545caa616d46fc4",
+      "bytes": 1073741824,
+      "index": 3,
+      "offset": 2147483648,
+      "blob": "c1010aedc652a6bdf6beb96bdda8bdbd79103685",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04.odb.parts/part-0003"
+    },
+    {
+      "sha256": "ae534791731e4e54d603e3e049041c55f8fcc2012ced27578cb8711114c6961e",
+      "bytes": 794691368,
+      "index": 4,
+      "offset": 3221225472,
+      "blob": "d386448383aeb6622053a98899311ab13a16f25e",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04.odb.parts/part-0004"
+    }
+  ],
+  "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+}
