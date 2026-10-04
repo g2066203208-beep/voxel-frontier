@@ -1,10 +1,11 @@
 import './style.css';
 import { researchPage, engineeringPage, mountEngineering } from './engineering';
+import { literaturePage, mountLiterature } from './literature';
 import { icon } from './icons';
 import { createRecord, createProject, createDemoWorkspace, loadWorkspace, saveWorkspace, validateWorkspace, exportMarkdown, parseBibtex, referencesToBibtex, type Workspace, type Project, type ResearchRecord, type RecordKind } from './store';
 import { addAttachment, getAttachment, deleteAttachment, deleteProjectAttachments, exportAttachments, importAttachments, validateAttachmentBackups, readPreview, downloadBlob, type AttachmentBackup } from './files';
 
-type View = 'overview' | 'manuscript' | RecordKind | 'search' | 'workflow' | 'engineering';
+type View = 'overview' | 'manuscript' | RecordKind | 'search' | 'workflow' | 'literature' | 'engineering';
 const modules: Record<RecordKind, { label: string; icon: string; note: string; fields: Record<string, string> }> = {
   reviews: { label: '论文审查', icon: 'check', note: '逐项追踪问题，让每次修订都有回应。', fields: { priority: '优先级', finding: '发现的问题 / 审查意见', action: '修改方案与回应' } },
   replications: { label: '论文复盘', icon: 'book', note: '拆解研究问题、方法和证据，沉淀可复用的思路。', fields: { question: '研究问题与核心假设', method: '研究方法与复现条件', result: '主要结果 / 复现记录', limitations: '局限性与启发' } },
@@ -32,6 +33,7 @@ try {
 }
 let view: View = 'workflow';
 let disposeEngineering: (()=>void) | undefined;
+let disposeLiterature: (()=>void) | undefined;
 let renderGeneration = 0;
 let query = '';
 let statusFilter = 'all';
@@ -72,13 +74,15 @@ function navItem(key: View, label: string, ico: string, count?: number) {
 }
 function render() {
   disposeEngineering?.(); disposeEngineering = undefined;
+  disposeLiterature?.(); disposeLiterature = undefined;
   const generation = ++renderGeneration;
   if (recoveryError) { renderRecovery(); return; }
   const p = project();
-  const cloud = view === 'workflow' || view === 'engineering';
-  const title = view === 'workflow' ? '研究全过程 · GitHub' : view === 'engineering' ? '工程模型 · 云端读取' : view === 'overview' ? '项目总览' : view === 'manuscript' ? '论文写作' : view === 'search' ? '搜索结果' : modules[view].label;
-  app.innerHTML = `<aside class="sidebar"><a class="brand" href="#" data-view="overview"><span class="brand-mark">${icon('paper', 25)}</span><span>论文工作室<small>PAPER STUDIO</small></span></a><div class="project-select"><label for="project-selector">当前研究项目</label><select id="project-selector" ${cloud ? 'disabled' : ''}>${cloud ? `<option value="${p.id}">10 MW风机混合塔架研究</option>` : workspace.projects.map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select>${button('new-project', '新建项目', 'plus', 'new-project')}</div><nav aria-label="工作台导航">${navItem('workflow', '研究全过程 · GitHub', 'steps')}${navItem('engineering', '工程模型查看', 'cube')}${navItem('overview', '草稿项目总览', 'grid')}<div class="nav-label">浏览器草稿区 · 不上传正文</div>${navItem('manuscript', '论文写作', 'paper')}${kindKeys.map(k => navItem(k, modules[k].label, modules[k].icon, p.records.filter(r => r.kind === k).length)).join('')}</nav><div class="sidebar-footer"><div class="local-note"><span class="status-dot"></span><span>${cloud ? 'GitHub正式研究区<small>流程、工程与成果由仓库管理</small>' : '浏览器草稿区<small>此处笔记不会上传GitHub</small>'}</span></div>${button('help', '使用与数据说明', 'help', 'help-button')}</div></aside><div class="workspace"><header class="topbar">${button('toggle-nav', '', 'menu', 'icon-button mobile-menu', 'aria-label="展开导航"')}<div class="breadcrumb">工作空间 <span>/</span> <strong>${title}</strong></div><label class="search-box">${icon('search', 17)}<input id="global-search" placeholder="搜索项目内的记录…" aria-label="搜索项目内的记录" value="${esc(query)}"/><kbd>⌘ K</kbd></label><span class="avatar" title="本地工作区">研</span></header><main id="main" tabindex="-1">${view === 'workflow' ? researchPage() : view === 'engineering' ? engineeringPage() : view === 'overview' ? overview() : view === 'manuscript' ? manuscript() : recordsPage()}</main><footer class="workspace-footer"><span><span class="status-dot"></span><span id="save-state">已保存到本机</span></span><span>Paper Studio · 专注研究的每一步</span></footer></div>`;
+  const cloud = view === 'workflow' || view === 'literature' || view === 'engineering';
+  const title = view === 'workflow' ? '研究全过程 · GitHub' : view === 'literature' ? '文献下载助手' : view === 'engineering' ? '工程模型 · 云端读取' : view === 'overview' ? '项目总览' : view === 'manuscript' ? '论文写作' : view === 'search' ? '搜索结果' : modules[view].label;
+  app.innerHTML = `<aside class="sidebar"><a class="brand" href="#" data-view="overview"><span class="brand-mark">${icon('paper', 25)}</span><span>论文工作室<small>PAPER STUDIO</small></span></a><div class="project-select"><label for="project-selector">当前研究项目</label><select id="project-selector" ${cloud ? 'disabled' : ''}>${cloud ? `<option value="${p.id}">10 MW风机混合塔架研究</option>` : workspace.projects.map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select>${button('new-project', '新建项目', 'plus', 'new-project')}</div><nav aria-label="工作台导航">${navItem('workflow', '研究全过程 · GitHub', 'steps')}${navItem('literature', '文献下载助手', 'quote')}${navItem('engineering', '工程模型查看', 'cube')}${navItem('overview', '草稿项目总览', 'grid')}<div class="nav-label">浏览器草稿区 · 不上传正文</div>${navItem('manuscript', '论文写作', 'paper')}${kindKeys.map(k => navItem(k, modules[k].label, modules[k].icon, p.records.filter(r => r.kind === k).length)).join('')}</nav><div class="sidebar-footer"><div class="local-note"><span class="status-dot"></span><span>${cloud ? 'GitHub正式研究区<small>流程、工程与成果由仓库管理</small>' : '浏览器草稿区<small>此处笔记不会上传GitHub</small>'}</span></div>${button('help', '使用与数据说明', 'help', 'help-button')}</div></aside><div class="workspace"><header class="topbar">${button('toggle-nav', '', 'menu', 'icon-button mobile-menu', 'aria-label="展开导航"')}<div class="breadcrumb">工作空间 <span>/</span> <strong>${title}</strong></div><label class="search-box">${icon('search', 17)}<input id="global-search" placeholder="搜索项目内的记录…" aria-label="搜索项目内的记录" value="${esc(query)}"/><kbd>⌘ K</kbd></label><span class="avatar" title="本地工作区">研</span></header><main id="main" tabindex="-1">${view === 'workflow' ? researchPage() : view === 'literature' ? literaturePage() : view === 'engineering' ? engineeringPage() : view === 'overview' ? overview() : view === 'manuscript' ? manuscript() : recordsPage()}</main><footer class="workspace-footer"><span><span class="status-dot"></span><span id="save-state">已保存到本机</span></span><span>Paper Studio · 专注研究的每一步</span></footer></div>`;
   bindMain();
+  if (view === 'literature') disposeLiterature = mountLiterature(app);
   if (view === 'engineering') void mountEngineering(app).then(dispose => { if (generation !== renderGeneration) dispose(); else disposeEngineering = dispose; });
   document.querySelector('#save-state')!.textContent = cloud ? '来源：GitHub · main' : saveState;
 }
