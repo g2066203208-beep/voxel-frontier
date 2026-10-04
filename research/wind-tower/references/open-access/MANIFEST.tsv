@@ -1,0 +1,6 @@
+id	filename	status	sha256	bytes	url	license
+L004	Li_2021_AppliedSciences_8683.pdf	ok	212bbbe69b2c0616df4fa2d8c8807328fb9a0ddb340cfc4ca7e57a279c243352	3359108	https://mdpi-res.com/d_attachment/applsci/applsci-11-08683/article_deploy/applsci-11-08683.pdf	CC-BY-4.0
+L009	Hannesdottir_2019_WES_4_325.pdf	ok	f9c380e52728667bc3eb8f79c722121d4a854389b8e13620b79e4486191eb891	7388629	https://wes.copernicus.org/articles/4/325/2019/wes-4-325-2019.pdf	CC-BY-4.0
+L013	Tan_2025_Structures_108811_AAM.pdf	download-failed		0	https://research.manchester.ac.uk/files/880574416/AAM.pdf	CC-BY
+L016	Wang_2025_IJCSM_19_68.pdf	not-pdf		0	https://link.springer.com/content/pdf/10.1186/s40069-025-00800-5.pdf	Open-Access-check-article
+L017	Qu_2026_Buildings_16_3854.pdf	download-failed		0	https://www.mdpi.com/2075-5309/16/19/3854/pdf?download=1	CC-BY-4.0
