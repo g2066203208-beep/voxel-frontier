@@ -20327,7 +20327,10 @@
     "bytes": 694731280,
     "sha256": "3a9759c08b5c69e2251f2a23f30e11474b20418bc3a1830359c9f722ee58d29a",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC.odb"
+    }
   },
   {
     "section": "abaqus-dtu-models",
@@ -20562,7 +20565,10 @@
     "bytes": 694731400,
     "sha256": "c7161e1e809a6ac109ecbf931c2fa4b07a287d9df05bb9f554c88b25de4d1229",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_SITE_S04_INTERFACE_DYNAMIC.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_S04_INTERFACE_DYNAMIC.odb"
+    }
   },
   {
     "section": "abaqus-dtu-models",
