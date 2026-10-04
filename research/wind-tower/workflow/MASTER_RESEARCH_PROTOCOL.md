@@ -1,8 +1,8 @@
 # MASTER RESEARCH PROTOCOL — 10 MW级预应力混凝土—钢混合风机塔架硕士论文
 
-版本：2026-10-04 v1.0  
+版本：2026-10-04 v1.1  
 状态：本文件为**唯一总控流程**。MASTER建立前的旧workflow已移入`archive/workflow-pre-master/`，早期audit已移入`archive/audit-early/`；归档文件只用于追溯，不得作为新任务入口。当前审计以`audit/INDEX.md`和`registry/`状态为准。  
-正式技术路线：**ERA5 / TurbSim → OpenFAST / ROSCO → 控制工况 → 载荷映射V&V → Abaqus精细混塔 → 全局/局部响应与疲劳 → 机制驱动敏感性 → 结构优化 → 独立复核**。
+正式技术路线（T027全文再设计）：**唯一baseline → ERA5/TurbSim → OpenFAST/ROSCO大样本整机筛选 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细混塔全局/局部响应与机制识别 → 机制驱动敏感性 → 多目标优化 → 候选整机载荷回算与高保真复核**。两条条件增强支路：**H1：1–2个控制工况Simpack RNA+Abaqus MBD-FE交叉验证；H2：控制接缝/转换段真实contact局部模型**。36-case雨流/DEL属于载荷疲劳筛选；材料寿命另建DLC 1.2概率加权与样本收敛支路。
 
 ---
 
@@ -73,9 +73,10 @@
 1. 混塔结构体系与接缝/预应力；
 2. RNA等效、模态和动力简化；
 3. OpenFAST/ROSCO随机风气动弹性；
-4. 整机载荷→精细FE载荷传递；
-5. 疲劳与长期随机性；
-6. 敏感性、代理模型和多目标优化。
+4. 整机载荷→精细FE载荷传递及MBD-FE高保真交叉验证；
+5. 接缝/转换段局部开合、弯扭耦合与全局—局部多尺度；
+6. 疲劳与长期随机性、样本收敛；
+7. 敏感性、代理模型和多目标优化。
 
 ### P1.2 系统检索
 **方法依据**：采用PRISMA 2020的透明检索/筛选思想，但本文不是系统综述论文，不机械宣称“PRISMA systematic review”。  
@@ -262,8 +263,8 @@ m、CG、J_G、J_T、M6、公共tower-top、坐标变换、模态影响。
 产出：openfast_baseline.md。  
 门槛：版本和输入哈希固定。
 
-### P3.4 正式36 case
-设计：3个主风速 × NTM/ETM × 6 seed（若最终矩阵仍采用此设计）。  
+### P3.4 正式筛选矩阵（当前36 case）
+设计：3个主风速 × NTM/ETM × 6 seed（当前用于响应/载荷筛选，不等同于全寿命DLC矩阵）。  
 做：
 - run_id；
 - seed；
@@ -271,7 +272,7 @@ m、CG、J_G、J_T、M6、公共tower-top、坐标变换、模态影响。
 - 输出hash；
 - 统一100–700 s；
 - 峰值/RMS/std/PSD/DEL。
-产出：36-case master table。  
+产出：36-case screening master table。  
 门槛：
 - 36/36成功；
 - 对象化阻尼统一；
@@ -292,7 +293,7 @@ m、CG、J_G、J_T、M6、公共tower-top、坐标变换、模态影响。
 
 # F. OpenFAST → Abaqus载荷映射实验
 
-## Phase 4 — 接口V&V
+## Phase 4 — 主生产接口V&V + 条件高保真交叉验证
 
 ### P4.1 先定义自由体
 明确：
@@ -333,6 +334,16 @@ M_B = R M_A + r × F_B
 
 产出：load_mapping_vv_report。  
 门槛：G0–G5按适用范围闭合后才进入第四章正式生产分析；映射G5不能被遗漏。
+
+### P4.6 H1：控制工况MBD-FE交叉验证（增强支路）
+**文献依据**：Wang et al. 2025 MSSP将OpenFAST/MBD、OpenFAST载荷驱动的非耦合FE与Simpack RNA+Abaqus MBD-FE放在同一框架比较；Xu et al. 2025进一步支持多体—非线性塔架耦合对照。  
+**做什么**：
+- 仅选1–2个最关键case；
+- OpenFAST作为独立气动弹性基准；
+- Simpack RNA + Abaqus精细混塔作为高保真交叉验证；
+- 比较tower-top位移/加速度、base N/V/M/T、PSD/主频和接口能量量（适用时）。
+**定位**：增强证据，不作为36-case生产链的前置依赖。  
+**门槛G5H**：接口、坐标、时间同步、数值稳定和结果可追溯均闭合才进入论文主结果；未通过不阻断主链，但不得声称完成高保真全耦合。
 
 ---
 
@@ -376,14 +387,20 @@ D. connection nonlinearity（若模型支持）
 产出：mechanism_attribution_report。  
 门槛：薄弱机制必须由对照实验而非云图主观判断。
 
+### P5.5 H2：控制接缝/转换段全局—局部高保真支路
+**触发条件**：P5.1–P5.4确认水平接缝或转换段为主控机制，且论文需要解释开合、摩擦、局部压碎、PT增量或弯扭耦合。  
+**依据**：Li et al. 2023的试验验证两尺度思路；Ren et al. 2025压弯、压弯扭、扭转系列试验。  
+**做什么**：从全局模型提取N/V/M/T或边界运动，建立真实contact/局部实体细化模型；对N-M-T组合需求与PT变化进行验证/解释。  
+**门槛G6L**：未建立真实contact时，不得将SPRING/TIE等效输出解释为真实接触面开合、摩擦或压碎。
+
 ---
 
 # H. 疲劳研究
 
 ## Phase 6 — DEL → 应力循环 → 材料寿命逐级升级
 
-### P6.1 载荷DEL
-用途：工况相对比较。  
+### P6.1 载荷DEL（G7A）
+用途：工况相对比较与筛选；当前36 case属于这一层。  
 输入：时程、m、Neq。  
 产出：DEL matrix。  
 禁止称材料寿命。
@@ -393,8 +410,11 @@ D. connection nonlinearity（若模型支持）
 方法：rainflow，保存range/mean/count。  
 产出：cycle spectra。
 
-### P6.3 材料疲劳
+### P6.3 材料疲劳/寿命（G7B，条件支路）
+**文献约束**：Huang et al. 2025采用OpenFAST+ROSCO、DLC 1.2、多风速bin、独立随机seed、rainflow、Miner及材料疲劳模型，并发现预应力混凝土水平接缝可能比钢塔需要更大样本量。本文不得把固定6 seed自动视为寿命统计充分。
 只有当以下完整闭合才做：
+- DLC 1.2运行风速bins与概率权重；
+- 每bin满足最低随机实现要求，并对混凝土接缝做样本收敛；
 - 适用S–N；
 - mean stress/prestress；
 - detail category；
@@ -516,8 +536,11 @@ G2 风场V&V
 G3 OpenFAST/ROSCO模型身份  
 G4 36 case正式闭合  
 G5 OpenFAST→Abaqus映射守恒  
+G5H 控制工况MBD-FE交叉验证（增强门禁，不阻断主链）  
 G6 第四章机制识别  
-G7 疲劳层级闭合  
+G6L 真实接缝/转换段局部contact机制（仅相关主张需要）  
+G7A load-DEL筛选闭合  
+G7B 材料疲劳寿命闭合（仅寿命主张需要）  
 G8 敏感性统计闭合  
 G9 优化高保真独立复核  
 G10 全文claim-evidence 100%审计
@@ -535,3 +558,8 @@ G10 全文claim-evidence 100%审计
 5. 疲劳层级与实际主张对应：载荷DEL不代替材料寿命；未关闭材料寿命层时不写满足疲劳设计或全寿命可靠，亦不能以其构造优化约束。
 
 这些规则是流程修正，不能代替G0–G10的实际证据。
+
+
+# N. T027全文驱动路线再设计
+
+依据2023–2025新增核心全文，对“OpenFAST-only”与“全量Simpack-Abaqus”两种极端路线均作修正。当前采用“一条主链+两条高保真支路”的分层方案，详见[33-t027-literature-driven-route-redesign.md](../audit/33-t027-literature-driven-route-redesign.md)。该设计优先保证随机风统计覆盖、结构局部解释和优化闭环，同时保留少量MBD-FE耦合作为模型形式交叉验证，不让单一协同链成为全文完成的前置瓶颈。
