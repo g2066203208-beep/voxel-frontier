@@ -81,3 +81,12 @@ C. 当前正式OpenFAST/ROSCO模型文件夹。
 ## 10月9日进展汇报并行任务
 
 新增T021，与T020并行推进。汇报材料不另造一套事实，所有数字、图、状态直接从registry/audit生成。10月8日冻结汇报口径并完成数字、图源、引用与HOLD状态终审。
+
+
+## 2026-10-04 新上传资料复核
+
+- He2024原始PDF已可读取：T020.1原页缺失阻断关闭；
+- 表3-3原文确认写“半径(m)”，因此问题从“转述是否错误”升级为“原表内部几何语义冲突”；
+- 导师两次会议Word不上传GitHub，已结构化为`governance/supervisor_requirements_matrix.md`；
+- R2Z74原始Word不上传GitHub，已结构化为`governance/current_manuscript_structured_baseline.md`；
+- 用户提供PDF/工程资料已登记`references/USER_SUPPLIED_SOURCES.md`及SHA-256。
