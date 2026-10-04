@@ -9,3 +9,6 @@ ASSET007	HIST_GIT	Historical CAE LFS pointer	commit cb4dd846... / model path	Git
 ASSET008	HIST_GIT	Historical manifest.json	commit cb4dd846...	JSON	Git history	archived-history	model metadata/materials/steps	available	Preserves model statistics and first/current file hashes
 ASSET009	HIST_GIT	Historical Abaqus JNL	commit cb4dd846...	text	Git history	archived-history	interface topology/job provenance	available	Direct TIE-pair and model/job evidence
 ASSET010	HIST_GIT	Historical Abaqus REC	commit cb4dd846...	text	Git history	archived-history	RNA branch operation provenance	available	Abaqus operations only; not a solver result
+ASSET011	HIST_THESIS	Historical FST/ElastoDyn/TwrFile audit statements	R2Z74/R2Z54 thesis versions	text in DOCX	Library	indexed-only	OpenFAST baseline history	available-derived	Raw FST/ElastoDyn not preserved
+ASSET012	OPENFAST_OFFICIAL	OpenFAST Hub location coordinate sheet	OpenFAST official documentation	PDF/web	public	reference-only	HubHt formula and geometry definitions	available	Formula: TowerHt+Twr2Shft+OverHang*sin(ShftTilt)
+ASSET013	HIST_THESIS	Historical .lin/.ED.sum audit statements	R2Z74/R2Z54 thesis versions	text in DOCX	Library	indexed-only	modal/discretization history	available-derived	Raw .lin/.ED.sum absent
