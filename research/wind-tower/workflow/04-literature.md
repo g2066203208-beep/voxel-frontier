@@ -1,5 +1,7 @@
 # 04 首轮文献检索与核查记录
 
+当前阅读进展见[文献原文阅读与研究核查](../audit/03-literature-reading.md)：三篇已读原文方法与结果、六篇出版页摘要或预览，分别注明阅读等级、老师问题和后续验证任务。下方为历史首轮检索记录，不能当成全部文献阅读进展。
+
 检索日期：2026-10-04。数据库：Consensus。检索式：`prestressed concrete steel hybrid wind turbine tower dynamic response optimization domain:eng`。返回10条，先选取2条与混合塔架几何/优化直接相关的记录，并调用完整记录读取。不是系统综述，尚未完成原文方法审查和质量评价。
 
 ## 候选记录
