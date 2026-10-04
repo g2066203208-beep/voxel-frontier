@@ -1,6 +1,10 @@
 id	filename	status	sha256	bytes	url	license
 L004	Li_2021_AppliedSciences_8683.pdf	ok	212bbbe69b2c0616df4fa2d8c8807328fb9a0ddb340cfc4ca7e57a279c243352	3359108	https://mdpi-res.com/d_attachment/applsci/applsci-11-08683/article_deploy/applsci-11-08683.pdf	CC-BY-4.0
 L009	Hannesdottir_2019_WES_4_325.pdf	ok	f9c380e52728667bc3eb8f79c722121d4a854389b8e13620b79e4486191eb891	7388629	https://wes.copernicus.org/articles/4/325/2019/wes-4-325-2019.pdf	CC-BY-4.0
-L013	Tan_2025_Structures_108811_AAM.pdf	download-failed		0	https://research.manchester.ac.uk/files/880574416/AAM.pdf	CC-BY
-L016	Wang_2025_IJCSM_19_68.pdf	not-pdf		0	https://link.springer.com/content/pdf/10.1186/s40069-025-00800-5.pdf	Open-Access-check-article
+L013	Tan_2025_Structures_108811_AAM.pdf	ok	37d5c913cf4af946b30f712f3805ae3549289316995e67b1ff0bd8fe8451b19d	1814987	https://pure.manchester.ac.uk/ws/portalfiles/portal/880574416/AAM.pdf	CC-BY
+L014	Tan_2025_EngineeringStructures_120443_AAM.pdf	ok	2ebd5032181db257cd9b2e25ec3655970449a0952a57a41ccc5d4ee776757ed3	2373918	https://pure.manchester.ac.uk/ws/portalfiles/portal/970003646/AAM-Mini.pdf	CC-BY
+L016	Wang_2025_IJCSM_19_68.pdf	not-pdf		0	https://link.springer.com/content/pdf/10.1186/s40069-025-00800-5.pdf	Open-Access
 L017	Qu_2026_Buildings_16_3854.pdf	download-failed		0	https://www.mdpi.com/2075-5309/16/19/3854/pdf?download=1	CC-BY-4.0
+L018	Brown_2024_WES_9_1791.pdf	ok	cd29e924829f6a8e5b7a6d340d07b4f84d6e851af7eee4ed33173e6c2e2cd623	12523840	https://wes.copernicus.org/articles/9/1791/2024/wes-9-1791-2024.pdf	CC-BY-4.0
+L019	Guma_2021_WES_6_93.pdf	ok	bd403805c3d5dd7f80ea1f82a4142e78588e9562f27f8b890608e4510065846d	4994708	https://wes.copernicus.org/articles/6/93/2021/wes-6-93-2021.pdf	CC-BY-4.0
+L020	Sayed_2016_JPCS_753_042009.pdf	ok	456d85994bb608508b7573ad9b6a0235e4302935575755f1f56aee09737d47a4	3391393	https://iopscience.iop.org/article/10.1088/1742-6596/753/4/042009/pdf	Open-Access-JPCS
