@@ -77,3 +77,11 @@
 |L026|Eccentric compressive behaviour of horizontal circumferential joints in concrete wind turbine towers considering joint opening, Structures 92 (2026) 112870|10.1016/j.istruc.2026.112870|B/OA待PDF|偏心受压、全截面压缩→局部开口、刚度与承载退化|
 
 > L021–L026 均属于2026年直接相关新文献。即使正文当前已经有2025接缝论文，也应继续纳入，以避免第一章“最新研究现状”在答辩前已经滞后。
+
+
+## Step 09 材料/CDP新增核心来源
+
+- **Li Qingfu, Guo Wei, Kuang Yihang (2020)**, *Parameter calculation and verification of concrete plastic damage model of ABAQUS*, IOP Conference Series: Materials Science and Engineering 794, 012036, DOI 10.1088/1757-899X/794/1/012036, CC BY 3.0。承担GB单轴曲线→CDP变量转换、Sidoroff damage及等效塑性应变合法性方法；其约40 MPa试验对象不能替代C65/C70对象验证。
+- **Dassault Systèmes Abaqus 2025 Concrete Damaged Plasticity官方文档**。承担CDP变量物理含义和默认值。特别注意ψ没有默认值；e=0.1、fb0/fc0=1.16、Kc=2/3、μ=0为官方默认/基线定义。
+- **住房城乡建设部2024年第62号公告**：自2024-08-01起，《混凝土结构设计规范》名称改为《混凝土结构设计标准》，编号改为GB/T 50010-2010。2026论文应按现行身份引用。
+- **Xu, He, Wang, He, Wu, Zhang (2025)**, *Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel–Concrete Hybrid Tower using a co-simulation approach*, Renewable Energy 243, 122475, DOI 10.1016/j.renene.2025.122475。用于同研究谱系对象材料身份交叉核查：C70/C65、HRB335、外置无黏结PT和Q345；不作为本文生产路线。
