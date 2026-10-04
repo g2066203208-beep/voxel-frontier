@@ -1,5 +1,5 @@
 task_id	phase	chapter	question_id	objective	primary_output	status	next_gate	notes
-T000	P0	global	Q01-Q05	建立重新开工基线与证据原则	audit/04-restart-baseline-2026-10-04.md	complete	G0	旧结果只作历史证据，正式结论重新闭合
+T000	P0	global	Q01-Q05	建立重新开工基线与证据原则	archive/audit-early/04-restart-baseline-2026-10-04.md	complete	G0	旧结果只作历史证据，正式结论重新闭合
 T001	P0	1	Q01-Q05	题目与对象逐词证据审查	audit/07-step00-01-title-evidence.md	conditional	G0	题目暂保留，结构优化为条件性承诺
 T002	P0	摘要	Q01-Q05	摘要逐句证据与完成状态审查	audit/08-step02-abstract-evidence.md	hold	G1-G9	最终摘要必须主要结果完成后回写
 T003	P1	1.1	Q01-Q05	研究背景与意义文献驱动重写	audit/09-step03-section1-1-evidence-rewrite.md	conditional	G0	几何身份和部分全文证据待闭合
