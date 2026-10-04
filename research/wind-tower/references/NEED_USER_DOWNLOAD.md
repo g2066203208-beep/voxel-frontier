@@ -69,3 +69,30 @@
 ## 用户上传要求
 
 请尽量上传**出版社PDF或作者Accepted Manuscript**，不要截图版。文件名可以保持原样。收到后将登记：来源、版本、页数、SHA-256、阅读等级、对应论文章节和可/不可支持的具体论断。
+
+
+## P0/P1 新增：2026年最新开放获取但当前自动抓取未得到稳定PDF直链
+
+16. **Cirong Huang et al. Model and test verification for concrete fatigue failure of the steel-concrete hybrid wind turbine tower. Case Studies in Construction Materials, 24 (2026), e06051. DOI: 10.1016/j.cscm.2026.e06051.**
+   - 原因：1:5变幅高周疲劳试验、混凝土S–N与FE验证，第四章材料疲劳非常直接。
+   - OA，但当前仅稳定获得出版页；如果你的浏览器能点PDF，请下载给我。
+
+17. **Xintong Hao et al. Analysis on influence factors of static and dynamic response of prefabricated prestressed steel-concrete hybrid tower for onshore wind turbines. Results in Engineering, 30 (2026), 111045. DOI: 10.1016/j.rineng.2026.111045.**
+   - 原因：振动台+FE，直接讨论预制预应力钢混塔接缝形式、损伤、模态与响应。
+   - OA；当前自动抓取没有稳定PDF直链。
+
+18. **Ji-Ke Tan et al. Evaluation of load-carrying capacity of horizontal joints in concrete wind turbine towers. Engineering Structures, 364 (2026), 123195. DOI: 10.1016/j.engstruct.2026.123195.**
+   - 原因：压—弯—剪—扭联合试验 + Abaqus验证，是第四章接缝六分量传力目前最关键的新文献之一。
+   - OA；优先下载。
+
+19. **Ji-Ke Tan et al. Shear resistance of horizontal joints in concrete wind turbine towers under bending and torsion. Structures, 92 (2026), 112947. DOI: 10.1016/j.istruc.2026.112947.**
+   - 原因：直接验证预应力界面摩擦、接缝开口和弯扭耦合作用。
+   - OA；优先下载。
+
+20. **Structural behaviour of horizontal joints in steel fibre reinforced concrete wind turbine towers. Structures, 92 (2026), 112891. DOI: 10.1016/j.istruc.2026.112891.**
+   - 原因：预应力、摩擦系数、几何尺寸和初始弯曲水平的参数研究，可用于第五章变量边界对照。
+   - OA；建议下载。
+
+21. **Eccentric compressive behaviour of horizontal circumferential joints in concrete wind turbine towers considering joint opening. Structures, 92 (2026), 112870. DOI: 10.1016/j.istruc.2026.112870.**
+   - 原因：直接研究从全截面受压到部分开口的过渡，是接缝机理解释的重要补充。
+   - OA；建议下载。
