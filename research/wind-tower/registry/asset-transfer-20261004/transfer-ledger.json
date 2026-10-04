@@ -15420,7 +15420,10 @@
     "bytes": 20534428,
     "sha256": "269d3910ef34b808a16169ef863ed06cb1b9acf9fd08ff38c9a6c59585815c66",
     "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\rayleigh_free_decay_20260902\\DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/free-decay/DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.odb"
+    }
   },
   {
     "section": "free-decay",
@@ -16143,7 +16146,10 @@
     "bytes": 38797312,
     "sha256": "41ddd796d9946b3aeca9575c32abe4a298afb1120a73f31712b8c584c0dd37af",
     "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run13\\direct.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/c3-bridge/WT_MBD_FE_SINGLE_0p15/run13/direct.odb"
+    }
   },
   {
     "section": "c3-bridge",
@@ -16259,7 +16265,10 @@
     "bytes": 38203620,
     "sha256": "07e2fa8125ab912674a09f00ec5847ce1f3f7ffa1c1fd578597fdc579de752fb",
     "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/c3-bridge/WT_MBD_FE_SINGLE_0p15/run14/C3_PERSISTENT_0P15.odb"
+    }
   },
   {
     "section": "c3-bridge",
@@ -16291,7 +16300,10 @@
     "bytes": 38797312,
     "sha256": "adcd9058586ea4e41d959df8f93949a18702d47d89aae5dff5cd190072419a20",
     "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run14\\C3_PERSISTENT_0P15_coordinator_probe.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/c3-bridge/WT_MBD_FE_SINGLE_0p15/run14/C3_PERSISTENT_0P15_coordinator_probe.odb"
+    }
   },
   {
     "section": "c3-bridge",
@@ -16803,7 +16815,10 @@
     "bytes": 38797312,
     "sha256": "e383be3543ba0b124dae02ad49a6be514c278c87a0e71c1d5a379f039f823e5a",
     "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\WT_MBD_FE_SINGLE_0p15\\run9\\C3_PERSISTENT_0P15.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/c3-bridge/WT_MBD_FE_SINGLE_0p15/run9/C3_PERSISTENT_0P15.odb"
+    }
   },
   {
     "section": "c3-bridge",
@@ -17010,7 +17025,10 @@
     "bytes": 38203620,
     "sha256": "07e2fa8125ab912674a09f00ec5847ce1f3f7ffa1c1fd578597fdc579de752fb",
     "source_locator": "CODEX_WORK\\simpack-mcp-runs\\C3_SIMPACK_ABAQUS_INTERFACE_CLOSURE_20260906\\_FINAL_PACKAGE_STAGE_2\\run14\\C3_PERSISTENT_0P15.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/c3-bridge/WT_MBD_FE_SINGLE_0p15/run14/C3_PERSISTENT_0P15.odb"
+    }
   },
   {
     "section": "c3-bridge",
@@ -17434,7 +17452,10 @@
     "bytes": 34220984,
     "sha256": "70bb2c6d5dc4765ef297255a19cbef2248519458e4e32f34440c55b9e14b4766",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\A008_R2_clean2.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/A008_R2_clean2.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -17513,7 +17534,10 @@
     "bytes": 22020096,
     "sha256": "f91da5e64e28d2d9e757659d529ae4841032990aa4b5430b913db5f0c21c6759",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\A008_RiksFine.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/A008_RiksFine.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -17781,7 +17805,10 @@
     "bytes": 41963800,
     "sha256": "a472943598de2a460b5485920a5d0c4897b788b952f01088533dca423a1a7fd9",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_BUCKLE_DLC13_S06_UNITFIX.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_BUCKLE_DLC13_S06_UNITFIX.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -17892,7 +17919,10 @@
     "bytes": 66827702,
     "sha256": "068739ba0779373af2fe038c0e5caebd0553eb60bef4739f4b5a380b9efa2ca0",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.sim",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.sim"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -18285,7 +18315,10 @@
     "bytes": 20870268,
     "sha256": "3e832d2a1e85981d9fb76491eb89fb6de7b27469f9dd09c53c40a2678a1cdc39",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_RIKS_DLC13_S06_CDP_IMP_A008.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_IMP_A008.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -18411,7 +18444,10 @@
     "bytes": 19542265,
     "sha256": "0ded0d457bb3413c7fa10fca9c301115f5e1c5c8e9ac2ea691fbde17b44f9531",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.msg",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.msg"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -18498,7 +18534,10 @@
     "bytes": 48854399,
     "sha256": "1e7ac5183c2211a6193ed19427b4477923c5c72f3a6afe308c7a75d5412f0572",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.msg",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.msg"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -18585,7 +18624,10 @@
     "bytes": 48863792,
     "sha256": "b3375672230cb818c023709752f527abac4002b05aa810330f7cc63321626a31",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_RIKS_DLC13_S06_CDP_MODE1_A016.msg",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A016.msg"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -18806,7 +18848,10 @@
     "bytes": 25853456,
     "sha256": "c96d3ec40c1574b17df40999827dd0535cda2463a5948c0ef24e4bbb11a7f73a",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_V30_LT10K_DATACHECK.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_V30_LT10K_DATACHECK.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -20206,7 +20251,10 @@
     "bytes": 17131283,
     "sha256": "48021004a68cc3678cf3466f2dfb8eb0dd6e45b58f9219a7fed46b1375b5b862",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_OpenFAST_6DOF_SETUP.inp",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.inp"
+    }
   },
   {
     "section": "abaqus-dtu-models",
@@ -20317,7 +20365,8 @@
     "bytes": 19581516,
     "sha256": "04afaada2dec0f206bf29b3e90364f14029c26d3cdb7425f99c8e8d21afc0b0e",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_SITE_NTM_U18p57_S04.inp",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "Network connection failed after 4 attempts"
   },
   {
     "section": "abaqus-dtu-models",
@@ -20333,7 +20382,10 @@
     "bytes": 19581623,
     "sha256": "14666b495a1531ef05863bd0f00db2cfe3106e25a97bba33ff0c8f6d90312795",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_SITE_NTM_U18p57_S04_STRESS.inp",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.inp"
+    }
   },
   {
     "section": "abaqus-dtu-models",
