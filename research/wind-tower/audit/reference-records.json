@@ -8020,26 +8020,6 @@
       "automaticTitleMatch": true
     },
     {
-      "citationNumber": 109,
-      "reference": "DASSAULT SYSTÈMES SIMULIA. Simpack Wind Modules: Wind Turbine Design and Analysis; Rotorblade Generator[EB/OL]. Dassault Systèmes, 2026. https://www.3ds.com/products/simulia/simpack/wind [2026-08-28].",
-      "doi": null,
-      "location": {
-        "block": 864
-      },
-      "identityStatus": "needs-source",
-      "note": "No DOI supplied; not evidence of an invalid reference."
-    },
-    {
-      "citationNumber": 110,
-      "reference": "DASSAULT SYSTÈMES SIMULIA. SIMULIA Co-simulation: Abaqus–Simpack solver compatibility and support[EB/OL]. Dassault Systèmes, 2026. https://www.3ds.com/support/hardware-and-software/simulia-systems-information/simulia-co-simulation [2026-08-28].",
-      "doi": null,
-      "location": {
-        "block": 865
-      },
-      "identityStatus": "needs-source",
-      "note": "No DOI supplied; not evidence of an invalid reference."
-    },
-    {
       "citationNumber": 111,
       "reference": "LIVERUD KRATHE V, JONKMAN J, GEBEL J, RIVERA-ARREBA I, NEJAD A R, BACHYNSKI-POLIĆ E. Investigation of Main Bearing Fatigue Estimate Sensitivity to Synthetic Turbulence Models Using a Novel Drivetrain Model Implemented in OpenFAST[J]. Wind Energy, 2025, 28(3): e70005. DOI:10.1002/we.70005.",
       "doi": "10.1002/we.70005",
