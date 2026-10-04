@@ -19,3 +19,10 @@ PAR017	CDP Kc	0.6666667	-	material model	Abaqus official	CDP keyword	BASE_PENDIN
 PAR018	CDP viscosity baseline	0	-	material model	Abaqus official	CDP keyword	BASE_PENDING	verified-definition	Standard default; production choice still needs sensitivity
 PAR019	public HAWC2 single-blade mass	41722.411281503	kg	RNA source identity	DTU public HAWC2	Blade_st.dat integration	BASE_PENDING	verified-recalculated	2026-10-04 independent trapezoidal integration
 PAR020	public HAWC2 RNA mass	676727.233844509	kg	RNA source identity	DTU public HAWC2	3 blades + 105520 hub + 446040 nacelle	BASE_PENDING	verified-recalculated	implementation-specific source chain
+PAR021	OpenFAST historical TowerHt	158	m	combined-model geometry	HIST_R2Z74	FST/ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
+PAR022	OpenFAST historical TowerBsHt	0	m	combined-model geometry	HIST_R2Z74	FST/ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
+PAR023	OpenFAST historical Twr2Shft	2.75	m	hub geometry	HIST_R2Z74	ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
+PAR024	OpenFAST historical OverHang	-7.1	m	hub geometry	HIST_R2Z74	ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
+PAR025	OpenFAST historical ShftTilt	-5	deg	hub geometry	HIST_R2Z74	ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
+PAR026	OpenFAST combined HubHt recomputation	161.3688057735	m	hub geometry	OpenFAST official formula	TowerHt+Twr2Shft+OverHang*sin(ShftTilt)	BASE_PENDING	verified-arithmetic-from-historical-inputs	Becomes current verified only after raw inputs are re-read
+PAR027	Historical ROSCO runtime version	2.6.0	-	controller identity	HIST_R2Z54	runtime initialization record	BASE_PENDING	historical-reported	Controller files absent
