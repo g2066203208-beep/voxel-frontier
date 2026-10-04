@@ -53,5 +53,6 @@ jobs:
             echo "No literature cache changes."
           else
             git commit -m "research: cache verified open-access literature PDFs"
+            git pull --rebase origin main
             git push
           fi
