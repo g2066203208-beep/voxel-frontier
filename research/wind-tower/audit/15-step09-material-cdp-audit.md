@@ -68,9 +68,9 @@ Li Qingfu, Guo Wei, Kuang Yihang. *Parameter calculation and verification of con
 
 #### damage
 论文明确说明采用Sidoroff能量等价思想计算拉压damage，并给出式(6)：
-d = 1 - σ/(E0 ε)。
+d = 1 − sqrt[σ/(E0 ε)]。
 
-因此R2Z74“式(2-1)按Li等式(6)采用Sidoroff能量等价damage”有直接方法依据。
+2026-10-04 T025原文视觉复核纠正：Li等式(5)的D与式(6)的d不能混写；式(6)含平方根。原论文Word式(2-1)已包含平方根，本次修正的是本审计此前的转录错误，不能据旧审计误判原稿公式漏根。该方法依据不等于完整材料表、峰后耗能或物理校准已验证。
 
 #### 压缩输入转换
 Li等§3.3给出：

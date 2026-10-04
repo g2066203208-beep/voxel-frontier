@@ -83,3 +83,7 @@ RNA质量/CG/J/M6和对象化阻尼的计算过程本身具有较高价值，但
 ## 6. 下一步执行顺序
 
 下一次直接从2.1开始逐段改：先把“研究对象/几何/baseline身份”改成唯一无冲突口径，再到2.2材料、2.3连接、2.4 RNA；每一节都按“原文→问题→来源→修改稿→证据/门禁”处理。未经核验的计算值只保留为reported/historical，不删除证据，也不冒充verified。
+
+## 当前阶段结果
+
+T025已完成第二章私有正文修订与专业实质评审；本文件为启动记录。最新结果以[31](31-t025-reviewer-assessment-and-chapter2-revision.md)、task_registry与EXECUTION_STATUS最新摘要为准。未提交新求解或上传论文正文。

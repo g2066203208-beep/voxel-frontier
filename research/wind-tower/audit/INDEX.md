@@ -59,3 +59,7 @@
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
 |[29-t024-title-chapter1-evidence-revision.md](29-t024-title-chapter1-evidence-revision.md)|文献驱动修订与私有Word核查|20项引用映射、9项最接近研究、阅读范围及缓存身份纠正|本轮修订完成；模型与数值结论仍Conditional|
+
+## T025：专业实质评审与第二章正文修订
+
+[31-t025-reviewer-assessment-and-chapter2-revision.md](31-t025-reviewer-assessment-and-chapter2-revision.md)记录关键问题、外审追问、文献读级、实际修改及验收边界。第二章和累计稿保持私有；原始公式媒体保留，第二章缺图与计算验证待完成。

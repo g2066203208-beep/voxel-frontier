@@ -1,0 +1,96 @@
+{
+  "reviewDate": "2026-10-04",
+  "policy": "记录实际阅读范围；不上传私有论文、期刊PDF或原文",
+  "sources": [
+    {
+      "id": "WANG112583",
+      "title": "High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel–Concrete Hybrid Tower",
+      "authors": [
+        "Dan Wang",
+        "Jun Xu",
+        "Zeyu He",
+        "Quanfu Yu",
+        "Weiwei Tang",
+        "Guangling He",
+        "Qiang Wu"
+      ],
+      "journal": "Mechanical Systems and Signal Processing",
+      "volume": "230",
+      "year": 2025,
+      "article": "112583",
+      "doi": "10.1016/j.ymssp.2025.112583",
+      "url": "https://doi.org/10.1016/j.ymssp.2025.112583",
+      "totalPdfPages": 21,
+      "readLevel": "正式出版PDF关键正文页阅读，升级自摘要/章节预览；PDF页号与本文印刷页号一致",
+      "textPagesActuallyRead": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "visualPagesActuallyInspected": [
+        1,
+        7,
+        11,
+        13,
+        14
+      ],
+      "correctionToEarlierNotes": "不得笼统称全篇无试验验证；应区分作者报告的结构模态实测比较与整机方法的OpenFAST数值验证。第一章适合写该文建立联合模型并进行分层核验，避免把局部/短时比较扩展成长期整机验证。"
+    },
+    {
+      "id": "HUANG120295",
+      "title": "Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads",
+      "authors": [
+        "Xiaogang Huang",
+        "Jie Cui",
+        "Xuhong Zhou",
+        "Dongping Zhu",
+        "Yuhang Wang",
+        "Tian Li"
+      ],
+      "journal": "Engineering Structures",
+      "volume": "334",
+      "year": 2025,
+      "article": "120295",
+      "doi": "10.1016/j.engstruct.2025.120295",
+      "url": "https://doi.org/10.1016/j.engstruct.2025.120295",
+      "totalPdfPages": 15,
+      "readLevel": "正式出版PDF方法、疲劳、样本和结论关键页阅读，升级自摘要/引言；PDF页号与印刷页号一致",
+      "textPagesActuallyRead": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        14
+      ],
+      "visualPagesActuallyInspected": [
+        1,
+        6,
+        9,
+        11,
+        14
+      ],
+      "validationLimit": "本轮已读方法给出弹性降阶/理论应力恢复和模型内统计与不确定性比较；不能据此称该文全部疲劳寿命经实塔疲劳试验验证。"
+    }
+  ]
+}
