@@ -95,3 +95,10 @@
 - **Abaqus 2025 Springs**：SPRING2在两个节点之间建立固定方向的力—相对位移/矩—相对转角关系；与可随构形转动的SPRINGA不同。
 - **Abaqus 2025 Linear Constraint Equations**：线性多点约束会产生constraint forces，官方明确这些约束力不包含在reaction force输出合计中，因此本文后续六分量平衡不能只求和RF。
 - **Abaqus 2025 Initial Stress**：初始应力只能在Initial step定义；本文需区分名义初始预应力和重力平衡后实际状态。
+
+
+## Step 11 RNA空间质量新增一级来源
+
+- **OpenFAST BeamDyn sectional-properties technical note, “Mass matrix – General form for a rigid body”**：官方给出质心和任意参考点处6×6刚体质量矩阵、反对称叉乘矩阵及平行轴惯量关系。本文M6空间惯性统一表示以该官方定义为方法依据。
+- **DTUWindEnergy/BasicDTUController公开DTU10MW HAWC2输入**：`dtu10mw_advanced.htc`直接包含446040 kg上部集中质量和105520 kg hub侧集中质量；`DTU_10MW_RWT_Blade_st.dat`第一套51站质量分布本轮重新积分得到单叶片41722.411281503 kg，三叶片+Hub+Nacelle=676727.233844509 kg。该值用于“公开HAWC2实现”口径，不与Bak 2013报告级组件口径混用。
+- **Cao et al. 2024, Structures 68, 107235, DOI 10.1016/j.istruc.2024.107235**：直接比较不同RNA简化，支持质量偏心和转动惯量必须显式核对；全文仍在待用户下载队列。
