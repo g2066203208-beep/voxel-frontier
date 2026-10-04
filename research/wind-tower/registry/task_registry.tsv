@@ -33,3 +33,7 @@ T026	P2	2	Q01	按最新授权恢复本地仿真，以实际模型、独立解析
 T027	P0-P8	global	Q01-Q05	基于新增核心全文重新设计全论文技术路线：OpenFAST/ROSCO整机+OpenFAST→Abaqus映射V&V+局部contact+分级疲劳+机制优化	audit/33-t027-literature-driven-route-redesign.md	complete-route/conditional-research	G0-G10	锁定OpenFAST/ROSCO→Abaqus分层主线；不采用额外多体软件协同；36-case仅作筛选/载荷DEL，寿命另需DLC1.2概率权重和样本收敛
 
 T028	global	global	Q01-Q05	按现有分区上传本地论文工作索引和历史计算证据，不改变T027路线或科学状态	audit/34-t028-local-work-inventory.md	complete-inventory	record-only	用户授权上传论文工作室；不上传论文正文或导师原文
+T029	P1-P8	global	Q01-Q05	逐篇全文核读用户补齐10篇核心论文并建立能支持/不能支持边界	audit/35-t029-ten-paper-fulltext-evidence-audit.md	complete-fulltext-audit	G0-G10	10篇全部fulltext-audited；用途映射见references/ten-paper-fulltext-use-map-20261004.tsv
+
+T030	P2-P8	global	Q01-Q05	针对T029发现的source gaps补官方文档/直接论文并重判MASTER逐步文献覆盖	audit/36-t030-source-gap-closure.md	complete-source-audit/implementation-open	G1-G10	P3.1/P4.1-P4.4/P5.5/P7/P8.4等主要source gap已关闭；本文专属参数、baseline和数值门禁仍未PASS
+
