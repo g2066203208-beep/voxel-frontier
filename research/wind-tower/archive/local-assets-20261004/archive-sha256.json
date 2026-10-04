@@ -1,0 +1,297 @@
+[
+  {
+    "bytes": 5465607,
+    "archive": "era5-raw-2005-2014/part-001.zip",
+    "sha256": "267746A7C523435635C04F63CF9BEBFE766AD0CACE15C83A27D6A4BF25F7CF0A"
+  },
+  {
+    "bytes": 5473662,
+    "archive": "era5-raw-2005-2014/part-002.zip",
+    "sha256": "45768B32D6C9454277976A7A04438BF62E0F9F7DB8C6CBF11E0B98C86D0A89EB"
+  },
+  {
+    "bytes": 5463802,
+    "archive": "era5-raw-2005-2014/part-003.zip",
+    "sha256": "83E98BE9644559E0B759D4FA62D7CA646DE1660B70F47C87F923E6C087BDE459"
+  },
+  {
+    "bytes": 5466282,
+    "archive": "era5-raw-2005-2014/part-004.zip",
+    "sha256": "AFA3F69986F28313C3A9E94771ACBD942B0D7AE979B761789247A73F907F8599"
+  },
+  {
+    "bytes": 2434993,
+    "archive": "era5-raw-2005-2014/part-005.zip",
+    "sha256": "5EA5C29ACF4321213DE3E72DE7BBF97F57FA110CDA95AAD5A9B518A5A4C7E8B9"
+  },
+  {
+    "bytes": 5469512,
+    "archive": "era5-raw-2015-2025/part-001.zip",
+    "sha256": "B8D2F83CCF945A27EBFD40B87854DC85B8ACD3FFF2F7FAF799109C5455B0920F"
+  },
+  {
+    "bytes": 5471585,
+    "archive": "era5-raw-2015-2025/part-002.zip",
+    "sha256": "7C7D9C72A5497A2DC00A491247BF2AE59721E251025DF7033DAA4A66BCFDAA60"
+  },
+  {
+    "bytes": 5479819,
+    "archive": "era5-raw-2015-2025/part-003.zip",
+    "sha256": "57AC0D2867B59A3809ABF0DE69B34CFA86F2607D089C3D0CA5886B7504693502"
+  },
+  {
+    "bytes": 5472876,
+    "archive": "era5-raw-2015-2025/part-004.zip",
+    "sha256": "9ACEF8102BC638E4F55D60C9485F8B78DA558A0277455A2FB36A622FB03F9DE3"
+  },
+  {
+    "bytes": 4880637,
+    "archive": "era5-raw-2015-2025/part-005.zip",
+    "sha256": "62AFB34806144608D368F93EE32D25E8823E4B0580A2313783161DB2E2E4EA88"
+  },
+  {
+    "bytes": 2116593,
+    "archive": "turbSim-36/part-001.zip",
+    "sha256": "DFDCD78F822D383D401432A534238F96C2001EE9D2A1F6FC25F54E58B21E2007"
+  },
+  {
+    "bytes": 2107968,
+    "archive": "turbSim-36/part-002.zip",
+    "sha256": "0AC7D8376356BFD7ADCEEBF035F8BF23C18DDC43CDE0AD2B47AAF7D11830BE1D"
+  },
+  {
+    "bytes": 2108903,
+    "archive": "turbSim-36/part-003.zip",
+    "sha256": "89AD97478BA1053795260034954C185C506ACC46BE84F078602E37524482CAF1"
+  },
+  {
+    "bytes": 1988889,
+    "archive": "turbSim-36/part-004.zip",
+    "sha256": "B3EE37164301EDDAEDD28384407625B86A12907771AB5E57E5B6FAC47C3FF7FA"
+  },
+  {
+    "bytes": 1982213,
+    "archive": "turbSim-36/part-005.zip",
+    "sha256": "DDD9CD05B0D52B699DC89F08294B011E84F32F1561EEA2B70DC486ABF6F7127D"
+  },
+  {
+    "bytes": 1983966,
+    "archive": "turbSim-36/part-006.zip",
+    "sha256": "E6556D3A830C11A1A5F4EA448E373E17F7EAC49B542AEEF0DD4D61BFF46B8374"
+  },
+  {
+    "bytes": 2133228,
+    "archive": "turbSim-36/part-007.zip",
+    "sha256": "386559B89FACD364F7CCA51EF701848C50E2F708B68AE66E61C97DAD49D244D5"
+  },
+  {
+    "bytes": 2126115,
+    "archive": "turbSim-36/part-008.zip",
+    "sha256": "762EC607192E9D7AF05CC88DA407B276E84DD3F4212EEE9BD73F464027540C3D"
+  },
+  {
+    "bytes": 2128652,
+    "archive": "turbSim-36/part-009.zip",
+    "sha256": "DA73225C3430939C3356E6D089292C7E676AEBA155F922EC533A3900BBBE26A6"
+  },
+  {
+    "bytes": 2021827,
+    "archive": "turbSim-36/part-010.zip",
+    "sha256": "C0FB4AB868F95315A2710AA5878F0CA14032142981E82C598AB0FBB368E05671"
+  },
+  {
+    "bytes": 2014796,
+    "archive": "turbSim-36/part-011.zip",
+    "sha256": "B4BC3AE59BB903B998DE97711E9A0124534CD1E855543B1F8CF9BCB3AC5B9B6F"
+  },
+  {
+    "bytes": 2016356,
+    "archive": "turbSim-36/part-012.zip",
+    "sha256": "3996F4ED42F6EDE6DE0D0D49264D594FBAB2AAF644CDA50ED0135DF8E8A0FD8E"
+  },
+  {
+    "bytes": 2195352,
+    "archive": "turbSim-36/part-013.zip",
+    "sha256": "4DC4BE85CDEE4681D4FB950F09FECB0E4C20BF0CA54A9F984E6B8BFB51EA1398"
+  },
+  {
+    "bytes": 2189747,
+    "archive": "turbSim-36/part-014.zip",
+    "sha256": "18BB3B76ABEF87AE15DBF003FF8DF06EB015E438032609D66806E140E5FE1167"
+  },
+  {
+    "bytes": 2192158,
+    "archive": "turbSim-36/part-015.zip",
+    "sha256": "510DB5F943291AE37370A74AB8E9EA1E46A29A9F917570ACD1406ABD4506CB93"
+  },
+  {
+    "bytes": 2126187,
+    "archive": "turbSim-36/part-016.zip",
+    "sha256": "5FA78A6189FF548509FE29F6C517C730EFA833E6636DE54086DC15DE8DF02A30"
+  },
+  {
+    "bytes": 2120086,
+    "archive": "turbSim-36/part-017.zip",
+    "sha256": "F2F6D240076DEE443A7283DBDEC003E6C48F284A1A400B7D33ED332699F69F16"
+  },
+  {
+    "bytes": 2156287,
+    "archive": "turbSim-36/part-018.zip",
+    "sha256": "BA81444861C211B4B99C80A3FF4B3DDA3E122E0914CFF66897C57E1DD9723316"
+  },
+  {
+    "bytes": 2464357,
+    "archive": "openfast-36-r2/part-001.zip",
+    "sha256": "63F6B61400474E623F3B4C70BEF3656AF09BBBB28A47BCC2BCB6CD28074C5778"
+  },
+  {
+    "bytes": 1524767,
+    "archive": "openfast-36-r2/part-002.zip",
+    "sha256": "D70820123FCC682FBB55B7878BE9AD836ECA3A8A886EFF3F9345AAD6E6829E65"
+  },
+  {
+    "bytes": 890924,
+    "archive": "openfast-36-r2/part-003.zip",
+    "sha256": "3D67536EFFA816F391C5E0ACF836BDD9EDA42A5EE8AC51AFF5C8B8EA65A01C79"
+  },
+  {
+    "bytes": 1457098,
+    "archive": "damping/part-001.zip",
+    "sha256": "489F9E25EB85BC3F2CD01EBEC382B092A05A94C748F82FFD88B415772049C80D"
+  },
+  {
+    "bytes": 156577,
+    "archive": "free-decay/part-001.zip",
+    "sha256": "54B021615D6061967960CE44D0C281A44CFD8F6E23F22F75015E3D1ABEA97B6A"
+  },
+  {
+    "bytes": 138002,
+    "archive": "r5c-six-component/part-001.zip",
+    "sha256": "6F5A6E78C37DC6046A23F2AE5E1BAD429B8026CDE3E8E14F1E9C8E48AB1569EE"
+  },
+  {
+    "bytes": 1903,
+    "archive": "r5c-run/part-001.zip",
+    "sha256": "744A9DDC6E592E756E597D8617458256FA6644F6D9D63F4C3249BA27AAAF4317"
+  },
+  {
+    "bytes": 1352198,
+    "archive": "c3-bridge/part-001.zip",
+    "sha256": "889D7BC1391BD0819BF56437130CD5871004DC0D7F1C8BC246515F8405D6169B"
+  },
+  {
+    "bytes": 1480339,
+    "archive": "c3-bridge/part-002.zip",
+    "sha256": "27510FB2F118C646B3B90D0DA785B7E481BB6BF9C7357D94E63D14685C4E3DE1"
+  },
+  {
+    "bytes": 391480,
+    "archive": "c3-bridge/part-003.zip",
+    "sha256": "09CE792EC6DFDF63DE00EC55C45A453D14DB46B7E9CD6DB4DE8A7002908EFE0E"
+  },
+  {
+    "bytes": 1349622,
+    "archive": "c3-bridge/part-004.zip",
+    "sha256": "97A21D99CA4AED0F8DCA4E23F6AE441F13286DD48E1372C088D306A5DB807F2A"
+  },
+  {
+    "bytes": 1342532,
+    "archive": "c3-bridge/part-005.zip",
+    "sha256": "0A0754B5CBD88E6E1AC5E6BA170B1FDE7BDC764D7366DFA2919CE1DBF1C912C9"
+  },
+  {
+    "bytes": 1343699,
+    "archive": "c3-bridge/part-006.zip",
+    "sha256": "F09BD4FD43FC287407EFF96A2C1E2527EFB0C432A1B5F30F66FEC58E889E76FF"
+  },
+  {
+    "bytes": 1343667,
+    "archive": "c3-bridge/part-007.zip",
+    "sha256": "A3033CEB04097E630E784E1DFC21E47FA624B8787BFA9D54FCE00AFD087AEB0B"
+  },
+  {
+    "bytes": 1359047,
+    "archive": "c3-bridge/part-008.zip",
+    "sha256": "B8934285FF1595F7F7C2A66913E5A39C1C8E7387103676BD5193E4E58B8E39C7"
+  },
+  {
+    "bytes": 1361504,
+    "archive": "c3-bridge/part-009.zip",
+    "sha256": "E0674CC6706419B9C93EAF022C319CB515E24F76037C9B769D0E77F3907EF454"
+  },
+  {
+    "bytes": 1351047,
+    "archive": "c3-bridge/part-010.zip",
+    "sha256": "992A111C8B99D8AD1E03FB53E178C13A6AAA66132BDD167C857E9B4A8C71CAE6"
+  },
+  {
+    "bytes": 1344317,
+    "archive": "c3-bridge/part-011.zip",
+    "sha256": "F8BB321D3D5CCFA18B55A379767A2008E0A40142903549337F5310128E8BFE2C"
+  },
+  {
+    "bytes": 1346335,
+    "archive": "c3-bridge/part-012.zip",
+    "sha256": "ADE3CCDBB620D4D19285CCDE64CE2E8351C699D740E3982726AA0D6C248DF5D0"
+  },
+  {
+    "bytes": 1347196,
+    "archive": "c3-bridge/part-013.zip",
+    "sha256": "5F3F0BC90AA7C652716F35E145D329AE562A9325A0066F356EFA0C00C715CF58"
+  },
+  {
+    "bytes": 1348873,
+    "archive": "c3-bridge/part-014.zip",
+    "sha256": "9BFACC24D9C4C7C9E404AD00B752D30A004FB68CFF4320D627BE041DBB08B4D9"
+  },
+  {
+    "bytes": 1363281,
+    "archive": "c3-bridge/part-015.zip",
+    "sha256": "DB5071FF9F2ABFF0D0238148381DC66EA7482C1C624377972008B3C12DE0E47A"
+  },
+  {
+    "bytes": 1346674,
+    "archive": "c3-bridge/part-016.zip",
+    "sha256": "C84DB881CADC415C7A2CC9049402087BE83CE7DE72BF90B051B744630AF9C86C"
+  },
+  {
+    "bytes": 309963,
+    "archive": "abaqus-v30/part-001.zip",
+    "sha256": "799A21721DF78FDE48F91C37A9698EE3D6102D38CCA3D56E1AC7E698CEEDB03A"
+  },
+  {
+    "bytes": 150400,
+    "archive": "abaqus-v30/part-002.zip",
+    "sha256": "38112C0BE5286D3FBD310BA3D994C166D1C91D5C9601CD2DC2BE3601F07B9C10"
+  },
+  {
+    "bytes": 784992,
+    "archive": "abaqus-v30/part-003.zip",
+    "sha256": "02458A6E5BAA6AD18DE73FE600C75616A22632945694E795C21AC221FDB0453A"
+  },
+  {
+    "bytes": 663087,
+    "archive": "abaqus-v30/part-004.zip",
+    "sha256": "D8F69A98430E2A5D37F69A9290BF06F979EFAA1168EB4A612BBF11417B9AB12F"
+  },
+  {
+    "bytes": 329619,
+    "archive": "abaqus-v30/part-005.zip",
+    "sha256": "BCD8E62E41D703A6B68418B59854E8851F016BB6368F295161FA912BD28CE64F"
+  },
+  {
+    "bytes": 266132,
+    "archive": "abaqus-v30/part-006.zip",
+    "sha256": "EAA99D957B090A02D2DE510A487DD9D307BAE9D1128A1E6BC798A6E2EB11D98A"
+  },
+  {
+    "bytes": 41412,
+    "archive": "rna-validation/part-001.zip",
+    "sha256": "F38E56946BB375D0FB6D55BCB9BB52EAF82CBE69202EE27D857B313B28E0DA51"
+  },
+  {
+    "bytes": 2445951,
+    "archive": "simpack-blade-validation/part-001.zip",
+    "sha256": "494DA969ED1676CD932F209CDB2714E2AE9EB1EBDD07F81F6E01B6BB20F67F91"
+  }
+]

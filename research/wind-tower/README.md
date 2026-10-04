@@ -50,3 +50,6 @@ SHOWTIME 工程包含三组 SHOWTIME 命名模型；不得仅凭上传文件名�
 ## 本地工作资料分区入口（T028）
 
 [资产清单与分类](registry/local-work-inventory-20261004/README.md) · [整理范围与检查顺序](audit/34-t028-local-work-inventory.md) · [历史计算证据](archive/local-work-evidence-20261004/README.md)。本次上传不改变T027路线及当前科学状态；大型原始结果仍在本地。
+## 实际文件与数据分区归档
+
+[下载已上传的实际数据、输入、脚本和记录](archive/local-assets-20261004/README.md)：1453个源文件，12个分区，59个分包；超10MiB源文件暂缓，见清单。
