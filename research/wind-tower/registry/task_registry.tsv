@@ -30,3 +30,4 @@ T023	P0-P8	global	Q01-Q05	按用户要求先复核整篇研究流程，补充章
 T024	P0-P1	1	Q01-Q05	依据核心全文、标准身份和导师意见实质修订题目及第一章	audit/29-t024-title-chapter1-evidence-revision.md	complete-stage/conditional-research	G0/G10	题目/第一章私有Word已修订并核查；公开20项引用证据映射；不代表G0、计算、寿命或优化通过
 T025	P2	2	Q01	从当前论文第二章开始逐段学术核查与重构：对象/几何、材料、预应力与连接、RNA、初态、V&V、阻尼及数值边界	audit/31-t025-reviewer-assessment-and-chapter2-revision.md	complete-writing-stage/conditional-research	G0-G1	第二章私有正文及累计稿已修订并独立复核；明确T3D2/PT/阻尼/V&V范围与缺图；全篇实质评审完成；G0-G1及计算、寿命、优化尚待验证
 T026	P2	2	Q01	按最新授权恢复本地仿真，以实际模型、独立解析和原始文献完成第二章核验与正文修订	audit/32-t026-local-validation-and-chapter2.md	in-progress	G0-G1	原始工程保留；单元材料/PT实施核验已登记，完整RNA质量分支待核；私有正文及老师原文不上传
+T027	P0-P8	global	Q01-Q05	基于新增核心全文重新设计全论文技术路线：主生产链+MBD-FE交叉验证+局部contact+分级疲劳+机制优化	audit/33-t027-literature-driven-route-redesign.md	complete-route/conditional-research	G0-G10	替代OpenFAST-only单一路线；06号路线降为历史；36-case仅作筛选/载荷DEL，寿命另需DLC1.2概率权重和样本收敛
