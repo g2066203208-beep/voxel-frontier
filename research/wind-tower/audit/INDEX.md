@@ -83,3 +83,10 @@
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
 |[36-t030-source-gap-closure.md](36-t030-source-gap-closure.md)|ERA5、TurbSim、OpenFAST坐标/输出、载荷映射、Abaqus submodel、V&V、阻尼、敏感性、代理复核等直接来源补齐|P3.1、P4.1-P4.4、P5.5、P7、P8.4等source层大缺口关闭；剩余为本文专属参数/数值门禁|source审计完成；implementation仍Conditional|
+
+
+## T031：ERA5风能文献专项
+
+|审计文件|主要内容|关键成果|当前状态|
+|---|---|---|---|
+|[37-t031-era5-wind-energy-literature-survey.md](37-t031-era5-wind-energy-literature-survey.md)|实际风能期刊、中文论文、硕士论文中的ERA5方法专项检索|REF080–REF103；U10/U100动态alpha；161m外推边界；ERA5→TurbSim分工|PASS-literature / HOLD-site-validation|
