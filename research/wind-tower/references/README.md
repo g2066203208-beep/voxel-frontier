@@ -85,3 +85,13 @@
 - **Dassault Systèmes Abaqus 2025 Concrete Damaged Plasticity官方文档**。承担CDP变量物理含义和默认值。特别注意ψ没有默认值；e=0.1、fb0/fc0=1.16、Kc=2/3、μ=0为官方默认/基线定义。
 - **住房城乡建设部2024年第62号公告**：自2024-08-01起，《混凝土结构设计规范》名称改为《混凝土结构设计标准》，编号改为GB/T 50010-2010。2026论文应按现行身份引用。
 - **Xu, He, Wang, He, Wu, Zhang (2025)**, *Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel–Concrete Hybrid Tower using a co-simulation approach*, Renewable Energy 243, 122475, DOI 10.1016/j.renene.2025.122475。用于同研究谱系对象材料身份交叉核查：C70/C65、HRB335、外置无黏结PT和Q345；不作为本文生产路线。
+
+
+## Step 10 预应力/约束新增官方依据
+
+- **GB/T 5224—2023《预应力混凝土用钢绞线》**：全国标准信息公共服务平台确认现行，2024-03-01实施，全部替代GB/T 5224—2014。用于钢绞线产品标准身份，不直接为本文1280 MPa初始预应力背书。
+- **Abaqus 2025 Truss Elements**：T3D2等truss仅承受轴向力、不传递弯矩。
+- **Abaqus 2025 Embedded Elements**：embedded region是运动学约束，适合reinforcement-in-solid等，但不表示bond-slip。
+- **Abaqus 2025 Springs**：SPRING2在两个节点之间建立固定方向的力—相对位移/矩—相对转角关系；与可随构形转动的SPRINGA不同。
+- **Abaqus 2025 Linear Constraint Equations**：线性多点约束会产生constraint forces，官方明确这些约束力不包含在reaction force输出合计中，因此本文后续六分量平衡不能只求和RF。
+- **Abaqus 2025 Initial Stress**：初始应力只能在Initial step定义；本文需区分名义初始预应力和重力平衡后实际状态。
