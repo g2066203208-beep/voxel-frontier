@@ -51,3 +51,16 @@
 - 第五章做敏感性并冻结变量/目标/约束；
 - 第六章优化并独立回算；
 - 两个创新点保持HOLD，直到结果真正支撑。
+
+
+## 6. 可复现细节唯一入口
+
+与本文件相同SHA的R2Z74源稿已经完成“去Word化”结构化抽取，原DOCX仍不进入GitHub。后续不要再复制一份摘要式说明，统一从以下目录读取历史方法细节与可比数字：
+
+- `manuscript/reproducibility/README.md`
+- `manuscript/reproducibility/02_ABAQUS_RNA_DAMPING_REPRODUCIBLE_METHOD.md`
+- `manuscript/reproducibility/03_ERA5_TURBSIM_OPENFAST_REPRODUCIBLE_METHOD.md`
+- `manuscript/reproducibility/RESULT_BENCHMARK_LEDGER.tsv`
+- `manuscript/reproducibility/WORD_TO_CURRENT_ROUTE_MAP.tsv`
+
+该目录已经在抽取阶段排除Simpack/AeroDyn-Simpack/Simpack-Abaqus旧生产路线。任何benchmark升级为final结果仍须绑定当前RUN/source/input hash。
