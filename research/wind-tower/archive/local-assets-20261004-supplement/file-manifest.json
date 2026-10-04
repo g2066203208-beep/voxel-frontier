@@ -4,1126 +4,1609 @@
     "relative_path": "A008_MESHFACE_NFORC_420.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3694
+    "bytes": 3694,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_MESHFACE_NFORC_420.com",
+    "status": "included"
   },
   {
     "sha256": "B523691193D17303E3EEB0CCA18FADB9E92A9A54B7BF654C4EBD9EB54F8E68A7",
     "relative_path": "A008_MESHFACE_NFORC_420.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 474077
+    "bytes": 474077,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_MESHFACE_NFORC_420.prt",
+    "status": "included"
   },
   {
     "sha256": "F1AFBA34B875048543FF3C27A255BC58BFCC6E783C02AFBB6C04AFDBFF5206E6",
     "relative_path": "A008_MESHFACE_NFORC_420ALL.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3699
+    "bytes": 3699,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_MESHFACE_NFORC_420ALL.com",
+    "status": "included"
   },
   {
     "sha256": "B523691193D17303E3EEB0CCA18FADB9E92A9A54B7BF654C4EBD9EB54F8E68A7",
     "relative_path": "A008_MESHFACE_NFORC_420ALL.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 474077
+    "bytes": 474077,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_MESHFACE_NFORC_420.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "6370F0417C03AC4DBC2C28519AECA2A11D8B67C5A3E5ACD6D51FEAE2581ABE62",
     "relative_path": "A008_MESHFACE_NFORC_420N.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3695
+    "bytes": 3695,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_MESHFACE_NFORC_420N.com",
+    "status": "included"
   },
   {
     "sha256": "B523691193D17303E3EEB0CCA18FADB9E92A9A54B7BF654C4EBD9EB54F8E68A7",
     "relative_path": "A008_MESHFACE_NFORC_420N.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 474077
+    "bytes": 474077,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_MESHFACE_NFORC_420.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "B034CEBB1C2B98B1CA84A8CD645BAFDB55C7F8C690D2DBF0CBAF5876D4AD1053",
     "relative_path": "A008_R2_clean.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3668
+    "bytes": 3668,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean.com",
+    "status": "included"
   },
   {
     "sha256": "4F73A9D09046B06EE444E2129F02F13736D1B17E75C29B415696ECB396703B78",
     "relative_path": "A008_R2_clean2.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3679
+    "bytes": 3679,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean2.com",
+    "status": "included"
   },
   {
     "sha256": "82A93A8DE3E785836053932DDDD92243871197741B68A106B7402E88F167E70E",
     "relative_path": "A008_R2_clean2.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 473560
+    "bytes": 473560,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean2.prt",
+    "status": "included"
   },
   {
     "sha256": "C0AC5B453D996B89B496E75AE8A0308F858374A3602620F6D26C34B53B328A53",
     "relative_path": "A008_RiksFine.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3678
+    "bytes": 3678,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_RiksFine.com",
+    "status": "included"
   },
   {
     "sha256": "96B76595DC9E74DC4CBA948BCD0DBA715833352EDC1E78FEF937FDD6387AAE92",
     "relative_path": "A008_RiksFine.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 473560
+    "bytes": 473560,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_RiksFine.prt",
+    "status": "included"
   },
   {
     "sha256": "D5BDEE8EC2991277143827A04F2B357948DCC017800A208BA05D2D9151ADA768",
     "relative_path": "abaqus.rpy",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 1175
+    "bytes": 1175,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "abaqus.rpy",
+    "status": "included"
   },
   {
     "sha256": "3CCC878EC54F9340F80F0265133764C7B5AD47A578E44D943A3EFFC50E7E817D",
     "relative_path": "DTU158_BUCKLE_DLC13_S06_UNITFIX.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 4042
+    "bytes": 4042,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_BUCKLE_DLC13_S06_UNITFIX.com",
+    "status": "included"
   },
   {
     "sha256": "82A93A8DE3E785836053932DDDD92243871197741B68A106B7402E88F167E70E",
     "relative_path": "DTU158_BUCKLE_DLC13_S06_UNITFIX.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 473560
+    "bytes": 473560,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean2.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "9727A42561C616F52A1521F59DA243C8E31F3EF65D9AEF6CCFD38A9BF5278DB2",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3961
+    "bytes": 3961,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.com",
+    "status": "included"
   },
   {
     "sha256": "A52A70382BC57AB941204734AC634878DE8209E7244F0F0BC896D45C5F37FD72",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 474009
+    "bytes": 474009,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.prt",
+    "status": "included"
   },
   {
     "sha256": "1EEA65A97658C39159750BDD744372D77FAF4AD2C486F2D051E73C207C4744E8",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.cax",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 2628
+    "bytes": 2628,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.cax",
+    "status": "included"
   },
   {
     "sha256": "F1EB5855BB359EFAFFE6158439E0E03A7805495E28A921CA3177BE5DA5E0B3DA",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-001.zip",
-    "bytes": 3524
+    "bytes": 3524,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.com",
+    "status": "included"
   },
   {
     "sha256": "A100B31E5875BC4BBD289A80767D3B3A7E275A4ED86669718238F0B760480F2D",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.mdl",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-002.zip",
-    "bytes": 9973028
+    "bytes": 9973028,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-002.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.mdl",
+    "status": "included"
   },
   {
     "sha256": "A52A70382BC57AB941204734AC634878DE8209E7244F0F0BC896D45C5F37FD72",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 474009
+    "bytes": 474009,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "200D65532CB84D7DAB7225C35472D492CEC3D38D1E66C9B8FCBA82DCA00F6A16",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.sim",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 664
+    "bytes": 664,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.sim",
+    "status": "included"
   },
   {
     "sha256": "DB48305A67FEFD4B5AC5FFE282E670CC9E4CF2246EDC75ECF9950ED65288787A",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.simlog",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3035
+    "bytes": 3035,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.simlog",
+    "status": "included"
   },
   {
     "sha256": "02406C85246DDC22CD00A6EA8F7C220616E3E686AA66973F94D9E7A463C6D1DA",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3961
+    "bytes": 3961,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007.com",
+    "status": "included"
   },
   {
     "sha256": "A52A70382BC57AB941204734AC634878DE8209E7244F0F0BC896D45C5F37FD72",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 474009
+    "bytes": 474009,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "41B21D7B277659E7C57EF18D017737B5D445E5A909232EE0D601FA7BE8D9F93A",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007R1.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3740
+    "bytes": 3740,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007R1.com",
+    "status": "included"
   },
   {
     "sha256": "A52A70382BC57AB941204734AC634878DE8209E7244F0F0BC896D45C5F37FD72",
     "relative_path": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007R1.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 474009
+    "bytes": 474009,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "D7B4C2DFC94D446ECAE695986A668BA160AD0CBB324216418900961D63581DBE",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_IMP_A008_R2.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3945
+    "bytes": 3945,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_RIKS_DLC13_S06_CDP_IMP_A008_R2.com",
+    "status": "included"
   },
   {
     "sha256": "46C608AA9987E145EB5BCFC627544A924A0B5C15813714CE5F63ED3E135A95EF",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_IMP_A008.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3939
+    "bytes": 3939,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_RIKS_DLC13_S06_CDP_IMP_A008.com",
+    "status": "included"
   },
   {
     "sha256": "82A93A8DE3E785836053932DDDD92243871197741B68A106B7402E88F167E70E",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_IMP_A008.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 473560
+    "bytes": 473560,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean2.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "D269B0F5A1B90202F95CA772A03457ACCB26ED2CDEF08F6FDF263811C48A509F",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3953
+    "bytes": 3953,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.com",
+    "status": "included"
   },
   {
     "sha256": "82A93A8DE3E785836053932DDDD92243871197741B68A106B7402E88F167E70E",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 473560
+    "bytes": 473560,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean2.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "1EB78538E67AAA8A8CC3F8E3A59A16DE04D6AA9245E658C4EAFC5C970559AF09",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3943
+    "bytes": 3943,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.com",
+    "status": "included"
   },
   {
     "sha256": "82A93A8DE3E785836053932DDDD92243871197741B68A106B7402E88F167E70E",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 473560
+    "bytes": 473560,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean2.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "54110086D4543D1480CF01489601152D3490EECFF6C95C16C63663A17529B1D7",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A016.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3943
+    "bytes": 3943,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A016.com",
+    "status": "included"
   },
   {
     "sha256": "82A93A8DE3E785836053932DDDD92243871197741B68A106B7402E88F167E70E",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A016.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 473560
+    "bytes": 473560,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "A008_R2_clean2.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "BD557CF2776216A2F3838187FD417869E4191A20190F85C45C553B00520851FD",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A032.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3943
+    "bytes": 3943,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A032.com",
+    "status": "included"
   },
   {
     "sha256": "079E2B6D6DE3F127A525580308FA6CA7117DB44F1B7EBCEE3391D338DA60A520",
     "relative_path": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A032.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 473860
+    "bytes": 473860,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_RIKS_DLC13_S06_CDP_MODE1_A032.prt",
+    "status": "included"
   },
   {
     "sha256": "1EEA65A97658C39159750BDD744372D77FAF4AD2C486F2D051E73C207C4744E8",
     "relative_path": "DTU158_V30_LT10K_DATACHECK.cax",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 2628
+    "bytes": 2628,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-001.zip",
+    "canonical_member": "DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.cax",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "51971D11C8023CED4E45C7B360A8E6595C7A49CC93B28D0D16B4D24562041F10",
     "relative_path": "DTU158_V30_LT10K_DATACHECK.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-003.zip",
-    "bytes": 3948
+    "bytes": 3948,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-003.zip",
+    "canonical_member": "DTU158_V30_LT10K_DATACHECK.com",
+    "status": "included"
   },
   {
     "sha256": "D983E42448F8ACDBFC3543B1432BB5C1C5D1A3AAEFB29E865A8DF954582A4D60",
     "relative_path": "DTU158_V30_LT10K_DATACHECK.mdl",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-004.zip",
-    "bytes": 8435972
+    "bytes": 8435972,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-004.zip",
+    "canonical_member": "DTU158_V30_LT10K_DATACHECK.mdl",
+    "status": "included"
   },
   {
     "sha256": "D64D77DE73EA1854A680B75A44CB2BE4F295BC24F012FD3CB4C072028E670DE7",
     "relative_path": "DTU158_V30_LT10K_DATACHECK.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-004.zip",
-    "bytes": 479264
+    "bytes": 479264,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-004.zip",
+    "canonical_member": "DTU158_V30_LT10K_DATACHECK.prt",
+    "status": "included"
   },
   {
     "sha256": "39452314A31249E741A93B46E75DE291E7AB530E1E64D6D17A203525BA03F9B2",
     "relative_path": "DTU158_V30_LT10K_DATACHECK.sim",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-005.zip",
-    "bytes": 1724230
+    "bytes": 1724230,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-005.zip",
+    "canonical_member": "DTU158_V30_LT10K_DATACHECK.sim",
+    "status": "included"
   },
   {
     "sha256": "7C293947CF43340A8A1009166884C8E800A99C7660E3033703482DF9DC3DE4A6",
     "relative_path": "DTU158_V30_LT10K_GRAVITY_MODAL.com",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-005.zip",
-    "bytes": 3935
+    "bytes": 3935,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-005.zip",
+    "canonical_member": "DTU158_V30_LT10K_GRAVITY_MODAL.com",
+    "status": "included"
   },
   {
     "sha256": "D64D77DE73EA1854A680B75A44CB2BE4F295BC24F012FD3CB4C072028E670DE7",
     "relative_path": "DTU158_V30_LT10K_GRAVITY_MODAL.prt",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-005.zip",
-    "bytes": 479264
+    "bytes": 479264,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-004.zip",
+    "canonical_member": "DTU158_V30_LT10K_DATACHECK.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "9B782942A6C34492ACA1EDB8F770F78A59AD8CA222DBB887E2145AC1A68D4A6A",
     "relative_path": "DTU158_V30_LT10K_GRAVITY_MODAL.sim",
     "section": "abaqus-v30",
     "archive": "abaqus-v30/part-005.zip",
-    "bytes": 2042902
+    "bytes": 2042902,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-005.zip",
+    "canonical_member": "DTU158_V30_LT10K_GRAVITY_MODAL.sim",
+    "status": "included"
   },
   {
     "sha256": "3AAAC54D8D196AA31777A52C626D019BE85C6E5A0B0FF5D2E1188C89B59FBAD4",
     "relative_path": "WT_MBD_FE_SINGLE_0p15/run13/direct.com",
     "section": "c3-bridge",
     "archive": "c3-bridge/part-001.zip",
-    "bytes": 3433
+    "bytes": 3433,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/c3-bridge/part-001.zip",
+    "canonical_member": "WT_MBD_FE_SINGLE_0p15/run13/direct.com",
+    "status": "included"
   },
   {
     "sha256": "980B5522A77C083BBDDA1A71EECA3B98C9B22F75474DB2FA10F328162C7FF828",
     "relative_path": "WT_MBD_FE_SINGLE_0p15/run13/direct.prt",
     "section": "c3-bridge",
     "archive": "c3-bridge/part-001.zip",
-    "bytes": 413664
+    "bytes": 413664,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/c3-bridge/part-001.zip",
+    "canonical_member": "WT_MBD_FE_SINGLE_0p15/run13/direct.prt",
+    "status": "included"
   },
   {
     "sha256": "4FD7F33DCC0CA0C09C1AE0959DF8123A7A55D02F9718F5C7C2D7370B98262290",
     "relative_path": "WT_MBD_FE_SINGLE_0p15/run14/C3_PERSISTENT_0P15.com",
     "section": "c3-bridge",
     "archive": "c3-bridge/part-001.zip",
-    "bytes": 3511
+    "bytes": 3511,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/c3-bridge/part-001.zip",
+    "canonical_member": "WT_MBD_FE_SINGLE_0p15/run14/C3_PERSISTENT_0P15.com",
+    "status": "included"
   },
   {
     "sha256": "1C0CAD3CDA17475CA152D64465472B20F943D6BC706FDA97DD85C862A99BDF74",
     "relative_path": "WT_MBD_FE_SINGLE_0p15/run14/C3_PERSISTENT_0P15.prt",
     "section": "c3-bridge",
     "archive": "c3-bridge/part-001.zip",
-    "bytes": 413664
+    "bytes": 413664,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/c3-bridge/part-001.zip",
+    "canonical_member": "WT_MBD_FE_SINGLE_0p15/run14/C3_PERSISTENT_0P15.prt",
+    "status": "included"
   },
   {
     "sha256": "FD18870F4BCDA1DDCB9334D50530A0B6C76FCB1605757C9333FEE207D972023D",
     "relative_path": "WT_MBD_FE_SINGLE_0p15/run9/C3_PERSISTENT_0P15.com",
     "section": "c3-bridge",
     "archive": "c3-bridge/part-001.zip",
-    "bytes": 3463
+    "bytes": 3463,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/c3-bridge/part-001.zip",
+    "canonical_member": "WT_MBD_FE_SINGLE_0p15/run9/C3_PERSISTENT_0P15.com",
+    "status": "included"
   },
   {
     "sha256": "980B5522A77C083BBDDA1A71EECA3B98C9B22F75474DB2FA10F328162C7FF828",
     "relative_path": "WT_MBD_FE_SINGLE_0p15/run9/C3_PERSISTENT_0P15.prt",
     "section": "c3-bridge",
     "archive": "c3-bridge/part-001.zip",
-    "bytes": 413664
+    "bytes": 413664,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/c3-bridge/part-001.zip",
+    "canonical_member": "WT_MBD_FE_SINGLE_0p15/run13/direct.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "963982F7DEC0BAA58620DB6C710AC898182E381FEDB551F161EA60ECDD40B850",
     "relative_path": "abaqus.rpy",
     "section": "damping",
     "archive": "damping/part-001.zip",
-    "bytes": 1100
+    "bytes": 1100,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/damping/part-001.zip",
+    "canonical_member": "abaqus.rpy",
+    "status": "included"
   },
   {
     "sha256": "890BD521B2BDE5A126293646CF92715DA045CA3C52CBAC74AE87368800862268",
     "relative_path": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.com",
     "section": "damping",
     "archive": "damping/part-001.zip",
-    "bytes": 3736
+    "bytes": 3736,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/damping/part-001.zip",
+    "canonical_member": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.com",
+    "status": "included"
   },
   {
     "sha256": "DDC56A367E631EDBC0D783DA9E61608E03A789E1E78DEC3FABEE62A0BA49842D",
     "relative_path": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.prt",
     "section": "damping",
     "archive": "damping/part-001.zip",
-    "bytes": 473634
+    "bytes": 473634,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/damping/part-001.zip",
+    "canonical_member": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.prt",
+    "status": "included"
   },
   {
     "sha256": "33CCB133BB097E6874FA85751A542875A52FA728903A1A88EBEE4875EC9D73FF",
     "relative_path": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.sim",
     "section": "damping",
     "archive": "damping/part-001.zip",
-    "bytes": 2042706
+    "bytes": 2042706,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/damping/part-001.zip",
+    "canonical_member": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.sim",
+    "status": "included"
   },
   {
     "sha256": "4828240F62945C915E1AF811B613781380AEDEC77F9704D9C7D7483D41847B28",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.com",
     "section": "free-decay",
     "archive": "free-decay/part-001.zip",
-    "bytes": 3766
+    "bytes": 3766,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/free-decay/part-001.zip",
+    "canonical_member": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.com",
+    "status": "included"
   },
   {
     "sha256": "F401EFDF36A6805969496B4A9A01BF2BDC52686A879F006E475548D2F0E49470",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.prt",
     "section": "free-decay",
     "archive": "free-decay/part-001.zip",
-    "bytes": 479264
+    "bytes": 479264,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/free-decay/part-001.zip",
+    "canonical_member": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.prt",
+    "status": "included"
   },
   {
     "sha256": "A660C14CB1BC196349A7DEBBE67A48DC4CA8890E6CCDF091F8D46B4F21617A1D",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.sim",
     "section": "free-decay",
     "archive": "free-decay/part-001.zip",
-    "bytes": 1725050
+    "bytes": 1725050,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/free-decay/part-001.zip",
+    "canonical_member": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R1.sim",
+    "status": "included"
   },
   {
     "sha256": "3955122A2D291797D698C89BDC01B3A13ED7DD1C988B6ED611A4466AF3FB02F6",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.com",
     "section": "free-decay",
     "archive": "free-decay/part-001.zip",
-    "bytes": 3766
+    "bytes": 3766,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/free-decay/part-001.zip",
+    "canonical_member": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.com",
+    "status": "included"
   },
   {
     "sha256": "D64D77DE73EA1854A680B75A44CB2BE4F295BC24F012FD3CB4C072028E670DE7",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.prt",
     "section": "free-decay",
     "archive": "free-decay/part-001.zip",
-    "bytes": 479264
+    "bytes": 479264,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-004.zip",
+    "canonical_member": "DTU158_V30_LT10K_DATACHECK.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "3E8D5F3D079B38B27C34632AAE4E2E2DD70FF695DD74587DB718CF4489C48C2A",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.sim",
     "section": "free-decay",
     "archive": "free-decay/part-001.zip",
-    "bytes": 5157950
+    "bytes": 5157950,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/free-decay/part-001.zip",
+    "canonical_member": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION_R2.sim",
+    "status": "included"
   },
   {
     "sha256": "34899E1DFC08A9B824DFA8456A87BF7EF9B01AA56462AA922407F126F49F2414",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.com",
     "section": "free-decay",
     "archive": "free-decay/part-001.zip",
-    "bytes": 3760
+    "bytes": 3760,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/free-decay/part-001.zip",
+    "canonical_member": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.com",
+    "status": "included"
   },
   {
     "sha256": "F144C2FB7F9AAF0F9928D9EDB1E9C0DBBBD5E3DE5F63A112DD81F4899093D5B9",
     "relative_path": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.sim",
     "section": "free-decay",
     "archive": "free-decay/part-002.zip",
-    "bytes": 1716846
+    "bytes": 1716846,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/free-decay/part-002.zip",
+    "canonical_member": "DTU158_RAYLEIGH_FREE_DECAY_VALIDATION.sim",
+    "status": "included"
   },
   {
     "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
     "relative_path": "R2_QUEUE.err",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-001.zip",
-    "bytes": 0
+    "bytes": 0,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004/era5-raw-2005-2014/part-001.zip",
+    "canonical_member": "background_stdout.log",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "0D6F0D9DFD067A3495EC65D69DB0AFDA2A903699EAA5988914AB45089D1C126C",
     "relative_path": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-001.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-001.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "included"
   },
   {
     "sha256": "F2BE32FFAFD9EDFDA2297D03B22DFDB1C25602205FA89049009A8ED35AD483A9",
     "relative_path": "CASES/U09p343881_ETM_S02/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-002.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-002.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S02/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_ETM_S02/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-002.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "836BF30851D3558C1ED620598A2E9A9BE874430E5AFDAB33A6C4D2575D0613F9",
     "relative_path": "CASES/U09p343881_ETM_S03/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-003.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-003.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S03/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_ETM_S03/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-003.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "368D507D730382769B73707D67ECCCBDD0911AE5CAD097096D492648D3383B27",
     "relative_path": "CASES/U09p343881_ETM_S04/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-004.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-004.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S04/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_ETM_S04/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-004.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "214096375A599C4DA947EB5852F92BB28E3501CF6269322F489EDD42A74C2688",
     "relative_path": "CASES/U09p343881_ETM_S05/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-005.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-005.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S05/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_ETM_S05/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-005.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "97D628EED3640A40138B3BB5D09FBC057C74E665CC0D18FAA98CFE590F5C41DF",
     "relative_path": "CASES/U09p343881_ETM_S06/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-006.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-006.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S06/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_ETM_S06/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-006.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "F2D5D236038F67F5BEE729DCA66FF1612D72636DCD2BC4369FE034D2A70B45CF",
     "relative_path": "CASES/U09p343881_NTM_S01/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-007.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-007.zip",
+    "canonical_member": "CASES/U09p343881_NTM_S01/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_NTM_S01/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-007.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "0AE8763E4A95BC59D760EAA708978DB819F8974BE093DCD3BA22C071B66636E2",
     "relative_path": "CASES/U09p343881_NTM_S02/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-008.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-008.zip",
+    "canonical_member": "CASES/U09p343881_NTM_S02/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_NTM_S02/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-008.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "4AEDB30C5BF19C17FD2745446382068862F1BAF8A61B417D056CCFDB5A082EAE",
     "relative_path": "CASES/U09p343881_NTM_S03/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-009.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-009.zip",
+    "canonical_member": "CASES/U09p343881_NTM_S03/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_NTM_S03/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-009.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "A2DDA590E9D8AFC9A5A6401F843EC5786E42A84BE764611C4647D90CDC63C8FF",
     "relative_path": "CASES/U09p343881_NTM_S04/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-010.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-010.zip",
+    "canonical_member": "CASES/U09p343881_NTM_S04/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_NTM_S04/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-010.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "87D7D9E5CF880D82F9179F524C7E0710F6C697DF7FFF26A21C29B0940F1AF0C6",
     "relative_path": "CASES/U09p343881_NTM_S05/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-011.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-011.zip",
+    "canonical_member": "CASES/U09p343881_NTM_S05/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_NTM_S05/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-011.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "ABDCC0569D1F532284A063EBE6F59A66FAFF2AFC7761EA8F063B0999254C5E88",
     "relative_path": "CASES/U09p343881_NTM_S06/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-012.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-012.zip",
+    "canonical_member": "CASES/U09p343881_NTM_S06/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U09p343881_NTM_S06/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-012.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "ABEA64FCFFEAF8383CD670F0C9285A5EC90457901956CDEDD3BE8EDEEF9BB9D1",
     "relative_path": "CASES/U11p4_ETM_S01/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-013.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-013.zip",
+    "canonical_member": "CASES/U11p4_ETM_S01/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-013.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "1CDD973A5D050BE9F7F905FA8CBDBDD3C6F55DB0A14F8EB699E1108F3B17133C",
     "relative_path": "CASES/U11p4_ETM_S02/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-014.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-014.zip",
+    "canonical_member": "CASES/U11p4_ETM_S02/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_ETM_S02/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-014.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "ABC09ECF3856E6750110D6D23137C123DD15BB884D40D72271EB7A69ADDF351E",
     "relative_path": "CASES/U11p4_ETM_S03/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-015.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-015.zip",
+    "canonical_member": "CASES/U11p4_ETM_S03/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_ETM_S03/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-015.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "650E08D46C164D831B9B3FC703238BD22E3B19644C367498639BB900142F7AD0",
     "relative_path": "CASES/U11p4_ETM_S04/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-016.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-016.zip",
+    "canonical_member": "CASES/U11p4_ETM_S04/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_ETM_S04/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-016.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "BC9325979169B319C6980E555B75B18284EA3B8F3E64FDD064937BA515C7E7C1",
     "relative_path": "CASES/U11p4_ETM_S05/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-017.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-017.zip",
+    "canonical_member": "CASES/U11p4_ETM_S05/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_ETM_S05/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-017.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "18211C314E05C78BEDDD7E2BB9674DCA6CEA72B9EAB8E274F1FBA9BEAB8D977C",
     "relative_path": "CASES/U11p4_ETM_S06/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-018.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-018.zip",
+    "canonical_member": "CASES/U11p4_ETM_S06/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_ETM_S06/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-018.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "BCEBCB7971B2E0DCC459FF38748045CE02EC9559CE79D173187DEE82FB796A79",
     "relative_path": "CASES/U11p4_NTM_S01/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-019.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-019.zip",
+    "canonical_member": "CASES/U11p4_NTM_S01/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_NTM_S01/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-019.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "873E8D0AC7E147D29A25426D1DDFE99D450B37D41F4A2DB6ABD3127CB65F54D0",
     "relative_path": "CASES/U11p4_NTM_S02/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-020.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-020.zip",
+    "canonical_member": "CASES/U11p4_NTM_S02/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_NTM_S02/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-020.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "1D9EFDFA291A7103CD5061BCA60FBB6BB0C8D5940D2F53ACFCA0D4F43B0F99DF",
     "relative_path": "CASES/U11p4_NTM_S03/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-021.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-021.zip",
+    "canonical_member": "CASES/U11p4_NTM_S03/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_NTM_S03/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-021.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "709B6F94525C22BE51DD61D5DD2205F699D2169FD4BB65364882A381F9C89733",
     "relative_path": "CASES/U11p4_NTM_S04/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-022.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-022.zip",
+    "canonical_member": "CASES/U11p4_NTM_S04/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_NTM_S04/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-022.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "C2C0E97E8420B9710CE090EF32BDA1AEEBB0FAB610A8484EE708480097E85383",
     "relative_path": "CASES/U11p4_NTM_S05/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-023.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-023.zip",
+    "canonical_member": "CASES/U11p4_NTM_S05/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_NTM_S05/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-023.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "43185F8551EC839DA2894855A112266C848464E16055687513E0CD662B724D49",
     "relative_path": "CASES/U11p4_NTM_S06/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-024.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-024.zip",
+    "canonical_member": "CASES/U11p4_NTM_S06/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U11p4_NTM_S06/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-024.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "28CDB7323482BD993EA1C1EF875F37EAABCB049B11C686B23C6FE28B77C527F6",
     "relative_path": "CASES/U19p202140_ETM_S01/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-025.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-025.zip",
+    "canonical_member": "CASES/U19p202140_ETM_S01/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-025.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "10DF5A77B847B3BC5DB92DEFE89CD221F033BCB96FBBEE87B064AE7096554CE8",
     "relative_path": "CASES/U19p202140_ETM_S02/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-026.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-026.zip",
+    "canonical_member": "CASES/U19p202140_ETM_S02/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_ETM_S02/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-026.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "18707F3B3CFD1606E42FAD847B1896B0EE38893856AB4CF6EEBDF324B76CC543",
     "relative_path": "CASES/U19p202140_ETM_S03/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-027.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-027.zip",
+    "canonical_member": "CASES/U19p202140_ETM_S03/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_ETM_S03/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-027.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "D20806025BB9FDCD212B18AA2D9F6A1F775E86D79B8ED5591145A4F9177928C2",
     "relative_path": "CASES/U19p202140_ETM_S04/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-028.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-028.zip",
+    "canonical_member": "CASES/U19p202140_ETM_S04/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_ETM_S04/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-028.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "C4A64813D75E40650E9142A808ECE9EF1FA714C86B10809B537EED93228F0BE6",
     "relative_path": "CASES/U19p202140_ETM_S05/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-029.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-029.zip",
+    "canonical_member": "CASES/U19p202140_ETM_S05/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_ETM_S05/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-029.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "95AF6C91B4F0B8DAB565436F667463A48559D344D4A5667084972B61281BCCDA",
     "relative_path": "CASES/U19p202140_ETM_S06/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-030.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-030.zip",
+    "canonical_member": "CASES/U19p202140_ETM_S06/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_ETM_S06/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-030.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "A9F91E5D1D2C99342AE514739F6123AD977930C4ED78308DDFEF24739F474352",
     "relative_path": "CASES/U19p202140_NTM_S01/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-031.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-031.zip",
+    "canonical_member": "CASES/U19p202140_NTM_S01/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_NTM_S01/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-031.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "105358014A9C292E7C1708AB7407851E114CA34B6BD9D3F86BE055195343D61F",
     "relative_path": "CASES/U19p202140_NTM_S02/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-032.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-032.zip",
+    "canonical_member": "CASES/U19p202140_NTM_S02/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_NTM_S02/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-032.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "255C3FBAA1F7C10A5FC06DF32335999A03A73C8295A2CA65A2C7DA20CEB3A2D5",
     "relative_path": "CASES/U19p202140_NTM_S03/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-033.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-033.zip",
+    "canonical_member": "CASES/U19p202140_NTM_S03/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_NTM_S03/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-033.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "DD85987779922A66597886F8FBB65C1D7304A27DA68671E11EC48A23B7ED023C",
     "relative_path": "CASES/U19p202140_NTM_S04/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-034.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-034.zip",
+    "canonical_member": "CASES/U19p202140_NTM_S04/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_NTM_S04/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-034.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "95406AC6876AD7EBD14A14195173AA06F202B17CC8277E9B00B3B73E8E8E8320",
     "relative_path": "CASES/U19p202140_NTM_S05/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-035.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-035.zip",
+    "canonical_member": "CASES/U19p202140_NTM_S05/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_NTM_S05/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-035.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "DC95A0662E3D92099FE778EF4E1468E86EBA0CEFAD2FE730B8F2FCD78F6EDCAB",
     "relative_path": "CASES/U19p202140_NTM_S06/DTU_10MW_RWT.outb",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-036.zip",
-    "bytes": 7088610
+    "bytes": 7088610,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-036.zip",
+    "canonical_member": "CASES/U19p202140_NTM_S06/DTU_10MW_RWT.outb",
+    "status": "included"
   },
   {
     "sha256": "8F5D7546420EE34838E66B63E4B26D64460BE5D5492F99C60B6D1EF977FFC61A",
     "relative_path": "CASES/U19p202140_NTM_S06/Control/DTU_10MW_RWT_DISCON.IN",
     "section": "openfast-36-r2",
     "archive": "openfast-36-r2/part-036.zip",
-    "bytes": 17600
+    "bytes": 17600,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "canonical_member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "FA99863E5DEA3A39A4B8516D47C9B1516FA745881FB4D5CDCC8BFA88305A4B61",
     "relative_path": "DTU158_RNA_R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S.sir",
     "section": "r5c-run",
     "archive": "r5c-run/part-001.zip",
-    "bytes": 7405744
+    "bytes": 7405744,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/r5c-run/part-001.zip",
+    "canonical_member": "DTU158_RNA_R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S.sir",
+    "status": "included"
   },
   {
     "sha256": "2C4F4BBE979F02E4AE09429B2DA87541D3CFA348E68FF44CEE0E45BC8158BEAC",
     "relative_path": "DTU158_RNA_R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S.spckst",
     "section": "r5c-run",
     "archive": "r5c-run/part-001.zip",
-    "bytes": 103140
+    "bytes": 103140,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/r5c-run/part-001.zip",
+    "canonical_member": "DTU158_RNA_R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S.spckst",
+    "status": "included"
   },
   {
     "sha256": "FA99863E5DEA3A39A4B8516D47C9B1516FA745881FB4D5CDCC8BFA88305A4B61",
     "relative_path": "DTU158_RNA_R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S.sir",
     "section": "r5c-six-component",
     "archive": "r5c-six-component/part-001.zip",
-    "bytes": 7405744
+    "bytes": 7405744,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/r5c-run/part-001.zip",
+    "canonical_member": "DTU158_RNA_R5C_SIX_COMPONENT_INERTIAL_REPLAY_U11p4_ETM_S03_600S.sir",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "4552AFC96242AD540B118DE38C70ABF160B5A63CD40F35ADDC9F2A523D84D0BF",
     "relative_path": "DTU158_RNA_OFFICIAL_GRAVITY_MODAL.com",
     "section": "rna-validation",
     "archive": "rna-validation/part-001.zip",
-    "bytes": 3977
+    "bytes": 3977,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/rna-validation/part-001.zip",
+    "canonical_member": "DTU158_RNA_OFFICIAL_GRAVITY_MODAL.com",
+    "status": "included"
   },
   {
     "sha256": "D64D77DE73EA1854A680B75A44CB2BE4F295BC24F012FD3CB4C072028E670DE7",
     "relative_path": "DTU158_RNA_OFFICIAL_GRAVITY_MODAL.prt",
     "section": "rna-validation",
     "archive": "rna-validation/part-001.zip",
-    "bytes": 479264
+    "bytes": 479264,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/abaqus-v30/part-004.zip",
+    "canonical_member": "DTU158_V30_LT10K_DATACHECK.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "8BE162A3E331A5CBAA3C4F7ED5FC4BF001EE240093A8EAB4E77FF431E27AE560",
     "relative_path": "DTU158_RNA_OFFICIAL_GRAVITY_MODAL.sim",
     "section": "rna-validation",
     "archive": "rna-validation/part-001.zip",
-    "bytes": 2042902
+    "bytes": 2042902,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/rna-validation/part-001.zip",
+    "canonical_member": "DTU158_RNA_OFFICIAL_GRAVITY_MODAL.sim",
+    "status": "included"
   },
   {
     "sha256": "137A8694F7EB34A6572F9FC568E424CAC40FD2A42B5B206B5C584FA4D2A7B9B3",
     "relative_path": "DTU158_RNA_POINTMASS_GRAVITY_MODAL.com",
     "section": "rna-validation",
     "archive": "rna-validation/part-001.zip",
-    "bytes": 3951
+    "bytes": 3951,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/rna-validation/part-001.zip",
+    "canonical_member": "DTU158_RNA_POINTMASS_GRAVITY_MODAL.com",
+    "status": "included"
   },
   {
     "sha256": "DDC56A367E631EDBC0D783DA9E61608E03A789E1E78DEC3FABEE62A0BA49842D",
     "relative_path": "DTU158_RNA_POINTMASS_GRAVITY_MODAL.prt",
     "section": "rna-validation",
     "archive": "rna-validation/part-001.zip",
-    "bytes": 473634
+    "bytes": 473634,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/damping/part-001.zip",
+    "canonical_member": "DTU158_HYBRID_UNDAMPED_MODAL_20260902.prt",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "E408A56D52B81DDD81CF2B09FEA4EE07AF72E3455B6F2517D556A305ECE2694F",
     "relative_path": "DTU158_RNA_POINTMASS_GRAVITY_MODAL.sim",
     "section": "rna-validation",
     "archive": "rna-validation/part-001.zip",
-    "bytes": 2042706
+    "bytes": 2042706,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/rna-validation/part-001.zip",
+    "canonical_member": "DTU158_RNA_POINTMASS_GRAVITY_MODAL.sim",
+    "status": "included"
   },
   {
     "sha256": "16AABE7ACE5D5E4B1AD77A174559BF9B3634EF617BB036A7AD01EBEC20630DBB",
     "relative_path": "DTU158_RNA_Validation_ABC.jnl",
     "section": "rna-validation",
     "archive": "rna-validation/part-001.zip",
-    "bytes": 205087
+    "bytes": 205087,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/rna-validation/part-001.zip",
+    "canonical_member": "DTU158_RNA_Validation_ABC.jnl",
+    "status": "included"
   },
   {
     "sha256": "FF9A2015CBA065ED4A9EB12DBD200D35D12DCAAA0A07C912543233B9E3EE507B",
     "relative_path": "EXP0.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP0.unv",
+    "status": "included"
   },
   {
     "sha256": "2484A088C2023CCDEB7C5B15CF980BAFEF174027EE2526B7EE1D8434504D8BBE",
     "relative_path": "EXP1.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP1.unv",
+    "status": "included"
   },
   {
     "sha256": "2484A088C2023CCDEB7C5B15CF980BAFEF174027EE2526B7EE1D8434504D8BBE",
     "relative_path": "EXP10.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP1.unv",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "142475A6CAC0337D7CA447CB5709192819588C6B007D08EB3B3FC646EA569F8B",
     "relative_path": "EXP11.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP11.unv",
+    "status": "included"
   },
   {
     "sha256": "142475A6CAC0337D7CA447CB5709192819588C6B007D08EB3B3FC646EA569F8B",
     "relative_path": "EXP2.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP11.unv",
+    "status": "duplicate-reference"
   },
   {
     "sha256": "6DAC0371877EC9865E3BFEBB7B58DA5AB60F03DF1F460B97CC78518FB19BCD88",
     "relative_path": "EXP3.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP3.unv",
+    "status": "included"
   },
   {
     "sha256": "DED778B19184A86C4E8149A9E49117EAC4E150E684C50E8BD8404E4954EE30CD",
     "relative_path": "EXP4.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP4.unv",
+    "status": "included"
   },
   {
     "sha256": "0A20372589114790067B1A269A78FB54C7C0D4ED781CC1799C09041D83EDBF58",
     "relative_path": "EXP5.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP5.unv",
+    "status": "included"
   },
   {
     "sha256": "31A3089BBB2BF4EED90FEB374C31BF3005573BA20F342FAF1D83CDEEB78C8C87",
     "relative_path": "EXP6.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP6.unv",
+    "status": "included"
   },
   {
     "sha256": "517B7509D029EE5C19C5C574FD4E7E8EFF157CE8A6D9D2E688AB8F27844E8898",
     "relative_path": "EXP7.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP7.unv",
+    "status": "included"
   },
   {
     "sha256": "3401D4ADCBDD6EAF4581FCEB88BE0F80A0AB36BDCBEF5EE6D9A25C66DB67BC21",
     "relative_path": "EXP8.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP8.unv",
+    "status": "included"
   },
   {
     "sha256": "F5BDA9B300C857BC3AF8F0EF3544BDB9CB7D72920122CE6120F7FB06D0B75244",
     "relative_path": "EXP9.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "EXP9.unv",
+    "status": "included"
   },
   {
     "sha256": "6519AF3111904A14EA93BA19EAD3BEC4270C0FD0600736927BCEFD4EA644EC1B",
     "relative_path": "R3B_station_modes.fbi",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 3249650
+    "bytes": 3249650,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "R3B_station_modes.fbi",
+    "status": "included"
   },
   {
     "sha256": "0336103C10C0A4EB92D3DC80302199E1F32D21ADA37329A465C0F2052B0EB0D7",
     "relative_path": "SIMPACK_R3B_MARKER_PROBE.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "SIMPACK_R3B_MARKER_PROBE.unv",
+    "status": "included"
   },
   {
     "sha256": "1CEE601F93FA3319B983480D009AE249989130CC039372141496F082353A7ADA",
     "relative_path": "SIMPACK_R3B_MODESHAPES_probe.unv",
     "section": "simpack-blade-validation",
     "archive": "simpack-blade-validation/part-001.zip",
-    "bytes": 4416
+    "bytes": 4416,
+    "canonical_archive": "research/wind-tower/archive/local-assets-20261004-supplement/simpack-blade-validation/part-001.zip",
+    "canonical_member": "SIMPACK_R3B_MODESHAPES_probe.unv",
+    "status": "included"
   }
 ]

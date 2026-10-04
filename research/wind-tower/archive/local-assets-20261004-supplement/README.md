@@ -1,9 +1,11 @@
-# 小型实际结果及模型文件补充
+# 实际工作文件归档（已按内容去重）
 
-第一批按文本扩展名筛选，本补充纳入其原清单中excluded-format但小于10MiB的OUTB、控制器.IN、柔性模型及Abaqus配套文件。保留源文件字节；与第一批合并使用。未包含程序DLL/EXE或环境.env文件。
-共161 个文件、49 个分包、207.27 MiB。各源文件SHA256见file-manifest.json。
+原始位置全部保留在清单中，内容相同的文件只保留一个实体。重复项通过canonical_archive/canonical_member指向唯一文件；解压后可按清单恢复原目录。
 
-## 分包
+10 MiB不再是上传限制。先前大小暂缓标记已撤销，大文件补传以新增传输台账为准。未改动本地原始文件；Git历史保留去重前版本，未强制改写历史。
+
+## 现存分包
+
 - [abaqus-v30/part-001.zip](abaqus-v30/part-001.zip)
 - [abaqus-v30/part-002.zip](abaqus-v30/part-002.zip)
 - [abaqus-v30/part-003.zip](abaqus-v30/part-003.zip)
@@ -50,6 +52,5 @@
 - [openfast-36-r2/part-035.zip](openfast-36-r2/part-035.zip)
 - [openfast-36-r2/part-036.zip](openfast-36-r2/part-036.zip)
 - [r5c-run/part-001.zip](r5c-run/part-001.zip)
-- [r5c-six-component/part-001.zip](r5c-six-component/part-001.zip)
 - [rna-validation/part-001.zip](rna-validation/part-001.zip)
 - [simpack-blade-validation/part-001.zip](simpack-blade-validation/part-001.zip)
