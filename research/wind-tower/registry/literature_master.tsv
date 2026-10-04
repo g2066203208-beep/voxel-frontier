@@ -6,7 +6,7 @@ REF004	hybrid tower geometry/constraints	journal	2022	Geometric optimisation ana
 REF005	hybrid tower multiscale	journal	2023	Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models	10.1016/j.engstruct.2023.115622	paywalled	need-user	global/local FE validation	P0
 REF006	hybrid tower dynamics	doctoral thesis	2023	风电机组钢—混凝土混合塔筒动力性能及损伤识别研究	重庆大学	CNKI	need-user	dynamics/damage thesis structure comparison	P1
 REF007	hybrid tower optimization/performance	doctoral thesis	2024	预应力混凝土-钢混合风电塔架结构优化及性能分析	湖南大学	CNKI	need-user	optimization→multiscale→wind/fatigue research architecture	P0
-REF008	hybrid turbine modelling	hesis	2024	大型混塔式风力机的建模与可靠度分析	湖南大学	library	available	158 m prototype source; reliability/modelling lineage	P0
+REF008	hybrid turbine modelling	thesis	2024	大型混塔式风力机的建模与可靠度分析	湖南大学	user-uploaded original PDF	fulltext-audited	158 m prototype source; direct Tables3-1~3-3/Figs3-4~3-5 extraction	P0
 REF009	OpenFAST validation	journal	2024	Validation of OpenFAST against measurements for an onshore wind turbine	10.5194/wes-9-1791-2024	OA	cached	model identity→modal/operating/load/fatigue QoI validation	P0
 REF010	RNA dynamics	journal	2024	Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode	10.1016/j.istruc.2024.107235	paywalled	need-user	RNA eccentricity/inertia; model simplification evidence	P0
 REF011	sensitivity	journal	2019	Sensitivity assessment of wind turbine loads to input parameters using elementary effects	10.5194/wes-4-479-2019	OA	cached	Morris/seed variability application	P0
@@ -29,5 +29,5 @@ REF027	horizontal joint bending-torsion	journal	2026	Structural behaviour of hor
 REF028	horizontal joint shear	journal	2026	Shear resistance of horizontal joints in concrete wind turbine towers under bending and torsion	10.1016/j.istruc.2026.112947	OA	need-user	prestress friction + contact area	P0
 REF029	horizontal joint opening	journal	2026	Bending mechanism and ultimate capacity of the opening horizontal joints of prestressed concrete towers for wind turbines	10.1016/j.istruc.2026.112527	paywalled	metadata-only	joint opening mechanics	P1
 REF030	concrete fatigue code comparison	journal	2025	Comparative Analysis of Concrete Fatigue Calculation Methods and Proposed Recommendations for the Determination of Design Parameters in Wind Turbine Towers	10.59238/j.pt.2025.04.004	web	metadata/full-html	code/S-N applicability	P0
-REF031	related hybrid-tower lineage	journal	2026	大型混塔式风电机组非线性动力响应分析	10.19912/j.0254-0096.tynxb.2024-1794	publisher page/PDF	publisher-page	He 2024 lineage; distinct 160m-hub hybrid model; not baseline proof	P0
+REF031	related hybrid-tower lineage	journal	2026	大型混塔式风电机组非线性动力响应分析	10.19912/j.0254-0096.tynxb.2024-1794	user-uploaded publisher PDF + publisher page	fulltext-audited	He 2024 lineage; distinct 5MW/157.3m model; nonlinear/P-Delta comparison; not baseline proof	P0
 REF032	related hybrid-tower reliability	journal	2026	混塔式风力机水平位移角限值可靠度确定方法	10.19912/j.0254-0096.tynxb.2025-0278	publisher page	publisher-page	He 2024 lineage/reliability context; not direct 10MW geometry proof	P1
