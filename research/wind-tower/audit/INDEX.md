@@ -72,9 +72,14 @@
 
 - [34 T028 本地论文工作分区索引](34-t028-local-work-inventory.md)：资料整理完成，科学状态未改变。
 
-
-## T028：十篇全文与路线证据覆盖
+## T029：十篇全文证据审计
 
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
-|[34-t028-fulltext-and-route-evidence-coverage.md](34-t028-fulltext-and-route-evidence-coverage.md)|10篇publisher PDF全文核读 + MASTER逐步source audit|全部10篇建立能支持/不能支持边界；识别P3.1/P4.2/P4.3/P4.4等source缺口|全文审计完成；缺口待补|
+|[35-t029-ten-paper-fulltext-evidence-audit.md](35-t029-ten-paper-fulltext-evidence-audit.md)|10篇publisher PDF全文核读|全部10篇建立能支持/不能支持边界，修正Wang/Xu、700/100 s、6 seed、contact参数等使用口径|完成|
+
+## T030：路线source-gap查漏补缺
+
+|审计文件|主要内容|关键成果|当前状态|
+|---|---|---|---|
+|[36-t030-source-gap-closure.md](36-t030-source-gap-closure.md)|ERA5、TurbSim、OpenFAST坐标/输出、载荷映射、Abaqus submodel、V&V、阻尼、敏感性、代理复核等直接来源补齐|P3.1、P4.1-P4.4、P5.5、P7、P8.4等source层大缺口关闭；剩余为本文专属参数/数值门禁|source审计完成；implementation仍Conditional|
