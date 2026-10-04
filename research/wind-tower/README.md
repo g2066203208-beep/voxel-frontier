@@ -8,7 +8,7 @@
 5. `workflow/EXECUTION_STATUS.md`
 6. `registry/`
 
-旧workflow与audit文件是历史记录/阶段证据；若与MASTER冲突，以MASTER为准。
+活动目录只保留当前有效流程和审计。被替代的旧workflow与早期audit已统一移入`archive/`；归档只用于追溯，不作为新任务入口。当前状态以`workflow/EXECUTION_STATUS.md`和`registry/`为准。
 
 # 风机塔架研究工程资料
 
