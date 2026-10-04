@@ -64,4 +64,7 @@
 "abaqus-dtu-models/DTU158_HybridTower_v28_RNA_DISTRIBUTED_OFFICIAL.cae" filter=lfs diff=lfs merge=lfs -text
 "r5c-six-component/AERODYN_SIMPACK_SIX_COMPONENT_INERTIAL_REPLAY.afs" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_HybridTower_v27_CDP_C65_C70_VALIDATED.cae" filter=lfs diff=lfs merge=lfs -text
+"turbSim-36/inputs/U09p343881_NTM_S02.bts" filter=lfs diff=lfs merge=lfs -text
+"turbSim-36/inputs/U09p343881_NTM_S03.bts" filter=lfs diff=lfs merge=lfs -text
+"turbSim-36/inputs/U09p343881_NTM_S01.bts" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text

@@ -1352,7 +1352,8 @@
     "bytes": 436968166,
     "sha256": "dd37ad4ccf36c674d017bbc9e4fa78b6de24ef618e238510c2178bc550eea514",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S04.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "[WinError 10053] 你的主机中的软件中止了一个已建立的连接。"
   },
   {
     "section": "turbSim-36",
@@ -1396,7 +1397,8 @@
     "bytes": 436968166,
     "sha256": "a80cf703e2bac87b90ad040fc0a9e4946a59ea679f0d4237fba79e5a9bd65a53",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S05.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "[WinError 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。"
   },
   {
     "section": "turbSim-36",
@@ -1440,7 +1442,8 @@
     "bytes": 436968166,
     "sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S06.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "[WinError 10053] 你的主机中的软件中止了一个已建立的连接。"
   },
   {
     "section": "turbSim-36",
@@ -1484,7 +1487,10 @@
     "bytes": 436968166,
     "sha256": "bd96c65ede467f28fe91e1d744132f4824a9a3c7e83476022209c91cabfa902b",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S01.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S01.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1528,7 +1534,10 @@
     "bytes": 436968166,
     "sha256": "6e2fc1431c6d607e57c7599ab0f97f96a737042fcd8621bac3712e69500f5bb7",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S02.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S02.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1572,7 +1581,10 @@
     "bytes": 436968166,
     "sha256": "f00325c384522538ff43e647854da728a9166f9cee68399eb41997d507bf9168",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S03.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S03.bts"
+    }
   },
   {
     "section": "turbSim-36",
