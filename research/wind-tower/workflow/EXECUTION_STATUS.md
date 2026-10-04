@@ -90,3 +90,13 @@ C. 当前正式OpenFAST/ROSCO模型文件夹。
 - 导师两次会议Word不上传GitHub，已结构化为`governance/supervisor_requirements_matrix.md`；
 - R2Z74原始Word不上传GitHub，已结构化为`governance/current_manuscript_structured_baseline.md`；
 - 用户提供PDF/工程资料已登记`references/USER_SUPPLIED_SOURCES.md`及SHA-256。
+
+
+## 2026-10-04：导师要求与源文件治理更新
+
+- 两次导师讨论已转成 `requirements/advisor_requirements.md` 和20条 `advisor_requirement_matrix.tsv`；原Word不提交。
+- R2Z74历史论文只保留SHA与结构化delta；原Word不提交，旧Simpack生产路线永久标记为obsolete。
+- He2024完整PDF已重新取得：158/112/46 m原页PASS；表3-3原表确写“半径”，但与图3-4/3-5和D=4.97m混凝土顶径冲突。
+- G0的PACKAGE-A已关闭；当前主要阻断只剩正式Abaqus生产输入与正式OpenFAST/ROSCO输入。
+- 新增T022 国际Benchmark模型专项调查，直接落实导师“从国际期刊中找共同对比模型”的要求。
+- T021 10月9日汇报新增“导师意见闭环页”和“baseline文献谱系图”。
