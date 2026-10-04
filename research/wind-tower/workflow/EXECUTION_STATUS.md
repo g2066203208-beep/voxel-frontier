@@ -46,3 +46,12 @@
 - `figure_table_registry.tsv` 同理，待正式新baseline图表生成后登记。
 
 当前结论：**高层研究过程记录已经完整；结构化台账正在由“框架已建立”进入“逐项回填”阶段。**
+
+
+## 2026-10-04 旧记录治理
+
+- MASTER建立前的`workflow/00–06`已移入`archive/workflow-pre-master/`；
+- 早期`audit/01–05`已移入`archive/audit-early/`；
+- 活动目录只保留当前有效workflow与06以后审计；
+- `audit/INDEX.md`、`task_registry.tsv`、`MASTER_RESEARCH_PROTOCOL.md`、`PROJECT_ORGANIZATION.md`与README已同步修复；
+- 新增硬规则：每次产生新结论/新流程时，必须同时执行旧记录替代、修正、去重、归档和交叉引用更新。
