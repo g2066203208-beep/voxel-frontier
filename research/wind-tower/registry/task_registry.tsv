@@ -19,3 +19,4 @@ T016	P0-P8	global	Q01-Q05	固化导师要求	workflow/ADVISOR_REQUIREMENTS.md	co
 T017	P0-P1	global	Q01-Q05	文献驱动论文结构审计	audit/18-literature-driven-thesis-structure-audit.md	complete	all	七章保留，第三章重构、四五六章职责重定
 T018	P1	global	Q01-Q05	建立结构化文献主表与研究范式提取	registry/literature_master.tsv	in-progress	P1	当前30项核心来源，继续扩充与全文提取
 T019	P0-P8	global	Q01-Q05	治理旧记录：归档被替代流程/早期审计并修复活动索引	research/wind-tower/archive/README.md	complete	all	旧workflow 00-06与audit 01-05已移出活动目录；README/INDEX/task/Master已同步修正
+T020	P0	global	Q01	闭合研究对象与唯一baseline：何泽瑜原型+DTU10MW+正式Abaqus+正式OpenFAST身份统一	registry/baseline_identity.tsv	in-progress	G0	先关闭158/112/46m、钢塔半径/直径、HubHt、正式模型文件与版本；未通过前不进入P2.5
