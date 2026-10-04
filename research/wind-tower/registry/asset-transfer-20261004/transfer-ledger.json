@@ -1628,7 +1628,10 @@
     "bytes": 436968166,
     "sha256": "16f0d3f8ed9f961aad8c03af11fe2815206b2f32ff154e1f0b8d9333b810071c",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S04.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S04.bts"
+    }
   },
   {
     "section": "turbSim-36",
