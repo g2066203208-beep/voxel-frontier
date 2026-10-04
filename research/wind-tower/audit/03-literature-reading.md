@@ -36,11 +36,11 @@ Li Z、Chen H、Xu B、Ge H，Applied Sciences 11(18) (2021) 8683，DOI：10.339
 
 | 编号 | 文献与来源 | 实际阅读范围 | 本研究的核查用途 |
 | --- | --- | --- | --- |
-| L04 | Wang等，MSSP 230 (2025) 112583，DOI 10.1016/j.ymssp.2025.112583，[出版页](https://www.sciencedirect.com/science/article/pii/S0888327025002845)，原稿[20] | 摘要、亮点、部分结论及数据可用性说明 | Simpack与Abaqus联合、OpenFAST对比及转换段改进已有先例；接口细节和误差需全文，组合软件不能单独称创新。 |
+| L04 | Wang等，MSSP 230 (2025) 112583，DOI 10.1016/j.ymssp.2025.112583，[出版页](https://www.sciencedirect.com/science/article/pii/S0888327025002845)，原稿[20] | 摘要、亮点、部分结论及数据可用性说明 | 多体动力学子系统与Abaqus联合、OpenFAST对比及转换段改进已有先例；接口细节和误差需全文，多软件组合不能单独称创新。 |
 | L05 | Huang等，Engineering Structures 334 (2025) 120295，DOI 10.1016/j.engstruct.2025.120295，[出版页](https://www.sciencedirect.com/science/article/pii/S0141029625006868)，原稿[95] | 摘要与亮点 | 运行疲劳与结构不确定性已有研究；需核查材料疲劳关系、风况权重和基础/控制器假设后定量对比。 |
 | L06 | Cheng等，JCSR 218 (2024) 108729，DOI 10.1016/j.jcsr.2024.108729，[出版页](https://www.sciencedirect.com/science/article/pii/S0143974X24002797) | 摘要、引言和部分方法预览 | 5 MW、160 m算例的参数化FE与进化优化已有先例；其对早期研究的批评是作者判断，须回查被批评原文。 |
 | L07 | Xu等，The Structural Design of Tall and Special Buildings (2025)，DOI 10.1002/tal.70014，[出版页](https://onlinelibrary.wiley.com/doi/10.1002/tal.70014)，原稿[92] | 摘要 | 约束优化与疲劳控制已有研究；算法优越性、疲劳公式及适用工况尚不能核准。 |
-| L08 | Wang等，Nonlinear fatigue analysis … enhanced kernel density estimation，DOI 10.1016/j.ymssp.2025.113243，[出版页](https://www.sciencedirect.com/science/article/pii/S0888327025009446) | 摘要、引言、结果片段及部分结论 | 已把Simpack—OpenSees非线性分析、风速风向联合分布、雨流及S–N寿命连接；应作为创新排重重点，尚不采用其未读公式或结果幅度。 |
+| L08 | Wang等，Nonlinear fatigue analysis … enhanced kernel density estimation，DOI 10.1016/j.ymssp.2025.113243，[出版页](https://www.sciencedirect.com/science/article/pii/S0888327025009446) | 摘要、引言、结果片段及部分结论 | 已把多体动力学—OpenSees非线性分析、风速风向联合分布、雨流及S–N寿命连接；应作为创新排重重点，尚不采用其未读公式或结果幅度。 |
 | L09 | Wang等，Journal of Intelligent Construction 3(2) (2025) 9180090，DOI 10.26599/JIC.2025.9180090，[出版页](https://www.sciopen.com/article/10.26599/JIC.2025.9180090) | 作者摘要及出版信息；排除页面AI摘要 | 区分钢—预应力混凝土塔与预应力CFST格构塔。它是研究概览，不能替代具体建模或参数原文。 |
 
 ## 据此建立的研究任务
@@ -50,7 +50,7 @@ Li Z、Chen H、Xu B、Ge H，Applied Sciences 11(18) (2021) 8683，DOI：10.339
 | 任务 | 对应老师问题 | 必须记录的对照与输出 | 当前阻碍 |
 | --- | --- | --- | --- |
 | R01 对象身份 | D01、D03、D06 | 参考塔、DTU RNA、实际场址及生产CAE的独立版本/单位表；几何、质量、惯量和参考点 | STEP尺度与百米塔不符；158/185工程版本未映射 |
-| R02 RNA简化误差 | D08、D09 | 同边界、同重力状态比较点质量、空间惯性等效与详细RNA；频率、振型及接口响应 | 实际Simpack原生工程和基准输出未进入结果目录 |
+| R02 RNA简化误差 | D08、D09 | 同边界、同重力状态比较点质量、空间惯性等效与详细RNA；频率、振型及接口响应 | 现有高保真多体基准输出未进入结果目录 |
 | R03 接口可信性 | D09 | 固定输入基准，通信步长逐级缩小；接口力矩变换、运动协调及功率/能量误差 | 联合求解日志与接口时程不足 |
 | R04 非线性机制 | D07、D13 | 材料线性/非线性×几何线性/非线性四组；同风场、阻尼和种子；位移、截面力及应力 | 原始输出缺失；连接能力须按真实模型限定 |
 | R05 随机与疲劳 | D10、D13 | 每种风况及种子的版本、统计窗口、载荷与应力循环；寿命另需材料关系和概率权重 | 36组支路完成状态不一致；DEL尚不能等同材料寿命 |
