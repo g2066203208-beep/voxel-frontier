@@ -2,6 +2,17 @@
 
 更新时间：2026-10-04
 
+## T027最新路线决策（2026-10-04）
+
+已根据新增核心全文重新设计路线，**不再采用“OpenFAST→Abaqus only”的单一方法路线，也不恢复“全部工况都做Simpack-Abaqus双向协同”的高风险路线**。当前唯一有效路线是分层证据链：
+
+- 主生产链：baseline → ERA5/TurbSim → OpenFAST/ROSCO大样本筛选 → 多指标控制工况 → OpenFAST→Abaqus映射V&V → Abaqus精细响应/机制 → 敏感性 → 优化 → 候选整机载荷回算/高保真复核；
+- H1增强支路：1–2个控制工况Simpack RNA + Abaqus MBD-FE，与OpenFAST/单向FE进行交叉验证；不阻断主链；
+- H2增强支路：若接缝/转换段成为控制机制，则建立真实contact局部模型，否则降低开合/摩擦/压碎主张；
+- 疲劳分G7A/G7B：36 case仅作load-DEL筛选；若写材料寿命，另建DLC1.2风速bin、概率权重、材料模型及样本收敛支路。
+
+详细依据与判定见[audit/33](../audit/33-t027-literature-driven-route-redesign.md)，MASTER已升级为v1.1；06号OpenFAST-only路线仅保留历史追溯。
+
 ## 当前流程状态（T025最新摘要）
 
 - Phase0：题目及生产baseline仍为Conditional；He2024原页已核读，钢塔尺寸语义冲突与实际模型身份待闭合。
