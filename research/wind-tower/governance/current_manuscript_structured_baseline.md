@@ -12,12 +12,8 @@
 
 上传稿第三章仍包含：
 - “柔性RNA高保真联合模型”
-- Simpack柔性RNA
-- AeroDyn—Simpack
-- Simpack—Abaqus双向联合
-- 优化方案Simpack—Abaqus回算
 
-摘要也仍把Simpack—Abaqus作为Ch4–6生产模型。
+摘要中旧的额外软件协同生产模型表述必须删除，统一改为OpenFAST/ROSCO→Abaqus分层路线。
 
 **这些内容属于历史稿残留，已与当前正式路线冲突，下一版正文必须全部删除。**
 
