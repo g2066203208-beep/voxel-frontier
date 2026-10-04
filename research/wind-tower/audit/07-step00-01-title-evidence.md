@@ -62,3 +62,91 @@
 - 正式Abaqus模型、OpenFAST模型、风场和36组结果必须统一baseline_id。
 
 Step 00未完全通过，因此下一步允许做摘要“证据审查”，但不允许把仍未闭合的几何/结果直接升级成verified。
+
+
+## 6. 逐词判定的正式文献/标准依据
+
+### 6.1 “10 MW级”为什么基本通过
+
+**一级对象来源**
+- Bak et al. (2013), *The DTU 10-MW Reference Wind Turbine*, DTU Wind Energy。用于确认研究上部机组确实属于DTU 10 MW参考机组体系。
+- DTU公开参考资料/HAWC2实现用于交叉核对转速、组件质量和公开模型身份。
+
+**判定逻辑**
+- 题目中的“10 MW级”是研究对象身份词，不要求论文自己证明10 MW机组存在；
+- 只要正式OpenFAST模型能够与DTU 10 MW源参数和文件身份闭合，即可PASS；
+- 当前DTU一级来源已确认，但正式OpenFAST输入尚未入库并计算hash，因此状态为“基本通过”，而非最终PASS。
+
+### 6.2 “陆上”为什么条件通过
+
+**规范一级来源**
+- IEC 61400-6:2020+AMD1:2025 CSV, *Tower and foundation design requirements*：明确适用于onshore wind turbine support structures。
+- IEC 61400-1:2019+AMD1:2025 CSV：风机整体设计与结构完整性要求；offshore另有IEC 61400-3-1追加要求。
+
+**直接混塔论文**
+- Huang et al. (2022), *Structures* 35, 1125–1137, DOI 10.1016/j.istruc.2021.08.036：研究对象明确为onshore tall steel–concrete hybrid wind turbine towers。
+- Cao et al. (2024), *Structures* 68, 107235：钢—混凝土混塔用于onshore low-wind-speed wind farms的动力研究。
+
+**判定逻辑**
+- 本文嘉鱼场址、固定基础和高塔研究路线属于陆上风机问题；
+- 但必须确认正式baseline没有混入DTU原始119 m参考塔或海上派生基础/荷载，所以当前为“条件通过”。
+
+### 6.3 “预应力”为什么条件通过
+
+**直接论文**
+- Li et al. (2021), *Applied Sciences* 11(18), 8683, DOI 10.3390/app11188683：研究对象直接定义为prestressed concrete–steel hybrid wind turbine tower。
+- Tan et al. (2025), *Engineering Structures* 336, 120443, DOI 10.1016/j.engstruct.2025.120443：四个预应力混凝土风机塔水平接缝试验+FE，研究prestressing force对扭转/弯剪耦合承载的影响。
+- Tan et al. (2026), *Engineering Structures* 364, 123195, DOI 10.1016/j.engstruct.2026.123195：压—弯—剪—扭联合试验表明接缝剪/扭承载主要由预应力形成的界面摩擦控制。
+- Huang et al. (2025), *Engineering Structures* 334, 120295, DOI 10.1016/j.engstruct.2025.120295：segmental precast post-tensioned concrete tower运行疲劳，直接研究初始预应力对疲劳寿命的影响。
+
+**判定逻辑**
+- 文献能够证明“预应力”是该类混塔真实且关键的结构机制；
+- 但本文是否有资格在题目里写“预应力”，必须由本文正式INP中的PT材料、数量、路径、锚固、初始应力和平衡后状态证明；
+- 因此目前是“条件通过”。
+
+### 6.4 “混凝土—钢混合塔架”为什么基本通过
+
+**直接论文**
+- Huang et al. (2022), *Structures* 35, 1125–1137：明确定义下部concrete、上部steel的hybrid tower。
+- Li et al. (2021), *Applied Sciences* 11, 8683：直接研究prestressed concrete–steel hybrid tower。
+- Cao et al. (2024), *Structures* 68, 107235：直接研究steel-concrete hybrid wind turbine tower。
+- 何泽瑜(2024)，湖南大学硕士论文《大型混塔式风力机的建模与可靠度分析》：本文158 m原型直接来源，后续公开论文也引用该学位论文。
+
+**判定逻辑**
+- “混凝土—钢混合塔架”作为结构体系身份有充分直接文献支撑；
+- 但本文特定158/112/46 m几何仍需原表/正式模型闭合，所以体系词基本通过，具体对象仍受G0约束。
+
+### 6.5 “抗风性能”为什么尚未最终通过
+
+**规范与方法依据**
+- IEC 61400-1:2019+AMD1:2025 CSV：风机结构完整性设计要求，涵盖风机各子系统和support structures。
+- IEC 61400-6:2020+AMD1:2025 CSV：陆上风机塔架/基础结构完整性要求。
+- Brown et al. (2024), *Wind Energy Science* 9, 1791–1810, DOI 10.5194/wes-9-1791-2024：用实测陆上风机数据对OpenFAST整机气动伺服弹性模型进行一对一验证，并比较运行状态、载荷和疲劳QoI。
+- Huang et al. (2025), *Engineering Structures* 334, 120295：运行风载下SPPT混塔疲劳评价。
+
+**判定逻辑**
+- 文献和标准证明“风致动力响应/结构完整性/疲劳”确实属于该类塔架的核心性能问题；
+- 但题目中的“抗风性能”是本文自己的成果承诺，必须由本文完成的随机风、OpenFAST、Abaqus强度/刚度/局部机制/疲劳结果来兑现；
+- 因此当前不能最终PASS。
+
+### 6.6 “结构优化”为什么当前未通过
+
+**直接优化论文**
+- Li et al. (2021), *Applied Sciences* 11, 8683：PCSH塔架生命周期经济优化。
+- Huang et al. (2022), *Structures* 35, 1125–1137：钢—混塔几何优化，同时考虑几何、频率、位移、压应力和疲劳等约束。
+- Cheng et al. (2025), *Engineering Structures* 341, 120835, DOI 10.1016/j.engstruct.2025.120835：SVM/ANN/XGBoost + NSGA-II，成本与AEP双目标。
+- 其他2024–2026混塔优化/代理模型研究用于创新排重。
+
+**判定逻辑**
+- 上述论文只能证明“混塔结构优化是一个合理且已有先例的研究方向”；
+- 它们不能证明本文已经完成结构优化；
+- 本文只有真正完成设计变量来源→范围/约束→敏感性→优化→Pareto→Abaqus高保真重建→未参与优化的风况/seed独立复核，题目中的“结构优化”才能最终PASS。
+- 当前状态：NOT PASS。
+
+## 7. 判定级别定义
+
+- **PASS**：外部对象/术语依据充分，且本文自身模型/结果已经兑现。
+- **基本通过**：外部对象依据充分，本文只差正式baseline文件闭合。
+- **条件通过**：方向和文献依据充分，但本文自身关键输入/实现仍未闭合。
+- **未最终通过**：该词代表本文成果承诺，必须等后续结果完成。
+- **NOT PASS**：本文当前尚没有足够自身结果兑现该题目承诺。
