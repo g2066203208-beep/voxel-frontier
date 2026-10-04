@@ -1,7 +1,7 @@
 # MASTER RESEARCH PROTOCOL — 10 MW级预应力混凝土—钢混合风机塔架硕士论文
 
 版本：2026-10-04 v1.0  
-状态：本文件为**唯一总控流程**。旧`workflow/00-title.md`至`06-step-by-step-prompts.md`和`audit/*`均作为历史工作记录/子证据，不得凌驾于本流程。  
+状态：本文件为**唯一总控流程**。MASTER建立前的旧workflow已移入`archive/workflow-pre-master/`，早期audit已移入`archive/audit-early/`；归档文件只用于追溯，不得作为新任务入口。当前审计以`audit/INDEX.md`和`registry/`状态为准。  
 正式技术路线：**ERA5 / TurbSim → OpenFAST / ROSCO → 控制工况 → 载荷映射V&V → Abaqus精细混塔 → 全局/局部响应与疲劳 → 机制驱动敏感性 → 结构优化 → 独立复核**。
 
 ---
