@@ -1,0 +1,13 @@
+item_id	category	item	value	unit/source	primary_evidence	secondary_evidence	status	conflict_or_action
+BASE-OBJ-001	reference turbine	DTU reference turbine	DTU 10 MW	-	Bak et al. 2013 DTU official report	DTU public HAWC2 implementation	verified-source	Formal thesis OpenFAST input still must be bound to this source
+BASE-OBJ-002	prototype thesis	He Zeyu thesis	大型混塔式风力机的建模与可靠度分析, Hunan University, 2024	-	He 2024 thesis	2026 related papers cite thesis	verified-bibliographic	Original page evidence for Tables 3-1~3-3 still inaccessible in current tool path
+BASE-GEO-001	thesis tower	total tower height	158	m	Current R2Z74 reports He 2024 Tables 3-1~3-3	Formal Abaqus geometry pending	reported	Must capture original thesis page/table before verification
+BASE-GEO-002	thesis tower	concrete height	112	m	Current R2Z74 reports He 2024	Related 2026 5MW article also uses 112.0m concrete section but is a distinct model	reported	Same number in related paper is not proof of same baseline
+BASE-GEO-003	thesis tower	steel height	46	m	Current R2Z74 reports He 2024	-	reported	Original thesis page + formal model required
+BASE-GEO-004	thesis tower	steel section values	4.66/4.58/4.50/4.42	m	Current R2Z74 transcription of He 2024 Table 3-3	Geometric continuity reasoning only	conflict	Original thesis table/figure and formal model required; do not assert radius or diameter yet
+BASE-HUB-001	DTU reference	official hub height	119	m	Bak et al. 2013	-	verified-source	Not thesis combined-model hub height
+BASE-HUB-002	thesis combined model	combined hub height	161.368806	m	Historical thesis model record	Formal OpenFAST/Abaqus inputs pending	reported	Must recompute from actual model coordinates
+BASE-LINEAGE-001	related paper	Xu et al. 2026 Acta Energiae Solaris Sinica model	5 MW, hub height 160m; tower 157.3m = 112.0m concrete + 1.5m transition + 43.8m steel	-	DOI 10.19912/j.0254-0096.tynxb.2024-1794	Article cites He 2024 thesis	distinct-related-model	Must NOT be used as direct proof of the thesis 10MW/158m geometry
+BASE-LINEAGE-002	related paper	Xu et al. 2026 lateral drift reliability paper	Hybrid-tower reliability framework; cites He 2024 thesis	-	DOI 10.19912/j.0254-0096.tynxb.2025-0278	-	related-method-source	Useful for lineage/reliability context, not for 10MW/158m geometry identity
+BASE-FILE-001	GitHub geometry	DTU158_TOWER_RNA_FULL_ASSEMBLY.step	Git LFS object	-	manifest SHA-256 b401b3d37ba21ff7c6aceac17b96f8635e73c3ca62853f82d62d5dc4e8e40309	STEP declares MILLIMETRE but decoded scale conflicts	conflict	Cannot approve dimensions until source CAD/export units are closed
+BASE-FILE-002	GitHub Abaqus	SHOWTIME185_V167_MAINLEG_CALIBRATED_VALIDATED.cae	SHOWTIME185 series	-	GitHub manifest	-	excluded	Not thesis 158m baseline
