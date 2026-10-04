@@ -60,3 +60,19 @@
 ## 当前正式任务：T020 / G0 baseline闭合
 
 目标：把何泽瑜158 m混塔原型、DTU 10 MW参考机组、正式Abaqus模型和正式OpenFAST模型统一为唯一baseline。G0未通过前，不进入P2.5及后续正式生产计算。
+
+
+## T020 / G0 最新状态（2026-10-04）
+
+已完成第一轮主动追溯：
+- T020.1：何泽瑜原型谱系与几何冲突审计 → HOLD（原页资产不可读）；
+- T020.2：Git历史158 m Abaqus候选追溯 → historical candidate found / current INP HOLD；
+- T020.3：OpenFAST/ROSCO历史逐文件审计追溯 → historical partial pass / raw inputs HOLD；
+- T020.4：G0阻断资料包与验收矩阵 → COMPLETE。
+
+当前唯一阻断源资产：
+A. He2024表3-1～3-3、图3-4/3-5原页；
+B. 当前正式158 m Abaqus生产INP（首选）；
+C. 当前正式OpenFAST/ROSCO模型文件夹。
+
+这些资产补齐前不创建BASE001，不把题目改成最终PASS，不启动正式新生产case。
