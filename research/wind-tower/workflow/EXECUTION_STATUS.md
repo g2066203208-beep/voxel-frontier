@@ -4,14 +4,14 @@
 
 ## T027最新路线决策（2026-10-04）
 
-已根据新增核心全文重新设计路线，**不再采用“OpenFAST→Abaqus only”的单一方法路线，也不恢复“全部工况都做Simpack-Abaqus双向协同”的高风险路线**。当前唯一有效路线是分层证据链：
+已根据新增核心全文重新设计并再次收敛路线。当前唯一有效路线为：
 
-- 主生产链：baseline → ERA5/TurbSim → OpenFAST/ROSCO大样本筛选 → 多指标控制工况 → OpenFAST→Abaqus映射V&V → Abaqus精细响应/机制 → 敏感性 → 优化 → 候选整机载荷回算/高保真复核；
-- H1增强支路：1–2个控制工况Simpack RNA + Abaqus MBD-FE，与OpenFAST/单向FE进行交叉验证；不阻断主链；
-- H2增强支路：若接缝/转换段成为控制机制，则建立真实contact局部模型，否则降低开合/摩擦/压碎主张；
-- 疲劳分G7A/G7B：36 case仅作load-DEL筛选；若写材料寿命，另建DLC1.2风速bin、概率权重、材料模型及样本收敛支路。
+- 主生产链：baseline → Abaqus模型V&V → ERA5/TurbSim → OpenFAST/ROSCO整机随机风生产计算 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细响应/机制 → 分级疲劳 → 敏感性 → 优化 → 真实FE复核；
+- 局部增强：只有控制机制指向水平接缝/转换段时，才依据Li 2023两尺度方法与Ren 2025试验机制建立局部实体/contact模型；
+- 疲劳分G7A/G7B：当前36 case只作load-DEL筛选；材料寿命另建DLC1.2风速bin、概率权重、材料模型及样本收敛支路；
+- 所有步骤执行前必须登记直接文献/标准/官方文档的原文做法、适用边界和本文对应关系；无依据不运行正式case。
 
-详细依据与判定见[audit/33](../audit/33-t027-literature-driven-route-redesign.md)，MASTER已升级为v1.1；06号OpenFAST-only路线仅保留历史追溯。
+详细依据见[audit/33](../audit/33-t027-literature-driven-route-redesign.md)，MASTER已升级为v1.2。
 
 ## 当前流程状态（T025最新摘要）
 
@@ -98,7 +98,7 @@ C. 当前正式OpenFAST/ROSCO模型文件夹。
 ## 2026-10-04：导师要求与源文件治理更新
 
 - 两次导师讨论已转成 `requirements/advisor_requirements.md` 和20条 `advisor_requirement_matrix.tsv`；原Word不提交。
-- R2Z74历史论文只保留SHA与结构化delta；原Word不提交，旧Simpack生产路线永久标记为obsolete。
+- R2Z74历史论文只保留SHA与结构化delta；原Word不提交；旧的额外软件协同生产路线不再属于当前论文方法。
 - He2024完整PDF已重新取得：158/112/46 m原页PASS；表3-3原表确写“半径”，但与图3-4/3-5和D=4.97m混凝土顶径冲突。
 - G0的PACKAGE-A已关闭；当前主要阻断只剩正式Abaqus生产输入与正式OpenFAST/ROSCO输入。
 - 新增T022 国际Benchmark模型专项调查，直接落实导师“从国际期刊中找共同对比模型”的要求。
@@ -106,7 +106,7 @@ C. 当前正式OpenFAST/ROSCO模型文件夹。
 
 ## 本轮用户优先级：先审整篇流程（T023）
 
-用户明确要求移除旧多体路线，原始结果文件先不追索，先看整个研究流程是否合理。本轮T023已完成流程层审查：
+用户明确要求移除旧的额外软件协同路线，原始结果文件先不追索，先看整个研究流程是否合理。本轮T023已完成流程层审查：
 
 - 七章骨架及Q01–Q05保留，与18号审计一致；
 - 六处章间断点、机制→变量→优化→独立复核产物与验收已明确；
