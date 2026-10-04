@@ -1,6 +1,6 @@
 item_id	category	item	value	unit/source	primary_evidence	secondary_evidence	status	conflict_or_action
 BASE-OBJ-001	reference turbine	DTU reference turbine	DTU 10 MW	-	Bak et al. 2013 DTU official report	DTU public HAWC2 implementation	verified-source	Formal thesis OpenFAST input still must be bound to this source
-BASE-OBJ-002	prototype thesis	He Zeyu thesis	大型混塔式风力机的建模与可靠度分析, Hunan University, 2024	-	He 2024 thesis	2026 related papers cite thesis	verified-bibliographic	Original page evidence for Tables 3-1~3-3 still inaccessible in current tool path
+BASE-OBJ-002	prototype thesis	He Zeyu thesis	大型混塔式风力机的建模与可靠度分析, Hunan University, 2024	-	He 2024 user-supplied original PDF SHA256 85fb7d2e...	2026 related papers cite thesis	direct-source-verified	Tables 3-1~3-3 and Figs 3-4/3-5 directly audited; steel radius-label semantics still conflict
 BASE-GEO-001	thesis tower	total tower height	158	m	He 2024 Sec.3.3 original PDF p33/body p22	Formal Abaqus geometry pending	direct-source-verified	Need actual production model closure
 BASE-GEO-002	thesis tower	concrete height	112	m	He 2024 Sec.3.3 original PDF p33/body p22	He 2024 Table 3-2 ends at 112m	direct-source-verified	Need current Abaqus geometry closure
 BASE-GEO-003	thesis tower	steel height	46	m	He 2024 Sec.3.3 original PDF p33/body p22	158-112=46	direct-source-verified	Need current Abaqus geometry closure
