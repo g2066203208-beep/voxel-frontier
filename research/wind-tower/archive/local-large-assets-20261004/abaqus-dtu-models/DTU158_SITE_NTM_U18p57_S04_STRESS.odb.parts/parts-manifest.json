@@ -1,0 +1,22 @@
+{
+  "section": "abaqus-dtu-models",
+  "relative_path": "DTU158_SITE_NTM_U18p57_S04_STRESS.odb",
+  "bytes": 4316822840,
+  "sha256": "996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd",
+  "git_sha": "34d9bee55a2c35ebb70a26662a6609c73ed13afc",
+  "existing": null,
+  "status": "multipart-incomplete",
+  "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts",
+  "storage": "git-lfs-multipart",
+  "parts": [
+    {
+      "sha256": "6a75f587489e43b55bee9709858083b80cd7ccd117e842e53e4e2e7c16245e86",
+      "bytes": 1073741824,
+      "index": 1,
+      "offset": 0,
+      "blob": "e28074be21fdcd501f7835781ef50f53709a8f85",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0001"
+    }
+  ],
+  "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+}

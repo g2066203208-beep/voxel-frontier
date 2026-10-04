@@ -1675,7 +1675,10 @@
     "bytes": 436968166,
     "sha256": "96046424a62c33866a342f70358062b36f7abee542cbd53bf0b04a8b48f3d2f5",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S05.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S05.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1719,7 +1722,10 @@
     "bytes": 436968166,
     "sha256": "39678e129deae1953214426c5e3beac18904ad834e49c10d47d75e8c980d6a68",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S06.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S06.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1763,7 +1769,8 @@
     "bytes": 436968166,
     "sha256": "d3496824129d32a2f8fc749899bfe80aa2d6d95a75cf9718593037b870ecb5f1",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S01.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
   },
   {
     "section": "turbSim-36",
@@ -1807,7 +1814,8 @@
     "bytes": 436968166,
     "sha256": "183123d524e3abb5d156526147f191132e2eb3db7a8d59108b7a16242a18cb32",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S02.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
   },
   {
     "section": "turbSim-36",
@@ -1851,7 +1859,8 @@
     "bytes": 436968166,
     "sha256": "6600054ce16d11aa60758728a775e11030a08d0a0bc27f26178e4b50e5c65f5b",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S03.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
   },
   {
     "section": "turbSim-36",
@@ -18593,7 +18602,8 @@
     "bytes": 10082558876,
     "sha256": "82042472a7cc3bc3c2c491da51a6f1ec2dc5cdc4fa7ad1ec03909b24e3d53f2e",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb",
-    "status": "pending-upload"
+    "status": "multipart-incomplete",
+    "error": "[WinError 10053] 你的主机中的软件中止了一个已建立的连接。"
   },
   {
     "section": "abaqus-v30",
@@ -20473,7 +20483,8 @@
     "bytes": 4316822840,
     "sha256": "996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_SITE_NTM_U18p57_S04_STRESS.odb",
-    "status": "pending-upload"
+    "status": "multipart-incomplete",
+    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
   },
   {
     "section": "abaqus-dtu-models",
