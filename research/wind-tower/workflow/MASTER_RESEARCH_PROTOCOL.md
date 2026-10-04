@@ -1,8 +1,8 @@
 # MASTER RESEARCH PROTOCOL — 10 MW级预应力混凝土—钢混合风机塔架硕士论文
 
-版本：2026-10-04 v1.1  
+版本：2026-10-04 v1.2  
 状态：本文件为**唯一总控流程**。MASTER建立前的旧workflow已移入`archive/workflow-pre-master/`，早期audit已移入`archive/audit-early/`；归档文件只用于追溯，不得作为新任务入口。当前审计以`audit/INDEX.md`和`registry/`状态为准。  
-正式技术路线（T027全文再设计）：**唯一baseline → ERA5/TurbSim → OpenFAST/ROSCO大样本整机筛选 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细混塔全局/局部响应与机制识别 → 机制驱动敏感性 → 多目标优化 → 候选整机载荷回算与高保真复核**。两条条件增强支路：**H1：1–2个控制工况Simpack RNA+Abaqus MBD-FE交叉验证；H2：控制接缝/转换段真实contact局部模型**。36-case雨流/DEL属于载荷疲劳筛选；材料寿命另建DLC 1.2概率加权与样本收敛支路。
+正式技术路线（T027修订）：**唯一baseline → Abaqus模型V&V → ERA5/TurbSim → OpenFAST/ROSCO整机随机风生产计算 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细混塔全局/局部响应与机制识别 → 分级疲劳 → 机制驱动敏感性 → 多目标优化 → 真实FE复核**。任何局部高保真模型仅在全局响应确认控制部位后，依据Li 2023两尺度方法与Ren 2025接缝试验机制条件触发；不设置多体软件协同支路。
 
 ---
 
@@ -73,7 +73,7 @@
 1. 混塔结构体系与接缝/预应力；
 2. RNA等效、模态和动力简化；
 3. OpenFAST/ROSCO随机风气动弹性；
-4. 整机载荷→精细FE载荷传递及MBD-FE高保真交叉验证；
+4. 整机载荷→精细FE载荷传递；
 5. 接缝/转换段局部开合、弯扭耦合与全局—局部多尺度；
 6. 疲劳与长期随机性、样本收敛；
 7. 敏感性、代理模型和多目标优化。
@@ -293,7 +293,7 @@ m、CG、J_G、J_T、M6、公共tower-top、坐标变换、模态影响。
 
 # F. OpenFAST → Abaqus载荷映射实验
 
-## Phase 4 — 主生产接口V&V + 条件高保真交叉验证
+## Phase 4 — OpenFAST→Abaqus主生产接口V&V
 
 ### P4.1 先定义自由体
 明确：
@@ -335,15 +335,6 @@ M_B = R M_A + r × F_B
 产出：load_mapping_vv_report。  
 门槛：G0–G5按适用范围闭合后才进入第四章正式生产分析；映射G5不能被遗漏。
 
-### P4.6 H1：控制工况MBD-FE交叉验证（增强支路）
-**文献依据**：Wang et al. 2025 MSSP将OpenFAST/MBD、OpenFAST载荷驱动的非耦合FE与Simpack RNA+Abaqus MBD-FE放在同一框架比较；Xu et al. 2025进一步支持多体—非线性塔架耦合对照。  
-**做什么**：
-- 仅选1–2个最关键case；
-- OpenFAST作为独立气动弹性基准；
-- Simpack RNA + Abaqus精细混塔作为高保真交叉验证；
-- 比较tower-top位移/加速度、base N/V/M/T、PSD/主频和接口能量量（适用时）。
-**定位**：增强证据，不作为36-case生产链的前置依赖。  
-**门槛G5H**：接口、坐标、时间同步、数值稳定和结果可追溯均闭合才进入论文主结果；未通过不阻断主链，但不得声称完成高保真全耦合。
 
 ---
 
@@ -536,7 +527,6 @@ G2 风场V&V
 G3 OpenFAST/ROSCO模型身份  
 G4 36 case正式闭合  
 G5 OpenFAST→Abaqus映射守恒  
-G5H 控制工况MBD-FE交叉验证（增强门禁，不阻断主链）  
 G6 第四章机制识别  
 G6L 真实接缝/转换段局部contact机制（仅相关主张需要）  
 G7A load-DEL筛选闭合  
@@ -562,4 +552,4 @@ G10 全文claim-evidence 100%审计
 
 # N. T027全文驱动路线再设计
 
-依据2023–2025新增核心全文，对“OpenFAST-only”与“全量Simpack-Abaqus”两种极端路线均作修正。当前采用“一条主链+两条高保真支路”的分层方案，详见[33-t027-literature-driven-route-redesign.md](../audit/33-t027-literature-driven-route-redesign.md)。该设计优先保证随机风统计覆盖、结构局部解释和优化闭环，同时保留少量MBD-FE耦合作为模型形式交叉验证，不让单一协同链成为全文完成的前置瓶颈。
+依据2023–2025新增核心全文，当前采用严格的OpenFAST/ROSCO→Abaqus分层主链：OpenFAST/ROSCO承担整机随机风和控制器，Abaqus承担精细结构响应；局部接缝/转换段高保真仅由控制机制触发。每一步必须先有直接文献/标准/官方文档依据。详见[33-t027-literature-driven-route-redesign.md](../audit/33-t027-literature-driven-route-redesign.md)。
