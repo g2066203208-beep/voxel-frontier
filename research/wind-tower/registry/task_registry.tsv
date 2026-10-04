@@ -24,3 +24,4 @@ T020.1	P0	global	Q01	何泽瑜2024原型几何原页与多源对照	audit/19-t02
 T020.2	P0	global	Q01	追溯158m Abaqus历史基准并判断当前可复现性	audit/20-t020-2-abaqus-baseline-history-and-current-state.md	partial-hold	G0	历史候选已找到；当前正式生产INP/ODB仍缺失
 T020.3	P0	global	Q01	追溯正式OpenFAST/ROSCO模型、版本、HubHt和输入指纹	registry/baseline_identity.tsv	partial-hold	G0	当前开始搜索Git历史、Library和论文历史证据
 T020.4	P0	global	Q01	形成G0阻断资料包、原图归档规范和BASE001验收矩阵	audit/22-t020-4-g0-blocker-package.md	complete	G0	已明确He2024原页、Abaqus生产INP、OpenFAST模型文件夹三组必需源资产
+T021	P0-P2	report	Q01-Q05	准备2026-10-09论文进展汇报：证据化展示题目、结构、baseline审计、文献和下一步	workflow/REPORT_2026-10-09_PLAN.md	in-progress	REPORT-2026-10-09	与T020并行；10月8日冻结内容并做数字/图源终审
