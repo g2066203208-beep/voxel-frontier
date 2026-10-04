@@ -1,0 +1,36 @@
+source_id	source_table	pdf_page	printed_page	z_top_m	size_field_literal	size_m	thickness_mm	rebar_inner	rebar_outer	evidence_status	interpretation
+REF008	Table3-2	34	23	3.64	直径	8.17	280.00	108	108	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	7.28	直径	8.01	280.00	108	108	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	10.92	直径	7.85	280.00	108	108	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	14.56	直径	7.70	282.50	108	108	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	18.20	直径	7.54	287.50	96	96	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	21.84	直径	7.36	295.00	96	96	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	25.48	直径	7.22	302.50	96	96	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	29.12	直径	7.06	307.50	96	96	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	32.76	直径	6.90	312.50	96	96	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	36.40	直径	6.74	320.00	96	96	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	40.04	直径	6.58	327.50	96	96	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	43.68	直径	6.42	332.50	90	90	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	47.32	直径	6.26	337.50	90	90	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	50.96	直径	6.10	345.00	90	90	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	54.60	直径	5.94	352.50	90	90	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	58.24	直径	5.78	357.50	84	84	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	61.88	直径	5.70	360.00	84	84	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	65.52	直径	5.70	360.00	84	84	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	69.16	直径	5.70	360.00	84	84	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	72.78	直径	5.70	340.00	84	84	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	76.44	直径	5.70	320.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	80.08	直径	5.70	320.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	83.72	直径	5.70	320.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	87.36	直径	5.70	320.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	91.00	直径	5.70	290.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	94.64	直径	5.70	260.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	98.28	直径	5.70	260.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	101.92	直径	5.70	260.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	105.56	直径	5.70	354.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	109.20	直径	5.45	414.00	76	76	direct-page-verified	literal diameter
+REF008	Table3-2	34	23	112.00	直径	4.97	500.00	76	76	direct-page-verified	concrete top diameter
+REF008	Table3-3	35	24	123.50	半径	4.66	38.00			direct-page-verified	LITERAL SOURCE SAYS RADIUS; production meaning unresolved
+REF008	Table3-3	35	24	135.00	半径	4.58	37.00			direct-page-verified	LITERAL SOURCE SAYS RADIUS; production meaning unresolved
+REF008	Table3-3	35	24	146.50	半径	4.50	36.00			direct-page-verified	LITERAL SOURCE SAYS RADIUS; production meaning unresolved
+REF008	Table3-3	35	24	158.00	半径	4.42	35.00			direct-page-verified	LITERAL SOURCE SAYS RADIUS; production meaning unresolved
