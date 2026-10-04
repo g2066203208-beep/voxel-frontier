@@ -28,3 +28,5 @@ T021	P0-P2	report	Q01-Q05	准备2026-10-09论文进展汇报：证据化展示�
 T022	P0-P1	global	Q01	按导师要求系统调查国际期刊中混塔benchmark模型及复用网络	audit/26-t022-benchmark-survey-first-pass.md	in-progress	G0/REPORT-2026-10-09	第一轮已完成30项模型指纹+reuse network+22份公开PDF缓存；下一轮重点核F-ZHOU/F-HNU/F-CHEN exact-reuse链
 
 T023	P0-P8	global	Q01-Q05	按用户要求先复核整篇研究流程，补充章间回路及逐章检查映射	audit/27-overall-process-review.md	complete	G0-G10	仅流程审查完成；40项为补充检查，不另建主流程；原始结果核查暂缓，研究与门禁未据此PASS
+
+T024	P0-P1	1	Q01-Q05	依据核心全文、标准身份和导师意见实质修订题目及第一章	audit/29-t024-title-chapter1-evidence-revision.md	in-progress	G0/G10	只发布文献依据和整改记录；正文修订Word保持私有；不提交正式求解
