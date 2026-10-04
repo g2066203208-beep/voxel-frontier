@@ -1358,8 +1358,10 @@
     "bytes": 436968166,
     "sha256": "dd37ad4ccf36c674d017bbc9e4fa78b6de24ef618e238510c2178bc550eea514",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S04.bts",
-    "status": "failed",
-    "error": "Network connection failed after 4 attempts"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S04.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1450,8 +1452,10 @@
     "bytes": 436968166,
     "sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_ETM_S06.bts",
-    "status": "failed",
-    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1777,8 +1781,10 @@
     "bytes": 436968166,
     "sha256": "d3496824129d32a2f8fc749899bfe80aa2d6d95a75cf9718593037b870ecb5f1",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S01.bts",
-    "status": "failed",
-    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S01.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1822,8 +1828,10 @@
     "bytes": 436968166,
     "sha256": "183123d524e3abb5d156526147f191132e2eb3db7a8d59108b7a16242a18cb32",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S02.bts",
-    "status": "failed",
-    "error": "[WinError 10053] 你的主机中的软件中止了一个已建立的连接。"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S02.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1867,8 +1875,10 @@
     "bytes": 436968166,
     "sha256": "6600054ce16d11aa60758728a775e11030a08d0a0bc27f26178e4b50e5c65f5b",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S03.bts",
-    "status": "failed",
-    "error": "Network connection failed after 4 attempts"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S03.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1912,8 +1922,10 @@
     "bytes": 436968166,
     "sha256": "9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S04.bts",
-    "status": "failed",
-    "error": "[WinError 10053] 你的主机中的软件中止了一个已建立的连接。"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -1957,8 +1969,10 @@
     "bytes": 436968166,
     "sha256": "b82db2fa24eb190b7f585e82adaa618bdaf6742cdb2773a905b9360fabf99fcd",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S05.bts",
-    "status": "failed",
-    "error": "[WinError 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S05.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -2002,8 +2016,10 @@
     "bytes": 436968166,
     "sha256": "bb7a5e4e0f8a423131c40779da30c8d8a817d1aba70e536b8b08b987ce588071",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S06.bts",
-    "status": "failed",
-    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S06.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -2423,8 +2439,10 @@
     "bytes": 436968166,
     "sha256": "de47885ed149a2f0f7c98ba32fa7364f10e95ec8e39ca2ffcce9574fc68f03c0",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_ETM_S03.bts",
-    "status": "failed",
-    "error": "Network connection failed after 4 attempts"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U19p202140_ETM_S03.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -2797,8 +2815,10 @@
     "bytes": 436968166,
     "sha256": "fabc9632eab696fb809181802bf3beb0a982c296eeac5afec70fcf834585ceed",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U19p202140_NTM_S05.bts",
-    "status": "failed",
-    "error": "Network connection failed after 4 attempts"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U19p202140_NTM_S05.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -18595,8 +18615,10 @@
     "bytes": 4045986464,
     "sha256": "5e67e418aca2085976d2a79aaa1b0cdc0c94f8a2e39e50f1a9f2a16b612b5185",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.odb",
-    "status": "multipart-incomplete",
-    "error": "[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+    "status": "uploaded-lfs-multipart",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.odb.parts"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -18686,8 +18708,10 @@
     "bytes": 10082558876,
     "sha256": "82042472a7cc3bc3c2c491da51a6f1ec2dc5cdc4fa7ad1ec03909b24e3d53f2e",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb",
-    "status": "multipart-incomplete",
-    "error": "Network connection failed after 4 attempts"
+    "status": "uploaded-lfs-multipart",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.odb.parts"
+    }
   },
   {
     "section": "abaqus-v30",
