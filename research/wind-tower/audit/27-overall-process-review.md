@@ -1,6 +1,6 @@
 # 整篇论文研究流程审查与修正
 
-日期：2026-10-04。按用户最新要求，当前只审查整篇研究流程，撤销旧Simpack及双向桥接路线，保留当前OpenFAST→Abaqus载荷映射验证；数据文件与求解专项核查暂缓。正文没有改写，结果与创新没有提前认定完成。来源是本次原稿结构、老师问题归纳及已读文献。
+日期：2026-10-04。按用户最新要求，当前只审查整篇研究流程，撤销旧的额外软件协同与双向桥接路线，保留当前OpenFAST→Abaqus载荷映射验证；数据文件与求解专项核查暂缓。正文没有改写，结果与创新没有提前认定完成。来源是本次原稿结构、老师问题归纳及已读文献。
 
 本记录补充[既有结构审计](18-literature-driven-thesis-structure-audit.md)，不替代[唯一MASTER](../workflow/MASTER_RESEARCH_PROTOCOL.md)。正式任务T023，检查项另见[40项逐章映射](28-chapter-checklist.md)。导师问题编号沿用[REQ台账](../requirements/advisor_requirement_matrix.tsv)。
 
