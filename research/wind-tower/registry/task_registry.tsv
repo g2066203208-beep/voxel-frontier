@@ -18,3 +18,4 @@ T015	P0-P8	global	Q01-Q05	建立项目目录/编号/版本规则	workflow/PROJEC
 T016	P0-P8	global	Q01-Q05	固化导师要求	workflow/ADVISOR_REQUIREMENTS.md	complete	all	范围收敛、简化量化、前文服务优化
 T017	P0-P1	global	Q01-Q05	文献驱动论文结构审计	audit/18-literature-driven-thesis-structure-audit.md	complete	all	七章保留，第三章重构、四五六章职责重定
 T018	P1	global	Q01-Q05	建立结构化文献主表与研究范式提取	registry/literature_master.tsv	in-progress	P1	当前30项核心来源，继续扩充与全文提取
+T019	P0-P8	global	Q01-Q05	治理旧记录：归档被替代流程/早期审计并修复活动索引	research/wind-tower/archive/README.md	complete	all	旧workflow 00-06与audit 01-05已移出活动目录；README/INDEX/task/Master已同步修正
