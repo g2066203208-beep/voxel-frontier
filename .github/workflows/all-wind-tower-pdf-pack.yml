@@ -1,0 +1,80 @@
+name: Package all wind-tower PDFs
+
+on:
+  push:
+    paths:
+      - "research/wind-tower/**/*.pdf"
+      - ".github/workflows/all-wind-tower-pdf-pack.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build <=85 MiB ZIP packs from all valid PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile, csv
+
+          root=Path('research/wind-tower')
+          out=root/'pdf-archives'
+          out.mkdir(parents=True, exist_ok=True)
+          for p in out.glob('all-wind-tower-pdfs-part-*.zip'): p.unlink()
+
+          files=[]
+          for p in sorted(root.rglob('*.pdf')):
+              if out in p.parents: continue
+              try:
+                  with p.open('rb') as f:
+                      if f.read(5) != b'%PDF-': continue
+              except OSError:
+                  continue
+              files.append(p)
+
+          limit=85*1024*1024
+          groups=[]; cur=[]; total=0
+          for p in files:
+              sz=p.stat().st_size
+              if cur and total+sz>limit:
+                  groups.append(cur); cur=[]; total=0
+              cur.append(p); total+=sz
+          if cur: groups.append(cur)
+
+          rows=[]
+          for i,grp in enumerate(groups,1):
+              zpath=out/f'all-wind-tower-pdfs-part-{i:02d}.zip'
+              with zipfile.ZipFile(zpath,'w',compression=zipfile.ZIP_STORED,allowZip64=True) as z:
+                  for p in grp:
+                      rel=p.relative_to(root)
+                      z.write(p,arcname=str(rel))
+                      rows.append([i,str(rel),p.stat().st_size,hashlib.sha256(p.read_bytes()).hexdigest()])
+
+          with (out/'ALL_WIND_TOWER_PDFS_MANIFEST.tsv').open('w',encoding='utf-8',newline='') as f:
+              w=csv.writer(f,delimiter='\t')
+              w.writerow(['part','path','bytes','sha256'])
+              w.writerows(rows)
+          print('valid_pdfs=',len(files),'parts=',len(groups))
+          PY
+
+      - name: Commit all-PDF ZIP packs
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/pdf-archives
+          if git diff --cached --quiet; then
+            echo "No all-PDF archive changes."
+          else
+            git commit -m "research: package every valid wind-tower PDF into GitHub ZIP archives"
+            git pull --rebase origin main
+            git push
+          fi
