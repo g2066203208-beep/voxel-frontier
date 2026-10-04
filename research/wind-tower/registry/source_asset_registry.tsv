@@ -1,0 +1,7 @@
+source_asset_id	source_id	asset	location	format	access_status	archive_status	use	status	notes
+ASSET001	REF008	He 2024 Table 3-1	original thesis page unknown	page image	user/library copy	pending	prototype geometry	blocked	Current library copy cannot be page-read or materialized
+ASSET002	REF008	He 2024 Table 3-2	original thesis page unknown	page image	user/library copy	pending	prototype geometry	blocked	Need original page image
+ASSET003	REF008	He 2024 Table 3-3	original thesis page unknown	page image	user/library copy	pending	steel radius/diameter conflict	blocked	Highest-priority source asset
+ASSET004	REF008	He 2024 Figure 3-4	original thesis page unknown	figure/page image	user/library copy	pending	geometry continuity	blocked	Need original figure
+ASSET005	REF008	He 2024 Figure 3-5	original thesis page unknown	figure/page image	user/library copy	pending	geometry continuity	blocked	Need original figure
+ASSET006	REF031	Xu et al. 2026 Acta paper Figure 1 / Table 1	published paper	publisher/original PDF	public-page; PDF link on journal site	pending	lineage comparison	secondary-only	Do not substitute for He 2024
