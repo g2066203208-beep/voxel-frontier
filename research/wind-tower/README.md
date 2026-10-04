@@ -1,3 +1,15 @@
+# START HERE — 正式研究入口
+
+后续任何论文工作先读：
+1. `workflow/MASTER_RESEARCH_PROTOCOL.md`
+2. `workflow/ADVISOR_REQUIREMENTS.md`
+3. `workflow/LITERATURE_PROTOCOL.md`
+4. `workflow/EXPERIMENT_SIMULATION_PROTOCOL.md`
+5. `workflow/EXECUTION_STATUS.md`
+6. `registry/`
+
+旧workflow与audit文件是历史记录/阶段证据；若与MASTER冲突，以MASTER为准。
+
 # 风机塔架研究工程资料
 
 本目录保存用户提供的几何、Abaqus 工程、操作日志以及整理后的研究问题。论文正文、论文 Word 文件、老师讨论 Word 原文和逐字转写均不纳入仓库。
