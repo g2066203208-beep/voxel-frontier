@@ -1,6 +1,6 @@
 # MASTER RESEARCH PROTOCOL — 10 MW级预应力混凝土—钢混合风机塔架硕士论文
 
-版本：2026-10-04 v1.4  
+版本：2026-10-04 v1.5  
 状态：本文件为**唯一总控流程**。MASTER建立前的旧workflow已移入`archive/workflow-pre-master/`，早期audit已移入`archive/audit-early/`；归档文件只用于追溯，不得作为新任务入口。当前审计以`audit/INDEX.md`和`registry/`状态为准。  
 正式技术路线（T027修订）：**唯一baseline → Abaqus模型V&V → ERA5/TurbSim → OpenFAST/ROSCO整机随机风生产计算 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细混塔全局/局部响应与机制识别 → 分级疲劳 → 机制驱动敏感性 → 多目标优化 → 真实FE复核**。任何局部高保真模型仅在全局响应确认控制部位后，依据Li 2023两尺度方法与Ren 2025接缝试验机制条件触发；不设置多体软件协同支路。
 
@@ -565,17 +565,22 @@ G10 全文claim-evidence 100%审计
 
 详细执行见 `workflow/RECORDING_POLICY.md` 第8节与 `workflow/LITERATURE_PROTOCOL.md` 第8节。
 
+# P. T029/T030 全文核读与source-gap关闭
 
-# P. T028全路线证据覆盖审计
+10篇新增publisher PDF已完成全文核读，见[audit/35](../audit/35-t029-ten-paper-fulltext-evidence-audit.md)与[逐篇用途表](../references/ten-paper-fulltext-use-map-20261004.tsv)。
 
-十篇2023–2025新增核心全文已逐篇核读并形成[34号审计](../audit/34-t028-fulltext-and-route-evidence-coverage.md)与[十篇全文用途表](../references/ten-paper-fulltext-use-map-20261004.tsv)。
+针对核读中发现的缺口，又补入ERA5/ECMWF、TurbSim、OpenFAST、Abaqus、ASME V&V及直接load-mapping/nonlinearity/damping/sensitivity文献，见[audit/36](../audit/36-t030-source-gap-closure.md)。
 
-硬结论：
-1. 当前整体技术路线有直接文献基础，但**不是每个实现细节都已完成文献闭合**。
-2. 当前明确为HOLD-source的步骤包括：P3.1 ERA5精确方法源、P4.2坐标/作用点运输、P4.3跨软件采样/插值/对齐、P4.4载荷映射守恒/V&V容差；P5.4非线性逐项剥离仍为PARTIAL-source。
-3. P3.4的3风速×NTM/ETM×6 seed是本文screening design，不得写成IEC完整DLC矩阵；700 s=100 s过渡+600 s统计是本文设计，不得写成标准唯一规定。
-4. REF018明确提示预应力混凝土水平接缝材料寿命对随机样本更敏感，6 seed不能自动证明G7B材料寿命收敛。
-5. REF051只直接支持“OpenFAST载荷提取→非耦合非线性FE”的范式，不能替代P4.2–P4.4的实现依据。
-6. REF005支持integrated two-scale beam-solid模型；若本文采用独立Abaqus Submodel，必须另补官方Submodeling文档和直接工程文献。
+当前硬状态：
+- P3.1 ERA5：PASS-method；
+- P3.2 TurbSim：core method PASS，51×51等本文具体grid设计仍需V&V；
+- P4.1 OpenFAST六分量/坐标：PASS-method；
+- P4.2 坐标转换/作用点等效：PASS-principle；
+- P4.3 时间序列：PASS-basic，优先原始时间戳+tabular linear interpolation，不默认滤波/重采样；
+- P4.4 力/矩守恒：PASS-method，以resultant-equilibrium为数学目标，数值残差由本文RUN报告；
+- P5.4：取消无直接依据的固定四级ablation，改为文献支持的linear vs geometric+material nonlinear；真实connection模型存在时再比较connection effect；
+- P5.5 Abaqus独立submodel：PASS-method；
+- P7 seed噪声/EE screening：PASS-method；
+- P8 surrogate test/CV + 高保真候选复核：PASS-method。
 
-任何HOLD-source未关闭前，不允许创建对应正式生产run。
+注意：source PASS只说明“方法不是自己瞎编”，**不等于本文模型、参数和结果PASS**。G0、具体阻尼目标、51×51适用性、CDP最终参数、G7B材料寿命及优化范围仍须本文对象化验证。
