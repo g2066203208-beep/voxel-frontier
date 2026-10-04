@@ -5,10 +5,10 @@
 |ID|文献|DOI/来源|当前证据等级|与论文关系|下一步|
 |---|---|---|---|---|---|
 |L001|Bak et al., Description of the DTU 10 MW Reference Wind Turbine|DTU官方报告|A/官方|DTU 10 MW基础参数、转速与额定风速|补正式PDF哈希和页码索引|
-|L002|Li et al., Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models, Engineering Structures 279 (2023) 115622|10.1016/j.engstruct.2023.115622|B|预应力分段混塔、接缝开口、试验/两尺度数值|寻找作者公开全文；未取得前不引用具体数值|
+|L002|Li et al., Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models, Engineering Structures 279 (2023) 115622|10.1016/j.engstruct.2023.115622|A候选/全文已取得|预应力分段混塔、接缝开口、试验/两尺度数值|用户提供出版PDF已核验；进入逐页提取与试验/两尺度模型对照|
 |L003|Huang et al., Geometric optimisation analysis of Steel–Concrete hybrid wind turbine towers, Structures 35 (2022) 1125–1137|10.1016/j.istruc.2021.08.036；作者公开PDF|A|几何变量、频率/位移/应力/疲劳约束、高保真复核|保留页码级笔记|
 |L004|Li et al., Hybrid Wind Turbine Towers Optimization with a Parallel Updated Particle Swarm Algorithm, Applied Sciences 11 (2021) 8683|10.3390/app11188683；MDPI开放获取|A|LCOE目标、PCSH几何优化、约束与模型简化边界|下载出版PDF并做哈希|
-|L005|Wang et al., High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel–Concrete Hybrid Tower, MSSP 230 (2025) 112583|10.1016/j.ymssp.2025.112583|B|既有多体—有限元联合与OpenFAST对照研究，用于界定研究现状；本文不采用该生产路线|优先寻找全文，仅用于研究现状和创新排重|
+|L005|Wang et al., High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel–Concrete Hybrid Tower, MSSP 230 (2025) 112583|10.1016/j.ymssp.2025.112583|A候选/全文已取得|既有多体—有限元联合与OpenFAST对照研究，用于界定研究现状；本文不采用该生产路线|用户提供出版PDF已核验；逐页提取Simpack–Abaqus耦合、OpenFAST验证和适用边界|
 |L006|Xu, Zhou, Wang, Optimization Model of Steel-Prestressed Concrete Hybrid Wind Turbine Tower: Using a Combined Differential Whale Optimization Algorithm, Struct. Design Tall Spec. Build. 34(5) (2025)|10.1002/tal.70014|B|最新混塔优化、约束体系、疲劳控制|核查是否开放全文/作者公开稿，并与第5–6章变量约束逐项比较|
 |L007|Optimization for Offshore Prestressed Concrete–Steel Hybrid Wind Turbine Support Structure with Pile Foundation Using a Parallel Modified Particle Swarm Algorithm, JMSE 12(5) (2024) 826|10.3390/jmse12050826；MDPI开放获取|A候选|海上PCSH优化；仅作方法学补充，不能直接外推陆上|下载PDF并明确SSI/水压等不适用于本文的边界|
 |L008|Yang et al., Spatiotemporal variation of power law exponent on the use of wind energy, Applied Energy 356 (2024) 122441|10.1016/j.apenergy.2023.122441|待复核|逐时风切变指数及高度外推依据|取得全文并定位方法公式/高度范围|
@@ -101,4 +101,24 @@
 
 - **OpenFAST BeamDyn sectional-properties technical note, “Mass matrix – General form for a rigid body”**：官方给出质心和任意参考点处6×6刚体质量矩阵、反对称叉乘矩阵及平行轴惯量关系。本文M6空间惯性统一表示以该官方定义为方法依据。
 - **DTUWindEnergy/BasicDTUController公开DTU10MW HAWC2输入**：`dtu10mw_advanced.htc`直接包含446040 kg上部集中质量和105520 kg hub侧集中质量；`DTU_10MW_RWT_Blade_st.dat`第一套51站质量分布本轮重新积分得到单叶片41722.411281503 kg，三叶片+Hub+Nacelle=676727.233844509 kg。该值用于“公开HAWC2实现”口径，不与Bak 2013报告级组件口径混用。
-- **Cao et al. 2024, Structures 68, 107235, DOI 10.1016/j.istruc.2024.107235**：直接比较不同RNA简化，支持质量偏心和转动惯量必须显式核对；全文仍在待用户下载队列。
+- **Cao/Cheng et al. 2024, Structures 68, 107235, DOI 10.1016/j.istruc.2024.107235**：直接比较不同RNA简化，支持质量偏心和转动惯量必须显式核对；用户已补齐出版PDF，后续逐页核查RNA质量、偏心、转动惯量与模态误差。
+
+
+## 2026-10-04 用户补齐的10篇出版全文
+
+本批10篇PDF均已从用户上传文件读取首页信息、DOI、页数并完成SHA-256校验，统一命名规则为“第一作者_年份_期刊_文章号.pdf”。详细字节数与哈希见 `references/user-provided/MANIFEST.tsv`。其中L002、L005沿用既有ID，新文献使用L052-L059。
+
+|ID|统一文件名|文献|DOI|页数|与本文直接关系|
+|---|---|---|---|---:|---|
+|L002|`Li_2023_EngineeringStructures_115622.pdf`|Li et al., Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models|10.1016/j.engstruct.2023.115622|13|预应力混塔试验、两尺度FE、局部/整体行为，对第4章精细塔架建模与验证很直接|
+|L053|`Cheng_2024_JCSR_108729.pdf`|Cheng et al., Intelligent optimal design of steel-concrete hybrid wind turbine tower based on evolutionary algorithm|10.1016/j.jcsr.2024.108729|14|OpenSees参数化FE+进化算法，约束含频率、ULS、SLS、疲劳，支撑第5–6章优化体系对比|
+|L054|`Cheng_2025_EngineeringStructures_120835.pdf`|Cheng et al., Generative design of steel-prestressed concrete hybrid wind turbine tower based on machine learning and multi-objective optimization|10.1016/j.engstruct.2025.120835|16|机器学习代理+NSGA-II，多目标成本/AEP，作为最新智能优化研究边界|
+|L055|`Huang_2025_EngineeringStructures_120295.pdf`|Huang et al., Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads|10.1016/j.engstruct.2025.120295|15|OpenFAST/ROSCO多体动力、DLC 1.2、10 min随机实现、雨流疲劳，对第三章随机风与疲劳口径直接相关|
+|L056|`Ren_2025_ThinWalledStructures_113154.pdf`|Ren et al., Compression-bending behavior of thin-walled prestressed concrete tower with horizontal joint for wind turbines|10.1016/j.tws.2025.113154|21|水平接缝开口、预应力比、压弯承载与破坏试验，对第4章接缝非线性直接相关|
+|L057|`Ren_2025_ThinWalledStructures_113570.pdf`|Ren et al., Experimental study on the combined compression-bending-torsion behavior of prestressed concrete towers for wind turbines considering horizontal joints|10.1016/j.tws.2025.113570|23|压-弯-扭联合循环试验，支撑不能只用单一弯矩评价接缝|
+|L058|`Ren_2025_ThinWalledStructures_113610.pdf`|Ren et al., Torsional behavior of prestressed concrete towers for wind turbines considering the effect of horizontal joint|10.1016/j.tws.2025.113610|26|扭转试验+验证FE+扭转承载公式，补足塔筒接缝扭转机制|
+|L005|`Wang_2025_MSSP_112583.pdf`|Wang et al., High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel–Concrete Hybrid Tower|10.1016/j.ymssp.2025.112583|21|Simpack RNA + Abaqus SCHT + OpenFAST对照，是本文整机—精细塔架协同路线最关键对比文献之一|
+|L052|`Xu_2025_RenewableEnergy_122475.pdf`|Xu et al., Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel–Concrete Hybrid Tower using a co-simulation approach|10.1016/j.renene.2025.122475|17|DTU 10 MW、158 m混塔、非线性动力与协同分析，与本文对象尺寸和材料谱系高度接近|
+|L059|`Cheng_2024_Structures_107235.pdf`|Cheng et al., Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode|10.1016/j.istruc.2024.107235|12|RNA质量偏心/转动惯量、预应力、变截面与Abaqus模态验证，直接支撑本文RNA空间惯量与模态核对|
+
+> 状态说明：本轮已把统一命名、DOI、页数、字节数和SHA-256写入GitHub工作室；PDF二进制本体需与MANIFEST哈希完全一致后才可把状态由 `binary-pending` 改为 `ok`，不得把“已登记”写成“已入库全文”。
