@@ -96,3 +96,21 @@
 21. **Eccentric compressive behaviour of horizontal circumferential joints in concrete wind turbine towers considering joint opening. Structures, 92 (2026), 112870. DOI: 10.1016/j.istruc.2026.112870.**
    - 原因：直接研究从全截面受压到部分开口的过渡，是接缝机理解释的重要补充。
    - OA；建议下载。
+
+
+## 方法原典（若学校可下载，请一并给我正式PDF）
+
+22. **S. D. Downing, D. F. Socie. Simple rainflow counting algorithms. International Journal of Fatigue, 4(1) (1982), 31–40. DOI: 10.1016/0142-1123(82)90018-4.**
+   - 用途：雨流计数原始算法。后续第四章循环计数方法要逐算法核对。
+
+23. **Max D. Morris. Factorial Sampling Plans for Preliminary Computational Experiments. Technometrics, 33(2) (1991), 161–174. DOI: 10.1080/00401706.1991.10484804.**
+   - 用途：Morris/elementary-effects原典。若第五章实际采用Morris，必须读全文。
+
+24. **M. D. McKay, R. J. Beckman, W. J. Conover. A Comparison of Three Methods for Selecting Values of Input Variables in the Analysis of Output from a Computer Code. Technometrics, 21(2) (1979), 239–245. DOI: 10.1080/00401706.1979.10489755.**
+   - 用途：Latin hypercube sampling原典。只有实际采用LHS才进入方法正文。
+
+25. **Jerome Sacks, William J. Welch, Toby J. Mitchell, Henry P. Wynn. Design and Analysis of Computer Experiments. Statistical Science, 4(4) (1989), 409–423. DOI: 10.1214/ss/1177012413.**
+   - 用途：计算试验与随机过程/Kriging经典框架。若采用GP/Kriging代理需要全文。
+
+26. **Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, T. Meyarivan. A fast and elitist multiobjective genetic algorithm: NSGA-II. IEEE Transactions on Evolutionary Computation, 6(2) (2002), 182–197. DOI: 10.1109/4235.996017.**
+   - 用途：NSGA-II原典。若第六章实际采用NSGA-II，必须逐项核算法定义与约束处理。
