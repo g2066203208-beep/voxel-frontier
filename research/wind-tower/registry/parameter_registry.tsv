@@ -5,9 +5,9 @@ PAR003	DTU rated wind speed	11.4	m/s	reference turbine identity	REF001	DTU repor
 PAR004	DTU rotor-speed minimum	6.0	rpm	1P/3P source	REF001	DTU report	BASE_PENDING	verified-source	
 PAR005	DTU rotor-speed maximum	9.6	rpm	1P/3P source	REF001	DTU report	BASE_PENDING	verified-source	
 PAR006	DTU original hub height	119	m	reference-turbine identity	REF001	DTU report	BASE_PENDING	verified-source	not thesis combined-model HubHt
-PAR007	thesis tower total height	158	m	geometry	REF008	He 2024 tables 3-1~3-3	BASE_PENDING	reported	page-level evidence still required
-PAR008	concrete tower height	112	m	geometry	REF008	He 2024	BASE_PENDING	reported	page-level evidence still required
-PAR009	steel tower height	46	m	geometry	REF008	He 2024	BASE_PENDING	reported	page-level evidence still required
+PAR007	tower total height	158	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE_PENDING	direct-source-verified	Production Abaqus model still required for implementation check
+PAR008	concrete tower height	112	m	prototype geometry	He2024 original PDF Sec.3.3 p33 + Table3-2 p34	original-page	BASE_PENDING	direct-source-verified	31 segment endpoint
+PAR009	steel tower height	46	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE_PENDING	direct-source-verified	4 steel segments
 PAR010	combined model hub height	161.368806	m	combined model geometry	RUN/INPUT_PENDING	formal OpenFAST+Abaqus inputs	BASE_PENDING	reported	must be recomputed from actual model
 PAR011	C65 elastic modulus	36.5	GPa	material	GB/T50010+object literature	material table	BASE_PENDING	conditional	current standard authorized text still to archive
 PAR012	C70 elastic modulus	37.0	GPa	material	GB/T50010+object literature	material table	BASE_PENDING	conditional	
@@ -26,3 +26,5 @@ PAR024	OpenFAST historical OverHang	-7.1	m	hub geometry	HIST_R2Z74	ElastoDyn per
 PAR025	OpenFAST historical ShftTilt	-5	deg	hub geometry	HIST_R2Z74	ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
 PAR026	OpenFAST combined HubHt recomputation	161.3688057735	m	hub geometry	OpenFAST official formula	TowerHt+Twr2Shft+OverHang*sin(ShftTilt)	BASE_PENDING	verified-arithmetic-from-historical-inputs	Becomes current verified only after raw inputs are re-read
 PAR027	Historical ROSCO runtime version	2.6.0	-	controller identity	HIST_R2Z54	runtime initialization record	BASE_PENDING	historical-reported	Controller files absent
+PAR028	He2024 concrete top diameter at z=112m	4.97	m	prototype geometry	He2024 Table3-2 PDF p34/body p23	original-page	BASE_PENDING	direct-source-verified	Compare with production Abaqus
+PAR029	He2024 steel Table3-3 value at z=123.5m	4.66	m	prototype geometry	He2024 Table3-3 PDF p35/body p24; header=半径	original-page	BASE_PENDING	conflict-source-verified	Do not silently reinterpret as diameter before production model check
