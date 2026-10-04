@@ -76,5 +76,8 @@
 "turbSim-36/inputs/U11p4_NTM_S04.bts" filter=lfs diff=lfs merge=lfs -text
 "turbSim-36/inputs/U11p4_NTM_S05.bts" filter=lfs diff=lfs merge=lfs -text
 "turbSim-36/inputs/U11p4_NTM_S06.bts" filter=lfs diff=lfs merge=lfs -text
+"turbSim-36/inputs/U19p202140_ETM_S02.bts" filter=lfs diff=lfs merge=lfs -text
+"turbSim-36/inputs/U19p202140_ETM_S01.bts" filter=lfs diff=lfs merge=lfs -text
+"turbSim-36/inputs/U19p202140_ETM_S04.bts" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text
