@@ -1904,7 +1904,8 @@
     "bytes": 436968166,
     "sha256": "9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S04.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "[WinError 10053] 你的主机中的软件中止了一个已建立的连接。"
   },
   {
     "section": "turbSim-36",
@@ -1948,7 +1949,8 @@
     "bytes": 436968166,
     "sha256": "b82db2fa24eb190b7f585e82adaa618bdaf6742cdb2773a905b9360fabf99fcd",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S05.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "Network connection failed after 4 attempts"
   },
   {
     "section": "turbSim-36",
@@ -1992,7 +1994,8 @@
     "bytes": 436968166,
     "sha256": "bb7a5e4e0f8a423131c40779da30c8d8a817d1aba70e536b8b08b987ce588071",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_ETM_S06.bts",
-    "status": "pending-upload"
+    "status": "failed",
+    "error": "Network connection failed after 4 attempts"
   },
   {
     "section": "turbSim-36",
@@ -2080,7 +2083,10 @@
     "bytes": 436968166,
     "sha256": "86cfe1d5b091c32c1c6f41e2197506487252f61e8ec15c55692259c6b3709162",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S02.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_NTM_S02.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -2124,7 +2130,10 @@
     "bytes": 436968166,
     "sha256": "7735a5f11f9cd678eb2b54fd7424f5a1a52f3c37465520df848a1a3bbc860ad5",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S03.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_NTM_S03.bts"
+    }
   },
   {
     "section": "turbSim-36",
