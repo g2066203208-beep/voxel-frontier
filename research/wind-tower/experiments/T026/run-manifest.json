@@ -1,0 +1,506 @@
+{
+  "task": "T026",
+  "original_input": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.inp",
+  "original_hash": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
+  "software": "Abaqus 2025",
+  "claim_scope": "numerical implementation verification only",
+  "runs": [
+    {
+      "run_id": "RUN-T026-001",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "39c4fb02bd0ef69a013a90b88cf579c7c090b505c850fa6a870cd8f1c181969b",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C65_compression_mu1em5",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu1em5",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu1em5\\MAT_C65_compression_mu1em5.inp",
+      "changed_variables": {
+        "grade": "C65",
+        "direction": "compression",
+        "mu": 1e-05
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-002",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "16df647a883c2f80b2b1d17bf97782addb20d6d8d71485fb278552ceceb89142",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C65_compression_mu0",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0\\MAT_C65_compression_mu0.inp",
+      "changed_variables": {
+        "grade": "C65",
+        "direction": "compression",
+        "mu": 0.0
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-003",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "6cedd5567e676b973782f2381036acd1777fc8247fd6e611f8abab306b5553bc",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C65_tension_mu1em5",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu1em5",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu1em5\\MAT_C65_tension_mu1em5.inp",
+      "changed_variables": {
+        "grade": "C65",
+        "direction": "tension",
+        "mu": 1e-05
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-004",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "0a5121d7ff3a32dcd0ce8b14f2c026d4ba39b88048940542af27222bad8b7782",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C65_tension_mu0",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0\\MAT_C65_tension_mu0.inp",
+      "changed_variables": {
+        "grade": "C65",
+        "direction": "tension",
+        "mu": 0.0
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-005",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "49547a6ab5bc1475416dd507786038c6b50ff2ba8273a4502907617785fda27d",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C70_compression_mu1em5",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu1em5",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu1em5\\MAT_C70_compression_mu1em5.inp",
+      "changed_variables": {
+        "grade": "C70",
+        "direction": "compression",
+        "mu": 1e-05
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-006",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "907bd5e9627bb2d76e0b9ffbfe91c083ddb81884eddac8639554997dcc4492e2",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C70_compression_mu0",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu0",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu0\\MAT_C70_compression_mu0.inp",
+      "changed_variables": {
+        "grade": "C70",
+        "direction": "compression",
+        "mu": 0.0
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-007",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "cc764bae747d13d221e2fec0f2129fa1d6f145e1632ac5bc9dc5536ef58c4b71",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C70_tension_mu1em5",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu1em5",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu1em5\\MAT_C70_tension_mu1em5.inp",
+      "changed_variables": {
+        "grade": "C70",
+        "direction": "tension",
+        "mu": 1e-05
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-008",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "baace996acfb80e6858b704dd659877c1897d3c00fe25d659117408f329c4f7a",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "job": "MAT_C70_tension_mu0",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu0",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu0\\MAT_C70_tension_mu0.inp",
+      "changed_variables": {
+        "grade": "C70",
+        "direction": "tension",
+        "mu": 0.0
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      }
+    },
+    {
+      "run_id": "RUN-T026-009",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "141ea080b5261cc45ccb729945868e10ca73fae3c9a7019ed1688c88e03e87fa",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Initial stress fixed-anchor equilibrium and axial EA/L",
+      "job": "PT_FIXED",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_FIXED",
+      "input": "D:\\Codex-research-validation\\T026\\PT_FIXED\\PT_FIXED.inp",
+      "changed_variables": {
+        "anchorage": "fixed",
+        "delta_u": 0.001
+      },
+      "validation_reference": "N0=179200N; axial tangent EA/L=243750N/m",
+      "acceptance": {
+        "relative_analytic": 1e-06,
+        "scope": "small-strain analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-010",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "d8b9654dd8c6b6ded84dcf3f4133b43c5db1ba175ece2dd2a5657f8a5c931680",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Initial stress elastic-anchor release",
+      "job": "PT_ELASTIC",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_ELASTIC",
+      "input": "D:\\Codex-research-validation\\T026\\PT_ELASTIC\\PT_ELASTIC.inp",
+      "changed_variables": {
+        "anchor_k_N_per_m": 2437500
+      },
+      "validation_reference": "N=N0/(1+EA/(Lkh)); u=-N/(kh)",
+      "acceptance": {
+        "relative_analytic": 1e-06,
+        "scope": "small-strain analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-011",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "e875c636acf8b529b4244be2c64f3ed1e925e0463b31ed84e4330afe331d423b",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N0_h1000_plus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h1000_plus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h1000_plus\\PT_GEO_N0_h1000_plus.inp",
+      "changed_variables": {
+        "stress": 0.0,
+        "h": 0.001,
+        "sign": 1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-012",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "3f666246fee2055016fe64effbd083b22a8e7a22c9c7c52d61dd7b8f17f0ef7e",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N0_h1000_minus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h1000_minus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h1000_minus\\PT_GEO_N0_h1000_minus.inp",
+      "changed_variables": {
+        "stress": 0.0,
+        "h": 0.001,
+        "sign": -1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-013",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "f911af031153c19995b7142c1d872c18f7cbb91256827dd9059f218e9f18c145",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N0_h500_plus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h500_plus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h500_plus\\PT_GEO_N0_h500_plus.inp",
+      "changed_variables": {
+        "stress": 0.0,
+        "h": 0.0005,
+        "sign": 1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-014",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "a25080e39f9d5c7fa5a800e6d86bd34e8cda7b16e1236fc102863b85a3b933c5",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N0_h500_minus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h500_minus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h500_minus\\PT_GEO_N0_h500_minus.inp",
+      "changed_variables": {
+        "stress": 0.0,
+        "h": 0.0005,
+        "sign": -1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-015",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "99751331c745dd730335e9960160d74be18eec56e96472d04dea34eded09ba45",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N1_h1000_plus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h1000_plus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h1000_plus\\PT_GEO_N1_h1000_plus.inp",
+      "changed_variables": {
+        "stress": 1280000000.0,
+        "h": 0.001,
+        "sign": 1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-016",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "85c3319d1e34768e2e53c297bc117756c90ee152a47eda94746cc517e597a9e3",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N1_h1000_minus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h1000_minus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h1000_minus\\PT_GEO_N1_h1000_minus.inp",
+      "changed_variables": {
+        "stress": 1280000000.0,
+        "h": 0.001,
+        "sign": -1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-017",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "cabf44f3d1b5c73f2505a77ace501fc851e24ffc63fef9d223996f477ca2a744",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N1_h500_plus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h500_plus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h500_plus\\PT_GEO_N1_h500_plus.inp",
+      "changed_variables": {
+        "stress": 1280000000.0,
+        "h": 0.0005,
+        "sign": 1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    },
+    {
+      "run_id": "RUN-T026-018",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "6c2027937c34d9fd1f6d33a3897700facec4cf4c21be2069016877f3d49efe39",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "registered-not-started",
+      "output_hash": "",
+      "notes": "Central difference transverse prestress stiffness",
+      "job": "PT_GEO_N1_h500_minus",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h500_minus",
+      "input": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h500_minus\\PT_GEO_N1_h500_minus.inp",
+      "changed_variables": {
+        "stress": 1280000000.0,
+        "h": 0.0005,
+        "sign": -1
+      },
+      "validation_reference": "Kgeo=N0/L=1600N/m; zero-N cubic term is assessed on same stiffness scale",
+      "acceptance": {
+        "scaled_stiffness_error": 1e-05,
+        "scale_N_per_m": 1600.0,
+        "scope": "current-state straight-truss analytic verification"
+      }
+    }
+  ]
+}
