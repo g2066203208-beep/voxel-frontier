@@ -1,0 +1,53 @@
+benchmark_id	source_section	quantity	historical_value	unit	current_status	use_rule	replacement_gate
+B001	2.6	pushover baseline last converged Utop	0.9011257887	m	historical-comparable	共同收敛段可比较；不得当极限位移	绑定正式INP/ODB/hash并完成网格来源核查
+B002	2.6	pushover reset-check last converged Utop	0.928000	m	historical-comparable	仅用于控制重置影响	同上
+B003	2.6	first saved tensile damage Utop	0.673000	m	historical-comparable	仅称首个已保存帧；不称精确起裂	ODB逐帧复核
+B004	2.6	first negative eigenvalue around Utop	0.913	m	historical-comparable	数值诊断	.msg/.sta/ODB闭合
+B005	2.6	common-range max reaction difference	1.320	kN	historical-comparable	推覆重复性对照	两run原始F-U重提取
+B006	2.6	common-range reaction RMS difference	0.131	kN	historical-comparable	推覆重复性对照	两run原始F-U重提取
+B007	2.7	first horizontal bending pair	0.13718	Hz	historical-comparable	整体弹性身份benchmark	正式baseline modal rerun
+B008	2.7	reference first horizontal frequency	0.1361	Hz	external-reference	源文献比较值	保留原页定位
+B009	2.7	30-mode cumulative effective mass X	94.8322	percent	historical-comparable	只作模态覆盖诊断	正式ODB重新提取
+B010	2.7	30-mode cumulative effective mass Z	94.8341	percent	historical-comparable	只作模态覆盖诊断	正式ODB重新提取
+B011	2.7	SS1 object-specific damping	4.6341	percent	conditional-method-result	不是现场实测	阻尼source+当前模型重算
+B012	2.7	FA1 object-specific damping	4.6350	percent	conditional-method-result	不是现场实测	同上
+B013	2.7	SS2 object-specific damping	5.5282	percent	conditional-method-result	不是现场实测	同上
+B014	2.7	FA2 object-specific damping	5.5344	percent	conditional-method-result	不是现场实测	同上
+B015	2.7	Rayleigh alpha	0.0634885913	s^-1	conditional-method-result	仅对应历史目标阻尼	目标阻尼冻结后重算
+B016	2.7	Rayleigh beta	0.0212358838	s	conditional-method-result	仅对应历史目标阻尼	目标阻尼冻结后重算
+B017	3.1	ERA5 hourly sample count	184080	h	historical-data-result	可作为数据完整性benchmark	原84季度包独立重读
+B018	3.1	100m mean wind	4.298716	m/s	historical-data-result	场址背景	原始ERA5重读
+B019	3.1	HubHt	161.368806	m	model-derived	必须随正式OpenFAST几何	最终OpenFAST geometry identity
+B020	3.1	HubHt mean wind	4.796029	m/s	historical-data-result	逐时alpha方法结果	原始ERA5重算
+B021	3.1	HubHt P95	9.343881	m/s	historical-data-result	screening design anchor	原始ERA5重算
+B022	3.1	HubHt P99	11.448289	m/s	historical-data-result	场址统计背景	原始ERA5重算
+B023	3.1	HubHt historical maximum	19.202140	m/s	historical-data-result	历史小时平均风速锚点；非Vref	原始ERA5重算
+B024	3.2	TurbSim field width	200	m	conditional-study-design	须覆盖转子并经V&V	TurbSim Research Card
+B025	3.2	TurbSim field height	200	m	conditional-study-design	同上	TurbSim Research Card
+B026	3.2	TurbSim grid	51x51	-	conditional-study-design	不是官方唯一值	空间分辨率V&V
+B027	3.2	TurbSim spacing	4.0	m	conditional-study-design	由200m/51点定义	空间分辨率V&V
+B028	3.2	total simulation duration	700	s	conditional-study-design	100s过渡+600s统计；非标准唯一值	时程收敛/文献闭合
+B029	3.2	analysis window	100-700	s	conditional-study-design	统一600s有效窗	时程Research Card
+B030	3.5	formal screening cases	36	cases	historical-run-set	只作screening	当前inputs/hash核验或重跑
+B031	3.5	control: max top displacement case	U09p343881_ETM_S06	-	historical-ranking	benchmark only	正式36case重排
+B032	3.5	max top resultant displacement	2.187647	m	historical-result	benchmark only	正式outb重提取
+B033	3.5	max base resultant moment	344.012746	MN*m	historical-result	benchmark only	正式outb重提取
+B034	3.5	control: base resultant moment RMS	U11p4_NTM_S02	-	historical-ranking	benchmark only	正式36case重排
+B035	3.5	base resultant moment RMS	202.935175	MN*m	historical-result	benchmark only	正式outb重提取
+B036	3.5	control: TwrBsMyt load-DEL	U11p4_ETM_S03	-	historical-ranking	benchmark only	正式rainflow重算
+B037	3.5	max TwrBsMyt load-DEL	28.177010	MN*m	historical-result	load metric, not material life	正式rainflow重算
+B038	3.5	control: TwrBsMxt load-DEL	U19p202140_ETM_S02	-	historical-ranking	benchmark only	正式rainflow重算
+B039	3.5	max TwrBsMxt load-DEL	9.715431	MN*m	historical-result	load metric, not material life	正式rainflow重算
+B040	3.5	rainflow cycle ledger rows	57286	cycles	historical-result	完整性benchmark	原始outb重算
+B041	3.5	DEL records	72	records	historical-result	36case*2 channels	原始outb重算
+B042	3.5	DEL slope m	4	-	comparison-convention	不可作为混凝土寿命参数	材料疲劳另建
+B043	3.5	DEL Neq	100000	cycles	comparison-convention	只用于一致排序	材料疲劳另建
+B044	3.4	Abaqus RNA mass	676723.995578	kg	historical-model-result	空间身份benchmark	正式INP/ODB核查
+B045	3.4	OpenFAST recovered RNA mass	676753.237515	kg	historical-model-result	空间身份benchmark	正式.lin核查
+B046	3.4	RNA mass relative difference	0.004321	percent	historical-model-result	不能替代CG/J	M6重算
+B047	3.4	common-top CG distance	0.535906775	m	historical-model-result	表示差异	同参考点重算
+B048	3.4	J_G Frobenius difference	3.4883	percent	historical-model-result	表示差异	同参考点重算
+B049	3.4	full M6 Frobenius difference	2.9925	percent	historical-model-result	表示差异	M6重算
+B050	3.4	1120-node OpenFAST tower mass	1923999.000	kg	historical-model-result	离散benchmark	当前ED.sum复核
+B051	3.4	tower-only OF-vs-Abaqus frequency difference	12.40-12.95	percent	historical-model-form-result	不得调参归零	当前baseline重算
+B052	3.4	RNA-on OF-vs-Abaqus frequency difference	8.96-14.99	percent	historical-model-form-result	不得调参归零	当前baseline重算
