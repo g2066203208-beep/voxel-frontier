@@ -1,6 +1,6 @@
 # MASTER RESEARCH PROTOCOL — 10 MW级预应力混凝土—钢混合风机塔架硕士论文
 
-版本：2026-10-04 v1.2  
+版本：2026-10-04 v1.3  
 状态：本文件为**唯一总控流程**。MASTER建立前的旧workflow已移入`archive/workflow-pre-master/`，早期audit已移入`archive/audit-early/`；归档文件只用于追溯，不得作为新任务入口。当前审计以`audit/INDEX.md`和`registry/`状态为准。  
 正式技术路线（T027修订）：**唯一baseline → Abaqus模型V&V → ERA5/TurbSim → OpenFAST/ROSCO整机随机风生产计算 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细混塔全局/局部响应与机制识别 → 分级疲劳 → 机制驱动敏感性 → 多目标优化 → 真实FE复核**。任何局部高保真模型仅在全局响应确认控制部位后，依据Li 2023两尺度方法与Ren 2025接缝试验机制条件触发；不设置多体软件协同支路。
 
@@ -553,3 +553,14 @@ G10 全文claim-evidence 100%审计
 # N. T027全文驱动路线再设计
 
 依据2023–2025新增核心全文，当前采用严格的OpenFAST/ROSCO→Abaqus分层主链：OpenFAST/ROSCO承担整机随机风和控制器，Abaqus承担精细结构响应；局部接缝/转换段高保真仅由控制机制触发。每一步必须先有直接文献/标准/官方文档依据。详见[33-t027-literature-driven-route-redesign.md](../audit/33-t027-literature-driven-route-redesign.md)。
+
+
+# O. 段落级/步骤级文献硬门禁（T028）
+
+1. **每个实质正文段落必须有证据锚点**：外部事实/方法/参数用REF，本文结果用RUN+FIG/TAB；结果机理解释同时需要REF。
+2. **每个正式研究步骤必须有直接方法依据**：Research Card必须记录原文具体做法、对象、边界、步骤、参数、验证指标、比较对象、判据和局限。
+3. **禁止只凭“合理”自行设计关键参数或流程**。若文献只给原则而没有唯一数值，本文选择必须标明为study design，并做敏感性/收敛性或独立verification。
+4. **不能把引用当装饰**：引用必须真的支持紧邻claim；不能用综述替代方法原典，不能用摘要替代关键公式/参数全文。
+5. **G10增加100%段落审计**：终稿每个实质段落必须在claim-evidence台账中可追溯；任何未覆盖段落不得判定终稿完成。
+
+详细执行见 `workflow/RECORDING_POLICY.md` 第8节与 `workflow/LITERATURE_PROTOCOL.md` 第8节。
