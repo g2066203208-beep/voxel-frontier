@@ -1,10 +1,10 @@
 item_id	category	item	value	unit/source	primary_evidence	secondary_evidence	status	conflict_or_action
 BASE-OBJ-001	reference turbine	DTU reference turbine	DTU 10 MW	-	Bak et al. 2013 DTU official report	DTU public HAWC2 implementation	verified-source	Formal thesis OpenFAST input still must be bound to this source
 BASE-OBJ-002	prototype thesis	He Zeyu thesis	大型混塔式风力机的建模与可靠度分析, Hunan University, 2024	-	He 2024 thesis	2026 related papers cite thesis	verified-bibliographic	Original page evidence for Tables 3-1~3-3 still inaccessible in current tool path
-BASE-GEO-001	thesis tower	total tower height	158	m	Current R2Z74 reports He 2024 Tables 3-1~3-3	Formal Abaqus geometry pending	reported	Must capture original thesis page/table before verification
-BASE-GEO-002	thesis tower	concrete height	112	m	Current R2Z74 reports He 2024	Related 2026 5MW article also uses 112.0m concrete section but is a distinct model	reported	Same number in related paper is not proof of same baseline
-BASE-GEO-003	thesis tower	steel height	46	m	Current R2Z74 reports He 2024	-	reported	Original thesis page + formal model required
-BASE-GEO-004	thesis tower	steel section values	4.66/4.58/4.50/4.42	m	Current R2Z74 transcription of He 2024 Table 3-3	Geometric continuity reasoning only	conflict	Original thesis table/figure and formal model required; do not assert radius or diameter yet
+BASE-GEO-001	thesis tower	total tower height	158	m	He 2024 Sec.3.3 original PDF p33/body p22	Formal Abaqus geometry pending	direct-source-verified	Need actual production model closure
+BASE-GEO-002	thesis tower	concrete height	112	m	He 2024 Sec.3.3 original PDF p33/body p22	He 2024 Table 3-2 ends at 112m	direct-source-verified	Need current Abaqus geometry closure
+BASE-GEO-003	thesis tower	steel height	46	m	He 2024 Sec.3.3 original PDF p33/body p22	158-112=46	direct-source-verified	Need current Abaqus geometry closure
+BASE-GEO-004	thesis tower	steel section values	4.66/4.58/4.50/4.42	m	He 2024 Table 3-3 original PDF p35/body p24 explicitly labels column 半径	He 2024 Fig.3-4/3-5 + Table3-2 geometry conflict	conflict-source-verified	Original table says radius; physical/model implementation must be resolved from production Abaqus input
 BASE-HUB-001	DTU reference	official hub height	119	m	Bak et al. 2013	-	verified-source	Not thesis combined-model hub height
 BASE-HUB-002	thesis combined model	combined hub height	161.368806	m	Historical thesis model record	Formal OpenFAST/Abaqus inputs pending	reported	Must recompute from actual model coordinates
 BASE-LINEAGE-001	related paper	Xu et al. 2026 Acta Energiae Solaris Sinica model	5 MW, hub height 160m; tower 157.3m = 112.0m concrete + 1.5m transition + 43.8m steel	-	DOI 10.19912/j.0254-0096.tynxb.2024-1794	Article cites He 2024 thesis	distinct-related-model	Must NOT be used as direct proof of the thesis 10MW/158m geometry
@@ -19,3 +19,4 @@ BASE-HIST-OF-001	historical OpenFAST geometry	TowerHt/TowerBsHt/Twr2Shft/OverHan
 BASE-HIST-OF-002	historical OpenFAST geometry	actual HubHt	161.368806	m	Historical per-file audit	Independent official-formula recomputation =161.3688057735	historical-reproduced-arithmetic	Input fields still need raw-file closure
 BASE-HIST-OF-003	historical OpenFAST discretization	TwrNodes production comparison	70 / 560 / 1120	nodes	Historical ED.sum audit	Historical independent midpoint integration	historical-only	ED.sum/TwrFile originals absent
 BASE-HIST-CTRL-001	historical controller	ROSCO	v2.6.0	runtime record	R2Z54 thesis record	-	historical-reported	DISCON/controller binary/config absent
+BASE-GEO-005	thesis tower	concrete top diameter at z=112m	4.97	m	He 2024 Table 3-2 original PDF p34/body p23	-	direct-source-verified	Creates strong internal conflict with literal radius interpretation of Table 3-3
