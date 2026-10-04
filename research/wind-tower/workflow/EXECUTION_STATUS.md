@@ -1,3 +1,13 @@
+## T029/T030 文献查漏补缺完成（2026-10-04）
+
+- T029：用户补齐10篇核心publisher PDF已全文核读并建立逐篇用途边界；
+- T030：针对先前P3.1/P4.2/P4.3/P4.4等source gaps继续补官方文档和直接论文；
+- 当前P3.1、P4.1-P4.4、P5.5、P7敏感性方法、P8代理测试/高保真复核均已有直接source basis；
+- P5.4已取消无充分来源的固定“四级ablation”，改成文献支持的linear vs geometric+material nonlinear，connection只在真实模型存在时单独比较；
+- 仍未闭合的主要是本文专属数值，而不是完全无文献：G0 baseline、目标阻尼、CDP最终参数、51×51适用性、G7B材料疲劳原条文/样本收敛、优化变量范围与约束值。
+
+详见[audit/35](../audit/35-t029-ten-paper-fulltext-evidence-audit.md)和[audit/36](../audit/36-t030-source-gap-closure.md)。source PASS不自动提升任何生产run或G0-G10数值门禁。
+
 # EXECUTION STATUS
 
 更新时间：2026-10-04（T026）
