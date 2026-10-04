@@ -21,14 +21,39 @@ jobs:
           set -u
           mkdir -p research/wind-tower/references/open-access
           manifest="research/wind-tower/references/open-access/MANIFEST.tsv"
+          prev_manifest="$manifest.prev"
+          if [ -f "$manifest" ]; then cp "$manifest" "$prev_manifest"; else : > "$prev_manifest"; fi
           printf 'id\tfilename\tstatus\tsha256\tbytes\turl\tlicense\n' > "$manifest"
-          tail -n +2 research/wind-tower/references/open-access-sources.tsv | while IFS=$'\t' read -r id filename url license citation; do
+          tail -n +2 research/wind-tower/references/open-access-sources.tsv | while IFS=
+      - name: Commit successfully fetched open-access files and manifest
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/open-access
+          if git diff --cached --quiet; then
+            echo "No literature cache changes."
+          else
+            git commit -m "research: cache verified open-access literature PDFs"
+            git pull --rebase origin main
+            git push
+          fi
+\t' read -r id filename url license citation; do
             out="research/wind-tower/references/open-access/$filename"
             tmp="$out.tmp"
             status="download-failed"
             sha=""
             bytes="0"
-            if curl -L --fail --retry 2 --connect-timeout 20 --max-time 180 -A "Mozilla/5.0 research-literature-cache" "$url" -o "$tmp"; then
+            prev_row="$(awk -F '\t' -v key="$id" '$1==key {print; exit}' "$prev_manifest")"
+            prev_status="$(printf '%s' "$prev_row" | awk -F '\t' '{print $3}')"
+            prev_url="$(printf '%s' "$prev_row" | awk -F '\t' '{print $6}')"
+            if [ -f "$out" ] && head -c 5 "$out" | grep -q '%PDF-'; then
+              sha="$(sha256sum "$out" | awk '{print $1}')"
+              bytes="$(wc -c < "$out" | tr -d ' ')"
+              status="ok"
+            elif [ -n "$prev_row" ] && [ "$prev_url" = "$url" ] && { [ "$prev_status" = "download-failed" ] || [ "$prev_status" = "not-pdf" ]; }; then
+              status="$prev_status"
+            elif curl -L --fail --retry 2 --connect-timeout 20 --max-time 180 -A "Mozilla/5.0 research-literature-cache" "$url" -o "$tmp"; then
               if head -c 5 "$tmp" | grep -q '%PDF-'; then
                 mv "$tmp" "$out"
                 sha="$(sha256sum "$out" | awk '{print $1}')"
@@ -43,6 +68,7 @@ jobs:
             fi
             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$id" "$filename" "$status" "$sha" "$bytes" "$url" "$license" >> "$manifest"
           done
+          rm -f "$prev_manifest"
       - name: Commit successfully fetched open-access files and manifest
         shell: bash
         run: |
