@@ -20,3 +20,13 @@
 - `Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf`
 
 其中L002和L005沿用既有文献ID；其余新分配L052-L059。后续PDF本体一旦写入仓库，必须先按MANIFEST中的SHA-256逐一复核，再把状态改为 `ok`。
+
+
+## 全文核读状态
+
+截至2026-10-04，本批10篇PDF已完成正文全文级核读（研究对象、方法、参数、边界、验证、结果、局限和结论），不再按“仅摘要/仅关键页”使用。逐篇“能支持什么 / 不能支持什么”见：
+
+- `../ten-paper-fulltext-use-map-20261004.tsv`
+- `../../audit/34-t028-fulltext-and-route-evidence-coverage.md`
+
+注意：这里的“fulltext-audited”指会话内用户提供PDF已被完整用于学术证据审查；GitHub中的PDF二进制本体仍为`binary-pending`，二者不得混淆。
