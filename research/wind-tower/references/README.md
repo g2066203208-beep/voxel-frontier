@@ -37,3 +37,20 @@
 |L017|Qu et al., Fatigue Life Evaluation of a Steel–Prestressed Concrete Hybrid Tower Under Prestress Relaxation Using a Bidirectionally Coupled Damage Model and Neural Network Surrogate, Buildings 16(19) (2026) 3854|10.3390/buildings16193854；MDPI OA，2026-09-28|A候选|4.55 MW混塔预应力松弛、FE疲劳、损伤耦合与代理模型；对第4章疲劳和第5–6章退化/代理边界非常直接|下载出版PDF；重点核查S–N/损伤定义、风载来源、松弛情景及外推限制|
 
 > 注：L017发表于当前论文审查日前6天，属于必须纳入“最新研究现状”的直接相关工作，但其4.55 MW对象、松弛情景和数据驱动模型不能直接移植到本文10 MW基准。
+
+
+## 2026-10-04 第二批开放全文入库结果
+
+本轮自动化已实际写入并校验以下全文：
+
+- **L013 Tan et al. (2025), Structures 77, 108811** — Manchester Accepted Author Manuscript，CC BY，SHA-256 `37d5c913cf4af946b30f712f3805ae3549289316995e67b1ff0bd8fe8451b19d`。
+- **L014 Tan et al. (2025), Engineering Structures 336, 120443** — Manchester Accepted Author Manuscript，CC BY，SHA-256 `2ebd5032181db257cd9b2e25ec3655970449a0952a57a41ccc5d4ee776757ed3`。
+- **L018 Brown et al. (2024), Wind Energy Science 9, 1791–1810** — 出版版OA全文，CC BY 4.0，SHA-256 `cd29e924829f6a8e5b7a6d340d07b4f84d6e851af7eee4ed33173e6c2e2cd623`。
+- **L019 Guma et al. (2021), Wind Energy Science 6, 93–110** — 出版版OA全文，CC BY 4.0，SHA-256 `bd403805c3d5dd7f80ea1f82a4142e78588e9562f27f8b890608e4510065846d`。
+- **L020 Sayed et al. (2016), Journal of Physics: Conference Series 753, 042009** — OA全文，SHA-256 `456d85994bb608508b7573ad9b6a0235e4302935575755f1f56aee09737d47a4`。
+
+此前已入库：
+- **L004 Li et al. (2021), Applied Sciences 11, 8683**；
+- **L009 Hannesdóttir et al. (2019), Wind Energy Science 4, 325–342**。
+
+因此当前工作室已有 **7篇可直接逐页阅读的全文PDF**。Springer L016 返回HTML而非PDF，MDPI L017自动下载仍失败，二者状态如MANIFEST所示，不伪装为成功。
