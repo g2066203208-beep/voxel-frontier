@@ -17261,7 +17261,10 @@
     "bytes": 874881060,
     "sha256": "c3a519783a28abf9a6f4ff41b98460122bbb38c025e9eb48a894f6c85b7c95d1",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\A008_MESHFACE_NFORC_420.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/A008_MESHFACE_NFORC_420.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -20396,7 +20399,10 @@
     "bytes": 820670464,
     "sha256": "08af3f4feed146a042d5df92e941fd0ed5ddcd29505259ad89432f061b7f654f",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_HybridTower_v30_LT10K_MODAL.cae",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_HybridTower_v30_LT10K_MODAL.cae"
+    }
   },
   {
     "section": "abaqus-dtu-models",
