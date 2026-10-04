@@ -1,0 +1,57 @@
+name: Cache open-access research PDFs
+
+on:
+  push:
+    paths:
+      - "research/wind-tower/references/open-access-sources.tsv"
+      - ".github/workflows/literature-cache.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch only declared open-access sources
+        shell: bash
+        run: |
+          set -u
+          mkdir -p research/wind-tower/references/open-access
+          manifest="research/wind-tower/references/open-access/MANIFEST.tsv"
+          printf 'id\tfilename\tstatus\tsha256\tbytes\turl\tlicense\n' > "$manifest"
+          tail -n +2 research/wind-tower/references/open-access-sources.tsv | while IFS=$'\t' read -r id filename url license citation; do
+            out="research/wind-tower/references/open-access/$filename"
+            tmp="$out.tmp"
+            status="download-failed"
+            sha=""
+            bytes="0"
+            if curl -L --fail --retry 2 --connect-timeout 20 --max-time 180 -A "Mozilla/5.0 research-literature-cache" "$url" -o "$tmp"; then
+              if head -c 5 "$tmp" | grep -q '%PDF-'; then
+                mv "$tmp" "$out"
+                sha="$(sha256sum "$out" | awk '{print $1}')"
+                bytes="$(wc -c < "$out" | tr -d ' ')"
+                status="ok"
+              else
+                status="not-pdf"
+                rm -f "$tmp"
+              fi
+            else
+              rm -f "$tmp"
+            fi
+            printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$id" "$filename" "$status" "$sha" "$bytes" "$url" "$license" >> "$manifest"
+          done
+      - name: Commit successfully fetched open-access files and manifest
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/open-access
+          if git diff --cached --quiet; then
+            echo "No literature cache changes."
+          else
+            git commit -m "research: cache verified open-access literature PDFs"
+            git push
+          fi
