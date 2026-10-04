@@ -1,0 +1,21 @@
+{
+  "section": "abaqus-dtu-models",
+  "relative_path": "DTU158_OpenFAST_6DOF_SETUP.odb",
+  "bytes": 2700197352,
+  "sha256": "0ecf9a55010d970d353609f8b22d05676c5f6239060e8faa2641f4174aeb2692",
+  "git_sha": "f6235d356df9e72488968aeacdecf05b9e7a24b7",
+  "existing": null,
+  "status": "multipart-in-progress",
+  "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts",
+  "storage": "git-lfs-multipart",
+  "parts": [
+    {
+      "sha256": "651e341cb1dd507ac0b3042ae0daf0ca57af774e231571817204e87817a2841f",
+      "bytes": 1073741824,
+      "index": 1,
+      "offset": 0,
+      "blob": "1a596ee8af0aec874635a06b67f76136d11c42b5",
+      "destination": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0001"
+    }
+  ]
+}
