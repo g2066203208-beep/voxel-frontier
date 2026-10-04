@@ -1,6 +1,6 @@
 # MASTER RESEARCH PROTOCOL — 10 MW级预应力混凝土—钢混合风机塔架硕士论文
 
-版本：2026-10-04 v1.5  
+版本：2026-10-04 v1.6  
 状态：本文件为**唯一总控流程**。MASTER建立前的旧workflow已移入`archive/workflow-pre-master/`，早期audit已移入`archive/audit-early/`；归档文件只用于追溯，不得作为新任务入口。当前审计以`audit/INDEX.md`和`registry/`状态为准。  
 正式技术路线（T027修订）：**唯一baseline → Abaqus模型V&V → ERA5/TurbSim → OpenFAST/ROSCO整机随机风生产计算 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细混塔全局/局部响应与机制识别 → 分级疲劳 → 机制驱动敏感性 → 多目标优化 → 真实FE复核**。任何局部高保真模型仅在全局响应确认控制部位后，依据Li 2023两尺度方法与Ren 2025接缝试验机制条件触发；不设置多体软件协同支路。
 
@@ -584,3 +584,15 @@ G10 全文claim-evidence 100%审计
 - P8 surrogate test/CV + 高保真候选复核：PASS-method。
 
 注意：source PASS只说明“方法不是自己瞎编”，**不等于本文模型、参数和结果PASS**。G0、具体阻尼目标、51×51适用性、CDP最终参数、G7B材料寿命及优化范围仍须本文对象化验证。
+
+
+# Q. T031 ERA5风能文献专项
+
+P3.1今后不能只依赖ERA5/ECMWF官方资料。已专项检索同行评议期刊及学位论文，见[audit/37](../audit/37-t031-era5-wind-energy-literature-survey.md)与[ERA5 evidence map](../references/ERA5_WIND_ENERGY_EVIDENCE_MAP_20261004.tsv)。
+
+正式方法口径：
+1. ERA5用于2005–2025长期场址风环境背景/代表风速，不作为10-min局地湍流输入；
+2. 有U10/U100时优先按Jung2021、Yang2024逐时计算`alpha(t)=ln(U100/U10)/ln(100/10)`，不默认固定1/7；
+3. `Uhub=U100*(Hhub/100)^alpha(t)`仅作为100m以上的外推估计；Liu2023对120/160/200m的研究要求在约161m处显式报告外推不确定性；
+4. ERA5之后用TurbSim产生随机湍流场；这一分工由Koivisto2020/Murcia2022直接支持；
+5. P3.1当前状态为**PASS-literature / HOLD-site-validation**：文献方法已闭合，但嘉鱼原始处理链、161.37m重算与可能的附近实测验证仍需RUN级闭合。
