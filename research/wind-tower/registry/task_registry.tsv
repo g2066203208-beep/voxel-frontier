@@ -36,4 +36,5 @@ T028	global	global	Q01-Q05	按现有分区上传本地论文工作索引和历�
 T029	P1-P8	global	Q01-Q05	逐篇全文核读用户补齐10篇核心论文并建立能支持/不能支持边界	audit/35-t029-ten-paper-fulltext-evidence-audit.md	complete-fulltext-audit	G0-G10	10篇全部fulltext-audited；用途映射见references/ten-paper-fulltext-use-map-20261004.tsv
 
 T030	P2-P8	global	Q01-Q05	针对T029发现的source gaps补官方文档/直接论文并重判MASTER逐步文献覆盖	audit/36-t030-source-gap-closure.md	complete-source-audit/implementation-open	G1-G10	P3.1/P4.1-P4.4/P5.5/P7/P8.4等主要source gap已关闭；本文专属参数、baseline和数值门禁仍未PASS
+T031	P3	3	Q02	专项检索ERA5在风能期刊/学位论文中的真实用法并重判U10/U100→161.37m方法	audit/37-t031-era5-wind-energy-literature-survey.md	complete-literature-survey/site-validation-open	G2	新增REF080-REF103与ERA5证据图；P3.1升级为PASS-literature/HOLD-site-validation；固定1/7不作为默认方法
 
