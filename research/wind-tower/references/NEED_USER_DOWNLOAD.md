@@ -5,7 +5,7 @@
 ## P0：必须优先拿到全文
 
 1. **Dan Wang, Jun Xu, Zeyu He, Quanfu Yu, Weiwei Tang, Guangling He, Qiang Wu. High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel–Concrete Hybrid Tower. Mechanical Systems and Signal Processing, 230 (2025), 112583. DOI: 10.1016/j.ymssp.2025.112583.**
-   - 原因：与本文“Simpack RNA + Abaqus精细混塔 + OpenFAST验证”路线最直接重合，是判断联合仿真创新边界的核心文献。
+   - 原因：该文代表既有多体—有限元高保真联合研究，是判断研究现状与创新边界的核心文献；本文当前不采用其生产路线。
    - 当前状态：出版社页面可读摘要，未取得合法全文PDF。
 
 2. **Xiaogang Huang et al. Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads. Engineering Structures, 334 (2025), 120295. DOI: 10.1016/j.engstruct.2025.120295.**
@@ -44,7 +44,7 @@
     - 原因：显式考虑RNA质量偏心/转动惯量、变截面和预应力；是第二章RNA简化影响的直接学术依据。
 
 11. **M. Sayed, L. Klein, Th. Lutz, E. Krämer. The impact of the aerodynamic model fidelity on the aeroelastic response of a multi-megawatt wind turbine. Renewable Energy, 140 (2019), 304–318. DOI: 10.1016/j.renene.2019.03.046.**
-    - 原因：同一SIMPACK结构模型下比较AeroDyn/BEM与FLOWer/CFD，直接用于本文AeroDyn保真度和适用边界。
+    - 原因：在同一结构模型下比较AeroDyn/BEM与FLOWer/CFD，可用于本文AeroDyn保真度和适用边界。
 
 ## P1：2026年最新直接相关，建议立刻下载
 
