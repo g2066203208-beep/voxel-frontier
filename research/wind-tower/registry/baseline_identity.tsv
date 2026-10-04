@@ -15,3 +15,7 @@ BASE-HIST-ABAQUS-001	historical Abaqus candidate	DTU158_SITE_S04_INTERFACE_DYNAM
 BASE-HIST-ABAQUS-002	historical Abaqus derived branch	RNA_REAL_EXPLICIT	copy of DTU158_SITE_S04_INTERFACE_DYNAMIC	Abaqus JNL	manifest metadata	excluded-from-current-route	Historical explicit RNA branch; do not restore
 BASE-CONN-001	historical interface	CSEG_31 top to SSEG_01 bottom	Abaqus TIE pair	Abaqus JNL job warning	-	historical-direct-evidence	Corrects prior overgeneralization that all interfaces were SPRING2
 BASE-CONN-002	historical interface	SSEG_03 top to SSEG_04 bottom	Abaqus TIE pair	Abaqus JNL job warning	-	historical-direct-evidence	Formal current INP still required
+BASE-HIST-OF-001	historical OpenFAST geometry	TowerHt/TowerBsHt/Twr2Shft/OverHang/ShftTilt	158 / 0 / 2.75 / -7.1 / -5	m,m,m,m,deg	R2Z74 historical per-file audit	OpenFAST official hub-location formula	historical-partial	Raw FST/ElastoDyn not currently available
+BASE-HIST-OF-002	historical OpenFAST geometry	actual HubHt	161.368806	m	Historical per-file audit	Independent official-formula recomputation =161.3688057735	historical-reproduced-arithmetic	Input fields still need raw-file closure
+BASE-HIST-OF-003	historical OpenFAST discretization	TwrNodes production comparison	70 / 560 / 1120	nodes	Historical ED.sum audit	Historical independent midpoint integration	historical-only	ED.sum/TwrFile originals absent
+BASE-HIST-CTRL-001	historical controller	ROSCO	v2.6.0	runtime record	R2Z54 thesis record	-	historical-reported	DISCON/controller binary/config absent
