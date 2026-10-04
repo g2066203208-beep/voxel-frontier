@@ -21,36 +21,6 @@
       "initialIntakeSha256": "fbacc495eaecd8c435a1be6229df510c167735ebd4953f45a364605215281900",
       "changedSinceIntake": false,
       "storage": "Git LFS"
-    },
-    {
-      "name": "SIMPACK_SITE_ONLY.cae",
-      "path": "research/wind-tower/models/SIMPACK_SITE_ONLY.cae",
-      "bytes": 111546368,
-      "sha256": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
-      "initialIntakeBytes": 111525888,
-      "initialIntakeSha256": "759bcdff6d4e787a9feaa1261c8af86a8de01d87f97020329f8fb6a301057867",
-      "changedSinceIntake": true,
-      "storage": "Git LFS"
-    },
-    {
-      "name": "SIMPACK_SITE_ONLY.rec",
-      "path": "research/wind-tower/logs/SIMPACK_SITE_ONLY.rec",
-      "bytes": 2470,
-      "sha256": "749a868e243503b0de37d8628f9b41c3bff3326eb18a29e6e7591a13942b6c93",
-      "initialIntakeBytes": 2470,
-      "initialIntakeSha256": "749a868e243503b0de37d8628f9b41c3bff3326eb18a29e6e7591a13942b6c93",
-      "changedSinceIntake": false,
-      "storage": "Git"
-    },
-    {
-      "name": "SIMPACK_SITE_ONLY.jnl",
-      "path": "research/wind-tower/logs/SIMPACK_SITE_ONLY.jnl",
-      "bytes": 29930,
-      "sha256": "a49dbb68c424c10bb2956b9b2849ca928829affae3396706af1b412606f71cec",
-      "initialIntakeBytes": 29930,
-      "initialIntakeSha256": "a49dbb68c424c10bb2956b9b2849ca928829affae3396706af1b412606f71cec",
-      "changedSinceIntake": false,
-      "storage": "Git"
     }
   ],
   "inspection": [
@@ -288,65 +258,6 @@
         }
       ],
       "error": null
-    },
-    {
-      "file": "SIMPACK_SITE_ONLY.cae",
-      "scope": "Abaqus 2025 metadata inspection; no analysis submitted; no save called; compare source byte fingerprints and automatic writeback note in manifest/README",
-      "models": [
-        {
-          "name": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
-          "parts": 102,
-          "instances": 108,
-          "nodesAcrossParts": 54843,
-          "elementsAcrossParts": 43883,
-          "steps": [
-            "Initial",
-            "Gravity",
-            "Modal_From_Gravity",
-            "Wind_SITE_NTM_U18p57_S04_INTERFACE"
-          ],
-          "materials": [
-            "C65",
-            "C70",
-            "HRB500_BASELINE",
-            "MAT_RNA_BLD_Z1",
-            "MAT_RNA_BLD_Z2",
-            "MAT_RNA_BLD_Z3",
-            "MAT_RNA_BLD_Z4",
-            "MAT_RNA_BLD_Z5",
-            "MAT_RNA_HUB_EQ",
-            "MAT_RNA_NAC_EQ",
-            "S345",
-            "STRAND_1860"
-          ]
-        },
-        {
-          "name": "RNA_REAL_EXPLICIT",
-          "parts": 102,
-          "instances": 108,
-          "nodesAcrossParts": 54843,
-          "elementsAcrossParts": 43883,
-          "steps": [
-            "Initial",
-            "RNA_ROTATION_EXPLICIT"
-          ],
-          "materials": [
-            "C65",
-            "C70",
-            "HRB500_BASELINE",
-            "MAT_RNA_BLD_Z1",
-            "MAT_RNA_BLD_Z2",
-            "MAT_RNA_BLD_Z3",
-            "MAT_RNA_BLD_Z4",
-            "MAT_RNA_BLD_Z5",
-            "MAT_RNA_HUB_EQ",
-            "MAT_RNA_NAC_EQ",
-            "S345",
-            "STRAND_1860"
-          ]
-        }
-      ],
-      "error": "Traceback (most recent call last):\n  File \"C:/Users/REME/Documents/Codex/2026-10-03/lia/work/cae-intake.py\", line 37, in <module>\n    report['jobs']={key:attrs(obj,['name','model','type','numCpus','numDomains','status','description']) for key,obj in db.jobs.items()}\n<unknown>.AbaqusException: rom_MementoRead::rom_MementoRead - Object is not available in DB file: ajbC_Message[176002]\n"
     }
   ]
 }
