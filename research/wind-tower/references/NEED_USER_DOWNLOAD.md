@@ -56,12 +56,6 @@
     - 原因：OA；振动台+FE，分析接缝形式/损伤对静动力和模态的影响，与本文模型验证和局部退化解释直接相关。
     - 当前状态：网页摘要可读，自动化尚未获得稳定PDF直链。
 
-14. **Chang Qu, Pengyong Miao, Chengyun Li, Ziyue Li, Yanru Wu. Fatigue Life Evaluation of a Steel–Prestressed Concrete Hybrid Tower Under Prestress Relaxation Using a Bidirectionally Coupled Damage Model and Neural Network Surrogate. Buildings, 16(19) (2026), 3854. DOI: 10.3390/buildings16193854.**
-    - 原因：2026-09-28新发表、OA；直接研究混塔预应力松弛—疲劳寿命—代理模型，是第五六章最新研究边界。
-    - 当前状态：网页全文已读，自动下载PDF暂失败；若浏览器能下载，请给我PDF。
-
-## 中文核心方法文献
-
 15. **李守振，周绪红，王宇航，甘丹，朱嵘华. 考虑P-Δ效应的钢混凝土混合塔筒动力响应分析. 东南大学学报（自然科学版）, 2024, 54(1). DOI: 10.3969/j.issn.1001-0505.2024.01.002.**
     - 原因：本文当前等效阻尼/Rayleigh/P–Δ路线的重要直接来源，必须保留正式PDF并逐式核对式(18)/(19)、对象、基础阻尼和适用范围。
     - 当前状态：公开网页/作者上传内容可检索，但需要稳定正式PDF副本用于逐页核查。
@@ -76,14 +70,6 @@
 16. **Cirong Huang et al. Model and test verification for concrete fatigue failure of the steel-concrete hybrid wind turbine tower. Case Studies in Construction Materials, 24 (2026), e06051. DOI: 10.1016/j.cscm.2026.e06051.**
    - 原因：1:5变幅高周疲劳试验、混凝土S–N与FE验证，第四章材料疲劳非常直接。
    - OA，但当前仅稳定获得出版页；如果你的浏览器能点PDF，请下载给我。
-
-17. **Xintong Hao et al. Analysis on influence factors of static and dynamic response of prefabricated prestressed steel-concrete hybrid tower for onshore wind turbines. Results in Engineering, 30 (2026), 111045. DOI: 10.1016/j.rineng.2026.111045.**
-   - 原因：振动台+FE，直接讨论预制预应力钢混塔接缝形式、损伤、模态与响应。
-   - OA；当前自动抓取没有稳定PDF直链。
-
-18. **Ji-Ke Tan et al. Evaluation of load-carrying capacity of horizontal joints in concrete wind turbine towers. Engineering Structures, 364 (2026), 123195. DOI: 10.1016/j.engstruct.2026.123195.**
-   - 原因：压—弯—剪—扭联合试验 + Abaqus验证，是第四章接缝六分量传力目前最关键的新文献之一。
-   - OA；优先下载。
 
 19. **Ji-Ke Tan et al. Shear resistance of horizontal joints in concrete wind turbine towers under bending and torsion. Structures, 92 (2026), 112947. DOI: 10.1016/j.istruc.2026.112947.**
    - 原因：直接验证预应力界面摩擦、接缝开口和弯扭耦合作用。
@@ -120,3 +106,6 @@
    - 原因：何泽瑜本人参与的同研究谱系正式期刊论文，Table 2直接给出C70/C65、HRB335、15.2 mm预应力筋及Q345材料参数；可用于解决R2Z74中“S345/HRB335/Q345”的来源冲突。
    - 用途只限材料/原型身份和研究现状；本文已撤销该文的联合求解生产路线。
    - 请优先下载出版社PDF或学校数据库版本给我。
+
+
+> 维护说明：Qu et al. 2026（Buildings 16(19), 3854）已于2026-10-04成功缓存出版PDF，已从待用户下载项删除；重复的Tan 2026与Hao 2026条目已合并。
