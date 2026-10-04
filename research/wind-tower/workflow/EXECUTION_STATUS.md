@@ -1,3 +1,10 @@
+## T032/T033 Word去重抽取与新文献缓存（2026-10-04）
+
+- 用户本轮上传R2Z74 DOCX与工作室既有历史稿SHA-256完全一致：`65b5bddae58aac9b5e194ba7ddff498a67cb82aa8bbe984d7ad445684bfc7480`；未重复上传原Word。
+- 已新增唯一“去Word化”可复现入口：`manuscript/reproducibility/`，只保存当前路线仍有效的思路、公式、输入/处理步骤、V&V逻辑、可比benchmark与章节映射；旧Simpack路线已在抽取阶段排除。
+- 新检索开放文献L060–L072共13项已通过GitHub literature-cache尝试；10项PDF实际缓存并完成PDF头/SHA256/字节校验，3项（L062、L065、L069）因站点机器人限制下载失败。
+- `references/NEED_USER_DOWNLOAD.md`已重建为当前去重队列：已缓存成功和用户已提供全文不再重复要求；付费、许可不明或不宜公开再分发的文献只保存题录/链接/阅读记录，不向公共GitHub提交受限PDF。
+
 # EXECUTION STATUS
 
 更新时间：2026-10-04（T026）
