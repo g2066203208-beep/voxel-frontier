@@ -1,0 +1,20 @@
+task_id	phase	chapter	question_id	objective	primary_output	status	next_gate	notes
+T000	P0	global	Q01-Q05	建立重新开工基线与证据原则	audit/04-restart-baseline-2026-10-04.md	complete	G0	旧结果只作历史证据，正式结论重新闭合
+T001	P0	1	Q01-Q05	题目与对象逐词证据审查	audit/07-step00-01-title-evidence.md	conditional	G0	题目暂保留，结构优化为条件性承诺
+T002	P0	摘要	Q01-Q05	摘要逐句证据与完成状态审查	audit/08-step02-abstract-evidence.md	hold	G1-G9	最终摘要必须主要结果完成后回写
+T003	P1	1.1	Q01-Q05	研究背景与意义文献驱动重写	audit/09-step03-section1-1-evidence-rewrite.md	conditional	G0	几何身份和部分全文证据待闭合
+T004	P1	1.2	Q01/Q03	混塔体系与受力特点文献驱动重写	audit/10-step04-section1-2-evidence-rewrite.md	conditional	G1	模型真实连接能力待INP闭合
+T005	P1	1.3	Q01/Q02/Q03	动力响应研究现状重构	audit/11-step05-section1-3-evidence-rewrite.md	conditional	G1-G5	已按OpenFAST/ROSCO+Abaqus路线重构
+T006	P1	1.4	Q03-Q05	疲劳/敏感性/优化研究现状重构	audit/12-step06-section1-4-evidence-rewrite.md	conditional	G7-G9	DEL与材料寿命已分层
+T007	P1	1.5-1.7	Q01-Q05	研究边界、研究内容与技术路线重构	audit/13-step07-section1-5-to-1-7-evidence-rewrite.md	conditional	G0-G9	创新最终判定推迟到第4-6章
+T008	P2	2.1	Q01	几何、原型与baseline身份审查	audit/14-step08-section2-1-geometry-baseline-audit.md	hold	G0	半径/直径、STEP单位、正式158m输入未闭合
+T009	P2	2.2	Q01	材料与CDP证据审查	audit/15-step09-material-cdp-audit.md	hold	G1	正式INP、材料曲线、数值试件待入库
+T010	P2	2.3	Q01/Q03	预应力、接缝、转换段建模能力审查	audit/16-step10-prestress-joint-transition-audit.md	hold	G1	正式连接定义与PT约束待INP闭合
+T011	P2	2.4	Q01	RNA空间等效与6x6质量身份审查	audit/17-step11-rna-spatial-equivalence-audit.md	partial-hold	G0-G1	DTU源质量已重算；正式Abaqus/OpenFAST原始文件待入库
+T012	P0-P1	global	Q01-Q05	建立唯一总控科研流程	workflow/MASTER_RESEARCH_PROTOCOL.md	complete	all	后续工作必须挂接本流程
+T013	P1	global	Q01-Q05	建立文献检索/下载/阅读协议	workflow/LITERATURE_PROTOCOL.md	complete	all	核心文献必须全文提取
+T014	P2-P8	global	Q01-Q05	建立实验与仿真Research Card规范	workflow/EXPERIMENT_SIMULATION_PROTOCOL.md	complete	all	无卡不运行正式case
+T015	P0-P8	global	Q01-Q05	建立项目目录/编号/版本规则	workflow/PROJECT_ORGANIZATION.md	complete	all	文件名不等于科学状态
+T016	P0-P8	global	Q01-Q05	固化导师要求	workflow/ADVISOR_REQUIREMENTS.md	complete	all	范围收敛、简化量化、前文服务优化
+T017	P0-P1	global	Q01-Q05	文献驱动论文结构审计	audit/18-literature-driven-thesis-structure-audit.md	complete	all	七章保留，第三章重构、四五六章职责重定
+T018	P1	global	Q01-Q05	建立结构化文献主表与研究范式提取	registry/literature_master.tsv	in-progress	P1	当前30项核心来源，继续扩充与全文提取
