@@ -1,0 +1,18 @@
+item_id	title_or_group	acquisition_route	status	sha256_or_reason	next_action
+ACQ001	Open-access declared source set (34)	GitHub Actions literature-cache	22-ok / 5-not-pdf / 7-download-failed	see open-access/MANIFEST.tsv	continue replacing bot-blocked URLs with stable repositories
+ACQ002	Wu 2022 160m post-tensioned precast hybrid tower	publisher direct PDF	cached	cfaee65bc0adfff21f1f4df815d1f202c149d9cc477b3776e83e3bc17fded7f4	fulltext extraction for T022
+ACQ003	Wang et al. 2025 hybrid-tower technology review	publisher direct PDF	cached	9e461202ecdb77c7fd9017890da2fd73bcfd9aef9cfeab367258c93b4632b5d9	use to map commercial/research families
+ACQ004	Kenna 2019 PhD	TARA OA	bot-failed	TARA PDF exists 5.77MB	user browser download or future alternate API
+ACQ005	Chen 2020 optimization	Wiley fulltext	bot-failed	Wiley page readable	user browser PDF; web content can support limited extraction meanwhile
+ACQ006	Wu 2022 3MW UHPC	Springer OA	bot-returned-HTML	CC BY 4.0; publisher page has PDF	user browser PDF
+ACQ007	Kim 2019 transition joint fatigue	Springer/Elsevier OA	bot-returned-HTML	CC BY-NC-ND 4.0	user browser PDF
+ACQ008	Tan 2026 combined-loading joint	ScienceDirect OA	bot-failed	OA full HTML available	user browser PDF
+ACQ009	Hao 2026 hybrid tower shaking-table	ScienceDirect OA	bot-failed	OA article	user browser PDF
+ACQ010	Huang 2026 concrete fatigue	ScienceDirect OA	bot-failed	OA CC license	user browser PDF
+ACQ011	Li 2023 closed-form hybrid frequency	HKU repository	bot-failed	HKU final-version record, CC BY-NC-ND	user browser PDF
+ACQ012	Kenna & Basu 2015 prestressed tower FE	Wiley free-to-read	bot-failed	Wiley page	user browser PDF
+ACQ013	Li 2023 PCSH two-scale experiment	institution/paywall	manual-required	no stable OA PDF found	user school database
+ACQ014	Cao 2024 RNA/dynamics	institution/paywall	manual-required	no stable OA PDF found	user school database
+ACQ015	Huang 2025 fatigue	institution/paywall	manual-required	no stable OA PDF found	user school database
+ACQ016	Wang 2025 MSSP high-fidelity co-simulation	institution/paywall	manual-required	no public fulltext found	user school database
+ACQ017	Xu/He 2025 Renewable Energy	publisher + SSRN preprint	manual-required	SSRN 39-page preprint exists; publisher article paywalled	publisher PDF preferred, SSRN acceptable as A2/preprint
