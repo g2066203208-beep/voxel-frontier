@@ -55,4 +55,10 @@
 "rna-validation/DTU158_RNA_OFFICIAL_GRAVITY_MODAL.odb" filter=lfs diff=lfs merge=lfs -text
 "abaqus-v30/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL005.odb" filter=lfs diff=lfs merge=lfs -text
 "abaqus-v30/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007.odb" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007R1.odb" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.odb" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_HybridTower_v28_RNA_COARSE_INERTIA_OFFICIAL.cae" filter=lfs diff=lfs merge=lfs -text
+"simpack-blade-validation/SIMPACK_FBI_RECOVERY_DUMP_R3B.txt" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_HybridTower_v29_RNA_DISTRIBUTED_OFFICIAL.cae" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_HybridTower_v28_RNA_SURFACE_MASS_OFFICIAL.cae" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text

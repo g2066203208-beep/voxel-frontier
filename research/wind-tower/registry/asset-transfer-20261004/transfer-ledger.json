@@ -18022,7 +18022,10 @@
     "bytes": 150625508,
     "sha256": "df4955a4f51a476028b5d72e3f9e5d311fa918cb76a637448948e4ca46113f38",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL006.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -18231,7 +18234,10 @@
     "bytes": 154006160,
     "sha256": "e35ecf908cc2ecad2a9bbb42bce1be3ce419dd19a6f686715dd8c6718c5502e7",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007R1.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/DTU158_DLC13_U24_S06_INTERFACE_DYNAMIC_CTRL007R1.odb"
+    }
   },
   {
     "section": "abaqus-v30",
@@ -19738,7 +19744,10 @@
     "bytes": 174175344,
     "sha256": "a63f019fa441ac6451d707fd4a6db0544fe45f0a69eed3dbee95f202a75de819",
     "source_locator": "CODEX_WORK\\simpack-mcp-runs\\taskbook_flex_vv_20260904\\SIMPACK_FBI_RECOVERY_DUMP_R3B.txt",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/simpack-blade-validation/SIMPACK_FBI_RECOVERY_DUMP_R3B.txt"
+    }
   },
   {
     "section": "simpack-blade-validation",
@@ -20241,7 +20250,10 @@
     "bytes": 160972800,
     "sha256": "7fabc3a6a7fb560367b3c03335a7de31c7b40036d681fa957f4efb4c3d8f674b",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_HybridTower_v28_RNA_COARSE_INERTIA_OFFICIAL.cae",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_HybridTower_v28_RNA_COARSE_INERTIA_OFFICIAL.cae"
+    }
   },
   {
     "section": "abaqus-dtu-models",
@@ -20257,7 +20269,10 @@
     "bytes": 161218560,
     "sha256": "0fbc8c27d76c3cc4f025d52c9bd97bcbfed2ee742a9e7c5094cc42a7122f8b63",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_HybridTower_v28_RNA_SURFACE_MASS_OFFICIAL.cae",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_HybridTower_v28_RNA_SURFACE_MASS_OFFICIAL.cae"
+    }
   },
   {
     "section": "abaqus-dtu-models",
@@ -20265,7 +20280,10 @@
     "bytes": 161824768,
     "sha256": "52701da7f2f366a71cfc22248824927d039070381799db6ebe2d942512ce0770",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_HybridTower_v29_RNA_DISTRIBUTED_OFFICIAL.cae",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_HybridTower_v29_RNA_DISTRIBUTED_OFFICIAL.cae"
+    }
   },
   {
     "section": "abaqus-dtu-models",
