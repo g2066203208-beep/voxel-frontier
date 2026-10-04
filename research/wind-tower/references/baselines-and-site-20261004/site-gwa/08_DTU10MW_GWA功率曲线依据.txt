@@ -1,0 +1,25 @@
+﻿DTU 10 MW RWT - Global Wind Atlas custom turbine input
+
+Geometry and control parameters
+- Rated power: 10,000 kW
+- Rotor diameter: 178.3 m
+- Hybrid tower total length: 158 m (112 m reinforced-concrete section + 46 m steel section)
+- Hub height required by Global Wind Atlas: 160.0 m
+- Tower/hub-height source: 大型混塔式风力机的建模与可靠度分析_何泽瑜.pdf, Chapter 3
+- Cut-in wind speed: 4 m/s
+- Rated wind speed: 11.4 m/s
+- Cut-out wind speed: 25 m/s
+- Control: variable speed and collective pitch
+- Reference air density: 1.225 kg/m3
+- IEC Class I design annual mean wind speed: 10 m/s
+
+Power-curve construction
+1. Aerodynamic power points at 5, 6, 8, 9, 10 and 11 m/s are taken from the official DTU 10 MW RWT CFD power_curve.dat.
+2. Electrical power is calculated using the official 94% electrical generator efficiency from DTU10MWReferenceWindTurbine.xls.
+3. Missing below-rated points are linearly interpolated.
+4. At 11.4-25 m/s, electrical power is limited to the official 10,000 kW rated constant-power value.
+5. This curve is a documented reconstruction from public DTU reference-model data, not a manufacturer-certified measured power curve.
+
+Do not use the Generic 15.0 MW Offshore power curve for the DTU 10 MW model.
+
+

@@ -1,0 +1,16 @@
+*.exe
+*.out
+*.outb
+*.sum
+*.dbg
+*.yaml
+*.JSON
+*.lin
+*.vtp
+*.png
+*.pyPostMBC
+*.bts
+*.pvsm
+*.chkp
+*.bin
+_*

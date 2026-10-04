@@ -1,0 +1,29 @@
+[
+  {
+    "source_name": "DTU_10_MW_Reference_Wind_Turbine_v_9-2.zip",
+    "bytes": 2950858,
+    "sha256": "789477a70427cce2ad8de8eae70a057c8ec8bbc6ce14d7271b2fa95fecbd02af",
+    "section": "dtu-hawc2-reference",
+    "identity": "local DTU reference distribution; outer v9-2 / inner v9-1 discrepancy retained",
+    "archive_itself_uploaded": false,
+    "reason": "unpacked and deduplicated; manifest preserves source archive identity"
+  },
+  {
+    "source_name": "dtu-10mw-rwt-master-structural_models-ABAQUS.zip",
+    "bytes": 38099889,
+    "sha256": "d3afa53ff30d13a920c0d6459885ec273e46697567d2e5005264969fb9d23abf",
+    "section": "dtu-abaqus-blade",
+    "identity": "user-held DTU reference blade source package; original README retained",
+    "archive_itself_uploaded": false,
+    "reason": "unpacked and deduplicated; manifest preserves source archive identity"
+  },
+  {
+    "source_name": "DTU-10MW-Landbased-OpenFAST-v3.3.0-main (1).zip",
+    "bytes": 8305117,
+    "sha256": "45fe02a00f5d73a32221459e3209e3fd7a72d2ab7c9af4786d010d24ff0e758e",
+    "section": "openfast-v330-adaptation",
+    "identity": "third-party Bing008 adaptation, NOT DTU original official release",
+    "archive_itself_uploaded": false,
+    "reason": "unpacked and deduplicated; manifest preserves source archive identity"
+  }
+]
