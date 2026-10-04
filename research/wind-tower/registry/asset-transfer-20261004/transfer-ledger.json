@@ -20488,7 +20488,10 @@
     "bytes": 1007224332,
     "sha256": "7d3b78472eb822dd44de5880bb94a23afdcc6f1bb8e14636f3d5bc4838beb845",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_RIKS_SITE_S04_T535_INC.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_RIKS_SITE_S04_T535_INC.odb"
+    }
   },
   {
     "section": "abaqus-dtu-models",
@@ -20507,7 +20510,10 @@
     "bytes": 1006638660,
     "sha256": "d5916b53a5eb078dd30fab3deeb423a13fc9a9cb813cfeb2624534cf3d50ea40",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_RIKS_SITE_S04_T535_INTERFACE.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_RIKS_SITE_S04_T535_INTERFACE.odb"
+    }
   },
   {
     "section": "abaqus-dtu-models",
