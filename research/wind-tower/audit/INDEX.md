@@ -44,3 +44,12 @@
 2. 补G0 baseline原始资料；
 3. 完成P1核心全文提取；
 4. 达到入口条件后按MASTER进入P2.5。
+
+## T023：整篇流程复核与逐章映射
+
+|审计文件|主要内容|关键成果|当前状态|
+|---|---|---|---|
+|[27-overall-process-review.md](27-overall-process-review.md)|七章章间关系复核|六处断点、控制工况回路与候选载荷代表性|流程审查完成；数值研究未据此验收|
+|[28-chapter-checklist.md](28-chapter-checklist.md)|40项逐章补充检查|问题—REQ—文献—模型—数据—计算—验收映射|映射完成；实际证据状态以registry为准|
+
+机器映射见[chapter-process-checklist.json](chapter-process-checklist.json)。本轮按用户要求先完成流程审查，原始结果追索与求解专项暂缓；正式生产仍需满足MASTER门禁。

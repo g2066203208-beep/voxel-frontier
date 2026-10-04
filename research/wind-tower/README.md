@@ -42,3 +42,7 @@ GitHub 页面中看到的 LFS 指针不是 CAE 本体；使用文件的 Download
 SHOWTIME 工程包含三组 SHOWTIME 命名模型；不得仅凭上传文件名称把它认作 DTU158 的最终生产模型。后续正式结构分析只采用来源、版本与输入可追溯的 Abaqus 基准模型。
 
 老师讨论提出的问题、执行措施与验收依据见 [讨论问题与整改台账](discussion-issues.md)。后续新增数据与结果时须写明工况、模型版本、处理脚本、单位及来源，不能把计划或日志中的作业提交当成已完成分析。
+
+## 整篇流程复核（本轮优先）
+
+[七章流程判定与六处衔接修正](audit/27-overall-process-review.md) · [40项逐章研究核查映射](audit/28-chapter-checklist.md)。本轮先审流程，原始结果追索与求解专项暂缓；正式流程及研究状态继续以MASTER和registry为准。原论文与导师Word均不提交。
