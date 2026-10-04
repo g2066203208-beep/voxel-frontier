@@ -1,0 +1,94 @@
+name: Recover user-provided reference PDFs
+
+on:
+  push:
+    paths:
+      - "research/wind-tower/references/user-provided/REMOTE_RECOVERY_SOURCES.tsv"
+      - ".github/workflows/user-provided-pdf-recovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Recover only exact publisher binaries by SHA-256
+        shell: bash
+        run: |
+          set -u
+          dir="research/wind-tower/references/user-provided"
+          src="$dir/REMOTE_RECOVERY_SOURCES.tsv"
+          out_manifest="$dir/REMOTE_RECOVERY_STATUS.tsv"
+          mkdir -p "$dir" "research/wind-tower/references/archives"
+          printf 'id\tfilename\tstatus\texpected_sha256\tactual_sha256\tbytes\turl\n' > "$out_manifest"
+
+          while IFS="$(printf '\t')" read -r id filename url expected; do
+            [ "$id" = "id" ] && continue
+            [ -z "$id" ] && continue
+            out="$dir/$filename"
+            tmp="$out.tmp"
+            status="download-failed"
+            actual=""
+            bytes="0"
+
+            if [ -f "$out" ] && head -c 5 "$out" | grep -q '%PDF-'; then
+              actual="$(sha256sum "$out" | awk '{print $1}')"
+              bytes="$(wc -c < "$out" | tr -d ' ')"
+              if [ "$actual" = "$expected" ]; then
+                status="ok"
+              else
+                status="existing-hash-mismatch"
+              fi
+            else
+              rm -f "$tmp"
+              if curl -L --fail --retry 2 --connect-timeout 20 --max-time 180 -A "Mozilla/5.0 research-literature-recovery" "$url" -o "$tmp"; then
+                if head -c 5 "$tmp" | grep -q '%PDF-'; then
+                  actual="$(sha256sum "$tmp" | awk '{print $1}')"
+                  bytes="$(wc -c < "$tmp" | tr -d ' ')"
+                  if [ "$actual" = "$expected" ]; then
+                    mv "$tmp" "$out"
+                    status="ok"
+                  else
+                    status="hash-mismatch"
+                    rm -f "$tmp"
+                  fi
+                else
+                  status="not-pdf"
+                  rm -f "$tmp"
+                fi
+              fi
+            fi
+
+            printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+              "$id" "$filename" "$status" "$expected" "$actual" "$bytes" "$url" >> "$out_manifest"
+          done < "$src"
+
+      - name: Build GitHub-side user-provided ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/wind-tower/references/archives
+          rm -f research/wind-tower/references/archives/user-provided-pdfs.zip
+          count=$(find research/wind-tower/references/user-provided -maxdepth 1 -type f -name '*.pdf' | wc -l | tr -d ' ')
+          if [ "$count" -gt 0 ]; then
+            find research/wind-tower/references/user-provided -maxdepth 1 -type f -name '*.pdf' -print0 | sort -z | xargs -0 zip -j -9 research/wind-tower/references/archives/user-provided-pdfs.zip
+          fi
+
+      - name: Commit recovered PDFs status and ZIP
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/user-provided research/wind-tower/references/archives
+          if git diff --cached --quiet; then
+            echo "No recovery changes."
+          else
+            git commit -m "research: recover exact user-provided PDF binaries where publicly retrievable"
+            git pull --rebase origin main
+            git push
+          fi
