@@ -1,0 +1,21 @@
+citation_no	ref_id	chapter_location	evidence_role	reading_scope	use_boundary
+1	REF008	1.1/1.6	source lineage	original-page record	prototype geometry does not validate assembled 10MW model
+2	REF001	1.1	reference turbine identity	presentation plus report metadata	formal Report-I-0092 detailed parameters pending
+5	REF002	1.3/1.4/1.5	global/local and optimization	relevant thesis chapters	not whole-book read; capital/AEP metric simplified
+20	REF051	1.3.5/1.5	integrated-model prior work	abstract/section preview	5MW rotor parameters/157.3m differs from present combination
+28	REF009	1.3.1/1.3.4/1.5	target-response validation	full HTML key sections	2.8MW measured validation does not validate this hybrid tower
+64	REF010	1.2/1.3.2/1.5	RNA spatial simplification	publisher abstract	first author Cheng; detailed formulas not adopted
+65	REF004	1.1/1.4.3/1.5	multi-constraint design	complete 13-page paper	final FE checks specified three quantities; not 10MW validation
+71	REF003	1.4.3/1.5	LCOE objective definition	complete 21-page paper	economic improvement is not equivalent weight reduction
+75	REF011	1.4.2	seed variability and sensitivity	full HTML key sections	case-specific rankings; nonlinearity and interaction not separately identified by sigma
+95	REF018	1.4.1/1.5	prestress mean-stress and sampling issues	publisher abstract/preview	no fatigue formula or life parameter adopted
+96	REF013	1.2	compression-bending modelling	institutional AAM key sections	different test scale; friction/material parameters not transferred
+118	REF049	1.1	support-structure design scope	official edition/scope metadata	full standard clauses not read
+125	REF050	1.3.3	aeroelastic capability	existing fulltext record/key sections	not proof current solver enables feedback
+128	REF023	1.4.1/1.5	fatigue surrogate validation boundary	publisher HTML key sections	no claim of page-by-page PDF reading
+129	REF045	1.1	height resource cost context	official metadata/front matter	no quantitative benefit imported
+130	REF046	1.3.1	controller and tuning	full HTML key sections	not proof actual controller configured correctly
+131	REF047	1.3.4	general modal representation	official HTML	dev version is not production software identity
+132	REF014	1.2	horizontal-joint torsion	institutional AAM key sections	third author LAN Y S; parameters not transferred
+133	REF048	1.1	design-condition scope	official edition/scope metadata	full standard clauses not read
+134	REF019	1.4.1/1.5	direct nonlinear-fatigue prior work	publisher abstract/preview	cannot claim first combination; case conclusions not universal

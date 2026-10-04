@@ -53,3 +53,9 @@
 |[28-chapter-checklist.md](28-chapter-checklist.md)|40项逐章补充检查|问题—REQ—文献—模型—数据—计算—验收映射|映射完成；实际证据状态以registry为准|
 
 机器映射见[chapter-process-checklist.json](chapter-process-checklist.json)。本轮按用户要求先完成流程审查，原始结果追索与求解专项暂缓；正式生产仍需满足MASTER门禁。
+
+## T024：题目与第一章实质修订
+
+|审计文件|主要内容|关键成果|当前状态|
+|---|---|---|---|
+|[29-t024-title-chapter1-evidence-revision.md](29-t024-title-chapter1-evidence-revision.md)|文献驱动修订与私有Word核查|20项引用映射、9项最接近研究、阅读范围及缓存身份纠正|本轮修订完成；模型与数值结论仍Conditional|

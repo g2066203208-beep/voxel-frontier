@@ -124,3 +124,11 @@ C. 当前正式OpenFAST/ROSCO模型文件夹。
 - 真正PDF缓存成功：22项；
 - 新增成功全文：Wu2022 160m post-tensioned hybrid tower、Wang2025 hybrid-tower technology review；
 - 下载失败/付费核心文献已重建为干净的`NEED_USER_DOWNLOAD.md`队列。
+
+## 本轮T024：题目与第一章私有正文实质修订
+
+- 已完成基于文献的第一章综述、研究问题、比较表和路线修订；批注与引用保留在私有Word。
+- 20项引用证据与阅读级别见`references/chapter1-evidence-map.tsv`，整改和版面验收见29号审计。
+- 题目继续Conditional；未产生新生产run，不将原稿36组视作新基线已完成。
+- 更正DTU缓存为介绍幻灯片而非正式I-0092报告；现有参数核读不能冒充报告全文核读。
+- 当前文字修订继续到第二章，原始结果追索仍暂缓；正式生产计算仍按MASTER门禁。
