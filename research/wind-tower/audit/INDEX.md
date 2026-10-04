@@ -71,3 +71,10 @@
 |[33-t027-literature-driven-route-redesign.md](33-t027-literature-driven-route-redesign.md)|Wang/Li/Ren/Huang/Cheng核心全文对照|OpenFAST/ROSCO→Abaqus主生产链 + 条件局部contact + G7A/G7B分级疲劳 + 机制驱动优化|路线已批准；各研究门禁仍Conditional|
 
 - [34 T028 本地论文工作分区索引](34-t028-local-work-inventory.md)：资料整理完成，科学状态未改变。
+
+
+## T028：十篇全文与路线证据覆盖
+
+|审计文件|主要内容|关键成果|当前状态|
+|---|---|---|---|
+|[34-t028-fulltext-and-route-evidence-coverage.md](34-t028-fulltext-and-route-evidence-coverage.md)|10篇publisher PDF全文核读 + MASTER逐步source audit|全部10篇建立能支持/不能支持边界；识别P3.1/P4.2/P4.3/P4.4等source缺口|全文审计完成；缺口待补|
