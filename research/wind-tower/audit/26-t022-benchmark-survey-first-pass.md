@@ -109,3 +109,28 @@ He2024 158m PCSH作为**公开可提取的原型来源**，但不称“国际标
 - 对F-ZHOU-160M、F-HNU-160M、F-CHEN-2MW做全文citation-chain核对；
 - 获取P0付费/作者稿后确认“exact reuse”还是“modified reuse”；
 - 最终生成可用于10月9日PPT的一张model-family/reuse-network图。
+
+
+## 8. 文献获取状态（2026-10-04）
+
+本轮不是只建立书目，实际启动GitHub自动PDF缓存。
+
+当前`open-access/MANIFEST.tsv`：
+- 声明源34项；
+- PDF实际成功22项；
+- not-pdf 5项；
+- download-failed 7项。
+
+本轮新增真正缓存成功：
+1. Wu et al. 2022, *Design and behavior of 160 m-tall post-tensioned precast concrete-steel hybrid wind turbine tower*；
+2. Wang et al. 2025, *Technology status and development trends of concrete-steel hybrid towers for wind turbines*。
+
+后者是T022重要的cross-family review：它本身梳理了多种商业/学术混塔技术路线，因此进一步支持“行业存在多个技术family，而非一个统一几何benchmark”的阶段判断。
+
+其余站点失败分两类：
+- **网页/全文OA但机器人被挡**：继续寻找稳定repository URL，同时加入用户浏览器下载队列；
+- **真正付费/机构权限**：不尝试绕过访问控制，列入用户学校数据库下载队列。
+
+详见：
+- `registry/literature_acquisition_status.tsv`
+- `references/NEED_USER_DOWNLOAD.md`
