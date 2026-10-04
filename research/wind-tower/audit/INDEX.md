@@ -16,7 +16,6 @@
 
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
-|06-route-change-openfast-abaqus-only.md|阶段性路线变更|曾撤销旧多体联合生产路线|**历史/被T027替代**|
 |07-step00-01-title-evidence.md|题目/对象|题目逐词证据矩阵|Conditional|
 |08-step02-abstract-evidence.md|摘要|逐句完成状态/证据审查|Hold|
 |09-step03-section1-1-evidence-rewrite.md|1.1|背景意义第一轮重写|Conditional|
@@ -69,4 +68,4 @@
 
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
-|[33-t027-literature-driven-route-redesign.md](33-t027-literature-driven-route-redesign.md)|Wang/Xu/Li/Ren/Huang/Cheng核心全文对照|主生产链 + H1 MBD-FE交叉验证 + H2局部contact + G7A/G7B分级疲劳 + 机制驱动优化|路线已批准；各研究门禁仍Conditional|
+|[33-t027-literature-driven-route-redesign.md](33-t027-literature-driven-route-redesign.md)|Wang/Li/Ren/Huang/Cheng核心全文对照|OpenFAST/ROSCO→Abaqus主生产链 + 条件局部contact + G7A/G7B分级疲劳 + 机制驱动优化|路线已批准；各研究门禁仍Conditional|
