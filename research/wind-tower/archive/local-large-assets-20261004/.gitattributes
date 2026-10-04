@@ -1,0 +1,17 @@
+"abaqus-v30/DTU158_BUCKLE_DLC13_S06_UNITFIX.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_RIKS_SITE_S04_T535_INTERFACE.inp" filter=lfs diff=lfs merge=lfs -text
+"damping/DTU158_HYBRID_UNDAMPED_MODAL_20260902.inp" filter=lfs diff=lfs merge=lfs -text
+"rna-validation/DTU158_RNA_POINTMASS_GRAVITY_MODAL.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A032.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008_POST.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A008.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_RIKS_SITE_S04_T047P50_SEPARATED.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_RIKS_DLC13_S06_T220P60_SEPARATED.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_RIKS_SITE_S04_T535_SEPARATED.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/A008_MESHFACE_NFORC_420ALL.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/A008_MESHFACE_NFORC_420N.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/A008_MESHFACE_NFORC_420.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_MODE1_A016.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/DTU158_RIKS_DLC13_S06_CDP_IMP_A008.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/A008_RiksFine.inp" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/A008_R2_clean.inp" filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- COPYRIGHT DASSAULT SYSTEMES 2009 -->
+<manifest>
+    <focusFile fileBinary="A008_SECTION_VERIFY.simdir\A008_SECTION_VERIFY.1.SMAFocus"/>
+    <publishIndex value="1"/>
+    <bulkFile bulkid="0" fileBinary="A008_SECTION_VERIFY.2.SMABulk"/>
+    <bulkFile bulkid="1" fileBinary="A008_SECTION_VERIFY.1.SMABulk"/>
+</manifest>
