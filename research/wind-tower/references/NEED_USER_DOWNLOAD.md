@@ -114,3 +114,9 @@
 
 26. **Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, T. Meyarivan. A fast and elitist multiobjective genetic algorithm: NSGA-II. IEEE Transactions on Evolutionary Computation, 6(2) (2002), 182–197. DOI: 10.1109/4235.996017.**
    - 用途：NSGA-II原典。若第六章实际采用NSGA-II，必须逐项核算法定义与约束处理。
+
+
+27. **Jun Xu, Zeyu He, Dan Wang, Guangling He, Qiang Wu, Zili Zhang. Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel–Concrete Hybrid Tower using a co-simulation approach. Renewable Energy, 243 (2025), 122475. DOI: 10.1016/j.renene.2025.122475.**
+   - 原因：何泽瑜本人参与的同研究谱系正式期刊论文，Table 2直接给出C70/C65、HRB335、15.2 mm预应力筋及Q345材料参数；可用于解决R2Z74中“S345/HRB335/Q345”的来源冲突。
+   - 用途只限材料/原型身份和研究现状；本文已撤销该文的联合求解生产路线。
+   - 请优先下载出版社PDF或学校数据库版本给我。
