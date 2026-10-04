@@ -17446,7 +17446,10 @@
     "bytes": 874881060,
     "sha256": "e77bc08c83c795b8df08a92fbff748ae1cf3b8c93c094084ffcf705b8ef0f1e3",
     "source_locator": "THESIS_ROOT\\DTU\\V30_LT10K_Analysis\\A008_MESHFACE_NFORC_420N.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-v30/A008_MESHFACE_NFORC_420N.odb"
+    }
   },
   {
     "section": "abaqus-v30",

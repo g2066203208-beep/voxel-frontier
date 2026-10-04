@@ -98,5 +98,6 @@
 "damping/DTU158_HybridTower_v30_LT10K_MODAL_COPY.cae" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_HybridTower_v30_LT10K_MODAL.cae" filter=lfs diff=lfs merge=lfs -text
 "abaqus-v30/A008_MESHFACE_NFORC_420.odb" filter=lfs diff=lfs merge=lfs -text
+"abaqus-v30/A008_MESHFACE_NFORC_420N.odb" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text
