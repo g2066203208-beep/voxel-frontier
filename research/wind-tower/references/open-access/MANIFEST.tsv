@@ -1,19 +1,20 @@
 id	filename	status	sha256	bytes	url	license
 L004	Li_2021_AppliedSciences_8683.pdf	ok	212bbbe69b2c0616df4fa2d8c8807328fb9a0ddb340cfc4ca7e57a279c243352	3359108	https://mdpi-res.com/d_attachment/applsci/applsci-11-08683/article_deploy/applsci-11-08683.pdf	CC-BY-4.0
 L009	Hannesdottir_2019_WES_4_325.pdf	ok	f9c380e52728667bc3eb8f79c722121d4a854389b8e13620b79e4486191eb891	7388629	https://wes.copernicus.org/articles/4/325/2019/wes-4-325-2019.pdf	CC-BY-4.0
-L013	Tan_2025_Structures_108811_AAM.pdf	ok	daaa2f36b403db9aa99073c7e69e6e9811b58526eb5a6b2acafb0c0683924c0e	1814987	https://pure.manchester.ac.uk/ws/portalfiles/portal/880574416/AAM.pdf	CC-BY
-L014	Tan_2025_EngineeringStructures_120443_AAM.pdf	ok	26a0b7d76a47a56ce4785c1220e45d8575c8ef932fee119bceae2a27b03566a3	2373918	https://pure.manchester.ac.uk/ws/portalfiles/portal/970003646/AAM-Mini.pdf	CC-BY
+L013	Tan_2025_Structures_108811_AAM.pdf	ok	015c47ab2da45ae2ecb87ecfd99cea4839fad1283c41b77f52e838d294756846	1814987	https://pure.manchester.ac.uk/ws/portalfiles/portal/880574416/AAM.pdf	CC-BY
+L014	Tan_2025_EngineeringStructures_120443_AAM.pdf	ok	731349d9c103e6b26a27a8980e9984df69dad47aa43f86433a3885fac7600ac1	2373918	https://pure.manchester.ac.uk/ws/portalfiles/portal/970003646/AAM-Mini.pdf	CC-BY
 L016	Wang_2025_IJCSM_19_68.pdf	not-pdf		0	https://link.springer.com/content/pdf/10.1186/s40069-025-00800-5.pdf	Open-Access
-L017	Qu_2026_Buildings_16_3854.pdf	download-failed		0	https://www.mdpi.com/2075-5309/16/19/3854/pdf?download=1	CC-BY-4.0
+L017	Qu_2026_Buildings_16_3854.pdf	ok	ce5e7bbee3a8d8fb794c4eee9b8df46359e34ef466fd8015ca400ec06cedcb01	19946934	https://mdpi-res.com/d_attachment/buildings/buildings-16-03854/article_deploy/buildings-16-03854.pdf	CC-BY-4.0
 L018	Brown_2024_WES_9_1791.pdf	ok	cd29e924829f6a8e5b7a6d340d07b4f84d6e851af7eee4ed33173e6c2e2cd623	12523840	https://wes.copernicus.org/articles/9/1791/2024/wes-9-1791-2024.pdf	CC-BY-4.0
 L019	Guma_2021_WES_6_93.pdf	ok	bd403805c3d5dd7f80ea1f82a4142e78588e9562f27f8b890608e4510065846d	4994708	https://wes.copernicus.org/articles/6/93/2021/wes-6-93-2021.pdf	CC-BY-4.0
-L020	Sayed_2016_JPCS_753_042009.pdf	ok	51203c077655af7e5d768479641fb95c38ca8dc6642aafacf452d005eef5a0c0	3391389	https://iopscience.iop.org/article/10.1088/1742-6596/753/4/042009/pdf	Open-Access-JPCS
+L020	Sayed_2016_JPCS_753_042009.pdf	ok	216c8548e197a47943a879fe3fc143ddce44405f6bc658c1eeb5497b54638e08	3391391	https://iopscience.iop.org/article/10.1088/1742-6596/753/4/042009/pdf	Open-Access-JPCS
 L027	Huang_2022_Structures_35_1125.pdf	ok	822ccd6623214c5418ef49f63746a6f178ab75c81ac3bf2d8bb7ce3c3fba7ea7	5426001	https://www.sas.rochester.edu/chm/courses/chm286_486/HomeWork2024/Project2/Huang-Wind-towers-Steel-Concrete_1-s2.0-S2352012421007487-main.pdf	Open-public-copy
 L028	Lian_2022_Energies_15_5787.pdf	ok	29b8a485ce70b4afba8bf54419c10348358b977875dc203892b1b8f172bf7b40	4170896	https://psecommunity.org/wp-content/plugins/wpor/includes/file/2303/LAPSE-2023.25034-1v1.pdf	CC-BY-4.0
 L029	Gkantou_2020_Energies_13_3950.pdf	ok	76a0d8038ce6397ead9c3fdf093e68df2609499ea1512241c5436f10caa5846c	3127280	https://researchonline.ljmu.ac.uk/id/eprint/13459/8/Life%20Cycle%20Assessment%20of%20Tall%20Onshore%20Hybrid%20Steel%20Wind%20Turbine%20Towers.pdf	CC-BY-4.0
 L030	DOE_2015_Enabling_Wind_Power_Nationwide.pdf	ok	30ca91a5aba4ecfe7889510fd869eda6001b8d0b34dcf7b76118caa7185aa74c	6607943	https://www.energy.gov/sites/prod/files/2015/05/f22/Enabling%20Wind%20Power%20Nationwide_18MAY2015_FINAL.pdf	US-Government-Public
 L031	Wang_2025_JIC_9180090.pdf	not-pdf		0	https://www.sciopen.com/pdf/10.26599/JIC.2025.9180090.pdf	CC-BY-4.0
 L032	Kenna_2019_PhD_Hybrid_Wind_Turbine_Towers.pdf	download-failed		0	https://www.tara.tcd.ie/bitstreams/43be90ce-4853-47c5-bf9d-4ce0d57f5dbf/download	Open-Access-Thesis
-L033	Dong_2025_Buildings_15_3786.pdf	download-failed		0	https://www.mdpi.com/2075-5309/15/20/3786/pdf	CC-BY-4.0
+L033	Dong_2025_Buildings_15_3786.pdf	ok	4580759f71790350f94de9cb518d12723ffd144334b649df6e788f27e15a4552	6356365	https://mdpi-res.com/d_attachment/buildings/buildings-15-03786/article_deploy/buildings-15-03786.pdf	CC-BY-4.0
 L034	Xing_2026_Frontiers_1728006.pdf	ok	b7402d360c7610e667186ec7af9e36ea1e7c6b382e5e9f75c83edf8b300c95e5	4192862	https://www.frontiersin.org/journals/built-environment/articles/10.3389/fbuil.2025.1728006/pdf	CC-BY-4.0
 L036	Trigaux_2024_WES_9_1765.pdf	ok	91e933058a75753ec21365200062321db187cf9b76e6ce248df79e0020e3168e	11226660	https://wes.copernicus.org/articles/9/1765/2024/wes-9-1765-2024.pdf	CC-BY-4.0
+L037	Sanchez_2022_WES_DEL_1171.pdf	ok	076ede0b718ace12d10aee6254980898d82417bd6258c24d0917512f2c88216d	4192672	https://wes.copernicus.org/articles/7/1171/2022/wes-7-1171-2022.pdf	CC-BY-4.0
