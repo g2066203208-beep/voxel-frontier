@@ -1,5 +1,7 @@
 # Step 10：第二章2.3预应力、钢筋、水平接缝与钢—混转换段建模审查
 
+> **2026-10-04 T020.2修正**：Git历史Abaqus JNL已经直接证明，在历史`DTU158_SITE_S04_INTERFACE_DYNAMIC`模型中，`CSEG_31-1.SURF_TOP → SSEG_01-1.SURF_BOTTOM`钢—混转换接口以及部分钢塔段间接口采用过`*TIE`。因此本文件中“SPRING2水平接缝”的讨论只适用于实际使用SPRING2的预制混凝土水平接缝，**不得扩展为整塔所有接口**。当前正式BASE001仍需由生产INP逐接口重建connection capability table。详见`20-t020-2-abaqus-baseline-history-and-current-state.md`。
+
 日期：2026-10-04  
 状态：**HOLD（正式158 m INP未入库）**。  
 目标：逐项对应真实构造、有限元理想化、Abaqus数学约束、可输出物理量和不可解释物理量。
