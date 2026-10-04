@@ -1,14 +1,21 @@
 # AUDIT INDEX — 论文研究过程审计索引
 
-本文件用于回答“每一步做了什么、得到什么、当前能否使用”。
+本文件只索引**当前有效审计**；早期审计已移入 `../archive/audit-early/`，不再与当前审计并列。
+
+## 历史归档
+
+|归档文件|原用途|当前身份|
+|---|---|---|
+|`archive/audit-early/01-first-review.md`|旧稿首轮总审|历史快照，不作为当前结论|
+|`archive/audit-early/02-material-review.md`|旧材料参数复核|历史快照，被15细化|
+|`archive/audit-early/03-literature-reading.md`|早期文献阅读|历史快照，被结构化文献库替代|
+|`archive/audit-early/04-restart-baseline-2026-10-04.md`|重新开工基线|历史起点，其原则已并入MASTER|
+|`archive/audit-early/05-chapter1-rigorous-review.md`|第一章整体审查|被09–13逐节审计替代|
+
+## 当前有效审计
 
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
-|01-first-review.md|旧稿首轮总审|识别路线、证据、创新风险|历史审计|
-|02-material-review.md|旧材料参数复核|材料/CDP初始问题表|历史审计|
-|03-literature-reading.md|早期文献阅读|核心研究边界|历史审计|
-|04-restart-baseline-2026-10-04.md|重新开工基线|新证据标准与路线|有效|
-|05-chapter1-rigorous-review.md|第一章整体审查|综述重写要求|被09–13细化|
 |06-route-change-openfast-abaqus-only.md|路线变更|撤销旧多体联合生产路线|有效|
 |07-step00-01-title-evidence.md|题目/对象|题目逐词证据矩阵|Conditional|
 |08-step02-abstract-evidence.md|摘要|逐句完成状态/证据审查|Hold|
@@ -25,15 +32,15 @@
 
 ## 使用规则
 
-- “有效/Complete”表示该审计结论当前仍适用；
-- “Conditional”表示逻辑已通过，但存在未关闭来源/模型门禁；
-- “Hold”表示不能把其中报告值写成最终verified结论；
-- “历史审计”只用于追溯，不可凌驾于MASTER_RESEARCH_PROTOCOL。
+- “有效/Complete”：当前仍可直接使用；
+- “Conditional”：逻辑通过，但尚有来源/模型门禁；
+- “Hold”：不能把其中报告值写成最终verified结论；
+- 历史归档只用于追溯，不得作为新任务入口；
+- 当前状态统一以 `workflow/EXECUTION_STATUS.md` 与 `registry/` 为准。
 
-## 下一步
+## 当前下一步
 
-不是新增更多零散audit，而是：
-1. 把已有审计逐项回填CLAIM/PAR/REF registry；
+1. 继续回填CLAIM/PAR/REF registry；
 2. 补G0 baseline原始资料；
 3. 完成P1核心全文提取；
-4. 再按MASTER进入P2.5。
+4. 达到入口条件后按MASTER进入P2.5。
