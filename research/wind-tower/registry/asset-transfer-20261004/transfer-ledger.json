@@ -20605,7 +20605,10 @@
     "bytes": 533368832,
     "sha256": "0a31874504a26c0751e3be7e7f602113562b0a5877a10d5c3059e051c61d2d63",
     "source_locator": "THESIS_ROOT\\DTU\\SIMPACK.cae",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/SIMPACK.cae"
+    }
   },
   {
     "section": "abaqus-dtu-models",
