@@ -57,3 +57,9 @@ SHOWTIME 工程包含三组 SHOWTIME 命名模型；不得仅凭上传文件名�
 ### 实际文件补充包
 
 [161个小型结果及模型文件](archive/local-assets-20261004-supplement/README.md)：包含小于10MiB的OUTB、控制器输入与柔性模型配套文件；49包约207.27MiB。与首批合计1614个源文件。
+
+## 去重后资产与大文件补传（当前入口）
+
+[传输台账](registry/asset-transfer-20261004/transfer-ledger.json) · [大文件实体/LFS](archive/local-large-assets-20261004/README.md) · [原分包去重映射](registry/asset-transfer-20261004/deduplication-map.json)
+
+此前10 MiB上传排除线已取消。原1614条位置记录去重为887份内容，727条重复项改为引用，不重复存实体。当前补传正在进行，以上台账区分已存在、已上传、待传及失败，不将排队文件算作完成。GitHub当前LFS接口返回单对象2 GiB限制，超限ODB采用可校验分块；不改变本地原件。上方旧段落的10MiB暂缓说明仅为历史批次说明，以本节及传输台账为准。
