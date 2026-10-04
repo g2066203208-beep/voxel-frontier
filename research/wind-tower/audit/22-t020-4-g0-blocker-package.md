@@ -2,7 +2,7 @@
 
 日期：2026-10-04  
 所属：T020 / Phase 0 / Q01 / G0  
-状态：**BLOCKED BY SOURCE ASSETS — 其余可做项已完成第一轮追溯**
+状态：**PACKAGE-A CLOSED / BLOCKED BY PACKAGE-B+C**
 
 ## 1. G0到底要关闭什么
 
@@ -27,18 +27,13 @@ G0不是“有一个158 m文件”就通过，而是要同时证明：
 状态：**SOURCE IDENTITY PASS**
 
 ### 2.2 何泽瑜原型
-已确认：
-- 论文真实存在；
-- 是本文原型谱系的重要一级来源；
-- 后续何泽瑜参与期刊论文继续引用该学位论文；
-- R2Z74历史稿指向表3-1～3-3和图3-4/3-5。
+已于2026-10-04通过用户重新上传原始PDF完成直接页面核对：
+- PDF p33/body p22：158 m总塔高、112 m混凝土段、46 m钢塔段；
+- PDF p34/body p23：表3-2明确为“直径”，112 m处D=4.97 m、t=500 mm；
+- PDF p35/body p24：表3-3原表头**确实写“半径(m)”**，4.66/4.58/4.50/4.42 m；
+- 同页图3-4/3-5显示钢塔明显较细，因此原表字面“半径”与图示/4.97 m混凝土顶径存在内部冲突。
 
-未关闭：
-- 原始页面当前工具不可读取；
-- 158/112/46 m原页定位；
-- 4.66/4.58/4.50/4.42 m的“半径/直径”语义。
-
-状态：**HOLD**
+状态：**SOURCE EXTRACTION PASS / PRODUCTION SEMANTICS CONFLICT**
 
 ### 2.3 Abaqus
 已找到Git历史候选：
@@ -89,33 +84,13 @@ HubHt=161.3688057735 m。
 
 ## 3. 现在只缺三组“源资产包”
 
-### PACKAGE-A：He2024原始论文页面
+### PACKAGE-A：He2024原始论文页面 — **CLOSED**
 
-**最少需要：**
-- 完整PDF直接上传到当前聊天；或
-- 表3-1、3-2、3-3和图3-4、3-5所在页面的原始PDF页面/高清截图。
+已取得完整PDF并完成原页抽取。成果：
+- `audit/23-he2024-original-pages-extraction.md`
+- `references/extracts/REF008-he2024-geometry.tsv`
 
-**为什么必须：**
-关闭：
-- PAR007 158 m；
-- PAR008 112 m；
-- PAR009 46 m；
-- BASE-GEO-004半径/直径冲突；
-- 题目“混凝土—钢混合塔架”具体对象身份。
-
-**拿到后做什么：**
-1. 页面原样保存/引用；
-2. 记录页码、表号、图号；
-3. 人工视觉核对表头/数值/单位；
-4. 与R2Z74转述逐格diff；
-5. 与Abaqus正式几何逐项diff；
-6. 生成`he2024_geometry_extraction.tsv`；
-7. 更新PAR/CLAIM状态。
-
-**严禁：**
-- OCR猜表格；
-- 从二手论文反推；
-- 因为“几何更合理”就改原表含义。
+注意：PACKAGE-A关闭的是“原文到底写了什么”，不是“半径语义是否正确”。后者必须由PACKAGE-B正式Abaqus实现继续判定。
 
 ### PACKAGE-B：当前正式158 m Abaqus生产输入
 
@@ -211,8 +186,8 @@ INP文本最适合学术审计：
 |门禁项|当前|PASS条件|
 |---|---|---|
 |DTU 10 MW一级源|PASS|已满足|
-|He2024 158/112/46原页|HOLD|原页定位+数值提取|
-|钢塔4.66等语义|CONFLICT|原表+正式Abaqus几何|
+|He2024 158/112/46原页|PASS|已完成原页定位+数值提取|
+|钢塔4.66等语义|CONFLICT|原表已确认写半径；需正式Abaqus几何判生产采用语义|
 |Abaqus 158 m身份|PARTIAL|当前INP/CAE hash+解析|
 |Abaqus连接/PT|HOLD|正式INP逐项解析|
 |OpenFAST几何|HISTORICAL PASS|当前FST/ED重读|
@@ -224,9 +199,9 @@ INP文本最适合学术审计：
 ## 6. 下一动作顺序
 
 拿到资料后严格顺序：
-1. PACKAGE-A；
-2. PACKAGE-B；
-3. PACKAGE-C；
+1. PACKAGE-B：正式Abaqus生产INP/CAE；
+2. PACKAGE-C：正式OpenFAST/ROSCO模型；
+3. 同时执行T022国际混塔benchmark专项调查；
 4. 建立Abaqus/OpenFAST双模型diff；
 5. 创建BASE001；
 6. Title Review v2；
