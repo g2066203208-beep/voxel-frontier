@@ -54,3 +54,26 @@
 - **L009 Hannesdóttir et al. (2019), Wind Energy Science 4, 325–342**。
 
 因此当前工作室已有 **7篇可直接逐页阅读的全文PDF**。Springer L016 返回HTML而非PDF，MDPI L017自动下载仍失败，二者状态如MANIFEST所示，不伪装为成功。
+
+
+## 2026-10-04 第三批：规范、软件版本与最新2026直接文献
+
+### 当前正式规范/官方软件锚点
+
+- **IEC 61400-1:2019+AMD1:2025 CSV**，Edition 4.1，正式合并版发布于2025-12-18。用于整机设计要求、NTM/ETM/DLC等规范身份。正文引用具体条文时必须由合法授权标准原文核对。
+- **IEC 61400-6:2020+AMD1:2025 CSV**，Edition 1.1，正式合并版发布于2025-06-13。用于陆上风机塔架与基础设计背景。
+- **OpenFAST v5.0.0**，官方GitHub于2026-03-12发布。后续论文凡写OpenFAST版本必须与实际计算版本一致，不能因为“最新版本是5.0.0”就追改历史计算版本。
+- **ROSCO 2.10.6**，官方文档日期2026-09-29。后续控制器描述必须以实际使用版本为准。
+
+### 2026最新直接文献
+
+|ID|文献|DOI|证据等级|直接用途|
+|---|---|---|---|---|
+|L021|Huang et al., Model and test verification for concrete fatigue failure of the steel-concrete hybrid wind turbine tower, Case Studies in Construction Materials 24 (2026) e06051|10.1016/j.cscm.2026.e06051|B/OA待PDF|混塔混凝土疲劳、S–N、变幅高周疲劳试验与FE验证|
+|L022|Hao et al., Analysis on influence factors of static and dynamic response of prefabricated prestressed steel-concrete hybrid tower for onshore wind turbines, Results in Engineering 30 (2026) 111045|10.1016/j.rineng.2026.111045|B/OA待PDF|振动台+FE、接缝形式/损伤对静动力与模态影响|
+|L023|Tan et al., Evaluation of load-carrying capacity of horizontal joints in concrete wind turbine towers, Engineering Structures 364 (2026) 123195|10.1016/j.engstruct.2026.123195|B/OA待PDF|压-弯-剪-扭联合试验、Abaqus验证、水平接缝承载力|
+|L024|Tan et al., Shear resistance of horizontal joints in concrete wind turbine towers under bending and torsion, Structures 92 (2026) 112947|10.1016/j.istruc.2026.112947|B/OA待PDF|预应力界面摩擦、弯扭下接缝剪/扭承载与开口|
+|L025|Structural behaviour of horizontal joints in steel fibre reinforced concrete wind turbine towers, Structures 92 (2026) 112891|10.1016/j.istruc.2026.112891|B/OA待PDF|弯扭、接缝开口、摩擦滑移、预应力/摩擦系数参数效应|
+|L026|Eccentric compressive behaviour of horizontal circumferential joints in concrete wind turbine towers considering joint opening, Structures 92 (2026) 112870|10.1016/j.istruc.2026.112870|B/OA待PDF|偏心受压、全截面压缩→局部开口、刚度与承载退化|
+
+> L021–L026 均属于2026年直接相关新文献。即使正文当前已经有2025接缝论文，也应继续纳入，以避免第一章“最新研究现状”在答辩前已经滞后。
