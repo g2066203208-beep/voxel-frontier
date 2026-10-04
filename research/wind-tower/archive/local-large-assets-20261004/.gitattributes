@@ -94,5 +94,7 @@
 "abaqus-dtu-models/DTU158_SITE_S04_INTERFACE_DYNAMIC.odb" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_RIKS_SITE_S04_T047P50_SEPARATED.odb" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_RIKS_SITE_S04_T535_SEPARATED.odb" filter=lfs diff=lfs merge=lfs -text
+"abaqus-dtu-models/DTU158_RIKS_DLC13_S06_T220P60_SEPARATED.odb" filter=lfs diff=lfs merge=lfs -text
+"damping/DTU158_HybridTower_v30_LT10K_MODAL_COPY.cae" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_OpenFAST_6DOF_SETUP.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text
 "abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-0001" filter=lfs diff=lfs merge=lfs -text

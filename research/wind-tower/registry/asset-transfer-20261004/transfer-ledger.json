@@ -14627,7 +14627,10 @@
     "bytes": 820625408,
     "sha256": "d8402744a38d431540aaac11563434bd2c175a275df5b4cded7782d11c24cabe",
     "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\DTU158_HybridTower_v30_LT10K_MODAL_COPY.cae",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/damping/DTU158_HybridTower_v30_LT10K_MODAL_COPY.cae"
+    }
   },
   {
     "section": "damping",
@@ -20432,7 +20435,10 @@
     "bytes": 809992588,
     "sha256": "cfc28ff78acda6cfacbd74c1d8fee15bb88624393a58d7379ba9ee7ae73e552d",
     "source_locator": "THESIS_ROOT\\DTU\\DTU158_RIKS_DLC13_S06_T220P60_SEPARATED.odb",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_RIKS_DLC13_S06_T220P60_SEPARATED.odb"
+    }
   },
   {
     "section": "abaqus-dtu-models",
