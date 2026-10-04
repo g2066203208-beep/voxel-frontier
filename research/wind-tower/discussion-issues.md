@@ -38,3 +38,12 @@
 
 - E06，待核查：STEP声明MILLIMETRE，按声明解码后包围盒最大尺寸约0.249 m，与研究对象百米级塔架不符。需核查源坐标和导出单位；不静默乘1000。来源：scripts/read-model.cjs及Pages生成的geometry-report.json。
 - E07，待核查：CAD三角化发现退化面；数量随显示离散化参数变化，详见每次报告。这不是FE单元质量检查，不能据此判定有限元模型合格或不合格。
+
+
+## T020 baseline追溯新增问题（2026-10-04）
+
+| 编号 | 实际发现 | 下一步 | 当前状态 |
+| --- | --- | --- | --- |
+| E06 | Git历史中已找到Abaqus 158 m候选模型`DTU158_SITE_S04_INTERFACE_DYNAMIC`，并保存LFS指纹、模型规模、材料、steps及JNL；但活动工作室缺当前可运行INP/ODB。 | 取得当前正式158 m生产INP，建立BASE001并与历史候选逐项比对。 | 阻断 |
+| E07 | 历史CAE首次接收SHA-256为`759bcdff...`，Abaqus元数据读取后变为`9e1544e...`并增加20,480 bytes。 | 不以读取后CAE作为无条件原始基准；新baseline必须重新指纹化。 | 未闭合 |
+| E08 | 历史JNL证明CSEG_31→SSEG_01钢—混转换接口采用TIE，说明旧“整塔接口=SPRING2”的概括不准确。 | 按正式INP逐接口建立Tie/Spring/Equation/Embedded/Coupling/Contact能力表。 | 已识别，待正式模型闭合 |
