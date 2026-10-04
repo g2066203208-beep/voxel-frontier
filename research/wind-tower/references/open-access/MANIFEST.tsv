@@ -1,13 +1,13 @@
 id	filename	status	sha256	bytes	url	license
 L004	Li_2021_AppliedSciences_8683.pdf	ok	212bbbe69b2c0616df4fa2d8c8807328fb9a0ddb340cfc4ca7e57a279c243352	3359108	https://mdpi-res.com/d_attachment/applsci/applsci-11-08683/article_deploy/applsci-11-08683.pdf	CC-BY-4.0
 L009	Hannesdottir_2019_WES_4_325.pdf	ok	f9c380e52728667bc3eb8f79c722121d4a854389b8e13620b79e4486191eb891	7388629	https://wes.copernicus.org/articles/4/325/2019/wes-4-325-2019.pdf	CC-BY-4.0
-L013	Tan_2025_Structures_108811_AAM.pdf	ok	8e724df9c00f4e408686eb712772c3594ee66c488052b32811339a2483b25d68	1877126	https://pure.manchester.ac.uk/ws/portalfiles/portal/880574416/AAM.pdf	CC-BY
-L014	Tan_2025_EngineeringStructures_120443_AAM.pdf	ok	510ff45b05bd097e9709c8194f93cdbf769b901c4a7e2ba8fcd241581166c9de	2373918	https://pure.manchester.ac.uk/ws/portalfiles/portal/970003646/AAM-Mini.pdf	CC-BY
+L013	Tan_2025_Structures_108811_AAM.pdf	ok	ee2b9070853dc9de73541cead70c0132dc4229bf0bb0541586d9a4d21ec32028	1814987	https://pure.manchester.ac.uk/ws/portalfiles/portal/880574416/AAM.pdf	CC-BY
+L014	Tan_2025_EngineeringStructures_120443_AAM.pdf	ok	3eba62ff3b0806ac09f5ed35a66c5f5b4c2344dbff536e608286db82e87806ed	2373918	https://pure.manchester.ac.uk/ws/portalfiles/portal/970003646/AAM-Mini.pdf	CC-BY
 L016	Wang_2025_IJCSM_19_68.pdf	not-pdf		0	https://link.springer.com/content/pdf/10.1186/s40069-025-00800-5.pdf?pdf=button	CC-BY-NC-ND-4.0
 L017	Qu_2026_Buildings_16_3854.pdf	ok	ce5e7bbee3a8d8fb794c4eee9b8df46359e34ef466fd8015ca400ec06cedcb01	19946934	https://mdpi-res.com/d_attachment/buildings/buildings-16-03854/article_deploy/buildings-16-03854.pdf	CC-BY-4.0
 L018	Brown_2024_WES_9_1791.pdf	ok	cd29e924829f6a8e5b7a6d340d07b4f84d6e851af7eee4ed33173e6c2e2cd623	12523840	https://wes.copernicus.org/articles/9/1791/2024/wes-9-1791-2024.pdf	CC-BY-4.0
 L019	Guma_2021_WES_6_93.pdf	ok	bd403805c3d5dd7f80ea1f82a4142e78588e9562f27f8b890608e4510065846d	4994708	https://wes.copernicus.org/articles/6/93/2021/wes-6-93-2021.pdf	CC-BY-4.0
-L020	Sayed_2016_JPCS_753_042009.pdf	ok	7cd1e64fe9a4a3a57315a5e3c549cbc26f481af7dbba948a3fecebc14eeec098	3391388	https://iopscience.iop.org/article/10.1088/1742-6596/753/4/042009/pdf	Open-Access-JPCS
+L020	Sayed_2016_JPCS_753_042009.pdf	ok	ad2b6b75eb3a76224b47f85b345c50053f0e16ded97c802201d0558137417212	3391391	https://iopscience.iop.org/article/10.1088/1742-6596/753/4/042009/pdf	Open-Access-JPCS
 L027	Huang_2022_Structures_35_1125.pdf	ok	822ccd6623214c5418ef49f63746a6f178ab75c81ac3bf2d8bb7ce3c3fba7ea7	5426001	https://www.sas.rochester.edu/chm/courses/chm286_486/HomeWork2024/Project2/Huang-Wind-towers-Steel-Concrete_1-s2.0-S2352012421007487-main.pdf	Open-public-copy
 L028	Lian_2022_Energies_15_5787.pdf	ok	29b8a485ce70b4afba8bf54419c10348358b977875dc203892b1b8f172bf7b40	4170896	https://psecommunity.org/wp-content/plugins/wpor/includes/file/2303/LAPSE-2023.25034-1v1.pdf	CC-BY-4.0
 L029	Gkantou_2020_Energies_13_3950.pdf	ok	76a0d8038ce6397ead9c3fdf093e68df2609499ea1512241c5436f10caa5846c	3127280	https://researchonline.ljmu.ac.uk/id/eprint/13459/8/Life%20Cycle%20Assessment%20of%20Tall%20Onshore%20Hybrid%20Steel%20Wind%20Turbine%20Towers.pdf	CC-BY-4.0
@@ -21,4 +21,11 @@ L037	Sanchez_2022_WES_DEL_1171.pdf	ok	076ede0b718ace12d10aee6254980898d82417bd62
 L038	Robertson_2019_WES_4_479.pdf	ok	3d620dc97085efe82d607ae7ff96ff3de958ad5f53fd923797bff0ce26357237	13850738	https://wes.copernicus.org/articles/4/479/2019/wes-4-479-2019.pdf	CC-BY-4.0
 L039	WES_2026_Numerical_Input_Sensitivity_11_2447.pdf	ok	876ac5757dd880bcf54b2ba8ec9d012ae7c8a5e4382c458ac755519b0cd72dc0	15565044	https://wes.copernicus.org/articles/11/2447/2026/wes-11-2447-2026.pdf	CC-BY-4.0
 L001	Bak_2013_DTU_10MW_Reference_Wind_Turbine.pdf	ok	c796ecbec9b5d6c20f9640e4110ce4c2d2a74f3e3108a0eade5b54471fed0f52	2025692	https://backend.orbit.dtu.dk/ws/portalfiles/portal/55645274/The_DTU_10MW_Reference_Turbine_Christian_Bak.pdf	DTU-public-report
-L040	Li_2020_IOP_CDP_012036.pdf	ok	344cdec4c2480c646ad73033ba6b7d4733f5cc5b74b0a4e7dcffde1270a7c702	541786	https://iopscience.iop.org/article/10.1088/1757-899X/794/1/012036/pdf	CC-BY-3.0
+L040	Li_2020_IOP_CDP_012036.pdf	ok	08d26e53594976c7fa030c200d5702925cb87678c28ca8ae607913876f1b842a	541788	https://iopscience.iop.org/article/10.1088/1757-899X/794/1/012036/pdf	CC-BY-3.0
+L041	Chen_2020_TallSpecialBuildings_e1741.pdf	download-failed		0	https://onlinelibrary.wiley.com/doi/pdf/10.1002/tal.1741	publisher-PDF
+L042	Wu_2022_SCS_44_407_160m_Hybrid_Tower.pdf	ok	cfaee65bc0adfff21f1f4df815d1f202c149d9cc477b3776e83e3bc17fded7f4	3327595	https://www.techno-press.org/download.php?journal=scs&num=3&ordernum=8&volume=44	publisher-PDF
+L043	Wu_2022_IJCSM_16_52_UHPC_Hybrid.pdf	not-pdf		0	https://link.springer.com/content/pdf/10.1186/s40069-022-00542-8.pdf	CC-BY-4.0
+L044	Kim_2019_KSCE_23_2971_Hybrid_Joint_Fatigue.pdf	not-pdf		0	https://link.springer.com/content/pdf/10.1007/s12205-019-1171-2.pdf	CC-BY-NC-ND-4.0
+L045	Tan_2026_EngineeringStructures_123195.pdf	download-failed		0	https://www.sciencedirect.com/science/article/pii/S0141029626011090/pdfft?isDTMRedir=true&download=true	CC-BY-open-access
+L046	Hao_2026_ResultsEngineering_111045.pdf	download-failed		0	https://www.sciencedirect.com/science/article/pii/S2590123026020748/pdfft?isDTMRedir=true&download=true	CC-BY-open-access
+L047	Huang_2026_CSCM_e06051.pdf	download-failed		0	https://www.sciencedirect.com/science/article/pii/S2214509526003025/pdfft?isDTMRedir=true&download=true	CC-BY-open-access
