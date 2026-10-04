@@ -20,7 +20,9 @@
 
 这是一个静态前端应用。记录保存在当前浏览器的 `localStorage`，附件保存在 `IndexedDB`。数据跟随浏览器配置文件和网站地址，不会自动上传到 GitHub，也不会在不同设备之间自动同步。清除网站数据或使用其他浏览器会影响本地记录；请定期导出项目备份。
 
-模型模块用于保存文件和建模记录。应用不执行真实模型求解或三维渲染；没有后端、账号系统、云同步或 AI 服务。实验结果、论文审查意见和科研判断由使用者填写，应用不会生成或验证科学结论。
+正式研究流程与工程输入由GitHub管理：[从题目开始的研究流程](research/wind-tower/workflow/00-title.md)。首页进入正式研究区；原有项目模块是浏览器草稿，不能误认为已同步GitHub。
+
+工程模型区显示由GitHub Actions实际读取STEP生成的三维装配，支持部件选择/隔离、线框、PNG出图及CAE审计元数据查看。当前STEP单位存在冲突，页面明确警告。没有执行有限元求解、完整CAE二进制解码或CAE修改，不会自动验证科学结论。
 
 ## 本地运行
 
@@ -28,6 +30,8 @@
 
 ```sh
 npm ci
+git lfs pull --include="research/wind-tower/geometry/*.step"
+node scripts/read-model.cjs
 npm run dev
 ```
 

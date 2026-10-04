@@ -12,3 +12,5 @@ playwright-report/
 # Manuscripts and original meeting documents remain local.
 /research/**/*.docx
 /research/**/manuscript*
+
+/public/research/

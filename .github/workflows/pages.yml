@@ -32,6 +32,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Read source STEP on GitHub
+        run: |
+          git lfs pull --include="research/wind-tower/geometry/*.step"
+          node scripts/read-model.cjs
+
       - name: Run tests
         run: npm test
 
