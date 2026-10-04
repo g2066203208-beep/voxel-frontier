@@ -1,0 +1,326 @@
+{
+  "record_id": "T026-four-Chinese-figures",
+  "script": {
+    "path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-03\\lia\\work\\chapter2-completion\\plot_material_damping_zh.py",
+    "sha256": "61f1360032ee49e057fe95f521eb413fce45ad0abc37c2369ea6241e2bdde613"
+  },
+  "derived_plot_scripts": {
+    "D:\\Codex-research-validation\\T026\\independent-targets\\render_real_material_review.py": "40e4bad3967c07fc9ec3875499aa4a4dac3dc7b5c244d83a3c9fbf7949a2073e",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\plot_xy_reportlab.py": "0db239b4531a2e5d0bbe6ef1317dc57ee0840e6226d110efc7aa938c5e821972",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\compare_material_outputs.py": "994360f5e3791952e3d4d7b9e16dbb76388bd4e6603243ecef3f414af51d2fbf",
+    "D:\\Codex-research-validation\\T026\\damping\\verify_and_plot.py": "885cdc68990ff2bed0f5980d1962aaeb7dad60b4b0e23201cb54338456812a14"
+  },
+  "scientific_results_or_manifests_mutated": false,
+  "solver_invoked": false,
+  "word_or_body_mutated": false,
+  "remote_mutated": false,
+  "data_policy": "Exact original numeric series/filtering; labels/fonts/layout only. Original figures and original result/manifest SHA preserved.",
+  "font": {
+    "file": "C:/Windows/Fonts/simhei.ttf",
+    "sha256": "aa4560dd8fe5645745fed3ffa301c3ca4d6c03cbd738145b613303961ba733b8",
+    "pdf_registered_name": "T026-SimHei",
+    "svg_family": "SimHei",
+    "missing_glyph_codepoints": [],
+    "drawing_width_points": 720,
+    "word_recommended_width_inches": 5.5,
+    "physical_body_font_points": 7.15,
+    "physical_tick_font_points": 7.15,
+    "physical_secondary_run_label_points": 7.15
+  },
+  "protected_originals_before_after_equal": true,
+  "protected_original_sha256": {
+    "D:\\Codex-research-validation\\T026\\independent-targets\\render_real_material_review.py": "40e4bad3967c07fc9ec3875499aa4a4dac3dc7b5c244d83a3c9fbf7949a2073e",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\plot_xy_reportlab.py": "0db239b4531a2e5d0bbe6ef1317dc57ee0840e6226d110efc7aa938c5e821972",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\compare_material_outputs.py": "994360f5e3791952e3d4d7b9e16dbb76388bd4e6603243ecef3f414af51d2fbf",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\real-material-curves.png": "3ea2a63edee2e96b67493b3ceedc1731b1a99d1af27f2048ec90b386de499af0",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\real-material-curves.pdf": "51cb230f657c7c839a082f432bd31d3880ab65bcb4c9a5b9dcdfd7ec9f5a25a8",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\real-material-curves.svg": "0e9783ef0f443e6b5caa1dd0aefa4bd5aec2715b8614133964aba499fa4c2116",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\actual-material-targets.json": "b8338d1a97b1d8eac311522ebd01de51f853d6de92199c1be241eac857868946",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\independent-material-output-review.json": "ccd865240e7c3f132a3e8c060ebd1f7b387ee23b2bed8a2c998221c353770c83",
+    "D:\\Codex-research-validation\\T026\\damping\\verify_and_plot.py": "885cdc68990ff2bed0f5980d1962aaeb7dad60b4b0e23201cb54338456812a14",
+    "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json": "60ec62465c26a5a5ec5d1734a53e0d73af622bd42cc8148d15982df9a3648244",
+    "D:\\Codex-research-validation\\T026\\damping\\damping-verification-results.json": "9f1784d85612705cea4e1fe3bb7244127e671396d59d3182c671282e70ec0822",
+    "D:\\Codex-research-validation\\T026\\damping\\damping-verification-plots.pdf": "3bbcfe822b411684557d70d3bd1b09ab076065626c26aea5047dc973d109f856",
+    "D:\\Codex-research-validation\\T026\\damping\\plot-1.png": "e850d5b110dada62361f66dae75bab08ae80a5badfce9878727a5a59642ea823",
+    "D:\\Codex-research-validation\\T026\\damping\\plot-2.png": "6be4247b2d4f3f62e7be1ad924b91c53dad67775fa14352f6513d814feadcd12",
+    "D:\\Codex-research-validation\\T026\\damping\\plot-3.png": "2d9151997369f43b882ba07d4f7d582d250e32f917e73731482f0cafe7ee6003"
+  },
+  "input_csv_sha256": {
+    "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu1em5\\extracted.csv": "9450392ea0724543f2d5b9e058397d1674a52fdee51e19a844bacd5aecc5c050",
+    "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu1em5\\extracted.csv": "eb7ae4c4fa49a245d8acce8332a93d1704b4a0d45762871b86864e6cec6f4eee",
+    "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0\\extracted.csv": "424d0fdb32c88dcc1687f906c430cb2de3a9e667746b3a17db5e874626bfca0c",
+    "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu1em5\\extracted.csv": "539a8b209cb57d3ae897886d09e009470d5703916f7ed076255daa8f8f38e818",
+    "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu0\\extracted.csv": "b18834963c1d53b7431b0438e8922e0ea30b3debe82dbb33024a62b3b991ee8d",
+    "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu1em5\\extracted.csv": "cea112035a3c9938b0755af4bb790246742e1d2edc740e691230598353d175d8",
+    "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu0\\extracted.csv": "30c51a99cc03c45e4451b87360f42e8ef8d66df40fd791d36bca50a43733f9fd",
+    "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0_DTMP\\extracted.csv": "ca8747f1a25a16b9293651293fadd7154cf2a0fe1d60a8d836a5bffc8dada8c7",
+    "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\analytical-comparison.csv": "d447c402bb0225c15278eac7e60cafb8c1977def2ec46eeea088f15c17a40ac5",
+    "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\analytical-comparison.csv": "2d81b5202ab1af2093194e69ddc2501fe2989c2d7001a2508ae9a8426ac5ded8",
+    "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\analytical-comparison.csv": "db130d6fad3dd12e863d07d21c2010f48096f6bb12d4bce154357b4905460ebf",
+    "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\analytical-comparison.csv": "d27ced6978f6dfbc6123f8df2f82c122d79dcf47c7670289ef8cdcacb203dd46"
+  },
+  "numeric_series": [
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C65_compression",
+      "label": "source target",
+      "points": 2102,
+      "numeric_series_sha256": "205fa732efea629112788c3209c9534c323cff86f369d7a77cf307ebc6f25fdd"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C65_compression",
+      "label": "RUN-T026-019",
+      "points": 402,
+      "numeric_series_sha256": "41c1f40fb5c8db1be705304a28acf36021db3da909a74ab80a3dcb7cb8029ae7"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C65_compression",
+      "label": "RUN-T026-001",
+      "points": 402,
+      "numeric_series_sha256": "8517c526908f6f849a86ef3ad8a837696a6177fcfa2060d20771bd4be4a9afa2"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C65_tension",
+      "label": "source target",
+      "points": 2102,
+      "numeric_series_sha256": "ef6c4a6d585ac8f96ec111de8a2866041b3202a631cf2f7575a050fdd566c977"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C65_tension",
+      "label": "RUN-T026-004",
+      "points": 402,
+      "numeric_series_sha256": "c39e079a4353d50d6d640d6d955c5643014b7d5f7071b6937faec23e407b281d"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C65_tension",
+      "label": "RUN-T026-003",
+      "points": 402,
+      "numeric_series_sha256": "c6a21dab407759155648bc345f717bea4f7387af844542d3842562d33cfa3ab1"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C70_compression",
+      "label": "source target",
+      "points": 2102,
+      "numeric_series_sha256": "2934e2c363bf9f6b94dc5ffc76d400e8e4143e484818212caf749e8a4c7ea998"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C70_compression",
+      "label": "RUN-T026-006",
+      "points": 402,
+      "numeric_series_sha256": "b19f1fee14396e7341d1f1381cc87a359f409fd4535d2a733a796ba9a204e326"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C70_compression",
+      "label": "RUN-T026-005",
+      "points": 402,
+      "numeric_series_sha256": "f0e9d2482866c695388007d743e6e736009e98a451247df0cffecee91662d406"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C70_tension",
+      "label": "source target",
+      "points": 2102,
+      "numeric_series_sha256": "54ceb59abe0c753c68e3b32163ffdcc20e71a146a42114b8a2f328f6c1b1ea26"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C70_tension",
+      "label": "RUN-T026-008",
+      "points": 402,
+      "numeric_series_sha256": "512039a4cc34f0fdba050d02092201bcdb64202646704a162051a6ed56df6dea"
+    },
+    {
+      "figure": "real-material-curves-zh",
+      "panel": "C70_tension",
+      "label": "RUN-T026-007",
+      "points": 402,
+      "numeric_series_sha256": "5d7d279c5b1c938d00bb8b9abaa3bf6fe533e5037bf23d50c3f05ed722155e3a"
+    },
+    {
+      "figure": "damping-plot-1-zh",
+      "panel": "displacement",
+      "label": "actual",
+      "points": 2015,
+      "numeric_series_sha256": "2ce4dc7f1ae89aadb5c1703c8f027a16fcb143d080611f8cad401ecb3e039a4b"
+    },
+    {
+      "figure": "damping-plot-1-zh",
+      "panel": "displacement",
+      "label": "analytical",
+      "points": 2015,
+      "numeric_series_sha256": "ce257cb6133b450c5a2d19285562eddd6099edd32d2174fb67f86ef4b5964af3"
+    },
+    {
+      "figure": "damping-plot-1-zh",
+      "panel": "log peaks",
+      "label": "actual same-sign peaks",
+      "points": 10,
+      "numeric_series_sha256": "e9a2816787045df809d44c4cf3045c6a43809a5c890d1f894a1eeb3482c3f063"
+    },
+    {
+      "figure": "damping-plot-1-zh",
+      "panel": "log peaks",
+      "label": "analytical decay",
+      "points": 10,
+      "numeric_series_sha256": "670d6af0322015020bfe0f002eb3e0fc5358cb29ac5361944862f9718676e447"
+    },
+    {
+      "figure": "damping-plot-2-zh",
+      "panel": "displacement",
+      "label": "actual",
+      "points": 2015,
+      "numeric_series_sha256": "8f7bcc9c91876662f94c00510bbfb814f39ae6d3442ccfb8b67f73b180c411f5"
+    },
+    {
+      "figure": "damping-plot-2-zh",
+      "panel": "displacement",
+      "label": "analytical",
+      "points": 2015,
+      "numeric_series_sha256": "8c7479ca90da9dd4d84c735edfdd3b52a281acb3a5daf020ec5e01fc4c3df719"
+    },
+    {
+      "figure": "damping-plot-2-zh",
+      "panel": "log peaks",
+      "label": "actual same-sign peaks",
+      "points": 10,
+      "numeric_series_sha256": "85ca11be90d42a44687493e9f5f0837b12d373c0598a878ee351fd57977804bf"
+    },
+    {
+      "figure": "damping-plot-2-zh",
+      "panel": "log peaks",
+      "label": "analytical decay",
+      "points": 10,
+      "numeric_series_sha256": "0136a7851b0cefe2961e0e279549ed413f74ad282b125f9e1b7176030523fc20"
+    },
+    {
+      "figure": "damping-plot-3-zh",
+      "panel": "energy relative drift",
+      "label": "RUN-T026-030",
+      "points": 1008,
+      "numeric_series_sha256": "24a03b8bd0f40d2d291d1dcce7370eb70bf714ca9aa409f67255f83840b0f079"
+    },
+    {
+      "figure": "damping-plot-3-zh",
+      "panel": "displacement phase error",
+      "label": "RUN-T026-030",
+      "points": 1008,
+      "numeric_series_sha256": "518935a6eabb5d4ff4edce1b917f0f9970399c86b509b572816b5c92373a3a29"
+    },
+    {
+      "figure": "damping-plot-3-zh",
+      "panel": "energy relative drift",
+      "label": "RUN-T026-031",
+      "points": 2015,
+      "numeric_series_sha256": "7c4285bfb58178f3b7ac4c4f247d3da32fd2a6aa1fa7f3c52b86c46a924c2f8a"
+    },
+    {
+      "figure": "damping-plot-3-zh",
+      "panel": "displacement phase error",
+      "label": "RUN-T026-031",
+      "points": 2015,
+      "numeric_series_sha256": "9824803a97dcfe1ead53b1234fd5dd12bf0df078f76299e64b109b028f77bd05"
+    }
+  ],
+  "outputs": {
+    "real-material-curves-zh": {
+      "png": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\real-material-curves-zh.png",
+        "sha256": "f7da7de58d8fd6451dbda3dd50dfbcd8a0b4d44375550309a4317fccb004a0b8"
+      },
+      "pdf": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\real-material-curves-zh.pdf",
+        "sha256": "5868d6b8be4898c0a1bb69b5576e21a556a9ad08de2a58306e4f764e5432d231"
+      },
+      "svg": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\real-material-curves-zh.svg",
+        "sha256": "f9f04a23eab04ea8343448cfabcba4517a034e421e7df5e3fee2d3437f4c4e84"
+      }
+    },
+    "damping-plot-1-zh": {
+      "png": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-1-zh.png",
+        "sha256": "59ad0ebfbb6ef47e1ec1a3a3d6356be663126df4d220d556b43a6f0b53ddf60e"
+      },
+      "pdf": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-1-zh.pdf",
+        "sha256": "b65fef22f1d862d499e54c76d32905333a9dbf789ead0056a3b9e20b6c3ce284"
+      },
+      "svg": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-1-zh.svg",
+        "sha256": "87f8e6f8a1ba8a63c58ff1fea12e5b335b25a0c1c61300ea1a2a8562ea9a547b"
+      }
+    },
+    "damping-plot-2-zh": {
+      "png": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-2-zh.png",
+        "sha256": "dab6f373d01fd29799746ccbc345286bb6a565f1aba0ea9fec733979eaa5e418"
+      },
+      "pdf": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-2-zh.pdf",
+        "sha256": "9e626edbdf27435a7e28aa4d5b18a890dea7d868c1a2b430f41e7977d7f064a3"
+      },
+      "svg": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-2-zh.svg",
+        "sha256": "511afe7a22c6c5a02a5fa758cb9f529be18a9403413c2817dd0f26e04ae4928c"
+      }
+    },
+    "damping-plot-3-zh": {
+      "png": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-3-zh.png",
+        "sha256": "8e85f099c620f5cb826d2a2accc79fde733f37e9048456bc8a6b9b3f1a228249"
+      },
+      "pdf": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-3-zh.pdf",
+        "sha256": "704d1d7c3941d2da2bb71211d856a2057d0c0fe2f984a06e71e42af01d5882c8"
+      },
+      "svg": {
+        "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-3-zh.svg",
+        "sha256": "b9c1b6688155eed6b3e85375082bc5e97ada287659136fde8ddfd5db2569f746"
+      }
+    }
+  },
+  "Word_figure_mapping": {
+    "图2-3": "real-material-curves-zh",
+    "图2-6": "damping-plot-1-zh",
+    "图2-7": "damping-plot-2-zh",
+    "图2-8": "damping-plot-3-zh"
+  },
+  "visual_QA": {
+    "status": "PASS",
+    "date": "2026-10-04",
+    "method": "All four final200dpi PNGs viewed entirely via view_image. First material layout overlaps were repaired; all four regenerated and re-inspected. Chinese title/panel/axes/legends/notes complete, no missing glyph/cropping/overlap. Numerical symbols/units and run/keyword codes retained.",
+    "figures_checked": [
+      "real-material-curves-zh",
+      "damping-plot-1-zh",
+      "damping-plot-2-zh",
+      "damping-plot-3-zh"
+    ],
+    "minimum_print_font_at_5point5_inches": 7.15
+  },
+  "Word_figure_png_paths": {
+    "图2-3": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\real-material-curves-zh.png",
+      "sha256": "f7da7de58d8fd6451dbda3dd50dfbcd8a0b4d44375550309a4317fccb004a0b8"
+    },
+    "图2-6": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-1-zh.png",
+      "sha256": "59ad0ebfbb6ef47e1ec1a3a3d6356be663126df4d220d556b43a6f0b53ddf60e"
+    },
+    "图2-7": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-2-zh.png",
+      "sha256": "dab6f373d01fd29799746ccbc345286bb6a565f1aba0ea9fec733979eaa5e418"
+    },
+    "图2-8": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\damping-plot-3-zh.png",
+      "sha256": "8e85f099c620f5cb826d2a2accc79fde733f37e9048456bc8a6b9b3f1a228249"
+    }
+  }
+}

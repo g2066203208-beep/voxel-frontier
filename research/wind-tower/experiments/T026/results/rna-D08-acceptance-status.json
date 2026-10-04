@@ -1,0 +1,29 @@
+{
+  "requirement_id": "D08",
+  "state": "OPEN",
+  "content_policy": "原创问题概述与验收条件，不含教师Word原文或其转录段落。",
+  "requirement_summary": "RNA质量与空间分布的简化需要近期方法依据，并需定量评价简化对研究结果的影响；既有文献采用同一简化并不自动证明本模型合理。",
+  "source_locator_private": "teacher-ji-private.txt，2026-07-26讨论，16:27—18:22；原文仅本地保存。",
+  "completed_subtasks": [
+    "实际B31质量、质心及完整离散惯量读取与独立积分",
+    "相同刚体空间质量下的MASS＋ROTARYI数值等价对照",
+    "相同质量及质心下连续/离散惯量表示敏感性"
+  ],
+  "completed_subtask_boundary": "这些子项均未开放RNA内部相对运动，不能检验叶片柔性、转子旋转/陀螺或气动弹性反馈，不关闭D08。",
+  "unperformed_acceptance": [
+    "具有可追溯叶片刚度和质量分布、转速及气动耦合的详细整机模型",
+    "相同塔架/预应力基态/参考点/坐标的刚体与详细模型模态、参与量对照",
+    "一致风况和转速下塔顶位移、塔底弯矩等时域及频域响应差",
+    "若涉及疲劳，则相同定义、载荷处理步骤下的损伤等效载荷差",
+    "比较前给定目标响应量、评价误差预算及适用运行状态"
+  ],
+  "literature_roles": {
+    "original_thesis_ref_2": "DTU参考机组公开参数来源；其存在不等于本章已建详细模型",
+    "original_thesis_ref_20": "2025研究中结构模态对照与整机耦合数值比较的方法及对象差异；文献作者的结果不冒认为本模型计算"
+  },
+  "word_revision_anchors": ["第二章开篇", "2.4.4 刚体简化与详细整机对照的边界", "2.8 本章结论与适用范围"],
+  "rigid_frequency_alone_validates_wind_fatigue_optimization": false,
+  "no_new_solver": true,
+  "no_fabricated_detailed_model_results": true,
+  "chapter_acceptance_complete": false
+}

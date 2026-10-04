@@ -1,4 +1,4 @@
-material,direction,node,behavior_source_line,damage_source_line,sigma_absolute_Pa,sigma_signed_Pa,eps_in_or_ck,damage,eps_pl_software,eps_total_absolute,eps_total_signed,nominal_unloading_E_Pa,nominal_zero_stress_residual_strain_abs
+﻿material,direction,node,behavior_source_line,damage_source_line,sigma_absolute_Pa,sigma_signed_Pa,eps_in_or_ck,damage,eps_pl_software,eps_total_absolute,eps_total_signed,nominal_unloading_E_Pa,nominal_zero_stress_residual_strain_abs
 C70,compression,0,363803,363822,33032400.0,-33032400.0,0.0,0.0,0.0,0.0008927675675675675,-0.0008927675675675675,37000000000.0,0.0
 C70,compression,1,363804,363823,40167900.0,-40167900.0,0.000212432,0.0,0.000212432,0.0012980509189189189,-0.0012980509189189189,37000000000.0,0.000212432
 C70,compression,2,363805,363824,43607800.0,-43607800.0,0.000424865,0.0,0.000424865,0.001603454189189189,-0.001603454189189189,37000000000.0,0.000424865

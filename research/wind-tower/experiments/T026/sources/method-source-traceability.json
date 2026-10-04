@@ -1,0 +1,850 @@
+{
+  "record_id": "T026-method-source-traceability",
+  "date": "2026-10-04",
+  "registry_snapshot": {
+    "head": "ce4be35caa3e6a94be2ca6c1e307ebf1dd8d6ad8",
+    "rows": 56,
+    "registry_sha256": "5122c043f63d59e6bc81cbc3eff4b201c6b79bf56cb75a4a57f421b4e0cffa51",
+    "path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-03\\lia\\work\\chapter2-completion\\method-registry-latest.tsv"
+  },
+  "content_policy": "可公开方法/过程的原创概述、精确出处与参数边界；不含新论文正文、付费PDF、教师Word原文或期刊长引文。source-private全文提取保留本地。",
+  "remote_mutated": false,
+  "solver_invoked": false,
+  "word_mutated": false,
+  "section_mapping_policy": "chapter_section_anchor为方法主题锚点，主笔可按最终第二章编号映射；本表不伪造尚未落稿的节号。",
+  "source_attribution_policy": "方法有来源不等于本塔参数实测；由守恒/量纲/解析算例设计的数值核验标研究者预登记方案，不以文献题名代替参数出处。",
+  "sources": {
+    "ABAQUS2025_CDP": {
+      "key": "ABAQUS2025_CDP",
+      "registryRef": "REF052",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-concretedamaged.htm",
+      "readLevel": "官方HTML关键完整段落",
+      "locators": [
+        "Defining Tension Stiffening/Postfailure Stress-Strain Relation",
+        "Fracture Energy Cracking Criterion/Implementation",
+        "Defining Compressive Behavior",
+        "Defining Damage and Stiffness Recovery",
+        "Viscoplastic Regularization",
+        "Material Damping"
+      ],
+      "limits": "软件变量定义与实现说明不是C65/C70物理校准；拉伸Gf正则化不能自动证明压缩峰后也已网格客观。",
+      "title": "Concrete Damaged Plasticity",
+      "publication": "Abaqus 2025 official documentation"
+    },
+    "ABAQUS2025_DAMPING": {
+      "key": "ABAQUS2025_DAMPING",
+      "originalThesisReference": 119,
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-dampingopt.htm",
+      "readLevel": "官方HTML Rayleigh/Mass/Stiffness/Structural/Modal/Elements关键段落",
+      "limits": "不能把材料β等同完整总切线（含几何、弹簧和接触等）比例项；拟合ξ及数值衰减只能验证实现，不能增加独立物理证据。",
+      "title": "Material Damping",
+      "publication": "Abaqus 2025 official documentation"
+    },
+    "ABAQUS2025_FREQUENCY_BASE": {
+      "key": "ABAQUS2025_FREQUENCY_BASE",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEANLRefMap/simaanl-c-freqextraction.htm",
+      "readLevel": "官方HTML开头/Eigenvalue Extraction/Normalization/Initial Conditions/Boundary Conditions关键段落；本轮补核Modal Effective Mass公式及排除受约束自由度质量的边界",
+      "limits": "Frequency步骤自身不会随动力过程中损伤实时更新刚度。必须用实际求解frames确认，DATACHECK正常结束不是模态解。",
+      "title": "Natural Frequency Extraction",
+      "publication": "Abaqus 2025 official documentation"
+    },
+    "ABAQUS2025_PRESTRESS": {
+      "key": "ABAQUS2025_PRESTRESS",
+      "registryRef": "REF053",
+      "urls": [
+        "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMODRefMap/simamod-c-rebar.htm",
+        "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-prestresshold.htm"
+      ],
+      "readLevel": "官方HTML Initial Conditions/Defining Prestress/Holding Prestress及PRESTRESS HOLD全文",
+      "limits": "必须据实际INP区分独立筋、rebar层与温降/初应力/张拉过程；不能只凭正文方法名判断实现正确。",
+      "title": "Defining Rebar as an Element Property; *PRESTRESS HOLD",
+      "publication": "Abaqus 2025 official documentation"
+    },
+    "ABAQUS2025_TRUSS": {
+      "key": "ABAQUS2025_TRUSS",
+      "registryRef": "REF054",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEELMRefMap/simaelm-c-truss.htm",
+      "readLevel": "官方HTML Typical Applications/Choosing Element/Section及Large-Displacement完整段落",
+      "limits": "外置无粘结筋对整塔弯曲的贡献取决于端锚及导向拓扑，不能不分条件套局部EpApd²。",
+      "title": "Truss Elements",
+      "publication": "Abaqus 2025 official documentation"
+    },
+    "ABAQUS_BEAM_MASS": {
+      "key": "ABAQUS_BEAM_MASS",
+      "title": "*BEAM SECTION",
+      "publication": "Abaqus 2025 official documentation",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-beamsection.htm",
+      "readLevel": "本轮重核官方HTML LUMPED和ROTARY INERTIA参数；沿用此前实际B31/DAT核读"
+    },
+    "ABAQUS_EMBEDDED": {
+      "key": "ABAQUS_EMBEDDED",
+      "title": "Embedded Elements",
+      "publication": "Abaqus 2025 official documentation",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAECSTRefMap/simacst-c-embeddedelement.htm",
+      "readLevel": "本轮官方HTML Introduction/Host/Embedded Elements/Use with Other Constraints/Limitations段，尤其平动插值约束和附加质量刚度"
+    },
+    "ABAQUS_INITIAL_STRESS": {
+      "key": "ABAQUS_INITIAL_STRESS",
+      "title": "*INITIAL CONDITIONS",
+      "publication": "Abaqus 2025 official documentation",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-initialconditions.htm",
+      "readLevel": "本轮官方HTML TYPE=STRESS、REBAR和UNBALANCED STRESS参数及一般STRESS数据行"
+    },
+    "ABAQUS_NSM": {
+      "key": "ABAQUS_NSM",
+      "title": "Nonstructural Mass Definition",
+      "publication": "Abaqus 2025 official documentation",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMODRefMap/simamod-c-nonstructuralmass.htm",
+      "readLevel": "本轮官方HTML Introduction/Defining Nonstructural Mass/Total Mass及distribution段；多条贡献可相加，参与重力"
+    },
+    "ABAQUS_RIGID_MASS": {
+      "key": "ABAQUS_RIGID_MASS",
+      "title": "Equivalent rigid body dynamic motion",
+      "publication": "Abaqus 2025 official documentation",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-equivrbm.htm",
+      "readLevel": "本轮官方理论HTML质量、一/二阶质量矩及CG转移方程、低阶元素集总质量段；未扩展后半旋转平均推导"
+    },
+    "ABAQUS_SPRING": {
+      "key": "ABAQUS_SPRING",
+      "title": "Springs",
+      "publication": "Abaqus 2025 official documentation",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEELMRefMap/simaelm-c-spring.htm",
+      "readLevel": "本轮官方HTML SPRING2 Relative Displacement/Linear Spring Behavior/Direction of Action段"
+    },
+    "BROWN2024_VV": {
+      "key": "BROWN2024_VV",
+      "registryRef": "REF009",
+      "title": "One-to-one aeroservoelastic validation of operational loads and performance of a 2.8 MW wind turbine model in OpenFAST",
+      "publication": "Wind Energy Science 9 (2024) 1791–1810",
+      "doi": "10.5194/wes-9-1791-2024",
+      "url": "https://wes.copernicus.org/articles/9/1791/2024/",
+      "readLevel": "本轮重读publisher HTML方法段；沿用前次题名身份核对",
+      "locators": [
+        "§2.2.1–2.2.2",
+        "§2.3.1–2.3.2",
+        "§5.3"
+      ],
+      "limits": "2.8MW实机验证不能作为本文DTU10MW混塔的验证结果；本轮不扩展整机载荷研究。"
+    },
+    "CHENG2024_RNA_PRESTRESS": {
+      "key": "CHENG2024_RNA_PRESTRESS",
+      "registryRef": "REF010",
+      "title": "Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode",
+      "authors": [
+        "Yu Cheng",
+        "Liang Cao",
+        "Jiepeng Liu",
+        "Yuhang Wang",
+        "Xuhong Zhou"
+      ],
+      "publication": "Structures 68 (2024) 107235",
+      "doi": "10.1016/j.istruc.2024.107235",
+      "url": "https://doi.org/10.1016/j.istruc.2024.107235",
+      "pdfSha256": "716b4615a635c1f32e27bb247a84fcafeab51ed62abea5eb8f990a7fe3526ce0",
+      "textFullPagesRead": [
+        3,
+        6,
+        7
+      ],
+      "visualPagesRead": [
+        7
+      ],
+      "locators": [
+        "PDF3：§2 RNA质量偏心/转动惯量及预应力虚功",
+        "PDF6–7：§3.3、§4.1初始静力预应力后频率摄动",
+        "PDF7：§4.2理论–FE比较及§5.1 RNA简化"
+      ],
+      "limits": "5MW/C80、弹性本构、Tie连接，采用温降预应力和B31筋。理论与FE一致是模型间核验；不构成本塔材料、接缝或实测阻尼的物理标定，也不要求本模型必须复制其预应力施加方法。",
+      "readLevel": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读"
+    },
+    "HE2024": {
+      "key": "HE2024",
+      "registryRef": "REF008",
+      "originalThesisReference": 1,
+      "title": "大型混塔式风力机的建模与可靠度分析",
+      "authors": [
+        "何泽瑜"
+      ],
+      "publication": "湖南大学硕士学位论文，2024",
+      "readLevel": "用户提供原始PDF；不是期刊实验论文",
+      "locators": [
+        "PDF33–36/印刷22–25，§3.3–3.4.1及Table3-1~3-4",
+        "本轮补读PDF39/印刷28、PDF44–45/印刷33–34的完整正文页"
+      ],
+      "textFullPagesRead": [
+        33,
+        34,
+        35,
+        36,
+        39,
+        44,
+        45
+      ],
+      "visualPagesRead": [
+        33,
+        35,
+        36
+      ],
+      "additional_scope": "本轮全文90页仅作关键词定位，不声称90页逐页读完；PDF35视觉确认图3-4/3-5没有弹簧刚度/NSM标注",
+      "pdfSha256": "85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c"
+    },
+    "LI2020_CDP": {
+      "key": "LI2020_CDP",
+      "registryRef": "REF056",
+      "originalThesisReference": 32,
+      "title": "Parameter calculation and verification of concrete plastic damage model of ABAQUS",
+      "authors": [
+        "Li Qingfu",
+        "Guo Wei",
+        "Kuang Yihang"
+      ],
+      "publication": "IOP Conference Series: Materials Science and Engineering 794 (2020) 012036；会议论文集，不标为独立期刊混塔试验",
+      "doi": "10.1088/1757-899X/794/1/012036",
+      "url": "https://doi.org/10.1088/1757-899X/794/1/012036",
+      "pdfSha256": "1e964f27287a2aa43264e97a03d08187bea3df19622f5c9879df6b545f8f836f",
+      "textPagesRead": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "visualPagesRead": [
+        4
+      ],
+      "locators": [
+        "PDF4/印刷3：§3.1–3.3，式5–9",
+        "PDF5/印刷4：式10–12及Table1",
+        "PDF6–8/印刷5–7：§4，Table3–4，梁试验对照与截断研究"
+      ],
+      "limits": "研究基于STEEL-40S梁及特定50mm网格，进行峰后截断选择；不是C65/C70多轴材料校准或网格无关证明。本文μ0历史分支不能说与该文全部参数相同。作者摘要的小于5%结论不可不分指标照搬，表4裂缝荷载与正文实验值需另逐项复核。",
+      "readLevel": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读"
+    },
+    "LI2023_TWO_SCALE_TEST": {
+      "key": "LI2023_TWO_SCALE_TEST",
+      "registryRef": "REF005",
+      "title": "Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models",
+      "authors": [
+        "Zeyu Li",
+        "Bin Xu",
+        "Jiang Wang",
+        "Hongbing Chen",
+        "Hanbin Ge"
+      ],
+      "publication": "Engineering Structures 279 (2023) 115622",
+      "doi": "10.1016/j.engstruct.2023.115622",
+      "url": "https://doi.org/10.1016/j.engstruct.2023.115622",
+      "pdfSha256": "ea7e556627322d8277b87bd337b7b0bc709bea5ca979850194a5b3cbff2c19b7",
+      "textFullPagesRead": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "visualPagesRead": [
+        3,
+        5,
+        6,
+        7
+      ],
+      "additionalKeywordExcerpts": "本轮扫描13页关键词；完整核读PDF5、6、9，新增视觉PDF6 Fig8；其他既读范围沿用，未宣称13页逐页全读",
+      "locators": [
+        "PDF2–3：§2缩尺子结构试验/图1–3",
+        "PDF5：§3.1.2式10、图7断裂能软化；§3.3接口",
+        "PDF6：无粘结筋横向导向、轴向自由；§4.1–4.2.1",
+        "PDF7：Table5–6、图10–11，§4.2.2–4.2.4",
+        "PDF8：Table7与损伤位置"
+      ],
+      "limits": "77.5m原型的0.1尺度子结构，C50、PT544.8kN及轴力42.3kN，不能直接移植到本文158m/C65/C70。为安全试验只到16.50mm；Table6约90kN极限值是模型互比，不是实测峰值。已读页未明确Gf数值，未经补齐不可声称完整复制其峰后响应。",
+      "readLevel": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读"
+    },
+    "LI2024_DAMPING": {
+      "key": "LI2024_DAMPING",
+      "originalThesisReference": 116,
+      "title": "考虑P–Δ效应的钢混凝土混合塔筒动力响应分析",
+      "authors": [
+        "李守振",
+        "周绪红",
+        "王宇航",
+        "甘丹",
+        "朱嵘华"
+      ],
+      "publication": "东南大学学报（自然科学版）54(1):9–16，2024；原排版页首为2024年1月",
+      "doi": "10.3969/j.issn.1001-0505.2024.01.002",
+      "primaryAuthorCopyUrl": "https://www.researchgate.net/publication/391776112_Dynamic_response_analysis_of_steel-concrete_hybrid_tower_considering_P-D_effect",
+      "readLevel": "原作者全文HTML关键正文；没有冒称已视觉核读公式PDF",
+      "readLocators": [
+        "§1.1–1.2，期刊页10–11，式1–14",
+        "§2，期刊页11–12，式15–19",
+        "§3.1–3.2，期刊页12，Table1–4",
+        "§4.1–4.3，期刊页13–14，式20–22及Table5–7"
+      ],
+      "visualPdfPagesRead": [],
+      "limits": "其102m、2MW算例未考虑预应力，FE连接全部Tie；不足以直接认证158m、T3D2无粘结筋、SPRING2接口和空间RNA模型的耗能分区。5%/2%是作者引据其他规范的情景，非本塔实测阻尼。"
+    },
+    "ROY_OBERKAMPF_2011": {
+      "key": "ROY_OBERKAMPF_2011",
+      "originalThesisReference": 22,
+      "title": "A comprehensive framework for verification, validation, and uncertainty quantification in scientific computing",
+      "publication": "Computer Methods in Applied Mechanics and Engineering 200(25–28), 2131–2144 (2011)",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0045782511001290",
+      "doi": "10.1016/j.cma.2011.03.016",
+      "readLevel": "Publisher abstract and accessible Introduction, actually read 2026-10-04; not a claim of full PDF reading",
+      "locators": [
+        "Abstract: numerical discretization/iteration/roundoff versus experimental comparisons",
+        "Introduction: numerical approximation, input and model form uncertainties"
+      ],
+      "limits": "Supports the conceptual separation; does not prescribe this study 0.5% mesh or 1% residual-point numerical budgets."
+    },
+    "ASME_VV10_OVERVIEW": {
+      "key": "ASME_VV10_OVERVIEW",
+      "originalThesisReference": 21,
+      "title": "V&V 10-2019 (R2025): Standard for Verification and Validation in Computational Solid Mechanics",
+      "url": "https://www.asme.org/codes-standards/find-codes-standards/standard-for-verification-and-validation-in-computational-solid-mechanics/2019",
+      "readLevel": "Official product/edition and scope overview actually read; full normative clauses not acquired",
+      "locators": [
+        "Edition 2019 (R2025)",
+        "Purpose and conceptual VVUQ framework overview"
+      ],
+      "limits": "Edition and high-level framework only; do not claim full clause compliance or attach invented tolerance thresholds to this standard."
+    },
+    "ABAQUS_ROTARY_INERTIA": {
+      "key": "ABAQUS_ROTARY_INERTIA",
+      "title": "*ROTARY INERTIA",
+      "publication": "Abaqus 2025 official documentation",
+      "originalThesisReference": 140,
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-rotaryinertia.htm",
+      "readLevel": "官方关键词全文：所附节点、六个张量分量顺序及坐标方向随附节点旋转；本轮再次核读",
+      "locators": [
+        "ELSET parameter",
+        "Data line: I11 I22 I33 I12 I13 I23",
+        "Directions rotating with the attached node"
+      ],
+      "limits": "官方关键词定义支持惯量输入实施，不给本工程物理RNA惯量；质心输入与向参考点运输由实际数值核对及本研究动能推导说明。"
+    }
+  },
+  "methods": [
+    {
+      "id": "M01",
+      "chapter_section_anchor": "研究对象与几何",
+      "method": "158 m混塔的尺寸、分段与边界",
+      "source_locators": [
+        {
+          "source_key": "HE2024",
+          "citation_locator": "§3.3，PDF33–35/印刷22–24；Table3-2、Table3-3、Fig3-4~3-5",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        }
+      ],
+      "adopted_part": "采用112 m混凝土段与46 m钢段的原型对象；按源输入坐标实际核对31+4节段。",
+      "object_or_implementation_difference": "何文Table3-3标题为半径，但源模型按与混凝土段衔接的直径解释实施；此语义歧义不能靠频率吻合关闭。RNA与预应力基态亦不完全相同。",
+      "parameter_provenance": "几何为文献/源工程输入，不是本研究现场测量；基础采用源模型固定底边界，不构成土–基础标定。",
+      "remaining_unclosed": [
+        "钢段半径/直径表头歧义需独立尺寸证据；论文源几何与源工程逐段对照保留。"
+      ],
+      "permitted_claim": "本文为按明确解释实施的文献对象数值模型，不称原型全部参数已实测复现。"
+    },
+    {
+      "id": "M02",
+      "chapter_section_anchor": "有限元离散",
+      "method": "实体塔段与T3D2轴向杆件",
+      "source_locators": [
+        {
+          "source_key": "LI2023_TWO_SCALE_TEST",
+          "citation_locator": "PDF5，§3.2与Table3：C3D8R/T3D2；PDF6，Fig9",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [2, 3, 4, 5, 6, 7, 8, 9]"
+        },
+        {
+          "source_key": "HE2024",
+          "citation_locator": "PDF33/印刷22，§3.3：三维单元、嵌入桁架钢筋网及预应力筋",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        },
+        {
+          "source_key": "ABAQUS2025_TRUSS",
+          "citation_locator": "Typical Applications/Choosing Element/Section；Large-Displacement Formulation",
+          "actual_read_scope": "官方HTML Typical Applications/Choosing Element/Section及Large-Displacement完整段落; "
+        }
+      ],
+      "adopted_part": "混凝土/钢塔实体与普通筋/PT轴向杆件的部件级分工；本研究用真实源输入的C3D8R/C3D8I与T3D2。",
+      "object_or_implementation_difference": "Li的0.1缩尺子结构和two-scale B31方案不是本塔；C3D8I来自本源工程而不是Table3原样配置。T3D2没有梁弯矩自由度。",
+      "parameter_provenance": "单元型式、截面面积、密度来自冻结源工程；本轮核验单元section覆盖及质量积分。",
+      "remaining_unclosed": [
+        "桁架等效的面积/位置属于源实现；不能由单元合法性推出真实钢筋与PT施工布置已验证。"
+      ],
+      "permitted_claim": "有同类原始混塔研究支持离散机制，当前单元分配仍按本工程实际说明。"
+    },
+    {
+      "id": "M03",
+      "chapter_section_anchor": "混凝土材料",
+      "method": "CDP变量转换与损伤定义",
+      "source_locators": [
+        {
+          "source_key": "LI2020_CDP",
+          "citation_locator": "PDF4/印刷3，§3.1–3.3式5–9，尤其D与Sidoroff d的式6平方根；PDF5 Table1",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [1, 2, 3, 4, 5, 6, 7, 8]"
+        },
+        {
+          "source_key": "ABAQUS2025_CDP",
+          "citation_locator": "Defining Compressive Behavior/Defining Tension Stiffening/Defining Damage and Stiffness Recovery",
+          "actual_read_scope": "官方HTML关键完整段落; ['Defining Tension Stiffening/Postfailure Stress-Strain Relation', 'Fracture Energy Cracking Criterion/Implementation', 'Defining Compressive Behavior', 'Defining Damage and Stiffness Recovery', 'Viscoplastic Regularization', 'Material Damping']"
+        }
+      ],
+      "adopted_part": "区分总应变、非弹性/开裂应变、塑性应变及损伤d；逐表核软件塑性转换和损伤后的卸载刚度。",
+      "object_or_implementation_difference": "Li2020是C40梁会议论文；其μ=0.0005和损伤生成路线不直接适用C65/C70。本工程内嵌σ–应变–d表不是本轮按Li重新生成。",
+      "parameter_provenance": "C65/C70生产表和μ=1e-5为源输入；不是本塔实测曲线；数值试件只检实施。",
+      "remaining_unclosed": [
+        "C65/C70强度、多轴CDP和损伤曲线缺独立材料试验标定；实际源d与Li Sidoroff路线不同须分别命名。"
+      ],
+      "permitted_claim": "可说明采用CDP且变量转换接受官方定义核验，不称按Li全部参数复制或材料已物理标定。"
+    },
+    {
+      "id": "M04",
+      "chapter_section_anchor": "材料实施核验",
+      "method": "单轴包络、卸载与增量/黏性对照",
+      "source_locators": [
+        {
+          "source_key": "ABAQUS2025_CDP",
+          "citation_locator": "Damage and Stiffness Recovery/Viscoplastic Regularization",
+          "actual_read_scope": "官方HTML关键完整段落; ['Defining Tension Stiffening/Postfailure Stress-Strain Relation', 'Fracture Energy Cracking Criterion/Implementation', 'Defining Compressive Behavior', 'Defining Damage and Stiffness Recovery', 'Viscoplastic Regularization', 'Material Damping']"
+        },
+        {
+          "source_key": "LI2020_CDP",
+          "citation_locator": "PDF5–8，Table1与§4数值–梁试验对照",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [1, 2, 3, 4, 5, 6, 7, 8]"
+        }
+      ],
+      "adopted_part": "RF/A、U/L与积分点应力/应变互查；损伤后卸载斜率核对(1-d)E；保持源μ并独立做μ/增量对照。",
+      "object_or_implementation_difference": "本轮均匀小试件不是Li梁试验，更不是C65/C70标定；均匀单元重复不能验证损伤局部化客观性。",
+      "parameter_provenance": "μ及曲线来自源输入；测试加载/时间步与误差预算为预登记数值方案，不冒称文献给定阈值。",
+      "remaining_unclosed": [
+        "RUN-T026-033三维C3D8R精确末节点应力相对目标偏13.76052%，未满足严格残余强度预算；RUN-T026-038同卡纯T3D2七节点通过只确认一维实施，不能替代三维、多轴或循环标定。",
+        "真实多轴、循环行为及裂后局部化客观性未覆盖。"
+      ],
+      "permitted_claim": "已报告路径的整体峰归一及同号卸载指标满足预算；三维严格残余尾部未通过，不得称全材料实施或物理实验标定完成。"
+    },
+    {
+      "id": "M05",
+      "chapter_section_anchor": "软化及网格边界",
+      "method": "应变软化与断裂能正则化",
+      "source_locators": [
+        {
+          "source_key": "LI2023_TWO_SCALE_TEST",
+          "citation_locator": "PDF5 §3.1.2式10与Fig7；u_t0=2Gf/σ_t0",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [2, 3, 4, 5, 6, 7, 8, 9]"
+        },
+        {
+          "source_key": "ABAQUS2025_CDP",
+          "citation_locator": "Fracture Energy Cracking Criterion/Implementation；Postfailure Stress-Strain Relation",
+          "actual_read_scope": "官方HTML关键完整段落; ['Defining Tension Stiffening/Postfailure Stress-Strain Relation', 'Fracture Energy Cracking Criterion/Implementation', 'Defining Compressive Behavior', 'Defining Damage and Stiffness Recovery', 'Viscoplastic Regularization', 'Material Damping']"
+        }
+      ],
+      "adopted_part": "引用原文解释位移/断裂能软化为何缓解网格敏感；对当前应变型软化明确局限。",
+      "object_or_implementation_difference": "当前生产输入采用TYPE=STRAIN，尚未以Li的Gf方案替换；已读原文未得到可无歧义移植的本塔Gf数值。",
+      "parameter_provenance": "当前软化表为源输入；Gf不是本塔实测；不反调Gf去匹配目标频率或反力。",
+      "remaining_unclosed": [
+        "若结论涉及后峰、裂缝局部应力，必须另建立有来源Gf或限定离散依赖；弹性整塔网格PASS不能关闭此项。"
+      ],
+      "permitted_claim": "现有网格结论仅针对未损伤重力基态的低阶整体响应。"
+    },
+    {
+      "id": "M06",
+      "chapter_section_anchor": "普通钢筋连接",
+      "method": "Embedded完全粘结近似",
+      "source_locators": [
+        {
+          "source_key": "HE2024",
+          "citation_locator": "PDF33/印刷22，混凝土内嵌桁架钢筋网",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        },
+        {
+          "source_key": "ABAQUS_EMBEDDED",
+          "citation_locator": "Introduction/Specifying Host Elements/Limitations，嵌入节点平动由宿主插值约束、额外质量刚度叠加",
+          "actual_read_scope": "本轮官方HTML Introduction/Host/Embedded Elements/Use with Other Constraints/Limitations段，尤其平动插值约束和附加质量刚度; "
+        }
+      ],
+      "adopted_part": "普通筋T3D2与宿主混凝土共同平动，按完全粘结理想化；核宿主与嵌入集合及重复质量。",
+      "object_or_implementation_difference": "该约束不模拟真实粘结滑移；不能用其解释无粘结预应力筋沿程传力。",
+      "parameter_provenance": "筋截面/位置/材料分配从源工程读出；不因模型另存HRB500材料名而称实际普通筋已用该材料。",
+      "remaining_unclosed": [
+        "真实粘结/锚固损伤与滑移需独立试验或模型；本轮未标定。"
+      ],
+      "permitted_claim": "本节描述完全粘结假定与软件执行能力，不声称连接材料全部已验证。"
+    },
+    {
+      "id": "M07",
+      "chapter_section_anchor": "接缝与转换结构",
+      "method": "SPRING2与Tie的真实能力及刚度出处",
+      "source_locators": [
+        {
+          "source_key": "HE2024",
+          "citation_locator": "PDF33/印刷22：钢段焊接、预应力压紧混凝土段与钢法兰；PDF35 Fig3-5",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        },
+        {
+          "source_key": "LI2023_TWO_SCALE_TEST",
+          "citation_locator": "PDF5 §3.3：法兰与混凝土Tie防分离简化",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [2, 3, 4, 5, 6, 7, 8, 9]"
+        },
+        {
+          "source_key": "ABAQUS_SPRING",
+          "citation_locator": "SPRING2 Relative Displacement/Defining Linear Spring Behavior/Direction of Action",
+          "actual_read_scope": "本轮官方HTML SPRING2 Relative Displacement/Linear Spring Behavior/Direction of Action段; "
+        }
+      ],
+      "adopted_part": "按源输入保留SPRING2指定自由度上的力–相对位移关系，以及实际Tie/耦合关系；用它报告整体连接柔度。",
+      "object_or_implementation_difference": "Li采用Tie不是有限SPRING2刚度；何已读段和本轮全文关键词定位未提供1e14刚度值。SPRING2不是接触压力/开闭面积/摩擦损伤模型。",
+      "parameter_provenance": "源输入的平动/扭转刚度设为1e14；两个水平弯曲转动刚度随接头约8.75565e11–2.91321e12 N·m/rad。全部为源建模设置，未被证明是实测接口刚度。",
+      "remaining_unclosed": [
+        "该值的原设计/试验依据未闭合；需有针对性的刚度敏感性或施工/试验依据后才讨论真实接缝效应。"
+      ],
+      "permitted_claim": "引用支撑连接简化方法；明确本塔参数仍是源假定，不称文献或规范认证1e14。"
+    },
+    {
+      "id": "M08",
+      "chapter_section_anchor": "预应力拓扑",
+      "method": "端部锚固与沿程横向导向",
+      "source_locators": [
+        {
+          "source_key": "LI2023_TWO_SCALE_TEST",
+          "citation_locator": "PDF5–6 §3.3与Fig8：锚点位移映射、沿程横向elasticity rigid connector、无轴向载荷沿程传递",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [2, 3, 4, 5, 6, 7, 8, 9]"
+        },
+        {
+          "source_key": "HE2024",
+          "citation_locator": "PDF33/印刷22：PT底固定、顶部锚钢法兰",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        }
+      ],
+      "adopted_part": "采用端部锚固传力与无粘结筋横向导向/轴向自由的机制划分，并核实际本塔自由度拓扑。",
+      "object_or_implementation_difference": "Li是缩尺/77.5m原型的two-scale模型，C50与PT544.8kN；不直接复制为158m本塔PT。何的描述也不详细给出每个导向连接关键词。",
+      "parameter_provenance": "筋数、面积、1280MPa等来自冻结源工程；本塔有效预应力没有现场实测记录。",
+      "remaining_unclosed": [
+        "源工程实际沿程约束是否完全满足无粘结假定须按输入审阅与小例实施核验说明；不依据论文方法名称自动确认。"
+      ],
+      "permitted_claim": "文献支持传力拓扑区分，不支持参数共用或施工损失已标定。"
+    },
+    {
+      "id": "M09",
+      "chapter_section_anchor": "预应力施加与初态",
+      "method": "独立T3D2一般初始应力与非线性平衡",
+      "source_locators": [
+        {
+          "source_key": "ABAQUS_INITIAL_STRESS",
+          "citation_locator": "TYPE=STRESS一般数据行；区别REBAR参数及UNBALANCED STRESS",
+          "actual_read_scope": "本轮官方HTML TYPE=STRESS、REBAR和UNBALANCED STRESS参数及一般STRESS数据行; "
+        },
+        {
+          "source_key": "ABAQUS2025_PRESTRESS",
+          "citation_locator": "Defining Rebar/Initial Conditions/Defining Prestress/Holding Prestress，HOLD属于rebar路径",
+          "actual_read_scope": "官方HTML Initial Conditions/Defining Prestress/Holding Prestress及PRESTRESS HOLD全文; "
+        },
+        {
+          "source_key": "HE2024",
+          "citation_locator": "PDF44–45/印刷33–34：OpenSEES初始应力、重力后位移加载次序，非本模型关键词",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        }
+      ],
+      "adopted_part": "实际采用独立T3D2的*Initial Conditions,type=STRESS，不把rebar-specific HOLD当生产实现；报告输入1280MPa与平衡末态1259~1264MPa区别。",
+      "object_or_implementation_difference": "何的OpenSEES Steel02单杆等效、Li2023预应力损失对象均与本Abaqus独立筋不同；本轮不是施工张拉全过程模拟。",
+      "parameter_provenance": "输入应力1280MPa为源设置；末态是实际求解输出；施加–释放解析小例只验证实施。",
+      "remaining_unclosed": [
+        "真实摩擦、锚具回缩、松弛、徐变收缩等损失未由数值平衡替代标定。"
+      ],
+      "permitted_claim": "可以称非线性基态完成平衡，不能称已恢复真实有效预应力施工历史。"
+    },
+    {
+      "id": "M10",
+      "chapter_section_anchor": "质量账本与重力",
+      "method": "非结构质量和变形后自由体平衡",
+      "source_locators": [
+        {
+          "source_key": "ABAQUS_NSM",
+          "citation_locator": "Introduction/Defining Nonstructural Mass/Specifying Units of Mass：多条NSM贡献可相加并参与重力",
+          "actual_read_scope": "本轮官方HTML Introduction/Defining Nonstructural Mass/Total Mass及distribution段；多条贡献可相加，参与重力; "
+        },
+        {
+          "source_key": "ABAQUS_RIGID_MASS",
+          "citation_locator": "质量与一阶质量矩、当前CG的定义",
+          "actual_read_scope": "本轮官方理论HTML质量、一/二阶质量矩及CG转移方程、低阶元素集总质量段；未扩展后半旋转平均推导; "
+        }
+      ],
+      "adopted_part": "保留源输入4622.69+33004.8+2172.73=39800.22kg；几何/截面质量积分与DAT核对；重力ΣF/ΣM仅计外部固定底反力，NLGEOM用当前CG。",
+      "object_or_implementation_difference": "官方说明关键词执行含义，不提供该工程三条数值的构造设计来源；何原PDF和指定jnl/rec检索未找到可证明其物理构造组成的记录。",
+      "parameter_provenance": "三条NSM为源输入，非本轮新增补质量，也非根据频率反调；数值ΣF/ΣM是守恒核验，非实验标定。",
+      "remaining_unclosed": [
+        "各条NSM对应环筋/锚具/附加构造等真实身份与设计质量表未闭合，不能自行归类。"
+      ],
+      "permitted_claim": "完整保留源质量设置并核执行；不宣称其物理质量清单已独立确认。"
+    },
+    {
+      "id": "M11",
+      "chapter_section_anchor": "RNA空间质量表示",
+      "method": "质量、CG与B31离散惯量",
+      "source_locators": [
+        {
+          "source_key": "HE2024",
+          "citation_locator": "PDF33 Table3-1：叶片、轮毂、机舱质量；PDF36 §3.4简化忽略偏心",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        },
+        {
+          "source_key": "ABAQUS_BEAM_MASS",
+          "citation_locator": "LUMPED=YES、ROTARY INERTIA=EXACT默认参数",
+          "actual_read_scope": "本轮重核官方HTML LUMPED和ROTARY INERTIA参数；沿用此前实际B31/DAT核读; "
+        },
+        {
+          "source_key": "ABAQUS_RIGID_MASS",
+          "citation_locator": "质量二阶矩及低阶集总质量导致惯量偏离连续值",
+          "actual_read_scope": "本轮官方理论HTML质量、一/二阶质量矩及CG转移方程、低阶元素集总质量段；未扩展后半旋转平均推导; "
+        },
+        {
+          "source_key": "ABAQUS_ROTARY_INERTIA",
+          "citation_locator": "数据行六分量 I11 I22 I33 I12 I13 I23、节点坐标方向与惯量归属",
+          "actual_read_scope": "官方关键词全文：所附节点、六个张量分量顺序及坐标方向随附节点旋转；本轮再次核读"
+        }
+      ],
+      "adopted_part": "从真实源CAE恢复28B31质量骨架；解析圆柱连续惯量与实际端节点集总FE惯量分列，核CG、DAT、惯量符号和RP运输。 完整M6质量算子和端点集总ΔJ由刚体动能与质量积分自行推导，独立与真实DAT/ODB核对，不归为He参数表给出的公式或标定结果。",
+      "object_or_implementation_difference": "源RNA骨架不是官方完整气弹叶片；He质量分项可以作数量级参照，但不直接给本工程J张量。连续CAE质量属性不是默认B31离散惯量。",
+      "parameter_provenance": "恢复质量约673998.493kg由实际导出输入积分；He的676604.565kg是按分项相加的派生值，不能称其表直接给RNA总质量；实际物理J未有DTU原始完整报告支持。",
+      "remaining_unclosed": [
+        "D08未关闭：当前28B31刚性质量骨架及MASS+ROTARYI都不含柔性叶片、旋转陀螺及气动弹性反馈；同质量算子的等价试验不是详细整机对照。",
+        "需同源质量/几何/塔架与相同入流、控制状态下的详细柔性模型，逐项比较塔架目标模态、接口载荷、峰值/RMS/谱/DEL及薄弱位置；未执行不得写成通过。",
+        "真实RNA官方m/CG/J、材料/截面与叶片刚度仍需完整数据来源对齐。"
+      ],
+      "permitted_claim": "刚体空间质量的数值表示等价已核验；尚未证明它能代替详细整机，也不能据此确认风响应、疲劳或优化结论。"
+    },
+    {
+      "id": "M12",
+      "chapter_section_anchor": "模态与静态柔度",
+      "method": "同一预载基态的Frequency与线性扰动",
+      "source_locators": [
+        {
+          "source_key": "ABAQUS2025_FREQUENCY_BASE",
+          "citation_locator": "Eigenvalue Extraction；Initial Conditions，基态须为前置一般NLGEOM分析末态",
+          "actual_read_scope": "官方HTML开头/Eigenvalue Extraction/Normalization/Initial Conditions/Boundary Conditions关键段落；本轮补核Modal Effective Mass公式及排除受约束自由度质量的边界; "
+        },
+        {
+          "source_key": "CHENG2024_RNA_PRESTRESS",
+          "citation_locator": "PDF6–7 §3.3/§4.1：先初始静力预应力、后频率；PDF3 RNA偏心/惯量",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [3, 6, 7]"
+        },
+        {
+          "source_key": "HE2024",
+          "citation_locator": "PDF36/印刷25 §3.4.1与Table3-4：0.1361Hz来自自由衰减FFT比较",
+          "actual_read_scope": "用户提供原始PDF；不是期刊实验论文; [33, 34, 35, 36, 39, 44, 45]"
+        }
+      ],
+      "adopted_part": "将Gravity非线性平衡末态作为无阻尼频率和1kN微扰柔度的共同基态，输出实际频率与四水平模态。",
+      "object_or_implementation_difference": "Cheng是5MW/C80弹性Tie、温降PT/B31筋；本塔沿用generic stress/T3D2。He0.1361是衰减FFT，RNA偏心和初态不同，不能要求与本Frequency一对一相等。",
+      "parameter_provenance": "1kN为研究者选定的微扰量，不是文献风荷载或真实极限载荷；实际频率与柔度来自本章RUN032/034/035。",
+      "remaining_unclosed": [
+        "参考对象差异需列明；单个接近的主频不能标定材料、RNA、接缝。"
+      ],
+      "permitted_claim": "可称预载基态上的整体数值响应核验，参考频率仅为有边界的文献比较。"
+    },
+    {
+      "id": "M13",
+      "chapter_section_anchor": "网格敏感性",
+      "method": "三档固定参数网格与预登记0.5%预算",
+      "source_locators": [
+        {
+          "source_key": "LI2023_TWO_SCALE_TEST",
+          "citation_locator": "PDF6–8 §4.2：整体F–U、沿高挠度与局部应力/裂缝分层比较",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [2, 3, 4, 5, 6, 7, 8, 9]"
+        },
+        {
+          "source_key": "ABAQUS2025_CDP",
+          "citation_locator": "Fracture Energy/Implementation：局部软化尺度影响",
+          "actual_read_scope": "官方HTML关键完整段落; ['Defining Tension Stiffening/Postfailure Stress-Strain Relation', 'Fracture Energy Cracking Criterion/Implementation', 'Defining Compressive Behavior', 'Defining Damage and Stiffness Recovery', 'Viscoplastic Regularization', 'Material Damping']"
+        }
+      ],
+      "adopted_part": "比较三档实体离散下的质量、低四阶频率、两向微扰柔度；末两档相对差以M3为分母。",
+      "object_or_implementation_difference": "本三档为各向异性源网格族，不是Li三种模型对比或均匀h网格族；不计算GCI，不把弹性收敛推广至后峰。",
+      "parameter_provenance": "0.5%是计算前冻结的本项目数值精度预算，不是规范强制阈值，也不是Li试验误差的移植；1e-5自由体平衡预算同属数值方案。",
+      "remaining_unclosed": [
+        "后峰局部损伤客观性和接缝刚度敏感性单独未闭合；不能宣称全模型网格无关。"
+      ],
+      "permitted_claim": "仅宣告实际通过的低阶整体QoI满足预设精度，不据此保证设计或材料真实。"
+    },
+    {
+      "id": "M14",
+      "chapter_section_anchor": "模态有效质量",
+      "method": "读取全30阶EM/PF并限定总质量分母",
+      "source_locators": [
+        {
+          "source_key": "ABAQUS2025_FREQUENCY_BASE",
+          "citation_locator": "Normalization/Modal Participation Factors/Modal Effective Mass：m_eff=Γ²m_alpha，全模态和排除受运动学约束自由度的质量",
+          "actual_read_scope": "官方HTML开头/Eigenvalue Extraction/Normalization/Initial Conditions/Boundary Conditions关键段落；本轮补核Modal Effective Mass公式及排除受约束自由度质量的边界; "
+        }
+      ],
+      "adopted_part": "实际读全30阶6分量EM/PF，核质量归一化下平方关系，按DAT总质量报告XYZ比例。",
+      "object_or_implementation_difference": "总质量分母包括受约束质量，其补数不能全部解释为未提取高阶模态；自由节点质量仅作额外诊断，非严格激发质量分母。",
+      "parameter_provenance": "30阶是当前实际提取数；不是文献认证的充分阶数，也无固定90%即可验证全部局部响应的声明。",
+      "remaining_unclosed": [
+        "若以后用模态叠加，应按目标响应补做截断敏感性；本章未执行的不得写成完成。"
+      ],
+      "permitted_claim": "M3 XYZ=93.8430/86.4682/93.8455% of总质量，只报告定义与数值，不宣称完整覆盖。"
+    },
+    {
+      "id": "M15",
+      "chapter_section_anchor": "线性阻尼依据",
+      "method": "Li有符号耗能推导的适用假设",
+      "source_locators": [
+        {
+          "source_key": "LI2024_DAMPING",
+          "citation_locator": "期刊11–12页 §1–2，式15–19；式18谐波耗能等价及线性推广，式19 Rayleigh频率式",
+          "actual_read_scope": "原作者全文HTML关键正文；没有冒称已视觉核读公式PDF; ['§1.1–1.2，期刊页10–11，式1–14', '§2，期刊页11–12，式15–19', '§3.1–3.2，期刊页12，Table1–4', '§4.1–4.3，期刊页13–14，式20–22及Table5–7']"
+        },
+        {
+          "source_key": "ABAQUS2025_DAMPING",
+          "citation_locator": "Rayleigh Damping/Stiffness Proportional Damping/Elements",
+          "actual_read_scope": "官方HTML Rayleigh/Mass/Stiffness/Structural/Modal/Elements关键段落; "
+        }
+      ],
+      "adopted_part": "以Li2024作为连续变截面Euler–Bernoulli梁的线性阻尼讨论参照，同时核本FE实际材料/RNA/连接阻尼覆盖。",
+      "object_or_implementation_difference": "Li102m/2MW例未考虑PT、全部Tie；本塔空间RNA/T3D2/SPRING2与之不同。式18中有符号算子权重不自动成为本FE耗能权重。",
+      "parameter_provenance": "本塔目标阻尼没有实测标定；2%/5%为引用情景不是本塔实测，也非所有含负几何刚度体系的绝对上界。",
+      "remaining_unclosed": [
+        "完整FE模态耗能分区与真实阻尼标定未由共享函数恒等或目标拟合衰减关闭。"
+      ],
+      "permitted_claim": "按已读式的适用边界作理论讨论，不据此宣布本塔4.63/5.53%已验证。"
+    },
+    {
+      "id": "M16",
+      "chapter_section_anchor": "阻尼实施核验",
+      "method": "直接积分单自由度解析基准与无阻尼时间步对照",
+      "source_locators": [
+        {
+          "source_key": "ABAQUS2025_DAMPING",
+          "citation_locator": "Rayleigh Damping：ζ=αR/(2ω)+βRω/2；Elements：SPRING无βR，MASS/ROTARYI须属性定义；Artificial Damping in Direct-Integration",
+          "actual_read_scope": "官方HTML Rayleigh/Mass/Stiffness/Structural/Modal/Elements关键段落; "
+        },
+        {
+          "source_key": "ABAQUS2025_CDP",
+          "citation_locator": "Material Damping：βR按未损伤弹性刚度",
+          "actual_read_scope": "官方HTML关键完整段落; ['Defining Tension Stiffening/Postfailure Stress-Strain Relation', 'Fracture Energy Cracking Criterion/Implementation', 'Defining Compressive Behavior', 'Defining Damage and Stiffness Recovery', 'Viscoplastic Regularization', 'Material Damping']"
+        }
+      ],
+      "adopted_part": "五个实际直接积分SDOF算例检解析ζ与峰衰减、T/100和T/200时间步、零物理阻尼能量；另SPRING+MASS说明β不会自动传至spring。",
+      "object_or_implementation_difference": "单自由度无损伤测试是软件/关键词执行核验，不是整塔四模态衰减，更非物理阻尼标定。不能把SDOFζ公式直接当全部非线性塔的统一比例阻尼。",
+      "parameter_provenance": "α=.2、β=.001、k=1000、m=1为独立数值fixture；极小ρ补救输入processor检查，不是材料拟合；容限均预登记。",
+      "remaining_unclosed": [
+        "真实塔阻尼的实验依据与整塔实际耗能投影仍单列。"
+      ],
+      "permitted_claim": "当前实际SDOF作业通过，确认指定物理阻尼与积分实施，不宣称真实塔阻尼已确定。"
+    },
+    {
+      "id": "M17",
+      "chapter_section_anchor": "独立参考与结论范围",
+      "method": "作者真实试验与本次数值核验的区分",
+      "source_locators": [
+        {
+          "source_key": "LI2023_TWO_SCALE_TEST",
+          "citation_locator": "PDF2–3 §2试验；PDF6–7 §4.2.1、Fig10、Table6；PDF8 Table7局部应力对比",
+          "actual_read_scope": "本地原始PDF关键页完整文字核读与指定页视觉核查；不是全篇逐页阅读; [2, 3, 4, 5, 6, 7, 8, 9]"
+        },
+        {
+          "source_key": "BROWN2024_VV",
+          "citation_locator": "publisher HTML §2.2.1–2.2.2、§2.3.1–2.3.2、§5.3",
+          "actual_read_scope": "本轮重读publisher HTML方法段；沿用前次题名身份核对; ['§2.2.1–2.2.2', '§2.3.1–2.3.2', '§5.3']"
+        }
+      ],
+      "adopted_part": "采用原始试验的加载/轴力/PT/实测范围作为独立参考结构，分别报告整体与局部指标；明确verification与validation。",
+      "object_or_implementation_difference": "Li试验安全终止于16.5mm；约90kN来自数值极限，非实验峰值；Brown是2.8MW运行风机而非本混塔。",
+      "parameter_provenance": "作者试验量归属于文献；本研究小例/塔结果归属于本次数值。若按图读取试验曲线，须报告图像读取误差而非假称原始实验时程。",
+      "remaining_unclosed": [
+        "本塔材料/现场运行物理验证未全部闭合；完成计算不代表实验外推自动成立。"
+      ],
+      "permitted_claim": "说明以原始研究设计分层可信度，独立参考范围不外扩为本塔全部真实行为。"
+    },
+    {
+      "id": "M18",
+      "chapter_section_anchor": "本章引言、数值预算与范围",
+      "method": "区分输入实施、离散误差和物理模型确认",
+      "source_locators": [
+        {
+          "source_key": "ROY_OBERKAMPF_2011",
+          "citation_locator": "Publisher Abstract/Introduction",
+          "actual_read_scope": "Accessible publisher text, no full PDF claim"
+        },
+        {
+          "source_key": "ASME_VV10_OVERVIEW",
+          "citation_locator": "Official edition and purpose overview",
+          "actual_read_scope": "Full standard clauses not read"
+        }
+      ],
+      "adopted_part": "区分数值近似、输入和模型形式不确定性；明确实验比较与数值执行检查的不同作用。",
+      "object_or_implementation_difference": "本轮只覆盖列明的实施/网格指标，不实施整套预测不确定性量化，不宣称已按标准全部条款验收。",
+      "parameter_provenance": "0.5%末两格整体量与1%严格材料尾部等预算是计算前设定的本研究数值目标，不是文献中的规范阈值。",
+      "remaining_unclosed": [
+        "实物参数、接头、RNA/阻尼校准与裂后适用范围保留"
+      ],
+      "permitted_claim": "数值指标满足既定预算，不等于整塔所有物理响应已确认。"
+    }
+  ],
+  "keyword_search_audit": {
+    "He2024": {
+      "total_pdf_pages_scanned_for_keywords": 90,
+      "new_full_text_pages_read": [
+        33,
+        34,
+        35,
+        36,
+        39,
+        44,
+        45
+      ],
+      "new_visual_page": 35,
+      "search_terms": [
+        "耦合",
+        "Coupling/coupling",
+        "弹簧",
+        "刚度",
+        "附加质量",
+        "非结构",
+        "锚",
+        "预应力",
+        "刚性",
+        "Tie/tie",
+        "1e14/10^14/1014",
+        "39800",
+        "4622",
+        "33004",
+        "2172"
+      ],
+      "result": "弹簧/附加质量/非结构/1e14及三NSM数字的可移用命中未找到；耦合多为多体/气弹耦合背景，不等于节点coupling关键词。已读§3.3只给PT/固定底/法兰叙述；Fig3-5无K/NSM数值。",
+      "negative_search_boundary": "全文文本关键词扫描及关键图页核查，不是对所有图像OCR的穷尽证明；准确结论为未找到可引用参数出处，不是断言原作者从未使用该设置。"
+    },
+    "Li2023": {
+      "total_pdf_pages_scanned_for_keywords": 13,
+      "new_full_text_pages_read": [
+        5,
+        6,
+        9
+      ],
+      "new_visual_page": 6,
+      "result": "§3.3与Fig8实际支持Tie/端锚/横向导向与轴向不传力区分；未给可移植为1e14的SPRING2实验刚度，不能参数共用。"
+    }
+  },
+  "major_unclosed": [
+    "实际SPRING2平动/扭转大刚度与随接头变化的弯曲转动刚度的物理依据",
+    "三条NSM 39800.22kg物理构造组成",
+    "钢段半径/直径文献表头歧义",
+    "C65/C70材料独立试验/Gf",
+    "实际RNA物理惯量与原型参数完整对齐",
+    "真实塔阻尼物理标定",
+    "三维C3D8R严格低残余拉伸13.76052%偏差",
+    "D08：刚体空间RNA与详细柔性/旋转/气动弹性模型的目标响应对照"
+  ],
+  "latest_verification_records": [
+    "tower-verification-results.json",
+    "rna-discrete-inertia-comparison.json",
+    "independent-fused-input-review.json",
+    "D:/Codex-research-validation/T026/damping/damping-verification-results.json"
+  ]
+}

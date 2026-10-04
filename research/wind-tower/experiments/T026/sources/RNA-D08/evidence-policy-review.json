@@ -1,0 +1,244 @@
+{
+  "review_id": "RNA-D08-evidence-policy-independent-review",
+  "date": "2026-10-04",
+  "reviewer": "/root/evidence_policy_review",
+  "audit_scope": "Read-only semantic and structural audit of the three listed records; targeted primary-source cross-checks. Not a complete reread of every cited source, not a solver or manuscript acceptance.",
+  "audited_inputs": [
+    {
+      "repository_staging_path": "work/chapter2-completion/RNA-D08/public-review.md",
+      "sha256": "5926880ef3efd43669880933701d485a41e9251bcbf3bd69f91041000dd4d801"
+    },
+    {
+      "repository_staging_path": "work/chapter2-completion/RNA-D08/sources-metadata.json",
+      "sha256": "bf54bd7f5104c21f4124c4d3a80b81b2beec930eaf2630d88ae006868689dae2"
+    },
+    {
+      "repository_staging_path": "work/chapter2-completion/method-source-traceability.json",
+      "sha256": "2e2f1ab29447b0f2bd028b1b7492115e30799a3a0386d3ad5924e8dfeb546d83"
+    },
+    {
+      "repository_staging_path": "work/chapter2-completion/RNA-D08/evidence-per-step.md",
+      "sha256": "5f94fbaf13c77f0cf2f577e309307d1231b000abd4f22fd9b889015fa4d5904d"
+    }
+  ],
+  "overall_record_quality": "PASS_WITH_OPEN_RESEARCH_ITEMS",
+  "D08_acceptance": "OPEN",
+  "chapter_acceptance": "OPEN",
+  "structural_checks": {
+    "method_rows": 18,
+    "method_source_records": 20,
+    "rna_source_records": 8,
+    "unresolved_source_keys": [],
+    "missing_minimum_narrative_fields": [],
+    "unique_method_ids": true
+  },
+  "independently_cross_checked_sources": [
+    {
+      "source": "BROWN2024",
+      "url": "https://wes.copernicus.org/articles/9/1791/2024/",
+      "actually_read_here": "Publisher HTML §§2.2.1–2.2.2 plus adjacent §2.3 overview",
+      "supports": "Blade and tower checks precede operating-system comparison. Blade properties and experimental data have independent provenance.",
+      "not_supported": "Its turbine-specific calibration and load error do not certify this 10MW tower or a fixed rigid RNA."
+    },
+    {
+      "source": "TRIGAUX2024",
+      "url": "https://wes.copernicus.org/articles/9/1765/2024/",
+      "actually_read_here": "Publisher HTML §2.3–2.4 context and §4.2 key comparison paragraphs",
+      "supports": "Controlled blade flexibility comparison and separate mean, variation and phase evaluation.",
+      "not_supported": "Its fixed-speed 15MW case cannot supply this project threshold or full-tower fatigue validation."
+    },
+    {
+      "source": "DTU2024_H2_HS2",
+      "url": "https://backend.orbit.dtu.dk/ws/portalfiles/portal/359162105/h2_v13.1_vs_hs2_v2.16_comparison.pdf",
+      "actually_read_here": "Official report §1 pp3–4 and §2 opening p5 (printed page numbering)",
+      "supports": "Code comparisons state gravity, inflow, tower and shaft-flexibility assumptions explicitly.",
+      "not_supported": "Stiff and flexible branches do not imply all reported software-to-software errors quantify rigid-vs-flexible RNA error."
+    },
+    {
+      "source": "WANG112583",
+      "doi": "10.1016/j.ymssp.2025.112583",
+      "actually_read_here": "Prior privately held key-page extraction, PDF3 relevant structural-model paragraphs; not all article pages",
+      "supports": "The structural representation explicitly retains flexible blades.",
+      "not_supported": "This reading does not justify a full integrated-model reproduction or transfer of turbine parameters."
+    },
+    {
+      "source": "OPENFAST_BEAMDYN_OFFICIAL",
+      "url": "https://openfast.readthedocs.io/en/main/source/user/beamdyn/theory.html",
+      "actually_read_here": "Official theory page reaction-load and blade-load paragraphs",
+      "supports": "Blade-root reactions and distributed blade loads are distinct defined quantities in a coupled structural module.",
+      "not_supported": "The documentation provides no user-RNA material or section calibration."
+    }
+  ],
+  "checks": [
+    {
+      "id": "E01",
+      "status": "PASS",
+      "finding": "All 18 method rows refer to defined source keys and provide adoption, implementation difference, parameter provenance, remaining issues and permitted claim."
+    },
+    {
+      "id": "E02",
+      "status": "PASS",
+      "finding": "The matrix distinguishes journal papers, a conference paper, a masters thesis, official software docs and overview-only V&V sources. It does not pretend every source is a journal experiment."
+    },
+    {
+      "id": "E03",
+      "status": "PASS",
+      "finding": "M13/M18 explicitly identify 0.5% mesh and 1% strict residual-point budgets as project numerical goals. No examined source is falsely presented as prescribing these thresholds."
+    },
+    {
+      "id": "E04",
+      "status": "PASS",
+      "finding": "M11 identifies M6 and lumped-inertia differences as project derivations, and limits tests to rigid numerical representation."
+    },
+    {
+      "id": "E05",
+      "status": "PASS",
+      "finding": "The RNA review retains D08 OPEN and describes the proposed comparisons as not executed. It does not claim mean/frequency agreement validates operating loads or fatigue."
+    },
+    {
+      "id": "E06",
+      "status": "PASS",
+      "finding": "Published-source or official-report parameters are limited to their own turbine and boundary conditions. The original HAWC2 distribution webpage is not treated as a bundle already inspected or as an official OpenFAST conversion."
+    },
+    {
+      "id": "E07",
+      "status": "OPEN",
+      "finding": "The 18-row method ledger does not yet contain a dedicated current active S3/S4R source-RNA section-compatibility and coupling-repair step. The source audit, actual section classes, affected sets and applicable shell/coupling documentation need a linked new row."
+    },
+    {
+      "id": "E08",
+      "status": "OPEN",
+      "finding": "Source/provenance and thresholds are narrative strings; most rows do not yet carry machine-readable parameter units/axes, source-file SHA, criterion formula/denominator, threshold role and linked run/output SHA. This is a traceability implementation gap, not proof of a wrong scientific statement."
+    },
+    {
+      "id": "E09",
+      "status": "OPEN",
+      "finding": "The current-main OpenFAST URLs are moving references. Freeze the exact solver/document release or immutable source revision before selecting a method, converting parameters or claiming a reproducible result."
+    },
+    {
+      "id": "E10",
+      "status": "OPEN",
+      "finding": "Current RNA component structural properties, reference coordinate transforms, root-only constraints, rotation configuration and actual deformation/load-transmission evidence remain unaccepted. Literature alone cannot close these engineering items."
+    },
+    {
+      "id": "E11",
+      "status": "PASS",
+      "finding": "Abstract/overview-only sources are explicitly limited to conceptual framing. Full-standard conformance, unacquired normative thresholds and unperformed physical validation are not claimed."
+    },
+    {
+      "id": "E12",
+      "status": "OPEN",
+      "finding": "No rigid/flexible same-source rotating operating comparison has been executed in the examined records. The chapter cannot be declared complete from the present equivalent rigid mass test."
+    }
+  ],
+  "recommended_persistent_repository_rule": {
+    "rule": "Each research step must link an actually read source for its adopted method, separately identify every engineering parameter and assumption, predefine the comparison and numerical acceptance rule with its own provenance, and retain actual run evidence before writing a completed conclusion.",
+    "source_roles": [
+      "theory_or_method",
+      "software_definition",
+      "engineering_parameter",
+      "independent_benchmark_or_experiment",
+      "researcher_derivation_or_numerical_budget"
+    ],
+    "minimum_step_fields": [
+      "step_id",
+      "scientific_question",
+      "adopted_method_and_alternative_scope",
+      "source_id_and_exact_locator",
+      "actual_read_level",
+      "source_role",
+      "object_difference_and_assumptions",
+      "parameter_value_unit_axes_and_origin",
+      "parameter_source_file_or_url_and_sha256_or_revision",
+      "acceptance_metric_formula_and_denominator",
+      "threshold_value_and_provenance",
+      "threshold_preregistration_timestamp_or_explicit_retrospective_label",
+      "planned_running_pass_fail_or_open_state",
+      "solver_version_input_sha_job_id_output_sha",
+      "public_run_and_figure_links",
+      "permitted_conclusion_and_uncovered_range",
+      "independent_review_status"
+    ],
+    "read_level_values": [
+      "metadata_only",
+      "abstract_only",
+      "selected_original_sections",
+      "original_full_text",
+      "selected_figures_verified"
+    ],
+    "parameter_rules": [
+      "A method citation does not authorize turbine-specific material, shell thickness, laminate, sectional stiffness, mass or damping values.",
+      "An existing engineering value must retain its source file, units and identity; an unvalidated existing value remains an assumption.",
+      "A project-designed analytical fixture or tolerance must be labelled researcher-selected or derived, with derivation and use recorded; do not fabricate a literature value.",
+      "Unknown parameters remain OPEN. Do not tune them to desired frequencies and then describe the match as independent validation."
+    ],
+    "reading_and_reference_rules": [
+      "Record the actual methods/results read and PDF-versus-printed-page distinction. Bibliographic metadata, cached abstracts and another chapters reading status do not prove relevant original text was read.",
+      "Choose relevant original journal papers, official reference data, standards and dissertations according to their evidential role. A thesis can provide detailed implementation context but cannot replace an independent experiment or relevant journal evidence by citation count.",
+      "Keep publication year, access date, software release and actual model revision distinct.",
+      "Every source has supports/cannot_support. Numerical budgets, source-engineering values and published method definitions must not be conflated."
+    ],
+    "execution_rules": [
+      "Distinguish a planned comparison, a successful datacheck, a completed solver run, numerical verification and physical validation.",
+      "Preserve failed runs and unclosed criteria rather than removing them when later alternative tests pass.",
+      "Use equal physical parameters, interfaces, boundary conditions, preloaded state and input conditions when isolating one modeling effect; separately identify any simultaneous changes.",
+      "Publish research methods, original issue paraphrases, allowable model inputs, results and provenance; keep thesis text, teacher Word originals/transcripts and restricted full-text copies private."
+    ]
+  },
+  "mutations": {
+    "word": false,
+    "solver": false,
+    "other_scripts": false,
+    "remote": false
+  },
+  "public_upload_permitted": true,
+  "content_policy": "Original audit paraphrases and public bibliography links only. No thesis text, teacher transcript, private source excerpts, restricted full-text files or private document links included.",
+  "repository_rule_review": {
+    "overall": "PASS_WITH_TWO_PREEXECUTION_SOURCE_GAPS",
+    "user_instruction_as_rule_origin": "PASS",
+    "nine_field_coverage": "PASS",
+    "no_fabricated_literature_thresholds": "PASS",
+    "reference_category_no_filler_rule": "PASS",
+    "privacy_and_continuing_repository_updates": "PASS",
+    "R01_R08_state_honesty": "PASS",
+    "source_scope_and_gate_notes": [
+      {
+        "steps": "R01–R03",
+        "status": "PASS_AS_AUDIT_AND_PENDING_REPAIR_PLAN",
+        "finding": "Official shell/coupling references are appropriate for compatibility and constraint semantics; source CAE/STEP carries engineering identity. Compatible shell sections do not supply thickness, laminate or physical material values."
+      },
+      {
+        "steps": "R04",
+        "status": "PASS_AS_PROPOSED_LAYERED_CHECK",
+        "finding": "Brown separates component checks from whole-system validation. DTU §3 supplies code-to-code blade comparisons only. Any actual mass, gravity or modal reference must be source-specific."
+      },
+      {
+        "steps": "R05",
+        "status": "PASS_AS_RESEARCHER_DEFINED_COMPARISON",
+        "finding": "Using DTU/Trigaux as controlled-variable examples is properly described. Neither provides this tower/PT paired test result or its acceptable error budget."
+      },
+      {
+        "steps": "R06",
+        "status": "OPEN_BEFORE_EXECUTION",
+        "finding": "An ElastoDyn DOF-switch definition and steady-state comparison do not by themselves specify the rotating modal/Campbell procedure. Add exact linearization or rotating-frame/modal processing references, physical axes, speed conventions and relevant software version before performing or accepting this step."
+      },
+      {
+        "steps": "R07",
+        "status": "PASS_AS_PROPOSED_CONTROLLED_COMPARE",
+        "finding": "The references justify layered interface/operating comparisons and warn against confounded changes. Equal conditions and actual root/tower metrics remain project execution requirements."
+      },
+      {
+        "steps": "R08",
+        "status": "OPEN_BEFORE_DEL_EXECUTION",
+        "finding": "The guide does not yet give a direct locator for DEL definition and its reference-count/material-exponent conventions. A fatigue paper citation is not automatically evidence for every DEL algorithm. Add the exact equation/source plus the rainflow convention, stress-recovery applicability and lifetime weighting origin when executing this step."
+      }
+    ],
+    "small_traceability_improvements": [
+      "Record freeze timestamp and input SHA for each preregistered comparison/threshold; preserve the earlier rule if a new protocol is adopted after a failure.",
+      "Freeze official moving documentation/software release or immutable source revision; an access date alone cannot reproduce a changing main page.",
+      "Add structured source-role and criterion fields alongside the existing narrative ledger rather than recasting engineering parameters as literature parameters."
+    ],
+    "publication_may_proceed_with_current_open_states": true,
+    "interpretation": "The guide is an honest research workflow record, so the two source gaps do not require withholding its publication. They prohibit claiming those future calculations are fully sourced or accepted before the gaps are repaired."
+  }
+}

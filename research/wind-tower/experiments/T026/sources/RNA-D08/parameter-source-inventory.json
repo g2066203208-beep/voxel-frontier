@@ -1,0 +1,814 @@
+{
+  "schema": "rna-parameter-source-inventory/v1",
+  "created_at_utc": "2026-10-04T14:26:16.183244+00:00",
+  "status": "OFFICIAL_FULL_COMPOSITE_SHELL_DATA_LOCATED_AND_READ; CURRENT_USER_MESH_MAPPING_NOT_YET_VERIFIED",
+  "summary_zh": "已定位官方完整参考叶片结构输入、11个分区全展向铺层表及截面边界坐标。原用户外形网格仍有价值，但不能给单层外表面套任意厚度后称为完整复合叶片。须核验尺寸、轴系、预弯与分区，补足承载腹板并验证根部连接和模态。",
+  "search_scope": [
+    "work research/manifests",
+    "D:/MC filenames",
+    "D:/论文/阅/混塔模型参考/下载模型",
+    "D:/C盘清理归档/Tower论文_完整",
+    "D:/ root filename inventory excluding access-denied WindowsApps"
+  ],
+  "sources": {
+    "official_report": {
+      "title": "Description of the DTU 10 MW Reference Wind Turbine",
+      "authors": "Bak C; Zahle F; Bitsche R; Kim T; Yde A; Henriksen LC; Natarajan A; Hansen MH",
+      "year": 2013,
+      "report_id": "DTU Wind Energy Report-I-0092",
+      "official_model_page": "https://www.hawc2.dk/models/dtu-10-mw",
+      "local_pdf_sha256": "55aac8cae8f656cdc4aa73afd3f5dedc45345079168476289eb49f000efd8017",
+      "PDF_pages_actually_read": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        68,
+        69
+      ],
+      "supports": {
+        "37-41": "constituent and effective orthotropic multidirectional-ply/core material properties; Table 4.4/4.5",
+        "42-47": "S8R reference shell, internal webs, section boundaries, full layup repository pointer and BECAS-derived beam properties",
+        "68-69": "HAWC2 isolated-blade and whole-reference-turbine frequencies; not validation of the custom 158 m hybrid tower"
+      },
+      "limitations": [
+        "Table 4.8 is only an example; the full 11-by-100 tables are in the official repository",
+        "Reference structural shell omits aerodynamic prebend",
+        "Whole-turbine frequency benchmark uses original DTU tower and cannot be imposed on the custom hybrid tower"
+      ]
+    },
+    "official_repository": {
+      "repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+      "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+      "commit_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/commit/3e1d7a82db7633807f72156b3232b773ac55dee7",
+      "source_index_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\source-index.json",
+      "source_index_sha256": "17d211dc8d42fbe8dd97f058625ec7eee7ff78f589098a326a8bdc0bd5856d1d",
+      "official_files": [
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/README.txt",
+          "git_blob_sha1": "8b8373cd9a8190f03af1817547aeeb018b243a36",
+          "bytes": 471,
+          "sha256": "e02bf379aa3948afaeeff380cd963eb6053749505ceb6f86b0528789deffd23e",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\README.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2FREADME.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/README.txt",
+          "line_count": 8
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Caps.txt",
+          "git_blob_sha1": "56c047c2344da9d4df6874e3bc63ea85c39002dd",
+          "bytes": 8377,
+          "sha256": "a1bb3ec495c44a01d36298a123a9fe90b54c6a6fcf5f1a8be00f6661ab70164e",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Caps.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Caps.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Caps.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Leading_Panels.txt",
+          "git_blob_sha1": "54a2ae5f06cefd4fb7a0ef12ef08532bfc63c44b",
+          "bytes": 8387,
+          "sha256": "29874e99997ac38b7089341f0941572262c93a84f9c6a521e910b58926b156c4",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Leading_Panels.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Leading_Panels.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Leading_Panels.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Nose.txt",
+          "git_blob_sha1": "79dbec5853d56ff2bb06b4818b887d6c0755caf7",
+          "bytes": 8377,
+          "sha256": "202a231f3f242c51be878f6ed104b0b1492b917376816b150ea9aa1caa177b40",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Nose.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Nose.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Nose.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Tail_A.txt",
+          "git_blob_sha1": "9a8d2a7c837af00abd2b3c493b42ecfa7115c5ae",
+          "bytes": 8379,
+          "sha256": "99d406eeaab26a1067eab702ec767d3d3ed6c14938e748c711817c6307a87bff",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Tail_A.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Tail_A.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Tail_A.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Tail_B.txt",
+          "git_blob_sha1": "c3c164b150e44247caab8c7d8cf671c8269b305f",
+          "bytes": 8379,
+          "sha256": "95c5833c39293866aaa112a215d4c0618d19a7d51153f06b0e7d2765ada60ac1",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Tail_B.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Tail_B.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Tail_B.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Tail_C.txt",
+          "git_blob_sha1": "623c0fdfea275f32ad4e9bead992e2635464fd2f",
+          "bytes": 8379,
+          "sha256": "be9ce96199616d5604e747993b0f906b57d697efdfb60802548dfb9d5f669d5a",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Tail_C.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Tail_C.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Tail_C.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Tail_V.txt",
+          "git_blob_sha1": "77fff4c9be30c6fc883c90bee376b7769ca2c574",
+          "bytes": 8379,
+          "sha256": "461ee225e8e5091095428a2834c865fd6e015f690b18df92277d8bd32926dfab",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Tail_V.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Tail_V.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Tail_V.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Trailing_Panels.txt",
+          "git_blob_sha1": "f6115892807074c2fe17ac605f662a68ec08430a",
+          "bytes": 8388,
+          "sha256": "4b9e6e38e1141840ed2f02dfad79901cbf162c90a4628b3421d13020b0f59a94",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Trailing_Panels.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Trailing_Panels.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Trailing_Panels.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Web_A.txt",
+          "git_blob_sha1": "8e674c7dfc6727a2a19bf4cd913c5996b41a9b2d",
+          "bytes": 6338,
+          "sha256": "c234b75a27d21b29e09a73c90897277998a9b6c653f6fa9c30a6eed9ababd7f7",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Web_A.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Web_A.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Web_A.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Web_B.txt",
+          "git_blob_sha1": "6df47262532d38c7773a49361ff0bf4dabc366d6",
+          "bytes": 6338,
+          "sha256": "26d6d9ff4ee28b214647715fb5516ea61ca888f805733dfc60da35e9825a2715",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Web_B.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Web_B.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Web_B.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/composite_layup/composite_layup_Web_C.txt",
+          "git_blob_sha1": "8701c3e4751c3925b9eea695ac150c5d07a7a0f0",
+          "bytes": 6338,
+          "sha256": "00c917ba5664d8ee8fa2014d2cac42d49a556adbea0bc395d4e16bac1d9888db",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\composite_layup\\composite_layup_Web_C.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2Fcomposite_layup%2Fcomposite_layup_Web_C.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/composite_layup/composite_layup_Web_C.txt",
+          "line_count": 105
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/ABAQUS/README.txt",
+          "git_blob_sha1": "6cadf7eea5b2915b53d58cadc1f203ff9a8822d7",
+          "bytes": 1202,
+          "sha256": "6c5248ecd80f4cbe52ae78da80fe3f665fccda41267afa3987271c91227b3417",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\README.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FABAQUS%2FREADME.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/ABAQUS/README.txt",
+          "line_count": 24
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/ABAQUS/cross_sections.inp",
+          "git_blob_sha1": "317a35c07a6d3a567d3594678f1891563751eb44",
+          "bytes": 301687,
+          "sha256": "a13ec34aa4af4f28aa8b8572b32417f3c45e2de1ca115cf1e4284a5b207b6b13",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\cross_sections.inp",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FABAQUS%2Fcross_sections.inp/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/ABAQUS/cross_sections.inp",
+          "line_count": 11110
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/ABAQUS/refblade_layup.inp",
+          "git_blob_sha1": "27546304cc965679659f51b81b2b4a571b7eea2a",
+          "bytes": 286534,
+          "sha256": "ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_layup.inp",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FABAQUS%2Frefblade_layup.inp/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/ABAQUS/refblade_layup.inp",
+          "line_count": 5102
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/ABAQUS/refblade_master.inp",
+          "git_blob_sha1": "eff30305980ccd3d63bd58ecac19aad69441d86f",
+          "bytes": 773,
+          "sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_master.inp",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FABAQUS%2Frefblade_master.inp/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/ABAQUS/refblade_master.inp",
+          "line_count": 31
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/ABAQUS/refblade_materials.inp",
+          "git_blob_sha1": "46dfc9e09132f5703fd85b3f68fb12780ef060ab",
+          "bytes": 947,
+          "sha256": "6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_materials.inp",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FABAQUS%2Frefblade_materials.inp/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/ABAQUS/refblade_materials.inp",
+          "line_count": 41
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/ABAQUS/refblade_mesh.inp",
+          "git_blob_sha1": "ef82ef2f238f7f4dc5b66fc7d3050e2bf6cdb2ad",
+          "bytes": 12547783,
+          "sha256": "0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_mesh.inp",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FABAQUS%2Frefblade_mesh.inp/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/ABAQUS/refblade_mesh.inp",
+          "line_count": 185000
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/ABAQUS/refblade_te_glue.inp",
+          "git_blob_sha1": "3b608c57b0c024d3fe5bf19e4f795dc7d7defa29",
+          "bytes": 216674,
+          "sha256": "e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_te_glue.inp",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FABAQUS%2Frefblade_te_glue.inp/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/ABAQUS/refblade_te_glue.inp",
+          "line_count": 3460
+        },
+        {
+          "source_repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+          "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "repository_path": "structural_models/BECAS/README.txt",
+          "git_blob_sha1": "5c9d05919cb1a3c480a97a064f002513b5ae2fbc",
+          "bytes": 743,
+          "sha256": "e3f8c03df33c6576edb841d9406124ffc1ac9086ca70a26ecbecacd9543204a4",
+          "local_path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\BECAS\\README.txt",
+          "raw_url": "https://gitlab.windenergy.dtu.dk/api/v4/projects/rwts%2Fdtu-10mw-rwt/repository/files/structural_models%2FBECAS%2FREADME.txt/raw?ref=3e1d7a82db7633807f72156b3232b773ac55dee7",
+          "web_url": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt/-/blob/3e1d7a82db7633807f72156b3232b773ac55dee7/structural_models/BECAS/README.txt",
+          "line_count": 18
+        }
+      ],
+      "total_downloaded_bytes": 13442873,
+      "received_blob_sha1_matches_git_tree_for_every_file": true,
+      "no_login_required_for_these_public_files": true,
+      "CAE_binary_not_opened_or_downloaded": true
+    },
+    "existing_local_parameter_package": {
+      "source_link_ledger_records_third_party_OpenFAST_repo": "https://github.com/CastorHeng/DTU10MW_OpenFAST",
+      "package_version_not_pinned": true,
+      "files": [
+        {
+          "path": "D:\\论文\\阅\\混塔模型参考\\下载模型\\DTU10MW_model_package\\Sources\\official_and_third_party_links.txt",
+          "sha256": "2fe0084ae574d6780e3ffce19ac8696ef5f4f71dbf4ceab4803c61d6381922a8",
+          "bytes": 427,
+          "role": "source-link ledger, not parameter authority"
+        },
+        {
+          "path": "D:\\论文\\阅\\混塔模型参考\\下载模型\\DTU10MW_model_package\\OpenFAST_selected_files\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat",
+          "sha256": "428c06370ffc9e73e66d6f7ac488fd5468d5f22187fd2042b3e0d1201e80b86d",
+          "bytes": 12402,
+          "role": "51-station distributed blade mass/stiffness and modal polynomial file; third-party package"
+        },
+        {
+          "path": "D:\\论文\\阅\\混塔模型参考\\下载模型\\DTU10MW_model_package\\OpenFAST_selected_files\\Rotor\\DTU_10MW_AeroDyn15_blade.dat",
+          "sha256": "0c4c18824924e7d56581b7702054edad5d9126963719248c435b002cd8b0e212",
+          "bytes": 2847,
+          "role": "38-station aerodynamic shape file; third-party package"
+        },
+        {
+          "path": "D:\\论文\\阅\\混塔模型参考\\下载模型\\DTU10MW_model_package\\Official_DTU_Report\\Description_of_the_DTU_10MW_Reference_Wind_Turbine.pdf",
+          "sha256": "55aac8cae8f656cdc4aa73afd3f5dedc45345079168476289eb49f000efd8017",
+          "bytes": 10815847,
+          "role": "full 138-page DTU reference report"
+        },
+        {
+          "path": "D:\\论文\\阅\\混塔模型参考\\下载模型\\DTU10MW_model_package\\ANSYS_equivalent\\DTU10MW_equivalent_parameters_for_ANSYS.csv",
+          "sha256": "41740d81497e235bf6162d1cf3d5c06570400e9431fc5da08a7f9deb1cad7d5f",
+          "bytes": 1143,
+          "role": "local secondary table; inconsistent dimensions/mass, not accepted for production"
+        }
+      ],
+      "not_promoted_to_primary_parameter_source": true
+    }
+  },
+  "actual_official_data_read": {
+    "circumferential_layup_tables": [
+      {
+        "region": "Caps",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "a1bb3ec495c44a01d36298a123a9fe90b54c6a6fcf5f1a8be00f6661ab70164e"
+      },
+      {
+        "region": "Leading_Panels",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "29874e99997ac38b7089341f0941572262c93a84f9c6a521e910b58926b156c4"
+      },
+      {
+        "region": "Nose",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "202a231f3f242c51be878f6ed104b0b1492b917376816b150ea9aa1caa177b40"
+      },
+      {
+        "region": "Tail_A",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "99d406eeaab26a1067eab702ec767d3d3ed6c14938e748c711817c6307a87bff"
+      },
+      {
+        "region": "Tail_B",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "95c5833c39293866aaa112a215d4c0618d19a7d51153f06b0e7d2765ada60ac1"
+      },
+      {
+        "region": "Tail_C",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "be9ce96199616d5604e747993b0f906b57d697efdfb60802548dfb9d5f669d5a"
+      },
+      {
+        "region": "Tail_V",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "461ee225e8e5091095428a2834c865fd6e015f690b18df92277d8bd32926dfab"
+      },
+      {
+        "region": "Trailing_Panels",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "UNIAX",
+          "BALSA",
+          "UNIAX",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "4b9e6e38e1141840ed2f02dfad79901cbf162c90a4628b3421d13020b0f59a94"
+      },
+      {
+        "region": "Web_A",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "BIAX",
+          "BALSA",
+          "BIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "c234b75a27d21b29e09a73c90897277998a9b6c653f6fa9c30a6eed9ababd7f7"
+      },
+      {
+        "region": "Web_B",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "BIAX",
+          "BALSA",
+          "BIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "26d6d9ff4ee28b214647715fb5516ea61ca888f805733dfc60da35e9825a2715"
+      },
+      {
+        "region": "Web_C",
+        "radial_interval_count": 100,
+        "radial_range_m": [
+          2.8,
+          89.166
+        ],
+        "layer_columns_outer_to_inner": [
+          "TRIAX",
+          "BALSA",
+          "TRIAX"
+        ],
+        "thickness_unit": "mm",
+        "complete_100_intervals_read": true,
+        "sha256": "00c917ba5664d8ee8fa2014d2cac42d49a556adbea0bc395d4e16bac1d9888db"
+      }
+    ],
+    "all_tables_have_100_contiguous_radial_intervals": true,
+    "composite_shell_section_count": 1078,
+    "shell_section_count_by_layup_group": {
+      "Blade-1_ca": 100,
+      "Blade-1_wa": 100,
+      "Blade-1_wb": 100,
+      "Blade-1_wc": 78,
+      "Blade-1_lp": 100,
+      "Blade-1_no": 100,
+      "Blade-1_tp": 100,
+      "Blade-1_ta": 100,
+      "Blade-1_tb": 100,
+      "Blade-1_tc": 100,
+      "Blade-1_tv": 100
+    },
+    "mesh_and_adhesive_input": {
+      "refblade_mesh.inp": {
+        "node_count_including_reference_points": 101496,
+        "element_count_by_type": {
+          "S8R": 34849
+        },
+        "raw_node_coordinate_bbox_before_SYSTEM_transforms": [
+          [
+            -3.89137292,
+            2.68956065
+          ],
+          [
+            -2.6894362,
+            2.69152308
+          ],
+          [
+            0.0,
+            89.1660004
+          ]
+        ],
+        "first_main_node_block": {
+          "nodes": 101394,
+          "raw_bbox": [
+            [
+              -3.89137292,
+              2.68956065
+            ],
+            [
+              -2.6894362,
+              2.69152308
+            ],
+            [
+              2.79999995,
+              89.1660004
+            ]
+          ]
+        },
+        "keyword_counts": {
+          "*heading": 1,
+          "*preprint": 1,
+          "*node": 103,
+          "*element": 1,
+          "*nset": 1698,
+          "*elset": 1573,
+          "*system": 102,
+          "*surface": 101,
+          "*coupling": 101,
+          "*kinematic": 2,
+          "*distributing": 99
+        },
+        "coordinate_registration_completed": false,
+        "native_SYSTEM_transform_not_evaluated_here": true
+      },
+      "refblade_te_glue.inp": {
+        "node_count_including_reference_points": 2016,
+        "element_count_by_type": {
+          "C3D20": 1008
+        },
+        "raw_node_coordinate_bbox_before_SYSTEM_transforms": [
+          [
+            -3.87661517,
+            -0.347775638
+          ],
+          [
+            -0.0638759341,
+            0.683327109
+          ],
+          [
+            20.9370003,
+            89.1660004
+          ]
+        ],
+        "first_main_node_block": {
+          "nodes": 2016,
+          "raw_bbox": [
+            [
+              -3.87661517,
+              -0.347775638
+            ],
+            [
+              -0.0638759341,
+              0.683327109
+            ],
+            [
+              20.9370003,
+              89.1660004
+            ]
+          ]
+        },
+        "keyword_counts": {
+          "*node": 1,
+          "*element": 1,
+          "*elset": 159,
+          "*solid section": 1
+        },
+        "coordinate_registration_completed": false,
+        "native_SYSTEM_transform_not_evaluated_here": true
+      }
+    },
+    "cross_sections": {
+      "section_count": 101,
+      "radial_range_m": [
+        2.8,
+        89.166
+      ],
+      "keypoint_counts": [
+        17
+      ],
+      "coordinates_and_keypoints_fully_read": true,
+      "purpose": "KP marks circumferential boundaries; supports locating surface regions and internal web attachments"
+    },
+    "materials": [
+      {
+        "name": "UNIAX",
+        "density_source_value": 1915.5,
+        "elastic_keyword": "*ELASTIC, TYPE=ENGINEERING CONSTANTS",
+        "elastic_source_values": [
+          41630000000.0,
+          14930000000.0,
+          13425830000.0,
+          0.241,
+          0.2675,
+          0.3301,
+          5047000000.0,
+          5046980000.0,
+          5046980000.0
+        ]
+      },
+      {
+        "name": "BIAX",
+        "density_source_value": 1845.0,
+        "elastic_keyword": "*ELASTIC, TYPE=ENGINEERING CONSTANTS",
+        "elastic_source_values": [
+          13920000000.0,
+          13920000000.0,
+          12099010000.0,
+          0.533,
+          0.275,
+          0.3329,
+          11500000000.0,
+          4538640000.0,
+          4538640000.0
+        ]
+      },
+      {
+        "name": "TRIAX",
+        "density_source_value": 1845.0,
+        "elastic_keyword": "*ELASTIC, TYPE=ENGINEERING CONSTANTS",
+        "elastic_source_values": [
+          21790000000.0,
+          14670000000.0,
+          12099010000.0,
+          0.478,
+          0.275,
+          0.3329,
+          9413000000.0,
+          4538640000.0,
+          4538640000.0
+        ]
+      },
+      {
+        "name": "BALSA",
+        "density_source_value": 110.0,
+        "elastic_keyword": "*ELASTIC, TYPE=ENGINEERING CONSTANTS",
+        "elastic_source_values": [
+          50000000.0,
+          50000000.0,
+          2730000000.0,
+          0.5,
+          0.013,
+          0.013,
+          16670000.0,
+          150000000.0,
+          150000000.0
+        ]
+      },
+      {
+        "name": "TE_GLUE_MAT",
+        "density_source_value": 1.0,
+        "elastic_keyword": "*ELASTIC, TYPE=ISO",
+        "elastic_source_values": [
+          2000000000.0,
+          0.3
+        ]
+      }
+    ],
+    "source_MASTER_has_eight_mode_frequency_step_and_root_six_DOF_boundary": true,
+    "four_includes_present_locally": true
+  },
+  "mapping_gaps_in_current_user_model": [
+    "Current S3/S4R RNA parts have BeamSection assignments; preserve shape but replace with compatible sourced structural sections",
+    "No verified mapping from current 886 blade nodes / 1761 surface triangles to official 11 circumferential layup groups and 100 span intervals",
+    "Current source blade part reports one surface face and no volumetric cells; this alone does not prove internal webs are present; compare exported connectivity against official web geometry",
+    "Whole-surface six-DOF kinematic couplings must be replaced by physically scoped root/interface connections before the blade can deform",
+    "Official shell reference omits prebend; current surface may include a different sweep/prebend/tip definition, so registration must be documented rather than assuming exact identity",
+    "Official reference tip region 88.3–89.166 m is acknowledged approximate by its README",
+    "Official trailing-edge glue density is 1.0 in its source input; keep as a documented original modeling choice pending component mass sensitivity; do not silently substitute arbitrary material",
+    "Rotor orientation, speed, blade pitch and hub/nacelle load paths must be verified against current source BC and axes"
+  ],
+  "concrete_implementation_route": [
+    {
+      "step": 1,
+      "action": "Parse official master/mesh/material/layup/glue into a read-only baseline; establish units, topology, material coverage and include closure",
+      "source": "official README + refblade_master.inp + source commit",
+      "pass_condition": "every element has a compatible section; complete referenced sets and local includes; no undocumented parameter substitution"
+    },
+    {
+      "step": 2,
+      "action": "Export current user RNA local/assembly node coordinates and connectivity; register one blade against official sections and KP boundaries",
+      "source": "current user CAE snapshot SHA + official cross_sections.inp + Bak2013 Fig4.3/TablesA.5-A.6",
+      "pass_condition": "record transform/scale/prebend and surface-to-region map; record missing structural webs instead of fitting stiffness"
+    },
+    {
+      "step": 3,
+      "action": "Keep the user assembly location/outer shape; reconstruct missing internal structure from official design and transfer official layered sections to a suitable verified shell mesh",
+      "source": "11 complete layup tables + official shell/adhesive input",
+      "pass_condition": "correct outer/mid-surface offsets, orthotropic axes and interfaces; no whole-blade rigid coupling"
+    },
+    {
+      "step": 4,
+      "action": "Run isolated-blade mass/gravity/modal checks; compare an unmodified official shell baseline with its stated HAWC2 blade benchmark under matched boundary conditions",
+      "source": "Bak2013 Table6.4 and official master frequency step",
+      "pass_condition": "report numerical differences and element convergence; distinguish FE/beam and prebend assumptions; do not invent a paper-derived universal tolerance"
+    },
+    {
+      "step": 5,
+      "action": "Assemble flexible RNA with the actual hybrid tower and compare rigid versus flexible under identical inputs; then verify rotation and aerodynamic load transfer",
+      "source": "public RNA-D08 literature review + matched current tower and source geometry",
+      "pass_condition": "matched wind/rotor/control conditions and target tower responses; document unresolved aeroelastic feedback before operating-load conclusions"
+    }
+  ],
+  "official_input_layup_coverage_note": "The 11 full tables contain 1100 radial rows. The actual shell input has 1078 sections: Web_C contains only 78 nonzero regions. This is a source design difference, not a missing file.",
+  "official_input_shell_section_connectivity_check": {
+    "shell_elements": 34849,
+    "shell_elements_assigned_exactly_once": 34849,
+    "unassigned_shell_elements": [],
+    "multiply_assigned_shell_elements": [],
+    "assignments_to_unknown_shell_labels": [],
+    "undefined_shell_connectivity_nodes": [],
+    "all_referenced_section_elsets_exist": true,
+    "one_section_per_shell_element_verified": true
+  },
+  "official_isolated_blade_HAWC2_modal_locator": {
+    "source": "Bak2013 Table6.4, printed/PDF p68; visually checked",
+    "modes_Hz": {
+      "flap_1": 0.61,
+      "edge_1": 0.93,
+      "flap_2": 1.74,
+      "edge_2": 2.76,
+      "flap_3": 3.57,
+      "torsion_1": 5.69,
+      "flap_4": 6.11,
+      "edge_3": 6.66
+    },
+    "meaning": "Cross-model benchmark; source shell model differs from aeroelastic geometry in prebend. Do not present a match as an experimental validation or silently tune properties."
+  },
+  "visual_checks": {
+    "report_material_table_page_40": true,
+    "report_example_only_layup_page_47": true,
+    "report_blade_frequency_page_68": true,
+    "rendered_PNGs_private_not_for_publication": true
+  },
+  "production_acceptance_complete": false,
+  "solver_executed_in_this_inventory": false,
+  "current_user_CAE_modified": false,
+  "publication_policy": "Publish this original inventory, locators/hashes and methodological conclusions. Do not upload private Word documents, extracts or the entire third-party source package by default."
+}

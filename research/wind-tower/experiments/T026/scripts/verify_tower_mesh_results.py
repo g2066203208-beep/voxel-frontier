@@ -220,7 +220,7 @@ report['last_two_mesh_comparisons']=comparisons
 report['frequency_and_flexibility_budget_pass']=all(c['pass'] for c in comparisons if 'pass' in c)
 report['all_three_force_moment_balance_pass']=all(c['gravity']['force_pass'] and c['gravity']['moment_pass'] for c in report['cases'])
 report['all_three_gravity_damage_zero']=all(c['PT']['zero_damage_gravity_state'] for c in report['cases'])
-report['coverage_conclusion']='30mode coverage reported for X/Y/Z using all30 EM/PF; incomplete residual translational mass exists. No assertion of complete modal coverage or convergence of local stress without response comparison.'
+report['coverage_conclusion']='30mode effective-mass fractions reported for X/Y/Z using all30 EM/PF and DAT total mass. All-mode sum excludes mass at kinematically restrained DOFs, so complements of total-mass ratios cannot be assigned wholly to missing high modes. No assertion of complete modal coverage or convergence of local stress without response comparison.'
 report['legacy_control_Elsets']='Three inherited control-Elset entries are legal and not used by the chapter2 verification steps; preserve the source input/card identity rather than silently deleting legacy sets.'
 path=ROOT/'tower-verification-results.json';path.write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
 print(json.dumps({'mass':[c['mass_kg'] for c in report['cases']], 'balance':[(c['run_id'],c['gravity']['force_residual_relative_to_weight'],c['gravity']['moment_residual_scaled_by_weight_base_radius']) for c in report['cases']],

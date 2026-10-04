@@ -1,0 +1,22 @@
+{
+  "path": "D:\\Codex-research-validation\\T026\\figures\\figure2-1-word.png",
+  "sha256": "3268ac3e109755787ea6447a1bb110fc0c57a7b8073ce5355223f1daf86eae29",
+  "source_builder": "C:\\Users\\REME\\Documents\\Codex\\2026-10-03\\lia\\work\\chapter2-completion\\build_input_geometry_figure.py",
+  "source_INP": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+  "source_INP_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+  "minimum_text_font_source_points": 18,
+  "minimum_text_at_5_5_in_word_points": 7.128,
+  "dimensions_px": [
+    3000,
+    2220
+  ],
+  "same_actual_nodes_elements_and_projections": true,
+  "original_PDF_and_PNG_unmodified": true,
+  "original_sha256": {
+    "D:\\Codex-research-validation\\T026\\figures\\figure2-1-input-geometry.pdf": "9cab1c7f8be02eab9e9968188a0e0903da2ebfdcabd28d3f142b5998c46ca058",
+    "D:\\Codex-research-validation\\T026\\figures\\figure2-1-input-geometry.png": "518ca4ff872314169903030441f89e1ec83e727a64929728867e488cc468b596",
+    "D:\\Codex-research-validation\\T026\\figures\\figure2-1-input-geometry-300dpi.png": "30851def6c7851e4bd7dd810c02f45251505c416ce59f98430e161b5cbd05c36"
+  },
+  "temporary_PDF_removed": true,
+  "visual_QA": "PASS: complete enlarged view_image inspection; labels within panels, no overlap or clipping, RNA axis legend moved clear of actual beam edges"
+}

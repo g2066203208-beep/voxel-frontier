@@ -1,0 +1,218 @@
+{
+  "review_id": "RNA-D08-primary-source-review",
+  "date": "2026-10-04",
+  "reviewer": "/root/chapter1_optimization_sources",
+  "requirement_state": "OPEN",
+  "overall_research_acceptance": "PARTIAL",
+  "sources_count": 8,
+  "recent_primary_papers_count": 4,
+  "recent_official_report_count": 1,
+  "official_capability_or_original_distribution_count": 3,
+  "sources": [
+    {
+      "id": "WANG112583",
+      "title": "High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel–Concrete Hybrid Tower",
+      "authors": [
+        "Dan Wang",
+        "Jun Xu",
+        "Zeyu He",
+        "Quanfu Yu",
+        "Weiwei Tang",
+        "Guangling He",
+        "Qiang Wu"
+      ],
+      "journal": "Mechanical Systems and Signal Processing",
+      "year": 2025,
+      "volume": "230",
+      "article": "112583",
+      "doi": "10.1016/j.ymssp.2025.112583",
+      "url": "https://doi.org/10.1016/j.ymssp.2025.112583",
+      "primary_source": true,
+      "read_level": "user-held published PDF key sections; not a full-page-by-page claim",
+      "actually_read_for_this_check": [
+        "PDF3–5 §2.1.1–2.1.2/Table1",
+        "PDF8–10 §3.1 interface/coupling",
+        "PDF11–12 §3.3 verification",
+        "PDF13–14 §4.1 comparison"
+      ],
+      "earlier_read_record": "source-upgrade.json contains earlier key-page review; current claim constrained to named RNA/method sections",
+      "supports": "柔性叶片RNA、传动与控制、双向界面及分层核验；结构模态报告与整机数值对照区别。",
+      "cannot_support": "不是DTU10MW参数来源；三模型比较同时改变塔非线性与耦合，非隔离RNA柔性的成对实验。",
+      "source_sha256": "859ef5122b2c4b8568970f756ae6c9fbcecbc655cf0eb46971b0e2bf84c0a4c9",
+      "source_file_upload_permitted": false
+    },
+    {
+      "id": "HUANG120295",
+      "title": "Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads",
+      "authors": [
+        "Xiaogang Huang",
+        "Jie Cui",
+        "Xuhong Zhou",
+        "Dongping Zhu",
+        "Yuhang Wang",
+        "Tian Li"
+      ],
+      "journal": "Engineering Structures",
+      "year": 2025,
+      "volume": "334",
+      "article": "120295",
+      "doi": "10.1016/j.engstruct.2025.120295",
+      "url": "https://doi.org/10.1016/j.engstruct.2025.120295",
+      "primary_source": true,
+      "read_level": "user-held published PDF key sections; not a full-page-by-page claim",
+      "actually_read_for_this_check": [
+        "PDF3 Fig5 visual and DOF table",
+        "PDF4–5 §3 full key paragraphs/Table2",
+        "PDF12 §5",
+        "PDF14 §6"
+      ],
+      "earlier_read_record": "source-upgrade.json contains earlier key-page review; current claim constrained to named RNA/method sections",
+      "supports": "16DOF：9 blade bending+4 tower+1 yaw+1 drivetrain+1 generator azimuth；运行载荷生成及弹性应力恢复。",
+      "cannot_support": "不支持固定刚体RNA与柔性/旋转/控制整机等价，不验证本塔损伤或接缝物理行为。",
+      "source_sha256": "858d44b9229c679b64ccb627c53ee0282689254b28f9c78c37f6fc222a5dbd30",
+      "source_file_upload_permitted": false
+    },
+    {
+      "id": "BROWN2024",
+      "title": "One-to-one aeroservoelastic validation of operational loads and performance of a 2.8 MW wind turbine model in OpenFAST",
+      "authors": [
+        "Kenneth Brown",
+        "Pietro Bortolotti",
+        "Emmanuel Branlard",
+        "Mayank Chetan",
+        "Scott Dana",
+        "Nathaniel deVelder",
+        "Paula Doubrawa",
+        "Nicholas Hamilton",
+        "Hristo Ivanov",
+        "Jason Jonkman",
+        "Christopher Kelley",
+        "Daniel Zalkind"
+      ],
+      "year": 2024,
+      "journal": "Wind Energy Science",
+      "volume": "9",
+      "pages": "1791–1810",
+      "doi": "10.5194/wes-9-1791-2024",
+      "url": "https://wes.copernicus.org/articles/9/1791/2024/",
+      "primary_source": true,
+      "read_level": "publisher full HTML selected complete sections",
+      "actually_read_for_this_check": [
+        "Abstract",
+        "§2.2.1–2.2.2",
+        "§2.3.1–2.3.2"
+      ],
+      "supports": "Blade/tower numerical verification versus operational measured validation; ED tower with BeamDyn blade; RNA on/off tower modes.",
+      "cannot_support": "2.8MW calibration or limited local nacelle-flex effect is not transferable to 10MW; operational load errors are not isolated RNA simplification errors."
+    },
+    {
+      "id": "TRIGAUX2024",
+      "title": "Investigation of blade flexibility effects on the loads and wake of a 15 MW wind turbine using a flexible actuator line method",
+      "authors": [
+        "François Trigaux",
+        "Philippe Chatelain",
+        "Grégoire Winckelmans"
+      ],
+      "year": 2024,
+      "journal": "Wind Energy Science",
+      "volume": "9",
+      "pages": "1765–1789",
+      "doi": "10.5194/wes-9-1765-2024",
+      "url": "https://wes.copernicus.org/articles/9/1765/2024/",
+      "registry_ref": "REF012",
+      "primary_source": true,
+      "read_level": "publisher full HTML selected complete sections",
+      "actually_read_for_this_check": [
+        "§2 structural coupling context",
+        "§3.1–3.2",
+        "§4–4.2",
+        "Conclusions"
+      ],
+      "supports": "Same-inflow undeformed-rigid/mean-deformed-rigid/flexible comparison; mean versus spectrum/phase distinctions.",
+      "cannot_support": "IEA15MW fixed-speed scenario percentages or mean-wake conclusions cannot certify 158m hybrid-tower fatigue; not a complete tower-PT comparison."
+    },
+    {
+      "id": "DTU2024_H2_HS2",
+      "title": "HAWC2 v13.1 and HAWCStab2 v2.16 Comparison",
+      "authors": [
+        "David Robert Verelst",
+        "Georg Pirrung",
+        "Riccardo Riva"
+      ],
+      "year": 2024,
+      "type": "official DTU technical report",
+      "doi": "10.11581/DTU.00000323",
+      "url": "https://orbit.dtu.dk/en/publications/hawc2-v131-and-hawcstab2-v216-comparison/",
+      "fulltext_url": "https://backend.orbit.dtu.dk/ws/portalfiles/portal/359162105/h2_v13.1_vs_hs2_v2.16_comparison.pdf",
+      "primary_source": true,
+      "read_level": "official full PDF selected complete method/conclusion text, graph context, not every graph visually reviewed",
+      "actually_read_for_this_check": [
+        "§1 pp3–4 assumptions/case definitions",
+        "§2 intro p5",
+        "§2.1 p6",
+        "§2.2 p12",
+        "§2.3 p18",
+        "§3 pp30–33 nonrotating blade eigenvalue analysis",
+        "§4 p34 conclusions"
+      ],
+      "supports": "DTU10MW controlled code comparisons with stiff/flexible blade branches and blade-only modal tests.",
+      "cannot_support": "Reported code-to-code differences are not stiff-versus-flexible error. Gravity/tilt/tower-shaft flexibility/turbulence excluded as listed; not target tower operating or fatigue validation."
+    },
+    {
+      "id": "OPENFAST_ED_OFFICIAL",
+      "title": "ElastoDyn Input Files",
+      "type": "official software documentation",
+      "publication_year": null,
+      "access_date": "2026-10-04",
+      "url": "https://openfast.readthedocs.io/en/main/source/user/elastodyn/input.html",
+      "primary_source": true,
+      "read_level": "official full relevant HTML sections",
+      "actually_read_for_this_check": [
+        "Degrees of Freedom; FlapDOF1/2, EdgeDOF, PitchDOF, DrTrDOF, GenDOF, YawDOF, TwFADOF/TwSSDOF"
+      ],
+      "supports": "Documented DOF switches for controlled models within the actual supported version.",
+      "cannot_support": "Current-main capability is not proof actual old production version includes every switch; no parameter calibration or simulation evidence."
+    },
+    {
+      "id": "OPENFAST_BEAMDYN_OFFICIAL",
+      "title": "BeamDyn Theory",
+      "type": "official software documentation",
+      "publication_year": null,
+      "access_date": "2026-10-04",
+      "url": "https://openfast.readthedocs.io/en/main/source/user/beamdyn/theory.html",
+      "secondary_official_code_url": "https://github.com/OpenFAST/openfast/blob/main/modules/beamdyn/README.md",
+      "primary_source": true,
+      "read_level": "official selected complete theory paragraphs",
+      "actually_read_for_this_check": [
+        "Intro/GEBT kinematics",
+        "General section mass/stiffness and element matrix context"
+      ],
+      "supports": "Curved/twisted large-deformation beam, extension/shear/bending/torsion, fully coupled 6x6 section properties.",
+      "cannot_support": "Does not provide source-specific blade parameters; using module does not validate user RNA or target tower."
+    },
+    {
+      "id": "DTU_ORIGINAL_MODEL",
+      "title": "DTU 10 MW Reference Wind Turbine model, HAWC2 v5.0 distribution",
+      "type": "official model distribution",
+      "publication_year": null,
+      "access_date": "2026-10-04",
+      "url": "https://www.hawc2.dk/models/dtu-10-mw/hawc2_5_0",
+      "primary_source": true,
+      "read_level": "official model webpage; bundle not imported/read/solved in this review",
+      "actually_read_for_this_check": [
+        "Official model description/version notes/controller distribution context"
+      ],
+      "supports": "Original HAWC2 model and Basic DTU controller provenance, priority parameter-source path.",
+      "cannot_support": "Not an official OpenFAST conversion; page existence does not confirm full source structural properties or user-model equivalence; IEA10.0-198 differs."
+    }
+  ],
+  "user_existing_RNA_priority": "Read and accept user original CAE/STEP RNA structural identity before designing supplements. Do not infer whole-source display-only status from one exported branch. No unsupported full rebuild.",
+  "current_numerical_equivalence_boundary": "Existing B31 rigid carrier versus MASS+ROTARYI tests verify a fixed rigid spatial mass operator only, not blade flexibility/rotation/aeroelasticity.",
+  "existing_2026_registry_scope": "No direct 2026 rigid/flexible RNA paired evidence established in this check; metadata/abstract/cache and other-topic full-text status do not establish relevant method/result reading.",
+  "own_proposed_comparisons_not_executed": true,
+  "solver_invoked": false,
+  "word_mutated": false,
+  "remote_mutated": false,
+  "public_upload_permitted": true,
+  "content_policy": "Original paraphrases and source metadata only; no private thesis/teacher text, PDF contents or local private file links; private read-page extracts excluded."
+}

@@ -1,0 +1,1189 @@
+{
+  "date": "2026-10-04",
+  "status": "source identity read; physical structural acceptance OPEN",
+  "source": {
+    "file": "SIMPACK_SITE_ONLY.cae",
+    "sha256_before": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+    "sha256_after": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+    "unchanged": true
+  },
+  "audit": {
+    "method": "official auxiliary model copy into new in-memory Mdb; historical jobs/custom user data are not copied",
+    "source_copy_report_sha256": "dea793f9db4454709c406f7581901f844b5a59f0697e76560eb97043958bf1d1",
+    "source_original_not_opened_or_saved": true,
+    "solver_submitted": false
+  },
+  "models": {
+    "DTU158_SITE_S04_INTERFACE_DYNAMIC": {
+      "outer_parts": {
+        "DTU_BLADE_SMOOTH_OFFICIAL": {
+          "nodes": 886,
+          "elements": 1761,
+          "element_types": {
+            "S3": 1761
+          },
+          "faces": 1,
+          "cells": 0,
+          "assignments": [
+            {
+              "section": "SEC_RNA_BLD_Z3",
+              "class": "BeamSection",
+              "profile": "PROF_RNA_MASS_CARRIER_R10MM",
+              "material": "MAT_RNA_BLD_Z3",
+              "input_density_table": [
+                [
+                  1269330.64868078
+                ]
+              ],
+              "input_elastic_table": [
+                [
+                  210000000000.0,
+                  0.3
+                ]
+              ],
+              "suppressed": false,
+              "not_physical_shell_properties": true
+            }
+          ]
+        },
+        "DTU_NACELLE_120DEG_OFFICIAL": {
+          "nodes": 330,
+          "elements": 320,
+          "element_types": {
+            "S3": 17,
+            "S4R": 303
+          },
+          "faces": 1,
+          "cells": 0,
+          "assignments": [
+            {
+              "section": "SEC_RNA_NAC_EQ",
+              "class": "BeamSection",
+              "profile": "PROF_RNA_MASS_CARRIER_R10MM",
+              "material": "MAT_RNA_NAC_EQ",
+              "input_density_table": [
+                [
+                  135084773.78985196
+                ]
+              ],
+              "input_elastic_table": [
+                [
+                  210000000000.0,
+                  0.3
+                ]
+              ],
+              "suppressed": false,
+              "not_physical_shell_properties": true
+            }
+          ]
+        },
+        "DTU_SPINNER_120DEG_OFFICIAL": {
+          "nodes": 331,
+          "elements": 322,
+          "element_types": {
+            "S3": 10,
+            "S4R": 312
+          },
+          "faces": 1,
+          "cells": 0,
+          "assignments": [
+            {
+              "section": "SEC_RNA_NAC_EQ",
+              "class": "BeamSection",
+              "profile": "PROF_RNA_MASS_CARRIER_R10MM",
+              "material": "MAT_RNA_NAC_EQ",
+              "input_density_table": [
+                [
+                  135084773.78985196
+                ]
+              ],
+              "input_elastic_table": [
+                [
+                  210000000000.0,
+                  0.3
+                ]
+              ],
+              "suppressed": false,
+              "not_physical_shell_properties": true
+            }
+          ]
+        }
+      },
+      "outer_instances": {
+        "DTU_BLADE_SMOOTH_1-1": {
+          "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+          "nodes": 886,
+          "elements": 1761,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_BLADE_SMOOTH_2-1": {
+          "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+          "nodes": 886,
+          "elements": 1761,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_BLADE_SMOOTH_3-1": {
+          "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+          "nodes": 886,
+          "elements": 1761,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_NACELLE_SEG_1-1": {
+          "part": "DTU_NACELLE_120DEG_OFFICIAL",
+          "nodes": 330,
+          "elements": 320,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_SPINNER_SEG_1-1": {
+          "part": "DTU_SPINNER_120DEG_OFFICIAL",
+          "nodes": 331,
+          "elements": 322,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_NACELLE_SEG_2-1": {
+          "part": "DTU_NACELLE_120DEG_OFFICIAL",
+          "nodes": 330,
+          "elements": 320,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_SPINNER_SEG_2-1": {
+          "part": "DTU_SPINNER_120DEG_OFFICIAL",
+          "nodes": 331,
+          "elements": 322,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_NACELLE_SEG_3-1": {
+          "part": "DTU_NACELLE_120DEG_OFFICIAL",
+          "nodes": 330,
+          "elements": 320,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_SPINNER_SEG_3-1": {
+          "part": "DTU_SPINNER_120DEG_OFFICIAL",
+          "nodes": 331,
+          "elements": 322,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        }
+      },
+      "surface_couplings": {
+        "CPL_NAC_DTU_NACELLE_SEG_1_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_TOWER_TOP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_NAC_DTU_NACELLE_SEG_1_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_NAC_DTU_NACELLE_SEG_2_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_TOWER_TOP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_NAC_DTU_NACELLE_SEG_2_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_NAC_DTU_NACELLE_SEG_3_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_TOWER_TOP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_NAC_DTU_NACELLE_SEG_3_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_BLADE_SMOOTH_1_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_BLADE_SMOOTH_1_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_BLADE_SMOOTH_2_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_BLADE_SMOOTH_2_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_BLADE_SMOOTH_3_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_BLADE_SMOOTH_3_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_SPINNER_SEG_1_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_SPINNER_SEG_1_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_SPINNER_SEG_2_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_SPINNER_SEG_2_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_SPINNER_SEG_3_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_SPINNER_SEG_3_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        }
+      },
+      "mass_skeleton_instance": {
+        "partName": "RNA_MASS_SKELETON_OFFICIAL",
+        "nodes": 0,
+        "elements": 0,
+        "assembly_feature_suppression": {
+          "isSuppressed_method": true
+        },
+        "suppression_or_exclusion": {
+          "excludedFromSimulation": false
+        }
+      },
+      "mass_skeleton_rigid_body": {
+        "class": "RigidBody",
+        "suppression": {
+          "suppressed": true
+        },
+        "attributes": {}
+      },
+      "rotation_steps": {},
+      "rotation_BC_existing_report": null,
+      "rotation_rate_fields_in_existing_report": "superseded by actual source-copy export below; primary none, explicit vr3=1.0 and other rates 0",
+      "rotation_BC_actual_export": {}
+    },
+    "RNA_REAL_EXPLICIT": {
+      "outer_parts": {
+        "DTU_BLADE_SMOOTH_OFFICIAL": {
+          "nodes": 886,
+          "elements": 1761,
+          "element_types": {
+            "S3": 1761
+          },
+          "faces": 1,
+          "cells": 0,
+          "assignments": [
+            {
+              "section": "SEC_RNA_BLD_Z3",
+              "class": "BeamSection",
+              "profile": "PROF_RNA_MASS_CARRIER_R10MM",
+              "material": "MAT_RNA_BLD_Z3",
+              "input_density_table": [
+                [
+                  1269330.64868078
+                ]
+              ],
+              "input_elastic_table": [
+                [
+                  210000000000.0,
+                  0.3
+                ]
+              ],
+              "suppressed": false,
+              "not_physical_shell_properties": true
+            }
+          ]
+        },
+        "DTU_NACELLE_120DEG_OFFICIAL": {
+          "nodes": 330,
+          "elements": 320,
+          "element_types": {
+            "S3": 17,
+            "S4R": 303
+          },
+          "faces": 1,
+          "cells": 0,
+          "assignments": [
+            {
+              "section": "SEC_RNA_NAC_EQ",
+              "class": "BeamSection",
+              "profile": "PROF_RNA_MASS_CARRIER_R10MM",
+              "material": "MAT_RNA_NAC_EQ",
+              "input_density_table": [
+                [
+                  135084773.78985196
+                ]
+              ],
+              "input_elastic_table": [
+                [
+                  210000000000.0,
+                  0.3
+                ]
+              ],
+              "suppressed": false,
+              "not_physical_shell_properties": true
+            }
+          ]
+        },
+        "DTU_SPINNER_120DEG_OFFICIAL": {
+          "nodes": 331,
+          "elements": 322,
+          "element_types": {
+            "S3": 10,
+            "S4R": 312
+          },
+          "faces": 1,
+          "cells": 0,
+          "assignments": [
+            {
+              "section": "SEC_RNA_NAC_EQ",
+              "class": "BeamSection",
+              "profile": "PROF_RNA_MASS_CARRIER_R10MM",
+              "material": "MAT_RNA_NAC_EQ",
+              "input_density_table": [
+                [
+                  135084773.78985196
+                ]
+              ],
+              "input_elastic_table": [
+                [
+                  210000000000.0,
+                  0.3
+                ]
+              ],
+              "suppressed": false,
+              "not_physical_shell_properties": true
+            }
+          ]
+        }
+      },
+      "outer_instances": {
+        "DTU_BLADE_SMOOTH_1-1": {
+          "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+          "nodes": 886,
+          "elements": 1761,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_BLADE_SMOOTH_2-1": {
+          "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+          "nodes": 886,
+          "elements": 1761,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_BLADE_SMOOTH_3-1": {
+          "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+          "nodes": 886,
+          "elements": 1761,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_NACELLE_SEG_1-1": {
+          "part": "DTU_NACELLE_120DEG_OFFICIAL",
+          "nodes": 330,
+          "elements": 320,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_SPINNER_SEG_1-1": {
+          "part": "DTU_SPINNER_120DEG_OFFICIAL",
+          "nodes": 331,
+          "elements": 322,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_NACELLE_SEG_2-1": {
+          "part": "DTU_NACELLE_120DEG_OFFICIAL",
+          "nodes": 330,
+          "elements": 320,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_SPINNER_SEG_2-1": {
+          "part": "DTU_SPINNER_120DEG_OFFICIAL",
+          "nodes": 331,
+          "elements": 322,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_NACELLE_SEG_3-1": {
+          "part": "DTU_NACELLE_120DEG_OFFICIAL",
+          "nodes": 330,
+          "elements": 320,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        },
+        "DTU_SPINNER_SEG_3-1": {
+          "part": "DTU_SPINNER_120DEG_OFFICIAL",
+          "nodes": 331,
+          "elements": 322,
+          "suppression": {
+            "isSuppressed_method": false
+          },
+          "exclusion": {
+            "excludedFromSimulation": false
+          }
+        }
+      },
+      "surface_couplings": {
+        "CPL_NAC_DTU_NACELLE_SEG_1_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_TOWER_TOP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_NAC_DTU_NACELLE_SEG_1_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_NAC_DTU_NACELLE_SEG_2_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_TOWER_TOP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_NAC_DTU_NACELLE_SEG_2_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_NAC_DTU_NACELLE_SEG_3_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_TOWER_TOP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_NAC_DTU_NACELLE_SEG_3_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_BLADE_SMOOTH_1_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_BLADE_SMOOTH_1_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_BLADE_SMOOTH_2_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_BLADE_SMOOTH_2_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_BLADE_SMOOTH_3_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_BLADE_SMOOTH_3_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_SPINNER_SEG_1_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_SPINNER_SEG_1_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_SPINNER_SEG_2_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_SPINNER_SEG_2_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        },
+        "CPL_RNA_DTU_SPINNER_SEG_3_1": {
+          "class": "Coupling",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "couplingType": "KINEMATIC",
+            "influenceRadius": "WHOLE_SURFACE",
+            "u1": 1,
+            "u2": 1,
+            "u3": 1,
+            "ur1": 1,
+            "ur2": 1,
+            "ur3": 1,
+            "adjust": false,
+            "controlPoint": [
+              "SET_RNA_RP",
+              "Assembly",
+              1,
+              1,
+              0
+            ],
+            "surface": [
+              "SURF_RNA_DTU_SPINNER_SEG_3_1",
+              "Assembly",
+              1,
+              9,
+              0
+            ]
+          }
+        }
+      },
+      "mass_skeleton_instance": {
+        "partName": "RNA_MASS_SKELETON_OFFICIAL",
+        "nodes": 0,
+        "elements": 0,
+        "assembly_feature_suppression": {
+          "isSuppressed_method": true
+        },
+        "suppression_or_exclusion": {
+          "excludedFromSimulation": false
+        }
+      },
+      "mass_skeleton_rigid_body": {
+        "class": "RigidBody",
+        "suppression": {
+          "suppressed": true
+        },
+        "attributes": {}
+      },
+      "rotation_steps": {
+        "RNA_ROTATION_EXPLICIT": {
+          "class": "ExplicitDynamicsStep",
+          "suppression": {
+            "suppressed": false
+          },
+          "attributes": {
+            "previous": "Initial",
+            "nlgeom": 1,
+            "timePeriod": 1.0,
+            "description": "",
+            "perturbation": false
+          }
+        }
+      },
+      "rotation_BC_existing_report": {
+        "class": "VelocityBC",
+        "suppression": {
+          "suppressed": false
+        },
+        "attributes": {
+          "region": [
+            "SET_RNA_RP",
+            "Assembly",
+            1,
+            1,
+            0
+          ]
+        }
+      },
+      "rotation_rate_fields_in_existing_report": "superseded by actual source-copy export below; primary none, explicit vr3=1.0 and other rates 0",
+      "rotation_BC_actual_export": {
+        "class": "VelocityBC",
+        "settings": {
+          "suppressed": false,
+          "distributionType": "UNIFORM",
+          "localCsys": null,
+          "fieldName": ""
+        },
+        "region": {
+          "raw": [
+            "SET_RNA_RP",
+            "Assembly",
+            1,
+            1,
+            0
+          ],
+          "resolution": "assembly.sets",
+          "resolved": true,
+          "geometric_face_count": 0,
+          "node_membership_method": "element_getNodes_for_element_only_region",
+          "faces": [],
+          "mesh_node_count": 0,
+          "node_ranges": {},
+          "reference_points": [
+            {
+              "index_in_region": 0,
+              "coordinates": [
+                0.0,
+                160.0,
+                0.0
+              ]
+            }
+          ]
+        },
+        "step_states": {
+          "Initial": {
+            "status": "NOT_YET_ACTIVE"
+          },
+          "RNA_ROTATION_EXPLICIT": {
+            "status": "CREATED",
+            "v1": 0.0,
+            "v2": 0.0,
+            "v3": 0.0,
+            "vr1": 0.0,
+            "vr2": 0.0,
+            "vr3": 1.0,
+            "v1State": "SET",
+            "v2State": "SET",
+            "v3State": "SET",
+            "vr1State": "SET",
+            "vr2State": "SET",
+            "vr3State": "SET"
+          }
+        }
+      }
+    }
+  },
+  "input_export": {
+    "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+    "success": false,
+    "error_summary": "Three RNA surface parts lack Beam Orientation for assigned BeamSection; consistency checking generated no INP. Adding a beam orientation alone would not supply compatible shell properties."
+  },
+  "method_sources": [
+    {
+      "id": "ABAQUS_2025_SHELL_ELEMENTS",
+      "title": "Choosing a Shell Element",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEELMRefMap/simaelm-c-shellelem.htm",
+      "actual_read": "2026-10-04: S3/S4R conventional shell elements, degrees of freedom and general-purpose application sections",
+      "supports": "Interpretation of shell type and required compatible structural properties; no source-specific laminate parameters."
+    },
+    {
+      "id": "ABAQUS_2025_COUPLING",
+      "title": "Coupling Constraints",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAECSTRefMap/simacst-c-coupling.htm",
+      "actual_read": "2026-10-04: Surface-Based Coupling; region of influence; Kinematic Coupling; Distributing Coupling",
+      "supports": "Full translational/rotational kinematic coupling imposes rigid motion of the cloud, distributing constraints have different deformation and force-transfer scope."
+    },
+    {
+      "title": "Mdb auxiliary model interface",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKERRefMap/simaker-c-mdbpyc.htm",
+      "id": "ABAQUS_2025_API_MDB",
+      "actual_read": "2026-10-04: named API operation key section in official 2025 reference",
+      "supports": "Read-only model-copy access and exact mesh-node label extraction; does not establish physical validity."
+    },
+    {
+      "title": "MeshElement.getNodes and internal indices versus labels",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKERRefMap/simaker-c-meshelementpyc.htm",
+      "id": "ABAQUS_2025_API_MESHELEMENT.GETNODES",
+      "actual_read": "2026-10-04: named API operation key section in official 2025 reference",
+      "supports": "Read-only model-copy access and exact mesh-node label extraction; does not establish physical validity."
+    },
+    {
+      "title": "Face.getNodes associated mesh nodes",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKERRefMap/simaker-c-facepyc.htm",
+      "id": "ABAQUS_2025_API_FACE.GETNODES",
+      "actual_read": "2026-10-04: named API operation key section in official 2025 reference",
+      "supports": "Read-only model-copy access and exact mesh-node label extraction; does not establish physical validity."
+    }
+  ],
+  "interpretation": [
+    "Supplied active RNA outer meshes are present, not replaced by a statement about a historical display-body export.",
+    "Assigned sections are beam mass-carrier sections, not verified shell thickness/laminates.",
+    "Mass-carrier densities are artificial effective input densities, not physical composite-shell densities.",
+    "Whole-blade six-DOF kinematic couplings suppress the relative elastic deformation that a flexible blade model must retain.",
+    "RNA_REAL_EXPLICIT has a rotation step and VelocityBC; settings alone do not establish a solved and validated operating model.",
+    "No detailed flexible/rotating/aeroelastic paired calculation has been accepted. D08 stays OPEN."
+  ],
+  "source_geometry": {
+    "main_STEP_file": "DTU158_TOWER_RNA_FULL_ASSEMBLY.step",
+    "sha256": "b401b3d37ba21ff7c6aceac17b96f8635e73c3ca62853f82d62d5dc4e8e40309",
+    "declared_STEP_unit": "MILLIMETRE",
+    "limitation": "STEP unit declaration does not by itself establish the CAE structural unit system or individual solid identity."
+  },
+  "privacy": "Original research/model summary only; no thesis, teacher transcript, or restricted publication extracts.",
+  "actual_mesh_settings_export": {
+    "public_report": "../../results/source-RNA/original_review_export_report_final.json",
+    "report_sha256": "364850e4361e6e5a42658eb562e0f325caad6410c9a6f8ad932b39ea69b8dfa7",
+    "nodes": 4641,
+    "elements": 7209,
+    "element_types": {
+      "S3": 5364,
+      "S4R": 1845
+    },
+    "models_mesh_equal": {
+      "nodes_csv": true,
+      "elements_csv": true,
+      "sections_csv": true,
+      "coupling_region_nodes_csv": true
+    },
+    "RP": [
+      0.0,
+      160.0,
+      0.0
+    ],
+    "unit_scope": "CAE has no built-in units. CSV X_m/Y_m/Z_m follow the source engineering SI convention with Y vertical. RNA RP at (0,160,0) and the 158-unit tower are consistent with this convention, but the CSV header alone does not prove physical units. No scale conversion was applied; STEP MILLIMETRE metadata is a separate source and is not used to infer CAE units.",
+    "configuration_observations": [
+      "All nine RNA outer instances exist and are active, with 4641 mesh nodes and 7209 S3/S4R elements. Primary and explicit model geometry and coupling-region CSV hashes match.",
+      "Blade and spinner whole-face kinematic couplings reference SET_RNA_RP at (0,160,0).",
+      "Three nacelle couplings use SET_TOWER_TOP as controlPoint; this source region contains one SSEG04 top face and 48 face nodes, no reference point. This observation requires model validation; it is not silently repaired.",
+      "RNA_REAL_EXPLICIT has VelocityBC in RNA_ROTATION_EXPLICIT: v1/v2/v3/vr1/vr2=0, vr3=1.0. Presence of an input boundary condition is not proof of a completed rotation-response computation.",
+      "The source S3/S4R outer faces carry BeamSection assignments with r=0.01 circular mass-carrier profiles and large artificial densities; no physical shell thickness/layup or structural validity is inferred."
+    ],
+    "no_solver_submit": true,
+    "no_writeInput": true,
+    "no_CAE_save": true
+  }
+}

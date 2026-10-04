@@ -1,0 +1,46 @@
+{
+  "outputs": [
+    {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\figure2-1-word-zh.png",
+      "sha256": "62318e809516fd5b2ce9d4e731fc8b1c8e601a6387fcf9ded5d67cff3f74d22d"
+    },
+    {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\figure2-1-word-zh.pdf",
+      "sha256": "39301fb82f8b20f41d2472011bac84ce13a642a10e1afa8dfa763258e85da795"
+    }
+  ],
+  "source_INP": {
+    "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+    "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1"
+  },
+  "language": "zh-CN; XYZ, units and element codes retained",
+  "font": {
+    "name": "SimHei",
+    "local_path": "C:\\Windows\\Fonts\\simhei.ttf",
+    "glyph_coverage_checked": true,
+    "checked_character_count": 169,
+    "missing_glyphs": [],
+    "font_file_not_redistributed": true
+  },
+  "minimum_text_at_5_5_in_word_points": 7.128,
+  "dimensions_px": [
+    3000,
+    2220
+  ],
+  "same_actual_nodes_elements_and_projection_matrices": true,
+  "original_English_figures_unchanged": true,
+  "original_SHA256": {
+    "D:\\Codex-research-validation\\T026\\figures\\figure2-1-input-geometry.pdf": "9cab1c7f8be02eab9e9968188a0e0903da2ebfdcabd28d3f142b5998c46ca058",
+    "D:\\Codex-research-validation\\T026\\figures\\figure2-1-input-geometry.png": "518ca4ff872314169903030441f89e1ec83e727a64929728867e488cc468b596",
+    "D:\\Codex-research-validation\\T026\\figures\\figure2-1-input-geometry-300dpi.png": "30851def6c7851e4bd7dd810c02f45251505c416ce59f98430e161b5cbd05c36",
+    "D:\\Codex-research-validation\\T026\\figures\\figure2-1-word.png": "3268ac3e109755787ea6447a1bb110fc0c57a7b8073ce5355223f1daf86eae29"
+  },
+  "visual_QA": "PASS: full enlarged view_image inspection; all title/panel/notes Chinese, XYZ/units/codes preserved; no clipping or overlap",
+  "no_new_solver": true,
+  "PDF_extracts_Chinese_title": true,
+  "PDF_pages": 1,
+  "PDF_fonts": [
+    "/Helvetica",
+    "/AAAAAA+SimHei"
+  ]
+}

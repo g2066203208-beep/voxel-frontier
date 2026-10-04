@@ -16339,47 +16339,53 @@
   "frequency_and_flexibility_budget_pass": true,
   "all_three_force_moment_balance_pass": true,
   "all_three_gravity_damage_zero": true,
-  "coverage_conclusion": "30mode coverage reported for X/Y/Z using all30 EM/PF; incomplete residual translational mass exists. No assertion of complete modal coverage or convergence of local stress without response comparison.",
+  "coverage_conclusion": "30mode effective-mass fractions use DAT total mass. All-mode sum excludes mass at kinematically restrained DOFs, so complements of total-mass ratios cannot be assigned wholly to missing high modes. No assertion of complete modal coverage or convergence of local stress without response comparison.",
   "legacy_control_Elsets": "Three inherited control-Elset entries are legal and not used by the chapter2 verification steps; preserve the source input/card identity rather than silently deleting legacy sets.",
   "scientific_figures": {
     "mesh_convergence": {
       "pdf": {
         "path": "D:\\Codex-research-validation\\T026\\figures\\mesh-convergence.pdf",
-        "sha256": "f0aae463dc6f04e48a350581f4ae696f43d64b30f371cb4edca8c229584be099"
+        "sha256": "69a5081d8533a5e61dd7950e1cd4579f504390ff5ac053f957f8a9d6dc3b95f7"
       },
       "svg": {
         "path": "D:\\Codex-research-validation\\T026\\figures\\mesh-convergence.svg",
-        "sha256": "1b62bd2062b8f7dabdbcc0353c643bd01a9e908bc9cbf37db0e6535853368969"
+        "sha256": "d5a5f4e7a78fec5867c61038bb8a1fcf0a5077433a7c65eacfaccc99f84a7ef2"
       },
       "png": {
         "path": "D:\\Codex-research-validation\\T026\\figures\\mesh-convergence.png",
-        "sha256": "5acab6d024c618b0a95ed2b22d2ffc66f584f15fe2cc44b32dbefc9b91ee7b74"
+        "sha256": "bf529bdfc20ba909c3decbc2627520d1e3893bac1a17278923f64ae0b9f31aa1"
       }
     },
     "modal_shapes": {
       "pdf": {
         "path": "D:\\Codex-research-validation\\T026\\figures\\modal-shapes.pdf",
-        "sha256": "cea2b861d6216ba46c13dfaeaf9815123839e36b526cb6022f90b8aa9165092c"
+        "sha256": "ec021678888cf30ab66376374a2abbac0511eaf897cb56295881eee09f422779"
       },
       "svg": {
         "path": "D:\\Codex-research-validation\\T026\\figures\\modal-shapes.svg",
-        "sha256": "5fc14364289a657d7df2b3420ace7a9e05571fabb136988f858c26b3ec0f4f7b"
+        "sha256": "629c9f19bee37368654a1bc61227236922649f163ef09a8f89160d29802c8e2a"
       },
       "png": {
         "path": "D:\\Codex-research-validation\\T026\\figures\\modal-shapes.png",
-        "sha256": "6edea35d916531f2184ae74df8e273fea0ddc901950e89121df7a558a59ee36e"
+        "sha256": "31e19a30cb5c6e436619904b928fee6faae307ff6ed062910c3c1638b868c8f0"
       }
     },
     "visual_QA": {
-      "status": "PASS",
-      "inspection": "Both final Poppler170dpi PNGs viewed entirely through view_image; readable axes, curves, legends and footer, no text/plot cropping or overlap. Earlier axis-label rotation defect corrected and both images re-rendered and re-inspected.",
-      "figures": [
-        "mesh-convergence.png",
-        "modal-shapes.png"
+      "status": "PASS; explicit visual inspection of both final PNGs",
+      "checks": [
+        "all four panels and labels visible without overlap",
+        "drawing labels >=12.8pt; at 5.5in Word width >=7.04pt",
+        "actual data and normalization unchanged"
       ],
-      "date": "2026-10-04"
+      "inspection_date": "2026-10-04"
     },
     "mode_line_definition": "Actual ODB CSEG/SSEG node arithmetic-average U at each initialY rounded4dec; relevant U1/U3 normalized by per-curve maxabs and phase aligned by top sign; not a finite element cloud."
   },
-  "scientific_writing_note": "work\\chapter2-completion\\tower-verification-writing-note.md"
+  "scientific_writing_note": "work\\chapter2-completion\\tower-verification-writing-note.md",
+  "modal_fraction_constraint_boundary": {
+    "official_url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEANLRefMap/simaanl-c-freqextraction.htm",
+    "section": "Modal Effective Mass",
+    "ratio_complement_is_not_pure_truncation_mass": true,
+    "free_node_mass_is_only_diagnostic": "Independently integrated free-node nodal mass uses fixed supports, not a rigorous reduced-coordinate excited-mass derivation for every constrained DOF."
+  }
 }

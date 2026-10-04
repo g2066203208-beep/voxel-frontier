@@ -1,0 +1,52 @@
+{
+  "scope": "Chinese labels only, frozen scientific results unchanged",
+  "font": "SimHei; local licensed Windows system font; embedded PDF",
+  "mesh_convergence": {
+    "pdf": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\mesh-convergence-zh.pdf",
+      "sha256": "3ea8d25f83be22b0c57c6d7705510ddd187457bbe799de953444002e59a86def"
+    },
+    "svg": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\mesh-convergence-zh.svg",
+      "sha256": "6af4df13968ca120fed320a920e0e7423766d5cee0bb40d77708db0de4504c5e"
+    },
+    "png": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\mesh-convergence-zh.png",
+      "sha256": "d729bc81f795d400480fcffc613c1649a2e35ff57f1837b1934716468ec4e241"
+    }
+  },
+  "modal_shapes": {
+    "pdf": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\modal-shapes-zh.pdf",
+      "sha256": "59b6ac5842487ae85892f3779a41260b12c042625a9eb4f6de86ec36d2132455"
+    },
+    "svg": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\modal-shapes-zh.svg",
+      "sha256": "53c2df29878ccc6997d91f0fa042019b85a50665d5fbe96a5516d225efd3af72"
+    },
+    "png": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\modal-shapes-zh.png",
+      "sha256": "64d0dc330a936c495d757ef79a87f9b074b13b445e38e21fa153325978ace3cf"
+    }
+  },
+  "PT": {
+    "pdf": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\pt-verification-zh.pdf",
+      "sha256": "8a4fb3ead31a33ba40851808ea69ad5dd7c569b685115786ceb8cb26ecf72222"
+    },
+    "svg": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\pt-verification-zh.svg",
+      "sha256": "f7dfd861c01fa254c9303ae0ed028e4ef79b29db8a72568be366478ab4e41d50"
+    },
+    "png": {
+      "path": "D:\\Codex-research-validation\\T026\\figures\\pt-verification-zh.png",
+      "sha256": "7adce91286ec5477f0af8d54307b37314e0ba693ee0da207e8e12c47b40b5e9c"
+    }
+  },
+  "source_result_sha256": "731d1154defed46080505b490010def7396ba9a96c0760344cdb29c995bbffb7",
+  "minimum_print_font_points_at_5_5in": {
+    "tower": 7.04,
+    "PT": 7.025806451612903
+  },
+  "visual_QA": "PASS: all3 PNGs explicitly viewed; Chinese labels and symbols visible, legends separate, numeric data unchanged"
+}

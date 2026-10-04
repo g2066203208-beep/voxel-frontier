@@ -1,0 +1,54 @@
+{
+  "status": "READONLY_EXPORT_COMPLETE",
+  "report": "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\original_review_export_report_final.json",
+  "report_sha256": "364850e4361e6e5a42658eb562e0f325caad6410c9a6f8ad932b39ea69b8dfa7",
+  "source_copy_sha256_before_after": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+  "original_source_sha256_after": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+  "nodes": 4641,
+  "elements": 7209,
+  "element_types": {
+    "S3": 5364,
+    "S4R": 1845
+  },
+  "models_mesh_equal": {
+    "nodes_csv": true,
+    "elements_csv": true,
+    "sections_csv": true,
+    "coupling_region_nodes_csv": true
+  },
+  "RP": [
+    0.0,
+    160.0,
+    0.0
+  ],
+  "vr3_in_explicit_step": 1.0,
+  "physical_validation": "NOT_ESTABLISHED_BY_EXPORT",
+  "csv": {
+    "nodes_csv": {
+      "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_nodes.csv",
+      "sha256": "da9ccacad3dea25c492ef39fadbf9903760484038d9f57c36029fd7e2a7635a7",
+      "rows": 4641,
+      "bytes": 383522
+    },
+    "elements_csv": {
+      "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_elements.csv",
+      "sha256": "bd0d935815b434445759bb160b007a925cfa42c0f052c9fe3b2885e7c594a610",
+      "rows": 7209,
+      "bytes": 341385
+    },
+    "sections_csv": {
+      "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_section_assignments.csv",
+      "sha256": "963fbbb1bbb1cf8d1b5949f0c668a4ceeea7b89ec13281a1b535842725e2d25c",
+      "rows": 3,
+      "bytes": 553
+    },
+    "coupling_region_nodes_csv": {
+      "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_coupling_region_nodes.csv",
+      "sha256": "c87d483d27527d1108bb5316c0e309e45f0affa361cb553d269c3cb031367102",
+      "rows": 4689,
+      "bytes": 247173
+    }
+  },
+  "no_submit_writeInput_save": true,
+  "unit_scope": "CAE has no built-in units. CSV X_m/Y_m/Z_m follow the source engineering SI convention with Y vertical. RNA RP at (0,160,0) and the 158-unit tower are consistent with this convention, but the CSV header alone does not prove physical units. No scale conversion was applied; STEP MILLIMETRE metadata is a separate source and is not used to infer CAE units."
+}

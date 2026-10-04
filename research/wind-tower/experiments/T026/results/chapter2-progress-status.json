@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-04",
+  "state": "in-progress",
+  "chapter_scientifically_accepted": false,
+  "chapter_complete": false,
+  "D08": "OPEN",
+  "runs": {
+    "registered_attempts": 38,
+    "solver_successes": 31,
+    "failures_retained": 7
+  },
+  "method_ledger": {
+    "methods": 18,
+    "sources": 20,
+    "RNA_supplementary_source_records": 8
+  },
+  "scientific_figures": {
+    "new_figures_localized_to_Chinese": 8,
+    "source_solver_results_unchanged_by_label_edits": true,
+    "current_geometry_figure": "rigid mass-carrier diagnostic; must not represent supplied detailed RNA as main assembly",
+    "supplied_RNA_main_figure": "actual RNA audit figure available; combined chapter assembly figure and Word integration still pending",
+    "supplied_RNA_mesh_audit_figure": "actual node/element CSV orthographic views rendered and visually checked; not a deformation/stress result"
+  },
+  "private_manuscript": {
+    "status": "V4 interim draft, not a final accepted chapter",
+    "standalone_render_pages_inspected": 29,
+    "equation_2_19": "explicit square-root grouping corrected in builder, Word regeneration pending",
+    "public_upload": false
+  },
+  "source_RNA": {
+    "provided_outer_geometry_exists": true,
+    "current_outer_instances": "3 blades, 3 nacelle segments, 3 spinner segments; active",
+    "outer_elements": "S3/S4R",
+    "assigned_section_type": "BeamSection",
+    "input_consistency_export": "failed, not a solved flexible structure",
+    "whole_blade_six_DOF_kinematic_couplings_present": true,
+    "explicit_rotation_step_and_VelocityBC_present": true,
+    "flexible_blade_material_thickness_layup_acceptance": "OPEN",
+    "source_model_unchanged": true,
+    "actual_export": {
+      "nodes": 4641,
+      "elements": 7209,
+      "S3": 5364,
+      "S4R": 1845,
+      "models_csv_equal": true,
+      "source_and_copy_unchanged": true
+    },
+    "reference_point": [
+      0,
+      160,
+      0
+    ],
+    "actual_explicit_vr3": 1.0,
+    "nacelle_control_region": "SET_TOWER_TOP contains 48 face nodes and no RP; configuration acceptance OPEN",
+    "official_shell_data": "20 fixed-version official files actually read, full 11-region laminate tables and 34849 S8R reference mesh found; source/user geometry registration not yet verified"
+  },
+  "completed_scope": "scoped material/PT/damping/tower and fixed rigid RNA representation numerical checks only",
+  "not_completed": [
+    "source RNA valid deformable structural properties and interfaces",
+    "same-source flexible versus fixed rigid RNA controlled comparison",
+    "rotating and aeroelastic production validation",
+    "3D low residual tensile target discrepancy closure",
+    "physical material, interface stiffness and tower damping calibration",
+    "later chapter historical wind/fatigue/optimization recalculation"
+  ],
+  "evidence_rule": "Every research step records actually read literature, source parameters, applicability, assumptions, preregistered criteria and actual execution evidence; unsupported items remain OPEN/HOLD.",
+  "privacy": "No thesis/teacher Word, discussion transcript or restricted full-text extracts uploaded."
+}

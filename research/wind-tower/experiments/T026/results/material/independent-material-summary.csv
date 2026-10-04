@@ -1,4 +1,4 @@
-run_id,material,direction,mu,curve_max_abs_error_over_peak,curve_RMSE_over_peak,unloading_same_sign_relative_slope_error,max_interpolated_node_relative_error,damage_abs_error,registered_root_all_checks,stress_zero_crossing_in_unload
+﻿run_id,material,direction,mu,curve_max_abs_error_over_peak,curve_RMSE_over_peak,unloading_same_sign_relative_slope_error,max_interpolated_node_relative_error,damage_abs_error,registered_root_all_checks,stress_zero_crossing_in_unload
 RUN-T026-019,C65,compression,0,0.0004210878213571317,0.00022330708300938065,2.4441844104217125e-09,0.007228865797234585,0.00042091130111288066,True,False
 RUN-T026-001,C65,compression,1e-5,0.001139770560791873,0.0006221631011313902,1.0138845318863332e-09,0.008341025796557267,0.0006630253681905174,True,False
 RUN-T026-004,C65,tension,0,0.0013771776992641707,0.0008854170167033677,3.009606230897077e-08,0.1014046547290599,0.0013582789813644247,True,True

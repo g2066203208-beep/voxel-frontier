@@ -1,0 +1,14 @@
+{
+  "scope": "Independent CSV connectivity integrity only; does not verify physical section settings or element quality.",
+  "nodes": 4641,
+  "elements": 7209,
+  "element_type_counts": {
+    "S3": 5364,
+    "S4R": 1845
+  },
+  "duplicate_element_nodes": [],
+  "missing_connectivity_nodes": [],
+  "unused_mesh_nodes": 0,
+  "passes": true,
+  "units": "CAE has no built-in units. CSV X_m/Y_m/Z_m follow source engineering SI convention; scale is consistent with the source tower height, but file column naming alone does not prove units."
+}

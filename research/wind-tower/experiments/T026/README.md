@@ -4,6 +4,12 @@
 
 本目录公开实际关键词模型、事先登记的误差预算、真实求解日志、可检查的CSV/JSON与科学图。38次尝试中31次求解成功、7次失败被保留。成功终止与验证通过分别记录。正文和老师原文不在此目录。
 
+[逐步骤文献依据](sources/method-source-traceability.md)列出18项方法与20个来源，分别说明实际阅读位置、文献可支持的论点、当前实现和原研究的差别、自行推导及未标定参数。[第二章修订进度](results/chapter2-progress-status.json)记录中文图表核对范围和D08未关闭状态，不公开论文正文。刚体RNA等价不等于详细柔性整机对照；第二章目前仍在修订。
+
+[每一步依据与验收规则](../../governance/evidence-per-step.md)作为后续研究的持续要求；[RNA近期原始文献审查](sources/RNA-D08/public-review.md)及[来源/实际阅读位置](sources/RNA-D08/sources-metadata.json)说明原RNA的优先使用及刚柔/旋转/运行对照门槛。[原模型结构身份](sources/RNA-D08/source-RNA-structural-audit.json)保留活动外形与不相容截面、整面刚性约束和旋转设置的具体证据。诊断用质量骨架图不等于用户提供的完整RNA主图。
+
+[实际源RNA节点/连接和读取报告](results/source-RNA/)与[原网格中文图](figures/source-rna-mesh-zh.png)提供可检查的用户模型外形。[官方完整复合壳参数来源库存](sources/RNA-D08/parameter-source-inventory.json)固定20个原文件版本、哈希、读取范围与适用性；不是一份已执行的壳模型修复结果。
+
 `run-manifest.json`的每项`public_input`给出本目录内可下载的自包含INP（无外部*Include），`input_hash`可验证身份。`results`报告实施关系、网格及惯量等价；`figures`使用真实输入/ODB数据生成，截面平均模态图并非求解器云图。原大ODB未复制到普通Git；清单保留SHA以便与本地原结果核对。
 
 ## 复现一项实际作业
