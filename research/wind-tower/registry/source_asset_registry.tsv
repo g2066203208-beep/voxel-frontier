@@ -1,9 +1,9 @@
 source_asset_id	source_id	asset	location	format	access_status	archive_status	use	status	notes
-ASSET001	REF008	He 2024 Table 3-1	original thesis page unknown	page image	user/library copy	pending	prototype geometry	blocked	Current library copy cannot be page-read or materialized
-ASSET002	REF008	He 2024 Table 3-2	original thesis page unknown	page image	user/library copy	pending	prototype geometry	blocked	Need original page image
-ASSET003	REF008	He 2024 Table 3-3	original thesis page unknown	page image	user/library copy	pending	steel radius/diameter conflict	blocked	Highest-priority source asset
-ASSET004	REF008	He 2024 Figure 3-4	original thesis page unknown	figure/page image	user/library copy	pending	geometry continuity	blocked	Need original figure
-ASSET005	REF008	He 2024 Figure 3-5	original thesis page unknown	figure/page image	user/library copy	pending	geometry continuity	blocked	Need original figure
+ASSET001	REF008	He 2024 Table 3-1	PDF p33/body p22	original PDF page	user-provided PDF	indexed	DTU10MW prototype parameters	available	Source SHA256 85fb7d2e...
+ASSET002	REF008	He 2024 Table 3-2	PDF p34/body p23	original PDF page	user-provided PDF	indexed	concrete tower geometry	available	112m row: D=4.97m, t=500mm
+ASSET003	REF008	He 2024 Table 3-3	PDF p35/body p24	original PDF page	user-provided PDF	indexed	steel radius/diameter conflict	available-conflict	Original header explicitly says 半径(m)
+ASSET004	REF008	He 2024 Figure 3-4	PDF p35/body p24	original figure/page	user-provided PDF	indexed	geometry continuity	available	Shows upper steel tower thinner than lower concrete tower
+ASSET005	REF008	He 2024 Figure 3-5	PDF p35/body p24	original figure/page	user-provided PDF	indexed	FE geometry/interface	available	Shows connection flange, prestressing tendons, rebar cage
 ASSET006	REF031	Xu et al. 2026 Acta paper Figure 1 / Table 1	published paper	publisher/original PDF	public-page; PDF link on journal site	pending	lineage comparison	secondary-only	Do not substitute for He 2024
 ASSET007	HIST_GIT	Historical CAE LFS pointer	commit cb4dd846... / model path	Git LFS pointer	Git history	archived-history	Abaqus baseline provenance	available	LFS oid sha256:9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4
 ASSET008	HIST_GIT	Historical manifest.json	commit cb4dd846...	JSON	Git history	archived-history	model metadata/materials/steps	available	Preserves model statistics and first/current file hashes
