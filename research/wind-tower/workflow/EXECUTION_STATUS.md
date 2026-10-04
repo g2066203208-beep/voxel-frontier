@@ -112,3 +112,15 @@ C. 当前正式OpenFAST/ROSCO模型文件夹。
 - 原始结果追索及正式求解专项暂缓，不因这些资料尚缺而停止流程审查。
 
 本轮未修改或上传论文原Word，未提交正式求解，未将优化、创新或任何生产门禁改为PASS。以后恢复生产计算时仍按既有G0及MASTER入口条件执行；T020/T022等研究状态保持其原有记录。
+
+
+## 2026-10-04 T022 文献下载与Benchmark专项第一轮
+
+- 国际benchmark模型指纹：30项；
+- model reuse network：已建立；
+- 阶段结论：尚未发现跨团队统一复用、类似DTU/NREL reference turbine那样的单一混塔几何benchmark；存在多个团队family；
+- 推荐baseline策略：DTU10MW公开reference turbine + He2024透明158m PCSH原型 + 多国际family交叉验证；
+- GitHub OA下载源：34项；
+- 真正PDF缓存成功：22项；
+- 新增成功全文：Wu2022 160m post-tensioned hybrid tower、Wang2025 hybrid-tower technology review；
+- 下载失败/付费核心文献已重建为干净的`NEED_USER_DOWNLOAD.md`队列。
