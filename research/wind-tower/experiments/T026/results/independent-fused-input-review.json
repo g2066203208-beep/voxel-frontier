@@ -1,0 +1,2668 @@
+{
+  "review_id": "T026-RUN032-independent-fused-input-review",
+  "time": "2026-10-04T20:14:44.291718+08:00",
+  "scope": "Read-only text parsing, independent numpy integration and source comparison; no Abaqus API or solver invocation, no Word/input modification",
+  "baseline_id": "DTU158-T026-RECONSTRUCTED-B31-G1",
+  "run_id": "RUN-T026-032",
+  "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+  "input_sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+  "matches_ledger_hash": true,
+  "source_inputs": {
+    "tower": {
+      "path": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.inp",
+      "sha256": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
+      "matches_ledger_hash": true
+    },
+    "RNA": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\input\\T026_RECOVERED_RNA_CANDIDATE.inp",
+      "sha256": "f61eac3dd3f7c484ac00d43273e86dc5fafc4cc098c99ab88a104f32be994fac",
+      "matches_ledger_hash": true
+    }
+  },
+  "integration_method": {
+    "solid": "8node trilinear C3D8 geometry, 2x2x2 Gauss detJ integral times material density; first moment integrated with same rule",
+    "Jacobian_extra_check": "All 27 (-1,0,1)^3 samples including corners/center; discrete sample positivity, not a formal all-domain proof",
+    "truss": "rho*A*Euclidean endpoint length; actual material/section assignments",
+    "B31": "rho*pi*r^2*length; centers at endpoints midpoint; finite circular cylinder center inertia plus parallel axis; line inertia separately",
+    "NSM": "Actual three TOTAL MASS definitions, additive. Default MASS PROPORTIONAL preserves each region CG; no duplicate candidate transfer."
+  },
+  "counts": {
+    "parts": 68,
+    "instances": 68,
+    "solid_concrete_parts": 31,
+    "solid_steel_parts": 4,
+    "mass_bearing_element_types": {
+      "C3D8R": 2976,
+      "T3D2": 5476,
+      "C3D8I": 384,
+      "B31": 28
+    },
+    "material_element_counts": {
+      "C70": 192,
+      "C65": 2784,
+      "S345": 5824,
+      "STRAND_1860": 36,
+      "MAT_RNA_HUB_EQ": 12,
+      "MAT_RNA_BLD_Z5": 3,
+      "MAT_RNA_BLD_Z4": 3,
+      "MAT_RNA_BLD_Z3": 3,
+      "MAT_RNA_BLD_Z2": 3,
+      "MAT_RNA_BLD_Z1": 3,
+      "MAT_RNA_NAC_EQ": 1
+    },
+    "coverage_errors": []
+  },
+  "mesh_geometry": {
+    "minimum_2x2x2_detJ_m3": 0.007122162508812697,
+    "minimum_extra27sample_detJ_m3": 0.007080596015356865,
+    "nonpositive_elements": [],
+    "all_requested_Gauss_determinants_positive": true,
+    "all_section_coverage_exactly_once": true
+  },
+  "mass_ledger": {
+    "structural_mass_kg": 2557861.907739594,
+    "source_NSM_kg": 39800.22,
+    "total_mass_kg": 2597662.1277395943,
+    "total_CG_m": [
+      2.252277546462174e-17,
+      86.87286035883203,
+      -0.16169349972347402
+    ],
+    "RNA_mass_kg": 673998.4931380383,
+    "tower_mass_including_source_NSM_kg": 1923663.634601556,
+    "material_subtotals_kg": {
+      "C70": 120916.79575281405,
+      "C65": 1494494.9225733406,
+      "S345": 264020.528275401,
+      "STRAND_1860": 4431.168,
+      "MAT_RNA_HUB_EQ": 105519.77423865834,
+      "MAT_RNA_BLD_Z5": 4395.135518741931,
+      "MAT_RNA_BLD_Z4": 11958.888957172718,
+      "MAT_RNA_BLD_Z3": 20664.189894774125,
+      "MAT_RNA_BLD_Z2": 31375.68921182912,
+      "MAT_RNA_BLD_Z1": 54047.81431401687,
+      "MAT_RNA_NAC_EQ": 446037.00100284524
+    },
+    "type_subtotals_kg": {
+      "C3D8R": 1615411.7183261546,
+      "T3D2": 79779.86563812957,
+      "C3D8I": 188671.83063727143,
+      "B31": 673998.4931380383
+    },
+    "source_NSM_assignments": [
+      {
+        "elset": "SET_CSEG_ALL_ACTIVE",
+        "units": "TOTAL MASS",
+        "distribution": "MASS PROPORTIONAL",
+        "mass_kg": 4622.69,
+        "line": 33165,
+        "header": "*Nonstructural Mass, elset=SET_CSEG_ALL_ACTIVE, units=TOTAL MASS",
+        "element_count": 2976,
+        "underlying_structural_mass_kg": 1615411.7183261546,
+        "CG_m": [
+          1.337151323223586e-17,
+          53.13714116955419,
+          2.6743026464471722e-18
+        ],
+        "valid_region": true,
+        "additive_assignment": true
+      },
+      {
+        "elset": "SET_CSEG_ALL_ACTIVE",
+        "units": "TOTAL MASS",
+        "distribution": "MASS PROPORTIONAL",
+        "mass_kg": 33004.8,
+        "line": 33167,
+        "header": "*Nonstructural Mass, elset=SET_CSEG_ALL_ACTIVE, units=TOTAL MASS",
+        "element_count": 2976,
+        "underlying_structural_mass_kg": 1615411.7183261546,
+        "CG_m": [
+          1.337151323223586e-17,
+          53.13714116955419,
+          2.6743026464471722e-18
+        ],
+        "valid_region": true,
+        "additive_assignment": true
+      },
+      {
+        "elset": "SET_SSEG_ALL_ACTIVE",
+        "units": "TOTAL MASS",
+        "distribution": "MASS PROPORTIONAL",
+        "mass_kg": 2172.73,
+        "line": 33169,
+        "header": "*Nonstructural Mass, elset=SET_SSEG_ALL_ACTIVE, units=TOTAL MASS",
+        "element_count": 384,
+        "underlying_structural_mass_kg": 188671.83063727143,
+        "CG_m": [
+          -9.399997140361973e-17,
+          134.19789362898777,
+          4.278203826703206e-17
+        ],
+        "valid_region": true,
+        "additive_assignment": true
+      }
+    ],
+    "part_instance_subtotals": [
+      {
+        "instance": "CSEG_01-1",
+        "part": "CSEG_01",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 61071.40016847772,
+        "volume_m3": 25.446416736865697,
+        "CG_m": [
+          9.680006590999027e-17,
+          1.813910508336857,
+          -1.62884726290849e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.032198985805031666,
+        "translation_rotation_data": []
+      },
+      {
+        "instance": "CSEG_02-1",
+        "part": "CSEG_02",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 59845.39558433635,
+        "volume_m3": 24.935581493473457,
+        "CG_m": [
+          0.0,
+          5.453786170189891,
+          2.6310507050211573e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.031533861685394175,
+        "translation_rotation_data": [
+          [
+            0.0,
+            3.64,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_03-1",
+        "part": "CSEG_03",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 58619.36841726774,
+        "volume_m3": 24.424736840528226,
+        "CG_m": [
+          -6.20610372530056e-17,
+          9.093655517694385,
+          -1.6484963020329614e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.030868672958810073,
+        "translation_rotation_data": [
+          [
+            0.0,
+            7.28,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_04-1",
+        "part": "CSEG_04",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 57677.52003997506,
+        "volume_m3": 24.032300016656265,
+        "CG_m": [
+          3.9421541579049206e-17,
+          12.736523136397373,
+          2.192823250334612e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.03046736835571148,
+        "translation_rotation_data": [
+          [
+            0.0,
+            10.92,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_05-1",
+        "part": "CSEG_05",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 57207.37678377118,
+        "volume_m3": 23.83640699323797,
+        "CG_m": [
+          1.5898206715727916e-17,
+          16.378498294085535,
+          7.70069387793071e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.0302695614503743,
+        "translation_rotation_data": [
+          [
+            0.0,
+            14.56,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_06-1",
+        "part": "CSEG_06",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 57055.850591971466,
+        "volume_m3": 23.77327107998811,
+        "CG_m": [
+          -3.1880856821400414e-17,
+          20.01986664025153,
+          1.2254204340725785e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.03020591037882888,
+        "translation_rotation_data": [
+          [
+            0.0,
+            18.2,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_07-1",
+        "part": "CSEG_07",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 57156.43667551027,
+        "volume_m3": 23.815181948129286,
+        "CG_m": [
+          6.364950334019811e-17,
+          23.66121542483939,
+          -2.734939596649138e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.030209160760011552,
+        "translation_rotation_data": [
+          [
+            0.0,
+            21.84,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_08-1",
+        "part": "CSEG_08",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 57048.66704266929,
+        "volume_m3": 23.770277934445527,
+        "CG_m": [
+          7.97121781208907e-18,
+          27.297649859705643,
+          -3.2582352806914075e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.03004766090046909,
+        "translation_rotation_data": [
+          [
+            0.0,
+            25.48,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_09-1",
+        "part": "CSEG_09",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 56584.11910920368,
+        "volume_m3": 23.576716295501527,
+        "CG_m": [
+          -4.420163235286161e-17,
+          30.937388798616112,
+          -1.8082485962534296e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.02975945213063435,
+        "translation_rotation_data": [
+          [
+            0.0,
+            29.12,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_10-1",
+        "part": "CSEG_10",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 56285.150554865904,
+        "volume_m3": 23.45214606452744,
+        "CG_m": [
+          -2.4238045722726638e-17,
+          34.579381511107215,
+          3.092875626077097e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.029637293826220552,
+        "translation_rotation_data": [
+          [
+            0.0,
+            32.76,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_11-1",
+        "part": "CSEG_11",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 56135.98489036488,
+        "volume_m3": 23.389993704318716,
+        "CG_m": [
+          -5.265531167814884e-17,
+          38.2190082730528,
+          1.503714189270212e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.02950012942308933,
+        "translation_rotation_data": [
+          [
+            0.0,
+            36.4,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_12-1",
+        "part": "CSEG_12",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 55719.335513161284,
+        "volume_m3": 23.21638979715055,
+        "CG_m": [
+          2.4484176634467385e-17,
+          41.85648416895707,
+          3.596113443187397e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.02914591939169691,
+        "translation_rotation_data": [
+          [
+            0.0,
+            40.04,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_13-1",
+        "part": "CSEG_13",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 55050.907272667006,
+        "volume_m3": 22.93787803027794,
+        "CG_m": [
+          -2.478146356248599e-17,
+          45.49619262569791,
+          -1.0273981768613983e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.028744941168078793,
+        "translation_rotation_data": [
+          [
+            0.0,
+            43.68,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_14-1",
+        "part": "CSEG_14",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 54524.447548069074,
+        "volume_m3": 22.718519811695437,
+        "CG_m": [
+          0.0,
+          49.13796466592068,
+          1.1832725191784525e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.028486159909121456,
+        "translation_rotation_data": [
+          [
+            0.0,
+            47.32,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_15-1",
+        "part": "CSEG_15",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 54124.20616754794,
+        "volume_m3": 22.55175256981164,
+        "CG_m": [
+          8.401921858747257e-18,
+          52.77756418279061,
+          -1.1132546462840116e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.028209563518380023,
+        "translation_rotation_data": [
+          [
+            0.0,
+            50.96,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_16-1",
+        "part": "CSEG_16",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 53480.07054564468,
+        "volume_m3": 22.283362727351935,
+        "CG_m": [
+          -3.4012472029059273e-17,
+          56.41518059139019,
+          5.4473099734040245e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.027739775931321244,
+        "translation_rotation_data": [
+          [
+            0.0,
+            54.6,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_17-1",
+        "part": "CSEG_17",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 52831.4734563042,
+        "volume_m3": 22.013113940126747,
+        "CG_m": [
+          6.455631290445307e-17,
+          60.05746325263751,
+          8.069539113056634e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.027458834421162336,
+        "translation_rotation_data": [
+          [
+            0.0,
+            58.24,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_18-1",
+        "part": "CSEG_18",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 52609.619382799225,
+        "volume_m3": 21.920674742833015,
+        "CG_m": [
+          -1.7287612274007225e-17,
+          63.70000005000001,
+          -2.6741775236354926e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.027431591849833358,
+        "translation_rotation_data": [
+          [
+            0.0,
+            61.88,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_19-1",
+        "part": "CSEG_19",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 52609.61938279915,
+        "volume_m3": 21.92067474283298,
+        "CG_m": [
+          -1.2965709205505435e-17,
+          67.34000004999996,
+          2.5607275680873237e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.027431591849833285,
+        "translation_rotation_data": [
+          [
+            0.0,
+            65.52,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_20-1",
+        "part": "CSEG_20",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 50961.5593863683,
+        "volume_m3": 21.233983077653477,
+        "CG_m": [
+          -1.3385010869823512e-17,
+          70.95388936253583,
+          -5.604973301738595e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.026067931832215886,
+        "translation_rotation_data": [
+          [
+            0.0,
+            69.16,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_21-1",
+        "part": "CSEG_21",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 48761.968583301066,
+        "volume_m3": 20.31748690970878,
+        "CG_m": [
+          2.331465300204246e-17,
+          74.59265078307777,
+          -8.130985234462308e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.024966904473242464,
+        "translation_rotation_data": [
+          [
+            0.0,
+            72.78,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_22-1",
+        "part": "CSEG_22",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 47114.4036300059,
+        "volume_m3": 19.631001512502447,
+        "CG_m": [
+          4.825990735844184e-18,
+          78.26000005000002,
+          -8.747108208717583e-18
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.024683406722188668,
+        "translation_rotation_data": [
+          [
+            0.0,
+            76.44,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_23-1",
+        "part": "CSEG_23",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 47114.4036300059,
+        "volume_m3": 19.631001512502447,
+        "CG_m": [
+          -1.447797220753255e-17,
+          81.90000005,
+          -1.6227393849276067e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.024683406722188734,
+        "translation_rotation_data": [
+          [
+            0.0,
+            80.08,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_24-1",
+        "part": "CSEG_24",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 47114.40363000591,
+        "volume_m3": 19.631001512502465,
+        "CG_m": [
+          4.825990735844183e-18,
+          85.54000004999997,
+          1.2668225681590981e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.02468340672218871,
+        "translation_rotation_data": [
+          [
+            0.0,
+            83.72,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_25-1",
+        "part": "CSEG_25",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 45029.06695287691,
+        "volume_m3": 18.762111230365388,
+        "CG_m": [
+          2.01979468667365e-17,
+          89.15184948795054,
+          4.860130964808471e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.02279806272180044,
+        "translation_rotation_data": [
+          [
+            0.0,
+            87.36,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_26-1",
+        "part": "CSEG_26",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 40825.557466442086,
+        "volume_m3": 17.01064894435088,
+        "CG_m": [
+          6.683274582500318e-17,
+          92.78858499898251,
+          -1.0094529317318189e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.020650045142522257,
+        "translation_rotation_data": [
+          [
+            0.0,
+            91.0,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_27-1",
+        "part": "CSEG_27",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 38707.378298420605,
+        "volume_m3": 16.128074291008577,
+        "CG_m": [
+          2.3496675356337392e-17,
+          96.46000005000005,
+          9.398670142534957e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.020420611526545486,
+        "translation_rotation_data": [
+          [
+            0.0,
+            94.64,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_28-1",
+        "part": "CSEG_28",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 38707.37829842066,
+        "volume_m3": 16.128074291008613,
+        "CG_m": [
+          2.349667535633736e-17,
+          100.10000005000003,
+          -1.211547323061145e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.020420611526545507,
+        "translation_rotation_data": [
+          [
+            0.0,
+            98.28,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_29-1",
+        "part": "CSEG_29",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 45289.452609210326,
+        "volume_m3": 18.87060525383764,
+        "CG_m": [
+          0.0,
+          103.82762915209052,
+          -7.718950127537537e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.021137916667120064,
+        "translation_rotation_data": [
+          [
+            0.0,
+            101.92,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_30-1",
+        "part": "CSEG_30",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 54508.70438857845,
+        "volume_m3": 22.711960161907722,
+        "CG_m": [
+          2.0856639136232625e-17,
+          107.40930395875714,
+          6.04842534950746e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.027313286345883963,
+        "translation_rotation_data": [
+          [
+            0.0,
+            105.56,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "CSEG_31-1",
+        "part": "CSEG_31",
+        "elements": 96,
+        "nodes": 288,
+        "sections": 1,
+        "mass_kg": 45640.492325112325,
+        "volume_m3": 19.016871802130137,
+        "CG_m": [
+          1.4945522968304602e-17,
+          110.61615377636754,
+          9.683453423214023e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.022865094459129758,
+        "translation_rotation_data": [
+          [
+            0.0,
+            109.2,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_01-1",
+        "part": "RBLONG_01",
+        "elements": 216,
+        "nodes": 432,
+        "sections": 1,
+        "mass_kg": 3011.0962843659445,
+        "volume_m3": 0.38603798517512194,
+        "CG_m": [
+          -7.0792429267308e-18,
+          1.820000050000004,
+          -9.586474796614625e-18
+        ],
+        "length_sum_m": 786.4298886784012,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": []
+      },
+      {
+        "instance": "RBLONG_02-1",
+        "part": "RBLONG_02",
+        "elements": 216,
+        "nodes": 432,
+        "sections": 1,
+        "mass_kg": 3011.0962856480287,
+        "volume_m3": 0.38603798533949085,
+        "CG_m": [
+          -7.079242923716553e-18,
+          5.460000049999994,
+          -6.400815476860384e-17
+        ],
+        "length_sum_m": 786.4298890132521,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            3.64,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_03-1",
+        "part": "RBLONG_03",
+        "elements": 216,
+        "nodes": 432,
+        "sections": 1,
+        "mass_kg": 3011.0962844124247,
+        "volume_m3": 0.38603798518107996,
+        "CG_m": [
+          -5.4274195770765004e-17,
+          9.10000005,
+          3.0824203576331214e-17
+        ],
+        "length_sum_m": 786.4298886905399,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            7.28,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_04-1",
+        "part": "RBLONG_04",
+        "elements": 216,
+        "nodes": 432,
+        "sections": 1,
+        "mass_kg": 3011.0299140739235,
+        "volume_m3": 0.38602947616332434,
+        "CG_m": [
+          -6.607439038812008e-17,
+          12.740000050000011,
+          6.533695299539551e-17
+        ],
+        "length_sum_m": 786.4125542671318,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            10.92,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_05-1",
+        "part": "RBLONG_05",
+        "elements": 192,
+        "nodes": 384,
+        "sections": 1,
+        "mass_kg": 2676.5716743681464,
+        "volume_m3": 0.3431502146625832,
+        "CG_m": [
+          -8.229491860614171e-17,
+          16.380000050000017,
+          6.96852133358458e-18
+        ],
+        "length_sum_m": 699.0596663554857,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            14.56,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_06-1",
+        "part": "RBLONG_06",
+        "elements": 192,
+        "nodes": 384,
+        "sections": 1,
+        "mass_kg": 2676.772627108768,
+        "volume_m3": 0.34317597783445786,
+        "CG_m": [
+          2.389027949956338e-17,
+          20.020000050000004,
+          -4.943960618659644e-17
+        ],
+        "length_sum_m": 699.112150642442,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            18.2,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_07-1",
+        "part": "RBLONG_07",
+        "elements": 192,
+        "nodes": 384,
+        "sections": 1,
+        "mass_kg": 2676.4344368832444,
+        "volume_m3": 0.3431326201132371,
+        "CG_m": [
+          -2.1238487323830426e-17,
+          23.660000050000004,
+          5.823991445831625e-17
+        ],
+        "length_sum_m": 699.023823044685,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            21.84,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_08-1",
+        "part": "RBLONG_08",
+        "elements": 192,
+        "nodes": 384,
+        "sections": 1,
+        "mass_kg": 2676.571674353972,
+        "volume_m3": 0.3431502146607654,
+        "CG_m": [
+          1.3273373968802828e-17,
+          27.300000050000005,
+          1.1481468483014445e-16
+        ],
+        "length_sum_m": 699.0596663517833,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            25.48,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_09-1",
+        "part": "RBLONG_09",
+        "elements": 192,
+        "nodes": 384,
+        "sections": 1,
+        "mass_kg": 2676.5716740306207,
+        "volume_m3": 0.3431502146193093,
+        "CG_m": [
+          -2.3892073146731443e-17,
+          30.94000005000003,
+          1.7753137685418503e-17
+        ],
+        "length_sum_m": 699.0596662673305,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            29.12,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_10-1",
+        "part": "RBLONG_10",
+        "elements": 192,
+        "nodes": 384,
+        "sections": 1,
+        "mass_kg": 2676.5934424266798,
+        "volume_m3": 0.3431530054393183,
+        "CG_m": [
+          -5.309306407893616e-18,
+          34.58000004999993,
+          2.289638388404122e-17
+        ],
+        "length_sum_m": 699.0653516774538,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            32.76,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_11-1",
+        "part": "RBLONG_11",
+        "elements": 192,
+        "nodes": 384,
+        "sections": 1,
+        "mass_kg": 2676.5934418363945,
+        "volume_m3": 0.34315300536363985,
+        "CG_m": [
+          2.3891878840790293e-17,
+          38.220000049999975,
+          -1.625975087776006e-17
+        ],
+        "length_sum_m": 699.0653515232838,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            36.4,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_12-1",
+        "part": "RBLONG_12",
+        "elements": 180,
+        "nodes": 360,
+        "sections": 1,
+        "mass_kg": 2509.285944829618,
+        "volume_m3": 0.3217033262602075,
+        "CG_m": [
+          5.663306226412123e-17,
+          41.860000049999975,
+          8.902009474641557e-17
+        ],
+        "length_sum_m": 655.3684372368622,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            40.04,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_13-1",
+        "part": "RBLONG_13",
+        "elements": 180,
+        "nodes": 360,
+        "sections": 1,
+        "mass_kg": 2509.2859444757737,
+        "volume_m3": 0.3217033262148431,
+        "CG_m": [
+          -3.397983736326437e-17,
+          45.500000050000004,
+          -2.017552843443822e-17
+        ],
+        "length_sum_m": 655.3684371444464,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            43.68,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_14-1",
+        "part": "RBLONG_14",
+        "elements": 180,
+        "nodes": 360,
+        "sections": 1,
+        "mass_kg": 2509.306352024595,
+        "volume_m3": 0.321705942567256,
+        "CG_m": [
+          1.4158150422462562e-17,
+          49.14000005000001,
+          3.6280260457560314e-17
+        ],
+        "length_sum_m": 655.373767132209,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            47.32,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_15-1",
+        "part": "RBLONG_15",
+        "elements": 180,
+        "nodes": 360,
+        "sections": 1,
+        "mass_kg": 2509.306351770636,
+        "volume_m3": 0.3217059425346971,
+        "CG_m": [
+          8.494890254337279e-18,
+          52.78000004999999,
+          -5.309306408960799e-19
+        ],
+        "length_sum_m": 655.3737670658811,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            50.96,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_16-1",
+        "part": "RBLONG_16",
+        "elements": 168,
+        "nodes": 336,
+        "sections": 1,
+        "mass_kg": 2342.000214538017,
+        "volume_m3": 0.3002564377612847,
+        "CG_m": [
+          0.0,
+          56.42000004999999,
+          7.47101334981899e-17
+        ],
+        "length_sum_m": 611.6772079215531,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            54.6,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_17-1",
+        "part": "RBLONG_17",
+        "elements": 168,
+        "nodes": 336,
+        "sections": 1,
+        "mass_kg": 2341.548837265956,
+        "volume_m3": 0.3001985688802506,
+        "CG_m": [
+          -3.641398673143604e-17,
+          60.060000049999935,
+          -9.61556837126983e-17
+        ],
+        "length_sum_m": 611.5593184406808,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            58.24,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_18-1",
+        "part": "RBLONG_18",
+        "elements": 168,
+        "nodes": 336,
+        "sections": 1,
+        "mass_kg": 2341.398358468125,
+        "volume_m3": 0.3001792767266825,
+        "CG_m": [
+          6.069387835609293e-18,
+          63.700000050000334,
+          -8.724745013688358e-18
+        ],
+        "length_sum_m": 611.5200167999998,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            61.88,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_19-1",
+        "part": "RBLONG_19",
+        "elements": 168,
+        "nodes": 336,
+        "sections": 1,
+        "mass_kg": 2341.398358468123,
+        "volume_m3": 0.30017927672668226,
+        "CG_m": [
+          9.104081753413947e-18,
+          67.34000004999997,
+          7.871237349305807e-17
+        ],
+        "length_sum_m": 611.5200167999994,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            65.52,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_20-1",
+        "part": "RBLONG_20",
+        "elements": 168,
+        "nodes": 336,
+        "sections": 1,
+        "mass_kg": 2328.551166493769,
+        "volume_m3": 0.29853220083253396,
+        "CG_m": [
+          -9.154311221299094e-18,
+          70.96999994499969,
+          -8.029093800347748e-17
+        ],
+        "length_sum_m": 608.1646223522418,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            69.16,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_21-1",
+        "part": "RBLONG_21",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2130.0635381322436,
+        "volume_m3": 0.2730850689913138,
+        "CG_m": [
+          2.335047317265475e-17,
+          74.61000004499995,
+          -4.169727352259777e-17
+        ],
+        "length_sum_m": 556.3241666727373,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            72.78,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_22-1",
+        "part": "RBLONG_22",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.4080386140163,
+        "volume_m3": 0.271590774181284,
+        "CG_m": [
+          -2.3478947679857017e-17,
+          78.26000005000013,
+          -9.517359148799184e-17
+        ],
+        "length_sum_m": 553.2800152000002,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            76.44,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_23-1",
+        "part": "RBLONG_23",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.4080386140163,
+        "volume_m3": 0.271590774181284,
+        "CG_m": [
+          -2.3478947679857017e-17,
+          81.9000000500001,
+          -9.517359148799184e-17
+        ],
+        "length_sum_m": 553.2800152000002,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            80.08,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_24-1",
+        "part": "RBLONG_24",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.4080386140163,
+        "volume_m3": 0.271590774181284,
+        "CG_m": [
+          -2.3478947679857017e-17,
+          85.54000005000026,
+          -9.517359148799184e-17
+        ],
+        "length_sum_m": 553.2800152000002,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            83.72,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_25-1",
+        "part": "RBLONG_25",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.4440120931863,
+        "volume_m3": 0.2715953861657933,
+        "CG_m": [
+          -2.0124470555859414e-17,
+          89.18000005000013,
+          2.117262006397709e-17
+        ],
+        "length_sum_m": 553.2894106548603,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            87.36,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_26-1",
+        "part": "RBLONG_26",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.4440120607587,
+        "volume_m3": 0.2715953861616359,
+        "CG_m": [
+          -2.3478548982195375e-17,
+          92.82000004999992,
+          -4.3812649439989586e-17
+        ],
+        "length_sum_m": 553.2894106463909,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            91.0,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_27-1",
+        "part": "RBLONG_27",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.4080386140163,
+        "volume_m3": 0.271590774181284,
+        "CG_m": [
+          3.3541353828367168e-18,
+          96.46000004999973,
+          -3.983035767118601e-17
+        ],
+        "length_sum_m": 553.2800152000002,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            94.64,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_28-1",
+        "part": "RBLONG_28",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.4080386140163,
+        "volume_m3": 0.271590774181284,
+        "CG_m": [
+          3.3541353828367168e-18,
+          100.10000005000038,
+          -3.983035767118601e-17
+        ],
+        "length_sum_m": 553.2800152000002,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            98.28,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_29-1",
+        "part": "RBLONG_29",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2118.761165094059,
+        "volume_m3": 0.2716360468069307,
+        "CG_m": [
+          0.0,
+          103.74000004999996,
+          -3.9614120762844817e-17
+        ],
+        "length_sum_m": 553.3722438078432,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            101.92,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_30-1",
+        "part": "RBLONG_30",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 2120.399535163359,
+        "volume_m3": 0.2718460942517128,
+        "CG_m": [
+          -6.7019703030198866e-18,
+          107.38000005000016,
+          2.010591090905966e-17
+        ],
+        "length_sum_m": 553.8001488196825,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            105.56,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "RBLONG_31-1",
+        "part": "RBLONG_31",
+        "elements": 152,
+        "nodes": 304,
+        "sections": 1,
+        "mass_kg": 1638.0359146730955,
+        "volume_m3": 0.21000460444526864,
+        "CG_m": [
+          1.5182204204946652e-17,
+          110.59999997499997,
+          2.0062198413679505e-17
+        ],
+        "length_sum_m": 427.8177382490589,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": [
+          [
+            0.0,
+            109.2,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "SSEG_01-1",
+        "part": "SSEG_01",
+        "elements": 96,
+        "nodes": 240,
+        "sections": 1,
+        "mass_kg": 51239.026610729736,
+        "volume_m3": 6.569105975734576,
+        "CG_m": [
+          -2.21875482891803e-17,
+          117.66312857983586,
+          -3.6942267901485197e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.0081695552580793,
+        "translation_rotation_data": [
+          [
+            0.0,
+            112.0,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "SSEG_02-1",
+        "part": "SSEG_02",
+        "elements": 96,
+        "nodes": 240,
+        "sections": 1,
+        "mass_kg": 47876.21405106124,
+        "volume_m3": 6.137976160392464,
+        "CG_m": [
+          -1.8996796630638512e-17,
+          129.20792496196017,
+          1.3475852609859194e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.007798805924110194,
+        "translation_rotation_data": [
+          [
+            0.0,
+            123.5,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "SSEG_03-1",
+        "part": "SSEG_03",
+        "elements": 96,
+        "nodes": 240,
+        "sections": 1,
+        "mass_kg": 45796.25080344069,
+        "volume_m3": 5.871314205569317,
+        "CG_m": [
+          -9.929794315221515e-18,
+          140.70693820627073,
+          6.019937803603043e-17
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.007456851964166689,
+        "translation_rotation_data": [
+          [
+            0.0,
+            135.0,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "SSEG_04-1",
+        "part": "SSEG_04",
+        "elements": 96,
+        "nodes": 240,
+        "sections": 1,
+        "mass_kg": 43760.33917203979,
+        "volume_m3": 5.610299893851253,
+        "CG_m": [
+          -1.558765400898744e-17,
+          152.20589473967883,
+          2.019900165331289e-16
+        ],
+        "length_sum_m": null,
+        "minimum_2x2x2_detJ_m3": 0.007122162508812697,
+        "translation_rotation_data": [
+          [
+            0.0,
+            146.5,
+            0.0
+          ]
+        ]
+      },
+      {
+        "instance": "PT_36X15P2-1",
+        "part": "PT_36X15P2",
+        "elements": 36,
+        "nodes": 72,
+        "sections": 1,
+        "mass_kg": 4431.168000000002,
+        "volume_m3": 0.5644800000000005,
+        "CG_m": [
+          2.5656178624149653e-17,
+          56.00000000000002,
+          4.8105334920280596e-18
+        ],
+        "length_sum_m": 4032.0,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": []
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "part": "RNA_MASS_SKELETON_OFFICIAL",
+        "elements": 28,
+        "nodes": 32,
+        "sections": 7,
+        "mass_kg": 673998.4931380383,
+        "volume_m3": 0.08820745510386314,
+        "CG_m": [
+          8.636170778729943e-17,
+          160.29779769845646,
+          -0.6231840053199021
+        ],
+        "length_sum_m": 280.77304994672505,
+        "minimum_2x2x2_detJ_m3": null,
+        "translation_rotation_data": []
+      }
+    ]
+  },
+  "RNA_cross_check": {
+    "elements": [
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 1,
+        "mass_kg": 8793.332213987114,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303995081124783,
+        "CG_m": [
+          1.676989135,
+          159.55065150000001,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 2,
+        "mass_kg": 8793.332213987114,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303995081124783,
+        "CG_m": [
+          1.676989135,
+          160.44934849999999,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 3,
+        "mass_kg": 8793.26785857205,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303926988341451,
+        "CG_m": [
+          1.2276412534999999,
+          161.2276385,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 4,
+        "mass_kg": 8793.34348710542,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.930400700891674,
+        "CG_m": [
+          0.4493478835,
+          161.676987,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 5,
+        "mass_kg": 8793.34348710542,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.930400700891674,
+        "CG_m": [
+          -0.4493478835,
+          161.676987,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 6,
+        "mass_kg": 8793.26785857205,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303926988341451,
+        "CG_m": [
+          -1.2276412534999999,
+          161.2276385,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 7,
+        "mass_kg": 8793.332213987114,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303995081124783,
+        "CG_m": [
+          -1.676989135,
+          160.44934849999999,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 8,
+        "mass_kg": 8793.332213987114,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303995081124783,
+        "CG_m": [
+          -1.676989135,
+          159.55065150000001,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 9,
+        "mass_kg": 8793.26785857205,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303926988341451,
+        "CG_m": [
+          -1.2276412534999999,
+          158.7723615,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 10,
+        "mass_kg": 8793.34348710542,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.930400700891674,
+        "CG_m": [
+          -0.4493478835,
+          158.323013,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 11,
+        "mass_kg": 8793.34348710542,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.930400700891674,
+        "CG_m": [
+          0.4493478835,
+          158.323013,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 12,
+        "mass_kg": 8793.26785857205,
+        "material": "MAT_RNA_HUB_EQ",
+        "density_kgm3": 30083900.0,
+        "radius_m": 0.01,
+        "length_m": 0.9303926988341451,
+        "CG_m": [
+          1.2276412534999999,
+          158.7723615,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 13,
+        "mass_kg": 1465.0454120975005,
+        "material": "MAT_RNA_BLD_Z5",
+        "density_kgm3": 269978.0,
+        "radius_m": 0.01,
+        "length_m": 17.27320146007601,
+        "CG_m": [
+          69.7405071,
+          119.735298,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 14,
+        "mass_kg": 3986.2958253882985,
+        "material": "MAT_RNA_BLD_Z4",
+        "density_kgm3": 734593.0,
+        "radius_m": 0.01,
+        "length_m": 17.2732025825766,
+        "CG_m": [
+          54.78147505,
+          128.3718985,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 15,
+        "mass_kg": 6888.063985365611,
+        "material": "MAT_RNA_BLD_Z3",
+        "density_kgm3": 1269330.0,
+        "radius_m": 0.01,
+        "length_m": 17.27319816917898,
+        "CG_m": [
+          39.8224449,
+          137.008499,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 16,
+        "mass_kg": 10458.560636003846,
+        "material": "MAT_RNA_BLD_Z2",
+        "density_kgm3": 1927300.0,
+        "radius_m": 0.01,
+        "length_m": 17.273196937127885,
+        "CG_m": [
+          24.8634157,
+          145.6450955,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 17,
+        "mass_kg": 18015.942740361574,
+        "material": "MAT_RNA_BLD_Z1",
+        "density_kgm3": 3319970.0,
+        "radius_m": 0.01,
+        "length_m": 17.27320633372646,
+        "CG_m": [
+          9.904386405,
+          154.2817,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 18,
+        "mass_kg": 1465.0446945469303,
+        "material": "MAT_RNA_BLD_Z5",
+        "density_kgm3": 269978.0,
+        "radius_m": 0.01,
+        "length_m": 17.273192999999992,
+        "CG_m": [
+          0.0,
+          240.5294035,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 19,
+        "mass_kg": 3986.297306396121,
+        "material": "MAT_RNA_BLD_Z4",
+        "density_kgm3": 734593.0,
+        "radius_m": 0.01,
+        "length_m": 17.27320900000001,
+        "CG_m": [
+          0.0,
+          223.2562025,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 20,
+        "mass_kg": 6888.061924042903,
+        "material": "MAT_RNA_BLD_Z3",
+        "density_kgm3": 1269330.0,
+        "radius_m": 0.01,
+        "length_m": 17.273192999999992,
+        "CG_m": [
+          0.0,
+          205.9830015,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 21,
+        "mass_kg": 10458.56793982143,
+        "material": "MAT_RNA_BLD_Z2",
+        "density_kgm3": 1927300.0,
+        "radius_m": 0.01,
+        "length_m": 17.27320900000001,
+        "CG_m": [
+          0.0,
+          188.7098005,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 22,
+        "mass_kg": 18015.92883329372,
+        "material": "MAT_RNA_BLD_Z1",
+        "density_kgm3": 3319970.0,
+        "radius_m": 0.01,
+        "length_m": 17.273192999999992,
+        "CG_m": [
+          0.0,
+          171.4365995,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 23,
+        "mass_kg": 1465.0454120975005,
+        "material": "MAT_RNA_BLD_Z5",
+        "density_kgm3": 269978.0,
+        "radius_m": 0.01,
+        "length_m": 17.27320146007601,
+        "CG_m": [
+          -69.7405071,
+          119.735298,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 24,
+        "mass_kg": 3986.2958253882985,
+        "material": "MAT_RNA_BLD_Z4",
+        "density_kgm3": 734593.0,
+        "radius_m": 0.01,
+        "length_m": 17.2732025825766,
+        "CG_m": [
+          -54.78147505,
+          128.3718985,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 25,
+        "mass_kg": 6888.063985365611,
+        "material": "MAT_RNA_BLD_Z3",
+        "density_kgm3": 1269330.0,
+        "radius_m": 0.01,
+        "length_m": 17.27319816917898,
+        "CG_m": [
+          -39.8224449,
+          137.008499,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 26,
+        "mass_kg": 10458.560636003846,
+        "material": "MAT_RNA_BLD_Z2",
+        "density_kgm3": 1927300.0,
+        "radius_m": 0.01,
+        "length_m": 17.273196937127885,
+        "CG_m": [
+          -24.8634157,
+          145.6450955,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 27,
+        "mass_kg": 18015.942740361574,
+        "material": "MAT_RNA_BLD_Z1",
+        "density_kgm3": 3319970.0,
+        "radius_m": 0.01,
+        "length_m": 17.27320633372646,
+        "CG_m": [
+          -9.904386405,
+          154.2817,
+          -7.0999999
+        ]
+      },
+      {
+        "instance": "RNA_MASS_SKELETON_OFFICIAL-1",
+        "element": 28,
+        "mass_kg": 446037.00100284524,
+        "material": "MAT_RNA_NAC_EQ",
+        "density_kgm3": 135085000.0,
+        "radius_m": 0.01,
+        "length_m": 10.51027035,
+        "CG_m": [
+          0.0,
+          160.449997,
+          2.687000155
+        ]
+      }
+    ],
+    "CG_m": [
+      8.636170778729943e-17,
+      160.29779769845646,
+      -0.6231840053199021
+    ],
+    "mass_kg": 673998.4931380383,
+    "finite_cylinder_J_about_CG_kgm2": [
+      [
+        96760669.74724701,
+        7.043547267658587e-10,
+        -5.709819252677471e-10
+      ],
+      [
+        7.043547267658587e-10,
+        96730110.18353698,
+        -664405.3751226319
+      ],
+      [
+        -5.709819252677471e-10,
+        -664405.3751226319,
+        156378478.90267432
+      ]
+    ],
+    "line_J_about_CG_kgm2": [
+      [
+        96760650.04776482,
+        1.170016014073598e-09,
+        -5.709819252677471e-10
+      ],
+      [
+        1.170016014073598e-09,
+        96730090.48405719,
+        -664405.3751226319
+      ],
+      [
+        -5.709819252677471e-10,
+        -664405.3751226319,
+        156378450.90178695
+      ]
+    ],
+    "principal_J_kgm2": [
+      96722710.48834863,
+      96760669.74724701,
+      156385878.59786266
+    ],
+    "symmetric_J": true,
+    "all_principal_J_positive": true,
+    "angular_kinetic_energy_J_at_unit_directions": [
+      48380334.873623505,
+      48365055.09176849,
+      78189239.45133716,
+      96745389.965392,
+      126569574.32496066,
+      125889889.16798301,
+      175599034.7918518
+    ],
+    "center_energy_note": "For each reported direction omega in rad/s, energy=.5 omega^T J_CG omega; all nonnegative. Translational mass is separately positive.",
+    "CAE_ledger_mass_kg": 673997.979913,
+    "difference_exported_density_vs_CAE_kg": 0.5132250383030623,
+    "use_exported_INP_mass_for_RUN032": "Input material density precision is authoritative for actual solver mass; API full-precision source mass is provenance, not a second mass insertion.",
+    "important_scope_update": "Continuous cylinder and line integrals verify CAE continuum calculation; real solver B31 rigid-body inertia is endpoint-lumped and differs by 11.64%/11.64%/3.90% diagonal. Both are retained and separately labelled."
+  },
+  "source_comparison": {
+    "preserved_part_count": 67,
+    "preserved_part_content_changes": [],
+    "removed_parts": [
+      "DTU_BLADE_SMOOTH_OFFICIAL",
+      "DTU_NACELLE_120DEG_OFFICIAL",
+      "DTU_SPINNER_120DEG_OFFICIAL"
+    ],
+    "added_parts": [
+      "RNA_MASS_SKELETON_OFFICIAL"
+    ],
+    "new_RNA_part_identical_to_recovered_export": true,
+    "keyword_checks": {
+      "spring_behavior_and_elements": {
+        "unchanged": true,
+        "source_block_count": 180,
+        "new_block_count": 180
+      },
+      "ties_couplings_equations_embedded_surfaces": {
+        "unchanged": true,
+        "source_block_count": 337,
+        "new_block_count": 337
+      },
+      "initial_stress_and_boundaries": {
+        "unchanged": true,
+        "source_block_count": 3,
+        "new_block_count": 3
+      },
+      "nonstructural_mass": {
+        "unchanged": true,
+        "source_block_count": 3,
+        "new_block_count": 3
+      },
+      "materials": {
+        "unchanged_nonRNA": true,
+        "changed_material_names": [],
+        "unexpected_changes": [],
+        "RNA_material_changes_explicit": true
+      },
+      "instance_placement": {
+        "unchanged": true,
+        "preserved_count": 67,
+        "unexpected_changes": []
+      },
+      "assembly_nodes_sets_and_spring_elements": {
+        "unchanged": true,
+        "source_block_count": 481,
+        "new_block_count": 481,
+        "scope": "Assembly Node/Nset/Elset/Element definitions; removed display-only instances are independently excluded from placement comparison."
+      }
+    },
+    "intentional_analysis_changes": "Display-only surfaces removed; recovered rigid B31 carrier inserted; source physical tower materials/sections/NSM/constraints preserved; wind amplitudes/step removed; Gravity controls reset/output enabled then Modal/1kN perturbation steps.",
+    "not_recovered_historical_run": true
+  },
+  "NSM_physical_source_review": {
+    "named_history_files": [
+      {
+        "path": "D:\\MC\\SIMPACK_SITE_ONLY.jnl",
+        "sha256": "a49dbb68c424c10bb2956b9b2849ca928829affae3396706af1b412606f71cec",
+        "characters": 29930,
+        "matching_lines": [],
+        "scope": "Only named JNL/REC text search; no binary CAE or external design schedule interpreted"
+      },
+      {
+        "path": "D:\\MC\\SIMPACK_SITE_ONLY.rec",
+        "sha256": "749a868e243503b0de37d8628f9b41c3bff3326eb18a29e6e7591a13942b6c93",
+        "characters": 2470,
+        "matching_lines": [],
+        "scope": "Only named JNL/REC text search; no binary CAE or external design schedule interpreted"
+      }
+    ],
+    "finding": "No creation/naming record for these three NSM magnitudes found in named JNL/REC search. Treat as retained source model settings, not independently design/test calibrated component masses.",
+    "no_extra_candidate_NSM_inserted": true,
+    "official_sources": [
+      "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-nonstructuralmass.htm",
+      "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMODRefMap/simamod-c-nonstructuralmass.htm"
+    ]
+  },
+  "solver_DAT_read_only": {
+    "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.dat",
+    "matching_mass_CG_text": [
+      {
+        "line": 2181,
+        "text": "\n\n                    TOTAL MASS OF MODEL\n\n                       2597662.    \n\n\n                    LOCATION OF THE CENTER OF MASS OF THE MODEL\n\n                     -5.0417349E-17       86.87286         -0.1616935    \n"
+      },
+      {
+        "line": 2186,
+        "text": "\n\n                    LOCATION OF THE CENTER OF MASS OF THE MODEL\n\n                     -5.0417349E-17       86.87286         -0.1616935    \n\n\n                    MOMENTS OF INERTIA ABOUT THE ORIGIN\n                           I(XX)               I(YY)               I(ZZ)\n\n                      2.7616448E+10      1.2600315E+08      2.7670644E+10"
+      },
+      {
+        "line": 2203,
+        "text": "\n\n                    MOMENTS OF INERTIA ABOUT THE CENTER OF MASS\n                           I(XX)               I(YY)               I(ZZ)\n\n                      8.0120998E+09      1.2593523E+08      8.0663638E+09\n\n\n                    PRODUCTS OF INERTIA ABOUT THE CENTER OF MASS\n                           I(XY)               I(XZ)               I(YZ)\n"
+      },
+      {
+        "line": 2209,
+        "text": "\n\n                    PRODUCTS OF INERTIA ABOUT THE CENTER OF MASS\n                           I(XY)               I(XZ)               I(YZ)\n\n                     -2.5347337E-08     -2.1338426E-06      3.0175910E+07\n\n\n                              RIGID BODY MASS AND INERTIA \n                              --------------------------- \n"
+      },
+      {
+        "line": 2228,
+        "text": " \n \n                     TOTAL MASS OF RIGID BODY\n \n                          673998.5\n \n \n                     LOCATION OF THE CENTER OF MASS OF RIGID BODY\n                         -1.2954256E-16     1.6029780E+02    -6.2318401E-01\n \n "
+      },
+      {
+        "line": 2233,
+        "text": " \n \n                     LOCATION OF THE CENTER OF MASS OF RIGID BODY\n                         -1.2954256E-16     1.6029780E+02    -6.2318401E-01\n \n \n                     MOMENTS OF INERTIA ABOUT THE CENTER OF RIGID BODY\n                            I(XX)               I(YY)               I(ZZ)\n                         1.0802460E+08      1.0799404E+08      1.6248239E+08\n \n "
+      }
+    ],
+    "status": "Actual completed root-run DAT mass/CG read and independently compared",
+    "sha256": "53ddfd14ba3cbe31b2a0c9ddf9e125cd31a12844c7ef1a5e1026fbc8d57ec511",
+    "total_mass_kg": 2597662.0,
+    "total_mass_raw": "2597662.",
+    "total_CG_m": [
+      -5.0417349e-17,
+      86.87286,
+      -0.1616935
+    ],
+    "total_CG_raw": "-5.0417349E-17       86.87286         -0.1616935",
+    "total_mass_relative_difference": 4.9174830303711486e-08,
+    "registered_mass_budget_relative": 1e-06,
+    "mass_within_registered_budget": true,
+    "total_CG_difference_m": [
+      -7.294012446462175e-17,
+      -3.588320254266364e-07,
+      -2.7652596878979807e-10
+    ],
+    "RNA_mass_kg": 673998.5,
+    "RNA_mass_raw": "673998.5",
+    "RNA_CG_m": [
+      -1.2954256e-16,
+      160.2978,
+      -0.62318401
+    ],
+    "RNA_CG_raw": "-1.2954256E-16     1.6029780E+02    -6.2318401E-01",
+    "RNA_mass_difference_from_export_integral_kg": 0.006861961679533124
+  },
+  "limits": [
+    "This independent integral verifies actual input bookkeeping, not source geometry interpretation or physical stiffness calibration.",
+    "RNA is a rigid mass carrier with source-dependent distributed inertia, not proof of DTU10MW target mass/CG/inertia.",
+    "Positive sampled detJ does not establish all element quality metrics or response mesh convergence.",
+    "No load-response/initial-state/capacity/physical damping inference from this text audit."
+  ],
+  "input_after_sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+  "input_unchanged_during_review": true,
+  "passed_input_identity_and_geometry_checks": true,
+  "RNA_discrete_inertia_review": {
+    "identity": "RUN032 actual input B31 rigid RNA carrier; no physical DTU10MW inertia validation",
+    "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+    "input_sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+    "mass_kg": 673998.4931380383,
+    "CG_m": [
+      8.636170778729943e-17,
+      160.29779769845646,
+      -0.6231840053199021
+    ],
+    "reference_point_m": [
+      0.0,
+      160.0,
+      0.0
+    ],
+    "CG_minus_RP_m": [
+      8.636170778729943e-17,
+      0.2977976984564634,
+      -0.6231840053199021
+    ],
+    "continuous_cylinder_J_CG_tensor_kgm2": [
+      [
+        96760669.74724701,
+        7.043547267658587e-10,
+        -5.709819252677471e-10
+      ],
+      [
+        7.043547267658587e-10,
+        96730110.18353698,
+        -664405.3751226319
+      ],
+      [
+        -5.709819252677471e-10,
+        -664405.3751226319,
+        156378478.90267432
+      ]
+    ],
+    "B31_discrete_J_CG_tensor_kgm2": [
+      [
+        108024597.4607835,
+        7.184036276973436e-10,
+        4.767559711746663e-10
+      ],
+      [
+        7.184036276973436e-10,
+        107994037.60245842,
+        -664405.3751226325
+      ],
+      [
+        4.767559711746663e-10,
+        -664405.3751226325,
+        162482391.8728107
+      ]
+    ],
+    "B31_discrete_J_RP_tensor_kgm2": [
+      [
+        108346122.89741616,
+        7.010695202447787e-10,
+        5.130300544430237e-10
+      ],
+      [
+        7.010695202447787e-10,
+        108255790.51448,
+        -539322.8728458127
+      ],
+      [
+        5.130300544430237e-10,
+        -539322.8728458127,
+        162542164.39742178
+      ]
+    ],
+    "continuous_J_RP_tensor_kgm2": [
+      [
+        97082195.18387967,
+        6.870206193132938e-10,
+        -5.347078419993897e-10
+      ],
+      [
+        6.870206193132938e-10,
+        96991863.09555855,
+        -539322.8728458121
+      ],
+      [
+        -5.347078419993897e-10,
+        -539322.8728458121,
+        156438251.4272854
+      ]
+    ],
+    "solver_DAT_actual_J_CG_printed_tensor_kgm2": [
+      [
+        108024600.0,
+        -2.5171703e-08,
+        7.5290306e-10
+      ],
+      [
+        -2.5171703e-08,
+        107994040.0,
+        -664405.4
+      ],
+      [
+        7.5290306e-10,
+        -664405.4,
+        162482390.0
+      ]
+    ],
+    "solver_DAT_raw_diagonal": "1.0802460E+08      1.0799404E+08      1.6248239E+08",
+    "solver_DAT_raw_products": "-2.5171703E-08      7.5290306E-10      -664405.4",
+    "preferred_for_RUN036_equivalence": "B31_discrete_J_CG_tensor_kgm2: full-precision endpoint-lumped + exact cross-section calculation validated against printed real DAT; use same mass and CG.",
+    "preferred_for_RUN037_representation_sensitivity": "continuous_cylinder_J_CG_tensor_kgm2: same exported input densities, mass and CG; mathematical continuous mass distribution, not official physical RNA inertia.",
+    "ROTARYI_keyword_order": [
+      "I11",
+      "I22",
+      "I33",
+      "I12",
+      "I13",
+      "I23"
+    ],
+    "ROTARYI_input_discrete_about_CG": [
+      108024597.4607835,
+      107994037.60245842,
+      162482391.8728107,
+      7.184036276973436e-10,
+      4.767559711746663e-10,
+      -664405.3751226325
+    ],
+    "ROTARYI_input_continuous_about_CG": [
+      96760669.74724701,
+      96730110.18353698,
+      156378478.90267432,
+      7.043547267658587e-10,
+      -5.709819252677471e-10,
+      -664405.3751226319
+    ],
+    "DAT_offdiagonal_print_order": [
+      "I(XY)",
+      "I(XZ)",
+      "I(YZ)"
+    ],
+    "CAE_query_order_distinct": [
+      "xx",
+      "yy",
+      "zz",
+      "xy",
+      "yz",
+      "zx"
+    ],
+    "default_mass_formulation": "Official BEAM SECTION: LUMPED=YES, ROTARY INERTIA=EXACT. No isotropic option is present in input.",
+    "discrete_prediction": "Sum endpoints m_e/2 at each coordinate, plus exact circular cross-section rotary inertia; J_CG matches real DAT to printed last-digit rounding.",
+    "why_difference": "Each straight uniform beam adds mL^2/6 (I−tt^T) to continuous inertia when endpoint-lumped; no mass or CG change.",
+    "delta_discrete_minus_continuous_J_CG_kgm2": [
+      [
+        11263927.713536486,
+        1.4048900931484912e-11,
+        1.0477378964424133e-09
+      ],
+      [
+        1.4048900931484912e-11,
+        11263927.41892144,
+        -5.820766091346741e-10
+      ],
+      [
+        1.0477378964424133e-09,
+        -5.820766091346741e-10,
+        6103912.970136374
+      ]
+    ],
+    "diagonal_relative_increase_vs_continuous": [
+      0.11641018755822494,
+      0.1164469615257247,
+      0.039032947583121605
+    ],
+    "DAT_minus_independent_discrete_diagonal_kgm2": [
+      2.5392165035009384,
+      2.397541582584381,
+      -1.8728106915950775
+    ],
+    "DAT_diagonal_rounding_budget_kgm2": [
+      5.0,
+      5.0,
+      5.0
+    ],
+    "all_diagonals_within_DAT_last_digit_rounding": true,
+    "DAT_yz_minus_independent_kgm2": -0.024877367541193962,
+    "DAT_yz_rounding_budget_kgm2": 0.05,
+    "DAT_yz_within_last_digit_rounding": true,
+    "CG_vs_RP_confirmation": "DAT xy/xz≈0 and yz=−664405.4 match J_CG. J_RP has yz≈−539322.873 from parallel-axis shift; do not shift J_CG twice.",
+    "M6_at_RP_dof_order": [
+      "U1",
+      "U2",
+      "U3",
+      "UR1",
+      "UR2",
+      "UR3"
+    ],
+    "skew_CG_minus_RP_m": [
+      [
+        0.0,
+        0.6231840053199021,
+        0.2977976984564634
+      ],
+      [
+        -0.6231840053199021,
+        0.0,
+        -8.636170778729943e-17
+      ],
+      [
+        -0.2977976984564634,
+        8.636170778729943e-17,
+        0.0
+      ]
+    ],
+    "M6_B31_discrete_at_RP": [
+      [
+        673998.4931380383,
+        0.0,
+        0.0,
+        -0.0,
+        -420025.08053334133,
+        -200715.20001963226
+      ],
+      [
+        0.0,
+        673998.4931380383,
+        0.0,
+        420025.08053334133,
+        -0.0,
+        5.820766091346741e-11
+      ],
+      [
+        0.0,
+        0.0,
+        673998.4931380383,
+        200715.20001963226,
+        -5.820766091346741e-11,
+        -0.0
+      ],
+      [
+        0.0,
+        420025.08053334133,
+        200715.20001963226,
+        108346122.89741616,
+        7.010695202447787e-10,
+        5.130300544430237e-10
+      ],
+      [
+        -420025.08053334133,
+        0.0,
+        -5.820766091346741e-11,
+        7.010695202447787e-10,
+        108255790.51448,
+        -539322.8728458127
+      ],
+      [
+        -200715.20001963226,
+        5.820766091346741e-11,
+        0.0,
+        5.130300544430237e-10,
+        -539322.8728458127,
+        162542164.39742178
+      ]
+    ],
+    "M6_continuous_at_RP": [
+      [
+        673998.4931380383,
+        0.0,
+        0.0,
+        -0.0,
+        -420025.08053334133,
+        -200715.20001963226
+      ],
+      [
+        0.0,
+        673998.4931380383,
+        0.0,
+        420025.08053334133,
+        -0.0,
+        5.820766091346741e-11
+      ],
+      [
+        0.0,
+        0.0,
+        673998.4931380383,
+        200715.20001963226,
+        -5.820766091346741e-11,
+        -0.0
+      ],
+      [
+        0.0,
+        420025.08053334133,
+        200715.20001963226,
+        97082195.18387967,
+        6.870206193132938e-10,
+        -5.347078419993897e-10
+      ],
+      [
+        -420025.08053334133,
+        0.0,
+        -5.820766091346741e-11,
+        6.870206193132938e-10,
+        96991863.09555855,
+        -539322.8728458121
+      ],
+      [
+        -200715.20001963226,
+        5.820766091346741e-11,
+        0.0,
+        -5.347078419993897e-10,
+        -539322.8728458121,
+        156438251.4272854
+      ]
+    ],
+    "M6_block_formula": "[mI, −m[d]x; +m[d]x, J_CG+m((d.d)I−dd^T)], v_CG=v_RP+omega×d. Mixed blocks have kg/kg*m/kg*m^2 units.",
+    "discrete_principal_J_CG_kgm2": [
+      107985937.35985665,
+      108024597.4607835,
+      162490492.11541244
+    ],
+    "all_discrete_principal_inertias_positive": true,
+    "M6_energy_cases": [
+      {
+        "v_RP_m_per_s": [
+          1,
+          2,
+          3
+        ],
+        "omega_rad_per_s": [
+          0.1,
+          -0.2,
+          0.3
+        ],
+        "nodal_plus_section_energy_J": 14939602.679211011,
+        "M6_energy_J": 14939602.679211013,
+        "relative_difference": 1.2467835920582374e-16
+      },
+      {
+        "v_RP_m_per_s": [
+          0,
+          0,
+          0
+        ],
+        "omega_rad_per_s": [
+          1,
+          1,
+          1
+        ],
+        "nodal_plus_section_energy_J": 189032716.03181314,
+        "M6_energy_J": 189032716.03181314,
+        "relative_difference": 0.0
+      },
+      {
+        "v_RP_m_per_s": [
+          -0.5,
+          0.2,
+          0.7
+        ],
+        "omega_rad_per_s": [
+          -1,
+          0.3,
+          0.2
+        ],
+        "nodal_plus_section_energy_J": 62384484.97572276,
+        "M6_energy_J": 62384484.97572276,
+        "relative_difference": 0.0
+      }
+    ],
+    "all_energy_cases_agree_relative_1e-12": true,
+    "solver_dat": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.dat",
+      "sha256": "53ddfd14ba3cbe31b2a0c9ddf9e125cd31a12844c7ef1a5e1026fbc8d57ec511"
+    },
+    "official_sources": [
+      "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-beamsection.htm",
+      "https://docs.software.vt.edu/abaqusv2025/English/SIMACAECAERefMap/simacae-t-qremassprops.htm",
+      "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-rotaryinertia.htm",
+      "https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-equivrbm.htm"
+    ],
+    "not_claimed": "No new solver/API invocation; DAT snapshot is real root-run output. Mathematical discrete prediction is verified to DAT print precision, not extracted full-precision assembled mass matrix."
+  },
+  "all_mass_and_discrete_J_implementation_checks_pass": true,
+  "scientific_scope": "Actual reconstructed input mass/CG/discrete inertia implementation verified; source mass/geometry/inertia physical design calibration remains separate. Continuum vs discrete J is a representation sensitivity, not physical validation."
+}

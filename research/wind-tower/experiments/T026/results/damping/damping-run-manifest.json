@@ -1,0 +1,1065 @@
+{
+  "manifest_id": "T026-isolated-damping",
+  "created_at": "2026-10-04T19:50:09.506633+08:00",
+  "owner": "/root/chapter1_recent_sources",
+  "independent_of_root_main_manifest": true,
+  "authorization": "Root authorized five independent direct-integration solver fixtures",
+  "runs": [
+    {
+      "run_id": "RUN-T026-022",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "eceae167903bab88a58da050a7137239559a63c7e4c478a935379962570bae2e",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "30eee5a655426e1892e76bf146f5cfcea299c7e23fd874c940014510d783f3b2",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_DAMP_T100",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100\\TRUSS_DAMP_T100.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T100",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100\\TRUSS_DAMP_T100.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:18.155818+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:28.257818+08:00",
+      "output_files": {
+        "execution.log": "003d65044ae44668b227d43d588587895d3c47bd54bca510f989da922a18bb70",
+        "TRUSS_DAMP_T100.dat": "b20a9ddebbe234856ffa7a1b4ecd84a71e3861c546dd735789fda182daa0c352",
+        "TRUSS_DAMP_T100.odb": "f49057c8825b3e1136f3d0b43f2cafc4dd0f264404f30f7434b0edb342a1abf0"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained."
+    },
+    {
+      "run_id": "RUN-T026-023",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "fd07a19a23ffe113e6077097cba1622f5b268818e69d99def6d20eeecfb01e35",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "795cb0416cb18314f831ee8932810b214cc7b01cc336433a0dc72c9d72a6013f",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_DAMP_T200",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200\\TRUSS_DAMP_T200.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T200",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200\\TRUSS_DAMP_T200.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:28.267686+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:37.941171+08:00",
+      "output_files": {
+        "execution.log": "dfd5d75a2fe34f5f5cbc9ce26a17a6b22f641604aae1c1583d825d6f0f561085",
+        "TRUSS_DAMP_T200.dat": "dbd80ce658df5c041913bd4ab3bf05f13765f03dcc3cf2565317e065ec99d7c5",
+        "TRUSS_DAMP_T200.odb": "324328d22accd335c3c2d017e31efeae629fc57cb4eda98a1b13bb0722b22344"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained."
+    },
+    {
+      "run_id": "RUN-T026-024",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "90f153e03e4a0ddfef344cbbae020cbcee3d7b3d0360de598495e510676f35bd",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "6140889b00e0354b0359e84315971a50412fb6221d4cc689dd6d3f5a3bc9ec1b",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_ZERO_T100",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100\\TRUSS_ZERO_T100.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T100",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100\\TRUSS_ZERO_T100.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:37.946868+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:46.949063+08:00",
+      "output_files": {
+        "execution.log": "75d6d7ffaa81b805ce8909e92980e8403cf0403a887d3502d043736710b7bbc9",
+        "TRUSS_ZERO_T100.dat": "91af2965d5793872b395d390f43104814b9073515740c590b733e8b61d69842f",
+        "TRUSS_ZERO_T100.odb": "deda469c136f02d46dbff086026c51e876e70820f4f704703a51937ce7f1b433"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained."
+    },
+    {
+      "run_id": "RUN-T026-025",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "9b13c794cbe95a180fb27f8f4e1cfd2c00c6f7c9b1cf4ad0c1c6cc46c833777f",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "e7f925198af5002eba2d56d44bbfb2e56438b55fecdea48f0b8ffbe35abd722d",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_ZERO_T200",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200\\TRUSS_ZERO_T200.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T200",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200\\TRUSS_ZERO_T200.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:46.957173+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:56.141529+08:00",
+      "output_files": {
+        "execution.log": "e19d61d9f1e08ced5e5bef8ec82bbf6fcc01f7db53695bac2ca8d765386a6844",
+        "TRUSS_ZERO_T200.dat": "c89b34445651813d2bbce0afb7db3e15fecf544565f3b1848f9197e64a7335aa",
+        "TRUSS_ZERO_T200.odb": "b91536f70f84ca1f4a739bb25daa8a7a87a7ac9831bd1655f837bda64185c193"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained."
+    },
+    {
+      "run_id": "RUN-T026-026",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "e90781f444f432650c42abca44c851d313000f6a64af2b5f731a17addc565d2e",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "262b8470eed9139ee9d5d2887bb4bd3c5fc9c16a6c54a904c71b54516b83ec00",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "SPRING_ALPHA_T200",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\SPRING_ALPHA_T200.inp",
+      "changed_variables": {
+        "stiffness_element": "spring",
+        "mass_alpha": 0.2,
+        "material_beta": 0.0,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": 0.001
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": null,
+        "area_m2": null,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.2,
+        "zeta": 0.0031622776601683794,
+        "omega_d_rad_per_s": 31.6226184874055,
+        "frequency_d_Hz": 5.03289604577974,
+        "decay_rate_per_s": 0.1,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=SPRING_ALPHA_T200",
+        "input=D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\SPRING_ALPHA_T200.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:56.149583+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:51:51.637989+08:00",
+      "output_files": {
+        "execution.log": "e06b34b6e437d7bf820671030b0ec8111514fc18f9f71866de117de2736776fc",
+        "SPRING_ALPHA_T200.dat": "6966651316789a03c16fcfcf54811019a6d8bc447dd84178e05c25fa0d66e020",
+        "SPRING_ALPHA_T200.msg": "ed3e97f6bd8733a8986587be70b0018d0b1406b5894a88973420f22994accd5d",
+        "SPRING_ALPHA_T200.odb": "a49a2ab53c1399c7ac1dc48dbcc4f6e01421a9f787088b9d01dafa00a5f62858",
+        "SPRING_ALPHA_T200.sta": "a99a93449249d498323166dcc788969ef4fc5f68a7066a2b0a9aca803a97bacb"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.032482162662097,
+        "analytical_frequency_Hz": 5.03289604577974,
+        "frequency_relative_error": 8.223557845786737e-05,
+        "zeta": 0.0031617574548911676,
+        "analytical_zeta": 0.0031622776601683794,
+        "zeta_relative_error": 0.000164503352682871,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.003161757638537268,
+        "positive_negative_zeta_absolute_difference": 1.836461004968426e-10,
+        "positive_decay_rate_per_s": 0.09997532729523789,
+        "analytical_decay_rate_per_s": 0.1,
+        "analytical_history_error_over_x0": 0.0041491506918552145,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.3280669950763695,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 9.832333558532774e-05,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 0.00033596650246181525,
+        "final_viscous_dissipation_J": 0.00016403861809521914
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\free-history.csv",
+          "sha256": "66563cede7eedba9dd458059e896b2e2c3b8d9105971c8895c84a2db292058a2"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\analytical-comparison.csv",
+          "sha256": "2d81b5202ab1af2093194e69ddc2501fe2989c2d7001a2508ae9a8426ac5ded8"
+        }
+      }
+    },
+    {
+      "run_id": "RUN-T026-028",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "8a6604cc26cf1e9bd567ff3d51b7dc31e63f21a1951814863eac5d9317eac6c0",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "13cebb39369fd01578257ba76b0790829d4b92df5ecacb1703b82be8ea1e04ae",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.988448+08:00",
+      "job": "TRUSS_DAMP_T100_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\TRUSS_DAMP_T100_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T100_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\TRUSS_DAMP_T100_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-022",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:55:09.967489+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:55:37.708436+08:00",
+      "output_files": {
+        "execution.log": "897faa99d06d86a8722332aa24e2d691e47c77ab4f0c52ebf03c64751ad369f9",
+        "TRUSS_DAMP_T100_RHOEPS.dat": "679fe2ed320a226bbf979e639b1df47a9beee4d403a9f7b3b3a9b573683fbf08",
+        "TRUSS_DAMP_T100_RHOEPS.msg": "faba82bbe023d3fce2628213a9879ac6eb2a37f481b5df08b7818a7659c67d35",
+        "TRUSS_DAMP_T100_RHOEPS.odb": "10d0022eb3c108bd8912164a8d98f9a6490b101fd280110aa7727a9f8b9e1790",
+        "TRUSS_DAMP_T100_RHOEPS.sta": "78dc5b2d01cf77ed52107abca4c4c5165305232557ea06888c6943df4453a61a"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.030364629223256,
+        "analytical_frequency_Hz": 5.03201520308282,
+        "frequency_relative_error": 0.0003280144818626164,
+        "zeta": 0.01896120507206758,
+        "analytical_zeta": 0.018973665961010275,
+        "zeta_relative_error": 0.0006567465121554505,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.018961193528014956,
+        "positive_negative_zeta_absolute_difference": 1.154405262354663e-08,
+        "positive_decay_rate_per_s": 0.5994091309349941,
+        "analytical_decay_rate_per_s": 0.6,
+        "analytical_history_error_over_x0": 0.0063762454483531645,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.9078654927870957,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 0.0011236078923957185,
+        "minimum_actual_dt_s": 0.0011608600616455078,
+        "maximum_actual_dt_s": 0.001986980438232422,
+        "last_time_s": 2.0,
+        "history_points": 1008,
+        "final_mechanical_energy_J": 4.606725360645214e-05,
+        "final_viscous_dissipation_J": 0.00045393971959128976
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\free-history.csv",
+          "sha256": "edce9a3b61b0eae400b5942f8badd8a6155f9e631342b44ddfaf8fd07face7a8"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\analytical-comparison.csv",
+          "sha256": "26adaddfd552e215d28824f8cae2e13854006ca59eae9572348a318fa29ccbd0"
+        }
+      }
+    },
+    {
+      "run_id": "RUN-T026-029",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "920039de84c346cffcbce5e209f7cb113523991b8833b2c8c94c9e3228a5dd84",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "101724f2a1c6cfee693b7e8d2fd535b085917ead907016129005b650a9bd39e7",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.990570+08:00",
+      "job": "TRUSS_DAMP_T200_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\TRUSS_DAMP_T200_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T200_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\TRUSS_DAMP_T200_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-023",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:55:37.745318+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:56:25.187201+08:00",
+      "output_files": {
+        "execution.log": "e6579a9ce8a6f712262123482e6dacb21d8fc4e2c0113797861902082617dd17",
+        "TRUSS_DAMP_T200_RHOEPS.dat": "3304f4e03746c5c5948120486e018f878c2910746db7d176dc952428f94fd2bf",
+        "TRUSS_DAMP_T200_RHOEPS.msg": "5b0b008895909a72985207b0a730feb9fb808e9eb1da43dd658d8253bbdbf1be",
+        "TRUSS_DAMP_T200_RHOEPS.odb": "854ba7aff41dabadf21a9bb1221779af176de675a758c6ad196d4fdfaa8b2964",
+        "TRUSS_DAMP_T200_RHOEPS.sta": "594d0ea0b2ab07ae87ea2f151d7856095a08e71230e3a3518148bbd4e31ca25e"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.031602492432133,
+        "analytical_frequency_Hz": 5.03201520308282,
+        "frequency_relative_error": 8.201697213367779e-05,
+        "zeta": 0.01897054711750058,
+        "analytical_zeta": 0.018973665961010275,
+        "zeta_relative_error": 0.0001643774859378795,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.01897054591946631,
+        "positive_negative_zeta_absolute_difference": 1.1980342690121049e-09,
+        "positive_decay_rate_per_s": 0.5998521359075524,
+        "analytical_decay_rate_per_s": 0.6,
+        "analytical_history_error_over_x0": 0.0015950139775836787,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.9079897925184923,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 0.0005619174080493186,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 4.600510374075384e-05,
+        "final_viscous_dissipation_J": 0.00045399885857477784
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\free-history.csv",
+          "sha256": "5cd8c977ea7fbe33bddcaf1f90b6268b49b69bcb0b543f3f85b23833128f36fc"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\analytical-comparison.csv",
+          "sha256": "d447c402bb0225c15278eac7e60cafb8c1977def2ec46eeea088f15c17a40ac5"
+        }
+      }
+    },
+    {
+      "run_id": "RUN-T026-030",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "e88fe120f254c18d2b5c323771c1b112c30f692fedda126b310ddfa46db7a20b",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "5cff9f0970ca1e8cd1b73099733cc85e23c0d08363c3b6e35a7c44adca7110e9",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.994095+08:00",
+      "job": "TRUSS_ZERO_T100_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\TRUSS_ZERO_T100_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T100_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\TRUSS_ZERO_T100_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-024",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:56:25.248307+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:56:54.515603+08:00",
+      "output_files": {
+        "execution.log": "0e9d623c95a1fce1d580b71bdefadc31fa808d2f654c6143b2a552ab315667b2",
+        "TRUSS_ZERO_T100_RHOEPS.dat": "fa3b162aee42537821d7915880bfe136ef83cf7fad932ae8a978be6747e7216f",
+        "TRUSS_ZERO_T100_RHOEPS.msg": "5f4b184bd56a1d137887a49cc90d9c4d252804df6c89b03866658cd296fc6bda",
+        "TRUSS_ZERO_T100_RHOEPS.odb": "b977566d5563f044befde5e8cbb8c50b1f463243cb63502d208004c19ee97740",
+        "TRUSS_ZERO_T100_RHOEPS.sta": "369648d3272131aaa5c6397fb82259faf6aea13ec586293eb96afb37c42e2f84"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.031266823569689,
+        "analytical_frequency_Hz": 5.032921210448704,
+        "frequency_relative_error": 0.0003287130495068747,
+        "zeta": 2.974797835124766e-09,
+        "analytical_zeta": 0.0,
+        "zeta_relative_error": null,
+        "zero_zeta_absolute": 2.974797835124766e-09,
+        "negative_peak_zeta": 3.0595157005904234e-09,
+        "positive_negative_zeta_absolute_difference": 8.47178654656576e-11,
+        "positive_decay_rate_per_s": 9.404044488928182e-08,
+        "analytical_decay_rate_per_s": 0.0,
+        "analytical_history_error_over_x0": 0.02013895291035378,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 5.800393412108695e-08,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 5.800393412108695e-08,
+        "minimum_actual_dt_s": 0.0011608600616455078,
+        "maximum_actual_dt_s": 0.001986980438232422,
+        "last_time_s": 2.0,
+        "history_points": 1008,
+        "final_mechanical_energy_J": 0.0005000000019208528,
+        "final_viscous_dissipation_J": 0.0
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\free-history.csv",
+          "sha256": "24f5c34fc9d9a3b62b0581b8e600264701a60ed73f6a34cf9fe9802fc082a682"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\analytical-comparison.csv",
+          "sha256": "db130d6fad3dd12e863d07d21c2010f48096f6bb12d4bce154357b4905460ebf"
+        }
+      }
+    },
+    {
+      "run_id": "RUN-T026-031",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "3156dd3d938de634fb5fcf7d2d97aa8a86bc15c0f07181ac91086566dc5a3f99",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "3d8d72e043bf2a94c1bd3259cf5df1f18151295877713bf7fb01fee40b834629",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.999572+08:00",
+      "job": "TRUSS_ZERO_T200_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\TRUSS_ZERO_T200_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T200_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\TRUSS_ZERO_T200_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-025",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:56:54.550717+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:57:35.363515+08:00",
+      "output_files": {
+        "execution.log": "088c08fea645201d97a9d7727818c9d2962b202f15dbdc36ba147029b5c38c25",
+        "TRUSS_ZERO_T200_RHOEPS.dat": "004f95c13de3403c46a7df697fe8e2f7c3763cf78643b5cf352deea177ba9c6b",
+        "TRUSS_ZERO_T200_RHOEPS.msg": "8667468958046903ad102e75bf3914c196d9b66029b14ecb70b8109d10f37376",
+        "TRUSS_ZERO_T200_RHOEPS.odb": "74809b05c31e01df0cef708fb3e2d60e31b7cb27ed407220fb5fd3c9a1c228ab",
+        "TRUSS_ZERO_T200_RHOEPS.sta": "0f61c8ccf57e460021a1e85b8e9f2e56035b9566b6e5997e62950788241e401f"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.0325075156779135,
+        "analytical_frequency_Hz": 5.032921210448704,
+        "frequency_relative_error": 8.219774431027642e-05,
+        "zeta": -6.094264473089957e-10,
+        "analytical_zeta": 0.0,
+        "zeta_relative_error": null,
+        "zero_zeta_absolute": 6.094264473089957e-10,
+        "negative_peak_zeta": -4.4212638631200826e-10,
+        "positive_negative_zeta_absolute_difference": 1.6730006099698744e-10,
+        "positive_decay_rate_per_s": -1.9270172303505343e-08,
+        "analytical_decay_rate_per_s": 0.0,
+        "analytical_history_error_over_x0": 0.005037403484314413,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 5.8124948430771095e-08,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 5.8124948430771095e-08,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 0.0004999999873689376,
+        "final_viscous_dissipation_J": 0.0
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\free-history.csv",
+          "sha256": "6dfcba23eda2135af3b595d8d45ef39e962ce2a5e54dd10e29806b605d094976"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\analytical-comparison.csv",
+          "sha256": "d27ced6978f6dfbc6123f8df2f82c122d79dcf47c7670289ef8cdcacb203dd46"
+        }
+      }
+    }
+  ],
+  "read_scope": "Official Abaqus 2025 MASS, DYNAMIC, SPRING, damping and truss documentation; linear SDOF derivation",
+  "source_urls": [
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-mass.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-dynamic.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-spring.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-dampingopt.htm"
+  ],
+  "peak_processing": "Primary: positive same-sign peaks, full-cycle period and ln(amplitude) vs time regression; 3-point parabolic peak time/value refinement; exclude initial release sample. Negative same-sign peaks are an independent identifiability check. Absolute alternating peaks have half-cycle spacing and are not labelled full cycle.",
+  "uncertainty_scope": "Exact linear fixture analytical reference; numerical implementation only",
+  "failure_action": "Retain every failed run and files; diagnose; rerun requires a new parent-allocated run ID. Do not modify license/install or retrospectively relax criteria.",
+  "diagnostic_revision": "T3D2 active density 1e-12 repair authorized before rerun; four original failures retained. SPRING RUN-T026-026 is unchanged and succeeded.",
+  "verification_report": {
+    "path": "D:\\Codex-research-validation\\T026\\damping\\damping-verification-results.json",
+    "sha256": "9f1784d85612705cea4e1fe3bb7244127e671396d59d3182c671282e70ec0822"
+  },
+  "results_note": {
+    "path": "D:\\Codex-research-validation\\T026\\damping\\damping-results-note.md",
+    "sha256": "2823dee870147b50fc554292de1cbab1c63526d7ce86658e088722f807e35cb6"
+  },
+  "visual_QA": {
+    "pages_inspected": [
+      1,
+      2,
+      3
+    ],
+    "method": "Poppler110dpi; direct view_image inspection all rendered pages",
+    "result": "Readable axes/text, actual and analytical curves, no clipping or overlapping text",
+    "render_files": {
+      "plot-1.png": "e850d5b110dada62361f66dae75bab08ae80a5badfce9878727a5a59642ea823",
+      "plot-2.png": "6be4247b2d4f3f62e7be1ad924b91c53dad67775fa14352f6513d814feadcd12",
+      "plot-3.png": "2d9151997369f43b882ba07d4f7d582d250e32f917e73731482f0cafe7ee6003"
+    }
+  },
+  "processing_scripts": {
+    "build_and_register.py": "6f3e0ac946c45cae187555817b4975e25c78c4bc7d33532d2e9411397a5153aa",
+    "extract_damping_odb.py": "5d13a694d5f9da6dc8fef58e63ab9275d48231603cfc968412e752cdf1b50bcc",
+    "register_density_retries.py": "41032ed2ea931bfdc55f05c3065d2513f9091a1358aa9909106ef745e6d38c70",
+    "run_registered.py": "acf4fc8bc4e9ac3272b83179c33cf0330d77f54bba074af0a67a790ffc7ba660",
+    "verify_and_plot.py": "885cdc68990ff2bed0f5980d1962aaeb7dad60b4b0e23201cb54338456812a14"
+  }
+}

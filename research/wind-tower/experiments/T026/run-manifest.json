@@ -3,7 +3,7 @@
   "original_input": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.inp",
   "original_hash": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
   "software": "Abaqus 2025",
-  "claim_scope": "numerical implementation verification only",
+  "claim_scope": "Actual numerical implementation verification and explicitly bounded reconstruction; physical calibration and other chapters are not certified",
   "runs": [
     {
       "run_id": "RUN-T026-001",
@@ -14,8 +14,8 @@
       "input_hash": "39c4fb02bd0ef69a013a90b88cf579c7c090b505c850fa6a870cd8f1c181969b",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "0503babfff2100bab040aeaddf5c775be8ab1d941712f837b148acc69185512e",
       "notes": "Input CDP envelope/unloading verification, not material calibration",
       "job": "MAT_C65_compression_mu1em5",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu1em5",
@@ -32,7 +32,21 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "started": "2026-10-04T19:33:32.805503+08:00",
+      "finished": "2026-10-04T19:34:06.324915+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "10eb7de955843ca78e1c769432ca9f61d5e0092302d0a522eff7b76a100fb96d",
+        "MAT_C65_compression_mu1em5.dat": "a2406326e03495a159eccbf28d2ed8483d597b8d6943be64425df7dd33ca1d30",
+        "MAT_C65_compression_mu1em5.msg": "af2d2fee268a93649d01ae59302638e53b094d648f3f3915a5b225ba98e54c03",
+        "MAT_C65_compression_mu1em5.odb": "f2c3ed42c9b44038ded46508cce436c35aef750c87ec6478c01f3800d7502d53",
+        "MAT_C65_compression_mu1em5.sta": "779951c50707d6901c7c5fed0c82a09fcffc21f007687b34bb4f53578eaa828b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-001/MAT_C65_compression_mu1em5.inp"
     },
     {
       "run_id": "RUN-T026-002",
@@ -43,9 +57,9 @@
       "input_hash": "16df647a883c2f80b2b1d17bf97782addb20d6d8d71485fb278552ceceb89142",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
-      "notes": "Input CDP envelope/unloading verification, not material calibration",
+      "status": "failed-environment",
+      "output_hash": "637e12611945671c164800d57d6ae445cc6047dd23eaadcda8c12a019adbc212",
+      "notes": "Input CDP envelope/unloading verification, not material calibration; C-drive temporary free=0GB; shared-memory allocation exception",
       "job": "MAT_C65_compression_mu0",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0",
       "input": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0\\MAT_C65_compression_mu0.inp",
@@ -61,7 +75,8 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "public_input": "inputs/RUN-T026-002/MAT_C65_compression_mu0.inp"
     },
     {
       "run_id": "RUN-T026-003",
@@ -72,8 +87,8 @@
       "input_hash": "6cedd5567e676b973782f2381036acd1777fc8247fd6e611f8abab306b5553bc",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "60aed2e135cf06ea669f832a6cce66abbcdc85f13beb80e55a66c0ed0d78e39f",
       "notes": "Input CDP envelope/unloading verification, not material calibration",
       "job": "MAT_C65_tension_mu1em5",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu1em5",
@@ -90,7 +105,21 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "started": "2026-10-04T19:34:06.362749+08:00",
+      "finished": "2026-10-04T19:34:36.709751+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "710ebc088fca4d27dfc666f2b523ba4e8718c3f0c14034cbcec8d749dfbc3e02",
+        "MAT_C65_tension_mu1em5.dat": "f951ac7feb8042cf4a15ae4f670113bbe0f2c024c901f09ff65b0e026f2279a6",
+        "MAT_C65_tension_mu1em5.msg": "88691c062e3a88729902ef7ff2a649e4b1b201e0a939ea996d33833648d01def",
+        "MAT_C65_tension_mu1em5.odb": "24307986ff21eb3ef29e55849a2e900b8af53b0a374a8dcdac9626901e6526d0",
+        "MAT_C65_tension_mu1em5.sta": "cd0ac384c871e51a1e49dc69af1a45e75c4bd09934400842379f850ac6ad52bd"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-003/MAT_C65_tension_mu1em5.inp"
     },
     {
       "run_id": "RUN-T026-004",
@@ -101,8 +130,8 @@
       "input_hash": "0a5121d7ff3a32dcd0ce8b14f2c026d4ba39b88048940542af27222bad8b7782",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "8a142235d9351aa9f15904418be497b304903793f931142065df9e573a08d032",
       "notes": "Input CDP envelope/unloading verification, not material calibration",
       "job": "MAT_C65_tension_mu0",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0",
@@ -119,7 +148,21 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "started": "2026-10-04T19:34:36.756665+08:00",
+      "finished": "2026-10-04T19:35:04.957725+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "c309bf8a1a27ed7ca8b090ad0e46ed8e193ff36ac469f15ec19cc6db14c43e51",
+        "MAT_C65_tension_mu0.dat": "892fc847e54529e7e06b3f9431576cae92c5e2fa7bc2e094cfff5b0e2a65ab6f",
+        "MAT_C65_tension_mu0.msg": "167e5ef463208a72c49e2ff7a75d2c46b99063f5c71d2aed0387e2e4a7439252",
+        "MAT_C65_tension_mu0.odb": "892066bcfe28c9c90497b91775ac1e6ce759ccd5ea93ff08ea6d104ece442a64",
+        "MAT_C65_tension_mu0.sta": "42fdf576b8cf2b90c3687cebc354aa0617084937c5860f28f2d44ae898af3b1d"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-004/MAT_C65_tension_mu0.inp"
     },
     {
       "run_id": "RUN-T026-005",
@@ -130,8 +173,8 @@
       "input_hash": "49547a6ab5bc1475416dd507786038c6b50ff2ba8273a4502907617785fda27d",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "ec6ed69c7905eaff55ddf27fe4520113e246727ca1164b2b4ad0b0429b1591a5",
       "notes": "Input CDP envelope/unloading verification, not material calibration",
       "job": "MAT_C70_compression_mu1em5",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu1em5",
@@ -148,7 +191,21 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "started": "2026-10-04T19:35:04.996588+08:00",
+      "finished": "2026-10-04T19:35:32.476130+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "e1a2bb49be8de83feb0a8aa4a93c3fcf4ba6175c9928d373c9a3ffae7ec059c8",
+        "MAT_C70_compression_mu1em5.dat": "4bc9c889ea92976d2698b0d855cd96a7083f860197200be9dffa8b4280ed2b3f",
+        "MAT_C70_compression_mu1em5.msg": "dbf33100e9dd5a5921fc8da940d48fb3475e91dafa7312f64f4a7fa988c815e1",
+        "MAT_C70_compression_mu1em5.odb": "f877d20c431359dc13586782cab17443ee3398d376b661929a97e08c51b810b3",
+        "MAT_C70_compression_mu1em5.sta": "03a6904f51dfd0c283f42dd0d7051a267d95909e44abf7a99e3876d31a95aa4b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-005/MAT_C70_compression_mu1em5.inp"
     },
     {
       "run_id": "RUN-T026-006",
@@ -159,8 +216,8 @@
       "input_hash": "907bd5e9627bb2d76e0b9ffbfe91c083ddb81884eddac8639554997dcc4492e2",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "f9cbe3772a25708aa376152b87681e320a352db66734325c70dab11d9bba18a0",
       "notes": "Input CDP envelope/unloading verification, not material calibration",
       "job": "MAT_C70_compression_mu0",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu0",
@@ -177,7 +234,21 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "started": "2026-10-04T19:35:32.516127+08:00",
+      "finished": "2026-10-04T19:36:00.176129+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "a45bd1be9028ffdbcb0ed6d0846d091075b983f7838b479d8810de276ccd5daa",
+        "MAT_C70_compression_mu0.dat": "bfc5c939a712815ee9cbb3721c8da78f1e72a39f3ad3b954b54dd9e49aae8efa",
+        "MAT_C70_compression_mu0.msg": "a9c20c71264bdfc7682a3ac6db9cc5b48aa22a1336cfab14d821549bed0accb5",
+        "MAT_C70_compression_mu0.odb": "a374e4748f700e2cde54e0c043195988d4e9368e225537d08c55181ff6c1ccfb",
+        "MAT_C70_compression_mu0.sta": "61291b99328bfd44779ccb86f63db0da17d92f9a3066cf01339ed2e7f1b2de1b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-006/MAT_C70_compression_mu0.inp"
     },
     {
       "run_id": "RUN-T026-007",
@@ -188,8 +259,8 @@
       "input_hash": "cc764bae747d13d221e2fec0f2129fa1d6f145e1632ac5bc9dc5536ef58c4b71",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "ebd680748434fab895d0c2ee22ed4997cc58a67fb693d2f5a91a1135bbc244f7",
       "notes": "Input CDP envelope/unloading verification, not material calibration",
       "job": "MAT_C70_tension_mu1em5",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu1em5",
@@ -206,7 +277,21 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "started": "2026-10-04T19:36:00.305715+08:00",
+      "finished": "2026-10-04T19:36:26.374647+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "4d4a90653ff3cf05064ff690afd84aa16dac9ea36301a159198063d93ea7a7cf",
+        "MAT_C70_tension_mu1em5.dat": "dc45f7fccfdca09a45ee93a08ad890dbded8dd4f50cdc41b42ebeb741d246338",
+        "MAT_C70_tension_mu1em5.msg": "53b025e20456ecdc012ce83718e88d4ff972c4e0e1c79dd1ab932f332420e78c",
+        "MAT_C70_tension_mu1em5.odb": "40287ef762cfda11012e1ca9715554e59f8414945c93eb6f07742de0abeca2ab",
+        "MAT_C70_tension_mu1em5.sta": "dcb27a19d68c3fa2b3d358d00ee2322eeb5f64510adc2f8ff1d308fbc0cc92c7"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-007/MAT_C70_tension_mu1em5.inp"
     },
     {
       "run_id": "RUN-T026-008",
@@ -217,8 +302,8 @@
       "input_hash": "baace996acfb80e6858b704dd659877c1897d3c00fe25d659117408f329c4f7a",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "913c79dffaed955ce048b8eda2ac29000bb3ff75968eb67ee5613761159cac11",
       "notes": "Input CDP envelope/unloading verification, not material calibration",
       "job": "MAT_C70_tension_mu0",
       "directory": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu0",
@@ -235,7 +320,21 @@
         "lateral_stress_relative_peak": 0.0001,
         "RF_to_S_relative_peak": 1e-05,
         "unloading_modulus_relative": 0.02
-      }
+      },
+      "started": "2026-10-04T19:36:26.404755+08:00",
+      "finished": "2026-10-04T19:36:53.657885+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "38e495ddc279bf06a226b50e91df0262a03d5b5b90d763c7dc67d3d264e6ed02",
+        "MAT_C70_tension_mu0.dat": "ef1b1d737baf7831e12a56cc6a04cd47d4f19d86927eecced5b9ea481af7b522",
+        "MAT_C70_tension_mu0.msg": "c3cee341ed094408ea20bf041ec5936e5570ca773cb944632be2035870b532bc",
+        "MAT_C70_tension_mu0.odb": "c14d312ab3e6d9baa000e411023b3c70fdbfd9242cbff33cc74de509440d45dd",
+        "MAT_C70_tension_mu0.sta": "8bc386ef44c2f13383b0a64898e0038b9e469a911cac2929c6b6335658add37c"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-008/MAT_C70_tension_mu0.inp"
     },
     {
       "run_id": "RUN-T026-009",
@@ -246,9 +345,9 @@
       "input_hash": "141ea080b5261cc45ccb729945868e10ca73fae3c9a7019ed1688c88e03e87fa",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
-      "notes": "Initial stress fixed-anchor equilibrium and axial EA/L",
+      "status": "failed-environment",
+      "output_hash": "b08b14a4d11428ec1101018313a627900fc22915c64ba05edf769c9270f766bb",
+      "notes": "Initial stress fixed-anchor equilibrium and axial EA/L; C-drive temporary free=0GB; shared-memory allocation exception",
       "job": "PT_FIXED",
       "directory": "D:\\Codex-research-validation\\T026\\PT_FIXED",
       "input": "D:\\Codex-research-validation\\T026\\PT_FIXED\\PT_FIXED.inp",
@@ -260,7 +359,8 @@
       "acceptance": {
         "relative_analytic": 1e-06,
         "scope": "small-strain analytic verification"
-      }
+      },
+      "public_input": "inputs/RUN-T026-009/PT_FIXED.inp"
     },
     {
       "run_id": "RUN-T026-010",
@@ -271,9 +371,9 @@
       "input_hash": "d8b9654dd8c6b6ded84dcf3f4133b43c5db1ba175ece2dd2a5657f8a5c931680",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
-      "notes": "Initial stress elastic-anchor release",
+      "status": "failed-environment",
+      "output_hash": "44d7d840fa6805991cde1c03f62373ea44e45e900f600f529da838c6ed80fd5f",
+      "notes": "Initial stress elastic-anchor release; C-drive temporary free=0GB; shared-memory allocation exception",
       "job": "PT_ELASTIC",
       "directory": "D:\\Codex-research-validation\\T026\\PT_ELASTIC",
       "input": "D:\\Codex-research-validation\\T026\\PT_ELASTIC\\PT_ELASTIC.inp",
@@ -284,7 +384,8 @@
       "acceptance": {
         "relative_analytic": 1e-06,
         "scope": "small-strain analytic verification"
-      }
+      },
+      "public_input": "inputs/RUN-T026-010/PT_ELASTIC.inp"
     },
     {
       "run_id": "RUN-T026-011",
@@ -295,8 +396,8 @@
       "input_hash": "e875c636acf8b529b4244be2c64f3ed1e925e0463b31ed84e4330afe331d423b",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "223e130a03c640d0b71b135c1c335eef3facde2e9075703be31e89246f6d09d2",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N0_h1000_plus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h1000_plus",
@@ -311,7 +412,19 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:36:53.706103+08:00",
+      "finished": "2026-10-04T19:37:01.188932+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "7826c8495556361d2e01bbbc26b610218e6b4ea8ac159eb3b7c37c6b3a3b8e9a",
+        "PT_GEO_N0_h1000_plus.dat": "e072e2885439529080a56797b4820bb6ba57f5cb6336d4b7ed1548bfb10b2b2c",
+        "PT_GEO_N0_h1000_plus.msg": "f24dc8a0e554113e274fb8c80ec84caa96b3cf9affc81d109549e4ae14021815",
+        "PT_GEO_N0_h1000_plus.odb": "081a9bedcfd4397d901442147a1b30b5cc4c0697b445c77c3c85ddc7297a1df5",
+        "PT_GEO_N0_h1000_plus.sta": "b6563a8961a162856ba0601b38652d94f925ecfe06e58aa0925c5b804481b0c1"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-011/PT_GEO_N0_h1000_plus.inp"
     },
     {
       "run_id": "RUN-T026-012",
@@ -322,8 +435,8 @@
       "input_hash": "3f666246fee2055016fe64effbd083b22a8e7a22c9c7c52d61dd7b8f17f0ef7e",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "6b37cca7b59a422efb5f1dab44fb3e0c6952231cb1f6fdc8b56dcfbcc49124bc",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N0_h1000_minus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h1000_minus",
@@ -338,7 +451,19 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:37:01.196277+08:00",
+      "finished": "2026-10-04T19:37:10.815378+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "80a2ad11ed97853440be4fc28dd8a4789503a5eba46b57e9115e5b6852c30c87",
+        "PT_GEO_N0_h1000_minus.dat": "5017c4b9d8bff1757c5c007de871510831668c73add87a006e408a9911ef6cf4",
+        "PT_GEO_N0_h1000_minus.msg": "e034ad896b2a17d4e43792955296545ae331cd6243aff7a4fa00b061c7a27abc",
+        "PT_GEO_N0_h1000_minus.odb": "6ebcfe525cb45034da6dbe1324aec8d4670a9387691535ca43222845ff9d5802",
+        "PT_GEO_N0_h1000_minus.sta": "a6f5a68e0ab8ad1d704a40e0da93593b2c2f0f3d89a296eea9ce806eae03622b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-012/PT_GEO_N0_h1000_minus.inp"
     },
     {
       "run_id": "RUN-T026-013",
@@ -349,8 +474,8 @@
       "input_hash": "f911af031153c19995b7142c1d872c18f7cbb91256827dd9059f218e9f18c145",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "83f799a9676b419a350ef33884ee0378dcd8deba799ac17264a89b32a76e25af",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N0_h500_plus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h500_plus",
@@ -365,7 +490,19 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:37:10.822088+08:00",
+      "finished": "2026-10-04T19:37:18.152485+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "c505b12651598fc63e884c3b3fedaff025a502af7dafa37ae2773c10c41dc9b1",
+        "PT_GEO_N0_h500_plus.dat": "53518f6105e66980c439db875c7dcd9b9e7b131c07acddfdbccae3f6e7005dff",
+        "PT_GEO_N0_h500_plus.msg": "96d7691d556095254a2a6472de4439148386b4e4fd15e60750781bcce9b327d6",
+        "PT_GEO_N0_h500_plus.odb": "4a23423305b0b2b439410d55b7a7d3351c8e1d12ab6807506ed170a0cfd6596f",
+        "PT_GEO_N0_h500_plus.sta": "31d97c068506de82c67d5dfdfb85242905cfca3e73ed66a1349f66c99ad6885b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-013/PT_GEO_N0_h500_plus.inp"
     },
     {
       "run_id": "RUN-T026-014",
@@ -376,8 +513,8 @@
       "input_hash": "a25080e39f9d5c7fa5a800e6d86bd34e8cda7b16e1236fc102863b85a3b933c5",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "6eeacc6fca18fb54598a53c885746646090a4c5ea84b2ca4c717eea5c46914b4",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N0_h500_minus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N0_h500_minus",
@@ -392,7 +529,19 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:37:18.159512+08:00",
+      "finished": "2026-10-04T19:37:27.449644+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "7c32dbf2a9eead237243cea2d213b35a0d0ad03063c4f0802b823ffb9beb7b16",
+        "PT_GEO_N0_h500_minus.dat": "e67fe8e384589753e3097244ef2c8dc765cad05e704e326feb96bbd18611d193",
+        "PT_GEO_N0_h500_minus.msg": "656f00d38dc5b7d208e84ee7ec0e8cbd47b0ab9e8207aec37186a7481e823ac7",
+        "PT_GEO_N0_h500_minus.odb": "fd91fcad6d4562cdedef025bcc57c9ece0db94e7d53ee5fcff1fd1faa781c6eb",
+        "PT_GEO_N0_h500_minus.sta": "05256231395104e4456e3400c222225e3847710f315546c0f87ec39fbbb5104b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-014/PT_GEO_N0_h500_minus.inp"
     },
     {
       "run_id": "RUN-T026-015",
@@ -403,8 +552,8 @@
       "input_hash": "99751331c745dd730335e9960160d74be18eec56e96472d04dea34eded09ba45",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "7c9945d9df832508f890e7a1c5463bf666336e5682ec832dde17fb8a562fc239",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N1_h1000_plus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h1000_plus",
@@ -419,7 +568,19 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:37:27.454947+08:00",
+      "finished": "2026-10-04T19:37:34.283191+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "5635e055c09aa35cc63d7abdeaccdbd0ef9b3afbeb8ec150e283eda22abb22b4",
+        "PT_GEO_N1_h1000_plus.dat": "3249e8a48f75c751aaebe2c58dc239c5d027d9fbd039c8c8ff14e128b46c01a6",
+        "PT_GEO_N1_h1000_plus.msg": "6e39972664f88fb878587b2386cb7c9a7263b3e4f97e3ec04b2c4fc868e52c51",
+        "PT_GEO_N1_h1000_plus.odb": "d3d411002f9757fbe159c88b4a30b3ca591ade55b26bfd0cce0988fe4d93e3b3",
+        "PT_GEO_N1_h1000_plus.sta": "9d866c229ad08070ba66d501ac5c0fe0620e72803ac8fe0c44246601064722db"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-015/PT_GEO_N1_h1000_plus.inp"
     },
     {
       "run_id": "RUN-T026-016",
@@ -430,8 +591,8 @@
       "input_hash": "85c3319d1e34768e2e53c297bc117756c90ee152a47eda94746cc517e597a9e3",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "e4fa34093302e20061d843b74d9f96c4faf519b8339693fb09988bc28e15f543",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N1_h1000_minus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h1000_minus",
@@ -446,7 +607,19 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:37:34.290415+08:00",
+      "finished": "2026-10-04T19:37:41.584235+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "13295ba9feaa901d8911d36c2be2640fd7b4d397e48e6981f4ba337d69de189e",
+        "PT_GEO_N1_h1000_minus.dat": "73849f6701d93e502c0716d3f14f74ee6520e8217457107205e8ec2ecf29ba16",
+        "PT_GEO_N1_h1000_minus.msg": "05db436e0fbffea2a8ffa7700787d430e9b870e42a4dcdbdc7ce2afbbbaff2da",
+        "PT_GEO_N1_h1000_minus.odb": "0f07fdc639c5a1acb83900b83813bbd2cd8bce17f929e30bbf8f4603e400f269",
+        "PT_GEO_N1_h1000_minus.sta": "041fbe594de827d171783e79d9d9ad3de572650b8d1f0c0c4842e65252ea729a"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-016/PT_GEO_N1_h1000_minus.inp"
     },
     {
       "run_id": "RUN-T026-017",
@@ -457,8 +630,8 @@
       "input_hash": "cabf44f3d1b5c73f2505a77ace501fc851e24ffc63fef9d223996f477ca2a744",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "0ce38edb29a9cceb9d6f8b441d5ea977070591cecc03cf409df89dd8dc051d13",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N1_h500_plus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h500_plus",
@@ -473,7 +646,19 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:37:41.591661+08:00",
+      "finished": "2026-10-04T19:37:50.634417+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "0fc26d46c9e9b41cdb157c8cddacd8000499ff2b33a7aae4274a31d56d31c335",
+        "PT_GEO_N1_h500_plus.dat": "6dc20b2a0246e3d801250b4ac4ea6c7539d4e4c9382b896e5e84bd4e56e7d62b",
+        "PT_GEO_N1_h500_plus.msg": "89c627b3852bcacf2f9d5479b367efa7ac5fb73281f48bff3390ae3219acbc04",
+        "PT_GEO_N1_h500_plus.odb": "ed797255252f5cc6fcb0049a9e0277d0959f496b1c480a9db43faa4b70530384",
+        "PT_GEO_N1_h500_plus.sta": "1fb01c7f556bf4bb3f50a0f28a46a6deb9478146bd698e751d736c1c69c96101"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-017/PT_GEO_N1_h500_plus.inp"
     },
     {
       "run_id": "RUN-T026-018",
@@ -484,8 +669,8 @@
       "input_hash": "6c2027937c34d9fd1f6d33a3897700facec4cf4c21be2069016877f3d49efe39",
       "seed": "not_applicable",
       "time_window": "static pseudo-time; see input",
-      "status": "registered-not-started",
-      "output_hash": "",
+      "status": "verification-pass",
+      "output_hash": "10732f4c35f24e152149518b66277be8a45deb8b85cdee6059ca15c1f9fdfa73",
       "notes": "Central difference transverse prestress stiffness",
       "job": "PT_GEO_N1_h500_minus",
       "directory": "D:\\Codex-research-validation\\T026\\PT_GEO_N1_h500_minus",
@@ -500,7 +685,1598 @@
         "scaled_stiffness_error": 1e-05,
         "scale_N_per_m": 1600.0,
         "scope": "current-state straight-truss analytic verification"
-      }
+      },
+      "started": "2026-10-04T19:37:50.641513+08:00",
+      "finished": "2026-10-04T19:38:00.114212+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "b335be878709bd6698734a437027b7944cde677e27603c2bdd2b49863dfabbb3",
+        "PT_GEO_N1_h500_minus.dat": "fe7a40fc05498bb5e6e0f60c435c72bfd9c2680f435094b86d007f8cbfa697ff",
+        "PT_GEO_N1_h500_minus.msg": "befe444d1f8cd5741a4aca82d3b95fa82e41c39ad950a5adcd14b51874df81ec",
+        "PT_GEO_N1_h500_minus.odb": "c9d56c1ff8706b9d4e35ac70ab0829ee6ff29ea3234ac788e1301a3cb003d4a5",
+        "PT_GEO_N1_h500_minus.sta": "f07585dc2ecb982e98d8edf420925f0715353ed323d74970278845023acb94b2"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-018/PT_GEO_N1_h500_minus.inp"
+    },
+    {
+      "run_id": "RUN-T026-019",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "16df647a883c2f80b2b1d17bf97782addb20d6d8d71485fb278552ceceb89142",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "8e7409c81fe65cf4553e9b9370bf9cad2f666495e60e401cff69d598c1bdaf3c",
+      "notes": "Input CDP envelope/unloading verification, not material calibration; C-drive temporary free=0GB; shared-memory allocation exception; retry with D-drive isolated temporary/scratch and memory=512mb",
+      "job": "MAT_C65_compression_mu0_DTMP",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0_DTMP",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0_DTMP\\MAT_C65_compression_mu0_DTMP.inp",
+      "changed_variables": {
+        "grade": "C65",
+        "direction": "compression",
+        "mu": 0.0
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "retry_of": "RUN-T026-002",
+      "started": "2026-10-04T19:38:00.119920+08:00",
+      "finished": "2026-10-04T19:38:22.668968+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "f90ae7c94deda1cbb1b36d429f9b5cd2aa16f14d896cde8112d8fc0f5921bd95",
+        "MAT_C65_compression_mu0_DTMP.dat": "b6302768cd30b14d2a0e78c5d6ca58f93e6b0130aa305fe6efc86e303701bafc",
+        "MAT_C65_compression_mu0_DTMP.msg": "84b74cc5eb8908309ecdc73bb504ac8509a485bebb61c9042b7a5ba007227bda",
+        "MAT_C65_compression_mu0_DTMP.odb": "683d9bba38b54ffaec6f45738e4d599bcd79b76af97c4e535e3395e03566c47f",
+        "MAT_C65_compression_mu0_DTMP.sta": "195e295d4da11600271631eafec8c03d0dcc06a8b3231c8adfea47c0397e9992"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/independent-material-output-review.json",
+      "secondary_diagnostic": "Tensile low-residual relative accuracy remains limited for C3D8R; original peak-normalized acceptance is not changed",
+      "public_input": "inputs/RUN-T026-019/MAT_C65_compression_mu0_DTMP.inp"
+    },
+    {
+      "run_id": "RUN-T026-020",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "141ea080b5261cc45ccb729945868e10ca73fae3c9a7019ed1688c88e03e87fa",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "verification-pass",
+      "output_hash": "ab5b5f73866ed0d743d711609ee8cc795468c89cc74e739dc1f7070d992679cb",
+      "notes": "Initial stress fixed-anchor equilibrium and axial EA/L; C-drive temporary free=0GB; shared-memory allocation exception; retry with D-drive isolated temporary/scratch and memory=512mb",
+      "job": "PT_FIXED_DTMP",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_FIXED_DTMP",
+      "input": "D:\\Codex-research-validation\\T026\\PT_FIXED_DTMP\\PT_FIXED_DTMP.inp",
+      "changed_variables": {
+        "anchorage": "fixed",
+        "delta_u": 0.001
+      },
+      "validation_reference": "N0=179200N; axial tangent EA/L=243750N/m",
+      "acceptance": {
+        "relative_analytic": 1e-06,
+        "scope": "small-strain analytic verification"
+      },
+      "retry_of": "RUN-T026-009",
+      "started": "2026-10-04T19:38:22.696684+08:00",
+      "finished": "2026-10-04T19:38:30.343004+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "70280abb766887fec600157e2b9f1a9855050bf12c3ab1a56bfa57cd7f01663a",
+        "PT_FIXED_DTMP.dat": "b3890f5a5021bbab4d1156c21fec2e4708eabc429240baab043ac082966e6c98",
+        "PT_FIXED_DTMP.msg": "e544327f080cc83a2b7985c4680af942c2445fbdf176b4fd58981d7684d3a2b8",
+        "PT_FIXED_DTMP.odb": "41597c2a5eb84811002b9747f18ef85fd2bbc078e7a45d10821a873a2e928781",
+        "PT_FIXED_DTMP.sta": "136b93a898030fee22b8d52edf2599a1a79635013ca29a55a3e88f6932620b4b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-020/PT_FIXED_DTMP.inp"
+    },
+    {
+      "run_id": "RUN-T026-021",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "d8b9654dd8c6b6ded84dcf3f4133b43c5db1ba175ece2dd2a5657f8a5c931680",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "verification-pass",
+      "output_hash": "7279cbd42e83e767b658d381f8f492e86c8ef2f307ce72efe77895b2482325e1",
+      "notes": "Initial stress elastic-anchor release; C-drive temporary free=0GB; shared-memory allocation exception; retry with D-drive isolated temporary/scratch and memory=512mb",
+      "job": "PT_ELASTIC_DTMP",
+      "directory": "D:\\Codex-research-validation\\T026\\PT_ELASTIC_DTMP",
+      "input": "D:\\Codex-research-validation\\T026\\PT_ELASTIC_DTMP\\PT_ELASTIC_DTMP.inp",
+      "changed_variables": {
+        "anchor_k_N_per_m": 2437500
+      },
+      "validation_reference": "N=N0/(1+EA/(Lkh)); u=-N/(kh)",
+      "acceptance": {
+        "relative_analytic": 1e-06,
+        "scope": "small-strain analytic verification"
+      },
+      "retry_of": "RUN-T026-010",
+      "started": "2026-10-04T19:38:30.350038+08:00",
+      "finished": "2026-10-04T19:38:37.503841+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "4d96c28e5024cf70fdd6c8e9cd8b2f765ac08768aafe6e2d8201530c0eb0b293",
+        "PT_ELASTIC_DTMP.dat": "c87930067432c65bec861df1a50d1324b94a4439dda6d1629f851de43ccfc382",
+        "PT_ELASTIC_DTMP.msg": "71b4776fb3504bea84119375ee25c04bb16a0bb5ce7d4f67b0598841348fcbe0",
+        "PT_ELASTIC_DTMP.odb": "3897c582e77267c22d45c328166bc2b15e5692ecc956eafa5a43a8908fd51138",
+        "PT_ELASTIC_DTMP.sta": "1c8d58aab95ec35035dfa3ae1a38bb5fe4854847dbd09b75b59d217bfd6ecb0b"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "public_input": "inputs/RUN-T026-021/PT_ELASTIC_DTMP.inp"
+    },
+    {
+      "run_id": "RUN-T026-022",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "eceae167903bab88a58da050a7137239559a63c7e4c478a935379962570bae2e",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "30eee5a655426e1892e76bf146f5cfcea299c7e23fd874c940014510d783f3b2",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_DAMP_T100",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100\\TRUSS_DAMP_T100.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T100",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100\\TRUSS_DAMP_T100.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:18.155818+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:28.257818+08:00",
+      "output_files": {
+        "execution.log": "003d65044ae44668b227d43d588587895d3c47bd54bca510f989da922a18bb70",
+        "TRUSS_DAMP_T100.dat": "b20a9ddebbe234856ffa7a1b4ecd84a71e3861c546dd735789fda182daa0c352",
+        "TRUSS_DAMP_T100.odb": "f49057c8825b3e1136f3d0b43f2cafc4dd0f264404f30f7434b0edb342a1abf0"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-022/TRUSS_DAMP_T100.inp"
+    },
+    {
+      "run_id": "RUN-T026-023",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "fd07a19a23ffe113e6077097cba1622f5b268818e69d99def6d20eeecfb01e35",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "795cb0416cb18314f831ee8932810b214cc7b01cc336433a0dc72c9d72a6013f",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_DAMP_T200",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200\\TRUSS_DAMP_T200.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T200",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200\\TRUSS_DAMP_T200.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:28.267686+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:37.941171+08:00",
+      "output_files": {
+        "execution.log": "dfd5d75a2fe34f5f5cbc9ce26a17a6b22f641604aae1c1583d825d6f0f561085",
+        "TRUSS_DAMP_T200.dat": "dbd80ce658df5c041913bd4ab3bf05f13765f03dcc3cf2565317e065ec99d7c5",
+        "TRUSS_DAMP_T200.odb": "324328d22accd335c3c2d017e31efeae629fc57cb4eda98a1b13bb0722b22344"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-023/TRUSS_DAMP_T200.inp"
+    },
+    {
+      "run_id": "RUN-T026-024",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "90f153e03e4a0ddfef344cbbae020cbcee3d7b3d0360de598495e510676f35bd",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "6140889b00e0354b0359e84315971a50412fb6221d4cc689dd6d3f5a3bc9ec1b",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_ZERO_T100",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100\\TRUSS_ZERO_T100.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T100",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100\\TRUSS_ZERO_T100.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:37.946868+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:46.949063+08:00",
+      "output_files": {
+        "execution.log": "75d6d7ffaa81b805ce8909e92980e8403cf0403a887d3502d043736710b7bbc9",
+        "TRUSS_ZERO_T100.dat": "91af2965d5793872b395d390f43104814b9073515740c590b733e8b61d69842f",
+        "TRUSS_ZERO_T100.odb": "deda469c136f02d46dbff086026c51e876e70820f4f704703a51937ce7f1b433"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-024/TRUSS_ZERO_T100.inp"
+    },
+    {
+      "run_id": "RUN-T026-025",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "9b13c794cbe95a180fb27f8f4e1cfd2c00c6f7c9b1cf4ad0c1c6cc46c833777f",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "failed-input",
+      "output_hash": "e7f925198af5002eba2d56d44bbfb2e56438b55fecdea48f0b8ffbe35abd722d",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "TRUSS_ZERO_T200",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200\\TRUSS_ZERO_T200.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T200",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200\\TRUSS_ZERO_T200.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:46.957173+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:50:56.141529+08:00",
+      "output_files": {
+        "execution.log": "e19d61d9f1e08ced5e5bef8ec82bbf6fcc01f7db53695bac2ca8d765386a6844",
+        "TRUSS_ZERO_T200.dat": "c89b34445651813d2bbce0afb7db3e15fecf544565f3b1848f9197e64a7335aa",
+        "TRUSS_ZERO_T200.odb": "b91536f70f84ca1f4a739bb25daa8a7a87a7ac9831bd1655f837bda64185c193"
+      },
+      "failure_cause": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-025/TRUSS_ZERO_T200.inp"
+    },
+    {
+      "run_id": "RUN-T026-026",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "e90781f444f432650c42abca44c851d313000f6a64af2b5f731a17addc565d2e",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "262b8470eed9139ee9d5d2887bb4bd3c5fc9c16a6c54a904c71b54516b83ec00",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation",
+      "registered_at": "2026-10-04T19:50:09.506633+08:00",
+      "job": "SPRING_ALPHA_T200",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\SPRING_ALPHA_T200.inp",
+      "changed_variables": {
+        "stiffness_element": "spring",
+        "mass_alpha": 0.2,
+        "material_beta": 0.0,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": 0.001
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": null,
+        "area_m2": null,
+        "length_m": 1.0,
+        "truss_density": "not_defined",
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.2,
+        "zeta": 0.0031622776601683794,
+        "omega_d_rad_per_s": 31.6226184874055,
+        "frequency_d_Hz": 5.03289604577974,
+        "decay_rate_per_s": 0.1,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=SPRING_ALPHA_T200",
+        "input=D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\SPRING_ALPHA_T200.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "started_at": "2026-10-04T19:50:56.149583+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:51:51.637989+08:00",
+      "output_files": {
+        "execution.log": "e06b34b6e437d7bf820671030b0ec8111514fc18f9f71866de117de2736776fc",
+        "SPRING_ALPHA_T200.dat": "6966651316789a03c16fcfcf54811019a6d8bc447dd84178e05c25fa0d66e020",
+        "SPRING_ALPHA_T200.msg": "ed3e97f6bd8733a8986587be70b0018d0b1406b5894a88973420f22994accd5d",
+        "SPRING_ALPHA_T200.odb": "a49a2ab53c1399c7ac1dc48dbcc4f6e01421a9f787088b9d01dafa00a5f62858",
+        "SPRING_ALPHA_T200.sta": "a99a93449249d498323166dcc788969ef4fc5f68a7066a2b0a9aca803a97bacb"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.032482162662097,
+        "analytical_frequency_Hz": 5.03289604577974,
+        "frequency_relative_error": 8.223557845786737e-05,
+        "zeta": 0.0031617574548911676,
+        "analytical_zeta": 0.0031622776601683794,
+        "zeta_relative_error": 0.000164503352682871,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.003161757638537268,
+        "positive_negative_zeta_absolute_difference": 1.836461004968426e-10,
+        "positive_decay_rate_per_s": 0.09997532729523789,
+        "analytical_decay_rate_per_s": 0.1,
+        "analytical_history_error_over_x0": 0.0041491506918552145,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.3280669950763695,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 9.832333558532774e-05,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 0.00033596650246181525,
+        "final_viscous_dissipation_J": 0.00016403861809521914
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\free-history.csv",
+          "sha256": "66563cede7eedba9dd458059e896b2e2c3b8d9105971c8895c84a2db292058a2"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\analytical-comparison.csv",
+          "sha256": "2d81b5202ab1af2093194e69ddc2501fe2989c2d7001a2508ae9a8426ac5ded8"
+        }
+      },
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-026/SPRING_ALPHA_T200.inp",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-027",
+      "task_id": "T026",
+      "baseline_id": "ACTUAL-DTU158-MODAL-INPUT__verification_fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "48241c895b70f29f5523fa785c26423e7a400916ef46c488a6c718ea191e8ca7",
+      "seed": "not_applicable",
+      "time_window": "static pseudo-time; see input",
+      "status": "verification-hold",
+      "output_hash": "ed30ae79ab6b465fd565324bf4b7ec873a041b22e7ec3b56aebe389e8fbf18c8",
+      "notes": "Targeted increment refinement after >10% relative interpolation error at 1%-peak tensile residual; preserve total pseudo-time and material",
+      "job": "MAT_C65_tension_mu0_FINE",
+      "directory": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0_FINE",
+      "input": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0_FINE\\MAT_C65_tension_mu0_FINE.inp",
+      "changed_variables": {
+        "max_increment": 0.0005,
+        "initial_increment": 0.00025,
+        "increments_max": 6000
+      },
+      "validation_reference": "Actual source input envelope; official Abaqus CDP conversion",
+      "acceptance": {
+        "tail_relative_stress_error": 0.01,
+        "curve_peak_normalized_budget": 0.005,
+        "purpose": "determine output/increment resolution contribution; original peak-normalized implementation check already passed"
+      },
+      "started": "2026-10-04T19:47:07.627553+08:00",
+      "finished": "2026-10-04T19:48:52.407700+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "ff46fc83acf9348f6b919e37a0ec27655e755007801569c0ca8f03968f791a78",
+        "MAT_C65_tension_mu0_FINE.dat": "f7d29c884dc33399e3e22af7fdcde333fd7f68d9aab8d4b9d6bffab4364557ed",
+        "MAT_C65_tension_mu0_FINE.msg": "7735c7a92b753509f8343be45b3f4a837cb8bdf751b2f63fbbe9bd283981c0c0",
+        "MAT_C65_tension_mu0_FINE.odb": "61285046fce3d4886a00141f1313abdde5e422bfb1c76cc1708ec2cef6b95891",
+        "MAT_C65_tension_mu0_FINE.sta": "69247c592f463d85772f51dd7a6b01727fe23673943a67758e159100c60cb5c8"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/C65-fine-convergence-review.json",
+      "public_input": "inputs/RUN-T026-027/MAT_C65_tension_mu0_FINE.inp"
+    },
+    {
+      "run_id": "RUN-T026-028",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "8a6604cc26cf1e9bd567ff3d51b7dc31e63f21a1951814863eac5d9317eac6c0",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "13cebb39369fd01578257ba76b0790829d4b92df5ecacb1703b82be8ea1e04ae",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.988448+08:00",
+      "job": "TRUSS_DAMP_T100_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\TRUSS_DAMP_T100_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T100_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\TRUSS_DAMP_T100_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-022",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:55:09.967489+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:55:37.708436+08:00",
+      "output_files": {
+        "execution.log": "897faa99d06d86a8722332aa24e2d691e47c77ab4f0c52ebf03c64751ad369f9",
+        "TRUSS_DAMP_T100_RHOEPS.dat": "679fe2ed320a226bbf979e639b1df47a9beee4d403a9f7b3b3a9b573683fbf08",
+        "TRUSS_DAMP_T100_RHOEPS.msg": "faba82bbe023d3fce2628213a9879ac6eb2a37f481b5df08b7818a7659c67d35",
+        "TRUSS_DAMP_T100_RHOEPS.odb": "10d0022eb3c108bd8912164a8d98f9a6490b101fd280110aa7727a9f8b9e1790",
+        "TRUSS_DAMP_T100_RHOEPS.sta": "78dc5b2d01cf77ed52107abca4c4c5165305232557ea06888c6943df4453a61a"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.030364629223256,
+        "analytical_frequency_Hz": 5.03201520308282,
+        "frequency_relative_error": 0.0003280144818626164,
+        "zeta": 0.01896120507206758,
+        "analytical_zeta": 0.018973665961010275,
+        "zeta_relative_error": 0.0006567465121554505,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.018961193528014956,
+        "positive_negative_zeta_absolute_difference": 1.154405262354663e-08,
+        "positive_decay_rate_per_s": 0.5994091309349941,
+        "analytical_decay_rate_per_s": 0.6,
+        "analytical_history_error_over_x0": 0.0063762454483531645,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.9078654927870957,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 0.0011236078923957185,
+        "minimum_actual_dt_s": 0.0011608600616455078,
+        "maximum_actual_dt_s": 0.001986980438232422,
+        "last_time_s": 2.0,
+        "history_points": 1008,
+        "final_mechanical_energy_J": 4.606725360645214e-05,
+        "final_viscous_dissipation_J": 0.00045393971959128976
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\free-history.csv",
+          "sha256": "edce9a3b61b0eae400b5942f8badd8a6155f9e631342b44ddfaf8fd07face7a8"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\analytical-comparison.csv",
+          "sha256": "26adaddfd552e215d28824f8cae2e13854006ca59eae9572348a318fa29ccbd0"
+        }
+      },
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-028/TRUSS_DAMP_T100_RHOEPS.inp",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-029",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "920039de84c346cffcbce5e209f7cb113523991b8833b2c8c94c9e3228a5dd84",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "101724f2a1c6cfee693b7e8d2fd535b085917ead907016129005b650a9bd39e7",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.990570+08:00",
+      "job": "TRUSS_DAMP_T200_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\TRUSS_DAMP_T200_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.2,
+        "material_beta": 0.001,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 1.2,
+        "zeta": 0.018973665961010275,
+        "omega_d_rad_per_s": 31.617083989514278,
+        "frequency_d_Hz": 5.03201520308282,
+        "decay_rate_per_s": 0.6,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_DAMP_T200_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\TRUSS_DAMP_T200_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-023",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:55:37.745318+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:56:25.187201+08:00",
+      "output_files": {
+        "execution.log": "e6579a9ce8a6f712262123482e6dacb21d8fc4e2c0113797861902082617dd17",
+        "TRUSS_DAMP_T200_RHOEPS.dat": "3304f4e03746c5c5948120486e018f878c2910746db7d176dc952428f94fd2bf",
+        "TRUSS_DAMP_T200_RHOEPS.msg": "5b0b008895909a72985207b0a730feb9fb808e9eb1da43dd658d8253bbdbf1be",
+        "TRUSS_DAMP_T200_RHOEPS.odb": "854ba7aff41dabadf21a9bb1221779af176de675a758c6ad196d4fdfaa8b2964",
+        "TRUSS_DAMP_T200_RHOEPS.sta": "594d0ea0b2ab07ae87ea2f151d7856095a08e71230e3a3518148bbd4e31ca25e"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.031602492432133,
+        "analytical_frequency_Hz": 5.03201520308282,
+        "frequency_relative_error": 8.201697213367779e-05,
+        "zeta": 0.01897054711750058,
+        "analytical_zeta": 0.018973665961010275,
+        "zeta_relative_error": 0.0001643774859378795,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.01897054591946631,
+        "positive_negative_zeta_absolute_difference": 1.1980342690121049e-09,
+        "positive_decay_rate_per_s": 0.5998521359075524,
+        "analytical_decay_rate_per_s": 0.6,
+        "analytical_history_error_over_x0": 0.0015950139775836787,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.9079897925184923,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 0.0005619174080493186,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 4.600510374075384e-05,
+        "final_viscous_dissipation_J": 0.00045399885857477784
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\free-history.csv",
+          "sha256": "5cd8c977ea7fbe33bddcaf1f90b6268b49b69bcb0b543f3f85b23833128f36fc"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\analytical-comparison.csv",
+          "sha256": "d447c402bb0225c15278eac7e60cafb8c1977def2ec46eeea088f15c17a40ac5"
+        }
+      },
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-029/TRUSS_DAMP_T200_RHOEPS.inp",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-030",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "e88fe120f254c18d2b5c323771c1b112c30f692fedda126b310ddfa46db7a20b",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "5cff9f0970ca1e8cd1b73099733cc85e23c0d08363c3b6e35a7c44adca7110e9",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.994095+08:00",
+      "job": "TRUSS_ZERO_T100_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\TRUSS_ZERO_T100_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0019869176531592202,
+        "T_divisions": 100,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T100_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\TRUSS_ZERO_T100_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-024",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:56:25.248307+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:56:54.515603+08:00",
+      "output_files": {
+        "execution.log": "0e9d623c95a1fce1d580b71bdefadc31fa808d2f654c6143b2a552ab315667b2",
+        "TRUSS_ZERO_T100_RHOEPS.dat": "fa3b162aee42537821d7915880bfe136ef83cf7fad932ae8a978be6747e7216f",
+        "TRUSS_ZERO_T100_RHOEPS.msg": "5f4b184bd56a1d137887a49cc90d9c4d252804df6c89b03866658cd296fc6bda",
+        "TRUSS_ZERO_T100_RHOEPS.odb": "b977566d5563f044befde5e8cbb8c50b1f463243cb63502d208004c19ee97740",
+        "TRUSS_ZERO_T100_RHOEPS.sta": "369648d3272131aaa5c6397fb82259faf6aea13ec586293eb96afb37c42e2f84"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.031266823569689,
+        "analytical_frequency_Hz": 5.032921210448704,
+        "frequency_relative_error": 0.0003287130495068747,
+        "zeta": 2.974797835124766e-09,
+        "analytical_zeta": 0.0,
+        "zeta_relative_error": null,
+        "zero_zeta_absolute": 2.974797835124766e-09,
+        "negative_peak_zeta": 3.0595157005904234e-09,
+        "positive_negative_zeta_absolute_difference": 8.47178654656576e-11,
+        "positive_decay_rate_per_s": 9.404044488928182e-08,
+        "analytical_decay_rate_per_s": 0.0,
+        "analytical_history_error_over_x0": 0.02013895291035378,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 5.800393412108695e-08,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 5.800393412108695e-08,
+        "minimum_actual_dt_s": 0.0011608600616455078,
+        "maximum_actual_dt_s": 0.001986980438232422,
+        "last_time_s": 2.0,
+        "history_points": 1008,
+        "final_mechanical_energy_J": 0.0005000000019208528,
+        "final_viscous_dissipation_J": 0.0
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\free-history.csv",
+          "sha256": "24f5c34fc9d9a3b62b0581b8e600264701a60ed73f6a34cf9fe9802fc082a682"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\analytical-comparison.csv",
+          "sha256": "db130d6fad3dd12e863d07d21c2010f48096f6bb12d4bce154357b4905460ebf"
+        }
+      },
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-030/TRUSS_ZERO_T100_RHOEPS.inp",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-031",
+      "task_id": "T026",
+      "baseline_id": "SDOF-T3D2-MASS__numerical-implementation-fixture",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "3156dd3d938de634fb5fcf7d2d97aa8a86bc15c0f07181ac91086566dc5a3f99",
+      "seed": "not_applicable",
+      "time_window": "Preload static pseudo-time 1; Free physical time 0..2 s; every increment history",
+      "status": "verification-passed",
+      "output_hash": "3d8d72e043bf2a94c1bd3259cf5df1f18151295877713bf7fb01fee40b834629",
+      "notes": "Direct integration numerical verification only; no physical tower damping validation; diagnostic retry with active truss density 1e-12 kg/m3; same frozen acceptance criteria",
+      "registered_at": "2026-10-04T19:55:08.999572+08:00",
+      "job": "TRUSS_ZERO_T200_RHOEPS",
+      "directory": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\TRUSS_ZERO_T200_RHOEPS.inp",
+      "changed_variables": {
+        "stiffness_element": "truss",
+        "mass_alpha": 0.0,
+        "material_beta": 0.0,
+        "time_step": 0.0009934588265796101,
+        "T_divisions": 200,
+        "unused_beta_material": null,
+        "numerical_active_density_repair_kg_per_m3": 1e-12
+      },
+      "fixed_variables": {
+        "k_N_per_m": 1000.0,
+        "mass_kg": 1.0,
+        "static_force_N": 1.0,
+        "E_Pa": 1000000.0,
+        "area_m2": 0.001,
+        "length_m": 1.0,
+        "truss_density": 1e-12,
+        "initial_velocity_m_per_s": 0.0,
+        "preload_displacement_m": 0.001,
+        "HHT_alpha": 0.0,
+        "integration_beta": 0.25,
+        "integration_gamma": 0.5,
+        "nonlinear_geometry": false
+      },
+      "analytical_reference": {
+        "omega_n_rad_per_s": 31.622776601683793,
+        "period_n_s": 0.19869176531592203,
+        "c_Ns_per_m": 0.0,
+        "zeta": 0.0,
+        "omega_d_rad_per_s": 31.622776601683793,
+        "frequency_d_Hz": 5.032921210448704,
+        "decay_rate_per_s": 0.0,
+        "initial_energy_J": 0.0005,
+        "displacement": "x0 exp(-lambda*t)[cos(wd*t)+(lambda/wd)sin(wd*t)]"
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "physical_validation_reference": "not_available; no physical calibration claim",
+      "solver_command": [
+        "D:/Abaqus/Commands/abaqus.bat",
+        "job=TRUSS_ZERO_T200_RHOEPS",
+        "input=D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\TRUSS_ZERO_T200_RHOEPS.inp",
+        "cpus=1",
+        "memory=512mb",
+        "scratch=D:\\Codex-research-validation\\T026\\damping\\scratch",
+        "interactive"
+      ],
+      "retry_of": "RUN-T026-025",
+      "authorization": "Root explicitly allocated RUN-T026-028..031 and authorized active-density numerical repair",
+      "numerical_repair_scope": {
+        "bar_total_mass_kg": 1e-15,
+        "maximum_possible_relative_mass_perturbation": 1e-15,
+        "reference_mass_kg": 1.0,
+        "mass_distribution_note": "Exact constrained truss mass contribution is bounded by its entire 1e-15kg; below solver output precision. No retuning of stiffness/damping targets."
+      },
+      "started_at": "2026-10-04T19:56:54.550717+08:00",
+      "environment_override": {
+        "TEMP": "D:\\Codex-research-validation\\T026\\damping\\temp",
+        "TMP": "D:\\Codex-research-validation\\T026\\damping\\temp"
+      },
+      "process_returncode": 0,
+      "finished_at": "2026-10-04T19:57:35.363515+08:00",
+      "output_files": {
+        "execution.log": "088c08fea645201d97a9d7727818c9d2962b202f15dbdc36ba147029b5c38c25",
+        "TRUSS_ZERO_T200_RHOEPS.dat": "004f95c13de3403c46a7df697fe8e2f7c3763cf78643b5cf352deea177ba9c6b",
+        "TRUSS_ZERO_T200_RHOEPS.msg": "8667468958046903ad102e75bf3914c196d9b66029b14ecb70b8109d10f37376",
+        "TRUSS_ZERO_T200_RHOEPS.odb": "74809b05c31e01df0cef708fb3e2d60e31b7cb27ed407220fb5fd3c9a1c228ab",
+        "TRUSS_ZERO_T200_RHOEPS.sta": "0f61c8ccf57e460021a1e85b8e9f2e56035b9566b6e5997e62950788241e401f"
+      },
+      "verification_metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.0325075156779135,
+        "analytical_frequency_Hz": 5.032921210448704,
+        "frequency_relative_error": 8.219774431027642e-05,
+        "zeta": -6.094264473089957e-10,
+        "analytical_zeta": 0.0,
+        "zeta_relative_error": null,
+        "zero_zeta_absolute": 6.094264473089957e-10,
+        "negative_peak_zeta": -4.4212638631200826e-10,
+        "positive_negative_zeta_absolute_difference": 1.6730006099698744e-10,
+        "positive_decay_rate_per_s": -1.9270172303505343e-08,
+        "analytical_decay_rate_per_s": 0.0,
+        "analytical_history_error_over_x0": 0.005037403484314413,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 5.8124948430771095e-08,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 5.8124948430771095e-08,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 0.0004999999873689376,
+        "final_viscous_dissipation_J": 0.0
+      },
+      "verification_decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "postprocessing_outputs": {
+        "free_history_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\free-history.csv",
+          "sha256": "6dfcba23eda2135af3b595d8d45ef39e962ce2a5e54dd10e29806b605d094976"
+        },
+        "analytical_comparison_csv": {
+          "path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\analytical-comparison.csv",
+          "sha256": "d27ced6978f6dfbc6123f8df2f82c122d79dcf47c7670289ef8cdcacb203dd46"
+        }
+      },
+      "independent_manifest_source": "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+      "public_input": "inputs/RUN-T026-031/TRUSS_ZERO_T200_RHOEPS.inp",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-032",
+      "task_id": "T026",
+      "baseline_id": "DTU158-T026-RECONSTRUCTED-B31-G1",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+      "seed": "not_applicable",
+      "time_window": "Gravity 1s static pseudo-time; 30 modes; two 1kN linear perturbations",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "9e693019386a27525df5f247168c6b8a1b3ff8244fdcd3c67eb61c09364eed64",
+      "notes": "New reconstructed source branch, no historical result transplant; physical capacity/damping not calibrated",
+      "job": "DTU158_RECONSTRUCTED_G1",
+      "directory": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1",
+      "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+      "acceptance": {
+        "global_force_relative": 1e-05,
+        "global_moment_scaled": 1e-05,
+        "mass_integral_vs_solver_relative": 1e-06,
+        "eigenvalues": "stable positive requested modes; participation/output coverage recorded, no arbitrary frequency fitting"
+      },
+      "changed_variables": "remove display-only geometry; restore 28B31 RNA with existing rigidbody; no unrelated candidate NSM transferred; static default controls reset; output enabled; add 1kN perturbation flexibility",
+      "fixed_variables": "original complete 31+4 tower mesh, C65/C70/PT/rebar/SPRING2/TIE/coupling/BC parameters; no physical tuning",
+      "started": "2026-10-04T20:02:54.273699+08:00",
+      "finished": "2026-10-04T20:04:27.438197+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "DTU158_RECONSTRUCTED_G1.dat": "53ddfd14ba3cbe31b2a0c9ddf9e125cd31a12844c7ef1a5e1026fbc8d57ec511",
+        "DTU158_RECONSTRUCTED_G1.msg": "d6b177144ce8b5c8c9150d9c79aaf9654474652695aa7ec79bba65d2122ae038",
+        "DTU158_RECONSTRUCTED_G1.odb": "1d153fe32c6c81fc23a56d8e3c52c58567b1c40b0a42715186c731c294467e11",
+        "DTU158_RECONSTRUCTED_G1.sta": "7320d416729141724006bd0a58c094a7ce8c919b025081fcc2ef7e36953fd234",
+        "execution.log": "bdd20c0e1752ec8b17da3459397c4f68b49de4fa2575a8aa91e220625f4eb00a"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "results/tower-verification-results.json",
+      "scope_limits": "Only balanced gravity, four low frequencies and two tangent flexibilities; incomplete 30mode coverage and no postpeak objectivity/physical calibration",
+      "public_input": "inputs/RUN-T026-032/DTU158_RECONSTRUCTED_G1.inp"
+    },
+    {
+      "run_id": "RUN-T026-033",
+      "task_id": "T026",
+      "baseline_id": "C65-actual-card__exact-table-diagnosis",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "b7991a76ef55f8aaa30b6c6abc8b13d06bc4c241a1528adf1630672c9aa6b412",
+      "seed": "not_applicable",
+      "time_window": "monotonic static .7278565379825654s; exact 7 table strain nodes",
+      "status": "verification-hold",
+      "output_hash": "d5b6d083c119b29e5adcf38862fd09f11c2c813bd8a94e0703454f1ce90c06e8",
+      "notes": "Diagnose persistent residual-point error using PEEQT/PEEQ/tensors and exact time marks; no retuning",
+      "job": "MAT_C65_tension_mu0_EXACT_TABLE",
+      "directory": "D:\\Codex-research-validation\\T026\\independent-targets\\exact-table-diagnostic",
+      "input": "D:\\Codex-research-validation\\T026\\independent-targets\\exact-table-diagnostic\\MAT_C65_tension_mu0_EXACT_TABLE.inp",
+      "acceptance": {
+        "tail_relative_stress_budget": 0.01,
+        "damage_absolute_budget": 0.001,
+        "scope": "original independent diagnostic criteria unchanged; distinguish target conversion/3D plastic scalar/interpolation issues"
+      },
+      "changed_variables": {
+        "sampling": "exact seven original tensile table total-strain nodes",
+        "stop_at_last_table_node": true,
+        "output": "PEEQT/PEEQ/PE tensors, damage and every-increment histories"
+      },
+      "fixed_variables": {
+        "material": "actual C65 card",
+        "E_Pa": 36500000000.0,
+        "nu": 0.2,
+        "mu": 0.0,
+        "element": "C3D8R unit cube",
+        "strain_rate_s-1": 0.001375,
+        "max_increment_s": 0.002,
+        "damage_tables": "unchanged",
+        "acceptance": "original strict diagnostics unchanged"
+      },
+      "started": "2026-10-04T20:12:58.522195+08:00",
+      "finished": "2026-10-04T20:13:13.582195+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "execution.log": "af46368b889eb35f5b7445438c3c3c14cf3dcb65a045949176f48364565eaf5e",
+        "MAT_C65_tension_mu0_EXACT_TABLE.dat": "363fb5c1a3fa3afe6ab6a751dcc6ce4a5576214d20076a1d9a333e541a81792b",
+        "MAT_C65_tension_mu0_EXACT_TABLE.msg": "0af3b970564220ec8d0e26dfae09ce09c482d7321d8ae950c0bb0a404a7fd053",
+        "MAT_C65_tension_mu0_EXACT_TABLE.odb": "7a6dfc75be4a96e7f2bee3f28b49ad91c6d7ef8700c492b768cfd20486114e65",
+        "MAT_C65_tension_mu0_EXACT_TABLE.sta": "be4dd280f7257b340504df8f20c8744144a12ef7cebb787fd7bae18001771d94"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "independent-targets/exact-table-diagnostic/exact-node-independent-review.json",
+      "public_input": "inputs/RUN-T026-033/MAT_C65_tension_mu0_EXACT_TABLE.inp"
+    },
+    {
+      "run_id": "RUN-T026-034",
+      "task_id": "T026",
+      "baseline_id": "DTU158-T026-RECONSTRUCTED-B31-M2",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "seed": "not_applicable",
+      "time_window": "Gravity 1s static pseudo-time; 30 modes; two 1kN linear perturbations",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "8fb28012a5b785966a37e2350f6c1f96f4bb28dd9f1af54df9f35f6a499828d4",
+      "notes": "Frozen physical model, only native tower mesh refinement; assembly mesh sets remapped; no changed springs/rebar/PT/RNA or added NSM",
+      "job": "DTU158_RECONSTRUCTED_M2",
+      "directory": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2",
+      "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+      "acceptance": {
+        "frequency_and_flexibility_budget_relative_last_two": 0.005,
+        "reason": "numerical implementation diagnostic aimed to resolve percent-scale differences; does not validate physics/local damage; finer grid needed on exceedance",
+        "mass_and_balance": "separate independent integral/force/moment check",
+        "GCI": "anisotropic family, no uniform-h Richardson/GCI claim"
+      },
+      "changed_variables": {
+        "native_tower_part_family": "m2",
+        "part_file_sha": "71d9bc2ad221e38facafde4edadb15e3e97ae2e5a6c69b6a3dc7c27b0f60b3ca",
+        "tower_elements": 15120
+      },
+      "fixed_variables": "original complete 31+4 tower mesh, C65/C70/PT/rebar/SPRING2/TIE/coupling/BC parameters; no physical tuning",
+      "started": "2026-10-04T20:14:43.100275+08:00",
+      "finished": "2026-10-04T20:16:48.212253+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "DTU158_RECONSTRUCTED_M2.dat": "632372fb940edce81999de0b8fafa748eb665a8555e4f394c8953b8377566316",
+        "DTU158_RECONSTRUCTED_M2.msg": "b57b10f9484d9b78ca4ba14efadde2541c381fe1931d04da35aeb5f24e4d393e",
+        "DTU158_RECONSTRUCTED_M2.odb": "4374f5caa4ab15d157d736f0122ffedd46f56159d194a681bedc852e25399958",
+        "DTU158_RECONSTRUCTED_M2.sta": "92c290b8b8a877af00293b7375137e7e06b949b49ce0be7a82cc3694d03cece6",
+        "execution.log": "4dd1e16364259061201927b9716d0805fbe866f4ce827a2b3300dbdcac2f30ef"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "results/tower-verification-results.json",
+      "scope_limits": "Only balanced gravity, four low frequencies and two tangent flexibilities; incomplete 30mode coverage and no postpeak objectivity/physical calibration",
+      "public_input": "inputs/RUN-T026-034/DTU158_RECONSTRUCTED_M2.inp"
+    },
+    {
+      "run_id": "RUN-T026-035",
+      "task_id": "T026",
+      "baseline_id": "DTU158-T026-RECONSTRUCTED-B31-M3",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767",
+      "seed": "not_applicable",
+      "time_window": "Gravity 1s static pseudo-time; 30 modes; two 1kN linear perturbations",
+      "status": "verification-pass-with-scope-limits",
+      "output_hash": "3a9fabb8ea24786ba3f60d0825c3f347dc2e3db459733b0aeb2f1a9e18be4aab",
+      "notes": "Frozen physical model, only native tower mesh refinement; assembly mesh sets remapped; no changed springs/rebar/PT/RNA or added NSM",
+      "job": "DTU158_RECONSTRUCTED_M3",
+      "directory": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3",
+      "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3\\DTU158_RECONSTRUCTED_M3.inp",
+      "acceptance": {
+        "frequency_and_flexibility_budget_relative_last_two": 0.005,
+        "reason": "numerical implementation diagnostic aimed to resolve percent-scale differences; does not validate physics/local damage; finer grid needed on exceedance",
+        "mass_and_balance": "separate independent integral/force/moment check",
+        "GCI": "anisotropic family, no uniform-h Richardson/GCI claim"
+      },
+      "changed_variables": {
+        "native_tower_part_family": "m3",
+        "part_file_sha": "4110a6b4938656e45eac2a21619afbd30fadb6ffe7581c5f092b2adf409a861e",
+        "tower_elements": 40320
+      },
+      "fixed_variables": "original complete 31+4 tower mesh, C65/C70/PT/rebar/SPRING2/TIE/coupling/BC parameters; no physical tuning",
+      "started": "2026-10-04T20:18:41.649474+08:00",
+      "finished": "2026-10-04T20:23:13.680487+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "DTU158_RECONSTRUCTED_M3.dat": "ca9c639aca2fc44963a441d3eff5c5a095cf472dd1a0c41bae35480e2d8223c9",
+        "DTU158_RECONSTRUCTED_M3.msg": "dafa8cc18f06160f3ab2115c3c2fc2c5f4bfd4cad8389bd6283121e7f95209d9",
+        "DTU158_RECONSTRUCTED_M3.odb": "c0cdc28e991e855b86dea16f04c62fadd75572aa0688b3de81b5f33cbc2e8570",
+        "DTU158_RECONSTRUCTED_M3.sta": "943e85c47ea93dbc84c817fbee54987eab66882b2542c360271c99ec56b66898",
+        "execution.log": "2fd1feedee6390b2402368c19c38c4ccb546f879429518e10c1ca3c689276e68"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "results/tower-verification-results.json",
+      "scope_limits": "Only balanced gravity, four low frequencies and two tangent flexibilities; incomplete 30mode coverage and no postpeak objectivity/physical calibration",
+      "public_input": "inputs/RUN-T026-035/DTU158_RECONSTRUCTED_M3.inp"
+    },
+    {
+      "run_id": "RUN-T026-036",
+      "task_id": "T026",
+      "baseline_id": "DTU158-T026-RNA-EQUIV-G1",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "a5ef13ce762c213c7313088fa2f4836b4c2841f8b1e006e74450b33f290abede",
+      "seed": "not_applicable",
+      "time_window": "Gravity 1s static pseudo-time; 30 modes; two 1kN linear perturbations",
+      "status": "verification-pass",
+      "output_hash": "1424ab4320ab4fed9434c47776739db6022c13e61d94d31bc057b5a4e4f210cd",
+      "notes": "Same mass/CG; discrete actual inertia equivalence",
+      "job": "DTU158_RNA_EQUIV_G1",
+      "directory": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RNA_EQUIV_G1",
+      "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RNA_EQUIV_G1\\DTU158_RNA_EQUIV_G1.inp",
+      "acceptance": {
+        "equivalence_frequency_relative": 0.0001,
+        "equivalence_static_displacements_relative": 0.0001,
+        "equivalence_mass_relative": 1e-06,
+        "inertia_sensitivity": "report measured differences, no pass threshold or physical calibration claim",
+        "reason": "solver printed frequency resolution and alternative constraint assembly; physically identical discrete mass before sensitivity"
+      },
+      "changed_variables": {
+        "RNA_representation": "EQUIV",
+        "mass_kg": 673998.4931380383,
+        "CG_m": [
+          8.636170778729943e-17,
+          160.29779769845646,
+          -0.6231840053199021
+        ],
+        "ROTARYI_tensor_order": [
+          "I11",
+          "I22",
+          "I33",
+          "I12",
+          "I13",
+          "I23"
+        ],
+        "ROTARYI_values": [
+          108024597.4607835,
+          107994037.60245842,
+          162482391.8728107,
+          7.184036276973436e-10,
+          4.767559711746663e-10,
+          -664405.3751226325
+        ]
+      },
+      "fixed_variables": "original complete 31+4 tower mesh, C65/C70/PT/rebar/SPRING2/TIE/coupling/BC parameters; no physical tuning",
+      "started": "2026-10-04T20:33:36.090871+08:00",
+      "finished": "2026-10-04T20:35:15.397650+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "DTU158_RNA_EQUIV_G1.dat": "4cf1fc7ad5930d9bfd4f2686aa73a57fce7fc07e0370055aadc15849cc52d90b",
+        "DTU158_RNA_EQUIV_G1.msg": "6d0d1d8c5f4543540051cc90316c3c9ad2eccc8878912364faf7582aaa078e5e",
+        "DTU158_RNA_EQUIV_G1.odb": "ee254ef193b490d350a5453d08f52e3918c07b852d9e2a4d6db931ef81748689",
+        "DTU158_RNA_EQUIV_G1.sta": "7c2656a8209a7716a98fcfb64aed55c71cec87f6048319f8a6ae1cf54611880b",
+        "execution.log": "15ccdaae60bacb3df60da67da0acbc06d7e6b62f730b102f48256f2b75db6d2f"
+      },
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison",
+      "verification_report": "results/rna-equivalence-results.json",
+      "public_input": "inputs/RUN-T026-036/DTU158_RNA_EQUIV_G1.inp"
+    },
+    {
+      "run_id": "RUN-T026-037",
+      "task_id": "T026",
+      "baseline_id": "DTU158-T026-RNA-CONTINUOUS-G1",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "8eeee7b1095b84c35334838dc8b85f34e05512fa94050c0892c54c06eccfad4e",
+      "seed": "not_applicable",
+      "time_window": "Gravity 1s static pseudo-time; 30 modes; two 1kN linear perturbations",
+      "status": "diagnostic-completed",
+      "output_hash": "aa9cfbda6d44ed6171d0f98326178eaa7a9fdf9e2d1be7abc99bbcc8149c2cf4",
+      "notes": "Same mass/CG; continuous mathematical inertia sensitivity, not calibrated physical RNA",
+      "job": "DTU158_RNA_CONTINUOUS_G1",
+      "directory": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RNA_CONTINUOUS_G1",
+      "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RNA_CONTINUOUS_G1\\DTU158_RNA_CONTINUOUS_G1.inp",
+      "acceptance": {
+        "equivalence_frequency_relative": 0.0001,
+        "equivalence_static_displacements_relative": 0.0001,
+        "equivalence_mass_relative": 1e-06,
+        "inertia_sensitivity": "report measured differences, no pass threshold or physical calibration claim",
+        "reason": "solver printed frequency resolution and alternative constraint assembly; physically identical discrete mass before sensitivity"
+      },
+      "changed_variables": {
+        "RNA_representation": "CONTINUOUS",
+        "mass_kg": 673998.4931380383,
+        "CG_m": [
+          8.636170778729943e-17,
+          160.29779769845646,
+          -0.6231840053199021
+        ],
+        "ROTARYI_tensor_order": [
+          "I11",
+          "I22",
+          "I33",
+          "I12",
+          "I13",
+          "I23"
+        ],
+        "ROTARYI_values": [
+          96760669.74724701,
+          96730110.18353698,
+          156378478.90267432,
+          7.043547267658587e-10,
+          -5.709819252677471e-10,
+          -664405.3751226319
+        ]
+      },
+      "fixed_variables": "original complete 31+4 tower mesh, C65/C70/PT/rebar/SPRING2/TIE/coupling/BC parameters; no physical tuning",
+      "started": "2026-10-04T20:37:10.216356+08:00",
+      "finished": "2026-10-04T20:38:19.896323+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "DTU158_RNA_CONTINUOUS_G1.dat": "b43fc1791e9eef782e715373488abb33912cf542ce9ddbdca354f51eaddb586f",
+        "DTU158_RNA_CONTINUOUS_G1.msg": "b8df7371050e793295c2d0c3439031c6ec731ccfda22bdf14747d75cc0307ea8",
+        "DTU158_RNA_CONTINUOUS_G1.odb": "7b9eba8308ec2d33871c88346802d7c68e3994bd2cd7a27f7c592b41d4274804",
+        "DTU158_RNA_CONTINUOUS_G1.sta": "3e59d2a34a8e2fb7418779ab74994f90d91840d805eafb4e5d449a40f31b229a",
+        "execution.log": "66da080b5cab8f8f8a1c252254fc7378a8dc6ee04b8339d6ef309a7c293baf5b"
+      },
+      "verification_report": "results/rna-equivalence-results.json",
+      "scope_limits": "Representation sensitivity only; no physical correctness ranking",
+      "public_input": "inputs/RUN-T026-037/DTU158_RNA_CONTINUOUS_G1.inp",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-038",
+      "task_id": "T026",
+      "baseline_id": "C65-actual-card__strict-T3D2-exact-table-control",
+      "software": "Abaqus/Standard",
+      "version": "2025",
+      "input_hash": "0ce4b8c06da31ada27e5f937c5f4021e402798d74512fec5cbcf0e99292af089",
+      "seed": "not_applicable",
+      "time_window": "monotonic static .7278565379825654s; exact 7 table strain nodes",
+      "status": "solver-completed-numerical-diagnostic-pass",
+      "output_hash": "3091a52fc3008e1136120d9fe59744cc5e7f0ffe444dfb6415f741ab9eac1450",
+      "notes": "Strict 1D element control of unresolved scalar/tensor and residual-point accuracy; no material retuning",
+      "job": "MAT_C65_tension_mu0_TRUSS_EXACT",
+      "directory": "D:\\Codex-research-validation\\T026\\independent-targets\\exact-table-diagnostic\\MAT_C65_tension_mu0_TRUSS_EXACT",
+      "input": "D:\\Codex-research-validation\\T026\\independent-targets\\exact-table-diagnostic\\MAT_C65_tension_mu0_TRUSS_EXACT\\MAT_C65_tension_mu0_TRUSS_EXACT.inp",
+      "registered": "2026-10-04T20:33:26.914147+08:00",
+      "acceptance": {
+        "tail_relative_stress_budget": 0.01,
+        "damage_absolute_budget": 0.001,
+        "scope": "original independent diagnostic criteria unchanged; distinguish target conversion/3D plastic scalar/interpolation issues"
+      },
+      "acceptance_frozen_from": "RUN-T026-033 ResearchCard acceptance, copied exactly before solver",
+      "changed_variables": [
+        "C3D8R unit cube replaced by one T3D2 with L=1m, A=1m2; lateral constraints replaced by 1D transverse restraints"
+      ],
+      "fixed_variables": [
+        "exact C65 mu0 material bytes, E0/nu/CDP/compression+tension/damage tables",
+        "strain rate .001375/s; initial increment .001s; maxdt .002s; min .1e-9s",
+        "same .7278565379825654s monotonic step, 7 exact table nodes, endpoint and NLGEOM=NO"
+      ],
+      "material_card_sha256": "38e2165b7bbbefd7c4f46ac6d49862955bc8adf4fd705acdd6bb4dc5a85e41cf",
+      "reference_run": "RUN-T026-033",
+      "reference_input_hash": "b7991a76ef55f8aaa30b6c6abc8b13d06bc4c241a1528adf1630672c9aa6b412",
+      "original_source_sha256": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
+      "claim_scope": "Numerical implementation control only, no physical calibration or material validation",
+      "started": "2026-10-04T20:33:35.689304+08:00",
+      "finished": "2026-10-04T20:33:58.181562+08:00",
+      "process_returncode": 0,
+      "output_files": {
+        "element-history-every-increment.csv": "cd511ac89d121d1f595a784b9af276ef022eee818fe2f24267c9a2f17de615fa",
+        "exact-node-comparison.csv": "997e3c77b0d3466d60c48f0c3dbdef52405eba0c20b84eabbc7ec79a24e893e6",
+        "execution.log": "79ea424b5adb56fea7dfce839620d8eea440931b031fb5af63cd301e053dff46",
+        "extracted.csv": "13611fc94d57ce423af6e6e17fed66199d7e2b30b0584764f3f00829a56ac885",
+        "extraction-readonly.json": "376128ba5a5cd62139ee05574aeef08ef9081a6871fb3260cf987b9efc789fc6",
+        "history-all-long.csv": "d94ceae21383d67b4a6e04670495e7fa18b72cb8657fdd42e8681fc19a218e3e",
+        "MAT_C65_tension_mu0_TRUSS_EXACT.dat": "c6c90ac562122dacb9a11b25dfedc39017bbdee5b8071c97f0ff561414708438",
+        "MAT_C65_tension_mu0_TRUSS_EXACT.msg": "9ec389b7b1855a7c83de27e78851703e94eee494ffa8f5ad93e43d43e9951e5e",
+        "MAT_C65_tension_mu0_TRUSS_EXACT.odb": "62aa25b3a52e62880aa3473e2d95cf06bd975ab78b5d55d9022aa171b7f9fdf0",
+        "MAT_C65_tension_mu0_TRUSS_EXACT.sta": "2ab9e0e1dc25b4fb092eba8d236234dd748506eb9c826524c55db18e747cf1a2",
+        "truss-control-verification.json": "ae0d800f38488f1a30541106e6af79fa2ddfc58aa86af6430df401381e1943ff"
+      },
+      "verified": "2026-10-04T20:48:41.887470+08:00",
+      "verification_report": "D:\\Codex-research-validation\\T026\\independent-targets\\exact-table-diagnostic\\MAT_C65_tension_mu0_TRUSS_EXACT\\truss-control-verification.json",
+      "acceptance_evaluation": {
+        "tail_relative_stress": true,
+        "exact_node_damage_absolute": true
+      },
+      "warning_assessment": "Only generic exact time-point request notice (may require smaller/increased increments); no CDP compatibility warning or numerical analysis warning.",
+      "independent_manifest_source": "D:/Codex-research-validation/T026/independent-targets/exact-table-diagnostic/truss-control-run-manifest.json",
+      "public_input": "inputs/RUN-T026-038/MAT_C65_tension_mu0_TRUSS_EXACT.inp",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
     }
-  ]
+  ],
+  "independent_manifests_integrated": [
+    "D:\\Codex-research-validation\\T026\\damping\\damping-run-manifest.json",
+    "D:\\Codex-research-validation\\T026\\independent-targets\\exact-table-diagnostic\\truss-control-run-manifest.json"
+  ],
+  "summary": {
+    "registered_attempts": 38,
+    "successful_solver_attempts": 31,
+    "preserved_environment_failures": 3,
+    "preserved_input_failures": 4,
+    "statuses": {
+      "verification-pass-with-scope-limits": 11,
+      "failed-environment": 3,
+      "verification-pass": 11,
+      "failed-input": 4,
+      "verification-passed": 5,
+      "verification-hold": 2,
+      "diagnostic-completed": 1,
+      "solver-completed-numerical-diagnostic-pass": 1
+    },
+    "strict_3D_tensile_tail": "HOLD",
+    "strict_1D_same_card_control": "PASS"
+  }
 }

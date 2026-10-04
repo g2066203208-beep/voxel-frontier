@@ -1,0 +1,1183 @@
+{
+  "source_sha256": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
+  "solver_not_launched_by_reviewer": true,
+  "budget_file_sha256": "6b27967ed1f2a79ac128daa19662b25c3ccb258e9d846838d8e664410276b990",
+  "runs": {
+    "RUN-T026-001": {
+      "job": "MAT_C65_compression_mu1em5",
+      "curve_max_error_over_peak": 0.001139770560791873,
+      "curve_RMSE_over_peak": 0.0006221631011313902,
+      "inside_card_monotonic_frames": 388,
+      "outside_card_monotonic_frames": 14,
+      "damage_max_abs_error_inside_card": 0.0006630253681905174,
+      "RF_to_sigma_max_error_over_peak": 4.8192771084337347e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 2.3275294939759037e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.0001423614457831679,
+      "predicted_peak_sampling_loss_relative": 0.0005505098289737553,
+      "actual_vs_same_sample_target_peak_relative_error": 0.0006928712747569185,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 30731229.9569863,
+          "target_sigma_Pa": 30805400.0,
+          "relative_error": 0.002407696151119576,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 37458283.67946667,
+          "target_sigma_Pa": 37460000.0,
+          "relative_error": 4.581741946951823e-05,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 40673724.28195068,
+          "target_sigma_Pa": 40667900.0,
+          "relative_error": 0.00014321570454045585,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 41499548.306673974,
+          "target_sigma_Pa": 41500000.0,
+          "relative_error": 1.0884176530723266e-05,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 40753146.36956164,
+          "target_sigma_Pa": 40743500.0,
+          "relative_error": 0.00023675849059712206,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 38985014.20180822,
+          "target_sigma_Pa": 38962300.0,
+          "relative_error": 0.0005829789773248439,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 36598914.19821004,
+          "target_sigma_Pa": 36561500.0,
+          "relative_error": 0.0010233222983202506,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 7,
+          "actual_interpolated_sigma_Pa": 28145863.688840188,
+          "target_sigma_Pa": 28095500.0,
+          "relative_error": 0.0017925891633958635,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 8,
+          "actual_interpolated_sigma_Pa": 19148797.853735168,
+          "target_sigma_Pa": 19106600.0,
+          "relative_error": 0.0022085485505096702,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 9,
+          "actual_interpolated_sigma_Pa": 3818879.8835890437,
+          "target_sigma_Pa": 3787290.0,
+          "relative_error": 0.008341025796557267,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 48,
+        "fitted_E_Pa": 3330990003.3772397,
+        "expected_fixed_last_damage_E_Pa": 3330990000.0000005,
+        "relative_slope_error": 1.0138845318863332e-09,
+        "fit_max_residual_over_peak": 3.672501386468669e-09,
+        "time_interval": [
+          0.8054999709129333,
+          0.8995000123977661
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": false,
+      "last_state": {
+        "E1": -0.006,
+        "PE1": -0.004862333,
+        "S1": -3789556.5,
+        "DAMAGET": 0.0,
+        "DAMAGEC": 0.9087399840354919,
+        "ALLAE": 2.32595233459127e-28,
+        "ALLIE": 127611.2734375,
+        "ALLSE": 2155.6259765625,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": true,
+        "damage_absolute_0p001": true,
+        "literal_peak_0p1pct_including_sampling": true,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu1em5\\extracted.csv",
+      "csv_sha256": "9450392ea0724543f2d5b9e058397d1674a52fdee51e19a844bacd5aecc5c050",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-002": {
+      "job": "MAT_C65_compression_mu0",
+      "state": "not_yet_extracted"
+    },
+    "RUN-T026-003": {
+      "job": "MAT_C65_tension_mu1em5",
+      "curve_max_error_over_peak": 0.0014047817948273122,
+      "curve_RMSE_over_peak": 0.0009475895688331052,
+      "inside_card_monotonic_frames": 366,
+      "outside_card_monotonic_frames": 36,
+      "damage_max_abs_error_inside_card": 0.0013579809581405478,
+      "RF_to_sigma_max_error_over_peak": 3.412969286455026e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 3.423001706484641e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.003320750853242238,
+      "predicted_peak_sampling_loss_relative": 0.00366555156657955,
+      "actual_vs_same_sample_target_peak_relative_error": 0.0003448007133372967,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 2900974.828580324,
+          "target_sigma_Pa": 2930000.0,
+          "relative_error": 0.009906201849718799,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 2346401.6822851803,
+          "target_sigma_Pa": 2344000.0,
+          "relative_error": 0.0010246084834386604,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 1763388.2571606475,
+          "target_sigma_Pa": 1758000.0,
+          "relative_error": 0.0030649926966139773,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 1175387.0394458282,
+          "target_sigma_Pa": 1172000.0,
+          "relative_error": 0.0028899653974643336,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 735754.2955479454,
+          "target_sigma_Pa": 732500.0,
+          "relative_error": 0.004442724297536449,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 297179.4234806973,
+          "target_sigma_Pa": 293000.0,
+          "relative_error": 0.014264243961424228,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 32294.764450871546,
+          "target_sigma_Pa": 29300.0,
+          "relative_error": 0.10221039081472849,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 22,
+        "fitted_E_Pa": 364999987.42364454,
+        "expected_fixed_last_damage_E_Pa": 365000000.0000003,
+        "relative_slope_error": 3.445576923777338e-08,
+        "fit_max_residual_over_peak": 2.036719811584009e-09,
+        "time_interval": [
+          0.8054999709129333,
+          0.8475000262260437
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": true,
+      "last_state": {
+        "E1": 0.0011,
+        "PE1": 0.001019715,
+        "S1": 29311.998,
+        "DAMAGET": 0.9900000095367432,
+        "DAMAGEC": 0.0,
+        "ALLAE": 8.803098423170292e-24,
+        "ALLIE": 1092.53955078125,
+        "ALLSE": 1.1763365268707275,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": false,
+        "damage_absolute_0p001": false,
+        "literal_peak_0p1pct_including_sampling": false,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu1em5\\extracted.csv",
+      "csv_sha256": "eb7ae4c4fa49a245d8acce8332a93d1704b4a0d45762871b86864e6cec6f4eee",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-004": {
+      "job": "MAT_C65_tension_mu0",
+      "curve_max_error_over_peak": 0.0013771776992641707,
+      "curve_RMSE_over_peak": 0.0008854170167033677,
+      "inside_card_monotonic_frames": 366,
+      "outside_card_monotonic_frames": 36,
+      "damage_max_abs_error_inside_card": 0.0013582789813644247,
+      "RF_to_sigma_max_error_over_peak": 3.412969286455026e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 3.457182798634812e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.0034297610921502075,
+      "predicted_peak_sampling_loss_relative": 0.00366555156657955,
+      "actual_vs_same_sample_target_peak_relative_error": 0.00023579047442931974,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 2900834.1215442093,
+          "target_sigma_Pa": 2930000.0,
+          "relative_error": 0.00995422472893881,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 2345917.070298879,
+          "target_sigma_Pa": 2344000.0,
+          "relative_error": 0.0008178627554944473,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 1763009.2398816936,
+          "target_sigma_Pa": 1758000.0,
+          "relative_error": 0.002849396974797358,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 1175149.5670921544,
+          "target_sigma_Pa": 1172000.0,
+          "relative_error": 0.002687343935285247,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 735600.2979452057,
+          "target_sigma_Pa": 732500.0,
+          "relative_error": 0.004232488662396783,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 297098.89981942705,
+          "target_sigma_Pa": 293000.0,
+          "relative_error": 0.013989419178931817,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 32271.156383561454,
+          "target_sigma_Pa": 29300.0,
+          "relative_error": 0.1014046547290599,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 22,
+        "fitted_E_Pa": 365000010.9850631,
+        "expected_fixed_last_damage_E_Pa": 365000000.0000003,
+        "relative_slope_error": 3.009606230897077e-08,
+        "fit_max_residual_over_peak": 1.1497327358896587e-10,
+        "time_interval": [
+          0.8054999709129333,
+          0.8475000262260437
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": true,
+      "last_state": {
+        "E1": 0.0011,
+        "PE1": 0.0010197288,
+        "S1": 29307.115,
+        "DAMAGET": 0.9900000095367432,
+        "DAMAGEC": 0.0,
+        "ALLAE": 4.022016002739286e-24,
+        "ALLIE": 1092.3389892578125,
+        "ALLSE": 1.1759313344955444,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": false,
+        "damage_absolute_0p001": false,
+        "literal_peak_0p1pct_including_sampling": false,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0\\extracted.csv",
+      "csv_sha256": "424d0fdb32c88dcc1687f906c430cb2de3a9e667746b3a17db5e874626bfca0c",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-005": {
+      "job": "MAT_C70_compression_mu1em5",
+      "curve_max_error_over_peak": 0.001216139584278625,
+      "curve_RMSE_over_peak": 0.0006333931073507358,
+      "inside_card_monotonic_frames": 363,
+      "outside_card_monotonic_frames": 39,
+      "damage_max_abs_error_inside_card": 0.000737496964417439,
+      "RF_to_sigma_max_error_over_peak": 4.49438202247191e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 2.1979777528089887e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.0005130337078651515,
+      "predicted_peak_sampling_loss_relative": 0.00011963727298425209,
+      "actual_vs_same_sample_target_peak_relative_error": 0.0006326709808494602,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 32983654.5827027,
+          "target_sigma_Pa": 33032400.0,
+          "relative_error": 0.001475685003127225,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 40162344.06468468,
+          "target_sigma_Pa": 40167900.0,
+          "relative_error": 0.00013831779394291033,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 43604924.983297296,
+          "target_sigma_Pa": 43607800.0,
+          "relative_error": 6.592895543233723e-05,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 44518280.5849009,
+          "target_sigma_Pa": 44500000.0,
+          "relative_error": 0.0004107996606943498,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 43698318.645333335,
+          "target_sigma_Pa": 43688800.0,
+          "relative_error": 0.00021787381052651433,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 41800715.92454054,
+          "target_sigma_Pa": 41778800.0,
+          "relative_error": 0.0005245704649377014,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 39248211.977513514,
+          "target_sigma_Pa": 39204500.0,
+          "relative_error": 0.0011149734727777805,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 7,
+          "actual_interpolated_sigma_Pa": 30179139.719495494,
+          "target_sigma_Pa": 30126500.0,
+          "relative_error": 0.0017472895787926657,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 8,
+          "actual_interpolated_sigma_Pa": 20559133.733909912,
+          "target_sigma_Pa": 20487800.0,
+          "relative_error": 0.003481766412690046,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 9,
+          "actual_interpolated_sigma_Pa": 4097418.8768378384,
+          "target_sigma_Pa": 4061070.0,
+          "relative_error": 0.008950566436392027,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 48,
+        "fitted_E_Pa": 3376620016.7655725,
+        "expected_fixed_last_damage_E_Pa": 3376620000.0000005,
+        "relative_slope_error": 4.965193589612227e-09,
+        "fit_max_residual_over_peak": 3.666403190640921e-09,
+        "time_interval": [
+          0.8054999709129333,
+          0.8995000123977661
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": false,
+      "last_state": {
+        "E1": -0.006,
+        "PE1": -0.004796593,
+        "S1": -4063448.5,
+        "DAMAGET": 0.0,
+        "DAMAGEC": 0.9087399840354919,
+        "ALLAE": 3.553807785405964e-28,
+        "ALLIE": 129282.1640625,
+        "ALLSE": 2444.9912109375,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": true,
+        "damage_absolute_0p001": true,
+        "literal_peak_0p1pct_including_sampling": true,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu1em5\\extracted.csv",
+      "csv_sha256": "539a8b209cb57d3ae897886d09e009470d5703916f7ed076255daa8f8f38e818",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-006": {
+      "job": "MAT_C70_compression_mu0",
+      "curve_max_error_over_peak": 0.0004424820138293873,
+      "curve_RMSE_over_peak": 0.00022635872184946878,
+      "inside_card_monotonic_frames": 363,
+      "outside_card_monotonic_frames": 39,
+      "damage_max_abs_error_inside_card": 0.0004424828893238031,
+      "RF_to_sigma_max_error_over_peak": 4.49438202247191e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 2.2022850561797752e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 7.307865168537653e-05,
+      "predicted_peak_sampling_loss_relative": 0.00011963727298425209,
+      "actual_vs_same_sample_target_peak_relative_error": 4.6558621298898475e-05,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 32982642.572432432,
+          "target_sigma_Pa": 33032400.0,
+          "relative_error": 0.0015063219011506312,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 40153373.736547746,
+          "target_sigma_Pa": 40167900.0,
+          "relative_error": 0.000361638608248227,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 43590631.708972976,
+          "target_sigma_Pa": 43607800.0,
+          "relative_error": 0.00039369771066244397,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 44492570.339963965,
+          "target_sigma_Pa": 44500000.0,
+          "relative_error": 0.00016695865249516384,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 43666181.45700901,
+          "target_sigma_Pa": 43688800.0,
+          "relative_error": 0.000517719483963619,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 41765955.17124324,
+          "target_sigma_Pa": 41778800.0,
+          "relative_error": 0.0003074484847999104,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 39209140.273297295,
+          "target_sigma_Pa": 39204500.0,
+          "relative_error": 0.00011836073147963866,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 7,
+          "actual_interpolated_sigma_Pa": 30144633.947819818,
+          "target_sigma_Pa": 30126500.0,
+          "relative_error": 0.0006019268026427049,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 8,
+          "actual_interpolated_sigma_Pa": 20534307.255927928,
+          "target_sigma_Pa": 20487800.0,
+          "relative_error": 0.002269997556005432,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 9,
+          "actual_interpolated_sigma_Pa": 4092696.5679459465,
+          "target_sigma_Pa": 4061070.0,
+          "relative_error": 0.007787742625944949,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 48,
+        "fitted_E_Pa": 3376620032.4456034,
+        "expected_fixed_last_damage_E_Pa": 3376620000.0000005,
+        "relative_slope_error": 9.608899675939142e-09,
+        "fit_max_residual_over_peak": 3.780202144819699e-09,
+        "time_interval": [
+          0.8054999709129333,
+          0.8995000123977661
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": false,
+      "last_state": {
+        "E1": -0.006,
+        "PE1": -0.0047972957,
+        "S1": -4061075.5,
+        "DAMAGET": 1.7425649811997346e-10,
+        "DAMAGEC": 0.9087399840354919,
+        "ALLAE": 6.082478691118574e-28,
+        "ALLIE": 129196.25,
+        "ALLSE": 2442.13623046875,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": true,
+        "damage_absolute_0p001": true,
+        "literal_peak_0p1pct_including_sampling": true,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C70_compression_mu0\\extracted.csv",
+      "csv_sha256": "b18834963c1d53b7431b0438e8922e0ea30b3debe82dbb33024a62b3b991ee8d",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-007": {
+      "job": "MAT_C70_tension_mu1em5",
+      "curve_max_error_over_peak": 0.0014065110068638025,
+      "curve_RMSE_over_peak": 0.0009505474342313599,
+      "inside_card_monotonic_frames": 366,
+      "outside_card_monotonic_frames": 36,
+      "damage_max_abs_error_inside_card": 0.0013590947223345307,
+      "RF_to_sigma_max_error_over_peak": 3.344481608465962e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 2.3707842809364547e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.0020744147157190085,
+      "predicted_peak_sampling_loss_relative": 0.002389587362991663,
+      "actual_vs_same_sample_target_peak_relative_error": 0.0003151726472725699,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 2962494.302825553,
+          "target_sigma_Pa": 2990000.0,
+          "relative_error": 0.009199229824229826,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 2394479.1883292384,
+          "target_sigma_Pa": 2392000.0,
+          "relative_error": 0.001036449970417408,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 1799215.11977887,
+          "target_sigma_Pa": 1794000.0,
+          "relative_error": 0.002906978695022211,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 1199442.3633292383,
+          "target_sigma_Pa": 1196000.0,
+          "relative_error": 0.0028782302083931732,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 750829.0476044227,
+          "target_sigma_Pa": 747500.0,
+          "relative_error": 0.0044535753905319275,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 303281.1620884522,
+          "target_sigma_Pa": 299000.0,
+          "relative_error": 0.014318267854355193,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 32956.74119889421,
+          "target_sigma_Pa": 29900.0,
+          "relative_error": 0.10223214712020767,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 22,
+        "fitted_E_Pa": 370000035.7784516,
+        "expected_fixed_last_damage_E_Pa": 370000000.00000036,
+        "relative_slope_error": 9.66985169714718e-08,
+        "fit_max_residual_over_peak": 7.696273624912577e-10,
+        "time_interval": [
+          0.8054999709129333,
+          0.8475000262260437
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": true,
+      "last_state": {
+        "E1": 0.0011,
+        "PE1": 0.0010191777,
+        "S1": 29912.336,
+        "DAMAGET": 0.9900000095367432,
+        "DAMAGEC": 0.0,
+        "ALLAE": 5.536512583780109e-24,
+        "ALLIE": 1114.9234619140625,
+        "ALLSE": 1.2084648609161377,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": false,
+        "damage_absolute_0p001": false,
+        "literal_peak_0p1pct_including_sampling": false,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu1em5\\extracted.csv",
+      "csv_sha256": "cea112035a3c9938b0755af4bb790246742e1d2edc740e691230598353d175d8",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-008": {
+      "job": "MAT_C70_tension_mu0",
+      "curve_max_error_over_peak": 0.0013790059901413977,
+      "curve_RMSE_over_peak": 0.0008885208154105598,
+      "inside_card_monotonic_frames": 366,
+      "outside_card_monotonic_frames": 36,
+      "damage_max_abs_error_inside_card": 0.0013593927455584076,
+      "RF_to_sigma_max_error_over_peak": 3.344481608465962e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 2.3944931438127087e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.002144648829431439,
+      "predicted_peak_sampling_loss_relative": 0.002389587362991663,
+      "actual_vs_same_sample_target_peak_relative_error": 0.00024493853356019537,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 2962360.7954545454,
+          "target_sigma_Pa": 2990000.0,
+          "relative_error": 0.009243881118881081,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 2393987.1794840293,
+          "target_sigma_Pa": 2392000.0,
+          "relative_error": 0.0008307606538584533,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 1798828.7245085996,
+          "target_sigma_Pa": 1794000.0,
+          "relative_error": 0.002691596716053235,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 1199201.306941032,
+          "target_sigma_Pa": 1196000.0,
+          "relative_error": 0.0026766780443410187,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 750672.8036855038,
+          "target_sigma_Pa": 747500.0,
+          "relative_error": 0.004244553425423181,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 303199.3518181819,
+          "target_sigma_Pa": 299000.0,
+          "relative_error": 0.014044654910307486,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 32932.66501535613,
+          "target_sigma_Pa": 29900.0,
+          "relative_error": 0.10142692359050587,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 22,
+        "fitted_E_Pa": 370000006.15984917,
+        "expected_fixed_last_damage_E_Pa": 370000000.00000036,
+        "relative_slope_error": 1.6648240119820912e-08,
+        "fit_max_residual_over_peak": 2.2606883282414217e-10,
+        "time_interval": [
+          0.8054999709129333,
+          0.8475000262260437
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": true,
+      "last_state": {
+        "E1": 0.0011,
+        "PE1": 0.0010191916,
+        "S1": 29907.385,
+        "DAMAGET": 0.9900000095367432,
+        "DAMAGEC": 0.0,
+        "ALLAE": 4.447383607900297e-24,
+        "ALLIE": 1114.72021484375,
+        "ALLSE": 1.2080512046813965,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": false,
+        "damage_absolute_0p001": false,
+        "literal_peak_0p1pct_including_sampling": false,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C70_tension_mu0\\extracted.csv",
+      "csv_sha256": "30c51a99cc03c45e4451b87360f42e8ef8d66df40fd791d36bca50a43733f9fd",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-019": {
+      "job": "MAT_C65_compression_mu0_DTMP",
+      "curve_max_error_over_peak": 0.0004210878213571317,
+      "curve_RMSE_over_peak": 0.00022330708300938065,
+      "inside_card_monotonic_frames": 388,
+      "outside_card_monotonic_frames": 14,
+      "damage_max_abs_error_inside_card": 0.00042091130111288066,
+      "RF_to_sigma_max_error_over_peak": 4.8192771084337347e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 2.3397724096385543e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.00047556626506028987,
+      "predicted_peak_sampling_loss_relative": 0.0005505098289737553,
+      "actual_vs_same_sample_target_peak_relative_error": 7.494356391354497e-05,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 30729493.51461187,
+          "target_sigma_Pa": 30805400.0,
+          "relative_error": 0.0024640642675677338,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 37448848.18824658,
+          "target_sigma_Pa": 37460000.0,
+          "relative_error": 0.00029769919256328325,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 40657865.90193973,
+          "target_sigma_Pa": 40667900.0,
+          "relative_error": 0.0002467326333612796,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 41475802.548471235,
+          "target_sigma_Pa": 41500000.0,
+          "relative_error": 0.0005830711211750605,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 40724317.05189041,
+          "target_sigma_Pa": 40743500.0,
+          "relative_error": 0.0004708222933619277,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 38953495.069150686,
+          "target_sigma_Pa": 38962300.0,
+          "relative_error": 0.00022598591072175989,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 36566200.2382831,
+          "target_sigma_Pa": 36561500.0,
+          "relative_error": 0.0001285570417814963,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 7,
+          "actual_interpolated_sigma_Pa": 28116097.90677626,
+          "target_sigma_Pa": 28095500.0,
+          "relative_error": 0.0007331390000626659,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 8,
+          "actual_interpolated_sigma_Pa": 19131298.898849323,
+          "target_sigma_Pa": 19106600.0,
+          "relative_error": 0.001292689376933831,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 9,
+          "actual_interpolated_sigma_Pa": 3814667.8111452083,
+          "target_sigma_Pa": 3787290.0,
+          "relative_error": 0.007228865797234585,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 48,
+        "fitted_E_Pa": 3330989991.8584466,
+        "expected_fixed_last_damage_E_Pa": 3330990000.0000005,
+        "relative_slope_error": 2.4441844104217125e-09,
+        "fit_max_residual_over_peak": 3.6865046180515404e-09,
+        "time_interval": [
+          0.8054999709129333,
+          0.8995000123977661
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": false,
+      "last_state": {
+        "E1": -0.006,
+        "PE1": -0.004863012,
+        "S1": -3787296.2,
+        "DAMAGET": 1.0534413341645177e-09,
+        "DAMAGEC": 0.9087399840354919,
+        "ALLAE": 1.2472498060959165e-28,
+        "ALLIE": 127525.8671875,
+        "ALLSE": 2153.05517578125,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "response_budget_relative_peak": 0.005,
+        "justification": "pre-registered diagnostic budget for interpolation/increment/viscosity; test step reduction on exceedance; no physical accuracy claim",
+        "lateral_stress_relative_peak": 0.0001,
+        "RF_to_S_relative_peak": 1e-05,
+        "unloading_modulus_relative": 0.02
+      },
+      "registered_root_result": {
+        "curve": true,
+        "lateral": true,
+        "RF_to_sigma": true,
+        "unloading_same_sign": true
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": true,
+        "damage_absolute_0p001": true,
+        "literal_peak_0p1pct_including_sampling": true,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C65_compression_mu0_DTMP\\extracted.csv",
+      "csv_sha256": "ca8747f1a25a16b9293651293fadd7154cf2a0fe1d60a8d836a5bffc8dada8c7",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    },
+    "RUN-T026-027": {
+      "job": "MAT_C65_tension_mu0_FINE",
+      "curve_max_error_over_peak": 0.0013745838998191523,
+      "curve_RMSE_over_peak": 0.000884025074620415,
+      "inside_card_monotonic_frames": 1457,
+      "outside_card_monotonic_frames": 145,
+      "damage_max_abs_error_inside_card": 0.001355682026136229,
+      "RF_to_sigma_max_error_over_peak": 3.412969286455026e-08,
+      "U_over_L_to_E_max_abs_error": 0.0,
+      "global_RF_balance_max_error_over_peak": 0.0,
+      "lateral_stress_max_abs_over_peak": 1.6563006825938564e-05,
+      "sampled_peak_vs_literal_peak_relative_error": 0.00010402730375425051,
+      "predicted_peak_sampling_loss_relative": 0.00010405119453926748,
+      "actual_vs_same_sample_target_peak_relative_error": 2.3890785084649564e-08,
+      "node_interpolated_errors": [
+        {
+          "node": 0,
+          "actual_interpolated_sigma_Pa": 2929649.304482306,
+          "target_sigma_Pa": 2930000.0,
+          "relative_error": 0.00011969130296729524,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 1,
+          "actual_interpolated_sigma_Pa": 2345897.0483409218,
+          "target_sigma_Pa": 2344000.0,
+          "relative_error": 0.0008093209645569921,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 2,
+          "actual_interpolated_sigma_Pa": 1761254.8332586058,
+          "target_sigma_Pa": 1758000.0,
+          "relative_error": 0.001851440988968056,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 3,
+          "actual_interpolated_sigma_Pa": 1174860.7956824997,
+          "target_sigma_Pa": 1172000.0,
+          "relative_error": 0.0024409519475252495,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 4,
+          "actual_interpolated_sigma_Pa": 735593.6564745251,
+          "target_sigma_Pa": 732500.0,
+          "relative_error": 0.004223421808225325,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 5,
+          "actual_interpolated_sigma_Pa": 297029.44118397986,
+          "target_sigma_Pa": 293000.0,
+          "relative_error": 0.013752358989692404,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        },
+        {
+          "node": 6,
+          "actual_interpolated_sigma_Pa": 32241.41479142572,
+          "target_sigma_Pa": 29300.0,
+          "relative_error": 0.10038958332510983,
+          "note": "Interpolation across a slope corner contains output-sampling error."
+        }
+      ],
+      "unloading_same_sign_fit": {
+        "frames": 87,
+        "fitted_E_Pa": 365000009.6828239,
+        "expected_fixed_last_damage_E_Pa": 365000000.0000003,
+        "relative_slope_error": 2.6528283791904528e-08,
+        "fit_max_residual_over_peak": 6.398337989985552e-09,
+        "time_interval": [
+          0.8043749928474426,
+          0.8473749756813049
+        ],
+        "damage_variation": 0.0
+      },
+      "unloading_crosses_stress_zero": true,
+      "last_state": {
+        "E1": 0.0011,
+        "PE1": 0.0010197156,
+        "S1": 29305.863,
+        "DAMAGET": 0.9900000095367432,
+        "DAMAGEC": 0.0,
+        "ALLAE": 2.6179593962267716e-23,
+        "ALLIE": 1092.359619140625,
+        "ALLSE": 1.1763209104537964,
+        "ALLVD": 0.0
+      },
+      "registered_root_criteria": {
+        "tail_relative_stress_error": 0.01,
+        "curve_peak_normalized_budget": 0.005,
+        "purpose": "determine output/increment resolution contribution; original peak-normalized implementation check already passed"
+      },
+      "registered_root_result": {
+        "curve": true,
+        "tail_last_node_relative": false
+      },
+      "stricter_independent_diagnostic_result": {
+        "curve_max": true,
+        "curve_RMSE": true,
+        "node_relative_1pct": false,
+        "damage_absolute_0p001": false,
+        "literal_peak_0p1pct_including_sampling": true,
+        "unloading_slope": true
+      },
+      "interpretation": "Actual input-curve numerical reproduction only; source provenance and physical calibration not established by this test.",
+      "csv": "D:\\Codex-research-validation\\T026\\MAT_C65_tension_mu0_FINE\\extracted.csv",
+      "csv_sha256": "c903409b4a9936139bf77b9c848ff8b5fed220c24f6f0f2c01996402fa44d554",
+      "solver_success_independent_of_manifest_label": true,
+      "state": "compared_completed_solver_csv"
+    }
+  },
+  "mu_pairs": {
+    "C65_compression": {
+      "mu0_run": "RUN-T026-019",
+      "mu1e_minus5_run": "RUN-T026-001",
+      "max_abs_delta_over_peak": 0.0008424733167269144,
+      "RMSE_delta_over_peak": 0.0004316836901716383,
+      "independent_viscosity_budget_pass": true,
+      "note": "At fixed 1s prescribed path only; does not calibrate rate behavior or establish all production-rate adequacy."
+    },
+    "C65_tension": {
+      "mu0_run": "RUN-T026-004",
+      "mu1e_minus5_run": "RUN-T026-003",
+      "max_abs_delta_over_peak": 0.00019662650872892843,
+      "RMSE_delta_over_peak": 8.672616568597184e-05,
+      "independent_viscosity_budget_pass": true,
+      "note": "At fixed 1s prescribed path only; does not calibrate rate behavior or establish all production-rate adequacy."
+    },
+    "C70_compression": {
+      "mu0_run": "RUN-T026-006",
+      "mu1e_minus5_run": "RUN-T026-005",
+      "max_abs_delta_over_peak": 0.0008913119001108943,
+      "RMSE_delta_over_peak": 0.00043739870079567873,
+      "independent_viscosity_budget_pass": true,
+      "note": "At fixed 1s prescribed path only; does not calibrate rate behavior or establish all production-rate adequacy."
+    },
+    "C70_tension": {
+      "mu0_run": "RUN-T026-008",
+      "mu1e_minus5_run": "RUN-T026-007",
+      "max_abs_delta_over_peak": 0.00019553252673539705,
+      "RMSE_delta_over_peak": 8.622209381533444e-05,
+      "independent_viscosity_budget_pass": true,
+      "note": "At fixed 1s prescribed path only; does not calibrate rate behavior or establish all production-rate adequacy."
+    }
+  },
+  "C65_tension_mu0_refinement": [
+    {
+      "coarse_run": "RUN-T026-004",
+      "fine_run": "RUN-T026-027",
+      "curve_error_ratio_coarse_over_fine": 1.0018869706282458,
+      "RMSE_ratio_coarse_over_fine": 1.0015745504544094,
+      "coarse_node_max_relative": 0.1014046547290599,
+      "fine_node_max_relative": 0.10038958332510983,
+      "fine_last_node_relative": 0.10038958332510983,
+      "coarse_damage_abs_error": 0.0013582789813644247,
+      "fine_damage_abs_error": 0.001355682026136229,
+      "interpretation": "A single refinement tests numerical trend; neither changes primary budget nor establishes physical material calibration."
+    }
+  ]
+}

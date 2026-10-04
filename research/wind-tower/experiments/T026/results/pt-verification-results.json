@@ -1,0 +1,96 @@
+{
+  "scope": "straight independent T3D2 implementation verification only",
+  "checks": [
+    {
+      "quantity": "fixed_N",
+      "actual": 179200.0,
+      "analytic": 179200.0,
+      "scale": 179200.0,
+      "scaled_error": 0.0,
+      "budget": 1e-06,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "fixed_balance",
+      "actual": 0.0,
+      "analytic": 0.0,
+      "scale": 179200.0,
+      "scaled_error": 0.0,
+      "budget": 1e-06,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "axial_K",
+      "actual": 243750.0,
+      "analytic": 243749.99999999997,
+      "scale": 243749.99999999997,
+      "scaled_error": 1.194003300789075e-16,
+      "budget": 1e-06,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "released_N",
+      "actual": 162909.096,
+      "analytic": 162909.09090909088,
+      "scale": 179200.0,
+      "scaled_error": 2.840909100346575e-08,
+      "budget": 1e-06,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "released_u",
+      "actual": -0.0668345,
+      "analytic": -0.06683449883449885,
+      "scale": 0.06683449883449885,
+      "scaled_error": 1.743861589816727e-08,
+      "budget": 1e-06,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "released_base_RF",
+      "actual": -162909.1,
+      "analytic": -162909.09090909088,
+      "scale": 179200.0,
+      "scaled_error": 5.073051966064668e-08,
+      "budget": 1e-06,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "transverse_N0_h0.001",
+      "actual": 9.715794e-06,
+      "analytic": 0.0,
+      "scale": 1600.0,
+      "scaled_error": 6.07237125e-09,
+      "budget": 1e-05,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "transverse_N0_h0.0005",
+      "actual": 2.4289486e-06,
+      "analytic": 0.0,
+      "scale": 1600.0,
+      "scaled_error": 1.518092875e-09,
+      "budget": 1e-05,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "transverse_N1_h0.001",
+      "actual": 1600.0,
+      "analytic": 1600.0,
+      "scale": 1600.0,
+      "scaled_error": 0.0,
+      "budget": 1e-05,
+      "within_registered_budget": true
+    },
+    {
+      "quantity": "transverse_N1_h0.0005",
+      "actual": 1600.0,
+      "analytic": 1600.0,
+      "scale": 1600.0,
+      "scaled_error": 0.0,
+      "budget": 1e-05,
+      "within_registered_budget": true
+    }
+  ],
+  "all_pass": true
+}

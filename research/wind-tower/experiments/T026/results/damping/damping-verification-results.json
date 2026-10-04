@@ -1,0 +1,990 @@
+{
+  "report_id": "T026-direct-integration-damping-verification",
+  "results": [
+    {
+      "run_id": "RUN-T026-026",
+      "job": "SPRING_ALPHA_T200",
+      "input_hash": "e90781f444f432650c42abca44c851d313000f6a64af2b5f731a17addc565d2e",
+      "odb_path": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\SPRING_ALPHA_T200.odb",
+      "odb_sha256": "a49a2ab53c1399c7ac1dc48dbcc4f6e01421a9f787088b9d01dafa00a5f62858",
+      "solver_version": "Abaqus/Standard 2025",
+      "scope": "Numerical direct-integration fixture verification only; no tower physical damping calibration",
+      "metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.032482162662097,
+        "analytical_frequency_Hz": 5.03289604577974,
+        "frequency_relative_error": 8.223557845786737e-05,
+        "zeta": 0.0031617574548911676,
+        "analytical_zeta": 0.0031622776601683794,
+        "zeta_relative_error": 0.000164503352682871,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.003161757638537268,
+        "positive_negative_zeta_absolute_difference": 1.836461004968426e-10,
+        "positive_decay_rate_per_s": 0.09997532729523789,
+        "analytical_decay_rate_per_s": 0.1,
+        "analytical_history_error_over_x0": 0.0041491506918552145,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.3280669950763695,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 9.832333558532774e-05,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 0.00033596650246181525,
+        "final_viscous_dissipation_J": 0.00016403861809521914
+      },
+      "positive_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.19870909973996154,
+        "frequency_Hz": 5.032482162662097,
+        "omega_d_rad_per_s": 31.620017983081837,
+        "decay_rate_per_s": 0.09997532729523789,
+        "zeta": 0.0031617574548911676,
+        "period_regression_r2": 0.9999999999999967,
+        "log_amplitude_regression_r2": 0.9999999999998547,
+        "logarithmic_decrement_per_full_cycle": 0.019866007283044725,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.19870910935595337,
+            "amplitude_m": 0.0009803299635353794,
+            "raw_index": 200
+          },
+          {
+            "time_s": 0.39741823758967465,
+            "amplitude_m": 0.0009610469532313104,
+            "raw_index": 400
+          },
+          {
+            "time_s": 0.596127356345899,
+            "amplitude_m": 0.0009421432001493395,
+            "raw_index": 600
+          },
+          {
+            "time_s": 0.7948364659724142,
+            "amplitude_m": 0.0009236112344979773,
+            "raw_index": 800
+          },
+          {
+            "time_s": 0.9935455062910279,
+            "amplitude_m": 0.000905443823940995,
+            "raw_index": 1000
+          },
+          {
+            "time_s": 1.1922546563813397,
+            "amplitude_m": 0.0008876337401692563,
+            "raw_index": 1200
+          },
+          {
+            "time_s": 1.3909636689935874,
+            "amplitude_m": 0.000870174033322168,
+            "raw_index": 1400
+          },
+          {
+            "time_s": 1.5896728727703766,
+            "amplitude_m": 0.0008530577151691714,
+            "raw_index": 1600
+          },
+          {
+            "time_s": 1.7883819630432614,
+            "amplitude_m": 0.000836278074825765,
+            "raw_index": 1800
+          },
+          {
+            "time_s": 1.987091002427323,
+            "amplitude_m": 0.0008198285164658412,
+            "raw_index": 2000
+          }
+        ]
+      },
+      "negative_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.19870909922776817,
+        "frequency_Hz": 5.032482175633843,
+        "omega_d_rad_per_s": 31.62001806458572,
+        "decay_rate_per_s": 0.09997533335991479,
+        "zeta": 0.003161757638537268,
+        "period_regression_r2": 0.9999999999999983,
+        "log_amplitude_regression_r2": 0.9999999999998977,
+        "logarithmic_decrement_per_full_cycle": 0.01986600843694451,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.09935458521323715,
+            "amplitude_m": 0.0009901161913097244,
+            "raw_index": 100
+          },
+          {
+            "time_s": 0.29806369974579866,
+            "amplitude_m": 0.0009706406072724648,
+            "raw_index": 300
+          },
+          {
+            "time_s": 0.49677279179840844,
+            "amplitude_m": 0.0009515481293231072,
+            "raw_index": 500
+          },
+          {
+            "time_s": 0.6954818801611732,
+            "amplitude_m": 0.0009328311737934412,
+            "raw_index": 700
+          },
+          {
+            "time_s": 0.8941909618753083,
+            "amplitude_m": 0.0009144824467993844,
+            "raw_index": 900
+          },
+          {
+            "time_s": 1.092900051701756,
+            "amplitude_m": 0.0008964945469536536,
+            "raw_index": 1100
+          },
+          {
+            "time_s": 1.2916092081011694,
+            "amplitude_m": 0.0008788605252716423,
+            "raw_index": 1300
+          },
+          {
+            "time_s": 1.4903182939488675,
+            "amplitude_m": 0.0008615733907373366,
+            "raw_index": 1500
+          },
+          {
+            "time_s": 1.6890273369429314,
+            "amplitude_m": 0.0008446262533610466,
+            "raw_index": 1700
+          },
+          {
+            "time_s": 1.8877365105246913,
+            "amplitude_m": 0.0008280124686604537,
+            "raw_index": 1900
+          }
+        ]
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "verification_passed": true,
+      "actual_procedure": "*DYNAMIC",
+      "history_owner": "Node PART-1-1.2",
+      "history_csv": "D:\\Codex-research-validation\\T026\\damping\\SPRING_ALPHA_T200\\free-history.csv",
+      "history_csv_sha256": "66563cede7eedba9dd458059e896b2e2c3b8d9105971c8895c84a2db292058a2"
+    },
+    {
+      "run_id": "RUN-T026-028",
+      "job": "TRUSS_DAMP_T100_RHOEPS",
+      "input_hash": "8a6604cc26cf1e9bd567ff3d51b7dc31e63f21a1951814863eac5d9317eac6c0",
+      "odb_path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\TRUSS_DAMP_T100_RHOEPS.odb",
+      "odb_sha256": "10d0022eb3c108bd8912164a8d98f9a6490b101fd280110aa7727a9f8b9e1790",
+      "solver_version": "Abaqus/Standard 2025",
+      "scope": "Numerical direct-integration fixture verification only; no tower physical damping calibration",
+      "metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.030364629223256,
+        "analytical_frequency_Hz": 5.03201520308282,
+        "frequency_relative_error": 0.0003280144818626164,
+        "zeta": 0.01896120507206758,
+        "analytical_zeta": 0.018973665961010275,
+        "zeta_relative_error": 0.0006567465121554505,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.018961193528014956,
+        "positive_negative_zeta_absolute_difference": 1.154405262354663e-08,
+        "positive_decay_rate_per_s": 0.5994091309349941,
+        "analytical_decay_rate_per_s": 0.6,
+        "analytical_history_error_over_x0": 0.0063762454483531645,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.9078654927870957,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 0.0011236078923957185,
+        "minimum_actual_dt_s": 0.0011608600616455078,
+        "maximum_actual_dt_s": 0.001986980438232422,
+        "last_time_s": 2.0,
+        "history_points": 1008,
+        "final_mechanical_energy_J": 4.606725360645214e-05,
+        "final_viscous_dissipation_J": 0.00045393971959128976
+      },
+      "positive_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.19879274639270256,
+        "frequency_Hz": 5.030364629223256,
+        "omega_d_rad_per_s": 31.60671312809145,
+        "decay_rate_per_s": 0.5994091309349941,
+        "zeta": 0.01896120507206758,
+        "period_regression_r2": 0.9999999999999958,
+        "log_amplitude_regression_r2": 0.9999999999991867,
+        "logarithmic_decrement_per_full_cycle": 0.11915818735143054,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.19879395181436615,
+            "amplitude_m": 0.0008876675009385393,
+            "raw_index": 100
+          },
+          {
+            "time_s": 0.3975867127421661,
+            "amplitude_m": 0.000787953565638122,
+            "raw_index": 200
+          },
+          {
+            "time_s": 0.596379472535244,
+            "amplitude_m": 0.0006994407462455057,
+            "raw_index": 300
+          },
+          {
+            "time_s": 0.7951722322931423,
+            "amplitude_m": 0.0006208707882030394,
+            "raw_index": 400
+          },
+          {
+            "time_s": 0.9939649109483222,
+            "amplitude_m": 0.00055112678147145,
+            "raw_index": 500
+          },
+          {
+            "time_s": 1.1927576318809812,
+            "amplitude_m": 0.0004892172867559406,
+            "raw_index": 600
+          },
+          {
+            "time_s": 1.3915503760949548,
+            "amplitude_m": 0.0004342622365760361,
+            "raw_index": 700
+          },
+          {
+            "time_s": 1.590343193606313,
+            "amplitude_m": 0.00038548044355593726,
+            "raw_index": 800
+          },
+          {
+            "time_s": 1.7891359059050165,
+            "amplitude_m": 0.00034217841723022563,
+            "raw_index": 900
+          },
+          {
+            "time_s": 1.9879287345879801,
+            "amplitude_m": 0.00030374027445530586,
+            "raw_index": 1001
+          }
+        ]
+      },
+      "negative_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.19879274615822298,
+        "frequency_Hz": 5.03036463515666,
+        "omega_d_rad_per_s": 31.60671316537213,
+        "decay_rate_per_s": 0.5994087665755887,
+        "zeta": 0.018961193528014956,
+        "period_regression_r2": 0.9999999999999977,
+        "log_amplitude_regression_r2": 0.9999999999999799,
+        "logarithmic_decrement_per_full_cycle": 0.11915811477887454,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.09939756479392461,
+            "amplitude_m": 0.0009421610503192728,
+            "raw_index": 50
+          },
+          {
+            "time_s": 0.29819033859904603,
+            "amplitude_m": 0.0008363257718266906,
+            "raw_index": 150
+          },
+          {
+            "time_s": 0.4969830653852963,
+            "amplitude_m": 0.0007423791702796829,
+            "raw_index": 250
+          },
+          {
+            "time_s": 0.695775814049511,
+            "amplitude_m": 0.0006589858425437202,
+            "raw_index": 350
+          },
+          {
+            "time_s": 0.8945685854568908,
+            "amplitude_m": 0.0005849602518000907,
+            "raw_index": 450
+          },
+          {
+            "time_s": 1.0933612463652134,
+            "amplitude_m": 0.0005192501738814727,
+            "raw_index": 550
+          },
+          {
+            "time_s": 1.292154085096134,
+            "amplitude_m": 0.0004609214523502364,
+            "raw_index": 650
+          },
+          {
+            "time_s": 1.4909467751216299,
+            "amplitude_m": 0.0004091449691217055,
+            "raw_index": 750
+          },
+          {
+            "time_s": 1.6897395214052595,
+            "amplitude_m": 0.00036318464378357073,
+            "raw_index": 850
+          },
+          {
+            "time_s": 1.888532321875418,
+            "amplitude_m": 0.0003223871830134847,
+            "raw_index": 950
+          }
+        ]
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "verification_passed": true,
+      "actual_procedure": "*DYNAMIC",
+      "history_owner": "Node PART-1-1.2",
+      "history_csv": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100_RHOEPS\\free-history.csv",
+      "history_csv_sha256": "edce9a3b61b0eae400b5942f8badd8a6155f9e631342b44ddfaf8fd07face7a8"
+    },
+    {
+      "run_id": "RUN-T026-029",
+      "job": "TRUSS_DAMP_T200_RHOEPS",
+      "input_hash": "920039de84c346cffcbce5e209f7cb113523991b8833b2c8c94c9e3228a5dd84",
+      "odb_path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\TRUSS_DAMP_T200_RHOEPS.odb",
+      "odb_sha256": "854ba7aff41dabadf21a9bb1221779af176de675a758c6ad196d4fdfaa8b2964",
+      "solver_version": "Abaqus/Standard 2025",
+      "scope": "Numerical direct-integration fixture verification only; no tower physical damping calibration",
+      "metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.031602492432133,
+        "analytical_frequency_Hz": 5.03201520308282,
+        "frequency_relative_error": 8.201697213367779e-05,
+        "zeta": 0.01897054711750058,
+        "analytical_zeta": 0.018973665961010275,
+        "zeta_relative_error": 0.0001643774859378795,
+        "zero_zeta_absolute": null,
+        "negative_peak_zeta": 0.01897054591946631,
+        "positive_negative_zeta_absolute_difference": 1.1980342690121049e-09,
+        "positive_decay_rate_per_s": 0.5998521359075524,
+        "analytical_decay_rate_per_s": 0.6,
+        "analytical_history_error_over_x0": 0.0015950139775836787,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 0.9079897925184923,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 0.0005619174080493186,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 4.600510374075384e-05,
+        "final_viscous_dissipation_J": 0.00045399885857477784
+      },
+      "positive_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.19874383986097213,
+        "frequency_Hz": 5.031602492432133,
+        "omega_d_rad_per_s": 31.61449085201776,
+        "decay_rate_per_s": 0.5998521359075524,
+        "zeta": 0.01897054711750058,
+        "period_regression_r2": 0.999999999999997,
+        "log_amplitude_regression_r2": 0.9999999999999774,
+        "logarithmic_decrement_per_full_cycle": 0.11921691683907268,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.19874416033540476,
+            "amplitude_m": 0.0008876152524327497,
+            "raw_index": 200
+          },
+          {
+            "time_s": 0.3974880040832075,
+            "amplitude_m": 0.0007878608211286767,
+            "raw_index": 400
+          },
+          {
+            "time_s": 0.5962318187018959,
+            "amplitude_m": 0.0006993172666156606,
+            "raw_index": 600
+          },
+          {
+            "time_s": 0.7949757320226796,
+            "amplitude_m": 0.0006207246990381373,
+            "raw_index": 800
+          },
+          {
+            "time_s": 0.9937194805083126,
+            "amplitude_m": 0.0005509647088626359,
+            "raw_index": 1000
+          },
+          {
+            "time_s": 1.1924634248061394,
+            "amplitude_m": 0.0004890446480251797,
+            "raw_index": 1200
+          },
+          {
+            "time_s": 1.3912071792421223,
+            "amplitude_m": 0.000434083512629775,
+            "raw_index": 1400
+          },
+          {
+            "time_s": 1.5899510637891439,
+            "amplitude_m": 0.00038529914469015387,
+            "raw_index": 1600
+          },
+          {
+            "time_s": 1.7886948851059223,
+            "amplitude_m": 0.00034199738074174344,
+            "raw_index": 1800
+          },
+          {
+            "time_s": 1.987438704614183,
+            "amplitude_m": 0.0003035620491577599,
+            "raw_index": 2001
+          }
+        ]
+      },
+      "negative_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.198743849770058,
+        "frequency_Hz": 5.031602241563584,
+        "omega_d_rad_per_s": 31.614489275764182,
+        "decay_rate_per_s": 0.5998520681040808,
+        "zeta": 0.01897054591946631,
+        "period_regression_r2": 0.9999999999999969,
+        "log_amplitude_regression_r2": 0.9999999999999969,
+        "logarithmic_decrement_per_full_cycle": 0.11921690930753602,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.09937222852123159,
+            "amplitude_m": 0.0009421333446478752,
+            "raw_index": 100
+          },
+          {
+            "time_s": 0.2981160571589795,
+            "amplitude_m": 0.0008362519530690493,
+            "raw_index": 300
+          },
+          {
+            "time_s": 0.49685990199143537,
+            "amplitude_m": 0.0007422699457262156,
+            "raw_index": 500
+          },
+          {
+            "time_s": 0.6956037205130107,
+            "amplitude_m": 0.0006588501641933,
+            "raw_index": 700
+          },
+          {
+            "time_s": 0.894347650726456,
+            "amplitude_m": 0.000584805426037084,
+            "raw_index": 900
+          },
+          {
+            "time_s": 1.0930914582447202,
+            "amplitude_m": 0.0005190822280429643,
+            "raw_index": 1100
+          },
+          {
+            "time_s": 1.291835319168578,
+            "amplitude_m": 0.0004607452952163837,
+            "raw_index": 1300
+          },
+          {
+            "time_s": 1.4905791905086163,
+            "amplitude_m": 0.00040896454860913555,
+            "raw_index": 1500
+          },
+          {
+            "time_s": 1.689322943837322,
+            "amplitude_m": 0.00036300317189766487,
+            "raw_index": 1700
+          },
+          {
+            "time_s": 1.8880668906590425,
+            "amplitude_m": 0.0003222071395379114,
+            "raw_index": 1900
+          }
+        ]
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": 0.002,
+        "zero_damping_ratio_absolute_max": null,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": null,
+        "damped_energy_balance_relative_error_max": 0.002,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "verification_passed": true,
+      "actual_procedure": "*DYNAMIC",
+      "history_owner": "Node PART-1-1.2",
+      "history_csv": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200_RHOEPS\\free-history.csv",
+      "history_csv_sha256": "5cd8c977ea7fbe33bddcaf1f90b6268b49b69bcb0b543f3f85b23833128f36fc"
+    },
+    {
+      "run_id": "RUN-T026-030",
+      "job": "TRUSS_ZERO_T100_RHOEPS",
+      "input_hash": "e88fe120f254c18d2b5c323771c1b112c30f692fedda126b310ddfa46db7a20b",
+      "odb_path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\TRUSS_ZERO_T100_RHOEPS.odb",
+      "odb_sha256": "b977566d5563f044befde5e8cbb8c50b1f463243cb63502d208004c19ee97740",
+      "solver_version": "Abaqus/Standard 2025",
+      "scope": "Numerical direct-integration fixture verification only; no tower physical damping calibration",
+      "metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.031266823569689,
+        "analytical_frequency_Hz": 5.032921210448704,
+        "frequency_relative_error": 0.0003287130495068747,
+        "zeta": 2.974797835124766e-09,
+        "analytical_zeta": 0.0,
+        "zeta_relative_error": null,
+        "zero_zeta_absolute": 2.974797835124766e-09,
+        "negative_peak_zeta": 3.0595157005904234e-09,
+        "positive_negative_zeta_absolute_difference": 8.47178654656576e-11,
+        "positive_decay_rate_per_s": 9.404044488928182e-08,
+        "analytical_decay_rate_per_s": 0.0,
+        "analytical_history_error_over_x0": 0.02013895291035378,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 5.800393412108695e-08,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 5.800393412108695e-08,
+        "minimum_actual_dt_s": 0.0011608600616455078,
+        "maximum_actual_dt_s": 0.001986980438232422,
+        "last_time_s": 2.0,
+        "history_points": 1008,
+        "final_mechanical_energy_J": 0.0005000000019208528,
+        "final_viscous_dissipation_J": 0.0
+      },
+      "positive_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.19875709936816646,
+        "frequency_Hz": 5.031266823569689,
+        "omega_d_rad_per_s": 31.61238178235318,
+        "decay_rate_per_s": 9.404044488928182e-08,
+        "zeta": 2.974797835124766e-09,
+        "period_regression_r2": 0.999999999999998,
+        "log_amplitude_regression_r2": 0.7004626624387569,
+        "logarithmic_decrement_per_full_cycle": 1.869120604948557e-08,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.19875710550459239,
+            "amplitude_m": 0.0009999999678300324,
+            "raw_index": 100
+          },
+          {
+            "time_s": 0.39751418603086963,
+            "amplitude_m": 0.0009999999580824464,
+            "raw_index": 200
+          },
+          {
+            "time_s": 0.5962712672383491,
+            "amplitude_m": 0.0010000000226747076,
+            "raw_index": 300
+          },
+          {
+            "time_s": 0.7950284013872526,
+            "amplitude_m": 0.000999999930323112,
+            "raw_index": 400
+          },
+          {
+            "time_s": 0.9937854446783048,
+            "amplitude_m": 0.0009999999024645656,
+            "raw_index": 500
+          },
+          {
+            "time_s": 1.1925425574276718,
+            "amplitude_m": 0.0009999999550019797,
+            "raw_index": 600
+          },
+          {
+            "time_s": 1.3912996610907784,
+            "amplitude_m": 0.0009999998546237877,
+            "raw_index": 700
+          },
+          {
+            "time_s": 1.5900568351630384,
+            "amplitude_m": 0.000999999812429869,
+            "raw_index": 800
+          },
+          {
+            "time_s": 1.7888138882136833,
+            "amplitude_m": 0.0009999998546752307,
+            "raw_index": 900
+          },
+          {
+            "time_s": 1.9875709665028565,
+            "amplitude_m": 0.000999999841784099,
+            "raw_index": 1000
+          }
+        ]
+      },
+      "negative_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.1987571030061466,
+        "frequency_Hz": 5.031266731479151,
+        "omega_d_rad_per_s": 31.612381203731257,
+        "decay_rate_per_s": 9.671857662586537e-08,
+        "zeta": 3.0595157005904234e-09,
+        "period_regression_r2": 0.9999999999999934,
+        "log_amplitude_regression_r2": 0.7923507802648818,
+        "logarithmic_decrement_per_full_cycle": 1.9223504097035007e-08,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.09937855281354499,
+            "amplitude_m": 0.000999999998476766,
+            "raw_index": 50
+          },
+          {
+            "time_s": 0.29813565117380075,
+            "amplitude_m": 0.00099999995555725,
+            "raw_index": 150
+          },
+          {
+            "time_s": 0.49689274202222716,
+            "amplitude_m": 0.0009999999861335393,
+            "raw_index": 250
+          },
+          {
+            "time_s": 0.6956498102952539,
+            "amplitude_m": 0.0009999999678624743,
+            "raw_index": 350
+          },
+          {
+            "time_s": 0.894406912226592,
+            "amplitude_m": 0.0009999999038511986,
+            "raw_index": 450
+          },
+          {
+            "time_s": 1.0931639771300177,
+            "amplitude_m": 0.000999999919514826,
+            "raw_index": 550
+          },
+          {
+            "time_s": 1.291921203105652,
+            "amplitude_m": 0.0009999999076104808,
+            "raw_index": 650
+          },
+          {
+            "time_s": 1.4906781965850464,
+            "amplitude_m": 0.0009999999284398024,
+            "raw_index": 750
+          },
+          {
+            "time_s": 1.6894353109035247,
+            "amplitude_m": 0.0009999998242868897,
+            "raw_index": 850
+          },
+          {
+            "time_s": 1.8881925374532569,
+            "amplitude_m": 0.0009999997985407371,
+            "raw_index": 950
+          }
+        ]
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.025,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "verification_passed": true,
+      "actual_procedure": "*DYNAMIC",
+      "history_owner": "Node PART-1-1.2",
+      "history_csv": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100_RHOEPS\\free-history.csv",
+      "history_csv_sha256": "24f5c34fc9d9a3b62b0581b8e600264701a60ed73f6a34cf9fe9802fc082a682"
+    },
+    {
+      "run_id": "RUN-T026-031",
+      "job": "TRUSS_ZERO_T200_RHOEPS",
+      "input_hash": "3156dd3d938de634fb5fcf7d2d97aa8a86bc15c0f07181ac91086566dc5a3f99",
+      "odb_path": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\TRUSS_ZERO_T200_RHOEPS.odb",
+      "odb_sha256": "74809b05c31e01df0cef708fb3e2d60e31b7cb27ed407220fb5fd3c9a1c228ab",
+      "solver_version": "Abaqus/Standard 2025",
+      "scope": "Numerical direct-integration fixture verification only; no tower physical damping calibration",
+      "metrics": {
+        "preload_displacement_m": 0.0010000000474974513,
+        "preload_displacement_relative_error": 4.749745128457272e-08,
+        "frequency_Hz": 5.0325075156779135,
+        "analytical_frequency_Hz": 5.032921210448704,
+        "frequency_relative_error": 8.219774431027642e-05,
+        "zeta": -6.094264473089957e-10,
+        "analytical_zeta": 0.0,
+        "zeta_relative_error": null,
+        "zero_zeta_absolute": 6.094264473089957e-10,
+        "negative_peak_zeta": -4.4212638631200826e-10,
+        "positive_negative_zeta_absolute_difference": 1.6730006099698744e-10,
+        "positive_decay_rate_per_s": -1.9270172303505343e-08,
+        "analytical_decay_rate_per_s": 0.0,
+        "analytical_history_error_over_x0": 0.005037403484314413,
+        "energy_history_available": true,
+        "energy_relative_drift_max": 5.8124948430771095e-08,
+        "mechanical_plus_viscous_energy_balance_relative_error_max": 5.8124948430771095e-08,
+        "minimum_actual_dt_s": 0.00016736984252929688,
+        "maximum_actual_dt_s": 0.000993490219116211,
+        "last_time_s": 2.0,
+        "history_points": 2015,
+        "final_mechanical_energy_J": 0.0004999999873689376,
+        "final_viscous_dissipation_J": 0.0
+      },
+      "positive_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.19870809867340916,
+        "frequency_Hz": 5.0325075156779135,
+        "omega_d_rad_per_s": 31.620177280778307,
+        "decay_rate_per_s": -1.9270172303505343e-08,
+        "zeta": -6.094264473089957e-10,
+        "period_regression_r2": 0.9999999999999952,
+        "log_amplitude_regression_r2": 0.18667696777460352,
+        "logarithmic_decrement_per_full_cycle": -3.829139299538536e-09,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.1987081229686737,
+            "amplitude_m": 0.0009999999483229296,
+            "raw_index": 200
+          },
+          {
+            "time_s": 0.39741624207879755,
+            "amplitude_m": 0.0009999999999822547,
+            "raw_index": 400
+          },
+          {
+            "time_s": 0.5961243525332054,
+            "amplitude_m": 0.0009999999698340086,
+            "raw_index": 600
+          },
+          {
+            "time_s": 0.7948324332634608,
+            "amplitude_m": 0.0009999999702735708,
+            "raw_index": 800
+          },
+          {
+            "time_s": 0.9935405018891912,
+            "amplitude_m": 0.001000000007673687,
+            "raw_index": 1000
+          },
+          {
+            "time_s": 1.1922486523400366,
+            "amplitude_m": 0.0009999999639273905,
+            "raw_index": 1200
+          },
+          {
+            "time_s": 1.390956665622098,
+            "amplitude_m": 0.000999999947567432,
+            "raw_index": 1400
+          },
+          {
+            "time_s": 1.5896649212155018,
+            "amplitude_m": 0.000999999979092289,
+            "raw_index": 1600
+          },
+          {
+            "time_s": 1.7883729145073224,
+            "amplitude_m": 0.0010000000272291415,
+            "raw_index": 1800
+          },
+          {
+            "time_s": 1.9870809988769622,
+            "amplitude_m": 0.0010000000046177162,
+            "raw_index": 2000
+          }
+        ]
+      },
+      "negative_peak_identification": {
+        "peak_count": 10,
+        "period_s": 0.1987081098457979,
+        "frequency_Hz": 5.032507232724538,
+        "omega_d_rad_per_s": 31.62017550292982,
+        "decay_rate_per_s": -1.3980113929661848e-08,
+        "zeta": -4.4212638631200826e-10,
+        "period_regression_r2": 0.999999999999998,
+        "log_amplitude_regression_r2": 0.067982129532006,
+        "logarithmic_decrement_per_full_cycle": -2.777962014392016e-09,
+        "peak_convention": "same sign; one complete cycle between peaks",
+        "peaks": [
+          {
+            "time_s": 0.09935403214817026,
+            "amplitude_m": 0.0009999999642570621,
+            "raw_index": 100
+          },
+          {
+            "time_s": 0.298062144806358,
+            "amplitude_m": 0.000999999998224213,
+            "raw_index": 300
+          },
+          {
+            "time_s": 0.4967702557643255,
+            "amplitude_m": 0.0009999999503284324,
+            "raw_index": 500
+          },
+          {
+            "time_s": 0.6954783570828332,
+            "amplitude_m": 0.0010000000531012092,
+            "raw_index": 700
+          },
+          {
+            "time_s": 0.8941864994950702,
+            "amplitude_m": 0.0009999999579108818,
+            "raw_index": 900
+          },
+          {
+            "time_s": 1.0928945666624725,
+            "amplitude_m": 0.0010000000129478121,
+            "raw_index": 1100
+          },
+          {
+            "time_s": 1.2916027031146224,
+            "amplitude_m": 0.0009999999801150105,
+            "raw_index": 1300
+          },
+          {
+            "time_s": 1.4903108007717976,
+            "amplitude_m": 0.0009999999878835344,
+            "raw_index": 1500
+          },
+          {
+            "time_s": 1.6890188548054657,
+            "amplitude_m": 0.0010000000283306768,
+            "raw_index": 1700
+          },
+          {
+            "time_s": 1.8877270681773666,
+            "amplitude_m": 0.0009999999891198033,
+            "raw_index": 1900
+          }
+        ]
+      },
+      "acceptance": {
+        "static_displacement_relative_error_max": 1e-06,
+        "damped_frequency_relative_error_max": 0.001,
+        "damping_ratio_relative_error_max": null,
+        "zero_damping_ratio_absolute_max": 2e-05,
+        "analytical_history_error_over_x0_max": 0.007,
+        "zero_damping_energy_relative_drift_max": 1e-05,
+        "damped_energy_balance_relative_error_max": null,
+        "pass_requires_all_metrics": true,
+        "rationale": "Pre-registered numerical fixture budgets, not engineering/experimental tolerances. T/100 trapezoidal frequency phase error O(dt^2) accumulates over ten cycles; fine-step history budget is reduced; energy budget includes float output precision."
+      },
+      "decisions": {
+        "static_displacement": true,
+        "damped_frequency": true,
+        "analytical_history": true,
+        "damping_ratio": true,
+        "energy": true
+      },
+      "verification_passed": true,
+      "actual_procedure": "*DYNAMIC",
+      "history_owner": "Node PART-1-1.2",
+      "history_csv": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200_RHOEPS\\free-history.csv",
+      "history_csv_sha256": "6dfcba23eda2135af3b595d8d45ef39e962ce2a5e54dd10e29806b605d094976"
+    }
+  ],
+  "time_step_comparisons": [
+    {
+      "coarse_run": "RUN-T026-028",
+      "fine_run": "RUN-T026-029",
+      "frequency_error_ratio_coarse_to_fine": 3.999348833897358,
+      "history_error_ratio_coarse_to_fine": 3.997611016558411,
+      "observed_scope": "Fixed direct-integration fixture; time-step convergence, not tower mesh or true damping calibration"
+    },
+    {
+      "coarse_run": "RUN-T026-030",
+      "fine_run": "RUN-T026-031",
+      "frequency_error_ratio_coarse_to_fine": 3.999051948020169,
+      "history_error_ratio_coarse_to_fine": 3.9978836265673237,
+      "observed_scope": "Fixed direct-integration fixture; time-step convergence, not tower mesh or true damping calibration"
+    }
+  ],
+  "failed_input_runs": [
+    {
+      "run_id": "RUN-T026-022",
+      "failure": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T100\\TRUSS_DAMP_T100.inp",
+      "input_hash": "eceae167903bab88a58da050a7137239559a63c7e4c478a935379962570bae2e"
+    },
+    {
+      "run_id": "RUN-T026-023",
+      "failure": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_DAMP_T200\\TRUSS_DAMP_T200.inp",
+      "input_hash": "fd07a19a23ffe113e6077097cba1622f5b268818e69d99def6d20eeecfb01e35"
+    },
+    {
+      "run_id": "RUN-T026-024",
+      "failure": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T100\\TRUSS_ZERO_T100.inp",
+      "input_hash": "90f153e03e4a0ddfef344cbbae020cbcee3d7b3d0360de598495e510676f35bd"
+    },
+    {
+      "run_id": "RUN-T026-025",
+      "failure": "Abaqus 2025 input processor requires at least one active material with nonzero density in general dynamic step, despite MASS inertia; original zero-density fixture retained.",
+      "input": "D:\\Codex-research-validation\\T026\\damping\\TRUSS_ZERO_T200\\TRUSS_ZERO_T200.inp",
+      "input_hash": "9b13c794cbe95a180fb27f8f4e1cfd2c00c6f7c9b1cf4ad0c1c6cc46c833777f"
+    }
+  ],
+  "peak_convention": "Positive same-sign full-cycle peaks are primary. Negative same-sign full-cycle peaks independently checked. No half-cycle/full-cycle interchange.",
+  "claimed_validation": "not_available; implementation verification only",
+  "limitations": [
+    "Single linear degree of freedom with controlled properties, not spatial tower.",
+    "No experimental damping calibration or inference of prestress/geometric damping.",
+    "SPRING2 cannot take material beta property; an unused beta material demonstrates no automatic global inheritance, not a comparable material assignment.",
+    "Truss retries add density1e-12 to satisfy active-material processor requirement; bar mass1e-15kg negligible versus MASS1kg."
+  ],
+  "source_urls": [
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-mass.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-dynamic.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-spring.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-dampingopt.htm"
+  ],
+  "plot_pdf": {
+    "path": "D:\\Codex-research-validation\\T026\\damping\\damping-verification-plots.pdf",
+    "sha256": "3bbcfe822b411684557d70d3bd1b09ab076065626c26aea5047dc973d109f856"
+  }
+}

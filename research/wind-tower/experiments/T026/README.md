@@ -1,0 +1,29 @@
+# T026 模型输入、数值核验与复现
+
+## 数据范围
+
+本目录公开实际关键词模型、事先登记的误差预算、真实求解日志、可检查的CSV/JSON与科学图。38次尝试中31次求解成功、7次失败被保留。成功终止与验证通过分别记录。正文和老师原文不在此目录。
+
+`run-manifest.json`的每项`public_input`给出本目录内可下载的自包含INP（无外部*Include），`input_hash`可验证身份。`results`报告实施关系、网格及惯量等价；`figures`使用真实输入/ODB数据生成，截面平均模态图并非求解器云图。原大ODB未复制到普通Git；清单保留SHA以便与本地原结果核对。
+
+## 复现一项实际作业
+
+需要具有合法可用Abaqus/Standard的计算机。GitHub储存/查看输入和研究记录，网页本身不提供商用求解器许可。使用独立输出目录保留旧结果，例如：
+
+```powershell
+python scripts/portable_run.py --input inputs/RUN-T026-036/DTU158_RNA_EQUIV_G1.inp --abaqus D:/Abaqus/Commands/abaqus.bat --output D:/validation/recheck-036 --scratch D:/validation/scratch --cpus 2 --sha256 <run-manifest对应input_hash>
+```
+
+runner会复制并验证输入，只在新目录运行，保存实际STA状态及输出哈希。小算例可用1CPU/512mb；本轮塔模型用2CPU/2048mb。D临时目录是本机C盘空间不足时的环境修复，不是模型参数。
+
+本轮生成/提取/比较脚本亦公开，内部保留当时源路径以追溯运行身份；复跑时按自己的目录配置ROOT和manifest输入。`portable_run.py`可直接参数化提交，Python材料/积分/图脚本需要numpy、reportlab；读取ODB必须用Abaqus Python，不能以普通Python直接解二进制CAE/ODB。
+
+## 解释结果
+
+- 数值实施验证、数值收敛、物理标定、文献外部试验对照分别成立；不得混写为“模型已全面验证”。
+- C3D8R末端13.76052%残余强度偏差未关闭；纯1D目标通过不替代3D多轴/循环校准。
+- RNA模型实际总质量/CG/完整惯量均已核算；连续与端点集总惯量不能互换。相同质量并不保证模态相同。
+- 三套网格只确认前四频率和两方向切线柔度在所报数值预算内；不证明开裂后耗能客观性或30阶覆盖全部响应。
+- 本目录公开数据和研究思路，不包含论文Word正文、老师讨论Word或受限全文。
+
+详细结果与文献读范围见[本轮核验记录](../../audit/32-t026-local-validation-and-chapter2.md)。

@@ -1,0 +1,44 @@
+{
+  "state": "preregistered_before_independent_solver_output_read",
+  "basis": "Project numerical accuracy targets for uniform small-strain material-card reproduction; not official material calibration or a standard 5% tolerance.",
+  "required_kinematics": "uniform uniaxial state, free lateral Poisson deformation, actual strain measure and area matching solver formulation, no extra stabilization hidden",
+  "mu0_input_reproduction": {
+    "RF_over_A_vs_IP_sigma_abs_error_over_peak_max": 1e-06,
+    "avg_strain_vs_U_over_L_absolute_error_max": 1e-08,
+    "curve_error_sampling": "Compare monotonic loading only at common total-strain values inside card bounds; separate unload/reload path. Interpolate converted-plastic target, inspect residual vs strain.",
+    "curve_max_abs_stress_error_over_input_peak": 0.002,
+    "curve_RMSE_over_input_peak": 0.001,
+    "input_node_stress_relative_error_max_for_sigma_ge_0p01_peak": 0.01,
+    "sampled_peak_stress_relative_error_max": 0.001,
+    "peak_strain_error_bound": "one local output strain increment about peak plus literal table numerical precision; report this resolution and do not claim smaller uncertainty",
+    "unloading_slope_relative_error_max": 0.005,
+    "unloading_slope_fit": "same-sign unloading without new plastic flow/stiffness-recovery reversal; at least 5 usable frames; regress sigma on axial strain and report interval/fit residual",
+    "damage_absolute_error_at_aligned_table_node_max": 0.001,
+    "legality": "nonnegative and nondecreasing plastic conversion at literal nodes; d<1; finite inputs. 1e-12 strain diagnostic floor only covers floating/printed data checks",
+    "budget_reason": "Algebraic target exact for supplied literals; tolerances above permit solver/increment/output precision yet resolve 1%-of-peak tensile residual and meaningful slope changes. Refine increments when exceeded; do not retune card."
+  },
+  "mu1e_minus5_branch": {
+    "same_curve_accuracy_target_as_mu0": true,
+    "mu0_vs_actual_mu_curve_max_delta_stress_over_peak_budget": 0.002,
+    "mu0_vs_actual_mu_curve_RMSE_over_peak_budget": 0.001,
+    "mu0_vs_actual_mu_unloading_slope_relative_delta_budget": 0.005,
+    "classification": "If actual-mu branch exceeds reproduction budget, label viscosity/path influenced. It does not alone prove invalid material data or failed calibration. Hold production response-rate applicability until rate/increment diagnosis.",
+    "required_record": "actual total pseudo-time, strain-rate/amplitude, max actual increment, mu/T and mu relative to damage-transition loading duration",
+    "diagnostic_trigger": "halve max increment without changing total loading time; if branch difference persists, increase loading duration or reduce mu in a new diagnostic run to separate time integration from regularization. Preserve actual mu baseline."
+  },
+  "dense_reference_interpolation": {
+    "warning": "Uniform dense sampling can miss slope corners. Node comparison is primary; interpolation difference estimated by doubling dense sampling belongs to target-processing budget.",
+    "target_processing_interpolation_max_abs_error_over_peak_budget": 0.0001
+  },
+  "outside_table": "Do not certify target reproduction beyond last recorded total-strain node or through reversed-sign recovery from this monotonic target alone.",
+  "actual_cards": {
+    "C65": {
+      "mu": 1e-05,
+      "E0": 36500000000.0
+    },
+    "C70": {
+      "mu": 1e-05,
+      "E0": 37000000000.0
+    }
+  }
+}

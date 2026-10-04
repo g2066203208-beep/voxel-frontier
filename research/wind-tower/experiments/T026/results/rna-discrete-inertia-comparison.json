@@ -1,0 +1,378 @@
+{
+  "identity": "RUN032 actual input B31 rigid RNA carrier; no physical DTU10MW inertia validation",
+  "input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+  "input_sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+  "mass_kg": 673998.4931380383,
+  "CG_m": [
+    8.636170778729943e-17,
+    160.29779769845646,
+    -0.6231840053199021
+  ],
+  "reference_point_m": [
+    0.0,
+    160.0,
+    0.0
+  ],
+  "CG_minus_RP_m": [
+    8.636170778729943e-17,
+    0.2977976984564634,
+    -0.6231840053199021
+  ],
+  "continuous_cylinder_J_CG_tensor_kgm2": [
+    [
+      96760669.74724701,
+      7.043547267658587e-10,
+      -5.709819252677471e-10
+    ],
+    [
+      7.043547267658587e-10,
+      96730110.18353698,
+      -664405.3751226319
+    ],
+    [
+      -5.709819252677471e-10,
+      -664405.3751226319,
+      156378478.90267432
+    ]
+  ],
+  "B31_discrete_J_CG_tensor_kgm2": [
+    [
+      108024597.4607835,
+      7.184036276973436e-10,
+      4.767559711746663e-10
+    ],
+    [
+      7.184036276973436e-10,
+      107994037.60245842,
+      -664405.3751226325
+    ],
+    [
+      4.767559711746663e-10,
+      -664405.3751226325,
+      162482391.8728107
+    ]
+  ],
+  "B31_discrete_J_RP_tensor_kgm2": [
+    [
+      108346122.89741616,
+      7.010695202447787e-10,
+      5.130300544430237e-10
+    ],
+    [
+      7.010695202447787e-10,
+      108255790.51448,
+      -539322.8728458127
+    ],
+    [
+      5.130300544430237e-10,
+      -539322.8728458127,
+      162542164.39742178
+    ]
+  ],
+  "continuous_J_RP_tensor_kgm2": [
+    [
+      97082195.18387967,
+      6.870206193132938e-10,
+      -5.347078419993897e-10
+    ],
+    [
+      6.870206193132938e-10,
+      96991863.09555855,
+      -539322.8728458121
+    ],
+    [
+      -5.347078419993897e-10,
+      -539322.8728458121,
+      156438251.4272854
+    ]
+  ],
+  "solver_DAT_actual_J_CG_printed_tensor_kgm2": [
+    [
+      108024600.0,
+      -2.5171703e-08,
+      7.5290306e-10
+    ],
+    [
+      -2.5171703e-08,
+      107994040.0,
+      -664405.4
+    ],
+    [
+      7.5290306e-10,
+      -664405.4,
+      162482390.0
+    ]
+  ],
+  "solver_DAT_raw_diagonal": "1.0802460E+08      1.0799404E+08      1.6248239E+08",
+  "solver_DAT_raw_products": "-2.5171703E-08      7.5290306E-10      -664405.4",
+  "preferred_for_RUN036_equivalence": "B31_discrete_J_CG_tensor_kgm2: full-precision endpoint-lumped + exact cross-section calculation validated against printed real DAT; use same mass and CG.",
+  "preferred_for_RUN037_representation_sensitivity": "continuous_cylinder_J_CG_tensor_kgm2: same exported input densities, mass and CG; mathematical continuous mass distribution, not official physical RNA inertia.",
+  "ROTARYI_keyword_order": [
+    "I11",
+    "I22",
+    "I33",
+    "I12",
+    "I13",
+    "I23"
+  ],
+  "ROTARYI_input_discrete_about_CG": [
+    108024597.4607835,
+    107994037.60245842,
+    162482391.8728107,
+    7.184036276973436e-10,
+    4.767559711746663e-10,
+    -664405.3751226325
+  ],
+  "ROTARYI_input_continuous_about_CG": [
+    96760669.74724701,
+    96730110.18353698,
+    156378478.90267432,
+    7.043547267658587e-10,
+    -5.709819252677471e-10,
+    -664405.3751226319
+  ],
+  "DAT_offdiagonal_print_order": [
+    "I(XY)",
+    "I(XZ)",
+    "I(YZ)"
+  ],
+  "CAE_query_order_distinct": [
+    "xx",
+    "yy",
+    "zz",
+    "xy",
+    "yz",
+    "zx"
+  ],
+  "default_mass_formulation": "Official BEAM SECTION: LUMPED=YES, ROTARY INERTIA=EXACT. No isotropic option is present in input.",
+  "discrete_prediction": "Sum endpoints m_e/2 at each coordinate, plus exact circular cross-section rotary inertia; J_CG matches real DAT to printed last-digit rounding.",
+  "why_difference": "Each straight uniform beam adds mL^2/6 (I−tt^T) to continuous inertia when endpoint-lumped; no mass or CG change.",
+  "delta_discrete_minus_continuous_J_CG_kgm2": [
+    [
+      11263927.713536486,
+      1.4048900931484912e-11,
+      1.0477378964424133e-09
+    ],
+    [
+      1.4048900931484912e-11,
+      11263927.41892144,
+      -5.820766091346741e-10
+    ],
+    [
+      1.0477378964424133e-09,
+      -5.820766091346741e-10,
+      6103912.970136374
+    ]
+  ],
+  "diagonal_relative_increase_vs_continuous": [
+    0.11641018755822494,
+    0.1164469615257247,
+    0.039032947583121605
+  ],
+  "DAT_minus_independent_discrete_diagonal_kgm2": [
+    2.5392165035009384,
+    2.397541582584381,
+    -1.8728106915950775
+  ],
+  "DAT_diagonal_rounding_budget_kgm2": [
+    5.0,
+    5.0,
+    5.0
+  ],
+  "all_diagonals_within_DAT_last_digit_rounding": true,
+  "DAT_yz_minus_independent_kgm2": -0.024877367541193962,
+  "DAT_yz_rounding_budget_kgm2": 0.05,
+  "DAT_yz_within_last_digit_rounding": true,
+  "CG_vs_RP_confirmation": "DAT xy/xz≈0 and yz=−664405.4 match J_CG. J_RP has yz≈−539322.873 from parallel-axis shift; do not shift J_CG twice.",
+  "M6_at_RP_dof_order": [
+    "U1",
+    "U2",
+    "U3",
+    "UR1",
+    "UR2",
+    "UR3"
+  ],
+  "skew_CG_minus_RP_m": [
+    [
+      0.0,
+      0.6231840053199021,
+      0.2977976984564634
+    ],
+    [
+      -0.6231840053199021,
+      0.0,
+      -8.636170778729943e-17
+    ],
+    [
+      -0.2977976984564634,
+      8.636170778729943e-17,
+      0.0
+    ]
+  ],
+  "M6_B31_discrete_at_RP": [
+    [
+      673998.4931380383,
+      0.0,
+      0.0,
+      -0.0,
+      -420025.08053334133,
+      -200715.20001963226
+    ],
+    [
+      0.0,
+      673998.4931380383,
+      0.0,
+      420025.08053334133,
+      -0.0,
+      5.820766091346741e-11
+    ],
+    [
+      0.0,
+      0.0,
+      673998.4931380383,
+      200715.20001963226,
+      -5.820766091346741e-11,
+      -0.0
+    ],
+    [
+      0.0,
+      420025.08053334133,
+      200715.20001963226,
+      108346122.89741616,
+      7.010695202447787e-10,
+      5.130300544430237e-10
+    ],
+    [
+      -420025.08053334133,
+      0.0,
+      -5.820766091346741e-11,
+      7.010695202447787e-10,
+      108255790.51448,
+      -539322.8728458127
+    ],
+    [
+      -200715.20001963226,
+      5.820766091346741e-11,
+      0.0,
+      5.130300544430237e-10,
+      -539322.8728458127,
+      162542164.39742178
+    ]
+  ],
+  "M6_continuous_at_RP": [
+    [
+      673998.4931380383,
+      0.0,
+      0.0,
+      -0.0,
+      -420025.08053334133,
+      -200715.20001963226
+    ],
+    [
+      0.0,
+      673998.4931380383,
+      0.0,
+      420025.08053334133,
+      -0.0,
+      5.820766091346741e-11
+    ],
+    [
+      0.0,
+      0.0,
+      673998.4931380383,
+      200715.20001963226,
+      -5.820766091346741e-11,
+      -0.0
+    ],
+    [
+      0.0,
+      420025.08053334133,
+      200715.20001963226,
+      97082195.18387967,
+      6.870206193132938e-10,
+      -5.347078419993897e-10
+    ],
+    [
+      -420025.08053334133,
+      0.0,
+      -5.820766091346741e-11,
+      6.870206193132938e-10,
+      96991863.09555855,
+      -539322.8728458121
+    ],
+    [
+      -200715.20001963226,
+      5.820766091346741e-11,
+      0.0,
+      -5.347078419993897e-10,
+      -539322.8728458121,
+      156438251.4272854
+    ]
+  ],
+  "M6_block_formula": "[mI, −m[d]x; +m[d]x, J_CG+m((d.d)I−dd^T)], v_CG=v_RP+omega×d. Mixed blocks have kg/kg*m/kg*m^2 units.",
+  "discrete_principal_J_CG_kgm2": [
+    107985937.35985665,
+    108024597.4607835,
+    162490492.11541244
+  ],
+  "all_discrete_principal_inertias_positive": true,
+  "M6_energy_cases": [
+    {
+      "v_RP_m_per_s": [
+        1,
+        2,
+        3
+      ],
+      "omega_rad_per_s": [
+        0.1,
+        -0.2,
+        0.3
+      ],
+      "nodal_plus_section_energy_J": 14939602.679211011,
+      "M6_energy_J": 14939602.679211013,
+      "relative_difference": 1.2467835920582374e-16
+    },
+    {
+      "v_RP_m_per_s": [
+        0,
+        0,
+        0
+      ],
+      "omega_rad_per_s": [
+        1,
+        1,
+        1
+      ],
+      "nodal_plus_section_energy_J": 189032716.03181314,
+      "M6_energy_J": 189032716.03181314,
+      "relative_difference": 0.0
+    },
+    {
+      "v_RP_m_per_s": [
+        -0.5,
+        0.2,
+        0.7
+      ],
+      "omega_rad_per_s": [
+        -1,
+        0.3,
+        0.2
+      ],
+      "nodal_plus_section_energy_J": 62384484.97572276,
+      "M6_energy_J": 62384484.97572276,
+      "relative_difference": 0.0
+    }
+  ],
+  "all_energy_cases_agree_relative_1e-12": true,
+  "solver_dat": {
+    "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.dat",
+    "sha256": "53ddfd14ba3cbe31b2a0c9ddf9e125cd31a12844c7ef1a5e1026fbc8d57ec511"
+  },
+  "official_sources": [
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-beamsection.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAECAERefMap/simacae-t-qremassprops.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-rotaryinertia.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-equivrbm.htm"
+  ],
+  "not_claimed": "No new solver/API invocation; DAT snapshot is real root-run output. Mathematical discrete prediction is verified to DAT print precision, not extracted full-precision assembled mass matrix."
+}

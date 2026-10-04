@@ -1,0 +1,3954 @@
+{
+  "created_for": "RUN-T026-034/035 independent mesh-input review; no solver",
+  "baseline": {
+    "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+    "sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e"
+  },
+  "inputs": {
+    "DTU158_RECONSTRUCTED_M2": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+      "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "checks": [
+        {
+          "name": "all_non_tower_and_non_remapped_physical_cards_identical_to_G1",
+          "passed": true,
+          "evidence": {
+            "baseline_digest": "bdea7bddedcc87ccbad0768587b565a440138c0c5580c02900ff25f9cef659e6",
+            "target_digest": "bdea7bddedcc87ccbad0768587b565a440138c0c5580c02900ff25f9cef659e6",
+            "excluded_changes": "35 tower Part blocks; tower instance mesh label sets; unused SET_CH4_STRESS_CTRL"
+          }
+        },
+        {
+          "name": "old_control_set_only_valid_unchanged_nontower_components",
+          "passed": true,
+          "evidence": {
+            "obsolete_tower_labels_removed": true,
+            "whole_set_removed": false,
+            "remaining_cards": [
+              {
+                "line": 63445,
+                "instance": "RBLONG_03-1",
+                "data": [
+                  [
+                    "110"
+                  ]
+                ]
+              },
+              {
+                "line": 63447,
+                "instance": "RBLONG_05-1",
+                "data": [
+                  [
+                    "97"
+                  ]
+                ]
+              },
+              {
+                "line": 63449,
+                "instance": "PT_36X15P2-1",
+                "data": [
+                  [
+                    "19"
+                  ]
+                ]
+              }
+            ],
+            "disposition": "Root explicitly retains these valid non-refined-component labels in already-solved input; not an accepted chapter4 observation region; later chapters require newly tagged locations."
+          }
+        },
+        {
+          "name": "tower_element_types_and_material_section_tokens_preserved",
+          "passed": true,
+          "evidence": {
+            "element_type_counts": {
+              "C3D8R": 13392,
+              "C3D8I": 1728
+            },
+            "tower_nodes": 29808,
+            "solid_sections": {
+              "CSEG_25": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_10": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_27": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_11": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_03": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_03": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_31": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_07": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_16": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_09": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_13": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_18": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_04": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_04": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_19": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_24": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_20": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_12": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_05": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_22": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_01": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_06": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_01": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C70"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_21": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_26": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_30": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_14": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_23": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_08": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_02": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C70"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_28": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_15": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_17": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_29": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_02": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "CSEG_whole_mesh_active_sets_complete",
+          "passed": true,
+          "evidence": {
+            "elements": 13392,
+            "expected_elements": 13392,
+            "missing_elements": 0,
+            "extra_elements": 0,
+            "nodes": 26784,
+            "expected_nodes": 26784,
+            "invalid_labels": []
+          }
+        },
+        {
+          "name": "SSEG_whole_mesh_active_sets_complete",
+          "passed": true,
+          "evidence": {
+            "elements": 1728,
+            "expected_elements": 1728,
+            "missing_elements": 0,
+            "extra_elements": 0,
+            "nodes": 3024,
+            "expected_nodes": 3024,
+            "invalid_labels": []
+          }
+        },
+        {
+          "name": "three_original_NSM_cards_and_complete_target_sets",
+          "passed": true,
+          "evidence": {
+            "cards": [
+              {
+                "line": 67673,
+                "target": "SET_CSEG_ALL_ACTIVE",
+                "total_mass_kg": 4622.69,
+                "covered_elements": 13392,
+                "invalid_labels": [],
+                "units": "TOTAL MASS"
+              },
+              {
+                "line": 67675,
+                "target": "SET_CSEG_ALL_ACTIVE",
+                "total_mass_kg": 33004.8,
+                "covered_elements": 13392,
+                "invalid_labels": [],
+                "units": "TOTAL MASS"
+              },
+              {
+                "line": 67677,
+                "target": "SET_SSEG_ALL_ACTIVE",
+                "total_mass_kg": 2172.73,
+                "covered_elements": 1728,
+                "invalid_labels": [],
+                "units": "TOTAL MASS"
+              }
+            ],
+            "total_NSM_kg": 39800.22
+          }
+        },
+        {
+          "name": "SET_TOWER_BASE_covers_geometric_end_face",
+          "passed": true,
+          "evidence": {
+            "node_count": 216,
+            "expected_node_count": 216,
+            "global_y_range": [
+              0.0,
+              0.0
+            ],
+            "expected_y": 0.0,
+            "missing_nodes": 0,
+            "extra_nodes": 0
+          }
+        },
+        {
+          "name": "SET_TOWER_TOP_covers_geometric_end_face",
+          "passed": true,
+          "evidence": {
+            "node_count": 108,
+            "expected_node_count": 108,
+            "global_y_range": [
+              158.0,
+              158.0
+            ],
+            "expected_y": 158.0,
+            "missing_nodes": 0,
+            "extra_nodes": 0
+          }
+        },
+        {
+          "name": "all_70_tower_end_surfaces_cover_complete_end_faces",
+          "passed": true,
+          "evidence": {
+            "CSEG_01-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 0.0,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_01-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 3.6400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_02-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 3.64,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_02-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 7.2800001000000005,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_03-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 7.28,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_03-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 10.9200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_04-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 10.92,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_04-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 14.5600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_05-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 14.56,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_05-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 18.2000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_06-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 18.2,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_06-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 21.840000099999997,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_07-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 21.84,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_07-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 25.480000099999998,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_08-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 25.48,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_08-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 29.1200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_09-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 29.12,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_09-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 32.7600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_10-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 32.76,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_10-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 36.4000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_11-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 36.4,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_11-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 40.0400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_12-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 40.04,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_12-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 43.6800001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_13-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 43.68,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_13-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 47.3200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_14-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 47.32,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_14-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 50.9600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_15-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 50.96,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_15-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 54.6000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_16-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 54.6,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_16-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 58.2400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_17-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 58.24,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_17-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 61.880000100000004,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_18-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 61.88,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_18-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 65.5200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_19-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 65.52,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_19-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 69.16000009999999,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_20-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 69.16,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_20-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 72.77999989,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_21-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 72.78,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_21-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 76.44000009,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_22-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 76.44,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_22-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 80.08000009999999,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_23-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 80.08,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_23-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 83.7200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_24-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 83.72,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_24-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 87.3600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_25-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 87.36,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_25-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 91.0000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_26-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 91.0,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_26-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 94.6400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_27-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 94.64,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_27-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 98.2800001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_28-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 98.28,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_28-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 101.9200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_29-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 101.92,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_29-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 105.5600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_30-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 105.56,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_30-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 109.2000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_31-1.SURF_BOTTOM": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 109.2,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_31-1.SURF_TOP": {
+              "count": 216,
+              "expected_count": 216,
+              "global_y": 111.99999995,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_01-1.SURF_BOTTOM": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 112.0,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_01-1.SURF_TOP": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 123.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_02-1.SURF_BOTTOM": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 123.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_02-1.SURF_TOP": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 135.0,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_03-1.SURF_BOTTOM": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 135.0,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_03-1.SURF_TOP": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 146.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_04-1.SURF_BOTTOM": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 146.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_04-1.SURF_TOP": {
+              "count": 108,
+              "expected_count": 108,
+              "global_y": 158.0,
+              "exact_boundary_node_coverage": true
+            }
+          }
+        },
+        {
+          "name": "all_boundary_regions_nonempty_and_labels_valid",
+          "passed": true,
+          "evidence": [
+            {
+              "region": "PT_36X15P2-1.SET_PT_BOTTOM_GEOM",
+              "node_count": 36,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "region": "PT_36X15P2-1.SET_PT_BOTTOM_GEOM",
+              "node_count": 36,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "2",
+                "2"
+              ]
+            },
+            {
+              "region": "PT_36X15P2-1.SET_PT_BOTTOM_GEOM",
+              "node_count": 36,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "3",
+                "3"
+              ]
+            },
+            {
+              "region": "CSEG_01-1.FACE_BOTTOM",
+              "node_count": 216,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "ENCASTRE"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "all_coupling_RPs_and_surfaces_nonempty",
+          "passed": true,
+          "evidence": {
+            "count": 62,
+            "records": [
+              {
+                "constraint": "COUPLING_RNA_TOP",
+                "refnode": "_PICKEDSET230",
+                "refnode_count": 1,
+                "surface": "SSEG_04-1.SURF_TOP",
+                "surface_node_count": 108,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_FLANGE_C31_TOP",
+                "refnode": "SET_FLANGE_RP",
+                "refnode_count": 1,
+                "surface": "CSEG_31-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J01_LO",
+                "refnode": "_PICKEDSET235",
+                "refnode_count": 1,
+                "surface": "CSEG_01-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J01_UP",
+                "refnode": "_PICKEDSET236",
+                "refnode_count": 1,
+                "surface": "CSEG_02-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J02_LO",
+                "refnode": "_PICKEDSET253",
+                "refnode_count": 1,
+                "surface": "CSEG_02-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J02_UP",
+                "refnode": "_PICKEDSET254",
+                "refnode_count": 1,
+                "surface": "CSEG_03-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J03_LO",
+                "refnode": "_PICKEDSET271",
+                "refnode_count": 1,
+                "surface": "CSEG_03-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J03_UP",
+                "refnode": "_PICKEDSET272",
+                "refnode_count": 1,
+                "surface": "CSEG_04-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J04_LO",
+                "refnode": "_PICKEDSET289",
+                "refnode_count": 1,
+                "surface": "CSEG_04-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J04_UP",
+                "refnode": "_PICKEDSET290",
+                "refnode_count": 1,
+                "surface": "CSEG_05-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J05_LO",
+                "refnode": "_PICKEDSET307",
+                "refnode_count": 1,
+                "surface": "CSEG_05-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J05_UP",
+                "refnode": "_PICKEDSET308",
+                "refnode_count": 1,
+                "surface": "CSEG_06-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J06_LO",
+                "refnode": "_PICKEDSET325",
+                "refnode_count": 1,
+                "surface": "CSEG_06-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J06_UP",
+                "refnode": "_PICKEDSET326",
+                "refnode_count": 1,
+                "surface": "CSEG_07-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J07_LO",
+                "refnode": "_PICKEDSET343",
+                "refnode_count": 1,
+                "surface": "CSEG_07-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J07_UP",
+                "refnode": "_PICKEDSET344",
+                "refnode_count": 1,
+                "surface": "CSEG_08-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J08_LO",
+                "refnode": "_PICKEDSET361",
+                "refnode_count": 1,
+                "surface": "CSEG_08-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J08_UP",
+                "refnode": "_PICKEDSET362",
+                "refnode_count": 1,
+                "surface": "CSEG_09-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J09_LO",
+                "refnode": "_PICKEDSET379",
+                "refnode_count": 1,
+                "surface": "CSEG_09-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J09_UP",
+                "refnode": "_PICKEDSET380",
+                "refnode_count": 1,
+                "surface": "CSEG_10-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J10_LO",
+                "refnode": "_PICKEDSET397",
+                "refnode_count": 1,
+                "surface": "CSEG_10-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J10_UP",
+                "refnode": "_PICKEDSET398",
+                "refnode_count": 1,
+                "surface": "CSEG_11-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J11_LO",
+                "refnode": "_PICKEDSET415",
+                "refnode_count": 1,
+                "surface": "CSEG_11-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J11_UP",
+                "refnode": "_PICKEDSET416",
+                "refnode_count": 1,
+                "surface": "CSEG_12-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J12_LO",
+                "refnode": "_PICKEDSET433",
+                "refnode_count": 1,
+                "surface": "CSEG_12-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J12_UP",
+                "refnode": "_PICKEDSET434",
+                "refnode_count": 1,
+                "surface": "CSEG_13-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J13_LO",
+                "refnode": "_PICKEDSET451",
+                "refnode_count": 1,
+                "surface": "CSEG_13-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J13_UP",
+                "refnode": "_PICKEDSET452",
+                "refnode_count": 1,
+                "surface": "CSEG_14-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J14_LO",
+                "refnode": "_PICKEDSET469",
+                "refnode_count": 1,
+                "surface": "CSEG_14-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J14_UP",
+                "refnode": "_PICKEDSET470",
+                "refnode_count": 1,
+                "surface": "CSEG_15-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J15_LO",
+                "refnode": "_PICKEDSET487",
+                "refnode_count": 1,
+                "surface": "CSEG_15-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J15_UP",
+                "refnode": "_PICKEDSET488",
+                "refnode_count": 1,
+                "surface": "CSEG_16-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J16_LO",
+                "refnode": "_PICKEDSET505",
+                "refnode_count": 1,
+                "surface": "CSEG_16-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J16_UP",
+                "refnode": "_PICKEDSET506",
+                "refnode_count": 1,
+                "surface": "CSEG_17-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J17_LO",
+                "refnode": "_PICKEDSET523",
+                "refnode_count": 1,
+                "surface": "CSEG_17-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J17_UP",
+                "refnode": "_PICKEDSET524",
+                "refnode_count": 1,
+                "surface": "CSEG_18-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J18_LO",
+                "refnode": "_PICKEDSET541",
+                "refnode_count": 1,
+                "surface": "CSEG_18-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J18_UP",
+                "refnode": "_PICKEDSET542",
+                "refnode_count": 1,
+                "surface": "CSEG_19-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J19_LO",
+                "refnode": "_PICKEDSET559",
+                "refnode_count": 1,
+                "surface": "CSEG_19-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J19_UP",
+                "refnode": "_PICKEDSET560",
+                "refnode_count": 1,
+                "surface": "CSEG_20-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J20_LO",
+                "refnode": "_PICKEDSET577",
+                "refnode_count": 1,
+                "surface": "CSEG_20-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J20_UP",
+                "refnode": "_PICKEDSET578",
+                "refnode_count": 1,
+                "surface": "CSEG_21-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J21_LO",
+                "refnode": "_PICKEDSET595",
+                "refnode_count": 1,
+                "surface": "CSEG_21-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J21_UP",
+                "refnode": "_PICKEDSET596",
+                "refnode_count": 1,
+                "surface": "CSEG_22-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J22_LO",
+                "refnode": "_PICKEDSET613",
+                "refnode_count": 1,
+                "surface": "CSEG_22-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J22_UP",
+                "refnode": "_PICKEDSET614",
+                "refnode_count": 1,
+                "surface": "CSEG_23-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J23_LO",
+                "refnode": "_PICKEDSET631",
+                "refnode_count": 1,
+                "surface": "CSEG_23-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J23_UP",
+                "refnode": "_PICKEDSET632",
+                "refnode_count": 1,
+                "surface": "CSEG_24-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J24_LO",
+                "refnode": "_PICKEDSET649",
+                "refnode_count": 1,
+                "surface": "CSEG_24-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J24_UP",
+                "refnode": "_PICKEDSET650",
+                "refnode_count": 1,
+                "surface": "CSEG_25-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J25_LO",
+                "refnode": "_PICKEDSET667",
+                "refnode_count": 1,
+                "surface": "CSEG_25-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J25_UP",
+                "refnode": "_PICKEDSET668",
+                "refnode_count": 1,
+                "surface": "CSEG_26-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J26_LO",
+                "refnode": "_PICKEDSET685",
+                "refnode_count": 1,
+                "surface": "CSEG_26-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J26_UP",
+                "refnode": "_PICKEDSET686",
+                "refnode_count": 1,
+                "surface": "CSEG_27-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J27_LO",
+                "refnode": "_PICKEDSET703",
+                "refnode_count": 1,
+                "surface": "CSEG_27-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J27_UP",
+                "refnode": "_PICKEDSET704",
+                "refnode_count": 1,
+                "surface": "CSEG_28-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J28_LO",
+                "refnode": "_PICKEDSET721",
+                "refnode_count": 1,
+                "surface": "CSEG_28-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J28_UP",
+                "refnode": "_PICKEDSET722",
+                "refnode_count": 1,
+                "surface": "CSEG_29-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J29_LO",
+                "refnode": "_PICKEDSET739",
+                "refnode_count": 1,
+                "surface": "CSEG_29-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J29_UP",
+                "refnode": "_PICKEDSET740",
+                "refnode_count": 1,
+                "surface": "CSEG_30-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J30_LO",
+                "refnode": "_PICKEDSET757",
+                "refnode_count": 1,
+                "surface": "CSEG_30-1.SURF_TOP",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J30_UP",
+                "refnode": "_PICKEDSET758",
+                "refnode_count": 1,
+                "surface": "CSEG_31-1.SURF_BOTTOM",
+                "surface_node_count": 216,
+                "invalid_refnode": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "all_4_concrete_steel_ties_resolve_to_complete_end_surfaces",
+          "passed": true,
+          "evidence": [
+            {
+              "name": "TIE_C31_S01",
+              "surface_pair": [
+                "SSEG_01-1.SURF_BOTTOM",
+                "CSEG_31-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                108,
+                216
+              ]
+            },
+            {
+              "name": "TIE_S01_S02",
+              "surface_pair": [
+                "SSEG_02-1.SURF_BOTTOM",
+                "SSEG_01-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                108,
+                108
+              ]
+            },
+            {
+              "name": "TIE_S02_S03",
+              "surface_pair": [
+                "SSEG_03-1.SURF_BOTTOM",
+                "SSEG_02-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                108,
+                108
+              ]
+            },
+            {
+              "name": "TIE_S03_S04",
+              "surface_pair": [
+                "SSEG_04-1.SURF_BOTTOM",
+                "SSEG_03-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                108,
+                108
+              ]
+            }
+          ]
+        },
+        {
+          "name": "31_embedded_long_bar_hosts_cover_whole_respective_refined_CSEG",
+          "passed": true,
+          "evidence": [
+            {
+              "host": "CSEG_01-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_02-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_03-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_04-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_05-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_06-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_07-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_08-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_09-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_10-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_11-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_12-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_13-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_14-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_15-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_16-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_17-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_18-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_19-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_20-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_21-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_22-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_23-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_24-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_25-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_26-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_27-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_28-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_29-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_30-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_31-1.SET_ALL",
+              "host_elements": 432,
+              "expected_host_elements": 432,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            }
+          ]
+        },
+        {
+          "name": "108_PT_equations_resolve_unchanged",
+          "passed": true,
+          "evidence": {
+            "count": 108
+          }
+        },
+        {
+          "name": "PT_initial_stress_covers_all_36_tendons",
+          "passed": true,
+          "evidence": [
+            {
+              "type": "STRESS",
+              "region": "PT_36X15P2-1.SET_PT_ALL_ELEMS",
+              "elements": 36,
+              "sigma11_Pa": 1280000000.0,
+              "invalid_labels": []
+            }
+          ]
+        },
+        {
+          "name": "RNA_rigid_body_covers_28_B31_at_RP_0_160_0",
+          "passed": true,
+          "evidence": [
+            {
+              "refnode": "SET_RNA_RP",
+              "ref_xyz": [
+                [
+                  0.0,
+                  160.0,
+                  0.0
+                ]
+              ],
+              "elements": 28,
+              "element_types": {
+                "B31": 28
+              },
+              "invalid_refs": []
+            }
+          ]
+        },
+        {
+          "name": "all_local_and_assembly_sets_have_valid_labels",
+          "passed": true,
+          "evidence": {
+            "checked_sets": 771,
+            "invalid_sets": []
+          }
+        }
+      ],
+      "issues": [],
+      "status": "PASS-input-topology-and-frozen-parameters",
+      "no_solver_started": true
+    },
+    "DTU158_RECONSTRUCTED_M3": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3\\DTU158_RECONSTRUCTED_M3.inp",
+      "sha256": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767",
+      "checks": [
+        {
+          "name": "all_non_tower_and_non_remapped_physical_cards_identical_to_G1",
+          "passed": true,
+          "evidence": {
+            "baseline_digest": "bdea7bddedcc87ccbad0768587b565a440138c0c5580c02900ff25f9cef659e6",
+            "target_digest": "bdea7bddedcc87ccbad0768587b565a440138c0c5580c02900ff25f9cef659e6",
+            "excluded_changes": "35 tower Part blocks; tower instance mesh label sets; unused SET_CH4_STRESS_CTRL"
+          }
+        },
+        {
+          "name": "old_control_set_only_valid_unchanged_nontower_components",
+          "passed": true,
+          "evidence": {
+            "obsolete_tower_labels_removed": true,
+            "whole_set_removed": false,
+            "remaining_cards": [
+              {
+                "line": 125325,
+                "instance": "RBLONG_03-1",
+                "data": [
+                  [
+                    "110"
+                  ]
+                ]
+              },
+              {
+                "line": 125327,
+                "instance": "RBLONG_05-1",
+                "data": [
+                  [
+                    "97"
+                  ]
+                ]
+              },
+              {
+                "line": 125329,
+                "instance": "PT_36X15P2-1",
+                "data": [
+                  [
+                    "19"
+                  ]
+                ]
+              }
+            ],
+            "disposition": "Root explicitly retains these valid non-refined-component labels in already-solved input; not an accepted chapter4 observation region; later chapters require newly tagged locations."
+          }
+        },
+        {
+          "name": "tower_element_types_and_material_section_tokens_preserved",
+          "passed": true,
+          "evidence": {
+            "element_type_counts": {
+              "C3D8R": 35712,
+              "C3D8I": 4608
+            },
+            "tower_nodes": 66432,
+            "solid_sections": {
+              "CSEG_25": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_10": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_27": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_11": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_03": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_03": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_31": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_07": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_16": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_09": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_13": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_18": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_04": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_04": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_19": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_24": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_20": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_12": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_05": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_22": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_01": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_06": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_01": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C70"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_21": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_26": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_30": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_14": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_23": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_08": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_02": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C70"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_28": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_15": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_17": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "CSEG_29": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "C65"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ],
+              "SSEG_02": [
+                {
+                  "key": "solidsection",
+                  "params": {
+                    "elset": "SET_ALL",
+                    "material": "S345"
+                  },
+                  "flags": [],
+                  "data": [
+                    []
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "CSEG_whole_mesh_active_sets_complete",
+          "passed": true,
+          "evidence": {
+            "elements": 35712,
+            "expected_elements": 35712,
+            "missing_elements": 0,
+            "extra_elements": 0,
+            "nodes": 59520,
+            "expected_nodes": 59520,
+            "invalid_labels": []
+          }
+        },
+        {
+          "name": "SSEG_whole_mesh_active_sets_complete",
+          "passed": true,
+          "evidence": {
+            "elements": 4608,
+            "expected_elements": 4608,
+            "missing_elements": 0,
+            "extra_elements": 0,
+            "nodes": 6912,
+            "expected_nodes": 6912,
+            "invalid_labels": []
+          }
+        },
+        {
+          "name": "three_original_NSM_cards_and_complete_target_sets",
+          "passed": true,
+          "evidence": {
+            "cards": [
+              {
+                "line": 133442,
+                "target": "SET_CSEG_ALL_ACTIVE",
+                "total_mass_kg": 4622.69,
+                "covered_elements": 35712,
+                "invalid_labels": [],
+                "units": "TOTAL MASS"
+              },
+              {
+                "line": 133444,
+                "target": "SET_CSEG_ALL_ACTIVE",
+                "total_mass_kg": 33004.8,
+                "covered_elements": 35712,
+                "invalid_labels": [],
+                "units": "TOTAL MASS"
+              },
+              {
+                "line": 133446,
+                "target": "SET_SSEG_ALL_ACTIVE",
+                "total_mass_kg": 2172.73,
+                "covered_elements": 4608,
+                "invalid_labels": [],
+                "units": "TOTAL MASS"
+              }
+            ],
+            "total_NSM_kg": 39800.22
+          }
+        },
+        {
+          "name": "SET_TOWER_BASE_covers_geometric_end_face",
+          "passed": true,
+          "evidence": {
+            "node_count": 384,
+            "expected_node_count": 384,
+            "global_y_range": [
+              0.0,
+              0.0
+            ],
+            "expected_y": 0.0,
+            "missing_nodes": 0,
+            "extra_nodes": 0
+          }
+        },
+        {
+          "name": "SET_TOWER_TOP_covers_geometric_end_face",
+          "passed": true,
+          "evidence": {
+            "node_count": 192,
+            "expected_node_count": 192,
+            "global_y_range": [
+              158.0,
+              158.0
+            ],
+            "expected_y": 158.0,
+            "missing_nodes": 0,
+            "extra_nodes": 0
+          }
+        },
+        {
+          "name": "all_70_tower_end_surfaces_cover_complete_end_faces",
+          "passed": true,
+          "evidence": {
+            "CSEG_01-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 0.0,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_01-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 3.6400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_02-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 3.64,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_02-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 7.2800001000000005,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_03-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 7.28,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_03-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 10.9200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_04-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 10.92,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_04-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 14.5600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_05-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 14.56,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_05-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 18.2000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_06-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 18.2,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_06-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 21.840000099999997,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_07-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 21.84,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_07-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 25.480000099999998,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_08-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 25.48,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_08-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 29.1200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_09-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 29.12,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_09-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 32.7600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_10-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 32.76,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_10-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 36.4000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_11-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 36.4,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_11-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 40.0400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_12-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 40.04,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_12-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 43.6800001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_13-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 43.68,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_13-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 47.3200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_14-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 47.32,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_14-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 50.9600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_15-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 50.96,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_15-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 54.6000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_16-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 54.6,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_16-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 58.2400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_17-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 58.24,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_17-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 61.880000100000004,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_18-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 61.88,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_18-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 65.5200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_19-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 65.52,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_19-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 69.16000009999999,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_20-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 69.16,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_20-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 72.77999989,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_21-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 72.78,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_21-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 76.44000009,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_22-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 76.44,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_22-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 80.08000009999999,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_23-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 80.08,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_23-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 83.7200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_24-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 83.72,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_24-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 87.3600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_25-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 87.36,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_25-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 91.0000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_26-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 91.0,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_26-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 94.6400001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_27-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 94.64,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_27-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 98.2800001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_28-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 98.28,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_28-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 101.9200001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_29-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 101.92,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_29-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 105.5600001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_30-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 105.56,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_30-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 109.2000001,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_31-1.SURF_BOTTOM": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 109.2,
+              "exact_boundary_node_coverage": true
+            },
+            "CSEG_31-1.SURF_TOP": {
+              "count": 384,
+              "expected_count": 384,
+              "global_y": 111.99999995,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_01-1.SURF_BOTTOM": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 112.0,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_01-1.SURF_TOP": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 123.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_02-1.SURF_BOTTOM": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 123.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_02-1.SURF_TOP": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 135.0,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_03-1.SURF_BOTTOM": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 135.0,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_03-1.SURF_TOP": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 146.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_04-1.SURF_BOTTOM": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 146.5,
+              "exact_boundary_node_coverage": true
+            },
+            "SSEG_04-1.SURF_TOP": {
+              "count": 192,
+              "expected_count": 192,
+              "global_y": 158.0,
+              "exact_boundary_node_coverage": true
+            }
+          }
+        },
+        {
+          "name": "all_boundary_regions_nonempty_and_labels_valid",
+          "passed": true,
+          "evidence": [
+            {
+              "region": "PT_36X15P2-1.SET_PT_BOTTOM_GEOM",
+              "node_count": 36,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "region": "PT_36X15P2-1.SET_PT_BOTTOM_GEOM",
+              "node_count": 36,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "2",
+                "2"
+              ]
+            },
+            {
+              "region": "PT_36X15P2-1.SET_PT_BOTTOM_GEOM",
+              "node_count": 36,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "3",
+                "3"
+              ]
+            },
+            {
+              "region": "CSEG_01-1.FACE_BOTTOM",
+              "node_count": 384,
+              "invalid_labels": [],
+              "DOF_tokens": [
+                "ENCASTRE"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "all_coupling_RPs_and_surfaces_nonempty",
+          "passed": true,
+          "evidence": {
+            "count": 62,
+            "records": [
+              {
+                "constraint": "COUPLING_RNA_TOP",
+                "refnode": "_PICKEDSET230",
+                "refnode_count": 1,
+                "surface": "SSEG_04-1.SURF_TOP",
+                "surface_node_count": 192,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_FLANGE_C31_TOP",
+                "refnode": "SET_FLANGE_RP",
+                "refnode_count": 1,
+                "surface": "CSEG_31-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J01_LO",
+                "refnode": "_PICKEDSET235",
+                "refnode_count": 1,
+                "surface": "CSEG_01-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J01_UP",
+                "refnode": "_PICKEDSET236",
+                "refnode_count": 1,
+                "surface": "CSEG_02-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J02_LO",
+                "refnode": "_PICKEDSET253",
+                "refnode_count": 1,
+                "surface": "CSEG_02-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J02_UP",
+                "refnode": "_PICKEDSET254",
+                "refnode_count": 1,
+                "surface": "CSEG_03-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J03_LO",
+                "refnode": "_PICKEDSET271",
+                "refnode_count": 1,
+                "surface": "CSEG_03-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J03_UP",
+                "refnode": "_PICKEDSET272",
+                "refnode_count": 1,
+                "surface": "CSEG_04-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J04_LO",
+                "refnode": "_PICKEDSET289",
+                "refnode_count": 1,
+                "surface": "CSEG_04-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J04_UP",
+                "refnode": "_PICKEDSET290",
+                "refnode_count": 1,
+                "surface": "CSEG_05-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J05_LO",
+                "refnode": "_PICKEDSET307",
+                "refnode_count": 1,
+                "surface": "CSEG_05-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J05_UP",
+                "refnode": "_PICKEDSET308",
+                "refnode_count": 1,
+                "surface": "CSEG_06-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J06_LO",
+                "refnode": "_PICKEDSET325",
+                "refnode_count": 1,
+                "surface": "CSEG_06-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J06_UP",
+                "refnode": "_PICKEDSET326",
+                "refnode_count": 1,
+                "surface": "CSEG_07-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J07_LO",
+                "refnode": "_PICKEDSET343",
+                "refnode_count": 1,
+                "surface": "CSEG_07-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J07_UP",
+                "refnode": "_PICKEDSET344",
+                "refnode_count": 1,
+                "surface": "CSEG_08-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J08_LO",
+                "refnode": "_PICKEDSET361",
+                "refnode_count": 1,
+                "surface": "CSEG_08-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J08_UP",
+                "refnode": "_PICKEDSET362",
+                "refnode_count": 1,
+                "surface": "CSEG_09-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J09_LO",
+                "refnode": "_PICKEDSET379",
+                "refnode_count": 1,
+                "surface": "CSEG_09-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J09_UP",
+                "refnode": "_PICKEDSET380",
+                "refnode_count": 1,
+                "surface": "CSEG_10-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J10_LO",
+                "refnode": "_PICKEDSET397",
+                "refnode_count": 1,
+                "surface": "CSEG_10-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J10_UP",
+                "refnode": "_PICKEDSET398",
+                "refnode_count": 1,
+                "surface": "CSEG_11-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J11_LO",
+                "refnode": "_PICKEDSET415",
+                "refnode_count": 1,
+                "surface": "CSEG_11-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J11_UP",
+                "refnode": "_PICKEDSET416",
+                "refnode_count": 1,
+                "surface": "CSEG_12-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J12_LO",
+                "refnode": "_PICKEDSET433",
+                "refnode_count": 1,
+                "surface": "CSEG_12-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J12_UP",
+                "refnode": "_PICKEDSET434",
+                "refnode_count": 1,
+                "surface": "CSEG_13-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J13_LO",
+                "refnode": "_PICKEDSET451",
+                "refnode_count": 1,
+                "surface": "CSEG_13-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J13_UP",
+                "refnode": "_PICKEDSET452",
+                "refnode_count": 1,
+                "surface": "CSEG_14-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J14_LO",
+                "refnode": "_PICKEDSET469",
+                "refnode_count": 1,
+                "surface": "CSEG_14-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J14_UP",
+                "refnode": "_PICKEDSET470",
+                "refnode_count": 1,
+                "surface": "CSEG_15-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J15_LO",
+                "refnode": "_PICKEDSET487",
+                "refnode_count": 1,
+                "surface": "CSEG_15-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J15_UP",
+                "refnode": "_PICKEDSET488",
+                "refnode_count": 1,
+                "surface": "CSEG_16-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J16_LO",
+                "refnode": "_PICKEDSET505",
+                "refnode_count": 1,
+                "surface": "CSEG_16-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J16_UP",
+                "refnode": "_PICKEDSET506",
+                "refnode_count": 1,
+                "surface": "CSEG_17-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J17_LO",
+                "refnode": "_PICKEDSET523",
+                "refnode_count": 1,
+                "surface": "CSEG_17-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J17_UP",
+                "refnode": "_PICKEDSET524",
+                "refnode_count": 1,
+                "surface": "CSEG_18-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J18_LO",
+                "refnode": "_PICKEDSET541",
+                "refnode_count": 1,
+                "surface": "CSEG_18-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J18_UP",
+                "refnode": "_PICKEDSET542",
+                "refnode_count": 1,
+                "surface": "CSEG_19-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J19_LO",
+                "refnode": "_PICKEDSET559",
+                "refnode_count": 1,
+                "surface": "CSEG_19-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J19_UP",
+                "refnode": "_PICKEDSET560",
+                "refnode_count": 1,
+                "surface": "CSEG_20-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J20_LO",
+                "refnode": "_PICKEDSET577",
+                "refnode_count": 1,
+                "surface": "CSEG_20-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J20_UP",
+                "refnode": "_PICKEDSET578",
+                "refnode_count": 1,
+                "surface": "CSEG_21-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J21_LO",
+                "refnode": "_PICKEDSET595",
+                "refnode_count": 1,
+                "surface": "CSEG_21-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J21_UP",
+                "refnode": "_PICKEDSET596",
+                "refnode_count": 1,
+                "surface": "CSEG_22-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J22_LO",
+                "refnode": "_PICKEDSET613",
+                "refnode_count": 1,
+                "surface": "CSEG_22-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J22_UP",
+                "refnode": "_PICKEDSET614",
+                "refnode_count": 1,
+                "surface": "CSEG_23-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J23_LO",
+                "refnode": "_PICKEDSET631",
+                "refnode_count": 1,
+                "surface": "CSEG_23-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J23_UP",
+                "refnode": "_PICKEDSET632",
+                "refnode_count": 1,
+                "surface": "CSEG_24-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J24_LO",
+                "refnode": "_PICKEDSET649",
+                "refnode_count": 1,
+                "surface": "CSEG_24-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J24_UP",
+                "refnode": "_PICKEDSET650",
+                "refnode_count": 1,
+                "surface": "CSEG_25-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J25_LO",
+                "refnode": "_PICKEDSET667",
+                "refnode_count": 1,
+                "surface": "CSEG_25-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J25_UP",
+                "refnode": "_PICKEDSET668",
+                "refnode_count": 1,
+                "surface": "CSEG_26-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J26_LO",
+                "refnode": "_PICKEDSET685",
+                "refnode_count": 1,
+                "surface": "CSEG_26-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J26_UP",
+                "refnode": "_PICKEDSET686",
+                "refnode_count": 1,
+                "surface": "CSEG_27-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J27_LO",
+                "refnode": "_PICKEDSET703",
+                "refnode_count": 1,
+                "surface": "CSEG_27-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J27_UP",
+                "refnode": "_PICKEDSET704",
+                "refnode_count": 1,
+                "surface": "CSEG_28-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J28_LO",
+                "refnode": "_PICKEDSET721",
+                "refnode_count": 1,
+                "surface": "CSEG_28-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J28_UP",
+                "refnode": "_PICKEDSET722",
+                "refnode_count": 1,
+                "surface": "CSEG_29-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J29_LO",
+                "refnode": "_PICKEDSET739",
+                "refnode_count": 1,
+                "surface": "CSEG_29-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J29_UP",
+                "refnode": "_PICKEDSET740",
+                "refnode_count": 1,
+                "surface": "CSEG_30-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J30_LO",
+                "refnode": "_PICKEDSET757",
+                "refnode_count": 1,
+                "surface": "CSEG_30-1.SURF_TOP",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              },
+              {
+                "constraint": "CPL_J30_UP",
+                "refnode": "_PICKEDSET758",
+                "refnode_count": 1,
+                "surface": "CSEG_31-1.SURF_BOTTOM",
+                "surface_node_count": 384,
+                "invalid_refnode": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "all_4_concrete_steel_ties_resolve_to_complete_end_surfaces",
+          "passed": true,
+          "evidence": [
+            {
+              "name": "TIE_C31_S01",
+              "surface_pair": [
+                "SSEG_01-1.SURF_BOTTOM",
+                "CSEG_31-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                192,
+                384
+              ]
+            },
+            {
+              "name": "TIE_S01_S02",
+              "surface_pair": [
+                "SSEG_02-1.SURF_BOTTOM",
+                "SSEG_01-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                192,
+                192
+              ]
+            },
+            {
+              "name": "TIE_S02_S03",
+              "surface_pair": [
+                "SSEG_03-1.SURF_BOTTOM",
+                "SSEG_02-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                192,
+                192
+              ]
+            },
+            {
+              "name": "TIE_S03_S04",
+              "surface_pair": [
+                "SSEG_04-1.SURF_BOTTOM",
+                "SSEG_03-1.SURF_TOP"
+              ],
+              "surface_node_counts": [
+                192,
+                192
+              ]
+            }
+          ]
+        },
+        {
+          "name": "31_embedded_long_bar_hosts_cover_whole_respective_refined_CSEG",
+          "passed": true,
+          "evidence": [
+            {
+              "host": "CSEG_01-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_02-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_03-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_04-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 216,
+              "embedded_node_count": 432,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_05-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_06-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_07-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_08-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_09-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_10-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_11-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 192,
+              "embedded_node_count": 384,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_12-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_13-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_14-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_15-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 180,
+              "embedded_node_count": 360,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_16-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_17-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_18-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_19-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_20-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 168,
+              "embedded_node_count": 336,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_21-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_22-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_23-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_24-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_25-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_26-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_27-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_28-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_29-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_30-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            },
+            {
+              "host": "CSEG_31-1.SET_ALL",
+              "host_elements": 1152,
+              "expected_host_elements": 1152,
+              "embedded_elements": 152,
+              "embedded_node_count": 304,
+              "invalid_labels": [],
+              "nodes_outside_analytic_host": []
+            }
+          ]
+        },
+        {
+          "name": "108_PT_equations_resolve_unchanged",
+          "passed": true,
+          "evidence": {
+            "count": 108
+          }
+        },
+        {
+          "name": "PT_initial_stress_covers_all_36_tendons",
+          "passed": true,
+          "evidence": [
+            {
+              "type": "STRESS",
+              "region": "PT_36X15P2-1.SET_PT_ALL_ELEMS",
+              "elements": 36,
+              "sigma11_Pa": 1280000000.0,
+              "invalid_labels": []
+            }
+          ]
+        },
+        {
+          "name": "RNA_rigid_body_covers_28_B31_at_RP_0_160_0",
+          "passed": true,
+          "evidence": [
+            {
+              "refnode": "SET_RNA_RP",
+              "ref_xyz": [
+                [
+                  0.0,
+                  160.0,
+                  0.0
+                ]
+              ],
+              "elements": 28,
+              "element_types": {
+                "B31": 28
+              },
+              "invalid_refs": []
+            }
+          ]
+        },
+        {
+          "name": "all_local_and_assembly_sets_have_valid_labels",
+          "passed": true,
+          "evidence": {
+            "checked_sets": 771,
+            "invalid_sets": []
+          }
+        }
+      ],
+      "issues": [],
+      "status": "PASS-input-topology-and-frozen-parameters",
+      "no_solver_started": true
+    }
+  },
+  "issues": [],
+  "evidence_limits": [
+    "Text/topology review does not establish solver convergence or physical validity.",
+    "Embedded membership is checked against the preserved axisymmetric annular frustum, not a new contact/bond-slip model.",
+    "Continuous CAE mass-property inertia and solver discretized rigid-body inertia must be reported separately.",
+    "SET_CH4_STRESS_CTRL removal is explicitly checked; subsequent chapters require newly tagged locations rather than inherited source labels."
+  ]
+}

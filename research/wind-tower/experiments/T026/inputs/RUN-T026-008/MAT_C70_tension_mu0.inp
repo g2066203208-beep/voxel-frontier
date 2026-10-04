@@ -1,0 +1,90 @@
+*Heading
+T026 uniaxial implementation verification; SI units; not physical calibration
+*Node
+1,0,0,0
+2,1,0,0
+3,1,1,0
+4,0,1,0
+5,0,0,1
+6,1,0,1
+7,1,1,1
+8,0,1,1
+*Element,type=C3D8R,elset=BODY
+1,1,2,3,4,5,6,7,8
+*Nset,nset=XZERO
+1,4,5,8
+*Nset,nset=YZERO
+1,2,5,6
+*Nset,nset=ZZERO
+1,2,3,4
+*Nset,nset=DRIVE
+2,3,6,7
+*Nset,nset=ALLN,generate
+1,8,1
+*Solid Section,elset=BODY,material=C70
+,
+*Material, name=C70
+*Density
+2400.,
+*Elastic
+ 3.7e+10, 0.2
+*Concrete Damaged Plasticity
+30.,0.1,1.16,0.666667,0
+*Concrete Compression Hardening
+ 3.30324e+07,          0.
+ 4.01679e+07, 0.000212432
+ 4.36078e+07, 0.000424865
+    4.45e+07, 0.000637297
+ 4.36888e+07,  0.00084973
+ 4.17788e+07,  0.00106216
+ 3.92045e+07,  0.00127459
+ 3.01265e+07,  0.00191189
+ 2.04878e+07,  0.00265541
+ 4.06107e+06,  0.00531081
+*Concrete Tension Stiffening
+  2.99e+06,     0.
+ 2.392e+06, 0.0001
+ 1.794e+06, 0.0002
+ 1.196e+06, 0.0004
+   747500., 0.0006
+   299000., 0.0008
+    29900.,  0.001
+*Concrete Compression Damage
+      0.,          0.
+      0., 0.000212432
+      0., 0.000424865
+      0., 0.000637297
+ 0.01823,  0.00084973
+ 0.06115,  0.00106216
+   0.119,  0.00127459
+   0.323,  0.00191189
+  0.5396,  0.00265541
+ 0.90874,  0.00531081
+*Concrete Tension Damage
+   0.,     0.
+  0.2, 0.0001
+  0.4, 0.0002
+  0.6, 0.0004
+ 0.75, 0.0006
+  0.9, 0.0008
+ 0.99,  0.001
+*Boundary
+XZERO,1,1
+YZERO,2,2
+ZZERO,3,3
+*Amplitude,name=PATH
+0,0,0.8,1,0.9,0.85,1,1
+*Step,name=Uniaxial,nlgeom=NO,inc=2000
+*Static
+0.001,1,1e-10,0.002
+*Boundary,amplitude=PATH
+DRIVE,1,1,0.0011
+*Output,field,frequency=1
+*Node Output,nset=ALLN
+U,RF
+*Element Output,elset=BODY
+S,E,PE,DAMAGET,DAMAGEC
+*Output,history,frequency=1
+*Energy Output
+ALLAE,ALLIE,ALLSE,ALLVD
+*End Step

@@ -1,0 +1,69 @@
+{
+  "scope": "Only C65 tension mu0 numerical refinement; no material recalibration",
+  "runs": [
+    {
+      "run_id": "RUN-T026-004",
+      "max_increment_s": 0.002,
+      "monotonic_inside_card_frames": 366,
+      "curve_max_error_over_peak": 0.0013771776992641707,
+      "curve_RMSE_over_peak": 0.0008854170167033677,
+      "last_node_interpolated_relative_stress_error": 0.1014046547290599,
+      "damage_max_absolute_error": 0.0013582789813644247,
+      "sampled_peak_relative_error": 0.0034297610921502075,
+      "unloading_same_sign_relative_slope_error": 3.009606230897077e-08,
+      "primary_curve_budget_0p005_pass": true,
+      "tail_diagnostic_budget_0p01_pass": false,
+      "csv_sha256": "424d0fdb32c88dcc1687f906c430cb2de3a9e667746b3a17db5e874626bfca0c"
+    },
+    {
+      "run_id": "RUN-T026-027",
+      "max_increment_s": 0.0005,
+      "monotonic_inside_card_frames": 1457,
+      "curve_max_error_over_peak": 0.0013745838998191523,
+      "curve_RMSE_over_peak": 0.000884025074620415,
+      "last_node_interpolated_relative_stress_error": 0.10038958332510983,
+      "damage_max_absolute_error": 0.001355682026136229,
+      "sampled_peak_relative_error": 0.00010402730375425051,
+      "unloading_same_sign_relative_slope_error": 2.6528283791904528e-08,
+      "primary_curve_budget_0p005_pass": true,
+      "tail_diagnostic_budget_0p01_pass": false,
+      "csv_sha256": "c903409b4a9936139bf77b9c848ff8b5fed220c24f6f0f2c01996402fa44d554"
+    }
+  ],
+  "refinement": [
+    {
+      "coarse_run": "RUN-T026-004",
+      "fine_run": "RUN-T026-027",
+      "curve_error_ratio_coarse_over_fine": 1.0018869706282458,
+      "RMSE_ratio_coarse_over_fine": 1.0015745504544094,
+      "coarse_node_max_relative": 0.1014046547290599,
+      "fine_node_max_relative": 0.10038958332510983,
+      "fine_last_node_relative": 0.10038958332510983,
+      "coarse_damage_abs_error": 0.0013582789813644247,
+      "fine_damage_abs_error": 0.001355682026136229,
+      "interpretation": "A single refinement tests numerical trend; neither changes primary budget nor establishes physical material calibration."
+    }
+  ],
+  "figures": [
+    {
+      "svg": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-envelope.svg",
+      "pdf": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-envelope.pdf",
+      "png": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-envelope.png"
+    },
+    {
+      "svg": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-tail.svg",
+      "pdf": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-tail.pdf",
+      "png": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-tail.png"
+    },
+    {
+      "svg": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-damage.svg",
+      "pdf": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-damage.pdf",
+      "png": "D:\\Codex-research-validation\\T026\\independent-targets\\C65-fine-convergence-damage.png"
+    }
+  ],
+  "original_budget_modified": false,
+  "state": "tail_diagnostic_HOLD",
+  "source_sha256": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
+  "next_test": "Exact literal table total-strain points with direct PEEQT and per-increment tensor histories; not blind repeated refinement.",
+  "target_warning": "Piecewise nominal stress/damage vs converted plastic strain is an independent ideal-uniaxial reconstruction. Software internal table handling must be distinguished using exact outputs."
+}

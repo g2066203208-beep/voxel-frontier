@@ -1,0 +1,61 @@
+{
+  "source_sha256": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
+  "issues": {
+    "C65": [],
+    "C70": []
+  },
+  "card_summaries": {
+    "C65": {
+      "compression": {
+        "node_count": 10,
+        "plastic_strain_min": 0.0,
+        "min_delta_plastic_strain": 0.00016189538707731205,
+        "max_damage": 0.90874,
+        "peak_node": 3,
+        "peak_sigma_Pa": 41500000.0,
+        "peak_total_strain": 0.001820000301369863,
+        "last_total_strain": 0.005795541369863013,
+        "stress_ratio_damage_max_difference_after_peak": 1.0843373493864272e-06,
+        "relationship_note": "Observed numeric relationship only; not proof of generation method or independent physical calibration."
+      },
+      "tension": {
+        "node_count": 7,
+        "plastic_strain_min": 0.0,
+        "min_delta_plastic_strain": 8.394520547945204e-05,
+        "max_damage": 0.99,
+        "peak_node": 0,
+        "peak_sigma_Pa": 2930000.0,
+        "peak_total_strain": 8.027397260273973e-05,
+        "last_total_strain": 0.0010008027397260275,
+        "stress_ratio_damage_max_difference_after_peak": 5.551115123125783e-17,
+        "relationship_note": "Observed numeric relationship only; not proof of generation method or independent physical calibration."
+      }
+    },
+    "C70": {
+      "compression": {
+        "node_count": 10,
+        "plastic_strain_min": 0.0,
+        "min_delta_plastic_strain": 0.00014285360463994908,
+        "max_damage": 0.90874,
+        "peak_node": 3,
+        "peak_sigma_Pa": 44500000.0,
+        "peak_total_strain": 0.0018399997027027026,
+        "last_total_strain": 0.005420568648648648,
+        "stress_ratio_damage_max_difference_after_peak": 7.865168538991052e-07,
+        "relationship_note": "Observed numeric relationship only; not proof of generation method or independent physical calibration."
+      },
+      "tension": {
+        "node_count": 7,
+        "plastic_strain_min": 0.0,
+        "min_delta_plastic_strain": 8.383783783783784e-05,
+        "max_damage": 0.99,
+        "peak_node": 0,
+        "peak_sigma_Pa": 2990000.0,
+        "peak_total_strain": 8.08108108108108e-05,
+        "last_total_strain": 0.0010008081081081081,
+        "stress_ratio_damage_max_difference_after_peak": 5.551115123125783e-17,
+        "relationship_note": "Observed numeric relationship only; not proof of generation method or independent physical calibration."
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "baseline_id": "DTU158-T026-RECONSTRUCTED-B31-G1",
+  "tower_input": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.inp",
+  "tower_sha": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23",
+  "RNA_input": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\input\\T026_RECOVERED_RNA_CANDIDATE.inp",
+  "RNA_source_sha": "f61eac3dd3f7c484ac00d43273e86dc5fafc4cc098c99ab88a104f32be994fac",
+  "new_input": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+  "new_sha": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+  "new_branch_not_recovered_historical_results": true,
+  "visual_parts_removed": [
+    "DTU_BLADE_SMOOTH_OFFICIAL",
+    "DTU_NACELLE_120DEG_OFFICIAL",
+    "DTU_SPINNER_120DEG_OFFICIAL"
+  ],
+  "rigid_mass_carrier_materials": [
+    "MAT_RNA_BLD_Z1",
+    "MAT_RNA_BLD_Z2",
+    "MAT_RNA_BLD_Z3",
+    "MAT_RNA_BLD_Z4",
+    "MAT_RNA_BLD_Z5",
+    "MAT_RNA_HUB_EQ",
+    "MAT_RNA_NAC_EQ"
+  ],
+  "RNA_mass_CAE_mesh_kg": 673997.979913,
+  "RNA_CG_source_m": [
+    0.0,
+    160.297798282,
+    -0.623190142
+  ],
+  "source_property_warning": "RNA has none; whole older CAE mass warning/empty CSEG01 prevented using that whole CAE as baseline",
+  "fixed": "original complete 31+4 tower mesh, C65/C70/PT/rebar/SPRING2/TIE/coupling/BC parameters; no physical tuning",
+  "changed": "remove display-only geometry; restore 28B31 RNA with existing rigidbody; no unrelated candidate NSM transferred; static default controls reset; output enabled; add 1kN perturbation flexibility",
+  "verification_plan": "independent material/line/volume mass ledger; gravity force/moment/PT equilibrium; low-frequency/reference method distinction; frozen native mesh family for frequencies/flexibility; no nonlinear capacity claim"
+}
