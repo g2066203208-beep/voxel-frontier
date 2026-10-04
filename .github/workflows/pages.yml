@@ -36,6 +36,7 @@ jobs:
         run: |
           git lfs pull --include="research/wind-tower/geometry/*.step"
           node scripts/read-model.cjs
+          node scripts/sanity-check-reported.mjs
 
       - name: Run tests
         run: npm test

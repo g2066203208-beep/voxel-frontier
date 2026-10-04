@@ -1,0 +1,28 @@
+name: Research bibliography identity check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  references:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '22'
+      - name: Retrieve public registry metadata
+        run: node scripts/check-reference-records.mjs
+      - name: Recalculate reported scalar arithmetic
+        run: node scripts/sanity-check-reported.mjs
+      - name: Save audit records
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: research-bibliography-and-arithmetic
+          path: |
+            research/wind-tower/audit/reference-records.json
+            public/research/reported-checks.json
