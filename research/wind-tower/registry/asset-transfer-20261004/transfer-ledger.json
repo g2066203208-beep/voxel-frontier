@@ -2039,7 +2039,10 @@
     "bytes": 436968166,
     "sha256": "a4d141c7eac94204ab9737efd914ad310a31ed83a9eafdeaad453be9a1979245",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S01.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_NTM_S01.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -2177,7 +2180,10 @@
     "bytes": 436968166,
     "sha256": "f62466cb7dc6ba949c124dda070ef584b05f02d3f8bf3116ea47747ba6fcbd4f",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S04.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_NTM_S04.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -2221,7 +2227,10 @@
     "bytes": 436968166,
     "sha256": "3f9d485f98972fdef78511be6a80e1a4ef9af7d6b851554d05f501c30e152eeb",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S05.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_NTM_S05.bts"
+    }
   },
   {
     "section": "turbSim-36",
@@ -2265,7 +2274,10 @@
     "bytes": 436968166,
     "sha256": "4725f74c6e19bc6a14a084e179e8ad986d58dfc0fa9cad82ffabd6eb5f1e3d8c",
     "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S06.bts",
-    "status": "pending-upload"
+    "status": "uploaded-lfs",
+    "canonical": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_NTM_S06.bts"
+    }
   },
   {
     "section": "turbSim-36",
