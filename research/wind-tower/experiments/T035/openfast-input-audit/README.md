@@ -21,7 +21,7 @@ Cases detected: **36**.
 
 ## AeroDyn exception
 
-Two AeroDyn SHA families detected across the 36 cases. Automated semantic split verdict: **MODEL_INPUT_DIFF_BEFORE_OUTLIST**.
+Two AeroDyn SHA families detected across the 36 cases. Raw positional verdict: **MODEL_INPUT_DIFF_BEFORE_OUTLIST**. Field-name/value semantic verdict: **PHYSICS_FIELDS_EQUIVALENT_REORDERED_PLUS_OUTLIST_DIFF**.
 A difference exists before the OutList marker. U11p4_NTM_S01 is therefore not proven dynamically equivalent to the other 35 cases and must not be pooled until the difference is explained or rerun.
 
 The case-hash table and raw unified diff are stored beside this report.
@@ -35,5 +35,5 @@ Therefore the 36-case structural/static identity can be substantially closed fro
 
 - FST, ElastoDyn, ServoDyn and the 158 m tower file are one SHA family across all 36 cases.
 - InflowWind is 36 distinct SHA values, consistent with case-specific stochastic inflow.
-- AeroDyn verdict: **MODEL_INPUT_DIFF_BEFORE_OUTLIST**.
+- AeroDyn raw positional verdict: **MODEL_INPUT_DIFF_BEFORE_OUTLIST**; semantic field verdict: **PHYSICS_FIELDS_EQUIVALENT_REORDERED_PLUS_OUTLIST_DIFF**.
 - G0 OpenFAST can move from 'raw files absent' to 'canonical static input mostly bound / controller identity HOLD'.
