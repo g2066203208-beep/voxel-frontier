@@ -6,8 +6,9 @@ steel_height	46 m	He2024; M2	FROZEN	无
 steel_diameter_interpretation	4.66/4.58/4.50/4.42 m按直径实现	He表3-3冲突; M2实际几何	IMPLEMENTATION-FROZEN/SOURCE-CONFLICT	正文保留原表头歧义
 hub_height	161.3688057735 m	R2实际ElastoDyn字段+官方几何公式	FROZEN-R2	BASE001文件冻结后写入参数表
 abaqus_parent	DTU158_RECONSTRUCTED_M2.inp	T026/T037	FROZEN-PARENT	原件不覆盖
-abaqus_preferred_candidate	BASE001_CANDIDATE_M2_R2RNA_O158.inp	T045	CANDIDATE	Abaqus 2025整塔求解
+abaqus_preferred_candidate	BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp	T045 Git blob 49ca06bd2c5af67d681d39c77ad292382d982b4f	CANDIDATE-PREFERRED-CLEAN	Abaqus 2025整塔求解
 common_structural_interface	O=(0,158,0) m	T038验证小样; T045 O158候选	CANDIDATE-FROZEN	G5仍需载荷接口验证
+legacy_rna_cleanup	旧RNA未实例化部件、旧RNA等效材料、旧RP集合已从clean候选移除	T045 static audit	PASS-NUMERICALLY-NEUTRAL	不改变塔架/PT/接头/步骤，仅清理无引用定义
 rna_mass	676753.29072314012 kg	T038 R2重建+S1验证	NUMERICALLY-VERIFIED	整塔候选求解复核
 rna_cg	(-4.794e-16,160.7835880303,-0.8729624989) m	T038	NUMERICALLY-VERIFIED	整塔候选求解复核
 rna_inertia	完整JG含I23=-5.23149569e6 kgm2	T038	NUMERICALLY-VERIFIED	整塔候选求解复核
@@ -29,4 +30,4 @@ openfast_version	3.5.3	logs/scripts/T037	FROZEN	模板标题3.3.0不得误写实
 rosco_version	2.6.0	runtime record/T037	FROZEN	无
 openfast_tower_aero	TwrAero=False	T037 actual input	FROZEN	G5必须明确塔身气动分工
 openfast_tower_damping	FA1/FA2/SS1/SS2=4.6350/5.5344/4.6341/5.5282 %	T037 actual tower card	IMPLEMENTED/PHYSICAL-HOLD	查物理来源或重设并重算
-g0_status	CANDIDATE-CREATED / SOLVER-VALIDATION-PENDING	T045	OPEN	整塔求解+剩余来源裁决
+g0_status	PREFERRED-CLEAN-CANDIDATE-CREATED / SOLVER-VALIDATION-PENDING	T045	OPEN	RUN-T045-001整塔求解+剩余来源裁决
