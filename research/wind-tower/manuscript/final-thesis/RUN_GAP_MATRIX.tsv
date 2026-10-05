@@ -1,0 +1,13 @@
+gate	purpose	minimum_execution	depends_on	blocks_chapter	status
+G0	唯一BASE001	冻结Abaqus/OpenFAST几何材料RNA坐标版本hash	T037/T038	Ch2-Ch6	OPEN
+G1	Abaqus分层V&V	材料试件+初始平衡+RNA+模态+网格+阻尼+时间步	G0	Ch2	OPEN
+G2	ERA5/TurbSim	Hub-height重算+风场空间/时间/seed V&V	G0	Ch3	OPEN
+G3	OpenFAST/ROSCO	输入链/控制器/运行点/模态	G0	Ch3	OPEN
+G4	多指标控制工况	final 36case或调整矩阵统计+seed离散+DEL	G2,G3	Ch3	OPEN
+G5	OF→Abaqus映射	自由体+坐标+单位load+ΣF/ΣM+跨模型QoI	G1,G4	Ch4	OPEN
+G6	控制机制	2-4case详细Abaqus+N/V/M/T+linear/nonlinear	G5	Ch4,Ch5	OPEN
+G7A	load-DEL	final channels/window/baseline DEL	G4	Ch3,Ch5	OPEN-HISTORICAL-ASSET
+G7B	材料疲劳	局部应力rainflow+材料模型+概率/seed+Miner	G6	Ch5	CONDITIONAL
+G8	敏感性	变量来源+配对seed+物理效应筛选	G6	Ch5,Ch6	OPEN
+G9	优化与验证	变量/约束+优化+真实FE/OpenFAST必要更新+独立case	G8	Ch6	OPEN
+G10	全文证据回收	claim↔RUN↔FIG/TAB↔REF	G0-G9	Ch7/final	OPEN
