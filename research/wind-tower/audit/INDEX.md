@@ -120,3 +120,8 @@
 ## T039 第一章学校模板格式与执行顺序纠正
 
 [43号记录](43-t039-chapter1-school-format-correction.md)：第一章为当前唯一写作交付，内容尚未验收；仅修既有第一章格式。T038历史审查保留，第二章及后续实施暂停。
+
+
+## T040 新增核心全文科学核读
+
+[44号审计](44-t040-new-core-literature-scientific-audit.md)：优先核读ERA5、混凝土疲劳、P-Δ与水平接缝文献；Huang 2026完成20/20页逐页审计，明确G7A load-DEL与G7B局部材料疲劳分层；Jung/Yang/Olauson/Gualtieri收紧ERA5动态alpha与不确定性口径；P-Δ与N-M-V-T接缝形成后续计算门禁。其余新PDF按阅读等级继续推进，不把“已入库”冒充“已全文审”。
