@@ -24,7 +24,7 @@
 |R1 预应力塔FE方法|Kenna & Basu 2015 Wind Energy (REF038)|A-WEB/仓库仍无PDF本体|预应力/后张混凝土风塔FE、预应力与刚度影响|论文对象和具体参数不可移植|P1补强，非硬阻断|
 |R1 水平接缝接触/扭转FE|Ren et al. 2025 TWS (REF017/L058)|A-PDF|C3D8R/T3D2、hard contact+摩擦、PT、试验校准、接缝扭转机制|0.9摩擦系数、40 mm网格等为论文专属|否|
 |R1 RNA空间等效与模态|Cheng et al. 2024 Structures 68, 107235 (REF010/L059)|A-PDF|RNA质量偏心、转动惯量、预应力对频率影响；Abaqus RP质量/惯量验证|其RNA数值/网格不可直接移植|否|
-|R1 基频解析交叉校核|Li Shouzhen et al. 2023 IJSSD (REF039/L051)|A-PDF/待完整科学核读|混塔基频解析解；RNA质量/转动惯量、钢混分段影响|不能取代本文FE V&V|否（PDF已取得，待核读）|
+|R1 基频解析交叉校核|Li Shouzhen et al. 2023 IJSSD (REF039/L051)|A-PDF/核心公式+边界+FE验证已核|分段Euler–Bernoulli/Rayleigh–Ritz；显式考虑钢混截面突变、预应力、RNA质量/转动惯量/偏心；可作FE基频独立交叉校核|122m/250t/48MN、元素、tie、0.25m网格、固定基础结论均不可复制；不验证局部contact|否|
 |R1 CDP/预应力/阻尼定义|Abaqus 2025 official (REF052–054, REF059 etc.)|A-WEB/OFFICIAL|材料变量、T3D2、预应力、Rayleigh阻尼等软件物理定义|官方默认值≠本文物理校准值|否|
 |R1 网格/V&V|ASME V&V10 (REF069); mesh convergence REF079|A-WEB + A-PDF|verification/validation分层；网格收敛方法|不提供本文统一误差阈值|否|
 |R2 ERA5长期场址风环境|Olauson 2018 (REF080/L074)|A-PDF/方法与主要结果已核|ERA5相对MERRA-2的长期风电建模验证；支撑ERA5作为长期背景|不能作为局地10-min湍流输入，也不能作为嘉鱼无偏验证|否|
@@ -46,15 +46,15 @@
 |R6 水平接缝N-M-T机制|Ren 2025三篇 (REF015–017/L056–058)|A-PDF|压弯、压弯扭、扭转试验；预应力、开闭、自复位和局部破坏|实验参数不直接成为本文模型参数|否|
 |R6 最新N-M-V-T接缝|Tan et al. 2026 Engineering Structures (REF115/REF026/L045)|A-PDF/试验+FE+参数框架已核|组合N-M-V-T、预应力/摩擦、试验校准Abaqus；要求控制工况保存多轴需求|试件系数/参数范围不能直接成为本文输入；逐页参数核对继续|否；参数移植仍禁止|
 |R6 接缝变化对静动力影响|Hao et al. 2026 Results in Engineering (REF117/REF025/L046)|A-PDF/待完整科学核读|说明全局模态变化小不等于局部连接安全；振动台+FE|具体损伤/接缝方案不可移植|否（PDF已取得，待核读）|
-|R6 钢-混转换连接|Kim et al. 2019 KSCE (REF036/L044)|A-PDF/待完整科学核读|钢混连接疲劳试验、2e6循环、残余承载|试件连接构造不等同本文转换段|否（PDF已取得，待核读）|
+|R6 钢-混转换连接|Kim et al. 2019 KSCE (REF036/L044)|A-PDF/摘要+方法预览已核，逐页待补|钢混连接2e6循环后再做静载残余性能；支撑转换连接需独立疲劳/残余承载验证|锚栓长度、循环幅值、连接构造不可移植|否；参数仍未批准|
 |R6 转换段承压机制|2023 adapter papers REF042/043|一篇需PDF、一篇全文网页|转换区试验+验证FE、承压传力机制|不是本文几何的直接校准|可补|
 |R7A 载荷疲劳|Huang 2025; Sanchez 2022|A-PDF|load-DEL/seed离散/控制case；已有57,286 rainflow和72 DEL属于该层|不能写材料damage/life|否|
-|R7B 局部材料疲劳|Huang 2025/L055; Kim 2019/L044; Wang 2025 grout/L016; Huang 2026 CSCM/L047|四篇均A-PDF；Huang2026已20/20页全文审计|Abaqus局部应力→rainflow range/mean/count→材料S-N；混凝土需考虑mean stress/stress ratio与prestress；再做damage/life|钢、混凝土、钢筋、PT不能共用m=4；Huang2026恒幅数据库/分级试验不直接证明真实变幅20年寿命|寿命链仍需DLC/bin概率/seed收敛/材料模型闭合|
+|R7B 局部材料疲劳|Huang 2025/L055; Kim 2019/L044; Wang 2025 grout/L016; Huang 2026 CSCM/L047|Huang2026 20/20页全文审；Wang2025方法结果全文网页审；Kim预览级|局部应力→rainflow→材料S-N/mean stress/prestress→Miner；提前定义热点/路径/厚度平均并检查网格敏感性|不能共用m=4；缺陷灌浆工况与20年频次不可复制；恒幅/分级试验不等于真实变幅寿命|寿命链仍需DLC/bin概率/seed收敛/材料模型闭合|
 |R7B 预应力松弛-疲劳|Qu et al. 2026 Buildings (REF023/L017)|A-PDF|最新服役状态/预应力松弛与疲劳耦合边界；用于现状与讨论|其4.55MW模型和NN不作为本文创新|否|
-|R8 参数敏感性|Robertson 2019 WES (REF011/L038); Morris原典（条件）|A-PDF；原典按最终方法补|先做seed噪声/收敛，再判断参数效应；工况依赖|不能先选算法后倒推变量|若正式用Morris再补原典|
+|R8 参数敏感性|Robertson 2019 WES (REF011/L038); Kenna 2019 PhD (REF002/L032); Morris原典（条件）|A-PDF；Kenna关键章节已核|先做seed噪声/收敛，再判断参数效应；Kenna证明global/local指标对同一参数敏感性可能不同，预应力可弱影响全局但强影响局部|不能先选算法后倒推变量；Kenna的DOE样本/模型不可复制|若正式用Morris再补原典|
 |R9 机制驱动优化|Cheng et al. 2024 JCSR (REF020/L053)|A-PDF|参数化FE、频率/ULS/SLS/fatigue/geometric constraints、优化循环|5MW变量范围/阈值/算法参数不能复制|否|
-|R9 多目标/代理优化|Cheng et al. 2025 Engineering Structures (REF021/L054)|A-PDF/此前已全文审计，仓库本体已补齐|LHS、代理、NSGA-II/Pareto、独立FE对比及固定载荷局限|4096样本、5MW范围、成本/AEP系数不可移植|否（PDF本体已补齐）|
-|R9 早期优化谱系|Chen et al. 2020 (REF033/L041)|A-PDF/待完整科学核读|混塔几何/预应力变量与约束谱系|2MW/120m范围不能直接用|建议补|
+|R9 多目标/代理优化|Cheng et al. 2025 Engineering Structures (REF021/L054); Kenna 2019 PhD (REF002/L032)|A-PDF；Cheng全文审、Kenna关键优化章节审|LHS/代理/Pareto或GA+PatternSearch均只能服务已定义变量/约束；局部应力/疲劳可作为代理输出；最终候选独立高保真复核|4096/240等样本量、ANN结构、5MW范围、成本/LCoE和算法参数不可移植|否|
+|R9 早期优化谱系|Chen et al. 2020 (REF033/L041)|A-PDF+全文网页/方法框架已核|直径、壁厚、混凝土段高度、预应力面积等变量；成本目标；频率/强度/变形/构造约束先行，再GA搜索|2MW/120m变量范围、单价、GA参数不可复制|否|
 |R10 独立高保真验证|Cheng 2025 + surrogate/high-fidelity verification sources|核心方法已定位|Pareto候选必须回到真实FE；未参与训练/筛选风况/seed复核|高R²不能替代独立验证|随最终优化方案补|
 
 ## 3. 当前足够与不足的判断
@@ -70,7 +70,7 @@
 - 机制驱动优化的总体方法框架。
 
 ### 仍不能宣布完全闭合的部分
-1. **当前主要缺口已从“缺PDF”转为“缺逐篇科学核读与本文适用性判定”**：Yang 2024、Gualtieri 2022、Tan 2026、Hao 2026、Huang 2026、Kim 2019、Li 2023基频、李守振2024 P-Δ等全文均已入库，下一步必须逐篇提取原文对象、模型、边界、参数、验证、结果和局限。
+1. **当前主要缺口已从“缺PDF”转为“剩余核心PDF逐篇科学核读与本文适用性判定”**：Huang 2026已20/20页全文审；Li 2023基频核心公式/边界/FE验证、李守振2024 P-Δ、Wang 2025灌浆疲劳、Kenna 2019关键章节已经完成实质核读。仍优先补Tan 2026逐页、Hao 2026全文、Kim 2019逐页及两篇中文博士论文的系统提取。
 2. **材料疲劳寿命G7B仍未闭合**：虽然Huang 2026、Kim 2019、Wang 2025 grout等PDF已取得，但若要给damage/life/20年寿命，仍需闭合DLC1.2、风速bin概率、局部应力、材料疲劳模型、mean stress/prestress和seed收敛。
 3. **IEC/ASME等标准具体条文**：若正文采用具体阈值或条款，仍需合法授权原文核页；公共GitHub不上传受版权限制全文。
 4. **Kenna & Basu 2015**：仓库仍无PDF本体，但已有全文网页和多篇更直接的混塔/预应力FE来源，因此属于建议补强而非主路线硬阻断。
