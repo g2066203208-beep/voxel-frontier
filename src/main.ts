@@ -30,7 +30,7 @@ try {
   recoveryError = error instanceof Error ? error.message : String(error);
   saveState = '原数据待恢复';
 }
-let view: View = 'workflow';
+let view: View = globalThis.location.hash === '#engineering' ? 'engineering' : 'workflow';
 let disposeEngineering: (()=>void) | undefined;
 let renderGeneration = 0;
 let query = '';
@@ -374,7 +374,7 @@ async function action(name: string, b: HTMLElement) {
     catch (error) { toast(`项目已删除，但旧附件尚未清理：${errorText(error)}`, true); }
     return;
   }
-  if (name === 'help') openDialog('关于论文工作室', `<div class="dialog-body help-copy"><p>这是你的科研项目工作空间。每个项目独立管理论文正文、审查、复盘、实验、步骤、模型、数据和参考文献。</p><h3>如何开始</h3><ol><li>新建项目，填写研究目标。</li><li>进入工作区，添加结构化记录与原始文件。</li><li>在论文写作中整理 Markdown 正文，用 [@引用键] 记录引用。</li><li>定期导出完整 JSON 备份，迁移到另一台设备时导入。</li></ol><h3>数据保存</h3><p>文字自动保存在此浏览器的本地存储；附件保存在 IndexedDB。这里没有账号或云同步，清理网站数据会删除本地资料。完整 JSON 备份包含所有项目与附件，Markdown 和 BibTeX 导出方便继续使用。</p><h3>功能范围</h3><p>CSV 可预览前 100 行和 25 列。GitHub工程模型区能展示真实STEP几何及CAE审计元数据；目前不会执行有限元求解或修改专有CAE。论文审查与复盘由你记录和判断，不会自动生成学术结论。</p><p>初始项目中的所有内容均为演示模板，不是实测数据或已验证的研究结论。</p></div>`);
+  if (name === 'help') openDialog('关于论文工作室', `<div class="dialog-body help-copy"><p>这是你的科研项目工作空间。每个项目独立管理论文正文、审查、复盘、实验、步骤、模型、数据和参考文献。</p><h3>如何开始</h3><ol><li>新建项目，填写研究目标。</li><li>进入工作区，添加结构化记录与原始文件。</li><li>在论文写作中整理 Markdown 正文，用 [@引用键] 记录引用。</li><li>定期导出完整 JSON 备份，迁移到另一台设备时导入。</li></ol><h3>数据保存</h3><p>文字自动保存在此浏览器的本地存储；附件保存在 IndexedDB。这里没有账号或云同步，清理网站数据会删除本地资料。完整 JSON 备份包含所有项目与附件，Markdown 和 BibTeX 导出方便继续使用。</p><h3>功能范围</h3><p>CSV 可预览前 100 行和 25 列。GitHub工程模型区直接展示当前 Abaqus INP 有限元网格，并可叠加原始 Abaqus RNA 表面网格；目前不会在浏览器中执行有限元求解或修改专有 CAE。论文审查与复盘由你记录和判断，不会自动生成学术结论。</p><p>初始项目中的所有内容均为演示模板，不是实测数据或已验证的研究结论。</p></div>`);
 }
 document.addEventListener('click', e => {
   if (restoring) { e.preventDefault(); return; }
