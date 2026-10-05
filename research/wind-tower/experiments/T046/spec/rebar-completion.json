@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "experiment": "T046",
+  "identity": "CODE_DERIVED_REBAR_COMPLETION / NOT_HE_DIRECT_VALUE",
+  "baseInp": "research/wind-tower/experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp",
+  "evidence": {
+    "primaryPrototype": "He Zeyu 2024 thesis, Table 3-2, Fig. 3-5, Sec. 4.4.1",
+    "sameLineage": "Xu et al., Renewable Energy 243 (2025) 122475",
+    "detailing": [
+      "GB 50135-2019 6.5.3, 6.5.5-6.5.8",
+      "T/CEC 5008-2018 4.6, 6.6.3-6.6.7",
+      "GB 50010-2010 (2015) 4.1.4-2, 4.2.3-1"
+    ]
+  },
+  "baselineFacts": {
+    "longitudinalElements": 5440,
+    "longitudinalLayers": 2,
+    "longitudinalAreaM2": 0.000490874,
+    "longitudinalEquivalentDiameterMm": 25.000004,
+    "longitudinalMaterial": "S345",
+    "hoopElements": 0,
+    "tieBarElements": 0,
+    "ptCount": 36,
+    "ptRadiusM": 1.75,
+    "ptAreaM2": 0.00014,
+    "ptInitialStressPa": 1280000000,
+    "ptBaseBoundary": "U1=U2=U3=0 at y=0",
+    "ptTopBoundary": "3 translational equations per tendon to SET_FLANGE_RP at y=112 m"
+  },
+  "hoopCandidate": {
+    "material": "HRB335_T046",
+    "diameterMm": 14,
+    "areaM2": 0.0001539380400258999,
+    "maxAxialSpacingMm": 80,
+    "coverMm": 30,
+    "centerlineSurfaceOffsetMm": 37,
+    "circumferentialSegmentsPerRing": 36,
+    "elementType": "T3D2",
+    "host": "SET_CSEG_ALL_ACTIVE",
+    "placement": "double layer; outer at Rout-37mm, inner at Rin+37mm"
+  },
+  "tieCandidate": {
+    "material": "HRB335_T046",
+    "diameterMm": 6,
+    "areaM2": 0.000028274333882308137,
+    "targetVerticalSpacingMm": 480,
+    "maxCircumferentialSpacingMm": 500,
+    "elementType": "T3D2",
+    "host": "SET_CSEG_ALL_ACTIVE"
+  },
+  "codeChecks": {
+    "C65_ft_MPa": 2.09,
+    "C70_ft_MPa": 2.14,
+    "HRB335_fy_design_MPa": 300,
+    "hoopMinRatioPercent": 0.2,
+    "additionalFormula": "45*ft/fy percent",
+    "worstWallThicknessMm": 500,
+    "worstRequiredRatioPercent": 0.3135,
+    "providedPhi14At80RatioPercent": 0.38484510006474965
+  },
+  "unresolved": [
+    "Published direct source for current longitudinal 490.874 mm2 / equivalent phi25",
+    "Published direct source for 36 PT count",
+    "Published direct source for PT radius 1.75 m",
+    "Real foundation/anchor hardware geometry",
+    "Abaqus solver validation of T046-E1",
+    "Sensitivity of global QoIs to explicit hoop/tie completion"
+  ]
+}
