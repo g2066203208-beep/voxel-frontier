@@ -32,10 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Read source STEP on GitHub
+      - name: Build Abaqus viewer data
         run: |
-          git lfs pull --include="research/wind-tower/geometry/*.step"
-          node scripts/read-model.cjs
           node scripts/read-abaqus.cjs
           node scripts/read-source-rna.cjs
           node scripts/sanity-check-reported.mjs
