@@ -125,3 +125,8 @@
 ## T040 新增核心全文科学核读
 
 [44号审计](44-t040-new-core-literature-scientific-audit.md)：优先核读ERA5、混凝土疲劳、P-Δ与水平接缝文献；Huang 2026完成20/20页逐页审计，明确G7A load-DEL与G7B局部材料疲劳分层；Jung/Yang/Olauson/Gualtieri收紧ERA5动态alpha与不确定性口径；P-Δ与N-M-V-T接缝形成后续计算门禁。其余新PDF按阅读等级继续推进，不把“已入库”冒充“已全文审”。
+
+## T041 全论文流程与参考文献充分性总审查
+
+[45号审计](45-t041-full-route-reference-sufficiency-review.md)：重新贯通Route B从BASE001、Abaqus V&V、ERA5/TurbSim/OpenFAST、载荷映射、控制机制、分级疲劳、敏感性、优化到G10证据回收；判定主路线文献已足够，剩余硬缺口集中在IEC/GB授权条文、实际材料牌号/阻尼来源和条件G7B材料疲劳规范，不再无边界扩文献。
+
