@@ -43,12 +43,18 @@
 
 ## C. 当前库存口径
 
-- `references/open-access/MANIFEST.tsv`：36个已校验 `ok` PDF。
+- `references/open-access/MANIFEST.tsv`：38个已校验 `ok` PDF（已新增Lantz 2019与Abbas 2022 ROSCO）。
 - `references/user-provided/MANIFEST.tsv`：29个 `ok` PDF。
-- 两个受控文献目录合计：**65个真实PDF本体**。
-- `references/` 树共69个PDF blob；除上述65个外还有4个baseline/site证据PDF，其中DTU正式报告有1份重复归档，因此约 **68份不同PDF来源文档**。
-- 整个 `research/wind-tower/` 当前84个PDF blob，其中15个为T026图/结果文件，不属于参考文献。
+- 两个受控文献目录合计：**67个真实PDF本体**。
+- `references/` 树现有71个PDF blob；除上述67个外还有4个baseline/site证据PDF，其中DTU正式报告有1份重复归档，因此约 **70份不同PDF来源文档**。
+- 整个 `research/wind-tower/` 当前86个PDF blob，其中15个为T026图/结果文件，不属于参考文献。
 
 ## D. 后续原则
 
 不再无边界补文献。先对这29篇新入库全文按技术路线逐篇完成科学核读，并把“原文具体做法—本文采用—不能照搬—对应章节/计算/图表”写回总矩阵。只有发现明确方法缺口时再定向补文献。
+
+## F. 仍无法直接公开入库的三类来源
+
+- **何泽瑜2024本地PDF**：用户个人文件库中完整PDF已确认，但当前文件接口无法materialize原始二进制，因此GitHub二进制仍pending；若用户把原PDF重新作为当前会话附件上传，可立即完整入库。
+- **IEC 61400-1:2019+AMD1:2025 CSV** 与 **IEC 61400-6:2020+AMD1:2025 CSV**：官方付费标准，不能从非授权站点抓取并公开到GitHub。官方版本与入口已登记在 `OFFICIAL_RESTRICTED_AND_WEB_SOURCES_20261005.tsv`。
+- **Abaqus 2025 CDP**：官方以HTML文档发布，并不存在对应官方整本PDF；已登记主文档、理论页和关键字页的官方版本链接。
