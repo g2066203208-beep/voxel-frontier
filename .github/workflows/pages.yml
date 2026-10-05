@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: write
       pages: read
     steps:
       - name: Checkout
@@ -44,6 +44,16 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Freeze generated Abaqus model inputs
+        run: |
+          git config user.name "paper-studio-bot"
+          git config user.email "paper-studio-bot@users.noreply.github.com"
+          git add research/wind-tower/experiments/T046/inputs/*.inp research/wind-tower/experiments/T047/inputs/*.inp
+          if ! git diff --cached --quiet; then
+            git commit -m "Freeze generated Abaqus model inputs [skip ci]"
+            git push
+          fi
 
       - name: Upload T046 Abaqus candidates
         uses: actions/upload-artifact@v4
