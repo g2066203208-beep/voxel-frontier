@@ -1,0 +1,357 @@
+{
+  "database": "D:\\MC\\SIMPACK_SITE_ONLY.cae",
+  "inventory": "D:/Codex-research-native/user-original-live-inspection-20261005/live-model-inventory.json",
+  "viewports": {
+    "Viewport: 1": {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC"
+    }
+  },
+  "models": {
+    "DTU158_SITE_S04_INTERFACE_DYNAMIC": {
+      "part_count": 102,
+      "instance_count": 108,
+      "groups": {
+        "CSEG_": {
+          "instances": 31,
+          "active_instances": 31,
+          "active_nodes": 8640,
+          "active_elements": 2880,
+          "active_element_types": {
+            "C3D8R": 2880
+          },
+          "empty_active_instances": [
+            "CSEG_01-1"
+          ]
+        },
+        "SSEG_": {
+          "instances": 4,
+          "active_instances": 4,
+          "active_nodes": 960,
+          "active_elements": 384,
+          "active_element_types": {
+            "C3D8I": 384
+          },
+          "empty_active_instances": []
+        },
+        "RBLONG_": {
+          "instances": 31,
+          "active_instances": 31,
+          "active_nodes": 10880,
+          "active_elements": 5440,
+          "active_element_types": {
+            "T3D2": 5440
+          },
+          "empty_active_instances": []
+        },
+        "RHOOP_": {
+          "instances": 31,
+          "active_instances": 0,
+          "active_nodes": 0,
+          "active_elements": 0,
+          "active_element_types": {},
+          "empty_active_instances": []
+        },
+        "PT_": {
+          "instances": 1,
+          "active_instances": 1,
+          "active_nodes": 72,
+          "active_elements": 36,
+          "active_element_types": {
+            "T3D2": 36
+          },
+          "empty_active_instances": []
+        },
+        "DTU_BLADE": {
+          "instances": 3,
+          "active_instances": 3,
+          "active_nodes": 2658,
+          "active_elements": 5283,
+          "active_element_types": {
+            "S3": 5283
+          },
+          "empty_active_instances": []
+        },
+        "DTU_NACELLE": {
+          "instances": 3,
+          "active_instances": 3,
+          "active_nodes": 990,
+          "active_elements": 960,
+          "active_element_types": {
+            "S3": 51,
+            "S4R": 909
+          },
+          "empty_active_instances": []
+        },
+        "DTU_SPINNER": {
+          "instances": 3,
+          "active_instances": 3,
+          "active_nodes": 993,
+          "active_elements": 966,
+          "active_element_types": {
+            "S3": 30,
+            "S4R": 936
+          },
+          "empty_active_instances": []
+        },
+        "RNA_MASS": {
+          "instances": 1,
+          "active_instances": 0,
+          "active_nodes": 0,
+          "active_elements": 0,
+          "active_element_types": {},
+          "empty_active_instances": []
+        }
+      },
+      "rna_sections": {
+        "DTU_BLADE_SMOOTH_OFFICIAL": [
+          {
+            "name": "SEC_RNA_BLD_Z3",
+            "class": "BeamSection",
+            "suppressed": false,
+            "region": "('SET_ALL_FACE', 'DTU_BLADE_SMOOTH_OFFICIAL', 1, 1, 0)"
+          }
+        ],
+        "DTU_NACELLE_120DEG_OFFICIAL": [
+          {
+            "name": "SEC_RNA_NAC_EQ",
+            "class": "BeamSection",
+            "suppressed": false,
+            "region": "('SET_ALL_FACE', 'DTU_NACELLE_120DEG_OFFICIAL', 1, 1, 0)"
+          }
+        ],
+        "DTU_SPINNER_120DEG_OFFICIAL": [
+          {
+            "name": "SEC_RNA_NAC_EQ",
+            "class": "BeamSection",
+            "suppressed": false,
+            "region": "('SET_ALL_FACE', 'DTU_SPINNER_120DEG_OFFICIAL', 1, 1, 0)"
+          }
+        ]
+      },
+      "constraints": {
+        "Coupling": {
+          "total": 71,
+          "active": 71
+        },
+        "EmbeddedRegion": {
+          "total": 31,
+          "active": 31
+        },
+        "Equation": {
+          "total": 108,
+          "active": 108
+        },
+        "RigidBody": {
+          "total": 1,
+          "active": 0
+        },
+        "Tie": {
+          "total": 4,
+          "active": 4
+        }
+      },
+      "steps": {
+        "Initial": {
+          "class": "InitialStep",
+          "suppressed": false,
+          "previous": "",
+          "nlgeom": 0
+        },
+        "Gravity": {
+          "class": "StaticStep",
+          "suppressed": false,
+          "previous": "Initial",
+          "timePeriod": 1.0,
+          "nlgeom": 1
+        },
+        "Modal_From_Gravity": {
+          "class": "FrequencyStep",
+          "suppressed": false,
+          "previous": "Gravity",
+          "nlgeom": 1,
+          "numEigen": 30
+        },
+        "Wind_SITE_NTM_U18p57_S04_INTERFACE": {
+          "class": "ModalDynamicsStep",
+          "suppressed": false,
+          "previous": "Modal_From_Gravity",
+          "timePeriod": 600.0,
+          "nlgeom": 1
+        }
+      },
+      "interaction_count": 0,
+      "engineering_features": {
+        "springDashpots": {
+          "total": 180,
+          "active": 180
+        }
+      }
+    },
+    "RNA_REAL_EXPLICIT": {
+      "part_count": 102,
+      "instance_count": 108,
+      "groups": {
+        "CSEG_": {
+          "instances": 31,
+          "active_instances": 31,
+          "active_nodes": 8640,
+          "active_elements": 2880,
+          "active_element_types": {
+            "C3D8R": 2880
+          },
+          "empty_active_instances": [
+            "CSEG_01-1"
+          ]
+        },
+        "SSEG_": {
+          "instances": 4,
+          "active_instances": 4,
+          "active_nodes": 960,
+          "active_elements": 384,
+          "active_element_types": {
+            "C3D8I": 384
+          },
+          "empty_active_instances": []
+        },
+        "RBLONG_": {
+          "instances": 31,
+          "active_instances": 31,
+          "active_nodes": 10880,
+          "active_elements": 5440,
+          "active_element_types": {
+            "T3D2": 5440
+          },
+          "empty_active_instances": []
+        },
+        "RHOOP_": {
+          "instances": 31,
+          "active_instances": 0,
+          "active_nodes": 0,
+          "active_elements": 0,
+          "active_element_types": {},
+          "empty_active_instances": []
+        },
+        "PT_": {
+          "instances": 1,
+          "active_instances": 1,
+          "active_nodes": 72,
+          "active_elements": 36,
+          "active_element_types": {
+            "T3D2": 36
+          },
+          "empty_active_instances": []
+        },
+        "DTU_BLADE": {
+          "instances": 3,
+          "active_instances": 3,
+          "active_nodes": 2658,
+          "active_elements": 5283,
+          "active_element_types": {
+            "S3": 5283
+          },
+          "empty_active_instances": []
+        },
+        "DTU_NACELLE": {
+          "instances": 3,
+          "active_instances": 3,
+          "active_nodes": 990,
+          "active_elements": 960,
+          "active_element_types": {
+            "S3": 51,
+            "S4R": 909
+          },
+          "empty_active_instances": []
+        },
+        "DTU_SPINNER": {
+          "instances": 3,
+          "active_instances": 3,
+          "active_nodes": 993,
+          "active_elements": 966,
+          "active_element_types": {
+            "S3": 30,
+            "S4R": 936
+          },
+          "empty_active_instances": []
+        },
+        "RNA_MASS": {
+          "instances": 1,
+          "active_instances": 0,
+          "active_nodes": 0,
+          "active_elements": 0,
+          "active_element_types": {},
+          "empty_active_instances": []
+        }
+      },
+      "rna_sections": {
+        "DTU_BLADE_SMOOTH_OFFICIAL": [
+          {
+            "name": "SEC_RNA_BLD_Z3",
+            "class": "BeamSection",
+            "suppressed": false,
+            "region": "('SET_ALL_FACE', 'DTU_BLADE_SMOOTH_OFFICIAL', 1, 1, 0)"
+          }
+        ],
+        "DTU_NACELLE_120DEG_OFFICIAL": [
+          {
+            "name": "SEC_RNA_NAC_EQ",
+            "class": "BeamSection",
+            "suppressed": false,
+            "region": "('SET_ALL_FACE', 'DTU_NACELLE_120DEG_OFFICIAL', 1, 1, 0)"
+          }
+        ],
+        "DTU_SPINNER_120DEG_OFFICIAL": [
+          {
+            "name": "SEC_RNA_NAC_EQ",
+            "class": "BeamSection",
+            "suppressed": false,
+            "region": "('SET_ALL_FACE', 'DTU_SPINNER_120DEG_OFFICIAL', 1, 1, 0)"
+          }
+        ]
+      },
+      "constraints": {
+        "Coupling": {
+          "total": 71,
+          "active": 71
+        },
+        "EmbeddedRegion": {
+          "total": 31,
+          "active": 31
+        },
+        "Equation": {
+          "total": 108,
+          "active": 108
+        },
+        "RigidBody": {
+          "total": 1,
+          "active": 0
+        },
+        "Tie": {
+          "total": 4,
+          "active": 4
+        }
+      },
+      "steps": {
+        "Initial": {
+          "class": "InitialStep",
+          "suppressed": false,
+          "previous": "",
+          "nlgeom": 1
+        },
+        "RNA_ROTATION_EXPLICIT": {
+          "class": "ExplicitDynamicsStep",
+          "suppressed": false,
+          "previous": "Initial",
+          "timePeriod": 1.0,
+          "nlgeom": 1
+        }
+      },
+      "interaction_count": 0,
+      "engineering_features": {
+        "springDashpots": {
+          "total": 180,
+          "active": 180
+        }
+      }
+    }
+  }
+}

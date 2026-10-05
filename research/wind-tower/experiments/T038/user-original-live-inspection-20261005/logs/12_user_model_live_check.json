@@ -1,0 +1,36 @@
+{
+  "at_utc": "2026-10-05T11:58:40.586231+00:00",
+  "request": {
+    "id": "codex-7df4aa94b44b429d82ada80f934961be",
+    "method": "execute",
+    "params": {
+      "code": "from abaqus import mdb, session\nresult = {'database': mdb.pathName, 'lastChangedCount': mdb.lastChangedCount,\n          'models': {}, 'viewports': {}, 'jobs': list(mdb.jobs.keys())}\nfor name, model in mdb.models.items():\n    result['models'][name] = {'parts': list(model.parts.keys()),\n        'instances': list(model.rootAssembly.instances.keys()),\n        'steps': list(model.steps.keys())}\nfor name, vp in session.viewports.items():\n    result['viewports'][name] = {'displayedObject': str(vp.displayedObject)}\n",
+      "timeout": 30.0
+    }
+  },
+  "response": {
+    "id": "codex-7df4aa94b44b429d82ada80f934961be",
+    "ok": true,
+    "result": {
+      "ok": false,
+      "core_error": "<unknown>.AbaqusException: rom_MementoRead::rom_MementoRead - Object is not available in DB file: ajbC_Message[176002]",
+      "error_type": "<module 'abaqusExceptions' from 'D:\\\\Abaqus\\\\2025\\\\win_b64\\\\code\\\\python3.10\\\\lib\\\\abaqusExceptions.pyc'>.AbaqusException",
+      "error_line": 3,
+      "code_excerpt": "      1 | from abaqus import mdb, session\n      2 | result = {'database': mdb.pathName, 'lastChangedCount': mdb.lastChangedCount,\n>>    3 |           'models': {}, 'viewports': {}, 'jobs': list(mdb.jobs.keys())}\n      4 | for name, model in mdb.models.items():\n      5 |     result['models'][name] = {'parts': list(model.parts.keys()),",
+      "traceback_tail": [
+        "During handling of the above exception, another exception occurred:",
+        "Traceback (most recent call last):",
+        "  File \"<string>\", line 520, in <module>",
+        "  File \"<abaqus-mcp>\", line 3, in <module>",
+        "<unknown>.AbaqusException: rom_MementoRead::rom_MementoRead - Object is not available in DB file: ajbC_Message[176002]"
+      ],
+      "recovery": {
+        "call_target": "list",
+        "callable_signature": null,
+        "callable_summary": null
+      },
+      "stdout": "",
+      "stderr": ""
+    }
+  }
+}
