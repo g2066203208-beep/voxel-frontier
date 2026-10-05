@@ -131,7 +131,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
         if(v.wire) v.wire.visible=base && meshCheck.checked;
         if(v.line) v.line.visible=base;
         if(v.material) {
-          v.material.opacity=transparentCheck.checked?.34:1;
+          v.material.opacity=transparentCheck.checked ? .34 : 1;
           v.material.emissive.set(v.name===selected ? 0x273b20 : 0x000000);
         }
       }
