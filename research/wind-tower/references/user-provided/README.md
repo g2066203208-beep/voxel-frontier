@@ -10,6 +10,7 @@
 - [文件清单、页数和SHA-256](MANIFEST.tsv)
 - [原名、规范名称、复用/上传决定](LOCAL_IMPORT_20261005.tsv)
 - [本地逐页内容流及完整性核对](LOCAL_PDF_INTEGRITY_20261005.json)
+- [GitHub全文文件、远端哈希与读回校验报告](REMOTE_LOCAL_VERIFICATION_20261005.json)
 
 本次检查本地29份PDF，9份与GitHub现有文件字节相同，沿用既有文件；20份补上传。此前只登记未上传的L054已补齐，不再是binary-pending。已有REF编号按DOI/题名复用，历史存在的别名编号保留兼容，不再为同一论文新增编号。
 
