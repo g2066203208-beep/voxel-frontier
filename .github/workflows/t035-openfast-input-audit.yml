@@ -218,5 +218,6 @@ jobs:
             echo "No changes"
           else
             git commit -m "T035.1 audit OpenFAST 36-case canonical input identity"
+            git pull --rebase origin main
             git push
           fi
