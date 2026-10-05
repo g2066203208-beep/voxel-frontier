@@ -1,0 +1,12 @@
+{
+  "path": "research/wind-tower/references/baselines-and-site-20261004/dtu-report/DTU_Wind_Energy_Report-I-0092.pdf",
+  "git_blob_sha": "62ed3b258241bdfb5d0c1c6886e38ced85769aae",
+  "lfs_pointer": "version https://git-lfs.github.com/spec/v1\noid sha256:55aac8cae8f656cdc4aa73afd3f5dedc45345079168476289eb49f000efd8017\nsize 10815847\n",
+  "probe_url": "https://media.githubusercontent.com/media/g2066203208-beep/voxel-frontier/17723adc4b29948837e4246603ec9a8f5007e372/research/wind-tower/references/baselines-and-site-20261004/dtu-report/DTU_Wind_Energy_Report-I-0092.pdf",
+  "http_status": 206,
+  "content_range": "bytes 0-1023/10815847",
+  "content_length": "1024",
+  "prefix_bytes": 1024,
+  "pdf_signature": true,
+  "scope": "LFS object accessibility and PDF header probe only; not a new full-body or scientific audit."
+}

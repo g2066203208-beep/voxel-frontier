@@ -1,0 +1,42 @@
+{
+  "He2024": {
+    "ref_id": "REF008",
+    "title": "大型混塔式风力机的建模与可靠度分析",
+    "author": "何泽瑜",
+    "year": 2024,
+    "institution": "湖南大学",
+    "local_source": "D:\\MC\\cae仿真\\大型混塔式风力机的建模与可靠度分析_何泽瑜.pdf",
+    "repository_path": "research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf",
+    "bytes": 10193750,
+    "sha256": "85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c",
+    "pages": 90,
+    "reading_this_audit": "PDF33–35；全篇页数与原件身份由本轮来源审查确认，不新增全90页科学审读声明",
+    "prior_repository_state": "Current tree, references manifests and literature_master said binary pending; no same-source hash found in archive manifest.",
+    "publication": "Exact complete user-provided reference PDF included in this publication; completion requires the publisher byte-readback receipt. This is a reference thesis, not the user manuscript."
+  },
+  "DTU2013": {
+    "title": "Description of the DTU 10 MW Reference Wind Turbine",
+    "source": "Report-I-0092",
+    "repository_path": "research/wind-tower/references/baselines-and-site-20261004/dtu-report/DTU_Wind_Energy_Report-I-0092.pdf",
+    "storage": "Git LFS",
+    "sha256": "55aac8cae8f656cdc4aa73afd3f5dedc45345079168476289eb49f000efd8017",
+    "bytes": 10815847,
+    "new_reading": "Local PDF65,67 by provenance reviewer; actual remote LFS PDF header probe in reference-lfs-accessibility.json."
+  },
+  "Xu2025": {
+    "title": "Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach",
+    "doi": "10.1016/j.renene.2025.122475",
+    "repository_path": "research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf",
+    "scope": "Existing T037 PDF3–4 source audit used as background; no new whole-paper review this task."
+  },
+  "Cheng2024": {
+    "title": "Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode",
+    "doi": "10.1016/j.istruc.2024.107235",
+    "repository_path": "research/wind-tower/references/user-provided/Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf",
+    "scope": "T038-S1 actual PDF3–9 method reading, with separately identified local-copy SHA; no byte-equivalence claim between that copy and repository copy."
+  },
+  "Abaqus": {
+    "record": "research/wind-tower/experiments/T038/validation-sample-20261005/method-source-review.md",
+    "scope": "Previously directly checked official keyword/output definitions; not evidence of physical parameter calibration."
+  }
+}

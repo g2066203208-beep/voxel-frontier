@@ -1,0 +1,252 @@
+{
+  "scope": "Existing T026 results read from current GitHub; local INP/DAT/ODB rehashed only, no new solver or ODB extraction",
+  "cases": [
+    {
+      "job": "DTU158_RECONSTRUCTED_G1",
+      "counts": {
+        "C3D8R": 2976,
+        "T3D2": 5476,
+        "C3D8I": 384,
+        "B31": 28
+      },
+      "tower_solid_elements": 3360,
+      "mass_kg": 2597662.1277395934,
+      "first_four_frequency_Hz": [
+        0.13537,
+        0.13592,
+        0.70726,
+        0.74247
+      ],
+      "PT": {
+        "S11_range_MPa": [
+          1259.900416,
+          1263.706624
+        ],
+        "initial_input_MPa": 1280.0,
+        "max_DAMAGET": 0.0,
+        "max_DAMAGEC": 0.0,
+        "zero_damage_gravity_state": true,
+        "meaning": "True final gravity state stress range; input1280MPa is not final effective stress. Zero damage only in this base state."
+      },
+      "minimum_gauss_detJ": 0.00712216250881269,
+      "gravity": {
+        "force_pass": true,
+        "moment_pass": true,
+        "force_residual_relative_to_weight": 2.2846262354319765e-09,
+        "moment_residual_scaled_by_weight_base_radius": 5.76824650145359e-09
+      },
+      "source_identity": {
+        "input": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+          "expected_sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+          "actual_sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+          "matches": true
+        },
+        "ODB": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.odb",
+          "expected_sha256": "1d153fe32c6c81fc23a56d8e3c52c58567b1c40b0a42715186c731c294467e11",
+          "actual_sha256": "1d153fe32c6c81fc23a56d8e3c52c58567b1c40b0a42715186c731c294467e11",
+          "matches": true
+        },
+        "DAT": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.dat",
+          "expected_sha256": "53ddfd14ba3cbe31b2a0c9ddf9e125cd31a12844c7ef1a5e1026fbc8d57ec511",
+          "actual_sha256": "53ddfd14ba3cbe31b2a0c9ddf9e125cd31a12844c7ef1a5e1026fbc8d57ec511",
+          "matches": true
+        }
+      }
+    },
+    {
+      "job": "DTU158_RECONSTRUCTED_M2",
+      "counts": {
+        "C3D8R": 13392,
+        "T3D2": 5476,
+        "C3D8I": 1728,
+        "B31": 28
+      },
+      "tower_solid_elements": 15120,
+      "mass_kg": 2601434.4795952295,
+      "first_four_frequency_Hz": [
+        0.13521,
+        0.13576,
+        0.70795,
+        0.74291
+      ],
+      "PT": {
+        "S11_range_MPa": [
+          1259.70816,
+          1263.519872
+        ],
+        "initial_input_MPa": 1280.0,
+        "max_DAMAGET": 0.0,
+        "max_DAMAGEC": 0.0,
+        "zero_damage_gravity_state": true,
+        "meaning": "True final gravity state stress range; input1280MPa is not final effective stress. Zero damage only in this base state."
+      },
+      "minimum_gauss_detJ": 0.0015888239880521198,
+      "gravity": {
+        "force_pass": true,
+        "moment_pass": true,
+        "force_residual_relative_to_weight": 2.414239445106443e-10,
+        "moment_residual_scaled_by_weight_base_radius": 7.593324008073307e-10
+      },
+      "source_identity": {
+        "input": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+          "expected_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+          "actual_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+          "matches": true
+        },
+        "ODB": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.odb",
+          "expected_sha256": "4374f5caa4ab15d157d736f0122ffedd46f56159d194a681bedc852e25399958",
+          "actual_sha256": "4374f5caa4ab15d157d736f0122ffedd46f56159d194a681bedc852e25399958",
+          "matches": true
+        },
+        "DAT": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.dat",
+          "expected_sha256": "632372fb940edce81999de0b8fafa748eb665a8555e4f394c8953b8377566316",
+          "actual_sha256": "632372fb940edce81999de0b8fafa748eb665a8555e4f394c8953b8377566316",
+          "matches": true
+        }
+      }
+    },
+    {
+      "job": "DTU158_RECONSTRUCTED_M3",
+      "counts": {
+        "C3D8R": 35712,
+        "T3D2": 5476,
+        "C3D8I": 4608,
+        "B31": 28
+      },
+      "tower_solid_elements": 40320,
+      "mass_kg": 2602756.504647882,
+      "first_four_frequency_Hz": [
+        0.13498,
+        0.13553,
+        0.70763,
+        0.74244
+      ],
+      "PT": {
+        "S11_range_MPa": [
+          1259.60896,
+          1263.43296
+        ],
+        "initial_input_MPa": 1280.0,
+        "max_DAMAGET": 0.0,
+        "max_DAMAGEC": 0.0,
+        "zero_damage_gravity_state": true,
+        "meaning": "True final gravity state stress range; input1280MPa is not final effective stress. Zero damage only in this base state."
+      },
+      "minimum_gauss_detJ": 0.0005965517628120292,
+      "gravity": {
+        "force_pass": true,
+        "moment_pass": true,
+        "force_residual_relative_to_weight": 2.0718795922623656e-09,
+        "moment_residual_scaled_by_weight_base_radius": 2.7425745821950814e-09
+      },
+      "source_identity": {
+        "input": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3\\DTU158_RECONSTRUCTED_M3.inp",
+          "expected_sha256": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767",
+          "actual_sha256": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767",
+          "matches": true
+        },
+        "ODB": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3\\DTU158_RECONSTRUCTED_M3.odb",
+          "expected_sha256": "c0cdc28e991e855b86dea16f04c62fadd75572aa0688b3de81b5f33cbc2e8570",
+          "actual_sha256": "c0cdc28e991e855b86dea16f04c62fadd75572aa0688b3de81b5f33cbc2e8570",
+          "matches": true
+        },
+        "DAT": {
+          "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3\\DTU158_RECONSTRUCTED_M3.dat",
+          "expected_sha256": "ca9c639aca2fc44963a441d3eff5c5a095cf472dd1a0c41bae35480e2d8223c9",
+          "actual_sha256": "ca9c639aca2fc44963a441d3eff5c5a095cf472dd1a0c41bae35480e2d8223c9",
+          "matches": true
+        }
+      }
+    }
+  ],
+  "last_two_budget_relative": 0.005,
+  "last_two_mesh_comparisons": [
+    {
+      "quantity": "frequency_mode_1",
+      "middle": 0.13521,
+      "fine": 0.13498,
+      "units": "Hz",
+      "relative_change": 0.0017039561416506742,
+      "pass": true
+    },
+    {
+      "quantity": "frequency_mode_2",
+      "middle": 0.13576,
+      "fine": 0.13553,
+      "units": "Hz",
+      "relative_change": 0.0016970412454805593,
+      "pass": true
+    },
+    {
+      "quantity": "frequency_mode_3",
+      "middle": 0.70795,
+      "fine": 0.70763,
+      "units": "Hz",
+      "relative_change": 0.0004522137275129474,
+      "pass": true
+    },
+    {
+      "quantity": "frequency_mode_4",
+      "middle": 0.74291,
+      "fine": 0.74244,
+      "units": "Hz",
+      "relative_change": 0.0006330477883734315,
+      "pass": true
+    },
+    {
+      "quantity": "Flex_X_RP_U_m",
+      "middle": 0.001581417629495263,
+      "fine": 0.0015861871652305126,
+      "units": "m per1000N",
+      "relative_change": 0.0030069186283930033,
+      "pass": true
+    },
+    {
+      "quantity": "Flex_Z_RP_U_m",
+      "middle": 0.0015814153011888266,
+      "fine": 0.0015861851861700416,
+      "units": "m per1000N",
+      "relative_change": 0.003007142559900103,
+      "pass": true
+    },
+    {
+      "quantity": "mass",
+      "middle": 2601434.4795952295,
+      "fine": 2602756.504647882,
+      "relative_change": 0.0005079326668829309,
+      "units": "kg",
+      "diagnostic_only": true
+    },
+    {
+      "quantity": "gravity_RP_UY",
+      "middle": -0.01383285690099001,
+      "fine": -0.013884903863072395,
+      "relative_change": 0.003748456784119878,
+      "units": "m",
+      "diagnostic_only": true
+    },
+    {
+      "quantity": "gravity_RP_UZ",
+      "middle": -0.07607661932706833,
+      "fine": -0.07622161507606506,
+      "relative_change": 0.001902291742992282,
+      "units": "m",
+      "diagnostic_only": true
+    }
+  ],
+  "mesh_family": "Frozen source geometry/materials/connectors/PT/rebar/RNA; different native tower discretizations; anisotropic family, no uniform-h Richardson/GCI inference.",
+  "not_claimed": [
+    "Physical calibration of RNA/material/damping",
+    "Damage/postpeak mesh objectivity",
+    "30 modes sufficient for all local stress responses",
+    "Finite element cloud image from averaged-mode line plots"
+  ]
+}

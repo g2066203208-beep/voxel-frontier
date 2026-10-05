@@ -54,3 +54,4 @@ T042	P0-P10	final-thesis-rebuild	Q01-Q05	按最终论文最高执行规则从R2Z
 T038-S1	P0-P1	2	Q01	按用户授权执行R2冻结RNA算子的独立Abaqus小样，核质量矩阵、重力和混合动能	experiments/T038/validation-sample-20261005/RESEARCH_CARD.md	verification-complete/user-review-pending	sample-review/D08-remains-open	只执行独立小样；不改M2、不跑36case；求解前登记数值预算，全部成功失败尝试保留；当前用户授权覆盖旧仅审查暂停状态
 T043	P0-P10	final-thesis-citation-integrity	Q01-Q05	逐步骤审计七章所有方法/公式/参数/验证步骤并强制绑定GitHub真实REF/OFFICIAL/STANDARD；修正错配引用并建立证据准入门禁	manuscript/final-thesis/evidence/STEPWISE_METHOD_EVIDENCE_MATRIX.tsv; manuscript/final-thesis/evidence/CITATION_INTEGRITY_REPORT_20261005.md	complete/76-of-76-steps-mapped	G0-G10	76个实质研究步骤均有GitHub登记来源；正文全部REF编号可解析；具体本文结果仍必须由RUN/FIG/TAB提供，不得用文献替代
 
+T038-S2	P0-P1	2	Q01	逐项公开现用M2与RNA来源、钢筋/PT、材料、连接接触、网格实体和真实验证范围；补齐REF008原文	experiments/T038/model-disclosure-20261005/README.md	implementation-audit-complete/physical-acceptance-open	user-review/D08-remains-open	只读原模型；披露M2的12条警告、1512高长宽比单元及缺失环向筋/接触等；新S1未接入整塔；不新增求解或升级疲劳状态

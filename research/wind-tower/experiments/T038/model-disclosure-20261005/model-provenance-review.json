@@ -1,0 +1,688 @@
+{
+  "schema": "model-provenance-review-v1",
+  "date": "2026-10-05",
+  "scope": "Read-only provenance review. Only this MD/JSON report authored. No model edits, no CAE reopen, no solver run, no GitHub access or publication by reviewer.",
+  "answer": "Current M2 is a documented derivative of the user's pre-existing local files: full tower from the historical MODAL INP, recovered pre-existing rigid RNA skeleton from a copied CAE, and newly generated/refined native tower meshes. T038-S1 is a separately authored isolated RNA numerical fixture built from the archived R2 OpenFAST inputs; it has not replaced the RNA in M2.",
+  "authorship_boundary": "File inheritance is verified; this does not establish who personally authored every earlier model operation or certify the original model as finished/validated.",
+  "identities": {
+    "user_CAE": {
+      "path": "D:\\MC\\SIMPACK_SITE_ONLY.cae",
+      "exists": true,
+      "bytes": 111546368,
+      "sha256": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4"
+    },
+    "historical_INP": {
+      "path": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.inp",
+      "exists": true,
+      "bytes": 15081056,
+      "sha256": "2098a8cb08bfb9e12c9b2ec0dd8861317c7bcd3b3dc0603f39ab35f91e896e23"
+    },
+    "RNA_recovery_INP": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\input\\T026_RECOVERED_RNA_CANDIDATE.inp",
+      "exists": true,
+      "bytes": 3830878,
+      "sha256": "f61eac3dd3f7c484ac00d43273e86dc5fafc4cc098c99ab88a104f32be994fac"
+    },
+    "recovery_CAE": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\T026_RECOVERED_RNA_CSEG01_PENDING.cae",
+      "exists": true,
+      "bytes": 27205632,
+      "sha256": "451b72a489c0543405ab84f53c81bc17577940713927be5748e7aa1458799eab"
+    },
+    "G1": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+      "exists": true,
+      "bytes": 1400316,
+      "sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e"
+    },
+    "M2": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+      "exists": true,
+      "bytes": 3129268,
+      "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1"
+    },
+    "M3": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3\\DTU158_RECONSTRUCTED_M3.inp",
+      "exists": true,
+      "bytes": 6791557,
+      "sha256": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767"
+    },
+    "EQUIV": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RNA_EQUIV_G1\\DTU158_RNA_EQUIV_G1.inp",
+      "exists": true,
+      "bytes": 1394560,
+      "sha256": "a5ef13ce762c213c7313088fa2f4836b4c2841f8b1e006e74450b33f290abede"
+    },
+    "CONTINUOUS": {
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RNA_CONTINUOUS_G1\\DTU158_RNA_CONTINUOUS_G1.inp",
+      "exists": true,
+      "bytes": 1394566,
+      "sha256": "8eeee7b1095b84c35334838dc8b85f34e05512fa94050c0892c54c06eccfad4e"
+    },
+    "parts_m1": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\tower_parts_20261004_200529_434860\\m1\\T026_TOWER_m1_tower_parts_only.inp",
+      "exists": true,
+      "bytes": 676981,
+      "sha256": "0349640dc633764a7d23d8aa1acdb82ff797f5690b923734d587d0affa85e6e7"
+    },
+    "parts_m2": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\tower_parts_20261004_200529_434860\\m2\\T026_TOWER_m2_tower_parts_only.inp",
+      "exists": true,
+      "bytes": 2230009,
+      "sha256": "71d9bc2ad221e38facafde4edadb15e3e97ae2e5a6c69b6a3dc7c27b0f60b3ca"
+    },
+    "parts_m3": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\tower_parts_20261004_200529_434860\\m3\\T026_TOWER_m3_tower_parts_only.inp",
+      "exists": true,
+      "bytes": 5602077,
+      "sha256": "4110a6b4938656e45eac2a21619afbd30fadb6ffe7581c5f092b2adf409a861e"
+    },
+    "build_fused_baseline.py": {
+      "path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-03\\lia\\work\\chapter2-completion\\build_fused_baseline.py",
+      "exists": true,
+      "bytes": 5965,
+      "sha256": "eb8c945feed81191817e10c96baa4641bd3126ba54f0983761d688764ee18b63"
+    },
+    "register_next_cases.py": {
+      "path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-03\\lia\\work\\chapter2-completion\\register_next_cases.py",
+      "exists": true,
+      "bytes": 5121,
+      "sha256": "7409c9d1120fa2659bf2b63f4286bf13dba0a466215664bea9a8f3ff1065fa45"
+    },
+    "register_rna_equivalence.py": {
+      "path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-03\\lia\\work\\chapter2-completion\\register_rna_equivalence.py",
+      "exists": true,
+      "bytes": 3467,
+      "sha256": "6e7e2073e4a6629472353daaee4eb4cae8c66b21e5bfeee4836d1abd79234477"
+    },
+    "run-manifest.json": {
+      "path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-03\\lia\\work\\chapter2-completion\\run-manifest.json",
+      "exists": true,
+      "bytes": 124950,
+      "sha256": "07b64f7eedcc89e6c626319cc1325c062ca179fcae59872f1192a13c7c6724ea"
+    },
+    "candidate_recovery.py": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_recovery.py",
+      "exists": true,
+      "bytes": 9644,
+      "sha256": "6b3d44e40155b1c6eb57f91409737c77b3810d9593fa9de9fe4b380840138064"
+    },
+    "build_tower_part_families.py": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\build_tower_part_families.py",
+      "exists": true,
+      "bytes": 12396,
+      "sha256": "ed430e55f3e36ddac0cf9a7171552c6a78fd7607ecdd392a241fc9ac666e0ef8"
+    },
+    "cae_audit": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\cae_audit_20261004_193900_105064\\cae_readonly_report.json",
+      "exists": true,
+      "bytes": 4688513,
+      "sha256": "dea793f9db4454709c406f7581901f844b5a59f0697e76560eb97043958bf1d1"
+    },
+    "candidate_report": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\candidate_recovery_report.json",
+      "exists": true,
+      "bytes": 32059,
+      "sha256": "50ea3aa7ce51cac7769ad953c53f85dfad1250b86b5281f2922f2906322da8d1"
+    },
+    "tower_family_report": {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\tower_parts_20261004_200529_434860\\tower_part_family_report.json",
+      "exists": true,
+      "bytes": 282510,
+      "sha256": "8964e6eb31a33a4e06dda3796209ea5db881fbed1265d20af75d71e8930867c7"
+    }
+  },
+  "actual_input_structure": {
+    "historical_INP": {
+      "part_count": 70,
+      "tower_parts": 35,
+      "elements": {
+        "C3D8R": 2976,
+        "S3": 207601,
+        "T3D2": 5476,
+        "C3D8I": 384,
+        "Spring2": 180
+      },
+      "steps": [
+        "*Step, name=Gravity, nlgeom=YES",
+        "*Step, name=Modal_From_Gravity, nlgeom=NO, perturbation"
+      ],
+      "rigid_body_lines": [],
+      "mass_keyword_count": 0,
+      "rotary_keyword_count": 0
+    },
+    "RNA_recovery_INP": {
+      "part_count": 68,
+      "tower_parts": 35,
+      "elements": {
+        "C3D8R": 2880,
+        "T3D2": 5476,
+        "B31": 28,
+        "C3D8I": 384,
+        "Spring2": 180
+      },
+      "steps": [
+        "*Step, name=Gravity, nlgeom=YES",
+        "*Step, name=Modal_From_Gravity, nlgeom=NO, perturbation",
+        "*Step, name=Wind_SITE_NTM_U18p57_S04_INTERFACE, nlgeom=NO, perturbation"
+      ],
+      "rigid_body_lines": [
+        "*Rigid Body, ref node=SET_RNA_RP, elset=RNA_MASS_SKELETON_OFFICIAL-1.SET_ALL_WIRES"
+      ],
+      "mass_keyword_count": 0,
+      "rotary_keyword_count": 0
+    },
+    "G1": {
+      "part_count": 68,
+      "tower_parts": 35,
+      "elements": {
+        "C3D8R": 2976,
+        "T3D2": 5476,
+        "C3D8I": 384,
+        "B31": 28,
+        "Spring2": 180
+      },
+      "steps": [
+        "*Step,name=Gravity,nlgeom=YES,inc=500",
+        "*Step,name=Modal_From_Gravity,perturbation",
+        "*Step,name=Flex_X,perturbation",
+        "*Step,name=Flex_Z,perturbation"
+      ],
+      "rigid_body_lines": [
+        "*Rigid Body, ref node=SET_RNA_RP, elset=RNA_MASS_SKELETON_OFFICIAL-1.SET_ALL_WIRES"
+      ],
+      "mass_keyword_count": 0,
+      "rotary_keyword_count": 0
+    },
+    "M2": {
+      "part_count": 68,
+      "tower_parts": 35,
+      "elements": {
+        "C3D8R": 13392,
+        "T3D2": 5476,
+        "C3D8I": 1728,
+        "B31": 28,
+        "Spring2": 180
+      },
+      "steps": [
+        "*Step,name=Gravity,nlgeom=YES,inc=500",
+        "*Step,name=Modal_From_Gravity,perturbation",
+        "*Step,name=Flex_X,perturbation",
+        "*Step,name=Flex_Z,perturbation"
+      ],
+      "rigid_body_lines": [
+        "*Rigid Body, ref node=SET_RNA_RP, elset=RNA_MASS_SKELETON_OFFICIAL-1.SET_ALL_WIRES"
+      ],
+      "mass_keyword_count": 0,
+      "rotary_keyword_count": 0
+    },
+    "M3": {
+      "part_count": 68,
+      "tower_parts": 35,
+      "elements": {
+        "C3D8R": 35712,
+        "T3D2": 5476,
+        "C3D8I": 4608,
+        "B31": 28,
+        "Spring2": 180
+      },
+      "steps": [
+        "*Step,name=Gravity,nlgeom=YES,inc=500",
+        "*Step,name=Modal_From_Gravity,perturbation",
+        "*Step,name=Flex_X,perturbation",
+        "*Step,name=Flex_Z,perturbation"
+      ],
+      "rigid_body_lines": [
+        "*Rigid Body, ref node=SET_RNA_RP, elset=RNA_MASS_SKELETON_OFFICIAL-1.SET_ALL_WIRES"
+      ],
+      "mass_keyword_count": 0,
+      "rotary_keyword_count": 0
+    },
+    "EQUIV": {
+      "part_count": 68,
+      "tower_parts": 35,
+      "elements": {
+        "C3D8R": 2976,
+        "T3D2": 5476,
+        "C3D8I": 384,
+        "MASS": 1,
+        "ROTARYI": 1,
+        "Spring2": 180
+      },
+      "steps": [
+        "*Step,name=Gravity,nlgeom=YES,inc=500",
+        "*Step,name=Modal_From_Gravity,perturbation",
+        "*Step,name=Flex_X,perturbation",
+        "*Step,name=Flex_Z,perturbation"
+      ],
+      "rigid_body_lines": [],
+      "mass_keyword_count": 1,
+      "rotary_keyword_count": 1
+    },
+    "CONTINUOUS": {
+      "part_count": 68,
+      "tower_parts": 35,
+      "elements": {
+        "C3D8R": 2976,
+        "T3D2": 5476,
+        "C3D8I": 384,
+        "MASS": 1,
+        "ROTARYI": 1,
+        "Spring2": 180
+      },
+      "steps": [
+        "*Step,name=Gravity,nlgeom=YES,inc=500",
+        "*Step,name=Modal_From_Gravity,perturbation",
+        "*Step,name=Flex_X,perturbation",
+        "*Step,name=Flex_Z,perturbation"
+      ],
+      "rigid_body_lines": [],
+      "mass_keyword_count": 1,
+      "rotary_keyword_count": 1
+    }
+  },
+  "inheritance_checks": {
+    "G1_67_other_parts_exact_text_match_historical": true,
+    "G1_67_other_part_count": 67,
+    "G1_RNA_exact_text_match_recovered": true,
+    "M2": {
+      "35_native_part_blocks_exact_match": true,
+      "non_tower_parts_exact_G1": true,
+      "post_assembly_material_BC_steps_exact_G1": true
+    },
+    "M3": {
+      "35_native_part_blocks_exact_match": true,
+      "non_tower_parts_exact_G1": true,
+      "post_assembly_material_BC_steps_exact_G1": true
+    }
+  },
+  "recovery_record": {
+    "source": "D:/MC/SIMPACK_SITE_ONLY.cae",
+    "source_sha256_before": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+    "branch": "Recovered source RNA rigid-body candidate; not a frozen production baseline",
+    "ledger": [
+      {
+        "action": "regenerate CSEG_01 from its own saved feature history",
+        "no_parameter_changes": true,
+        "outcome": {
+          "ok": true,
+          "value": 1
+        }
+      },
+      {
+        "action": "remove visual RNA-associated coupling/display constraints in new in-memory model",
+        "names": [
+          "CPL_RNA_DTU_BLADE_SMOOTH_1_1",
+          "CPL_RNA_DTU_BLADE_SMOOTH_2_1",
+          "CPL_RNA_DTU_BLADE_SMOOTH_3_1",
+          "CPL_RNA_DTU_SPINNER_SEG_1_1",
+          "CPL_RNA_DTU_SPINNER_SEG_2_1",
+          "CPL_RNA_DTU_SPINNER_SEG_3_1"
+        ]
+      },
+      {
+        "action": "remove 9 visual instances and their unused visual parts from new in-memory model",
+        "names": [
+          "DTU_BLADE_SMOOTH_1-1",
+          "DTU_BLADE_SMOOTH_2-1",
+          "DTU_BLADE_SMOOTH_3-1",
+          "DTU_NACELLE_SEG_1-1",
+          "DTU_SPINNER_SEG_1-1",
+          "DTU_NACELLE_SEG_2-1",
+          "DTU_SPINNER_SEG_2-1",
+          "DTU_NACELLE_SEG_3-1",
+          "DTU_SPINNER_SEG_3-1"
+        ]
+      },
+      {
+        "action": "resume existing RNA skeleton feature and existing rigid-body constraint",
+        "names": [
+          "RNA_MASS_SKELETON_OFFICIAL-1",
+          "RB_RNA_DISTRIBUTED_OFFICIAL"
+        ],
+        "no_new_material_or_mass_tuning": true
+      }
+    ],
+    "cseg01_before": {
+      "counts": {
+        "vertices": 0,
+        "edges": 0,
+        "faces": 0,
+        "cells": 0,
+        "nodes": 0,
+        "elements": 0,
+        "features": 1
+      },
+      "features": {
+        "Solid revolve-1": {
+          "name": "Solid revolve-1",
+          "id": 1,
+          "suppressed": {
+            "ok": true,
+            "value": false
+          }
+        }
+      }
+    },
+    "cseg01_after": {
+      "counts": {
+        "vertices": 0,
+        "edges": 0,
+        "faces": 0,
+        "cells": 0,
+        "nodes": 0,
+        "elements": 0,
+        "features": 1
+      },
+      "features": {
+        "Solid revolve-1": {
+          "name": "Solid revolve-1",
+          "id": 1,
+          "suppressed": {
+            "ok": true,
+            "value": false
+          }
+        }
+      }
+    },
+    "RNA_RP_before": {
+      "reference_points": [
+        {
+          "coordinates": [
+            0,
+            160,
+            0
+          ]
+        }
+      ],
+      "nodes": []
+    },
+    "rna_rigid_body_before": {
+      "refPointRegion": [
+        "SET_RNA_RP",
+        "Assembly",
+        1,
+        1,
+        0
+      ],
+      "bodyRegion": [
+        "SET_ALL_WIRES",
+        "RNA_MASS_SKELETON_OFFICIAL",
+        "RNA_MASS_SKELETON_OFFICIAL-1",
+        1,
+        1,
+        0
+      ],
+      "tieRegion": null,
+      "pinRegion": null,
+      "suppressed": true,
+      "refPointAtCOM": 0,
+      "isothermal": 0
+    },
+    "RNA_RP_after": {
+      "reference_points": [
+        {
+          "coordinates": [
+            0,
+            160,
+            0
+          ]
+        }
+      ],
+      "nodes": []
+    },
+    "rna_rigid_body_after": {
+      "refPointRegion": [
+        "SET_RNA_RP",
+        "Assembly",
+        1,
+        1,
+        0
+      ],
+      "bodyRegion": [
+        "SET_ALL_WIRES",
+        "RNA_MASS_SKELETON_OFFICIAL",
+        "RNA_MASS_SKELETON_OFFICIAL-1",
+        1,
+        1,
+        0
+      ],
+      "tieRegion": null,
+      "pinRegion": null,
+      "suppressed": false,
+      "refPointAtCOM": 0,
+      "isothermal": 0
+    },
+    "input_export": {
+      "ok": true,
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\input\\T026_RECOVERED_RNA_CANDIDATE.inp",
+      "sha256": "f61eac3dd3f7c484ac00d43273e86dc5fafc4cc098c99ab88a104f32be994fac",
+      "source_parameters_unchanged": true
+    },
+    "source_unchanged": true
+  },
+  "recorded_runs": [
+    {
+      "run_id": "RUN-T026-032",
+      "job": "DTU158_RECONSTRUCTED_G1",
+      "input_hash": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+      "status": "verification-pass-with-scope-limits",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-034",
+      "job": "DTU158_RECONSTRUCTED_M2",
+      "input_hash": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "status": "verification-pass-with-scope-limits",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-035",
+      "job": "DTU158_RECONSTRUCTED_M3",
+      "input_hash": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767",
+      "status": "verification-pass-with-scope-limits",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-036",
+      "job": "DTU158_RNA_EQUIV_G1",
+      "input_hash": "a5ef13ce762c213c7313088fa2f4836b4c2841f8b1e006e74450b33f290abede",
+      "status": "verification-pass",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    },
+    {
+      "run_id": "RUN-T026-037",
+      "job": "DTU158_RNA_CONTINUOUS_G1",
+      "input_hash": "8eeee7b1095b84c35334838dc8b85f34e05512fa94050c0892c54c06eccfad4e",
+      "status": "diagnostic-completed",
+      "completion_evidence": "Actual Abaqus Standard successful STA, hashed output files, ODB numeric extraction and separately scoped comparison"
+    }
+  ],
+  "direct_literature_reads": [
+    {
+      "source": "He Zeyu 2024 thesis",
+      "path": "D:/MC/cae仿真/大型混塔式风力机的建模与可靠度分析_何泽瑜.pdf",
+      "bytes": 10193750,
+      "sha256": "85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c",
+      "pdf_pages": 90,
+      "text_pages_read_this_review": [
+        33,
+        34,
+        35
+      ],
+      "printed_pages": [
+        22,
+        23,
+        24
+      ],
+      "supports": "158 m = 112 m concrete + 46 m steel; 31+4 segment tables; C70 first two segments, C65 remainder; S345 rebar and steel; PT and top concentrated mass description.",
+      "limits": "Table3-3 is headed radius while the current model uses those values as diameters. Some end values and connection/rebar/PT/NSM details remain model assumptions; not strict replication of author input.",
+      "github_status_at_review": "No full-PDF repository path verified by reviewer in existing local tree/manifest records. Root plans to publish the user-provided reference PDF at references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf; final publication state belongs in reference-sources.json, not presumed here."
+    },
+    {
+      "source": "Bak et al. DTU Wind Energy Report-I-0092 (2013)",
+      "path": "D:/论文/阅/混塔模型参考/下载模型/DTU10MW_model_package/Official_DTU_Report/Description_of_the_DTU_10MW_Reference_Wind_Turbine.pdf",
+      "bytes": 10815847,
+      "sha256": "55aac8cae8f656cdc4aa73afd3f5dedc45345079168476289eb49f000efd8017",
+      "pdf_pages": 138,
+      "text_pages_read_this_review": [
+        65,
+        67
+      ],
+      "supports": "Original yaw/tower-top 115.63 m, hub 119 m, shaft vertical offset 2.75 m and 5 degree tilt; a land-based tower is explicitly described in section6.2.3, while turbine design background is offshore IEC IA.",
+      "limits": "158 m hybrid tower is not the original DTU reference tower. Local PDF identity is verified; parent is independently resolving current GitHub LFS availability."
+    }
+  ],
+  "lineage": [
+    {
+      "id": "source_CAE_to_RNA_recovery",
+      "from": "user_CAE",
+      "to": "RNA_recovery_INP",
+      "proof": "Read actual candidate_recovery.py and immutable candidate_recovery_report. Existing RNA skeleton and rigid-body constraint were resumed in a copied model; no source material/mass tuning. Original CAE current hash still matches recorded source hash.",
+      "changes": [
+        "Remove nine visual instances and their unused visual parts in copied model",
+        "Resume RNA_MASS_SKELETON_OFFICIAL-1 and RB_RNA_DISTRIBUTED_OFFICIAL",
+        "Export candidate INP"
+      ],
+      "limit": "Candidate CSEG_01 remained empty; whole candidate not used as complete tower."
+    },
+    {
+      "id": "fuse_G1",
+      "from": [
+        "historical_INP",
+        "RNA_recovery_INP"
+      ],
+      "to": "G1",
+      "proof": "67 non-RNA Part blocks text-identical to historical INP; RNA Part text-identical to recovered INP.",
+      "changes": [
+        "Remove three display-only DTU visual Part types and their instances",
+        "Insert 28 B31 rigid RNA with seven inherited mass-carrier material cards and rigid-body constraint",
+        "Preserve original tower NSM; do not copy questionable candidate NSM",
+        "Remove unused wind amplitudes; define gravity, 30-mode extraction, two 1kN linear perturbation steps"
+      ],
+      "limit": "This is a new T026 reconstructed analysis branch, not recovered historical results."
+    },
+    {
+      "id": "refined_M2_M3",
+      "from": [
+        "G1",
+        "parts_m2",
+        "parts_m3"
+      ],
+      "to": [
+        "M2",
+        "M3"
+      ],
+      "proof": "35 tower Part blocks each text-identical to respective native export; all 33 remaining Parts and entire text after EndAssembly identical to G1.",
+      "changes": [
+        "Native geometry CSEG02–31/SSEG01–04 copied from recovered CAE",
+        "CSEG01 newly rebuilt using historical INP annular frustum radii and height because saved native feature was empty",
+        "Regenerate anisotropic mesh families",
+        "Remap assembly node/element sets and remove unused SET_CH4_STRESS_CTRL"
+      ],
+      "limit": "Finer mesh does not itself validate local damage/contact/fatigue or RNA flexible dynamics."
+    },
+    {
+      "id": "T026_RNA_alternatives",
+      "from": "G1",
+      "to": [
+        "EQUIV",
+        "CONTINUOUS"
+      ],
+      "proof": "Read register_rna_equivalence.py and actual INPs: each replaces B31 RNA with one MASS and one ROTARYI at CG, coupled to existing RNA RP; tower is G1.",
+      "changes": [
+        "EQUIV uses actual discrete B31 assembled inertia",
+        "CONTINUOUS uses continuous-rod mathematical inertia with same mass/CG"
+      ],
+      "limit": "Neither uses the later R2 target or constitutes physical RNA truth."
+    },
+    {
+      "id": "T038S1",
+      "from": "archived_R2_ElastoDyn_and_blade_inputs",
+      "to": "D:/Codex-research-validation/T038S1",
+      "proof": "Read actual build_sample.py/frozen-target/source-identity-review and five actual fixture INPs; no tower components.",
+      "changes": [
+        "Independent float64 locked undeformed ElastoDyn operator reconstruction",
+        "Two nodes O/G plus MASS/ROTARYI and kinematic offset coupling",
+        "Matrix, gravity, prescribed-motion tests with documented timestep refinements"
+      ],
+      "limit": "Not a full wind turbine, not new OpenFAST 36-case runs, not M2 replacement, not D08 closure."
+    }
+  ],
+  "RNA_roles": {
+    "M2": {
+      "representation": "28 B31 circular rods, radius 0.01 m, constrained as one rigid body; synthetic density is mass-carrier representation, not flexible blade laminate model",
+      "mass_kg_from_prior_independent_INP_integral": 673998.4931380384,
+      "RP_m": [
+        0,
+        160,
+        0
+      ],
+      "current_INP_unchanged": true
+    },
+    "T038S1": {
+      "mass_kg": 676753.2907231401,
+      "O_m": [
+        0,
+        158,
+        0
+      ],
+      "CG_m": [
+        -4.794053742399661e-16,
+        160.78358803030605,
+        -0.8729624988915398
+      ],
+      "target_scope": "Independent locked, undeformed R2 operator; not native solver high-precision full M6"
+    },
+    "difference": {
+      "mass_kg": 2754.797585101682,
+      "CG_distance_m": 0.546243116542
+    }
+  },
+  "openfast_provenance": {
+    "directly_read_this_review": [
+      "step2-baseline-20261005/openfast-source-decision.md",
+      "step3-rna-20261005/extract_openfast_rna.py",
+      "rna-sample-validation-20261005/source-identity-review.json/md",
+      "rna-sample-validation-20261005/build_sample.py"
+    ],
+    "previous_direct_archive_verification": {
+      "ref": "bb01a4651eeeec095a98aa88cfb432c9a4601edc",
+      "archive_path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "note": "Existing record of direct in-memory archive-byte verification; this reviewer did not re-download the archive in the present task."
+    },
+    "chain": "DTU official reference definition/HAWC2 -> Bing008 third-party landbased OpenFAST v3.3.0 adaptation -> historical local 158m hybrid tower/ROSCO/wind configuration -> R2 damping 36-case archive, logged solver v3.5.3 and ROSCO v2.6.0 -> T038 locked-RNA target",
+    "current_selected_geometry": {
+      "TowerHt_m": 158,
+      "TowerBsHt_m": 0,
+      "Twr2Shft_m": 2.75,
+      "OverHang_m": -7.1,
+      "ShftTilt_deg": -5,
+      "derived_HubHt_m": 161.36880577350837,
+      "He_paper_HubHt_m": 160,
+      "official_original_HubHt_m": 119
+    },
+    "local_entry_status": "Exact historical directories C:/Users/REME/Documents/Codex/2026-08-30/turbsim and C:/Users/tt/Documents/Codex/2026-08-30/openfast/CH3_CDX06_R1_36CASE absent on current spot check. A restored complete 36-case local runtime entry was not verified.",
+    "limitations": [
+      "Not an official DTU 158m OpenFAST release",
+      "The precise authorship of all historical local changes was not established",
+      "Candidate source and numerical implementation evidence do not certify BASE001 or physical RNA applicability"
+    ]
+  },
+  "intermediate_CAE_hash_discrepancy": {
+    "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\T026_RECOVERED_RNA_CSEG01_PENDING.cae",
+    "recovery_report_saved_sha256": "42089ab5595b1c3367af179ccbe639d127c8dacf6b6064ca392ea75aec58a4bf",
+    "current_sha256": "451b72a489c0543405ab84f53c81bc17577940713927be5748e7aa1458799eab",
+    "later_tower_family_report_before_and_after_sha256": "451b72a489c0543405ab84f53c81bc17577940713927be5748e7aa1458799eab",
+    "assessment": "Current intermediate CAE matches the version recorded by actual native mesh-family generation. Its bytes differ from the earlier recovery-save fingerprint. Exact reason not established; do not assert all intermediate CAEs stayed byte-identical. Original CAE, recovery INP and final inputs remain matched."
+  },
+  "remaining_source_assumptions": [
+    "He steel-table radius-versus-current-diameter interpretation",
+    "Bottom diameter 8.33 m and steel bottom thickness39 mm need explicit endpoint provenance",
+    "25mm longitudinal rebar diameter, 36 PT strands, spring connection stiffness and 39800.22kg NSM need parameter-level source/assumption disclosure",
+    "M2 and R2 RNA and hub/reference heights are not yet one adopted full-system implementation",
+    "Original model file inheritance does not establish a fully validated finished wind turbine model"
+  ],
+  "publication_note": "This review is a local private provenance record. Root owns GitHub publication and current remote verification. Do not publish original personal paths indiscriminately; create repository-relative source map and include accurate source-reading levels."
+}

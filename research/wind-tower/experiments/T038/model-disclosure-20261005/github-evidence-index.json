@@ -1,0 +1,146 @@
+{
+  "checked_utc": "2026-10-05T09:01:00.344296+00:00",
+  "checked_commit": "17723adc4b29948837e4246603ec9a8f5007e372",
+  "files": [
+    {
+      "path": "research/wind-tower/registry/task_registry.tsv",
+      "git_blob_sha": "7815473c1947ab22aa374b8cc81b171e73237979",
+      "sha256": "dab657b38c76a1cde817e7db7643fc4c1510c75bb846b571cda74610d5719f33",
+      "bytes": 14756
+    },
+    {
+      "path": "research/wind-tower/registry/run_registry.tsv",
+      "git_blob_sha": "0b9a95a3962a8a0dd1bb315dead21aa0e918ae3d",
+      "sha256": "56b94fd06f746aea59fa98bb3e0c4ab6652d1d27733019e17f4449621de87512",
+      "bytes": 17967
+    },
+    {
+      "path": "research/wind-tower/registry/baseline_identity.tsv",
+      "git_blob_sha": "a5231fa174ceb95f4a08cbd9379258ad6c8b4d96",
+      "sha256": "673d59dfc0d1b0078f78270fc796a1d05ff48e74c677ed4b1de8ecce2b12d114",
+      "bytes": 4827
+    },
+    {
+      "path": "research/wind-tower/workflow/EXECUTION_STATUS.md",
+      "git_blob_sha": "eb2c17d51ee169ceaccae34cc419572e5848e179",
+      "sha256": "c771604b3bc562744bfd2ac167966b5db4e4827756ddcced598ed810a29c6214",
+      "bytes": 18844
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/README.md",
+      "git_blob_sha": "bc8bd70aba677ce2b53739b1220b9d813b084d6e",
+      "sha256": "e32d25a31c6c24e6923eddc5908919fdbb100b72f751614da26750709a59faa8",
+      "bytes": 3891
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/ResearchCard.md",
+      "git_blob_sha": "81f4e56a7f9c45b534f8f7c4476ceccf74731c2b",
+      "sha256": "0405a0daff402af30db4c37eaf64b9e00ca7678efb7be5254fc2d2c55cc2bd3b",
+      "bytes": 934
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/results/tower-verification-results.json",
+      "git_blob_sha": "e36f353063d57eec78dce9066ee16d8618ba986c",
+      "sha256": "731d1154defed46080505b490010def7396ba9a96c0760344cdb29c995bbffb7",
+      "bytes": 461660
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/results/mesh-input-independent-review.json",
+      "git_blob_sha": "a031d075db1d1fa25de63e1b278f3e8b98c19207",
+      "sha256": "6accbb23340c37afe1c904cd34b934625a27778ff15cf3c4377ab02a72963894",
+      "bytes": 131978
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/results/rna-D08-acceptance-status.json",
+      "git_blob_sha": "b599f0bc257a6ea8ffcab07ad56eae6215d11fab",
+      "sha256": "bf3d370a4127d4ccb75539d873923f11b159103a2b14ba6c1b2c32f586ceb111",
+      "bytes": 1992
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/sources/method-source-traceability.md",
+      "git_blob_sha": "de281726da4f0e669b2b937a2e0b6ddab4274d5f",
+      "sha256": "60d5f1c9120df02d087fd5ecdd2fedc13a7e5925130a72c57f4573496f81870b",
+      "bytes": 26176
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/sources/RNA-D08/source-RNA-structural-audit.json",
+      "git_blob_sha": "e26d39f43a808d58f30d88801f8814697def90dc",
+      "sha256": "7282545fa1534a626132493f9761bdcbb6769df6cb30ea8c480ea112e2637c26",
+      "bytes": 35451
+    },
+    {
+      "path": "research/wind-tower/experiments/T026/results/source-RNA/original_review_export_summary.json",
+      "git_blob_sha": "90ae451776b6e50e7f4619fdc7f37b7d9c89e30d",
+      "sha256": "0408214b9083c2ac2e9b074dd7e2381b207252d80a18751245d62326c122b384",
+      "bytes": 2336
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/INPUT_REVISION_PLAN.md",
+      "git_blob_sha": "87707dc4f172e80e25c81e4ddaa730344eb55eed",
+      "sha256": "d564677f375bcf8a517cb23347d2fb238781205ab6785a914480501a6c24f31e",
+      "bytes": 6218
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/validation-sample-20261005/RESULTS.md",
+      "git_blob_sha": "a965cfa59717001b0d8ab11cc3cc2df57fcde637",
+      "sha256": "8a6e821f011a7416ea9c926ca1c35579559439a5448f69a513946748c81970d6",
+      "bytes": 7893
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/validation-sample-20261005/verification-results.json",
+      "git_blob_sha": "af8d50a3a0abb365c5b88811e9a06e501deb7fcf",
+      "sha256": "9613481f49e06fb44c015ee4e4ee8ee0e307d90002610a04e92e4b1f6e5a0f60",
+      "bytes": 4891
+    }
+  ],
+  "model_input_identity": [
+    {
+      "branch": "G1",
+      "local": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_G1\\DTU158_RECONSTRUCTED_G1.inp",
+      "remote": "research/wind-tower/experiments/T026/inputs/RUN-T026-032/DTU158_RECONSTRUCTED_G1.inp",
+      "bytes": 1400316,
+      "sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+      "local_git_blob_sha": "38d34538d170aa4b2d782d2807113c98da548370",
+      "remote_git_blob_sha": "38d34538d170aa4b2d782d2807113c98da548370",
+      "byte_identity_via_git_blob": true
+    },
+    {
+      "branch": "M2",
+      "local": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+      "remote": "research/wind-tower/experiments/T026/inputs/RUN-T026-034/DTU158_RECONSTRUCTED_M2.inp",
+      "bytes": 3129268,
+      "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "local_git_blob_sha": "205b17c8d48169aab23c49bee36164d9e54d0016",
+      "remote_git_blob_sha": "205b17c8d48169aab23c49bee36164d9e54d0016",
+      "byte_identity_via_git_blob": true
+    },
+    {
+      "branch": "M3",
+      "local": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M3\\DTU158_RECONSTRUCTED_M3.inp",
+      "remote": "research/wind-tower/experiments/T026/inputs/RUN-T026-035/DTU158_RECONSTRUCTED_M3.inp",
+      "bytes": 6791557,
+      "sha256": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767",
+      "local_git_blob_sha": "e453d9941d946e885367f8ae3a25bc7301259000",
+      "remote_git_blob_sha": "e453d9941d946e885367f8ae3a25bc7301259000",
+      "byte_identity_via_git_blob": true
+    }
+  ],
+  "reference_metadata": [
+    {
+      "path": "research/wind-tower/references/baselines-and-site-20261004/dtu-report/DTU_Wind_Energy_Report-I-0092.pdf",
+      "git_blob_sha": "62ed3b258241bdfb5d0c1c6886e38ced85769aae",
+      "bytes": 133
+    },
+    {
+      "path": "research/wind-tower/references/user-provided/Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf",
+      "git_blob_sha": "e5228acc2bc28b121424f5c053af93860b864726",
+      "bytes": 4389627
+    },
+    {
+      "path": "research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf",
+      "git_blob_sha": "5da54b0a858a7b5d4ddf5fa7f812145240e99334",
+      "bytes": 5949356
+    }
+  ],
+  "scope": "Read-only inventory; existing numerical results are identified, not recomputed in this audit."
+}
