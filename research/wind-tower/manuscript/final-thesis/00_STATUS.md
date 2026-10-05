@@ -19,7 +19,7 @@ R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
 
 ## 当前门禁
 
-- G0 BASE001：OPEN
+- G0 BASE001：**CANDIDATE-FROZEN / RUN-T045-001 PENDING**
 - G1 Abaqus分层V&V：OPEN
 - G2 ERA5/TurbSim：OPEN
 - G3 OpenFAST/ROSCO：OPEN
@@ -40,7 +40,7 @@ R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
 ## 当前执行阶段
 
 STAGE 0：工作区与源稿冻结 —— PASS  
-STAGE 1：第二章BASE001/G1正文重构 —— DRAFT-A COMPLETE；final数值待G0/G1  
+STAGE 1：第二章BASE001/G1正文重构 —— DRAFT-A COMPLETE；T045已生成首选O158整塔候选，final数值待RUN-T045-001与G1  
 STAGE 2：第三章G2–G4正文重构 —— DRAFT-A COMPLETE；final统计待G2–G4  
 STAGE 3：第四章G5/G6正文重构 —— DRAFT-A COMPLETE；final结果待G5/G6  
 STAGE 4：第五章G6/G7/G8正文重构 —— DRAFT-A COMPLETE；final机制/敏感性待G6/G8；G7B条件  
@@ -92,3 +92,16 @@ STAGE 7：摘要、Abstract、参考文献统一、图表编号、全文格式�
 - Annex H进一步闭合rainflow→S-N→wind probability→Miner的G7B方法边界；
 - 完整标准本体受IEC/IHS版权许可限制，不向public GitHub公开分发；仓库保存hash、版本、条款审计和采用边界；
 - 当前有效合并版REF048仍为IEC 61400-1:2019+AMD1:2025，终稿前必须取得并核AMD1:2025。
+
+
+## T045 BASE001候选
+
+状态：**CANDIDATE-FROZEN / SOLVER-RUN-PENDING**
+
+- 原T026 M2未覆盖；
+- 已生成保守P160候选与首选O158候选；
+- 首选文件：`experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158.inp`；
+- 首选候选删除旧28根B31 RNA质量骨架，接入T038已数值验证的R2 MASS+完整ROTARYI+偏心耦合；
+- 公共结构接口统一为O=(0,158,0)，Flex_X/Z同步在O施加；
+- 静态输入审计通过，但未在整塔Abaqus 2025实际求解，因此G0不能标PASS；
+- 唯一下一步运行：RUN-T045-001，Gravity + 30 modes + Flex_X/Z，提取质量/CG/J、支座反力、PT平衡后应力、频率与柔度。
