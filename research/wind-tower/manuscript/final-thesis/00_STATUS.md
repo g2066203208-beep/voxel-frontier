@@ -39,8 +39,8 @@ R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
 
 ## 当前执行阶段
 
-STAGE 0：工作区与源稿冻结 —— IN PROGRESS  
-STAGE 1：第二章BASE001/G1重构 —— NEXT  
+STAGE 0：工作区与源稿冻结 —— PASS  
+STAGE 1：第二章BASE001/G1重构 —— IN PROGRESS（2.1–2.3已重构并建证据矩阵）  
 STAGE 2：第三章G2–G4 —— PENDING  
 STAGE 3：第四章G5/G6入口 —— PENDING  
 STAGE 4：第五章G6/G8/G7条件 —— PENDING  
