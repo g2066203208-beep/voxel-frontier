@@ -1,0 +1,128 @@
+{
+  "source_repository_snapshot": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+  "OpenFAST_nominal_fields": {
+    "ElastoDyn_sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+    "source": "Step2 actual archived R2 ElastoDyn, lines45-100; Step3 OF audit confirms pose",
+    "TowerHt_m": 158,
+    "Twr2Shft_m": 2.75,
+    "OverHang_m": -7.1,
+    "ShftTilt_deg": -5,
+    "NacCMxn_m": 2.687,
+    "NacCMyn_m": 0,
+    "NacCMzn_m": 2.45,
+    "NacMass_kg": 446036.25,
+    "NacYIner_kg_m2": 7326346.45,
+    "HubIner_kg_m2": 325670.9,
+    "GenIner_kg_m2": 1500.5,
+    "GBRatio": 50,
+    "pose": {
+      "NacYaw_deg": 0,
+      "Azimuth_input_deg": 0,
+      "AzimB1Up_deg": 0,
+      "PreCone_deg": -2.5,
+      "Furling": false,
+      "HubCM_m": 0,
+      "UndSling_m": 0,
+      "deformation": "zero for this audit",
+      "relative_GeAz_DrTr_velocity": "zero only for frozen operator, not actual running initial velocity"
+    }
+  },
+  "M2_evidence": {
+    "file": "abaqus-results/abaqus-rna-properties.json",
+    "sha256": "4cb8f5f680cf4e27d3da329c0a45b0a083a99a9f6a98dc345790b8d22a667f34",
+    "input_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+    "meaning": "Current M2 independent component integration; this file embeds exactly the fields needed for portable formula verification"
+  },
+  "ABQ_operator": {
+    "mass_kg": 673998.4931380384,
+    "CG_m": [
+      4.318085389364971e-17,
+      160.29779769845646,
+      -0.623184005319902
+    ],
+    "reference_point_m": [
+      0.0,
+      160.0,
+      0.0
+    ],
+    "B31_discrete_J_CG_tensor_kgm2": [
+      [
+        108024597.46078354,
+        -4.6272988940561437e-10,
+        -1.6907564080693874e-10
+      ],
+      [
+        -4.6272988940561437e-10,
+        107994037.60245839,
+        -664405.3751226318
+      ],
+      [
+        -1.6907564080693874e-10,
+        -664405.3751226318,
+        162482391.87281075
+      ]
+    ],
+    "M6_B31_discrete_at_RP": [
+      [
+        673998.4931380384,
+        0.0,
+        0.0,
+        -0.0,
+        -420025.0805333413,
+        -200715.2000196323
+      ],
+      [
+        0.0,
+        673998.4931380384,
+        0.0,
+        420025.0805333413,
+        -0.0,
+        2.9103830456733704e-11
+      ],
+      [
+        0.0,
+        0.0,
+        673998.4931380384,
+        200715.2000196323,
+        -2.9103830456733704e-11,
+        -0.0
+      ],
+      [
+        0.0,
+        420025.0805333413,
+        200715.2000196323,
+        108346122.8974162,
+        -4.713969431318967e-10,
+        -1.5093859917276008e-10
+      ],
+      [
+        -420025.0805333413,
+        0.0,
+        -2.9103830456733704e-11,
+        -4.713969431318967e-10,
+        108255790.51447996,
+        -539322.872845812
+      ],
+      [
+        -200715.2000196323,
+        2.9103830456733704e-11,
+        0.0,
+        -1.5093859917276008e-10,
+        -539322.872845812,
+        162542164.39742184
+      ]
+    ]
+  },
+  "ABQ_geometry": {
+    "hub_center_m": [
+      0.0,
+      160.00000000000006,
+      -7.0999999
+    ],
+    "nac_CG_m": [
+      0.0,
+      160.44999699999997,
+      2.6870001550000002
+    ]
+  }
+}

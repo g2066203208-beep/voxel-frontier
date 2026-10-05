@@ -1,0 +1,510 @@
+{
+  "scope": "Step3 read-only analytical coordinate/operator audit; not a new model or solver verification",
+  "input_sha256": "ee2de5135c0e3dd56c2ed65ce9a52788dbda94c077c3aa1177a146d9800dcc32",
+  "source_repository_snapshot": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+  "candidate_alignment": {
+    "R_IEC_OF_to_ABQ": [
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "C_IEC_OF_to_ED_internal": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        -1.0,
+        0.0
+      ]
+    ],
+    "R_ED_internal_to_ABQ": [
+      [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "status": "conditional geometric alignment at zero yaw; historic wind/load mapping not closed",
+    "translation_if_base_origins_coincident_m": [
+      0,
+      0,
+      0
+    ]
+  },
+  "M2_ABQ_operator": {
+    "mass_kg": 673998.4931380384,
+    "CG_m": [
+      4.318085389364971e-17,
+      160.29779769845646,
+      -0.623184005319902
+    ],
+    "RP_m": [
+      0.0,
+      160.0,
+      0.0
+    ],
+    "tower_top_m": [
+      0.0,
+      158.0,
+      0.0
+    ],
+    "CG_minus_tower_top_m": [
+      4.318085389364971e-17,
+      2.2977976984564634,
+      -0.623184005319902
+    ],
+    "J_CG_kg_m2": [
+      [
+        108024597.46078354,
+        -4.6272988940561437e-10,
+        -1.6907564080693874e-10
+      ],
+      [
+        -4.6272988940561437e-10,
+        107994037.60245839,
+        -664405.3751226318
+      ],
+      [
+        -1.6907564080693874e-10,
+        -664405.3751226318,
+        162482391.87281075
+      ]
+    ],
+    "J_tower_top_kg_m2": [
+      [
+        111844977.67004688,
+        -5.296046040453641e-10,
+        -1.5093859917276008e-10
+      ],
+      [
+        -5.296046040453641e-10,
+        108255790.51447996,
+        300727.28822087054
+      ],
+      [
+        -1.5093859917276008e-10,
+        300727.28822087054,
+        166041019.1700525
+      ]
+    ],
+    "M6_tower_top": [
+      [
+        673998.4931380384,
+        0.0,
+        0.0,
+        -0.0,
+        -420025.0805333413,
+        -1548712.186295709
+      ],
+      [
+        0.0,
+        673998.4931380384,
+        0.0,
+        420025.0805333413,
+        -0.0,
+        2.9103830456733704e-11
+      ],
+      [
+        0.0,
+        0.0,
+        673998.4931380384,
+        1548712.186295709,
+        -2.9103830456733704e-11,
+        -0.0
+      ],
+      [
+        0.0,
+        420025.0805333413,
+        1548712.186295709,
+        111844977.67004688,
+        -5.296046040453641e-10,
+        -1.5093859917276008e-10
+      ],
+      [
+        -420025.0805333413,
+        0.0,
+        -2.9103830456733704e-11,
+        -5.296046040453641e-10,
+        108255790.51447996,
+        300727.28822087054
+      ],
+      [
+        -1548712.186295709,
+        2.9103830456733704e-11,
+        0.0,
+        -1.5093859917276008e-10,
+        300727.28822087054,
+        166041019.1700525
+      ]
+    ],
+    "M6_units_by_block": [
+      [
+        "kg",
+        "kg*m"
+      ],
+      [
+        "kg*m",
+        "kg*m^2"
+      ]
+    ],
+    "identity": "current M2 discrete B31 operator; not an OpenFAST target",
+    "input_identity": {
+      "file": "abaqus-results/abaqus-rna-properties.json",
+      "sha256": "4cb8f5f680cf4e27d3da329c0a45b0a083a99a9f6a98dc345790b8d22a667f34",
+      "input_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "meaning": "Current M2 independent component integration; this file embeds exactly the fields needed for portable formula verification"
+    }
+  },
+  "nominal_geometry_under_candidate_alignment": {
+    "hub_IEC_m": [
+      -7.072982356451393,
+      0.0,
+      161.36880577350837
+    ],
+    "hub_ABQ_m": [
+      0.0,
+      161.36880577350837,
+      -7.072982356451393
+    ],
+    "nac_CG_IEC_m": [
+      2.687,
+      0.0,
+      160.45
+    ],
+    "nac_CG_ABQ_m": [
+      0.0,
+      160.45,
+      2.687
+    ],
+    "hub_delta_to_M2_ABQ_m": [
+      0.0,
+      1.3688057735083135,
+      0.02701754354860686
+    ],
+    "nac_delta_to_M2_ABQ_m": [
+      0.0,
+      3.0000000208474376e-06,
+      -1.5500000039025963e-07
+    ],
+    "shaft_direction_IEC": [
+      0.9961946980917455,
+      0.0,
+      -0.08715574274765817
+    ],
+    "shaft_direction_ABQ": [
+      0.0,
+      -0.08715574274765817,
+      0.9961946980917455
+    ]
+  },
+  "native_ED_frozen_inertia_rules": {
+    "nac_centroid_yaw_kg_m2": 4105978.5521237506,
+    "nac_centroid_dyadic_IEC": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        4105978.5521237506
+      ]
+    ],
+    "hub_centroid_dyadic_IEC": [
+      [
+        323197.0636252318,
+        0.0,
+        -28276.07915207455
+      ],
+      [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      [
+        -28276.07915207455,
+        -0.0,
+        2473.8363747682447
+      ]
+    ],
+    "generator_locked_relative_dyadic_IEC": [
+      [
+        1489.1020166974092,
+        0.0,
+        -130.27954529461448
+      ],
+      [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      [
+        -130.27954529461448,
+        -0.0,
+        11.397983302590902
+      ]
+    ],
+    "generator_GeAz_generalized_coefficient_kg_m2": 3751250.0,
+    "generator_note": "1500.5 multiplies locked common-body axial angular velocity; 3751250 is the separate geared relative GeAz coefficient, not the locked-body spatial inertia",
+    "blade_sectional_inertia": "ED_IO reads six columns only; no legacy extra sectional inertia columns added",
+    "native_zero_note": "model-omitted transverse component inertias are zero in this restricted native operator, not measured physical zeros"
+  },
+  "R2_independent_symmetric_blade_crosscheck": {
+    "source_file": "openfast-rna-current.json",
+    "source_sha256": "cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e",
+    "method": "closed-form first and second moments for three equally spaced identical straight coned blade centerlines; does not reuse node position loop",
+    "mass_kg": 676753.2907231401,
+    "rG_from_tower_top_IEC_m": [
+      -0.8729624988915398,
+      0.0,
+      2.783588030306039
+    ],
+    "JG_IEC_kg_m2": [
+      [
+        155901495.33851194,
+        0.0,
+        -5231495.690281961
+      ],
+      [
+        0.0,
+        94926999.79811175,
+        0.0
+      ],
+      [
+        -5231495.690281961,
+        0.0,
+        99481015.62016472
+      ]
+    ],
+    "JG_max_abs_difference_kg_m2": 5.960464477539063e-08,
+    "R2_CG_ABQ_global_m": [
+      0.0,
+      160.78358803030605,
+      -0.8729624988915398
+    ],
+    "R2_JG_ABQ_kg_m2": [
+      [
+        94926999.79811175,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        99481015.62016472,
+        -5231495.690281961
+      ],
+      [
+        0.0,
+        -5231495.690281961,
+        155901495.33851194
+      ]
+    ]
+  },
+  "verification": {
+    "R_orthogonal": true,
+    "R_determinant_plus_one": true,
+    "internal_C_determinant_plus_one": true,
+    "M2_RP_M6_reconstructed": true,
+    "reference_shift_congruence": true,
+    "coordinate_rotation_congruence": true,
+    "kinetic_energy_cases": true,
+    "force_moment_virtual_power": true,
+    "R2_CG_closed_form_matches_point_assembly": true,
+    "R2_JG_closed_form_matches_point_assembly": true,
+    "R2_M6_closed_form_matches_point_assembly": true
+  },
+  "energy_cases": [
+    {
+      "v_at_tower_top": [
+        1.0,
+        2.0,
+        3.0
+      ],
+      "omega": [
+        0.1,
+        -0.2,
+        0.3
+      ],
+      "M6_energy_J": 15064142.40817855,
+      "direct_CG_energy_J": 15064142.40817855,
+      "shifted_RP_energy_J": 15064142.40817855,
+      "max_relative_error": 0.0
+    },
+    {
+      "v_at_tower_top": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "omega": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "M6_energy_J": 193371620.96551055,
+      "direct_CG_energy_J": 193371620.96551055,
+      "shifted_RP_energy_J": 193371620.96551055,
+      "max_relative_error": 0.0
+    },
+    {
+      "v_at_tower_top": [
+        -0.5,
+        0.2,
+        0.7
+      ],
+      "omega": [
+        -1.0,
+        0.3,
+        0.2
+      ],
+      "M6_energy_J": 63445494.27538908,
+      "direct_CG_energy_J": 63445494.27538909,
+      "shifted_RP_energy_J": 63445494.27538909,
+      "max_relative_error": 1.1743277725261503e-16
+    }
+  ],
+  "virtual_power_W": {
+    "OF_at_P": 924.8649999999999,
+    "ABQ_at_O": 924.865
+  },
+  "fixed_official_sources": [
+    {
+      "repository": "OpenFAST/openfast",
+      "commit": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+      "path": "modules/elastodyn/src/ElastoDyn.f90",
+      "url": "https://raw.githubusercontent.com/OpenFAST/openfast/6a7a543790f3cad4a65b87242a619ac5b34b4c0f/modules/elastodyn/src/ElastoDyn.f90",
+      "sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+      "bytes": 663919,
+      "excerpts": [
+        {
+          "start": 3652,
+          "end": 3656,
+          "text": "!   x%QT (DOF_GeAz) = MOD( (InputFileData%Azimuth - p%AzimB1Up)*R2D + 270.0 + 360.0, 360.0 )*D2R   ! Internal position of blade 1\n   \n   x%QT (DOF_GeAz) = REAL(InputFileData%Azimuth, R8Ki) - p%AzimB1Up - REAL(Piby2_D, R8Ki)\n   CALL Zero2TwoPi( x%QT (DOF_GeAz) )\n   x%QDT(DOF_GeAz) = p%RotSpeed                                               ! Rotor speed in rad/sec."
+        },
+        {
+          "start": 4672,
+          "end": 4677,
+          "text": "   p%Nacd2Iner = InputFileData%NacYIner - p%NacMass*( p%NacCMxn**2 + p%NacCMyn**2 ) ! Nacelle inertia about the d2-axis\n   IF ( p%Nacd2Iner < 0.0 ) THEN\n      ErrStat = ErrID_Fatal\n      ErrMsg = ' NacYIner must not be less than NacMass*( NacCMxn^2 + NacCMyn^2 ).'\n      RETURN\n   END IF"
+        },
+        {
+          "start": 4683,
+          "end": 4697,
+          "text": "      !   Hubg2Iner is the inertia of the hub about both the g1- and g2- axes.  For\n      !   3-bladers, Hubg1Iner is simply equal to HubIner and Hubg2Iner is zero.\n      ! Also, Initialize RotMass and RotIner to associated hub properties:\n\n   IF ( p%NumBl == 2 )  THEN ! 2-blader\n      p%Hubg1Iner = ( InputFileData%HubIner - p%HubMass*( ( p%UndSling - p%HubCM )**2 ) )/( p%CosDel3**2 )\n      p%Hubg2Iner = p%Hubg1Iner\n      IF ( p%Hubg1Iner < 0.0 ) THEN\n         ErrStat = ErrID_Fatal\n         ErrMsg = ' HubIner must not be less than HubMass*( UndSling - HubCM )^2 for 2-blader.'\n         RETURN\n      END IF\n   ELSE                    ! 3-blader\n      p%Hubg1Iner = InputFileData%HubIner\n      p%Hubg2Iner = 0.0"
+        },
+        {
+          "start": 6002,
+          "end": 6006,
+          "text": "      ! Inertial frame coordinate system:\n\n   CoordSys%z1 = (/ 1.0_R8Ki, 0.0_R8Ki, 0.0_R8Ki /)   ! Vector / direction z1 (=  xi from the IEC coord. system).\n   CoordSys%z2 = (/ 0.0_R8Ki, 1.0_R8Ki, 0.0_R8Ki /)   ! Vector / direction z2 (=  zi from the IEC coord. system).\n   CoordSys%z3 = (/ 0.0_R8Ki, 0.0_R8Ki, 1.0_R8Ki /)   ! Vector / direction z3 (= -yi from the IEC coord. system)."
+        },
+        {
+          "start": 6054,
+          "end": 6061,
+          "text": "      ! Nacelle / yaw coordinate system:\n\n   CNacYaw  = COS( x%QT(DOF_Yaw ) )\n   SNacYaw  = SIN( x%QT(DOF_Yaw ) )\n\n   CoordSys%d1 = CNacYaw*CoordSys%b1 - SNacYaw*CoordSys%b3     ! Vector / direction d1 (=  xn from the IEC coord. system).\n   CoordSys%d2 = CoordSys%b2                                   ! Vector / direction d2 (=  zn from the IEC coord. system).\n   CoordSys%d3 = SNacYaw*CoordSys%b1 + CNacYaw*CoordSys%b3     ! Vector / direction d3 (= -yn from the IEC coord. system)."
+        },
+        {
+          "start": 6081,
+          "end": 6095,
+          "text": "      ! Shaft coordinate system:\n\n   CoordSys%c1 =  p%CShftSkew*p%CShftTilt*CoordSys%rf1 + p%SShftTilt*CoordSys%rf2 - p%SShftSkew*p%CShftTilt*CoordSys%rf3  ! Vector / direction c1 (=  xs from the IEC coord. system).\n   CoordSys%c2 = -p%CShftSkew*p%SShftTilt*CoordSys%rf1 + p%CShftTilt*CoordSys%rf2 + p%SShftSkew*p%SShftTilt*CoordSys%rf3  ! Vector / direction c2 (=  zs from the IEC coord. system).\n   CoordSys%c3 =  p%SShftSkew*            CoordSys%rf1                            + p%CShftSkew*            CoordSys%rf3  ! Vector / direction c3 (= -ys from the IEC coord. system).\n\n\n      ! Azimuth coordinate system:\n\n   CAzimuth = COS( x%QT(DOF_DrTr) + x%QT(DOF_GeAz) )\n   SAzimuth = SIN( x%QT(DOF_DrTr) + x%QT(DOF_GeAz) )\n\n   CoordSys%e1 =  CoordSys%c1                                  ! Vector / direction e1 (=  xa from the IEC coord. system).\n   CoordSys%e2 =  CAzimuth*CoordSys%c2 + SAzimuth*CoordSys%c3  ! Vector / direction e2 (=  ya from the IEC coord. system).\n   CoordSys%e3 = -SAzimuth*CoordSys%c2 + CAzimuth*CoordSys%c3  ! Vector / direction e3 (=  za from the IEC coord. system)."
+        },
+        {
+          "start": 6133,
+          "end": 6156,
+          "text": "       gRotAng = p%TwoPiNB*(K-1)\n      CgRotAng = COS( gRotAng )\n      SgRotAng = SIN( gRotAng )\n\n      g1Prime =  CoordSys%g1\n      g2Prime =  CgRotAng*CoordSys%g2 + SgRotAng*CoordSys%g3\n      g3Prime = -SgRotAng*CoordSys%g2 + CgRotAng*CoordSys%g3\n\n\n      ! Coned coordinate system:\n\n      CoordSys%i1(K,:) = p%CosPreC(K)*g1Prime - p%SinPreC(K)*g3Prime  ! i1(K,:) = vector / direction i1 for blade K (=  xcK from the IEC coord. system).\n      CoordSys%i2(K,:) = g2Prime                                      ! i2(K,:) = vector / direction i2 for blade K (=  ycK from the IEC coord. system).\n      CoordSys%i3(K,:) = p%SinPreC(K)*g1Prime + p%CosPreC(K)*g3Prime  ! i3(K,:) = vector / direction i3 for blade K (=  zcK from the IEC coord. system).\n\n\n      ! Blade / pitched coordinate system:\n\n      CosPitch = COS( REAL(BlPitch(K),R8Ki) )\n      SinPitch = SIN( REAL(BlPitch(K),R8Ki) )\n\n      CoordSys%j1(K,:) = CosPitch*CoordSys%i1(K,:) - SinPitch*CoordSys%i2(K,:)      ! j1(K,:) = vector / direction j1 for blade K (=  xbK from the IEC coord. system).\n      CoordSys%j2(K,:) = SinPitch*CoordSys%i1(K,:) + CosPitch*CoordSys%i2(K,:)      ! j2(K,:) = vector / direction j2 for blade K (=  ybK from the IEC coord. system).\n      CoordSys%j3(K,:) = CoordSys%i3(K,:)                                           ! j3(K,:) = vector / direction j3 for blade K (=  zbK from the IEC coord. system)."
+        },
+        {
+          "start": 6543,
+          "end": 6549,
+          "text": "   RtHSdat%rOU   =   p%NacCMxn*CoordSys%d1  +  p%NacCMzn  *CoordSys%d2  -  p%NacCMyn  *CoordSys%d3                            ! Position vector from tower-top / base plate (point O) to nacelle center of mass (point U).\n   RtHSdat%rOV   = p%RFrlPnt_n(1)*CoordSys%d1  +  p%RFrlPnt_n(3)*CoordSys%d2  -  p%RFrlPnt_n(2)*CoordSys%d3                            ! Position vector from tower-top / base plate (point O) to specified point on rotor-furl axis (point V).\n   RtHSdat%rVIMU =   p%rVIMUxn*CoordSys%rf1 +  p%rVIMUzn  *CoordSys%rf2 -   p%rVIMUyn *CoordSys%rf3                           ! Position vector from specified point on rotor-furl axis (point V) to nacelle IMU (point IMU).\n   RtHSdat%rVD   =     p%rVDxn*CoordSys%rf1 +    p%rVDzn  *CoordSys%rf2 -     p%rVDyn *CoordSys%rf3                           ! Position vector from specified point on rotor-furl axis (point V) to center of mass of structure that furls with the rotor (not including rotor) (point D).\n   RtHSdat%rVP   =     p%rVPxn*CoordSys%rf1 +    p%rVPzn  *CoordSys%rf2 -     p%rVPyn *CoordSys%rf3 + p%OverHang*CoordSys%c1  ! Position vector from specified point on rotor-furl axis (point V) to teeter pin (point P).\n   RtHSdat%rPQ   = -p%UndSling*CoordSys%g1                                                                                    ! Position vector from teeter pin (point P) to apex of rotation (point Q).\n   RtHSdat%rQC   =     p%HubCM*CoordSys%g1                                                                                    ! Position vector from apex of rotation (point Q) to hub center of mass (point C)."
+        },
+        {
+          "start": 6609,
+          "end": 6611,
+          "text": "                               + 2.0*p%AxRedBld(K,1,3,J)*x%QT( DOF_BF(K,1) )*x%QT( DOF_BE(K,1) )    ) )*CoordSys%j3(K,:)\n         RtHSdat%rQS (:,K,J) = RtHSdat%rS0S(:,K,J) + p%HubRad*CoordSys%j3(K,:)                                                ! Position vector from apex of rotation (point Q) to the current node (point S(RNodes(J)).\n         RtHSdat%rS  (:,K,J) = RtHSdat%rQS (:,K,J) + RtHSdat%rQ                                                               ! Position vector from inertial frame origin      to the current node (point S(RNodes(J))."
+        },
+        {
+          "start": 6722,
+          "end": 6724,
+          "text": "   RtHSdat%PAngVelEG(       :,0,:) = RtHSdat%PAngVelER(:,0,:)\n   RtHSdat%PAngVelEG(DOF_GeAz,0,:) = p%GBRatio*CoordSys%c1\n   RtHSdat%AngVelEG                = RtHSdat%AngVelER + x%QDT(DOF_GeAz)*RtHSdat%PAngVelEG(DOF_GeAz,0,:)"
+        },
+        {
+          "start": 7681,
+          "end": 7686,
+          "text": "      TmpVec1 = -p%NacMass*RtHSdat%PLinVelEU(p%DOFs%PUE(I),0,:)              ! The portion of PFrcONcRt associated with the NacMass\n      TmpVec2 = CROSS_PRODUCT( RtHSdat%rOU,               TmpVec1 ) ! The portion of PMomBNcRt associated with the NacMass\n\n      RtHSdat%PFrcONcRt(:,p%DOFs%PUE(I)  ) = RtHSdat%PFrcONcRt(:,p%DOFs%PUE(I) ) + TmpVec1\n      RtHSdat%PMomBNcRt(:,p%DOFs%PUE(I)  ) = RtHSdat%PMomBNcRt(:,p%DOFs%PUE(I) ) + TmpVec2 - p%Nacd2Iner*CoordSys%d2* &\n                                             DOT_PRODUCT( CoordSys%d2, RtHSdat%PAngVelEN(p%DOFs%PUE(I),0,:) )"
+        }
+      ]
+    },
+    {
+      "repository": "OpenFAST/openfast",
+      "commit": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+      "path": "modules/elastodyn/src/ElastoDyn_IO.f90",
+      "url": "https://raw.githubusercontent.com/OpenFAST/openfast/6a7a543790f3cad4a65b87242a619ac5b34b4c0f/modules/elastodyn/src/ElastoDyn_IO.f90",
+      "sha256": "af1c78a15e4102668f83740c8ad1fc450f7112cdcc2ce004093278acf75d1d5a",
+      "bytes": 226556,
+      "excerpts": [
+        {
+          "start": 1771,
+          "end": 1791,
+          "text": "      ! Read the table.\n\n   NInputCols = 6\n\n\n   DO I=1,BladeKInputFileData%NBlInpSt\n\n      CALL ReadAry( UnIn, BldFile, TmpRAry, NInputCols, 'Line'//TRIM(Num2LStr(I)), 'Blade input station table', &\n                    ErrStat2, ErrMsg2, UnEc )\n         CALL SetErrStat( ErrStat2, ErrMsg2, ErrStat, ErrMsg, RoutineName )\n         IF ( ErrStat >= AbortErrLev ) THEN\n            CALL Cleanup()\n            RETURN\n         END IF\n\n      BladeKInputFileData%BlFract( I) = TmpRAry(1)\n      BladeKInputFileData%PitchAx( I) = TmpRAry(2)\n      BladeKInputFileData%StrcTwst(I) = TmpRAry(3)*D2R      ! Input in degrees; converted to radians here\n      BladeKInputFileData%BMassDen(I) = TmpRAry(4)*AdjBlMs  ! Apply the correction factors to the elemental data.\n      BladeKInputFileData%FlpStff( I) = TmpRAry(5)*AdjFlSt  ! Apply the correction factors to the elemental data.\n      BladeKInputFileData%EdgStff( I) = TmpRAry(6)*AdjEdSt  ! Apply the correction factors to the elemental data."
+        }
+      ]
+    },
+    {
+      "repository": "OpenFAST/openfast",
+      "commit": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+      "path": "docs/source/user/elastodyn/input.rst",
+      "url": "https://raw.githubusercontent.com/OpenFAST/openfast/6a7a543790f3cad4a65b87242a619ac5b34b4c0f/docs/source/user/elastodyn/input.rst",
+      "sha256": "78fb7b16f23074a1db8640af4d03e98d51dc9e2eaa76416e26d6f97fda34f6be",
+      "bytes": 35866,
+      "excerpts": [
+        {
+          "start": 131,
+          "end": 149,
+          "text": "**HubCM**       - Distance from rotor apex to hub mass [positive downwind] (meters)\n\n**UndSling**    - Undersling length [distance from teeter pin to the rotor apex] (meters) [unused for 3 blades]\n\n**Delta3**      - Delta-3 angle for teetering rotors (degrees) [unused for 3 blades]\n\n**AzimB1Up**    - Azimuth value to use for I/O when blade 1 points up (degrees); for floating MHK turbines, blade 1 will be pointed up (opposite gravity) when `AzimB1Up` = 0; the user can set `AzimB1Up` to 180 degrees to give the same azimuth convention relative to the tower for floating MHK turbines as for fixed MHK turbines\n\n**OverHang**    - Distance from yaw axis to rotor apex [3 blades] or teeter pin [2 blades] (meters)\n\n**ShftGagL**    - Distance from rotor apex [3 blades] or teeter pin [2 blades] to shaft strain gages [positive for upwind rotors] (meters)\n\n**ShftTilt**    - Rotor shaft tilt angle (degrees)\n\n**NacCMxn**     - Downwind distance from the tower-top to the nacelle CM (meters)\n\n**NacCMyn**     - Lateral  distance from the tower-top to the nacelle CM (meters)\n\n**NacCMzn**     - Vertical distance from the tower-top to the nacelle CM, typically negative for floating MHK turbines (meters)"
+        },
+        {
+          "start": 184,
+          "end": 192,
+          "text": "**HubIner**     - Hub inertia about rotor axis [3 blades] or teeter axis [2 blades] (kg m^2)\n\n**GenIner**     - Generator inertia about HSS (kg m^2)\n\n**NacMass**     - Nacelle mass (kg)\n\n**NacYIner**    - Nacelle inertia about yaw axis (kg m^2)\n\n**YawBrMass**   - Yaw bearing mass (kg)"
+        }
+      ]
+    }
+  ],
+  "model_modified": false,
+  "solver_executed": false
+}

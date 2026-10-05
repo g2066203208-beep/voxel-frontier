@@ -44,4 +44,4 @@ T034	P0-P8	global	Q01-Q05	在既定MASTER v1.6路线下恢复整篇论文顺序�
 T035	P0-P9	global	Q01-Q05	以优秀硕士论文导师/盲审/期刊审稿视角重新审查全部已有资产，不以现有路线为上限，比较三条候选路线并选择最优方案	audit/39-t035-expert-thesis-redesign.md	complete-expert-review/implementation-open	G0-G10	选择Route B：控制工况→多轴需求→控制区域机制→机制驱动优化；疲劳寿命和局部contact均按结果条件触发；Simpack继续排除
 T036	P1	literature	Q01-Q05	核对并按正式题名重命名9份用户新下载PDF，去重后完整入库并核验二进制	references/user-provided/README.md	complete-binary-upload-and-readback	P1	9篇均沿用已有L/REF编号；9份完整PDF共162页84855343字节；新旧哈希留痕；仅身份/完整性/传输核验，不新增科学全文审读结论
 T037	P0-P1	2	Q01	按用户逐步审查要求核对DTU与158m混塔来源、实际Abaqus/OpenFAST候选及控制器归档身份	audit/41-t037-baseline-source-review.md	source-review-complete/user-review-pending	G0-G1	推荐M2结构候选与R2真实输入链；补核DISCON和DLL并订正缺件判断；RNA与物理适用性未统一；不自动执行下一步
-T038	P1	2	Q01	按用户逐步审查要求核对Abaqus与OpenFAST的RNA质量质心惯量和公共参考点，形成输入修订方案	experiments/T038/RESEARCH_CARD.md	in-progress/source-and-numerical-audit	G0-G1/D08	仅本步数值审查与方案；原模型不改，无新求解；D08不因刚体质量等价自动通过
+T038	P1	2	Q01	按用户逐步审查要求核对Abaqus与OpenFAST的RNA质量质心惯量和公共参考点，形成输入修订方案	experiments/T038/RESEARCH_CARD.md	audit-complete/user-review-pending	G0-G1/D08	仅本步数值审查与方案；原模型不改，无新求解；D08不因刚体质量等价自动通过

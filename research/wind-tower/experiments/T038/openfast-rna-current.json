@@ -1,0 +1,769 @@
+{
+  "schema": "R2-RNA-frozen-native-audit-v1",
+  "repository": "g2066203208-beep/voxel-frontier",
+  "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+  "solver_source_ref": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+  "case": "U09p343881_ETM_S01",
+  "solver_run": false,
+  "input_modified": false,
+  "frame": "IEC OpenFAST inertial xyz at zero nacelle yaw",
+  "reference_point": "undeformed physical tower top/yaw bearing; absolute IEC (0,0,158) m",
+  "state": {
+    "geometry": "undeformed input; yaw/pitch/azimuth inputs zero; precone -2.5 deg",
+    "native_input_rotor_rpm": 9.6,
+    "operator_restriction": "all internal relative velocities locked; GeAz/DrTr/blade bending fixed",
+    "not_claimed": "not operating-time M6, not a solver linearization, not a full physical inertia tensor"
+  },
+  "ed_fields": {
+    "Echo": {
+      "value": false,
+      "line": 4
+    },
+    "Method": {
+      "value": 3.0,
+      "line": 5
+    },
+    "DT": {
+      "value": 0.0025,
+      "line": 6
+    },
+    "FlapDOF1": {
+      "value": true,
+      "line": 8
+    },
+    "FlapDOF2": {
+      "value": true,
+      "line": 9
+    },
+    "EdgeDOF": {
+      "value": true,
+      "line": 10
+    },
+    "TeetDOF": {
+      "value": false,
+      "line": 11
+    },
+    "DrTrDOF": {
+      "value": true,
+      "line": 12
+    },
+    "GenDOF": {
+      "value": true,
+      "line": 13
+    },
+    "YawDOF": {
+      "value": false,
+      "line": 14
+    },
+    "TwFADOF1": {
+      "value": true,
+      "line": 15
+    },
+    "TwFADOF2": {
+      "value": true,
+      "line": 16
+    },
+    "TwSSDOF1": {
+      "value": true,
+      "line": 17
+    },
+    "TwSSDOF2": {
+      "value": true,
+      "line": 18
+    },
+    "PtfmSgDOF": {
+      "value": false,
+      "line": 19
+    },
+    "PtfmSwDOF": {
+      "value": false,
+      "line": 20
+    },
+    "PtfmHvDOF": {
+      "value": false,
+      "line": 21
+    },
+    "PtfmRDOF": {
+      "value": false,
+      "line": 22
+    },
+    "PtfmPDOF": {
+      "value": false,
+      "line": 23
+    },
+    "PtfmYDOF": {
+      "value": false,
+      "line": 24
+    },
+    "OoPDefl": {
+      "value": 0.0,
+      "line": 26
+    },
+    "IPDefl": {
+      "value": 0.0,
+      "line": 27
+    },
+    "BlPitch(1)": {
+      "value": 0.0,
+      "line": 28
+    },
+    "BlPitch(2)": {
+      "value": 0.0,
+      "line": 29
+    },
+    "BlPitch(3)": {
+      "value": 0.0,
+      "line": 30
+    },
+    "TeetDefl": {
+      "value": 0.0,
+      "line": 31
+    },
+    "Azimuth": {
+      "value": 0.0,
+      "line": 32
+    },
+    "RotSpeed": {
+      "value": 9.6,
+      "line": 33
+    },
+    "NacYaw": {
+      "value": 0.0,
+      "line": 34
+    },
+    "TTDspFA": {
+      "value": 0.0,
+      "line": 35
+    },
+    "TTDspSS": {
+      "value": 0.0,
+      "line": 36
+    },
+    "PtfmSurge": {
+      "value": 0.0,
+      "line": 37
+    },
+    "PtfmSway": {
+      "value": 0.0,
+      "line": 38
+    },
+    "PtfmHeave": {
+      "value": 0.0,
+      "line": 39
+    },
+    "PtfmRoll": {
+      "value": 0.0,
+      "line": 40
+    },
+    "PtfmPitch": {
+      "value": 0.0,
+      "line": 41
+    },
+    "PtfmYaw": {
+      "value": 0.0,
+      "line": 42
+    },
+    "NumBl": {
+      "value": 3.0,
+      "line": 44
+    },
+    "TipRad": {
+      "value": 89.2,
+      "line": 45
+    },
+    "HubRad": {
+      "value": 2.8,
+      "line": 46
+    },
+    "PreCone(1)": {
+      "value": -2.5,
+      "line": 47
+    },
+    "PreCone(2)": {
+      "value": -2.5,
+      "line": 48
+    },
+    "PreCone(3)": {
+      "value": -2.5,
+      "line": 49
+    },
+    "HubCM": {
+      "value": 0.0,
+      "line": 50
+    },
+    "UndSling": {
+      "value": 0.0,
+      "line": 51
+    },
+    "Delta3": {
+      "value": 0.0,
+      "line": 52
+    },
+    "AzimB1Up": {
+      "value": 0.0,
+      "line": 53
+    },
+    "OverHang": {
+      "value": -7.1,
+      "line": 54
+    },
+    "ShftGagL": {
+      "value": 2.38,
+      "line": 55
+    },
+    "ShftTilt": {
+      "value": -5.0,
+      "line": 56
+    },
+    "NacCMxn": {
+      "value": 2.687,
+      "line": 57
+    },
+    "NacCMyn": {
+      "value": 0.0,
+      "line": 58
+    },
+    "NacCMzn": {
+      "value": 2.45,
+      "line": 59
+    },
+    "NcIMUxn": {
+      "value": -3.09528,
+      "line": 60
+    },
+    "NcIMUyn": {
+      "value": 0.0,
+      "line": 61
+    },
+    "NcIMUzn": {
+      "value": 2.23336,
+      "line": 62
+    },
+    "Twr2Shft": {
+      "value": 2.75,
+      "line": 63
+    },
+    "TowerHt": {
+      "value": 158.0,
+      "line": 64
+    },
+    "TowerBsHt": {
+      "value": 0.0,
+      "line": 65
+    },
+    "PtfmCMxt": {
+      "value": 0.0,
+      "line": 66
+    },
+    "PtfmCMyt": {
+      "value": 0.0,
+      "line": 67
+    },
+    "PtfmCMzt": {
+      "value": 0.0,
+      "line": 68
+    },
+    "PtfmRefzt": {
+      "value": 0.0,
+      "line": 69
+    },
+    "TipMass(1)": {
+      "value": 0.0,
+      "line": 71
+    },
+    "TipMass(2)": {
+      "value": 0.0,
+      "line": 72
+    },
+    "TipMass(3)": {
+      "value": 0.0,
+      "line": 73
+    },
+    "HubMass": {
+      "value": 105520.0,
+      "line": 74
+    },
+    "HubIner": {
+      "value": 325670.9,
+      "line": 75
+    },
+    "GenIner": {
+      "value": 1500.5,
+      "line": 76
+    },
+    "NacMass": {
+      "value": 446036.25,
+      "line": 77
+    },
+    "NacYIner": {
+      "value": 7326346.45,
+      "line": 78
+    },
+    "YawBrMass": {
+      "value": 0.0,
+      "line": 79
+    },
+    "PtfmMass": {
+      "value": 0.0,
+      "line": 80
+    },
+    "PtfmRIner": {
+      "value": 0.0,
+      "line": 81
+    },
+    "PtfmPIner": {
+      "value": 0.0,
+      "line": 82
+    },
+    "PtfmYIner": {
+      "value": 0.0,
+      "line": 83
+    },
+    "BldNodes": {
+      "value": 51.0,
+      "line": 85
+    },
+    "TeetMod": {
+      "value": 0.0,
+      "line": 90
+    },
+    "TeetDmpP": {
+      "value": 0.0,
+      "line": 91
+    },
+    "TeetDmp": {
+      "value": 0.0,
+      "line": 92
+    },
+    "TeetCDmp": {
+      "value": 0.0,
+      "line": 93
+    },
+    "TeetSStP": {
+      "value": 0.0,
+      "line": 94
+    },
+    "TeetHStP": {
+      "value": 0.0,
+      "line": 95
+    },
+    "TeetSSSp": {
+      "value": 0.0,
+      "line": 96
+    },
+    "TeetHSSp": {
+      "value": 0.0,
+      "line": 97
+    },
+    "GBoxEff": {
+      "value": 100.0,
+      "line": 99
+    },
+    "GBRatio": {
+      "value": 50.0,
+      "line": 100
+    },
+    "DTTorSpr": {
+      "value": 2317025000.0,
+      "line": 101
+    },
+    "DTTorDmp": {
+      "value": 9240560.0,
+      "line": 102
+    },
+    "Furling": {
+      "value": false,
+      "line": 104
+    },
+    "TwrNodes": {
+      "value": 1120.0,
+      "line": 107
+    },
+    "SumPrint": {
+      "value": true,
+      "line": 110
+    },
+    "OutFile": {
+      "value": 1.0,
+      "line": 111
+    },
+    "TabDelim": {
+      "value": true,
+      "line": 112
+    },
+    "TStart": {
+      "value": 0.0,
+      "line": 114
+    },
+    "DecFact": {
+      "value": 1.0,
+      "line": 115
+    },
+    "NTwGages": {
+      "value": 9.0,
+      "line": 116
+    },
+    "NBlGages": {
+      "value": 0.0,
+      "line": 118
+    }
+  },
+  "blade_fields": {
+    "NBlInpSt": {
+      "value": 51.0,
+      "line": 4
+    },
+    "BldFlDmp(1)": {
+      "value": 3.0,
+      "line": 5
+    },
+    "BldFlDmp(2)": {
+      "value": 8.4,
+      "line": 6
+    },
+    "BldEdDmp(1)": {
+      "value": 3.0,
+      "line": 7
+    },
+    "FlStTunr(1)": {
+      "value": 1.0,
+      "line": 9
+    },
+    "FlStTunr(2)": {
+      "value": 1.0,
+      "line": 10
+    },
+    "AdjBlMs": {
+      "value": 1.0,
+      "line": 11
+    },
+    "AdjFlSt": {
+      "value": 1.0,
+      "line": 12
+    },
+    "AdjEdSt": {
+      "value": 1.0,
+      "line": 13
+    },
+    "BldFl1Sh(2)": {
+      "value": 0.1351,
+      "line": 69
+    },
+    "BldFl1Sh(3)": {
+      "value": 0.1443,
+      "line": 70
+    },
+    "BldFl1Sh(4)": {
+      "value": 1.261,
+      "line": 71
+    },
+    "BldFl1Sh(5)": {
+      "value": 0.08439,
+      "line": 72
+    },
+    "BldFl1Sh(6)": {
+      "value": -0.6245,
+      "line": 73
+    },
+    "BldFl2Sh(2)": {
+      "value": -1.245,
+      "line": 74
+    },
+    "BldFl2Sh(3)": {
+      "value": 8.075,
+      "line": 75
+    },
+    "BldFl2Sh(4)": {
+      "value": -30.73,
+      "line": 76
+    },
+    "BldFl2Sh(5)": {
+      "value": 42.07,
+      "line": 77
+    },
+    "BldFl2Sh(6)": {
+      "value": -17.17,
+      "line": 78
+    },
+    "BldEdgSh(2)": {
+      "value": 0.362,
+      "line": 79
+    },
+    "BldEdgSh(3)": {
+      "value": 0.828,
+      "line": 80
+    },
+    "BldEdgSh(4)": {
+      "value": 0.4562,
+      "line": 81
+    },
+    "BldEdgSh(5)": {
+      "value": -0.7149,
+      "line": 82
+    },
+    "BldEdgSh(6)": {
+      "value": 0.06974,
+      "line": 83
+    }
+  },
+  "archive_summary": {
+    "rotor_mass_kg": {
+      "value": 230717.031,
+      "line": 49
+    },
+    "blade_mass_kg": {
+      "value": 2600752.25,
+      "line": 64
+    },
+    "blade_second_kgm2": {
+      "value": 45671252.0,
+      "line": 54
+    },
+    "blade_first_kgm": {
+      "value": 1090742.25,
+      "line": 55
+    },
+    "RNA_mass_kg": {
+      "value": 676753.25,
+      "line": 61
+    }
+  },
+  "diagnostic_guards": {
+    "meaning": "parser and finite-precision consistency only; not model acceptance",
+    "summary_radius_absolute_m": 0.0006,
+    "summary_dr_absolute_m": 0.0006,
+    "summary_density_absolute_kg_per_m": 0.001,
+    "summary_RNA_mass_absolute_kg": 0.1,
+    "kinetic_energy_relative": 1e-12,
+    "passed": true,
+    "RNA_mass_relative_residual": 6.017428083078085e-08
+  },
+  "blade": {
+    "source_station_count": 51,
+    "runtime_node_count": 51,
+    "flex_length_m": 86.4,
+    "station_trapezoid_mass_kg": 41738.79248856,
+    "double_midpoint_mass_kg": 41732.346907713385,
+    "double_midpoint_first_about_root_kgm": 1090742.546738271,
+    "double_midpoint_second_about_root_kgm2": 45671254.53620334,
+    "double_midpoint_CG_from_root_m": 26.13662129164054,
+    "HAWC2_station_trapezoid_mass_kg": 41722.41128150315,
+    "node_grid_max_residual_vs_printed_summary": {
+      "r_from_apex_m": 0.00047058823530221616,
+      "dr_m": 0.00011764705882377768,
+      "mass_density_kg_per_m": 0.000574133699160484
+    }
+  },
+  "mass_chain": {
+    "nacelle_kg": 446036.25,
+    "hub_kg": 105520.0,
+    "three_blades_kg": 125197.04072314015,
+    "yaw_bearing_kg": 0.0,
+    "RNA_kg": 676753.2907231401,
+    "HAWC2_component_subtotal_kg": 676727.2338445095,
+    "delta_vs_archived_EDsum_kg": 0.04072314011864364,
+    "delta_vs_historical_differentfile_M6_mass_kg": 0.053208140074275434
+  },
+  "frozen_native_operator": {
+    "mass_kg": 676753.2907231401,
+    "rG_from_tower_top_m": [
+      -0.8729624988915398,
+      -4.794053742399661e-16,
+      2.783588030306047
+    ],
+    "hub_from_tower_top_m": [
+      -7.072982356451393,
+      0.0,
+      3.368805773508373
+    ],
+    "nacelle_from_tower_top_m": [
+      2.687,
+      0.0,
+      2.45
+    ],
+    "JG_kgm2": [
+      [
+        155901495.33851188,
+        -4.203840483372562e-10,
+        -5231495.690281978
+      ],
+      [
+        -4.203840483372562e-10,
+        94926999.79811174,
+        2.2844544447195585e-08
+      ],
+      [
+        -5231495.690281978,
+        2.2844544447195585e-08,
+        99481015.62016469
+      ]
+    ],
+    "JT_kgm2": [
+      [
+        161145225.03795397,
+        -7.036072722110896e-10,
+        -3587006.875091368
+      ],
+      [
+        -7.036072722110896e-10,
+        100686458.49547963,
+        2.3747649422358834e-08
+      ],
+      [
+        -3587006.875091368,
+        2.3747649422358834e-08,
+        99996744.6180905
+      ]
+    ],
+    "M6_mixed_SI": [
+      [
+        676753.2907231401,
+        0.0,
+        0.0,
+        -0.0,
+        1883802.359527161,
+        3.244391646072556e-10
+      ],
+      [
+        0.0,
+        676753.2907231401,
+        0.0,
+        -1883802.359527161,
+        -0.0,
+        -590780.2438027451
+      ],
+      [
+        0.0,
+        0.0,
+        676753.2907231401,
+        -3.244391646072556e-10,
+        590780.2438027451,
+        -0.0
+      ],
+      [
+        0.0,
+        -1883802.359527161,
+        -3.244391646072556e-10,
+        161145225.03795397,
+        -7.036072722110896e-10,
+        -3587006.875091368
+      ],
+      [
+        1883802.359527161,
+        0.0,
+        590780.2438027451,
+        -7.036072722110896e-10,
+        100686458.49547963,
+        2.3747649422358834e-08
+      ],
+      [
+        3.244391646072556e-10,
+        -590780.2438027451,
+        0.0,
+        -3587006.875091368,
+        2.3747649422358834e-08,
+        99996744.6180905
+      ]
+    ],
+    "native_intrinsic_kgm2": [
+      [
+        324686.1656419292,
+        0.0,
+        -28406.35869736917
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        -28406.35869736917,
+        0.0,
+        4108463.7864818214
+      ]
+    ],
+    "nacelle_center_yaw_projection_kgm2": 4105978.5521237506,
+    "generator_locked_axial_kgm2": 1500.5,
+    "generator_low_speed_generalized_kgm2_not_added": 3751250.0,
+    "kinetic_energy_relative_residual": 2.3255704870175047e-16
+  },
+  "limits": [
+    "Nacelle native roll/pitch and hub transverse intrinsic inertias omitted by source; real values unknown",
+    "ElastoDyn reads only six blade input columns; inherited extra section inertia/offset columns are not used",
+    "Independent float64 midpoint assembly approximates finite-precision native integration; report summary residual",
+    "Historical identity .lin and D/B matrices have not been located/bound to the R2 input",
+    "Mass agreement cannot bind a historical different-file CG/J/M6 to this frozen operator"
+  ],
+  "mass_difference_decomposition": [
+    {
+      "term": "three_blades_HAWC2_station_to_R2_station",
+      "delta_kg": 49.14362117055862
+    },
+    {
+      "term": "three_blades_R2_station_to_51_midpoint",
+      "delta_kg": -19.336742539846455
+    },
+    {
+      "term": "nacelle_446040_to_446036.25",
+      "delta_kg": -3.75
+    },
+    {
+      "term": "total_current_midpoint_minus_HAWC2_component_subtotal",
+      "delta_kg": 26.056878630653955
+    }
+  ],
+  "provenance": [
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "bytes": 2234740,
+      "sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT_ElastoDyn.dat",
+      "bytes": 27838,
+      "sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/Rotor/DTU_10MW_ElastoDyn_Blades.dat",
+      "bytes": 12348,
+      "sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.ED.sum",
+      "bytes": 103610,
+      "sha256": "e3ab59a7561bf12ab66ca738f25ccd941b81cb45b82ae7481ae5735df2cb8c84"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/references/baselines-and-site-20261004/dtu-hawc2-reference/data/DTU_10MW_RWT_Blade_st.dat",
+      "bytes": 39046,
+      "sha256": "ca93feaf85a194af84a78feec53d44fd35b01d73aa82e5b9684e412f3d7c4ca5"
+    },
+    {
+      "repository": "OpenFAST/openfast",
+      "ref": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+      "path": "modules/elastodyn/src/ElastoDyn.f90",
+      "bytes": 663919,
+      "sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3"
+    },
+    {
+      "repository": "OpenFAST/openfast",
+      "ref": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+      "path": "modules/elastodyn/src/ElastoDyn_IO.f90",
+      "bytes": 226556,
+      "sha256": "af1c78a15e4102668f83740c8ad1fc450f7112cdcc2ce004093278acf75d1d5a"
+    }
+  ]
+}

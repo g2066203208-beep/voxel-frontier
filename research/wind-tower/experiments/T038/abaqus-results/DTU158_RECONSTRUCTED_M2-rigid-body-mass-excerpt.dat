@@ -1,0 +1,31 @@
+                              RIGID BODY MASS AND INERTIA 
+                              --------------------------- 
+
+ 
+ 
+                     REFERENCE NODE IS:         1
+ 
+ 
+                     POSITION OF THE REFERENCE NODE
+                               X                Y                Z
+                          0.000000           160.0000           0.000000
+ 
+ 
+                     TOTAL MASS OF RIGID BODY
+ 
+                          673998.5
+ 
+ 
+                     LOCATION OF THE CENTER OF MASS OF RIGID BODY
+                         -1.2954256E-16     1.6029780E+02    -6.2318401E-01
+ 
+ 
+                     MOMENTS OF INERTIA ABOUT THE CENTER OF RIGID BODY
+                            I(XX)               I(YY)               I(ZZ)
+                         1.0802460E+08      1.0799404E+08      1.6248239E+08
+ 
+ 
+                     PRODUCTS OF INERTIA ABOUT THE CENTER OF RIGID BODY
+                            I(XY)               I(XZ)               I(YZ)
+                        -2.5171703E-08      7.5290306E-10      -664405.4
+  

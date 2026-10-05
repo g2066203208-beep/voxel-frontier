@@ -1,0 +1,193 @@
+{
+  "task": "T038",
+  "snapshot_inputs": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+  "self_hash_excluded": true,
+  "notes": "Exact bytes preserved in Git; this manifest excludes itself. Publication commit and full remote readback are recorded in Git and local published-finish.json.",
+  "files": [
+    {
+      "path": "research/wind-tower/audit/42-t038-rna-mass-properties-and-revision-plan.md",
+      "bytes": 6163,
+      "sha256": "b2187a55d13c739b0fb602db506d757f09d6b78a5b2dd1574cc58de2be38bca7"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-results/abaqus-rna-components.csv",
+      "bytes": 19190,
+      "sha256": "29d21c9c19fe8c3a68a4f745a3f7881239cefc442729521c7b5b60a6618a334b"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-results/abaqus-rna-DAT-excerpt-source.json",
+      "bytes": 950,
+      "sha256": "e8fd36f0f2a41c1e87440688acf6c075229093e6797baa0f14bbc5162465f073"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-results/abaqus-rna-input-source-lines.csv",
+      "bytes": 34194,
+      "sha256": "737b41212aae529cea619b84d304ded69063e30574486edfaab34f9f3c9fb3cd"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-results/abaqus-rna-M6.csv",
+      "bytes": 59176,
+      "sha256": "2c1c78d3c6e12e3f7ff71e176ac03223b1ea2fab7bf32a673b333a933a148d6d"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-results/abaqus-rna-properties.json",
+      "bytes": 245633,
+      "sha256": "4cb8f5f680cf4e27d3da329c0a45b0a083a99a9f6a98dc345790b8d22a667f34"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-results/abaqus-rna-run-record.json",
+      "bytes": 1077,
+      "sha256": "c244f0103f2ef86068116d82a9c267d7bea6175e9b34aaf7f4ee6cedcea63b15"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-results/DTU158_RECONSTRUCTED_M2-rigid-body-mass-excerpt.dat",
+      "bytes": 1085,
+      "sha256": "c78b3bdca6d6fab9effc4905453fbad1a811cec963657af0842cdcd0284b4058"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-rna-audit.md",
+      "bytes": 14501,
+      "sha256": "88b0aa22d254a2089ec9d88da619a0be9a059e037bdd6a0b3659ea284564f615"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/abaqus-rna-sources.json",
+      "bytes": 3859,
+      "sha256": "9f471dc2561fbbb9fa4bf3f9011ac32b8d7206486308ff04160897a84c9770d9"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/audit_abaqus_rna.py",
+      "bytes": 25194,
+      "sha256": "1151d1a2d4df939ae7bf9800ee62b2497c3b63e883ba2548dd125e8e20533345"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/audit_coordinate_method.py",
+      "bytes": 9560,
+      "sha256": "c5db3d1417a9a128b0486bcacedbbbd8656bd2365523b225176be8eae5fe01f5"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/compare_rna_properties.py",
+      "bytes": 8028,
+      "sha256": "f44f85d12c930c391522f7f27daabba8cd620c0e51e472238d8af0580ae68b87"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/comparison-results/component-mass-difference.csv",
+      "bytes": 223,
+      "sha256": "5aa35ec7b4ae3aa9912af2ee4eea9bc7e57142d9c9809600200c9f9f8dc74545"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/comparison-results/R2-frozen-target-M6-ABQ.csv",
+      "bytes": 578,
+      "sha256": "a1d2116980a9c84d38d8c72f0ef230b98698c1b126cb27f21a0253b002969c71"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/comparison-results/rna-comparison.json",
+      "bytes": 7127,
+      "sha256": "9fb46875767a5a35d47d4fc1982315b7266fdad11cf1860c52b688502bb40602"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/coordinate-method-audit.md",
+      "bytes": 15430,
+      "sha256": "cd25f9ef48702df455c8a9028379edf49340623d9d3300d3c5c4ef5e8f957124"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/coordinate-method-evidence.json",
+      "bytes": 22100,
+      "sha256": "f1ee467c723e4041e3d90cc490e6a0be8b7550e876a26d86805aa76cad891835"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/coordinate-method-input.json",
+      "bytes": 3242,
+      "sha256": "ee2de5135c0e3dd56c2ed65ce9a52788dbda94c077c3aa1177a146d9800dcc32"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/extract_openfast_rna.py",
+      "bytes": 17762,
+      "sha256": "1509a277f4b233f67540513815ceb9d8253196e875511026861822c991ca5b07"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/INPUT_REVISION_PLAN.md",
+      "bytes": 6218,
+      "sha256": "d564677f375bcf8a517cb23347d2fb238781205ab6785a914480501a6c24f31e"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/locate_openfast_rna_evidence.py",
+      "bytes": 3613,
+      "sha256": "329e1712d69cf2f96fa45f7a70897054785f6209abd5782ba8cec46ae2e657ba"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-audit.md",
+      "bytes": 13852,
+      "sha256": "2e6185ff5f838bd245e8caf9063c314b4168c9b1a185507eee5ccaef1e66711b"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-blade-nodes.csv",
+      "bytes": 4929,
+      "sha256": "adae0ee5498b54b4248ae534bd6d388808f7d87a8e4f901b83e333c201cffe76"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-blade-stations.csv",
+      "bytes": 1106,
+      "sha256": "d5c94d98e85780546efd8b526b387314a05596838638c4ce903b1261d3f23f10"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-current.json",
+      "bytes": 17086,
+      "sha256": "cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-evidence-search.json",
+      "bytes": 53583,
+      "sha256": "90f32a512e8cd4c8eaa06b01f2330b031cb322be8ef2a49971443f6a1ef5798f"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-frozen-M6.csv",
+      "bytes": 569,
+      "sha256": "bba17792892a16d674ca882785b00fdd937b0c54e1c05fd6c46da6824320353c"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-frozen-mass-points.csv",
+      "bytes": 13572,
+      "sha256": "dcb26756018f94c99b499ced52002cd0c5d3d51b8371cb83f42af9b2b6600566"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/openfast-rna-mass-difference.csv",
+      "bytes": 244,
+      "sha256": "7992ec3318d72fd6673a729e06a4e7764c2beb58a29cdad2d0b24f7d3cdeee44"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/publish_bundle.py",
+      "bytes": 5858,
+      "sha256": "01ad0e0a8b80c8b0b926df31515ff052fbd62eec3ab84016105677f487bac0d6"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/published-start.json",
+      "bytes": 282,
+      "sha256": "626d96fc38c069df6fb23972ed3a54d840e1a83a8bdbfaa7fbb2ae8ab28ef28e"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/README.md",
+      "bytes": 5699,
+      "sha256": "a51660988c39e8d5236e542cfd50dd4512fdaef6a5d9706c34705bc089930f64"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/RESEARCH_CARD.md",
+      "bytes": 2873,
+      "sha256": "6b4fbf3e12dd0bdacd067d031f77832b1762264ad4312bc9e559ad66265c3fae"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/verification-record.json",
+      "bytes": 1568,
+      "sha256": "ae4cd428ca5d2f471894f869cba795f12187dc3f63bdcacc7ca54e6700c8d66c"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/verify_bundle.py",
+      "bytes": 6513,
+      "sha256": "73ec316805c82498993526375549bb18e0564959a518c802e82055635648d292"
+    },
+    {
+      "path": "research/wind-tower/experiments/T038/WORK_LOG.md",
+      "bytes": 3751,
+      "sha256": "c55e55ecc93e60b469adddc2d967be954611df2ba4e2bbd4147709f1433d2b61"
+    }
+  ]
+}

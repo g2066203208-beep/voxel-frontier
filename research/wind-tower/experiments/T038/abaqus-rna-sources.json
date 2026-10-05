@@ -1,0 +1,68 @@
+{
+  "schema": "step3-abaqus-rna-source-record-v1",
+  "date": "2026-10-05",
+  "github_reference_sha": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+  "sources": [
+    {
+      "id": "ACTUAL_M2_INPUT",
+      "file": "DTU158_RECONSTRUCTED_M2.inp",
+      "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "repository_path": "research/wind-tower/experiments/T026/inputs/RUN-T026-034/DTU158_RECONSTRUCTED_M2.inp",
+      "repository_ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "read_this_step": true,
+      "locator": "RNA Part lines 62803-63042; Instance 63319; RP node 63322; rigid body 68579; density cards 68682-68716",
+      "method": "Independent keyword parsing; original node coordinates and assigned section densities; no Abaqus API",
+      "supports": "Current carrier geometry, mass, CG, continuous/discrete mass operators and component partition",
+      "does_not_support": "Physical flexible/rotating/aeroelastic RNA validation"
+    },
+    {
+      "id": "EXISTING_M2_DAT",
+      "file": "DTU158_RECONSTRUCTED_M2.dat",
+      "sha256": "632372fb940edce81999de0b8fafa748eb665a8555e4f394c8953b8377566316",
+      "full_DAT_in_checked_repository_output_directory": false,
+      "public_excerpt_file": "abaqus-results/DTU158_RECONSTRUCTED_M2-rigid-body-mass-excerpt.dat",
+      "public_excerpt_sha256": "c78b3bdca6d6fab9effc4905453fbad1a811cec963657af0842cdcd0284b4058",
+      "excerpt_original_lines": [3768, 3798],
+      "read_this_step": true,
+      "locator": "lines 3768-3797 RIGID BODY MASS AND INERTIA",
+      "supports": "Independent endpoint-lumped prediction agrees with existing solver mass/CG/CG tensor within printed precision",
+      "does_not_support": "A new simulation or physical parameter calibration"
+    },
+    {
+      "id": "ABAQUS_2025_BEAM_SECTION",
+      "title": "Abaqus 2025 *BEAM SECTION",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-beamsection.htm",
+      "retrieved_this_step": true,
+      "raw_html_sha256": "478309685d5b968bcc282063766efe55c1b0e6f091e9912efaa89e015af05495",
+      "sections_read": ["LUMPED", "ROTARY INERTIA"],
+      "short_exact_quotes": ["Set LUMPED = YES (default)", "Set ROTARY INERTIA = EXACT (default)"],
+      "scope": "LUMPED applies to linear Timoshenko beams in Standard frequency/modal procedures; exact rotary inertia applies to the section geometry. Do not generalize to every procedure/element."
+    },
+    {
+      "id": "PRIOR_T026_METHOD",
+      "files": ["check_rna_spatial_mass.py", "independent_fused_input_review.py", "rna-discrete-inertia-comparison.json", "register_rna_equivalence.py"],
+      "read_this_step": true,
+      "use": "Reviewed prior continuous/discrete distinction and signed inertia convention before implementing a portable parser for actual M2. The current numeric outputs are recalculated, not copied from G1 JSON.",
+      "scope": "Previous B31/MASS+ROTARYI equivalence is implementation evidence, not physical RNA validation."
+    },
+    {
+      "id": "RIGID_BODY_ALGEBRA",
+      "kind": "explicit analytical derivation implemented in published script",
+      "equations": [
+        "m=rho*pi*r^2*L",
+        "Jcont,e=m*L^2/12*(I-ttT)+m*r^2/4*(I+ttT)",
+        "Jdisc,e=m*L^2/4*(I-ttT)+m*r^2/4*(I+ttT)",
+        "J_O=J_CG+m*((d.d)I-ddT)",
+        "M6=[[mI,-mS(d)],[mS(d),J_O]]"
+      ],
+      "independent_checks": "Direct endpoint velocity assembly; separate three-point Gauss integration; delta mL^2/6 identity; symmetry, positive definiteness and mixed translational/rotational kinetic energies."
+    }
+  ],
+  "execution": {
+    "successful_audit_executions": 2,
+    "second_execution_reason": "Added publishable original-input line CSV; numeric results unchanged",
+    "script_failures_this_step": [],
+    "solver_executions_this_step": 0,
+    "input_modifications": 0
+  }
+}

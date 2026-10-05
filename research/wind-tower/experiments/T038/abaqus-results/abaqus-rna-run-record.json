@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "time_utc": "2026-10-05T04:24:21.484534+00:00",
+  "input_file": "DTU158_RECONSTRUCTED_M2.inp",
+  "input_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+  "script_sha256": "1151d1a2d4df939ae7bf9800ee62b2497c3b63e883ba2548dd125e8e20533345",
+  "no_solver_called": true,
+  "input_unchanged": true,
+  "failures": [],
+  "command_template": "python audit_abaqus_rna.py --input INPUT.inp --out OUT [--dat EXISTING.dat]",
+  "outputs": [
+    {
+      "file": "abaqus-rna-components.csv",
+      "sha256": "29d21c9c19fe8c3a68a4f745a3f7881239cefc442729521c7b5b60a6618a334b"
+    },
+    {
+      "file": "abaqus-rna-input-source-lines.csv",
+      "sha256": "737b41212aae529cea619b84d304ded69063e30574486edfaab34f9f3c9fb3cd"
+    },
+    {
+      "file": "abaqus-rna-M6.csv",
+      "sha256": "2c1c78d3c6e12e3f7ff71e176ac03223b1ea2fab7bf32a673b333a933a148d6d"
+    },
+    {
+      "file": "abaqus-rna-properties.json",
+      "sha256": "4cb8f5f680cf4e27d3da329c0a45b0a083a99a9f6a98dc345790b8d22a667f34"
+    }
+  ]
+}

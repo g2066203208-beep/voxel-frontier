@@ -1,0 +1,276 @@
+{
+  "schema": "T038-M2-versus-R2-conditional-comparison-v1",
+  "scope": "undeformed M2 B31 versus independent float64 frozen native R2 operator; not operating validation",
+  "provenance": [
+    {
+      "file": "abaqus-rna-properties.json",
+      "sha256": "4cb8f5f680cf4e27d3da329c0a45b0a083a99a9f6a98dc345790b8d22a667f34"
+    },
+    {
+      "file": "openfast-rna-current.json",
+      "sha256": "cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e"
+    },
+    {
+      "file": "compare_rna_properties.py",
+      "sha256": "f44f85d12c930c391522f7f27daabba8cd620c0e51e472238d8af0580ae68b87"
+    }
+  ],
+  "alignment": {
+    "R_OF_IEC_to_ABQ": [
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "common_point_ABQ_m": [
+      0.0,
+      158.0,
+      0.0
+    ],
+    "status": "defined geometric candidate at zero yaw; historical wind/load mapping is still unverified"
+  },
+  "mass": {
+    "M2_kg": 673998.4931380384,
+    "R2_float64_kg": 676753.2907231401,
+    "R2_minus_M2_kg": 2754.7975851016818,
+    "M2_deficit_relative_to_R2_percent": 0.407060833373719,
+    "increase_relative_to_M2_percent": 0.4087245911004559,
+    "R2_archived_printed_kg": 676753.25,
+    "float64_minus_archived_printed_kg": 0.04072314011864364
+  },
+  "component_mass_difference": [
+    {
+      "component": "nacelle",
+      "M2_kg": 446037.0010028453,
+      "R2_float64_kg": 446036.25,
+      "R2_minus_M2_kg": -0.7510028452961706
+    },
+    {
+      "component": "hub",
+      "M2_kg": 105519.77423865834,
+      "R2_float64_kg": 105520.0,
+      "R2_minus_M2_kg": 0.2257613416586537
+    },
+    {
+      "component": "blades_all",
+      "M2_kg": 122441.71789653478,
+      "R2_float64_kg": 125197.04072314015,
+      "R2_minus_M2_kg": 2755.322826605363
+    }
+  ],
+  "centroid": {
+    "M2_global_ABQ_m": [
+      4.318085389364971e-17,
+      160.29779769845646,
+      -0.623184005319902
+    ],
+    "R2_global_ABQ_m": [
+      -4.794053742399661e-16,
+      160.78358803030605,
+      -0.8729624988915398
+    ],
+    "R2_minus_M2_m": [
+      -5.225862281336158e-16,
+      0.48579033184958353,
+      -0.24977849357163773
+    ],
+    "distance_m": 0.5462431165419342
+  },
+  "inertia": {
+    "M2_JG_kgm2": [
+      [
+        108024597.46078354,
+        -4.6272988940561437e-10,
+        -1.6907564080693874e-10
+      ],
+      [
+        -4.6272988940561437e-10,
+        107994037.60245839,
+        -664405.3751226318
+      ],
+      [
+        -1.6907564080693874e-10,
+        -664405.3751226318,
+        162482391.87281075
+      ]
+    ],
+    "R2_JG_in_ABQ_kgm2": [
+      [
+        94926999.79811174,
+        2.2844544447195585e-08,
+        -4.203840483372562e-10
+      ],
+      [
+        2.2844544447195585e-08,
+        99481015.62016469,
+        -5231495.690281978
+      ],
+      [
+        -4.203840483372562e-10,
+        -5231495.690281978,
+        155901495.33851188
+      ]
+    ],
+    "M2_JT_kgm2": [
+      [
+        111844977.67004688,
+        -5.296046040453641e-10,
+        -1.5093859917276008e-10
+      ],
+      [
+        -5.296046040453641e-10,
+        108255790.51447996,
+        300727.28822087054
+      ],
+      [
+        -1.5093859917276008e-10,
+        300727.28822087054,
+        166041019.1700525
+      ]
+    ],
+    "R2_JT_in_ABQ_kgm2": [
+      [
+        100686458.49547963,
+        2.3747649422358834e-08,
+        -7.036072722110896e-10
+      ],
+      [
+        2.3747649422358834e-08,
+        99996744.6180905,
+        -3587006.875091368
+      ],
+      [
+        -7.036072722110896e-10,
+        -3587006.875091368,
+        161145225.03795397
+      ]
+    ],
+    "M2_minus_R2_JG_diagonal_percent_relative_R2": [
+      13.797547263189003,
+      8.557433726649766,
+      4.221188847489654
+    ],
+    "JG_frobenius_difference_relative_R2_percent": 8.720574690544543,
+    "B31_minus_continuous_JG_diagonal_percent_relative_continuous": [
+      11.641018755822529,
+      11.64469615257242,
+      3.90329475831217
+    ]
+  },
+  "R2_frozen_target_M6_at_tower_top_ABQ_mixed_SI": [
+    [
+      676753.2907231401,
+      0.0,
+      0.0,
+      0.0,
+      -590780.2438027451,
+      -1883802.359527161
+    ],
+    [
+      0.0,
+      676753.2907231401,
+      0.0,
+      590780.2438027451,
+      0.0,
+      -3.244391646072556e-10
+    ],
+    [
+      0.0,
+      0.0,
+      676753.2907231401,
+      1883802.359527161,
+      3.244391646072556e-10,
+      0.0
+    ],
+    [
+      0.0,
+      590780.2438027451,
+      1883802.359527161,
+      100686458.49547963,
+      2.3747649422358834e-08,
+      -7.036072722110896e-10
+    ],
+    [
+      -590780.2438027451,
+      0.0,
+      3.244391646072556e-10,
+      2.3747649422358834e-08,
+      99996744.6180905,
+      -3587006.875091368
+    ],
+    [
+      -1883802.359527161,
+      -3.244391646072556e-10,
+      0.0,
+      -7.036072722110896e-10,
+      -3587006.875091368,
+      161145225.03795397
+    ]
+  ],
+  "M6_difference_by_unit_block_only": [
+    {
+      "block": "translation_translation",
+      "unit": "kg",
+      "max_abs_difference": 2754.7975851016818,
+      "frobenius_difference": 4771.449381964161
+    },
+    {
+      "block": "translation_rotation",
+      "unit": "kg*m",
+      "max_abs_difference": 335090.173231452,
+      "frobenius_difference": 531869.8148596991
+    },
+    {
+      "block": "rotation_rotation",
+      "unit": "kg*m^2",
+      "max_abs_difference": 11158519.174567252,
+      "frobenius_difference": 15713756.49935156
+    }
+  ],
+  "proposed_validation_copy_only": {
+    "MASS_kg": 676753.2907231401,
+    "CG_global_ABQ_m": [
+      -4.794053742399661e-16,
+      160.78358803030605,
+      -0.8729624988915398
+    ],
+    "ROTARYI_at_CG_order_I11_I22_I33_I12_I13_I23_kgm2": [
+      94926999.79811174,
+      99481015.62016469,
+      155901495.33851188,
+      2.2844544447195585e-08,
+      -4.203840483372562e-10,
+      -5231495.690281978
+    ],
+    "implementation": "mass and full centroid tensor at CG, rigidly offset to tower-top reference; not generated or applied"
+  },
+  "verification": {
+    "rotation_is_right_handed": true,
+    "M2_M6_reconstructs": true,
+    "R2_M6_reconstructs_after_rotation": true,
+    "R2_M6_is_symmetric": true,
+    "both_centroid_tensors_positive_definite": true,
+    "both_M6_positive_definite": true,
+    "component_mass_difference_closes": true
+  },
+  "limits": [
+    "No single mixed-unit M6 relative norm is used.",
+    "R2 native omissions are implementation assumptions, not physical zero inertias.",
+    "Float64 reconstruction differs from archived finite-precision ED.sum; no exact solver matrix was exported.",
+    "Axis map is a proposed geometric alignment; it does not validate historical load transfer.",
+    "D08 remains OPEN; flexible, rotating and operating response equivalence is not shown."
+  ],
+  "solver_executed": false,
+  "model_modified": false
+}

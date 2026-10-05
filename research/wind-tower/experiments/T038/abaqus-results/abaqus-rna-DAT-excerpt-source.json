@@ -1,0 +1,18 @@
+{
+  "source_file": "DTU158_RECONSTRUCTED_M2.dat",
+  "source_sha256": "632372fb940edce81999de0b8fafa748eb665a8555e4f394c8953b8377566316",
+  "source_first_line": 3768,
+  "source_last_line": 3798,
+  "excerpt_file": "DTU158_RECONSTRUCTED_M2-rigid-body-mass-excerpt.dat",
+  "excerpt_sha256": "c78b3bdca6d6fab9effc4905453fbad1a811cec963657af0842cdcd0284b4058",
+  "change": "Only selected complete printed rigid-body section, newline normalized to LF; numeric text unchanged.",
+  "full_DAT_at_fixed_github_path": false,
+  "github_path_checked": "research/wind-tower/experiments/T026/outputs/RUN-T026-034",
+  "github_ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+  "listing_found": [
+    "DTU158_RECONSTRUCTED_M2.msg",
+    "DTU158_RECONSTRUCTED_M2.sta"
+  ],
+  "public_excerpt_parser_check_passed": true,
+  "note": "Confirmed the same optional --dat parser accepts this excerpt and reproduces all printed-precision comparison passes."
+}

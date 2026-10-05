@@ -1,0 +1,1072 @@
+{
+  "repository": "g2066203208-beep/voxel-frontier",
+  "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+  "solver_run": false,
+  "direct_lin_paths": [],
+  "archive_manifests": [
+    {
+      "path": "research/wind-tower/archive/local-assets-20261004/file-manifest.json",
+      "record_count": 2000,
+      "candidate_records": [
+        {
+          "section": "damping",
+          "relative_path": "01_MODEL_IDENTITY_AUDIT.md",
+          "bytes": 3108,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "0A4250AC3D8E3A958A4E0962AFE833F14FA2665B82AA78D627C0E4E02AD372B6",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "01_MODEL_IDENTITY_AUDIT.md"
+        },
+        {
+          "section": "damping",
+          "relative_path": "02_MODEL_IDENTITY_DIFF.csv",
+          "bytes": 1118,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "248B0C08542B82140E0D68F5C62587D28A5564677217E35D56B9B8DC0CF12E63",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "02_MODEL_IDENTITY_DIFF.csv"
+        },
+        {
+          "section": "damping",
+          "relative_path": "C2_ABAQUS_M6_PROVENANCE.md",
+          "bytes": 477,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "23CB4F7DB31691C8130989FBA58E5B9A9FAB67DCB012238AC71899AAC19F01AC",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "C2_ABAQUS_M6_PROVENANCE.md"
+        },
+        {
+          "section": "damping",
+          "relative_path": "C2_ABAQUS_M6_RECONSTRUCTED.csv",
+          "bytes": 1484,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "C0DBB879B4491B0831BD0F64F89B7B81054AA60193CBB63DBA842EFDF3AC84F8",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "C2_ABAQUS_M6_RECONSTRUCTED.csv"
+        },
+        {
+          "section": "damping",
+          "relative_path": "C2_ABAQUS_M6_TRANSPORT_VERIFICATION.csv",
+          "bytes": 432,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "611056BBB16EFEC6731ECCD108022E1AAEA846247418F8426C1022F06C09654B",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "C2_ABAQUS_M6_TRANSPORT_VERIFICATION.csv"
+        },
+        {
+          "section": "damping",
+          "relative_path": "EQ18_CONSTRAINED_STRONG_WEAK_IDENTITY.csv",
+          "bytes": 1310,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "F54BE698F3082801E7E86DFCFFA0F8001DE0AE2620842182410120383D341955",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "EQ18_CONSTRAINED_STRONG_WEAK_IDENTITY.csv"
+        },
+        {
+          "section": "damping",
+          "relative_path": "EQ18_STRONG_WEAK_IDENTITY.csv",
+          "bytes": 1310,
+          "status": "duplicate-reference",
+          "archive": "damping/part-001.zip",
+          "sha256": "F54BE698F3082801E7E86DFCFFA0F8001DE0AE2620842182410120383D341955",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "EQ18_CONSTRAINED_STRONG_WEAK_IDENTITY.csv"
+        },
+        {
+          "section": "damping",
+          "relative_path": "FORMAL_RNA_MASS_PROPERTIES.csv",
+          "bytes": 312,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "57806128BBFB7438BC6EF0D6CB8B6865C527189A00324DF4414C2EC905AB5210",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "FORMAL_RNA_MASS_PROPERTIES.csv"
+        },
+        {
+          "section": "damping",
+          "relative_path": "MODEL_IDENTITY_CLOSURE_20260902.md",
+          "bytes": 2322,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "25526F8BB5A7967D7FAF24229160E17B3C46B19C4443DC01BB502FA04A5CD769",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "MODEL_IDENTITY_CLOSURE_20260902.md"
+        },
+        {
+          "section": "damping",
+          "relative_path": "MODEL_IDENTITY_EVIDENCE.csv",
+          "bytes": 853,
+          "status": "included",
+          "archive": "damping/part-001.zip",
+          "sha256": "F11EB639AF8112669D4735776FD0350B035EADFE5CBA08914B4755C9FBE8DFDD",
+          "canonical_archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+          "canonical_member": "MODEL_IDENTITY_EVIDENCE.csv"
+        },
+        {
+          "section": "damping",
+          "relative_path": "verify_eq18_strong_weak_identity.py",
+          "bytes": 3067,
+          "status": "duplicate-package-or-cache",
+          "archive": "",
+          "sha256": ""
+        },
+        {
+          "section": "damping",
+          "relative_path": "PACKAGE_DAMPING_STAGE_20260902/01_MODEL_IDENTITY_AUDIT.md",
+          "bytes": 3056,
+          "status": "duplicate-package-or-cache",
+          "archive": "",
+          "sha256": ""
+        },
+        {
+          "section": "damping",
+          "relative_path": "PACKAGE_DAMPING_STAGE_20260902/02_MODEL_IDENTITY_DIFF.csv",
+          "bytes": 1118,
+          "status": "duplicate-package-or-cache",
+          "archive": "",
+          "sha256": ""
+        },
+        {
+          "section": "damping",
+          "relative_path": "PACKAGE_DAMPING_STAGE_20260902/MODEL_IDENTITY_CLOSURE_20260902.md",
+          "bytes": 2322,
+          "status": "duplicate-package-or-cache",
+          "archive": "",
+          "sha256": ""
+        },
+        {
+          "section": "damping",
+          "relative_path": "PACKAGE_DAMPING_STAGE_20260902/MODEL_IDENTITY_EVIDENCE.csv",
+          "bytes": 853,
+          "status": "duplicate-package-or-cache",
+          "archive": "",
+          "sha256": ""
+        },
+        {
+          "section": "damping",
+          "relative_path": "PACKAGE_MODAL_FIGURES_AUDIT_20260902_B/01_MODEL_IDENTITY_AUDIT.md",
+          "bytes": 3056,
+          "status": "duplicate-package-or-cache",
+          "archive": "",
+          "sha256": ""
+        },
+        {
+          "section": "damping",
+          "relative_path": "PACKAGE_MODAL_FIGURES_AUDIT_20260902_B/02_MODEL_IDENTITY_DIFF.csv",
+          "bytes": 1118,
+          "status": "duplicate-package-or-cache",
+          "archive": "",
+          "sha256": ""
+        }
+      ]
+    },
+    {
+      "path": "research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json",
+      "record_count": 161,
+      "candidate_records": []
+    },
+    {
+      "path": "research/wind-tower/references/baselines-and-site-20261004/asset-manifest.json",
+      "record_count": 375,
+      "candidate_records": []
+    }
+  ],
+  "searched_inventory_files": [
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/04_OpenFAST与Rainflow_DEL.json",
+      "record_count": 1040,
+      "candidate_records": []
+    },
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/05_对象化阻尼.json",
+      "record_count": 310,
+      "candidate_records": [
+        {
+          "name": "verify_eq18_strong_weak_identity.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\verify_eq18_strong_weak_identity.py",
+          "bytes": 3067,
+          "modified": "2026-09-02 20:27:26",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "C2_ABAQUS_M6_TRANSPORT_VERIFICATION.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\C2_ABAQUS_M6_TRANSPORT_VERIFICATION.csv",
+          "bytes": 432,
+          "modified": "2026-09-02 21:14:11",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "C2_ABAQUS_M6_RECONSTRUCTED.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\C2_ABAQUS_M6_RECONSTRUCTED.csv",
+          "bytes": 1484,
+          "modified": "2026-09-02 21:13:27",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "C2_ABAQUS_M6_PROVENANCE.md",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\C2_ABAQUS_M6_PROVENANCE.md",
+          "bytes": 477,
+          "modified": "2026-09-02 21:13:27",
+          "extension": ".md",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "02_MODEL_IDENTITY_DIFF.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\02_MODEL_IDENTITY_DIFF.csv",
+          "bytes": 1118,
+          "modified": "2026-09-02 14:03:53",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "01_MODEL_IDENTITY_AUDIT.md",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\01_MODEL_IDENTITY_AUDIT.md",
+          "bytes": 3108,
+          "modified": "2026-09-02 21:12:44",
+          "extension": ".md",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "02_MODEL_IDENTITY_DIFF.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\02_MODEL_IDENTITY_DIFF.csv",
+          "bytes": 1118,
+          "modified": "2026-09-02 14:03:53",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "01_MODEL_IDENTITY_AUDIT.md",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_MODAL_FIGURES_AUDIT_20260902_B\\01_MODEL_IDENTITY_AUDIT.md",
+          "bytes": 3056,
+          "modified": "2026-09-02 14:03:53",
+          "extension": ".md",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "EQ18_STRONG_WEAK_IDENTITY.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_STRONG_WEAK_IDENTITY.csv",
+          "bytes": 1310,
+          "modified": "2026-09-02 21:13:27",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "EQ18_CONSTRAINED_STRONG_WEAK_IDENTITY.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\EQ18_CONSTRAINED_STRONG_WEAK_IDENTITY.csv",
+          "bytes": 1310,
+          "modified": "2026-09-02 21:13:27",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "FORMAL_RNA_MASS_PROPERTIES.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\FORMAL_RNA_MASS_PROPERTIES.csv",
+          "bytes": 312,
+          "modified": "2026-09-02 20:26:14",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "MODEL_IDENTITY_CLOSURE_20260902.md",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\MODEL_IDENTITY_CLOSURE_20260902.md",
+          "bytes": 2322,
+          "modified": "2026-09-02 15:38:52",
+          "extension": ".md",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "MODEL_IDENTITY_EVIDENCE.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\MODEL_IDENTITY_EVIDENCE.csv",
+          "bytes": 853,
+          "modified": "2026-09-02 15:34:45",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "MODEL_IDENTITY_EVIDENCE.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\MODEL_IDENTITY_EVIDENCE.csv",
+          "bytes": 853,
+          "modified": "2026-09-02 15:34:45",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "MODEL_IDENTITY_CLOSURE_20260902.md",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\MODEL_IDENTITY_CLOSURE_20260902.md",
+          "bytes": 2322,
+          "modified": "2026-09-02 15:38:52",
+          "extension": ".md",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "02_MODEL_IDENTITY_DIFF.csv",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\02_MODEL_IDENTITY_DIFF.csv",
+          "bytes": 1118,
+          "modified": "2026-09-02 14:03:53",
+          "extension": ".csv",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "01_MODEL_IDENTITY_AUDIT.md",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\\PACKAGE_DAMPING_STAGE_20260902\\01_MODEL_IDENTITY_AUDIT.md",
+          "bytes": 3056,
+          "modified": "2026-09-02 14:03:53",
+          "extension": ".md",
+          "verification": "inventory-only"
+        }
+      ]
+    },
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/06_Abaqus及求解文件_用途待核.json",
+      "record_count": 288,
+      "candidate_records": [
+        {
+          "name": "ops.gpencil.draw.line.dat",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\datafiles\\icons\\ops.gpencil.draw.line.dat",
+          "bytes": 422,
+          "modified": "2025-06-30 05:35:40",
+          "extension": ".dat",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ops.node.links_cut.dat",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\datafiles\\icons\\ops.node.links_cut.dat",
+          "bytes": 1628,
+          "modified": "2025-06-30 05:35:40",
+          "extension": ".dat",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ops.sculpt.line_trim.dat",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\datafiles\\icons\\ops.sculpt.line_trim.dat",
+          "bytes": 1826,
+          "modified": "2025-06-30 05:35:40",
+          "extension": ".dat",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ops.sculpt.line_project.dat",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\datafiles\\icons\\ops.sculpt.line_project.dat",
+          "bytes": 1016,
+          "modified": "2025-06-30 05:35:40",
+          "extension": ".dat",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ops.sculpt.line_mask.dat",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\datafiles\\icons\\ops.sculpt.line_mask.dat",
+          "bytes": 1412,
+          "modified": "2025-06-30 05:35:40",
+          "extension": ".dat",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ops.sculpt.line_hide.dat",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\datafiles\\icons\\ops.sculpt.line_hide.dat",
+          "bytes": 1034,
+          "modified": "2025-06-30 05:35:40",
+          "extension": ".dat",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ops.sculpt.line_face_set.dat",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\datafiles\\icons\\ops.sculpt.line_face_set.dat",
+          "bytes": 1790,
+          "modified": "2025-06-30 05:35:40",
+          "extension": ".dat",
+          "verification": "inventory-only"
+        }
+      ]
+    },
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/06_Abaqus塔架与RNA.json",
+      "record_count": 273,
+      "candidate_records": []
+    },
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/07_Simpack柔性RNA与R5C.json",
+      "record_count": 7866,
+      "candidate_records": [
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.spckst",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\validation_static_official\\DTU_RNA_3BLADE_SPATIAL_V2.spckst",
+          "bytes": 8904,
+          "modified": "2026-08-31 11:01:01",
+          "extension": ".spckst",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.sir",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\validation_static_official\\DTU_RNA_3BLADE_SPATIAL_V2.sir",
+          "bytes": 9988,
+          "modified": "2026-08-31 11:01:01",
+          "extension": ".sir",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.sbr",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\validation_static_official\\DTU_RNA_3BLADE_SPATIAL_V2.sbr",
+          "bytes": 2234214,
+          "modified": "2026-08-31 11:01:01",
+          "extension": ".sbr",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\validation_static_official\\DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "bytes": 728,
+          "modified": "2026-08-31 11:01:01",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.tes",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V2_testcall\\DTU_RNA_3BLADE_SPATIAL_V2.tes",
+          "bytes": 11726,
+          "modified": "2026-08-30 16:18:29",
+          "extension": ".tes",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V2_testcall\\DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "bytes": 728,
+          "modified": "2026-08-30 16:18:29",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1_1788085851961635900.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\gui-logs\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1_1788085851961635900.log",
+          "bytes": 204,
+          "modified": "2026-08-30 18:30:54",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH_1788085220174439800.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\gui-logs\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH_1788085220174439800.log",
+          "bytes": 202,
+          "modified": "2026-08-30 18:20:22",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_1788078746959814200.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\gui-logs\\DTU_RNA_3BLADE_SPATIAL_V2_1788078746959814200.log",
+          "bytes": 978,
+          "modified": "2026-08-30 18:29:20",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.spckst",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V2_static\\DTU_RNA_3BLADE_SPATIAL_V2.spckst",
+          "bytes": 8904,
+          "modified": "2026-08-30 16:18:54",
+          "extension": ".spckst",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.sir",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V2_static\\DTU_RNA_3BLADE_SPATIAL_V2.sir",
+          "bytes": 9988,
+          "modified": "2026-08-30 16:18:54",
+          "extension": ".sir",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.sbr",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V2_static\\DTU_RNA_3BLADE_SPATIAL_V2.sbr",
+          "bytes": 2234214,
+          "modified": "2026-08-30 16:18:54",
+          "extension": ".sbr",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V2_static\\DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "bytes": 728,
+          "modified": "2026-08-30 16:18:54",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V1.tes",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V1_testcall\\DTU_RNA_3BLADE_SPATIAL_V1.tes",
+          "bytes": 12952,
+          "modified": "2026-08-30 16:09:11",
+          "extension": ".tes",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V1.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_3BLADE_SPATIAL_V1_testcall\\DTU_RNA_3BLADE_SPATIAL_V1.licreq.log",
+          "bytes": 728,
+          "modified": "2026-08-30 16:09:10",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1.spck.patch.json",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1.spck.patch.json",
+          "bytes": 1992,
+          "modified": "2026-08-30 18:30:51",
+          "extension": ".json",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1.spck",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1.spck",
+          "bytes": 16440,
+          "modified": "2026-08-30 18:30:51",
+          "extension": ".spck",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.assembly.json",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2.assembly.json",
+          "bytes": 3648,
+          "modified": "2026-08-30 16:17:35",
+          "extension": ".json",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V1.spck",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V1.spck",
+          "bytes": 14184,
+          "modified": "2026-08-30 16:08:05",
+          "extension": ".spck",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1.output\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_SCALE1.licreq.log",
+          "bytes": 753,
+          "modified": "2026-08-30 18:30:55",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH.spck.patch.json",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH.spck.patch.json",
+          "bytes": 1411,
+          "modified": "2026-08-30 18:20:20",
+          "extension": ".json",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH.spck",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH.spck",
+          "bytes": 16503,
+          "modified": "2026-08-30 18:20:20",
+          "extension": ".spck",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V1.assembly.json",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V1.assembly.json",
+          "bytes": 3648,
+          "modified": "2026-08-30 16:08:05",
+          "extension": ".json",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.spck",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2.spck",
+          "bytes": 16244,
+          "modified": "2026-08-30 16:17:35",
+          "extension": ".spck",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V1.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V1.output\\DTU_RNA_3BLADE_SPATIAL_V1.licreq.log",
+          "bytes": 728,
+          "modified": "2026-08-30 16:08:22",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_capture_20260830.png",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2_capture_20260830.png",
+          "bytes": 111920,
+          "modified": "2026-08-30 16:32:54",
+          "extension": ".png",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH.output\\DTU_RNA_3BLADE_SPATIAL_V2_SMOOTH_PATH.licreq.log",
+          "bytes": 749,
+          "modified": "2026-08-30 18:20:22",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\DTU_RNA_GUI\\DTU_RNA_3BLADE_SPATIAL_V2.output\\DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "bytes": 728,
+          "modified": "2026-09-01 16:45:00",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.tes",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-rigid-smoke\\DTU_RNA_3BLADE_SPATIAL_V2.tes",
+          "bytes": 11726,
+          "modified": "2026-08-30 19:21:23",
+          "extension": ".tes",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-rigid-smoke\\DTU_RNA_3BLADE_SPATIAL_V2.licreq.log",
+          "bytes": 728,
+          "modified": "2026-08-30 19:21:23",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.spckst",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-complete-integration_dd0d9e29\\DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.spckst",
+          "bytes": 8906,
+          "modified": "2026-08-30 19:42:34",
+          "extension": ".spckst",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.sir",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-complete-integration_dd0d9e29\\DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.sir",
+          "bytes": 122510,
+          "modified": "2026-08-30 19:42:33",
+          "extension": ".sir",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.sbr",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-complete-integration_dd0d9e29\\DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.sbr",
+          "bytes": 2275369,
+          "modified": "2026-08-30 19:42:34",
+          "extension": ".sbr",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.licreq.log",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-complete-integration_dd0d9e29\\DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.licreq.log",
+          "bytes": 752,
+          "modified": "2026-08-30 19:42:33",
+          "extension": ".log",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.intinfo",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-complete-integration_dd0d9e29\\DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.intinfo",
+          "bytes": 3714,
+          "modified": "2026-08-30 19:42:33",
+          "extension": ".intinfo",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.spck",
+          "source_locator": "CODEX_WORK\\simpack-mcp-runs\\rna-complete-integration\\DTU_RNA_3BLADE_SPATIAL_V2_INTEGRATION.spck",
+          "bytes": 16244,
+          "modified": "2026-08-30 16:17:35",
+          "extension": ".spck",
+          "verification": "inventory-only"
+        }
+      ]
+    },
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/10_脚本工具与管理.json",
+      "record_count": 6732,
+      "candidate_records": [
+        {
+          "name": "test_spatial_assembly.cpython-312.pyc",
+          "source_locator": "CODEX_WORK\\2026-08-29\\c-mc-codex\\outputs\\simpack-control-mcp\\__pycache__\\test_spatial_assembly.cpython-312.pyc",
+          "bytes": 6601,
+          "modified": "2026-08-30 16:37:40",
+          "extension": ".pyc",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "spatial_assembly.cpython-39.pyc",
+          "source_locator": "CODEX_WORK\\2026-08-29\\c-mc-codex\\outputs\\simpack-control-mcp\\__pycache__\\spatial_assembly.cpython-39.pyc",
+          "bytes": 34440,
+          "modified": "2026-09-05 22:31:52",
+          "extension": ".pyc",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "spatial_assembly.cpython-312.pyc",
+          "source_locator": "CODEX_WORK\\2026-08-29\\c-mc-codex\\outputs\\simpack-control-mcp\\__pycache__\\spatial_assembly.cpython-312.pyc",
+          "bytes": 54575,
+          "modified": "2026-09-02 20:41:38",
+          "extension": ".pyc",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "spatial_assembly.cpython-311.pyc",
+          "source_locator": "CODEX_WORK\\2026-08-29\\c-mc-codex\\outputs\\simpack-control-mcp\\__pycache__\\spatial_assembly.cpython-311.pyc",
+          "bytes": 56255,
+          "modified": "2026-08-31 13:47:16",
+          "extension": ".pyc",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "test_spatial_assembly.py",
+          "source_locator": "CODEX_WORK\\2026-08-29\\c-mc-codex\\outputs\\simpack-control-mcp\\test_spatial_assembly.py",
+          "bytes": 3846,
+          "modified": "2026-08-30 16:37:29",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "spatial_assembly.py",
+          "source_locator": "CODEX_WORK\\2026-08-29\\c-mc-codex\\outputs\\simpack-control-mcp\\spatial_assembly.py",
+          "bytes": 39887,
+          "modified": "2026-09-02 20:41:25",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "FASTLin_EDM.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\openfast_toolbox\\io\\tests\\example_files\\FASTLin_EDM.lin",
+          "bytes": 19937,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "FASTLin.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\openfast_toolbox\\io\\tests\\example_files\\FASTLin.lin",
+          "bytes": 10287,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "verify_rna_m6_transport.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\verify_rna_m6_transport.py",
+          "bytes": 1488,
+          "modified": "2026-09-02 21:14:04",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "verify_eq18_strong_weak_identity.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\verify_eq18_strong_weak_identity.py",
+          "bytes": 3067,
+          "modified": "2026-09-02 20:27:26",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "Main.24.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\NREL5MW\\5MW_Land_Lin_Rotating\\Main.24.lin",
+          "bytes": 13522,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "Main.12.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\NREL5MW\\5MW_Land_Lin_Rotating\\Main.12.lin",
+          "bytes": 13522,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "Main.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\NREL5MW\\5MW_Land_Lin_Rotating\\Main.1.lin",
+          "bytes": 13522,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "Main.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\NREL5MW\\5MW_Land_Lin_BladeOnly\\Main.1.lin",
+          "bytes": 9226,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ws03.0.34.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\linearization_outputs\\ws03.0.34.lin",
+          "bytes": 33656,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ws03.0.13.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\linearization_outputs\\ws03.0.13.lin",
+          "bytes": 33656,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ws03.0.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\linearization_outputs\\ws03.0.1.lin",
+          "bytes": 33656,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "ws00.0.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\linearization_outputs\\ws00.0.1.lin",
+          "bytes": 33635,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "Standstill_old.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\example_files\\Standstill_old.1.lin",
+          "bytes": 87830,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "Standstill_ForID_ED.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\example_files\\Standstill_ForID_ED.1.lin",
+          "bytes": 26512,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "StandstillSemi_ForID_EDHD.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\example_files\\StandstillSemi_ForID_EDHD.1.lin",
+          "bytes": 423077,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "Standstill.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\example_files\\Standstill.1.lin",
+          "bytes": 102005,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "BAR_URC_EDBD.1.lin",
+          "source_locator": "CODEX_WORK\\2026-08-29\\new-chat\\work\\openfast_pkg\\OpenFAST批量审查离线工具_v0.2.0_Win64_Py312\\third_party\\openfast_toolbox_upstream\\data\\example_files\\BAR_URC_EDBD.1.lin",
+          "bytes": 54645,
+          "modified": "2026-08-26 16:40:04",
+          "extension": ".lin",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "build_g0_identity_report.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\turbsim\\build_g0_identity_report.py",
+          "bytes": 6617,
+          "modified": "2026-09-02 14:03:25",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "test_spatial_assembly.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\new-chat\\SimpackMCP_Portable_0.21.0_release\\test_spatial_assembly.py",
+          "bytes": 3846,
+          "modified": "2026-08-30 16:37:29",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "spatial_assembly.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\new-chat\\SimpackMCP_Portable_0.21.0_release\\spatial_assembly.py",
+          "bytes": 39887,
+          "modified": "2026-09-02 20:41:25",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "spatial_assembly.cpython-312.pyc",
+          "source_locator": "CODEX_WORK\\2026-08-30\\new-chat\\SimpackMCP_Portable_0.21.0\\__pycache__\\spatial_assembly.cpython-312.pyc",
+          "bytes": 54572,
+          "modified": "2026-09-03 17:34:56",
+          "extension": ".pyc",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "test_spatial_assembly.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\new-chat\\SimpackMCP_Portable_0.21.0\\test_spatial_assembly.py",
+          "bytes": 3846,
+          "modified": "2026-08-30 16:37:29",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "spatial_assembly.py",
+          "source_locator": "CODEX_WORK\\2026-08-30\\new-chat\\SimpackMCP_Portable_0.21.0\\spatial_assembly.py",
+          "bytes": 39887,
+          "modified": "2026-09-02 20:41:25",
+          "extension": ".py",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "gui-arm64.exe",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\python\\lib\\site-packages\\setuptools\\gui-arm64.exe",
+          "bytes": 137728,
+          "modified": "2025-06-30 05:38:58",
+          "extension": ".exe",
+          "verification": "inventory-only"
+        },
+        {
+          "name": "cli-arm64.exe",
+          "source_locator": "CODEX_WORK\\2026-09-28\\2d\\work\\blender_runtime\\blender-4.5.14-windows-x64\\4.5\\python\\lib\\site-packages\\setuptools\\cli-arm64.exe",
+          "bytes": 137216,
+          "modified": "2025-06-30 05:38:58",
+          "extension": ".exe",
+          "verification": "inventory-only"
+        }
+      ]
+    },
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/11_历史与待完成.json",
+      "record_count": 1432,
+      "candidate_records": []
+    },
+    {
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/12_其他候选资料_待判定.json",
+      "record_count": 3402,
+      "candidate_records": []
+    }
+  ],
+  "historical_abaqus_M6_evidence": [
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+      "member": "C2_ABAQUS_M6_PROVENANCE.md",
+      "sha256": "23cb4f7db31691c8130989fba58e5b9a9fab67dcb012238ac71899aac19f01ac",
+      "bytes": 477,
+      "text": "# Formal RNA spatial mass matrix\r\n\r\nThe obsolete 673997.979913 kg SIMPACK metadata is excluded. The authoritative C2 mass/CG frozen values are m=676723.995578 kg and COM=(0,160.296599,-0.649270) m. The inertia tensor is the formal spatial-RNA B31 re-integration tensor in `FORMAL_RNA_MASS_PROPERTIES.csv` (about RA=(0,160,0)); the 6x6 matrix is transported to TA=(0,158,0) with M_TA=A^T M_RA A. This is a reproducible reconstruction pending no separate binary C2 matrix file.\r\n"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+      "member": "C2_ABAQUS_M6_RECONSTRUCTED.csv",
+      "sha256": "c0dbb879b4491b0831bd0f64f89b7b81054aa60193cbb63dba842efdf3ac84f8",
+      "bytes": 1484,
+      "text": "reference,row,col,value\r\nRA,1,1,676723.995578\r\nRA,1,2,0.0\r\nRA,1,3,0.0\r\nRA,1,4,-0.0\r\nRA,1,5,-439376.588608928\r\nRA,1,6,-200715.66036442993\r\nRA,2,1,0.0\r\nRA,2,2,676723.995578\r\nRA,2,3,0.0\r\nRA,2,4,439376.588608928\r\nRA,2,5,-0.0\r\nRA,2,6,0.0\r\nRA,3,1,0.0\r\nRA,3,2,0.0\r\nRA,3,3,676723.995578\r\nRA,3,4,200715.66036442993\r\nRA,3,5,-0.0\r\nRA,3,6,-0.0\r\nRA,4,1,0.0\r\nRA,4,2,439376.588608928\r\nRA,4,3,200715.66036442993\r\nRA,4,4,97270571.47167587\r\nRA,4,5,3.026798367500305e-09\r\nRA,4,6,1.1641532182693481e-10\r\nRA,5,1,-439376.588608928\r\nRA,5,2,0.0\r\nRA,5,3,-0.0\r\nRA,5,4,3.026798367500305e-09\r\nRA,5,5,97180239.31795417\r\nRA,5,6,-539322.9050201096\r\nRA,6,1,-200715.66036442993\r\nRA,6,2,0.0\r\nRA,6,3,0.0\r\nRA,6,4,1.1641532182693481e-10\r\nRA,6,5,-539322.9050201096\r\nRA,6,6,156540227.21152014\r\nTA,1,1,676723.995578\r\nTA,1,2,0.0\r\nTA,1,3,0.0\r\nTA,1,4,0.0\r\nTA,1,5,-439376.588608928\r\nTA,1,6,-1554163.6515204299\r\nTA,2,1,0.0\r\nTA,2,2,676723.995578\r\nTA,2,3,0.0\r\nTA,2,4,439376.588608928\r\nTA,2,5,0.0\r\nTA,2,6,0.0\r\nTA,3,1,0.0\r\nTA,3,2,0.0\r\nTA,3,3,676723.995578\r\nTA,3,4,1554163.6515204299\r\nTA,3,5,0.0\r\nTA,3,6,0.0\r\nTA,4,1,0.0\r\nTA,4,2,439376.588608928\r\nTA,4,3,1554163.6515204299\r\nTA,4,4,100780330.09544559\r\nTA,4,5,3.026798367500305e-09\r\nTA,4,6,1.1641532182693481e-10\r\nTA,5,1,-439376.588608928\r\nTA,5,2,0.0\r\nTA,5,3,0.0\r\nTA,5,4,3.026798367500305e-09\r\nTA,5,5,97180239.31795417\r\nTA,5,6,339430.27219774644\r\nTA,6,1,-1554163.6515204299\r\nTA,6,2,0.0\r\nTA,6,3,0.0\r\nTA,6,4,1.1641532182693481e-10\r\nTA,6,5,339430.27219774644\r\nTA,6,6,160049985.83528987\r\n"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+      "member": "FORMAL_RNA_MASS_PROPERTIES.csv",
+      "sha256": "57806128bbfb7438bc6ef0d6cb8b6865c527189a00324df4414c2ec905ab5210",
+      "bytes": 312,
+      "text": "quantity,value\r\nmass_kg,676724.0250907971\r\nCOM_x_m,4.300694134928755e-17\r\nCOM_y_m,160.2965983001137\r\nCOM_z_m,-0.6492696296195837\r\nIxx_kgm2,97270571.47167587\r\nIyy_kgm2,97180239.31795417\r\nIzz_kgm2,156540227.21152014\r\nIxy_kgm2,3.026798367500305e-09\r\nIxz_kgm2,1.1641532182693481e-10\r\nIyz_kgm2,-539322.9050201096\r\n"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+      "member": "reconcile_rna_c2_mass_properties.py",
+      "sha256": "442fe01de1d16b7b4534fd2530637f1461c7f4757dea7b78ecae0019797c9206",
+      "bytes": 2205,
+      "text": "from pathlib import Path\nimport csv\nBASE=Path(r\"C:\\Users\\tt\\Documents\\Codex\\2026-08-30\\turbsim\\outputs\\damping_final_20260902_CORRECTED\")\ncurrent={r['quantity']:float(r['value']) for r in csv.DictReader((BASE/'FORMAL_RNA_MASS_PROPERTIES.csv').open(encoding='utf-8-sig'))}\nmeta=next(r for r in csv.DictReader((Path(r'C:\\Thesis_Tower185\\DTU\\SIMPACK_EXPORT\\metadata\\rna_component_mass_properties.csv')).open(encoding='utf-8-sig')) if r['component']=='RNA_TOTAL')\nfrozen={'mass_kg':float(meta['mass_kg']),'COM_y_m':float(meta['com_y_m']),'COM_z_m':float(meta['com_z_m'])}\ntarget={'mass_kg':676723.9956,'COM_y_m':160.296599,'COM_z_m':-0.649270}\nrows=[]\nfor key in ('mass_kg','COM_y_m','COM_z_m'):\n    fv=frozen.get(key,float('nan')); tv=target.get(key,float('nan')); cv=current.get(key,float('nan'))\n    rows.append([key,cv,fv,tv,cv-fv,cv-tv,(cv-tv)/tv if tv else float('nan')])\nout=BASE/'RNA_C2_RECONCILIATION.csv'\nwith out.open('w',newline='',encoding='utf-8-sig') as f:\n    w=csv.writer(f);w.writerow(['quantity','INP_reconstruction','C2_metadata_found','C2_values_stated_by_user','INP_minus_metadata','INP_minus_user_target','relative_to_user_target']);w.writerows(rows)\n(BASE/'RNA_C2_RECONCILIATION.md').write_text(\"\"\"# RNA 6×6 reconciliation\\n\\nThe archived C2 metadata found on this workstation is `C:\\\\Thesis_Tower185\\\\DTU\\\\SIMPACK_EXPORT\\\\metadata\\\\rna_component_mass_properties.csv`. Its RNA_TOTAL row reports 673997.979913 kg, COM=(0,160.297798,-0.623190) m, and a full inertia tensor. The current direct INP line-mass reconstruction reports 676724.025091 kg, COM=(0,160.296598,-0.649270) m.\\n\\nThe user-stated frozen C2 target is m=676723.9956 kg, COM=(0,160.296599,-0.649270) m. Against that target, mass differs by approximately 0.0295 kg and COM agrees to about 1 micrometre in y; the z coordinate agrees to the shown precision. Against the archived metadata row, however, mass differs by about 2726 kg and COM-z by 0.0261 m. This is a provenance/version discrepancy, not a reason to silently overwrite either record. `RNA_6X6_FOR_EQ18` remains HOLD until the exact frozen C2 inertia file is identified or the user confirms the stated target as authoritative.\\n\"\"\",encoding='utf-8')\nprint(out)\n"
+    }
+  ],
+  "scope": "Repository tree, main/supplement/reference manifests, selected original local-file inventories; content outside these scopes may exist",
+  "interpretation": "No selected-R2 identity .lin or D/B-to-M6 original was found in this scope. Existing C2 matrix is historical Abaqus reconstruction, not selected-R2 OpenFAST evidence.",
+  "provenance": [
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/archive/local-assets-20261004/file-manifest.json",
+      "bytes": 802969,
+      "sha256": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json",
+      "bytes": 76630,
+      "sha256": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/references/baselines-and-site-20261004/asset-manifest.json",
+      "bytes": 252300,
+      "sha256": "afcec5f3cc65fee820ca21d79825f6fd680e089aca5dcf32be878fd32ef0c4b9"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/04_OpenFAST与Rainflow_DEL.json",
+      "bytes": 348944,
+      "sha256": "f33b280a95fd30f88864c5c2688d77d901319f48ca95e32dd4250079c38ad702"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/05_对象化阻尼.json",
+      "bytes": 102254,
+      "sha256": "4a9db92529cf80544afeb9c47666b213706e8becb7299fe61309f0de29dd8fa1"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/06_Abaqus及求解文件_用途待核.json",
+      "bytes": 88627,
+      "sha256": "7a9b141a6c34fa4d84bb4a54840082def0cc5f91b6c59dc2fa2a0a73ee3749df"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/06_Abaqus塔架与RNA.json",
+      "bytes": 78742,
+      "sha256": "527c7dc0a5f39e4fbfb746c4a8f787df2fcd4829d90635fc5893f3c97d446e75"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/07_Simpack柔性RNA与R5C.json",
+      "bytes": 2420730,
+      "sha256": "af6b42e4bcb5fecc42a344d640074752202fe9ce4f2379099227c414e7951f41"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/10_脚本工具与管理.json",
+      "bytes": 2243513,
+      "sha256": "0e531229efcd076f25cab5c8213daedf803dc0a20970fe41c9c6b50cc9d5ae33"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/11_历史与待完成.json",
+      "bytes": 442930,
+      "sha256": "cfbcd285957ed90dc59a411405cd1d21a65589b2d6a56a2687d3bdbb3537f034"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/registry/local-work-inventory-20261004/12_其他候选资料_待判定.json",
+      "bytes": 1077188,
+      "sha256": "eb923cfcaea86e4b9f8f5d30f0cca6fafb050baddee8328ad905b9d0b6359dc3"
+    },
+    {
+      "repository": "g2066203208-beep/voxel-frontier",
+      "ref": "7c05ea7355fa623f863a3cf11d0908a83cb94f41",
+      "path": "research/wind-tower/archive/local-assets-20261004/damping/part-001.zip",
+      "bytes": 1463874,
+      "sha256": "06b61a245ead38d613b8e168236b44e3dd4af6438f33f585e11115ea291006c7"
+    }
+  ]
+}
