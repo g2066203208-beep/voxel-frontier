@@ -8,7 +8,7 @@ export function researchPage() {
 }
 export function engineeringPage() {
   const inp = repo + '/blob/main/research/wind-tower/experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp';
-  return `<div class="page-heading"><div><div class="eyebrow">ABAQUS / FINITE ELEMENT MODEL</div><h1>Abaqus 有限元模型在线查看</h1><p>直接从当前 T045 首选 .inp 输入文件生成。显示的是未变形有限元网格、钢筋/预应力筋、接头以及 RNA 等效质量—转动惯量位置，不是 CAD 外观替代图。</p></div><a class="button primary" href="${inp}" target="_blank" rel="noopener">打开当前 Abaqus INP</a></div><div class="engineering-layout"><section class="panel viewer-panel"><div class="viewer-controls"><button class="button" id="model-reset">轴测</button><button class="button" id="model-front">正视</button><button class="button" id="model-side">侧视</button><button class="button" id="model-top">俯视</button><label><input type="checkbox" id="model-mesh" checked/> 外表面网格</label><label><input type="checkbox" id="model-transparent"/> 半透明</label><button class="button" id="model-rebar-check">钢筋检查</button><label><input type="checkbox" id="model-rna" checked/> RNA 等效点</label><label><input type="checkbox" id="model-isolate"/> 隔离选中</label><button class="button" id="model-png">导出 PNG</button></div><div id="model-canvas"><p id="model-loading" role="status">正在从 GitHub 构建的 Abaqus 网格成果读取模型…</p></div><p class="viewer-caption">拖动旋转 · 滚轮缩放 · 右键平移 · 点击实体可选中部件。该视图由 Abaqus 输入文件的节点与单元直接生成；当前仅显示未变形网格，不代表 ODB 应力/位移结果。</p></section><aside class="panel model-details"><h2>当前计算模型</h2><div id="model-report" role="status">加载中…</div><h3>显示层</h3><div class="layer-grid" id="model-layers"><label><input type="checkbox" data-cat="concrete" checked/> 混凝土塔段</label><label><input type="checkbox" data-cat="steel" checked/> 钢塔段</label><label><input type="checkbox" data-cat="rebar" checked/> 普通钢筋</label><label><input type="checkbox" data-cat="prestress" checked/> 预应力筋</label><label><input type="checkbox" data-cat="joint" checked/> 接头弹簧</label><label><input type="checkbox" data-cat="rna-source" checked/> 原始 RNA 表面网格（展示）</label></div><label>部件 / 实例 <select id="model-part"><option value="">全部部件</option></select></label><div id="part-details"></div><h3>纵筋几何审计</h3><div id="rebar-audit" class="rna-details">加载中…</div><h3>RNA 等效算子</h3><div id="rna-details" class="rna-details">加载中…</div><h3>模型身份</h3><div class="research-links model-links"><a href="${inp}" target="_blank" rel="noopener">T045 首选 INP</a><a href="${repo}/blob/main/research/wind-tower/experiments/T045/RESEARCH_CARD.md" target="_blank" rel="noopener">T045 研究卡</a><a href="${import.meta.env.BASE_URL}research/abaqus-model-report.json" target="_blank" rel="noopener">解析报告 JSON</a></div></aside></div>`;
+  return `<div class="page-heading"><div><div class="eyebrow">ABAQUS / FINITE ELEMENT MODEL</div><h1>Abaqus 有限元模型在线查看</h1><p>直接从当前 T045 首选 .inp 输入文件生成。显示的是未变形有限元网格、钢筋/预应力筋、接头以及 RNA 等效质量—转动惯量位置，不是 CAD 外观替代图。</p></div><a class="button primary" href="${inp}" target="_blank" rel="noopener">打开当前 Abaqus INP</a></div><div class="engineering-layout"><section class="panel viewer-panel"><div class="viewer-controls"><button class="button" id="model-reset">轴测</button><button class="button" id="model-front">正视</button><button class="button" id="model-side">侧视</button><button class="button" id="model-top">俯视</button><label><input type="checkbox" id="model-mesh" checked/> 外表面网格</label><label><input type="checkbox" id="model-transparent"/> 半透明</label><button class="button" id="model-rebar-check">钢筋检查</button><label><input type="checkbox" id="model-rna" checked/> RNA 等效点</label><label><input type="checkbox" id="model-foundation" checked/> 等效基础固定面</label><label><input type="checkbox" id="model-isolate"/> 隔离选中</label><button class="button" id="model-png">导出 PNG</button></div><div id="model-canvas"><p id="model-loading" role="status">正在从 GitHub 构建的 Abaqus 网格成果读取模型…</p></div><p class="viewer-caption">拖动旋转 · 滚轮缩放 · 右键平移 · 点击实体可选中部件。该视图由 Abaqus 输入文件的节点与单元直接生成；当前仅显示未变形网格，不代表 ODB 应力/位移结果。</p></section><aside class="panel model-details"><h2>当前计算模型</h2><div id="model-report" role="status">加载中…</div><h3>显示层</h3><div class="layer-grid" id="model-layers"><label><input type="checkbox" data-cat="concrete" checked/> 混凝土塔段</label><label><input type="checkbox" data-cat="steel" checked/> 钢塔段</label><label><input type="checkbox" data-cat="rebar" checked/> 普通纵向钢筋</label><label><input type="checkbox" data-cat="hoop" checked/> T046 环向钢筋候选</label><label><input type="checkbox" data-cat="tiebar"/> T046 拉筋候选</label><label><input type="checkbox" data-cat="prestress" checked/> 预应力筋</label><label><input type="checkbox" data-cat="joint" checked/> 接头弹簧</label><label><input type="checkbox" data-cat="rna-source" checked/> 原始 RNA 表面网格（展示）</label></div><label>部件 / 实例 <select id="model-part"><option value="">全部部件</option></select></label><div id="part-details"></div><h3>纵筋几何审计</h3><div id="rebar-audit" class="rna-details">加载中…</div><h3>RNA 等效算子</h3><div id="rna-details" class="rna-details">加载中…</div><h3>模型身份</h3><div class="research-links model-links"><a href="${inp}" target="_blank" rel="noopener">T045 首选 INP</a><a href="${repo}/blob/main/research/wind-tower/experiments/T045/RESEARCH_CARD.md" target="_blank" rel="noopener">T045 研究卡</a><a href="${import.meta.env.BASE_URL}research/abaqus-model-report.json" target="_blank" rel="noopener">解析报告 JSON</a></div></aside></div>`;
 }
 export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
   let alive = true, frame = 0;
@@ -38,7 +38,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
     return response.json();
   }
   try {
-    const [data, report, sourceRna, sourceRnaReport, rebarAudit] = await Promise.all([json('abaqus-model.json.gz',true),json('abaqus-model-report.json'),json('source-rna-model.json.gz',true),json('source-rna-model-report.json'),json('rebar-audit.json')]);
+    const [data, report, sourceRna, sourceRnaReport, rebarAudit, t046Overlay, t046Report] = await Promise.all([json('abaqus-model.json.gz',true),json('abaqus-model-report.json'),json('source-rna-model.json.gz',true),json('source-rna-model-report.json'),json('rebar-audit.json'),json('t046-rebar-overlay.json.gz',true),json('t046-rebar-report.json')]);
     if(!alive || !canvasHost.isConnected) { dispose(); return dispose; }
 
     const scene=new THREE.Scene();
@@ -47,7 +47,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
     const light=new THREE.DirectionalLight(0xffffff,3.2); light.position.set(80,180,120); scene.add(light);
     const root=new THREE.Group(); scene.add(root);
 
-    const categoryColor:Record<string,string>={concrete:'#b9b7ae',steel:'#5f7896',rebar:'#725747',prestress:'#d69a3b',joint:'#8b63a5','rna-source':'#4f9688',other:'#7b8881'};
+    const categoryColor:Record<string,string>={concrete:'#b9b7ae',steel:'#5f7896',rebar:'#725747',hoop:'#b7463d',tiebar:'#8b6b51',prestress:'#d69a3b',joint:'#8b63a5','rna-source':'#4f9688',other:'#7b8881'};
     type Visual={name:string;category:string;kind:string;surface?:THREE.Mesh;wire?:THREE.LineSegments;line?:THREE.LineSegments;material?:THREE.MeshStandardMaterial;info:any;baseOpacity?:number};
     const visuals:Visual[]=[];
     const pickMeshes:THREE.Mesh[]=[];
@@ -93,6 +93,22 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
       visuals.push({name:g.name,category:'rna-source',kind:'surface',surface,wire,material:mat,info:{...g,displayRole:'原始 Abaqus RNA 表面网格（仅展示，不参与 T045 求解）'},baseOpacity:.82});
     }
 
+    const t046Groups=[{name:'T046_CODE_HOOP',category:'hoop',positions:t046Overlay.hoop.positions,info:{nodes:0,elements:t046Overlay.hoop.elements,elementTypes:['T3D2'],displayRole:'规范推导的环向钢筋候选；不参与当前 T045 求解'}},{name:'T046_CODE_TIE',category:'tiebar',positions:t046Overlay.tie.positions,info:{nodes:0,elements:t046Overlay.tie.elements,elementTypes:['T3D2'],displayRole:'规范推导的拉筋候选；不参与当前 T045 求解'}}];
+    for(const g of t046Groups){
+      const geom=new THREE.BufferGeometry();
+      geom.setAttribute('position',new THREE.Float32BufferAttribute(g.positions,3)); geometries.push(geom);
+      const mat=new THREE.LineBasicMaterial({color:categoryColor[g.category],transparent:true,opacity:g.category==='hoop' ? .9 : .65}); materials.push(mat);
+      const line=new THREE.LineSegments(geom,mat); root.add(line);
+      visuals.push({name:g.name,category:g.category,kind:'line',line,info:g.info});
+    }
+
+    const foundationGroup=new THREE.Group(); scene.add(foundationGroup);
+    const foundationGeom=new THREE.CircleGeometry(4.45,96); foundationGeom.rotateX(-Math.PI/2); geometries.push(foundationGeom);
+    const foundationMat=new THREE.MeshBasicMaterial({color:'#4f5960',transparent:true,opacity:.12,side:THREE.DoubleSide,depthWrite:false}); materials.push(foundationMat);
+    const foundationDisk=new THREE.Mesh(foundationGeom,foundationMat); foundationDisk.position.y=-0.012; foundationGroup.add(foundationDisk);
+    const foundationRingGeom=new THREE.RingGeometry(4.15,4.45,96); foundationRingGeom.rotateX(-Math.PI/2); geometries.push(foundationRingGeom);
+    const foundationRingMat=new THREE.MeshBasicMaterial({color:'#353f45',transparent:true,opacity:.45,side:THREE.DoubleSide}); materials.push(foundationRingMat);
+    const foundationRing=new THREE.Mesh(foundationRingGeom,foundationRingMat); foundationRing.position.y=-0.01; foundationGroup.add(foundationRing);
     const rnaGroup=new THREE.Group(); scene.add(rnaGroup);
     const markerMaterialTop=new THREE.MeshStandardMaterial({color:'#355d7a',roughness:.35}); materials.push(markerMaterialTop);
     const markerMaterialCg=new THREE.MeshStandardMaterial({color:'#b56d2a',roughness:.35}); materials.push(markerMaterialCg);
@@ -140,6 +156,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
     const transparentCheck=host.querySelector<HTMLInputElement>('#model-transparent')!;
     const isolateCheck=host.querySelector<HTMLInputElement>('#model-isolate')!;
     const rnaCheck=host.querySelector<HTMLInputElement>('#model-rna')!;
+    const foundationCheck=host.querySelector<HTMLInputElement>('#model-foundation')!;
     const rebarCheck=host.querySelector<HTMLButtonElement>('#model-rebar-check')!;
     let rebarInspect=false;
     function updateVisibility() {
@@ -156,16 +173,17 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
         }
       }
       rnaGroup.visible=rnaCheck.checked && !rebarInspect;
+      foundationGroup.visible=foundationCheck.checked;
       const v=visuals.find(x=>x.name===selected);
       host.querySelector('#part-details')!.textContent=v ? `${v.name} · ${v.info.nodes.toLocaleString()} 节点 · ${v.info.elements.toLocaleString()} 单元 · ${v.info.elementTypes.join(', ')}` : '点击模型或从下拉框选择实例；可配合“隔离选中”检查单段网格。';
     }
-    select.onchange=updateVisibility; isolateCheck.onchange=updateVisibility; meshCheck.onchange=updateVisibility; transparentCheck.onchange=updateVisibility; rnaCheck.onchange=updateVisibility;
+    select.onchange=updateVisibility; isolateCheck.onchange=updateVisibility; meshCheck.onchange=updateVisibility; transparentCheck.onchange=updateVisibility; rnaCheck.onchange=updateVisibility; foundationCheck.onchange=updateVisibility;
     rebarCheck.onclick=()=>{
       rebarInspect=!rebarInspect;
       rebarCheck.classList.toggle('primary',rebarInspect);
       rebarCheck.textContent=rebarInspect?'退出钢筋检查':'钢筋检查';
       if(rebarInspect){
-        for(const x of catChecks) x.checked=x.dataset.cat==='concrete'||x.dataset.cat==='rebar';
+        for(const x of catChecks) x.checked=x.dataset.cat==='concrete'||x.dataset.cat==='rebar'||x.dataset.cat==='hoop'||x.dataset.cat==='tiebar';
         rnaCheck.checked=false; isolateCheck.checked=false; select.value='';
       } else {
         for(const x of catChecks) x.checked=true;
@@ -195,9 +213,9 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
     };
 
     host.querySelector('#model-report')!.innerHTML=`<p><strong>T045 当前计算模型：</strong>${report.counts.instances} 个装配实例 · ${report.counts.solidElements.toLocaleString()} 个实体单元 · ${report.counts.lineElements.toLocaleString()} 个线单元</p><p><strong>整机 RNA 展示层：</strong>${sourceRnaReport.counts.instances} 个原始 Abaqus 表面网格实例 · ${sourceRnaReport.counts.nodes.toLocaleString()} 节点 · ${sourceRnaReport.counts.elements.toLocaleString()} 单元</p><p>当前计算塔架高度范围：${report.bounds.min[1].toFixed(3)} ～ ${report.bounds.max[1].toFixed(3)} m；源 RNA 展示范围：${sourceRnaReport.bounds.min[1].toFixed(3)} ～ ${sourceRnaReport.bounds.max[1].toFixed(3)} m</p><p>计算模型元素类型：${report.elementTypes.join(' / ')}</p><details><summary>当前 INP 与 SHA-256</summary><code>${safe(report.sha256)}</code><p>${safe(report.source)}</p></details><details><summary>源 RNA 网格证据</summary><code>${safe(sourceRnaReport.sha256)}</code><p>${safe(sourceRnaReport.source.nodes)}</p><p>${safe(sourceRnaReport.source.elements)}</p></details>`;
-    host.querySelector('#rebar-audit')!.innerHTML=`<p><b>审计状态：</b><span class="badge done">PASS</span></p><p>31/31 塔段纵筋中心线均位于混凝土壁厚内部；最小/最大中心线距对应内外表面均为 <b>${Number(rebarAudit.minCenterlineClearanceMm).toFixed(1)} mm</b>。</p><p>纵筋数量与何泽瑜表3-2逐段一致，31/31 个 *Embedded Element 约束存在。</p><p class="model-note">${safe(rebarAudit.implementationOnlyNote)}</p><a href="${import.meta.env.BASE_URL}research/rebar-audit.json" target="_blank" rel="noopener">打开逐段纵筋审计报告</a>`;
+    host.querySelector('#rebar-audit')!.innerHTML=`<p><b>T045纵筋：</b><span class="badge done">PASS</span> 5440 根，31/31 Embedded，位置在筒壁内部。</p><p><b>T045环向筋/拉筋：</b><span class="badge">MISSING</span> 当前正式输入为 0；因此不能称完整钢筋网。</p><p><b>T046-E1候选：</b>φ14@80 mm 双层环向筋 + φ6 拉筋；新增质量约 <b>${(t046Report.candidate.totalAddedRebarMassKg/1000).toFixed(1)} t</b>，最不利配筋率 ${t046Report.candidate.providedWorstHoopRatioPercent.toFixed(3)}% ≥ ${t046Report.candidate.requiredWorstHoopRatioPercent.toFixed(3)}%。</p><p class="model-note">T046 是 GB50135/T/CEC5008/GB50010 推导候选，不冒充何泽瑜未公开的箍筋参数；尚未完成 Abaqus 求解，网页红色环筋/棕色拉筋是候选叠加层。</p><p>${safe(rebarAudit.implementationOnlyNote)}</p><a href="${import.meta.env.BASE_URL}research/rebar-audit.json" target="_blank" rel="noopener">纵筋逐段审计</a> · <a href="${import.meta.env.BASE_URL}research/t046-rebar-report.json" target="_blank" rel="noopener">T046配筋补全报告</a>`;
     const rna=data.rna;
-    host.querySelector('#rna-details')!.innerHTML=rna ? `<p><b>塔顶公共点 O</b><br/>${rna.towerTop?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>RNA 质心 G</b><br/>${rna.rnaCg?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>MASS</b> ${Number(rna.mass).toLocaleString(undefined,{maximumFractionDigits:3})} kg</p><p><b>ROTARYI</b><br/>${rna.rotaryInertia?.map((x:number)=>Number(x).toExponential(5)).join('<br/>') || '—'}</p><p class="model-note">网页中的两个球仅是 O 与 G 的符号标记；真实计算仍由 INP 中 MASS + ROTARYI + 6DOF 偏心耦合承担。页面同时叠加原始 Abaqus RNA 表面网格，以便整机查看，但该 RNA 表面网格不参与当前 T045 求解。</p>` : '<p>未找到 RNA 等效算子。</p>';
+    host.querySelector('#rna-details')!.innerHTML=rna ? `<p><b>塔顶公共点 O</b><br/>${rna.towerTop?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>RNA 质心 G</b><br/>${rna.rnaCg?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>MASS</b> ${Number(rna.mass).toLocaleString(undefined,{maximumFractionDigits:3})} kg</p><p><b>ROTARYI</b><br/>${rna.rotaryInertia?.map((x:number)=>Number(x).toExponential(5)).join('<br/>') || '—'}</p><p class="model-note">网页中的两个球仅是 O 与 G 的符号标记；真实计算仍由 INP 中 MASS + ROTARYI + 6DOF 偏心耦合承担。塔底灰色圆盘仅表示 y=0 的等效刚性基础固定截面，不代表已建立真实基础实体或锚具。页面同时叠加原始 Abaqus RNA 表面网格，以便整机查看，但该 RNA 表面网格不参与当前 T045 求解。</p>` : '<p>未找到 RNA 等效算子。</p>';
   } catch(error) {
     if(alive) canvasHost.innerHTML=`<p role="alert">${safe(error)}。Pages 构建需先运行 scripts/read-abaqus.cjs；请查看 GitHub Actions 日志。</p>`;
   }
