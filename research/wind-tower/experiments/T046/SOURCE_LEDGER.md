@@ -55,6 +55,8 @@ Xu J, He Z, Wang D, et al. *Nonlinear dynamic response analyses of Onshore Wind 
 2026-10-05核查入口：
 - https://www.scribd.com/document/1032184051/TCEC5008-2018-%E9%A3%8E%E5%8A%9B%E5%8F%91%E7%94%B5%E6%9C%BA%E7%BB%84%E9%A2%84%E5%BA%94%E5%8A%9B%E8%A3%85%E9%85%8D%E5%BC%8F%E6%B7%B7%E5%87%9D%E5%9C%9F%E5%A1%94%E7%AD%92%E6%8A%80%E6%9C%AF%E8%A7%84%E8%8C%83
 
+适用范围边界：该标准公开文本明确适用于**后张法有黏结预应力**陆上装配式混凝土塔筒；本文同谱系PT为externally unbonded。因此T046仅把REF137用于普通钢筋笼/保护层/拉筋等构造交叉依据，不用它证明当前无黏结PT的36根、r=1.75 m或端锚拓扑。
+
 直接核到：
 - 4.6.1：塔筒宜采用HRB500；
 - 4.6.2：塔筒受力钢筋直径不应小于8 mm、不宜大于14 mm；拉结筋不宜小于6 mm；
