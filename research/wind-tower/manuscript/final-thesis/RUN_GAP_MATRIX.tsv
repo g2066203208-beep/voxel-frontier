@@ -1,5 +1,5 @@
 gate	purpose	minimum_execution	depends_on	blocks_chapter	status
-G0	唯一BASE001	冻结Abaqus/OpenFAST几何材料RNA坐标版本hash	T037/T038	Ch2-Ch6	OPEN
+G0	唯一BASE001	T037/T038输入冻结+T045首选O158候选+整塔Gravity/30 modes/Flex复核	T037/T038/T045	Ch2-Ch6	CANDIDATE-FROZEN / RUN-T045-001-PENDING
 G1	Abaqus分层V&V	材料试件+初始平衡+RNA+模态+网格+阻尼+时间步	G0	Ch2	OPEN
 G2	ERA5/TurbSim	Hub-height重算+风场空间/时间/seed V&V	G0	Ch3	OPEN
 G3	OpenFAST/ROSCO	输入链/控制器/运行点/模态	G0	Ch3	OPEN
