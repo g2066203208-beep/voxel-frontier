@@ -1,6 +1,6 @@
 citation_no	ref_id	chapter_location	evidence_role	reading_scope	use_boundary
 1	REF008	1.1/1.6	source lineage	original-page record	prototype geometry does not validate assembled 10MW model
-2	REF001	1.1	reference turbine identity	presentation plus report metadata	formal Report-I-0092 detailed parameters pending
+2	REF001	1.1	reference turbine identity	formal DTU Wind Energy Report-I-0092 + presentation	Official DTU reference-turbine definition; does not by itself validate the present assembled 10 MW model
 5	REF002	1.3/1.4/1.5	global/local and optimization	relevant thesis chapters	not whole-book read; capital/AEP metric simplified
 20	REF051	1.3.5/1.5	integrated-model prior work	abstract/section preview	5MW rotor parameters/157.3m differs from present combination
 28	REF009	1.3.1/1.3.4/1.5	target-response validation	full HTML key sections	2.8MW measured validation does not validate this hybrid tower
