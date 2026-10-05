@@ -1,0 +1,7 @@
+list_no	ref_id	title	official_url	github_status	reason_or_license	next_action
+[1]	REF008	大型混塔式风力机的建模与可靠度分析（何泽瑜，2024）		local-library-pdf-confirmed/github-binary-pending	完整PDF已在用户个人文件库中，但当前文件接口不给原始二进制materialize路径，不能伪造上传	用户若再次把原PDF作为当前会话附件上传，则直接完整入库并做PDF头/页数/SHA256校验
+[118]	REF049	IEC 61400-6:2020+AMD1:2025 CSV — Tower and foundation design requirements	https://webstore.iec.ch/en/publication/107942	official-metadata-only/full-pdf-not-in-public-github	IEC版权付费标准；官方电子版311页，不能从非授权来源下载并公开到GitHub	通过学校/机构IEC权限取得合法副本；如许可证允许，仅作私有科研保存，不公开分发
+[133]	REF048	IEC 61400-1:2019+AMD1:2025 CSV — Design requirements	https://webstore.iec.ch/en/publication/111042	official-metadata-only/full-pdf-not-in-public-github	IEC版权付费标准；官方电子版358页，不能从非授权来源下载并公开到GitHub	通过学校/机构IEC权限取得合法副本；如许可证允许，仅作私有科研保存，不公开分发
+[135]	REF052	Abaqus 2025 — Concrete Damaged Plasticity	https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-concretedamaged.htm	official-html-source-registered	官方文档以HTML发布，不存在对应官方整本PDF；相关理论页和关键字页均为官方在线文档	保留版本化官方URL、访问日期、关键方法摘录和本文采用边界；不把第三方教程冒充官方PDF
+[135]	REF052	Abaqus 2025 — Damaged plasticity model theory	https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-concretedamaged.htm	official-html-source-registered	官方理论页	用于CDP理论、损伤/刚度退化、流动法则、粘塑性正则化边界
+[135]	REF052	Abaqus 2025 — *CONCRETE DAMAGED PLASTICITY keyword	https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-concretedamagedplasticity.htm	official-html-source-registered	官方关键字页	用于关键字参数身份，不提供本文校准值
