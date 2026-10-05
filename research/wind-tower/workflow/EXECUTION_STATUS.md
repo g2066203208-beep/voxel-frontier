@@ -1,3 +1,14 @@
+<!-- T041 CURRENT ROUTE REVIEW START -->
+## T041 全流程与参考文献充分性总审查（2026-10-05）
+
+- Route B继续作为唯一正式主线：BASE001 → G1分层V&V → ERA5/TurbSim/OpenFAST/ROSCO → 多指标控制工况 → OpenFAST→Abaqus映射V&V → 控制区域机制 → 敏感性 → 优化 → 独立高保真复核 → G10证据回收。
+- 文献主线已足够，不再无边界堆论文。literature_master现为123条；受控PDF本体68个。真正硬缺口收敛到IEC/GB正式条文核页、canonical模型实际材料牌号/阻尼来源，以及仅在G7B启动时才需要的材料疲劳规范链。
+- 新增现行标准身份REF121 GB/T 5224-2023、REF122 GB 1499.2-2024、REF123 GB/T 1591-2018；只登记官方身份，不把未授权全文写成已读。
+- 当前最大风险不是缺文献，而是G0/G1/G5/G6/G9/G10的实际计算和证据闭环。详见[audit/45](../audit/45-t041-full-route-reference-sufficiency-review.md)。
+- T037已证明实际OpenFAST输入链、DISCON、ROSCO DLL和代表outb存在；下方更早“raw inputs absent”等文字仅保留历史语境，不得作为当前缺件判断。
+
+<!-- T041 CURRENT ROUTE REVIEW END -->
+
 <!-- T039 CURRENT SCOPE START -->
 ## T039 用户纠正执行顺序：先审第一章（2026-10-05）
 
