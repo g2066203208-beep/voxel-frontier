@@ -1,0 +1,136 @@
+name: T046 ERA5 quarterly inner inventory
+
+on:
+  push:
+    paths:
+      - ".github/workflows/t046-era5-inner-inventory.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Inspect nested quarterly archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile, io, hashlib, csv, json, collections, datetime, re
+
+          root=Path("research/wind-tower")
+          groups=[
+              root/"archive/local-assets-20261004/era5-raw-2005-2014",
+              root/"archive/local-assets-20261004/era5-raw-2015-2025",
+          ]
+          out=root/"experiments/T046/inner-inventory"
+          out.mkdir(parents=True,exist_ok=True)
+
+          rows=[]
+          quarterly=[]
+          ext_counts=collections.Counter()
+          magic_counts=collections.Counter()
+          years=collections.Counter()
+          errors=[]
+
+          for g in groups:
+              for outer in sorted(g.glob("part-*.zip")):
+                  with zipfile.ZipFile(outer) as z:
+                      for oi in z.infolist():
+                          if oi.is_dir() or not oi.filename.lower().endswith(".zip"):
+                              continue
+                          qbytes=z.read(oi.filename)
+                          qsha=hashlib.sha256(qbytes).hexdigest()
+                          m=re.search(r"(20\d{2})_Q([1-4])",oi.filename)
+                          yq=f"{m.group(1)}Q{m.group(2)}" if m else oi.filename
+                          if m: years[m.group(1)]+=1
+                          qrow={
+                              "outer_archive":str(outer.relative_to(root)),
+                              "quarter_member":oi.filename,
+                              "quarter_id":yq,
+                              "quarter_bytes":len(qbytes),
+                              "quarter_sha256":qsha,
+                              "valid_zip":False,
+                              "inner_files":0,
+                          }
+                          try:
+                              with zipfile.ZipFile(io.BytesIO(qbytes)) as qz:
+                                  bad=qz.testzip()
+                                  qrow["valid_zip"]=bad is None
+                                  if bad: errors.append(f"{yq}: CRC failure {bad}")
+                                  infos=[i for i in qz.infolist() if not i.is_dir()]
+                                  qrow["inner_files"]=len(infos)
+                                  for ii in infos:
+                                      data=qz.read(ii.filename)
+                                      ext=Path(ii.filename).suffix.lower() or "<none>"
+                                      magic=data[:16].hex()
+                                      ext_counts[ext]+=1
+                                      magic_counts[magic[:8]]+=1
+                                      rows.append({
+                                          "quarter_id":yq,
+                                          "outer_archive":str(outer.relative_to(root)),
+                                          "quarter_member":oi.filename,
+                                          "inner_member":ii.filename,
+                                          "bytes":ii.file_size,
+                                          "compressed_bytes":ii.compress_size,
+                                          "crc32":f"{ii.CRC:08x}",
+                                          "sha256":hashlib.sha256(data).hexdigest(),
+                                          "extension":ext,
+                                          "magic_hex":magic,
+                                      })
+                          except Exception as e:
+                              errors.append(f"{yq}: {type(e).__name__}: {e}")
+                          quarterly.append(qrow)
+
+          with (out/"INNER_MEMBERS.tsv").open("w",encoding="utf-8",newline="") as f:
+              fields=["quarter_id","outer_archive","quarter_member","inner_member","bytes","compressed_bytes","crc32","sha256","extension","magic_hex"]
+              w=csv.DictWriter(f,fieldnames=fields,delimiter="\t"); w.writeheader(); w.writerows(rows)
+
+          with (out/"QUARTERLY_ARCHIVES.tsv").open("w",encoding="utf-8",newline="") as f:
+              fields=["outer_archive","quarter_member","quarter_id","quarter_bytes","quarter_sha256","valid_zip","inner_files"]
+              w=csv.DictWriter(f,fieldnames=fields,delimiter="\t"); w.writeheader(); w.writerows(quarterly)
+
+          summary={
+              "generated_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "quarterly_archives":len(quarterly),
+              "valid_quarterly_archives":sum(1 for x in quarterly if x["valid_zip"]),
+              "inner_files":len(rows),
+              "extensions":dict(sorted(ext_counts.items())),
+              "magic_prefix_counts":dict(sorted(magic_counts.items())),
+              "year_quarter_counts":dict(sorted(years.items())),
+              "errors":errors,
+          }
+          (out/"SUMMARY.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          (out/"README.md").write_text(
+              "# T046 ERA5 quarterly inner inventory\n\n"
+              f"- quarterly archives: **{summary['quarterly_archives']}**\n"
+              f"- valid: **{summary['valid_quarterly_archives']}/{summary['quarterly_archives']}**\n"
+              f"- inner files: **{summary['inner_files']}**\n"
+              f"- extensions: `{json.dumps(summary['extensions'],ensure_ascii=False)}`\n"
+              f"- years: `{json.dumps(summary['year_quarter_counts'],ensure_ascii=False)}`\n\n"
+              "No scientific statistic is computed in this stage.\n",
+              encoding="utf-8")
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          PY
+
+      - name: Commit nested inventory
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T046/inner-inventory
+          if git diff --cached --quiet; then
+            echo "No nested inventory changes."
+          else
+            git commit -m "T046 inventory nested ERA5 quarterly archives"
+            git pull --rebase origin main
+            git push
+          fi
