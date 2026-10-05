@@ -34,14 +34,14 @@ C3-S01	Ch3	ERA5数据产品与变量	REF062	OFFICIAL-WEB-REGISTERED	ERA5 single-
 C3-S02	Ch3	ERA5长期风资源适用性	REF080;REF090;REF096	PDF/WEB	再分析风电建模、误差综述、湖北64测风塔偏差	用于长期场址背景并明确不确定性	不将ERA5当site truth	PASS-METHOD
 C3-S03	Ch3	U10/U100→alpha(t)→Hub-height	REF083;REF093;REF063;REF091	PDF+OFFICIAL+WEB	逐时alpha、8塔验证、官方幂律、160m外推误差背景	按161.37m实际HubHt重算	不把全球误差直接当嘉鱼误差	NEED-RUN
 C3-S04	Ch3	ERA5与随机湍流职责分离	REF103;REF064	PUBLISHER-SUMMARY+OFFICIAL	大尺度再分析+随机高频恢复；TurbSim随机场	ERA5背景，TurbSim 10-min随机风	不把ERA5小时风直接驱动高频动力	PASS-METHOD
-C3-S05	Ch3	NTM/ETM/DLC身份	REF048;REF018;REF064	PAID-STANDARD+PDF+OFFICIAL	IEC框架；Huang DLC1.2运行疲劳；TurbSim输入	工况正式公式待IEC条文核页	未读标准条文前不声称特定阈值来自IEC	HOLD-CLAUSE
-C3-S06	Ch3	TurbSim TimeStep/AnalysisTime/空间网格	REF064;REF011	OFFICIAL+PDF	guide语义与风机研究的25x25/seed收敛先例	51x51/700s作为待V&V研究设置	不把51x51/6seed/700s称标准规定	NEED-RUN
-C3-S07	Ch3	随机seed数量与收敛	REF011;REF018	PDF-IN-REPO	seed数应由QoI统计稳定性判断；混凝土疲劳可能需更多样本	历史6seed为起点，必要时增加	不预先宣称6seed充分	NEED-RUN
+C3-S05	Ch3	NTM/ETM/DLC身份	REF132;REF048;REF018;REF064	FULLTEXT-AUDITED-STANDARD+CURRENT-EDITION-METADATA+PDF+OFFICIAL	IEC 2019 Table2明确DLC1.2=NTM fatigue、DLC1.3=ETM ultimate；REF048保留当前Edition4.1身份	按2019完整条文区分NTM/ETM用途，终稿前核AMD1:2025	不得把ETM DEL写成DLC1.2材料寿命，也不把36case称完整认证矩阵	PASS-BASE-2019/AMD1-PENDING
+C3-S06	Ch3	TurbSim TimeStep/AnalysisTime/空间网格	REF132;REF064;REF001;REF011	FULLTEXT-AUDITED-STANDARD+OFFICIAL+PDF	IEC7.5给空间分辨率判据；DTU给D；TurbSim给时间/网格输入语义	200m/51x51经计算单元对角线5.66m<0.25Λ1=10.5m且<0.15D=26.75m；时间步继续做QoI收敛	51x51不是IEC指定网格；只能说通过IEC空间判据	PASS-SPATIAL/NEED-TIME-STEP
+C3-S07	Ch3	随机seed数量与收敛	REF132;REF011;REF018	FULLTEXT-AUDITED-STANDARD+PDF	IEC7.5一般湍流case每平均风速至少6个10min实现；DLC1.1在Vr-2至cut-out极值统计需15次/风速；论文研究仍需QoI收敛	历史6seed满足一般湍流最低数，但继续以QoI均值/离散/排序检查是否增样本	不得把6seed=统计收敛，也不得把额定以上6seed称完整DLC1.1极值统计	PASS-IEC-MINIMUM/CONVERGENCE-OPEN
 C3-S08	Ch3	OpenFAST整机模型验证	REF009;REF001;REF047;REF073	PDF+OFFICIAL	identity→modal/operating/load/fatigue validation	冻结actual input chain/hash并验证运行点	不以文件能运行作为模型验证	NEED-RUN
 C3-S09	Ch3	ROSCO控制器身份	REF046	PDF-IN-REPO	ROSCO参考控制器结构与范围	绑定实际DISCON/DLL版本与hash	不复制其他机组调参值	NEED-BASE001
-C3-S10	Ch3	统计窗口/多QoI/频域分析	REF009;REF011;REF061	PDF-IN-REPO	多运行点、载荷/频域和至少600s有效时程先例	统一100-700s候选窗口并重新验证	不把历史窗口自动升级final	NEED-RUN
-C3-S11	Ch3	rainflow循环计数	REF018;REF124	PDF+REGISTERED-ORIGINAL	风机疲劳实际应用+原始rainflow算法来源	从正式载荷通道提取循环ledger	不把未核通道的历史循环直接当final	NEED-RUN
-C3-S12	Ch3	load-DEL	REF125;REF018	PDF/REGISTERED	DEL等效载荷定义和风机应用	统一m/Neq仅用于载荷比较	DEL不等于材料寿命	NEED-RUN
+C3-S10	Ch3	统计窗口/多QoI/频域分析	REF132;REF009;REF011;REF061	FULLTEXT-AUDITED-STANDARD+PDF	IEC7.5要求至少10min随机实现且至少剔除最初5s必要时更长；直接论文补充多QoI/频域实践	700s总长剔除100s后分析600s，满足IEC最低有效时长；100s属于本文保守spin-up	不得把100s写成IEC规定，也不因满足10min就跳过QoI收敛	PASS-DURATION/NEED-FINAL-RUN
+C3-S11	Ch3	rainflow循环计数	REF132;REF018;REF124	FULLTEXT-AUDITED-STANDARD+PDF+REGISTERED-ORIGINAL	IEC7.5要求残余按半循环计入；Annex H采用rainflow；风机论文给直接应用	从正式载荷通道提取完整循环ledger并保留residual half cycles	不把未核通道或遗漏残余半循环的历史循环直接当final	NEED-RUN
+C3-S12	Ch3	load-DEL	REF125;REF018;REF132	PDF+FULLTEXT-AUDITED-STANDARD	DEL等效载荷定义；IEC Annex H给rainflow-SN-wind-probability-Miner长期损伤链	统一m/Neq仅用于G7A载荷比较；G7B必须另走材料S-N/均值/概率链	DEL不等于材料寿命；ETM DEL不等于DLC1.2疲劳寿命	NEED-RUN
 C3-S13	Ch3	2–4个多指标控制工况	REF009;REF011;REF018	PDF-IN-REPO	不同QoI/运行区/随机实现可能有不同控制case	按位移/加速度/N-V-M-T/DEL筛选	不只取最大塔底弯矩或最大DEL	NEED-RUN
 C4-S01	Ch4	OpenFAST接口通道身份	REF047;REF073	OFFICIAL-WEB-REGISTERED	YawBr/TwrBs等六分量通道定义与坐标	逐通道记录源点/坐标/单位	不能凭名字猜坐标	PASS-OFFICIAL
 C4-S02	Ch4	自由体与重力/惯性分账	REF051;REF067;REF047	PDF/AAM/OFFICIAL	整机载荷驱动FE与气动/重力/惯性分离先例	定义OF与Abaqus各承担哪些作用	禁止重复施加RNA重力/惯性	NEED-G5
@@ -59,8 +59,8 @@ C5-S03	Ch5	材料非线性对照	REF031;REF061;REF052	PDF+OFFICIAL	材料非线�
 C5-S04	Ch5	结果触发水平接缝contact	REF015;REF016;REF017;REF026;REF115	PDF-IN-REPO	试验校准hard contact/摩擦/PT及组合受力	只有控制区触发才建local contact	不照搬0.9摩擦/40mm网格/试件参数	RESULT-TRIGGERED
 C5-S05	Ch5	global-to-local submodel	REF068;REF005	OFFICIAL+PDF	Abaqus submodel边界插值+两尺度FE	局部模型先复现global边界再研究细节	global边界不准时不允许local结论	RESULT-TRIGGERED
 C5-S06	Ch5	局部应力提取规则	REF041;REF024	PDF-IN-REPO	热点单点vs厚度平均、材料疲劳应力状态	明确点/路径/体积平均规则并做网格敏感性	不在网格尖峰上直接算寿命	CONDITIONAL-G7B
-C5-S07	Ch5	局部rainflow/材料疲劳	REF024;REF018;REF041	PDF-IN-REPO	局部应力循环、mean stress、Miner与运行风载	按材料分别处理	混凝土/钢/钢筋/PT不得共享m=4	CONDITIONAL-G7B
-C5-S08	Ch5	疲劳结论分级	REF024;REF018;REF125	PDF/REGISTERED	DEL只是等效载荷；材料寿命需S-N/概率/累计损伤	明确G7A/G7B结论层级	未闭合长期概率时禁止20年寿命	PASS-RULE
+C5-S07	Ch5	局部rainflow/材料疲劳	REF132;REF024;REF018;REF041	FULLTEXT-AUDITED-STANDARD+PDF	IEC7.6.3/AnnexH要求循环幅值+mean stress/strain+S-N+wind probability+Miner；论文提供材料/运行细节	按材料分别建立局部应力疲劳链	混凝土/钢/钢筋/PT不得共享m=4，也不能用load-DEL替代S-N/Miner	CONDITIONAL-G7B
+C5-S08	Ch5	疲劳结论分级	REF132;REF024;REF018;REF125	FULLTEXT-AUDITED-STANDARD+PDF/REGISTERED	IEC standard classes I-III设计寿命至少20年，但疲劳寿命需完整S-N/概率/Miner链；DEL仅等效载荷	明确G7A/G7B结论层级	不能因为IEC写20年设计寿命就宣称本文结构满足20年疲劳寿命	PASS-RULE
 C5-S09	Ch5	设计变量从机制反推	REF002;REF020;REF021	PDF-IN-REPO	Kenna机制/响应→优化；混塔参数优化先例	只保留物理相关、可制造、范围有源变量	不从别人变量表直接抄上下界	NEED-G8
 C5-S10	Ch5	参数敏感性与seed噪声分离	REF011;REF126	PDF+REGISTERED	风机载荷EE/Morris应用及原始方法	优先配对seed，参数效应需稳定超过随机离散	不设无来源的统一显著阈值	NEED-G8
 C6-S01	Ch6	优化变量/范围来自前文机制	REF003;REF004;REF020;REF021	PDF/WEB	混塔几何/预应力/进化/多目标优化	变量由G8冻结，范围有工程来源	不移植2–5MW范围	NEED-G9
