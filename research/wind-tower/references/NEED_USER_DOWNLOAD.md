@@ -1,132 +1,189 @@
 # 待用户协助下载的核心文献 — CURRENT QUEUE
 
-更新日期：2026-10-04  
-原则：只列**当前GitHub自动缓存没有得到PDF**、或因公共仓库版权边界不应由机器人重新公开分发的文献。已经缓存成功/用户已经提供的文献不再重复要求。
+更新日期：2026-10-05
 
-## 0. 已完成，不要重复下载
+原则：能由公开、稳定且许可允许的来源自动取得的 PDF，已经直接缓存到 GitHub；这里只保留 **GitHub 自动抓取仍失败、需要机构访问/手动点下载、或公开再分发许可不清楚** 的全文。不要重复下载已经成功缓存的文件。
 
-用户此前提供的10篇混塔核心publisher PDF（Li 2023、Cheng 2024/2025、Huang 2025、Ren 2025三篇、Wang 2025、Xu 2025、Cheng 2024 Structures）已经全文核读并进入 `references/user-provided/` 的题录/哈希/用途体系；不要再下载一遍。
+## 0. 2026-10-05 已新增成功，不要再下载
 
-本轮新检索文献中，GitHub自动缓存 L060–L072 共13项，**10项成功、3项失败**。成功项统一以 `references/open-access/MANIFEST.tsv` 为准，不在此重复列。
+以下 PDF 已真实写入 `research/wind-tower/references/open-access/`，并由 Action 校验 PDF 文件头、记录字节数与 SHA-256：
 
-## A. 现在请你优先下载：自动缓存失败的3篇OA全文
+- Nefabas et al. (2021), *Modeling of Ethiopian Wind Power Production Using ERA5 Reanalysis Data* — L062；
+- Xu et al. (2026), *Segmented Bias Correction of ERA5 100 m Wind Speed for Wind-Resource Assessment in Complex Terrain* — L065；
+- Jessen et al. (2019), *Experimental Validation of Aero-Hydro-Servo-Elastic Models of a Scaled Floating Offshore Wind Turbine* — L069；
+- Bak et al. (2013), *Description of the DTU 10 MW Reference Wind Turbine*, **DTU Wind Energy Report-I-0092** — L073。
 
-1. **Nefabas KL et al. (2021)**  
-   *Modeling of Ethiopian Wind Power Production Using ERA5 Reanalysis Data.*  
-   Energies 14(9), 2573. DOI: **10.3390/en14092573**  
-   状态：CC BY 4.0；GitHub机器人访问MDPI PDF返回失败。  
-   用途：ERA5 → 双线性插值/降尺度 → hub-height → 风电功率 → 实测验证的完整同行评议workflow。  
-   建议文件名：`Modeling of Ethiopian Wind Power Production Using ERA5 Reanalysis Data.pdf`
+其中 L073 是正式 138 页 DTU 报告，不是仓库早先的 22 页演示稿。
 
-2. **Xu Y et al. (2026)**  
-   *Segmented Bias Correction of ERA5 100 m Wind Speed for Wind-Resource Assessment in Complex Terrain.*  
-   Energies 19(19), 4625. DOI: **10.3390/en19194625**  
-   状态：CC BY 4.0；GitHub机器人访问MDPI PDF返回失败。  
-   用途：湖北区域、64座风塔、459630个逐时观测—ERA5配对；与嘉鱼区域最接近的ERA5偏差/复杂地形证据之一。  
-   建议文件名：`Segmented Bias Correction of ERA5 100 m Wind Speed for Wind-Resource Assessment in Complex Terrain.pdf`
+用户此前提供的 publisher PDF 中，当前仓库实际已落盘 **9/10**；尚缺 L054（Cheng et al. 2025, Engineering Structures 341:120835）。
 
-3. **Jessen K et al. (2019)**  
-   *Experimental Validation of Aero-Hydro-Servo-Elastic Models of a Scaled Floating Offshore Wind Turbine.*  
-   Applied Sciences 9(6), 1244. DOI: **10.3390/app9061244**  
-   状态：CC BY 4.0；GitHub机器人访问MDPI PDF返回失败。  
-   用途：free-decay / model-validation方法旁证；不移植其浮式缩尺模型阻尼数值。  
-   建议文件名：`Experimental Validation of Aero-Hydro-Servo-Elastic Models of a Scaled Floating Offshore Wind Turbine.pdf`
+## A. 你现在最优先帮我下载的全文
 
-## B. ERA5方法最关键，但当前没有稳定可公开缓存URL/出版社需要机构访问
+### A1. ERA5 / hub-height 方法
 
-4. **Jung C, Schindler D. (2021)**  
+1. **Jung C, Schindler D. (2021)**  
    *The role of the power law exponent in wind energy assessment: A global analysis.*  
-   International Journal of Energy Research 45. DOI: **10.1002/er.6382**  
-   状态：论文为CC BY，FreiDok可下载，但当前直链是短时签名URL，不能作为长期GitHub自动缓存源。  
-   用途：**直接使用ERA5逐时10 m/100 m计算时变alpha**，是本文U10/U100→161.37 m方法的关键直接依据。  
-   建议文件名：`The role of the power law exponent in wind energy assessment - A global analysis.pdf`
+   International Journal of Energy Research 45, 8484–8496. DOI: **10.1002/er.6382**  
+   状态：FreiDok 明确 CC BY 且有 5.61 MB PDF，但下载采用动态签名地址，GitHub 自动缓存无法稳定解析。  
+   用途：本文由 ERA5 U10/U100 推算时变风切变指数并外推至轮毂高度的关键直接依据。  
+   文件名：`Jung_2021_Power_Law_Exponent_Wind_Energy.pdf`
 
-5. **Yang X et al. (2024)**  
+2. **Yang X et al. (2024)**  
    *Spatiotemporal variation of power law exponent on the use of wind energy.*  
    Applied Energy 356, 122441. DOI: **10.1016/j.apenergy.2023.122441**  
-   状态：ScienceDirect显示机构访问/购买PDF；当前未找到可公开再分发的稳定OA版本。  
-   用途：1980–2022逐时ERA5 10 m/100 m alpha + 8座风塔验证；强证据说明固定1/7不能机械采用。  
-   建议文件名：`Spatiotemporal variation of power law exponent on the use of wind energy.pdf`
+   状态：ScienceDirect 机构访问/购买；未找到可直接公开再分发的稳定 PDF。  
+   用途：1980–2022 ERA5 10 m/100 m 逐时 alpha；8 座风塔验证；用于论证固定 1/7 不宜机械采用。  
+   文件名：`Yang_2024_Spatiotemporal_Power_Law_Exponent.pdf`
 
-6. **Olauson J. (2018)**  
+3. **Olauson J. (2018)**  
    *ERA5: The new champion of wind power modelling?*  
    Renewable Energy 126, 322–331. DOI: **10.1016/j.renene.2018.03.056**  
-   状态：出版社全文当前未发现可公开再分发的稳定OA源。  
-   用途：ERA5 vs MERRA-2风电建模，证明ERA5作为长期风能/风电背景数据的同行评议基础。  
-   建议文件名：`ERA5 - The new champion of wind power modelling.pdf`
+   状态：DiVA 有作者预印本，出版社版本受访问限制；为避免在公共 GitHub 重新分发许可不明确版本，列为手动。  
+   用途：ERA5 与 MERRA-2 风电建模性能比较，是采用 ERA5 的经典依据。  
+   文件名：`Olauson_2018_ERA5_New_Champion_Wind_Power_Modelling.pdf`
 
-7. **Yang/Gualtieri等再分析不确定性综述（2022）**  
+4. **Gualtieri G. (2022)**  
    *Analysing the uncertainties of reanalysis data used for wind resource assessment: A critical review.*  
-   Renewable and Sustainable Energy Reviews. DOI: **10.1016/j.rser.2022.112741**  
-   状态：出版社全文当前未找到明确可公开缓存版本。  
-   用途：第三章ERA5局限性/地形/再分析不确定性综述证据。
+   Renewable and Sustainable Energy Reviews 167, 112741. DOI: **10.1016/j.rser.2022.112741**  
+   状态：CNR 仓储明确显示全文为 restricted/private；需要学校数据库或作者版本。  
+   用途：ERA5/再分析风资源不确定性、复杂地形与高度效应综述。  
+   文件名：`Gualtieri_2022_Reanalysis_Uncertainty_Critical_Review.pdf`
 
-8. **Pryor SC, Barthelmie RJ. (2021)**  
-   *A global assessment of extreme wind speeds for wind energy applications.*  
-   Nature Energy. DOI: **10.1038/s41560-020-00773-7**  
-   状态：出版社访问限制。  
-   用途：只用于ERA5长期/极端风气候背景，不用于TurbSim ETM瞬态方法。
+5. **《ERA5再分析资料在风能资源方面的应用》**  
+   《湖北农业科学》2021. DOI: **10.14088/j.cnki.issn0439-8114.2021.24.016**  
+   状态：题录已定位，自动检索未取得可信官方 PDF。  
+   用途：国内/湖北区域 ERA5 风能方法写法。  
+   文件名：`ERA5再分析资料在风能资源方面的应用.pdf`
 
-## C. 可以自己下载研究，但**不要直接公开上传本公共GitHub PDF**的版本
+6. **吉会峰等 (2023)《基于ERA5数据的江苏海域风能资源评估》**  
+   《太阳能学报》44(1):320–324. DOI: **10.19912/j.0254-0096.tynxb.2021-0952**  
+   状态：期刊官网明确有 **5931 KB PDF**，但下载按钮由 JavaScript 生成，GitHub 自动抓取无法解析。  
+   用途：国内同行评议 ERA5 风资源评估直接先例。  
+   文件名：`基于ERA5数据的江苏海域风能资源评估.pdf`
 
-9. **Koivisto M et al. (2020)**  
-   *Combination of meteorological reanalysis data and stochastic simulation for modelling wind generation variability.*  
-   Renewable Energy 159, 991–999. DOI: **10.1016/j.renene.2020.06.033**  
-   DTU Orbit有peer-reviewed postprint，但仓储页面明确限制为个人研究下载/打印且禁止进一步分发。  
-   用途：直接支持“再分析负责大尺度长期变化、随机模拟补高频变化”的ERA5→随机湍流思想。  
-   **处理规则：你可以合法下载并发给我做内部全文核读，但公共GitHub只存题录、URL、哈希和阅读笔记，不上传该PDF。**
+### A2. 混塔 / Abaqus / 动力响应核心
 
-10. **Scheffler (2019) MSc**  
-    *Development of a Methodology for Preliminary Site Assessment for Offshore Wind Applications based on ERA5 Reanalysis Data.*  
-    HAW Hamburg / Fraunhofer IWES.  
-    状态：学校仓储可公开读/下载，但未确认允许第三方在公共GitHub重新分发PDF。  
-    用途：ERA5作为学位论文长期风环境/场址评估输入的完整章节组织参考。
+7. **Kenna AP. (2019) PhD**  
+   *The Response and Optimisation of Hybrid Wind Turbine Towers.* Trinity College Dublin.  
+   状态：TARA 明确 open access，官方 PDF 5.77 MB；GitHub runner 连续访问失败。  
+   用途：混塔学位论文结构、塔架模型/整机模型分层、benchmark、global/local response、优化范式。  
+   文件名：`Kenna_2019_PhD_Response_and_Optimisation_of_Hybrid_Wind_Turbine_Towers.pdf`
 
-11. **Akor (2021) MSc**  
-    *Assessment of the Wind Energy Potential over Africa based on ERA5.*  
-    状态：学位论文仓储可读，公开再分发许可未确认。  
-    用途：ERA5低高度→hub-height外推及误差指标的学位论文方法旁证。
+8. **Kenna A, Basu B. (2015)**  
+   *A finite element model for pre-stressed or post-tensioned concrete wind turbine towers.*  
+   Wind Energy 18, 1593–1610. DOI: **10.1002/we.1778**  
+   状态：Wiley “Free to Read”，GitHub 直抓失败。  
+   用途：预应力筋建模、材料/几何非线性、预应力水平与时变损失对塔架刚度影响。  
+   文件名：`Kenna_Basu_2015_FE_Model_Prestressed_Concrete_Wind_Turbine_Towers.pdf`
 
-## D. 国内ERA5全文：请你从知网/万方/学校数据库或期刊PDF按钮下载
+9. **Chen J, Li J, He X. (2020)**  
+   *Design optimization of steel–concrete hybrid wind turbine tower based on improved genetic algorithm.*  
+   Struct Design Tall Spec Build 29:e1741. DOI: **10.1002/tal.1741**  
+   状态：Wiley 全文页可读，PDF 自动抓取失败。  
+   用途：钢—混混塔几何/预应力参数、设计约束和优化变量先例。  
+   文件名：`Chen_2020_Design_Optimization_Steel_Concrete_Hybrid_Wind_Turbine_Tower.pdf`
 
-12. **《ERA5再分析资料在风能资源方面的应用》**  
-    2021，《湖北农业科学》. DOI: **10.14088/j.cnki.issn0439-8114.2021.24.016**  
-    状态：题录已定位，全文未取得。  
-    用途：国内/湖北语境的ERA5风能资源方法表达，优先级高。
+10. **Li Shouzhen et al. (2023)**  
+    *Closed-form solution of fundamental frequency of steel-concrete hybrid wind turbine tower.*  
+    International Journal of Structural Stability and Dynamics 23, 2350031.  
+    状态：HKU 仓储有 `content.pdf`，GitHub runner 下载失败。  
+    用途：混塔基频解析解，考虑截面/材料突变、预应力、RNA 质量与转动惯量，可用于 Abaqus 模态交叉校核。  
+    文件名：`Li_2023_Closed_Form_Fundamental_Frequency_Hybrid_Tower.pdf`
 
-13. **吉会峰等（2023）《基于ERA5数据的江苏海域风能资源评估》**  
-    《太阳能学报》44(1):320–324. DOI: **10.19912/j.0254-0096.tynxb.2021-0952**  
-    状态：期刊官网明确显示5931 KB PDF按钮，但机器人没有解析出真实PDF下载地址。  
-    用途：国内同行评议ERA5风资源评估直接先例。
+11. **李守振等 (2024)《考虑P-Δ效应的钢混凝土混合塔筒动力响应分析》**  
+    《东南大学学报（自然科学版）》54(1):9–16. DOI: **10.3969/j.issn.1001-0505.2024.01.002**  
+    状态：作者在 ResearchGate 上传全文；建议你手动下载。  
+    用途：P-Δ、等效阻尼、ABAQUS 对照与动力响应理论交叉验证。  
+    文件名：`考虑P-Delta效应的钢混凝土混合塔筒动力响应分析.pdf`
 
-## E. 仍未缓存的原有混塔/方法核心文献
+12. **李泽宇 (2024) 博士论文**  
+    *预应力混凝土-钢混合风电塔架结构优化及性能分析.* 湖南大学.  
+    状态：CNKI 博士论文，需学校/知网权限。  
+    用途：PCSH 几何优化、两尺度 FE、缩尺试验验证、风/疲劳性能完整学位论文范式。  
+    文件名：`李泽宇_2024_预应力混凝土-钢混合风电塔架结构优化及性能分析.pdf`
 
-以下旧队列仍有效，但优先级低于A/B/D：
-- Kenna 2019 PhD, *The Response and Optimisation of Hybrid Wind Turbine Towers*；
-- Chen et al. 2020, DOI 10.1002/tal.1741；
-- Wu et al. 2022 UHPC hybrid tower, DOI 10.1186/s40069-022-00542-8；
-- Kim et al. 2019 hybrid joint fatigue, DOI 10.1007/s12205-019-1171-2；
-- Tan et al. 2026, Engineering Structures 123195；
-- Hao et al. 2026, Results in Engineering 111045；
-- Huang et al. 2026, Case Studies in Construction Materials e06051；
-- Li Shouzhen et al. 2023 IJSSD 2350031；
-- Kenna & Basu 2015, DOI 10.1002/we.1778；
-- 李守振等 2024《考虑P-Δ效应的钢混凝土混合塔筒动力响应分析》；
-- 李泽宇 2024博士论文、李守振 2023博士论文；
-- Downing & Socie 1982、Morris 1991、McKay et al. 1979、Sacks et al. 1989、Deb et al. 2002等方法原典（只有正文最终采用时才必须取得全文）。
+13. **李守振 (2023) 博士论文**  
+    *风电机组钢—混凝土混合塔筒动力性能及损伤识别研究.* 重庆大学.  
+    状态：CNKI 学位论文，需学校/知网权限。  
+    用途：混塔动力性能、理论模型与损伤识别；优先用于论文方法与章节逻辑核对。  
+    文件名：`李守振_2023_风电机组钢-混凝土混合塔筒动力性能及损伤识别研究.pdf`
 
-## 本轮已经成功缓存到GitHub的新PDF
+14. **Kim MO et al. (2019)**  
+    *Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower for a Wind Turbine under Fatigue Loading.*  
+    KSCE Journal of Civil Engineering 23(7):2971–2982. DOI: **10.1007/s12205-019-1171-2**  
+    状态：文章为 OA/CC BY-NC-ND，但当前没有机器人可稳定取得的直接 PDF URL。  
+    用途：钢—混转换连接疲劳试验、锚栓埋置长度、200 万次循环及残余承载力。  
+    文件名：`Kim_2019_Steel_Concrete_Joint_Hybrid_Tower_Fatigue.pdf`
 
-不需要你再下：
-- L060 Jourdier 2020 ERA5/Wind Power；
-- L061 Gualtieri 2021 ERA5 vs Tall Towers；
-- L063 Liu 2023 ~160 m hub-height wind；
-- L064 Ji 2025 China 19 wind towers vs ERA5；
-- L066 Gandoin 2024 ERA5 strong-wind underestimation；
-- L067 Rappe 2025 load mapping to FE；
-- L068 Berg 2011 resultant force/moment preserving load mapping；
-- L070 JMSE 2022 wind-turbine FE mesh/frequency convergence；
-- L071 Soares 2020 global offshore ERA5 wind resource；
-- L072 Murcia 2022 ERA5/NEWA tall-mast and wind-generation validation。
+15. **Wu X et al. (2022)**  
+    *Structural Behavior Analysis of UHPC Hybrid Tower for 3-MW Super Tall Wind Turbine Under Rated Wind Load.*  
+    IJCSM 16:52. DOI: **10.1186/s40069-022-00542-8**  
+    状态：CC BY；Springer/ACI 页面可读，但 GitHub runner 获得的不是 PDF 文件。  
+    用途：UHPC 混塔壁厚、壁厚比、预应力筋与转换区域应力集中参数研究。  
+    文件名：`Wu_2022_UHPC_Hybrid_Tower.pdf`
 
-以上全部已由GitHub Action验证PDF头、计算SHA-256并写入 `references/open-access/MANIFEST.tsv`。
+16. **Wang Z et al. (2025)**  
+    *Numerical Simulation and Fatigue Analysis of the Grout Layer Replacement for Horizontal Joint of Wind Turbine Prestressed Concrete Tower.*  
+    IJCSM 19:68. DOI: **10.1186/s40069-025-00800-5**  
+    状态：OA；Springer/ACI 页面可读，但 GitHub runner 获得的不是 PDF 文件。  
+    用途：水平接缝灌浆缺失、局部应力、损伤与疲劳分析。  
+    文件名：`Wang_2025_Grout_Layer_Horizontal_Joint_Fatigue.pdf`
+
+17. **Alvarez-Anton L et al. (2016)**  
+    *Optimization of a hybrid tower for onshore wind turbines by Building Information Modeling and prefabrication techniques.*  
+    Visualization in Engineering 4:3. DOI: **10.1186/s40327-015-0032-4**  
+    状态：CC BY 4.0；Springer PDF 直链对 runner 返回 HTML。  
+    用途：早期混塔概念、预制化/施工与材料减量背景。  
+    文件名：`AlvarezAnton_2016_Hybrid_Tower_BIM_Prefabrication.pdf`
+
+### A3. 2026 最新混塔文献：网页 OA，但 ScienceDirect 防机器人
+
+18. **Tan et al. (2026)**  
+    *Evaluation of load-carrying capacity of horizontal joints in concrete wind turbine towers.*  
+    Engineering Structures 364, 123195. DOI: **10.1016/j.engstruct.2026.123195**  
+    状态：CC OA；ScienceDirect PDF 防机器人。  
+    用途：压弯剪扭组合、预应力水平、水平接缝承载力、ABAQUS 校准。
+
+19. **Hao et al. (2026)**  
+    *Analysis on influence factors of static and dynamic response of prefabricated prestressed steel-concrete hybrid tower for onshore wind turbines.*  
+    Results in Engineering 30, 111045. DOI: **10.1016/j.rineng.2026.111045**  
+    状态：OA；ScienceDirect PDF 防机器人。  
+    用途：振动台 + FE，接缝方案/损伤对频率与动力响应影响。
+
+20. **Huang et al. (2026)**  
+    *Model and test verification for concrete fatigue failure of the steel-concrete hybrid wind turbine tower.*  
+    Case Studies in Construction Materials 24, e06051. DOI: **10.1016/j.cscm.2026.e06051**  
+    状态：CC OA；ScienceDirect PDF 防机器人。  
+    用途：混塔混凝土疲劳试验、fe-safe、S-N/均值应力修正与模型验证。
+
+## B. 现有用户提供文献仍缺 1 篇
+
+21. **Cheng et al. (2025)**  
+    *Generative design of steel-prestressed concrete hybrid wind turbine tower based on machine learning and multi-objective optimization.*  
+    Engineering Structures 341, 120835. DOI: **10.1016/j.engstruct.2025.120835**  
+    当前 `references/user-provided/` 仍缺实际 PDF（二进制待补）。  
+    SSRN 有同题预印本页面，但正式期刊 PDF 未自动取得。  
+    文件名：`Generative design of steel-prestressed concrete hybrid wind turbine tower based on machine learning and multi-objective optimization.pdf`
+
+## C. 暂不急着下：只有正文最终采用时才补原典
+
+- Downing & Socie (1982) rainflow counting；
+- ASTM E1049（若学校数据库/标准库可取得）；
+- Morris (1991) elementary effects；
+- McKay et al. (1979) Latin hypercube sampling；
+- Sacks et al. (1989) computer experiments / surrogate modelling；
+- Deb et al. (2002) NSGA-II。
+
+这些方法如果最终正文不用，就不为了“凑文献”下载。
+
+## D. 已有自动缓存体系
+
+所有自动取得的 PDF 统一放在：
+
+`research/wind-tower/references/open-access/`
+
+真实下载状态、SHA-256、字节数和原始来源统一以：
+
+`research/wind-tower/references/open-access/MANIFEST.tsv`
+
+为准。任何 `download-failed` / `not-pdf` 均不算“已有全文”。
