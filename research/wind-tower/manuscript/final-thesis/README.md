@@ -52,3 +52,12 @@ Simpack及其任何生产路线永久排除。
 - assemble/：最终合并稿准备区
 
 最终Word只从本目录的已通过章节装配，不从旧R2Z74直接覆盖生成。
+
+
+## 强制证据入口
+
+- 全论文逐步骤证据总表：`evidence/STEPWISE_METHOD_EVIDENCE_MATRIX.tsv`
+- 引用完整性审计：`evidence/CITATION_INTEGRITY_REPORT_20261005.md`
+- 第二章细化证据：`evidence/CH02_EVIDENCE.tsv`
+
+从现在起任何新方法必须先进入逐步骤证据总表，再进入正文。
