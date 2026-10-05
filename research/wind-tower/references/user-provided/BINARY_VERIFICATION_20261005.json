@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-05",
+  "scope": "The full PDF bytes were uploaded through the GitHub Git Data API and fetched back from GitHub; byte counts and SHA-256 match the supplied, renamed files. This is binary transfer verification, not a new scientific full-text reading.",
+  "count": 9,
+  "total_bytes": 84855343,
+  "files": [
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models.pdf",
+      "git_blob_sha": "a3222375489ef21e1690bb0d6b039e775b3ed90e",
+      "bytes": 7347561,
+      "readback_sha256": "0c016693e43a4568a79b0336699ce52d428de72d3dc05e2c19665201d3e6dae1",
+      "expected_sha256": "0c016693e43a4568a79b0336699ce52d428de72d3dc05e2c19665201d3e6dae1",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:14:28.726702+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Intelligent optimal design of steel-concrete hybrid wind turbine tower based on evolutionary algorithm.pdf",
+      "git_blob_sha": "52a74237e98e2fe7eb259f74bacd706eeb643508",
+      "bytes": 3281828,
+      "readback_sha256": "60648b30bfb0fe5dec34b81471201d274065a5dfb0491b3751eca8dbb77b6041",
+      "expected_sha256": "60648b30bfb0fe5dec34b81471201d274065a5dfb0491b3751eca8dbb77b6041",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:14:34.578525+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads.pdf",
+      "git_blob_sha": "759dc436844cbb81eedbcd344fe729bb67122523",
+      "bytes": 9613557,
+      "readback_sha256": "ea9372686b9ef01f91be11267387a185131aed17cf9eda187b5813682b91fab9",
+      "expected_sha256": "ea9372686b9ef01f91be11267387a185131aed17cf9eda187b5813682b91fab9",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:14:44.095988+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Compression-bending behavior of thin-walled prestressed concrete tower with horizontal joint for wind turbines - Experimental study and calculation model.pdf",
+      "git_blob_sha": "e39dd8c24dec4e3444a2e7d915e110729485dd30",
+      "bytes": 14298933,
+      "readback_sha256": "ede45007074492f6e540a7775f147686bdc2f3e47bd6557fa14c6a2152031bfa",
+      "expected_sha256": "ede45007074492f6e540a7775f147686bdc2f3e47bd6557fa14c6a2152031bfa",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:14:57.105776+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Experimental study on the combined compression-bending-torsion behavior of prestressed concrete towers for wind turbines considering horizontal joints.pdf",
+      "git_blob_sha": "cb0331004c184f818b2842f55f754dd4637c98d0",
+      "bytes": 18273853,
+      "readback_sha256": "7bb3f4e60fe760aa9c4605c2af732a7a3ce19fd6df16a532443cb3a2b6818ef0",
+      "expected_sha256": "7bb3f4e60fe760aa9c4605c2af732a7a3ce19fd6df16a532443cb3a2b6818ef0",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:16:14.821876+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Torsional behavior of prestressed concrete towers for wind turbines considering the effect of horizontal joint.pdf",
+      "git_blob_sha": "d0dc3560a8d7f4357fb524598e7c1413ce691bf4",
+      "bytes": 16637732,
+      "readback_sha256": "83c7f787cc0e0fec9daeb063842ba89b5b281115cf211ca9a7dafc82438f3187",
+      "expected_sha256": "83c7f787cc0e0fec9daeb063842ba89b5b281115cf211ca9a7dafc82438f3187",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:16:29.282205+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel-Concrete Hybrid Tower.pdf",
+      "git_blob_sha": "0f95c71f9a74d919392881a44ce9987af7a0a981",
+      "bytes": 5062896,
+      "readback_sha256": "0ede4affba46b9580eca30b2c26dd54246d375ca9e53ee76a37707a0fa7b87eb",
+      "expected_sha256": "0ede4affba46b9580eca30b2c26dd54246d375ca9e53ee76a37707a0fa7b87eb",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:16:35.910497+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf",
+      "git_blob_sha": "5da54b0a858a7b5d4ddf5fa7f812145240e99334",
+      "bytes": 5949356,
+      "readback_sha256": "86a46402bd0aa2e57fb9e02e10749ca2a02c183a80039abe75d156cea339e237",
+      "expected_sha256": "86a46402bd0aa2e57fb9e02e10749ca2a02c183a80039abe75d156cea339e237",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:17:06.235135+00:00"
+    },
+    {
+      "repo_path": "research/wind-tower/references/user-provided/Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf",
+      "git_blob_sha": "e5228acc2bc28b121424f5c053af93860b864726",
+      "bytes": 4389627,
+      "readback_sha256": "4c5fb8e57b713245bc8d06cedcb683b509c2038b41a34cdb76acba66fcb5aed0",
+      "expected_sha256": "4c5fb8e57b713245bc8d06cedcb683b509c2038b41a34cdb76acba66fcb5aed0",
+      "status": "github-blob-readback-verified",
+      "verified_at_utc": "2026-10-05T03:17:16.009784+00:00"
+    }
+  ]
+}

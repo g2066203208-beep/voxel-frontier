@@ -53,7 +53,7 @@
 - **L004 Li et al. (2021), Applied Sciences 11, 8683**；
 - **L009 Hannesdóttir et al. (2019), Wind Energy Science 4, 325–342**。
 
-因此当前工作室已有 **7篇可直接逐页阅读的全文PDF**。Springer L016 返回HTML而非PDF，MDPI L017自动下载仍失败，二者状态如MANIFEST所示，不伪装为成功。
+该批次完成时，工作室已有 **7篇可直接逐页阅读的全文PDF**；这不是当前累计数量。Springer L016 返回HTML而非PDF，MDPI L017自动下载仍失败，二者状态如MANIFEST所示，不伪装为成功。
 
 
 ## 2026-10-04 第三批：规范、软件版本与最新2026直接文献
@@ -121,4 +121,9 @@
 |L052|`Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf`|Xu et al., Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel–Concrete Hybrid Tower using a co-simulation approach|10.1016/j.renene.2025.122475|17|DTU 10 MW、158 m混塔、非线性动力与协同分析，与本文对象尺寸和材料谱系高度接近|
 |L059|`Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf`|Cheng et al., Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode|10.1016/j.istruc.2024.107235|12|RNA质量偏心/转动惯量、预应力、变截面与Abaqus模态验证，直接支撑本文RNA空间惯量与模态核对|
 
-> 状态说明：本轮已把统一命名、DOI、页数、字节数和SHA-256写入GitHub工作室；PDF二进制本体需与MANIFEST哈希完全一致后才可把状态由 `binary-pending` 改为 `ok`，不得把“已登记”写成“已入库全文”。
+> 2026-10-05更新：上述10条中的9篇（除L054）已按本次用户提供文件实际补入完整PDF，状态为 `ok`。新下载文件的哈希差异已逐项留痕；L054仍为 `binary-pending`。见 [实际文件、完整题录与校验记录](user-provided/README.md)。
+
+
+## 2026-10-05 9篇用户提供PDF本体补齐
+
+9篇既有文献完成正式题名重命名、文件完整性检查和二进制入库，不增加重复文献条目。完整题录、可打开PDF及新旧文件哈希见 [user-provided](user-provided/README.md)。本次属于文件与身份核验，不将其写为新的科学全文审读或模型验证。

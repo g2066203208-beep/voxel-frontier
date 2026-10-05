@@ -103,3 +103,8 @@
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
 |[39-t035-expert-thesis-redesign.md](39-t035-expert-thesis-redesign.md)|不把现有提纲视为上限，重新回答13个论文设计问题并比较A/B/C三条研究路线|选定Route B：场址/随机风→控制工况→多轴需求→控制区域机制→机制驱动优化；材料寿命与局部contact条件触发|专家重审完成；实施从G0继续|
+
+
+## T036 九篇用户提供PDF完整入库
+
+[40-t036-nine-pdf-binary-ingest.md](40-t036-nine-pdf-binary-ingest.md)：9篇沿用既有题录，完整PDF补入references/user-provided，正式题名重命名、首尾完整性检查与GitHub全字节读回校验完成；研究门禁状态未改变。
