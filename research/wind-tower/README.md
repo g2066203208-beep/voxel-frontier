@@ -1,5 +1,7 @@
 # START HERE — 正式研究入口
 
+参考文献：[本地29篇分类目录及完整PDF](references/user-provided/LOCAL_LIBRARY_20261005.md) · [全部参考资料目录](references/README.md)
+
 后续任何论文工作先读：
 1. `workflow/MASTER_RESEARCH_PROTOCOL.md`
 2. `workflow/ADVISOR_REQUIREMENTS.md`

@@ -1,5 +1,20 @@
 # 文献入库与阅读状态
 
+## 2026-10-05 本地29篇文献整理结果
+
+本地29份完整PDF共1,115页、257,005,505字节：复用已有9份，补上传20份。原L054已补齐全文。题名、作者、年份、DOI及版本已核对；原始PDF字节不变，既有科学阅读状态保留。
+
+- [用户提供的29篇完整论文：分类题录与PDF](user-provided/LOCAL_LIBRARY_20261005.md)
+- [用户论文文件清单及SHA-256](user-provided/MANIFEST.tsv)
+- [开放获取全文清单](open-access/MANIFEST.tsv)
+- [开放获取来源记录](open-access-sources.tsv)
+- [官方基准、场址与模型参考资料](baselines-and-site-20261004/)
+- [文献主表与实际阅读等级](../registry/literature_master.tsv)
+- [文献获取状态](../registry/literature_acquisition_status.tsv)
+
+同一PDF全文仅保留一份；题录依DOI和完整题名复用已有编号。本地本批29份文件复用9份已有全文并补上传20份。不同版本、原始名称、页数和校验值见用户论文目录内的结构化题录与导入记录。
+历史入库/自动下载状态保留在下文，当前文件可用性以29篇目录、用户文献MANIFEST及文献主表为准。
+
 > 技术路线与文献用途的统一总表见：[TECHNICAL_ROUTE_LITERATURE_MATRIX_20261005.md](TECHNICAL_ROUTE_LITERATURE_MATRIX_20261005.md)。后续优先按该表补缺，不再无边界堆文献。
 
 本目录清单只登记可以追溯的文献来源。受版权限制的论文不绕过付费墙；开放获取全文可以保存公开下载入口并在后续合法取得文件后校验SHA-256。未取得全文的文献不用于批准具体公式、参数或数值结论。
