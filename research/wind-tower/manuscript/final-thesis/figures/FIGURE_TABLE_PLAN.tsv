@@ -1,0 +1,39 @@
+id	chapter	title_or_content	data_source	status	final_rule
+FIG1-1	Ch1	论文总体技术路线图	Route B/T041	READY-DESIGN	不得出现Simpack
+TAB1-1	Ch1	直接相关研究对比与本文研究缺口	literature_master + core fulltexts	NEED-ASSEMBLE	只列直接相关研究
+FIG2-1	Ch2	DTU10MW+158m混塔研究对象与来源关系	DTU/He2024/BASE001	NEED-BASE001	明确组合研究对象非官方单一模型
+TAB2-1	Ch2	BASE001几何/材料/来源总表	baseline_identity+parameter_registry	NEED-BASE001	每值有SOURCE
+FIG2-2	Ch2	Abaqus精细模型及关键构件	canonical INP	NEED-BASE001	只用正式模型
+FIG2-3	Ch2	C65/C70单轴材料V&V	G1 material runs	NEED-RUN	目标曲线vsAbaqus输出
+FIG2-4	Ch2	RNA质量-质心-惯量空间等效	G1 RNA audit	NEED-RUN	统一ref point
+FIG2-5	Ch2	模态与有效质量	G1 modal run	NEED-RUN	FA/SS方向明确
+FIG2-6	Ch2	网格收敛	G1 mesh family	NEED-RUN	QoI多指标
+FIG2-7	Ch2	自由衰减阻尼验证	G1 decay runs	NEED-RUN	目标阻尼来源先闭合
+FIG3-1	Ch3	2005-2025 ERA5年平均风速	ERA5 archive	HISTORICAL-READY	G2脚本hash复核
+FIG3-2	Ch3	月平均风速气候态	ERA5 archive	HISTORICAL-READY	G2复核
+FIG3-3	Ch3	全年/高风风向玫瑰图	ERA5 archive	HISTORICAL-READY	G2复核
+FIG3-4	Ch3	alpha(t)分布与Hub-height外推	ERA5 archive	HISTORICAL-READY	动态alpha
+FIG3-5	Ch3	TurbSim风场与谱/湍流V&V	G2 wind files	NEED-RUN	不能只截图
+FIG3-6	Ch3	OpenFAST运行点/控制器验证	G3	NEED-RUN	RotorSpeed Pitch Power
+FIG3-7	Ch3	36case多QoI seed离散	G4	NEED-RUN	final baseline
+FIG3-8	Ch3	load-DEL矩阵	G7A/G4	NEED-RUN	DEL不等于寿命
+TAB3-1	Ch3	2-4控制工况及控制理由	G4	NEED-RUN	每case不同物理目的
+FIG4-1	Ch4	OpenFAST→Abaqus自由体/坐标/参考点图	G5 mapping definition	NEED-ASSEMBLE	明确重力惯性分账
+FIG4-2	Ch4	六分量单位载荷与ΣF/ΣM守恒	G5	NEED-RUN	必须先于生产响应
+FIG4-3	Ch4	跨模型塔顶/塔底QoI对比	G5	NEED-RUN	不调参强制吻合
+FIG4-4	Ch4	控制case塔顶时程与PSD	G6	NEED-RUN	统一窗口
+FIG4-5	Ch4	沿塔高N/V/M/T包络	G6	NEED-RUN	保留各分量
+FIG4-6	Ch4	控制区域/材料响应	G6	NEED-RUN	不超出模型能力
+TAB4-1	Ch4	工况-QoI-控制高度-材料/构件-机制矩阵	G6	NEED-RUN	第四章核心表
+FIG5-1	Ch5	linear vs P-Delta vs material nonlinear	G6	NEED-RUN	同一输入受控对照
+FIG5-2	Ch5	条件局部模型/接缝或转换区响应	G6	CONDITIONAL	结果触发
+FIG5-3	Ch5	局部应力rainflow/循环矩阵	G7B conditional	CONDITIONAL	不得从load DEL替代
+FIG5-4	Ch5	参数效应vs seed噪声	G8	NEED-RUN	配对seed
+FIG5-5	Ch5	敏感性排序/交互	G8	NEED-RUN	方法按最终变量数选择
+TAB5-1	Ch5	设计变量物理意义/范围/来源	G8	NEED-RUN	无来源变量不得进入优化
+FIG6-1	Ch6	DOE/代理精度	G9	CONDITIONAL	仅需要代理时
+FIG6-2	Ch6	Pareto前沿	G9	NEED-RUN	真实约束
+TAB6-1	Ch6	代表优化方案参数	G9	NEED-RUN	真实FE重建
+FIG6-3	Ch6	优化前后高保真响应	G9	NEED-RUN	同seed对比
+FIG6-4	Ch6	独立风况/seed稳健性	G9	NEED-RUN	训练外验证
+TAB7-1	Ch7	结论-证据-创新对应表	G10	NEED-RUN	只纳入PASS claim
