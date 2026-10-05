@@ -1,0 +1,7 @@
+{
+  "first_published_commit": "ed33b69cd729b3300af33b127e70765806bff143",
+  "phase": "post-push readback",
+  "error": "GitHub CLI raw content output: transform: short source buffer",
+  "impact": "Commit and files exist; first process stopped before a successful byte-readback receipt. No solver or numerical result changed.",
+  "resolution": "Retain the first commit, publish corrected publisher using Git blob JSON/base64 for binary-safe readback; final receipt required before claiming completion."
+}

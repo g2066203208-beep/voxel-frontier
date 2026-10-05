@@ -72,9 +72,15 @@ def main(mode):
         except RuntimeError:
             if attempt<3 and api('git/ref/heads/main')['object']['sha']!=head:continue
             raise
+        pending={'mode':mode,'commit':commit['sha'],'parent':head,'readback_verified':False,'entries':entries}
+        (ROOT/('publication-pending-'+mode+'.json')).write_text(json.dumps(pending,ensure_ascii=False,indent=2),encoding='utf-8')
+        blob_by_path={entry['path']:entry['sha'] for entry in entries}
         def verify(item):
             p,data=item
-            actual=api('contents/'+p+'?ref='+commit['sha'],raw=True)
+            # JSON/base64 avoids Windows gh raw-output transcoding of binary ZIP/PDF.
+            obj=api('git/blobs/'+blob_by_path[p])
+            if obj['encoding']!='base64':raise RuntimeError('Unexpected Git blob encoding '+p)
+            actual=base64.b64decode(obj['content'])
             if actual!=data:raise RuntimeError('readback failed '+p)
             return {'path':p,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
         with ThreadPoolExecutor(max_workers=4) as pool:checks=list(pool.map(verify,prepared.items()))
