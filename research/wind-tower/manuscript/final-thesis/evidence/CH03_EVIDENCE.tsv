@@ -1,0 +1,12 @@
+section	claim_or_method	evidence	adoption	boundary	status
+3.1	ERA5 data identity and u/v wind conversion	ECMWF official;REF080;REF090	Use 2005-2025 hourly archive and documented interpolation	Not site measurement	PASS-METHOD
+3.2	Hourly alpha from ERA5 U10/U100	REF083;REF093	alpha(t)=ln(U100/U10)/ln10 and hourly hub extrapolation	Global/eight-tower errors not Jiayu errors	PASS-METHOD
+3.2	Current Jiayu statistics	ERA5 archive + historical scripts/runs	Retain as current data snapshot	Rebind to final HubHt and script/hash	CONDITIONAL-RUN
+3.3	NTM/ETM identities	IEC61400-1;TurbSim official;REF018	Use paired turbulence models at same mean speed	Full IEC clauses still need authorized check	CONDITIONAL-STANDARD
+3.3	6 seeds and 700s/100-700s precedent	REF018;related OpenFAST studies	Use as screening design then test QoI convergence	Do not claim 6 seeds inherently sufficient	PASS-DESIGN/NEED-RUN
+3.3	200m x 200m 51x51 historical grid	Historical TurbSim assets	Candidate only	Requires spatial/time V&V	NEED-RUN
+3.4	OpenFAST/ROSCO model validation	REF009;REF046;OpenFAST official;DTU report	Freeze actual input chain and controller hash	Do not cite latest software behavior for v3.5.3 run without check	NEED-RUN
+3.5	Multi-seed statistics	REF009;REF011	Mean/std/RMS/extreme/PSD and ranking stability	No arbitrary convergence threshold	PASS-METHOD
+3.6	Rainflow/DEL load comparison	REF037;Downing-Socie/ASTM conditionally	Use G7A only	m=4 Neq=1e5 not material life	PASS-METHOD
+3.6	57286 cycles and 72 DEL	Historical run assets	Benchmark	Rebind channels/window/baseline	CONDITIONAL-RUN
+3.7	Multi-QoI control-case selection	REF009;REF011;REF018	Select 2-4 cases serving distinct physical purposes	Allow adaptive extra cases if G6 exposes gap	PASS-DESIGN/NEED-RUN
