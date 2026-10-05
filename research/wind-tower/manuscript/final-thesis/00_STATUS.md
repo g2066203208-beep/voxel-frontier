@@ -64,3 +64,15 @@ STAGE 7：摘要、Abstract、参考文献统一、图表编号、全文格式�
 - 7章“可直接作为最终提交正文”的完成度：约40%。主要缺口是G0–G9实际run、最终图表、定量结论和G10证据闭环。
 - 文献主路线：SUFFICIENT；不再无边界扩文献。
 - 最终Word：尚未装配，必须等关键run和图表闭合后生成。
+
+
+## T043 逐步骤文献证据审计
+
+状态：PASS-CITATION-MAPPING
+
+- 七章共拆分76个实质研究步骤；
+- 76/76均已在STEPWISE_METHOD_EVIDENCE_MATRIX.tsv绑定GitHub REF/OFFICIAL/STANDARD或RUN证据要求；
+- 七章正文当前所有REF编号均能在literature_master.tsv解析；
+- 已修正REF065/071/055/056/059等历史错配；
+- 新增REF124–131以补rainflow、DEL、Morris、LHS、Kriging、NSGA-II、Embedded Region和Implicit Dynamic等方法/官方定义；
+- 注意：引用完整性PASS不等于计算完成。G0–G9仍需真实RUN，G10才允许形成最终定量结论。
