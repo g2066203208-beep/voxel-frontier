@@ -198,14 +198,14 @@ jobs:
           md.append("## AeroDyn exception")
           md.append("")
           md.append(f"Two AeroDyn SHA families detected across the 36 cases. Raw positional verdict: **{verdict}**. Field-name/value semantic verdict: **{semantic_verdict}**.")
-          if pre_equal is True:
-              md.append("The normalized portion before the AeroDyn OutList marker is identical; the detected variant is confined to the output-request section. This does **not** by itself change aerodynamic physics, but the exact diff is retained for audit.")
-          elif pre_equal is False:
-              md.append("A difference exists before the OutList marker. U11p4_NTM_S01 is therefore not proven dynamically equivalent to the other 35 cases and must not be pooled until the difference is explained or rerun.")
+          if semantic_verdict=="PHYSICS_FIELDS_EQUIVALENT_REORDERED_PLUS_OUTLIST_DIFF":
+              md.append("The field-name/value comparison found **no physics-input value differences** between the two AeroDyn variants. The raw difference is parameter-section ordering plus requested output channels. Therefore U11p4_NTM_S01 remains dynamically comparable for shared physical QoIs; only channel availability differs.")
+          elif pre_equal is True:
+              md.append("The normalized portion before the AeroDyn OutList marker is identical; the detected variant is confined to the output-request section.")
+          else:
+              md.append("A physics-relevant AeroDyn difference has not been ruled out; the affected case must be isolated until explained or rerun.")
           md.append("")
           md.append("The case-hash table, semantic-field delta and raw unified diff are stored beside this report.")
-          if semantic_verdict=="PHYSICS_FIELDS_EQUIVALENT_REORDERED_PLUS_OUTLIST_DIFF":
-              md.append("The field-name/value comparison found **no physics-input value differences** between the two AeroDyn variants. The raw difference is section ordering plus requested output channels. Therefore U11p4_NTM_S01 can remain dynamically comparable for shared physical QoIs, while its AeroDyn output-channel availability must be treated separately.")
           md.append("")
           md.append("## Runtime identity across all 36 cases")
           md.append("")
