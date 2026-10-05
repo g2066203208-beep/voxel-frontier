@@ -96,3 +96,29 @@ OpenFAST→Abaqus必须独立V&V：
 → 第七章结论。
 
 任何阶段稿都必须保存在本工作区并带状态，不覆盖历史证据。
+
+
+## 12. 步骤级引用准入门禁
+
+任何新研究步骤、公式、参数、工况、模型简化、验证指标或算法，在进入 `chapters/` 正文前，必须先在：
+
+`evidence/STEPWISE_METHOD_EVIDENCE_MATRIX.tsv`
+
+建立对应条目，并至少给出：
+
+- primary GitHub REF；
+- 原文/官方真正怎么做；
+- 本文采用方式；
+- 禁止照搬内容；
+- 当前gate状态。
+
+若不存在直接来源，则必须标记 `NEED-SOURCE` 或“本文研究设计+V&V”，不得先写成final正文。
+
+引用完整性检查见：
+`evidence/CITATION_INTEGRITY_REPORT_20261005.md`。
+
+特别规则：
+- 方法/参数需要REF/STANDARD/OFFICIAL；
+- 本文结果需要RUN/FIG/TAB；
+- 机理解释需要RUN+REF；
+- 文献不能替代本文计算结果。
