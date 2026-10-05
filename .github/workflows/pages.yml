@@ -36,6 +36,7 @@ jobs:
         run: |
           node scripts/read-abaqus.cjs
           node scripts/read-source-rna.cjs
+          node scripts/audit-rebar-geometry.cjs
           node scripts/sanity-check-reported.mjs
           node scripts/check-material-audit.mjs
 
