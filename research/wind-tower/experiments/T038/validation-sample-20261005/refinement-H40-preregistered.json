@@ -1,0 +1,9 @@
+{
+  "new_job": "RNA_R2_MOTION_H40",
+  "factor": 40,
+  "prior_failure": "original MOTION max KE residual/peak 5.32959004245594e-4 > pre-run 1e-6",
+  "hypothesis": "Prescribed boundary derivative and implicit integration/energy evaluation may retain timestep error. Check change with step refinement rather than changing target or budget.",
+  "next_decision": "If residual does not decrease, investigate output/constraint/energy definitions; do not declare pass by increasing tolerance.",
+  "source": "Abaqus Standard direct-integration dynamics accuracy and prescribed-motion amplitude definitions; prepared-fixture-method-source-review.md; research card numerical verification framework",
+  "input_hash": "b3e11d9076689efa07e5b9e8d6db6ce6653f8e3117b1b46e7e122eeb4206eac0"
+}

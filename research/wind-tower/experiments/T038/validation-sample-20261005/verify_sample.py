@@ -84,7 +84,7 @@ motion_result={
  'budget':budgets['motion_kinetic_energy_relative_peak_scale'],
  'max_CG_velocity_kinematic_residual_m_s':velocity_error,
  'max_O_vs_G_angular_velocity_residual_rad_s':float(np.max(np.abs(qg[:,3:]-q[:,3:]))),
- 'scope':'Fully prescribed small motion; validates inertia/coupling/energy accounting, not free-response dynamics or time-step convergence',
+ 'scope':'Fully prescribed small motion; validates inertia/coupling/energy accounting, not free-response dynamics or full-tower time-step convergence',
  'pass':max(error_O,error_G)/peak<=budgets['motion_kinetic_energy_relative_peak_scale']
 }
 with (ROOT/('kinetic-energy-'+motion_case+'.csv')).open('w',newline='',encoding='utf-8') as stream:
@@ -103,7 +103,7 @@ for case in ['MATRIX','GRAVITY',motion_case]:
 original=Path('D:/Codex-research-validation/T026/tower/DTU158_RECONSTRUCTED_M2/DTU158_RECONSTRUCTED_M2.inp')
 original_hash=hashlib.sha256(original.read_bytes()).hexdigest()
 assert original_hash=='428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1'
-result={'task_id':'T038-S1','accepted_motion_candidate':motion_case,'all_required_checks_pass':all(b['pass'] for b in block_results) and properties['pass'] and all(g['pass'] for g in gravity_results) and motion_result['pass'] and all(r['completed'] and not r['fatal_keyword_messages'] for r in solver_runs),
+result={'task_id':'T038-S1','evaluated_motion_case':motion_case,'all_required_checks_pass':all(b['pass'] for b in block_results) and properties['pass'] and all(g['pass'] for g in gravity_results) and motion_result['pass'] and all(r['completed'] and not r['fatal_keyword_messages'] for r in solver_runs),
  'target_sha256':hashlib.sha256((ROOT/'frozen-target.json').read_bytes()).hexdigest(),'matrix_blocks':block_results,'recovered_properties':properties,'gravity':gravity_results,'motion':motion_result,'solver_runs':solver_runs,'source_M2_unchanged_sha256':original_hash,
  'retained_limits':['No full-tower input modified; no OpenFAST solver run','Target is independent locked undeformed ElastoDyn reconstruction, not native exported or physical complete RNA','Does not validate flexibility, rotation, aeroelastic feedback, full-tower damping, wind-load mapping, fatigue or D08','Original ED.sum mass residual 0.040723140119 kg remains unresolved','Two initial ODB extraction attempts failed on float32 JSON serialization; corrected and retried without rerunning any solver or changing any target']}
 (ROOT/'verification-results.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
