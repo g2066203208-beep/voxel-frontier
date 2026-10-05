@@ -1,7 +1,7 @@
 # T045 — BASE001候选冻结与R2 RNA接入
 
 日期：2026-10-05  
-状态：**candidate-created / preferred-O158 / solver-validation-pending**
+状态：**candidate-created / preferred-O158-CLEAN / solver-validation-pending**
 
 ## 目标
 
@@ -48,6 +48,21 @@ Git blob：`f1702541034c8063fc33ce2a7ae252847a6e8449`
 
 将塔顶结构接口统一到物理塔顶O=(0,158,0)，并将R2 CG通过6DOF偏心耦合连接O。Flex_X/Z也改在O点施加。该版本是当前BASE001首选候选。
 
+### Candidate C — O158 CLEAN正式首选版
+`inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp`
+
+Git blob：`49ca06bd2c5af67d681d39c77ad292382d982b4f`  
+大小：3,055,191 bytes
+
+以Candidate B为母本，仅清除已经失去全部活动引用的旧RNA部件定义、旧RNA等效材料卡和旧RP集合。静态审计确认：
+- R2 MASS、完整ROTARYI与O158偏心耦合保留；
+- C65/C70、S345、STRAND_1860保留；
+- 1280 MPa名义PT输入保留；
+- Gravity、30阶Modal、Flex_X/Z保留；
+- 31段混凝土、4段钢塔、普通钢筋、30个SPRING2接头及Tie关系未改。
+
+**Candidate C从本提交起作为BASE001唯一首选候选。** Candidate A/B仅保留审计与回退，不再作为后续RUN默认输入。
+
 ## 对原M2的修改边界
 
 保留：
@@ -79,7 +94,7 @@ Git blob：`f1702541034c8063fc33ce2a7ae252847a6e8449`
 
 ## T045通过标准
 
-只有Preferred O158候选在Abaqus 2025完成并通过：
+只有Preferred O158 CLEAN候选在Abaqus 2025完成并通过：
 - 输入/约束无新增不可接受错误；
 - RNA质量/CG/J与T038目标一致；
 - Gravity平衡；
