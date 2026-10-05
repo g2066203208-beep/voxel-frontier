@@ -40,10 +40,21 @@ R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
 ## 当前执行阶段
 
 STAGE 0：工作区与源稿冻结 —— PASS  
-STAGE 1：第二章BASE001/G1重构 —— IN PROGRESS（2.1–2.3已重构并建证据矩阵）  
-STAGE 2：第三章G2–G4 —— PENDING  
-STAGE 3：第四章G5/G6入口 —— PENDING  
-STAGE 4：第五章G6/G8/G7条件 —— PENDING  
-STAGE 5：第六章G9 —— PENDING  
-STAGE 6：第一章、摘要、第七章回写 —— PENDING  
+STAGE 1：七章DRAFT-A骨架与方法正文 —— PASS；第二章BASE001/G1实证闭合 —— IN PROGRESS  
+STAGE 2：第三章G2–G4实证闭合 —— NEXT  
+STAGE 3：第四章G5/G6实证闭合 —— PENDING  
+STAGE 4：第五章G6/G8/G7条件实证闭合 —— PENDING  
+STAGE 5：第六章G9实证闭合 —— PENDING  
+STAGE 6：第一章/摘要/第七章最终回写 —— PENDING  
 STAGE 7：全文格式/参考文献/Word装配 —— PENDING
+
+## 2026-10-05 七章重构结果
+
+- Ch1：DRAFT-A 已建立；Simpack/MBD研究现状与创新叙事删除，研究缺口改为随机整机载荷—精细结构—控制机制—优化连续证据链。
+- Ch2：DRAFT-A 已完成2.1–2.8；BASE001/G1数值门禁待关闭。
+- Ch3：DRAFT-A 已建立；正式路线仅ERA5→TurbSim→OpenFAST/ROSCO→多QoI/DEL控制工况。
+- Ch4：DRAFT-A 已建立；正式路线为OpenFAST→Abaqus六分量守恒映射与控制区域识别。
+- Ch5：DRAFT-A 已建立；P-Δ/材料/条件连接非线性、G7分级疲劳、机制驱动敏感性。
+- Ch6：DRAFT-A 已建立；机制驱动优化、条件代理、多目标及独立高保真验证。
+- Ch7：STRUCTURED-DRAFT 已建立；禁止在G10前填入虚构结论或创新。
+- 7章证据矩阵、图表计划、RUN_GAP_MATRIX和唯一装配入口均已建立。
