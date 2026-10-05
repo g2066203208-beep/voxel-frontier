@@ -153,17 +153,28 @@ jobs:
               with zipfile.ZipFile(Path(canonical_archive)) as z:
                   return z.read(canonical_member).decode("utf-8",errors="replace")
           log_lines=[]
-          target_cases={"U09p343881_ETM_S01","U11p4_NTM_S01"}
+          log_summary=[]
           for rr in of:
               m=case_re.match(rr.get("relative_path",""))
-              if not m or m.group(1) not in target_cases: continue
-              if not rr.get("relative_path","").endswith("/openfast_stdout.log"): continue
+              if not m or not rr.get("relative_path","").endswith("/openfast_stdout.log"): continue
+              case=m.group(1)
               txt=extract_member(rr["canonical_archive"],rr["canonical_member"])
+              ofver=""; roscover=""; warn=[]; fatal=[]
               for line in txt.splitlines():
                   lo=line.lower()
+                  if "openfast-v" in lo and not ofver: ofver=line.strip()
+                  if "running rosco-v" in lo and not roscover: roscover=line.strip()
+                  if "warning" in lo or "improperly formatted" in lo: warn.append(line.strip())
+                  if "fatal" in lo or "severe error" in lo: fatal.append(line.strip())
                   if any(k in lo for k in ["openfast-v","aerodyn","rosco","warning","severe","fatal","version"]):
-                      log_lines.append(f"[{m.group(1)}] {line}")
-          (outdir/"REPRESENTATIVE_LOG_VERSION_WARNINGS.txt").write_text("\n".join(log_lines)+"\n",encoding="utf-8")
+                      log_lines.append(f"[{case}] {line}")
+              log_summary.append((case,ofver,roscover,len(warn),len(fatal)," | ".join(warn[:4])," | ".join(fatal[:4])))
+          (outdir/"ALL36_LOG_VERSION_WARNINGS.txt").write_text("\n".join(log_lines)+"\n",encoding="utf-8")
+          with (outdir/"ALL36_RUNTIME_IDENTITY.tsv").open("w",encoding="utf-8",newline="") as f:
+              w=csv.writer(f,delimiter="\t"); w.writerow(["case","openfast_version","rosco_version","warning_count","fatal_count","warning_excerpt","fatal_excerpt"]); w.writerows(sorted(log_summary))
+          ofvers=sorted({x[1] for x in log_summary if x[1]})
+          rvers=sorted({x[2] for x in log_summary if x[2]})
+          fatal_cases=[x[0] for x in log_summary if x[4]>0]
 
           # detect known archive gaps
           discon=[r for r in of if r.get("relative_path","").endswith("/Control/DTU_10MW_RWT_DISCON.IN")]
@@ -192,7 +203,14 @@ jobs:
           elif pre_equal is False:
               md.append("A difference exists before the OutList marker. U11p4_NTM_S01 is therefore not proven dynamically equivalent to the other 35 cases and must not be pooled until the difference is explained or rerun.")
           md.append("")
-          md.append("The case-hash table and raw unified diff are stored beside this report.")
+          md.append("The case-hash table, semantic-field delta and raw unified diff are stored beside this report.")
+          if semantic_verdict=="PHYSICS_FIELDS_EQUIVALENT_REORDERED_PLUS_OUTLIST_DIFF":
+              md.append("The field-name/value comparison found **no physics-input value differences** between the two AeroDyn variants. The raw difference is section ordering plus requested output channels. Therefore U11p4_NTM_S01 can remain dynamically comparable for shared physical QoIs, while its AeroDyn output-channel availability must be treated separately.")
+          md.append("")
+          md.append("## Runtime identity across all 36 cases")
+          md.append("")
+          md.append(f"OpenFAST runtime strings: {ofvers}. ROSCO runtime strings: {rvers}. Cases with fatal/severe errors: {fatal_cases}.")
+          md.append("The repeated AeroDyn nodal-output formatting message is recorded in ALL36_RUNTIME_IDENTITY.tsv and must not be silently discarded; it concerns nodal output configuration and requires checking only if nodal AeroDyn outputs are used as thesis evidence.")
           md.append("")
           md.append("## Controller archive gap")
           md.append("")
@@ -204,7 +222,8 @@ jobs:
           md.append("- FST, ElastoDyn, ServoDyn and the 158 m tower file are one SHA family across all 36 cases.")
           md.append("- InflowWind is 36 distinct SHA values, consistent with case-specific stochastic inflow.")
           md.append(f"- AeroDyn raw positional verdict: **{verdict}**; semantic field verdict: **{semantic_verdict}**.")
-          md.append("- G0 OpenFAST can move from 'raw files absent' to 'canonical static input mostly bound / controller identity HOLD'.")
+          md.append(f"- Runtime versions across archived logs: OpenFAST={ofvers}; ROSCO={rvers}; fatal/severe-error cases={fatal_cases}.")
+          md.append("- G0 OpenFAST can move from 'raw files absent' to 'canonical static/physics input and runtime version substantially bound / exact controller configuration HOLD'.")
           (outdir/"README.md").write_text("\n".join(md)+"\n",encoding="utf-8")
           PY
 
