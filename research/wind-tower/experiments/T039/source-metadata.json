@@ -1,0 +1,27 @@
+{
+  "task": "T039",
+  "date": "2026-10-05",
+  "stage": "start",
+  "sources": [
+    {
+      "role": "user-supplied school formatting authority",
+      "private_filename": "论文格式.docx",
+      "sha256": "3b1079d0766eab9dc19cd541464cf3bd9e319e2e83d4c70d0b7432bc04aa5c2a",
+      "hash_checked_this_step": true,
+      "publication": "metadata only; original template, complete extraction and original comments remain private"
+    },
+    {
+      "role": "existing chapter 1 content-preserving formatting source",
+      "private_filename": "第一章_绪论_文献综述重写稿_20261005.docx",
+      "sha256": "4089e132260a85cb0afd4341930b67c194a167fe5e5c842cce041fbfb964d8f0",
+      "hash_checked_this_step": true,
+      "publication": "metadata only; thesis Word/PDF/page images remain private"
+    }
+  ],
+  "execution_scope": "Only existing chapter 1 formatting; content not yet accepted",
+  "downstream_work": "Paused, including chapter 2, RNA sample/input revision, simulations and optimization",
+  "T038": "Preserve completed audit as historical evidence; do not execute its next-step plan",
+  "final_render_QA": "pending at start record",
+  "model_changes": 0,
+  "new_solver_runs": 0
+}
