@@ -43,11 +43,11 @@
 
 ## C. 当前库存口径
 
-- `references/open-access/MANIFEST.tsv`：38个已校验 `ok` PDF（已新增Lantz 2019与Abbas 2022 ROSCO）。
+- `references/open-access/MANIFEST.tsv`：39个已校验 `ok` PDF（已新增Lantz 2019与Abbas 2022 ROSCO）。
 - `references/user-provided/MANIFEST.tsv`：29个 `ok` PDF。
-- 两个受控文献目录合计：**67个真实PDF本体**。
-- `references/` 树现有71个PDF blob；除上述67个外还有4个baseline/site证据PDF，其中DTU正式报告有1份重复归档，因此约 **70份不同PDF来源文档**。
-- 整个 `research/wind-tower/` 当前86个PDF blob，其中15个为T026图/结果文件，不属于参考文献。
+- 两个受控文献目录合计：**68个真实PDF本体**。
+- `references/` 树现有72个PDF blob；除上述67个外还有4个baseline/site证据PDF，其中DTU正式报告有1份重复归档，因此约 **71份不同PDF来源文档**。
+- 整个 `research/wind-tower/` 当前87个PDF blob，其中15个为T026图/结果文件，不属于参考文献。
 
 ## D. 后续原则
 
