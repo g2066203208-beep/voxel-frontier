@@ -108,3 +108,7 @@
 ## T036 九篇用户提供PDF完整入库
 
 [40-t036-nine-pdf-binary-ingest.md](40-t036-nine-pdf-binary-ingest.md)：9篇沿用既有题录，完整PDF补入references/user-provided，正式题名重命名、首尾完整性检查与GitHub全字节读回校验完成；研究门禁状态未改变。
+
+## T037 研究对象与模型来源审定提案
+
+[41号审计](41-t037-baseline-source-review.md)：逐参数核对公开DTU、158m混塔及真实候选输入，补核控制器与补充归档，推荐M2/R2来源；待用户审定，未授予统一生产基线或后续求解许可。

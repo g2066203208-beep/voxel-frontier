@@ -1,0 +1,116 @@
+{
+  "task_id": "T037",
+  "reviewed_repository_commit": "5b59cf803b590910d027be7650d1f45e890a8171",
+  "status": "source-review-complete/user-review-pending",
+  "production_baseline_approved": false,
+  "new_simulations_run": false,
+  "model_inputs_modified": false,
+  "scope": "Step 2 only: research object and proposed input source identity. Await human review before next step.",
+  "files": [
+    {
+      "name": "DTU158_RECONSTRUCTED_M2.inp",
+      "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "verification": "local-input-bytes-rehashed",
+      "role": "Abaqus structural candidate; CONDITIONAL"
+    },
+    {
+      "name": "DTU158_RECONSTRUCTED_G1.inp",
+      "sha256": "e2049252ef05c9b6794051f5162b71524d224c5d8e3d1ee179a3e0c83577c39e",
+      "verification": "local-input-bytes-rehashed",
+      "role": "Reconstruction/audit parent"
+    },
+    {
+      "name": "DTU158_RECONSTRUCTED_M3.inp",
+      "sha256": "ec144a68341811325fce1f065c94847289913318202482a2d238cdc89f4a7767",
+      "verification": "local-input-bytes-rehashed",
+      "role": "Mesh comparison"
+    },
+    {
+      "name": "DTU_10MW_RWT.fst",
+      "sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+      "verification": "archive-bytes-rehashed",
+      "role": "R2 common entry candidate"
+    },
+    {
+      "name": "DTU_10MW_RWT_ElastoDyn.dat",
+      "sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+      "verification": "archive-bytes-rehashed",
+      "role": "R2 structural dynamics candidate"
+    },
+    {
+      "name": "C02R3R2_158M_Tower.dat",
+      "sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+      "verification": "archive-bytes-rehashed",
+      "role": "R2 tower candidate; damping physical basis open"
+    },
+    {
+      "name": "DTU_10MW_ElastoDyn_Blades.dat",
+      "sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+      "verification": "archive-bytes-rehashed",
+      "role": "Common Rotor blade input"
+    },
+    {
+      "name": "DTU_10MW_RWT_ServoDyn.dat",
+      "sha256": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+      "verification": "archive-bytes-rehashed",
+      "role": "R2 ServoDyn candidate"
+    },
+    {
+      "name": "CASES/Rotor/DTU_10MW_RWT_AeroDyn15.dat",
+      "sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568",
+      "verification": "archive-bytes-rehashed",
+      "role": "Actual relative target of saved FST; historical runtime overwrites not independently excluded"
+    },
+    {
+      "name": "DTU_10MW_RWT_DISCON.IN",
+      "sha256": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+      "verification": "supplement-archive-bytes-rehashed",
+      "role": "36-source mapping; 17600 bytes"
+    },
+    {
+      "name": "libdiscon.dll",
+      "sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+      "verification": "github-binary-bytes-rehashed",
+      "role": "36-source mapping; 1122431 bytes"
+    },
+    {
+      "name": "openfast_x64_v353.exe",
+      "sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a",
+      "verification": "manifest-only-this-step",
+      "role": "Script and logs identify v3.5.3; 61086208-byte executable not rehashed this step"
+    }
+  ],
+  "archive_locations": {
+    "r2_main": "archive/local-assets-20261004/openfast-36-r2/part-001.zip through part-003.zip",
+    "discon_and_representative_outb": "archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+    "rosco_dll": "references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll",
+    "source_mapping": "references/baselines-and-site-20261004/asset-manifest.json and registry/asset-transfer-20261004/transfer-ledger.json"
+  },
+  "geometry": {
+    "tower_height_m": 158,
+    "concrete_height_m": 112,
+    "steel_height_m": 46,
+    "openfast_hub_height_m": 161.36880577350837,
+    "abaqus_vertical_axis": "+Y",
+    "abaqus_rna_reference_point": [
+      0,
+      160,
+      0
+    ],
+    "reference_points_equivalent": false
+  },
+  "approval_does_not_imply": [
+    "D08 passed",
+    "RNA mass CG and inertia harmonized",
+    "material or joint physics calibrated",
+    "operating damping verified",
+    "load transfer validated",
+    "historical results promoted to current final results"
+  ],
+  "remaining_source_gaps": [
+    "He steel radius-column interpretation",
+    "bottom diameter and steel bottom thickness",
+    "reinforcement diameter and prestressing strand count",
+    "joint stiffness and added mass physical sources"
+  ]
+}
