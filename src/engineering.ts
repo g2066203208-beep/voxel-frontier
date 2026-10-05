@@ -8,7 +8,7 @@ export function researchPage() {
 }
 export function engineeringPage() {
   const inp = repo + '/blob/main/research/wind-tower/experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp';
-  return \`<div class="page-heading"><div><div class="eyebrow">ABAQUS / FINITE ELEMENT MODEL</div><h1>Abaqus 有限元模型在线查看</h1><p>直接从当前 T045 首选 .inp 输入文件生成。显示的是未变形有限元网格、钢筋/预应力筋、接头以及 RNA 等效质量—转动惯量位置，不是 CAD 外观替代图。</p></div><a class="button primary" href="\${inp}" target="_blank" rel="noopener">打开当前 Abaqus INP</a></div><div class="engineering-layout"><section class="panel viewer-panel"><div class="viewer-controls"><button class="button" id="model-reset">轴测</button><button class="button" id="model-front">正视</button><button class="button" id="model-side">侧视</button><button class="button" id="model-top">俯视</button><label><input type="checkbox" id="model-mesh" checked/> 外表面网格</label><label><input type="checkbox" id="model-transparent"/> 半透明</label><label><input type="checkbox" id="model-rna" checked/> RNA 等效点</label><label><input type="checkbox" id="model-isolate"/> 隔离选中</label><button class="button" id="model-png">导出 PNG</button></div><div id="model-canvas"><p id="model-loading" role="status">正在从 GitHub 构建的 Abaqus 网格成果读取模型…</p></div><p class="viewer-caption">拖动旋转 · 滚轮缩放 · 右键平移 · 点击实体可选中部件。该视图由 Abaqus 输入文件的节点与单元直接生成；当前仅显示未变形网格，不代表 ODB 应力/位移结果。</p></section><aside class="panel model-details"><h2>当前计算模型</h2><div id="model-report" role="status">加载中…</div><h3>显示层</h3><div class="layer-grid" id="model-layers"><label><input type="checkbox" data-cat="concrete" checked/> 混凝土塔段</label><label><input type="checkbox" data-cat="steel" checked/> 钢塔段</label><label><input type="checkbox" data-cat="rebar" checked/> 普通钢筋</label><label><input type="checkbox" data-cat="prestress" checked/> 预应力筋</label><label><input type="checkbox" data-cat="joint" checked/> 接头弹簧</label><label><input type="checkbox" data-cat="rna-source" checked/> 原始 RNA 表面网格（展示）</label></div><label>部件 / 实例 <select id="model-part"><option value="">全部部件</option></select></label><div id="part-details"></div><h3>RNA 等效算子</h3><div id="rna-details" class="rna-details">加载中…</div><h3>模型身份</h3><div class="research-links model-links"><a href="\${inp}" target="_blank" rel="noopener">T045 首选 INP</a><a href="\${repo}/blob/main/research/wind-tower/experiments/T045/RESEARCH_CARD.md" target="_blank" rel="noopener">T045 研究卡</a><a href="\${import.meta.env.BASE_URL}research/abaqus-model-report.json" target="_blank" rel="noopener">解析报告 JSON</a></div></aside></div>\`;
+  return `<div class="page-heading"><div><div class="eyebrow">ABAQUS / FINITE ELEMENT MODEL</div><h1>Abaqus 有限元模型在线查看</h1><p>直接从当前 T045 首选 .inp 输入文件生成。显示的是未变形有限元网格、钢筋/预应力筋、接头以及 RNA 等效质量—转动惯量位置，不是 CAD 外观替代图。</p></div><a class="button primary" href="${inp}" target="_blank" rel="noopener">打开当前 Abaqus INP</a></div><div class="engineering-layout"><section class="panel viewer-panel"><div class="viewer-controls"><button class="button" id="model-reset">轴测</button><button class="button" id="model-front">正视</button><button class="button" id="model-side">侧视</button><button class="button" id="model-top">俯视</button><label><input type="checkbox" id="model-mesh" checked/> 外表面网格</label><label><input type="checkbox" id="model-transparent"/> 半透明</label><label><input type="checkbox" id="model-rna" checked/> RNA 等效点</label><label><input type="checkbox" id="model-isolate"/> 隔离选中</label><button class="button" id="model-png">导出 PNG</button></div><div id="model-canvas"><p id="model-loading" role="status">正在从 GitHub 构建的 Abaqus 网格成果读取模型…</p></div><p class="viewer-caption">拖动旋转 · 滚轮缩放 · 右键平移 · 点击实体可选中部件。该视图由 Abaqus 输入文件的节点与单元直接生成；当前仅显示未变形网格，不代表 ODB 应力/位移结果。</p></section><aside class="panel model-details"><h2>当前计算模型</h2><div id="model-report" role="status">加载中…</div><h3>显示层</h3><div class="layer-grid" id="model-layers"><label><input type="checkbox" data-cat="concrete" checked/> 混凝土塔段</label><label><input type="checkbox" data-cat="steel" checked/> 钢塔段</label><label><input type="checkbox" data-cat="rebar" checked/> 普通钢筋</label><label><input type="checkbox" data-cat="prestress" checked/> 预应力筋</label><label><input type="checkbox" data-cat="joint" checked/> 接头弹簧</label><label><input type="checkbox" data-cat="rna-source" checked/> 原始 RNA 表面网格（展示）</label></div><label>部件 / 实例 <select id="model-part"><option value="">全部部件</option></select></label><div id="part-details"></div><h3>RNA 等效算子</h3><div id="rna-details" class="rna-details">加载中…</div><h3>模型身份</h3><div class="research-links model-links"><a href="${inp}" target="_blank" rel="noopener">T045 首选 INP</a><a href="${repo}/blob/main/research/wind-tower/experiments/T045/RESEARCH_CARD.md" target="_blank" rel="noopener">T045 研究卡</a><a href="${import.meta.env.BASE_URL}research/abaqus-model-report.json" target="_blank" rel="noopener">解析报告 JSON</a></div></aside></div>`;
 }
 export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
   let alive = true, frame = 0;
@@ -30,8 +30,8 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
     camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h);
   }
   async function json(file:string,gzip=false) {
-    const response = await fetch(\`\${import.meta.env.BASE_URL}research/\${file}\`,{signal:controller.signal});
-    if(!response.ok) throw Error(\`读取失败 HTTP \${response.status}\`);
+    const response = await fetch(`${import.meta.env.BASE_URL}research/${file}`,{signal:controller.signal});
+    if(!response.ok) throw Error(`读取失败 HTTP ${response.status}`);
     if(gzip && !response.headers.get('Content-Encoding')?.includes('gzip')) {
       return JSON.parse(await new Response(response.body!.pipeThrough(new DecompressionStream('gzip'))).text());
     }
@@ -133,7 +133,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
 
     const select=host.querySelector<HTMLSelectElement>('#model-part')!;
     const sorted=[...visuals].sort((a,b)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name));
-    select.innerHTML='<option value="">全部部件</option>'+sorted.map(v=>\`<option value="\${safe(v.name)}">\${safe(v.name)} · \${safe(v.info.elementTypes.join('/'))}</option>\`).join('');
+    select.innerHTML='<option value="">全部部件</option>'+sorted.map(v=>`<option value="${safe(v.name)}">${safe(v.name)} · ${safe(v.info.elementTypes.join('/'))}</option>`).join('');
 
     const catChecks=[...host.querySelectorAll<HTMLInputElement>('#model-layers input[data-cat]')];
     const meshCheck=host.querySelector<HTMLInputElement>('#model-mesh')!;
@@ -155,7 +155,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
       }
       rnaGroup.visible=rnaCheck.checked;
       const v=visuals.find(x=>x.name===selected);
-      host.querySelector('#part-details')!.textContent=v ? \`\${v.name} · \${v.info.nodes.toLocaleString()} 节点 · \${v.info.elements.toLocaleString()} 单元 · \${v.info.elementTypes.join(', ')}\` : '点击模型或从下拉框选择实例；可配合“隔离选中”检查单段网格。';
+      host.querySelector('#part-details')!.textContent=v ? `${v.name} · ${v.info.nodes.toLocaleString()} 节点 · ${v.info.elements.toLocaleString()} 单元 · ${v.info.elementTypes.join(', ')}` : '点击模型或从下拉框选择实例；可配合“隔离选中”检查单段网格。';
     }
     select.onchange=updateVisibility; isolateCheck.onchange=updateVisibility; meshCheck.onchange=updateVisibility; transparentCheck.onchange=updateVisibility; rnaCheck.onchange=updateVisibility;
     catChecks.forEach(x=>x.onchange=updateVisibility); updateVisibility();
@@ -179,11 +179,11 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
       const link=document.createElement('a');link.download='DTU158-T045-Abaqus-FE.png';link.href=renderer!.domElement.toDataURL('image/png');link.click();
     };
 
-    host.querySelector('#model-report')!.innerHTML=\`<p><strong>\${report.counts.instances}</strong> 个装配实例 · <strong>\${report.counts.solidElements.toLocaleString()}</strong> 个实体单元 · <strong>\${report.counts.lineElements.toLocaleString()}</strong> 个线单元</p><p>模型高度范围：\${report.bounds.min[1].toFixed(3)} ～ \${report.bounds.max[1].toFixed(3)} m；外包尺寸 \${report.dimensions.map((v:number)=>v.toFixed(3)).join(' × ')} m</p><p>元素类型：\${report.elementTypes.join(' / ')}</p><details><summary>输入文件与 SHA-256</summary><code>\${safe(report.sha256)}</code><p>\${safe(report.source)}</p></details>\`;
+    host.querySelector('#model-report')!.innerHTML=`<p><strong>${report.counts.instances}</strong> 个装配实例 · <strong>${report.counts.solidElements.toLocaleString()}</strong> 个实体单元 · <strong>${report.counts.lineElements.toLocaleString()}</strong> 个线单元</p><p>模型高度范围：${report.bounds.min[1].toFixed(3)} ～ ${report.bounds.max[1].toFixed(3)} m；外包尺寸 ${report.dimensions.map((v:number)=>v.toFixed(3)).join(' × ')} m</p><p>元素类型：${report.elementTypes.join(' / ')}</p><details><summary>输入文件与 SHA-256</summary><code>${safe(report.sha256)}</code><p>${safe(report.source)}</p></details>`;
     const rna=data.rna;
-    host.querySelector('#rna-details')!.innerHTML=rna ? \`<p><b>塔顶公共点 O</b><br/>\${rna.towerTop?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>RNA 质心 G</b><br/>\${rna.rnaCg?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>MASS</b> \${Number(rna.mass).toLocaleString(undefined,{maximumFractionDigits:3})} kg</p><p><b>ROTARYI</b><br/>\${rna.rotaryInertia?.map((x:number)=>Number(x).toExponential(5)).join('<br/>') || '—'}</p><p class="model-note">网页中的两个球仅是 O 与 G 的符号标记；真实计算仍由 INP 中 MASS + ROTARYI + 6DOF 偏心耦合承担。页面同时叠加原始 Abaqus RNA 表面网格，以便整机查看，但该 RNA 表面网格不参与当前 T045 求解。</p>\` : '<p>未找到 RNA 等效算子。</p>';
+    host.querySelector('#rna-details')!.innerHTML=rna ? `<p><b>塔顶公共点 O</b><br/>${rna.towerTop?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>RNA 质心 G</b><br/>${rna.rnaCg?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>MASS</b> ${Number(rna.mass).toLocaleString(undefined,{maximumFractionDigits:3})} kg</p><p><b>ROTARYI</b><br/>${rna.rotaryInertia?.map((x:number)=>Number(x).toExponential(5)).join('<br/>') || '—'}</p><p class="model-note">网页中的两个球仅是 O 与 G 的符号标记；真实计算仍由 INP 中 MASS + ROTARYI + 6DOF 偏心耦合承担。页面同时叠加原始 Abaqus RNA 表面网格，以便整机查看，但该 RNA 表面网格不参与当前 T045 求解。</p>` : '<p>未找到 RNA 等效算子。</p>';
   } catch(error) {
-    if(alive) canvasHost.innerHTML=\`<p role="alert">\${safe(error)}。Pages 构建需先运行 scripts/read-abaqus.cjs；请查看 GitHub Actions 日志。</p>\`;
+    if(alive) canvasHost.innerHTML=`<p role="alert">${safe(error)}。Pages 构建需先运行 scripts/read-abaqus.cjs；请查看 GitHub Actions 日志。</p>`;
   }
   return dispose;
 }
