@@ -40,21 +40,27 @@ R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
 ## 当前执行阶段
 
 STAGE 0：工作区与源稿冻结 —— PASS  
-STAGE 1：七章DRAFT-A骨架与方法正文 —— PASS；第二章BASE001/G1实证闭合 —— IN PROGRESS  
-STAGE 2：第三章G2–G4实证闭合 —— NEXT  
-STAGE 3：第四章G5/G6实证闭合 —— PENDING  
-STAGE 4：第五章G6/G8/G7条件实证闭合 —— PENDING  
-STAGE 5：第六章G9实证闭合 —— PENDING  
-STAGE 6：第一章/摘要/第七章最终回写 —— PENDING  
-STAGE 7：全文格式/参考文献/Word装配 —— PENDING
+STAGE 1：第二章BASE001/G1正文重构 —— DRAFT-A COMPLETE；final数值待G0/G1  
+STAGE 2：第三章G2–G4正文重构 —— DRAFT-A COMPLETE；final统计待G2–G4  
+STAGE 3：第四章G5/G6正文重构 —— DRAFT-A COMPLETE；final结果待G5/G6  
+STAGE 4：第五章G6/G7/G8正文重构 —— DRAFT-A COMPLETE；final机制/敏感性待G6/G8；G7B条件  
+STAGE 5：第六章G9正文重构 —— DRAFT-A COMPLETE；final优化结果待G9  
+STAGE 6：第一章与第七章 —— DRAFT-A/STRUCTURED-DRAFT COMPLETE；研究不足/创新/结论待G6–G9回写  
+STAGE 7：摘要、Abstract、参考文献统一、图表编号、全文格式和Word装配 —— NOT STARTED
 
-## 2026-10-05 七章重构结果
+## 章节文件实际状态
 
-- Ch1：DRAFT-A 已建立；Simpack/MBD研究现状与创新叙事删除，研究缺口改为随机整机载荷—精细结构—控制机制—优化连续证据链。
-- Ch2：DRAFT-A 已完成2.1–2.8；BASE001/G1数值门禁待关闭。
-- Ch3：DRAFT-A 已建立；正式路线仅ERA5→TurbSim→OpenFAST/ROSCO→多QoI/DEL控制工况。
-- Ch4：DRAFT-A 已建立；正式路线为OpenFAST→Abaqus六分量守恒映射与控制区域识别。
-- Ch5：DRAFT-A 已建立；P-Δ/材料/条件连接非线性、G7分级疲劳、机制驱动敏感性。
-- Ch6：DRAFT-A 已建立；机制驱动优化、条件代理、多目标及独立高保真验证。
-- Ch7：STRUCTURED-DRAFT 已建立；禁止在G10前填入虚构结论或创新。
-- 7章证据矩阵、图表计划、RUN_GAP_MATRIX和唯一装配入口均已建立。
+- Ch1：已按“随机整机载荷→精细结构多轴需求→控制机制→机制驱动优化”重写，Simpack路线已删除。
+- Ch2：2.1–2.8完整DRAFT-A，已建立CH02_EVIDENCE.tsv；G0/G1数值未final。
+- Ch3：完整DRAFT-A，ERA5/TurbSim/OpenFAST/ROSCO/多指标控制工况/DEL逻辑已重构；历史精确数值待final run绑定。
+- Ch4：完整DRAFT-A，OpenFAST→Abaqus自由体、坐标、作用点、时间、ΣF/ΣM、跨模型QoI及控制区域方法已写；结果待G5/G6。
+- Ch5：完整DRAFT-A，P-Δ/材料非线性/条件contact/G7A-G7B/敏感性方法已写；结果待G6/G8。
+- Ch6：完整DRAFT-A，机制驱动变量、目标/约束、代理/NSGA-II条件使用及独立高保真验证方法已写；结果待G9。
+- Ch7：证据回收型结构稿已完成；禁止在G0–G9未过前提前写虚构定量结论。
+
+## 当前整体完成度口径
+
+- 7章“结构+方法+学术逻辑”第一轮重构：7/7章，约75%。
+- 7章“可直接作为最终提交正文”的完成度：约40%。主要缺口是G0–G9实际run、最终图表、定量结论和G10证据闭环。
+- 文献主路线：SUFFICIENT；不再无边界扩文献。
+- 最终Word：尚未装配，必须等关键run和图表闭合后生成。
