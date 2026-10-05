@@ -19,7 +19,7 @@ C2-S07	Ch2	CDP理论定义	REF052	OFFICIAL-WEB-REGISTERED	Abaqus CDP受拉/受�
 C2-S08	Ch2	物理曲线→Abaqus CDP变量转换	REF056	CACHED-PDF	inelastic/cracking strain与damage转换公式	生成可复现CSV/INC并单轴核验	不把总应变直接填入CDP inelastic/cracking列	PASS-METHOD/NEED-RUN
 C2-S09	Ch2	CDP塑性参数来源	REF052;REF041	OFFICIAL+PDF	Abaqus默认参数语义；对象级研究参数背景	默认值与study-choice分开，psi需敏感性	不把psi=30°称Abaqus默认	CONDITIONAL
 C2-S10	Ch2	C65/C70单轴数值试件	REF052;REF056;REF005	OFFICIAL+PDF	材料输入变量定义、转换与试验/FE验证思路	四类单轴试件核实际写入曲线	材料试件通过不代表整塔局部破坏网格客观	NEED-RUN
-C2-S11	Ch2	普通钢筋T3D2+Embedded理想化	REF054;REF005	OFFICIAL+PDF	Truss轴向能力；Li等使用嵌入/两尺度FE	用于轴向钢筋—混凝土协同	不解释bond-slip/拔出/锚固退化	PASS-CAPABILITY
+C2-S11	Ch2	普通钢筋T3D2+Embedded理想化	REF054;REF130;REF005	OFFICIAL+PDF	Truss轴向能力；Li等使用嵌入/两尺度FE	用于轴向钢筋—混凝土协同	不解释bond-slip/拔出/锚固退化	PASS-CAPABILITY
 C2-S12	Ch2	预应力筋及预应力实现	REF053;REF005;REF017;REF121	OFFICIAL+PDF+STANDARD-METADATA	预应力/钢绞线FE先例与产品标准身份	名义PT来自对象来源，平衡后读取有效应力	GB/T5224不证明1280MPa；不照搬文献温降/张拉参数	NEED-BASE001
 C2-S13	Ch2	水平接缝全局等效/局部contact边界	REF015;REF016;REF017;REF026;REF115	PDF-IN-REPO	N-M/N-M-T/N-M-V-T试验及接触FE	全局模型定位，结果触发显式contact	SPRING2/Tie模型不得报告COPEN/CPRESS/摩擦滑移	PASS-CAPABILITY/RESULT-TRIGGERED
 C2-S14	Ch2	钢—混转换区局部性	REF005;REF036	PDF-IN-REPO	两尺度结构响应与钢混连接疲劳试验	先全局N/V/M/T识别是否控制，再细化	不移植其他adapter构造尺寸/疲劳结论	RESULT-TRIGGERED
@@ -29,7 +29,7 @@ C2-S17	Ch2	重力—预应力初始平衡	REF005;REF017;REF053	PDF+OFFICIAL	预�
 C2-S18	Ch2	模态与独立解析交叉验证	REF010;REF039;REF005	PDF-IN-REPO	RNA影响、闭式基频及试验/FE对照	Abaqus模态+解析/来源对照	模态吻合不证明接触/疲劳能力	NEED-RUN
 C2-S19	Ch2	网格收敛与局部化边界	REF079;REF005;REF052	WEB/PDF/OFFICIAL	风机FE频率网格收敛；断裂能/软化网格处理	按最终QoI做多网格比较	人工能小不等于后峰网格客观	NEED-RUN
 C2-S20	Ch2	Rayleigh阻尼与自由衰减	REF059;REF071;REF078	OFFICIAL+WEB	Rayleigh数值定义；自由衰减识别阻尼的实验先例	目标阻尼→alpha/beta→自由衰减复核	数值拟合目标不证明目标阻尼物理正确	HOLD-PHYSICAL/NEED-RUN
-C2-S21	Ch2	动力时间步/增量收敛	REF069;REF079	STANDARD-SCOPE+WEB	数值verification与逐级离散收敛原则	用位移/加速度/N-V-M-T/局部应力多QoI比较时间步	只看位移收敛不足以证明高频/局部量收敛	NEED-RUN
+C2-S21	Ch2	动力时间步/增量收敛	REF131;REF069;REF079	OFFICIAL+STANDARD-SCOPE+WEB	数值verification与逐级离散收敛原则	用位移/加速度/N-V-M-T/局部应力多QoI比较时间步	只看位移收敛不足以证明高频/局部量收敛	NEED-RUN
 C3-S01	Ch3	ERA5数据产品与变量	REF062	OFFICIAL-WEB-REGISTERED	ERA5 single-levels官方数据身份和变量	固定2005-2025原始数据/hash	不称为现场测风	PASS-SOURCE/NEED-HASH
 C3-S02	Ch3	ERA5长期风资源适用性	REF080;REF090;REF096	PDF/WEB	再分析风电建模、误差综述、湖北64测风塔偏差	用于长期场址背景并明确不确定性	不将ERA5当site truth	PASS-METHOD
 C3-S03	Ch3	U10/U100→alpha(t)→Hub-height	REF083;REF093;REF063;REF091	PDF+OFFICIAL+WEB	逐时alpha、8塔验证、官方幂律、160m外推误差背景	按161.37m实际HubHt重算	不把全球误差直接当嘉鱼误差	NEED-RUN
