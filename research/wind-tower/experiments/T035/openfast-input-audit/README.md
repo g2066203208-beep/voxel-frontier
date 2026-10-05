@@ -22,10 +22,9 @@ Cases detected: **36**.
 ## AeroDyn exception
 
 Two AeroDyn SHA families detected across the 36 cases. Raw positional verdict: **MODEL_INPUT_DIFF_BEFORE_OUTLIST**. Field-name/value semantic verdict: **PHYSICS_FIELDS_EQUIVALENT_REORDERED_PLUS_OUTLIST_DIFF**.
-A difference exists before the OutList marker. U11p4_NTM_S01 is therefore not proven dynamically equivalent to the other 35 cases and must not be pooled until the difference is explained or rerun.
+The field-name/value comparison found **no physics-input value differences** between the two AeroDyn variants. The raw difference is parameter-section ordering plus requested output channels. Therefore U11p4_NTM_S01 remains dynamically comparable for shared physical QoIs; only channel availability differs.
 
 The case-hash table, semantic-field delta and raw unified diff are stored beside this report.
-The field-name/value comparison found **no physics-input value differences** between the two AeroDyn variants. The raw difference is section ordering plus requested output channels. Therefore U11p4_NTM_S01 can remain dynamically comparable for shared physical QoIs, while its AeroDyn output-channel availability must be treated separately.
 
 ## Runtime identity across all 36 cases
 
