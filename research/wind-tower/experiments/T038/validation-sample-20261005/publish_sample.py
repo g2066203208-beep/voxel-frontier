@@ -42,6 +42,8 @@ def main(mode):
     row='\t'.join(['T038-S1','P0-P1','2','Q01','按用户授权执行R2冻结RNA算子的独立Abaqus小样，核质量矩阵、重力和混合动能','experiments/T038/validation-sample-20261005/RESEARCH_CARD.md',status_label,'sample-review/D08-remains-open','只执行独立小样；不改M2、不跑36case；求解前登记数值预算，全部成功失败尝试保留；当前用户授权覆盖旧仅审查暂停状态'])
     start='<!-- T038-S1 RNA SAMPLE START -->';end='<!-- T038-S1 RNA SAMPLE END -->'
     block=start+'\n## T038-S1 独立RNA小样（2026-10-05）\n\n用户已明确授权在本机执行独立RNA数值验证。状态：`'+status_label+'`。以T038独立float64重建量为目标，检查Abaqus质量矩阵、重力及混合动能；M2整塔未改，无新风况生产计算，D08不因算子等价自动通过。见[研究卡](../experiments/T038/validation-sample-20261005/RESEARCH_CARD.md)。\n\n'+end+'\n\n'
+    if mode=='finish':
+        block=block.replace('\n\n'+end,'\n\n实际完成5次Abaqus求解；最终三类检查达到原预算，初始及半步动能未达标记录保留。详见[结果与方法依据](../experiments/T038/validation-sample-20261005/RESULTS.md)。\n\n'+end)
     for attempt in range(4):
         head=api('git/ref/heads/main')['object']['sha'];parent=api('git/commits/'+head)
         paths=['registry/task_registry.tsv','registry/run_registry.tsv','workflow/EXECUTION_STATUS.md']

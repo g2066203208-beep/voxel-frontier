@@ -1,0 +1,10 @@
+{
+  "field": "openfast-rna-current.json.archive_summary.blade_mass_kg",
+  "old_value_kg": 2600752.25,
+  "corrected_archived_printed_blade_mass_kg": 41732.34,
+  "source": "Actual R2 ED.sum: blade mass line53; old field incorrectly matched Mass Incl. Platform line64",
+  "cause": "Over-broad substring match in historical extract_openfast_rna.py",
+  "impact": "Does not enter reconstructed target m/CG/J; independent mass-point rebuild confirms target unchanged",
+  "source_review_sha256": "79a007a0549ec9220a7c79a0a312640d1fd6c423be898ddd7687c1b0585a1cae",
+  "resolution": "Explicit source-metadata erratum; do not use old blade_mass summary field. Frozen original source/target hashes remain unchanged."
+}

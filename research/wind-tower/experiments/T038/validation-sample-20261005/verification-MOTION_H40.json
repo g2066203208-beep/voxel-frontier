@@ -1,0 +1,162 @@
+{
+  "task_id": "T038-S1",
+  "evaluated_motion_case": "MOTION_H40",
+  "all_required_checks_pass": true,
+  "target_sha256": "63fc7995dee7ec35523d08c23612f0f3927a60204f5468bf1566d6b29d1796c3",
+  "matrix_blocks": [
+    {
+      "block": "translation",
+      "unit": "kg",
+      "scale": 676753.2907231401,
+      "max_abs_error": 0.0,
+      "relative_to_block_scale": 0.0,
+      "budget": 1e-09,
+      "pass": true
+    },
+    {
+      "block": "coupling",
+      "unit": "kg*m",
+      "scale": 1883802.3595271627,
+      "max_abs_error": 2.3283064365386963e-10,
+      "relative_to_block_scale": 1.2359611000397646e-16,
+      "budget": 1e-09,
+      "pass": true
+    },
+    {
+      "block": "rotation",
+      "unit": "kg*m^2",
+      "scale": 161145225.03795397,
+      "max_abs_error": 5.960464477539063e-08,
+      "relative_to_block_scale": 3.6988154480749987e-16,
+      "budget": 1e-09,
+      "pass": true
+    }
+  ],
+  "recovered_properties": {
+    "solver_matrix_mass_kg": 676753.2907231401,
+    "mass_relative_error": 0.0,
+    "solver_matrix_CG_m": [
+      -4.794053742399661e-16,
+      160.78358803030605,
+      -0.8729624988915398
+    ],
+    "CG_max_abs_error_m": 0.0,
+    "solver_matrix_JG_kgm2": [
+      [
+        94926999.79811169,
+        2.2844544447195836e-08,
+        -4.203840483372088e-10
+      ],
+      [
+        2.2844544447195836e-08,
+        99481015.62016475,
+        -5231495.690281977
+      ],
+      [
+        -4.203840483372088e-10,
+        -5231495.690281977,
+        155901495.33851188
+      ]
+    ],
+    "JG_error_relative_tensor_scale": 3.823224700056271e-16,
+    "pass": true
+  },
+  "gravity": [
+    {
+      "quantity": "RF",
+      "unit": "N",
+      "actual": [
+        -0.0,
+        6638950.0,
+        -0.0
+      ],
+      "expected": [
+        -0.0,
+        6638949.781994005,
+        -0.0
+      ],
+      "max_abs_error": 0.2180059952661395,
+      "relative_to_nonzero_scale": 3.283742194547245e-08,
+      "budget": 1e-06,
+      "pass": true
+    },
+    {
+      "quantity": "RM",
+      "unit": "N*m",
+      "actual": [
+        5795554.0,
+        -0.0,
+        -3.182748287144932e-09
+      ],
+      "expected": [
+        5795554.19170493,
+        -0.0,
+        -3.182748204797177e-09
+      ],
+      "max_abs_error": 0.19170492980629206,
+      "relative_to_nonzero_scale": 3.3077928954693545e-08,
+      "budget": 1e-06,
+      "pass": true
+    }
+  ],
+  "motion": {
+    "samples": 101,
+    "end_time_s": 0.10000000149011612,
+    "ALLKE_peak_J": 3071.99462890625,
+    "matrix_route_max_abs_error_J": 0.0011032944471480732,
+    "matrix_route_relative_to_peak": 3.591459557795155e-07,
+    "CG_route_max_abs_error_J": 0.0011083694712397119,
+    "CG_route_relative_to_peak": 3.607979847394247e-07,
+    "budget": 1e-06,
+    "max_CG_velocity_kinematic_residual_m_s": 3.251048812102919e-09,
+    "max_O_vs_G_angular_velocity_residual_rad_s": 0.0,
+    "scope": "Fully prescribed small motion; validates inertia/coupling/energy accounting, not free-response dynamics or full-tower time-step convergence",
+    "pass": true
+  },
+  "solver_runs": [
+    {
+      "job": "RUN-T038-S1-MATRIX",
+      "return_code": 0,
+      "wall_seconds": 11.21900000000096,
+      "completed": true,
+      "message_counts": {
+        "WARNING MESSAGES DURING USER INPUT PROCESSING": 0,
+        "WARNING MESSAGES DURING ANALYSIS": 0,
+        "ERROR MESSAGES": 0
+      },
+      "fatal_keyword_messages": false
+    },
+    {
+      "job": "RUN-T038-S1-GRAVITY",
+      "return_code": 0,
+      "wall_seconds": 5.625,
+      "completed": true,
+      "message_counts": {
+        "WARNING MESSAGES DURING USER INPUT PROCESSING": 0,
+        "WARNING MESSAGES DURING ANALYSIS": 0,
+        "ERROR MESSAGES": 0
+      },
+      "fatal_keyword_messages": false
+    },
+    {
+      "job": "RUN-T038-S1-MOTION-H40",
+      "return_code": 0,
+      "wall_seconds": 39.875,
+      "completed": true,
+      "message_counts": {
+        "WARNING MESSAGES DURING USER INPUT PROCESSING": 0,
+        "WARNING MESSAGES DURING ANALYSIS": 0,
+        "ERROR MESSAGES": 0
+      },
+      "fatal_keyword_messages": false
+    }
+  ],
+  "source_M2_unchanged_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+  "retained_limits": [
+    "No full-tower input modified; no OpenFAST solver run",
+    "Target is independent locked undeformed ElastoDyn reconstruction, not native exported or physical complete RNA",
+    "Does not validate flexibility, rotation, aeroelastic feedback, full-tower damping, wind-load mapping, fatigue or D08",
+    "Original ED.sum mass residual 0.040723140119 kg remains unresolved",
+    "Two initial ODB extraction attempts failed on float32 JSON serialization; corrected and retried without rerunning any solver or changing any target"
+  ]
+}

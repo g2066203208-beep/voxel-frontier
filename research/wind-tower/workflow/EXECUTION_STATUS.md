@@ -1,7 +1,9 @@
 <!-- T038-S1 RNA SAMPLE START -->
 ## T038-S1 独立RNA小样（2026-10-05）
 
-用户已明确授权在本机执行独立RNA数值验证。状态：`in-progress/registered-refinement`。以T038独立float64重建量为目标，检查Abaqus质量矩阵、重力及混合动能；M2整塔未改，无新风况生产计算，D08不因算子等价自动通过。见[研究卡](../experiments/T038/validation-sample-20261005/RESEARCH_CARD.md)。
+用户已明确授权在本机执行独立RNA数值验证。状态：`verification-complete/user-review-pending`。以T038独立float64重建量为目标，检查Abaqus质量矩阵、重力及混合动能；M2整塔未改，无新风况生产计算，D08不因算子等价自动通过。见[研究卡](../experiments/T038/validation-sample-20261005/RESEARCH_CARD.md)。
+
+实际完成5次Abaqus求解；最终三类检查达到原预算，初始及半步动能未达标记录保留。详见[结果与方法依据](../experiments/T038/validation-sample-20261005/RESULTS.md)。
 
 <!-- T038-S1 RNA SAMPLE END -->
 

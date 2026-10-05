@@ -1,0 +1,413 @@
+{
+  "review_utc": "2026-10-05T08:29:13.781078+00:00",
+  "scope": "Independent read-only verification of initial MATRIX/GRAVITY/MOTION; no solver calls, no input edits. Later timestep trials are excluded.",
+  "matrix": {
+    "matrix_node": 1,
+    "independent_DOFs": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "MTX_entries": 15,
+    "mass_kg": 676753.2907231401,
+    "rG_from_O_m": [
+      -4.794053742399661e-16,
+      2.7835880303060496,
+      -0.8729624988915398
+    ],
+    "CG_global_ABQ_m": [
+      -4.794053742399661e-16,
+      160.78358803030605,
+      -0.8729624988915398
+    ],
+    "JG_kgm2": [
+      [
+        94926999.79811169,
+        2.2844544447195836e-08,
+        -4.203840483372088e-10
+      ],
+      [
+        2.2844544447195836e-08,
+        99481015.62016475,
+        -5231495.690281977
+      ],
+      [
+        -4.203840483372088e-10,
+        -5231495.690281977,
+        155901495.33851188
+      ]
+    ],
+    "translation_isotropic_error_kg": 0.0,
+    "coupling_skew_residual_m": 0.0,
+    "mass_relative_error": 0.0,
+    "CG_max_abs_error_m": 0.0,
+    "JG_relative_tensor_scale": 3.823224700056271e-16,
+    "blocks": [
+      {
+        "block": "translation",
+        "unit": "kg",
+        "max_abs_error": 0.0,
+        "scale": 676753.2907231401,
+        "normalized_error": 0.0,
+        "pass": true
+      },
+      {
+        "block": "coupling",
+        "unit": "kg*m",
+        "max_abs_error": 2.3283064365386963e-10,
+        "scale": 1883802.3595271627,
+        "normalized_error": 1.2359611000397646e-16,
+        "pass": true
+      },
+      {
+        "block": "rotation",
+        "unit": "kg*m^2",
+        "max_abs_error": 5.960464477539063e-08,
+        "scale": 161145225.03795397,
+        "normalized_error": 3.6988154480749987e-16,
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  "gravity": {
+    "time_s": 1.0,
+    "ODB_precision": "SINGLE_PRECISION",
+    "checks": [
+      {
+        "quantity": "RF",
+        "actual": [
+          -0.0,
+          6638950.0,
+          -0.0
+        ],
+        "independently_expected": [
+          -0.0,
+          6638949.781994005,
+          -0.0
+        ],
+        "max_abs_error": 0.2180059952661395,
+        "normalized_error": 3.283742194547245e-08,
+        "budget": 1e-06,
+        "pass": true
+      },
+      {
+        "quantity": "RM",
+        "actual": [
+          5795554.0,
+          -0.0,
+          -3.182748287144932e-09
+        ],
+        "independently_expected": [
+          5795554.19170493,
+          -0.0,
+          -3.182748204797177e-09
+        ],
+        "max_abs_error": 0.19170492980629206,
+        "normalized_error": 3.3077928954693545e-08,
+        "budget": 1e-06,
+        "pass": true
+      }
+    ],
+    "DAT_direct_confirmation": [
+      {
+        "line": 621,
+        "text": "1      0.0000000E+00  6.6389498E+06  0.0000000E+00  5.7955542E+06  0.0000000E+00 -3.1827482E-09"
+      }
+    ],
+    "sign_reason": "CG is offset toward negative Z; downward gravity produces negative X moment at O, so support RM1 is positive.",
+    "pass": true
+  },
+  "initial_motion": {
+    "input_step_s": 0.001,
+    "samples": 101,
+    "end_time_s": 0.10000000149011612,
+    "ALLKE_peak_J": 3073.6318359375,
+    "M6_max_abs_error_J": 1.6381197626978974,
+    "M6_error_relative_to_peak": 0.0005329590042452981,
+    "CG_max_abs_error_J": 1.63807202453836,
+    "CG_error_relative_to_peak": 0.0005329434727301116,
+    "registered_budget": 1e-06,
+    "pass": false,
+    "worst_sample": {
+      "time_s": 0.05000000074505806,
+      "ALLKE_J": 3073.6318359375,
+      "from_solver_M6_J": 3071.993716174802,
+      "from_CG_J": 3071.9937639129616,
+      "M6_minus_ALLKE_J": -1.6381197626978974,
+      "CG_minus_ALLKE_J": -1.63807202453836
+    },
+    "last_sample": {
+      "time_s": 0.10000000149011612,
+      "ALLKE_J": 0.0008224744233302772,
+      "from_solver_M6_J": 0.0,
+      "from_CG_J": 0.0,
+      "M6_minus_ALLKE_J": -0.0008224744233302772,
+      "CG_minus_ALLKE_J": -0.0008224744233302772
+    },
+    "max_CG_kinematic_velocity_residual_m_s": 3.251048819041813e-09,
+    "max_angular_velocity_residual_rad_s": 0.0,
+    "interpretation": "Initial 0.001 s trial fails registered energy comparison despite solver completion. Cause and time-step behavior are outside this review; no criterion relaxed."
+  },
+  "solver_completion_and_hashes": [
+    {
+      "run": "RUN-T038-S1-MATRIX",
+      "input_hash_matches_execution_record": true,
+      "all_recorded_output_hashes_match": true,
+      "output_checks": [
+        {
+          "name": "execution.log",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MATRIX.dat",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MATRIX.msg",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MATRIX.odb",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MATRIX.sta",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MATRIX_MASS1.mtx",
+          "match": true
+        }
+      ],
+      "return_code": 0,
+      "MSG_completed": true,
+      "STA_completed": true,
+      "message_counts": {
+        "WARNING MESSAGES DURING USER INPUT PROCESSING": 0,
+        "WARNING MESSAGES DURING ANALYSIS": 0,
+        "ERROR MESSAGES": 0
+      },
+      "zero_warning_error": true,
+      "fatal_markers": false
+    },
+    {
+      "run": "RUN-T038-S1-GRAVITY",
+      "input_hash_matches_execution_record": true,
+      "all_recorded_output_hashes_match": true,
+      "output_checks": [
+        {
+          "name": "execution.log",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_GRAVITY.dat",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_GRAVITY.msg",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_GRAVITY.odb",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_GRAVITY.sta",
+          "match": true
+        }
+      ],
+      "return_code": 0,
+      "MSG_completed": true,
+      "STA_completed": true,
+      "message_counts": {
+        "WARNING MESSAGES DURING USER INPUT PROCESSING": 0,
+        "WARNING MESSAGES DURING ANALYSIS": 0,
+        "ERROR MESSAGES": 0
+      },
+      "zero_warning_error": true,
+      "fatal_markers": false
+    },
+    {
+      "run": "RUN-T038-S1-MOTION",
+      "input_hash_matches_execution_record": true,
+      "all_recorded_output_hashes_match": true,
+      "output_checks": [
+        {
+          "name": "execution.log",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MOTION.dat",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MOTION.msg",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MOTION.odb",
+          "match": true
+        },
+        {
+          "name": "RNA_R2_MOTION.sta",
+          "match": true
+        }
+      ],
+      "return_code": 0,
+      "MSG_completed": true,
+      "STA_completed": true,
+      "message_counts": {
+        "WARNING MESSAGES DURING USER INPUT PROCESSING": 0,
+        "WARNING MESSAGES DURING ANALYSIS": 0,
+        "ERROR MESSAGES": 0
+      },
+      "zero_warning_error": true,
+      "fatal_markers": false
+    }
+  ],
+  "legacy_summary_bug": {
+    "metadata_field": "archive_summary.blade_mass_kg",
+    "wrong_value_kg": 2600752.25,
+    "correct_printed_single_blade_kg": 41732.34,
+    "not_used_by_target_assembly": true,
+    "independent_component_mass_kg": 676753.2907231401,
+    "mass_difference_vs_target_kg": 0.0,
+    "CG_max_abs_difference_m": 0.0,
+    "JG_max_abs_difference_kgm2": 8.940696716308594e-08,
+    "conclusion": "Wrong summary metadata does not affect frozen mass/CG/J; confirmed by separate mass-point plus original-field assembly."
+  },
+  "comparison_to_root_report": {
+    "root_report_all_required_checks_pass": false,
+    "matches_independent_gate_outcome": true,
+    "root_motion_normalized_error": 0.00013331717713973348,
+    "independent_motion_normalized_error": 0.0005329590042452981
+  },
+  "M2_original_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+  "all_initial_checks_pass": false,
+  "evidence_hashes": {
+    "work\\rna-sample-validation-20261005\\frozen-target.json": {
+      "sha256": "63fc7995dee7ec35523d08c23612f0f3927a60204f5468bf1566d6b29d1796c3",
+      "bytes": 2561
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\RNA_R2_MATRIX_MASS1.mtx": {
+      "sha256": "06ee78d678c3bc33afb6985923cd0ca5a661049a557b64902655458464032dbe",
+      "bytes": 510
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\odb-extract.json": {
+      "sha256": "b4d23dc1444e2abfa6a75e7d0df0c78598f0f61461730f1a499024f3874f570e",
+      "bytes": 2524
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\RNA_R2_GRAVITY.dat": {
+      "sha256": "cffa1c25ce647720a497a3ef7126d9bd9a923aed0900c6735a196c602d8b4ac3",
+      "bytes": 26481
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\odb-extract.json": {
+      "sha256": "3f2f3986f5ffedb586e5749419c9ad1db133f5b692d2ae1ee984daa23ca36b07",
+      "bytes": 389916
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\execution-record.json": {
+      "sha256": "49fa81eba736f9a83195eb44a3ac67ffc062ac2287923775b05295576024d820",
+      "bytes": 1850
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\RNA_R2_MATRIX.inp": {
+      "sha256": "69981a7f8abd52d861eaef253efb62c2a0a6dead23271637084eed81d1da1b32",
+      "bytes": 808
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\RNA_R2_MATRIX.msg": {
+      "sha256": "27bdacf27acada4328f6b2a92f667303ebc6679fb015c83d31d425ae43b84aec",
+      "bytes": 2164
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\RNA_R2_MATRIX.sta": {
+      "sha256": "1d3fb7f3f6b0441a0cb43fdd33ea30f198006e9bca761eb4b98077f591c3e097",
+      "bytes": 443
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\RNA_R2_MATRIX.odb": {
+      "sha256": "bdc6f0b4b36144d0e9f4a152f2462e06b1c275fd2b4884c3504356c575d6e574",
+      "bytes": 112520
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\execution.log": {
+      "sha256": "dfe67788c07a406c77e7ae9d8840f65f55c53fdafc99b3043e9435c8f102ab40",
+      "bytes": 669
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MATRIX\\RNA_R2_MATRIX.dat": {
+      "sha256": "2f09166992f4e05595b473b344c4ccaafcf53d6a2e6ff80b86bb786c8f546156",
+      "bytes": 18510
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\execution-record.json": {
+      "sha256": "6a4803d7a5b431a9b336b6136a3905bfbab70f4e1ba0ccc234dbfcc1e2578e24",
+      "bytes": 1684
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\RNA_R2_GRAVITY.inp": {
+      "sha256": "ebc8594116c5d150702b7ef17f663d89478246b71646e93848491c4e8b5972e0",
+      "bytes": 989
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\RNA_R2_GRAVITY.msg": {
+      "sha256": "a0eacb7f1662a0cc2535bb851816c872f2e4aa2dae401c5eb2f80ef433d50106",
+      "bytes": 8716
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\RNA_R2_GRAVITY.sta": {
+      "sha256": "cf48454d75bc070f6943b75a91e6d2f1bb048d5b48d6713f4018f8274caeb398",
+      "bytes": 443
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\RNA_R2_GRAVITY.odb": {
+      "sha256": "15d50f3e6d84c26d96a4ead73744288922e1f0fdcbeddffb4d70b5a46e8c479f",
+      "bytes": 205860
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_GRAVITY\\execution.log": {
+      "sha256": "198ba7f7e17d34fe13149f010d2c472dadc4b0282b92763f680708f108d571c8",
+      "bytes": 669
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\execution-record.json": {
+      "sha256": "202cdde511b3dd77a0bb725337149951bbe88a5e993a857fe82e1bf09174c224",
+      "bytes": 1692
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\RNA_R2_MOTION.inp": {
+      "sha256": "d1f5d4a9f2d798897c60326aa2a23eb8ffa489aa146c59754251a6eef870cc61",
+      "bytes": 1247
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\RNA_R2_MOTION.msg": {
+      "sha256": "4a43e53ea63f7c21b8a3477b75c9d5a7c153eb5016169e38a9f0fd6250f8aa17",
+      "bytes": 146305
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\RNA_R2_MOTION.sta": {
+      "sha256": "cced8b1e30a76b4845fe497e458bacf113c06c50f89ab4be9751e75dda7b54f1",
+      "bytes": 7175
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\RNA_R2_MOTION.odb": {
+      "sha256": "110afe4144c297af3327667e4da00d03b0a12ad45fbc5f868aa9f06887773301",
+      "bytes": 1479132
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\execution.log": {
+      "sha256": "a68a6120ed59789ac8e26417f50450f1ed2256746889b1e8c055138b0c74ff7c",
+      "bytes": 667
+    },
+    "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION\\RNA_R2_MOTION.dat": {
+      "sha256": "3a2f624121f07c59e7ea5f32bc5f33761239e79f3de31090ca45d9d14f340a91",
+      "bytes": 28918
+    },
+    "work\\step3-rna-20261005\\openfast-rna-current.json": {
+      "sha256": "cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e",
+      "bytes": 17086
+    },
+    "work\\step3-rna-20261005\\openfast-rna-frozen-mass-points.csv": {
+      "sha256": "dcb26756018f94c99b499ced52002cd0c5d3d51b8371cb83f42af9b2b6600566",
+      "bytes": 13572
+    },
+    "work\\rna-sample-validation-20261005\\verification-results.json": {
+      "sha256": "33d9545b28e2a6de4e566bf077756fae5f523065adc95713d7750a4e7ad7d6be",
+      "bytes": 4890
+    },
+    "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp": {
+      "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "bytes": 3129268
+    }
+  },
+  "limits": [
+    "Gravity and motion use existing read-only ODB extraction JSON, crosschecked with actual ODB hashes and gravity DAT; reviewer did not launch a new Abaqus ODB extraction.",
+    "Only numerical representation of prescribed frozen R2 operator; not D08, full-tower or flexible/rotating aeroelastic validation."
+  ]
+}

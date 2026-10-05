@@ -1,0 +1,297 @@
+[
+  {
+    "job": "RNA_R2_MATRIX",
+    "archive": "RNA_R2_MATRIX.zip",
+    "bytes": 791578,
+    "sha256": "58256b55f597b7b04cf0fd8c673d8ca0bd996305312cb45be0348547b5af1e8e",
+    "members": [
+      {
+        "name": "execution-record.json",
+        "bytes": 1850,
+        "sha256": "49fa81eba736f9a83195eb44a3ac67ffc062ac2287923775b05295576024d820"
+      },
+      {
+        "name": "execution-start.json",
+        "bytes": 676,
+        "sha256": "a240007300e267f577bc343aee2c731f5e38dcbb3a236a605ed8fa2d358d3f64"
+      },
+      {
+        "name": "execution.log",
+        "bytes": 669,
+        "sha256": "dfe67788c07a406c77e7ae9d8840f65f55c53fdafc99b3043e9435c8f102ab40"
+      },
+      {
+        "name": "ResearchCard.json",
+        "bytes": 2122,
+        "sha256": "45a4b1e2efb5700903c81893375fcac6783b1776496cdfb6c991fdc3bac40215"
+      },
+      {
+        "name": "RNA_R2_MATRIX.dat",
+        "bytes": 18510,
+        "sha256": "2f09166992f4e05595b473b344c4ccaafcf53d6a2e6ff80b86bb786c8f546156"
+      },
+      {
+        "name": "RNA_R2_MATRIX.inp",
+        "bytes": 808,
+        "sha256": "69981a7f8abd52d861eaef253efb62c2a0a6dead23271637084eed81d1da1b32"
+      },
+      {
+        "name": "RNA_R2_MATRIX.msg",
+        "bytes": 2164,
+        "sha256": "27bdacf27acada4328f6b2a92f667303ebc6679fb015c83d31d425ae43b84aec"
+      },
+      {
+        "name": "RNA_R2_MATRIX.odb",
+        "bytes": 112520,
+        "sha256": "bdc6f0b4b36144d0e9f4a152f2462e06b1c275fd2b4884c3504356c575d6e574"
+      },
+      {
+        "name": "RNA_R2_MATRIX.sta",
+        "bytes": 443,
+        "sha256": "1d3fb7f3f6b0441a0cb43fdd33ea30f198006e9bca761eb4b98077f591c3e097"
+      },
+      {
+        "name": "RNA_R2_MATRIX_MASS1.mtx",
+        "bytes": 510,
+        "sha256": "06ee78d678c3bc33afb6985923cd0ca5a661049a557b64902655458464032dbe"
+      },
+      {
+        "name": "RNA_R2_MATRIX_X1.sim",
+        "bytes": 1723730,
+        "sha256": "ea82c6eecf2b5d1d0ab84971f6b9d529ec951c3a3ada6d9488ce351c1cfff7cf"
+      }
+    ]
+  },
+  {
+    "job": "RNA_R2_GRAVITY",
+    "archive": "RNA_R2_GRAVITY.zip",
+    "bytes": 36859,
+    "sha256": "0cc3cd06bc0e354400953471dbc80d3c9dbc0dcd2aac4435b6b676fc41bc77d2",
+    "members": [
+      {
+        "name": "execution-record.json",
+        "bytes": 1684,
+        "sha256": "6a4803d7a5b431a9b336b6136a3905bfbab70f4e1ba0ccc234dbfcc1e2578e24"
+      },
+      {
+        "name": "execution-start.json",
+        "bytes": 680,
+        "sha256": "709f2d6c60e670b827055f32e690404cffca6e29b9caea6823b822a2ff90634f"
+      },
+      {
+        "name": "execution.log",
+        "bytes": 669,
+        "sha256": "198ba7f7e17d34fe13149f010d2c472dadc4b0282b92763f680708f108d571c8"
+      },
+      {
+        "name": "odb-extract.json",
+        "bytes": 2524,
+        "sha256": "b4d23dc1444e2abfa6a75e7d0df0c78598f0f61461730f1a499024f3874f570e"
+      },
+      {
+        "name": "ResearchCard.json",
+        "bytes": 2110,
+        "sha256": "fa4725b1dcd6849f023c2068edb367d29ce2ecab5952daf587700cba21489c2e"
+      },
+      {
+        "name": "RNA_R2_GRAVITY.dat",
+        "bytes": 26481,
+        "sha256": "cffa1c25ce647720a497a3ef7126d9bd9a923aed0900c6735a196c602d8b4ac3"
+      },
+      {
+        "name": "RNA_R2_GRAVITY.inp",
+        "bytes": 989,
+        "sha256": "ebc8594116c5d150702b7ef17f663d89478246b71646e93848491c4e8b5972e0"
+      },
+      {
+        "name": "RNA_R2_GRAVITY.msg",
+        "bytes": 8716,
+        "sha256": "a0eacb7f1662a0cc2535bb851816c872f2e4aa2dae401c5eb2f80ef433d50106"
+      },
+      {
+        "name": "RNA_R2_GRAVITY.odb",
+        "bytes": 205860,
+        "sha256": "15d50f3e6d84c26d96a4ead73744288922e1f0fdcbeddffb4d70b5a46e8c479f"
+      },
+      {
+        "name": "RNA_R2_GRAVITY.sta",
+        "bytes": 443,
+        "sha256": "cf48454d75bc070f6943b75a91e6d2f1bb048d5b48d6713f4018f8274caeb398"
+      }
+    ]
+  },
+  {
+    "job": "RNA_R2_MOTION",
+    "archive": "RNA_R2_MOTION.zip",
+    "bytes": 252366,
+    "sha256": "d920f6b8f6da347bbfe96e394b32e47b8e42e485a30bd7a0d440b8dff4b98ca7",
+    "members": [
+      {
+        "name": "execution-record.json",
+        "bytes": 1692,
+        "sha256": "202cdde511b3dd77a0bb725337149951bbe88a5e993a857fe82e1bf09174c224"
+      },
+      {
+        "name": "execution-start.json",
+        "bytes": 676,
+        "sha256": "4318369680a647379ac3aa3c653fe83f391daafe7d1ef4e098e9a3fc8b649493"
+      },
+      {
+        "name": "execution.log",
+        "bytes": 667,
+        "sha256": "a68a6120ed59789ac8e26417f50450f1ed2256746889b1e8c055138b0c74ff7c"
+      },
+      {
+        "name": "odb-extract.json",
+        "bytes": 389916,
+        "sha256": "3f2f3986f5ffedb586e5749419c9ad1db133f5b692d2ae1ee984daa23ca36b07"
+      },
+      {
+        "name": "ResearchCard.json",
+        "bytes": 2102,
+        "sha256": "dcf176478f0bc6d8e33b0b65f20a2a89c28bb104f8db275f6c916e633bc11bb9"
+      },
+      {
+        "name": "RNA_R2_MOTION.dat",
+        "bytes": 28918,
+        "sha256": "3a2f624121f07c59e7ea5f32bc5f33761239e79f3de31090ca45d9d14f340a91"
+      },
+      {
+        "name": "RNA_R2_MOTION.inp",
+        "bytes": 1247,
+        "sha256": "d1f5d4a9f2d798897c60326aa2a23eb8ffa489aa146c59754251a6eef870cc61"
+      },
+      {
+        "name": "RNA_R2_MOTION.msg",
+        "bytes": 146305,
+        "sha256": "4a43e53ea63f7c21b8a3477b75c9d5a7c153eb5016169e38a9f0fd6250f8aa17"
+      },
+      {
+        "name": "RNA_R2_MOTION.odb",
+        "bytes": 1479132,
+        "sha256": "110afe4144c297af3327667e4da00d03b0a12ad45fbc5f868aa9f06887773301"
+      },
+      {
+        "name": "RNA_R2_MOTION.sta",
+        "bytes": 7175,
+        "sha256": "cced8b1e30a76b4845fe497e458bacf113c06c50f89ab4be9751e75dda7b54f1"
+      }
+    ]
+  },
+  {
+    "job": "RNA_R2_MOTION_H2",
+    "archive": "RNA_R2_MOTION_H2.zip",
+    "bytes": 464248,
+    "sha256": "eea50b552cf7df52b34aab1056f590af86115ea6e9217d0b69374ce978c317f7",
+    "members": [
+      {
+        "name": "execution-record.json",
+        "bytes": 1716,
+        "sha256": "3cacdd2bd6f7291f30c034b20d6e610ddba2136b10697de24a081eb09ee6d29f"
+      },
+      {
+        "name": "execution-start.json",
+        "bytes": 688,
+        "sha256": "fd769b922c1fe6f33291f1ad00ab37e781492d5779b868651021224a827c073e"
+      },
+      {
+        "name": "execution.log",
+        "bytes": 673,
+        "sha256": "11b0fb609b5c4e1230dbfd12b3f1c6380f3e2935ce6b6ff382c2f9a330ec5de0"
+      },
+      {
+        "name": "odb-extract.json",
+        "bytes": 776479,
+        "sha256": "44015d9d01c4cb8e53513afa7be421d1e01a9239021fe8d9ba898499a7d266d9"
+      },
+      {
+        "name": "ResearchCard.json",
+        "bytes": 2238,
+        "sha256": "a995c81f6881edf8369e27992a575dcaef9c1af580a3acc766a420d03f5afeaa"
+      },
+      {
+        "name": "RNA_R2_MOTION_H2.dat",
+        "bytes": 28935,
+        "sha256": "34bf7c520c24ba0f48a06e93dc8340bd959dd3d8c6451f3b6e4d30377e3c082c"
+      },
+      {
+        "name": "RNA_R2_MOTION_H2.inp",
+        "bytes": 1264,
+        "sha256": "a019d644a788119c499799642d16ce044cd8012b6306e487e2096e00665e0fee"
+      },
+      {
+        "name": "RNA_R2_MOTION_H2.msg",
+        "bytes": 285805,
+        "sha256": "6c650f41dd0b8e040de641b2a63a256e11c13f228252325ee88aa0b11d83dd34"
+      },
+      {
+        "name": "RNA_R2_MOTION_H2.odb",
+        "bytes": 2756828,
+        "sha256": "9e8bd0ad39be7cc492d56b1c2311b17dacf894498a63b6992fb88550bbd4b25b"
+      },
+      {
+        "name": "RNA_R2_MOTION_H2.sta",
+        "bytes": 13975,
+        "sha256": "9c8585ba5148534795a66e30f8d862a482791363e98c7d8f91288b2ac8bb1089"
+      }
+    ]
+  },
+  {
+    "job": "RNA_R2_MOTION_H40",
+    "archive": "RNA_R2_MOTION_H40.zip",
+    "bytes": 1267904,
+    "sha256": "faefc6fdca5acbf16dee69140952bfa4aecb214cafc0d42ac0698909fb44218e",
+    "members": [
+      {
+        "name": "execution-record.json",
+        "bytes": 1717,
+        "sha256": "8cc7d6c4c0ee3a46c60ca6f826af520e47ae2dd673903408fa4febcf00c3d9e7"
+      },
+      {
+        "name": "execution-start.json",
+        "bytes": 692,
+        "sha256": "aa165a77efc7e0e787ae691b0ea3d2023867029def5a8b8813dd70b3090eaac1"
+      },
+      {
+        "name": "execution.log",
+        "bytes": 675,
+        "sha256": "11ecfef1ec2966a10a25ad0c404b525738d1f7be8eccef1baba2f00ae2c099c3"
+      },
+      {
+        "name": "odb-extract.json",
+        "bytes": 390176,
+        "sha256": "082ef8478a11fd2d3facd278af786b3dbdee2836430a54b9a123e0198e9b9d62"
+      },
+      {
+        "name": "ResearchCard.json",
+        "bytes": 2246,
+        "sha256": "517b8014647e8575fc1c8bebc59d5731ffe3c54e9f0287d751b6f25d85fb64ed"
+      },
+      {
+        "name": "RNA_R2_MOTION_H40.dat",
+        "bytes": 28953,
+        "sha256": "2f4de6d8ca838c86a5a3bbd0e03efac27e5a00dec6933e50572ba31c47ac2925"
+      },
+      {
+        "name": "RNA_R2_MOTION_H40.inp",
+        "bytes": 1267,
+        "sha256": "b3e11d9076689efa07e5b9e8d6db6ce6653f8e3117b1b46e7e122eeb4206eac0"
+      },
+      {
+        "name": "RNA_R2_MOTION_H40.msg",
+        "bytes": 5586748,
+        "sha256": "b456d47505c09b27fbc5588a52e3bfb75239c270094a7ebc95e16583995708f9"
+      },
+      {
+        "name": "RNA_R2_MOTION_H40.odb",
+        "bytes": 21208620,
+        "sha256": "7d959dd6b0c16c5e15475b9e791cc52ce229df146df84f1e27a547f8643f3915"
+      },
+      {
+        "name": "RNA_R2_MOTION_H40.sta",
+        "bytes": 272375,
+        "sha256": "3316993b11425deda9329c5d22bb498b19672f866ba4cd4e8ff18ad12bc68b89"
+      }
+    ]
+  }
+]
