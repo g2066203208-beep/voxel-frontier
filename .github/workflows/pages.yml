@@ -37,12 +37,21 @@ jobs:
           node scripts/read-abaqus.cjs
           node scripts/read-source-rna.cjs
           node scripts/audit-rebar-geometry.cjs
+          node scripts/build-t046-rebar-completion.cjs
           node scripts/sanity-check-reported.mjs
           node scripts/check-material-audit.mjs
 
       - name: Run tests
         run: npm test
 
+      - name: Upload T046 Abaqus candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: T046-Abaqus-rebar-completion-candidates
+          path: |
+            artifacts/T046/*.inp.gz
+            public/research/t046-rebar-report.json
+          retention-days: 30
       - name: Build production site
         run: npm run build
 
