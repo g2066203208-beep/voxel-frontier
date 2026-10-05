@@ -63,6 +63,13 @@
 
 ### A2. 混塔 / Abaqus / 动力响应核心
 
+7a. **Wang Y et al. (2025)**  
+   *Analysis theory and engineering applications of steel–concrete hybrid tower structures for large wind turbines.*  
+   Journal of Intelligent Construction 3(2), 9180090. DOI: **10.26599/JIC.2025.9180090**  
+   状态：SciOpen 官方页为 Open Access / CC BY 4.0，并明确显示 **PDF 17.2 MB**；但 PDF 按钮由前端动态生成，GitHub runner 对猜测直链取得的是 HTML，因此当前不能算已下载。  
+   用途：2025 年钢—预应力混凝土混塔与预应力CFST格构混塔研究进展/工程应用综述，第一章研究现状优先。  
+   文件名：`Wang_2025_Analysis_Theory_Engineering_Applications_Hybrid_Towers.pdf`
+
 7. **Kenna AP. (2019) PhD**  
    *The Response and Optimisation of Hybrid Wind Turbine Towers.* Trinity College Dublin.  
    状态：TARA 明确 open access，官方 PDF 5.77 MB；GitHub runner 连续访问失败。  
