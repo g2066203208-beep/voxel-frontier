@@ -35,7 +35,7 @@ def main(mode):
         for rel,local in json.loads(extra.read_text(encoding='utf-8')).items():
             if '..' in Path(rel).parts:raise ValueError(rel)
             files[DEST+rel]=Path(local).read_bytes()
-    status_label='in-progress/registered-before-run' if mode=='start' else 'verification-complete/user-review-pending'
+    status_label=('in-progress/registered-refinement' if (ROOT/'verification-results.json').exists() else 'in-progress/registered-before-run') if mode=='start' else 'verification-complete/user-review-pending'
     if mode=='finish':
         result=json.loads((ROOT/'verification-results.json').read_text(encoding='utf-8'))
         if not result['all_required_checks_pass']:status_label='completed-with-open-verification-items'
@@ -77,6 +77,7 @@ def main(mode):
             return {'path':p,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
         with ThreadPoolExecutor(max_workers=4) as pool:checks=list(pool.map(verify,prepared.items()))
         receipt={'mode':mode,'commit':commit['sha'],'parent':head,'readback_verified':True,'files':checks}
+        (ROOT/('published-'+mode+'-'+commit['sha'][:8]+'.json')).write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
         (ROOT/('published-'+mode+'.json')).write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
         print(json.dumps({'mode':mode,'commit':commit['sha'],'readback_verified':True,'files':len(checks)},ensure_ascii=False));return
     raise RuntimeError('Concurrent updates prevented publication')

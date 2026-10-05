@@ -11,8 +11,8 @@
     "input_hash": "69981a7f8abd52d861eaef253efb62c2a0a6dead23271637084eed81d1da1b32",
     "seed": "not_applicable",
     "time_window": "linear perturbation matrix generation",
-    "status": "registered-not-started",
-    "output_hash": "",
+    "status": "solver-finished-awaiting-verification",
+    "output_hash": "b0101f248dfe086a901e5e46650d99253bd324f565bc010a72c3b821f76f5a29",
     "registered_utc": "2026-10-05T08:09:09.591729+00:00",
     "method_basis": [
       "Abaqus 2025 MASS/ROTARY INERTIA",
@@ -46,8 +46,8 @@
     "input_hash": "ebc8594116c5d150702b7ef17f663d89478246b71646e93848491c4e8b5972e0",
     "seed": "not_applicable",
     "time_window": "static pseudo-time 1",
-    "status": "registered-not-started",
-    "output_hash": "",
+    "status": "solver-finished-awaiting-verification",
+    "output_hash": "c5c5d8dcfbcd15cad784b1d964d29fd509d1b55bcd88942cbc0f49ea13e32c0a",
     "registered_utc": "2026-10-05T08:09:09.593760+00:00",
     "method_basis": [
       "Abaqus 2025 MASS/ROTARY INERTIA",
@@ -81,8 +81,8 @@
     "input_hash": "d1f5d4a9f2d798897c60326aa2a23eb8ffa489aa146c59754251a6eef870cc61",
     "seed": "not_applicable",
     "time_window": "0-0.1 s; dt 0.001 s",
-    "status": "registered-not-started",
-    "output_hash": "",
+    "status": "solver-finished-awaiting-verification",
+    "output_hash": "f5dfe1c68305c67151f9f2c7f41c04c3eca8f7eea546c9827efb8acc48a75f4d",
     "registered_utc": "2026-10-05T08:09:09.595271+00:00",
     "method_basis": [
       "Abaqus 2025 MASS/ROTARY INERTIA",
@@ -103,5 +103,40 @@
     },
     "changed_variables": "isolated inertia representation only; M2 original untouched",
     "notes": "Verification fixture only; no tower/wind run, no D08/BASE001 physical approval. All output is retained, including failed attempts."
+  },
+  {
+    "run_id": "RUN-T038-S1-MOTION-H2",
+    "task_id": "T038-S1",
+    "baseline_id": "R2-FROZEN-LOCKED-RNA-FIXTURE",
+    "software": "Abaqus/Standard",
+    "version": "2025",
+    "job": "RNA_R2_MOTION_H2",
+    "input": "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION_H2\\RNA_R2_MOTION_H2.inp",
+    "directory": "D:\\Codex-research-validation\\T038S1\\RNA_R2_MOTION_H2",
+    "input_hash": "a019d644a788119c499799642d16ce044cd8012b6306e487e2096e00665e0fee",
+    "seed": "not_applicable",
+    "time_window": "0-0.1 s; dt=0.0005 s",
+    "status": "registered-not-started",
+    "output_hash": "",
+    "registered_utc": "2026-10-05T08:25:06.567603+00:00",
+    "method_basis": [
+      "Abaqus 2025 MASS/ROTARY INERTIA",
+      "Abaqus 2025 kinematic coupling",
+      "Abaqus 2025 matrix generation with MPC elimination",
+      "T038 INPUT_REVISION_PLAN sections 2 and 4",
+      "T026 RUN036 implemented six-DOF coupling"
+    ],
+    "literature_boundary": "DTU source/T038 native-input reconstruction supplies target. Existing Cheng2024/T026 source trace supports need to separate mass, eccentricity and inertia; no paper supplies this fixture or numerical tolerance.",
+    "acceptance": {
+      "matrix_max_abs_error_relative_block_scale": 1e-09,
+      "mass_reconstruction_relative": 1e-09,
+      "CG_reconstruction_absolute_m": 1e-08,
+      "JG_max_abs_error_relative_tensor_scale": 1e-09,
+      "gravity_relative_force_and_moment_scale": 1e-06,
+      "motion_kinetic_energy_relative_peak_scale": 1e-06,
+      "tolerance_basis": "Pre-run numerical implementation budgets: text matrix double precision and ODB output precision; no engineering/model-form acceptance implied. Zero entries assessed using nonzero same-unit block scales."
+    },
+    "changed_variables": "Time increment only; if factor40 output sampled each40 increments to retain common0.001s points; target/geometry/BC amplitudes/alpha/tolerance fixed",
+    "notes": "Time-discretization diagnostic after original motion energy budget failed; original failed result retained; no tolerance relaxation/no physical parameter change."
   }
 ]

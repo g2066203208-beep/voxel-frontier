@@ -1,0 +1,580 @@
+{
+  "review_utc": "2026-10-05T08:11:54.761361+00:00",
+  "scope": "read-only input identity and duplicate-run check; no solver, no model edit, no publication",
+  "provided_head": "e6e67096659f6cbbfa9b0ff86cccbf6e248efeec",
+  "checked_head": "bb01a4651eeeec095a98aa88cfb432c9a4601edc",
+  "archive": {
+    "path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+    "ref": "bb01a4651eeeec095a98aa88cfb432c9a4601edc",
+    "git_blob_sha": "54deb8cf10f41cb54fa2ad650af7898c9d338223",
+    "bytes": 2234740,
+    "sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+    "expected_T038_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+    "matches": true
+  },
+  "source_files": [
+    {
+      "role": "actual-local-M2",
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.inp",
+      "bytes": 3129268,
+      "sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "expected_T038_sha256": "428a8bb567a52200311ebb1a2019a71c304d1c427ce761f0c836e4fc46fe50f1",
+      "matches": true,
+      "mtime_utc": "2026-10-04T12:12:57.054114+00:00"
+    },
+    {
+      "role": "actual-local-M2",
+      "path": "D:\\Codex-research-validation\\T026\\tower\\DTU158_RECONSTRUCTED_M2\\DTU158_RECONSTRUCTED_M2.dat",
+      "bytes": 207717,
+      "sha256": "632372fb940edce81999de0b8fafa748eb665a8555e4f394c8953b8377566316",
+      "expected_T038_sha256": "632372fb940edce81999de0b8fafa748eb665a8555e4f394c8953b8377566316",
+      "matches": true,
+      "mtime_utc": "2026-10-04T12:16:45.691427+00:00"
+    },
+    {
+      "role": "R2-current-online-archive-member",
+      "archive_path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT_ElastoDyn.dat",
+      "bytes": 27838,
+      "sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+      "expected_T038_sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+      "matches": true,
+      "read_in_memory_only": true
+    },
+    {
+      "role": "R2-current-online-archive-member",
+      "archive_path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/Rotor/DTU_10MW_ElastoDyn_Blades.dat",
+      "bytes": 12348,
+      "sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+      "expected_T038_sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+      "matches": true,
+      "read_in_memory_only": true
+    },
+    {
+      "role": "R2-current-online-archive-member",
+      "archive_path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.ED.sum",
+      "bytes": 103610,
+      "sha256": "e3ab59a7561bf12ab66ca738f25ccd941b81cb45b82ae7481ae5735df2cb8c84",
+      "expected_T038_sha256": "e3ab59a7561bf12ab66ca738f25ccd941b81cb45b82ae7481ae5735df2cb8c84",
+      "matches": true,
+      "read_in_memory_only": true
+    },
+    {
+      "role": "R2-T037-entry-and-tower",
+      "archive_path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.fst",
+      "sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+      "expected_T037_sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+      "matches": true,
+      "read_in_memory_only": true
+    },
+    {
+      "role": "R2-T037-entry-and-tower",
+      "archive_path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "member": "CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat",
+      "sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+      "expected_T037_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+      "matches": true,
+      "read_in_memory_only": true
+    }
+  ],
+  "derived_target_files": [
+    {
+      "local_path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-04\\lian\\work\\step3-rna-20261005\\openfast-rna-current.json",
+      "local_sha256": "cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e",
+      "remote_sha256": "cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e",
+      "remote_git_blob_sha": "55dfa850f7f7f3f99f4c09548a2851942407908a",
+      "matches": true
+    },
+    {
+      "local_path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-04\\lian\\work\\step3-rna-20261005\\comparison-results\\rna-comparison.json",
+      "local_sha256": "9fb46875767a5a35d47d4fc1982315b7266fdad11cf1860c52b688502bb40602",
+      "remote_sha256": "9fb46875767a5a35d47d4fc1982315b7266fdad11cf1860c52b688502bb40602",
+      "remote_git_blob_sha": "8093c1ef6712cebe0ecb8b7be71a93bee4739ec0",
+      "matches": true
+    },
+    {
+      "local_path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-04\\lian\\work\\step3-rna-20261005\\abaqus-results\\abaqus-rna-properties.json",
+      "local_sha256": "4cb8f5f680cf4e27d3da329c0a45b0a083a99a9f6a98dc345790b8d22a667f34",
+      "remote_sha256": "4cb8f5f680cf4e27d3da329c0a45b0a083a99a9f6a98dc345790b8d22a667f34",
+      "remote_git_blob_sha": "9d68fd0ecfdaad30d24d6c98fc596e82351fb05d",
+      "matches": true
+    }
+  ],
+  "EDsum_mass_excerpt": [
+    {
+      "line": 47,
+      "text": "Rotor mass properties:"
+    },
+    {
+      "line": 49,
+      "text": "    Rotor Mass            (kg)       230717.031"
+    },
+    {
+      "line": 53,
+      "text": "    Mass                  (kg)        41732.340    41732.340    41732.340"
+    },
+    {
+      "line": 54,
+      "text": "    Second Mass Moment    (kg-m^2) 45671252.000 45671252.000 45671252.000"
+    },
+    {
+      "line": 55,
+      "text": "    First Mass Moment     (kg-m)    1090742.250  1090742.250  1090742.250"
+    },
+    {
+      "line": 56,
+      "text": "    Center of Mass        (m)            26.137       26.137       26.137"
+    },
+    {
+      "line": 59,
+      "text": "Additional mass properties:"
+    },
+    {
+      "line": 61,
+      "text": "    Tower-top Mass        (kg)       676753.250"
+    },
+    {
+      "line": 62,
+      "text": "    Tower Mass            (kg)      1923999.000"
+    },
+    {
+      "line": 63,
+      "text": "    Platform Mass         (kg)            0.000"
+    },
+    {
+      "line": 64,
+      "text": "    Mass Incl. Platform   (kg)      2600752.250"
+    },
+    {
+      "line": 69,
+      "text": "Node  TwFract   HNodes  DHNodes  TMassDen    FAStiff    SSStiff"
+    }
+  ],
+  "target": {
+    "scope": "undeformed M2 B31 versus independent float64 frozen native R2 operator; not operating validation",
+    "mass_kg": 676753.2907231401,
+    "CG_global_ABQ_m": [
+      -4.794053742399661e-16,
+      160.78358803030605,
+      -0.8729624988915398
+    ],
+    "JG_in_ABQ_kgm2": [
+      [
+        94926999.79811174,
+        2.2844544447195585e-08,
+        -4.203840483372562e-10
+      ],
+      [
+        2.2844544447195585e-08,
+        99481015.62016469,
+        -5231495.690281978
+      ],
+      [
+        -4.203840483372562e-10,
+        -5231495.690281978,
+        155901495.33851188
+      ]
+    ],
+    "JT_at_O_in_ABQ_kgm2": [
+      [
+        100686458.49547963,
+        2.3747649422358834e-08,
+        -7.036072722110896e-10
+      ],
+      [
+        2.3747649422358834e-08,
+        99996744.6180905,
+        -3587006.875091368
+      ],
+      [
+        -7.036072722110896e-10,
+        -3587006.875091368,
+        161145225.03795397
+      ]
+    ],
+    "M6_at_O_ABQ_mixed_SI": [
+      [
+        676753.2907231401,
+        0.0,
+        0.0,
+        0.0,
+        -590780.2438027451,
+        -1883802.359527161
+      ],
+      [
+        0.0,
+        676753.2907231401,
+        0.0,
+        590780.2438027451,
+        0.0,
+        -3.244391646072556e-10
+      ],
+      [
+        0.0,
+        0.0,
+        676753.2907231401,
+        1883802.359527161,
+        3.244391646072556e-10,
+        0.0
+      ],
+      [
+        0.0,
+        590780.2438027451,
+        1883802.359527161,
+        100686458.49547963,
+        2.3747649422358834e-08,
+        -7.036072722110896e-10
+      ],
+      [
+        -590780.2438027451,
+        0.0,
+        3.244391646072556e-10,
+        2.3747649422358834e-08,
+        99996744.6180905,
+        -3587006.875091368
+      ],
+      [
+        -1883802.359527161,
+        -3.244391646072556e-10,
+        0.0,
+        -7.036072722110896e-10,
+        -3587006.875091368,
+        161145225.03795397
+      ]
+    ],
+    "ROTARYI_order_I11_I22_I33_I12_I13_I23": [
+      94926999.79811174,
+      99481015.62016469,
+      155901495.33851188,
+      2.2844544447195585e-08,
+      -4.203840483372562e-10,
+      -5231495.690281978
+    ],
+    "O_ABQ_m": [
+      0.0,
+      158.0,
+      0.0
+    ],
+    "existing_M2_RP_P_ABQ_m": [
+      0,
+      160,
+      0
+    ],
+    "R_OF_IEC_to_ABQ": [
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "state": {
+      "geometry": "undeformed input; yaw/pitch/azimuth inputs zero; precone -2.5 deg",
+      "native_input_rotor_rpm": 9.6,
+      "operator_restriction": "all internal relative velocities locked; GeAz/DrTr/blade bending fixed",
+      "not_claimed": "not operating-time M6, not a solver linearization, not a full physical inertia tensor"
+    },
+    "signed_off_diagonal_convention": "tensor matrix elements (negative products of inertia); no extra sign reversal"
+  },
+  "current_M2_comparison": {
+    "mass": {
+      "M2_kg": 673998.4931380384,
+      "R2_float64_kg": 676753.2907231401,
+      "R2_minus_M2_kg": 2754.7975851016818,
+      "M2_deficit_relative_to_R2_percent": 0.407060833373719,
+      "increase_relative_to_M2_percent": 0.4087245911004559,
+      "R2_archived_printed_kg": 676753.25,
+      "float64_minus_archived_printed_kg": 0.04072314011864364
+    },
+    "centroid": {
+      "M2_global_ABQ_m": [
+        4.318085389364971e-17,
+        160.29779769845646,
+        -0.623184005319902
+      ],
+      "R2_global_ABQ_m": [
+        -4.794053742399661e-16,
+        160.78358803030605,
+        -0.8729624988915398
+      ],
+      "R2_minus_M2_m": [
+        -5.225862281336158e-16,
+        0.48579033184958353,
+        -0.24977849357163773
+      ],
+      "distance_m": 0.5462431165419342
+    },
+    "inertia": {
+      "M2_JG_kgm2": [
+        [
+          108024597.46078354,
+          -4.6272988940561437e-10,
+          -1.6907564080693874e-10
+        ],
+        [
+          -4.6272988940561437e-10,
+          107994037.60245839,
+          -664405.3751226318
+        ],
+        [
+          -1.6907564080693874e-10,
+          -664405.3751226318,
+          162482391.87281075
+        ]
+      ],
+      "R2_JG_in_ABQ_kgm2": [
+        [
+          94926999.79811174,
+          2.2844544447195585e-08,
+          -4.203840483372562e-10
+        ],
+        [
+          2.2844544447195585e-08,
+          99481015.62016469,
+          -5231495.690281978
+        ],
+        [
+          -4.203840483372562e-10,
+          -5231495.690281978,
+          155901495.33851188
+        ]
+      ],
+      "M2_JT_kgm2": [
+        [
+          111844977.67004688,
+          -5.296046040453641e-10,
+          -1.5093859917276008e-10
+        ],
+        [
+          -5.296046040453641e-10,
+          108255790.51447996,
+          300727.28822087054
+        ],
+        [
+          -1.5093859917276008e-10,
+          300727.28822087054,
+          166041019.1700525
+        ]
+      ],
+      "R2_JT_in_ABQ_kgm2": [
+        [
+          100686458.49547963,
+          2.3747649422358834e-08,
+          -7.036072722110896e-10
+        ],
+        [
+          2.3747649422358834e-08,
+          99996744.6180905,
+          -3587006.875091368
+        ],
+        [
+          -7.036072722110896e-10,
+          -3587006.875091368,
+          161145225.03795397
+        ]
+      ],
+      "M2_minus_R2_JG_diagonal_percent_relative_R2": [
+        13.797547263189003,
+        8.557433726649766,
+        4.221188847489654
+      ],
+      "JG_frobenius_difference_relative_R2_percent": 8.720574690544543,
+      "B31_minus_continuous_JG_diagonal_percent_relative_continuous": [
+        11.641018755822529,
+        11.64469615257242,
+        3.90329475831217
+      ]
+    }
+  },
+  "execution_notes": [
+    "Initial Contents API call provided no inline content for 2.2 MB archive; retried through Git blob API. No source was written or solver launched."
+  ],
+  "github_recent_change": {
+    "ahead_by": 7,
+    "commits": [
+      {
+        "sha": "3772a582b78c66fadf8a5f1ed965438b6ec4fc56",
+        "message": "Add final thesis control file FIGURE_TABLE_PLAN.tsv"
+      },
+      {
+        "sha": "b614b23c3eb3df8fe76680d1ff7f0c6721076fa1",
+        "message": "Add final thesis control file RUN_GAP_MATRIX.tsv"
+      },
+      {
+        "sha": "31c4a1744d97eda36091708cc00c04c6b57b914c",
+        "message": "Add final thesis control file MASTER_MANUSCRIPT.md"
+      },
+      {
+        "sha": "35f5ea3d66b7d7ca233619da522e58fcd24853f7",
+        "message": "Mark all seven final-thesis chapters as Draft-A"
+      },
+      {
+        "sha": "dcc1c2f99271a358d26fcf516f4a84b3bc115701",
+        "message": "Advance T042 after seven-chapter Draft-A rebuild"
+      },
+      {
+        "sha": "12921d5a03b2d0c1b99c06abf4c3cf54f5906846",
+        "message": "Save seven-chapter Draft-A rebuild snapshot"
+      },
+      {
+        "sha": "bb01a4651eeeec095a98aa88cfb432c9a4601edc",
+        "message": "Sync final-thesis status after all seven chapter drafts"
+      }
+    ],
+    "changed_paths": [
+      "research/wind-tower/manuscript/final-thesis/00_STATUS.md",
+      "research/wind-tower/manuscript/final-thesis/RUN_GAP_MATRIX.tsv",
+      "research/wind-tower/manuscript/final-thesis/assemble/MASTER_MANUSCRIPT.md",
+      "research/wind-tower/manuscript/final-thesis/figures/FIGURE_TABLE_PLAN.tsv",
+      "research/wind-tower/manuscript/final-thesis/snapshots/STAGE01B_20261005_ALL7_DRAFT_A.md",
+      "research/wind-tower/registry/task_registry.tsv"
+    ]
+  },
+  "duplicate_run_check": {
+    "result": "No completed independent R2-target RNA sample solve found in the checked latest snapshot.",
+    "evidence": [
+      {
+        "path": "research/wind-tower/manuscript/final-thesis/RUN_GAP_MATRIX.tsv",
+        "ref": "bb01a4651eeeec095a98aa88cfb432c9a4601edc",
+        "sha256": "d3d1cf7f4d3090109d0217eec0210fdadc028485f946d8bbd9239c192f775976",
+        "selected_evidence": [
+          {
+            "line": 2,
+            "text": "G0\t唯一BASE001\t冻结Abaqus/OpenFAST几何材料RNA坐标版本hash\tT037/T038\tCh2-Ch6\tOPEN"
+          },
+          {
+            "line": 3,
+            "text": "G1\tAbaqus分层V&V\t材料试件+初始平衡+RNA+模态+网格+阻尼+时间步\tG0\tCh2\tOPEN"
+          }
+        ]
+      },
+      {
+        "path": "research/wind-tower/registry/task_registry.tsv",
+        "ref": "bb01a4651eeeec095a98aa88cfb432c9a4601edc",
+        "sha256": "57b46636fe35b95a412d60ed9b912d253ffc688e061f68583bd4accc2ead1c74",
+        "selected_evidence": [
+          {
+            "line": 47,
+            "text": "T038\tP1\t2\tQ01\t按用户逐步审查要求核对Abaqus与OpenFAST的RNA质量质心惯量和公共参考点，形成输入修订方案\texperiments/T038/RESEARCH_CARD.md\taudit-complete/implementation-paused\tG0-G1/D08\t仅本步数值审查与方案；原模型不改，无新求解；D08不因刚体质量等价自动通过；T039用户纠正：第一章为当前唯一写作交付且内容未验收；本任务后续实施暂停，不执行小样或新求解"
+          },
+          {
+            "line": 52,
+            "text": "T042\tP0-P10\tfinal-thesis-rebuild\tQ01-Q05\t按最终论文最高执行规则从R2Z74真实基础重构整篇学位论文；每一步绑定文献/标准/官方文档/RUN/FIG/TAB并阶段化保存到manuscript/final-thesis\tmanuscript/final-thesis/\tin-progress/all-seven-chapters-draft-A-established\tG0-G10\t七章final-thesis正文、证据矩阵、图表计划、RUN缺口矩阵和唯一装配入口已建立；下一阶段按G0→G1→G2/G4→G5→G6→G8/G9逐项把NEED-RUN/HOLD清零，禁止用旧Simpack或历史benchmark填空"
+          }
+        ]
+      },
+      {
+        "path": "research/wind-tower/registry/run_registry.tsv",
+        "ref": "bb01a4651eeeec095a98aa88cfb432c9a4601edc",
+        "sha256": "a00c1922a04a7a440a6bbdffbb55e85cd1641cd756af5f200a38fb3790283c58",
+        "selected_evidence": [
+          {
+            "line": 37,
+            "text": "RUN-T026-036\tT026\tDTU158-T026-RNA-EQUIV-G1\tAbaqus/Standard\t2025\ta5ef13ce762c213c7313088fa2f4836b4c2841f8b1e006e74450b33f290abede\tnot_applicable\tGravity 1s static pseudo-time; 30 modes; two 1kN linear perturbations\tverification-pass\t1424ab4320ab4fed9434c47776739db6022c13e61d94d31bc057b5a4e4f210cd\tSame mass/CG; discrete actual inertia equivalence"
+          },
+          {
+            "line": 38,
+            "text": "RUN-T026-037\tT026\tDTU158-T026-RNA-CONTINUOUS-G1\tAbaqus/Standard\t2025\t8eeee7b1095b84c35334838dc8b85f34e05512fa94050c0892c54c06eccfad4e\tnot_applicable\tGravity 1s static pseudo-time; 30 modes; two 1kN linear perturbations\tdiagnostic-completed\taa9cfbda6d44ed6171d0f98326178eaa7a9fdf9e2d1be7abc99bbcc8149c2cf4\tSame mass/CG; continuous mathematical inertia sensitivity, not calibrated physical RNA"
+          },
+          {
+            "last_nonblank_run": "RUN-T026-038"
+          }
+        ]
+      }
+    ],
+    "distinction": "Existing RUN-T026-036/037 are G1 B31 mass-operator equivalence/continuous-inertia sensitivity, not the proposed R2 target at O. T038 contains audits/scripts/targets and explicitly no new solve.",
+    "limits": "This checks published tree/registries and latest changed paths; unpublished work in unrelated chats is not excluded."
+  },
+  "R2_local_availability": {
+    "status": "No recovered local R2 runtime directory identified; current verified source is GitHub archive members read in memory.",
+    "prior_T037_record": "work/step2-baseline-20261005/openfast-source-decision.md",
+    "historical_inventory_root": "CODEX_WORK/2026-08-30/turbsim/outputs/openfast_formal_damping_36case_R2_20260904/CASES",
+    "historical_rerun_upstream": "C:/Users/tt/Documents/Codex/2026-08-30/openfast/CH3_CDX06_R1_36CASE",
+    "searched_current_roots": [
+      "C:/Users/REME/Documents/Codex",
+      "D:/Codex-research-cache",
+      "D:/Codex-research-public",
+      "D:/Codex-task-work",
+      "D:/MC/cae仿真",
+      "D:/C盘清理归档",
+      "D:/OpenFast"
+    ],
+    "no_new_model_directory_created": true
+  },
+  "independent_algebra_check": {
+    "mass_translation_block_max_abs_kg": 0.0,
+    "coupling_block_max_abs_kgm": 1.6298145055770874e-09,
+    "inertia_block_max_abs_kgm2": 1.4901161193847656e-08,
+    "JG_eigenvalues_kgm2": [
+      94926999.79811174,
+      99000034.17264685,
+      156382476.78602973
+    ],
+    "gravity_acceleration_ABQ_m_s2": [
+      0,
+      -9.81,
+      0
+    ],
+    "gravity_force_N": [
+      0.0,
+      -6638949.781994005,
+      0.0
+    ],
+    "gravity_moment_at_O_Nm": [
+      -5795554.19170493,
+      0.0,
+      3.182748204797177e-09
+    ],
+    "fixed_O_reaction_expected_N_Nm": {
+      "force": [
+        -0.0,
+        6638949.781994005,
+        -0.0
+      ],
+      "moment": [
+        5795554.19170493,
+        -0.0,
+        -3.182748204797177e-09
+      ]
+    },
+    "scope": "Algebra only, not solver verification"
+  },
+  "identified_metadata_error": {
+    "file": "work/step3-rna-20261005/openfast-rna-current.json",
+    "field": "archive_summary.blade_mass_kg",
+    "recorded_value_kg": 2600752.25,
+    "recorded_line": 64,
+    "actual_quantity_at_line64": "Mass Incl. Platform; full-system mass, not single-blade mass",
+    "correct_single_blade_printed_kg": 41732.34,
+    "correct_line": 53,
+    "cause": "extract_openfast_rna.py line 192 uses substring \"    Mass \", subsequently overwritten by \"    Mass Incl. Platform\".",
+    "effect_on_target": "No effect: target mass/CG/J are assembled from 51 midpoint blade masses and component fields; computed target references RNA_mass_kg only for summary residual.",
+    "action_in_this_review": "Reported only; no previous file or model changed."
+  },
+  "conclusion": {
+    "source_hash_identity": "All 7 checked source/member hashes and R2 archive hash match T037/T038. Three local target/property JSON files match current GitHub bytes.",
+    "target_valid_for": "Independent Abaqus numerical representation sample of the specified frozen R2 operator.",
+    "not_valid_for": [
+      "physical full inertia certification",
+      "flexible or rotating aeroelastic equivalence",
+      "historical load-direction mapping validation",
+      "D08 closure",
+      "automatic production M2 replacement"
+    ],
+    "no_solver_run_this_review": true,
+    "no_model_modified_this_review": true,
+    "no_publication_this_review": true
+  }
+}

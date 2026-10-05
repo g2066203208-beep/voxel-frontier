@@ -1,0 +1,83 @@
+{
+  "source_id": "CHENG2024_RNA_PRESTRESS",
+  "registry_id": "REF010",
+  "acquisition_id": "L059",
+  "citation": "Cheng Y., Cao L., Liu J., Wang Y., Zhou X. Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode. Structures 68 (2024) 107235.",
+  "doi": "10.1016/j.istruc.2024.107235",
+  "source_type": "peer-reviewed article; personally inspected local PDF in this audit",
+  "pdf_sha256": "14f05055820226e29793b16cff2144523596b5c7de9aa297f506d3b6c24a6622",
+  "pdf_bytes": 4401973,
+  "pdf_pages": 12,
+  "actual_reading_scope": {
+    "complete_relevant_text_pages": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "visual_pages": [
+      3,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "identity_page": 1,
+    "not_claimed": "No claim of a new all-12-page scientific fulltext audit or of reproducing the paper computations."
+  },
+  "locations": [
+    {
+      "locator": "p.3 §2.1, Fig.2",
+      "method": "Represent nacelle and rotor by rigid points N and R with their own concentrated masses and rotational inertias; retain horizontal eccentricity and the height of point W relative to tower top.",
+      "supports": "Mass, reference position/eccentricity and inertia must be distinguished in RNA dynamics.",
+      "limits": "The theory studies the u/v bending directions; it is not a complete 3D six-DOF mass matrix derivation."
+    },
+    {
+      "locator": "pp.4–5 §2.2(c), Eqs.(13)–(30); p.5 Eqs.(35),(38)",
+      "method": "RNA virtual work separates self-weight, translational inertia, rotational inertia and eccentricity-induced moment; W-point displacement includes tower-top displacement and slope terms; rotational work includes mass-times-eccentricity-squared terms.",
+      "supports": "Eccentric mass needs translational/rotational coupling and moments, beyond total-mass matching.",
+      "limits": "Do not copy signs/axes directly into the current Abaqus axes, or label the current M6 block formula as a Cheng equation."
+    },
+    {
+      "locator": "pp.6–7 §4.1; p.7 Fig.5",
+      "method": "Place reference points at nacelle and rotor centers, apply concentrated masses/inertias at those two points, couple each to the tower-top section; Fig.5 explicitly labels rigid kinematic coupling.",
+      "supports": "Concentrated mass/inertia at offset reference points and rigid kinematic coupling to the supporting tower have a direct published precedent.",
+      "limits": "The main FE has two component reference points and a tower-top section; the paper does not disclose the MASS/ROTARYI keyword deck, coupling data lines, or the current single-CG-to-single-O topology."
+    },
+    {
+      "locator": "p.7 §4.1; p.8 Table3/Fig.6",
+      "method": "Apply prestress in static general, then perform frequency extraction about the resulting state using linear perturbation/Lanczos; compare first three frequencies and mode shapes in both lateral directions against the analytical method.",
+      "supports": "Separate preprocessing/base state from modal comparison and inspect more than one bending mode.",
+      "limits": "FE and analytical models both simplify RNA; this is not validation against flexible rotating aeroelastic RNA or operating loads. Current S1 has no tower or prestress and cannot perform this comparison."
+    },
+    {
+      "locator": "p.7 §5.1; p.9 Fig.7/Table4",
+      "method": "Compare PM, EPM, EPMJ and EDPMJ simplifications; EPMJ is a single eccentric mass with rotational inertia, EDPMJ has separate nacelle/rotor masses and inertias.",
+      "supports": "Current single-CG mass-plus-inertia representation is conceptually closest to EPMJ; mass-only agreement does not establish higher-mode fidelity.",
+      "limits": "The comparison does not demonstrate generic equivalence of every full 3D tensor, validate DTU10MW/R2 inputs, or prescribe a matrix/energy/gravity verification fixture."
+    }
+  ],
+  "keyword_search": {
+    "ROTARYI": false,
+    "keyword_ROTARY_INERTIA": false,
+    "keyword_MASS": false,
+    "MATRIX_GENERATE": false,
+    "6x6": false
+  },
+  "what_is_not_in_the_paper": [
+    "Explicit MASS or ROTARYI keyword identification/data lines",
+    "A published full 6x6 mass matrix or its solver export",
+    "A complete three-axis inertia tensor with three products of inertia",
+    "The current R2 mass, CG, JG or tower-top coordinates",
+    "The current isolated MATRIX/GRAVITY/MOTION jobs",
+    "Numerical fixture time/amplitude/tolerances 1e-9, 1e-6 or 1e-8 m",
+    "A flexible rotating blade/aeroelastic validation establishing D08 closure"
+  ],
+  "current_S1_decision": "Published precedent supports preserving RNA mass, eccentricity, inertia and using rigid reference-point coupling. Single-CG/full-tensor implementation and isolated operator checks must be attributed separately to verified Abaqus definitions, rigid-body mechanics/project derivation, frozen R2 inputs, and the preregistered numerical verification design. Cheng alone does not validate the exact S1 implementation or physical applicability.",
+  "publication_control": "Public form contains paraphrases and locators only, no original PDF, page image, extracted text, local personal paths or manuscript/advisor text. No upload or simulation performed by this reviewer.",
+  "T026_provenance_note": "T026 M11 explicitly attributes the complete M6 operator and its verification to project derivation plus official definitions; M12 cites Cheng only for the prestress/base-state/modal procedure. Historical numerical equivalence is not current S1 validation or D08 closure."
+}

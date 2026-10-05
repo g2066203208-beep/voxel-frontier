@@ -1,0 +1,9 @@
+{
+  "scope": "Postprocessing only; no solver rerun or target/input changes",
+  "failed_extraction_attempts": [
+    {"job": "RNA_R2_GRAVITY", "script": "extract_odb-v1-failed.py", "error": "TypeError: Object of type float32 is not JSON serializable"},
+    {"job": "RNA_R2_MOTION", "script": "extract_odb-v1-failed.py", "error": "TypeError: Object of type float32 is not JSON serializable"}
+  ],
+  "correction": "Convert Abaqus/Numpy field and history scalar values explicitly to built-in float. Serialize fully before opening output to avoid partial JSON.",
+  "launcher_note": "abaqus python wrapper returned exit code 0 despite traceback; successful extraction is checked by parsing the completed JSON, not wrapper status alone."
+}
