@@ -58,7 +58,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
         const geom=new THREE.BufferGeometry();
         geom.setAttribute('position',new THREE.Float32BufferAttribute(g.positions,3));
         geom.setIndex(g.triangles); geom.computeVertexNormals(); geometries.push(geom);
-        const mat=new THREE.MeshStandardMaterial({color,roughness:.72,metalness:g.category==='steel'?.28:.04,side:THREE.DoubleSide,transparent:true,opacity:1});
+        const mat=new THREE.MeshStandardMaterial({color,roughness:.72,metalness:g.category==='steel' ? .28 : .04,side:THREE.DoubleSide,transparent:true,opacity:1});
         materials.push(mat);
         const surface=new THREE.Mesh(geom,mat); surface.userData.visualName=g.name; root.add(surface); pickMeshes.push(surface);
         const wireGeom=new THREE.BufferGeometry();
@@ -82,7 +82,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
       const geom=new THREE.BufferGeometry();
       geom.setAttribute('position',new THREE.Float32BufferAttribute(g.positions,3));
       geom.setIndex(g.triangles); geom.computeVertexNormals(); geometries.push(geom);
-      const mat=new THREE.MeshStandardMaterial({color:sourceColor,roughness:.68,metalness:g.subtype==='nacelle'?.18:.05,side:THREE.DoubleSide,transparent:true,opacity:.82});
+      const mat=new THREE.MeshStandardMaterial({color:sourceColor,roughness:.68,metalness:g.subtype==='nacelle' ? .18 : .05,side:THREE.DoubleSide,transparent:true,opacity:.82});
       materials.push(mat);
       const surface=new THREE.Mesh(geom,mat); surface.userData.visualName=g.name; root.add(surface); pickMeshes.push(surface);
       const wireGeom=new THREE.BufferGeometry();
@@ -179,7 +179,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
       const link=document.createElement('a');link.download='DTU158-T045-Abaqus-FE.png';link.href=renderer!.domElement.toDataURL('image/png');link.click();
     };
 
-    host.querySelector('#model-report')!.innerHTML=`<p><strong>${report.counts.instances}</strong> 个装配实例 · <strong>${report.counts.solidElements.toLocaleString()}</strong> 个实体单元 · <strong>${report.counts.lineElements.toLocaleString()}</strong> 个线单元</p><p>模型高度范围：${report.bounds.min[1].toFixed(3)} ～ ${report.bounds.max[1].toFixed(3)} m；外包尺寸 ${report.dimensions.map((v:number)=>v.toFixed(3)).join(' × ')} m</p><p>元素类型：${report.elementTypes.join(' / ')}</p><details><summary>输入文件与 SHA-256</summary><code>${safe(report.sha256)}</code><p>${safe(report.source)}</p></details>`;
+    host.querySelector('#model-report')!.innerHTML=`<p><strong>T045 当前计算模型：</strong>${report.counts.instances} 个装配实例 · ${report.counts.solidElements.toLocaleString()} 个实体单元 · ${report.counts.lineElements.toLocaleString()} 个线单元</p><p><strong>整机 RNA 展示层：</strong>${sourceRnaReport.counts.instances} 个原始 Abaqus 表面网格实例 · ${sourceRnaReport.counts.nodes.toLocaleString()} 节点 · ${sourceRnaReport.counts.elements.toLocaleString()} 单元</p><p>当前计算塔架高度范围：${report.bounds.min[1].toFixed(3)} ～ ${report.bounds.max[1].toFixed(3)} m；源 RNA 展示范围：${sourceRnaReport.bounds.min[1].toFixed(3)} ～ ${sourceRnaReport.bounds.max[1].toFixed(3)} m</p><p>计算模型元素类型：${report.elementTypes.join(' / ')}</p><details><summary>当前 INP 与 SHA-256</summary><code>${safe(report.sha256)}</code><p>${safe(report.source)}</p></details><details><summary>源 RNA 网格证据</summary><code>${safe(sourceRnaReport.sha256)}</code><p>${safe(sourceRnaReport.source.nodes)}</p><p>${safe(sourceRnaReport.source.elements)}</p></details>`;
     const rna=data.rna;
     host.querySelector('#rna-details')!.innerHTML=rna ? `<p><b>塔顶公共点 O</b><br/>${rna.towerTop?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>RNA 质心 G</b><br/>${rna.rnaCg?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>MASS</b> ${Number(rna.mass).toLocaleString(undefined,{maximumFractionDigits:3})} kg</p><p><b>ROTARYI</b><br/>${rna.rotaryInertia?.map((x:number)=>Number(x).toExponential(5)).join('<br/>') || '—'}</p><p class="model-note">网页中的两个球仅是 O 与 G 的符号标记；真实计算仍由 INP 中 MASS + ROTARYI + 6DOF 偏心耦合承担。页面同时叠加原始 Abaqus RNA 表面网格，以便整机查看，但该 RNA 表面网格不参与当前 T045 求解。</p>` : '<p>未找到 RNA 等效算子。</p>';
   } catch(error) {
