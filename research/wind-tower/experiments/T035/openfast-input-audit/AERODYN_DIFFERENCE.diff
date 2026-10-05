@@ -1,0 +1,49 @@
+--- 7EBAA0BDF25076041A98EE25AE0577F2D02BE61569092965E47BE5F875BBCC6D
++++ E258D2E8FC7664B93F3E6A792C46EC38BEA327859F95C3B200391E9F2BB1A568
+@@ -10,6 +10,7 @@
+ False                  TwrAero     - Calculate tower aerodynamic loads? (flag)
+ False                  FrozenWake  - Assume frozen wake during linearization? (flag) [used only when WakeMod=1 and when linearizing]
+ False                  CavitCheck  - Perform cavitation check? (flag) [AFAeroMod must be 1 when CavitCheck=true]
++False                  Buoyancy     - Land turbine, no buoyancy
+ False                  CompAA      - Flag to compute AeroAcoustics calculation [only used when WakeMod=1 or 2]
+ "unused"  			   AA_InputFile - AeroAcoustics input file [used only when CompAA=true]
+ ======  Environmental Conditions  ===================================================================
+@@ -18,13 +19,6 @@
+ 335.0                  SpdSound    - Speed of sound (m/s)
+ 101325.0               Patm        - Atmospheric pressure (Pa) [used only when CavitCheck=True]
+ 2000.0                 Pvap        - Vapour pressure of fluid (Pa) [used only when CavitCheck=True]
+-False                  Buoyancy     - Land turbine, no buoyancy
+-0.0                    VolHub       - no buoyancy volume
+-0.0                    HubCenBx     - no buoyancy offset
+-0.0                    VolNac       - no buoyancy volume
+-0.0 0.0 0.0            NacCenB      - no buoyancy offset
+-False                  TFinAero     - no tail-fin aerodynamics
+-"unused"               TFinFile     - no tail-fin file
+ ======  Blade-Element/Momentum Theory Options  ====================================================== [unused when WakeMod=0 or 3]
+ 2                      SkewMod     - Type of skewed-wake correction model (switch) {1=uncoupled, 2=Pitt/Peters, 3=coupled} [unused when WakeMod=0 or 3]
+ "default" 		       SkewModFactor - Constant used in Pitt/Peters skewed wake model {or "default" is 15/32*pi} (-) [used only when SkewMod=2; unused when WakeMod=0 or 3]
+@@ -64,6 +58,15 @@
+ "DTU_10MW_AeroDyn15_blade.dat" ADBlFile(1) - Name of file containing distributed aerodynamic properties for Blade #1 (-)
+ "DTU_10MW_AeroDyn15_blade.dat" ADBlFile(2) - Name of file containing distributed aerodynamic properties for Blade #2 (-) [unused if NumBl < 2]
+ "DTU_10MW_AeroDyn15_blade.dat" ADBlFile(3) - Name of file containing distributed aerodynamic properties for Blade #3 (-) [unused if NumBl < 3]
++======  Hub Properties ==============================================================================
++0.0                    VolHub       - Hub volume (m^3)
++0.0                    HubCenBx     - Hub center of buoyancy x offset (m)
++======  Nacelle Properties ==========================================================================
++0.0                    VolNac       - Nacelle volume (m^3)
++0.0 0.0 0.0            NacCenB      - Nacelle center of buoyancy (m)
++======  Tail Fin Aerodynamics =======================================================================
++False                  TFinAero     - no tail-fin aerodynamics
++"unused"               TFinFile     - no tail-fin file
+ ======  Tower Influence and Aerodynamics ============================================================= [used only when TwrPotent/=0, TwrShadow/=0, or TwrAero=True]
+ 11                     NumTwrNds   - Number of tower nodes used in the analysis  (-) [used only when TwrPotent/=0, TwrShadow/=0, or TwrAero=True]
+ TwrElev        TwrDiam        TwrCd         TwrTI (used only with TwrShadow=2)
+@@ -92,7 +95,6 @@
+ "RtAeroPwr"
+ "RtSpeed"
+ "RtTSR"
+-"RtAeroFxg"
+-"RtAeroMxg"
+ END of input file (the word "END" must appear in the first 3 columns of this last OutList line)
+ ---------------------------------------------------------------------------------------
++
