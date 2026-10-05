@@ -36,6 +36,7 @@ jobs:
         run: |
           git lfs pull --include="research/wind-tower/geometry/*.step"
           node scripts/read-model.cjs
+          node scripts/read-abaqus.cjs
           node scripts/sanity-check-reported.mjs
           node scripts/check-material-audit.mjs
 
