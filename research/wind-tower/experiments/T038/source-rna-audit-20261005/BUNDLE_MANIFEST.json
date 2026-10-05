@@ -1,0 +1,91 @@
+{
+  "task": "T038-S3",
+  "scope": "Native source-model read-only audit; no simulation or model changes.",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 12036,
+      "sha256": "ca2f2493c390007715f267be9e96c58890090f33351ebfb13a8274e1cdca17aa"
+    },
+    {
+      "path": "native_source_inventory.py",
+      "bytes": 9818,
+      "sha256": "bc32a7ed01bfa8527c7baeb764d285bf1230742f5eaae5f79a0d1b6e0cd5d89d"
+    },
+    {
+      "path": "run_native_inventory.py",
+      "bytes": 2647,
+      "sha256": "c956e6959444db2c25dbfa07cee09bdd367f852b792b7da6ea977ebf80ec9f29"
+    },
+    {
+      "path": "native-inventory.json",
+      "bytes": 1782060,
+      "sha256": "6e0c5476d6a30e8b5bd7b9c925aaaa3a2e1428ccc4d7e9b383f96b03b45bd3c2"
+    },
+    {
+      "path": "native-launch.json",
+      "bytes": 1837,
+      "sha256": "9807571707292ff5b36388aa1a6cbdbf2197fbbaac934c7388662fe0b66142b9"
+    },
+    {
+      "path": "native-execution.log",
+      "bytes": 146,
+      "sha256": "8ca01b0d6d2806b5d8d1c8e966db21405cb03e86ba700eab50edf7ea6d50f87f"
+    },
+    {
+      "path": "candidate-inventory.md",
+      "bytes": 7509,
+      "sha256": "cd6c7c691629661e6a9dad711b20e8e363c0d222ed482499fc21f8209d8daee3"
+    },
+    {
+      "path": "candidate-inventory.json",
+      "bytes": 22840,
+      "sha256": "25d51b795793cd273aab3ad9e826d40466af22c53496d7db473eb510ae6ce3b1"
+    },
+    {
+      "path": "prior-evidence-review.md",
+      "bytes": 11541,
+      "sha256": "1c71dd5b9a8e6025933fb36ff04325f17929362dd42adeba087307c1bbdc5f5f"
+    },
+    {
+      "path": "prior-evidence-review.json",
+      "bytes": 97930,
+      "sha256": "c52f8ab1621d039c6809fe2debfba917dfed604729d58ec103e15ccf1c1240e6"
+    },
+    {
+      "path": "native-independent-review.md",
+      "bytes": 2318,
+      "sha256": "cbb8299fdd8fc143af15279f7f8f6c17d7758524655f66433292017147bd0ff8"
+    },
+    {
+      "path": "native-independent-review.json",
+      "bytes": 16088,
+      "sha256": "4f704dc250661616daa128c24f135c507d22273edadb4fc058afcdafa23bbd1c"
+    },
+    {
+      "path": "summarize_native_inventory.py",
+      "bytes": 16156,
+      "sha256": "91a7a6f396ddc4ae2c230255d02ba7e459ebe31818a0be4006f4cbb1407e4921"
+    },
+    {
+      "path": "compact-summary.json",
+      "bytes": 81964,
+      "sha256": "c472179d749db83d0b19b682443bfaac3ed483d370ce6b913a87cae362b23c86"
+    },
+    {
+      "path": "model-summary.tsv",
+      "bytes": 1584,
+      "sha256": "01e47da7cf2feeecd47325241b37b0b1b2b50423061b475fdf581515ac9c958d"
+    },
+    {
+      "path": "publish_source_audit.py",
+      "bytes": 11556,
+      "sha256": "1c012586999c82b2557fa527fe07c48353ea351688dd76130518956c3a62052c"
+    }
+  ],
+  "excluded": [
+    "BUNDLE_MANIFEST.json",
+    "publication-pending.json",
+    "published.json"
+  ]
+}

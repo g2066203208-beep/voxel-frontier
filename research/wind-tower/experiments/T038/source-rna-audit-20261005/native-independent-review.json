@@ -1,0 +1,576 @@
+{
+  "scope": "Independent parse and set/count checks on newly generated native-inventory.json; no CAE or solver launched.",
+  "inventory_sha256": "6e0c5476d6a30e8b5bd7b9c925aaaa3a2e1428ccc4d7e9b383f96b03b45bd3c2",
+  "sources": [
+    {
+      "source": "D:\\MC\\SIMPACK_SITE_ONLY.cae",
+      "model_names": [
+        "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+        "RNA_REAL_EXPLICIT"
+      ],
+      "all_hash_records_equal": true,
+      "sha256": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+      "status": "complete"
+    },
+    {
+      "source": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.cae",
+      "model_names": [
+        "DTU158_MODAL_CHECK",
+        "DTU158_SITE_S04_INTERFACE_DYNAMIC"
+      ],
+      "all_hash_records_equal": true,
+      "sha256": "2eebd6a8db0a46f231c10e9c72eca46de2a14117cd6a85d7603321fd139a1922",
+      "status": "complete"
+    },
+    {
+      "source": "D:\\MC\\DTU158_Hoop_Repair_20260909\\DTU158_Hoop_Repair.cae",
+      "model_names": [
+        "DTU158_SITE_S04_INTERFACE_DYNAMIC"
+      ],
+      "all_hash_records_equal": true,
+      "sha256": "10021f316bbd68fdc8aa2bdc2594d659a1a7eff93137582b94ed0b1b0ec7bf45",
+      "status": "complete"
+    }
+  ],
+  "rhoop_per_model": [
+    {
+      "source": "D:\\MC\\SIMPACK_SITE_ONLY.cae",
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "parts": 31,
+      "T3D2_elements": 32712,
+      "part_elements": 32712,
+      "instances": 31,
+      "all_instances_suppressed": true,
+      "active_instances": 0,
+      "instance_elements": 0,
+      "part_element_counts": {
+        "RHOOP_01": 1728,
+        "RHOOP_02": 1728,
+        "RHOOP_03": 1728,
+        "RHOOP_04": 1728,
+        "RHOOP_05": 1728,
+        "RHOOP_06": 1704,
+        "RHOOP_07": 1296,
+        "RHOOP_08": 1296,
+        "RHOOP_09": 1008,
+        "RHOOP_10": 864,
+        "RHOOP_11": 864,
+        "RHOOP_12": 864,
+        "RHOOP_13": 864,
+        "RHOOP_14": 864,
+        "RHOOP_15": 864,
+        "RHOOP_16": 864,
+        "RHOOP_17": 864,
+        "RHOOP_18": 864,
+        "RHOOP_19": 864,
+        "RHOOP_20": 864,
+        "RHOOP_21": 864,
+        "RHOOP_22": 864,
+        "RHOOP_23": 864,
+        "RHOOP_24": 864,
+        "RHOOP_25": 864,
+        "RHOOP_26": 864,
+        "RHOOP_27": 864,
+        "RHOOP_28": 864,
+        "RHOOP_29": 864,
+        "RHOOP_30": 864,
+        "RHOOP_31": 624
+      }
+    },
+    {
+      "source": "D:\\MC\\SIMPACK_SITE_ONLY.cae",
+      "model": "RNA_REAL_EXPLICIT",
+      "parts": 31,
+      "T3D2_elements": 32712,
+      "part_elements": 32712,
+      "instances": 31,
+      "all_instances_suppressed": true,
+      "active_instances": 0,
+      "instance_elements": 0,
+      "part_element_counts": {
+        "RHOOP_01": 1728,
+        "RHOOP_02": 1728,
+        "RHOOP_03": 1728,
+        "RHOOP_04": 1728,
+        "RHOOP_05": 1728,
+        "RHOOP_06": 1704,
+        "RHOOP_07": 1296,
+        "RHOOP_08": 1296,
+        "RHOOP_09": 1008,
+        "RHOOP_10": 864,
+        "RHOOP_11": 864,
+        "RHOOP_12": 864,
+        "RHOOP_13": 864,
+        "RHOOP_14": 864,
+        "RHOOP_15": 864,
+        "RHOOP_16": 864,
+        "RHOOP_17": 864,
+        "RHOOP_18": 864,
+        "RHOOP_19": 864,
+        "RHOOP_20": 864,
+        "RHOOP_21": 864,
+        "RHOOP_22": 864,
+        "RHOOP_23": 864,
+        "RHOOP_24": 864,
+        "RHOOP_25": 864,
+        "RHOOP_26": 864,
+        "RHOOP_27": 864,
+        "RHOOP_28": 864,
+        "RHOOP_29": 864,
+        "RHOOP_30": 864,
+        "RHOOP_31": 624
+      }
+    },
+    {
+      "source": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.cae",
+      "model": "DTU158_MODAL_CHECK",
+      "parts": 31,
+      "T3D2_elements": 32712,
+      "part_elements": 32712,
+      "instances": 31,
+      "all_instances_suppressed": true,
+      "active_instances": 0,
+      "instance_elements": 0,
+      "part_element_counts": {
+        "RHOOP_01": 1728,
+        "RHOOP_02": 1728,
+        "RHOOP_03": 1728,
+        "RHOOP_04": 1728,
+        "RHOOP_05": 1728,
+        "RHOOP_06": 1704,
+        "RHOOP_07": 1296,
+        "RHOOP_08": 1296,
+        "RHOOP_09": 1008,
+        "RHOOP_10": 864,
+        "RHOOP_11": 864,
+        "RHOOP_12": 864,
+        "RHOOP_13": 864,
+        "RHOOP_14": 864,
+        "RHOOP_15": 864,
+        "RHOOP_16": 864,
+        "RHOOP_17": 864,
+        "RHOOP_18": 864,
+        "RHOOP_19": 864,
+        "RHOOP_20": 864,
+        "RHOOP_21": 864,
+        "RHOOP_22": 864,
+        "RHOOP_23": 864,
+        "RHOOP_24": 864,
+        "RHOOP_25": 864,
+        "RHOOP_26": 864,
+        "RHOOP_27": 864,
+        "RHOOP_28": 864,
+        "RHOOP_29": 864,
+        "RHOOP_30": 864,
+        "RHOOP_31": 624
+      }
+    },
+    {
+      "source": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.cae",
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "parts": 31,
+      "T3D2_elements": 32712,
+      "part_elements": 32712,
+      "instances": 31,
+      "all_instances_suppressed": true,
+      "active_instances": 0,
+      "instance_elements": 0,
+      "part_element_counts": {
+        "RHOOP_01": 1728,
+        "RHOOP_02": 1728,
+        "RHOOP_03": 1728,
+        "RHOOP_04": 1728,
+        "RHOOP_05": 1728,
+        "RHOOP_06": 1704,
+        "RHOOP_07": 1296,
+        "RHOOP_08": 1296,
+        "RHOOP_09": 1008,
+        "RHOOP_10": 864,
+        "RHOOP_11": 864,
+        "RHOOP_12": 864,
+        "RHOOP_13": 864,
+        "RHOOP_14": 864,
+        "RHOOP_15": 864,
+        "RHOOP_16": 864,
+        "RHOOP_17": 864,
+        "RHOOP_18": 864,
+        "RHOOP_19": 864,
+        "RHOOP_20": 864,
+        "RHOOP_21": 864,
+        "RHOOP_22": 864,
+        "RHOOP_23": 864,
+        "RHOOP_24": 864,
+        "RHOOP_25": 864,
+        "RHOOP_26": 864,
+        "RHOOP_27": 864,
+        "RHOOP_28": 864,
+        "RHOOP_29": 864,
+        "RHOOP_30": 864,
+        "RHOOP_31": 624
+      }
+    },
+    {
+      "source": "D:\\MC\\DTU158_Hoop_Repair_20260909\\DTU158_Hoop_Repair.cae",
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "parts": 31,
+      "T3D2_elements": 32712,
+      "part_elements": 32712,
+      "instances": 31,
+      "all_instances_suppressed": true,
+      "active_instances": 0,
+      "instance_elements": 0,
+      "part_element_counts": {
+        "RHOOP_01": 1728,
+        "RHOOP_02": 1728,
+        "RHOOP_03": 1728,
+        "RHOOP_04": 1728,
+        "RHOOP_05": 1728,
+        "RHOOP_06": 1704,
+        "RHOOP_07": 1296,
+        "RHOOP_08": 1296,
+        "RHOOP_09": 1008,
+        "RHOOP_10": 864,
+        "RHOOP_11": 864,
+        "RHOOP_12": 864,
+        "RHOOP_13": 864,
+        "RHOOP_14": 864,
+        "RHOOP_15": 864,
+        "RHOOP_16": 864,
+        "RHOOP_17": 864,
+        "RHOOP_18": 864,
+        "RHOOP_19": 864,
+        "RHOOP_20": 864,
+        "RHOOP_21": 864,
+        "RHOOP_22": 864,
+        "RHOOP_23": 864,
+        "RHOOP_24": 864,
+        "RHOOP_25": 864,
+        "RHOOP_26": 864,
+        "RHOOP_27": 864,
+        "RHOOP_28": 864,
+        "RHOOP_29": 864,
+        "RHOOP_30": 864,
+        "RHOOP_31": 624
+      }
+    }
+  ],
+  "simpack_outer_section_checks": [
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+      "element_types": {
+        "S3": 1761
+      },
+      "total_elements": 1761,
+      "active_section_classes": [
+        "BeamSection"
+      ],
+      "assigned_unique_elements": 1761,
+      "covers_all_numbered_elements": true,
+      "composite_layups": 0,
+      "material_orientations": 0
+    },
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "part": "DTU_NACELLE_120DEG_OFFICIAL",
+      "element_types": {
+        "S3": 17,
+        "S4R": 303
+      },
+      "total_elements": 320,
+      "active_section_classes": [
+        "BeamSection"
+      ],
+      "assigned_unique_elements": 320,
+      "covers_all_numbered_elements": true,
+      "composite_layups": 0,
+      "material_orientations": 0
+    },
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "part": "DTU_SPINNER_120DEG_OFFICIAL",
+      "element_types": {
+        "S3": 10,
+        "S4R": 312
+      },
+      "total_elements": 322,
+      "active_section_classes": [
+        "BeamSection"
+      ],
+      "assigned_unique_elements": 322,
+      "covers_all_numbered_elements": true,
+      "composite_layups": 0,
+      "material_orientations": 0
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "part": "DTU_BLADE_SMOOTH_OFFICIAL",
+      "element_types": {
+        "S3": 1761
+      },
+      "total_elements": 1761,
+      "active_section_classes": [
+        "BeamSection"
+      ],
+      "assigned_unique_elements": 1761,
+      "covers_all_numbered_elements": true,
+      "composite_layups": 0,
+      "material_orientations": 0
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "part": "DTU_NACELLE_120DEG_OFFICIAL",
+      "element_types": {
+        "S3": 17,
+        "S4R": 303
+      },
+      "total_elements": 320,
+      "active_section_classes": [
+        "BeamSection"
+      ],
+      "assigned_unique_elements": 320,
+      "covers_all_numbered_elements": true,
+      "composite_layups": 0,
+      "material_orientations": 0
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "part": "DTU_SPINNER_120DEG_OFFICIAL",
+      "element_types": {
+        "S3": 10,
+        "S4R": 312
+      },
+      "total_elements": 322,
+      "active_section_classes": [
+        "BeamSection"
+      ],
+      "assigned_unique_elements": 322,
+      "covers_all_numbered_elements": true,
+      "composite_layups": 0,
+      "material_orientations": 0
+    }
+  ],
+  "simpack_blade_coupling_checks": [
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "instance": "DTU_BLADE_SMOOTH_1-1",
+      "nodes": 886,
+      "coupling_selected_nodes": 886,
+      "exact_labels_1_through_886": true,
+      "six_dof_kinematic_active": true
+    },
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "instance": "DTU_BLADE_SMOOTH_2-1",
+      "nodes": 886,
+      "coupling_selected_nodes": 886,
+      "exact_labels_1_through_886": true,
+      "six_dof_kinematic_active": true
+    },
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "instance": "DTU_BLADE_SMOOTH_3-1",
+      "nodes": 886,
+      "coupling_selected_nodes": 886,
+      "exact_labels_1_through_886": true,
+      "six_dof_kinematic_active": true
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "instance": "DTU_BLADE_SMOOTH_1-1",
+      "nodes": 886,
+      "coupling_selected_nodes": 886,
+      "exact_labels_1_through_886": true,
+      "six_dof_kinematic_active": true
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "instance": "DTU_BLADE_SMOOTH_2-1",
+      "nodes": 886,
+      "coupling_selected_nodes": 886,
+      "exact_labels_1_through_886": true,
+      "six_dof_kinematic_active": true
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "instance": "DTU_BLADE_SMOOTH_3-1",
+      "nodes": 886,
+      "coupling_selected_nodes": 886,
+      "exact_labels_1_through_886": true,
+      "six_dof_kinematic_active": true
+    }
+  ],
+  "simpack_nac_control_point_checks": [
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "coupling": "CPL_NAC_DTU_NACELLE_SEG_1_1",
+      "set": "SET_TOWER_TOP",
+      "node_count": 48,
+      "node_count_by_labels": 48,
+      "reference_points": [],
+      "faces": [
+        {
+          "index": 1,
+          "instance": "SSEG_04-1"
+        }
+      ]
+    },
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "coupling": "CPL_NAC_DTU_NACELLE_SEG_2_1",
+      "set": "SET_TOWER_TOP",
+      "node_count": 48,
+      "node_count_by_labels": 48,
+      "reference_points": [],
+      "faces": [
+        {
+          "index": 1,
+          "instance": "SSEG_04-1"
+        }
+      ]
+    },
+    {
+      "model": "DTU158_SITE_S04_INTERFACE_DYNAMIC",
+      "coupling": "CPL_NAC_DTU_NACELLE_SEG_3_1",
+      "set": "SET_TOWER_TOP",
+      "node_count": 48,
+      "node_count_by_labels": 48,
+      "reference_points": [],
+      "faces": [
+        {
+          "index": 1,
+          "instance": "SSEG_04-1"
+        }
+      ]
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "coupling": "CPL_NAC_DTU_NACELLE_SEG_1_1",
+      "set": "SET_TOWER_TOP",
+      "node_count": 48,
+      "node_count_by_labels": 48,
+      "reference_points": [],
+      "faces": [
+        {
+          "index": 1,
+          "instance": "SSEG_04-1"
+        }
+      ]
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "coupling": "CPL_NAC_DTU_NACELLE_SEG_2_1",
+      "set": "SET_TOWER_TOP",
+      "node_count": 48,
+      "node_count_by_labels": 48,
+      "reference_points": [],
+      "faces": [
+        {
+          "index": 1,
+          "instance": "SSEG_04-1"
+        }
+      ]
+    },
+    {
+      "model": "RNA_REAL_EXPLICIT",
+      "coupling": "CPL_NAC_DTU_NACELLE_SEG_3_1",
+      "set": "SET_TOWER_TOP",
+      "node_count": 48,
+      "node_count_by_labels": 48,
+      "reference_points": [],
+      "faces": [
+        {
+          "index": 1,
+          "instance": "SSEG_04-1"
+        }
+      ]
+    }
+  ],
+  "explicit_rotation": {
+    "step": {
+      "class": "ExplicitDynamicsStep",
+      "properties": {
+        "previous": "Initial",
+        "timePeriod": 1.0,
+        "nlgeom": 1,
+        "perturbation": false,
+        "suppressed": false
+      }
+    },
+    "bc": {
+      "class": "VelocityBC",
+      "properties": {
+        "suppressed": false,
+        "localCsys": null
+      },
+      "region": {
+        "raw": [
+          "SET_RNA_RP",
+          "Assembly",
+          1,
+          1,
+          0
+        ],
+        "resolved": true,
+        "resolved_repository": "sets",
+        "faces": [],
+        "element_labels": [],
+        "element_count": 0,
+        "node_labels_by_instance": {},
+        "node_count": 0,
+        "reference_points": [
+          [
+            0.0,
+            160.0,
+            0.0
+          ]
+        ]
+      },
+      "step_states": {
+        "Initial": {
+          "status": "NOT_YET_ACTIVE"
+        },
+        "RNA_ROTATION_EXPLICIT": {
+          "status": "CREATED",
+          "v1": 0.0,
+          "v2": 0.0,
+          "v3": 0.0,
+          "vr1": 0.0,
+          "vr2": 0.0,
+          "vr3": 1.0
+        }
+      }
+    },
+    "top_control_point": {
+      "raw": [
+        "_PickedSet230",
+        "Assembly",
+        1,
+        1,
+        1
+      ],
+      "resolved": true,
+      "resolved_repository": "sets",
+      "faces": [],
+      "element_labels": [],
+      "element_count": 0,
+      "node_labels_by_instance": {},
+      "node_count": 0,
+      "reference_points": [
+        [
+          0.0,
+          160.0,
+          0.0
+        ]
+      ]
+    }
+  },
+  "inference_limits": [
+    "Each of five models contains 32712 RHOOP T3D2 elements in 31 Parts; this is not a total of 32712 summed across five models. All corresponding instances are suppressed.",
+    "Original RHOOP Parts exist and are meshed; current M2 has no active RHOOP, which is a separate statement. Do not say the user never built hoop reinforcement.",
+    "Different top and rotation set names with equal coordinates do not establish RP identity. Check native identity/free-body before claiming shared kinematics or duplicate constraints.",
+    "Presence of ExplicitDynamicsStep and rotational VelocityBC proves configuration existence, not solver completion or validated deformable rotor response.",
+    "Coverage and zero layup/orientation results apply to the three RNA outer Parts in the two SIMPACK models; do not extend to every possible user model.",
+    "Reported unsupported attribute query errors on unrelated object APIs are not themselves structural model failures."
+  ]
+}

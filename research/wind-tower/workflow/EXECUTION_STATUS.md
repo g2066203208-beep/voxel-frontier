@@ -1,3 +1,10 @@
+<!-- T038-S3 SOURCE AUDIT STATUS START -->
+## T038-S3 用户源 CAE 原生核对（2026-10-05）
+
+**用户已有详细 RNA 外形网格、RNA_REAL_EXPLICIT 显式旋转分支及环筋部件。** 本次实际只读 3 份源 CAE、5 个模型，源与副本前后哈希一致。SIMPACK 两模型各有 4641 节点/7209 壳单元；发现外形壳网格被赋梁截面、无复合铺层及整叶片六自由度运动学耦合。五个模型各有 31 个环筋 Part、32712 个 T3D2，但对应实例全部被抑制。不能用 M2 简化分支否认用户原有资产。见[逐项证据与限制](../experiments/T038/source-rna-audit-20261005/README.md)。此次是原生读取，不是仿真；未改模型、未提交新 Job，修正尚未启动，D08 和疲劳适用性未闭合。
+
+<!-- T038-S3 SOURCE AUDIT STATUS END -->
+
 <!-- T038-S2 MODEL DISCLOSURE START -->
 ## T038-S2 现用模型逐项公开（2026-10-05）
 

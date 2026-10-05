@@ -1,0 +1,44 @@
+{
+  "started_utc": "2026-10-05T09:35:09.399724+00:00",
+  "command": [
+    "cmd.exe",
+    "/d",
+    "/c",
+    "D:/Abaqus/Commands/abaqus.bat",
+    "cae",
+    "noGUI=D:\\Codex-research-native\\source-rna-audit-20261005\\20261005_173507\\native_source_inventory.py",
+    "--",
+    "D:\\Codex-research-native\\source-rna-audit-20261005\\20261005_173507\\config.json"
+  ],
+  "run_directory": "D:\\Codex-research-native\\source-rna-audit-20261005\\20261005_173507",
+  "config": {
+    "output_directory": "D:\\Codex-research-native\\source-rna-audit-20261005\\20261005_173507",
+    "sources": [
+      {
+        "source": "D:\\MC\\SIMPACK_SITE_ONLY.cae",
+        "copy": "D:\\Codex-research-native\\source-rna-audit-20261005\\20261005_173507\\source_0.cae",
+        "sha256": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+        "bytes": 111546368
+      },
+      {
+        "source": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.cae",
+        "copy": "D:\\Codex-research-native\\source-rna-audit-20261005\\20261005_173507\\source_1.cae",
+        "sha256": "2eebd6a8db0a46f231c10e9c72eca46de2a14117cd6a85d7603321fd139a1922",
+        "bytes": 103809024
+      },
+      {
+        "source": "D:\\MC\\DTU158_Hoop_Repair_20260909\\DTU158_Hoop_Repair.cae",
+        "copy": "D:\\Codex-research-native\\source-rna-audit-20261005\\20261005_173507\\source_2.cae",
+        "sha256": "10021f316bbd68fdc8aa2bdc2594d659a1a7eff93137582b94ed0b1b0ec7bf45",
+        "bytes": 71303168
+      }
+    ]
+  },
+  "solver_submitted": false,
+  "launcher_pid": 24920,
+  "return_code": 0,
+  "wall_seconds": 193.84109570000146,
+  "finished_utc": "2026-10-05T09:38:23.241494+00:00",
+  "report_status": "complete",
+  "report_sha256": "6e0c5476d6a30e8b5bd7b9c925aaaa3a2e1428ccc4d7e9b383f96b03b45bd3c2"
+}

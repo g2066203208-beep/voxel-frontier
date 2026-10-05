@@ -1,0 +1,448 @@
+{
+  "schema": "source-rna-candidate-inventory-v1",
+  "date": "2026-10-05",
+  "scope": "Filename-first targeted read-only inventory under D:/MC and D:/Codex-research-native, plus the current/previous workspace's known model inventories and archive indices. No CAE opened, no solver, no source edit, no upload. Only candidate-inventory.md/.json authored.",
+  "direct_answer": "Yes: there is positive evidence of a previously created user RNA geometry/mesh and explicit rotation branch (RNA_REAL_EXPLICIT), beyond the B31 reduced representation currently used in M2. There is also an actual detailed official composite blade INP source chain. Whether the user's detailed branch has physically consistent sections/constraints and completed rotation solve requires actual source-model checks; it cannot be denied from the M2 file.",
+  "cae_candidates": [
+    {
+      "path": "D:\\MC\\DTU158_MODAL_20260909_103944\\DTU158_MODAL_CHECK.cae",
+      "bytes": 103809024,
+      "mtime_utc": "2026-09-09T02:41:34.475893+00:00",
+      "sha256_now": "2eebd6a8db0a46f231c10e9c72eca46de2a14117cd6a85d7603321fd139a1922",
+      "origin": "pre-existing-user-local-source",
+      "mtime_Asia_Shanghai": "2026-09-09T10:41:34.475+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 2,
+      "models_to_read": [
+        "DTU158_MODAL_CHECK",
+        "DTU158_SITE_S04_INTERFACE_DYNAMIC if present"
+      ],
+      "identity_evidence": "Current hash equals previous inventory. Actual JNL15–25 creates DTU158_MODAL_CHECK by copying DTU158_SITE_S04_INTERFACE_DYNAMIC and suppressing wind step; full Mdb model inventory not opened in this task.",
+      "next_action": "Enumerate actual Mdb models and RNA variants; compare source state with SIMPACK, not just exported MODAL INP."
+    },
+    {
+      "path": "D:\\MC\\SIMPACK_SITE_ONLY.cae",
+      "bytes": 111546368,
+      "mtime_utc": "2026-10-03T15:40:49.458345+00:00",
+      "sha256_now": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+      "origin": "pre-existing-user-local-source",
+      "mtime_Asia_Shanghai": "2026-10-03T23:40:49.458+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 1,
+      "models_to_read": [
+        "RNA_REAL_EXPLICIT",
+        "DTU158_SITE_S04_INTERFACE_DYNAMIC"
+      ],
+      "identity_evidence": "Current hash matches old source audit. Actual JNL lines433–434 creates RNA_REAL_EXPLICIT; lines463–468 contain 1 s explicit step and vr3=1. Existing same-source mesh export is rehashed below.",
+      "next_action": "Read all model names and inspect both models' RNA Parts, element/section assignments, active instances, kinematic constraints, reference points, rotations and jobs from source-protected copy."
+    },
+    {
+      "path": "D:\\MC\\SHOWTIME185_V167_MAINLEG_CALIBRATED_VALIDATED.cae",
+      "bytes": 606576640,
+      "mtime_utc": "2026-09-02T07:29:00.799464+00:00",
+      "inspection": "metadata only; content not inspected",
+      "origin": "pre-existing-user-local-source",
+      "mtime_Asia_Shanghai": "2026-09-02T15:29:00.799+08:00",
+      "hash_scope": "not rehashed; metadata only",
+      "priority": 5,
+      "sha256_previously_recorded": "fbacc495eaecd8c435a1be6229df510c167735ebd4953f45a364605215281900",
+      "models_to_read": "not inspected",
+      "identity_evidence": "Filename suggests a separate185m branch and old inventory isolates it; only metadata checked here, so current RNA content not ruled out.",
+      "next_action": "Lower priority; avoid unrelated content unless source mapping makes it relevant."
+    },
+    {
+      "path": "D:\\MC\\DTU158_Hoop_Repair_20260909\\DTU158_Hoop_Repair.cae",
+      "bytes": 71303168,
+      "mtime_utc": "2026-09-08T16:11:53.194544+00:00",
+      "sha256_now": "10021f316bbd68fdc8aa2bdc2594d659a1a7eff93137582b94ed0b1b0ec7bf45",
+      "origin": "pre-existing-user-local-source",
+      "mtime_Asia_Shanghai": "2026-09-09T00:11:53.194+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 3,
+      "models_to_read": "unknown pending actual Mdb enumeration",
+      "identity_evidence": "Current hash equals previous inventory. Journal is85bytes with save comment only; filename cannot establish its model contents.",
+      "next_action": "Enumerate actual models/Parts; preserve potential alternative RNA; do not infer absence from file name."
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\cae_audit_20261004_193313_148504\\DTU158_SOURCE_COPY.cae",
+      "bytes": 111546368,
+      "mtime_utc": "2026-10-04T11:35:28.385817+00:00",
+      "sha256_now": "5f987340bfe1885b32ab7f4ebc3e0ad2287ad9b5ddf6e6bb78a82046c60a5f9b",
+      "origin": "T026-derived-copy-or-recovery",
+      "mtime_Asia_Shanghai": "2026-10-04T19:35:28.385+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 4,
+      "next_action": "Use for comparison/recovery provenance, not as evidence of a newer independently authored user model."
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194626_453017\\SOURCE_COPY.cae",
+      "bytes": 111546368,
+      "mtime_utc": "2026-10-04T11:46:30.887480+00:00",
+      "sha256_now": "6e6e7cb4099c4d94d1772ffcbb08022d039bce068a4ff3058332985a26789853",
+      "origin": "T026-derived-copy-or-recovery",
+      "mtime_Asia_Shanghai": "2026-10-04T19:46:30.887+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 4,
+      "next_action": "Use for comparison/recovery provenance, not as evidence of a newer independently authored user model."
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\cae_audit_20261004_193900_105064\\DTU158_SOURCE_COPY.cae",
+      "bytes": 111546368,
+      "mtime_utc": "2026-10-03T15:40:49.458345+00:00",
+      "sha256_now": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+      "origin": "T026-derived-copy-or-recovery",
+      "mtime_Asia_Shanghai": "2026-10-03T23:40:49.458+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 4,
+      "next_action": "Use for comparison/recovery provenance, not as evidence of a newer independently authored user model."
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\tower_parts_20261004_200529_434860\\RECOVERY_SOURCE_COPY.cae",
+      "bytes": 27205632,
+      "mtime_utc": "2026-10-04T12:05:52.645577+00:00",
+      "sha256_now": "021e1d697ab1ab87167b9cd46ca9e459c926b2896971c18899b4967b923e9286",
+      "origin": "T026-derived-copy-or-recovery",
+      "mtime_Asia_Shanghai": "2026-10-04T20:05:52.645+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 4,
+      "next_action": "Use for comparison/recovery provenance, not as evidence of a newer independently authored user model."
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\tower_parts_20261004_200046_796566\\RECOVERY_SOURCE_COPY.cae",
+      "bytes": 27205632,
+      "mtime_utc": "2026-10-04T12:00:53.617749+00:00",
+      "sha256_now": "021e1d697ab1ab87167b9cd46ca9e459c926b2896971c18899b4967b923e9286",
+      "origin": "T026-derived-copy-or-recovery",
+      "mtime_Asia_Shanghai": "2026-10-04T20:00:53.617+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 4,
+      "next_action": "Use for comparison/recovery provenance, not as evidence of a newer independently authored user model."
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\T026_RECOVERED_RNA_CSEG01_PENDING.cae",
+      "bytes": 27205632,
+      "mtime_utc": "2026-10-04T11:51:14.551274+00:00",
+      "sha256_now": "451b72a489c0543405ab84f53c81bc17577940713927be5748e7aa1458799eab",
+      "origin": "T026-derived-copy-or-recovery",
+      "mtime_Asia_Shanghai": "2026-10-04T19:51:14.551+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 4,
+      "next_action": "Use for comparison/recovery provenance, not as evidence of a newer independently authored user model."
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-cae-probe\\candidate_20261004_194953_219631\\SOURCE_COPY.cae",
+      "bytes": 111546368,
+      "mtime_utc": "2026-10-04T11:49:59.101585+00:00",
+      "sha256_now": "6e6e7cb4099c4d94d1772ffcbb08022d039bce068a4ff3058332985a26789853",
+      "origin": "T026-derived-copy-or-recovery",
+      "mtime_Asia_Shanghai": "2026-10-04T19:49:59.101+08:00",
+      "hash_scope": "actual bytes rehashed this inventory",
+      "priority": 4,
+      "next_action": "Use for comparison/recovery provenance, not as evidence of a newer independently authored user model."
+    }
+  ],
+  "official_cache": {
+    "repository": "https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt",
+    "commit": "3e1d7a82db7633807f72156b3232b773ac55dee7",
+    "files": [
+      {
+        "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\README.txt",
+        "exists": true,
+        "recorded_sha256": "6c5248ecd80f4cbe52ae78da80fe3f665fccda41267afa3987271c91227b3417",
+        "repository_path": "structural_models/ABAQUS/README.txt",
+        "bytes": 1202,
+        "mtime_utc": "2026-10-04T14:20:11.183031+00:00",
+        "sha256_now": "6c5248ecd80f4cbe52ae78da80fe3f665fccda41267afa3987271c91227b3417",
+        "matches_record": true
+      },
+      {
+        "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\cross_sections.inp",
+        "exists": true,
+        "recorded_sha256": "a13ec34aa4af4f28aa8b8572b32417f3c45e2de1ca115cf1e4284a5b207b6b13",
+        "repository_path": "structural_models/ABAQUS/cross_sections.inp",
+        "bytes": 301687,
+        "mtime_utc": "2026-10-04T14:20:13.204763+00:00",
+        "sha256_now": "a13ec34aa4af4f28aa8b8572b32417f3c45e2de1ca115cf1e4284a5b207b6b13",
+        "matches_record": true,
+        "include_references": [],
+        "element_type_headers": [],
+        "composite_shell_section_count": 0,
+        "material_count": 0
+      },
+      {
+        "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_layup.inp",
+        "exists": true,
+        "recorded_sha256": "ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7",
+        "repository_path": "structural_models/ABAQUS/refblade_layup.inp",
+        "bytes": 286534,
+        "mtime_utc": "2026-10-04T14:20:13.104017+00:00",
+        "sha256_now": "ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7",
+        "matches_record": true,
+        "include_references": [],
+        "element_type_headers": [],
+        "composite_shell_section_count": 1078,
+        "material_count": 0
+      },
+      {
+        "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_master.inp",
+        "exists": true,
+        "recorded_sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050",
+        "repository_path": "structural_models/ABAQUS/refblade_master.inp",
+        "bytes": 773,
+        "mtime_utc": "2026-10-04T14:20:11.408410+00:00",
+        "sha256_now": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050",
+        "matches_record": true,
+        "include_references": [
+          "refblade_mesh.inp",
+          "refblade_materials.inp",
+          "refblade_layup.inp",
+          "refblade_te_glue.inp"
+        ],
+        "element_type_headers": [],
+        "composite_shell_section_count": 0,
+        "material_count": 0
+      },
+      {
+        "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_materials.inp",
+        "exists": true,
+        "recorded_sha256": "6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6",
+        "repository_path": "structural_models/ABAQUS/refblade_materials.inp",
+        "bytes": 947,
+        "mtime_utc": "2026-10-04T14:20:12.141337+00:00",
+        "sha256_now": "6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6",
+        "matches_record": true,
+        "include_references": [],
+        "element_type_headers": [],
+        "composite_shell_section_count": 0,
+        "material_count": 5
+      },
+      {
+        "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_mesh.inp",
+        "exists": true,
+        "recorded_sha256": "0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4",
+        "repository_path": "structural_models/ABAQUS/refblade_mesh.inp",
+        "bytes": 12547783,
+        "mtime_utc": "2026-10-04T14:20:30.667514+00:00",
+        "sha256_now": "0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4",
+        "matches_record": true,
+        "include_references": [],
+        "element_type_headers": [
+          "S8R"
+        ],
+        "composite_shell_section_count": 0,
+        "material_count": 0
+      },
+      {
+        "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_te_glue.inp",
+        "exists": true,
+        "recorded_sha256": "e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a",
+        "repository_path": "structural_models/ABAQUS/refblade_te_glue.inp",
+        "bytes": 216674,
+        "mtime_utc": "2026-10-04T14:20:14.882386+00:00",
+        "sha256_now": "e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a",
+        "matches_record": true,
+        "include_references": [],
+        "element_type_headers": [
+          "C3D20"
+        ],
+        "composite_shell_section_count": 0,
+        "material_count": 0
+      }
+    ]
+  },
+  "journals": [
+    {
+      "path": "D:/MC/SIMPACK_SITE_ONLY.jnl",
+      "bytes": 29930,
+      "mtime_utc": "2026-09-13T12:11:36.959236+00:00",
+      "sha256_now": "a49dbb68c424c10bb2956b9b2849ca928829affae3396706af1b412606f71cec"
+    },
+    {
+      "path": "D:/MC/DTU158_MODAL_20260909_103944/DTU158_MODAL_CHECK.jnl",
+      "bytes": 1016,
+      "mtime_utc": "2026-09-09T02:41:34.480180+00:00",
+      "sha256_now": "991036fc07e6f41f73509a0cac9b92af848ce86597caabf5d91ffb4b4f608a56"
+    },
+    {
+      "path": "D:/MC/DTU158_Hoop_Repair_20260909/DTU158_Hoop_Repair.jnl",
+      "bytes": 85,
+      "mtime_utc": "2026-09-08T16:11:53.207445+00:00",
+      "sha256_now": "64fc41280f4ca2a7c834c06c12f7189e3bfb84769151e76765f4eea4a8d7d329"
+    }
+  ],
+  "prior_original_export_summary": {
+    "status": "READONLY_EXPORT_COMPLETE",
+    "report": "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\original_review_export_report_final.json",
+    "report_sha256": "364850e4361e6e5a42658eb562e0f325caad6410c9a6f8ad932b39ea69b8dfa7",
+    "source_copy_sha256_before_after": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+    "original_source_sha256_after": "9e1544e236a1454b209c3688603e0562a384c09607baebd80dd1707b9fb8a1f4",
+    "nodes": 4641,
+    "elements": 7209,
+    "element_types": {
+      "S3": 5364,
+      "S4R": 1845
+    },
+    "models_mesh_equal": {
+      "nodes_csv": true,
+      "elements_csv": true,
+      "sections_csv": true,
+      "coupling_region_nodes_csv": true
+    },
+    "RP": [
+      0,
+      160,
+      0
+    ],
+    "vr3_in_explicit_step": 1,
+    "physical_validation": "NOT_ESTABLISHED_BY_EXPORT",
+    "csv": {
+      "nodes_csv": {
+        "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_nodes.csv",
+        "sha256": "da9ccacad3dea25c492ef39fadbf9903760484038d9f57c36029fd7e2a7635a7",
+        "rows": 4641,
+        "bytes": 383522
+      },
+      "elements_csv": {
+        "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_elements.csv",
+        "sha256": "bd0d935815b434445759bb160b007a925cfa42c0f052c9fe3b2885e7c594a610",
+        "rows": 7209,
+        "bytes": 341385
+      },
+      "sections_csv": {
+        "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_section_assignments.csv",
+        "sha256": "963fbbb1bbb1cf8d1b5949f0c668a4ceeea7b89ec13281a1b535842725e2d25c",
+        "rows": 3,
+        "bytes": 553
+      },
+      "coupling_region_nodes_csv": {
+        "path": "D:/Codex-research-native/t026-rna-source-readonly-20261004\\primary_coupling_region_nodes.csv",
+        "sha256": "c87d483d27527d1108bb5316c0e309e45f0affa361cb553d269c3cb031367102",
+        "rows": 4689,
+        "bytes": 247173
+      }
+    },
+    "no_submit_writeInput_save": true,
+    "unit_scope": "CAE has no built-in units. CSV X_m/Y_m/Z_m follow the source engineering SI convention with Y vertical. RNA RP at (0,160,0) and the 158-unit tower are consistent with this convention, but the CSV header alone does not prove physical units. No scale conversion was applied; STEP MILLIMETRE metadata is a separate source and is not used to infer CAE units."
+  },
+  "prior_export_files_reverified": {
+    "nodes": {
+      "paths": [
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\primary_nodes.csv",
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\explicit_nodes.csv"
+      ],
+      "sha256": [
+        "da9ccacad3dea25c492ef39fadbf9903760484038d9f57c36029fd7e2a7635a7",
+        "da9ccacad3dea25c492ef39fadbf9903760484038d9f57c36029fd7e2a7635a7"
+      ],
+      "equal_bytes": true,
+      "rows": 4641
+    },
+    "elements": {
+      "paths": [
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\primary_elements.csv",
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\explicit_elements.csv"
+      ],
+      "sha256": [
+        "bd0d935815b434445759bb160b007a925cfa42c0f052c9fe3b2885e7c594a610",
+        "bd0d935815b434445759bb160b007a925cfa42c0f052c9fe3b2885e7c594a610"
+      ],
+      "equal_bytes": true,
+      "rows": 7209
+    },
+    "section_assignments": {
+      "paths": [
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\primary_section_assignments.csv",
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\explicit_section_assignments.csv"
+      ],
+      "sha256": [
+        "963fbbb1bbb1cf8d1b5949f0c668a4ceeea7b89ec13281a1b535842725e2d25c",
+        "963fbbb1bbb1cf8d1b5949f0c668a4ceeea7b89ec13281a1b535842725e2d25c"
+      ],
+      "equal_bytes": true,
+      "rows": 3
+    },
+    "coupling_region_nodes": {
+      "paths": [
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\primary_coupling_region_nodes.csv",
+        "D:\\Codex-research-native\\t026-rna-source-readonly-20261004\\explicit_coupling_region_nodes.csv"
+      ],
+      "sha256": [
+        "c87d483d27527d1108bb5316c0e309e45f0affa361cb553d269c3cb031367102",
+        "c87d483d27527d1108bb5316c0e309e45f0affa361cb553d269c3cb031367102"
+      ],
+      "equal_bytes": true,
+      "rows": 4689
+    },
+    "report_sha256": "364850e4361e6e5a42658eb562e0f325caad6410c9a6f8ad932b39ea69b8dfa7",
+    "matches_recorded_report": true
+  },
+  "official_reference_classification": "The10/4 official-properties directory is an agent-created verified source cache, not evidence that this detailed blade had been assembled into the user's RNA_REAL_EXPLICIT. Master has four local includes, all present and hash-matched. Shell S8R,1078 composite shell-section definitions,5 materials, TE glue C3D20. README states no prebend and simplified tip geometry.",
+  "official_CAE_archive_record": {
+    "source": "step2-baseline-20261005/github-asset-manifest.json; previous archive index, not current live-object probe",
+    "repository_path": "research/wind-tower/references/baselines-and-site-20261004/dtu-abaqus-blade/structural_models/ABAQUS/refblade.cae",
+    "source_locator": "dtu-10mw-rwt-master-structural_models-ABAQUS.zip!dtu-10mw-rwt-master-structural_models-ABAQUS/structural_models/ABAQUS/refblade.cae",
+    "recorded_bytes": 28000256,
+    "recorded_sha256": "26bada22e42c32549b5f123727a7e5325fd9732a524e9980e4fded85647e11e4",
+    "native_scopes_local_CAE_located": false,
+    "reference_JNL_record": {
+      "bytes": 1889969,
+      "sha256": "7d48e742a04b21204448a8a96edcb0d7f0a356828acea03a39f86afb29c807c9"
+    },
+    "note": "Archive identity records point to user-held DTU source package. The explicit .cae was not located within the two authorized local roots; do not infer absent everywhere."
+  },
+  "rna_rotation_result_evidence": {
+    "filename_search_scope": [
+      "D:/MC",
+      "D:/Codex-research-native",
+      "C:/Users/REME/Documents/Codex/2026-10-03/lia/work/voxel-frontier/research/wind-tower"
+    ],
+    "matching_extensions": [
+      ".inp",
+      ".odb",
+      ".sta",
+      ".msg",
+      ".log",
+      ".dat",
+      ".com"
+    ],
+    "matching_names": [
+      "RNA",
+      "EXPLICIT",
+      "ROTATION",
+      "JOB.?1",
+      "DTU158"
+    ],
+    "named_RNA_REAL_rotation_input_or_result_located": false,
+    "positive_evidence": [
+      "Actual source JNL433: creation of RNA_REAL_EXPLICIT",
+      "Actual source JNL463–468: RNA_ROTATION_EXPLICIT from Initial,timePeriod1.0 and VelocityBC vr3=1.0",
+      "Prior same-source native mesh export rehashed:4641nodes,7209shell elements, both source model exports byte-identical"
+    ],
+    "other_job_candidates_not_established_as_RNA": [
+      {
+        "path": "D:/MC/FA/Job-1.odb",
+        "prior_inventory_classification": "separate rectangular solid static model; not evidence of tower/RNA solve",
+        "current_content_opened": false
+      },
+      {
+        "path": "D:/MC/FB/jobs/job_01/fe-results/Job-1Results.odb",
+        "prior_inventory_classification": "related separate Job-1 family; not accepted as RNA result",
+        "current_content_opened": false
+      }
+    ],
+    "limits": "No matching filename under these scopes is not proof no RNA solve ever happened, especially arbitrary job names or files outside these roots. Current source CAE job list and actual linked result identity should be checked by parent."
+  },
+  "archive_state": {
+    "SIMPACK_CAE_tree_path": "research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/SIMPACK_SITE_ONLY.cae",
+    "recorded_blob_sha": "ad7f61485cdf67c6bddbbca51d253d8506d0715f",
+    "tree_size_bytes": 133,
+    "note": "Local saved tree at17723adc:133byte blob indicates pointer-sized object; no current LFS accessibility check by this reviewer. Original local source111546368bytes is verified."
+  },
+  "not_claimed": [
+    "No global absence of other user RNA models",
+    "No physical validation conclusion from object names, mesh existence, or cached official input",
+    "No claim of a rotation solver run based on ExplicitDynamicsStep or VelocityBC alone",
+    "No inference that newer copied-file mtime is newer scientific modeling",
+    "No general denial that the user has already built RNA geometry or an explicit rotation branch"
+  ]
+}

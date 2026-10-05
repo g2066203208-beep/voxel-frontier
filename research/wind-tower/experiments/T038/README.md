@@ -1,3 +1,10 @@
+<!-- T038-S3 SOURCE AUDIT INDEX START -->
+## 用户源模型与当前 M2 的范围说明
+
+[T038-S3 原生源 CAE 审查](source-rna-audit-20261005/README.md)实际核对 3 份源 CAE、5 个模型，确认用户已有 RNA 外形网格和 RNA_REAL_EXPLICIT 旋转分支，以及各模型 31 组、32712 个 T3D2 的环筋部件（实例被抑制）。当前 M2 使用恢复后的 28 B31 质量骨架，不能据此说用户没有建过 RNA 或环筋。详细源模型的截面、铺层、耦合和连接仍有已记录问题，尚未实施修正或新求解。
+
+<!-- T038-S3 SOURCE AUDIT INDEX END -->
+
 <!-- T038-S2 MODEL INDEX START -->
 ## 现用整塔模型明细
 
