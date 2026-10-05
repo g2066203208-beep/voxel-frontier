@@ -23,7 +23,7 @@ C2-S11	Ch2	普通钢筋T3D2+Embedded理想化	REF054;REF130;REF005	OFFICIAL+PDF	
 C2-S12	Ch2	预应力筋及预应力实现	REF053;REF005;REF017;REF121	OFFICIAL+PDF+STANDARD-METADATA	预应力/钢绞线FE先例与产品标准身份	名义PT来自对象来源，平衡后读取有效应力	GB/T5224不证明1280MPa；不照搬文献温降/张拉参数	NEED-BASE001
 C2-S13	Ch2	水平接缝全局等效/局部contact边界	REF015;REF016;REF017;REF026;REF115	PDF-IN-REPO	N-M/N-M-T/N-M-V-T试验及接触FE	全局模型定位，结果触发显式contact	SPRING2/Tie模型不得报告COPEN/CPRESS/摩擦滑移	PASS-CAPABILITY/RESULT-TRIGGERED
 C2-S14	Ch2	钢—混转换区局部性	REF005;REF036	PDF-IN-REPO	两尺度结构响应与钢混连接疲劳试验	先全局N/V/M/T识别是否控制，再细化	不移植其他adapter构造尺寸/疲劳结论	RESULT-TRIGGERED
-C2-S15	Ch2	RNA质量/CG/惯量空间等效	REF010;REF057;REF058;REF039	PDF+OFFICIAL	RNA质量偏心/转动惯量对模态影响；Abaqus惯量定义；闭式频率模型	核m、CG、J、reference point及模态趋势	总质量相等不代表空间等效	NEED-RUN
+C2-S15	Ch2	RNA质量/CG/惯量空间等效	REF010;REF039;REF120;REF133;REF134;REF057;REF058	PDF+OFFICIAL	RNA质量偏心/转动惯量对模态影响；Abaqus惯量定义；闭式频率模型	核m、CG、J、reference point及模态趋势	总质量相等不代表空间等效	NEED-RUN
 C2-S16	Ch2	固定基础适用边界	REF039	PDF-IN-REPO	闭式/FE模型固定基础及基础敏感性背景	主模型固定底部并明确适用范围	不外推到基础柔性显著场景	CONDITIONAL
 C2-S17	Ch2	重力—预应力初始平衡	REF005;REF017;REF053	PDF+OFFICIAL	预应力塔FE与PT实现先例	以反力/位移/PT应力/能量检查平衡	名义PT输入不等于平衡后有效PT	NEED-RUN
 C2-S18	Ch2	模态与独立解析交叉验证	REF010;REF039;REF005	PDF-IN-REPO	RNA影响、闭式基频及试验/FE对照	Abaqus模态+解析/来源对照	模态吻合不证明接触/疲劳能力	NEED-RUN
@@ -44,7 +44,7 @@ C3-S11	Ch3	rainflow循环计数	REF132;REF018;REF124	FULLTEXT-AUDITED-STANDARD+P
 C3-S12	Ch3	load-DEL	REF125;REF018;REF132	PDF+FULLTEXT-AUDITED-STANDARD	DEL等效载荷定义；IEC Annex H给rainflow-SN-wind-probability-Miner长期损伤链	统一m/Neq仅用于G7A载荷比较；G7B必须另走材料S-N/均值/概率链	DEL不等于材料寿命；ETM DEL不等于DLC1.2疲劳寿命	NEED-RUN
 C3-S13	Ch3	2–4个多指标控制工况	REF009;REF011;REF018	PDF-IN-REPO	不同QoI/运行区/随机实现可能有不同控制case	按位移/加速度/N-V-M-T/DEL筛选	不只取最大塔底弯矩或最大DEL	NEED-RUN
 C4-S01	Ch4	OpenFAST接口通道身份	REF047;REF073	OFFICIAL-WEB-REGISTERED	YawBr/TwrBs等六分量通道定义与坐标	逐通道记录源点/坐标/单位	不能凭名字猜坐标	PASS-OFFICIAL
-C4-S02	Ch4	自由体与重力/惯性分账	REF051;REF067;REF047	PDF/AAM/OFFICIAL	整机载荷驱动FE与气动/重力/惯性分离先例	定义OF与Abaqus各承担哪些作用	禁止重复施加RNA重力/惯性	NEED-G5
+C4-S02	Ch4	自由体与重力/惯性分账	REF135;REF051;REF067;REF047	PDF/AAM/OFFICIAL	整机载荷驱动FE与气动/重力/惯性分离先例	定义OF与Abaqus各承担哪些作用	禁止重复施加RNA重力/惯性	NEED-G5
 C4-S03	Ch4	坐标旋转	REF065;REF047	WEB+OFFICIAL	映射到共同坐标系及OpenFAST参考系定义	使用显式旋转矩阵并保存源/目标系	不靠结果调符号	NEED-G5
 C4-S04	Ch4	作用点换算/力矩运输	REF066;REF065	PDF/WEB	通过r×F保持合矩	按公共reference point运输六分量	不使用经验offset拟合结果	NEED-G5
 C4-S05	Ch4	时间戳与插值	REF070;REF075	OFFICIAL-WEB-REGISTERED	Abaqus tabular amplitude线性插值；OpenFAST六分量时程文件时间语义	保留原时间戳，必要时受控插值	禁止用数组序号代替时间	NEED-G5
