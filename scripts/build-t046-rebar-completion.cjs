@@ -6,6 +6,8 @@ const crypto=require('node:crypto');
 const BASE='research/wind-tower/experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp';
 const SPEC='research/wind-tower/experiments/T046/spec/rebar-completion.json';
 const ART='artifacts/T046';
+const INPUTS='research/wind-tower/experiments/T046/inputs';
+const T047_INPUTS='research/wind-tower/experiments/T047/inputs';
 const PUB='public/research';
 
 const spec=JSON.parse(fs.readFileSync(SPEC,'utf8'));
@@ -145,11 +147,27 @@ function build(removeNSM=false){
 }
 
 const A=build(false), B=build(true);
-fs.mkdirSync(ART,{recursive:true});fs.mkdirSync(PUB,{recursive:true});
+// T047 sensitivity only: same T046-E1B tower/rebar/RNA, but each of the 36 PT line elements
+// represents an eight-strand bundle (8 x 140 mm2). This is NOT frozen as the prototype value;
+// it is generated to quantify the consequence of the directly documented 36-bundle x 8-strand
+// precedent in REF139 while the exact Tongyu prototype bundle factor remains under provenance audit.
+function withPtBundleFactor8(inp){
+  const old='** Section: SEC_PT_15p2_A140\n*Solid Section, elset=SET_PT_ALL_GEOM, material=STRAND_1860\n0.00014,';
+  const neu='** Section: SEC_PT_15p2_BUNDLE8_SENSITIVITY\n** T047 sensitivity: 8 x 140 mm2 = 1120 mm2 per PT line; not a frozen He2024 direct value.\n*Solid Section, elset=SET_PT_ALL_GEOM, material=STRAND_1860\n0.00112,';
+  if(!inp.includes(old)) throw Error('PT section marker not found for bundle-factor sensitivity');
+  return inp.replace(old,neu).replace('** T046-E1B reinforcement-completion candidate; legacy 39.80022 t NSM removed for mass sensitivity.','** T047-PTBF8 sensitivity candidate; T046-E1B cage, NSM removed, PT bundle factor=8 for sensitivity only.');
+}
+const PTBF8=withPtBundleFactor8(B);
+
+fs.mkdirSync(ART,{recursive:true});fs.mkdirSync(INPUTS,{recursive:true});fs.mkdirSync(T047_INPUTS,{recursive:true});fs.mkdirSync(PUB,{recursive:true});
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp'),A);
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp'),B);
+fs.writeFileSync(path.join(INPUTS,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp'),A);
+fs.writeFileSync(path.join(INPUTS,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp'),B);
+fs.writeFileSync(path.join(T047_INPUTS,'BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp'),PTBF8);
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp.gz'),zlib.gzipSync(A,{level:9}));
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp.gz'),zlib.gzipSync(B,{level:9}));
+fs.writeFileSync(path.join(ART,'BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp.gz'),zlib.gzipSync(PTBF8,{level:9}));
 
 let hoopLength=0,tieLength=0;
 function pos(id){const v=nodes[id-1];return v.slice(1);}
@@ -175,7 +193,8 @@ const report={
   },
   variants:{
     E1A:'explicit hoop+ties; legacy 39.80022 t NSM retained; mass upper-bound sensitivity',
-    E1B:'explicit hoop+ties; legacy 39.80022 t NSM removed; avoids possible double count if NSM represented omitted cage/attachments'
+    E1B:'explicit hoop+ties; legacy 39.80022 t NSM removed; avoids possible double count if NSM represented omitted cage/attachments',
+    T047_PTBF8:'same as E1B but PT area=0.00112 m2 per each of 36 PT lines (8x140 mm2); sensitivity only, not prototype-frozen'
   },
   hold:[
     'Abaqus 2025 Gravity/Modal/Flex solver run is not yet executed for T046.',
@@ -199,4 +218,4 @@ const overlay={
 };
 fs.writeFileSync(path.join(PUB,'t046-rebar-overlay.json.gz'),zlib.gzipSync(JSON.stringify(overlay),{level:9}));
 
-console.log(JSON.stringify({status:'T046 generated',levels:levels.length,hoopElements:hoopElems.length,tieElements:tieElems.length,addedMassKg:hoopMass+tieMass,minCoverMm:minCover,providedRatioPercent:provided,requiredRatioPercent:worstReq}));
+console.log(JSON.stringify({status:'T046/T047 Abaqus INP generated',committedInputs:[path.join(INPUTS,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp'),path.join(INPUTS,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp'),path.join(T047_INPUTS,'BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp')],levels:levels.length,hoopElements:hoopElems.length,tieElements:tieElems.length,addedMassKg:hoopMass+tieMass,minCoverMm:minCover,providedRatioPercent:provided,requiredRatioPercent:worstReq}));
