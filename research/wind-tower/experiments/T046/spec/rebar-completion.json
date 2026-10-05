@@ -34,10 +34,12 @@
     "maxAxialSpacingMm": 80,
     "coverMm": 30,
     "centerlineSurfaceOffsetMm": 37,
-    "circumferentialSegmentsPerRing": 36,
+    "circumferentialSegmentsPerRing": 72,
     "elementType": "T3D2",
     "host": "SET_CSEG_ALL_ACTIVE",
-    "placement": "double layer; outer at Rout-37mm, inner at Rin+37mm"
+    "placement": "double layer; outer at Rout-37mm, inner at Rin+37mm",
+    "chordAngleDeg": 5,
+    "circumferentialSegmentsRationale": "72 chords per ring so T046 tie bars can share hoop nodes while keeping equal angular spacing; this is FE discretization, not a published detailing parameter."
   },
   "tieCandidate": {
     "material": "HRB335_T046",
