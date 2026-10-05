@@ -90,3 +90,10 @@
 |审计文件|主要内容|关键成果|当前状态|
 |---|---|---|---|
 |[37-t031-era5-wind-energy-literature-survey.md](37-t031-era5-wind-energy-literature-survey.md)|实际风能期刊、中文论文、硕士论文中的ERA5方法专项检索|REF080–REF103；U10/U100动态alpha；161m外推边界；ERA5→TurbSim分工|PASS-literature / HOLD-site-validation|
+
+
+## T034：整体流程继续执行与G0重绑定
+
+|审计文件|主要内容|关键成果|当前状态|
+|---|---|---|---|
+|[38-t034-thesis-execution-restart.md](38-t034-thesis-execution-restart.md)|在MASTER v1.6已锁定前提下恢复G0→G10顺序执行，并用T028实际资产修正旧阻断判断|确认OpenFAST/Abaqus实际输入资产已存在；G0从“缺文件”转为canonical baseline选择/谱系/哈希/参数绑定|in-progress / G0-rebinding|
