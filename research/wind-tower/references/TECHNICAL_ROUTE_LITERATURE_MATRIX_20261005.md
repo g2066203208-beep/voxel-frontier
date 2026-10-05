@@ -18,13 +18,14 @@
 |路线环节|核心文献/来源|仓库状态|本文具体用途|不能直接支持/禁止照搬|是否还缺核心全文|
 |---|---|---|---|---|---|
 |R0 研究对象与baseline|Bak et al. 2013 DTU Wind Energy Report-I-0092 (REF001/L073)|A-PDF|DTU 10 MW官方参考机组参数、组件身份、额定工况|不能单独证明本文组装后的OpenFAST/Abaqus模型一致|否|
-|R0 158 m混塔原型|何泽瑜2024《大型混塔式风力机的建模与可靠度分析》(REF008)|A-PDF/已全文审计|158/112/46 m原型、几何/材料谱系|原文局部半径/直径语义冲突须由正式生产输入闭合|否|
+|R0 158 m混塔原型|何泽瑜2024《大型混塔式风力机的建模与可靠度分析》(REF008)|原始90页PDF已全文审计；当前会话原件已验证，GitHub repo二进制仍待最终对齐|158/112/46 m原型、几何/材料谱系|原文局部半径/直径语义冲突须由正式生产输入闭合|否|
 |R0 同谱系10MW/158m对照|Xu et al. 2025 Renewable Energy (REF061/L052)|A-PDF|DTU10MW/158m对象对照、非线性响应和时程处理参考|其协同仿真路线不进入本文|否|
 |R1 Abaqus混塔建模与全局/局部验证|Li et al. 2023 Engineering Structures 279, 115622 (REF005/L002)|A-PDF|CDP/断裂能网格处理、预应力筋约束、试验-数值验证、两尺度global/local逻辑|不能定义本文158m几何；其两尺度耦合不等同于任意submodel|否|
 |R1 预应力塔FE方法|Kenna & Basu 2015 Wind Energy (REF038)|A-WEB/仓库仍无PDF本体|预应力/后张混凝土风塔FE、预应力与刚度影响|论文对象和具体参数不可移植|P1补强，非硬阻断|
 |R1 水平接缝接触/扭转FE|Ren et al. 2025 TWS (REF017/L058)|A-PDF|C3D8R/T3D2、hard contact+摩擦、PT、试验校准、接缝扭转机制|0.9摩擦系数、40 mm网格等为论文专属|否|
 |R1 RNA空间等效与模态|Cheng et al. 2024 Structures 68, 107235 (REF010/L059)|A-PDF|RNA质量偏心、转动惯量、预应力对频率影响；Abaqus RP质量/惯量验证|其RNA数值/网格不可直接移植|否|
 |R1 基频解析交叉校核|Li Shouzhen et al. 2023 IJSSD (REF039/L051)|A-PDF/核心公式+边界+FE验证已核|分段Euler–Bernoulli/Rayleigh–Ritz；显式考虑钢混截面突变、预应力、RNA质量/转动惯量/偏心；可作FE基频独立交叉校核|122m/250t/48MN、元素、tie、0.25m网格、固定基础结论均不可复制；不验证局部contact|否|
+|R1 材料现行标准身份|GB/T 50010-2010(2024局修) REF055；GB/T 5224-2023 REF121；GB 1499.2-2024 REF122；GB/T 1591-2018 REF123|A-WEB/OFFICIAL；完整条文未全部核|用于混凝土、预应力钢绞线、普通钢筋、低合金结构钢的现行标准身份；最终材料表仍须与canonical INP和授权条文核对|标准身份不能替代原型材料牌号、1280 MPa预应力或材料疲劳曲线|终稿前核相关正式条文|
 |R1 CDP/预应力/阻尼定义|Abaqus 2025 official (REF052–054, REF059 etc.)|A-WEB/OFFICIAL|材料变量、T3D2、预应力、Rayleigh阻尼等软件物理定义|官方默认值≠本文物理校准值|否|
 |R1 网格/V&V|ASME V&V10 (REF069); mesh convergence REF079|A-WEB + A-PDF|verification/validation分层；网格收敛方法|不提供本文统一误差阈值|否|
 |R2 ERA5长期场址风环境|Olauson 2018 (REF080/L074)|A-PDF/方法与主要结果已核|ERA5相对MERRA-2的长期风电建模验证；支撑ERA5作为长期背景|不能作为局地10-min湍流输入，也不能作为嘉鱼无偏验证|否|
@@ -78,7 +79,7 @@
 
 ## 4. PDF本体库存（2026-10-05核查）
 
-- `references/open-access/MANIFEST.tsv`：48条下载任务，其中 **39条 status=ok 的真实PDF**，12条自动抓取失败/not-pdf（其中多篇已由用户手动补入另一目录）。
+- `references/open-access/MANIFEST.tsv`：51条下载任务，其中 **39条 status=ok 的真实PDF**、5条not-pdf、7条download-failed（其中多篇已由用户手动补入另一目录）。
 - `references/user-provided/MANIFEST.tsv`：**29条，29条全部 status=ok**，共1115页、257,005,505字节。
 - 两个受控文献目录中共有 **68个真实PDF本体**。
 - `references/` 目录当前有 **72个PDF blob**：另有4个baseline/site证据PDF，其中DTU正式报告有1份重复归档；按不同来源内容计约 **71份不同PDF来源文档**。
