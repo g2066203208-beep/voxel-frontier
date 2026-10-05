@@ -1,0 +1,120 @@
+name: T046 ERA5 raw archive inventory
+
+on:
+  push:
+    paths:
+      - ".github/workflows/t046-era5-archive-inventory.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Inventory every ERA5 archive member
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile, hashlib, csv, json, os, collections, datetime
+
+          root=Path("research/wind-tower")
+          groups=[
+              root/"archive/local-assets-20261004/era5-raw-2005-2014",
+              root/"archive/local-assets-20261004/era5-raw-2015-2025",
+          ]
+          out=root/"experiments/T046/archive-inventory"
+          out.mkdir(parents=True,exist_ok=True)
+
+          rows=[]
+          archive_rows=[]
+          ext_counts=collections.Counter()
+          errors=[]
+
+          for g in groups:
+              for zp in sorted(g.glob("part-*.zip")):
+                  zsha=hashlib.sha256(zp.read_bytes()).hexdigest()
+                  zrow={"archive":str(zp.relative_to(root)),"bytes":zp.stat().st_size,"sha256":zsha,"valid_zip":False,"members":0}
+                  try:
+                      with zipfile.ZipFile(zp) as z:
+                          bad=z.testzip()
+                          zrow["valid_zip"]=bad is None
+                          if bad:
+                              errors.append(f"{zp}: CRC failure at {bad}")
+                          infos=[i for i in z.infolist() if not i.is_dir()]
+                          zrow["members"]=len(infos)
+                          for info in infos:
+                              data=z.read(info.filename)
+                              ext=Path(info.filename).suffix.lower() or "<none>"
+                              ext_counts[ext]+=1
+                              rows.append({
+                                  "archive":str(zp.relative_to(root)),
+                                  "member":info.filename,
+                                  "bytes":info.file_size,
+                                  "compressed_bytes":info.compress_size,
+                                  "crc32":f"{info.CRC:08x}",
+                                  "sha256":hashlib.sha256(data).hexdigest(),
+                                  "extension":ext,
+                                  "magic_hex":data[:16].hex(),
+                              })
+                  except Exception as e:
+                      errors.append(f"{zp}: {type(e).__name__}: {e}")
+                  archive_rows.append(zrow)
+
+          fields=["archive","member","bytes","compressed_bytes","crc32","sha256","extension","magic_hex"]
+          with (out/"ARCHIVE_MEMBERS.tsv").open("w",encoding="utf-8",newline="") as f:
+              w=csv.DictWriter(f,fieldnames=fields,delimiter="\t")
+              w.writeheader(); w.writerows(rows)
+
+          with (out/"ARCHIVES.tsv").open("w",encoding="utf-8",newline="") as f:
+              w=csv.DictWriter(f,fieldnames=["archive","bytes","sha256","valid_zip","members"],delimiter="\t")
+              w.writeheader(); w.writerows(archive_rows)
+
+          summary={
+              "generated_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "archives":len(archive_rows),
+              "all_archives_valid":all(x["valid_zip"] for x in archive_rows),
+              "members":len(rows),
+              "extensions":dict(sorted(ext_counts.items())),
+              "errors":errors,
+          }
+          (out/"SUMMARY.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+
+          md=[
+              "# T046 ERA5 raw archive inventory",
+              "",
+              f"- archives: **{summary['archives']}**",
+              f"- valid ZIPs: **{sum(1 for x in archive_rows if x['valid_zip'])}/{summary['archives']}**",
+              f"- file members: **{summary['members']}**",
+              f"- extensions: `{json.dumps(summary['extensions'],ensure_ascii=False)}`",
+              "",
+              "This stage inventories existing GitHub raw archives only. No wind statistic is recomputed here.",
+              "The next stage must parse the actual detected file type rather than assume NetCDF/GRIB.",
+          ]
+          if errors:
+              md += ["","## Errors",""]+[f"- {e}" for e in errors]
+          (out/"README.md").write_text("\n".join(md)+"\n",encoding="utf-8")
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          PY
+
+      - name: Commit inventory
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T046/archive-inventory
+          if git diff --cached --quiet; then
+            echo "No inventory changes."
+          else
+            git commit -m "T046 inventory ERA5 raw archives before final recomputation"
+            git pull --rebase origin main
+            git push
+          fi
