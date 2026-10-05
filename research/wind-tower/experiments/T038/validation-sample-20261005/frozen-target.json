@@ -1,0 +1,107 @@
+{
+  "schema": "T038-S1-frozen-target-v1",
+  "mass_kg": 676753.2907231401,
+  "CG_global_ABQ_m": [
+    -4.794053742399661e-16,
+    160.78358803030605,
+    -0.8729624988915398
+  ],
+  "O_global_ABQ_m": [
+    0.0,
+    158.0,
+    0.0
+  ],
+  "JG_kgm2": [
+    [
+      94926999.79811174,
+      2.2844544447195585e-08,
+      -4.203840483372562e-10
+    ],
+    [
+      2.2844544447195585e-08,
+      99481015.62016469,
+      -5231495.690281978
+    ],
+    [
+      -4.203840483372562e-10,
+      -5231495.690281978,
+      155901495.33851188
+    ]
+  ],
+  "M6_at_O_mixed_SI": [
+    [
+      676753.2907231401,
+      0.0,
+      0.0,
+      -0.0,
+      -590780.2438027451,
+      -1883802.3595271627
+    ],
+    [
+      0.0,
+      676753.2907231401,
+      0.0,
+      590780.2438027451,
+      -0.0,
+      -3.244391646072556e-10
+    ],
+    [
+      0.0,
+      0.0,
+      676753.2907231401,
+      1883802.3595271627,
+      3.244391646072556e-10,
+      -0.0
+    ],
+    [
+      0.0,
+      590780.2438027451,
+      1883802.3595271627,
+      100686458.49547964,
+      2.3747649422358837e-08,
+      -7.036072722110896e-10
+    ],
+    [
+      -590780.2438027451,
+      0.0,
+      3.244391646072556e-10,
+      2.3747649422358837e-08,
+      99996744.6180905,
+      -3587006.875091367
+    ],
+    [
+      -1883802.3595271627,
+      -3.244391646072556e-10,
+      0.0,
+      -7.036072722110896e-10,
+      -3587006.8750913674,
+      161145225.03795397
+    ]
+  ],
+  "gravity_acceleration_m_s2": [
+    0,
+    -9.81,
+    0
+  ],
+  "expected_support_force_N": [
+    -0.0,
+    6638949.781994005,
+    -0.0
+  ],
+  "expected_support_moment_Nm": [
+    5795554.19170493,
+    -0.0,
+    -3.182748204797177e-09
+  ],
+  "source_comparison_sha256": "9fb46875767a5a35d47d4fc1982315b7266fdad11cf1860c52b688502bb40602",
+  "scope": "Independent float64 reconstruction of locked undeformed ElastoDyn operator; not native solver M6 or physical 3D RNA validation",
+  "acceptance": {
+    "matrix_max_abs_error_relative_block_scale": 1e-09,
+    "mass_reconstruction_relative": 1e-09,
+    "CG_reconstruction_absolute_m": 1e-08,
+    "JG_max_abs_error_relative_tensor_scale": 1e-09,
+    "gravity_relative_force_and_moment_scale": 1e-06,
+    "motion_kinetic_energy_relative_peak_scale": 1e-06,
+    "tolerance_basis": "Pre-run numerical implementation budgets: text matrix double precision and ODB output precision; no engineering/model-form acceptance implied. Zero entries assessed using nonzero same-unit block scales."
+  }
+}
