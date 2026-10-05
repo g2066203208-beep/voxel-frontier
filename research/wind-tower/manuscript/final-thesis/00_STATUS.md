@@ -76,3 +76,19 @@ STAGE 7：摘要、Abstract、参考文献统一、图表编号、全文格式�
 - 已修正REF065/071/055/056/059等历史错配；
 - 新增REF124–131以补rainflow、DEL、Morris、LHS、Kriging、NSGA-II、Embedded Region和Implicit Dynamic等方法/官方定义；
 - 注意：引用完整性PASS不等于计算完成。G0–G9仍需真实RUN，G10才允许形成最终定量结论。
+
+
+## T044 IEC 61400-1:2019全文核读
+
+状态：PASS-BASE-2019 / AMD1:2025-PENDING
+
+- 用户授权提供的IEC 61400-1:2019 Edition 4.0完整172页PDF已校验并全文针对性核读；
+- SHA256：1d210bfac4829cd1bb791d98f3f56de8ea95dc0b4b716c9de274672bb7a8c2a9；
+- DLC 1.2明确为NTM fatigue；DLC 1.3明确为ETM ultimate；
+- Clause 7.5明确一般湍流动态计算每平均风速至少6个10min随机实现，并至少剔除前5s、必要时更长；
+- 历史6 seeds + 600s有效窗口满足该最低要求，但QoI统计收敛仍需验证；
+- 历史200m×200m、51×51网格单元对角线约5.66m，小于0.25Lambda1=10.5m和0.15D≈26.75m，空间分辨率PASS；
+- Clause 7.6.2.2指出DLC1.1从Vr-2到cut-out若做characteristic extreme统计需15 simulations/mean speed，因此36case不能冒充完整认证级DLC1.1；
+- Annex H进一步闭合rainflow→S-N→wind probability→Miner的G7B方法边界；
+- 完整标准本体受IEC/IHS版权许可限制，不向public GitHub公开分发；仓库保存hash、版本、条款审计和采用边界；
+- 当前有效合并版REF048仍为IEC 61400-1:2019+AMD1:2025，终稿前必须取得并核AMD1:2025。
