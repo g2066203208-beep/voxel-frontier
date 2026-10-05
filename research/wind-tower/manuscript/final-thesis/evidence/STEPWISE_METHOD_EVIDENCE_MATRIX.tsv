@@ -19,12 +19,12 @@ C2-S07	Ch2	CDP理论定义	REF052	OFFICIAL-WEB-REGISTERED	Abaqus CDP受拉/受�
 C2-S08	Ch2	物理曲线→Abaqus CDP变量转换	REF056	CACHED-PDF	inelastic/cracking strain与damage转换公式	生成可复现CSV/INC并单轴核验	不把总应变直接填入CDP inelastic/cracking列	PASS-METHOD/NEED-RUN
 C2-S09	Ch2	CDP塑性参数来源	REF052;REF041	OFFICIAL+PDF	Abaqus默认参数语义；对象级研究参数背景	默认值与study-choice分开，psi需敏感性	不把psi=30°称Abaqus默认	CONDITIONAL
 C2-S10	Ch2	C65/C70单轴数值试件	REF052;REF056;REF005	OFFICIAL+PDF	材料输入变量定义、转换与试验/FE验证思路	四类单轴试件核实际写入曲线	材料试件通过不代表整塔局部破坏网格客观	NEED-RUN
-C2-S11	Ch2	普通钢筋T3D2+Embedded理想化	REF054;REF130;REF005	OFFICIAL+PDF	Truss轴向能力；Li等使用嵌入/两尺度FE	用于轴向钢筋—混凝土协同	不解释bond-slip/拔出/锚固退化	PASS-CAPABILITY
-C2-S12	Ch2	预应力筋及预应力实现	REF053;REF005;REF017;REF121	OFFICIAL+PDF+STANDARD-METADATA	预应力/钢绞线FE先例与产品标准身份	名义PT来自对象来源，平衡后读取有效应力	GB/T5224不证明1280MPa；不照搬文献温降/张拉参数	NEED-BASE001
+C2-S11	Ch2	普通钢筋T3D2+Embedded及钢筋网完整性	REF054;REF130;REF005;REF008;REF061;REF136;REF137	OFFICIAL+PDF+STANDARD-CLAUSE-AUDIT	Truss轴向能力；He原型钢筋网/纵筋数量；同谱系箍筋约束处理；塔筒双层纵环筋构造要求	T045保留纵筋复现基线；T046建立显式环筋/拉筋工程候选并做敏感性	不解释bond-slip/拔出；不把规范推导phi14@80冒充He未公开参数	CODE-COMPLETION/NEED-RUN
+C2-S12	Ch2	预应力筋、锚固边界及预应力实现	REF008;REF061;REF053;REF005;REF017;REF121;REF136;REF137	OFFICIAL+PDF+STANDARD	15.2mm/端锚/无黏结对象来源；PT有限元先例；锚固区构造标准	冻结T045实际36根/r1.75/端方程拓扑为输入事实，平衡后读取有效应力；真实锚固局部另建模	GB/T5224不证明1280MPa；36根/r1.75无直接来源不得升级为文献设计值	HOLD-PT-GEOMETRY/NEED-RUN
 C2-S13	Ch2	水平接缝全局等效/局部contact边界	REF015;REF016;REF017;REF026;REF115	PDF-IN-REPO	N-M/N-M-T/N-M-V-T试验及接触FE	全局模型定位，结果触发显式contact	SPRING2/Tie模型不得报告COPEN/CPRESS/摩擦滑移	PASS-CAPABILITY/RESULT-TRIGGERED
 C2-S14	Ch2	钢—混转换区局部性	REF005;REF036	PDF-IN-REPO	两尺度结构响应与钢混连接疲劳试验	先全局N/V/M/T识别是否控制，再细化	不移植其他adapter构造尺寸/疲劳结论	RESULT-TRIGGERED
 C2-S15	Ch2	RNA质量/CG/惯量空间等效	REF010;REF039;REF120;REF133;REF134;REF057;REF058	PDF+OFFICIAL	RNA质量偏心/转动惯量对模态影响；Abaqus惯量定义；闭式频率模型	核m、CG、J、reference point及模态趋势	总质量相等不代表空间等效	NEED-RUN
-C2-S16	Ch2	固定基础适用边界	REF039	PDF-IN-REPO	闭式/FE模型固定基础及基础敏感性背景	主模型固定底部并明确适用范围	不外推到基础柔性显著场景	CONDITIONAL
+C2-S16	Ch2	固定基础与PT底端等效锚固边界	REF008;REF039;REF136;REF137;T045	PDF+STANDARD+INPUT	He复现采用塔底/PT底固定；规范要求可靠锚具和锚固区局部加强；当前INP无基础实体	把y=0解释为刚性基础截断面和等效锚固边界，仅用于全局塔架响应	不外推到真实锚具/基础局部应力、滑移或SSI	PASS-SCOPE/HOLD-LOCAL
 C2-S17	Ch2	重力—预应力初始平衡	REF005;REF017;REF053	PDF+OFFICIAL	预应力塔FE与PT实现先例	以反力/位移/PT应力/能量检查平衡	名义PT输入不等于平衡后有效PT	NEED-RUN
 C2-S18	Ch2	模态与独立解析交叉验证	REF010;REF039;REF005	PDF-IN-REPO	RNA影响、闭式基频及试验/FE对照	Abaqus模态+解析/来源对照	模态吻合不证明接触/疲劳能力	NEED-RUN
 C2-S19	Ch2	网格收敛与局部化边界	REF079;REF005;REF052	WEB/PDF/OFFICIAL	风机FE频率网格收敛；断裂能/软化网格处理	按最终QoI做多网格比较	人工能小不等于后峰网格客观	NEED-RUN
@@ -75,3 +75,4 @@ C6-S09	Ch6	未用风况/seed独立稳健性	REF076;REF011;REF018	WEB+PDF	独立�
 C7-S01	Ch7	主要结论回收	REF069 + RUN/FIG/TAB	STANDARD-SCOPE+INTERNAL-EVIDENCE	V&V/证据链原则	每条结论绑定RUN/FIG/TAB，文献只支持方法/机理	文献不能替代本文结果	NEED-G10
 C7-S02	Ch7	创新点与直接先例比较	REF005;REF051;REF018;REF020;REF021 + RUN	PDF-IN-REPO+INTERNAL-EVIDENCE	与最直接的两尺度/整机/疲劳/优化先例比较	创新由实际G6–G9增量反推	软件名称/常规算法不得作为创新	NEED-G10
 C7-S03	Ch7	适用范围与不足	REF090;REF096;REF049;REF069 + RUN	PDF/WEB/STANDARD	ERA5局限、塔架设计范围、V&V边界	限制逐项对应本文假设	不写空泛‘时间有限’	NEED-G10
+C2-S22	Ch2	环向钢筋/拉筋规范推导候选	REF136;REF137;REF138;REF008;REF061;T046	STANDARD-CLAUSE-AUDIT+PDF+INPUT	双层环筋、拉筋、保护层和最低配筋率有标准依据；He/Xu证明箍筋作用但未公开本塔精确尺寸	T046-E1采用HRB335 phi14@80双层环筋+phi6拉筋作为透明工程候选；与T045做质量/模态/柔度/控制响应敏感性	不把候选尺寸写成原型论文直接值；求解前不得升级为生产模型	CODE-DERIVED/NEED-ABAQUS-RUN
