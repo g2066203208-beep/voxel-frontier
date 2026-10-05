@@ -78,11 +78,11 @@
 
 ## 4. PDF本体库存（2026-10-05核查）
 
-- `references/open-access/MANIFEST.tsv`：48条下载任务，其中 **36条 status=ok 的真实PDF**，12条自动抓取失败/not-pdf（其中多篇已由用户手动补入另一目录）。
+- `references/open-access/MANIFEST.tsv`：48条下载任务，其中 **38条 status=ok 的真实PDF**，12条自动抓取失败/not-pdf（其中多篇已由用户手动补入另一目录）。
 - `references/user-provided/MANIFEST.tsv`：**29条，29条全部 status=ok**，共1115页、257,005,505字节。
-- 两个受控文献目录中共有 **65个真实PDF本体**。
-- `references/` 目录当前有 **69个PDF blob**：另有4个baseline/site证据PDF，其中DTU正式报告有1份重复归档；按不同来源内容计约 **68份不同PDF来源文档**。
-- 整个 `research/wind-tower/` 当前有 **84个PDF blob**，其中15个为T026计算图/结果PDF，不属于参考文献原文。
+- 两个受控文献目录中共有 **67个真实PDF本体**。
+- `references/` 目录当前有 **71个PDF blob**：另有4个baseline/site证据PDF，其中DTU正式报告有1份重复归档；按不同来源内容计约 **70份不同PDF来源文档**。
+- 整个 `research/wind-tower/` 当前有 **86个PDF blob**，其中15个为T026计算图/结果PDF，不属于参考文献原文。
 
 ## 5. 结论
 
