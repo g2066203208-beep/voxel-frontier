@@ -45,4 +45,4 @@ T035	P0-P9	global	Q01-Q05	以优秀硕士论文导师/盲审/期刊审稿视角�
 T036	P1	literature	Q01-Q05	核对并按正式题名重命名9份用户新下载PDF，去重后完整入库并核验二进制	references/user-provided/README.md	complete-binary-upload-and-readback	P1	9篇均沿用已有L/REF编号；9份完整PDF共162页84855343字节；新旧哈希留痕；仅身份/完整性/传输核验，不新增科学全文审读结论
 T037	P0-P1	2	Q01	按用户逐步审查要求核对DTU与158m混塔来源、实际Abaqus/OpenFAST候选及控制器归档身份	audit/41-t037-baseline-source-review.md	source-review-complete/user-review-pending	G0-G1	推荐M2结构候选与R2真实输入链；补核DISCON和DLL并订正缺件判断；RNA与物理适用性未统一；不自动执行下一步
 T038	P1	2	Q01	按用户逐步审查要求核对Abaqus与OpenFAST的RNA质量质心惯量和公共参考点，形成输入修订方案	experiments/T038/RESEARCH_CARD.md	audit-complete/implementation-paused	G0-G1/D08	仅本步数值审查与方案；原模型不改，无新求解；D08不因刚体质量等价自动通过；T039用户纠正：第一章为当前唯一写作交付且内容未验收；本任务后续实施暂停，不执行小样或新求解
-T039	P1	1	Q01	按用户纠正顺序，仅修订现有第一章学校模板格式并保留正文原文，第一章内容仍待审查	experiments/T039/RESEARCH_CARD.md	formatting-in-progress/content-not-accepted	chapter1-only	第二章及后续暂停；T038保留历史审查不执行小样；不改模型不求解；正文模板及渲染私有
+T039	P1	1	Q01	按用户纠正顺序，仅修订现有第一章学校模板格式并保留正文原文，第一章内容仍待审查	experiments/T039/RESEARCH_CARD.md	format-QA-complete/user-review-pending/content-not-accepted	chapter1-only	格式校正交付待用户审查；第一章正文未审定；用户新质疑引用实物，现优先核对22条；第二章及后续暂停；T038保留历史审查不执行小样；不改模型不求解；正文模板及渲染私有

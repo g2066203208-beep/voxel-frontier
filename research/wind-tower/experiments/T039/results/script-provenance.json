@@ -1,0 +1,14 @@
+{
+  "source_script": "format_chapter1.py",
+  "source_script_sha256": "68b157440920b5aee24fe32b2778b9c154e7bc942327fc4a2bbe0ab948489283",
+  "public_script": "scripts/format_chapter1_public.py",
+  "public_script_sha256": "ed35c313ed9349424e6a1426e30c3749512f0fb714c09a5a9e61c16eb3346d83",
+  "changes": [
+    "Replace two private paragraph suffix selectors with SHA256 selectors supplied by --layout-overrides.",
+    "Report tracking values from the supplied configuration.",
+    "Document the configuration argument."
+  ],
+  "validation": "Python syntax parsed; both configured hashes identify exactly one source paragraph and preserve the original tracking choices. Public derivative was not used to regenerate the delivered DOCX.",
+  "source_script_responsibility": "Executed by the primary formatting agent; retained exact hash.",
+  "no_private_paragraph_text_in_public_script": true
+}

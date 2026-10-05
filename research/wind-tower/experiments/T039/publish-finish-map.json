@@ -1,0 +1,18 @@
+{
+  "research/wind-tower/experiments/T039/RESEARCH_CARD.md": "RESEARCH_CARD.md",
+  "research/wind-tower/experiments/T039/README.md": "README.md",
+  "research/wind-tower/experiments/T039/source-metadata.json": "source-metadata.json",
+  "research/wind-tower/experiments/T039/formatting-differences.md": "formatting-differences.md",
+  "research/wind-tower/experiments/T039/correction-process.md": "correction-process.md",
+  "research/wind-tower/experiments/T039/scripts/format_chapter1_public.py": "scripts/format_chapter1_public.py",
+  "research/wind-tower/experiments/T039/scripts/verify_chapter_preservation.py": "scripts/verify_chapter_preservation.py",
+  "research/wind-tower/experiments/T039/scripts/publish_t039.py": "scripts/publish_t039.py",
+  "research/wind-tower/experiments/T039/config/layout-overrides.json": "config/layout-overrides.json",
+  "research/wind-tower/experiments/T039/results/structural-preservation.json": "results/structural-preservation.json",
+  "research/wind-tower/experiments/T039/results/formatting-qa-summary.json": "results/formatting-qa-summary.json",
+  "research/wind-tower/experiments/T039/results/script-provenance.json": "results/script-provenance.json",
+  "research/wind-tower/experiments/T039/publish-finish-map.json": "publish-finish-map.json",
+  "research/wind-tower/experiments/T039/FOLLOWUP_SOURCE_HOLDINGS.md": "FOLLOWUP_SOURCE_HOLDINGS.md",
+  "research/wind-tower/experiments/T039/results/source-pdf-header-checks.json": "results/source-pdf-header-checks.json",
+  "research/wind-tower/audit/43-t039-chapter1-school-format-correction.md": "43-t039-chapter1-school-format-correction.md"
+}

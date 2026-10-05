@@ -1,0 +1,52 @@
+{
+  "scope": "Structural preservation only; no visual or scientific approval",
+  "source_hashes": {
+    "第一章_绪论_文献综述重写稿_20261005.docx": "4089e132260a85cb0afd4341930b67c194a167fe5e5c842cce041fbfb964d8f0",
+    "第一章_绪论_学校模板格式校正版_待逐节审阅_20261005.docx": "f0bce98ffc5b4100f3d181cd2ba859c22e31ae8231c7224d68259ea3c35cc9dc",
+    "论文格式.docx": "3b1079d0766eab9dc19cd541464cf3bd9e319e2e83d4c70d0b7432bc04aa5c2a"
+  },
+  "visible_w_t_sequence_unchanged": true,
+  "visible_w_t_sequence_sha256": "709574ce78a5a08913ed4c5e15a9c85f219f624a66a4a90629bf68acbdc1cfc8",
+  "superscript_text_hashes_sizes_and_regions_unchanged": true,
+  "superscript_groups": [
+    {
+      "region": "body",
+      "size_pt": 9.0,
+      "count": 39
+    },
+    {
+      "region": "table",
+      "size_pt": 10.5,
+      "count": 7
+    }
+  ],
+  "all_source_image_bytes_preserved": true,
+  "source_image_hashes": {
+    "word/media/image1.png": "86c51d863da1c5c2894dac2155b437245aba6b9fe543367a079f85f6ca4b7374"
+  },
+  "source_table_borders_preserved": true,
+  "image_extents_cm": [
+    {
+      "width_cm": 13.2,
+      "height_cm": 14.107502777777778
+    }
+  ],
+  "template_default_header5_bytes_preserved": true,
+  "template_default_footer5_bytes_preserved": true,
+  "page_width_height_twips": [
+    "11906",
+    "16838"
+  ],
+  "margins_twips": {
+    "top": "1984",
+    "bottom": "1984",
+    "left": "1814",
+    "right": "1814",
+    "header": "1474",
+    "footer": "1361"
+  },
+  "page_geometry_matches_template_body_section": true,
+  "inputs_unchanged": true,
+  "private_text_excluded": true,
+  "structural_checks_pass": true
+}

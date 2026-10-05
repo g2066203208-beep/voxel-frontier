@@ -1,0 +1,140 @@
+{
+  "task": "T039",
+  "date": "2026-10-05",
+  "status": "格式校正交付待用户审查；第一章正文未审定；用户新质疑引用实物，现优先核对22条",
+  "scope": "Only chapter 1 formatting; no content, reference or scientific approval",
+  "output_sha256": "f0bce98ffc5b4100f3d181cd2ba859c22e31ae8231c7224d68259ea3c35cc9dc",
+  "source_files_unchanged": true,
+  "structural_preservation": {
+    "actual_verifier_run": true,
+    "all_checks_pass": true,
+    "report": "structural-preservation.json"
+  },
+  "counts": {
+    "body_paragraphs": 43,
+    "chapter_titles": 1,
+    "sections": 7,
+    "subsections": 8,
+    "captions": 2,
+    "tables": 1,
+    "table_rows": 7,
+    "table_columns": 4,
+    "images": 1,
+    "bibliography_entries": 22,
+    "superscripts_body_9pt": 39,
+    "superscripts_table_10_5pt": 7
+  },
+  "visual_review": {
+    "completed": true,
+    "responsible_reviewer_confirmed": true,
+    "render": "render-final-v3",
+    "renderer": "Existing WPS COM read-only export adapter, documents render_docx.py and bundled Poppler",
+    "page_count": 13,
+    "page_size_px": [
+      1414,
+      2000
+    ],
+    "reviewed_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "method_pages_1_7": "Each page visually reviewed; final v3 pages 1,2,5 opened again at original size, pages 3,4,6,7 confirmed byte-identical to reviewed pages",
+    "method_pages_8_13": "Each full page and both overlapping native-pixel crops reviewed; final v3 pages byte-identical to reviewed pages",
+    "blocking_layout_defects": [],
+    "nonblocking_observations": [
+      "Some English references show widened word spacing from justified alignment; no observed overlap, overflow or split entries"
+    ],
+    "arabic_page_numbers_continuous": true,
+    "table_complete_on_page": 8,
+    "image_caption_and_summary_complete_on_page": 11,
+    "bibliography_pages": [
+      12,
+      13
+    ],
+    "private_pdf_sha256": "78b740709c97e68b63bc333a81c99983a982b890ac6f5d13ec9cb6da5f356a81",
+    "page_hashes": [
+      {
+        "page": 1,
+        "png_sha256": "c90bb9adace51677bc3727e9376567eb2e681e4b8ad7df114280b21b81c93073"
+      },
+      {
+        "page": 2,
+        "png_sha256": "8c15a91af86187099f7c7bfadcf7c661f8f854b7546f46399f31634b70c27ee8"
+      },
+      {
+        "page": 3,
+        "png_sha256": "7cd80903b12bfe65463ec59dc3be1083fe5ccfb9b8dde3ef6dc789ecc7d0c33f"
+      },
+      {
+        "page": 4,
+        "png_sha256": "0274b51f498ab80cfe3a051845e15815da5f5713d5c53b6ced4652b66cf63140"
+      },
+      {
+        "page": 5,
+        "png_sha256": "8ba220c7923f9b90f68db931658b1b226a54e1eabaa7eea11389b7d24101cb37"
+      },
+      {
+        "page": 6,
+        "png_sha256": "ed7925c5c194d617f1f5230b2fc923632c30b3faad420438aead866f0d45b45b"
+      },
+      {
+        "page": 7,
+        "png_sha256": "e90c43f3c97a065c5663cdaf5bddc50f4b67a774bb2993f283c6b72bd7fe02bd"
+      },
+      {
+        "page": 8,
+        "png_sha256": "e473de8f33f55e533aaf05b40aa29128683ec1ea2a18907f09ec8d321ee2d6ca"
+      },
+      {
+        "page": 9,
+        "png_sha256": "b976fadfbfec65b26c8421ba1ab2207cc4c12690a728ef56fa3d526e99be9276"
+      },
+      {
+        "page": 10,
+        "png_sha256": "b5c4f5da812cdc350a190535bff04ff6baf26aca0e56736c1feff6cb019e9078"
+      },
+      {
+        "page": 11,
+        "png_sha256": "64ee1a10022d23a6d07286d1888a7fea9b1d0d863ce8a755a25414ff5fa75817"
+      },
+      {
+        "page": 12,
+        "png_sha256": "8df7a5b09668d1c6a6128fec8cc6fa8cf3f3ec533a4bf857db25002c740a3ad5"
+      },
+      {
+        "page": 13,
+        "png_sha256": "171273560e53559985a4d8ad2219c9dbfc7473ab64e5b53d56fef3fd9a16816e"
+      }
+    ],
+    "private_review_report_hashes": {
+      "final-review-pages1-7.md": "82f3313c46567b60910ed2e133974fbcc536a6532159d3833b65652c2c832949",
+      "final-review-pages1-7.json": "7605ec1bd663473421f754e0191ff3b997a34357f5afac71a0b7e6f9dd007c46",
+      "final-review-pages8-13.md": "0edd90e759defac20a50e4c8a1824d1e704b353f317d301e57444ed348f21b88",
+      "final-review-pages8-13.json": "4e85654129357c5420cc2ea927836efb7c08394e4629d6d202d5a6adfbf70835"
+    }
+  },
+  "reference_scope": "22 listed entries with retained library numbering; no claim of 100+ PDFs, full-text reading or evidence support",
+  "not_established_by_this_step": [
+    "scientific correctness",
+    "chapter content acceptance",
+    "reference PDF possession",
+    "full-text reading",
+    "bibliographic accuracy",
+    "citation numbering approval",
+    "claim-to-source support",
+    "pagination in all Word/WPS versions"
+  ],
+  "downstream": "Chapter 2 and later writing, RNA changes/sample runs, simulations and optimization remain paused",
+  "privacy": "No Word, template, PDF, PNG, full extraction, original comments or thesis paragraphs in this public bundle"
+}

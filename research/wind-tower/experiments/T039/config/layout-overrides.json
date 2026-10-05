@@ -1,0 +1,8 @@
+{
+  "schema": "T039-layout-overrides-v1",
+  "tracking_overrides_pt": {
+    "d8760e93012ea027183f2042cff05fb91adf8beace9b577747193509c965795e": -0.2,
+    "5165d54a7e2e9f89f5cce309a47a6b3811e87b07de084093b06dcb8493214789": -0.1
+  },
+  "scope": "Layout implementation choices, not school rules; identify full paragraphs by SHA256 without publishing their text."
+}

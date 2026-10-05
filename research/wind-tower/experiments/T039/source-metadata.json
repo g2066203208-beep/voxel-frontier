@@ -1,7 +1,7 @@
 {
   "task": "T039",
   "date": "2026-10-05",
-  "stage": "start",
+  "stage": "finish-formatting-only",
   "sources": [
     {
       "role": "user-supplied school formatting authority",
@@ -21,7 +21,27 @@
   "execution_scope": "Only existing chapter 1 formatting; content not yet accepted",
   "downstream_work": "Paused, including chapter 2, RNA sample/input revision, simulations and optimization",
   "T038": "Preserve completed audit as historical evidence; do not execute its next-step plan",
-  "final_render_QA": "pending at start record",
+  "final_render_QA": "Complete for final SHA and recorded renderer; 13 pages covered by two independent reviews",
   "model_changes": 0,
-  "new_solver_runs": 0
+  "new_solver_runs": 0,
+  "status": "格式校正交付待用户审查；第一章正文未审定；用户新质疑引用实物，现优先核对22条",
+  "output": {
+    "private_filename": "第一章_绪论_学校模板格式校正版_待逐节审阅_20261005.docx",
+    "sha256": "f0bce98ffc5b4100f3d181cd2ba859c22e31ae8231c7224d68259ea3c35cc9dc",
+    "page_count": 13,
+    "publication": "metadata only; thesis Word/PDF/page images remain private"
+  },
+  "source_files_unchanged": true,
+  "reference_inventory_scope": "22 listed references; existing library numbering retained",
+  "reference_evidence_status": "This formatting step does not establish PDF possession, full-text reading, accuracy or claim support; the 22 entries are now the audit priority",
+  "content_acceptance": "Not accepted; user review pending",
+  "subsequent_source_holdings_audit": {
+    "record": "FOLLOWUP_SOURCE_HOLDINGS.md",
+    "pdf_files_located": 17,
+    "complete_pdf_not_located": 4,
+    "html_source": 1,
+    "remote_pdf_header_check_only": 16,
+    "full_text_and_claim_support_review_complete": false,
+    "user_pdf_citation_condition_fully_satisfied": false
+  }
 }

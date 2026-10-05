@@ -53,10 +53,11 @@ def updated_registry(original, mode):
         raise RuntimeError('T039 already exists or is duplicated; inspect before overwriting')
     if mode == 'finish' and not found:
         raise RuntimeError('T039 start record is missing')
-    status = 'formatting-in-progress/content-not-accepted' if mode == 'start' else 'formatting-complete/content-review-pending'
+    status = 'formatting-in-progress/content-not-accepted' if mode == 'start' else 'format-QA-complete/user-review-pending/content-not-accepted'
     row = '\t'.join(['T039', 'P1', '1', 'Q01',
                      '按用户纠正顺序，仅修订现有第一章学校模板格式并保留正文原文，第一章内容仍待审查',
                      'experiments/T039/RESEARCH_CARD.md', status, 'chapter1-only',
+                     ('格式校正交付待用户审查；第一章正文未审定；用户新质疑引用实物，现优先核对22条；' if mode == 'finish' else '') +
                      '第二章及后续暂停；T038保留历史审查不执行小样；不改模型不求解；正文模板及渲染私有'])
     if found:
         rows[found[0]] = row
@@ -83,13 +84,14 @@ def current_status(original, mode):
         original = (original[:begin] + original[end:]).lstrip('\n')
     progress = ('当前只调整既有第一章的学校模板格式，保持正文内容；格式检查与渲染QA尚在进行。'
                 if mode == 'start' else
-                '第一章格式修订及本轮渲染QA已完成，结果交用户审阅；这不代表第一章内容或论证已经验收。')
+                '格式校正交付待用户审查；第一章正文未审定；用户新质疑引用实物，现优先核对22条。格式QA完成；文献实物持有与支持关系未由本步骤证明。')
     return (BLOCK_START + '\n## T039 用户纠正执行顺序：先审第一章（2026-10-05）\n\n' +
             progress + '\n\n' +
             '- **第一章是当前唯一写作交付；第一章内容尚未验收。**\n' +
             '- 第二章及后续写作、模型修订、RNA小样、仿真与优化全部暂停。\n' +
             '- T038质量属性审查保留为历史证据；不得将既有研究计划或旧“下一步”文字理解为当前执行授权。\n' +
             '- 原Word和学校模板保持私有；公开研究卡、方法/差异、脚本、哈希和QA摘要，详见[43号记录](../' + AUDIT + ')。\n' +
+            ('- [后续来源持有核对](../experiments/T039/FOLLOWUP_SOURCE_HOLDINGS.md)：17条已定位PDF、4条未定位完整PDF、1条HTML；用户规定的PDF引用条件尚未全部满足，正文与引用支持关系未审定。\n' if mode == 'finish' else '') +
             '- 下方旧阶段记录保留其历史语境；如与本段冲突，以本次用户纠正和T039范围为准。\n\n' +
             BLOCK_END + '\n\n' + original)
 
