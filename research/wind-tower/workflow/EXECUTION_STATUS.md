@@ -1,3 +1,13 @@
+## T034 整体流程继续执行（2026-10-05）
+
+- 不再重新设计技术路线，继续以MASTER v1.6为唯一总控，从G0→G10顺序闭环。
+- T028之后，旧状态中“OpenFAST原始FST/ElastoDyn/ROSCO缺失”已过时：本地索引已明确出现`DTU_10MW_RWT.fst`、`DTU_10MW_RWT_ElastoDyn.dat`、`DTU_10MW_RWT_DISCON.IN`、`libdiscon.dll`、158m Tower文件等，且`archive/local-assets-20261004/openfast-36-r2/`已有实际归档。
+- Abaqus索引也已有多套158 m实际INP。G0阻断从“文件缺失”修正为“需要选定并证明唯一canonical production baseline”，不能自动把任一历史候选升级为BASE001。
+- 当前第一优先级：T034.1 OpenFAST canonical baseline → T034.2 Abaqus canonical baseline → T034.3 BASE001；随后继续G1第二章V&V、G2-G4风与整机、G5载荷映射、G6机制、G7疲劳、G8-G9优化、G10全文证据审计。
+- 旧Simpack路线继续排除，不恢复。
+
+详见[38号审计](../audit/38-t034-thesis-execution-restart.md)。
+
 ## T032/T033 Word去重抽取与新文献缓存（2026-10-04）
 
 - 用户本轮上传R2Z74 DOCX与工作室既有历史稿SHA-256完全一致：`65b5bddae58aac9b5e194ba7ddff498a67cb82aa8bbe984d7ad445684bfc7480`；未重复上传原Word。
