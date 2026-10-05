@@ -92,7 +92,7 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
       const line=new THREE.Line(lg,lm); line.computeLineDistances(); rnaGroup.add(line);
     }
 
-    const bounds=new THREE.Box3(new THREE.Vector3(...data.bounds.min),new THREE.Vector3(...data.bounds.max));
+    const bounds=new THREE.Box3(new THREE.Vector3(data.bounds.min[0],data.bounds.min[1],data.bounds.min[2]),new THREE.Vector3(data.bounds.max[0],data.bounds.max[1],data.bounds.max[2]));
     const center=bounds.getCenter(new THREE.Vector3()), size=bounds.getSize(new THREE.Vector3());
     camera=new THREE.PerspectiveCamera(32,1,.05,5000); camera.up.set(0,1,0);
     renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
@@ -104,9 +104,10 @@ export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
     function setView(kind:'iso'|'front'|'side'|'top') {
       const span=Math.max(size.x,size.y,size.z), d=span*1.25;
       const c=center.clone();
+      camera.up.set(0,1,0);
       if(kind==='front') camera.position.set(c.x,c.y,c.z+d);
       else if(kind==='side') camera.position.set(c.x+d,c.y,c.z);
-      else if(kind==='top') camera.position.set(c.x,c.y+d,c.z+.001);
+      else if(kind==='top') { camera.up.set(0,0,-1); camera.position.set(c.x,c.y+d,c.z+.001); }
       else camera.position.set(c.x+d*.56,c.y+d*.12,c.z+d*.78);
       controls!.target.copy(c); controls!.update();
     }
