@@ -4,9 +4,9 @@
 
 ## 输入
 
-`../inputs/BASE001_CANDIDATE_M2_R2RNA_O158.inp`
+`../inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp`
 
-该文件是当前首选BASE001候选。原T026 M2不覆盖。
+该文件是当前唯一首选BASE001候选（Git blob `49ca06bd2c5af67d681d39c77ad292382d982b4f`）。原T026 M2及T045 Candidate A/B均保留、不覆盖。
 
 ## 运行目的
 
@@ -23,7 +23,7 @@
 在独立工作目录复制首选INP后运行：
 
 ```text
-abaqus job=RUN_T045_001 input=BASE001_CANDIDATE_M2_R2RNA_O158.inp cpus=4 interactive
+abaqus job=RUN_T045_001 input=BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp cpus=4 interactive
 abaqus python extract_t045_odb.py RUN_T045_001.odb t045-results.json
 ```
 
