@@ -7,57 +7,165 @@ export function researchPage() {
   return `<div class="page-heading"><div><div class="eyebrow">GITHUB RESEARCH</div><h1>从题目开始，建立证据链</h1><p>正式研究流程、问题与工程文件均由 GitHub 管理。论文正文和老师讨论原文不公开。</p></div><a class="button primary" href="${repo}/tree/main/research/wind-tower/workflow" target="_blank" rel="noopener">打开完整流程</a></div><section class="panel research-intro"><h2>本轮已开始逐章核查</h2><p>七章第一轮审查形成25项台账；127条文献已登记，书目身份与论断支持分别核查。优先处理摘要与第三章的36组重算状态矛盾、材料引用不完整、模型身份和载荷映射证据。</p><div class="research-links"><a class="button primary" href="${repo}/blob/main/research/wind-tower/audit/01-first-review.md" target="_blank" rel="noopener">逐章问题与文献对照</a><a class="button" href="${repo}/blob/main/research/wind-tower/audit/reference-records.json" target="_blank" rel="noopener">127条书目核查记录</a><a class="button" href="${import.meta.env.BASE_URL}research/reported-checks.json" target="_blank" rel="noopener">基础算术复核报告</a></div></section><section class="panel research-intro"><h2>10 MW级陆上风机预应力混凝土—钢混合塔架抗风性能与结构优化研究</h2><p>这是待证据支持的工作题目。先确认塔架身份、预应力建模、风环境、RNA 简化及约束，再决定是否保留“优化”等承诺。现有数值属于文稿报告值，不能作为独立验证结果。</p><div class="research-links">${[['00-title.md','01 · 逐词审查题目与研究问题'],['01-process.md','02 · 从立项到结论的完整流程'],['02-evidence.md','03 · 参数、证据与验收规则'],['03-cloud.md','04 · GitHub 云端执行与模型读取'],['04-literature.md','05 · 文献检索与核查记录']].map(([file,label])=>`<a class="button" href="${repo}/blob/main/research/wind-tower/workflow/${file}" target="_blank" rel="noopener">${label}</a>`).join('')}</div></section><section class="panel research-intro"><h2>当前阻塞与研究顺序</h2><ol><li>确认 158 m 与 SHOWTIME185 模型各自的用途，建立同一基准。</li><li>审查模型材料、预应力、连接、边界条件与 RNA 表征；修复缺失的 jobs 记录。</li><li>补齐气象原始数据、风场、载荷时程及求解结果，复核 36 组工况。</li><li>统一阻尼后重新判断控制工况；随后开展响应、疲劳及优化。</li></ol><p>每项完成必须关联输入哈希、脚本版本、运行记录及输出；缺少证据时保持待核查。</p><a href="${repo}/blob/main/research/wind-tower/discussion-issues.md" target="_blank" rel="noopener">查看老师指出的问题与工程排查清单</a></section><section class="panel research-intro"><h2>全程 GitHub 的工作入口</h2><p>修改正式流程请使用 GitHub 文件编辑器；运行模型读取使用 Actions；成果由 Pages 展示。左侧原有笔记模块仍是浏览器草稿，不会自动写入仓库。</p><div class="research-links"><a class="button" href="${repo}/edit/main/research/wind-tower/workflow/01-process.md" target="_blank" rel="noopener">在 GitHub 编辑流程</a><a class="button" href="${repo}/actions" target="_blank" rel="noopener">查看云端运行与检查</a><a class="button" href="${repo}/tree/main/research/wind-tower" target="_blank" rel="noopener">工程文件与版本</a></div></section>`;
 }
 export function engineeringPage() {
-  return `<div class="page-heading"><div><div class="eyebrow">ENGINEERING / SOURCE GEOMETRY</div><h1>工程模型读取与检查</h1><p>从仓库 STEP 实际读取生成，单位为米。可选择部件、检查网格并导出视图。</p></div><a class="button" href="${repo}/actions" target="_blank" rel="noopener">云端读取记录</a></div><div class="engineering-layout"><section class="panel viewer-panel"><div class="viewer-controls"><button class="button" id="model-reset">恢复视角</button><label><input type="checkbox" id="model-wire"/> 线框</label><label><input type="checkbox" id="model-isolate"/> 隔离选中部件</label><button class="button" id="model-png">导出 PNG</button></div><div id="model-canvas"><p id="model-loading" role="status">正在读取云端几何成果…</p></div><p class="viewer-caption">拖动旋转 · 滚轮缩放 · 右键平移。该视图表示 CAD 几何，不表示应力或有限元验证结果。</p></section><aside class="panel model-details"><h2>原始文件与读取结果</h2><div id="model-report" role="status">加载中…</div><label>部件 <select id="model-part"><option value="">全部部件</option></select></label><div id="part-details"></div><h3>CAE 元数据检查</h3><p>读取先前提取的审计文件；未实现专有 CAE 二进制的完整解码。</p><button class="button" id="audit-showtime">SHOWTIME185</button><pre id="audit-result">选择模型查看材料、步骤与网格数量。</pre></aside></div>`;
+  const inp = repo + '/blob/main/research/wind-tower/experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp';
+  return \`<div class="page-heading"><div><div class="eyebrow">ABAQUS / FINITE ELEMENT MODEL</div><h1>Abaqus 有限元模型在线查看</h1><p>直接从当前 T045 首选 .inp 输入文件生成。显示的是未变形有限元网格、钢筋/预应力筋、接头以及 RNA 等效质量—转动惯量位置，不是 CAD 外观替代图。</p></div><a class="button primary" href="\${inp}" target="_blank" rel="noopener">打开当前 Abaqus INP</a></div><div class="engineering-layout"><section class="panel viewer-panel"><div class="viewer-controls"><button class="button" id="model-reset">轴测</button><button class="button" id="model-front">正视</button><button class="button" id="model-side">侧视</button><button class="button" id="model-top">俯视</button><label><input type="checkbox" id="model-mesh" checked/> 外表面网格</label><label><input type="checkbox" id="model-transparent"/> 半透明</label><label><input type="checkbox" id="model-rna" checked/> RNA 等效点</label><label><input type="checkbox" id="model-isolate"/> 隔离选中</label><button class="button" id="model-png">导出 PNG</button></div><div id="model-canvas"><p id="model-loading" role="status">正在从 GitHub 构建的 Abaqus 网格成果读取模型…</p></div><p class="viewer-caption">拖动旋转 · 滚轮缩放 · 右键平移 · 点击实体可选中部件。该视图由 Abaqus 输入文件的节点与单元直接生成；当前仅显示未变形网格，不代表 ODB 应力/位移结果。</p></section><aside class="panel model-details"><h2>当前计算模型</h2><div id="model-report" role="status">加载中…</div><h3>显示层</h3><div class="layer-grid" id="model-layers"><label><input type="checkbox" data-cat="concrete" checked/> 混凝土塔段</label><label><input type="checkbox" data-cat="steel" checked/> 钢塔段</label><label><input type="checkbox" data-cat="rebar" checked/> 普通钢筋</label><label><input type="checkbox" data-cat="prestress" checked/> 预应力筋</label><label><input type="checkbox" data-cat="joint" checked/> 接头弹簧</label></div><label>部件 / 实例 <select id="model-part"><option value="">全部部件</option></select></label><div id="part-details"></div><h3>RNA 等效算子</h3><div id="rna-details" class="rna-details">加载中…</div><h3>模型身份</h3><div class="research-links model-links"><a href="\${inp}" target="_blank" rel="noopener">T045 首选 INP</a><a href="\${repo}/blob/main/research/wind-tower/experiments/T045/RESEARCH_CARD.md" target="_blank" rel="noopener">T045 研究卡</a><a href="\${import.meta.env.BASE_URL}research/abaqus-model-report.json" target="_blank" rel="noopener">解析报告 JSON</a></div></aside></div>\`;
 }
 export async function mountEngineering(host: HTMLElement): Promise<()=>void> {
-  let alive = true, frame = 0; const controller = new AbortController();
+  let alive = true, frame = 0;
+  const controller = new AbortController();
   let renderer: THREE.WebGLRenderer | undefined, controls: OrbitControls | undefined;
-  const geometries: THREE.BufferGeometry[] = [], materials: THREE.MeshStandardMaterial[] = [];
-  const dispose = () => { alive=false; controller.abort(); cancelAnimationFrame(frame); controls?.dispose(); geometries.forEach(g=>g.dispose()); materials.forEach(m=>m.dispose()); renderer?.dispose(); resizeObserver.disconnect(); };
+  const geometries: THREE.BufferGeometry[] = [], materials: THREE.Material[] = [];
   const canvasHost = host.querySelector<HTMLElement>('#model-canvas')!;
   const resizeObserver = new ResizeObserver(()=>resize());
   let camera: THREE.PerspectiveCamera;
-  function resize() { if(!renderer || !camera) return; const w=canvasHost.clientWidth,h=canvasHost.clientHeight; camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); }
+  let clickHandler: ((e:PointerEvent)=>void) | undefined;
+  const dispose = () => {
+    alive=false; controller.abort(); cancelAnimationFrame(frame); controls?.dispose();
+    if(clickHandler && renderer) renderer.domElement.removeEventListener('pointerdown',clickHandler);
+    geometries.forEach(g=>g.dispose()); materials.forEach(m=>m.dispose()); renderer?.dispose(); resizeObserver.disconnect();
+  };
+  function resize() {
+    if(!renderer || !camera) return;
+    const w=Math.max(canvasHost.clientWidth,1), h=Math.max(canvasHost.clientHeight,1);
+    camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h);
+  }
   async function json(file:string,gzip=false) {
-    const response = await fetch(`${import.meta.env.BASE_URL}research/${file}`,{signal:controller.signal});
-    if(!response.ok) throw Error(`读取失败 HTTP ${response.status}`);
-    // Fetch already decodes HTTP Content-Encoding; Pages may instead serve a raw gzip file.
-    if(gzip && !response.headers.get('Content-Encoding')?.includes('gzip')) return JSON.parse(await new Response(response.body!.pipeThrough(new DecompressionStream('gzip'))).text());
+    const response = await fetch(\`\${import.meta.env.BASE_URL}research/\${file}\`,{signal:controller.signal});
+    if(!response.ok) throw Error(\`读取失败 HTTP \${response.status}\`);
+    if(gzip && !response.headers.get('Content-Encoding')?.includes('gzip')) {
+      return JSON.parse(await new Response(response.body!.pipeThrough(new DecompressionStream('gzip'))).text());
+    }
     return response.json();
   }
   try {
-    const [data, report] = await Promise.all([json('geometry.json.gz',true),json('geometry-report.json')]);
+    const [data, report] = await Promise.all([json('abaqus-model.json.gz',true),json('abaqus-model-report.json')]);
     if(!alive || !canvasHost.isConnected) { dispose(); return dispose; }
-    const scene=new THREE.Scene(); scene.background=new THREE.Color('#e9eeea'); scene.add(new THREE.HemisphereLight(0xffffff,0x596d64,2.7));
-    const light=new THREE.DirectionalLight(0xffffff,3); light.position.set(80,100,100); scene.add(light);
-    const group=new THREE.Group(); scene.add(group);
-    const meshes:THREE.Mesh[]=[];
-    for(const part of data.meshes) {
-      const geometry=new THREE.BufferGeometry(); geometry.setAttribute('position',new THREE.Float32BufferAttribute(part.attributes.position.array,3)); geometry.setIndex(part.index.array);
-      if(part.attributes.normal) geometry.setAttribute('normal',new THREE.Float32BufferAttribute(part.attributes.normal.array,3)); else geometry.computeVertexNormals();
-      const color=part.color ? new THREE.Color(...part.color as [number,number,number]) : new THREE.Color('#b5c8c1');
-      const material=new THREE.MeshStandardMaterial({color,roughness:.65,metalness:.15,side:THREE.DoubleSide});
-      const mesh=new THREE.Mesh(geometry,material); group.add(mesh); meshes.push(mesh); geometries.push(geometry); materials.push(material);
+
+    const scene=new THREE.Scene();
+    scene.background=new THREE.Color('#edf1ef');
+    scene.add(new THREE.HemisphereLight(0xffffff,0x5b6660,2.5));
+    const light=new THREE.DirectionalLight(0xffffff,3.2); light.position.set(80,180,120); scene.add(light);
+    const root=new THREE.Group(); scene.add(root);
+
+    const categoryColor:Record<string,string>={concrete:'#b9b7ae',steel:'#5f7896',rebar:'#725747',prestress:'#d69a3b',joint:'#8b63a5',other:'#7b8881'};
+    type Visual={name:string;category:string;kind:string;surface?:THREE.Mesh;wire?:THREE.LineSegments;line?:THREE.LineSegments;material?:THREE.MeshStandardMaterial;info:any};
+    const visuals:Visual[]=[];
+    const pickMeshes:THREE.Mesh[]=[];
+
+    for(const g of data.groups as any[]) {
+      const color=categoryColor[g.category] || categoryColor.other;
+      if(g.kind==='solid') {
+        const geom=new THREE.BufferGeometry();
+        geom.setAttribute('position',new THREE.Float32BufferAttribute(g.positions,3));
+        geom.setIndex(g.triangles); geom.computeVertexNormals(); geometries.push(geom);
+        const mat=new THREE.MeshStandardMaterial({color,roughness:.72,metalness:g.category==='steel'?.28:.04,side:THREE.DoubleSide,transparent:true,opacity:1});
+        materials.push(mat);
+        const surface=new THREE.Mesh(geom,mat); surface.userData.visualName=g.name; root.add(surface); pickMeshes.push(surface);
+        const wireGeom=new THREE.BufferGeometry();
+        wireGeom.setAttribute('position',new THREE.Float32BufferAttribute(g.positions,3));
+        wireGeom.setIndex(g.lineIndices); geometries.push(wireGeom);
+        const wireMat=new THREE.LineBasicMaterial({color:'#33413a',transparent:true,opacity:.42}); materials.push(wireMat);
+        const wire=new THREE.LineSegments(wireGeom,wireMat); root.add(wire);
+        visuals.push({name:g.name,category:g.category,kind:g.kind,surface,wire,material:mat,info:g});
+      } else {
+        const lineGeom=new THREE.BufferGeometry();
+        lineGeom.setAttribute('position',new THREE.Float32BufferAttribute(g.positions,3)); lineGeom.setIndex(g.lineIndices); geometries.push(lineGeom);
+        const lineMat=new THREE.LineBasicMaterial({color,transparent:true,opacity:.92}); materials.push(lineMat);
+        const line=new THREE.LineSegments(lineGeom,lineMat); line.userData.visualName=g.name; root.add(line);
+        visuals.push({name:g.name,category:g.category,kind:g.kind,line,info:g});
+      }
     }
-    const bounds=new THREE.Box3().setFromObject(group),center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
-    camera=new THREE.PerspectiveCamera(35,1,.000001,10000); camera.up.set(0,1,0);
-    renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); canvasHost.replaceChildren(renderer.domElement);
-    controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=true;
-    function reset(){ const distance=Math.max(size.x,size.y,size.z)*1.6; camera.position.copy(center).add(new THREE.Vector3(distance*.6,distance*.18,distance)); controls!.target.copy(center); controls!.update(); }
-    reset(); resizeObserver.observe(canvasHost); resize();
-    const tick=()=>{if(!alive)return; controls!.update(); renderer!.render(scene,camera); frame=requestAnimationFrame(tick);}; tick();
+
+    const rnaGroup=new THREE.Group(); scene.add(rnaGroup);
+    const markerMaterialTop=new THREE.MeshStandardMaterial({color:'#355d7a',roughness:.35}); materials.push(markerMaterialTop);
+    const markerMaterialCg=new THREE.MeshStandardMaterial({color:'#b56d2a',roughness:.35}); materials.push(markerMaterialCg);
+    const markerGeometryTop=new THREE.SphereGeometry(.55,24,16), markerGeometryCg=new THREE.SphereGeometry(.75,24,16); geometries.push(markerGeometryTop,markerGeometryCg);
+    if(data.rna?.towerTop) {
+      const m=new THREE.Mesh(markerGeometryTop,markerMaterialTop); m.position.fromArray(data.rna.towerTop); rnaGroup.add(m);
+    }
+    if(data.rna?.rnaCg) {
+      const m=new THREE.Mesh(markerGeometryCg,markerMaterialCg); m.position.fromArray(data.rna.rnaCg); rnaGroup.add(m);
+    }
+    if(data.rna?.towerTop && data.rna?.rnaCg) {
+      const lg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3().fromArray(data.rna.towerTop),new THREE.Vector3().fromArray(data.rna.rnaCg)]); geometries.push(lg);
+      const lm=new THREE.LineDashedMaterial({color:'#8b5a2b',dashSize:.35,gapSize:.2}); materials.push(lm);
+      const line=new THREE.Line(lg,lm); line.computeLineDistances(); rnaGroup.add(line);
+    }
+
+    const bounds=new THREE.Box3(new THREE.Vector3(...data.bounds.min),new THREE.Vector3(...data.bounds.max));
+    const center=bounds.getCenter(new THREE.Vector3()), size=bounds.getSize(new THREE.Vector3());
+    camera=new THREE.PerspectiveCamera(32,1,.05,5000); camera.up.set(0,1,0);
+    renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    renderer.outputColorSpace=THREE.SRGBColorSpace;
+    canvasHost.replaceChildren(renderer.domElement);
+    controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=true; controls.dampingFactor=.08;
+
+    function setView(kind:'iso'|'front'|'side'|'top') {
+      const span=Math.max(size.x,size.y,size.z), d=span*1.25;
+      const c=center.clone();
+      if(kind==='front') camera.position.set(c.x,c.y,c.z+d);
+      else if(kind==='side') camera.position.set(c.x+d,c.y,c.z);
+      else if(kind==='top') camera.position.set(c.x,c.y+d,c.z+.001);
+      else camera.position.set(c.x+d*.56,c.y+d*.12,c.z+d*.78);
+      controls!.target.copy(c); controls!.update();
+    }
+    setView('iso'); resizeObserver.observe(canvasHost); resize();
+    const tick=()=>{if(!alive)return; controls!.update();renderer!.render(scene,camera);frame=requestAnimationFrame(tick);}; tick();
+
     const select=host.querySelector<HTMLSelectElement>('#model-part')!;
-    select.innerHTML='<option value="">全部部件</option>'+report.parts.map((p:any)=>`<option value="${p.id}">${safe(p.name)}</option>`).join('');
-    host.querySelector('#model-report')!.innerHTML=`<p><strong>${report.parts.length}</strong> 部件 · <strong>${report.triangles.toLocaleString()}</strong> 三角面</p><p>包围盒尺寸：${report.dimensions.map((v:number)=>v.toFixed(3)).join(' × ')} m</p><p>非有限数：${report.checks.nonfinite} · 越界索引：${report.checks.invalidIndices} · 退化面：${report.checks.degenerate}</p><details><summary>来源与 SHA-256</summary><code>${safe(report.sha256)}</code><p>${safe(report.source)}</p><p>弦偏差 ${report.parameters.linearDeflection} m；读取器 ${safe(report.reader)} ${safe(report.readerVersion)}</p></details>`;
-    if(report.warnings?.length) { const warning=document.createElement('p');warning.className='model-warning';warning.textContent='单位冲突待核查：STEP声明毫米，读取后装配最大尺寸不足1 m，与百米级塔架不符。尚未自动修正比例。';host.querySelector('#model-report')!.prepend(warning); }
-    const download=document.createElement('a');download.href=`${import.meta.env.BASE_URL}research/geometry-report.json`;download.target='_blank';download.rel='noopener';download.textContent='打开完整读取与检查报告';host.querySelector('#model-report')!.append(download);
-    function selection(){const id=select.value===''?-1:Number(select.value),isolate=host.querySelector<HTMLInputElement>('#model-isolate')!.checked; meshes.forEach((mesh,i)=>{mesh.visible=!isolate||id===-1||i===id; materials[i].emissive.set(i===id?0x334f25:0);}); const part=report.parts[id]; host.querySelector('#part-details')!.textContent=part?`${part.name} · ${part.vertices} 顶点 · ${part.triangles} 三角面`:'';}
-    select.onchange=selection; host.querySelector<HTMLInputElement>('#model-isolate')!.onchange=selection;
-    host.querySelector<HTMLInputElement>('#model-wire')!.onchange=e=>materials.forEach(m=>m.wireframe=(e.target as HTMLInputElement).checked);
-    host.querySelector<HTMLButtonElement>('#model-reset')!.onclick=reset;
-    host.querySelector<HTMLButtonElement>('#model-png')!.onclick=()=>{renderer!.render(scene,camera); const link=document.createElement('a'); link.download='DTU158-CAD-geometry.png';link.href=renderer!.domElement.toDataURL('image/png');link.click();};
-    const audit=async(name:string)=>{const target=host.querySelector('#audit-result')!; target.textContent='读取审计元数据…';try{const audit=await json(`${name}.cae.audit.json.gz`,true); if(!alive)return;target.textContent=JSON.stringify(audit.models ? Object.fromEntries(Object.entries(audit.models).map(([key,value])=>{const m=value as any;return[key,{parts:Object.keys(m.parts??{}).length,instances:Object.keys(m.instances??{}).length,nodes:Object.values(m.parts??{}).reduce((n:number,p:any)=>n+(p.nodes??0),0),elements:Object.values(m.parts??{}).reduce((n:number,p:any)=>n+(p.elements??0),0),materials:m.materials,steps:m.steps}];})) : audit,null,2)+(audit.error?`\n读取错误：${audit.error}`:'');}catch(e){if(alive)target.textContent=String(e);}};
-    host.querySelector<HTMLButtonElement>('#audit-showtime')!.onclick=()=>void audit('SHOWTIME185_V167_MAINLEG_CALIBRATED_VALIDATED');
-  } catch(error) { if(alive) canvasHost.innerHTML=`<p role="alert">${safe(error)}。请查看 GitHub Actions 的模型读取日志。</p>`; }
+    const sorted=[...visuals].sort((a,b)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name));
+    select.innerHTML='<option value="">全部部件</option>'+sorted.map(v=>\`<option value="\${safe(v.name)}">\${safe(v.name)} · \${safe(v.info.elementTypes.join('/'))}</option>\`).join('');
+
+    const catChecks=[...host.querySelectorAll<HTMLInputElement>('#model-layers input[data-cat]')];
+    const meshCheck=host.querySelector<HTMLInputElement>('#model-mesh')!;
+    const transparentCheck=host.querySelector<HTMLInputElement>('#model-transparent')!;
+    const isolateCheck=host.querySelector<HTMLInputElement>('#model-isolate')!;
+    const rnaCheck=host.querySelector<HTMLInputElement>('#model-rna')!;
+    function updateVisibility() {
+      const selected=select.value, isolate=isolateCheck.checked;
+      const enabled=new Set(catChecks.filter(x=>x.checked).map(x=>x.dataset.cat));
+      for(const v of visuals) {
+        const base=enabled.has(v.category) && (!isolate || !selected || v.name===selected);
+        if(v.surface) v.surface.visible=base;
+        if(v.wire) v.wire.visible=base && meshCheck.checked;
+        if(v.line) v.line.visible=base;
+        if(v.material) {
+          v.material.opacity=transparentCheck.checked?.34:1;
+          v.material.emissive.set(v.name===selected ? 0x273b20 : 0x000000);
+        }
+      }
+      rnaGroup.visible=rnaCheck.checked;
+      const v=visuals.find(x=>x.name===selected);
+      host.querySelector('#part-details')!.textContent=v ? \`\${v.name} · \${v.info.nodes.toLocaleString()} 节点 · \${v.info.elements.toLocaleString()} 单元 · \${v.info.elementTypes.join(', ')}\` : '点击模型或从下拉框选择实例；可配合“隔离选中”检查单段网格。';
+    }
+    select.onchange=updateVisibility; isolateCheck.onchange=updateVisibility; meshCheck.onchange=updateVisibility; transparentCheck.onchange=updateVisibility; rnaCheck.onchange=updateVisibility;
+    catChecks.forEach(x=>x.onchange=updateVisibility); updateVisibility();
+
+    const raycaster=new THREE.Raycaster(), pointer=new THREE.Vector2();
+    clickHandler=(event:PointerEvent)=>{
+      const rect=renderer!.domElement.getBoundingClientRect();
+      pointer.x=((event.clientX-rect.left)/rect.width)*2-1; pointer.y=-((event.clientY-rect.top)/rect.height)*2+1;
+      raycaster.setFromCamera(pointer,camera);
+      const hit=raycaster.intersectObjects(pickMeshes,false)[0];
+      if(hit){select.value=String(hit.object.userData.visualName||'');updateVisibility();}
+    };
+    renderer.domElement.addEventListener('pointerdown',clickHandler);
+
+    host.querySelector<HTMLButtonElement>('#model-reset')!.onclick=()=>setView('iso');
+    host.querySelector<HTMLButtonElement>('#model-front')!.onclick=()=>setView('front');
+    host.querySelector<HTMLButtonElement>('#model-side')!.onclick=()=>setView('side');
+    host.querySelector<HTMLButtonElement>('#model-top')!.onclick=()=>setView('top');
+    host.querySelector<HTMLButtonElement>('#model-png')!.onclick=()=>{
+      renderer!.render(scene,camera);
+      const link=document.createElement('a');link.download='DTU158-T045-Abaqus-FE.png';link.href=renderer!.domElement.toDataURL('image/png');link.click();
+    };
+
+    host.querySelector('#model-report')!.innerHTML=\`<p><strong>\${report.counts.instances}</strong> 个装配实例 · <strong>\${report.counts.solidElements.toLocaleString()}</strong> 个实体单元 · <strong>\${report.counts.lineElements.toLocaleString()}</strong> 个线单元</p><p>模型高度范围：\${report.bounds.min[1].toFixed(3)} ～ \${report.bounds.max[1].toFixed(3)} m；外包尺寸 \${report.dimensions.map((v:number)=>v.toFixed(3)).join(' × ')} m</p><p>元素类型：\${report.elementTypes.join(' / ')}</p><details><summary>输入文件与 SHA-256</summary><code>\${safe(report.sha256)}</code><p>\${safe(report.source)}</p></details>\`;
+    const rna=data.rna;
+    host.querySelector('#rna-details')!.innerHTML=rna ? \`<p><b>塔顶公共点 O</b><br/>\${rna.towerTop?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>RNA 质心 G</b><br/>\${rna.rnaCg?.map((x:number)=>x.toFixed(6)).join(', ') || '—'} m</p><p><b>MASS</b> \${Number(rna.mass).toLocaleString(undefined,{maximumFractionDigits:3})} kg</p><p><b>ROTARYI</b><br/>\${rna.rotaryInertia?.map((x:number)=>Number(x).toExponential(5)).join('<br/>') || '—'}</p><p class="model-note">网页中的两个球仅是 O 与 G 的符号标记；真实计算仍由 INP 中 MASS + ROTARYI + 6DOF 偏心耦合承担。</p>\` : '<p>未找到 RNA 等效算子。</p>';
+  } catch(error) {
+    if(alive) canvasHost.innerHTML=\`<p role="alert">\${safe(error)}。Pages 构建需先运行 scripts/read-abaqus.cjs；请查看 GitHub Actions 日志。</p>\`;
+  }
   return dispose;
 }
