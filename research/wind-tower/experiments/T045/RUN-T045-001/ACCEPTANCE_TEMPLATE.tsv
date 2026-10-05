@@ -1,0 +1,13 @@
+check	criterion	status_before_run	actual	decision
+solver_completion	STA/MSG successful; no ERROR	PENDING		
+input_identity	must equal T045 preferred O158 candidate	PENDING		
+gravity_force_balance	residual/weight <= 1e-5	PENDING		
+gravity_moment_balance	residual/(weight*base_radius) <= 1e-5	PENDING		
+candidate_total_mass	compare against 2600416.925324695 kg input-algebra expectation	PENDING		
+PT_equilibrated_S11	read actual min/max/mean from Gravity final frame	PENDING		
+gravity_damage	read max DAMAGET/DAMAGEC; investigate if nonzero	PENDING		
+modes_1_30	all 30 frequencies extracted	PENDING		
+mode_change_vs_M2_M3	report and physically explain; no hindsight pass threshold	PENDING		
+Flex_X_at_O	response extracted at O=(0,158,0)	PENDING		
+Flex_Z_at_O	response extracted at O=(0,158,0)	PENDING		
+G0_decision	all identity + numerical checks reviewed	PENDING		
