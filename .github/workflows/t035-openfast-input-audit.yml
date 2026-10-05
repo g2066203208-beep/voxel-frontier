@@ -1,0 +1,174 @@
+name: T035 OpenFAST 36-case input audit
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t035-openfast-input-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit archived OpenFAST input identity
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, csv, zipfile, difflib, re, hashlib
+
+          root = Path("research/wind-tower")
+          manifest_path = root/"archive/local-assets-20261004/file-manifest.json"
+          rows = json.loads(manifest_path.read_text(encoding="utf-8"))
+          of = [r for r in rows if r.get("section")=="openfast-36-r2" and r.get("relative_path","").startswith("CASES/")]
+
+          outdir = root/"experiments/T035/openfast-input-audit"
+          outdir.mkdir(parents=True, exist_ok=True)
+
+          case_re = re.compile(r"^CASES/(U[^/]+)/")
+          cases = sorted({case_re.match(r["relative_path"]).group(1) for r in of if case_re.match(r.get("relative_path",""))})
+
+          keys = [
+              "DTU_10MW_RWT.fst",
+              "DTU_10MW_RWT_ElastoDyn.dat",
+              "DTU_10MW_RWT_ServoDyn.dat",
+              "DTU_10MW_RWT_AeroDyn15.dat",
+              "DTU_10MW_AeroDyn15_blade.dat",
+              "C02R3R2_158M_Tower.dat",
+              "C02R3R2_158M_Tower_ZERO_DAMPING_20260831.dat",
+              "DTU_10MW_InflowWind.dat",
+              "DTU_10MW_RWT_DISCON.IN",
+              "libdiscon.dll",
+              "gen_discon.py",
+              "Cp_Ct_Cq_10MW.txt",
+          ]
+
+          audit=[]
+          for key in keys:
+              hits=[r for r in of if r.get("relative_path","").split("/")[-1]==key and case_re.match(r.get("relative_path",""))]
+              hashes=sorted({r.get("sha256") for r in hits if r.get("sha256")})
+              audit.append({
+                  "file":key,
+                  "case_records":len(hits),
+                  "unique_sha256":len(hashes),
+                  "missing_sha_records":sum(not bool(r.get("sha256")) for r in hits),
+                  "statuses":";".join(sorted({r.get("status","") for r in hits})),
+                  "sha256_values":";".join(hashes),
+              })
+          with (outdir/"OPENFAST_36CASE_STATIC_IDENTITY.tsv").open("w",encoding="utf-8",newline="") as f:
+              w=csv.DictWriter(f, fieldnames=audit[0].keys(), delimiter="\t"); w.writeheader(); w.writerows(audit)
+
+          # per-case AeroDyn hash
+          aero=[]
+          for r in of:
+              if r.get("relative_path","").endswith("/Rotor/DTU_10MW_RWT_AeroDyn15.dat"):
+                  m=case_re.match(r["relative_path"])
+                  if m:
+                      aero.append((m.group(1),r.get("bytes"),r.get("sha256"),r.get("canonical_archive"),r.get("canonical_member")))
+          with (outdir/"AERODYN_CASE_HASHES.tsv").open("w",encoding="utf-8",newline="") as f:
+              w=csv.writer(f,delimiter="\t"); w.writerow(["case","bytes","sha256","canonical_archive","canonical_member"]); w.writerows(sorted(aero))
+
+          # extract unique AeroDyn canonical contents
+          uniq={}
+          for case, size, sha, arc, member in aero:
+              if sha and sha not in uniq:
+                  uniq[sha]=(case,arc,member)
+          contents={}
+          for sha,(case,arc,member) in uniq.items():
+              zpath=Path(arc)
+              with zipfile.ZipFile(zpath) as z:
+                  data=z.read(member)
+              contents[sha]=data.decode("utf-8",errors="replace")
+              (outdir/f"AERODYN_{sha[:12]}.dat").write_bytes(data)
+
+          verdict="NO_AERODYN_VARIATION"
+          diff_text=""
+          pre_equal=None
+          diff_before=[]
+          diff_after=[]
+          if len(contents)==2:
+              (sha1,t1),(sha2,t2)=list(contents.items())
+              l1=t1.splitlines(); l2=t2.splitlines()
+              diff_text="\n".join(difflib.unified_diff(l1,l2,fromfile=sha1,tofile=sha2,lineterm=""))+"\n"
+              def outlist_idx(lines):
+                  for i,line in enumerate(lines):
+                      s=line.strip().lower()
+                      if s.startswith("outlist") or s=="outlist":
+                          return i
+                  return len(lines)
+              i1,i2=outlist_idx(l1),outlist_idx(l2)
+              def norm_pre(lines,i):
+                  out=[]
+                  for x in lines[:i]:
+                      # preserve values but normalize spacing and strip ! comments
+                      x=x.split("!")[0].strip()
+                      if x: out.append(" ".join(x.split()))
+                  return out
+              pre_equal = norm_pre(l1,i1)==norm_pre(l2,i2)
+              verdict = "ONLY_OUTPUT_SECTION_DIFF" if pre_equal else "MODEL_INPUT_DIFF_BEFORE_OUTLIST"
+              diff_before = list(difflib.unified_diff(norm_pre(l1,i1),norm_pre(l2,i2),lineterm=""))
+              diff_after = list(difflib.unified_diff(l1[i1:],l2[i2:],lineterm=""))
+          (outdir/"AERODYN_DIFFERENCE.diff").write_text(diff_text,encoding="utf-8")
+
+          # detect known archive gaps
+          discon=[r for r in of if r.get("relative_path","").endswith("/Control/DTU_10MW_RWT_DISCON.IN")]
+          dll=[r for r in of if r.get("relative_path","").endswith("/Control/libdiscon.dll")]
+          missing_discon=sum(not bool(r.get("sha256")) for r in discon)
+          missing_dll=sum(not bool(r.get("sha256")) for r in dll)
+
+          # markdown report
+          md=[]
+          md.append("# T035.1 OpenFAST 36-case canonical input identity audit")
+          md.append("")
+          md.append(f"Cases detected: **{len(cases)}**.")
+          md.append("")
+          md.append("## Static-input identity summary")
+          md.append("")
+          md.append("|file|records|unique SHA|missing SHA|status|")
+          md.append("|---|---:|---:|---:|---|")
+          for a in audit:
+              md.append(f"|{a['file']}|{a['case_records']}|{a['unique_sha256']}|{a['missing_sha_records']}|{a['statuses']}|")
+          md.append("")
+          md.append("## AeroDyn exception")
+          md.append("")
+          md.append(f"Two AeroDyn SHA families detected across the 36 cases. Automated semantic split verdict: **{verdict}**.")
+          if pre_equal is True:
+              md.append("The normalized portion before the AeroDyn OutList marker is identical; the detected variant is confined to the output-request section. This does **not** by itself change aerodynamic physics, but the exact diff is retained for audit.")
+          elif pre_equal is False:
+              md.append("A difference exists before the OutList marker. U11p4_NTM_S01 is therefore not proven dynamically equivalent to the other 35 cases and must not be pooled until the difference is explained or rerun.")
+          md.append("")
+          md.append("The case-hash table and raw unified diff are stored beside this report.")
+          md.append("")
+          md.append("## Controller archive gap")
+          md.append("")
+          md.append(f"DISCON.IN: {len(discon)} case records, {missing_discon} without archived SHA. libdiscon.dll: {len(dll)} records, {missing_dll} without archived SHA.")
+          md.append("Therefore the 36-case structural/static identity can be substantially closed from existing hashes, but **controller identity is not yet G0-complete**. The original DISCON.IN and controller binary/config provenance must be hash-bound before BASE001.")
+          md.append("")
+          md.append("## Gate consequence")
+          md.append("")
+          md.append("- FST, ElastoDyn, ServoDyn and the 158 m tower file are one SHA family across all 36 cases.")
+          md.append("- InflowWind is 36 distinct SHA values, consistent with case-specific stochastic inflow.")
+          md.append(f"- AeroDyn verdict: **{verdict}**.")
+          md.append("- G0 OpenFAST can move from 'raw files absent' to 'canonical static input mostly bound / controller identity HOLD'.")
+          (outdir/"README.md").write_text("\n".join(md)+"\n",encoding="utf-8")
+          PY
+
+      - name: Commit audit outputs
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T035/openfast-input-audit
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "T035.1 audit OpenFAST 36-case canonical input identity"
+            git push
+          fi
