@@ -1,0 +1,35 @@
+{
+  "task": "T048",
+  "date": "2026-10-06",
+  "status": "MODEL_PACKAGE_CREATED_SOLVER_VALIDATION_PENDING",
+  "model_level": "DPM_DISTRIBUTED_PARAMETER_RNA",
+  "tower_top_abq_m": [0.0, 158.0, 0.0],
+  "blade_count": 3,
+  "blade_element": "B31",
+  "blade_stations": 51,
+  "mass_representation": "offset_station_mass_nodes_plus_rotary_inertia",
+  "hub": {
+    "mass_kg": 105520.0,
+    "axial_inertia_kgm2": 325670.9
+  },
+  "nacelle": {
+    "mass_kg": 446036.25,
+    "yaw_inertia_kgm2": 7326346.45
+  },
+  "geometry": {
+    "hub_radius_m": 2.8,
+    "overhang_m": -7.1,
+    "shaft_tilt_deg": -5.0,
+    "tower_top_to_shaft_m": 2.75,
+    "nacelle_cm_downwind_m": 2.687,
+    "nacelle_cm_vertical_m": 2.45,
+    "precone_deg": -2.5
+  },
+  "source_files": [
+    "research/wind-tower/references/baselines-and-site-20261004/dtu-hawc2-reference/data/DTU_10MW_RWT_Blade_st.dat",
+    "research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/0Linearization/Template_Servo/DTU_10MW_RWT_ElastoDyn.dat"
+  ],
+  "comparison_baseline": "T045_R2_SPATIAL_RIGID_RNA",
+  "integration_target": "T046_E1B",
+  "solver_validation": false
+}
