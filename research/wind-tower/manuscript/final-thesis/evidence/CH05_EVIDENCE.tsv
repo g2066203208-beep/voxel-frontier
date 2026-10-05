@@ -1,0 +1,8 @@
+section	claim_or_method	evidence	adoption	boundary	status
+5.2	P-Delta controlled comparison	REF120;REF031;REF061	Linear vs NLGEOM with same input	No copied effect percentage	NEED-RUN
+5.3	Material nonlinear comparison	REF031;REF061;Abaqus official	Add validated CDP/steel nonlinear behavior after geometric comparison	Do not force visible damage	NEED-RUN
+5.4	Explicit contact only if global results trigger it	REF015-017;REF026;REF115;REF117	Experiment-informed local contact model	Do not copy friction/grid blindly	CONDITIONAL
+5.5	G7A/G7B fatigue hierarchy	REF018;REF024;REF036;REF041	Local stress cycles only after G6; life only after full closure	No unified m=4 for all materials	CONDITIONAL
+5.6	Variables come from controlling mechanism	REF020;REF021;REF065	Require physical meaning and sourced bounds	No literature variable-copying	HOLD-RESULT
+5.7	Paired seeds before sensitivity ranking	REF011	Compare parameter effect against stochastic noise	No single-seed sensitivity claim	NEED-RUN
+5.7	Morris if many variables	REF055;REF056	Use only if needed	No arbitrary mu* cutoff	CONDITIONAL
