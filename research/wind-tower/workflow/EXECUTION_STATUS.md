@@ -1,3 +1,15 @@
+<!-- T042 FINAL THESIS REBUILD START -->
+## T042 最终学位论文重构（2026-10-05）
+
+- 用户已批准按最终总控规则直接执行，目标为可提交的优秀硕士学位论文。
+- 唯一正文工作区：`manuscript/final-thesis/`。
+- R2Z74仅作为历史源稿，不再直接覆盖修改。
+- STAGE 0工作区/证据矩阵已建立；STAGE 1从第二章BASE001/G1开始。
+- 每个章节只允许写入有REF/STANDARD/OFFICIAL/SOURCE/RUN/FIG/TAB支持的内容；未闭合项保留HOLD，不虚构结果。
+- 最终DOCX将在G0–G10及章节证据闭合后由final-thesis装配，不从历史Word直接生成。
+
+<!-- T042 FINAL THESIS REBUILD END -->
+
 ## 2026-10-05 T039-R1 原始论文前三章只读复盘
 
 - 用户最新要求先检查原稿前三章问题；本步已完成内容审查，未开始修订或新计算。
