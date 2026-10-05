@@ -1,0 +1,1831 @@
+{
+  "scope": "Read-only source/export semantic audit. No CAE invocation, solve, source edit or upload.",
+  "source": {
+    "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_master.inp",
+    "bytes": 773,
+    "sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050"
+  },
+  "exported": {
+    "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.inp",
+    "bytes": 13797388,
+    "sha256": "2a554a04191934654b09d3ff5bbdbdac626e58902d13e24a38e4d9c740b8ae71"
+  },
+  "parser_constraints": [
+    "Exact S8R/C3D20 connectivity length",
+    "Single untransformed instance only",
+    "SYSTEM translations checked to have identity rotation",
+    "NODE surfaces with no duplicate entries",
+    "Explicit per-element ordered layer comparison independent of CAE group names"
+  ],
+  "keyword_counts": {
+    "source": {
+      "*HEADING": 2,
+      "*PREPRINT": 1,
+      "*NODE": 104,
+      "*ELEMENT": 2,
+      "*NSET": 1698,
+      "*ELSET": 1732,
+      "*SYSTEM": 102,
+      "*SURFACE": 101,
+      "*COUPLING": 101,
+      "*KINEMATIC": 2,
+      "*DISTRIBUTING": 99,
+      "*MATERIAL": 5,
+      "*DENSITY": 5,
+      "*ELASTIC": 5,
+      "*SHELL SECTION": 1078,
+      "*SOLID SECTION": 1,
+      "*ORIENTATION": 2,
+      "*BOUNDARY": 1,
+      "*STEP": 1,
+      "*FREQUENCY": 1,
+      "*END STEP": 1
+    },
+    "exported": {
+      "*HEADING": 1,
+      "*PREPRINT": 1,
+      "*PART": 1,
+      "*NODE": 1,
+      "*ELEMENT": 2,
+      "*ELSET": 2731,
+      "*ORIENTATION": 1079,
+      "*SHELL SECTION": 1078,
+      "*SOLID SECTION": 1,
+      "*END PART": 1,
+      "*ASSEMBLY": 1,
+      "*INSTANCE": 1,
+      "*END INSTANCE": 1,
+      "*NSET": 1799,
+      "*SURFACE": 101,
+      "*COUPLING": 101,
+      "*KINEMATIC": 2,
+      "*DISTRIBUTING": 99,
+      "*END ASSEMBLY": 1,
+      "*MATERIAL": 5,
+      "*DENSITY": 5,
+      "*ELASTIC": 5,
+      "*BOUNDARY": 1,
+      "*STEP": 1,
+      "*FREQUENCY": 1,
+      "*RESTART": 1,
+      "*OUTPUT": 2,
+      "*NODE OUTPUT": 1,
+      "*ENERGY OUTPUT": 1,
+      "*END STEP": 1
+    }
+  },
+  "nodes": {
+    "source_count": 103512,
+    "exported_count": 103512,
+    "missing_labels": [],
+    "added_labels": [],
+    "coordinates_not_exact_count": 1961,
+    "max_abs_coordinate_delta_m": 3.800000001774606e-06,
+    "coordinate_delta_examples": [
+      {
+        "node": 101488,
+        "source": [
+          -0.324916,
+          -0.014652,
+          82.257
+        ],
+        "exported": [
+          -0.324916005,
+          -0.0146519998,
+          82.2570038
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102478,
+        "source": [
+          -1.99533611,
+          0.0367634138,
+          65.2305717
+        ],
+        "exported": [
+          -1.99533606,
+          0.0367634147,
+          65.2305679
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102483,
+        "source": [
+          -1.99533611,
+          0.0367634138,
+          65.2305717
+        ],
+        "exported": [
+          -1.99533606,
+          0.0367634147,
+          65.2305679
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102586,
+        "source": [
+          -1.84131646,
+          0.0161654486,
+          68.5614281
+        ],
+        "exported": [
+          -1.84131646,
+          0.0161654484,
+          68.5614319
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102591,
+        "source": [
+          -1.84131646,
+          0.0161654486,
+          68.5614281
+        ],
+        "exported": [
+          -1.84131646,
+          0.0161654484,
+          68.5614319
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102633,
+        "source": [
+          -1.98832941,
+          -0.0281495181,
+          70.0417137
+        ],
+        "exported": [
+          -1.98832941,
+          -0.0281495173,
+          70.0417099
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102640,
+        "source": [
+          -1.98832941,
+          -0.0281495181,
+          70.0417137
+        ],
+        "exported": [
+          -1.98832941,
+          -0.0281495173,
+          70.0417099
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102693,
+        "source": [
+          -1.90204269,
+          -0.0356323262,
+          71.7849999
+        ],
+        "exported": [
+          -1.90204275,
+          -0.0356323272,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102694,
+        "source": [
+          -1.69781601,
+          0.00028753005,
+          71.7849999
+        ],
+        "exported": [
+          -1.69781601,
+          0.000287530042,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102699,
+        "source": [
+          -1.69781601,
+          0.00028753005,
+          71.7849999
+        ],
+        "exported": [
+          -1.69781601,
+          0.000287530042,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102700,
+        "source": [
+          -1.90204269,
+          -0.0356323262,
+          71.7849999
+        ],
+        "exported": [
+          -1.90204275,
+          -0.0356323272,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102766,
+        "source": [
+          -1.61424434,
+          -0.0077055744,
+          73.7280006
+        ],
+        "exported": [
+          -1.61424434,
+          -0.00770557439,
+          73.7279968
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102771,
+        "source": [
+          -1.61424434,
+          -0.0077055744,
+          73.7280006
+        ],
+        "exported": [
+          -1.61424434,
+          -0.00770557439,
+          73.7279968
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102878,
+        "source": [
+          -1.49100357,
+          -0.0180959628,
+          76.6909981
+        ],
+        "exported": [
+          -1.49100351,
+          -0.0180959627,
+          76.6910019
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102882,
+        "source": [
+          -1.48710883,
+          -0.0184012593,
+          76.7869987
+        ],
+        "exported": [
+          -1.48710883,
+          -0.0184012596,
+          76.7869949
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      }
+    ],
+    "coordinate_changed_groups": {
+      "reference": 101,
+      "glue_added": 1851,
+      "shell": 9
+    },
+    "all_changed_coordinates_equal_source_cast_to_float32_and_formatted_9_significant_digits": true,
+    "float32_9g_mismatch_examples": []
+  },
+  "elements": {
+    "source_types": {
+      "S8R": 34849,
+      "C3D20": 504
+    },
+    "exported_types": {
+      "S8R": 34849,
+      "C3D20": 504
+    },
+    "missing_labels": [],
+    "added_labels": [],
+    "type_or_ordered_connectivity_mismatches": []
+  },
+  "shell_sections": {
+    "source_sections": 1078,
+    "exported_sections": 1078,
+    "source_covered_elements": 34849,
+    "exported_covered_elements": 34849,
+    "source_missing": [],
+    "exported_missing": [],
+    "source_overlaps": [],
+    "exported_overlaps": [],
+    "source_unexpected": [],
+    "exported_unexpected": [],
+    "semantic_mismatch_count": 0,
+    "semantic_mismatch_examples": [],
+    "element_assignment_or_orientation_name_changed_count": 34849
+  },
+  "solid_sections": {
+    "source_sections": 1,
+    "exported_sections": 1,
+    "source_covered_elements": 504,
+    "exported_covered_elements": 504,
+    "source_missing": [],
+    "exported_missing": [],
+    "source_overlaps": [],
+    "exported_overlaps": [],
+    "source_unexpected": [],
+    "exported_unexpected": [],
+    "semantic_mismatch_count": 0,
+    "semantic_mismatch_examples": [],
+    "element_assignment_or_orientation_name_changed_count": 0
+  },
+  "materials": {
+    "source_names": [
+      "BALSA",
+      "BIAX",
+      "TE_GLUE_MAT",
+      "TRIAX",
+      "UNIAX"
+    ],
+    "exported_names": [
+      "BALSA",
+      "BIAX",
+      "TE_GLUE_MAT",
+      "TRIAX",
+      "UNIAX"
+    ],
+    "structure_mismatches": [],
+    "numeric_differences": [
+      {
+        "material": "BIAX",
+        "keyword": "*ELASTIC",
+        "component_index_1_based": 3,
+        "source": 12099010000.0,
+        "exported": 12099000000.0,
+        "absolute_delta": -10000.0,
+        "relative_delta": -8.265139048566783e-07,
+        "source_line": 19,
+        "exported_line": 201692
+      },
+      {
+        "material": "TRIAX",
+        "keyword": "*ELASTIC",
+        "component_index_1_based": 3,
+        "source": 12099010000.0,
+        "exported": 12099000000.0,
+        "absolute_delta": -10000.0,
+        "relative_delta": -8.265139048566783e-07,
+        "source_line": 26,
+        "exported_line": 201703
+      },
+      {
+        "material": "UNIAX",
+        "keyword": "*ELASTIC",
+        "component_index_1_based": 3,
+        "source": 13425830000.0,
+        "exported": 13425800000.0,
+        "absolute_delta": -30000.0,
+        "relative_delta": -2.2344987237288122e-06,
+        "source_line": 12,
+        "exported_line": 201717
+      }
+    ],
+    "source": {
+      "UNIAX": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1915.5
+          ],
+          "line": 10
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            41630000000.0,
+            14930000000.0,
+            13425830000.0,
+            0.241,
+            0.2675,
+            0.3301,
+            5047000000.0,
+            5046980000.0,
+            5046980000.0
+          ],
+          "line": 12
+        }
+      },
+      "BIAX": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1845.0
+          ],
+          "line": 17
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            13920000000.0,
+            13920000000.0,
+            12099010000.0,
+            0.533,
+            0.275,
+            0.3329,
+            11500000000.0,
+            4538640000.0,
+            4538640000.0
+          ],
+          "line": 19
+        }
+      },
+      "TRIAX": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1845.0
+          ],
+          "line": 24
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            21790000000.0,
+            14670000000.0,
+            12099010000.0,
+            0.478,
+            0.275,
+            0.3329,
+            9413000000.0,
+            4538640000.0,
+            4538640000.0
+          ],
+          "line": 26
+        }
+      },
+      "BALSA": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            110.0
+          ],
+          "line": 31
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            50000000.0,
+            50000000.0,
+            2730000000.0,
+            0.5,
+            0.013,
+            0.013,
+            16670000.0,
+            150000000.0,
+            150000000.0
+          ],
+          "line": 33
+        }
+      },
+      "TE_GLUE_MAT": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1.0
+          ],
+          "line": 38
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ISOTROPIC"
+          },
+          "data": [
+            2000000000.0,
+            0.3
+          ],
+          "line": 40
+        }
+      }
+    },
+    "exported": {
+      "BALSA": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            110.0
+          ],
+          "line": 201684
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            50000000.0,
+            50000000.0,
+            2730000000.0,
+            0.5,
+            0.013,
+            0.013,
+            16670000.0,
+            150000000.0,
+            150000000.0
+          ],
+          "line": 201686
+        }
+      },
+      "BIAX": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1845.0
+          ],
+          "line": 201690
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            13920000000.0,
+            13920000000.0,
+            12099000000.0,
+            0.533,
+            0.275,
+            0.3329,
+            11500000000.0,
+            4538640000.0,
+            4538640000.0
+          ],
+          "line": 201692
+        }
+      },
+      "TE_GLUE_MAT": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1.0
+          ],
+          "line": 201696
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ISOTROPIC"
+          },
+          "data": [
+            2000000000.0,
+            0.3
+          ],
+          "line": 201698
+        }
+      },
+      "TRIAX": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1845.0
+          ],
+          "line": 201701
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            21790000000.0,
+            14670000000.0,
+            12099000000.0,
+            0.478,
+            0.275,
+            0.3329,
+            9413000000.0,
+            4538640000.0,
+            4538640000.0
+          ],
+          "line": 201703
+        }
+      },
+      "UNIAX": {
+        "*DENSITY": {
+          "params": {},
+          "data": [
+            1915.5
+          ],
+          "line": 201715
+        },
+        "*ELASTIC": {
+          "params": {
+            "TYPE": "ENGINEERING CONSTANTS"
+          },
+          "data": [
+            41630000000.0,
+            14930000000.0,
+            13425800000.0,
+            0.241,
+            0.2675,
+            0.3301,
+            5047000000.0,
+            5046980000.0,
+            5046980000.0
+          ],
+          "line": 201717
+        }
+      }
+    },
+    "native_readback_evidence": {
+      "path": "C:\\Users\\REME\\Documents\\Codex\\2026-10-04\\lian\\work\\source-rna-repair-20261005\\native-blade-candidate.json",
+      "bytes": 82404,
+      "sha256": "aa69cac62b85a5d485283d5c1c8252d152c064179171c35f509f80ea51e15086"
+    },
+    "native_readback_numeric_mismatches": [],
+    "native_evidence_limit": "Read-only inspection of the creator-provided native JSON, not a second CAE invocation by this reviewer."
+  },
+  "couplings": {
+    "source_count": 101,
+    "exported_count": 101,
+    "missing_names": [],
+    "added_names": [],
+    "semantic_mismatches": [],
+    "source_types": {
+      "*KINEMATIC": 2,
+      "*DISTRIBUTING": 99
+    },
+    "exported_types": {
+      "*KINEMATIC": 2,
+      "*DISTRIBUTING": 99
+    },
+    "root_source": {
+      "line": 184699,
+      "ref": "REFPOINT-001_REFPOINT",
+      "surface": "BLADE-1_EDGESEC001_CNS_",
+      "type": "*KINEMATIC",
+      "dofs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "mode_params": {},
+      "extra_params": {},
+      "ref_nodes": [
+        101396
+      ],
+      "surface_nodes_weights": [
+        [
+          1697,
+          1.0
+        ],
+        [
+          1698,
+          1.0
+        ],
+        [
+          1700,
+          1.0
+        ],
+        [
+          1702,
+          1.0
+        ],
+        [
+          1704,
+          1.0
+        ],
+        [
+          1706,
+          1.0
+        ],
+        [
+          1707,
+          1.0
+        ],
+        [
+          1709,
+          1.0
+        ],
+        [
+          1710,
+          1.0
+        ],
+        [
+          1711,
+          1.0
+        ],
+        [
+          1713,
+          1.0
+        ],
+        [
+          1714,
+          1.0
+        ],
+        [
+          1715,
+          1.0
+        ],
+        [
+          1716,
+          1.0
+        ],
+        [
+          1717,
+          1.0
+        ],
+        [
+          1718,
+          1.0
+        ],
+        [
+          1719,
+          1.0
+        ],
+        [
+          13766,
+          1.0
+        ],
+        [
+          13767,
+          1.0
+        ],
+        [
+          13778,
+          1.0
+        ],
+        [
+          13779,
+          1.0
+        ],
+        [
+          13780,
+          1.0
+        ],
+        [
+          13781,
+          1.0
+        ],
+        [
+          13782,
+          1.0
+        ],
+        [
+          13795,
+          1.0
+        ],
+        [
+          13796,
+          1.0
+        ],
+        [
+          13797,
+          1.0
+        ],
+        [
+          13798,
+          1.0
+        ],
+        [
+          13799,
+          1.0
+        ],
+        [
+          13800,
+          1.0
+        ],
+        [
+          13801,
+          1.0
+        ],
+        [
+          13808,
+          1.0
+        ],
+        [
+          13809,
+          1.0
+        ],
+        [
+          13824,
+          1.0
+        ],
+        [
+          13825,
+          1.0
+        ],
+        [
+          13831,
+          1.0
+        ],
+        [
+          13832,
+          1.0
+        ],
+        [
+          13833,
+          1.0
+        ],
+        [
+          13834,
+          1.0
+        ],
+        [
+          13835,
+          1.0
+        ],
+        [
+          13836,
+          1.0
+        ],
+        [
+          13837,
+          1.0
+        ],
+        [
+          13838,
+          1.0
+        ],
+        [
+          13839,
+          1.0
+        ],
+        [
+          13840,
+          1.0
+        ],
+        [
+          13841,
+          1.0
+        ],
+        [
+          13842,
+          1.0
+        ],
+        [
+          13857,
+          1.0
+        ],
+        [
+          13858,
+          1.0
+        ],
+        [
+          13859,
+          1.0
+        ],
+        [
+          13860,
+          1.0
+        ],
+        [
+          13861,
+          1.0
+        ],
+        [
+          13866,
+          1.0
+        ],
+        [
+          13867,
+          1.0
+        ],
+        [
+          13868,
+          1.0
+        ],
+        [
+          13869,
+          1.0
+        ],
+        [
+          13876,
+          1.0
+        ],
+        [
+          13877,
+          1.0
+        ],
+        [
+          100716,
+          1.0
+        ],
+        [
+          100734,
+          1.0
+        ],
+        [
+          100736,
+          1.0
+        ],
+        [
+          100738,
+          1.0
+        ],
+        [
+          100750,
+          1.0
+        ],
+        [
+          100762,
+          1.0
+        ],
+        [
+          100773,
+          1.0
+        ],
+        [
+          100780,
+          1.0
+        ],
+        [
+          100787,
+          1.0
+        ],
+        [
+          100794,
+          1.0
+        ],
+        [
+          100801,
+          1.0
+        ],
+        [
+          100806,
+          1.0
+        ],
+        [
+          100860,
+          1.0
+        ],
+        [
+          100863,
+          1.0
+        ],
+        [
+          100865,
+          1.0
+        ],
+        [
+          100867,
+          1.0
+        ],
+        [
+          100869,
+          1.0
+        ],
+        [
+          100871,
+          1.0
+        ],
+        [
+          100873,
+          1.0
+        ],
+        [
+          100874,
+          1.0
+        ],
+        [
+          100891,
+          1.0
+        ],
+        [
+          100893,
+          1.0
+        ],
+        [
+          100895,
+          1.0
+        ],
+        [
+          100963,
+          1.0
+        ],
+        [
+          100965,
+          1.0
+        ],
+        [
+          100967,
+          1.0
+        ],
+        [
+          100996,
+          1.0
+        ],
+        [
+          101002,
+          1.0
+        ],
+        [
+          101008,
+          1.0
+        ],
+        [
+          101014,
+          1.0
+        ],
+        [
+          101020,
+          1.0
+        ],
+        [
+          101024,
+          1.0
+        ],
+        [
+          101056,
+          1.0
+        ],
+        [
+          101058,
+          1.0
+        ],
+        [
+          101060,
+          1.0
+        ],
+        [
+          101062,
+          1.0
+        ],
+        [
+          101064,
+          1.0
+        ],
+        [
+          101066,
+          1.0
+        ],
+        [
+          101068,
+          1.0
+        ],
+        [
+          101069,
+          1.0
+        ],
+        [
+          101265,
+          1.0
+        ],
+        [
+          101267,
+          1.0
+        ],
+        [
+          101269,
+          1.0
+        ],
+        [
+          101271,
+          1.0
+        ],
+        [
+          101283,
+          1.0
+        ],
+        [
+          101285,
+          1.0
+        ],
+        [
+          101286,
+          1.0
+        ],
+        [
+          101342,
+          1.0
+        ],
+        [
+          101344,
+          1.0
+        ],
+        [
+          101346,
+          1.0
+        ],
+        [
+          101358,
+          1.0
+        ],
+        [
+          101360,
+          1.0
+        ],
+        [
+          101361,
+          1.0
+        ],
+        [
+          101367,
+          1.0
+        ],
+        [
+          101373,
+          1.0
+        ],
+        [
+          101379,
+          1.0
+        ],
+        [
+          101391,
+          1.0
+        ],
+        [
+          101393,
+          1.0
+        ],
+        [
+          101394,
+          1.0
+        ]
+      ]
+    },
+    "root_exported": {
+      "line": 201377,
+      "ref": "REFPOINT-001_REFPOINT",
+      "surface": "BLADE-1_EDGESEC001_CNS__CNS_",
+      "type": "*KINEMATIC",
+      "dofs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "mode_params": {},
+      "extra_params": {},
+      "ref_nodes": [
+        101396
+      ],
+      "surface_nodes_weights": [
+        [
+          1697,
+          1.0
+        ],
+        [
+          1698,
+          1.0
+        ],
+        [
+          1700,
+          1.0
+        ],
+        [
+          1702,
+          1.0
+        ],
+        [
+          1704,
+          1.0
+        ],
+        [
+          1706,
+          1.0
+        ],
+        [
+          1707,
+          1.0
+        ],
+        [
+          1709,
+          1.0
+        ],
+        [
+          1710,
+          1.0
+        ],
+        [
+          1711,
+          1.0
+        ],
+        [
+          1713,
+          1.0
+        ],
+        [
+          1714,
+          1.0
+        ],
+        [
+          1715,
+          1.0
+        ],
+        [
+          1716,
+          1.0
+        ],
+        [
+          1717,
+          1.0
+        ],
+        [
+          1718,
+          1.0
+        ],
+        [
+          1719,
+          1.0
+        ],
+        [
+          13766,
+          1.0
+        ],
+        [
+          13767,
+          1.0
+        ],
+        [
+          13778,
+          1.0
+        ],
+        [
+          13779,
+          1.0
+        ],
+        [
+          13780,
+          1.0
+        ],
+        [
+          13781,
+          1.0
+        ],
+        [
+          13782,
+          1.0
+        ],
+        [
+          13795,
+          1.0
+        ],
+        [
+          13796,
+          1.0
+        ],
+        [
+          13797,
+          1.0
+        ],
+        [
+          13798,
+          1.0
+        ],
+        [
+          13799,
+          1.0
+        ],
+        [
+          13800,
+          1.0
+        ],
+        [
+          13801,
+          1.0
+        ],
+        [
+          13808,
+          1.0
+        ],
+        [
+          13809,
+          1.0
+        ],
+        [
+          13824,
+          1.0
+        ],
+        [
+          13825,
+          1.0
+        ],
+        [
+          13831,
+          1.0
+        ],
+        [
+          13832,
+          1.0
+        ],
+        [
+          13833,
+          1.0
+        ],
+        [
+          13834,
+          1.0
+        ],
+        [
+          13835,
+          1.0
+        ],
+        [
+          13836,
+          1.0
+        ],
+        [
+          13837,
+          1.0
+        ],
+        [
+          13838,
+          1.0
+        ],
+        [
+          13839,
+          1.0
+        ],
+        [
+          13840,
+          1.0
+        ],
+        [
+          13841,
+          1.0
+        ],
+        [
+          13842,
+          1.0
+        ],
+        [
+          13857,
+          1.0
+        ],
+        [
+          13858,
+          1.0
+        ],
+        [
+          13859,
+          1.0
+        ],
+        [
+          13860,
+          1.0
+        ],
+        [
+          13861,
+          1.0
+        ],
+        [
+          13866,
+          1.0
+        ],
+        [
+          13867,
+          1.0
+        ],
+        [
+          13868,
+          1.0
+        ],
+        [
+          13869,
+          1.0
+        ],
+        [
+          13876,
+          1.0
+        ],
+        [
+          13877,
+          1.0
+        ],
+        [
+          100716,
+          1.0
+        ],
+        [
+          100734,
+          1.0
+        ],
+        [
+          100736,
+          1.0
+        ],
+        [
+          100738,
+          1.0
+        ],
+        [
+          100750,
+          1.0
+        ],
+        [
+          100762,
+          1.0
+        ],
+        [
+          100773,
+          1.0
+        ],
+        [
+          100780,
+          1.0
+        ],
+        [
+          100787,
+          1.0
+        ],
+        [
+          100794,
+          1.0
+        ],
+        [
+          100801,
+          1.0
+        ],
+        [
+          100806,
+          1.0
+        ],
+        [
+          100860,
+          1.0
+        ],
+        [
+          100863,
+          1.0
+        ],
+        [
+          100865,
+          1.0
+        ],
+        [
+          100867,
+          1.0
+        ],
+        [
+          100869,
+          1.0
+        ],
+        [
+          100871,
+          1.0
+        ],
+        [
+          100873,
+          1.0
+        ],
+        [
+          100874,
+          1.0
+        ],
+        [
+          100891,
+          1.0
+        ],
+        [
+          100893,
+          1.0
+        ],
+        [
+          100895,
+          1.0
+        ],
+        [
+          100963,
+          1.0
+        ],
+        [
+          100965,
+          1.0
+        ],
+        [
+          100967,
+          1.0
+        ],
+        [
+          100996,
+          1.0
+        ],
+        [
+          101002,
+          1.0
+        ],
+        [
+          101008,
+          1.0
+        ],
+        [
+          101014,
+          1.0
+        ],
+        [
+          101020,
+          1.0
+        ],
+        [
+          101024,
+          1.0
+        ],
+        [
+          101056,
+          1.0
+        ],
+        [
+          101058,
+          1.0
+        ],
+        [
+          101060,
+          1.0
+        ],
+        [
+          101062,
+          1.0
+        ],
+        [
+          101064,
+          1.0
+        ],
+        [
+          101066,
+          1.0
+        ],
+        [
+          101068,
+          1.0
+        ],
+        [
+          101069,
+          1.0
+        ],
+        [
+          101265,
+          1.0
+        ],
+        [
+          101267,
+          1.0
+        ],
+        [
+          101269,
+          1.0
+        ],
+        [
+          101271,
+          1.0
+        ],
+        [
+          101283,
+          1.0
+        ],
+        [
+          101285,
+          1.0
+        ],
+        [
+          101286,
+          1.0
+        ],
+        [
+          101342,
+          1.0
+        ],
+        [
+          101344,
+          1.0
+        ],
+        [
+          101346,
+          1.0
+        ],
+        [
+          101358,
+          1.0
+        ],
+        [
+          101360,
+          1.0
+        ],
+        [
+          101361,
+          1.0
+        ],
+        [
+          101367,
+          1.0
+        ],
+        [
+          101373,
+          1.0
+        ],
+        [
+          101379,
+          1.0
+        ],
+        [
+          101391,
+          1.0
+        ],
+        [
+          101393,
+          1.0
+        ],
+        [
+          101394,
+          1.0
+        ]
+      ]
+    }
+  },
+  "boundary_conditions": {
+    "identical_resolved_nodes_dofs_values": true,
+    "source": [
+      [
+        101396,
+        1,
+        0.0
+      ],
+      [
+        101396,
+        2,
+        0.0
+      ],
+      [
+        101396,
+        3,
+        0.0
+      ],
+      [
+        101396,
+        4,
+        0.0
+      ],
+      [
+        101396,
+        5,
+        0.0
+      ],
+      [
+        101396,
+        6,
+        0.0
+      ]
+    ],
+    "exported": [
+      [
+        101396,
+        1,
+        0.0
+      ],
+      [
+        101396,
+        2,
+        0.0
+      ],
+      [
+        101396,
+        3,
+        0.0
+      ],
+      [
+        101396,
+        4,
+        0.0
+      ],
+      [
+        101396,
+        5,
+        0.0
+      ],
+      [
+        101396,
+        6,
+        0.0
+      ]
+    ]
+  },
+  "analysis": {
+    "source_steps": [
+      {
+        "line": 27,
+        "params": {
+          "NAME": "NAT_FRE"
+        },
+        "flags": []
+      }
+    ],
+    "exported_steps": [
+      {
+        "line": 201735,
+        "params": {
+          "NAME": "NAT_FRE",
+          "NLGEOM": "NO"
+        },
+        "flags": [
+          "PERTURBATION"
+        ]
+      }
+    ],
+    "source_frequency": [
+      {
+        "line": 28,
+        "params": {},
+        "flags": [],
+        "data": [
+          8.0
+        ]
+      }
+    ],
+    "exported_frequency": [
+      {
+        "line": 201736,
+        "params": {
+          "EIGENSOLVER": "LANCZOS",
+          "ACOUSTIC COUPLING": "ON",
+          "NORMALIZATION": "MASS"
+        },
+        "flags": [
+          "SIM"
+        ],
+        "data": [
+          8.0
+        ]
+      }
+    ],
+    "requested_mode_count_preserved": true,
+    "official_frequency_reference": {
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-frequency.htm",
+      "read_date": "2026-10-05",
+      "observed_defaults": [
+        "EIGENSOLVER=LANCZOS default",
+        "SIM=YES default",
+        "Mass normalization used with default SIM",
+        "ACOUSTIC COUPLING=ON default for Lanczos"
+      ],
+      "interpretation": "Export spells out documented Abaqus 2025 defaults. This does not prove historical Abaqus versions used the same defaults or provide solved frequencies."
+    }
+  },
+  "organization": {
+    "source_parts": [],
+    "exported_parts": [
+      "PART-1"
+    ],
+    "source_instances": [],
+    "exported_instances": [
+      {
+        "NAME": "PART-1-1",
+        "PART": "PART-1"
+      }
+    ],
+    "source_orientation_definition_count": 2,
+    "exported_orientation_definition_count": 1079
+  },
+  "source_files": [
+    {
+      "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\README.txt",
+      "bytes": 1202,
+      "sha256": "6c5248ecd80f4cbe52ae78da80fe3f665fccda41267afa3987271c91227b3417"
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_master.inp",
+      "bytes": 773,
+      "sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050"
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_mesh.inp",
+      "bytes": 12547783,
+      "sha256": "0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4"
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_materials.inp",
+      "bytes": 947,
+      "sha256": "6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6"
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_layup.inp",
+      "bytes": 286534,
+      "sha256": "ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7"
+    },
+    {
+      "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_te_glue.inp",
+      "bytes": 216674,
+      "sha256": "e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a"
+    }
+  ],
+  "limitations": [
+    "Text-level semantic comparison does not validate element Jacobians, stiffness, mass or eigenmodes.",
+    "Floating point coordinate/material serializer differences are reported explicitly, not silently accepted as exact equality.",
+    "Frequency options newly made explicit by CAE must be distinguished from proof of identical solver execution.",
+    "The source-model assumptions (no prebend, imperfect tip and glue density=1) remain inherited.",
+    "Original RNA integration/Explicit compatibility is outside this audit."
+  ]
+}

@@ -1,0 +1,4061 @@
+{
+  "started_utc": "2026-10-05T10:06:35.173067+00:00",
+  "solver_submitted": false,
+  "source_cae_opened": false,
+  "scope": "Independent official detailed blade candidate; not integrated into user RNA or M2.",
+  "source_records": [
+    {
+      "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_master.inp",
+      "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\official-source\\refblade_master.inp",
+      "sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050",
+      "bytes": 773,
+      "source_repository_path": "structural_models/ABAQUS/refblade_master.inp"
+    },
+    {
+      "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_mesh.inp",
+      "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\official-source\\refblade_mesh.inp",
+      "sha256": "0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4",
+      "bytes": 12547783,
+      "source_repository_path": "structural_models/ABAQUS/refblade_mesh.inp"
+    },
+    {
+      "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_materials.inp",
+      "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\official-source\\refblade_materials.inp",
+      "sha256": "6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6",
+      "bytes": 947,
+      "source_repository_path": "structural_models/ABAQUS/refblade_materials.inp"
+    },
+    {
+      "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_layup.inp",
+      "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\official-source\\refblade_layup.inp",
+      "sha256": "ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7",
+      "bytes": 286534,
+      "source_repository_path": "structural_models/ABAQUS/refblade_layup.inp"
+    },
+    {
+      "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_te_glue.inp",
+      "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\official-source\\refblade_te_glue.inp",
+      "sha256": "e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a",
+      "bytes": 216674,
+      "source_repository_path": "structural_models/ABAQUS/refblade_te_glue.inp"
+    },
+    {
+      "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\README.txt",
+      "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\official-source\\README.txt",
+      "sha256": "6c5248ecd80f4cbe52ae78da80fe3f665fccda41267afa3987271c91227b3417",
+      "bytes": 1202,
+      "source_repository_path": "structural_models/ABAQUS/README.txt"
+    }
+  ],
+  "model": "DTU10MW_BLADE_STANDARD_CANDIDATE",
+  "parts": {
+    "PART-1": {
+      "nodes": 103512,
+      "elements": 35353,
+      "element_types": {
+        "S8R": 34849,
+        "C3D20": 504
+      },
+      "sections": [
+        {
+          "section": "Section-1-AUTO_TE_GLUE",
+          "class": "HomogeneousSolidSection",
+          "elements": 504,
+          "element_labels": [
+            34850,
+            34851,
+            34852,
+            34853,
+            34854,
+            34855,
+            34856,
+            34857,
+            34858,
+            34859,
+            34860,
+            34861,
+            34862,
+            34863,
+            34864,
+            34865,
+            34866,
+            34867,
+            34868,
+            34869,
+            34870,
+            34871,
+            34872,
+            34873,
+            34874,
+            34875,
+            34876,
+            34877,
+            34878,
+            34879,
+            34880,
+            34881,
+            34882,
+            34883,
+            34884,
+            34885,
+            34886,
+            34887,
+            34888,
+            34889,
+            34890,
+            34891,
+            34892,
+            34893,
+            34894,
+            34895,
+            34896,
+            34897,
+            34898,
+            34899,
+            34900,
+            34901,
+            34902,
+            34903,
+            34904,
+            34905,
+            34906,
+            34907,
+            34908,
+            34909,
+            34910,
+            34911,
+            34912,
+            34913,
+            34914,
+            34915,
+            34916,
+            34917,
+            34918,
+            34919,
+            34920,
+            34921,
+            34922,
+            34923,
+            34924,
+            34925,
+            34926,
+            34927,
+            34928,
+            34929,
+            34930,
+            34931,
+            34932,
+            34933,
+            34934,
+            34935,
+            34936,
+            34937,
+            34938,
+            34939,
+            34940,
+            34941,
+            34942,
+            34943,
+            34944,
+            34945,
+            34946,
+            34947,
+            34948,
+            34949,
+            34950,
+            34951,
+            34952,
+            34953,
+            34954,
+            34955,
+            34956,
+            34957,
+            34958,
+            34959,
+            34960,
+            34961,
+            34962,
+            34963,
+            34964,
+            34965,
+            34966,
+            34967,
+            34968,
+            34969,
+            34970,
+            34971,
+            34972,
+            34973,
+            34974,
+            34975,
+            34976,
+            34977,
+            34978,
+            34979,
+            34980,
+            34981,
+            34982,
+            34983,
+            34984,
+            34985,
+            34986,
+            34987,
+            34988,
+            34989,
+            34990,
+            34991,
+            34992,
+            34993,
+            34994,
+            34995,
+            34996,
+            34997,
+            34998,
+            34999,
+            35000,
+            35001,
+            35002,
+            35003,
+            35004,
+            35005,
+            35006,
+            35007,
+            35008,
+            35009,
+            35010,
+            35011,
+            35012,
+            35013,
+            35014,
+            35015,
+            35016,
+            35017,
+            35018,
+            35019,
+            35020,
+            35021,
+            35022,
+            35023,
+            35024,
+            35025,
+            35026,
+            35027,
+            35028,
+            35029,
+            35030,
+            35031,
+            35032,
+            35033,
+            35034,
+            35035,
+            35036,
+            35037,
+            35038,
+            35039,
+            35040,
+            35041,
+            35042,
+            35043,
+            35044,
+            35045,
+            35046,
+            35047,
+            35048,
+            35049,
+            35050,
+            35051,
+            35052,
+            35053,
+            35054,
+            35055,
+            35056,
+            35057,
+            35058,
+            35059,
+            35060,
+            35061,
+            35062,
+            35063,
+            35064,
+            35065,
+            35066,
+            35067,
+            35068,
+            35069,
+            35070,
+            35071,
+            35072,
+            35073,
+            35074,
+            35075,
+            35076,
+            35077,
+            35078,
+            35079,
+            35080,
+            35081,
+            35082,
+            35083,
+            35084,
+            35085,
+            35086,
+            35087,
+            35088,
+            35089,
+            35090,
+            35091,
+            35092,
+            35093,
+            35094,
+            35095,
+            35096,
+            35097,
+            35098,
+            35099,
+            35100,
+            35101,
+            35102,
+            35103,
+            35104,
+            35105,
+            35106,
+            35107,
+            35108,
+            35109,
+            35110,
+            35111,
+            35112,
+            35113,
+            35114,
+            35115,
+            35116,
+            35117,
+            35118,
+            35119,
+            35120,
+            35121,
+            35122,
+            35123,
+            35124,
+            35125,
+            35126,
+            35127,
+            35128,
+            35129,
+            35130,
+            35131,
+            35132,
+            35133,
+            35134,
+            35135,
+            35136,
+            35137,
+            35138,
+            35139,
+            35140,
+            35141,
+            35142,
+            35143,
+            35144,
+            35145,
+            35146,
+            35147,
+            35148,
+            35149,
+            35150,
+            35151,
+            35152,
+            35153,
+            35154,
+            35155,
+            35156,
+            35157,
+            35158,
+            35159,
+            35160,
+            35161,
+            35162,
+            35163,
+            35164,
+            35165,
+            35166,
+            35167,
+            35168,
+            35169,
+            35170,
+            35171,
+            35172,
+            35173,
+            35174,
+            35175,
+            35176,
+            35177,
+            35178,
+            35179,
+            35180,
+            35181,
+            35182,
+            35183,
+            35184,
+            35185,
+            35186,
+            35187,
+            35188,
+            35189,
+            35190,
+            35191,
+            35192,
+            35193,
+            35194,
+            35195,
+            35196,
+            35197,
+            35198,
+            35199,
+            35200,
+            35201,
+            35202,
+            35203,
+            35204,
+            35205,
+            35206,
+            35207,
+            35208,
+            35209,
+            35210,
+            35211,
+            35212,
+            35213,
+            35214,
+            35215,
+            35216,
+            35217,
+            35218,
+            35219,
+            35220,
+            35221,
+            35222,
+            35223,
+            35224,
+            35225,
+            35226,
+            35227,
+            35228,
+            35229,
+            35230,
+            35231,
+            35232,
+            35233,
+            35234,
+            35235,
+            35236,
+            35237,
+            35238,
+            35239,
+            35240,
+            35241,
+            35242,
+            35243,
+            35244,
+            35245,
+            35246,
+            35247,
+            35248,
+            35249,
+            35250,
+            35251,
+            35252,
+            35253,
+            35254,
+            35255,
+            35256,
+            35257,
+            35258,
+            35259,
+            35260,
+            35261,
+            35262,
+            35263,
+            35264,
+            35265,
+            35266,
+            35267,
+            35268,
+            35269,
+            35270,
+            35271,
+            35272,
+            35273,
+            35274,
+            35275,
+            35276,
+            35277,
+            35278,
+            35279,
+            35280,
+            35281,
+            35282,
+            35283,
+            35284,
+            35285,
+            35286,
+            35287,
+            35288,
+            35289,
+            35290,
+            35291,
+            35292,
+            35293,
+            35294,
+            35295,
+            35296,
+            35297,
+            35298,
+            35299,
+            35300,
+            35301,
+            35302,
+            35303,
+            35304,
+            35305,
+            35306,
+            35307,
+            35308,
+            35309,
+            35310,
+            35311,
+            35312,
+            35313,
+            35314,
+            35315,
+            35316,
+            35317,
+            35318,
+            35319,
+            35320,
+            35321,
+            35322,
+            35323,
+            35324,
+            35325,
+            35326,
+            35327,
+            35328,
+            35329,
+            35330,
+            35331,
+            35332,
+            35333,
+            35334,
+            35335,
+            35336,
+            35337,
+            35338,
+            35339,
+            35340,
+            35341,
+            35342,
+            35343,
+            35344,
+            35345,
+            35346,
+            35347,
+            35348,
+            35349,
+            35350,
+            35351,
+            35352,
+            35353
+          ],
+          "suppressed": false
+        }
+      ],
+      "composite_layups": {
+        "BLADE-1_CA": {
+          "suppressed": false,
+          "plies": 238
+        },
+        "BLADE-1_LP": {
+          "suppressed": false,
+          "plies": 360
+        },
+        "BLADE-1_NO": {
+          "suppressed": false,
+          "plies": 446
+        },
+        "BLADE-1_TA": {
+          "suppressed": false,
+          "plies": 460
+        },
+        "BLADE-1_TB": {
+          "suppressed": false,
+          "plies": 500
+        },
+        "BLADE-1_TC": {
+          "suppressed": false,
+          "plies": 360
+        },
+        "BLADE-1_TP": {
+          "suppressed": false,
+          "plies": 360
+        },
+        "BLADE-1_TV": {
+          "suppressed": false,
+          "plies": 460
+        },
+        "BLADE-1_WA": {
+          "suppressed": false,
+          "plies": 300
+        },
+        "BLADE-1_WB": {
+          "suppressed": false,
+          "plies": 300
+        },
+        "BLADE-1_WC": {
+          "suppressed": false,
+          "plies": 185
+        }
+      },
+      "material_orientations": [
+        {
+          "orientationType": "SYSTEM",
+          "axis": "AXIS_3",
+          "angle": 0.0,
+          "stackDirection": "STACK_3",
+          "localCsys": 1083,
+          "region": [
+            "_PickedSet1084",
+            "PART-1",
+            1,
+            2,
+            1
+          ]
+        }
+      ],
+      "section_assigned_element_labels": [
+        34850,
+        34851,
+        34852,
+        34853,
+        34854,
+        34855,
+        34856,
+        34857,
+        34858,
+        34859,
+        34860,
+        34861,
+        34862,
+        34863,
+        34864,
+        34865,
+        34866,
+        34867,
+        34868,
+        34869,
+        34870,
+        34871,
+        34872,
+        34873,
+        34874,
+        34875,
+        34876,
+        34877,
+        34878,
+        34879,
+        34880,
+        34881,
+        34882,
+        34883,
+        34884,
+        34885,
+        34886,
+        34887,
+        34888,
+        34889,
+        34890,
+        34891,
+        34892,
+        34893,
+        34894,
+        34895,
+        34896,
+        34897,
+        34898,
+        34899,
+        34900,
+        34901,
+        34902,
+        34903,
+        34904,
+        34905,
+        34906,
+        34907,
+        34908,
+        34909,
+        34910,
+        34911,
+        34912,
+        34913,
+        34914,
+        34915,
+        34916,
+        34917,
+        34918,
+        34919,
+        34920,
+        34921,
+        34922,
+        34923,
+        34924,
+        34925,
+        34926,
+        34927,
+        34928,
+        34929,
+        34930,
+        34931,
+        34932,
+        34933,
+        34934,
+        34935,
+        34936,
+        34937,
+        34938,
+        34939,
+        34940,
+        34941,
+        34942,
+        34943,
+        34944,
+        34945,
+        34946,
+        34947,
+        34948,
+        34949,
+        34950,
+        34951,
+        34952,
+        34953,
+        34954,
+        34955,
+        34956,
+        34957,
+        34958,
+        34959,
+        34960,
+        34961,
+        34962,
+        34963,
+        34964,
+        34965,
+        34966,
+        34967,
+        34968,
+        34969,
+        34970,
+        34971,
+        34972,
+        34973,
+        34974,
+        34975,
+        34976,
+        34977,
+        34978,
+        34979,
+        34980,
+        34981,
+        34982,
+        34983,
+        34984,
+        34985,
+        34986,
+        34987,
+        34988,
+        34989,
+        34990,
+        34991,
+        34992,
+        34993,
+        34994,
+        34995,
+        34996,
+        34997,
+        34998,
+        34999,
+        35000,
+        35001,
+        35002,
+        35003,
+        35004,
+        35005,
+        35006,
+        35007,
+        35008,
+        35009,
+        35010,
+        35011,
+        35012,
+        35013,
+        35014,
+        35015,
+        35016,
+        35017,
+        35018,
+        35019,
+        35020,
+        35021,
+        35022,
+        35023,
+        35024,
+        35025,
+        35026,
+        35027,
+        35028,
+        35029,
+        35030,
+        35031,
+        35032,
+        35033,
+        35034,
+        35035,
+        35036,
+        35037,
+        35038,
+        35039,
+        35040,
+        35041,
+        35042,
+        35043,
+        35044,
+        35045,
+        35046,
+        35047,
+        35048,
+        35049,
+        35050,
+        35051,
+        35052,
+        35053,
+        35054,
+        35055,
+        35056,
+        35057,
+        35058,
+        35059,
+        35060,
+        35061,
+        35062,
+        35063,
+        35064,
+        35065,
+        35066,
+        35067,
+        35068,
+        35069,
+        35070,
+        35071,
+        35072,
+        35073,
+        35074,
+        35075,
+        35076,
+        35077,
+        35078,
+        35079,
+        35080,
+        35081,
+        35082,
+        35083,
+        35084,
+        35085,
+        35086,
+        35087,
+        35088,
+        35089,
+        35090,
+        35091,
+        35092,
+        35093,
+        35094,
+        35095,
+        35096,
+        35097,
+        35098,
+        35099,
+        35100,
+        35101,
+        35102,
+        35103,
+        35104,
+        35105,
+        35106,
+        35107,
+        35108,
+        35109,
+        35110,
+        35111,
+        35112,
+        35113,
+        35114,
+        35115,
+        35116,
+        35117,
+        35118,
+        35119,
+        35120,
+        35121,
+        35122,
+        35123,
+        35124,
+        35125,
+        35126,
+        35127,
+        35128,
+        35129,
+        35130,
+        35131,
+        35132,
+        35133,
+        35134,
+        35135,
+        35136,
+        35137,
+        35138,
+        35139,
+        35140,
+        35141,
+        35142,
+        35143,
+        35144,
+        35145,
+        35146,
+        35147,
+        35148,
+        35149,
+        35150,
+        35151,
+        35152,
+        35153,
+        35154,
+        35155,
+        35156,
+        35157,
+        35158,
+        35159,
+        35160,
+        35161,
+        35162,
+        35163,
+        35164,
+        35165,
+        35166,
+        35167,
+        35168,
+        35169,
+        35170,
+        35171,
+        35172,
+        35173,
+        35174,
+        35175,
+        35176,
+        35177,
+        35178,
+        35179,
+        35180,
+        35181,
+        35182,
+        35183,
+        35184,
+        35185,
+        35186,
+        35187,
+        35188,
+        35189,
+        35190,
+        35191,
+        35192,
+        35193,
+        35194,
+        35195,
+        35196,
+        35197,
+        35198,
+        35199,
+        35200,
+        35201,
+        35202,
+        35203,
+        35204,
+        35205,
+        35206,
+        35207,
+        35208,
+        35209,
+        35210,
+        35211,
+        35212,
+        35213,
+        35214,
+        35215,
+        35216,
+        35217,
+        35218,
+        35219,
+        35220,
+        35221,
+        35222,
+        35223,
+        35224,
+        35225,
+        35226,
+        35227,
+        35228,
+        35229,
+        35230,
+        35231,
+        35232,
+        35233,
+        35234,
+        35235,
+        35236,
+        35237,
+        35238,
+        35239,
+        35240,
+        35241,
+        35242,
+        35243,
+        35244,
+        35245,
+        35246,
+        35247,
+        35248,
+        35249,
+        35250,
+        35251,
+        35252,
+        35253,
+        35254,
+        35255,
+        35256,
+        35257,
+        35258,
+        35259,
+        35260,
+        35261,
+        35262,
+        35263,
+        35264,
+        35265,
+        35266,
+        35267,
+        35268,
+        35269,
+        35270,
+        35271,
+        35272,
+        35273,
+        35274,
+        35275,
+        35276,
+        35277,
+        35278,
+        35279,
+        35280,
+        35281,
+        35282,
+        35283,
+        35284,
+        35285,
+        35286,
+        35287,
+        35288,
+        35289,
+        35290,
+        35291,
+        35292,
+        35293,
+        35294,
+        35295,
+        35296,
+        35297,
+        35298,
+        35299,
+        35300,
+        35301,
+        35302,
+        35303,
+        35304,
+        35305,
+        35306,
+        35307,
+        35308,
+        35309,
+        35310,
+        35311,
+        35312,
+        35313,
+        35314,
+        35315,
+        35316,
+        35317,
+        35318,
+        35319,
+        35320,
+        35321,
+        35322,
+        35323,
+        35324,
+        35325,
+        35326,
+        35327,
+        35328,
+        35329,
+        35330,
+        35331,
+        35332,
+        35333,
+        35334,
+        35335,
+        35336,
+        35337,
+        35338,
+        35339,
+        35340,
+        35341,
+        35342,
+        35343,
+        35344,
+        35345,
+        35346,
+        35347,
+        35348,
+        35349,
+        35350,
+        35351,
+        35352,
+        35353
+      ],
+      "all_elements_have_section_assignment": false
+    }
+  },
+  "sections": {
+    "Section-1-AUTO_TE_GLUE": {
+      "class": "HomogeneousSolidSection",
+      "properties": {
+        "material": "TE_GLUE_MAT",
+        "thickness": 1.0
+      }
+    }
+  },
+  "materials": {
+    "BALSA": {
+      "density": {
+        "table": [
+          [
+            110.0
+          ]
+        ]
+      },
+      "elastic": {
+        "table": [
+          [
+            50000000.0,
+            50000000.0,
+            2730000000.0,
+            0.5,
+            0.013,
+            0.013,
+            16670000.0,
+            150000000.0,
+            150000000.0
+          ]
+        ],
+        "type": "ENGINEERING_CONSTANTS"
+      }
+    },
+    "BIAX": {
+      "density": {
+        "table": [
+          [
+            1845.0
+          ]
+        ]
+      },
+      "elastic": {
+        "table": [
+          [
+            13920000000.0,
+            13920000000.0,
+            12099010000.0,
+            0.533,
+            0.275,
+            0.3329,
+            11500000000.0,
+            4538640000.0,
+            4538640000.0
+          ]
+        ],
+        "type": "ENGINEERING_CONSTANTS"
+      }
+    },
+    "TE_GLUE_MAT": {
+      "density": {
+        "table": [
+          [
+            1.0
+          ]
+        ]
+      },
+      "elastic": {
+        "table": [
+          [
+            2000000000.0,
+            0.3
+          ]
+        ],
+        "type": "ISOTROPIC"
+      }
+    },
+    "TRIAX": {
+      "density": {
+        "table": [
+          [
+            1845.0
+          ]
+        ]
+      },
+      "elastic": {
+        "table": [
+          [
+            21790000000.0,
+            14670000000.0,
+            12099010000.0,
+            0.478,
+            0.275,
+            0.3329,
+            9413000000.0,
+            4538640000.0,
+            4538640000.0
+          ]
+        ],
+        "type": "ENGINEERING_CONSTANTS"
+      }
+    },
+    "UNIAX": {
+      "density": {
+        "table": [
+          [
+            1915.5
+          ]
+        ]
+      },
+      "elastic": {
+        "table": [
+          [
+            41630000000.0,
+            14930000000.0,
+            13425830000.0,
+            0.241,
+            0.2675,
+            0.3301,
+            5047000000.0,
+            5046980000.0,
+            5046980000.0
+          ]
+        ],
+        "type": "ENGINEERING_CONSTANTS"
+      }
+    }
+  },
+  "instances": {
+    "PART-1-1": {
+      "part": "PART-1",
+      "nodes": 103512,
+      "elements": 35353,
+      "element_types": {
+        "S8R": 34849,
+        "C3D20": 504
+      }
+    }
+  },
+  "constraints": {
+    "COUPCON-001": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "KINEMATIC",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_EDGESEC001_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-001_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-002": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES002_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-002_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-003": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES003_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-003_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-004": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES004_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-004_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-005": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES005_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-005_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-006": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES006_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-006_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-007": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES007_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-007_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-008": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES008_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-008_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-009": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES009_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-009_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-010": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES010_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-010_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-011": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES011_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-011_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-012": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES012_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-012_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-013": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES013_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-013_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-014": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES014_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-014_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-015": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES015_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-015_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-016": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES016_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-016_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-017": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES017_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-017_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-018": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES018_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-018_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-019": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES019_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-019_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-020": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES020_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-020_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-021": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES021_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-021_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-022": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES022_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-022_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-023": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES023_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-023_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-024": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES024_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-024_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-025": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES025_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-025_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-026": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES026_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-026_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-027": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES027_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-027_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-028": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES028_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-028_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-029": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES029_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-029_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-030": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES030_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-030_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-031": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES031_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-031_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-032": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES032_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-032_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-033": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES033_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-033_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-034": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES034_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-034_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-035": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES035_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-035_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-036": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES036_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-036_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-037": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES037_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-037_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-038": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES038_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-038_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-039": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES039_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-039_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-040": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES040_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-040_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-041": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES041_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-041_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-042": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES042_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-042_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-043": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES043_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-043_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-044": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES044_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-044_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-045": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES045_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-045_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-046": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES046_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-046_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-047": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES047_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-047_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-048": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES048_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-048_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-049": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES049_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-049_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-050": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES050_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-050_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-051": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES051_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-051_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-052": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES052_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-052_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-053": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES053_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-053_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-054": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES054_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-054_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-055": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES055_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-055_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-056": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES056_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-056_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-057": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES057_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-057_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-058": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES058_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-058_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-059": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES059_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-059_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-060": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES060_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-060_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-061": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES061_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-061_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-062": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES062_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-062_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-063": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES063_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-063_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-064": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES064_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-064_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-065": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES065_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-065_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-066": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES066_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-066_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-067": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES067_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-067_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-068": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES068_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-068_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-069": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES069_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-069_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-070": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES070_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-070_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-071": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES071_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-071_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-072": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES072_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-072_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-073": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES073_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-073_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-074": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES074_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-074_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-075": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES075_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-075_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-076": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES076_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-076_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-077": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES077_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-077_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-078": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES078_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-078_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-079": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES079_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-079_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-080": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES080_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-080_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-081": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES081_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-081_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-082": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES082_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-082_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-083": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES083_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-083_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-084": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES084_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-084_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-085": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES085_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-085_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-086": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES086_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-086_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-087": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES087_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-087_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-088": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES088_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-088_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-089": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES089_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-089_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-090": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES090_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-090_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-091": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES091_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-091_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-092": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES092_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-092_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-093": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES093_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-093_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-094": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES094_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-094_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-095": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES095_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-095_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-096": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES096_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-096_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-097": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES097_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-097_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-098": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES098_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-098_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-099": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES099_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-099_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-100": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "DISTRIBUTING",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_SLAVES100_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-100_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    },
+    "COUPCON-101": {
+      "class": "Coupling",
+      "properties": {
+        "suppressed": false,
+        "couplingType": "KINEMATIC",
+        "u1": 1,
+        "u2": 1,
+        "u3": 1,
+        "ur1": 1,
+        "ur2": 1,
+        "ur3": 1,
+        "surface": [
+          "BLADE-1_EDGESEC101_CNS_",
+          "Assembly",
+          1,
+          4,
+          1
+        ],
+        "controlPoint": [
+          "REFPOINT-101_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    }
+  },
+  "steps": {
+    "Initial": {
+      "class": "InitialStep",
+      "properties": {
+        "nlgeom": 0
+      }
+    },
+    "NAT_FRE": {
+      "class": "FrequencyStep",
+      "properties": {
+        "numEigen": 8,
+        "eigensolver": "LANCZOS",
+        "nlgeom": 0
+      }
+    }
+  },
+  "boundary_conditions": {
+    "Disp-BC-1": {
+      "class": "DisplacementBC",
+      "properties": {
+        "suppressed": false,
+        "region": [
+          "REFPOINT-001_REFPOINT",
+          "Assembly",
+          1,
+          4,
+          0
+        ]
+      }
+    }
+  },
+  "exported_input": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.inp",
+  "cae": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.cae",
+  "outputs": [
+    {
+      "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.inp",
+      "bytes": 13797388,
+      "sha256": "2a554a04191934654b09d3ff5bbdbdac626e58902d13e24a38e4d9c740b8ae71"
+    },
+    {
+      "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.cae",
+      "bytes": 4194304,
+      "sha256": "b49ceb8a530587e208f0b42cfee618205a0ccd05dcf91ebd85c26d971f9237a0"
+    }
+  ],
+  "status": "candidate-created/roundtrip-audit-pending/not-solver-validated",
+  "sources_unchanged": true,
+  "finished_utc": "2026-10-05T10:06:54.520685+00:00"
+}

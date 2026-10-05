@@ -1,0 +1,442 @@
+{
+  "scope": "Read-only source/export semantic audit. No CAE invocation, solve, source edit or upload.",
+  "source": {
+    "path": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_master.inp",
+    "bytes": 773,
+    "sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050"
+  },
+  "exported": {
+    "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.inp",
+    "bytes": 13797388,
+    "sha256": "2a554a04191934654b09d3ff5bbdbdac626e58902d13e24a38e4d9c740b8ae71"
+  },
+  "parser_constraints": [
+    "Exact S8R/C3D20 connectivity length",
+    "Single untransformed instance only",
+    "SYSTEM translations checked to have identity rotation",
+    "NODE surfaces with no duplicate entries",
+    "Explicit per-element ordered layer comparison independent of CAE group names"
+  ],
+  "nodes": {
+    "source_count": 103512,
+    "exported_count": 103512,
+    "missing_labels": [],
+    "added_labels": [],
+    "coordinates_not_exact_count": 1961,
+    "max_abs_coordinate_delta_m": 3.800000001774606e-06,
+    "coordinate_delta_examples": [
+      {
+        "node": 101488,
+        "source": [
+          -0.324916,
+          -0.014652,
+          82.257
+        ],
+        "exported": [
+          -0.324916005,
+          -0.0146519998,
+          82.2570038
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102478,
+        "source": [
+          -1.99533611,
+          0.0367634138,
+          65.2305717
+        ],
+        "exported": [
+          -1.99533606,
+          0.0367634147,
+          65.2305679
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102483,
+        "source": [
+          -1.99533611,
+          0.0367634138,
+          65.2305717
+        ],
+        "exported": [
+          -1.99533606,
+          0.0367634147,
+          65.2305679
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102586,
+        "source": [
+          -1.84131646,
+          0.0161654486,
+          68.5614281
+        ],
+        "exported": [
+          -1.84131646,
+          0.0161654484,
+          68.5614319
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102591,
+        "source": [
+          -1.84131646,
+          0.0161654486,
+          68.5614281
+        ],
+        "exported": [
+          -1.84131646,
+          0.0161654484,
+          68.5614319
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102633,
+        "source": [
+          -1.98832941,
+          -0.0281495181,
+          70.0417137
+        ],
+        "exported": [
+          -1.98832941,
+          -0.0281495173,
+          70.0417099
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102640,
+        "source": [
+          -1.98832941,
+          -0.0281495181,
+          70.0417137
+        ],
+        "exported": [
+          -1.98832941,
+          -0.0281495173,
+          70.0417099
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102693,
+        "source": [
+          -1.90204269,
+          -0.0356323262,
+          71.7849999
+        ],
+        "exported": [
+          -1.90204275,
+          -0.0356323272,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102694,
+        "source": [
+          -1.69781601,
+          0.00028753005,
+          71.7849999
+        ],
+        "exported": [
+          -1.69781601,
+          0.000287530042,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102699,
+        "source": [
+          -1.69781601,
+          0.00028753005,
+          71.7849999
+        ],
+        "exported": [
+          -1.69781601,
+          0.000287530042,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102700,
+        "source": [
+          -1.90204269,
+          -0.0356323262,
+          71.7849999
+        ],
+        "exported": [
+          -1.90204275,
+          -0.0356323272,
+          71.7850037
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102766,
+        "source": [
+          -1.61424434,
+          -0.0077055744,
+          73.7280006
+        ],
+        "exported": [
+          -1.61424434,
+          -0.00770557439,
+          73.7279968
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102771,
+        "source": [
+          -1.61424434,
+          -0.0077055744,
+          73.7280006
+        ],
+        "exported": [
+          -1.61424434,
+          -0.00770557439,
+          73.7279968
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102878,
+        "source": [
+          -1.49100357,
+          -0.0180959628,
+          76.6909981
+        ],
+        "exported": [
+          -1.49100351,
+          -0.0180959627,
+          76.6910019
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      },
+      {
+        "node": 102882,
+        "source": [
+          -1.48710883,
+          -0.0184012593,
+          76.7869987
+        ],
+        "exported": [
+          -1.48710883,
+          -0.0184012596,
+          76.7869949
+        ],
+        "max_abs_m": 3.800000001774606e-06
+      }
+    ],
+    "coordinate_changed_groups": {
+      "reference": 101,
+      "glue_added": 1851,
+      "shell": 9
+    },
+    "all_changed_coordinates_equal_source_cast_to_float32_and_formatted_9_significant_digits": true,
+    "float32_9g_mismatch_examples": []
+  },
+  "elements": {
+    "source_types": {
+      "S8R": 34849,
+      "C3D20": 504
+    },
+    "exported_types": {
+      "S8R": 34849,
+      "C3D20": 504
+    },
+    "missing_labels": [],
+    "added_labels": [],
+    "type_or_ordered_connectivity_mismatches": []
+  },
+  "shell_sections": {
+    "source_sections": 1078,
+    "exported_sections": 1078,
+    "source_covered_elements": 34849,
+    "exported_covered_elements": 34849,
+    "source_missing": [],
+    "exported_missing": [],
+    "source_overlaps": [],
+    "exported_overlaps": [],
+    "source_unexpected": [],
+    "exported_unexpected": [],
+    "semantic_mismatch_count": 0,
+    "semantic_mismatch_examples": [],
+    "element_assignment_or_orientation_name_changed_count": 34849
+  },
+  "solid_sections": {
+    "source_sections": 1,
+    "exported_sections": 1,
+    "source_covered_elements": 504,
+    "exported_covered_elements": 504,
+    "source_missing": [],
+    "exported_missing": [],
+    "source_overlaps": [],
+    "exported_overlaps": [],
+    "source_unexpected": [],
+    "exported_unexpected": [],
+    "semantic_mismatch_count": 0,
+    "semantic_mismatch_examples": [],
+    "element_assignment_or_orientation_name_changed_count": 0
+  },
+  "boundary_conditions": {
+    "identical_resolved_nodes_dofs_values": true,
+    "source": [
+      [
+        101396,
+        1,
+        0.0
+      ],
+      [
+        101396,
+        2,
+        0.0
+      ],
+      [
+        101396,
+        3,
+        0.0
+      ],
+      [
+        101396,
+        4,
+        0.0
+      ],
+      [
+        101396,
+        5,
+        0.0
+      ],
+      [
+        101396,
+        6,
+        0.0
+      ]
+    ],
+    "exported": [
+      [
+        101396,
+        1,
+        0.0
+      ],
+      [
+        101396,
+        2,
+        0.0
+      ],
+      [
+        101396,
+        3,
+        0.0
+      ],
+      [
+        101396,
+        4,
+        0.0
+      ],
+      [
+        101396,
+        5,
+        0.0
+      ],
+      [
+        101396,
+        6,
+        0.0
+      ]
+    ]
+  },
+  "analysis": {
+    "source_steps": [
+      {
+        "line": 27,
+        "params": {
+          "NAME": "NAT_FRE"
+        },
+        "flags": []
+      }
+    ],
+    "exported_steps": [
+      {
+        "line": 201735,
+        "params": {
+          "NAME": "NAT_FRE",
+          "NLGEOM": "NO"
+        },
+        "flags": [
+          "PERTURBATION"
+        ]
+      }
+    ],
+    "source_frequency": [
+      {
+        "line": 28,
+        "params": {},
+        "flags": [],
+        "data": [
+          8.0
+        ]
+      }
+    ],
+    "exported_frequency": [
+      {
+        "line": 201736,
+        "params": {
+          "EIGENSOLVER": "LANCZOS",
+          "ACOUSTIC COUPLING": "ON",
+          "NORMALIZATION": "MASS"
+        },
+        "flags": [
+          "SIM"
+        ],
+        "data": [
+          8.0
+        ]
+      }
+    ],
+    "requested_mode_count_preserved": true,
+    "official_frequency_reference": {
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-frequency.htm",
+      "read_date": "2026-10-05",
+      "observed_defaults": [
+        "EIGENSOLVER=LANCZOS default",
+        "SIM=YES default",
+        "Mass normalization used with default SIM",
+        "ACOUSTIC COUPLING=ON default for Lanczos"
+      ],
+      "interpretation": "Export spells out documented Abaqus 2025 defaults. This does not prove historical Abaqus versions used the same defaults or provide solved frequencies."
+    }
+  },
+  "organization": {
+    "source_parts": [],
+    "exported_parts": [
+      "PART-1"
+    ],
+    "source_instances": [],
+    "exported_instances": [
+      {
+        "NAME": "PART-1-1",
+        "PART": "PART-1"
+      }
+    ],
+    "source_orientation_definition_count": 2,
+    "exported_orientation_definition_count": 1079
+  },
+  "limitations": [
+    "Text-level semantic comparison does not validate element Jacobians, stiffness, mass or eigenmodes.",
+    "Floating point coordinate/material serializer differences are reported explicitly, not silently accepted as exact equality.",
+    "Frequency options newly made explicit by CAE must be distinguished from proof of identical solver execution.",
+    "The source-model assumptions (no prebend, imperfect tip and glue density=1) remain inherited.",
+    "Original RNA integration/Explicit compatibility is outside this audit."
+  ]
+}
+MATERIAL_DIFFERENCES [{"material": "BIAX", "keyword": "*ELASTIC", "component_index_1_based": 3, "source": 12099010000.0, "exported": 12099000000.0, "absolute_delta": -10000.0, "relative_delta": -8.265139048566783e-07, "source_line": 19, "exported_line": 201692}, {"material": "TRIAX", "keyword": "*ELASTIC", "component_index_1_based": 3, "source": 12099010000.0, "exported": 12099000000.0, "absolute_delta": -10000.0, "relative_delta": -8.265139048566783e-07, "source_line": 26, "exported_line": 201703}, {"material": "UNIAX", "keyword": "*ELASTIC", "component_index_1_based": 3, "source": 13425830000.0, "exported": 13425800000.0, "absolute_delta": -30000.0, "relative_delta": -2.2344987237288122e-06, "source_line": 12, "exported_line": 201717}]
+COUPLING_DIFFERENCES []

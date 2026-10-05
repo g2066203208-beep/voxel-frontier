@@ -60,3 +60,4 @@ T044	P2-P7	iec61400-1-fulltext-audit	Q02-Q05	核验并全文审读用户授权�
 T038-S3	P0-P1	2	Q01	原生读取用户3份源CAE/5模型，核对RNA外形、显式旋转、截面/铺层/耦合及被抑制环筋	experiments/T038/source-rna-audit-20261005/README.md	source-audit-complete/model-repair-not-started	user-review/D08-remains-open	源/副本哈希不变；RNA_REAL_EXPLICIT及4641节点/7209壳单元确实存在；各模型31组环筋32712单元被抑制；只读CAE，无新求解，未改模型
 T045	P0-P2	2	Q01	建立BASE001首选候选：以T026 M2为塔架母本，接入T038验证通过的R2冻结RNA，并把公共结构接口统一到O=(0,158,0)	experiments/T045/RESEARCH_CARD.md	candidate-created/solver-validation-pending	G0	原M2未覆盖；首选文件BASE001_CANDIDATE_M2_R2RNA_O158.inp；下一步只运行Gravity+30 modes+Flex_X/Z并提取质量/CG/J/反力/PT/频率/柔度
 
+T038-S4	P0-P1	2	Q01	按真实原文制定RNA/环筋修正路线，建立官方详细Standard单叶片候选并核导入导出差异	experiments/T038/source-rna-repair-20261005/README.md	stage1-candidate-created/not-solver-validated	user-review/D08-remains-open	四篇原文及官方源码支撑；实际CAE/INP留档；未装入源RNA或M2，未改原件，未求解；保留失败尝试与导出舍入

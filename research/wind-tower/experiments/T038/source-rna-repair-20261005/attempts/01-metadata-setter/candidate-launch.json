@@ -1,0 +1,70 @@
+{
+  "started_utc": "2026-10-05T10:03:45.060076+00:00",
+  "command": [
+    "cmd.exe",
+    "/d",
+    "/c",
+    "D:/Abaqus/Commands/abaqus.bat",
+    "cae",
+    "noGUI=D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\build_blade_candidate_native.py",
+    "--",
+    "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\config.json"
+  ],
+  "run_directory": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344",
+  "config": {
+    "output_directory": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344",
+    "source_directory": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source",
+    "master": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source\\refblade_master.inp",
+    "source_records": [
+      {
+        "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_master.inp",
+        "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source\\refblade_master.inp",
+        "sha256": "4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050",
+        "bytes": 773,
+        "source_repository_path": "structural_models/ABAQUS/refblade_master.inp"
+      },
+      {
+        "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_mesh.inp",
+        "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source\\refblade_mesh.inp",
+        "sha256": "0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4",
+        "bytes": 12547783,
+        "source_repository_path": "structural_models/ABAQUS/refblade_mesh.inp"
+      },
+      {
+        "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_materials.inp",
+        "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source\\refblade_materials.inp",
+        "sha256": "6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6",
+        "bytes": 947,
+        "source_repository_path": "structural_models/ABAQUS/refblade_materials.inp"
+      },
+      {
+        "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_layup.inp",
+        "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source\\refblade_layup.inp",
+        "sha256": "ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7",
+        "bytes": 286534,
+        "source_repository_path": "structural_models/ABAQUS/refblade_layup.inp"
+      },
+      {
+        "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\refblade_te_glue.inp",
+        "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source\\refblade_te_glue.inp",
+        "sha256": "e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a",
+        "bytes": 216674,
+        "source_repository_path": "structural_models/ABAQUS/refblade_te_glue.inp"
+      },
+      {
+        "original": "D:\\Codex-research-native\\t026-rna-official-properties-20261004\\structural_models\\ABAQUS\\README.txt",
+        "copy": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180344\\official-source\\README.txt",
+        "sha256": "6c5248ecd80f4cbe52ae78da80fe3f665fccda41267afa3987271c91227b3417",
+        "bytes": 1202,
+        "source_repository_path": "structural_models/ABAQUS/README.txt"
+      }
+    ]
+  },
+  "solver_submitted": false,
+  "launcher_pid": 29928,
+  "return_code": 0,
+  "wall_seconds": 16.010830999999598,
+  "finished_utc": "2026-10-05T10:04:01.071610+00:00",
+  "candidate_status": "failed",
+  "sources_unchanged": true
+}

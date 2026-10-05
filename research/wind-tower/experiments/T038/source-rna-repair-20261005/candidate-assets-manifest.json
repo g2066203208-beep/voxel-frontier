@@ -1,0 +1,60 @@
+{
+  "task": "T038-S4",
+  "zip_local_path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\candidate-assets.zip",
+  "zip_bytes": 6812369,
+  "zip_sha256": "c144c31f05812a383116700e7ff5d1fe2f326db83adfcb4188544fd91a1386e3",
+  "scope": "Actual isolated Standard blade CAE and exported input; no solver validation or whole-RNA integration.",
+  "members": [
+    {
+      "name": "RNA_REPAIR_S1_DTU_BLADE_STANDARD.inp",
+      "bytes": 13797388,
+      "sha256": "2a554a04191934654b09d3ff5bbdbdac626e58902d13e24a38e4d9c740b8ae71"
+    },
+    {
+      "name": "RNA_REPAIR_S1_DTU_BLADE_STANDARD.cae",
+      "bytes": 3780608,
+      "sha256": "53e1120823d6dbc29d56281dbfc74027ae11a73b908a74affda38b309d3a5af0"
+    },
+    {
+      "name": "execution/config.json",
+      "bytes": 3133,
+      "sha256": "511b23775dc4c7e2585231d0720a9cf9e29158a18d3e08a55c3f2d9b269ad782"
+    },
+    {
+      "name": "execution/build_blade_candidate_native.py",
+      "bytes": 6729,
+      "sha256": "565e52fef52ccbe3803f10ecdfcac5ae6722211f07923a32efe2c17c72eb7044"
+    },
+    {
+      "name": "execution/native-blade-candidate.json",
+      "bytes": 82404,
+      "sha256": "aa69cac62b85a5d485283d5c1c8252d152c064179171c35f509f80ea51e15086"
+    },
+    {
+      "name": "execution/execution.log",
+      "bytes": 146,
+      "sha256": "8ca01b0d6d2806b5d8d1c8e966db21405cb03e86ba700eab50edf7ea6d50f87f"
+    },
+    {
+      "name": "execution/saved-candidate-reopen.json",
+      "bytes": 1502,
+      "sha256": "8f90e219014e30077e85a38d473ff5df47b8ef9e8790ea1ebefae57ed5913126"
+    },
+    {
+      "name": "execution/reopen-execution.log",
+      "bytes": 146,
+      "sha256": "8ca01b0d6d2806b5d8d1c8e966db21405cb03e86ba700eab50edf7ea6d50f87f"
+    },
+    {
+      "name": "execution/verify_saved_candidate_native.py",
+      "bytes": 2120,
+      "sha256": "9e8578871c3750d2854caa950d3f40cae0faf5c80807d3acfee80961c094d087"
+    },
+    {
+      "name": "execution/candidate-finalization.json",
+      "bytes": 3416,
+      "sha256": "b242101e91f86dea4544bdc13e33c2ea094efeab4d079f67c5000334aa0365ea"
+    }
+  ],
+  "member_readback_verified": true
+}

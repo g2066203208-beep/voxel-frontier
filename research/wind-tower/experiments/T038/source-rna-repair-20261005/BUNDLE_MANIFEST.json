@@ -1,0 +1,152 @@
+{
+  "task": "T038-S4",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 12060,
+      "sha256": "0595e70852ebaa437385d901b870f2baf1081e4b0f749665dcbad94200c831bd"
+    },
+    {
+      "path": "literature-method-evidence.md",
+      "bytes": 14804,
+      "sha256": "9ccc02ffb63d206f83b23bf0aa0d3aa0a7e653c71939628300268c7ceb064daf"
+    },
+    {
+      "path": "literature-method-evidence.json",
+      "bytes": 20617,
+      "sha256": "0b6997dd69c70f766ad562e226de2b78c6e2b0edde22a97882fa4948083f003f"
+    },
+    {
+      "path": "official-blade-repair-basis.md",
+      "bytes": 9438,
+      "sha256": "d239f7f39837b35a839a84896fdd8da7d5b2c8366888111ed2bd0838a7f01688"
+    },
+    {
+      "path": "official-blade-repair-basis.json",
+      "bytes": 1334306,
+      "sha256": "76a80f1d284ecbcdfa98a54eaf64b5822a43e018575c8d4ee11d1220be48bb87"
+    },
+    {
+      "path": "independent-repair-plan-review.md",
+      "bytes": 18518,
+      "sha256": "f06913cd8921f992097755e9b410b6b2a78e91e68f40af97872b0e4c3b1c399b"
+    },
+    {
+      "path": "roundtrip-review.md",
+      "bytes": 5051,
+      "sha256": "064f3c26eb95a6645735ecb88b1ce9e84c8592f13ca17212fef5bec322946283"
+    },
+    {
+      "path": "roundtrip-review.json",
+      "bytes": 34729,
+      "sha256": "2945c6bb3f2d7ffeb07c5d777365f05cc0ff44df61ed559cf730a9453bbab081"
+    },
+    {
+      "path": "roundtrip-audit.log",
+      "bytes": 11223,
+      "sha256": "1f2209e510747624ea9303fa59a6a34197a68530a32d62113064ee269a25f754"
+    },
+    {
+      "path": "build_blade_candidate_native.py",
+      "bytes": 6729,
+      "sha256": "565e52fef52ccbe3803f10ecdfcac5ae6722211f07923a32efe2c17c72eb7044"
+    },
+    {
+      "path": "run_blade_candidate.py",
+      "bytes": 3302,
+      "sha256": "2a867ac38fd08dcfe6abed938a8c4091b4a16f1492d2e1353609382f17efede2"
+    },
+    {
+      "path": "candidate-launch.json",
+      "bytes": 4015,
+      "sha256": "726d2bedf0b1565b00b20bc3b8a04a2b2fdb791b3c0246fcf557db170a2521f3"
+    },
+    {
+      "path": "native-blade-candidate.json",
+      "bytes": 82404,
+      "sha256": "aa69cac62b85a5d485283d5c1c8252d152c064179171c35f509f80ea51e15086"
+    },
+    {
+      "path": "execution.log",
+      "bytes": 146,
+      "sha256": "8ca01b0d6d2806b5d8d1c8e966db21405cb03e86ba700eab50edf7ea6d50f87f"
+    },
+    {
+      "path": "prepare_candidate_assets.py",
+      "bytes": 2306,
+      "sha256": "5cceb3adabd94d69963f947984e0e013b02415841ca30b4c9c679d4a0a4ee788"
+    },
+    {
+      "path": "candidate-assets-manifest.json",
+      "bytes": 2173,
+      "sha256": "08c061807ab27525c2f365ec624549c68c50bdeb14b5fe697cf15dfc4244c467"
+    },
+    {
+      "path": "publish_repair_stage1.py",
+      "bytes": 8432,
+      "sha256": "cbb7c05c1552f7d66138434732f190e24bb9bbb5a0f8e6d526a4cc510804490d"
+    },
+    {
+      "path": "candidate-finalization.json",
+      "bytes": 3416,
+      "sha256": "b242101e91f86dea4544bdc13e33c2ea094efeab4d079f67c5000334aa0365ea"
+    },
+    {
+      "path": "verify_saved_candidate_native.py",
+      "bytes": 2120,
+      "sha256": "9e8578871c3750d2854caa950d3f40cae0faf5c80807d3acfee80961c094d087"
+    },
+    {
+      "path": "finalize_candidate.py",
+      "bytes": 2726,
+      "sha256": "03a274c5f7d4a4051ae8c50aad3bb6d45f7cb3f817cdfa15f310633bfb2415ef"
+    },
+    {
+      "path": "saved-candidate-reopen.json",
+      "bytes": 1502,
+      "sha256": "8f90e219014e30077e85a38d473ff5df47b8ef9e8790ea1ebefae57ed5913126"
+    },
+    {
+      "path": "reopen-execution.log",
+      "bytes": 146,
+      "sha256": "8ca01b0d6d2806b5d8d1c8e966db21405cb03e86ba700eab50edf7ea6d50f87f"
+    },
+    {
+      "path": "attempts/01-metadata-setter/build_blade_candidate_native.py",
+      "bytes": 6788,
+      "sha256": "0c0ca51a282bae95b4d06f5db5153be1a2f102e7c327b1270a611c73c3ae5804"
+    },
+    {
+      "path": "attempts/01-metadata-setter/candidate-launch.json",
+      "bytes": 3959,
+      "sha256": "62212ca27223661e3b2f693f79a2c240f1d364ec65cca24008585c5cafddc7fd"
+    },
+    {
+      "path": "attempts/01-metadata-setter/execution.log",
+      "bytes": 159,
+      "sha256": "aa4724d02dbaa1c8e8327c537d28a5ac9f094d11737e48200f13a90a2b4816da"
+    },
+    {
+      "path": "attempts/01-metadata-setter/native-blade-candidate.json",
+      "bytes": 3478,
+      "sha256": "8eb1a5b51e1719f8ae659069c9108df2171a6d0c72026a990a04c20ca1cd4abb"
+    },
+    {
+      "path": "attempts/01-metadata-setter/run_blade_candidate.py",
+      "bytes": 3242,
+      "sha256": "8f26fe7bcf936e8ecb3eeb702b6a2c79e4f9724dd9da7517b73d6a8155c47ddc"
+    },
+    {
+      "path": "audit_blade_roundtrip.py",
+      "bytes": 20142,
+      "sha256": "cd4e614356a5051beb395972a99ca2820878e17463d902f5e7fe2470fa90e841"
+    },
+    {
+      "path": "candidate-assets.zip",
+      "bytes": 6812369,
+      "sha256": "c144c31f05812a383116700e7ff5d1fe2f326db83adfcb4188544fd91a1386e3"
+    }
+  ],
+  "no_solver_submitted": true,
+  "source_caes_unchanged": true
+}

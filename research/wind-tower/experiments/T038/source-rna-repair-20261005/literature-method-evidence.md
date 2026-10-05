@@ -1,0 +1,128 @@
+# RNA与环筋修复：四篇原文证据及边界
+
+用户已有真实RNA外形、网格、显式旋转配置和环筋资产。文献支持针对性修复，但不能证明当前模型已是经过验证的柔性旋转模型，也不能证明论文两章完全无问题。
+
+四篇指定原文及既有官方软件定义的修复依据；本子任务仅写两份报告，不改CAE、不求解、不上传。
+
+## 文献身份与实际阅读范围
+
+### BAK2013
+
+**Description of the DTU 10 MW Reference Wind Turbine**。Christian Bak, Frederik Zahle, Robert Bitsche, Taeseong Kim, Anders Yde, Lars Christian Henriksen, Anand Natarajan, Morten Hartvig Hansen；DTU Wind Energy Report-I-0092, July 2013。
+
+DOI：未设此项，不虚构DOI。
+
+本机PDF：`D:/论文/阅/混塔模型参考/下载模型/DTU10MW_model_package/Official_DTU_Report/Description_of_the_DTU_10MW_Reference_Wind_Turbine.pdf`
+
+身份：138页，10815847字节；SHA256 `55aac8cae8f656cdc4aa73afd3f5dedc45345079168476289eb49f000efd8017`。
+
+GitHub路径：`research/wind-tower/references/baselines-and-site-20261004/dtu-report/DTU_Wind_Energy_Report-I-0092.pdf`；起始树存在：True。
+
+实际阅读范围：`{"fresh_complete_text_pages": [1, 3, 37, 42, 45, 48, 55], "prior_complete_text_pages_used": [12, 13, 49, 51, 65, 66, 67], "prior_visual_pages": [66, 67], "limit": "未声称全138页逐页科学审读。"}`
+
+Git LFS；此前HTTP206与PDF头检查仅证明入口可读，不等于本轮远端全文件哈希复核。
+
+### XU2025
+
+**Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel–Concrete Hybrid Tower using a co-simulation approach**。Jun Xu, Zeyu He, Dan Wang, Guangling He, Qiang Wu, Zili Zhang；Renewable Energy 243 (2025) 122475。
+
+DOI：10.1016/j.renene.2025.122475。
+
+本机PDF：`D:/MC/cae仿真/参考文献/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf`
+
+身份：17页，5949356字节；SHA256 `86a46402bd0aa2e57fb9e02e10749ca2a02c183a80039abe75d156cea339e237`。
+
+GitHub路径：`research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf`；起始树存在：True。
+
+实际阅读范围：`{"fresh_complete_text_pages": [1, 4, 6, 7, 8, 9, 10], "fresh_partial_text_pages": {"11": "开头推覆加载续段及Table3/§4.2，前3300字符"}, "prior_complete_text_pages_used": [2, 3, 11, 13, 14], "prior_visual_pages": [3, 4], "limit": "全17页关键词检索不等于全篇科学审读。"}`
+
+此前D:/浏览器下载路径失效；本次用所列实际存在的同哈希PDF读页并重新计算SHA256。
+
+### HE2024
+
+**大型混塔式风力机的建模与可靠度分析**。何泽瑜；湖南大学硕士学位论文，提交日期2024-04-12。
+
+DOI：未设此项，不虚构DOI。
+
+本机PDF：`D:/MC/cae仿真/大型混塔式风力机的建模与可靠度分析_何泽瑜.pdf`
+
+身份：90页，10193750字节；SHA256 `85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c`。
+
+GitHub路径：`research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf`；起始树存在：True。
+
+实际阅读范围：`{"fresh_complete_text_pages": [1, 39, 40, 41, 42, 43, 44, 45], "prior_complete_text_pages_used": [33, 34, 35], "prior_visual_pages": [33, 35], "page_mapping": "所引用正文印刷页=PDF页-11", "limit": "全90页关键词检索不等于全篇科学审读。"}`
+
+本机原件本次重新核验；此前完整参考论文发表记录由根代理保存，本子任务不新增上传。
+
+### CHENG2024
+
+**Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode**。Yu Cheng, Liang Cao, Jiepeng Liu, Yuhang Wang, Xuhong Zhou；Structures 68 (2024) 107235。
+
+DOI：10.1016/j.istruc.2024.107235。
+
+本机PDF：`D:/论文/阅/混塔模型参考/GOOD/[21]Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf`
+
+身份：12页，4401973字节；SHA256 `14f05055820226e29793b16cff2144523596b5c7de9aa297f506d3b6c24a6622`。
+
+GitHub路径：`research/wind-tower/references/user-provided/Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf`；起始树存在：True。
+
+实际阅读范围：`{"fresh_identity_page": 1, "prior_complete_relevant_text_pages": [3, 4, 5, 6, 7, 8, 9], "prior_visual_pages": [3, 5, 6, 7, 8, 9], "prior_record": "work/rna-sample-validation-20261005/literature-method-review-private.json", "limit": "复用本会话已有实读记录，没有声称新读全12页。"}`
+
+本机实读副本与仓库副本题名/DOI相同但二进制不同；仓库既有登记4389627字节，SHA256 4c5fb8e57b713245bc8d06cedcb683b509c2038b41a34cdb76acba66fcb5aed0，Git blob e5228acc2bc28b121424f5c053af93860b864726；本轮没有重新获取仓库副本。
+
+## 具体修法与出处对应
+
+|步骤|原文位置|直接支持|不能据此宣称|项目应做的实现与核验|
+|---|---|---|---|---|
+|R01 保留并修复用户已有RNA与环筋资产|work/source-rna-audit-20261005/native-inventory.json；work/source-rna-audit-20261005/compact-summary.json|原始CAE只读审查证明存在RNA外形/网格、RNA_REAL_EXPLICIT与旋转设置；31个RHOOP Part、每模型32712个T3D2环筋单元确实存在，相关实例被抑制。此项依据是用户源模型，不是文献。|有旋转配置不等于已正确求解或验证了柔性旋转；不同模型版本的单元数不能相加成为唯一实物总数。|在副本保留资产血缘；修复已发现的壳网格/BeamSection错配、人工质量载体与整叶片运动学耦合。论文中若写成未建立RNA/环筋应更正。|
+|R02 使用官方复合材料叶片结构源建立可审查候选|Bak PDF37 §4.1.1；Bak PDF42 §4.1.2；Bak PDF45铺层；Bak PDF55 §4.1.5|玻纤复材和轻木夹芯；Abaqus S8R分层壳描述外壳与剪切腹板，C3D20描述尾缘胶层；包含内外部几何和铺层目录。原始结构模型无预弯，设计分区为周向11×展向100。|不能以通用钢壳或极高密度质量载体替代真实复合叶片后声称物理正确。公开结构源是叶片，不是完整机舱/轴承工程设计。1100设计区不强制要求缓存恰有1100张section卡。|核master的mesh/materials/layup/glue包含链、截面覆盖、材料方向、连接、质量/质心/惯量和刚度/模态。官方S8R/C3D20体系用于Standard结构候选，转入Explicit需另核单元兼容和转换影响；缓存实际1078张COMPOSITE shell-section卡照实记录。|
+|R03 区分刚性RNA简化与柔性叶片分支|Cheng PDF3 §2.1/Fig2；Cheng PDF6–7 §4.1及PDF7 Fig5；Cheng PDF7 §5.1与PDF9 Fig7/Table4；Xu PDF7–9 §3.4|Cheng主FE在机舱/叶轮设置独立偏心参考点，赋集中质量/惯量并刚性运动学耦合至塔顶截面；比较EPMJ单偏心质量+惯量和EDPMJ双部件等简化。Xu保留柔性叶片自由度和塔体相互作用。|Cheng不支持全叶片所有节点耦合一个RP后称为柔性模型。当前单CG方案概念接近EPMJ，不能说精确复现其主双RP模型，也不由其证明DTU10MW完整惯性张量或柔性旋转验证完成。|刚性分支明确质量、偏心、惯量和适用目的；柔性分支保留叶片变形自由度，单独验证根部/轮毂/轴系传力。两分支验证结论不可混写。|
+|R04 修复叶根与轴系连接，解除错误整叶片锁定|Bak PDF42 §4.1.2；Bak PDF55 §4.1.5；Xu PDF7–9 §3.4|Bak给出具有内部结构的弹性叶片；截面屈曲小段端部的运动学耦合不能推广成全叶片刚化。Xu保留叶片柔性运动与塔体相互作用。|四源未规定用户CAE的RP身份、叶根节点集、轴承connector参数、当前旋转轴、1rad/s或1s的接受标准。参考点坐标重合不证明其身份及传力关系相同。|按实际节点/RP标识重建传力图；连接限定到有物理依据的叶根截面；从源几何核局部轴和旋转轴。约束冲突、刚体运动、弹性变形、旋转反力分别检查。|
+|R05 恢复已有环筋前核对宿主、构造与重复约束|何 PDF33/印刷22 §3.3；何 PDF45/印刷34 §4.4.1；Xu PDF6 §3.3；Xu PDF10 §4.1/Fig14|何和Xu的Abaqus三维塔使用嵌入桁架钢筋网；OpenSEES纤维梁的箍筋约束效应使用Mander约束混凝土近似。这是不同离散层次的做法。|原文不提供用户31个RHOOP实例/32712单元的具体直径、间距、激活命令或host名称。何PDF44环向布置的预应力钢筋指沿周向布置的预应力筋，不能误当普通箍筋。|保留已有RHOOP几何/截面，核普通筋与预应力筋分类、宿主混凝土、越界节点、嵌入和重复约束后恢复实例。若显式环筋与Mander增强本构并用，审查约束效应重复计入。Embedded程序含义据官方定义，不冒充物理黏结标定。|
+|R06 恢复真实结构后重建质量账本|Bak PDF65–66 §6.2.1；Cheng PDF3 §2.1、PDF7 Fig5/Table2|DTU报告区别质量、质心以及不同参考点/轴下的惯量；Cheng展示偏心及转动惯量对动态特性的影响。|这四篇不能确定39800.22kg等现存NSM的实物组成，不能武断视为全是环筋并删除；环筋恢复同时保留表示相同实物的NSM也不能默认无重复。|逐项记录实体/壳/杆件积分质量、集中质量、NSM及人工质量载体的物理用途，确认重复范围后调整；复核总质量、质心、惯量与重力反力。NSM累加及参与重力属于官方软件定义，具体构造质量不从论文反推。|
+|R07 用子系统自由体核塔顶载荷，避免重复惯性和重力|Xu PDF6 §3.3、PDF7–9 §3.4/Eqs10–16；何 PDF40–42/印刷29–31 §4.2；何 PDF43–44/印刷32–33 §4.3|文献区分环境荷载广义力与子系统运动产生的耦合广义力，迭代交换子系统响应；MBD缺Z向自由度时在OpenSEES只补对应Z方向的上部集中质量。|不是导入任何塔顶时程都必须删全部RNA的规定，也不是OpenFAST输出到Abaqus的现成映射。力–力双向迭代联合仿真不等于单向荷载回放。|先判定外部环境力、截面总反力或扣除惯性/重力的接口量，明确坐标、作用点、符号、自由度与两侧保留的质量惯量。自由体证明同一项计入两次后才扣除一次。防重复属于项目动力平衡推导和实施核验，不声称是Xu的逐字方法。|
+|R08 分开报告参考方法、输入核验和物理确认|Cheng PDF7 §4.1、PDF8 Table3/Fig6；Xu PDF10–11 §4.1；何 PDF45/印刷34 §4.4.1；Bak PDF67 §6.2.3|Cheng先静力预载再提频并比较多阶振型。Xu/何用顶部集中质量的Abaqus塔体推覆模型校验OpenSEES，与柔性MBD动态分支不同。Bak §6.2.3明确是陆上塔，但不是当前158m混塔。|文献通过的对照不能直接变成当前模型通过；成功导入或单个接近频率不能替代完整验证。不能声称DTU只有海上版本或无陆上塔。|记录实际完成的导入、关键词、质量、约束、求解和对照；未完成的柔性旋转、刚度模态、接口载荷与塔响应验证明确保留。容限和fixture属于项目预先设计，不冒称四源规定。|
+
+## 官方叶片源文件链
+
+来源：`https://gitlab.windenergy.dtu.dk/rwts/dtu-10mw-rwt`；冻结commit `3e1d7a82db7633807f72156b3232b773ac55dee7`。
+
+本机目录：`D:/Codex-research-native/t026-rna-official-properties-20261004/structural_models/ABAQUS`。
+
+GitHub前缀：`research/wind-tower/references/baselines-and-site-20261004/dtu-abaqus-blade/structural_models/ABAQUS/`。
+
+|源文件/用途|字节|SHA256|
+|---|---:|---|
+|refblade_master.inp / 总入口/四项include|773|`4908a48d4749fa914370ff760fd50be622d20f2332fbfe47f684b87b2308a050`|
+|refblade_mesh.inp / S8R网格|12547783|`0d22cb1731acaaf2c6da5002a88bab7129f185b74e41f11b3a195b1227e42ac4`|
+|refblade_materials.inp / 5种材料|947|`6d1f784c0d7c6f2bbcdadf88ee1d7d5cc05c06a6bd8ea906ba9901a89586b9a6`|
+|refblade_layup.inp / 1078张COMPOSITE shell-section卡|286534|`ad5acf326d94df0f28cf37bc191da17b8afb467f2084e0a3c921e64eaa535ca7`|
+|refblade_te_glue.inp / C3D20胶层|216674|`e2d0ed0ce2241a5a7db51685cc4319db86dab38d684b000d7e6bd4324b1da95a`|
+
+本机缓存存在不证明已装配到用户CAE；本轮只重新核本机身份，不重新获取远端。原模型无预弯，源README提示末端几何简化。
+
+1100设计区与实际1078张section卡分别按原文和缓存版本记录，不为凑数改动源文件。四文件include均存在已由前次源链审查确认。
+
+## 官方软件定义与项目推导
+
+既有实际阅读记录：`C:/Users/REME/Documents/Codex/2026-10-03/lia/work/chapter2-completion/method-source-traceability.md`。本子任务未新增网页阅读。
+
+- ABAQUS_EMBEDDED：https://docs.software.vt.edu/abaqusv2025/English/SIMACAECSTRefMap/simacst-c-embeddedelement.htm。既有实际阅读Introduction/Host/Embedded Elements/Use with Other Constraints/Limitations；宿主位移插值与附加质量/刚度，不等于物理黏结标定。
+
+- ABAQUS_NSM：https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMODRefMap/simamod-c-nonstructuralmass.htm。既有实际阅读Introduction/Defining Nonstructural Mass/Total Mass/distribution；多条贡献累加并参与重力。
+
+单CG完整三维质量矩阵、载荷参考点变换、重复重力/惯性排除、数值fixture和容限分别归于项目推导与软件实施核验，不作为Cheng/Xu给出的完整测试方案。
+
+## 保留的来源差异与未闭合项
+
+- Xu塔材料写Q345/E206GPa，何写S345；不能掩盖与当前输入名称/弹性模量的差别。
+
+- 何PDF35/印刷24 Table3-3标题为半径，当前输入按直径解释；仍需单独处理原文歧义和输入解释，不能在修RNA时静默替换。
+
+- 何PDF40–42正文引用(4.x)，显示的公式号却为(3.26)等；使用节号/PDF页/内容定位，不硬写未经统一的公式号。
+
+- Cheng正文234t与Table2合计246t存在原文差异，不能把其表值替代DTU10MW RNA质量。
+
+- Cheng高阶频率表存在超过5%的差异，不能把第一阶小于5%的陈述改写成通用验收标准。
+
+本报告已重新计算四个本机PDF与五个官方INP缓存的完整SHA256，并在起始GitHub树核对四篇路径。未新增下载、上传、CAE变更或求解。导入、数据检查、质量/约束核验以及柔性旋转响应验证的最终状态必须依据后续实际输出，不能由本报告的文献依据替代。

@@ -1,3 +1,10 @@
+<!-- T038-S4 REPAIR STAGE1 START -->
+## T038-S4 RNA修正第一步：官方详细单叶片候选（2026-10-05）
+
+用户已授权修正并要求真实文献依据。已核Bak/Xu/Cheng/何泽瑜四篇实际PDF相关页，形成逐项修法；使用已核官方INP源链在副本生成详细Standard单叶片CAE及导出INP，原件、失败尝试及导出差异留档。官方S8R/C3D20不能原样投入原RNA_REAL_EXPLICIT。当前仅完成修复用候选与输入语义核对；未接入源RNA或M2、未求解，整机连接/环筋修正及质量模态验证待后续阶段，D08/疲劳适用性仍未闭合。见[修正方案与实际文件](../experiments/T038/source-rna-repair-20261005/README.md)。
+
+<!-- T038-S4 REPAIR STAGE1 END -->
+
 <!-- T038-S3 SOURCE AUDIT STATUS START -->
 ## T038-S3 用户源 CAE 原生核对（2026-10-05）
 

@@ -1,3 +1,10 @@
+<!-- T038-S4 REPAIR INDEX START -->
+## RNA修正路线与第一步文件
+
+[T038-S4 修正方案与原文依据](source-rna-repair-20261005/README.md)记录详细叶片、连接/旋转、既有环筋和载荷接口的修正顺序，并交付已实际生成的Standard单叶片CAE/INP及导入导出审查。该候选未接入原RNA/M2且未求解，不代表整机修复或疲劳验收完成。
+
+<!-- T038-S4 REPAIR INDEX END -->
+
 <!-- T038-S3 SOURCE AUDIT INDEX START -->
 ## 用户源模型与当前 M2 的范围说明
 

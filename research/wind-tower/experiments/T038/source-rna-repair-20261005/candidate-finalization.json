@@ -1,0 +1,97 @@
+{
+  "status": "final-closed-files-verified",
+  "outputs": [
+    {
+      "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.inp",
+      "bytes": 13797388,
+      "sha256": "2a554a04191934654b09d3ff5bbdbdac626e58902d13e24a38e4d9c740b8ae71",
+      "pre_close_record": {
+        "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.inp",
+        "bytes": 13797388,
+        "sha256": "2a554a04191934654b09d3ff5bbdbdac626e58902d13e24a38e4d9c740b8ae71"
+      },
+      "pre_close_identity_same": true
+    },
+    {
+      "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.cae",
+      "bytes": 3780608,
+      "sha256": "53e1120823d6dbc29d56281dbfc74027ae11a73b908a74affda38b309d3a5af0",
+      "pre_close_record": {
+        "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.cae",
+        "bytes": 4194304,
+        "sha256": "b49ceb8a530587e208f0b42cfee618205a0ccd05dcf91ebd85c26d971f9237a0"
+      },
+      "pre_close_identity_same": false
+    }
+  ],
+  "note": "The native report hashed the CAE before Mdb.close; the database file finalizes on close. Use these post-close fingerprints.",
+  "reopen": {
+    "path": "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\RNA_REPAIR_S1_DTU_BLADE_STANDARD.cae",
+    "before_sha256": "53e1120823d6dbc29d56281dbfc74027ae11a73b908a74affda38b309d3a5af0",
+    "models": {
+      "DTU10MW_BLADE_STANDARD_CANDIDATE": {
+        "parts": {
+          "PART-1": {
+            "nodes": 103512,
+            "elements": 35353,
+            "element_types": {
+              "S8R": 34849,
+              "C3D20": 504
+            },
+            "layups": {
+              "BLADE-1_CA": 238,
+              "BLADE-1_LP": 360,
+              "BLADE-1_NO": 446,
+              "BLADE-1_TA": 460,
+              "BLADE-1_TB": 500,
+              "BLADE-1_TC": 360,
+              "BLADE-1_TP": 360,
+              "BLADE-1_TV": 460,
+              "BLADE-1_WA": 300,
+              "BLADE-1_WB": 300,
+              "BLADE-1_WC": 185
+            }
+          }
+        },
+        "materials": [
+          "BALSA",
+          "BIAX",
+          "TE_GLUE_MAT",
+          "TRIAX",
+          "UNIAX"
+        ],
+        "constraints": 101,
+        "steps": {
+          "Initial": {
+            "class": "InitialStep",
+            "numEigen": null
+          },
+          "NAT_FRE": {
+            "class": "FrequencyStep",
+            "numEigen": 8
+          }
+        }
+      }
+    },
+    "solver_submitted": false,
+    "model_names": [
+      "DTU10MW_BLADE_STANDARD_CANDIDATE"
+    ],
+    "status": "reopened-successfully",
+    "after_sha256": "53e1120823d6dbc29d56281dbfc74027ae11a73b908a74affda38b309d3a5af0",
+    "unchanged": true
+  },
+  "reopen_return_code": 0,
+  "reopen_wall_seconds": 4.769488400001137,
+  "command": [
+    "cmd.exe",
+    "/d",
+    "/c",
+    "D:/Abaqus/Commands/abaqus.bat",
+    "cae",
+    "noGUI=D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\verify_saved_candidate_native.py",
+    "--",
+    "D:\\Codex-research-native\\source-rna-repair-20261005\\20261005_180633\\config.json"
+  ],
+  "no_solver_submitted": true
+}
