@@ -51,7 +51,7 @@ jobs:
           path: |
             artifacts/T046/*.inp.gz
             public/research/t046-rebar-report.json
-          retention-days: 30
+          retention-days: 90
       - name: Build production site
         run: npm run build
 
