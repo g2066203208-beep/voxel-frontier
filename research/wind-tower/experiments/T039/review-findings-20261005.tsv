@@ -1,0 +1,24 @@
+review_id	chapter	priority	review_finding	status	scope
+C1-01	1	P1	1.3、1.6和小结仍把已撤除的Simpack双向协同当作本文生产主线	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C1-02	1	P1	1.3五个小节和1.4三个小节仍以证据提示代替研究现状比较	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C1-03	1	P1	RNA历史质量矩阵核查被无条件写成本文已完成的动力身份验证	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C1-04	1	P1	疲劳路线将雨流/DEL与材料S–N/Miner直接相连，缺少局部应力和长期统计环节	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C1-05	1	P1	1.5没有从最接近研究推导出可检验的未决问题	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C1-06	1	P2	三风速六种子及2–4个控制工况被提前固定为后续统一输入	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C1-07	1	P2	1.1过早转向158m参数和跨软件建模，尚未完成高塔需求到结构问题的论证	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-01	2	高	三套结构/RNA结果虽局部区分，仍被混称“正式模型已验证”	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-02	2	高	Li/Sidoroff、μ=0材料路线与当前源卡μ=1e-5路线没有明确分开	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-03	2	高	“材料试件通过”应按指标和分支限定，当前三维尾部误差仍未关闭	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-04	2	中高	独立T3D2预应力实现不能用REBAR/HOLD路径替代说明	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-05	2	高	“网格敏感性未执行”是旧分支状态，后来三网格成果应准确纳入	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-06	2	中高	何文频率比较和RNA总质量的证据口径被写得过强	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-07	2	高	阻尼推导与衰减算术成立，不等于当前塔的全局阻尼物理/实现闭环已完成	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C2-08	2	高	有限推覆/模态验证不能作为后章大幅风响应的整体可靠性结论	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-01	3	P1	RNA及跨软件误差仍属于历史分支，不能作为当前M2的已验证结果	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-02	3	P1	约9%—15%的频率残差已量化，但其对目标响应可接受尚未得到证明	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-03	3	P1	4.63%/5.53%阻尼是实际输入，不能写成物理适用性已验证	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-04	3	P1	未去均值的合弯矩RMS不能直接称为“持续波动”控制	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-05	3	P2	完整M6的单一Frobenius百分比不是独立于单位的空间惯性误差	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-06	3	P2	时间步与标准字段仍是候选写法，正文却把筛选输入宣布完全冻结	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-07	3	P1	气动简化影响仍待复核，与“无需重跑OpenFAST”的无条件结论冲突	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
+C3-08	3	P1	3.6—3.9仍以Simpack双向联合为生产主线，已不对应仓库当前论文路线	reviewed/not-revised	original-manuscript; current-baseline-applicability; no-new-run
