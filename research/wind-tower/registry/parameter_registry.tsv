@@ -5,10 +5,10 @@ PAR003	DTU rated wind speed	11.4	m/s	reference turbine identity	REF001	DTU repor
 PAR004	DTU rotor-speed minimum	6.0	rpm	1P/3P source	REF001	DTU report	BASE_PENDING	verified-source	
 PAR005	DTU rotor-speed maximum	9.6	rpm	1P/3P source	REF001	DTU report	BASE_PENDING	verified-source	
 PAR006	DTU original hub height	119	m	reference-turbine identity	REF001	DTU report	BASE_PENDING	verified-source	not thesis combined-model HubHt
-PAR007	tower total height	158	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE_PENDING	direct-source-verified	Production Abaqus model still required for implementation check
-PAR008	concrete tower height	112	m	prototype geometry	He2024 original PDF Sec.3.3 p33 + Table3-2 p34	original-page	BASE_PENDING	direct-source-verified	31 segment endpoint
-PAR009	steel tower height	46	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE_PENDING	direct-source-verified	4 steel segments
-PAR010	combined model hub height	161.368806	m	combined model geometry	RUN/INPUT_PENDING	formal OpenFAST+Abaqus inputs	BASE_PENDING	reported	must be recomputed from actual model
+PAR007	tower total height	158	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE001_CANDIDATE	source+implementation-verified	T045 preferred candidate preserves M2 geometry
+PAR008	concrete tower height	112	m	prototype geometry	He2024 original PDF Sec.3.3 p33 + Table3-2 p34	original-page	BASE001_CANDIDATE	source+implementation-verified	T045 preferred candidate preserves M2 geometry
+PAR009	steel tower height	46	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE001_CANDIDATE	source+implementation-verified	T045 preferred candidate preserves M2 geometry
+PAR010	combined model hub height	161.3688057735	m	combined model geometry	T037_R2_ACTUAL_INPUT	TowerHt+Twr2Shft+OverHang*sin(ShftTilt)	BASE001_CANDIDATE	verified-actual-r2	Formal R2 fields re-read and archived hashes verified
 PAR011	C65 elastic modulus	36.5	GPa	material	GB/T50010+object literature	material table	BASE_PENDING	conditional	current standard authorized text still to archive
 PAR012	C70 elastic modulus	37.0	GPa	material	GB/T50010+object literature	material table	BASE_PENDING	conditional	
 PAR013	concrete Poisson ratio	0.20	-	material	GB/T50010	material table	BASE_PENDING	conditional	
@@ -19,12 +19,26 @@ PAR017	CDP Kc	0.6666667	-	material model	Abaqus official	CDP keyword	BASE_PENDIN
 PAR018	CDP viscosity baseline	0	-	material model	Abaqus official	CDP keyword	BASE_PENDING	verified-definition	Standard default; production choice still needs sensitivity
 PAR019	public HAWC2 single-blade mass	41722.411281503	kg	RNA source identity	DTU public HAWC2	Blade_st.dat integration	BASE_PENDING	verified-recalculated	2026-10-04 independent trapezoidal integration
 PAR020	public HAWC2 RNA mass	676727.233844509	kg	RNA source identity	DTU public HAWC2	3 blades + 105520 hub + 446040 nacelle	BASE_PENDING	verified-recalculated	implementation-specific source chain
-PAR021	OpenFAST historical TowerHt	158	m	combined-model geometry	HIST_R2Z74	FST/ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
-PAR022	OpenFAST historical TowerBsHt	0	m	combined-model geometry	HIST_R2Z74	FST/ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
-PAR023	OpenFAST historical Twr2Shft	2.75	m	hub geometry	HIST_R2Z74	ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
-PAR024	OpenFAST historical OverHang	-7.1	m	hub geometry	HIST_R2Z74	ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
-PAR025	OpenFAST historical ShftTilt	-5	deg	hub geometry	HIST_R2Z74	ElastoDyn per-file audit	BASE_PENDING	historical-reported	Raw input file absent
-PAR026	OpenFAST combined HubHt recomputation	161.3688057735	m	hub geometry	OpenFAST official formula	TowerHt+Twr2Shft+OverHang*sin(ShftTilt)	BASE_PENDING	verified-arithmetic-from-historical-inputs	Becomes current verified only after raw inputs are re-read
-PAR027	Historical ROSCO runtime version	2.6.0	-	controller identity	HIST_R2Z54	runtime initialization record	BASE_PENDING	historical-reported	Controller files absent
+PAR021	OpenFAST historical TowerHt	158	m	combined-model geometry	T037_R2_ACTUAL_INPUT	FST/ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR022	OpenFAST historical TowerBsHt	0	m	combined-model geometry	T037_R2_ACTUAL_INPUT	FST/ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR023	OpenFAST historical Twr2Shft	2.75	m	hub geometry	T037_R2_ACTUAL_INPUT	ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR024	OpenFAST historical OverHang	-7.1	m	hub geometry	T037_R2_ACTUAL_INPUT	ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR025	OpenFAST historical ShftTilt	-5	deg	hub geometry	T037_R2_ACTUAL_INPUT	ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR026	OpenFAST combined HubHt recomputation	161.3688057735	m	hub geometry	OpenFAST official formula	TowerHt+Twr2Shft+OverHang*sin(ShftTilt)	BASE001_CANDIDATE	verified-actual-r2	Computed from re-read actual R2 fields
+PAR027	Historical ROSCO runtime version	2.6.0	-	controller identity	T037_ACTUAL_RUNTIME	DISCON+DLL archive hashes	BASE001_CANDIDATE	verified-current	ROSCO2.6.0; controller files verified
 PAR028	He2024 concrete top diameter at z=112m	4.97	m	prototype geometry	He2024 Table3-2 PDF p34/body p23	original-page	BASE_PENDING	direct-source-verified	Compare with production Abaqus
 PAR029	He2024 steel Table3-3 value at z=123.5m	4.66	m	prototype geometry	He2024 Table3-3 PDF p35/body p24; header=半径	original-page	BASE_PENDING	conflict-source-verified	Do not silently reinterpret as diameter before production model check
+PAR030	BASE001 common structural interface y	158	m	OpenFAST-Abaqus common reference point	T038/T045	O=(0,158,0)	BASE001_CANDIDATE	candidate-frozen	Preferred candidate uses O158 instead of legacy P160
+PAR031	R2 frozen RNA mass	676753.29072314012	kg	RNA spatial identity	T038	R2 reconstruction + validated sample	BASE001_CANDIDATE	numerically-verified	Integrated in T045 preferred candidate
+PAR032	R2 RNA CG y	160.78358803030605	m	RNA spatial identity	T038	Abaqus global coordinates	BASE001_CANDIDATE	numerically-verified	CG z=-0.87296249889154m; x≈0
+PAR033	R2 RNA I11	94926999.79811174	kg m2	RNA inertia	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	
+PAR034	R2 RNA I22	99481015.62016469	kg m2	RNA inertia	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	
+PAR035	R2 RNA I33	155901495.33851188	kg m2	RNA inertia	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	
+PAR036	R2 RNA I23	-5231495.690281978	kg m2	RNA inertia coupling	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	Off-diagonal retained
+PAR037	PT nominal initial stress	1280	MPa	prestress input	T038/M2 actual input	*INITIAL CONDITIONS,TYPE=STRESS	BASE001_CANDIDATE	implemented/effective-pending	Not equal to equilibrated operating prestress
+PAR038	PT strand count	36	-	prestress geometry	T038/M2 actual input	PT_36x15p2	BASE001_CANDIDATE	implemented/source-partial	Each area 140 mm2
+PAR039	OpenFAST TwrAero	False	-	load ownership	T037 actual AeroDyn input	R2 formal chain	BASE001_CANDIDATE	verified-current	Tower aerodynamic distributed load absent from current OF production chain
+PAR040	OpenFAST tower FA1 damping	4.6350	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold	Header comments differ; use actual fields only
+PAR041	OpenFAST tower FA2 damping	5.5344	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold	
+PAR042	OpenFAST tower SS1 damping	4.6341	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold	
+PAR043	OpenFAST tower SS2 damping	5.5282	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold	
