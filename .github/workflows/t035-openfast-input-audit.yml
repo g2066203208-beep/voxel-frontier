@@ -117,6 +117,54 @@ jobs:
               diff_after = list(difflib.unified_diff(l1[i1:],l2[i2:],lineterm=""))
           (outdir/"AERODYN_DIFFERENCE.diff").write_text(diff_text,encoding="utf-8")
 
+          # Semantic field comparison: detect reordered but value-equivalent input fields.
+          semantic_verdict = verdict
+          semantic_delta = []
+          if len(contents)==2:
+              vals=[]
+              for txt in contents.values():
+                  lines=txt.splitlines()
+                  oi=outlist_idx(lines)
+                  mp={}
+                  for line in lines[:oi]:
+                      s=line.strip()
+                      if not s or s.startswith("=") or s.startswith("#"): continue
+                      if " - " not in line: continue
+                      left=line.split(" - ",1)[0].strip()
+                      toks=left.split()
+                      if len(toks)<2: continue
+                      key=toks[-1]
+                      value=" ".join(toks[:-1])
+                      # parameter labels are alphabetic-ish; ignore table rows
+                      if re.match(r"^[A-Za-z][A-Za-z0-9_()]*$", key):
+                          mp[key]=value
+                  vals.append(mp)
+              kset=set(vals[0])|set(vals[1])
+              semantic_delta=[(k,vals[0].get(k),vals[1].get(k)) for k in sorted(kset) if vals[0].get(k)!=vals[1].get(k)]
+              if not semantic_delta:
+                  semantic_verdict="PHYSICS_FIELDS_EQUIVALENT_REORDERED_PLUS_OUTLIST_DIFF"
+              (outdir/"AERODYN_SEMANTIC_FIELD_DELTA.tsv").write_text(
+                  "field\tvariant_A\tvariant_B\n"+"\n".join(f"{k}\t{a or ''}\t{b or ''}" for k,a,b in semantic_delta)+"\n",
+                  encoding="utf-8"
+              )
+
+          # Extract module/version/warning evidence from two representative logs.
+          def extract_member(canonical_archive, canonical_member):
+              with zipfile.ZipFile(Path(canonical_archive)) as z:
+                  return z.read(canonical_member).decode("utf-8",errors="replace")
+          log_lines=[]
+          target_cases={"U09p343881_ETM_S01","U11p4_NTM_S01"}
+          for rr in of:
+              m=case_re.match(rr.get("relative_path",""))
+              if not m or m.group(1) not in target_cases: continue
+              if not rr.get("relative_path","").endswith("/openfast_stdout.log"): continue
+              txt=extract_member(rr["canonical_archive"],rr["canonical_member"])
+              for line in txt.splitlines():
+                  lo=line.lower()
+                  if any(k in lo for k in ["openfast-v","aerodyn","rosco","warning","severe","fatal","version"]):
+                      log_lines.append(f"[{m.group(1)}] {line}")
+          (outdir/"REPRESENTATIVE_LOG_VERSION_WARNINGS.txt").write_text("\n".join(log_lines)+"\n",encoding="utf-8")
+
           # detect known archive gaps
           discon=[r for r in of if r.get("relative_path","").endswith("/Control/DTU_10MW_RWT_DISCON.IN")]
           dll=[r for r in of if r.get("relative_path","").endswith("/Control/libdiscon.dll")]
@@ -138,7 +186,7 @@ jobs:
           md.append("")
           md.append("## AeroDyn exception")
           md.append("")
-          md.append(f"Two AeroDyn SHA families detected across the 36 cases. Automated semantic split verdict: **{verdict}**.")
+          md.append(f"Two AeroDyn SHA families detected across the 36 cases. Raw positional verdict: **{verdict}**. Field-name/value semantic verdict: **{semantic_verdict}**.")
           if pre_equal is True:
               md.append("The normalized portion before the AeroDyn OutList marker is identical; the detected variant is confined to the output-request section. This does **not** by itself change aerodynamic physics, but the exact diff is retained for audit.")
           elif pre_equal is False:
@@ -155,7 +203,7 @@ jobs:
           md.append("")
           md.append("- FST, ElastoDyn, ServoDyn and the 158 m tower file are one SHA family across all 36 cases.")
           md.append("- InflowWind is 36 distinct SHA values, consistent with case-specific stochastic inflow.")
-          md.append(f"- AeroDyn verdict: **{verdict}**.")
+          md.append(f"- AeroDyn raw positional verdict: **{verdict}**; semantic field verdict: **{semantic_verdict}**.")
           md.append("- G0 OpenFAST can move from 'raw files absent' to 'canonical static input mostly bound / controller identity HOLD'.")
           (outdir/"README.md").write_text("\n".join(md)+"\n",encoding="utf-8")
           PY
