@@ -4,7 +4,7 @@
 
 |ID|文献|DOI/来源|当前证据等级|与论文关系|下一步|
 |---|---|---|---|---|---|
-|L001|Bak et al., Description of the DTU 10 MW Reference Wind Turbine|DTU官方报告|A/官方|DTU 10 MW基础参数、转速与额定风速|补正式PDF哈希和页码索引|
+|L001|Bak et al., Description of the DTU 10 MW Reference Wind Turbine|DTU Wind Energy Report-I-0092|A/官方全文|DTU 10 MW基础参数、几何、质量、转速与额定风速|正式138页报告已作为L073实际缓存并完成PDF头/SHA-256校验；下一步做页码级参数索引|
 |L002|Li et al., Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models, Engineering Structures 279 (2023) 115622|10.1016/j.engstruct.2023.115622|A候选/全文已取得|预应力分段混塔、接缝开口、试验/两尺度数值|用户提供出版PDF已核验；进入逐页提取与试验/两尺度模型对照|
 |L003|Huang et al., Geometric optimisation analysis of Steel–Concrete hybrid wind turbine towers, Structures 35 (2022) 1125–1137|10.1016/j.istruc.2021.08.036；作者公开PDF|A|几何变量、频率/位移/应力/疲劳约束、高保真复核|保留页码级笔记|
 |L004|Li et al., Hybrid Wind Turbine Towers Optimization with a Parallel Updated Particle Swarm Algorithm, Applied Sciences 11 (2021) 8683|10.3390/app11188683；MDPI开放获取|A|LCOE目标、PCSH几何优化、约束与模型简化边界|下载出版PDF并做哈希|
