@@ -61,3 +61,5 @@ T038-S3	P0-P1	2	Q01	原生读取用户3份源CAE/5模型，核对RNA外形、显
 T045	P0-P2	2	Q01	建立BASE001首选候选：以T026 M2为塔架母本，接入T038验证通过的R2冻结RNA，并把公共结构接口统一到O=(0,158,0)	experiments/T045/RESEARCH_CARD.md	candidate-created/solver-validation-pending	G0	原M2未覆盖；首选文件BASE001_CANDIDATE_M2_R2RNA_O158.inp；下一步只运行Gravity+30 modes+Flex_X/Z并提取质量/CG/J/反力/PT/频率/柔度
 
 T038-S4	P0-P1	2	Q01	按真实原文制定RNA/环筋修正路线，建立官方详细Standard单叶片候选并核导入导出差异	experiments/T038/source-rna-repair-20261005/README.md	stage1-candidate-created/not-solver-validated	user-review/D08-remains-open	四篇原文及官方源码支撑；实际CAE/INP留档；未装入源RNA或M2，未改原件，未求解；保留失败尝试与导出舍入
+T046	P1-P5	RNA-model-fidelity-and-load-ownership	Q01-Q03	核查GitHub现有RNA文献/模型与2026前沿RNA fidelity研究，决定Abaqus RNA层级并冻结OpenFAST→Abaqus自由体规则	audit/46-t046-rna-modeling-fidelity-and-load-ownership-review.md	complete/method-decision	G0-G5	主线采用两层RNA：BASE001-STRUCTURAL用R2完整空间刚体RNA；CUT-REPLAY以塔顶切口以下自由体回放六分量，默认不重复RNA动态质量；详细RNA保留为可选fidelity对照
+
