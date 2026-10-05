@@ -1,0 +1,32 @@
+item	adopted_value_or_file	evidence	status	remaining_action
+research_object	DTU 10 MW + He2024 158 m hybrid tower	REF001;REF008;T037	FROZEN-IDENTITY	不得称官方DTU 158m混塔
+tower_height	158 m	He2024; M2; R2 ElastoDyn	FROZEN	无
+concrete_height	112 m	He2024; M2	FROZEN	无
+steel_height	46 m	He2024; M2	FROZEN	无
+steel_diameter_interpretation	4.66/4.58/4.50/4.42 m按直径实现	He表3-3冲突; M2实际几何	IMPLEMENTATION-FROZEN/SOURCE-CONFLICT	正文保留原表头歧义
+hub_height	161.3688057735 m	R2实际ElastoDyn字段+官方几何公式	FROZEN-R2	BASE001文件冻结后写入参数表
+abaqus_parent	DTU158_RECONSTRUCTED_M2.inp	T026/T037	FROZEN-PARENT	原件不覆盖
+abaqus_preferred_candidate	BASE001_CANDIDATE_M2_R2RNA_O158.inp	T045	CANDIDATE	Abaqus 2025整塔求解
+common_structural_interface	O=(0,158,0) m	T038验证小样; T045 O158候选	CANDIDATE-FROZEN	G5仍需载荷接口验证
+rna_mass	676753.29072314012 kg	T038 R2重建+S1验证	NUMERICALLY-VERIFIED	整塔候选求解复核
+rna_cg	(-4.794e-16,160.7835880303,-0.8729624989) m	T038	NUMERICALLY-VERIFIED	整塔候选求解复核
+rna_inertia	完整JG含I23=-5.23149569e6 kgm2	T038	NUMERICALLY-VERIFIED	整塔候选求解复核
+concrete	C65/C70 CDP	M2 actual cards; REF052/REF056	IMPLEMENTED	GB/T50010具体条文终稿核页
+ordinary_rebar	实际引用S345; HRB500_BASELINE卡未有效引用	T037/T038 disclosure	IMPLEMENTATION-FROZEN/SOURCE-HOLD	材料名称/牌号来源裁决
+steel_tower	S345	M2 actual section/material	IMPLEMENTATION-FROZEN/SOURCE-HOLD	与现行/原型材料身份对照
+prestress_strand	STRAND_1860; 36 roots; 140 mm2/root; nominal 1280 MPa	M2 actual input	IMPLEMENTED/SOURCE-PARTIAL	核对象级设计来源; 读取平衡后有效应力
+horizontal_joints	30 interfaces; 6 SPRING2/interface; linear	M2 actual input	IMPLEMENTED/UNCALIBRATED	不得解释真实contact; 刚度来源HOLD
+steel_concrete_transition	CSEG31-SSEG01 Tie	M2 actual input	IMPLEMENTED	只支持Tie能力范围
+extra_nonstructural_mass	39800.22 kg total	M2 actual input	IMPLEMENTED/SOURCE-HOLD	补物理来源或作为研究假设
+foundation	fixed base	M2 actual input	FROZEN-SCOPE	全文限制基础柔性
+openfast_entry	DTU_10MW_RWT.fst SHA256 5307e04d...	T037 archive rehash	FROZEN-INPUT	无
+openfast_elastodyn	SHA256 6d2d8713...	T037 archive rehash	FROZEN-INPUT	无
+openfast_tower	C02R3R2_158M_Tower.dat SHA256 f738d35f...	T037 archive rehash	FROZEN-INPUT	阻尼物理来源待核
+openfast_aerodyn	SHA256 e258d2e8...	T037 archive rehash	FROZEN-INPUT	运行时覆盖仅保留历史限制
+rosco_discon	SHA256 8f5d7546...	T037 supplement rehash	FROZEN-INPUT	无
+rosco_dll	SHA256 7aebb0d2...	T037 binary rehash	FROZEN-INPUT	无
+openfast_version	3.5.3	logs/scripts/T037	FROZEN	模板标题3.3.0不得误写实际版本
+rosco_version	2.6.0	runtime record/T037	FROZEN	无
+openfast_tower_aero	TwrAero=False	T037 actual input	FROZEN	G5必须明确塔身气动分工
+openfast_tower_damping	FA1/FA2/SS1/SS2=4.6350/5.5344/4.6341/5.5282 %	T037 actual tower card	IMPLEMENTED/PHYSICAL-HOLD	查物理来源或重设并重算
+g0_status	CANDIDATE-CREATED / SOLVER-VALIDATION-PENDING	T045	OPEN	整塔求解+剩余来源裁决
