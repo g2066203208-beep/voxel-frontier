@@ -19,7 +19,7 @@ cover	30 mm	code-derived detailing completion; not He2024 direct	keep transparen
 hoop_elements	201456 T3D2	T053 actual input	keep	PASS-STATIC
 tie_elements	12312 T3D2	T053 actual input	keep	PASS-STATIC
 PT_diameter	15.2 mm	He2024 direct	keep	PASS-DIRECT
-PT_topology	36 circumferential FE positions	inherited model topology; He2024 does not publish count	keep; call positions not strands/bundles	HOLD-SOURCE
+PT_topology	36 circumferential FE positions; production interpretation=36 tendons	T026/V28-derived source topology has 36 T3D2; Xu/Wang/He et al. 2026 same research lineage Table 1 explicitly states prestressing tendon count=36 roots; He2024 public thesis does not list count	use BF=1/36-tendon interpretation as formal baseline; retain BF8 only as external-engineering sensitivity	PASS-LINEAGE-CORROBORATED/HE-DIRECT-NOT-PUBLISHED
 PT_area	140 mm2 per FE position	engineering/later-lineage supported; not He2024 direct	keep BF1 baseline	HOLD-HE-DIRECT
 PT_radius	1.75 m	inherited reconstruction parameter	keep; radius sensitivity required	HOLD-SOURCE
 PT_initial_stress	1280 MPa	same-object later-lineage Xu2025; not He2024 direct	keep nominal input	PASS-LATER-LINEAGE/NEED-EQUILIBRIUM
