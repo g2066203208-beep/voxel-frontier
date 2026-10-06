@@ -29,7 +29,7 @@
 |10|纵筋数量/分层|31段内外双排，共5440根|He2024 Table 3-2直接|无|冻结|31/31 Embedded|PASS-DIRECT + PASS-STATIC|T053|
 |11|纵筋单元/约束|T3D2 + Embedded|He2024 + Abaqus官方|不表示bond-slip|保留并限定解释边界|Embedded/data check|PASS-SOURCE + PENDING-SOLVER|T053|
 |12|纵筋材料|S345|He2024直接写钢筋网S345|无|冻结|section assignment|PASS-DIRECT + PASS-STATIC|T053|
-|13|**纵筋单根面积**|**490.874 mm²**|旧/重建INP继承|**He2024公开文本未给直接截面**|优先追原CAE/JNL/同源论文；找不到则建立面积敏感性并标RECONSTRUCTION|质量/刚度/模态/应力敏感性|**HOLD-SOURCE**|待关闭|
+|13|**纵筋单根面积**|**490.874 mm²**|V28 Abaqus源模型输入直接存在；He2024公开文本未给截面尺寸|不是本文后加参数；属于源模型实现值，不是He论文公开直接值|冻结当前面积；论文写“源Abaqus模型截面值”，禁止写“何泽瑜给φ25”|源输入一致性 + 后续T053求解|**PASS-SOURCE-MODEL / HE-DIRECT-NOT-PUBLISHED**|T053/closure/01-longitudinal-rebar-area-20261006.md|
 |14|环向筋材料|S345|He2024钢筋网材料身份|几何非He直接|材料冻结|section assignment|PASS-SOURCE-IDENTITY|T053|
 |15|环向筋规格|φ14@80，双层|规范补全|不是He直接施工参数|保留为本文规范补全|配筋率+求解|PASS-CODE + PENDING-SOLVER|T050/T053|
 |16|拉筋|φ6；竖向约480 mm；环向≤500 mm|规范补全|不是He直接值|保留为本文规范补全|几何+求解|PASS-CODE + PENDING-SOLVER|T050/T053|
@@ -57,7 +57,7 @@
 
 ## 优先关闭顺序
 
-1. 纵筋490.874 mm²来源；
+1. ~~纵筋490.874 mm²来源~~ — 已关闭：V28源Abaqus输入直接存在；He公开论文未列尺寸；
 2. PT“36”的物理身份；
 3. PT 140 mm²/位置；
 4. PT r=1.75 m；

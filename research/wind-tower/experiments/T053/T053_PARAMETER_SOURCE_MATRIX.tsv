@@ -12,7 +12,7 @@ tie_material	S345	He2024 reinforcement-mesh material identity	T050 HRB335 -> T05
 S345_density	7800 kg/m3	T053 inherited INP; He2024 Table 7-1 steel density mean=7800	keep	PASS-CROSSCHECK
 S345_elastic_modulus	200 GPa	T053 inherited INP; He2024 Table 7-1 steel Es mean=200 GPa	keep	PASS-CROSSCHECK
 S345_plastic_curve	345 MPa@0; 365 MPa@0.002; 420 MPa@0.02	T053 inherited INP; He2024 public text does not list these hardening points	keep	SOURCE-IMPLEMENTATION-HOLD
-longitudinal_area	490.874 mm2 per bar	inherited source INP; not published by He2024	keep for reconstruction; sensitivity required	HOLD-SOURCE
+longitudinal_area	490.874 mm2 per bar	V28 source Abaqus INP SEC_REBAR_LONG=0.000490874 m2; He2024 public thesis gives counts/positions but not bar area	keep as source-model implementation value; do not call He2024 direct phi25	PASS-SOURCE-MODEL/HE-DIRECT-NOT-PUBLISHED
 hoop_geometry	phi14@80 mm; double layer	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
 tie_geometry	phi6; vertical approx 480 mm; circumferential <=500 mm	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
 cover	30 mm	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
