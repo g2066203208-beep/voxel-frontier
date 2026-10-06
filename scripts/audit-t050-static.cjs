@@ -74,13 +74,24 @@ requireCheck(checks,'31 RBLONG active instances',rblongInstances===31,{rblongIns
 const embLong=count(/^\*Embedded Element, host elset=.*CSEG.*$/gmi);
 requireCheck(checks,'Embedded constraints present for longitudinal reinforcement',embLong>=31,{embeddedKeywordLines:embLong});
 
-const ptParts=count(/^\*Part, name=PT_/gmi);
-const ptInstances=count(/^\*Instance, name=PT_/gmi);
-requireCheck(checks,'36 PT parts',ptParts===36,{ptParts});
-requireCheck(checks,'36 PT instances',ptInstances===36,{ptInstances});
+const ptPart=partBlock('PT_36x15p2');
+const ptPartCount=count(/^\*Part, name=PT_36x15p2\s*$/gmi);
+const ptInstanceCount=count(/^\*Instance, name=PT_36x15p2-1, part=PT_36x15p2\s*$/gmi);
+let ptT3d2=0, inPtElements=false;
+for(const raw of ptPart){
+  const l=raw.trim();
+  if(/^\*Element, type=T3D2\b/i.test(l)){inPtElements=true;continue;}
+  if(l.startsWith('*')){inPtElements=false;continue;}
+  if(inPtElements&&/^\d+\s*,/.test(l))ptT3d2++;
+}
+const ptTopSets=count(/^\*Nset, nset=SET_PT_TOP_NODE_\d{2}, instance=PT_36x15p2-1\s*$/gmi);
+requireCheck(checks,'Single PT_36x15p2 part exists',ptPartCount===1,{ptPartCount});
+requireCheck(checks,'Single PT_36x15p2 instance exists',ptInstanceCount===1,{ptInstanceCount});
+requireCheck(checks,'PT part contains exactly 36 T3D2 lines',ptT3d2===36,{ptT3d2});
+requireCheck(checks,'36 individual PT top-node sets exist',ptTopSets===36,{ptTopSets});
 requireCheck(checks,'PT 15.2 / 140 mm2 section identity',/Section: SEC_PT_15p2_A140[\s\S]{0,180}\*Solid Section, elset=SET_PT_ALL_GEOM, material=STRAND_1860\s*\r?\n0\.00014,/i.test(text),'A=140 mm2');
 requireCheck(checks,'STRAND_1860 material exists',/^\*Material, name=STRAND_1860\s*$/im.test(text),'material found');
-requireCheck(checks,'PT initial stress 1280 MPa',/1\.28e9|1280000000/i.test(text),'search initial stress value');
+requireCheck(checks,'PT initial stress field is 1280 MPa',/\*\*\s*Name:\s*PF_PT_INITIAL_1280MPa[\s\S]{0,180}\*Initial Conditions, type=STRESS\s*\r?\nPT_36x15p2-1\.SET_PT_ALL_ELEMS,\s*1\.28e\+09/i.test(text),'PF_PT_INITIAL_1280MPa -> SET_PT_ALL_ELEMS = 1.28e+09 Pa');
 requireCheck(checks,'Tower-top and RNA CG nodes present',/SET_TOWER_TOP_O/i.test(text)&&/SET_RNA_R2_EQUIV_CG/i.test(text),'RNA reference sets present');
 requireCheck(checks,'RNA mass present',/676753\.290723/i.test(text),'RNA mass 676753.290723 kg');
 requireCheck(checks,'No T048 contamination',!/T048/i.test(text),'T048 absent from T050 input');
