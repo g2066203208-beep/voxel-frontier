@@ -1,0 +1,12 @@
+section	primary_reference	source_evidence	current_project_data	method_role	gate_or_limit
+3.1	REF062;REF080;REF090	REF080 p3,p7,p8;REF090 p8,p10,p11	ERA5 2005Q1-2025Q4;184080h	long-term site climatology	Not site measurement
+3.2	REF093;REF083	REF093 p4-6	U10/U100 hourly;HubHt161.368806m	dynamic alpha and hub-height reconstruction	low-wind alpha diagnostic; final hash binding
+3.2 probability	REF080;REF090	ERA5 evidence pages	HubHt mean/quantiles/histogram/wind direction	provide Ch4 wind-bin probability	uncertainty disclosed
+3.3	REF132;REF064	IEC audit + TurbSim official guide	3 URef x NTM/ETM x6 seeds=36	stochastic screening wind fields	36case != full fatigue DLC
+3.3 grid	REF064	TurbSim official definitions	200m x200m;51x51;700s	production historical setup	grid coverage/spectrum/transient V&V pending
+3.4	REF001;REF046;REF009	REF046 p4,p6,p13,p17;REF009 p5,p7,p10,p13,p15,p17	DTU10MW+ROSCO+158m tower	whole-turbine identity and validation	controller gains not copied from other turbine
+3.5	REF011;REF009	multi-condition/load validation logic	36 outb	multi-seed QoI statistics	channel/hash/parser binding
+3.6	REF009	frequency/modal/load validation evidence	RotorSpeed+PSD channels	PSD/1P/3P vs tower modes	No resonance claim without evidence
+3.7	REF124;REF125	fatigue/rainflow literature	TwrBsMxt/TwrBsMyt;m4;Neq1e5	load-level fatigue screening	Not material life
+3.7 source audit	OpenFAST toolbox official parser	T062 three-method crosscheck	historical S03 28.177 vs current S04 ~26.8	data-version audit	HOLD until source identity closes
+3.8	Brown-style multi-QoI validation logic	control-case matrix	peak/RMS/DEL/near-rated union	inputs to Ch4	No universal worst case
