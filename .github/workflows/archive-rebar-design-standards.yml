@@ -10,11 +10,22 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: archive-rebar-design-standards
+  cancel-in-progress: true
+
 jobs:
   archive:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            research/wind-tower/references
+          sparse-checkout-cone-mode: false
       - name: Download public/official standard sources
         shell: bash
         run: |
@@ -94,12 +105,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- research/wind-tower/references/standards/rebar-prestress-20261006; then
-            echo "No changes."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add research/wind-tower/references/standards/rebar-prestress-20261006
+          if git diff --cached --quiet; then
+            echo "No archive changes."
+            exit 0
+          fi
           git commit -m "references: archive rebar and prestress standards sources"
           git push
