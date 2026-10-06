@@ -1,6 +1,6 @@
 # CURRENT ABAQUS MODEL — 2026-10-06
 
-状态：**ACTUAL ABAQUS INPUTS GENERATED / GITHUB-FROZEN BY WORKFLOW / SOLVER VALIDATION PENDING**
+状态：**T050 FORMAL REINFORCEMENT CANDIDATE DEFINED / WORKFLOW GENERATION + SOLVER VALIDATION PENDING**
 
 这份文件只回答“论文里真正送给 Abaqus 的模型是什么”，不描述网页展示层。
 
@@ -19,7 +19,7 @@
 
 OpenFAST+ROSCO承担叶片柔性、转子旋转、气动与控制；Abaqus不重复建立柔性叶片参与生产求解。
 
-## 2. 当前实际 Abaqus 输入文件
+## 2. 当前 Abaqus 输入与正式钢筋分支
 
 ### T046-E1A
 `research/wind-tower/experiments/T046/inputs/BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp`
@@ -42,6 +42,19 @@ OpenFAST+ROSCO承担叶片柔性、转子旋转、气动与控制；Abaqus不重
 - 删除原39.80022 t NSM。
 
 用途：测试原NSM若本来代表省略钢筋/附件时的重复计重问题。
+
+### T050-E2 当前正式钢筋主候选
+`research/wind-tower/experiments/T050/inputs/BASE001_T050_E2_HRB335_REBAR_HOOP_TIE_NSM_REMOVE.inp`
+
+由生成器从T046-E1B派生：
+- 保留何泽瑜表3-2的31段内/外排纵筋数量与几何；
+- 31段 `SEC_REBAR_LONG` 普通纵筋材料由S345统一为HRB335；
+- 环向筋/拉筋仍为HRB335；
+- HRB335材料参数按Xu et al. 2025同一10 MW/158 m对象：E=200 GPa、fy=335 MPa、fu=455 MPa；
+- 保留显式φ14@80双层环向筋和φ6拉筋规范补全；
+- 移除旧39.80022 t NSM，避免与显式钢筋笼潜在重复计重。
+
+身份：**FORMAL REINFORCEMENT CANDIDATE / SOLVER-PENDING**。在实际Abaqus data check、Gravity、Modal完成前仍不称FINAL。
 
 ### T047 PT bundle-factor sensitivity
 `research/wind-tower/experiments/T047/inputs/BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp`
@@ -67,16 +80,20 @@ RNA质量：
 
 三片叶片、机舱和轮毂的旧表面网格不参与上述Abaqus生产求解；它们只用于原模型追溯/网页外形对照。
 
-## 4. 普通钢筋与T046补全
+## 4. 普通钢筋与T050正式补全
 
-T045已有：
+T045/何泽瑜复现基线已有：
 - 31组RBLONG；
 - 5440个纵筋T3D2；
 - 内/外双排；
 - 数量逐段对应何泽瑜表3-2；
 - 31/31 Embedded。
 
-T046补：
+T050正式补全：
+- 普通钢筋材料统一为HRB335（Xu et al. 2025同一10 MW/158 m对象）；
+- 纵筋根数/分层仍按何泽瑜表3-2；
+- 当前490.874 mm²/根只保留为复现等效面积，不写成何论文直接φ25值；
+
 - HRB335 φ14@80 mm双层环向筋；
 - HRB335 φ6拉筋；
 - 保护层30 mm；
@@ -116,7 +133,7 @@ REF139工程直接先例：
 
 ## 6. 现在还不能叫 FINAL 的原因
 
-三个实际INP已经是可送Abaqus的模型，但最终论文生产模型仍需Abaqus 2025执行：
+T046/T047已有实际INP；T050由同一可复现生成器派生并作为当前正式钢筋候选，但最终论文生产模型仍需Abaqus 2025执行：
 1. data check；
 2. Gravity平衡；
 3. PT平衡后S11/轴力；
