@@ -135,3 +135,8 @@
 ## T051 当前论文工作室一致性审计
 
 [49号审计](49-t051-current-workspace-consistency-audit-20261006.md)：核对 T048–T050、正式Abaqus治理、第二章正文/证据矩阵和执行总状态的一致性；确认T048交付包不完整、T050尚未同步进final-thesis、正式RNA治理存在分支冲突，并冻结后续修复顺序。本审计不修改模型、不提交求解、不改变G0/G1门禁。
+
+
+## T052 He 2024原始页证据与Abaqus基准闭合
+
+[50号审计](50-t052-he2024-source-page-and-abaqus-baseline-closure.md)：本步属于G0基准模型身份冻结，不是结果分析。固定核对He 2024 PDF p33–35（Table 3-1~3-3、Fig.3-4/3-5），把“原文直接参数 / 当前Abaqus实现 / 后续同谱系补全 / 规范补全 / 未决冲突”逐项分层；T050不得称为He 2024的1:1复刻。原页PNG由T052工作流归档到`references/extracts/REF008-original-pages/`。
