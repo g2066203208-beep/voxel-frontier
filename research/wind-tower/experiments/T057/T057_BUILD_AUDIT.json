@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "source": "research/wind-tower/experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp",
+  "output": "research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp",
+  "status": "PASS-STATIC-GENERATION",
+  "checks": {
+    "source_sha256": "06f294ae6ccc37508b3d17158247c9562c8c8f1a09b575fb8d24097d63e1e8ce",
+    "output_sha256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+    "HRB335_sections": 33,
+    "Q345_sections": 4,
+    "old_S345_assignments": 0,
+    "pt_bundle_area_0p00112": true,
+    "pt_initial_1280_preserved": true,
+    "joint_couplings_removed": true,
+    "joint_springs_removed": true,
+    "joint_contact_pairs": 30,
+    "friction_mu_0p5": true,
+    "hard_contact": true,
+    "rna_mass_preserved": true,
+    "legacy_nsm_absent": true
+  },
+  "material_law_note": "Xu-He-Wang 2025 supplies same-object E/fy/fu; b=0.01 supplied by constitutive literature. Engineering bilinear curve converted to true stress/true plastic strain.",
+  "pt_note": "BF8 is evidence-reconciled engineering baseline, not He2024 direct design value.",
+  "radius_note": "r=1.75 m remains reconstruction geometry pending sensitivity/anchor-layout evidence.",
+  "solver_note": "No claim of Abaqus solver pass is made by this generator."
+}
