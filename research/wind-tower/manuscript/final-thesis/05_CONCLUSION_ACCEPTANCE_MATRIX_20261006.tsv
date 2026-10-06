@@ -1,0 +1,11 @@
+conclusion_or_innovation	source_chapter	required_evidence	minimum_acceptance	current_status	forbidden_shortcut
+C1 model identity and V&V	Ch2	T057 native datacheck;mass/CG/J;Gravity/PT/contact;Modal;Flex;mesh	all relevant gates pass and values trace to RUN/TAB/FIG	PENDING	Do not infer local validity from first frequency only
+C2 site wind statistics	Ch3	final ERA5 data/hash;HubHt reconstruction;probability	full time-axis/QC and uncertainty statement	PARTIAL	Do not call ERA5 measured wind
+C3 whole-turbine random loads	Ch3	36 outb;operability;multi-seed stats;PSD;control matrix	channels/hash/window/parser bound	PARTIAL	Do not use one seed as deterministic answer
+C4 final load-DEL control	Ch3	T062 source-identity closure	S03/S04 version conflict closed	HOLD	Do not choose historical/current value by preference
+C5 fatigue control material/location	Ch4	local stress;mesh/extraction convergence;multi-seed	control remains stable under required checks	PENDING	Do not use one element peak alone
+C6 annual/design-life damage	Ch4	DLC1.2 bins;site probability;material fatigue model;Miner ledger	all probability/material gates closed	PENDING	Do not extrapolate 3 representative speeds to 20-year life
+I1 evidence-constrained T057 model	Ch2	C1 evidence	model source hierarchy + independent V&V demonstrated	CONDITIONAL	Not "first Abaqus hybrid tower"
+I2 long-term wind->whole-turbine->local stress chain	Ch3+Ch4	interface/load ownership+local stress traceability	force/moment conservation + independent response check	CONDITIONAL	Not merely software coupling
+I3 prestress baseline + stochastic material-specific fatigue	Ch4	Gravity/PT reference stress + range/mean/count + separate material models	full material fatigue chain	CONDITIONAL	Not invention of rainflow/Miner
+I4 load-DEL vs material-damage control difference	Ch3+Ch4	control-case comparison	difference is stable and physically explained	RESULT-TRIGGERED	Delete if results are the same
