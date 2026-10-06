@@ -1,6 +1,6 @@
 # 最终论文重构状态
 
-更新时间：2026-10-05
+更新时间：2026-10-06
 
 ## 当前源稿
 
@@ -19,7 +19,7 @@ R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
 
 ## 当前门禁
 
-- G0 BASE001：**CANDIDATE-FROZEN / RUN-T045-001 PENDING**
+- G0 BASE001：**T053 HE-ALIGNED CANDIDATE GENERATED / STATIC PASS / ABAQUS SOLVER RUN PENDING**
 - G1 Abaqus分层V&V：OPEN
 - G2 ERA5/TurbSim：OPEN
 - G3 OpenFAST/ROSCO：OPEN
@@ -40,7 +40,7 @@ R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
 ## 当前执行阶段
 
 STAGE 0：工作区与源稿冻结 —— PASS  
-STAGE 1：第二章BASE001/G1正文重构 —— DRAFT-A COMPLETE；T045已生成首选O158整塔候选，final数值待RUN-T045-001与G1  
+STAGE 1：第二章BASE001/G1正文重构 —— DRAFT-A COMPLETE；T053已生成当前首选“何2024塔架参数对齐+升级RNA”整塔候选，final数值待Abaqus data check/Gravity/PT/Modal/Flex与G1  
 STAGE 2：第三章G2–G4正文重构 —— DRAFT-A COMPLETE；final统计待G2–G4  
 STAGE 3：第四章G5/G6正文重构 —— DRAFT-A COMPLETE；final结果待G5/G6  
 STAGE 4：第五章G6/G7/G8正文重构 —— DRAFT-A COMPLETE；final机制/敏感性待G6/G8；G7B条件  
@@ -105,3 +105,18 @@ STAGE 7：摘要、Abstract、参考文献统一、图表编号、全文格式�
 - 公共结构接口统一为O=(0,158,0)，Flex_X/Z同步在O施加；
 - 静态输入审计通过，但未在整塔Abaqus 2025实际求解，因此G0不能标PASS；
 - 唯一下一步运行：RUN-T045-001，Gravity + 30 modes + Flex_X/Z，提取质量/CG/J、支座反力、PT平衡后应力、频率与柔度。
+
+
+## T052/T053 原型原页闭合与Abaqus候选修正
+
+状态：**SOURCE-PAGE ARCHIVED / T053 STATIC PASS / SOLVER-PENDING**
+
+- T052已把何泽瑜2024 PDF p33–35原页渲染归档到 `references/extracts/REF008-original-pages/`；
+- 原页确认：158=112+46 m、Table 3-2 31段几何/纵筋数量、钢筋网与钢塔S345、15.2 mm PT、塔底/PT底固定、PT顶锚钢法兰；
+- Table 3-3原表字面仍为“半径”，而图3-4/3-5与4.97 m混凝土塔顶形成内部冲突；当前按直径实现仅作为重建解释；
+- 用户明确决定RNA不退回何2024简单集中质量，继续保留R2偏心CG+完整ROTARYI+6DOF coupling；
+- T053从T050派生，共33个活动钢筋section由HRB335_T046切回S345；显式环筋/拉筋几何保留但继续标为规范补全；
+- 旧39.80022 t NSM在T053中继续删除，T046-E1A仅保留为质量上界敏感性支路；
+- PT统一称“36个周向FE位置”，A=140 mm²、r=1.75 m、bundle factor仍为重建/敏感性边界；
+- T053输入：`experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp`；
+- 静态生成审计PASS不等于Abaqus求解PASS。
