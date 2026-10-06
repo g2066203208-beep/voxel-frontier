@@ -41,6 +41,20 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT.write_text(out_text, encoding="utf-8")
 out_sha = hashlib.sha256(out_text.encode()).hexdigest()
 
+# Extract the actual inherited S345 material card for audit (identity + numerical card).
+lines = out_text.splitlines()
+s345_start = next((i for i,l in enumerate(lines) if l.strip().lower() == "*material, name=s345"), None)
+if s345_start is None:
+    raise RuntimeError("S345 material card not found")
+s345_end = len(lines)
+for i in range(s345_start + 1, len(lines)):
+    if lines[i].strip().lower().startswith("*material, name="):
+        s345_end = i
+        break
+s345_block = lines[s345_start:s345_end]
+s345_block_preview = s345_block[:40]
+
+
 # Static identity checks
 checks = {
     "source_exists": SRC.exists(),
@@ -62,7 +76,7 @@ report = {
     "output": str(OUT),
     "source_sha256": src_sha,
     "output_sha256": out_sha,
-    "changed_active_section_assignments": len(matches),
+    "changed_active_section_assignments": len(matches),\n    "s345_material_card_preview": s345_block_preview,
     "status": status,
     "checks": checks,
     "scope_note": "Static input transformation only; Abaqus data check/Gravity/PT equilibrium/Modal/Flex still pending."
