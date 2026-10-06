@@ -43,7 +43,7 @@ jobs:
       - name: Install parser and rainflow tools
         shell: bash
         run: |
-          python3 -m pip install --quiet openfast-toolbox rainflow pandas numpy
+          python3 -m pip install --quiet 'git+https://github.com/OpenFAST/openfast_toolbox.git' rainflow pandas numpy
 
       - name: Recompute cycle ledger and DEL
         shell: bash
@@ -54,7 +54,7 @@ jobs:
           import numpy as np
           import pandas as pd
           import rainflow
-          from openfast_toolbox.io.fast_output_file import FASTOutputFile
+          from openfast_toolbox.io import FASTOutputFile
 
           ROOT=Path('/tmp/openfast36/CASES')
           OUT=Path('/tmp/t062-recomputed'); OUT.mkdir(parents=True,exist_ok=True)
