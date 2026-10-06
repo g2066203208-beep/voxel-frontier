@@ -34,10 +34,10 @@ jobs:
 
       - name: Build Abaqus viewer data
         run: |
+          node scripts/build-t046-rebar-completion.cjs
           node scripts/read-abaqus.cjs
           node scripts/read-source-rna.cjs
           node scripts/audit-rebar-geometry.cjs
-          node scripts/build-t046-rebar-completion.cjs
           node scripts/build-t047-pt-bundle-sensitivity.cjs
           node scripts/sanity-check-reported.mjs
           node scripts/check-material-audit.mjs

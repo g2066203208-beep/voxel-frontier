@@ -3,7 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const zlib = require('node:zlib');
 
-const SOURCE = 'research/wind-tower/experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158_CLEAN.inp';
+const SOURCE = 'research/wind-tower/experiments/T050/inputs/BASE001_T050_E2_HRB335_REBAR_HOOP_TIE_NSM_REMOVE.inp';
 const DEST = 'public/research';
 
 function attrs(line) {
@@ -148,6 +148,10 @@ function build(parsed) {
   const groups=[], bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};
   let solidElements=0,lineElements=0,surfaceFaces=0;
   for(const inst of parsed.instances){
+    // The T050 hoop/tie cage is rendered from the exact generator overlay below,
+    // where hoops and ties can be controlled separately. Skip the combined generic
+    // part here to avoid drawing identical T3D2 geometry twice.
+    if(/^HOOP_TIE_CAGE_T046/i.test(inst.part)) continue;
     const part=parsed.parts.get(inst.part);
     if(!part) continue;
     const idToIndex=new Map();
@@ -210,7 +214,7 @@ function main(){
   const parsed=parse(text), model=build(parsed), sha256=crypto.createHash('sha256').update(bytes).digest('hex');
   const out={schema:1,source:SOURCE,sha256,generatedAt:new Date().toISOString(),units:'m-kg-s',...model};
   const dims=model.bounds.max.map((v,i)=>v-model.bounds.min[i]);
-  const report={schema:1,source:SOURCE,sha256,bytes:bytes.length,generatedAt:out.generatedAt,units:out.units,bounds:model.bounds,dimensions:dims,counts:model.counts,rna:model.rna,elementTypes:[...new Set([...model.groups.flatMap(g=>g.elementTypes),...parsed.assemblyElements.map(e=>e.type).filter(Boolean)])],groups:model.groups.map(g=>({name:g.name,part:g.part,category:g.category,kind:g.kind,nodes:g.nodes,elements:g.elements,elementTypes:g.elementTypes})),limitations:['Viewer is generated from the Abaqus input deck and shows undeformed FE geometry only.','No ODB stress, strain, damage or displacement field is implied by this mesh view.','MASS and ROTARYI are rendered as symbolic markers at the validated RNA CG, not physical solid geometry.']};
+  const report={schema:1,source:SOURCE,sha256,bytes:bytes.length,generatedAt:out.generatedAt,units:out.units,bounds:model.bounds,dimensions:dims,counts:model.counts,rna:model.rna,elementTypes:[...new Set([...model.groups.flatMap(g=>g.elementTypes),...parsed.assemblyElements.map(e=>e.type).filter(Boolean)])],groups:model.groups.map(g=>({name:g.name,part:g.part,category:g.category,kind:g.kind,nodes:g.nodes,elements:g.elements,elementTypes:g.elementTypes})),limitations:['Viewer is generated from the Abaqus input deck and shows undeformed FE geometry only.','No ODB stress, strain, damage or displacement field is implied by this mesh view.','MASS and ROTARYI are rendered as symbolic markers at the validated RNA CG, not physical solid geometry.','The T050 HOOP_TIE_CAGE_T046 part is omitted from the generic line parser and rendered from the same generator overlay so hoop and tie layers remain independently controllable; this does not change the INP source identity.']};
   fs.mkdirSync(DEST,{recursive:true});
   fs.writeFileSync(path.join(DEST,'abaqus-model.json.gz'),zlib.gzipSync(JSON.stringify(out),{level:9}));
   fs.writeFileSync(path.join(DEST,'abaqus-model-report.json'),JSON.stringify(report,null,2));
