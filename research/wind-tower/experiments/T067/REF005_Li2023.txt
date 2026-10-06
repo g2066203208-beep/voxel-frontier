@@ -1,0 +1,918 @@
+                                                                     Engineering Structures 279 (2023) 115622
+
+
+                                                                    Contents lists available at ScienceDirect
+
+
+                                                                    Engineering Structures
+                                                         journal homepage: www.elsevier.com/locate/engstruct
+
+
+
+
+Experimental and two-scale numerical studies on the behavior of
+prestressed concrete-steel hybrid wind turbine tower models
+Zeyu Li a, Bin Xu b, c, *, Jiang Wang b, Hongbing Chen d, Hanbin Ge e
+a
+  College of Civil Engineering, Hunan University, Changsha, Hunan 410082, China
+b
+  College of Civil Engineering, Huaqiao University, Xiamen 361021, China
+c
+  Key Laboratory for Intelligent Infrastructure and Monitoring of Fujian Province (Huaqiao University), Xiamen 361021, China
+d
+  School of Civil and Resource Engineering, University of Science and Technology Beijing, Beijing 100083, China
+e
+  Department of Civil Engineering, Meijo University, Nagoya 468-8502, Japan
+
+
+
+
+A R T I C L E I N F O                                      A B S T R A C T
+
+Keywords:                                                  Prestressed concrete-steel hybrid (PCSH) wind turbine tower has been recognized as an efficient alternative to
+Prestressed concrete (PC)                                  traditional steel tube supporting towers for wind farms in harsh sites such as mountain regions. To investigate the
+Prestressed concrete-steel hybrid (PCSH) wind              global and local mechanical behavior including failure patterns of a full scale PCSH wind turbine towers, an
+turbine tower
+                                                           experimental study on a substructure of a scaled PCSH tower is carried out firstly. Then, a material subroutine for
+Two-scale simulation
+                                                           three-dimensional (3D) fiber beam elements suitable for implicit analysis on the mechanical behavior of the
+Finite element model
+3D fiber beam element                                      substructure of the scaled PCSH tower is developed. A two-scale numerical model of the substructure of the
+                                                           scaled PCSH wind turbine tower employing the developed 3D fiber beam elements and solid elements is
+                                                           developed. The accuracy and efficiency of the developed two-scale numerical model for the behavior simulation
+                                                           of the substructure of the scaled PCSH wind turbine tower is illustrated by comparing the numerical results with
+                                                           the experimental measurements. Additional comparison of the simulation results using the developed two-scale
+                                                           numerical model is made with them of a model using sole 3D fiber beam elements and a model using sole solid
+                                                           elements, respectively. Results show that the force–displacement curve determined with the developed two-scale
+                                                           model is close to the test result and coincident well with that of the two models using 3D fiber beam elements and
+                                                           the solid elements. The developed two-scale model can describe the global behavior, the local failure patterns
+                                                           and the stress distribution of the tested specimen accurately with improved simulation efficiency. Finally, the
+                                                           validated two-scale modelling approach is employed to analyze the static behavior, modal parameter, and fatigue
+                                                           of the optimized full-scale PCSH wind turbine tower previously developed by the authors. The simulation results
+                                                           show that the two-scale model can reflect the stress of the PCSH wind turbine tower at the critical position as well
+                                                           as the global mechanical behavior with higher computational efficiency. The fiber beam model can be used for
+                                                           predicting only global, but not local, behavior.
+
+
+
+
+1. Introduction                                                                                  prestressed concrete (PC) towers can be either cast on site or precast in a
+                                                                                                 factory and then assembled on site in pieces. The PC towers usually have
+    Given the trend towards developing wind turbines with higher hub                             better dynamic behavior and global and local stability when compared
+elevation in harsh construction sites such as mountain regions, it is                            with traditional steel tubular towers. Ercan et al. [3] presented a concept
+necessary to develop novel and efficient supporting systems for wind                             of modular prefabricated post-tensioned concrete wind turbine towers
+turbines with better static and dynamic properties, transportation and                           which is testified by numerical simulation. Cao et al. [4] experimentally
+construction convenience and economic advantages [1]. The application                            and numerically studied the seismic performance of prestressed
+of traditional steel tube towers with large diameters for large capacity                         segmental concrete wind turbine towers. In recent years, as a new
+wind turbines in mountain regions is limited due to the difficulty and                           alternative of supporting structure for wind turbine, prestressed
+risk in transportation and extra investment in temporary road con­                               concrete-steel hybrid (PCSH) wind turbine tower has shown its advan­
+struction [2]. As an alternative of traditional steel tubular towers,                            tages including better static and dynamic behavior, convenience in
+
+
+    * Corresponding author at: College of Civil Engineering, Huaqiao University, Xiamen 361021, China.
+      E-mail address: binxu@hqu.edu.cn (B. Xu).
+
+https://doi.org/10.1016/j.engstruct.2023.115622
+
+Available online 20 January 2023
+0141-0296/© 2023 Elsevier Ltd. All rights reserved.
+Z. Li et al.                                                                                                                 Engineering Structures 279 (2023) 115622
+
+
+transportation, longer service life and less costs in the form of the lev­          critical parts with limited computation cost. In the two-scale model, the
+elized cost of energy (LCOE) [5,6].                                                 interested PC segment is simulated with solid elements and the rest of
+    Numerical simulation on the behavior of the supporting system of a              the PC segment as 3D fiber beam elements. Two material subroutines for
+modern wind turbine is usually a time-consuming and cost-inefficient                3D fiber beam elements for the PC segment are developed. The inter­
+task because of the massive number of finite elements required [7].                 action between the concrete and the prestressing tendons is simulated by
+Moreover, to properly understand the behavior of different type of wind             a customized connection type. The accuracy and efficiency of the
+turbine towers, it is of significance to take both geometric and material           developed two-scale model for the behavior investigation of the scaled
+nonlinearity into account. At present, most of the dynamic behavior                 PCSH tower specimen is presented by comparing the numerical results
+analysis for PC wind turbine towers is carried out by simplifying the               with the experimental measurements, the simulation results of the
+wind turbine towers into multi-degree-of-freedom (MDOF) models or                   models adopting 3D fiber beam elements and solid elements only,
+converting the dynamic problem into a static problem. Harte and Basu                respectively. In addition, the validated two-scale modeling approach
+[8] developed an MDOF model for a horizontal axis wind turbine sup­                 and the developed material subroutine are adopted to investigate the
+porting structure to investigate its dynamic behavior using an Euler-               mechanical behavior of an optimized full-scale PCSH wind turbine
+Lagrangian approach. Ma et al. [9] provided an optimization design                  tower previously developed by the authors.
+approach for a PC wind turbine tower where the dynamic loads such as
+wind and earthquake are converted into static loads. However, the                   2. Experimental study on a substructure of a scaled PCSH tower
+shortages of the employed MDOF models are the simulated global
+behavior is not accurate enough and the local failure pattern of the wind               Experimental study on the mechanic behavior of a scaled PCSH wind
+turbine towers cannot be described with acceptable accuracy. Seismic                turbine tower specimen under static loadings is carried out firstly. The
+response analysis of a PC wind turbine tower is carried out adopting a              experimental results of the tested scaled specimen are used to verify the
+static load determined by the response spectrum [10]. To properly                   two-scale model, the model with sole 3D fiber beam elements and sole
+investigate the behavior of PC towers including material and geometric              solid elements.
+non-linearity, Kenna and Basu [11] suggested a finite element method
+(FEM) employing shell elements and spring elements with large stiff­                2.1. Substructure of the scaled PCSH wind turbine model and test
+ness, which are used to constrain the translation degree-of-freedom
+(DOF) between the truss elements for prestressed reinforcements and                      In this section, a substructure of a specimen of a 77.5 m full scale
+shell elements for concrete. To model the wind-induced response of                  PCSH wind turbine tower with geometric similarity ratio of 0.1 is
+wind turbine tower, Wang and Wu [12] developed a knowledge-                         investigated, as shown in Fig. 1[22]. The dimensions of the prototype
+enhanced deep learning (KEDL) algorithm with high accuracy and effi­                tower and the parameters of the wind turbine are respectively listed in
+ciency. Zhao et al. [13] introduced a fast convolution integration                  Table 1 and Table 2. The area of the reinforcement and prestressed
+method to accelerate the computation of the dynamic analysis of non-                tendons are 47,100 mm2 and 48,020 mm2, respectively. Two sets of load
+proportionally damped structures. In practice, traditional FEM ana­                 combinations are considered in the prototype tower design. One corre­
+lyses for full-scale wind turbine towers with solid elements and                    sponding to the serviceability limit state (SLS) has a load factor of 1.0 for
+nonlinear constitutive laws for concrete is a challenging task because of           all load categories. The other corresponds to the ultimate limit state
+its high computational costs. It is of importance to develop an efficient           (ULS) and its load factors are equal to 1.0 and 1.4 for permanent and
+and accurate approach for the prediction of both global behavior and                wind loads, respectively. The scaled PCSH tower specimen is shown in
+local failure patterns of wind turbine towers.                                      Fig (a)-(c). The substructure of the specimen has a strong foundation and
+    Multi-scale simulation provides a more reliable way to investigate              is anchored on the strong floor of the lab. The top of the specimen is
+structure behavior at different scales with sufficient precision and lower          connected to an electro-hydraulic servo control actuator to apply hori­
+computational costs[14]. Chen et al. [15] revealed the detailed failure             zontal loading. The dimensions of the steel and PC segment are shown in
+pattern and the crack evolution of a reinforced concrete (RC) bridge                Fig. 1(d) and (e), respectively. The PC segment and the steel segment are
+column interface based on two-dimensional multiscale models. Gu et al.              connected by a circular steel flange with a thickness of 25 mm. The load
+[16] implemented the multi-scale simulation method for concrete                     acting on the specimen can be calculated based on the parameters of the
+structures by combining FEM and discrete element method. Sun et al.                 prototype tower and the corresponding references[23]. The vertical
+[17] introduced a multi-scale beam lattice method to explore meso­                  prestressing force of 544.8kN is applied on the concrete tube with six ΦS
+scopic fracture mechanisms with higher computational efficiency. Chen               1 × 7 prestressed tendons of 12.7 mm diameter. The axial force of
+et al. [18] proposed a XFEM-based multiscale modeling approach to                   42.3kN was applied to the top of the specimen, which is determined by
+investigate the monotonic and hysteretic performance of concrete col­               the similarity ratio of the specimen to the original full scale PCSH tower.
+umns and reveal its cracking behavior. Moyeda and Fish[19] carried out              To simulate the actual stress state of the PC segment of the substructure
+a multiscale beam element method to predict the initial effects of pre­             of the PCSH tower under the SLS and ULS, the loading procedure is
+stressing, creep, shrinkage, and temperature of PC structures and veri­             divided into three stages divided by two target lateral forces of 24.1kN
+fied the method by experimental measurement. Sadowski [20] explored                 and 34.5kN, respectively[23]. Horizontal displacement control is used
+a hybrid beam-shell modeling technique for steel tube wind turbine                  during the loading process, and the loading rate is 0.5 mm/min. As
+towers to investigate the criticality in all tower strakes. Calibrated by the       presented in Fig. 1 (f), eight dial gauges are arranged at the heights of
+measurements of an actual tower, Szafran et al.[21] established a beam              140 mm, 470 mm, 780 mm, 1,050 mm, 1,550 mm, 1,620 mm, 2,120 mm
+finite element model with shell elements for the joints to evaluate the             and 2,400 mm above the base, respectively. The horizontal reaction
+response of a steel lattice tower under random wind loads.                          force can be measured from the actuator directly. The test loading device
+    This paper aims at the experimental and two-scale numerical                     is illustrated in Fig. (g). A 50 t force sensor is arranged on the top of the
+investigation on the mechanical behavior of PCSH wind turbine towers.               specimen. The measured average compressive strength for the concrete
+In order to develop three-dimensional (3D) fiber beam elements for the              is 48.9 MPa. The ultimate strength of 6 and 8 reinforcements are 530.98
+two-scale models, experimental study on a substructure of a reduced-                MPa and 526.85 MPa, respectively.
+scale PCSH tower specimen is carried out at first. The test results are
+used to validate the 3D fiber beam elements. Combining the 3D fiber                 2.2. Experimental observation
+beam elements and solid elements, a two-scale finite element modelling
+approach is utilized to investigate both the global mechanical behavior                 No collapse of the steel segment and no separation between the
+of the PCSH wind turbine tower specimen and the local failure pattern of            flange and the PC segment is observed during the whole loading
+
+                                                                                2
+Z. Li et al.                                                                                                                         Engineering Structures 279 (2023) 115622
+
+
+
+
+                                                                                        Fig. 1. Test setup.
+
+
+
+Table 1
+Parameters of the full scale PCSH wind turbine tower.
+  Segment              Height         Thickness        Top diameter        Bottom diameter
+                       (m)            (mm)             (mm)                (mm)
+
+  Steel                21.5           14               2,686               3,485
+    segment 3
+  Steel                20             18               3,485               4,046
+    segment 2
+  Steel                20             20               4,046               4,400
+    segment 1
+  PC segment           16             450              4,400               4,400
+
+
+
+
+Table 2
+Parameters of the wind turbine.                                                                                  Fig. 2. Load-displacement curve.
+
+  Item         Rated          Number        Rotor        Wind         Rated        Cut-out
+               Power          of blades     diameter     turbine      wind         wind
+               (MW)                         (m)          mass (t)     speed        speed
+                                                                      (m/s)        (m/s)
+
+  Value        2              3             93.4         128.5        11           25
+
+
+
+procedure. There is no crack in the base foundation and the concrete
+part at the connection between concrete and steel flange during the test.
+The specimen top displacement versus top horizontal load is shown in
+Fig. 2. According to Fig. 2, the structural stiffness does not have obvious
+change until the top displacement reached 6.84 mm, then decreases
+slightly. The load-carrying capacity of the model in the test is greater
+than the equivalent value under the ULS and no cracks are detected in
+the factored SLS. It can be observed that the structure can provide suf­
+ficient strength in the ULS and the SLS. Cracking occurred at the lower                                       Fig. 3. Flexural cracks in the specimen.
+part of the PC segment when the top displacement reached 9.58 mm and
+the horizontal force reached 48.95kN which exceed the load under the
+ULS. As shown in Fig. 3, crack develops in the horizontal direction,
+indicating that the main damage mode of the structure is bending
+
+
+                                                                                                 3
+Z. Li et al.                                                                                                                                Engineering Structures 279 (2023) 115622
+
+
+damage.                                                                                      ⎧                   (        )
+                                                                                             ⎪
+                                                                                             ⎪                 εc     εc
+                                                                                             ⎪
+                                                                                             ⎪           fc0       2−     0 < εc < εc0
+                                                                                             ⎪
+3. Two-scale mode and simulation for the substructure of the                                 ⎪
+                                                                                             ⎨                 εc0    εc0
+scaled PCSH tower                                                                     σc =           fcu − fc0                                                                  (1)
+                                                                                             ⎪
+                                                                                             ⎪ fc0 +             (εc − εc0 )εc0 < εc < εcu
+                                                                                             ⎪
+                                                                                             ⎪       ε cu − εc0
+                                                                                             ⎪
+                                                                                             ⎪
+    To investigate the global and local behavior including failure pat­                      ⎩
+                                                                                                                fcu εc > εcu
+terns of the substructure of the scaled PCSH wind turbine tower spec­
+imen, a two-scale finite element modeling approach is proposed by                            f − Ecu εcu
+                                                                                      εr = cu                                                                                   (2)
+modeling the lower selected concrete parts with higher stress level with                      Ec − Ecu
+fine solid elements and the rest of the substructure of the scaled spec­
+imen with beam elements. Maximum stress and damage of the concrete                    σ r = Ec ε r                                                                              (3)
+segment of the PCSH wind turbine tower often occurs at the bottom of
+the tower or the connection between the concrete and steel flange of the              Ec =
+                                                                                             2fc0
+                                                                                                                                                                                (4)
+PCSH substructure where the maximum stress is likely to be located.                          εc0
+Therefore, solid elements are employed to model the upper and lower                          ⎧
+parts of the concrete segment, and 3D fiber beam elements are applied to                     ⎪
+                                                                                             ⎨        Ec εε ≤ εt
+                                                                                                      (         )
+simulate the rest part of the windturbine support in the two-scale model.             σt =                   ft                                                                 (5)
+                                                                                             ⎪
+                                                                                             ⎩ ft − Et ε −        ε > εt
+                                                                                                            Ec
+3.1. Material model for the substructure of the PCSH wind turbine tower
+                                                                                          where fc0 is the axial compressive strength of concrete, εc0 is the
+                                                                                      concrete strain when the stress reaches the axial compressive strength,
+3.1.1. 3D fiber beam
+                                                                                      εcu is the ultimate compressive strain, fcu is the concrete strength at ul­
+    Fiber beam element has been universally applied to simulate the
+                                                                                      timate compressive strain, σc is the compressive stress of concrete, εc is
+nonlinear behavior of composite cross-sections. As shown in Fig. 4, the
+                                                                                      the compressive strain of concrete, Ec is the initial stiffness, Ecu is the
+reinforcement is equivalent to a tubular section with the same area and
+                                                                                      stiffness at ultimate compressive strain, ft is the tensile strength, σt is the
+moment of inertia to assign the properties of the reinforcement section
+                                                                                      tensile stress and εt is the peak tensile strain of the concrete.
+to the beam element.
+    In Fig. 4, d is the diameter of the concrete section, c is the thickness of
+                                                                                      3.1.2. Concrete
+the protective layer, t is the thickness of the equivalent circular section
+                                                                                          The concrete damage plasticity (CDP) constitutive law shown in
+of the reinforcement, As and I are the area and the moment of inertia of
+                                                                                      Fig. 6 is utilized to simulate the solid concrete elements. The curve under
+the reinforcement, respectively.
+                                                                                      compression can be calculated by the Eqs (6)-(9) [27].
+    In the 3D fiber beam element, the bilinear constitutive model with a
+                                                                                                 ( )
+reverse loading curve pointing to the historical maximum deformation                        fcc r εεccc
+point proposed by Clough is used to model the reinforcement and the                   fc =                                                                    (6)
+hysteresis constitutive model of Concrete02 in Opensees is used as                         r − 1 + εεccc
+constitutive law of concrete. The constitutive laws for both reinforce­
+                                                                                             Ec
+ment and concrete are shown in Fig. 5. The user-defined material                      r=                                                                                        (7)
+(UMAT) for 3D fiber beam elements has been developed and used as the                       Ec − εfcccc
+material subroutines of ABAQUS which is used as a solver in this study                            (                  √̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅         )
+[24–26].                                                                                                                      7.94fl            fl
+                                                                                      fcc = fc0       − 1.254 + 2.254 1 +                  − 2                                  (8)
+    In Fig. 5(a), α and λ take the value of 0.04 and 0.3, respectively. E0 is                                                    fc0           fc0
+the initial stiffness of reinforcement and fy is the yielding strength of
+steel reinforcement.                                                                            2fyh Asp
+    The constitutive law of concrete shown in Fig. 5(b) is described by               fl = Ke                                                                                   (9)
+                                                                                                  DS
+the following equations:
+                                                                                         where fc is the compressive concrete stress, fcc denotes the
+                                                                                      compressive strength of confined concrete, εc is the compressive strain of
+                                                                                      confined concrete, εcc is the strain at fcc , the Ec is the Young’s modulus of
+                                                                                      concrete, fc0 presents the compressive concrete stress of unconfined
+                                                                                      concrete, fl is effective lateral confining pressure, Ke is the effective
+                                                                                      confinement coefficient of cross section, fyh is yield stress of stirrups, Asp
+
+
+
+
+                                                   Fig. 4. Longitudinal reinforcement and section equivalence.
+
+                                                                                  4
+Z. Li et al.                                                                                                                                       Engineering Structures 279 (2023) 115622
+
+
+
+                                                                                                           c
+
+
+                                                                E
+                                                                                                       fc
+                                             fy
+                                                                                                                   Ec
+                                                       E
+                                                                    E
+                           fmax                                                                       fcu                             Er Ec
+                                                                                                                                         F
+                                                                    fmax                                                         0.5Er       Ecu
+                                                                                                               O        re
+                                                                                                                             H    c                     cu             c
+
+                                                  fy                                                  Et           Et
+
+                                                                                         R    r   r
+
+
+
+
+                                       Fig. 5. Constitutive models of concrete and reinforcement for the 3D fiber beam element.
+
+
+                                                                                          in which μt0 stands for the crack normal displacement when the
+                                                                                       tensile stress σ t is completely lost, σt0 is the failure stress, Gf represents
+                                                                                       the fracture energy.
+
+                                                                                       3.1.3. Other
+                                                                                          The elastic-perfectly plastic stress–strain relationship is utilized to
+                                                                                       model the steel segment and the bilinear model for prestressed tendon
+                                                                                       and steel reinforcement in the segment with solid elements.
+
+                                                                                       3.2. Elements
+
+                                                                                           In this study, three different models including the solid element
+                                                                                       model, two-scale element model and fiber beam model are considered.
+                                                                                       The employed elements in each FEM model are listed in Table 3[29].
+                                                                                       The B31 element is adopted to simulate the PC segment modeled by the
+                                                                                       3D fiber beam element in the two-scale element model and the C3D8R
+                                                                                       and T3D2 element are used to simulate the concrete and reinforcement
+                                                                                       of the rest part of the PC segment, respectively.
+         Fig. 6. The loading and unloading rules for uniaxial load cycle.
+
+                                                                                       3.3. Boundary and interaction setting
+
+                                                                                           For the two-scale element model, the 3D fiber beam elements and the
+                                                                                       solid elements are connected by coupling based on the plane-section
+                                                                                       assumption. Since the prestressing force applied on the flange can pre­
+                                                                                       vent the separation of steel and concrete, the steel flange and concrete
+                                                                                       are directly tied together for simplicity. According to the bond-slip effect
+                                                                                       described by Kwak and Filippou, the nodes of steel reinforcement can be
+                                                                                       mapped directly onto the nodes of concrete occupied the same location
+                                                                                       to incorporate them into the overall stiffness of the model[30]. The
+
+                                                                                       Table 3
+                                                                                       Elements employed in different FEM models.
+                                                                                        Models                                     Component                        Element in ABAQUS
+
+                                                                                        Solid element model                        Steel                            C3D8R
+                                                                                                                                   Concrete                         C3D8R
+                  Fig. 7. Post-failure stress-fracture energy curve.                                                               Reinforcement                    T3D2
+                                                                                                                                   Prestressed tendon               T3D2
+                                                                                                                                   Flange                           C3D8R
+means the area of the stirrup section, D and S are the diameter and                     Two-scale element model                    Steel                            B31
+spacing of the stirrups, respectively, wc and wt are the compressive and                                                           Concrete                         C3D8R/ B31
+tensile stiffness recovery factor, respectively.                                                                                   Reinforcement                    T3D2/ B31
+                                                                                                                                   Prestressed tendon               T3D2
+   Instead of the tensile stress–strain curve, the fracture energy pre­                                                            Flange                           C3D8R
+sented in Eqs (10) and Fig. 7 is used to alleviate the mesh sensitivity                 Fiber beam model                           Steel                            B31
+problem[28].                                                                                                                       Concrete                         B31
+                                                                                                                                   Reinforcement                    B31
+μt0 = 2Gf /σ t0                                                             (10)                                                   Prestressed tendon               T3D2
+
+
+                                                                                   5
+Z. Li et al.                                                                                                                 Engineering Structures 279 (2023) 115622
+
+
+
+
+                                                Fig. 8. Fiber beam elements with prestressed tendons overlay.
+
+
+nodes on the prestressed tendons are mapped onto the nodes on the fiber
+                                                                                    Table 4
+beam element used as anchorage locations. As shown in Fig. 8, the
+                                                                                    Material property of the steel, reinforcement, and prestressed tendon of the
+elasticity rigid connector perpendicular to the tendons is utilized to
+                                                                                    scaled PCSH tower.
+restrain the translational DOF of the nodes on unbonded and prestressed
+                                                                                     Material   Elastic       Density     Poisson’s     Yield          Tensile
+tendons laterally against the nodes on the concrete segment of the tower
+                                                                                                modulus       (kg/m3)     ratio         strength       strength
+in the two-scale element model, which do not allow the vertical load                            (MPa)                                   (MPa)          (MPa)
+transfer between the tendons and the concrete segment.
+                                                                                     Q345       206,000       7,850       0.28          345            –
+                                                                                     HPB300     200,000       7,850       0.3           300            420
+4. Two-scale simulation for the substructure of the scaled PCSH                      6 rebar    200,000       7,850       0.3           393            531
+wind turbine tower                                                                   8 rebar    200,000       7,850       0.3           390            527
+                                                                                     Strand     195,000       7,850       0.3           1,320          1,860
+4.1. FEM simulation on the tested specimen with different models
+                                                                                    modeled with beam elements as shown in Fig. 9(c).
+    In this section, as illustrated in Fig. 9, the tested substructure of the
+scaled PCSH wind turbine tower is modeled with three different models,
+                                                                                    4.2. Numerical simulation results of different models and their
+a solid element model, a two-scale model, and a fiber beam model for
+                                                                                    comparison
+comparison. All the DOF at the bottom of the model are fixed. The
+horizontal force in the x-negative direction is applied on the top of the
+                                                                                    4.2.1. Comparison of the load–displacement curves of different models
+model in the form of controlled horizontal displacement. The detailed
+                                                                                        The load–displacement curves of the above three models compared
+material parameters are listed in Tables 4 and 5.
+                                                                                    with the experiment result are shown in Fig. 10 and Table 6. From
+    In the solid element model, both the PC and the steel tube of the
+                                                                                    Fig. 10, the load–displacement curves determined by the three numer­
+specimen are modeled as solid elements as shown in Fig. 9(a). Since the
+                                                                                    ical models are close to each other and also agree with the test results.
+stress distribution of the steel tube of the PCSH specimen is relatively
+                                                                                    For safety, the maximum deformation of the tested substructure of the
+simply and clear and no steel tube failure is observed in the experiment
+                                                                                    PCSH tower was 16.50 mm, which is over the displacement of the
+procedure, the steel segment is modeled with beam elements. In the two-
+                                                                                    specimens under ULS. Compared with the test result, when the hori­
+scale model, the top and bottom of the PC segment are modeled with
+                                                                                    zontal deformation is 16.50 mm, the relative error of the reaction force
+solid elements and the rest of the PC segment is modeled with 3D fiber
+                                                                                    generated by the solid element model, the two-scale model and fiber
+beam elements as shown in Fig. 9(b) because of the complicated stress
+                                                                                    beam model are 4.75 %, 6.45 % and 6.87 %, respectively. The relative
+distribution on the top and bottom parts of the specimen. In the fiber
+                                                                                    errors of the three model are smaller than 10 %, which testify the ac­
+element model, both the PC and steel tube parts of the specimen are
+                                                                                    curacy of the models. As the applied displacement increases, the tangent
+
+
+
+
+                                                           Fig. 9. Multiscale modeling approaches.
+
+                                                                                6
+Z. Li et al.                                                                                                                              Engineering Structures 279 (2023) 115622
+
+
+Table 5
+Material property of the concrete of the scaled PCSH tower.
+  Material     Elastic modulus      Density (kg/       Poisson’s      Compressive strength     Tensile strength   Dilation angles   Eccentricity     K         Viscosity
+               (MPa)                m3)                ratio          (MPa)                    (MPa)              (◦ )                                         coefficient
+
+  C50          32,000               2,500              0.2            48.95                    2.64               31                0.1              0.667     1.0e-5
+
+
+
+                                                                                             of the three numerical models are close. The deflection curves of the
+                                                                                             three models are similar, which indicates the effectiveness of the
+                                                                                             modeling approach. The deformation error of the fiber beam model is
+                                                                                             larger when compared with them of the sole solid element model and the
+                                                                                             two-scale model.
+                                                                                                 According to Figs. 10 and 11, the two-scale model in this paper can
+                                                                                             be used to mimic the global behavior of the tested specimen with
+                                                                                             acceptable accuracy when compared with the traditional model with
+                                                                                             solid elements, the model with fiber beam elements and the experiment
+                                                                                             result. Compared with the fiber beam model, the established two-scale
+                                                                                             model is used to simulate the local behavior including the stress and
+                                                                                             the damage distribution of the tested specimen and the results are
+                                                                                             described as follows.
+
+                                                                                             4.2.3. Comparison of stress distribution of PC segment of the tested
+                                                                                             specimen with different models
+                Fig. 10. Comparison of load–displacement curves.                                 The tensile and compressive stress in concrete, and the stress of non-
+                                                                                             prestressed reinforcement and the prestressing tendon of the solid
+                                                                                             element model and the two-scale model when the horizontal deforma­
+Table 6                                                                                      tion is 16.50 mm are presented in Figs. 12 and 13, respectively. The
+Load comparison when the horizontal deformation is 16.50 mm.
+                                                                                             comparison of the maximum tensile and compression stress in concrete
+  Model              Force       Relative          Ultimate load        Relative             and the maximum stress in the non-prestressed reinforcement and the
+                     (kN)        Error (%)         bearing capacity     Error (%)
+                                                                                             prestressing tendon of the above three numerical models are summa­
+                                                   (kN)
+                                                                                             rized in Table 7. The stress value and distribution of the fiber beam
+  Experiment         72.22       –                  –                   –                    model can be calculated by the section forces and moments with ma­
+  Solid element      68.79       4.75              91.73
+                                                                                             terial mechanics.
+                                                                        –
+    model
+  Two-scale          67.56       6.45              90.29                1.57                     According to Figs. 12 and 13, it can be observed that the maximum
+    model                                                                                    stress of the reinforcement is located at the bottom of the longitudinal
+  Fiber beam         77.18       6.87              93.43                1.85                 reinforcement at the compression side of the PC tube of the tested
+    model
+                                                                                             specimen. The maximum tensile and compressive stresses of concrete
+                                                                                             are located at the lower part of the concrete at the tensile and
+stiffness of the three models decreases. The load–displacement curves of                     compression side, respectively.
+the three numerical simulation models are close, which testifies that the                        According to Table 7, the relative errors between the stress of the
+developed two-scale modeling approach can be employed to simulate                            two-scale element model and that of the model with solid elements are
+the stiffness and ultimate load bearing capacity of the substructure of the                  smaller than 5 %, which exhibits that the two-scale models can simulate
+PCSH tower structure with acceptable accuracy.                                               the maximum structural stress at the critical location of the tested
+                                                                                             specimen with acceptable accuracy. The stress distribution and
+4.2.2. Deformation along the height of the tested specimen                                   maximum stress of the model with solid elements, the two-scale models
+   The comparison of the deflection of the tested specimen and the                           are close.
+three models are exhibited in Fig. 11. According to Fig. 11, the lateral                         The location of the maximum stress of the fiber beam model,
+displacement measurement along the height of the specimen and them                           including maximum tensile stress in concrete, the maximum compres­
+                                                                                             sive stress in concrete, maximum stress of non-prestressed reinforce­
+                                                                                             ment, and maximum stress in prestressing tendon, is similar to that of
+                                                                                             the model with solid elements. However, the maximum stresses derived
+                                                                                             from the fiber beam model are not accurate enough and the relative
+                                                                                             error of some maximum stress of the model is greater than 10 %, espe­
+                                                                                             cially the maximum tensile stress of concrete. This is because it is
+                                                                                             difficult to simulate the cracks using the 3D fiber beam elements.
+                                                                                             Meanwhile, the complexity and non-uniformity of the stress at the
+                                                                                             critical parts cannot be presented by the fiber beam model. Therefore,
+                                                                                             the fiber beam model cannot obtain maximum stress and local failure of
+                                                                                             the critical PC tube of the PCSH wind turbine tower accurately.
+
+                                                                                             4.2.4. Comparison of damage distribution of the tested specimen with
+                                                                                             different models
+                                                                                                 The spatial distribution of the tensile and compressive damage of
+                                                                                             concrete in different models are respectively illustrated in Figs. 14 and
+                                                                                             15 when the horizontal deformation is 16.50 mm. The compressive
+                             Fig. 11. Deflection curve.                                      damage is low, and the tensile damage is mainly concentrated at the
+
+                                                                                        7
+Z. Li et al.                                                                                                                  Engineering Structures 279 (2023) 115622
+
+
+
+
+                                                        Fig. 12. Stress nephogram of the solid element model.
+
+
+
+
+                                                          Fig. 13. Stress nephogram of the two-scale model.
+
+
+
+Table 7
+Stress comparison of the three models.
+  Model                                Solid element   Two-scale   Fiber beam
+                                       model           model       model
+
+  Maximum tensile stress in concrete   2.53            2.55        6.39
+    (MPa)
+  Relative Error (%)                   –               0.79        152.57
+  Maximum compressive stress in        − 50.29         − 48.26     − 33.36
+    concrete (MPa)
+  Relative Error (%)                   –               4.04        33.66
+  Maximum Mises stress of non-         394.7           396.0       385.2
+    prestressed reinforcement (MPa)
+  Relative Error (%)                   –               0.33        2.41
+  Maximum Mises stress in              1,393           1,394       1,361
+    prestressing tendon (MPa)
+  Relative Error (%)                   –               0.07        2.30
+
+
+
+bottom of the specimen. The bending cracks derived from the different
+models are consistent with the actual cracking patterns in the tested
+specimen which presents horizontal flexural cracks on the tensile side of
+the PC tube as shown in Fig. 3.                                                                Fig. 14. Damage distribution of the solid element model.
+
+
+
+
+                                                                                  8
+Z. Li et al.                                                                                                                       Engineering Structures 279 (2023) 115622
+
+
+                                                                                       Table 9
+                                                                                       PCSH wind turbine tower parameter.
+                                                                                        Dimension                                              Value
+
+                                                                                        Thickness of steel segment (mm)                        11
+                                                                                        Top diameter of steel segment (mm)                     2,686
+                                                                                        Base diameter of steel segment (mm)                    3,296
+                                                                                        Length of steel segment (mm)                           22,200
+                                                                                        Thickness at the top of PC segment (mm)                285
+                                                                                        Thickness at the base of PC segment (mm)               285
+                                                                                        Length of the PC segment (mm)                          55,300
+                                                                                        Diameter at the top of PC segment (mm)                 3,565
+                                                                                        Diameter at the base of PC segment (mm)                6,000
+                                                                                        Longitudinal reinforcement                             1820
+                                                                                        Prestressed duct number                                36
+                                                                                        Prestressed reinforcement                              4 ΦS 1 × 7(d = 21.6 mm)
+                                                                                        Prestressed reinforcement area (mm2)                   41,040
+
+
+
+                                                                                       5.1. Different models for an optimized full-scale PCSH wind turbine tower
+
+                                                                                           For comparison, the three models for the PCSH wind turbine tower,
+                                                                                       including a fiber beam model, a two-scale model, and a solid element
+               Fig. 15. Damage distribution of the two-scale model.                    model as shown in Fig. 16, are established. Post-tensioned tendons are
+                                                                                       unbonded to the surrounding concrete of the optimized full-scale PCSH
+4.2.5. Computational efficiency comparison between different models                    wind turbine tower. Prestress losses including anchorage, friction, stress
+    The numerical simulation for all the three numerical models is based               relaxation, creep, and shrinkage have been incorporated. The optimized
+on a DELL desktop computer with 16-core 32 processes and 32G mem­                      full-scale PCSH wind turbine tower is divided into several uniform
+ory. To exhibit the numerical simulation efficiency of the three different             section beam elements with a length of about two meters but different
+models, the comparison of the element numbers and the corresponding                    cross-section areas for simulation[20]. The bottom of the model is fixed
+simulation time between the three numerical models are presented in                    and the wind turbine on the top of the tower is regarded as a rigid body
+Table 8.                                                                               with a certain mass [33]. For the two-scale model and fiber beam model,
+    It can be observed from Table 8 that the solid element model has the               the steel segment is modeled as beam elements for simplicity[34].
+largest number of elements and takes the longest computation time,
+while the fiber beam model has the least number of fiber elements and                  5.2. Natural frequencies and modal shapes
+computation time. The analysis time of the two-scale model was greatly
+reduced due to the reduction of the total element number when                              In this section, the first two fundamental natural frequencies and
+compared with that of the model with solid elements. The two-scale                     modal shapes of the optimized full-scale PCSH wind turbine tower
+models are qualified of providing both global and local behavior of                    structure are simulated with the above three models and compared. The
+the tested PCSH specimen with acceptable accuracy and a shorter                        first and the second fore-aft mode shapes of the three models are pre­
+computation time.                                                                      sented in Fig. 17. Table 12 presents the comparison of the first two
+                                                                                       frequencies determined by the three models. According to Fig. 17 and
+5. Two-scale numerical simulation on a full-scale optimized                            Table 12, the natural frequencies and modal shapes of the three models
+PCSH wind turbine tower and the comparison with sole solid and                         are close to each other, which testify that the proposed two-scale
+fiber element models                                                                   modeling approach for the full-scale PCSH tower can be used to deter­
+                                                                                       mine the natural frequency and mode shape effectively with acceptable
+    After validating the effectiveness of the two-scale models described               accuracy.
+above, in this section, the two-scale modelling approach is utilized to
+study the global and local behavior of an optimized full-scale PCSH wind               5.3. Structural analysis on the behavior of the full-scale PCSH tower with
+turbine tower [31,32]. The rated power of the wind turbine is 2 MW and                 different models
+the rotating speed in the rated power is 17 rpm. The rotor diameter is
+93.4 m. The cut-in, rated, and cut-out wind speeds are 3 m/s, 11 m/s, 25                   To compare the stress distribution of the above three models, the
+m/s, respectively. The weight of the wind turbine is 128.5 t and the                   stress nephograms of the PC segment of the solid element model and
+distance from the gravity center of the wind turbine to the center of the              two-scale model are shown in Fig. 18 and Fig. 19 when the PCSH tower
+tower is 3.7 m. The dimensions of the PCSH wind turbine tower are                      is under ULS as an example. The stress value and distribution of the fiber
+listed in Table 9. The PC segment of the PCSH tower is connected to the                beam model can be reckoned by the section forces and moments with
+steel section through a steel flange with a thickness of 90 mm.The global              material mechanics and compared with the results of the solid element
+and local behavior of the optimized full-scale PCSH model is simulated                 model and two-scale model. The wind direction is the x-direction. No
+with the solid element model, two-scale model, and fiber beam model                    collapse of the steel segment is found, and no separation occurs between
+for comparison. The detailed material parameters are listed in Tables 10               the steel flange and the PC segment. The maximum compressive stresses
+and 11.                                                                                of concrete of the three models are located near the connection between
+                                                                                       the concrete and flange at the compression side. The compressive stress
+                                                                                       distribution of the two-scale element model and solid element are
+Table 8
+                                                                                       similar and have stress concentration phenomenon which is difficult to
+Element number and calculation time.
+                                                                                       be expressed by the fiber beam model. The maximum tensile stresses of
+  Model                            Numbers of elements                CPU time/s
+                                                                                       concrete of the solid element model and the two-scale model are located
+  Solid element model              36,096                             140,328          near the connection at the tensile side while the maximum tensile
+  Two-scale model                  15,642                             84,202           stresses of concrete of the fiber beam model are located near the bottom
+  Fiber beam model                 31                                 70
+                                                                                       of the tower at the tensile side. The reason for the difference is the fiber
+
+                                                                                   9
+Z. Li et al.                                                                                                                                       Engineering Structures 279 (2023) 115622
+
+
+Table 10
+Material property of concrete of the optimized full-scale PCSH wind turbine model.
+  Material     Elastic modulus           Density (kg/        Poisson’s        Compressive strength     Tensile strength    Dilation angles   Eccentricity      K        Viscosity
+               (MPa)                     m3)                 ratio            (MPa)                    (MPa)               (◦ )                                         coefficient
+
+  C50          34,500                    2,500               0.2              32.4                     2.64                31                0.1               0.667    1.0e-5
+
+
+
+                                                                                                     larger error due to the fact that the stress of the fiber beam model is
+Table 11
+                                                                                                     estimated by the section internal force, which may be affected by the
+Material property of steel, reinforcement and prestressed tendon of the opti­
+                                                                                                     stress concentration phenomenon. Therefore, it is necessary to analyze
+mized full-scale PCSH wind turbine model.
+                                                                                                     and study the structural form and mechanical characteristics of critical
+  Material     Elastic           Density         Poisson’s         Yield         Tensile
+                                                                                                     locations using finer mesh. When only the global behavior of the wind
+               modulus           (kg/m3)         ratio             strength      strength
+               (MPa)                                               (MPa)         (MPa)
+                                                                                                     turbine tower is considered, the PC segment is recommended to be
+                                                                                                     simulated by the 3D fiber beam element. The solid element model can
+  Q345         206,000           7,850           0.28              345
+                                                                                                     calculate the stress distribution of the PCSH tower, but it is time-
+                                                                                 –
+  HPB300       200,000           7,850           0.3               300           420
+  HRB400       200,000           7,850           0.3               400           540                 consuming, and the stress in most positions is not essential.
+  Strand       195,000           7,850           0.3               1,320         1,860                   To analyze the ultimate load-carrying capacity of the PCSH tower,
+                                                                                                     the load acting on the top of the tower is simplified as a static transverse
+                                                                                                     point load [35–37]. No separation between the flange and the PC
+beam model cannot simulate the stress concentration phenomenon at
+                                                                                                     segment is observed during the whole loading procedure. The
+the connection between the concrete and the flange. The maximum                                      load–displacement curves of different models of the PCSH tower are
+stress of the reinforcement of the three models are located near the
+                                                                                                     presented and compared in Fig. 20. According to Fig. 20, it can be
+connection at the compression side.                                                                  concluded that the initial stiffness of the three models are similar and the
+    The displacement, maximum stress, and computation efficiency
+                                                                                                     PCSH towers show a ductile behavior. The load-carrying capacity and
+comparison of the three models are exhibited in Table 13. According to                               load–displacement curve of the two-scale model are close to that of the
+Table 13, the top displacements and the maximum stress in the rein­                                  solid element model. As the loading proceeds, the stiffness degradation
+forcement and prestressed tendons of the three models are similar. The                               of the fiber beam model is worse than that of the solid element model
+maximum tensile and compressive stresses of concrete of the two-scale
+model are close to that of the solid element model. The errors of the
+                                                                                                     Table 12
+tensile and compressive stresses of the concrete reckoned by the fiber
+                                                                                                     Natural vibration frequency comparison of the models.
+beam model are large. Besides, the use of fiber beam elements reduces
+the number of elements. As the element number decreases, so does the                                  Model                     Solid element          Two-scale         Fiber beam
+                                                                                                                                model                  model             model
+computation time. The two-scale model can reflect the stress of the wind
+turbine tower at the critical position and accelerate the computing speed                             First-order frequency     0.563                  0.556             0.539
+compared with that of the solid element model. The fiber beam model                                     (Hz)
+                                                                                                      Relative Error (%)        –                      1.24              4.26
+can reduce the calculation time as well, but it is difficult to obtain the                            Second-order frequency    2.07                   2.13              2.13
+structural stress at the critical position with complicated stress distri­                              (Hz)
+bution intuitively. In addition, the result of the fiber beam model has                               Relative Error (%)        –                      2.90              2.90
+
+
+
+
+                                                 Fig. 16. Different FEM models for the full-scale optimized PCSH wind turbine tower.
+
+
+
+
+                         Fig. 17. Comparison of the first two mode shapes of the three numerical models of the optimized full scale PCSH tower.
+
+                                                                                                10
+Z. Li et al.                                                                                                                   Engineering Structures 279 (2023) 115622
+
+
+
+
+                                                      Fig. 18. Stress nephogram of the solid element model.
+
+
+
+
+                                                        Fig. 19. Stress nephogram of the two-scale model.
+
+
+                                                                                       and the two-scale element model. The possible reason for the difference
+Table 13
+                                                                                       may be the fact that the stirrup cannot be considered in the beam ele­
+Displacement, stress and computation efficiency comparison of different models.
+                                                                                       ments, and it is difficult to precisely model the behavior of the critical
+  Model                            Solid element    Two-scale     Fiber beam           parts of the optimized full-scale PCSH tower. Fig. 20 also depicts the
+                                   model            model         model
+                                                                                       load of the PCSH tower in the ULS, indicating that the structure can
+  Top displacement (mm)            568.6            535.1         583.0                provide sufficient load capacity for the wind turbine tower. The capacity
+  Relative Error (%)                                5.89          2.53
+                                   –
+                                                                                       determined by the fiber beam model is lower than that of the solid
+  Maximum tensile stress of        2.368            2.297         − 1.326
+    concrete (MPa)                                                                     element model and the two-scale model.
+  Relative Error (%)               –                3.00          156.00
+  Maximum compressive stress of    − 29.99          − 31.87       − 26.59              5.4. Fatigue of the full-scale wind turbine tower
+    concrete (MPa)
+  Relative Error (%)               –                6.27          11.34
+  Maximum stress of non-           163.8            149.4         174.7                    Adopting the proposed two-scale approach, wind-induced fatigue
+    prestressed reinforcement                                                          analysis of the optimized PCSH wind turbine tower in section 5 is carried
+    (MPa)                                                                              out. Dynamic response of the wind turbine towers corresponding to
+  Relative Error (%)                                8.79          6.65
+                                   –
+                                                                                       different wind speed under normal operational state is considered (be­
+  Maximum stress of prestressed    1,176            1,155         1094
+    reinforcement (MPa)                                                                tween 3 and 25 m/s)[38]. Due to the long calculation time of solid
+  Relative Error (%)               –                1.79          6.97                 element model, only the fiber beam model and the two-scale model are
+  Element number                   233,375          18,745        331                  adopted here. Based on the rain flow method, the mean value and
+  CPU time (s)                     29,122           2,708         59                   amplitude of third main stress and corresponding cycle number in one
+                                                                                       year at the bottom of the PC segment are illustrated in Fig. 21 as an
+                                                                                       example.
+                                                                                           In the fatigue analysis, four critical regions, namely, the connection
+                                                                                       region between the steel tube and the flange, leeward side of the top and
+                                                                                       bottom region of the PC segment, and the prestressed tendons, are
+                                                                                       selected to carry out the wind-induced fatigue life analysis of the wind
+                                                                                       turbine tower. The fatigue reference compressive strength of concrete,
+                                                                                       the fatigue strength corresponding to the stress cycle number 2 × 106
+                                                                                       and the minimum fatigue stress range of prestressing steel are 34 MPa,
+                                                                                       69 MPa and 170 MPa, respectively. Adopting the time domain analysis
+                                                                                       method, the shortest fatigue life of different tower models is listed in
+                                                                                       Table 14[39]. According to Table 14, the fatigue life of each part of the
+                                                                                       towers is more than 20 years and meets the design requirements. The
+                                                                                       fatigue life on the top region of the PC segment is shorter than the
+                                                                                       bottom region, because the stress value of the top region is larger than
+                                                                                       that of the bottom region. The leeward side of the top region of concrete
+Fig. 20. Load-displacement curves of the three numerical models of the full-           of the two-scale model has the shortest fatigue life. This is because the
+scale optimized PCSH tower model.                                                      influence of prestressed reinforcement leads to the stress concentration
+                                                                                       phenomenon on the top of the concrete. Because it is difficult for the
+                                                                                       fiber beam model to simulate the stress concentration of the concrete,
+
+                                                                                  11
+Z. Li et al.                                                                                                                           Engineering Structures 279 (2023) 115622
+
+
+                                                                                        inaccurate due to the complex stress in the connection section and the
+                                                                                        bottom of the tower and the occurrence of cracks, which are hard to be
+                                                                                        modeled in fiber elements. The fiber beam model can be used for pre­
+                                                                                        dicting only global, but not local, behavior. Compared with the solid
+                                                                                        element model, the two-scale model can not only significantly reduce
+                                                                                        simulation time but describe the local failure behavior in critical parts of
+                                                                                        the PCSH tower. The numerical simulation results show that the steel­
+                                                                                        –concrete connection section and the bottom of the PCSH tower are the
+                                                                                        critical locations where stress concentration and concrete cracking may
+                                                                                        occur.
+                                                                                            3) Aiming at the static behavior and modal parameter of the full-
+                                                                                        scale PCSH wind turbine tower optimized by the authors in the previ­
+                                                                                        ous study, the validated two-scale modeling approach is employed. The
+                                                                                        first two order frequencies and the corresponding modal shapes of the
+                                                                                        optimized PCSH tower are analyzed by the use of the two-scale model
+                                                                                        and the results are compared with those of the solid element model and
+                                                                                        the fiber beam model. Results show the developed two-scale model can
+                                                                                        be used to determine both the natural frequencies and model shapes and
+                                                                                        the static load–displacement curves with accuracy and high efficiency.
+                                                                                            4) The proposed method can be used to calculate the fatigue of PCSH
+                                                                                        wind turbine tower. The leeward side of the top region of the PC segment
+Fig. 21. The mean value and amplitude of stress and corresponding
+cycle number.                                                                           has the shortest fatigue life of the PCSH tower because of the stress
+                                                                                        concentration. The top region of the PC segment is the critical location of
+                                                                                        the PCSH wind turbine tower in the fatigue analysis. Because it is
+Table 14                                                                                difficult for the fiber beam model to simulate the stress concentration,
+The fatigue life calculation results.                                                   the fatigue life calculated by the fiber beam model may arise security
+  Fatigue       Connection region       Top region   Bottom          Prestressed        risks.
+  life          between the steel       of the PC    region of the   tendons
+                tube and the flange     segment      PC segment                         CRediT authorship contribution statement
+  Two-scale      65.19                  26.13        6.74 × 106      6.26 × 1010
+    model                                                                                  Zeyu Li: Data curation, Writing – original draft, Visualization,
+    (year)                                                                              Software, Investigation. Bin Xu: Conceptualization, Methodology, Su­
+  Fiber         107.78                  1,368        7.23 × 105      5.56 × 1018
+                                                                                        pervision, Writing – review & editing, Funding acquisition. Jiang
+    beam
+    model                                                                               Wang: Software, Validation, Data curation. Hongbing Chen: Software,
+    (year)                                                                              Validation, Visualization. Hanbin Ge: Methodology, Writing – review &
+                                                                                        editing, Supervision.
+
+the fatigue life calculated by the fiber beam model is longer than the
+                                                                                        Declaration of Competing Interest
+result of two-scale model, which may arise security risks.
+                                                                                            The authors declare that they have no known competing financial
+6. Conclusions
+                                                                                        interests or personal relationships that could have appeared to influence
+                                                                                        the work reported in this paper.
+    In this paper, to investigate both the global and local mechanical
+behavior of an optimized full scale PCSH wind turbine tower efficiently,
+                                                                                        Data availability
+a two-scale finite element modeling approach is proposed. Based on both
+the experimental and numerical simulation results, the following main
+                                                                                           No data was used for the research described in the article.
+conclusions can be made.
+    1) To establish the two-scale model for the optimized full-scale PCSH
+                                                                                        Acknowledgement
+wind turbine tower, a 3D fiber beam element is developed at first for the
+PC segments of the PCSH tower. With the developed 3D fiber beam el­
+                                                                                           The authors gratefully acknowledge the supports provided by the
+ements, a two-scale modeling approach for the substructure of a scaled
+                                                                                        National Natural Science Foundation of China (No. 51878305,
+PCSH tower is established and both global and local behavior of the
+                                                                                        No.51478175) and the Scientific Research Funds of Huaqiao University
+specimen under the ULS and SLS are numerically investigated with the
+                                                                                        (605-50Y18016) to the second author.
+two-scale models. The experimental results of the substructure of the
+scaled PCSH model indicate that the designed specimen can meet the
+                                                                                        References
+design requirements under the ULS and SLS with redundancy. The
+developed two-scale model is validated with the test results of the sub­                 [1] E. Lantz, O. Roberts, J. Nunemaker, E. DeMeo, K. Dykes, G. Scott, Increasing Wind
+structure of the scaled PCSH tower and the comparison of the numerical                       Turbine Tower Heights: Opportunities and Challenges, National Renewable Energy
+results of the two-scale model with those of the solid element model and                     Laboratory (NREL), Golden, Colorado, 2019.
+                                                                                         [2] Kang C, Hartwig S, Marx S. Behavior of externally prestressed segmental towers’
+the fiber beam model also show the accuracy and efficiency of the                            dry joint under torsion effects. Struct Concr 2019;20:1350–7.
+developed two-scale model.                                                               [3] E. Ercan, E. Hokelekli, A. Ozdemir, Dynamic Analysis of a Reinforced-Concrete Post
+    2) The developed fiber beam model can simulate the global behavior                       Tensioned Wind Turbine Tower, Proceedings of 3rd International Sustainable
+                                                                                             Buildings Symposium (ISBS 2017), Springer, Cham, 2018, pp. 674-688.
+of the PCSH wind turbine tower but is hard to simulate the stress con­                   [4] Cao Y, He M, Ma R, Yang R, Liang F. Beam-column modeling and seismic fragility
+centration phenomenon and the local failure mechanism at critical lo­                        analysis of a prestressed segmental concrete tower for wind turbines. Adv Struct
+cations of the substructure of the scaled PCSH tower. Moreover, with the                     Eng 2020;23:1715–27.
+                                                                                         [5] I.M. Seidel, Experiences with two of the world’s largest wind turbine towers, 2003
+increase of the external force, the fiber beam model may become                              EWEC European Wind Energy Conference and Exhibition, Madrid, 2003, pp. 16-19.
+
+
+                                                                                   12
+Z. Li et al.                                                                                                                                     Engineering Structures 279 (2023) 115622
+
+ [6] Barutha P, Nahvi A, Cai B, Jeong HD, Sritharan S. Evaluating commercial                      [22] J. Niu, Research on the structural performance of pretressed concrete-steel hybrid
+     feasibility of a new tall wind tower design concept using a stochastic levelized cost             wind turbine tower, Civil Engineering, Hunan University, Changsha, 2014.
+     of energy model. J Clean Prod 2019;240:118001.                                               [23] SAC, GB50009-2012: Load Code for the Design of Building Structures,
+ [7] Chen S, Li Q, Liu Y, Xia J, Xue Z. Dynamic elastoplastic analysis using the meshless              Standardization Administration of China, Beijing, 2012.
+     local natural neighbor interpolation method. Int J Comput Methods 2011;8:                    [24] S. Mazzoni, F. McKenna, M.H. Scott, G.L. Fenves, OpenSees users manual, PEER,
+     463–81.                                                                                           University of California, Berkeley, 2004.
+ [8] M. Harte, B. Basu, Soil-Foundation Models and Tower Transfer Functions for                   [25] R.W. Clough, Effect of stiffness degradation on earthquake ductility requirements,
+     Offshore Wind Turbines, 53rd AIAA/ASME/ASCE/AHS/ASC Structures, Structural                        Structural Engineering Laboratory, University of California, Berkeley 1966.
+     Dynamics and Materials Conference, American Institute of Aeronautics and                     [26] M.M. Yassin, Nonlinear analysis of prestressed concrete structures under
+     Astronautics, Honolulu, Hawaii, 2012, pp. 1-12.                                                   monotonic and cyclic loads, University of California, Berkeley., 1994.
+ [9] Ma H, Meng R. Optimization design of prestressed concrete wind-turbine tower.                [27] Mander JB, Priestley MJ, Park R. Theoretical Stress-Strain Model for Confined
+     Science China 2014;57:414–22.                                                                     Concrete. J Struct Eng 1988;114:1804–26.
+[10] Ma H, Zhang D. Seismic Response of a Prestressed Concrete Wind Turbine Tower,                [28] Chen H, Xu B, Mo Y, Zhou T. Behavior of meso-scale heterogeneous concrete under
+     International. J Civ Eng 2016;14:561–71.                                                          uniaxial tensile and compressive loadings. Constr Build Mater 2018;178:418–31.
+[11] Kenna A, Basu B. A finite element model for pre-stressed or post-tensioned concrete          [29] D. Systèmes, Analysis user’s guide volume IV: elements, 2016.
+     wind turbine towers. Wind Energy 2015;18:1593–610.                                           [30] H.G. KWAK, F.C. FILIPPOU, Finite element analysis of reinforced concrete
+[12] Wang H, Wu T. Knowledge-Enhanced Deep Learning for Wind-Induced Nonlinear                         structures under monotonic loads, Department of Civil Engineering, University of
+     Structural Dynamic Analysis. J Struct Eng 2020;146:04020235.                                      California, 1990.
+[13] Zhao N, Huang G, Yang Q, Zhou X, Kareem A. Fast Convolution Integration-Based                [31] Z.Y. Li, H.B. Chen, B. Xu, Dimension Optimization for a Prestressed Concrete-Steel
+     Nonstationary Response Analysis of Linear and Nonlinear Structures with                           Hybrid Wind Turbine Tower with Particle Swarm Approach, 3rd International
+     Nonproportional Damping. J Eng Mech 2019;145:04019053.                                            Conference on New Energy and Renewable Resources (ICNERR), Destech
+[14] G. Cusatis, R. Rezakhani, M. Alnaggar, X. Zhou, D. Pelessone, Multiscale                          Publications, Inc, Guangzhou, China, 2018.
+     computational models for the simulation of concrete materials and structures,                [32] Li Z, Chen H, Xu B, Ge H. Hybrid Wind Turbine Towers Optimization with a
+     Computational Modelling of Concrete Structures - Proceedings of EURO-C 2014,                      Parallel Updated Particle Swarm Algorithm. Appl Sci 2021;11:8683.
+     Taylor and Francis - Balkema, 2014, pp. 23-38.                                               [33] Witcher D. Seismic analysis of wind turbines in the time domain. Wind Energy
+[15] Chen H, Masud M, Sawab J, Huang H-W, Xu B, Mo YL, et al. Multiscale analysis of                   2010;8:81–91.
+     non-contact splices at drilled shaft to bridge column interface. Eng Struct 2018;            [34] Gantes CJ, Villi Billi M, Güldogan M, Gül S. A Novel Tripod Concept for Onshore
+     176:28–40.                                                                                        Wind Turbine Towers 2021;14:5772.
+[16] Gu Q, Wang L, Li Y, Deng X, Lin C. Multi-scale response sensitivity analysis based           [35] Zhao Z, Dai K, Camara A, Bitsuamlak GT, Sheng C. Wind Turbine Tower Failure
+     on direct differentiation method for concrete structures. Composites Part B-                      Modes under Seismic and Wind Loads. J Perform Constr Facil 2019;33:04019015.
+     Engineering 2019;157:295–304.                                                                [36] Hernandez-Estrada E, Lastres-Danguillecourt O, Robles-Ocampo J-B, López-
+[17] Sun B, Huang X, Zheng Y, Guo L. Multi-scale lattice method for mesoscopic crack                   López AT, Sevilla-Camacho PY, Pérez-Sariñana BY, et al. Considerations for the
+     growth simulation of concrete structures. Theor Appl Fract Mech 2020;106:                         structural analysis and design of wind turbine towers: A review. Renew Sustain
+     102475.                                                                                           Energy Rev 2021;137:110447.
+[18] Chen H, Xu B, Wang J, Nie X, Mo Y-L. XFEM-Based Multiscale Simulation on                     [37] Santos RR, Cho S-J, Park J-S. Ultimate Strength of 10 MW Wind Turbine Tower
+     Monotonic and Hysteretic Behavior of Reinforced-Concrete Columns. Appl Sci                        Considering Opening. Stiffener, and Initial Imperfection, International Journal of
+     2020;10:7899.                                                                                     Steel Structures 2018;18:1318–24.
+[19] Moyeda A, Fish J. Multiscale analysis of prestressed concrete structures. Int J              [38] K. Thomsen, P.H. Madsen, E. Jørgensen, Status og perspektiver for forskning i
+     Multiscale Comput Eng 2018;16:285–301.                                                            aeroelasticitet. Lastgrundlag og sikkerhed, Denmark, Forskningscenter Risoe,
+[20] Sadowski AJ. On the advantages of hybrid beam-shell structural finite element                     1997.
+     models for the efficient analysis of metal wind turbine support towers. Finite               [39] Huo T, Tong L. An approach to wind-induced fatigue analysis of wind turbine
+     Elements in Analysis Design 2019;162:19–33.                                                       tubular towers. J Constr Steel Res 2020;166:105917.
+[21] Szafran J, Juszczyk K, Kaminski MM. Experiment-based reliability analysis of
+     structural joints in a steel lattice tower. J Constr Steel Res 2019;154:278–92.
+
+
+
+
+                                                                                             13
+

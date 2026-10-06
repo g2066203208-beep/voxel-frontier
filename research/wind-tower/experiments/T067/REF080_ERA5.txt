@@ -1,0 +1,782 @@
+                                                                      Renewable Energy 126 (2018) 322e331
+
+
+
+                                                              Contents lists available at ScienceDirect
+
+
+                                                                    Renewable Energy
+                                               journal homepage: www.elsevier.com/locate/renene
+
+
+
+
+ERA5: The new champion of wind power modelling?
+Jon Olauson a, b, *
+a
+    Division of Electricity, Department of Engineering Sciences, Uppsala University, Sweden
+b
+    Integration of Renewable Energy Sources Group, KTH Royal Institute of Technology, Stockholm, Sweden
+
+
+
+
+a r t i c l e i n f o                                   a b s t r a c t
+
+Article history:                                        Output from meteorological reanalyses are used extensively in both academia and industry for modelling
+Received 27 September 2017                              wind power. Recently, the ﬁrst batch of the new ERA5 reanalysis was released. The main purpose of this
+Received in revised form                                paper is to compare the performance of ERA5 and MERRA-2 (a commonly used reanalysis today) in terms
+28 February 2018
+                                                        of modelling i) the aggregated wind generation in ﬁve different countries and ii) the generation for 1051
+Accepted 22 March 2018
+Available online 26 March 2018
+                                                        individual wind turbines in Sweden. The modelled wind power generation was compared to measure-
+                                                        ments. In conclusion, ERA5 performs better than MERRA-2 in all analysed aspects; correlations are
+                                                        higher, mean absolute and root mean square errors are in average around 20% lower and distributions of
+Keywords:
+ERA5
+                                                        both hourly data and changes in hourly data are more similar to those for measurements. It is also shown
+MERRA-2                                                 that the uncertainty related to long-term correction (using one year of measurements and reanalysis data
+Wind power modelling                                    to predict the energy production during the remaining 1e5 years) is 20% lower for ERA5. In fact, using
+Long-term correction                                    one year sample data and ERA5 gives slightly more accurate estimates than using two years of sample
+Reanalyses                                              data and MERRA-2. Additionally, a new metric for quantifying the system size and dispersion of wind
+                                                        farms is proposed.
+                                                                                                                         © 2018 Elsevier Ltd. All rights reserved.
+
+
+
+
+1. Introduction                                                                           that MERRA gives good results in terms of country-wise wind po-
+                                                                                          wer generation (relatively low errors when comparing to
+   Quoting Ref. [1], “reanalysis is the process whereby an un-                            measurements).
+changing data assimilation system is used to provide a consistent                            During 2017e2018, a new reanalysis named ERA5 [15] will be
+reprocessing of meteorological observations, typically spanning an                        released. Contrary to its predecessor ERA-Interim [16], ERA5 has
+extended segment of the historical data record”. The products from                        hourly resolution and wind speed data is freely available at 100 m
+a reanalysis include many variables such as wind speeds, temper-                          height, i.e. relevant for modern wind turbines (WTs). The horizontal
+ature and atmospheric pressure and are used extensively for                               resolution is around 31 km, which is better than ERA-Interim and
+modelling wind power both in academia and industry. Examples of                           MERRA. The main objective of this paper is to compare the per-
+applications include generation of long wind power time series for                        formance of MERRA-2 and ERA5 in terms of modelling wind power,
+grid integration studies and long-term correction (LTC) of wind                           both for countries and for individual WTs. For the former, the
+speed measurements conducted prior to the construction of wind                            generation in Germany, Denmark, France, Sweden and Bonneville
+farms. An important advantage of reanalyses is that these are often                       Power Administration (BPA) in north-west USA were analysed. For
+freely and globally available.                                                            simplicity, BPA is denoted a “country” in the remaining of this pa-
+   Over the decades, new reanalyses have gradually become more                            per. For the analysis of individual WTs, hourly time series for more
+high-resolved in time and space [2]. During the last years, MERRA                         than 1000 Swedish units were obtained.
+[3] and MERRA-2 [1] (both produced by NASA) have been very                                   The most common approach for modelling country-wise wind
+popular for modelling wind power generation [4e14] due to, e.g.,                          power from reanalyses is to i) generate wind speed time series for
+the hourly temporal resolution and adequate height for wind                               each site, ii) transform wind speed to power via a power curve (PC)
+speeds (50 m). A general conclusion from the studies cited above is                       and iii) aggregate. Regarding point i), the reanalysis wind speeds
+                                                                                          can either be scaled so that a desired mean generation is met [9,10]
+                                                                                          or calculated from reanalysis data at different model heights [4,12]
+                                                                                          (possibly using statistical [6] or dynamical [17] downscaling). When
+    * Kungliga Tekniska Ho € gskolan, SE-100 44, Stockholm, Sweden.
+                                                                                          transforming wind speed to power, some authors [4,9] use one
+      E-mail address: olauson@gmail.com.
+
+https://doi.org/10.1016/j.renene.2018.03.056
+0960-1481/© 2018 Elsevier Ltd. All rights reserved.
+                                                               J. Olauson / Renewable Energy 126 (2018) 322e331                                               323
+
+
+generic PC while others [6,12] use farm speciﬁc ditto. It is common                      (50 m for MERRA-2 and 100 m for ERA-I) and that the colors thus
+to alter the original PCs, e.g. using smoother “multi-turbine” power                     represent different ranges of mean wind speeds. Although ERA5
+curves [4,12]. Especially for larger countries, it may be important to                   gives more correct patterns than MERRA-2 e.g. along the coast, it is
+handle the maximum country-wise output, which can be consid-                             obvious that none of the reanalyses are capable of resolving the
+erably lower than the installed capacity [4,10,12]. Post-processing                      local variations, especially in more complex terrain. Using rean-
+of the outputs at any of steps i-iii) is possible for improving the                      alyses directly for determining the mean wind speed at a site is
+results. Examples include correction of seasonal and diurnal biases                      therefore not recommended.
+[10] and noise addition for a better representation of observed wind
+power variability.                                                                       2.2. Wind power measurements and metadata
+    The remainder of the paper is structured in the following
+manner. First, the two reanalyses and all measurement datasets are                          In order to model country-wise generation and to evaluate the
+described. In Section 3, the methods used are presented, including a                     results, the following measurements and metadata were used:
+suggestion for a new metric describing the geographical di-
+mensions of a wind power system. Subsequently the results are                             1. Coordinates, capacity and, if available, commissioning and
+given and the paper is concluded with a short discussion.                                    decommissioning dates of each farm.
+                                                                                          2. Hourly measurements of nation-wide generation.
+                                                                                          3. Time series of the installed capacity corresponding to the
+2. Data
+                                                                                             measured generation. Since the wind farm database might be
+                                                                                             incomplete and that commissioning/decommissioning dates
+   Several different datasets were retrieved for the purpose of this
+                                                                                             might not be available, this time series can differ from the one
+study. The two reanalyses are described in Section 2.1 while mea-
+                                                                                             calculated from the wind farm data (item one in this list). The
+surements and metadata are described in Section 2.2.
+                                                                                             measured and modelled generation time series were therefore
+                                                                                             normalised to their corresponding capacity time series in order
+2.1. Reanalyses                                                                              to get comparable per unit generation; pp:u: ½t ¼ pMW ½t=pinst ½t.
+
+     In this work, the performance of MERRA-2 and ERA5 are                                  For Germany, Denmark and France, data were retrieved from the
+compared. Other freely available reanalyses also exist (e.g. ERA-                        “Open Power System Data” (OPSD) database (data packages
+Interim and JRA-55), but have lower spatiotemporal resolutions                           “Renewable power plants” version 2017-07-03 and “Time series”
+and heights for wind speed data.                                                         version 2017-07-09). Primary data are from various sources, for a
+     The ﬁrst version of MERRA, the “Modern-Era Retrospective                            complete list see Ref. [19]. Since coordinates for German offshore
+Analysis for Research and Applications”, was released in 2009. In                        farms were lacking or seemed suspicious, these were instead ob-
+early 2016 the production stopped and was replaced by MERRA-2                            tained from wikipedia.org. The latter source was also used for
+which is now updated in “near real-time”, i.e. data is available                         country-wise installed capacities (linear interpolation of end-of-
+with a couple of months lag. For the purpose of modelling wind                           year values was employed to calculate pinst ½t). BPA generation
+power, these two reanalyses perform similarly [12].                                      time series and farm metadata except coordinates were retrieved
+     The ﬁrst batch of the ERA5 dataset, produced by the European                        from Ref. [20]. Coordinates for BPA farms were obtained from on-
+Centre for Medium-Range Weather Forecasts (ECMWF), was                                   line sources; thewindpower.net, wikipedia.org and farm de-
+released in July 2017 and covers the period 2010e2016. Subse-                            velopers' web pages. The BPA generation time series is given with
+quently, ERA5 will span 1950 to near real-time. Some important                           ﬁve-minute resolution, so the data were averaged into hourly
+properties of MERRA-2 and ERA5 are shown in Table 1. For com-                            blocks.
+parison, data for ERA-Interim, the predecessor of ERA5, are also                            Generation measurements for individual Swedish WTs were
+given. ECMWF reanalyses are produced on reduced Gaussian grids,                          obtained from the Cesar database. This dataset can be retrieved by
+i.e. using different number of grid points along different latitudes                     request from the Swedish Energy Agency and a more thorough
+and thus keeping the grid point separation in metres approximately                       description can be found in Ref. [21]. Only wind turbines
+constant. Since the data is downloaded on a user-deﬁned regular                          commissioned year 2000 or later with a capacity of  1 MW and at
+lat/lon grid, the resolutions given in Table 1 are only approximate.                     least one year records were considered. Wind turbines for which
+Downloading with a higher resolution is possible, but this merely                        the rated capacity changed during the measurement period and
+implies an interpolation of the data.                                                    measurements taken for farms in aggregation were also excluded.
+     The spatial resolutions of ERA5 and MERRA-2 are illustrated                         In total, 1e6 year long time series for 1051 WTs remained to be
+qualitatively in Fig. 1. For comparison, mean wind speeds from the                       analysed.
+meso-scale model MIUU [18] (spatial resolution 0.5 km) are also                             For Sweden, generation time series for individual WTs but no
+shown. Note that data from the native model heights are shown                            coordinates were available. The latter were therefore estimated
+                                                                                         from the reanalyses grid points with the highest correlation be-
+                                                                                         tween modelled and measured generation. Since choosing the best
+Table 1
+                                                                                         ﬁtting data could potentially give overly optimistic results, a test
+Information on the two reanalyses considered in this study (MERRA-2 and ERA5).
+For comparison, data for ERA-Interim, the predecessor of ERA5, is also shown. The        was performed. Relatively exact coordinates for ten randomly
+spatial resolutions of the ERA reanalyses are approximate (see Section 2.1). In gen-     chosen WTs were found from the developers/owners web pages
+eral, wind speed data are available at several heights or pressure levels. Only the      and reanalyses time series were computed for these sites. The
+most proper for modelling wind power is given here.
+                                                                                         corresponding correlations to measurements were in principle
+                           MERRA-2           ERA-Interim          ERA5                   identical to those obtained from the best ﬁtting time series; the
+ Temporal resolution       1h                6h                   1h                     largest difference for a single WT was 0.001 and the average cor-
+ Spatial resolution        0:5  0:625     79 km (z0:75 )      31 km (z0:28 )        relations were the same within three digits precision. It was
+ Coverage                  1980e             1979e                2010e2016,             therefore concluded that estimating coordinates from the best
+                                                                  soon 1950e             ﬁtting reanalyses grid points does not skew the results (neither
+ Wind speed height         50 m              10 m                 100 m
+                                                                                         positively nor negatively). It can be mentioned that the mean
+324                                                             J. Olauson / Renewable Energy 126 (2018) 322e331
+
+
+
+
+Fig. 1. Mean wind speeds for ERA5 (at 100 m above ground) and MERRA-2 (50 m). For comparison, mean wind speeds from the meso-scale model MIUU [18] with a spatial
+resolution of 0.5 km are also shown. No numeric color bars are given since the comparison should only be seen as qualitative (one particular color does not represent the same mean
+wind speed in the three panels).
+
+
+
+distances between the correct and the estimated locations were                              3.1. Modelling hourly generation
+36 km for MERRA-2 and 15 km for ERA5.
+    Summary statistics of the country-wide measurements are                                    The hourly energy production for each unit (WT or farm) was
+shown in Table 2. “Capacity 1” and “Capacity 2” give the ﬁrst and                           modelled from reanalyses wind speeds and subsequently aggre-
+last samples of the capacity time series that were used to normalise                        gated to country-wise time series. The model was deliberately kept
+measured and modelled generation, respectively. These values can                            relatively simple and the same parameters (or rules for deter-
+sometimes, as described in the numbered list opening this section,                          mining parameters) were used for all countries. Because of this, no
+differ. Note that for France, no commissioning and decom-                                   separate training, validation and test sets were used. No formal
+missioning dates were available (Capacity 2 is constant), so all                            optimisation procedure was employed for trimming parameter
+farms were included in the simulations for the entire period. The                           values, only manual trial end error. All model parameters are
+“equivalent system radius” is a new metric for quantifying the                              described below and the chosen values are given in Table 3.
+system size and wind farm dispersion, which can be important for                               In horizontal, bi-linear interpolation of the four neighbouring
+wind power variability as well as the difﬁculty of modelling the                            grid points was employed, thus neglecting the impact from local
+generation, see Section 3.4. The capacity factor (CF) is the average                        topography. Based on earlier studies [2,6,17,21], statistical or
+p.u.-generation during the whole period. Note that aggregated
+Swedish generation was only studied during 2014e2015 while time
+series for individual WTs were studied for the whole concurrent
+                                                                                            Table 3
+periods of measurements and ERA5 data (between one and six                                  Parameter values used for modelling hourly generation for countries and individual
+years during 2010e2015).                                                                    wind turbines (WTs). See Section 3.1 for parameter descriptions. No formal opti-
+                                                                                            misation procedure was employed for ﬁnding parameter values, only manual trial
+                                                                                            end error.
+3. Methods
+                                                                                                                              Countries                          Individual WTs
+   This section contains four parts. Firstly, the methodology for                             Speciﬁc power                   360 W/m2                           360 W/m2
+modelling hourly generation is described; secondly, the method for                            Multi-turbine smoothing         1.5 m/s                            0.5 m/s
+identifying downtime of Swedish WTs is given; thirdly, long-term                              Internal losses                 10%                                15%
+correction is described and lastly a new metric for quantifying                               External loss factor            1.01  measured maximum            1
+                                                                                              b                               1/40                               1/40
+the size of a wind power system is proposed.
+
+
+Table 2
+Information on country-wise wind power measurements. “Capacity 1” and “Capacity 2” give the ﬁrst and last samples of the capacity time series that were used to normalise
+measured and modelled generation (see main text). The “equivalent system radius” is a metric describing the system size and wind farm dispersion, see Section 3.4.
+
+                                          Germany                      Denmark                        France                         Sweden                         BPA
+
+  Country code                            DE                           DK                             FR                             SE
+  Time period                             2016                         2015e2016                      2015e2016                      2014e2015                      2014e2015
+  Temporal resolution                     Hourly                       Hourly                         Hourly                         Hourly                         5 min
+  Capacity 1 (GW)                         44e50                        4.9e5.2                        9.3e12.1                       2.0e2.3                        4.5e4.8
+  Capacity 2 (GW)                         43e48                        4.7e5.2                        10.2                           2.0e2.3                        4.5e4.8
+  Equivalent system                       329                          166                            376                            471                            91
+  radius, req (km)
+  Capacity factor                         0.186                        0.303                          0.215                          0.329                          0.266
+                                                    J. Olauson / Renewable Energy 126 (2018) 322e331                                           325
+
+
+dynamical downscaling does, however, not necessarily implies                  measured generation is zero for an extended period of time, this is
+better results in terms of e.g. correlations with measurements. As            due to downtime.
+described below, the mean wind speed was also not taken directly                 For each WT, a generation time series was ﬁrst calculated with
+from reanalysis data.                                                         the method given in the previous section. For periods with zero
+    Since no information on rotor diameters were available, a power           actual generation for at least ﬁve hours, the corresponding mean
+curve corresponding to a speciﬁc rating (rating over swept rotor              reanalyses generation was computed. The period was considered
+area) of 360 W/m2 was used for all units. The power curve was ﬁrst            downtime if at least one of the following conditions was fulﬁlled:
+smoothed, i.e., transformed to a “multi-turbine” power curve, using
+a Gaussian distribution with standard deviation 1.5 m/s [10].                  1. The period is longer than one week
+    There are several types of losses in a wind farm. Wake losses,             2. The period is at least twelve hours and the corresponding
+mild icing, degraded blades etc. shift the power curve (a higher                  reanalysis mean is at least 0.05 p.u.
+wind speed is required in order to give a certain output) but does             3. The corresponding reanalysis mean is at least 0.15 p.u.
+not affect the maximum generation level. Downtime and some
+electrical losses can however lead to a lower maximum generation,                 In general, there is a trade-off between false positive and false
+at least for a country. Furthermore, reanalyses generally underes-            negative downtime classiﬁcations. If, for example, the threshold of
+timate the diversity of wind speeds; in reality, all farms in a country       ﬁve hours was to be lowered to three hours, additional downtime
+will never have wind speeds above rated simultaneously and thus               events would be correctly captured at the expense of increasing the
+the generation in countries like Germany, France and Sweden will              number of events falsely classiﬁed as downtime. The chosen pa-
+seldom exceed 0.8 p.u. In order to mimic these two different phe-             rameters give balanced results; when validating with actual
+nomena, denoted “internal” and “external” losses in Ref. [10], the            downtime records, there were 9% false negative and 8% false pos-
+incoming energy in the wind was reduced by a ﬁxed amount and                  itive errors (in relation to the true number of downtime hours) [21].
+the resulting energy time series were multiplied by a factor.                     After the downtime samples were removed, a new calculation of
+    As has been showed in Section 2.1, reanalyses are generally not           reanalysis generation was performed based on the new (higher)
+suitable for determining the mean wind speed at a particular site. In         measured CF. Note that downtime data was only removed for the
+the present study, hub heights were also not available, i.e. it was not       analysis of individual WTs, not for the analysis of aggregated
+possible to interpolate/extrapolate the wind speeds from different            Swedish data.
+reanalysis model heights. The mean wind speeds were therefore
+determined from the estimated CF of each farm (CFi), which was                3.3. Long-term correction
+calculated as
+                                                                                Long-term correction (LTC) is routinely used for ﬁnding the best
+CFi ¼ CFcountry þ b ui  ucountry ;                                  (1)      estimate of the long-term wind speed distribution at a site given a
+                                                                              shorter (one or a few years) measurement. A LTC can also be used to
+where CFcountry is the measured CF of the country in question, ui and         determine the long-term CF given a shorter generation time series,
+ucountry are the mean reanalyses wind speeds for the particular site          e.g. to see whether a new farm performs according to plan or to
+and the capacity-weighted mean for all sites in the country,                  analyse the value of a farm that is to be sold. All types of LTC
+respectively, and b is a parameter determining how much the mean              methods require some sort of long, preferably at least ten years,
+wind speeds inﬂuence the CFs. Note that ui and ucountry were                  reference time series. A relationship is established between the site
+computed for the reanalyses model heights, i.e. 50 m for MERRA-2              measurement and the reference during the period with concurrent
+and 100 m for ERA. For Denmark and Germany, separate calcula-                 data. This relationship is subsequently “fed” with the whole refer-
+tions were performed for onshore and offshore farms. The wind                 ence time series in order to determine the long-term distribution or
+speed time series were subsequently linearly scaled to the desired            mean of the variable of interest.
+means (the mean wind speeds that corresponds to the desired CFs),                 In recent years, reanalyses wind speeds have become the de
+i.e. assuming constant wind shears. Although this is obviously not            facto standard as reference time series due to their consistency and
+entirely correct, using time-varying wind shears give little or no            long records. Wind speed measurements from meteorological
+improvement of the model performance [10].                                    masts, generally 10 m high, can also be used but often have con-
+     For the modelling of generation for individual Swedish WTs,              sistency problems due to e.g. gradually growing vegetation and
+internal losses were increased to 15% and the external loss factor            changes in anemometry.
+was set to unity. The reason for not using any external losses was, of            In this work, the energy errors from using short, long-term
+course, that the generation for a single WT can sometimes be 1 p.u.           corrected generation time series of single WTs are evaluated. One
+The multi-turbine smoothing parameter was lowered to 0.5 m/s                  randomly chosen year of measurements (sample data/training
+since this gives a somewhat better representation of the output               period) and reanalyses wind speeds were used for predicting the
+from individual WTs.                                                          energy production for the remaining 1e5 years (out-of-sample
+     As a ﬁnal note, it should be recognised that the method outlined         data). Since at least two years of data is thus required, “only” 893
+above make use of the measured average CF and maximum gen-                    WTs were analysed. A simple “wind index” method was employed:
+eration, i.e. the modelled time series will have the correct averages
+and maxima.                                                                    1. A one-year period was randomly chosen as sample data and the
+                                                                                  corresponding CF was calculated.
+3.2. Identifying downtime                                                      2. Generation time series for the entire measurement period were
+                                                                                  modelled from ERA5 and MERRA-2 data. The mean wind speeds
+    When evaluating the performance of reanalyses in terms of                     were linearly scaled so that the CF during the training period
+modelling generation for individual WTs, downtime (stops due to                   matches measurements.
+e.g. maintenance and technical faults) will make the comparison                3. The predicted CF was taken as the average modelled generation
+less fair. A method for automatic detection of downtime was                       for out-of-sample data.
+therefore used and these data samples were removed. The basic
+idea was that if the modelled generation is relatively high while the             Note that independent LTCs were performed for each WT, i.e.,
+326                                                                               J. Olauson / Renewable Energy 126 (2018) 322e331
+
+
+the training periods were not the same. Since the results to some
+degree depend on the random choice of training periods, ten                                                                       X
+                                                                                                                                  N X
+                                                                                                                                    N
+different runs were performed.                                                                              Varðptot ½tÞ ¼                     Pi Pj si sj ri;j ;                   (2)
+    Small errors in such an exercise is not only of academic interest;                                                                i¼1 j¼1
+when, for instance, a farm is to be sold, the most important ﬁgure is
+often not the predicted generation but rather the generation that                                           where N is the number of farms, Pi is farm i's share of the total
+                                                                                                                          P
+will be achieved with a given certainty, e.g. 75% or 90%. A low                                             capacity (i.e. Pi ¼ 1), si is the standard deviation of pi ½t (the per
+                                                                                                                                  i
+uncertainty is thus worth a lot in monetary terms.
+                                                                                                            unit time series for farm i) and ri;j is the correlation between the
+                                                                                                            outputs for farms i and j. Assuming the same si for all farms and
+                                                                                                            using the common [24] correlation model
+
+3.4. Equivalent system radius
+                                                                                                            ri;j ¼ edi;j =D ;                                                       (3)
+   There are many possible candidates for quantifying the system
+size and/or dispersion of wind farms. Such metrics can be used for a                                        where di;j is the distance between farms i and j and D is a constant,
+general system description or as a proxy for wind power variability                                         Eq. (2) can be rewritten as
+and include, e.g., the system dimensions in North-South and West-
+East [22], the system area [8] and the (weighted) mean distance                                                                         X
+                                                                                                                                        N X
+                                                                                                                                          N
+between farms [23]. Although these metrics might be adequate,                                               Varðptot ½tÞ ¼ s2                      Pi Pj edi;j =D :                (4)
+there are some issues:                                                                                                                  i¼1 j¼1
+
+                                                                                                                We now want to ﬁnd req so that a uniform “wind power disk”
+  System dimensions and areas are the same no matter if the
+                                                                                                            with this radius will have the same variance as that obtained with
+   farms are evenly distributed of heavily concentrated in one part
+                                                                                                            Eq. (4). Let us denote the total output ptot;eq ½t. The variance of
+   of the system.
+  The area can be the same for various system shapes, although                                             ptot;eq ½t can, in analogue with Eq. (4) for the discrete case, be
+   wind power variability differs.                                                                          expressed as
+  The mean distance is inﬂuenced by the level of details of the                                                                 Z Z
+                                                                                                                          
+   dataset, e.g. whether coordinates are given for farms or WTs.                                            Var ptot;eq ½t ¼ s2     edi;j =D dPi dPj ;                             (5)
+   The mean distance also, in my opinion, gives a less intuitive
+                                                                                                                                           Aeq Aeq
+   feeling of the system dimensions.
+                                                                                                                                                    R
+    Because of these drawbacks, a new metric was developed: the                                             where Aeq is the area of our disk. Since dP ¼ 1, we can write
+                                                                                                                                                                           A
+“equivalent system radius” req . The idea is that a set of wind farms
+can be described by a disk of uniformly distributed wind power that
+                                                                                                                     dA
+has the same combined variance as the actual wind farm ﬂeet,                                                dP ¼            :                                                        (6)
+assuming that the correlation between generation of two farms                                                        preq
+                                                                                                                       2
+
+declines in an exponential fashion with separation distance. Before                                               In polar coordinates,
+proceeding with the derivation of the equation for req, the concept
+is illustrated in Fig. 2.
+                                                                                                            dA ¼ rdrdq            and                                                (7)
+    Let ptot ½t denote the per unit time series of the combined gen-
+eration for the actual farm distribution. The variance of ptot ½t is
+
+
+
+                                                                          Germany
+                                                         400                                                      Wind farms are shown in dark grey (the
+                                                                                                                  areas are proportional to the capacities).
+                                                         300
+                                                                                                                  The disks with radius r eq are shown in light
+                                                         200
+                                                                                                                  grey.
+                             Distance from centre (km)
+
+
+
+
+                                                         100
+
+                                                            0
+
+                                                         -100                                                                               BPA
+                                                                                                           200
+                                                         -200
+
+                                                         -300                                              100
+
+                                                         -400
+                                                                                                              0
+                                                         -500
+
+                                                         -600                                              -100
+                                                            -400   -200       0        200        400         -400     -300       -200      -100           0         100       200
+                                                                   Distance from centre (km)                                    Distance from centre (km)
+
+Fig. 2. Illustration of the equivalent system radius (req ) for Germany and BPA. Note that BPA farms are concentrated in a relatively small area which gives a small req as compared to
+the total system dimensions. In particular, the small farm at around (300,100) does not impact req much. For Germany, wind turbines with the same coordinates are plotted like
+one farm although this is not always the case.
+                                                                                        J. Olauson / Renewable Energy 126 (2018) 322e331                                                                               327
+
+
+                                                                                                                             judgment, the model performance for Sweden is medium good in
+      qﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ
+                                                                                                                           comparison to all ﬁve evaluated countries. Panel a shows a repre-
+di;j ¼ r 2i þ r 2j  2ri rj cos qi  qj                                                                         (8)          sentative 4000 sample excerpt of the time series of measured and
+                                                                                                                             modelled generation. In panel b, all data have been sorted from
+and Eq. (5) can thus be rewritten as                                                                                         highest to lowest, forming so called duration curves. Panel c
+
+
+
+
+                         Zreq                       Zreq        Z2p    Z2p              pﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ.
+                 s2                                                                   r 2i þr 2j 2ri rj cosðqi qj Þ D
+Var ptot;eq ½t ¼                                                            ri rj e                                             dri drj dqi dqj                                                                       (9)
+                  p2 req
+                      4
+                                         ri ¼0 rj ¼0 qi ¼0 qj ¼0
+
+
+
+
+                                                                                                                             demonstrates the distribution of changes of hourly generation. The
+     Combining Eq. (4) and Eq. (9) gives us                                                                                  magnitudes of these “step changes” are somewhat underestimated
+
+
+
+
+                                               Z req            Zreq   Z2p    Z2p                pﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ.
+X
+N X
+  N
+                                      1                                                          r2i þr 2j 2ri rj cosðqi qj Þ D
+                      di;j =D
+             Pi Pj e              ¼                                                    ri rj e                                             dri drj dqi dqj                                                         (10)
+i¼1 j¼1
+                                    p2 req
+                                        4
+                                                    ri ¼0
+                                                            rj ¼0 qi ¼0 qj ¼0
+
+
+
+
+                                                                                                                             by the model; the standard deviation of ERA5 step changes are
+   Equation (10) was solved numerically for req using D ¼ 500 km,                                                            around 8% lower than that for measurements (in relative terms),
+a common value in the literature [24]. For practical purposes, an                                                            see Table 4. Panel d, ﬁnally, gives a scatter plot of actual versus
+approximate solution of Eq. (10) sufﬁce. The left-hand side of Eq.                                                           predicted monthly CFs. For all months but one, the modelled and
+(10) can be computed easily, let us denote this sum x. A good                                                                measured CFs agree well. For February 2014, ERA5 predicts 0.40 but
+polynomial approximation of req for 0:22  x  1 is given in Fig. 3,                                                         the actual outcome was 0.32. A likely explanation for at least part of
+using D ¼ 500 km as before. The mean absolute residual of the ﬁt is                                                          the difference is icing losses (which are not modelled).
+0.5 km.                                                                                                                          Quantitative results for all countries and for both MERRA-2 and
+   Rather than quantifying variability by looking at the variance of                                                         ERA5 are presented in Table 4. The metrics considered are corre-
+generation, one might want to study the variance of changes in                                                               lations, root-mean-square errors (RMSE), mean absolute errors
+generation. As the correlation of changes is much lower than that                                                            (MAE), relative errors in the standard deviation of one hour step
+for generation itself, a lower value of D must be used. Since D ap-                                                          changes (sDP ) and RMSE of the duration curves (RMSEdur ). Note
+pears on both sides of Eq. (10), the value of req does however not                                                           that RMSE, MAE and RMSEdur are given in absolute terms, so e.g.
+change very much. As an example, using D ¼ 50 km instead of D ¼                                                              2.82% corresponds to an error of 0.0282 p.u. For sDP , the errors are
+500 km changes req with 4% and 8% for Germany and Denmark,                                                                 given in relative terms; þ12.8% implies that the standard deviation
+respectively. It should be mentioned that a lower value of D re-                                                             is 12.8% higher for the model than for measurements (e.g. 0.0338
+quires a higher quality of the farm coordinates since the estimated                                                          p.u. versus 0.03 p.u.). All metrics in Table 4 are calculated for hourly
+correlations become more sensitive to farm separation distances.                                                             data.
+
+
+4. Results
+                                                                                                                                               1200
+   This section is divided into two subsections. First an evaluation                                                                                               r eq = - 5793.3*x 5 + 20815*x 4 - 30283*x 3 +
+                                                                                                                                               1000
+of the modelling of country-wise generation is presented and
+second results for individual Swedish WTs are given.                                                                                                                        23081*x 2 - 10269*x + 2446.5
+                                                                                                                                               800
+                                                                                                                                   r eq (km)
+
+
+
+
+                                                                                                                                                                                        Solutions to integral
+4.1. Country-wise generation                                                                                                                   600                                      Polynomial fit
+
+   The challenges of modelling wind power generation in different                                                                              400
+countries vary with e.g. system size, installed capacity, terrain
+                                                                                                                                               200
+complexity and wind regimes. A large system with many WTs is
+generally easier to model since the errors for individual WTs are
+                                                                                                                                                 0
+partially cancelled out; the correlations between errors reduce with                                                                                   0.3   0.4      0.5       0.6    0.7     0.8     0.9         1
+separation distance. Because of this, the most important results of                                                                                                               x
+this paper are not the absolute errors but rather the difference in
+performance between MERRA-2 and ERA5.                                                                                        Fig. 3. Polynomial approximation of the equivalent system radius (req ) as a function of
+                                                                                                                             x, the left-hand side of Eq. (10). The variable x can be interpreted as the per unit
+   In order to give a reference frame for the quantitative results                                                           variance of a country-wise time series as compared to that for individual wind turbines
+that will soon be presented, some graphical examples (Sweden                                                                 (WTs). The approximation is valid for D ¼ 500 km, where D is the parameter deter-
+modelled with ERA5 data) are shown in Fig. 4. As an overall                                                                  mining how fast correlations decline with WT separation distance.
+328                                                                              J. Olauson / Renewable Energy 126 (2018) 322e331
+
+
+                                                                                                             a) Time series
+                                  1
+            Generation (p.u.)
+
+
+
+
+                                0.5
+
+
+
+
+                                  0
+                                                      500            1000                        1500               2000                                             2500                           3000             3500               4000
+                                                                                                            Hour in year 2015
+                                                                                                            c) Step changes                                                                                  d) Monthly CFs
+                                             b) Duration curves                                                                                                                               0.6
+                                  1                                                     103
+
+                                                      Measurements                                                                                                                            0.5
+
+
+
+
+                                                                                                                                                                               Measurements
+            Generation (p.u.)
+
+
+
+
+                                0.8
+                                                      Model (ERA5)                      10   2
+                                                                                                                                                                                              0.4
+                                0.6
+                                                                                Count
+
+
+                                                                                                                                                                                              0.3
+                                0.4
+                                                                                        101
+                                                                                                                                                                                              0.2
+                                0.2
+                                                                                                                                                                                              0.1
+                                  0                                                     100                                                                                                      0.1   0.2     0.3     0.4        0.5
+                                      0                0.5                  1                      -0.1     -0.05    0           0.05                               0.1
+                                                                                                        One hour change (p.u.)                                                                                     ERA5
+                                          Exceedance probability
+
+Fig. 4. Illustration of the model performance (ERA5 data used for modelling the Swedish wind power generation). Panel a shows a representative 4000 sample excerpt of the time
+series of measured and modelled generation. Panel b gives duration curves (generation sorted from highest to lowest) of all data. Panel c shows the distribution of one hour step
+changes, i.e. the changes in average power from one hour to the next. In panel d, a scatter plot of modelled and measured monthly capacity factors (CFs) is given. The straight line
+shows the desired one-to-one relationship.
+
+
+
+Table 4                                                                                                                                                       1.2
+Quantitative results for the modelling of hourly, county-wise wind power. The
+                                                                                                                                                                                                                                          RMSE
+                                                                                                                           Errors for ERA5 relative MERRA-2
+
+
+
+
+metrics considered are correlations, root-mean-square errors (RMSE), mean abso-
+                                                                                                                                                               1                                                                          MAE
+lute errors (MAE), relative errors in the standard deviation of one hour step changes
+(sDP ) and RMSE of the duration curves (RMSEdur ). Note that RMSE, MAE and RMSEdur
+are given in absolute terms, so e.g. 2.82% corresponds to an error of 0.0282 p.u. For                                                                         0.8
+sDP , the errors are given in relative terms; þ12.8% implies that the standard devi-
+ation is 12.8% higher for the model than for measurements (e.g. 0.0338 p.u. versus
+0.03 p.u.).                                                                                                                                                   0.6
+
+  Country                       Reanalysis    Correlation    RMSE    MAE        Error sDP           RMSEdur
+                                                                                                                                                              0.4
+  Germany                       MERRA-2       0.982          2.82%   2.06%      þ12.8%              0.43%
+                                ERA5          0.987          2.35%   1.66%      þ7.5%               0.44%
+  Denmark                       MERRA-2       0.973          5.40%   3.75%      11.7%              1.75%                                                     0.2
+                                ERA5          0.973          5.45%   3.71%      6.0%               1.52%
+  France                        MERRA-2       0.975          3.49%   2.63%      þ17.2%              0.79%
+                                                                                                                                                               0
+                                ERA5          0.982          2.97%   2.25%      þ14.3%              1.00%                                                                 DE                     DK           FR             SE           BPA
+  Sweden                        MERRA-2       0.950          6.10%   4.58%      8.7%               1.27%
+                                ERA5          0.975          4.40%   3.21%      7.9%               0.52%             Fig. 5. Root-mean-square errors (RMSE) and mean absolute errors (MAE) for ERA5 in
+  BPA                           MERRA-2       0.756          18.4%   13.3%      10.4%              6.09%             relation to those for MERRA-2. A bar of e.g. height 0.8 thus implies that the considered
+                                ERA5          0.945          9.10%   6.06%      1.5%                2.34%             metric is 20% lower for ERA5 than for MERRA-2. In average, the RMSE is reduced with
+                                                                                                                      22% and the MAE is reduced with 24% by using ERA5 data.
+
+
+
+   For a clearer comparison of the performance of the reanalyses,                                                     using a reanalysis with higher spatial resolution.
+Fig. 5 shows the RMSE and MAE of ERA5 normalised to those for                                                             The performance of MERRA for modelling wind generation in
+MERRA-2 (a bar of e.g. height 0.8 thus implies that the errors are                                                    several different European countries has been evaluated earlier
+20% lower for ERA5 than for MERRA-2). In average, the RMSE is 22%                                                     [6,12]. The results in this work (correlation and RMSE) for MERRA-2
+lower and the MAE is 24% lower. Large differences however exist                                                       are comparable or better, which indicates that the methodology
+between the ﬁve countries. For Denmark, the MERRA-2 and ERA5                                                          and measurement data quality are adequate. One should be careful
+results are very similar. Likely, this can be explained by the ﬂat                                                    in drawing too far-reaching conclusions on the pros and cons of the
+terrain and lack of forest; the beneﬁt of a higher model resolution is                                                different modelling approaches and reanalyses since the studied
+limited for such conditions. For BPA, on the other hand, the errors                                                   time periods were not the same and that different WT databases
+are around 50% lower for ERA5. In comparison to Denmark, the                                                          were used. With that said, it is interesting to note that the perfor-
+equivalent system radius of BPA is much lower and the surrounding                                                     mance of ERA5 seem to be better than that of “EMHIRES”, a dataset
+terrain is more complex. As a consequence, the generation is more                                                     obtained by statistically downscaling MERRA data [6], for the
+volatile in the BPA area; the standard deviation of one hour step                                                     countries studied here.
+changes is for instance 0.048 p.u. as compared to 0.028 p.u. for                                                          When comparing the Swedish results here to those in Ref. [10],
+Denmark. Taken together, these factors increase the beneﬁts of                                                        the errors are somewhat higher and the correlation is lower. The
+                                                             J. Olauson / Renewable Energy 126 (2018) 322e331                                                                         329
+
+
+main explanation is that only modern WTs were included in this                                                     a) Correlation                                b) RMSE (p.u.)
+study. These are generally located in more complex terrain (hilly
+                                                                                            0.9                                                 0.3
+forests) and are more exposed to icing than the early WTs which
+were erected mainly in open landscape in southern Sweden. The CF                            0.8                                                0.25
+for the WTs studied here is around 35% higher than for those                                                                                    0.2
+studied in Ref. [10], which tend to increase the per unit errors. The                       0.7
+                                                                                                                                               0.15
+model in Ref. [10] was also more detailed, e.g. accounting for sea-                         0.6
+sonal/diurnal biases and direction dependent losses. Finally,                                                                                   0.1
+MERRA-2 seem to perform slightly worse than MERRA in Sweden                                                    MERRA-2        ERA5                       MERRA-2             ERA5
+[12]. A ﬁnal note on the modelling of Swedish, aggregated gener-
+ation is that only the average national CF was used as input to the                                                c) MAE (p.u.)                            d) RMSE dur (p.u.)
+model, i.e. not information on the measured CFs of individual WTs.
+Using this extra information does however, surprisingly enough,                             0.2                                                0.06
+not improve the results at all.
+                                                                                          0.15                                                 0.04
+
+
+4.2. Individual WTs                                                                         0.1                                                0.02
+
+                                                                                          0.05
+   In this section, results are given for modelling of individual                                              MERRA-2        ERA5                       MERRA-2             ERA5
+Swedish WTs. As described in Section 3.2, periods classiﬁed as
+downtime were ﬁrst removed. Table 5 gives mean and median                               Fig. 6. Boxplots of the results for 1051 Swedish wind turbines. On each box, the central
+                                                                                        mark is the median, the edges of the box represent the 25th and 75th percentiles and
+values of correlations, RMSE, MAE and RMSE of duration curves for
+                                                                                        whiskers extend to the most extreme data. For an explanation of the metrics, see
+the 1051 analysed WTs. In the last column, correlations of monthly                      Table 4.
+generation are given (only months with at least 300 valid data
+samples were considered). Boxplots of the analysed hourly metrics
+are given in Fig. 6. On each box, the central mark is the median, the
+edges of the box represent the 25th and 75th percentiles and
+whiskers extend to the most extreme data. It is clear from Table 5
+and Fig. 6 that ERA5 performs better than MERRA-2 in all ana-                                                                                              Measurements
+                                                                                                         100
+lysed aspects. One can note that the median performance is always
+                                                                                          PSD estimate
+
+
+
+
+better than mean. This is due to very large errors for a few WTs.
+   Neither MERRA-2 nor ERA5 is capable of reproducing the vari-
+ability of individual WTs; the measured ﬂuctuations are much                                             10-2
+larger in magnitude than those obtained from reanalyses. This is
+not surprising since coarse models are not able to reproduce the                                                                                                 ERA5
+ﬂuctuations at a local site. In average, the standard deviation of one
+                                                                                                              -4
+hour step changes are underestimated by 49% and 43% by the                                               10
+                                                                                                                                                         MERRA-2
+models based on MERRA-2 and ERA5 data, respectively. A Welch
+power spectral density estimate [25] can be used to illustrate the
+magnitude of ﬂuctuations of different frequencies. In Fig. 7, a                                                    (1 m) -1    (1 w) -1               (1 d) -1                  (2 h) -1
+representative example is given, using 50 segments to reduce the                                                                            Frequency
+noise and make the graph easier to interpret. For frequencies higher
+                                                                                        Fig. 7. Representative example of Welch power spectral density (PSD) estimates for
+than around ð1 dayÞ1 , the spectra for modelled generation start to                    one wind turbine (WT). It is clear that the variability of the generation for a single WT
+deviate from that for measurements. At the highest resolvable                           is underestimated by both reanalyses (however, somewhat less by ERA5).
+frequency, the difference is large, in particular for MERRA-2.
+   Although the variability of an individual WT is underestimated,
+that for aggregated country-wise generation might not be. This is                       during the remaining 1e5 years (out-of-sample data). Note that all
+because the correlations between different time series are over-                        results given in this section are means from ten different realisa-
+estimated by the models and consequently the modelled genera-                           tions. Results for the 893 studied WTs are shown in Table 6. For
+tion is smoothed more by aggregation. From Table 4, the variability                     comparison, results are also given for the “Naïve estimate” which is
+as quantiﬁed by the standard deviation of one hour step changes is                      simply assuming the same capacity factor as for the sample data. All
+overestimated for some countries and underestimated for some.                           three estimates are in principle unbiased which implies that the
+The absolute mismatch is always lower for ERA5.                                         standard deviations of the errors are similar to the RMSEs.
+   Next, energy errors from long-term correction (LTC) are evalu-                          First, one should note that the errors are considerably lower
+ated. As described in Section 3.3, one randomly chosen year was                         with a proper LTC than with the Naïve estimator. This is of course
+used as sample data in order to predict the energy production                           not surprising, but nevertheless important. In conclusion, the
+
+
+Table 5
+Results for the modelling of generation for individual wind turbines. Means and medians for the 1051 analysed WTs are given. For an explanation of the metrics, see Table 4.
+
+                                        Correlation                    RMSE                               MAE                       RMSEdur                         Monthly correlation
+
+ MERRA-2 (mean)                         0.802                          19.1%                              13.2%                     2.94%                           0.922
+ ERA5 (mean)                            0.868                          15.8%                              10.6%                     1.92%                           0.964
+ MERRA-2 (median)                       0.812                          18.3%                              12.6%                     2.71%                           0.935
+ ERA5 (median)                          0.874                          15.3%                              10.3%                     1.66%                           0.973
+330                                                             J. Olauson / Renewable Energy 126 (2018) 322e331
+
+Table 6                                                                                   energy production during the remaining period). As a matter of
+Energy errors in long-term correction for 893 individual Swedish wind turbines            fact, using one year of measurements long-term corrected with
+(WTs). Both root-mean-square errors (RMSE) and mean absolute errors (MAE) are
+given. For each WT, one randomly chosen year of data was used to train a model
+                                                                                          ERA5 gives slightly more accurate estimates than using two years of
+which was subsequently used to predict the energy production during the                   measurements long-term corrected with MERRA-2. The latter
+remaining 1e5 years of out-of-sample data. The Naïve estimator assumes the same           result is however not statistically signiﬁcant. This is good news for
+capacity factor as for the training period. The results are means from ten realisations   the wind industry since lower uncertainties imply reduced risks
+and normalised to the measured generation.
+                                                                                          and increased project values. Apart from the better performance,
+                                             MAE                              RMSE        ERA5 will also soon be available from 1950 to near real-time, i.e. for
+  Naïve estimate                             7.42%                            9.26%       a longer period than most other reanalyses.
+  MERRA-2                                    3.07%                            4.00%           The proposed metric “equivalent system radius” has its advan-
+  ERA5                                       2.43%                            3.23%       tages as compared to earlier metrics for quantifying the size of a
+                                                                                          wind power system. Most importantly, it is based on the smoothing
+                                                                                          of wind power ﬂuctuations from geographical dispersion, which is
+energy errors are around 20% lower for ERA5 than for MERRA-2. If                          often an important characteristic when the system size is to be
+two years' worth of data are used for training the models, the errors                     quantiﬁed. Unfortunately, the equation for req turned out to be
+for both reanalyses are reduced with around 18%. This means that                          quite cumbersome and had to be solved numerically. Although a
+one year of measurements long-term corrected with ERA5 actually                           polynomial approximation works ﬁne for practical purposes, an
+gives slightly more accurate estimates than two years of mea-                             analytic solution to the integral would be a welcome contribution.
+surements long-term corrected with MERRA-2.                                                   In this work, a relatively simple and generic wind power model
+    In order to validate the robustness of the results, two-tailed t-                     was chosen and data on e.g. hub heights and farm speciﬁc power
+tests were performed, testing the null hypothesis that the differ-                        curves were not available. An important conclusion is that good
+                                                    
+ences in absolute errors, i.e. EERA5;i   EMERRA2;i , come from a                     results (generally equally or better than in earlier work) were still
+(normal) distribution with mean equal to zero. Using one year                             obtained. By including bias-correction and trimming the model
+sample data for both reanalyses, the mean difference is 0.64                             harder for a speciﬁc country, somewhat better results can however
+percentage points (pp) and the 95% conﬁdence interval is                                  be achieved [10]. Likely, the improvement would be larger for
+(0.79, 0.49) pp. The null hypothesis can thus be rejected on the                        MERRA-2 since e.g. the biases in seasonal and diurnal wind pat-
+0.05 signiﬁcance level (or any other meaningful level) and we can                         terns are larger. In practice, the models used in both research and
+conclude that ERA5 performs better than MERRA-2. With one year                            industry are however also relatively simple, i.e. the results pre-
+training data for ERA5 and two years training data for MERRA-2, the                       sented here are representative for the beneﬁts of using the more
+corresponding ﬁgures are 0.11 (0.31, 0.09) pp, i.e. the difference                      high-resolved ERA5.
+is not statistically signiﬁcant. For veriﬁcation, 10,000 samples                              A common application of reanalysis based wind power models
+bootstrap tests were also performed; the results were identical                           is to study hypothetical, highly renewable power systems [8,11]. In
+within the precision given above.                                                         a future with more offshore wind power, higher hub heights and
+    In Ref. [21], correlations between measurements and generation                        lower speciﬁc rating, the capacity factors will be higher and the
+modelled from MERRA, ERA-Interim and ConWx (a dataset                                     WTs will more often generate at or near rated capacity. Even for
+dynamically downscaled from ERA-Interim) were analysed. It was                            large countries, the maximum generation will thus be closer to 1
+concluded that MERRA and ConWx performed similarly, which was                             p.u. than today. Here, the maximum generation in a country was
+somewhat surprising given the higher spatial resolution of ConWx.                         determined from measurements (around 0.8 p.u. for larger coun-
+Similar results have however been seen also in earlier work [2]; a                        tries). A better modelling approach for future scenarios might be to
+higher resolution does not guarantee better performance. As has                           add multivariate noise to the wind speed time series and simulate
+already been mentioned, the WTs chosen for the current work are                           downtime stochastically. If a proper model is set up, the spectra,
+more often located in complex terrain and suffer more severe icing                        correlations, maximum generation etc. will be correct both for in-
+losses than Swedish WTs in general. The average correlation obtain                        dividual WTs and country-wise generation (at the expense of
+for MERRA-2 here is thus lower than that for MERRA in Ref. [21]                           increasing the errors to some extent).
+(0.80 versus 0.84). Despite the tougher modelling conditions, the
+average correlation for ERA5 is however higher (0.87).                                    Acknowledgements
+
+                                                                                             This work was conducted within the StandUP for Energy stra-
+5. Concluding discussion                                                                  tegic research framework and was funded by Vindforsk through
+                                                                                          contract 40290-1. Energimyndigheten, ECMWF, NASA, BPA and
+   In this work, MERRA-2 and the new reanalysis ERA5 were                                 OPSD provided data. The Matlab function for projecting latitudes
+compared in terms of modelling wind power, both for countries                             and longitudes onto an azimuthal equidistant image was written by
+and for individual wind turbines. The main conclusion is that ERA5                        Kurt von Laven. The method for solving quadruple integrals in
+performs better in all analysed aspects. As an average for the ﬁve                        Matlab was inspired by Mike Hosea. Dorothe   e Vallot and Jonatan
+studied countries, the mean absolute errors in modelled hourly                            Samuelsson are acknowledged for their valuable comments on the
+generation (when compared to measurements) were 24% lower for                             equivalent system radius method. Lasse Johansson is acknowledged
+ERA5. For the small BPA system, the errors were roughly 50% lower.                        for the idea of approximating unknown WT coordinates from co-
+Correlations were also higher and the mismatches in standard                              ordinates of the best ﬁtting reanalyses time series.
+deviations of one hour step changes, a common variability metric,
+were lower.                                                                               References
+   ERA5 also performed better in terms of modelling generation for
+the 1051 individual Swedish WTs that were studied. The average                                                                rez, R. Todling, A. Molod, L. Takacs, C.A. Randles,
+                                                                                            [1] R. Gelaro, W. McCarty, M.J. Sua
+correlation in hourly data was 6.6% points higher and the average                               A. Darmenov, M.G. Bosilovich, R. Reichle, K. Wargan, L. Coy, R. Cullather,
+                                                                                                C. Draper, S. Akella, V. Buchard, A. Conaty, A.M. da Silva, W. Gu, G.-K. Kim,
+MAE was 20% lower. A similar reduction was seen for the long-term                               R. Koster, R. Lucchesi, D. Merkova, J.E. Nielsen, G. Partyka, S. Pawson,
+correction energy errors (using one year of data to predict the                                 W. Putman, M. Rienecker, S.D. Schubert, M. Sienkiewicz, B. Zhao, The Modern-
+                                                                  J. Olauson / Renewable Energy 126 (2018) 322e331                                                               331
+
+     Era retrospective analysis for research and applications, version 2 (MERRA-2),         [13] M. McPherson, T. Sotiropoulos-Michalakakos, L.D. Harvey, B. Karney, An open-
+     J. Clim. 30 (14) (2017) 5419e5454, https://doi.org/10.1175/JCLI-D-16-0758.1.                access web-based tool to access global, hourly wind and solar PV generation
+           o, E. Berge, O. Undheim, R. Klinkert, R.E. Bredesen, Long-term Correction
+ [2] S. Lile                                                                                     time-series derived from the MERRA reanalysis dataset, Energies 10 (7)
+     of Wind Measurements - State-of-the-art, Guidelines and Future Work, Tech.                  (2017) 1007, https://doi.org/10.3390/en10071007.
+     rep., Elforsk report 13:18, Jan. 2013.                                                 [14] S. Liao, W. Yao, X. Han, J. Wen, S. Cheng, Chronological operation simulation
+ [3] M.M. Rienecker, M.J. Suarez, R. Gelaro, R. Todling, J. Bacmeister, E. Liu,                  framework for regional power system under high penetration of renewable
+     M.G. Bosilovich, S.D. Schubert, L. Takacs, G.-K. Kim, S. Bloom, J. Chen, D. Collins,        energy using meteorological data, Appl. Energy 203 (2017) 816e828, https://
+     A. Conaty, A. da Silva, W. Gu, J. Joiner, R.D. Koster, R. Lucchesi, A. Molod,               doi.org/10.1016/j.apenergy.2017.06.086.
+     T. Owens, S. Pawson, P. Pegion, C.R. Redder, R. Reichle, F.R. Robertson,               [15] ERA5 data documentation, Available online: https://software.ecmwf.int/wiki/
+     A.G. Ruddick, M. Sienkiewicz, J. Woollen, MERRA: NASA's modern-era retro-                   display/CKB/ERA5þdataþdocumentation (Accessed: 2017-07-18).
+     spective analysis for research and applications, J. Clim. 24 (2011) 3624e3648,         [16] D.P. Dee, S.M. Uppala, A.J. Simmons, P. Berrisford, P. Poli, S. Kobayashi,
+     https://doi.org/10.1175/JCLI-D-11-00015.1.                                                  U. Andrae, M.A. Balmaseda, G. Balsamo, P. Bauer, P. Bechtold, A.C.M. Beljaars,
+ [4] D.J. Cannon, D.J. Brayshaw, J. Methven, P.J. Coker, D. Lenaghan, Using rean-                L. van de Berg, J. Bidlot, N. Bormann, C. Delsol, R. Dragani, M. Fuentes, A.J. Geer,
+     alysis data to quantify extreme wind power generation statistics: a 33 year                 L. Haimberger, S.B. Healy, H. Hersbach, E.V. Ho       lm, L. Isaksen, P. Kållberg,
+     case study in Great Britain,, Renew. Energy 75 (2015) 767e778, https://                     M. Ko €hler, M. Matricardi, A.P. McNally, B.M. Monge-Sanz, J.-J. Morcrette, B.-
+     doi.org/10.1016/j.renene.2014.10.024.                                                       K. Park, C. Peubey, P. de Rosnay, C. Tavolato, J.-N. The paut, F. Vitart, The ERA-
+ [5] A. Cosseron, U.B. Gunturu, C.A. Schlosser, Characterization of the wind power               Interim reanalysis: conﬁguration and performance of the data assimilation
+     resource in europe and its intermittency, Energy Procedia 40 (2013) 58e66.                  system, Q. J. R. Meteorol. Soc. 137 (656) (2011), https://doi.org/10.1002/
+     https://doi.org/10.1016/j.egypro.2013.08.008.                                               qj.828.
+ [6] I. Gonz alez-Aparicio, F. Monforti, P. Volker, A. Zucker, F. Careri, T. Huld,         [17] E. Nun ~ o, P. Maule, A. Hahmann, N. Cutululis, P. Sørensen, I. Karagali, Simula-
+     J. Badger, Simulating European wind power generation applying statistical                   tion of transcontinental wind and solar pv generation time series, Renew.
+     downscaling to reanalysis data, Appl. Energy 199 (2017) 155e168. https://doi.               Energy 118 (2018) 425e436. https://doi.org/10.1016/j.renene.2017.11.039.
+     org/10.1016/j.apenergy.2017.04.066.                                                    [18] H. Bergstro  € m, Boundary-layer modelling for wind climate estimates, Wind
+ [7] W.L. Henson, J.G. McGowan, J.F. Manwell, Utilizing reanalysis and synthesis                 Eng. 25 (5) (2001) 289e299, https://doi.org/10.1260/030952401760177864.
+     datasets in wind resource characterization for large-scale wind integration,           [19] Open Power System Data, Available online: https://data.open-power-system-
+     Wind Eng. 36 (1) (2012) 97e109, https://doi.org/10.1260/0309-524X.36.1.97.                  data.org (Accessed: 2017-08-02).
+ [8] M. Huber, D. Dimkova, T. Hamacher, Integration of wind and solar power in              [20] Wind generation and total load in the BPA balancing authority, Available
+     Europe: Assessment of ﬂexibility requirements, Energy 69 (2014) 236e246,                    online:      https://transmission.bpa.gov/Business/Operations/Wind/(Accessed:
+     https://doi.org/10.1016/j.energy.2014.02.109.                                               2017-08-09).
+ [9] M.L. Kubik, D.J. Brayshaw, P.J. Coker, J.F. Barlow, Exploring the role of rean-        [21] J. Olauson, P. Edstro € m, J. Ryde
+                                                                                                                                  n, Wind turbine performance decline in Sweden,
+     alysis data in simulating regional wind generation variability over Northern                Wind Energy (2017) 1e5, https://doi.org/10.1002/we.2132.
+     Ireland, Renew. Energy 57 (2013) 558e561, https://doi.org/10.1016/                     [22] H. Holttinen, Hourly wind power variations in the Nordic countries, Wind
+     j.renene.2013.02.012.                                                                       Energy 8 (2) (2005) 173e195, https://doi.org/10.1002/we.144.
+[10] J. Olauson, M. Bergkvist, Modelling the Swedish wind power production using            [23] S.M. Fisher, J.T. Schoof, C.L. Lant, M.D. Therrell, The effects of geographical
+     MERRA reanalysis data, Renew. Energy 76 (2015) 717e725. https://doi.org/10.                 distribution on the reliability of wind energy, Appl. Geogr. 40 (2013) 83e89.
+     1016/j.renene.2014.11.085.                                                                  https://doi.org/10.1016/j.apgeog.2013.01.010.
+[11] J. Olauson, M.N. Ayob, M. Bergkvist, N. Carpman, V. Castellucci, A. Goude,             [24] C.M. St Martin, J.K. Lundquist, M.A. Handschy, Variability of interconnected
+     D. Lingfors, R. Waters, J. Widen, Net load variability in Nordic countries with a          wind plants: correlation length and its dependence on variability time scale,
+     highly or fully renewable power system, Nature Energy 1 (2016) 16175,                       Environ. Res. Lett. 10 (4) (2015), 044004, https://doi.org/10.1088/1748-9326/
+     https://doi.org/10.1038/nenergy.2016.175.                                                   10/4/044004.
+[12] I. Staffell, S. Pfenninger, Using bias-corrected reanalysis to simulate current        [25] P.D. Welch, The use of fast fourier transform for the estimation of power
+     and future wind power output, Energy 114 (2016) 1224e1239, https://                         spectra: a method based on time averaging over short, modiﬁed periodo-
+     doi.org/10.1016/j.energy.2016.08.068.                                                       grams, in: IEEE Trans. Audio and Electroacoust. AU-15, 1967, pp. 70e73.
+

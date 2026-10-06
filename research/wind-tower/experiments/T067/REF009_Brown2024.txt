@@ -1,0 +1,1092 @@
+Wind Energ. Sci., 9, 1791–1810, 2024
+https://doi.org/10.5194/wes-9-1791-2024
+© Author(s) 2024. This work is distributed under
+the Creative Commons Attribution 4.0 License.
+
+
+
+
+            One-to-one aeroservoelastic validation of operational
+                 loads and performance of a 2.8 MW wind
+                        turbine model in OpenFAST
+               Kenneth Brown1 , Pietro Bortolotti2 , Emmanuel Branlard3 , Mayank Chetan2 , Scott Dana2 ,
+              Nathaniel deVelder1 , Paula Doubrawa2 , Nicholas Hamilton2 , Hristo Ivanov2 , Jason Jonkman2 ,
+                                        Christopher Kelley1 , and Daniel Zalkind2
+                                       1 Sandia National Laboratories, Albuquerque, NM, USA
+                                     2 National Renewable Energy Laboratory, Golden, CO, USA
+                   3 Mechanical and Industrial Engineering, University of Massachusetts, Amherst, MA, USA
+
+                                     Correspondence: Kenneth Brown (kbrown1@sandia.gov)
+
+                                     Received: 4 December 2023 – Discussion started: 16 January 2024
+                                Revised: 14 June 2024 – Accepted: 2 July 2024 – Published: 23 August 2024
+
+        Abstract. This article presents a validation study of the popular aeroservoelastic code suite OpenFAST leverag-
+        ing weeks of measurements obtained during normal operation of a 2.8 MW land-based wind turbine. Measured
+        wind conditions were used to generate one-to-one turbulent flow fields (i.e., comparing simulation to measure-
+        ment in 10 min increments, or bins) through unconstrained and constrained assimilation methods using the kine-
+        matic turbulence generators TurbSim and PyConTurb. A total of 253 bins of 10 min of normal turbine operation
+        were selected for analysis, and a statistical comparison in terms of performance and loads is presented. We show
+        that successful validation of the model was not strongly dependent on the type of inflow assimilation method
+        used for mean quantities of interest, which had median modeling errors per wind-speed interval generally within
+        5 %–10 % of the measurement. The type of inflow assimilation method did have a larger effect on the fatigue
+        predictions for blade-root flapwise and tower-base fore–aft quantities, which surprisingly saw larger errors from
+        the assumed higher-fidelity assimilation methods. Avenues for further work are discussed and include possible
+        improvements to the aerodynamic, structural, and controller modeling that may offer insight on the origin of the
+        up to ∼ 40 % median overprediction of fatigue for these quantities.
+
+
+
+Copyright statement. Sandia National Laboratories is a multi-           ally sponsored research in accordance with the DOE Public Access
+mission laboratory managed and operated by the National Technol-        Plan.
+ogy & Engineering Solutions of Sandia, LLC (NTESS), a wholly               This work was authored in part by the National Renewable En-
+owned subsidiary of Honeywell International Inc., for the U.S.          ergy Laboratory, operated by Alliance for Sustainable Energy, LLC,
+Department of Energy’s National Nuclear Security Administration         for the U.S. Department of Energy (DOE) under contract no. DE-
+(DOE/NNSA) under contract DE-NA0003525. This written work               AC36-08GO28308.
+is authored by an employee of NTESS. The employee, not NTESS,
+owns the right, title, and interest in and to the written work and is
+responsible for its contents. Any subjective views or opinions that     1   Introduction
+might be expressed in the written work do not necessarily represent
+the views of the U.S. Government. The publisher acknowledges that       Aeroservoelastic turbine models based on blade element mo-
+the U.S. Government retains a non-exclusive, paid-up, irrevocable,      mentum theory (BEMT) and equivalent beam models remain
+world-wide license to publish or reproduce the published form of        at the center of design and certification processes for wind
+this written work or allow others to do so, for U.S. Government         turbines thanks to the balance they strike between accuracy
+purposes. The DOE will provide public access to results of feder-       and computational efficiency (Van Kuik et al., 2016). The
+
+
+Published by Copernicus Publications on behalf of the European Academy of Wind Energy e.V.
+1792                 K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+multiphysics tool, OpenFAST (Jonkman and Sprague, 2021),           constrained and constrained approaches. They found that the
+which is actively developed at the National Renewable En-          unconstrained approach produced 27 % and 12 % underpre-
+ergy Laboratory, is one of these models. Over the years,           diction of the tower-bottom fore–aft and blade-root flapwise
+OpenFAST has been subject to several rounds of verification        DELs, respectively, compared to the constrained approach.
+against other aeroservoelastic solvers (Rinker et al., 2020)       Rather than using a meteorological tower or an on-blade sen-
+and validation against measurement (Guntur et al., 2017;           sor, Rinker (2022) constrained the turbulence fields to data
+Schepers et al., 2021; Asmuth et al., 2022; Boorsma et al.,        generated from a turbine-mounted virtual lidar that sampled
+2023), but changes in modern wind turbines, namely, the in-        a simulated flow field. The constraining process produced a
+creased rotor size and concomitant changes in blade flexi-         clear improvement of mean absolute errors for several quan-
+bility, blade aerodynamics, and atmospheric forcing, suggest       tities of interest (QoIs) versus unconstrained results. DEL
+an ongoing need to validate OpenFAST at scales relevant            predictions for the tower-base fore–aft bending moment im-
+to industry. Importantly, this validation should be accom-         proved when the constraint points from the lidar extended to
+plished with suitable assimilation of measured inflow into         at least 40 % of the rotor span from the axis of rotation.
+the simulation environment to obtain a synthetic wind field            Similar to the above three studies but considering instead
+that matches as closely as possible the inflow experienced by      the OpenFAST code suite, the objective of this current effort
+the turbine.                                                       is to assess the value of existing inflow assimilation tools of
+   So far, validation of OpenFAST relative to full-scale mea-      different levels of fidelity (i.e., including both unconstrained
+surements has adopted either (1) non-turbulent and uni-            and constrained turbulence assimilation methods) for vali-
+form inflow (Schepers et al., 2021; Boorsma et al., 2023);         dation of simulations of megawatt-scale wind turbine per-
+(2) purely stochastic turbulent inflow (i.e., based on the         formance and loads. In addition to performing such a com-
+spectral magnitudes of a reference flow but with random            parison across three levels of fidelity for the first time with
+phases) that matches time-averaged statistics of hub-height        OpenFAST, we here consider other validation quantities (i.e.,
+wind speed, hub-height turbulence intensity, and shear pro-        damage equivalent loads) not included in the previous, re-
+file (Schepers et al., 2021); (3) time-resolved inflow at a sin-   cent studies involving OpenFAST that employed one of the
+gle point in the domain (i.e., with more distant points revert-    four inflow assimilation approaches listed previously (Gun-
+ing to random phases) that matches time-averaged statistics        tur et al., 2017; Schepers et al., 2021; Asmuth et al., 2022;
+of hub-height wind speed, hub-height turbulence intensity,         Boorsma et al., 2023). In our work, quantitative comparison
+and shear profile (Guntur et al., 2017); or (4) time-resolved      between measured and simulated turbine signals is calculated
+inflow at multiple points in the domain (Asmuth et al., 2022).     for 10 min statistics of these QoIs:
+The strategy of combining one or more time series with a
+stochastic turbulence generation method as in (3) and (4) rep-       – rotor speed;
+resents a compromise between the simpler approach of (2)             – blade pitch;
+that constrains the generated inflow only in terms of time-
+averaged statistics and emerging higher-fidelity approaches          – electrical power;
+that combine large-eddy simulations with machine learning
+(Rybchuk et al., 2023). This paper adopts the second through         – flapwise and edgewise blade-root bending moments;
+fourth approaches, allowing comparison of the code predic-           – fore–aft tower-base bending moment.
+tions across different levels of inflow assimilation methods.
+   Recent efforts on other code suites have also compared             The approach is an end-to-end validation, meaning that the
+across different levels of inflow assimilation methods. The        accuracy of the inflow modeling, turbine aeroelastic model-
+data assimilation techniques considered by Pedersen et al.         ing, and controller modeling is collectively evaluated accord-
+(2019) leveraged data from an upstream meteorological              ing to the final turbine QoIs above. For the inflow modeling,
+tower and included both unconstrained and constrained              we evaluate the relative merits of the several inflow assim-
+turbulence assimilation approaches. Surprisingly, the con-         ilation methods with varying levels of simplifying assump-
+strained turbulence approach increased the mean simulation         tions as described above. For the turbine aeroelastic and con-
+errors by several percentage points for all damage equivalent      troller modeling, a significant amount of attention was de-
+loads (DELs) considered, and they attributed this to possi-        voted to matching the behavior of the field turbine by incor-
+bly unmet assumptions about frozen turbulence and about            porating proprietary information about the characteristics of
+the measured flow field passing completely through the ro-         the turbine and controller as closely as possible into the sub-
+tor disk. However, the constrained approach did outperform         modules of OpenFAST.
+the unconstrained approach when considering inflow data               The study is part of the Rotor Aerodynamics, Aeroelas-
+measured from a Pitot probe mounted on one of the blades.          tics, and Wake (RAAW) experiment, which is a collaboration
+Nybø et al. (2021) used data from a meteorological tower as        between the National Renewable Energy Laboratory, San-
+the input to a simulation study on the differences of tower-       dia National Laboratories, and the wind turbine manufac-
+bottom fore–aft and blade-root flapwise DELs between un-           turer GE Vernova. This experimental campaign leveraged a
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                  https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                             1793
+
+
+
+
+Figure 1. Illustration of the prototype wind turbine and surrounding instrumentation during the RAAW project.
+
+
+suite of measurements on a test turbine and its environment           (Abbas et al., 2022), which was tuned to the reference infor-
+as shown in Fig. 1. The validation of the OpenFAST model              mation and turbine sensor data. The next sections elaborate
+presented here is based on measurements collected prior to            on the process used to develop this model and on the verifi-
+the RAAW field campaign and is intended to benchmark                  cation and validation steps that were performed.
+the model performance. The inflow and wind turbine mea-
+surements are therefore limited to instrumentation already            2.1    Aerodynamics
+present at the site before RAAW as indicated in the figure.
+   The rest of the paper is organized as follows: the devel-          OpenFAST can simulate rotor aerodynamics at different lev-
+opment of the turbine aeroservoelastic model is described             els of fidelity with models implemented in the module Aero-
+in Sect. 2. Section 3 gives an overview of the methods for            Dyn15. This study models rotor aerodynamics using BEMT.
+assimilation and modeling of the measured inflow data. Sec-           The blade aerodynamic shape was discretized into 78 sec-
+tion 4 shows the results and is followed by suggestions for fu-       tions equally spaced along the blade span. A set of two-
+ture experiments in Sect. 5. Conclusions are drawn in Sect. 6.        dimensional (2D) airfoil data blending clean and rough po-
+                                                                      lars from wind tunnel measurements with a weighted aver-
+                                                                      age was shared by GE. The 2D polars were first interpolated
+2   Turbine model development                                         adopting a piecewise cubic hermite interpolating polyno-
+                                                                      mial scheme to match the spanwise distribution of thickness-
+The wind turbine used within the RAAW experiment is a                 to-chord ratio. Next, the polars of airfoils with thickness-
+highly instrumented 2.8 MW prototype wind turbine that                to-chord ratios smaller than 0.7 were corrected to account
+mounts a rotor of 127 m diameter at a hub height of 120 m.            for rotational effects adopting the Du–Selig model (Du and
+The turbine is located in Lubbock, Texas, in a region char-           Selig, 1998). Note that the Du–Selig model relies on the
+acterized by flat terrain. More details on the instrumentation        successful identification of a linear regime of the lift curve,
+and sampling in and around the wind turbine are given in              which is not obvious for airfoils located close to the blade
+Sect. 3. The first step of this study consisted of building the       root. This led to some arbitrary decisions about the range of
+OpenFAST model of the turbine. This step was performed                angles of attack over which to apply the correction and to
+by combining different data sets shared by GE describing the          the decision of limiting the corrections to airfoils up to 0.7
+aerodynamic and elastic properties of the rotor, the elastic          of thickness-to-chord ratio. The airfoil unsteady behavior
+properties of the rest of the turbine system, and high-level          was modeled using an extension of the Beddoes–Leishman
+information about the controller. Additionally, the GE team           model developed by Minnema/Pierce (Damiani and Hayman,
+shared experimental results from the structural testing of the        2019). The parameters required by the unsteady airfoil aero-
+blade and numerical results from its in-house solvers. All            dynamic model at each blade spanwise station were provided
+this information was used to develop an accurate OpenFAST             to OpenFAST as precomputed inputs.
+model. GE’s proprietary controller was replaced by the pub-              A dynamic BEMT model that implements a continuous-
+licly available Reference OpenSource Controller (ROSCO)               time state-space form of Oye’s dynamic model was used
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                     Wind Energ. Sci., 9, 1791–1810, 2024
+1794                K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+(Branlard et al., 2022). Also, the Glauert skewed wake cor-       Table 1. Comparison of blade natural frequencies and structural
+rection model was used with a flow expansion function of          damping ratios between OpenFAST and reference data including
+15/32π (Pitt and Peters, 1980). Other corrections to the          experimental and numerical values shared by GE. The values pro-
+BEMT model included the Prandtl hub- and tip-loss models,         vided are in terms of percent difference relative to the experimental
+wake swirl (tangential induction), and the influence of drag      (“Exp”) and numerical (“Num”) reference. Positive values repre-
+                                                                  sent higher frequencies and damping in OpenFAST relative to the
+on the induction factors. The effect of the tower on the in-
+                                                                  values shared by GE.
+coming wind was accounted for using OpenFAST’s baseline
+potential flow model for two of the three inflow assimilation
+                                                                                      Natural frequency          Damping ratio
+methods as discussed further below, and tower aerodynamic
+loading was calculated for these two methods as well. The                            Exp (%)     Num (%)      Exp (%)     Num (%)
+downstream tower shadow was not included in the model-              First flap          −5.1          0.0        −5.9         −5.3
+ing. The environmental conditions (i.e., inflow density and         First edge          −1.1         −0.1          1.3        16.2
+velocity) were set on a bin-by-bin basis using the data from        Second flap          0.1          0.5        416.4         0.3
+the met tower (see Sect. 3).                                        Second edge         −1.2          3.0        192.7        29.0
+                                                                    Third flap                        2.3                      2.7
+                                                                    Fourth flap                       2.3                    −57.1
+2.2     Structural dynamics                                         Third edge                       11.3                    341.6
+The elastic response of the turbine was modeled by combin-          Fifth flap                       12.7                     −7.9
+                                                                    First torsion         2.5        −0.6                    −69.1
+ing the reduced-order ElastoDyn beam model for the tower
+and the higher-fidelity BeamDyn model, which implements
+the geometrically exact beam theory (Jelenić and Crisfield,
+1999; Wang et al., 2017) for the blades. The elastic proper-      quency by 5.1 %. The research team could not explain the
+ties for all turbine components were precomputed and shared       offset, which could have various origins, such as the impact
+by GE. The next subsections elaborate on the verification and     of clamping of the blade root during laboratory testing.
+validation steps that were performed to ensure the accuracy           The comparisons of structural damping show larger rela-
+of the elastic model.                                             tive errors. Damping is an input to aeroelastic solvers, and
+                                                                  it is modeled differently across frameworks. BeamDyn mod-
+                                                                  els damping as a set of six stiffness-proportional values ac-
+2.2.1    Elastic response of the blades
+                                                                  counting for three rotations and three translations. This al-
+GE shared detailed elastic properties of the blades. An initial   lows the user to set the desired damping for a mode of inter-
+verification step was then performed to confirm that the data     est, usually the first or the second. In this study, three values
+were converted to the BeamDyn coordinate system correctly.        of flapwise, edgewise, and torsional damping were initially
+Figure 2 shows the static deflections and rotations for a sin-    set based on the experimental data from GE to match the
+gle blade clamped at the root and subjected to gravitational      first modes. These values achieved differences of −5.9 % for
+loads in flapwise and edgewise directions. This verification      the first flap mode and 1.3 % for the first edge mode. Be-
+step returned maximum differences of 0.02 m in deflections        cause of the stiffness-proportional formulation, damping in
+and 0.5° in rotations and was considered satisfactory.            the second modes was greatly overpredicted by OpenFAST
+   Next, a verification and validation step was performed by      compared to the results obtained in the laboratory. Despite
+comparing numerical and experimental values of natural fre-       this overprediction, the turbine in OpenFAST suffered from
+quencies and values of structural damping for a single blade.     edgewise instabilities, which were resolved by artificially in-
+The experimental values were generated during testing of the      creasing the values of edgewise damping by almost an order
+blade in a structural laboratory. Table 1 presents the percent-   of magnitude. The higher damping value is believed to com-
+age error of the blade natural frequencies and damping be-        pensate for some discrepancies in the unsteady aerodynamic
+tween the laboratory test and the numerical predictions gen-      solvers, which will be investigated in future work. Note that
+erated at GE and in OpenFAST. The match was again satis-          recent work has verified OpenFAST against other aeroelastic
+factory, although some important discrepancies emerged, as        solvers, where there was no need to increase the edgewise
+described next.                                                   term of structural damping (Collier et al., forthcoming).
+   The verification comparing the natural frequencies pre-
+dicted by the two numerical models shows that the frequen-        2.2.2   Elastic response of tower and drivetrain
+cies up to the fourth flap, second edge, and first torsional
+modes match within 3 %, with negligible differences for the       While the elastic response of blades was modeled at rela-
+first flap, edge, and torsional modes. The validation step also   tively high fidelity, the tower of the turbine was modeled in
+shows a good match between the experimental results and           ElastoDyn, which implements a reduced-order beam model
+the predictions of OpenFAST, with the exception of the first      using the first two tower fore–aft and side–side modes. The
+flap mode. Here, both models underpredict the natural fre-        fore–aft and side–side stiffness distributions and unit mass
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                  https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                                        1795
+
+
+
+
+Figure 2. Deflection (a, b) and rotation (c, d) profiles of the blade loaded under gravity in the flapwise (a, c) and edgewise (b, d) directions.
+The dashed lines were generated by GE, and the solid lines were generated with BeamDyn, the beam model of OpenFAST implementing
+the geometrically exact beam theory. Results are expressed in the BeamDyn coordinate system, and rotations are expressed in terms of
+Wiener–Milenkovic parameters relative to the undeflected beam orientation.
+
+
+Table 2. Comparison of tower natural frequencies with and with-            to the different model fidelity and to different discretization
+out rotor nacelle assembly (RNA) between OpenFAST and the nu-              of the tower properties along its height. In terms of damp-
+merical values shared by GE. The values provided are in terms of           ing, the values for the tower structure were assigned to the
+percent difference for the first four modes, namely the first and sec-     individual modes.
+ond side–side and fore–aft tower modes. Positive values represent             OpenFAST currently models the drivetrain as an assem-
+higher frequencies in OpenFAST relative to the numerical values
+                                                                           bly of lumped masses. The only exception is the torsional
+shared by GE.
+                                                                           stiffness and damping of the drivetrain system, which were
+                                                                           populated thanks to data shared by GE. Sensitivity studies
+          Tower mode            No RNA (%)       RNA (%)
+                                                                           were conducted including the nodding and yawing flexibil-
+          First side–side               −1.0          +0.2                 ity of the nacelle in OpenFAST. Results were impacted to a
+          First fore–aft                −1.0          −1.1                 negligible amount.
+          Second side–side              −4.0          +1.0
+          Second fore–aft               −4.0          +2.5
+                                                                           2.3     Aeroelastic response of the turbine system
+
+                                                                           Next, the aeroelastic modeling of the full turbine was verified
+distribution were specified according to values provided by
+                                                                           and validated during turbine operation.
+GE. Note that ElastoDyn models the tower as torsionally
+stiff. Work is planned in OpenFAST to include tower tor-
+sion within its elastic model ElastoDyn. A workaround con-                 2.3.1    Experimental modal analysis
+sisted of modeling the tower in the module SubDyn, but this
+was not pursued in this work. The verification step consisted              The experimental natural frequencies were obtained by cal-
+of verifying numerically the tower mass, which matched ex-                 culating the power spectral density (PSD) for signals from
+actly, and then the natural frequencies with and without the               strain gauges installed at the blade root and tower base. In
+rotor nacelle assembly. The results for the first four tower               signal processing, there are several ways of converting a sig-
+modes, namely the first and second side–side and fore–aft                  nal from the time domain to the frequency domain. Choosing
+modes, are reported in Table 2.                                            the correct method depends on the data or signals in question.
+   The comparison returned small discrepancies between nat-                In this scenario, Welch’s averaged, modified periodogram
+ural frequencies by OpenFAST and natural frequencies by                    method with a Hanning window was used to convert time-
+the numerical solver at GE. The discrepancies were attributed              series data to the frequency domain. This method was pre-
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                           Wind Energ. Sci., 9, 1791–1810, 2024
+1796                K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+ferred, as its approach to periodogram estimations helps re-      ter, with differences within 10 %. The better match is ex-
+duce noise in the power spectra.                                  plained by the small impact that rotor aerodynamics have on
+   The analysis of the experimental data used for modal anal-     edgewise modes and by a more precise determination of the
+ysis was split into two sections: emergency stop and normal       experimental frequencies of the system. Note that edgewise
+operation. Data from emergency stops were helpful for find-       modes are more important than flapwise modes because they
+ing component natural frequencies by minimizing the im-           are usually affected by low damping and are prone to aeroe-
+pact of rotor aerodynamics. The normal operation data were        lastic instabilities (Volk et al., 2020). Lastly, tower modes
+binned by rotor speed between cut-in and rated. The anal-         match within 10 % at low rotor speeds, growing to ± 15 %
+ysis was limited to this range of wind speeds to conduct the      toward rated rotor speed. Again, the impact of aerodynamics
+comparison between experimental and numerical natural fre-        is thought to be responsible for the growing offset.
+quencies as a function of rotor speed, which only varies up
+to rated.                                                         2.4   Controls
+   Conducting the experimental modal analysis with the ex-
+isting set of installed sensors came with several challenges.     While the ideal validation process would incorporate the ac-
+A critical limitation was that the only measurement location      tual turbine controller in the turbine model, such as in Zierath
+along the blade span was the strain gauges close to the root.     et al. (2016), this was not possible due to concerns around in-
+Therefore, it was not possible to extract any information re-     tellectual property. The solution to this problem was to adopt
+garding modal shapes. Fundamentally, the gauge measure-           the ROSCO controller (Abbas et al., 2022), which was cou-
+ments only allowed us to derive the PSDs of the blade-root        pled to OpenFAST to match the steady-state and transient
+strain.                                                           behavior of the field controller observed through historical
+   When analyzing the PSD, it was found to be difficult to        SCADA data. The ROSCO generator speed set points were
+isolate and find the component frequencies. Consequently,         used to match those of the field controller. The peak-shaving,
+the peaks were saturated and extremely challenging to iden-       or thrust-limiting, parameter of ROSCO was used to repro-
+tify experimentally, especially when we chose to run a blind      duce the mean and peak blade and tower loading near rated
+comparison to the numerical model. It was particularly dif-       power; this also resulted in similar near-rated power produc-
+ficult to find the first and second blade-root flap frequencies   tion. Step wind simulations were used to tune the transient
+during normal operation. We were only able to extract the         response of the torque and pitch controller bandwidths to
+first flap frequency from emergency stop data. This is not        match the GE controller’s response to the same wind input.
+abnormal as the flap modes are typically strongly damped          For simplicity, we omitted pitch actuator dynamics and tuned
+by the aerodynamics, which then leads to the difficulty of        the pitch response only using the controller gains of ROSCO.
+peak finding in the PSDs. Additionally, there was high un-        Modeling actuator dynamics would have added a tuning pa-
+certainty related to the second blade-root edge frequency be-     rameter and could have led to a better match, but the overall
+cause the peaks varied between data files, and there were in-     goal of tuning the pitch response of ROSCO to match the
+stances where there was no energy in the expected region.         SCADA data would have remained the same.
+We tried to apply a method known as time-synchronous av-             Because of the long run times for OpenFAST simulations
+eraging, which can help remove the rotor passing frequen-         with BeamDyn, we ran 72 step wind simulations in parallel
+cies; however, this would have required a much higher data        with uniformly distributed ROSCO tuning inputs (pitch and
+sampling frequency to be successful.                              torque control bandwidths). We then evaluated the difference
+                                                                  in generator speed and rotor thrust response between the GE
+2.3.2   Validation of modal analysis
+                                                                  reference and our controlled OpenFAST model. The simula-
+                                                                  tion parameters with the lowest error were used to prescribe
+The relative difference between experimental frequencies ex-      the parameters for another set of 72 simulations in a smaller
+tracted using the strain gauge data and the numerical frequen-    design space. From these simulations, the best combination
+cies estimated using OpenFAST is shown in Fig. 3 across a         of low generator speed and rotor thrust error was used to se-
+range of rotor speeds. For the first flapwise modes, we ob-       lect the set of ROSCO tuning parameters. Since both the gen-
+serve a good agreement at lower rotor speeds and growing          erator speed and the rotor thrust error could not be simulta-
+discrepancies at higher speeds. Note that this trend is oppo-     neously optimized, some judgment was used to give slightly
+site to the one reported in Table 1, where OpenFAST un-           more weight to the generator speed response error as it is a
+derpredicts the natural frequency of the first flapwise struc-    more direct measure of the controller’s desired behavior.
+tural mode. The different trend is attributed to limitations         Although available in ROSCO, individual pitch control
+of the linearized unsteady aerodynamic model (see Sect. 2.1       (IPC) and tower damping control features were not enabled
+and Branlard et al., 2022) and to the uncertainty in the high     because the controller logic used to activate these features
+aerodynamic damping, which makes both numerical and ex-           in the proprietary field controller was unknown. Even so, a
+perimental frequencies hard to identify. The numerical and        generally good agreement between the field controller and
+experimental first and second edgewise modes match bet-           ROSCO was realized, as is demonstrated in Sect. 4.1. Differ-
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                                      1797
+
+
+
+
+Figure 3. Relative differences between numerical (OpenFAST) and experimental (from strain gauges) natural frequencies for first tower
+modes (a), first rotor flap modes (b), first rotor edge modes (c), and second rotor edge modes (d). For the tower, fore–aft (FA) and side–side
+(SS) modes are reported. For the rotor, backward whirling (BW), collective (C), and forward whirling (FW) modes are reported. Positive
+values represent higher frequencies in OpenFAST relative to experimental values.
+
+
+ences in the specifics of the implementation of the GE versus            sonic measurement and because of a malfunction in the top-
+ROSCO controller, which cannot be disclosed, will lead to                tip wind vane during the campaign. The 10 min WindCube
+changes in transient behavior and could lead to small dis-               data were used to remove static wind-direction offsets in the
+crepancies in fatigue load results.                                      ultrasonic data that ranged between −9 and 14° between the
+                                                                         various anemometers, likely due to misalignment during in-
+                                                                         stallation of the ultrasonics with the cardinal directions. The
+3     Inflow assimilation methods
+                                                                         three ultrasonic anemometers spanned nearly the full height
+This section describes how field data were used to generate              of the rotor and were mounted onto booms at 52.6, 110.5,
+one-to-one inflow bins for the numerical simulations.                    and 179.5 m. The historical data analyzed herein were output
+                                                                         at a frequency of 1 Hz (note that this value was later raised to
+                                                                         20 Hz for the continuation of the data collection happening
+3.1    Experimental campaign                                             within the RAAW experiment).
+The validation of the OpenFAST model presented here is                      Related to measurements on the turbine, the layout of in-
+based on measurements collected prior to the RAAW field                  struments on the turbine are shown in Fig. 5. In line with the
+campaign. The inflow and turbine measurements are there-                 objectives presented in Sect. 1, the wind turbine channels of
+fore limited to instrumentation already present at the site be-          interest for this study included the rotor speed, blade pitch,
+fore RAAW.                                                               electrical power, and blade-root and tower-base bending mo-
+   In terms of inflow measurements, we focused on assimi-                ments, the latter two of which were sensed with strain gauges
+lating data from the meteorological tower, which is shown in             located near the blade roots and tower base, respectively. Re-
+planform view in Fig. 4 along with the turbine. The meteo-               calibrations of the strain gauges were performed such that the
+rological tower was instrumented with various wind sensors,              calibrations were never out of date by more than 90 d. Even
+including three RM Young 81000 ultrasonic anemometers,                   so, we estimate an uncertainty of up to 150 kN m in these
+five Thies Clima First Class cup anemometers, three MetOne               measurements based on changes in some of the calibrations
+020WD wind vanes, and a ground-sitting WindCube lidar,                   over such intervals.
+the latter of which provided only 10 min statistics during the              The validation data in this article were collected between
+period considered here. In this study we preferred to use data           22 September 2021 and 14 May 2022, and data are orga-
+from the ultrasonic anemometers rather than data from the                nized into 10 min bins during this period. For each bin, sev-
+cup anemometers with co-elevated wind vanes because of                   eral preprocessing steps were applied to the ultrasonic data
+the inclusion of the w component of velocity in the ultra-               to render the data appropriate for model validation. First, fol-
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                         Wind Energ. Sci., 9, 1791–1810, 2024
+1798                   K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+
+
+
+Figure 4. Planform view of the test site, including inset showing the cup and sonic anemometers in relation to the wake of the tower lattice
+for the wind sector retained in this study.
+
+
+                                                                           – remove all values above an absolute magnitude of
+                                                                             30 m s−1 ;
+
+                                                                           – remove all values that are identically zero;
+
+                                                                           – remove all remaining values that are deemed spikes or
+                                                                             statistical outliers in the time-series data, as identified
+                                                                             using a median absolute deviation filter with a time win-
+                                                                             dow of 300 s and a threshold of 5 × 1.4826 = 7.4130.
+
+                                                                           An additional filter used in Kelley and Ennis (2016) to re-
+                                                                        move values based on a hold detection criterion was omitted
+                                                                        from the current work since this filter appeared to be elimi-
+                                                                        nating valid data in some cases.
+                                                                           Next, bins that had less than 95 % remaining data avail-
+                                                                        ability or had time spans of removed data longer than 5 s
+                                                                        were also rejected. For the accepted bins, any instances of
+                                                                        scattered data removal were filled in with a cubic hermite
+                                                                        interpolation. Summary statistics were then calculated over
+                                                                        10 min bins. Finally, the horizontal components of the veloc-
+                                                                        ity series at each ultrasonic height were rotated into the ref-
+                                                                        erence frame of the 10 min mean reading of the hub-height
+                                                                        wind vane, which was the appropriate form for input into the
+                                                                        inflow assimilation methods.
+                                                                           In addition to the preprocessing steps above, the wind and
+                                                                        turbine data of each 10 min bin also underwent several filter-
+                                                                        ing processes to be deemed valid and useful for the valida-
+Figure 5. Illustration of instrumentation on the prototype wind tur-    tion analyses. These filters included bounds to eliminate bins
+bine. The channels discussed in this article are outlined in blue.      that included malfunctioning sensors, bins with an idling tur-
+                                                                        bine, bins including turbine start-up/shutdown events, bins
+                                                                        with absolute mean yaw misalignment greater than 10°, bins
+lowing Kelley and Ennis (2016), who processed 2.5 years of              with yaw standard deviation greater than 4°, bins with abso-
+meteorological tower ultrasonic data from the nearby 200 m              lute mean shear exponent greater than 1, bins with absolute
+tower run by Texas Tech University, several quality control             mean veer (as linearly fit from measurements taken from 52.6
+filters were applied to the u, v, and w signals:                        to 179.5 m above ground level) greater than 50°, and lastly
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                        https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                           1799
+
+bins where the wind direction deviated more than 15° from          that which was specified. Random phases are applied to the
+the 185° heading of the meteorological tower relative to the       Fourier terms, and the phases of the streamwise component
+turbine. This last condition not only prevented the ultrasonic     of velocity are correlated based on the spatial coherence
+sensors from ever being waked by the mounting boom arms,           model. The two higher-fidelity approaches of generating in-
+the meteorological tower structure, or the wind turbine, but it    flow are TurbSim with the TIMESR option and PyConTurb.
+also meant that specific turbulence structures passing through     These two approaches constrain the turbulent time series to
+the rotor disk were more likely to be the same as those sensed     match time-resolved measurements by linearly interpolating
+by the meteorological tower, assuming a frozen turbulence          Fourier magnitudes from the measured time series to the
+hypothesis.                                                        computational grid and constraining the Fourier phases to
+   The above filtering reduced the data set to 253 bins of         match the wind series provided at one or more measurement
+10 min, or 1.8 d, for validation analysis. Figure 6 displays       locations. In TurbSim TIMESR, only one point in the domain
+10 min inflow statistics from these bins, which demonstrate        can be constrained. PyConTurb, in contrast, is able to apply
+a diversity of inflow conditions and thus imply a relatively       the same constraints to an arbitrary number of points. For
+broad range of turbine operating conditions. The lack of           the simulations performed here, TurbSim TIMESR is con-
+cases with turbulence intensity above 0.15 in Fig. 6a is a         strained based on the near-hub-height ultrasonic anemometer
+consequence of the filtering on yaw standard deviation as de-      measurements. In PyConTurb, all three ultrasonic anemome-
+scribed above, which was required because of limitations in        ter measurement locations are used. For each turbulence as-
+the modeling setup. It is also noted that the existence of some    similation method and each 10 min bin, six turbulence seeds
+relatively high shear exponents in Fig. 6b is a known charac-      were generated to improve statistical convergence over the
+teristic of the site, and cases with these conditions were re-     non-constrained data of the turbulence grids. As a result,
+tained in the data set, though some validation error should be     4554 turbulent inflows were produced (253 bins of 10 min,
+expected for such cases since IPC was not included in our          six random seeds, and three different approaches).
+turbine model while it was active in the field turbine in these       Other differences between the three methods are related to
+cases. We elected not to filter such cases from the data set be-   how the mean wind speed and direction are assimilated from
+cause many 10 min bins had some IPC activity but few bins          the measurement. As shown in Table 3, TurbSim simple has
+had persistent IPC activity (some justification for this choice    the most restrictive assumptions in this regard, as it only gen-
+is provided in Sect. 4.3). Data for rotor-height veer from the     erates power-law wind profiles without veer. The two other
+wind vanes is omitted from Fig. 6c because of non-physical         methods are more flexible, though the linear interpolation of
+wind-direction shifts that were observed in the readings of        wind data for these methods is likely to result in wind-speed
+the wind vane near the top-tip position. However, the wind         and wind-direction profiles that do not exactly match the ob-
+vane near hub height, which was used to rotate the ultrasonic      served conditions, especially in stably stratified conditions.
+data into the appropriate reference frame as described previ-         For all three methods, the turbulence plane was a lateral–
+ously, was reliable.                                               vertical grid of 33 by 33 points that was 10 % wider than the
+                                                                   rotor diameter both laterally and vertically (see Fig. 7). The
+3.2   Computational environment
+                                                                   TurbSim methods include tower nodes to simulate wind load-
+                                                                   ing on the entire tower including the region below the turbu-
+The inflow simulations were performed in three different           lence plane (Jonkman, 2014), whereas PyConTurb does not
+ways by using two different sets of inputs to TurbSim              have this feature. Tower aerodynamics were therefore dis-
+(Jonkman, 2014) as well as an implementation of PyCon-             abled for the PyConTurb cases.
+Turb (Rinker, 2018). These kinematic turbulence generators            Figures 8, 9, and 10 show an example of the simulated
+begin with information on the spectra and spatial coherence        inflow versus the measurement for an example 10 min bin
+of velocity components, which are then translated to the time      captured on 16 March 2022. The data here illustrate that
+domain via an inverse Fourier transform. Each generator can        TurbSim simple generally matches only the 10 min statis-
+produce Gaussian turbulence fields according to a spectral         tics, while the constrained turbulence assimilation methods
+model, which is herein taken as the Kaimal spectrum with           (i.e., TurbSim TIMESR and PyConTurb) additionally match
+exponential coherence as defined in the International Elec-        the time-varying values at one or more measured heights.
+trotechnical Commission’s (2005) 61400-1 standard.                 The small differences in the data of TurbSim TIMESR and
+   The differences among the three approaches, which are de-       PyConTurb compared to the measurement at the constraint
+scribed in Table 3, center around how the measured data are        points are due to non-alignment of the simulation grid with
+assimilated. The turbulent fluctuations in the baseline Turb-      the measurement location, and PyConTurb notably has two
+Sim approach, termed here TurbSim simple, are stochastic           more constraint points than TurbSim TIMESR, as illustrated
+and based on the turbulence intensity measured by the ul-          by matching of the measurement data by PyConTurb at the
+trasonic anemometer at the near-hub-height location. The           near-top-tip and near-bottom-tip positions as well as the near-
+Fourier magnitudes are determined from the spectral model,         hub-height position. Note that the detrending process for
+which is scaled so that the turbulence intensity matches           TurbSim simple described in the footnotes of Table 3 results
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                 Wind Energ. Sci., 9, 1791–1810, 2024
+1800                       K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+
+
+
+Figure 6. Mean inflow conditions for the 253 bins of 10 min selected for model validation: (a) horizontal turbulence intensity near hub
+height, (b) shear exponent calculated from a power-law fit over the rotor span, and (c) veer calculated from a linear fit over the rotor span.
+The data are plotted versus horizontal wind speed as measured by the ultrasonic anemometer near hub height (at 110.5 m).
+
+Table 3. Comparison of inflow assimilation methods. Single-point constraints are enforced from the ultrasonic anemometer near hub height
+(i.e., z = 110.5 m), and three-point constraints are enforced from all three ultrasonic anemometers.
+
+                                       TurbSim simple                             TurbSim TIMESR                                   PyConTurb
+    Turbulence method                  Unconstrained Kaimal                       Constrained Kaimal at single                     Constrained Kaimal at three
+                                       (TurbModel = IECKAI)                       point with exponential coherence                 points with exponential coherence
+                                                                                  (TurbModel = TIMESR)
+    Turbulence magnitudes              Uniform (derived from single               Linear interpolation from                        Linear interpolation from
+                                       pointa )                                   three-point input                                three-point input
+    Spatial coherence                  IEC in u component, none                   GENERALb in u component,                         IEC in u component, none
+                                       currently enforced in v and w              none currently enforced in v                     currently enforced in v and w
+                                                                                  and w
+    Wind-speed profile                 Power-law interpolation from               Linear interpolation from                        Linear interpolation from
+                                       three-point input                          three-point input                                three-point input
+    Wind-direction profile             None enforced                              Linear interpolation from                        Linear interpolation from
+                                                                                  three-point input                                three-point input
+  a The near-hub-height velocity time series is linearly detrended before calculating turbulence intensity as per Larsen and Hansen (2014), and the input field ScaleIEC is set to
+  1 to enforce the exact value specified near hub height given the desired sample rate. b See Jonkman (2014) for a description of the coherence model.
+
+
+
+                                                                                             in significantly lower turbulence levels for TurbSim simple
+                                                                                             in this (and some other) bins because of the time gradient
+                                                                                             in wind speed during this interval. The corresponding dif-
+                                                                                             ference in turbulent energy does not manifest in the spectral
+                                                                                             plots of Fig. 9 because the data have been binned on 60 s
+                                                                                             intervals, thus eliminating the long-pass timescale that is af-
+                                                                                             fected by the detrending process.
+                                                                                                For reference, the 10 min statistics of another example bin
+                                                                                             are given in Fig. 11. This bin demonstrates a non-monotonic
+                                                                                             shear profile (i.e., jet) that is sometimes observed at the
+                                                                                             site. TurbSim simple is not able to capture the shape of the
+                                                                                             shear profile, whereas the two higher-fidelity approaches can
+                                                                                             roughly capture the shape within the limitations of linear in-
+Figure 7. Image of the 2.8 MW GE wind turbine in Lubbock,                                    terpolation.
+Texas, USA, with turbulence grid overlaid.                                                      A note is appropriate about the frequency of the wind field
+                                                                                             input to OpenFAST, which is unaltered from the 1 Hz sam-
+                                                                                             pling frequency of the meteorological tower described previ-
+                                                                                             ously. For calculations involving DEL, neglecting frequency
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                                                   https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                                   1801
+
+
+
+
+Figure 8. Comparison of time series of simulated inflow to measured inflow for an example 10 min bin for the sonic anemometers near (a) top
+tip, (b) hub height, and (c) bottom tip. The simulated data have been interpolated from the computational grid to the exact measurement
+locations, which were 179.5, 110.5, and 52.6 m, respectively. Only one of six turbulence seeds is shown.
+
+
+
+
+Figure 9. Comparison of turbulence spectra of simulated inflow to measured inflow for an example 10 min bin for the sonic anemometers
+near (a) top tip, (b) hub height, and (c) bottom tip. Before calculating the spectra, the simulated data have been interpolated from the
+computational grid to the exact measurement locations, which are 179.5, 110.5, and 52.6 m, respectively. Spectra are calculated with the
+one-sided welch method using 60 s bins and a Hanning window. Only one of six turbulence seeds is shown.
+
+
+content in the wind higher than 1 Hz will lead to slight un-            a coarse turbulence grid compared to an inflow with higher
+derprediction of DELs. For a turbine of similar size and rated          temporal and spatial resolution. In this study, we make no at-
+rpm, Sim et al. (2012) demonstrate an underprediction of                tempt to populate the higher-frequency content of the mea-
+5 % and 2 % for the blade-root flapwise DEL and tower-                  sured inflow but note that the measured 1 Hz corresponds
+base fore–aft DEL, respectively, by using a 1 Hz inflow and             to more than 4 times the rotor revolution frequency (> 4P)
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                       Wind Energ. Sci., 9, 1791–1810, 2024
+1802                 K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+
+
+
+Figure 10. Comparison of vertical profiles of simulated inflow to measured inflow for an example 10 min bin for (a) horizontal wind speed
+and (b) direction, as well as (c) the three components of turbulence intensity, which are calculated as the standard deviation of the given
+component divided by the mean of the u component. Only one of six turbulence seeds is shown.
+
+
+
+
+Figure 11. Analog to Fig. 10 except for an example 10 min bin that includes a non-monotonic shear profile.
+
+
+at rated rpm, which allows excitation of the 3P frequency.
+Frequencies of 6P and 9P, which might especially affect the
+tower, are not present in the simulation at rated rotor speed.
+
+
+3.3    Postprocessing
+
+Outputs from the field turbine and simulated turbine were
+processed similarly. The first minute of each 10 min bin was
+discarded to remove transients in the simulated results. A
+temporal offset was then applied to the simulation time se-
+ries to account for the advection time of the flow between the          Figure 12. Histogram of the number of 10 min bins within each of
+meteorological tower and the rotor by leveraging knowledge              the wind-speed intervals used throughout Sect. 4
+of the location of the meteorological tower relative to the
+turbine and by assuming the flow advected with the 10 min
+mean wind direction and speed as measured from the near-                rotor speed and blade pitch) and proceeding to power, blade
+hub-height sonic anemometer on the meteorological tower.                loading, and tower loading.
+Both the experimental and simulation results were therefore                In the following subsections, the individual 10 min bins
+shortened by 20–100 s depending on the wind speed so that               have been sorted into wind-speed intervals of 1.5 m s−1
+only the overlapping segments of time between the simulated             based on the mean horizontal wind speed of the ultrasonic
+and measured channels were retained. After the temporal                 anemometer near hub height. A histogram of the counts at
+alignment process, bending moment data from the simula-                 each wind speed is shown in Fig. 12. As the rated wind speed
+tions were interpolated to the position of the strain gauges at         is ∼ 11 m s−1 , there are roughly an even number of counts
+the blade roots and tower base. Lastly, statistics including av-        corresponding to above-rated wind speeds (i.e., Region III)
+erages and DELs were calculated for each bin, and the latter            as there are corresponding to below-rated conditions (i.e.,
+was calculated as in the OpenFAST Python toolbox (Bran-                 Region II).
+lard et al., 2023) at a frequency of 50 Hz, which was the rate
+of the measurement and simulation output.                               4.1   Basic operability
+
+                                                                        First we considered the basic operability of the turbine mod-
+4     Results                                                           els in terms of the controller set points for rotor speed and
+                                                                        blade pitch. Figure 13 shows statistics of the model errors
+This section describes the results of the one-to-one validation         over the 253 bins of 10 min compared to the measurements
+beginning with analysis of the basic operability (i.e., mean            for rotor speed and blade pitch. For the rotor speed, the me-
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                       https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                              1803
+
+
+
+
+Figure 13. Comparison of (a) mean rotor speed and (b) mean blade pitch between models and measurement. The plots consist of statistics
+calculated within each wind-speed interval including the median (solid lines) and interquartile range (shaded areas). The median value
+reported in the legend is the overall median error calculated across all 10 min bins.
+
+
+dian errors within each wind-speed interval are less than            4.3   Blade loading
+0.5 rpm, or within 4 %. This error is not very sensitive to the
+                                                                     Figure 16a shows the near-root flapwise moment mean at
+inflow assimilation method, though the spread of error (i.e.,
+                                                                     blade 1. The comparison shows that median modeling errors
+the interquartile range) is smaller for the higher-fidelity as-
+                                                                     in each wind-speed interval are within 10 %. The mean near-
+similation methods. For the blade pitch, all the inflow assim-
+                                                                     root edgewise moment is close to zero and is not reported.
+ilation methods underpredict pitch above rated wind speed.
+                                                                         The comparisons of the near-root DELs are shown in
+The cause for the underpredicted pitch by all three models in
+                                                                     Fig. 16b and c. The edgewise comparisons in Fig. 16c show
+Region III could be related to aerodynamic modeling errors
+                                                                     little sensitivity to the inflow assimilation method, which is
+that produce an underestimation of the aerodynamic torque.
+                                                                     congruous with Rezaeiha et al. (2017), whose study demon-
+   Figure 14 is analogous to Fig. 13 except it shows errors in
+                                                                     strated that aerodynamics (i.e., turbulence, wind shear, and
+the standard deviation rather than the mean. The median error
+                                                                     yaw) account for < 20 % of lifetime equivalent fatigue loads
+in the standard deviation of rotor speed is less than 0.3 rpm,
+                                                                     in the edgewise direction. Rather, it is rotor imbalances and
+or 2 % of the nominal rotor speed at rated. The maximum er-
+                                                                     gravity that dominate the edgewise fatigue budget. Thus,
+ror in the standard deviation of blade pitch is around 0.5°.
+                                                                     the < 5 % simulation error for edgewise DEL suggests that
+Note that the underprediction of the standard deviation of
+                                                                     the blade model development in Sect. 2.2 was successful
+blade pitch at wind speeds ≥ 14 m s−1 appears to be a result
+                                                                     in terms of edgewise characteristics, granted the need to
+of the omission of an IPC model in the controller, but the rel-
+                                                                     artificially increase the value of structural damping in the
+atively small overall magnitude of the errors in this quantity
+                                                                     edgewise direction compared to the value assumed by GE
+corroborates the previous statement that few of the 10 min
+                                                                     Vernova, and this difference should be investigated further.
+bins had persistent IPC activity in this data set.
+                                                                     Unlike the edgewise case, the flapwise fatigue comparison
+                                                                     shown in Fig. 16b shows significant errors on the order of
+4.2   Power                                                          8 %–18 % for the overall medians.
+Figure 15 shows the comparison of simulated-to-measured                  Given the magnitude of the model errors for the flapwise
+power. The scatterplot in Fig. 15a indicates generally good          DELs, a closer investigation is warranted. The results from
+performance of the models with increased scatter apparent            Rezaeiha et al. (2017) for a turbulence intensity similar to the
+below 10 m s−1 that could be related to, for instance, span-         mean of our study (i.e., ∼ 8 %) show that around half of the
+wise inhomogeneity in the inflow that cannot be captured             contribution to flapwise lifetime equivalent fatigue loads was
+by the vertically aligned met tower sensors. In addition to          from turbulence, and more than 8 % was from wind shear.
+the scatter, Fig. 15b reveals a negative bias in the median          Figure 17 replots the modeling error for flapwise DEL ob-
+modeling error in Region II that is up to 8 % for the higher-        served in Fig. 16b but this time as a function of inflow turbu-
+fidelity inflow assimilation methods and 10 % for the simpler        lence intensity and wind shear exponent. The flapwise DEL
+method. The source of the bias is not presently known but            error has little correlation with turbulence intensity as shown
+could plausibly be related to errors in modeling of the con-         in Fig. 17a. However, the flapwise DEL error shows a pos-
+troller, blade twist, airfoil performance, or rotor aerodynam-       itive correlation with wind shear exponent, at least until the
+ics. We note also that the underprediction of the models at          very highest shear exponents where the sample size is small.
+the knee of the power curve may be a result of exaggerated           Several possible explanations for this trend are proposed.
+modeling of the peak-shaving strategy of the proprietary field           The omission of modeling of the field turbine’s IPC ac-
+controller.                                                          tions could produce this trend since IPC has been shown in
+                                                                     some cases to reduce flapwise DELs on the order 10 %–20 %
+                                                                     (Bossanyi, 2003; Van Engelen and Van Der Hooft, 2005).
+                                                                     Indeed, the flapwise DEL errors fall closest to zero for all
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                    Wind Energ. Sci., 9, 1791–1810, 2024
+1804                  K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+
+
+
+Figure 14. Comparison of (a) standard deviation of rotor speed and (b) standard deviation of blade pitch between models and measurement.
+See Fig. 13 for explanation of the lines, shading, and legend.
+
+
+                                                                       around the azimuth rather than using an annulus-averaged
+                                                                       approach (Madsen et al., 2012, 2020), Perez-Becker et al.
+                                                                       (2020) suggest that such locally computed induction fields
+                                                                       as found in OpenFAST, which include induced velocities
+                                                                       from bound and wake vorticity, are still not accurate. They
+                                                                       observed the 1P fluctuations of the local angle of attack in
+                                                                       OpenFAST to be overpredicted and found OpenFAST to con-
+                                                                       sequently predict 9 % higher lifetime DELs for the out-of-
+                                                                       plane blade-root and the tower-base fore–aft bending mo-
+                                                                       ments compared to a lifting-line free-vortex method. It might
+                                                                       be argued that such an induction-related rationale is weak-
+                                                                       ened in our case because the errors in flapwise DEL persist
+                                                                       and even increase at higher wind speed where induction be-
+                                                                       gins to decrease, but it is noted that the data in Fig. 6b show
+                                                                       a correlation between the inflow wind speed and shear expo-
+Figure 15. Comparison of (a) mean electrical power and (b) mean
+                                                                       nent.
+electrical power error between models and measurement. Each dot           In addition to the uncertainty surrounding the cause of
+in panel (a) represents a 10 min time series. See Fig. 13 for expla-   the error in the flapwise DEL predictions, there also ex-
+nation of the lines, shading, and legend in panel (b).                 ists significant sensitivity of the error to the inflow assimi-
+                                                                       lation method, which is not surprising given the aforemen-
+                                                                       tioned sensitivity of flapwise DELs to turbulence and wind
+                                                                       shear and the fact that turbulence and wind shear are handled
+three inflow assimilation methods as the inflow shear expo-            uniquely in each method. Considering the error as the wind
+nent (and thus the likelihood of IPC activity) tends to zero.          shear goes to zero may give an indication of the performance
+More specific insight on the effect of IPC on the flapwise             of the models apart from the possible modeling errors re-
+errors in this data set can be gained by an additional filter-         lated to IPC and induction noted above. Extrapolating the re-
+ing step as described next. One indicator of the strength of           sults in Fig. 17b to the point of zero wind shear suggests that
+IPC activity is the standard deviation of the difference of two        the simplest inflow assimilation method (i.e., TurbSim sim-
+blades’ pitch signals. Filtering out the half of the 10 min bins       ple) validates better than the higher-fidelity methods in terms
+with the larger standard deviations and recomputing the er-            of flapwise DELs. The apparent reason for the lower flap-
+ror metrics only reduced the range of overall median flapwise          wise DEL predictions of TurbSim simple is the notably lower
+errors reported in Fig. 17a from 8.57 %–17.46 % to 7.78 %–             turbulence intensity of this approach stemming from the de-
+14.43 %. This result suggests that the omission of IPC in the          trending process (see Figs. 10c and 11c and the first footnote
+models may not sufficiently explain the errors in the flapwise         of Table 3), which is believed to be good practice. Peder-
+DEL predictions.                                                       sen et al. (2019) found a similarly surprisingly result when
+   Another possible explanation is that overprediction of flap-        comparing unsteady QoIs between simulations with uncon-
+wise DELs stems from the computation of induction in                   strained and constrained turbulence from a meteorological
+OpenFAST. The last 10 years have seen awareness of over-               tower, and they concluded that measurements taken at large
+prediction of some unsteady QoIs from BEMT models versus               distances from the turbine should not be used to constrain
+higher-fidelity approaches, especially in sheared conditions           turbulence because of possibly invalid assumptions related
+(Madsen et al., 2012; Boorsma et al., 2016; Perez-Becker               to frozen turbulence between the inflow measurement and
+et al., 2020; Madsen et al., 2020). Although this overpredic-          turbine and those related to the measured flow field passing
+tion seems to be improved by computing induction locally
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                     https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                               1805
+
+
+
+
+Figure 16. Comparison of (a, b) flapwise and (c) edgewise bending moment QoIs for blade 1 at 1.25 m from the root. See Fig. 13 for
+explanation of the lines, shading, and legend.
+
+
+
+
+Figure 17. Comparison of the flapwise bending moment DEL from Fig. 16b except plotted versus (a) near-hub-height turbulence intensity
+and (b) rotor-height wind shear exponent. See Fig. 13 for explanation of the lines and shading.
+
+
+completely through the rotor disk. In our data set, the results             The combination of potential modeling errors discussed in
+from Region II in Fig. 14a and Region III in Fig. 14b (be-               the above paragraphs could be responsible for the observed
+fore 14 m s−1 when IPC actions in the field turbine increase)            error in the flapwise DELs, and the possible presence of com-
+indicate an overprediction of unsteadiness in the turbine set            pensating errors in the TurbSim simple method should be ac-
+points. A hypothesis is that this added unsteadiness as well as          knowledged, considering the lower overall errors for this in-
+a portion of the flapwise DEL overprediction could therefore             flow assimilation method compared to the supposedly higher
+be related to the BEMT formulation, which, in contrast to                fidelity constrained methods. Such errors could be related,
+how the formulation modifies the mean velocity with a rotor              for instance, to TurbSim simple using a uniform profile of
+induction model, does not account for changes to the relative            turbulence magnitude drawn from the near-hub-height mea-
+magnitude of the fluctuating component of the velocity (i.e.,            surement, which would artificially lower the rotor-averaged
+distortion of turbulence structures) due to the induction field          turbulence intensity compared to a turbulence profile with
+of the rotor. Branlard et al. (2016) and Mann et al. (2018)              higher curvature near the bottom tip than the top tip. Also,
+consider this question, and their conclusions about the de-              the use of a pre-defined spectral model in TurbSim simple
+gree of amplification or attenuation of the turbulence spec-             leaves open the possibility that the energy content at the
+trum due to the presence of the rotor vary depending on the              lowest frequencies of the turbulence spectra is on average
+turbulent length scale and the region of rotor operation (i.e.,          too low compared to a spectra derived from time-resolved
+the slope of the thrust coefficient curve versus wind speed).            measurements. TurbSim simple also does not include effects
+Further insight on this possible modeling discrepancy might              of non-monotonic shear profiles (see Fig. 11a) or veer (see
+be afforded by a higher-fidelity modeling technique such as              Fig. 11b) that would affect unsteady flapwise loading.
+a free-vortex wake method.
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                           Wind Energ. Sci., 9, 1791–1810, 2024
+1806                  K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+                                                                       the flapwise DEL and could be related again to omission in
+                                                                       the simulations of certain control features on the turbine, in-
+                                                                       cluding collective-pitch tower damping, which could explain
+                                                                       the local peak in DEL error near rated power. Another culprit
+                                                                       for the large fore–aft DEL overprediction could be omission
+                                                                       of the modification of the inflow turbulence by the BEMT
+                                                                       model as suggested previously since the tower-base fore–aft
+                                                                       DELs are known to be highly sensitive to the accuracy of the
+                                                                       wind spectrum (Nybø et al., 2021).
+
+
+                                                                       5     Suggestions for a future validation campaign
+
+                                                                       Below are recorded lessons from the preceding analysis that
+                                                                       may aid the design of future validation studies.
+
+
+                                                                       5.1    Inflow measurements
+
+                                                                       This study leveraged meteorological tower data to define tur-
+Figure 18. Comparison of time series of blade-root flapwise mo-
+                                                                       bulence grids. Shortcomings of this approach include low
+ment between measurement and simulation for blade 1. Each color        spatial resolution and negligence of the effects of the rotor
+of simulation data has six lines corresponding to the six turbulence   induction on the characteristics of the inflow fluctuations.
+seeds.                                                                 An improved experiment might include on-blade pressure
+                                                                       probes as in Pedersen et al. (2019) to validate the induction
+                                                                       physics predicted by the model. Taking a series of measure-
+   Another perspective on the flapwise DELs is offered by              ments as the flow moves toward the rotor, such as with a
+comparison of time series of flapwise loading for three time           nacelle- or hub-mounted lidar, could additionally allow for
+segments in Fig. 18. The effect of the time-offsetting process         step-by-step tracking of the inflow spectrum, shear, and veer,
+described in Sect. 3.3 is evident for the two constrained tur-         as well as comparison thereof with the same quantities pre-
+bulence assimilation methods, which are able to more faith-            dicted by BEMT models.
+fully reconstruct the variations in blade loads on the longer
+timescales. The generally larger amplitude of the oscillations
+                                                                       5.2    On-blade measurements
+in the modeled results than the measured ones is consistent
+with the overprediction of flapwise DEL discussed above.               Further, on-blade surface pressure measurements would be
+                                                                       useful to quantify errors related to airfoil polars and three-
+                                                                       dimensional effects. Tracking of the level of soiling on the
+4.4    Tower loading
+                                                                       turbine blades during the measurement period might also
+Figure 19 shows the comparison of tower-base bending mo-               lead to more informed selection of the roughness condition of
+ments. The median errors of the model in Fig. 19a are gener-           airfoil polars to be used in models. Better information about
+ally less than ± 10 % and indicate that the steady loading on          the local blade aerodynamic behavior will lead to improved
+the rotor and tower are well modeled, granted the underpre-            estimates of aerodynamic frequencies and damping.
+diction of steady tower loading in Region II that is related to
+the underprediction of mean flapwise loading in this region            5.3    Experimental modal analysis
+as noted above. Note that the more negative mean error for
+the PyConTurb cases compared to the TurbSim ones is a re-              From the initial modal analysis discussed in Sect. 2.3.1, ar-
+sult of the absence of tower nodes and tower aerodynamics              eas for improvement were identified. As mentioned, time-
+in PyConTurb as described previously, and this effect grows            synchronous averaging was unsuccessfully used to isolate
+with wind speed. The DEL errors of the model in Fig. 19b               the blade-damped natural frequencies from the rotational dy-
+have a significant positive bias similar to that of the flapwise       namics, which tend to dominate the spectral content. In the
+DEL errors. As before, the two higher-fidelity models show             future, this method can be improved by increasing the data
+higher bias than TurbSim simple.                                       acquisition sampling rate for intervals of interest. Using an
+   Similar hypotheses can be made for the overprediction               increased sampling rate will also allow for other time-domain
+of tower fore–aft DEL as for the overprediction of flapwise            methods to be leveraged. Another method for future use is the
+DELs in Sect. 4.3. The median errors for the fore–aft DELs             order-domain analysis, where the resulting time-series data
+in some wind-speed intervals are even larger than those for            can be analyzed on a per-revolution basis, which is directly
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                     https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                              1807
+
+
+
+
+Figure 19. Comparison of fore–aft bending moment QoIs for the tower at 8.6 m from the base. See Fig. 13 for explanation of the lines,
+shading, and legend.
+
+
+related to the rotational speed of the rotor, allowing for sepa-     5.4    Controller modeling
+ration of rotor speed harmonics from rotor structural frequen-
+cies. A final method for future consideration is operational         The model controller used above was an open-source con-
+modal analysis. This method can be used not only to under-           troller that was tuned to match the proprietary field controller.
+stand the spectral content for structural frequencies but also       The complexity of the proprietary controller is significant
+to estimate the forced input into the rotor. A more detailed         and resulted in simplifications and omissions in the model
+understanding of the modes can be gleaned where frequency,           controller. Future work might benefit from using the DLL
+damping, and mode shape (where spatial resolution is ade-            controller file from the field turbine, if permitted.
+quate) are estimated.
+   To develop a full-turbine modal estimate, the instrumen-
+                                                                     6     Conclusions
+tation effort should be focused on utilizing accelerometers.
+Postprocessing data from accelerometers installed along the
+                                                                     This study was designed to answer two questions: what is the
+blade span can be challenging, but their addition will allow
+                                                                     value of one-to-one time-series-matched inflow for aeroser-
+for a modal map of acceptable spatial resolution to resolve
+                                                                     voelastic simulation and what are the residual errors in tur-
+mode shapes. Adding accelerometers to the hub, bed plate,
+                                                                     bine QoIs when modeling a 2.8 MW land-based wind tur-
+and tower top will also provide insight into the stiffness and
+                                                                     bine in OpenFAST. The work included ingestion of 253 bins
+damping of the coupled components. Accelerometers should
+                                                                     of 10 min of operational data from a prototype wind turbine
+also be installed before and after the bearings, such as yaw
+                                                                     manufactured and operated by GE Vernova, as well as de-
+and pitch, to quantify the impact of those degrees of freedom.
+                                                                     velopment of corresponding full-field turbulence grids from
+   The installation of accelerometers is also not trivial. The
+                                                                     three levels of fidelity of inflow assimilation techniques. The
+blade, for example, provides limited entry, which makes it
+                                                                     flow fields were input to an OpenFAST model that was devel-
+difficult to install sensors beyond 18 m for the turbine in con-
+                                                                     oped to mimic as closely as possible the behavior of the field
+sideration. Exterior installation allows for instrumenting the
+                                                                     turbine. Subsequent bin-by-bin validation revealed that the
+full span of the rotor but comes with installation, mainte-
+                                                                     median errors of steady QoIs for power, blade loading, and
+nance, and safety challenges for an operating turbine.
+                                                                     tower loading within each wind-speed interval were gener-
+   An improved method to understanding the full-turbine
+                                                                     ally within 5 %–10 %. The unsteady loading QoIs showed
+system and component-damped natural frequencies is
+                                                                     mixed results. Simulated edgewise blade-root DELs were
+through an in situ modal test. This test would be designed
+                                                                     consistently predicted with less than 5 % error. However, the
+to excite the entire turbine with a known input force. Testing
+                                                                     simulated flapwise blade-root DELs and tower-base fore–
+of this type creates a true frequency response function of the
+                                                                     aft DELs showed significant median biases of up to ∼ 40 %
+system where damping can more easily be approximated us-
+                                                                     overprediction, which the authors speculate could be a re-
+ing common modal parameter estimation techniques. Also,
+                                                                     sult of inaccurate aerodynamic modeling in sheared condi-
+modal shapes can be extracted, and modal scaling can be
+                                                                     tions (note this shortcoming is being addressed currently by
+more accurately approximated.
+                                                                     NREL in the ongoing development of OpenFAST) and omis-
+   Lastly, to achieve a full-turbine excitation, a snap-back test
+                                                                     sion of certain control features of the proprietary field con-
+method can be used where a reaction mass applies tension to
+                                                                     troller, combined with possible errors in the simulated inflow
+the turbine bed plate with a load cell in line with the tension.
+                                                                     wind fluctuations, and other unidentified errors. Interestingly,
+A quick-release device is used to release the mass and excite
+                                                                     the lower-fidelity inflow assimilation technique produced the
+the turbine. In this way, an impulsive excitation of known
+                                                                     lowest errors for the above two unsteady QoIs, which is sim-
+force is applied to the turbine, and frequency response func-
+                                                                     ilar to Pedersen et al. (2019). Since the higher-fidelity ap-
+tions can be determined.
+                                                                     proaches intuitively allow for more faithful representation of
+                                                                     inflow featuring prominent coherent structures and/or non-
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                   Wind Energ. Sci., 9, 1791–1810, 2024
+1808                   K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+stationarity, the possibility of the existence of compensating           Acknowledgements. A portion of the research was performed
+errors in the lower-fidelity approach should be considered.              using computational resources sponsored by the Department of En-
+New approaches are under development to further investi-                 ergy’s Office of Energy Efficiency and Renewable Energy and lo-
+gate the origin of the errors in the unsteady loading QoIs               cated at the National Renewable Energy Laboratory.
+and to determine the level of fidelity required by inflow mod-
+els to accurately predict specific QoIs. Towards this end, tar-
+geted measurements of inflow and blade quantities during the             Financial support. This research has been supported by the Wind
+                                                                         Energy Technologies Office of the U.S. Department of Energy Of-
+RAAW campaign have been designed to narrow these mod-
+                                                                         fice of Energy Efficiency and Renewable Energy (grant nos. DE-
+eling gaps, and the results of ongoing work in this area may             NA0003525 and DE-AC36-08GO28308); by Sandia National Lab-
+produce a more physical approach to the aeroelastic simu-                oratories, which is a multimission laboratory managed and operated
+lations that are at the center of design and certification pro-          by National Technology & Engineering Solutions of Sandia, LLC,
+cesses for wind turbines.                                                a wholly owned subsidiary of Honeywell International Inc., for the
+                                                                         U.S. Department of Energy’s National Nuclear Security Adminis-
+                                                                         tration under contract no. DE-NA0003525; and by GE Vernova.
+Code and data availability. The          simulation     codes  used
+in this work are open-source and can be found at
+https://github.com/OpenFAST/openfast (last access: 14 Au-                Review statement. This paper was edited by Alessandro Croce
+gust 2024) (https://doi.org/10.5281/zenodo.7632926, Jonkman              and reviewed by four anonymous referees.
+et al., 2023) and https://github.com/NREL/ROSCO (last access:
+14 August 2024) (https://doi.org/10.5281/zenodo.7629837, Abbas
+et al., 2023). OpenFAST v3.4.1 and ROSCO v2.7.0 were used in
+this study. The specific turbine model used is proprietary. The data
+generated in the field are also not publicly available.                  References
+
+                                                                         Abbas, N. J., Zalkind, D. S., Pao, L., and Wright, A.: A reference
+                                                                           open-source controller for fixed and floating offshore wind tur-
+Author contributions. KB processed the experimental results,
+                                                                           bines, Wind Energ. Sci., 7, 53–73, https://doi.org/10.5194/wes-
+analyzed the validation comparisons, and led the writing of the
+                                                                           7-53-2022, 2022.
+manuscript. PB, EB, and MC led the development of the Open-
+                                                                         Abbas, N. J., Zalkind, D., Mudafort, R. M., Hylander, G., Mulders,
+FAST model, conducted the verification and validation steps pre-
+                                                                           S., Heffernan, D., and Bortolotti, P.: NREL/ROSCO: Version
+sented in Sect. 2, and helped write the manuscript. SD and HI led the
+                                                                           2.7.0, Zenodo [code], https://doi.org/10.5281/zenodo.7629837,
+experimental modal analysis. NdV ran the simulations and helped
+                                                                           2023.
+with the model validation. PD and NH lead the RAAW experimen-
+                                                                         Asmuth, H., Navarro Diaz, G. P., Madsen, H. A., Branlard, E.,
+tal campaign. JJ leads the development of OpenFAST. CK co-leads
+                                                                           Meyer Forsting, A. R., Nilsson, K., Jonkman, J., and Ivanell, S.:
+RAAW and supervised this validation study. DZ led the tuning of
+                                                                           Wind turbine response in waked inflow: A modelling benchmark
+the ROSCO controller and helped with the model validation. All au-
+                                                                           against full-scale measurements, Renew. Energ., 191, 868–887,
+thors were a critical element of the research team and all contributed
+                                                                           https://doi.org/10.1016/j.renene.2022.04.047, 2022.
+to the manuscript.
+                                                                         Boorsma, K., Hartvelt, M., and Orsi, L.: Application of the lift-
+                                                                           ing line vortex wake method to dynamic load case simulations,
+                                                                           J. Phys. Conf. Ser., 753, 022030, https://doi.org/10.1088/1742-
+Competing interests. At least one of the (co-)authors is a mem-            6596/753/2/022030, 2016.
+ber of the editorial board of Wind Energy Science. The peer-review       Boorsma, K., Schepers, G., Aagard Madsen, H., Pirrung, G.,
+process was guided by an independent editor, and the authors also          Sørensen, N., Bangga, G., Imiela, M., Grinderslev, C., Meyer
+have no other competing interests to declare.                              Forsting, A., Shen, W. Z., Croce, A., Cacciola, S., Schaffar-
+                                                                           czyk, A. P., Lobo, B., Blondel, F., Gilbert, P., Boisard, R., Hön-
+                                                                           ing, L., Greco, L., Testa, C., Branlard, E., Jonkman, J., and
+Disclaimer. The views expressed in the article do not necessarily          Vijayakumar, G.: Progress in the validation of rotor aerody-
+represent the views of the U.S. Department of Energy or the United         namic codes using field data, Wind Energ. Sci., 8, 211–230,
+States Government.                                                         https://doi.org/10.5194/wes-8-211-2023, 2023.
+                                                                         Bossanyi, E. A.: Individual blade pitch control for load reduction,
+Publisher’s note: Copernicus Publications remains neutral                  Wind Energy, 6, 119–128, 2003.
+with regard to jurisdictional claims made in the text, published         Branlard, E., Mercier, P., Machefaux, E., Gaunaa, M., and Voutsi-
+maps, institutional affiliations, or any other geographical represen-      nas, S.: Impact of a wind turbine on turbulence: Un-freezing tur-
+tation in this paper. While Copernicus Publications makes every            bulence by means of a simple vortex particle approach, J. Wind
+effort to include appropriate place names, the final responsibility        Eng. Ind. Aerod., 151, 37–47, 2016.
+lies with the authors.                                                   Branlard, E., Jonkman, B., Pirrung, G. R., Dixon, K., and Jonkman,
+                                                                           J.: Dynamic inflow and unsteady aerodynamics models for modal
+                                                                           and stability analyses in OpenFAST, J. Phys. Conf. Ser., 2265, 1–
+                                                                           12, https://doi.org/10.1088/1742-6596/2265/3/032044, 2022.
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                        https://doi.org/10.5194/wes-9-1791-2024
+K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST                                        1809
+
+Branlard, E., Mudafort, R., Bortolotti, P., Hammond, R., Zalkind,            bottom-fixed wind turbine, J. Phys. Conf. Ser., 2018, 012028,
+   D., Stanislawski, B., and Thedin, R.: pyFAST – OpenFAST tools,            https://doi.org/10.1088/1742-6596/2018/1/012028, 2021.
+   National Renewable Energy Lab. (NREL), Golden, CO (United              Pedersen, M. M., Larsen, T. J., Madsen, H. A., and Larsen, G.
+   States), https://doi.org/10.5281/zenodo.8122172, 2023.                    C.: More accurate aeroelastic wind-turbine load simulations us-
+Collier, W., Ors, D., Barlas, T., Zahle, F., Bortolotti, P., Marten,         ing detailed inflow information, Wind Energ. Sci., 4, 303–323,
+   D., Jensen, S., Branlard, E., Zalkind, D., and Lønbæk, K.:                https://doi.org/10.5194/wes-4-303-2019, 2019.
+   Aeroelastic code comparison using the IEA 22 MW reference              Perez-Becker, S., Papi, F., Saverin, J., Marten, D., Bianchini, A.,
+   turbine, TORQUE 2024, J. Phys.: Conf. Ser., 2767, 052042,                 and Paschereit, C. O.: Is the Blade Element Momentum the-
+   https://doi.org/10.1088/1742-6596/2767/5/052042, 2024.                    ory overestimating wind turbine loads? – An aeroelastic com-
+Damiani, R. R. and Hayman, G.: The Unsteady Aerodynamics                     parison between OpenFAST’s AeroDyn and QBlade’s Lifting-
+   Module For FAST8, National Renewable Energy Lab. (NREL),                  Line Free Vortex Wake method, Wind Energ. Sci., 5, 721–743,
+   Golden, CO (United States), https://doi.org/10.2172/1576488,              https://doi.org/10.5194/wes-5-721-2020, 2020.
+   2019.                                                                  Pitt, D. M. and Peters, D. A.: Theoretical prediction of dynamic in-
+Du, Z. and Selig, M.: A 3-D stall-delay model for horizontal                 flow derivatives, sixth European rotorcraft and powered lift air-
+   axis wind turbine performance prediction, AIAA, 1998 ASME                 craft forum, No. 47, 16–19 September 1980, Bristol, England,
+   Wind Energy Symposium, 12–15 January 1998, Reno, NV, USA,                 1980.
+   https://doi.org/10.2514/6.1998-21, 1998.                               Rezaeiha, A., Pereira, R., and Kotsonis, M.: Fluctuations of angle
+Guntur, S., Jonkman, J., Sievers, R., Sprague, M. A., Schreck,               of attack and lift coefficient and the resultant fatigue loads for a
+   S., and Wang, Q.: A validation and code-to-code verifica-                 large horizontal axis wind turbine, Renew. Energ., 114, 904–916,
+   tion of FAST for a megawatt-scale wind turbine with aeroe-                2017.
+   lastically tailored blades, Wind Energ. Sci., 2, 443–468,              Rinker, J., Gaertner, E., Zahle, F., Skrzypiński, W., Abbas, N.,
+   https://doi.org/10.5194/wes-2-443-2017, 2017.                             Bredmose, H., Barter, G., and Dykes, K.: Comparison of
+International Electrotechnical Commission and others: IEC 61400-             loads from HAWC2 and OpenFAST for the IEA Wind 15 MW
+   1 Ed. 3: Wind Turbines-Part 1: Design Requirements, In-                   Reference Wind Turbine, J. Phys. Conf. Ser., 1618, 052052,
+   ternational Electrotechnical Commission, Edition 0, ISBN                  https://doi.org/10.1088/1742-6596/1618/5/052052, 2020.
+   2831881617, 2005.                                                      Rinker, J. M.: PyConTurb: an open-source constrained tur-
+Jelenić, G. and Crisfield, M.: Geometrically exact 3D beam the-             bulence generator, J. Phys. Conf. Ser., 1037, 062032,
+   ory: implementation of a strain-invariant finite element for stat-        https://doi.org/10.1088/1742-6596/1037/6/062032, 2018.
+   ics and dynamics, Comput. Method. Appl. M., 171, 141–171,              Rinker, J. M.: Impact of rotor size on aeroelastic uncertainty with
+   https://doi.org/10.1016/S0045-7825(98)00249-7, 1999.                      lidar-constrained turbulence, J. Phys. Conf. Ser., 2265, 032011,
+Jonkman, B.: TurbSim user’s guide v2.00.00, Natl. Renew.                     https://doi.org/10.1088/1742-6596/2265/3/032011, 2022.
+   Energy Lab, https://www.nrel.gov/wind/nwtc/assets/downloads/           Rybchuk, A., Hassanaly, M., Hamilton, N., Doubrawa, P., Fulton,
+   TurbSim/TurbSim_v2.00.pdf (last access: 1 July 2022), 2014.               M. J., and Martínez-Tossas, L. A.: Ensemble flow reconstruc-
+Jonkman, J. and Sprague, M.: OpenFAST Documentation Release                  tion in the atmospheric boundary layer from spatially limited
+   v3.0.0, National Renewable Energy Laboratory, Golden, CO,                 measurements through latent diffusion models, Phys. Fluids, 35,
+   USA, 2021.                                                                126604, https://doi.org/10.1063/5.0172559, 2023.
+Jonkman, B., Mudafort, R. M., Platt, A., et al.: Open-                    Schepers, J., Boorsma, K., Madsen, H., Pirrung, G., Bangga, G.,
+   FAST/openfast:         v3.4.1      (v3.4.1),   Zenodo        [code],      Guma, G., Lutz, T., Potentier, T., Braud, C., Guilmineau, E.,
+   https://doi.org/10.5281/zenodo.7632926, 2023.                             Croce, A., Cacciola, S., Schaffarczyk, A. P., Lobo, B. A., Ivanell,
+Kelley, C. L. and Ennis, B. L.: SWiFT site atmospheric characteriza-         S., Asmuth, H., Bertagnolio, F., Sørensen, N., Shen, W. Z.,
+   tion, Tech. rep., Sandia National Lab. (SNL-NM), Albuquerque,             Grinderslev, C., Forsting, A. M., Blondel, F., Bozonnet, P., Bois-
+   NM, USA, 2016.                                                            ard, R., Yassin, K., Honing, L., Stoevesandt, B., Imiela, M.,
+Larsen, G. C. and Hansen, K. S.: De-trending of wind speed vari-             Greco, L., Testa, C., Magionesi, F., Vijayakumar, G., Anan-
+   ance based on first-order and second-order statistical moments            than, S., Sprague, M. A., Branlard, E., Jonkman, J., Carrion, M.,
+   only, Wind Energy, 17, 1905–1924, 2014.                                   Parkinson, S., and Cicirello, E.: Final report of Task 29, Phase IV:
+Madsen, H. A., Riziotis, V., Zahle, F., Hansen, M. O. L., Snel, H.,          Detailed Aerodynamics of Wind Turbines, Tech. rep., IEA Wind,
+   Grasso, F., Larsen, T. J., Politis, E., and Rasmussen, F.: Blade          Task 29, IEA Wind, https://doi.org/10.5281/zenodo.4813068,
+   element momentum modeling of inflow with shear in comparison              2021.
+   with advanced model results, Wind Energy, 15, 63–81, 2012.             Sim, C., Basu, S., and Manuel, L.: On space-time resolution of in-
+Madsen, H. A., Larsen, T. J., Pirrung, G. R., Li, A., and Zahle, F.:         flow representations for wind turbine loads analysis, Energies, 5,
+   Implementation of the blade element momentum model on a po-               2071–2092, 2012.
+   lar grid and its aeroelastic load impact, Wind Energ. Sci., 5, 1–27,   Van Engelen, T. and Van Der Hooft, E.: Individual pitch control
+   https://doi.org/10.5194/wes-5-1-2020, 2020.                               inventory, Technical Univ. of Delft, Delft, the Netherlands, 2005.
+Mann, J., Peña, A., Troldborg, N., and Andersen, S. J.: How does          van Kuik, G. A. M., Peinke, J., Nijssen, R., Lekou, D., Mann, J.,
+   turbulence change approaching a rotor?, Wind Energ. Sci., 3,              Sørensen, J. N., Ferreira, C., van Wingerden, J. W., Schlipf, D.,
+   293–300, https://doi.org/10.5194/wes-3-293-2018, 2018.                    Gebraad, P., Polinder, H., Abrahamsen, A., van Bussel, G. J. W.,
+Nybø, A., Nielsen, F. G., and Godvik, M.: Analysis of turbulence             Sørensen, J. D., Tavner, P., Bottasso, C. L., Muskulus, M., Matha,
+   models fitted to site, and their impact on the response of a              D., Lindeboom, H. J., Degraer, S., Kramer, O., Lehnhoff, S., Son-
+                                                                             nenschein, M., Sørensen, P. E., Künneke, R. W., Morthorst, P.
+
+
+
+https://doi.org/10.5194/wes-9-1791-2024                                                          Wind Energ. Sci., 9, 1791–1810, 2024
+1810                 K. Brown et al.: One-to-one aeroservoelastic validation of a 2.8 MW wind turbine model in OpenFAST
+
+  E., and Skytte, K.: Long-term research challenges in wind en-     Wang, Q., Sprague, M. A., Jonkman, J., Johnson, N., and Jonkman,
+  ergy – a research agenda by the European Academy of Wind            B.: BeamDyn: a high-fidelity wind turbine blade solver in
+  Energy, Wind Energ. Sci., 1, 1–39, https://doi.org/10.5194/wes-     the FAST modular framework, Wind Energy, 20, 1439–1462,
+  1-1-2016, 2016.                                                     https://doi.org/10.1002/we.2101, 2017.
+Volk, D. M., Kallesøe, B. S., Johnson, S., Pirrung, G. R.,          Zierath, J., Rachholz, R., and Woernle, C.: Field test validation of
+  Riva, R., and Barnaud, F.: Large wind turbine edge insta-           Flex5, MSC. Adams, alaska/Wind and SIMPACK for load calcu-
+  bility field validation, J. Phys. Conf. Ser., 1618, 052014,         lations on wind turbines, Wind Energy, 19, 1201–1222, 2016.
+  https://doi.org/10.1088/1742-6596/1618/5/052014, 2020.
+
+
+
+
+Wind Energ. Sci., 9, 1791–1810, 2024                                                   https://doi.org/10.5194/wes-9-1791-2024
+

@@ -1,0 +1,1235 @@
+Wind Energ. Sci., 7, 53–73, 2022
+https://doi.org/10.5194/wes-7-53-2022
+© Author(s) 2022. This work is distributed under
+the Creative Commons Attribution 4.0 License.
+
+
+
+
+       A reference open-source controller for fixed and floating
+                       offshore wind turbines
+                         Nikhar J. Abbas1,3 , Daniel S. Zalkind3 , Lucy Pao2 , and Alan Wright3
+                 1 Paul M. Rady Department of Mechanical Engineering, University of Colorado Boulder,
+
+                                                  Boulder, CO 80309, USA
+             2 Department of Electrical, Computer, and Energy Engineering, University of Colorado Boulder,
+
+                                                  Boulder, CO 80309, USA
+                       3 National Wind Technology Center, National Renewable Energy Laboratory,
+
+                                                 Boulder, CO, 80303, USA
+                             Correspondence: Nikhar J. Abbas (nikhar.abbas@colorado.edu)
+
+                                   Received: 4 March 2021 – Discussion started: 6 April 2021
+                      Revised: 21 October 2021 – Accepted: 25 November 2021 – Published: 19 January 2022
+
+      Abstract. This paper describes the development of a new reference controller framework for fixed and floating
+      offshore wind turbines that greatly facilitates controller tuning and represents standard industry practices. The
+      reference wind turbine controllers that are most commonly cited in the literature have been developed to work
+      with specific reference wind turbines. Although these controllers have provided standard control functionalities,
+      they are often not easy to modify for use on other turbines, so it has been challenging for researchers to run
+      representative, fully dynamic simulations of other wind turbine designs. The Reference Open-Source Controller
+      (ROSCO) has been developed to provide a modular reference wind turbine controller that represents indus-
+      try standards and performs comparably to or better than existing reference controllers. The formulation of the
+      ROSCO controller logic and tuning processes is presented in this paper. Control capabilities such as tip speed
+      ratio tracking generator torque control, minimum pitch saturation, wind speed estimation, and a smoothing algo-
+      rithm at near-rated operation are included to provide modern controller features. A floating offshore wind turbine
+      feedback module is also included to facilitate growing research in the floating offshore arena. All of the standard
+      controller implementations and control modules are automatically tuned such that a non-controls engineer or
+      automated optimization routine can easily improve the controller performance. This article provides the frame-
+      work and theoretical basis for the ROSCO controller modules and generic tuning processes. Simulations of the
+      National Renewable Energy Laboratory (NREL) 5 MW reference wind turbine and International Energy Agency
+      15 MW reference turbine on the University of Maine semisubmersible platform are analyzed to demonstrate the
+      controller’s performance in both fixed and floating configurations, respectively. The simulation results demon-
+      strate ROSCO’s peak shaving routine to reduce maximum rotor thrusts by over 10 % compared to the NREL
+      5 MW reference wind turbine controller on the land-based turbine and to reduce maximum platform pitch angles
+      by nearly 30 % when using the platform feedback routine instead of a more traditional low-bandwidth controller.
+
+
+
+
+Published by Copernicus Publications on behalf of the European Academy of Wind Energy e.V.
+54                                                                N. J. Abbas et al.: A reference controller for wind turbines
+
+1    Introduction                                                 tion within the optimization loop. Naturally, changes in the
+                                                                  wind turbine design often necessitate an update to the con-
+As wind turbine research has evolved during the past few          troller. An automated controller tuning process and general-
+decades, the need for reference wind turbine controllers          ized implementation method provide the opportunity for au-
+has also changed. Traditionally, reference wind turbine con-      tomated control codesign, where the system and controller
+trollers have been used for two primary purposes. First, the      are designed concurrently (Garcia-Sanz, 2019; Zalkind et al.,
+control systems research community has extensively used           2020).
+reference controllers as a baseline to compare and evaluate          In addition to the need for a generic controller for
+more modern and advanced control algorithms (Lackner and          land-based and fixed-bottom wind turbines, to the authors’
+van Kuik, 2010; Schlipf et al., 2013). Second, researchers        knowledge, the availability of a modern, open-source con-
+interested in aero-structural dynamics have used reference        troller with specific logic for floating offshore wind turbines
+controllers to enable dynamic simulations in studies concern-     (FOWTs) is not available. Simply reducing the controller
+ing other aspects of the wind turbine (Wayman et al., 2006;       bandwidth, as presented by Larsen and Hanson (2007), has
+Sathe et al., 2013). In both applications, a reference con-       been shown to have disadvantages (Fleming et al., 2014). For
+troller provides a standardized method by which wind energy       the same reasons that a generic controller with automated
+researchers can compare and contrast their various turbine        tuning processes is useful for land-based turbines and rotor
+designs, aerodynamic models, structural analysis tools, and       design, a specific control implementation for FOWTs has its
+more.                                                             own utility.
+   There has been a lack of reference controllers that can be        There are numerous motivations for the development of
+easily adapted to a wide variety of different wind turbines.      the Reference Open-Source Controller (ROSCO) tool chain
+The National Renewable Energy Laboratory (NREL) and the           and the publication of this paper. Continued development,
+Technical University of Denmark (DTU) have published per-         refinement, and expansion of the Delft Research Controller
+haps the most ubiquitous of these reference turbines and re-      (Mulders and van Wingerden, 2018) provide a wind tur-
+spective controllers with the NREL 5 MW (Jonkman et al.,          bine controller that is consistent with industry-standard con-
+2009) and DTU 10 MW (Bak et al., 2013; Hansen and Hen-            trol functionalities for use in the research community. Ad-
+riksen, 2013) turbine models. Generally, for new turbine          ditionally, the implementation of generalized tuning proce-
+models, the tuning processes for these turbines’ respective       dures through open-source software provides a means for
+controllers necessitate a control systems engineer to gener-      non-controls engineers to conveniently implement and mod-
+ate linear models of the turbine at multiple operating points     ify a standard wind turbine controller for use in their research
+using aeroelastic simulation solvers to schedule controller       applications. This paper provides a more theoretically com-
+gains. At the very least, someone familiar with the NREL          prehensive collection of how to tune and implement a base-
+5 MW reference controller tuning process must be able to          line wind turbine controller for fixed and floating applica-
+adequately modify the controller accordingly, as shown in         tions than currently exists in the literature. Specifically, the
+Griffith and Ashwill (2011), where the reference controller       presented methods contribute, in detail, to the growing body
+is scaled for a rotor with a novel blade design.                  of scientific literature in the wind energy field and show how
+   Additionally, trends in the wind energy industry heavily       analytical turbine models and power coefficient surfaces can
+favor larger and more flexible rotor designs (Veers et al.,       be used to rapidly tune a wind turbine controller in a com-
+2019). As wind turbines have grown and modeling tools have        pletely automated fashion. This paper also provides meth-
+improved and increased in fidelity, design constraints – such     ods for analytical tuning of a feedback term and pitch sat-
+as blade tip deflection – have become increasingly important.     uration routines to specifically address challenges presented
+Without a controller that performs consistently across turbine    by floating offshore wind turbines. Finally, these generalized
+designs and is representative of the controllers in the field,    tuning procedures and controller implementations provide a
+dynamic simulations cannot be entirely trusted to provide re-     framework by which systems design optimization tools such
+liable results that can be used for turbine design. The need to   as WISDEM can include a controller for time-domain simu-
+run representative dynamic simulations of large flexible tur-     lations in the optimization loop.
+bines necessitates a controller and controller tuning process        The structure of this paper is as follows. In Sect. 2, we
+that can be implemented consistently by the non-controls en-      give a high-level overview of the ROSCO tool chain and im-
+gineer in a streamlined fashion.                                  plementation methods. Here, we also discuss the structure of
+   Finally, completely automated optimization tools for           the ROSCO controller and some requisite theoretical back-
+medium- to high-fidelity wind turbine designs are becoming        ground for the proceeding sections. In Sects. 3 and 4, we dis-
+well established in research and industry. These tools – such     cuss the primary generator torque and collective blade pitch
+as the Wind-Plant Integrated System Design & Engineering          controllers, respectively. In Sect. 5, we provide details on
+Model (WISDEM® ) (Dykes et al., 2014), HawtOpt (Zahle             the primary individual “modules” of the controller. For each
+et al., 2015), and Cp-max (Bottasso et al., 2012) – gener-        module detailed in this paper, we provide a review of its pur-
+ally include some element of dynamic wind turbine simula-         pose, how the generic tuning processes are applied, and in
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                       https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                  55
+
+some cases a brief time-domain simulation result to show-            The general workflow for using the ROSCO tool chain is
+case its functionality. Then, in Sect. 6, we provide power        shown in Fig. 1. The tuning file provides necessary controller
+and loads analysis results for the ROSCO controller on tur-       tuning inputs to the ROSCO toolbox. The ROSCO toolbox
+bines in both land-based and floating configurations. Finally,    then reads an OpenFAST model and writes the DISCON.IN
+Sect. 7 discusses some conclusions and future directions of       file. The DISCON.IN file is used as the input file to the
+ROSCO.                                                            ROSCO controller and can be directly modified to change the
+                                                                  controller performance, to turn on and off individual control
+2   Foundations of the Reference Open-Source                      modules, or to change the desired control logic. OpenFAST
+    Controller                                                    communicates with ROSCO using the Bladed-style control
+                                                                  interface.
+ROSCO was developed to provide a modular control systems             The work by Mulders and van Wingerden (2018) modu-
+architecture with a Fortran-based software structure simi-        larized the controller architecture and established an input
+lar to that of OpenFAST (NREL, 2019), a complete aero-            file framework for the compiled Fortran code. Since then,
+servo-hydro-elastic wind turbine simulation tool developed        numerous modules and controller features have been intro-
+at NREL. The initial work and foundation for the ROSCO            duced and the functionalities of the controller have been ex-
+controller was done by researchers at the Delft University        panded significantly into what is now ROSCO. In this article,
+of Technology and presented in Mulders and van Wingerden          we provide an overview of the primary controller modules
+(2018). The standard controller functionalities are designed      that are generically tuned by the ROSCO toolbox or were
+to perform comparably with existing reference controllers in      added specifically for ROSCO.
+the literature, such as the NREL 5 MW and DTU 10 MW
+controllers. In addition to the standard control functionali-     2.1   Control regions
+ties, a number of operational controller features are included
+to represent more modern wind turbine control functionali-        There are generally two methods of actuation in the stan-
+ties. The primary functions of the controller are still to max-   dard reference wind turbine controllers, including ROSCO.
+imize power in below-rated operation and to regulate rotor        A variable-speed generator torque controller is used to con-
+speed in above-rated operation. The controller was developed      trol the generator power, and a collective blade pitch con-
+to communicate with wind turbine simulation software (e.g.,       troller is used to regulate rotor speed. These methods of actu-
+OpenFAST) using the Bladed-style control interface (DNV-          ation are commonly separated into four regions of operation,
+GL, 2018). The controller source code is compiled once and        with transition logic between them. The steady-state operat-
+reads a controller input file. The controller input file can be   ing points, as shown in Fig. 2 for the NREL 5 MW and In-
+renamed and changed for any horizontal-axis wind turbine,         ternational Energy Agency (IEA) 15 MW wind turbines, are
+and it is generally referred to as the “DISCON.IN” file.          a convenient way to visualize the regions of operation.
+   To facilitate usage of ROSCO, a related “ROSCO toolbox”           In Fig. 2, regions 1 and 4 are considered to be below cut-
+was developed. The ROSCO toolbox is a Python-based tool           in wind speed and above cut-out wind speed, respectively, so
+set developed for tuning, implementing, and post-processing       they are not of particular interest. Here, we provide a brief
+OpenFAST simulations using ROSCO. Both ROSCO and the              overview of each region and compare how they are imple-
+ROSCO toolbox are available for download and implemen-            mented in the NREL 5 MW reference wind turbine controller
+tation on GitHub (NREL, 2021): https://github.com/NREL/           versus ROSCO. In the following sections, we provide more
+ROSCO (last access: 10 November 2021).                            in-depth descriptions of the logic and tuning processes.
+   The primary purpose of the ROSCO toolbox is to automat-           Region 1 is when the wind speed is below the turbine’s
+ically execute the generalized tuning procedures for a given      cut-in wind speed. This region is generally uninteresting for
+OpenFAST turbine model and to generate the necessary in-          standard control purposes, and it is not shown in Fig. 2 for
+put file for the controller. A separate .yaml (Ben-Kiki et al.,   either turbine.
+2009) formatted parameter file is used for these generic tun-        Region 1.5 is when the wind speed is above the turbine’s
+ing procedures. This file includes relevant turbine and con-      cut-in wind speed, but the turbine cannot operate at its opti-
+troller tuning parameters that are generally available a pri-     mal tip speed ratio (TSR). In the traditional NREL 5 MW ref-
+ori. Only four parameters are necessary for tuning a com-         erence controller, a linear transition from no generator torque
+plete controller, though additional tuning inputs are avail-      to the minimum optimal generator torque is used. In ROSCO,
+able for the user to introduce further modifications and fine-    a proportional-integral (PI) controller modifies the generator
+tune the controller performance. In addition to the controller    torque to maintain a defined minimum rotor speed, and the
+tuning scripts, post-processing scripts, plotting scripts, and    blades are pitched to their minimum allowable blade pitch
+a MATLAB/Simulink version (MATLAB, 2019) of ROSCO                 angle. In turbines designed to operate at a higher TSR in low
+are available through the ROSCO toolbox.                          wind speeds because of a minimum rotor speed constraint,
+                                                                  minimum blade pitch angles can be scheduled by a wind
+                                                                  speed estimate to improve power output (see Sect. 5.3.2).
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                       Wind Energ. Sci., 7, 53–73, 2022
+56                                                                         N. J. Abbas et al.: A reference controller for wind turbines
+
+
+
+
+Figure 1. The general workflow of the ROSCO tool chain. The orange squares denote ROSCO-related input files, the blue squares denote
+the ROSCO software tools themselves, and the green squares denote the OpenFAST wind turbine model and OpenFAST itself.
+
+
+
+
+Figure 2. The steady-state operating points for the NREL 5 MW and IEA 15 MW wind turbines with the ROSCO controller are shown to
+illustrate how the turbine operation changes in different regions for different types of controller implementation. The plotted operation points
+are based on the turbine parameters needed by the ROSCO toolbox tuning procedures and from the Cp surfaces generated by CCBlade (see
+Sect. 2.3). The different control regions are separated by the vertical grey dashed lines. Regions 1 and 4 are not shown. Region 2.5 is specified
+by the shaded area between Region 2 and Region 3 for the NREL 5 MW turbine, and does not specifically exist for the IEA 15 MW turbine
+(Gaertner et al., 2020). Constant torque operation is shown in Region 3 for both turbines. The pitch-saturation routine (see Sect. 5.3) used by
+the IEA 15 MW wind turbine results in the nonzero blade pitch trajectory in Region 1.5 and in the upper portion of Region 2 and beginning
+of Region 3. Also note that the generator torque is in kNm for the NREL 5 MW turbine and MNm for the IEA 15 MW turbine and that the
+y axis is shared for both plots.
+
+
+ROSCO’s different Region 1.5 behaviors are shown in Fig. 2,                turbine operates in transition between regions 2 and 3. In
+where Region 1.5 does not span a specific range of wind                    the NREL 5 MW reference controller, a linear transition and
+speeds for the NREL 5 MW wind turbine because of the use                   switching logic are used across this transitional range of wind
+of a PI controller, and increased blade pitch angles are seen              speeds. In ROSCO, a PI controller is used in both the pitch
+in low wind speeds for the IEA 15 MW turbine.                              and torque controllers to regulate the rotor speed to their re-
+   Region 2 is when the wind speed is large enough that the                spective set points. A set point smoother (see Sect. 5.2) is
+turbine can operate at its optimal TSR but is still below rated.           used to ensure that only the pitch or torque controller is ac-
+Here, the torque controller aims to maximize power as much                 tive at any point in time and that there is a smooth transition
+as possible, and the blade pitch angle is fixed. In ROSCO,                 between them.
+the generator torque controller either follows a traditional                  Region 3 is when the wind speed is above rated. The blade
+squared law (Bossanyi, 2000) or employs a TSR tracking PI                  pitch controller regulates the rotor speed, and the generator
+controller (see Sect. 3.1.2) to track a rotor speed reference              torque is either constant or maintains constant power output.
+that is based on a wind speed estimate (see Sect. 5.1) and op-             In ROSCO, a gain-scheduled PI collective pitch controller
+timal TSR. The blades are pitched to fine pitch, where they                is used to regulate the rotor speed. For floating systems,
+are generally designed to be the most aerodynamically effi-                the NREL 5 MW reference controller reduces the pitch con-
+cient.                                                                     troller bandwidth to prevent platform instability. In ROSCO,
+   Region 2.5 is when the wind speed is larger than the wind               an additional feedback term is added to this controller for
+speed that corresponds with rated rotor speed, but less than               FOWTs (see Sect. 5.5) to help stabilize the platform using
+the wind speed that corresponds with rated power. Here, the                collective pitch, without the need to detune the rotor speed
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                                  https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                     57
+
+controller. The generator torque is either kept constant at        and a constant TSR (see Fig. 2); this operation point is de-
+its rated torque value, or the controller adjusts the torque to    noted by the red dot in Fig. 4. In above-rated wind speeds,
+maintain constant power output.                                    the blades pitch to regulate the rotor speed, and there is a re-
+   Region 4 is when the wind speed is greater than the tur-        duction in TSR (see Fig. 2), as denoted by the dashed blue
+bine’s cut-out wind speed. Here, the blades are pitched to         line in Fig. 4.
+reduce rotor thrust to zero. Other than triggering a shutdown         In the standard ROSCO toolbox tuning procedure, the
+maneuver, this region is also generally uninteresting for stan-    steady-state blade element momentum solver CCBlade
+dard control purposes and is not shown in Fig. 2.                  (Ning, 2013) is used to find the Cp , Ct , and Cq surfaces
+   In the case of the generator torque and blade pitch con-        quickly and efficiently. Similarly, parameter surfaces can be
+trollers, a generator speed signal is low-pass filtered and fed    generated and written to a text file using any other blade el-
+back to the respective controllers. The low-pass filter can be     ement momentum or coupled aeroelastic solver. Using more
+chosen as a first- or second-order filter, and the ROSCO tool-     complex solvers will, naturally, provide a more realistic Cp
+box tuning process generically tunes the cutoff frequency for      surface, though with a significant increase in computation
+the filter to be one-quarter of the blade’s first edgewise nat-    time. Anecdotally, the authors have found the Cp surfaces
+ural frequency, as suggested in Jonkman et al. (2009). This        generated using CCBlade to be sufficiently accurate for con-
+helps prevent the controller from actuating at a frequency that    troller synthesis on numerous wind turbines thus far. Future
+excites the first edgewise mode of the blade.                      work includes a more substantive analysis of the controller
+                                                                   performance sensitivity to Cp surfaces generated using dif-
+2.2    Implementation structure                                    ferent aerodynamic solvers.
+                                                                      Within the ROSCO toolbox tuning processes, the Cp sur-
+The high-level block diagram of ROSCO shown in Fig. 3              face is primarily used to facilitate the calculation of the plant
+provides an overview of the control modules that are imple-        parameters, as discussed in Sect. 2.4. These parameters are
+mented in ROSCO. The combination of these modules en-              used for tuning the blade pitch and generator torque con-
+sures smooth actuation across the range of operation regions,      troller gains and for accurate implementation of the wind
+as described in Sect. 2.1. Table 1 provides a brief description    speed estimator. The Cp surface is also used to determine the
+of each controller module.                                         minimum blade pitch schedule in low wind speeds, if needed,
+                                                                   and to determine the optimal below-rated TSR to maximize
+2.3    The power coefficient surface                               power output. Finally, the Cp surface is used within ROSCO
+                                                                   itself so that the wind speed estimator can accurately estimate
+Many tuning procedures and module implementations in this          the operational state of the wind turbine. The Ct surface is
+work are based on the so-called Cp surface. The power coeffi-      used to determine the minimum blade pitch schedule for the
+cient, Cp , is the ratio of the power extracted from the wind to   so-called “peak shaving” routine, as described in Sect. 5.3.1.
+the power available in the wind (Burton et al., 2011). For any
+given wind speed, the Cp surface can be calculated to repre-
+                                                                   2.4     Plant model
+sent the aerodynamic efficiency of the turbine as a function
+of collective blade pitch angle and TSR. The TSR is the ra-        A number of generic tuning processes have been developed
+tio of the speed of the tip of the wind turbine blade to the       for the ROSCO controller. The first publication on this work
+rotor-averaged wind speed:                                         (Abbas et al., 2020) provided an initial formulation of the pri-
+                                                                   mary tuning processes in ROSCO. By using simplified ana-
+      ωr R
+λ=         ,                                                (1)    lytical models of the wind turbine, the need for numerical
+       v                                                           linearization routines using servo-aeroelastic codes such as
+where ωr is the rotor speed, R is the rotor radius, and v is the   OpenFAST is avoided. To define the simplified wind turbine
+wind speed. Similar parameter surfaces can be generated for        for control systems development, a first-order model of the
+the thrust and torque coefficients of the turbine, Ct and Cq ,     wind turbine is used (Pao and Johnson, 2011):
+respectively. An example Cp surface is shown in Fig. 4 for                 Ng
+the IEA 15 MW wind turbine (Gaertner et al., 2020).                ω̇g =      (τa − Ng τg ηgb ),                                (2)
+                                                                           J
+   The overlaid lines on the Cp surface shown in Fig. 4 rep-
+resent the expected steady-state operation point of the wind       where the aerodynamic torque is
+turbine. The dashed–dotted black line shows the steady-state           1    Cp (λ, β) 3
+operating points at low wind speeds, where the TSR is high         τa = ρAr          v .                                        (3)
+                                                                       2       ωr
+because of a constraint on the wind turbine’s minimum rotor
+speed. By imposing a blade pitch angle that is greater than        In Eq. (2), ωg is the generator speed, J is the rotor inertia,
+fine pitch at low wind speeds, the turbine can operate at a        Ng is the gearbox ratio, τg is the generator torque, and ηgb is
+higher point on the Cp surface. In below-rated operation, the      the gearbox efficiency. In Eq. (3), ρ is the air density, and Ar
+turbine is expected to operate with a fixed blade pitch angle      is the rotor area. The power coefficient Cp (λ, β) is found via
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                              Wind Energ. Sci., 7, 53–73, 2022
+58                                                                         N. J. Abbas et al.: A reference controller for wind turbines
+
+
+
+
+Figure 3. A block diagram showing the general controller logic in ROSCO. The shown signals in the figure are the primary time-varying
+signals passed between various parts of the controller; no constant set points or parameters are shown. The generator torque and collective
+blade pitch controllers described in Sects. 3 and 4, respectively, are shown in blue. The orange squares denote the various controller modules
+that are described in Sect. 5. The yellow squares are filters. The details of the floating filter are described in Sect. 5.5, and the standard
+low-pass filter implementations are provided in Appendix A. For the feedback signals, ẋt is the tower-top fore–aft velocity, β is the collective
+blade pitch angle, ωg is the generator speed, and τg is the generator torque. For outputs from the controller modules, βfloat is the floating
+controller’s contribution to the blade pitch angle (see Sect. 5.5), βmin is the minimum blade pitch angle (see Sect. 5.3), v̂ is the estimated
+wind speed (see Sect. 5.1), and 1ω is a controller reference set point shifting term from the set point smoother (see Sect. 5.2).
+
+
+                                                                           where 1 denotes a perturbation from the steady-state value.
+                                                                           Equation (5) is the plant model used to define the generator
+                                                                           torque and blade pitch controller gains, where
+
+                                                                                   Ng ∂τa ∂λ
+                                                                           A(vop ) =         ,                                               (6)
+                                                                                    J ∂λ ∂ωg
+                                                                                                               
+                                                                              ∂τa  1      2 1    ∂Cp
+                                                                                  = ρAr Rv 2         λop − Cp,op ,                           (7)
+                                                                              ∂λ   2       λop ∂λ
+                                                                               ∂λ   1 R
+                                                                                  =        ,                                                 (8)
+                                                                              ∂ωg   Ng vop
+Figure 4. Cp surface for the IEA 15 MW wind turbine. The dashed–
+dotted black line shows the below-rated steady-state operating             and λ is the tip speed ratio as defined in Eq. (1). The coef-
+points that result from a Cp -maximizing minimum pitch schedule            ficients Bτg and Bβ (vop ) are described in Sects. 3.1.2 and 4,
+at low wind speeds when the turbine has a minimum rotor speed              where the blade pitch and generator torque controllers are de-
+constraint. The dashed blue line shows the expected steady-state           scribed, respectively. To calculate the Cp surface gradients, a
+operation points that are used to calculate the controller gain sched-     second-order central differencing approach is used.
+ules.
+                                                                              This linearized plant model is used to separately tune
+                                                                           above- and below-rated controllers. Note that Bv , the distur-
+                                                                           bance (1v) input matrix to the system, is set to 0 for the
+lookup table. The first-order linearization of Eq. (3) at some
+                                                                           controller tuning.
+nominal steady-state operational point is
+
+1τa = 0ωg op 1ωg + 0β op 1β + 0v |op 1v,                          (4)      2.5   Proportional-integral reference tracking control
+
+                                                                           A reference tracking PI controller is used in above-rated and
+where 0ωg = ∂τa /∂ωg , 0β = ∂τa /∂β, and 0v = ∂τa /∂v, and                 below-rated operation. The PI controller is generically de-
+“op” denotes the expected steady-state operational ωg , β, and             fined as
+v for any linearization point. Equation (2) can then be rewrit-
+ten in a linearized form as                                                                ZT
+                                                                           y = kp u + ki        udt,                                         (9)
+1ω̇g = A(vop )1ωg +Bτg 1τg +Bβ (vop )1β+Bv (vop )1v, (5)                                   0
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                                       https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                                  59
+
+Table 1. The primary ROSCO modules and each of their available functionalities. The flag column shows the flag that must be set in the
+controller input file to activate each functionality. The functionalities column gives the possible flag values and a high-level description of
+available functions for each module. Section 5 gives more details of these functionalities. Modules with a section number reference in this
+table are primary modules that are discussed in more detail in this article. Functionalities with an asterisk denote functionalities that are used
+in the traditional NREL 5 MW wind turbine controller.
+
+       Module                                   Flag              Functionalities
+       Blade pitch controller           PC_ControlMode            (0) Fixed pitch (for debug)
+       (Sect. 4)                                                  (1)* Gain-scheduled blade pitch control to regulate rotor speed
+       Generator torque controller      VS_ControlMode            (0) Square law below rated, constant torque above rated
+       (Sect. 3)                                                  (1)* Square law below rated, constant power above rated
+                                                                  (2) Tip speed ratio tracking below rated, constant torque above rated
+                                                                  (3) Tip speed ratio tracking below rated, constant power above rated
+       Set point smoother                    SS_Mode              (0) No set point smoothing
+       (Sect. 5.2)                                                (1) Set point smoothing
+       Yaw control                       Y_ControlMode            (0) No yaw control
+                                                                  (1) Yaw rate control
+                                                                  (2) Yaw by individual pitch control
+       Wind speed estimator                  WE_Mode              (0) Filtered hub-height wind speed estimate
+       (Sect. 5.1)                                                (1) Immersion and invariance estimator
+                                                                  (2) Extended Kalman filter
+       Individual pitch control        IPC_ControlMode            (0) No individual pitch control
+                                                                  (1) 1P reductions
+                                                                  (2) 1P and 2P reductions
+       Pitch saturation                      PS_Mode              (0) No pitch saturation
+       (Sect. 5.3)                                                (1) Pitch saturation
+       Shutdown                              SD_Mode              (0) No shutdown control
+       (Sect. 5.4)                                                (1) Shutdown at maximum pitch
+       Floating-specific feedback            Fl_Mode              (0) No floating-specific feedback
+       (Sect. 5.5)                                                (1) Include floating feedback term
+       Distributed aerodynamic              Flp_Mode              (0) No flap control
+       control                                                    (1) Constant flap angle
+                                                                  (2) PI flap control
+
+
+
+where u is an input to the controller, y is the output from the            the reference generator speed perturbation 1ωg,ref and the
+controller passed to the wind turbine, and kp and ki are the               actual generator speed perturbation 1ωg is obtained. If we
+proportional and integral gains, respectively. For example,                take the Laplace transform of this differential equation, the
+the standard PI blade pitch controller has inputs and outputs              closed-loop transfer function from 1ωg,ref = 0 to 1ωg re-
+such that                                                                  sults in
+u = −1ωg ,         y = 1β,                                       (10)                 1ωg (s)
+                                                                           H (s) =
+and the TSR tracking PI generator torque controller has in-                          1ωg,ref (s)
+puts such that                                                                                B(kp (vop )s + ki (vop ))
+                                                                                    = 2                                       ,              (14)
+                                                                                     s + (Bkp (vop ) − A(vop ))s + Bki (vop )
+u = −1ωg ,         y = 1τg .                                     (11)
+In Eqs. (10) and (11), the generator speed error input, −1ωg ,             where B is either Bτg or Bβ (vop ), depending on whether the
+is defined as a perturbation from the reference speed such that            turbine is in below- or above-rated operation, respectively. A
+                                                                           block diagram to visualize this closed-loop system in above-
+ωg (t) = ωg,ref + 1ωg       −→       −1ωg = ωg,ref − ωg (t), (12)          rated operation is shown in Fig. 5. Note that 1ωg,ref = 0 be-
+                                                                           cause we would not like the rotor speed to differ from the
+while 1β and 1τg are perturbations from their respective
+                                                                           reference value, ωg,ref .
+nominal steady-state values such that
+                                                                              This closed-loop system is a simple second-order system,
+β(t) = βop + 1β,          τg (t) = τg,op + 1τg .                 (13)      so we define the PI gains as
+
+  By combining the PI controller formulation in Eq. (9) with                             1
+Eq. (10) or Eqs. (11) and (5), a differential equation relating            kp (vop ) =     (2ζdes ωdes + A(vop )),                           (15)
+                                                                                         B
+
+https://doi.org/10.5194/wes-7-53-2022                                                                    Wind Energ. Sci., 7, 53–73, 2022
+60                                                                   N. J. Abbas et al.: A reference controller for wind turbines
+
+
+
+
+Figure 5. A block diagram showing the closed-loop system used to tune the ROSCO controller in above-rated operation. The blocks C(s)
+and G(s) represent the controller and plant transfer functions, respectively.
+
+
+               2
+              ωdes
+ki (vop ) =        ,                                       (16)     3.1     Below-rated torque control
+               B
+                                                                    In below-rated operation, the generator torque controller’s
+                                                                    goal is to maximize power production. If the blades are
+where the closed-loop response is characterized by a desired
+                                                                    pitched to fine pitch, maximum aerodynamic efficiency can
+natural frequency, ωdes , and damping ratio, ζdes . For a stan-
+                                                                    be achieved and power can be maximized if the torque con-
+dard horizontal-axis wind turbine, B is negative in below-
+                                                                    troller maintains the TSR corresponding to the peak of the
+and above-rated operation, so ki and kp are negative. There-
+                                                                    Cp surface. In ROSCO, this is done in one of two ways.
+fore, based on this formulation, an increase in rotor speed
+results in −1ωg < 0 and an increase in generator torque
+or blade pitch angle. By defining the desired natural fre-          3.1.1    K ω2 law
+quency and damping ratio of the rotor speed response, the           A study of Eq. (2) in steady state, such that ω̇g = 0, pro-
+user can modify the dynamic response of the rotor to changes        vides the foundation for the so-called “Kωg2 law” for opti-
+in the wind speed. Increased desired natural frequencies will       mal torque control (Bossanyi, 2000; Johnson et al., 2006). By
+decrease the response time of the rotor, whereas increased          restructuring Eq. (2), and assuming that the wind turbine is
+damping ratios will reduce the amount of oscillation in the re-     operating at its optimal TSR, λopt , and corresponding power
+sponse. To learn more about second-order system responses,          coefficient, Cp,max , one can realize a quadratic relationship
+the authors recommend Franklin et al. (2019) to the curious         between the generator speed and demanded generator torque.
+reader.                                                             This relationship is commonly defined as
+   If PI controllers are employed for below- and above-rated
+operation, we are left with the need to define four controller                                            πρR 5 Cp,max
+                                                                    τg (t) = Kωg2 (t),        where K =                    .   (17)
+tuning inputs. The choice of ωdes and ζdes for the below- and                                             2λ3opt Ng3 ηgb
+above-rated operating regions is the only parameter decision
+that needs to be made by the control designer or optimization       3.1.2    Tip speed ratio tracking torque control
+routine, though additional tuning of the individual modules
+discussed in Sect. 5 might further improve controller perfor-       Two primary motivations are behind the development of the
+mance.                                                              TSR tracking controller in ROSCO. First, although the Kωg2
+                                                                    law has historically worked reliably in idealized simulation
+                                                                    environments, the calculation of K can be subject to mod-
+                                                                    eling and assumption errors. For example, the assumption
+2.6    Filters                                                      that R is a constant value across wind speeds does not hold
+                                                                    as strongly in modern, highly flexible rotors as it has in the
+Four filters are commonly used in the ROSCO controller (see
+                                                                    past. Fortunately, modern rotors are still commonly designed
+Fig. 3): first- and second-order low-pass filters, a first-order
+                                                                    to maximize aerodynamic efficiency at a specific TSR. Sec-
+high-pass filter, and a notch filter. Appendix A shows the
+                                                                    ond, industry collaborators have indicated that a TSR track-
+continuous-time formulations of these filters. The filters are
+                                                                    ing controller is more representative of the controllers often
+converted to discrete time for implementation using the bi-
+                                                                    used in the field.
+linear transform.
+                                                                       If the blades are pitched to their most aerodynamically effi-
+                                                                    cient angle and the wind turbine rotor is operating at its opti-
+                                                                    mal TSR, the turbine power is theoretically maximized. This
+3     The generator torque controller                               suggests that if the wind speed can be measured or estimated
+                                                                    accurately, a generator torque controller can be designed to
+Four total variable-speed generator torque control methods          maintain the rotor’s λopt and maximize power capture. In
+are available in ROSCO (see Table 1). Two methods of op-            ROSCO, a standard PI controller is used to track a genera-
+timal power generation are available for below-rated opera-         tor speed reference. For the generator torque controller:
+tion, and two methods of maintaining power output near the                        λopt v̂
+turbine’s rated value are available in above-rated operation.       ωref,τ = Ng           ,                                    (18)
+                                                                                   R
+
+Wind Energ. Sci., 7, 53–73, 2022                                                              https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                   61
+
+where v̂ is the estimated rotor-effective wind speed provided     than in the constant torque case. As discussed by Jonkman
+by the wind speed estimator described in Sect. 5.1. This ref-     (2010), using a constant generator torque controller in above-
+erence signal is also constrained by                              rated operating conditions can help improve FOWT platform
+                                                                  stability.
+ωg,min ≤ ωref,τ ≤ ωg,rated ,                              (19)
+
+where ωg,min is the minimum allowable generator speed, and        4    The blade pitch controller
+the subscript “rated” denotes the value as calculated at rated
+operation.                                                        In below-rated operation, the generator speed is less than the
+   A straightforward and automated tuning process has been        rated generator speed, so the blade pitch angle, β, saturates
+developed for the PI gains for the TSR tracking torque con-       at β = βmin . This is generally the fine-pitch angle, unless
+troller. With the assumption that the blade pitch is held         a pitch saturation schedule is implemented, as described in
+constant at fine pitch in below-rated operation, 1β = 0 in        Sect. 5.3.
+Eq. (5). This means that B = Bτg in Eqs. (15) and (16) and is        In above-rated operation, a PI controller is used to deter-
+defined as                                                        mine the collective blade pitch angle to keep the turbine at a
+                                                                  rotor speed reference. The above-rated rotor speed reference
+                −Ng2                                              ωg,ref for the blade pitch controller is generally defined as
+B = Bτg =                                                 (20)
+                  J
+                                                                  ωref,β = ωrated .                                           (22)
+for the generator torque controller. With this, ωdes and ζdes
+can be chosen to describe the below-rated closed-loop ro-         It is well established, and common in reference controllers,
+tor speed response, and Eqs. (15) and (16) can be calculated      to employ a gain schedule to improve blade pitch controller
+for the generator torque controller. Equation (15) suggests       performance (Jonkman et al., 2009; Hansen and Henriksen,
+that kp (v) and A(v) are both dependent on v; however, it         2013; Mulders and van Wingerden, 2018). In the ROSCO
+was found that fixing kp,vs = kp (v = vrated ), where the sub-    toolbox we use the Cp surface to prescribe this gain schedule,
+script “vs” denotes variable-speed torque control, simplifies     rather than using aero-servo-elastic linearization tools.
+the controller implementation without negatively affecting           When tuning the pitch controller’s gain schedule, we can-
+power production or generator loads.                              not directly assume that the generator torque is kept constant
+                                                                  because it may change if constant power operation is used.
+3.2   Above-rated torque control                                  In constant power operation, the first-order Taylor series ex-
+                                                                  pansion of the generator torque in Eq. (21) is
+There are two standard methods of actuating the generator
+torque in above-rated operation. Defining P as the generator                    Prated    Prated
+power output, in above-rated operation the generator torque       τg,ar (t) =           − 2       1ωg .                       (23)
+                                                                                ωg,rated ωg,rated
+is defined to be
+              Prated                        Prated                Considering that the generator torque as defined by Eq. (13)
+τg,ar (t) =            ,   or τg,ar (t) =          ,      (21)    can be rewritten as τg,ar (t) = τg,rated + 1τg in above-rated
+              ωg,rated                      ωg (t)
+                                                                  wind speeds, we define
+for constant torque or constant power output, respectively.
+   If the Kωg2 law is used for below-rated torque control, the                  Prated
+                                                                  1τg = −        2
+                                                                                         1ωg .                                (24)
+torque controller switches to above-rated operation when the                    ωg,rated
+blades are pitched beyond an offset, denoted by PC_Switch
+in the DISCON.IN file. When the turbine is in above-rated         If constant power operation is used, then A(vop ) in Eq. (6) is
+operation, the generator torque is then defined directly by the   re-defined to
+relationships in Eq. (21). If the TSR tracking control is used                  1 ∂τa ∂λ       Prated
+for below-rated operation, the above-rated generator torque       A(vop ) =              − Bτg 2       .                      (25)
+                                                                                J ∂λ ∂ωg      ωg,rated
+output is simply constrained such that τg (t) ≤ τg,ar (t). In
+above-rated operation, the set point smoother (see Sect. 5.2)
+                                                                  For constant torque operation, it can be assumed that 1τg =
+shifts the reference generator speed such that the generator
+                                                                  0, so no modifications are made to A(vop ). In both cases, B
+torque is saturated at its maximum allowable value, resulting
+                                                                  in Eqs. (15) and (16) is
+in either constant torque or constant power output.
+   If constant torque control is used, power output changes                            Ng ∂τa
+are directly correlated to the changes in the generator speed     B = Bβ (vop ) =
+                                                                                       J ∂β
+in above-rated operation. If constant power control is used,                                                     !
+there are still some changes in power output because ωg (t) in          Ng       2 1             ∂Cp
+                                                                      =    ρAr Rvop                           λop .           (26)
+Eq. (21) is low-pass filtered, but the power is more consistent         2J          λ2op          ∂β λop ,βop
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                             Wind Energ. Sci., 7, 53–73, 2022
+62                                                                       N. J. Abbas et al.: A reference controller for wind turbines
+
+  For any wind speed vop , the expected steady-state Cp,op               gration method is used to propagate the state and covariance
+can be calculated by (Bottasso and Croce, 2009)                          estimates forward in time.
+                               3                                          The nonlinear continuous-time state-space model used for
+                        λop                                              the continuous–discrete Kalman filter implemented in the
+Cp,op = Cp,rated                     .                           (27)
+                       λrated                                            controller is defined as
+
+Through the relationship in Eq. (27) and the Cp surface,                 ẋ = f (x, u) + ξ s ,                                          (28)
+we can find the expected blade pitch angles, βop (λop ), for             y = h(x, u) + ξm ,                                             (29)
+any TSR. In steady-state above-rated operation the genera-
+                                                                         where the system noise is ξ s = [n1 n2 n3 ]T , and ni is con-
+tor speed is considered to be constant, so the TSR is only a
+                                                                         sidered to be zero-mean white noise. The measurement noise,
+function of the wind speed, and we can define βop (v). This
+                                                                         ξm , is assumed to be white noise with a constant covariance.
+enables us to change A(vop ) and Bβ (vop ) to be A(βop ) and
+                                                                         The system state, inputs, and outputs are defined as
+Bβ (βop ) for controller tuning purposes. Equations (15) and
+(16) are then defined for the blade pitch controller to be               x = [ωr vt vm ]T ,                                             (30)
+kp,pc (βop ) and ki,pc (βop ), and the blade pitch controller gain       u = [β τg ] ,T
+                                                                                                                                        (31)
+schedule can be implemented as a function of blade pitch an-
+gle rather than an estimated wind speed. In the ROSCO im-                where vt is the turbulent component of the wind speed, and
+plementation of the blade pitch controller, a low-pass-filtered          vm is the mean wind speed. The nonlinear state equations are
+blade pitch angle, βlpf , is used to interpolate the necessary           defined as
+pitch controller gains, kp,pc (βlpf (t)) and ki,pc (βlpf (t)), for the          1
+PI controller at each time step.                                         ω̇r = (τa − Ng τg ),                                   (32)
+                                                                                J
+   Notably, the Cp surface gradients used to calculate both               v̇t = −a(vm )vt + n1 ,                                (33)
+A(vop ) and B(vop ) approach zero near the “peak” of the Cp
+                                                                         v̇m = n2 ,                                                     (34)
+surface. Because Bβ (vop ) is in the denominator of Eqs. (15)
+and (16), the gains would theoretically approach infinity near           and the output is
+rated operation. To avoid unrealistically high gains, A(vop )
+                                                                         y = ωr + ξm .                                                  (35)
+and B(vop ) are each approximated by a linear fit for the blade
+pitch controller gain calculation in the ROSCO toolbox. With             To complete the state equation definitions, we establish
+this foundation, the blade pitch controller’s gain schedule can                   π vm
+be generated using the ROSCO toolbox for any user-defined                a(vm ) =                                                 (36)
+                                                                                   2L
+ωdes and ζdes .
+                                                                             v̂ = vt + vm .                                       (37)
+                                                                         In Eq. (36), L is a turbulence length scale parameter generi-
+5     Additional control modules
+                                                                         cally defined as L = 3D, where D is the rotor diameter.
+ROSCO is modularized such that various control methods                      In the Kalman filter, the covariance matrices are based on
+can be switched on and off without the need to recompile                 the wind model as defined by Knudsen et al. (2011). In the
+any code. Here, we present the theoretical foundations for the           ROSCO implementation of this wind speed estimator, the
+module implementations and their respective generic tuning               process noise (Q) and measurement noise (Rm ) covariances
+processes.                                                               are
+                                                                                 1 × 10−5
+                                                                                                         
+                                                                                               0      0
+                                                                                               3 t2
+                                                                                             πvm
+5.1    Wind speed estimator                                              Q=                      i
+                                                                                                      0  , Rm = 0.02,            (38)
+                                                                                                         
+                                                                                     0         L
+                                                                                                        22
+In this section, we discuss the wind speed estimator used in                          0          0     600
+ROSCO. The wind speed estimate is used in the TSR track-                 where the turbulence intensity is defined as ti = 0.18, the up-
+ing generator torque controller (see Sect. 3.1.2) and pitch sat-         per limit of the turbulence intensity for standard inflow wind
+uration (see Sect. 5.3) routines. The employed wind speed es-            conditions as defined by IEC (2019). A continuous–discrete
+timator is inspired by Knudsen et al. (2011) and is based on             Kalman filter is then implemented through the following for-
+a continuous–discrete extended Kalman filter. The theoreti-              mulation:
+cal background of the continuous and discrete time extended
+                                                                           – Prediction update
+Kalman filters used in this work is further detailed in Grewal
+and Andrews (2014). The Kalman filter uses informed defini-                   ˙ = f (x̂ k−1|k−1 , uk )
+                                                                              x̂(t)
+tions of the covariance matrices based on the expected wind                     (predicted state estimate)                              (39)
+fields to provide a wind speed estimate, v̂. The derivatives                                             T
+are evaluated in continuous time, whereas the measurement                     Ṗ(t) = F(t)Pk|k + Pk|k F      (t) + Qk − Kk−1 Rm KTk−1
+updates are evaluated in discrete time. A forward Euler inte-                   (predicted covariance estimate)                         (40)
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                                 https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                    63
+
+  – Measurement update                                           piecewise logic is then implemented to shift the blade pitch
+                                                                 or generator torque reference generator speeds:
+      ỹk = yk − hk (x̂ k|k−1 )                                           (
+                                                                            ωref,τ − 1ω 1ω ≥ 0
+       (innovation residual)                              (41)   ωref,τ =                             and
+                                                                           ωref,τ         1ω < 0
+      S k = Hk Pk|k−1 HTk + Rm                                            (
+       (innovation covariance)                            (42)              ωref,β         1ω ≥ 0
+                                                                 ωref,β =                           .                    (49)
+                                                                            ωref,β − 1ω 1ω < 0
+      Kk = Pk|k−1 HTk S−1
+                       k
+       (near-optimal Kalman gain)                         (43)   Figure 7 shows a block diagram displaying the set point
+      x̂ k|k = x̂ k|k−1 + Kk ỹk                                 smoother logic.
+                                                                    The shifting term in the set point smoother defined in
+        (updated state estimate)                          (44)
+                                                                 Eq. (48) includes normalization terms, so no specific tuning
+      v̂k = [0 1 1] x̂ k|k                                       is necessary. The ROSCO toolbox tuning processes define
+       (wind speed estimate)                              (45)   kvs = 1 and kpc = 1 × 10−3 . These values were chosen be-
+      Pk|k = (I − Kk Hk )Pk|k−1                                  cause of their utility across turbine models, although specific
+                                                                 tuning of these can improve the controller performance near
+       (updated covariance estimate)                      (46)
+                                                                 rated operation.
+                                                                    Figure 8 shows results from a 10 min time-domain simula-
+Here the state transition and output Jacobians are defined as    tions of the NREL 5 MW wind turbine near rated operation.
+                                                                 The set point smoother employed in ROSCO provides sig-
+         ∂f                               ∂h                     nificantly smoother transitions from above- to below-rated
+F(t) =                     ,       Hk =               .   (47)
+         ∂x x̂ k−1|k−1 ,uk                ∂x x̂ k|k−1            operation. When the blade pitch is greater than zero (the
+                                                                 first 12 s in Fig. 8), the torque controller set point decreases,
+   Wind speed estimator results from a 10 min simulation of      which biases the generator torque toward its maximum value.
+the NREL 5 MW turbine are shown in Fig. 6. In the pre-           When the generator torque is less than its rated value (the last
+sented simulation, the root-mean-square error between the        12 s in Fig. 8), the set point for the pitch controller increases,
+rotor-averaged wind speed and the wind speed estimate is         and it biases the pitch to its minimum value. The smoother
+0.48 m s−1 .                                                     shifts the saturated controller’s set point linearly depending
+                                                                 on how “far” it is from rated operation. By separating the
+                                                                 control regions this way, resonances such as those seen in
+5.2   Set point smoothing
+                                                                 the time history of the NREL 5 MW torque controller’s sig-
+The generator torque and blade pitch controllers will con-       nal between 15 and 25 s can be reduced.
+flict with each other in near-rated operation if the gener-
+ator torque and blade pitch reference speeds are defined         5.3     Minimum pitch saturation
+only by Eqs. (19) and (22). To avoid this, we employ a set
+                                                                 A method for saturating the minimum blade pitch angle for a
+point smoother regime that is akin to a Region 2.5 controller
+                                                                 given wind speed estimate is also included in ROSCO. This
+(Schlipf, 2019; Zalkind and Pao, 2019). Practically, the so-
+                                                                 has primarily been used for two purposes: to limit the ro-
+called “set point smoother” shifts the generator speed refer-
+                                                                 tor thrust through a peak shaving algorithm and to imple-
+ence signal of the saturated controller while the unsaturated
+                                                                 ment a minimum pitch angle at low wind speeds for power
+controller is active, so the controllers do not have conflict-
+                                                                 maximization in the presence of a minimum rotor speed con-
+ing behaviors. This encourages one controller to stay active
+                                                                 straint. The ROSCO controller simply defines a minimum
+while the other is not.
+                                                                 blade pitch angle for a given wind speed as specified by a
+   We first define an offset to the rotor speed set point, 1ω,
+                                                                 lookup table in the DISCON.IN file. Figure 9 provides an ex-
+as
+                                                                 ample minimum pitch schedule for the IEA 15 MW wind tur-
+                                                                 bine with a minimum rotor speed constraint and peak shav-
+                                              
+      β − β           
+                           τg,max − τg
+                                                               ing, along with the corresponding rotor thrust that is expected
+              min
+1ω =              kvs −                kpc  ωg,rated , (48)    with and without peak shaving.
+                                           
+          βmax                τg,max
+                                                                    The following two subsections describe the two primary
+                                           
+       |   {z     }      |      {z     }
+                1β                    1τ                         aspects of the minimum pitch schedule in more detail.
+
+where kvs and kpc are unitless gain factors that are greater
+                                                                 5.3.1    Peak shaving
+than 0, and βmax is the blade pitch angle at cut-out wind
+speed. Equation (48) is defined such that 1β = 0 in below-       Thrust limiting, or peak shaving, is often used to reduce peak
+rated operation and 1τ = 0 in above-rated operation. A           tower base loads. Generally, the largest rotor thrusts are seen
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                       Wind Energ. Sci., 7, 53–73, 2022
+64                                                                        N. J. Abbas et al.: A reference controller for wind turbines
+
+
+
+
+Figure 6. Wind speed estimator results for the NREL 5 MW wind turbine with 10 min of simulation time and an average wind speed of
+11 m s−1 .
+
+
+
+
+Figure 7. A block diagram of the set point smoother logic defined in Eqs. (48)–(49) is shown here. The term 1ω shifts the blade pitch or
+generator torque controller to help avoid unwanted controller interactions.
+
+
+near rated operation and have a strong effect on tower base              NREL 5 MW wind turbine in near-rated operation. Based on
+loads. It is has also been shown that rotor thrust is corre-             the wind speed estimate, the blades are pitched to reduce the
+lated to the blade pitch actuation (Bossanyi, 2003; Fischer              rotor thrust to stay at or below the maximum allowable thrust
+and Shan, 2013; Petrović and Bottasso, 2017). We impose                 limit.
+a minimum blade pitch angle, βmin (v), to “shave” the peak                  Peak shaving algorithms implemented with minimum
+of the rotor thrust curve and subsequently reduce tower base             pitch saturation can result in power losses because the tur-
+loads near rated. The rotor thrust can be defined by                     bine will no longer be operating at its highest efficiency
+                                                                         near rated. Though the default peak shaving algorithm in the
+        1
+Tr (v) = ρAr v 2 Ct (λ, β),                                    (50)      ROSCO toolbox reduces the maximum rotor thrust by 25 %,
+        2                                                                ultimately the trade-off between power production and load
+where Ct is the rotor thrust coefficient. Given a maximum al-            reductions must be made by the control system designer.
+lowable rotor thrust, Tr,max = amax(Tr (v)), where a ≤ 1, the
+maximum allowable thrust coefficient is defined as                       5.3.2   Power maximization in low wind
+             2Tr,max
+Ct,max (v) =         .                                         (51)      In certain wind turbine configurations, such as the IEA
+             ρAr v 2
+                                                                         15 MW wind turbine (Gaertner et al., 2020), minimum or
+For all operational TSRs, we can find a blade pitch angle,               maximum blade tip speed limits might be imposed for rea-
+βmin (Ct,max , λ), through a Ct surface similar to the Cp sur-           sons such as tower resonance avoidance or noise avoidance.
+face shown in Fig. 4. Notably, Ct,max (v) and λ are both pa-             If a minimum tip speed constraint exists, the wind turbine
+rameterized by v, so we can define a minimum blade pitch                 cannot operate at λopt in low wind speeds. A minimum pitch
+schedule, βmin (v), that is dependent on a wind speed esti-              schedule can be implemented such that the power can be
+mate. Figure 10 shows an example 60 s time series for the                maximized in low wind speeds while the generator torque
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                             https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                              65
+
+
+
+
+Figure 8. Time-domain simulation results from the NREL 5 MW wind turbine near rated wind speeds. The rotor-averaged wind speed is
+plotted in the background as grey curves in each plot.
+
+
+
+
+Figure 9. Expected steady-state pitch saturation for the IEA 15 MW wind turbine, based on the Ct surface calculated with CCBlade. The
+blade pitch schedule (a) shows the expected steady-state value of the pitch angle along with the imposed minimum pitch angles with pitch
+saturation for both peak shaving and power maximization in low wind speeds. The right-hand plot (b) shows the expected rotor thrust with
+and without peak shaving. The grey region in the blade pitch schedule corresponds to the pitch angles that result in a rotor thrust above the
+maximum allowable thrust, shown as the grey region in the right-hand plot (b).
+
+
+controller works to satisfy the minimum rotor speed con-                 filtered blade pitch angle signal triggers turbine shutdown if
+straints. The black dashed–dotted line in Fig. 4 provides in-            it exceeds a certain threshold. If the shutdown is initiated, the
+sight into how the power output can be improved through a                blades are pitched to feather at their maximum pitch rate to
+minimum pitch angle at low wind speeds by moving the tur-                slow down the rotor. If the TSR tracking torque controller
+bine’s expected operating point to the “top” of the Cp surface           is being used, ωref,τ is set to the minimum rotor speed. This
+for high TSRs.                                                           encourages the torque controller to help slow down the ro-
+   Figure 11 shows an example of how the power can be in-                tor initially. Once the blades are pitched such that very little
+creased. A 10 min simulation was run in OpenFAST for an                  lift is generated and the rotor is nearly stopped, the torque
+inflow wind with normal turbulence and a 5 m s−1 average                 controller will saturate at zero in an unsuccessful attempt to
+wind speed. With the pitch saturation module turned on, the              speed up the rotor to the minimum rotor speed.
+blade pitch angle is changed based on the wind speed es-                     It is shown in Bottasso et al. (2014) that there are shutdown
+timate and the pitch saturation lookup table, resulting in a             methods that could reduce possible design-driving loads dur-
+slightly increased power output.                                         ing shutdown. Future work includes the investigation and in-
+                                                                         clusion of these methods in the ROSCO controller. Addition-
+                                                                         ally, a number of events can trigger wind turbine shutdowns,
+5.4   Shutdown                                                           such as generator overspeeds and yaw misalignment. Future
+A simple shutdown routine is included in ROSCO for shut-                 work also includes the addition of improved shutdown event
+down during high wind speed events. A first-order low-pass-              detection and control methods for such cases.
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                                Wind Energ. Sci., 7, 53–73, 2022
+66                                                                    N. J. Abbas et al.: A reference controller for wind turbines
+
+
+
+
+Figure 10. A sample 1 min time series from a 10 min turbulent simulation of the NREL 5 MW wind turbine to showcase the peak shaving
+routine in ROSCO. The peak shaving percentage was tuned to 20 % for this simulation. The wind speed is shown in the background of each
+plot, and the maximum allowable thrust is denoted by the dashed–dotted black line in the lower plot.
+
+
+
+
+Figure 11. A sample 2 min time series from a 10 min turbulent simulation of the IEA 15 MW wind turbine showing how increased blade
+pitch angles can increase power output at low wind speed. The rotor-averaged wind speeds are plotted in grey in the background.
+
+
+5.5   Floating offshore wind turbine feedback                        with a second-order low-pass filter are used to filter the
+                                                                     nacelle fore–aft acceleration signal. The ROSCO toolbox
+An additional control feedback term is included to account
+                                                                     generically places high- and low-pass filter cutoff frequen-
+for FOWTs in a method referred to as “parallel compensa-
+                                                                     cies at 0.01 rad s−1 and the platform’s first fore–aft natural
+tion” (Van Der Veen et al., 2012). The tower-top accelera-
+                                                                     frequency, respectively. Additionally, a notch filter is used to
+tion is filtered, integrated, and multiplied times a proportional
+                                                                     remove the tower fore–aft frequency component of the feed-
+gain feedback, kβfloat . This modifies the blade pitch control
+                                                                     back signal for the floating controller. A Bode diagram of
+signal to become
+                                                                     the final form of this filter is shown in Fig. 12 for the IEA
+                   ZT                                                15 MW wind turbine on the University of Maine (UMaine)
+1β = kp 1ωg + ki        1ωg dt + kβfloat 1ẋt ,             (52)     semisubmersible platform (Allen et al., 2020). After this na-
+                                                                     celle fore–aft acceleration signal is filtered and integrated, it
+                   0
+                                                                     is similar to a platform pitching velocity signal that is often
+where xt is the tower-top position in the fore–aft direction.        used for FOWT control.
+The block diagram in Fig. 3 provides a visualization of how             For consistency with the theme of the ROSCO tool set, a
+this signal is implemented.                                          generic tuning process has been developed for this floating
+   Although some research suggests the use of a platform             feedback term. We start by defining the simplified second-
+pitch feedback signal for FOWT control (Fleming et al.,              order equation of tower-top motion as
+2014, 2016), the nacelle fore–aft signal is used in ROSCO
+                                                                     Jt ẍt + ct ẋt + kt xt = Tr ,                              (53)
+so that the overall controller implementation can maintain
+the structure of the Bladed-style communication interface            where Jt is the total system inertia in the platform pitching
+(DNV-GL, 2018). A first-order high-pass filter combined              direction, ct is a damping constant, kt is a restoring constant,
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                               https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                            67
+
+
+
+
+Figure 12. A Bode plot showing the filter used for the tower-top motion feedback signal for the IEA 15 MW turbine on the UMaine
+semisubmersible platform. The first platform and tower fore–aft natural frequencies are shown in red and labeled accordingly. These natural
+frequencies are inputs to the ROSCO tuning process to shape this filter.
+
+
+and Tr is the rotor thrust as defined by Eq. (50). The rotor            we can define
+effective wind speed is modified by tower motion such that
+                                                                             0            1                      0            0
+                                                                                                                                      
+                                                                                                                                    
+                                                                          −kt  − ct − 5v + 5β kβfloat          5 β ki   5 ω + 5 β kp 
+1v = 1vw − 1ẋt ,                                             (54)      A= 0             0                      0            1        ,
+                                                                                                                                    
+                                                                             0     0β kβfloat − 0v              0β ki    0ωg + 0β kp
+where 1vw is the change in free-stream wind speed. Similar                         
+to the derivation of Eq. (4), we can linearize Eq. (50) to be               0   0
+                                                                          5v   0 
+                                                                        B= 0   0 .                                                  (61)
+1Tr = 5ωg 1ωg + 5β 1β + 5v 1v,                                (55)          0v −Ng
+
+where 5ωg = ∂Tr /∂ωg , 5ω = ∂Tr /∂β, and 5ω = ∂Tr /∂v.                  Note that A(4, 2) is the state transition term from 1ẋt to 1θ̈ .
+   For the controller, we have suggested that a proportional            This suggests that if 0β kβfloat − 0v = 0, then the tower-top
+feedback term should be added to the standard blade pitch PI            pitching velocity will have no direct effect on the rotor accel-
+controller, such that the control input should be defined by            eration. To attempt to achieve this, we define
+Eq. (52). We also define the generator position as θ such that
+                                                                                         ∂τa ∂τa −1
+                                                                                               
+                                                                                    0v
+θ̇ = ωg ,     θ̈ = ω̇g .                                      (56)      kβfloat =      =            .                                 (62)
+                                                                                    0β   ∂v ∂β
+   After substituting Eqs. (52) and (54)–(56) in Eqs. (53) and
+(5), we arrive at the equations of motion for the closed-loop              Including the additional parallel compensation term βfloat
+tower-top (Eq. 57) and rotor (Eq. 58) dynamics:                         reduces the need to detune the standard blade pitch PI con-
+                                                                        troller because of the infamous negative-damping problem
+      1h                                                               (Larsen and Hanson, 2007). If tuned appropriately, the paral-
+dẍt =   − kt dxt + − ct − 5v + 5β kβfloat dẋt                         lel compensation term can help negate the effect of tower-top
+      Jt
+                                                i                      motion and subsequent changes to the relative wind speed at
+         + 5β ki dθ + 5ω + 5β kp dθ̇ + 5v dvw ,               (57)      the rotor. Additionally, combining the use of this βfloat feed-
+      Ng h                                                             back term with a peak shaving routine from Sect. 5.3.1 can
+dθ̈ =      0β kβfloat − 0v dẋt + 0β ki dθ                              reduce the tower-top pitching transients and further stabilize
+       J
+                                               i                       the system. Though the peak shaving does, theoretically, re-
+           + 0ωg + 0β kp dθ̇ + 0v dvw − Ng dτg .              (58)
+                                                                        duce power output near rated operation, the tower-top stabi-
+                                                                        lization benefits generally outweigh the power losses because
+   If we then convert Eqs. (57) and (58) into the state-space
+                                                                        less fore–aft tower motion can lead to increased power out-
+form ẋ = Ax + Bu, where
+                                                                        put.
+u = [1vw 1τg ]T ,                                             (59)
+                            T
+x = [1xt 1ẋt 1θ 1θ̇ ] ,                                      (60)
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                               Wind Energ. Sci., 7, 53–73, 2022
+68                                                                  N. J. Abbas et al.: A reference controller for wind turbines
+
+6     Example results and analysis                                  reference controller exhibits significantly higher TSRs be-
+                                                                    cause of the torque controller’s linear transition between
+In this section, we use ROSCO v2.3.0 and present results            regions 1 and 2 (Jonkman et al., 2009) rather than the
+from both land-based and floating wind turbine simulations.         PI controller-based transition that is used in ROSCO. The
+First, the ROSCO controller, as tuned by the ROSCO tool-            ROSCO controller tracks the optimal TSR of 7.5 well during
+box, is compared to the NREL 5 MW wind turbine controller           below-rated operation.
+using the land-based NREL 5 MW wind turbine. Then, re-                 The power output and subsequent annual energy produc-
+sults from the IEA 15 MW atop the UMaine semisubmersible            tion from the ROSCO controller without peak shaving is
+floating wind turbine configuration are shown to illustrate the     0.1 % greater than that of the NREL 5 MW reference con-
+effect of the FOWT βfloat control feedback loop. The subset         troller. This is consistent with observations by Holley et al.
+of the International Electrotechnical Commission (IEC) de-          (1999) and Bossanyi (2000), who note that minor energy pro-
+sign load cases (DLCs) (IEC, 2019) shown in Table 2 were            duction gains are possible to be achieved through an optimal
+run for both turbines to offer a comparison of controller per-      TSR-tracking controller, though at the cost of more gener-
+formance.                                                           ator power fluctuations. In fact, the maximum standard de-
+                                                                    viation of the power output during DLC 1.1 decreased by
+6.1    NREL 5 MW land-based wind turbine results                    1.5 % when using ROSCO instead off the NREL 5 MW ref-
+                                                                    erence controller, so no significant power increases are ex-
+The land-based NREL 5 MW turbine with the NREL 5 MW                 pected. The annual energy production from the ROSCO con-
+wind turbine controller is compared to ROSCO with the               troller is 1.7 % less than that of the NREL 5 MW reference
+ROSCO toolbox generic tuning values and ROSCO with                  controller when the peak shaving routine is implemented in
+minimal manual tuning and peak shaving implemented. As              ROSCO. This is expected because rotor thrust reductions re-
+previously stated, there are only four necessary tuning pa-         duce the wind turbine’s power output as well. Notably, the
+rameters when tuning ROSCO using the generic ROSCO                  maximum rotor thrust seen is slightly higher than the ex-
+toolbox tuning functionalities. For the NREL 5 MW configu-          pected maximum rotor thrust (see Fig. 10). This is attributed
+ration, the choices for ζdes and ωdes are shown in Table 3.         to the imperfect nature of a peak shaving routine based on a
+The controller tuning parameters used for ROSCO’s pitch             wind speed estimate, and it could likely be improved through
+controller in the results presented in this section were cho-       an observer-based rotor thrust shaving algorithm or similar.
+sen to be the same as those used for scheduling the gains of        The peak shaving also helps to both mitigate rotor thrusts in-
+the NREL 5 MW reference controller. ROSCO’s TSR track-              troduced by the initial ROSCO tuning and reduce them fur-
+ing torque controller was tuned manually so that below-rated        ther than those from the simulations using the NREL 5 MW
+simulations resulted in consistent TSR tracking.                    reference controller.
+   The collective blade pitch controller gain schedules from
+the ROSCO tuning process are similar to those from the              6.2   IEA 15 MW on the UMaine semisubmersible FOWT
+NREL 5 MW reference controller’s tuning process, but they                 results
+are not the same. The NREL 5 MW reference controller’s
+gain schedule is based on the turbine’s sensitivity of aerody-      We compare results from the IEA 15 MW wind turbine on
+namic power to the collective blade pitch angle, a value that       a semisubmersible floating turbine platform for the ROSCO
+has generally been found using more computationally expen-          controller with and without the floating feedback and peak
+sive aeroelastic solvers, whereas the ROSCO tuning process          shaving modules enabled (see Fig. 3). Larsen and Hanson
+depends directly on the Cp surface.                                 (2007) suggest that the tuned bandwidth of a rotor speed-
+   High-level comparison results of the ROSCO controller            regulating collective blade pitch controller should not be
+compared to the NREL 5 MW reference controller are shown            higher than the platform’s first fore–aft eigenfrequency. This
+in Fig. 13. Results are shown from both the generic ROSCO           method of “derating” the blade pitch controller has tradition-
+controller and a ROSCO controller with peak shaving. For            ally been employed in baseline FOWT controllers, such as
+the ROSCO controller with peak shaving, all controller tun-         the NREL 5 MW OC3- and OC4-Hywind FOWT models
+ing input parameters were kept the same as for the generic          (Jonkman, 2010; Robertson et al., 2014). Though derating
+ROSCO controller with the exception of implementing the             the turbine can provide stable platform dynamics, genera-
+standard peak shaving routine. The results from the generic         tor overspeeds can generally be very high with this method
+ROSCO controller are consistent with the expected steady-           of control. The standard distribution of the IEA 15 MW
+state operating points shown in Fig. 2. In the results from         wind turbine on the UMaine semisubmersible platform (IEA
+the generic ROSCO controller, there is a noticeable increase        Wind Task 37, 2021) employs ROSCO, and the pitch con-
+in rotor thrust compared to the NREL 5 MW reference con-            troller bandwidth is 0.2 rad s−1 , which is already less than
+troller. This is attributed to the difference in pitch controller   the UMaine semisubmersible’s first platform eigenfrequency
+gains, and it can be mitigated with slightly different con-         of ∼ 0.21 rad s−1 . Also, the IEA 15 MW wind turbine uses
+troller tuning parameters. Also, note that the NREL 5 MW            constant generator torque control in above-rated operation.
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                        https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                           69
+
+Table 2. Simulated DLCs to showcase the difference in controller performance. The wind speeds were separated by increments of 2 m s−1 ,
+with normal and extreme turbulence models defined by the IEC (2019) standards. The sea-state-related inputs are relevant only for the FOWT
+simulations. Simulations were run for codirectional waves (i.e., wind and waves are aligned) to isolate the negative-damping phenomenon
+that is generally of interest to the control designer.
+
+                         DLC     Wind condition          Wind speeds    Seeds    Waves
+                         1.1     Normal turbulence      3 to 25 m s−1     6      Normal sea state, co-directional
+                         1.3     Extreme turbulence     3 to 25 m s−1     6      Normal sea state, co-directional
+
+
+
+
+Figure 13. Results from simulations of the NREL 5 MW land-based wind turbine. Average power, maximum rotor speeds, average TSRs,
+and maximum rotor thrusts are shown for DLCs 1.1 and 1.3. The dynamic results from the ROSCO controller are comparable to those from
+the NREL 5 MW reference controller. “ROSCO - generic” refers to ROSCO with the most generic tuning methods, and “ROSCO - peak
+shaving” refers to ROSCO with peak shaving implemented.
+
+
+Table 3. ROSCO controller tuning values for the collective blade        ing controller because the standard pitch controller for rotor
+pitch and TSR tracking torque controllers for the DLC simulations       speed regulation is the same. Similarly, the average power
+of the NREL 5 MW wind turbine.                                          output is expected to drop when peak shaving is introduced,
+                                                                        as shown in the bottom right plot of Fig. 14.
+                                 ζdes (−)    ωdes (rad s−1 )               Figure 15 shows a comparison of the three presented it-
+      Collective blade pitch          0.7               0.6             erations of the ROSCO controller for the IEA 15 MW wind
+      controller                                                        turbine on the UMaine semisubmersible platform. In Fig. 15,
+                                                                        ROSCO with FOWT tuning, low wind-speed pitch satura-
+      Tip speed ratio tracking        0.7              0.15
+      torque controller
+                                                                        tion, and peak shaving is used as the baseline. For a num-
+                                                                        ber of metrics of interest, the percent difference when us-
+                                                                        ing ROSCO without any pitch saturation and without the
+                                                                        FOWT feedback term is shown. As expected, by remov-
+For this comparison, the floating feedback and peak shaving             ing the pitch saturation term, the annual energy production
+modules are either enabled or disabled, and the rest of the             (AEP) increases by 1.6 %. This is directly related to the re-
+controller is not changed at all.                                       duced power output in low wind speeds because there is not
+   Figure 14 presents results from the DLC 1.1 and 1.3 sim-             power-maximizing pitch saturation and in near-rated wind
+ulations. With the peak shaving enabled, slight decreases in            speeds where the thrust is being reduced. When the pitch
+power production are seen at near-rated wind speeds. This               saturation module is kept on and the floating feedback term
+does, however, correlate to significant reductions of tower             is removed, the AEP decreases by 1.4 %. This suggests that
+fore–aft bending moments and related loads near rated. The              the increased platform damping that results from the floating
+presented reduction in platform pitching motion of about                feedback term also helps increase AEP. Overall, maximum
+15 % resulting from the floating-specific feedback term has             platform deflections and tower damage equivalent loads are
+a clear effect on the tower base bending moment as well. The            also seen to decrease somewhat significantly throughout the
+above-rated maximum rotor speed is not expected to change               turbine, with both peak shaving and the floating feedback
+significantly with and without the peak shaving and float-
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                              Wind Energ. Sci., 7, 53–73, 2022
+70                                                                      N. J. Abbas et al.: A reference controller for wind turbines
+
+
+
+
+Figure 14. Results from DLC 1.1 and 1.3 simulations for the IEA 15 MW wind turbine on the UMaine semisubmersible platform. Output
+statistics from the platform pitch angles, tower base fore–aft bending moments, rotor speed, and generator power are shown. Simulations
+using the FOWT feedback loop (βfloat ) and pitch saturation (at low wind speeds and for peak shaving) are compared to those with the pitch
+saturation or FOWT feedback modules turned off.
+
+
+
+
+Figure 15. An AEP and load comparison of the IEA 15 MW wind turbine on the UMaine semisubmersible platform. The presented values
+show the percent change of the metrics identified along the x axis with respect to the ROSCO controller with FOWT tuning and pitch
+saturation (at low wind speeds and for peak shaving) routines enabled. The AEP and DELs were calculated using DLC 1.1 results, and the
+maximum deflections were calculated using results from DLC 1.3.
+
+
+term enabled, while AEP is not detrimentally affected. In              been developed for the ROSCO controller and made avail-
+this work, no specific tuning of the floating feedback term or         able through the Python-based ROSCO toolbox. The tuning
+blade pitch controller gains was done outside of the methods           methods can be implemented easily by the interested non-
+presented in Sects. 5.5 and 2.5, so overall controller perfor-         controls engineer or in a completely automated fashion for
+mance could certainly be tuned and improved.                           use in optimization routines.
+                                                                         On the NREL 5 MW land-based wind turbine, we have
+7    Conclusions and future work                                       shown that the generically tuned ROSCO controller performs
+                                                                       comparably to the NREL 5 MW reference controller. We
+We have provided the research community with a refer-                  have also shown that, through a small amount of additional
+ence open-source controller (ROSCO) for fixed and float-               controller tuning, ROSCO’s performance can be further im-
+ing offshore wind turbines. Generic tuning methods have                proved to reduce rotor thrusts without significant reductions
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                              https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                         71
+
+in power generation. We have also provided the foundations        Appendix A: Filters
+of more modern, industry standard control methods, such as
+peak shaving and wind speed estimation. A TSR tracking            Four filters are used in the ROSCO controller. For the filters
+controller is shown to generate below-rated turbine power         presented, ωf is a cornering frequency in rad s−1 , and ζf is a
+outputs that are consistent with the expectation based on the     unitless damping ratio.
+literature without significant power fluctuation or increased
+tower-base loads. No significant differences have been made       First-order low-pass filter
+to the implementation of the above-rated collective blade                       ωf
+pitch controller, but automated tuning methods have been          FL1 (s) =                                                        (A1)
+                                                                              s + ωf
+developed to easily generate pitch-dependent gain schedules
+for the blade pitch controller based on the Cp surface. A set
+                                                                  Second-order low-pass filter
+point smoother has been implemented to improve the tran-
+sition between the primary blade pitch and generator torque                            ωf2
+controller regions. A Kalman filter-based wind speed estima-      FL2 (s) =                                                        (A2)
+                                                                              s 2 + 2ζf ωf s + ωf2
+tor is implemented in ROSCO to enable the TSR tracking and
+blade pitch saturation capabilities. Pitch saturation routines
+                                                                  First-order high-pass filter
+have been implemented to improve power output in low wind
+speeds and reduce rotor thrust rated wind speeds. A simple                   s
+                                                                  FH1 =                                                            (A3)
+shutdown logic has also been implemented to facilitate more               s + ωf
+realistic wind turbine testing for the IEC DLCs.
+   Additionally, a FOWT-specific feedback loop is included        Notch filter
+in ROSCO and has shown improvements over previously                      s 2 + 2ωf ζf1 s + ωf2
+published open-source FOWT control methods. The combi-            FN =                                                             (A4)
+                                                                         s 2 + 2ωf ζf2 s + ωf2
+nation of a FOWT-specific feedback loop and a peak shav-
+ing routine has been shown to significantly reduce platform
+pitch motions and maximum rotor speeds compared to a sim-         Code availability. The ROSCO controller and toolbox are avail-
+ple pitch controller with a bandwidth below the first fore–       able for download at https://github.com/NREL/ROSCO (NREL,
+aft natural frequency of the platform. Notably, all the results   2021; https://doi.org/10.5281/zenodo.5748043, nikhar-abbas et al.,
+shown for the IEA 15 MW on the UMaine semisubmersible             2021).
+are shown for the generalized ROSCO tuning values, and
+there is potential to further improve controller performance
+through additional fine-tuning of the input parameters to the     Data availability. The data presented in work can be made avail-
+ROSCO toolbox.                                                    able upon request.
+   Several other capabilities are also being incorporated in
+ROSCO and the ROSCO toolbox generic tuning logic. These
+capabilities and tuning methods are currently being devel-        Author contributions. NA developed the generic tuning pro-
+oped, some of which include individual pitch control, dis-        cesses, formalized the control concepts, and collected the theoret-
+tributed aerodynamic control, and improved FOWT feedback          ical foundations discussed in this article. He also contributed the
+                                                                  majority of the code found in ROSCO and the ROSCO toolbox and
+term tuning methods. A number of specific improvements for
+                                                                  established them as the tools that they are today. NA was also the
+the control methods discussed in this paper will also be im-
+                                                                  primary contributor to the writing of the article. DZ contributed to
+plemented. These include additional functionalities for the       much of the testing and verification of the ROSCO toolchain. He has
+blade pitch and torque controller, such as power-reference        also served in an advisory role during the development of many of
+tracking control and tower resonance avoidance methods.           ROSCO’s modules and reviewed this article multiple times before
+Improved shutdown and yaw methods are also being actively         its submittal. AW contributed the original theoretical idea behind
+investigated.                                                     the tuning of the floating feedback term, served in an advisory role,
+   Finally, the authors would like to reiterate that ROSCO and    and reviewed this article multiple times. LP served in a supervisory
+the ROSCO toolbox are open-source tools. We invite the re-        role, guided the theoretical foundations discussed in this article, and
+search community to download, use, and contribute to these        reviewed this article extensively.
+codes in whichever ways they see fit.
+
+
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                            Wind Energ. Sci., 7, 53–73, 2022
+72                                                                     N. J. Abbas et al.: A reference controller for wind turbines
+
+Competing interests. The contact author has declared that nei-         Bak, C., Zahle, F., Bitsche, R., Kim, T., Yde, A., Henriksen, L. C.,
+ther they nor their co-authors have any competing interests.              Natarajan, A., and Hansen, M.: Description of the DTU 10 MW
+                                                                          reference wind turbine, Tech. Rep. I-0092, Technical University
+                                                                          of Denmark, Department of Wind Energy, 2013.
+Disclaimer. This work was authored in part by the National Re-         Ben-Kiki, O., Evans, C., and Ingerson, B.: YAML ain’t markup lan-
+newable Energy Laboratory, operated by Alliance for Sustainable           guage (yaml™) version 1.1, Working Draft 2008-05, 11, [code],
+Energy, LLC, for the US Department of Energy (DOE) under                  2009.
+contract no. DE-AC36-08GO28308. Funding was provided by                Bossanyi, E.: Wind turbine control for load reduction, Wind Energy,
+the US Department of Energy Office of Energy Efficiency and               6, 229–244, 2003.
+Wind Energy Technologies Office. The views expressed in the            Bossanyi, E. A.: The design of closed loop controllers for wind tur-
+article do not necessarily represent the views of the DOE or the          bines, Wind Energy, 3, 149–163, 2000.
+US Government. The US Government retains and the publisher,            Bottasso, C. and Croce, A.: Power curve tracking with tip speed
+by accepting the article for publication, acknowledges that the           constraint using LQR regulators, Scientific Report DIA-SR, 09–
+US Government retains a nonexclusive, paid-up, irrevocable,               04, 2009.
+worldwide license to publish or reproduce the published form of        Bottasso, C. L., Campagnolo, F., and Croce, A.: Multi-disciplinary
+this work, or allow others to do so, for US Government purposes.          constrained optimization of wind turbines, Multibody Syst. Dyn.,
+                                                                          27, 21–53, 2012.
+Publisher’s note: Copernicus Publications remains neutral with         Bottasso, C. L., Croce, A., and Riboldi, C.: Optimal shutdown man-
+regard to jurisdictional claims in published maps and institutional       agement, J. Phys. Conf. Ser., 524, 012050, 2014.
+affiliations.                                                          Burton, T., Jenkins, N., Sharpe, D., and Bossanyi, E.: Wind energy
+                                                                          handbook, John Wiley & Sons, West Sussex, England, 2011.
+                                                                       DNV-GL: Bladed, [code], https://www.dnvgl.com/energy (last ac-
+Acknowledgements. The authors specifically thank Jan-Willem               cess: 1 December 2021), 2018.
+van Wingerden and Sebastiaan Mulders from the Delft University of      Dykes, K., Ning, A., King, R., Graf, P., Scott, G., and Veers, P. S.:
+Technology for their contributions to the Delft Research Controller,      Sensitivity analysis of wind plant performance to key turbine
+which provided much of the foundations upon which the ROSCO               design parameters: a systems engineering approach, in: 32nd
+controller has been built.                                                ASME Wind Energy Symposium, National Harbor, Maryland,
+   Additionally, we thank the many researchers at the National            13–17 January 2014, AIAA 2014-1087 p. 1087, 2014.
+Renewable Energy Laboratory, who have put the entire ROSCO             Fischer, B. and Shan, M.: A survey on control methods for the mit-
+toolchain through its paces in numerous applications. In particu-         igation of tower loads, Fraunhofer IWES Report, 2013.
+lar, the authors thank Pietro Bortolotti and Evan Gaertner (now at     Fleming, P. A., Pineda, I., Rossetti, M., Wright, A. D., and Arora,
+Siemens Gamesa), who helped ROSCO through perhaps the most                D.: Evaluating methods for control of an offshore floating tur-
+challenging software bugs. A special thanks to Paul Fleming as well       bine, in: ASME 2014 33rd International Conference on Ocean,
+for his initial inspiration on the structure of the ROSCO toolbox.        Offshore and Arctic Engineering, American Society of Mechan-
+                                                                          ical Engineers Digital Collection, San Francisco, California,
+                                                                          USA, 8–13 June2014, OMAE2014-24107, 2014.
+                                                                       Fleming, P. A., Peiffer, A., and Schlipf, D.: Wind turbine con-
+Financial support. This research has been supported by the US
+                                                                          troller to mitigate structural loads on a floating wind tur-
+Department of Energy, Office of Energy Efficiency and Renewable
+                                                                          bine platform, J. Offshore Mech. Arct., 141, OMAE-16-1097,
+Energy (grant no. DE-AC36-08GO28308) and the US Department
+                                                                          https://doi.org/10.1115/1.4042938, 2016.
+of Energy, Advanced Research Projects Agency – Energy (grant
+                                                                       Franklin, G. F., Powell, J. D., and Emami-Naeini, A.: Feedback con-
+no. DE-AR0000ABC).
+                                                                          trol of dynamic systems, 8 edn., Pearson, New York, NY, 2019.
+                                                                       Gaertner, E., Rinker, J., Sethuraman, L., Zahle, F., Anderson, B.,
+                                                                          Barter, G. E., Abbas, N. J., Meng, F., Bortolotti, P., Skrzypinski,
+Review statement. This paper was edited by Michael Muskulus               W., Scott, G. N., Feil, R., Bredmose, H., Dykes, K., Shields, M.,
+and reviewed by Turaj Ashuri and two anonymous referees.                  Allen, C., and Viselli, A.: IEA Wind TCP Task 37: Definition of
+                                                                          the IEA 15-Megawatt Offshore Reference Wind Turbine, Tech.
+                                                                          rep., National Renewable Energy Laboratory, Golden, CO, USA,
+                                                                          2020.
+References                                                             Garcia-Sanz, M.: Control Co-Design: an engineering game changer,
+                                                                          Advanced Control for Applications: Engineering and Industrial
+Abbas, N. J., Wright, A., and Pao, L.: An Update to the National Re-      Systems, 1, e18, 2019.
+  newable Energy Laboratory Baseline Wind Turbine Controller, J.       Grewal, M. S. and Andrews, A. P.: Kalman filtering: Theory and
+  Phys. Conf. Ser., 1452, 012002, 2020.                                   Practice with MATLAB, John Wiley & Sons, New York, NY,
+Allen, C., Viselli, A., Dagher, H., Goupee, A., Gaertner, E., Ab-         2014.
+  bas, N., Hall, M., and Barter, G.: Definition of the UMaine          Griffith, D. T. and Ashwill, T. D.: The Sandia 100 m all-glass base-
+  VolturnUS-S Reference Platform Developed for the IEA Wind               line wind turbine blade: SNL100-00, Sandia National Laborato-
+  15-Megawatt Offshore Reference Wind Turbine, Tech. rep., In-            ries Technical Report, SAND2011-3779, 2011.
+  ternational Energy Agency, https://www.nrel.gov/docs/fy20osti/
+  76773.pdf (last access: 1 December 2021), 2020.
+
+
+Wind Energ. Sci., 7, 53–73, 2022                                                              https://doi.org/10.5194/wes-7-53-2022
+N. J. Abbas et al.: A reference controller for wind turbines                                                                               73
+
+Hansen, M. H. and Henriksen, L. C.: Basic DTU Wind Energy Con-            Pao, L. Y. and Johnson, K. E.: Control of wind turbines, IEEE Contr.
+   troller, Tech. Rep. E-0028, Technical University of Denmark,             Syst. Mag., 31, 44–62, 2011.
+   Department of Wind Energy, 2013.                                       Petrović, V. and Bottasso, C. L.: Wind turbine envelope protection
+Holley, W., Rock, S., and Chaney, K.: Control of variable speed             control over the full wind speed range, Renew. Energy, 111, 836–
+   wind turbines below-rated wind speed, in: Proceedings of the 3rd         848, 2017.
+   ASME/JSME Joint Fluids Engineering Conference, The Ameri-              Robertson, A., Jonkman, J., Masciola, M., Song, H., Goupee, A.,
+   can Society of Mechanical Engineers, New York, 18 July 1999,             Coulling, A., and Luan, C.: Definition of the semisubmersible
+   1999.                                                                    floating system for phase II of OC4, Tech. rep., National Renew-
+IEA Wind Task 37: IEA-15-240-RWT, GitHub [code], https:                     able Energy Laboratory, Golden, CO, USA, 2014.
+   //github.com/IEAWindTask37/IEA-15-240-RWT, last access:                Sathe, A., Mann, J., Barlas, T., Bierbooms, W., and Van Bussel, G.:
+   1 December 2021.                                                         Influence of atmospheric stability on wind turbine loads, Wind
+IEC: Wind energy generation systems – Part 1: Design require-               Energy, 16, 1013–1032, 2013.
+   ments, IEC 614001-1, 4th edn., Internation Energy Commission,          Schlipf, D.: Set-Point-Fading for Wind Turbine Control, Zenodo,
+   Geneva, Switzerland, 2019.                                               https://doi.org/10.5281/zenodo.5567358, 2019.
+Johnson, K. E., Pao, L. Y., Balas, M. J., and Fingersh, L. J.: Con-       Schlipf, D., Schlipf, D. J., and Kühn, M.: Nonlinear model predic-
+   trol of variable-speed wind turbines: standard and adaptive tech-        tive control of wind turbines using LIDAR, Wind Energy, 16,
+   niques for maximizing energy capture, IEEE Contr. Syst. Mag.,            1107–1129, 2013.
+   26, 70–81, 2006.                                                       Van Der Veen, G., Couchman, I. J., and Bowyer, R.: Con-
+Jonkman, J.: Definition of the Floating System for Phase IV of OC3,         trol of floating wind turbines, in: Proc. 2012 American Con-
+   Tech. rep., National Renewable Energy Laboratory, Golden, CO,            trol Conference, Montreal, QC, Canada, 27–29 June 2012,
+   USA, 2010.                                                               https://doi.org/10.1109/ACC.2012.6315120, 3148–3153, 2012.
+Jonkman, J., Butterfield, S., Musial, W., and Scott, G.: Defini-          Veers, P., Dykes, K., Lantz, E., Barth, S., Bottasso, C. L., Carlson,
+   tion of a 5-MW reference wind turbine for offshore system de-            O., Clifton, A., Green, J., Green, P., Holttinen, H., Laird, D.,
+   velopment, Tech. rep., National Renewable Energy Laboratory,             Lehtomäki, V., Lundquist, J. K., Manwell, J., Marquis, M., Men-
+   Golden, CO, USA, 2009.                                                   eveau, C., Moriarty, P., Munduate, X., Muskulus, M., Naughton,
+Knudsen, T., Bak, T., and Soltani, M.: Prediction models for wind           J., Pao, L., Paquette, J., Peinke, J., Robertson, A., Sanz Rodrigo,
+   speed at turbine locations in a wind farm, Wind Energy, 14, 877–         J., Sempreviva, A. M., Smith, J. C., Tuohy, A., and Wiser, R.:
+   894, 2011.                                                               Grand challenges in the science of wind energy, Science, 366,
+Lackner, M. A. and van Kuik, G.: A comparison of smart rotor con-           eaau2027, https://doi.org/10.1126/science.aau2027, 2019.
+   trol approaches using trailing edge flaps and individual pitch con-    Wayman, E. N., Sclavounos, P., Butterfield, S., Jonkman, J., and
+   trol, Wind Energy, 13, 117–134, 2010.                                    Musial, W.: Coupled dynamic modeling of floating wind tur-
+Larsen, T. J. and Hanson, T. D.: A method to avoid negative damped          bine systems, Tech. rep., National Renewable Energy Labora-
+   low frequent tower vibrations for a floating, pitch controlled wind      tory, Golden, CO, USA, 2006.
+   turbine, J. Phys. Conf. Ser., 75, 012073, 2007.                        Zahle, F., Tibaldi, C., Verelst, D. R., Bak, C., Bitche, R., and
+MATLAB: version 9.6.0 (R2019a), The MathWorks Inc., Natick,                 Blasques, J. P. A. A.: Aero-elastic optimization of a 10 MW wind
+   Massachusetts, 2019.                                                     turbine, in: 33rd Wind Energy Symposium, Kissimmee, Florida,
+Mulders, S. and van Wingerden, J.: Delft Research Controller: an            5–9 January 2015, AIAA 2015-0491 p. 0491, 2015.
+   open-source and community-driven wind turbine baseline con-            Zalkind, D. S. and Pao, L. Y.: Constrained Wind Tur-
+   troller, J. Phys. Conf. Ser., 1037, 032009, 2018.                        bine Power Control, in: Proc. 2019 American Control
+nikhar-abbas, dzalkind, Mudafort, R. M., Mulders, S., david-                Conference, Philadelphia, PA, USA, 10–12 July 2019,
+   heff, Hylander, G., and Bortolotti, P.: NREL/ROSCO:                      https://doi.org/10.23919/ACC.2019.8814860,              3494–3499,
+   Zenodo         Integration      (v2.4.1-z),    Zenodo        [code],     2019.
+   https://doi.org/10.5281/zenodo.5748043, 2021.                          Zalkind, D. S., Dall’Anese, E., and Pao, L. Y.: Automatic con-
+Ning, S.: CCBlade Documentation: Release 1.1.0, Tech. rep., Na-             troller tuning using a zeroth-order optimization algorithm, Wind
+   tional Renewable Energy Laboratory, Golden, CO, USA, 2013.               Energ. Sci., 5, 1579–1600, https://doi.org/10.5194/wes-5-1579-
+NREL: OpenFAST, Version 2.1.0, GitHub [code], https://github.               2020, 2020.
+   com/openfast/openfast (last access: 1 December 2021), 2019.
+NREL: ROSCO, Version 2.4.1, GitHub [code], https://github.com/
+   NREL/ROSCO (last access: 1 December 2021), 2021.
+
+
+
+
+https://doi.org/10.5194/wes-7-53-2022                                                                  Wind Energ. Sci., 7, 53–73, 2022
+

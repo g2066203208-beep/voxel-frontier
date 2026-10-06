@@ -1,0 +1,62 @@
+{
+  "REF008_He2024": {
+    "pages": 91,
+    "matches": 172,
+    "pdf": "research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf"
+  },
+  "REF005_Li2023": {
+    "pages": 14,
+    "matches": 201,
+    "pdf": "research/wind-tower/references/user-provided/Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models.pdf"
+  },
+  "REF010_Cheng2024": {
+    "pages": 13,
+    "matches": 149,
+    "pdf": "research/wind-tower/references/user-provided/Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf"
+  },
+  "REF039_Frequency2023": {
+    "pages": 46,
+    "matches": 189,
+    "pdf": "research/wind-tower/references/user-provided/Closed-Form Solution of Fundamental Frequency of Steel-Concrete Hybrid Wind Turbine Tower.pdf"
+  },
+  "REF061_Xu2025": {
+    "pages": 18,
+    "matches": 91,
+    "pdf": "research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf"
+  },
+  "REF001_DTU10MW": {
+    "pages": 139,
+    "matches": 190,
+    "pdf": "research/wind-tower/references/open-access/Bak_2013_DTU_Wind_Energy_Report_I_0092.pdf"
+  },
+  "REF080_ERA5": {
+    "pages": 11,
+    "matches": 169,
+    "pdf": "research/wind-tower/references/user-provided/ERA5 - The new champion of wind power modelling.pdf"
+  },
+  "REF083_PowerLaw": {
+    "pages": 14,
+    "matches": 75,
+    "pdf": "research/wind-tower/references/user-provided/The role of the power law exponent in wind energy assessment - A global analysis.pdf"
+  },
+  "REF093_DynamicAlpha": {
+    "pages": 15,
+    "matches": 117,
+    "pdf": "research/wind-tower/references/user-provided/Spatiotemporal variation of power law exponent on the use of wind energy.pdf"
+  },
+  "REF090_ReanalysisReview": {
+    "pages": 21,
+    "matches": 323,
+    "pdf": "research/wind-tower/references/user-provided/Analysing the uncertainties of reanalysis data used for wind resource assessment - A critical review.pdf"
+  },
+  "REF046_ROSCO": {
+    "pages": 22,
+    "matches": 323,
+    "pdf": "research/wind-tower/references/open-access/Abbas_2022_WES_ROSCO_7_53.pdf"
+  },
+  "REF009_Brown2024": {
+    "pages": 21,
+    "matches": 167,
+    "pdf": "research/wind-tower/references/open-access/Brown_2024_WES_9_1791.pdf"
+  }
+}

@@ -1,0 +1,1163 @@
+                                                                     Renewable Energy 243 (2025) 122475
+
+
+                                                                  Contents lists available at ScienceDirect
+
+
+                                                                       Renewable Energy
+                                                        journal homepage: www.elsevier.com/locate/renene
+
+
+
+
+Nonlinear dynamic response analyses of Onshore Wind Turbines with
+Steel–Concrete Hybrid Tower using a co-simulation approach
+Jun Xu a,b ,∗, Zeyu He a , Dan Wang a , Guangling He c , Qiang Wu c , Zili Zhang d
+a College of Civil Engineering, Hunan University, Changsha, 410082, PR China
+b
+  State Key Laboratory of Bridge Engineering Safety and Resilience, Hunan University, 410082, PR China
+c
+  Hunan Sany Intelligent New Energy Design Co., Ltd, Changsha, 410100, PR China
+d
+  School of Civil Engineering, Tongji University, 200092 Shanghai, PR China
+
+
+
+ARTICLE               INFO                               ABSTRACT
+
+Keywords:                                                The Onshore Wind Turbine (OWT) with a Steel–Concrete Hybrid Tower (SCHT) exhibits unique dynamic
+Steel–concrete hybrid tower                              characteristics due to its combination of a steel upper section and a concrete lower section, distinguishing
+Co-simulation                                            it from traditional steel towers. This study proposes a co-simulation approach to develop an integrated,
+Multi-body dynamics
+                                                         fully-coupled model of OWTs with SCHT, combining multi-body dynamics and finite-element methods for
+Onshore wind turbines
+                                                         nonlinear dynamic response analysis. First, the multi-flexible body system of the OWT is divided into the
+Time history analysis
+                                                         blade system and the tower system, with a force–force coupling method applied to manage the interactions
+                                                         between these components. The equation of motion for the blade system is derived using the Euler–Lagrange
+                                                         equations, establishing a multi-body dynamic model. This allows for the detailed simulation of blade dynamics,
+                                                         capturing their flexible behavior and interactions with other turbine components. Then, a finite-element model
+                                                         employing beam elements is developed with OpenSEES software to describe the structural behavior of the
+                                                         SCHT, incorporating material nonlinearity. This model captures the distinct structural responses of the steel
+                                                         and concrete sections. The interactions between these two separate systems are then integrated using an
+                                                         iterative coupling method to formulate the co-simulation approach. This iterative method ensures accurate
+                                                         representation of the dynamic interactions between the two subsystems, leading to a more realistic simulation
+                                                         of the overall turbine behavior. Numerical investigations are conducted to verify the effectiveness of the
+                                                         proposed co-simulation model. Additionally, both linear and nonlinear dynamic response analyses of OWTs
+                                                         with SCHT under extreme wind conditions are performed.
+
+
+
+1. Introduction                                                                               a comprehensive understanding of their performance. Due to the com-
+                                                                                              plexity of OWT with SCHT, the dynamic response analysis of OWT with
+    As the demand for renewable energy continues to surge, improving                          SCHT still remains a challenging task. Given the similarities between
+the efficiency and reliability of wind turbines has become a crucial                          OWTs with SCHT and Monopile Offshore Wind Turbines (MOWTs), the
+focus of research and development. Onshore Wind Turbines (OWTs),
+                                                                                              extensive investigations conducted on the dynamic analysis of MOWTs
+favored for their ease of installation and lower costs compared to
+                                                                                              can serve as valuable references. Traditionally, the Multi-Body Dynamic
+offshore systems, encounter various dynamic loads that can impact
+                                                                                              (MBD) model and Finite-Element (FE) model are widely applied for this
+their performance and structural integrity. One innovative solution to
+enhancing the stability and durability of these turbines is the implemen-                     purpose.
+tation of Steel–Concrete Hybrid Towers (SCHTs). The SCHT combines                                The multi-body dynamics (MBD) approach is frequently employed
+the strengths of both materials to provide a robust and resilient support                     to model the entire wind turbine system, capturing the interactions
+structure for wind turbines. This combination enhances overall struc-                         between components such as the rotor, drivetrain, and tower [1,2].
+tural performance, enabling the construction of taller and more robust                        This method facilitates the simulation of complex dynamic behaviors
+wind turbines capable of withstanding diverse environmental loads. Ad-                        and the evaluation of various operational conditions and external loads.
+ditionally, since the concrete section can exhibit nonlinear behaviors, a                     By accounting for the flexibility and movements of these components,
+nonlinear dynamic response analysis of OWTs with SCHTs is crucial for
+
+
+    ∗ Corresponding author.
+    E-mail addresses: xujun86@hnu.edu.cn (J. Xu), zeyu@hnu.edu.cn (Z. He), wangdan1@hnu.edu.cn (D. Wang), 43835975@qq.com (G. He),
+wuqiang07@163.com (Q. Wu), zili_zhang@tongji.edu.cn (Z. Zhang).
+
+https://doi.org/10.1016/j.renene.2025.122475
+Received 28 June 2024; Received in revised form 7 January 2025; Accepted 19 January 2025
+Available online 27 January 2025
+0960-1481/© 2025 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies.
+J. Xu et al.                                                                                                                  Renewable Energy 243 (2025) 122475
+
+
+MBD offers detailed insights into the overall performance and relia-             2.1. General description
+bility of wind turbines under diverse scenarios. For instance, Harun
+et al. (2017) utilized the MBD approach to simulate wind turbine
+dynamic deformations, subsequently applying it as a design method                    A SCHT wind turbine comprises two primary sections: the upper
+for foundations [3]. Sun et al. (2018) developed an analytical model             part, which includes the blades and nacelle components, and the lower
+of a MOWT coupled with a pendulum tuned mass damper, model-                      part, which is the SCHT. Fig. 1 provides a schematic illustration of the
+ing interactions between the blades, tower, and damper [4]. Sajeer               OWT with SCHT configuration. The wind turbine structure is designed
+et al. (2021) investigated the dynamic response of a MOWT using                  to withstand wind loads in this paper. For simplicity, this study assumes
+MBD for hydro-servo-elastic analysis, incorporating soil–structure in-           the tower base to be a fixed support and considers the nacelle and
+teraction [5]. Xi et al. (2021) designed a monopile for a 10 MW                  hub as rigid bodies. In practical engineering applications, the initial
+offshore wind turbine specific to an ocean site, developing a new soil–          section of the tower may contain openings; however, these are typically
+structure interaction framework for the aero-servo-hydro-elastic code
+                                                                                 reinforced along their edges. Therefore, for the purposes of this study,
+FAST, also based on the MBD approach [6]. Similarly, Xie et al. (2022)
+                                                                                 these openings are disregarded in the overall dynamic response analysis
+established a complete multi-body model of a fixed-bottom offshore
+wind turbine considering pile-soil interaction, performing simulations           of the tower [26].
+under multiple external excitations [7]. Other related works utilizing               In Fig. 1, a global coordinate system 𝑂𝑋 𝑌 𝑍 is established with the
+the MBD approach include studies by Li et al. (2017) [8], Zhang et al.           intersection of the ground and tower axis as the origin 𝑂. The 𝑍-axis
+(2020) [9], Jahani et al. (2022) [10], Xi et al. (2022) [11], Padron             aligns with the tower axis, the 𝑌 -direction parallels the blade pitching,
+et al. (2022) [12], Steinacker et al. (2022), and Ding et al. (2024) [13].       and the 𝑋-direction is perpendicular to the blade flapping. The degrees
+Recently, Mitra et al. (2023) extended the MBD approach to study the             of freedom 𝑞7 and 𝑞8 represent the fore-aft and side-side responses of
+dynamic behavior of OWTs [14]. Despite these advancements, the MBD
+                                                                                 the nacelle atop the tower relative to its base.
+approach can only simulate the elastic response of wind turbines. Under
+the extreme loading conditions, the OWT with SCHT may experience                      For the blades, as depicted in Fig. 2, a local coordinate system
+nonlinear deformations, which may not be realistically considered by             𝑜′ 𝑥′ 𝑦′ 𝑧′ is established parallel to the global coordinates 𝑂𝑋 𝑌 𝑍, with
+MBD approach.                                                                    the hub center as the origin. In this coordinate system, 𝑞1 , 𝑞2 , and 𝑞3 rep-
+    On the other hand, the FE method stands as a cornerstone in probing          resent the degrees of freedom for the edgewise (out-of-plane) motions
+the structural behavior and stress distribution within wind turbine              of the three blades within their respective local systems. Similarly, 𝑞4 ,
+components. This approach offers an intricate exploration of mechan-             𝑞5 , and 𝑞6 represent the degrees of freedom for the flapwise (in-plane)
+ical properties and material behaviors, thereby facilitating a thorough          motions of the three blades within their respective local systems.
+assessment of structural integrity and potential failure modes in wind
+                                                                                     In normal operation, wind energy is converted into electrical energy
+turbines. A plethora of investigations has delved into the dynamic re-
+                                                                                 as the blades rotate around the hub center, causing their positions
+sponses of wind turbines under varied loading scenarios, encompassing
+wind, sea waves, and seismic forces. In streamlining these analyses,             to change over time. If we denote the angular velocity of the blade
+researchers commonly assume wind turbines to be in a parked state,               rotation as 𝛺, the azimuth angle 𝜓𝑗 (𝑡) of the 𝑗th blade at time instant
+with blades represented as a lumped mass atop the tower [15–21]. This            𝑡 can be expressed as:
+simplification, however, overlooks the intricate geometrical intricacies                       2𝜋
+                                                                                 𝜓𝑗 (𝑡) = 𝛺𝑡 +    (𝑗 − 1), 𝑗 = 1, 2, 3                                (1)
+of the blades and their interactions with the tower. Conversely, some                           3
+studies, like those by Prowell et al. [22], Kjørlaug and Kaynia [23],
+and Santangelo et al. [24], have intricately incorporated blade geome-
+tries into their FE models for seismic analyses. Despite this, they still        2.2. Parameter settings of OWTs with SCHT
+constrain their investigations to the parked condition, neglecting the
+dynamic effects of blade rotation, which can induce position shifts and
+stiffness variations. The dynamic responses of contemporary NREL 5                   In this section, the 10 MW (DTU-10 MW) wind turbine blade model
+MW wind turbines under combined wind and sea wave loads have                     provided by the Technical University of Denmark [27] is selected
+been scrutinized numerically using the Abaqus FE code [25]. However,             for the upper blades. The flexible deformation characteristics of the
+the intricate interactions between blades and tower may not receive              tower and blades are captured using the modal synthesis method.
+due consideration. Indeed, simulating blade operation conditions in-             Accordingly, the fundamental mode shapes of the blades and tower are
+volving rotation using the FE method presents considerable challenges,           also presented in this section.
+accompanied by significant computational efforts.
+    Given the aforementioned limitations, this study proposes an inno-
+vative Co-Simulation (CS) approach for dynamic response analysis of              2.2.1. Blade parameters
+OWT with SCHT. The methodology involves segregating the OWT with
+                                                                                    The SCHT turbine blades are modeled after those of the DTU 10 MW
+SCHT into two distinct systems: the blade system is simulated using
+the MBD approach, while the FE model is employed to investigate the              turbine. This wind turbine uses a three-blade configuration for power
+structural behavior of the SCHT. Additionally, proper consideration is           generation, with a rotor diameter of 178.3 m and individual blade
+given to the interactions between these two segregated systems. The              lengths of 86.35 m. The total weight of the blades is 125,078.565 kg,
+subsequent sections of the paper are structured as follows: Section 2            while the nacelle weighs 227,962 kg. Key parameters for the upper
+delineates the model description of the OWT with SCHT. Section 3                 components are summarized in Table 1.
+elaborates on the development of the CS model for dynamic response                   The fundamental mode functions of the blade in edgewise and flap-
+analyses. The verification of the proposed CS method and subsequent              wise directions, denoted by 𝜙1e (𝑟) and 𝜙1f (𝑟) respectively, are defined
+numerical analyses are conducted in Section 4. Finally, concluding
+                                                                                 as follows: [28]
+remarks are provided in the last section.
+                                                                                 𝜙1f (𝑟) = −0.62450 × 𝑟6 + 0.08439 × 𝑟5 + 1.26100 × 𝑟4 + 0.14430 × 𝑟3
+2. Model description of OWTs with SCHT                                              + 0.13510 × 𝑟2
+                                                                                                                                                            (2)
+                                                                                 𝜙1e (𝑟) = −0.06974 × 𝑟6 + 0.71490 × 𝑟5 + 0.45620 × 𝑟4 + 0.82800 × 𝑟3
+   This section provides a general description of an OWT with SHCT.
+Additionally, the parameter settings for the blades and tower are also              + 0.36200 × 𝑟2
+provided.
+
+                                                                             2
+J. Xu et al.                                                                                                          Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                       Fig. 1. Schematic illustration of OWTs with SCHT.
+
+
+
+
+                                                      Fig. 2. Schematic illustration of wind turbine blades.
+
+
+               Table 1
+               Parameters of the DTU 10 MW turbine.
+                Gross properties                                Rating                                         10 MW
+                                                                Rotor orientation, Configuration               Upwind, 3 Blades
+                                                                Rotor, Hub diameter                            178.3 m, 5.6 m
+                                                                Hub height                                     160.0 m
+                                                                Cut-in, Rated, Cut-out wind speed              4 m/s, 11.4 m/s, 25 m/s
+                                                                Cut-in, Rated rotor speed                      6.0 rpm, 9.6 rpm
+                Blade structural properties                     Length                                         89.2 m
+                                                                Overall (integrated) mass                      416,92.855 kg
+                                                                Structural-damping ratio                       0.48%
+                Nacelle and hub properties                      Hub mass                                       105,520 kg
+                                                                Nacelle mass                                   446,006 kg
+
+
+
+                                                                                3
+J. Xu et al.                                                                                                                                    Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                                                      2.3. Wind loads
+
+                                                                                          During operation, an OWT with SCHT relies on its blades to harness
+                                                                                      wind energy, bearing the majority of the wind loads and transferring
+                                                                                      these loads downwards. This section will delve into the theoretical
+                                                                                      calculations of the wind loads experienced by an OWT with SCHT. As is
+                                                                                      commonly understood, wind speed comprises both mean and turbulent
+                                                                                      components [30], denoted by 𝑣(𝑡) = 𝑣̄ + 𝑣̃(𝑡). The mean wind speed at
+                                                                                      a given height 𝑧 is determined through a power-law profile, whereas
+                                                                                      the turbulent component of wind speed is calculated using the spectral
+                                                                                      representation method. For the latter, the Kaimal spectrum is utilized
+                                                                                      as the reference spectrum [31].
+                                                                                          As illustrated in Fig. 4(a), the program calculates the wind speed at
+                                                                                      each point in a 31 × 31 grid. This generates a stochastic wind field,
+                                                                                      which is then applied to the blades and tower structures to assess
+                                                                                      the effects of turbulent wind-induced loadings on the wind turbine.
+                                                                                      Fig. 4(b) depicts the time history of wind speed at a specific point in
+                                                                                      the turbulent wind field.
+                                                                                          The Blade Element Momentum (BEM) theory [28,32,33] is then
+                                                                                      employed to approximate the load effects acting on the blades. This
+                                                                                      method offers high computational efficiency compared to computa-
+                                                                                      tional fluid dynamics, while also maintaining a high level of accuracy.
+                       Fig. 3. Simplified diagram of SCHT model.
+                                                                                      BEM theory combines blade element theory and momentum theory to
+                                                                                      determine the normal forces 𝑃N and tangential forces 𝑃T acting on
+Table 2                                                                               blade elements, based on the aerodynamic characteristics of the blades
+Material parameters.
+                                                                                      and the incoming wind speed profiles. Recognizing that direct iteration
+ Material                           Parameter                      Value
+                                                                                      methods exhibit poor stability, this paper adopts the computational
+ C70                                Compressive strength           44.5 MPa
+                                                                                      approach outlined in [34,35] to transform the traditional two-variable
+                                    Tensile strength               2.99 MPa
+                                    Elastic modulus                37 000 MPa         iterative BEM equations into single-variable equations with unknown
+                                                                                      inflow angles, employing stable and reliable root-finding algorithms
+ C65                                Compressive strength           41.5 MPa
+                                    Tensile strength               2.93 MPa           to solve them. After obtaining the aerodynamic loads, specifically the
+                                    Elastic modulus                36 500 MPa         normal forces 𝑃N and tangential forces 𝑃T , through the BEM theory,
+ HRB335                             Yield strength                 335 MPa            the generalized aerodynamic loads acting on each degree of freedom
+                                    Ultimate strength              455 MPa            are calculated using the principle of virtual work. The virtual work
+                                    Elastic modulus                200 000 MPa        generated by the aerodynamic loads is expressed as follows [33]:
+ Prestressed tendon                 Yield strength                 1320 MPa
+                                                                                               ∑3 {     𝑅           [                             ]
+                                    Ultimate strength              1860 MPa           𝛿 𝑊wl =             𝑃T𝑗 (𝑟, 𝑡) 𝜙1e (𝑟)𝛿 𝑞𝑗 + 𝛿 𝑢ss
+                                                                                                                                      nac cos 𝜓𝑗 d𝑟
+                                    Elastic modulus                195 000 MPa                       ∫0
+                                                                                               𝑗=1                                                          (4)
+                                                                                                                                                     }
+ Q345                               Yield strength                 345 MPa                                 𝑅           [                        ]
+                                    Ultimate strength              470 MPa                           +       𝑃N𝑗 (𝑟, 𝑡) 𝜙1f (𝑟)𝛿 𝑞𝑗+3 + 𝛿 𝑢fnac
+                                                                                                                                             a
+                                                                                                                                                  d𝑟
+                                    Elastic modulus                206 000 MPa
+                                                                                                        ∫0
+                                                                                      where 𝑃T𝑗 (𝑟, 𝑡) and 𝑃N𝑗 (𝑟, 𝑡) respectively represent the tangential and
+                                                                                      normal forces experienced by the 𝑗th blade element.
+                                                                                          Introducing the generalized force 𝑄𝑗 , in accordance with the re-
+2.2.2. Tower parameters
+                                                                                      lationship between work and energy, the virtual work done by the
+    As illustrated in Fig. 3, the SCHT is a steel–concrete hybrid tower
+                                                                                      generalized force is given by:
+consisting of a steel upper section and a concrete lower section, with a
+                                                                                             𝜕 𝑊wl
+total height of 158 m. The concrete section extends from 0 m to 112 m,                𝑄𝑗 =                                                                   (5)
+                                                                                              𝜕 𝑞𝑗
+while the remaining portion is composed of steel. The tower of the
+SCHT wind turbine is modeled as a typical cantilever beam structure,
+                                                                                         Substituting Eq. (4) into Eq. (5) yields the generalized forces acting
+with its cross-sectional geometric characteristics varying along the
+                                                                                      on each degree of freedom as follows:
+height of the tower.
+                                                                                                        𝑅                                              𝑅
+    For the concrete tower, the lower two sections utilize C70 concrete
+                                                                                      𝑄𝑗 ,wind =            𝑃T𝑗 (𝑟, 𝑡)𝜙1e d𝑟,     𝑄𝑗+3,wind =              𝑃N𝑗 (𝑟, 𝑡)𝜙1f d𝑟, 𝑗 = 1, 2, 3
+as per Chinese standards, while the remaining sections use C65 con-                                ∫0                                             ∫0
+crete. The reinforcement for the concrete sections employs HRB335                                  ∑
+                                                                                                   3          𝑅                               ∑
+                                                                                                                                              3            𝑅
+steel bars. Additionally, the prestressed tendons are made of externally              𝑄7,wind =                   𝑃T𝑗 (𝑟, 𝑡)d𝑟,   𝑄8,wind =                    𝑃N𝑗 (𝑟, 𝑡)d𝑟 cos 𝜓𝑗
+                                                                                                        ∫0                                         ∫0
+unbonded, high-strength, low-relaxation wire ropes with a diameter of                               0                                         0
+
+15.2 mm and an initial prestress of 1280 MPa. For the steel sections                                                                                                                  (6)
+of the tower, Q345 steel is used. Detailed material parameters are
+provided in Table 2.
+                                                                                         This section has provided a comprehensive overview of the OWT
+    Then, the first-mode vibration function of the tower, denoted as
+                                                                                      with SCHT, detailing the parameters for both the blades and tower
+𝜙1t (𝑧), can be expressed as [29]:
+                                                                                      materials. Additionally, the wind loads acting on the turbine have
+𝜙1t (𝑧) = 0.36850 ×𝑧6 − 2.55828 ×𝑧5 + 3.47648 ×𝑧4 − 1.87776 ×𝑧3 + 1.59106 ×𝑧2         been described. With this foundational information, the subsequent
+                                                                                      section will introduce a CS approach to perform nonlinear dynamic
+                                                                            (3)
+
+                                                                                  4
+J. Xu et al.                                                                                                               Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                                 Fig. 4. Wind speed.
+
+
+response analysis of OWTs with SCHT. This approach will integrate
+multi-body dynamics and FE methods to provide a detailed and ac-
+curate assessment of the turbine’s behavior under various loading
+conditions.
+
+3. Co-simulation model for wind turbines with steel–concrete hy-
+brid tower
+
+    In a multi-body system, different components often exhibit varying
+levels of structural complexity. Employing a uniform analysis method
+across the entire system can result in inaccurate results or high com-
+putational costs. Therefore, it is advantageous to decompose structures
+of varying complexities into relatively independent components. These
+components can be analyzed separately and their individual solutions                             Fig. 5. Simplified diagram of CS model.
+
+integrated afterward, reducing computational costs and enhancing ac-
+curacy. This method is referred to as the CS approach [36]. Consid-
+ering the complexity of the SCHT section and its material behavior,
+along with the relatively simple characteristics of the blades and hub,
+a co-simulation model will be established to develop an integrated,
+fully-coupled model for the SCHT wind turbine.
+
+3.1. Introduction of co-simulation approach
+
+    For multi-body systems involving flexible bodies, a Co-Simulation
+(CS) approach that combines the MBD method with the FE model can
+be employed. This approach allows for the creation of a model for
+the flexible body within an independent coordinate system, accurately
+describing its elastic deformation. In practice, simulations of multi-                           Fig. 6. CS model: force–force coupling.
+flexible body systems have been explored across various fields, such
+as vehicle-track coupling systems [36] and gear box systems of wind
+turbines [37,38], among others. Typically, this involves integrating
+commercial simulation software like SIMPACK and Abaqus to perform             where 𝑥s and 𝑥m denote the responses of the subsystem 𝑆 and the multi-
+hybrid simulations [39–42]. This combined approach leverages the              flexible body system 𝑀, respectively. These responses can encompass
+strengths of both MBD and FE methods, enabling a comprehensive                displacement, velocity, or acceleration as structural response variables.
+analysis of the dynamic responses and interactions within flexible            Meanwhile, 𝜆̄ 𝑐 represents the generalized force acting on both systems.
+multi-body systems.                                                               As depicted in Fig. 6 and based on Eq. (7), the two systems can be
+    As illustrated in Fig. 5, a multi-flexible body system 𝑀 is coupled       decoupled using a force–force coupling method. At each macro time
+with the subsystem 𝑆 through a fixed connection. The multi-flexible           step, which corresponds to the interval for data exchange between the
+body system 𝑀 also can comprise multiple flexible bodies 𝑆b𝑖 and              systems, the response variables of each system are computed. These
+stiffness components, which can be solved as a complete multi-flexible        response variables are then used to calculate the generalized loads
+body system [43]. The interaction between the multi-flexible body             that act as inputs to the other system for the subsequent time step.
+system 𝑀 and the subsystem 𝑆 can be likened to a black box, producing         The force–force coupling method is well-suited for a wide range of
+different output results under varying input conditions such that             applications, as it enables the decomposition of complex systems into
+ {
+     𝑥s = 𝑆(𝜆̄ 𝑐 )                                                            subsystems, allowing for parallel computation and simplified inter-
+                                                                    (7)
+    𝑥m = 𝑀(𝜆̄ 𝑐 )                                                             action modeling through constitutive laws. Each subsystem can be
+
+                                                                          5
+J. Xu et al.                                                                                                                           Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                                   Fig. 7. Diagram of the CS model.
+
+
+solved independently using solvers tailored to its specific require-                  where 𝐌blade , 𝐂blade , 𝐊blade denote the mass, damping, and stiffness ma-
+ments. However, the stability and accuracy of the force–force coupling                trices for the blade system, respectively, 𝐪blade , 𝐪̇ blade , 𝐪̈ blade represent the
+method are sensitive to coupling parameters, and its non-iterative                    displacement, velocity, and acceleration vectors of the blade system.
+implementation may suffer from reduced stability, particularly in sys-                and the term 𝐐blade represents the blade system’s generalized force
+tems with strong coupling or high stiffness. When combined with                       vector. Actually, these matrices can be considered as the sub-matrices
+iterative coupling methods, it achieves excellent numerical stability and             that correspond to the first six degrees of freedom in the matrices
+effectively handles such challenges, albeit at the cost of increased com-              ̃ 𝐂,
+                                                                                      𝐌,  ̃ 𝐊.
+                                                                                             ̃
+putational effort [44]. Through an iterative process of data exchange
+at macro time steps, the interaction forces between the subsystems can
+                                                                                      3.3. Modeling of subsystem: SCHT model
+be accurately captured and updated.
+    As shown in Fig. 7, for a multi-body system, the equations of motion
+can be derived using methods such as Euler–Lagrange equations and                         As shown in Fig. 3, the upper part of the SCHT is made of a
+solved using algorithms like Runge–Kutta or Newmark. Meanwhile,                       steel tower, while the lower part consists of a reinforced concrete
+the structural response of the subsystem can be determined by solving                 tower body. The reinforced concrete section contains prestressed steel
+the implicit function 𝑔(). These two systems transfer structural dis-                 reinforcements to induce compressive stress between tower segments.
+placement, velocity, and acceleration to the CS manager, which then                   Additionally, the tower features a reinforcing steel mesh, with differ-
+calculates the generalized forces acting on the other system. When the                ent segment configurations for both reinforcement and geometry. To
+computer performance is strong enough or the interaction cost between                 accurately capture the structural behaviors of the SCHT, a nonlinear
+the two systems is low, using smaller macro time steps can reduce                     FE model needs to be established and applied. For this purpose, the
+errors. However, in mature and stable time integration algorithms,                    OpenSEES software is specifically employed.
+adaptive time steps are commonly employed to enhance solution sta-                        The SCHT model in OpenSEES consists of 31 sections of reinforced
+bility and reduce computation time, making it challenging to select a                 concrete tower segments and 4 sections of steel tower segments, with
+suitable macro time step. Therefore, some studies used extrapolation                  each tower represented by one beam element, as depicted in Fig. 8.
+methods to replace actual responses in other systems [36,44]. For                     The base of the tower is fixedly constrained, while the wind turbine
+simplification purposes, this paper will utilize linear interpolation to              hub loads at the top are calculated using the MBD model built in the
+calculate the response outputs of each subsystem towards the other                    previous section. However, the MBD model cannot account for the
+systems within their respective sub-time steps, and perform generalized               vertical direction (𝑍-axis) of the tower. Therefore, in the OpenSEES
+force calculations for the model in Fig. 7.
+                                                                                      model, a lumped mass in the 𝑍-axis is added to simulate the hub loads.
+    For dynamic response analysis of an OWT with SCHT, the flexible
+                                                                                          Both linear and nonlinear models will be established using
+multi-body system comprises the blades and nacelle, while the sub-
+                                                                                      displacement-based beam–column elements, with unit sections defined
+system is treated as the SCHT. In this setup, the flexible multi-body
+                                                                                      in a fiber manner as depicted in Fig. 9. For reinforced concrete tower
+system and the subsystem interact through the CS manager, which
+                                                                                      segments, longitudinal steel fibers will be created alongside concrete
+facilitates the exchange of structural responses between the two. By
+                                                                                      section fibers, as shown in Fig. 10. In this representation, steel fibers are
+doing so, the CS manager calculates the generalized forces acting on
+                                                                                      arranged based on the actual quantities and positions of longitudinal
+each component, ensuring an accurate representation of the overall
+                                                                                      reinforcement. Since simulating reinforcement stirrups is challenging
+dynamic behavior of an OWT with SCHT.
+                                                                                      in OpenSEES, an approximate modeling approach using the Mander
+                                                                                      confined concrete model is adopted to simulate the strengthening effect
+3.2. Modeling of flexible multi-body system: Blades
+                                                                                      of stirrups and longitudinal reinforcements on concrete. The same fiber
+                                                                                      approach is applied to steel tower segments.
+   As mentioned, the dynamic responses of blades are evaluated using
+the equation of motion for the blade system, which is derived from                        In the nonlinear models, both material and geometric nonlineari-
+the Euler–Lagrange method and solved with appropriate numerical                       ties are incorporated within OpenSEES. For material nonlinearity, the
+algorithms such as the Runge–Kutta or Newmark algorithm. These                        ‘‘Concrete D’’ material model is used to simulate the nonlinear behavior
+responses include displacements, velocities, and accelerations, which                 of concrete fibers [45], while steel fibers and steel tower sections are
+are then communicated to the CS manager.                                              modeled with the bilinear ‘‘Steel01’’ material model. Prestressed steel
+   In our previous work, an 8-DOF multi-body dynamic model has                        bars, subjected to uniaxial tension only, are represented using truss
+been thoroughly derived for the OWT with SCHT based on the Euler–                     elements. Geometric nonlinearity of the P-𝛥 effect is incorporated via
+Lagrange equations [29], which can be expressed as                                    the ‘‘geomTransf PDelta’’ transformation, capturing significant tower
+̃ 𝐪̈ + 𝐂
+       ̃ 𝐪̇ + 𝐊𝐪
+              ̃ =𝐐
+                 ̃                                                                    deformations under dynamic loading conditions. As shown in Fig. 10,
+𝐌                                                                           (8)
+                                                                                      to simultaneously observe the stress–strain response of linear and non-
+where 𝐌,̃ 𝐂,
+           ̃ 𝐊̃ denote the mass, damping, and stiffness matrices of the               linear hybrid models and to reduce output burden, eight stress–strain
+system, respectively. The term 𝐐  ̃ represents the system’s generalized               output monitoring fibers were set along the circumference every 45◦ on
+force vector. Detailed explanations of the system matrices are provided               the outer layer of concrete fiber in the lower portion of the tower. This
+in Appendix.                                                                          placement is based on the fact that the maximum stress–strain values
+    In this context, the equation of motion for the blade system can be               generally occur at the bottom of the tower. The monitoring fibers are
+expressed in a general form as follows:                                               named clockwise starting from 𝑥 = 0, 𝑦 > 0 as ‘‘Node1’’, ‘‘Node2’’, up
+                                                                                      to ‘‘Node8’’.
+𝐌blade ⋅ 𝐪̈ blade + 𝐂blade ⋅ 𝐪̇ blade + 𝐊blade ⋅ 𝐪blade = 𝐐blade            (9)
+
+                                                                                  6
+J. Xu et al.                                                                                                                                   Renewable Energy 243 (2025) 122475
+
+
+                                                                                      loads acting on the tower. Due to the interaction between the upper and
+                                                                                      lower structures, these matrices are not diagonal but contain nonzero
+                                                                                      terms in both the upper and lower triangles, which are denoted in
+                                                                                      𝐌side,up , 𝐌side,down , 𝐂side,up , 𝐂side,down , 𝐊side,up , 𝐊side,down . Additionally,
+                                                                                      because of the rotation of the rotor, the matrices exhibit characteristics
+                                                                                      of asymmetric matrices.
+                                                                                          Then, Eq. (10) can be further expanded as:
+                                                                                      ⎧𝐌blade ⋅ 𝐪̈ blade + 𝐂blade ⋅ 𝐪̇ blade + 𝐊blade ⋅ 𝐪blade
+                                                                                      ⎪
+                                                                                      ⎪ = −𝐌side,up ⋅ 𝐪̈ t ower − 𝐂side,up ⋅ 𝐪̇ t ower − 𝐊side,up ⋅ 𝐪t ower + 𝐐blade
+                                                                                      ⎨
+                                                                                      ⎪𝐌t ower ⋅ 𝐪̈ t ower + 𝐂t ower ⋅ 𝐪̇ t ower + 𝐊t ower ⋅ 𝐪t ower
+                                                                                      ⎪
+                                                                                      ⎩ = −𝐌side,down ⋅ 𝐪̈ blade − 𝐂side,down ⋅ 𝐪̇ blade − 𝐊side,down ⋅ 𝐪blade + 𝐐t ower
+                                                                                                                                                                             (11)
+
+
+                                                                                         Assuming 𝐟blade and 𝐟t ower represent the external force vectors acting
+                                                                                      on the separated components of a wind turbine’s blade system and
+                                                                                      supporting structure, one can express the equations of motion for both
+                                                                                      parts as follows:
+                                                                                         For the blade system:
+                                                                                      𝐌blade 𝐪̈ blade + 𝐂blade 𝐪̇ blade + 𝐊blade 𝐪blade = 𝐟blade                             (12)
+                           Fig. 8.   OpenSEES model.
+
+
+                                                                                          For the tower system:
+                                                                                      𝐌t ower 𝐪̈ t ower + 𝐂t ower 𝐪̇ t ower + 𝐊t ower 𝐪t ower = 𝐟t ower                      (13)
+
+
+                                                                                         These equations actually account for the dynamics of each compo-
+                                                                                      nent independently, with external forces 𝐟blade and 𝐟t ower acting on them.
+                                                                                      The generalized forces 𝐟blade and 𝐟t ower can be expressed as follows:
+                                                                                      ⎧𝐟blade      = 𝝀̃ c,blade + 𝐐blade
+                                                                                      ⎪
+                                                                                      ⎪            = −𝐌side,up ⋅ 𝐪̈ t ower − 𝐂side,up ⋅ 𝐪̇ t ower − 𝐊side,up ⋅ 𝐪t ower + 𝐐blade
+                                                                                      ⎪
+                                                                                      ⎨𝐟t ower     = 𝝀̃ c,t ower + 𝐐t ower
+                                                                                      ⎪
+                                                                                      ⎪            = −𝐌side,down ⋅ 𝐪̈ blade − 𝐂side,down ⋅ 𝐪̇ blade − 𝐊side,down ⋅ 𝐪blade
+                                                                                      ⎪               +𝐐t ower
+                                                                                      ⎩
+                                                                                                                                                                             (14)
+
+
+                                                                                           The equations above demonstrate that both the upper and lower
+                    Fig. 9. First tower section in OpenSEES.                          parts of an OWT with SCHT can be described using standard equations
+                                                                                      of motion. The Eq. (12) is effectively analogous to Eq. (9), indicating
+                                                                                      that the equation of motion for the blade system can be derived from
+3.4. Development of the co-simulation model for wind turbine with SCHT                the 8-DOF model for the OWT with SCHT. Despite the presence of
+                                                                                      flexible bodies in the upper structure, their deformation characteristics
+    As mentioned, an OWT with SCHT can be modeled as a multi-body                     can still be captured using modal synthesis. This approach shows no
+system 𝑀, consisting of three flexible blade bodies 𝑆b1 , 𝑆b2 , 𝑆b3 and the           fundamental deviation from the dynamic models discussed in previous
+                                                                                      research. Consequently, employing the Runge–Kutta solver can ensure
+rigid body of the nacelle. The subsystem 𝑆 represents the tower model,
+                                                                                      the computational efficiency. For the lower support structure, due to its
+which is established using the FE method. The dynamic response of the
+                                                                                      complex structural characteristics, it is necessary to use the FE method
+rotor blades interacts with that of the tower. As shown in Appendix A.3
+                                                                                      to develop a detailed and sophisticated nonlinear tower model for anal-
+and Eq. (8), the model actually combines the six degrees of freedom of
+                                                                                      ysis, where the OpenSEES solver is specifically employed. Therefore,
+the wind turbine blades with the two degrees of freedom of the lower
+                                                                                      Eq. (12) and (13) can be rewritten as:
+support structure. Therefore, it can be expanded as follows:
+                                                                                       ⎧𝐪blade , 𝐪̇ blade = RK 45(𝝀̃ c,blade + 𝐐blade )
+                                                                                       ⎪
+                                                                                       ⎨𝐪̈ blade = (𝝀̃ c,blade + 𝐐blade − 𝐂blade ⋅ 𝐪̇ blade − 𝐊blade ⋅ 𝐪blade )𝐌blade
+                                                                                                                                                                −1    (15)
+                                                                                       ⎪                                           ̃
+                                                                                       ⎩𝐪t ower , 𝐪̇ t ower , 𝐪̈ t ower = OpenSEES(𝝀c,t ower + 𝐐t ower )
+                                                                                      where RK 45 and OpenSEES represent the Runge–Kutta and OpenSEES
+                                                                                      solvers, respectively. Specifically, the Runge–Kutta solver is used to
+                                                                          (10)        solve the equation of motion for the blade system in Eq. (12), while
+                                                                                      the OpenSEES solver is employed to solve the equation of motion for
+where 𝐌tower , 𝐂tower , 𝐊tower denote the mass, damping, and stiffness                the tower system in Eq. (13). The generalized force 𝝀̃ c,blade corresponds
+matrices of the top two degrees of freedom for the tower; 𝐪t ower , 𝐪̇ t ower ,       to the force vector exerted by the tower structure subsystem’s motion
+𝐪̈ t ower represent the displacement, velocity, and acceleration vectors of           on the upper structure subsystem, whereas 𝝀̃ c,t ower represents the force
+the tower, and 𝐐tower is the generalized force of the environmental                   vector exerted by the upper structure subsystem’s motion on the tower
+
+                                                                                  7
+J. Xu et al.                                                                                                                    Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                      Fig. 10. Cross-sectional view of OpenSEES model.
+
+
+structure subsystem. According to Eq. (10), the external loads acting on         solvers are used to determine the displacement and velocity responses
+the upper structure and the lower supporting structure are denoted as            of the rotor and tower systems’ degrees of freedom. Subsequently, the
+𝐐blade and 𝐐t ower , respectively.                                               newly calculated external forces for the rotor and tower systems are
+    Substituting Eq. (15) into Eq. (14) yields the iterative equation for        substituted back into Eq. (16) and compared with the external forces
+calculating the generalized forces as follows:                                   from the previous iteration step to complete one iteration.
+{
+   𝝀̃ c,t ower = 𝐟t ower (𝝀̃ c,blade , 𝐐blade )                                      As shown in Fig. 12, in the actual iterative solving process, each
+                                                                     (16)        time step is decomposed into multiple sub-steps for iteration to reduce
+   𝝀̃ c,blade = 𝐟blade (𝝀̃ c,t ower , 𝐐t ower )
+                                                                                 the difficulty of solving caused by sudden shifts in system’s response.
+    As shown in Fig. 11, although the blade and tower systems are sep-           To enhance convergence during iteration, the system’s response from
+arated, Eq. (15) reveals that the dynamic response of the blade system           the previous time step is utilized as the initial condition for the current
+is included in the external force calculation of the tower system, and           time step. This optimization reduces the likelihood of initial value devi-
+vice versa. Consequently, there remains an interplay between the rotor           ation from the actual solution and minimizes the number of iterations
+system and the tower system, which is a classic problem encountered              required. Concurrently, utilizing the 8-DOF dynamic model established
+when dealing with multiple coupled systems and their interactions. In            in previous research, a correction model is developed for synchronized
+this case, there are two common approaches to simulation: iterative              solution. This correction model generates system responses that serve
+coupling and non-iterative coupling.                                             as improved initial values for each iteration, further optimizing the
+    Non-iterative coupling involves calculating the external forces act-         iterative process.
+ing on each system at a given time step using the responses from                     Due to the introduction of material nonlinearity and other proper-
+the previous time steps for both systems. This approach avoids the               ties, the stiffness of the tower system may change, leading to discrep-
+need to iterate within the system itself, thereby reducing the control           ancies between the tower body in the correction model and the tower
+requirements for the solver. However, this method is sensitive to the            body in the CS model, thereby causing errors in calculations and ren-
+selection of the time step: if the time step is too small, the computation       dering the selection of initial values meaningless. To address this issue,
+time and interaction time between systems will increase; if it is too            the tower stiffness values are recalculated using the FE solver OpenSEES
+large, the simulation may not converge. Iterative coupling, on the               at the end of each time step and updated in the correction model
+other hand, involves iterating at each time step to achieve equilibrium          to maintain consistency and accuracy across iterations. The iterative
+between the interacting nodes in the two systems. In general, non-               error tolerance (𝑡𝑜𝑙) is set to 10−4 , ensuring numerical precision and
+iterative coupling requires a more careful selection of the time step and        preventing divergence. To mitigate abrupt changes in system response,
+has poorer stability compared to iterative coupling [44,46]. Therefore,          linear interpolation is applied within the sub-steps of each time step,
+this section will employ an iterative approach to simulate the response          enhancing iterative stability and accelerating convergence in solving
+of the wind turbine system at each time step for error control.                  coupled nonlinear dynamic systems. The iterative procedure for each
+    According to Eq. (16), the generalized forces 𝝀c between systems             time step is explained as follows:
+can be represented by the state of the upper structure and the state
+of the lower supporting structure. Therefore, it can be utilized as an           Step 1: Initialize the solver. Calculate the responses of the 8-DOF
+iterative parameter for calculation [47]. The specific iterative process                dynamic model based on the previous responses, as described in
+is illustrated in Fig. 12. This process involves initializing the solver                Eq. (A.15), and use these as the initial values 𝑞blade , 𝑞̇ blade , 𝑞̈blade
+before computational solving begins and selecting initial values for the                and 𝑞t ower , 𝑞̇ t ower , 𝑞̈t ower for the CS model.
+displacements, velocities, and accelerations of each system’s degrees of         Step 2: Calculate the wind loads on the blades using BEM theory
+freedom.                                                                                under actual wind field conditions at the current time step.
+    Wind loads on the blades are determined using BEM theory under                      Then, compute the generalized external forces for each degree
+actual wind field conditions. Utilizing the principle of virtual work,                  of freedom of the OWT using the principle of virtual work, as
+the generalized external forces for every degree of freedom in the                      described in Eq. (6).
+wind turbine system are computed. Then, Eq. (16) is used to solve                Step 3: Calculate the external forces 𝝀̃ c,blade acting on the blade system
+for the external forces on the rotor and tower systems. The respective                  using the first equation in Eq. (14), and solve for the responses
+
+                                                                             8
+J. Xu et al.                                                                                                                       Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                           Fig. 11. CS model architecture for an OWT with SCHT.
+
+
+
+
+                                                      Fig. 12. Flowchart of the iterative process for generalized forces.
+
+
+       of the blade system using the RK45 solver based the equations                       Step 7: Update the 8-DOF dynamic model matrix 𝐌    ̃ with tower stiff-
+       of motion. The outputs include 𝑞blade , 𝑞̇ blade , 𝑞̈blade .                               ness values obtained from OpenSEES.
+Step 4: Calculate the external forces 𝝀̃ c,t ower acting on the tower system               Step 8: Advance the time step 𝑡 = 𝑡 + 𝑑 𝑡. If 𝑡 remains below the
+       using the second equation in Eq. (14),                                                     target simulation time, return to Step 1; otherwise, terminate
+                                                                             ′
+Step 5: Iteratively update the load. Compare the current load 𝝀̃ c,t ower                         the simulation.
+       with the previous load 𝝀c,t ower using ‖𝜆
+                               ̃                   ̃ ′      − 𝜆𝑐 ,tower ‖∞ . If the
+                                                      𝑐 ,tower
+                                                               ̃                               It is well known that the OpenSEES solver is an open-source FE
+       difference is within the set tolerance (𝑡𝑜𝑙 = 10−4 ), proceed to                    computational framework written in C++ [48–50]. To facilitate data
+       step 7 and 8; otherwise, proceed to step 6.                                         interaction between the MBD model and the FE model, as well as to
+Step 6: Use the OpenSEES solver to compute the tower system re-                            minimize associated costs, this study develops an interaction module
+       sponses, yielding 𝑞t ower , 𝑞̇ t ower , 𝑞̈t ower , then return to Step 3.           for handling data exchange in CS models by conducting secondary
+
+                                                                                       9
+J. Xu et al.                                                                                                                       Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                            Fig. 13. OpenSEES interactive module.
+
+
+development of OpenSEES solver. The architecture of the OpenSEES
+interactive module is illustrated in Fig. 13. The module is responsible
+for receiving data from the MBD model, calculating the external forces
+acting on the tower system, and transmitting the results back to the
+MBD model. Additionally, the module calculates the stiffness values of
+the tower system in the correction model.
+
+4. Verification of the co-simulation model
+
+   The accuracy of the MBD model has already been validated using
+OpenFAST software [29]. Therefore, this paper does not include a
+verification of the MBD model. Instead, the dynamic responses of the
+CS model will be verified against the MBD model.
+
+4.1. Verification of FE model built with OpenSEES solver
+
+    The proposed CS model is established based on MBD and FE models.
+Since the MBD model has already been validated, this section will
+compare the FE models created using OpenSEES with a more refined
+model developed in Abaqus through static push-over analysis. This
+comparison will serve to validate the FE model built with OpenSEES
+solver.                                                                                       Fig. 14. Model overview and connection detail in Abaqus.
+    Fig. 14 illustrates the FE model of the SCHT developed using
+Abaqus software. This model employs three-dimensional elements, with
+embedded truss elements inside the concrete tower acting as rein-
+forcement mesh. Additionally, the model includes rebar elements to
+simulate prestressed steel reinforcement extending the entire length of
+the concrete tower from top to bottom. The constitutive behavior of the
+concrete is represented by a damage plastic model [51], while the steel
+mesh, tower segments, and prestressed reinforcement are described by
+bilinear plastic constitutive models. A lumped mass at the top of the
+model represents the weight of components such as the blades and
+nacelle, and fixed constraints are applied to both the tower’s foundation
+and the bottom of the prestressed rebar [52]. As depicted in the detailed
+illustration in Fig. 14, the connection between the steel and concrete
+towers uses a flange joint, with the top end of the prestressed steel rebar
+also fixed to this flange.
+    In the pushover analysis, both Abaqus and OpenSEES models apply
+                                                                                                    Fig. 15. Comparison of pushover analysis results.
+loads via displacement. Initially, gravity loads and tendon prestressing
+
+                                                                              10
+J. Xu et al.                                                                                                                       Renewable Energy 243 (2025) 122475
+
+               Table 3
+               Comparison of MBD, LCS and NLCS models.
+                 Model         Blade subsystem              Tower subsystem                         Key features
+                 MBD           Modal synthesis method       Modal synthesis method                  Fast but limited in handling nonlinear effects.
+                 LCS           Modal synthesis method       Linear fiber beam element               For co-simulation validation.
+                 NLCS          Modal synthesis method       Nonlinear fiber beam element            Highly accurate for nonlinear dynamic behavior.
+
+
+
+are applied. Then, a 4 m displacement is applied at the top of the                 Table 4
+                                                                                   Wind speed and turbulence intensity.
+tower in both models to produce displacement–force curves. As shown
+                                                                                                                   Wind speed                   Turbulence intensity
+in Fig. 15, the displacement–force curves from both models are quite
+similar. The Abaqus model exhibits slightly higher stiffness in the linear          Normal                         6.48 m/s                     0.29%
+                                                                                    Extreme                        27.7 m/s                     0.17%
+stage compared to the OpenSEES model. Despite this minor difference,
+the results remain very close, validating the effectiveness and accuracy
+of the OpenSEES model for simulating the structural behavior of the                displacement in these scenarios compared to the displacement in fore-
+SCHT.                                                                              aft direction, the differences between the displacements of the NLCS
+                                                                                   and MBD models could be considered acceptable.
+                                                                                       In summary, the dynamic response comparison between the co-
+4.2. Verification of transient response
+                                                                                   simulation model LCS and the MBD model shows strong consistency,
+                                                                                   with both models exhibiting nearly identical displacement responses,
+    This section compares the dynamic responses of an OWT with
+                                                                                   particularly in the tower’s fore-aft direction. This validates the LCS
+SCHT simulated by the MBD model and the proposed CS model under                    model’s accuracy in predicting the system’s dynamic behavior under
+operational conditions. The wind conditions include a hub-height mean              standard conditions, with the MBD model serving as a reliable bench-
+wind speed of 12 m/s and a turbulence intensity of 10%.                            mark. While the LCS model accurately replicates the MBD model’s
+    Table 3 presents a comparison of the Multi-Body Dynamics Model                 displacement response, the NLCS model, which accounts for nonlinear
+(denoted as ‘‘MBD Model’’), the Linear Co-Simulation Model (denoted                effects, shows significantly larger responses, especially in the fore-aft
+as ‘‘LCS Model’’) and the Nonlinear Co-Simulation Model (denoted as                direction, under high wind conditions. This emphasizes the need to
+‘‘NLCS Model’’), highlighting their respective modeling techniques and             consider nonlinearities for accurate predictions under extreme loading
+applications. In the MBD Model, both the blade and tower subsystems                scenarios. The frequency spectra of the LCS model closely match those
+are modeled using the modal synthesis method, which enables effi-                  of the MBD model, further confirming the LCS model’s effectiveness in
+cient computation for linear response analysis. However, this model                capturing the turbine’s dynamic characteristics. Thus, the LCS model
+is limited in accounting for nonlinear dynamic effects, making it less             provides a reliable approximation under normal operating conditions,
+suitable for scenarios involving complex structural interactions. The              while the NLCS model is essential for more accurate predictions when
+LCS Model provides a more refined representation by combining the                  nonlinear deformations become significant at higher wind speeds.
+modal synthesis method for the blade with a linear fiber beam element
+for the tower. This approach facilitates co-simulation validation and              4.3. Nonlinear dynamic response analysis of OWTs with SCHT under
+is particularly effective for fast and efficient linear dynamic analyses.          extreme wind conditions
+In contrast, the NLCS Model achieves higher accuracy by employing
+a nonlinear fiber beam element for the tower, while still utilizing the                In this section, the dynamic responses of the MBD and NLCS models
+modal synthesis method for the blade. This configuration is highly                 under various loading conditions will be analyzed. Differences and sim-
+accurate in capturing nonlinear dynamic behavior of SCHT.                          ilarities across different load scenarios will be compared to evaluate the
+    As illustrated in Fig. 16, the dynamic responses obtained from the             robustness of the results. This comparative analysis aims to highlight
+three models are presented under identical operating conditions. The               the strengths and limitations of these modeling approaches, providing
+results demonstrate that the MBD and LCS models exhibit nearly iden-               insights into wind turbine tower performance under both typical and
+tical displacement responses in the tower’s fore-aft direction, indicating         extreme conditions. Valuable data support and design guidance for the
+a high degree of consistency in their predictive capabilities for this             future development of wind turbines will be also provided through this
+motion. However, the NLCS model shows significantly larger responses               analysis.
+in the fore-aft direction due to nonlinear effects. This highlights the                It is well-established that ERA5, the fifth-generation reanalysis of
+great necessity of the NLCS model in capturing nonlinear dynamic                   global climate and weather data from the European Centre for Medium-
+                                                                                   Range Weather Forecasts (ECMWF), offers comprehensive data span-
+behaviors compared to the linear approaches. Figs. 16(b) and 16(c)
+                                                                                   ning the past eighty years. According to IEC 61400-1, the extreme wind
+illustrate the velocity and acceleration responses, where the MBD and
+                                                                                   condition is defined using the 50-year return period wind speed. For
+LCS models exhibit consistent profiles, demonstrating their agreement
+                                                                                   this study, data from the ERA5 dataset were collected for a specific
+under linear dynamic conditions. The frequency response of the NLCS
+                                                                                   location in Tongyu, China, covering the period from January 1, 1973,
+model, as depicted in Fig. 16(d) is also strikingly similar to that of
+                                                                                   to September 27, 2023. This 50-year dataset consists of hourly average
+the linear model. Given that the average wind speed 𝑣0 = 12 m/s
+                                                                                   wind speeds, amounting to a total of 444,762 data points. These
+corresponds to high wind speed conditions, it is expected that the
+                                                                                   data are crucial for calculating the annual average wind speed under
+NLCS model will enter the nonlinear state. This transition results in
+                                                                                   typical operational conditions and the maximum average wind speed
+significantly larger displacements compared to the LCS model, which
+                                                                                   over a 50-year return period for extreme loading scenarios. Table 4
+is a reasonable and anticipated phenomenon under such conditions.                  provides specific values for wind speed and turbulence intensity. Fig. 18
+    To provide a comprehensive analysis, this section also compares                illustrates the hourly average wind speeds at a height of 10 m from
+the time histories of displacement between NLCS and MBD models                     1973 to 2023.
+under low wind speed conditions, characterized by an average wind                      The turbulence standard deviation 𝜎 can be determined according
+speed of 𝑣 = 2 m/s. As shown in Fig. 17, at a low wind speed, the                  to the specification GB/T 18451.1-2022:
+displacement is quite small in both directions, indicating that it has             𝜎 = 𝐼r ef (0.75𝑉hub + 𝑏)
+not entered the nonlinear state. Under these conditions, the fore-aft                                                                                    (17)
+displacement of the NLCS model closely agrees with that of the MBD                 𝑏 = 5.6 m∕s
+model. In addition, due to the relatively minor nature of side-to-side             where 𝐼r ef is the reference value for turbulence intensity.
+
+                                                                              11
+J. Xu et al.                                                                                                                   Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                 Fig. 16. Comparison of dynamic responses in fore-aft direction.
+
+
+
+
+                                           Fig. 17. Comparison of dynamic responses under low wind speed conditions.
+
+
+    Turbulence is classified into four categories, as outlined in GB/T              least 600 s. During simulations, to avoid the influence of transient
+18451.1-2022. In this paper, the highest class of turbulence characteris-           responses—which can introduce significant outliers and anomalies in
+tics is selected to calculate the reference value for turbulence intensity,         the data—the initial dynamic response when the wind turbine begins
+denoted as 𝐼r ef = 0.16. The notation 𝑉hub represents the wind speed                operation is usually omitted from the analysis. In the case of linear
+measured at hub height. Turbulence intensity values are computed                    models, the transient response that occurs during the aerodynamic
+using Eq. (18), with the resulting values presented in Table 4 for normal           phase of the wind turbine can be disregarded, as it has negligible
+and extreme wind speeds (i.e., the 50-year return period maximum).                  impact on the subsequent steady-state dynamics. However, nonlinear
+       𝜎                                                                            models present a more complex scenario. In these systems, large tran-
+𝐼=                                                                    (18)
+      𝑉hub                                                                          sient responses could lead to phenomena such as plastic deformation or
+                                                                                    even structural failure. These responses must be carefully considered,
+   Building upon the previous discussions, we can now proceed with                  as they significantly influence the later stages of simulation and overall
+detailed calculations for the wind loads acting on the wind turbine. To             turbine behavior. In this study, the dynamic time history simulation
+capture a comprehensive range of dynamic responses and interactions,                of wind turbines will involve a controlled linear start-up process. The
+the simulation time for wind turbine dynamics should typically be at                rotor speed will be methodically accelerated from 0 to the required
+
+                                                                               12
+J. Xu et al.                                                                                                                  Renewable Energy 243 (2025) 122475
+
+
+
+
+                                                          Fig. 18. Wind speed from 1973 to 2023.
+
+
+
+
+                                                 Fig. 19. Comparison of start-up process in fore-aft direction.
+
+
+operational rotational speed within 5 s. After this initial phase, the                 In extreme wind speed conditions, as shown in Fig. 21, the dif-
+analysis will focus exclusively on data collected after the first 100 s            ferences between the MBD model and the NLCS model become more
+of operation. This approach ensures that the data reflects the turbine’s           pronounced. The MBD model indicates a maximum fore-aft displace-
+performance under stable operating conditions, providing a more ac-                ment of 2.47 m and a maximum side-side displacement of 0.36 m. In
+curate representation of its dynamic behavior under various wind load              contrast, the NLCS model shows substantially higher values, with the
+scenarios.                                                                         maximum fore-aft displacement reaching 5.90 m and the maximum
+    As illustrated in Fig. 19, both linear and nonlinear models exhibit            side-side displacement reaching 0.62 m. This significant discrepancy
+the elimination of initial transient responses when the blade is started           under extreme wind conditions highlights the limitations of the MBD
+linearly, with no subsequent impact on the simulation. This comparison             model in accurately capturing the dynamic behavior and flexibility of
+highlights that employing a controlled linear start-up method can effec-           OWTs with SCHT under severe loading scenarios. The NLCS model
+tively mitigate transient response effects on wind turbine structures. It          demonstrates its ability to account for nonlinear interactions and more
+allows the nonlinear model to transition more smoothly and promptly                complex dynamics, reflecting a higher sensitivity to extreme wind
+to the nonlinear stage during simulation.                                          forces.
+    The top displacements of the tower under two wind conditions are
+                                                                                       The considerable differences in displacement values suggest that for
+shown in Figs. 20 and 21. For normal wind speed, the results from the
+                                                                                   design and safety evaluations under extreme wind conditions, the NLCS
+MBD model are close to those of the NLCS model. Specifically, the maxi-
+                                                                                   model is more reliable. It can provide critical insights into the potential
+mum fore-aft displacement observed in the MBD model is 1.27 m, while
+                                                                                   structural challenges and failure mechanisms that may arise, ensuring
+the side-side displacement is 0.2 m. Comparatively, the NLCS model
+                                                                                   that wind turbine designs are robust enough to withstand such extreme
+exhibits a slightly larger maximum fore-aft displacement of 1.34 m and
+                                                                                   events. Overall, while the MBD model may be sufficient for normal
+a side-side displacement of 0.19 m. This close agreement between the
+                                                                                   operational conditions, its limitations are apparent under extreme wind
+MBD and NLCS models under normal wind conditions highlights the
+robustness of the NLCS model in simulating the dynamic response of                 scenarios. The NLCS model offers a more accurate representation of the
+OWTs with SCHT. The slight discrepancy in fore-aft displacement may                wind turbine’s response, making it essential for accurately predicting
+be attributed to the inherent nonlinearities accounted for the NLCS                performance and ensuring structural integrity in the face of extreme
+model, which makes it slightly more sensitive to dynamic variations                wind conditions.
+in wind loads.
+
+                                                                              13
+J. Xu et al.                                                                                                              Renewable Energy 243 (2025) 122475
+
+
+
+
+                                        Fig. 20. Comparison of dynamic responses under normal wind speed conditions.
+
+
+
+
+                                       Fig. 21. Comparison of dynamic responses under extreme wind speed conditions.
+
+
+5. Conclusions                                                                       The co-simulation method provides a valuable tool for analyzing
+                                                                                 and designing OWTs with SCHT. Future work could explore further re-
+    In this paper, a co-simulation method has been developed to in-              finements to enhance computational efficiency and extend the method
+vestigate the nonlinear dynamic response of OWTs with SCHT. This                 to other types of wind turbine systems and loading scenarios.
+approach involves breaking down the SCHT wind turbine into blade
+and tower subsystems using a force–force coupling method. Specifi-
+                                                                                 CRediT authorship contribution statement
+cally, the equations of motion for the blade system have been derived
+based on the Euler–Lagrange equations, establishing a multi-body dy-
+                                                                                     Jun Xu: Writing – review & editing, Writing – original draft, Val-
+namic model. The finite element method has been employed to solve
+the structural dynamics of the SCHT, utilizing OpenSEES software.                idation, Supervision, Resources, Project administration, Methodology,
+To account for the interactions between these two separate systems,              Investigation, Funding acquisition, Formal analysis, Data curation, Con-
+an iterative coupling method has been applied during simultaneous                ceptualization. Zeyu He: Writing – review & editing, Writing – original
+solution of the subsystems. A numerical example has been studied to              draft, Methodology, Investigation, Data curation. Dan Wang: Writing
+validate the proposed co-simulation method. The following conclusions            – review & editing, Writing – original draft, Validation. Guangling
+have been reached:                                                               He: Writing – review & editing, Supervision, Resources, Project admin-
+    1. Accuracy of the Co-Simulation Method: The proposed co-                    istration. Qiang Wu: Writing – review & editing, Resources, Project
+simulation method accurately captures the dynamic responses of OWTs              administration. Zili Zhang: Writing – review & editing, Writing –
+with SCHT. Comparisons with established MBD and refined FE models                original draft, Supervision.
+demonstrate that the co-simulation approach yields reliable results
+under both linear and nonlinear conditions.                                      Replication of results
+    2. Effectiveness of Force–Force Coupling: The force–force cou-
+pling method effectively decouples the blade and tower subsystems,
+                                                                                    Some or all data, models, or code generated or used during the study
+allowing each to be solved independently while still accounting for
+                                                                                 are available from the corresponding author by request.
+their interactions. This approach simplifies the computational process
+without sacrificing accuracy.
+    3. Nonlinear Dynamic Behavior: The NLCS model effectively cap-               Declaration of competing interest
+tures the nonlinear dynamic behavior of the system, especially under
+high wind speed conditions. The ability to transition smoothly into the              The authors declare that they have no known competing finan-
+nonlinear state and accurately predict larger displacements highlights           cial interests or personal relationships that could have appeared to
+the model’s robustness.                                                          influence the work reported in this paper.
+
+                                                                            14
+J. Xu et al.                                                                                                                                                 Renewable Energy 243 (2025) 122475
+
+
+Acknowledgments                                                                             Therefore, the total system kinetic energy can be expressed as:
+                                                                                                 3 [                                       ]
+                                                                                              1∑
+                                                                                                       𝑅                                           𝐻t ow
+                                                                                                                              1               1
+   The National Natural Science Foundation of China (No. 52278178),                     𝑇 =              𝑚̄ ⋅ 𝑣2b𝑗 (𝑟, 𝑡)𝑑 𝑟 + 𝑀nac ⋅ 𝑣2nac +            𝑚̄ t ow ⋅ 𝑣2tow 𝑑 𝑧                           (A.9)
+                                                                                              2 𝑗=1 ∫0                        2               2 ∫0
+Natural Science Foundation of Hunan Province, China (No. 2022JJ2
+0012) and the Science and Technology Innovation Program of Hunan                        where 𝑚̄ represents the mass per unit length of the blade, 𝑀nac is the
+Province (No. 2022RC1176) are gratefully appreciated for the financial                  total mass of the nacelle, 𝑚̄ t ow is the mass per unit length of the tower
+support of this research.                                                               and 𝑅, 𝐻t ow denote the blade’s radius and tower’s height, respectively.
+
+Appendix. Mathematical model of the 8-DOF SCHT
+                                                                                        A.2. System potential energy
+
+A.1. System kinetic energy                                                                 The total potential energy of the blades encompasses the strain
+                                                                                        potential energy, the potential energy arising from centrifugal motion,
+   The dynamic equations for an 8-DOF SCHT wind turbine gener-                          and the gravitational potential energy term. The collective potential
+ator can be obtained through the application of the Euler–Lagrange                      energy of the three-blade system can be expressed as follows [53]:
+equation:                                                                                         3 [
+                                                                                             1∑
+                    ̇
+ 𝑑 𝜕 𝑇 (𝑡, 𝐪(𝑡), 𝐪(𝑡))                  ̇
+                         𝜕 𝑇 (𝑡, 𝐪(𝑡), 𝐪(𝑡))   𝜕 𝑉 (𝑡, 𝐪(𝑡))                            𝑉b =          (𝑘eg + 𝑘ge,eg − 𝑘gr,eg ⋅ cos 𝜓𝑗 ) ⋅ 𝑞𝑗2
+                       −                     +               = 𝑄𝑖 (𝑡) (A.1)                  2 𝑗=1
+𝑑𝑡       𝜕 𝑞̇ 𝑖 (𝑡)            𝜕 𝑞𝑖 (𝑡)           𝜕 𝑞𝑖 (𝑡)
+                                                                                                                                         ]
+                                                                                                                                     2
+where 𝑇 and 𝑉 represent the kinetic and potential energy of the system,                    + (𝑘f g + 𝑘ge,f p − 𝑘gr,f p ⋅ cos 𝜓𝑗 ) ⋅ 𝑞𝑗+3                 (A.10)
+                                     [            ]⊤
+respectively. The vector 𝐪(𝑡) = 𝑞1 , 𝑞2 , … 𝑞8 denotes the generalized
+coordinates, and 𝑄𝑖 (𝑡) is the generalized force acting on the 𝑖th degree               where:
+of freedom in 𝐪(𝑡).                                                                                  𝑅                                                             𝑅
+                                                                                        𝑘eg =            𝐸 𝐼eg (𝑟)(𝜙′′1e )2 𝑑 𝑟,                    𝑘f g =             𝐸 𝐼f g (𝑟)(𝜙′′1f )2 𝑑 𝑟
+    As shown in Fig. 2, the absolute displacements and velocities of the                        ∫0                                                            ∫0
+nacelle (‘‘nac’’) in the fore-aft (‘‘fa’’) and side-side (‘‘ss’’) directions can                            𝑅      𝑅                                                      𝑅      𝑅
+                                                                                        𝑘ge,eg = 𝛺                     [𝑚(𝜉)𝜉
+                                                                                                                        ̄     𝑑 𝜉] (𝜙′1e )2 𝑑 𝑟,    𝑘ge,f p = 𝛺                      [𝑚(𝜉)𝜉
+                                                                                                                                                                                      ̄     𝑑 𝜉] (𝜙′1f )2 𝑑 𝑟
+be expressed as follows:                                                                                 ∫0 ∫r                                                         ∫0 ∫r
+                                                                                                           𝑅     𝑅                                                       𝑅      𝑅
+𝑢fnac
+   a
+      = 𝑞7 , 𝑢ss          fa            ss
+              nac = 𝑞8 ; 𝑣nac = 𝑞̇ 7 , 𝑣nac = 𝑞̇ 8                        (A.2)         𝑘gr,eg = 𝑔                    [𝑚(𝜉)𝑑
+                                                                                                                       ̄     𝜉] (𝜙′1e )2 𝑑 𝑟,       𝑘gr,f p = 𝑔                     [𝑚(𝜉)𝑑
+                                                                                                                                                                                     ̄     𝜉] (𝜙′1f )2 𝑑 𝑟
+                                                                                                     ∫0 ∫r                                                         ∫0 ∫r
+                                                                                                                                                                                                     (A.11)
+    Hence, the absolute velocity of the nacelle is:
+      √
+𝑣nac = (𝑣fnac
+            a )2 + (𝑣ss )2                                                (A.3)         where 𝐼f and 𝐼e represent the moments of inertia in the flapwise and
+                     nac
+                                                                                        edgewise directions, respectively. 𝑔 is the gravitational acceleration, 𝐸
+                                                                                        represents the elastic modulus of blades, and ()′ and ()′′ denote the first
+      Additionally, by defining a local coordinate system 𝑜′ 𝑥′ 𝑦′ 𝑧′ as the            and second derivatives with respect to the distance 𝑟.
+origin, the following considerations are made. For the 𝑗th blade, at a                     Consequently, the complete potential energy of the onshore wind
+distance 𝑟 relative to the hub, the edgewise displacement 𝑢𝑗 ,e (𝑟, 𝑡) and              turbine system can be expressed as:
+flapwise displacement 𝑢𝑗 ,f (𝑟, 𝑡) are defined. The relative displacement of                      1           1
+a specific blade element on the blade can be expressed as:                              𝑉 = 𝑉b + 𝑘ft a ⋅ 𝑞72 + 𝑘ss ⋅ 𝑞82                                   (A.12)
+                                                                                                  2           2 t
+𝑢𝑗 ,e (𝑟, 𝑡) = 𝑞𝑗 ⋅ 𝜙1e (𝑟), 𝑗 = 1, 2, 3
+                                                                       (A.4)            where 𝑘ft a , 𝑘ss
+                                                                                                       t represent the stiffness of the tower in the fore-aft and
+𝑢𝑗 ,f (𝑟, 𝑡) = 𝑞𝑗 ⋅ 𝜙1f (𝑟), 𝑗 = 4, 5, 6                                                side-side directions respectively. It is assumed that the stiffness in both
+where 𝜙1e (𝑟) and 𝜙1f (𝑟) denote the first modal shapes for edgewise and                directions is consistent and can be derived from the following equation:
+                                                                                                                 𝐻𝑐                                  𝐻t ow
+flapwise motions respectively.
+                                                                                        𝑘ft a = 𝑘ss
+                                                                                                 t =                   𝐸̄ 𝑐 𝐼t (𝑧)(𝜙′′
+                                                                                                                                    1t
+                                                                                                                                       )2 𝑑 𝑧 +              𝐸𝑆 𝐼t (𝑧)(𝜙′′
+                                                                                                                                                                        1t
+                                                                                                                                                                           )2 𝑑 𝑧                    (A.13)
+    Hence, the relative displacement per unit length of the 𝑗th blade                                       ∫0                                     ∫𝐻𝑐
+with respect to the local coordinate system is given by:
+                                                                                        where 𝐻𝑐 represents the height of the concrete tower section, 𝜙1t
+𝑥′r = 𝑢ss
+       nac + 𝑟 ⋅ sin 𝜓𝑗 + 𝑢e𝑗 cos 𝜓𝑗
+                                                                                        signifies the first modal shape of the tower motion, and 𝐸𝑆 represents
+𝑦′r = 𝑢fnac
+         a
+            + 𝑢𝑗f                                                         (A.5)         the elastic modulus of the steel tower. In practical numerical computa-
+𝑧′r = 𝑟 ⋅ cos 𝜓𝑗 − 𝑢𝑗e sin 𝜓𝑗                                                           tions, the tower can be discretized into multiple segments for analysis.
+                                                                                        The moment of inertia of the annular cross-section for steel tower
+      Likewise, the first derivative of the relative displacement can be                segments can be directly calculated. However, for a composite cross-
+expressed as:                                                                           section of a reinforced concrete tower segment, the bending stiffness of
+𝑥̇ ′r = 𝑣ss
+         nac − 𝛺𝑟 ⋅ cos 𝜓𝑗 + 𝑞̇ 𝑗 ⋅ 𝜙1e (𝑟) cos 𝜓𝑗 − 𝑞𝑗 𝛺 ⋅ 𝜙1e (𝑟) sin 𝜓𝑗              the concrete and the rebars should be computed separately and then
+𝑦̇ ′r = 𝑣fnac
+           a
+              + 𝑞̇ 𝑗+3 ⋅ 𝜙1f (𝑟)                                          (A.6)         superimposed [54], as shown in Eq. (A.14).
+
+𝑧̇ ′r =   − 𝛺𝑟 ⋅ sin 𝜓𝑗 − 𝑞̇ 𝑗 ⋅ 𝜙1e (𝑟) sin 𝜓𝑗 − 𝑞𝑗 𝛺 ⋅ 𝜙1e (𝑟) cos 𝜓𝑗                 𝐸̄ 𝑐 𝐼t (𝑧) = 𝐸𝑐 𝐼𝑐 (𝑧) + 𝐸𝑠𝑏 𝐼𝑠𝑏 (𝑧)                                                                        (A.14)
+
+     As a result, the absolute velocity per unit length of the blade with               where 𝐸𝑐 and 𝐸𝑠𝑏 represent the elastic modulus of concrete and rebar,
+respect to the local coordinate system is given by:                                     respectively, while 𝐼𝑐 (𝑧) and 𝐼𝑠𝑏 (𝑧) correspond to the moments of inertia
+            √                                                                           of the concrete tower section and steel tower section.
+𝑣b𝑗 (𝑟, 𝑡) = (𝑥̇ ′r )2 + (𝑦̇ ′r )2 + (𝑧̇ ′r )2                      (A.7)
+                                                                                            By substituting Eqs. (A.9) and (A.12) into Eq. (A.1), the governing
+                                                                                        equations of motion for the system can be derived as follows:
+     Likewise, for a unit length of the tower, the absolute velocity is                 ̃ 𝐪̈ + 𝐂
+                                                                                        𝐌      ̃ 𝐪̇ + 𝐊𝐪
+                                                                                                      ̃ =𝐐
+                                                                                                         ̃ wind                                                                                      (A.15)
+given by:
+        √                                                                                       ̃ 𝐂,
+                                                                                                   ̃ 𝐊
+                                                                                                     ̃ are the mass, damping, and stiffness matrices of the
+                                                                                        where 𝐌,
+𝑣t ow = (𝑞̇ 7 ⋅ 𝜙1t (𝑟))2 + (𝑞̇ 8 ⋅ 𝜙1t (𝑟))2                    (A.8)
+                                                                                        system, respectively. The terms 𝐐̃ wind is the generalized force vectors
+                                                                                        of the system due to wind loads.
+
+                                                                                   15
+J. Xu et al.                                                                                                                                                                  Renewable Energy 243 (2025) 122475
+
+
+A.3. System matrix of the 8-DOF SCHT                                                                                       the steel mesh and concrete, respectively.
+                                                                                                                                ⎡ 𝑐b,e         0         0       0     0                  0     0     0⎤
+                                                                                                                                ⎢                                                                        ⎥
+    The matrix representation of the 8-DOF SCHT system is expressed                                                             ⎢    0       𝑐 b,e       0       0     0                  0     0     0⎥
+as follows:                                                                                                                     ⎢    0         0        𝑐b,e     0     0                  0     0     0 ⎥⎥
+                                                                                                                                ⎢
+     ⎡𝑚1𝑒    0     0     0      0     0     0  𝑚18 ⎤                                                                            ⎢    0         0         0      𝑐b,f   0                  0     0     0⎥
+     ⎢                                             ⎥                                                                       𝐂=⎢                                                                           ⎥ (A.21)
+     ⎢ 0    𝑚1𝑒    0     0      0     0     0  𝑚18 ⎥                                                                            ⎢    0         0         0       0    𝑐b,f                0     0     0⎥
+     ⎢ 0                                                                                                                        ⎢                                                                        ⎥
+     ⎢       0    𝑚1𝑒    0      0     0   𝑚47 𝑚18 ⎥⎥                                                                            ⎢    0         0         0       0     0                𝑐b,f    0     0⎥
+     ⎢ 0                                                                                                                        ⎢                                                                        ⎥
+             0     0    𝑚1𝑓     0     0   𝑚47    0 ⎥                                                                            ⎢    0         0         0       0     0                  0     𝑐7    0⎥
+𝐌=⎢                                                ⎥         (A.16)                                                             ⎢                                                                        ⎥
+     ⎢ 0     0     0     0    𝑚1𝑓     0   𝑚47    0 ⎥                                                                            ⎣−2𝛺𝑚81 −2𝛺𝑚82 −2𝛺𝑚83            0     0                  0     0     𝑐8 ⎦
+     ⎢                                             ⎥
+     ⎢ 0     0     0     0      0    𝑚1𝑓 𝑚47     0 ⎥                                                                       where:
+     ⎢                                             ⎥
+     ⎢ 0     0     0    𝑚47 𝑚47 𝑚47        𝑚7    0 ⎥                                                                                𝑅
+     ⎢                                             ⎥                                                                       𝑚̄ 8𝑗 = ∫0 𝑚(𝑟)𝜙
+                                                                                                                                      ̄    1e d𝑟 ⋅ sin 𝜓𝑗 , 𝑗 = 1, 2, 3                                    (A.22)
+     ⎣𝑚18 𝑚38 𝑚38        0      0     0     0   𝑚8 ⎦
+
+                                                                                                                               Parameters 𝑐b,e and 𝑐b,f represent the damping in the edgewise and
+where:
+                                                                                                                           flapwise directions of the blades, while 𝑐7 and 𝑐8 denote the damping
+          𝑅    2 d𝑟,                              𝑅  2 d𝑟,
+𝑚1𝑒 = ∫0 𝑚(𝑟)𝜙
+         ̄     1e
+                                      𝑚1𝑓 = ∫0 𝑚(𝑟)𝜙
+                                               ̄     1f                                                                    in the fore-aft and side-side directions of the tower, respectively.
+          𝑅                                                                  𝑅
+𝑚j8 = ∫0 𝑚(𝑟)𝜙
+         ̄    1e d𝑟 ⋅ cos 𝜓𝑗 , 𝑗 = 1, 2, 3 𝑚47 = ∫0 𝑚(𝑟)𝜙
+                                                    ̄    1f d𝑟,                                            (A.17)
+                                𝐻                                                                                          References
+                                      ̄
+𝑚7 = 𝑚8 = 3𝑚0 + 𝑀nac + 𝑀hub + ∫0 t ow 𝑀(𝑧)𝜙2 d𝑧
+                                           1t
+                                                                                                                            [1] Kristian Holm-Jørgensen, Søren R.K. Nielsen, System reduction in multibody
+                                                                                                                                dynamics of wind turbines, Multibody Syst. Dyn. 21 (2009) 147–165.
+                                                                                                                            [2] Zili Zhang, Søren RK Nielsen, Frede Blaabjerg, Dao Zhou, Dynamics and control
+   Parameters 𝑀nac and 𝑀hub denote the masses of the nacelle and hub,                                                           of lateral tower vibrations in offshore wind turbines by means of active generator
+respectively. 𝑚0 is the total mass of each blade, and 𝑚(𝑟)
+                                                        ̄  is the mass                                                          torque, Energies 7 (11) (2014) 7746–7772.
+per unit length of the blade. 𝜙1e and 𝜙1f are the first mode shapes of                                                      [3] Mohamad Bakhit Aiman Harun, Multi Body Approach to Dynamical System: The
+                                                                  ̄
+the edgewise and flapwise directions of the blade, respectively. 𝑀(𝑧)                                                           Case of Wind Turbine (Bachelor’s Thesis), University of Teknologi PETRONAS,
+                                                                                                                                2017.
+represents the mass per unit length of the tower. 𝜙1t is the first mode
+                                                                                                                            [4] Chao Sun, VJMS Jahangiri, Bi-directional vibration control of offshore wind
+shape of the tower. 𝜓𝑗 is the angle between the 𝑥-axis and the 𝑗th blade.                                                       turbines using a 3D pendulum tuned mass damper, Mech. Syst. Signal Process.
+𝑅 is the radius of the rotor. 𝐻t ow is the height of the tower.                                                                 105 (2018) 338–360.
+                                                                                                                            [5] M. Mohamed Sajeer, Arka Mitra, Arunasis Chakraborty, Multi-body dynamic
+     ⎡ 𝑘b1,e     0       0       0       0     0      0    0⎤
+     ⎢                                                        ⎥                                                                 analysis of offshore wind turbine considering soil-structure interaction for fatigue
+     ⎢  0      𝑘b2,e     0       0       0     0      0    0  ⎥                                                                 design of monopile, Soil Dyn. Earthq. Eng. 144 (2021) 106674.
+     ⎢ 0         0     𝑘b3,e     0       0     0      0    0 ⎥⎥                                                             [6] Renqiang Xi, Xiuli Du, Piguang Wang, Chengshun Xu, Endi Zhai, Suyu Wang,
+     ⎢                                                                                                                          Dynamic analysis of 10 MW monopile supported offshore wind turbine based on
+     ⎢ 0         0       0     𝑘b1,f     0     0      0    0⎥                                                                   fully coupled model, Ocean Eng. 234 (2021) 109346.
+𝐊=⎢                                                           ⎥   (A.18)                                                    [7] Shuangyi Xie, Chenglin Zhang, Jiao He, Jing Jiang, Jian Gao, Dynamic response
+     ⎢ 0         0       0       0     𝑘b2,f   0      0    0⎥
+     ⎢                                                        ⎥                                                                 analysis and vibration control for a fixed-bottom offshore wind turbine subjected
+     ⎢ 0         0       0       0       0    𝑘b3,f   0    0⎥                                                                   to multiple external excitations, China Ocean Eng. 36 (1) (2022) 50–64.
+     ⎢                                                        ⎥                                                             [8] Y Li, AM Castro, JE Martin, T Sinokrot, W Prescott, PM Carrica, Coupled
+     ⎢ 0         0       0       0       0     0      𝑘7   0⎥                                                                   computational fluid dynamics/multibody dynamics method for wind turbine
+     ⎢                                                        ⎥
+     ⎣−𝛺182   −𝛺28 2  −𝛺38 2     0       0     0      0 𝑘8 ⎦                                                                    aero-servo-elastic simulation including drivetrain dynamics, Renew. Energy 101
+                                                                                                                                (2017) 1037–1051.
+                                                                                                                            [9] Yuhao Zhang, Fushun Liu, Yuanchuan Liu, et al., Coupled analysis of an offshore
+where:                                                                                                                          monopile wind turbine subjected to wind and waves, in: ISOPE International
+                                                                                                                                Ocean and Polar Engineering Conference, ISOPE, 2020, pages ISOPE–I.
+𝑘b𝑗 ,e = 𝑘eg + 𝑘ge,eg − 𝑘gr,eg 𝑐 𝑜𝑠𝜓𝑗 − 𝛺2 𝑚1𝑒 ,                    𝑘b𝑗 ,f = 𝑘f g + 𝑘ge,f p
+                                                                                                                           [10] Kamal Jahani, Robert G. Langlois, Fred F. Afagh, Structural dynamics of offshore
+   −𝑘gr,f p 𝑐 𝑜𝑠𝜓𝑗 ,                                                                                       (A.19)               wind turbines: A review, Ocean Eng. 251 (2022) 111136.
+            𝐻                        𝐻                                                                                     [11] Renqiang Xi, Chengshun Xu, Xiuli Du, M Hesham El Naggar, et al., Framework
+𝑘7 = 𝑘8 = ∫0 c 𝐸̄ 𝑐 𝐼t (𝜙′′
+                         1t
+                            )2 d𝑧 + ∫𝐻 t ow 𝐸𝑠 𝐼t (𝜙′′
+                                                    1t
+                                                       )2 d𝑧                                                                    for dynamic response analysis of monopile supported offshore wind turbine
+                                      c
+                                                                                                                                excited by combined wind-wave-earthquake loading, Ocean Eng. 247 (2022)
+                                                                                                                                110743.
+and:                                                                                                                       [12] Luis A Padrón, Sandro Carbonari, Francesca Dezi, et al., Seismic response of large
+             𝑅                                                           𝑅                                                      offshore wind turbines on monopile foundations including dynamic soil–structure
+𝑘eg =            𝐸 𝐼eg (𝑟)(𝜙′′1e )2 𝑑 𝑟,                   𝑘f g =            𝐸 𝐼f g (𝑟)(𝜙′′1f )2 𝑑 𝑟                            interaction, Ocean Eng. 257 (2022) 111653.
+        ∫0                                                          ∫0                                                     [13] Hao Ding, Zili Zhang, Jinting Wang, et al., Multiscale fluid–structure coupled
+                    𝑅      𝑅                                                     𝑅     𝑅
+                                                                                                                                real-time hybrid simulation of monopile wind turbines with vibration control
+𝑘ge,eg = 𝛺                     [𝑚(𝜉)𝜉
+                                ̄     𝑑 𝜉] (𝜙′1e )2 𝑑 𝑟,   𝑘ge,f p = 𝛺                     [𝑚(𝜉)𝜉
+                                                                                            ̄     𝑑 𝜉] (𝜙′1f )2 𝑑 𝑟
+                 ∫0 ∫r                                                       ∫0 ∫r                                              devices, Mech. Syst. Signal Process. 215 (2024) 111439.
+                   𝑅     𝑅                                                     𝑅      𝑅                                    [14] Arka Mitra, Saptarshi Sarkar, Arunasis Chakraborty, Multibody dynamic anal-
+𝑘gr,eg = 𝑔                   [𝑚(𝜉)𝑑
+                              ̄     𝜉] (𝜙′1e )2 𝑑 𝑟,       𝑘gr,f p = 𝑔                    [𝑚(𝜉)𝑑
+                                                                                           ̄     𝜉] (𝜙′1f )2 𝑑 𝑟                ysis of onshore horizontal-axis wind turbine, in: Non-Destructive Testing and
+               ∫0 ∫r                                                     ∫0 ∫r                                                  Condition Monitoring Techniques in Wind Energy, Elsevier, 2023, p. 351.
+                                                                                                           (A.20)          [15] N. Bazeos, G. Hatzigeorgiou, I. Hondros, H. Karamaneas, D. Karabalis, D. Beskos,
+                                                                                                                                Static, seismic and stability analyses of a prototype wind turbine steel tower, Eng.
+                                                                                                                                Struct. 24 (2002) 1015–1025.
+                                                                                                                           [16] I. Lavassas, G. Nikolaidis, P. Zervas, E. Efthimiou, I. Doudoumis, C. Baniotopou-
+                                                                                                                                los, Analysis and design of the prototype of a steel 1-MW wind turbine tower,
+    Parameters 𝐼f and 𝐼e represent the moments of inertia in the flap-                                                          Eng. Struct. 25 (2003) 1097–1106.
+wise and edgewise directions, respectively. 𝑔 is the gravitational ac-                                                     [17] S. Colwell, B. Basu, Tuned liquid column dampers in offshore wind turbines for
+                                                                                                                                structural control, Eng. Struct. 31 (2009) 358–368.
+celeration, 𝐸 represents the elastic modulus of blades, and ()′ and ()′′
+                                                                                                                           [18] J. Chen, C.T. Georgakis, Tuned rolling-ball dampers for vibration control in wind
+denote the first and second derivatives with respect to the distance 𝑟.                                                         turbines, J. Sound Vib. 332 (2013) 5271–5282.
+𝐼t is the moment of inertia of the tower cross-section. 𝐻c is the height                                                   [19] S. Bisoi, S. Haldar, Dynamic analysis of offshore wind turbine in clay considering
+of the reinforced concrete tower. 𝐸s and 𝐸c are the elastic moduli of                                                           soil-monopile-tower interaction, Soil Dyn. Earthq. Eng. 63 (2014) 19–35.
+
+
+                                                                                                                      16
+J. Xu et al.                                                                                                                                      Renewable Energy 243 (2025) 122475
+
+
+[20] S. Bisoi, S. Haldar, Design of monopile supported offshore wind turbine in clay             [39] Roman Rachholz, Christoph Woernle, János Zierath, P Eberhard, P Ziegler,
+     considering dynamic soil-structure-interaction, Soil Dyn. Earthq. Eng. 73 (2015)                 Dynamics of a controlled flexible multi-body model of a 2 MW wind turbine,
+     103–117.                                                                                         in: Proceedings of the 2nd Joint International Conference on Multibody System
+[21] H. Zuo, K. Bi, H. Hao, Using multiple tuned mass dampers to control off-                         Dynamics-IMSD, Stuttgart, 2012.
+     shore wind turbine vibrations under multiple hazards, Eng. Struct. 141 (2017)               [40] Grzegorz Orzechowski, Aki M. Mikkola, José L. Escalona, Co-simulation proce-
+     303–315.                                                                                         dure for multibody reeving systems, in: Volume 6: 14th International Conference
+[22] I. Prowell, M. Veletzos, A. Elgamal, J. Restrepo, Experimental and numerical                     on Multibody Systems, Nonlinear Dynamics, and Control, American Society of
+     seismic response of a 65 kW wind turbine, J. Earthq. Eng. 13 (2009) 1172–1190.                   Mechanical Engineers, 2018, V006T09A018.
+[23] R.A. Kjørlaug, A.M. Kaynia, Vertical earthquake response of megawatt-sized wind             [41] Guoqiang Du, Feng Han, Xianghui Fan, Yuan Li, Tao Liang, Dynamic simulation
+     turbine with soil-structure interaction effects, Earthq. Eng. Struct. Dyn. 44 (2015)             analysis of rail track and track structure based on SIMPACK and ABAQUS, in:
+     2341–2358.                                                                                       L. Wang, V. Yepes (Eds.), E3S Web of Conferences, vol. 248 (2021) 03007.
+[24] F. Santangelo, G. Failla, A. Santini, F. Arena, Time-domain uncoupled analyses              [42] Yang Li, Chao Wang, Optimization design and simulation of TMD for a wind
+     for seismic assessment of land-based wind turbines, Eng. Struct. 123 (2016)                      turbine based on SIMPACK, in: Proceedings of the 2022 International Conference
+     275–299.                                                                                         on Green Building, Civil Engineering and Smart City, vol. 211, Springer Nature
+[25] Haoran Zuo, Kaiming Bi, Hong Hao, Dynamic analyses of operating offshore wind                    Singapore, 2023, pp. 708–715.
+     turbines including soil-structure interaction, Eng. Struct. 157 (2018) 42–62.               [43] Albert Peiret, Francisco González, József Kövecses, Marek Teichmann, Co-
+[26] Junling Chen, Jinwei Li, Xinheng He, Design optimization of steel–concrete                       simulation of multibody systems with contact using reduced interface models,
+     hybrid wind turbine tower based on improved genetic algorithm, Struct. Des.                      J. Comput. Nonlinear Dyn. 15 (4) (2020) 041001.
+     Tall Spec. Build. 29 (10) (2020) e1741.                                                     [44] Bernhard Schweizer, Pu Li, Daixing Lu, Explicit and implicit cosimulation meth-
+[27] Christian Bak, Frederik Zahle, Robert Bitsche, Description of the DTU 10 MW                      ods: Stability and convergence analysis for different solver coupling approaches,
+     Reference Wind Turbine, DTU Wind Energy Report-I-0092, vol. 5, 2013.                             J. Comput. Nonlinear Dyn. 10 (5) (2015) 051007.
+[28] Xinqi Liu, Jun Xu, Guangling He, Chao Chen, Lateral vibration mitigation of                 [45] Jian Ying Wu, Jie Li, Rui Faria, An energy release rate-based plastic-damage
+     monopile offshore wind turbines with a spring pendulum pounding tuned mass                       model for concrete, Int. J. Solids Struct. 43 (3) (2006) 583–612.
+     damper, Ocean Eng. 266 (2022) 112954.                                                       [46] R. Kübler, W. Schiehlen, Modular simulation in multibody system dynamics,
+[29] Zeyu He, Modeling and Reliability Analysis of Large-Scale Hybrid Wind                            Multibody Syst. Dyn. 4 (2000) 107–127.
+     Turbines (Master’s thesis), Hunan University, Changsha, 2024.                               [47] Zhe Cui, A sub-modeling technique to balance force system boundary condition,
+[30] Emmanuel Branlard, Generation of time series from a spectrum: Generation of                      Int. J. Perform. Eng. (2017).
+     wind time series from the kaimal spectrum, generation of wave time series from              [48] Francis Thomas McKenna, Object-Oriented Finite Element Programming: Frame-
+     Jonswap spectrum, Tech. Univ. Den. (2010) 1–13.                                                  works for Analysis, Algorithms and Parallel Computing, University of California,
+[31] IEC61400 IEC. 61400-1: Wind turbines part 1: Design requirements, Int.                           Berkeley, 1997.
+     Electrotech. Comm. 177 (2005).                                                              [49] Michael H. Scott, Gregory L. Fenves, Frank McKenna, Filip C. Filippou, Software
+[32] Martin Otto Laver Hansen, Aerodynamics of Wind Turbines, third ed., Earthscan,                   patterns for nonlinear beam-column models, J. Struct. Eng. 134 (4) (2008)
+     London, UK, 2015.                                                                                562–571.
+[33] Hong-bing Xia, Pounding Tuned Mass Damper for Vibration Control of Offshore                 [50] Frank McKenna, Michael H. Scott, Gregory L. Fenves, Nonlinear finite-element
+     Wind Turbine Subject to Combined Wind and Wave Excitation (Master’s thesis),                     analysis software architecture using object composition, J. Comput. Civ. Eng. 24
+     Wuhan University of Technology, 2020.                                                            (1) (2010) 95–107.
+[34] S. Andrew Ning, A simple solution method for the blade element momentum                     [51] Junling Chen, Jinwei Li, Dawei Wang, Youquan Feng, Seismic response analysis
+     equations with guaranteed convergence, Wind Energy 17 (9) (2014) 1327–1345.                      of steel–concrete hybrid wind turbine tower, J. Vib. Control 28 (17) (2022)
+[35] J. Jonkman, M. Sprague, OpenFAST Documentation Release v3. 0.0, National                         2240–2253.
+     Renewable Energy Laboratory, Golden, CO, USA, 2021.                                         [52] Zhao Zhi, Dai Kao-shan, Mao Zhen-xi, Zhang Cai-wei, Failure analyses of a wind
+[36] Jian-yuan Tang, Wei Guo, Yang Wang, Jun-long Li, Zhe-feng Zeng, A                                turbine tower under ground motions with different frequency characteristics,
+     co-simulation method for the train-track-bridge interaction analysis under earth-                Eng. Mech. 35 (S1) (2018) 293–299.
+     quake using simpack and OpenSees, J. Central South Univ. 29 (8) (2022)                      [53] C. Sun, Semi-active control of monopile offshore wind turbines under
+     2791–2806.                                                                                       multi-hazards, Mech. Syst. Signal Process. 99 (2018) 285–305.
+[37] Jan Helsen, Frederik Vanhollebeke, Ben Marrant, Dirk Vandepitte, Wim Desmet,                [54] Qingxu Jin, Victor C. Li, Structural and durability assessment of ECC/concrete
+     Multibody modelling of varying complexity for modal behaviour analysis of wind                   dual-layer system for tall wind turbine towers, Eng. Struct. 196 (2019) 109338.
+     turbine gearboxes, Renew. Energy 36 (11) (2011-11) 3098–3113.
+[38] Jiao He, Xin Jin, S.Y. Xie, Le Cao, Yifan Lin, Ning Wang, Multi-body dynamics
+     modeling and TMD optimization based on the improved AFSA for floating wind
+     turbines, Renew. Energy 141 (2019) 305–321.
+
+
+
+
+                                                                                            17
+

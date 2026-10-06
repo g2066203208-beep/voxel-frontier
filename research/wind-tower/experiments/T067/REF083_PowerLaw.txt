@@ -1,0 +1,637 @@
+Received: 16 July 2020     Revised: 7 December 2020       Accepted: 12 December 2020
+DOI: 10.1002/er.6382
+
+
+RESEARCH ARTICLE
+
+
+
+
+The role of the power law exponent in wind energy
+assessment: A global analysis
+
+Christopher Jung                       |      Dirk Schindler
+
+Environmental Meteorology, Albert-
+Ludwigs-University of Freiburg, Freiburg,
+                                                      Summary
+Germany                                               The power law is most often applied to extrapolate the near-surface wind speed
+                                                      to the wind turbine hub height. Due to variations of the meteorological condi-
+Correspondence
+Christopher Jung, Environmental                       tions, the power law exponent varies over time. Usually, no long-term wind
+Meteorology, Albert-Ludwigs-University                speed measurements from multiple heights are available which would allow
+of Freiburg, Werthmannstrasse
+                                                      time-dependent and spatially explicit power law exponent estimations. Instead,
+10, D-79085 Freiburg, Germany.
+Email: christopher.jung@mail.unr.uni-                 often the mean of the power law exponent or a constant value of 0.14 is
+freiburg.de                                           assumed. The goal of this study was to quantify the error in wind potential
+Funding information
+                                                      assessments resulting from applying the mean of the power law exponent or a
+ALBERT-LUDWIGS-UNIVERSITAET                           value of 0.14. The data base for this study are the hourly wind speed time series
+FREIBURG                                              at 10 and 100 m above ground available for the period 2007 to 2018 from the
+                                                      ERA5 reanalysis project at a global 0.25 × 0.25 grid. The errors in the estima-
+                                                      tion of the wind power density and the capacity factor were calculated. It was
+                                                      found that, onshore, the global median of the absolute percentage error related
+                                                      to the wind power density using the mean of the power law exponent is 7.5%.
+                                                      Assuming a constant value of 0.14, the power law is less accurate (absolute per-
+                                                      centage error: 37.1%). For the estimation of the capacity factor the absolute per-
+                                                      centage errors are 5.5% and 36.9%. Based on the results of this study, the use of
+                                                      time-dependent and spatially explicit power law exponents is suggested. In the
+                                                      absence of long-term wind speed measurements from multiple heights, the
+                                                      results provide a comprehensive global overview of the errors to be expected
+                                                      from using the mean of the power law exponent or assuming a value of 0.14.
+                                                      In many regions where the wind resource is abundant, using the mean of the
+                                                      power law exponent only leads to minor errors in capacity factor estimation.
+                                                      There, the assessment of wind resources with small errors is possible, even in
+                                                      the absence of long-term wind speed measurements at different heights.
+
+                                                      KEYWORDS
+                                                      method error assessment, seasonal cycle, Wakeby distribution, wind resource, wind speed
+                                                      extrapolation
+
+
+ABBREVIATIONS: DJF, December, January, February; JJA, June, July, August; EV, variant of the power law exponent; GloWiSMo, Global Wind
+Speed Model; LIDAR, Light Detection and Ranging; MAM, March, April, May; SON, September, October, November; Wak, five-parameter Wakeby
+distribution.
+This is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium, provided
+the original work is properly cited.
+© 2021 The Authors. International Journal of Energy Research published by John Wiley & Sons Ltd
+
+8484      wileyonlinelibrary.com/journal/er                                                                                        Int J Energy Res. 2021;45:8484–8496.
+JUNG AND SCHINDLER                                                                                                      8485
+
+
+
+1 | INTRODUCTION                                                near-surface wind speed (Ug) have been carried out by
+                                                                national weather services for several decades.18 Usually,
+The ongoing global warming requires a rapid reduction           Ug measurements are made at a height of 10 m above
+in global greenhouse gas emissions. An important pillar         ground level. However, the wind energy is commonly
+for mitigating climate change is the conversion of the          exploited in the wind turbine hub height (hhub) range
+power supply based on conventional to renewable ener-           from 80 to 140 m above ground level. Thus, an important
+gies. The technical wind potential is sufficient to cover       step in every wind potential assessment is the extrapola-
+global electricity consumption by wind energy.1-3 Thus,         tion of Ug to hhub.
+one of the most effective renewable energies for the miti-          The most common approach to extrapolate Ug to hhub
+gation of climate change is wind energy.4                       is the power law19:
+     The need for climate change mitigation and the tech-
+                                                                                                           E
+nical progress of wind turbine technology has led to an                                              hhub
+increasing wind energy expansion in recent years. In                               U hub = U g                   ,      ð1Þ
+                                                                                                      hg
+2019, the globally installed wind capacity amounted to
+651 GW.5 Since 2014, the annual expansion rate of wind
+capacity exceeded 50 GW.5                                       where hg is the measurement height of Ug, E is the power
+     However, the current wind energy expansion rate is         law exponent, and Uhub is the wind speed in hhub. The
+still not sufficient to meet the goals set by the Paris Cli-    value assigned to E determines the increase of U with
+mate Agreement aiming at lowering greenhouse gas                increasing height above the ground. Just as U, E is char-
+emissions. The comprehensive exploitation of the glob-          acterized by spatiotemporal variations which are driven
+ally available technical wind potential requires the instal-    by thermally and mechanically induced mixing, wind
+lation of much more wind turbines.3 The installation of         speed, air temperature conditions, elevation, time of day,
+wind turbines cannot always be as smooth and efficient          season, and orography.20 Usually, under a stably strati-
+as it should be, as their installation is highly regulated in   fied atmosphere and/or high surface roughness, E values
+some parts of the world. Barriers to the installation of        are high.21 In contrast, under unstable atmospheric con-
+wind turbines include the lack of detailed knowledge on         ditions and/or when the surface roughness is low,
+wind resources,6 geographical restrictions,7 availability of    E values are low.22 At greater values of E, U increases
+wind turbine technology,8 and socio-economic                    more with increasing height.
+conditions.9                                                        Since Uhub is very sensitive to E, the values of
+     The basis for wind potential assessments is detailed       E impact the accuracy of wind energy assessments.23 To
+knowledge of wind resources. Globally, wind resources           estimate E values at a specific site, wind speed measure-
+are very unevenly distributed. The areas where the wind         ments in at least two different heights are required.
+resources are abundant include the southern tip of South        Moreover, these measurements should be carried out
+America, the Midwest of the USA, Canada, Russia, and            over a period as long as possible to account for the tem-
+many deserts.3 Besides, the wind resources are abundant         poral variability of E.24 For instance, using a Light Detec-
+off many coasts and inshore.10                                  tion and Ranging (LIDAR) system, long-term
+     The dynamics of wind resources are primarily driven        U observations were obtained in Singapore25 and Ohio
+by large-scale circulation systems.11 On the local scale,       (USA)26 to calculate spatiotemporal explicit E values.
+surface roughness and orography then modify the large-          Another approach to calculate spatiotemporal explicit
+scale wind resource patterns.12 As a result, exposed            E values is to use U measurements from a tower
+mountain ranges and areas where the surface roughness           equipped with U measurement sensors.27 It is usually not
+is low, often provide sufficient wind resource for wind         possible to realize such measurements, due to logistical
+turbine installations.13                                        and financial reasons.
+     Besides the great spatial variability, an inherent fea-        There are different approaches to substitute missing
+ture of wind resources is their temporal variability.14 It      empirical values of E. The simplest, but frequently
+extends over several time scales, ranging from sub-             applied approach is the assumption that E is constant at
+hourly15 to multi-decadal scales.16 Considering the tem-        the value of 0.14 (E014).28 The advantage of using E014 is
+poral variability of wind resources in wind potential           that neither measurements nor knowledge of the local
+assessments is crucial because it is a key factor regarding     influences on E is required. However, using E014 ignores
+their capability to provide a constant power supply.17          both the temporal and spatial variability of E.
+     To capture the complex spatiotemporal pattern of the           Another widely used approach to substitute missing
+wind resource, detailed modeling, and measuring the             empirical values of E is to implement spatially explicit
+wind speed (U) is required. Routine measurements of the         but temporally constant mean values of E (EM).23
+8486                                                                                                                               JUNG AND SCHINDLER
+
+
+
+Usually, EM values can be assigned to a site based on the                 annual variability of EM, (f) calculation of the mean
+local surroundings.29 The use of EM neglects the tempo-                   wind power density (WPD) using UE (WPDE), UEM
+ral variability of E.                                                     (WPDEM), and UE014 (WPDE014), (g) estimation of the
+    Previous studies reveal that applying the power law is                probability density functions f() of UE (f(UE)), UEM (f
+fundamental in wind potential assessments and using                       (UEM)), and UE014 (f(UE014)), and (h) calculation of the
+EM or E014 as the power law exponent is widespread.                       capacity factors (cf ) using f(UE), f(UEM), and f(UE014)
+Thus, quantifying the errors in the application of EM and                 yielding cfE, cfEM, and cfE014 by applying an exemplary
+E014 is of utmost importance to judge the accuracy of                     wind turbine power curve.
+wind potential estimates. Unfortunately, such investiga-
+tions are rare and have so far only been carried out for
+individual sites.23 To obtain a generalizable error evalua-               2.1 | Wind speed data
+tion, it is essential to conduct investigations on a global
+scale. Besides, the regionally influenced temporal vari-                  Time series of hourly wind vector components (u (zonal),
+ability of E must be considered as a potential cause of EM                v (meridional)) in 10 m (u10, v10) and 100 m (u100, v100) in
+and E014 errors.                                                          the period January 1, 2007 to December 31, 2018 were
+    Thus, the goals of this study are (a) the evaluation of               obtained from the ERA5 reanalysis project30 for all onshore
+the spatiotemporal variability of E and (b) the quantifica-               areas and offshore regions with sea depth < 200 m.
+tion of the error in the application of EM and E014 for                       The horizontal resolution of u and v is 0.25 × 0.25 .
+wind resource and technical wind potential assessments.                   The wind speed in 10 and 100 m was calculated by:
+                                                                                                          pﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ
+                                                                                                 U he =    uhe 2 + vhe 2 :                       ð2Þ
+2 | M A T E R I A L AN D M E T H O D S
+
+The methodology to assess the influence of E on the                       with he = {10 m, 100 m} being the height above ground
+accuracy of wind potential assessments includes the fol-                  level.
+lowing steps (Figure 1): (a) Obtaining wind speed time
+series in 100 m (U100) and 10 m (U10) on a global grid,
+(b) calculation of E from U100 and U10, (c) calculation of                2.2 | The power law
+EM, (d) extrapolation of U10 to hhub = 100 m by assuming
+variants of E yielding U100, UEM, and UE014,                              Hourly values of E available at the grid cells were com-
+(e) investigation of the seasonal variability and inter-                  puted from U10 and U100 by Reference 19:
+
+
+
+
+F I G U R E 1 Methodology applied to assess the influence of the power law exponent (E) on the accuracy of wind potential assessments
+with U100 being the wind speed in 100 m, U10 being the wind speed in 10 m, EM being the mean of E, E014 being E = 0.14, WPD being the
+wind power density, f() being the probability density function and cf being the capacity factor. The subscripts denote the E variants (EV = {E,
+EM, E014}). Gridded data available as time series (dimensions: xyt) is labeled in blue and time-independent gridded data (dimensions: xy) is
+labeled in green [Colour figure can be viewed at wileyonlinelibrary.com]
+JUNG AND SCHINDLER                                                                                                                      8487
+
+
+                                
+                             ln UU100                                distribution by the L-moment method.32 Wak is a very
+                          E = 100m :                         ð3Þ
+                                   10
+                                                                     flexible distribution able to reproduce a greater variety of
+                             ln 10m                                  empirical distributions compared to other two- or three-
+                                                                     parameter distributions.31 Thus, Wak is often designated
+    From the time series of E, EM over the entire investi-           as grandparent distribution.
+gation period was calculated. The dimensions of E014,                    In a recent review, Wak was found to provide a reli-
+EM, and E differ: E varies at the grid cells and in time (t),        able fitting accuracy for U regimes around the world.33
+EM varies only at the grid cells, and E014 is a constant.            Wak consists of a location parameter (ε), two scale
+Hourly extrapolated wind speed in 100 m was calculated               parameters (α, γ), and two shape parameters (β, δ). The
+based on the variants of E by applying the power law19:              probability density function of Wak is defined as:
+
+                                             E                                           n                                          o−1
+                      U E = U 10
+                                       100m
+                                                   ,           ð4Þ    f ðU; α,β, γ, δ, εÞ = α½1 −F ðU Þβ − 1 + γ ½1 −F ðU Þ − δ − 1     :
+                                       10m
+                                                                                                                                        ð8Þ
+                                             EM
+                                       100m
+                     U EM = U 10                       ,       ð5Þ       Most often Wak is defined by its quantile function:
+                                       10m
+                                                                                                     αh             i γh              i
+                                             E014                  F − 1 ðF; α,β, γ, δ, εÞ = ε +      1 − ð1 −F Þβ − 1 − ð1 −F Þ − δ :
+                                       100m                                                          β                δ
+                 U E014 = U 10                             :   ð6Þ
+                                       10m                                                                                           ð9Þ
+
+
+
+
+2.3 | Analysis of the temporal variability
+of the power law exponent
+
+The temporal variability of E was assessed at seasonal
+and inter-annual scales. The seasonal behavior of E was
+evaluated for (a) December, January, February (DJF),
+(b) March, April, May (MAM), (c) June, July, August
+(JJA), and (4) September, October, November (SON). EM
+was calculated for each season yielding EMDJF, EMMAM,
+EMJJA, and EMSON.
+    The investigation of the inter-annual variability of
+E is based on the annual mean values of E for the entire
+investigation period. Both, the seasonal and inter-annual
+variability of E were quantified by the standard deviation
+(sd) and the range (r).
+
+
+2.4 | Influence of the power law
+exponent on the wind resource and
+technical potential
+
+To estimate the influence of the variants of E on wind
+resource assessments, WPDE, WPDEM, and WPDE014 were
+computed by Reference 20:
+
+                 WPDEV = 0:5  U EV 3  AD                     ð7Þ
+
+with AD being the air density (AD = 1.225 kg/m3).                    F I G U R E 2 A, Schematic representation of a Wakeby
+   The technical wind potential was quantified by cf.                probability density function f(U) and B, the power curve (PW(U)) of
+Before the calculation of the cf variants, the time series of        the Nordex N117/2400 wind turbine [Colour figure can be viewed
+U were fitted to the five-parameter Wakeby (Wak)31                   at wileyonlinelibrary.com]
+8488                                                                                                                    JUNG AND SCHINDLER
+
+
+
+    For this study, the power curve (PW(U)) of the                        The second        quality     measure        is     the   absolute
+Nordex N117/2400 wind turbine was selected34                          error (AER):
+(Figure 2B). This wind turbine is one of the most fre-
+quently installed wind turbines in Germany in recent                                   AERWPV = jWPV EV −WPV E j:                       ð13Þ
+years. It has a hub height of 100 m, a rated power (PR) of
+2400 kW, and a rotor diameter of 117 m.                                   The third       quality     measure     is        the   percentage
+    The calculation of the mean power output (PWM)                    error (PER):
+was carried out using PW(U) and f(UEV):
+                                                                                                 WPV EV − WPV E
+                           ð∞                                                        PERWPV =                    100:                  ð14Þ
+                                                                                                    WPV E
+                PWM EV =        PW ðU Þf ðU EV ÞdU:         ð10Þ
+                            0
+                                                                          The fourth quality measure is the absolute percentage
+       After PWMEV estimation, cf was calculated by:                  error (APER):
+
+                      cf EV = PWM EV =PR:                   ð11Þ                                    WPV EV − WPV E
+                                                                                   APERWPV =                        100:               ð15Þ
+                                                                                                       WPV E
+   The power law accuracy applying EM and E014 was
+evaluated using four quality measures. The quality mea-
+sures are based on the comparison between the mean of
+the wind potential variables WPV = {cf, WPD} in the                   3 | RESULTS A ND DISCUSSION
+investigation period that were calculated from hourly
+E (WPVE) and from the variants (EV = {EM, E014}) of                   3.1 | Mean power law exponent
+E (WPVEV).
+   The first quality measure is the error (ER):                       The global distribution of EM is displayed in Figure 3.
+                                                                      The results reveal that the land-sea distribution is the
+                  ERWPV = WPV EV −WPV E :                   ð12Þ      most important factor influencing EM. Frequently, the
+
+
+
+
+F I G U R E 3 Global pattern of the mean power law exponent (EM). The legend values indicate the highest class values [Colour figure can
+be viewed at wileyonlinelibrary.com]
+JUNG AND SCHINDLER                                                                                                       8489
+
+
+
+T A B L E 1 Country-related median                        ~                          ~                                 ~
+                                         Country         EM        country          EM        country                 EM
+                                  ~
+of the mean power law exponent (EM)
+of the countries with the largest        China           0.203     Canada           0.209     Chad                    0.179
+populations                              India           0.210     Afghanistan      0.147     Rwanda                  0.184
+                                         USA             0.216     Morocco          0.153     Belgium                 0.225
+                                         Indonesia       0.208     Malaysia         0.211     Burundi                 0.213
+                                         Brazil          0.238     Venezuela        0.222     Tunisia                 0.166
+                                         Pakistan        0.157     Peru             0.180     Cuba                    0.204
+                                         Nigeria         0.226     Uzbekistan       0.166     Bolivia                 0.233
+                                         Bangladesh      0.211     Nepal            0.133     Benin                   0.232
+                                         Russia          0.231     Angola           0.237     Portugal                0.211
+                                         Japan           0.217     Saudi Arabia     0.167     Greece                  0.172
+                                         Mexico          0.178     Yemen            0.151     Dominican Republic      0.208
+                                         Ethiopia        0.183     Ghana            0.219     Czechia                 0.235
+                                         Philippines     0.173     Mozambique       0.218     Haiti                   0.141
+                                         Egypt           0.169     North Korea      0.214     Jordan                  0.157
+                                         Vietnam         0.220     Madagascar       0.210     Azerbaijan              0.165
+                                         Congo           0.236     Cameroon         0.227     Sweden                  0.250
+                                         Iran            0.145     Ivory Coast      0.235     Hungary                 0.229
+                                         Turkey          0.181     Taiwan           0.155     Belarus                 0.221
+                                         Germany         0.236     Australia        0.204     Honduras                0.215
+                                         Thailand        0.222     Sri Lanka        0.207     Austria                 0.225
+                                         France          0.228     Romania          0.218     Tajikistan              0.198
+                                         UK              0.222     Burkina Faso     0.225     Israel                  0.172
+                                         Italy           0.184     Niger            0.170     Switzerland             0.202
+                                         Myanmar         0.215     Malawi           0.212     Togo                    0.240
+                                         South Africa    0.195     Kazakhstan       0.205     Somalia                 0.162
+                                         Tanzania        0.214     Syria            0.162     Denmark                 0.202
+                                         South Korea     0.222     Mali             0.170     Laos                    0.233
+                                         Spain           0.207     Chile            0.191     Republic of Serbia      0.223
+                                         Colombia        0.233     Netherlands      0.223     Bulgaria                0.213
+                                         Kenya           0.186     Ecuador          0.190     Paraguay                0.233
+                                         Argentina       0.212     Cambodia         0.231     Papua New Guinea        0.205
+                                         Ukraine         0.225     Zambia           0.236     Libya                   0.165
+                                         Algeria         0.163     Guatemala        0.210     Lebanon                 0.153
+                                         Uganda          0.205     Senegal          0.211     El Salvador             0.189
+                                         Iraq            0.162     Zimbabwe         0.216     Sierra Leone            0.224
+                                         Poland          0.228     South Sudan      0.218     United Arab Emirates    0.155
+                                         Sudan           0.179     Guinea           0.222     Nicaragua               0.235
+
+
+
+offshore EM < 0.10. Onshore, the global median EM (EM)   ~       forested areas of Canada and Russia, EM is in a similar
+is 0.210. Among the countries with the highest EM values         range. In contrast, in many island states such as Seychelles
+are Suriname (EM ~ = 0.255), Sweden (EM   ~ = 0.250), Fin-       and Trinidad and Tobago, EM   ~ is below 0.050. Further-
+land (EM~ = 0.247), and Brazil (EM~ = 0.238) (Table 1). In       more, low values of EM occur in deserts and steppes. In
+all these countries, the share of the forest area is greater     Oman, Qatar, and the Western Sahara, EM    ~ is below 0.15.
+than 50%. In Suriname, which is the country with the                 These results demonstrate that the surface roughness,
+world's largest forest area, it is 98.3%.35 In the large         which is predominantly influenced by the land use,
+8490                                                                                                             JUNG AND SCHINDLER
+
+
+
+drives the spatial pattern of EM on a global scale. Besides,             In many Northern and Central European countries,
+the orography influences EM. In general, at grid cells               ~ is about 0.25. In MAM, EM decreases strongly
+                                                                    EM
+where the elevation is lower compared to the surround-              (Figure 4B). For instance, in Sweden, EM       ~ is 0.277 and
+ing grid cells, EM increases. The opposite is true at grid          0.245 in DJF and MAM. This EM trend continues in JJA.
+cells where the elevation is higher compared to the                 It is noticeable that the influence of the relative elevation
+neighboring grid cells. Thus, rapid changes of EM occur             on EM also decreases in summer as indicated by a lower
+in mountain areas, where the relative elevation varies              sd of EM.
+greatly. Striking examples of such EM patterns are the                   South of latitude 30 S, highest EM values occur in
+Himalaya in Asia and the Rocky Mountains in North                   JJA. However, the EM values are below the level of the
+America.                                                            northern hemisphere in DJF. The pattern of EM in SON
+                                                                    (Figure 4D) is very similar to the pattern of EM in MAM.
+                                                                         The global EM  ~ in SON (0.211) is slightly above global
+3.2 | Temporal variability                                           ~ in MAM (0.208). The most important reasons causing
+                                                                    EM
+                                                                    the temporal pattern of EM are the atmospheric stratifi-
+The monthly variation of EM is remarkable (Figure 4).               cation and wind speed, which both are subject to an
+The land-sea differences of EM are more pronounced in               annual cycle.36,37
+winter than in summer. Towards the equator, the sea-                     The global sd of EM on an annual scale (sda) is dis-
+sonal EM differences are smaller compared to the high               played in Figure 5A. The results reveal that the inter-
+latitudes. Global onshore EM~ ranges from 0.213 DJF                 annual variability of E is very small. Onshore, median sda
+(Figure 3A) to 0.200 in JJA (Figure 4C). The high EM    ~             ~ a ) is 0.003. In only 16 countries, sd
+                                                                    (sd                                      ~ a > 0.005. The inter-
+value in DJF is mainly due to high EM values north of               annual variability of E is only important in some very
+50 , which frequently exceed 0.25, especially in forested          sparsely populated regions including Alaska, northeast-
+areas.                                                              ern Russia, and the coast of Greenland. But even there,
+
+
+
+
+F I G U R E 4 Global pattern of the mean power law exponent (EM) in A, winter (EMDJF), B, spring (EMMAM), C, summer (EMJJA), and D,
+autumn EMSON. The legend values indicate the highest class values [Colour figure can be viewed at wileyonlinelibrary.com]
+JUNG AND SCHINDLER                                                                                                                     8491
+
+
+
+
+F I G U R E 5 Global pattern of the sd of the mean power law exponent (EM) on the A, annual scale (sda) and B, monthly scale (sdm) as
+well as the range (r) of the mean power law exponent (EM) on the C, annual scale (ra) and D, monthly scale (rm). The legend values indicate
+the highest class values [Colour figure can be viewed at wileyonlinelibrary.com]
+
+
+
+the pattern of areas where sda > 0.010 is patchy. The                       As opposed to this, global onshore ~r on the monthly
+results reveal that there is no influence of the inter-                 scale (~r m ) is much higher being at 0.045 (Figure 5D). In
+annual variability of U on E.                                           60 countries, ~r m exceeds 0.050. Similar to sdm, the spa-
+    In contrast, there is a striking seasonal variability of            tial distribution of rm is very heterogeneous and inde-
+E in most parts of the world (Figure 5B). The monthly                   pendent of the land-sea distribution. The factors
+global onshore median of sd (sd ~ m ) is 0.015.                         determining the spatial rm distribution are diverse and
+    The spatial pattern of sdm is very complex. In                      cannot be unambiguously traced back. North of latitude
+23 countries including Nepal, Sweden, and Canada, sd     ~m             60 N and south of latitude 30 S, rm frequently exceeds
+> 0.020. These countries can be found at very different                 0.050. Similar high rm values also occur in mountainous
+latitudes and longitudes. The land-sea distribution does                regions.
+not seem to be a decisive factor for the spatial distribu-
+tion of sdm. Whereas sdm ≈ 0.028 at the northeast Atlantic
+coast of the USA, sdm < 0.005 in the northwest Atlantic of              3.3 | Influence on the wind resource
+Europe.
+    In Figure 5C, r on the annual scale (ra) is presented.              The global onshore median of AERWPD (AER   ~ WPD ) apply-
+The global onshore median of ra (~r a ) is 0.011. The spatial           ing EM in the period January 1, 2007 to December
+distribution of ra confirms that the inter-annual variabil-             31, 2018 is 8 W/m2 (Figure 6A). The spatial pattern of
+ity of E is often of little importance. However, in moun-               ERWPD is very complex, which indicates that it is not pos-
+tainous regions including the Andes, the Himalaya, and                  sible to define a universally applicable correction factor
+the Central Siberian plateau, ra exceeds 0.040 in many                  for the EM-based WPD estimation. The greatest accuracy
+cases. ~r a values in mountainous countries like Nepal or               in the estimation of WPD is achieved near the equator.
+Andorra usually exceed 0.020. Nevertheless, in the vast                 This is mainly because the seasonal variability of EM in
+majority of countries, ~r a < 0.015.                                    this region is low. In countries such as Papua New
+8492                                                                                                                 JUNG AND SCHINDLER
+
+
+
+
+F I G U R E 6 Global pattern of the error in the wind power density estimation (ERWPD) using A, the mean power law exponent (EM)
+and B, assuming E = 0.14 (E014) as well as the percentage error in the wind power density estimation (PERWPD) using C, the mean power
+law exponent (EM) and D, assuming E = 0.14 (E014). The legend values indicate the highest class values [Colour figure can be viewed at
+wileyonlinelibrary.com]
+
+
+
+Guinea, Mexico, and Brazil, AERWPD is often <5 W/m2.                   The reason for the direction and magnitude of ERWPD
+With increasing distance from the equator, the pattern of              associated with the use of E014 is the bias of E014 in the
+ERWPD becomes patchier. Offshore, there is a tendency                  spatial distribution of E.
+towards an underestimation of WPD. In the northwestern                     The spatial pattern of PER when applying EM differs
+European offshore region, which is the most important                  on very small spatial scales (Figure 6C). Especially, in
+region for the offshore use of wind energy,38 WPD is                   regions with complex orography and rapidly changing land
+often underestimated by more than 100 W/m2. In con-                    use, areas with positive and negative PERWPD are often
+trast, WPD is often overestimated in onshore regions                   close. According to PERWPD, the highest accuracy of the
+where the installed wind capacity is high, such as the                 power law is in northeastern Canada, northwestern Russia,
+United Kingdom and the Midwest of the USA. An impor-                   and in many deserts around the world. The global onshore
+tant reason for the direction and magnitude of ER are the              median of APERWPD using EM (APER   ~ WPD ) is 7.5%. High
+seasonal fluctuations of E.                                            accuracy in the estimation of WPD is achieved in large
+    The global pattern of ERWPD using E014 reveals con-                parts of Finland (APER~ WPD = 1.1%) and desert countries
+siderable differences between onshore and offshore areas                                    ~
+                                                                       such as Kuwait (APERWPD = 3.0%), Libya (APER    ~ WPD =
+(Figure 6B). Offshore, WPD is greatly overestimated with               3.6%), and the Western Sahara (APER  ~ WPD = 4.0%). As
+ERWPD values almost everywhere exceeding 100 W/m2.                     opposed to that, in countries where the orography is
+Onshore, WPD is often underestimated. In Northwest                                                              ~ WPD = 15.0%),
+                                                                       highly diverse including Switzerland (APER
+Europe and Central and Eastern North America, ERWPD                              ~
+                                                                       Italy (APERWPD = 13.8%), and Argentina (APER    ~ WPD =
+is the lowest (< −50 W/m2). However, there are also                    10.3%), the accuracy in WPD estimation is lower.
+some regions where ER is ≈0 W/m2, indicating good                          In Figure 6D, PERWPD using E014 is presented. Off-
+potential for high quality assessments of the wind                     shore, WPD is frequently overestimated by more than
+resource assuming E014. This includes large parts of the               30.0%. Onshore, WPD is often underestimated by more
+West Coast of the Americas and regions near the equator.               than 40.0%. The areas where PERWPD ≈ 0.0% are rare. In
+JUNG AND SCHINDLER                                                                                                                        8493
+
+
+
+desert areas and permafrost regions, the underestimation                areas where ERcf is negative. Onshore, the global median
+of WPD is relatively small (PERWPD ≈ −8.0%). In contrast,               of ERcf using EM (ER  ~ cf ) is −0.009. In North African and
+WPD underestimation is very high in the evergreen tropi-                Arab countries such as Kuwait (ER      ~ cf = −0.038), Niger
+cal forests and temperate forests (PERWPD < −50.0%).                      ~
+                                                                        (ERcf = −0.034), and Saudi-Arabia (ER     ~ cf = −0.025) cf is
+The global onshore median of APERWPD using E014                         underestimated. A moderate cf overestimation was found
+(APER                                          ~ WPD is
+    ~ WPD ) is 37.1%. The only country where APER                       for Cuba (ER~ cf = 0.013) and Kenya (ER  ~ cf = 0.011).
+                                         ~
+quite low is Qatar (1.7%). Elsewhere, APERWPD exceeds                       The pattern of ERcf using E014 (Figure 7B) is similar
+5.0% anywhere in the world. Substantially inaccurate                    to ERWPD. Offshore, cf is overestimated by more than
+   ~ WPD values occur in Brazil (49.2%) and Congo
+APER                                                                    0.050 and onshore ERcf is mostly negative. In Northwest
+(56.0%), for example.                                                   Europe and eastern North America, ERcf ≈ −0.010. A rea-
+                                                                        sonable quality of wind resource assessment assuming
+                                                                        E014 can be achieved in large parts of the West Coast of
+3.4 | Influence on the technical potential                              America and regions near the equator where
+                                                                        ERcf ≈ 0.000. The global onshore ER   ~ cf is −0.061. In many
+The global distribution of ER in the capacity factor estima-            island states, cf is drastically overestimated including
+tion (ERcf) using EM of the period January 1, 2007 to                   New Zealand (ER   ~ cf = 0.168) and Trinidad and Tobago
+December 31, 2018 is displayed in Figure 7A. Offshore                     ~ cf = 0.136). In contrast, in many European countries,
+                                                                        (ER
+ERcf is often in the range around 0.000. The largest contig-            including Sweden (ER   ~ cf = −0.144) and Germany (ER   ~ cf =
+uous onshore area where ERcf ≈ 0.000 can be found in                    −0.123), cf is considerably underestimated.
+Northern Europe. In northwestern parts of North America                     The spatial distribution of PERcf using EM is pres-
+and near the equator, the use of EM results in only minor               ented in Figure 7C. There are numerous areas where
+errors. A slight underestimation of cf (ERcf < −0.020)                  PERcf is in the range ± 2% including the northern part of
+occurs in parts of North Africa, northern China, and Mon-               Europe and the northeastern part of North America. The
+golia. Areas, where ERcf is positive, are less abundant than            accuracy of the power law is also high in many offshore
+
+
+
+
+F I G U R E 7 Global pattern of the error in the capacity factor estimation (ERcf) using A, the mean power law exponent (EM) and B,
+assuming E = 0.14 (E014) as well as the percentage error in the capacity factor estimation (PERcf) using C, the mean power law exponent
+(EM) and D, assuming E = 0.14 (E014). The legend values indicate the highest class values [Colour figure can be viewed at
+wileyonlinelibrary.com]
+8494                                                                                                 JUNG AND SCHINDLER
+
+
+
+regions. Towards the equator, APERcf increases. Areas,          ACKNOWLEDGEMENT
+where cf is underestimated, are often close to areas where      Open Access funding enabled and organized by
+cf is overestimated. This indicates that the orography is       ProjektDEAL.
+an important factor driving the spatial distribution of
+PERcf. The global onshore APER~ cf is 5.5%.
+     Applying E014, onshore PERcf is frequently below
+−16.0% (Figure 7D). Slightly higher PERcf values usually         SYM BOL S
+                                                        ~
+occur only in deserts and steppes. The global onshore APER       AER~  median of absolute error
+cf is 36.9%, which indicates a much greater inaccuracy of        APER~ median of absolute percentage error (%)
+the power law due to the use of E014 compared to EM.             EM~   median of mean power law exponent
+     Supporting information on the country-related cf            ER~   median of error
+errors by applying the power law using EM and E014 are          ~r     median of range
+presented in Figure S1.                                           ~
+                                                                 sd    median of standard deviation
+                                                                 AD    air density (1.225 kg/m3)
+                                                                 AER   absolute error
+4 | C ON C L U S I ON S                                          APER  absolute percentage error (%)
+                                                                 cf    capacity factor
+This study provides a global overview of the errors in           E     power law exponent
+wind energy assessments resulting from applying mean             E014  power law exponent = 0.14
+and constant power law exponents. It was found that,             EM    mean power law exponent
+onshore, the global median absolute percentage error in          ER    error
+the wind turbine capacity factor estimations are 5.5%            EV    variant of power law exponent {E, EM, E014}
+applying mean power law exponents and 36.9% assuming             f()   probability density function
+the power law exponent being 0.14.                               F()   cumulative distribution function
+    The application of mean and constant power law               F−1() quantile function
+exponents is not suitable to reproduce the spatiotemporal        h     height (m)
+variability of daily power law exponents. It was revealed        PER   percentage error (%)
+that the errors produced from the use of mean and con-           PR    rated power (MW)
+stant power law exponents differ on the spatial scale. In        PW(U) wind turbine power curve (MW)
+many regions, where the wind resource is abundant,               PWM   mean wind turbine power output (MW)
+using only mean exponents leads to minor errors in esti-         r     range
+mating the capacity factor. In these regions, a reasonable       sd    standard deviation
+assessment of the technical wind potential using mean            t     Time (h)
+exponents is possible, even in the absence of long-term          u     zonal wind vector component (m/s)
+wind speed measurements. The prerequisite for mean               U     wind speed (m/s)
+value-based assessments is the availability of spatially         v     meridional wind vector component (m/s)
+explicit estimates of mean power law exponents available         WPD   wind power density (W/m2)
+from global wind speed models such as GloWiSMo.12                WPV   wind potential variable {cf, WPD}
+GloWiSMo contains a global high spatial resolution (hori-        x     x direction
+zontal resolution: 250 m × 250 m) grid of mean power             y     y direction
+law exponents. Using values of mean power law expo-              α     first Wakeby scale parameter
+nents from GloWiSMo enables minimizing the error cau-            β     first Wakeby shape parameter
+sed by the exponent's spatial variability.                       γ     second Wakeby scale parameter
+    At the local scale, there are further influencing factors    δ     second Wakeby shape parameter
+driving the spatiotemporal pattern of the power law expo-        ε     Wakeby location parameter
+nent that are not integrated at the spatial resolution of
+the ERA5 data. Locally, the errors in assessing wind
+power densities and capacity factors may deviate from
+this study's error values.
+    Future investigations could integrate small-scale sur-      SU BSC RI PT S
+face properties into the error assessment of the current        a     annual scale
+study. This may offer the potential to derive an atlas of       E     time-dependent power law exponent
+spatially explicit correction factors for using mean power      g     near-surface (10 m)
+law coefficients in wind energy assessments.                    he    height above ground level
+JUNG AND SCHINDLER                                                                                                                     8495
+
+
+hub      wind turbine hub (≈ 80-140 m)                                 12. Jung C, Schindler D. Integration of small-scale surface proper-
+m        monthly scale                                                     ties in a new high resolution global wind speed model. Energy
+WPD      wind power density                                                Convers Manage. 2020;2010:112733.
+10       10 m height above ground level                                13. Jung C, Schindler D. Achieving Germany's wind energy expan-
+                                                                           sion target with an improved wind turbine siting approach.
+100      100 m height above ground level
+                                                                           Energy Convers Manage. 2018;173:383-398.
+                                                                       14. Ren G, Wan J, Liu J, Yu D. Assessing temporal variability of
+CONFLICT OF INTEREST                                                       wind resources in China and the spatial correlation of wind
+The authors declare that they have no known competing                      power in the selected regions. J Renewable Sustainable Energy.
+financial interests or personal relation-ships that could                  2020;12:013302.
+have appeared to influence the work reported in this                   15. Jong PD, Dargaville R, Silver J, Utembe S, Kiperstock A,
+article.                                                                   Torres EA. Forecasting high proportions of wind energy sup-
+                                                                           plying the Brazilian Northeast electricity grid. Appl Energy.
+                                                                           2017;195:538-555.
+DATA AVAILABILITY STATEMENT
+                                                                       16. Jung C, Taubert D, Schindler D. The temporal variability of
+The data that support the findings of this study are avail-                global wind energy–Long-term trends and inter-annual vari-
+able from the corresponding author, upon reasonable                        ability. Energy Convers Manage. 2019;188:462-472.
+request.                                                               17. Harrou F, Saidi A, Sun Y. Wind power prediction using boot-
+                                                                           strap aggregating trees approach to enabling sustainable wind
+                                                                           power integration in a smart grid. Energy Convers Manage.
+ORCID                                                                      2019;201:112077.
+Christopher Jung       https://orcid.org/0000-0001-5952-               18. NOAA. Integrated Surface Database. https://www.ncdc.noaa.
+2610                                                                       gov/isd. Accessed July 15, 2020.
+                                                                       19. Hellman G. Über die Bewegung der Luft in den untersten
+R EF E RE N C E S                                                          Schichten der Atmosphäre. Meteorol Z. 1915;32:1-16.
+                                                                           (in German).
+ 1. Lu X, McElroy MB, Kiviluoma J. Global potential for wind-
+                                                                       20. Manwell JF, McGowan JG, Rogers AL. Wind Energy Explained:
+    generated electricity. Proc Natl Acad Sci U S A. 2009;106:10933-
+                                                                           Theory, Design and Application. Chichester: John Wiley &
+    10938.
+                                                                           Sons; 2009.
+ 2. Dupont E, Koppelaar R, Jeanmart H. Global available wind
+                                                                       21. Touma JS. Dependence of the wind profile power law on stabil-
+    energy with physical and energy return on investment con-
+                                                                           ity for various locations. J Air Waste Manage Assoc. 1977;27:
+    straints. Appl Energy. 2018;209:322-338.
+                                                                           863-866.
+ 3. Jung C, Schindler D, Laible J. National and global wind
+                                                                       22. Gualtieri G, Secci S. Extrapolating wind speed time series
+    resource assessment under six wind turbine installation scenar-
+                                                                           vs. Weibull distribution to assess wind resource to the turbine
+    ios. Energy Convers Manage. 2018;156:403-415.
+                                                                           hub height: a case study on coastal location in Southern Italy.
+ 4. Mekonnen MM, Gerbens-Leenes PW, Hoekstra AY. Future
+                                                                           Renewable Energy. 2014;62:164-176.
+    electricity: the challenge of reducing both carbon and water       23. Gualtieri G. A comprehensive review on wind resource extrap-
+    footprint. Sci Total Environ. 2016;569:1282-1288.                      olation models applied in wind energy. Renewable Sustainable
+ 5. GWEC. Global Wind Report 2019. https://gwec.net/global-                Energy Rev. 2019;102:215-233.
+    wind-report-2019. Accessed July 15, 2020.                          24. Jung C, Schindler D. Development of a statistical bivariate
+ 6. Adedeji PA, Akinlabi SA, Madushele N, Olatunji OO. Hybrid              wind speed-wind shear model (WSWS) to quantify the height-
+    neurofuzzy wind power forecast and wind turbine location for           dependent wind resource. Energy Convers Manage. 2017;149:
+    embedded generation. Int J Energy Res. 2021;45:413-428.                303-317.
+ 7. Grau L, Jung C, Schindler D. On the annual cycle of meteoro-       25. Tieo JJ, Skote M, Srikanth N. Suitability of power-law extrapo-
+    logical and geographical potential of wind energy: a case study        lation for wind speed estimation on a tropical island. J Wind
+    from Southwest Germany. Sustainability. 2017;9:1169.                   Eng Ind Aerodyn. 2020;205:104317.
+ 8. Nada SA, Elsayed AA, Elsayed M. Technoeconomic study for           26. Li J, Wang X, Yu XB. Use of spatio-temporal calibrated wind
+    the optimization of turbine size and wind farm layouts. Int J          shear model to improve accuracy of wind resource assessment.
+    Energy Res. 2019;43:7459-7476.                                         Appl Energy. 2018;213:469-485.
+ 9. Jäger T, McKenna R, Fichtner W. The feasible onshore wind          27. Xu C, Hao C, Li L, et al. Evaluation of the power-law wind-
+    energy potential in Baden-Württemberg: a bottom-up method-             speed extrapolation method with atmospheric stability classifi-
+    ology considering socio-economic constraints. Renewable                cation methods for flows over different terrain types. Appl Sci.
+    Energy. 2016;96:662-675.                                               2018;8:1429.
+10. Li Y, Huang X, Tee KF, Li Q, Wu XP. Comparative study of           28. Olaofe ZO. A surface-layer wind speed correction: a case-study
+    onshore and offshore wind characteristics and wind energy              of Darling station. Renewable Energy. 2016;93:228-244.
+    potentials: a case study for southeast coastal region of China.    29. Tizgui I, Bouzahir H, El Guezar F, Benaid B. Wind speed
+    Sustainable Energy Technol Assess. 2020;39:100711.                     extrapolation and wind power assessment at different heights.
+11. Garrido-Perez JM, Ordóñez C, Barriopedro D, García-Herrera             Paper presented at: 2017 International Conference on Electrical
+    R, Paredes D. Impact of weather regimes on wind power vari-            and Information Technologies (ICEIT); November 15-18, 2017;
+    ability in western Europe. Appl Energy. 2020;264:114731.               Rabat, Morocco: 1-4:IEEE.
+8496                                                                                                                   JUNG AND SCHINDLER
+
+
+
+30. ERA5 hourly data on single levels from 1979 to present. Available   37. Lledó L, Torralba V, Soret A, Ramon J, Doblas-Reyes FJ. Seasonal
+    from: https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanaly        forecasts of wind power generation. Renewable Energy. 2019;143:
+    sis-era5-single-levels?tab=overview. Accessed July 15, 2020.            91-100.
+31. Houghton JC. Birth of a parent: the Wakeby distribution             38. DeCastro M, Salvador S, Gómez-Gesteira M, et al. Europe,
+    for modeling flood flows. Water Resour Res. 1978;14:1105-               China and the United States: three different approaches to the
+    1109.                                                                   development of offshore wind energy. Renewable Sustainable
+32. Hosking JR. L-moments: analysis and estimation of distribu-             Energy Rev. 2019;109:55-70.
+    tions using linear combinations of order statistics. J R Stat Soc
+    B. 1990;52:105-124.
+33. Jung C, Schindler D. Wind speed distribution selection–a            SU PP O R TI N G I N F O RMA TI O N
+    review of recent development and progress. Renewable Sustain-
+                                                                        Additional supporting information may be found online
+    able Energy Rev. 2019;114:109290.
+34. NORDEX. THE N117/2400 wind turbine. https://www.nordex-
+                                                                        in the Supporting Information section at the end of this
+    online.com/en/product/n117-2400/. Accessed July 15, 2020.           article.
+35. The World Bank. Forest area of Suriname https://data.world
+    bank.org/indicator/AG.LND.FRST.ZS?locations=SR. Accessed
+    July 15, 2020.
+                                                                           How to cite this article: Jung C, Schindler D.
+36. Cortesi N, Torralba V, González-Reviriego N, Soret A,                  The role of the power law exponent in wind energy
+    Doblas-Reyes FJ. Characterization of European wind speed               assessment: A global analysis. Int J Energy Res.
+    variability using weather regimes. Clim Dynam. 2019;53:                2021;45:8484–8496. https://doi.org/10.1002/er.6382
+    4961-4976.
+

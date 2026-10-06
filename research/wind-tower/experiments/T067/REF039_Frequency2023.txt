@@ -1,0 +1,1954 @@
+  Closed-form solution of fundamental frequency of steel-
+                  concrete hybrid wind turbine tower
+ Shou-Zhen Lia,b, Xu-Hong Zhoua,b, Yu-Hang Wanga,b,*, Dan Gana,b, Xiao-Wei Dengc
+
+a School of Civil Engineering, Chongqing University, Chongqing 400000, China
+
+
+
+b Key Laboratory of New Technology for Construction of Cities in Mountain Area, Chongqing
+
+
+
+400045, China
+
+c The University of Hong Kong, Pokfulam, Hong Kong 999077, China
+
+
+
+Abstract
+
+     With the development of wind power energy, the steel-concrete hybrid tower has
+
+been gradually popularized as the onshore tall wind turbine tower. To avoid the resonant
+
+response that brings violent damage to the wind turbine tower, the fundamental
+
+frequency of the hybrid tower must be carefully analyzed. This study develops a closed-
+
+form solution of the fundamental frequency of the hybrid tower, where the abrupt
+
+changes of cross-section and material properties, the effect of prestressing, and the mass
+
+and rotary inertia of the wind turbine are taken into account. It provides an effective
+
+way to obtain the fundamental frequency in the preliminary design of the hybrid tower.
+
+The effectiveness of the proposed solution is validated by comparing it with the results
+
+of finite element analysis, showing good agreement. By using the proposed solution, a
+
+parametric analysis is conducted to investigate the variation rules of the fundamental
+
+frequency to the design parameters. It indicates that with the variation of the proportion
+
+of the concrete/steel segments, the correlations between the fundamental frequency and
+
+the design parameters also change significantly. The parametric analysis conducted
+
+
+                                            1
+herein may provide instructive guidelines to adjust the parameters in the preliminary
+
+design of the hybrid tower.
+
+Keywords: Steel-concrete hybrid structure, Onshore wind turbine tower, Closed-form
+
+solution, Fundamental frequency, Parametric analysis.
+
+1. Introduction
+
+     With the depletion of fossil energy and the aggravation of environmental pollution,
+
+the world is devoted to the research and promotion of clean energy. Wind power energy,
+
+which is highly efficient and renewable, plays an important role in promoting the
+
+construction of a low-carbon and environment-friendly society [1-4]. With the
+
+development of the wind power industry, the locations of the wind farm are converting
+
+from high-wind-speed areas to low-wind-speed areas [5,6]. To obtain a more stable
+
+wind speed and improve the generation efficiency of wind power in the low-wind-speed
+
+area, strategies aimed at increasing hub heights have been proposed, which means that
+
+the wind turbine tower has to be built with a taller height [7,8]. This puts forward higher
+
+requirements for the load-bearing capacity of the support structure to ensure the normal
+
+operation of the upper wind turbine.
+
+     The tubular steel tower, which is the most common support structure, has many
+
+limitations in production and transportation, for example, the tower diameter is limited
+
+to 4.3 m to meet the requirements of overpass heights of highway lines [9,10]. It means
+
+that the bending stiffness does not increase proportionally due to the limitations in
+
+transportation and manufacturing as the tower height increases, resulting in the decrease
+
+of the fundamental frequency. In consequence, the high tubular steel tower may
+
+
+                                            2
+experience severe vibration [11]. Some new and innovative alternative tower concepts
+
+[12-15] have been proposed to overcome the limitations. One alternative approach is to
+
+construct the steel-concrete hybrid tower (SCHT), as shown in Fig. 1, which consists
+
+of several lower hollow concrete segments with prestressing force and upper tubular
+
+steel segments [16,17]. A concrete segment can be divided into several assembling parts
+
+and each part is prefabricated separately, which means that the diameter of the concrete
+
+segment can be much larger than that of the steel segment. Recently, a lightweight
+
+engineered cementitious composite (ECC) was developed to serve as protective
+
+coatings on the tall concrete towers, which can improve the durability performance of
+
+the concrete towers without compromising the towers’ structural performance [18,19].
+
+Therefore, it will be more effective to construct the SCHT to offer sufficient strength
+
+and stiffness for supporting wind turbines with increasing size and mass.
+
+
+
+
+        (a) Shanghai Electric Group.              (b) Huadong Engineering Corporation.
+
+               Fig. 1 On-site photos of concrete-steel hybrid tower in China.
+
+
+     The fundamental frequency is a vital parameter affecting the dynamic response of
+
+                                             3
+the structure. When the frequency of the applied load becomes close to the fundamental
+
+frequency, the structure resonance may occur. It means that the dynamic amplification
+
+factor of the structure will tend to be its maximum value, producing a violent dynamic
+
+response [20-22]. Therefore, in the structure design, the fundamental frequency of the
+
+structure must be kept away from the frequency ranges where resonance may occur. For
+
+the wind turbine tower, the frequency ranges causing the structure resonance include
+
+the rotor frequency (f1p) and the blade passing frequency (f3p), and the permissible
+
+fundamental frequency lies between f1p and f3p [23,24]. For a three-bladed turbine,
+
+which is the most common horizontal axis wind turbine, it has f3p = 3·f1p. The
+
+operational rotor speed of the MW-level wind turbine is about 6.9 to 12.1 revolutions
+
+per minute [25], which means that the range of rotor frequency f1p is 0.115 Hz~0.202
+
+Hz, and the range of blade passing frequency f3p is 0.345 Hz~0.606 Hz. Fig. 2 shows
+
+the range of permissible frequency considering a relative deviation of ±10%, where
+
+Vmax and Vmin denote the maximum and minimum rotor speed, respectively. Based on
+
+the above analysis, the fundamental frequency lying in the range of [0.222 Hz, 0.310
+
+Hz] is feasible for the tower supporting the MW-level wind turbine.
+
+
+
+
+                                          4
+                          Fig. 2 Range of permissible frequency.
+
+     Different from the conventional tubular steel tower, the SCHT is composed of two
+
+different construction materials, and its cross-section size suddenly changes at the joint
+
+connecting the steel segment and the concrete segment, which leads to the complex
+
+structural configuration of the SCHT. Therefore, the structure analysis of the SCHT is
+
+mainly carried out through the finite element method (FEM) [26-30], and the related
+
+theoretical researches are still insufficient. Although FEM can offer accurate results
+
+about the static and dynamic response of the structure, the FE models might need to be
+
+reestablished when the configuration is adjusted, which makes FEM inefficient to be
+
+conducted in the preliminary design. On the other hand, the analytical method can offer
+
+an efficient way to obtain the fundamental frequency of the SCHT, and it also can be
+
+employed to investigate the variation rules of the fundamental frequency to the design
+
+parameters. Therefore, it is necessary to obtain the analytical method to calculate the
+
+fundamental frequency of the SCHT.
+
+     Previous studies on the fundamental frequency of wind turbine towers [31-34] are
+
+mainly for the tubular steel tower. Vugts [31] and Tempel [32] regarded the wind turbine
+
+                                            5
+tower as a constant cross-section cantilever beam with a lumped mass at its free end
+
+and obtained the approximate expression for calculating the fundamental frequency of
+
+the tubular steel tower. In general, the wind turbine tower was tapered, and its diameter
+
+decreased with the increase in height. To consider the influence of taper on the
+
+fundamental frequency, Yang et al [33] simplified the wind turbine tower to a linearly
+
+tapered cantilever beam with a lumped mass at its free end and put forward a simplified
+
+method for calculating the fundamental frequency of the tubular steel tower based on
+
+the Rayleigh-Ritz method. Based on the transfer matrix method of multibody system,
+
+Gu et al [34] established a multi-body dynamics model of wind turbine tower system.
+
+The existing analytical solutions are derived based on the characteristics that the
+
+material properties of the tower remain unchanged and the dimensions of cross-section
+
+vary linearly with the increase of height. However, those characteristics are inapplicable
+
+for the SCHT. As illustrated in Fig. 3, the material properties and the cross-section
+
+dimensions change suddenly at the connection joints between the adapter ring and the
+
+steel/concrete segment, resulting in discontinuity of bending stiffness and mass along
+
+the tower length. In addition, to restrain the crack generation and fully display the
+
+superior compressive performance of concrete, the prestress is applied by arranging
+
+post-tensioning strands along with the concrete segments, which also has an impact on
+
+the fundamental frequency of the structure [35-37]. Therefore, the existing analytical
+
+solutions to the fundamental frequency of the wind turbine tower are no longer
+
+applicable to the SCHT. In Ref. [38], Huang et al solved the transverse free vibration
+
+equations of the SCHT by using the differential quadrature method [39,40] and obtained
+
+
+                                            6
+the fundamental frequency of a numerical example. Despite this, the analytical solution
+
+for calculating the fundamental frequency of SCHT is still lacking in the investigation.
+
+
+
+
+                 Fig. 3 Conceptual drawing of steel-concrete hybrid tower.
+
+
+     This study aims to obtain a closed-form solution of the fundamental frequency of
+
+the SCHT through theoretical derivation, taking into consideration the changes of cross-
+
+section dimensions and material properties of the tower along its length and the
+
+prestress applied along the concrete portion. By comparing the results of the proposed
+
+solution with the simulation results from FEM, the proposed solution is proved to be
+
+effective and accurate. In addition, a parametric analysis is conducted to investigate the
+
+correlation between the fundamental frequency and different design parameters, so as
+
+to provide the guidelines for the preliminary design of the SCHT.
+
+2. Theoretical derivation
+                                             7
+2.1 Transverse vibration equation
+
+     Considering a steel-concrete hybrid wind turbine tower, as shown in Fig. 3,
+
+consisting of the upper wind turbine, the steel portion, the adapter ring, and the concrete
+
+portion. D1b, D2b, and D3b respectively denote the outer diameter of the bottom section
+
+of the concrete portion, the adapter ring, and the steel portion. Correspondingly, D1t,
+
+D2t, and D3t denote the outer diameter at the top section of each portion, and h1, h2, and
+
+h3 denote the length of each portion. For the SCHT, the concrete base diameter is within
+
+10 m and the length is usually over 100 m [38]. The relatively large ratio of height to
+
+diameter makes the shear effect of the tower under the action of the transverse load
+
+inapparent. Besides, the upper wind turbine, including the nacelle and blades, can be
+
+regarded as a lumped mass. Therefore, the wind turbine tower is simplified as an Euler-
+
+Bernoulli beam with a lumped mass at its free end, as shown in Fig. 4, where o denotes
+
+the origin of the coordinates system, u and x denote the transverse and longitudinal
+
+coordinates respectively, u(x, t) denotes the transverse displacement of the hybrid tower,
+
+which continuously varies with longitudinal coordinate x and time t, d denotes the
+
+distance from the centroid of the wind turbine to the top end of the tower. According to
+
+the transverse vibration theory of Euler-Bernoulli beam [20], the transverse free
+
+vibration equation of the hybrid tower can be written as
+
+                                2u ( x, t )  2         2u ( x, t ) 
+                        M ( x)              + 2  K ( x)                 =0,           (1)
+                                  t 2       x            x 2 
+
+where K(x) denotes the function of bending stiffness, and M(x) denotes the function of
+
+mass per unit length.
+
+
+
+                                                8
+               Fig. 4 Simplified configuration of steel-concrete hybrid tower.
+
+
+     For an onshore wind turbine tower, it is usually supported on a huge reinforced
+
+concrete plinth with piles attached, which leads to the fact that the soil -structures
+
+interaction can be ignored in the design [41]. Therefore, it is reasonable to consider the
+
+foundation as fixed. The boundary conditions at the bottom end are
+
+                                         u (0, t ) = 0 ,                              (2)
+
+                                        u
+                                           (0, t ) = 0 .                              (3)
+                                        x
+
+     As shown in Fig. 5, the lumped mass is taken as the isolated body to analyze the
+
+boundary conditions at the top end, where mwt and Jwt denote the mass and rotary inertia
+
+of the wind turbine, respectively.
+
+
+
+
+                                              9
+                          Fig. 5 Force analysis of the isolated body.
+
+
+      From the equilibrium conditions of force and moment acting on the lumped mass,
+
+it can be deduced that the boundary conditions to be satisfied at the top end of SCHT
+
+are
+
+                              3u                     2u ( H , t )      3u ( H , t ) 
+                    K (H )        ( H , t ) = − mwt                 + d                ,   (4)
+                             x3                          t 2
+                                                                            x t 2
+                                                                                        
+
+                    2u              u (H,t )
+                                          3
+                                                                     u (H,t )
+                                                                             2
+             K (H ) 2 ( H , t ) = −
+                   x                 xt 2
+                                               ( J wt + mwt d 2
+                                                                ) −
+                                                                       t 2
+                                                                               mwt d .       (5)
+
+
+      Since the cross-section dimensions and material properties of the hybrid tower
+
+vary along longitudinal coordinate x, it is appropriate to describe M(x) and K(x) by
+
+piecewise functions. Let E1, E2, and E3 respectively denote the modulus of elasticity of
+
+the concrete portion, the adapter ring, and the steel portion. Correspondingly, ρ1, ρ2, and
+
+ρ3 denote the mass density of each portion, and t1, t2, and t3 denote the thickness of each
+
+portion. Then, M(x) and K(x) can be expressed as
+
+                             m10 + m11 x,            0  x  h1
+                         
+                M ( x) =  m20 + m21 ( x − h1 ),   h1  x  h1 + h2   ,                      (6)
+                         m + m ( x − h − h ), h + h  x  h + h + h
+                          30   31       1     2 1  2        1    2 3
+
+
+
+
+                                                    10
+                                  3
+
+                                    k1i xi ,             0  x  h1
+                                i =0
+
+                           3
+                 K ( x) =   k2i ( x − h1 ) ,
+                                               i
+                                                        h1  x  h1 + h2      ,       (7)
+                           i =0
+                          3
+                           k3i ( x − h1 − h2 ) , h1 + h2  x  h1 + h2 + h3
+                                                 i
+
+                           i =0
+
+where
+
+                                          
+                                              i  Di2 − ( Di − 2ti )  ,
+                                                                    2
+                                mi 0 =                                                (8)
+                                          4                            
+
+                                          Dib − Dit 
+                         mi1 =       i               ( Di − 2ti ) − Di  ,      (9)
+                                 2         hi        
+
+                                          
+                                             Ei ( Di4 − ( Di − 2ti ) ) ,
+                                                                    4
+                                 ki 0 =                                              (10)
+                                          64
+
+                                                           D − Dit 
+                                  Ei ( Di − 2ti ) − Di3   ib
+                                                  3
+                        ki1 =                                        ,              (11)
+                                16                      
+                                                            hi      
+                                                                                 2
+                              3  2                2  D − Dit 
+                       ki 2 =   Ei Di − ( Di − 2ti )   ib      ,                  (12)
+                              32                    
+                                                        hi     
+                                                                             3
+                                                         D − Dit 
+                        ki 3 = Ei ( Di − 2ti ) − Di   ib       .               (13)
+                              16                             hi   
+
+2.2 Derivation of vibration frequency
+
+     The transverse free vibration equation of the hybrid tower, Eq. (1), is a partial
+
+differential equation with variable coefficients, and the coefficients are discontinuous
+
+functions, making it difficult to analytically solve Eq. (1) by elementary methods. This
+
+section presents a detailed analysis of the kinetic energy and the potential energy of the
+
+SCHT, where the influence of mwt, Jwt, and prestressing force are taken into
+
+consideration. Then, a frequency equation of the SCHT is established based on the
+
+Rayleigh-Ritz method [20], from which the natural frequencies and the corresponding
+
+
+                                                     11
+vibration modes can be obtained.
+
+     The kinetic energy of the SCHT comes from two aspects, including the one of the
+
+SCHT itself and the one of the wind turbine. As depicted in Fig. 6, a segment of a
+
+microelement with a length of dx is cut from the tower. The mass and velocity in the
+
+lateral direction of the microelement are M(x)dx and u ( x, t ) t , respectively. Then,
+
+the kinetic energy of this microelement, which is denoted by dT1(t), can be expressed
+
+as
+                                                                 2
+                                        1        u ( x, t ) 
+                             dT1 ( t ) = M ( x)                dx .                (14)
+                                        2        t 
+
+Integrating the above formula within the interval [0, H] yields the kinetic energy of the
+
+whole tower
+                                                                     2
+                                         1 H          u ( x, t ) 
+                            T1 ( t ) =       M ( x)                dx .           (15)
+                                         2  0
+                                                      t 
+
+
+
+
+                         Fig. 6 Kinetic energy analysis of SCHT.
+
+
+     The kinetic energy of the wind turbine can be expressed as
+
+
+
+                                                 12
+                                        1         1
+                              T2 ( t ) = mwt v12 + ( J wt + mwt d 2 ) w12 ,                            (16)
+                                        2         2
+where v1 and w1 denote the velocity of the wind turbine at its centroid and the angular
+
+velocity of the tower at its top end, respectively. The expressions of v1 and w1 are as
+
+follows
+
+                                       u ( x, t )     2u ( x, t )
+                                v1 =               +d               ,                                  (17)
+                                          t x = H       xt x = H
+
+                                                  2 u ( x, t )
+                                          w1 =                  .                                      (18)
+                                                    xt x = H
+
+Substituting Eqs. (17) and (18) into Eq. (16) yield the kinetic energy of the wind turbine.
+
+The kinetic energy of the whole structure is
+                                                                                               2
+                   1 H        u ( x, t ) 
+                                             2
+                                                    1      u ( x, t )      2u ( x , t ) 
+          T ( t ) =  M ( x)                 dx +   mwt              + d                
+                   2 0        t                  2      t x = H          xt x = H 
+                                                       2
+                                                                                                   .   (19)
+              1                     2 u ( x, t ) 
+             + ( J wt + mwt d 2 )                 
+              2                    xt x = H 
+
+     In practical engineering, the upper ends of the steel strands are anchored at the top
+
+of the adapter ring, and the anchor points of the lower ends are located in the internal
+
+cavity of the foundation, making it unable to form a self-equilibrium system between
+
+the hybrid tower and the steel strands. Therefore, the prestress effect applied by the steel
+
+strands is simplified as the axial external force acting on the top surface of the adapter
+
+ring. Since the locations of the adapter ring and the wind turbine vary during the
+
+vibration, the work done by the axial force and the gravity of the wind turbine would
+
+affect the potential energy of the SCHT. It has
+
+                                          U = U1 + U 2 + U3 ,                                          (20)
+
+where U denotes the potential energy of the system, U1 denotes the bending strain
+
+
+                                                   13
+energy, U2 and U3 denote the work done by the axial force and the gravity of the wind
+
+turbine. The bending strain energy U1 can be written as
+                                                            2
+                                 1 H        u 2 ( x, t ) 
+                             U1 =  K ( x)                 dx .                     (21)
+                                            x
+                                                    2
+                                 2 0                       
+
+     To obtain the expressions of U2 and U3, starting from the transverse deformation
+
+of the concrete portion, the displacement of the acting position of axial force is studied.
+
+As shown in Fig. 7, a segment of a microelement AB with a length of dx is cut from
+
+the undeflected tower, where P denotes the axial force. When the tower is deflected, the
+
+microelement AB became 
+                       AB , and the vertical displacement of the top end of the
+
+microelement is
+
+                                     = (1 − cos  ) dx ,                             (22)
+
+where θ denotes the included angle between AB and 
+                                                  AB .
+
+
+
+
+                         Fig. 7 Potential energy analysis of SCHT.
+
+
+     Suppose that the microelement is cut from the concrete portion, it is under the
+
+action of the axial force P. The component of the axial force P along the direction of
+
+the x-axis is P·cosθ. Then, the work dWpre done by the axial force P on the microelement
+
+                                            14
+segment with a length of dx is
+
+                                   dWpre = P  cos    .                            (23)
+
+Since θ is infinitesimal, according to the theorem of equivalent infinitesimal
+
+replacement, it has
+
+                                         P  cos  P ,                               (24)
+                                                1 2
+                                     1 − cos      ,                                (25)
+                                                2
+                                               u ( x, t )
+                                     tan  =             .                          (26)
+                                                 x
+
+Substituting Eqs. (24)-(26) into Eqs. (22) and (23), it yields
+
+                                                          2
+                                     1  u ( x, t ) 
+                                   =                 dx ,                           (27)
+                                     2  x 
+
+                                                                  2
+                                          1  u ( x, t ) 
+                               dWpre = P                  dx .                      (28)
+                                          2  x 
+
+Eqs. (27) and (28) are integrated within the intervals [0, H] and [0, h1+h2], respectively,
+
+yielding the vertical displacement of the wind turbine and work done by the axial force
+
+P during the vibration of the SCHT
+
+                                                              2
+                                        u ( x, t ) 
+                                           H
+                                  =                 dx ,                           (29)
+                                     0
+                                        x 
+                                                                      2
+                                        P h1 + h2  u ( x, t ) 
+                                        2 0  x 
+                               Wpre =                             dx .                (30)
+
+
+The work done by the gravity of the wind turbine is
+                                                                          2
+                                  1        H  u ( x, t ) 
+                             Wwt = mwt g                   dx ,                     (31)
+                                  2       0
+                                              x 
+
+where g denotes the acceleration of gravity. Since both the Wwt and Wpre are positive,
+
+then the increase of the potential energy is negative. The total potential energy of the
+
+hybrid tower is
+
+                                               15
+                                                         2                           2
+                         1 H        u 2 ( x, t )       P h1 + h2  u ( x, t ) 
+                U ( t ) =  K ( x) 
+                                                          2 0  x 
+                                                    dx −                           dx
+                                    x
+                                            2
+                         2 0                                                               .       (32)
+                                                     2
+                              mwt g  u ( x, t ) 
+                                      H
+
+                               2 0  x 
+                          −                         dx
+
+
+     The transverse displacement of the hybrid tower can be expressed as
+
+                                    u ( x, t ) = y ( x ) sin (t +  ) ,                            (33)
+
+where y(x) denotes the vibration mode, ω and φ denote the natural frequency and
+
+vibration phrase, respectively.
+
+     Substituting Eq. (33) into Eqs. (19) and (32), it yields
+
+                                       H M ( x)  y ( x )  2 dx +  y ( H ) + y ( H ) d  2 
+                 1                                                                     
+        T ( t ) =  2 cos 2 (t +  )  0                                                      ,   (34)
+                 2                    + ( J wt + mwt d 2 )  y ( H ) 
+                                                                           2
+                                                                                               
+                                                                                              
+
+                                   H K ( x)  y ( x )  2 dx − P h1 + h2  y ( x )  2dx 
+                   1 2             0                           0                  
+          U ( t ) = sin (t +  )                                                           .     (35)
+                   2                        H
+                                  −mwt g   y ( x )  dx
+                                                            2
+                                                                                             
+                                          0                                                 
+
+     On the one hand, the kinetic energy reaches its maximum when t=(nπ-φ)/ω,
+
+meanwhile the potential energy becomes zero. On the other hand, when t takes
+
+[(2n+1)π/2-φ]/ω, the kinetic energy is zero, while the potential energy reaches its
+
+maximum. The maximum values of T(t) and U(t) can be expressed as
+
+                         H                                                            
+                    1 2  0 M ( x)  y ( x )  dx + mwt  y ( H ) + y ( H ) d  
+                                                 2                                   2
+
+              Tmax =                                                                 ,           (36)
+                         ( wt               )
+                    2 + J + m d 2  y ( H )  2                                      
+                                      wt                                              
+
+                             H K ( x)  y ( x )  2 dx − P h1 + h2  y ( x )  2dx 
+                          1  0                           0                  
+                   U max =                                                            .           (37)
+                          2 −m g H  y ( x )  2 dx
+                             wt 0                                                  
+                                                                                       
+
+     According to the law of energy conservation, the mechanical energy of a
+
+conservation system remains unchanged when the system vibrates at a certain
+
+
+                                                   16
+frequency [20], that is
+
+                                    T (t ) + U (t ) = C ,                             (38)
+
+where T(t) and U(t) denote the kinetic and potential energy of the system at a certain
+
+time, respectively, and C is a constant. Therefore, it has
+
+                                       U max = Tmax .                                 (39)
+
+     A linear combination of a set of independent coordinate functions is used as the
+
+approximate expression of the vibration mode y(x)
+
+                                              n
+                                    y ( x )   qii ( x )                            (40)
+                                             i =0
+
+
+
+where qi are undetermined constants, coordinate functions ϕi(x) satisfy the geometry
+
+boundary conditions of the SCHT, which is usually called displacement function.
+
+     Since Eq. (40) is an approximate expression, it means that Eq. (39) is not tenable
+
+when adopting Eq. (40) as the vibration mode. It constructs the following function
+
+                                      = U max − Tmax .                               (41)
+
+Substituting Eq. (39) into Eqs. (35), (36), and (40), it has
+
+           H         n           
+                                     2
+                                              h1 + h2  n       
+                                                                2
+
+            K ( x)  qii ( x )  dx − P 0   qii ( x )  dx 
+                                                           
+         1 0         i =0                           i =0    
+       =                                                         
+         2         H n            
+                                       2
+                                                                   
+          −mwt g 0  qii ( x )  dx
+                                
+                                                                   
+                      i =0                                      
+                                                                                   2 , (42)
+                H            n        
+                                          2
+                                                                  n               
+                 M ( x)  qii ( x )  dx + ( J wt + mwt d )  qii ( x )  
+                                                               2
+
+            1 2 0            i =0                              i =0       x=H  
+           −                                                                      
+            2         n                    n             
+                                                             2
+                                                                                    
+               + mwt  qii ( H ) + d  qii ( x )                              
+                      i =0               i =0        x=H                         
+where Π is the difference between Umax and Tmax. It should be noted that Π is the
+
+function quadratic in qi, and the closer Π is to zero, the closer ω is to the exact value.
+
+
+                                            17
+The necessary conditions for Π to be minimized are that
+
+                                           
+                                               =0.                                (43)
+                                           qi
+
+     By substituting Eq. (42) into Eq. (43), a set of homogeneous equations can be
+
+obtained, which has the form
+
+                                    (K −  M ) q = 0 ,
+                                             2
+                                                                                  (44)
+
+where K and M denote the stiffness matrix and mass matrix of the SCHT, q is a vector
+
+composed of undetermined constants qi.
+
+     The necessary and sufficient condition for Eq. (44) to have non-zero solutions is
+
+that the coefficient determinant is zero, that is
+
+                                      K −  2M = 0 .                              (45)
+
+     An equation of ω can be obtained after expanding the determinant in Eq. (45),
+
+which is called the frequency equation of the SCHT. Theoretically, the first n+1 orders
+
+of natural frequencies can be obtained by solving the obtained equation
+
+                                  1  2  3  n+1 .                          (46)
+
+     Taking the damping into consideration, the expression of natural frequency f is
+                                           
+                                     f =       1−  2 ,                          (47)
+                                           2
+where ξ denotes the damping ratio of the wind turbine tower, including the aerodynamic
+
+damping ratio and structural damping ratio. Substituting the natural frequency ωi into
+
+the homogeneous equations (Eq. (44)), the value of qi (i=0,1,2,…,n) can thus be
+
+obtained. Then, qi and ϕi(x) are further substituted into Eq. (40), which forms the
+
+vibration mode yi corresponding to each ωi.
+
+     Substituting the obtained vibration mode yi into Eqs. (36) and (37), and making
+
+                                             18
+the following definition:
+
+                                                                                                                2
+                M eq(i ) =  M ( x)  yi ( x )  dx + mwt  yi ( H ) + yi ( H ) d 
+                             H                    2
+
+                            0                                                       
+                                                                                                                    ,   (48)
+                        + ( J wt + mwt d )  yi ( H ) 
+                                                                               2
+                                                2
+                                                      
+                                                                2
+                                                                h1 + h2                                 2
+                    K eq(i ) =  K ( x)  yi ( x )  dx − P           y  ( x ) dx
+                                 H
+
+                                0                            0         i        
+                                                                                                            .           (49)
+                                                                    2
+                            − mwt g   yi ( x )  dx
+                                        H
+
+                                     0           
+Then, the natural frequency can also be expressed as
+
+                                             1−  2   K eq(i )
+                                        fi =                  ,                                                        (50)
+                                              2      M eq(i )
+
+where Meq(i) and Keq(i) denote the equivalent mass per unit length and bending stiffness,
+
+respectively.
+
+2.3 Construction of displacement function
+
+     In this section, a set of Gram-Schmidt orthogonal polynomials [42-44] is used to
+
+construct the displacement function of the SCHT, which has the form of
+
+                              1 ( x ) =
+                                                        ( x − B1 ) 0 ( x )                     ,                       (51)
+                                                    H
+                                                 ( x − B ) ( x ) dx
+                                                                                          2
+
+                                                    0                      1       0
+
+
+
+                    k ( x ) =
+                                        ( x − Bk ) k −1 ( x ) − Ckk −2 ( x )                              ,           (52)
+                                    H
+                                   ( x − B ) ( x ) − C  ( x ) dx
+                                                                                                    2
+
+                                    0                   k          k −1                k k −2
+
+
+                                                        H
+                                             x ( x ) dx ,
+                                                                    2
+                                                                    k −1
+                                        B = k
+                                                        0
+                                                            H
+                                                                                                                        (53)
+                                               ( x ) dx
+                                                                   2
+                                                        0          k −1
+
+
+                                                H
+
+                                 C =
+                                      x  ( x ) ( x ) dx ,
+                                            0               k −1               k −2
+                                                                                                                        (54)
+                                    k                       H
+                                           ( x ) dx
+                                                                   2
+                                                        0          k −2
+
+
+
+where ϕ0(x) is the first polynomial. The polynomials ϕk(x) satisfy the orthogonality
+
+condition
+
+
+                                                                19
+                               H                    0 k  l
+                                ( x )  ( x ) dx = 1 k = l .
+                               0   k      l                                           (55)
+
+
+     It is noted that if ϕ0(x) satisfies the geometric boundary condition (Eqs. (2) and
+
+(3)), then the other members of the orthogonal set also satisfy the geometric boundary
+
+condition, which can be checked from Eq. (51)~Eq. (54). Therefore, the necessary
+
+condition of constructing the first member polynomial ϕ0(x) is to satisfy the geometric
+
+boundary conditions of the SCHT.
+
+3. Error analysis
+
+3.1 Numerical example
+
+     One SCHT with a top mass of 250 tons and pretension force of 48 MN is applied
+
+as a numerical example, its dimensions are listed in Table 1.
+
+Table 1 Dimensions of numerical example.
+
+                             Concrete portion          Adapter ring       Steel portion
+     Length (mm)                 60000                    2000               60000
+    Thickness (mm)                300                     1600                 30
+  Top diameter (mm)               5000                    4600                3300
+ Bottom diameter (mm)             7000                    5000                4000
+
+     As shown in Fig. 8, the wind turbine is mainly composed of nacelle, blades, and
+
+hub. To facilitate the description of the parameters, a three-dimensional rectangular
+
+coordinate system is established, where the coordinate origin o is located at the centroid
+
+of the wind turbine, the y-axis is in the windward direction of the blades, the z-axis is
+
+in the direction of the tower axis, and the x-axis is perpendicular to the y-z plane. Table
+
+2 lists the main parameters of the wind turbine, where Jx and Jy denote the rotary inertia
+
+of the wind turbine about the x-axis and y-axis, respectively.
+
+Table 2 Main parameters of wind turbine
+
+
+                                              20
+  Blade          Hub           Nacelle       Total mass     d     Jx (kg·m2)   Jy (kg·m2)
+ diameter      diameter       dimension
+  120 m          5m         13m×5m×5.6m         250 t     2.8 m   4.23×107     7.47×107
+
+
+
+
+                            Fig. 8 Schematic of wind turbine.
+
+
+3.2 Development of FE model
+
+     As shown in Fig. 9, the FE model included five parts: concrete portion, adapter
+
+ring, steel portion, wind turbine, and steel strand. The concrete portion and wind turbine
+
+were modeled by 8-node linear brick elements with reduced integration (C3D8R), while
+
+the adapter ring was modeled by 10-node quadratic tetrahedral elements (C3D10) with
+
+better grid adaptability because some holes were set in the adapter ring to make it
+
+possible for steel strands to pass through. The steel portion was modeled by 4-node
+
+curved shell elements with reduced integration (S4R), and the steel strand was modeled
+
+by 2-node linear 3-D truss elements (T3D2). Concrete with C60 grade and C70 grade
+
+were used to define the concrete portion and adapter ring, respectively, the steel portion
+
+was defined by Q355 grade steel, and the grade of the steel strand was 1850. Specific
+
+material properties were listed in Table 3. It should be noted that the steel density was
+
+defined as 8500 kg/m3 rather than the typical value of 7850kg/m3 to consider the
+
+
+                                           21
+influence of paint and connections [45]. The coefficient of linear expansion of the steel
+
+strand, which was definite to simulate the effect of prestressing with the method of
+
+cooling temperature [46,47], was also listed in Table 2. All fixed connections, including
+
+the connections between the concrete portion and the adapter ring, the steel portion and
+
+the adapter ring, as well as the steel portion and wind turbine, were simulated by tie
+
+constraints. The top end of each steel strand was coupled with the periphery of each
+
+hole at the top of the adapter ring, and the bottom end of each steel strand was pinned
+
+by restraining all translational degrees of freedom. The bottom end of the concrete
+
+portion was fixed by restraining all translational and rotational degrees of freedom. The
+
+vibration modes of the FE model are shown in Fig. 10, where SS and AF represent the
+
+directions of side-to-side and after-to-front, respectively.
+
+
+
+
+                                           22
+                          Fig 9 Finite element model of hybrid tower.
+
+Table 3 Definitions of material properties.
+
+      Material       Density (kg/m3)      Modulus of       Poisson’s    Coefficient of linear
+                                        elasticity (MPa)     ratio       expansion (1/℃)
+   C60 concrete            2500              36000            0.2                /
+   C70 concrete            2500              37000            0.2                /
+       Steel               8500             206000            0.3                /
+    Steel strand           7850             195000            0.3              1×10-5
+
+
+
+
+                                              23
+       (a) Mode 1 SS.                (b) Mode 1 FA.                   (c) Mode 2 SS.
+
+
+
+
+       (d) Mode 2 FA.                (e) Mode 3 SS.                   (f) Mode 3 AF.
+
+                        Fig.10 First three vibration modes of SCHT.
+
+
+     To improve the efficiency of numerical simulation, mesh sensitivity analysis is
+
+carried out to determine the appropriate mesh size. The different mesh sizes of 1.5m,
+
+1.0m, 0.5m, 0.25m, and 0.1m were used to divide the FE model, and the comparison
+
+was shown in Fig. 11. It can be seen that the numerical results were insensitive to the
+
+FE models with mesh sizes of 0.25m and 0.10m. To balance the computational
+
+efficiency and accuracy, a mesh size of 0.25 m was adopted for the FE model.
+
+
+                                            24
+    (a) Simulation of 1st order frequency.            (b) Simulation of 2nd order frequency.
+
+
+
+
+    (c) Simulation of 3rd order frequency.
+
+                          Fig 11 Sensitivity analysis of mesh size.
+
+
+     For the FE model with an elastic foundation, the bottom end of the concrete portion
+
+was fixed by restraining all translational degrees of freedom, while the rotational
+
+degrees of freedom were restrained by springs with rotational stiffness of Kφ,dyn, where
+
+Kφ,dyn is calculated by the method in Ref. [48]. Table 4 lists the simulation results of the
+
+FE models with different foundation stiffnesses, where R0 is the radius of the foundation,
+
+Es,dyn and ν are the dynamic compressive modulus and Poisson’s ratio of the soil under
+
+the foundation, respectively, f is the fundamental frequency of the SCHT, ξf-e is the
+
+relative error between the results obtained with fixed and elastic foundations.
+
+                                         f fixed − f elastic
+                                f-e =                       100% ,                           (56)
+                                                f fixed
+
+where ffixed (0.23502 Hz) and felastic denote the results obtained with fixed and elastic
+
+                                                25
+foundations, respectively.
+
+Table 4 Simulation results of the FE models with different dynamic rotational stiffness
+
+    Soil        R0(m)      Es,dyn(MPa)        ν           Kφ,dyn(N∙m/rad)    f (Hz)       ξf-e
+   Gravel        10             600          0.2              7.50×1011     0.23270   0.99%
+    Sand         10             400         0.25              5.93×1011     0.23210   1.24%
+    Clay         10             300         0.25              4.74×1011     0.23137   1.55%
+     Silt        10             200          0.3              3.27×1011     0.22976   2.24%
+
+     It can be seen that the maximum relative error is 2.24%, while the minimum is
+
+only 0.99%. It indicates that foundation stiffness has a limited influence on the
+
+fundamental frequency of the SCHT. Besides, the calculation method in Ref. [48] has
+
+underestimated the foundation stiffness, since the contribution of piles is not considered.
+
+Therefore, it is reasonable to consider the foundation as fixed.
+
+3.3 Convergence of solution
+
+     As can be seen from Section 2, the accuracy of the proposed solution is related to
+
+the form of the assumed vibration mode (Eq. (39)), including the number of
+
+polynomials and the first member of orthogonal polynomials. To study the influence of
+
+the assumed vibration mode on the results obtained with the proposed solution, the
+
+following curves are used to construct ϕ0(x). They are
+                                             2                3       4
+                                        x    x  x
+                             X ( x) = 6  − 4  +   ,                                    (57)
+                                       H    H H
+                                                      2           3
+                                             x  x
+                                  X ( x) = 3  −   ,                                      (58)
+                                            H H
+                                                          2
+                                                   x
+                                         X ( x) =   ,                                      (59)
+                                                  H
+                                                          3
+                                                   x
+                                         X ( x) =   .                                      (60)
+                                                  H
+
+     Eq. (57) and Eq. (58) are the dimensionless deflection curves of a homogeneous
+
+                                                 26
+cantilever beam with length H under uniformly distributed load and concentrated force
+
+at its free end, respectively. Eq. (59) and Eq. (60) are the power functions satisfying
+
+geometric boundary conditions of SCHT. The first member of orthogonal polynomials
+
+ϕ0(x) is obtained by normalizing the above curves
+
+                                                   X ( x)
+                                 0 ( x ) =                  .                        (61)
+                                               H
+                                               X ( x ) dx
+                                                     2
+                                              0
+
+
+
+     Fig. 12 shows the convergence trend of the first three orders natural frequencies.
+
+Table 5 lists the convergence results obtained from constructing ϕ0(x) with Eq. (57)~Eq.
+
+(60), respectively, where s denotes the standard deviation of those results. It can be seen
+
+that the natural frequency decreases and tends to converge as the number of polynomials
+
+increases. It indicates that some differences exist between the assumed vibration mode
+
+and the real one, which is equivalent to adding additional constraints to the original
+
+structure, resulting in the overestimation of the natural frequency. Therefore, the
+
+proposed solution is the upper bound of the exact value. As can be seen in Table 5, the
+
+results obtained by constructing ϕ0(x) with Eq. (57) are minimum, so Eq. (57) is the
+
+most suitable curve to construct ϕ0(x) within the scope of this study. Besides, although
+
+the displacement functions generated with different curves that satisfy the geometric
+
+boundary conditions of SCHT have a certain impact on the convergence trend of the
+
+natural frequencies, the difference among the convergence results is little.
+
+
+
+
+                                              27
+            (a) 1st order frequency SS.                      (b) 1st order frequency AF.
+
+
+
+
+            (c) 2nd order frequency SS.                      (d) 2nd order frequency AF.
+
+
+
+
+            (e) 3rd order frequency SS.                      (f) 3rd order frequency AF.
+
+                  Fig. 12 Convergence analysis for first three order frequencies.
+
+Table 5 Convergence results obtained from constructing ϕ0(x) with different curves.
+
+     Order         Direction   fEq. (57)/Hz   fEq. (58)/Hz   fEq. (59)/Hz   fEq. (60)/Hz     s/Hz
+                      SS        0.23739        0.23741        0.23743        0.23746       2.6×10-5
+      1st
+                      AF        0.24099        0.24101        0.24103        0.24107       3.0×10-5
+                      SS        0.95463        0.95463        0.95464        0.95607       6.2×10-4
+      2nd
+                      AF         1.0634         1.0636         1.0634         1.0652       7.5×10-4
+                      SS         2.0167         2.0168         2.0170         2.0182       6.0×10-4
+      3rd
+                      AF         2.2648         2.2649         2.2651         2.2660       4.7×10-4
+
+
+                                                 28
+3.4 Validation and comparison
+
+     Based on the numerical examples, the SCHTs with pretension force P from 0 to
+
+48 MN are used to analyze the errors of the proposed solution. Table 6 to Table 8 show
+
+the comparison between the proposed solution and the numerical solution, where the
+
+relative error ξ is defined as
+
+                                        f pro − f num
+                                  =                    100% ,                                 (62)
+                                            f pro
+
+where fpro denotes the results of the proposed solution, fnum denotes the results of the
+
+numerical solution.
+
+Table 6 Comparison of 1st order natural frequency.
+
+                 1st order natural frequency (SS)            1st order natural frequency (AF)
+   P/MN
+               fpro (Hz)     fnum Hz)           ξ          fpro (Hz)    fnum Hz)         ξ
+      0         0.24036      0.24011        0.104%         0.24415       0.24380      0.143%
+      8         0.23950      0.23930        0.083%         0.24326       0.24295      0.127%
+     16         0.23863      0.23847        0.067%         0.24235       0.24209      0.107%
+     24         0.23774      0.23764        0.042%         0.24142       0.24122      0.083%
+     32         0.23684      0.23678        0.025%         0.24048       0.24033      0.062%
+     40         0.23592      0.23591        0.004%         0.23952       0.23942      0.042%
+     48         0.23498      0.23502        0.017%         0.23854       0.23850      0.017%
+
+Table 7 Comparison of 2nd order natural frequency.
+
+                 1st order natural frequency (SS)            1st order natural frequency (AF)
+   P/MN
+               fpro (Hz)     fnum Hz)           ξ          fpro (Hz)    fnum Hz)         ξ
+      0         0.95976      0.96165        0.197%          1.0702       1.0707       0.046%
+      8         0.95733      0.95919        0.194%          1.0673       1.0677       0.037%
+     16         0.95488      0.95672        0.193%          1.0644       1.0648       0.038%
+     24         0.95242      0.95423        0.190%          1.0615       1.0618       0.028%
+     32         0.94994      0.95173        0.188%          1.0585       1.0588       0.028%
+     40         0.94745      0.94921        0.186%          1.0555       1.0558       0.028%
+     48         0.94494      0.94668        0.184%          1.0526       1.0527       0.010%
+
+Table 8 Comparison of 3rd order natural frequency.
+
+                 1st order natural frequency (SS)            1st order natural frequency (AF)
+   P/MN
+               fpro (Hz)     fnum Hz)           ξ          fpro (Hz)    fnum Hz)         ξ
+      0         2.0047       1.9433         3.063%          2.2478       2.1960       2.303%
+
+                                               29
+      8         2.0033      1.9420       3.060%       2.2468       2.1950      2.305%
+     16         2.0019      1.9406       3.062%       2.2458       2.1941      2.302%
+     24         2.0005      1.9392       3.064%       2.2448       2.1932      2.299%
+     32         1.9990      1.9378       3.062%       2.2438       2.1923      2.295%
+     40         1.9976      1.9364       3.064%       2.2428       2.1913      2.296%
+     48         1.9962      1.9351       3.061%       2.2418       2.1904      2.293%
+
+     Overall, the results of the proposed solution agree well with those of the numerical
+
+solution. Within the scope of this study, the minimum (maximum) relative errors about
+
+the 1st order natural frequency are 0.004% (0.143%), while those about the 2nd and 3rd
+
+orders natural frequencies are 0.010% (0.197%) and 2.293% (3.063%), respectively. In
+
+addition, the first three orders natural frequencies display different degrees of decrease
+
+as the prestress increases. Taking the side-to-side vibration as an example, when the
+
+prestressing force P increases from 0 to 48 MN, the first three natural frequencies
+
+decrease by 2.24%, 1.54%, and 0.42%, respectively. It indicates that the prestress
+
+mainly reduces the lower order natural frequencies, while it has slight influence on the
+
+higher order natural frequencies.
+
+4. Analysis and discussion
+
+     As mentioned above, the fundamental frequency of the hybrid tower (1 st order
+
+natural frequency) needs to be kept away from the frequency range formed by f1p and
+
+f3p to avoid the resonance response. To study the correlation between the fundamental
+
+frequency and the design parameters, a parametric analysis is conducted based on the
+
+numerical example depicted in subsection 3.1. The parameters to be studied include the
+
+geometric dimensions of the concrete portion (D1b, D1t, t1) and steel portion (D3b, D3t,
+
+t3), the pretension force (P), and the ratio of steel portion length to concrete portion
+
+length (rsc=h3/h1).
+
+
+                                           30
+4.1 Parametric analysis
+
+     Fig. 13 shows the variation of the fundamental frequency to the ratio of steel
+
+portion length to concrete portion length (rsc=h3/h1) when the other parameters (D1b, D1t,
+
+t1, D3b, P, D3t, t3) takes different values. It can be seen that with the increase of rsc, the
+
+fundamental frequency increases at first and then decreases. In addition, Fig. 13 also
+
+illustrates the variation trends of the fundamental frequency to the other parameters.
+
+The fundamental frequency has a positive correlation with the dimensions of the
+
+concrete portion (D1b, D1t, t1) but has a negative correlation with the pretension force P.
+
+As for the dimensions of the steel portion (D3b, D3t, t3), the variation trends are non-
+
+monotonic. When the proportion of the steel portion is small, the fundamental
+
+frequency shows a negative correlation with D3b, D3t, and t3, while the correlation
+
+gradually turns to be positive as rsc increases.
+
+
+
+
+ (a) Variation of f to rsc when D1b takes different        (b) Variation of f to rsc when D1t takes different
+
+     values.                                                   values.
+
+
+
+
+                                                      31
+ (c) Variation of f to rsc when t1 takes different         (d) Variation of f to rsc when P takes different
+
+     values.                                                   values.
+
+
+
+
+ (e) Variation of f to rsc when D3b takes different        (f) Variation of f to rsc when D3t takes different
+
+     values.                                                   values.
+
+
+
+
+ (g) Variation of f to rsc when t3 takes different
+
+     values.
+
+                        Fig. 13 Variation of fundamental frequency to rsc.
+
+
+     To study the sensitivity of the fundamental frequency to the parameters, the
+
+differences between curves in the same figure in Fig. 13 are calculated and their
+
+                                                      32
+variations with rsc are presented, as shown in Fig 14. It indicates that the sensitivities of
+
+the fundamental frequency to the parameters are related to the value of rsc, which are
+
+described as follows: 1) With the increase of rsc, the sensitivities of f to D1t and t1 have
+
+a significant tendency to increase and then decrease, while the sensitivity of f to D1b has
+
+a slight increase at first and then decreases significantly. 2) The fundamental frequency
+
+shows significant sensitivity to the pretension force P when the proportion of the steel
+
+portion is small, and the sensitivity decreases drastically as rsc increases. 3) The
+
+fundamental frequency shows little sensitivity to D3b when rsc is small, while the
+
+sensitivity increases significantly as rsc increases. 4) With the increase of rsc, the
+
+sensitivity of the fundamental frequency to the parameters D3t and t3 shows a trend of
+
+increase-decrease-increase. Moreover, there is one intersection between every two
+
+curves in Fig. 13 (e)~Fig. 13 (g), corresponding to the zero points in Fig. 14 (e)~Fig.
+
+14 (g). It indicates that for one SCHT with a determined value of rsc, the situation exists
+
+where changing the parameters (D3b, D3t, t3) from one certain value to another certain
+
+value does not affect the fundamental frequency of the overall structure.
+
+
+
+
+    (a) Sensitivity of f to D1b as rsc varies.        (b) Sensitivity of f to D1t as rsc varies.
+
+
+
+
+                                                 33
+     (c) Sensitivity of f to t1 as rsc varies.        (d) Sensitivity of f to P as rsc varies.
+
+
+
+
+    (e) Sensitivity of f to D3b as rsc varies.        (f) Sensitivity of f to D3t as rsc varies.
+
+
+
+
+     (g) Sensitivity of f to t1 as rsc varies.
+
+                     Fig. 14 Sensitivity analysis of fundamental frequency.
+
+
+4.2 Influence mechanism analysis
+
+     In this section, the results of the parametric analysis are explained based on the
+
+related formula and theory. According to Eqs. (19) and (32), the increase of pretension
+
+force P results in the decrease of total potential energy U but no effect on kinetic energy
+
+T. As revealed by Eqs. (47) and (48), when P increases the equivalent section stiffness
+
+                                                 34
+   (1)                                                                (1)
+K eq       decreases, but equivalent mass per unit length M eq              remains unchanged.
+
+Therefore, the fundamental frequency would decrease with the increase of the
+
+pretension force P. Since the pretension force only acts on the concrete portion, thus its
+
+effect on the fundamental frequency fades as the proportion of the concrete portion
+
+decreases. Therefore, the sensitivity of fundamental frequency to P decreases with the
+
+increase of rsc.
+
+         According to Eqs. (8)-(13), the section stiffness K(x) is linearly related to the fourth
+
+power of the cross-section dimensions (diameters and wall thickness), while the mass
+
+per unit length M(x) is linearly related to the second power of the cross-section
+
+dimensions. This means that K(x) is more sensitive to the section dimension compared
+
+with M(x), that is, the increase of K(x) is greater than that of M(x) when the cross-section
+
+dimension increase. In addition, in the formula to compute fundamental frequency Eq.
+
+(50), the term representing stiffness is the numerator while the term representing mass
+
+per unit length is the denominator. Therefore, in general, the fundamental frequency
+
+would increase with the increase of cross-section dimensions. However, besides the
+
+influence introduced above, the increase of some cross-section dimensions, especially
+
+the parameters of the steel portion, also enlarge the mass of the upper part of the SCHT.
+
+As proved in Ref. [20], the increase of mass at the free end of a cantilever beam would
+
+reduce the fundamental frequency of the overall structure. Therefore, the correlations
+
+between the fundamental frequency and parameters (D1b, D1t, t1, D3b, D3t, t3) are
+
+affected by those two factors.
+
+         The increase of parameter D1b does not affect the upper mass of the concrete
+
+
+                                                 35
+portion, thus increasing fundamental frequency. However, the increase of D1t and t1
+
+increase the upper mass of the concrete portion, which weakens the positive correlation
+
+between the fundamental frequency and parameters D1t and t1. Besides, the influence
+
+of such an effect on the fundamental frequency declines with the increase of rsc,
+
+resulting in the sensitivity of fundamental frequency to parameters D1t and t1 increase
+
+at the initial stage. With the continuous increase of rsc, the proportion of the concrete
+
+portion decreases, leading to the fading influence of changing parameters of the
+
+concrete portion on the fundamental frequency of the overall structure. Therefore, the
+
+sensitivity of fundamental frequency to parameters D1t and t1 presents a variation trend
+
+of increase-decrease.
+
+     When rsc is small, the proportion of steel portion in the overall SCHT is low,
+
+leading to the variation of the parameters of steel portion (D3b, D3t, t3) causing a slight
+
+effect on M(x) and K(x), but affect the mass of upper part of the SCHT apparently.
+
+Therefore, the fundamental frequency decreases with the increase of D3b, D3t, and t3
+
+when rsc is relatively small. However, the parameters of the steel portion (D3b, D3t, t3)
+
+gradually become the leading parameters that affect M(x) and K(x) as rsc increases. This
+
+causes the reason for fundamental frequency to increase with D3b, D3t, and t3 when rsc
+
+is relatively large.
+
+     It can be seen from Eq. (49) that when the total height of the SCHT H is kept
+
+unchanged, the fundamental frequency f is directly related to the equivalent section
+
+bending stiffness K eq(1) and the equivalent mass per unit length M eq(1) . Therefore, to
+
+investigate the influence mechanism of parameters rsc on the fundamental frequency f,
+
+
+                                            36
+                                                                    (1)       (1)
+it is necessary to analyze the influence of rsc on parameters Keq and Meq . Fig. 15 shows
+
+                                   (1)   (1)         (1)    (1)
+the variations of parameters Keq /(Keq )max, Meq /(Meq )max, and f/(f)max with rsc, where
+
+(Keq(1) )max, (Meq(1) )max, and (f)max respectively denote the maximum value of Keq(1) , Meq(1) ,
+
+and f when rsc varies from 0.1 to 1.5. As can be seen from Fig. 15, with the increase of
+
+rsc, Keq(1) and Meq(1) present different variation trends. At the initial stage of the increase
+
+of rsc, K eq(1) has a slight increase and then decrease while M eq(1) decreases rapidly,
+
+resulting in that f increases with rsc. With the continuous increase of rsc, the decreasing
+
+           (1)                                                                      (1)
+rate of Keq      almost remains unchanged, while the decreasing rate of Meq               gradually
+
+declines to such an extent that the variation curve almost becomes a horizontal line,
+
+resulting in that f decreases with the increase of rsc.
+
+
+
+
+                                                     (1)   (1)
+                            Fig. 15 Variations of Keq , Meq , and f to rsc.
+
+5. Conclusion
+
+     This paper developed a closed-form solution of the fundamental frequency of the
+
+steel-concrete hybrid tower (SCHT). In the theoretical derivation, the kinetic energy
+
+and potential energy of the SCHT are analyzed, where the abrupt changes of cross-
+
+section and material properties, the effect of prestressing, and the mass and rotary inertia
+
+of the wind turbine are taken into account. The frequency equation is established based
+
+on the law of energy conservation, and a set of orthogonal polynomials generated by
+
+                                               37
+using a Gram-Schmidt process is used to construct the displacement function. Then,
+
+based on a numerical example, the convergence of the proposed solution is analyzed,
+
+and its effectiveness is validated by comparing the results of the proposed solution with
+
+those of the numerical solution (FEM). In addition, by using the proposed solution, a
+
+parametric analysis is conducted to investigate the variation rules of the fundamental
+
+frequency to the design parameters.
+
+     The parametric analysis indicates that the fundamental frequency f increases with
+
+the cross-section dimensions of the concrete portion (D1b, D1t, t1) but decreases with the
+
+increase of the pretension force P. The variation rules of the fundamental frequency f
+
+to cross-section dimensions of the steel portion (D3b, D3t, t3) are related to the proportion
+
+of steel/concrete portion in the SCHT. When rsc is small, the fundamental frequency f
+
+has a negative correlation with the parameters D3b, D3t, and t3. But this correlation
+
+gradually becomes positive with the increase of rsc. Besides, when parameters except
+
+rsc remain unchanged, the fundamental frequency f performs a variation trend of initial
+
+increase and subsequent decrease with the increase of rsc. In addition, the sensitivity of
+
+each parameter to the fundamental frequency f is also related to the value of rsc. With
+
+the increase of rsc, the sensitivities of the fundamental frequency f to the cross-section
+
+dimensions of the concrete portion (D1t, D1b, t1) and the steel portion (D3t, D3b, t3) show
+
+tendencies of increase-decrease and increase-decrease-increase, respectively. As for the
+
+pretension force P, the tendency performs a continuous decline as the increase of rsc.
+
+The influence of prestress on the natural frequency is mainly reflected by Eq. (49), from
+
+which it can be seen that the increase of prestress would reduce the equivalent bending
+
+
+                                             38
+stiffness, thereby causing the decrease of the natural frequency.
+
+     Based on the related formula and theory, the phenomena in the parametric analysis
+
+are explained, which indicates that the results obtained from the parametric analysis are
+
+reasonable. The proposed solution provides an effective approach for determining the
+
+fundamental frequency of the SCHT, and the results of the parametric analysis
+
+conducted herein may offer guidelines to adjust the parameters in the preliminary
+
+design of the SCHT.
+
+Declaration of Competing Interest
+
+     The authors declare that they have no known competing financial interests or
+
+personal relationships that could have appeared to influence the work reported in this
+
+paper.
+
+Acknowledgments
+
+     The authors gratefully acknowledge the financial support provided by the Fok
+
+Ying Tung Education Foundation (171066) and National Natural Science Foundation
+
+of China (51822804).
+
+References
+
+[1] Johansen K. Blowing in the wind: A brief history of wind energy and wind power
+
+technologies in Denmark. Energy Policy, 2021;152:112139.
+
+[2] Barra PHA, Carvalho WC, Menezes TS, Fernandes RAS, Coury DV. A review on
+
+wind power smoothing using high-power energy storage systems. Renewable and
+
+Sustainable Energy Reviews, 2021;137:110455.
+
+[3] Peng XK, Liu ZC, Dong J. A review of multiphase energy conversion in wind power
+
+
+                                           39
+generation. Renewable and Sustainable Energy Reviews, 2021;147:111172.
+
+[4] Zhang RXX, Shen GQP, Meng N, Wong JKW. An overview on the status quo of
+
+onshore and offshore wind power development and wind power enterprise localization
+
+in China. International Journal of Green Energy, 2019;16(15):1646-1664.
+
+[5] Dong FG, An XW, Li CY. Performance evaluation of wind power industry chain
+
+based on three-stage DEA. Journal of Renewable and Sustainable Energy,
+
+2021;13:033313.
+
+[6] Dai JC, Xin Y, Li W. Development of wind power industry in China: a
+
+comprehensive assessment. Renewable and Sustainable Energy Reviews, 2018;97:156-
+
+164.
+
+[7] Harrison R, Hau E, Snel H. Large wind turbines design and economics. New York,
+
+NY: John Wiley & Sons Ltd, 2000.
+
+[8] McKenna R, vd Leye PO, Fichtner W. Key challenges and prospects for large wind
+
+turbines. Renewable & Sustainable Energy Reviews, 2016;53:1212–1221.
+
+[9] NREL, Transportation of Large Wind Components: A Review of Existing
+
+Geospatial Data, (Technical Report) National Renewable Energy Laboratory, Golden,
+
+CO, USA, 2016.
+
+[10] Way AC, Zijl GPAGV. A study on the design and material costs of tall wind turbine
+
+towers in South Africa. Journal of the South African Institution of Civil Engineers, 2015,
+
+57(4):45-54.
+
+[11] Agbayani NA, Vega RE. The rapid evolution of wind turbine tower structural
+
+systems: a historical and technical overview. Structures Congress, 2012:1201-1212.
+
+
+                                           40
+[12] Tricklebank AH, Halberstadt PH. Concrete towers for onshore and offshore wind
+
+farms technical report. Camberley: The concrete Center; 2007.
+
+[13] Rebelo C, Moura A, Gerv´asio H, et al. Comparative life cycle assessment of
+
+tubular wind towers and foundations–Part 1: structural design. Engineering Structures,
+
+2014;74:283–291.
+
+[14] Deng R, Zhou XH, Deng XW, Ke K, Bai JL, Wang YH. Compressive behaviour
+
+of tapered concrete-filled double skin steel tubular stub columns. Journal of
+
+Constructional Steel Research, 2021;184:106771.
+
+[15] Vernardos SM, Gantes CJ, Badogiannis EG, Lignos XA. Experimental and
+
+numerical investigation of steel-grout-steel sandwich shells for wind turbine towers.
+
+Journal of Constructional Steel Research, 2021;184:106815.
+
+[16] Chen JL, Li JW, He XH. Design optimization of steel–concrete hybrid wind turbine
+
+tower based on improved genetic algorithm. The structural Design of Tall and Special
+
+Buildings, 2020;29(10):1541-7794.
+
+[17] Chen YJ, Zhang YJ, Lin CH, Zhou JK. Optimization and analysis on prestressed
+
+concrete-steel hybrid wind turbine tower. Acta Energiae Solaris Sinica, 2021;42(3):121-
+
+127 (in Chinese).
+
+[18] Jin QX, Li VC. Development of lightweight engineered cementitious composite
+
+for durability enhancement of tall concrete wind towers. Cement and Concrete
+
+Composites, 2019;96:87-94.
+
+[19] Jin QX, Li VC. Structural and durability assessment of ECC/concrete dual-layer
+
+system for tall wind turbine towers. Engineering Structures, 2019;196:109338.
+
+
+                                          41
+[20] Clough RW, Penzien J. Dynamics of structures. 2nd Ed. New York: McGraw-Hill;
+
+1993.
+
+[21] Wu QY, Feng H, Xiao SY, Zhu HP, Bai XX. Passive control analysis and design of
+
+twin-tower structure with chassis. International Journal of Structural Stability and
+
+Dynamics, 2020;20(6):2040010.
+
+[22] Wu JB, Chen B, Song XX. Wind-induced response control of a television
+
+transmission tower by piezoelectric semi-active friction dampers. International Journal
+
+of Structural Stability and Dynamics, 2022;22(6):2250064.
+
+[23] Harte R, Gideon PAG. Van Z. Structural stability of concrete wind turbines and
+
+solar chimney towers exposed to dynamic wind action. Journal of Wind Engineering &
+
+Industrial Aerodynamics, 2007;95(9):1079-1096.
+
+[24] Damiani RR. Design of offshore wind turbine towers. Offshore Wind Farms.
+
+Woodhead Publishing, 2016:263-357.
+
+[25] Xie F, Aly AM. Structural control and vibration issues in wind turbines: A review.
+
+Engineering Structures, 2020;210:110087.
+
+[26] Ghaemmaghami A, Kianoush R, Yuan XX. Numerical modeling of dynamic
+
+behavior of annular tuned liquid dampers for applications in wind towers. Computer-
+
+Aided Civil and Infrastructure Engineering, 2013;28(1):38–51.
+
+[27] Kenna A, Basu B. A finite element model for pre-stressed or post-tensioned
+
+concrete wind turbine towers. Wind Energy, 2015;18(9):1593–610.
+
+[28] Bi JH, Ren HP, Yin YB. Seismic analysis of pre-stressed reinforced concrete wind-
+
+turbine tower. Journal of Tianjin University, 2011;44(2):126-133 (in Chinese).
+
+
+                                          42
+[29] Yue YC, Tian JJ, Mu QY, Chen TB, Peng L, Lu X, Liu J. Feasibility of segmented
+
+concrete in wind turbine tower: Numerical studies on its mechanical performance.
+
+International Journal of Damage Mechanics, 2021;30(4):518-536.
+
+[30] de Lana JA, Júnior PAAM, Magalhães CA, et al. Behavior study of prestressed
+
+concrete wind-turbine tower in circular cross-section. Engineering Structures, 2021;227:
+
+111403.
+
+[31] Vugts JH. Considerations on The Dynamics of Support Structures for An OWEC.
+
+Delft University of Technology. Netherlands, 2000.
+
+[32] Tempel JVD. Design of Support Structures for Offshore Wind Turbines. Delft
+
+University of Technology, Netherlands, 2006.
+
+[33] Yang CB, Wang R, Zhang JM. A simplified method for analyzing the fundamental
+
+frequency of monopile supported offshore wind turbine system design. Earthquake
+
+Engineering & Engineering Vibration, 2018;17:893-901.
+
+[34] Gu CJ, Chen DY, Liu FF, Fang K, Guo D, Marzocca P. Dynamic analysis of flexible
+
+wind turbine tower by a transfer matrix method. International Journal of Structural
+
+Stability and Dynamics, 2021;21(10):2150142.
+
+[35] Liu HB, Wang LL, Tan GJ, Cheng YC, Wu CX. Effect of prestress force on natural
+
+frequency of external prestressed simply supported steel beam. Journal of Jilin
+
+University (Engineering and Technology Edition), 2013;43:81-85 (in Chinese).
+
+[36] Abraham MA, Stubbs N. Loss of prestress prediction based on nondestructive
+
+damage location algorithms. Proceedings of Spie the International Society for Optical
+
+Engineering, 1995.
+
+
+                                          43
+[37] Saiidi M, Douglas B, Feng S. Prestress Force Effect on Vibration Frequency of
+
+Concrete Bridges. Journal of Structural Engineering, 1994;120(7):2233-2241.
+
+[38] Huang XG, Li BK, Zhou XH, Wang YH, Zhu RH. Geometric optimisation analysis
+
+of Steel–Concrete hybrid wind turbine towers. Structures, 2022;35:1125-1137.
+
+[39] Shu C. Differential Quadrature and Its Application in Engineering. Springer
+
+London, 2000.
+
+[40] Wang C, Liu RQ, Huang JP. Geometrically Nonlinear Dynamic Response of
+
+Perforated Plates by Modified Differential Quadrature Method. International Journal of
+
+Structural Stability and Dynamics, 2021;21(7):2150097.
+
+[41] Bernuzzi C, Crespi P, Montuori R, et al. Resonance of steel wind turbines:
+
+problems and solutions. Structures, 2021;32:65–75.
+
+[42] Mama F, Wolfram K. Orthogonal Polynomials. Birkhäuser Cham; 2020.
+
+[43] Bhat RB. Natural frequencies of rectangular-plates using characteristic orthogonal
+
+polynomials in Rayleigh-Ritz method. Journal of sound and vibration,1985;102(4):493-
+
+499.
+
+[44] Wachirawit S, Nuttawit W, Monsak P. Dynamic Analysis of Functionally Graded
+
+SandwichPlates under Multiple Moving Loads by Ritz Method with Gram–Schmidt
+
+Polynomials. International Journal       of    Structural Stability and     Dynamics,
+
+2021;21(10):2150138.
+
+[45] Jonkman J, Butterfield S, Musial W, Scott G. Definition of a 5-MW reference wind
+
+turbine for offshore system development Technical Report No NREL/TP-500-38060.
+
+Golden (CO): National Renewable Energy Laboratory; 2009.
+
+
+                                          44
+[46] Li P, Wang JL. Comparison of FEM simulation methods of prestressed reinforced
+
+concrete members. Journal of Chongqing Jiaotong University (natural science)
+
+2010;29(1):27-29 (in Chinese).
+
+[47] Singiresu SR. The Finite Element Method in Engineering. Butterworth-Heinemann,
+
+2018.
+
+[48] NB/T 10311-2019, Code for design of wind turbine foundations for onshore wind
+
+power projects, China Water & Power Press, Beijing, 2019 (in Chinese).
+
+
+
+
+                                        45
+

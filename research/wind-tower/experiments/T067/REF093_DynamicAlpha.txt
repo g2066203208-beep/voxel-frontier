@@ -1,0 +1,842 @@
+                                                                        Applied Energy 356 (2024) 122441
+
+
+                                                                    Contents lists available at ScienceDirect
+
+
+                                                                            Applied Energy
+                                                        journal homepage: www.elsevier.com/locate/apenergy
+
+
+
+
+Spatiotemporal variation of power law exponent on the use of wind energy
+Xinrong Yang a, Xin Jiang a, Shijing Liang a, Yingzuo Qin a, Fan Ye a, b, Bin Ye a, Jiayu Xu a,
+Xinyue He a, d, Jie Wu a, Tianyun Dong a, e, Xitian Cai c, *, Rongrong Xu a, *, Zhenzhong Zeng a, *
+a
+  School of Environmental Science and Engineering, Southern University of Science and Technology, Shenzhen, China
+b
+  MingYang Smart Energy, Zhongshan, China
+c
+  School of Civil Engineering, Sun Yat-sen University, Guangzhou, China
+d
+  School of Earth and Environment, University of Leeds, Leeds, United Kingdom
+e
+  Ningbo Institute of Digital Twin, Eastern Institute of Technology, Ningbo, China
+
+
+
+
+H I G H L I G H T S
+
+• Assess the spatiotemporal variation of the power law exponent (α) in global wind energy assessments.
+• The power law exponent α values vary with geography, seasons, diurnal cycles, latitudes, land and ocean.
+• The power law is generally applicable and has important implications for wind energy resource assessments and turbine design.
+
+
+
+A R T I C L E I N F O                                     A B S T R A C T
+
+Keywords:                                                 The power law, a common method in wind energy assessments, often assumes a global power law exponent (α) of
+Power law exponent                                        1/7, potentially leading to inaccuracies in estimating wind conditions and energy potential. This study uses high-
+Multiple heights                                          frequency measurements from eight wind towers to assess the power law’s reliability and demonstrates its
+Spatiotemporal variation
+                                                          general applicability, except in complex topography. The α value is found to differ significantly from 1/7 in
+Wind energy
+                                                          validation sites, yet it can be reliably used in ERA5 data based on regional verification. To evaluate the global
+                                                          spatiotemporal variation of α, we analyze the hourly α from 1980 to 2022 using ERA5 wind speed data at 10 m
+                                                          and 100 m. Our findings reveal varying α value with time and geography, with particular disparities between
+                                                          land and ocean. Additionally, we observe changes related to diurnal cycles, seasons, and latitudes. This analysis
+                                                          of α value carries significant implications for a global-scale wind energy resource assessment, site selection, and
+                                                          turbine design.
+
+
+
+
+1. Introduction                                                                                 design considering average wind speed at turbine heights. Turbine
+                                                                                                heights usually range from 50 to 150 m above ground. Yet available
+    The Paris Agreement calls for an accelerated reduction in global                            wind speed data are mostly at the height of 10 m. Problems emerge
+greenhouse gas emissions in the background of global warming. Con­                              when extrapolating the observed near-surface wind speeds to the tur­
+version from traditional energy production into renewable energy pro­                           bine height wind speeds used for wind energy assessment.
+duction is an essential improvement towards the zero‑carbon emission                               Several methods can be used to obtain wind speeds at turbine
+goal [1]. Wind energy currently shares around 7% of nowadays global                             heights. For example, the Global Wind Atlases provide high spatial
+total electricity needs and is projected to generate one-third of total                         resolution wind resource assessments by integrating meteorological
+electricity needs by 2050 [2]. It is imperative to assess global wind en­                       models; however, they are only able to provide wind speeds at fixed
+ergy generation. The generation of wind energy through wind turbines                            heights [4]. As wind turbine technology has advanced, turbines with
+generally follows that the generated wind energy is proportional to the                         hub heights of 200 m or higher have emerged, and these fixed-height
+cube (third power) of the wind speed [3]. Accordingly, the wind energy                          global wind datasets are often insufficient to meet the demands of
+generation can benefit from proper wind turbine site selections and                             wind energy project development. On the other hand, we can
+
+
+
+    * Corresponding authors.
+      E-mail addresses: caixitian@mail.sysu.edu.cn (X. Cai), xurr@sustech.edu.cn (R. Xu), zengzz@sustech.edu.cn (Z. Zeng).
+
+https://doi.org/10.1016/j.apenergy.2023.122441
+Received 16 June 2023; Received in revised form 17 November 2023; Accepted 30 November 2023
+Available online 8 December 2023
+0306-2619/© 2023 Elsevier Ltd. All rights reserved.
+X. Yang et al.                                                                                                                 Applied Energy 356 (2024) 122441
+
+
+extrapolate the upper-level wind speeds based on logarithm, power law            data to analyze. However, it is also appropriate to utilize long-term data
+formulas or others. The logarithm law is a calculation method to take            analysis because such data has a considerable degree of accuracy and
+into account the influence of atmospheric stability on the surface wind          stability [34]. We recommend incorporating spatiotemporally differ­
+profile [5,6]. However, the parameters that this model needs to                  entiated α value in wind energy estimation research at any location on
+consider, such as the boundary layer height cannot be easily obtained, so        earth, particularly when hub-height wind speed data is unavailable on a
+the wind power law shown in Eq. (1) as a quick and efficient approach            large time and spatial scale. This approach can effectively replace the
+has been widely used for wind speeds extrapolation and wind energy               simplistic use of 1/7. Finally, we publish our research results as open
+generation assessment [7]. Moreover, the wind power law commonly                 data. All the findings will help to improve wind energy assessments.
+describes the wind speed patterns in the boundary layer and only needs               In the subsequent analysis, the data sources and computational
+the near surface wind speed as input [8].                                        methodologies employed are first elaborated upon in Section 2. Section
+     ( )α                                                                        3 provides verification and comparison of the power law relationship
+u1     h1
+   =                                                                 (1)         through the use of measured data from eight towers, reanalysis data, the
+u2     h2
+                                                                                 conventional 1/7 exponent value. Then examines the global spatio­
+    The wind power law is widely utilized to convert near-surface wind           temporal variation and trends in the power law exponent α, including
+speed at h1 (u1 ) to wind speed at hub-height h2 (u2 ), where α is the           diurnal, seasonal, and interannual variability. Section 4 compares the
+empirically derived wind power law exponent that varies with the at­             results in this study with other published findings and discusses the
+mospheric stability, surface roughness, wind speed and height interval           limitations of the ERA5 results. Finally, Section 5 offers concluding re­
+[7]. For this reason, an accurate α value determines whether the wind            marks and summary comments.
+speed at the wind turbines’ height can be accurately calculated, which is
+critical for developing wind energy.                                             2. Method
+    However, wind power law is oversimplified in previous studies by
+using a constant 1/7 value worldwide as the wind power law exponent              2.1. Data source
+[9–13]. The α value of 1/7 and its characteristics are debated especially
+in recent studies [14–17]. In realistic circumstances, the observed power            This study utilized two data sources. One is the ERA5 global rean­
+law exponent α exhibits spatiotemporal variation regarding the condi­            alysis hourly averaged data (https://cds.climate.copernicus.eu/cdsa
+tions including atmospheric stability and surface roughness [18–20].             pp#!/dataset/reanalysis-era5-single-levels?tab=form) [35]. ERA5 data
+Besides, the 1/7 α value has poor representativeness in many regions             is the fifth-generation data provided by the European Centre for
+such as Southeast Asia [21,22], North America [23], Europe [24] and              Medium-Range Weather Forecasts (ECMWF) including the global
+offshore areas [25] as well as temporal variation. There are various             climate and weather data for the past several decades. ECMWF owns one
+studies using in-situ measurements [19], lidars and sodars [26,27] data          of the largest supercomputers facilitating and archiving meteorological
+to analyze the characteristics of the power law exponent α of the wind           data in the world, assuring the reliability of the data used in this study.
+profile, which claim that α value with spatial and temporal variation can        Some studies have shown that the near-surface wind speeds from the
+be more accurate in estimating wind energy than using fixed value.               ERA5 reanalysis data are closer to the measured data than several other
+However, these early studies using measurement data are plagued by               reanalysis data products [36]. The ERA5 reanalysis data are widely used
+spatial and temporal data limitations, making global analysis difficult.         as the data source for many studies on wind speeds and the wind power
+There are also remote sensing data [28,29] and reanalysis data [30,31]           law [32,37,38]. Here we used ERA5 global hourly averaged reanalysis
+that are used for wind speed extrapolation on a large regional scale,            data from 1980 to 2022 to investigate the spatial and temporal variation
+though the data from satellites are normally limited over the ocean.             of the power law exponent on a global scale. This 0.25◦ × 0.25◦ reso­
+With the ascendance of offshore wind turbines, assessments of offshore           lution gridded dataset provides the u-component and v-component of
+wind energy potential are becoming increasingly critical as well as the          wind speeds at 10 m and 100 m.
+onshore wind energy. While Jung’s study has analyzed the properties of               Another data source is the anemometer wind tower data provided by
+α using global land data, it ignored the broader ocean and compute the           Mingyang Smart Energy Company (http://www.myse.com.cn/). There
+global grids only on the seasonal temporal scale [32]. Therefore, it is          are a total of eight towers positioned across China, each of which is
+urgent and necessary for a global assessment of spatiotemporal variation         capable of measuring wind speed at multiple heights. Table 1 depicts the
+of α on covering both land and ocean for more accurate and efficient             information for each tower. The data range from over a year to more
+global wind energy estimation, given the development of climatology              than four years, and it is continuously updated every ten minutes
+and the availability of big data till the most current, which has not been
+done globally before.
+    In this study, we use wind tower data as a regional validation to test       Table 1
+whether the wind profile follows the power law and calculate the                 The information of the 8-wind tower measured data.
+exponent α for each tower using a statistical model. The measured α               Wind tower        Location   Terrain    Time of data        Height of data
+values are then compared to the commonly used 1/7 value and rean­
+                                                                                  Hunan             25◦ N      Mountain   2013.1–2013.12      10/30/50/60/
+alysis values to determine the errors as a previous study shows that                                111◦ E                                    70 m
+reanalysis may underestimate α value [33], but rarely other compari­              Xinjiang          43◦ N      Dessert    2018.1–2018.12      10/30/50/70
+sons. In our study, the wind tower data are accessible only in China, they                          88◦ E                                     m
+                                                                                  Jiangxi           26◦ N      Mountain   2016.1–2016.12      10/30/50/70/
+can be used as a regional stand-in for the real data to assess whether α
+                                                                                                    114◦ E                                    80/90 m
+values follow the power law and how close they are to 1/7. Meanwhile,             Shanxi            37◦ N      Mountain   2019.5–2020.4       10/30/50/70/
+we use global reanalysis data to investigate the spatiotemporal features,                           113◦ E                                    80/90 m
+diurnal, seasonal and interannual variation, and trends of α at a global          Anhui             33◦ N      Plain      2018.11–2019.10     10/30/50/70/
+scale. We will better understand the global spatial and temporal varia­                             116◦ E                                    120/140 m
+                                                                                  Jiangsu_Land      32◦ N      Plain      2019.6–2020.5       10/60/80/
+tion of α value in order to make up for many previous studies limited to
+                                                                                                    119◦ E                                    100/120/140
+the regional scale and have identified issues that will merit further                                                                         m
+investigation. In general, shorter time-span data allow for more precise          Qinghai           36◦ N      Dessert    2013.1–2013.12      10/30/50/70
+analysis of the instantaneous wind shear characteristics, just as many                              96◦ E                                     m
+                                                                                  Jiangsu_Seaside   32◦ N      Plain      2014.1–2014.12      10/30/50/70/
+studies mentioned above use short-term high-frequency observation
+                                                                                                    120◦ E                                    80/90/100 m
+
+
+                                                                             2
+X. Yang et al.                                                                                                                                      Applied Energy 356 (2024) 122441
+
+
+without any interruptions. The wind speeds in one year which the pe­                    ( )
+riods range from 2011 to 2020 are chosen for each tower to fit the α                  ln uu12
+value. It is important to note that the measured wind speeds of eight               α= ( )                                                                                      (2)
+towers are at several different heights range from 10 m to 140 m above                ln hh12
+ground level. Each tower contains at least four different heights, because
+of data resource constraints but also provides as much as possible wind
+                                                                                    and the equation is related to the wind speed at two heights. As a result,
+speed data calculations at higher heights. The sites’ location, heights,
+                                                                                    the α value for a given wind turbine can be computed by either solving
+and topography vary greatly, which are depicted in Fig. 1. These wind
+                                                                                    regressions or directly using data from two heights. It should be noted
+towers range in altitudes from below 100 m to over 3000 m. The satellite
+                                                                                    that we used the square root of u-component squared plus v-component
+images surrounding the towers are obtained from Google Earth, allow­
+                                                                                    squared of the 10 m and 100 m wind speeds respectively to directly
+ing the topography around the towers to be approximated. These towers
+                                                                                    calculate the α value for the ERA5 reanalysis wind speed data:
+can be found in various terrains, including plains, deserts and moun­
+                                                                                          √̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+tains, including inland and coastal areas. It is worth noting that the data
+                                                                                    u10 = (uwind10 )2 + (vwind10 )2                                       (3)
+used in previous studies which we have mentioned before are rarely as
+high in the specification as the anemometer wind towers data used in                         √̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+this study, whether in terms of the diverse topography, high temporal               u100 =    (uwind100 )2 + (vwind100 )2                                                       (4)
+resolution, or spatial span.
+                                                                                       To increase the reliability of the α value for the anemometer wind
+2.2. Power law                                                                      tower data, we solved the nonlinear regression model using wind speed
+                                                                                    data collected at as much as possible distinct heights in each of the
+   The wind power law relationship is described as Eq. (1). We have                 measured data to calculate the tower α value. The regression model is
+made a simple transformation of the way it is written to calculate the              based on the least-squared approach and the transformation of Eq. (1):
+power law exponent as follows:                                                                ( )α
+                                                                                                h
+                                                                                    u = u10 ×       +b                                                 (5)
+                                                                                               10
+
+                                                                                    where h is the height correspond to Table 1 except 10 m, u is the cor­
+                                                                                    responding wind speed and u10 is the wind speed at 10 m, b is the error
+
+
+
+
+       Fig. 1. The location of eight wind towers. The towers are distributed in China, and their images are obtained from the screenshots on Google Earth.
+
+                                                                                3
+X. Yang et al.                                                                                                                           Applied Energy 356 (2024) 122441
+
+
+term according to statistical principle. This equation designates u as the               data from the eight wind towers (Table 1). First, Gap test, Syntax test
+dependent variable because the source of errors lies in the deviations of                and Gross range test are used for the quality control of the tower data in
+wind speed, making our regression procedure aim to minimize the de­                      order to make sure the data ensure that the data are time-continuous,
+viation of u, which is also consistent with the physical mechanism of                    within the normal range of wind tower monitoring and can be used
+power law. We use the coefficient of determination (denoted R2) as the                   for calculation through coding [42]. Then derive hourly α values from
+proportion of the variance of dependent variable that can be well                        regression analysis of wind speed data at several distinct heights.
+explained by the regressions and p-value from t-test to see the signifi­                 Meanwhile, calculate the R2 and p-value of each fitted α value to esti­
+cance of relationship (Hypothesis: there is no such nonlinear relation­                  mate whether each tower is suitable to get α value using the power law.
+ship). R2 closer to 1 and p-value smaller than 0.05 stands for a good                    Table 2 shows the percentage of hourly R2 larger than 0.5 and p-value
+regression result. When calculating the α for the towers, we also utilize                less than 0.05 among all data in one year of each tower (Table S1 based
+eq. (6) based on least squares method. The distinction lies in trans­                    on Eq. (6)). The results demonstrate that most of the hourly values
+forming Eq. (1) into a linear form. We consider that linear regression                   display ideal fitting results and significant relationship. While tower
+offers greater robustness, and this formulation comprehensively cap­                     Xinjiang, Jiangxi, and Qinghai are not fitted significantly using the
+tures the relationship among all height pairs. It’s important to note that               power law for some time according to the p-value. It might be connected
+when introducing an error term, it alters the physical mechanism of the                  to the terrain where the tower is situated. Studies have shown that
+power law (it becomes an adjustment for α, not u). Consequently, we                      surface roughness and mountain topography significantly impact wind
+assume the intercept of the fitted straight line is 0. As Eq. (6) lacks a                speed characteristics at various heights as the atmospheric stability is
+statistical error term, we use it solely as a reference in this case.                    weaker, which result in wind speeds at different heights and directions
+                  ( ( ) )( ( ) )                                                         to fluctuate to varying degrees at different times [43,44]. As a result,
+          ∑n
+                       h
+                    ln h1,i
+                                       u
+                                    ln u1,i                                              based on the collected data, the wind profile most comply with the
+                                                                                         power law. It indicates that the further analysis will have some degree of
+                         2,j             2,j
+
+                                                                       (6)
+     i=2,j=1,h1>h2
+α=                     (     (      ) ) 2
+                 ∑                                                                       reliability.
+                  n
+                              h
+                           ln h1,i
+           i=2,j=1,h1>h2
+                                2,j
+                                                                                             Fig. 2 depicts the one-year monthly and diurnal mean α results of
+                                                                                         eight towers. The α value between each tower varies greatly, the range is
+    In Fig. S1, the hourly α value results obtained by the two fitting
+                                                                                         about 0.4. Towers Xinjiang, Jiangxi, and Qinghai have lower α values
+equations are slightly different. Alternatively, it is reasonable that the
+                                                                                         than other five towers, which are less than 1/7 in most monthly and
+transformation of the regression equation calculates very different re­
+                                                                                         yearly values. The fluctuations of monthly mean α value in each tower
+sults, the research can also be conducted by swapping the roles of the
+                                                                                         are less than the fluctuation range among different towers. There is
+independent and dependent variables, and the outcome is determined
+                                                                                         relatively significant diurnal variation in the 8 towers. Except for tower
+based on the equation with the smaller deviation [39].
+                                                                                         Xinjiang, Jiangxi and Anhui, the diurnal variation follows the charac­
+                                                                                         teristic that α values are lower in the daytime and higher at night. Fig. S2
+2.3. Validation of measured data                                                         based on linear regression depicts similar characteristics but generally
+                                                                                         larger values. Generally, the result shows that the α value has spatio­
+    For the comparison of reanalysis data and wind tower data, we                        temporal variation and significantly different from 1/7, which requires
+compare the errors among hourly reanalysis α value, measured α value                     more accurate estimation.
+and 1/7. The comparison of the errors of α value is defined as the
+following equation:
+                                                                                         3.2. Compare ERA5 α values and 1/7 against in-situ measurements
+         |αt − αe |
+ratio =                                                                       (7)
+        |αt − 1∕7|                                                                           We extracted the gridded data with corresponding space and time
+                                                                                         from the ERA5 reanalysis global gridded data for the eight anemometer
+where αt and αe are the α values from wind tower data and ERA5                           wind tower locations (Fig. 1) and calculate the hourly α value. It is very
+reanalysis data respectively.                                                            important that the ERA5 data results can show the fluctuation of α value.
+                                                                                         Fig. 3 exhibits the mean value of diurnal and monthly fluctuations in
+3. Result                                                                                tower Jiangsu_Seaside. Comparing the ERA5 data with the measured
+                                                                                         data, the variation of the α value between day and night and between
+3.1. Validation of power law                                                             months can be well displayed (i.e., α value is lower in the day and higher
+                                                                                         at night), and the reflection of such fluctuations probably cause the 1/7
+    We assume the wind speeds at various heights conform to power law.                   value a large error at some time.
+However, the wind speed in this study may not be consistent with that                        There is still some discrepancy between the calculated results of the
+assumption [22,40,41]. As a test of whether the wind speeds at different                 measured data and the reanalyzed data. To understand whether such a
+heights conform to the power law distribution, we used the anemometer                    discrepancy is more favorable or not than uniformly using 1/7, Eq. (7)
+wind tower data to determine the α value. If the validation results are                  from Section 2.3 is used to verify the measured data (Fig. 4 & S3).
+not aligned with the power law, we will need to consider whether                         Assuming that the fitted α from the measured data to be the accurate
+alternative equations, such as the log law, should be used to calculate                  value, as long as the ratio is less than 1, we believe that the result derived
+wind speeds at various heights.                                                          from ERA5 is closer to the measured value compared to the 1/7. From
+    The validation of the power law exponent is used for the measured                    the original hourly data, only three towers have a ratio less than 1 for
+
+Table 2
+Validation of power law in 8 towers. The first row refers to the percentage of determination coefficient R2 which calculated from the fitted α value that larger than 0.5
+among all the hourly data in one year. The second row is the percentage of p-value of the nonlinear fitting that smaller than 0.05 among all the hourly data in one year.
+The third row is the averaged value of the error term.
+  Tower                    Hunan         Xinjiang           Jiangxi          Shanxi             Anhui          Jiangsu_Land           Qinghai           Jiangsu_Seaside
+
+  (R2 > 0.5) %             89.02         91.52              81.83            86.91              84.08          92.25                  85.74             89.82
+  (p < 0.05) %             71.76         29.06              64.03            74.62              77.06          87.05                  33.65             85.28
+  Averaged b               0.92          0.15               − 0.27           1.72               0.08           0.38                   0.13              0.48
+
+
+                                                                                     4
+X. Yang et al.                                                                                                                      Applied Energy 356 (2024) 122441
+
+
+
+
+                 Fig. 2. Mean α value of eight towers. (a) is annual and monthly mean of hourly α value. (b) is the diurnal mean of hourly α value.
+
+
+
+
+Fig. 3. An example of analysis in tower Jiangsu_Seaside. The major figure shows the diurnal variation of α value calculated from measured and reanalysis data. The
+small figure shows the monthly variation. Two data are compared with 1/7.
+
+
+more than half of the time, which is not an ideal result. When the hourly            greater α value indicates that the upper-level wind speed is greater than
+data is averaged into monthly data and then calculate the ratio, there are           the lower-level wind speeds. These are regions where we must concen­
+four towers where all the data are within 1, and over 50% of the ratios              trate our efforts, as higher wind speeds allow wind turbines to produce
+less than 1 in two towers. Exceptions are the tower Hunan and Jiangxi,               more wind energy. Additionally, there are some regions with abnormal
+possibly due to the wind speed data do not comply with the power law                 values. For instance, in northwestern China, the α values of a few long-
+that we have proved or the nonlinear model is overparameterized (refer               strip regions are negative, which are similar to Jung’s result [32]. We
+to the results of linear model). Overall, the calculation error of using the         find that these abnormal regions are mainly caused by the relatively
+reanalysis data of ERA5 in wind energy production as a calculation basis             small wind speed at 100 m and large near-surface wind, which has
+is smaller than that of uniformly using 1/7, illustrating that using ERA5            similar patterns in other studies [45]. This could be related to the desert
+data are valuable for reference.                                                     climate or the sudden increase in elevation that have influence on sur­
+                                                                                     face roughness [46]. The locations also make sense, as the abnormal
+3.3. Spatial pattern of mean annual α value                                          regions are located in a basin surrounded by mountains, frequently exist
+                                                                                     large near-surface wind speed at the direction of the mountain gap [47].
+   To make the spatiotemporal variation of α value analysis be exam­                 For example, when the prevailing wind direction is consistent with the
+ined on larger spatial and temporal scales, the global gridded wind speed            direction of a canyon, the narrow space can accelerate the 10 m wind
+reanalysis data are used for the subsequent analyses.                                speed, while the wind speed at upper-level has little effect, which has a
+   Fig. 5 illustrates the multi-year mean α value from 1980 to 2022,                 time pattern of fluctuation. The relevant study also considers smaller α
+derived from the 10 m and 100 m wind speeds. The annual values vary                  value in mountainous regions with stronger mixing of atmospheric
+from the winter and summer values, represented by January and July,                  turbulence [41]. However, some studies also find that there may be
+respectively, and the spatial variation are also shown as well. Most land            biases when applying ERA5 data to mountainous and coastal regions
+areas have α values higher than 1/7, while most ocean areas have α                   [48]. The average α value in the ocean increases as it moves from the
+values lower than 1/7, meaning there is a big difference between land                equator to the poles, and the average α value in the land area increases in
+and ocean, and only a few regions have values very close to 1/7. There               both the Northern and Southern Hemispheres during their respective
+are a few regions in the low latitude ocean area where the α value is                winters. The difference in α values on land is mainly caused by surface
+negative, indicating that the 10 m wind speed is greater than the 100 m              roughness, which leads to obvious regional variation. In the ocean,
+wind speed due to the smooth surface of the ocean. A region with a                   however, surface roughness is very low, so the difference in α is mainly
+
+                                                                                 5
+X. Yang et al.                                                                                                                          Applied Energy 356 (2024) 122441
+
+
+
+
+Fig. 4. Comparison of reanalysis data and 1/7 with measured data. (a). The ratio is calculated from the original hourly value in one year. (b). The ratio is calculated
+from the monthly mean value in one year.
+
+
+affected by atmospheric stability. At the same location, low temperature               various climate types when determining the upper-level wind speeds in
+enhances atmospheric stability and reduces vertical convection. This                   a region (Table 4). Most of these α values are larger than 1/7. The results
+results in a more pronounced wind profile and a larger α value. There­                 indicate that climate types with warmer temperatures approximately
+fore, in the ocean, α values are larger at higher latitudes where the                  have higher values. When people obtain a certain α value, they can refer
+temperature is lower [26].                                                             to the data in the two tables to judge the relative level of the used value
+    To correlate with the installation of wind turbines, we also calculated            and the average value in a region.
+the multi-year average α value in different countries, which facilitates
+more accurate and straightforward calculations for assessing the wind
+                                                                                       3.4. Diurnal variability
+power generated by individual wind turbines especially in various small-
+area and flat countries. Table 3 displays the α value for some major
+                                                                                           As there exists difference in the pattern of daytime and nighttime
+countries and regions, which is more convenient to use than gridded
+                                                                                       wind speeds, the diurnal variation of the multi-year mean α value should
+data. From the standpoint of wind turbines, we placed greater emphasis
+                                                                                       be analyzed. This will also provide a reference for the variation in power
+on countries with larger markets, as variation in α value can result in
+                                                                                       generation of wind turbines during the day and night. Due to the large
+greater numerical differences in the calculation of wind power in these
+                                                                                       difference in the surface roughness, the characteristics of the ocean and
+nations. According to WWEA’s country ranking for the global wind
+                                                                                       land need to be distinguished. Fig. 6 shows the hourly α values for global
+turbine market in 2021 (https://wwindea.org/world-market-for-wind-
+                                                                                       ocean and land averages. The global characteristic for diurnal variation
+power-saw-another-record-year-in-2021-973-gigawatt-of-new-capacit
+                                                                                       is that α value is lower during the day than at night. This is mainly due to
+y-added/), China is ranked in the first place with an average α value of
+                                                                                       the large fluctuation of day and night on land, with a variation of about
+0.189, and the second-ranked United States has an average value of
+                                                                                       0.1, greater than 0.2 at night and reduced to about 0.1 during the day.
+0.208. They are both greater than 1/7, which means that when 1/7 is
+                                                                                       While the variation in the ocean is relatively small and stable at about
+used to calculate upper-level wind speeds and wind power, the capacity
+                                                                                       0.07 as the ocean’s near-surface boundary environment is more stable.
+of the two countries with the most wind turbines are underestimated.
+                                                                                       This is because the surface is warmed by solar radiation during the day,
+Average α values for the first ten countries range between 0.18 and 0.25,
+                                                                                       creating unstable conditions. At night, a stable boundary layer forms as
+indicating that the 1/7 parameter calculation method would probably
+                                                                                       vertical mixing is suppressed by a radiative inversion at the surface. The
+result in a significant underestimation when calculating wind power for
+                                                                                       large heat capacity of the ocean causes the sea surface temperature to
+countries with a large installed wind turbine capacity. These errors may
+                                                                                       change little due to solar radiation, resulting in a strong atmospheric
+be minimized by using the data in Table 3 rather than 1/7 for each
+                                                                                       stability and small diurnal variation in α value [26]. Past studies have
+nation.
+                                                                                       also found that the diurnal heating and cooling cycle of air above the
+    We can also use the multi-year average α value which distinguish
+                                                                                       ground affects the diurnal variation of the α value on land, as well as
+
+                                                                                   6
+X. Yang et al.                                                                                                                       Applied Energy 356 (2024) 122441
+
+
+
+
+Fig. 5. Spatial pattern of multi-year average α value calculated from annual, January, and July data on a global scale. (a) The multi-year average α value of the 43
+years. (b) The multi-year average α value in January of the 43 years. (c) The multi-year average α value in July of the 43 years.
+
+
+similar fluctuation characteristics [19]. Result means that using aver­              to the poles, particularly small above 80◦ N, while it increases in the
+ages over land without taking into account diurnal variation will over­              ocean, particularly large between 80◦ S and 90◦ S. The α values from
+estimate daytime upper-level wind speeds and underestimate nighttime                 60◦ N to 60◦ S on land are approximately 0.2 (Fig. 8a), whereas the values
+wind speeds.                                                                         from 30◦ N to 30◦ S in the ocean are approximately 0.05 (Fig. 8b). In
+                                                                                     addition, land and ocean regions close to the poles have values closer to
+                                                                                     1/7. In the two figures, the seasonal variability reflected in each latitude
+3.5. Seasonal variability
+                                                                                     region is not as significant as spatial variation across regions distributed
+                                                                                     by latitude.
+    In addition to spatial variation, temporal variation are important for
+upper-level wind speed estimation at different periods. For example,
+Fig. 7 shows small fluctuations in monthly average values when sepa­                 3.6. Interannual variability
+rating land and ocean areas in the Northern and Southern Hemispheres.
+The trough and peak monthly average α values in the land indicate that α                 If the α value is highly unstable in the utilization of wind turbines, we
+values have opposite fluctuations between the Northern and Southern                  cannot be sure whether the α value we calculated is suitable for use
+Hemispheres as their seasons are opposite, but the correspondence be­                because of the great variability. This indicates that the α value at a given
+tween the opposite peak and trough values in the Northern and Southern               time is frequently quite different from the average calculated from 1980
+Hemispheres in the ocean is slightly misaligned. The fluctuation range is            to 2022 data. Therefore, we must examine the extent to which the α
+approximately 0.01 in each figure except Northern Hemisphere for                     value varies over time. Here, we normalized the interannual variability
+larger fluctuation, from which we can see opposite seasonal variation                of the α value using standard deviation (STD) derived from the hourly
+between the land and ocean in each hemisphere that α values are higher               value over 43 years. Fig. 9 depicts the annual mean, winter, and summer
+in winter on land while higher in summer in the ocean. These charac­                 STD characteristics using the annual average, January, and July data,
+teristics are similar to previous studies, except that studies at regional           respectively. Generally, higher STD values on land are typically associ­
+sites exhibit larger fluctuations [26]. The patterns are because of                  ated with complex topography. For instance, the areas surrounding the
+changes in the atmospheric stability due to temperature changes which                Cordillera Mountains in America and the Qinghai-Xizang Plateau in
+similar to Fig. 6, as well as the monsoon effects. This means that when              Asia. Larger variation in the α value between years may result from wind
+judging the land as a whole, using winter’s α value to calculate upper-              speeds varying with average elevation and terrains in mountainous re­
+level wind speeds will get larger values than using summer’s α value,                gions. Because the wind speeds in different directions are affected by the
+while opposite for the calculation in the ocean.                                     complex topography in different degrees, such as hills and valleys can
+    By distinguishing the spatial area, we can observe both seasonal                 channel winds or block airflow, altering seasonal variation of local wind
+variation and spatial variation. Fig. 8 demonstrates that α value varies             conditions. Therefore, the impacts may differ on an annual basis due to
+with latitudes but with opposite seasonal variation characteristics over             changes in wind flow, resulting in variability in wind shear and profiles
+land and ocean. In the land area, the α value decreases from the equator             represented by α [49]. Besides, the wind speed profile may not conform
+
+                                                                                 7
+X. Yang et al.                                                                                                                        Applied Energy 356 (2024) 122441
+
+
+Table 3
+National multi-year average α value from maximum to minimum for 172 major countries and regions.
+  Countries                          α value     Countries             α value         Countries             α value      Countries                          α value
+  Afghanistan                        0.159       Egypt                 0.170           Liberia               0.206        Saudi Arabia                       0.160
+  Albania                            0.146       El Salvador           0.158           Libya                 0.165        Senegal                            0.205
+  Algeria                            0.166       Equatorial Guinea     0.199           Lithuania             0.230        Sierra Leone                       0.201
+  Angola                             0.220       Eritrea               0.167           Luxembourg            0.227        Slovakia                           0.225
+  Antarctica                         0.143       Estonia               0.217           Macedonia             0.185        Slovenia                           0.221
+  Argentina                          0.206       Ethiopia              0.177           Madagascar            0.205        Solomon Islands                    0.099
+  Armenia                            0.158       Fiji                  0.158           Malawi                0.206        Somalia                            0.158
+  Australia                          0.196       Finland               0.242           Malaysia              0.192        Somaliland                         0.156
+  Austria                            0.215       France                0.221           Mali                  0.188        South Africa                       0.188
+  Azerbaijan                         0.162       Gabon                 0.225           Mauritania            0.168        South Korea                        0.209
+  Bangladesh                         0.208       Gambia                0.209           Mexico                0.172        South Sudan                        0.219
+  Belarus                            0.222       Georgia               0.165           Moldova               0.235        Spain                              0.199
+  Belgium                            0.224       Germany               0.233           Mongolia              0.173        Sri Lanka                          0.186
+  Belize                             0.236       Ghana                 0.214           Montenegro            0.183        Sudan                              0.187
+  Benin                              0.229       Greece                0.155           Morocco               0.159        Suriname                           0.251
+  Bhutan                             0.132       Guatemala             0.187           Mozambique            0.218        Swaziland                          0.208
+  Bolivia                            0.211       Guinea                0.217           Myanmar               0.199        Sweden                             0.244
+  Bosnia and Herzegovina             0.201       Guinea Bissau         0.174           Namibia               0.168        Switzerland                        0.193
+  Botswana                           0.207       Guyana                0.253           Nepal                 0.136        Syria                              0.167
+  Brazil                             0.234       Haiti                 0.103           Netherlands           0.204        Taiwan                             0.163
+  Brunei                             0.170       Honduras              0.213           New Zealand           0.194        Tajikistan                         0.219
+  Bulgaria                           0.207       Hungary               0.232           Nicaragua             0.215        Thailand                           0.217
+  Burkina Faso                       0.227       Iceland               0.190           Niger                 0.179        The Bahamas                        0.068
+  Burundi                            0.167       India                 0.201           Nigeria               0.222        Togo                               0.227
+  Cambodia                           0.217       Indonesia             0.186           North Korea           0.202        Trinidad and Tobago                0.106
+  Cameroon                           0.219       Iran                  0.145           Northern Cyprus       0.189        Tunisia                            0.178
+  Canada                             0.190       Iraq                  0.169           Norway                0.206        Turkey                             0.174
+  Central African Republic           0.229       Ireland               0.227           Oman                  0.144        Turkmenistan                       0.163
+  Chad                               0.186       Israel                0.223           Pakistan              0.162        Uganda                             0.174
+  Chile                              0.152       Italy                 0.166           Palestine             0.171        Ukraine                            0.221
+  China                              0.189       Ivory Coast           0.228           Panama                0.182        United Arab Emirates               0.151
+  Colombia                           0.214       Jamaica               0.146           Papua New Guinea      0.185        United Kingdom                     0.205
+  Costa Rica                         0.156       Japan                 0.197           Paraguay              0.234        United Republic of Tanzania        0.203
+  Croatia                            0.203       Jordan                0.159           Peru                  0.171        United States of America           0.208
+  Cuba                               0.177       Kazakhstan            0.193           Philippines           0.157        Uruguay                            0.213
+  Cyprus                             0.137       Kenya                 0.183           Poland                0.228        Uzbekistan                         0.166
+  Czech Republic                     0.236       Kosovo                0.208           Portugal              0.189        Vanuatu                            0.130
+  Democratic Republic of the Congo   0.231       Kuwait                0.159           Qatar                 0.145        Venezuela                          0.217
+  Denmark                            0.183       Kyrgyzstan            0.154           Republic of Congo     0.238        Vietnam                            0.214
+  Djibouti                           0.161       Laos                  0.231           Republic of Serbia    0.221        Western Sahara                     0.152
+  Dominican Republic                 0.184       Latvia                0.229           Romania               0.218        Yemen                              0.135
+  East Timor                         0.155       Lebanon               0.144           Russia                0.215        Zambia                             0.230
+  Ecuador                            0.178       Lesotho               0.176           Rwanda                0.167        Zimbabwe                           0.215
+
+
+
+to the power law [50]. Similar STD patterns also appear in Jung’s study              land where areas with increasing trends alternate with areas with
+as the STD are generally small [32]. A few higher STD values exist in the            decreasing trends. The black dot in the figure shows that the fitted
+polar regions, but these areas are rarely suitable for the construction of           trend’s p-value is less than 0.05, defined as significant (based on t-test).
+wind turbines. Other regions with smaller STD also exhibit smaller                   Generally, the global gridded trends are not obvious in most regions,
+interannual variation in α value, indicating that these regions have a               which means that for wind energy assessment, it is reliable to use the α
+higher fundamental implication. Further research can concentrate on                  value in a certain past year for future estimations as it does not change
+most of the global regions with α values close to zero, where the analysis           significantly.
+results will be more stable and useful.
+                                                                                     4. Discussion
+
+3.7. Trend of α value                                                                4.1. ERA5 α value and other studies’ results
+
+    The multi-year global average α value is lower than 0.1, with the                    Previous research used the global reanalysis wind speed dataset to
+average α value of roughly 0.168 for global land and 0.064 for ocean in              analyze the power law exponent α value and the influence of wind speed
+Fig. 10. The interannual fluctuation of α value is not obvious compared              on wind energy [32]. Still, their analyses are restrained only to the land
+with diurnal and monthly temporal variation and spatial variation, so                area. In this study, we use the global data and compare the land α values
+here we focused more on the trend. Fig. 10 displays only weak trends in              to be larger than the ocean α values, while the values over the ocean are
+the global, land and ocean mean values, and the trends are not statis­               smaller than 1/7. The obvious difference from our research is that we
+tically significant refer to p-value larger than0.05, which stands for there         first combined the measured data with the ERA5 data for analysis, which
+is no obvious trend when the global mean values are considered.                      is verified by the real value. This makes it more reliable when using
+Although there is no significant trend when calculating the results of the           ERA5 data for global analysis. Similar analyzes in Jung’s study to ours
+entire land or ocean, we need to know if there is a clear trend in some              are presented in Figs. 6 and 10 of this study. From the view of the dis­
+parts of the world. Fig. 11 shows the trends by distinguishing the annual            tribution characteristics of α values on land, Jung’s results are very
+averages, January values and July values. The trend values are indicated             similar to ours. Judging from the standard deviation of the α values, the
+by the slopes derived from linear fitting over the 43 years. Trend values            larger standard deviations of the two studies both appear in places with
+in most parts of the globe are distributed in ±5 × 10− 4, especially on
+
+                                                                                 8
+X. Yang et al.                                                                                                                          Applied Energy 356 (2024) 122441
+
+
+Table 4                                                                                the ocean at a global scale [15,20,26,27,41]. Similar to previous studies,
+Multi-year average α value in different climate types according to the Koppen          our results also show that the α value is smaller in unstable conditions
+climate classification.                                                                (such as mountains) than in stable conditions (such as plains) [19,26].
+  Climate type                                                          α value        Regarding the discussion of terrain in this study, some research use
+  ET Polar-Tundra                                                       0.141
+                                                                                       model simulations and lidar measurements to focus on regional terrain.
+  EF Polar-Frost                                                        0.141          They show that some complex terrains may cause α value anomalies, and
+  Aw Tropical-Savanna                                                   0.219          our study find that such anomalies are common around the globe
+  BSh Arid-Steppe-Hot                                                   0.199          [20,41]. Generally, at the global scale we find that all these features are
+  BWh Arid-Desert-Hot                                                   0.166
+                                                                                       common across the world’s land and ocean. Evaluation from this study
+  Af Tropical-Rainforest                                                0.213
+  Dsa Cold-Dry_Summer-Hot_Summer                                        0.185          and other relevant studies shows regional variation in the α value that
+  Am Tropical-Monsoon                                                   0.226          may be caused by latitude, surface roughness, and topography [43,53].
+  Dwa Cold-Dry_Winter-Hot_Summer                                        0.221          The turbulence intensity and seasonal monsoons may also affect the
+  BSk Arid-Steppe-Cold                                                  0.182          results diversely in the land and ocean areas [54]. Research we refer to
+  Dwb Cold-Dry_Winter-Warm_Summer                                       0.220
+  Dfa Cold-Withouth_dry_season-Hot_Summer                               0.213
+                                                                                       discusses the difference of α value at different wind speeds, which we do
+  Dfb Cold-Withouth_dry_season-Warm_Summer                              0.225          not discuss but is worth studying in wind energy applications [23].
+  Csb Temperate-Dry_Summer-Warm_Summer                                  0.195              Since many related studies in the past are based on regional wind
+  Dfc Cold-Withouth_dry_season-Cold_Summer                              0.220          towers, most of their measured wind speed data are within three years
+  Cfc Temperate-Withouth_dry_season-Cold_Summer                         0.210
+                                                                                       and rarely over 20 years [15,19,20,22,26,27]. Compared with other
+  BWk Arid-Desert-Cold                                                  0.152
+  Cfa Temperate-Withouth_dry_season-Hot_Summer                          0.222          studies using the data at a short temporal scale [21], the multi-year
+  Cfb Temperate-Withouth_dry_season-Warm_Summer                         0.207          monthly, annual, and interannual analyses of the 43-year hourly data
+  Csa Temperate-Dry_Summer-Hot_Summer                                   0.173          rather than several days or years make the characteristics of the α value
+  Dwc Cold-Dry_Winter-Cold_Summer                                       0.219          more accurate and comprehensive. In addition, we found that the STD
+  Dsb Cold-Dry_Summer-Warm_Summer                                       0.213
+                                                                                       values are relatively high on land with greater increasing elevation and
+  Cwa Temperate-Dry_Winter-Hot_Summer                                   0.210
+  Dsc Cold-Dry_Summer-Cold_Summer                                       0.210          mountainous terrain, which has a similar result as the previous research
+  Cwb Temperate-Dry_Winter-Warm_Summer                                  0.192          [32]. As for wind energy assessment, the trends of global wind speed
+  Cwc Temperate-Dry_Winter-Cold_Summer                                  0.126          changes in recent decades are not significant, but the trend of α value
+  Dfa Cold-Withouth_dry_season-Very_Cold_Winter                         0.218
+                                                                                       cannot be neglected [55,56]. Most of the related studies in the past are
+  Dsd Cold-Dry_Summer-Very_Cold_Winter                                  0.213
+  Dwd Cold-Dry_Winter-Very_Cold_Winter                                  0.190          conducted using wind towers or lidar measurements. These studies focus
+                                                                                       on one region and have spatial limitations. Some studies use measured
+                                                                                       data to verify model simulation values, but only two representative
+larger terrain fluctuations. Jung’s further research also quantified the               stations that are close to each other are verified [20]. Our analysis not
+error of wind power density and capacity factor. In this study, however,               only ensures the reliability of the data results, but also gives the results a
+the spatial and temporal variation of α is analyzed in more detail, and                spatial breadth. This is something that many previous studies have failed
+the monthly variation of α is calculated by distinguishing between land                to do using wind towers, radar, remote sensing data, or reanalysis data
+and ocean, and latitudes. We also analyzed the diurnal and interannual                 alone.
+variation of α values separately from land and ocean.
+    It is consistent with previous findings that the ocean α value is about
+                                                                                       4.2. Limitations of the ERA5 results
+0.11 under near-neutral stable conditions, deduced from several site
+data and confirmed by other offshore wind potential research [51,52].
+                                                                                           Such results, however, still have certain limitations in application.
+Our α results have smaller values on the coastal areas compared to wind
+                                                                                       Since each grid in the ERA5 reanalysis data covers a certain spatial
+tower results in another study [21]. The clear differences and opposite
+                                                                                       range, it is not an exact location. Therefore, if the wind energy output at
+monthly changes in α values between land and ocean are in agreement
+                                                                                       a specific location is considered, the result calculated using the α value
+with previous studies [26]. In our study, α values on land are smaller in
+                                                                                       of ERA5 will not be as accurate as the one using a wind tower data
+summer and larger in winter, this feature also appears in many studies
+                                                                                       especially in coastal and mountainous terrain [49,57]. Nevertheless,
+based on regional measurements [14,21,22,26,27,41]. In some studies,
+                                                                                       wind power calculations at a specific location are only required when
+the diurnal variation of α values is characterized by being smaller during
+                                                                                       wind turbine companies are considering the precise location at which
+the day and larger at night. This phenomenon also appears in our study,
+                                                                                       the turbine will be built. Usually, relevant authorities need to conduct a
+and we find that such characteristic is more significant on land than in
+                                                                                       comprehensive assessment of a region’s wind resources, which is the
+
+
+
+
+Fig. 6. Diurnal variation of α value. Global land raster data is used to separate the land and ocean areas. The local time is based on UTC time zone. Buffer areas refer
+to the 12 interannual monthly mean value in every hour during 1980–2022. (a) Global averaged α value in each hour. (b) Global land averaged α value in each hour.
+(c) Global ocean averaged α value in each hour.
+
+                                                                                   9
+X. Yang et al.                                                                                                                      Applied Energy 356 (2024) 122441
+
+
+
+
+Fig. 7. Seasonal variation of α value in land and ocean in the Northern and Southern Hemispheres. (a) is the land mean α value in North and South Hemisphere
+differentiated over the 12 months. (b) is the ocean mean α value in Northern and Southern Hemisphere differentiated over the 12 months.
+
+
+
+
+                 Fig. 8. The seasonal and latitudinal variation of α value. Global land raster data is used to separate the land and ocean areas.
+
+
+situation for which the global results of this study apply. As the temporal         5. Conclusion
+and spatial resolution of such global reanalyzed wind speed data im­
+proves, the α results associated with this study will also become more                  In this study, we first verified the characteristics of the power law of
+accurate especially in complex terrain.                                             the wind profile by using the anemometer wind tower data located in
+    When calculating α, the ERA5 α is calculated directly using the two             China. Our findings confirmed that, the power law is appliable at
+heights of 10 m and 100 m, which will bring errors. These errors arise              different time scales and spatial ranges. And there are obvious differ­
+from variation in the height ranges utilized and variation in the number            ences between the power law exponent and 1/7. Then we compared the
+and intervals of adjacent heights employed (a challenge inherent in                 measured data and reanalysis data, which regional verification can serve
+tower α as well). A study investigated α values within three height                 as a reliability for global research using ERA5 data. This comparison
+ranges spanning 10 m to 80 m using a meteorological tower. Different                provided compelling evidence regarding the importance and reliability
+ranges imply discrepancies in the number of heights considered and the              of using ERA5 reanalysis data to analyze the power law exponent α.
+height intervals used, especially including the 10 m wind speed. This               Afterwards, we used reanalysis data from ERA5 to determine the global
+variation stems from the heightened atmospheric instability near the                power law exponent, after validating the power law with measured data
+ground [19]. Due to data constraints, our calculations are limited to two           obtained from wind towers. This approach allowed us to establish a
+heights. In the absence of such constraints, we would prefer utilizing as           comprehensive characterization of the power law exponent on a global
+many heights as possible to mitigate errors, akin to the approach taken             scale. On the temporal scale, we distinguished the diurnal, monthly and
+with wind tower data.                                                               annual average data, and then analyzed the average value, STD and
+    In addition, when we use wind tower data to compare and verify the              trend of the power law exponent α. On the spatial scale, we categorized
+ERA5 results, all wind towers are located in China due to difficulties in           the data into land, ocean, and different latitudes for a comprehensive
+obtaining data. This only shows that the ERA5 results are reliable at               analysis of the global characteristic of α.
+these locations, not a global validation. In the future, we hope to expand              The α value exhibits varying degrees of spatiotemporal variation
+the location of measurement around the world and conduct global                     across different scales of analysis scenarios. Generally, α values on land
+verification of α value.                                                            are mainly larger than 1/7, while values in the ocean are generally
+
+
+                                                                               10
+X. Yang et al.                                                                                                                           Applied Energy 356 (2024) 122441
+
+
+
+
+Fig. 9. Spatial pattern of the standard variation (STD) of α value. (a) STD of α value of the 43 years. (b) STD of α value in January of the 43 years. (c) STD of α value
+in July of 43 years.
+
+
+
+
+Fig. 10. Time series of α value. (a)-(c) are the interannual average α value data of the globe, land, and ocean areas. Red lines show their trends fitted by least square
+linear regression, and p-value based on t-test. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of
+this article.)
+
+
+smaller than 1/7. The results illustrate a gradual decrease in the α value                  Our results show significant spatiotemporal variation in the α value
+from the equator to the poles on land, while in the ocean, it exhibits an               across different regions of the globe. Furthermore, the α value obtained
+increase. Additionally, the α value shows significant diurnal variation as              from the measured data also differs from the uniformly used 1/7 and
+it is lower in the daytime while higher at night on land. In contrast, the α            reanalysis data to varying degrees at specific locations. This highlights
+value remains relatively stable in the ocean throughout the day. From                   the importance of focusing on local regions when studying wind energy
+the average seasonal fluctuation, the α value on land tends to increase                 production suitability in future research endeavors. For example, it is
+from summer to winter and then decrease from winter to summer.                          worth analyzing most parts of North China, some coastal areas in East
+Conversely, over the ocean, the variation pattern is reversed. For the                  China, and part of the Qinghai-Xizang Plateau, which are abundant in
+STD values, the results are relevant to the terrains which vary with re­                wind energy resources [58]. According to our results in these areas, the
+gions. Globally, areas with increasing and decreasing trends appear                     significant decrease of the α value and increase of the STD value will
+staggered, although most of them are not statistically significant. These               affect the evaluation of wind energy before the construction of wind
+observations suggest that diurnal, seasonal, and spatial variation pro­                 turbines. Therefore, careful consideration of these variation is crucial to
+vide more meaningful insights than year-to-year changes in the α value                  ensure accurate evaluations of wind energy potential in these regions. In
+data.                                                                                   areas with high α values on land at low latitudes, wind speeds may be
+
+
+                                                                                   11
+X. Yang et al.                                                                                                                              Applied Energy 356 (2024) 122441
+
+
+
+
+Fig. 11. Spatial pattern of the trend in α value. (a) The trend of α value of the 43 years. (b) The trend of α value in January of the 43 years. (c) The trend of α value in
+July of the 43 years. The black dot shows the least squares linear fitted trend’s p-value less than 0.05 that based on t-test, defined as significant.
+
+
+low at lower heights but increase significantly at higher heights. This                  CRediT authorship contribution statement
+characteristic suggests that such regions could be suitable for wind en­
+ergy development, considering the potential for harnessing stronger                         Xinrong Yang: Writing – review & editing, Writing – original draft,
+winds at greater heights. Another example is the value of α in offshore is               Methodology, Investigation. Xin Jiang: Writing – original draft, Meth­
+smaller than that on land while the wind speed offshore is larger than                   odology. Shijing Liang: Writing – review & editing, Writing – original
+onshore that has abundant wind energy [59,60], which may affect the                      draft, Methodology. Yingzuo Qin: Resources, Methodology. Fan Ye:
+evaluation of the optimal construction height of offshore wind turbines.                 Resources, Funding acquisition. Bin Ye: Writing – review & editing,
+In short, using global reanalysis data for a large-scale assessment facil­               Methodology. Jiayu Xu: Writing – review & editing. Xinyue He:
+itates a comprehensive approach to wind energy utilization research.                     Writing – review & editing. Jie Wu: Writing – review & editing. Tia­
+The subsequent study will also conduct a more detailed assessment of                     nyun Dong: Writing – review & editing. Xitian Cai: Writing – review &
+local areas that need wind energy development, such as the influence of                  editing, Supervision, Methodology. Rongrong Xu: Writing – review &
+different topography on wind speed variation [15].                                       editing, Resources, Methodology. Zhenzhong Zeng: Writing – review &
+    Such global-scale α value study can provide a better α reference value               editing, Writing – original draft, Resources, Funding acquisition,
+for using power law to obtain upper-level wind speed anywhere in the                     Conceptualization.
+world, which cannot be provided by previous regional studies. At the
+same time, our improved estimations of the power law exponent α can
+be applied by renewable energy developers to assess wind energy po­                      Declaration of Competing Interest
+tential at specific locations more accurately. More precise calculations of
+wind turbine energy production can reduce uncertainties in feasibility                       The authors declare that they have no known competing financial
+studies and allow optimized design of wind farms. Moreover, climatol­                    interests or personal relationships that could have appeared to influence
+ogists and atmospheric scientists can gain new insights into boundary                    the work reported in this paper.
+layer dynamics from the global maps and long-term α. The spatiotem­
+poral variation reflect impacts of large-scale modes of climate variability              Data availability
+and change, as well as regional weather systems and circulation pat­
+terns. The reanalysis-based α dataset provides a unique perspective for                     Data will be made available on request.
+studies on the effects of climate change on near-surface wind fields on a
+large spatial scale. To facilitate subsequent wind energy-related
+                                                                                         Acknowledgements
+research, we will make the data of the global α value with temporal
+and spatial variation calculated by ERA5 public, and readers can access
+                                                                                             This study was supported by the National Natural Science Founda­
+the data in the following doi: 10.57760/sciencedb.10067.
+                                                                                         tion of China (grants no. 42071022 and no. 72173058), Guangdong
+                                                                                         Basic and Applied Basic Research Foundation (n.o. 2022A1515240070)
+                                                                                         the start-up fund provided by Southern University of Science and
+                                                                                         Technology (no. 29/Y01296122).
+
+                                                                                    12
+X. Yang et al.                                                                                                                                        Applied Energy 356 (2024) 122441
+
+
+Appendix A. Supplementary data                                                                  [26] He JY, Chan PW, Li QS, Lee CW. Characterizing coastal wind energy resources
+                                                                                                     based on sodar and microwave radiometer observations. Renew Sustain Energy
+                                                                                                     Rev 2022;163. https://doi.org/10.1016/j.rser.2022.112498.
+   Supplementary data to this article can be found online at https://doi.                       [27] Li JL, Wang XF, Yu X. Use of spatio-temporal calibrated wind shear model to
+org/10.1016/j.apenergy.2023.122441.                                                                  improve accuracy of wind resource assessment. Appl Energy 2018;213:469–85.
+                                                                                                     https://doi.org/10.1016/j.apenergy.2018.01.063.
+                                                                                                [28] Zheng CW, Pan J. Assessment of the global ocean wind energy resource. Renew
+References                                                                                           Sustain Energy Rev 2014;33:382–91. https://doi.org/10.1016/j.rser.2014.01.065.
+                                                                                                [29] Gadad S, Deka PC. Offshore wind power resource assessment using Oceansat-2
+ [1] UNFCCC. The Paris Agreement. Available online: https://unfccc.int/process-and-                  scatterometer data at a regional scale. Appl Energy 2016;176:157–70. https://doi.
+     meetings/the-paris-agreement/the-paris-agreement; 2015.                                         org/10.1016/j.apenergy.2016.05.046.
+ [2] Global Wind Energy Council. Global wind report 2019. 2019.                                 [30] Borvaran D, Pena A, Gandoin R. Characterization of offshore vertical wind shear
+ [3] Mohammadi K, Alavi O, Mostafaeipour A, Goudarzi N, Jalilvand M. Assessing                       conditions in southern New England. Wind Energy 2021;24(5):465–80. https://
+     different parameters estimation methods of Weibull distribution to compute wind                 doi.org/10.1002/we.2583.
+     power density. Energy Convers Manag 2016;108:322–35. https://doi.org/                      [31] Tong D, Farnham DJ, Duan L, Zhang Q, Lewis NS, Caldeira K, et al. Geophysical
+     10.1016/j.enconman.2015.11.015.                                                                 constraints on the reliability of solar and wind power worldwide. Nat Commun
+ [4] DTU. Global Wind Atlas. Available online: https://globalwindatlas.info/en/; 2023.               2021;12(1). https://doi.org/10.1038/s41467-021-26355-z.
+ [5] Kelly M, Gryning SE. Long-term mean wind profiles based on similarity theory.              [32] Jung C, Schindler D. The role of the power law exponent in wind energy
+     Bound-Layer Meteorol 2010;136(3):377–90. https://doi.org/10.1007/s10546-                        assessment: a global analysis. Int J Energy Res 2021;45(6):8484–96. https://doi.
+     010-9509-9.                                                                                     org/10.1002/er.6382.
+ [6] Sorbjan Z. Assessment of gradient-based similarity functions in the stable boundary        [33] Baas P, Bosveld FC, Baltink HK, Holtslag AAM. A climatology of nocturnal low-
+     layer derived from a large-Eddy simulation. Bound-Layer Meteorol 2017;163(3):                   level jets at Cabauw. J Appl Meteorol Climatol 2009;48(8):1627–42. https://doi.
+     375–92. https://doi.org/10.1007/s10546-017-0234-5.                                              org/10.1175/2009jamc1965.1.
+ [7] Gualtieri G. A comprehensive review on wind resource extrapolation models                  [34] Nezhad MM, Heydari A, Neshat M, Keynia F, Piras G, Garcia DA. A Mediterranean
+     applied in wind energy. Renew Sustain Energy Rev 2019;102:215–33. https://doi.                  Sea offshore wind classification using MERRA-2 and machine learning models.
+     org/10.1016/j.rser.2018.12.015.                                                                 Renew Energy 2022;190:156–66. https://doi.org/10.1016/j.renene.2022.03.110.
+ [8] Sharma PK, Warudkar V, Ahmed S. Effect of atmospheric stability on the wind                [35] Hersbach H, et al. The ERA5 global reanalysis. Q J R Meteorol Soc 2020;146(730):
+     resource extrapolating models for large capacity wind turbines: a comparative                   1999–2049. https://doi.org/10.1002/qj.3803.
+     analysis of power law, log law. In: Deaves and Harris Model, Paper Presented at            [36] Ramon J, Lledó L, Torralba V, Soret A, Doblas-Reyes FJ. What global reanalysis
+     10th International Conference on Applied Energy (ICAE), Hong Kong, Aug 22-25;                   best represents near-surface winds? Q J R Meteorol Soc 2019;145(724):3236–51.
+     2018.                                                                                           https://doi.org/10.1002/qj.3616.
+ [9] Touma JS. Dependence of the wind profile power law on stability for various                [37] Dullaart JCM, Muis S, Bloemendaal N, Aerts J. Advancing global storm surge
+     locations. J Air Pollut Control Assoc 1977;27(9):863–6. https://doi.org/10.1080/                modelling using the new ERA5 climate reanalysis. Clim Dyn 2020;54(1–2):
+     00022470.1977.10470503.                                                                         1007–21. https://doi.org/10.1007/s00382-019-05044-0.
+[10] Lu L, Yang HX, Burnett J. Investigation on wind power potential on Hong Kong               [38] Hayes L, Stocks M, Blakers A. Accurate long-term power generation model for
+     islands - an analysis of wind power and wind turbine characteristics. Renew Energy              offshore wind farms in Europe using ERA5 reanalysis. Energy 2021;229. https://
+     2002;27(1):1–12. https://doi.org/10.1016/s0960-1481(01)00164-1.                                 doi.org/10.1016/j.energy.2021.120603.
+[11] Tizpar A, Satkin M, Roshan MB, Armoudli Y. Wind resource assessment and wind               [39] Barnéoud P, Ek N. On the application of linear regression to surface-layer wind
+     power potential of mil-E Nader region in Sistan and Baluchestan Province, Iran –                profiles for deducing roughness length and friction velocity. Bound-Layer Meteorol
+     part 1: annual energy estimation. Energy Convers Manag 2014;79:273–80. https://                 2020;174(2):327–39. https://doi.org/10.1007/s10546-019-00479-8.
+     doi.org/10.1016/j.enconman.2013.10.004.                                                    [40] Gualtieri G. Wind resource extrapolating tools for modern multi-MW wind
+[12] Boopathi K, Kushwaha R, Balaraman K, Bastin J, Kanagavel P, Reddy Prasad DM.                    turbines: comparison of the Deaves and Harris model vs. the power law. J Wind
+     Assessment of wind power potential in the coastal region of Tamil Nadu. India                   Eng Ind Aerodyn 2017;170:107–17. https://doi.org/10.1016/j.jweia.2017.08.007.
+     Ocean Eng 2021;219. https://doi.org/10.1016/j.oceaneng.2020.108356.                        [41] Xu C, Hao CY, Li LM, Han XX, Xue FF, Sun MW, et al. Evaluation of the power-law
+[13] Belabes B, Youcefi A, Guerri O, Djamai M, Kaabeche A. Evaluation of wind energy                 wind-speed extrapolation method with atmospheric stability classification methods
+     potential and estimation of cost using wind energy turbines for electricity                     for flows over different terrain types. Appl Sci Basel 2018;8(9). https://doi.org/
+     generation in north of Algeria. Renew Sust Energ Rev 2015;51:1245–55. https://                  10.3390/app8091429.
+     doi.org/10.1016/j.rser.2015.07.043.                                                        [42] Bushnell MW, Helen. Manual for real-time quality control of wind data: a guide to
+[14] Sumair M, Aized T, Gardezi SAR. Extrapolation of wind data using generalized                    quality control and quality assurance for coastal and oceanic wind observations.
+     versus site-specific wind power law for wind power production prospective at                    2017. https://doi.org/10.7289/V5FX77NH.
+     Shahbandar- a coastal site in Pakistan. Energy Explor Exploit 2020;39(6):2240–56.          [43] Yu R, Li J, Chen H. Diurnal variation of surface wind over central eastern China.
+     https://doi.org/10.1177/0144598720952507.                                                       Clim Dyn 2008;33(7–8):1089–97. https://doi.org/10.1007/s00382-008-0478-3.
+[15] Lopez-Villalobos CA, Martinez-Alvarado O, Rodriguez-Hernandez O, Romero-                   [44] Li YLHGL. Characteristics of wind turbulence near the boundary layer in three-
+     Centeno R. Analysis of the influence of the wind speed profile on wind power                    north regions of China. IOP Conference Series. Earth and Environmental Science;
+     production. Energy Rep 2022;8:8079–92. https://doi.org/10.1016/j.                               2019.
+     egyr.2022.06.046.                                                                          [45] Pryor SC, Barthelmie RJ. A global assessment of extreme wind speeds for wind
+[16] Hopuare M, Manni T, Laurent V, Maamaatuaiahutapu K. Investigating wind energy                   energy applications. Nat Energy 2021;6(3):268–76. https://doi.org/10.1038/
+     potential in Tahiti, French Polynesia. Energies 2022;15(6). https://doi.org/                    s41560-020-00773-7.
+     10.3390/en15062090.                                                                        [46] Zhou SH, Yang YJ, Gao ZQ, Xi XY, Duan ZX, Li YB. Estimating vertical wind power
+[17] Hahmann AN, Garcia-Santiago O, Pena A. Current and future wind energy                           density using tower observation and empirical models over varied desert steppe
+     resources in the North Sea according to CMIP6. Wind Energy Sci 2022;7(6):                       terrain in northern China. Atmos Meas Tech 2022;15(3):757–73. https://doi.org/
+     2373–91. https://doi.org/10.5194/wes-7-2373-2022.                                               10.5194/amt-15-757-2022.
+[18] Kwon S-D. Uncertainty analysis of wind energy potential assessment. Appl Energy            [47] He FL, Xu Q, Wang N, Zhu CH. A method to obtain the wind field characteristics of
+     2010;87(3):856–65. https://doi.org/10.1016/j.apenergy.2009.08.038.                              super-large aperture radio telescope site based on single-point wind tower and
+[19] Gualtieri G. Atmospheric stability varying wind shear coefficients to improve wind              numerical simulation. Res Astron Astrophys 2020;20(12). https://doi.org/
+     resource extrapolation: a temporal analysis. Renew Energy 2016;87:376–90.                       10.1088/1674-4527/20/12/199.
+     https://doi.org/10.1016/j.renene.2015.10.034.                                              [48] Gualtieri G. Reliability of ERA5 reanalysis data for wind resource assessment: a
+[20] Crippa P, Alifa M, Bolster D, Genton MG, Castruccio S. A temporal model for                     comparison against tall towers. Energies 2021;14(14). https://doi.org/10.3390/
+     vertical extrapolation of wind speed and wind energy assessment. Appl Energy                    en14144169.
+     2021;301. https://doi.org/10.1016/j.apenergy.2021.117378.                                  [49] Mahmoud EM, Almallahi, Ashraf Abdelkhalig, Mohamed YE Selim. A review of
+[21] Albani A, Ibrahim M. Wind energy potential and power law indexes assessment for                 wind turbines in complex terrain. Int J Therm 2023. https://doi.org/10.1016/j.
+     selected near-coastal sites in Malaysia. ENERGIES 2017;10(3). https://doi.org/                  ijft.2023.100289.
+     10.3390/en10030307.                                                                        [50] Zhang MJ, Zhang JX, Jiang FY, Wu LH, Qin JX, Li YL. Combined wind profile
+[22] Tieo J-J, Skote M, Srikanth N. Suitability of power-law extrapolation for wind                  characteristics based on wind parameters joint probability model in a mountainous
+     speed estimation on a tropical island. J Wind Eng Ind Aerodyn 2020;205. https://                gorge. Nat Hazards 2023;115(1):709–33. https://doi.org/10.1007/s11069-022-
+     doi.org/10.1016/j.jweia.2020.104317.                                                            05571-w.
+[23] Gomez MS, Lundquist JK. The effect of wind direction shear on turbine                      [51] Hsu SA, Meindl EA, Gilhousen DB. Determining the power-law wind-profile
+     performance in a wind farm in Central Iowa. Wind Energy Sci 2020;5(1):125–39.                   exponent under near-neutral stability conditions at sea. J Appl Meteorol 1994;33
+     https://doi.org/10.5194/wes-5-125-2020.                                                         (6):757–65. https://doi.org/10.1175/1520-0450(1994)033<0757:Dtplwp>2.0.
+[24] Pena A, Floors R, Gryning SE. The Hovsore tall wind-profile experiment: a                       Co;2.
+     description of wind profile observations in the atmospheric boundary layer. Bound-         [52] Shu ZR, Li QS, Chan PW. Investigation of offshore wind energy potential in Hong
+     Layer Meteorol 2014;150(1):69–89. https://doi.org/10.1007/s10546-013-9856-4.                    Kong based on Weibull distribution function. Appl Energy 2015;156:362–73.
+[25] Shu ZR, Li QS, He YC, Chan PW. Observations of offshore wind characteristics by                 https://doi.org/10.1016/j.apenergy.2015.07.027.
+     Doppler-LiDAR for wind energy applications. Appl Energy 2016;169:150–63.                   [53] Bañuelos-Ruedas F, Angeles-Camacho C, Rios-Marcuello S. Analysis and validation
+     https://doi.org/10.1016/j.apenergy.2016.01.135.                                                 of the methodology used in the extrapolation of wind speed data at different
+
+
+
+
+                                                                                           13
+X. Yang et al.                                                                                                                                            Applied Energy 356 (2024) 122441
+
+     heights. Renew Sust Energ Rev 2010;14(8):2383–91. https://doi.org/10.1016/j.                   [57] Gualtieri G. Analysing the uncertainties of reanalysis data used for wind resource
+     rser.2010.05.001.                                                                                   assessment: a critical review. Renew Sustain Energy Rev 2022;167. https://doi.
+[54] R K, K U, Raju K, Madurai Elavarasan R, Mihet-Popa L. An assessment of onshore                      org/10.1016/j.rser.2022.112741.
+     and offshore wind energy potential in India using moth flame optimization.                     [58] Liu F, Sun F, Liu W, Wang T, Wang H, Wang X, et al. On wind speed pattern and
+     Energies 2020;13(12). https://doi.org/10.3390/en13123063.                                           energy potential in China. Appl Energy 2019;236:867–76. https://doi.org/
+[55] Tian Q, Huang G, Hu KM, Niyogi D. Observed and global climate model based                           10.1016/j.apenergy.2018.12.056.
+     changes in wind power potential over the northern hemisphere during 1979-2016.                 [59] Lange B, Larsen S, Højstrup J, Barthelmie R. Importance of thermal effects and sea
+     Energy 2019;167:1224–35. https://doi.org/10.1016/j.energy.2018.11.027.                              surface roughness for offshore wind resource assessment. J Wind Eng Ind Aerodyn
+[56] Zeng ZZ, et al. A reversal in global terrestrial stilling and its implications for wind             2004;92(11):959–88. https://doi.org/10.1016/j.jweia.2004.05.005.
+     energy production. Nat Clim Chang 2019;9(12):979–85. https://doi.org/10.1038/                  [60] Li Y, Huang X, Tee KF, Li Q, Wu X-P. Comparative study of onshore and offshore
+     s41558-019-0622-6.                                                                                  wind characteristics and wind energy potentials: a case study for southeast coastal
+                                                                                                         region of China. Sustain Energy Technol Assess 2020;39. https://doi.org/10.1016/
+                                                                                                         j.seta.2020.100711.
+
+
+
+
+                                                                                               14
+

@@ -1,0 +1,748 @@
+                                                                           Structures 68 (2024) 107235
+
+
+                                                                   Contents lists available at ScienceDirect
+
+
+                                                                                 Structures
+                                                       journal homepage: www.elsevier.com/locate/structures
+
+
+
+
+Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind
+turbine tower based on adaptive vibration mode
+Yu Cheng a,b , Liang Cao c,d,*, Jiepeng Liu a,b, Yuhang Wang a,b, Xuhong Zhou a,b
+a
+  School of Civil Engineering, Chongqing University, Chongqing 400045, China
+b
+  Key Laboratory of New Technology for Construction of Cities in Mountain Area (Ministry of Education), Chongqing University, Chongqing 400045, China
+c
+  College of Civil Engineering, Hunan University, Changsha 410082, China
+d
+  Key Laboratory for Damage Diagnosis of Engineering Structures of Hunan Province, Hunan University, Changsha 410082, China
+
+
+
+
+A R T I C L E I N F O                                     A B S T R A C T
+
+Keywords:                                                 The steel-concrete wind turbine hybrid tower addresses the high flexibility and transportation difficulties
+Steel-concrete hybrid wind turbine tower                  associated with traditional steel towers, making it increasingly popular in onshore low-wind-speed wind farms.
+Natural frequency                                         Accurate analysis of dynamic characteristics plays an important role in the design of wind turbine tower
+Adaptive vibration mode
+                                                          structures. The vibration governing equation for the hybrid tower was derived using the principle of virtual
+Intelligent analysis
+Rotor-nacelle assembly (RNA)
+                                                          displacement and the generalized coordinates method, considering the mass eccentricity and moment of inertia
+                                                          of the rotor-nacelle assembly, variable cross-sections of the tower, and prestress. An adaptive vibration mode for
+                                                          the hybrid tower was constructed, and an intelligent optimization algorithm was employed to solve the natural
+                                                          frequencies. A refined finite element model was developed using ABAQUS software to predict the natural fre­
+                                                          quencies and vibration modes of the hybrid tower, validating the reliability of the intelligent analysis approach.
+                                                          Moreover, the impact of different simplified rotor-nacelle assembly models on the natural frequencies of the
+                                                          hybrid tower was explored, revealing that models neglecting moments of inertia overestimate structural natural
+                                                          frequencies, particularly for higher modes. Finally, the feature importance of various geometric dimensions of
+                                                          the tower was assessed employing a machine learning model, and parametric analysis of the geometric di­
+                                                          mensions was conducted. The results show that tower height, proportion of concrete tower segment height, and
+                                                          bottom diameter of concrete tower segment are critical factors influencing the natural frequencies.
+
+
+
+
+1. Introduction                                                                                induce resonance issues and are difficult to manufacture and transport,
+                                                                                               severely limiting the advancement of wind power. Steel-concrete wind
+    With the continuous development of the global economy and the                              turbine hybrid tower emerges as an innovative solution, featuring a
+increasing consumption of energy, traditional energy sources such as                           conical concrete lower section, a concrete transition segment in the
+coal, oil, and natural gas are facing supply shortages. Consequently, the                      middle, and a traditional steel upper section. Vertical prestress is applied
+development of new renewable energy sources has become a critical                              to the concrete using external prestressed steel strands, as shown in
+strategic demand for many countries. Wind power, as a clean and effi­                          Fig. 1. This hybrid tower combines the advantages of both concrete and
+cient renewable energy source, can effectively address energy con­                             steel towers, offering high load-bearing capacity, excellent stability, and
+sumption concerns. At present, many countries around the world are                             ease of transportation and construction, which makes it particularly
+vigorously developing wind power, with installed capacity increasing                           suitable for the construction of tall wind farms [5–8]. In recent years,
+year by year [1–3].                                                                            hybrid towers have been widely applied to wind turbines with hub
+    To achieve higher power output, wind turbines are being developed                          heights exceeding 100 m in low-wind speed regions [9].
+towards larger scales. The increasing length of wind turbine blades and                            Wind turbines will experience significant vibrations under wind
+the height of support structures pose new and significant challenges to                        loads and their own vibration loads. When the operational frequency of
+the mechanical performance and economic feasibility of wind turbine                            the wind turbine approaches the natural frequency of the overall
+towers [4]. For hub heights exceeding 100 m, traditional steel towers                          structure, resonance occurs, which can affect the performance of the
+
+
+
+    * Corresponding author at: College of Civil Engineering, Hunan University, Changsha 410082, China.
+      E-mail address: liangcao@hnu.edu.cn (L. Cao).
+
+https://doi.org/10.1016/j.istruc.2024.107235
+Received 30 June 2024; Received in revised form 15 August 2024; Accepted 3 September 2024
+Available online 10 September 2024
+2352-0124/© 2024 Institution of Structural Engineers. Published by Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and
+similar technologies.
+Y. Cheng et al.                                                                                                                     Structures 68 (2024) 107235
+
+
+wind turbine and even lead to structural failure. To avoid resonance              mechanism and serves as a supplementary method to validate the ac­
+between the tower and the wind turbine, the first-order frequency of the          curacy of numerical results. Analytical solutions of natural frequencies
+tower should steer clear of the ± 10 % range of the wind turbine rota­            are useful for preliminary tower design, avoiding the need for repetitive
+tional frequency f1p and the blade passing frequency f3p. Wind turbine            numerical modeling and enhancing design efficiency. Vugst [18] and
+towers are generally designed with three strategies: the stiff-stiff strat­       Tempel [19] treated tower structures as cantilever beams, with nacelles
+egy with natural frequencies greater than 1.1 f3p, the soft-stiff strategy        and wind rotors equivalent to concentrated masses at the top, deriving
+with natural frequencies between 1.1 f1p and 0.9 f3p, and the soft-soft           analytical formulas for natural frequencies based on structural dynamics
+strategy with natural frequencies less than 0.9f1p [10,11]. Therefore,            principles. Yang et al. [20] employed the Rayleigh method and the
+precise analysis of the dynamic characteristics of wind turbine tower             Lagrange equation to calculate natural frequencies of single pile offshore
+structures is crucial to ensure their safe and effective operation.               wind turbine pure steel tower, demonstrating that tower height, base
+    Currently, research on the natural frequencies of wind turbine towers         diameter, wall thickness, pile diameter, and length are significant fac­
+primarily involves analytical calculations and numerical simulations. In          tors influencing natural frequencies in offshore wind turbine structures.
+terms of numerical simulations, Tian et al. [12] treated the wind turbine         Lei et al. [21] considered the effects of wind turbine mass and eccen­
+rotor, nacelle, and flange as equivalent mass points, and utilized shell          tricity, deriving analytical methods for calculating natural frequencies
+elements to construct a finite element (FE) model of the tower structure          for steel tower using energy methods. Huang et al. [22] obtained the
+for natural frequency calculations, validated through experimental                natural frequencies of steel-concrete hybrid towers by solving free vi­
+verification of computational accuracy. Alkhoury et al. [13] used point           bration equations, and analyzed their correlation with geometric di­
+masses and beam elements to construct a nacelle model, studying the               mensions. Zhang et al. [23] used flexibility matrices to calculated
+characteristic modes and frequencies of the wind turbine structure. Cao           natural frequencies of precast concrete towers and studied the impact of
+et al. [14] adopted shell elements to develop a detailed FE model of a            top concentrated mass as well as precast segmental thickness on struc­
+monopile-tower-blade system, considering soil reactions, wind-wave                tural dynamic characteristics. Li et al. [24] employed the Rayleigh-Ritz
+combinations. Shi et al. [15] investigated the impact of four different           method to establish frequency equations for steel-concrete hybrid
+simplified rotor-nacelle assembly (RNA) models on the characteristic              towers, systematically considering turbine mass, rotational inertia,
+frequencies and seismic responses of offshore wind turbine structures,            elastic foundation stiffness, and prestress effects on structural natural
+finding that simplified RNA models will affect higher-order modes. Lana           frequencies. However, top wind turbines have large moment of inertia
+et al. [17] established a solid model of a prestressed concrete tower to          and their center of mass deviates from the tower axis. Scholars often
+calculate the first five natural frequencies and modes, and optimized the         simplify top units into concentrated mass point, neglecting rotational
+shape and dimensions of the hybrid tower using a genetic algorithm.               inertia, mass eccentricity, and asymmetric effects in two directions on
+Kenna et al. [16] created a detailed FE model of a prestressed concrete           overall structural natural frequencies. Additionally, the accuracy of
+tower using two-dimensional continuum shell elements and                          energy method solutions for tower natural frequencies depends on the
+one-dimensional beam elements, exploring the impact of prestress                  selection of mode shapes, and conventional mode shape constructions
+design and concrete compressive strength on tower stiffness. Although             often struggle to meet engineering accuracy requirements.
+detailed FE models can accurately determine the natural frequencies of                The structural configuration and mechanical features of a steel-
+wind turbine towers, the modeling workload is substantial, making it              concrete hybrid tower are relatively complex, with abrupt changes in
+unsuitable for simplified and rapid calculations during the early design          tower cross-sections at the transition segment. As wind turbines trend
+stages of the towers.                                                             towards larger scales, the impact of top unit rotational inertia and mass
+    Analytical calculation of tower natural frequencies offers a clear            eccentricity on structural natural frequencies becomes significant and
+
+
+
+
+                                                     Fig. 1. Steel-concrete hybrid wind turbine tower.
+
+                                                                              2
+Y. Cheng et al.                                                                                                                       Structures 68 (2024) 107235
+
+
+cannot be ignored. After considering numerous influencing factors, the             coordinates u and v represent the lateral directions of the tower, while x
+challenge lies in selecting appropriate mode shapes for solving the                represents the longitudinal coordinate. The heights of the concrete
+natural frequencies of hybrid tower structures. Currently, research on             tower segment, transition segment, and steel tower segment are denoted
+the vibration characteristics of steel-concrete hybrid towers is in its            as hc, ht, and hs, respectively, with the total height of the tower being H.
+initial stages, with theoretical studies lacking sufficient depth to meet          At any height x of the tower, the cross-section is annular, with diameter
+engineering practical needs.                                                       D(x) and wall thickness t(x). The intersection point W of the line con­
+    Considering the influence of wind turbine mass eccentricity, moment            necting the nacelle and rotor center of gravity with the tower axis is at a
+inertia, and prestress in concrete tower segments, the differential                distance a from the top of the tower. The masses of the nacelle and rotor
+equation governing the free vibration of hybrid towers is derived based            are mN and mR, respectively. The rotational inertias of the nacelle about
+on the principle of virtual displacement and the adaptive mode shapes,             the u and v axes are JNu and JNv, while those of the rotor are JRu and JRv.
+and natural frequencies are solved using a combination of the energy               The centroids of the nacelle and rotor are eccentrically located only in
+method and intelligent optimization algorithm. A refined FE model of               the u direction, with eccentric distances ΔN and ΔR, respectively.
+hybrid towers in ABAQUS was developed, validating the reliability of
+proposed analytical solutions. The feature importance of the geometric
+                                                                                   2.2. Virtual work analysis
+dimensions of the hybrid tower was analyzed based on machine learning
+model, and parameter analysis was conducted on the selected features,
+                                                                                       The governing equation for steel-concrete hybrid tower is estab­
+aiming to provide design guidelines for the engineering application of
+                                                                                   lished based on the virtual displacement principle. Below is a detailed
+hybrid towers.
+                                                                                   derivation of the virtual work performed by the prestress, tower, and top
+                                                                                   RNA components corresponding to their respective virtual displace­
+2. Development of governing equation
+                                                                                   ments.
+2.1. Mechanical model
+                                                                                      (a) Virtual Work Done by prestress
+                                                                                             The prestressed steel strands at the top of the transition section
+    The steel-concrete hybrid tower primarily is composed of of the top
+                                                                                          in the hybrid tower are anchored, while their bottoms are
+RNA, the concrete tower segment, the transition segment, and the steel
+                                                                                          anchored within cavities inside the foundation. Therefore,
+tower segment. The RNA comprises the nacelle and rotor, which can be
+                                                                                          prestress is considered to exert an axial force P at the top of the
+modeled as rigid points N and R with concentrated mass and rotational
+                                                                                          transition section. u(x,t) and δu(x,t) respectively represent the
+inertia, respectively. The hybrid tower can be simplified as a Euler-
+                                                                                          lateral displacement and virtual displacement along the u-direc­
+Bernoulli cantilever beam with eccentrically concentrated mass and
+                                                                                          tion at any height x of the hybrid tower varying continuously
+rotational inertia at the free end. A spatial Cartesian coordinate system is
+                                                                                          with time t. Similarly, v(x,t) and δv(x,t) respectively denote the
+established in Fig. 2, with the origin at the center of the tower base. The
+                                                                                          lateral displacement and virtual lateral displacement along the v-
+
+
+
+
+                                             Fig. 2. Simplified analysis model of the steel-concrete hybrid tower.
+
+                                                                               3
+Y. Cheng et al.                                                                                                                                                    Structures 68 (2024) 107235
+
+
+        direction at any height x of the hybrid tower varying continu­
+        ously with time t. The vertical displacement w(x,t) and virtual                                  δWTI = δWTIu + δWTIv                                                               (9)
+        displacement δw(x,t) at any height x of the hybrid tower varying
+        continuously with time t can be respectively expressed as Eqs. (1)                                  The virtual work done by the lateral inertia moments Mu(x,t)
+        and (2):                                                                                         and Mv(x,t) on their corresponding virtual curvatures is respec­
+         ( )         ∫ [(         )2 (           ) ]                                                     tively represented as:
+                   1 x ∂u(z, t)          ∂v(z, t) 2
+        w x, t =                     +              dz                 (1)                                        ∫H                          ∫H
+                   2 0       ∂z            ∂z
+                                                                                                         δWTMu =      Mu (x, t)δκu (x, t)dx =    − EI(x)uʹʹ(x, t)δuʹʹ(x, t)dx
+          ( ) ∫x                                                                                                       0                               0
+
+        δw x, t = [uʹ(z, t)δuʹ(z, t) + vʹ(z, t)δvʹ(z, t)]dz                            (2)                                                                                              (10)
+                           0
+                                                                                                                      ∫H                             ∫H
+                                                                                                         δWTMv =           Mv (x, t)δκv (x, t)dx =           − EI(x)vʹʹ(x, t)δvʹʹ(x, t)dx
+           During the lateral deformation process of the tower, the ver­                                               0                               0
+
+        tical position of the transition section changes, which affects the                                                                                                             (11)
+        work done by the prestress during this process. Substituting the
+        height of the prestress application point (hc+ht) into Eq. (2) to                                  The total virtual work done by the tower’s bending moment on
+        determine the vertical virtual displacement and displacement δw                                  the virtual curvature is
+        (hc+ht, t). Therefore, the virtual work done by the prestress P on
+        the vertical virtual displacement δWP is                                                         δWTM = δWTMu + δWTMv                                                           (12)
+                                    ∫ hc +ht
+        δWP = Pδw(hc + ht , t) = P           [uʹ(z, t)δuʹ(z, t) + vʹ(z, t)δvʹ(z, t)]dz
+                                                0                                                   (c) Virtual Work Done by RNA
+                                                                                       (3)
+                                                                                                     Due to the eccentricity of the nacelle and rotor in the u-direction,
+                                                                                                 there is an additional bending moment caused by the eccentricity of the
+   (b) Virtual Work Done by tower                                                                mass at the tower top. To determine the work done by the top RNA, the
+          The hybrid tower is typically a variable cross-section beam,                           gravity of the nacelle and blades is shifted to point W on the tower axis.
+       where the bending stiffness EI(x) and mass per unit length m(x)                           The work done by the top RNA can be divided into four parts: one part is
+       vary arbitrarily along the height x of the tower. Ei and ρi represent                     the virtual work δW WTG done by the self-weight of the RNA on its cor­
+       the elastic modulus and mass density of each segment, respec­                             responding vertical virtual displacement; a second part is the virtual
+       tively. Then, m(x) and EI(x) can be respectively expressed as:                            work δW WTI  done by the inertial force generated by the mass of the RNA
+        m(x) = πρi [D(x) − t(x)]t(x)                                                   (4)       on its corresponding lateral virtual displacement; a third part is the
+                                                                                                 virtual work δW WT J  done by the rotational inertia of the RNA on its
+                      π {                                      }                                 corresponding virtual angular displacement; and the fourth part is the
+        EI(x) = Ei                 [D(x)]4 − [D(x) − 2t(x)]4                           (5)
+                      64                                                                         virtual work δWWTE done by the additional bending moment caused by
+                                                                                                 the mass eccentricity of the RNA on its virtual angular displacement.
+                                                                                                     The displacements uw, vw and ww at point W on the tower axis are
+           The virtual work done by the tower can be divided into three
+                                                                                                 respectively represented as
+        parts: one part is the virtual work done by the tower self-weight in
+        its corresponding vertical virtual displacement δWTG; another part                       uw = u(H, t) + auʹ(H, t)                                                               (13)
+        is the virtual work done by the inertial force of the distributed
+        mass of the tower in its corresponding lateral virtual displace­                         vw = v(H, t) + avʹ(H, t)                                                               (14)
+        ment δWTI ; and the third part is the virtual work done by the in­
+                                                                                                            ∫ H [(           )      (         ) ]
+        ternal bending moment of the tower in its corresponding virtual                                 1            ∂u(z, t) 2   ∂v(z, t) 2     1              1
+                                                                                                 ww =                                        dz + a[uʹ(H, t)]2 + a[vʹ(H, t)]2
+        curvature δWTM.
+                                                                                                                                +
+                                                                                                        2    0         ∂z           ∂z           2              2
+           The virtual work δWTG done by the tower self-weight on the                                                                                                                   (15)
+        vertical virtual displacement is
+                                                                                                     The virtual displacements δuw, δvw and δww at point W are respec­
+                                 ∫H             ( )
+                                                                                                 tively represented as
+                       δWTG =         m(x)gδw x, t dx
+                                  0
+            ∫ H[       (∫ x                                           )]  (6)                    δuw = δu(H, t) + aδuʹ(H, t)                                                            (16)
+         =       m(x)g       [uʹ(z, t)δuʹ(z, t) + vʹ(z, t)δvʹ(z, t)]dz dx
+              0                      0                                                           δvw = δv(H, t) + aδvʹ(H, t)                                                            (17)
+                                                                                                            ∫H
+           The virtual work done by the lateral inertial forces fTIu(x,t) and                    δww =           [uʹ(z, t)δuʹ(z, t) + vʹ(z, t)δvʹ(z, t)]dz
+         T
+        fIv(x,t) on their corresponding lateral virtual displacements is                                    0                                                                           (18)
+        respectively represented as:                                                                 +auʹ(H, t)δuʹ(H, t) + avʹ(H, t)δvʹ(H, t)
+                 ∫H
+                         ( ) (        )
+                                              ∫H                                                    The linear velocities at point W along the u and v directions are
+        δWTIu =     f TIu x, t δu x, t dx = −    m(x)ü(x, t)δu(x, t)dx (7)                      respectively represented as
+                  0                                      0
+
+                  ∫H                                     ∫H                                      u̇w = u̇(H,       t) + au̇ʹ(H,    t)                                                   (19)
+                               (       ) (     )
+        δWTIv =        f TIv       x, t δv x, t dx = −        m(x)v̈(x, t)δv(x, t)dx   (8)
+                  0                                      0                                       v̇w = v̇(H, t) + av̇ʹ(H, t)                                                            (20)
+                                                                                                    The linear accelerations at point W along the u and v directions are
+          The total virtual work done by the inertia forces of the tower on                      respectively represented as
+        corresponding virtual displacements is
+                                                                                                 üw = ü(H, t) + aüʹ(H, t)                                                            (21)
+
+
+                                                                                             4
+Y. Cheng et al.                                                                                                                              Structures 68 (2024) 107235
+
+
+v̈w = v̈(H, t) + av̈ʹ(H, t)                                              (22)       Cu = − (mR gΔR − mN gΔN )[φʹ(H) + aφʹʹ(H)]                                    (37)
+
+   The total mass of the top RNA is mw (mN +mR). The virtual work done                               {                                       }
+                                                                                    Mv = (JNv + JRv ) [φʹ(H)]2 + 2aφʹʹ(H)φʹ(H) + a2 [φʹ(H)]2
+by the self-weight of the top RNA on the vertical virtual displacement is
+                                                                                                                   ∫H                                             (38)
+δWWT
+  G = mw gδww                                                            (23)             +mw [φ(H) + aφʹ(H)]2 +       m(x)[φ(x)]2 dx
+                                                                                                                          0
+   The virtual work done by the lateral inertial forces fM            M
+                                                         Iu(x,t) and fIv(x,t)
+                                                                                        If for any variation δTu and δTv, Eq. (34) holds true, then
+of the RNA on their corresponding lateral virtual displacements are
+respectively represented as:                                                        Mu T̈ u + Ku Tu + Cu = 0                                                      (39)
+       WT
+δWIu          = − mw üw δuw                                             (24)
+                                                                                    Mv T̈ v + Kv Tv = 0                                                           (40)
+
+δWIv   WT
+              = − mw v̈w δvw                                             (25)            Eqs. (39) and (40) respectively represent the motion governing
+                                                                                    equations of the tower along the u and v directions. By substituting the
+   The total virtual work done by the inertia forces of the RNA on
+                                                                                    shape function φi(x) for the i-th mode of tower vibration, the generalized
+corresponding virtual displacements is
+                                                                                    masses Mui and Mvi , and the generalized stiffnesses Kui and Kvi along the u
+δWWT
+  I  = δWWT      WT
+         Iu + δW Iv                                                      (26)       and v directions are calculated. Therefore, according to Rayleigh energy
+                                                                                    method, the natural frequencies of the hybrid tower along the u and v
+    The virtual work done by the rotational inertia moments of the top              directions are respectively represented as:
+RNA on their corresponding virtual angular displacements are respec­                       √̅̅̅̅̅̅̅
+tively represented as:                                                                       Kui
+                                                                                    f ui =                                                                  (41)
+            (           )             (            )                                         Mui
+δWJuWT = − JNu + mN ΔN 2 ü ʹw δuʹw − JRu + mR ΔR 2 ü ʹw δuʹw    (27)
+                  (            )                                                             √̅̅̅̅̅̅̅
+δWJvWT = −            JNv + JRv v̈ ʹw δvʹw                               (28)                  Kvi
+                                                                                    f vi =                                                                        (42)
+                                                                                              Mvi
+   The total virtual work done by the rotational inertia moments of the
+top RNA is expressed as:                                                               Eqs. (41) and (42) respectively yield the natural frequencies of tower
+                                                                                    vibration along the u and v directions. This is because the rotational
+δWWT = δWWT      WT
+         Ju + δW Jv                                                      (29)
+  J
+                                                                                    inertia and eccentric mass of the wind turbine atop the tower differ
+   The virtual work done by the additional moment caused by the mass                around the u and v axes, resulting in different natural frequencies of
+eccentricity of the top wind turbine on its virtual angular displacement is         vibration along each direction for each vibration mode.
+
+δWWT
+  E = (mR gΔR − mN gΔN )δuʹw                                             (30)       3. Solution of governing equation
+   According to the principle of virtual work, the total virtual work
+done by the whole wind turbine tower structure δW E is 0,                           3.1. Adaptive vibration mode function
+
+δWPE + δWTG + δWTI + δWTM + δWWT    WT     WT
+                              G + δWJ + δW I  + δWWT
+                                                  E = 0                  (31)           The accuracy of the natural frequency calculation depends on the
+                                                                                    similarity between the assumed vibration mode function and the actual
+2.3. Development of governing equation                                              vibration mode function. The shape function for the i-th vibration mode
+                                                                                    of a cantilever beam with constant cross-section is expressed as
+   According to principles of structural dynamics, assuming a shape
+function φ(x) for a specific mode of vibration of the hybrid tower, where                                              cos ai H + cosh ai H
+                                                                                    ψ i (x) = cos ai x − cosh ai x −                        (sin ai x − sinh ai x)
+the motion amplitude relative to the tower base along the u-direction is                                               sin ai H + sinh ai H
+generalized coordinate Tu(t), and the motion amplitude relative to the                                                                                            (43)
+tower base along the v-direction is generalized coordinate Tv(t), then the
+                                                                                    where ai is determined by the transcendental equation cosaH = -(1/
+displacements of the hybrid tower at height x at time t along the u-di­
+                                                                                    coshaH).
+rection and v-direction are respectively
+                                                                                        Eq. (43) is the exact solution for the vibration mode function of a
+u(x) = φ(x)Tu (t)                                                        (32)       homogeneous cantilever beam with constant cross-section. However,
+                                                                                    since the hybrid tower is a cantilever beam with variable cross-section
+v(x) = φ(x)Tv (t)                                                        (33)       and material properties, and is influenced by the top wind turbine,
+                                                                                    using Eq. (43) alone may result in significant errors. By superimposing
+   By substituting Eqs. (32–33) into Eq. (31), the governing equation
+                                                                                    the various vibration modes of a cantilever beam with equal cross-
+can be obtained:
+(                    )     (              )                                         section, a new shape function for the i-th vibration mode can be con­
+  Mu T̈u + Ku Tu + Cu δTu + Mv T̈v + Kv Tv δTv = 0               (34)               structed to closely approximate the actual vibration mode function of a
+                                                                                    hybrid tower.
+where:                                                                                           n
+                                                                                                 ∑
+     (                            )                                                 ϕi (x) =            qj ψ j (x)                                                (44)
+Mu = JNu + mN ΔN 2 + JRu + mR ΔR 2 [φʹ(H) + aφʹʹ(H)]2                                              1
+                            ∫H                                           (35)
+     +mw [φ(H) + aφʹ(H)]2 +     m(x)[φ(x)]2 dx                                      where qj represents the undetermined coefficient of the j-th vibration
+                                               0
+                                                                                    mode function ψ j(x).
+                        ∫ h1 +h2                   ∫ H[        )] (∫ x                  By using a filtering method, higher-order vibration mode functions
+Ku = Kv = − P                      [φʹ(z)]2 dz −    [φʹ(z)]2 dz dx
+                                                          m(x)g                     can be obtained [25]. If the contribution of the first vibration mode to
+       ∫H
+                0                   0
+                                  {∫ H
+                                                  0
+                                                               }         (36)       the assumed vibration mode function is zero, then the second vibration
+     +                 2
+          EI(x)[φʹʹ(x)] dx − mw g      [φʹ(x)] dx + a[φʹ(H)]2
+                                              2                                     mode will dominate. To calculate the second mode shape, it is sufficient
+          0                                         0                               to assume q1 = 0, thereby constructing a vibration mode function that
+
+
+                                                                                5
+Y. Cheng et al.                                                                                                                             Structures 68 (2024) 107235
+
+
+does not include the first vibration mode component of a constant                   3.3. Case
+cross-section cantilever beam. Similarly, setting both q1 and q2 to zero
+will yield the third vibration mode.                                                    In this study, a 5.0 MW hybrid tower with a height of 160 m is
+                                                                                    selected as a case study. The mass of this wind turbine is 234 t. The rated
+3.2. Equation solving                                                               wind speed and cut-out wind speed are 11 m/s and 25 m/s, respectively.
+                                                                                    The concrete tower is made of C80 concrete, with an elastic modulus of
+    According to the Rayleigh method, the frequency obtained by the                 36,000 MPa and a density of 2500 kg/m3. The steel grade of steel tower
+actual vibration mode is the lowest. Therefore, when selecting the                  is Q355, with an elastic modulus of 2.06 × 105 MPa. To account for the
+approximate results obtained using this method, the one with the lowest             contributions of welding, bolts, coating, and flanges to the mass of the
+frequency is always the best approximation [25]. This can be framed as              steel tower, the equivalent density of the steel tower is taken as 8500 kg/
+an optimization problem aimed at minimizing a function subject to                   m3 to consider the effect of paint and connections [15,24]. A prestress
+specified constraints, represented by the following mathematical model:             value of 80 MN is applied to the top of the transition segment. The
+                                                                                    geometric parameters of the tower and the mass characteristics of the
+find : q = {q1 , q2 , …, qn }
+                                                                                    top wind turbine are listed in Tables 1 and 2, respectively.
+min imize : fi (x)                                                       (45)
+                             (          )                                               The curves of the first three natural frequencies of the hybrid tower
+subjectto : − 1 ≤ qj ≤ 1 j = 1, 2, …, n
+                                                                                    with the number of vibration mode components are obtained by pro­
+    According to Eq. (45), the undetermined coefficients qj can be ob­              gramming in Python, as shown in Fig. 4. As the number of vibration
+tained, thereby simultaneously determining the vibration modes and                  mode components increases, the first three natural frequencies gradu­
+natural frequencies of each order. An intelligent optimization algorithm            ally decrease and converge. When the constructed adaptive mode shape
+is employed to solve Eq. (45). The genetic algorithm is a global search             function consists of 8 vibration mode components superimposed, the
+optimization algorithm that simulates natural selection and genetic                 first three natural frequencies converge to satisfactory results. Due to the
+mechanisms, enabling it to search for the optimal solution globally. This           significant increase in the moment of inertia of wind turbines around the
+makes it particularly suitable for complex, nonlinear, and non-smooth               u -axis compared to the v -axis, the generalized mass along the v -di­
+objective function optimization problems, avoiding local optima [26,                rection of the tower is greater than along the u-direction. Therefore, the
+27]. Therefore, the genetic algorithm is used to solve Eq. (45) in this             natural frequencies of vibration along the u-direction are slightly higher
+study. Fig. 3 illustrates the flowchart for calculating the dynamic char­           than those along the v-direction. Additionally, the differences in the
+acteristics of hybrid tower. The main parameters of algorithms were set             second and third natural frequencies along both directions are more
+as follows: the number of population size was 50, the number of itera­              pronounced than in the first frequency, indicating that moments of
+tions imax was 100, the crossover probability was set to 0.8, and the               inertia and eccentric mass primarily influence the higher-order natural
+mutation probability was set to 0.01.                                               frequencies of the tower vibration.
+
+                                                                                    4. Finite element analysis
+
+                                                                                    4.1. Modeling
+
+                                                                                        A FE analysis model was established for steel-concrete hybrid tower
+                                                                                    by ABAQUS software. The model comprises components such as con­
+                                                                                    crete tower segment, transition segment, prestressed steel strands, and
+                                                                                    steel tower segment. C3D8R solid elements were adopted for concrete
+                                                                                    tower segment, transition segment, and steel tower segment, while B31
+                                                                                    beam element was adopted for prestressed steel strands. Both steel and
+                                                                                    concrete materials employed elastic constitutive laws as detailed in
+                                                                                    Section 2.3 for their modulus and density values. Tie constraints were
+                                                                                    utilized to simulate the connections between tower segments. The upper
+                                                                                    nodes of the prestressed steel strands were constrained to the anchor
+                                                                                    faces at the top of the transition segment using MPC (multi-point
+                                                                                    constraint) constraints, while the lower nodes are restricted in all
+                                                                                    translational degrees of freedom to simulate hinged boundary condi­
+                                                                                    tions. To apply the prestress, initial temperatures were defined for the
+                                                                                    strands, with subsequent definitions of final temperatures in the loading
+                                                                                    steps to account for tendon shrinkage. The linear expansion coefficient
+                                                                                    for the prestressed steel strands was set to 1e-5. Reference points were
+                                                                                    established at the center of the nacelle and rotor, respectively, and
+
+
+                                                                                    Table 1
+                                                                                    The geometric parameters of the hybrid tower.
+                                                                                     Geometric parameters                                              Values /m
+
+                                                                                     Top and bottom diameters of the concrete tower segment            10，4.8
+                                                                                     Top and bottom diameters of the transition segment                4.8，4.6
+                                                                                     Top and bottom diameters of the steel tower segment               4.6，4
+                                                                                     Top and bottom thicknesses of the concrete tower segment          0.23，0.34
+                                                                                     Top and bottom thicknesses of the transition segment              1.6，1.2
+                                                                                     Top and bottom thicknesses of the steel tower segment             0.018，0.012
+                                                                                     Height of the concrete tower segment                              105
+                                                                                     Height of the transition segment                                  2.5
+                                                                                     Height of the steel tower segment                                 50
+     Fig. 3. The flowchart of the dynamic characteristics of hybrid tower.
+
+                                                                                6
+Y. Cheng et al.                                                                                                                             Structures 68 (2024) 107235
+
+
+Table 2                                                                                   were employed: point mass (PM), eccentric point mass (EPM), eccentric
+The mass characteristics of the RNA.                                                      point mass with moment of inertia (EPMJ), and eccentric double points
+  Component        Mass/t       Centroid/m           Moment of inertia                    mass with moment of inertia (EDPMJ), as depicted in Fig. 7.
+                                                                                              Based on the FE calculation results, the relative errors between the
+                                                     Ju/kg⋅m2            Jv/ kg⋅m2
+                                                                                          natural frequencies calculated by the four simplified models and the FE
+                                                                5
+  Nacelle          125          (1.082,0,2.5)        1.58 × 10           1.08 × 106       calculation results are listed in Table 4. Since the MM model ignores the
+  Blade            121          (− 5.825,0,2.5)      9.99 × 107          5.30 × 107
+  RNA              246          (− 2.315,0,2.5)      9.99 × 107          5.59 × 107
+                                                                                          top RNA’s asymmetry, the natural frequencies of the tower along both
+                                                                                          directions are the same. The PM and EPM models fail to consider the
+Note: The coordinates of the center of mass position are relative to the tower top        moment of inertia of the RNA, slightly overestimating the first natural
+coordinate system.
+                                                                                          frequency of the hybrid tower. For the second and third structural
+                                                                                          modes, relative deviations exceeding 10 % were observed in some re­
+concentrated masses and moments of inertia are applied on the two                         sults. Both the EPMJ and EDPMJ models comprehensively account for
+reference points to consider the influence of RNA. Each reference point                   the effects of the RNA’s mass eccentricity and moment of inertia,
+coupled with the tower’s top section to simulate their motion. The base                   yielding results closer to each other. In summary, for the first bending
+of the model was fully fixed, constraining all displacements and rota­                    mode of the tower, all four simplified models meet the precision re­
+tions in three directions. Considering computational accuracy and effi­                   quirements for engineering applications. However, for other bending
+ciency, a mesh size of 0.25 m was selected for the FE model. Fig. 5                       modes, the RNA models that neglect moments of inertia show relative
+illustrates the FE model of hybrid tower.                                                 frequency deviations exceeding 10 %.
+    The model first applied prestress in the static general analysis step,
+and then conducted frequency analysis in the linear perturbation anal­
+ysis step. The NLGEOM parameter was employed in the analysis steps to
+ensure the final shape post prestressing serves as the base state for fre­
+quency analysis. Modal analysis was conducted using the Lanczos
+method within ABAQUS.
+
+4.2. Validation
+
+    To verify the reliability of theoretical solutions for the hybrid tower’s
+dynamic characteristics, the first three natural frequencies and vibration
+modes obtained from FE results were compared with theoretical calcu­
+lations. The comparison of the first three natural frequencies is shown in
+Table 3, and the corresponding vibration modes are illustrated in Fig. 6.
+As seen, for the first three natural frequencies and vibration modes of the
+hybrid tower, the theoretical solutions agree well with the FE results,
+thereby validating the accuracy of the proposed method for analyzing
+the dynamic characteristics of hybrid towers based on adaptive vibra­
+tion modes. The theoretical results for the first-order frequencies along
+the u and v directions closely agree with the FE results, with relative
+errors within 5 %, meeting engineering design requirements. Besides,
+due to the complexity of higher-order vibration modes, lower modes
+exhibit higher agreement than higher modes.
+
+5. Discussion
+
+5.1. Effect of different RNA simplified models on natural vibration
+frequency
+
+   To explore the effect of different simplified models of the RNA on the
+                                                                                                              Fig. 5. FE model of hybrid tower.
+natural frequencies of hybrid tower, four commonly used RNA models
+
+
+
+
+                                           Fig. 4. Calculation results of the first three natural frequencies of hybrid tower.
+
+                                                                                      7
+Y. Cheng et al.                                                                                                                         Structures 68 (2024) 107235
+
+
+Table 3
+Comparison of the first three natural frequencies between theoretical solutions and FE results.
+  Direction                       Order                          FE results (Hz)                      Theoretical solution (Hz)                Relative error (%)
+
+  v-direction                     1st-order                      0.2347                               0.2292                                   − 2.33
+                                  2nd-order                      0.6464                               0.6871                                     6.30
+                                  3rd-order                      1.4306                               1.4818                                     3.58
+  u-direction                     1st-order                      0.2389                               0.2299                                   − 3.73
+                                  2nd-order                      0.7033                               0.6977                                   − 0.80
+                                  3rd-order                      1.6636                               1.5257                                   − 8.29
+
+
+
+
+                                Fig. 6. Comparison of the first three vibration modes between theoretical solutions and FE results.
+
+
+5.2. Effect of different geometric dimensions on natural vibration                     tower’s natural frequencies. This aids in adjusting preliminary design
+frequency                                                                              schemes for the tower more effectively.
+                                                                                           To eliminate multicollinearity issues among features, independent
+    The natural frequencies of the hybrid tower are influenced by a va­                random sampling was conducted for all variables. The sampling ranges
+riety of features, including tower height, tower segment diameters,                    and intervals for each variable are detailed in Table 5. A dataset with a
+tower segment thicknesses, the proportion of concrete tower segment,                   total sample size of 4096 was designed, and the first three natural fre­
+and prestress level. To simplify the initial design process, it is essential to        quencies for each sample were calculated using the theoretical method.
+determine the significance of these different features and complete the                The dataset was randomly shuffled and divided into training and testing
+optimization and selection of the most critical features. A machine                    sets in an 8:2 ratio. Gradient Boosting Decision Trees (GBDT), an effi­
+learning model is employed to train a regression task and perform                      cient ensemble learning algorithm that enhances model prediction
+feature selection, identifying the most significant features impacting the             through serial training of multiple decision trees [28], was employed.
+
+
+                                                                                   8
+Y. Cheng et al.                                                                                                                                Structures 68 (2024) 107235
+
+
+
+
+                                                                     Fig. 7. Different RNA simplified models.
+
+
+
+Table 4
+Natural frequencies calculated by different RNA simplified models.
+  Direction             Order             PM (Hz)        Error (%)           EPM (Hz)       Error (%)      EPMJ (Hz)        Error (%)      EDPMJ (Hz)         Error (%)
+
+  v-direction           1st-order         0.2309         − 1.96              0.2309         − 1.96         0.2292           − 2.33         0.2292             − 2.33
+                        2nd-order         0.7133          10.34              0.713           10.30         0.6872             6.30         0.6871               6.30
+                        3rd-order         1.5922          11.30              1.5907          11.19         1.4820             3.59         1.4818               3.58
+  u-direction           1st-order         0.2309         − 3.33              0.2309         − 3.33         0.2300           − 3.72         0.2299             − 3.73
+                        2nd-order         0.7133           1.42              0.7133           1.42         0.6980           − 0.75         0.6977             − 0.80
+                        3rd-order         1.5922         − 4.29              1.5922         − 4.29         1.5270           − 8.21         1.5257             − 8.29
+
+
+
+                                                                                            concrete segment also significantly impacts the structural stiffness,
+Table 5
+                                                                                            ranking high in importance, while the diameters of other sections
+Basic features and sampling range of the dataset.
+                                                                                            occupy moderate positions. However, the thickness of the tower sections
+  Feature       Meaning of feature             Units   Sampling         Sampling            has a limited effect on improving stiffness, resulting in a lower ranking
+                                                       range            spacing
+                                                                                            in the feature importance analysis for natural frequencies. Additionally,
+  Dcb           Bottom diameter of concrete    m       [6,10]            0.05               the impact of prestress on the first natural frequency of the tower is
+                tower segment                                                               notable and even exceeds the influence of the wall thickness of the tower
+  Dct           Top diameter of concrete       m       [3,5]             0.05
+                tower segment
+                                                                                            segments.
+  Dsb           Bottom diameter of steel       m       [3,5]             0.05                   To further investigate the specific impact of geometric dimensions on
+                tower segment                                                               the natural frequencies of the hybrid tower, a parametric analysis was
+  Dst           Top diameter of steel tower    m       [3,4]             0.05               conducted on hybrid towers with heights of 100 m, 120 m, 140 m, and
+                segment
+                                                                                            160 m. Fig. 10 displays the results of the parametric analysis of the
+  tcb           Bottom thickness of concrete   m       [0.2,0.4]         0.02
+                tower segment                                                               tower’s natural frequencies. As illustrated in Fig. 10, the diameter and
+  tct           Top thickness of concrete      m       [0.2,0.4]         0.02               wall thickness parameters of the tower segments positively correlate
+                tower segment                                                               with the natural frequencies of the tower, although the extent of the
+  tsb           Bottom thickness of steel      m       [0.01,0.03]       0.002              impact varies. The bottom diameter of the concrete segment has the
+                tower segment
+  tst           Top thickness of steel tower   m       [0.01,0.03]       0.002
+                                                                                            most significant effect on the natural frequencies. When the bottom
+                segment                                                                     diameter of concrete segment increases from 6 m to 10 m, the first
+  γsc           Concrete tower segment         m       [0.1,0.9]         0.1                natural frequency of the towers with heights of 100 m, 120 m, 140 m,
+                proportion                                                                  and 160 m increases by 80.1 %, 93.3 %, 116.0 %, and 161.7 %,
+  P             Prestress                      MN      [0100]           10
+                                                                                            respectively. The increase in the wall thickness of both the concrete and
+  H             Height of tower                m       [100,160]         5
+                                                                                            steel segments has a less pronounced effect on the natural frequencies, as
+                                                                                            the segments are modeled as thin-walled circular sections, and
+The model was constructed and trained using the Scikit-learn machine                        increasing wall thickness does not significantly enhance stiffness. The
+learning framework in Python [29]. The main hyper parameters were set                       height proportion of the concrete segment exhibits a non-linear rela­
+as follows: the number of decision trees was 100, the maximum tree                          tionship with the first natural frequency of the tower, initially increasing
+depth (max_depth) was set to 2, and the learning rate was set to 0.1. As                    and then decreasing. This behavior is due to the combined effects of
+shown in Fig. 8, the training results indicate that the goodness of fit R2                  increased generalized stiffness and mass of the tower. This is primarily
+exceeded 0.98, demonstrating the model’s excellent prediction accuracy                      because an increase in the height proportion of the concrete tower
+for the natural frequencies of the hybrid tower. Thus, this model can be                    segment enhances the generalized stiffness of the tower while also
+effectively used for feature importance analysis of the hybrid tower’s                      increasing its generalized mass. When the proportion of the concrete
+natural frequencies.                                                                        segment height is less than 0.7, the generalized stiffness of the tower
+    In the trained GBDT model, feature importance is measured based on                      dominates, leading to a continuous increase in the first natural fre­
+the average reduction in impurity brought by each feature. Fig. 9 il­                       quency. The maximum first natural frequency is achieved when the
+lustrates the contribution of each feature to the model’s predictions.                      height proportion is about 0.7. Beyond this proportion, the generalized
+Among the features, the total height of the tower and the proportion of                     mass of the tower dominates, causing a gradual decline in the first
+the concrete segment are the most significant, with their importance                        natural frequency. Additionally, an increase in prestress leads to a
+substantially surpassing other features. The bottom diameter of the                         reduction in the generalized stiffness of the tower, thus decreasing the
+
+
+                                                                                        9
+Y. Cheng et al.                                                                                                                                Structures 68 (2024) 107235
+
+
+
+
+Fig. 8. Prediction performance of GBDT models. Note: f1_cal, f2_cal, and f3_cal are the theoretical calculation results of the first-order, second-order, and third-order
+natural frequencies, respectively; f1_pre, f2_pre, and f3_pre are the machine learning predicted results of the first-order, second-order, and third-order natural fre­
+quencies, respectively.
+
+
+
+
+                                                   Fig. 9. Analysis of the feature importance of natural frequency.
+
+
+natural frequency of the structure, particularly the first natural                            closely agree well with the FE results, with relative errors not
+frequency.                                                                                    exceeding 10 %.
+                                                                                          (3) The influence on the natural frequencies of four different
+6. Conclusion                                                                                 simplified RNA models of point mass, eccentric point mass,
+                                                                                              eccentric point mass with moment of inertia, and eccentric dou­
+    An intelligent analysis of the dynamic characteristics is proposed for                    ble points mass with moment of inertia was explored. Results
+steel-concrete hybrid wind turbine tower, and the conclusion is sum­                          showed that all four simplified models met the engineering ac­
+marized as follows:                                                                           curacy requirements for the first natural frequency of the hybrid
+                                                                                              tower, whereas models neglecting moments of inertia over­
+   (1) The control equation of the hybrid tower was derived based on                          estimated the frequencies for the second and third modes.
+       the virtual displacement principle and generalized coordinate                      (4) Machine learning models for predicting the first three natural
+       method, considering the effects of mass eccentricity and moment                        frequencies of the hybrid tower were trained using GBDT, and the
+       of inertia of the RNA, variable cross-sections of the tower, and                       goodness of fit R2 of the models exceeded 0.98, indicating
+       prestress. By employing the Rayleigh energy method and intel­                          excellent training efficacy. Feature importance analysis based on
+       ligent optimization algorithms, an adaptive vibration mode was                         these models highlighted tower height, proportion of concrete
+       constructed, and an efficient solution for the natural frequencies                     tower segment height, and bottom diameter of concrete segment
+       was achieved.                                                                          as significant factors influencing natural frequencies.
+   (2) A refined finite element model using ABAQUS software was                           (5) Parameter analysis was conducted on the natural frequencies of
+       established to compute the natural frequencies and vibration                           hybrid towers with hub heights of 100 m, 120 m, 140 m, and
+       modes of the hybrid tower. For the first three natural frequencies                     160 m. Results indicated a strong positive correlation between
+       and vibration modes of the hybrid tower, the theoretical solutions                     the bottom diameter of concrete tower segment and natural fre­
+                                                                                              quencies. The proportion of concrete tower segment height
+
+                                                                                   10
+Y. Cheng et al.                                                          Structures 68 (2024) 107235
+
+
+
+
+                  Fig. 10. Parametric analysis on natural frequencies.
+
+
+
+
+                                           11
+Y. Cheng et al.                                                                                                                                             Structures 68 (2024) 107235
+
+
+        showed an initial increase followed by a decreasing trend in the                         [8] Xu B, Li ZY, Chen HB. Geometry optimization on prestressed concrete and steel
+                                                                                                     segments of wind turbine towers. J Hunan Univ (Nat Sci) 2016;43(7):25–31.
+        first natural frequency. Prestress exhibited a negative correlation
+                                                                                                     https://doi.org/10.16339/j.cnki.hdxbzkb.2016.07.004.
+        with structural natural frequencies, while the increase in wall                          [9] Anwer AK. Optimization of alternative wind turbine towers in low wind resource
+        thickness of tower segments showed slight effects on natural                                 regions. Nebraska: Florida State Universty,; 2017. p. 13–6.
+        frequency enhancements.                                                                 [10] Harte R, Van Zijl GPAG. Structural stability of concrete wind turbines and solar
+                                                                                                     chimney towers exposed to dynamic wind action. J Wind Eng Ind Aerodyn 2007;95
+                                                                                                     (9):1079–96. https://doi.org/10.1016/j.jweia.2007.01.028.
+CRediT authorship contribution statement                                                        [11] Wu QY, Feng H, Xiao SY, Zhu HP, Bai XX. Passive control analysis and design of
+                                                                                                     twin-tower structure with chassis. Int J Struct Stab Dyn 2020;20(6):2040010.
+                                                                                                     https://doi.org/10.1142/S0219455420400106.
+    Yuhang Wang: Validation, Supervision, Data curation. Xuhong                                 [12] Tian YP, Xu D, Zhou HM, Wang T. Study on the TMD damping of wind turbine
+Zhou: Validation, Supervision, Funding acquisition. Liang Cao: Writing                               towers in construction. Eng Mech 2019;36(S1):184–8.
+– original draft, Resources, Methodology, Investigation, Conceptuali­                           [13] CAO GW, CHEN ZX, WANG CL, Ding XM. Dynamic responses of offshore wind
+                                                                                                     turbine considering soil nonlinearity and wind-wave load combinations. Ocean Eng
+zation. Jiepeng Liu: Writing – review & editing, Supervision, Resources,                             2020;217:108155. https://doi.org/10.1016/j.oceaneng.2020.108155.
+Investigation, Conceptualization. Yu Cheng: Writing – review & editing,                         [14] Alkhoury P, Soubra AH, Rey V, Aït-Ahmed M. A full three-dimensional model for
+Writing – original draft, Visualization, Methodology, Investigation,                                 the estimation of the natural frequencies of an offshore wind turbine in sand. Wind
+                                                                                                     Energy 2021;24(7):699–719. https://doi.org/10.1002/we.2598.
+Formal analysis.                                                                                [15] Shi SG, Zhai ED, Xu CS, Du XL, Sun YL. Effects of rotor-nacelle assembly models on
+                                                                                                     the structural natural frequencies and seismic response of offshore wind turbine.
+Declaration of Competing Interest                                                                    Eng Mech 2023;40(6):19–36. https://doi.org/10.6052/j.issn.1000-
+                                                                                                     4750.2021.11.0887.
+                                                                                                [16] Kenna A, Basu B. A finite element model for pre-stressed or post-tensioned concrete
+    The authors declare that they have no known competing financial                                  wind turbine towers. Wind Energy 2015;18(9):1593–610. https://doi.org/
+interests or personal relationships that could have appeared to influence                            10.1002/we.1778.
+the work reported in this paper.                                                                [17] Lana JA, Júnior PAAM, Magalh CA, Magalhaes ALMA, Junior ACDA,
+                                                                                                     Ribeiro MSDB. Behavior study of prestressed concrete wind-turbine tower in
+                                                                                                     circular cross-section. Eng Struct 2021;227:111403. https://doi.org/10.1016/j.
+Acknowledgments                                                                                      engstruct.2020.111403.
+                                                                                                [18] Vugts JH. Considerations on the dynamics of support structures for an owec.
+                                                                                                     Netherlands: Delft University of Technology,; 2000.
+   The authors are grateful for the financial support provided by the                           [19] Tempel JVD. Design of support structures for offshore wind turbines. Netherlands:
+National Natural Science Foundation of China (Grant No. 52278175),                                   Delft University of Technology,; 2006.
+the Chongqing Academicians Leading the Special Project for Science and                          [20] Yang CB, Wang R, Zhang JM. A simplified method for analyzing the fundamental
+                                                                                                     frequency of monopile supported offshore wind turbine system design. Earthq Eng
+Technology Innovation Guidance China (Grant No. 2022YSZX-                                            Eng Vib 2018;17:893–901. https://doi.org/10.1007/s11803-018-0482-5.
+JCX0009CSTB), and the Fundamental Research Funds for the Central                                [21] Lei ZB, Liu G, Yang W, Li Y. Analytical calculation method for the pre-stress basic
+Universities (Grant No. 531118010784).                                                               frequency of wind turbine towers based on Rayleigh method. J Vib Shock 2022;41
+                                                                                                     (10):23–9. https://doi.org/10.6052/j.issn.1000-4750.2021.11.0887.
+                                                                                                [22] Huang XG, Li BK, Zhou XH, Wang YH, Zhu RH. Geometric optimisation analysis of
+References                                                                                           Steel-Concrete hybrid wind turbine towers. Struct 2022;35:1125–37. https://doi.
+                                                                                                     org/10.1016/j.istruc.2021.08.036.
+ [1] Sherif SA, Barbir F, Veziroglu TN. Wind energy and the hydrogen economy review             [23] Zhang DL, Bhattarai HB, Wang F, Zhang XS, Hwang HJ, Wu XG, et al. Dynamic
+     of the technology. Sol Energy 2005;78:647–60. https://doi.org/10.1016/j.                        characteristics of segmental assembled HH120 wind turbine tower. Eng Struct
+     solener.2005.01.002.                                                                            2024;303:117438. https://doi.org/10.1016/j.engstruct.2023.117438.
+ [2] GWEC. Global Wind Report; 2023, 〈http://www.gwec.net/〉.                                    [24] Li SZ, Zhou XH, Wang YH, Gan D, Deng XW. Closed-form solution of fundamental
+ [3] Offshore Wind in Europe-Key Trends and Statistics 2019; WindEurope: Brussels,                   frequency of steel-concrete hybrid wind turbine tower. Int J Struct Stab Dyn 2023;
+     Belgium, 2020.                                                                                  23:2350031. https://doi.org/10.1142/S0219455423500311.
+ [4] Zhang MS, Zhang GJ, Huang WZ, Ge JQ, Xu RL. Study on mechanical performance                [25] Clough RW, Penzien J. Dynamics of structures. 2nd ed. New York: McGraw-Hill;
+     of pre-stressed assembled towering wind tower. J Build Struct 2022;43(5):62–78.                 1993.
+     https://doi.org/10.14006/j.jzjgxb.2021.0546.                                               [26] Vose MD. The simple genetic algorithm: Foundations and theory. MIT press,; 1999.
+ [5] Huang XG, Li BK, Zhou XH, Wang YH, Bai JL, Bai YT, et al. Computational study of           [27] Katoch S, Chauhan SS, Kumar V. A review on genetic algorithm: past, present, and
+     steel-concrete hybrid wind turbine tower seismic performance. J Earthq Eng 2023;                future. Multimed Tools Appl 2021;80(5):8091–126. https://doi.org/10.3389/
+     27(10):2796–817. https://doi.org/10.1080/13632469.2022.2121789.                                 fceng.2021.740270.
+ [6] Chen J, Li J, He X. Design optimization of steel–concrete hybrid wind turbine tower        [28] Friedman JH. Stochastic gradient boosting. Comput Stat Data Anal 2002;38(4):
+     based on improved genetic algorithm. Struct, Des Tall Spec Build 2020;29:e1741.                 367–78. https://doi.org/10.1016/S0167-9473(01)00065-2.
+     https://doi.org/10.1002/tal.1741.                                                          [29] Pedregosa F, Varoquaux G, Gramfort A, Michel V, Thirion B, Grisel O, et al. Scikit-
+ [7] Ma HW, Meng R. Optimization design of prestressed concrete wind-turbine tower.                  learn, Machine learning in Python. J Mach Learn Res 2011;12:2825–30.
+     Sci China Technol Sci 2014;57(2):414–22. https://doi.org/10.1007/s11431-013-
+     5442-8.
+
+
+
+
+                                                                                           12
+
