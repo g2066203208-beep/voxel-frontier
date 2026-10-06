@@ -246,3 +246,19 @@ C. 当前正式OpenFAST/ROSCO模型文件夹。
 ### T028实际数据上传补充
 
 用户要求优先上传可传的实际文件：1453个源文件已按12区/59包归档，约115.57MiB；源文件逐项SHA256校验。超过10MiB的源文件暂缓；当前研究科学状态不变。见archive/local-assets-20261004。
+
+
+## T052/T053 原型原页闭合与当前Abaqus候选（2026-10-06）
+
+- **流程位置：G0 / BASELINE IDENTITY FREEZE。**
+- T052完成He2024 PDF p33–35原页归档：Table 3-1、3-2、3-3、Fig.3-4、Fig.3-5均可直接回看；原页PNG与SHA清单保存于`references/extracts/REF008-original-pages/`。
+- 原页直接确认：158 m=112 m混凝土+46 m钢；31段混凝土几何与内外纵筋数量；钢筋网/钢塔S345；15.2 mm PT；塔底/PT底固定；PT顶锚钢法兰。
+- 用户明确决定：**RNA不退回He2024简单集中质量**，继续使用R2的MASS+偏心CG+full ROTARYI+6DOF coupling。
+- T053由T050派生，当前首选输入为`experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp`。
+- T053共33个活动钢筋section从HRB335_T046切回S345；显式φ14@80双层环筋、φ6拉筋、30 mm保护层继续保留为**规范补全几何**，不冒充He2024直接施工参数。
+- 旧39.80022 t NSM继续删除；T046-E1A保留为含NSM质量上界敏感性支路。
+- PT统一描述为“36个周向FE位置”；A=140 mm²/位置、r=1.75 m、bundle factor仍为重建/敏感性边界。
+- Table 3-3原表字面“半径”与同页图示冲突尚未关闭；生产模型继续按直径解释，但必须标SOURCE-CONFLICT。
+- T053静态生成审计PASS；**Abaqus data check、Gravity、PT平衡、质量/CG、30阶Modal、Flex-X/Z仍未执行，因此G0/G1未PASS。**
+
+下一步唯一合法动作：对T053执行Abaqus原生求解门禁，而不是继续改论文结果或启动后续风荷载生产计算。
