@@ -1,0 +1,32 @@
+{
+  "cases": 36,
+  "channels": [
+    "TwrBsMxt",
+    "TwrBsMyt"
+  ],
+  "time_window_s": [
+    100.0,
+    700.0
+  ],
+  "m": 4.0,
+  "Neq": 100000.0,
+  "cycle_ledger_rows": 48070,
+  "del_rows": 72,
+  "max_DEL_record": {
+    "case_id": "U11p4_ETM_S04",
+    "channel": "TwrBsMyt",
+    "source_column": "TwrBsMyt_[kN-m]",
+    "m": 4.0,
+    "Neq": 100000.0,
+    "DEL": 26802.478501532034,
+    "n_cycles_rows": 662,
+    "cycle_count_sum": 655.0,
+    "signal_min": -26941.386336456784,
+    "signal_max": 327451.85761705285,
+    "signal_mean": 164566.1068820258,
+    "signal_std": 49387.22999246671
+  },
+  "parser": "openfast-toolbox FASTOutputFile",
+  "rainflow_package": "rainflow.extract_cycles",
+  "note": "Load-level screening only; not a material fatigue life calculation."
+}
