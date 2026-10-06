@@ -1,0 +1,29 @@
+{
+  "input": "research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp",
+  "output_block_count": 12,
+  "fatigue_relevant_set_declarations": 120,
+  "step_line_count": 8,
+  "required_for_material_fatigue": {
+    "concrete": [
+      "S principal/directional stress history at selected CSEG regions",
+      "optionally LE/PE if needed for nonlinear diagnostics"
+    ],
+    "prestressing_steel": [
+      "S11 axial stress history for PT elements"
+    ],
+    "ordinary_rebar": [
+      "S11 only if response screening proves rebar fatigue relevant"
+    ],
+    "steel_tower": [
+      "stress tensor at selected SSEG elements; weld fatigue requires nominal/hot-spot structural stress postprocessing"
+    ],
+    "joints": [
+      "CPRESS",
+      "COPEN",
+      "CSHEAR1/2 or equivalent contact outputs"
+    ],
+    "global_balance": [
+      "RF/RM at tower base and flange/reference points"
+    ]
+  }
+}

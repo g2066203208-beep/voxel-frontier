@@ -1,0 +1,40 @@
+482789: *Output,field,frequency=1
+482790: *Node Output
+482791: U,RF
+
+482790: *Node Output
+482791: U,RF
+
+482792: *Element Output
+482793: S,E,DAMAGET,DAMAGEC
+
+482794: *Output,history,frequency=1
+482795: *Energy Output
+482796: ALLIE,ALLAE,ALLSE
+
+482801: *Output,field
+482802: *Node Output
+482803: U
+
+482802: *Node Output
+482803: U
+
+482809: *Output,field
+482810: *Node Output
+482811: U,RF
+
+482810: *Node Output
+482811: U,RF
+
+482812: *Element Output
+482813: S
+
+482819: *Output,field
+482820: *Node Output
+482821: U,RF
+
+482820: *Node Output
+482821: U,RF
+
+482822: *Element Output
+482823: S

@@ -1,0 +1,8 @@
+482783: *Step,name=Gravity,nlgeom=YES,inc=500
+482784: *Static
+482798: *Step,name=Modal_From_Gravity,perturbation
+482799: *Frequency,eigensolver=Lanczos,normalization=MASS
+482805: *Step,name=Flex_X,perturbation
+482806: *Static
+482815: *Step,name=Flex_Z,perturbation
+482816: *Static
