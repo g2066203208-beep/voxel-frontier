@@ -1,0 +1,7 @@
+﻿action,characteristic_min,characteristic_max,gravity_handling,status
+TwrBsFxt,-865.6699487783762,2443.9769277037826,not applicable,unfactored screening
+TwrBsFyt,-495.30258129609126,416.3003217639188,not applicable,unfactored screening
+TwrBsFzt,-25869.42683700438,-25133.579173593065,already included in TwrBsFzt,unfactored screening
+TwrBsMxt,-39369.26811849781,80057.92382696312,not applicable,unfactored screening
+TwrBsMyt,-97584.7499765211,343696.24742354103,not applicable,unfactored screening
+TwrBsMzt,-34231.21605296351,30924.54719413509,not applicable,unfactored screening
