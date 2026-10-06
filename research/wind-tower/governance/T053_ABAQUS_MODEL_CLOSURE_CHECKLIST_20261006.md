@@ -43,7 +43,7 @@
 |24|**PT半径**|r=1.75 m|只能确认T026/V28/T053历史模型连续使用；He2024及同谱系公开资料未给该半径|**源模型连续性和几何不穿墙只能证明“可实现”，不能证明1.75 m是正确设计值**|继续找同一原型锚具/法兰/PT布置资料；找不到则正式定义为RECONSTRUCTION_PARAMETER并做半径敏感性，不能冻结为原型值|直接来源 + 几何约束 + PT偏心/模态/应力敏感性|**HOLD-PROTOTYPE-DIRECT / RECONSTRUCTION-CANDIDATE**|T053/closure/04-pt-radius-1p75m-20261006.md（需重新定级）|
 |25|PT底端|固定平移|He2024直接|无|冻结|BC/data check|PASS-DIRECT|T053|
 |26|PT顶端|112m转换法兰锚固/Equation|He2024拓扑 + 当前实现|约束力需求解核|保留|重复约束/平衡|PASS-DIRECT-TOPOLOGY + PENDING-SOLVER|T053|
-|27|**30个水平接缝**|每接口6DOF SPRING2|等效连接实现|**具体刚度不是He直接参数**|逐DOF追来源/公式，必要时重新标定并敏感性|接缝刚度敏感性/模态/柔度|**HOLD-PHYSICAL**|待关闭|
+|27|**30个水平接缝**|T053旧基线=6DOF SPRING2；T053J候选=30对Hard Contact+μ=0.5|旧SPRING2已追到V28且转动刚度主体≈5.3EI/L，但5.3物理标定无直接来源；2025–2026水平接缝试验/FE文献直接支持开闭接触+摩擦建模|旧弹簧不能代表真实开缝/摩擦；已建立物理接触候选生成器|最终非线性模型优先T053J；T053保留全局等效对照|Data Check→PT/Gravity→CPRESS/COPEN/CSHEAR→Modal/Flex|**CONTACT-CANDIDATE-GENERATOR-READY / PENDING-SOLVER**|T053/closure/05-horizontal-joint-spring2-stiffness-20261006.md|
 |28|钢—混转换连接|当前Tie/Coupling/法兰约束体系|He拓扑+历史模型证据|需逐约束能力表|生成connection capability table|data check/六分量传力|OPEN-VALIDATION|Step10 audit|
 |29|塔底边界|ENCASTRE|He2024直接|无|冻结|反力平衡|PASS-DIRECT + PENDING-SOLVER|T053|
 |30|RNA质量|676753.290723 kg|OpenFAST真实输入重建|需solver|保留|质量/Gravity/Modal|PASS-SOURCE + PENDING-SOLVER|T038/T053|
@@ -61,7 +61,7 @@
 2. PT“36”的物理身份：同谱系有36根旁证，但**本文原型直接证据未关闭**；
 3. PT 140 mm²/位置：单股140 mm²有依据，但**每位置束组倍数未关闭**；
 4. PT r=1.75 m：历史模型与几何可行性已确认，但**原型设计正确性未关闭**；
-5. 30个水平接缝SPRING2刚度；
+5. ~~30个水平接缝SPRING2刚度~~ — 旧弹簧完成反查并降级；Hard Contact+μ=0.5物理接触候选生成器已建立，待自动生成与Abaqus求解验收；
 6. 钢塔Table 3-3半径/直径冲突；
 7. S345塑性强化曲线；
 8. T053最终Abaqus求解验收。

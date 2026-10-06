@@ -26,7 +26,7 @@ PT_initial_stress	1280 MPa	same-object later-lineage Xu2025; not He2024 direct	k
 PT_base	fixed translations	He2024 direct modeling statement	keep	PASS-DIRECT
 PT_top	anchored/equation-coupled to 112 m steel-concrete flange	He2024 direct topology + current implementation	keep	PASS-DIRECT-TOPOLOGY/STATIC
 steel_Table3_3	4.66/4.58/4.50/4.42 m implemented as diameters	He2024 literal header says radius; figures conflict	keep current reconstruction; do not call direct	SOURCE-CONFLICT
-horizontal_joints	30 interfaces x 6 SPRING2	inherited global equivalent model; exact stiffness not He2024 direct	keep for global model; sensitivity required	HOLD-PHYSICAL
+horizontal_joints	T053 legacy:30 interfaces x 6 SPRING2; T053J candidate:30 hard-contact interfaces with mu=0.5	legacy V28/T053 springs traced; most krot≈5.3EI/L but factor 5.3 has no direct physical source; 2025–2026 horizontal-joint experiments/FE support opening/contact/friction and 2026 FE uses hard contact + mu=0.5	retain T053 only as equivalent baseline; prefer T053J contact candidate for final nonlinear joint physics	CONTACT-CANDIDATE-GENERATOR-READY/PENDING-SOLVER
 legacy_NSM	0 in T053; 39.80022 t removed	physical mapping unresolved; duplicate-mass risk with explicit cage	remove in formal candidate; T046-E1A retains sensitivity branch	PASS-IMPLEMENTATION/NEED-SENSITIVITY
 RNA	676753.290723 kg + eccentric CG + full ROTARYI + 6DOF coupling	thesis improved R2 spatial-equivalent model; user decision	keep unchanged	PASS-STATIC/NEED-SOLVER
 solver_gate	data check + Gravity/PT equilibrium + mass/CG + 30 modes + Flex-X/Z	required G0/G1 validation	next step	PENDING
