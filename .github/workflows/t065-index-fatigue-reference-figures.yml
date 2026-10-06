@@ -59,7 +59,7 @@ jobs:
             txt=out/(sid+'.txt')
             subprocess.run(['pdftotext','-layout',pdf,str(txt)],check=True)
             raw=txt.read_text(errors='ignore')
-            pages=raw.split('')
+            pages=raw.split('\\f')
             summaries[sid]={'pdf':pdf,'pages':len(pages),'matches':0}
             for pi,page in enumerate(pages,1):
               lines=[re.sub(r'\s+',' ',x).strip() for x in page.splitlines()]
