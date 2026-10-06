@@ -1,0 +1,35 @@
+[
+  {
+    "method": "generic_extract_cycles",
+    "total_cycle_rows": 48070,
+    "total_equiv_full_cycles": 47658.5,
+    "max_case": "U11p4_ETM_S04",
+    "max_channel": "TwrBsMyt",
+    "max_DEL": 26802.478501532038,
+    "U11p4_ETM_S03_Myt": 23005.397834265208,
+    "U11p4_ETM_S04_Myt": 26802.478501532038,
+    "U19p202140_ETM_S02_Mxt": 9468.855047640667
+  },
+  {
+    "method": "openfast_rainflow_astm",
+    "total_cycle_rows": 95317,
+    "total_equiv_full_cycles": 47658.5,
+    "max_case": "U11p4_ETM_S04",
+    "max_channel": "TwrBsMyt",
+    "max_DEL": 26802.478501532038,
+    "U11p4_ETM_S03_Myt": 23005.397834265204,
+    "U11p4_ETM_S04_Myt": 26802.478501532038,
+    "U19p202140_ETM_S02_Mxt": 9468.855047640667
+  },
+  {
+    "method": "openfast_rainflow_windap",
+    "total_cycle_rows": 57833,
+    "total_equiv_full_cycles": 28916.5,
+    "max_case": "U11p4_ETM_S04",
+    "max_channel": "TwrBsMyt",
+    "max_DEL": 26835.486977355664,
+    "U11p4_ETM_S03_Myt": 23023.169139161277,
+    "U11p4_ETM_S04_Myt": 26835.486977355664,
+    "U19p202140_ETM_S02_Mxt": 9479.041244527107
+  }
+]
