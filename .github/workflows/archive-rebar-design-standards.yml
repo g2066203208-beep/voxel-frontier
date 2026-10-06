@@ -18,14 +18,6 @@ jobs:
   archive:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout: |
-            .github/workflows
-            research/wind-tower/references
-          sparse-checkout-cone-mode: false
       - name: Download public/official standard sources
         shell: bash
         run: |
@@ -101,16 +93,68 @@ jobs:
 
           sha256sum "$D"/* > "$D/SHA256SUMS.txt"
 
-      - name: Commit archive
+      - name: Commit archive through Git Data API
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/wind-tower/references/standards/rebar-prestress-20261006
-          if git diff --cached --quiet; then
-            echo "No archive changes."
-            exit 0
-          fi
-          git commit -m "references: archive rebar and prestress standards sources"
-          git push
+          python3 - <<'PY'
+          import os, json, base64, urllib.request
+          from pathlib import Path
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          branch = "main"
+          root = Path("research/wind-tower/references/standards/rebar-prestress-20261006")
+
+          headers = {
+              "Authorization": "Bearer " + token,
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "wind-tower-standards-archive"
+          }
+
+          def api(method, path, payload=None):
+              data = None if payload is None else json.dumps(payload).encode("utf-8")
+              req = urllib.request.Request(
+                  "https://api.github.com/repos/" + repo + path,
+                  data=data, headers=headers, method=method
+              )
+              with urllib.request.urlopen(req, timeout=300) as resp:
+                  return json.loads(resp.read().decode("utf-8"))
+
+          ref = api("GET", "/git/ref/heads/" + branch)
+          parent = ref["object"]["sha"]
+          parent_commit = api("GET", "/git/commits/" + parent)
+          base_tree = parent_commit["tree"]["sha"]
+
+          entries = []
+          for p in sorted(root.iterdir()):
+              if not p.is_file():
+                  continue
+              raw = p.read_bytes()
+              blob = api("POST", "/git/blobs", {
+                  "content": base64.b64encode(raw).decode("ascii"),
+                  "encoding": "base64"
+              })
+              entries.append({
+                  "path": p.as_posix(),
+                  "mode": "100644",
+                  "type": "blob",
+                  "sha": blob["sha"]
+              })
+
+          tree = api("POST", "/git/trees", {"base_tree": base_tree, "tree": entries})
+          if tree["sha"] == base_tree:
+              print("Archive already identical; no commit required.")
+              raise SystemExit(0)
+
+          commit = api("POST", "/git/commits", {
+              "message": "references: archive rebar and prestress standards sources",
+              "tree": tree["sha"],
+              "parents": [parent]
+          })
+          api("PATCH", "/git/refs/heads/" + branch, {"sha": commit["sha"], "force": False})
+          print("Committed archive:", commit["sha"])
+          PY
