@@ -2,6 +2,14 @@
 
 对象：`D:/MC/SIMPACK_SITE_ONLY.cae` 主模型 `DTU158_SITE_S04_INTERFACE_DYNAMIC`。只读依据为本地 `rebar-inspection.json`、原始 CAE 静态审计、何泽瑜 2024 学位论文 PDF 和仓库 T053 参数矩阵。未运行 Abaqus 求解。
 
+## 证据文件与路径
+
+- 原始 CAE：`D:/MC/SIMPACK_SITE_ONLY.cae`；SHA-256：`DA034807D75115ABC089501367C7AA2A6045BE6A866573B22C8A9662B802F416`。
+- 何泽瑜论文原 PDF：`research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf`；本地核对文件 `D:/MC/cae/大型混塔式风力机的建模与可靠度分析_何泽瑜.pdf`，SHA-256：`85FB7D2E35A039E38E4B442DEADAB6CE7DDBF8BF0E57885DE0238D92113F511C`。
+- 原文截图（仓库目录 `research/wind-tower/references/evidence-screenshots/`）：[第33页](../../references/evidence-screenshots/He2024_PDF_page_33.png)、[第34页表3-2](../../references/evidence-screenshots/He2024_PDF_page_34.png)、[第35页](../../references/evidence-screenshots/He2024_PDF_page_35.png)、[第45页](../../references/evidence-screenshots/He2024_PDF_page_45.png)。
+- 同研究谱系论文源文件：`research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf`；仓库中另存公开版本 `research/wind-tower/references/open-access/Xu_2026_ActaEnergiaeSolarisSinica_Nonlinear_Hybrid_Tower.pdf`。
+- 参数总账：`research/wind-tower/experiments/T053/T053_PARAMETER_SOURCE_MATRIX.tsv`；规范补全边界：`research/wind-tower/experiments/T050/FORMAL_REINFORCEMENT_SPEC_20261006.md`。
+
 ## 一、纵筋：逐段数量核实
 
 何泽瑜 PDF 第34页（正文23页）表3-2逐段给出内、外排钢筋数量。原 CAE 每个 `RBLONG_XX` Part 的 T3D2 单元数与该段两排数量之和逐段相等，31/31段差值均为0：
