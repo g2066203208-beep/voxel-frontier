@@ -8,6 +8,7 @@ const SPEC='research/wind-tower/experiments/T046/spec/rebar-completion.json';
 const ART='artifacts/T046';
 const INPUTS='research/wind-tower/experiments/T046/inputs';
 const T047_INPUTS='research/wind-tower/experiments/T047/inputs';
+const T050_INPUTS='research/wind-tower/experiments/T050/inputs';
 const PUB='public/research';
 
 const spec=JSON.parse(fs.readFileSync(SPEC,'utf8'));
@@ -159,15 +160,50 @@ function withPtBundleFactor8(inp){
 }
 const PTBF8=withPtBundleFactor8(B);
 
-fs.mkdirSync(ART,{recursive:true});fs.mkdirSync(INPUTS,{recursive:true});fs.mkdirSync(T047_INPUTS,{recursive:true});fs.mkdirSync(PUB,{recursive:true});
+// T050 formal reinforcement branch: keep the He-2024 longitudinal bar counts/geometry,
+// but use the ordinary-reinforcement material identity reported for the same 10 MW / 158 m
+// object by Xu et al. (Renewable Energy 243, 2025): HRB335.
+// IMPORTANT: steel-tower S345/Q345 assignments are untouched.
+function withFormalHrb335Longitudinal(inp){
+  const lines=inp.split(/\r?\n/);
+  let armed=0, changed=0;
+  for(let i=0;i<lines.length;i++){
+    if(/^\*\*\s*Section:\s*SEC_REBAR_LONG\s*$/i.test(lines[i].trim())){
+      armed=8;
+      continue;
+    }
+    if(armed>0){
+      if(/^\*Solid Section\b/i.test(lines[i]) && /material=S345\b/i.test(lines[i])){
+        lines[i]=lines[i].replace(/material=S345\b/i,'material=HRB335_T046');
+        changed++;
+        armed=0;
+        continue;
+      }
+      armed--;
+    }
+  }
+  if(changed!==31) throw Error('T050 expected 31 longitudinal section material replacements, got '+changed);
+  let out=lines.join('\n');
+  out=out.replace(
+    '** T046-E1B reinforcement-completion candidate; legacy 39.80022 t NSM removed for mass sensitivity.',
+    '** T050-E2 formal reinforcement candidate; He-2024 longitudinal counts/geometry retained, ordinary reinforcement material unified to HRB335 per Xu et al. 2025 same 10 MW/158 m object; explicit hoop/ties; legacy NSM removed.'
+  );
+  return {text:out,changed};
+}
+const T050=withFormalHrb335Longitudinal(B);
+
+
+fs.mkdirSync(ART,{recursive:true});fs.mkdirSync(INPUTS,{recursive:true});fs.mkdirSync(T047_INPUTS,{recursive:true});fs.mkdirSync(T050_INPUTS,{recursive:true});fs.mkdirSync(PUB,{recursive:true});
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp'),A);
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp'),B);
 fs.writeFileSync(path.join(INPUTS,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp'),A);
 fs.writeFileSync(path.join(INPUTS,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp'),B);
 fs.writeFileSync(path.join(T047_INPUTS,'BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp'),PTBF8);
+fs.writeFileSync(path.join(T050_INPUTS,'BASE001_T050_E2_HRB335_REBAR_HOOP_TIE_NSM_REMOVE.inp'),T050.text);
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp.gz'),zlib.gzipSync(A,{level:9}));
 fs.writeFileSync(path.join(ART,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp.gz'),zlib.gzipSync(B,{level:9}));
 fs.writeFileSync(path.join(ART,'BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp.gz'),zlib.gzipSync(PTBF8,{level:9}));
+fs.writeFileSync(path.join(ART,'BASE001_T050_E2_HRB335_REBAR_HOOP_TIE_NSM_REMOVE.inp.gz'),zlib.gzipSync(T050.text,{level:9}));
 
 let hoopLength=0,tieLength=0;
 function pos(id){const v=nodes[id-1];return v.slice(1);}
@@ -194,7 +230,8 @@ const report={
   variants:{
     E1A:'explicit hoop+ties; legacy 39.80022 t NSM retained; mass upper-bound sensitivity',
     E1B:'explicit hoop+ties; legacy 39.80022 t NSM removed; avoids possible double count if NSM represented omitted cage/attachments',
-    T047_PTBF8:'same as E1B but PT area=0.00112 m2 per each of 36 PT lines (8x140 mm2); sensitivity only, not prototype-frozen'
+    T047_PTBF8:'same as E1B but PT area=0.00112 m2 per each of 36 PT lines (8x140 mm2); sensitivity only, not prototype-frozen',
+    T050_E2:'same cage/NSM choice as E1B; 31 longitudinal SEC_REBAR_LONG assignments changed from S345 to HRB335_T046 to match Xu et al. 2025 same 10 MW/158 m ordinary-rebar identity'
   },
   hold:[
     'Abaqus 2025 Gravity/Modal/Flex solver run is not yet executed for T046.',
@@ -218,4 +255,4 @@ const overlay={
 };
 fs.writeFileSync(path.join(PUB,'t046-rebar-overlay.json.gz'),zlib.gzipSync(JSON.stringify(overlay),{level:9}));
 
-console.log(JSON.stringify({status:'T046/T047 Abaqus INP generated',committedInputs:[path.join(INPUTS,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp'),path.join(INPUTS,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp'),path.join(T047_INPUTS,'BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp')],levels:levels.length,hoopElements:hoopElems.length,tieElements:tieElems.length,addedMassKg:hoopMass+tieMass,minCoverMm:minCover,providedRatioPercent:provided,requiredRatioPercent:worstReq}));
+console.log(JSON.stringify({status:'T046/T047/T050 Abaqus INP generated',committedInputs:[path.join(INPUTS,'BASE001_T046_E1A_HOOP_TIE_NSM_KEEP.inp'),path.join(INPUTS,'BASE001_T046_E1B_HOOP_TIE_NSM_REMOVE.inp'),path.join(T047_INPUTS,'BASE001_T047_E1B_PT_BUNDLE8_SENSITIVITY.inp'),path.join(T050_INPUTS,'BASE001_T050_E2_HRB335_REBAR_HOOP_TIE_NSM_REMOVE.inp')],t050LongitudinalMaterialReplacements:T050.changed,levels:levels.length,hoopElements:hoopElems.length,tieElements:tieElems.length,addedMassKg:hoopMass+tieMass,minCoverMm:minCover,providedRatioPercent:provided,requiredRatioPercent:worstReq}));
