@@ -1,0 +1,63 @@
+{
+  "predefinedFields": {
+    "IC-1": "({'distributionType': UNIFORM, 'fileName': '', 'increment': 2147483647, 'interpolate': False, 'name': 'IC-1', 'region': ('SET_PT_ALL_ELEMS', 'PT_36X15P2', 'PT_36X15P2-1', 1, 2, 0), 'sigma11': 1280000000.0, 'sigma12': 0.0, 'sigma13': None, 'sigma22': 0.0, 'sigma23': None, 'sigma33': None, 'step': 2147483647, 'suppressed': False})"
+  },
+  "pt_sections": {
+    "Section-32-SET_PT_ALL_GEOM": "({'area': 0.00014, 'material': 'STRAND_1860', 'name': 'Section-32-SET_PT_ALL_GEOM'})"
+  },
+  "hoop_sections": {
+    "Section-68-SET_HOOP_ALL": "({'area': 0.0001539380400259, 'material': 'S345', 'name': 'Section-68-SET_HOOP_ALL'})",
+    "Section-69-SET_TIE_ALL": "({'area': 2.82743338823081e-05, 'material': 'S345', 'name': 'Section-69-SET_TIE_ALL'})"
+  },
+  "boundaryConditions": {
+    "Disp-BC-1": "({'category': MECHANICAL, 'distribution': UNIFORM, 'distributionType': UNIFORM, 'fieldName': '', 'fixed': OFF, 'localCsys': None, 'name': 'Disp-BC-1', 'region': ('SET_PT_BOTTOM_GEOM', 'PT_36X15P2', 'PT_36X15P2-1', 1, 4, 0), 'suppressed': False})",
+    "Disp-BC-2": "({'category': MECHANICAL, 'distribution': UNIFORM, 'distributionType': UNIFORM, 'fieldName': '', 'fixed': OFF, 'localCsys': None, 'name': 'Disp-BC-2', 'region': ('SET_PT_BOTTOM_GEOM', 'PT_36X15P2', 'PT_36X15P2-1', 1, 4, 0), 'suppressed': False})",
+    "Disp-BC-3": "({'category': MECHANICAL, 'distribution': UNIFORM, 'distributionType': UNIFORM, 'fieldName': '', 'fixed': OFF, 'localCsys': None, 'name': 'Disp-BC-3', 'region': ('SET_PT_BOTTOM_GEOM', 'PT_36X15P2', 'PT_36X15P2-1', 1, 4, 0), 'suppressed': False})",
+    "Disp-BC-4": "({'category': MECHANICAL, 'localCsys': None, 'name': 'Disp-BC-4', 'region': ('FACE_BOTTOM', 'CSEG_01', 'CSEG_01-1', 1, 6, 0), 'suppressed': False})"
+  },
+  "constraint_counts": {
+    "Coupling": 63,
+    "EmbeddedRegion": 32,
+    "Equation": 108,
+    "Tie": 4
+  },
+  "rna_coupling": "({'adjust': False, 'alpha': 0.0, 'controlPoint': ('SET_TOWER_TOP_O', 'Assembly', 1, 4, 0), 'couplingType': KINEMATIC, 'influenceRadius': WHOLE_SURFACE, 'localCsys': None, 'name': 'CPL_RNA_R2_EQUIV', 'rotationalCouplingType': ROTATIONAL_STRUCTURAL, 'suppressed': False, 'surface': ('SURF_RNA_R2_EQUIV_CG', 'Assembly', 1, 4, 0), 'u1': ON, 'u2': ON, 'u3': ON, 'ur1': ON, 'ur2': ON, 'ur3': ON, 'weightingMethod': UNIFORM})",
+  "pt_assembly_sets": [
+    "SET_PT_TOP_NODE_01",
+    "SET_PT_TOP_NODE_02",
+    "SET_PT_TOP_NODE_03",
+    "SET_PT_TOP_NODE_04",
+    "SET_PT_TOP_NODE_05",
+    "SET_PT_TOP_NODE_06",
+    "SET_PT_TOP_NODE_07",
+    "SET_PT_TOP_NODE_08",
+    "SET_PT_TOP_NODE_09",
+    "SET_PT_TOP_NODE_10",
+    "SET_PT_TOP_NODE_11",
+    "SET_PT_TOP_NODE_12",
+    "SET_PT_TOP_NODE_13",
+    "SET_PT_TOP_NODE_14",
+    "SET_PT_TOP_NODE_15",
+    "SET_PT_TOP_NODE_16",
+    "SET_PT_TOP_NODE_17",
+    "SET_PT_TOP_NODE_18",
+    "SET_PT_TOP_NODE_19",
+    "SET_PT_TOP_NODE_20",
+    "SET_PT_TOP_NODE_21",
+    "SET_PT_TOP_NODE_22",
+    "SET_PT_TOP_NODE_23",
+    "SET_PT_TOP_NODE_24",
+    "SET_PT_TOP_NODE_25",
+    "SET_PT_TOP_NODE_26",
+    "SET_PT_TOP_NODE_27",
+    "SET_PT_TOP_NODE_28",
+    "SET_PT_TOP_NODE_29",
+    "SET_PT_TOP_NODE_30",
+    "SET_PT_TOP_NODE_31",
+    "SET_PT_TOP_NODE_32",
+    "SET_PT_TOP_NODE_33",
+    "SET_PT_TOP_NODE_34",
+    "SET_PT_TOP_NODE_35",
+    "SET_PT_TOP_NODE_36"
+  ]
+}

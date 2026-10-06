@@ -26,3 +26,18 @@ Abaqus/CAE stated that **node-based surfaces are not supported** in the INP impo
 The R2 RNA in this formal candidate is an equivalent mass, eccentric center of gravity, full rotary inertia and six-DOF coupling. It does not contain detailed visible blades/nacelle shells. The absence of those exterior parts in the viewport is expected for this candidate, not a failed tower import.
 
 Source model remains untouched. No Gravity, Modal, Flex, wind, or fatigue run was launched by this GUI import.
+
+## Reinforcement follow-up: actual imported GUI repositories
+
+This is a read-only check of the live imported T053 model. Full raw metadata is in `REINFORCEMENT_GUI_AUDIT.json` and `PT_IMPORT_SEMANTICS.json`.
+
+|Family|Active instances|T3D2 elements|Section/material|Imported connection/state|
+|---|---:|---:|---|---|
+|Longitudinal reinforcement `RBLONG_01..31`|31/31|5,440|S345; one group per concrete segment|31 embedded-region constraints appear, but host/overconstraint and actual stress transfer still require solver checks.|
+|Hoop reinforcement in `HOOP_TIE_CAGE_T046`|1/1|201,456|area 0.0001539380400259 m2 (nominal phi14); S345|One active cage, not the old suppressed `RHOOP_01..31` arrangement. This is code-derived detailing, not a direct He 2024 construction parameter.|
+|Radial/connecting ties in same cage|same active instance|12,312|area 2.82743338823081e-5 m2 (nominal phi6); S345|Modelled with the hoop cage; construction details remain code-derived.|
+|Prestressing strands `PT_36X15P2`|1/1|36|area 0.00014 m2 per FE position; STRAND_1860|One `IC-1` InitialStress field targets PT elements with `sigma11=1.28e9 Pa`, active. PT base BCs, 36 PT top-node sets and 108 equations are present; balanced effective PT force is not yet verified.|
+
+The first name-filter query did not find the prestress field because Abaqus/CAE renamed the INP's `PF_PT_INITIAL_1280MPa` to `IC-1` during import. A second query inspected the field properties and confirmed it is present and unsuppressed. `IC-1` is the nominal initial stress; it is not a measured or solved equilibrium stress.
+
+Therefore **all three reinforcement systems are modelled and active in the GUI import**, but completion of the engineering model is not established by presence/counts. The T055 data check has nine warnings including 1,512 high-aspect elements; full Gravity/PT equilibrium and local mesh/connection V&V remain open before structural-fatigue claims.

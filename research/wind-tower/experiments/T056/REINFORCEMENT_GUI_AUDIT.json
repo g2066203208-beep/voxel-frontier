@@ -1,0 +1,701 @@
+{
+  "database": "D:\\Codex-research-native\\fatigue-literature-20261006\\T053_HE_ALIGNED_R2_GUI_IMPORT.cae",
+  "groups": {
+    "longitudinal": [
+      {
+        "name": "RBLONG_01-1",
+        "part": "RBLONG_01",
+        "suppressed": false,
+        "nodes": 432,
+        "elements": 216,
+        "types": {
+          "T3D2": 216
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_01', 1, 6, 0), 'sectionName': 'Section-33-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 432,
+            "elements": 216
+          }
+        }
+      },
+      {
+        "name": "RBLONG_02-1",
+        "part": "RBLONG_02",
+        "suppressed": false,
+        "nodes": 432,
+        "elements": 216,
+        "types": {
+          "T3D2": 216
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_02', 1, 6, 0), 'sectionName': 'Section-34-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 432,
+            "elements": 216
+          }
+        }
+      },
+      {
+        "name": "RBLONG_03-1",
+        "part": "RBLONG_03",
+        "suppressed": false,
+        "nodes": 432,
+        "elements": 216,
+        "types": {
+          "T3D2": 216
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_03', 1, 6, 0), 'sectionName': 'Section-35-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 432,
+            "elements": 216
+          }
+        }
+      },
+      {
+        "name": "RBLONG_04-1",
+        "part": "RBLONG_04",
+        "suppressed": false,
+        "nodes": 432,
+        "elements": 216,
+        "types": {
+          "T3D2": 216
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_04', 1, 6, 0), 'sectionName': 'Section-36-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 432,
+            "elements": 216
+          }
+        }
+      },
+      {
+        "name": "RBLONG_05-1",
+        "part": "RBLONG_05",
+        "suppressed": false,
+        "nodes": 384,
+        "elements": 192,
+        "types": {
+          "T3D2": 192
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_05', 1, 6, 0), 'sectionName': 'Section-37-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 384,
+            "elements": 192
+          }
+        }
+      },
+      {
+        "name": "RBLONG_06-1",
+        "part": "RBLONG_06",
+        "suppressed": false,
+        "nodes": 384,
+        "elements": 192,
+        "types": {
+          "T3D2": 192
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_06', 1, 6, 0), 'sectionName': 'Section-38-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 384,
+            "elements": 192
+          }
+        }
+      },
+      {
+        "name": "RBLONG_07-1",
+        "part": "RBLONG_07",
+        "suppressed": false,
+        "nodes": 384,
+        "elements": 192,
+        "types": {
+          "T3D2": 192
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_07', 1, 6, 0), 'sectionName': 'Section-39-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 384,
+            "elements": 192
+          }
+        }
+      },
+      {
+        "name": "RBLONG_08-1",
+        "part": "RBLONG_08",
+        "suppressed": false,
+        "nodes": 384,
+        "elements": 192,
+        "types": {
+          "T3D2": 192
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_08', 1, 6, 0), 'sectionName': 'Section-40-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 384,
+            "elements": 192
+          }
+        }
+      },
+      {
+        "name": "RBLONG_09-1",
+        "part": "RBLONG_09",
+        "suppressed": false,
+        "nodes": 384,
+        "elements": 192,
+        "types": {
+          "T3D2": 192
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_09', 1, 6, 0), 'sectionName': 'Section-41-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 384,
+            "elements": 192
+          }
+        }
+      },
+      {
+        "name": "RBLONG_10-1",
+        "part": "RBLONG_10",
+        "suppressed": false,
+        "nodes": 384,
+        "elements": 192,
+        "types": {
+          "T3D2": 192
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_10', 1, 6, 0), 'sectionName': 'Section-42-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 384,
+            "elements": 192
+          }
+        }
+      },
+      {
+        "name": "RBLONG_11-1",
+        "part": "RBLONG_11",
+        "suppressed": false,
+        "nodes": 384,
+        "elements": 192,
+        "types": {
+          "T3D2": 192
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_11', 1, 6, 0), 'sectionName': 'Section-43-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 384,
+            "elements": 192
+          }
+        }
+      },
+      {
+        "name": "RBLONG_12-1",
+        "part": "RBLONG_12",
+        "suppressed": false,
+        "nodes": 360,
+        "elements": 180,
+        "types": {
+          "T3D2": 180
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_12', 1, 6, 0), 'sectionName': 'Section-44-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 360,
+            "elements": 180
+          }
+        }
+      },
+      {
+        "name": "RBLONG_13-1",
+        "part": "RBLONG_13",
+        "suppressed": false,
+        "nodes": 360,
+        "elements": 180,
+        "types": {
+          "T3D2": 180
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_13', 1, 6, 0), 'sectionName': 'Section-45-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 360,
+            "elements": 180
+          }
+        }
+      },
+      {
+        "name": "RBLONG_14-1",
+        "part": "RBLONG_14",
+        "suppressed": false,
+        "nodes": 360,
+        "elements": 180,
+        "types": {
+          "T3D2": 180
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_14', 1, 6, 0), 'sectionName': 'Section-46-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 360,
+            "elements": 180
+          }
+        }
+      },
+      {
+        "name": "RBLONG_15-1",
+        "part": "RBLONG_15",
+        "suppressed": false,
+        "nodes": 360,
+        "elements": 180,
+        "types": {
+          "T3D2": 180
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_15', 1, 6, 0), 'sectionName': 'Section-47-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 360,
+            "elements": 180
+          }
+        }
+      },
+      {
+        "name": "RBLONG_16-1",
+        "part": "RBLONG_16",
+        "suppressed": false,
+        "nodes": 336,
+        "elements": 168,
+        "types": {
+          "T3D2": 168
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_16', 1, 6, 0), 'sectionName': 'Section-48-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 336,
+            "elements": 168
+          }
+        }
+      },
+      {
+        "name": "RBLONG_17-1",
+        "part": "RBLONG_17",
+        "suppressed": false,
+        "nodes": 336,
+        "elements": 168,
+        "types": {
+          "T3D2": 168
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_17', 1, 6, 0), 'sectionName': 'Section-49-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 336,
+            "elements": 168
+          }
+        }
+      },
+      {
+        "name": "RBLONG_18-1",
+        "part": "RBLONG_18",
+        "suppressed": false,
+        "nodes": 336,
+        "elements": 168,
+        "types": {
+          "T3D2": 168
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_18', 1, 6, 0), 'sectionName': 'Section-50-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 336,
+            "elements": 168
+          }
+        }
+      },
+      {
+        "name": "RBLONG_19-1",
+        "part": "RBLONG_19",
+        "suppressed": false,
+        "nodes": 336,
+        "elements": 168,
+        "types": {
+          "T3D2": 168
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_19', 1, 6, 0), 'sectionName': 'Section-51-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 336,
+            "elements": 168
+          }
+        }
+      },
+      {
+        "name": "RBLONG_20-1",
+        "part": "RBLONG_20",
+        "suppressed": false,
+        "nodes": 336,
+        "elements": 168,
+        "types": {
+          "T3D2": 168
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_20', 1, 6, 0), 'sectionName': 'Section-52-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 336,
+            "elements": 168
+          }
+        }
+      },
+      {
+        "name": "RBLONG_21-1",
+        "part": "RBLONG_21",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_21', 1, 6, 0), 'sectionName': 'Section-53-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_22-1",
+        "part": "RBLONG_22",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_22', 1, 6, 0), 'sectionName': 'Section-54-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_23-1",
+        "part": "RBLONG_23",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_23', 1, 6, 0), 'sectionName': 'Section-55-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_24-1",
+        "part": "RBLONG_24",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_24', 1, 6, 0), 'sectionName': 'Section-56-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_25-1",
+        "part": "RBLONG_25",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_25', 1, 6, 0), 'sectionName': 'Section-57-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_26-1",
+        "part": "RBLONG_26",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_26', 1, 6, 0), 'sectionName': 'Section-58-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_27-1",
+        "part": "RBLONG_27",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_27', 1, 6, 0), 'sectionName': 'Section-59-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_28-1",
+        "part": "RBLONG_28",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_28', 1, 6, 0), 'sectionName': 'Section-60-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_29-1",
+        "part": "RBLONG_29",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_29', 1, 6, 0), 'sectionName': 'Section-61-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_30-1",
+        "part": "RBLONG_30",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_30', 1, 6, 0), 'sectionName': 'Section-62-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      },
+      {
+        "name": "RBLONG_31-1",
+        "part": "RBLONG_31",
+        "suppressed": false,
+        "nodes": 304,
+        "elements": 152,
+        "types": {
+          "T3D2": 152
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_ALL', 'RBLONG_31', 1, 6, 0), 'sectionName': 'Section-63-SET_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_ALL": {
+            "nodes": 304,
+            "elements": 152
+          }
+        }
+      }
+    ],
+    "hoop_tie": [
+      {
+        "name": "HOOP_TIE_CAGE_T046-1",
+        "part": "HOOP_TIE_CAGE_T046",
+        "suppressed": false,
+        "nodes": 201456,
+        "elements": 213768,
+        "types": {
+          "T3D2": 213768
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_HOOP_ALL', 'HOOP_TIE_CAGE_T046', 1, 2, 0), 'sectionName': 'Section-68-SET_HOOP_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})",
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_TIE_ALL', 'HOOP_TIE_CAGE_T046', 1, 2, 0), 'sectionName': 'Section-69-SET_TIE_ALL', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_TIE_ALL": {
+            "nodes": 24624,
+            "elements": 12312
+          },
+          "SET_HOOP_ALL": {
+            "nodes": 201456,
+            "elements": 201456
+          },
+          "SET_ALL": {
+            "nodes": 201456,
+            "elements": 213768
+          }
+        }
+      }
+    ],
+    "prestress": [
+      {
+        "name": "PT_36X15P2-1",
+        "part": "PT_36X15P2",
+        "suppressed": false,
+        "nodes": 72,
+        "elements": 36,
+        "types": {
+          "T3D2": 36
+        },
+        "sections": [
+          "({'offset': 0.0, 'offsetField': '', 'offsetType': SINGLE_VALUE, 'region': ('SET_PT_ALL_GEOM', 'PT_36X15P2', 1, 6, 0), 'sectionName': 'Section-32-SET_PT_ALL_GEOM', 'suppressed': False, 'tag': '', 'thicknessAssignment': FROM_SECTION})"
+        ],
+        "part_sets": {
+          "SET_PT_TOP_GEOM": {
+            "nodes": 36,
+            "elements": 0
+          },
+          "SET_PT_BOTTOM_GEOM": {
+            "nodes": 36,
+            "elements": 0
+          },
+          "SET_PT_ALL_GEOM": {
+            "nodes": 72,
+            "elements": 36
+          },
+          "SET_PT_ALL_ELEMS": {
+            "nodes": 72,
+            "elements": 36
+          }
+        }
+      }
+    ]
+  },
+  "materials": {
+    "S345": "({'density': 'Density object', 'description': '', 'elastic': 'Elastic object', 'materialIdentifier': '', 'name': 'S345', 'plastic': 'Plastic object'})",
+    "STRAND_1860": "({'density': 'Density object', 'description': '', 'elastic': 'Elastic object', 'materialIdentifier': '', 'name': 'STRAND_1860'})"
+  },
+  "initial_conditions": {},
+  "constraints": {
+    "COUPLING_RNA_TOP": "({'adjust': False, 'alpha': 0.0, 'controlPoint': ('SET_TOWER_TOP_O', 'Assembly', 1, 4, 0), 'couplingType': KINEMATIC, 'influenceRadius': WHOLE_SURFACE, 'localCsys': None, 'name': 'COUPLING_RNA_TOP', 'rotationalCouplingType': ROTATIONAL_STRUCTURAL, 'suppressed': False, 'surface': ('SURF_TOP', 'SSEG_04', 'SSEG_04-1', 1, 10, 0), 'u1': ON, 'u2': ON, 'u3': ON, 'ur1': ON, 'ur2': ON, 'ur3': ON, 'weightingMethod': UNIFORM})",
+    "CPL_FLANGE_C31_TOP": "({'adjust': False, 'alpha': 0.0, 'controlPoint': ('SET_FLANGE_RP', 'Assembly', 1, 4, 0), 'couplingType': KINEMATIC, 'influenceRadius': WHOLE_SURFACE, 'localCsys': None, 'name': 'CPL_FLANGE_C31_TOP', 'rotationalCouplingType': ROTATIONAL_STRUCTURAL, 'suppressed': False, 'surface': ('SURF_TOP', 'CSEG_31', 'CSEG_31-1', 1, 10, 0), 'u1': ON, 'u2': ON, 'u3': ON, 'ur1': ON, 'ur2': ON, 'ur3': ON, 'weightingMethod': UNIFORM})",
+    "CPL_RNA_R2_EQUIV": "({'adjust': False, 'alpha': 0.0, 'controlPoint': ('SET_TOWER_TOP_O', 'Assembly', 1, 4, 0), 'couplingType': KINEMATIC, 'influenceRadius': WHOLE_SURFACE, 'localCsys': None, 'name': 'CPL_RNA_R2_EQUIV', 'rotationalCouplingType': ROTATIONAL_STRUCTURAL, 'suppressed': False, 'surface': ('SURF_RNA_R2_EQUIV_CG', 'Assembly', 1, 4, 0), 'u1': ON, 'u2': ON, 'u3': ON, 'ur1': ON, 'ur2': ON, 'ur3': ON, 'weightingMethod': UNIFORM})",
+    "Embed-1": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M442', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_01', 'CSEG_01-1', 1, 6, 0), 'name': 'Embed-1', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-2": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M443', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_02', 'CSEG_02-1', 1, 6, 0), 'name': 'Embed-2', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-3": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M444', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_03', 'CSEG_03-1', 1, 6, 0), 'name': 'Embed-3', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-4": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M445', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_04', 'CSEG_04-1', 1, 6, 0), 'name': 'Embed-4', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-5": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M446', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_05', 'CSEG_05-1', 1, 6, 0), 'name': 'Embed-5', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-6": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M447', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_06', 'CSEG_06-1', 1, 6, 0), 'name': 'Embed-6', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-7": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M448', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_07', 'CSEG_07-1', 1, 6, 0), 'name': 'Embed-7', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-8": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M449', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_08', 'CSEG_08-1', 1, 6, 0), 'name': 'Embed-8', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-9": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M450', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_09', 'CSEG_09-1', 1, 6, 0), 'name': 'Embed-9', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-10": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M451', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_10', 'CSEG_10-1', 1, 6, 0), 'name': 'Embed-10', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-11": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M452', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_11', 'CSEG_11-1', 1, 6, 0), 'name': 'Embed-11', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-12": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M453', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_12', 'CSEG_12-1', 1, 6, 0), 'name': 'Embed-12', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-13": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M454', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_13', 'CSEG_13-1', 1, 6, 0), 'name': 'Embed-13', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-14": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M455', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_14', 'CSEG_14-1', 1, 6, 0), 'name': 'Embed-14', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-15": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M456', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_15', 'CSEG_15-1', 1, 6, 0), 'name': 'Embed-15', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-16": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M457', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_16', 'CSEG_16-1', 1, 6, 0), 'name': 'Embed-16', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-17": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M458', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_17', 'CSEG_17-1', 1, 6, 0), 'name': 'Embed-17', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-18": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M459', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_18', 'CSEG_18-1', 1, 6, 0), 'name': 'Embed-18', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-19": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M460', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_19', 'CSEG_19-1', 1, 6, 0), 'name': 'Embed-19', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-20": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M461', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_20', 'CSEG_20-1', 1, 6, 0), 'name': 'Embed-20', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-21": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M462', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_21', 'CSEG_21-1', 1, 6, 0), 'name': 'Embed-21', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-22": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M463', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_22', 'CSEG_22-1', 1, 6, 0), 'name': 'Embed-22', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-23": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M464', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_23', 'CSEG_23-1', 1, 6, 0), 'name': 'Embed-23', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-24": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M465', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_24', 'CSEG_24-1', 1, 6, 0), 'name': 'Embed-24', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-25": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M466', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_25', 'CSEG_25-1', 1, 6, 0), 'name': 'Embed-25', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-26": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M467', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_26', 'CSEG_26-1', 1, 6, 0), 'name': 'Embed-26', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-27": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M468', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_27', 'CSEG_27-1', 1, 6, 0), 'name': 'Embed-27', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-28": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M469', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_28', 'CSEG_28-1', 1, 6, 0), 'name': 'Embed-28', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-29": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M470', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_29', 'CSEG_29-1', 1, 6, 0), 'name': 'Embed-29', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-30": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M471', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_30', 'CSEG_30-1', 1, 6, 0), 'name': 'Embed-30', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-31": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M472', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_ALL', 'CSEG_31', 'CSEG_31-1', 1, 6, 0), 'name': 'Embed-31', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})",
+    "Embed-32": "({'absoluteTolerance': 0.0, 'embeddedRegion': ('_M833', 'Assembly', 1, 2, 1), 'fractionalTolerance': 0.05, 'hostRegion': ('SET_CSEG_ALL_ACTIVE', 'Assembly', 1, 6, 0), 'name': 'Embed-32', 'suppressed': False, 'toleranceMethod': BOTH, 'weightFactorTolerance': 1e-06})"
+  }
+}
