@@ -1,0 +1,18 @@
+model_item	primary_source	secondary_or_independent_source	current_T057_identity	evidence_grade	final_gate
+overall_geometry	REF008	REF061	158m=112m concrete+46m steel;31+4 sections	PASS-DIRECT	INP geometry audit
+steel_table_dimension_interpretation	REF008	later-lineage consistency	4.66/4.58/4.50/4.42 interpreted as diameters	PASS-INDEPENDENT-CONSISTENCY / disclosed header conflict	geometry continuity + final INP
+concrete_material	REF008/REF061	GB/T50010 background	C65/C70 + CDP	OBJECT-LINEAGE + METHOD	material coupon + assignment audit
+longitudinal_counts	REF008 Table3-2	T058 CAE audit	31 sections inner/outer;5440 T3D2	PASS-DIRECT+IMPLEMENTATION	embedded/data check
+longitudinal_area	GB50135-2019	REF008 geometry/counts	490.874mm2 ~= phi25	PASS-CODE-VALIDATED-RECONSTRUCTION / NOT HE-DIRECT	response sensitivity
+hoop_tie_cover	GB50135;T/CEC5008;GB50010	REF005 embedded-truss precedent	phi14@80 double hoop;phi6 ties;30mm cover	CODE-DERIVED / NOT HE-DIRECT	clause table + geometry audit
+rebar_material	REF061	REF008 historical S345 conflict	HRB335 E200 fy335 fu455	PASS-SAME-OBJECT-DIRECT / version conflict disclosed	native material read
+steel_tower_material	REF061	independent constitutive literature	Q345 E206 fy345 fu470	PASS-SAME-OBJECT-DIRECT	native material read
+steel_hardening	Shao2023;Xia2026;Zhou2020	Abaqus metal plasticity	b=0.01; true stress/plastic strain	LITERATURE BASELINE / NOT SAME-OBJECT	material sensitivity if yielding
+PT_diameter_topology	REF008	REF061	15.2mm; unbonded; base fixed; top anchored to flange	PASS-DIRECT+SAME-OBJECT-LINEAGE	equilibrium
+PT_bundle_factor	REF139; independent 112.28m/31-section project; Applied Sciences 2021	precompression-ratio physics check	36 positions x8x140=40320mm2;51.6096MN nominal	PASS-INDEPENDENT-ENGINEERING+PHYSICS / NOT HE-DIRECT	PT S11+CPRESS+base reaction
+PT_radius	historical source model only	geometry sensitivity	1.75m	RECONSTRUCTION-CANDIDATE	direct-source recovery or sensitivity
+horizontal_joint	Tan2025 validated FE; 2026 joint study	REF015-017/026 joint mechanics	30 pairs hard normal + penalty friction mu0.5	PASS-INDEPENDENT-METHOD+PARAMETER	contact init+CPRESS+COPEN+CSHEAR
+RNA	REF010;REF039;REF001	OpenFAST mass properties	mass+eccentric CG+full inertia+6DOF	PASS-STATIC / NEED V&V	mass/CG/J+modal
+legacy_NSM	mass-accounting audit	T053/T057 static audit	removed	PASS-IMPLEMENTATION	mass ledger
+native_solver	Abaqus official	T055 historical datacheck	T057 not yet solver verified	PENDING	DataCheck->Gravity/PT/contact->Modal->Flex
+steel_mesh	T055 Abaqus datacheck	REF005 mesh/local stress logic	1512 high-aspect-ratio warnings inherited risk	HOLD FOR LOCAL STEEL	remesh/convergence if steel fatigue branch
