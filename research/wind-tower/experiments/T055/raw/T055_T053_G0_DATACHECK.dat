@@ -1,0 +1,3686 @@
+1
+
+   Abaqus 2025                                  Date 06-Oct-2026   Time 15:29:04
+   For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
+
+
+
+                         The Abaqus Software is a product of:
+
+                           Dassault Systemes Americas Corp.
+                           1301 Atwood Avenue, Suite 101W
+                              Johnston, RI 02919, USA
+ 
+
+
+                   The Abaqus Software is available only under license
+                   from Dassault Systemes or its subsidiary and may be
+                   used or reproduced only in accordance with the terms
+                   of such license.
+ 
+                          On machine DESKTOP-1MEIMCL 
+                          you are authorized to run
+                          Abaqus/Standard until 31-Dec-2055
+
+                          Your site id is:  
+
+
+ 
+                    For assistance or any other information you may
+                    obtain contact information for your local office
+                    from the world wide web at:
+
+                      https://www.3ds.com/products-services/simulia/services-support/
+
+ 
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+                *                                                         * 
+                *                   *****************                     * 
+                *                   *  N O T I C E  *                     * 
+                *                   *****************                     * 
+                *                                                         * 
+                *                                                         * 
+                *                       Abaqus 2025                       * 
+                *                                                         * 
+                *       BUILD ID: 2024_09_20-21.00.46 RELr427 198590      * 
+                *                                                         * 
+                *                                                         * 
+                *  Please make sure you are using                         * 
+                *  release Abaqus 2025 manuals                            * 
+                *  plus the notes accompanying this release.              * 
+                *                                                         * 
+                *                                                         * 
+                *                                                         * 
+                *                                                         * 
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+
+ 
+
+
+
+     PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   *******************************************************
+
+
+     END PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   ***********************************************************
+
+
+
+
+     OPTIONS BEING PROCESSED
+   ***************************
+
+
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_HOOP_TIE_CAGE_T046-1_SET_ALL
+  *Elset, elset=ASSEMBLY_HOOP_TIE_CAGE_T046-1_SET_HOOP_ALL
+  *Elset, elset=ASSEMBLY_HOOP_TIE_CAGE_T046-1_SET_TIE_ALL
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_01-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_01-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_01-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_01-1_SET_SOLID
+  *Elset, elset=ASSEMBLY_CSEG_01-1__SURF_BOTTOM_S3
+  *Elset, elset=ASSEMBLY_CSEG_01-1__SURF_TOP_S5
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_02-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_02-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_02-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_02-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_02-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_03-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_03-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_03-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_03-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_03-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_04-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_04-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_04-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_04-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_04-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_05-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_05-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_05-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_05-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_05-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_06-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_06-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_06-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_06-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_06-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_07-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_07-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_07-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_07-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_07-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_08-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_08-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_08-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_08-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_08-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_09-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_09-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_09-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_09-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_09-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_10-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_10-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_10-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_10-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_10-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_11-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_11-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_11-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_11-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_11-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_12-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_12-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_12-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_12-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_12-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_13-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_13-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_13-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_13-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_13-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_14-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_14-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_14-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_14-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_14-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_15-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_15-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_15-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_15-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_15-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_16-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_16-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_16-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_16-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_16-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_17-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_17-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_17-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_17-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_17-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_18-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_18-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_18-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_18-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_18-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_19-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_19-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_19-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_19-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_19-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_20-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_20-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_20-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_20-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_20-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_21-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_21-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_21-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_21-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_21-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_22-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_22-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_22-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_22-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_22-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_23-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_23-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_23-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_23-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_23-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_24-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_24-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_24-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_24-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_24-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_25-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_25-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_25-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_25-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_25-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_26-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_26-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_26-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_26-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_26-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_27-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_27-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_27-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_27-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_27-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_28-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_28-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_28-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_28-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_28-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_29-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_29-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_29-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_29-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_29-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_30-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_30-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_30-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_30-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_30-1__SURF_TOP_S4
+  *Element, type=C3D8R
+  *Elset, elset=ASSEMBLY_CSEG_31-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_CSEG_31-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_CSEG_31-1_SET_ALL
+  *Elset, elset=ASSEMBLY_CSEG_31-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_CSEG_31-1__SURF_TOP_S4
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_01-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_02-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_03-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_04-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_05-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_06-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_07-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_08-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_09-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_10-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_11-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_12-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_13-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_14-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_15-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_16-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_17-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_18-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_19-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_20-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_21-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_22-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_23-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_24-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_25-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_26-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_27-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_28-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_29-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_30-1_SET_ALL
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_RBLONG_31-1_SET_ALL
+  *Element, type=C3D8I
+  *Elset, elset=ASSEMBLY_SSEG_01-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_SSEG_01-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_SSEG_01-1_SET_ALL
+  *Elset, elset=ASSEMBLY_SSEG_01-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_SSEG_01-1__SURF_TOP_S4
+  *Element, type=C3D8I
+  *Elset, elset=ASSEMBLY_SSEG_02-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_SSEG_02-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_SSEG_02-1_SET_ALL
+  *Elset, elset=ASSEMBLY_SSEG_02-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_SSEG_02-1__SURF_TOP_S4
+  *Element, type=C3D8I
+  *Elset, elset=ASSEMBLY_SSEG_03-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_SSEG_03-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_SSEG_03-1_SET_ALL
+  *Elset, elset=ASSEMBLY_SSEG_03-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_SSEG_03-1__SURF_TOP_S4
+  *Element, type=C3D8I
+  *Elset, elset=ASSEMBLY_SSEG_04-1_FACE_BOTTOM
+  *Elset, elset=ASSEMBLY_SSEG_04-1_FACE_TOP
+  *Elset, elset=ASSEMBLY_SSEG_04-1_SET_ALL
+  *Elset, elset=ASSEMBLY_SSEG_04-1__SURF_BOTTOM_S6
+  *Elset, elset=ASSEMBLY_SSEG_04-1__SURF_TOP_S4
+  *Element, type=T3D2
+  *Elset, elset=ASSEMBLY_PT_36X15P2-1_SET_PT_ALL_ELEMS
+  *Elset, elset=ASSEMBLY_PT_36X15P2-1_SET_PT_ALL_GEOM
+  *Element, type=SPRING2
+  *Element, type=MASS
+  *Element, type=ROTARYI
+  *Elset, elset=ASSEMBLY_RNA_R2_EQUIV_MASS
+  *Elset, elset=ASSEMBLY_RNA_R2_EQUIV_ROTARY
+  *Elset, elset=ASSEMBLY_SET_CH4_STRESS_CTRL
+  *Elset, elset=ASSEMBLY_SET_CSEG_ALL_ACTIVE
+  *Elset, elset=ASSEMBLY_SET_SSEG_ALL_ACTIVE
+  *Elset, elset=ASSEMBLY_SET_TOWER_BASE
+  *Elset, elset=ASSEMBLY_SET_TOWER_TOP
+  *Elset, elset=ASSEMBLY_SPR_J01_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J01_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J01_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J01_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J01_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J01_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J02_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J02_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J02_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J02_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J02_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J02_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J03_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J03_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J03_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J03_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J03_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J03_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J04_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J04_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J04_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J04_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J04_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J04_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J05_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J05_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J05_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J05_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J05_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J05_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J06_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J06_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J06_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J06_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J06_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J06_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J07_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J07_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J07_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J07_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J07_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J07_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J08_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J08_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J08_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J08_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J08_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J08_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J09_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J09_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J09_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J09_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J09_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J09_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J10_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J10_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J10_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J10_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J10_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J10_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J11_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J11_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J11_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J11_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J11_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J11_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J12_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J12_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J12_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J12_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J12_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J12_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J13_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J13_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J13_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J13_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J13_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J13_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J14_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J14_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J14_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J14_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J14_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J14_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J15_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J15_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J15_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J15_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J15_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J15_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J16_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J16_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J16_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J16_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J16_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J16_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J17_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J17_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J17_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J17_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J17_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J17_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J18_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J18_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J18_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J18_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J18_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J18_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J19_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J19_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J19_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J19_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J19_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J19_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J20_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J20_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J20_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J20_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J20_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J20_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J21_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J21_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J21_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J21_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J21_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J21_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J22_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J22_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J22_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J22_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J22_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J22_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J23_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J23_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J23_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J23_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J23_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J23_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J24_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J24_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J24_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J24_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J24_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J24_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J25_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J25_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J25_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J25_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J25_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J25_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J26_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J26_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J26_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J26_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J26_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J26_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J27_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J27_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J27_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J27_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J27_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J27_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J28_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J28_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J28_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J28_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J28_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J28_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J29_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J29_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J29_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J29_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J29_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J29_DOF6-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J30_DOF1-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J30_DOF2-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J30_DOF3-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J30_DOF4-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J30_DOF5-SPRING
+  *Elset, elset=ASSEMBLY_SPR_J30_DOF6-SPRING
+  *heading
+          BASE001 preferred candidate: T026 M2 tower + T038 validated R2 RNA at common O=(0,158,0); SI units                                                                                                                                                                                                                                                                                                                                                                                                                              
+  *material, name=C65
+  *density
+  *elastic
+  *concretedamagedplasticity
+  *concretecompressionhardening
+  *concretetensionstiffening
+  *concretecompressiondamage
+  *concretetensiondamage
+  *material, name=C70
+  *density
+  *elastic
+  *concretedamagedplasticity
+  *concretecompressionhardening
+  *concretetensionstiffening
+  *concretecompressiondamage
+  *concretetensiondamage
+  *material, name=HRB500_BASELINE
+  *material, name=S345
+  *density
+  *elastic
+  *plastic
+  *material, name=STRAND_1860
+  *density
+  *elastic
+  *spring, elset=ASSEMBLY_SPR_J01_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF6-SPRING
+  *mass, elset=ASSEMBLY_RNA_R2_EQUIV_MASS
+  *rotaryinertia, elset=ASSEMBLY_RNA_R2_EQUIV_ROTARY
+  *initialconditions, type=STRESS
+  *solidsection, elset=ASSEMBLY_HOOP_TIE_CAGE_T046-1_SET_HOOP_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_HOOP_TIE_CAGE_T046-1_SET_TIE_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_CSEG_01-1_SET_ALL, material=C70
+  *solidsection, elset=ASSEMBLY_CSEG_02-1_SET_ALL, material=C70
+  *solidsection, elset=ASSEMBLY_CSEG_03-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_04-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_05-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_06-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_07-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_08-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_09-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_10-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_11-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_12-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_13-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_14-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_15-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_16-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_17-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_18-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_19-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_20-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_21-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_22-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_23-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_24-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_25-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_26-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_27-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_28-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_29-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_30-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_31-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_RBLONG_01-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_02-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_03-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_04-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_05-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_06-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_07-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_08-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_09-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_10-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_11-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_12-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_13-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_14-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_15-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_16-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_17-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_18-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_19-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_20-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_21-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_22-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_23-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_24-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_25-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_26-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_27-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_28-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_29-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_30-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_31-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_01-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_02-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_03-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_04-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_PT_36X15P2-1_SET_PT_ALL_GEOM, material=STRAND_1860
+  *solidsection, elset=ASSEMBLY_HOOP_TIE_CAGE_T046-1_SET_HOOP_ALL, material=S345
+
+ ***WARNING: FOR TWO-DIMENSIONAL MODELS, IF A NON-UNITY THICKNESS IS SPECIFIED 
+             FOR TWO-DIMENSIONAL SOLID ELEMENTS AND THESE ELEMENTS ARE INVOLVED 
+             IN AN INTERACTION SUCH AS CONTACT, THE SAME THICKNESS SHOULD BE 
+             SPECIFIED FOR THE OUT-OF-PLANE THICKNESS OF THE CORRESPONDING 
+             SURFACE UNDER *SURFACE INTERACTION.
+  *solidsection, elset=ASSEMBLY_HOOP_TIE_CAGE_T046-1_SET_TIE_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_CSEG_01-1_SET_ALL, material=C70
+  *solidsection, elset=ASSEMBLY_CSEG_02-1_SET_ALL, material=C70
+  *solidsection, elset=ASSEMBLY_CSEG_03-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_04-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_05-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_06-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_07-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_08-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_09-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_10-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_11-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_12-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_13-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_14-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_15-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_16-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_17-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_18-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_19-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_20-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_21-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_22-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_23-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_24-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_25-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_26-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_27-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_28-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_29-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_30-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_CSEG_31-1_SET_ALL, material=C65
+  *solidsection, elset=ASSEMBLY_RBLONG_01-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_02-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_03-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_04-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_05-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_06-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_07-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_08-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_09-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_10-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_11-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_12-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_13-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_14-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_15-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_16-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_17-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_18-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_19-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_20-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_21-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_22-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_23-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_24-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_25-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_26-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_27-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_28-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_29-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_30-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_RBLONG_31-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_01-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_02-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_03-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_SSEG_04-1_SET_ALL, material=S345
+  *solidsection, elset=ASSEMBLY_PT_36X15P2-1_SET_PT_ALL_GEOM, material=STRAND_1860
+  *spring, elset=ASSEMBLY_SPR_J01_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J01_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J02_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J03_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J04_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J05_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J06_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J07_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J08_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J09_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J10_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J11_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J12_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J13_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J14_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J15_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J16_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J17_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J18_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J19_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J20_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J21_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J22_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J23_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J24_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J25_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J26_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J27_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J28_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J29_DOF6-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF1-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF2-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF3-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF4-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF5-SPRING
+  *spring, elset=ASSEMBLY_SPR_J30_DOF6-SPRING
+  *mass, elset=ASSEMBLY_RNA_R2_EQUIV_MASS
+  *rotaryinertia, elset=ASSEMBLY_RNA_R2_EQUIV_ROTARY
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_01-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_01-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_02-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_02-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_03-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_03-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_04-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_04-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_05-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_05-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_06-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_06-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_07-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_07-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_08-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_08-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_09-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_09-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_10-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_10-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_11-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_11-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_12-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_12-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_13-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_13-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_14-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_14-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_15-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_15-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_16-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_16-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_17-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_17-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_18-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_18-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_19-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_19-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_20-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_20-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_21-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_21-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_22-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_22-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_23-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_23-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_24-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_24-1_SURF_TOP
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_25-1_SURF_BOTTOM
+  *surface, type=ELEMENT, name=ASSEMBLY_CSEG_25-1_SURF_TOP
+
+ ***NOTE: DUE TO EXCESSIVE REPORTING, THE ECHO OF THE *SURFACE OPTION IS BEING 
+          SUPPRESSED.
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+  *coupling, constraintname=ASSEMBLY_COUPLING_RNA_TOP, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_FLANGE_C31_TOP, refnode=ASSEMBLY_SET_FLANGE_RP, surface=ASSEMBLY_CSEG_31-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_LO, refnode=ASSEMBLY__PICKEDSET235, surface=ASSEMBLY_CSEG_01-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_UP, refnode=ASSEMBLY__PICKEDSET236, surface=ASSEMBLY_CSEG_02-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J02_LO, refnode=ASSEMBLY__PICKEDSET253, surface=ASSEMBLY_CSEG_02-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J02_UP, refnode=ASSEMBLY__PICKEDSET254, surface=ASSEMBLY_CSEG_03-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J03_LO, refnode=ASSEMBLY__PICKEDSET271, surface=ASSEMBLY_CSEG_03-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J03_UP, refnode=ASSEMBLY__PICKEDSET272, surface=ASSEMBLY_CSEG_04-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J04_LO, refnode=ASSEMBLY__PICKEDSET289, surface=ASSEMBLY_CSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J04_UP, refnode=ASSEMBLY__PICKEDSET290, surface=ASSEMBLY_CSEG_05-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J05_LO, refnode=ASSEMBLY__PICKEDSET307, surface=ASSEMBLY_CSEG_05-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J05_UP, refnode=ASSEMBLY__PICKEDSET308, surface=ASSEMBLY_CSEG_06-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J06_LO, refnode=ASSEMBLY__PICKEDSET325, surface=ASSEMBLY_CSEG_06-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J06_UP, refnode=ASSEMBLY__PICKEDSET326, surface=ASSEMBLY_CSEG_07-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J07_LO, refnode=ASSEMBLY__PICKEDSET343, surface=ASSEMBLY_CSEG_07-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J07_UP, refnode=ASSEMBLY__PICKEDSET344, surface=ASSEMBLY_CSEG_08-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J08_LO, refnode=ASSEMBLY__PICKEDSET361, surface=ASSEMBLY_CSEG_08-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J08_UP, refnode=ASSEMBLY__PICKEDSET362, surface=ASSEMBLY_CSEG_09-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J09_LO, refnode=ASSEMBLY__PICKEDSET379, surface=ASSEMBLY_CSEG_09-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J09_UP, refnode=ASSEMBLY__PICKEDSET380, surface=ASSEMBLY_CSEG_10-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J10_LO, refnode=ASSEMBLY__PICKEDSET397, surface=ASSEMBLY_CSEG_10-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J10_UP, refnode=ASSEMBLY__PICKEDSET398, surface=ASSEMBLY_CSEG_11-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J11_LO, refnode=ASSEMBLY__PICKEDSET415, surface=ASSEMBLY_CSEG_11-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J11_UP, refnode=ASSEMBLY__PICKEDSET416, surface=ASSEMBLY_CSEG_12-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J12_LO, refnode=ASSEMBLY__PICKEDSET433, surface=ASSEMBLY_CSEG_12-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J12_UP, refnode=ASSEMBLY__PICKEDSET434, surface=ASSEMBLY_CSEG_13-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J13_LO, refnode=ASSEMBLY__PICKEDSET451, surface=ASSEMBLY_CSEG_13-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J13_UP, refnode=ASSEMBLY__PICKEDSET452, surface=ASSEMBLY_CSEG_14-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J14_LO, refnode=ASSEMBLY__PICKEDSET469, surface=ASSEMBLY_CSEG_14-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J14_UP, refnode=ASSEMBLY__PICKEDSET470, surface=ASSEMBLY_CSEG_15-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J15_LO, refnode=ASSEMBLY__PICKEDSET487, surface=ASSEMBLY_CSEG_15-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J15_UP, refnode=ASSEMBLY__PICKEDSET488, surface=ASSEMBLY_CSEG_16-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J16_LO, refnode=ASSEMBLY__PICKEDSET505, surface=ASSEMBLY_CSEG_16-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J16_UP, refnode=ASSEMBLY__PICKEDSET506, surface=ASSEMBLY_CSEG_17-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J17_LO, refnode=ASSEMBLY__PICKEDSET523, surface=ASSEMBLY_CSEG_17-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J17_UP, refnode=ASSEMBLY__PICKEDSET524, surface=ASSEMBLY_CSEG_18-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J18_LO, refnode=ASSEMBLY__PICKEDSET541, surface=ASSEMBLY_CSEG_18-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J18_UP, refnode=ASSEMBLY__PICKEDSET542, surface=ASSEMBLY_CSEG_19-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J19_LO, refnode=ASSEMBLY__PICKEDSET559, surface=ASSEMBLY_CSEG_19-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J19_UP, refnode=ASSEMBLY__PICKEDSET560, surface=ASSEMBLY_CSEG_20-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J20_LO, refnode=ASSEMBLY__PICKEDSET577, surface=ASSEMBLY_CSEG_20-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J20_UP, refnode=ASSEMBLY__PICKEDSET578, surface=ASSEMBLY_CSEG_21-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J21_LO, refnode=ASSEMBLY__PICKEDSET595, surface=ASSEMBLY_CSEG_21-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J21_UP, refnode=ASSEMBLY__PICKEDSET596, surface=ASSEMBLY_CSEG_22-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J22_LO, refnode=ASSEMBLY__PICKEDSET613, surface=ASSEMBLY_CSEG_22-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J22_UP, refnode=ASSEMBLY__PICKEDSET614, surface=ASSEMBLY_CSEG_23-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J23_LO, refnode=ASSEMBLY__PICKEDSET631, surface=ASSEMBLY_CSEG_23-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J23_UP, refnode=ASSEMBLY__PICKEDSET632, surface=ASSEMBLY_CSEG_24-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J24_LO, refnode=ASSEMBLY__PICKEDSET649, surface=ASSEMBLY_CSEG_24-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J24_UP, refnode=ASSEMBLY__PICKEDSET650, surface=ASSEMBLY_CSEG_25-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J25_LO, refnode=ASSEMBLY__PICKEDSET667, surface=ASSEMBLY_CSEG_25-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J25_UP, refnode=ASSEMBLY__PICKEDSET668, surface=ASSEMBLY_CSEG_26-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J26_LO, refnode=ASSEMBLY__PICKEDSET685, surface=ASSEMBLY_CSEG_26-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J26_UP, refnode=ASSEMBLY__PICKEDSET686, surface=ASSEMBLY_CSEG_27-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J27_LO, refnode=ASSEMBLY__PICKEDSET703, surface=ASSEMBLY_CSEG_27-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J27_UP, refnode=ASSEMBLY__PICKEDSET704, surface=ASSEMBLY_CSEG_28-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J28_LO, refnode=ASSEMBLY__PICKEDSET721, surface=ASSEMBLY_CSEG_28-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J28_UP, refnode=ASSEMBLY__PICKEDSET722, surface=ASSEMBLY_CSEG_29-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J29_LO, refnode=ASSEMBLY__PICKEDSET739, surface=ASSEMBLY_CSEG_29-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J29_UP, refnode=ASSEMBLY__PICKEDSET740, surface=ASSEMBLY_CSEG_30-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J30_LO, refnode=ASSEMBLY__PICKEDSET757, surface=ASSEMBLY_CSEG_30-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J30_UP, refnode=ASSEMBLY__PICKEDSET758, surface=ASSEMBLY_CSEG_31-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_RNA_R2_EQUIV, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SURF_RNA_R2_EQUIV_CG
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+  *coupling, constraintname=ASSEMBLY_COUPLING_RNA_TOP, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_FLANGE_C31_TOP, refnode=ASSEMBLY_SET_FLANGE_RP, surface=ASSEMBLY_CSEG_31-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_LO, refnode=ASSEMBLY__PICKEDSET235, surface=ASSEMBLY_CSEG_01-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_UP, refnode=ASSEMBLY__PICKEDSET236, surface=ASSEMBLY_CSEG_02-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J02_LO, refnode=ASSEMBLY__PICKEDSET253, surface=ASSEMBLY_CSEG_02-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J02_UP, refnode=ASSEMBLY__PICKEDSET254, surface=ASSEMBLY_CSEG_03-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J03_LO, refnode=ASSEMBLY__PICKEDSET271, surface=ASSEMBLY_CSEG_03-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J03_UP, refnode=ASSEMBLY__PICKEDSET272, surface=ASSEMBLY_CSEG_04-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J04_LO, refnode=ASSEMBLY__PICKEDSET289, surface=ASSEMBLY_CSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J04_UP, refnode=ASSEMBLY__PICKEDSET290, surface=ASSEMBLY_CSEG_05-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J05_LO, refnode=ASSEMBLY__PICKEDSET307, surface=ASSEMBLY_CSEG_05-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J05_UP, refnode=ASSEMBLY__PICKEDSET308, surface=ASSEMBLY_CSEG_06-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J06_LO, refnode=ASSEMBLY__PICKEDSET325, surface=ASSEMBLY_CSEG_06-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J06_UP, refnode=ASSEMBLY__PICKEDSET326, surface=ASSEMBLY_CSEG_07-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J07_LO, refnode=ASSEMBLY__PICKEDSET343, surface=ASSEMBLY_CSEG_07-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J07_UP, refnode=ASSEMBLY__PICKEDSET344, surface=ASSEMBLY_CSEG_08-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J08_LO, refnode=ASSEMBLY__PICKEDSET361, surface=ASSEMBLY_CSEG_08-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J08_UP, refnode=ASSEMBLY__PICKEDSET362, surface=ASSEMBLY_CSEG_09-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J09_LO, refnode=ASSEMBLY__PICKEDSET379, surface=ASSEMBLY_CSEG_09-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J09_UP, refnode=ASSEMBLY__PICKEDSET380, surface=ASSEMBLY_CSEG_10-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J10_LO, refnode=ASSEMBLY__PICKEDSET397, surface=ASSEMBLY_CSEG_10-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J10_UP, refnode=ASSEMBLY__PICKEDSET398, surface=ASSEMBLY_CSEG_11-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J11_LO, refnode=ASSEMBLY__PICKEDSET415, surface=ASSEMBLY_CSEG_11-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J11_UP, refnode=ASSEMBLY__PICKEDSET416, surface=ASSEMBLY_CSEG_12-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J12_LO, refnode=ASSEMBLY__PICKEDSET433, surface=ASSEMBLY_CSEG_12-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J12_UP, refnode=ASSEMBLY__PICKEDSET434, surface=ASSEMBLY_CSEG_13-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J13_LO, refnode=ASSEMBLY__PICKEDSET451, surface=ASSEMBLY_CSEG_13-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J13_UP, refnode=ASSEMBLY__PICKEDSET452, surface=ASSEMBLY_CSEG_14-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J14_LO, refnode=ASSEMBLY__PICKEDSET469, surface=ASSEMBLY_CSEG_14-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J14_UP, refnode=ASSEMBLY__PICKEDSET470, surface=ASSEMBLY_CSEG_15-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J15_LO, refnode=ASSEMBLY__PICKEDSET487, surface=ASSEMBLY_CSEG_15-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J15_UP, refnode=ASSEMBLY__PICKEDSET488, surface=ASSEMBLY_CSEG_16-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J16_LO, refnode=ASSEMBLY__PICKEDSET505, surface=ASSEMBLY_CSEG_16-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J16_UP, refnode=ASSEMBLY__PICKEDSET506, surface=ASSEMBLY_CSEG_17-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J17_LO, refnode=ASSEMBLY__PICKEDSET523, surface=ASSEMBLY_CSEG_17-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J17_UP, refnode=ASSEMBLY__PICKEDSET524, surface=ASSEMBLY_CSEG_18-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J18_LO, refnode=ASSEMBLY__PICKEDSET541, surface=ASSEMBLY_CSEG_18-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J18_UP, refnode=ASSEMBLY__PICKEDSET542, surface=ASSEMBLY_CSEG_19-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J19_LO, refnode=ASSEMBLY__PICKEDSET559, surface=ASSEMBLY_CSEG_19-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J19_UP, refnode=ASSEMBLY__PICKEDSET560, surface=ASSEMBLY_CSEG_20-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J20_LO, refnode=ASSEMBLY__PICKEDSET577, surface=ASSEMBLY_CSEG_20-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J20_UP, refnode=ASSEMBLY__PICKEDSET578, surface=ASSEMBLY_CSEG_21-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J21_LO, refnode=ASSEMBLY__PICKEDSET595, surface=ASSEMBLY_CSEG_21-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J21_UP, refnode=ASSEMBLY__PICKEDSET596, surface=ASSEMBLY_CSEG_22-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J22_LO, refnode=ASSEMBLY__PICKEDSET613, surface=ASSEMBLY_CSEG_22-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J22_UP, refnode=ASSEMBLY__PICKEDSET614, surface=ASSEMBLY_CSEG_23-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J23_LO, refnode=ASSEMBLY__PICKEDSET631, surface=ASSEMBLY_CSEG_23-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J23_UP, refnode=ASSEMBLY__PICKEDSET632, surface=ASSEMBLY_CSEG_24-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J24_LO, refnode=ASSEMBLY__PICKEDSET649, surface=ASSEMBLY_CSEG_24-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J24_UP, refnode=ASSEMBLY__PICKEDSET650, surface=ASSEMBLY_CSEG_25-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J25_LO, refnode=ASSEMBLY__PICKEDSET667, surface=ASSEMBLY_CSEG_25-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J25_UP, refnode=ASSEMBLY__PICKEDSET668, surface=ASSEMBLY_CSEG_26-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J26_LO, refnode=ASSEMBLY__PICKEDSET685, surface=ASSEMBLY_CSEG_26-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J26_UP, refnode=ASSEMBLY__PICKEDSET686, surface=ASSEMBLY_CSEG_27-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J27_LO, refnode=ASSEMBLY__PICKEDSET703, surface=ASSEMBLY_CSEG_27-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J27_UP, refnode=ASSEMBLY__PICKEDSET704, surface=ASSEMBLY_CSEG_28-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J28_LO, refnode=ASSEMBLY__PICKEDSET721, surface=ASSEMBLY_CSEG_28-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J28_UP, refnode=ASSEMBLY__PICKEDSET722, surface=ASSEMBLY_CSEG_29-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J29_LO, refnode=ASSEMBLY__PICKEDSET739, surface=ASSEMBLY_CSEG_29-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J29_UP, refnode=ASSEMBLY__PICKEDSET740, surface=ASSEMBLY_CSEG_30-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J30_LO, refnode=ASSEMBLY__PICKEDSET757, surface=ASSEMBLY_CSEG_30-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J30_UP, refnode=ASSEMBLY__PICKEDSET758, surface=ASSEMBLY_CSEG_31-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_RNA_R2_EQUIV, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SURF_RNA_R2_EQUIV_CG
+  *coupling, constraintname=ASSEMBLY_COUPLING_RNA_TOP, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SSEG_04-1_SURF_TOP
+  *kinematic
+
+ ***NOTE: WHENEVER A TRANSLATION (ROTATION) DOF AT A NODE IS CONSTRAINED BY A 
+          KINEMATIC COUPLING DEFINITION THE TRANSLATION (ROTATION) DOFS FOR 
+          THAT NODE CANNOT BE INCLUDED IN ANY OTHER CONSTRAINT INCLUDING MPCS, 
+          RIGID BODIES, ETC.
+  *coupling, constraintname=ASSEMBLY_CPL_FLANGE_C31_TOP, refnode=ASSEMBLY_SET_FLANGE_RP, surface=ASSEMBLY_CSEG_31-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J01_LO, refnode=ASSEMBLY__PICKEDSET235, surface=ASSEMBLY_CSEG_01-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J01_UP, refnode=ASSEMBLY__PICKEDSET236, surface=ASSEMBLY_CSEG_02-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J02_LO, refnode=ASSEMBLY__PICKEDSET253, surface=ASSEMBLY_CSEG_02-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J02_UP, refnode=ASSEMBLY__PICKEDSET254, surface=ASSEMBLY_CSEG_03-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J03_LO, refnode=ASSEMBLY__PICKEDSET271, surface=ASSEMBLY_CSEG_03-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J03_UP, refnode=ASSEMBLY__PICKEDSET272, surface=ASSEMBLY_CSEG_04-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J04_LO, refnode=ASSEMBLY__PICKEDSET289, surface=ASSEMBLY_CSEG_04-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J04_UP, refnode=ASSEMBLY__PICKEDSET290, surface=ASSEMBLY_CSEG_05-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J05_LO, refnode=ASSEMBLY__PICKEDSET307, surface=ASSEMBLY_CSEG_05-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J05_UP, refnode=ASSEMBLY__PICKEDSET308, surface=ASSEMBLY_CSEG_06-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J06_LO, refnode=ASSEMBLY__PICKEDSET325, surface=ASSEMBLY_CSEG_06-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J06_UP, refnode=ASSEMBLY__PICKEDSET326, surface=ASSEMBLY_CSEG_07-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J07_LO, refnode=ASSEMBLY__PICKEDSET343, surface=ASSEMBLY_CSEG_07-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J07_UP, refnode=ASSEMBLY__PICKEDSET344, surface=ASSEMBLY_CSEG_08-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J08_LO, refnode=ASSEMBLY__PICKEDSET361, surface=ASSEMBLY_CSEG_08-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J08_UP, refnode=ASSEMBLY__PICKEDSET362, surface=ASSEMBLY_CSEG_09-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J09_LO, refnode=ASSEMBLY__PICKEDSET379, surface=ASSEMBLY_CSEG_09-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J09_UP, refnode=ASSEMBLY__PICKEDSET380, surface=ASSEMBLY_CSEG_10-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J10_LO, refnode=ASSEMBLY__PICKEDSET397, surface=ASSEMBLY_CSEG_10-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J10_UP, refnode=ASSEMBLY__PICKEDSET398, surface=ASSEMBLY_CSEG_11-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J11_LO, refnode=ASSEMBLY__PICKEDSET415, surface=ASSEMBLY_CSEG_11-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J11_UP, refnode=ASSEMBLY__PICKEDSET416, surface=ASSEMBLY_CSEG_12-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J12_LO, refnode=ASSEMBLY__PICKEDSET433, surface=ASSEMBLY_CSEG_12-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J12_UP, refnode=ASSEMBLY__PICKEDSET434, surface=ASSEMBLY_CSEG_13-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J13_LO, refnode=ASSEMBLY__PICKEDSET451, surface=ASSEMBLY_CSEG_13-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J13_UP, refnode=ASSEMBLY__PICKEDSET452, surface=ASSEMBLY_CSEG_14-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J14_LO, refnode=ASSEMBLY__PICKEDSET469, surface=ASSEMBLY_CSEG_14-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J14_UP, refnode=ASSEMBLY__PICKEDSET470, surface=ASSEMBLY_CSEG_15-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J15_LO, refnode=ASSEMBLY__PICKEDSET487, surface=ASSEMBLY_CSEG_15-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J15_UP, refnode=ASSEMBLY__PICKEDSET488, surface=ASSEMBLY_CSEG_16-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J16_LO, refnode=ASSEMBLY__PICKEDSET505, surface=ASSEMBLY_CSEG_16-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J16_UP, refnode=ASSEMBLY__PICKEDSET506, surface=ASSEMBLY_CSEG_17-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J17_LO, refnode=ASSEMBLY__PICKEDSET523, surface=ASSEMBLY_CSEG_17-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J17_UP, refnode=ASSEMBLY__PICKEDSET524, surface=ASSEMBLY_CSEG_18-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J18_LO, refnode=ASSEMBLY__PICKEDSET541, surface=ASSEMBLY_CSEG_18-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J18_UP, refnode=ASSEMBLY__PICKEDSET542, surface=ASSEMBLY_CSEG_19-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J19_LO, refnode=ASSEMBLY__PICKEDSET559, surface=ASSEMBLY_CSEG_19-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J19_UP, refnode=ASSEMBLY__PICKEDSET560, surface=ASSEMBLY_CSEG_20-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J20_LO, refnode=ASSEMBLY__PICKEDSET577, surface=ASSEMBLY_CSEG_20-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J20_UP, refnode=ASSEMBLY__PICKEDSET578, surface=ASSEMBLY_CSEG_21-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J21_LO, refnode=ASSEMBLY__PICKEDSET595, surface=ASSEMBLY_CSEG_21-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J21_UP, refnode=ASSEMBLY__PICKEDSET596, surface=ASSEMBLY_CSEG_22-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J22_LO, refnode=ASSEMBLY__PICKEDSET613, surface=ASSEMBLY_CSEG_22-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J22_UP, refnode=ASSEMBLY__PICKEDSET614, surface=ASSEMBLY_CSEG_23-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J23_LO, refnode=ASSEMBLY__PICKEDSET631, surface=ASSEMBLY_CSEG_23-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J23_UP, refnode=ASSEMBLY__PICKEDSET632, surface=ASSEMBLY_CSEG_24-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J24_LO, refnode=ASSEMBLY__PICKEDSET649, surface=ASSEMBLY_CSEG_24-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J24_UP, refnode=ASSEMBLY__PICKEDSET650, surface=ASSEMBLY_CSEG_25-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J25_LO, refnode=ASSEMBLY__PICKEDSET667, surface=ASSEMBLY_CSEG_25-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J25_UP, refnode=ASSEMBLY__PICKEDSET668, surface=ASSEMBLY_CSEG_26-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J26_LO, refnode=ASSEMBLY__PICKEDSET685, surface=ASSEMBLY_CSEG_26-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J26_UP, refnode=ASSEMBLY__PICKEDSET686, surface=ASSEMBLY_CSEG_27-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J27_LO, refnode=ASSEMBLY__PICKEDSET703, surface=ASSEMBLY_CSEG_27-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J27_UP, refnode=ASSEMBLY__PICKEDSET704, surface=ASSEMBLY_CSEG_28-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J28_LO, refnode=ASSEMBLY__PICKEDSET721, surface=ASSEMBLY_CSEG_28-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J28_UP, refnode=ASSEMBLY__PICKEDSET722, surface=ASSEMBLY_CSEG_29-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J29_LO, refnode=ASSEMBLY__PICKEDSET739, surface=ASSEMBLY_CSEG_29-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J29_UP, refnode=ASSEMBLY__PICKEDSET740, surface=ASSEMBLY_CSEG_30-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J30_LO, refnode=ASSEMBLY__PICKEDSET757, surface=ASSEMBLY_CSEG_30-1_SURF_TOP
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_J30_UP, refnode=ASSEMBLY__PICKEDSET758, surface=ASSEMBLY_CSEG_31-1_SURF_BOTTOM
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_CPL_RNA_R2_EQUIV, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SURF_RNA_R2_EQUIV_CG
+  *kinematic
+  *coupling, constraintname=ASSEMBLY_COUPLING_RNA_TOP, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_FLANGE_C31_TOP, refnode=ASSEMBLY_SET_FLANGE_RP, surface=ASSEMBLY_CSEG_31-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_LO, refnode=ASSEMBLY__PICKEDSET235, surface=ASSEMBLY_CSEG_01-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_UP, refnode=ASSEMBLY__PICKEDSET236, surface=ASSEMBLY_CSEG_02-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J02_LO, refnode=ASSEMBLY__PICKEDSET253, surface=ASSEMBLY_CSEG_02-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J02_UP, refnode=ASSEMBLY__PICKEDSET254, surface=ASSEMBLY_CSEG_03-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J03_LO, refnode=ASSEMBLY__PICKEDSET271, surface=ASSEMBLY_CSEG_03-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J03_UP, refnode=ASSEMBLY__PICKEDSET272, surface=ASSEMBLY_CSEG_04-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J04_LO, refnode=ASSEMBLY__PICKEDSET289, surface=ASSEMBLY_CSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J04_UP, refnode=ASSEMBLY__PICKEDSET290, surface=ASSEMBLY_CSEG_05-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J05_LO, refnode=ASSEMBLY__PICKEDSET307, surface=ASSEMBLY_CSEG_05-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J05_UP, refnode=ASSEMBLY__PICKEDSET308, surface=ASSEMBLY_CSEG_06-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J06_LO, refnode=ASSEMBLY__PICKEDSET325, surface=ASSEMBLY_CSEG_06-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J06_UP, refnode=ASSEMBLY__PICKEDSET326, surface=ASSEMBLY_CSEG_07-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J07_LO, refnode=ASSEMBLY__PICKEDSET343, surface=ASSEMBLY_CSEG_07-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J07_UP, refnode=ASSEMBLY__PICKEDSET344, surface=ASSEMBLY_CSEG_08-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J08_LO, refnode=ASSEMBLY__PICKEDSET361, surface=ASSEMBLY_CSEG_08-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J08_UP, refnode=ASSEMBLY__PICKEDSET362, surface=ASSEMBLY_CSEG_09-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J09_LO, refnode=ASSEMBLY__PICKEDSET379, surface=ASSEMBLY_CSEG_09-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J09_UP, refnode=ASSEMBLY__PICKEDSET380, surface=ASSEMBLY_CSEG_10-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J10_LO, refnode=ASSEMBLY__PICKEDSET397, surface=ASSEMBLY_CSEG_10-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J10_UP, refnode=ASSEMBLY__PICKEDSET398, surface=ASSEMBLY_CSEG_11-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J11_LO, refnode=ASSEMBLY__PICKEDSET415, surface=ASSEMBLY_CSEG_11-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J11_UP, refnode=ASSEMBLY__PICKEDSET416, surface=ASSEMBLY_CSEG_12-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J12_LO, refnode=ASSEMBLY__PICKEDSET433, surface=ASSEMBLY_CSEG_12-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J12_UP, refnode=ASSEMBLY__PICKEDSET434, surface=ASSEMBLY_CSEG_13-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J13_LO, refnode=ASSEMBLY__PICKEDSET451, surface=ASSEMBLY_CSEG_13-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J13_UP, refnode=ASSEMBLY__PICKEDSET452, surface=ASSEMBLY_CSEG_14-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J14_LO, refnode=ASSEMBLY__PICKEDSET469, surface=ASSEMBLY_CSEG_14-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J14_UP, refnode=ASSEMBLY__PICKEDSET470, surface=ASSEMBLY_CSEG_15-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J15_LO, refnode=ASSEMBLY__PICKEDSET487, surface=ASSEMBLY_CSEG_15-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J15_UP, refnode=ASSEMBLY__PICKEDSET488, surface=ASSEMBLY_CSEG_16-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J16_LO, refnode=ASSEMBLY__PICKEDSET505, surface=ASSEMBLY_CSEG_16-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J16_UP, refnode=ASSEMBLY__PICKEDSET506, surface=ASSEMBLY_CSEG_17-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J17_LO, refnode=ASSEMBLY__PICKEDSET523, surface=ASSEMBLY_CSEG_17-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J17_UP, refnode=ASSEMBLY__PICKEDSET524, surface=ASSEMBLY_CSEG_18-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J18_LO, refnode=ASSEMBLY__PICKEDSET541, surface=ASSEMBLY_CSEG_18-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J18_UP, refnode=ASSEMBLY__PICKEDSET542, surface=ASSEMBLY_CSEG_19-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J19_LO, refnode=ASSEMBLY__PICKEDSET559, surface=ASSEMBLY_CSEG_19-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J19_UP, refnode=ASSEMBLY__PICKEDSET560, surface=ASSEMBLY_CSEG_20-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J20_LO, refnode=ASSEMBLY__PICKEDSET577, surface=ASSEMBLY_CSEG_20-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J20_UP, refnode=ASSEMBLY__PICKEDSET578, surface=ASSEMBLY_CSEG_21-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J21_LO, refnode=ASSEMBLY__PICKEDSET595, surface=ASSEMBLY_CSEG_21-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J21_UP, refnode=ASSEMBLY__PICKEDSET596, surface=ASSEMBLY_CSEG_22-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J22_LO, refnode=ASSEMBLY__PICKEDSET613, surface=ASSEMBLY_CSEG_22-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J22_UP, refnode=ASSEMBLY__PICKEDSET614, surface=ASSEMBLY_CSEG_23-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J23_LO, refnode=ASSEMBLY__PICKEDSET631, surface=ASSEMBLY_CSEG_23-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J23_UP, refnode=ASSEMBLY__PICKEDSET632, surface=ASSEMBLY_CSEG_24-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J24_LO, refnode=ASSEMBLY__PICKEDSET649, surface=ASSEMBLY_CSEG_24-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J24_UP, refnode=ASSEMBLY__PICKEDSET650, surface=ASSEMBLY_CSEG_25-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J25_LO, refnode=ASSEMBLY__PICKEDSET667, surface=ASSEMBLY_CSEG_25-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J25_UP, refnode=ASSEMBLY__PICKEDSET668, surface=ASSEMBLY_CSEG_26-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J26_LO, refnode=ASSEMBLY__PICKEDSET685, surface=ASSEMBLY_CSEG_26-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J26_UP, refnode=ASSEMBLY__PICKEDSET686, surface=ASSEMBLY_CSEG_27-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J27_LO, refnode=ASSEMBLY__PICKEDSET703, surface=ASSEMBLY_CSEG_27-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J27_UP, refnode=ASSEMBLY__PICKEDSET704, surface=ASSEMBLY_CSEG_28-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J28_LO, refnode=ASSEMBLY__PICKEDSET721, surface=ASSEMBLY_CSEG_28-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J28_UP, refnode=ASSEMBLY__PICKEDSET722, surface=ASSEMBLY_CSEG_29-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J29_LO, refnode=ASSEMBLY__PICKEDSET739, surface=ASSEMBLY_CSEG_29-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J29_UP, refnode=ASSEMBLY__PICKEDSET740, surface=ASSEMBLY_CSEG_30-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J30_LO, refnode=ASSEMBLY__PICKEDSET757, surface=ASSEMBLY_CSEG_30-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J30_UP, refnode=ASSEMBLY__PICKEDSET758, surface=ASSEMBLY_CSEG_31-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_RNA_R2_EQUIV, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SURF_RNA_R2_EQUIV_CG
+  *coupling, constraintname=ASSEMBLY_COUPLING_RNA_TOP, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_FLANGE_C31_TOP, refnode=ASSEMBLY_SET_FLANGE_RP, surface=ASSEMBLY_CSEG_31-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_LO, refnode=ASSEMBLY__PICKEDSET235, surface=ASSEMBLY_CSEG_01-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J01_UP, refnode=ASSEMBLY__PICKEDSET236, surface=ASSEMBLY_CSEG_02-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J02_LO, refnode=ASSEMBLY__PICKEDSET253, surface=ASSEMBLY_CSEG_02-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J02_UP, refnode=ASSEMBLY__PICKEDSET254, surface=ASSEMBLY_CSEG_03-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J03_LO, refnode=ASSEMBLY__PICKEDSET271, surface=ASSEMBLY_CSEG_03-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J03_UP, refnode=ASSEMBLY__PICKEDSET272, surface=ASSEMBLY_CSEG_04-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J04_LO, refnode=ASSEMBLY__PICKEDSET289, surface=ASSEMBLY_CSEG_04-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J04_UP, refnode=ASSEMBLY__PICKEDSET290, surface=ASSEMBLY_CSEG_05-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J05_LO, refnode=ASSEMBLY__PICKEDSET307, surface=ASSEMBLY_CSEG_05-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J05_UP, refnode=ASSEMBLY__PICKEDSET308, surface=ASSEMBLY_CSEG_06-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J06_LO, refnode=ASSEMBLY__PICKEDSET325, surface=ASSEMBLY_CSEG_06-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J06_UP, refnode=ASSEMBLY__PICKEDSET326, surface=ASSEMBLY_CSEG_07-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J07_LO, refnode=ASSEMBLY__PICKEDSET343, surface=ASSEMBLY_CSEG_07-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J07_UP, refnode=ASSEMBLY__PICKEDSET344, surface=ASSEMBLY_CSEG_08-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J08_LO, refnode=ASSEMBLY__PICKEDSET361, surface=ASSEMBLY_CSEG_08-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J08_UP, refnode=ASSEMBLY__PICKEDSET362, surface=ASSEMBLY_CSEG_09-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J09_LO, refnode=ASSEMBLY__PICKEDSET379, surface=ASSEMBLY_CSEG_09-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J09_UP, refnode=ASSEMBLY__PICKEDSET380, surface=ASSEMBLY_CSEG_10-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J10_LO, refnode=ASSEMBLY__PICKEDSET397, surface=ASSEMBLY_CSEG_10-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J10_UP, refnode=ASSEMBLY__PICKEDSET398, surface=ASSEMBLY_CSEG_11-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J11_LO, refnode=ASSEMBLY__PICKEDSET415, surface=ASSEMBLY_CSEG_11-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J11_UP, refnode=ASSEMBLY__PICKEDSET416, surface=ASSEMBLY_CSEG_12-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J12_LO, refnode=ASSEMBLY__PICKEDSET433, surface=ASSEMBLY_CSEG_12-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J12_UP, refnode=ASSEMBLY__PICKEDSET434, surface=ASSEMBLY_CSEG_13-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J13_LO, refnode=ASSEMBLY__PICKEDSET451, surface=ASSEMBLY_CSEG_13-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J13_UP, refnode=ASSEMBLY__PICKEDSET452, surface=ASSEMBLY_CSEG_14-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J14_LO, refnode=ASSEMBLY__PICKEDSET469, surface=ASSEMBLY_CSEG_14-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J14_UP, refnode=ASSEMBLY__PICKEDSET470, surface=ASSEMBLY_CSEG_15-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J15_LO, refnode=ASSEMBLY__PICKEDSET487, surface=ASSEMBLY_CSEG_15-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J15_UP, refnode=ASSEMBLY__PICKEDSET488, surface=ASSEMBLY_CSEG_16-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J16_LO, refnode=ASSEMBLY__PICKEDSET505, surface=ASSEMBLY_CSEG_16-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J16_UP, refnode=ASSEMBLY__PICKEDSET506, surface=ASSEMBLY_CSEG_17-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J17_LO, refnode=ASSEMBLY__PICKEDSET523, surface=ASSEMBLY_CSEG_17-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J17_UP, refnode=ASSEMBLY__PICKEDSET524, surface=ASSEMBLY_CSEG_18-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J18_LO, refnode=ASSEMBLY__PICKEDSET541, surface=ASSEMBLY_CSEG_18-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J18_UP, refnode=ASSEMBLY__PICKEDSET542, surface=ASSEMBLY_CSEG_19-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J19_LO, refnode=ASSEMBLY__PICKEDSET559, surface=ASSEMBLY_CSEG_19-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J19_UP, refnode=ASSEMBLY__PICKEDSET560, surface=ASSEMBLY_CSEG_20-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J20_LO, refnode=ASSEMBLY__PICKEDSET577, surface=ASSEMBLY_CSEG_20-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J20_UP, refnode=ASSEMBLY__PICKEDSET578, surface=ASSEMBLY_CSEG_21-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J21_LO, refnode=ASSEMBLY__PICKEDSET595, surface=ASSEMBLY_CSEG_21-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J21_UP, refnode=ASSEMBLY__PICKEDSET596, surface=ASSEMBLY_CSEG_22-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J22_LO, refnode=ASSEMBLY__PICKEDSET613, surface=ASSEMBLY_CSEG_22-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J22_UP, refnode=ASSEMBLY__PICKEDSET614, surface=ASSEMBLY_CSEG_23-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J23_LO, refnode=ASSEMBLY__PICKEDSET631, surface=ASSEMBLY_CSEG_23-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J23_UP, refnode=ASSEMBLY__PICKEDSET632, surface=ASSEMBLY_CSEG_24-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J24_LO, refnode=ASSEMBLY__PICKEDSET649, surface=ASSEMBLY_CSEG_24-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J24_UP, refnode=ASSEMBLY__PICKEDSET650, surface=ASSEMBLY_CSEG_25-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J25_LO, refnode=ASSEMBLY__PICKEDSET667, surface=ASSEMBLY_CSEG_25-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J25_UP, refnode=ASSEMBLY__PICKEDSET668, surface=ASSEMBLY_CSEG_26-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J26_LO, refnode=ASSEMBLY__PICKEDSET685, surface=ASSEMBLY_CSEG_26-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J26_UP, refnode=ASSEMBLY__PICKEDSET686, surface=ASSEMBLY_CSEG_27-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J27_LO, refnode=ASSEMBLY__PICKEDSET703, surface=ASSEMBLY_CSEG_27-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J27_UP, refnode=ASSEMBLY__PICKEDSET704, surface=ASSEMBLY_CSEG_28-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J28_LO, refnode=ASSEMBLY__PICKEDSET721, surface=ASSEMBLY_CSEG_28-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J28_UP, refnode=ASSEMBLY__PICKEDSET722, surface=ASSEMBLY_CSEG_29-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J29_LO, refnode=ASSEMBLY__PICKEDSET739, surface=ASSEMBLY_CSEG_29-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J29_UP, refnode=ASSEMBLY__PICKEDSET740, surface=ASSEMBLY_CSEG_30-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_J30_LO, refnode=ASSEMBLY__PICKEDSET757, surface=ASSEMBLY_CSEG_30-1_SURF_TOP
+  *coupling, constraintname=ASSEMBLY_CPL_J30_UP, refnode=ASSEMBLY__PICKEDSET758, surface=ASSEMBLY_CSEG_31-1_SURF_BOTTOM
+  *coupling, constraintname=ASSEMBLY_CPL_RNA_R2_EQUIV, refnode=ASSEMBLY_SET_TOWER_TOP_O, surface=ASSEMBLY_SURF_RNA_R2_EQUIV_CG
+  *initialconditions, type=STRESS
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_01-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_02-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_03-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_04-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_05-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_06-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_07-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_08-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_09-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_10-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_11-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_12-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_13-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_14-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_15-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_16-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_17-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_18-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_19-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_20-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_21-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_22-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_23-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_24-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_25-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_26-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_27-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_28-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_29-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_30-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_31-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_SET_CSEG_ALL_ACTIVE
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_01-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_02-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_03-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_04-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_05-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_06-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_07-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_08-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_09-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_10-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_11-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_12-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_13-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_14-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_15-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_16-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_17-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_18-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_19-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_20-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_21-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_22-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_23-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_24-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_25-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_26-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_27-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_28-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_29-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_30-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_31-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_SET_CSEG_ALL_ACTIVE
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_01-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_02-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_03-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_04-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_05-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_06-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_07-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_08-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_09-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_10-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_11-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_12-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_13-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_14-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_15-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_16-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_17-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_18-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_19-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_20-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_21-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_22-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_23-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_24-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_25-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_26-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_27-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_28-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_29-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_30-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_31-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_SET_CSEG_ALL_ACTIVE
+  *boundary
+  *boundary
+  *boundary
+  *boundary
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+
+ ***WARNING: FOR *TIE PAIR 
+             (ASSEMBLY_SSEG_01-1_SURF_BOTTOM-ASSEMBLY_CSEG_31-1_SURF_TOP), 
+             ADJUSTED NODES WITH VERY SMALL ADJUSTMENTS WERE NOT PRINTED. 
+             SPECIFY *PREPRINT,MODEL=YES FOR COMPLETE PRINTOUT.
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+
+ ***WARNING: FOR *TIE PAIR 
+             (ASSEMBLY_SSEG_02-1_SURF_BOTTOM-ASSEMBLY_SSEG_01-1_SURF_TOP), 
+             ADJUSTED NODES WITH VERY SMALL ADJUSTMENTS WERE NOT PRINTED. 
+             SPECIFY *PREPRINT,MODEL=YES FOR COMPLETE PRINTOUT.
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+
+ ***WARNING: FOR *TIE PAIR 
+             (ASSEMBLY_SSEG_03-1_SURF_BOTTOM-ASSEMBLY_SSEG_02-1_SURF_TOP), 
+             ADJUSTED NODES WITH VERY SMALL ADJUSTMENTS WERE NOT PRINTED. 
+             SPECIFY *PREPRINT,MODEL=YES FOR COMPLETE PRINTOUT.
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+
+ ***WARNING: FOR *TIE PAIR 
+             (ASSEMBLY_SSEG_04-1_SURF_BOTTOM-ASSEMBLY_SSEG_03-1_SURF_TOP), 
+             ADJUSTED NODES WITH VERY SMALL ADJUSTMENTS WERE NOT PRINTED. 
+             SPECIFY *PREPRINT,MODEL=YES FOR COMPLETE PRINTOUT.
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+  *equation
+
+ ***NOTE: DUE TO EXCESSIVE REPORTING, THE ECHO OF THE *MPC and *EQUATION 
+          OPTIONS IS BEING SUPPRESSED.
+  *tie, name=ASSEMBLY_TIE_C31_S01, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S01_S02, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S02_S03, adjust=YES
+  *tie, name=ASSEMBLY_TIE_S03_S04, adjust=YES
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_01-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_02-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_03-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_04-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_05-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_06-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_07-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_08-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_09-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_10-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_11-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_12-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_13-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_14-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_15-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_16-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_17-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_18-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_19-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_20-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_21-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_22-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_23-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_24-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_25-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_26-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_27-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_28-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_29-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_30-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_CSEG_31-1_SET_ALL
+  *embeddedelement, hostelset=ASSEMBLY_SET_CSEG_ALL_ACTIVE
+  *output, field, frequency=1
+  *output, history, frequency=1
+  *output, field
+  *output, field
+  *output, field
+  *elementoutput
+  *elementoutput
+  *elementoutput
+  *initialconditions, type=STRESS
+  *output, field, frequency=1
+  *output, history, frequency=1
+  *output, field
+  *output, field
+  *output, field
+  *elementoutput
+  *elementoutput
+  *elementoutput
+  *initialconditions, type=STRESS
+  *initialconditions, type=STRESS
+  *output, field, frequency=1
+  *output, history, frequency=1
+  *output, field
+  *output, field
+  *output, field
+  *elementoutput
+  *elementoutput
+  *elementoutput
+
+ ***NOTE: MPCS (EXTERNAL or INTERNAL, including those generated from rigid body 
+          definitions), KINEMATIC COUPLINGS, AND/OR EQUATIONS WILL ACTIVATE 
+          ADDITIONAL DEGREES OF FREEDOM
+  
+                               E L E M E N T   Q U A L I T Y  C H E C K S        
+  
+  
+ ***NOTES: DISTORTED ISOPARAMETRIC ELEMENTS: ANGLE BETWEEN ISOPARAMETRIC LINES 
+           IS LESS THAN 45 DEGREES OR GREATER THAN 135 DEGREES.
+  
+           TETRAHEDRAL QUALITY MEASURE: VOLUME OF TETRAHEDRON DIVIDED BY THE 
+           VOLUME OF EQUILATERAL TETRAHEDRON WITH SAME CIRCUMSPHERE RADIUS; 
+           0 FOR DEGENERATE TETRAHEDRON AND 1 FOR EQUILATERIAL TETRAHEDRON. IT 
+           IS RECOMMENDED THAT THE TETRAHEDRAL QUALITY MEASURE BE GREATER THAN 
+           0.02, THE MIN INTERIOR (DIHEDRAL) ANGLE BE GREATER THAN 10 DEGREES, 
+           AND THE MAX INTERIOR (DIHEDRAL) ANGLE BE LESS THAN 160 DEGREES. 
+  
+           MODIFIED TETRAHEDRAL QUALITY MEASURE: ANGLES BETWEEN THE TWO LINE 
+           SEGMENTS ON EACH EDGE; THE EDGES OF MODIFIED TETRAHEDRAL SHOULD BE 
+           AS STRAIGHT AS POSSIBLE. IT IS RECOMMENDED THAT THE ANGLE BETWEEN 
+           THE TWO LINE SEGMENTS ON EACH EDGE IS BETWEEN 160 AND 180 DEGREES. 
+  
+           TRIANGULAR QUALITY MEASURE: AREA OF TRIANGLE DIVIDED BY THE AREA OF 
+           EQUILATERAL TRIANGLE WITH SAME CIRCUMCIRCLE RADIUS; 0 FOR DEGENERATE 
+           TRIANGLE AND 1 FOR EQUILATERAL TRIANGLE. IT IS RECOMMENDED THAT THE
+           TRIANGULAR QUALITY MEASURE BE GREATER THAN 0.01, THE MIN INTERIOR 
+           ANGLE BE GREATER THAN 10 DEGREES, AND THE MAX INTERIOR ANGLE BE LESS 
+           THAN 160 DEGREES. 
+  
+           NODAL ADJUSTMENTS ARISING FROM CONTACT INTERACTIONS AND/OR TIE 
+           CONSTRAINTS CAN CAUSE SEVERE ELEMENT DISTORTION. IT MAY BE NECESSARY 
+           TO REMESH IN ORDER TO REDUCE THE AMOUNT OF ADJUSTMENT. 
+
+ ***WARNING: The aspect ratio for 1512 elements exceeds 100 to 1. The elements 
+             have been identified in element set WarnElemAspectRatio.
+  
+ --------------------------------------------------------------------------------
+ Elements with large aspect ratio
+  
+       Element       Adjusted nodes 
+ ------------------- -------------- 
+         SSEG_01-1.4       NO       
+         SSEG_01-1.5       NO       
+         SSEG_01-1.6       NO       
+        SSEG_01-1.10       NO       
+        SSEG_01-1.11       NO       
+        SSEG_01-1.12       NO       
+        SSEG_01-1.16       NO       
+        SSEG_01-1.17       NO       
+        SSEG_01-1.18       NO       
+        SSEG_01-1.22       NO       
+        SSEG_01-1.23       NO       
+        SSEG_01-1.24       NO       
+        SSEG_01-1.28       NO       
+        SSEG_01-1.29       NO       
+        SSEG_01-1.30       NO       
+        SSEG_01-1.34       NO       
+        SSEG_01-1.35       NO       
+        SSEG_01-1.36       NO       
+        SSEG_01-1.40       NO       
+        SSEG_01-1.41       NO       
+        SSEG_01-1.42       NO       
+        SSEG_01-1.46       NO       
+        SSEG_01-1.47       NO       
+        SSEG_01-1.48       NO       
+        SSEG_01-1.52       NO       
+        SSEG_01-1.53       NO       
+        SSEG_01-1.54       NO       
+        SSEG_01-1.58       NO       
+        SSEG_01-1.59       NO       
+        SSEG_01-1.60       NO       
+        SSEG_01-1.64       NO       
+        SSEG_01-1.65       NO       
+        SSEG_01-1.66       NO       
+        SSEG_01-1.70       NO       
+        SSEG_01-1.71       NO       
+        SSEG_01-1.72       NO       
+        SSEG_01-1.76       NO       
+        SSEG_01-1.77       NO       
+        SSEG_01-1.78       NO       
+        SSEG_01-1.82       NO       
+        SSEG_01-1.83       NO       
+        SSEG_01-1.84       NO       
+        SSEG_01-1.88       NO       
+        SSEG_01-1.89       NO       
+        SSEG_01-1.90       NO       
+        SSEG_01-1.94       NO       
+        SSEG_01-1.95       NO       
+        SSEG_01-1.96       NO       
+       SSEG_01-1.100       NO       
+       SSEG_01-1.101       NO       
+       SSEG_01-1.102       NO       
+       SSEG_01-1.106       NO       
+       SSEG_01-1.107       NO       
+       SSEG_01-1.108       NO       
+       SSEG_01-1.112       NO       
+       SSEG_01-1.113       NO       
+       SSEG_01-1.114       NO       
+       SSEG_01-1.118       NO       
+       SSEG_01-1.119       NO       
+       SSEG_01-1.120       NO       
+       SSEG_01-1.124       NO       
+       SSEG_01-1.125       NO       
+       SSEG_01-1.126       NO       
+       SSEG_01-1.130       NO       
+       SSEG_01-1.131       NO       
+       SSEG_01-1.132       NO       
+       SSEG_01-1.136       NO       
+       SSEG_01-1.137       NO       
+       SSEG_01-1.138       NO       
+       SSEG_01-1.142       NO       
+       SSEG_01-1.143       NO       
+       SSEG_01-1.144       NO       
+       SSEG_01-1.148       NO       
+       SSEG_01-1.149       NO       
+       SSEG_01-1.150       NO       
+       SSEG_01-1.154       NO       
+       SSEG_01-1.155       NO       
+       SSEG_01-1.156       NO       
+       SSEG_01-1.160       NO       
+       SSEG_01-1.161       NO       
+       SSEG_01-1.162       NO       
+       SSEG_01-1.166       NO       
+       SSEG_01-1.167       NO       
+       SSEG_01-1.168       NO       
+       SSEG_01-1.172       NO       
+       SSEG_01-1.173       NO       
+       SSEG_01-1.174       NO       
+       SSEG_01-1.178       NO       
+       SSEG_01-1.179       NO       
+       SSEG_01-1.180       NO       
+       SSEG_01-1.184       NO       
+       SSEG_01-1.185       NO       
+       SSEG_01-1.186       NO       
+       SSEG_01-1.190       NO       
+       SSEG_01-1.191       NO       
+       SSEG_01-1.192       NO       
+       SSEG_01-1.196       NO       
+       SSEG_01-1.197       NO       
+       SSEG_01-1.198       NO       
+       SSEG_01-1.202       NO       
+       SSEG_01-1.203       NO       
+       SSEG_01-1.204       NO       
+       SSEG_01-1.208       NO       
+       SSEG_01-1.209       NO       
+       SSEG_01-1.210       NO       
+       SSEG_01-1.214       NO       
+       SSEG_01-1.215       NO       
+       SSEG_01-1.216       NO       
+       SSEG_01-1.220       NO       
+       SSEG_01-1.221       NO       
+       SSEG_01-1.222       NO       
+       SSEG_01-1.226       NO       
+       SSEG_01-1.227       NO       
+       SSEG_01-1.228       NO       
+       SSEG_01-1.232       NO       
+       SSEG_01-1.233       NO       
+       SSEG_01-1.234       NO       
+       SSEG_01-1.238       NO       
+       SSEG_01-1.239       NO       
+       SSEG_01-1.240       NO       
+       SSEG_01-1.244       NO       
+       SSEG_01-1.245       NO       
+       SSEG_01-1.246       NO       
+       SSEG_01-1.250       NO       
+       SSEG_01-1.251       NO       
+       SSEG_01-1.252       NO       
+       SSEG_01-1.256       NO       
+       SSEG_01-1.257       NO       
+       SSEG_01-1.258       NO       
+       SSEG_01-1.262       NO       
+       SSEG_01-1.263       NO       
+       SSEG_01-1.264       NO       
+       SSEG_01-1.268       NO       
+       SSEG_01-1.269       NO       
+       SSEG_01-1.270       NO       
+       SSEG_01-1.274       NO       
+       SSEG_01-1.275       NO       
+       SSEG_01-1.276       NO       
+       SSEG_01-1.280       NO       
+       SSEG_01-1.281       NO       
+       SSEG_01-1.282       NO       
+       SSEG_01-1.286       NO       
+       SSEG_01-1.287       NO       
+       SSEG_01-1.288       NO       
+       SSEG_01-1.292       NO       
+       SSEG_01-1.293       NO       
+       SSEG_01-1.294       NO       
+       SSEG_01-1.298       NO       
+       SSEG_01-1.299       NO       
+       SSEG_01-1.300       NO       
+       SSEG_01-1.304       NO       
+       SSEG_01-1.305       NO       
+       SSEG_01-1.306       NO       
+       SSEG_01-1.310       NO       
+       SSEG_01-1.311       NO       
+       SSEG_01-1.312       NO       
+       SSEG_01-1.316       NO       
+       SSEG_01-1.317       NO       
+       SSEG_01-1.318       NO       
+       SSEG_01-1.322       NO       
+       SSEG_01-1.323       NO       
+       SSEG_01-1.324       NO       
+       SSEG_01-1.328       NO       
+       SSEG_01-1.329       NO       
+       SSEG_01-1.330       NO       
+       SSEG_01-1.334       NO       
+       SSEG_01-1.335       NO       
+       SSEG_01-1.336       NO       
+       SSEG_01-1.340       NO       
+       SSEG_01-1.341       NO       
+       SSEG_01-1.342       NO       
+       SSEG_01-1.346       NO       
+       SSEG_01-1.347       NO       
+       SSEG_01-1.348       NO       
+       SSEG_01-1.352       NO       
+       SSEG_01-1.353       NO       
+       SSEG_01-1.354       NO       
+       SSEG_01-1.358       NO       
+       SSEG_01-1.359       NO       
+       SSEG_01-1.360       NO       
+       SSEG_01-1.364       NO       
+       SSEG_01-1.365       NO       
+       SSEG_01-1.366       NO       
+       SSEG_01-1.370       NO       
+       SSEG_01-1.371       NO       
+       SSEG_01-1.372       NO       
+       SSEG_01-1.376       NO       
+       SSEG_01-1.377       NO       
+       SSEG_01-1.378       NO       
+       SSEG_01-1.382       NO       
+       SSEG_01-1.383       NO       
+       SSEG_01-1.384       NO       
+       SSEG_01-1.388       NO       
+       SSEG_01-1.389       NO       
+       SSEG_01-1.390       NO       
+       SSEG_01-1.394       NO       
+       SSEG_01-1.395       NO       
+       SSEG_01-1.396       NO       
+       SSEG_01-1.400       NO       
+       SSEG_01-1.401       NO       
+       SSEG_01-1.402       NO       
+       SSEG_01-1.406       NO       
+       SSEG_01-1.407       NO       
+       SSEG_01-1.408       NO       
+       SSEG_01-1.412       NO       
+       SSEG_01-1.413       NO       
+       SSEG_01-1.414       NO       
+       SSEG_01-1.418       NO       
+       SSEG_01-1.419       NO       
+       SSEG_01-1.420       NO       
+       SSEG_01-1.424       NO       
+       SSEG_01-1.425       NO       
+       SSEG_01-1.426       NO       
+       SSEG_01-1.430       NO       
+       SSEG_01-1.431       NO       
+       SSEG_01-1.432       NO       
+         SSEG_02-1.1       NO       
+         SSEG_02-1.2       NO       
+         SSEG_02-1.3       NO       
+         SSEG_02-1.4       NO       
+         SSEG_02-1.5       NO       
+         SSEG_02-1.6       NO       
+         SSEG_02-1.7       NO       
+         SSEG_02-1.8       NO       
+         SSEG_02-1.9       NO       
+        SSEG_02-1.10       NO       
+        SSEG_02-1.11       NO       
+        SSEG_02-1.12       NO       
+        SSEG_02-1.13       NO       
+        SSEG_02-1.14       NO       
+        SSEG_02-1.15       NO       
+        SSEG_02-1.16       NO       
+        SSEG_02-1.17       NO       
+        SSEG_02-1.18       NO       
+        SSEG_02-1.19       NO       
+        SSEG_02-1.20       NO       
+        SSEG_02-1.21       NO       
+        SSEG_02-1.22       NO       
+        SSEG_02-1.23       NO       
+        SSEG_02-1.24       NO       
+        SSEG_02-1.25       NO       
+        SSEG_02-1.26       NO       
+        SSEG_02-1.27       NO       
+        SSEG_02-1.28       NO       
+        SSEG_02-1.29       NO       
+        SSEG_02-1.30       NO       
+        SSEG_02-1.31       NO       
+        SSEG_02-1.32       NO       
+        SSEG_02-1.33       NO       
+        SSEG_02-1.34       NO       
+        SSEG_02-1.35       NO       
+        SSEG_02-1.36       NO       
+        SSEG_02-1.37       NO       
+        SSEG_02-1.38       NO       
+        SSEG_02-1.39       NO       
+        SSEG_02-1.40       NO       
+        SSEG_02-1.41       NO       
+        SSEG_02-1.42       NO       
+        SSEG_02-1.43       NO       
+        SSEG_02-1.44       NO       
+        SSEG_02-1.45       NO       
+        SSEG_02-1.46       NO       
+        SSEG_02-1.47       NO       
+        SSEG_02-1.48       NO       
+        SSEG_02-1.49       NO       
+        SSEG_02-1.50       NO       
+        SSEG_02-1.51       NO       
+        SSEG_02-1.52       NO       
+        SSEG_02-1.53       NO       
+        SSEG_02-1.54       NO       
+        SSEG_02-1.55       NO       
+        SSEG_02-1.56       NO       
+        SSEG_02-1.57       NO       
+        SSEG_02-1.58       NO       
+        SSEG_02-1.59       NO       
+        SSEG_02-1.60       NO       
+        SSEG_02-1.61       NO       
+        SSEG_02-1.62       NO       
+        SSEG_02-1.63       NO       
+        SSEG_02-1.64       NO       
+        SSEG_02-1.65       NO       
+        SSEG_02-1.66       NO       
+        SSEG_02-1.67       NO       
+        SSEG_02-1.68       NO       
+        SSEG_02-1.69       NO       
+        SSEG_02-1.70       NO       
+        SSEG_02-1.71       NO       
+        SSEG_02-1.72       NO       
+        SSEG_02-1.73       NO       
+        SSEG_02-1.74       NO       
+        SSEG_02-1.75       NO       
+        SSEG_02-1.76       NO       
+        SSEG_02-1.77       NO       
+        SSEG_02-1.78       NO       
+        SSEG_02-1.79       NO       
+        SSEG_02-1.80       NO       
+        SSEG_02-1.81       NO       
+        SSEG_02-1.82       NO       
+        SSEG_02-1.83       NO       
+        SSEG_02-1.84       NO       
+        SSEG_02-1.85       NO       
+        SSEG_02-1.86       NO       
+        SSEG_02-1.87       NO       
+        SSEG_02-1.88       NO       
+        SSEG_02-1.89       NO       
+        SSEG_02-1.90       NO       
+        SSEG_02-1.91       NO       
+        SSEG_02-1.92       NO       
+        SSEG_02-1.93       NO       
+        SSEG_02-1.94       NO       
+        SSEG_02-1.95       NO       
+        SSEG_02-1.96       NO       
+        SSEG_02-1.97       NO       
+        SSEG_02-1.98       NO       
+        SSEG_02-1.99       NO       
+       SSEG_02-1.100       NO       
+       SSEG_02-1.101       NO       
+       SSEG_02-1.102       NO       
+       SSEG_02-1.103       NO       
+       SSEG_02-1.104       NO       
+       SSEG_02-1.105       NO       
+       SSEG_02-1.106       NO       
+       SSEG_02-1.107       NO       
+       SSEG_02-1.108       NO       
+       SSEG_02-1.109       NO       
+       SSEG_02-1.110       NO       
+       SSEG_02-1.111       NO       
+       SSEG_02-1.112       NO       
+       SSEG_02-1.113       NO       
+       SSEG_02-1.114       NO       
+       SSEG_02-1.115       NO       
+       SSEG_02-1.116       NO       
+       SSEG_02-1.117       NO       
+       SSEG_02-1.118       NO       
+       SSEG_02-1.119       NO       
+       SSEG_02-1.120       NO       
+       SSEG_02-1.121       NO       
+       SSEG_02-1.122       NO       
+       SSEG_02-1.123       NO       
+       SSEG_02-1.124       NO       
+       SSEG_02-1.125       NO       
+       SSEG_02-1.126       NO       
+       SSEG_02-1.127       NO       
+       SSEG_02-1.128       NO       
+       SSEG_02-1.129       NO       
+       SSEG_02-1.130       NO       
+       SSEG_02-1.131       NO       
+       SSEG_02-1.132       NO       
+       SSEG_02-1.133       NO       
+       SSEG_02-1.134       NO       
+       SSEG_02-1.135       NO       
+       SSEG_02-1.136       NO       
+       SSEG_02-1.137       NO       
+       SSEG_02-1.138       NO       
+       SSEG_02-1.139       NO       
+       SSEG_02-1.140       NO       
+       SSEG_02-1.141       NO       
+       SSEG_02-1.142       NO       
+       SSEG_02-1.143       NO       
+       SSEG_02-1.144       NO       
+       SSEG_02-1.145       NO       
+       SSEG_02-1.146       NO       
+       SSEG_02-1.147       NO       
+       SSEG_02-1.148       NO       
+       SSEG_02-1.149       NO       
+       SSEG_02-1.150       NO       
+       SSEG_02-1.151       NO       
+       SSEG_02-1.152       NO       
+       SSEG_02-1.153       NO       
+       SSEG_02-1.154       NO       
+       SSEG_02-1.155       NO       
+       SSEG_02-1.156       NO       
+       SSEG_02-1.157       NO       
+       SSEG_02-1.158       NO       
+       SSEG_02-1.159       NO       
+       SSEG_02-1.160       NO       
+       SSEG_02-1.161       NO       
+       SSEG_02-1.162       NO       
+       SSEG_02-1.163       NO       
+       SSEG_02-1.164       NO       
+       SSEG_02-1.165       NO       
+       SSEG_02-1.166       NO       
+       SSEG_02-1.167       NO       
+       SSEG_02-1.168       NO       
+       SSEG_02-1.169       NO       
+       SSEG_02-1.170       NO       
+       SSEG_02-1.171       NO       
+       SSEG_02-1.172       NO       
+       SSEG_02-1.173       NO       
+       SSEG_02-1.174       NO       
+       SSEG_02-1.175       NO       
+       SSEG_02-1.176       NO       
+       SSEG_02-1.177       NO       
+       SSEG_02-1.178       NO       
+       SSEG_02-1.179       NO       
+       SSEG_02-1.180       NO       
+       SSEG_02-1.181       NO       
+       SSEG_02-1.182       NO       
+       SSEG_02-1.183       NO       
+       SSEG_02-1.184       NO       
+       SSEG_02-1.185       NO       
+       SSEG_02-1.186       NO       
+       SSEG_02-1.187       NO       
+       SSEG_02-1.188       NO       
+       SSEG_02-1.189       NO       
+       SSEG_02-1.190       NO       
+       SSEG_02-1.191       NO       
+       SSEG_02-1.192       NO       
+       SSEG_02-1.193       NO       
+       SSEG_02-1.194       NO       
+       SSEG_02-1.195       NO       
+       SSEG_02-1.196       NO       
+       SSEG_02-1.197       NO       
+       SSEG_02-1.198       NO       
+       SSEG_02-1.199       NO       
+       SSEG_02-1.200       NO       
+       SSEG_02-1.201       NO       
+       SSEG_02-1.202       NO       
+       SSEG_02-1.203       NO       
+       SSEG_02-1.204       NO       
+       SSEG_02-1.205       NO       
+       SSEG_02-1.206       NO       
+       SSEG_02-1.207       NO       
+       SSEG_02-1.208       NO       
+       SSEG_02-1.209       NO       
+       SSEG_02-1.210       NO       
+       SSEG_02-1.211       NO       
+       SSEG_02-1.212       NO       
+       SSEG_02-1.213       NO       
+       SSEG_02-1.214       NO       
+       SSEG_02-1.215       NO       
+       SSEG_02-1.216       NO       
+       SSEG_02-1.217       NO       
+       SSEG_02-1.218       NO       
+       SSEG_02-1.219       NO       
+       SSEG_02-1.220       NO       
+       SSEG_02-1.221       NO       
+       SSEG_02-1.222       NO       
+       SSEG_02-1.223       NO       
+       SSEG_02-1.224       NO       
+       SSEG_02-1.225       NO       
+       SSEG_02-1.226       NO       
+       SSEG_02-1.227       NO       
+       SSEG_02-1.228       NO       
+       SSEG_02-1.229       NO       
+       SSEG_02-1.230       NO       
+       SSEG_02-1.231       NO       
+       SSEG_02-1.232       NO       
+       SSEG_02-1.233       NO       
+       SSEG_02-1.234       NO       
+       SSEG_02-1.235       NO       
+       SSEG_02-1.236       NO       
+       SSEG_02-1.237       NO       
+       SSEG_02-1.238       NO       
+       SSEG_02-1.239       NO       
+       SSEG_02-1.240       NO       
+       SSEG_02-1.241       NO       
+       SSEG_02-1.242       NO       
+       SSEG_02-1.243       NO       
+       SSEG_02-1.244       NO       
+       SSEG_02-1.245       NO       
+       SSEG_02-1.246       NO       
+       SSEG_02-1.247       NO       
+       SSEG_02-1.248       NO       
+       SSEG_02-1.249       NO       
+       SSEG_02-1.250       NO       
+       SSEG_02-1.251       NO       
+       SSEG_02-1.252       NO       
+       SSEG_02-1.253       NO       
+       SSEG_02-1.254       NO       
+       SSEG_02-1.255       NO       
+       SSEG_02-1.256       NO       
+       SSEG_02-1.257       NO       
+       SSEG_02-1.258       NO       
+       SSEG_02-1.259       NO       
+       SSEG_02-1.260       NO       
+       SSEG_02-1.261       NO       
+       SSEG_02-1.262       NO       
+       SSEG_02-1.263       NO       
+       SSEG_02-1.264       NO       
+       SSEG_02-1.265       NO       
+       SSEG_02-1.266       NO       
+       SSEG_02-1.267       NO       
+       SSEG_02-1.268       NO       
+       SSEG_02-1.269       NO       
+       SSEG_02-1.270       NO       
+       SSEG_02-1.271       NO       
+       SSEG_02-1.272       NO       
+       SSEG_02-1.273       NO       
+       SSEG_02-1.274       NO       
+       SSEG_02-1.275       NO       
+       SSEG_02-1.276       NO       
+       SSEG_02-1.277       NO       
+       SSEG_02-1.278       NO       
+       SSEG_02-1.279       NO       
+       SSEG_02-1.280       NO       
+       SSEG_02-1.281       NO       
+       SSEG_02-1.282       NO       
+       SSEG_02-1.283       NO       
+       SSEG_02-1.284       NO       
+       SSEG_02-1.285       NO       
+       SSEG_02-1.286       NO       
+       SSEG_02-1.287       NO       
+       SSEG_02-1.288       NO       
+       SSEG_02-1.289       NO       
+       SSEG_02-1.290       NO       
+       SSEG_02-1.291       NO       
+       SSEG_02-1.292       NO       
+       SSEG_02-1.293       NO       
+       SSEG_02-1.294       NO       
+       SSEG_02-1.295       NO       
+       SSEG_02-1.296       NO       
+       SSEG_02-1.297       NO       
+       SSEG_02-1.298       NO       
+       SSEG_02-1.299       NO       
+       SSEG_02-1.300       NO       
+       SSEG_02-1.301       NO       
+       SSEG_02-1.302       NO       
+       SSEG_02-1.303       NO       
+       SSEG_02-1.304       NO       
+       SSEG_02-1.305       NO       
+       SSEG_02-1.306       NO       
+       SSEG_02-1.307       NO       
+       SSEG_02-1.308       NO       
+       SSEG_02-1.309       NO       
+       SSEG_02-1.310       NO       
+       SSEG_02-1.311       NO       
+       SSEG_02-1.312       NO       
+       SSEG_02-1.313       NO       
+       SSEG_02-1.314       NO       
+       SSEG_02-1.315       NO       
+       SSEG_02-1.316       NO       
+       SSEG_02-1.317       NO       
+       SSEG_02-1.318       NO       
+       SSEG_02-1.319       NO       
+       SSEG_02-1.320       NO       
+       SSEG_02-1.321       NO       
+       SSEG_02-1.322       NO       
+       SSEG_02-1.323       NO       
+       SSEG_02-1.324       NO       
+       SSEG_02-1.325       NO       
+       SSEG_02-1.326       NO       
+       SSEG_02-1.327       NO       
+       SSEG_02-1.328       NO       
+       SSEG_02-1.329       NO       
+       SSEG_02-1.330       NO       
+       SSEG_02-1.331       NO       
+       SSEG_02-1.332       NO       
+       SSEG_02-1.333       NO       
+       SSEG_02-1.334       NO       
+       SSEG_02-1.335       NO       
+       SSEG_02-1.336       NO       
+       SSEG_02-1.337       NO       
+       SSEG_02-1.338       NO       
+       SSEG_02-1.339       NO       
+       SSEG_02-1.340       NO       
+       SSEG_02-1.341       NO       
+       SSEG_02-1.342       NO       
+       SSEG_02-1.343       NO       
+       SSEG_02-1.344       NO       
+       SSEG_02-1.345       NO       
+       SSEG_02-1.346       NO       
+       SSEG_02-1.347       NO       
+       SSEG_02-1.348       NO       
+       SSEG_02-1.349       NO       
+       SSEG_02-1.350       NO       
+       SSEG_02-1.351       NO       
+       SSEG_02-1.352       NO       
+       SSEG_02-1.353       NO       
+       SSEG_02-1.354       NO       
+       SSEG_02-1.355       NO       
+       SSEG_02-1.356       NO       
+       SSEG_02-1.357       NO       
+       SSEG_02-1.358       NO       
+       SSEG_02-1.359       NO       
+       SSEG_02-1.360       NO       
+       SSEG_02-1.361       NO       
+       SSEG_02-1.362       NO       
+       SSEG_02-1.363       NO       
+       SSEG_02-1.364       NO       
+       SSEG_02-1.365       NO       
+       SSEG_02-1.366       NO       
+       SSEG_02-1.367       NO       
+       SSEG_02-1.368       NO       
+       SSEG_02-1.369       NO       
+       SSEG_02-1.370       NO       
+       SSEG_02-1.371       NO       
+       SSEG_02-1.372       NO       
+       SSEG_02-1.373       NO       
+       SSEG_02-1.374       NO       
+       SSEG_02-1.375       NO       
+       SSEG_02-1.376       NO       
+       SSEG_02-1.377       NO       
+       SSEG_02-1.378       NO       
+       SSEG_02-1.379       NO       
+       SSEG_02-1.380       NO       
+       SSEG_02-1.381       NO       
+       SSEG_02-1.382       NO       
+       SSEG_02-1.383       NO       
+       SSEG_02-1.384       NO       
+       SSEG_02-1.385       NO       
+       SSEG_02-1.386       NO       
+       SSEG_02-1.387       NO       
+       SSEG_02-1.388       NO       
+       SSEG_02-1.389       NO       
+       SSEG_02-1.390       NO       
+       SSEG_02-1.391       NO       
+       SSEG_02-1.392       NO       
+       SSEG_02-1.393       NO       
+       SSEG_02-1.394       NO       
+       SSEG_02-1.395       NO       
+       SSEG_02-1.396       NO       
+       SSEG_02-1.397       NO       
+       SSEG_02-1.398       NO       
+       SSEG_02-1.399       NO       
+       SSEG_02-1.400       NO       
+       SSEG_02-1.401       NO       
+       SSEG_02-1.402       NO       
+       SSEG_02-1.403       NO       
+       SSEG_02-1.404       NO       
+       SSEG_02-1.405       NO       
+       SSEG_02-1.406       NO       
+       SSEG_02-1.407       NO       
+       SSEG_02-1.408       NO       
+       SSEG_02-1.409       NO       
+       SSEG_02-1.410       NO       
+       SSEG_02-1.411       NO       
+       SSEG_02-1.412       NO       
+       SSEG_02-1.413       NO       
+       SSEG_02-1.414       NO       
+       SSEG_02-1.415       NO       
+       SSEG_02-1.416       NO       
+       SSEG_02-1.417       NO       
+       SSEG_02-1.418       NO       
+       SSEG_02-1.419       NO       
+       SSEG_02-1.420       NO       
+       SSEG_02-1.421       NO       
+       SSEG_02-1.422       NO       
+       SSEG_02-1.423       NO       
+       SSEG_02-1.424       NO       
+       SSEG_02-1.425       NO       
+       SSEG_02-1.426       NO       
+       SSEG_02-1.427       NO       
+       SSEG_02-1.428       NO       
+       SSEG_02-1.429       NO       
+       SSEG_02-1.430       NO       
+       SSEG_02-1.431       NO       
+       SSEG_02-1.432       NO       
+         SSEG_03-1.1       NO       
+         SSEG_03-1.2       NO       
+         SSEG_03-1.3       NO       
+         SSEG_03-1.4       NO       
+         SSEG_03-1.5       NO       
+         SSEG_03-1.6       NO       
+         SSEG_03-1.7       NO       
+         SSEG_03-1.8       NO       
+         SSEG_03-1.9       NO       
+        SSEG_03-1.10       NO       
+        SSEG_03-1.11       NO       
+        SSEG_03-1.12       NO       
+        SSEG_03-1.13       NO       
+        SSEG_03-1.14       NO       
+        SSEG_03-1.15       NO       
+        SSEG_03-1.16       NO       
+        SSEG_03-1.17       NO       
+        SSEG_03-1.18       NO       
+        SSEG_03-1.19       NO       
+        SSEG_03-1.20       NO       
+        SSEG_03-1.21       NO       
+        SSEG_03-1.22       NO       
+        SSEG_03-1.23       NO       
+        SSEG_03-1.24       NO       
+        SSEG_03-1.25       NO       
+        SSEG_03-1.26       NO       
+        SSEG_03-1.27       NO       
+        SSEG_03-1.28       NO       
+        SSEG_03-1.29       NO       
+        SSEG_03-1.30       NO       
+        SSEG_03-1.31       NO       
+        SSEG_03-1.32       NO       
+        SSEG_03-1.33       NO       
+        SSEG_03-1.34       NO       
+        SSEG_03-1.35       NO       
+        SSEG_03-1.36       NO       
+        SSEG_03-1.37       NO       
+        SSEG_03-1.38       NO       
+        SSEG_03-1.39       NO       
+        SSEG_03-1.40       NO       
+        SSEG_03-1.41       NO       
+        SSEG_03-1.42       NO       
+        SSEG_03-1.43       NO       
+        SSEG_03-1.44       NO       
+        SSEG_03-1.45       NO       
+        SSEG_03-1.46       NO       
+        SSEG_03-1.47       NO       
+        SSEG_03-1.48       NO       
+        SSEG_03-1.49       NO       
+        SSEG_03-1.50       NO       
+        SSEG_03-1.51       NO       
+        SSEG_03-1.52       NO       
+        SSEG_03-1.53       NO       
+        SSEG_03-1.54       NO       
+        SSEG_03-1.55       NO       
+        SSEG_03-1.56       NO       
+        SSEG_03-1.57       NO       
+        SSEG_03-1.58       NO       
+        SSEG_03-1.59       NO       
+        SSEG_03-1.60       NO       
+        SSEG_03-1.61       NO       
+        SSEG_03-1.62       NO       
+        SSEG_03-1.63       NO       
+        SSEG_03-1.64       NO       
+        SSEG_03-1.65       NO       
+        SSEG_03-1.66       NO       
+        SSEG_03-1.67       NO       
+        SSEG_03-1.68       NO       
+        SSEG_03-1.69       NO       
+        SSEG_03-1.70       NO       
+        SSEG_03-1.71       NO       
+        SSEG_03-1.72       NO       
+        SSEG_03-1.73       NO       
+        SSEG_03-1.74       NO       
+        SSEG_03-1.75       NO       
+        SSEG_03-1.76       NO       
+        SSEG_03-1.77       NO       
+        SSEG_03-1.78       NO       
+        SSEG_03-1.79       NO       
+        SSEG_03-1.80       NO       
+        SSEG_03-1.81       NO       
+        SSEG_03-1.82       NO       
+        SSEG_03-1.83       NO       
+        SSEG_03-1.84       NO       
+        SSEG_03-1.85       NO       
+        SSEG_03-1.86       NO       
+        SSEG_03-1.87       NO       
+        SSEG_03-1.88       NO       
+        SSEG_03-1.89       NO       
+        SSEG_03-1.90       NO       
+        SSEG_03-1.91       NO       
+        SSEG_03-1.92       NO       
+        SSEG_03-1.93       NO       
+        SSEG_03-1.94       NO       
+        SSEG_03-1.95       NO       
+        SSEG_03-1.96       NO       
+        SSEG_03-1.97       NO       
+        SSEG_03-1.98       NO       
+        SSEG_03-1.99       NO       
+       SSEG_03-1.100       NO       
+       SSEG_03-1.101       NO       
+       SSEG_03-1.102       NO       
+       SSEG_03-1.103       NO       
+       SSEG_03-1.104       NO       
+       SSEG_03-1.105       NO       
+       SSEG_03-1.106       NO       
+       SSEG_03-1.107       NO       
+       SSEG_03-1.108       NO       
+       SSEG_03-1.109       NO       
+       SSEG_03-1.110       NO       
+       SSEG_03-1.111       NO       
+       SSEG_03-1.112       NO       
+       SSEG_03-1.113       NO       
+       SSEG_03-1.114       NO       
+       SSEG_03-1.115       NO       
+       SSEG_03-1.116       NO       
+       SSEG_03-1.117       NO       
+       SSEG_03-1.118       NO       
+       SSEG_03-1.119       NO       
+       SSEG_03-1.120       NO       
+       SSEG_03-1.121       NO       
+       SSEG_03-1.122       NO       
+       SSEG_03-1.123       NO       
+       SSEG_03-1.124       NO       
+       SSEG_03-1.125       NO       
+       SSEG_03-1.126       NO       
+       SSEG_03-1.127       NO       
+       SSEG_03-1.128       NO       
+       SSEG_03-1.129       NO       
+       SSEG_03-1.130       NO       
+       SSEG_03-1.131       NO       
+       SSEG_03-1.132       NO       
+       SSEG_03-1.133       NO       
+       SSEG_03-1.134       NO       
+       SSEG_03-1.135       NO       
+       SSEG_03-1.136       NO       
+       SSEG_03-1.137       NO       
+       SSEG_03-1.138       NO       
+       SSEG_03-1.139       NO       
+       SSEG_03-1.140       NO       
+       SSEG_03-1.141       NO       
+       SSEG_03-1.142       NO       
+       SSEG_03-1.143       NO       
+       SSEG_03-1.144       NO       
+       SSEG_03-1.145       NO       
+       SSEG_03-1.146       NO       
+       SSEG_03-1.147       NO       
+       SSEG_03-1.148       NO       
+       SSEG_03-1.149       NO       
+       SSEG_03-1.150       NO       
+       SSEG_03-1.151       NO       
+       SSEG_03-1.152       NO       
+       SSEG_03-1.153       NO       
+       SSEG_03-1.154       NO       
+       SSEG_03-1.155       NO       
+       SSEG_03-1.156       NO       
+       SSEG_03-1.157       NO       
+       SSEG_03-1.158       NO       
+       SSEG_03-1.159       NO       
+       SSEG_03-1.160       NO       
+       SSEG_03-1.161       NO       
+       SSEG_03-1.162       NO       
+       SSEG_03-1.163       NO       
+       SSEG_03-1.164       NO       
+       SSEG_03-1.165       NO       
+       SSEG_03-1.166       NO       
+       SSEG_03-1.167       NO       
+       SSEG_03-1.168       NO       
+       SSEG_03-1.169       NO       
+       SSEG_03-1.170       NO       
+       SSEG_03-1.171       NO       
+       SSEG_03-1.172       NO       
+       SSEG_03-1.173       NO       
+       SSEG_03-1.174       NO       
+       SSEG_03-1.175       NO       
+       SSEG_03-1.176       NO       
+       SSEG_03-1.177       NO       
+       SSEG_03-1.178       NO       
+       SSEG_03-1.179       NO       
+       SSEG_03-1.180       NO       
+       SSEG_03-1.181       NO       
+       SSEG_03-1.182       NO       
+       SSEG_03-1.183       NO       
+       SSEG_03-1.184       NO       
+       SSEG_03-1.185       NO       
+       SSEG_03-1.186       NO       
+       SSEG_03-1.187       NO       
+       SSEG_03-1.188       NO       
+       SSEG_03-1.189       NO       
+       SSEG_03-1.190       NO       
+       SSEG_03-1.191       NO       
+       SSEG_03-1.192       NO       
+       SSEG_03-1.193       NO       
+       SSEG_03-1.194       NO       
+       SSEG_03-1.195       NO       
+       SSEG_03-1.196       NO       
+       SSEG_03-1.197       NO       
+       SSEG_03-1.198       NO       
+       SSEG_03-1.199       NO       
+       SSEG_03-1.200       NO       
+       SSEG_03-1.201       NO       
+       SSEG_03-1.202       NO       
+       SSEG_03-1.203       NO       
+       SSEG_03-1.204       NO       
+       SSEG_03-1.205       NO       
+       SSEG_03-1.206       NO       
+       SSEG_03-1.207       NO       
+       SSEG_03-1.208       NO       
+       SSEG_03-1.209       NO       
+       SSEG_03-1.210       NO       
+       SSEG_03-1.211       NO       
+       SSEG_03-1.212       NO       
+       SSEG_03-1.213       NO       
+       SSEG_03-1.214       NO       
+       SSEG_03-1.215       NO       
+       SSEG_03-1.216       NO       
+       SSEG_03-1.217       NO       
+       SSEG_03-1.218       NO       
+       SSEG_03-1.219       NO       
+       SSEG_03-1.220       NO       
+       SSEG_03-1.221       NO       
+       SSEG_03-1.222       NO       
+       SSEG_03-1.223       NO       
+       SSEG_03-1.224       NO       
+       SSEG_03-1.225       NO       
+       SSEG_03-1.226       NO       
+       SSEG_03-1.227       NO       
+       SSEG_03-1.228       NO       
+       SSEG_03-1.229       NO       
+       SSEG_03-1.230       NO       
+       SSEG_03-1.231       NO       
+       SSEG_03-1.232       NO       
+       SSEG_03-1.233       NO       
+       SSEG_03-1.234       NO       
+       SSEG_03-1.235       NO       
+       SSEG_03-1.236       NO       
+       SSEG_03-1.237       NO       
+       SSEG_03-1.238       NO       
+       SSEG_03-1.239       NO       
+       SSEG_03-1.240       NO       
+       SSEG_03-1.241       NO       
+       SSEG_03-1.242       NO       
+       SSEG_03-1.243       NO       
+       SSEG_03-1.244       NO       
+       SSEG_03-1.245       NO       
+       SSEG_03-1.246       NO       
+       SSEG_03-1.247       NO       
+       SSEG_03-1.248       NO       
+       SSEG_03-1.249       NO       
+       SSEG_03-1.250       NO       
+       SSEG_03-1.251       NO       
+       SSEG_03-1.252       NO       
+       SSEG_03-1.253       NO       
+       SSEG_03-1.254       NO       
+       SSEG_03-1.255       NO       
+       SSEG_03-1.256       NO       
+       SSEG_03-1.257       NO       
+       SSEG_03-1.258       NO       
+       SSEG_03-1.259       NO       
+       SSEG_03-1.260       NO       
+       SSEG_03-1.261       NO       
+       SSEG_03-1.262       NO       
+       SSEG_03-1.263       NO       
+       SSEG_03-1.264       NO       
+       SSEG_03-1.265       NO       
+       SSEG_03-1.266       NO       
+       SSEG_03-1.267       NO       
+       SSEG_03-1.268       NO       
+       SSEG_03-1.269       NO       
+       SSEG_03-1.270       NO       
+       SSEG_03-1.271       NO       
+       SSEG_03-1.272       NO       
+       SSEG_03-1.273       NO       
+       SSEG_03-1.274       NO       
+       SSEG_03-1.275       NO       
+       SSEG_03-1.276       NO       
+       SSEG_03-1.277       NO       
+       SSEG_03-1.278       NO       
+       SSEG_03-1.279       NO       
+       SSEG_03-1.280       NO       
+       SSEG_03-1.281       NO       
+       SSEG_03-1.282       NO       
+       SSEG_03-1.283       NO       
+       SSEG_03-1.284       NO       
+       SSEG_03-1.285       NO       
+       SSEG_03-1.286       NO       
+       SSEG_03-1.287       NO       
+       SSEG_03-1.288       NO       
+       SSEG_03-1.289       NO       
+       SSEG_03-1.290       NO       
+       SSEG_03-1.291       NO       
+       SSEG_03-1.292       NO       
+       SSEG_03-1.293       NO       
+       SSEG_03-1.294       NO       
+       SSEG_03-1.295       NO       
+       SSEG_03-1.296       NO       
+       SSEG_03-1.297       NO       
+       SSEG_03-1.298       NO       
+       SSEG_03-1.299       NO       
+       SSEG_03-1.300       NO       
+       SSEG_03-1.301       NO       
+       SSEG_03-1.302       NO       
+       SSEG_03-1.303       NO       
+       SSEG_03-1.304       NO       
+       SSEG_03-1.305       NO       
+       SSEG_03-1.306       NO       
+       SSEG_03-1.307       NO       
+       SSEG_03-1.308       NO       
+       SSEG_03-1.309       NO       
+       SSEG_03-1.310       NO       
+       SSEG_03-1.311       NO       
+       SSEG_03-1.312       NO       
+       SSEG_03-1.313       NO       
+       SSEG_03-1.314       NO       
+       SSEG_03-1.315       NO       
+       SSEG_03-1.316       NO       
+       SSEG_03-1.317       NO       
+       SSEG_03-1.318       NO       
+       SSEG_03-1.319       NO       
+       SSEG_03-1.320       NO       
+       SSEG_03-1.321       NO       
+       SSEG_03-1.322       NO       
+       SSEG_03-1.323       NO       
+       SSEG_03-1.324       NO       
+       SSEG_03-1.325       NO       
+       SSEG_03-1.326       NO       
+       SSEG_03-1.327       NO       
+       SSEG_03-1.328       NO       
+       SSEG_03-1.329       NO       
+       SSEG_03-1.330       NO       
+       SSEG_03-1.331       NO       
+       SSEG_03-1.332       NO       
+       SSEG_03-1.333       NO       
+       SSEG_03-1.334       NO       
+       SSEG_03-1.335       NO       
+       SSEG_03-1.336       NO       
+       SSEG_03-1.337       NO       
+       SSEG_03-1.338       NO       
+       SSEG_03-1.339       NO       
+       SSEG_03-1.340       NO       
+       SSEG_03-1.341       NO       
+       SSEG_03-1.342       NO       
+       SSEG_03-1.343       NO       
+       SSEG_03-1.344       NO       
+       SSEG_03-1.345       NO       
+       SSEG_03-1.346       NO       
+       SSEG_03-1.347       NO       
+       SSEG_03-1.348       NO       
+       SSEG_03-1.349       NO       
+       SSEG_03-1.350       NO       
+       SSEG_03-1.351       NO       
+       SSEG_03-1.352       NO       
+       SSEG_03-1.353       NO       
+       SSEG_03-1.354       NO       
+       SSEG_03-1.355       NO       
+       SSEG_03-1.356       NO       
+       SSEG_03-1.357       NO       
+       SSEG_03-1.358       NO       
+       SSEG_03-1.359       NO       
+       SSEG_03-1.360       NO       
+       SSEG_03-1.361       NO       
+       SSEG_03-1.362       NO       
+       SSEG_03-1.363       NO       
+       SSEG_03-1.364       NO       
+       SSEG_03-1.365       NO       
+       SSEG_03-1.366       NO       
+       SSEG_03-1.367       NO       
+       SSEG_03-1.368       NO       
+       SSEG_03-1.369       NO       
+       SSEG_03-1.370       NO       
+       SSEG_03-1.371       NO       
+       SSEG_03-1.372       NO       
+       SSEG_03-1.373       NO       
+       SSEG_03-1.374       NO       
+       SSEG_03-1.375       NO       
+       SSEG_03-1.376       NO       
+       SSEG_03-1.377       NO       
+       SSEG_03-1.378       NO       
+       SSEG_03-1.379       NO       
+       SSEG_03-1.380       NO       
+       SSEG_03-1.381       NO       
+       SSEG_03-1.382       NO       
+       SSEG_03-1.383       NO       
+       SSEG_03-1.384       NO       
+       SSEG_03-1.385       NO       
+       SSEG_03-1.386       NO       
+       SSEG_03-1.387       NO       
+       SSEG_03-1.388       NO       
+       SSEG_03-1.389       NO       
+       SSEG_03-1.390       NO       
+       SSEG_03-1.391       NO       
+       SSEG_03-1.392       NO       
+       SSEG_03-1.393       NO       
+       SSEG_03-1.394       NO       
+       SSEG_03-1.395       NO       
+       SSEG_03-1.396       NO       
+       SSEG_03-1.397       NO       
+       SSEG_03-1.398       NO       
+       SSEG_03-1.399       NO       
+       SSEG_03-1.400       NO       
+       SSEG_03-1.401       NO       
+       SSEG_03-1.402       NO       
+       SSEG_03-1.403       NO       
+       SSEG_03-1.404       NO       
+       SSEG_03-1.405       NO       
+       SSEG_03-1.406       NO       
+       SSEG_03-1.407       NO       
+       SSEG_03-1.408       NO       
+       SSEG_03-1.409       NO       
+       SSEG_03-1.410       NO       
+       SSEG_03-1.411       NO       
+       SSEG_03-1.412       NO       
+       SSEG_03-1.413       NO       
+       SSEG_03-1.414       NO       
+       SSEG_03-1.415       NO       
+       SSEG_03-1.416       NO       
+       SSEG_03-1.417       NO       
+       SSEG_03-1.418       NO       
+       SSEG_03-1.419       NO       
+       SSEG_03-1.420       NO       
+       SSEG_03-1.421       NO       
+       SSEG_03-1.422       NO       
+       SSEG_03-1.423       NO       
+       SSEG_03-1.424       NO       
+       SSEG_03-1.425       NO       
+       SSEG_03-1.426       NO       
+       SSEG_03-1.427       NO       
+       SSEG_03-1.428       NO       
+       SSEG_03-1.429       NO       
+       SSEG_03-1.430       NO       
+       SSEG_03-1.431       NO       
+       SSEG_03-1.432       NO       
+         SSEG_04-1.1       NO       
+         SSEG_04-1.2       NO       
+         SSEG_04-1.3       NO       
+         SSEG_04-1.4       NO       
+         SSEG_04-1.5       NO       
+         SSEG_04-1.6       NO       
+         SSEG_04-1.7       NO       
+         SSEG_04-1.8       NO       
+         SSEG_04-1.9       NO       
+        SSEG_04-1.10       NO       
+        SSEG_04-1.11       NO       
+        SSEG_04-1.12       NO       
+        SSEG_04-1.13       NO       
+        SSEG_04-1.14       NO       
+        SSEG_04-1.15       NO       
+        SSEG_04-1.16       NO       
+        SSEG_04-1.17       NO       
+        SSEG_04-1.18       NO       
+        SSEG_04-1.19       NO       
+        SSEG_04-1.20       NO       
+        SSEG_04-1.21       NO       
+        SSEG_04-1.22       NO       
+        SSEG_04-1.23       NO       
+        SSEG_04-1.24       NO       
+        SSEG_04-1.25       NO       
+        SSEG_04-1.26       NO       
+        SSEG_04-1.27       NO       
+        SSEG_04-1.28       NO       
+        SSEG_04-1.29       NO       
+        SSEG_04-1.30       NO       
+        SSEG_04-1.31       NO       
+        SSEG_04-1.32       NO       
+        SSEG_04-1.33       NO       
+        SSEG_04-1.34       NO       
+        SSEG_04-1.35       NO       
+        SSEG_04-1.36       NO       
+        SSEG_04-1.37       NO       
+        SSEG_04-1.38       NO       
+        SSEG_04-1.39       NO       
+        SSEG_04-1.40       NO       
+        SSEG_04-1.41       NO       
+        SSEG_04-1.42       NO       
+        SSEG_04-1.43       NO       
+        SSEG_04-1.44       NO       
+        SSEG_04-1.45       NO       
+        SSEG_04-1.46       NO       
+        SSEG_04-1.47       NO       
+        SSEG_04-1.48       NO       
+        SSEG_04-1.49       NO       
+        SSEG_04-1.50       NO       
+        SSEG_04-1.51       NO       
+        SSEG_04-1.52       NO       
+        SSEG_04-1.53       NO       
+        SSEG_04-1.54       NO       
+        SSEG_04-1.55       NO       
+        SSEG_04-1.56       NO       
+        SSEG_04-1.57       NO       
+        SSEG_04-1.58       NO       
+        SSEG_04-1.59       NO       
+        SSEG_04-1.60       NO       
+        SSEG_04-1.61       NO       
+        SSEG_04-1.62       NO       
+        SSEG_04-1.63       NO       
+        SSEG_04-1.64       NO       
+        SSEG_04-1.65       NO       
+        SSEG_04-1.66       NO       
+        SSEG_04-1.67       NO       
+        SSEG_04-1.68       NO       
+        SSEG_04-1.69       NO       
+        SSEG_04-1.70       NO       
+        SSEG_04-1.71       NO       
+        SSEG_04-1.72       NO       
+        SSEG_04-1.73       NO       
+        SSEG_04-1.74       NO       
+        SSEG_04-1.75       NO       
+        SSEG_04-1.76       NO       
+        SSEG_04-1.77       NO       
+        SSEG_04-1.78       NO       
+        SSEG_04-1.79       NO       
+        SSEG_04-1.80       NO       
+        SSEG_04-1.81       NO       
+        SSEG_04-1.82       NO       
+        SSEG_04-1.83       NO       
+        SSEG_04-1.84       NO       
+        SSEG_04-1.85       NO       
+        SSEG_04-1.86       NO       
+        SSEG_04-1.87       NO       
+        SSEG_04-1.88       NO       
+        SSEG_04-1.89       NO       
+        SSEG_04-1.90       NO       
+        SSEG_04-1.91       NO       
+        SSEG_04-1.92       NO       
+        SSEG_04-1.93       NO       
+        SSEG_04-1.94       NO       
+        SSEG_04-1.95       NO       
+        SSEG_04-1.96       NO       
+        SSEG_04-1.97       NO       
+        SSEG_04-1.98       NO       
+        SSEG_04-1.99       NO       
+       SSEG_04-1.100       NO       
+       SSEG_04-1.101       NO       
+       SSEG_04-1.102       NO       
+       SSEG_04-1.103       NO       
+       SSEG_04-1.104       NO       
+       SSEG_04-1.105       NO       
+       SSEG_04-1.106       NO       
+       SSEG_04-1.107       NO       
+       SSEG_04-1.108       NO       
+       SSEG_04-1.109       NO       
+       SSEG_04-1.110       NO       
+       SSEG_04-1.111       NO       
+       SSEG_04-1.112       NO       
+       SSEG_04-1.113       NO       
+       SSEG_04-1.114       NO       
+       SSEG_04-1.115       NO       
+       SSEG_04-1.116       NO       
+       SSEG_04-1.117       NO       
+       SSEG_04-1.118       NO       
+       SSEG_04-1.119       NO       
+       SSEG_04-1.120       NO       
+       SSEG_04-1.121       NO       
+       SSEG_04-1.122       NO       
+       SSEG_04-1.123       NO       
+       SSEG_04-1.124       NO       
+       SSEG_04-1.125       NO       
+       SSEG_04-1.126       NO       
+       SSEG_04-1.127       NO       
+       SSEG_04-1.128       NO       
+       SSEG_04-1.129       NO       
+       SSEG_04-1.130       NO       
+       SSEG_04-1.131       NO       
+       SSEG_04-1.132       NO       
+       SSEG_04-1.133       NO       
+       SSEG_04-1.134       NO       
+       SSEG_04-1.135       NO       
+       SSEG_04-1.136       NO       
+       SSEG_04-1.137       NO       
+       SSEG_04-1.138       NO       
+       SSEG_04-1.139       NO       
+       SSEG_04-1.140       NO       
+       SSEG_04-1.141       NO       
+       SSEG_04-1.142       NO       
+       SSEG_04-1.143       NO       
+       SSEG_04-1.144       NO       
+       SSEG_04-1.145       NO       
+       SSEG_04-1.146       NO       
+       SSEG_04-1.147       NO       
+       SSEG_04-1.148       NO       
+       SSEG_04-1.149       NO       
+       SSEG_04-1.150       NO       
+       SSEG_04-1.151       NO       
+       SSEG_04-1.152       NO       
+       SSEG_04-1.153       NO       
+       SSEG_04-1.154       NO       
+       SSEG_04-1.155       NO       
+       SSEG_04-1.156       NO       
+       SSEG_04-1.157       NO       
+       SSEG_04-1.158       NO       
+       SSEG_04-1.159       NO       
+       SSEG_04-1.160       NO       
+       SSEG_04-1.161       NO       
+       SSEG_04-1.162       NO       
+       SSEG_04-1.163       NO       
+       SSEG_04-1.164       NO       
+       SSEG_04-1.165       NO       
+       SSEG_04-1.166       NO       
+       SSEG_04-1.167       NO       
+       SSEG_04-1.168       NO       
+       SSEG_04-1.169       NO       
+       SSEG_04-1.170       NO       
+       SSEG_04-1.171       NO       
+       SSEG_04-1.172       NO       
+       SSEG_04-1.173       NO       
+       SSEG_04-1.174       NO       
+       SSEG_04-1.175       NO       
+       SSEG_04-1.176       NO       
+       SSEG_04-1.177       NO       
+       SSEG_04-1.178       NO       
+       SSEG_04-1.179       NO       
+       SSEG_04-1.180       NO       
+       SSEG_04-1.181       NO       
+       SSEG_04-1.182       NO       
+       SSEG_04-1.183       NO       
+       SSEG_04-1.184       NO       
+       SSEG_04-1.185       NO       
+       SSEG_04-1.186       NO       
+       SSEG_04-1.187       NO       
+       SSEG_04-1.188       NO       
+       SSEG_04-1.189       NO       
+       SSEG_04-1.190       NO       
+       SSEG_04-1.191       NO       
+       SSEG_04-1.192       NO       
+       SSEG_04-1.193       NO       
+       SSEG_04-1.194       NO       
+       SSEG_04-1.195       NO       
+       SSEG_04-1.196       NO       
+       SSEG_04-1.197       NO       
+       SSEG_04-1.198       NO       
+       SSEG_04-1.199       NO       
+       SSEG_04-1.200       NO       
+       SSEG_04-1.201       NO       
+       SSEG_04-1.202       NO       
+       SSEG_04-1.203       NO       
+       SSEG_04-1.204       NO       
+       SSEG_04-1.205       NO       
+       SSEG_04-1.206       NO       
+       SSEG_04-1.207       NO       
+       SSEG_04-1.208       NO       
+       SSEG_04-1.209       NO       
+       SSEG_04-1.210       NO       
+       SSEG_04-1.211       NO       
+       SSEG_04-1.212       NO       
+       SSEG_04-1.213       NO       
+       SSEG_04-1.214       NO       
+       SSEG_04-1.215       NO       
+       SSEG_04-1.216       NO       
+       SSEG_04-1.217       NO       
+       SSEG_04-1.218       NO       
+       SSEG_04-1.219       NO       
+       SSEG_04-1.220       NO       
+       SSEG_04-1.221       NO       
+       SSEG_04-1.222       NO       
+       SSEG_04-1.223       NO       
+       SSEG_04-1.224       NO       
+       SSEG_04-1.225       NO       
+       SSEG_04-1.226       NO       
+       SSEG_04-1.227       NO       
+       SSEG_04-1.228       NO       
+       SSEG_04-1.229       NO       
+       SSEG_04-1.230       NO       
+       SSEG_04-1.231       NO       
+       SSEG_04-1.232       NO       
+       SSEG_04-1.233       NO       
+       SSEG_04-1.234       NO       
+       SSEG_04-1.235       NO       
+       SSEG_04-1.236       NO       
+       SSEG_04-1.237       NO       
+       SSEG_04-1.238       NO       
+       SSEG_04-1.239       NO       
+       SSEG_04-1.240       NO       
+       SSEG_04-1.241       NO       
+       SSEG_04-1.242       NO       
+       SSEG_04-1.243       NO       
+       SSEG_04-1.244       NO       
+       SSEG_04-1.245       NO       
+       SSEG_04-1.246       NO       
+       SSEG_04-1.247       NO       
+       SSEG_04-1.248       NO       
+       SSEG_04-1.249       NO       
+       SSEG_04-1.250       NO       
+       SSEG_04-1.251       NO       
+       SSEG_04-1.252       NO       
+       SSEG_04-1.253       NO       
+       SSEG_04-1.254       NO       
+       SSEG_04-1.255       NO       
+       SSEG_04-1.256       NO       
+       SSEG_04-1.257       NO       
+       SSEG_04-1.258       NO       
+       SSEG_04-1.259       NO       
+       SSEG_04-1.260       NO       
+       SSEG_04-1.261       NO       
+       SSEG_04-1.262       NO       
+       SSEG_04-1.263       NO       
+       SSEG_04-1.264       NO       
+       SSEG_04-1.265       NO       
+       SSEG_04-1.266       NO       
+       SSEG_04-1.267       NO       
+       SSEG_04-1.268       NO       
+       SSEG_04-1.269       NO       
+       SSEG_04-1.270       NO       
+       SSEG_04-1.271       NO       
+       SSEG_04-1.272       NO       
+       SSEG_04-1.273       NO       
+       SSEG_04-1.274       NO       
+       SSEG_04-1.275       NO       
+       SSEG_04-1.276       NO       
+       SSEG_04-1.277       NO       
+       SSEG_04-1.278       NO       
+       SSEG_04-1.279       NO       
+       SSEG_04-1.280       NO       
+       SSEG_04-1.281       NO       
+       SSEG_04-1.282       NO       
+       SSEG_04-1.283       NO       
+       SSEG_04-1.284       NO       
+       SSEG_04-1.285       NO       
+       SSEG_04-1.286       NO       
+       SSEG_04-1.287       NO       
+       SSEG_04-1.288       NO       
+       SSEG_04-1.289       NO       
+       SSEG_04-1.290       NO       
+       SSEG_04-1.291       NO       
+       SSEG_04-1.292       NO       
+       SSEG_04-1.293       NO       
+       SSEG_04-1.294       NO       
+       SSEG_04-1.295       NO       
+       SSEG_04-1.296       NO       
+       SSEG_04-1.297       NO       
+       SSEG_04-1.298       NO       
+       SSEG_04-1.299       NO       
+       SSEG_04-1.300       NO       
+       SSEG_04-1.301       NO       
+       SSEG_04-1.302       NO       
+       SSEG_04-1.303       NO       
+       SSEG_04-1.304       NO       
+       SSEG_04-1.305       NO       
+       SSEG_04-1.306       NO       
+       SSEG_04-1.307       NO       
+       SSEG_04-1.308       NO       
+       SSEG_04-1.309       NO       
+       SSEG_04-1.310       NO       
+       SSEG_04-1.311       NO       
+       SSEG_04-1.312       NO       
+       SSEG_04-1.313       NO       
+       SSEG_04-1.314       NO       
+       SSEG_04-1.315       NO       
+       SSEG_04-1.316       NO       
+       SSEG_04-1.317       NO       
+       SSEG_04-1.318       NO       
+       SSEG_04-1.319       NO       
+       SSEG_04-1.320       NO       
+       SSEG_04-1.321       NO       
+       SSEG_04-1.322       NO       
+       SSEG_04-1.323       NO       
+       SSEG_04-1.324       NO       
+       SSEG_04-1.325       NO       
+       SSEG_04-1.326       NO       
+       SSEG_04-1.327       NO       
+       SSEG_04-1.328       NO       
+       SSEG_04-1.329       NO       
+       SSEG_04-1.330       NO       
+       SSEG_04-1.331       NO       
+       SSEG_04-1.332       NO       
+       SSEG_04-1.333       NO       
+       SSEG_04-1.334       NO       
+       SSEG_04-1.335       NO       
+       SSEG_04-1.336       NO       
+       SSEG_04-1.337       NO       
+       SSEG_04-1.338       NO       
+       SSEG_04-1.339       NO       
+       SSEG_04-1.340       NO       
+       SSEG_04-1.341       NO       
+       SSEG_04-1.342       NO       
+       SSEG_04-1.343       NO       
+       SSEG_04-1.344       NO       
+       SSEG_04-1.345       NO       
+       SSEG_04-1.346       NO       
+       SSEG_04-1.347       NO       
+       SSEG_04-1.348       NO       
+       SSEG_04-1.349       NO       
+       SSEG_04-1.350       NO       
+       SSEG_04-1.351       NO       
+       SSEG_04-1.352       NO       
+       SSEG_04-1.353       NO       
+       SSEG_04-1.354       NO       
+       SSEG_04-1.355       NO       
+       SSEG_04-1.356       NO       
+       SSEG_04-1.357       NO       
+       SSEG_04-1.358       NO       
+       SSEG_04-1.359       NO       
+       SSEG_04-1.360       NO       
+       SSEG_04-1.361       NO       
+       SSEG_04-1.362       NO       
+       SSEG_04-1.363       NO       
+       SSEG_04-1.364       NO       
+       SSEG_04-1.365       NO       
+       SSEG_04-1.366       NO       
+       SSEG_04-1.367       NO       
+       SSEG_04-1.368       NO       
+       SSEG_04-1.369       NO       
+       SSEG_04-1.370       NO       
+       SSEG_04-1.371       NO       
+       SSEG_04-1.372       NO       
+       SSEG_04-1.373       NO       
+       SSEG_04-1.374       NO       
+       SSEG_04-1.375       NO       
+       SSEG_04-1.376       NO       
+       SSEG_04-1.377       NO       
+       SSEG_04-1.378       NO       
+       SSEG_04-1.379       NO       
+       SSEG_04-1.380       NO       
+       SSEG_04-1.381       NO       
+       SSEG_04-1.382       NO       
+       SSEG_04-1.383       NO       
+       SSEG_04-1.384       NO       
+       SSEG_04-1.385       NO       
+       SSEG_04-1.386       NO       
+       SSEG_04-1.387       NO       
+       SSEG_04-1.388       NO       
+       SSEG_04-1.389       NO       
+       SSEG_04-1.390       NO       
+       SSEG_04-1.391       NO       
+       SSEG_04-1.392       NO       
+       SSEG_04-1.393       NO       
+       SSEG_04-1.394       NO       
+       SSEG_04-1.395       NO       
+       SSEG_04-1.396       NO       
+       SSEG_04-1.397       NO       
+       SSEG_04-1.398       NO       
+       SSEG_04-1.399       NO       
+       SSEG_04-1.400       NO       
+       SSEG_04-1.401       NO       
+       SSEG_04-1.402       NO       
+       SSEG_04-1.403       NO       
+       SSEG_04-1.404       NO       
+       SSEG_04-1.405       NO       
+       SSEG_04-1.406       NO       
+       SSEG_04-1.407       NO       
+       SSEG_04-1.408       NO       
+       SSEG_04-1.409       NO       
+       SSEG_04-1.410       NO       
+       SSEG_04-1.411       NO       
+       SSEG_04-1.412       NO       
+       SSEG_04-1.413       NO       
+       SSEG_04-1.414       NO       
+       SSEG_04-1.415       NO       
+       SSEG_04-1.416       NO       
+       SSEG_04-1.417       NO       
+       SSEG_04-1.418       NO       
+       SSEG_04-1.419       NO       
+       SSEG_04-1.420       NO       
+       SSEG_04-1.421       NO       
+       SSEG_04-1.422       NO       
+       SSEG_04-1.423       NO       
+       SSEG_04-1.424       NO       
+       SSEG_04-1.425       NO       
+       SSEG_04-1.426       NO       
+       SSEG_04-1.427       NO       
+       SSEG_04-1.428       NO       
+       SSEG_04-1.429       NO       
+       SSEG_04-1.430       NO       
+       SSEG_04-1.431       NO       
+       SSEG_04-1.432       NO       
+  
+  
+  *step, name=Gravity, nlgeom=YES, inc=500
+  *step, name=Modal_From_Gravity, perturbation
+  *step, name=Flex_X, perturbation
+  *step, name=Flex_Z, perturbation
+  *step, name=Gravity, nlgeom=YES, inc=500
+  *output, field, frequency=1
+  *output, history, frequency=1
+  *step, name=Modal_From_Gravity, perturbation
+  *frequency, eigensolver=LANCZOS, normalization=MASS
+  *output, field
+  *step, name=Flex_X, perturbation
+  *output, field
+  *step, name=Flex_Z, perturbation
+  *output, field
+  *step, name=Gravity, nlgeom=YES, inc=500
+  *step, name=Modal_From_Gravity, perturbation
+  *step, name=Flex_X, perturbation
+  *step, name=Flex_Z, perturbation
+  *step, name=Gravity, nlgeom=YES, inc=500
+  *static
+  *dload
+
+ ***NOTE: ALL VALID ELEMENTS HAVE BEEN COLLECTED IN ELEMENT SET 
+          _Whole_Model_GRAV_Elset FOR APPLICATION OF LOAD TYPE GRAV.
+  *controls, reset
+  *output, field, frequency=1
+  *nodeoutput
+  *elementoutput
+  *output, history, frequency=1
+  *energyoutput
+  *endstep
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL STRAND_1860
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL STRAND_1860
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR THE MATERIAL S345
+
+ ***NOTE: OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR THE MATERIAL S345
+  *step, name=Modal_From_Gravity, perturbation
+  *frequency, eigensolver=LANCZOS, normalization=MASS
+  *frequency, eigensolver=LANCZOS, normalization=MASS
+  *output, field
+  *nodeoutput
+  *endstep
+
+ ***WARNING: THE NLGEOM FLAG IS ACTIVATED BECAUSE IT WAS ACTIVE IN THE PREVIOUS 
+             STEP. GEOMETRIC NONLINEARITY IN THE BASE STATE WILL BE CONSIDERED 
+             IN THE CURRENT STEP.
+  *step, name=Flex_X, perturbation
+  *static
+  *output, field
+  *nodeoutput
+  *elementoutput
+  *endstep
+
+ ***WARNING: THE NLGEOM FLAG IS ACTIVATED BECAUSE IT WAS ACTIVE IN THE PREVIOUS 
+             STEP. GEOMETRIC NONLINEARITY IN THE BASE STATE WILL BE CONSIDERED 
+             IN THE CURRENT STEP.
+  *step, name=Flex_Z, perturbation
+  *static
+  *output, field
+  *nodeoutput
+  *elementoutput
+  *endstep
+
+ ***WARNING: THE NLGEOM FLAG IS ACTIVATED BECAUSE IT WAS ACTIVE IN THE PREVIOUS 
+             STEP. GEOMETRIC NONLINEARITY IN THE BASE STATE WILL BE CONSIDERED 
+             IN THE CURRENT STEP.
+  *boundary
+  *boundary
+  *step, name=Gravity, nlgeom=YES, inc=500
+  *static
+  *endstep
+  *step, name=Modal_From_Gravity, perturbation
+  *frequency, eigensolver=LANCZOS, normalization=MASS
+  *frequency, eigensolver=LANCZOS, normalization=MASS
+  *endstep
+  *step, name=Flex_X, perturbation
+  *static
+  *cload
+  *endstep
+  *step, name=Flex_Z, perturbation
+  *static
+  *cload
+  *endstep
+
+
+
+                            P R O B L E M   S I Z E
+
+
+          NUMBER OF ELEMENTS IS                                234546
+          NUMBER OF NODES IS                                   250919
+          NUMBER OF NODES DEFINED BY THE USER                  242279
+          NUMBER OF INTERNAL NODES GENERATED BY THE PROGRAM      8640
+          TOTAL NUMBER OF VARIABLES IN THE MODEL               789342
+          (DEGREES OF FREEDOM PLUS MAX NO. OF ANY LAGRANGE MULTIPLIER
+           VARIABLES. INCLUDE *PRINT,SOLVE=YES TO GET THE ACTUAL NUMBER.)
+
+
+
+                              END OF USER INPUT PROCESSING
+
+
+
+     JOB TIME SUMMARY
+       USER TIME (SEC)      =      6.3    
+       SYSTEM TIME (SEC)    =     0.40    
+       TOTAL CPU TIME (SEC) =      6.7    
+       WALLCLOCK TIME (SEC) =           28
+1
+
+   Abaqus 2025                                  Date 06-Oct-2026   Time 15:29:35
+   For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
+
+     BASE001 preferred candidate: T026 M2 tower + T038 validated R2 RNA at common O=(          STEP    1  INCREMENT    1
+                                                                                          TIME COMPLETED IN THIS STEP   0.00    
+
+
+                        A N A L Y S I S    D A T A C H E C K
+
+
+
+
+
+                    TOTAL MASS OF MODEL
+
+                       2629109.    
+
+
+                    LOCATION OF THE CENTER OF MASS OF THE MODEL
+
+                      3.7156069E-13       86.63769         -0.2247074    
+
+
+                    MOMENTS OF INERTIA ABOUT THE ORIGIN
+                           I(XX)               I(YY)               I(ZZ)
+
+                      2.7867524E+10      1.1801841E+08      2.7927983E+10
+
+
+                    PRODUCTS OF INERTIA ABOUT THE ORIGIN
+                           I(XY)               I(XZ)               I(YZ)
+
+                     -7.3739509E-05      1.3761060E-07      8.9756272E+07
+
+
+                    MOMENTS OF INERTIA ABOUT THE CENTER OF MASS
+                           I(XX)               I(YY)               I(ZZ)
+
+                      8.1330617E+09      1.1788565E+08      8.1936533E+09
+
+
+                    PRODUCTS OF INERTIA ABOUT THE CENTER OF MASS
+                           I(XY)               I(XZ)               I(YZ)
+
+                      1.0894568E-05     -8.1900117E-08      3.8572434E+07
+  
+                   M E M O R Y   E S T I M A T E
+  
+ PROCESS      FLOATING PT       MINIMUM MEMORY        MEMORY TO
+              OPERATIONS           REQUIRED          MINIMIZE I/O
+             PER ITERATION           (MB)               (MB)
+  
+     1          6.73E+10              690               6745
+  
+ NOTE:
+      (1) SINCE ABAQUS DOES NOT PRE-ALLOCATE MEMORY AND ONLY ALLOCATES MEMORY AS NEEDED DURING THE ANALYSIS,
+          THE MEMORY REQUIREMENT PRINTED HERE CAN ONLY BE VIEWED AS A GENERAL GUIDELINE BASED ON THE BEST
+          KNOWLEDGE AVAILABLE AT THE BEGINNING OF A STEP BEFORE THE SOLUTION PROCESS HAS BEGUN.
+      (2) THE ESTIMATE IS NORMALLY UPDATED AT THE BEGINNING OF EVERY STEP. IT IS THE MAXIMUM VALUE OF THE
+          ESTIMATE FROM THE CURRENT STEP TO THE LAST STEP OF THE ANALYSIS, WITH UNSYMMETRIC SOLUTION TAKEN
+          INTO ACCOUNT IF APPLICABLE. 
+      (3) SINCE THE ESTIMATE IS BASED ON THE ACTIVE DEGREES OF FREEDOM IN THE FIRST ITERATION OF THE 
+          CURRENT STEP, THE MEMORY ESTIMATE MIGHT BE SIGNIFICANTLY DIFFERENT THAN ACTUAL USAGE FOR 
+          PROBLEMS WITH SUBSTANTIAL CHANGES IN ACTIVE DEGREES OF FREEDOM BETWEEN STEPS (OR EVEN WITHIN
+          THE SAME STEP). EXAMPLES ARE: PROBLEMS WITH SIGNIFICANT CONTACT CHANGES, PROBLEMS WITH MODEL
+          CHANGE, PROBLEMS WITH BOTH STATIC STEP AND STEADY STATE DYNAMIC PROCEDURES WHERE ACOUSTIC 
+          ELEMENTS WILL ONLY BE ACTIVATED IN THE STEADY STATE DYNAMIC STEPS.
+      (4) FOR MULTI-PROCESS EXECUTION, THE ESTIMATED VALUE OF FLOATING POINT OPERATIONS FOR EACH PROCESS
+          IS BASED ON AN INITIAL SCHEDULING OF OPERATIONS AND MIGHT NOT REFLECT THE ACTUAL FLOATING 
+          POINT OPERATIONS COMPLETED ON EACH PROCESS. OPERATIONS ARE DYNAMICALLY BALANCED DURING EXECUTION, 
+          SO THE ACTUAL BALANCE OF OPERATIONS BETWEEN PROCESSES IS EXPECTED TO BE BETTER THAN THE ESTIMATE
+          PRINTED HERE.
+      (5) THE UPPER LIMIT OF MEMORY THAT CAN BE ALLOCATED BY ABAQUS WILL IN GENERAL DEPEND ON THE VALUE OF
+          THE "MEMORY" PARAMETER AND THE AMOUNT OF PHYSICAL MEMORY AVAILABLE ON THE MACHINE. PLEASE SEE
+          THE "ABAQUS ANALYSIS USER'S MANUAL" FOR MORE DETAILS. THE ACTUAL USAGE OF MEMORY AND OF DISK
+          SPACE FOR SCRATCH DATA WILL DEPEND ON THIS UPPER LIMIT AS WELL AS THE MEMORY REQUIRED TO MINIMIZE
+          I/O. IF THE MEMORY UPPER LIMIT IS GREATER THAN THE MEMORY REQUIRED TO MINIMIZE I/O, THEN THE ACTUAL
+          MEMORY USAGE WILL BE CLOSE TO THE ESTIMATED "MEMORY TO MINIMIZE I/O" VALUE, AND THE SCRATCH DISK
+          USAGE WILL BE CLOSE-TO-ZERO; OTHERWISE, THE ACTUAL MEMORY USED WILL BE CLOSE TO THE PREVIOUSLY
+          MENTIONED MEMORY LIMIT, AND THE SCRATCH DISK USAGE WILL BE ROUGHLY PROPORTIONAL TO THE DIFFERENCE
+          BETWEEN THE ESTIMATED "MEMORY TO MINIMIZE I/O" AND THE MEMORY UPPER LIMIT. HOWEVER ACCURATE
+          ESTIMATE OF THE SCRATCH DISK SPACE IS NOT POSSIBLE.
+      (6) USING "*RESTART, WRITE" CAN GENERATE A LARGE AMOUNT OF DATA WRITTEN IN THE WORK DIRECTORY.
+
+
+
+                              ANALYSIS DATACHECK COMPLETE
+                              WITH      9 WARNING MESSAGES ON THE DAT FILE
+
+
+
+     JOB TIME SUMMARY
+       USER TIME (SEC)      =      5.9    
+       SYSTEM TIME (SEC)    =     0.20    
+       TOTAL CPU TIME (SEC) =      6.1    
+       WALLCLOCK TIME (SEC) =           26
