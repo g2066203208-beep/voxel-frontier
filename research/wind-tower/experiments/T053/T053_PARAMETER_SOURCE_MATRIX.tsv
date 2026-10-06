@@ -1,0 +1,32 @@
+parameter	current_T053_value	identity/source	model_action	status
+tower_total_height	158 m	He2024 direct	keep	PASS-DIRECT
+concrete_height	112 m	He2024 direct	keep	PASS-DIRECT
+steel_height	46 m	He2024 direct	keep	PASS-DIRECT
+concrete_sections	31	He2024 Table 3-2	keep	PASS-DIRECT
+steel_sections	4	He2024 Table 3-3	keep	PASS-DIRECT
+concrete_geometry	Table 3-2 diameters/thicknesses	He2024 direct	keep	PASS-DIRECT
+longitudinal_rebar_counts	inner/outer counts by 31 sections; total 5440 T3D2	He2024 Table 3-2	keep	PASS-DIRECT
+longitudinal_rebar_material	S345	He2024 p33 direct identity	T050 HRB335 -> T053 S345	PASS-SOURCE+STATIC
+hoop_material	S345	He2024 reinforcement-mesh material identity	T050 HRB335 -> T053 S345	PASS-SOURCE-IDENTITY+STATIC
+tie_material	S345	He2024 reinforcement-mesh material identity	T050 HRB335 -> T053 S345	PASS-SOURCE-IDENTITY+STATIC
+S345_density	7800 kg/m3	T053 inherited INP; He2024 Table 7-1 steel density mean=7800	keep	PASS-CROSSCHECK
+S345_elastic_modulus	200 GPa	T053 inherited INP; He2024 Table 7-1 steel Es mean=200 GPa	keep	PASS-CROSSCHECK
+S345_plastic_curve	345 MPa@0; 365 MPa@0.002; 420 MPa@0.02	T053 inherited INP; He2024 public text does not list these hardening points	keep	SOURCE-IMPLEMENTATION-HOLD
+longitudinal_area	490.874 mm2 per bar	inherited source INP; not published by He2024	keep for reconstruction; sensitivity required	HOLD-SOURCE
+hoop_geometry	phi14@80 mm; double layer	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
+tie_geometry	phi6; vertical approx 480 mm; circumferential <=500 mm	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
+cover	30 mm	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
+hoop_elements	201456 T3D2	T053 actual input	keep	PASS-STATIC
+tie_elements	12312 T3D2	T053 actual input	keep	PASS-STATIC
+PT_diameter	15.2 mm	He2024 direct	keep	PASS-DIRECT
+PT_topology	36 circumferential FE positions	inherited model topology; He2024 does not publish count	keep; call positions not strands/bundles	HOLD-SOURCE
+PT_area	140 mm2 per FE position	engineering/later-lineage supported; not He2024 direct	keep BF1 baseline	HOLD-HE-DIRECT
+PT_radius	1.75 m	inherited reconstruction parameter	keep; radius sensitivity required	HOLD-SOURCE
+PT_initial_stress	1280 MPa	same-object later-lineage Xu2025; not He2024 direct	keep nominal input	PASS-LATER-LINEAGE/NEED-EQUILIBRIUM
+PT_base	fixed translations	He2024 direct modeling statement	keep	PASS-DIRECT
+PT_top	anchored/equation-coupled to 112 m steel-concrete flange	He2024 direct topology + current implementation	keep	PASS-DIRECT-TOPOLOGY/STATIC
+steel_Table3_3	4.66/4.58/4.50/4.42 m implemented as diameters	He2024 literal header says radius; figures conflict	keep current reconstruction; do not call direct	SOURCE-CONFLICT
+horizontal_joints	30 interfaces x 6 SPRING2	inherited global equivalent model; exact stiffness not He2024 direct	keep for global model; sensitivity required	HOLD-PHYSICAL
+legacy_NSM	0 in T053; 39.80022 t removed	physical mapping unresolved; duplicate-mass risk with explicit cage	remove in formal candidate; T046-E1A retains sensitivity branch	PASS-IMPLEMENTATION/NEED-SENSITIVITY
+RNA	676753.290723 kg + eccentric CG + full ROTARYI + 6DOF coupling	thesis improved R2 spatial-equivalent model; user decision	keep unchanged	PASS-STATIC/NEED-SOLVER
+solver_gate	data check + Gravity/PT equilibrium + mass/CG + 30 modes + Flex-X/Z	required G0/G1 validation	next step	PENDING
