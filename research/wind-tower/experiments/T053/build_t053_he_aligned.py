@@ -98,7 +98,8 @@ report = {
     "output": str(OUT),
     "source_sha256": src_sha,
     "output_sha256": out_sha,
-    "changed_active_section_assignments": len(matches),\n    "s345_material_card_preview": s345_block_preview,
+    "changed_active_section_assignments": len(matches),
+    "s345_material_card_preview": s345_block_preview,
     "status": status,
     "checks": checks,
     "scope_note": "Static input transformation only; Abaqus data check/Gravity/PT equilibrium/Modal/Flex still pending."
