@@ -1,0 +1,35 @@
+{
+  "blade_rows": 51,
+  "source_hawc2_blade_mass_kg": 41722.411281503126,
+  "target_openfast_blade_mass_kg": 41732.3469077132,
+  "mass_scale": 1.0002381364332718,
+  "generated_three_blade_mass_kg": 125197.04072313974,
+  "hub_mass_kg": 105520,
+  "nacelle_mass_kg": 446036.25,
+  "generated_rna_mass_kg": 676753.2907231398,
+  "target_rna_mass_kg": 676753.2907231401,
+  "tower_top_abq_m": [
+    0,
+    158,
+    0
+  ],
+  "rotor_apex_abq_m": [
+    0,
+    161.36880577350837,
+    -7.072982356451393
+  ],
+  "nacelle_cm_abq_m": [
+    0,
+    160.45,
+    2.687
+  ],
+  "shaft_unit_abq": [
+    0,
+    -0.08715574274765817,
+    0.9961946980917455
+  ],
+  "beam_elements": 150,
+  "blade_structural_nodes": 153,
+  "blade_mass_nodes": 153,
+  "status": "INPUT_GENERATED_SOLVER_VALIDATION_PENDING"
+}
