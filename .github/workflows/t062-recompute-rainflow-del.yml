@@ -1,0 +1,217 @@
+name: t062-recompute-rainflow-del
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/t062-recompute-rainflow-del.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: t062-recompute-rainflow-del
+  cancel-in-progress: true
+
+jobs:
+  recompute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2
+          sparse-checkout-cone-mode: false
+
+      - name: Extract 36 cases
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC='research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2'
+          MERGED='/tmp/openfast36'
+          mkdir -p "$MERGED"
+          for n in $(seq 1 36); do
+            f=$(printf 'part-%03d.zip' "$n")
+            unzip -oq "$SRC/$f" -d "$MERGED"
+          done
+          test "$(find "$MERGED/CASES" -name 'DTU_10MW_RWT.outb' | wc -l)" -eq 36
+
+      - name: Install parser and rainflow tools
+        shell: bash
+        run: |
+          python3 -m pip install --quiet openfast-toolbox rainflow pandas numpy
+
+      - name: Recompute cycle ledger and DEL
+        shell: bash
+        run: |
+          cat > /tmp/recompute.py <<'PY'
+          from pathlib import Path
+          import json, math, re
+          import numpy as np
+          import pandas as pd
+          import rainflow
+          from openfast_toolbox.io.fast_output_file import FASTOutputFile
+
+          ROOT=Path('/tmp/openfast36/CASES')
+          OUT=Path('/tmp/t062-recomputed'); OUT.mkdir(parents=True,exist_ok=True)
+          M=4.0
+          NEQ=100000.0
+
+          case_dirs=sorted([p for p in ROOT.iterdir() if p.is_dir()])
+          if len(case_dirs)!=36:
+              raise RuntimeError(f'Expected 36 cases, got {len(case_dirs)}')
+
+          cycle_rows=[]
+          del_rows=[]
+          channel_inventory=None
+          qa=[]
+
+          for case in case_dirs:
+              fn=case/'DTU_10MW_RWT.outb'
+              fo=FASTOutputFile(str(fn))
+              df=fo.toDataFrame()
+              cols=list(df.columns)
+
+              if channel_inventory is None:
+                  channel_inventory=cols
+                  (OUT/'CHANNEL_INVENTORY.txt').write_text('\n'.join(cols),encoding='utf-8')
+
+              # Resolve Time and tower-base fore-aft / side-side bending moment channels robustly.
+              def resolve(prefix):
+                  exact=[c for c in cols if c.split('_[',1)[0].strip()==prefix]
+                  if exact: return exact[0]
+                  cand=[c for c in cols if prefix.lower() in c.lower()]
+                  if len(cand)==1: return cand[0]
+                  raise RuntimeError(f'{case.name}: cannot resolve {prefix}; candidates={cand}')
+
+              time_col=resolve('Time')
+              target_names=['TwrBsMxt','TwrBsMyt']
+              targets=[resolve(x) for x in target_names]
+
+              t=np.asarray(df[time_col],dtype=float)
+              mask=(t>=100.0-1e-9) & (t<=700.0+1e-9)
+              if mask.sum()<2:
+                  raise RuntimeError(f'{case.name}: invalid 100-700s window')
+              tw=t[mask]
+
+              qa.append({
+                  'case_id':case.name,
+                  'n_total':len(t),
+                  'n_window':int(mask.sum()),
+                  't0':float(tw[0]),
+                  't1':float(tw[-1]),
+                  'dt_median':float(np.median(np.diff(tw))),
+              })
+
+              for logical, col in zip(target_names,targets):
+                  x=np.asarray(df[col],dtype=float)[mask]
+                  if not np.all(np.isfinite(x)):
+                      raise RuntimeError(f'{case.name} {logical}: nonfinite values')
+
+                  # rainflow.extract_cycles yields (range, mean, count, i_start, i_end)
+                  cycles=list(rainflow.extract_cycles(x))
+                  s=0.0
+                  for rng, mean, count, i0, i1 in cycles:
+                      rng=float(rng); mean=float(mean); count=float(count)
+                      s += count*(rng**M)
+                      cycle_rows.append({
+                          'case_id':case.name,
+                          'channel':logical,
+                          'source_column':col,
+                          'range':rng,
+                          'mean':mean,
+                          'count':count,
+                          'i_start':int(i0),
+                          'i_end':int(i1),
+                      })
+                  deleq=(s/NEQ)**(1.0/M) if s>0 else 0.0
+                  del_rows.append({
+                      'case_id':case.name,
+                      'channel':logical,
+                      'source_column':col,
+                      'm':M,
+                      'Neq':NEQ,
+                      'DEL':deleq,
+                      'n_cycles_rows':len(cycles),
+                      'cycle_count_sum':sum(float(c[2]) for c in cycles),
+                      'signal_min':float(np.min(x)),
+                      'signal_max':float(np.max(x)),
+                      'signal_mean':float(np.mean(x)),
+                      'signal_std':float(np.std(x,ddof=0)),
+                  })
+
+          cyc=pd.DataFrame(cycle_rows)
+          dels=pd.DataFrame(del_rows)
+          qa_df=pd.DataFrame(qa)
+
+          cyc.to_csv(OUT/'03_RAINFLOW_CYCLE_LEDGER_RECOMPUTED.csv',index=False)
+          dels.to_csv(OUT/'05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv',index=False)
+          qa_df.to_csv(OUT/'TIME_WINDOW_QA.csv',index=False)
+
+          # group summary: turbulence type + speed label + channel
+          pat=re.compile(r'^(U[^_]+)_(NTM|ETM)_S(\d+)$')
+          tmp=[]
+          for _,r in dels.iterrows():
+              m=pat.match(r.case_id)
+              tmp.append((m.group(1),m.group(2),r.channel,r.DEL))
+          g=pd.DataFrame(tmp,columns=['speed','turbulence','channel','DEL'])
+          gs=g.groupby(['speed','turbulence','channel']).agg(
+              DEL_mean=('DEL','mean'),DEL_std=('DEL','std'),DEL_min=('DEL','min'),DEL_max=('DEL','max'),n=('DEL','size')
+          ).reset_index()
+          gs.to_csv(OUT/'06_LOAD_DEL_M4_GROUP_SUMMARY_RECOMPUTED.csv',index=False)
+
+          top=dels.sort_values('DEL',ascending=False).head(20)
+          top.to_csv(OUT/'07_DEL_CONTROL_RANKING_RECOMPUTED.csv',index=False)
+
+          audit={
+              'cases':len(case_dirs),
+              'channels':['TwrBsMxt','TwrBsMyt'],
+              'time_window_s':[100.0,700.0],
+              'm':M,'Neq':NEQ,
+              'cycle_ledger_rows':int(len(cyc)),
+              'del_rows':int(len(dels)),
+              'max_DEL_record':top.iloc[0].to_dict(),
+              'parser':'openfast-toolbox FASTOutputFile',
+              'rainflow_package':'rainflow.extract_cycles',
+              'note':'Load-level screening only; not a material fatigue life calculation.'
+          }
+          (OUT/'RECOMPUTE_AUDIT.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(audit,ensure_ascii=False,indent=2))
+          PY
+          python3 /tmp/recompute.py
+
+      - name: Commit recomputed evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import os, json, base64, urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']; branch='main'
+          src=Path('/tmp/t062-recomputed')
+          prefix='research/wind-tower/experiments/T062/recomputed-load-fatigue'
+          headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json',
+                   'X-GitHub-Api-Version':'2022-11-28','User-Agent':'wind-tower-t062'}
+          def api(method,path,payload=None):
+              data=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request('https://api.github.com/repos/'+repo+path,data=data,headers=headers,method=method)
+              with urllib.request.urlopen(req,timeout=300) as r:
+                  return json.loads(r.read().decode())
+          ref=api('GET','/git/ref/heads/'+branch); parent=ref['object']['sha']
+          base=api('GET','/git/commits/'+parent)['tree']['sha']
+          entries=[]
+          for p in sorted(src.rglob('*')):
+              if not p.is_file(): continue
+              raw=p.read_bytes()
+              blob=api('POST','/git/blobs',{'content':base64.b64encode(raw).decode(),'encoding':'base64'})
+              entries.append({'path':prefix+'/'+p.name,'mode':'100644','type':'blob','sha':blob['sha']})
+          tree=api('POST','/git/trees',{'base_tree':base,'tree':entries})
+          commit=api('POST','/git/commits',{'message':'research: independently recompute 36-case rainflow and DEL','tree':tree['sha'],'parents':[parent]})
+          api('PATCH','/git/refs/heads/'+branch,{'sha':commit['sha'],'force':False})
+          print(commit['sha'])
+          PY
