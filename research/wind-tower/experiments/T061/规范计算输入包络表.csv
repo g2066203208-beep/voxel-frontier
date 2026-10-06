@@ -1,0 +1,9 @@
+﻿quantity,envelope_abs,case,source
+TwrBsFxt,2443.9769277037826,U11p4_ETM_S04,36-case independent envelope
+TwrBsFyt,495.30258129609126,U19p202140_ETM_S01,36-case independent envelope
+TwrBsFzt,25869.42683700438,U19p202140_ETM_S04,36-case independent envelope
+TwrBsMxt,80057.92382696312,U19p202140_ETM_S01,36-case independent envelope
+TwrBsMyt,343696.24742354103,U09p343881_ETM_S06,36-case independent envelope
+TwrBsMzt,34231.21605296351,U19p202140_ETM_S06,36-case independent envelope
+sqrt(Mxt^2+Myt^2)_max,344012.7463940748,U09p343881_ETM_S06,same-time resultant
+sqrt(Fxt^2+Fyt^2)_max,2135.617351434061,U09p343881_ETM_S06,same-time resultant
