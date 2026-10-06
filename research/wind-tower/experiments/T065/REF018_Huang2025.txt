@@ -1,0 +1,716 @@
+                                                                      Engineering Structures 334 (2025) 120295
+
+
+                                                                      Contents lists available at ScienceDirect
+
+
+                                                                      Engineering Structures
+                                                          journal homepage: www.elsevier.com/locate/engstruct
+
+
+
+
+Fatigue analysis of segmental precast post-tensioned concrete towers under
+operational wind turbine loads
+Xiaogang Huang a, Jie Cui a , Xuhong Zhou a , Dongping Zhu b, Yuhang Wang a,*, Tian Li a
+a
+    School of Civil Engineering, Chongqing University, Chongqing 400045, China
+b
+    Vernon, CT 06066, USA
+
+
+
+
+A R T I C L E I N F O                                        A B S T R A C T
+
+Keywords:                                                    Recently, segmental precast post-tensioned concrete towers have emerged as a solution for achieving higher hub
+Fatigue calculation                                          heights in wind turbines. They are commonly employed as the lower portion of a hybrid tower, with a tubular
+Wind turbine                                                 steel tower situated on top. In this paper, fatigue analyses and evaluations of this tower using a multi-body
+Concrete
+                                                             dynamic model are presented. Initially, the key dimensions of a 160-m hybrid tower were determined based
+Precast
+Post-tensioned
+                                                             on operational limit state loads. The fatigue life calculations of the segmental precast post-tensioned concrete
+                                                             tower were analysed using this computational model. The influences of the mean stress correction, initial
+                                                             prestress, azimuth angle, and sample size were investigated. The results showed that fatigue accumulation in the
+                                                             horizontal joints of the segmental precast post-tensioned concrete tower was notably influenced by fatigue cycles
+                                                             with larger mean and range values. Furthermore, structural uncertainty analyses revealed that the elastic
+                                                             modulus of the concrete, tower foundation stiffness, and turbine control strategy significantly affected the fatigue
+                                                             damage of the segmental precast post-tensioned concrete tower.
+
+
+
+
+1. Introduction                                                                                Moriarty [13] simulated five years of wind turbine loads during opera­
+                                                                                               tion to facilitate load extrapolation analyses of tubular steel towers.
+    Wind turbine towers are subjected to alternating stress cycles owing                       Recently, steel-concrete hybrid towers have been proposed for onshore
+to the variability in the turbulent wind input and turbine control system                      wind turbines to capture wind resources at greater heights [17–19].
+[1,2]. The accumulated fatigue damage over the lifetime of a tower often                       Hybrid towers utilise segmental precast post-tensioned (SPPT) concrete
+governs its design criteria. Fatigue stress calculation involves various                       towers as partial replacements for tubular steel towers, addressing cost
+fully coupled dynamic simulations under normal turbine operational                             barriers associated with large steel sections, as shown in Fig. 1. It is
+conditions [3]. This task can be highly time-consuming for the fatigue                         estimated that more than 5000 wind turbines in China are currently
+design of a tower [4,5], particularly considering that a wind turbine is                       supported by hybrid towers. Although various concrete tower products
+expected to operate for 20–50 years. The total number of fatigue stress                        have been introduced in the wind-energy industry, there are currently
+cycles can reach approximately 109 [6]. To streamline computational                            no established regulations for their fatigue design.
+efforts in practice, tower lifetime damage is typically estimated using a                          Previous research [20–24] has highlighted significant differences in
+collection of stress time histories covering a shorter time range than the                     the fatigue behavior of steel and concrete materials, indicating that the
+intended lifespan [7–10]. The duration of the stress time histories must                       fatigue analysis of SPPT towers requires further investigation. There­
+be sufficiently long to ensure the statistical reliability of the fatigue                      fore, this study aims to assess whether additional factors should be
+stresses.                                                                                      incorporated into the fatigue calculations of an SPPT tower under
+    The fatigue life estimation accuracy is often evaluated using different                    operational wind turbine loads. The work presented in this paper is
+year-long databases of dynamic responses [11–13]. Tubular steel towers                         mainly divided into three parts. First, the multi-body dynamic model
+are the primary choice for supporting wind turbines at a height of 80 m                        developed to evaluate the fatigue damage of an SPPT tower is described.
+above ground over the past few decades [14–16]. This has been the focus                        Second, the key design parameters were studied to reveal their effects on
+of the previous studies on the fatigue analyses of wind turbine towers.                        the SPPT tower fatigue analyses. Finally, uncertainty analyses were
+
+
+
+    * Corresponding author.
+      E-mail address: wangyuhang@cqu.edu.cn (Y. Wang).
+
+https://doi.org/10.1016/j.engstruct.2025.120295
+Received 8 August 2024; Received in revised form 18 December 2024; Accepted 9 April 2025
+Available online 14 April 2025
+0141-0296/© 2025 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies.
+X. Huang et al.                                                                                                            Engineering Structures 334 (2025) 120295
+
+
+
+
+                                                     Fig. 1. On-site photos of the hybrid tower in China.
+
+
+
+
+                                               Fig. 2. Primary components of the steel-concrete hybrid tower.
+
+
+performed to quantify the correlation between project-specific factors             of one another. To accelerate the tower construction on site, these seg­
+and the SPPT tower fatigue damage, including the elastic modulus of                ments are typically designed without reinforcement across the joints and
+concrete, tower foundation stiffness, and turbine control strategy.                are clamped together using post-tensioned (PT) unbonded strands, as
+                                                                                   shown in Fig. 3. The PT strands are anchored at the cast-in-place foun­
+2. Description of the SPPT tower                                                   dations and the apex of the adapter ring, resulting in extremely long
+                                                                                   unbonded strands along the tower height; for instance, it can typically
+    Fig. 2 shows the layout of the primary components of the land-based            exceed 100 m in a 160-m SCHT. Such a length prevents the strand from
+SCHT. The tubular steel tower is erected atop the SPPT tower with an               producing significant force variations owing to lateral deformations,
+interposed adapter ring to facilitate force transfer between the two               which are often observed in precast bridge piers or shear walls with
+substructures. Both tower portions have circular hollow sections with              much smaller heights (e.g. [25,26]). Furthermore, SPPT towers typically
+diameters that decrease linearly with height, although the inclination             undergo small lateral deformations under operational wind turbine
+angles of two portions may vary slightly. The tapered geometry reflects            loads [27], thereby causing fatigue stresses in strands to fluctuate within
+the current trend in the wind energy industry. In Fig. 2, rcb and rct              a very narrow range.
+represent the radii of the bottom and top sections of the concrete                     In each precast segment, longitudinal reinforcement terminates
+portion, respectively; tc and ta denote the thicknesses of the concrete            before reaching its top and bottom interfaces, leaving the PT strands as
+portion and the adapter ring; rsb and tsb denote the radius and thickness          the main connectors across the contact interfaces between adjacent
+of the bottom steel section; rst and tst are the radius and thickness of the       segments, which are typically termed horizontal joints. The lateral
+top steel section.                                                                 resistance of these joints is dependent on the pre-stressing force and the
+    The SPPT tower is constructed by stacking discrete segments on top             roughness of the interfaces. These locations typically experience greater
+
+
+                                                                               2
+X. Huang et al.                                                                                                         Engineering Structures 334 (2025) 120295
+
+
+
+
+                                                 Fig. 3. External and internal views of the SPPT tower.
+
+
+
+
+                               Fig. 4. Conceptual drawing showing the sectional stress used in fatigue damage evaluation.
+
+
+
+
+                                           Fig. 5. Degrees-of-freedom of different components in the model.
+
+
+stress variations compared to the segment bodies with reinforcements,          directions, as illustrated in Figs. 4a and 4b. For tall and slender struc­
+making them critical for fatigue design in SPPT tower.                         tures primarily subjected to top loadings, flexural responses are more
+    Under operational wind turbine loads, the horizontal joints experi­        critical than shear demands. Therefore, this study focuses on the fatigue
+ence different force components in both the fore-aft and side-to-side          damage induced by normal stresses, with the assumption that friction is
+
+
+                                                                           3
+X. Huang et al.                                                                                                                 Engineering Structures 334 (2025) 120295
+
+
+                                                                                     height Vave was 7.5 m/s, and the reference turbulence intensity (Iref) was
+                                                                                     0.16. The hub-height mean wind speed Vave follows a Rayleigh proba­
+                                                                                     bility distribution, as detailed in the Appendix. The wind speeds were
+                                                                                     binned according to the Vave distribution, each with an interval of 1 m/s,
+                                                                                     as shown in Fig. 6. The majority of the wind bins were clustered around
+                                                                                     the annual mean wind speed, with higher and lower wind intensities
+                                                                                     showing markedly lower occurrence probabilities. For the NREL 5-MW
+                                                                                     wind turbine, the cut-in and -out wind speeds were 3 and 25 m/s,
+                                                                                     respectively, corresponding to 11 wind bins.
+                                                                                         Wind-field simulations are crucial for the fatigue analysis of wind
+                                                                                     turbine systems [30]. In this study, the wind field acting on the wind
+                                                                                     turbine was represented by a 19 × 19 grid covering an area of
+                                                                                     170 × 170 m2. The mean wind speed profile was determined using a
+                                                                                     power law with an exponent of 0.2. The wind direction was assumed to
+                                                                                     be constant. The 3-D wind speed field (i.e., the x-, y-, and z-components
+                                                                                     along the x-, y-, and z-directions, as shown in Fig. 7) was generated using
+                                                                                     spectral representation methods (SRMs). An example of the x-, y-, and
+                  Fig. 6. Annual probability of wind speeds.                         z-component generation at the hub height is shown in Fig. 7. The wind
+                                                                                     loading duration was extended by an additional 50 s to eliminate the
+sufficient to prevent sliding throughout the planned lifetime. In Fig. 4c,           effect of the initial conditions on the load statistics. The Kaimal spectrum
+the stress distribution resulting from the combination of two orthogonal             [3] used to define the single-point power spectral densities (PSDs) was
+bending moments Mx and My is presented. With the addition of pre-                    given in the Appendix. The coherence function was modelled using the
+stressing forces, the horizontal joints are capable of preventing the                exponential coherence model. The longitudinal wind speed (i.e., the
+development of tensile stresses during normal turbine operation.                     u-component) comprises both the mean and fluctuating wind compo­
+                                                                                     nents. The non-Gaussian characteristics of the fluctuating wind com­
+3. Multi-body dynamic model                                                          ponents were not simulated.
+                                                                                         The geometric parameters of the SCHT were initially determined
+    To simulate the operational turbine responses, the wind turbine                  using a genetic algorithm. This procedure was described by the authors
+generator system—comprising the blade, tower, nacelle, drivetrain, and               of this paper in previous study [18]. The SPPT and steel towers were
+generator—was idealised as a multi-body dynamic model using Kane’s                   made of C70 concrete and S355 steel, respectively, in accordance with
+method in OpenFast software [28]. A standard ROSCO controller [29]                   Eurocode [31,32]. The former has an elastic modulus of 41,000 MPa and
+was used for the turbine control system, which generated the primary                 density of 2500 kg/m3. Correspondingly, those of the latter were 210,
+source of nonlinearity in the model. The complete kinematics of the                  000 MPa and 7850 kg/m³ , respectively. Both materials were modelled
+model was described by 16 degrees of freedom (DOFs), as shown in                     as elastic uniaxial materials in OpenFast software. The ultimate limit
+Fig. 5. Dynamic analyses were conducted with a time step of 0.005 s.                 state (ULS) and fatigue limit state (FLS) of the trial design were then
+Estimating the fatigue life of the wind turbine generator system requires            rechecked using a group of 10-min dynamic load analyses. Extreme load
+numerous simulations following design load case (DLC) 1.2 in IEC                     extrapolation in the ULS was performed using a Weibull three-parameter
+61400–1 [3].                                                                         model [33]. The fatigue design of the FLS is described in the following
+    The SCHT was designed to support an NREL 5-MW wind turbine with                  sections.
+a hub height of 160 m at an IEC Class-III wind site [3]. The tower was                   The resulting SCHT dimensions are listed in Table 1, and the symbol
+assumed to be rigidly fixed to the ground and designed to have a min­                definitions are detailed in Fig. 2. The SPPT tower maintained a constant
+imum lifespan of 50 years. The annual mean wind speed at the hub                     wall thickness, whereas the wall thickness in the steel tower decreased
+
+
+
+
+                                                         Fig. 7. Wind speed time series at the hub height.
+
+
+Table 1
+Component dimensions of the SCHT.
+  rcb/m            tc/mm           rct/m           ta/mm             rsb/m            tsb/mm           rst/m           tst/mm              lc/m              Fpt0/MN
+
+    4.60           280             2.50            780               2.15             25.0             1.70            13.0                128.0             80.0
+
+
+                                                                                 4
+X. Huang et al.                                                                                                           Engineering Structures 334 (2025) 120295
+
+
+Table 2                                                                            4. Fatigue life calculation
+First two modal frequencies of the SCHT.
+  Fore-aft direction                        Side-to-side direction                     This section explores the influence of the mean stress correction,
+                                                                                   initial pre-stress, azimuth angle, and sample size on the SPPT tower
+  1st                  2nd                  1st                      2nd
+  0.24 Hz              0.93 Hz              0.24 Hz                  0.87 Hz       fatigue life calculation results. The horizontal joints between the tower
+                                                                                   segments are assumed to be dry joints, with no epoxy or other bonding
+                                                                                   materials used. Additionally, the fatigue characteristics of the steel
+linearly from bottom to top. Table 2 presents the first two modal fre­             tower are provided to emphasise the distinctions between the two tower
+quencies of the SCHT in the fore-aft and side-to-side directions. The              portions.
+results in both directions were highly similar, suggesting that variations             Fatigue investigations of SPPT towers involve analysing stress time-
+in the turbine moment of inertia had a minimal impact on the free vi­              series data generated from dynamic simulations and evaluating their
+bration responses of the SCHT.                                                     results using the fatigue life curves of the adopted materials. The IEC
+                                                                                   61400–1 standard [3] recommends performing at least six 10-min sto­
+                                                                                   chastic realizations per wind condition. Accordingly, ten simulations per
+                                                                                   wind bin were conducted in the fatigue analyses, resulting in a total of
+
+
+
+
+                                           Fig. 8. Rainflow counting matrix obtained from stress time series data.
+
+
+
+
+                                       Fig. 9. Effects of azimuth angle on damage contributions of different wind bins.
+
+                                                                               5
+X. Huang et al.                                                                                                             Engineering Structures 334 (2025) 120295
+
+
+
+
+                                              Fig. 10. Variation in damage contribution according to wind bins.
+
+
+110 simulations for an integrated fatigue evaluation of the 11 wind bins.         Palmgren-Miner damage rule [35]. For the fatigue stresses in the SPPT
+In each simulation, a unique turbulence seed was used to generate in­             tower, fatigue damage was assessed using the fatigue life model speci­
+dependent random phases at each wind speed. Turbine responses under               fied in Model Code 2020 [36]. Meanwhile, the fatigue damage to the
+these wind conditions were simulated using the OpenFAST model                     steel tower was evaluated using the fatigue life model provided by DNV
+described in the previous section.                                                [37].
+    After obtaining the force components from the OpenFAST model, the                 The fatigue accumulation Dlife during the design lifetime was esti­
+sectional stresses of the horizontal joints were theoretically derived by         mated as follows:
+assuming that the plane sections remained planar. The time series local                     11
+stress σ (t) at a specified azimuth angle α is given as:
+                                                                                            ∑          Tlife Pj
+                                                                                  Dlife =         Dj                                                            (2)
+                                                                                            j=1
+                                                                                                          tj
+       F (t) + Fpt0 Mx (t)           My (t)
+σ (t) = z          +       R sin α −        R cos α                     (1)
+            Ac       Ixx              Iyy                                         where Dj and tj are the fatigue damage and total duration of the stress
+                                                                                  time series data in the j-th wind bin, respectively; Tlife is the total number
+where Fpt0 is the vertical component of the initial PT force; Fz(t) is the
+                                                                                  of 10-min segments during the design lifetime; Pj is the annual proba­
+axial force; Mx(t) and My(t) are the fore-aft and side-to-side moments,
+                                                                                  bility of the mean wind speed of the 10-min segments falling in the j-th
+respectively; Ac is the cross-sectional area; Ixx and Iyy are the moment of
+                                                                                  wind bin. Eq. (2) indicates that the fatigue accumulation Dlife is calcu­
+inertia in the fore-aft and side-to-side directions, respectively; R is the
+                                                                                  lated by aggregating the damage contribution of each wind bin. Fatigue
+outer radius in the horizontal joints; and t is the time of the response
+                                                                                  failure will occur when fatigue accumulation Dlife exceeded unity.
+time histories.
+     Existing fatigue-life predictive models are typically based on fatigue
+tests of specimens under constant-amplitude loading conditions.
+                                                                                  4.1. Effects of azimuth angle
+Therefore, these models cannot directly quantify the fatigue damage
+caused by the turbine dynamic responses. In this study, the rainflow
+                                                                                      The fatigue stresses within the tower cross-sections vary owing to the
+counting method provided by ASTM [34] was utilised to transform each
+                                                                                  combined fore-aft and side-to-side loads, highlighting the need to
+σ (t) into an equivalent rainflow matrix. This matrix includes cycle mean
+                                                                                  identify critical locations along the sectional circumference. The effect
+σ m, cycle range Δσ c, and cycle count Nc, as illustrated in Fig. 8. The
+                                                                                  of the azimuth angle on damage contributions of different wind bins (α
+fatigue damage caused by the time series local stress σ (t) is then
+                                                                                  = 0, 10, 20, and 30 ◦ ) is shown in Fig. 9. Owing to the tower’s tapered
+computed via a linear combination of fatigue cycles following the
+                                                                                  geometry, the fatigue stresses at the base may not consistently govern
+
+                                                                              6
+X. Huang et al.                                                                                                            Engineering Structures 334 (2025) 120295
+
+
+
+
+                               Fig. 11. Damage contributions of different wind bins with and without mean stress correction.
+
+
+the design criterion. Consequently, the fatigue behaviour at the top and         4.2. Effects of mean stress correction
+bottom joints of the SPPT tower was compared.
+    For the bottom joint, fatigue accumulation was very small. Corre­                During the fatigue analyses of steel sections, different cycle means
+spondingly, those of the top joint were 0.37, 0.40, 0.26, and 0.11 as the        are typically transformed to a fixed zero mean using mean stress
+azimuth angle increased from 0 ◦ to 30 ◦ . This indicates that fatigue           correction. The fatigue life at an equivalent fixed-mean alternating stress
+accumulation increased up to 10 ◦ and then decreased as the azimuth              was equal to the fatigue life under alternating stresses with different
+angle continued to increase. The most severe fatigue accumulation                means. This constant-life transformation is often performed using Mar­
+occurred near the azimuth angle aligned with the fore-aft direction,             in’s general equation [38], as follows:
+indicating the significant contribution of the fore-aft force components         ( )n (         )
+                                                                                   σa        σm m
+to the total fatigue response. Consequently, it is generally reasonable to              + f         =1                                                   (3)
+consider only fore-aft loads (α = 0 ◦ ) when assessing the fatigue accu­
+                                                                                  σf          σu
+mulation in the concrete portion of a 160-m SCHT.
+                                                                                 where σ u is the ultimate strength of the material; σ a and σ m are the stress
+    Fig. 10 shows the variation in damage contribution with respect to
+                                                                                 amplitude and mean stress obtained from the response time history,
+wind bins, assuming an azimuth angle of zero (α = 0 ◦ ). Ten simulations
+                                                                                 respectively; and σf is the zero-mean stress amplitude. In this study, Eq.
+were conducted for each wind bin. Notably, the fatigue accumulation in
+                                                                                 (3) was used with constants n = m = f = 1, which is known as the
+different tower portions was significantly affected by wind bins close to
+                                                                                 Goodman model. For the SPPT tower in the SCHT, the unbonded PT
+a rated wind speed of 11.5 m/s. This is primarily due to these wind bins
+                                                                                 force between the concrete segments eliminates tensile stress develop­
+inducing higher tower loads, resulting in larger mean stress levels at
+                                                                                 ment, rendering the zero-mean alternating stress assumption in the
+horizontal joints. For the steel tower, the damage contribution exhibited
+                                                                                 Goodman model unsuitable. Consequently, it was modified as follows to
+a relatively uniform distribution within same wind bin, whereas for the
+                                                                                 consider nonzero mean stress correction:
+SPPT tower, it frequently varied across different simulations in the same
+                                                                                        (          )
+wind bin. For instance, considering the 10-m/s wind bin at the top joints,                σ − σ fm
+                                                                                 σf = σa u                                                                  (4)
+the standard deviation of the former was 46 times that of the latter,                     σu − σm
+highlighting the inherent complexity of the long-term fatigue damage of
+the SPPT tower.                                                                  where σ f is the stress amplitude related to the fixed mean σ fm. For hor­
+                                                                                 izontal joints in the SPPT tower, σ fm can be specified as the average value
+
+
+
+
+                                                  Fig. 12. Rainflow matrices under a wind bin of 10 m/s.
+
+                                                                             7
+X. Huang et al.                                                                                                              Engineering Structures 334 (2025) 120295
+
+
+
+
+                                                   Fig. 13. Fatigue damage under a wind bin of 10 m/s.
+
+
+
+
+                                    Fig. 14. Effects of initial pre-stress on damage contributions of different wind bins.
+
+
+of the stress time-series data resulting from the same wind bin.                      To elucidate the impact of mean stress correction on fatigue damage,
+    Fig. 11 shows the damage contribution of different wind bins ob­              a detailed examination of the fatigue damage associated with each cycle
+tained with and without considering the mean stress correction. It is             range is presented in Figs. 12 and 13. The cycle range and cycle mean for
+evident that applying the mean stress correction consistently leads to an         the concrete are normalized by the design fatigue reference compressive
+overestimation of fatigue accumulation over the design lifetime.                  strength from Model Code 2020 [36]. In the rainflow analysis, the cycle
+Increased damage contribution is prominently observed in the wind bins            range of both the steel and SPPT towers exhibited similar correlations
+close to the rated wind speed of 11.5 m/s. The increase in damage                 with the cycle counts, as shown in Fig. 12. However, fatigue cycles with
+contribution in the top joint is not shown because it far exceeds unity.          larger cycle ranges have smaller cycle counts but exert a greater
+
+                                                                              8
+X. Huang et al.                                                                                                           Engineering Structures 334 (2025) 120295
+
+
+
+
+                                                Fig. 15. Variation in damage contribution in the second run.
+
+
+influence on the fatigue behaviour of the SPPT tower. As shown in                 increase with an increase in Fpt0 across most wind bins and the fatigue
+Fig. 13a, the fatigue damage exponentially increases (ranging from                accumulation did not exceed unity. However, the damage contributions
+10− 13 to 10− 2) over the increasing cycle range. The mean stress                 of different wind bins in the top joint can be significantly affected by
+correction may widen the difference between the cycle amplitude and               increasing Fpt0 from 80 to 85 and 90 MN. The sharp increase in damage
+mean, thereby inducing a disproportionate alteration in the fatigue life.         contribution suggests that higher Fpt0 values noticeably amplify the
+Fig. 13b shows that the fatigue accumulation in the steel tower is                damage contribution, particularly as the section sizes decrease with
+distributed within a narrow range, indicating a relative insensitivity to         tower height. This suggests that progressively increasing the PT force
+different cycle ranges. Consequently, mean stress correction was                  can be detrimental to the tower fatigue behaviour owing to the
+deemed suitable for the steel tower in the SCHT.                                  increasing stress levels.
+
+
+4.3. Effects of initial pre-stress                                                4.4. Effects of sample size
+
+    The SPPT tower comprises a stack of precast concrete segments post-               To assess whether the number of simulations specified by the IEC
+tensioned to the foundation using unbonded PT strands and inter­                  61400–1 standard [3] was adequate for the long-term fatigue estimates,
+connected along the joints without additional reinforcements. The PT              the wind turbine loads were recalculated using more independent tur­
+strands serve as the primary source of lateral resistance in the SPPT             bulence seeds in each wind bin. The variability in damage contributions
+tower. The clamping action of the initial PT force creates a highly rigid         between two separate runs was compared. The results of the first run are
+initial condition between the concrete segments, resembling securely              shown in Figs. 10a and 10c, while the second run is presented in Fig. 15,
+tied joints.                                                                      with each run consisting of 110 simulations. For the steel tower, small
+    To investigate the impact of the initial pre-stress, the SPPT tower was       changes (no greater than a 5 % difference) were observed in the
+analysed using four values (Fpt0 = 75, 80, 85, and 90 MN). Corre­                 different runs. This stable distribution implies that the fatigue load es­
+spondingly, the design axial ratios at the bottom joint of the SPPT tower         timates based on the ten simulations are accurate for the steel tower. By
+varied as 0.20, 0.22, 0.23, and 0.25, while those at the top joint were           contrast, the fatigue damage to the SPPT tower appears significantly
+0.39, 0.41, 0.44, and 0.46 due to the tapering geometry. Fig. 14 illus­           susceptible to turbulent wind conditions, as evidenced by the 91.7 %
+trates the fatigue variations of the SPPT tower for different initial pre-        difference observed between the two runs. This considerable variability
+stress values. At the bottom joint, the fatigue damage showed a slight            suggests that ten simulations may not be sufficient to eliminate the
+
+
+
+
+                                      Fig. 16. Damage contributions of different wind bins using year-long simulations.
+
+                                                                              9
+X. Huang et al.                                                                                                     Engineering Structures 334 (2025) 120295
+
+
+
+
+                                           Fig. 17. Fatigue damage at the bottom joint of the SPPT tower.
+
+
+
+
+                                           Fig. 18. Fatigue damage at the bottom section of the steel tower.
+
+
+statistical uncertainty for the SPPT tower.                                    As depicted in Fig. 16, the damage contribution from the same wind bin
+    To assess the long-term damage contribution distribution, three            remains almost identical across different one-year simulations for the
+years of turbine operation were simulated, equivalent to 4,6337 × 3            steel tower. The fatigue accumulation from various year-long datasets
+fatigue load cases (each representing a 10-minute simulation) after            was approximately 0.61, closely matching the results from short-term
+excluding wind speeds below and above the cut-in and -out wind speeds.         simulations. This indicates that using short-term simulations can
+
+
+
+
+                                                    Fig. 19. Wind speed time-series at hub-height.
+
+                                                                          10
+X. Huang et al.                                                                                                           Engineering Structures 334 (2025) 120295
+
+
+
+
+                                             Fig. 20. Stress time-series at the bottom joint of the SPPT tower.
+
+
+
+
+                                            Fig. 21. Stress time-series at the bottom section of the steel tower.
+
+
+reliably predict the fatigue life of a steel tower in representative wind         This highlights the fatigue accumulation sensitivity in the SPPT tower to
+conditions. Conversely, for the SPPT tower, the fatigue accumulation              extreme fatigue loads. Conversely, the fatigue damage for the steel tower
+over the three-year datasets varied significantly, measuring 0.82, 0.31,          consistently remained within one order of magnitude under same wind
+and 0.31 respectively. It is shown that variability still exists in damage        bins. This indicates that the impact of extreme fatigue loads on fatigue
+contributions across different year-long simulations, although the dif­           accumulation is much smaller for the steel tower.
+ferences in fatigue life estimates have decreased to an acceptable level.             The stress time histories extracted from the extreme fatigue load
+    Figs. 17 and 18 presents the empirical cumulative distribution (ECD)          cases in the above year-long datasets are highlighted to further illustrate
+of fatigue load cases with wind-speed bins of 10 m/s and 12 m/s. Fa­              the difference in damage contributions. Both cases shared the same
+tigue damage observed in these wind-speed bins contributes most                   mean wind profile along the tower height. The longitudinal wind speed
+significantly to the overall fatigue accumulation, as they correspond to          at the hub height is shown in Fig. 19. The load case with maximum fa­
+higher mean stress levels. These results were therefore used to quantify          tigue damage exhibits a significant cycle range, more than four times
+the variability of fatigue damage in the year-long datasets. The ECD              larger than the load case with minimum fatigue damage, as shown in
+reveals a large fatigue damage variability for the SPPT tower, with the           Figs. 20 and 21.
+ratio of maximum and minimum values reaching approximately 108.                       In these two simulations, the fatigue damage at the steel tower varied
+
+
+
+
+                                               Fig. 22. Permissible range of the tower first modal frequency.
+
+                                                                             11
+X. Huang et al.                                                                                                                   Engineering Structures 334 (2025) 120295
+
+
+                                                                                     Table 3
+                                                                                     Comparison between the first two modal frequencies.
+                                                                                      Type                   Fore-aft direction               Side-to-side direction
+
+                                                                                                             1st             2nd              1st             2nd
+
+                                                                                      AF length = 10 m       0.22 Hz         0.85 Hz          0.22 Hz         0.80 Hz
+                                                                                      AF length = 20 m       0.20 Hz         0.78 Hz          0.20 Hz         0.74 Hz
+
+
+
+                                                                                     5.1. Tower foundation stiffness
+
+                                                                                         In the OpenFAST software [28], the foundation flexibility is typically
+                                                                                     modelled using the apparent fixity (AF) [41] method owing to its
+                                                                                     simplicity, as shown in Fig. 23. This involves incorporating a fictitious
+                                                                                     cantilevered beam beneath the tower base to simulate the
+                                                                                     soil-foundation interaction. The length and properties of this fictitious
+                                                                                     beam were carefully defined to match the expected stiffness of the actual
+                                                                                     soil-foundation system. Table 3 presents the natural frequencies of the
+Fig. 23. Conceptual schematics showing details of the fixed-base and flexible        AF and fixed-base models. The foundation stiffness in the AF model was
+foundations.                                                                         selected based on the risk that f1 approached or slightly overlapped with
+                                                                                     the turbine operational frequencies.
+by approximately 0.1 (i.e., the ratio between maximum and minimum                        As shown in Fig. 24, the damage contributions of different wind bins
+values of fatigue damage), whereas the ratio in the SPPT tower was 108.              increases significantly as the tower modal frequencies decrease. As f1
+This suggests that SPPT towers are more susceptible to fatigue cycles                ranged from 0.24 to 0.22 Hz, the damage contributions at the bottom
+with larger mean and range values. As the mean stress level of the SPPT              joint for the 10-, 12-, 14-, and 16-m/s wind bins increased 204.8, 139.6,
+tower increased, the increasing stress amplitude induced a higher rate of            53.9, and 196.5 %, respectively, compared with the theoretically exact
+change in fatigue damage. Identifying the fatigue load case with                     model. Similarly, as f1 ranged from 0.24 to 0.20 Hz, the damage con­
+maximum fatigue damage is helpful to develop loading protocols and                   tributions increased by 433.6, 351.6, 385.5, and 593.9 %, respectively.
+targeted improvements in the future experimental studies.                            These results suggest that neglecting the foundation flexibility may
+                                                                                     significantly underestimate the fatigue accumulation in the SCHT. The
+5. Structural uncertainty analyses                                                   damage contributions at the top joint of the SPPT tower exhibited a
+                                                                                     smaller increase when subjected to the effects of foundation flexibility.
+    To mitigate the risk of resonance, the natural frequencies of the
+supporting structures should fall outside the frequencies induced by
+                                                                                     5.2. Elastic modulus of concrete
+wind excitation and turbine operation, as shown in Fig. 22. The NREL 5-
+MW wind turbine typically operates at speeds ranging between 6.9–12.1
+                                                                                         Various methods are provided in modern building codes for calcu­
+revolutions per minute (rpm), corresponding to a rotor operational
+                                                                                     lating the elastic modulus of concrete. To assess the accuracy of these
+frequency (1 P) of 0.12–0.20 Hz. Consequently, the blade pass fre­
+                                                                                     methods, Noguchi et al. [39] developed a database consisting of more
+quency (3 P) was within a range of 0.36–0.60 Hz. Moreover, most of the
+                                                                                     than 3000 uniaxial compression tests. Their findings suggest that the
+energy in the wind excitation lies below 1 P. Therefore, it is advisable for
+                                                                                     Eurocode-2 equation [31] tends to overestimate the modulus of elas­
+the tower frequency f1 to be situated between the 1 P and 3 P fre­
+                                                                                     ticity of concrete, and most of the residuals (i.e., the difference between
+quencies, as outlined in Table 2.
+                                                                                     the estimations and observations) fall within 0–8000 MPa. A near-mean
+    However, in practice, actual towers may be constructed and erected
+                                                                                     residual of 4000 MPa was considered to demonstrate the typical devi­
+with deviations from design conditions. These discrepancies may lower
+                                                                                     ation effects, corresponding to a 10 % reduction in the design value. As a
+the natural frequencies of SCHTs, bringing them closer to turbine
+                                                                                     result, the first two modal frequencies of the SCHT were respectively
+operational frequencies. The factors influencing tower dynamic re­
+                                                                                     reduced to 0.21 and 0.82 Hz in the fore-aft direction, and 0.21 and
+sponses inconsistent with the design case can be summarised as follows.
+                                                                                     0.79 Hz in the side-to-side direction.
+a) Elastic modulus of concrete: Previous experimental studies [39,40]
+                                                                                         Fig. 25 shows the variation in damage contributions after consid­
+revealed a significant discrepancy in the stress-strain relationship of
+                                                                                     ering the reduced elastic modulus. As Ec is decreased by 10 % in the
+concrete prior to reaching its maximum stress owing to the complex
+                                                                                     SPPT tower, the damage contributions at the bottom concrete joint
+composition of concrete and crack propagation. b) Tower foundation
+                                                                                     varies by 60.1, 66.3, − 16.8, and 87.0 % for the 10-, 12-, 14-, and 16-m/s
+stiffness: The tower’s ground restraint [41,42] depends on the strength
+                                                                                     wind bins, respectively. Correspondingly, the damage contributions at
+and stiffness parameters of the soil as well as their interaction with the
+                                                                                     the top concrete joint varied by 8.6, 16.7, 0.38, and 20.7 %, respectively.
+foundation, making it difficult to achieve the fixed condition assumed in
+                                                                                     The increased damage is mainly due to the reduction in the elastic
+this study. c) Turbine control strategy: Wind turbine loads under
+                                                                                     modulus of concrete, which in turn increases the likelihood of a reso­
+different wind speeds can change based on the control approach. The
+                                                                                     nance condition between the tower and turbine. However, the increase
+lifespan of the supporting towers can be extended by integrating
+                                                                                     induced by the elastic modulus of concrete was not significant compared
+prognostic-based control schemes into the wind turbine [43–46].
+                                                                                     to the impact of the tower foundation stiffness.
+    In this section, the impact of these structural uncertainties on the
+damage contributions of key wind bins is evaluated. The computational
+model established in the previous sections served as a benchmark. For                5.3. Turbine control strategy
+each assessment, only one parameter was altered, while keeping the
+other parameters constant. Year-long turbulent wind fields were used to                  Integrating advanced control technology may prevent the premature
+reduce short-term variability effects.                                               fatigue failure of wind turbine systems owing to off-design deviations.
+                                                                                     To achieve this, the tower resonance avoidance mode offered by the
+                                                                                     ROSCO controller [29] was analysed. This mode enables the avoidance
+                                                                                     of specific frequency ranges through torque control set points. Its
+
+                                                                                12
+X. Huang et al.                                                                                                          Engineering Structures 334 (2025) 120295
+
+
+
+
+                              Fig. 24. Damage contribution change according to variations in the tower foundation stiffness.
+
+
+
+
+                               Fig. 25. Damage contribution change according to variations in the elastic modulus concrete.
+
+
+
+
+                               Fig. 26. Damage contribution change according to variations in the turbine control strategy.
+
+
+effectiveness was examined using the AF model with the lowest devia­             are significantly reduced by employing the tower resonance avoidance
+tion frequency (f1 = 0.20 Hz). The torque control set points were                mode. The damage contributions at the bottom concrete joint decreased
+changed to avoid a rotor frequency range of 0.18–0.22 Hz.                        by 78.9, 88.3, 92.5, and 82.7 % for the 10-, 12-, 14-, and 16-m/s wind
+    As shown in Fig. 26, the damage contributions of different wind bins         bins, respectively, while that of the top concrete joint exhibited similar
+
+                                                                            13
+X. Huang et al.                                                                                                               Engineering Structures 334 (2025) 120295
+
+
+
+
+                                   Fig. 27. Generator power change according to variations in the turbine control strategy.
+
+
+decreases across most wind bins. Notably, the fatigue accumulation of                these uncertainties can result in a significant underestimation of fatigue
+all horizontal joints remained below unity, highlighting the effective­              accumulation in the SPPT tower. Integrating a tower resonance avoid­
+ness of advanced control strategies in mitigating tower fatigue. Addi­               ance mode can prevent the premature fatigue failure of the SCHT owing
+tionally, the use of this mode resulted in an average mean output power              to off-design deviations. However, the additional cost of this control
+fluctuation decrease of 2.1, 0.1, 0.0, and 0.0 % for the 10-, 12-, 14-, and          method limits its practical application in the SCHT.
+16-m/s wind bins, respectively, as shown in Fig. 27, indicating small                    The fatigue damage in wind turbine towers accumulates progres­
+impacts on power variation.                                                          sively over time as the turbine operates, which may in turn affect the
+                                                                                     tower’s dynamic responses. However, the nonlinearities resulting from
+6. Conclusion                                                                        accumulated damage cannot be considered in simulation tools like the
+                                                                                     OpenFast software. Further research is recommended to analyse the
+    SPPT towers are typically designed utilized as the lower portion of a            impact of these coupled effects on long-term tower performance.
+SCHT. This tower configuration is suitable for wind turbines in regions
+where achieving higher hub heights is crucial for maximizing wind                    CRediT authorship contribution statement
+resource capture. In this study, the fatigue damage of the SPPT tower
+was investigated using a multi-body dynamic model of a 160-meter                        Huang Xiaogang: Writing – review & editing, Writing – original
+SCHT. The main dimensions of tower components were determined                        draft, Methodology, Funding acquisition, Formal analysis. Cui Jie:
+based on operational limit state loads derived from an NREL 5-MW wind                Writing – review & editing, Software. Wang Yu-Hang: Supervision,
+turbine.                                                                             Conceptualization. Li Tian: Methodology. Zhou Xuhong: Supervision,
+    The main findings from the fatigue life calculation of SPPT towers are           Project administration. Zhu Dongping: Writing – review & editing.
+summarized as follows: (i) The mean stress correction methods signifi­
+cantly overestimated the fatigue accumulation in different horizontal
+joints. In contrast, the average stress correction is more suitable for steel        Declaration of Competing Interest
+towers. (ii) It is generally reasonable to consider only fore-aft loads
+when assessing the fatigue accumulation in the concrete portion of a                     The authors declare that they have no known competing financial
+160-m SCHT. (iii) The initial pre-stress had minimal effects on the bot­             interests or personal relationships that could have appeared to influence
+tom concrete joint but significantly affected the top concrete joint. (iv)           the work reported in this paper.
+Short-term simulations can accurately predict the fatigue accumulation
+of steel tower sections; however, a larger sample size is required for               Acknowledgements
+horizontal joints in the SPPT tower owing to the variability in fatigue
+cycles with larger mean and range values.                                                The authors gratefully acknowledge the financial support provided
+    Structural uncertainty analyses were performed to investigate their              by the National Natural Science Foundation of China (52378478),
+effects on the fatigue life of the SPPT towers. Uncertainties in the elastic         Natural Science Foundation of Chongqing (CSTB2023NSCQ-MSX0650),
+modulus of concrete and tower foundation stiffness can lead to an un­                National Natural Science Foundation Innovation Group Project of China
+derestimation of the tower’s natural frequencies, thereby increasing the             (52221002), and Fundamental Research Funds for the Central Univer­
+risk of resonance with the turbine’s operating frequencies. Neglecting               sities of China (2024CDJYXTD-005 and 2024CDJXY021).
+
+
+
+Appendix
+
+    As stated in IEC 61400–1 [3], the cumulative distribution function of the Rayleigh distribution is defined as,
+                [    (       )2 ]
+                        v
+PR (v) = 1 − exp − π                                                                                                                                              (5)
+                       2Vave
+
+
+where v is the wind speed. The component power spectral densities used to generate the 3-D wind field are given as,
+
+
+
+
+                                                                                14
+X. Huang et al.                                                                                                                                   Engineering Structures 334 (2025) 120295
+
+
+fSk (f)           4fLk /Vhub
+          =                                                                                                                                                                             (6)
+  σ 2k        (1 + 6fLk /Vhub )5/3
+where f is the frequency in hertz; k is the index referring to the wind speed component (k = 1 for the x-component, k = 2 for the y-component, and
+k = 3 for the z-component); σ k and Lk denote the standard deviation and the integral scale parameter of the wind speed component, respectively. Their
+values are given in Table C.1 of IEC 61400–1 [3].
+
+
+
+Data availability                                                                                [20] Hümme J, von der Haar C, Lohaus L, et al. Fatigue behaviour of a normal-strength
+                                                                                                      concrete–number of cycles to failure and strain development. Struct Concr 2016;17
+                                                                                                      (4):637–45.
+     The data that has been used is confidential.                                                [21] Viswanath S, LaFave JM, Kuchma DA. Concrete compressive strain behavior and
+                                                                                                      magnitudes under uniaxial fatigue loading. Constr Build Mater 2021;296:123718.
+                                                                                                 [22] Viswanath S, Kuchma DA, LaFave JM. Experimental investigation of concrete
+References
+                                                                                                      fatigue in axial compression. Acids Struct J 2021;118(1):263–76.
+                                                                                                 [23] Velarde J, Mankar A, Kramhøft C, et al. Probabilistic calibration of fatigue safety
+ [1] Pacheco J, Pimenta F, Pereira S, et al. Fatigue assessment of wind turbine towers:               factors for offshore wind turbine concrete structures. Eng Struct 2020;222:111090.
+     Review of processing strategies with illustrative case study. Energies 2022;15(13):         [24] Kachkouch FZ, Noberto CC, Babadopulos LFAL, et al. Fatigue behavior of concrete:
+     4782.                                                                                            A literature review on the main relevant parameters. Constr Build Mater 2022;338:
+ [2] Do TQ, Mahmoud H, van de Lindt JW. Fatigue life of wind turbine tower bases                      127510.
+     throughout Colorado. J Perform Constr Facil 2015;29(4):04014109.                            [25] Perez FJ, Sause R, Pessiki S. Analytical and experimental lateral load behavior of
+ [3] IEC 61400–1. Wind turbines-Part 1: design requirements. 4th ed. Geneva,                          unbonded posttensioned precast concrete walls. J Struct Eng 2007;133(11):
+     Switzerland: International Electrotechnical Commission; 2019.                                    1531–40.
+ [4] Do TQ, van de Lindt JW, Mahmoud H. Fatigue life fragilities and performance-                [26] Li C, Hao H, Bi K. Numerical study on the seismic performance of precast segmental
+     based design of wind turbine tower base connections. J Struct Eng 2015;141(7):                   concrete columns under cyclic loading. Eng Struct 2017;148:373–86.
+     04014183.                                                                                   [27] IEC 61400-6. Wind energy generation systems-Part6: Tower and foundation design
+ [5] Haselibozchaloee D, Correia J, Mendes P, et al. A review of fatigue damage                       requirements. Geneva, Switzerland: International Electrotechnical Commission;
+     assessment in offshore wind turbine support structure. Int J Fatigue 2022;164:                   2020.
+     107145.                                                                                     [28] Jonkman B., et al. OpenFAST/openfast:OpenFAST v3.5.2. 2024.
+ [6] Klose M, Dalhoff P, Argyriadis K. Integrated load and strength analysis for offshore        [29] NREL: ROSCO. Version 2.9.0, 〈https://github.com/NREL/ROSCO〉, 2024.
+     wind turbines with jacket structures. Proc 17th Isope 2007.                                 [30] Toft HS, Svenningsen L, Sørensen JD, et al. Uncertainty in wind climate parameters
+ [7] Manuel L, Veers PS, Winterstein SR. Parametric models for estimating wind turbine                and their influence on wind turbine fatigue loads. Renew Energy 2016;90:352–61.
+     fatigue loads for design. J Sol Energy Eng 2001;123(4):346–55.                              [31] Eurocode 2. Design of concrete structures, Part 1: General rules, rules for buildings,
+ [8] Sun C, Jahangiri V. Fatigue damage mitigation of offshore wind turbines under real               bridges and civil engineering structures. Brussels: CEN; 2019.
+     wind and wave conditions. Eng Struct 2019;178:472–83.                                       [32] Eurocode 3. Design of Steel Structures, Parts 1–6: Strength and Stability of Shell
+ [9] Dong W, Moan T, Gao Z. Long-term fatigue analysis of multi-planar tubular joints                 Structures. Brussels, Belgium: CEN; 2023.
+     for jacket-type offshore wind turbine in time domain. Eng Struct 2011;33(6):                [33] Yang Q, Li Y, Li T, et al. Statistical extrapolation methods and empirical formulae
+     2002–14.                                                                                         for estimating extreme loads on operating wind turbine towers. Eng Struct 2022;
+[10] Häfele J, Hübler C, Gebhardt CG, et al. A comprehensive fatigue load set reduction              267:114667.
+     study for offshore wind turbines with jacket substructures. Renew Energy 2018;              [34] ASTM E1049-85. Standard Practices for Cycle Counting in Fatigue Analysis. West
+     118:99–112.                                                                                      Conshohocken, PA: ASTM International; 2017.
+[11] Manuel L., Nguyen H.H., Barone M.F. On the use of a large database of simulated             [35] Miner AM. Cumulative damage in fatigue. J Appl Mech 1945;12(2):A159–64.
+     wind turbine loads to aid in assessing design standard provisions. Proceedings of           [36] FIB. Model Code 2020. Lausanne: International Federation for Structural Concrete;
+     the 51st AIAA Aerospace Sciences Meeting including the New Horizons Forum and                    2023.
+     Aerospace Exposition, Grapevine, Texas. 2013: 1-9.                                          [37] DNVGL-ST-0126. Support structures for wind turbines. Oslo, Norway: DNV GL;
+[12] Repetto MP, Torrielli A. Long term simulation of wind-induced fatigue loadings.                  2016.
+     Eng Struct 2017;132:551–61.                                                                 [38] Marin J. Interpretation of fatigue strengths for combined stresses. Int Conf Fatigue
+[13] Moriarty PJ, Holley WE, Butterfield SP. Extrapolation of extreme and fatigue loads               Met 1956:184–94.
+     using probabilistic methods. NREL/TP-500-34421. Golden, Colorado: National                  [39] Noguchi T, Tomosawa F, Nemati KM, et al. A practical equation for elastic modulus
+     Renewable Energy Laboratory; 2004.                                                               of concrete. Acids Struct J 2009;106(5):690.
+[14] Agbayani NA, Vega RE. The rapid evolution of wind turbine tower structural                  [40] Beushausen H, Dittmer T. The influence of aggregate type on the strength and
+     systems: a historical and technical overview. Struct Congr 2012:1201–12.                         elastic modulus of high strength concrete. Constr Build Mater 2015;74:132–9.
+[15] Huo T, Tong L. An approach to wind-induced fatigue analysis of wind turbine                 [41] Yang S, Deng X, Yang J. Modeling of soil-pile-structure interaction for dynamic
+     tubular towers. J Constr Steel Res 2020;166:105917.                                              response of standalone wind turbines. Renew Energy 2022;186:394–410.
+[16] Fu B, Zhao J, Li B, et al. Fatigue reliability analysis of wind turbine tower under         [42] Jalbi S, Bhattacharya S. Closed form solution for the first natural frequency of
+     random wind load. Struct Saf 2020;87:101982.                                                     offshore wind turbine jackets supported on multiple foundations incorporating
+[17] Lantz E, Roberts O, Nunemaker J, et al. Increasing wind turbine tower heights:                   soil-structure interaction. Soil Dyn Earthq Eng 2018;113:593–613.
+     Opportunities and challenges. NREL/TP-5000-73629. Golden, Colorado: National                [43] Horn JT, Leira BJ. Fatigue reliability assessment of offshore wind turbines with
+     Renewable Energy Laboratory; 2019.                                                               stochastic availability. Reliab Eng Syst Saf 2019;191:106550.
+[18] Huang X, Li B, Zhou X, et al. Geometric optimisation analysis of Steel–Concrete             [44] Petrović V, Jelavić M, Baotić M. Advanced control algorithms for reduction of wind
+     hybrid wind turbine towers. Structures 2022;35:1125–37.                                          turbine structural loads. Renew Energy 2015;76:418–31.
+[19] Klein F, Fürll F, Betz T, et al. Experimental study on the joint bearing behavior of        [45] Skaare B, Hanson TD, Nielsen FG. Importance of control strategies on fatigue life of
+     segmented tower structures subjected to normal and bending shear loads. Struct                   floating wind turbines. Int Conf Offshore Mech Arct Eng 2007;42711:493–500.
+     Concr 2022;23(3):1370–84.                                                                   [46] Njiri JG, Beganovic N, Do MH, et al. Consideration of lifetime and fatigue load in
+                                                                                                      wind turbine control. Renew Energy 2019;131:818–28.
+
+
+
+
+                                                                                            15
+

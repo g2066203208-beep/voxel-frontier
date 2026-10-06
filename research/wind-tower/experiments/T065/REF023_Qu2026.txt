@@ -1,0 +1,1876 @@
+Article
+
+Fatigue Life Evaluation of a Steel–Prestressed Concrete Hybrid
+Tower Under Prestress Relaxation Using a Bidirectionally
+Coupled Damage Model and Neural Network Surrogate
+Chang Qu, Pengyong Miao *, Chengyun Li, Ziyue Li and Yanru Wu *
+
+                                         School of Civil Engineering and Smart Construction, Chang’an University, Xi’an 710064, China
+                                         * Correspondence: p.y.miao@outlook.com (P.M.); wuyr@chd.edu.cn (Y.W.)
+
+                                         Abstract
+                                         This study investigates the long-term fatigue performance of an in-service 4.55 MW
+                                         steel–prestressed concrete hybrid wind turbine tower under different tendon relaxation
+                                         scenarios. The fatigue lives of prestressing tendons and concrete are calculated from finite
+                                         element stress responses obtained in ABAQUS. A bidirectionally coupled damage model
+                                         then updates the damage and stiffness of the two materials to determine the overall cou-
+                                         pled fatigue life. Based on these results, a Spatial-Topology and Physics-Informed Cascade
+                                         Network (STPI-Net) is developed for life prediction. The results show that fatigue life
+                                         reductions vary across tendon relaxation cases and generally increase with prestress loss.
+                                         Windward-side and simultaneous multi-tendon relaxation cause larger reductions, and
+                                         damage coupling further reduces overall fatigue life in all studied cases. At 80% prestress
+                                         loss, the overall coupled fatigue life reaches 0.45 years in the severe three-tendon relaxation
+                                         case, representing a 28.6% reduction relative to uncoupled life. Scenario-based five-fold
+                                         cross-validation is further used to evaluate the predictive performance of STPI-Net. The
+                                         R2 values are 0.8879 for logarithmic tendon fatigue life, 0.9030 for logarithmic concrete
+                                         fatigue life, and 0.8195 for overall coupled fatigue life. The proposed framework supports
+                                         the assessment of component and overall fatigue performance under different prestress
+                                         relaxation conditions.
+
+                                         Keywords: steel–concrete hybrid tower; prestress relaxation; fatigue life evaluation;
+                                         bidirectional damage coupling; physics-informed neural network
+
+
+
+
+                                         1. Introduction
+                                              As wind energy becomes more important to the global renewable energy transition,
+                                         installed wind power capacity keeps expanding rapidly. At the same time, wind turbines
+                                         are being developed with higher rated capacities and greater hub heights. Steel–prestressed
+Academic Editor: Antonio Caggiano        concrete hybrid towers are increasingly used for large wind turbines, since they combine
+Received: 6 September 2026               the construction efficiency of steel structures with the high stiffness and crack resistance
+Revised: 23 September 2026               of prestressed concrete. For this type of hybrid tower, prestressing tendons provide the
+Accepted: 25 September 2026              concrete portion with pre-compression. This precompression improves the composite
+Published: 28 September 2026
+                                         action between tendons and concrete, and also increases overall stiffness and durability.
+Copyright: © 2026 by the authors.
+                                         However, during long-term service, the tendons may experience prestress loss caused by
+Licensee MDPI, Basel, Switzerland.
+                                         anchorage relaxation, thermal fluctuations, and extreme loading events. Prestress loss
+This article is an open access article
+distributed under the terms and
+                                         changes the internal stress state and fatigue response of the structure. Therefore, it is
+conditions of the Creative Commons       important to accurately assess the long-term fatigue performance of hybrid wind turbine
+Attribution (CC BY) license.             towers under prestress loss to ensure the service safety of large wind power structures.
+
+
+Buildings 2026, 16, 3854                                                                                  https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                            2 of 34
+
+
+
+                                 In recent years, substantial research has been conducted on the structural performance
+                           and fatigue durability of wind turbine support structures. Alonso-Martinez et al. [1] and
+                           Seidel et al. [2] examined the structural behavior of bolted flange connections in wind
+                           turbine towers, demonstrating the necessity of considering nonlinear effects and geometric
+                           imperfections in connection analysis. Zhang et al. [3] investigated the mechanical perfor-
+                           mance of curved steel–concrete–steel composite walls for wind turbine towers, highlighting
+                           the role of bidirectionally coupled damage in structural behavior.
+                                 The fatigue performance of wind turbine towers is also closely related to the evolution
+                           of material damage. In concrete, performance degradation is usually related to stiffness
+                           degradation, crack propagation, and damage accumulation. Riyar et al. [4] and Wei et al. [5]
+                           review concrete fatigue behavior and related fatigue analysis methods. Their work covered
+                           fatigue crack growth, fracture processes, size effects, and life prediction methods based
+                           on S–N curves, fracture mechanics, and damage mechanics. Qin et al. [6] extended the
+                           microplane model to steel-fibre-reinforced concrete and linked fatigue history variables to
+                           stiffness degradation, indicating that stiffness loss can characterize progressive concrete
+                           fatigue damage. Saqif and El-Tawil [7] developed an elastoplastic damage constitutive
+                           model for UHPC using cyclic compression test data, revealing the progressive stiffness
+                           and strength degradation of concrete under repeated loading. Other studies have focused
+                           on the evaluation of concrete degradation. Hassan et al. [8] combined non-destructive
+                           testing measurements with a mix-specific regression model to predict concrete compressive
+                           strength and emphasized the importance of material-specific calibration. Imoh et al. [9]
+                           investigated concrete containing waste glass cullet and snail shell powder and showed
+                           that changes in material composition significantly affected its workability and mechanical
+                           strength. Studies on geomaterials have also provided insights into internal structural
+                           evolution and fracture development linked to macroscopic mechanical degradation [10,11].
+                                 Fatigue evolution is further affected by load characteristics, damage accumulation,
+                           and structural degradation. Therefore, researchers have improved and extended the
+                           traditional Palmgren–Miner linear cumulative damage rule. Sadeghi et al. [12] proposed
+                           a rainflow residual reconstruction method to compensate for lost low-frequency large-
+                           amplitude fatigue cycles caused by 10 min signal truncation for offshore wind supports.
+                           Haselbozchaloe et al. [13] indicated that nonlinear damage models consider load-order
+                           effects and critical-plane schemes handle non-proportional loads. Zhu et al. [14] developed
+                           a Markov-subset simulation fatigue reliability model, showing that long-term operation
+                           without inspection greatly raises failure probability. In addition to fatigue damage caused
+                           by loads, the effects of environmental degradation have also received increasing attention.
+                           Studies have shown that corrosion degradation and welding residual stress can accelerate
+                           fatigue deterioration by affecting structural conditions and crack propagation [15,16].
+                                 The high computational cost of fatigue analysis has also encouraged the develop-
+                           ment of data-driven surrogate models for the efficient prediction and assessment of wind
+                           turbine structures. Bai et al. [17] developed a residual neural network using hub-height
+                           wind speed statistics to reduce the need for repeated numerical simulations. Similarly,
+                           Santos et al. [18] incorporated fatigue-related physical information into a physics-guided
+                           neural network, achieving errors below 3% for long-term accumulated damage-equivalent
+                           moment estimation. Their results demonstrated the value of physical information in data-
+                           driven fatigue prediction. Some other studies have combined continuous-time Bayesian
+                           networks and Bayesian optimization to assess wind turbine blade fatigue reliability and
+                           predict material fatigue life [19,20]. These methods integrate finite element simulation, ex-
+                           perimental data, and parameter uncertainty, improving prediction reliability. Data-driven
+                           methods also enhance real-time operations and maintenance (O&M). Studies [21–23] lever-
+                           age SCADA data alongside Gaussian process regression, health index modeling, and neural
+
+
+
+                                                                                  https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                               3 of 34
+
+
+
+                           networks for turbine condition assessment and anomaly detection. For physical damage
+                           inspection, Li et al. [24] combined UAV imagery with an attention-enhanced grid CNN
+                           for autonomous concrete tower crack inspection. In addition, recent work scales these
+                           methodologies from single components to entire wind farms. Pacheco et al. [25] used
+                           two years of strain-monitoring data to develop a probabilistic farm-wide fatigue estima-
+                           tion framework, showing that monitoring information from selected turbines can support
+                           fatigue assessment across a wind farm.
+                                 Although existing studies have made considerable progress in fatigue damage mod-
+                           eling and data-driven life prediction for wind turbine structures, several issues remain
+                           unresolved. In particular, the prestress degradation effect of steel–prestressed concrete
+                           hybrid wind turbine towers has not been systematically investigated. The fatigue response
+                           of these towers is affected by the interaction among tendon relaxation, concrete damage
+                           evolution, and external loading. Stress redistribution caused by prestress loss may further
+                           change local fatigue development and overall fatigue life. However, the effects of different
+                           relaxation locations, relaxation modes, and prestress loss levels on the fatigue performance
+                           of hybrid towers remain unclear. The relationship between local component degradation
+                           and overall fatigue life also requires further investigation. In addition, an effective method
+                           for incorporating prestress loss information into fatigue life prediction has not yet been
+                           fully established for the condition assessment of in-service wind turbine towers.
+                                 To address the above issues, this study investigates the fatigue performance evolution
+                           of an in-service 4.55 MW steel–prestressed concrete hybrid wind turbine tower under
+                           different tendon relaxation cases. An integrated analysis framework is established that
+                           combines high-fidelity finite element simulation, fatigue damage assessment, bidirectional
+                           damage coupling analysis, and data-driven prediction. First, a refined three-dimensional
+                           finite element model of the hybrid tower is established in ABAQUS. Different tendon
+                           relaxation cases are then constructed to examine the effects of relaxation location and
+                           prestress loss level on fatigue performance. This paper mainly displays the cases of single-
+                           tendon relaxation (SR1–SR5) and multiple-tendon relaxation (MR1–MR4) under different
+                           prestress loss levels (20%, 40%, 60%, and 80%). These cases can reveal the influence of
+                           typical spatial degradation modes on structural performance. Based on the fatigue analysis
+                           results, a bidirectionally coupled damage model is established to describe the interaction
+                           between prestressing tendon and concrete. This model is used to describe the effects of
+                           stiffness degradation and stress redistribution on overall fatigue performance. The resulting
+                           component and overall fatigue life data are then used to develop a Spatial-Topology and
+                           Physics-Informed Cascade Network (STPI-Net). The network uses the spatial configuration
+                           and prestress loss characteristics of the tendons as input information to predict fatigue life at
+                           critical regions and for the overall structure. The proposed integrated analysis framework
+                           combines high-fidelity numerical simulation with data-driven prediction. It provides
+                           an approach for fatigue performance evaluation and life prediction of steel–prestressed
+                           concrete hybrid wind turbine towers under different prestress relaxation conditions.
+
+                           2. Fatigue Analysis Methodology
+                                Steel–prestressed concrete hybrid towers are subjected to alternating wind loads
+                           throughout their service life, rendering the tower structure highly susceptible to fatigue-
+                           related issues. Over the typical design life of 20 years, the cumulative number of stress
+                           cycles experienced by the tower can reach 5.29 × 108 , placing the tower response within the
+                           high-cycle fatigue regime [26]. To evaluate the fatigue life of the hybrid tower, this section
+                           outlines the fundamental theories and methods employed in time-domain fatigue analysis,
+                           encompassing the rainflow counting method, S–N curves, mean stress correction, and the
+                           linear cumulative damage rule. The flowchart is presented in Figure 1.
+
+
+
+                                                                                     https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                               4 of 34
+
+
+
+
+                           Figure 1. Framework of the proposed bidirectional coupled fatigue damage assessment.
+
+                           2.1. Rainflow Counting Method
+                                 The rainflow counting method [27] is used to convert each stress time history into a set
+                           of fatigue cycles. In this study, the rainflow function in MATLAB R2020b is used to perform
+                           the cycle counting. This function follows ASTM E1049-85 [28]. It first identifies the turning
+                           points in the stress history, and then extracts closed cycles. Complete cycles are counted as
+                           full cycles, while unmatched residuals are counted as half-cycles. For each identified cycle,
+                           the stress range or amplitude, mean stress, and cycle count are obtained. These results are
+                           subsequently used for mean-stress correction and cumulative fatigue-damage calculation.
+
+                           2.2. S–N Curves
+                                S–N curves describe the relationship between stress level and fatigue life under
+                           constant-amplitude cyclic loading. Because the prestressing tendons and concrete have
+                           different fatigue properties, separate S–N relations are used for the two materials.
+                                The fatigue life of the grade 1860 prestressing steel strands is evaluated using the S–N
+                           model proposed by Paulson et al. [29]. The model was developed from fatigue-test data for
+                           more than 700 prestressing strands and is expressed as
+
+                                                              lgN = 13.95 − 3.5lgSr                                        (1)
+
+                           where N denotes the number of stress cycles; Sr is the stress range of the prestressing
+                           tendon in MPa.
+                                Since the actual mean stress level of the strands in the present investigation does
+                           not satisfy the assumption adopted in the fatigue life formulation, the Goodman linear
+                           correction model [30] is introduced to modify the stress as follows:
+
+                                                                            ∆σ
+                                                                  ∆σG =                                                    (2)
+                                                                          1 − SSmu
+
+
+
+
+                                                                                     https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                 5 of 34
+
+
+
+                           where ∆σG is the Goodman-corrected stress range; ∆σ is the original stress range; Sm is the
+                           mean stress of the corresponding stress cycle (MPa); and Su is the ultimate tensile strength
+                           of the prestressing strand (MPa).
+                                 In a steel–prestressed concrete hybrid tower, the concrete component serves as the
+                           primary compression-resisting member, sustaining the vast majority of compressive stresses.
+                           Its fatigue performance therefore has an important influence on the safety and durability of
+                           the entire structure. Once fatigue damage initiates, crack nucleation and propagation may
+                           accelerate structural degradation. Consequently, a systematic assessment of the fatigue life
+                           of the concrete portion is essential.
+                                 Because concrete fatigue behavior is highly dependent on the stress state, distinct S–N
+                           curves must be adopted for the compressive and tensile loading regimes, respectively, as
+                           specified in the CEB-FIP Model Code provisions [31]. According to Lohaus et al. [32], the
+                           fatigue design provisions of the CEB–FIP Model Code apply to concrete strength classes up
+                           to C80. Therefore, the C80 high-strength concrete used in this study is at the upper limit of
+                           the specified range.
+                                 For concrete under full compression, the S–N curves are expressed as
+
+                                                                                     2
+                                                            lgN1 = 12 + 16Sc,min + 8Sc,min                                   (3)
+
+                                                              lgN2 = 0.2 lgN1 (lgN1 − 1)                                     (4)
+                                                                     lgN2 (0.3 − 0.375Sc,min )
+                                                           lgN3 =                                                            (5)
+                                                                               ∆Sc
+                                The final fatigue life, expressed as log N, is selected according to the following rules:
+                                                   
+                                                   lgN1 ,
+                                                                              lgN1 ≤ 6
+                                              lgN = lgN2 ,        lgN1 > 6 and ∆Sc ≥ 0.3 − 0.375Sc,min                       (6)
+                                                                  lgN1 > 6 and ∆Sc < 0.3 − 0.375Sc,min
+                                                   
+                                                   lgN ,
+                                                       3
+
+                           where ∆Sc,min = σc,min / f c and ∆Sc = σc / f c are the stress level and stress-amplitude ratio.
+                                When the concrete is subjected to cyclic loading that induces tensile stresses, the
+                           corresponding S–N curves are categorised into two cases according to the relative mag-
+                           nitude of the tensile stress. These scenarios can be expressed uniformly in the following
+                           piecewise form:
+                                                       (
+                                                            9(1 − Sct,max ),   σct,max ≤ 0.026 | σc,max |
+                                               lgN =                                                                         (7)
+                                                           12(1 − Sct,max ),   σct,max > 0.026 | σc,max |
+
+                           where N is the number of cycles; Sc,min is the minimum compressive stress level;
+                           ∆Sc is the range of stress-level variation; σct,max is the maximum tensile stress; σc,max
+                           is the maximum compressive stress; Sc,max is the maximum compressive stress level; and
+                           Sct,max is the maximum tensile stress level.
+
+                           2.3. Linear Cumulative Damage Theory
+                                Under variable-amplitude fatigue loading, structural components experience cycles
+                           across various stress ranges, where the total fatigue damage is commonly evaluated via
+                           linear cumulative damage. The Palmgren–Miner rule is widely used for this purpose [33].
+                           This theory operates under two core assumptions: (i) the total dissipated work required to
+                           cause failure is constant W regardless of the loading history and (ii) each stress level Si cor-
+                           responds to a specific constant-amplitude fatigue life Ni . On the basis of these assumptions,
+                           when the structure undergoes ni cycles at the i-th stress level, the incremental damage
+
+
+
+
+                                                                                       https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                6 of 34
+
+
+
+                           incurred at this level is expressed as the ratio of the applied cycles to the corresponding
+                           fatigue life:
+                                                                     Wi     n
+                                                                         = i                                        (8)
+                                                                     W      Ni
+                           where Wi denotes the work dissipated at the i-th stress level.
+                                Defining the fatigue damage D as the ratio of the accumulated cycle count to the
+                           corresponding fatigue life, for a single constant-amplitude stress level we have
+
+                                                                               n
+                                                                       D=                                                   (9)
+                                                                               N
+                              For variable-amplitude loading histories, the total damage is given by the linear
+                           summation of the damage contributions from each stress-range level:
+
+                                                                               ni
+                                                                    D=∑                                                   (10)
+                                                                           i
+                                                                               Ni
+
+                                Failure of the structure is considered to occur when D ≥ 1.
+
+                           2.4. Bidirectionally Coupled Damage Model
+                                A bidirectionally coupled damage model is established to describe the interaction
+                           between concrete and prestressing tendon damage under cyclic loading. Specifically,
+                           concrete cracking reduces structural stiffness and redistributes internal forces [34], raising
+                           stress ranges in prestressing tendons. Meanwhile, tendon fatigue damage weakens concrete
+                           precompression reserve. To formalize this bidirectional deterioration process, the concrete
+                           damage variable Dc and the prestressing tendon damage variable Ds are defined, where 0
+                           represents the intact state, and 1 represents fatigue failure of the corresponding component.
+                                A scalar stiffness-degradation relation is adopted to update the material stiffness:
+
+                                                                Ec = Ec0 (1 − Dc )                                        (11)
+
+                                                                 Es = Es0 (1 − Ds )                                       (12)
+
+                           where Ec0 and Es0 are the initial elastic moduli of concrete and prestressing tendons,
+                           respectively
+                                Within each service-time increment, the damage evolution of each material depends
+                           on its stress state and the damage state of the other material. To clarify this process,
+                           two state-dependent coupling factors β cs and β sc are introduced. β cs is the acceleration
+                           factor of tendon damage on concrete deterioration, and β sc denotes the acceleration factor
+                           of concrete damage on tendon deterioration. The damage growth rates are written as
+
+                                                             dDc   1
+                                                                 = (0) (1 + β cs Ds )                                     (13)
+                                                              dt  T    c
+
+                                                             dDs   1
+                                                                 = (0) (1 + β sc Dc )                                     (14)
+                                                              dt  T    s
+                                    (0)       (0)
+                           where Tc and Ts represent the component fatigue lives calculated for the current
+                           prestress-loss case; t denotes the accumulated service time.
+                                β cs , β sc are defined as
+                                                                         ∆σc ( Ds ) mc
+                                                                                  
+                                                                β cs =                                  (15)
+                                                                          ∆σc0
+                                                                         ∆ s ( Ds ) m s
+                                                                                  
+                                                                β sc =                                  (16)
+                                                                          ∆σs0
+
+
+
+                                                                                      https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                    7 of 34
+
+
+
+                           where ∆σc ( Ds ) denotes the concrete fatigue stress range accounting for the current damage
+                           state of the prestressing tendon; ∆σs ( Dc ) denotes the tendon fatigue stress range accounting
+                           for the current damage state of concrete; ∆σc0 and ∆σs0 represent the fatigue stress ranges of
+                           concrete and tendon under the initial undamaged state; mc and ms are the slope parameters
+                           of the fatigue S–N curves for concrete and prestressing tendon.
+                                 The overall fatigue-life limit is defined using the following weighted damage criterion:
+
+                                                                  γc Dc + γs Ds ≥ 1                                           (17)
+
+                           where γc and γs represent structural weighting coefficients that reflect the respective
+                           contributions of the concrete cross-section and the tendon layout to the overall overturning
+                                                 (E A )
+                           resistance. γs /γc = (Es As ) , As /Ac ≈ 1.9% is the cross-sectional area ratio of the tendon
+                                                   c c
+                           to concrete.
+                                Based on the above theories, the specific procedure is as follows:
+                           (1)   Dynamic analysis is carried out on the refined finite element model under self-weight,
+                                 prestress, and multi-speed wind time histories. Rainflow counting, material S–N
+                                 curves, Goodman correction, and Miner’s rule are adopted to solve single-cycle
+                                 incremental damage, ∆Dc , ∆Ds .
+                                                                                                                               (n)
+                           (2)   The elastic moduli are updated via Equations (11) and (12) with current damage, Dc ,
+                                   (n)
+                                 Ds . The updated material properties are assigned in the ABAQUS model to obtain
+                                 the revised stiffness distribution.
+                           (3)   The finite element analysis is then repeated with updated stiffness. Concrete crack-
+                                 ing raises tendon stress ranges, while tendon prestress loss accelerates concrete ten-
+                                 sile damage. The cycle incremental damage is superposed following Equations (13)
+                                 and (14), and the total damages are updated as
+
+                                                                     ( n +1)      (n)
+                                                                   Dc          = Dc     + ∆Dc                                 (18)
+
+                                                                     ( n +1)      (n)
+                                                                   Ds          = Ds     + ∆Ds                                 (19)
+                                                        ( n +1)     ( n +1)
+                           (4)   Substitute updated Dc         and Ds       into Equation (17). If γc Dc + γs Ds < 1, repeat
+                                 Steps (2) and (3) for the next cycle. Iteration terminates once γc Dc + γs Ds ≥ 1 and the
+                                 total iterative cycles correspond to the overall tower fatigue life with mutual material
+                                 deterioration considered.
+                                This stiffness-feedback iteration effectively couples the dual-material damage evolu-
+                           tion by recycling the pre-calculated stress spectra and baseline damage data.
+
+                           3. Finite Element Model of the Hybrid Tower
+                           3.1. Finite Element Modeling
+                                The model adopted in this study is based on an in-service 4.55 MW three-bladed steel–
+                           prestressed concrete hybrid wind turbine tower. The key design parameters of this wind
+                           tower are summarised in Table 1. As shown in Figure 2, the concrete section comprises
+                           35 precast segments, numbered Part 1 to Part 35 from bottom to top, together with the
+                           door-opening region A0. Reinforcing bars are embedded within the concrete, and the
+                           precast concrete segments are tied together. The prestressing strands are arranged as
+                           external tendons, connecting the tower foundation to the transition piece. In terms of
+                           element selection, both the concrete and steel components are discretised using eight-
+                           node linear hexahedral reduced-integration elements (C3D8R). The reinforcing bars and
+                           prestressing tendons are represented by two-node linear three-dimensional truss elements
+                           (T3D2). The concrete grade is C80, and its nonlinear behaviour is described by the Concrete
+
+
+
+                                                                                          https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                8 of 34
+
+
+
+                           Damaged Plasticity (CDP) model. The reinforcing steel is HRB400, the steel tower section
+                           is Q355, and the prestressing strands have an ultimate tensile strength of 1860 MPa. A
+                           structural damping ratio of 1% is adopted in the dynamic analysis to represent the energy
+                           dissipation of the wind turbine tower. Rayleigh damping is defined using the first two
+                           natural frequencies obtained from the modal analysis.
+
+                           Table 1. Tower design parameters.
+
+                                                                                            Maximum           Weight of
+                                                               Rated       Tower
+                             Number of         Blade                                       Rotor Speed      Wind Turbine
+                                                               Power       Height
+                              Blades         Radius [m]                                       [rpm]          and Blades
+                                                               [MW]         [m]
+                                                                                             [r/min]            [ton]
+                                  3             92.5           4.55        157.63               8.5               250
+
+
+
+
+                           Figure 2. Finite–element model.
+
+                           3.2. Load Configuration
+                               The loads acting on the tower include structural self-weight, the nacelle and rotor
+                           mass, rotor thrust, hub torque, prestress, and along-wind load on the tower.
+
+                           3.2.1. Dead Load and Prestress Application
+                                In the finite element model, the structural self-weight is calculated from the material
+                           densities using a gravitational acceleration of 9.8 m/s2 . The nacelle and rotor masses
+                           are represented by concentrated masses at the tower top. Prestressing loads are applied
+                           using the equivalent temperature drop method. Sixteen external prestressing tendons
+                           are arranged inside the concrete tower section, each consisting of 18 high-strength low-
+                           relaxation strands, with an initial prestress of 1260 MPa. The equivalent temperature
+                           change is expressed as
+                                                                             σp
+                                                                   ∆T = −                                          (20)
+                                                                            αEs
+
+
+
+                                                                                    https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                     9 of 34
+
+
+
+                           where ∆T is the equivalent temperature change; σp is the initial prestress of the strand;
+                           Es = 200 GPa is the elastic modulus of the prestressing strand; α = 1.2 × 10−5 is the
+                           coefficient of thermal expansion of the strand.
+
+                           3.2.2. Stochastic Wind Field Simulation
+                                The total duration of wind field simulation in this study is set to 600 s, with a sampling
+                           frequency of 20 Hz. The wind speed is decomposed into mean and fluctuating components.
+                           The time-domain stochastic wind field simulation method is adopted to generate wind-
+                           speed time histories:
+                                                             V (z, t) = V̄ (z) + v′ (z, t)                            (21)
+
+                           where V (z, t) is the instantaneous wind speed at height z; V̄ (z) is the mean wind speed;
+                           v′ (z, t) is the fluctuating wind speed.
+                                  V̄ (z) along the height direction is represented by an exponential wind profile:
+                                                                                   z α
+                                                                   V̄ (z) = V10                                                (22)
+                                                                                    10
+
+                           where V10 is the reference wind speed at 10 m height; z is the height of the calculation
+                           position; α is the terrain roughness exponent.
+                                Since the fluctuating wind speed process is stochastic, the harmonic superposition
+                           method is employed to generate the fluctuating wind speed time history. The fluctuating
+                           wind speed is expressed as the superposition of multiple harmonic components with
+                           different frequencies:
+
+                                                               M     q
+                                                   v′ (z, t) = ∑         2Sv ( f m )∆ f cos(2π f m t + ϕm )                    (23)
+                                                              m =1
+
+                           where Sv ( f m ) is the wind speed power spectral density; f m is the m discrete frequency;
+                           ∆ f is the frequency interval; M is the number of discrete frequencies; t is the time variable;
+                           ϕm is the random phase angle. The random phase satisfies ϕm ∈ [0, 2π ] and is randomly
+                           generated following a uniform distribution.
+                                 The simulated spectra are compared with the target Kaimal spectrum to verify the
+                           frequency characteristics of the generated wind field.
+
+                                                                               200u2* z/U
+                                                             Su ( f ) =                                                        (24)
+                                                                           (1 + 50 f z/U )5/3
+
+                           where Su ( f ) is the longitudinal turbulence power spectral density; u* = ln0.4U(z/z0 )
+                                                                                                                    is the
+                           friction velocity, where z0 is the ground roughness length; U is the mean wind speed; and
+                           f is the frequency variable.
+                                 Fluctuating wind speeds at different heights are spatially correlated. To account for
+                           this effect, the spatial coherence function is adopted in this study to describe the wind
+                           speed correlation characteristics between different spatial positions. The spatial coherence
+                           function is defined as                                              !
+                                                                             Cz f | zi − z j |
+                                                         Cohij ( f ) = exp −                                           (25)
+                                                                                   V̄ij
+
+                           where Cohij ( f ) is the spatial coherence coefficient; i and j denote two spatial positions,
+                           respectively; zi and z j are the height coordinates of the corresponding positions; V̄ij is the
+                           mean wind speed at the two positions; Cz = 10 is the spatial coherence decay coefficient.
+
+
+
+
+                                                                                           https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                         10 of 34
+
+
+
+                                The cross-power spectral density considering spatial correlation is expressed as
+                                                                         q
+                                                           Sij ( f ) =       Si ( f )S j ( f )Cohij ( f )                           (26)
+
+                           where Si ( f ) and S j ( f ) i-th and j-th spatial positions, respectively. Based on the obtained
+                           cross-power spectral matrix, Cholesky decomposition is performed to obtain the frequency-
+                           domain components of the stochastic wind speed with spatial correlation, and the fluc-
+                           tuating wind speed time histories at each spatial position are obtained through inverse
+                           Fourier transform.
+
+                           3.2.3. Rotor Aerodynamic Force
+                                The time-varying aerodynamic loads on the rotor are calculated using blade element
+                           momentum (BEM) theory. At each time step, the local wind speed is obtained from the
+                           stochastic wind field described in Section 3.2.2. The relative wind speed and inflow angle of
+                           each blade element are determined from the local wind speed and blade rotational speed.
+                                The blade is divided into several blade elements along the spanwise direction. For a
+                           blade element at radius r, the thrust and torque increments are expressed as
+
+                                                                             1
+                                                                  dT =         ρW 2 BcCn dr                                         (27)
+                                                                             2
+                                                                             1
+                                                                 dQ =          ρW 2 BcCt rdr                                        (28)
+                                                                             2
+                           where dT and dQ are the thrust and torque increments of the blade element; ρ = 1.31 kg/m3
+                           is the air density; W is the relative wind speed at the blade element; B = 3 is the number of
+                           blades; c is the chord length of the blade element; Cn and Ct are the normal and tangential
+                           aerodynamic force coefficients.
+                                 The aerodynamic force coefficients are obtained from the lift and drag characteristics
+                           of the blade airfoil:
+                                                               Cn = CL cos ϕ + CD sin ϕ                             (29)
+
+                                                               Ct = CL sin ϕ − CD cos ϕ                                             (30)
+
+                           where CL and CD are the lift and drag coefficients of the airfoil, respectively; and ϕ is the
+                           inflow angle. The lift and drag coefficients are determined from the airfoil data according
+                           to the local angle of attack.
+                                The total rotor thrust and torque are obtained by integrating the blade-element contri-
+                           butions along the blade span:
+                                                                                   Z R
+                                                                     T (t) =              dT                                        (31)
+                                                                                     rh
+                                                                                   Z R
+                                                                     Q(t) =               dQ                                        (32)
+                                                                                     rh
+
+                           where rh is the hub radius; and R is the blade radius. The resulting thrust and torque time
+                           histories are applied at the hub as a concentrated force and torsional moment, respectively.
+
+                           3.2.4. Wind Load on the Tower
+                                The along-wind load acting directly on the tower is calculated using the quasi-
+                           steady method:
+                                                                  1
+                                                       Fw (z, t) = ρµs A(z)V 2 (z, t)                      (33)
+                                                                  2
+
+
+
+
+                                                                                                https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                  11 of 34
+
+
+
+                           where Fw (z, t) is the wind load on the tower at height z; ρ is the air density, taken as
+                           ρ = 1.31 kg/m3 ; µs is the tower shape coefficient, taken as µs = 0.9; and A(z) is the
+                           windward area at the corresponding height; V (z, t) is the local instantaneous wind speed.
+                                For the rotor-affected region, the local inflow wind speed is corrected by considering
+                           the velocity variation induced by rotor rotation:
+
+                                                             Vw (z, t) = V∞ (z, t)(1 − ∆V )                                  (34)
+
+                           where Vw (z, t) is the corrected local wind speed; V∞ (z, t) is the inflow wind speed unaf-
+                           fected by the rotor; and ∆V is the velocity deficit coefficient induced by the rotor. The
+                           corrected local wind speed is used to calculate the wind load on the tower surface in the
+                           rotor-affected region.
+
+                           3.3. Prestressing Conditions
+                                 As illustrated in Figure 2, the 16 prestressing tendons are sequentially numbered from
+                           1 to 16. Tendon No. 1 is aligned with the incoming wind direction (i.e., at 0◦ relative to the
+                           mean incoming wind direction), while Tendon No. 9 is positioned on the opposite side
+                           (at 180◦ ). The remaining tendons are numbered clockwise.
+                                 In this study, two categories of prestress-loss cases are designed: single-tendon relax-
+                           ation and multi-tendon relaxation. The detailed configurations are presented in Table 2. BL
+                           denotes the case without prestress loss.
+
+                           Table 2. Prestressing tendon relaxation cases.
+
+                                                                                                       Angle Between
+                                                 Number of
+                               Case ID                                 Relaxed Tendon IDs           Relaxed Tendons and
+                                              Relaxed Tendons
+                                                                                                     Wind Direction (◦ )
+                                 BL                    0                      N/A                             N/A
+                                 SR1                   1                         1                               0
+                                 SR2                   1                         3                              45
+                                 SR3                   1                         5                              90
+                                 SR4                   1                         7                             135
+                                 SR5                   1                         9                             180
+                                 MR1                   3                     1, 2, 16                    0, 22.5, −22.5
+                                 MR2                   3                      1, 2, 3                      0, 22.5, 45
+                                 MR3                   3                     1, 3, 15                      0, 45, −45
+                                 MR4                   3                      1, 3, 5                       0, 45, 90
+
+
+                                For the single-tendon relaxation cases (SR1–SR5), prestress loss levels of 20%, 40%,
+                           60%, and 80% are adopted, corresponding to equivalent temperature drops of −420 ◦ C,
+                           −315 ◦ C, −210 ◦ C, and −105 ◦ C (with corresponding stresses of 1008, 756, 504, and
+                           252 MPa), respectively. For the multi-tendon relaxation cases (MR1–MR4), the same
+                           loss levels are applied to the relaxed tendons. The 60% and 80% prestress-loss cases are
+                           introduced as severe parametric scenarios rather than as loss levels expected from normal
+                           tendon relaxation during service. These cases are used to examine fatigue sensitivity and
+                           identify critical degradation under prestress loss. At 80% prestress loss, the initial residual
+                           tendon stress is approximately 252 MPa, while the minimum stress during the simulated
+                           case remains positive at 223.37 MPa. This result confirms that the tendons remain engaged
+                           throughout the investigated loading range. Accordingly, the high-loss cases are used to
+                           examine the effects of substantial prestress reduction on coupled damage evolution and
+                           overall fatigue life while the tendons remain effectively engaged.
+                                In the case setup, prestress loss levels are represented by several discrete states to
+                           evaluate the influence of different degradation degrees on the fatigue performance of
+
+
+                                                                                        https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                                                                                                                                              12 of 34
+
+
+
+                           hybrid towers. However, during actual service, strand relaxation exhibits significant time
+                           dependence, and the prestress loss accumulates gradually over time in a nonlinear manner.
+                           To further clarify the correspondence between the preset prestress loss levels and the actual
+                           service degradation process, this study analyzes the time evolution characteristics of strand
+                           prestress loss over a two-year period. Referring to an existing time-dependent prestress
+                           loss model [35], the normalized form is adopted to calculate the variation in loss rate
+                           with time:                                               0.75(1−µ)
+                                                     ∆σpr
+                                                                             
+                                                                                 t
+                                                          = 0.66ρ1000 e 9.1µ
+                                                                                               10−5                  (35)
+                                                      σpi                      1000
+                           where ∆σpr is the absolute value of relaxation stress; σpi is the prestress after short-term
+                           post-tensioning loss; ρ1000 is the strand relaxation percentage at 1000 h and 20 ◦ C, taken as
+                           ρ1000 = 2.5% for low relaxation strands; t is the time after tensioning in hours; µ = σpi / f ptk ;
+                           and f ptk is the characteristic value of the ultimate tensile strength of the prestressing tendon.
+                                Figure 3 shows the prestress evolution of windward tendons 1 and 3 and leeward
+                           tendons 7 and 9 over a two-year period. Under normal conditions, the loss of strands
+                           within two years is small, while under relaxation conditions, strands at all positions
+                           exhibit a nonlinear increase in prestress loss, with the loss mainly concentrated in the early
+                           service stage and then gradually decreasing and stabilizing. In terms of spatial position,
+                           the maximum monthly loss rates of windward tendons 1 and 3 are 7.79% and 8.12%,
+                           respectively, while those of leeward tendons 7 and 9 reach 9.67% and 9.94%, respectively.
+                           Compared with the windward side, the leeward strands have a higher initial loss rate and
+                           a higher initial rate of prestress loss, resulting in non-uniform changes in the cross-sectional
+                           prestress distribution and further affecting the fatigue damage development of the hybrid
+                           tower. Therefore, the time accumulation characteristics and spatial differences in prestress
+                           loss should be considered in fatigue performance evaluation.
+
+                                                    1300                                                                                                        1300
+
+
+                                                    1250                                                                                                        1250
+
+
+                                                                                                  1300                                                                                                     1300
+                                                    1200                                                                                                        1200
+                                  Prestress (MPa)
+
+
+
+
+                                                                                                                                             Prestress (MPa)
+
+
+
+
+                                                                                                  1250                                                                                                     1250
+                                                                                                             Max loss rate =7.79%                                                                                     Max loss rate =8.12%
+                                                                                                  1200                                                                                                     1200
+                                                    1150                                                                                                        1150
+                                                                                                  1150                                                                                                     1150
+
+                                                                                                  1100                                                                                                     1100
+                                                    1100                                                                                                        1100
+                                                                                                     0   1      2   3    4   5      6                                                                         0   1      2   3    4   5      6
+
+
+                                                    1050                                                                                                        1050
+                                                                  Baseline                                                                                                 Baseline prestress
+                                                                  Presstress relaxation of No.1                                                                            Presstress relaxation of No.3
+                                                    1000                                                                                                        1000
+                                                              0       4           8         12           16             20              24                             0       4          8          12           16             20              24
+                                                                                       Time (months)                                                                                           Time (months)
+                                             1300                                                                                                               1300
+
+
+                                             1250                                                                                                               1250
+
+
+                                             1200                                                 1300                                                          1200                                       1300
+                           Prestress (MPa)
+
+
+
+
+                                                                                                                                              Prestress (MPa)
+
+
+
+
+                                                                                                  1250                                                                                                     1250
+                                             1150                                                                                                               1150
+                                                                                                  1200
+                                                                                                             Max loss rate =9.67%                                                                                     Max loss rate =9.94%
+                                                                                                                                                                                                           1200
+
+                                                                                                  1150                                                                                                     1150
+                                             1100                                                                                                               1100
+                                                                                                  1100                                                                                                     1100
+
+                                             1050                                                    0   1      2   3    4    5     6                           1050                                          0   1      2   3   4    5      6
+
+
+
+                                             1000                                                                                                               1000
+                                                                  Baseline prestress                                                                                       Baseline prestress
+                                                                  Presstress relaxation of No.7                                                                            Presstress relaxation of No.9
+                                                    950                                                                                                          950
+                                                          0           4          8          12           16             20              24                             0       4          8          12           16             20              24
+                                                                                      Time (months)                                                                                            Time (months)
+
+
+
+                           Figure 3. Time-dependent evolution of tendon prestress under relaxation.
+
+                           3.4. Wind Speed Conditions
+                                 In all cases, the magnitude of the wind load acting on the tower is adjusted by varying
+                           the wind speed to simulate the dynamic responses under different velocities. A proba-
+                           bility weighting approach is then used to provide a reasonable assessment of cumulative
+                           fatigue damage over the design service life. In long-term fatigue evaluation of wind
+                           turbines, the long-term wind speed distribution is typically fitted using a Weibull distribu-
+
+
+
+
+                                                                                                                                                                                              https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                   13 of 34
+
+
+
+                           tion [36]. In this study, the two-parameter Weibull distribution is employed, as given by
+                           Equation (36) [37] and Figure 4.
+
+                                                                       k  v  k −1
+                                                                                          
+                                                                                          v k
+                                                         f (v; k, λ) =              exp −                                       (36)
+                                                                       λ λ                λ
+
+
+
+
+                           Figure 4. Wind speed frequency distribution.
+
+                                The corresponding cumulative distribution function (CDF) is:
+                                                                                     
+                                                                                     v k
+                                                             F (v; k, λ) = 1 − exp −                                            (37)
+                                                                                     λ
+
+                           where v is the wind speed (m/s); k is the dimensionless shape parameter; and λ is the scale
+                           parameter (m/s).
+                                  Based on the wind-resource records for the project site, the fit to the available wind-
+                           resource data gives k = 2.632, λ = 10.704 m/s, as shown in Figure 4. The sensitivity of the
+                           fit is examined by varying k and λ individually by ±5%. As shown in Table 3, R2 remains
+                           above 0.94, while RMSE and MAE remain low. Therefore, the Weibull distribution still
+                           adequately describes the wind speed probability characteristics within a ±5% parameter
+                           fluctuation range.
+
+                           Table 3. Sensitivity of goodness-of-fit metrics to Weibull parameter variations.
+
+                                 Case              k                λ                R2              RMSE              MAE
+                              Baseline           2.632           10.704           0.96649           0.00622           0.00455
+                               k −5%             2.500           10.704           0.96199           0.00665           0.00463
+                               k +5%             2.764           10.704           0.95454           0.00724           0.00522
+                               λ −5%             2.632           10.169           0.95130           0.00750           0.00503
+                               λ +5%             2.632           11.239           0.94531           0.00794           0.00628
+
+
+                                 The cut-in, rated, and cut-out wind speeds of the turbine are 3, 11.9, and 25 m/s,
+                           respectively. Considering these operating limits and the long-term wind-speed distribution,
+                           six representative wind speeds of 3, 6, 9, 12, 15, and 18 m/s are selected. The probability
+                           of each wind-speed interval is obtained by integrating the Weibull probability density
+                           function. To preserve the total probability in the six-state discretization, the lower and
+                           upper tails of the distribution are assigned to the nearest representative wind-speed con-
+                           ditions. The resulting intervals and probabilities are listed in Table 4. Annual occurrence
+
+
+
+
+                                                                                          https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                    14 of 34
+
+
+
+                           probability Pj for each wind speed is obtained by integrating the Weibull PDF over the
+                           corresponding interval:
+                                                                                 "        #      "        #
+                                                 Z v
+                                                       j,h                           v j,l k           v j,h k
+                                          Pj =               f (v; k, λ) dv = exp −           − exp −                          (38)
+                                                   v j,l                              λ                 λ
+
+                           where v j,l and v j,h are the lower and upper bounds, respectively, of the j-th wind-speed bin.
+                           The annual weighting factors for each wind speed are summarised in Table 4.
+
+                           Table 4. Annual occurrence probability for each wind-speed bin.
+
+                                                                                                       Annual Occurrence
+                                 Wind Speed (m/s)                    Wind Speed Bin (m/s)
+                                                                                                          Probability
+                                          3                                  v ≤ 4.5                           0.0965
+                                          6                              4.5 < v ≤ 7.5                         0.2279
+                                          9                             7.5 < v ≤ 10.5                         0.2968
+                                          12                            10.5 < v ≤ 13.5                        0.2189
+                                          15                            13.5 < v ≤ 16.5                        0.1257
+                                          18                                v > 16.5                           0.0342
+
+
+                                Long-term fatigue assessment of wind turbine structures usually requires short-
+                           duration simulation or measurement results to be extrapolated to the design period.
+                           Probability-based extrapolation methods have been widely used to estimate long-term
+                           fatigue damage from short-duration load responses [38]. In this study, a 600 s dynamic
+                           time-history analysis is performed for each representative wind speed, and the correspond-
+                           ing stress cycles are obtained using the rainflow counting method. The counted cycles
+                           are then scaled to one year according to the ratio of the annual duration to the simulation
+                           duration. Based on the Palmgren–Miner rule described in Section 2.3, the annual fatigue
+                           damage associated with the j-th representative wind speed is calculated as
+
+                                                                                      nj
+                                                                            Dj =                                               (39)
+                                                                                      Nj
+
+                           where D j is the fatigue damage corresponding to the j-th representative wind speed acting
+                           continuously for one year; Nj is the theoretical number of fatigue cycles corresponding to
+                                                                                t
+                           the j-th representative wind speed; n j = n′j · 600
+                                                                            y
+                                                                               , where n j is the number of cycles converted
+                           under the condition of continuous action throughout the year for the j-th representative
+                           wind speed, n′j is the number of cycles obtained by rainflow counting from the 600 s
+                           simulated time history under the j-th representative wind speed, and ty is the total duration
+                           of one year (s).
+                                 The final annual cumulative fatigue damage is expressed as [39]
+
+                                                                                6
+                                                                          D = ∑ Pj D j                                         (40)
+                                                                               j =1
+
+
+                           3.5. Model Validation
+                                Using the established finite-element model, the modal characteristics of the hybrid tower
+                           were first obtained, as shown in Figure 5. Measured modal characteristics have been widely
+                           used to validate and update finite element models of wind turbine towers [40]. For the
+                           investigated tower, the maximum rotor speed of the wind turbine is 8.5 r/min, from which
+                           the rotational frequency of the rotor is computed as f1 = 8.5/60 = 0.1417 Hz. As the turbine
+                           is equipped with three blades, the blade-passing frequency is f3 = 3 × f1 = 0.425 Hz. To
+                           avoid resonance, the rotor rotational frequency must fall outside the interval of 0.1275–0.1559
+
+
+                                                                                           https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                15 of 34
+
+
+
+                           Hz, and the blade-passing frequency must avoid the range of 0.3825–0.4675 Hz. As can
+                           be observed from Figure 5, all the computed natural frequencies lie outside these critical
+                           resonance bands.
+
+
+
+
+                           Figure 5. Model analysis results.
+
+                                To further assess the model using independent field data, one-year monitoring results
+                           from the in-service tower were introduced. Horizontal vibration was measured in two
+                           orthogonal directions using JBA22 dual-axis accelerometers. Tower-top displacement was
+                           estimated from the inclination recorded by JQIN-04 biaxial inclinometers using the small-
+                           angle geometric relation for the tower. The mean tensile forces of Tendons Nos. 1, 3, 5, 7,
+                           and 9 were also compared with the corresponding finite element results. The main sensor
+                           specifications are listed in Table 5. The main sensor specifications are listed in Table 5.
+
+                           Table 5. Main Specifications of the Field Monitoring Sensors.
+
+                                        Parameter                    JBA22 Accelerometer           JQIN-04 Inclinometer
+                                    Measurement                      Horizontal vibration           Tower inclination
+                                         Axes                        Two horizontal axes                X and Y
+                                 Measurement range                          ±2 g                         ±15◦
+                                      Accuracy                        Linearity < 0.1%            Dynamic accuracy: 0.1◦
+                            Frequency response/Resolution                 0–120 Hz                       0.001◦
+
+
+                                 Field monitoring showed that the dominant vibration frequencies in the x- and y-
+                           directions were both approximately 0.224 Hz. The first-mode frequencies obtained from the
+                           finite element model were 0.2101 Hz and 0.2112 Hz, corresponding to relative differences
+                           of 6.21% and 5.71%, respectively. For the absolute tower-top displacement, the relative
+                           differences in the mean, standard deviation, and maximum values were 4.61%, 3.94%, and
+                           7.76%, respectively. The relative differences in mean tensile force for Tendons Nos. 1, 3,
+                           5, 7, and 9 ranged from 1.24% to 7.04%. These comparisons are summarized in Table 6;
+                           the results support the ability of the finite element model to reproduce the global dynamic
+                           characteristics under the compared conditions.
+
+
+
+
+                                                                                       https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                16 of 34
+
+
+
+                           Table 6. Comparison of field measurements and numerical results for global model validation.
+
+                                                                                                            Corrected
+       Response Type            Parameter             Field Measurement            FE Result
+                                                                                                          Difference (%)
+  Dynamic characteristic    1st mode (x-dir.)              0.224 Hz                0.2101 Hz                    6.21
+  Dynamic characteristic    1st mode (y-dir.)              0.224 Hz                0.2112 Hz                    5.71
+ Tower-top displacement          Mean                     565.92 mm                539.8 mm                     4.61
+ Tower-top displacement    Standard deviation             271.94 mm               282.65 mm                     3.94
+ Tower-top displacement        Maximum                    862.99 mm               929.96 mm                     7.76
+   Tendon No. 1 force            Mean                     3288.33 KN              3459.83 KN                    5.22
+   Tendon No. 3 force            Mean                    3265.245 KN              3219.61 KN                    1.40
+   Tendon No. 5 force            Mean                     3206.25 KN              3166.58 KN                    1.24
+   Tendon No. 7 force            Mean                     3149.82 KN              3080.77 KN                    2.19
+   Tendon No. 9 force            Mean                    3126.735 KN              2906.59 KN                    7.04
+
+
+                           4. Fatigue Life of Prestressing Tendons
+                           4.1. Baseline Fatigue Performance of Prestressing Tendons
+                                The fatigue performance of the 16 prestressing tendons distributed across the tower
+                           cross-section was first evaluated under the baseline (BL) case, which represents the long-
+                           term wind loading condition. Tendon No. 1 was selected as an example to analyze
+                           the stress variation characteristics. The axial stress time history was extracted, and the
+                           rainflow counting method was applied to obtain the stress cycles, including the stress range
+                           and mean stress. Figure 6a–d present the stress spectra under wind speeds of 9, 12, 15,
+                           and 18 m/s.
+
+
+
+
+                                         (a) 9 m/s                              (b) 12 m/s
+
+
+
+
+                                         (c) 15 m/s                             (d) 18 m/s
+
+                           Figure 6. Load spectrum of Tendon No. 1.
+
+
+
+
+                                                                                       https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                               17 of 34
+
+
+
+                                Overall, the stress ranges at different wind speeds are mainly concentrated below
+                           40 MPa, while the mean stresses are distributed within 1240–1320 MPa. At relatively low
+                           wind speeds (9 and 12 m/s), most stress ranges remain below 20 MPa. With increasing
+                           wind speed, the stress range distribution gradually shifts toward higher values. This trend
+                           is mainly related to the increase in aerodynamic thrust and turbulence intensity under
+                           higher wind speeds, which leads to larger cyclic loads transferred from the rotor to the
+                           tower structure. As a result, the dynamic stress range of the prestressing tendons increases.
+                           The mean stress also shows a slight increase with wind speed. However, its variation
+                           is much smaller than that of the stress range. This is because the initial tensile stress of
+                           the prestressing tendon is relatively high, and the additional mean stress caused by wind
+                           loading has a limited influence compared with the initial stress level.
+                                Based on the stress spectra, tendon fatigue life is calculated using the framework
+                           described in Section 2. Taking the 12 m/s wind speed as an example, the stress range and
+                           mean stress of each stress cycle are first obtained by rainflow counting. The stress ranges are
+                           then corrected using the Goodman relation in Equation (2). Based on the fatigue damage
+                           equivalence principle [41], the corrected stress spectrum is converted into an equivalent
+                           stress range of 16.89 MPa. Substituting this value into Equation (1) gives the corresponding
+                           theoretical number of fatigue cycles, where Nj = 4.50 × 109 cycles. The number of cycles
+                           obtained from the 600 s stress history is converted into the annual cycle number. The
+                           annual fatigue damage under continuous operation at the j-th representative wind speed is
+                           calculated using Equation (39), yielding D j = 0.03335. The same procedure is applied to
+                           the other representative wind speeds. Finally, the contributions of all wind-speed intervals
+                           are accumulated using Equation (40).
+                                Table 7 summarizes the equivalent stress range, equivalent fatigue life cycles, and
+                           annual damage contribution at each wind speed for Tendon No. 1 (baseline case). The
+                           total annual damage for Tendon No. 1 is 2.504 × 10−2 , corresponding to a fatigue life
+                           of 39.9 years.
+
+                           Table 7. Fatigue life and annual damage of Tendon No. 1.
+
+                              Wind Speed          Equivalent Stress        Equivalent Fatigue           Annual Damage
+                                (m/s)              Range (MPa)               Life (Cycles)               Contribution
+                                    3.0                  1.07                  7.03 × 1013                 3.28 × 10−8
+                                    6.0                  4.19                  5.92 × 1011                 1.25 × 10−5
+                                    9.0                  9.86                  2.96 × 1010                 1.15 × 10−3
+                                   12.0                 16.89                   4.5 × 109                  7.30 × 10−3
+                                   15.0                 26.35                  9.49 × 108                  9.46 × 10−3
+                                   18.0                 37.03                  2.88 × 108                  7.11 × 10−3
+                              Total annual damage: 2.504 × 10−2                       Fatigue life: 39.9 years
+
+
+                                Figure 7 presents the fatigue-life distribution of the prestressing tendons under the
+                           baseline condition. The predicted lives of all tendons exceed the 20-year design service life,
+                           but a clear spatial variation is observed around the tower cross-section. The windward
+                           and leeward tendons, including Tendons Nos. 1, 2, 8, 9, 10, and 16, have relatively short
+                           fatigue lives. By contrast, the lateral tendons, such as Tendons Nos. 5 and 13, have
+                           much longer lives.
+
+
+
+
+                                                                                      https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                                                                 18 of 34
+
+
+
+
+                                                  104
+                                                                                                                               Baseline case
+                                                                                                                               3453
+                                                                               3027
+                                                                                                                                      2366
+                                                                        1584          1686
+
+
+
+
+                           Fatigue Life (years)
+                                                                                                                        1112
+                                                  103
+
+
+
+
+                                                                  163                        172                                             184
+                                                                                                                  141
+
+                                                  102                                                        74
+                                                                                                   72
+                                                             63                                                                                    62
+                                                                                                        53
+                                                        40
+
+
+
+
+                                                  101
+                                                        1    2    3      4      5      6     7     8    9    10   11    12     13     14     15    16
+                                                                                             Tendon Number
+
+                           Figure 7. Fatigue life of each prestressing tendon under the baseline case.
+
+                                This spatial variation is mainly controlled by the tendon position relative to the
+                           bending neutral axis. The windward and leeward tendons are farther from the neutral
+                           axis and therefore experience larger stress ranges under along-wind bending. The lateral
+                           tendons are closer to the neutral region and experience smaller stress variations. The
+                           windward and leeward tendons are therefore identified as the fatigue-critical tendons
+                           under the baseline condition. Their locations are used in the subsequent analysis of
+                           tendon relaxation.
+
+                           4.2. Prestressing Tendon Fatigue Response Under Tendon Relaxation
+                                 Prestress relaxation changes the stress state of the tower and affects the fatigue per-
+                           formance of prestressing tendons. In this section, both single-tendon and three-tendon
+                           relaxation cases are considered to evaluate the effects of relaxation position and prestress
+                           loss level on tendon fatigue life.
+                                 Figure 8a–e shows the results for the single-tendon relaxation cases. The fatigue lives
+                           of most tendons decrease as the prestress loss level increases. However, the extent of this
+                           reduction also depends on the relaxation position. SR1 and SR2, which represent relaxation
+                           near the windward side, cause greater reductions than SR3–SR5. At prestress loss levels
+                           above 40%, the lives of some tendons in SR1 and SR2 fall below the 20-year design service
+                           life. The effects of SR3–SR5 are less pronounced, and the tendon fatigue lives generally
+                           remain above the design life over the investigated loss range.
+                                 Figure 8f–i presents the results for the three-tendon relaxation cases. Compared
+                           with single-tendon relaxation, simultaneous relaxation of three tendons causes a broader
+                           reduction in fatigue life. Even at a prestress loss level of 20%, the fatigue lives of several
+                           tendons in the MR cases are already below the design service life. The effect also depends
+                           on the tendon arrangement. MR1 and MR2 produce larger changes in the fatigue-life
+                           distribution than MR3 and MR4. In MR1 and MR2, the fatigue lives of most critical tendons
+                           are below 30 years, and some decrease to less than 10 years. In contrast, the fatigue lives in
+                           MR3 and MR4 generally remain above 10 years.
+                                 Although fatigue life generally decreases with increasing prestress loss, some tendons
+                           show minor non-monotonic variations at individual loss levels. These local variations
+                           result from the redistribution of prestressing force, which can reduce the stress range at
+                           specific tendon locations. However, they do not change the overall reduction in tendon
+                           fatigue life with increasing prestress loss.
+
+
+
+
+                                                                                                                                        https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                             19 of 34
+
+
+
+
+                           Figure 8. Fatigue life of tendons under various cases.
+
+                           4.3. Sensitivity Analysis of Tendon Fatigue Life
+                                 Because long-term fatigue life also depends on the wind-speed distribution, the sensi-
+                           tivity to the Weibull parameters is further examined. The minimum tendon fatigue life is
+                           used as the response indicator for the relaxation cases.
+                                 Figure 9 shows the effect of the Weibull parameters on the fatigue life of Tendon
+                           No. 1. When λ = 8.0 m/s, increasing k from 1.0 to 3.0 increases the fatigue life from
+                           approximately 20 to 200 years. In contrast, increasing λ from 8.0 to 12.0 m/s reduces
+                           the fatigue life for a fixed k. The wide variation indicates that the long-term fatigue
+                           prediction is highly dependent on the probability distribution of wind speed, consistent
+                           with probabilistic fatigue assessments of wind turbine towers [39]. Therefore, changes in
+                           wind-speed probability characteristics can lead to variations in predicted fatigue life.
+                                 Figure 10 compares the minimum tendon fatigue life under different relaxation con-
+                           ditions. At 80% relaxation, the minimum lives of SR1 and SR2 decrease to 12.88 and
+                           11.48 years, whereas those of SR3–SR5 remain above the 20-year design life. For the three-
+                           tendon cases, the minimum life is already reduced to around 8 years at only 20% relaxation
+                           and further decreases to 4.66–8.05 years at 80%. Previous tests on prestressed concrete
+
+
+
+                                                                                    https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                  20 of 34
+
+
+
+                           beams have shown that prestressing force affects their fatigue S–N relationships [34]. In the
+                           present tower, the pronounced life reduction indicates that tendon fatigue is particularly
+                           sensitive to simultaneous multi-tendon relaxation.
+
+
+
+
+                           Figure 9. Effect of Weibull parameters on tendon No. 1 fatigue life under the baseline case.
+
+
+
+
+                           Figure 10. Minimum fatigue life of prestressing tendons.
+
+                           5. Fatigue Life of Concrete
+                           5.1. Baseline Fatigue Performance of Concrete
+                                 In this section, the fatigue performance of the concrete portion of the tower is evaluated
+                           under the baseline (BL) case. Seven observation regions, including the A0 base ring, Part 3,
+                           Part 7, Part 11, Part 15, Part 20, and Part 30 (designated OR1 through OR7) were selected.
+                           The layout of these points is shown in Figure 2. Each defined region is a zone with a
+                           finite spatial extent rather than an idealized geometric point. The regions are selected to
+                           cover the main height range of the concrete tower, including geometric discontinuities and
+                           connection zones between precast segments.
+                                 Taking OR6 as an example, Figure 11 shows the stress spectra under different wind
+                           speeds. The stress amplitudes are mainly below 20 MPa, while the mean stresses remain
+                           below 35 MPa. As the wind speed increases, the stress-amplitude distribution gradually
+                           shifts toward higher values. The 12, 15, and 18 m/s wind-speed conditions contribute more
+                           than 90% of the total annual fatigue damage. Although these wind conditions occur less
+                           frequently, the larger stress amplitudes generated at higher wind speeds make them the
+                           main contributors to concrete fatigue damage. Table 8 summarizes the fatigue damage
+
+
+
+                                                                                       https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                               21 of 34
+
+
+
+                           contributions corresponding to different wind speeds. The total annual damage at OR6 is
+                           4.09 × 10−2 , corresponding to a fatigue life of 24.46 years.
+
+
+
+
+                                            (a) 9 m/s                                 (b) 12 m/s
+
+
+
+
+                                            (c) 15 m/s                                (d) 18 m/s
+
+                           Figure 11. Load spectrum at observation region OR6.
+
+                           Table 8. Fatigue life and annual damage of concrete at observation region OR6.
+
+                                                                                                        Annual Damage
+                             Wind Speed (m/s)            Applied Cycles       Cycles to Failure
+                                                                                                         Contribution
+                                      3.0                  7.96 × 106             6.86 × 1017               1.16 × 10−11
+                                      6.0                   2.7 × 108             4.61 × 1016               5.86 × 10−9
+                                      9.0                  3.11 × 108             1.97 × 1015               1.58 × 10−7
+                                     12.0                  1.99 × 109             1.97 × 1012               1.01 × 10−3
+                                     15.0                  1.19 × 109             7.37 × 1010               1.61 × 10−2
+                                     18.0                  6.47 × 108             2.73 × 1010               2.37 × 10−2
+                                Total annual damage: 4.09 × 10−2                       Fatigue life: 24.46 years
+
+
+                                Figure 12 presents the fatigue lives for all observation regions under the baseline case.
+                           Among these, OR6 exhibits the shortest fatigue life, followed by OR5, while OR1 and OR2
+                           show much longer lives. This distribution indicates a clear localization of concrete fatigue
+                           damage along the tower height. Therefore, OR5 and OR6 are identified as the critical
+                           concrete regions under the baseline condition and are used as the main reference for the
+                           following prestress relaxation analysis.
+
+
+
+
+                                                                                      https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                                22 of 34
+
+
+
+                                         100
+                                                                                              Baseline Case
+                                                       81.94
+                                                  80           77.93
+
+
+
+
+                           Fatigue Life (years)
+                                                  60
+                                                                       49.52
+
+                                                                               41.44
+                                                  40
+
+                                                                                       28.6           28.69
+                                                                                              24.46
+                                                  20
+
+
+
+                                                  0
+                                                        1       2       3       4       5      6       7
+                                                                       Observation Region
+
+                           Figure 12. Fatigue life of concrete at observation regions under the baseline case.
+
+                           5.2. Concrete Fatigue Response Under Tendon Relaxation
+                                Figure 13 presents the fatigue-life distributions of the seven concrete observation
+                           regions under different relaxation cases. The relative ranking of the observation regions
+                           remains largely unchanged. In the single-tendon cases, OR5 and OR6 remain the regions
+                           with relatively short fatigue lives, especially in SR1 and SR2 (Figure 13a,b). OR6 exhibits the
+                           minimum fatigue life under almost all relaxation conditions, while OR1 and OR2 generally
+                           retain much longer lives. This indicates that the critical concrete region is relatively stable
+                           and is mainly controlled by its structural location.
+                                Prestress relaxation therefore mainly amplifies the existing spatial difference in con-
+                           crete fatigue performance. This feature becomes more evident in the three-tendon cases. As
+                           shown in Figure 13f,g, the fatigue lives of OR5 and OR6 decrease to only a few years, while
+                           clear reductions also occur in other observation regions. Similar behavior can be observed
+                           in Figure 13h,i. Thus, simultaneous multi-tendon relaxation extends the fatigue influence
+                           from the original critical regions to a larger portion of the concrete tower.
+                                Some observation regions show small non-monotonic changes at intermediate pre-
+                           stress loss levels, such as those in Figure 13b–e. However, these local variations do not
+                           change the overall spatial pattern, and OR5 and OR6 remain the governing regions for
+                           concrete fatigue assessment.
+
+                           5.3. Sensitivity Analysis of Concrete Fatigue Life
+                                 The sensitivity of concrete fatigue life is further examined with respect to the Weibull
+                           wind parameters and prestress relaxation. OR6 is selected as the response region because it
+                           governs the minimum concrete fatigue life under most conditions.
+                                 Figure 14 shows that the fatigue life of OR6 increases with the Weibull shape parameter
+                           k and decreases with the scale parameter λ. Within the investigated range, the predicted life
+                           varies from approximately 10 to more than 100 years. Concrete fatigue models generally
+                           consider the maximum and minimum stress levels rather than only the stress amplitude,
+                           and relatively small changes in the cyclic stress state can therefore lead to marked variations
+                           in fatigue life [32].
+
+
+
+
+                                                                                                       https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                23 of 34
+
+
+
+
+                           Figure 13. Fatigue life of concrete under various cases.
+
+
+
+
+                           Figure 14. Effect of Weibull parameters on OR6 fatigue life under the baseline case.
+
+                                Figure 15 shows that prestress relaxation has an even stronger influence on the avail-
+                           able fatigue margin. The baseline minimum life of OR6 is 24.46 years, only slightly above
+                           the 20-year design service life. All relaxation cases reduce the minimum life below this
+                           reference level. At 80% relaxation, the minimum lives of SR1–SR5 are 2.29, 3.83, 5.94, 8.13,
+
+
+                                                                                       https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                               24 of 34
+
+
+
+                           and 12.77 years, respectively, while those of MR1–MR4 decrease further to 0.64, 0.31, 2.03,
+                           and 3.04 years. In particular, the minimum life in MR2 is only about 1.3% of the baseline
+                           value. These results show a nonlinear relationship between prestress loss and concrete fa-
+                           tigue life. As the effective prestress decreases, the cyclic stress state of the concrete changes
+                           and the available pre-compression is reduced. Higher effective prestress can improve
+                           fatigue resistance by limiting crack opening [42]. Therefore, prestress relaxation reduces
+                           this pre-compression reserve, leading to a rapid decrease in fatigue life once the remaining
+                           prestress becomes insufficient.
+
+
+
+
+                           Figure 15. Minimum fatigue life of concrete observation regions.
+
+                           6. Coupled Fatigue Life Analysis of the Overall Structure
+                                The bidirectionally coupled damage model developed in Section 2.4 is used to evaluate
+                           the overall fatigue life under different tendon relaxation cases. According to Sections 4.1
+                           and 5.1, the baseline fatigue life of the critical concrete region OR6 is Tc = 24.46 years,
+                           and the minimum tendon fatigue life is Ts = 39.90 years. When the bidirectional damage
+                                                           1
+                           coupling is neglected, T = γc +   γs = 23.05 years. When bidirectional damage coupling
+                                                          Tc   Ts
+                           is considered, the material stiffness is updated according to the damage state. Through
+                           finite element iterative analysis, the updated structural response and fatigue-relevant stress
+                           responses are obtained until the overall damage index satisfies γc Dc + γs Ds ≥ 1. The
+                           corresponding cumulative service time of 22.15 years is then defined as the overall fatigue
+                           life under the coupled baseline condition.
+
+                           6.1. Coupling Effect on Overall Fatigue Life
+                                Figure 16 presents a comparison between the uncoupled and coupled overall fatigue
+                           lives under single-tendon and multi-tendon relaxation scenarios.
+                                For the single-tendon relaxation cases (Figure 16a), the overall fatigue life is strongly
+                           affected by the relaxation position and prestress loss level. As prestress loss increases,
+                           the overall fatigue life decreases further. This trend is consistent with previous studies
+                           identifying the initial prestress level as an important factor in the fatigue assessment of post-
+                           tensioned concrete wind turbine towers [43]. SR1 and SR2, located closer to the windward
+                           side, exhibit more significant life reductions, whereas SR5 maintains a relatively longer
+                           fatigue life. At 80% prestress loss, the coupled fatigue lives of SR1 and SR2 decrease to
+                           1.85 and 3.18 years, respectively, while SR5 retains a life of 11.50 years. This spatial
+                           dependence indicates that the effect of prestress loss on fatigue life is closely related to its
+                           location, consistent with previous observations of spatially different fatigue-critical regions
+                           in wind turbine towers [44].
+
+
+
+                                                                                      https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                            25 of 34
+
+
+
+                                The effect becomes more pronounced under multi-tendon relaxation (Figure 16b).
+                           At 80% prestress loss, the coupled fatigue lives of MR1 and MR2 decrease to 0.45 and
+                           0.24 years, respectively. The stronger degradation associated with concentrated multi-
+                           tendon relaxation indicates that the spatial extent of prestress loss is another important
+                           factor controlling overall fatigue performance.
+
+
+
+
+                           Figure 16. Comparison of uncoupled and coupled overall fatigue lives under different tendon
+                           relaxation cases.
+
+                                 The design service life of the investigated tower is 20 years. Under critical relaxation
+                           cases, even a 20% prestress loss reduces the predicted overall fatigue life below this design
+                           target. Under severe multi-tendon relaxation, the coupled fatigue life further decreases to
+                           less than one year. These results indicate that relatively moderate prestress degradation may
+                           already have a significant influence on long-term fatigue performance, while concentrated
+                           high-level loss causes a marked reduction in the remaining fatigue life.
+
+                           6.2. Variation in Coupling Life Reduction Rate
+                                To further distinguish the influence of prestress loss itself from that of bidirectional
+                           damage coupling between materials on the overall fatigue life, Figure 17 presents the
+                           fatigue life reduction rate caused by bidirectional coupling. The baseline case gives a
+                           coupling-induced fatigue-life reduction of 3.9%, which provides a reference for evaluating
+                           the additional life reduction induced by coupling under different relaxation conditions.
+                                For the single-tendon relaxation cases, the coupling life reduction rate generally
+                           increases with the prestress loss ratio. SR1 shows the strongest increase, while SR3–SR5
+                           exhibit relatively smaller changes. This result indicates that the relaxation position affects
+                           not only the fatigue life but also the intensity of bidirectionally coupled damage.
+
+
+
+
+                                                                                   https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                                                 26 of 34
+
+
+
+                                The coupling effect is generally stronger under multi-tendon relaxation. The reduction
+                           rates of the MR cases are higher than those of most single-tendon cases over the investigated
+                           loss range, with MR1 showing the largest reduction of 28.6% at 80% prestress loss. Even
+                           MR4, which exhibits the smallest reduction within the multi-tendon group, reaches levels
+                           comparable to the more critical single-tendon cases. This suggests that simultaneous
+                           degradation of multiple tendons increases the contribution of damage interaction to the
+                           overall fatigue-life reduction.
+
+                                                               35                                           35
+                                                                          SR1                                           MR1
+                                                                          SR2                                           MR2
+                                                               30         SR3                               30          MR3
+                                                                          SR4                                           MR4
+                            Coupling life reduction rate (%)
+
+
+
+
+                                                                          SR5
+                                                               25                                           25
+
+
+                                                               20                                           20
+
+
+                                                               15                                           15
+
+
+                                                               10                                           10
+
+
+                                                               5                                            5
+                                                                                                                               Baseline=3.9
+
+
+                                                                    20          40        60           80        20           40          60        80
+                                                                         Single-tendon loss rate (%)                   Tree-tendon loss rate (%)
+
+                           Figure 17. Variation in coupling reduction amplitude with prestress loss.
+
+                                The increase in coupling reduction rate is not strictly monotonic for every scenario.
+                           For example, MR2 increases from 20% to 60% prestress loss but shows a slight decrease at
+                           80%. This local variation may result from differences in the evolution rates of tendon and
+                           concrete damage during the coupling process. Therefore, the coupling effect is controlled
+                           by both the prestress loss level and the relative evolution of tendon and concrete damage,
+                           rather than by the loss percentage alone.
+
+                           7. Deep Learning-Based Fatigue Life Assessment
+                           7.1. The Proposed STPI-Net Framework
+                                To address the high computational cost of conventional bidirectionally coupled dam-
+                           age simulations and rapidly quantify how local component deterioration cascades to in-
+                           duce global structural failure, a Spatial-Topology and Physics-Informed Cascade Network
+                           (STPI-Net) is proposed for multi-scale fatigue life assessment of steel–prestressed concrete
+                           hybrid towers.
+                                As shown in Figure 18, the established framework operates under a dual-space col-
+                           laborative prediction paradigm. Specifically, component-level degradation prediction is
+                           implemented in a smoothed logarithmic fatigue space to stabilize gradient descent opti-
+                           mization during multi-task joint training. Subsequently, a nonlinear inverse transformation
+                           layer maps the intermediate logarithmic prediction results back to the linear physical
+                           time domain.
+
+
+
+
+                                                                                                                      https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                  27 of 34
+
+
+
+
+                           Figure 18. Configuration of the proposed STPI-Net.
+
+                           (1)   Spatial Topology Input Vectorization
+                                For the anchoring zone containing 16 prestressed tendons, the health state of each
+                           tendon is determined by its loss rate, defined as αi ∈ [0, 1]. Therefore, STPI-Net converts
+                           the health state of 16 prestressing tendons into a 16-dimensional spatial input vector:
+                                                                h
+                                                            Xs = x1 , x2 , . . . , x16 ] T ∈ R16                             (41)
+
+                           where xi = 1 − αi , αi ∈ [0, 1] is the prestress loss ratio of tendon i, and xi denotes the
+                           residual effective bearing capacity. For instance, xi = 1.0 corresponds to the full working
+                           state of the tendon.
+                                Then, Xs is fed into three shared ReLU-activated embedding layers to extract a 32D
+                           unified topology feature F:
+
+                                                   F = σ (W3 · σ (W2 · σ(W1 · Xs + b1 ) + b2 ) + b3 )                        (42)
+
+                                In this formula, W1 ∈ R64×16 , W2 ∈ R64×64 , W3 ∈ R32×64 are layer weights; b1 , b2 , b3
+                           are bias vectors; σ (·) = ReLU activation. This step filters geometric noise and outputs
+                           shared features for multi-task prediction.
+                           (2)   Component Degradation Modeling (Stage 1)
+                                Wide-ranging fatigue life values trigger severe gradient oscillation during direct re-
+                           gression. To stabilize training, component fatigue prediction is implemented in logarithmic
+                           fatigue space with two parallel MLP branches sharing the feature F. For the prestressed
+                           tendon prediction branch, the prediction formula is defined as
+
+                                             log                                          log
+                                           Ŷtendon = Wtendon · F + btendon ∈ R16 , Ŷtendon,i = lg N̂tendon,i               (43)
+
+                           where Wtendon and btendon are the branch-specific weights and bias; N̂tendon,i denotes the
+                           numerical value of the predicted fatigue life of i-th tendon in years.
+
+
+                                                                                         https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                      28 of 34
+
+
+
+                                   Correspondingly, the concrete logarithmic life branch (7 observed regions) is expressed as
+
+                                              log                                             log
+                                            Ŷconcrete = Wconcrete · F + bconcrete ∈ R7 , Ŷconcrete,j = lg N̂concrete,j         (44)
+
+                               Logarithmic mapping compresses the value span of fatigue life, smooths optimization
+                           gradients, and improves model generalization for diverse damage conditions.
+                           (3)     Physics-Informed Inverse Transformation Layer
+                                Logarithmic outputs serve only for training optimization and cannot be directly
+                           used for engineering evaluation. An exponential inverse transformation layer recovers
+                           logarithmic predictions to real service life in years:
+
+                                                                     years         log
+                                                                   Ŷtendon = 10Ŷtendon ∈ R16                                   (45)
+
+                                                                     years          log
+                                                                   Ŷconcrete = 10Ŷconcrete ∈ R7                                (46)
+
+                                This step aligns network outputs with physical time scales and supplies component
+                           residual life data for subsequent global coupling prediction.
+                           (4)     Global Cascade Coupling Prediction (Stage 2)
+                                This stage predicts overall tower coupled fatigue life by capturing mutual degradation
+                           interactions between tendons and concrete. The original spatial vector and converted
+                           physical life results are concatenated to construct an augmented feature matrix:
+                                                              h                          i
+                                                                      years      years
+                                                         Xca = Xs | Ŷtendon | Ŷconcrete ∈ R39                                  (47)
+
+                                A two-layer fully connected fusion network integrates cross-channel features to gener-
+                           ate preliminary global coupled life:
+
+                                                            yco = Wc2 · σ (Wc1 · Xca + bc1 ) + bc2                               (48)
+
+                           where Wc1 , Wc2 and bc1 , bc2 are the fusion network’s parameters. To enforce physical
+                           plausibility, a physical boundary constraint eliminates unphysical negative-life predictions
+                           via lower-bound truncation:
+                                                               Ŷco = max (0.05, yco )                              (49)
+
+                                 The threshold of 0.05 years guarantees that all outputs comply with structural me-
+                           chanical laws and engineering reality.
+                                 The model training is optimized by the Adam optimizer, with a fixed learning rate
+                           of 0.003 and a total training epoch of 500. A unified multi-task objective loss function is
+                           constructed to synchronously optimize the three regression tasks of tendon logarithmic life
+                           prediction, concrete logarithmic life prediction, and system coupled life prediction. The
+                           total loss is defined as the sum of the mean squared errors (MSEs) of all subtasks:
+                                                                                          
+                                                log       log            log         log              norm    norm
+                                                                                                                   
+                                 Ltotal = MSE Ŷtendon , Ytendon + MSE Ŷconcrete , Yconcrete + MSE Ŷco   , Yco                 (50)
+
+                           where the superscript “norm” indicates that the coupled target values are standardized.
+
+                           7.2. Experiments and Validations
+                                All training and validation samples adopted in this study are generated by high-
+                           precision finite element method (FEM) numerical simulations. The dataset covers typical
+                           engineering working conditions, which are intended to represent operational damage
+                           characteristics of structural systems.
+
+
+
+                                                                                             https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                              29 of 34
+
+
+
+                                To improve the dataset’s coverage of different prestress loss patterns, this study
+                           further expands the prestress relaxation scenarios. For the anchorage region containing
+                           16 prestressing strands, single-strand loss conditions are first considered, comprising
+                           16 spatial position combinations in total. Subsequently, cases involving the simultane-
+                           ous loss of two or three strands are further considered. Adjacent strand combinations,
+                           opposite-position strand combinations, and other random combinations are included.
+                           These scenarios simulate local prestress degradation under different spatial distribution
+                           forms. They also cover the structural response characteristics associated with the simulta-
+                           neous degradation of multiple strands.
+                                Considering different strand loss forms, a total of 69 different prestress loss topology
+                           combinations are generated. Combined with four prestress loss levels of 20%, 40%, 60%,
+                           and 80%, 276 independent damage scenarios are ultimately formed for the training and
+                           validation of the STPI-Net model. This expanded dataset can cover structural degradation
+                           patterns under different spatial topology forms and loss degrees, enabling the model to
+                           learn the nonlinear relationship between strand spatial distribution, prestress loss level,
+                           and fatigue life degradation.
+                                This study adopts a scenario-based five-fold cross-validation strategy. Specifically,
+                           working conditions with the same spatial loss topology characteristics are grouped into the
+                           same data group and kept intact during data partitioning. In each fold of validation, the
+                           validation set contains complete damage scenarios that are not involved in model training.
+                           Therefore, model evaluation not only reflects its fitting ability to known working conditions
+                           but also examines its prediction ability for unknown prestress loss combinations.
+                                For each cross-validation fold, the mean µtrain and standard deviation σtrain are calcu-
+                           lated using only its training subset. The same values are then used to standardize both the
+                           training and held-out validation subsets according to Equation (51):
+
+                                                                        x − µtrain
+                                                                   z=                                                    (51)
+                                                                          σtrain
+
+                                In terms of the validation, the coefficient of determination (R2 ) and mean absolute
+                           error (MAE) are selected as quantitative evaluation indices to comprehensively assess the
+                           out-of-sample prediction performance of STPI-Net across all cross-validation folds.
+
+                           7.3. Numerical Results and Discussion
+                                Figure 19 presents the logarithmic fatigue life prediction performance for 16 prestress-
+                           ing tendons and 7 critical concrete observation regions in Stage 1. For tendon predic-
+                           tion, nearly all output channels achieve out-of-sample R2 > 0.8, with the overall metric
+                           R2 = 0.8879 and MAE = 0.1409. The scattered sample points closely align with the ideal
+                           y = x prediction line, which verifies that the shared spatial topology embedding mod-
+                           ule (Equation (42)) effectively eliminates geometric interference induced by differential
+                           prestress relaxation positions and extracts the intrinsic degradation law of each tendon.
+                                For concrete components covering the base ring A0 to high-position Part 30 segments,
+                           the model yields a higher prediction accuracy of R2 = 0.9030 and MAE = 0.0764. The
+                           significant improvement in fitting effect demonstrates that logarithmic-domain regression
+                           (Equations (43) and (44)) narrows the wide value range of fatigue life, stabilizes gradi-
+                           ent backpropagation during multi-task training, and accurately characterizes the highly
+                           nonlinear fatigue deterioration of concrete under coupled wind loads and prestress loss.
+                           Minor deviations of individual sample points are mainly attributed to extreme prestress
+                           loss combinations that trigger abrupt tensile stress surges in concrete, which introduce
+                           strong nonlinear disturbances to structural stress responses.
+
+
+
+
+                                                                                     https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                             30 of 34
+
+
+
+
+                           Figure 19. Component prediction performance.
+
+                                 Stage 2 realizes the prediction of overall tower coupled fatigue life by fusing original
+                           spatial input and converted physical life outputs of all components (Equation (47)). As
+                           illustrated in Figure 20, the cross-validation results for system-level prediction deliver an
+                           overall R2 = 0.8195 and MAE = 1.9009. Most FEA simulation samples are distributed
+                           along the perfect prediction line, proving that the concatenated augmented feature Xca can
+                           capture the bidirectional mutual degradation coupling between tendons and concrete.
+
+
+
+
+                           Figure 20. System prediction performance.
+
+                                 Compared with component-level prediction, the global coupled life exhibits slightly
+                           lower accuracy, which is reasonable for two core reasons. First, the overall structural failure
+                           criterion is governed by the coupling of two materials, introducing stronger nonlinear
+                           interaction effects that increase prediction difficulty. Second, the random wind speed
+                           Weibull distribution amplifies the stochastic fluctuation of long-term cumulative fatigue
+                           damage, bringing unavoidable uncertainty to the ground-truth labels generated by FEM
+                           iterations. Even so, the R2 value close to 0.8 suggests that STPI-Net can provide reasonably
+                           acceptable global life predictions for the investigated cases, although further validation is
+                           needed before it can be regarded as reliable for engineering fatigue evaluation.
+
+
+
+
+                                                                                    https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                           31 of 34
+
+
+
+                           8. Engineering Implications and Limitations
+                           8.1. Engineering Implications
+                                The proposed fatigue assessment framework provides a basis for fatigue assessment
+                           and condition monitoring of steel–prestressed concrete hybrid wind turbine towers. The
+                           results indicate that windward-side tendons, adjacent tendon groups, and the middle and
+                           lower concrete regions are more sensitive to prestress relaxation. These regions may there-
+                           fore be prioritized in tendon monitoring, fatigue inspection, and maintenance planning.
+                           For the investigated tower, 20% prestress loss can be used as a preliminary warning level
+                           because investigated cases with prestress loss reaching 20% result in fatigue life shorter
+                           than the 20-year design life. The spatial distribution and magnitude of prestress loss
+                           obtained from monitoring data can be used as inputs to STPI-Net for estimating compo-
+                           nent and overall fatigue life, thereby linking prestress-loss identification with structural
+                           fatigue assessment.
+
+                           8.2. Limitations and Future Research
+                                The fatigue life of a hybrid wind turbine tower is affected by its material properties,
+                           structural configuration, and site-specific wind loading. Therefore, the results of this
+                           study should be interpreted mainly as fatigue-life trends under the investigated prestress-
+                           loss cases. Application to other tower types requires appropriate parameter updating
+                           and verification.
+                                The study mainly considers tendon relaxation as the source of prestress loss. In
+                           practice, prestress loss may also result from concrete shrinkage and creep, among other
+                           long-term mechanisms. The 60% and 80% prestress-loss cases are introduced as severe
+                           parametric scenarios to examine sensitivity and identify critical degradation states. They
+                           are useful for evaluating the progressive reduction in fatigue performance under high loss
+                           levels, although their quantitative results should be interpreted within the assumptions
+                           of the adopted structural model. Future studies should consider combined prestress-loss
+                           mechanisms and further examine the structural response under severe degradation.
+                                The STPI-Net training and validation data are mainly generated from finite element
+                           simulations. Experimental and field-monitoring data can be introduced to calibrate the
+                           model, account for structural and loading variability, and further improve its generalization
+                           and reliability.
+
+                           9. Conclusions
+                                This study established a numerical and analytical framework to evaluate the long-
+                           term fatigue performance of a steel–prestressed concrete hybrid wind turbine tower under
+                           different tendon relaxation cases. By integrating a novel stiffness-feedback bidirectional
+                           damage model with a deep learning surrogate, the fatigue performance of the structure
+                           was investigated. The main conclusions are as follows:
+                           (1) Prestress relaxation reduces the fatigue performance of both prestressing tendons
+                               and concrete. At 80% prestress loss, the minimum tendon fatigue life decreases to
+                               11.48 years under windward-side single-tendon relaxation and to 4.66 years under
+                               concentrated multi-tendon relaxation. OR5 and OR6 remain the critical concrete
+                               regions, with the minimum concrete fatigue life decreasing to 0.31 years under severe
+                               multi-tendon relaxation. These results show that fatigue performance depends not
+                               only on the level of prestress loss, but also on its location and spatial distribution.
+                               These findings highlight the need to prioritize windward-side regions and adjacent
+                               tendon groups in fatigue monitoring and inspection.
+                           (2) The bidirectionally coupled damage model captures a progressive feedback effect
+                               that further reduces the overall fatigue life of the tower. Concrete stiffness degrada-
+
+
+                                                                                  https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                          32 of 34
+
+
+
+                                        tion increases the stress demand in the tendons, while tendon prestress loss reduces
+                                        concrete pre-compression and accelerates concrete damage. As a result, the coupled
+                                        fatigue life falls below the 20-year design life even at 20% prestress loss. In the MR1
+                                        case at 80% prestress loss, it decreases to 0.45 years, which is 28.6% lower than the
+                                        corresponding uncoupled fatigue life. These findings show that damage coupling
+                                        causes an additional reduction in overall fatigue life, and this effect becomes more
+                                        significant under concentrated multiple-tendon relaxation.
+                                  (3)   The proposed Spatial-Topology and Physics-Informed Cascade Network (STPI-Net)
+                                        incorporates spatial tendon configurations and relaxation conditions. Scenario-
+                                        based five-fold cross-validation gives R2 = 0.8879 for logarithmic tendon fatigue life,
+                                        R2 = 0.9030 for logarithmic concrete fatigue life, and R2 = 0.8195 for overall coupled
+                                        fatigue life. The results demonstrate the potential of the proposed model for fatigue
+                                        assessment based on prestress loss data.
+
+                                  Author Contributions: C.Q.: Conceptualization, Methodology, Software, Validation, Formal analysis,
+                                  Writing—original draft, Visualization. P.M.: Conceptualization, Methodology, Software, Supervision,
+                                  Formal analysis, Project administration, Funding acquisition, Writing—review & editing. C.L.: Inves-
+                                  tigation, Data curation. Z.L.: Investigation, Data curation. Y.W.: Supervision, Project administration.
+                                  All authors have read and agreed to the published version of the manuscript.
+
+                                  Funding: This work was supported by the Qin Chuangyuan Higher Talent Project (QCYRCXM-2023–059).
+
+                                  Data Availability Statement: All data generated or analyzed during this study are included in
+                                  the manuscript.
+
+                                  Conflicts of Interest: The authors declare no conflict of interest.
+
+References
+1.    Alonso-Martinez, M.; Adam, J.M.; Alvarez-Rabanal, F.P.; del Coz Diaz, J.J. Wind turbine tower collapse due to flange failure: FEM
+      and DOE analyses. Eng. Fail. Anal. 2019, 104, 932–949. [CrossRef]
+2.    Seidel, M.; Stang, A.; Wegener, F.; Schierl, C.; Schaumann, P. Full-scale validation of FE models for geometrically imperfect flange
+      connections. J. Constr. Steel Res. 2021, 187, 106955. [CrossRef]
+3.    Zhang, S.; Yang, Y.; Liu, X.; Liu, G.; Xu, J. Study on axial compression performance of curved steel–concrete–steel composite wall
+      of wind turbine tower. Structures 2025, 75, 108794. [CrossRef]
+4.    Riyar, R.L.; Mansi; Bhowmik, S. Fatigue behaviour of plain and reinforced concrete: A systematic review. Theor. Appl. Fract. Mech.
+      2023, 125, 103867. [CrossRef]
+5.    Wei, X.; Makhloof, D.A.; Ren, X. Analytical Models of Concrete Fatigue: A State-of-the-Art Review. Comput. Model. Eng. Sci. 2023,
+      134, 9–34. [CrossRef]
+6.    Qin, C.; Dong, X.; Wu, B.; Cai, L.; Wang, S.; Xia, Q. Fatigue damage analysis of plain and steel fiber-reinforced concrete material
+      based on a stiffness degradation microplane model. Front. Mater. 2024, 11, 1505295. [CrossRef]
+7.    Saqif, M.A.; El-Tawil, S. Uniaxial behavior of UHPC under cyclic compression: Experimental investigation and constitutive
+      model. Constr. Build. Mater. 2024, 426, 136132. [CrossRef]
+8.    Hassan, R.; Imoh, U.U.; Movahedi Rad, M.; Schlangen, E.; Ikponmwosa, E.E.; Ali, M. Developing a mix-specific NDT model for
+      compressive strength prediction of concrete using local Nigerian materials. Results Eng. 2026, 30, 110102. [CrossRef]
+9.    Imoh, U.U.; Apata, A.C.; Movahedi Rad, M. Performance of concrete incorporating waste glass cullet and snail shell powder:
+      Workability and strength characteristics. Buildings 2025, 15, 2161. [CrossRef]
+10.   Lin, H.; Xu, Y.; Zhai, Y.; Wang, Q.; Zhu, D.; Wang, Q.; Huang, C.; Teng, T.; Xue, Y.; Cao, Z. Study on the physicochemical
+      characteristics and mechanism of red sandstone during high-temperature and cooling processes. Processes 2026, 14, 2033.
+      [CrossRef]
+11.   Teng, T.; Wang, Y. Fractal characteristics of coal structure and fluid transport during compression failure process. Fractal Fract.
+      2026, 10, 421. [CrossRef]
+12.   Sadeghi, N.; Robbelein, K.; D’Antuono, P.; Noppe, N.; Weijtjens, W.; Devriendt, C. Fatigue damage calculation of offshore wind
+      turbines’ long-term data considering the low-frequency fatigue dynamics. J. Phys. Conf. Ser. 2022, 2265, 032063. [CrossRef]
+13.   Haselibozchaloee, D.; Correia, J.; Mendes, P.; de Jesus, A.; Berto, F. A review of fatigue damage assessment in offshore wind
+      turbine support structure. Int. J. Fatigue 2022, 164, 107145. [CrossRef]
+
+
+
+                                                                                                 https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                            33 of 34
+
+
+
+14.   Zhu, D.; Ding, Z.; Huang, X.; Li, X. Probabilistic modeling for long-term fatigue reliability of wind turbines based on Markov
+      model and subset simulation. Int. J. Fatigue 2023, 173, 107685. [CrossRef]
+15.   Dong, W.; Moan, T.; Gao, Z. Fatigue reliability analysis of the jacket support structure for offshore wind turbine considering the
+      effect of corrosion and inspection. Reliab. Eng. Syst. Saf. 2012, 106, 11–27. [CrossRef]
+16.   Chen, F.; Zhang, H.; Li, Z.; Luo, Y.; Xiao, X.; Liu, Y. Residual stresses effects on fatigue crack growth behavior of rib-to-deck
+      double-sided welded joints in orthotropic steel decks. Adv. Struct. Eng. 2024, 27, 35–50. [CrossRef]
+17.   Bai, H.; Shi, L.; Aoues, Y.; Huang, C.; Lemosse, D. Estimation of probability distribution of long-term fatigue damage on wind
+      turbine tower using residual neural network. Mech. Syst. Signal Process. 2023, 190, 110101. [CrossRef]
+18.   Santos, F.N.; D’Antuono, P.; Robbelein, K.; Noppe, N.; Weijtjens, W.; Devriendt, C. Long-term fatigue estimation on offshore wind
+      turbines interface loads through loss function physics-guided learning of neural networks. Renew. Energy 2023, 205, 461–474.
+      [CrossRef]
+19.   Liu, Z.; He, Z.; Tu, L.; Liu, X.; Liu, H.; Liang, J. A fatigue reliability assessment approach for wind turbine blades based on
+      continuous time Bayesian network and FEA. Qual. Reliab. Eng. Int. 2023, 39, 1603–1621. [CrossRef]
+20.   He, L.; Wang, Z.L.; Akebono, H.; Sugeta, A. Machine learning-based predictions of fatigue life and fatigue limit for steels. J. Mater.
+      Sci. Technol. 2021, 90, 9–19. [CrossRef]
+21.   Haghi, R.; Stagg, C.; Crawford, C. Wind turbine damage equivalent load assessment using Gaussian process regression combining
+      measurement and synthetic data. Energies 2024, 17, 346. [CrossRef]
+22.   Zhang, F.; Wen, Z.; Liu, D.; Jiao, J.; Wan, H.; Zeng, B. Calculation and Analysis of Wind Turbine Health Monitoring Indicators
+      Based on the Relationships with SCADA Data. Appl. Sci. 2020, 10, 410. [CrossRef]
+23.   Yan, Y.; Li, J.; Gao, D.W. Condition parameter modeling for anomaly detection in wind turbines. Energies 2014, 7, 3104–3120.
+      [CrossRef]
+24.   Li, B.L.; Feng, C.Q.; Wei, S.H.; Liu, Y.F. Concrete wind turbine tower crack assessment based on drone imaging using computer
+      vision and artificial intelligence. Adv. Struct. Eng. 2025, 28, 3121–3140. [CrossRef]
+25.   Pacheco, J.; Pimenta, F.; Pereira, S.; Cunha, Á.; Magalhães, F. Experimental evaluation of strategies for wind turbine farm-wide
+      fatigue damage estimation. Eng. Struct. 2023, 285, 115913. [CrossRef]
+26.   LaNier, M.W. LWST Phase I Project Conceptual Design Study: Evaluation of Design and Construction Approaches for Economical
+      Hybrid Steel/Concrete Wind Turbine Towers; NREL/SR-500-36777; National Renewable Energy Laboratory: Golden, CO, USA, 2005.
+      [CrossRef]
+27.   Downing, S.D.; Socie, D.F. Simple rainflow counting algorithms. Int. J. Fatigue 1982, 4, 31–40. [CrossRef]
+28.   ASTM E1049-85; Standard Practices for Cycle Counting in Fatigue Analysis. ASTM International: West Conshohocken, PA, USA,
+      2023.
+29.   Paulson, C.; Frank, K.H.; Breen, J.E. A Fatigue Study of Prestressing Strand; Research Report No. 300-1; Center for Transportation
+      Research; The University of Texas at Austin: Austin, TX, USA, 1983.
+30.   Xie, Y.; Dai, B.; Huang, Z. Fatigue life analysis of offshore wind turbine tower under combined action of wind and wave. J. Phys.
+      Conf. Ser. 2023, 2552, 012007. [CrossRef]
+31.   MC90 CE; CEB-FIP Model Code 1990: Design Code. Thomas, Telford, Comité Euro-International du Béton: London, UK, 1993.
+32.   Lohaus, L.; Oneschkow, N.; Wefer, M. Design model for the fatigue behaviour of normal-strength, high-strength and ultra-high-
+      strength concrete. Struct. Concr. 2012, 13, 182–192. [CrossRef]
+33.   Manwell, J.F.; McGowan, J.G.; Rogers, A.L. Wind Energy Explained: Theory, Design and Application, 2nd ed.; John Wiley & Sons:
+      Hoboken, NJ, USA, 2009. [CrossRef]
+34.   Du, Y.; Wei, J.; Yuan, J.; Lai, Y.; Sun, D. Experimental research on fatigue behavior of prestressed concrete beams under
+      constant-amplitude and variable-amplitude fatigue loading. Constr. Build. Mater. 2020, 259, 119852. [CrossRef]
+35.   Zhang, H.; Han, J. Calculation Method for Prestress Loss in Post-Tensioned Bonded Prestressed Concrete Wind Turbine Towers.
+      Prestress. Technol. 2024, 2, 34–46. [CrossRef]
+36.   Ngo, D.V.; Chun, Y.S.; Kim, D.H. Long-term fatigue damage assessment of a 22 MW offshore wind turbine considering climate
+      change scenarios. Structures 2025, 81, 110182. [CrossRef]
+37.   Abbas, G.; Uzair, M.; Rashid, F.; Ali, A.; Mushtaq, Z.; Zubair, M. Improving wind speed distribution modeling with optimization
+      based three parameter Weibull distribution and economic evaluation of small scale wind turbines. Frankl. Open 2026, 15, 100621.
+      [CrossRef]
+38.   Natarajan, A. Damage equivalent load synthesis and stochastic extrapolation for fatigue life validation. Wind Energy Sci. 2022, 7,
+      1171–1181. [CrossRef]
+39.   Fu, B.; Zhao, J.; Li, B.; Yao, J.; Mouafo Teifouet, A.R.; Sun, L.; Wang, Z. Fatigue reliability analysis of wind turbine tower under
+      random wind load. Struct. Saf. 2020, 87, 101982. [CrossRef]
+40.   Camargo, E.A.; Ulfkjaer, J.P.; Brincker, R.; Nøergaard, J.; Gadegaard, S.S. Operational modal analysis and finite-element model
+      updating of pilot concrete wind turbine tower. J. Struct. Eng. 2019, 145, 05018003. [CrossRef]
+
+
+
+                                                                                                  https://doi.org/10.3390/buildings16193854
+Buildings 2026, 16, 3854                                                                                                        34 of 34
+
+
+
+41.   Han, C.; Qu, X.; Ma, Y.; Shi, D. Experimental and Numerical Study of Fatigue Damage Assessment under Combined High and
+      Low Cycle Loading. Shock Vib. 2018, 2018, 9045658. [CrossRef]
+42.   Younes, T.; Al-Mayah, A.; Topper, T. Fatigue performance of prestressed concrete beams using BFRP bars. Constr. Build. Mater.
+      2017, 157, 313–321. [CrossRef]
+43.   Huang, X.; Cui, J.; Zhou, X.; Zhu, D.; Wang, Y.; Li, T. Fatigue analysis of segmental precast post-tensioned concrete towers under
+      operational wind turbine loads. Eng. Struct. 2025, 334, 120295. [CrossRef]
+44.   Zhang, M.; Liu, B.; Gao, C.; Hossain, M.N.; Zhao, G. Wind-induced response analysis and fatigue reliability study of a
+      steel–concrete composite wind turbine tower. Buildings 2024, 14, 1740. [CrossRef]
+
+
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.
+
+
+
+
+                                                                                               https://doi.org/10.3390/buildings16193854
+

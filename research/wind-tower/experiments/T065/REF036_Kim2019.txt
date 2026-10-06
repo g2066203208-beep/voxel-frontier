@@ -1,0 +1,625 @@
+KSCE Journal of Civil Engineering (2019) 23(7):2971-2982                                                                                                                                        Structural Engineering
+Copyright ⓒ2019 Korean Society of Civil Engineers
+DOI 10.1007/s12205-019-1171-2                                                                                                                                               pISSN 1226-7988, eISSN 1976-3808
+                                                                                                                                                                                     www.springer.com/12205
+  TECHNICAL NOTE
+
+
+          Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower
+                        for a Wind Turbine under Fatigue Loading
+                           Moon Ok Kim*, Tae Min Kim**, Dae Yong Lee***, and Moon Kyum Kim****
+                               Received June 10, 2018/Revised January 29, 2019/Accepted March 12, 2019/Published Online April 30, 2019
+
+··································································································································································································································
+
+                                                                                                        Abstract
+         This study investigated the fatigue behaviors at the joint of a hybrid steel–concrete wind turbine tower. A fatigue design approach
+      was proposed for the joint based on CEB-FIP model code 1990 and Eurocode 2. In addition, to estimate the long-term fatigue
+      performance related to continuous wind changes at the joint, two types of specimens were fabricated and tested. Each specimen
+      consisted of steel and concrete sections, which were connected with anchor bolts, and they were designed to investigate the effect of
+      the embedded length of the anchor bolt. Two million cycles of cyclic loading were applied to the specimens, after which a monotonic
+      static loading was applied to investigate the residual performance of each specimen. The experimental results demonstrate that the
+      joint of a hybrid steel–concrete wind turbine tower designed using the proposed approach retained sufficient fatigue performance.
+      Thus, this approach can be effective for fatigue design of the joint.
+      Keywords: hybrid wind turbine tower, steel-concrete joint, anchor bolt, fatigue test, onshore tower
+··································································································································································································································
+
+1. Introduction                                                                                                     2009). Furthermore, damage to the tower can negatively affect
+                                                                                                                    operation of the wind turbine system. This leads to serious
+   Demand for renewable energy technologies has continuously                                                        economic costs, and thus these damages should be prevented
+increased across the globe to cope with depletion of fossil fuels                                                   during the design process. In the design of a wind turbine tower,
+and environmental pollution. Of several renewable energy                                                            safety checks are conducted with respect to the ultimate strength
+sources, wind power generation has received a large share of the                                                    as well as the fatigue resistance of the materials; fatigue loads are
+attention, and the size of wind power systems has been increasing to                                                a major factor in the design of the tower stiffness because the
+enhance their economic efficiency and to use winds of good                                                          tower is exposed to continuous vibration from the wind turbine
+quality (GWEC, 2016). However, large wind power systems                                                             (Bai et al., 2017).
+cause problems related to the transportation of construction                                                          For hybrid wind turbine towers, it is necessary to investigate
+members; for a steel wind turbine tower, the transported fabricated                                                 the fatigue failure of precast concrete and steel members as well
+structures can exceed bridge clearance heights (Von der Harr and                                                    as the concrete–steel joints. The fatigue safety of the first two
+Marx, 2015). To overcome these transportation issues, several                                                       members can be addressed using conventional design codes.
+types of wind turbine towers, which are made of concrete                                                            However, fatigue criteria for the concrete-steel joint member in
+materials and can be constructed on-site, have been proposed                                                        the design codes is not clear. In addition, there has been little
+(Alvarez-Anton et al., 2016; Staffan et al., 2010). A hybrid-type                                                   research on fatigue at the joint; there have been studies on the
+tower can provide advantages by using precast concrete and                                                          joint between steel members (Petersen, 1998; Schmidt and
+structural steel to make the lower and upper parts of the wind                                                      Neuper, 1997), but not the concrete–steel joint. Although some
+turbine tower, respectively. This allows the transportation                                                         experiments have been conducted on the anchor bolt used to
+difficulties due to the large size of the tower to be solved by on-                                                 connect steel and concrete parts (Rodriguez et al., 2001; Delhomme
+site assembly. In addition, the construction efficiency and                                                         et al., 2010, 2016; Hariyadi et al., 2017), these were pull-out tests
+applicability to various sites can be enhanced by using standard                                                    of the anchor bolts intended to analyze the static or dynamic
+tubular steel segments.                                                                                             behavior of the joint. Studies on fatigue in anchor bolts are not
+   The fabrication cost of a wind turbine tower is roughly 26%                                                      extensive, and those focused on the joint in wind turbine towers
+that of the total system including the wind turbine (EWEA,                                                          are particularly lacking. This study presents an approach to
+
+
+   *Member, General Manager, R&D Laboratory, SPEC Engineering Y&P Co., Ltd., Seoul 05854, Korea (Corresponding Author, E-mail: hihioho@speceng.co.kr)
+  **Member, Senior Researcher, Infrastructure Safety Research Center, K-water Convergence Institute, Daejeon 34045, Korea (E-mail: taemin@kwater.or.kr)
+ ***Member, Senior Project Manager, Steel Solution Center, POSCO, Korea (E-mail: dragon70@posco.com)
+****Member, Professor, Dept. of Civil and Environmental Engineering, Yonsei University, Seoul 03722, Korea (E-mail: applymkk@yonsei.ac.kr)
+
+                                                                                                          − 2971 −
+                                                   Moon Ok Kim, Tae Min Kim, Dae Yong Lee, and Moon Kyum Kim
+
+
+fatigue design for the steel-concrete joint of wind turbine towers                              act alternately as compressive and tensile on the joint, and cause
+with anchor bolts and demonstrates the validity of the fatigue                                  fatigue compressive and tensile failures in the concrete part,
+design through several fatigue experiments. Two types of joint                                  including the anchor bolts, as shown in Fig. 1. Generally, a joint
+between the steel and precast concrete were used in the                                         fatigue analysis can be conducted for the steel and concrete parts
+specimens. This paper consists of three parts. In the first part,                               as well as the anchor bolt. For steel, the S-N curves in widely
+several design codes related to fatigue are compared, and a                                     used design codes can be used to inform the fatigue safety
+design approach is proposed by reviewing the codes. Then, the                                   analysis. The curves are similar to each other, which enables
+design of steel–concrete joint specimens for fatigue testing is                                 fatigue design results to be consistent. In contrast, fatigue criteria
+described in detail. Finally, the experimental results from fatigue                             for concrete in the design codes differ, and results of the fatigue
+and monotonic loading tests are analyzed.                                                       safety analyses are thus dependent on which criterion was used.
+                                                                                                Furthermore, there are no clear criteria for conducting fatigue
+2. Review of Design Codes for Fatigue                                                           design analyses for anchor bolts.
+
+  The steel–concrete joint of a hybrid wind turbine tower is                                    2.1 Concrete
+subjected to periodic and dynamic moment forces. These forces                                     The Eurocode 2 (EN 1992-1-1, 2004), GL wind guideline
+
+
+
+
+                                             Fig. 1. Failure Behavior of a Steel–Concrete Joint due to Moment Force
+
+Table 1. Equations for Evaluating Fatigue Safety of Concrete from the Eurocode 2, GL Wind Guideline, and CEB-FIP Model Code 1990
+                       Eurocode 2                                GL wind guideline                                       CEB-FIP model code 1990
+                                                                                                           Under pure compression for 0 < Sc min ≤ 0.8 :        ,
+
+
+
+                                                                                                                                         2
+                                                                                                           logN1 = ( 12 + 16Sc, min + 8S c, min ) ( 1 – Sc, max )
+
+                                                                                                            logN2 = 0.2logN1 ( logN1 – 1 )
+
+                                                                                                           logN3 = logN2 ( 0.3 – 0.375Sc min ) ⁄ ΔSc       ,
+
+
+
+
+                                                                                                           Under compression-tension with
+                                                      Under compression:                                   σct max ≤ 0.026 σc max :
+                                                                                                                 ,                       ,
+   Under compression:
+   σc max                      σc min                 Scd max ≤ 0.4 + 0.46 ⋅ Scd min                       logN = 9 ( 1 – Sc max )
+   ------------ ≤ 0.5 + 0.45 ⋅ -----------
+       ,                             ,
+                                         -               ,                          ,                                                ,
+
+
+    fcd fat,
+                                fcd fat
+                                     ,
+                                                      Where,                                               Under pure tension and tension-compression with
+   ≤ 0.9 for fck ≤ 50 MPa                             Scd min = γsd ⋅ σc min ⋅ ηc ⁄ fcd fat                σct max > 0.026 σc max :
+                                                                                                                 ,                       ,
+                                                         ,                ,             ,
+
+
+
+
+   ≤ 0.8 for fck > 50 MPa                             Scd max = γsd ⋅ σc max ⋅ ηc ⁄ fcd fat                 logN = 12 ( 1 – Sct max )            ,
+                                                         ,                ,                 ,
+
+
+
+
+                                                                                                           Where,
+                                                                                                           Sc max = σc max ⁄ fck fat
+                                                                                                             ,               ,               ,
+
+
+
+
+                                                                                                            Sc min = σc min ⁄ fck fat
+                                                                                                                 ,           ,               ,
+
+
+
+
+                                                                                                            ΔSc = Sc max – Sc min
+                                                                                                                         ,                   ,
+
+
+
+
+                                                                                                  Sct max = σct max ⁄ fctk min
+                                                                                                                     ,           ,                   ,
+
+
+
+Note: σc,max is the maximum compressive stress, σc,min is the minimum compressive stress, σct,max is the maximum tensile stress, γsd is the partial safety
+factor, ηc is the factor for the non-uniform stress distribution, fcd,fat is the design value for the fatigue strength of the concrete under compressive
+loading, fck,fat is the fatigue reference compressive strength of the concrete, and fctk,min is the minimum characteristic tensile strength.
+
+
+                                                                                        − 2972 −                                                         KSCE Journal of Civil Engineering
+                    Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower for a Wind Turbine under Fatigue Loading
+
+
+(GL, 2010), and CEB-FIP model code 1990 (CEB, 1993) were                      post-tensioning single strands and straight/curved tendons in
+compared to establish a fatigue design approach for the concrete              plastic ducts was examined instead of anchor bolts.
+part of a hybrid wind turbine tower. Both Eurocode 2 and GL
+wind guideline estimate the fatigue resistance in concrete using              3. Design of Specimens for Fatigue Experiments
+stresses due to compression and shear forces. These codes apply
+zero stress to the tensile area of concrete to conservatively                 3.1 Overview of Target Hybrid Tower at Test Bed
+estimate fatigue safety. Rather than this method, fatigue checks                In this study, the fatigue performance of a hybrid tower for a 2
+using the stresses and number of cycles at the reinforcement or
+prestressing steel are recommended. Unlike these codes, CEB-
+FIP model code 1990 provides S-N curves to evaluate the
+compression and tensile fatigue in concrete. The concrete fatigue
+design formulae from the Eurocode 2, GL wind guideline, and
+CEB-FIP model code 1990 are listed in Table 1.
+   For a hybrid wind turbine tower, tensile fatigue failures are
+expected towing to anchor bolts embedded in concrete, and the
+fatigue behavior depends strongly on the anchor blot arrangement in
+the joint. Thus, a design method with respect to the tensile
+fatigue of concrete is necessary to consider the effects of the
+anchor bolt. In this study, the fatigue safety of concrete was
+evaluated according to CEB-FIP model code 1990; this code
+allows a fatigue failure area to be roughly and conservatively
+predicted.
+
+2.2 Anchor Bolts
+  Because there are no prescribed fatigue performance criteria
+for anchor bolts at the joint, this study applied a design approach
+in which steel bolts used in steel structures are considered as the
+prestressing steel used in prestressed concrete structures. This
+approach not only considers the similarity of the load transfer
+mechanism between steel bolts and embedded prestressing steel
+with respect to post-tension, but it also leads to more conservative
+design of the anchor bolts. Each method to evaluate the fatigue
+safety of the steel bolts and the prestressing steel is provided in
+Eurocode 3 (EN 1993-1-1, 2005) and Eurocode 2 (EN 1992-1-1,
+2004), respectively (see Fig. 2). In this study, the anchor bolts             Fig. 3. Schematic Diagram of the Target Hybrid Tower Consisting
+were treated as prestressing steel, and a fatigue evaluation of the                   of Steel and Precast Concrete
+
+
+
+
+Fig. 2. S-N Curves for a Steel Bolt and Prestressing Steel: (a) Steel Bolt, (b) Post-tensioning Prestressing Steel (Straight Tendons in
+        Plastic Ducts)
+
+Vol. 23, No. 7 / July 2019                                              − 2973 −
+                                           Moon Ok Kim, Tae Min Kim, Dae Yong Lee, and Moon Kyum Kim
+
+
+Table 2. Major Specifications of the Wind Turbine for the Hybrid            fatigue moment at the joint given in Table 3 was calculated for a
+         Tower Test Bed                                                     wind turbine designed to operate at 0.29 Hz for 20 y. The fatigue
+    Rated          Hub         Nacelle       Number of      Design          performance of materials has been generally estimated for
+    power         height         mass       rotor blades    lifetime        repeated loadings of 1 or 2 million cycles. Because increasing
+  2,000 kW       100.0 m      124,218 kg       3 pcs          20 y          the number of cycles drastically increases the amount of time
+                                                                            and cost required for the fatigue tests, the fatigue moment at 183
+    Table 3. Major Loads at the Top and Joint for the Test Bed              million cycles (0.29 cycles × 60 sec × 60 min × 24 hr × 365 d ×
+    Location              Ultimate loads         Fatigue loads*             20 y) should be converted to that at 2 million cycles. Assuming a
+                  Moment (kN·m) Axial force (kN) Moment (kN·m)              linear relationship between the uniaxial bending stress and
+   Top of tower      7,358             1,621          991                   moment, and using the relationship between the number of
+  Steel-concrete                                                            cycles and the stress variation to generate the specific fatigue
+                      66,094            3,914              4,410
+     interface
+                                                                            damage of the material, the fatigue moment at 2 million cycles
+*The moment is calculated at 1.83 × 10 cycles, and the slope of the S-N
+                                      8
+
+
+
+curve is 3.                                                                 can be estimated from that at 183 million cycles using Eq. (1):
+                                                                                                                       1⁄m
+                                                                                           Nn 2
+                                                                                  Δσn1 = ⎛ ------- × Δσn2⎞
+                                                                                                       m
+                                                                                         ⎝ Nn 1          ⎠
+                                                                                                                                                                   (1)
+MW wind turbine at a test bed was analyzed. This tower consists
+of steel and precast concrete for the upper (78 m) and lower (20            where Δσn is the stress range at n cycles, Nn is the number of
+m) parts of the tower, respectively, which are connected with               cycles in stress range Δσn, and m is the slope of the S-N curve.
+anchor bolts (see Fig. 3). Both parts were prefabricated and                  The tensile force intensity along the perimetric direction of the
+assembled at the construction site; major specifications of the             joint surface due to bending moments was calculated using Eq.
+wind turbine are summarized in Table 2. The external load cases             (2), and the resultant tensile force was assumed to be uniformly
+applied to the tower were calculated according to the GL wind               distributed at each anchor bolt. Based on this assumption, the
+guideline (GL, 2010). Cross-sectional forces such as an axial               tensile force acting on a single anchor bolt was calculated by
+force and bending moment at the steel-concrete joint (EL 20 m)              multiplying the tensile intensity by the distance between the
+and top of the tower (EL 98 m) are listed in Table 3. These forces          anchor bolts:
+are equivalent to the ultimate and fatigue limit states, respectively,
+and are considered as external forces acting on the joint. A cross-                   ⎧                                       ⎫
+                                                                                      ⎪ M, eq                          D1 ⎪
+section of the joint in the hybrid tower is shown in Fig. 4. The                  Z = ⎨ ---------------------------4 × ------ ⎬ × t                                (2)
+                                                                                      ⎪π    ( D1 – D2 ) 2 ⎪
+embedded M42 anchor bolts are used to connect the precast                             ⎩ --------------------------
+                                                                                                   64
+                                                                                                                  -           ⎭
+concrete part with an L-shape flange attached to the steel part
+and the anchor bolts are placed 115 mm apart on the top surface             where D1 and D2 are the outer and inner diameter of the steel
+of the concrete part.                                                       shell at the joint, respectively; Z is the tensile force intensity;
+                                                                            M,eq is the equivalent fatigue moment; and t is the thickness of
+3.2 Calculation of the Pull-Out Force                                       the steel shell at the joint. The tensile forces of each anchor bolt
+  For the hybrid wind turbine tower at the test bed, the equivalent         under fatigue loading were calculated using Eqs. (1) and (2), and
+
+
+
+
+                  Fig. 4. Cross-Section of the Joint between the Steel and Concrete Parts of the Hybrid Tower Test Bed
+
+                                                                       − 2974 −                                                       KSCE Journal of Civil Engineering
+                    Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower for a Wind Turbine under Fatigue Loading
+
+
+Table 4. Calculation of the Tensile Load Acting on an Anchor Bolt             Table 5. Calculation of the Extreme Tensile Resistance Strength
+         due to an Equivalent Fatigue Load                                             of the Joint
+      Fatigue life           M,eq (kN·m)    Z (kN/mm)          T (kN)                Ultimate state                 Equation               Results
+   1.83 × 10 cycles
+             8
+                                4,410          310.1            43.3
+                                                                               Steel strength of anchor          Nsa = Ase N futa
+                                                                                                                             ,
+                                                                                                                                          963.2 kN
+   2.00 × 10 cycles
+             6
+                               19,872         1,397.4          195.3
+                                                                                                                 ANc
+                                                                                   Concrete breakout*     Ncb = --------- ψ ψ ψ N         458.4 kN
+                                                                                                                ANco ed N c N cp N b
+                                                                                                                         ,       ,   ,
+
+
+
+
+are listed in Table 4.                                                              Concrete pullout             Npn = ψ c P Np
+                                                                                                                             ,
+                                                                                                                                         1,018.8 kN
+   In Table 4, T is the axial force of the anchor bolt. However,                 Concrete side-face
+during fatigue tests, a cyclic load of 147.1 kN was applied to the                     blowout
+                                                                                                          Nsb = ( 13ca1 Abrg )λ fck      1,411.5 kN
+specimen, which is 75.3% of the tensile force of 195.3 kN. This               *When reinforcement bars are installed in the concrete around anchor
+load reduction is made to consider decreases in the load resistance           bolts, specimen failure is governed by the yield of the reinforcement.
+                                                                              Thus, concrete failure was evaluated through the yield of the reinforce-
+capacity of the specimen; while a large number of reinforcement               ment.
+bars were placed in the concrete around the steel-concrete joint
+in the test bed tower to resist extreme tensile loads, those in the
+test specimen are much less. The reduction ratio was estimated                tension as governed by the steel, Ncb is the nominal concrete
+by assuming that decreases in the fatigue capacity due to                     breakout strength in tension of an anchor, Npn is the nominal pull-
+reinforcement reduction are proportional to those in the ultimate             out strength in tension of an anchor, Nsb is the nominal side-face
+pull-out resistance. The ratio of the extreme pull-out resistance of          blowout strength of an anchor, Ase,N is the effective cross-
+the specimen (458.4 kN) to that of the joint at the test bed (608.7           sectional area of an anchor, futa is the specified tensile strength of
+kN) was applied to calculate the decreased fatigue loading; the               the anchor steel, ANc is the projected concrete failure area of an
+joint force at the test bed was calculated using extreme external             anchor, ANco is the projected concrete failure area of an anchor
+axial and bending forces of 3,914 kN and 66,094 kN·m,                         not limited by edge distance, ψex,N is a factor used to modify the
+respectively. The pull-out resistances were estimated according               tensile strength of anchors based on proximity to the edges of a
+to the tensile strength formulae presented in the “Korea structural           concrete member, ψc,N is a factor used to modify the tensile
+concrete design code and commentary” (KCI, 2012). Examining                   strength of anchors based on the presence or absence of cracks in
+the possible ultimate failure states and the corresponding resistance         the concrete, ψcp,N is a factor used to modify the tensile strength
+forces of the laboratory specimen listed in Table 5, it was                   of post-installed anchors intended for use in uncracked concrete
+expected that concrete failure near the anchor bolt would occur               without supplementary reinforcement, Nb is the basic concrete
+first among these failure modes. Thus, 458.4 kN was selected as               breakout strength in tension of an anchor in cracked concrete,
+the extreme tensile resistance of the specimen. In Table 5, the               ψc,P is a factor used to modify the pullout strength of anchors
+notation is as follows: Nsa is the nominal strength of an anchor in           based on the presence or absence of cracks in the concrete, Np is
+
+
+
+
+         Fig. 5. Detailed Diagram of the Steel-Concrete Joint
+
+Vol. 23, No. 7 / July 2019                                              − 2975 −
+                                              Moon Ok Kim, Tae Min Kim, Dae Yong Lee, and Moon Kyum Kim
+
+
+the pullout strength in tension of an anchor in cracked concrete,
+ca1 is the distance from the center of an anchor shaft to the edge
+of concrete in one direction, Abrg is the bearing area of the head of
+a stud or anchor bolt, λ is a modification factor related to the unit
+weight of concrete, and fck is the specified compressive strength
+of concrete.
+
+3.3 Test Specimen Specifications
+  Full-scale specimens were used to analyze fatigue behavior at
+the concrete–steel joint of the tower. In the real tower joint, long
+and short anchor bolts were placed alternately to reduce bearing
+stresses in the concrete parts and prestressing steels were placed                       Fig. 6. Stress Distribution near the Anchor Bolt
+to introduce compressive stress into the concrete parts as shown
+in Fig. 5. Unlike the real tower joint, each specimen had only an
+anchor bolt embedded in the concrete part; anchor bolts (Φ = 42             properties are listed in Table 6. The properties of concrete at 28 d
+mm) with lengths of 1.45 m and 2.45 m were used. In the real                and a high-strength bolt (10.9 grade) in the test bed were
+tower, post-tensioning force of 4,930 kN was considered for each            applied to the model. From the stress distribution around the
+individual prestressing steel resulting in a compressive stress of          anchor base plate under the anchor bolts (see Fig. 6), the cross-
+8.9 MPa in concrete member. According to the CEB-FIP model                  sectional dimensions of the joint specimens were determined to
+code 1990, however, fatigue of concrete was conservatively                  be rectangular (720 mm × 860 mm) by considering the distance
+considered under pure tension state rather than the compressive             from each anchor bolt and the peak stress near the anchor bolts;
+state. Therefore, the specimens were fabricated and tested,                 a drastic increase in the stresses occurred within 345 mm
+excluding prestressing steel.                                               (about twice the width of the anchor base plate) of the anchor
+   Although embedding one anchor bolt in the specimen made its              bolts.
+joint behavior relatively simple and clear, the validity of the test           Based on the above preliminary design of the joint specimen,
+results using these specimens cannot be guaranteed. To verify the           the specific dimensions and reinforcement placement were
+effectiveness of using these specimens and determine the                    determined as shown in Fig. 7, and two types of test specimens
+dimension of its cross-section, stress analyses were conducted              with different length anchor bolts were manufactured, as shown
+using a finite element model of the specimen. In the finite                 in Fig. 8. Before the cyclic and static loading tests, concrete
+element model, a pull-out force of 147.1 kN was applied to the              strength tests were conducted. The compressive strength of the
+top of the anchor bolt, and fixed boundary conditions were                  concrete satisfied the design requirement of 40 MPa; the average
+imposed on the bottom of the concrete foundation. Steel and                 strength of concrete for specimens of Type-1 and Type-2 were
+concrete were assumed to be linear materials, and their material            40.7 MPa and 45 MPa, respectively.
+
+                                          Table 6. Material Properties of the Concrete and Anchor Bolt
+                                   Concrete                                                                Anchor bolt
+    fck (MPa)         fctk (MPa)              Ec (MPa)           νc               fyb (MPa)        fub (MPa)        Eb (MPa)              νb
+         40                2.5                 30,891           0.18                  900            1,000           210,000             0.30
+
+
+
+
+           Fig. 7. Schematics of the Test Specimens: (a) Types and Dimensions of Specimens, (b) Reinforcement Placement
+
+                                                                       − 2976 −                                    KSCE Journal of Civil Engineering
+                    Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower for a Wind Turbine under Fatigue Loading
+
+
+3.4 Fatigue Resistance Assessment                                                     Table 7. Fatigue Stress Ranges of Prestressing Steel
+                                                                                                                           Stress range (MPa)
+                                                                                     Post-tensioning types
+3.4.1 Concrete                                                                                                     At 1 × 10 cycles At 2 × 10 cycles
+                                                                                                                           6                 6
+
+
+
+
+  The fatigue resistance of concrete was estimated based on the                  Single strands in plastic ducts         185               171
+CEB-FIP model code 1990 (CEB, 1993). Assuming plain concrete                      Straight tendons or curved
+                                                                                                                        150               140
+subjected to pure tensile load, the fatigue safety was evaluated                    tendons in plastic ducts
+using Eq. (3):
+  logN = 12 ( 1 – Sct max )
+                      ,
+                                                                         (3)
+                                                                                the fatigue evaluation method of prestressing steel for post-
+where Sct,max is the tensile stress level (σct,max/fct k,min), σct,max is the   tensioning in Eurocode 2 (EN 1992-1-1, 2004). Because only a
+maximum tensile stress due to the external load, and fct k,min is the           stress range at 1 million cycles is presented in Eurocode 2, the
+minimum tensile strength proposed in Eurocode for concrete                      stress range was converted to that at 2 million cycles using Eq.
+with a compressive strength of 40 MPa; σct,max and fct k,min are                (1); cycle slopes of 9 and 10 were adopted for single strands and
+0.24 MPa and 2.5 MPa, respectively, and thus Sct,max is 0.095. The              straight/curved tendons in plastic ducts, respectively. The stress
+concrete fatigue resistance was determined by applying Sct,max to               ranges are listed in Table 7. The tensile stress of the anchor bolts
+the S-N curve, as shown in Fig. 8. As Sct,max is 0.095, which is                due to the test load was calculated to be 106.2 MPa, and thus the
+less than the maximum value of Sct,max at 2 million cycles (0.475),             fatigue safety is satisfied. The stress was derived by dividing the
+there are a sufficient number of cycles to reach concrete fatigue.              pull-out force by the effective area of 1,385 mm2.
+
+3.4.2 Anchor Bolt                                                               4. Experiments and Results
+  The fatigue resistance of the anchor bolts was calculated using
+                                                                                4.1 Overview of Experiments
+                                                                                  Loading tests were conducted to evaluate the fatigue performance
+                                                                                of the joint specimen and to verify the proposed fatigue assessment
+                                                                                guidelines. The experiment consists of two steps: First, a cyclic
+                                                                                loading with 2 million cycles, and second, monotonic and static
+                                                                                loading with a pull-out force to investigate the static residual
+                                                                                loading capacity of the specimen.
+                                                                                  A fatigue testing machine (FTM) with a capacity of 2,000 kN
+                                                                                was used to conduct the fatigue tests. To set up the specimen, the
+                                                                                head of the anchor bolt and the foundation part of the specimen
+                                                                                were fixed to the FTM and the ground, respectively. The cyclic
+                                                                                loading range was from 0 – 147.1 kN. The applied load cycle
+                                                                                had a frequency of 2 Hz, and the total number of cycles was 2
+                                                                                million. Furthermore, the concrete strain, displacement of the
+                                                                                anchor bolt, and crack opening width were measured as the
+                                                                                number of cycles increased. Strain gages were installed as shown
+   Fig. 8. S-N Curve for Concrete subjected to a Tensile Force                  in Fig. 9 and described in Table 8. The displacement at the head
+
+
+
+
+                              Fig. 9. Measurement Locations: (a) Test Specimen: Type-1, (b) Test Specimen: Type-2
+
+Vol. 23, No. 7 / July 2019                                                − 2977 −
+                                       Moon Ok Kim, Tae Min Kim, Dae Yong Lee, and Moon Kyum Kim
+
+      Table 8. Detailed Description of Strain Gage Locations
+  Strain gage number              Strain gage location
+      SG1 – SG4               At lower end of anchor bolt
+      SG5 – SG10     At 45° away above the lower end of anchor bolt
+     SG11 – SG14      At 1/2 of the anchor bolt embedment length
+                     On the surface of the CIP concrete and precast
+     SG15 – SG18
+                                        concrete
+
+
+of the anchor bolt was monitored by the FTM. A ruler was used
+to measure the crack opening width.
+
+4.2 Displacement
+   Figure 10 shows several load-displacement curves obtained
+during cyclic loading. As the number of cycles increased, the
+slope of the curves decreased while the maximum displacement
+of the test specimen increased. Although the curves show that the
+specimen stiffness decreased with increasing number of cycles,        Fig. 11. Load–Displacement Curves for the Specimens under
+the maximum displacement changes by less than 1 mm and is                      Static Loading
+relatively gradual. Thus, the specimen is stable with respect to
+fatigue. It was noted that the displacement increment from the
+first cycle to 0.5 million cycles is greater than the others. This    the curve for the Type-1 specimen, which exhibits changes in the
+was caused by detachment of a cast-in-placed (CIP) part from          slope at initial low loadings, the slope changes for the Type-2
+the specimen after one cycle, which resulted in a change in the       specimen appeared after the pull-out force was greater than 60 kN.
+embedded length of the anchor bolt.                                   In Fig. 11, the slope is large for low loading because there was no
+   The load-displacement curves for each specimen were compared       detachment between the anchor bolt and concrete; thus, the
+to analyze the effect of the embedded length of the anchor bolt.      displacements at the end of the anchor bolt were also small. In
+At each cycle, the maximum displacement of the Type-1 (longer         contrast, as the pull-out loading increased, the slope decreased
+anchor bolt) specimen is larger than the Type-2 specimen, as is       because slip occurred at the interface between the anchor bolt
+the displacement increment with increasing number of cycles.          and the concrete. The relative displacement at the upper and
+However, the difference between the displacement in the Type-1        lower ends of the long anchor bolt (Type-1) was larger than that
+and Type-2 specimens is small because it is due to the tensile        of the short anchor bolt (Type-2). It was determined that the slip
+deformation that is proportional to the length of the anchor bolt,    occurred earlier in Type-1 than Type-2, and the slope of the
+and thus the effect of the embedded length on the fatigue             Type-1 curve changed during initial cyclic loading.
+behavior of the joint was small. Changes in the slope of the load-      After 2 million cycles of cyclic loading were completed, a
+displacement curves shown in Fig. 11 can be observed. Unlike          monotonic and static loading was applied to the specimens. The
+
+
+
+
+                    Fig. 10. Load–Displacement Curves for Specimens under Cyclic Loading: (a) Type-1, (b) Type-2
+
+                                                                 − 2978 −                                KSCE Journal of Civil Engineering
+                     Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower for a Wind Turbine under Fatigue Loading
+
+
+load-displacement curves for each specimen are shown in
+Fig. 11, which indicates that the test specimens have a yield capacity
+of 1,000 kN. The load capacity is more than twice the magnitude of
+the required loading (458.4 kN); thus, it is concluded that the joint
+has sufficient load capacity after cyclic loading.
+  The results of the static stress analyses performed to verify the
+dimension of the specimens were compared with the experimental
+results; the numerical displacement by 147.1 kN was compared
+with the experimental results by the first cyclic loading, and the
+numerical displacement by 1,000 kN was compared with the
+experimental results by monotonic loading after two million
+cycles. As a result of the comparison, the displacement and the
+tendency were similar as shown in Table 9. The only difference
+was that the experimental displacement due to the monotonic
+loading was larger than numerical result due to the cyclic loading
+effect. When the elongations of the anchor bolts were analytically
+calculated without concrete, the displacements were resulted in                Fig. 12. Load-Strain Curves of a Specimen under Cyclic Loading
+1.5 mm for Type-1 and 1.0 mm or Type-2. These values were                               (Type-1, SG1)
+87% and 43% larger than the numerical results, respectively. It
+meant that the displacement was relatively reduced due to the                  million cycles was large, but was relatively small after 1 million
+attachment effect in case of the long anchor bolt, but the                     cycles. The reason was expected that the stress distribution ratio
+displacement was more influenced by the lengths of the anchor                  between concrete and anchor had changed according to S-N
+bolts than the attachment force.                                               curve changed after 1 million cycles. It also seemed that the load
+                                                                               transferred to the concrete was reduced due to the different
+4.3 Strain                                                                     attachment state between the two materials.
+   Although the strain gages used in these experiments provided                   The effect of the embedded length of the anchor bolt was also
+strain histories with insufficient resolution to capture changes in            analyzed using the strain data. For the Type-2 specimen, strains
+the strain, most of the strain increments during each loading                  near the embedded part of the anchor bolt were relatively uniform,
+cycle were less than 10 μm/m; the strain of the external surface               and this resulted in overall stiffer behavior of the specimen. On the
+by 147.1 kN was calculated as 7.69 μm/m, which was too small                   other hand, for the Type-1 specimen which has a longer anchor
+to measure it. However, the total strains increased as the number              bolt, differences between the strains at the top end of the anchor
+of loading cycles increased. The strain changes from SG1                       bolt and other areas led to more flexural behavior than was
+attached on the Type-1 specimen are shown in Fig. 12, and those                observed in Type-1. Thus, it can be concluded that a joint with a
+from other strain gages, which had similar trends to SG1, are                  longer anchor bolt makes the concrete more flexural.
+excluded. In the strains listed in Tables 12 to 15, the minus                     Figure 15 shows the load-strain curves for the specimens
+symbol (−) means compression.                                                  subjected to static loading after completing 2 million cycles of
+   Figures 13 and 14 show the accumulated strain histories from                cyclic loading. As the load was statically applied, the strains
+each strain gage. The maximum strain of the Type-1 specimen                    increased. Because the maximum load was greater than 1,000 kN,
+occurred at the lower end of the anchor bolt (SG3), and the                    residual strains remained at the strain gage points after unloading.
+maximum strain at the other locations were similar to each other.
+For the Type-2 specimen, the maximum strain occurred at 45°                    4.4 Cracks
+above the lower end of anchor bolt (SG6). Strains from SG1 and                   During cyclic loading, only micro-cracks were observed in the
+SG3 are excluded in Fig. 14 because SG1 was placed lower than                  specimen until 2 million cycles, which includes small cracks
+planned and SG3 was damaged during the cyclic loading; the                     with widths of less than 0.05 mm that occurred after 1.8 million
+tensile strain appeared at SG1. Regardless of anchor bolt length,              cycles. It seems that cracks were controlled by the reinforcement
+the strain increased as the number of load cycles increased, and               bars which resist thermal expansion and shrinkage of the
+the overall stiffness of the joint deteriorated.                               concrete, and consequently the specimens behaved as uncracked
+   Furthermore, the strain increment from the first cycle to 1                 concrete sections.
+
+                                 Table 9. Comparison of Displacement by Numerical and Experimental Results
+                                            Displacement (Type-1)                                           Displacement (Type-2)
+       Static load
+                                 Numerical result           Experimental result                  Numerical result           Experimental result
+       147.1 kN                     0.8 mm                        0.8 mm                            0.7 mm                        0.6 mm
+       1,000 kN                     8.7 mm                       10.9 mm                            5.8 mm                        7.9 mm
+
+
+Vol. 23, No. 7 / July 2019                                               − 2979 −
+                                        Moon Ok Kim, Tae Min Kim, Dae Yong Lee, and Moon Kyum Kim
+
+
+
+
+Fig. 13. Change in the Maximum Strain in the Perimetric Direction: (a) Type-1 (1), (b) Type-1 (2), (c) Type-1 (3), (d) Type-2 (1), (e) Type-2
+         (2), (f) Type-2 (3)
+
+
+  On the other hand, after cyclic loading, severe cracks occurred       5. Conclusions
+across the cross-section of the Type-2 specimen during static
+loading of over 1,000 kN. As shown in Fig. 16, the cracks are             In this study, a fatigue design approach for the joint in hybrid
+located at a line 450 mm below the lower end of the anchor bolt,        wind turbine towers was proposed as a combination of the
+and its direction is perpendicular to the axis of the anchor bolt.      conventional design codes. In addition, through several laboratory
+Analyzing the crack pattern suggests that compressive and               fatigue tests of a simplified joint specimen, the fatigue performance
+tensile stresses occurred at the front and the rear of the anchor       of the joint was experimentally estimated, and the validity of the
+base plate, respectively.                                               proposed design method was demonstrated. The fatigue tests
+
+                                                                  − 2980 −                                  KSCE Journal of Civil Engineering
+                    Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower for a Wind Turbine under Fatigue Loading
+
+
+
+
+    Fig. 14. Change in the Maximum Strain in the Longitudinal Direction: (a) Type-1 (1), (b) Type-1 (2), (c) Type-2 (1), (d) Type-2 (2)
+
+
+
+
+                         Fig. 15. Load–Strain Curves for the Specimens under Static Loading: (a) Type-1, (b) Type-2
+
+indicated that joints using anchor bolts for hybrid wind turbine                      evaluate the fatigue safety of the joint. As a result, it was
+towers not only have sufficient fatigue performance, but also                         shown that the anchor bolt connecting the steel and concrete
+safety under static loads. The following are detailed findings                        parts of the tower can resist the equivalent fatigue with 2
+drawn from this study:                                                                million cycles.
+  1. Guidelines in the “CEB-FIP model code 1990” and “Euro-                        2. The joint with anchor bolts shows less decrease in stiffness
+     code 2” for fatigue design were adopted and combined to                          under cyclic loading. As only micro-cracks with widths of
+
+Vol. 23, No. 7 / July 2019                                              − 2981 −
+                                          Moon Ok Kim, Tae Min Kim, Dae Yong Lee, and Moon Kyum Kim
+
+
+
+
+                               Fig. 16. Crack Distribution after the Static Loading Test: (a) Type-1, (a) Type-2
+
+     less than 0.05 mm were observed in the test specimen during
+                                                                               pp. 1843-1859, DOI: 10.1617/s11527-015-0616-4.
+     cyclic loading of 2 million cycles, the fatigue safety of the
+                                                                           EN 1992-1-1 (2004). Eurocode 2: Design of concrete structures — Part 1-1 :
+     joint was also verified. Furthermore, behavior of the Type-1              General rules and rules for buildings, EN 1992-1-1:2004, European
+     and Type-2 specimens was similar, and effect of the embed-                Committee for Standardization, Brussel, Belgium.
+     ded length was marginal.                                              EN 1993-1-1 (2005). Eurocode 3: Design of steel structures — Part 1-1:
+  3. From the static loading test, a yield capacity of the specimen            General rules and rules for buildings, EN 1993-1-1:2005, European
+     was estimated to be 1,000 kN, and thus the joint is safe for              Committee for Standardization, Brussel, Belgium.
+     static loading as well.                                               EWEA (The European Wind Energy Association) (2009). The economics
+                                                                               of wind energy, European Wind Energy Association, Brussels,
+                                                                               Belgium.
+Acknowledgements                                                           GL (Germanischer Lioyd) (2010). Rules and guidelines IV industrial
+                                                                               services. Part 1: Guideline for certification of wind turbines,
+  This study was supported by Korean Institute of Energy                       Germanischer LIoyd Inderstial Service GmbH, Hamburg, Germany.
+Technology Evaluation and Planning (KETEP) granted financial               GWEC (Global Wind Energy Council) (2016). Global wind report
+resource from the Ministry of Trade, Industry & Energy, Republic               2016, http://gwec.net/publications/global-wind-report-2/global-wind-
+of Korea (No. 20123010020060).                                                 report-2016/ [Accessed on August 12, 2017].
+                                                                           Hariyadi, Munemoto, S. and Sonoda, Y. (2017). “Experimental analysis
+References                                                                     of anchor bolt in concrete under the pull-out loading.” Procedia
+                                                                               Engineering, Vol. 171, pp. 926-933, DOI: 10.1016/j.proeng.2017.
+Alvarez-Anton, L., Koob, M., Diaz, J., and Minnert, J. (2016).                 01.391.
+   “Optimization of a hybrid tower for onshore wind turbines by            KCI (Korea Concrete Institute) (2012). Korea structural concrete design
+   building information modeling and prefabrication techniques.”               code and commentary, Korea Concrete Institute, Seoul, Korea.
+   Visualization in Engineering, Vol. 4, No. 1, p. 3, DOI: 10.1186/        Petersen, C. (1998). “Fatigue assessment eccentrically loaded ring
+   s40327-015-0032-4.                                                          flanges.” Stahlbau, Vol. 67, No. 3, pp. 191-203.
+Bai, X., He, M., Ma, R., Huang, D., and Chen, J. (2017). “Modelling        Rodriguez, M., Lotze, D., Gross, J. H., Zhang, Y. G., Klingner, R. E.,
+   fatigue degradation of the compressive zone of concrete in onshore          and Graves, H. L. (2001). “Dynamic behavior of tensile anchors to
+   wind turbine foundation.” Construction and Building Materials,              concrete.” ACI Structural Journal, Vol. 98, No. 4, pp. 511-524.
+   Vol. 132, pp. 425-437, DOI: 10.1016/j.conbuildmat.2016.12.026.          Schmidt, H. and Neuper, M. (1997). “Elastic-static behaviour of
+CEB (Comite Euro-International du Beton) (1993). CEB-FIB model                 eccentrically tensioned L-connections with pre-stressed bolts.”
+   code 1990, Thomas Telford service Ltd., London, England.                    Stahlbau, Vol. 66, No. 3, pp. 163-168.
+Delhomme, F., Debicki, G., and Chaib, Z. (2010). “Experimental behaviour   Staffan, E., Lyrner, T., Hassanzadeh, M., Stalin, T., and Johansson, J.
+   of anchor bolts under pullout and relaxation tests.” Construction and       (2010). Tall tower for large wind turbines, Report No. 10:48, Swedish
+   Building Materials, Vol. 24, No. 3, pp. 266-274, DOI: 10.1016/              Electricity Company Research and Development, Stockholm, Sweden.
+   j.conbuildmat.2009.08.038.                                              Von der Haar, C. and Marx, S. (2015). “Design aspects of concrete
+Delhomme, F., Thierry, R., Arrieta, B., and Limam, A. (2016). “Pullout         towers for wind turbines.” Journal of the South African Institution of
+   behavior of cast-in-place headed and bonded anchors with different          Civil Engineering, Vol. 57, No. 4, pp. 30-37, DOI: 10.17159/2309-
+   embedment depths.” Materials and Structures, Vol. 49, No. 5,                8775/2015/v57n4a4.
+
+
+
+
+                                                                     − 2982 −                                     KSCE Journal of Civil Engineering
+

@@ -1,0 +1,1161 @@
+Hindawi
+Advances in Civil Engineering
+Volume 2023, Article ID 1100725, 15 pages
+https://doi.org/10.1155/2023/1100725
+
+
+
+
+Research Article
+Fatigue Life Evaluation of Wind Turbine Tower Based on
+Measured Data
+
+          Yan Zhao           ,1,2 Xiaolu Li,3 Xinwu Wang,1,3 Jianqun Jiang,2 and Zhenyu Wang                                      2
+
+          1
+            School of Civil Engineering, Luoyang Institute of Science and Technology, Luoyang 471023, China
+          2
+            College of Civil Engineering and Architecture, Zhejiang University, Hangzhou 310058, China
+          3
+            International Joint Laboratory for New Type Civil Engineering Structures of Henan Province,
+          Luoyang Institute of Science and Technology, Luoyang 471023, China
+
+          Correspondence should be addressed to Zhenyu Wang; wzyu@zju.edu.cn
+
+          Received 8 February 2023; Revised 30 June 2023; Accepted 20 July 2023; Published 19 August 2023
+
+          Academic Editor: Xiao Sun
+
+          Copyright © 2023 Yan Zhao et al. This is an open access article distributed under the Creative Commons Attribution License,
+          which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.
+
+          Fatigue life is a crucial design factor which dictates the safe operation of the wind turbines, but it is inﬂuenced by uncertain factors
+          such as environmental loads, analytical models, material properties, and manufacturing methods. In this study, a 1.5 MW wind
+          turbine was monitored in operation to understand the fatigue mechanism and enhance wind turbine design. The inﬂuence of
+          different operating conditions on fatigue damage was analyzed by correlating strain monitoring data with supervisory control and
+          data acquisition (SCADA) data. Furthermore, a fatigue evaluation method based on measured strain data was proposed. Fatigue
+          damage increases with the increase of wind and rotation speed. More than 50% of the damage occurred at the rated rotation speed
+          state, the corresponding wind speed was greater than the rated wind speed and the pitch control system was active. The ﬁndings of
+          this study provide insights for investigating the real fatigue state of similar wind turbine towers and improving the return on
+          investment by closely estimating their service life.
+
+
+
+1. Introduction                                                            damping had a strong inﬂuence on dynamics of the supporting
+                                                                           structure. Hence, it is crucial to accurately determine the magni-
+Wind power has maintained its position as the fastest grow-                tude of aerodynamic damping. Bagbanci et al. [7] considered the
+ing renewable energy source worldwide in the past 20 years                 inﬂuence of environmental factors such as wind, wave, and cur-
+[1]. While there have been considerable advances in wind                   rent on the design load of a monopile offshore wind turbine
+power technology, there are also some challenges, such as the              structure during fatigue assessment. Kvittem and Moan [8]
+increasing of installed capacity and scale of wind turbines,               assessed the sensitivity of necessary simulation duration and
+they are more sensitive to dynamic loads, and vulnerability to
+                                                                           environmental conditions to the long-term fatigue damage of
+fatigue damage. Therefore, it is crucial to accurately predict
+                                                                           a 5 MW wind turbine and showed that the turbine experienced
+the actual fatigue damage of wind turbine structures, espe-
+                                                                           high-fatigue damage when it was in resonance. Hence, it is nec-
+cially fatigue performance of the welded joints.
+     Researchers have conducted extensive investigations on                essary to optimize the dynamic characteristics of the wind tur-
+fatigue assessment of the wind turbine structures. Repetto and             bine to avoid rapid increase in fatigue damage of the supporting
+Solari [2–5] explored the dynamic response and wind-induced                structure. Stavridou et al. [9] demonstrated that circumferential
+fatigue of a highly ﬂexible structure under wind load and pro-             welds between tower subparts and between the tower and con-
+posed a method for calculating the fatigue life. However, they did         necting ﬂanges were susceptible to the fatigue damage. The
+not consider the distribution of wind speed and direction during           fatigue of two towers with the same height and different thick-
+fatigue analysis. Tempel [6] used the frequency domain method              ness distributions was investigated using the numerical and ana-
+to evaluate the fatigue life of the supporting structure of a mono-        lytical methods, and the results showed that the thickness of the
+pile offshore wind turbine and revealed that aerodynamic                   tower was a decisive factor of the fatigue life.
+2                                                                                                   Advances in Civil Engineering
+
+    All these studies were based on the numerical models.               In this study, the fatigue life of a wind turbine tower
+However, the accuracy of stress time history considerably           structure was evaluated using long-term SCADA and strain
+inﬂuences the fatigue evaluation results. A small change in         monitoring data. First, wind speed, wind direction, rotation
+the stress range can produce signiﬁcantly different fatigue         speed, and blade pitch angle of the wind turbine were statis-
+assessment results because the fatigue life is at least inversely   tically analyzed, according to which the operating conditions
+proportional to the third power of the stress range [10–12].        of the wind turbine were divided into seven categories.
+At the same time, considering all inﬂuencing factors in the         Second, rainﬂow counting algorithm was used to convert
+traditional simulation analysis is time consuming. By instal-       the stress time history into stress spectrum, and the hourly
+ling sensors on the structural unit, measuring and recording        fatigue damage throughout the monitoring period was cal-
+the actual stress of the structure can provide reliable data for    culated based on the Palmgren–Miner damage accumulation
+fatigue assessment, accurately estimate the actual damage           rule. The inﬂuence of wind speed, rotation speed, and blade
+state of the structure, and reduce the periodic inspection of       pitch angle on fatigue damage was also analyzed. Finally, the
+the structure to a certain extent [13, 14].                         maximum and average hourly damage matrices were estab-
+    The studies on fatigue assessment of the wind turbine           lished according to the joint probability distribution of wind
+structure based on long-term monitoring data are limited.           speed and direction, and fatigue life was analyzed.
+Pollino and Huckelbridge [15] used strain gauges to monitor             This paper is organized as follows: Section 2 gives the
+a 100 kW wind turbine for approximately 1 year and con-             basic theory of fatigue damage calculation for the wind tur-
+cluded that the fatigue life of the wind turbine support struc-     bine tower, including S–N curve, extrapolation of hot spot
+ture was signiﬁcantly higher than 20 years. Weijtens et al.         stress, mean stress correction model, and Palmgreen–Miner
+[16] measured the loads of two 3 MW wind turbines in the            linear accumulation rule. Section 3 describes the turbine and
+Northwind offshore wind farm and analyzed the relationship          the monitoring plan. Making use of the monitoring data,
+between environmental and operation conditions and fatigue          Section 4 summarizes the operational and environmental
+damage. Loraux [17] monitored the structural vibration of a         conditions of the monitoring wind turbine, and categorizes
+Vestas V90–2.0 MW wind turbine in Switzerland for 3 years,          the operating states. The variation of measured stress data
+they combined the monitoring data with supervisory control          with average wind speed is also analyzed and discussed.
+and data acquisition (SCADA) data to evaluate the fatigue           Section 5 proposes a fatigue life assessment process based on
+safety of the tower and provide a realistic estimate of fatigue     monitoring data. First, Section 5.1 determines the stress con-
+duration. Mai et al. [18] used measured strain to link the          centration factor (SCF) at the weld near the sensor based on a
+oceanographic data with the fatigue damage, and the Bayes-          reﬁned local ﬁnite element model. Section 5.2 discusses the
+ian method was used to update the joint distribution of the         inﬂuence of environment/operation conditions on fatigue
+oceanographic data. Consequently, the remaining fatigue life        damage. Section 5.3 provides the fatigue life assessment process
+of the support structure can be updated, and eventually pro-        and constructs a damage matrices in Section 5.4. Section 5.5
+vide decision support for the operation of wind turbines.           evaluates the fatigue life of the wind turbine tower. Finally, the
+These monitoring activities enable more accurate structural         main conclusions are summarized in Section 6.
+engineering methods for the safety veriﬁcation of wind tur-
+bine structures. However, different environments and struc-         2. Fatigue Calculation Method
+tural types have varied effects on fatigue damage, thus, more
+                                                                    2.1. S–N Curve. The fatigue resistance of structures is typically
+wind ﬁelds should be monitored to obtain a better under-
+                                                                    illustrated by the S–N curve, it was determined via a series of
+standing of the relationship between fatigue damage and
+                                                                    fatigue tests on specimens. Parameters of S–N curve are dif-
+operational factors. In addition to the wind turbine support
+                                                                    ferent in the fatigue assessment due to diverse structural
+structures, studies on the fatigue assessment and residual life
+                                                                    forms and material properties. International wind turbine
+prediction of steel structure bridges based on ﬁeld measure-
+                                                                    design standards International Electrotechnical Commission
+ment can be used for reference. Xu et al. [19] analyzed the
+                                                                    (IEC) [21] and Det Norske Veritas and and Germanischer
+wind-induced fatigue of Qingma bridge. Joint probability
+                                                                    Lloyd (DNVGL) [22] provide guidance for the calculation
+density function of wind speed and direction was established
+                                                                    of fatigue life. As presented in DNVGL [22], different S–N
+according to data collected by the monitoring system. Then,
+                                                                    curves are used to evaluate the fatigue capacity of various
+the stress characteristics of the hot spot under different wind
+                                                                    welded joints in wind turbines. The S–N curve is expressed
+speeds and directions were analyzed using the ﬁnite element         as follows:
+model, the fatigue damage model based on continuous damage
+mechanics was used to calculate the fatigue damage at the hot                                          k 
+spot. Ni et al. [20] and Ye [11] monitored the dynamic strain of                log N ¼ log a − m log Δσ treft ;                  ð1Þ
+Qingma bridge for a long time. Considering the similarity of
+stress spectrum characteristics under normal trafﬁc and wind
+conditions and the differences during typhoon weather, the          where Δσ is the stress range; N is the predicted number of
+standard daily stress spectrum considering the inﬂuence of          cycles corresponding to fatigue failure for the stress range
+trafﬁc load and typhoon weather was established, and thus           Δσ; m is the negative inverse slope of the S–N curve in the
+the fatigue life of Qingma bridge was evaluated via Miner’s         double-logarithmic coordinate; log a is the intercept on the
+linear cumulative damage method.                                    log N axis; t is the thickness through which a crack will most
+Advances in Civil Engineering                                                                                                                                      3
+
+                                                                                                   Stress
+likely grow; tref is the reference thickness; and k is the thick-                                                Notch stress
+ness exponent on fatigue strength.
+    In this study, the D-type bilinear S–N curve was used for                                                             Hot spot stress
+the fatigue calculations. If the structure conforms to the S–N
+                                                                                                                                                 Surface stress
+curve recommended by other standards, then these stan-
+dards can also be used if the S–N curve comprehensively
+considers the contribution of all related damage.
+                                                                                                                x1           x2             x3
+2.2. Extrapolation of Hot Spot Stress. The ﬂange of the wind
+turbine is welded by the large diameter cylinder wall and
+ﬂange plate, which is a typical plate weld. For the fatigue                               Flange
+life evaluation of welded structures, the hot spot stress anal-
+ysis shall be carried out, and take the hot spot stress range                                                        Fillet weld
+at the position where fatigue failure is most likely to occur as
+the design basis [23]. However, it is impossible to measure
+the hot spot stress at the ﬂange weld, and only the nominal
+                                                                                t                                            Tower wall
+stress at a certain distance from the weld toe can be measured
+because of limitations of sensor installation conditions [12].
+Therefore, it is crucial to calculate the SCF at the weld
+between the tower and ﬂange plate and convert the measured                     FIGURE 1: Calculation principle of surface extrapolation method [22].
+nominal stress to the hot spot stress at the weld.
+     The stress concentration at the weld toe is generally
+assumed to be composed of two parts, namely, structural stress                      Fixed-point method:
+concentration caused by geometric discontinuity between the
+entire structure and the joint, and stress concentration caused                                             σ h ¼ 1:12σ 0:5t :                                    ð2Þ
+by notches (such as defects, cracks, notches, etc.) of the weld
+itself. When the hot spot stress method is used, only the struc-
+tural stress concentration needs to be considered, the notch                        Linear extrapolation method:
+effect due to the weld is included in the S–N curve [22, 24].
+     Determining the actual value of hot spot stress at the                                                 x2 σ s ðx1 Þ − x1 σ s ðx2 Þ
+weld toe is difﬁcult because of the complex conﬁguration                                             σh ¼                               :                         ð3Þ
+                                                                                                                     x2 − x1
+and stress states at welded joints. It can be estimated by
+extrapolating the stress at adjacent points far from the
+weld. The calculation methods are as follows:                                       Quadratic extrapolation method:
+
+
+                                     x2 x3 ðx3 − x2 Þσ s ðx1 Þ þ x1 x3 ðx1 − x3 Þσ s ðx2 Þ þ x1 x2 ðx2 − x1 Þσ s ðx3 Þ
+                              σh ¼                                                                                     ;                                          ð4Þ
+                                                x2 x3 ðx3 − x2 Þ þ x1 x3 ðx1 − x3 Þ þ x1 x2 ðx2 − x1 Þ
+
+
+where σ h is the hot spot stress value at the weld toe; x1 ; x2 ; x3           surface is stable [22]. DNVGL and International Institute of
+are extracting points at a certain distance from the weld toe,                 Welding (IIW) both provide the location of extracting points
+as shown in Figure 1; σ s ðx1 Þ; σ s ðx2 Þ; σ s ðx3 Þ are the structural       for the surface extrapolation method [22, 23].
+stress values at the extracting points x1 ; x2 ; x3 , respectively.
+    When the surface extrapolation method is used to calcu-                    2.3. Correction of Mean Stress. The mean value of the stress
+late the hot spot stress, identifying appropriate extracting                   cycle is ignored in many cases of fatigue analysis of wind
+points is crucial. These extracting points must, theoretically,                turbine support structures. High-mean stress corresponds to
+be outside the inﬂuence area of the notch effect but sufﬁ-                     serious fatigue damage and short fatigue life at the same
+ciently close to the weld toe to ensure that the stress concen-                stress range. Therefore, many mean stress correction models,
+tration arising from the structure can be captured [22]. In                    including Gerber, Goodman, and Soderberg models, have
+plate or shell structures, typically, hot spots are of three types:            been proposed [25, 26]. Among them, the Goodman model
+(a) weld toe located on the plate surface at an ending attach-                 is the most commonly used and expressed as follows:
+ment, (b) weld toe around the plate edge of an ending attach-                                                           Δσ
+                                                                                                            Δσ 0 ¼             ;                                  ð5Þ
+ment, and (c) weld toes on both the mother plate and the                                                              1 − σσmt
+attachment surface. The ﬂange weld belongs to the “c” type
+hot spot, and the inﬂuence area of the stress concentration                    where Δσ is the stress range at non-zero mean stress σ m ; Δσ 0
+near the hot spot is generally less than 0.5t (where t is the                  is the equivalent stress range at zero mean stress; σ m is the
+plate thickness). Beyond this area, stress change on the plate                 mean stress, and σ t is the ultimate tensile strength of steel.
+4                                                                                                             Advances in Civil Engineering
+
+                                                                                                          N
+                             Strain gauges
+
+
+                 400
+                                                                                                  330°
+                 3,300
+
+                                                                                                                            Door
+                                                                                                                    90°
+
+
+                            5,000                  6,000                 5,000                   210°
+
+
+                                                                                           Strain gauge
+                                                  ðaÞ                                                      ðbÞ
+FIGURE 2: Installation position of strain gauge. (a) Installation height of strain gauge (unit: mm). (b) Installation orientation of strain gauge.
+
+
+2.4. Fatigue Damage Accumulation. Stress time history com-                 wind turbine is 17.3 rpm, and the grid-connected rotation
+prises many stress pulses because of the randomness and                    speed is 9 rpm. Power generation increases gradually when
+dynamic characteristics of loads acting on wind turbines.                  the wind speed changes from Vcut-in to Vrated. Power is stable
+Rainﬂow counting algorithm is necessary to ease the calcu-                 at around 1.5 MW when the wind speed is greater than
+lation burden and simplify the complex and irregular mea-                  Vrated. Blades will be feathered to avoid damage caused by
+sured stress time history into the stress spectrum, which can              excessive wind load when the 10 min mean wind speed
+reﬂect the real situation. The stress spectrum consists of two             exceeds Vcutout.
+elements, namely, stress range (S) and its corresponding                       Modern wind turbines are typically equipped with a
+number of cycles (N).                                                      SCADA system. It comprises a microprocessor and several
+      The number of cycles corresponding to different stress               sensors, and remotely connected to the main control room,
+amplitudes can be calculated after the rainﬂow algorithm                   which is used to control the operation and monitor the per-
+is applied to the stress time history. According to the                    formance of the wind turbine. The SCADA system collects
+Palmgren–Miner damage accumulation rule, for a series of                   and records the operation data of the wind turbine, including
+stress ranges Δσ 1 ; Δσ 2 ; Δσ 3 , …, the number of cycles to fail-        wind speed, wind direction, rotation speed, nacelle azimuth,
+ure is N1 ; N2 ; N3 , …, and the actual number of cycles is n1 ;           generator speed, blade pitch angle, and power generation, at
+ n2 ; n3 , …. The damage component Di is calculated as the                 a speciﬁc sampling frequency (1/7 Hz in this study) during
+actual number of cycles for each stress amplitude divided by               the monitoring period. These data are used by the control
+the number of cycles at which fatigue failure occurred under               system to manage the operations of the turbine, such as
+that stress amplitude. Damage components generated by                      startup and shutdown of rotor, emergency shutdown, adjust-
+each cyclic load are assumed independent of each other,                    ment of nacelle azimuth, and blade pitch angle.
+and the accumulated fatigue damage D is the linear superpo-                    Three vertical strain gauges are arranged on the inner
+sition of damage components generated by each cyclic load                  wall of the foundation ring of the wind turbine. These strain
+and expressed as follows [22]:                                             gauges are installed 100 mm downward from the ﬂange.
+                                                                           Strain data were measured at 90°, 210°, and 330°, as shown
+                                 n1 n2 n3       n                          in Figure 2. However, the strain gauge at 90° was damaged,
+D ¼ D 1 þ D 2 þ D3 þ ⋯ ¼            þ  þ   þ⋯¼∑ i ;
+                                 N 1 N2 N3    i N i                        and these data are unavailable. In addition, measured strain
+                                                                  ð6Þ      data were simply caused by the external wind load because
+                                                                           the strain gauge was installed 2 years after the normal oper-
+                                                                           ation of the wind turbine.
+where ni is the actual number of cycles under the i-th level
+stress range; Ni is the allowable number of cycles when                    4. Analysis of Monitoring Data
+fatigue failure occurs under the i-th level stress range, which
+can be determined from the S–N curve; i is the total number                4.1. Statistics and Classiﬁcation of Operating Conditions. The
+of stress ranges corresponding to all operating conditions                 wind turbine presents different characteristics in various
+involved in the fatigue calculation.                                       operating states. Understanding statistical characteristics of
+                                                                           wind turbine operation and wind conditions using SCADA
+3. Monitoring Plan                                                         data and reasonably classifying its operating conditions is
+                                                                           crucial to master the inﬂuence of wind speed, rotation speed,
+The rated power of the wind turbine is 1.5 MW and the hub                  and blade pitch angle on fatigue damage. Therefore, operation
+height is 70 m in this study. Cut-in and cutout wind speeds                parameters, such as wind speed, rotation speed, blade pitch
+(Vcut-in and Vcutout) of the wind turbine are 3 and 22 m/s                 angle, and nacelle azimuth angle, were statistically analyzed
+(average wind speed of 10 min), respectively, and the rated                in this section using SCADA data of the monitoring wind
+wind speed (Vrated) is 11 m/s. The rated rotation speed of the             turbine.
+Advances in Civil Engineering                                                                                                                                                                                                                              5
+
+                               25                                                                                                                                                7
+                                                                                                                                                                                 6
+
+
+
+
+                                                                                                                                                     Occurring probability (%)
+                               20
+           Wind speed (m/s)
+
+
+
+
+                                                                                                                                                                                 5
+                               15
+                                                                                                                                                                                 4
+
+                               10                                                                                                                                                3
+                                                                                                                                                                                 2
+                                   5
+                                                                                                                                                                                 1
+                                   0                                                                                                                                             0
+                                       02/15
+
+                                                 03/15
+
+                                                           05/15
+
+                                                                     07/15
+
+                                                                               08/15
+
+                                                                                         10/15
+
+                                                                                                   11/15
+
+                                                                                                             01/16
+
+                                                                                                                       03/16
+
+                                                                                                                                 04/16
+                                                                                                                                                                                      0   2       4   6   8    10 12 14 16           18    20    22   24
+                                                                                                                                                                                                              Wind speed (m/s)
+                                                                                     Time
+                                                                              ðaÞ                                                                                                                                 ðbÞ
+FIGURE 3: Variations of wind speed and corresponding statistical analysis during monitoring period. (a) Monitoring data of wind speed.
+(b) Occurrence probability of wind speed.
+
+                                                                                                                                                                                 25
+
+                              18
+                                                                                                                                         Occurrence probability (%)
+                                                                                                                                                                                 20
+                              16
+ Rotation speed (rpm)
+
+
+
+
+                              14
+                              12                                                                                                                                                 15
+                              10
+                               8                                                                                                                                                 10
+                               6
+                               4                                                                                                                                                 5
+                               2
+                               0                                                                                                                                                 0
+                                   02/15
+
+                                               03/15
+
+                                                         05/15
+
+                                                                   07/15
+
+                                                                             08/15
+
+                                                                                       10/15
+
+                                                                                                 11/15
+
+                                                                                                           01/16
+
+                                                                                                                     03/16
+
+                                                                                                                               04/16
+
+
+
+
+                                                                                                                                                                                      0       2       4   6       8      10     12    14        16    18
+                                                                                                                                                                                                              Rotation speed (rpm)
+                                                                                Time
+                                                                             ðaÞ                                                                                                                                  ðbÞ
+FIGURE 4: Variations of rotation speed and corresponding statistical analysis during monitoring period. (a) Monitoring data of rotation speed.
+(b) Occurrence probability of rotation speed.
+
+
+
+    Figures 3–6 statistically present the wind speed, rotation                                                                                    3 m/s. The pitch angle at standby state was around 50°, and
+speed, blade pitch angle, and nacelle azimuth angle. As                                                                                           its occurrence probability was 16.3%. The wind speed corre-
+shown in Figure 3, the wind speed varied in the range of                                                                                          sponding to both the shutdown and standby states of the
+0–23.52 m/s, mainly in the range of 2–8 m/s. As shown in                                                                                          turbine was less than Vcut-in. The nacelle rotated around
+Figure 4, the maximum rotation speed of the rotor was                                                                                             the tower axis with the wind direction when the wind turbine
+18.38 rpm, about 30.42% of rotation speed was in the range                                                                                        was operational to align with the wind direction, obtaining
+of 9.5–10.5 rpm, while 24% reached the rated speed of                                                                                             the maximum wind energy. Therefore, as shown in Figure 6,
+17.3 rpm. As shown in Figure 5, the probability of the pitch                                                                                      the nacelle azimuth angle changes with the wind direction
+angle in the range of 0°–20° was 78%. The pitch angle of the                                                                                      in the range of 0°–360°. The probability of the nacelle azi-
+blade was 0° when the wind speed was less than Vrated, which                                                                                      muth angles around −20°–20° and 220°–260° was higher
+helped in maximizing the windward area of the rotor and                                                                                           than that of other azimuth angles, with the former being
+generate more energy. The pitch angle of the blade was                                                                                            the main wind direction (MWD) and the latter being the
+adjusted in the range of 0°–20° when the wind speed was                                                                                           secondary wind direction (SWD).
+greater than Vrated to maintain the rotation speed at the rated                                                                                        The operation state of the wind turbine studied in this
+rotation speed. The probability of the pitch angle near 88°                                                                                       paper was then divided into seven load cases (LCs) according
+was 4.45%, and the wind turbine was in shutdown state with                                                                                        to operational characteristics in Figures 3–6, as presented in
+the blades were feathered. After the shutdown program was                                                                                         Table 1 [27]. The values presented in bold in Table 1 are
+completed without fault, the turbine entered the standby                                                                                          prerequisite for every operational state, while values with
+state, so that the turbine can be put into operation and gen-                                                                                     normal font represent the range of operational parameters
+erate power quickly when the wind speed was greater than                                                                                          under these LCs.
+6                                                                                                                                                                                                       Advances in Civil Engineering
+                                                                                                                                                                      70
+                                 100
+                                                                                                                                                                      60
+
+
+
+
+                                                                                                                                         Occurrence probability (%)
+                                  90
+                                  80                                                                                                                                  50
+                                  70
+ Pitch angle (°)
+
+
+
+
+                                  60                                                                                                                                  40
+                                  50
+                                                                                                                                                                      30
+                                  40
+                                  30                                                                                                                                  20
+                                  20
+                                                                                                                                                                      10
+                                  10
+                                   0                                                                                                                                   0
+                                       02/15
+
+                                                 03/15
+
+                                                           05/15
+
+                                                                     07/15
+
+                                                                               08/15
+
+                                                                                          10/15
+
+                                                                                                      11/15
+
+                                                                                                               01/16
+
+                                                                                                                       03/16
+
+                                                                                                                                 04/16
+                                                                                                                                                                            0   10        20   30     40     50       60   70     80    90
+                                                                                                                                                                                                    Pitch angle (°)
+                                                                               Time
+                                                                               ðaÞ                                                                                                                    ðbÞ
+FIGURE 5: Variations of pitch angle and corresponding statistical analysis during monitoring period. (a) Monitoring data of pitch angle.
+(b) Occurrence probability of pitch angle.
+
+
+                                 360                                                                                                                                   1
+
+                                 300
+                                                                                                                                          Occurring probability (%)
+     Nacelle azimuth angle (°)
+
+
+
+
+                                                                                                                                                                      0.8
+                                 240
+                                                                                                                                                                      0.6
+                                 180
+                                                                                                                                                                      0.4
+                                 120
+                                                                                                                                                                      0.2
+                                  60
+
+                                   0                                                                                                                                   0
+                                                                                                                                                                            0        60        120        180      240      300        360
+                                         02/15
+
+                                                   03/15
+
+                                                             05/15
+
+                                                                       07/15
+
+                                                                                08/15
+
+                                                                                              10/15
+
+                                                                                                       11/15
+
+                                                                                                               01/16
+
+                                                                                                                       03/16
+
+                                                                                                                                 04/16
+
+
+
+
+                                                                                                                                                                                               Nacelle azimuth angle (°)
+                                                                                       Time
+                                                                               ðaÞ                                                                                                                    ðbÞ
+FIGURE 6: Variations of nacelle azimuth angle and corresponding statistical analysis during monitoring period. (a) Monitoring data of nacelle
+azimuth angle. (b) Occurrence probability of nacelle azimuth angle.
+
+
+                                                                                          TABLE 1: Deﬁnition of operational states for wind turbines.
+LC                                                            Operational state                                                Wind speed (m/s)                                            Rotation speed (rpm)             Pitch angle (°)
+LC 1                                                             Shutdown                                                           0–22                                                            0–3                         75–90
+LC 2                                                              Standby                                                           0–10                                                            0–3                         49–50
+LC 3                                                Transition of startup and shutdown                                               0–3                                                            2–9                           Æ0
+LC 4                                                  Grid-connected rotation speed                                                  1–6                                                           9–10.5                         Æ0
+LC 5                                                      Medium rotation speed                                                      3–9                                                          10.5–16                         Æ0
+LC 6                                                        Rated rotation speed                                                      11                                                         16–18.38                        0–20
+LC 7                                                         Cutout wind speed                                                       >22                                                            0–4                         75–90
+
+
+
+    LC 1 was the shutdown state. At this time, the pitch angle                                                                                     rotation speed and had no power output. The rotation speed
+was in the range of 75°–90°, the rotation speed was 0–3 rpm,                                                                                       varied freely from 0 to 3 rpm, the pitch angle was around 50°,
+and the wind turbine was in the idling state. Due to the                                                                                           and the rotor brake was released so that wind turbine can be
+possibility of shutdown in many cases, such as manual shut-                                                                                        put into operation and generate power quickly when the
+down and troubleshooting, the corresponding wind speed                                                                                             wind speed was greater than 3 m/s.
+range was relatively wide.                                                                                                                             LC 3 was the transition condition of startup and shut-
+    The wind turbine entered the standby state (LC 2) after                                                                                        down, which referred to the startup process of wind turbine
+the shutdown program was completed successfully and there                                                                                          from standby state (LC 2) to grid-connected power genera-
+is no fault. At this time, the wind turbine operated at a slow                                                                                     tion, or the shutdown process from grid-connected power
+Advances in Civil Engineering                                                                                                                       7
+
+                                                                                          50
+generation to shutdown state (LC 1). The rotation speed and
+wind speed were in the range of 2–9 rpm and 0–4 m/s,
+respectively. The pitch angle was around 0° so that the wind-                             40
+
+
+
+
+                                                                  Measured stress (MPa)
+ward area of blades was maximized and the most wind
+energy was obtained.                                                                      30
+    LC 4 was the grid-connected rotation speed condition.
+The rotation speed of wind turbine will increase gradually                                20
+after the startup process. When power generation of wind
+turbine was integrated into electricity grid, the correspond-                             10
+ing rotation speed was called grid-connected rotation speed.
+When the turbine shut down, the rotation speed gradually
+                                                                                          0
+decreased and also passed through the grid-connection rota-                                    0      2   4   6    8      10   12    14   16   18   20
+tion speed. The rotation speed corresponding to this opera-                                                       Wind speed (m/s)
+tional state was within the range of 9–10.5 rpm. To ensure
+                                                                                                   LC 1                LC 5
+the maximum windward area of the blades, the pitch angle
+                                                                                                   LC 2                LC 6
+was always maintained around 0°.                                                                   LC 3                LC 7
+    LC 5 was the medium rotation speed condition, where                                            LC 4
+the range of corresponding rotation speed was 10.5–16 rpm.
+At this time, the wind speed was lower than the rated wind        FIGURE 7: Relationship between measured stress of tower bottom
+speed (11 m/s), and the rotation speed was lower than the         and average wind speed.
+rated rotation speed too. The blade pitch angle was around 0°
+to ensure the maximum utilization of wind energy.                 turbine was affected by the startup and shutdown of the rotor
+    When the wind speed was greater than Vrated, the rota-        and yaw motion, etc. The stress at the tower bottom reached
+tion speed reached the rated rotation speed of 17.3 rpm and       the maximum value of 48.13 MPa at the rated wind speed of
+then stabilized around this value, which was the rated rota-      11 m/s. When the wind speed was higher than Vrated, the
+tion speed state (LC 6). Under this operational state, the        stress at the tower bottom was stable in the range of
+pitch angle increased from 0° to 20° with the increase of         33–48 MPa. This was because the pitch control system was
+wind speed to adjust the windward area of the rotor, ensure       active, and the pitch angle was adjusted in the range of
+that a constant load acted on the rotor, maintain the rotation    0°–20° when the wind speed was higher than Vrated to ensure
+speed close to the rated rotation speed, and ensure the maxi-     the stability of wind load on the rotor. Points of different
+mum electric energy output.                                       colors in Figure 7 corresponding to different operation states
+    LC 7 was the cutout wind speed condition. At this time,       were summarized in Table 1.
+the average wind speed in 10 min was greater than 22 m/s, the
+wind turbine entered a feathered shutdown state, The pitch        5. Fatigue Life Assessment Based on
+angle was around 90°, the rotation speed was 0–4 rpm. The            Monitoring Data
+wind turbine will idle to avoid potential damage of the struc-
+ture caused by excessive wind load.                               5.1. Calculation of Stress Concentration Factor. For several
+    The relationship between different operational parame-        typical welded joints, researchers have used different ﬁnite
+ters and fatigue damage of the wind turbine are discussed in      element software programs, simulation methods, element
+detail on the basis of these seven LCs.                           types, and mesh sizes to perform the comprehensive com-
+                                                                  parative analyses of theoretical and measured values of the
+4.2. Stress Monitoring. Measured strain data were considered      hot spot stress and fatigue test results of local and global
+to be caused only by the external wind load because the strain    models. They have also presented suggestions for the ﬁnite
+gauges on the tower bottom foundation ring were installed 2       element calculation method based on surface extrapolation
+years after the wind turbine became operational. The pres-        [24, 28].
+sure stress at the bottom of the tower caused by self-weight of       As shown in Figure 8, a half structure model of the foun-
+the wind turbine was approximately 5.8 MPa, and the stress        dation and tower was established according to the symmet-
+caused by the eccentricity of the rotor was approximately         rical relation of structure and load, and a symmetrical
+1.8 MPa.                                                          boundary was added on the symmetrical surface of the struc-
+    Figure 7 shows how the measured stress data changed           ture. The tower and foundation ring ﬂange made of Q345
+with average wind speed during the monitoring period.             steel had a yield strength of 345 MPa, elastic modulus of
+Points of various colors in Figure 7 corresponding to differ-     210 GPA, and Poisson’s ratio of 0.3. The foundation and
+ent operation states were summarized in Table 1. The stress       tower extended outward to a certain length, which helped
+at the tower bottom in the fore–aft (FA) direction ﬁrst           to eliminate the inﬂuence of the loading point at an upper
+increased and then stabilized with the increase of the average    location and the consolidation boundary at a lower location
+wind speed. In the range of 0–4 m/s (including LCs 1–3), the      on the ﬂange stress. A reference point (Figure 8) was created
+measured stress was highly discrete. This was because the         at the center of the upper end face of the tower. All nodes on
+wind speed was near the cut-in wind speed, and the wind           the upper end face of the tower wall were coupled with full
+8                                                                                                   Advances in Civil Engineering
+
+
+
+
+                                    FIGURE 8: Half structure model of the foundation and tower.
+
+
+
+
+                                                                                                             S, Mises
+                                                                                                             (Avg : 75%)
+                                                                                                                  +1.235e + 02
+                                                                                                                  +8.000e + 01
+                                                                                                                  +7.334e + 01
+                                                                                                                  +6.669e + 01
+                                                                                                                  +6.003e + 01
+                                                                                                                  +5.338e + 01
+                                                                                                                  +4.672e + 01
+                                                                                                                  +4.007e + 01
+                                                                                                                  +3.341e + 01
+                                                                                                                  +2.676e + 01
+                                                                                                                  +2.010e + 01
+                                                                                                                  +1.344e + 01
+                                                                                                                  +6.788e + 00
+                                                                                                                  +1.329e – 01
+
+                                 FIGURE 9: Maximum principal stress diagram of ﬂange (unit: MPa).
+
+
+
+degrees of freedom of the reference point, and the bending         different mesh precision values were compared to eliminate
+moment was directly applied to the reference point and             the calculation errors caused by the mesh size.
+transmitted to the tower and foundation. Ties were used to             Normal operation load of the wind turbine was used for
+connect upper and lower ﬂange plates as well as the lower          analysis. The vertical force was −2,648.8 kN, horizontal force
+end of the tower wall and the top of the foundation ring. The      was 358.2 kN, bending moment was 22,868 kN·m, and torque
+top surface of the foundation ring and the lower ﬂange plate       was 373.9 kN·m. The hot spot stress near the ﬂange weld was
+was the main surface, and the bottom surface of the lower          obtained via the ﬁnite element method, as shown in Figure 9.
+tower wall and the upper ﬂange plate was the secondary                 The following SCF KSCF was calculated using the stress
+surface. Normal behavior of the contact surface was hard           value at the location where the strain sensor was installed
+contact, tangential behavior was deﬁned as Coulomb fric-           (100 mm downward from the ﬂange) as the reference stress:
+tion, and the friction coefﬁcient was 0.35. The contact effect
+                                                                                                      σh
+between the foundation ring and concrete was considered,                                     KSCF ¼      ;                       ð7Þ
+and the friction coefﬁcient was set to 0.4. The shell element                                         σr
+(S4R) was used to mesh the tower and foundation ring, and
+the solid element (C3D4) was used to simulate the concrete.        where σ h is the hot spot stress and σ r is the reference stress.
+The mesh was reﬁned around the weld, and the results of            The hot spot stress and corresponding SCF KSCF at the weld
+Advances in Civil Engineering                                                                                                                                                                             9
+
+                                                         TABLE 2: Stress concentration factor KSCF .
+                                                                Normal operating condition                                                                           Extreme load condition
+Extrapolation method
+                                                            σ h (MPa)                    KSCF                                                                   σ h (MPa)                   KSCF
+Fixed-point method                                             78.42                     1.25                                                                     168.25                    1.21
+Linear extrapolation method                                    70.52                     1.12                                                                     150.65                    1.08
+Quadratic extrapolation method                                 69.75                     1.11                                                                     149.07                    1.07
+
+
+
+
+            4                                                                                                               5
+            5
+
+
+
+
+                                                                                               Occurrence probability (%)
+            6                                                                                                               4
+
+            7
+                                                                                                                            3
+–log (D)
+
+
+
+
+            8
+            9                                                                                                               2
+           10
+           11                                                                                                               1
+           12
+                                                                                                                            0
+           13                                                                                                                13      12    11      10          9      8        7        6        5    4
+                0     200      400       600       800      1,000     1,200
+                                Monitoring period (hr)                                                                                                         –log (D)
+
+                    Hourly damage           99% damage                                                                               50% damage
+                    50% damage                                                                                                       99% damage
+
+           FIGURE 10: Hourly fatigue damage during monitoring period.                                           FIGURE 11: Occurrence probability of hourly fatigue damage.
+
+
+
+obtained on the basis of ﬁxed-point, linear extrapolation, and                                                     100
+quadratic extrapolation methods are listed in Table 2.
+                                                                                 Cumulated damage (%)
+
+
+
+
+                                                                                                                            80
+5.2. Inﬂuence of Environment/Operation Conditions on
+Fatigue Damage. The strain time history during the moni-                                                                    60
+toring period was transformed into the hot spot stress time
+                                                                                                                            40
+history and hourly fatigue damage at the welded joint was
+calculated using the rainﬂow counting algorithm and the P–M
+                                                                                                                            20
+damage accumulation rule to understand the inﬂuence of
+different operation conditions on fatigue damage. Figure 10                                                                  0
+presents the hourly fatigue damage during the monitoring                                                                         0   10   20      30      40      50      60       70       80   90   100
+period (50 days, sampling frequency of 25 Hz). Points above                                                                                            Monitoring period (%)
+the dotted blue line represent 99% of the total cumulated                                                                            Cumulated damage                     99% damage
+damage, while those above the solid red line account for                                                                             50% damage
+50% of the total cumulated damage. It can be seen that a
+few large wind speeds have a great inﬂuence on the fatigue                       FIGURE 12: Percentage of cumulated damage over monitoring time.
+damage of the structure.
+    Figure 11 illustrates the probability distribution of hourly                 retain sufﬁcient power generation by detecting a few time
+fatigue damage. The peak value (−log(D) = 12.6) on the left                      periods that cause serious structural damage.
+represents the hourly time series with nearly no damage. At                          The damage mainly occurred during periods of high-
+this time, the wind turbine was in shutdown or standby                           wind speed. The inﬂuence of wind speed, rotation speed,
+states. The right side of the solid red line and the dotted                      and pitch angle on the hourly damage was also analyzed to
+blue line represent damage values greater than 50% and                           examine the cause of this phenomenon (Figures 13–15).
+99% of the total damage, respectively.                                           Points of the different colors in Figures 13–15 corresponding
+    Figure 12 shows the percentage of hourly time series                         to the different operation states were summarized in Table 1.
+required to reach a certain damage level. The results demon-                         Figure 13 shows that the hourly damage increased with
+strated that 50% of the total damage was achieved within                         the increase of wind speed. More than 50% of damage
+5.02% of the monitoring time, and 99% of the total damage                        occurred between Vrated (11 m/s) and Vcutout (22 m/s). The
+was achieved within 36.9% of the monitoring time. There-                         corresponding −log(D) was 5.25–5.79, and the damage value
+fore, it can signiﬁcantly reduce the total fatigue damage and                    range was 5.63E-6–1.62E-6. A very large number of hourly
+10                                                                                                                       Advances in Civil Engineering
+
+              4                                                                              4
+              5                                                                              5
+              6                                                                              6
+              7                                                                              7
+
+
+
+
+                                                                                 –log (D)
+  –log (D)
+
+
+
+
+              8                                                                              8
+              9                                                                              9
+             10                                                                             10
+             11                                                                             11
+             12                                                                             12
+             13                                                                             13
+                  0   2    4       6       8    10      12   14   16   18   20               –10   0   10       20   30     40     50   60   70   80   90
+                                         Wind speed (m/s)                                                             Pitch angle (°)
+                                                                                                   50% damage                  LC 4
+                      50% damage                 LC 4                                              99% damage                  LC 5
+                      99% damage                 LC 5                                              LC 1                        LC 6
+                      LC 1                       LC 6                                              LC 2                        LC 7
+                      LC 2                       LC 7                                              LC 3
+                      LC 3
+                                                                                 FIGURE 15: Relationship between hourly fatigue damage and pitch
+FIGURE 13: Relationship between hourly fatigue damage and wind                   angle.
+speed.
+
+
+              4                                                                  adjusted to maintain the rotation speed at the rated rotation
+              5                                                                  speed and ensure maximum power output. Several red points
+              6                                                                  above the dotted blue line with a pitch angle higher than 20°
+              7                                                                  corresponded to the startup and shutdown processes of the
+                                                                                 wind turbine.
+–log (D)
+
+
+
+
+              8
+                                                                                     More than 50% of the damage occurred when the wind
+              9
+                                                                                 speed was greater than Vrated at rated rotation speed and the
+             10
+                                                                                 pitch control system varied from 0° to 20°. The rated wind
+             11                                                                  speed state accounted for a small proportion of the monitor-
+             12                                                                  ing period despite it being the main cause of fatigue damage.
+             13                                                                  Emergency shutdowns and transition conditions of startup
+                  0   2     4          6      8      10    12     14   16   18
+                                                                                 and shutdown were also periods of serious damage, but their
+                                        Rotation speed (rpm)
+                                                                                 probability of occurrence was very low and contribution to
+                      50% damage                     LC 4                        the damage was insigniﬁcant.
+                      99% damage                     LC 5
+                      LC 1                           LC 6
+                                                                                 5.3. Fatigue Life Assessment Process. Strain data recorded
+                      LC 2                           LC 7
+                                                                                 continuously during the monitoring period can be used to
+                      LC 3
+                                                                                 establish a real stress spectrum, which can help to estimate
+FIGURE 14: Relationship between hourly fatigue damage and rotation               the fatigue damage of the structure. If the monitoring period
+speed.                                                                           is more than 1 year, then strain data of the entire year can be
+                                                                                 selected for fatigue assessment. The wind speed and direction
+series was required to accumulate 1% of the total damage                         distribution in this time period is just the annual wind speed
+below the rated wind speed.                                                      and direction distribution. However, if the monitoring period
+    As shown in Figure 14, the damage increased with the                         is less than 1 year, then the distribution of wind speed and
+increase of rotation speed. More than 50% of the total dam-                      direction cannot adequately represent the annual distribution
+age occurred near the rated rotation speed (17.3 rpm Æ10%),                      of wind speed and direction. The direct use of data from this
+and the corresponding wind speed was between Vrated and                          period for fatigue assessment will lead to inaccurate results. In
+Vcutout (Figure 13). A small amount of large damage was                          this situation, structural damage can be estimated by correlat-
+caused by the transition conditions of startup and shutdown                      ing the annual wind speed and direction data from the
+(red dot) states as well as emergency shutdowns (black dot)                      SCADA system and the strain monitoring data of the wind
+at high-wind speeds.                                                             turbine. The wind direction was divided into 12 regions, with
+    As shown in Figure 15, more than 50% of the damage                           the wind turbine as the center and θ ¼ 30° as an interval. The
+occurred when the pitch control was active and the pitch                         wind speed was divided into nine regions in each wind
+angle changed from 0° to 20°, the corresponding wind speed                       direction area. Therefore, the entire wind action plane was
+was greater than Vrated. The pitch angle was constantly                          divided into 108 wind speed and direction combinations.
+Advances in Civil Engineering                                                                                                                       11
+
+
+                                                     Collection of field monitoring data
+                          Joint distribution
+                            of wind speed
+                            and direction
+                                               Select the strain time history of each condition
+
+                                                                                                     Elastic modulus of
+                                                                                                             steel
+                                                  Convert the strain time history into
+                                                          stress time history
+
+                           Identify the weld
+                                 detail
+                                                       Stress concentration factor
+
+
+
+                                                         Hot spot stress at weld
+                                                                                                    Rainflow counting
+                                                                                                        algorithm
+                                                    Determine the stress range and
+                                                          number of cycles
+
+
+
+                                                          Select the S–N curve
+
+                          P–M damage rule
+
+                                                   Fatigue damage of each condition
+
+
+
+                                                            Damage matrix
+
+
+
+                                                  Total damage and fatigue life at weld
+
+
+                                 FIGURE 16: Fatigue life assessment process based on measured stress.
+
+                                                                                                    2                             3
+    Figure 16 shows the process of fatigue life assessment                                              D11     D12    ⋯    D1θ
+based on short-term measured strain data and long-term                                             6                            7
+                                                                                                   6 D21        D22    ⋯    D2θ 7
+SCADA data (minimum of 1 year). First, the strain time                                    ½Duθ  ¼ 6
+                                                                                                   6 ⋮
+                                                                                                                                7:                  ð8Þ
+history corresponding to different combinations of wind                                            4              ⋮     ⋮    ⋮ 75
+speeds and directions was selected and transformed into                                                 Du1     Du2    ⋯    Duθ
+stress time history. Second, the SCF at the ﬂange weld was
+determined to obtain the hot spot stress time history at the
+weld. Finally, the hot spot stress time history was trans-                  The occurrence probability of a certain wind speed level
+formed into the stress spectrum using the rainﬂow counting              u is Pu and the occurrence probability of wind direction θ at
+algorithm, and the accumulated fatigue damage as well as the            wind speed level u is Quθ in time period T. The fatigue
+fatigue life at the weld were calculated using the P–M damage           damage matrix of the structure component considering the
+accumulation rule.                                                      joint distribution of wind speed and direction can be
+                                                                        expressed using Equation (9):
+5.4. Damage Matrix. To calculate the fatigue damage in the
+entire service period using stress data of the monitoring                                2                                                      3
+                                                                                             D11 P 1 Q11      D12 P 1 Q12   ⋯     D1θ P 1 Q1θ
+period, the strain monitoring period should include all                              6                                                       7
+                                                                                     6 D21 P2 Q21             D22 P2 Q22    ⋯     D2θ P2 Q2θ 7
+important operating states. In order to make the selected                  ½Duθ T ¼ 6
+                                                                                     6
+                                                                                                                                             7:
+                                                                                                                                             7
+monitoring stress data in line with the joint distribution of                        4     ⋮                      ⋮         ⋮         ⋮      5
+annual wind speed and direction, it was necessary to calcu-                            Du1 Pu Qu1             Du2 Pu Qu2    ⋯     Duθ Pu Quθ
+late the damage under the different wind speeds and direc-
+tions and stored it in the damage matrix:                                                                                                           ð9Þ
+12                                                                                                Advances in Civil Engineering
+
+                             TABLE 3: Damage matrix corresponding to maximum hourly damage [−log(D)].
+                                                                Wind speed (m/s)
+Wind direction                                                                                                                Dave
+                     0–3          3–5       5–7       7–9         9–11       11–13       13–15       15–17       17–19
+N                    8.14         8.14      6.45      6.22        5.76        5.40        5.25        5.47        8.55        6.60
+NNE                  6.87         6.13      6.29      6.29        5.76        5.57        5.64        9.26        5.25        6.34
+ENE                  5.93         6.03      6.92      6.14        6.11        6.14        5.25        5.25        5.25        5.89
+E                    7.19         7.53      6.61      6.09        6.05        5.64        5.49         —           —          6.37
+ESE                  7.63         6.95      5.25      5.25        5.25        5.82         —           —           —          6.03
+SSE                  7.76         7.60      6.46      5.96        6.18        5.25        5.49         —           —          6.39
+S                    8.05         7.04      6.46      6.37        6.05        5.69        5.57        5.25         —          6.31
+SSW                  8.56         6.90      6.79      6.19        5.67        5.49        5.70        5.25         —          6.32
+WSW                  7.73         7.50      6.29      6.34        6.07        5.53        5.50        5.25        5.25        6.16
+W                    8.56         7.05      6.28      6.24        5.73        5.52        5.25        5.25         —          6.23
+WNW                  8.21         6.15      6.89      5.85        5.43        5.33        5.25         —           —          6.16
+NNW                  8.08         6.30      5.99      5.59        5.54        5.31        5.25        5.25         —          5.91
+Dave                 7.73         6.94      6.39      6.04        5.80        5.56        5.42        5.78        6.08
+
+
+
+                              TABLE 4: Damage matrix corresponding to average hourly damage [−log(D)].
+                                                                Wind speed (m/s)
+Wind direction                                                                                                                Dave
+                      0–3         3–5       5–7        7–9        9–11       11–13       13–15       15–17        17–19
+N                    12.46        8.40      6.87       6.76        6.39       5.89        5.63        6.27         8.55       7.47
+NNE                  8.21         6.90      7.03       6.78        6.47       6.12        5.64        9.26         5.73       6.90
+ENE                  6.88         7.16      7.38       6.56        6.55       6.14        5.73        5.73         5.73       6.43
+E                    8.34         8.22      7.09       6.41        6.15       5.78        5.49         —            —         6.78
+ESE                  8.54         7.91      5.73       5.73        5.73       5.88         —           —            —         6.59
+SSE                  8.73         8.72      7.20       6.24        6.18       5.73        5.49         —            —         6.90
+S                    8.76         8.22      7.48       7.13        6.78       5.69        5.57        5.73          —         6.92
+SSW                  9.19         7.80      7.38       6.72        6.19       5.80        5.70        5.73          —         6.82
+WSW                  8.43         8.22      7.32       7.26        7.14       6.38        5.50        5.73         5.73       6.86
+W                    9.37         8.09      7.49       7.68        6.39       5.84        5.73        5.73          —         7.04
+WNW                  9.32         7.69      7.73       6.42        5.86       5.57        5.73         —            —         6.90
+NNW                  9.04         7.58      7.10       6.22        5.96       5.77        5.73        5.73          —         6.64
+Dave                 8.94         7.91      7.15       6.66        6.32       5.88        5.63        6.24         6.44
+
+
+   The total damage of the component in time period T can            increased with the increase of wind speed. The occurrence
+be obtained through the superposition of each term in the            probability of some wind speed and direction combinations
+matrix as shown in Equation (10):                                    was 0 after a measuring period of more than 1 year because
+                                                                     these combinations were absent during the monitoring
+                  DT ¼ ∑ ∑ Duθ Pu Quθ :                              period of the wind turbine.
+                            u θ
+                                                             ð10Þ        The inﬂuence of the joint distribution of wind speed and
+                                                                     direction on the fatigue damage was considered when the
+                                                                     following were achieved. First, damage matrices calculated
+     According to the P–M damage accumulation rule, the              according to the maximum and average hourly damage
+component will be damaged by fatigue when D ≥ η. This                [−log(D)] in Tables 3 and 4 were transformed into annual
+(η) is the usage factor and η = 1/DFF, where DFF is the design       damage matrices. Second, the occurrence probability of dif-
+fatigue factor [22].                                                 ferent wind speeds and directions was multiplied to obtain
+     Each wind speed and direction combination corre-                the maximum and average annual total damage matrices
+sponded to several hourly damage values during the moni-             under different combinations of wind speed and direction,
+toring period. The maximum and average damage values                 as shown in Tables 5 and 6. Finally, the total annual damage
+were selected under the same wind speed and direction                at the ﬂange weld was obtained by adding all the data in
+and then expressed with the negative logarithm [−log(D)],            Tables 5 and 6.
+as shown in Tables 3 and 4. Among them, the fatigue life
+evaluated with average damage was closer to the actual value,        5.5. Fatigue Life Assessment Results. The fatigue life of the
+while the maximum damage was conservative. The damage                ﬂange weld of the wind turbine tower was analyzed using the
+Advances in Civil Engineering                                                                                                       13
+
+                          TABLE 5: Annual total damage matrix based on maximum hourly damage [−log(D)].
+                                                                  Wind speed (m/s)
+Wind direction                                                                                                                     Dave
+                       0–3          3–5        5–7        7–9       9–11       11–13            13–15    15–17        17–19
+N                      5.92         5.75       3.99       3.81      3.54        3.37             3.57     4.27         7.91        4.68
+NNE                    4.64         3.88       4.19       4.40      3.84        3.92             4.47     8.42         5.01        4.75
+ENE                    3.84         4.00       5.02       4.54      4.75        5.60             4.70     4.70         4.83        4.66
+E                      5.19         5.70       5.26       4.97      5.51         —                —        —            —          5.33
+ESE                    5.54         4.83       3.56       3.80      4.27        5.28              —        —            —          4.55
+SSE                    5.50         5.25       4.56       4.72      4.96        4.46             5.55      —            —          5.00
+S                      5.78         4.62       4.21       4.34      4.40        4.14             4.92     4.70          —          4.64
+SSW                    6.15         4.45       4.34       4.02      3.92        4.17             4.86     5.31          —          4.65
+WSW                    5.36         5.30       4.01       4.27      4.25        4.05             4.24     4.35         4.83        4.52
+W                      6.20         4.82       4.06       4.19      4.10        4.40             4.23     4.83          —          4.60
+WNW                    5.99         3.86       4.58       3.99      3.97        4.38             4.61      —            —          4.48
+NNW                    5.87         3.93       3.51       3.25      3.32        3.48             3.95     4.46          —          3.97
+Dave                   5.50         4.70       4.27       4.19      4.24        4.29             4.51     5.13         5.64
+
+
+                               TABLE 6: Annual total damage matrix based on average hourly damage [−log(D)].
+                                                                  Wind speed (m/s)
+Wind direction                                                                                                                     Dave
+                        0–3          3–5        5–7       7–9       9–11       11–13            13–15     15–17       17–19
+N                      10.23         6.01       4.41      4.35       4.17       3.86             3.94      5.08        7.91        5.55
+NNE                    5.98          4.65       4.94      4.89       4.55       4.47             4.47      8.42        5.49        5.32
+ENE                    4.79          5.12       5.48      4.96       5.20       5.60             5.19      5.19        5.31        5.20
+E                      6.35          6.40       5.73      5.29       5.60        —                —         —           —          5.87
+ESE                    6.45          5.79       4.04      4.28       4.75       5.33              —         —           —          5.11
+SSE                    6.47          6.37       5.30      4.99       4.96       4.94             5.55       —           —          5.51
+S                      6.49          5.80       5.23      5.10       5.13       4.14             4.92      5.19         —          5.25
+SSW                    6.77          5.36       4.93      4.56       4.45       4.48             4.86      5.79         —          5.15
+WSW                    6.06          6.02       5.04      5.20       5.31       4.89             4.24      4.83        5.31        5.21
+W                      7.00          5.86       5.26      5.64       4.77       4.73             4.71      5.31         —          5.41
+WNW                    7.11          5.41       5.41      4.56       4.39       4.63             5.09       —           —          5.23
+NNW                    6.83          5.21       4.62      3.87       3.75       3.94             4.43      4.94         —          4.70
+Dave                   6.71          5.67       5.03      4.81       4.75       4.64             4.74      5.59        6.00
+
+
+
+                                               TABLE 7: Fatigue damage results of ﬂange weld.
+                                                        Hourly mean damage                                     Hourly maximum damage
+Annual total damage                                          1.88E-03                                                  3.16E-03
+Fatigue life (years)                                            266                                                       158
+
+
+strain data measured with a high-sampling frequency in                  wind conditions may not have been recorded yet. Another
+50 days and the joint distribution of wind speed and direc-             important reason was that conservative assumptions were
+tion provided by SCADA system. The results are listed in                often used in wind turbine design to cover uncertainties in
+Table 7. The calculated fatigue life was 266 years considering          the environment, operation, and models. As a result, the effec-
+the hourly mean damage during the monitoring period and                 tive fatigue load endured by the wind turbine was likely to be
+158 years considering the hourly maximum damage.                        lower than the design assumptions provied by current codes,
+    The predicted fatigue life of the wind turbine tower based          which will generate structural reserves [29]. Similar results
+on measured strain was far greater than the design life of              were also obtained in Loraux’s [17] study, where the predicted
+20 years. This was because the fatigue damage and life calcu-           fatigue life of the tower based on strain monitoring was 165
+lated in the paper was based on the measured stress at 330°,            years, which proved that the actual fatigue damage suffered by
+which deviated approximately 10° from MWD and was not                   the wind turbine tower was relatively low compared to what
+the location with the highest fatigue damage. Second, the               could be expected from design. Hence, the service life of the
+strain monitoring time was relatively short, and some extreme           wind turbine tower can be extended.
+14                                                                                                     Advances in Civil Engineering
+
+6. Conclusion                                                       RPM:           Revolutions per minute
+                                                                    DFF:           Design fatigue factor
+In this study, fatigue of a wind turbine tower is evaluated         MWD:           Main wind direction
+using measured strain data of the tower bottom and SCADA            SWD:           Secondary wind direction.
+data of the wind turbine. The following conclusions can be
+drawn:
+                                                                    Symbols
+     (1) Operating states of the wind turbine were classiﬁed
+         and the joint distribution probability of wind speed       Δσ:                              Stress range
+         and direction was statistically analyzed according to      N:                               Number of stress cycles to failure at
+         SCADA data. The variation rule of stress at the tower                                       stress range Δσ
+         bottom with average wind speed was calculated on           m:                               Negative inverse slope of S–N curve
+         the basis of measured strain data. The stress at the       log a:                           Intercept of S–N curve
+         tower bottom ﬁrst increased and then stabilized with       t:                               Thickness through which a crack will
+         the increase of wind speed, and it had great discrete-                                      most likely grow
+         ness due to the inﬂuence of startup and shutdown of        tref:                            Reference thickness
+         the rotor and yaw motion when the wind speed was           k:                               Thickness exponent on fatigue strength
+         lower than Vcut-in. Stress at the tower bottom reached     σh:                              Hot spot stress value at the weld toe
+         the maximum value near Vrated and tended to stabi-         x1 ; x2 ; x3 :                   Extracting points at a certain distance
+         lize when the wind speed was higher than Vrated.                                            from the weld toe
+     (2) The process of fatigue life assessment based on mea-       σ s ðx1 Þ; σ s ðx2 Þ; σ s ðx3 Þ: Structural stress values at the extract-
+         sured data was proposed. First, the SCF of the ﬂange                                        ing points x1 ; x2 ; x3
+         weld was calculated using the reﬁned local ﬁnite ele-      Δσ 0 :                           Effective stress range based on Good-
+         ment model, and the monitoring stress was trans-                                            man model
+         formed into the hot spot stress of the weld. Second,       σm:                              Mean stress
+         the rainﬂow counting algorithm and S–N curve were          σt :                             Ultimate tensile strength
+         applied to calculate the hourly damage during the          i:                               Total number of different stress levels
+         monitoring period. The maximum and mean annual             ni:                              Number of cycles accumulated at
+         total damage matrices were established according to                                         stress range Δσ i
+         the joint distribution of annual wind speed and direc-     Ni:                              Number of cycles to failure at stress
+         tion. Finally, the total annual damage of ﬂange weld                                        range Δσ i
+         were calculated using the P–M damage accumulation          Di:                              Fatigue damage component
+         rule. The results indicated that fatigue life calculated   D:                               Accumulated fatigue damage
+         using average (close to the actual value) and maxi-        Vcut-in:                         Cut-in wind speed
+         mum (conservative estimation) values of the hourly         Vcutout:                         Cutout wind speed
+         damage during the monitoring period was 266 and            Vrated:                          Rated wind speed
+         158 years, respectively. This ﬁnding shows that the        KSCF:                            Stress concentration factor
+         wind turbine tower satisﬁes the requirement of             σh:                              Hot spot stress
+         20 years design life.                                      σr :                             Reference stress
+                                                                    Pu:                              Occurrence probability of wind speed u
+     (3) The contribution of different operating conditions of
+                                                                    Quθ:                             Occurrence probability of wind
+         the wind turbine to fatigue damage was quite differ-
+                                                                                                      direction θ at wind speed u
+         ent. Fatigue damage increased with the increase of
+                                                                    η:                               Usage factor
+         wind and rotation speeds. More than 50% of the
+                                                                    Dave:                            Average damage.
+         damage occurred when the wind speed was greater
+         than Vrated with the rated rotation speed and the
+         pitch control system varying from 0° to 20°.               Data Availability
+                                                                    The data used to support the ﬁndings of this study are
+Abbreviations                                                       available from the ﬁrst author upon request.
+
+SCADA:     Supervisory control and data acquisition system          Conﬂicts of Interest
+IEC:       International Electrotechnical Commission
+DNVGL: Det Norske Veritas and Germanischer Lloyd                    The authors declare that they have no conﬂicts of interest.
+IIW:       International Institute of Welding
+S–N curve: Stress (S) to fatigue life (N)                           Acknowledgments
+SCF:       Stress concentration factor
+LC:        Load case                                                The authors gratefully acknowledge the ﬁnancial support
+FA:        Fore–aft                                                 received from the National Natural Science Foundation of China
+Advances in Civil Engineering                                                                                                            15
+
+(51779224), Science and Technology Department of Henan                   [17] C. T. Loraux, Long-Term Monitoring of Existing Wind Turbine
+Province of China (212102310978 and 222102320114).                            Towers and Fatigue Performance of UHPFRC under
+                                                                              Compressive Stresse, École Polytechnique Fédérale de
+                                                                              Lausanne, Lausanne, Switzerland, 2018.
+References                                                               [18] Q. A. Mai, W. Weijtjens, C. Devriendt, P. G. Morato, P. Rigo,
+                                                                              and J. D. Sørensen, “Prediction of remaining fatigue life of
+ [1] J. D. Hua, “On the policy suggestion for promoting the
+                                                                              welded joints in wind turbine support structures considering
+     development of wind energy resources in China,” Advanced
+                                                                              strain measurement and a joint distribution of oceanographic
+     Materials Research, vol. 512–515, pp. 818–821, 2012.
+                                                                              data,” Marine Structures, vol. 66, pp. 307–322, 2019.
+ [2] M. P. Repetto and G. Solari, “Dynamic alongwind fatigue of
+                                                                         [19] Y. L. Xu, T. T. Liu, and W. S. Zhang, “Buffeting-induced
+     slender vertical structures,” Engineering Structure, vol. 23,
+                                                                              fatigue damage assessment of a long suspension bridge,”
+     no. 12, pp. 1622–1633, 2001.
+                                                                              International Journal of Fatigue, vol. 31, no. 3, pp. 575–586,
+ [3] M. P. Repetto and G. Solari, “Dynamic crosswind fatigue of
+                                                                              2009.
+     slender vertical structures,” Wind and Structures, vol. 5, no. 6,
+                                                                         [20] Y. Q. Ni, X. W. Ye, and J. M. Ko, “Monitoring-based fatigue
+     pp. 527–542, 2002.
+                                                                              reliability assessment of steel bridges: analytical model and
+ [4] M. P. Repetto and G. Solari, “Directional wind-induced
+                                                                              application,” Journal of Structural Engineering, vol. 136,
+     fatigue of slender vertical structure,” Journal of Structural
+                                                                              no. 12, pp. 1563–1573, 2010.
+     Engineering, vol. 130, no. 7, pp. 1032–1040, 2004.
+                                                                         [21] IEC 61400-1, Wind Turbines-Part 1: Design Requirements,
+ [5] M. P. Repetto and G. Solari, “Bimodal alongwind fatigue of
+                                                                              IEC, Switzerland, 2005.
+     structures,” Journal of Structure Engineering, vol. 132, no. 6,
+                                                                         [22] DNVGL-RP-C203, Fatigue Design of Offshore Steel Structures,
+     pp. 899–908, 2006.
+                                                                              DNV Recommended Practice, Norway, 2016.
+ [6] J. V. D. Tempel, “Design of support structures for offshore wind
+                                                                         [23] X. L. Zhao and J. A. Packer, Fatigue Design Procedure for
+     turbines,” Ph.D. thesis, Technische Universiteit Delft, Delft,
+                                                                              Welded Hollow Section Joints, Woodhead Publishing, 2000.
+     Netherlands, 2006.
+                                                                         [24] W. Fricke, “Recommended hot-spot analysis procedure for
+ [7] H. Bagbanci, D. Karmakar, and C. G. Soares, “Effect of the
+                                                                              structural details of ships and FPSOs based on round-robin FE
+     environment on the design loads on monopile offshore wind
+                                                                              analyses,” International Journal of Offshore and Polar
+     turbine,” in Maritime Engineering and Technology, pp. 547–
+                                                                              Engineering, vol. 12, no. 1, pp. 40–47, 2002.
+     552, CRC Press, 1 edition, 2012.
+                                                                         [25] K. N. Smith, P. Watson, and T. H. Topper, “A stress-strain
+ [8] M. I. Kvittem and T. Moan, “Time domain analysis
+                                                                              function for fatigue of metals,” Journal of Material, vol. 5,
+     procedures for fatigue assessment of a semi-submersible
+                                                                              no. 4, pp. 767–778, 1970.
+     wind turbine,” Marine Structures, vol. 40, pp. 38–59, 2015.
+                                                                         [26] Y. L. Lee, J. Pan, R. Hathaway, and M. Barkey, Fatigue Testing
+ [9] N. Stavridou, E. Efthymiou, and C. C. Baniotopoulos,
+                                                                              and Analysis: Theory and Practice, Elsevier Butterworth–
+     “Welded connections of wind turbine towers under fatigue
+                                                                              Heinemann, 2004.
+     loading: ﬁnite element analysis and comparative study,”
+                                                                         [27] Y. Zhao, J. Pan, Z. Huang, Y. Miao, J. Jiang, and Z. Wang,
+     American Journal of Engineering and Applied Sciences, vol. 8,
+                                                                              “Analysis of vibration monitoring data of an onshore wind
+     no. 4, pp. 489–503, 2015.
+                                                                              turbine under different operational conditions,” Engineering
+[10] Y. Edward Zhou, “Assessment of bridge remaining fatigue
+                                                                              Structures, vol. 205, Article ID 110071, 2020.
+     life through ﬁeld strain measurement,” Journal of Bridge
+                                                                         [28] I. Losberg, “Fatigue design of plated structures using ﬁnite
+     Engineering, vol. 11, no. 6, pp. 737–744, 2006.
+                                                                              element analysis,” Ships Offshore Structures, vol. 1, no. 1,
+[11] X. W. Ye, “Fatigue reliability assessment of steel bridges
+                                                                              pp. 45–54, 2006.
+     instrumented with structural health monitoring system,” Ph.D.
+                                                                         [29] G. Marsh, “Fatigue load monitoring of offshore wind turbine
+     thesis, The Hong Kong Polytechnic University, Hong Kong,
+                                                                              support structures,” Ph.D. thesis, University of Strathclyde,
+     China, 2010.
+                                                                              Glasgow, Scotland, 2016.
+[12] X. W. Ye, Y. Q. Ni, and J. M. Ko, “Experimental evaluation of
+     stress concentration factor of welded steel bridge T-joints,”
+     Journal of Constructional Steel Research, vol. 70, pp. 78–85,
+     2012.
+[13] T. H. T. Chan, Z. X. Li, and J. M. Ko, “Fatigue analysis and
+     life prediction of bridges with structural health monitoring
+     data—Part II: application,” International Journal of Fatigue,
+     vol. 23, no. 1, pp. 55–64, 2001.
+[14] E. A. Johnson, H. F. Lam, L. S. Katafygiotis, and J. L. Beck,
+     “Phase I IASC-ASCE structural health monitoring benchmark
+     problem using simulated data,” Journal of Engineering
+     Mechanics, vol. 130, no. 1, pp. 3–15, 2004.
+[15] M. C. Pollino and A. A. Huckelbridge, In-situ Measurements
+     of Fatigue Demands on a Wind Turbine Support Structure,
+     IEEE Energy Tech, Cleveland, USA, 2012.
+[16] W. Weijtens, N. Noppe, T. Verbelen, A. Iliopoulos, and
+     C. Devriendt, “Offshore wind turbine foundation monitoring,
+     extrapolating fatigue measurements from ﬂeet leaders to the
+     entire wind farm,” Journal of Physics: Conference Series,
+     vol. 753, no. 9, Article ID 092018, 2016.
+

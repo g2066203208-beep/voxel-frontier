@@ -1,0 +1,931 @@
+Wang et al. Int J Concr Struct Mater (2025) 19:68                                                                   International Journal of Concrete
+https://doi.org/10.1186/s40069-025-00800-5
+                                                                                                                             Structures and Materials
+
+
+ RESEARCH                                                                                                                                                 Open Access
+
+Numerical Simulation and Fatigue Analysis
+of the Grout Layer Replacement for Horizontal
+Joint of Wind Turbine Prestressed Concrete
+Tower
+Ziwei Wang1, Dongping Huang2, Minjuan He1,3 and Zheng Li1,3*   
+
+
+
+  Abstract
+  There are many engineering applications of prestressed concrete tower as the wind turbine support structure,
+  and the concrete tower has the advantages of applicability and economy with good prospects. This paper proposes
+  a grout layer replacement scheme for the problem of grout missing in the horizontal joint of concrete tower seg-
+  ments, and conducts a series of numerical simulation and fatigue analysis. The simulation results show that, for the case
+  of grout missing, there is an obvious stress unevenness in the local area of severe grout missing. The concrete compres-
+  sive stress decreases, tensile stress increases, tensile damage zone develops, and steel rebars stress increases, which
+  can lead to local concrete cracking and blocks falling. For the case of grout filling and replacement completion, using
+  no expansion grout for repair makes little contributions to the recovery of concrete stress, while using slight expansion
+  grout can restore the concrete local stress to an even state. The fatigue analysis results show that, for the case of grout
+  missing, the fatigue damage factors greatly exceed the limit, indicating a short fatigue life and the potential risk of local
+  failure. For the case of grout filling and replacement completion, using no expansion grout cannot decrease fatigue
+  damage, while using slight expansion grout can decrease fatigue damage and improve fatigue life. This paper provides
+  the investigation into the effectiveness of grout layer replacement for horizontal joint, and the presented results can
+  provide technical supports for the analysis and solution of grout missing problems.
+  Keywords Wind turbine tower, Prestressed concrete, Horizontal joint, Grout layer, Finite element modeling
+
+
+1 Introduction                                                                             electricity, which can be cost-effective and sustain-
+Wind energy is renewable and can effectively meet cur-                                     able (Hernandez-Estrada et al., 2021). At present, the
+rent and future energy demand of the society. Wind                                         wind energy market is vast, with a global new installed
+turbine is the device that converts wind energy into                                       capacity of 116.6 GW and a total global installed capac-
+                                                                                           ity of 1021 GW in 2023. China’s new installed capac-
+                                                                                           ity in that year accounted for 65% of the world’s total,
+Journal information: ISSN 1976-0485 / eISSN 2234-1315.                                     including 69 GW for onshore and 6.3 GW for offshore
+*Correspondence:                                                                           (GWEC, 2024). With the construction and develop-
+Zheng Li                                                                                   ment of onshore wind turbines in China, trying to use
+zhengli@tongji.edu.cn                                                                      of wind resources in areas with low wind speed and
+1
+  Department of Structural Engineering, College of Civil Engineering,
+Tongji University, Shanghai 200092, China                                                  high shear rate has become the main development
+2
+  Tongji Architectural Design (Group) Co., Ltd, Shanghai 200092, China                     direction, which puts higher demands on blade length,
+3
+  State Key Laboratory of Disaster Reduction in Civil Engineering, Tongji                  hub height, tower height, etc. Wind turbine towers over
+University, Shanghai 200092, China
+                                                                                           140 meters have gradually become mainstream. At this
+
+                                          © The Author(s) 2025. Open Access This article is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+                                          International License, which permits any non-commercial use, sharing, distribution and reproduction in any medium or format, as long
+                                          as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if
+                                          you modified the licensed material. You do not have permission under this licence to share adapted material derived from this article or
+                                          parts of it. The images or other third party material in this article are included in the article’s Creative Commons licence, unless indicated
+                                          otherwise in a credit line to the material. If material is not included in the article’s Creative Commons licence and your intended use is not
+                                          permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To
+                                          view a copy of this licence, visit http://​creat​iveco​mmons.​org/​licen​ses/​by-​nc-​nd/4.​0/.
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                             Page 2 of 23
+
+
+
+
+time, the use of concrete tower or steel-concrete hybrid                     is the mainstream for practical engineering applications
+tower has outstanding economic advantages (Grünberg                          of the concrete towers.
+& Göhlmann, 2013; Cheng et al., 2024).                                          Due to production and transportation limitations, the
+  Concrete tower can be mainly divided into two                              prefabricated concrete tower needs to be segmented,
+forms, which named cast-in-place tower and prefab-                           with horizontal joints and vertical joints (Fig. 1a, b). The
+ricated tower (von der Haar & Marx, 2015). Prefab-                           horizontal and vertical joints of the prefabricated con-
+ricated concrete tower have the advantages of short                          crete tower are usually the weakest parts of the structure.
+construction time and high industrialization level, and                      There are two forms of connection, the wet joint and the
+is the mainstream of engineering applications. Prefab-                       dry joint, for both horizontal and vertical joints. The wet
+ricated concrete tower normally requires the post ten-                       joint with on-site grouting has good structural integrity,
+sioned prestressed steel strands to ensure structural                        but the construction time will be long. The dry joint has
+integrity, hence it is also called prestressed concrete                      high construction efficiency, but the structural integrity
+tower. In 2005, the National Renewable Energy Labo-                          will be weakened. For vertical joint, bolt connections
+ratory (NREL) proposed a design for prestressed con-                         can be used generally. For horizontal joint, depending
+crete towers and conducted detailed structural analysis                      on the flatness of the concrete surface, it can be directly
+(LaNier, 2005). Since then, many scholars conducted                          connected without additional measures or connected
+comprehensive research on prestressed concrete tow-                          through a leveling layer. In China, commonly, the hori-
+ers. Lotfy (2012) proposed a tower with a triangular                         zontal joint is connected through a grout layer, which
+cross-section and conducted design calculations and                          made by epoxy resin or cement mortar (Fig. 1c).
+finite element analysis. Alvarez-Anton et al. (2016)                            Using dry horizontal joints greatly improves construc-
+designed a composite tower with a quadrilateral cross-                       tion efficiency, but in extreme situations, there is a risk of
+section, while Peggar (2017) designed a tower with an                        horizontal joint opening and contact detachment. Kang
+octagonal cross-section, they aimed to save the con-                         et al. (2019), Klein et al. (2022), Fürll et al. (2024), Chen
+crete form. Ma et al. (2015) designed the quasi-static                       et al. (2024b) studied the problem of joint opening of the
+test on a scaled concrete tower model with an octago-                        horizontal joint and the section bearing capacity under
+nal cross-section and made finite element simulations.                       detachment, but they did not take the grout layer into
+The results can verify the rationality of the design. Ren                    account. Jonscher et al. (2023) noticed the concrete sur-
+et al. (2023) proposed the steel-concrete composite                          face waviness of the dry horizontal joint, and they mainly
+tower segment of sandwich-like section, and conducted                        studied the influence of imperfections on structural
+axial compression test and numerical simulation. While                       mode shapes through experiments. Song et al. (2016)
+Chen et al. (2024a) further proposed the steel-concrete                      focused on the mechanical performance of the horizontal
+composite section with corrugated steel plates, and also                     joint, paying attention to the simulation of the grout layer,
+conducted static tests and numerical simulations. How-                       but did not consider the possible defects of the layer.
+ever, currently in China, ordinary circular cross-section                    The standards, IEC 61400-1 (2019), IEC 61400-6 (2020)
+                                                                             and DNVGL-ST-0126 (2016), are important references
+
+
+
+
+ Fig. 1 a Wind turbine steel-concrete hybrid tower, b concrete segments with joints, c horizontal joint with grout layer
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                           Page 3 of 23
+
+
+
+
+for wind turbine tower design. According to the stand-       2 Numerical Simulation
+ards, the mechanical verification of the horizontal joints   2.1 Overview
+for the prestressed concrete tower is necessary and the      The steel-concrete hybrid towers were used in a practical
+geometry imperfections should be considered. Neverthe-       project, with the prestressed concrete tower height of 104
+less, there is a lack of research on the missing of grout    meters. During operation, obvious concrete cracking and
+layer and the possible negative influence on the concrete    blocks falling were observed near the horizontal joints
+tower. Meanwhile, no relevant research reports on grout      (Fig. 2). It was speculated to be caused by uneven grout
+layer replacement and repair have been found yet.            layers, and probe detection was carried out accordingly.
+  This paper focus on the wind turbine prestressed con-      Taking the horizonal joint between the first and second
+crete tower, and bases on the problem of grout layer         segments as an example, where the tower door is, the
+missing in the horizontal joints of a practical engineer-    detection result is shown in Fig. 3. Detection points were
+ing project. A replacement repair scheme is proposed,        arranged along the circular direction, and were drawn
+and two possible properties of the repair grout are con-     on the straight coordinate axis. The tower wall thickness
+sidered. ABAQUS is used for finite element simulation        is 250 mm. The outside 40 mm is the waterproof rubber
+to obtain the mechanical response of the concrete tower      and the cavity, and the inside 210 mm is the grout layer
+structure during the replacement repair process. Based       where the missing may occur. The figure represents the
+on the simulation results, further fatigue analysis of the   depth of probe detection point, which indicates the depth
+local concrete section is carried out. The conclusions       of missing grout layer at the point.
+of this paper are expected to provide references for the        To solve the problem of grout layer missing in the
+design of grout layer repair scheme and the research of      horizontal joint, this paper proposes a scheme of local
+the similar structure in the future.                         replacement repair for the grout layer (Fig. 4). The spe-
+                                                             cific steps are as follows: (1) Inject grout from the out-
+                                                             side to fill the missing part of grout layer; (2) Completely
+
+
+
+
+ Fig. 2 a Concrete cracking, b concrete blocks falling
+
+
+
+
+ Fig. 3 Result of probe detection
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                           Page 4 of 23
+
+
+
+
+                                                                             chisel off Area One; (3) Fill Area One with grout and
+                                                                             chisel off Area Two; (4) Follow the above steps to chisel
+                                                                             and fill Area One to Eight in sequence; (5) Complete the
+                                                                             local replacement repair and the entire layer can bear
+                                                                             the load. The advantages of using this scheme of local
+                                                                             replacement repair are as follows: (1) There is no need
+                                                                             to unload or dismantle the upper part of the tower; (2)
+                                                                             It can reduce the layer unevenness by taking one-time
+                                                                             grouting method (i.e., only take the step (1) mentioned
+                                                                             above).
+
+                                                                             2.2 Model Description
+                                                                             ABAQUS is commonly used for fine simulation of wind
+                                                                             turbine concrete towers (Cao et al., 2020; Lin et al., 2023;
+                                                                             Li et al., 2024). This paper establishes a finite element
+                                                                             model in ABAQUS based on actual engineering draw-
+                                                                             ings. Concrete tower is founded by the solid, where the
+                                                                             first and second segments are the research objects while
+ Fig. 4 The scheme of local replacement repair                               the foundation and the third and fourth segments serve
+                                                                             as boundary conditions, considering a segment thickness
+                                                                             of 250 mm and a segment height of 3640 mm (Fig. 5a).
+
+
+
+
+ Fig. 5 Finite element model of a concrete tower, b rebar, c grout layer without missing, d grout layer with missing
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                               Page 5 of 23
+
+
+
+
+Steel rebars are founded by the line, considering radial,       (Tao et al., 2013). The definition of damage factors is
+circumferential, longitudinal, and door opening addi-           based on the energy method (Sidoroff, 1981). The steel
+tional rebars (Fig. 5b). Grout layers are founded by the        rebar is made of HRB400 material, and adopts an ideal
+solid, considering a thickness of 3 mm and a width of 210       elastic-plastic model with a yield strength of 400 MPa.
+mm. Ideally, the grout layer have an intact circular cross-     The grout layer is made of epoxy resin or cement mor-
+section without any missing (Fig. 5c). Actually, in the ini-    tar. According to the studies (Iwamoto et al., 2010; Pang
+tial simulation step, the grout layer will be considered the    et al., 2018; Elruby & Nakhla, 2019), epoxy resin per-
+missing based on the detection result (Fig. 5d).                formed elasticity in both tension and compression before
+  The basic control size of the finite elements is 200 mm.      failure. In addition, according to the product manual, its
+Six elements are set along the thickness direction to den-      compressive strength exceeds 100 MPa and its tensile
+sify the local mesh. The model has a total of 200,000 ele-      strength exceeds 5 MPa ensuring that failure occurs in
+ments, approximately.                                           concrete. Therefore, an ideal elastic model can be used
+  As shown in Fig. 6, the bottom of the foundation is           for this simulation. The main material parameters are
+constrained with all degrees of freedom as fixed. Tie           shown in Table 1, where E is the elastic modulus and μ is
+constraints are set between the tower segments and the          the Poisson’s ratio.
+grout layer to simulate the bonding of the grout. The steel       For the replacement of grout layer, two models are con-
+rebars are embedded into the concrete tower segments.           sidered: (1) Model One: using epoxy resin for grouting,
+A reference point is set at the center of the upper surface     which will solidify without expansion and fill the grout
+of the top concrete segment, and it is coupling with the        layer cavity precisely without initial stress and strain. So,
+surface.                                                        the local area will not immediately participate in bearing
+                                                                load; (2) Model Two: using cement mortar for grouting,
+2.3 Model Variables                                            which will solidify with certain expansion, or adopting
+The tower is made of C70 concrete. Referring to GB              some measures (such as lifting) to promote stress redis-
+50010-2010 (2015) Code for Design of Concrete Structures        tribution during replacement process. So, after grout-
+Appendix C, the concrete damage plastic model (CDPM)            ing, the local area will immediately participate in bearing
+is adopted. The compressive and tensile strengths are           load (the expansibility of cement mortar is adjustable in
+taken as standard values of 44.5 MPa and 2.99 MPa,              the practical application, assuming that its expansibility
+respectively. Constant values of 30°, 0.1, 1.16 and 0.67        can restore local deformation to the ideal state). The two
+are used for dilation angle (ψ), flow potential eccentricity    models are completely identical, except for the differ-
+(e), the ratio of the second stress invariant on the tensile    ent technical methods used in simulating the grout layer
+meridian to that on the compressive meridian (Kc) and           replacement. The model change method in ABAQUS is
+the ratio of the compressive strength under biaxial load-       used for simulating the replacement process. The ele-
+ing to uniaxial compressive strength (fb0/fc’), respectively    ments of grout missing areas are deactivated, and in the
+                                                                steps of replacement the elements of grout filling areas
+                                                                will be reactivated. Differently, in Model One the ele-
+                                                                ments will be reactivated without strain, and in Model
+                                                                Two the elements will be reactivated with strain. In this
+                                                                way, it can simulate the two situations mentioned above.
+
+                                                                2.4 Simulation Cases
+                                                                The simulation in this paper involves 12 cases, namely:
+                                                                Case Ideal, Case Missing, Case Fixing, Case Replacement
+                                                                One to Eight, and Case Completion. The specific descrip-
+                                                                tions of the cases are shown in Table 2.
+
+
+
+                                                                Table 1 Material parameters
+                                                                Component     Material         Element type    E (MPa)     μ
+
+                                                                Concrete      C70              C3D8R           37000       0.2
+                                                                Steel rebar   HRB400           T3D2            200000      0.3
+                                                                Grout         Epoxy resin      C3D8R           8000        0.2
+ Fig. 6 The interactions and boundary conditions of the model                 or cement mortar
+Wang et al. Int J Concr Struct Mater      (2025) 19:68                                                                                                Page 6 of 23
+
+
+
+
+Table 2 Simulation cases
+Name                                                                                             Description
+
+Case ideal                                                                                       The grout layer is ideal without missing (cf. Fig. 5c)
+Case missing                                                                                     The grout layer is defective with missing (cf. Fig. 5d)
+Case filling                                                                                     Fill the missing areas of the grout layer with grout
+Case replacement one                                                                             Chisel off area one (cf. Fig. 4)
+Case replacement two                                                                             Fill area one with grout and chisel off area two (cf. Fig. 4)
+Case replacement three                                                                           Fill area two with grout and chisel off area three (cf. Fig. 4)
+Case replacement four                                                                            Fill area three with grout and chisel off area four (cf. Fig. 4)
+Case replacement five                                                                            Fill area four with grout and chisel off area five (cf. Fig. 4)
+Case replacement six                                                                             Fill area five with grout and chisel off area six (cf. Fig. 4)
+Case replacement seven                                                                           Fill area six with grout and chisel off area seven (cf. Fig. 4)
+Case replacement eight                                                                           Fill area seven with grout and chisel off area eight (cf. Fig. 4)
+Case completion                                                                                  Fill area eight with grout (cf. Fig. 4)
+
+
+
+
+  The tower prestressing system consists of 30 bundles                            concentrated force of 79,788 kN. Therefore, the theo-
+of steel strands, each consisting of 11 steel strands with a                      retically calculated vertical compressive stress of the two
+nominal diameter of 15.2 mm. Each strand has a nominal                            concrete segments is between 9.72 and 10.18 MPa.
+cross-section area of 140 ­mm2 and a controlling tensile                            The finite element model will be validated by the verti-
+stress of 1340 MPa. The calculated equivalent prestress-                          cal stress of concrete for Case Ideal. As shown in Fig. 7a,
+ing load is 61,908 kN. The representative gravity value of                        the vertical stress contour (in MPa) of the first and sec-
+the upper concrete tower is 17,880 kN. Therefore, in all                          ond tower segments is presented, with negative values
+cases, the load is a vertical downward equivalent concen-                         indicating compression. The maximum value is set to
+trated force of 79,788 kN applied at the reference point                          − 8 MPa, the minimum value is set to − 12 MPa, and
+(cf. Fig. 6).                                                                     the values between them are displayed in color. It can
+                                                                                  be seen that in most area the vertical stress of the con-
+3 Simulation Results                                                             crete segments is between 8 to 12 MPa in compression.
+3.1 Validation                                                                   And only in the area near the horizontal joint and near
+The outer diameter of the bottom of the circular con-                             the door, the stress value is not within the range. The
+crete tower first segment is 10,700 mm and the inner                              stress deviation near the horizontal joint is due to the
+diameter is 10,200 mm. The top outer diameter of the                              fact that the surfaces are not in full contact, and there is
+second segment is 10,226 mm and the inner diameter is                             a small outer cavity (cf. Fig. 1c). This results in the lower
+9726 mm. As stated in Sect. 2.4, the load is a downward                           stress on the outer elements and the higher stress on the
+
+
+
+
+  Fig. 7 a The vertical stress of concrete segments for case ideal, b the distribution of vertical stress of finite elements
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                       Page 7 of 23
+
+
+
+
+inner elements. The tower door is a significant weak-                        theoretical values (9.72 to 10.18 MPa), which can validate
+ening of the cross-section, and it is reasonable to have                     the effectiveness of the model.
+higher tensile and compressive stresses nearby. As shown
+in Fig. 7b, it is a bar chart of the distribution of vertical                3.2 Concrete stress Analysis
+stress of elements. It can be seen that the vertical stress                  3.2.1 Model One
+values of most of the elements (80 %) are between 9 to 11                    As shown in Fig. 8, the minimum principal stress con-
+MPa in compression and are in good agreement with the                        tours (in MPa) of the first and second tower segments
+
+
+
+
+ Fig. 8 The minimum principal stress of concrete segments of model one for a case ideal, b case missing, c case filling, d case replacement one, e
+ case replacement two, f case completion
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                             Page 8 of 23
+
+
+
+
+of Model One (no expansion grout) are presented, with          One increases accordingly (Fig. 9d). For Case Replace-
+negative values indicating compression. The contours           ment Two, the tensile stress value of the concrete near
+of Case Replacement Two to Eight have some similari-           Area Two increases, while that near Area One will not
+ties and will be omitted (the same below). The maximum         recover (Fig. 9e). For Case Completion, the problem of
+value of the contour is set to zero, and the regions above     local high tensile stress can be alleviated to some extent,
+that will be gray. The minimum value of the contour is set     but it cannot restore the stress distribution of the con-
+to − 15 MPa, and the regions below that will be black.         crete segments to the Case Ideal (Fig. 9f ).
+  For Case Ideal, the overall compressive stress distri-
+bution of the concrete segments is even, with most of          3.2.2 Model Two
+the compressive stress between 8 to 12 MPa (Fig. 8a),          As shown in Fig. 10, the minimum principal stress con-
+which is consistent with the theoretical calculation value.    tours (in MPa) of the first and second tower segments of
+According to the detection result (cf. Fig. 3), there was a    Model Two (slight expansion grout) are presented, with
+noticeable missing of grout on both sides of the door. For     negative values indicating compression. The maximum
+Case Missing, the stress distribution at those positions       value of the contour is set to zero, and the regions above
+tends to be uneven, with the compressive stress value          that will be gray. The minimum value of the contour is set
+of the concrete above and below the grout missing cav-         to − 15 MPa, and the regions below that will be black.
+ity significantly decreasing, and beside the grout miss-          There is no difference in the results between Model
+ing cavity increasing (Fig. 8b). For Case Filling, because     One and Model Two for Case Ideal and Case Miss-
+of filling with no expansion grout, the local areas do not     ing (Fig. 8a, b), so they will be omitted. For Case Filling,
+immediately participate in bearing load, so there is no        assuming that the grout can be filled densely and can
+significant difference in the stress distribution from Case    immediately participate in bearing load, the local and
+Missing (Fig. 8c). For Case Replacement One, the grout         overall compressive stress distribution of the concrete
+in Area One is removed by chiseling, and the compres-          segments tends to be even visibly (Fig. 10a). For Case
+sive stress distribution of the concrete near the area tends   Replacement One, the compressive stress distribution of
+to be uneven accordingly (Fig. 8d). For Case Replacement       the concrete near Area One tends to be uneven accord-
+Two, the grout in Area Two is removed and the grout in         ingly (Fig. 10b). For Case Replacement Two, the com-
+Area One is filled. The removed area will lose its load-       pressive stress distribution of the concrete near Area Two
+bearing capacity, while the filled grout will not partici-     tends to be uneven, while that near Area One recovers
+pate in bearing load, immediately. The compressive stress      (Fig. 10c). For Case Completion, the uneven compressive
+distribution of the concrete near Area Two tends to be         stress of the tower segments can be significantly allevi-
+uneven, and that near Area One will not recover soon           ated, and the stress distribution can be mostly restored to
+(Fig. 8e). For Case Completion, due to the local replace-      the Case Ideal (Fig. 10d).
+ment repair process, the entire section can participate           As shown in Fig. 11, the maximum principal stress con-
+in bearing load together, and the problem of local low or      tours (in MPa) of the first and second tower segments of
+high compressive stress can be slightly alleviated, but it     Model Two (slight expansion grout) are presented, with
+cannot restore the stress distribution of the concrete seg-    positive values indicating tension. The minimum value of
+ments to the Case Ideal (Fig. 8f ).                            the contour is set to zero, and the regions below that will
+  As shown in Fig. 9, the maximum principal stress con-        be black. The maximum value of the contour is set to 2.4
+tours (in MPa) of the first and second tower segments          MPa, and the regions above that will be gray.
+of Model One (no expansion grout) are presented, with             There is no difference in the results between Model
+positive values indicating tension. The minimum value of       One and Model Two for Case Ideal and Case Missing
+the contour is set to zero, and the regions below that will    (Fig. 9a, b). For Case Filling, the local and overall ten-
+be black. The maximum value of the contour is set to 2.4       sile stress distribution of the concrete segments tends to
+MPa, and the regions above that will be gray.                  be even (Fig. 11a). For Case Replacement One, the ten-
+  For Case Ideal, the overall tensile stress distribution of   sile stress value of the concrete near Area One increases
+the concrete segments is even and the value is relatively      accordingly (Fig. 11b). For Case Replacement Two,
+low (Fig. 9a). For Case Missing, the tensile stress value      the tensile stress value of the concrete near Area Two
+of concrete near the grout missing positions increases         increases, while that near Area One recovers (Fig. 11c).
+obviously (Fig. 9b). For Case Filling, as the grout will not   For Case Completion, the uneven tensile stress of the
+immediately participate in bearing load after filling, there   tower can be alleviated to some extent, but due to irre-
+is no significant difference between the stress distribu-      versible local tensile damage to the concrete during the
+tion from Case Missing (Fig. 9c). For Case Replacement         replacement process, the tensile stress distribution can-
+One, the tensile stress value of the concrete near Area        not be restored to the Case Ideal (Fig. 11d).
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                      Page 9 of 23
+
+
+
+
+ Fig. 9 The maximum principal stress of concrete segments of model one for a case ideal, b case missing, c case filling, d case replacement one, e
+ case replacement two, f case completion
+
+
+
+3.3 Concrete Damage Analysis                                                particularly, while the compressive damage of concrete is
+When the tensile or compressive stress of concrete                           not significant, so it will be omitted.
+exceeds a certain limit, it is considered that irreversible
+material damage has occurred, and the elastic modulus
+and ultimate stress will decrease. The variables of the                      3.3.1 Model One
+concrete damage model are as defined in Sect. 2.3. In                        As shown in Fig. 12, the tensile damage contours of the
+this analysis, the tensile damage of concrete is prominent                   first and second segments of Model One (no expansion
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                  Page 10 of 23
+
+
+
+
+ Fig. 10 The minimum principal stress of concrete segments of model two for a case filling, b case replacement one, c case replacement two, d
+ case completion
+
+
+
+grout) are presented. A value of zero indicates no dam-                     Since the concrete damage is irreversible, the develop-
+age, while value of one indicates complete damage.                         ment of tensile damage of Model Two is similar to that of
+  For Case Ideal, the concrete is almost undamaged,                        Model One (cf. Fig. 12), as described in Sect. 3.2.1.
+with local damage occurring only above and below
+the door (Fig. 12a). For Case Missing and Filling, there                   3.4 Rebar Stress Analysis
+are significant concrete tensile damage areas near the                     3.4.1 Model One
+obvious grout missing position (Fig. 12b, c). For Case                     As shown in Fig. 14, the Mises stress contours (in MPa)
+Replacement One and Two, the concrete near the                             of the steel rebars inside the first and second tower seg-
+chiseled area also developed into a local tensile dam-                     ments of Model One (no expansion grout) are presented.
+age zone (Fig. 12d, e). For Case Completion, after the                     For easy observation, the maximum value of the contour
+processes of Case Replacement One to Eight, there are                      is set to 100 MPa, and the regions above that will be gray.
+obvious tensile damage areas around the concrete con-                         For Case Ideal, the stress distribution of the rebars is
+tact surface, but the range of damage areas is not so                      almost even, and there is a significant stress concentra-
+large (Fig. 12f ).                                                         tion near the door, which is reasonable (Fig. 14a). For
+                                                                           Case Missing, the stress distribution of the rebars near
+                                                                           the grout missing position is noticeably uneven, with the
+3.3.2 Model Two                                                           stress value of rebars near the horizontal joint increas-
+As shown in Fig. 13, the tensile damage contours of the                    ing and a little away from the joint decreasing (Fig. 14b).
+first and second segments of Model Two (slight expan-                      For Case Filling, due to the fact that the grout will not
+sion grout) are presented. A value of zero indicates no                    immediately participate in the bearing load, there is no
+damage, while value of one indicates complete damage.                      significant difference in the stress distribution from Case
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                  Page 11 of 23
+
+
+
+
+ Fig. 11 The maximum principal stress of concrete segments of model two for a case filling, b case replacement one, c case replacement two, d
+ case completion
+
+
+
+Missing (Fig. 14c). For Case Replacement One and Two,                      repair of the grout layer makes the stress of the rebars
+the stress distribution of the rebars near the chiseled area               tend to be even, but it will not fully restore to the Case
+tends to be uneven accordingly (Fig. 14d, e). For Case                     Ideal (Fig. 15d).
+Completion, referring to the results of concrete tensile
+stress (cf. Fig. 9f ) and tensile damage (cf. Fig. 12f ), the              3.5 Contact Stress Analysis
+high Mises stress areas of the rebars corresponds to the                   In order to study the stress of the horizontal contact
+high tensile stress areas and obvious tensile damage areas                 surface of tower segments, the vertical stress (i.e., S33
+of concrete (Fig. 14f ).                                                   in ABAQUS) of the top elements of the first tower seg-
+                                                                           ment is extracted, and the vertical stress of the bottom
+3.4.2 Model Two                                                           elements of the second tower segment is basically con-
+As shown in Fig. 15, the Mises stress contours (in MPa)                    sistent with it. As shown in Fig. 16, the Element 1 to 6
+of the steel rebars inside the first and second tower seg-                 in the legend of later figures means the six elements
+ments of Model Two (slight expansion grout) are pre-                       along the wall thickness, with Element 1 being the out-
+sented. For easy observation, the maximum value of the                     ermost one and Element 6 being the innermost one.
+contour is set to 100 MPa, and the regions above that will                 The Average means the arithmetic average of the val-
+be gray.                                                                   ues in Element 2 to 6, since Element 1 is located on the
+  The Mises stress variation of rebars in Model Two is                     outside of the waterproof rubber (cf. Fig. 1c), where
+basically similar to that in Model One, as described in                    there is no grout layer to transfer the load, while Ele-
+Sect. 3.3.1. The high Mises stress areas of the rebars cor-                ment 2 to 6 have the grout layer to transfer the load.
+responds to the high tensile stress areas (cf. Fig. 11) and                The X-axis of the later figures unfolds the circular
+obvious tensile damage areas (cf. Fig. 13) of concrete. The                cross-section into a straight line, with the leftmost
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                     Page 12 of 23
+
+
+
+
+ Fig. 12 The tensile damage of concrete segments of model one for a case ideal, b case missing, c case filling, d case replacement one, e case
+ replacement two, f case completion
+
+
+
+
+representing the right side of the door and the right-                      3.5.1 Model One
+most representing the left side of the door. The Y-axis                     As shown in Fig. 17, the surface contact stress line
+of the later figures represents the numerical value of                      charts of Model One (no expansion grout) are pre-
+stress (in MPa), with positive representing tensile                         sented. For Case Ideal, the entire section is in compres-
+stress and negative representing compressive stress.                        sive stress and the value is even, with an increase near
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                  Page 13 of 23
+
+
+
+
+ Fig. 13 The tensile damage of concrete segments of model two for a case filling, b case replacement one, c case replacement two, d case
+ completion
+
+
+
+the door, and the compressive stress range is 5 to 17                      mainly in compression, and the stress fluctuation near
+MPa. The compressive stress values at Element 2 to 6                       the door is relatively large (Fig. 17f ).
+are generally around 12 MPa, which is in good agree-
+ment with the theoretical calculation value of 11.89
+MPa considering the waterproof rubber and outer cav-                       3.5.2 Model Two
+ity, also validating the finite element model (Fig. 17a).                  As shown in Fig. 18, the surface contact stress line
+For Case Missing, the stress distribution is significantly                 charts of Model Two (slight expansion grout) are pre-
+uneven and tensile stress appears in some areas, par-                      sented. There is no difference in the results between
+ticularly in areas with serve grout missing. The maxi-                     Model One and Model Two for Case Ideal and Case
+mum compressive stress is about 28 MPa and tensile                         Missing (Fig. 17a, b). For Case Filling, assuming that
+stress is about 2 MPa (Fig. 17b). For Case Filling, the                    the expansibility of newly filled grout can restore local
+newly filled grout is subjected to less stress, so the                     deformation to the ideal state, the unevenness of stress
+overall contact stress is similar to that of Case Miss-                    is alleviated ideally (Fig. 18a). For Case Replacement
+ing (Fig. 17c). For Case Replacement One and Two, the                      One and Two, the stress corresponding to the grout
+stress value corresponding to the grout chiseled area                      chiseled area has a sudden change, with the extremum
+has a sudden change, with the extremum point show-                         point showing tensile stress, while the repaired areas
+ing tensile stress and both sides near the tensile point                   will restore to ideal stress values (Fig. 18b, c). For Case
+showing large compressive stress (Fig. 17d, e). For                        Completion, the stress tends to be even, and the entire
+Case Completion, due to the fact that the newly filled                     section is in compressive stress. The overall stress dis-
+grout cannot participate well in bearing load, the stress                  tribution is similar to the Case Ideal, but with a slight
+value fluctuates along the section position. The stress is                 fluctuation (Fig. 18d).
+Wang et al. Int J Concr Struct Mater    (2025) 19:68                                                                                       Page 14 of 23
+
+
+
+
+ Fig. 14 The mises stress of rebars of model one for a case ideal, b case missing, c case filling, d case replacement one, e case replacement two, f
+ case completion
+
+
+
+4 Fatigue Analysis                                                           tower design, especially when the concrete section has
+4.1 Method                                                                   defects. Therefore, it is necessary to conduct the fatigue
+The wind turbine prestressed concrete tower is sub-                           analysis and verification on concrete tower structures.
+jected to fatigue loads up to millions of cycles during                       Referring to Section 7.4.1 of the fib Model Code for
+the service life. Although the stress range caused by                         Concrete Structures 2010 (2013), this paper adopts the
+these loads is generally not too large, such a big number                     Palmgren-Miner summation method to calculate the
+of cycles may still make fatigue a control condition for                      fatigue damage factor (D) of the structure. If D ≤ 1.0, it
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                       Page 15 of 23
+
+
+
+
+ Fig. 15 The Mises stress of rebars of model two for a case filling, b case replacement one, c case replacement two, d case completion
+
+
+
+                                                                            is considered to meet the fatigue design requirements
+                                                                            (see Eq. (1)).
+                                                                                         j
+                                                                                          nEi
+                                                                                   D=                ≤ 1.0                                         (1)
+                                                                                               NRi
+                                                                                         i=1
+
+                                                                            where nEi is the number of acting stress cycles associated
+                                                                            with the actual stress levels for concrete; NRi is the num-
+                                                                            ber of resisting stress cycles at a given stress level.
+                                                                              The NRi of concrete needs to be calculated based on
+                                                                            actual stress levels and stress range for concrete.
+                                                                              (1) When the two extreme stresses are both compres-
+                                                                            sion (see Eqs. (2)–(9)).
+                                                                                                 8
+                                                                                  log N1 =          · (Scd,max − 1)                                (2)
+                                                                                               Y −1
+                                                                                                                                                       
+                                                                                            8 · ln(10)                              Scd,max − Scd,min
+                                                                            log N2 = 8 +               · (Y − Scd,min ) · log
+                                                                                              Y −1                                     Y − Scd,min
+                                                                                                                                                   (3)
+
+ Fig. 16 Segment contact surface
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                                                       Page 16 of 23
+
+
+
+
+ Fig. 17 The contact stress of segment surface of model one for a case ideal, b case missing, c case filling, d case replacement one, e case
+ replacement two, f case completion
+
+
+
+
+                                                                              number of resisting stress cycles at a given stress level.
+                 
+                     log N1     (log N1 ≤ 8)
+      log N =
+                     log N2     (log N1 > 8)                         (4)      The parameters can be calculated by following equations.
+
+where Scd,max is the maximum compressive stress level;
+Scd,min is the minimum compressive stress level, N is the
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                       Page 17 of 23
+
+
+
+
+ Fig. 17 continued
+
+
+
+                   0.45 + 1.8 · Scd,min                     Scd,min = min{γEd σc,min ηc /fcd,fat , 0.8}            (7)
+      Y =                               2             (5)
+             1 + 1.8 · Scd,min − 0.3 · Scd,min
+                                                                                                    
+                                                                                                 fck
+                                                            fcd,fat = 0.85 · βcc (t) · fck · 1 −        γc,fat     (8)
+      Scd,max = γEd σc,max ηc /fcd,fat                (6)                                        400
+Wang et al. Int J Concr Struct Mater        (2025) 19:68                                                                              Page 18 of 23
+
+
+
+
+ Fig. 18 The contact stress of segment surface of model two for a case filling, b case replacement one, c case replacement two, d case completion
+
+
+
+                                                                           taken as 1.0; γc,fat is the partial safety factor for concrete
+                                             0.5 
+                                           28
+      βcc (t) = exp s · 1 −                                        (9)     material properties under fatigue loading, taken as 1.5;
+                                            t
+                                                                           fck is the characteristic value of compressive strength of
+                                                                           concrete, for C70 concrete in Chinese code taken as 55
+where σc,max is the maximum compressive stress; σc,min is
+                                                                           MPa; s is the coefficient which depends on the strength
+the minimum compressive stress; γEd is the load factor,
+                                                                           class of cement, taken as 0.2; t is the concrete age in days
+taken as 1.1; ηc is the averaging factor of concrete stresses
+                                                                           adjusted, taken as 60 days.
+in the compression zone considering the stress gradient,
+Wang et al. Int J Concr Struct Mater   (2025) 19:68                                                               Page 19 of 23
+
+
+
+
+ Fig. 18 continued
+
+
+
+
+  (2) When the two extreme stresses are one compression          distribution of the contact surface as the reference to
+and one tension with the condition σct,max ≤ 0.026σc,max       calculate the stress level, and Case No.2 considers the
+                                                         
+
+.                                                                section weakening of the waterproof rubber and outer
+                                                                 cavity. The Initial cases in Table 3 correspond to the sim-
+      log N = 9(1 − Scd,max )                            (10)    ulation cases in Table 2, which refers to using the stress of
+                                                                 a certain simulation case to calculate the stress level for
+  (3) When the two extreme stresses are one com-
+                                                                 fatigue verification. For Case Ideal and Case Missing, the
+pression and  one  tension with the condition
+                                                                 property of the grout has no impact on the analysis, since
+σct,max > 0.026σc,max , or the two extreme stresses are
+                                                                 no repair process has been carried out. For Case Filling
+both tension (see Eqs. (11)–(13)).
+                                                                 and Case Completion, the property of the grout is dis-
+      log N = 12(1 − Std,max )                           (11)    tinguished, with no expansion and slight expansion cor-
+                                                                 responding to Model One and Model Two (cf. Sect. 2.3),
+                                                                 respectively. Specifically, this paper distinguishes whether
+      Std,max =γEd · σct,max /fctd,fat                   (12)
+                                                                 the verification area is located near the tower door
+                                                                 (Fig. 19). There is a significant stress concentration near
+       fctd,fat = fctk,0.05 /γc,fat                      (13)    the door even in Case Ideal (cf. Fig. 17a), which is not
+                                                                 caused by the missing of grout. This adverse effect needs
+where Std,max is the maximum tensile stress level; σct,max
+                                                                 to be considered. Therefore, when setting the verification
+is the maximum tensile stress; fctk,0.05 is the characteristic
+                                                                 area near the door, the stress response under the load
+value of 0.05 % proof axial tensile strength of concrete,
+                                                                 should be amplified to a certain extent. For the method
+for C70 concrete in Chinese code taken as 3.0 MPa.
+                                                                 of getting reference stress values, Single Point Extremum
+   Based on the above method, fatigue analysis and verifi-
+                                                                 means directly using the extremum of a certain element
+cation are conducted on the upper contact surface of the
+                                                                 from simulation results, and Thickness Average means
+first tower segment. Considering a design service life of
+                                                                 using the arithmetic average of the stresses in Element 2
+20 years, the values and frequencies of the fatigue loads
+                                                                 to 6 which have the grout layer to transfer the load. (cf.
+are calculated to obtain nEi. At the same time, consider-
+                                                                 Sect. 3.4, Figs. 17).
+ing the maximum bending moment as the control load,
+the stress levels and ranges of the concrete section are
+calculated to obtain NRi. Making a linear summation to           4.3 Results
+calculate the fatigue damage factor (D) can make a verifi-       The fatigue verification results of various cases are shown
+cation to the target area of the concrete section.               in Table 4. Among them, Reference Stress means the
+                                                                 stress of the concrete contact surface under the prestress
+4.2 Cases                                                       of steel strands and the gravity of the upper tower, with
+The cases for fatigue verification are shown in Table 3.         positive values indicating tension and negative values
+Among them, Case No.1 and No.2 take the theoreti-                indicating compression. The stress caused by external
+cal calculation stress of ideal uniform compression              load is further calculated and added to Reference Stress.
+Wang et al. Int J Concr Struct Mater    (2025) 19:68                                                                     Page 20 of 23
+
+
+
+
+Table 3 Verification cases
+Number                Initial case              Grout property     Verification area     Method of getting value
+
+1                     –                         –                  Not near the door     Theoretical calculation with full cross-section
+2                     –                         –                  Not near the door     Theoretical calculation with the grout layer
+3                     Case ideal                –                  Not near the door     Single point extremum
+4                     Case ideal                –                  Near the door         Single point extremum
+5                     Case ideal                –                  Not near the door     Thickness average
+6                     Case ideal                –                  Near the door         Thickness average
+7                     Case missing              –                  Not near the door     Single point extremum
+8                     Case missing              –                  Near the door         Single point extremum
+9                     Case missing              –                  Not near the door     Thickness average
+10                    Case missing              –                  Near the door         Thickness average
+11                    Case filling              No expansion       Not near the door     Single point extremum
+12                    Case filling              No expansion       Near the door         Single point extremum
+13                    Case filling              No expansion       Not near the door     Thickness average
+14                    Case filling              No expansion       Near the door         Thickness average
+15                    Case completion           No expansion       Not near the door     Single point extremum
+16                    Case completion           No expansion       Near the door         Single point extremum
+17                    Case completion           No expansion       Not near the door     Thickness average
+18                    Case completion           No expansion       Near the door         Thickness average
+19                    Case filling              Slight expansion   Not near the door     Single point extremum
+20                    Case filling              Slight expansion   Near the door         Single point extremum
+21                    Case filling              Slight expansion   Not near the door     Thickness average
+22                    Case filling              Slight expansion   Near the door         Thickness average
+23                    Case completion           Slight expansion   Not near the door     Single point extremum
+24                    Case completion           Slight expansion   Near the door         Single point extremum
+25                    Case completion           Slight expansion   Not near the door     Thickness average
+26                    Case completion           Slight expansion   Near the door         Thickness average
+
+
+
+                                                                   The choosing of Reference Stress value is based on the
+                                                                   worst condition, with the minimum compressive stress
+                                                                   (or maximum tensile stress) taken for the windward
+                                                                   verification and the maximum compressive stress taken
+                                                                   for the leeward verification. The verification area can be
+                                                                   windward or leeward, whether it is near the door or not
+                                                                   (cf. Fig. 19). The damage factor (D) is defined as Eq. (1).
+                                                                   When it is greater than 1.0, it indicates that the fatigue
+                                                                   verification does not meet the requirements, and the font
+                                                                   is bolded for easy observation in the table.
+                                                                      As shown in Table 4, the fatigue verifications for theo-
+                                                                   retical calculation (Case No.1 and No.2) and Case Ideal
+                                                                   (Case No.3, No.4, No.5 and No.6) all meet the code
+                                                                   requirements. The stress concentration of the door and
+                                                                   method of getting reference stress value have no influ-
+                                                                   ence on the final results, it indicates the rationality of
+                                                                   the tower section design. For Case Missing (Case No.7,
+                                                                   No.8, No.9 and No.10), most of the fatigue verifications
+                                                                   do not meet the requirements, and the damage fac-
+                                                                   tors significantly exceed the limit of 1.0, indicating that
+                                                                   the uneven stress distribution caused by grout missing
+    Fig. 19 Fatigue verification area
+                                                                   strongly weakens the fatigue performance of the local
+Wang et al. Int J Concr Struct Mater        (2025) 19:68                                                                           Page 21 of 23
+
+
+
+
+Table 4 Verification results                                                     the requirements, indicating that using no expansion
+Number          Reference stress (σ/MPa)           Damage factor (D)
+                                                                                 grout for replacement repair cannot achieve the effect
+                                                                                 of improving the fatigue life of the structure.
+                Windward           Leeward         Windward           Leeward      For the Case Filling (Case No.19, No.20, No.21 and
+1                  9.95             9.95           5.29E–09           1.22E–08   No.22) and Case Completion (Case No.23, No.24, No.25
+2                 11.89            11.89           1.37E–07           7.19E–07   and No.26) using slight expansion grout, the stress distri-
+3                  8.93            16.30           9.65E–08           1.47E–05   bution tends to be even significantly compared with Case
+4                 10.40            16.30           6.62E–04           7.75E–03   Missing, but the problem of local low compressive stress
+5                 10.50            14.88           1.08E–07           4.58E–06   still exists (cf. Fig. 18a, d). This problem leads to a higher
+6                 11.50            14.88           8.32E–06           1.61E–03   fatigue damage value on the windward side when using
+7                − 1.86            28.70           2.48E+43           2.58E+05   the Single Point Extremum method, which does not meet
+8                − 1.60            28.30           8.43E+54           2.42E+09   the verification requirements. However, when using the
+9                  3.34            17.81           5.82E+16           6.68E–05   Thickness Average method, the fatigue damage on the
+10                 7.45            16.40           3.81E+08           8.74E–03   windward side can meet the requirements. The fatigue
+11               − 1.90            29.60           3.97E+43           2.71E+06   verification on the leeward side meets the requirements,
+12               − 0.28            27.20           1.47E+48           1.36E+08   regardless of which method is used. It indicates that,
+13                 3.15            17.97           5.47E+17           7.98E–05   while ensuring the construction quality, using slight
+14                 7.64            16.42           4.05E+07           8.95E–03   expansion grout for one-time filling repair and replace-
+15               − 1.58            36.60           9.12E+41           2.39E+14   ment repair both can achieve an ideal result, remarkably
+16               − 1.58            36.60           6.66E+54           6.38E+18   decreasing the fatigue damage value and improving the
+17               − 0.31            35.08           2.86E+35           4.50E+12   fatigue life of the structure.
+18               − 0.31            35.08           2.09E+48           1.20E+17     In addition, it is found that whether the fatigue verifi-
+19                 6.39            17.30           1.40E+01           3.88E–05
+                                                                                 cation area is located near the tower door or not is not
+20                 7.63            17.30           4.56E+07           2.72E–02
+                                                                                 a critical factor in whether the fatigue verification will
+21                 9.52            15.06           9.87E–08           5.25E–06
+                                                                                 meet the requirements or not. But the fatigue damage of
+22                10.30            15.06           6.45E–04           1.94E–03
+                                                                                 the area not near the door is much smaller than that of
+23                 6.11            17.30           3.80E+02           3.88E–05
+                                                                                 the area near the door. Compared with the Single Point
+24                 7.15            17.30           1.31E+10           2.72E–02
+                                                                                 Extremum method, using the Thickness Average method
+25                 9.26            14.72           9.74E–08           4.07E–06
+                                                                                 homogenizes the local stress to some extent, so the cal-
+26                10.01            14.72           4.37E–05           1.37E–03
+                                                                                 culated fatigue damage factor is smaller. Compared with
+                                                                                 using no expansion grout, using slight expansion grout
+The significance of bold indicates that the damage factor is greater than 1.0
+                                                                                 can pronouncedly decrease the fatigue damage value and
+                                                                                 improve the fatigue life of the structure.
+
+concrete section. After the wind turbine running for a                           5 Conclusions
+period of time under Case Missing, local fatigue failure                         In this paper, a grout layer replacement repair scheme
+of the concrete is likely to occur, and there is a potential                     for grout missing in the horizontal joint of wind turbine
+risk to the whole structure of inclination or even col-                          prestressed concrete tower is proposed. Considering no
+lapse, so the repair is needed.                                                  expansion and of slight expansion grout, ABAQUS is
+  For Case Filling using no expansion grout (Case                                used for finite element simulation of the horizontal joint
+No.11, No.12, No.13 and No.14), the stress distribu-                             replacement process. The concrete stress, tensile dam-
+tion is similar to that of the Case Missing, so the fatigue                      age, contact surface stress, steel rebar stress and other
+verification results are basically similar to those of                           responses of the concrete tower are obtained. Based on
+the Case Missing. Most of the fatigue verifications do                           the simulation results, fatigue analysis is carried out on
+not meet the requirements, indicating that using no                              the concrete section near the horizontal joint. The poten-
+expansion grout for one-time filling repair is ineffec-                          tial risk caused by grout missing and the effectiveness of
+tive. For Case Completion (Case No.15, No.16, No.17                              the grout layer replacement are revealed. The main con-
+and No.18) using no expansion grout, the stress distri-                          clusions are as follows.
+bution of the section is shown in Fig. 17f. Due to the
+repair of chiseling and filling, the stress fluctuates along                       (1) The grout layer missing in the horizontal joint has
+the section position, and the local high compressive or                                a significant adverse effect on the local area of the
+high tensile stress is unfavorable for the fatigue verifica-                           concrete tower. Based on the finite element simu-
+tion. The fatigue verifications of all cases do not meet                               lation results, there is an obvious stress uneven-
+Wang et al. Int J Concr Struct Mater      (2025) 19:68                                                                                                 Page 22 of 23
+
+
+
+
+       ness in the local area of severe grout missing, with                   Declarations
+       concrete compressive stress increasing or decreas-
+                                                                              Ethics approval and consent to participate
+       ing, tensile stress increasing, tensile damage zone                    Not applicable.
+       developing, and steel rebars stress increasing or
+       decreasing. This can lead to concrete cracking and                     Consent for publication
+                                                                              Not applicable.
+       blocks falling. Based on the fatigue analysis results,
+       the fatigue damage factor greatly exceeds the limit                    Competing interests
+       value for the case of grout layer missing, meaning a                   The authors declare that they have no known competing financial interests
+                                                                              or personal relationships that could have appeared to influence the work
+       short fatigue life. In this situation, there is a risk to              reported in this paper.
+       the structure of local failure and repair of the grout
+       layer is required.
+                                                                              Received: 7 January 2025 Accepted: 6 May 2025
+   (2) The repair of the grout layer for the horizontal joint
+       should use slight expansion grout (whose expansi-
+       bility should be able to restore the local deformation
+       to the ideal state), or adopt measures such as local                   References
+       lifting to promote stress redistribution, so that the                  Alvarez-Anton, L., Koob, M., Diaz, J., & Minnert, J. (2016). Optimization of a
+       grout layer can immediately participate in bearing                            hybrid tower for onshore wind turbines by Building Information Mod-
+                                                                                     eling and prefabrication techniques. Visualization in Engineering, 4(1), 3.
+       load after repair. Based on the simulation results,                           https://​doi.​org/​10.​1186/​s40327-​015-​0032-4
+       the effectiveness of slight expansion grout is much                    Cao, Y., He, M., Ma, R., Yang, R., & Liang, F. (2020). Beam-column modeling
+       better than that of no expansion grout, and the con-                          and seismic fragility analysis of a prestressed segmental concrete tower
+                                                                                     for wind turbines. Advances in Structural Engineering, 23(8), 1715–1727.
+       crete stress, surface contact stress, and steel rebars                        https://​doi.​org/​10.​1177/​13694​33219​900295
+       stress tend to be more even. The concrete tensile                      Chen, J., Lin, W., & Li, J. (2024b). Ultimate torsional moment of dry horizontal
+       damage develops during the replacement process,                               joint for prefabricated concrete tower. The Structural Design of Tall and
+                                                                                     Special Buildings, e2156. https://​doi.​org/​10.​1002/​tal.​2156
+       and there is no noticeable difference between using                    Chen, J., Zhao, S., Zhang, Y., Tan, X., & Zhang, B. (2024a). Axial compressive per-
+       two types of grouts. Based on the fatigue analysis                            formance of composite cylinder wall members in steel-concrete towers
+       results, the effectiveness of slight expansion grout is                       designed for wind turbines. Journal of Constructional Steel Research, 221,
+                                                                                     Article 108908. https://​doi.​org/​10.​1016/j.​jcsr.​2024.​108908
+       also much better. The fatigue damage factors for the                   Cheng, Y., Zhao, Y., Qi, H., & Zhou, X. (2024). Intelligent optimal design of steel-
+       cases of grout filling and replacement completion                             concrete hybrid wind turbine tower based on evolutionary algorithm.
+       are significantly decreased, that is, the fatigue life is                     Journal of Constructional Steel Research, 218, Article 108729. https://​doi.​
+                                                                                     org/​10.​1016/j.​jcsr.​2024.​108729
+       improved. In this situation, the fatigue damage fac-                   DNVGL-ST-0126 Support structures for wind turbines. (2016). DNV.
+       tors can generally meet the requirements.                              Elruby, A. Y., & Nakhla, S. (2019). Strain energy density based damage initiation
+                                                                                     in heavily cross-linked epoxy using XFEM. Theoretical and Applied Fracture
+                                                                                     Mechanics, 103, Article 102254. https://​doi.​org/​10.​1016/j.​tafmec.​2019.​
+  This paper conducts numerical simulation and fatigue                               102254
+analysis research on the replacement of grout layer for                       fib Model Code for Concrete Structures 2010. (2013). John Wiley & Sons, Ltd.
+horizontal joint of wind turbine prestressed concrete                         Fürll, F., Klein, F., Hartwig, S., Kang, C., Betz, T., & Marx, S. (2024). Experimental
+                                                                                     and analytical study on the load-bearing capacity of segmented tower
+tower, in order to provide theoretical and technical                                 structures with dry joints under combined loading. Structural Concrete.
+support for the analysis and solution of similar grout                               https://​doi.​org/​10.​1002/​suco.​20230​0873
+missing problems and grout layer replacement projects.                        GB 50010-2010 Code for Design of Concrete Structures. (2015). China Architec-
+                                                                                     ture & Building Press.
+Acknowledgements                                                              Grünberg, J. & Göhlmann, J. (2013). Concrete structures for wind turbines. John
+The authors gratefully acknowledge the support from National Key Research            Wiley & Sons, Ltd. https://​doi.​org/​10.​1002/​97834​33603​291
+and Development Program of China (2024YFF0505400) and Fundamental             GWEC. (2024). Global Wind Report 2024.
+Research Funds for the Central Universities.                                  Hernandez-Estrada, E., Lastres-Danguillecourt, O., Robles-Ocampo, J. B., Lopez-
+                                                                                     Lopez, A., Sevilla-Camacho, P. Y., Perez-Sariñana, B. Y., & Dorrego-Portela,
+Author contributions                                                                 J. R. (2021). Considerations for the structural analysis and design of wind
+Ziwei Wang: Methodology, Formal analysis, Investigation, Writing—Original            turbine towers: A review. Renewable and Sustainable Energy Reviews, 137,
+Draft, Visualization. Dongping Huang: Investigation, Resources. Minjuan He:          Article 110447. https://​doi.​org/​10.​1016/j.​rser.​2020.​110447
+Conceptualization, Supervision. Zheng Li: Writing—Review and Editing, Fund-   IEC 61400-1:2019 Wind energy generation systems Part 1: Design require-
+ing acquisition, Project administration.                                             ments. (2019). International Electrotechnical Commission.
+                                                                              IEC 61400-6:2020 Wind energy generation systems Part 6: Tower and
+Funding                                                                              foundation design requirements. (2020). International Electrotechnical
+(1) National Key Research and Development Program of China                           Commission.
+(2024YFF0505400). (2) Fundamental Research Funds for the Central              Iwamoto, T., Nagai, T., & Sawa, T. (2010). Experimental and computational
+Universities.                                                                        investigations on strain rate sensitivity and deformation behavior of bulk
+                                                                                     materials made of epoxy resin structural adhesive. International Journal
+Data availability                                                                    of Solids and Structures, 47(2), 175–185. https://​doi.​org/​10.​1016/j.​ijsol​str.​
+Data will be made available on request.                                              2009.​09.​026
+Wang et al. Int J Concr Struct Mater            (2025) 19:68                               Page 23 of 23
+
+
+
+
+Jonscher, C., Liesecke, L., Penner, N., Hofmeister, B., Grießmann, T., & Rolfes, R.
+       (2023). Influence of system changes on closely spaced modes of a large-
+       scale concrete tower for the application to structural health monitoring.
+       Journal of Civil Structural Health Monitoring, 13(4), 1043–1060. https://​doi.​
+       org/​10.​1007/​s13349-​023-​00693-6
+Kang, C., Hartwig, S., & Marx, S. (2019). Behavior of externally prestressed
+       segmental towers’ dry joint under torsion effects. Structural Concrete, 20,
+       1350–1357. https://​doi.​org/​10.​1002/​suco.​20180​0266
+Klein, F., Fürll, F., Betz, T., & Marx, S. (2022). Experimental study on the joint bear-
+       ing behavior of segmented tower structures subjected to normal and
+       bending shear loads. Structural Concrete, 23, 1370–1384. https://​doi.​org/​
+       10.​1002/​suco.​20210​0710
+LaNier, M. W. (2005). LWST phase i project conceptual design study: evaluation
+       of design and construction approaches for economical hybrid steel/
+       concrete wind turbine towers; June 28, 2002–July 31, 2004 (NREL/SR-500-
+       36777). NREL. https://​doi.​org/​10.​2172/​15011​444
+Li, Z., Xu, B., & Zhao, Y. (2024). Two-scale probabilistic seismic fragility assess-
+       ment for a prestressed concrete-steel hybrid wind turbine tower with
+       incremental dynamic and multiple stripe analysis. Journal of Earthquake
+       Engineering, 28(14), 4025–4046. https://​doi.​org/​10.​1080/​13632​469.​2024.​
+       23617​70
+Lin, L., Zhang, X., Zhang, D., Wu, X., Liu, Y., Wang, X., Wang, H., Wang, F., & Yang, T.
+       (2023). Damage evolution and failure analysis of the advanced transition
+       segment behavior of wind turbine tower. Engineering Failure Analysis, 152,
+       Article 107527. https://​doi.​org/​10.​1016/j.​engfa​ilanal.​2023.​107527
+Lotfy, I. (2012). Prestressed Concrete Wind Turbine Supporting System [Univer-
+       sity of Nebraska - Lincoln].
+Ma, H., Zhang, D., Ma, Z., & Ma, Q. (2015). Scale model experimental of a
+       prestressed concrete wind turbine tower. Wind and Structures, 21(3),
+       353–367. https://​doi.​org/​10.​12989/​was.​2015.​21.3.​353
+Pang, B., Zhang, Y., & Liu, G. (2018). Study on the effect of waterborne epoxy
+       resins on the performance and microstructure of cement paste. Construc-
+       tion and Building Materials, 167, 831–845. https://​doi.​org/​10.​1016/j.​conbu​
+       ildmat.​2018.​02.​096
+Peggar, R. (2017). Design and structural testing of tall Hexcrete wind turbine
+       towers [Iowa State University].
+Ren, W., Deng, R., Zhou, X., Wang, Y., Cao, F., & Jin, K. (2023). Compressive
+       behavior of the steel–concrete composite adapter for wind turbine
+       hybrid towers. Engineering Structures, 280, Article 115703. https://​doi.​org/​
+       10.​1016/j.​engst​ruct.​2023.​115703
+Sidoroff, F. (1981). Description of Anisotropic Damage Application to Elasticity.
+       Physical Non-Linearities in Structural Analysis (pp. 237-244). Springer
+       Berlin Heidelberg. https://​doi.​org/​10.​1007/​978-3-​642-​81582-9_​35
+Song, H., Cong, O., Hao, H., & Xu, Y. (2016). Research on mechanical behaviors
+       of horizontal joint connection of prefabricated concrete towers. Building
+       Structure, 46, 16–20.
+Tao, Z., Wang, Z., & Yu, Q. (2013). Finite element modelling of concrete-filled
+       steel stub columns under axial compression. Journal of Constructional
+       Steel Research, 89, 121–131. https://​doi.​org/​10.​1016/j.​jcsr.​2013.​07.​001
+von der Haar, C., & Marx, S. (2015). Design aspects of concrete towers for wind
+       turbines. Journal of the South African Institution of Civil Engineering, 57(4),
+       30–37. https://​doi.​org/​10.​17159/​2309-​8775/​2015/​v57n4​a4
+
+
+Publisher’s Note
+Springer Nature remains neutral with regard to jurisdictional claims in pub-
+lished maps and institutional affiliations.
+
+
+Ziwei Wang is a PhD candidate in College of Civil Engineering at
+Tongji University.
+
+Dongping Huang is a Senior Engineer in Tongji Architectural
+Design (Group) Co., Ltd.
+
+Minjuan He         is a Professor in College of Civil Engineering at Tongji
+University.
+
+Zheng Li is a Professor in College of Civil Engineering at Tongji
+University.
+
