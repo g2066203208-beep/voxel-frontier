@@ -1,0 +1,11 @@
+85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c  research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf
+0c016693e43a4568a79b0336699ce52d428de72d3dc05e2c19665201d3e6dae1  research/wind-tower/references/user-provided/Experimental and two-scale numerical studies on the behavior of prestressed concrete-steel hybrid wind turbine tower models.pdf
+4c5fb8e57b713245bc8d06cedcb683b509c2038b41a34cdb76acba66fcb5aed0  research/wind-tower/references/user-provided/Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode.pdf
+1c9f474b16de3a2de29e8baf0b9d2c2d2ddb9bbf33f0319dcb13f82fd1e2789e  research/wind-tower/references/user-provided/Closed-Form Solution of Fundamental Frequency of Steel-Concrete Hybrid Wind Turbine Tower.pdf
+86a46402bd0aa2e57fb9e02e10749ca2a02c183a80039abe75d156cea339e237  research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf
+7a1f06b06a12464690ecb45dfd23fde0f3d1a88222bfc6b02e1e6e166739afab  research/wind-tower/references/open-access/Bak_2013_DTU_Wind_Energy_Report_I_0092.pdf
+a349e1f40cb7909e7a4fdb60e16e12da20019f06b0dd3a0477239e5484af10a8  research/wind-tower/references/user-provided/ERA5 - The new champion of wind power modelling.pdf
+b55260e5536888c444bbe87183ff3b6243bf2dca0e530a5aae7a9fe1758c4b5a  research/wind-tower/references/user-provided/Spatiotemporal variation of power law exponent on the use of wind energy.pdf
+d3d7216674415b2b77fd8d71a5dae0105ef08f6f811d92eb0faad6619ee8d843  research/wind-tower/references/user-provided/Analysing the uncertainties of reanalysis data used for wind resource assessment - A critical review.pdf
+cbf8b94cb11279589ba1f2b854fd89caa10d8015daed01dc68a516d8cbb1c089  research/wind-tower/references/open-access/Abbas_2022_WES_ROSCO_7_53.pdf
+cd29e924829f6a8e5b7a6d340d07b4f84d6e851af7eee4ed33173e6c2e2cd623  research/wind-tower/references/open-access/Brown_2024_WES_9_1791.pdf
