@@ -140,3 +140,8 @@
 ## T052 He 2024原始页证据与Abaqus基准闭合
 
 [50号审计](50-t052-he2024-source-page-and-abaqus-baseline-closure.md)：本步属于G0基准模型身份冻结，不是结果分析。固定核对He 2024 PDF p33–35（Table 3-1~3-3、Fig.3-4/3-5），把“原文直接参数 / 当前Abaqus实现 / 后续同谱系补全 / 规范补全 / 未决冲突”逐项分层；T050不得称为He 2024的1:1复刻。原页PNG由T052工作流归档到`references/extracts/REF008-original-pages/`。
+
+
+## T053 He2024塔架对齐 + 升级RNA正式候选静态验收
+
+[51号审计](51-t053-he-aligned-abaqus-static-acceptance.md)：当前首选Abaqus候选已切换为T053。31段纵筋+环筋+拉筋共33个活动钢筋section由HRB335_T046切回S345；显式钢筋笼、PT和升级RNA保留，旧39.80022 t NSM删除。静态输入验收PASS，但Abaqus data check、Gravity/PT平衡、质量/CG、30阶模态和Flex-X/Z仍为下一门禁。
