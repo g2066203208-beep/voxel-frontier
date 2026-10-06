@@ -1,8 +1,6 @@
 chapter	core_question	formal_method	primary_evidence	current_assets	missing_work	final_outputs	status
-Ch1	为什么研究、现有研究缺什么、本文增量是什么	直接文献对比+问题链重构	T041+literature_master+direct fulltexts	旧Ch1+chapter1 evidence map	G6-G9后回写不足/创新	研究问题图+技术路线图+现状比较表	CONDITIONAL
-Ch2	研究对象和精细结构模型为何可信	canonical baseline+分层V&V	DTU Report; He2024; Li2023; Cheng2024; Abaqus official; ASME V&V10	Abaqus M2/M3; RNA/阻尼/推覆历史资产	BASE001;材料/PT/RNA/阻尼/网格/连接最终闭合	参数表+V&V矩阵+网格/模态/自由衰减图	NEED-RUN
-Ch3	哪些随机风况/seed控制哪些整机QoI	ERA5 dynamic-alpha+TurbSim+OpenFAST/ROSCO+multi-QoI screening	Jung2021; Yang2024; Brown2024; Robertson2019; Huang2025; TurbSim/OpenFAST official	21年ERA5;36风场;36case;rainflow/DEL历史资产	Hub-height重算;风场/seed收敛;baseline下重提取	风速统计+seed离散+QoI控制工况矩阵+DEL	NEED-RUN
-Ch4	整机载荷如何可信地下沉到精细塔架、哪里控制	六分量mapping V&V+全塔响应	Wang2025; Rappe2025; Berg2011; OpenFAST/Abaqus official	历史载荷/映射资产	自由体/坐标/参考点/ΣF/ΣM/跨模型QoI	mapping验证表+全塔N-V-M-T+控制区域图	NEED-RUN
-Ch5	为什么该区域控制、哪些参数改变机制	受控非线性对照+条件局部模型+敏感性	Xu2025/2026; Li Shouzhen2024; Ren/Tan/Hao; Robertson2019	Abaqus精细模型+接缝/疲劳文献	2–4控制case;linear/P-Δ/material;必要时contact;敏感性	机制对比图+参数响应曲线+变量冻结表	NEED-RUN
-Ch6	如何针对机制优化且证明改进真实	机制驱动多目标优化+独立高保真回算	Huang2022; Chen2020; Cheng2024/2025; Kenna2019	优化文献与历史变量表	变量/范围/约束冻结;DOE/代理条件;Pareto;独立case验证	Pareto+候选方案+优化前后高保真对比	NEED-RUN
-Ch7	最终能证明什么、边界是什么	RUN/FIG/TAB/REF回收	G0-G9全部通过记录	无final	最终证据回收	结论+创新+局限	HOLD
+Ch1	为什么研究10MW混塔、现有研究缺什么、本文解决什么	直接文献对比+研究问题链	REF018/REF002+混塔建模/响应/疲劳文献+标准	既有综述与证据图	最终RUN后回写不足/创新	研究问题图+技术路线图+现状比较表	CONDITIONAL
+Ch2	158m预应力混凝土—钢混塔精细模型为何可信	证据约束建模+分层V&V	何泽瑜2024; REF136/137/138/139/140/141; Abaqus official; current T057	T052-T057; T055/T056/T063; standards archive	T057 native Data Check; Gravity+PT; mass/CG/J; Modal/Flex; mesh/contact closure	参数表+配筋/PT核算+质量/模态/Flex/网格/接触V&V矩阵	NEED-RUN
+Ch3	场址随机风和整机载荷在什么风速/seed下控制结构与疲劳筛选	ERA5+TurbSim+OpenFAST/ROSCO+multi-seed统计+load-rainflow/DEL	IEC61400-1 base audit; OpenFAST/TurbSim official; REF125; wind-response literature	ERA5资产; 36case outb; T062 independent recomputation	正式数据源身份闭合; DLC1.2长期bin规划; seed收敛	风速概率+整机响应统计+PSD+load-DEL筛选+候选控制case	NEED-RUN
+Ch4	长期正常运行风下混塔哪个材料/位置控制疲劳、寿命/损伤如何	控制区域识别+局部应力rainflow+分材料疲劳关系+Miner+场址概率加权	REF018 PRIMARY; REF002 framework; REF023 PT; REF041 joint/concrete extraction; REF143 steel/weld; REF036 connection	T061 literature audit; T064 output contract; T062 load screening	T057 production response; DLC1.2 bins+probability; local stress extraction; material fatigue model finalization	控制区域+range-mean矩阵+bin damage+annual damage+material comparison+conditional life	NEED-RUN
+Ch5	最终能证明什么、创新与边界是什么	RUN/FIG/TAB/REF回收	Ch2-Ch4全部闭合证据	canonical structure drafted	最终量化结论与创新回收	结论+创新+局限+展望	HOLD
