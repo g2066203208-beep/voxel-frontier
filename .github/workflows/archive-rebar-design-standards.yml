@@ -1,0 +1,105 @@
+name: archive-rebar-design-standards
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/archive-rebar-design-standards.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download public/official standard sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          D="research/wind-tower/references/standards/rebar-prestress-20261006"
+          mkdir -p "$D"
+
+          # GB 50010-2010 (2015 edition): public-domain copy hosted by Wikimedia Commons.
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://upload.wikimedia.org/wikipedia/commons/4/49/GB_50010-2010_%E6%B7%B7%E5%87%9D%E5%9C%9F%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%EF%BC%882015%E5%B9%B4%E7%89%88%EF%BC%89.pdf' \
+            -o "$D/GB_50010-2010_2015_混凝土结构设计规范.pdf"
+
+          # 2024 MOHURD official bulletin confirming current revision/name/number.
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://www.mohurd.gov.cn/file/2024/20240822/a015dc08-eaf2-474a-81c1-c4454e3b220c.pdf?n=%E3%80%8A%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E4%BD%8F%E6%88%BF%E5%92%8C%E5%9F%8E%E4%B9%A1%E5%BB%BA%E8%AE%BE%E9%83%A8%E6%96%87%E5%91%8A%E3%80%8B2024%E5%B9%B4%E7%AC%AC5%E3%80%816%E6%9C%9F' \
+            -o "$D/MOHURD_2024_第62号_GBT50010局部修订公告.pdf"
+
+          # Official standard-information pages. Full text is not redistributed where the
+          # official service states that copyright restrictions prevent text access.
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://std.samr.gov.cn/hb/search/stdHBDetailed?id=E1CE5F1D25419A1FE05397BE0A0AAD39' \
+            -o "$D/NBT_10907-2021_官方标准信息页.html"
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=74AE6D94498EBF8291FCA7CD614A29B9' \
+            -o "$D/GBT_42600-2023_官方标准信息页.html"
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=72D6D23611EC59237809B5CC3BB68245' \
+            -o "$D/GBT_5224-2023_官方标准信息页.html"
+
+          cat > "$D/README.md" <<'EOF'
+          # 混塔配筋与预应力规范归档（2026-10-06）
+
+          本目录用于 10 MW 钢-预应力混凝土混合塔筒的普通钢筋、构造钢筋与预应力体系审计。
+
+          ## 已归档文件
+
+          1. **GB 50010-2010（2015年版）《混凝土结构设计规范》**
+             - 文件：GB_50010-2010_2015_混凝土结构设计规范.pdf
+             - 来源：Wikimedia Commons 的公开副本。
+             - 注意：2024-08-01 起已发生局部修订，名称改为《混凝土结构设计标准》，编号改为 **GB/T 50010-2010**；使用时必须叠加 2024 修订条文，不能只按 2015 版。
+
+          2. **住房城乡建设部 2024 年第62号公告**
+             - 文件：MOHURD_2024_第62号_GBT50010局部修订公告.pdf
+             - 官方来源：住房和城乡建设部。
+             - 核心事实：2024-08-01 起实施局部修订；标准名称改为《混凝土结构设计标准》，编号改为 GB/T 50010-2010。
+             - 与当前模型直接相关：2024 修订删除 HRB335 牌号钢筋，因此“同源论文使用 HRB335”与“按现行规范选筋”必须分开论证。
+
+          3. **NB/T 10907-2021《风电机组混凝土—钢混合塔筒设计规范》**
+             - 文件：NBT_10907-2021_官方标准信息页.html
+             - 官方信息来源：全国标准信息公共服务平台。
+             - 状态：现行；发布日期 2021-12-22，实施日期 2022-03-22。
+             - 适用范围直接覆盖陆上/海上风电机组混凝土-钢混合圆形管状塔筒混凝土段及与钢制段连接。
+             - 当前未从官方免费渠道取得可再分发的全文 PDF，因此不使用第三方付费/来源不明副本冒充官方文件。
+
+          4. **GB/T 42600-2023《风能发电系统 风力发电机组塔架和基础设计要求》**
+             - 文件：GBT_42600-2023_官方标准信息页.html
+             - 官方平台明确：因采用国际标准涉及版权保护，系统不提供标准全文阅读。
+             - 因此本库只保存官方信息页，不擅自转载受限全文。
+
+          5. **GB/T 5224-2023《预应力混凝土用钢绞线》**
+             - 文件：GBT_5224-2023_官方标准信息页.html
+             - 状态：现行；2024-03-01 实施，代替 GB/T 5224-2014。
+             - 官方平台同样标明版权限制，不在本库转载受限全文。
+
+          ## 对 Abaqus 配筋模型的使用原则
+
+          - 风机混塔专用设计优先核对 NB/T 10907-2021。
+          - 普通钢筋具体构造/配筋计算采用现行 **GB/T 50010-2010（2024修订）**，同时满足上位强制性通用规范。
+          - 预应力钢绞线材料规格核对 GB/T 5224-2023。
+          - 塔架总体极限状态、疲劳及接口设计核对 GB/T 42600-2023。
+          - “何泽瑜模型原参数”“同研究团队论文参数”“现行规范重构参数”必须分栏记录，不得互相冒充直接来源。
+          EOF
+
+          sha256sum "$D"/* > "$D/SHA256SUMS.txt"
+
+      - name: Commit archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- research/wind-tower/references/standards/rebar-prestress-20261006; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/standards/rebar-prestress-20261006
+          git commit -m "references: archive rebar and prestress standards sources"
+          git push
