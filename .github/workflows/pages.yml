@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name "paper-studio-bot"
           git config user.email "paper-studio-bot@users.noreply.github.com"
-          git add research/wind-tower/experiments/T046/inputs/*.inp research/wind-tower/experiments/T047/inputs/*.inp
+          git add research/wind-tower/experiments/T046/inputs/*.inp research/wind-tower/experiments/T047/inputs/*.inp research/wind-tower/experiments/T050/inputs/*.inp
           if ! git diff --cached --quiet; then
             git commit -m "Freeze generated Abaqus model inputs [skip ci]"
             git push
@@ -71,6 +71,15 @@ jobs:
             artifacts/T047/*.inp.gz
             public/research/t047-pt-bundle-sensitivity.json
           retention-days: 90
+      - name: Upload T050 formal reinforcement candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: T050-formal-HRB335-reinforcement-candidate
+          path: |
+            artifacts/T046/BASE001_T050_E2_HRB335_REBAR_HOOP_TIE_NSM_REMOVE.inp.gz
+            research/wind-tower/experiments/T050/FORMAL_REINFORCEMENT_SPEC_20261006.md
+          retention-days: 90
+
       - name: Build production site
         run: npm run build
 
