@@ -12,16 +12,16 @@ tie_material	S345	He2024 reinforcement-mesh material identity	T050 HRB335 -> T05
 S345_density	7800 kg/m3	T053 inherited INP; He2024 Table 7-1 steel density mean=7800	keep	PASS-CROSSCHECK
 S345_elastic_modulus	200 GPa	T053 inherited INP; He2024 Table 7-1 steel Es mean=200 GPa	keep	PASS-CROSSCHECK
 S345_plastic_curve	345 MPa@0; 365 MPa@0.002; 420 MPa@0.02	T053 inherited INP; He2024 public text does not list these hardening points	keep	SOURCE-IMPLEMENTATION-HOLD
-longitudinal_area	490.874 mm2 per bar	V28 source Abaqus INP SEC_REBAR_LONG=0.000490874 m2; He2024 public thesis gives counts/positions but not bar area	keep as source-model implementation value; do not call He2024 direct phi25	PASS-SOURCE-MODEL/HE-DIRECT-NOT-PUBLISHED
+longitudinal_area	490.874 mm2 per bar	historical V28/T026/T053 implementation only; He2024 public thesis gives counts/positions but not area	do not treat source model as correctness proof; seek prototype-direct/design basis or retain as reconstruction with sensitivity	HOLD-DIRECT-EVIDENCE
 hoop_geometry	phi14@80 mm; double layer	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
 tie_geometry	phi6; vertical approx 480 mm; circumferential <=500 mm	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
 cover	30 mm	code-derived detailing completion; not He2024 direct	keep transparent completion	CODE-DERIVED
 hoop_elements	201456 T3D2	T053 actual input	keep	PASS-STATIC
 tie_elements	12312 T3D2	T053 actual input	keep	PASS-STATIC
 PT_diameter	15.2 mm	He2024 direct	keep	PASS-DIRECT
-PT_topology	36 circumferential FE positions; production interpretation=36 tendons	T026/V28-derived source topology has 36 T3D2; Xu/Wang/He et al. 2026 same research lineage Table 1 explicitly states prestressing tendon count=36 roots; He2024 public thesis does not list count	use BF=1/36-tendon interpretation as formal baseline; retain BF8 only as external-engineering sensitivity	PASS-LINEAGE-CORROBORATED/HE-DIRECT-NOT-PUBLISHED
-PT_area	140 mm2 per FE position	source Abaqus section SEC_PT_15p2_A140=0.00014 m2; Xu/Wang/He et al. 2026 same research lineage Table 1 nominal prestressing-tendon area=140 mm2; He2024 public thesis does not list area	freeze 140 mm2/tendon for BF1 production baseline; BF8 remains external bundle sensitivity	PASS-SOURCE-MODEL+PASS-LINEAGE/HE-DIRECT-NOT-PUBLISHED
-PT_radius	1.75 m	T026, V28 and T053 source Abaqus PT node coordinates all back-calculate to r=1.75 m; He2024/same-lineage public text does not publish radius	freeze 1.75 m as source-model production baseline; label as source-model geometry, not He2024 public direct value; retain local robustness sensitivity	PASS-SOURCE-MODEL/PROTOTYPE-DIRECT-NOT-PUBLISHED+PENDING-SENSITIVITY
+PT_topology	36 circumferential FE positions in current reconstruction	He2024 public thesis does not list count; same-lineage 2026 paper states 36 tendons but exact prototype equivalence is unproven	keep 36 only as reconstruction baseline; do not infer prototype correctness from source model; seek direct same-prototype evidence and retain BF sensitivity	HOLD-PROTOTYPE-DIRECT
+PT_area	140 mm2 per single 15.2 mm strand; current FE position uses 140 mm2	single-strand nominal area is well supported; He2024 does not publish number of strands per position	separate single-strand area from bundle multiplicity; do not use source model as proof that each prototype position is one strand	PARTIAL-SUPPORTED/BUNDLE-FACTOR-HOLD
+PT_radius	1.75 m	historical T026/V28/T053 implementation only; public prototype source not found	do not treat historical model continuity as correctness proof; keep only as reconstruction candidate pending direct source or radius sensitivity	HOLD-PROTOTYPE-DIRECT/RECONSTRUCTION-CANDIDATE
 PT_initial_stress	1280 MPa	same-object later-lineage Xu2025; not He2024 direct	keep nominal input	PASS-LATER-LINEAGE/NEED-EQUILIBRIUM
 PT_base	fixed translations	He2024 direct modeling statement	keep	PASS-DIRECT
 PT_top	anchored/equation-coupled to 112 m steel-concrete flange	He2024 direct topology + current implementation	keep	PASS-DIRECT-TOPOLOGY/STATIC

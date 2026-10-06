@@ -29,7 +29,7 @@
 |10|纵筋数量/分层|31段内外双排，共5440根|He2024 Table 3-2直接|无|冻结|31/31 Embedded|PASS-DIRECT + PASS-STATIC|T053|
 |11|纵筋单元/约束|T3D2 + Embedded|He2024 + Abaqus官方|不表示bond-slip|保留并限定解释边界|Embedded/data check|PASS-SOURCE + PENDING-SOLVER|T053|
 |12|纵筋材料|S345|He2024直接写钢筋网S345|无|冻结|section assignment|PASS-DIRECT + PASS-STATIC|T053|
-|13|**纵筋单根面积**|**490.874 mm²**|V28 Abaqus源模型输入直接存在；He2024公开文本未给截面尺寸|不是本文后加参数；属于源模型实现值，不是He论文公开直接值|冻结当前面积；论文写“源Abaqus模型截面值”，禁止写“何泽瑜给φ25”|源输入一致性 + 后续T053求解|**PASS-SOURCE-MODEL / HE-DIRECT-NOT-PUBLISHED**|T053/closure/01-longitudinal-rebar-area-20261006.md|
+|13|**纵筋单根面积**|**490.874 mm²**|仅能确认V28/T026/T053历史模型连续采用；He2024公开文本未给直径/面积|**源模型只能证明历史实现，不能证明该截面物理正确**|继续追同一原型设计资料/原作者说明/规范配筋依据；若找不到直接证据，则保留为RECONSTRUCTION并做面积敏感性|质量/刚度/模态/应力敏感性 + 文献/设计来源|**HOLD-DIRECT-EVIDENCE**|T053/closure/01-longitudinal-rebar-area-20261006.md（需重新定级）|
 |14|环向筋材料|S345|He2024钢筋网材料身份|几何非He直接|材料冻结|section assignment|PASS-SOURCE-IDENTITY|T053|
 |15|环向筋规格|φ14@80，双层|规范补全|不是He直接施工参数|保留为本文规范补全|配筋率+求解|PASS-CODE + PENDING-SOLVER|T050/T053|
 |16|拉筋|φ6；竖向约480 mm；环向≤500 mm|规范补全|不是He直接值|保留为本文规范补全|几何+求解|PASS-CODE + PENDING-SOLVER|T050/T053|
@@ -38,9 +38,9 @@
 |19|PT直径|15.2 mm|He2024直接|无|冻结|section identity|PASS-DIRECT|He2024|
 |20|PT材料E/fpu|195 GPa / 1860 MPa|同一10MW/158m对象Xu2025|非He2024直接|保留并注明同对象后续来源|材料卡|PASS-SOURCE|Xu2025|
 |21|PT初始应力|1280 MPa|同一对象Xu2025|平衡后实际应力未知|保留名义输入|Gravity后S11/轴力|PASS-SOURCE + PENDING-SOLVER|T053|
-|22|**PT数量物理身份**|36个周向FE位置；按当前主解释代表36根预应力索|源Abaqus链36条T3D2；徐军/王丹/何泽瑜等2026同研究谱系表1明确“预应力索 数量/根 36”|He2024公开论文未列数量；2026对象与DTU10MW上部机组并非完全同一配置|冻结BF=1/36根为当前主基线；BF=8仅保留外部工程敏感性，不再与BF=1等权|T053求解 + BF8稳健性对照|**PASS-LINEAGE-CORROBORATED / HE-DIRECT-NOT-PUBLISHED**|T053/closure/02-pt-count-identity-20261006.md|
-|23|**PT面积**|140 mm²/FE位置|源Abaqus `SEC_PT_15p2_A140=0.00014 m²`；徐军/王丹/何泽瑜等2026同研究谱系表1直接给公称截面积140 mm²|He2024公开论文未列面积；同谱系2026对象与DTU10MW上部机组并非完全同一配置|冻结140 mm²/根作为生产基线；BF8仅作外部工程束组敏感性|总名义预应力+Gravity后PT轴力|**PASS-SOURCE-MODEL + PASS-LINEAGE / HE-DIRECT-NOT-PUBLISHED**|T053/closure/03-pt-area-140mm2-20261006.md|
-|24|**PT半径**|r=1.75 m|T026、V28、T053三代Abaqus输入72个PT端点逐点反算均为1.75 m；He2024/同谱系公开文本未列半径|不是本文后加参数；属于源模型几何实现值，公开原型设计出处未披露|冻结1.75 m为生产基线；论文标SOURCE-MODEL；保留局部半径敏感性作为稳健性检查|112m顶内半径1.985 m，最小径向余量约235 mm；后续Gravity/Modal/应力|**PASS-SOURCE-MODEL / PROTOTYPE-DIRECT-NOT-PUBLISHED + PENDING-SENSITIVITY**|T053/closure/04-pt-radius-1p75m-20261006.md|
+|22|**PT数量物理身份**|当前模型36个周向FE位置|He2024公开文本未给36；同研究谱系2026论文给“预应力索 数量/根36”，但并非已证明与本文DTU10MW塔完全同一原型|**不能因为源模型36条或同谱系另一对象36根，就认定本文原型必为36根**|继续找同一原型直接资料；同时保留36位置作为当前重建基线，BF1/BF8只用于敏感性，不提前判原型身份|直接来源 + BF敏感性 + 总预应力合理性|**HOLD-PROTOTYPE-DIRECT**|T053/closure/02-pt-count-identity-20261006.md（需重新定级）|
+|23|**PT面积**|140 mm²/FE位置|15.2 mm单根七线钢绞线采用140 mm²有标准/工程强依据；He2024未公开本原型每位置股数；同谱系2026论文给140 mm²但对象不完全等同|**140 mm²可证明是单根15.2 mm钢绞线的合理公称面积，但不能证明本文每个PT位置只代表1根**|将“单股面积140 mm²”与“每位置束组倍数”分开；继续追同一原型束组资料并做BF敏感性|标准/产品截面依据 + 束组身份 + 总预应力|**PARTIAL-SUPPORTED / BUNDLE-FACTOR-HOLD**|T053/closure/03-pt-area-140mm2-20261006.md（需重新定级）|
+|24|**PT半径**|r=1.75 m|只能确认T026/V28/T053历史模型连续使用；He2024及同谱系公开资料未给该半径|**源模型连续性和几何不穿墙只能证明“可实现”，不能证明1.75 m是正确设计值**|继续找同一原型锚具/法兰/PT布置资料；找不到则正式定义为RECONSTRUCTION_PARAMETER并做半径敏感性，不能冻结为原型值|直接来源 + 几何约束 + PT偏心/模态/应力敏感性|**HOLD-PROTOTYPE-DIRECT / RECONSTRUCTION-CANDIDATE**|T053/closure/04-pt-radius-1p75m-20261006.md（需重新定级）|
 |25|PT底端|固定平移|He2024直接|无|冻结|BC/data check|PASS-DIRECT|T053|
 |26|PT顶端|112m转换法兰锚固/Equation|He2024拓扑 + 当前实现|约束力需求解核|保留|重复约束/平衡|PASS-DIRECT-TOPOLOGY + PENDING-SOLVER|T053|
 |27|**30个水平接缝**|每接口6DOF SPRING2|等效连接实现|**具体刚度不是He直接参数**|逐DOF追来源/公式，必要时重新标定并敏感性|接缝刚度敏感性/模态/柔度|**HOLD-PHYSICAL**|待关闭|
@@ -57,10 +57,10 @@
 
 ## 优先关闭顺序
 
-1. ~~纵筋490.874 mm²来源~~ — 已关闭：V28源Abaqus输入直接存在；He公开论文未列尺寸；
-2. ~~PT“36”的物理身份~~ — 已关闭主解释：源模型36条 + 同研究谱系2026表1明确“数量/根36”；He2024未公开；
-3. ~~PT 140 mm²/位置~~ — 已关闭主基线：源Abaqus A140 + 同研究谱系2026表1公称截面积140 mm²；
-4. ~~PT r=1.75 m~~ — 主基线已关闭：T026/V28/T053源模型几何一致为1.75 m，112m顶净余量约235 mm；公开论文未披露，保留稳健性敏感性；
+1. 纵筋490.874 mm²：历史实现已追溯，但**物理正确性未关闭**；
+2. PT“36”的物理身份：同谱系有36根旁证，但**本文原型直接证据未关闭**；
+3. PT 140 mm²/位置：单股140 mm²有依据，但**每位置束组倍数未关闭**；
+4. PT r=1.75 m：历史模型与几何可行性已确认，但**原型设计正确性未关闭**；
 5. 30个水平接缝SPRING2刚度；
 6. 钢塔Table 3-3半径/直径冲突；
 7. S345塑性强化曲线；
