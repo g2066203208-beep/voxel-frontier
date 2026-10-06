@@ -9,8 +9,8 @@
 `experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp`
 
 文件：
-- Git blob: `b0ae3f2e44b9313d3032c517362bc0c91180529a`
-- generated SHA256: `ab891b30f39ee241119b19a3496fa53ccb8457da44420609b8239fd70dfe3167`
+- Git blob: `c65d5ec3db6693f92d9a7938157a9b1e4182ee93`
+- generated SHA256: `06f294ae6ccc37508b3d17158247c9562c8c8f1a09b575fb8d24097d63e1e8ce`
 
 父模型：T050-E2。
 
@@ -41,6 +41,7 @@ T050的活动钢筋section中，33处 `material=HRB335_T046` 被确定性替换�
 - RBLONG活动Instance = 31；
 - 活动S345 Solid Section = 37，其中33个为钢筋体系，另外4个为钢塔；
 - 活动HRB335_T046 Solid Section = 0；
+- 未使用的`HRB335_T046`材料卡已从T053正式输入删除，旧T050“统一HRB335”身份注释已替换；
 - 显式HOOP_TIE_CAGE = 1个活动Part/Instance；
 - hoop T3D2 = 201456；
 - tie T3D2 = 12312；
