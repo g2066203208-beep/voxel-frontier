@@ -40,7 +40,7 @@
 |21|PT初始应力|1280 MPa|同一对象Xu2025|平衡后实际应力未知|保留名义输入|Gravity后S11/轴力|PASS-SOURCE + PENDING-SOLVER|T053|
 |22|**PT数量物理身份**|36个周向FE位置；按当前主解释代表36根预应力索|源Abaqus链36条T3D2；徐军/王丹/何泽瑜等2026同研究谱系表1明确“预应力索 数量/根 36”|He2024公开论文未列数量；2026对象与DTU10MW上部机组并非完全同一配置|冻结BF=1/36根为当前主基线；BF=8仅保留外部工程敏感性，不再与BF=1等权|T053求解 + BF8稳健性对照|**PASS-LINEAGE-CORROBORATED / HE-DIRECT-NOT-PUBLISHED**|T053/closure/02-pt-count-identity-20261006.md|
 |23|**PT面积**|140 mm²/FE位置|源Abaqus `SEC_PT_15p2_A140=0.00014 m²`；徐军/王丹/何泽瑜等2026同研究谱系表1直接给公称截面积140 mm²|He2024公开论文未列面积；同谱系2026对象与DTU10MW上部机组并非完全同一配置|冻结140 mm²/根作为生产基线；BF8仅作外部工程束组敏感性|总名义预应力+Gravity后PT轴力|**PASS-SOURCE-MODEL + PASS-LINEAGE / HE-DIRECT-NOT-PUBLISHED**|T053/closure/03-pt-area-140mm2-20261006.md|
-|24|**PT半径**|r=1.75 m|T026→T053继承|**未找到He/Xu同一原型直接值**|追原模型+做半径敏感性|PT偏心/模态/应力|**HOLD-SOURCE**|T047|
+|24|**PT半径**|r=1.75 m|T026、V28、T053三代Abaqus输入72个PT端点逐点反算均为1.75 m；He2024/同谱系公开文本未列半径|不是本文后加参数；属于源模型几何实现值，公开原型设计出处未披露|冻结1.75 m为生产基线；论文标SOURCE-MODEL；保留局部半径敏感性作为稳健性检查|112m顶内半径1.985 m，最小径向余量约235 mm；后续Gravity/Modal/应力|**PASS-SOURCE-MODEL / PROTOTYPE-DIRECT-NOT-PUBLISHED + PENDING-SENSITIVITY**|T053/closure/04-pt-radius-1p75m-20261006.md|
 |25|PT底端|固定平移|He2024直接|无|冻结|BC/data check|PASS-DIRECT|T053|
 |26|PT顶端|112m转换法兰锚固/Equation|He2024拓扑 + 当前实现|约束力需求解核|保留|重复约束/平衡|PASS-DIRECT-TOPOLOGY + PENDING-SOLVER|T053|
 |27|**30个水平接缝**|每接口6DOF SPRING2|等效连接实现|**具体刚度不是He直接参数**|逐DOF追来源/公式，必要时重新标定并敏感性|接缝刚度敏感性/模态/柔度|**HOLD-PHYSICAL**|待关闭|
@@ -60,7 +60,7 @@
 1. ~~纵筋490.874 mm²来源~~ — 已关闭：V28源Abaqus输入直接存在；He公开论文未列尺寸；
 2. ~~PT“36”的物理身份~~ — 已关闭主解释：源模型36条 + 同研究谱系2026表1明确“数量/根36”；He2024未公开；
 3. ~~PT 140 mm²/位置~~ — 已关闭主基线：源Abaqus A140 + 同研究谱系2026表1公称截面积140 mm²；
-4. PT r=1.75 m；
+4. ~~PT r=1.75 m~~ — 主基线已关闭：T026/V28/T053源模型几何一致为1.75 m，112m顶净余量约235 mm；公开论文未披露，保留稳健性敏感性；
 5. 30个水平接缝SPRING2刚度；
 6. 钢塔Table 3-3半径/直径冲突；
 7. S345塑性强化曲线；
