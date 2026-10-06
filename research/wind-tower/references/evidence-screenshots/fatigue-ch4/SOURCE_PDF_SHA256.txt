@@ -1,0 +1,6 @@
+ea9372686b9ef01f91be11267387a185131aed17cf9eda187b5813682b91fab9  research/wind-tower/references/user-provided/Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads.pdf
+dee34112786b606acf433b388c980094e4cf892a29a9a5342fbe7001bc1ddd14  research/wind-tower/references/user-provided/The Response and Optimisation of Hybrid Wind Turbine Towers_Alan Kenna.pdf
+ce5e7bbee3a8d8fb794c4eee9b8df46359e34ef466fd8015ca400ec06cedcb01  research/wind-tower/references/open-access/Qu_2026_Buildings_16_3854.pdf
+017d4f36cb27022d40f6918bbcd17a9f53ef04bdc66e0bd917cd5062741bc1a0  research/wind-tower/references/user-provided/Numerical Simulation and Fatigue Analysis of the Grout Layer Replacement for Horizontal Joint of Wind Turbine Prestressed Concrete Tower.pdf
+2ecf5444f2a99d65b97c8c088bb3793cac3bc9b472b90d0c0101a24c449bff3f  research/wind-tower/references/open-access/Zhao_2023_AdvCivilEng_1100725_SteelTower_Fatigue_MeasuredData.pdf
+7684f0d140514461efbe9f2b176aa4d7e0424acae945e8e10839f1eb097c90d2  research/wind-tower/references/user-provided/Experimental Investigation of the Steel-Concrete Joint in a Hybrid Tower for a Wind Turbine under Fatigue Loading.pdf
