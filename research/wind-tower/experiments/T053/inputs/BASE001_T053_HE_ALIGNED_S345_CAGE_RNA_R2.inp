@@ -15,7 +15,7 @@
 ** Legacy NSM remains removed.
 ** ----------------------------------------------------------------
 *Heading
-** T050-E2 formal reinforcement candidate; He-2024 longitudinal counts/geometry retained, ordinary reinforcement material unified to HRB335 per Xu et al. 2025 same 10 MW/158 m object; explicit hoop/ties; legacy NSM removed.
+** Historical parent T050-E2 transformed by T053; all active reinforcement sections now use S345; explicit hoop/ties retained; legacy NSM removed.
 ** Parent: T045 CLEAN. Hoop/tie geometry is code-derived, not a direct He-thesis detailing value.
 ** Parent: BASE001_CANDIDATE_M2_R2RNA_O158.inp.
 ** Cleaning only: removed inactive old RNA part/material/set definitions; active mechanics unchanged.
@@ -483737,13 +483737,6 @@ HOOP_TIE_CAGE_T046-1.SET_ALL
 7850.,
 *Elastic
  1.95e+11, 0.3
-*Material, name=HRB335_T046
-*Density
-7850.,
-*Elastic
-2.0e11, 0.3
-*Plastic
-3.35e8, 0.
 ** 
 ** BOUNDARY CONDITIONS
 ** 
