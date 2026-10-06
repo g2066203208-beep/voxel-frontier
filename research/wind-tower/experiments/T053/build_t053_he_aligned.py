@@ -19,6 +19,27 @@ if len(matches) != 33:
 
 body = pat.sub(r"\1S345\2", text)
 
+# Remove the now-unused HRB335_T046 material card to keep the formal deck unambiguous.
+blines = body.splitlines(keepends=True)
+mstart = next((i for i,l in enumerate(blines) if l.strip().lower() == "*material, name=hrb335_t046"), None)
+if mstart is None:
+    raise RuntimeError("Expected inherited HRB335_T046 material card not found")
+mend = mstart + 1
+while mend < len(blines):
+    t = blines[mend].strip()
+    if t.startswith("**") or t.lower().startswith("*material, name="):
+        break
+    mend += 1
+del blines[mstart:mend]
+body = "".join(blines)
+
+# Replace the inherited T050 identity comment; do not leave a contradictory HRB335 statement.
+body = re.sub(
+    r"(?im)^\*\* T050-E2 formal reinforcement candidate;.*$",
+    "** Historical parent T050-E2 transformed by T053; all active reinforcement sections now use S345; explicit hoop/ties retained; legacy NSM removed.",
+    body,
+)
+
 header = """** ----------------------------------------------------------------
 ** T053 — HE2024-ALIGNED TOWER STRUCTURE / RNA-R2 RETAINED
 ** Parent: T050-E2
@@ -60,6 +81,7 @@ checks = {
     "source_exists": SRC.exists(),
     "active_rebar_assignments_changed_HRB335_to_S345": len(matches) == 33,
     "no_active_HRB335_solid_section_assignment": re.search(r"(?im)^\*Solid Section,.*material=HRB335_T046\s*$", out_text) is None,
+    "no_HRB335_T046_token_remains": "HRB335_T046" not in out_text,
     "active_S345_solid_sections_at_least_33": len(re.findall(r"(?im)^\*Solid Section,.*material=S345\s*$", out_text)) >= 33,
     "rna_mass_unchanged_marker": "676753.290723" in out_text,
     "rna_cg_set_present": "SET_RNA_R2_EQUIV_CG" in out_text,
