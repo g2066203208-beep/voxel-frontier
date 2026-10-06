@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "source": "research/wind-tower/experiments/T050/inputs/BASE001_T050_E2_HRB335_REBAR_HOOP_TIE_NSM_REMOVE.inp",
+  "output": "research/wind-tower/experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp",
+  "source_sha256": "1ac9c2477d9b45ef701172747f114a0bd98fb4d3ef9e12cea6641253d74b9af2",
+  "output_sha256": "ab891b30f39ee241119b19a3496fa53ccb8457da44420609b8239fd70dfe3167",
+  "changed_active_section_assignments": 33,
+  "status": "PASS",
+  "checks": {
+    "source_exists": true,
+    "active_rebar_assignments_changed_HRB335_to_S345": true,
+    "no_active_HRB335_solid_section_assignment": true,
+    "active_S345_solid_sections_at_least_33": true,
+    "rna_mass_unchanged_marker": true,
+    "rna_cg_set_present": true,
+    "pt_part_preserved": true,
+    "pt_A140_preserved": true,
+    "pt_1280MPa_preserved": true,
+    "legacy_nsm_absent": true,
+    "explicit_cage_preserved": true
+  },
+  "scope_note": "Static input transformation only; Abaqus data check/Gravity/PT equilibrium/Modal/Flex still pending."
+}
