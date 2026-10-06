@@ -2,121 +2,171 @@
 
 更新时间：2026-10-06
 
-## 当前源稿
+## 当前唯一正式章节结构
 
-R2Z74，146页。身份：HISTORICAL SOURCE BASELINE。
+**五章制已经冻结。**
 
-## 已确认必须删除/替换
+1. 第1章 绪论
+2. 第2章 10 MW预应力混凝土—钢混合塔架精细有限元模型建立与验证
+3. 第3章 场址随机风、整机载荷与疲劳控制响应筛选
+4. 第4章 10 MW预应力混凝土—钢混合塔架风致疲劳性能分析
+5. 第5章 结论与展望
 
-- 第三章“柔性RNA高保真联合模型”中的Simpack生产路线；
-- AeroDyn–Simpack；
-- Simpack RNA–Abaqus双向联合；
-- 第六章Simpack–Abaqus优化回算；
-- 摘要/Abstract中上述联合路线；
-- 将历史benchmark精确数值直接作为final结论的写法；
-- 把SPRING2等效接缝解释为真实contact开合/CPRESS/COPEN的内容；
-- 把load-DEL直接与材料寿命混写的内容。
+权威路线文件：
+`00_CANONICAL_5CHAPTER_AND_FATIGUE_ROUTE_20261006.md`
 
-## 当前门禁
+旧七章结构不再作为最终论文组织依据。
 
-- G0 BASE001：**T053 HE-ALIGNED CANDIDATE GENERATED / STATIC PASS / ABAQUS SOLVER RUN PENDING**
-- G1 Abaqus分层V&V：OPEN
-- G2 ERA5/TurbSim：OPEN
-- G3 OpenFAST/ROSCO：OPEN
-- G4 控制工况筛选：OPEN
-- G5 OpenFAST→Abaqus mapping V&V：OPEN
-- G6 控制机制：OPEN
-- G7A load-DEL：历史资产存在，FINAL OPEN
-- G7B材料寿命：CONDITIONAL
-- G8敏感性：OPEN
-- G9优化：OPEN
-- G10全文证据回收：OPEN
+## 已废止的旧章节逻辑
 
-## 文献
+以下旧路线仅保留历史稿：
+- 第4章“整机载荷映射与混塔控制响应”独占一章；
+- 第5章“控制区域非线性机制与参数敏感性”独占一章；
+- 第6章“机制驱动结构优化与高保真验证”独占一章；
+- 第7章“结论与展望”旧编号。
 
-主路线：SUFFICIENT。
-只定向补：IEC/GB授权条文、实际材料牌号、阻尼物理目标、条件G7B材料疲劳规范和最终采用的算法原典。
+对应旧文件将保留DEPRECATED标识，禁止继续作为最终正文扩写。
 
-## 当前执行阶段
+## 第四章疲劳主参考冻结
 
-STAGE 0：工作区与源稿冻结 —— PASS  
-STAGE 1：第二章BASE001/G1正文重构 —— DRAFT-A COMPLETE；T053已生成当前首选“何2024塔架参数对齐+升级RNA”整塔候选，final数值待Abaqus data check/Gravity/PT/Modal/Flex与G1  
-STAGE 2：第三章G2–G4正文重构 —— DRAFT-A COMPLETE；final统计待G2–G4  
-STAGE 3：第四章G5/G6正文重构 —— DRAFT-A COMPLETE；final结果待G5/G6  
-STAGE 4：第五章G6/G7/G8正文重构 —— DRAFT-A COMPLETE；final机制/敏感性待G6/G8；G7B条件  
-STAGE 5：第六章G9正文重构 —— DRAFT-A COMPLETE；final优化结果待G9  
-STAGE 6：第一章与第七章 —— DRAFT-A/STRUCTURED-DRAFT COMPLETE；研究不足/创新/结论待G6–G9回写  
-STAGE 7：摘要、Abstract、参考文献统一、图表编号、全文格式和Word装配 —— NOT STARTED
+### 第一主参考
+REF018 — Huang et al. (2025), Engineering Structures 334:120295  
+*Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads.*
 
-## 章节文件实际状态
+第四章总体逻辑以REF018为主：
+正常运行随机风 → 局部应力循环 → mean stress / prestress → rainflow → 材料疲劳 → 长期概率累计。
 
-- Ch1：已按“随机整机载荷→精细结构多轴需求→控制机制→机制驱动优化”重写，Simpack路线已删除。
-- Ch2：2.1–2.8完整DRAFT-A，已建立CH02_EVIDENCE.tsv；G0/G1数值未final。
-- Ch3：完整DRAFT-A，ERA5/TurbSim/OpenFAST/ROSCO/多指标控制工况/DEL逻辑已重构；历史精确数值待final run绑定。
-- Ch4：完整DRAFT-A，OpenFAST→Abaqus自由体、坐标、作用点、时间、ΣF/ΣM、跨模型QoI及控制区域方法已写；结果待G5/G6。
-- Ch5：完整DRAFT-A，P-Δ/材料非线性/条件contact/G7A-G7B/敏感性方法已写；结果待G6/G8。
-- Ch6：完整DRAFT-A，机制驱动变量、目标/约束、代理/NSGA-II条件使用及独立高保真验证方法已写；结果待G9。
-- Ch7：证据回收型结构稿已完成；禁止在G0–G9未过前提前写虚构定量结论。
+### 辅参考职责
+- REF002 Kenna 2019：混塔钢/混凝土分材料疲劳总框架；
+- REF023 Qu et al. 2026：PT钢绞线疲劳与预应力损失；
+- REF041 Wang et al. 2025：水平接缝Reference Stress、single-point vs thickness average；
+- REF143 Zhao et al. 2023：钢塔法兰/焊缝nominal/hot-spot stress疲劳；
+- REF036 Kim et al. 2019：钢—混连接循环验证，条件触发。
 
-## 当前整体完成度口径
+参考职责矩阵：
+`04_FATIGUE_PRIMARY_REFERENCE_MATRIX_20261006.tsv`
 
-- 7章“结构+方法+学术逻辑”第一轮重构：7/7章，约75%。
-- 7章“可直接作为最终提交正文”的完成度：约40%。主要缺口是G0–G9实际run、最终图表、定量结论和G10证据闭环。
-- 文献主路线：SUFFICIENT；不再无边界扩文献。
-- 最终Word：尚未装配，必须等关键run和图表闭合后生成。
+## 当前关键模型状态
 
+### T057
+身份：**CURRENT EVIDENCE-RECONCILED CANDIDATE / NOT FINAL VERIFIED**
 
-## T043 逐步骤文献证据审计
+已完成：
+- HRB335/Q345/PTBF8/contact/RNA R2静态生成；
+- 当前参数证据重整；
+- T063确认已有Gravity / Modal / Flex步骤与基础输出。
 
-状态：PASS-CITATION-MAPPING
+尚未完成：
+- native Abaqus solver Data Check；
+- Gravity+PT有效平衡；
+- 质量/CG/J最终回读；
+- Modal/Flex最终验证；
+- 随机风动态生产步；
+- 疲劳专用history/contact输出。
 
-- 七章共拆分76个实质研究步骤；
-- 76/76均已在STEPWISE_METHOD_EVIDENCE_MATRIX.tsv绑定GitHub REF/OFFICIAL/STANDARD或RUN证据要求；
-- 七章正文当前所有REF编号均能在literature_master.tsv解析；
-- 已修正REF065/071/055/056/059等历史错配；
-- 新增REF124–131以补rainflow、DEL、Morris、LHS、Kriging、NSGA-II、Embedded Region和Implicit Dynamic等方法/官方定义；
-- 注意：引用完整性PASS不等于计算完成。G0–G9仍需真实RUN，G10才允许形成最终定量结论。
+### 钢塔网格
+T055发现1512个高长宽比警告单元：
+- SSEG_01：216；
+- SSEG_02：432；
+- SSEG_03：432；
+- SSEG_04：432。
 
+若钢塔疲劳成为正式分支，目标区域必须先整改并网格收敛。
 
-## T044 IEC 61400-1:2019全文核读
+## 疲劳数据状态
 
-状态：PASS-BASE-2019 / AMD1:2025-PENDING
+### 历史36case
+用途冻结为：
+- NTM/ETM规律；
+- seed离散；
+- 极值/RMS；
+- load-level rainflow/DEL筛选。
 
-- 用户授权提供的IEC 61400-1:2019 Edition 4.0完整172页PDF已校验并全文针对性核读；
-- SHA256：1d210bfac4829cd1bb791d98f3f56de8ea95dc0b4b716c9de274672bb7a8c2a9；
-- DLC 1.2明确为NTM fatigue；DLC 1.3明确为ETM ultimate；
-- Clause 7.5明确一般湍流动态计算每平均风速至少6个10min随机实现，并至少剔除前5s、必要时更长；
-- 历史6 seeds + 600s有效窗口满足该最低要求，但QoI统计收敛仍需验证；
-- 历史200m×200m、51×51网格单元对角线约5.66m，小于0.25Lambda1=10.5m和0.15D≈26.75m，空间分辨率PASS；
-- Clause 7.6.2.2指出DLC1.1从Vr-2到cut-out若做characteristic extreme统计需15 simulations/mean speed，因此36case不能冒充完整认证级DLC1.1；
-- Annex H进一步闭合rainflow→S-N→wind probability→Miner的G7B方法边界；
-- 完整标准本体受IEC/IHS版权许可限制，不向public GitHub公开分发；仓库保存hash、版本、条款审计和采用边界；
-- 当前有效合并版REF048仍为IEC 61400-1:2019+AMD1:2025，终稿前必须取得并核AMD1:2025。
+**禁止直接当20年材料寿命数据库。**
 
+### T062独立复算
+当前GitHub归档36个原始outb用OpenFAST官方工具/ASTM/Windap交叉复算后：
+- 当前归档数据的My控制为 U11p4_ETM_S04，约26.8 MN·m；
+- 历史正文记录为 U11p4_ETM_S03，28.177010 MN·m。
 
-## T045 BASE001候选
+状态：
+**HISTORICAL DEL SOURCE DIVERGENCE = HOLD**
 
-状态：**CANDIDATE-FROZEN / SOLVER-RUN-PENDING**
+终稿不得在源outb/hash未闭合前把S03历史值写成唯一正式控制结果。
 
-- 原T026 M2未覆盖；
-- 已生成保守P160候选与首选O158候选；
-- 首选文件：`experiments/T045/inputs/BASE001_CANDIDATE_M2_R2RNA_O158.inp`；
-- 首选候选删除旧28根B31 RNA质量骨架，接入T038已数值验证的R2 MASS+完整ROTARYI+偏心耦合；
-- 公共结构接口统一为O=(0,158,0)，Flex_X/Z同步在O施加；
-- 静态输入审计通过，但未在整塔Abaqus 2025实际求解，因此G0不能标PASS；
-- 唯一下一步运行：RUN-T045-001，Gravity + 30 modes + Flex_X/Z，提取质量/CG/J、支座反力、PT平衡后应力、频率与柔度。
+## 第四章正式计算路线
 
+### F0 文献/规范
+主路线文献：基本齐全。
 
-## T052/T053 原型原页闭合与Abaqus候选修正
+### F1 结构基线
+必须完成T057求解门禁。
 
-状态：**SOURCE-PAGE ARCHIVED / T053 STATIC PASS / SOLVER-PENDING**
+### F2 现有36case筛选
+继续使用，但只承担筛选。
 
-- T052已把何泽瑜2024 PDF p33–35原页渲染归档到 `references/extracts/REF008-original-pages/`；
-- 原页确认：158=112+46 m、Table 3-2 31段几何/纵筋数量、钢筋网与钢塔S345、15.2 mm PT、塔底/PT底固定、PT顶锚钢法兰；
-- Table 3-3原表字面仍为“半径”，而图3-4/3-5与4.97 m混凝土塔顶形成内部冲突；当前按直径实现仅作为重建解释；
-- 用户明确决定RNA不退回何2024简单集中质量，继续保留R2偏心CG+完整ROTARYI+6DOF coupling；
-- T053从T050派生，共33个活动钢筋section由HRB335_T046切回S345；显式环筋/拉筋几何保留但继续标为规范补全；
-- 旧39.80022 t NSM在T053中继续删除，T046-E1A仅保留为质量上界敏感性支路；
-- PT统一称“36个周向FE位置”，A=140 mm²、r=1.75 m、bundle factor仍为重建/敏感性边界；
-- T053输入：`experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp`；
-- 静态生成审计PASS不等于Abaqus求解PASS。
+### F3 正式长期疲劳工况
+新增：
+- DLC1.2 / NTM；
+- 正常运行风速bins；
+- 多seed；
+- 场址概率；
+- sample-size收敛。
+
+### F4 局部控制区域识别
+少量代表工况进入Abaqus，先确定：
+- 混凝土控制区；
+- PT控制方位；
+- 钢塔控制截面；
+- 接缝/转换区是否真正控制。
+
+### F5 长期局部应力
+优先采用：
+- 长期OpenFAST载荷；
+- 已验证局部应力响应关系；
+- 关键非线性case直接Abaqus时域。
+
+不采用所有bin×所有seed全部进行重型全塔非线性FE的蛮力路线。
+
+### F6 材料疲劳
+分支：
+- concrete；
+- PT；
+- steel/weld；
+- conditional connection。
+
+统一：
+rainflow → material fatigue relation / S-N → Miner → probability weighting。
+
+### F7 敏感性
+最低检查：
+- seed数量；
+- wind-bin；
+- mean-stress处理；
+- PT有效预应力；
+- 局部应力提取；
+- 局部网格。
+
+## 当前章节文件
+
+正式：
+- `chapters/01_绪论.md`
+- `chapters/02_研究对象_精细有限元模型与分层验证.md`
+- `chapters/03_场址风环境与整机随机风控制载荷.md`
+- `chapters/04_10MW混合塔架风致疲劳性能分析.md`
+- `chapters/05_结论与展望.md`
+
+历史/废止：
+- `chapters/04_整机载荷映射与混塔控制响应.md`
+- `chapters/05_控制区域非线性机制与参数敏感性.md`
+- `chapters/06_机制驱动结构优化与高保真验证.md`
+- `chapters/07_结论与展望.md`
+
+## 当前总判断
+
+- 最终论文不再按7章扩张；
+- 第四章正式定位为“风致疲劳性能分析”；
+- Huang 2025为第一主参考；
+- load mapping降为方法环节；
+- 独立优化章取消；
+- 当前主要缺口已经不是“缺疲劳文献”，而是T057求解门禁、正式DLC1.2长期风况、局部应力生产结果与材料疲劳标准最终参数。
