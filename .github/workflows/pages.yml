@@ -39,7 +39,6 @@ jobs:
           node scripts/audit-rebar-geometry.cjs
           node scripts/build-t046-rebar-completion.cjs
           node scripts/build-t047-pt-bundle-sensitivity.cjs
-          node scripts/build-t048-rna-viewer.cjs
           node scripts/sanity-check-reported.mjs
           node scripts/check-material-audit.mjs
 
