@@ -1,0 +1,44 @@
+name: T073 E01 numerical convergence
+
+on:
+  push:
+    paths:
+      - 'research/wind-tower/experiments/T073/t073_e01_convergence.py'
+      - '.github/workflows/t073-e01-convergence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  calc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T071/T071_input_geometry_31_segments.csv
+            research/wind-tower/experiments/T073/T073_T053_RBLONG_RADII.csv
+            research/wind-tower/experiments/T073/t073_e01_fixed_counts_feasible_map.py
+            research/wind-tower/experiments/T073/t073_e01_convergence.py
+            research/wind-tower/experiments/T073
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install numpy
+      - name: Run convergence
+        working-directory: research/wind-tower/experiments/T073
+        run: python t073_e01_convergence.py
+      - name: Clean transient files
+        run: find research/wind-tower/experiments/T073 -type d -name '__pycache__' -prune -exec rm -rf {} +
+      - name: Commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse research/wind-tower/experiments/T073
+          git diff --cached --quiet && exit 0
+          git commit -m "T073: close E01 numerical convergence gate for D46 BF10"
+          git pull --rebase origin main
+          git push
