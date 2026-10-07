@@ -1,0 +1,120 @@
+name: Render Li Zeyu chapter evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/render-li-zeyu-chapter-evidence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf
+            research/wind-tower/references/reading-notes/evidence/li-zeyu
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pymupdf
+      - name: Render targeted evidence
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz, re
+          from pathlib import Path
+
+          pdf = Path("research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf")
+          root = Path("research/wind-tower/references/reading-notes/evidence/li-zeyu")
+          doc = fitz.open(pdf)
+
+          targets = {
+            "two-scale": [
+              ("表4.12", "table4_12_model_efficiency"),
+              ("表4.13", "table4_13_modal"),
+              ("图4.41", "fig4_41_capacity"),
+              ("4.7 本章小结", "ch4_summary"),
+            ],
+            "seismic": [
+              ("表5.2", "table5_2_cases"),
+              ("5.3.3 极限状态定义", "limit_states"),
+              ("5.4.1 IDA", "ida_method"),
+              ("Hunt&Fill", "hunt_fill"),
+              ("图5.11", "fig5_11_ida_curves"),
+              ("图5.14", "fig5_14_damage_no_collapse"),
+              ("图5.15", "fig5_15_collapse"),
+              ("图5.16", "fig5_16_percentile_ida"),
+              ("图5.18", "fig5_18_nf_ff_fragility"),
+              ("图5.22", "fig5_22_msa_nf_ff"),
+              ("图5.23", "fig5_23_msa_site"),
+              ("5.6 方法对比", "ida_msa_comparison"),
+              ("表5.10", "table5_10_counts"),
+              ("5.7 本章小结", "ch5_summary"),
+            ],
+            "wind-fatigue": [
+              ("Kaimal", "kaimal"),
+              ("雨流计数", "rainflow"),
+              ("Miner", "miner"),
+              ("S-N", "sn"),
+              ("风速概率", "wind_probability"),
+            ]
+          }
+
+          entries=[]
+          for group, items in targets.items():
+            out = root/group
+            out.mkdir(parents=True, exist_ok=True)
+            for kw, label in items:
+              found=False
+              for pi,page in enumerate(doc):
+                rects=page.search_for(kw)
+                if not rects:
+                  continue
+                r=rects[0]
+                # Wide contextual crop around the hit, typically enough to include the figure/table and nearby explanatory paragraph.
+                x0=page.rect.x0+20
+                x1=page.rect.x1-20
+                y0=max(page.rect.y0+18, r.y0-185)
+                y1=min(page.rect.y1-18, r.y1+330)
+                # If target is a table/figure label, bias upward to include the graphic/table body.
+                if kw.startswith("表") or kw.startswith("图"):
+                  y0=max(page.rect.y0+18, r.y0-360)
+                  y1=min(page.rect.y1-18, r.y1+150)
+                clip=fitz.Rect(x0,y0,x1,y1)
+                fname=f"p{pi+1:03d}_{label}.png"
+                pix=page.get_pixmap(matrix=fitz.Matrix(2.0,2.0),clip=clip,alpha=False)
+                pix.save(out/fname)
+                entries.append((group,pi+1,kw,label,f"{group}/{fname}"))
+                found=True
+                break
+              if not found:
+                entries.append((group,None,kw,label,None))
+
+          idx=root/"TARGETED_INDEX.md"
+          with idx.open("w",encoding="utf-8") as f:
+            f.write("# 李泽宇博士论文定向原文证据截图\n\n")
+            f.write("> 直接从仓库内原PDF渲染。PDF页码为文件页码（1-based），解析笔记同时记录论文印刷页码。\n\n")
+            f.write("|模块|PDF页|原文定位词|文件|\n|---|---:|---|---|\n")
+            for group,pno,kw,label,path in entries:
+              if path:
+                f.write(f"|{group}|{pno}|{kw}|![]({path})|\n")
+              else:
+                f.write(f"|{group}|未检出|{kw}|待人工定位|\n")
+          print("rendered", sum(1 for x in entries if x[-1]), "of", len(entries))
+          PY
+      - name: Commit targeted screenshots
+        run: |
+          git config user.name "openai-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/reading-notes/evidence/li-zeyu
+          if git diff --cached --quiet; then
+            echo "No screenshot changes."
+          else
+            git commit -m "docs: add targeted original screenshots for Li Zeyu chapters"
+            git push
+          fi
