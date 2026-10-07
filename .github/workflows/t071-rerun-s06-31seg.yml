@@ -120,7 +120,7 @@ jobs:
           }
           if info["libdiscon_sha256"]!="7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa":
               raise SystemExit("libdiscon identity mismatch")
-          if info["discon_sha256"]!="8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61":
+          if info["discon_sha256"]!="8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a":
               raise SystemExit("DISCON identity mismatch")
           Path("run_meta.json").write_text(json.dumps(info,indent=2)+"\n")
           print(json.dumps(info,indent=2))
