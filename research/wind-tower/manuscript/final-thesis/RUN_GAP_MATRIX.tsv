@@ -6,4 +6,5 @@ G4	载荷筛选与数据身份	channel/hash/window/parser closure; rainflow/load
 G5	OpenFAST→Abaqus接口V&V	free-body/load ownership; coordinates/reference points; unit six-component tests; sumF/sumM; independent global-QoI check	G1,G4	Ch4	OPEN
 G6	局部疲劳输入	control-region screening; concrete/PT/steel local histories; peak vs physical averaging; mesh/extraction convergence	G5	Ch4	OPEN
 G7	材料疲劳与长期累计	DLC1.2/NTM bins; multi-seed convergence; range/mean/count; material-specific fatigue relation; site probability; Miner annual/design-life damage	G2,G6	Ch4-Ch5	OPEN
-G8	全文证据闭合	every quantitative conclusion -> RUN+FIG/TAB; every external method/parameter -> REF/STANDARD/OFFICIAL; final 5-chapter assembly	G1-G7	Ch1-Ch5/final	OPEN
+G8	疲劳驱动敏感性与结构优化	Ch4控制机理; 设计变量/范围来源; DOE/LHS; multi-QoI surrogate validation; NSGA-II Pareto; representative high-fidelity recheck	G1-G7	Ch5-Ch6	OPEN
+G9	全文证据闭合	every quantitative conclusion -> RUN+FIG/TAB; every external method/parameter -> REF/STANDARD/OFFICIAL; final 6-chapter assembly	G1-G8	Ch1-Ch6/final	OPEN
