@@ -1,0 +1,76 @@
+name: T073 GB50010 E01 He-locked fiber audit
+
+on:
+  push:
+    paths:
+      - 'research/wind-tower/experiments/T073/t073_gbt50010_e01_fiber.py'
+      - '.github/workflows/t073-e01-he-locked.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  calc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T071/T071_input_geometry_31_segments.csv
+            research/wind-tower/experiments/T073/T073_T053_RBLONG_RADII.csv
+            research/wind-tower/experiments/T073/t073_gbt50010_e01_fiber.py
+            research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf
+            research/wind-tower/experiments/T073
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils unzip
+      - name: Download T071 full histories
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/wind-tower/experiments/T073/artifacts/{A,B,C,D}
+          declare -A IDS=( [A]=11466755161 [B]=11465219800 [C]=11466308388 [D]=11465344577 )
+          for b in A B C D; do
+            curl -L --fail \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/${IDS[$b]}/zip" \
+              -o "/tmp/$b.zip"
+            unzip -q "/tmp/$b.zip" -d "research/wind-tower/experiments/T073/artifacts/$b"
+          done
+          find research/wind-tower/experiments/T073/artifacts -type f -maxdepth 2 -print
+      - name: Archive GB50010 Appendix E evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=research/wind-tower/experiments/T073/source-evidence/GB50010_Appendix_E
+          mkdir -p "$OUT"
+          PDF="research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf"
+          pdftoppm -f 241 -l 245 -png -r 160 "$PDF" "$OUT/GB50010_page"
+          pdftotext -f 241 -l 245 -layout "$PDF" "$OUT/GB50010_pages241_245.txt"
+          sha256sum "$PDF" > "$OUT/SOURCE_PDF_SHA256.txt"
+      - name: Run E01 fiber audit
+        run: python research/wind-tower/experiments/T073/t073_gbt50010_e01_fiber.py
+      - name: Remove downloaded histories before commit
+        run: rm -rf research/wind-tower/experiments/T073/artifacts
+      - name: Commit results
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse research/wind-tower/experiments/T073
+          git diff --cached --quiet && exit 0
+          git commit -m "T073: run He-locked GB50010 E01 fiber audit"
+          git pull --rebase origin main
+          git push
