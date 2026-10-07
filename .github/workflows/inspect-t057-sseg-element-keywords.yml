@@ -1,0 +1,34 @@
+name: Inspect T057 SSEG element keywords
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-t057-sseg-element-keywords.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp
+          sparse-checkout-cone-mode: false
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path("research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp")
+          lines=p.read_text(encoding="utf-8").splitlines()
+          for name in ("SSEG_01","SSEG_02","SSEG_03","SSEG_04"):
+              print("\n###",name)
+              start=next(i for i,l in enumerate(lines) if re.match(rf"\*Part,\s*name={name}\s*$",l,re.I))
+              end=next(i for i in range(start+1,len(lines)) if re.match(r"\*End Part\s*$",lines[i],re.I))
+              body=lines[start:end+1]
+              for j,l in enumerate(body):
+                  if l.strip().upper().startswith("*ELEMENT"):
+                      print("ELEMENT_KEYWORD",start+j+1,l)
+                      for k in range(j,min(j+8,len(body))):
+                          print(f"{start+k+1:07d}: {body[k]}")
+              print("NODE_KEYWORD",next((l for l in body if l.strip().upper().startswith("*NODE")),None))
+          PY
