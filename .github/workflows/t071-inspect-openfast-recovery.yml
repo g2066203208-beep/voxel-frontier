@@ -1,0 +1,49 @@
+name: T071 inspect formal 158m OpenFAST recovery
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t071-inspect-openfast-recovery.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
+      - name: Inspect exact formal archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP='research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip'
+          echo "ZIP SHA256:"
+          sha256sum "$ZIP"
+          echo "BASE CASE TREE:"
+          unzip -l "$ZIP" | grep -E 'CASES/(U09p343881_ETM_S01|Rotor)/' | head -n 500
+          rm -rf /tmp/of && mkdir -p /tmp/of
+          unzip -q "$ZIP" -d /tmp/of
+          CASE=/tmp/of/CASES/U09p343881_ETM_S01
+          echo "CASE FILES:"
+          find "$CASE" -maxdepth 4 -type f -printf '%P\t%s\n' | sort
+          echo "COMMON ROTOR FILES:"
+          find /tmp/of/CASES/Rotor -maxdepth 4 -type f -printf '%P\t%s\n' | sort || true
+          echo "KEY SHA:"
+          sha256sum \
+            "$CASE/DTU_10MW_RWT.fst" \
+            "$CASE/DTU_10MW_RWT_ElastoDyn.dat" \
+            "$CASE/C02R3R2_158M_Tower.dat" \
+            "$CASE/C02R3R2_158M_Tower_ZERO_DAMPING_20260831.dat" \
+            "$CASE/Control/DTU_10MW_RWT_ServoDyn.dat" \
+            "$CASE/Rotor/DTU_10MW_RWT_AeroDyn15.dat"
+          echo "FST REFERENCES:"
+          grep -Ei 'EDFile|InflowFile|AeroFile|ServoFile|TMax|DT' "$CASE/DTU_10MW_RWT.fst" || true
+          echo "ELASTODYN KEY:"
+          grep -Ei 'TowerHt|TowerBsHt|Twr2Shft|TwrFile|TwrNodes|NTwGages|TwrGagNd|OutList' "$CASE/DTU_10MW_RWT_ElastoDyn.dat" || true
+          echo "INFLOW KEY:"
+          grep -Ei 'WindType|Filename_BTS|RefHt|PropagationDir' "$CASE/DTU_10MW_InflowWind.dat" || true
+          echo "AERODYN REFERENCES:"
+          grep -Ei 'ADBlFile|AFNames|OLAFInputFileName|OutList' "$CASE/Rotor/DTU_10MW_RWT_AeroDyn15.dat" || true
