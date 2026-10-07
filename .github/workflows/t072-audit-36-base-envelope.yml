@@ -87,7 +87,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/wind-tower/experiments/T072
+          git add --sparse research/wind-tower/experiments/T072
           git commit -m "T072 audit formal 158m 36-case base resultant envelope"
           git pull --rebase origin main
           git push
