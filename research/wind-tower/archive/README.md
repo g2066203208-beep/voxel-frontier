@@ -1,19 +1,27 @@
-# ARCHIVE — 历史研究记录
+# ARCHIVE — 被替代但保留可追溯性的研究历史
 
-本目录保存**已被替代但需要保留可追溯性**的研究文件。
+本目录**不是当前工作入口**。任何“当前/下一步/final/validated”字样都只代表文件生成当时的状态。
 
-## 子目录
+主要分区：
+- `workflow-pre-master/`：早期流程；
+- `workflow-history/`：后续被替代的单项workflow；
+- `audit-early/`：最早审计；
+- `manuscript-legacy-seven-chapter-20261005/`：旧七章正文、证据、snapshot和旧总控；
+- `manuscript-route-intermediate-20261006/`：五章收敛过程中的中间规划；
+- `manuscript-patches/`：已合并/替代的正文patch；
+- `governance-t053-history-20261006/`：T053旧模型治理；
+- `governance-history/`：旧manuscript/导师/issue治理副本；
+- `registry-history/`：T057/五章制重建前的baseline/parameter/claim台账完整快照；
+- `github-actions-completed-20261007/`：已完成的一次性Actions脚本；
+- 其他local-assets/workflow/audit目录：历史原始资产与研究过程。
 
-- `workflow-pre-master/`：MASTER_RESEARCH_PROTOCOL建立之前的旧流程文件。
-- `audit-early/`：01–05早期审计快照。
+当前入口永远返回：
+`../README.md`
 
-## 使用原则
+当前论文：
+`../manuscript/final-thesis/00_STATUS.md`
 
-1. 本目录内容不作为新任务入口；
-2. 不从归档文件读取“当前状态”；
-3. 当前有效流程只看`../workflow/`；
-4. 当前有效审计只看`../audit/INDEX.md`及06以后审计；
-5. 当前参数、论断、运行、文献、图表状态只看`../registry/`；
-6. 若需要追溯“为什么当时这样判断”，才进入archive。
+当前模型：
+`../governance/CURRENT_ABAQUS_MODEL_20261006.md`
 
-归档不是删除历史，而是避免历史记录与当前规则同时处于活动状态。
+原则：**归档是为了保留证据，不是为了让历史继续参与当前决策。**
