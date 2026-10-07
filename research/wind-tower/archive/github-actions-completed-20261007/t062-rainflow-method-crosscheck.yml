@@ -1,0 +1,126 @@
+name: t062-rainflow-method-crosscheck
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/t062-rainflow-method-crosscheck.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: t062-rainflow-method-crosscheck
+  cancel-in-progress: true
+
+jobs:
+  crosscheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2
+          sparse-checkout-cone-mode: false
+
+      - name: Extract and install official toolbox
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC='research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2'
+          MERGED='/tmp/openfast36'
+          mkdir -p "$MERGED"
+          for n in $(seq 1 36); do
+            unzip -oq "$SRC/$(printf 'part-%03d.zip' "$n")" -d "$MERGED"
+          done
+          python3 -m pip install --quiet 'git+https://github.com/OpenFAST/openfast_toolbox.git' rainflow pandas numpy
+
+      - name: Compare rainflow implementations
+        shell: bash
+        run: |
+          cat > /tmp/cross.py <<'PY'
+          from pathlib import Path
+          import json
+          import numpy as np
+          import pandas as pd
+          import rainflow as rf_generic
+          from openfast_toolbox.io import FASTOutputFile
+          from openfast_toolbox.tools.fatigue import rainflow_astm, rainflow_windap
+
+          ROOT=Path('/tmp/openfast36/CASES')
+          OUT=Path('/tmp/t062-cross'); OUT.mkdir(parents=True,exist_ok=True)
+          M=4.0; NEQ=100000.0
+          rows=[]
+
+          def generic(x):
+              cyc=list(rf_generic.extract_cycles(x))
+              dmg=sum(float(c[2])*(float(c[0])**M) for c in cyc)
+              return len(cyc),sum(float(c[2]) for c in cyc),(dmg/NEQ)**(1/M)
+
+          def official_halfcycles(fun,x):
+              a,m=fun(np.asarray(x,dtype=float))
+              a=np.asarray(a,dtype=float)
+              # OpenFAST toolbox functions return half-cycle ranges; two half cycles make one full cycle.
+              dmg=0.5*np.nansum(a**M)
+              return len(a),0.5*len(a),(dmg/NEQ)**(1/M)
+
+          for case in sorted(ROOT.iterdir()):
+              if not case.is_dir(): continue
+              df=FASTOutputFile(str(case/'DTU_10MW_RWT.outb')).toDataFrame()
+              for logical in ['TwrBsMxt','TwrBsMyt']:
+                  col=next(c for c in df.columns if c.split('_[',1)[0].strip()==logical)
+                  time=next(c for c in df.columns if c.split('_[',1)[0].strip()=='Time')
+                  t=np.asarray(df[time],float)
+                  x=np.asarray(df[col],float)[(t>=100-1e-9)&(t<=700+1e-9)]
+                  for method,fun in [('generic_extract_cycles',generic),('openfast_rainflow_astm',lambda z:official_halfcycles(rainflow_astm,z)),('openfast_rainflow_windap',lambda z:official_halfcycles(rainflow_windap,z))]:
+                      nrows,ncyc,deleq=fun(x)
+                      rows.append({'case_id':case.name,'channel':logical,'method':method,'cycle_rows':nrows,'equiv_full_cycles':ncyc,'DEL_m4_Neq1e5':deleq})
+          d=pd.DataFrame(rows)
+          d.to_csv(OUT/'RAINFLOW_METHOD_CROSSCHECK.csv',index=False)
+
+          summ=[]
+          for method,g in d.groupby('method'):
+              top=g.sort_values('DEL_m4_Neq1e5',ascending=False).iloc[0]
+              summ.append({
+                  'method':method,
+                  'total_cycle_rows':int(g.cycle_rows.sum()),
+                  'total_equiv_full_cycles':float(g.equiv_full_cycles.sum()),
+                  'max_case':top.case_id,
+                  'max_channel':top.channel,
+                  'max_DEL':float(top.DEL_m4_Neq1e5),
+                  'U11p4_ETM_S03_Myt':float(g[(g.case_id=='U11p4_ETM_S03')&(g.channel=='TwrBsMyt')].iloc[0].DEL_m4_Neq1e5),
+                  'U11p4_ETM_S04_Myt':float(g[(g.case_id=='U11p4_ETM_S04')&(g.channel=='TwrBsMyt')].iloc[0].DEL_m4_Neq1e5),
+                  'U19p202140_ETM_S02_Mxt':float(g[(g.case_id=='U19p202140_ETM_S02')&(g.channel=='TwrBsMxt')].iloc[0].DEL_m4_Neq1e5),
+              })
+          (OUT/'RAINFLOW_METHOD_SUMMARY.json').write_text(json.dumps(summ,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(summ,ensure_ascii=False,indent=2))
+          PY
+          python3 /tmp/cross.py
+
+      - name: Commit crosscheck
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import os,json,base64,urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']; branch='main'
+          src=Path('/tmp/t062-cross'); prefix='research/wind-tower/experiments/T062/rainflow-method-crosscheck'
+          H={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'t062-cross'}
+          def api(m,p,x=None):
+              data=None if x is None else json.dumps(x).encode()
+              q=urllib.request.Request('https://api.github.com/repos/'+repo+p,data=data,headers=H,method=m)
+              with urllib.request.urlopen(q,timeout=300) as r:return json.loads(r.read().decode())
+          ref=api('GET','/git/ref/heads/'+branch); parent=ref['object']['sha']; base=api('GET','/git/commits/'+parent)['tree']['sha']
+          e=[]
+          for p in src.iterdir():
+              raw=p.read_bytes(); b=api('POST','/git/blobs',{'content':base64.b64encode(raw).decode(),'encoding':'base64'})
+              e.append({'path':prefix+'/'+p.name,'mode':'100644','type':'blob','sha':b['sha']})
+          t=api('POST','/git/trees',{'base_tree':base,'tree':e}); c=api('POST','/git/commits',{'message':'research: crosscheck ASTM/Windap/generic rainflow methods','tree':t['sha'],'parents':[parent]})
+          api('PATCH','/git/refs/heads/'+branch,{'sha':c['sha'],'force':False}); print(c['sha'])
+          PY
