@@ -1,3 +1,6 @@
+> **SUPERSEDED NOTICE — 2026-10-07**  
+> 本文件中的 `HRB400 φ50@20` 结论来自已废止的 `b=t、h0≈壁厚` 薄壁剪扭换算，只保留作审计历史，**不得用于论文最终配筋或Abaqus模型**。当前修正剪扭结果见 `T072_STEP2_CORRECTED_SHEAR_TORSION_PHI14_80.csv`；PT+纵筋纠正版见 `T072_STEP3_CORRECTED_PT_LONGITUDINAL_REPORT.md`；EI闭环见 `T072_STEP4_EI_CLOSURE_REPORT.md`。
+
 # T072 — 31段配筋一次性计算包（S06阶段候选）
 
 日期：2026-10-07  
