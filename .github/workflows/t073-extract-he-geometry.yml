@@ -127,7 +127,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/wind-tower/experiments/T073
+          git add --sparse research/wind-tower/experiments/T073
           git diff --cached --quiet && exit 0
           git commit -m "T073: extract He-aligned longitudinal rebar and PT geometry"
           git push
