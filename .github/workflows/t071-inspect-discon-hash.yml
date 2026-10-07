@@ -1,0 +1,28 @@
+name: T071 inspect exact DISCON hash
+on:
+  push:
+    paths:
+      - '.github/workflows/t071-inspect-discon-hash.yml'
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/file-manifest.json
+            research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
+          sparse-checkout-cone-mode: false
+      - name: Hash exact canonical controller file
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/supp && mkdir -p /tmp/supp
+          unzip -q research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip -d /tmp/supp
+          f=/tmp/supp/CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN
+          ls -l "$f"
+          sha256sum "$f"
+          echo "FIRST LINES"
+          sed -n '1,25p' "$f"
