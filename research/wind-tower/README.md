@@ -1,71 +1,107 @@
-# START HERE — 正式研究入口
+# 风机论文工作室 — START HERE
 
-参考文献：[本地29篇分类目录及完整PDF](references/user-provided/LOCAL_LIBRARY_20261005.md) · [全部参考资料目录](references/README.md)
+> 当前日期：2026-10-07  
+> 当前论文主线：**DTU 10 MW参考风机 + 158 m预应力混凝土—钢混合塔架 → 场址长期风/整机随机载荷 → 局部材料疲劳**。  
+> 当前正式结构：**五章制**。  
+> Simpack生产路线、旧七章优化路线均已退出当前论文主线。
 
-后续任何论文工作先读：
-1. `workflow/MASTER_RESEARCH_PROTOCOL.md`
-2. `workflow/ADVISOR_REQUIREMENTS.md`
-3. `workflow/LITERATURE_PROTOCOL.md`
-4. `workflow/EXPERIMENT_SIMULATION_PROTOCOL.md`
-5. `workflow/EXECUTION_STATUS.md`
-6. `registry/`
+## 1. 只看这四个入口
 
-活动目录只保留当前有效流程和审计。被替代的旧workflow与早期audit已统一移入`archive/`；归档只用于追溯，不作为新任务入口。当前状态以`workflow/EXECUTION_STATUS.md`和`registry/`为准。
+1. **论文当前状态**：`manuscript/final-thesis/00_STATUS.md`
+2. **论文唯一总控**：`manuscript/final-thesis/00_WORKSPACE_MASTER.md`
+3. **当前Abaqus模型**：`governance/CURRENT_ABAQUS_MODEL_20261006.md`
+4. **文献主表**：`registry/literature_master.tsv`
 
-# 风机塔架研究工程资料
+如果某个旧audit、workflow或历史报告与以上四个入口冲突，以上四个入口优先。
 
-本目录保存用户提供的几何、Abaqus 工程、操作日志以及整理后的研究问题。论文正文、论文 Word 文件、老师讨论 Word 原文和逐字转写均不纳入仓库。
+## 2. 当前五章
 
-## 工程文件
+- 第1章：绪论
+- 第2章：10 MW预应力混凝土—钢混合塔架精细有限元模型建立与分层验证
+- 第3章：场址长期风环境、整机随机载荷与疲劳控制响应筛选
+- 第4章：10 MW预应力混凝土—钢混合塔架风致疲劳性能分析
+- 第5章：结论与展望
 
-| 目录 | 文件 | 用途 |
-| --- | --- | --- |
-| geometry | DTU158_TOWER_RNA_FULL_ASSEMBLY.step | 塔架与 RNA 装配几何 |
-| models | SHOWTIME185_V167_MAINLEG_CALIBRATED_VALIDATED.cae | SHOWTIME 系列 Abaqus 工程 |
+正式正文只在：
+`manuscript/final-thesis/chapters/`
 
-一个 CAE 文件和 STEP 文件通过 Git LFS 存储。其余清单、日志、检查摘要与讨论问题使用普通 Git 管理。`manifest.json` 记录上传副本与首次读取时的字节数及 SHA-256；上传副本均已与当前源文件核对一致。
+该目录现在只允许出现这5章。
 
-## 下载完整文件
+## 3. 目录职责
 
-```sh
-git lfs install
-git clone https://github.com/g2066203208-beep/voxel-frontier.git
-cd voxel-frontier
-git lfs pull
-git lfs fsck
-```
+|目录|职责|是否当前入口|
+|---|---|---|
+|`manuscript/final-thesis/`|正式论文正文、章节证据、计算缺口、最终装配|**是**|
+|`governance/`|当前模型治理；当前只围绕T057|**是**|
+|`experiments/`|真实实验/仿真/审计产物；按T编号保留研究可追溯性|按README选择|
+|`references/`|论文PDF、标准、官方资料、原页证据图|**是**|
+|`registry/`|REF/PAR/RUN/CLAIM等结构化台账|**是**|
+|`requirements/`|导师要求原始结构化转录与当前覆盖关系|是|
+|`workflow/`|通用研究流程、记录规范与近期汇报|是，但不定义论文目录|
+|`audit/`|历史审计过程索引|**否：只追溯**|
+|`archive/`|被替代路线、旧正文、旧模型治理、历史资产|**否**|
+|`geometry/`, `models/`, `inspection/`|早期/原始工程资产入口|只作source/history|
+|`pdf-archives/`|PDF下载打包，不是文献source-of-truth|否|
 
-GitHub 页面中看到的 LFS 指针不是 CAE 本体；使用文件的 Download 按钮或执行 `git lfs pull` 获取原文件。工程文件不会被打包进入 GitHub Pages 的网页构建。
+## 4. 当前唯一Abaqus候选
 
-## 检查记录
+T057：
 
-`inspection/` 内为 Abaqus 2025 元数据读取记录，使用 gzip 压缩；没有提交任何求解作业。检查脚本未调用 save，但原数据库存在上述自动写回变化，后续检查应仅在独立副本上运行。这些记录证明工程内容已经读取，不证明计算结果正确、收敛或完成研究验证。
+`experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp`
 
-SHOWTIME 工程包含三组 SHOWTIME 命名模型；不得仅凭上传文件名称把它认作 DTU158 的最终生产模型。后续正式结构分析只采用来源、版本与输入可追溯的 Abaqus 基准模型。
+身份：
 
-老师讨论提出的问题、执行措施与验收依据见 [讨论问题与整改台账](discussion-issues.md)。后续新增数据与结果时须写明工况、模型版本、处理脚本、单位及来源，不能把计划或日志中的作业提交当成已完成分析。
+**CURRENT EVIDENCE-RECONCILED CANDIDATE / NOT FINAL VERIFIED**
 
-## 整篇流程复核（本轮优先）
+关键特征：
+- 158 m = 112 m混凝土 + 46 m钢塔；
+- HRB335普通钢筋；
+- Q345钢塔；
+- 36个PT束位置 × 8股 × 140 mm²；
+- 30个水平接缝显式hard contact + penalty friction；
+- RNA-R2质量 + 偏心CG + full inertia + 6DOF。
 
-[七章流程判定与六处衔接修正](audit/27-overall-process-review.md) · [40项逐章研究核查映射](audit/28-chapter-checklist.md)。本轮先审流程，原始结果追索与求解专项暂缓；正式流程及研究状态继续以MASTER和registry为准。原论文与导师Word均不提交。
+当前硬门禁：
+T057 native Data Check → Gravity/PT/contact平衡 → mass/CG/J → Modal → Flex → 必要网格收敛。
 
-## 本地工作资料分区入口（T028）
+## 5. 文献与原图
 
-[资产清单与分类](registry/local-work-inventory-20261004/README.md) · [整理范围与检查顺序](audit/34-t028-local-work-inventory.md) · [历史计算证据](archive/local-work-evidence-20261004/README.md)。本次上传不改变T027路线及当前科学状态；大型原始结果仍在本地。
-## 实际文件与数据分区归档
+- 文献主表：`registry/literature_master.tsv`
+- 文献库入口：`references/README.md`
+- 第1–3章原页证据：`references/evidence-screenshots/ch1-ch3/`
+- 第4章疲劳原页证据：`references/evidence-screenshots/fatigue-ch4/`
+- 学位论文关键页：`references/evidence-screenshots/comparison-theses/`
 
-[下载已上传的实际数据、输入、脚本和记录](archive/local-assets-20261004/README.md)：1453个源文件，12个分区，59个分包；超10MiB源文件暂缓，见清单。
+原页证据用于证明“文献确实这样做”，不冒充本文结果图。
 
-### 实际文件补充包
+## 6. 当前数据资产
 
-[161个小型结果及模型文件](archive/local-assets-20261004-supplement/README.md)：包含小于10MiB的OUTB、控制器输入与柔性模型配套文件；49包约207.27MiB。与首批合计1614个源文件。
+历史36组OpenFAST/TurbSim资产继续保留，用于：
+- NTM/ETM比较；
+- 6-seed离散；
+- 极值/RMS/PSD；
+- load-rainflow/DEL筛选。
 
-## 去重后资产与大文件补传（当前入口）
+它们**不是**20年材料疲劳数据库。正式材料疲劳还需要DLC1.2/NTM长期wind bins、场址概率和局部材料应力。
 
-[传输台账](registry/asset-transfer-20261004/transfer-ledger.json) · [大文件实体/LFS](archive/local-large-assets-20261004/README.md) · [原分包去重映射](registry/asset-transfer-20261004/deduplication-map.json)
+当前历史S03=28.177 MN·m与归档原始outb独立复算S04≈26.8 MN·m存在source divergence；在数据身份闭合前不能任选一套写入终稿。
 
-此前10 MiB上传排除线已取消。原1614条位置记录去重为887份内容，727条重复项改为引用，不重复存实体。当前补传正在进行，以上台账区分已存在、已上传、待传及失败，不将排队文件算作完成。GitHub当前LFS接口返回单对象2 GiB限制，超限ODB采用可校验分块；不改变本地原件。上方旧段落的10MiB暂缓说明仅为历史批次说明，以本节及传输台账为准。
+## 7. 历史资料规则
 
-## DTU基准、软件与场址资料
+`audit/`和`archive/`保存研究过程，不是当前事实源。
 
-[分区资产入口](references/baselines-and-site-20261004/README.md) · [整篇工作资产覆盖与缺口](registry/asset-completeness-20261004.md)。官方参考、第三方移植和本论文生产模型分别保存，内容相同的文件使用引用。
+规则：
+- 旧文件不因文件名含FINAL/VALIDATED就自动有效；
+- 被替代正文进入archive，不与正式5章并列；
+- T026/T038等大型历史实验不删除，因为需要保留科研可追溯性；
+- 活动实验以`experiments/README.md`的状态表为准；
+- 当前模型状态以`governance/`为准；
+- 当前论文状态以`manuscript/final-thesis/00_STATUS.md`为准。
+
+## 8. 下一步
+
+当前优先级不是继续扩章节，而是关闭第二章计算门禁：
+
+**T057 native Abaqus Data Check → Gravity/PT/contact equilibrium → mass/CG/J → Modal/Flex → 钢塔局部网格（若钢塔疲劳启用）。**
+
+随后才进入第三章正式数据闭合与第四章材料疲劳生产。
