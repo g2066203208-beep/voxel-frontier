@@ -58,6 +58,9 @@ jobs:
           Expand-Archive "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/$part" -DestinationPath target
           Expand-Archive "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" -DestinationPath supp
 
+          # Preserve the shared formal CASES topology (notably ..\\Rotor references).
+          New-Item -ItemType Directory -Force -Path "runroot" | Out-Null
+          Copy-Item -Recurse -Force "base/CASES/*" "runroot/"
           New-Item -ItemType Directory -Force -Path "runroot/$caseId" | Out-Null
           Copy-Item -Recurse -Force "base/CASES/U09p343881_ETM_S01/*" "runroot/$caseId/"
           Copy-Item -Force "target/CASES/$caseId/DTU_10MW_InflowWind.dat" "runroot/$caseId/DTU_10MW_InflowWind.dat"
