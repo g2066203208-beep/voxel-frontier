@@ -1,0 +1,194 @@
+name: T071 rerun max-bending case at 31 segment gages
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t071-rerun-s06-31seg.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rerun:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - batch: A
+            nodes: "13,39,65,91,117,142,168,194,220"
+            segments: "01,02,03,04,05,06,07,08,09"
+          - batch: B
+            nodes: "246,271,297,323,349,375,400,426,452"
+            segments: "10,11,12,13,14,15,16,17,18"
+          - batch: C
+            nodes: "478,504,529,555,581,607,633,658,684"
+            segments: "19,20,21,22,23,24,25,26,27"
+          - batch: D
+            nodes: "710,736,762,784,810,850,900,1000,1120"
+            segments: "28,29,30,31,EX1,EX2,EX3,EX4,EX5"
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install reader
+        shell: pwsh
+        run: python -m pip install "git+https://github.com/OpenFAST/openfast_toolbox.git" pandas
+      - name: Restore and patch exact 158m case
+        shell: pwsh
+        env:
+          BATCH: \${{ matrix.batch }}
+          NODES: \${{ matrix.nodes }}
+          SEGMENTS: \${{ matrix.segments }}
+        run: |
+          $ErrorActionPreference="Stop"
+          Expand-Archive "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip" -DestinationPath static
+          Expand-Archive "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" -DestinationPath supp
+          Copy-Item -Recurse static/CASES runroot
+          $base="runroot/U09p343881_ETM_S01"
+          $case="runroot/U09p343881_ETM_S06"
+          New-Item -ItemType Directory -Force -Path $case | Out-Null
+          Copy-Item "$base/DTU_10MW_RWT.fst" "$case/DTU_10MW_RWT.fst" -Force
+          Copy-Item "$base/DTU_10MW_RWT_ElastoDyn.dat" "$case/DTU_10MW_RWT_ElastoDyn.dat" -Force
+          Copy-Item "$base/C02R3R2_158M_Tower.dat" "$case/C02R3R2_158M_Tower.dat" -Force
+          Copy-Item "$base/C02R3R2_158M_Tower_ZERO_DAMPING_20260831.dat" "$case/C02R3R2_158M_Tower_ZERO_DAMPING_20260831.dat" -Force
+          Copy-Item -Recurse "$base/Control" "$case/Control" -Force
+          Copy-Item -Recurse "$base/Rotor" "$case/Rotor" -Force
+          Copy-Item "supp/CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN" "$case/Control/DTU_10MW_RWT_DISCON.IN" -Force
+          Copy-Item "research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll" "$case/Control/libdiscon.dll" -Force
+          Copy-Item "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts" "$case/U09p343881_ETM_S06.bts" -Force
+          @'
+          from pathlib import Path
+          import os,re,json
+          case=Path("runroot/U09p343881_ETM_S06")
+          p=case/"DTU_10MW_InflowWind.dat"
+          s=p.read_text(encoding="utf-8",errors="replace")
+          s2=re.sub(r'^".*U09p343881_ETM_S06\.bts"\s+FileName_BTS',
+                    '"U09p343881_ETM_S06.bts" FileName_BTS',s,flags=re.M)
+          if s==s2: raise SystemExit("BTS path patch failed")
+          p.write_text(s2,encoding="utf-8")
+          p=case/"DTU_10MW_RWT_ElastoDyn.dat"
+          s=p.read_text(encoding="utf-8")
+          s,n1=re.subn(r'(?m)^\s*9\s+NTwGages\b.*$',"9             NTwGages      - Number of tower nodes that have strain gages for output [0 to 9] (-)",s)
+          nodes=os.environ["NODES"]
+          s,n2=re.subn(r'(?m)^\s*1,3,5,7,9,13,15,17,20\s+TwrGagNd\b.*$',
+                       nodes+"             TwrGagNd      - T071 distributed reinforcement gages",s)
+          if n1!=1 or n2!=1: raise SystemExit(f"gage patch failed n1={n1} n2={n2}")
+          p.write_text(s,encoding="utf-8")
+          Path("run_meta.json").write_text(json.dumps({
+             "case":"U09p343881_ETM_S06","batch":os.environ["BATCH"],
+             "nodes":[int(x) for x in nodes.split(",")],
+             "segments":os.environ["SEGMENTS"].split(","),
+             "formal_model":"158m","openfast":"v3.5.3",
+             "libdiscon_sha256":"7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+             "discon_sha256":"8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61"
+          },indent=2)+"\n")
+          '@ | Set-Content -Encoding utf8 prep.py
+          python prep.py
+      - name: Run OpenFAST
+        shell: pwsh
+        run: |
+          $exe=Resolve-Path "research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe"
+          Push-Location "runroot/U09p343881_ETM_S06"
+          & $exe "DTU_10MW_RWT.fst" *>&1 | Tee-Object -FilePath "T071_\${{ matrix.batch }}.log"
+          $code=$LASTEXITCODE
+          Pop-Location
+          if($code -ne 0){ throw "OpenFAST failed $code" }
+      - name: Extract exact 100-700s segment time histories
+        shell: pwsh
+        env:
+          BATCH: \${{ matrix.batch }}
+          SEGMENTS: \${{ matrix.segments }}
+        run: |
+          @'
+          from pathlib import Path
+          import os
+          import pandas as pd, numpy as np
+          from openfast_toolbox.io.fast_output_file import FASTOutputFile
+          case="U09p343881_ETM_S06"; batch=os.environ["BATCH"]
+          segs=os.environ["SEGMENTS"].split(",")
+          f=Path("runroot")/case/"DTU_10MW_RWT.outb"
+          df=FASTOutputFile(str(f)).toDataFrame()
+          timecol=next(c for c in df.columns if c.startswith("Time"))
+          w=df[(df[timecol]>=100.0)&(df[timecol]<=700.0)].copy()
+          rows=[]
+          for gi,seg in enumerate(segs,1):
+              if seg.startswith("EX"): continue
+              def col(suffix):
+                  hits=[c for c in w.columns if c.startswith(f"TwHt{gi}{suffix}")]
+                  if not hits: raise KeyError((gi,suffix))
+                  return hits[0]
+              zcol=col("TPzi")
+              cols={q:col(q) for q in ["FLxt","FLyt","FLzt","MLxt","MLyt","MLzt"]}
+              z=float(w[zcol].iloc[0])
+              sub=pd.DataFrame({
+                 "case":case,"batch":batch,"segment":f"CSEG_{seg}",
+                 "gage_index":gi,"gage_z_m":z,"time_s":w[timecol].to_numpy(float),
+                 "Fx_kN":w[cols["FLxt"]].to_numpy(float),
+                 "Fy_kN":w[cols["FLyt"]].to_numpy(float),
+                 "Fz_kN":w[cols["FLzt"]].to_numpy(float),
+                 "Mx_kNm":w[cols["MLxt"]].to_numpy(float),
+                 "My_kNm":w[cols["MLyt"]].to_numpy(float),
+                 "Mz_kNm":w[cols["MLzt"]].to_numpy(float),
+              })
+              sub["V_kN"]=np.hypot(sub.Fx_kN,sub.Fy_kN)
+              sub["M_kNm"]=np.hypot(sub.Mx_kNm,sub.My_kNm)
+              sub["T_abs_kNm"]=np.abs(sub.Mz_kNm)
+              sub["N_comp_kN"]=np.maximum(0.0,-sub.Fz_kN)
+              rows.append(sub)
+          out=pd.concat(rows,ignore_index=True)
+          od=Path("extract"); od.mkdir(exist_ok=True)
+          out.to_csv(od/f"{case}_batch{batch}_31seg.csv.gz",index=False,compression="gzip")
+          sm=out.groupby("segment").agg(gage_z_m=("gage_z_m","first"),V_max_kN=("V_kN","max"),M_max_kNm=("M_kNm","max"),T_max_kNm=("T_abs_kNm","max"),N_comp_max_kN=("N_comp_kN","max")).reset_index()
+          sm.to_csv(od/f"{case}_batch{batch}_summary.csv",index=False)
+          print(sm.to_string(index=False))
+          '@ | Set-Content -Encoding utf8 extract.py
+          python extract.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T071-U09p343881_ETM_S06-\${{ matrix.batch }}
+          path: extract/*
+          retention-days: 30
+
+  aggregate:
+    needs: rerun
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: T071-U09p343881_ETM_S06-*
+          path: incoming
+          merge-multiple: true
+      - name: Merge compact summaries and verify 31 segments
+        run: |
+          python - <<'PY'
+          import pandas as pd
+          from pathlib import Path
+          fs=sorted(Path("incoming").glob("*_summary.csv"))
+          x=pd.concat([pd.read_csv(f) for f in fs],ignore_index=True).sort_values("segment")
+          assert len(x)==31, len(x)
+          out=Path("research/wind-tower/experiments/T071")
+          out.mkdir(parents=True,exist_ok=True)
+          x.to_csv(out/"T071_U09p343881_ETM_S06_31SEG_GAGE_SUMMARY.csv",index=False)
+          print(x.to_string(index=False))
+          PY
+      - name: Commit compact 31-segment evidence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T071
+          git commit -m "T071 extract real 158m 31-segment loads for max-bending case"
+          git pull --rebase origin main
+          git push
