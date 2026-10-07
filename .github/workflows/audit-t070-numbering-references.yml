@@ -1,0 +1,21 @@
+name: Audit T070 numbering and steel-type references
+
+on:
+  push:
+    paths:
+      - '.github/workflows/audit-t070-numbering-references.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Find stale observability numbering
+        shell: bash
+        run: |
+          echo "=== stale T058 observability refs ==="
+          grep -RInE 'BASE001_T058_T057_PLUS_G1_OBSERVABILITY|IOS_T058_|build_t058_g1_observability|T058_G1_OBSERVABILITY_CANDIDATE|T058 G1-observability|T058 native Data Check|T058 = instrumented' research/wind-tower .github || true
+          echo "=== T057 steel C3D8R claims ==="
+          grep -RInE 'T057.{0,120}C3D8R|C3D8R.{0,120}T057' research/wind-tower || true
