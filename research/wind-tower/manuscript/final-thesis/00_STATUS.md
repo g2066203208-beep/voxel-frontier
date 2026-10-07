@@ -62,7 +62,7 @@ HOLD：
 正式设计变量、范围和最优值必须由Ch4真实结果和文献/规范共同确定，不得提前填数。
 
 ## 当前唯一优先动作
-1. T057 native Abaqus Data Check；
+1. T070 native Abaqus Data Check；
 2. Gravity/PT/contact equilibrium；
 3. mass/CG/J；
 4. Modal/Flex；
