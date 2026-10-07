@@ -1,0 +1,10 @@
+source_type\tidentifier\tlocation\trole\tstatus
+RUN\tT071 workflow 37582521146\tGitHub Actions\t158 m U09p343881_ETM_S06 four-batch tower-gage rerun\tcompleted/success
+COMMIT\t02193cda3a2f5f1aec3f1015bab6638733a3dc77\tGitHub main\t31-segment summary and T071 inputs\tverified
+ARTIFACT\t11466755161\tGitHub Actions artifact A\tCSEG_01-CSEG_09 full time histories\tdownloaded and hashed
+ARTIFACT\t11465219800\tGitHub Actions artifact B\tCSEG_10-CSEG_18 full time histories\tdownloaded and hashed
+ARTIFACT\t11466308388\tGitHub Actions artifact C\tCSEG_19-CSEG_27 full time histories\tdownloaded and hashed
+ARTIFACT\t11465344577\tGitHub Actions artifact D\tCSEG_28-CSEG_31 full time histories\tdownloaded and hashed
+STANDARD\tNB/T 10907-2021\treferences/standards/rebar-prestress-20261006\tstrength, shear, torsion and prestress design basis\tfull local PDF and evidence pages archived
+MODEL\t158 m OpenFAST\tC02R3R2_158M_Tower.dat\tformal tower identity\t115.63 m mapping excluded
+CALC\tT072_T071_S06_VALIDATION.json\tT072 local validation output\tbyte hashes and structural checks\tverified on D drive
