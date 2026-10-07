@@ -1,0 +1,36 @@
+name: Inspect Li Zeyu remaining pages full audit
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-li-zeyu-remaining-full-audit.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pymupdf
+      - name: Extract remaining pages
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz
+          pdf="research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf"
+          doc=fitz.open(pdf)
+          print("TOTAL_PAGES",len(doc))
+          ranges=[(1,59),(160,len(doc)+1)]
+          for a,b in ranges:
+              for pno in range(a,b):
+                  page=doc[pno-1]
+                  text=page.get_text("text")
+                  print("\n"+"="*28+f" PDF_FILE_PAGE {pno} "+"="*28)
+                  print(text[:20000])
+          PY
