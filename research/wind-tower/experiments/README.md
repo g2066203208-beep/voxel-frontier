@@ -9,6 +9,7 @@
 |---|---|---|
 |T057|当前Abaqus evidence-reconciled物理父模型|ACTIVE PHYSICS；原生solver门禁未关闭|
 |T070|T057 + G1可观测性原生执行候选|ACTIVE EXECUTION；exact-roundtrip PASS；native solver待跑|
+|T071|规范配筋构造计算与原文证据链|ACTIVE SUPPORT；构造计算完成；分布式158 m荷载承载力验算待补跑|
 |T059|T057钢塔网格审计|ACTIVE SUPPORT；钢塔疲劳触发时必须关闭|
 |T062|36case原始outb rainflow/DEL独立复算与S03/S04冲突|ACTIVE HOLD；数据身份待关闭|
 |T063|T057 fatigue-output readiness审计|ACTIVE SUPPORT；确认当前还没有疲劳生产动态步|
