@@ -1,647 +1,107 @@
-# MASTER RESEARCH PROTOCOL — 10 MW级预应力混凝土—钢混合风机塔架硕士论文
+# MASTER RESEARCH PROTOCOL — 当前版
 
-版本：2026-10-05 v1.7  
-状态：本文件为**唯一总控流程**。MASTER建立前的旧workflow已移入`archive/workflow-pre-master/`，早期audit已移入`archive/audit-early/`；归档文件只用于追溯，不得作为新任务入口。当前审计以`audit/INDEX.md`和`registry/`状态为准。  
-正式技术路线（T027修订）：**唯一baseline → Abaqus模型V&V → ERA5/TurbSim → OpenFAST/ROSCO整机随机风生产计算 → 多指标控制工况 → OpenFAST→Abaqus载荷映射V&V → Abaqus精细混塔全局/局部响应与机制识别 → 分级疲劳 → 机制驱动敏感性 → 多目标优化 → 真实FE复核**。任何局部高保真模型仅在全局响应确认控制部位后，依据Li 2023两尺度方法与Ren 2025接缝试验机制条件触发；不设置多体软件协同支路。
+> 更新：2026-10-07  
+> 本文件只描述研究执行流程；论文内容和章节的最高权威见`../manuscript/final-thesis/00_WORKSPACE_MASTER.md`。
 
----
+## 1. 当前研究链
 
-# A. 论文最终目标
+**T057结构V&V → ERA5/TurbSim → OpenFAST/ROSCO多seed → load screening → OpenFAST→Abaqus接口V&V → 局部材料应力 → 分材料疲劳 → 结论回收。**
 
-不是“把软件都跑起来”，而是回答一个完整工程科学问题：
+不再包含：
+- Simpack生产路线；
+- 旧七章结构；
+- 独立优化章；
+- 为复杂而复杂的双向耦合。
 
-> 对一个可追溯的10 MW级陆上风机预应力混凝土—钢混合塔架，如何建立可信的整机随机风载荷与精细结构响应分析链，识别真正控制结构性能的风况与局部机制，并据此形成有工程依据、经高保真独立复核的结构改进方案？
+## 2. 执行顺序
 
-最终论文必须形成一条闭环：
+### P1 T057结构模型闭合
+必须完成：
+- native Data Check；
+- Gravity/PT/contact equilibrium；
+- mass/CG/J；
+- 30-mode Modal；
+- Flex-X/Z；
+- relevant mesh convergence。
 
-**对象定义 → 文献证据 → 模型可信性 → 风环境 → 整机载荷 → 控制工况 → 精细结构 → 薄弱机制 → 设计变量 → 优化 → 独立验证 → 结论**
+### P2 长期风与随机风
+- ERA5时间轴/QC；
+- HubHt dynamic-alpha；
+- long-term probability；
+- TurbSim grid/spectrum/transient；
+- 正式DLC1.2 NTM fatigue bins。
 
-导师要求固化为三条硬约束：
-1. 研究范围必须收敛到单一抗风主线；
-2. 所有模型简化必须说明依据并量化影响；
-3. 前文动力响应必须直接产生后文优化变量、目标和约束。
+### P3 OpenFAST/ROSCO
+- input/controller hash；
+- structural identity；
+- RotorSpeed/BldPitch/GenPwr；
+- six-seed stats；
+- PSD/1P/3P。
 
----
+### P4 load-level screening
+- exact channel identity；
+- 100–700 s window；
+- rainflow/load-DEL；
+- T062历史S03/当前S04数据源冲突关闭；
+- multi-QoI control-case union。
 
-# B. 总流程：每一步“为什么—找什么—做什么—得到什么—怎么过”
+### P5 OpenFAST→Abaqus
+- free body；
+- load ownership；
+- coordinate/reference point；
+- six-component unit tests；
+- force/moment conservation；
+- independent global QoI cross-check。
 
-## Phase 0 — 研究问题、题目与边界
+### P6 local fatigue input
+- candidate-region screening；
+- concrete/PT/steel local stress histories；
+- peak vs physical averaging；
+- local mesh/extraction convergence。
 
-### P0.1 明确研究对象
-**为什么**：对象不清，后面所有尺寸、风况、质量、模态和结果都会串线。  
-**必须找**：
-- DTU 10 MW官方报告/公开源模型；
-- 何泽瑜2024混塔原型学位论文原表/原图；
-- 本文Abaqus/OpenFAST正式输入。
-**做什么**：
-- 分开记录“原始参考风机”“混塔原型”“本文组合模型”；
-- 建立唯一`baseline_id`；
-- 统一长度、质量、坐标、参考点和软件版本。
-**得到什么**：
-- `baseline_identity.md`
-- 几何/组件/版本参数表
-- 冲突清单
-**通过门槛**：
-- 158/112/46 m、HubHt、RNA、材料、坐标均能追到原始源；
-- 185 m等历史模型排除；
-- 任何“reported”未关闭前不得写成verified。
+### P7 material fatigue
+- range/mean/count；
+- material-specific fatigue relation；
+- mean/reference stress；
+- multi-seed convergence；
+- site wind probability；
+- Miner annual/design-life damage。
 
-### P0.2 确定论文题目
-**为什么**：题目决定整篇论文必须兑现的成果。  
-**必须找**：
-- 10 MW级陆上风机/混塔代表论文；
-- 2023–2026混塔优化、疲劳、接缝、动力响应论文；
-- IEC 61400-1/6当前有效版；
-- 已完成/计划完成的本文真实结果。
-**做什么**：
-逐词审查“10 MW级 / 陆上 / 预应力 / 混凝土—钢混合塔架 / 抗风性能 / 结构优化”。
-**得到什么**：
-- title evidence matrix
-- 工作题目
-- 终稿题目保留条件
-**通过门槛**：
-题目中的每个词都有对象证据；“结构优化”仅在第六章真正完成独立复核后最终保留。
+### P8 final evidence
+- claim ↔ RUN ↔ FIG/TAB ↔ REF；
+- five chapters；
+- final DOCX。
 
----
+## 3. 每项任务开始前
 
-# C. 文献研究先于写作和参数选择
-
-## Phase 1 — 系统文献地图与证据库
-
-### P1.1 建立检索问题
-围绕六个主题，不按章节随手搜：
-1. 混塔结构体系与接缝/预应力；
-2. RNA等效、模态和动力简化；
-3. OpenFAST/ROSCO随机风气动弹性；
-4. 整机载荷→精细FE载荷传递；
-5. 接缝/转换段局部开合、弯扭耦合与全局—局部多尺度；
-6. 疲劳与长期随机性、样本收敛；
-7. 敏感性、代理模型和多目标优化。
-
-### P1.2 系统检索
-**方法依据**：采用PRISMA 2020的透明检索/筛选思想，但本文不是系统综述论文，不机械宣称“PRISMA systematic review”。  
-**数据库优先级**：
-- Web of Science / Scopus / Engineering Village（学校可用时）；
-- Crossref / Google Scholar用于补检索；
-- ScienceDirect / Springer / Wiley / Taylor & Francis / MDPI / WES / Frontiers出版社；
-- CNKI/万方用于中文学位论文、中文核心；
-- 官方：IEC、ASME、OpenFAST、ROSCO、Abaqus、DTU/NREL/DOE。
-
-**每个主题必须做**：
-- 核心关键词组合；
-- 向后看参考文献；
-- 向前看被引文献；
-- 2025–2026最新文献更新；
-- 原始方法论文追溯。
-
-### P1.3 筛选与分级
-每篇文献分：
-- A0：标准/官方文档；
-- A1：同行评议正式全文；
-- A2：作者接受稿/机构仓储全文；
-- B：仅摘要/网页；
-- C：仅书目。
-
-关键公式、参数、阈值只能用A0/A1/A2。
-
-### P1.4 文献提取
-每篇核心文献必须提取：
-- 研究对象；
-- 模型/试验；
-- 软件版本；
-- 几何/材料；
-- 边界条件；
-- 风况/载荷；
-- 网格/时间步；
-- 参数；
-- 验证方法；
+必须写清：
+- research question；
+- why needed；
+- source/literature basis；
+- fixed/changed variables；
+- model/input/hash；
 - QoI；
-- 结果；
-- 局限；
-- 可支持本文哪一句；
-- 不能支持本文哪一句；
-- 页/节/图/表/式定位。
-
-### P1.5 产出
-- literature_master.tsv
-- literature_extraction/
-- PDF + SHA-256
-- NEED_USER_DOWNLOAD.md
-- 主题证据矩阵
-- 第一章综述底稿
-
-**通过门槛**：
-一个研究缺口只有在“直接核心论文+方法原典+最新论文+官方标准”四层证据至少基本齐全后才能写入1.5。
-
----
-
-# D. 模型和计算的科研流程
-
-## Phase 2 — Abaqus精细混塔模型建立与V&V
-
-### P2.1 几何身份
-输入：原型表/图、CAD/STEP、INP。  
-做：尺寸、分段、壁厚、坐标三方核对。  
-产出：geometry_registry.tsv、baseline geometry图。  
-门槛：无未解释半径/直径、单位、158/185 m冲突。
-
-### P2.2 材料
-输入：GB/T 50010现行版、GB/T 5224、对象文献、Abaqus官方CDP。  
-做：
-- C65/C70弹性；
-- CDP拉压包络；
-- inelastic/cracking strain转换；
-- damage；
-- ψ/e/fb0/fc0/Kc/μ；
-- 钢筋/PT/钢材本构。
-产出：
-- material_registry.tsv
-- CSV/INC
-- 四个材料单轴数值试件
-门槛：
-- 每个参数有来源；
-- 公式与软件变量语义一致；
-- 数值试件重现目标曲线；
-- 后峰网格依赖已声明。
-
-### P2.3 连接与预应力
-输入：构造文献、接缝试验、Abaqus官方约束文档、正式INP。  
-做：
-- Embedded/Equation/Spring/Coupling/Tie/Contact逐项解释；
-- 初始预应力→平衡后预应力；
-- 接缝模型能力边界。
-产出：connection_capability.tsv。  
-门槛：
-- 任何第四章要解释的物理量必须在模型里真实存在。
-
-### P2.4 RNA空间等效
-输入：DTU源、Abaqus RNA、OpenFAST输入/lin。  
-做：
-m、CG、J_G、J_T、M6、公共tower-top、坐标变换、模态影响。  
-产出：rna_identity.tsv。  
-门槛：
-- 总质量、CG、惯量分别关闭；
-- 简化影响量化；
-- 不以总质量吻合替代动力等效。
-
-### P2.5 初始状态与静力验证
-做：
-- 重力/预应力平衡；
-- 反力；
-- 能量；
-- 推覆；
-- 收敛；
-- 边界条件。
-产出：initial_state_report、pushover_report。  
-门槛：
-- 未收敛区不得外推；
-- 平衡残差/能量可解释。
-
-### P2.6 网格与空间离散verification
-**依据**：ASME V&V 10思想——verification回答“数值模型是否正确求解了给定数学模型”。  
-做：
-- 关键QoI网格收敛；
-- 接缝/转换段局部网格检查；
-- 时间步/积分敏感性。
-产出：mesh_time_convergence.csv。  
-门槛：
-- 关键QoI对进一步细化变化低于预先登记阈值；
-- 阈值必须有来源/工程理由。
-
-### P2.7 模态与阻尼
-做：
-- 模态频率与振型；
-- 有效质量；
-- RNA加入影响；
-- 对象化阻尼；
-- Rayleigh反算；
-- 自由衰减验证。
-产出：modal_vv_report、damping_vv_report。  
-门槛：
-- 模态/阻尼对象身份和边界一致；
-- 数值阻尼与物理阻尼分账。
-
----
-
-# E. 风环境与整机载荷
-
-## Phase 3 — ERA5 / TurbSim / OpenFAST / ROSCO
-
-### P3.1 ERA5场址背景
-**为什么**：定义真实陆上场址统计背景，不代替IEC设计风。  
-找：ERA5官方资料、风切变文献。  
-做：
-- U10/U100；
-- 时段/缺测；
-- 风速风向；
-- α；
-- HubHt换算；
-- 长期统计。
-产出：era5_processing_report。  
-门槛：原始数据+脚本+结果可重算。
-
-### P3.2 NTM/ETM随机风
-找：IEC 61400-1正式条文、TurbSim官方文档、多seed研究。  
-做：
-- 风速矩阵；
-- 6 seed研究设计；
-- 网格、宽高、dt、700 s、100 s spin-up；
-- 风场空间覆盖；
-- 均值、TI、谱/相关性基本V&V。
-产出：wind_case_registry.tsv、wind_vv_report。  
-门槛：每个设置区分“标准要求/官方建议/文献做法/本文选择”。
-
-### P3.3 OpenFAST/ROSCO模型身份
-找：实际计算版本官方文档；DTU模型；ROSCO controller tuning/operation文档。  
-做：
-- 模块版本；
-- DOF；
-- 结构参数；
-- 控制器；
-- operating points；
-- Campbell/模态。
-产出：openfast_baseline.md。  
-门槛：版本和输入哈希固定。
-
-### P3.4 正式筛选矩阵（当前36 case）
-设计：3个主风速 × NTM/ETM × 6 seed（当前用于响应/载荷筛选，不等同于全寿命DLC矩阵）。  
-做：
-- run_id；
-- seed；
-- 输入hash；
-- 输出hash；
-- 统一100–700 s；
-- 峰值/RMS/std/PSD/DEL。
-产出：36-case screening master table。  
-门槛：
-- 36/36成功；
-- 对象化阻尼统一；
-- 旧阻尼仅历史对照；
-- 通道索引正确。
-
-### P3.5 控制工况
-不是“挑最大一个”。分别按：
-- 塔顶位移/加速度；
-- 塔底/关键截面N/V/M/T；
-- DEL；
-- 可能的材料/局部响应代理
-建立控制工况集合。
-产出：control_case_matrix.tsv。  
-门槛：每个后续分析对象知道“为什么选这个case”。
-
----
-
-# F. OpenFAST → Abaqus载荷映射实验
-
-## Phase 4 — OpenFAST→Abaqus主生产接口V&V
-
-### P4.1 先定义自由体
-明确：
-- tower-top参考点；
-- F/M分量；
-- 重力；
-- RNA惯性；
-- tower aerodynamic loads；
-- 哪些由OpenFAST输出、哪些由Abaqus自行承担。
-
-### P4.2 坐标/作用点运输
-方法：
-F_B = R F_A
-M_B = R M_A + r × F_B
-并严格定义r方向和参考点。
-
-### P4.3 时间处理
-定义：
-- sampling；
-- interpolation；
-- alignment；
-- 100–700 s窗口；
-- filter（若有）。
-
-### P4.4 守恒verification
-对每一时刻或抽样时刻验证：
-- ΣF；
-- ΣM；
-- work/energy（适用时）；
-- 静态简化算例解析闭合。
-
-### P4.5 跨模型QoI
-选择可比较的全局量：
-- tower-top displacement；
-- base moments；
-- 低频PSD/模态响应。
-不是要求两个软件局部结果相同，而是确认载荷传递没有引入不可解释误差。
-
-产出：load_mapping_vv_report。  
-门槛：G0–G5按适用范围闭合后才进入第四章正式生产分析；映射G5不能被遗漏。
-
-
----
-
-# G. 结构响应实验设计
-
-## Phase 5 — 控制工况下Abaqus精细响应
-
-### P5.1 全局响应
-得到：
-- U_top；
-- A_top；
-- base N/V/M/T；
-- PSD；
-- peak/RMS/std。
-
-### P5.2 关键截面传力
-在预先定义截面：
-- 混凝土塔底；
-- 接缝；
-- 转换段上下；
-- 钢塔关键截面；
-提取N、Vy、Vz、T、My、Mz。
-
-### P5.3 局部材料
-只提取模型真实支持：
-- concrete stress/strain/CDP variables；
-- steel reinforcement axial response；
-- PT stress increment；
-- spring force/moment；
-- contact变量仅在真实contact存在时。
-
-### P5.4 非线性分级实验
-**目的**：证明“哪个非线性造成什么影响”，不是只跑最终模型。
-对照：
-A. Linear material + small geometry  
-B. P–Δ  
-C. material nonlinearity  
-D. connection nonlinearity（若模型支持）
-保持同一case比较QoI。
-
-产出：mechanism_attribution_report。  
-门槛：薄弱机制必须由对照实验而非云图主观判断。
-
-### P5.5 H2：控制接缝/转换段全局—局部高保真支路
-**触发条件**：P5.1–P5.4确认水平接缝或转换段为主控机制，且论文需要解释开合、摩擦、局部压碎、PT增量或弯扭耦合。  
-**依据**：Li et al. 2023的试验验证两尺度思路；Ren et al. 2025压弯、压弯扭、扭转系列试验。  
-**做什么**：从全局模型提取N/V/M/T或边界运动，建立真实contact/局部实体细化模型；对N-M-T组合需求与PT变化进行验证/解释。  
-**门槛G6L**：未建立真实contact时，不得将SPRING/TIE等效输出解释为真实接触面开合、摩擦或压碎。
-
----
-
-# H. 疲劳研究
-
-## Phase 6 — DEL → 应力循环 → 材料寿命逐级升级
-
-### P6.1 载荷DEL（G7A）
-用途：工况相对比较与筛选；当前36 case属于这一层。  
-输入：时程、m、Neq。  
-产出：DEL matrix。  
-禁止称材料寿命。
-
-### P6.2 局部应力循环
-输入：Abaqus关键材料/截面时程。  
-方法：rainflow，保存range/mean/count。  
-产出：cycle spectra。
-
-### P6.3 材料疲劳/寿命（G7B，条件支路）
-**文献约束**：Huang et al. 2025采用OpenFAST+ROSCO、DLC 1.2、多风速bin、独立随机seed、rainflow、Miner及材料疲劳模型，并发现预应力混凝土水平接缝可能比钢塔需要更大样本量。本文不得把固定6 seed自动视为寿命统计充分。
-只有当以下完整闭合才做：
-- DLC 1.2运行风速bins与概率权重；
-- 每bin满足最低随机实现要求，并对混凝土接缝做样本收敛；
-- 适用S–N；
-- mean stress/prestress；
-- detail category；
-- Miner；
-- probability weights；
-- material-specific model。
-产出：damage/life。
-门槛：不能用统一m=4代替所有材料。
-
----
-
-# I. 敏感性与优化
-
-## Phase 7 — 变量必须由第四章产生
-
-### P7.1 变量生成
-从“控制机制”反推参数：
-例：若转换段应力控制→相关几何/连接变量；若频率约束控制→EI/质量分布相关变量。
-
-每个变量必须有：
-- 物理原因；
-- 可制造性；
-- 下限/上限来源；
-- 联动约束。
-
-### P7.2 随机噪声基线
-用固定seed/配对seed，量化seed方差。
-
-### P7.3 敏感性
-方法选择必须根据：
-- 参数数；
-- 计算预算；
-- 是否要交互；
-- 随机噪声。
-若用Morris，引用Morris原典与Robertson 2019直接风机应用。
-
-产出：rank + uncertainty。
-
-## Phase 8 — 多目标优化
-
-### P8.1 先定工程问题，再选算法
-目标示例只能来自前文：
-- mass/cost；
-- peak response；
-- fatigue；
-- frequency margin；
-- local stress。
-约束必须有IEC/材料/构造/论文依据。
-
-### P8.2 DOE/代理
-若使用LHS/GP/Kriging：
-- training/validation严格分开；
-- 误差不仅报告R²；
-- 检查约束边界附近误差。
-
-### P8.3 Pareto
-保存所有candidate，不只挑一个“最好”。
-
-### P8.4 高保真复核
-代表候选重新建立Abaqus；
-使用：
-- 未参与训练的设计点；
-- 未参与优化的wind case/seed。
-
-产出：final candidate verification report。  
-门槛：只有高保真独立复核通过，题目里的“结构优化”才最终成立。
-
----
-
-# J. 写作顺序
-
-不是“先把七章都写漂亮”。
-
-正确顺序：
-1. P0题目/对象；
-2. P1文献地图；
-3. 第二章方法与V&V；
-4. 第三章风与整机；
-5. 第四章结果和机制；
-6. 第五章敏感性；
-7. 第六章优化；
-8. 再回写第一章研究不足；
-9. 再写摘要；
-10. 最后写第七章结论/创新。
-
-**摘要、研究不足和创新必须最后回写一次。**
-
----
-
-# K. 每一步固定研究卡
-
-任何实验/仿真任务开始前必须有Research Card：
-
-- task_id
-- research_question
-- why_needed
-- literature_basis
-- hypothesis
-- model/input
-- fixed_variables
-- changed_variables
-- software/version
-- run_matrix
-- QoI
-- validation_metric
-- pass_fail_criterion
-- expected_artifacts
-- failure_action
-
-未建卡，不运行。
-
----
-
-# L. 总门禁
-
-G0 对象身份  
-G1 Abaqus模型verification/validation边界  
-G2 风场V&V  
-G3 OpenFAST/ROSCO模型身份  
-G4 36 case正式闭合  
-G5 OpenFAST→Abaqus映射守恒  
-G6 第四章机制识别  
-G6L 真实接缝/转换段局部contact机制（仅相关主张需要）  
-G7A load-DEL筛选闭合  
-G7B 材料疲劳寿命闭合（仅寿命主张需要）  
-G8 敏感性统计闭合  
-G9 优化高保真独立复核  
-G10 全文claim-evidence 100%审计
-
-任何后续G不得绕过前置G。
-
-# M. 流程复核补充：章间回路（T023）
-
-本轮用户优先完成整篇流程审查；原始结果追索与正式求解专项暂缓。逐章职责仍以既有结构审计18及Q01–Q05为准，补充审查见[audit/27](../audit/27-overall-process-review.md)，检查映射见[audit/28](../audit/28-chapter-checklist.md)。
-
-1. Phase 3的工况选择是初筛。Phase 5按精细结构指标检查其覆盖性；发现遗漏局部控制机制时返回Phase 3回补。
-2. Phase 7变量由Phase 5机制产生，再检验敏感性、交互、随机性及工程边界。Phase 8候选未满足约束时返回变量及问题定义，不以代理预测替代真实复算。
-3. 候选改变质量、刚度、模态或控制相关响应时，复核整机载荷模型代表性；必要时更新并重算相关整机工况、重筛控制集合、重做精细分析。固定基线载荷不能自动证明全部候选的运行改进。
-4. 非线性贡献对照保持同一重力/预应力平衡初态、风况与阻尼；有意改变初态时单列其贡献。
-5. 疲劳层级与实际主张对应：载荷DEL不代替材料寿命；未关闭材料寿命层时不写满足疲劳设计或全寿命可靠，亦不能以其构造优化约束。
-
-这些规则是流程修正，不能代替G0–G10的实际证据。
-
-
-# N. T027全文驱动路线再设计
-
-依据2023–2025新增核心全文，当前采用严格的OpenFAST/ROSCO→Abaqus分层主链：OpenFAST/ROSCO承担整机随机风和控制器，Abaqus承担精细结构响应；局部接缝/转换段高保真仅由控制机制触发。每一步必须先有直接文献/标准/官方文档依据。详见[33-t027-literature-driven-route-redesign.md](../audit/33-t027-literature-driven-route-redesign.md)。
-
-
-# O. 段落级/步骤级文献硬门禁（T028）
-
-1. **每个实质正文段落必须有证据锚点**：外部事实/方法/参数用REF，本文结果用RUN+FIG/TAB；结果机理解释同时需要REF。
-2. **每个正式研究步骤必须有直接方法依据**：Research Card必须记录原文具体做法、对象、边界、步骤、参数、验证指标、比较对象、判据和局限。
-3. **禁止只凭“合理”自行设计关键参数或流程**。若文献只给原则而没有唯一数值，本文选择必须标明为study design，并做敏感性/收敛性或独立verification。
-4. **不能把引用当装饰**：引用必须真的支持紧邻claim；不能用综述替代方法原典，不能用摘要替代关键公式/参数全文。
-5. **G10增加100%段落审计**：终稿每个实质段落必须在claim-evidence台账中可追溯；任何未覆盖段落不得判定终稿完成。
-
-详细执行见 `workflow/RECORDING_POLICY.md` 第8节与 `workflow/LITERATURE_PROTOCOL.md` 第8节。
-
-# P. T029/T030 全文核读与source-gap关闭
-
-10篇新增publisher PDF已完成全文核读，见[audit/35](../audit/35-t029-ten-paper-fulltext-evidence-audit.md)与[逐篇用途表](../references/ten-paper-fulltext-use-map-20261004.tsv)。
-
-针对核读中发现的缺口，又补入ERA5/ECMWF、TurbSim、OpenFAST、Abaqus、ASME V&V及直接load-mapping/nonlinearity/damping/sensitivity文献，见[audit/36](../audit/36-t030-source-gap-closure.md)。
-
-当前硬状态：
-- P3.1 ERA5：PASS-method；
-- P3.2 TurbSim：core method PASS，51×51等本文具体grid设计仍需V&V；
-- P4.1 OpenFAST六分量/坐标：PASS-method；
-- P4.2 坐标转换/作用点等效：PASS-principle；
-- P4.3 时间序列：PASS-basic，优先原始时间戳+tabular linear interpolation，不默认滤波/重采样；
-- P4.4 力/矩守恒：PASS-method，以resultant-equilibrium为数学目标，数值残差由本文RUN报告；
-- P5.4：取消无直接依据的固定四级ablation，改为文献支持的linear vs geometric+material nonlinear；真实connection模型存在时再比较connection effect；
-- P5.5 Abaqus独立submodel：PASS-method；
-- P7 seed噪声/EE screening：PASS-method；
-- P8 surrogate test/CV + 高保真候选复核：PASS-method。
-
-注意：source PASS只说明“方法不是自己瞎编”，**不等于本文模型、参数和结果PASS**。G0、具体阻尼目标、51×51适用性、CDP最终参数、G7B材料寿命及优化范围仍须本文对象化验证。
-
-
-# Q. T031 ERA5风能文献专项
-
-P3.1今后不能只依赖ERA5/ECMWF官方资料。已专项检索同行评议期刊及学位论文，见[audit/37](../audit/37-t031-era5-wind-energy-literature-survey.md)与[ERA5 evidence map](../references/ERA5_WIND_ENERGY_EVIDENCE_MAP_20261004.tsv)。
-
-正式方法口径：
-1. ERA5用于2005–2025长期场址风环境背景/代表风速，不作为10-min局地湍流输入；
-2. 有U10/U100时优先按Jung2021、Yang2024逐时计算`alpha(t)=ln(U100/U10)/ln(100/10)`，不默认固定1/7；
-3. `Uhub=U100*(Hhub/100)^alpha(t)`仅作为100m以上的外推估计；Liu2023对120/160/200m的研究要求在约161m处显式报告外推不确定性；
-4. ERA5之后用TurbSim产生随机湍流场；这一分工由Koivisto2020/Murcia2022直接支持；
-5. P3.1当前状态为**PASS-literature / HOLD-site-validation**：文献方法已闭合，但嘉鱼原始处理链、161.37m重算与可能的附近实测验证仍需RUN级闭合。
-
-
-# R. T035专家级路线重审：Route B成为优选执行解释
-
-T035不是简单沿用既有提纲，而是以导师、盲审、期刊审稿视角重新比较三条路线。结论见[audit/39](../audit/39-t035-expert-thesis-redesign.md)。
-
-## R.1 科学中心重定义
-
-后续不得把全文写成“ERA5→TurbSim→OpenFAST→Abaqus→优化”的软件流水账。MASTER各阶段统一服务于以下科学链：
-
-**场址相关随机风 → 整机随机响应与多指标控制工况 → 精细塔架多轴需求N/V/M/T → 控制区域与非线性机制 → 机制相关设计变量 → 优化 → 独立高保真验证。**
-
-核心问题暂定义为：
-
-> 在场址相关随机湍流风和整机气动弹性作用下，10 MW级预应力混凝土—钢混合塔架的控制荷载状态如何形成、关键结构区域由何种多轴受力与非线性机制控制，以及如何据此形成可验证的结构改进方案？
-
-该表述是研究问题，不是终稿结论；G6结果不足时不得提前宣称具体局部机制。
-
-## R.2 Route B执行修正
-
-1. **36case = screening，不是不可修改的最终矩阵。** G6若发现关键局部QoI覆盖不足，返回P3少量补风速/seed。
-2. **疲劳不单独绑架主线。** G7A保留为load-DEL/局部循环；G7B材料寿命继续条件触发。
-3. **局部contact不预设。** 仅当全局N/V/M/T和材料响应证明水平接缝/转换段控制时触发G6L。
-4. **频率吻合不是连接验证。** 模型V&V保持几何/质量/材料/PT/连接/模态/阻尼分层。
-5. **优化从机制产生。** 不提前冻结LHS样本数、代理模型类型、NSGA-II参数或变量范围；只有在G6/G8后确定。
-6. **新增2026机制证据。** REF115–REF117强化水平接缝组合N-M-V-T、开合/摩擦和“全局模态不能替代局部连接验证”的方法边界；REF118仅作为非线性疲劳重要性的外部证据，其多体协同方法不进入本文路线。
-7. **题目继续Conditional。** 当前工作题目暂保留；G6后在“风致响应/风致响应机理/关键连接区受力机制”等更准确标题中终审，不能先以题目强迫结果。
-
-## R.3 最优章节职责
-
-1. 绪论：从文献缺口提出“控制荷载—控制机制—结构改进”问题；
-2. 研究对象、精细模型与分层V&V；
-3. 场址风环境与整机随机风控制荷载；
-4. 整机载荷—精细结构映射与控制区域识别；
-5. 控制区域非线性机制与参数敏感性；
-6. 机制驱动结构优化与独立高保真验证；
-7. 结论与展望。
-
-load-DEL放第3章；局部应力循环可进入第5章；完整材料寿命仅在G7B通过时增加相应小节，不默认独立成章。
-
-## R.4 立即执行
-
-T035完成后，当前首要任务仍为G0，但含义已经更新：
-- 不再泛化讨论路线；
-- 不再把文件“是否存在”作为主要阻断；
-- 直接从T028资产中绑定canonical OpenFAST/Abaqus baseline；
-- 然后依次关闭G1、G2–G4、G5、G6、G8–G9；
-- G7B不阻断主论文完成；
-- G10最后做100% claim-evidence审计。
+- validation metric；
+- pass/fail criterion；
+- expected artifacts；
+- failure action。
+
+## 4. 状态词
+
+只用：
+- PASS；
+- CONDITIONAL；
+- HOLD；
+- NEED-RUN；
+- NEED-SOURCE；
+- HISTORICAL。
+
+文件名里的FINAL/VALIDATED不具有科学效力。
+
+## 5. 关键边界
+
+- source model不能证明自身物理正确；
+- first frequency agreement不能证明local fatigue；
+- load-DEL不能代替material fatigue life；
+- historical benchmark不能替代当前baseline结果；
+- 任何绝对寿命必须有local stress + material model + probability。
