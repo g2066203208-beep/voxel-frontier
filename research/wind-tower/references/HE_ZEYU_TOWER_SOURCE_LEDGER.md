@@ -132,16 +132,13 @@
 
 ## 10. 原文截图
 
-- [PDF第22页：论文表3-1，DTU 10 MW风机参数](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-22.png)
-- [PDF第23页：论文表3-2前半，混凝土塔段几何和内外排纵筋数量](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-23.png)
-- [PDF第24页：论文表3-2后半，混凝土塔段几何和内外排纵筋数量](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-24.png)
-- [PDF第33页：论文塔架总体构成、Abaqus建模描述](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-33.png)
-- [PDF第34页：论文表3-2，31个混凝土塔段](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-34.png)
-- [PDF第35页：论文表3-3，4个钢塔段及连接示意](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-35.png)
-- [PDF第36页：论文Abaqus模型和材料/约束说明](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-36.png)
-- [PDF第44页：论文OpenSEES截面、纵筋纤维、预应力桁架和监测点](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-44.png)
-- [PDF第45页：论文Abaqus与OpenSEES静力推覆验证](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-45.png)
-- [PDF第46页：论文动力响应/模型验证结果](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-46.png)
-- [PDF第78页：论文表7-1，塔架材料与几何随机变量](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-78.png)
+- [PDF第33页/论文第22页：表3-1 DTU 10 MW风机参数、158 m塔架总体构成和Abaqus建模描述](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-33.png)
+- [PDF第34页/论文第23页：表3-2，31个混凝土塔段几何和内外排纵筋数量](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-34.png)
+- [PDF第35页/论文第24页：表3-3，4个钢塔段及图3-4、图3-5连接/有限元模型](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-35.png)
+- [PDF第36页/论文第25页：图3-6、图3-7及模型频率验证起始页](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-36.png)
+- [PDF第44页/论文第33页：OpenSEES截面、纵筋纤维、预应力桁架和8个监测点](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-44.png)
+- [PDF第45页/论文第34页：Abaqus与OpenSEES静力推覆验证](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-45.png)
+- [PDF第46页/论文第35页：动力模型频率和响应验证结果](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-46.png)
+- [PDF第78页/论文第67页：表7-1，塔架材料与几何随机变量](https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-78.png)
 
 规范截图仍在：`research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_18.jpg`、`19.jpg`、`20.jpg`、`34.jpg`、`36.jpg`、`37.jpg`。
