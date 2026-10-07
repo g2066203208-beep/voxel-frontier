@@ -1,0 +1,59 @@
+{
+  "method": "GB/T50010 E.0.1 fixed He counts feasibility map",
+  "material": "S345 source-model symmetric 345 MPa screen",
+  "diameters_mm": [
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
+  ],
+  "BFs": [
+    9,
+    10,
+    11
+  ],
+  "etas": [
+    0.7,
+    1.0
+  ],
+  "best_min_diameter_then_BF": {
+    "uniform_1p40_screen": {
+      "combo": "uniform_1p40_screen",
+      "bar_d_mm": 46,
+      "Abar_mm2": 1661.9025137490005,
+      "BF": 10,
+      "max_utilization": 0.9990270654143062,
+      "control_segment": "CSEG_16",
+      "control_eta": 1.0,
+      "control_time_s": 652.75,
+      "N_design_kN": 22886.277822136057,
+      "M_design_kNm": 312573.15930185944,
+      "Mcap_kNm": 312877.5687095447,
+      "min_net_cover_mm_if_T053_centrelines_fixed": 39.49979380233799,
+      "min_clear_bar_spacing_mm": 136.69771115400317,
+      "PASS": "PASS"
+    },
+    "provisional_N1p35_M1p40": {
+      "combo": "provisional_N1p35_M1p40",
+      "bar_d_mm": 46,
+      "Abar_mm2": 1661.9025137490005,
+      "BF": 10,
+      "max_utilization": 0.9982062180023327,
+      "control_segment": "CSEG_16",
+      "control_eta": 1.0,
+      "control_time_s": 652.75,
+      "N_design_kN": 22068.91075705977,
+      "M_design_kNm": 312413.5002708073,
+      "Mcap_kNm": 312974.9090283439,
+      "min_net_cover_mm_if_T053_centrelines_fixed": 39.49979380233799,
+      "min_clear_bar_spacing_mm": 136.69771115400317,
+      "PASS": "PASS"
+    }
+  }
+}
