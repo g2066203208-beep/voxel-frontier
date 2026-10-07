@@ -1,0 +1,208 @@
+name: T072 rerun 31-segment control cases
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t072-rerun-control-31seg.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rerun:
+    strategy:
+      fail-fast: false
+      matrix:
+        case:
+          - U11p4_ETM_S04
+          - U19p202140_ETM_S04
+          - U19p202140_ETM_S06
+        batch: [A, B, C, D]
+    runs-on: windows-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-003.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U19p202140_ETM_S04.bts
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U19p202140_ETM_S06.bts
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install output reader
+        shell: pwsh
+        run: python -m pip install "git+https://github.com/OpenFAST/openfast_toolbox.git" pandas numpy
+
+      - name: Restore exact formal case and patch gages only
+        shell: pwsh
+        env:
+          CASE_ID: ${{ matrix.case }}
+          BATCH: ${{ matrix.batch }}
+        run: |
+          $ErrorActionPreference="Stop"
+          $caseId=$env:CASE_ID
+          $part = if($caseId -like "U11*"){"part-002.zip"}else{"part-003.zip"}
+          Expand-Archive "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip" -DestinationPath base
+          Expand-Archive "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/$part" -DestinationPath target
+          Expand-Archive "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" -DestinationPath supp
+
+          New-Item -ItemType Directory -Force -Path "runroot/$caseId" | Out-Null
+          Copy-Item -Recurse -Force "base/CASES/U09p343881_ETM_S01/*" "runroot/$caseId/"
+          Copy-Item -Force "target/CASES/$caseId/DTU_10MW_InflowWind.dat" "runroot/$caseId/DTU_10MW_InflowWind.dat"
+          Copy-Item -Force "supp/CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN" "runroot/$caseId/Control/DTU_10MW_RWT_DISCON.IN"
+          Copy-Item -Force "research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll" "runroot/$caseId/Control/libdiscon.dll"
+          Copy-Item -Force "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/$caseId.bts" "runroot/$caseId/$caseId.bts"
+
+          @'
+          from pathlib import Path
+          import os,re,hashlib,json
+          case_id=os.environ["CASE_ID"]; batch=os.environ["BATCH"]
+          cfg={
+            "A":([13,39,65,91,117,142,168,194,220],list(range(1,10))),
+            "B":([246,271,297,323,349,375,400,426,452],list(range(10,19))),
+            "C":([478,504,529,555,581,607,633,658,684],list(range(19,28))),
+            "D":([710,736,762,784,810,850,900,1000,1120],[28,29,30,31,"EX1","EX2","EX3","EX4","EX5"]),
+          }
+          nodes,segs=cfg[batch]
+          case=Path("runroot")/case_id
+
+          p=case/"DTU_10MW_InflowWind.dat"
+          s=p.read_text(encoding="utf-8",errors="replace")
+          s2,n=re.subn(r'^".*'+re.escape(case_id)+r'\.bts"\s+FileName_BTS',
+                       f'"{case_id}.bts" FileName_BTS',s,flags=re.M)
+          if n!=1: raise SystemExit(f"BTS path patch failed {case_id}: n={n}")
+          p.write_text(s2,encoding="utf-8")
+
+          p=case/"DTU_10MW_RWT_ElastoDyn.dat"
+          s=p.read_text(encoding="utf-8")
+          ns=",".join(map(str,nodes))
+          s2,n=re.subn(r'(?m)^\s*1,3,5,7,9,13,15,17,20\s+TwrGagNd\b.*$',
+                       ns+"             TwrGagNd      - T072 control-case distributed gages",s)
+          if n!=1: raise SystemExit(f"TwrGagNd patch failed n={n}")
+          p.write_text(s2,encoding="utf-8")
+
+          expected={
+            "DTU_10MW_RWT.fst":"5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+            "C02R3R2_158M_Tower.dat":"f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+          }
+          for rel,sha in expected.items():
+              got=hashlib.sha256((case/rel).read_bytes()).hexdigest()
+              if got!=sha: raise SystemExit(f"identity mismatch {rel}: {got}")
+          Path("run_meta.json").write_text(json.dumps({"case":case_id,"batch":batch,"nodes":nodes,"segments":segs},indent=2)+"\n")
+          '@ | Set-Content -Encoding utf8 prep.py
+          python prep.py
+
+      - name: Run OpenFAST v3.5.3
+        shell: pwsh
+        env:
+          CASE_ID: ${{ matrix.case }}
+        run: |
+          $ErrorActionPreference="Stop"
+          $exe=Resolve-Path "research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe"
+          Push-Location "runroot/$env:CASE_ID"
+          & $exe "DTU_10MW_RWT.fst" *>&1 | Tee-Object -FilePath "T072_$env:CASE_ID.log"
+          $code=$LASTEXITCODE
+          Pop-Location
+          if($code -ne 0){ throw "OpenFAST failed with exit code $code" }
+
+      - name: Extract 100-700 s histories
+        shell: pwsh
+        env:
+          CASE_ID: ${{ matrix.case }}
+          BATCH: ${{ matrix.batch }}
+        run: |
+          @'
+          from pathlib import Path
+          import os, numpy as np, pandas as pd
+          from openfast_toolbox.io.fast_output_file import FASTOutputFile
+          case=os.environ["CASE_ID"]; batch=os.environ["BATCH"]
+          segs={
+            "A":list(range(1,10)),"B":list(range(10,19)),
+            "C":list(range(19,28)),"D":[28,29,30,31,"EX1","EX2","EX3","EX4","EX5"]
+          }[batch]
+          f=Path("runroot")/case/"DTU_10MW_RWT.outb"
+          df=FASTOutputFile(str(f)).toDataFrame()
+          tcol=next(c for c in df if c.startswith("Time"))
+          w=df[(df[tcol]>=100)&(df[tcol]<=700)].copy()
+          frames=[]
+          for gi,seg in enumerate(segs,1):
+              if str(seg).startswith("EX"): continue
+              def col(suf):
+                  hits=[c for c in w if c.startswith(f"TwHt{gi}{suf}")]
+                  if len(hits)!=1: raise KeyError((gi,suf,hits))
+                  return hits[0]
+              z=float(w[col("TPzi")].iloc[0])
+              q=pd.DataFrame({
+                "case":case,"batch":batch,"segment":f"CSEG_{int(seg):02d}",
+                "gage_index":gi,"gage_z_m":z,"time_s":w[tcol].to_numpy(float),
+                "Fx_kN":w[col("FLxt")].to_numpy(float),"Fy_kN":w[col("FLyt")].to_numpy(float),
+                "Fz_kN":w[col("FLzt")].to_numpy(float),"Mx_kNm":w[col("MLxt")].to_numpy(float),
+                "My_kNm":w[col("MLyt")].to_numpy(float),"Mz_kNm":w[col("MLzt")].to_numpy(float)})
+              q["V_kN"]=np.hypot(q.Fx_kN,q.Fy_kN); q["M_kNm"]=np.hypot(q.Mx_kNm,q.My_kNm)
+              q["T_abs_kNm"]=np.abs(q.Mz_kNm); q["N_comp_kN"]=np.maximum(0,-q.Fz_kN)
+              frames.append(q)
+          out=pd.concat(frames,ignore_index=True)
+          Path("extract").mkdir(exist_ok=True)
+          out.to_csv(Path("extract")/f"{case}_batch{batch}_31seg.csv.gz",index=False,compression="gzip")
+          out.groupby("segment").agg(gage_z_m=("gage_z_m","first"),V_max_kN=("V_kN","max"),
+             M_max_kNm=("M_kNm","max"),T_max_kNm=("T_abs_kNm","max"),N_comp_max_kN=("N_comp_kN","max")).reset_index().to_csv(
+             Path("extract")/f"{case}_batch{batch}_summary.csv",index=False)
+          '@ | Set-Content -Encoding utf8 extract.py
+          python extract.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T072-${{ matrix.case }}-${{ matrix.batch }}
+          path: extract/*
+          retention-days: 30
+
+  aggregate:
+    needs: rerun
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pandas
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: T072-*
+          path: incoming
+          merge-multiple: true
+      - name: Build selected-control 31-segment envelope
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import pandas as pd
+          fs=sorted(Path("incoming").glob("*_summary.csv"))
+          x=pd.concat([pd.read_csv(f).assign(source=f.name) for f in fs],ignore_index=True)
+          if x["segment"].nunique()!=31: raise SystemExit("31 segments not recovered")
+          rows=[]
+          for seg,g in x.groupby("segment"):
+              o={"segment":seg}
+              for col in ["V_max_kN","M_max_kNm","T_max_kNm","N_comp_max_kN"]:
+                  j=g[col].idxmax(); o[col]=float(g.loc[j,col]); o[col+"_case"]=g.loc[j,"source"].split("_batch")[0]
+              rows.append(o)
+          out=Path("research/wind-tower/experiments/T072"); out.mkdir(parents=True,exist_ok=True)
+          pd.DataFrame(rows).sort_values("segment").to_csv(out/"T072_SELECTED_CONTROL_31SEG_ENVELOPE.csv",index=False)
+          PY
+      - name: Commit selected-control envelope
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse research/wind-tower/experiments/T072/T072_SELECTED_CONTROL_31SEG_ENVELOPE.csv
+          git commit -m "T072 add selected 31-segment control-case envelope"
+          git pull --rebase origin main
+          git push
