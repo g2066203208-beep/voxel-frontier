@@ -19,7 +19,7 @@
 
 不得把它们写成一个“官方10 MW嘉鱼实机原型”。
 
-## B. 三个科学问题
+## B. 四个科学问题
 
 **Q1 模型可信性**  
 如何建立10 MW—158 m混塔精细有限元模型，并通过来源、质量、惯量、初始状态、Modal、Flex、网格和连接等证据证明其可用于局部应力研究？
@@ -30,13 +30,17 @@
 **Q3 材料疲劳**  
 长期正常运行风下，混塔哪个材料、哪个高度、哪个方位控制疲劳；预应力/mean stress、wind-bin probability和随机样本如何共同决定累计damage？
 
-## C. 五章职责
+**Q4 疲劳驱动结构优化**  
+在不破坏频率、位移、强度、预应力和接缝服务性能的前提下，哪些结构参数最有效地降低控制疲劳damage并兼顾结构质量；优化方案经高保真独立复核后能获得多大真实改善？
 
-- Ch1：文献证据 → 研究不足 → Q1–Q3；
+## C. 六章职责
+
+- Ch1：文献证据 → 研究不足 → Q1–Q4；
 - Ch2：T057精细模型 + 分层V&V；
 - Ch3：ERA5/TurbSim/OpenFAST/ROSCO + 多seed + load-level screening；
 - Ch4：局部应力 + 分材料疲劳 + 长期概率；
-- Ch5：只回收已证明结论、创新、边界和展望。
+- Ch5：由Ch4控制机理驱动的参数敏感性 + 多目标结构优化 + 高保真复核；
+- Ch6：只回收已证明结论、创新、边界和展望。
 
 ## D. 当前结构模型
 
@@ -95,10 +99,17 @@ T057当前不叫“最终模型”，因为尚未完成native solver验证。
 - site probability；
 - Miner annual/design-life damage。
 
-**G8 — final evidence**
+**G8 — fatigue-driven optimization**
+- control-mechanism-driven variables;
+- DOE/LHS sensitivity;
+- surrogate validation;
+- NSGA-II Pareto search;
+- representative high-fidelity recheck.
+
+**G9 — final evidence**
 - every quantitative conclusion → RUN + FIG/TAB；
 - every external method/parameter → REF/STANDARD/OFFICIAL；
-- final five chapters → DOCX。
+- final six chapters → DOCX。
 
 ## F. 证据规则
 
@@ -126,7 +137,8 @@ T057当前不叫“最终模型”，因为尚未完成native solver验证。
 
 Ch2：REF008、REF061、REF005、REF010、REF039 + 标准/接缝文献。  
 Ch3：REF080、REF090、REF093、REF046、REF009 + IEC/TurbSim/OpenFAST官方。  
-Ch4：REF018为第一主参考；REF007为强二级学位论文参考；REF002、REF023、REF041、REF143、REF036分材料/连接补充。
+Ch4：REF018为第一主参考；REF007为强二级学位论文参考；REF002、REF023、REF041、REF143、REF036分材料/连接补充。  
+Ch5：REF002、REF004、REF020、REF021、REF022、REF033为优化主线；算法只作工具，重点是疲劳机理驱动变量选择与高保真复核。
 
 文献原图只作为方法证据，不作为本文结果。
 
@@ -135,13 +147,13 @@ Ch4：REF018为第一主参考；REF007为强二级学位论文参考；REF002�
 - Simpack生产路线；
 - 旧七章结构；
 - 载荷映射独立成章；
-- 独立“机制→敏感性→多目标优化”章节；
+- 与疲劳主线无关、为凑工作量而独立扩张的“大而全”优化路线；
 - 为凑工作量把所有材料全部做寿命；
 - 为复杂而复杂的双向耦合。
 
 ## J. 目录治理规则
 
-- 活动正文只有5章；
+- 活动正文只有6章；
 - 被替代路线移动到`archive/`；
 - `audit/`只作历史追溯；
 - `experiments/`不因体量大而删除真实证据，但必须由README分级；
