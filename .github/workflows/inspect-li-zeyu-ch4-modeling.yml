@@ -1,0 +1,31 @@
+name: Inspect Li Zeyu chapter 4 modeling
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-li-zeyu-ch4-modeling.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pymupdf
+      - name: Extract chapter 4 text
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz
+          pdf="research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf"
+          doc=fitz.open(pdf)
+          for pno in range(81,110):
+              print("\n"+"="*28+f" PDF_FILE_PAGE {pno} "+"="*28)
+              print(doc[pno-1].get_text("text")[:20000])
+          PY
