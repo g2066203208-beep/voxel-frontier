@@ -1,0 +1,11 @@
+{
+  "selected_diameter_mm": 50,
+  "selected_spacing_mm": 20,
+  "layers": 2,
+  "max_utilization": 0.9426388816895392,
+  "max_shear_ratio": 0.08063885943794051,
+  "max_torsion_ratio": 0.9426388816895392,
+  "xi_definition": "fy*A_sl*s/(fyv*A_st1*u_cor), NB/T 10907 Eq. 6.3.2-4",
+  "basis": "S06 exact same-time histories; b=t; c_nom=30mm; Np0=0",
+  "status": "S06 candidate, not 36-case final"
+}
