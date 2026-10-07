@@ -1,0 +1,41 @@
+name: T078 verify prestress closure
+
+on:
+  push:
+    paths:
+      - 'research/wind-tower/experiments/T078/**'
+      - '.github/workflows/t078-verify-prestress.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute T078
+        run: python research/wind-tower/experiments/T078/t078_prestress_loss_closure.py
+      - name: Verify numerical CSVs are reproducible
+        run: |
+          git diff --exit-code --             research/wind-tower/experiments/T078/T078_PRESTRESS_LOSS_BF_SCAN.csv             research/wind-tower/experiments/T078/T078_BF8_SEGMENT_LOSS_AND_GRAVITY_CHECK.csv
+      - name: Assert adopted design values
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T078/T078_PRESTRESS_LOSS_BF_SCAN.csv')
+          rows=list(csv.DictReader(p.open()))
+          r=next(x for x in rows if x['BF']=='8')
+          assert abs(float(r['sigma_pe_MPa'])-985.951362961661) < 1e-9
+          assert abs(float(r['Pe_MN'])-39.75355895461417) < 1e-9
+          assert r['adopted']=='YES'
+          q=list(csv.DictReader(Path('research/wind-tower/experiments/T078/T078_BF8_SEGMENT_LOSS_AND_GRAVITY_CHECK.csv').open()))
+          assert len(q)==31
+          assert all(x['permanent_full_compression_PASS']=='PASS' for x in q)
+          print('T078 VERIFIED: BF8, sigma_pe, Pe, 31/31 permanent compression')
+          PY
