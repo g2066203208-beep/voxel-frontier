@@ -1,0 +1,24 @@
+name: Grep 158m OpenFAST tower gage evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/grep-158m-openfast-gages.yml'
+
+jobs:
+  grep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Grep gage evidence
+        shell: bash
+        run: |
+          set -e
+          echo '--- TwrGagNd / NTwGages / TwrNodes ---'
+          grep -RInE --exclude='*.zip' --exclude='*.pdf' --exclude='*.png' --exclude='*.jpg' --exclude='*.odb*' \
+            'TwrGagNd|NTwGages|TwrNodes|C02R3R2_158M_Tower|TowerHt *= *158|TowerHt.?158' research/wind-tower | head -n 1000 || true
