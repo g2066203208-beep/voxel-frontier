@@ -1,0 +1,12 @@
+{
+  "t070_sha256": "9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9",
+  "expected_parent_sha256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "recovered_parent_sha256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "roundtrip_exact_parent": true,
+  "removed_blocks": {
+    "header": 1,
+    "diag_sections": 1,
+    "diag_output": 1
+  },
+  "status": "PASS-EXACT-ROUNDTRIP"
+}
