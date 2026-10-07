@@ -171,3 +171,47 @@ Abaqus质量和CG必须与独立质量账逐项对照：
 **T057 native solver + 钢塔网格 + Gravity/PT/contact平衡 + 独立质量/CG + Modal/Flex + 必要敏感性。**
 
 后续所有状态更新以本T057总账为主；T053总账保留为历史基线与证据谱系记录。
+
+
+## 8. 2026-10-07原始INP物理审计与T058后继
+
+已对T057原始INP本体（16,585,607 bytes / 482,824 lines / SHA与本总账一致）完成静态物理审计：
+
+`research/wind-tower/experiments/T057/T057_RAW_PHYSICS_AUDIT_20261007.md`
+
+主要结论：
+
+1. C65/C70均为CDP，但拉伸软化采用默认strain-based `*Concrete Tension Stiffening`，不是GFI/断裂能型；
+2. PT为36条T3D2、72节点、每束仅两端节点，未Embedded进混凝土；因此PT并没有被沿全长轴向锁死；
+3. PT顶部108条Equation连接SET_FLANGE_RP，底端U1/U2/U3固定；
+4. 1280 MPa通过 `*Initial Conditions,type=STRESS` 直接施加，不是降温法或pretension section；
+5. STRAND_1860当前只有线弹性E=195 GPa，没有实现fy=1320 MPa后的塑性；
+6. 30对水平接缝静态文本已经是HARD+μ=0.5物理接触，旧SPRING2/CPL_J已不存在；
+7. 原T057 Gravity输出没有CPRESS/COPEN/CSHEAR/CSLIP，也没有用于转换截面六分量的Integrated Output，故原T057即使求解成功也不足以完整关闭G1证据链。
+
+因此保留T057物理身份不变，建立后继：
+
+`T058 / BASE001_T058_T057_PLUS_G1_OBSERVABILITY.inp`
+
+T058 SHA-256：
+
+`0a0bb3b5f8e8e011d73389d3437182fb442e9fb710ee2c0e0043ee5e2958c1bb`
+
+T058只新增G1输出，不改变T057物理参数。后续native Data Check / Gravity优先使用T058，以便同一次原生求解获得：
+
+- 接缝CPRESS/COPEN/CSHEAR/CSLIP；
+- 36束PT S11/轴力；
+- 塔底反力；
+- C31顶面与S01底面的SOF/SOM；
+- 塔底SOF/SOM；
+- 能量项。
+
+详细总账：
+
+`research/wind-tower/governance/T058_G1_OBSERVABILITY_CANDIDATE_20261007.md`
+
+状态仍为：
+
+**NATIVE-SOLVER-PENDING**
+
+不得因T058静态生成成功而将G0/G1标记为PASS。
