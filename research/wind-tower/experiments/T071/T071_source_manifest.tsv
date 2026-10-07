@@ -1,0 +1,9 @@
+source_type	identifier	file_or_url	use	status
+STANDARD	NB/T 10907-2021	D:/MC/cae/参考文献/风电机组混凝土—钢混合塔筒设计规范（附条文说明）.pdf	material values; shear/torsion equations; fatigue/local bearing clauses	SHA256=FCF98AEE390850E27C22CDF2F3BAF40A933A6B21645F787EB16DD2FEA6DAC18E; local PDF; screenshots archived
+STANDARD	GB 50135-2019	https://pro5323b5d3-pic11.ysjianzhan.cn/upload/2_16GB50135-2019GCJGSJBZ1.pdf	public clause audit for double layers, hoop limits, ties	URL checked previously; server returned 403 on 2026-10-07; legal PDF/page image pending
+STANDARD	T/CEC 5008-2018	public clause audit in T046/SOURCE_LEDGER.md	construction detailing cross-check and 30 mm candidate	applicability limited: bonded PT standard; not direct PT-topology source
+STANDARD	GB/T 50010-2010+2024 amendment	D:/Codex-research-native/openfast-36-r2-data-20261006/audit_evidence_20261007/GB50010_2010_2015_2024局部修订_源PDF.pdf	general concrete design context and amendment identity	amendment evidence only; full current legal text still required
+REF008	He_Zeyu_2024	D:/MC/cae/大型混塔式风力机的建模与可靠度分析_何泽瑜.pdf	31-segment geometry; longitudinal counts; reinforcement-model method	SHA256=85FB7D2E35A039E38E4B442DEADAB6CE7DDBF8BF0E57885DE0238D92113F511C; original PDF; pages 33-34/44-45 screenshot archived
+MODEL	T057	research/wind-tower/governance/CURRENT_ABAQUS_MODEL_20261006.md	current candidate identity and material/source boundaries	static candidate; native solver pending
+RUN	T071	T071_rebar_detailing.py	reproducible 31-segment detailing calculation	SHA256=5099AC440956DC6012E064B0D084FA8E3B995466E59F79969A7757A0502D9C07 for output; completed locally on D drive
+RUN_INPUT	T071	T071_input_geometry_31_segments.csv	31-segment geometry and He table longitudinal-count fields only; no loads	SHA256=C560DC02F2800F238BF05A82BCDD5849C9D3AC4AF5249C3334F04B67ED6E235C
