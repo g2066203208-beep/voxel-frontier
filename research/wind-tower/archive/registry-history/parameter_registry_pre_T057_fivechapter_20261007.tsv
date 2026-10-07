@@ -1,0 +1,51 @@
+parameter_id	name	value	unit	role	source_id	source_location	baseline_id	status	notes
+PAR001	DTU rated power	10	MW	reference turbine identity	REF001	DTU report	BASE_PENDING	verified-source	公开参考机组
+PAR002	DTU rotor diameter	178.3	m	reference turbine identity	REF001	DTU report	BASE_PENDING	verified-source	
+PAR003	DTU rated wind speed	11.4	m/s	reference turbine identity	REF001	DTU report	BASE_PENDING	verified-source	
+PAR004	DTU rotor-speed minimum	6.0	rpm	1P/3P source	REF001	DTU report	BASE_PENDING	verified-source	
+PAR005	DTU rotor-speed maximum	9.6	rpm	1P/3P source	REF001	DTU report	BASE_PENDING	verified-source	
+PAR006	DTU original hub height	119	m	reference-turbine identity	REF001	DTU report	BASE_PENDING	verified-source	not thesis combined-model HubHt
+PAR007	tower total height	158	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE001_CANDIDATE	source+implementation-verified	T045 preferred candidate preserves M2 geometry
+PAR008	concrete tower height	112	m	prototype geometry	He2024 original PDF Sec.3.3 p33 + Table3-2 p34	original-page	BASE001_CANDIDATE	source+implementation-verified	T045 preferred candidate preserves M2 geometry
+PAR009	steel tower height	46	m	prototype geometry	He2024 original PDF Sec.3.3 p33/body p22	original-page	BASE001_CANDIDATE	source+implementation-verified	T045 preferred candidate preserves M2 geometry
+PAR010	combined model hub height	161.3688057735	m	combined model geometry	T037_R2_ACTUAL_INPUT	TowerHt+Twr2Shft+OverHang*sin(ShftTilt)	BASE001_CANDIDATE	verified-actual-r2	Formal R2 fields re-read and archived hashes verified
+PAR011	C65 elastic modulus	36.5	GPa	material	GB/T50010+object literature	material table	BASE_PENDING	conditional	current standard authorized text still to archive
+PAR012	C70 elastic modulus	37.0	GPa	material	GB/T50010+object literature	material table	BASE_PENDING	conditional	
+PAR013	concrete Poisson ratio	0.20	-	material	GB/T50010	material table	BASE_PENDING	conditional	
+PAR014	CDP dilation angle	30	deg	material model	object literature	CDP studies	BASE_PENDING	conditional	not Abaqus default; sensitivity required
+PAR015	CDP eccentricity	0.1	-	material model	Abaqus official	CDP keyword	BASE_PENDING	verified-definition	Abaqus default
+PAR016	CDP fb0/fc0	1.16	-	material model	Abaqus official	CDP keyword	BASE_PENDING	verified-definition	Abaqus default
+PAR017	CDP Kc	0.6666667	-	material model	Abaqus official	CDP keyword	BASE_PENDING	verified-definition	Abaqus default
+PAR018	CDP viscosity baseline	0	-	material model	Abaqus official	CDP keyword	BASE_PENDING	verified-definition	Standard default; production choice still needs sensitivity
+PAR019	public HAWC2 single-blade mass	41722.411281503	kg	RNA source identity	DTU public HAWC2	Blade_st.dat integration	BASE_PENDING	verified-recalculated	2026-10-04 independent trapezoidal integration
+PAR020	public HAWC2 RNA mass	676727.233844509	kg	RNA source identity	DTU public HAWC2	3 blades + 105520 hub + 446040 nacelle	BASE_PENDING	verified-recalculated	implementation-specific source chain
+PAR021	OpenFAST historical TowerHt	158	m	combined-model geometry	T037_R2_ACTUAL_INPUT	FST/ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR022	OpenFAST historical TowerBsHt	0	m	combined-model geometry	T037_R2_ACTUAL_INPUT	FST/ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR023	OpenFAST historical Twr2Shft	2.75	m	hub geometry	T037_R2_ACTUAL_INPUT	ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR024	OpenFAST historical OverHang	-7.1	m	hub geometry	T037_R2_ACTUAL_INPUT	ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR025	OpenFAST historical ShftTilt	-5	deg	hub geometry	T037_R2_ACTUAL_INPUT	ElastoDyn per-file audit	BASE001_CANDIDATE	verified-actual-r2	Old raw-input-absent note superseded by T037 archive rehash
+PAR026	OpenFAST combined HubHt recomputation	161.3688057735	m	hub geometry	OpenFAST official formula	TowerHt+Twr2Shft+OverHang*sin(ShftTilt)	BASE001_CANDIDATE	verified-actual-r2	Computed from re-read actual R2 fields
+PAR027	Historical ROSCO runtime version	2.6.0	-	controller identity	T037_ACTUAL_RUNTIME	DISCON+DLL archive hashes	BASE001_CANDIDATE	verified-current	ROSCO2.6.0; controller files verified
+PAR028	He2024 concrete top diameter at z=112m	4.97	m	prototype geometry	He2024 Table3-2 PDF p34/body p23	original-page	BASE_PENDING	direct-source-verified	Compare with production Abaqus
+PAR029	He2024 steel Table3-3 value at z=123.5m	4.66	m	prototype geometry	He2024 Table3-3 PDF p35/body p24; header=半径	original-page	BASE_PENDING	conflict-source-verified	Do not silently reinterpret as diameter before production model check
+PAR030	BASE001 common structural interface y	158	m	OpenFAST-Abaqus common reference point	T038/T045	O=(0,158,0)	BASE001_CANDIDATE	candidate-frozen	Preferred candidate uses O158 instead of legacy P160
+PAR031	R2 frozen RNA mass	676753.29072314012	kg	RNA spatial identity	T038	R2 reconstruction + validated sample	BASE001_CANDIDATE	numerically-verified	Integrated in T045 preferred candidate
+PAR032	R2 RNA CG y	160.78358803030605	m	RNA spatial identity	T038	Abaqus global coordinates	BASE001_CANDIDATE	numerically-verified	CG z=-0.87296249889154m; x≈0
+PAR033	R2 RNA I11	94926999.79811174	kg m2	RNA inertia	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	
+PAR034	R2 RNA I22	99481015.62016469	kg m2	RNA inertia	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	
+PAR035	R2 RNA I33	155901495.33851188	kg m2	RNA inertia	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	
+PAR036	R2 RNA I23	-5231495.690281978	kg m2	RNA inertia coupling	T038	JG at CG	BASE001_CANDIDATE	numerically-verified	Off-diagonal retained
+PAR037	PT nominal initial stress	1280	MPa	prestress input	REF061 + T045 actual INP	Renewable Energy 2025 material description + *INITIAL CONDITIONS,TYPE=STRESS	BASE001_CANDIDATE	direct-source+implemented/effective-pending	Same-lineage paper directly gives 1280MPa; not GB/T5224-prescribed and not equilibrated operating stress
+PAR038	PT strand count	36	-	prestress geometry	T045 actual INP	PT_36x15p2 element topology	BASE001_CANDIDATE	implemented/source-partial	15.2mm identity supported by REF008/REF061; count=36 and area=140mm2/strand are frozen implementation facts
+PAR039	OpenFAST TwrAero	False	-	load ownership	T037 actual AeroDyn input	R2 formal chain	BASE001_CANDIDATE	verified-current	Tower aerodynamic distributed load absent from current OF production chain
+PAR040	OpenFAST tower FA1 damping	4.6350	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold	Header comments differ; use actual fields only
+PAR041	OpenFAST tower FA2 damping	5.5344	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold	
+PAR042	OpenFAST tower SS1 damping	4.6341	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold	
+PAR043	OpenFAST tower SS2 damping	5.5282	%	structural damping	T037 actual tower card	C02R3R2_158M_Tower.dat	BASE001_CANDIDATE	implemented/physical-source-hold
+PAR044	ordinary reinforcement material identity	S345	-	material identity	REF008 + T045 actual INP	He2024 §3.3 + S345 section assignment	BASE001_CANDIDATE	direct-source+implemented/conflict-retained	REF061 uses HRB335 in same lineage; no silent conversion
+PAR045	steel tower material identity	S345	-	material identity	REF008 + T045 actual INP	He2024 §3.3 + S345 solid sections	BASE001_CANDIDATE	direct-source+implemented/conflict-retained	REF061 uses Q345 in same lineage; no silent conversion
+PAR046	prestressing strand diameter	15.2	mm	prestress identity	REF008;REF061	He2024 §3.3; Xu et al. 2025 material description	BASE001_CANDIDATE	direct-source-verified	Actual FE uses equivalent truss area 140mm2/strand
+PAR047	prestressing tendon elastic modulus	195	GPa	prestress material	REF061 + T045 actual INP	Renewable Energy 2025 Table 2 / STRAND_1860	BASE001_CANDIDATE	direct-source+implemented	Yield/ultimate 1320/1860MPa are source values; current production constitutive usage must remain actual-INP based
+PAR048	horizontal joint translational/rigid-like spring stiffness	1e14	N/m or corresponding DOF unit	global joint idealization	T045 actual INP	30 joints × SPRING2	BASE001_CANDIDATE	implemented/physical-source-hold	Not a standard/test value; sensitivity required
+PAR049	horizontal joint bending rotational stiffness range	8.76e11 to 2.91e12	N m/rad	global joint idealization	T045 actual INP	DOF4/DOF6 by joint	BASE001_CANDIDATE	implemented/physical-source-hold	Height-varying frozen source setting; exact design/test derivation unresolved
+PAR050	nonstructural mass total	39800.22	kg	mass bookkeeping	T045 actual INP	4622.69+33004.8+2172.73 kg NSM	BASE001_CANDIDATE	implemented/physical-origin-hold	Abaqus semantics verified; component identity unresolved; sensitivity required
