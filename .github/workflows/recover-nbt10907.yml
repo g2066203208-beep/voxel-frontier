@@ -1,0 +1,157 @@
+name: Recover NB/T 10907 Chapter 5 source
+
+on:
+  push:
+    paths:
+      - '.github/workflows/recover-nbt10907.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils qpdf
+          python -m pip install requests beautifulsoup4
+      - name: Probe public source pages and download endpoints
+        run: |
+          mkdir -p /tmp/nbtprobe research/wind-tower/experiments/T076
+          python - <<'PY'
+          import json,re,hashlib,subprocess
+          from pathlib import Path
+          from urllib.parse import urljoin
+          import requests
+          from bs4 import BeautifulSoup
+
+          out=Path("research/wind-tower/experiments/T076")
+          sess=requests.Session()
+          sess.headers.update({"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154 Safari/537.36"})
+
+          pages=[
+            "https://www.webfree.net/download/11632",
+            "https://www.qbw86.com/post-218039-1-1.html",
+            "https://www.guifanku.com/708264.html",
+            "https://max.book118.com/html/2026/0805/6100131135012205.shtm",
+          ]
+          probes=[
+            "https://www.webfree.net/?wpdmdl=11632",
+            "https://www.webfree.net/download/11632?wpdmdl=11632",
+            "https://www.webfree.net/download/11632/?wpdmdl=11632",
+            "https://www.webfree.net/wp-json/wp/v2/search?search=10907&per_page=100",
+            "https://www.webfree.net/wp-json/wp/v2/wpdmpro?search=10907&per_page=100",
+            "https://www.webfree.net/wp-json/wpdm/v1/packages?search=10907",
+            "https://www.qbw86.com/forum.php?mod=attachment&aid=MjE4MDE5fA%3D%3D",
+            "https://www.qbw86.com/forum.php?action=attachpay&aid=218019&mod=misc&tid=218039",
+          ]
+          report={"pages":[],"probes":[],"candidates":[]}
+          candidates=set()
+
+          for u in pages:
+            try:
+              r=sess.get(u,timeout=30,allow_redirects=True)
+              rec={"url":u,"status":r.status_code,"final_url":r.url,"content_type":r.headers.get("content-type"),"length":len(r.content)}
+              report["pages"].append(rec)
+              p=Path("/tmp/nbtprobe")/(re.sub(r'[^A-Za-z0-9]+','_',u)[-100:]+".html")
+              p.write_bytes(r.content)
+              if "text/html" in (r.headers.get("content-type") or ""):
+                soup=BeautifulSoup(r.text,"html.parser")
+                for tag in soup.find_all(True):
+                  for a in ("href","src","action","data-downloadurl","data-url","data-href"):
+                    v=tag.get(a)
+                    if v:
+                      z=urljoin(r.url,v)
+                      if re.search(r'(pdf|wpdm|download|attachment|attachpay|10907)',z,re.I):
+                        candidates.add(z)
+                for m in re.findall(r'https?://[^\\"\'<> ]+',r.text):
+                  if re.search(r'(pdf|wpdm|download|attachment|10907)',m,re.I):
+                    candidates.add(m.replace("&amp;","&"))
+            except Exception as e:
+              report["pages"].append({"url":u,"error":repr(e)})
+
+          candidates.update(probes)
+          for u in sorted(candidates):
+            try:
+              r=sess.get(u,timeout=35,allow_redirects=True)
+              ct=r.headers.get("content-type","")
+              head=r.content[:8]
+              rec={"url":u,"status":r.status_code,"final_url":r.url,"content_type":ct,"length":len(r.content),"head_hex":head.hex()}
+              report["probes"].append(rec)
+              if r.status_code==200 and (r.content.startswith(b"%PDF") or "application/pdf" in ct.lower()):
+                fn=Path("/tmp/nbtprobe")/("candidate_"+hashlib.sha256(u.encode()).hexdigest()[:12]+".pdf")
+                fn.write_bytes(r.content)
+            except Exception as e:
+              report["probes"].append({"url":u,"error":repr(e)})
+
+          pdfs=list(Path("/tmp/nbtprobe").glob("*.pdf"))
+          valid=[]
+          for f in pdfs:
+            try:
+              txt=subprocess.check_output(["pdftotext",str(f),"-"],stderr=subprocess.STDOUT,timeout=30).decode("utf-8","replace")
+              ok=("10907" in txt and ("作用和作用组合" in txt or "荷载与荷载效应组合" in txt))
+              valid.append({"file":str(f),"size":f.stat().st_size,"sha256":hashlib.sha256(f.read_bytes()).hexdigest(),"valid_nbt10907":ok,"text_hits":{"10907":"10907" in txt,"chapter5":"作用和作用组合" in txt or "荷载与荷载效应组合" in txt}})
+              if ok:
+                (out/"NBT10907_RECOVERED_TEXT.txt").write_text(txt,encoding="utf-8")
+                subprocess.run(["pdfinfo",str(f)],stdout=open(out/"NBT10907_RECOVERED_PDFINFO.txt","w"),stderr=subprocess.STDOUT)
+                # keep the recovered PDF only as an Actions artifact; do not republish the full standard in git
+                Path("/tmp/nbtprobe/VALID.pdf").write_bytes(f.read_bytes())
+            except Exception as e:
+              valid.append({"file":str(f),"error":repr(e)})
+          report["valid_pdfs"]=valid
+          (out/"T076_PUBLIC_SOURCE_RECOVERY.json").write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - name: If recovered, isolate Chapter 5 text and page images
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,subprocess,json,hashlib
+          out=Path("research/wind-tower/experiments/T076")
+          p=out/"NBT10907_RECOVERED_TEXT.txt"
+          if not p.exists():
+              print("No public direct PDF recovered in this pass.")
+              raise SystemExit(0)
+          t=p.read_text(encoding="utf-8",errors="replace")
+          # Save only a compact chapter-location audit, not the whole copyrighted text.
+          hits=[]
+          for pat in ["5 作用和作用组合","5.1","5.2","6 承载能力极限状态"]:
+              hits.append({"pattern":pat,"index":t.find(pat)})
+          (out/"T076_CH5_LOCATION.json").write_text(json.dumps(hits,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          pdf=Path("/tmp/nbtprobe/VALID.pdf")
+          # Printed Chapter 5 spans pages 12-17; locate PDF pages by text search.
+          pages=[]
+          n=int(subprocess.check_output(["pdfinfo",str(pdf)]).decode(errors="replace").split("Pages:")[1].splitlines()[0].strip())
+          for i in range(1,n+1):
+              s=subprocess.check_output(["pdftotext","-f",str(i),"-l",str(i),str(pdf),"-"],stderr=subprocess.DEVNULL).decode("utf-8","replace")
+              if any(k in s for k in ["5 作用和作用组合","5.1 作用","5.2 作用组合"]):
+                  pages.append(i)
+          if pages:
+              lo=max(1,min(pages)); hi=min(n,max(pages)+6)
+              ev=out/"source-evidence"/"NBT10907_Chapter5"; ev.mkdir(parents=True,exist_ok=True)
+              subprocess.run(["pdftoppm","-f",str(lo),"-l",str(hi),"-png","-r","120",str(pdf),str(ev/"page")],check=True)
+              (ev/"SOURCE_META.json").write_text(json.dumps({"pdf_pages":list(range(lo,hi+1)),"sha256":hashlib.sha256(pdf.read_bytes()).hexdigest()},indent=2)+"\n")
+          PY
+      - name: Upload recovered full PDF privately as workflow artifact when present
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: T076-nbt10907-recovery
+          path: |
+            /tmp/nbtprobe/VALID.pdf
+            research/wind-tower/experiments/T076/T076_PUBLIC_SOURCE_RECOVERY.json
+          if-no-files-found: ignore
+          retention-days: 1
+      - name: Commit recovery audit and Chapter 5 evidence if recovered
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T076
+          git diff --cached --quiet && exit 0
+          git commit -m "T076: audit public NB/T10907 sources and archive Chapter 5 evidence"
+          git pull --rebase origin main
+          git push
