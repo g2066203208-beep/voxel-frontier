@@ -32,7 +32,7 @@
 |目录|职责|是否当前入口|
 |---|---|---|
 |`manuscript/final-thesis/`|正式论文正文、章节证据、计算缺口、最终装配|**是**|
-|`governance/`|当前模型治理；当前只围绕T057|**是**|
+|`governance/`|当前模型治理；T057为物理父模型，T070为G0/G1可观测性执行后继|**是**|
 |`experiments/`|真实实验/仿真/审计产物；按T编号保留研究可追溯性|按README选择|
 |`references/`|论文PDF、标准、官方资料、原页证据图|**是**|
 |`registry/`|REF/PAR/RUN/CLAIM等结构化台账|**是**|
@@ -43,9 +43,9 @@
 |`geometry/`, `models/`, `inspection/`|早期/原始工程资产入口|只作source/history|
 |`pdf-archives/`|PDF下载打包，不是文献source-of-truth|否|
 
-## 4. 当前唯一Abaqus候选
+## 4. 当前Abaqus物理基线与执行候选
 
-T057：
+**物理基线 T057：**
 
 `experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp`
 
@@ -61,8 +61,16 @@ T057：
 - 30个水平接缝显式hard contact + penalty friction；
 - RNA-R2质量 + 偏心CG + full inertia + 6DOF。
 
+当前原生执行后继：
+
+T070：
+
+`experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp`
+
+T070只在T057上增加接缝、PT、塔底和转换截面的G1诊断输出；反向SHA审计可逐字节恢复T057父文件，因此没有改变物理参数。
+
 当前硬门禁：
-T057 native Data Check → Gravity/PT/contact平衡 → mass/CG/J → Modal → Flex → 必要网格收敛。
+T070 native Data Check → Gravity/PT/contact平衡 → mass/CG/J → Modal → Flex → 钢塔C3D8I网格整改/收敛。
 
 ## 5. 文献与原图
 
@@ -102,6 +110,6 @@ T057 native Data Check → Gravity/PT/contact平衡 → mass/CG/J → Modal → 
 
 当前优先级不是继续扩章节，而是关闭第二章计算门禁：
 
-**T057 native Abaqus Data Check → Gravity/PT/contact equilibrium → mass/CG/J → Modal/Flex → 钢塔局部网格（若钢塔疲劳启用）。**
+**T070 native Abaqus Data Check → Gravity/PT/contact equilibrium → mass/CG/J → Modal/Flex → 钢塔C3D8I局部网格整改与收敛。**
 
 随后才进入第三章正式数据闭合与第四章材料疲劳生产。
