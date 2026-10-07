@@ -1,95 +1,242 @@
-# T072 配筋计算全过程与规范证据总账
+# T072 配筋计算全过程与规范证据总账（SOURCE-LOCK修订版）
 
 日期：2026-10-07  
-当前状态：`S06阶段计算链完整归档；36工况最终包络未完成`
+状态：`SOURCE-LOCK-ENFORCED / S06-CALCULATION-CHAIN-AUDITED / FINAL-CODE-CLOSURE-PENDING`
 
-## 0. 先说清楚归档边界
+## 0. 最高优先级规则
 
-本文件把当前已经实际完成的输入、公式、脚本、输出和规范截图逐项串起来。它记录的是 `U09p343881_ETM_S06` 的 158 m、31段阶段计算；不能把单个 S06 结果写成36工况最终设计。
+何泽瑜论文明确给出的参数属于 `SOURCE-DIRECT / LOCKED`，禁止为了让规范计算通过而修改。
 
-## 1. 输入来源
+当前锁定矩阵：
+`T072_PARAMETER_LOCK_MATRIX.tsv`
 
-|步骤|输入|来源/身份|归档位置|
-|---|---|---|---|
-|1.1|158 m OpenFAST case|正式 `C02R3R2_158M_Tower.dat` 路线|T071 workflow/run记录|
-|1.2|31段目标几何|何泽瑜表3-2与当前重建几何|`T071_input_geometry_31_segments.csv`|
-|1.3|31段六分量时程|T071 四个 artifact，100–700 s|`T072_T071_S06_VALIDATION.json`|
-|1.4|混凝土材料|NB/T 10907 表4.1.2：C70/C65|`NBT10907_pdf_18.jpg`|
-|1.5|普通钢筋设计值|NB/T 10907 表4.2.2-1：HRB400|`NBT10907_pdf_19.jpg`、`NBT10907_pdf_20.jpg`|
-|1.6|正截面设计框架|NB/T 10907 第6.2节、GB 50010 附录E|T072 Step 1报告与标准归档|
+详细审计：
+`T072_HE_SOURCE_LOCK_AUDIT_20261007.md`
 
-## 2. 荷载处理
+因此，任何修改何表3-2纵筋根数、C70/C65分区、158/112/46 m分段、S345源模型身份或15.2 mm钢绞线规格的方案，都只能叫“规范重设计支路”，不得叫“He-aligned最终模型”。
 
-每一行原始时程都保留同一时间 `t` 的六分量：`Fx,Fy,Fz,Mx,My,Mz`。计算量为：
+## 1. 原始来源
 
-\[
-V(t)=\sqrt{F_x(t)^2+F_y(t)^2},\quad M(t)=\sqrt{M_x(t)^2+M_y(t)^2},\quad T(t)=|M_z(t)|,
-\]
+### 1.1 何泽瑜论文
 
-压轴力筛选为 `N(t)=max(0,-Fz(t))`。脚本 `build_same_time_actions.py` 从四批 artifact 生成 `T072_U09p343881_ETM_S06_31SEG_SAME_TIME_ACTIONS.csv`。它不把 `Vmax、Mmax、Tmax、Nmax` 进行跨时刻拼接。
+完整原PDF：
+`research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf`
 
-## 3. 正截面纵筋步骤
+原文总账：
+`research/wind-tower/references/HE_ZEYU_TOWER_SOURCE_LEDGER.md`
 
-1. 从何泽瑜表3-2读取内外排根数；
-2. 使用当前重建单根面积 `Abar=490.873852 mm²`，总面积 `As=2 n_row Abar`；
-3. 材料采用 C70/C65 和 HRB400设计值；
-4. 先按 GB 50010附录E环形截面偏心受压框架计算普通纵筋需求；
-5. `Ap=0` 时输出仅是“PT未计入的保守上界”，不能当最终预应力塔设计；
-6. 输出 `T072_STEP1_31SEG_LONGITUDINAL_NO_PT.csv` 和 `T072_STEP1_LONGITUDINAL_REPORT.md`。
+原文截图：
+`research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/`
 
-## 4. 抗剪步骤（NB/T 10907 6.3.1）
+其中关键页：
+- he-22/he-23/he-24：第3章原型与表3-2/3-3；
+- he-33/he-34/he-35：有限元/截面相关页；
+- he-44/he-45：OpenSees与Abaqus验证相关页。
 
-计算程序 `design_rebar_s06_corrected.py` 对同一时刻输入执行：
+### 1.2 NB/T 10907—2021
 
-\[
-\lambda=M/(Vh_0),
-\]
-\[
-V\leq\frac{1.75}{\lambda+1}f_t b h_0+f_{yv}\frac{A_{sv}}s h_0+0.07N.
-\]
+仓库关键原文截图：
+- `NBT10907_pdf_18.jpg`：混凝土材料；
+- `NBT10907_pdf_19.jpg`、`20.jpg`：普通钢筋/预应力筋；
+- `NBT10907_pdf_34.jpg`：正截面；
+- `NBT10907_pdf_36.jpg`：6.3.1抗剪；
+- `NBT10907_pdf_37.jpg`：6.3.2剪扭；
+- `NBT10907_pdf_38.jpg`、`39.jpg`：后续承载/疲劳条款。
 
-当前阶段的工程几何假设明确写在程序中：`b=t`，`h0=t-c_nom-d_h/2-d_l/2`，环筋内外双层闭合圆环，`Asv=4A_phi/s` 的层数/肢数换算。`b=t` 不是标准对本项目圆环截面的专门明文规定，因此结果属于阶段候选，不能掩饰为标准直接给定。
+### 1.3 GB/T 50010
 
-## 5. 剪扭步骤（NB/T 10907 6.3.2）
+仓库PDF：
+`research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf`
 
-标准原文截图 `NBT10907_pdf_37.jpg` 明确给出：
+2024年第62号公告已确认：自2024-08-01实施局部修订，名称改为《混凝土结构设计标准》，编号改为GB/T 50010-2010。
 
-\[
-T\leq\beta_t\left(0.35f_t+0.05\frac{N_{p0}}{A_0}\right)W_t+1.2\sqrt{\xi}f_{yv}\frac{A_{st1}A_{cor}}s,
-\]
-\[
-\xi=\frac{f_y A_{sl}s}{f_{yv}A_{st1}u_{cor}}.
-\]
+版本/适用性总账：
+`STANDARD_STATUS_20261007.md`
 
-修正版程序使用纵向受扭钢筋 `A_sl`，没有把 `A_st1` 在分子、分母中错误抵消。`A_cor、u_cor、W_t` 的圆环计算和 `Np0=0` 阶段假设均在脚本和报告中明列。
+## 2. 荷载链
 
-## 6. 环筋方案步骤
+正式结构：
+DTU 10 MW + 158 m混塔。
 
-程序遍历常用直径和间距，对每个候选逐时刻控制集合计算 `V/Vrd`、`T/Trd`，取同一时刻的最大利用率。S06阶段首次数学通过候选为 HRB400 φ50@20、内外双层，控制段 CSEG28，最大利用率约0.943。该值受 `Np0=0`、`b=t` 和圆环等效假设影响，暂不能冻结为施工方案。
+正式31段时程：
+`U09p343881_ETM_S06`，100–700 s。
 
-## 7. 拉筋步骤
+T071 run：
+`37582521146`，completed/success。
 
-拉筋记录为 φ6，竖向480 mm、环向不大于500 mm，作用是连接和定位内外钢筋网，不替代主环筋的剪扭承载。该数值是当前构造候选，不是何泽瑜论文直接给定值；最终应在保护层、净距、锚固和施工方案闭合后冻结。
+四批artifact：
+A 11466755161
+B 11465219800
+C 11466308388
+D 11465344577
 
-## 8. 预应力步骤
+校验：
+`T072_S06_LOAD_VALIDATION_REPORT.md`
+`T072_T071_S06_VALIDATION.json`
 
-15.2 mm钢绞线和顶部/底部连接方式有文献支持；36位置、每束股数及有效预应力损失尚未从何泽瑜原型施工图级资料闭合。因此主算不擅自把 `36×1` 或 `36×8` 写成原型事实，而保留两组敏感性，待 `σp0`、摩阻、锚具变形、松弛、收缩徐变、弹性压缩损失明确后再代入 `Np0`。
+逐时刻：
+[
+V(t)=\sqrt{F_x^2+F_y^2},\quad
+M(t)=\sqrt{M_x^2+M_y^2},\quad
+T(t)=|M_z|,\quad
+N(t)=\max(0,-F_z)
+]
 
-## 9. 规范原文截图
+所有承载力检查必须保持同一时刻N/M/V/T；禁止把各通道独立极值拼接。
 
-以下图片已真实上传 GitHub，并在当前仓库可直接打开：
+36组塔底包络已归档：
+`T072_FORMAL_36CASE_BASE_ENVELOPE.md`
 
-- [NBT10907_pdf_18.jpg：C65/C70材料参数](../T061/audit_evidence_20261007/NBT10907_pdf_18.jpg)
-- [NBT10907_pdf_19.jpg：普通钢筋强度](../T061/audit_evidence_20261007/NBT10907_pdf_19.jpg)
-- [NBT10907_pdf_20.jpg：普通钢筋/预应力筋参数](../T061/audit_evidence_20261007/NBT10907_pdf_20.jpg)
-- [NBT10907_pdf_34.jpg：正截面承载力章节](../T061/audit_evidence_20261007/NBT10907_pdf_34.jpg)
-- [NBT10907_pdf_36.jpg：6.3.1抗剪原文](../T061/audit_evidence_20261007/NBT10907_pdf_36.jpg)
-- [NBT10907_pdf_37.jpg：6.3.2剪扭原文](../T061/audit_evidence_20261007/NBT10907_pdf_37.jpg)
-- [he-33.jpg、he-34.jpg、he-44.jpg、he-45.jpg：何泽瑜原文证据](../T061/audit_evidence_20261007/)
+其中塔底合弯矩控制case为S06，但这不自动证明S06控制31个高度全部截面。
 
-## 10. 文件链
+## 3. Step 1：正截面普通纵筋上界
 
-`T071 artifact → T072_T071_S06_VALIDATION.json → build_same_time_actions.py → SAME_TIME_ACTIONS.csv → design_rebar_s06_corrected.py → T072_31SEG_REBAR_DESIGN_S06_CORRECTED.csv`
+文件：
+`T072_STEP1_31SEG_LONGITUDINAL_NO_PT.csv`
+`T072_STEP1_LONGITUDINAL_REPORT.md`
 
-所有脚本、CSV、报告、来源台账和截图路径已经上传；当前未完成的部分只有36工况包络、最终有效预应力、圆环截面等效规则工程确认和 EI/模态闭环。
+身份：
+- 固定何表3-2纵筋根数；
+- 当前模型等效Abar=490.873852 mm²只作重建输入；
+- PT取0；
+- 采用统一1.40不利作用上界。
 
+用途：
+仅证明“不计PT时普通纵筋需求很大”。
+
+不能据此修改何文根数，也不能把统一1.40称为NB/T第5章正式组合。
+
+## 4. Step 2：抗剪/剪扭
+
+NB/T 10907 6.3.1、6.3.2公式来自原文截图36/37。
+
+### 4.1 已废止路线
+
+旧：
+`b=t, h0≈壁厚`
+
+该映射把5–8 m直径圆环塔筒压缩成局部墙条，导致φ50@20不合理结果。
+
+状态：
+`SUPERSEDED`
+
+旧文件仅保留审计历史。
+
+### 4.2 当前修正路线
+
+文件：
+`T072_STEP2_CORRECTED_SHEAR_TORSION_REPORT.md`
+`T072_STEP2_CORRECTED_SHEAR_TORSION_PHI14_80.csv`
+
+当前工程映射：
+- b=2t；
+- h0按直径方向有效高度；
+- Wt为空心圆环抗扭抵抗矩；
+- Acor、ucor按环筋中心线核心；
+- Np0=0作保守处理。
+
+S06下φ14@80双层当前最大门槛约0.793，控制CSEG31。
+
+但NB/T 10907原文没有直接写“本项目圆环必须b=2t”，所以状态只能是：
+`ENGINEERING-MAPPING-CANDIDATE PASS`
+
+**不能写CODE-DIRECT FINAL PASS。**
+
+## 5. Step 3：PT + 纵筋联合正截面
+
+文件：
+`T072_STEP3_CORRECTED_PT_LONGITUDINAL_REPORT.md`
+`T072_STEP3_CORRECTED_PT_LONGITUDINAL_BF8_HRB500.csv`
+
+已纠正钢绞线受压设计强度：
+- fpy=1320 MPa；
+- f'py=390 MPa。
+
+PT BF8支路：
+- 36位置；
+- 8股/位置；
+- 15.2 mm；
+- 140 mm²/股；
+- Ap=40320 mm²；
+- eta=0.70–1.00；
+- rp=1.75 m。
+
+身份：
+`DESIGN-SENSITIVITY`，不是何泽瑜直接参数。
+
+HRB500身份：
+用于规范重设计支路，不得替换He-aligned模型中的S345源身份。
+
+### 5.1 何文根数锁定检查
+
+新增：
+`T072_HE_LOCKED_COUNT_PHI14_FEASIBILITY_BF8.csv`
+
+在何表根数锁死、BF8、当前S06统一1.40上界下，如再受T/CEC 5008的φ14上限约束：
+- 最不利CSEG16；
+- 需求/φ14固定根数提供面积≈8.351；
+- 固定根数需要等效直径≈40.46 mm。
+
+因此当前计算链下，“何文根数 + φ14 + BF8 + 统一1.40上界”没有可行解。
+
+这证明的是**门禁未闭合**，不是允许改何文根数。
+
+### 5.2 刚才φ25增根数方案的身份
+
+`T072_FINAL_31SEG_REINFORCEMENT_AND_EI_S06.csv`
+
+该文件改变何表根数，因此现在统一标记：
+
+`REDESIGN-SENSITIVITY / NOT-HE-ALIGNED / SUPERSEDED-AS-FINAL`
+
+禁止作为何文一致最终配筋。
+
+## 6. T/CEC 5008—2018适用性
+
+公开文本：
+- 1.0.2：后张法有黏结预应力陆上装配式混凝土塔筒；
+- 4.6.1：塔筒宜HRB500；
+- 4.6.2：受力钢筋8–14 mm；拉结筋≥6 mm；
+- 6.6.3：保护层按环境类别/作用等级，且不宜小于30 mm；
+- 6.6.5：双排纵筋、双层环筋。
+
+本项目原型/同谱系存在体外无黏结特征，所以T/CEC是否作为控制规范必须先裁决。
+
+不能选择性引用30 mm和双层配筋，同时忽略14 mm条文。
+
+## 7. Step 4：EI
+
+旧/当前EI敏感性文件：
+`T072_STEP4_EI_CLOSURE_REPORT.md`
+`T072_STEP4_31SEG_EI_CLOSURE_BF8_HRB500_PHI20.csv`
+以及后续φ25重设计敏感性表。
+
+这些EI建立在“规范重设计纵筋/PT支路”上。
+
+由于该支路改变了He锁定根数或采用未闭合PT，因此：
+- 可以用来说明“高配筋会显著改变EI”；
+- **不能直接写回He-aligned 158 m正式OpenFAST塔文件作为最终EI。**
+
+He-aligned EI闭环必须等源锁定下可行设计方案确定后重新生成。
+
+## 8. 当前尚未关闭的规范门
+
+1. NB/T 10907第5章正式作用组合/分项系数；
+2. 圆环薄壁截面6.3.1/6.3.2的b/h0权威映射；
+3. PT真实束数、半径、初始/有效预应力与损失；
+4. 保护层环境类别、设计年限和现行GB/T 50010条文；
+5. T/CEC 5008对体外无黏结原型的适用性；
+6. 其余36组控制case的31段分布包络。
+
+这些门关闭前，不允许使用“每一步均满足规范”“最终施工图配筋”“36工况最终通过”等表述。
+
+## 9. 当前最严谨结论
+
+- 何文原型数据已经锁定并归档；
+- 158 m真实S06 31段同一时刻荷载链完整；
+- NB/T 10907材料/正截面/剪扭原文证据已归档；
+- 旧b=t/φ50@20路线作废；
+- φ14@80目前仅为工程映射候选；
+- BF8/HRB500/φ20/φ25均属于规范设计敏感性，不是何文直接参数；
+- 刚才增根数φ25方案不得进入He-aligned最终模型；
+- 下一步必须在何文锁定参数不变的前提下关闭正式荷载组合、PT和规范适用性门。
