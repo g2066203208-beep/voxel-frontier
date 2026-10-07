@@ -3,7 +3,7 @@
 输入：`research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp`  
 SHA-256：c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db
 
-T055原生Abaqus 2025 Data Check已报告1512个 `aspect ratio > 100:1` 单元。T057原始INP复核确认四段钢塔实际采用C3D8I，而非此前治理文本中误写的C3D8R。本任务不改模型，先对当前T057四段钢塔C3D8R实际节点坐标与单元连接做独立几何诊断。
+T055原生Abaqus 2025 Data Check已报告1512个 `aspect ratio > 100:1` 单元。T057原始INP复核确认四段钢塔实际采用C3D8I，而非此前治理文本中误写的C3D8R。本任务不改模型，先对当前T057四段钢塔C3D8I实际节点坐标与单元连接做独立几何诊断。
 
 ## 分段结果
 
@@ -26,4 +26,4 @@ T055原生Abaqus 2025 Data Check已报告1512个 `aspect ratio > 100:1` 单元�
 
 ## 下一步
 
-根据本审计得到的实际三向边长，建立T060钢塔网格整改候选；至少两级网格，并以关键应力、塔顶位移和低阶频率进行收敛判定。
+根据本审计得到的实际三向边长，建立T071钢塔网格整改候选；至少两级网格，并以关键应力、塔顶位移和低阶频率进行收敛判定。

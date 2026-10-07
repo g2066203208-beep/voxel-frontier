@@ -3,7 +3,7 @@
   "input": "research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp",
   "input_sha256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
   "purpose": "Quantify inherited T055 steel-tower aspect-ratio warning on current T057 C3D8I geometry.",
-  "method": "For each C3D8R, compute 12 physical edge lengths and max/min edge ratio; classify edges in cylindrical axial/radial/circumferential directions.",
+  "method": "For each C3D8I, compute 12 physical edge lengths and max/min edge ratio; classify edges in cylindrical axial/radial/circumferential directions.",
   "abaqus_warning_reference": "T055 native Abaqus 2025 DAT reported 1512 elements aspect ratio >100:1: SSEG_01=216, SSEG_02=432, SSEG_03=432, SSEG_04=432.",
   "summary": {
     "SSEG_01": {
