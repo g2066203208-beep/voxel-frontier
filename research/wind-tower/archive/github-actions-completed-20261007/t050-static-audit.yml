@@ -1,0 +1,33 @@
+name: T050 Static Abaqus Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research/wind-tower/experiments/T050/**'
+      - 'scripts/audit-t050-static.cjs'
+      - '.github/workflows/t050-static-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '22'
+      - name: Static T050 input audit
+        run: node scripts/audit-t050-static.cjs
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: T050-static-audit
+          path: public/research/t050-static-audit.json
+          retention-days: 90
