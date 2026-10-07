@@ -1,0 +1,32 @@
+name: Export GB50010 annular section pages
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t072-export-gb50010-annular.yml'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf
+          sparse-checkout-cone-mode: false
+      - name: Install poppler
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: Render appendix E pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/gb50010-annular
+          PDF="research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf"
+          pdftoppm -f 241 -l 246 -png -r 180 "$PDF" /tmp/gb50010-annular/page
+          pdftotext -f 241 -l 246 -layout "$PDF" /tmp/gb50010-annular/pages241-246.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gb50010-annular-pages-241-246
+          path: /tmp/gb50010-annular
+          retention-days: 2
