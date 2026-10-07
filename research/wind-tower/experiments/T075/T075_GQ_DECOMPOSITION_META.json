@@ -1,0 +1,22 @@
+{
+  "method": "signed component-level G+Q effect decomposition",
+  "equation": "D_i(t)=gamma_G*G_i + gamma_Q*(TOTAL_i(t)-G_i), i=Fx,Fy,Fz,Mx,My,Mz",
+  "total_source": "T071 formal 158m U09p343881_ETM_S06 full 31-segment histories",
+  "gravity_source": "T074 formal 158m fixed-DOF still-air/no-aero/no-servo gravity baseline",
+  "combinations": {
+    "G1p35_Q1p40": {
+      "gamma_G": 1.35,
+      "gamma_Q": 1.4,
+      "identity": "SECONDARY-CORROBORATED / PRIMARY-TEXT-HOLD"
+    },
+    "G1p00_Q1p40": {
+      "gamma_G": 1.0,
+      "gamma_Q": 1.4,
+      "identity": "SECONDARY-CORROBORATED / favorable-G branch / PRIMARY-TEXT-HOLD"
+    }
+  },
+  "warning": "gamma values remain evidence-gated until primary Chapter-5 text is archived; compact controller rows are audit output only; final capacity evaluation must use full histories.",
+  "controller_rows": 310,
+  "summary_rows": 62,
+  "segments": 31
+}
