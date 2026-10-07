@@ -1,0 +1,2 @@
+85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c  research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf
+9dce0ccc4e840a4f62352239ae6dc4cc7605c082c89bdb5cb372a81432febac4  research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf
