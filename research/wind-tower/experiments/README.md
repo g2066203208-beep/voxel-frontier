@@ -7,7 +7,8 @@
 
 |任务|作用|当前状态|
 |---|---|---|
-|T057|当前Abaqus evidence-reconciled候选|ACTIVE；native solver门禁待跑|
+|T057|当前Abaqus evidence-reconciled物理父模型|ACTIVE PHYSICS；原生solver门禁未关闭|
+|T070|T057 + G1可观测性原生执行候选|ACTIVE EXECUTION；exact-roundtrip PASS；native solver待跑|
 |T059|T057钢塔网格审计|ACTIVE SUPPORT；钢塔疲劳触发时必须关闭|
 |T062|36case原始outb rainflow/DEL独立复算与S03/S04冲突|ACTIVE HOLD；数据身份待关闭|
 |T063|T057 fatigue-output readiness审计|ACTIVE SUPPORT；确认当前还没有疲劳生产动态步|
@@ -38,7 +39,7 @@ T026、T035、T037、T038、T039、T045–T050、T053–T058（T057除外）保�
 
 ## 使用规则
 
-1. 当前模型状态只看T057 + governance；
+1. 当前物理模型状态看T057 + governance；原生G0/G1执行入口看T070；
 2. 当前load-DEL状态只看T062；
 3. 当前fatigue输出规范只看T064；
 4. 历史T026/T038等不得把局部verification自动升级为当前T057已验证；
