@@ -1,0 +1,53 @@
+name: T074 inspect formal S06 load split inputs
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t074-inspect-s06-load-split.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
+      - name: Extract exact formal inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/static /tmp/supp
+          mkdir -p /tmp/static /tmp/supp
+          unzip -qo research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip -d /tmp/static
+          unzip -qo research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip -d /tmp/supp
+          SRC=/tmp/static/CASES/U09p343881_ETM_S01
+          OUT=research/wind-tower/experiments/T074/source-model-inspect
+          mkdir -p "$OUT"
+          for f in             DTU_10MW_RWT.fst             DTU_10MW_RWT_ElastoDyn.dat             DTU_10MW_AeroDyn.dat             DTU_10MW_ServoDyn.dat             DTU_10MW_InflowWind.dat             C02R3R2_158M_Tower.dat             C02R3R2_158M_Tower_ZERO_DAMPING_20260831.dat; do
+            if [ -f "$SRC/$f" ]; then cp "$SRC/$f" "$OUT/"; fi
+          done
+          find "$SRC" -maxdepth 3 -type f \( -iname '*blade*' -o -iname '*.dat' -o -iname '*.fst' \) -print | sort > "$OUT/FILES.txt"
+          {
+            echo '# Key load/mass/gravity fields'
+            echo
+            grep -RniE 'Gravity|CompElast|CompInflow|CompAero|CompServo|TipMass|HubMass|HubCM|NacMass|NacCM|OverHang|Twr2Shft|ShftTilt|TowerHt|TwrNodes|TwrFile|BldFile|RotSpeed|BlPitch' "$OUT" || true
+          } > "$OUT/KEY_FIELDS.txt"
+          sha256sum "$OUT"/* > "$OUT/SHA256SUMS.txt"
+      - name: Commit inspection package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T074/source-model-inspect
+          git commit -m "T074 inspect exact 158m OpenFAST inputs for Gate A load split" || exit 0
+          git pull --rebase origin main
+          git push
