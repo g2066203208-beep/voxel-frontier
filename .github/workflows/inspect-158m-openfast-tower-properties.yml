@@ -1,0 +1,30 @@
+name: Inspect 158m OpenFAST tower structural properties
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-158m-openfast-tower-properties.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower
+          sparse-checkout-cone-mode: false
+      - name: Inspect formal tower file and provenance text
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/of && mkdir -p /tmp/of
+          unzip -q research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip -d /tmp/of
+          TOWER=/tmp/of/CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat
+          echo '=== TOWER FILE ==='
+          sed -n '1,220p' "$TOWER"
+          echo '=== SEARCH REBAR/PRESTRESS PROVENANCE ==='
+          grep -RInEi --exclude='*.zip' --exclude='*.pdf' --exclude='*.png' --exclude='*.jpg' \
+            'C02R3R2|158M_Tower|rebar|reinforcement|prestress|钢筋|预应力|TMassDen|TwFAStif|TwSSStif' research/wind-tower | head -n 1500 || true
