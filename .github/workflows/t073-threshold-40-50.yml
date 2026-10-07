@@ -43,7 +43,10 @@ jobs:
       - name: Run threshold scan
         working-directory: research/wind-tower/experiments/T073
         run: python t073_e01_threshold_40_50.py
-      - run: rm -rf research/wind-tower/experiments/T073/artifacts
+      - name: Clean transient files
+        run: |
+          rm -rf research/wind-tower/experiments/T073/artifacts
+          find research/wind-tower/experiments/T073 -type d -name '__pycache__' -prune -exec rm -rf {} +
       - name: Commit
         shell: bash
         run: |
