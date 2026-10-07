@@ -1,0 +1,28 @@
+old_section	old_content	current_action	current_destination	reason
+Title/Abstract	10MW混塔抗风与优化	REWRITE	Abstract/Title	旧摘要含Simpack及未闭合结果
+1.1-1.5	background/literature	KEEP-REVISE	Chapter1	按T029-T031最新全文证据重写引用与缺口
+1.6-1.7	technical route	REWRITE	Chapter1	删除Simpack，改OpenFAST/ROSCO→Abaqus
+2.1	object/geometry	KEEP-CHECK	Chapter2	几何源歧义保留，G0仍须闭合
+2.2	material/CDP	KEEP-CHECK	Chapter2	方法可继承，最终参数必须registry闭合
+2.3	joint/transition	KEEP-REVISE	Chapter2/4	等效连接与真实contact能力边界必须区分
+2.4	RNA spatial equivalence	KEEP	Chapter2/3	质量+CG+J+M6验证仍有价值
+2.5	initial state	KEEP	Chapter2	重力→预应力→平衡顺序可复现
+2.6	material tests/pushover/modal	KEEP-AS-BENCHMARK	Chapter2	历史数字需原始run绑定；网格后损伤仍有限制
+2.7	damping/free decay	KEEP-CONDITIONAL	Chapter2	方法链保留；目标物理阻尼仍须对象化source
+3.1	ERA5 site statistics	KEEP-UPDATE	Chapter3	加入T031 ERA5期刊/学位论文证据与161m不确定性
+3.2	TurbSim	KEEP-VERIFY	Chapter3	51x51/200m/700s/6seed为study design，需V&V
+3.3	OpenFAST/ROSCO	KEEP-VERIFY	Chapter3	按实际版本/input hash闭合
+3.4	Abaqus-OpenFAST structural identity	KEEP-REVISE	Chapter3	保留RNA/M6/model-form V&V；生产链改load mapping
+3.5	36case screening/rainflow/load-DEL	KEEP-AS-BENCHMARK	Chapter3	旧排名需正式输入重绑/重算
+3.6	Simpack flexible RNA	EXCLUDE	archive only	已撤销
+3.7	AeroDyn-Simpack	EXCLUDE	archive only	已撤销
+3.8	Simpack-Abaqus coupling	EXCLUDE	archive only	已撤销
+3.9	rigid vs flexible RNA via Simpack	EXCLUDE/REPLACE	Chapter3/4	若需简化影响，改用当前Abaqus/OpenFAST对照
+4.1-4.10	structural response/mechanism	PARTLY-PLAN	Chapter4	旧稿多为计划；必须由当前OpenFAST→Abaqus正式结果重建
+5.1-5.8	sensitivity	PLAN-REUSE-METHOD	Chapter5	机制→变量逻辑保留；不能把未完成结果写成完成
+6.1-6.5	surrogate/NSGA-II/Pareto	PLAN-REUSE-METHOD	Chapter6	算法方法有文献；变量/约束/样本需当前对象化
+6.6	Simpack-Abaqus recheck	EXCLUDE/REPLACE	Chapter6	改为高保真FE/OpenFAST→Abaqus独立复核
+6.7	robustness	KEEP-REVISE	Chapter6	同风速同seed配对思想保留，生产链替换
+7.1	conclusions	PARTLY-HISTORICAL	Chapter7	只能保留已由当前证据重新闭合的结论
+7.2	innovations	HOLD	Chapter7	等待Chapter4-6当前路线结果
+7.3	limitations	KEEP-UPDATE	Chapter7	删除Simpack限制，加入ERA5/映射/网格/疲劳等当前边界
