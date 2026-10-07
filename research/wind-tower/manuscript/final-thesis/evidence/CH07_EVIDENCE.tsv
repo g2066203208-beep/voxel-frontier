@@ -1,5 +1,0 @@
-section	claim_or_method	evidence	adoption	boundary	status
-7.1	Conclusions must be RUN-backed	T041;T042;claim_evidence registry	Every quantitative conclusion requires RUN+FIG/TAB	No historical benchmark as final claim	HOLD
-7.2	Innovation defined against direct prior art	Direct literature set + G6-G9 results	Only evidence-backed incremental contribution	No software/algorithm novelty claims	HOLD
-7.3	Limitations must map assumptions to affected conclusions	T041+chapter gates	ERA5/fixed base/connection/sample/fatigue boundaries	No generic 'time limitation' paragraph	PASS-FRAMEWORK
-7.4	Outlook follows actual limits	G10	Only relevant unresolved physics/methods	No unrelated trend list	HOLD-FINAL
