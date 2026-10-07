@@ -1,13 +1,9 @@
 gate	purpose	minimum_execution	depends_on	blocks_chapter	status
-G0	唯一BASE001	T037/T038输入冻结+T045首选O158候选+整塔Gravity/30 modes/Flex复核	T037/T038/T045	Ch2-Ch6	CANDIDATE-FROZEN / RUN-T045-001-PENDING
-G1	Abaqus分层V&V	材料试件+初始平衡+RNA+模态+网格+阻尼+时间步	G0	Ch2	OPEN
-G2	ERA5/TurbSim	Hub-height重算+风场空间/时间/seed V&V	G0	Ch3	OPEN
-G3	OpenFAST/ROSCO	输入链/控制器/运行点/模态	G0	Ch3	OPEN
-G4	多指标控制工况	final 36case或调整矩阵统计+seed离散+DEL	G2,G3	Ch3	OPEN
-G5	OF→Abaqus映射	自由体+坐标+单位load+ΣF/ΣM+跨模型QoI	G1,G4	Ch4	OPEN
-G6	控制机制	2-4case详细Abaqus+N/V/M/T+linear/nonlinear	G5	Ch4,Ch5	OPEN
-G7A	load-DEL	final channels/window/baseline DEL	G4	Ch3,Ch5	OPEN-HISTORICAL-ASSET
-G7B	材料疲劳	局部应力rainflow+材料模型+概率/seed+Miner	G6	Ch5	CONDITIONAL
-G8	敏感性	变量来源+配对seed+物理效应筛选	G6	Ch5,Ch6	OPEN
-G9	优化与验证	变量/约束+优化+真实FE/OpenFAST必要更新+独立case	G8	Ch6	OPEN
-G10	全文证据回收	claim↔RUN↔FIG/TAB↔REF	G0-G9	Ch7/final	OPEN
+G1	T057结构V&V	native Data Check; Gravity/PT/contact equilibrium; independent mass/CG/J; 30-mode Modal; Flex-X/Z; relevant mesh convergence	T057 candidate	Ch2-Ch4	OPEN
+G2	场址与随机风	ERA5 QC/HubHt probability; TurbSim grid/spectrum/transient V&V; formal DLC1.2 NTM wind-bin matrix	G1 model identity shared fields	Ch3-Ch4	PARTIAL
+G3	OpenFAST/ROSCO整机身份与运行	input/controller hash; structural identity; operating-point checks; multi-seed statistics; PSD/1P/3P	G2	Ch3-Ch4	PARTIAL
+G4	载荷筛选与数据身份	channel/hash/window/parser closure; rainflow/load-DEL; historical S03/current S04 divergence closure; multi-QoI case union	G3	Ch3-Ch4	HOLD-SOURCE-DIVERGENCE
+G5	OpenFAST→Abaqus接口V&V	free-body/load ownership; coordinates/reference points; unit six-component tests; sumF/sumM; independent global-QoI check	G1,G4	Ch4	OPEN
+G6	局部疲劳输入	control-region screening; concrete/PT/steel local histories; peak vs physical averaging; mesh/extraction convergence	G5	Ch4	OPEN
+G7	材料疲劳与长期累计	DLC1.2/NTM bins; multi-seed convergence; range/mean/count; material-specific fatigue relation; site probability; Miner annual/design-life damage	G2,G6	Ch4-Ch5	OPEN
+G8	全文证据闭合	every quantitative conclusion -> RUN+FIG/TAB; every external method/parameter -> REF/STANDARD/OFFICIAL; final 5-chapter assembly	G1-G7	Ch1-Ch5/final	OPEN
