@@ -1,0 +1,122 @@
+name: Render Li Zeyu thesis evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/render-li-zeyu-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install renderer
+        run: pip install pymupdf
+      - name: Render evidence crops and build locator index
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz, os, re, hashlib
+          from pathlib import Path
+
+          pdf = Path("research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf")
+          out = Path("research/wind-tower/references/reading-notes/evidence/li-zeyu")
+          out.mkdir(parents=True, exist_ok=True)
+
+          groups = {
+              "two-scale": ["两尺度", "纤维梁", "UMAT", "Umat", "预应力筋", "相互作用", "缩尺", "循环荷载", "实体单元", "全尺寸", "足尺"],
+              "seismic": ["易损性", "增量动力分析", "IDA", "MSA", "多条带", "近场", "远场", "地震动", "地震响应"],
+              "wind-fatigue": ["Kaimal", "疲劳", "雨流", "Miner", "S-N", "风速概率", "风致", "脉动风"],
+              "offshore": ["5.5 MW", "5.5MW", "海上", "土-结构", "SSI", "导管架", "支撑结构"]
+          }
+
+          doc = fitz.open(pdf)
+          rows = []
+          seen = set()
+          max_per_keyword = 4
+
+          for group, kws in groups.items():
+              gdir = out / group
+              gdir.mkdir(exist_ok=True)
+              for kw in kws:
+                  hits = 0
+                  for pi, page in enumerate(doc):
+                      rects = page.search_for(kw)
+                      if not rects:
+                          continue
+                      hits += 1
+                      if hits > max_per_keyword:
+                          break
+                      r = rects[0]
+                      # Crop generous local context but do not reproduce whole thesis pages.
+                      x0 = max(page.rect.x0 + 20, r.x0 - 70)
+                      x1 = min(page.rect.x1 - 20, r.x1 + 320)
+                      y0 = max(page.rect.y0 + 20, r.y0 - 140)
+                      y1 = min(page.rect.y1 - 20, r.y1 + 230)
+                      # For narrow matches, widen toward full text column.
+                      if x1 - x0 < page.rect.width * 0.62:
+                          x0 = page.rect.x0 + 30
+                          x1 = page.rect.x1 - 30
+                      crop = fitz.Rect(x0, y0, x1, y1)
+                      safe = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff_-]+", "_", kw).strip("_")
+                      key = (group, pi+1, safe)
+                      if key in seen:
+                          continue
+                      seen.add(key)
+                      fname = f"p{pi+1:03d}_{safe}.png"
+                      pix = page.get_pixmap(matrix=fitz.Matrix(2.1,2.1), clip=crop, alpha=False)
+                      pix.save(gdir / fname)
+                      rows.append((group, pi+1, kw, f"{group}/{fname}"))
+
+          # Also create low-res full-page previews for pages with chapter-section anchors,
+          # capped to one page per anchor to preserve traceability without mirroring the PDF.
+          anchors = {
+              "two-scale": ["两尺度有限元", "纤维梁单元"],
+              "seismic": ["地震易损性", "增量动力分析"],
+              "wind-fatigue": ["风致动力", "疲劳性能"],
+              "offshore": ["海上", "支撑结构优化"]
+          }
+          for group, kws in anchors.items():
+              gdir = out / group
+              for kw in kws:
+                  for pi, page in enumerate(doc):
+                      if page.search_for(kw):
+                          fname = f"p{pi+1:03d}_FULL_anchor_{re.sub(r'[^0-9A-Za-z\u4e00-\u9fff_-]+','_',kw)}.jpg"
+                          pix = page.get_pixmap(matrix=fitz.Matrix(1.15,1.15), alpha=False)
+                          pix.save(gdir / fname, jpg_quality=72)
+                          rows.append((group, pi+1, kw+"（整页定位）", f"{group}/{fname}"))
+                          break
+
+          rows.sort(key=lambda x:(x[0], x[1], x[2]))
+          idx = out / "INDEX.md"
+          with idx.open("w", encoding="utf-8") as f:
+              f.write("# 李泽宇博士论文原文截图证据索引\n\n")
+              f.write("> 来源：GitHub中保存的李泽宇博士论文原PDF。截图用于研究定位与精读，保留PDF文件页码；解析时仍需回到原PDF核对上下文。\n\n")
+              f.write("| 模块 | PDF文件页码 | 检索词 | 截图 |\n|---|---:|---|---|\n")
+              for group,pno,kw,path in rows:
+                  f.write(f"| {group} | {pno} | {kw} | ![]({path}) |\n")
+              f.write("\n## 使用规则\n\n")
+              f.write("- 文件页码为PDF容器的1-based页码，不等同于论文印刷页码。\n")
+              f.write("- 关键结论引用截图时，要同时记录论文印刷页码、图号/表号/公式号（若存在）。\n")
+              f.write("- 截图只作定位证据；不能用截图代替对上下文和方法条件的完整阅读。\n")
+
+          print(f"PDF pages: {len(doc)}, evidence images: {len(rows)}")
+          PY
+      - name: Commit evidence
+        run: |
+          git config user.name "openai-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/reading-notes/evidence/li-zeyu
+          if git diff --cached --quiet; then
+            echo "No evidence changes."
+          else
+            git commit -m "docs: add original-source screenshots for Li Zeyu thesis reading notes"
+            git push
+          fi
