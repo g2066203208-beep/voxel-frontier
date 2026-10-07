@@ -1,0 +1,51 @@
+{
+  "source": "research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf",
+  "sha256": "86a46402bd0aa2e57fb9e02e10749ca2a02c183a80039abe75d156cea339e237",
+  "pages": 17,
+  "keyword_pages": [
+    {
+      "pdf_page": 2,
+      "hits": [
+        "diameter"
+      ]
+    },
+    {
+      "pdf_page": 3,
+      "hits": [
+        "diameter"
+      ]
+    },
+    {
+      "pdf_page": 4,
+      "hits": [
+        "HRB335",
+        "1280 MPa",
+        "externally",
+        "unbonded",
+        "15.2 mm",
+        "reinforcement",
+        "diameter"
+      ]
+    },
+    {
+      "pdf_page": 6,
+      "hits": [
+        "reinforcement"
+      ]
+    },
+    {
+      "pdf_page": 10,
+      "hits": [
+        "reinforcement"
+      ]
+    }
+  ],
+  "explicit_ordinary_rebar_diameter_candidates": [],
+  "machine_interpretation": "No ordinary longitudinal bar diameter identified",
+  "known_direct_same_lineage": [
+    "HRB335",
+    "externally unbonded high-strength low-relaxation prestressing tendon",
+    "15.2 mm PT diameter",
+    "1280 MPa initial prestress"
+  ]
+}
