@@ -1,17 +1,33 @@
-kind\tpath\tused_for\tstatus
-STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_18.jpg\tC65/C70 material values\tuploaded
-STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_19.jpg\tordinary reinforcement values\tuploaded
-STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_20.jpg\tordinary/prestress reinforcement values\tuploaded
-STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_34.jpg\tsection resistance chapter\tuploaded
-STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_36.jpg\tNB/T 10907 6.3.1 shear\tuploaded
-STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_37.jpg\tNB/T 10907 6.3.2 shear-torsion\tuploaded
-SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-33.jpg\tHe 2024 original evidence\tuploaded
-SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-34.jpg\tHe 2024 original evidence\tuploaded
-SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-44.jpg\tHe 2024 original evidence\tuploaded
-SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-45.jpg\tHe 2024 original evidence\tuploaded
-INPUT\tresearch/wind-tower/experiments/T072/T072_T071_S06_VALIDATION.json\tartifact and time-history integrity\tuploaded
-INPUT\tresearch/wind-tower/experiments/T072/T072_U09p343881_ETM_S06_31SEG_SAME_TIME_ACTIONS.csv\tsame-time N/M/V/T actions\tuploaded
-CALC\tresearch/wind-tower/experiments/T072/build_same_time_actions.py\tload transformation\tuploaded
-CALC\tresearch/wind-tower/experiments/T072/design_rebar_s06_corrected.py\t6.3.1/6.3.2 candidate design\tuploaded
-OUTPUT\tresearch/wind-tower/experiments/T072/T072_31SEG_REBAR_DESIGN_S06_CORRECTED.csv\t31-segment rebar candidate\tuploaded
-REPORT\tresearch/wind-tower/experiments/T072/T072_CALCULATION_TRACE.md\tend-to-end calculation trace\tuploaded
+kind	path	used_for	status
+SOURCE_PDF	research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf	He 2024 master source	LOCKED_ORIGINAL
+SOURCE_LEDGER	research/wind-tower/references/HE_ZEYU_TOWER_SOURCE_LEDGER.md	He direct vs unpublished parameter boundary	ACTIVE
+SOURCE_IMAGE	research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-22.png	He DTU/tower source page	LOCKED_ORIGINAL_PAGE
+SOURCE_IMAGE	research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-23.png	He Table 3-2 geometry/rebar counts	LOCKED_ORIGINAL_PAGE
+SOURCE_IMAGE	research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-24.png	He Table 3-3 / model continuation	LOCKED_ORIGINAL_PAGE
+SOURCE_IMAGE	research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-33.png	He FE model evidence	LOCKED_ORIGINAL_PAGE
+SOURCE_IMAGE	research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-34.png	He 31-segment source evidence	LOCKED_ORIGINAL_PAGE
+SOURCE_IMAGE	research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-44.png	He OpenSees/rebar/PT method evidence	LOCKED_ORIGINAL_PAGE
+SOURCE_IMAGE	research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-45.png	He Abaqus/OpenSees validation evidence	LOCKED_ORIGINAL_PAGE
+STANDARD_INFO	research/wind-tower/references/standards/rebar-prestress-20261006/NBT_10907-2021_官方标准信息页.html	NB/T 10907 official metadata	ACTIVE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_18.jpg	C65/C70 material values	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_19.jpg	ordinary reinforcement values	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_20.jpg	ordinary/prestress reinforcement values	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_34.jpg	section resistance chapter	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_36.jpg	NB/T 10907 6.3.1 shear	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_37.jpg	NB/T 10907 6.3.2 shear-torsion	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_38.jpg	NB/T 10907 subsequent clauses	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_39.jpg	NB/T 10907 subsequent clauses	ORIGINAL_EVIDENCE
+STANDARD_PDF	research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf	GB50010 repository source copy	ORIGINAL_REPO_COPY_NEEDS_2024_AMENDMENT_CROSSCHECK
+STANDARD_STATUS	research/wind-tower/references/standards/rebar-prestress-20261006/STANDARD_STATUS_20261007.md	current version/applicability gate	ACTIVE
+SOURCE_LOCK	research/wind-tower/experiments/T072/T072_PARAMETER_LOCK_MATRIX.tsv	parameter immutable/mutable boundary	ACTIVE
+SOURCE_LOCK_AUDIT	research/wind-tower/experiments/T072/T072_HE_SOURCE_LOCK_AUDIT_20261007.md	He/code conflict audit	ACTIVE
+INPUT	research/wind-tower/experiments/T072/T072_T071_S06_VALIDATION.json	artifact and time-history integrity	VALIDATED
+INPUT	research/wind-tower/experiments/T072/T072_U09p343881_ETM_S06_31SEG_SAME_TIME_ACTIONS.csv	same-time N/M/V/T actions	VALIDATED
+CALC	research/wind-tower/experiments/T072/build_same_time_actions.py	load transformation	ACTIVE
+CALC	research/wind-tower/experiments/T072/design_rebar_s06_corrected.py	old b=t design-search code	SUPERSEDED_FOR_FINAL
+OUTPUT	research/wind-tower/experiments/T072/T072_STEP2_CORRECTED_SHEAR_TORSION_PHI14_80.csv	b=2t engineering-mapping shear/torsion	CANDIDATE_NOT_CODE_DIRECT
+OUTPUT	research/wind-tower/experiments/T072/T072_STEP3_CORRECTED_PT_LONGITUDINAL_BF8_HRB500.csv	BF8 code-redesign sensitivity	SENSITIVITY_NOT_HE_DIRECT
+OUTPUT	research/wind-tower/experiments/T072/T072_HE_LOCKED_COUNT_PHI14_FEASIBILITY_BF8.csv	fixed-He-count feasibility audit	ACTIVE
+OUTPUT	research/wind-tower/experiments/T072/T072_FINAL_31SEG_REINFORCEMENT_AND_EI_S06.csv	increased-count phi25 redesign branch	SUPERSEDED_AS_HE_ALIGNED_FINAL
+REPORT	research/wind-tower/experiments/T072/T072_CALCULATION_TRACE.md	end-to-end corrected calculation trace	ACTIVE
+REPORT	research/wind-tower/experiments/T072/T072_REBAR_PACKAGE_REPORT.md	current source-lock status	ACTIVE
