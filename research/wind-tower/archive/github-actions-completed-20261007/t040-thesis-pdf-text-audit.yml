@@ -1,0 +1,59 @@
+name: T040 thesis PDF text audit
+
+on:
+  push:
+    paths:
+      - ".github/workflows/t040-thesis-pdf-text-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf
+            research/wind-tower/references/user-provided/风电机组钢-混凝土混合塔筒动力性能及损伤识别研究_李守振.pdf
+
+      - name: Install PDF text tools
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+
+      - name: Extract two thesis PDFs for temporary scientific audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="/tmp/t040-thesis-text"
+          mkdir -p "$out"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('research/wind-tower/references/user-provided')
+          targets=[
+              ('L080', '预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf'),
+              ('L081', '风电机组钢-混凝土混合塔筒动力性能及损伤识别研究_李守振.pdf'),
+          ]
+          Path('/tmp/t040-targets.tsv').write_text('\n'.join(f'{i}\t{root/n}' for i,n in targets) + '\n', encoding='utf-8')
+          PY
+          while IFS="$(printf '\t')" read -r id pdf; do
+            test -f "$pdf"
+            pdfinfo "$pdf" > "$out/${id}_pdfinfo.txt"
+            pdftotext -layout -enc UTF-8 "$pdf" "$out/${id}_fulltext.txt"
+            sha256sum "$pdf" > "$out/${id}_sha256.txt"
+          done < /tmp/t040-targets.tsv
+
+      - name: Upload temporary audit text
+        uses: actions/upload-artifact@v4
+        with:
+          name: t040-thesis-text-audit
+          path: /tmp/t040-thesis-text
+          retention-days: 1
+          compression-level: 9
