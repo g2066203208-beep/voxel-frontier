@@ -1,0 +1,38 @@
+name: Inspect representative 36-case OUTB channels
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-openfast-36-outb-channels.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
+      - name: List archive and inspect output strings
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP='research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip'
+          unzip -l "$ZIP" | sed -n '1,220p'
+          rm -rf /tmp/ofcase && mkdir -p /tmp/ofcase
+          unzip -q "$ZIP" -d /tmp/ofcase
+          echo '--- outb files ---'
+          find /tmp/ofcase -type f \( -name '*.outb' -o -name '*.out' \) -print
+          echo '--- ElastoDyn identity fields ---'
+          find /tmp/ofcase -type f -name 'DTU_10MW_RWT_ElastoDyn.dat' -print -exec grep -Ei 'TowerHt|TwrFile|TwrNodes|TowerBsHt|Twr2Shft' {} \;
+          echo '--- likely tower channels embedded in OUTB ---'
+          OUTB=$(find /tmp/ofcase -type f -name '*.outb' | head -n1)
+          if [ -n "$OUTB" ]; then
+            strings "$OUTB" | grep -E 'Twr|TwHt|Tower|Node' | head -n 300 || true
+          fi
+          echo '--- OUT text header if present ---'
+          OUT=$(find /tmp/ofcase -type f -name '*.out' | head -n1 || true)
+          if [ -n "$OUT" ]; then
+            sed -n '1,20p' "$OUT"
+          fi
