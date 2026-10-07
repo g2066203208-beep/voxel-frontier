@@ -1,0 +1,24 @@
+name: Inspect T057 step tail
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-t057-step-tail.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp
+          sparse-checkout-cone-mode: false
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp")
+          lines=p.read_text(encoding="utf-8").splitlines()
+          for i in range(max(0,len(lines)-130),len(lines)):
+              print(f"{i+1:07d}: {lines[i]}")
+          PY
