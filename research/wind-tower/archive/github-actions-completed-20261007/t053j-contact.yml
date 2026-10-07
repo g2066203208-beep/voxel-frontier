@@ -1,0 +1,41 @@
+name: T053J Contact Candidate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research/wind-tower/experiments/T053/closure/build_t053j_contact_candidate.cjs'
+      - 'research/wind-tower/experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp'
+      - '.github/workflows/t053j-contact.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-contact-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '22'
+      - name: Build T053J physical-contact candidate
+        run: node research/wind-tower/experiments/T053/closure/build_t053j_contact_candidate.cjs
+      - name: Freeze generated candidate and audit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'research/wind-tower/experiments/T053/inputs/BASE001_T053J_CONTACT_HARD_MU05_RNA_R2.inp' 'research/wind-tower/experiments/T053/closure/05-t053j-contact-static-audit.json'
+          if git diff --cached --quiet; then
+            echo "No generated changes."
+          else
+            git commit -m "T053J: freeze hard-contact horizontal-joint candidate"
+            git push
+          fi
