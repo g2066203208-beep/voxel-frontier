@@ -1,0 +1,46 @@
+{
+  "method": "GB/T 50010 Appendix E.0.1 numerical strain compatibility/equilibrium",
+  "ordinary_rebar_primary_identity": "T053 S345 source-model capacity check; He Table 3-2 counts LOCKED",
+  "ordinary_bar_area_mm2": 490.874,
+  "ordinary_bar_area_identity": "T053 reconstructed input, NOT He thesis direct",
+  "pt_identity": "T053 36 positions, r=1.75m, 140mm2/position; BF sensitivity NOT He thesis direct",
+  "sigma_p_initial_MPa": 1280.0,
+  "etas": [
+    0.7,
+    0.8,
+    0.85,
+    0.9,
+    1.0
+  ],
+  "BFs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "fiber_mesh": {
+    "nr": 16,
+    "ntheta": 360,
+    "neutral_axis_states": 1500
+  },
+  "combos": {
+    "uniform_1p40_screen": "screen only",
+    "provisional_N1p35_M1p40": "secondary-corroborated pending original NB/T 10907 chapter 5 page archive"
+  },
+  "selected_BF": {
+    "uniform_1p40_screen": 16,
+    "provisional_N1p35_M1p40": 16
+  }
+}
