@@ -76,3 +76,9 @@ HOLD：
 - 章节证据：`00_CHAPTER_EVIDENCE_MATRIX.tsv`
 - 计算缺口：`RUN_GAP_MATRIX.tsv`
 - 当前模型：`../../governance/CURRENT_ABAQUS_MODEL_20261006.md`
+
+## OpenFAST高度身份硬规则
+- 正式36组OpenFAST历史/当前归档结果：**158 m混塔**，不是115.63 m原始DTU塔。
+- `115.63 m` 只允许出现在：DTU/第三方参考基准文件、历史审计或已归档的旧筛选计算中。
+- 旧的“115.63→158 m无量纲映射”31段内力及其派生配筋结果已移出活动T061，统一归档；不得进入论文最终配筋。
+- 最终31段配筋内力必须来自同一158 m OpenFAST模型的正确分布tower-gage补跑。
