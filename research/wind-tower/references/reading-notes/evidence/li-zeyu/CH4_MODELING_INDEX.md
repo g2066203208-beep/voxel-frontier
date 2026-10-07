@@ -1,0 +1,26 @@
+# 李泽宇博士论文第4章建模方法原文截图索引
+
+> 直接由仓库原PDF渲染。PDF页码为文件页码，文件名同时标注论文印刷页。
+
+- PDF p.81: ![](ch4-modeling/p081_print69_ch4_start_fiber.png)
+- PDF p.82: ![](ch4-modeling/p082_print70_fiber_umat.png)
+- PDF p.83: ![](ch4-modeling/p083_print71_concrete_fiber_cdp.png)
+- PDF p.84: ![](ch4-modeling/p084_print72_cdp_fracture_energy.png)
+- PDF p.85: ![](ch4-modeling/p085_print73_interface_coupling.png)
+- PDF p.86: ![](ch4-modeling/p086_print74_pt_fiber_connection_elements.png)
+- PDF p.87: ![](ch4-modeling/p087_print75_table4_1_specimen.png)
+- PDF p.89: ![](ch4-modeling/p089_print77_test_results_model.png)
+- PDF p.90: ![](ch4-modeling/p090_print78_multiscale_layout.png)
+- PDF p.91: ![](ch4-modeling/p091_print79_materials.png)
+- PDF p.92: ![](ch4-modeling/p092_print80_load_displacement.png)
+- PDF p.95: ![](ch4-modeling/p095_print83_pt_stress.png)
+- PDF p.96: ![](ch4-modeling/p096_print84_stress_damage.png)
+- PDF p.97: ![](ch4-modeling/p097_print85_efficiency_cycle_test.png)
+- PDF p.100: ![](ch4-modeling/p100_print88_cycle_validation.png)
+- PDF p.102: ![](ch4-modeling/p102_print90_full_scale_model.png)
+- PDF p.103: ![](ch4-modeling/p103_print91_material_static.png)
+- PDF p.104: ![](ch4-modeling/p104_print92_full_scale_stress.png)
+- PDF p.106: ![](ch4-modeling/p106_print94_table4_12_efficiency.png)
+- PDF p.107: ![](ch4-modeling/p107_print95_modal.png)
+- PDF p.108: ![](ch4-modeling/p108_print96_capacity.png)
+- PDF p.109: ![](ch4-modeling/p109_print97_summary.png)
