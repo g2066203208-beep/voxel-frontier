@@ -1,0 +1,26 @@
+name: Audit all 115m references
+
+on:
+  push:
+    paths:
+      - '.github/workflows/audit-all-115m-references.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower
+          sparse-checkout-cone-mode: false
+      - name: Grep all textual 115m references
+        shell: bash
+        run: |
+          set -e
+          echo '=== EXACT 115.63 ==='
+          grep -RInE --exclude='*.zip' --exclude='*.pdf' --exclude='*.png' --exclude='*.jpg' --exclude='*.jpeg' --exclude='*.outb' --exclude='*.odb' \
+            '115\.63' research/wind-tower || true
+          echo '=== GENERIC 115m ==='
+          grep -RInEi --exclude='*.zip' --exclude='*.pdf' --exclude='*.png' --exclude='*.jpg' --exclude='*.jpeg' --exclude='*.outb' --exclude='*.odb' \
+            '115 ?m|115m|115\.6' research/wind-tower || true
