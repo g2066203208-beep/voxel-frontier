@@ -1,4 +1,5 @@
 name: T072 rerun 31-segment control cases
+# retrigger 2026-10-07 formal reinforcement closure
 
 on:
   push:
