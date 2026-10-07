@@ -1,0 +1,27 @@
+name: Inspect 158m tower file lean
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-158m-tower-lean.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
+      - name: Print formal tower file
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/of && mkdir -p /tmp/of
+          unzip -q research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip -d /tmp/of
+          T=/tmp/of/CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat
+          echo '=== BEGIN TOWER ==='
+          cat "$T"
+          echo '=== END TOWER ==='
