@@ -1,0 +1,28 @@
+kind	path	identity	status
+SOURCE_PDF	research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf	He 2024 master source	LOCKED
+SOURCE_LEDGER	research/wind-tower/references/HE_ZEYU_TOWER_SOURCE_LEDGER.md	He direct/unpublished boundary	ACTIVE
+SOURCE_LOCK	research/wind-tower/experiments/T072/T072_PARAMETER_LOCK_MATRIX.tsv	immutable parameter matrix	ACTIVE
+SOURCE_LOCK_AUDIT	research/wind-tower/experiments/T072/T072_HE_SOURCE_LOCK_AUDIT_20261007.md	He/code conflict audit	ACTIVE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_18.jpg	NB/T 10907 concrete material table	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_19.jpg	NB/T 10907 ordinary rebar strengths	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_20.jpg	NB/T 10907 ordinary/prestress steel values	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_34.jpg	NB/T 10907 normal-section chapter	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_36.jpg	NB/T 10907 6.3.1 shear	ORIGINAL_EVIDENCE
+STANDARD_IMAGE	research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_37.jpg	NB/T 10907 6.3.2 shear-torsion	ORIGINAL_EVIDENCE
+STANDARD_PDF	research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf	GB50010 repository source copy	ORIGINAL_REPO_COPY
+STANDARD_PAGES	research/wind-tower/experiments/T073/source-evidence/GB50010_Appendix_E/	GB50010 Appendix E pages 241-245	ARCHIVED_ORIGINAL_PAGES
+LOAD_INPUT	research/wind-tower/experiments/T072/T072_T071_S06_VALIDATION.json	T071 artifact/time-history validation	VALIDATED
+LOAD_INPUT	research/wind-tower/experiments/T072/T072_U09p343881_ETM_S06_31SEG_SAME_TIME_ACTIONS.csv	same-time S06 action summary	VALIDATED
+GEOMETRY	research/wind-tower/experiments/T073/T073_T053_RBLONG_RADII.csv	T053 actual longitudinal-bar ring radii	SOURCE_MODEL_EXTRACT
+GEOMETRY	research/wind-tower/experiments/T073/T073_T053_PT_GEOMETRY.csv	T053 actual PT geometry	SOURCE_MODEL_EXTRACT
+CALC	research/wind-tower/experiments/T073/t073_gbt50010_e01_fiber.py	GB50010 E.0.1 fiber solver	ACTIVE
+OUTPUT	research/wind-tower/experiments/T073/T073_E01_HE_LOCKED_PT_BUNDLE_SCAN.csv	He-count locked phi25/PT bundle sensitivity	SOURCE_MODEL_CAPACITY_CHECK
+OUTPUT	research/wind-tower/experiments/T073/T073_E01_HE_LOCKED_31SEG_CONTROL.csv	He-count locked 31-segment controls	SOURCE_MODEL_CAPACITY_CHECK
+CALC	research/wind-tower/experiments/T073/t073_e01_fixed_counts_feasible_map.py	fixed-count diameter/PT feasibility solver	ACTIVE
+OUTPUT	research/wind-tower/experiments/T073/T073_E01_HE_LOCKED_COUNT_DIAMETER_PT_MAP.csv	full S345 source-model feasibility map	SOURCE_MODEL_CAPACITY_CHECK
+OUTPUT	research/wind-tower/experiments/T073/T073_E01_MIN_DIAMETER_BY_PT_BF.csv	coarse standard-diameter feasibility	SOURCE_MODEL_CAPACITY_CHECK
+OUTPUT	research/wind-tower/experiments/T073/T073_E01_THRESHOLD_40_50_MAP.csv	41-50 mm mathematical threshold refinement	NONSTANDARD_DIAMETER_THRESHOLD
+OUTPUT	research/wind-tower/experiments/T073/T073_E01_NUMERICAL_CONVERGENCE_CSEG16_D46_BF10.csv	D46/BF10 convergence audit	NUMERICALLY_CONVERGED_NOT_FINAL_DESIGN
+CALC	research/wind-tower/experiments/T073/t073_code_hrb500_fixed_counts.py	HRB500 code-design branch, He counts fixed	ACTIVE
+LEGACY	research/wind-tower/experiments/T072/T072_STEP3_CORRECTED_PT_LONGITUDINAL_REPORT.md	old E.0.3 combined backsolve	SUPERSEDED_FOR_FINAL
+LEGACY	research/wind-tower/experiments/T072/T072_FINAL_31SEG_REINFORCEMENT_AND_EI_S06.csv	increased-count phi25 redesign	SUPERSEDED_AS_HE_ALIGNED_FINAL
