@@ -111,6 +111,13 @@ T057当前不叫“最终模型”，因为尚未完成native solver验证。
 - every external method/parameter → REF/STANDARD/OFFICIAL；
 - final six chapters → DOCX。
 
+## E2. OpenFAST高度身份硬规则
+
+- 正式36工况 = **158 m混塔OpenFAST模型**。
+- DTU/第三方OpenFAST参考基准中的 `TowerHt=115.63 m` 仅属于参考/适配模型，不属于本文正式36工况。
+- 任何基于115.63 m向158 m做高度映射的31段内力、应力或配筋结果均不得进入active evidence chain；旧结果只保留在archive。
+- 当前31段正式配筋必须由158 m模型重新布置TwrGagNd后输出同一工况的N/M/V/T。
+
 ## F. 证据规则
 
 每一个实质内容必须属于：
