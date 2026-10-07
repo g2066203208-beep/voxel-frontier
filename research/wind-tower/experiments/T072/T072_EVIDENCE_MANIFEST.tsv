@@ -1,0 +1,17 @@
+kind\tpath\tused_for\tstatus
+STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_18.jpg\tC65/C70 material values\tuploaded
+STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_19.jpg\tordinary reinforcement values\tuploaded
+STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_20.jpg\tordinary/prestress reinforcement values\tuploaded
+STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_34.jpg\tsection resistance chapter\tuploaded
+STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_36.jpg\tNB/T 10907 6.3.1 shear\tuploaded
+STANDARD_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_37.jpg\tNB/T 10907 6.3.2 shear-torsion\tuploaded
+SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-33.jpg\tHe 2024 original evidence\tuploaded
+SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-34.jpg\tHe 2024 original evidence\tuploaded
+SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-44.jpg\tHe 2024 original evidence\tuploaded
+SOURCE_IMAGE\tresearch/wind-tower/experiments/T061/audit_evidence_20261007/he-45.jpg\tHe 2024 original evidence\tuploaded
+INPUT\tresearch/wind-tower/experiments/T072/T072_T071_S06_VALIDATION.json\tartifact and time-history integrity\tuploaded
+INPUT\tresearch/wind-tower/experiments/T072/T072_U09p343881_ETM_S06_31SEG_SAME_TIME_ACTIONS.csv\tsame-time N/M/V/T actions\tuploaded
+CALC\tresearch/wind-tower/experiments/T072/build_same_time_actions.py\tload transformation\tuploaded
+CALC\tresearch/wind-tower/experiments/T072/design_rebar_s06_corrected.py\t6.3.1/6.3.2 candidate design\tuploaded
+OUTPUT\tresearch/wind-tower/experiments/T072/T072_31SEG_REBAR_DESIGN_S06_CORRECTED.csv\t31-segment rebar candidate\tuploaded
+REPORT\tresearch/wind-tower/experiments/T072/T072_CALCULATION_TRACE.md\tend-to-end calculation trace\tuploaded
