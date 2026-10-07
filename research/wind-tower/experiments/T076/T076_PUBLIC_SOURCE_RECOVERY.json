@@ -1,0 +1,124 @@
+{
+  "pages": [
+    {
+      "url": "https://www.webfree.net/download/11632",
+      "status": 403,
+      "final_url": "https://www.webfree.net/download/11632",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 5533
+    },
+    {
+      "url": "https://www.qbw86.com/post-218039-1-1.html",
+      "status": 200,
+      "final_url": "https://www.qbw86.com/post-218039-1-1.html",
+      "content_type": "text/html; charset=utf-8",
+      "length": 59596
+    },
+    {
+      "url": "https://www.guifanku.com/708264.html",
+      "status": 200,
+      "final_url": "https://www.guifanku.com/708264.html",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 61079
+    },
+    {
+      "url": "https://max.book118.com/html/2026/0805/6100131135012205.shtm",
+      "status": 200,
+      "final_url": "https://max.book118.com/html/2026/0805/6100131135012205.shtm",
+      "content_type": "text/html; charset=utf-8",
+      "length": 54450
+    }
+  ],
+  "probes": [
+    {
+      "url": "https://www.qbw86.com/forum.php?action=attachpay&aid=218019&mod=misc&tid=218039",
+      "status": 200,
+      "final_url": "https://www.qbw86.com/forum.php?action=attachpay&aid=218019&mod=misc&tid=218039",
+      "content_type": "text/html; charset=utf-8",
+      "length": 20867,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.qbw86.com/forum.php?mod=attachment&aid=MjE4MDE5fA%3D%3D",
+      "status": 200,
+      "final_url": "https://www.qbw86.com/forum.php?mod=attachment&aid=MjE4MDE5fA%3D%3D",
+      "content_type": "text/html; charset=utf-8",
+      "length": 20568,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.qbw86.com/forum.php?mod=misc&action=attachpay&aid=218019&tid=218039",
+      "status": 200,
+      "final_url": "https://www.qbw86.com/forum.php?mod=misc&action=attachpay&aid=218019&tid=218039",
+      "content_type": "text/html; charset=utf-8",
+      "length": 20867,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.qbw86.com/forum.php?mod=misc&action=viewattachpayments&aid=218019",
+      "status": 200,
+      "final_url": "https://www.qbw86.com/forum.php?mod=misc&action=viewattachpayments&aid=218019",
+      "content_type": "text/html; charset=utf-8",
+      "length": 20562,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.qbw86.com/static/image/filetype/pdf.gif",
+      "status": 200,
+      "final_url": "https://www.qbw86.com/static/image/filetype/pdf.gif",
+      "content_type": "image/gif",
+      "length": 1388,
+      "head_hex": "4749463839612000"
+    },
+    {
+      "url": "https://www.webfree.net/?wpdmdl=11632",
+      "status": 403,
+      "final_url": "https://www.webfree.net/?wpdmdl=11632",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 5545,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.webfree.net/download/11632/?wpdmdl=11632",
+      "status": 403,
+      "final_url": "https://www.webfree.net/download/11632/?wpdmdl=11632",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 5590,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.webfree.net/download/11632?wpdmdl=11632",
+      "status": 403,
+      "final_url": "https://www.webfree.net/download/11632?wpdmdl=11632",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 5587,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.webfree.net/wp-json/wp/v2/search?search=10907&per_page=100",
+      "status": 403,
+      "final_url": "https://www.webfree.net/wp-json/wp/v2/search?search=10907&per_page=100",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 5702,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.webfree.net/wp-json/wp/v2/wpdmpro?search=10907&per_page=100",
+      "status": 403,
+      "final_url": "https://www.webfree.net/wp-json/wp/v2/wpdmpro?search=10907&per_page=100",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 5705,
+      "head_hex": "3c21444f43545950"
+    },
+    {
+      "url": "https://www.webfree.net/wp-json/wpdm/v1/packages?search=10907",
+      "status": 403,
+      "final_url": "https://www.webfree.net/wp-json/wpdm/v1/packages?search=10907",
+      "content_type": "text/html; charset=UTF-8",
+      "length": 5639,
+      "head_hex": "3c21444f43545950"
+    }
+  ],
+  "candidates": [],
+  "valid_pdfs": []
+}
