@@ -1,0 +1,27 @@
+# 李泽宇博士论文正文定向截图索引
+
+> 截图直接来自仓库原PDF，仅保留对应表格/图/结论上下文区域。PDF页码为文件页码；文件名同时标出论文印刷页码。
+
+- PDF p.106: ![](exact/p106_print94_table4_12_efficiency.png)
+- PDF p.107: ![](exact/p107_print95_table4_13_modal.png)
+- PDF p.108: ![](exact/p108_print96_frequency_capacity.png)
+- PDF p.109: ![](exact/p109_print97_ch4_summary.png)
+- PDF p.110: ![](exact/p110_print98_ch5_start_model.png)
+- PDF p.111: ![](exact/p111_print99_fe_model_records.png)
+- PDF p.112: ![](exact/p112_print100_table5_2_cases_response.png)
+- PDF p.114: ![](exact/p114_print102_psd_amplification.png)
+- PDF p.115: ![](exact/p115_print103_fragility_definition.png)
+- PDF p.116: ![](exact/p116_print104_im_edp_records.png)
+- PDF p.118: ![](exact/p118_print106_limit_states.png)
+- PDF p.119: ![](exact/p119_print107_ls3_ida_method.png)
+- PDF p.121: ![](exact/p121_print109_hunt_fill.png)
+- PDF p.122: ![](exact/p122_print110_ida_collapse.png)
+- PDF p.124: ![](exact/p124_print112_damage_mechanism.png)
+- PDF p.125: ![](exact/p125_print113_damage_buckling_figures.png)
+- PDF p.126: ![](exact/p126_print114_percentile_ida.png)
+- PDF p.127: ![](exact/p127_print115_table5_6_regression.png)
+- PDF p.128: ![](exact/p128_print116_nf_ff_fragility.png)
+- PDF p.132: ![](exact/p132_print120_msa_results.png)
+- PDF p.133: ![](exact/p133_print121_ida_msa_compare.png)
+- PDF p.136: ![](exact/p136_print124_table5_10_summary.png)
+- PDF p.137: ![](exact/p137_print125_ch5_summary.png)
