@@ -1,37 +1,34 @@
-# THESIS STRUCTURE PROTOCOL
+# THESIS STRUCTURE PROTOCOL — 五章制
 
-本文件规定论文结构调整的原则。
+## 1. 一章只回答一个核心问题
 
-## 1. 一章只回答一个主研究问题
-- Ch2 → Q1 模型可信性
-- Ch3 → Q2 风与控制工况
-- Ch4 → Q3 薄弱机制
-- Ch5 → Q4 主控变量
-- Ch6 → Q5 优化与独立复核
+- Ch1：为什么研究、前人做到哪里、本文三个科学问题是什么；
+- Ch2：结构模型是否可信；
+- Ch3：场址风与整机随机载荷如何分布、哪些工况控制；
+- Ch4：哪个材料/位置/风速区控制长期疲劳；
+- Ch5：本文真正证明了什么、创新边界和局限是什么。
 
-## 2. 每章固定六项
+## 2. 每章固定结构
+
+每章必须能回答：
 1. Question
 2. Inputs
-3. Methods
-4. Validation / checks
-5. Outputs
-6. Handoff to next chapter
+3. Literature/source basis
+4. Method
+5. Validation/check
+6. Results
+7. Figures/tables
+8. Handoff/Conclusion
+9. Gate status
 
-## 3. 章节不得按软件划分
-禁止：
-“Abaqus章”“OpenFAST章”“优化算法章”。
-软件只是方法，章节必须围绕工程问题。
+## 3. 禁止按软件拆章
+Abaqus、OpenFAST、ERA5、TurbSim都是工具，不是章节科学问题。
 
-## 4. 方法与结果分离
-- Ch2/Ch3前半：方法和V&V
-- Ch3后半/Ch4：正式结果
-- Ch5/Ch6：设计研究
+## 4. 载荷映射不独占一章
+OpenFAST→Abaqus映射是Ch4材料疲劳链中的接口方法，必须V&V，但不单独占章。
 
-## 5. 不为已有结果强行保留小节
-如果最终模型没有某变量或输出，对应小节删除。
+## 5. 不为篇幅拆章
+只有独立科学问题、独立方法链、独立结果链同时成立时才单独成章。
 
-## 6. 不为篇幅拆章
-只有形成独立研究问题、独立方法链和独立结果链时才单独成章。
-
-## 7. 第一章最后定稿
-研究不足、创新和摘要均必须在主要结果完成后回写。
+## 6. 结论最后冻结
+Ch1研究不足、摘要、创新和Ch5量化结论必须在Ch2–Ch4真实结果闭合后回写。
