@@ -1,4 +1,4 @@
-name: Audit 115m references targeted
+name: Audit active 115m references
 
 on:
   push:
@@ -12,17 +12,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            research/wind-tower/README.md
-            research/wind-tower/AGENTS.md
-            research/wind-tower/audit
-            research/wind-tower/governance
-            research/wind-tower/manuscript/final-thesis
             research/wind-tower/experiments/T061
-            research/wind-tower/experiments/T035
-            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation
+            research/wind-tower/manuscript/final-thesis
+            research/wind-tower/governance
           sparse-checkout-cone-mode: false
-      - name: Grep
+      - name: Grep active workspace
         shell: bash
         run: |
-          grep -RInEi --exclude='*.pdf' --exclude='*.png' --exclude='*.jpg' --exclude='*.zip' \
-            '115\.63|115 ?m|115m|115\.6' research/wind-tower || true
+          echo '=== ACTIVE occurrences; intentional identity warnings may remain ==='
+          grep -RInEi '115\.63|115 ?m|115m|115\.6' \
+            research/wind-tower/experiments/T061 \
+            research/wind-tower/manuscript/final-thesis \
+            research/wind-tower/governance || true
