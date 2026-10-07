@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "input": "research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp",
+  "input_sha256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "purpose": "Quantify inherited T055 steel-tower aspect-ratio warning on current T057 C3D8I geometry.",
+  "method": "For each C3D8R, compute 12 physical edge lengths and max/min edge ratio; classify edges in cylindrical axial/radial/circumferential directions.",
+  "abaqus_warning_reference": "T055 native Abaqus 2025 DAT reported 1512 elements aspect ratio >100:1: SSEG_01=216, SSEG_02=432, SSEG_03=432, SSEG_04=432.",
+  "summary": {
+    "SSEG_01": {
+      "nodes": 756,
+      "elements": 432,
+      "edge_ratio_gt100": 216,
+      "edge_ratio_gt50": 432,
+      "edge_ratio_min": 98.72046640601295,
+      "edge_ratio_median": 99.79266009894414,
+      "edge_ratio_max": 100.88776305673376,
+      "axial_edge_median_m": 1.916839590127302,
+      "radial_edge_median_m": 0.019249977734076648,
+      "circ_edge_median_m": 0.4162994284082741,
+      "t055_warn_count": 216,
+      "matches_t055_warning_count": true
+    },
+    "SSEG_02": {
+      "nodes": 756,
+      "elements": 432,
+      "edge_ratio_gt100": 432,
+      "edge_ratio_gt50": 432,
+      "edge_ratio_min": 101.32216587411129,
+      "edge_ratio_median": 102.45138760326675,
+      "edge_ratio_max": 103.60571367410009,
+      "axial_edge_median_m": 1.9166779365037205,
+      "radial_edge_median_m": 0.018750011920168896,
+      "circ_edge_median_m": 0.3993912312970263,
+      "t055_warn_count": 432,
+      "matches_t055_warning_count": true
+    },
+    "SSEG_03": {
+      "nodes": 756,
+      "elements": 432,
+      "edge_ratio_gt100": 432,
+      "edge_ratio_gt50": 432,
+      "edge_ratio_min": 104.07178468132425,
+      "edge_ratio_median": 105.26453650525542,
+      "edge_ratio_max": 106.48317743488857,
+      "axial_edge_median_m": 1.9166779357026733,
+      "radial_edge_median_m": 0.018249991745231047,
+      "circ_edge_median_m": 0.3925058687543568,
+      "t055_warn_count": 432,
+      "matches_t055_warning_count": true
+    },
+    "SSEG_04": {
+      "nodes": 756,
+      "elements": 432,
+      "edge_ratio_gt100": 432,
+      "edge_ratio_gt50": 432,
+      "edge_ratio_min": 106.97714202334454,
+      "edge_ratio_median": 108.23739791937749,
+      "edge_ratio_max": 109.52562324044433,
+      "axial_edge_median_m": 1.9166779367811708,
+      "radial_edge_median_m": 0.017750010488891656,
+      "circ_edge_median_m": 0.385620540671902,
+      "t055_warn_count": 432,
+      "matches_t055_warning_count": true
+    }
+  },
+  "total_edge_ratio_gt100": 1512,
+  "total_t055_warn_count": 1512,
+  "all_counts_match_t055": true,
+  "note": "Edge-ratio reconstruction is an independent geometry diagnostic; Abaqus internal shape metric remains authoritative. Matching counts strongly identifies the geometric cause."
+}
