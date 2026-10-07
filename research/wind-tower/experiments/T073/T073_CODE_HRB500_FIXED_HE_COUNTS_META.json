@@ -1,6 +1,6 @@
 {
   "method": "GB/T50010 E.0.1 fixed He counts feasibility map",
-  "material": "S345 source-model symmetric 345 MPa screen",
+  "material": "HRB500 code-design branch",
   "diameters_mm": [
     28,
     32,
@@ -66,5 +66,11 @@
       "min_clear_bar_spacing_mm": 132.69771115400317,
       "PASS": "PASS"
     }
-  }
+  },
+  "fy_MPa": 435.0,
+  "fy_compression_MPa": 410.0,
+  "material_source": "NB/T 10907-2021 Table 4.2.2-1; see archived NBT10907_pdf_19/20 evidence",
+  "He_counts_status": "SOURCE-DIRECT / LOCKED; counts unchanged",
+  "model_identity": "CODE-REDESIGN / NOT-HE2024-MATERIAL-IDENTITY",
+  "warning": "Do not cite this branch as He2024 ordinary-rebar material or diameter."
 }
