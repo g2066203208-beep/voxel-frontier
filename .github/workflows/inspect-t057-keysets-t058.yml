@@ -1,0 +1,31 @@
+name: Inspect T057 key sets for T058
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-t057-keysets-t058.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp
+          sparse-checkout-cone-mode: false
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path("research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp")
+          lines=p.read_text(encoding="utf-8").splitlines()
+          pats=["SET_FLANGE_RP","CPL_FLANGE_C31_TOP","TIE_C31_S01","SURF_TOP","SET_TOWER_TOP_O"]
+          for pat in pats:
+              print("\n###",pat)
+              ids=[i for i,l in enumerate(lines) if pat.upper() in l.upper()]
+              for i in ids[:20]:
+                  a=max(0,i-5); b=min(len(lines),i+9)
+                  print(f"--- {a+1}-{b} ---")
+                  for j in range(a,b): print(f"{j+1:07d}: {lines[j]}")
+          PY
