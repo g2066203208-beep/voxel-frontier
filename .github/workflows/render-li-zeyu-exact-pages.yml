@@ -1,0 +1,91 @@
+name: Render Li Zeyu exact page evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/render-li-zeyu-exact-pages.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf
+            research/wind-tower/references/reading-notes/evidence/li-zeyu
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pymupdf
+      - name: Render exact contextual crops
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz
+          from pathlib import Path
+
+          pdf=Path("research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf")
+          root=Path("research/wind-tower/references/reading-notes/evidence/li-zeyu/exact")
+          root.mkdir(parents=True,exist_ok=True)
+          doc=fitz.open(pdf)
+
+          # (pdf page, y0 fraction, y1 fraction, label)
+          jobs=[
+            (106,.36,.96,"p106_print94_table4_12_efficiency"),
+            (107,.04,.60,"p107_print95_table4_13_modal"),
+            (108,.05,.74,"p108_print96_frequency_capacity"),
+            (109,.04,.93,"p109_print97_ch4_summary"),
+            (110,.05,.94,"p110_print98_ch5_start_model"),
+            (111,.03,.96,"p111_print99_fe_model_records"),
+            (112,.04,.90,"p112_print100_table5_2_cases_response"),
+            (114,.04,.95,"p114_print102_psd_amplification"),
+            (115,.40,.96,"p115_print103_fragility_definition"),
+            (116,.03,.96,"p116_print104_im_edp_records"),
+            (118,.38,.96,"p118_print106_limit_states"),
+            (119,.03,.93,"p119_print107_ls3_ida_method"),
+            (121,.03,.96,"p121_print109_hunt_fill"),
+            (122,.03,.92,"p122_print110_ida_collapse"),
+            (124,.03,.96,"p124_print112_damage_mechanism"),
+            (125,.03,.92,"p125_print113_damage_buckling_figures"),
+            (126,.03,.93,"p126_print114_percentile_ida"),
+            (127,.03,.96,"p127_print115_table5_6_regression"),
+            (128,.03,.93,"p128_print116_nf_ff_fragility"),
+            (132,.32,.96,"p132_print120_msa_results"),
+            (133,.03,.93,"p133_print121_ida_msa_compare"),
+            (136,.03,.96,"p136_print124_table5_10_summary"),
+            (137,.03,.76,"p137_print125_ch5_summary"),
+          ]
+          rows=[]
+          for pno,y0f,y1f,label in jobs:
+            p=doc[pno-1]
+            r=p.rect
+            clip=fitz.Rect(r.x0+22, r.y0+r.height*y0f, r.x1-22, r.y0+r.height*y1f)
+            fname=f"{label}.png"
+            pix=p.get_pixmap(matrix=fitz.Matrix(1.85,1.85),clip=clip,alpha=False)
+            pix.save(root/fname)
+            rows.append((pno,label,f"exact/{fname}"))
+
+          idx=Path("research/wind-tower/references/reading-notes/evidence/li-zeyu/EXACT_INDEX.md")
+          with idx.open("w",encoding="utf-8") as f:
+            f.write("# 李泽宇博士论文正文定向截图索引\n\n")
+            f.write("> 截图直接来自仓库原PDF，仅保留对应表格/图/结论上下文区域。PDF页码为文件页码；文件名同时标出论文印刷页码。\n\n")
+            for pno,label,path in rows:
+              f.write(f"- PDF p.{pno}: ![]({path})\n")
+          print("rendered",len(rows))
+          PY
+      - name: Commit exact page evidence
+        run: |
+          git config user.name "openai-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/reading-notes/evidence/li-zeyu
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "docs: add exact body-page evidence for Li Zeyu chapters 4 and 5"
+            git push
+          fi
