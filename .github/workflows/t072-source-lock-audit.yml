@@ -27,6 +27,9 @@ jobs:
             research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-45.png
             research/wind-tower/experiments/T072/source-audit
           sparse-checkout-cone-mode: false
+      - name: Install PDF tools
+        shell: bash
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - name: Build source audit
         shell: bash
         run: |
