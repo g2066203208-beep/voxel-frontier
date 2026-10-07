@@ -1,12 +1,28 @@
 # 论文研究工作要求
 
-本目录的持续用户要求：每一步研究必须有可追溯的参考依据，并将研究过程、方法、问题、模型、数据和结果写入 GitHub。执行细则见 [每一步依据与验收规则](governance/evidence-per-step.md)。
+本目录所有后续工作先读取：
 
-- 记录期刊、学位论文、官方模型/数据和理论文档的完整出处，定位至实际使用的章节、页码、公式或字段。区分已获取、已读摘要、已读方法/结果及全文，不虚报阅读。
-- 分开记录文献方法、工程参数、自行推导、未验证假设和事前误差预算。来源缺失则 OPEN/HOLD，不编造参数或参考文献。拟定实验不写成已完成。
-- 使用用户提供的原模型前，核验真实几何、网格、材料/截面、单位/坐标、质量、约束和接口；保留原文件，副本实施修复。模型名字包含 OFFICIAL 不证明其结构参数已验证。
-- D08 目前 OPEN：固定刚体 m/CG/J 等价不验证柔性、旋转、气动弹性运行响应或疲劳。只对实际已完成的明确指标作结论；第二章未完成科学验收。
-- 公开原创研究过程、来源记录、老师问题摘要、模型输入、脚本、失败记录、数据和中文科学图。论文正文/修订 Word、老师 Word/转录、受限论文全文与摘录保持私有。
-- 发布前读取最新 GitHub 主分支，保留持续更新的文献记录及无关内容；不要推送陈旧的本地全仓库覆盖新内容。
+1. `README.md`
+2. `manuscript/final-thesis/00_STATUS.md`
+3. `manuscript/final-thesis/00_WORKSPACE_MASTER.md`
+4. `governance/CURRENT_ABAQUS_MODEL_20261006.md`
+5. `registry/literature_master.tsv`
 
-以上来自已明确的用户指令与当前研究状态，不额外引入确认流程。
+## 强制规则
+
+- 每一步研究必须有可追溯依据：REF / STANDARD / OFFICIAL / SOURCE / RUN / FIG / TAB。
+- 核心文献必须记录原文对象、软件/模型、边界条件、步骤、参数、验证、结果和适用边界；不能只凭题目或摘要转移方法。
+- 参数来源必须区分：直接原型、同对象文献、标准/官方、独立工程重构、本文study-design、HOLD。
+- 源模型不能证明自身正确；文件名含FINAL/VALIDATED不代表科学状态。
+- 当前Abaqus唯一候选是T057；T053/T045及更早模型只作历史/对照。
+- 当前论文正式结构是五章制；旧七章和独立优化章已归档。
+- Simpack不得重新进入production thesis route。
+- load-DEL不等于material fatigue life；不同材料不得统一使用一个m值。
+- 真实失败记录、原始RUN和研究谱系不为了“目录整洁”而删除；被替代规则/正文统一进入archive。
+- 发布或修改前先读取最新GitHub主分支，禁止用陈旧本地副本覆盖当前状态。
+
+## 当前优先级
+
+T057 native Data Check → Gravity/PT/contact equilibrium → mass/CG/J → Modal/Flex → Ch3数据身份与DLC1.2 bins → Ch4 local material fatigue。
+
+任何与此冲突的历史audit/workflow文字只作为当时记录，不再作为当前执行授权。
