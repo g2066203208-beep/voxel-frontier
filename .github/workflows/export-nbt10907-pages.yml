@@ -1,0 +1,23 @@
+name: Export NB/T 10907 evidence pages
+
+on:
+  push:
+    paths:
+      - '.github/workflows/export-nbt10907-pages.yml'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_34.jpg
+            research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_36.jpg
+            research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_37.jpg
+          sparse-checkout-cone-mode: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nbt10907-design-pages
+          path: research/wind-tower/experiments/T061/audit_evidence_20261007/NBT10907_pdf_*.jpg
+          retention-days: 1
