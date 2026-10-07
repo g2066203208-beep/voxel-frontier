@@ -1,8 +1,0 @@
-section	claim_or_method	evidence	adoption	boundary	status
-6.1	Mechanism-driven optimization	REF020;REF021;REF065;REF071	Only G8-approved variables enter	Algorithm not novelty	PASS-FRAMEWORK/HOLD-VARIABLES
-6.2	Mass + controlling response objectives	Direct hybrid-tower optimization papers	Use only reliable objectives	Cost only with sourced cost model	CONDITIONAL
-6.2	Frequency/strength/service/prestress constraints	IEC/GB/object literature	Build per-constraint source ledger	Authorized clause check required	CONDITIONAL-STANDARD
-6.3	LHS/surrogate only if high-fidelity cost warrants	McKay;Sacks;REF021	Conditional DOE/surrogate	Do not force ML into low-dimensional cheap problem	CONDITIONAL
-6.4	NSGA-II/Pareto	Deb;REF020;REF021	Use if multi-objective formulation retained	Hyperparameters not innovation	CONDITIONAL
-6.5	Rebuild true FE and possibly OpenFAST after structural change	REF021 limitations + Route B logic	Update global identity/load model when stiffness/mass/aero geometry materially changes	No fixed-load proof for materially different structure	NEED-RUN
-6.6	Independent winds/seeds	Validation principle;REF009/REF011	Use unused conditions for robustness	Do not validate on training cases only	NEED-RUN
