@@ -6,7 +6,7 @@
 |---|---|
 | dtu-hawc2-reference | 用户持有DTU HAWC2参考发布包：叶片/塔架/轴系数据、翼型、气动及控制文件。外包名v9-2，内部目录v9-1，保留差异，不擅自改号。 |
 | dtu-abaqus-blade | 官方参考叶片源包副本：网格、材料、铺层、CAE、STEP及README。README明确不含预弯、叶尖几何有简化；不能混称完整整机模型。 |
-| openfast-v330-adaptation | Bing008第三方陆上DTU10MW移植及ROSCO配置，README声明兼容OpenFAST v3.3.0。不是本论文正式158m生产模型。来源：https://github.com/Bing008/DTU-10MW-Landbased-OpenFAST-v3.3.0 |
+| openfast-v330-adaptation | Bing008第三方陆上DTU10MW移植及ROSCO配置，README声明兼容OpenFAST v3.3.0。该参考适配包中的ElastoDyn使用 **TowerHt=115.63 m**；这是原始/第三方DTU参考几何身份，**不是本文正式158 m、36工况生产模型**。来源：https://github.com/Bing008/DTU-10MW-Landbased-OpenFAST-v3.3.0 |
 | dtu-report | 本地官方报告副本；仓库已有Bak2013 PDF为另一字节版本，不覆盖。 |
 | runtime-binaries / rosco-used-binaries | 本地可执行文件及实际工况控制器库，记录哈希，不通过文件名推定所有运行版本相同。 |
 | site-gwa / site-public-project / site-public-eia | GWA边界、风况库、时间变化、AEP、机型曲线与公开场址项目资料。 |
@@ -22,3 +22,7 @@
 `era5-derived-workbook`保存已有21年ERA5派生Excel；`dtu-extracted-geometry`保存历史提取几何及其来源清单，这些是提取/转换成果，不混称上游原始发布文件。
 
 共享文件只保留一个实体。需使用完整文件布局时，先拉取相关LFS对象，再运行`python restore_reference_assets.py 仓库目录 新输出目录`；脚本按清单还原每个原始位置并校验SHA256，不启动仿真。
+
+### 115.63 m身份警告
+
+本目录允许保留115.63 m，因为这里是“参考基准资料区”。当前论文正式OpenFAST 36工况已经独立审计为158 m混塔。任何人不得从本目录的115.63 m ElastoDyn示例反推“36工况是115 m”。旧的115.63→158 m配筋筛选结果已移入archive，不再属于活动计算链。
