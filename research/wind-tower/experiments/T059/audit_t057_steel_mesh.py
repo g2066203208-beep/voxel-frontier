@@ -102,7 +102,7 @@ audit={
     "input":str(INP),
     "input_sha256":sha,
     "purpose":"Quantify inherited T055 steel-tower aspect-ratio warning on current T057 C3D8I geometry.",
-    "method":"For each C3D8R, compute 12 physical edge lengths and max/min edge ratio; classify edges in cylindrical axial/radial/circumferential directions.",
+    "method":"For each C3D8I, compute 12 physical edge lengths and max/min edge ratio; classify edges in cylindrical axial/radial/circumferential directions.",
     "abaqus_warning_reference":"T055 native Abaqus 2025 DAT reported 1512 elements aspect ratio >100:1: SSEG_01=216, SSEG_02=432, SSEG_03=432, SSEG_04=432.",
     "summary":summary,
     "total_edge_ratio_gt100":sum(v["edge_ratio_gt100"] for v in summary.values()),
@@ -114,7 +114,7 @@ JSON_OUT.write_text(json.dumps(audit,ensure_ascii=False,indent=2)+"\n",encoding=
 
 md=["# T059 — T057钢塔实体网格高长宽比定量审计","",
     f"输入：`{INP}`  ","SHA-256："+sha,"",
-    "T055原生Abaqus 2025 Data Check已报告1512个 `aspect ratio > 100:1` 单元。T057原始INP复核确认四段钢塔实际采用C3D8I，而非此前治理文本中误写的C3D8R。本任务不改模型，先对当前T057四段钢塔C3D8R实际节点坐标与单元连接做独立几何诊断。","",
+    "T055原生Abaqus 2025 Data Check已报告1512个 `aspect ratio > 100:1` 单元。T057原始INP复核确认四段钢塔实际采用C3D8I，而非此前治理文本中误写的C3D8R。本任务不改模型，先对当前T057四段钢塔C3D8I实际节点坐标与单元连接做独立几何诊断。","",
     "## 分段结果","",
     "|钢塔段|单元数|edge ratio>100|T055 Abaqus警告数|中位edge ratio|最大edge ratio|轴向边中位(m)|厚度/径向边中位(m)|周向边中位(m)|",
     "|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
@@ -129,6 +129,6 @@ md += ["",
     "详细逐单元数据：`T059_STEEL_ELEMENT_METRICS.csv`  ",
     "机器审计：`T059_STEEL_MESH_AUDIT.json`","",
     "## 下一步","",
-    "根据本审计得到的实际三向边长，建立T060钢塔网格整改候选；至少两级网格，并以关键应力、塔顶位移和低阶频率进行收敛判定。"]
+    "根据本审计得到的实际三向边长，建立T071钢塔网格整改候选；至少两级网格，并以关键应力、塔顶位移和低阶频率进行收敛判定。"]
 MD_OUT.write_text("\n".join(md)+"\n",encoding="utf-8")
 print(json.dumps(audit,ensure_ascii=False))
