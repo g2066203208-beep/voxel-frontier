@@ -1,0 +1,66 @@
+# 当前论文Word结构化基线（不保存原始Word）
+
+来源文件：R2Z74历史稿，SHA-256 `65b5bddae58aac9b5e194ba7ddff498a67cb82aa8bbe984d7ad445684bfc7480`。  
+规则：**原始DOCX不进入GitHub**；本文件只保存后续审计需要的结构、论断状态和必须删除/改写项。
+
+## 1. 当前工作题目
+《10 MW级陆上风机预应力混凝土—钢混合塔架抗风性能与结构优化研究》
+
+状态：CONDITIONAL，等待G0和Ch4–6结果闭合。
+
+## 2. 历史Word中必须废弃的路线
+
+上传稿第三章仍包含：
+- “柔性RNA高保真联合模型”
+
+摘要中旧的额外软件协同生产模型表述必须删除，统一改为OpenFAST/ROSCO→Abaqus分层路线。
+
+**这些内容属于历史稿残留，已与当前正式路线冲突，下一版正文必须全部删除。**
+
+当前唯一生产路线：
+**ERA5/TurbSim → OpenFAST/ROSCO → 控制工况筛选 → 载荷导出/映射 → Abaqus精细混塔 → 薄弱机制 → 敏感性 → 优化 → Abaqus独立复核。**
+
+## 3. 可保留但需重新证据化的内容
+
+- 158m混塔对象；
+- C65/C70分区；
+- RNA空间等效思想；
+- ERA5+NTM/ETM随机风框架；
+- 36case研究矩阵思想；
+- 雨流/DEL作为载荷比较层；
+- 材料疲劳必须另走S–N/Miner层；
+- 薄弱机制驱动的敏感性和优化结构。
+
+## 4. 不能直接继承为final的历史精确数值
+
+任何没有当前run/source/input hash的软件结果，包括：
+- 旧36case排序；
+- 历史OpenFAST阻尼结果；
+- 历史RNA 6×6差异；
+- 历史频率差；
+- 历史控制case；
+都先进入historical ledger，不直接进入最终摘要/结论。
+
+## 5. 与导师要求的直接修正
+
+- 删除“极端动力/超高”等边界模糊标题词；
+- 只保留抗风主线；
+- 工程背景采用嘉鱼真实批复信息，但不把5MW嘉鱼项目伪装成本文10MW工程；
+- 第二章只做模型建立与V&V；
+- 第四章识别薄弱机制；
+- 第五章做敏感性并冻结变量/目标/约束；
+- 第六章优化并独立回算；
+- 两个创新点保持HOLD，直到结果真正支撑。
+
+
+## 6. 可复现细节唯一入口
+
+与本文件相同SHA的R2Z74源稿已经完成“去Word化”结构化抽取，原DOCX仍不进入GitHub。后续不要再复制一份摘要式说明，统一从以下目录读取历史方法细节与可比数字：
+
+- `manuscript/reproducibility/README.md`
+- `manuscript/reproducibility/02_ABAQUS_RNA_DAMPING_REPRODUCIBLE_METHOD.md`
+- `manuscript/reproducibility/03_ERA5_TURBSIM_OPENFAST_REPRODUCIBLE_METHOD.md`
+- `manuscript/reproducibility/RESULT_BENCHMARK_LEDGER.tsv`
+- `manuscript/reproducibility/WORD_TO_CURRENT_ROUTE_MAP.tsv`
+
+该目录已经在抽取阶段排除Simpack/AeroDyn-Simpack/Simpack-Abaqus旧生产路线。任何benchmark升级为final结果仍须绑定当前RUN/source/input hash。
