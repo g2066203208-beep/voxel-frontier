@@ -1,147 +1,43 @@
-# AUDIT INDEX — 论文研究过程审计索引
+# AUDIT INDEX — 历史审计索引
 
-本文件只索引**当前有效审计**；早期审计已移入 `../archive/audit-early/`，不再与当前审计并列。
+> **注意：audit/现在是历史追溯层，不是当前状态源。**  
+> 当前论文状态请看：
+> - `../manuscript/final-thesis/00_STATUS.md`
+> - `../manuscript/final-thesis/00_WORKSPACE_MASTER.md`
+> - `../governance/CURRENT_ABAQUS_MODEL_20261006.md`
 
-## 历史归档
+## 为什么audit不再做“当前入口”
 
-|归档文件|原用途|当前身份|
-|---|---|---|
-|`archive/audit-early/01-first-review.md`|旧稿首轮总审|历史快照，不作为当前结论|
-|`archive/audit-early/02-material-review.md`|旧材料参数复核|历史快照，被15细化|
-|`archive/audit-early/03-literature-reading.md`|早期文献阅读|历史快照，被结构化文献库替代|
-|`archive/audit-early/04-restart-baseline-2026-10-04.md`|重新开工基线|历史起点，其原则已并入MASTER|
-|`archive/audit-early/05-chapter1-rigorous-review.md`|第一章整体审查|被09–13逐节审计替代|
+2026-10-04至10-06期间论文经历了多次路线变化：
+- 早期七章/优化路线；
+- T045/T053 baseline；
+- RNA重构；
+- T057 evidence reconciliation；
+- 五章疲劳主线。
 
-## 当前有效审计
+旧audit准确记录了当时的判断，但其中大量“当前”“下一步”“七章”“优化”等字样已经被后续路线替代。继续把这些文件放在当前导航层会造成事实冲突。
 
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|07-step00-01-title-evidence.md|题目/对象|题目逐词证据矩阵|Conditional|
-|08-step02-abstract-evidence.md|摘要|逐句完成状态/证据审查|Hold|
-|09-step03-section1-1-evidence-rewrite.md|1.1|背景意义第一轮重写|Conditional|
-|10-step04-section1-2-evidence-rewrite.md|1.2|结构体系/受力第一轮重写|Conditional|
-|11-step05-section1-3-evidence-rewrite.md|1.3|动力研究现状重构|Conditional|
-|12-step06-section1-4-evidence-rewrite.md|1.4|疲劳/敏感性/优化综述重构|Conditional|
-|13-step07-section1-5-to-1-7-evidence-rewrite.md|1.5–1.7|研究边界、内容、技术路线|Conditional|
-|14-step08-section2-1-geometry-baseline-audit.md|2.1|几何/baseline身份与冲突|Hold|
-|15-step09-material-cdp-audit.md|2.2|材料/CDP来源、默认值、冲突|Hold|
-|16-step10-prestress-joint-transition-audit.md|2.3|PT/接缝/转换段模型能力|Hold|
-|17-step11-rna-spatial-equivalence-audit.md|2.4|RNA质量/CG/J/M6空间身份|Partial/Hold|
-|18-literature-driven-thesis-structure-audit.md|全论文结构|推荐最终七章结构与章间交付|有效|
+## 当前使用方式
 
-## 使用规则
+- 需要追溯“某个结论当时为什么产生”时查audit；
+- 需要看当前事实时**不要**从audit判断；
+- 需要论文正文时去final-thesis；
+- 需要当前模型时去governance；
+- 需要真实实验时去experiments；
+- 需要文献时去references/registry。
 
-- “有效/Complete”：当前仍可直接使用；
-- “Conditional”：逻辑通过，但尚有来源/模型门禁；
-- “Hold”：不能把其中报告值写成最终verified结论；
-- 历史归档只用于追溯，不得作为新任务入口；
-- 当前状态统一以 `workflow/EXECUTION_STATUS.md` 与 `registry/` 为准。
+## 主要历史阶段
 
-## 当前下一步
+- audit/07–18：早期题目、Ch1/Ch2、七章结构审计；
+- audit/19–28：G0、流程与40项检查；
+- audit/29–37：文献驱动重构、ERA5专项；
+- audit/38–45：Route B/优化主线时期；
+- audit/46–51：Abaqus baseline、RNA、T053时期。
 
-1. 继续回填CLAIM/PAR/REF registry；
-2. 补G0 baseline原始资料；
-3. 完成P1核心全文提取；
-4. 达到入口条件后按MASTER进入P2.5。
+T057及五章制之后的当前状态已经转入governance和manuscript，不再继续用audit编号堆“最新状态”。
 
-## T023：整篇流程复核与逐章映射
+## 更早历史
 
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[27-overall-process-review.md](27-overall-process-review.md)|七章章间关系复核|六处断点、控制工况回路与候选载荷代表性|流程审查完成；数值研究未据此验收|
-|[28-chapter-checklist.md](28-chapter-checklist.md)|40项逐章补充检查|问题—REQ—文献—模型—数据—计算—验收映射|映射完成；实际证据状态以registry为准|
+`../archive/audit-early/`：MASTER建立前的早期审计。
 
-机器映射见[chapter-process-checklist.json](chapter-process-checklist.json)。本轮按用户要求先完成流程审查，原始结果追索与求解专项暂缓；正式生产仍需满足MASTER门禁。
-
-## T024：题目与第一章实质修订
-
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[29-t024-title-chapter1-evidence-revision.md](29-t024-title-chapter1-evidence-revision.md)|文献驱动修订与私有Word核查|20项引用映射、9项最接近研究、阅读范围及缓存身份纠正|本轮修订完成；模型与数值结论仍Conditional|
-
-## T025：专业实质评审与第二章正文修订
-
-[31-t025-reviewer-assessment-and-chapter2-revision.md](31-t025-reviewer-assessment-and-chapter2-revision.md)记录关键问题、外审追问、文献读级、实际修改及验收边界。第二章和累计稿保持私有；原始公式媒体保留，第二章缺图与计算验证待完成。
-
-
-## T027：核心全文驱动的技术路线再设计
-
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[33-t027-literature-driven-route-redesign.md](33-t027-literature-driven-route-redesign.md)|Wang/Li/Ren/Huang/Cheng核心全文对照|OpenFAST/ROSCO→Abaqus主生产链 + 条件局部contact + G7A/G7B分级疲劳 + 机制驱动优化|路线已批准；各研究门禁仍Conditional|
-
-- [34 T028 本地论文工作分区索引](34-t028-local-work-inventory.md)：资料整理完成，科学状态未改变。
-
-## T029：十篇全文证据审计
-
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[35-t029-ten-paper-fulltext-evidence-audit.md](35-t029-ten-paper-fulltext-evidence-audit.md)|10篇publisher PDF全文核读|全部10篇建立能支持/不能支持边界，修正Wang/Xu、700/100 s、6 seed、contact参数等使用口径|完成|
-
-## T030：路线source-gap查漏补缺
-
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[36-t030-source-gap-closure.md](36-t030-source-gap-closure.md)|ERA5、TurbSim、OpenFAST坐标/输出、载荷映射、Abaqus submodel、V&V、阻尼、敏感性、代理复核等直接来源补齐|P3.1、P4.1-P4.4、P5.5、P7、P8.4等source层大缺口关闭；剩余为本文专属参数/数值门禁|source审计完成；implementation仍Conditional|
-
-
-## T031：ERA5风能文献专项
-
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[37-t031-era5-wind-energy-literature-survey.md](37-t031-era5-wind-energy-literature-survey.md)|实际风能期刊、中文论文、硕士论文中的ERA5方法专项检索|REF080–REF103；U10/U100动态alpha；161m外推边界；ERA5→TurbSim分工|PASS-literature / HOLD-site-validation|
-
-
-## T034：整体流程继续执行与G0重绑定
-
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[38-t034-thesis-execution-restart.md](38-t034-thesis-execution-restart.md)|在MASTER v1.6已锁定前提下恢复G0→G10顺序执行，并用T028实际资产修正旧阻断判断|确认OpenFAST/Abaqus实际输入资产已存在；G0从“缺文件”转为canonical baseline选择/谱系/哈希/参数绑定|in-progress / G0-rebinding|
-
-## T035：优秀学位论文专家级重审与路线优选
-
-|审计文件|主要内容|关键成果|当前状态|
-|---|---|---|---|
-|[39-t035-expert-thesis-redesign.md](39-t035-expert-thesis-redesign.md)|不把现有提纲视为上限，重新回答13个论文设计问题并比较A/B/C三条研究路线|选定Route B：场址/随机风→控制工况→多轴需求→控制区域机制→机制驱动优化；材料寿命与局部contact条件触发|专家重审完成；实施从G0继续|
-
-
-## T036 九篇用户提供PDF完整入库
-
-[40-t036-nine-pdf-binary-ingest.md](40-t036-nine-pdf-binary-ingest.md)：9篇沿用既有题录，完整PDF补入references/user-provided，正式题名重命名、首尾完整性检查与GitHub全字节读回校验完成；研究门禁状态未改变。
-
-## T037 研究对象与模型来源审定提案
-
-[41号审计](41-t037-baseline-source-review.md)：逐参数核对公开DTU、158m混塔及真实候选输入，补核控制器与补充归档，推荐M2/R2来源；待用户审定，未授予统一生产基线或后续求解许可。
-
-## T038 两软件RNA质量属性统一与输入修订方案
-
-[42号审计](42-t038-rna-mass-properties-and-revision-plan.md)：直接输入积分、坐标与参考点、历史M6证据边界、可复算脚本与修订方案。待用户审查，无新求解，原模型未改。
-
-## T039 第一章学校模板格式与执行顺序纠正
-
-[43号记录](43-t039-chapter1-school-format-correction.md)：第一章为当前唯一写作交付，内容尚未验收；仅修既有第一章格式。T038历史审查保留，第二章及后续实施暂停。
-
-
-## T040 新增核心全文科学核读
-
-[44号审计](44-t040-new-core-literature-scientific-audit.md)：优先核读ERA5、混凝土疲劳、P-Δ与水平接缝文献；Huang 2026完成20/20页逐页审计，明确G7A load-DEL与G7B局部材料疲劳分层；Jung/Yang/Olauson/Gualtieri收紧ERA5动态alpha与不确定性口径；P-Δ与N-M-V-T接缝形成后续计算门禁。其余新PDF按阅读等级继续推进，不把“已入库”冒充“已全文审”。
-
-## T041 全论文流程与参考文献充分性总审查
-
-[45号审计](45-t041-full-route-reference-sufficiency-review.md)：重新贯通Route B从BASE001、Abaqus V&V、ERA5/TurbSim/OpenFAST、载荷映射、控制机制、分级疲劳、敏感性、优化到G10证据回收；判定主路线文献已足够，剩余硬缺口集中在IEC/GB授权条文、实际材料牌号/阻尼来源和条件G7B材料疲劳规范，不再无边界扩文献。
-
-
-
-## T051 当前论文工作室一致性审计
-
-[49号审计](49-t051-current-workspace-consistency-audit-20261006.md)：核对 T048–T050、正式Abaqus治理、第二章正文/证据矩阵和执行总状态的一致性；确认T048交付包不完整、T050尚未同步进final-thesis、正式RNA治理存在分支冲突，并冻结后续修复顺序。本审计不修改模型、不提交求解、不改变G0/G1门禁。
-
-
-## T052 He 2024原始页证据与Abaqus基准闭合
-
-[50号审计](50-t052-he2024-source-page-and-abaqus-baseline-closure.md)：本步属于G0基准模型身份冻结，不是结果分析。固定核对He 2024 PDF p33–35（Table 3-1~3-3、Fig.3-4/3-5），把“原文直接参数 / 当前Abaqus实现 / 后续同谱系补全 / 规范补全 / 未决冲突”逐项分层；T050不得称为He 2024的1:1复刻。原页PNG由T052工作流归档到`references/extracts/REF008-original-pages/`。
-
-
-## T053 He2024塔架对齐 + 升级RNA正式候选静态验收
-
-[51号审计](51-t053-he-aligned-abaqus-static-acceptance.md)：当前首选Abaqus候选已切换为T053。31段纵筋+环筋+拉筋共33个活动钢筋section由HRB335_T046切回S345；显式钢筋笼、PT和升级RNA保留，旧39.80022 t NSM删除。静态输入验收PASS，但Abaqus data check、Gravity/PT平衡、质量/CG、30阶模态和Flex-X/Z仍为下一门禁。
+审计文件不删除；它们是研究决策历史，而不是当前执行清单。
