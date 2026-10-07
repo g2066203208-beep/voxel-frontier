@@ -1,15 +1,16 @@
 # 当前状态 — 2026-10-07
 
 ## 论文结构
-**五章制已冻结。**
+**六章制已冻结。**
 
 Ch1 绪论  
 Ch2 精细有限元模型与分层验证  
 Ch3 场址长期风/整机随机载荷/screening  
 Ch4 风致材料疲劳  
-Ch5 结论与展望
+Ch5 疲劳控制参数敏感性与结构优化  
+Ch6 结论与展望
 
-旧七章正文、证据和阶段快照已从活动正文区移出，进入archive。
+旧七章正文、证据和阶段快照仍在archive；本次新增的Ch5不是恢复旧七章，而是由Ch4真实疲劳控制机理触发的单一优化闭环。
 
 ## 当前Abaqus模型
 **T057 = CURRENT EVIDENCE-RECONCILED CANDIDATE / NOT FINAL VERIFIED**
@@ -50,13 +51,25 @@ HOLD：
 
 绝对材料寿命尚未计算，不得提前填数。
 
+## 第五章
+方法路线已冻结为：
+- Ch4控制材料/控制区域 → 变量筛选；
+- DOE/LHS敏感性；
+- 代理模型（优先Kriging/二阶响应面）；
+- NSGA-II质量—疲劳多目标优化；
+- Pareto代表方案高保真独立复核。
+
+正式设计变量、范围和最优值必须由Ch4真实结果和文献/规范共同确定，不得提前填数。
+
 ## 当前唯一优先动作
 1. T057 native Abaqus Data Check；
 2. Gravity/PT/contact equilibrium；
 3. mass/CG/J；
 4. Modal/Flex；
 5. 再关闭Ch3数据身份与DLC1.2 bins；
-6. 最后进入Ch4材料fatigue production。
+6. 进入Ch4材料fatigue production；
+7. Ch4闭合后进入Ch5敏感性、优化与高保真复核；
+8. 最后完成Ch6结论与展望。
 
 ## 权威文件
 - 总控：`00_WORKSPACE_MASTER.md`
