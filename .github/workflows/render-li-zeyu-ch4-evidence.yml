@@ -1,0 +1,84 @@
+name: Render Li Zeyu chapter 4 evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/render-li-zeyu-ch4-evidence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf
+            research/wind-tower/references/reading-notes/evidence/li-zeyu
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pymupdf
+      - name: Render chapter 4
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz
+          from pathlib import Path
+          pdf=Path("research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf")
+          root=Path("research/wind-tower/references/reading-notes/evidence/li-zeyu/ch4-modeling")
+          root.mkdir(parents=True,exist_ok=True)
+          doc=fitz.open(pdf)
+          pages=[
+            (81,"p081_print69_ch4_start_fiber"),
+            (82,"p082_print70_fiber_umat"),
+            (83,"p083_print71_concrete_fiber_cdp"),
+            (84,"p084_print72_cdp_fracture_energy"),
+            (85,"p085_print73_interface_coupling"),
+            (86,"p086_print74_pt_fiber_connection_elements"),
+            (87,"p087_print75_table4_1_specimen"),
+            (89,"p089_print77_test_results_model"),
+            (90,"p090_print78_multiscale_layout"),
+            (91,"p091_print79_materials"),
+            (92,"p092_print80_load_displacement"),
+            (95,"p095_print83_pt_stress"),
+            (96,"p096_print84_stress_damage"),
+            (97,"p097_print85_efficiency_cycle_test"),
+            (100,"p100_print88_cycle_validation"),
+            (102,"p102_print90_full_scale_model"),
+            (103,"p103_print91_material_static"),
+            (104,"p104_print92_full_scale_stress"),
+            (106,"p106_print94_table4_12_efficiency"),
+            (107,"p107_print95_modal"),
+            (108,"p108_print96_capacity"),
+            (109,"p109_print97_summary"),
+          ]
+          rows=[]
+          for pno,label in pages:
+            p=doc[pno-1]; r=p.rect
+            clip=fitz.Rect(r.x0+20,r.y0+20,r.x1-20,r.y1-20)
+            fn=f"{label}.png"
+            p.get_pixmap(matrix=fitz.Matrix(1.65,1.65),clip=clip,alpha=False).save(root/fn)
+            rows.append((pno,fn))
+          idx=Path("research/wind-tower/references/reading-notes/evidence/li-zeyu/CH4_MODELING_INDEX.md")
+          with idx.open("w",encoding="utf-8") as f:
+            f.write("# 李泽宇博士论文第4章建模方法原文截图索引\n\n")
+            f.write("> 直接由仓库原PDF渲染。PDF页码为文件页码，文件名同时标注论文印刷页。\n\n")
+            for pno,fn in rows:
+              f.write(f"- PDF p.{pno}: ![](ch4-modeling/{fn})\n")
+          print("rendered",len(rows))
+          PY
+      - name: Commit evidence
+        run: |
+          git config user.name "openai-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/reading-notes/evidence/li-zeyu
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "docs: add original chapter 4 modeling screenshots"
+            git push
+          fi
