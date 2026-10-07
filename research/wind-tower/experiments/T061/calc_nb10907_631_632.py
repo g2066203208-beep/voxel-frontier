@@ -137,6 +137,7 @@ def row_calc(load, geom, hoop):
     vc631_eq = 1.75 / (lam + 1.0) * ft * b_equiv_mm * h0_mm
     vrd631_eq = vc631_eq + vs631 + vn631
 
+    Asl_mm2 = 2.0 * float(geom["bars_each_row"]) * float(geom["Abar_mm2"])
     # 6.3.2: beta_t is bounded to [0.5,1.0] by the standard.
     ro_cor, ri_cor, Acor_mm2, ucor_mm = annulus_core(D_mm, di_mm, COVER_MM, HOOP_D_MM)
     # Exact circular-annulus plastic torsional resistance modulus:
@@ -147,7 +148,7 @@ def row_calc(load, geom, hoop):
     beta_raw = 1.5 / (1.0 + 0.2 * (lam + 1.0) * V_N * Wt_mm3 / (T_Nmm * b_wall_mm * h0_mm)) if T_Nmm > 0 else 1.0
     beta = min(1.0, max(0.5, beta_raw))
     vc632_wall = (1.0 - beta) * 1.75 / (lam + 1.0) * ft * b_wall_mm * h0_mm
-    vnp632 = 0.05 * Np0_main
+    vnp632 = (1.0 - beta) * 0.05 * Np0_main
     vrd632_wall = vc632_wall + vs631 + vnp632
     vc632_eq = (1.0 - beta) * 1.75 / (lam + 1.0) * ft * b_equiv_mm * h0_mm
     vrd632_eq = vc632_eq + vs631 + vnp632
@@ -155,14 +156,17 @@ def row_calc(load, geom, hoop):
     # 6.3.2-3 and -4. Here longitudinal and hoop steel are both HRB400 by design
     # assumption, so xi = fy*Ast1*s/(fyv*Ast1*u_cor) = s/u_cor numerically.
     xi = FY_LONG_MPA * Ast1_mm2 * s_mm / (FYV_MPA * Ast1_mm2 * ucor_mm)
+    xi_asl = FY_LONG_MPA * Asl_mm2 * s_mm / (FYV_MPA * Ast1_mm2 * ucor_mm)
     tc = beta * (0.35 * ft + 0.05 * Np0_main / A_mm2) * Wt_mm3
-    ts = beta * 1.2 * math.sqrt(xi) * FYV_MPA * Ast1_mm2 * Acor_mm2 / s_mm
+    ts = 1.2 * math.sqrt(xi) * FYV_MPA * Ast1_mm2 * Acor_mm2 / s_mm
     trd_Nmm = tc + ts
+    ts_asl = 1.2 * math.sqrt(xi_asl) * FYV_MPA * Ast1_mm2 * Acor_mm2 / s_mm
+    trd_asl_Nmm = tc + ts_asl
 
     # Optional one-strand-per-PT-position sensitivity only; it does not change the
     # main check and is labelled candidate, because the real strand grouping/losses are open.
     np0_nominal = NP0_NOMINAL_ONE_STRAND_N
-    vn632_nominal = 0.05 * np0_nominal
+    vn632_nominal = (1.0 - beta) * 0.05 * np0_nominal
     tc_nominal = beta * (0.35 * ft + 0.05 * np0_nominal / A_mm2) * Wt_mm3
     vrd632_nominal = vc632_wall + vs631 + vn632_nominal
     trd_nominal = tc_nominal + ts
@@ -199,13 +203,15 @@ def row_calc(load, geom, hoop):
         "Ast1_mm2_torsion_assumed": Ast1_mm2,
         "core_outer_radius_mm": ro_cor,
         "core_inner_radius_mm": ri_cor,
+        "Asl_mm2_two_longitudinal_rows": Asl_mm2,
         "Acor_mm2_assumed": Acor_mm2,
         "ucor_mm_assumed": ucor_mm,
         "Wt_mm3_assumed": Wt_mm3,
         "beta_raw": beta_raw,
         "beta_t_clipped": beta,
         "Np0_main_N": Np0_main,
-        "xi": xi,
+        "xi_literal_printed": xi,
+        "xi_A_sl_sensitivity": xi_asl,
         "Vrd_631_wall_kN": vrd631_wall / 1000.0,
         "Vrd_631_equiv_kN_sensitivity": vrd631_eq / 1000.0,
         "Vrd_632_wall_kN": vrd632_wall / 1000.0,
@@ -219,12 +225,14 @@ def row_calc(load, geom, hoop):
         "V_ratio_631_wall": V_N / vrd631_wall if vrd631_wall > 0 else float("inf"),
         "V_ratio_632_wall": V_N / vrd632_wall if vrd632_wall > 0 else float("inf"),
         "Trd_632_kNm": trd_Nmm / 1.0e6,
+        "Trd_632_kNm_A_sl_sensitivity": trd_asl_Nmm / 1.0e6,
         "Trd_concrete_kNm": tc / 1.0e6,
         "Trd_steel_kNm": ts / 1.0e6,
         "T_ratio_632": T_Nmm / trd_Nmm if trd_Nmm > 0 else float("inf"),
+        "T_ratio_632_A_sl_sensitivity": T_Nmm / trd_asl_Nmm if trd_asl_Nmm > 0 else float("inf"),
         "Vrd_632_one_strand_nominal_kN_candidate": vrd632_nominal / 1000.0,
         "Trd_one_strand_nominal_kNm_candidate": trd_nominal / 1.0e6,
-        "screening_status": "PASS under mapped-action + candidate HRB400/hoop assumptions; HOLD for final design",
+        "screening_status": "HOLD: geometry conversion and printed xi definition unresolved; do not claim final code pass",
     }
 
 
@@ -265,20 +273,22 @@ def main():
 
 第6.3.1：`V ≤ 1.75/(λ+1) f_t b h0 + f_yv Asv/s h0 + 0.07N`，`λ=M/(Vh0)`。
 
-第6.3.2：`βt=1.5/[1+0.2(λ+1) V Wt/(T b h0)]`，按标准限制 `0.5≤βt≤1.0`；`V ≤ (1−βt)1.75/(λ+1) f_t b h0 + f_yv Asv/s h0 + 0.05Np0`；`T ≤ βt(0.35f_t+0.05Np0/A0)Wt + 1.2√ξ f_yv Ast1 Acor/s`，`ξ=f_y Ast1 s/(f_yv Ast1 ucor)`。
+第6.3.2：`βt=1.5/[1+0.2(λ+1) V Wt/(T b h0)]`，按标准限制 `0.5≤βt≤1.0`；`V ≤ (1−βt)[1.75/(λ+1) f_t b h0 + 0.05Np0] + f_yv Asv/s h0`；`T ≤ βt(0.35f_t+0.05Np0/A0)Wt + 1.2√ξ f_yv Ast1 Acor/s`。
+
+标准图37的式(6.3.2-4)字面印为 `ξ=f_v Ast1 s/(f_yv Ast1 ucor)`，但变量说明把ξ定义为受扭纵向普通钢筋与箍筋的配筋强度比。脚本保留字面Ast1/Ast1读数，并同时提供 `ξ=f_y Asl s/(f_yv Ast1 ucor)` 敏感性，未把符号疑点悄悄改写为标准原文。扭转钢筋项不乘βt，βt只乘第一项。
 
 ## 3. 结果摘要（主算 b=t，Np0=0）
 
 - 第6.3.1剪力需求比最大段：`{out.loc[i_v31,'segment']}`，`V/Vrd={out.loc[i_v31,'V_ratio_631_wall']:.4f}`。
 - 第6.3.2剪力需求比最大段：`{out.loc[i_v,'segment']}`，`V/Vrd={out.loc[i_v,'V_ratio_632_wall']:.4f}`。
-- 第6.3.2扭矩需求比最大段：`{out.loc[i_t,'segment']}`，`T/Trd={out.loc[i_t,'T_ratio_632']:.4f}`。
+- 第6.3.2扭矩需求比最大段（标准印刷式字面ξ）：`{out.loc[i_t,'segment']}`，`T/Trd={out.loc[i_t,'T_ratio_632']:.4f}`；同段A_sl解释敏感性为 `{out.loc[i_t,'T_ratio_632_A_sl_sensitivity']:.4f}`。
 - 控制段 `{out.loc[i_v,'segment']}`：`V={out.loc[i_v,'V_d_kN']:.3f} kN`，`T={out.loc[i_v,'T_d_kNm']:.3f} kN·m`，`N={out.loc[i_v,'N_comp_d_kN']:.3f} kN`，`βt={out.loc[i_v,'beta_t_clipped']:.4f}`，`Vrd,6.3.2={out.loc[i_v,'Vrd_632_wall_kN']:.3f} kN`，`Trd={out.loc[i_v,'Trd_632_kNm']:.3f} kN·m`。
 
 逐段完整数值见同目录 CSV。
 
 ## 4. 结论边界
 
-在本筛选输入、HRB400候选、φ14@80内外双层环筋、`b=t`、`Np0=0` 的假设下，31段剪扭需求比均小于1；这只能证明候选构造在当前映射动作下通过了一个透明的筛选计算。它不等于最终规范设计，因为158 m专用OpenFAST载荷、正式组合分项系数、环筋/拉筋构造条款、保护层环境类别、开孔/接缝局部效应、预应力有效力和损失仍未闭合。
+本筛选输入、HRB400候选、φ14@80内外双层环筋、`b=t`、`Np0=0` 的假设下剪力验算满足，但扭转验算对ξ字面读数和A_sl解释敏感。本结果保持HOLD；需要核清圆环截面等效定义和式(6.3.2-4)符号，不能由其中一套敏感性结果直接宣称最终合格。158 m专用OpenFAST载荷、正式组合分项系数、环筋/拉筋构造条款、保护层环境类别、开孔/接缝局部效应、预应力有效力和损失也仍未闭合。
 
 ## 5. 可追溯文件
 
@@ -289,7 +299,7 @@ def main():
     md.write_text(md_text, encoding="utf-8")
     print(csv_path)
     print(md)
-    print(out[["segment", "V_ratio_631_wall", "V_ratio_632_wall", "T_ratio_632"]].to_string(index=False))
+    print(out[["segment", "V_ratio_631_wall", "V_ratio_632_wall", "T_ratio_632", "T_ratio_632_A_sl_sensitivity"]].to_string(index=False))
 
 
 if __name__ == "__main__":
