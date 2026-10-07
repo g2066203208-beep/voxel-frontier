@@ -1,0 +1,78 @@
+name: Render Li Zeyu offshore evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/render-li-zeyu-offshore-evidence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf
+            research/wind-tower/references/reading-notes/evidence/li-zeyu
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pymupdf
+      - name: Render offshore chapter
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz
+          from pathlib import Path
+          pdf=Path("research/wind-tower/references/user-provided/预应力混凝土-钢混合风电塔架结构优化及性能分析_李泽宇.pdf")
+          root=Path("research/wind-tower/references/reading-notes/evidence/li-zeyu/offshore")
+          root.mkdir(parents=True,exist_ok=True)
+          doc=fitz.open(pdf)
+          jobs=[
+            (59,.03,.96,"p059_print47_ch3_start_structure"),
+            (60,.03,.96,"p060_print48_fig3_1_five_mass"),
+            (61,.03,.96,"p061_print49_added_mass_ssi"),
+            (63,.03,.96,"p063_print51_morison"),
+            (68,.03,.96,"p068_print56_load_combinations_constraints"),
+            (69,.03,.96,"p069_print57_optimization_variables"),
+            (71,.03,.96,"p071_print59_table3_2_design_variables"),
+            (72,.03,.96,"p072_print60_5p5mw_materials"),
+            (73,.03,.96,"p073_print61_site_and_optimization"),
+            (74,.03,.96,"p074_print62_lcoe_geometry"),
+            (75,.03,.96,"p075_print63_material_utilization"),
+            (76,.03,.96,"p076_print64_table3_9_utilization"),
+            (77,.03,.96,"p077_print65_shear_moment"),
+            (78,.03,.96,"p078_print66_frequency_displacement_weight"),
+            (79,.03,.96,"p079_print67_pile_efficiency_summary"),
+            (80,.03,.96,"p080_print68_ch3_summary"),
+          ]
+          rows=[]
+          for pno,y0f,y1f,label in jobs:
+            p=doc[pno-1]; r=p.rect
+            clip=fitz.Rect(r.x0+22,r.y0+r.height*y0f,r.x1-22,r.y0+r.height*y1f)
+            fn=f"{label}.png"
+            p.get_pixmap(matrix=fitz.Matrix(1.75,1.75),clip=clip,alpha=False).save(root/fn)
+            rows.append((pno,fn))
+          idx=Path("research/wind-tower/references/reading-notes/evidence/li-zeyu/OFFSHORE_INDEX.md")
+          with idx.open("w",encoding="utf-8") as f:
+            f.write("# 李泽宇博士论文第3章海上PCSH原文截图索引\n\n")
+            f.write("> 直接由仓库原PDF渲染。PDF页码为文件页码，文件名同时标注论文印刷页。\n\n")
+            for pno,fn in rows:
+              f.write(f"- PDF p.{pno}: ![](offshore/{fn})\n")
+          print("rendered",len(rows))
+          PY
+      - name: Commit evidence
+        run: |
+          git config user.name "openai-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/reading-notes/evidence/li-zeyu
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "docs: add original chapter 3 offshore PCSH screenshots"
+            git push
+          fi
