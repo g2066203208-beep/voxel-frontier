@@ -1,0 +1,93 @@
+name: T072 audit formal 36-case tower-base envelope
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t072-audit-36-base-envelope.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install reader
+        run: python -m pip install "git+https://github.com/OpenFAST/openfast_toolbox.git" pandas numpy
+      - name: Extract 100-700 s tower-base envelope
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/of && mkdir -p /tmp/of
+          for z in research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-*.zip; do
+            unzip -qo "$z" -d /tmp/of
+          done
+          python - <<'PY'
+          from pathlib import Path
+          import numpy as np, pandas as pd
+          from openfast_toolbox.io.fast_output_file import FASTOutputFile
+
+          rows=[]
+          outbs=sorted(Path('/tmp/of').glob('CASES/*/*.outb'))
+          if len(outbs)!=36:
+              raise SystemExit(f'expected 36 outb, found {len(outbs)}')
+          for f in outbs:
+              case=f.parent.name
+              d=FASTOutputFile(str(f)).toDataFrame()
+              tc=next(c for c in d if c.startswith('Time'))
+              w=d[(d[tc]>=100.0)&(d[tc]<=700.0)].copy()
+              def col(prefix):
+                  hits=[c for c in w if c.startswith(prefix)]
+                  if len(hits)!=1: raise KeyError((case,prefix,hits))
+                  return hits[0]
+              fx=w[col('TwrBsFxt')].to_numpy(float)
+              fy=w[col('TwrBsFyt')].to_numpy(float)
+              fz=w[col('TwrBsFzt')].to_numpy(float)
+              mx=w[col('TwrBsMxt')].to_numpy(float)
+              my=w[col('TwrBsMyt')].to_numpy(float)
+              mz=w[col('TwrBsMzt')].to_numpy(float)
+              V=np.hypot(fx,fy); M=np.hypot(mx,my); T=np.abs(mz); N=np.maximum(0,-fz)
+              iM=int(np.argmax(M)); iV=int(np.argmax(V)); iT=int(np.argmax(T))
+              # base mean radius CSEG01 = 3.985 m; SLS no-tension screening demand
+              P=np.maximum(0,2*M/3.985-N)
+              iP=int(np.argmax(P))
+              rows.append(dict(
+                  case=case,
+                  Mres_max_kNm=float(M[iM]),Mres_time_s=float(w[tc].iloc[iM]),Mres_Ncomp_kN=float(N[iM]),
+                  Vres_max_kN=float(V[iV]),Vres_time_s=float(w[tc].iloc[iV]),
+                  T_abs_max_kNm=float(T[iT]),T_time_s=float(w[tc].iloc[iT]),
+                  Ncomp_max_kN=float(N.max()),
+                  P_no_tension_base_screen_max_kN=float(P[iP]),P_screen_time_s=float(w[tc].iloc[iP]),
+              ))
+          x=pd.DataFrame(rows)
+          out=Path('research/wind-tower/experiments/T072')
+          out.mkdir(parents=True,exist_ok=True)
+          x.to_csv(out/'T072_FORMAL_36CASE_BASE_ENVELOPE.csv',index=False)
+          metrics=['Mres_max_kNm','Vres_max_kN','T_abs_max_kNm','Ncomp_max_kN','P_no_tension_base_screen_max_kN']
+          lines=['# T072 — Formal 158 m 36-case tower-base envelope','',
+                 'All values use archived formal 158 m OpenFAST OUTB files and the 100–700 s analysis window.','',
+                 '|metric|control case|value|','|---|---|---:|']
+          for m in metrics:
+              j=x[m].idxmax()
+              lines.append(f"|{m}|{x.loc[j,'case']}|{x.loc[j,m]:.6f}|")
+          (out/'T072_FORMAL_36CASE_BASE_ENVELOPE.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print('\n'.join(lines))
+          PY
+      - name: Commit compact envelope
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T072
+          git commit -m "T072 audit formal 158m 36-case base resultant envelope"
+          git pull --rebase origin main
+          git push
