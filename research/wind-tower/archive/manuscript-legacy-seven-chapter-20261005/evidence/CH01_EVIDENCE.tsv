@@ -1,0 +1,11 @@
+section	claim_or_method	evidence	adoption	boundary	status
+1.1	Large onshore hybrid towers face coupled stiffness/transport/dynamics constraints	REF002;REF005;REF020;REF021;REF119	Use as research background, not novelty	No universal 'super-tall' threshold	PASS
+1.2	Horizontal joints require multi-axis/prestress/contact-aware interpretation	REF015;REF016;REF017;REF026;REF115;REF117	Use to motivate global-to-local hierarchy	Do not predeclare joints controlling	PASS
+1.3.1	OpenFAST validation must cover identity-operating-load-fatigue layers	REF009;REF011;REF046	Adopt staged whole-machine validation	Do not transfer 2.8MW error levels	PASS
+1.3.2	ERA5 long-term background + time-varying shear, not 10-min turbulence	REF080;REF083;REF090;REF093;REF096	Adopt U10/U100 dynamic-alpha route and uncertainty language	Not Jiayu measurement calibration	PASS
+1.3.3	Whole-machine to detailed-FE requires verified interface	REF051;REF065;REF066;OpenFAST official	Make G5 a formal gate	Do not equate file import with coupling validity	PASS
+1.4.1	Geometric/material/connection nonlinearities must be separated	REF031;REF061;REF120;REF015-017	Use controlled comparison design	Do not copy published effect percentages	PASS
+1.4.2	load DEL is not material fatigue life	REF018;REF024;REF037	Split G7A/G7B	No 20-year claim without material/probability closure	PASS
+1.4.3	Optimization algorithms are mature tools; mechanism defines variables	REF020;REF021;REF065;REF071	Mechanism-driven optimization only	Do not claim algorithm novelty	PASS
+1.5	Research gap is continuity from stochastic whole-machine loads to local mechanisms and validated optimization	T035;T041 + direct literature above	Formal thesis problem framing	Must be revisited after G6-G9 results	CONDITIONAL
+1.6	Seven-chapter Route B	MASTER;T041;T042	Adopt as only formal route	Simpack excluded	PASS
