@@ -1,0 +1,43 @@
+name: Read representative OUTB tower-gage positions
+
+on:
+  push:
+    paths:
+      - '.github/workflows/read-openfast-outb-gage-positions.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install openfast_toolbox
+      - name: Read OUTB
+        shell: bash
+        run: |
+          set -e
+          rm -rf /tmp/ofcase && mkdir -p /tmp/ofcase
+          unzip -q research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip -d /tmp/ofcase
+          python - <<'PY'
+          from pathlib import Path
+          from openfast_toolbox.io.fast_output_file import FASTOutputFile
+          f=next(Path('/tmp/ofcase').rglob('*.outb'))
+          fo=FASTOutputFile(str(f))
+          df=fo.toDataFrame()
+          print('COLUMNS',len(df.columns))
+          for i in range(1,10):
+              cand=[c for c in df.columns if c.startswith(f'TwHt{i}TPz')]
+              print('GAGE',i,'TPz columns',cand)
+              for c in cand:
+                  print(c, 'first=', float(df[c].iloc[0]), 'min=',float(df[c].min()),'max=',float(df[c].max()))
+          # also list force/moment channel names
+          for i in range(1,10):
+              cols=[c for c in df.columns if c.startswith(f'TwHt{i}') and ('FL' in c or 'ML' in c)]
+              print('LOADCOLS',i,cols)
+          PY
