@@ -1,0 +1,66 @@
+name: T075 formal 158m GQ component combination
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t075-gq-component-combo.yml'
+      - 'research/wind-tower/experiments/T075/t075_decompose_gq.py'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  calc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T074/T074_158M_31SEG_GRAVITY_BASELINE.csv
+            research/wind-tower/experiments/T074/T074_GRAVITY_BASELINE_VALIDATION.json
+            research/wind-tower/experiments/T075
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pandas numpy
+      - name: Download formal T071 S06 31-segment histories
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/wind-tower/experiments/T075/artifacts/{A,B,C,D}
+          declare -A IDS=( [A]=11466755161 [B]=11465219800 [C]=11466308388 [D]=11465344577 )
+          for b in A B C D; do
+            curl -L --fail -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/${IDS[$b]}/zip" -o "/tmp/$b.zip"
+            unzip -q "/tmp/$b.zip" -d "research/wind-tower/experiments/T075/artifacts/$b"
+          done
+          find research/wind-tower/experiments/T075/artifacts -type f -print
+      - name: Verify gravity baseline then combine signed components
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T074/T074_GRAVITY_BASELINE_VALIDATION.json')
+          j=json.loads(p.read_text())
+          assert j['status']=='PASS' and j['rows']==31 and j['segments']==31, j
+          PY
+          python research/wind-tower/experiments/T075/t075_decompose_gq.py
+      - name: Remove transient histories
+        run: rm -rf research/wind-tower/experiments/T075/artifacts
+      - name: Commit T075 results
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse research/wind-tower/experiments/T075
+          git diff --cached --quiet && exit 0
+          git commit -m "T075: combine formal 158m signed G and Q section actions"
+          git pull --rebase origin main
+          git push
