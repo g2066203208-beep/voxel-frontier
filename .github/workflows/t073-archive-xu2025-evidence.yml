@@ -1,0 +1,85 @@
+name: T073 archive Xu2025 lineage evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t073-archive-xu2025-evidence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf
+            research/wind-tower/experiments/T073/source-evidence
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pymupdf
+      - name: Extract exact evidence pages and search diameter disclosure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import fitz, re, json, hashlib
+          from pathlib import Path
+          pdf=Path("research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf")
+          out=Path("research/wind-tower/experiments/T073/source-evidence/Xu2025_lineage")
+          out.mkdir(parents=True,exist_ok=True)
+          doc=fitz.open(pdf)
+          records=[]
+          alltext=[]
+          for i,p in enumerate(doc):
+              t=p.get_text("text")
+              alltext.append(t)
+              hits=[k for k in ["HRB335","1280 MPa","externally","unbonded","15.2 mm","reinforcement","diameter"] if k.lower() in t.lower()]
+              if hits:
+                  records.append({"pdf_page":i+1,"hits":hits})
+              if ("HRB335" in t) or ("1280 MPa" in t) or ("externally" in t.lower() and "unbonded" in t.lower()):
+                  pix=p.get_pixmap(matrix=fitz.Matrix(2.0,2.0),alpha=False)
+                  pix.save(out/f"Xu2025_pdfpage_{i+1:02d}.png")
+                  (out/f"Xu2025_pdfpage_{i+1:02d}.txt").write_text(t,encoding="utf-8")
+          full="\n\f\n".join(alltext)
+          # Search whether a numeric ordinary longitudinal reinforcing-bar diameter is explicitly published.
+          # Capture contexts around all occurrences of ordinary reinforcement/rebar/diameter.
+          contexts=[]
+          pats=[r"HRB335",r"longitudinal.{0,80}reinforcement",r"reinforcement.{0,100}diameter",r"diameter.{0,100}reinforcement",r"steel bars?"]
+          for pat in pats:
+              for m in re.finditer(pat,full,re.I|re.S):
+                  contexts.append(full[max(0,m.start()-500):min(len(full),m.end()+900)].replace("\n"," "))
+          (out/"Xu2025_keyword_contexts.txt").write_text("\n\n---\n\n".join(contexts),encoding="utf-8")
+          # Conservative machine conclusion: explicit PT diameter is present; no claim of ordinary-bar diameter unless
+          # a local regex finds a diameter within 100 chars of ordinary/longitudinal reinforcement.
+          ordinary_diam=[]
+          for m in re.finditer(r"(?:ordinary|longitudinal|reinforcing|reinforcement).{0,120}?(\d+(?:\.\d+)?)\s*mm",full,re.I|re.S):
+              ordinary_diam.append(m.group(0).replace("\n"," "))
+          meta={
+              "source":str(pdf),
+              "sha256":hashlib.sha256(pdf.read_bytes()).hexdigest(),
+              "pages":len(doc),
+              "keyword_pages":records,
+              "explicit_ordinary_rebar_diameter_candidates":ordinary_diam,
+              "machine_interpretation":"No ordinary longitudinal bar diameter identified" if not ordinary_diam else "Review candidates manually",
+              "known_direct_same_lineage":["HRB335","externally unbonded high-strength low-relaxation prestressing tendon","15.2 mm PT diameter","1280 MPa initial prestress"]
+          }
+          (out/"Xu2025_EVIDENCE_META.json").write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print(json.dumps(meta,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse research/wind-tower/experiments/T073/source-evidence/Xu2025_lineage
+          git diff --cached --quiet && exit 0
+          git commit -m "T073: archive Xu2025 same-lineage material and PT evidence"
+          git pull --rebase origin main
+          git push
