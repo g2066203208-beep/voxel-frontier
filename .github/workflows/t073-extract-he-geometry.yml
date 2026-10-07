@@ -1,0 +1,133 @@
+name: T073 extract He-aligned rebar and PT geometry
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t073-extract-he-geometry.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp
+          sparse-checkout-cone-mode: false
+      - name: Parse INP geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, math, re, json
+          from pathlib import Path
+          inp=Path("research/wind-tower/experiments/T053/inputs/BASE001_T053_HE_ALIGNED_S345_CAGE_RNA_R2.inp")
+          text=inp.read_text(encoding="utf-8",errors="ignore")
+          out=Path("research/wind-tower/experiments/T073")
+          out.mkdir(parents=True,exist_ok=True)
+
+          # split parts
+          part_pat=re.compile(r'(?im)^\*Part,\s*name=([^\r\n]+)\s*$')
+          matches=list(part_pat.finditer(text))
+          parts={}
+          for i,m in enumerate(matches):
+              name=m.group(1).strip()
+              end=matches[i+1].start() if i+1<len(matches) else len(text)
+              parts[name]=text[m.start():end]
+
+          def parse_nodes(block):
+              lines=block.splitlines()
+              nodes=[]
+              active=False
+              for ln in lines:
+                  s=ln.strip()
+                  if not s: continue
+                  if s.startswith("*"):
+                      active=s.lower().startswith("*node")
+                      continue
+                  if active:
+                      a=[x.strip() for x in s.split(",")]
+                      if len(a)>=4:
+                          try:nodes.append((int(a[0]),float(a[1]),float(a[2]),float(a[3])))
+                          except: pass
+              return nodes
+
+          def parse_section_area(block):
+              # Abaqus truss area is normally the first data value after *Solid Section or *Truss Section
+              lines=block.splitlines()
+              areas=[]
+              for i,ln in enumerate(lines):
+                  low=ln.strip().lower()
+                  if low.startswith("*solid section") or low.startswith("*truss section"):
+                      for j in range(i+1,min(i+4,len(lines))):
+                          s=lines[j].strip()
+                          if not s or s.startswith("**"): continue
+                          if s.startswith("*"): break
+                          try:
+                              val=float(s.split(",")[0].strip())
+                              areas.append(val)
+                          except: pass
+                          break
+              return areas
+
+          rows=[]
+          for name,block in parts.items():
+              if "RBLONG" not in name.upper(): continue
+              ns=parse_nodes(block)
+              if not ns: continue
+              radii=[math.hypot(x,z) for _,x,y,z in ns]
+              ys=[y for _,x,y,z in ns]
+              # cluster radii to 1e-5 m
+              clusters={}
+              for r in radii: clusters.setdefault(round(r,5),0); clusters[round(r,5)]+=1
+              areas=parse_section_area(block)
+              segm=re.search(r'(\d+)',name)
+              seg=int(segm.group(1)) if segm else None
+              for rr,cnt in sorted(clusters.items()):
+                  rows.append({
+                      "part":name,"segment":seg,"radius_m":rr,"node_count_at_radius":cnt,
+                      "y_min_m":min(ys),"y_max_m":max(ys),
+                      "part_node_count":len(ns),
+                      "section_area_candidates_m2":";".join(map(str,areas))
+                  })
+
+          with (out/"T073_T053_RBLONG_RADII.csv").open("w",newline="",encoding="utf-8") as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+
+          ptrows=[]
+          for name,block in parts.items():
+              if "PT_36x15p2".lower() not in name.lower(): continue
+              ns=parse_nodes(block)
+              areas=parse_section_area(block)
+              by_r={}
+              for nid,x,y,z in ns:
+                  r=math.hypot(x,z)
+                  by_r.setdefault(round(r,5),[]).append((nid,x,y,z))
+              for rr,vals in sorted(by_r.items()):
+                  ptrows.append({
+                      "part":name,"radius_m":rr,"node_count":len(vals),
+                      "y_min_m":min(v[2] for v in vals),"y_max_m":max(v[2] for v in vals),
+                      "section_area_candidates_m2":";".join(map(str,areas)),
+                      "angles_deg":";".join(f"{(math.degrees(math.atan2(v[3],v[1]))%360):.3f}" for v in vals[:72])
+                  })
+          if ptrows:
+              with (out/"T073_T053_PT_GEOMETRY.csv").open("w",newline="",encoding="utf-8") as f:
+                  w=csv.DictWriter(f,fieldnames=list(ptrows[0]));w.writeheader();w.writerows(ptrows)
+
+          meta={"inp":str(inp),"parts_total":len(parts),"rblong_parts":sum("RBLONG" in k.upper() for k in parts),"pt_parts":sum("PT_36X15P2" in k.upper() for k in parts)}
+          (out/"T073_T053_GEOMETRY_META.json").write_text(json.dumps(meta,indent=2),encoding="utf-8")
+          print(json.dumps(meta))
+          PY
+      - name: Commit outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T073
+          git diff --cached --quiet && exit 0
+          git commit -m "T073: extract He-aligned longitudinal rebar and PT geometry"
+          git push
