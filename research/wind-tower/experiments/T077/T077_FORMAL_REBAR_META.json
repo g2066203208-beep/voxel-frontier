@@ -1,0 +1,73 @@
+{
+  "status": "FORMAL-NBT10907-CH5-COMBO + GBT50010-E01",
+  "load_cases": [
+    "U09p343881_ETM_S06",
+    "U11p4_ETM_S04",
+    "U19p202140_ETM_S04",
+    "U19p202140_ETM_S06"
+  ],
+  "segments": 31,
+  "NB_T_10907_2021": {
+    "table": "5.2.5",
+    "design_situation": "persistent / normal-operation / basic combination",
+    "gamma_vertical_load": [
+      1.35,
+      1.0
+    ],
+    "gamma_wind_turbine_horizontal_bending_torsion": 1.4,
+    "gamma_wind": 1.4,
+    "gamma_prestress": [
+      1.2,
+      1.0
+    ],
+    "vertical_treatment": "entire vertical component factored as vertical/gravity load per explanation 5.2.4"
+  },
+  "ordinary_rebar": {
+    "branch": "HRB500 code redesign; He counts locked",
+    "fy_MPa": 435.0,
+    "fy_compression_MPa": 410.0,
+    "diameters_scanned_mm": [
+      25,
+      28,
+      32,
+      36,
+      40,
+      50
+    ]
+  },
+  "prestress": {
+    "positions": 36,
+    "radius_mm": 1750.0,
+    "area_single_mm2": 140.0,
+    "sigma_initial_MPa": 1280.0,
+    "eta": [
+      0.7,
+      0.8,
+      0.85,
+      0.9,
+      1.0
+    ],
+    "BF": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "gammaP_method": "capacity curve contains baseline P0; only (gammaP-1)*P0 added to demand, concentric symmetric PT ring"
+  },
+  "source_model_PT_BF1_schedule_file": "T077_FORMAL_31SEG_REBAR_BF1.csv",
+  "BF8_sensitivity_schedule_file": "T077_FORMAL_31SEG_REBAR_BF8.csv",
+  "whole_tower_BF_summary_file": "T077_FORMAL_MIN_DIAMETER_BY_PT_BF.csv"
+}
