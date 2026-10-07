@@ -54,8 +54,15 @@ jobs:
           Expand-Archive "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip" -DestinationPath static
           Expand-Archive "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" -DestinationPath supp
           New-Item -ItemType Directory -Force -Path runroot | Out-Null
-          Copy-Item -Recurse "static/CASES/U09p343881_ETM_S01" "runroot/GRAVITY_BASELINE" -Force
-          Copy-Item "supp/CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN" "runroot/GRAVITY_BASELINE/Control/DTU_10MW_RWT_DISCON.IN" -Force
+          # Preserve the original archive directory topology. ElastoDyn blade files
+          # are referenced as ../Rotor/*, so copying a case alone breaks the model.
+          Copy-Item -Recurse "static/CASES/*" "runroot/" -Force
+          $base="runroot/U09p343881_ETM_S01"
+          $case="runroot/GRAVITY_BASELINE"
+          Copy-Item -Recurse $base $case -Force
+          if (Test-Path "supp/CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN") {
+            Copy-Item "supp/CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN" "$case/Control/DTU_10MW_RWT_DISCON.IN" -Force
+          }
           @'
           from pathlib import Path
           import os,re,json,hashlib
