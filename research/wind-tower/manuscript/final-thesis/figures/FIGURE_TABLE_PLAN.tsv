@@ -1,39 +1,31 @@
 id	chapter	title_or_content	data_source	status	final_rule
-FIG1-1	Ch1	论文总体技术路线图	Route B/T041	READY-DESIGN	不得出现Simpack
-TAB1-1	Ch1	直接相关研究对比与本文研究缺口	literature_master + core fulltexts	NEED-ASSEMBLE	只列直接相关研究
-FIG2-1	Ch2	DTU10MW+158m混塔研究对象与来源关系	DTU/He2024/BASE001	NEED-BASE001	明确组合研究对象非官方单一模型
-TAB2-1	Ch2	BASE001几何/材料/来源总表	baseline_identity+parameter_registry	NEED-BASE001	每值有SOURCE
-FIG2-2	Ch2	Abaqus精细模型及关键构件	canonical INP	NEED-BASE001	只用正式模型
-FIG2-3	Ch2	C65/C70单轴材料V&V	G1 material runs	NEED-RUN	目标曲线vsAbaqus输出
-FIG2-4	Ch2	RNA质量-质心-惯量空间等效	G1 RNA audit	NEED-RUN	统一ref point
-FIG2-5	Ch2	模态与有效质量	G1 modal run	NEED-RUN	FA/SS方向明确
-FIG2-6	Ch2	网格收敛	G1 mesh family	NEED-RUN	QoI多指标
-FIG2-7	Ch2	自由衰减阻尼验证	G1 decay runs	NEED-RUN	目标阻尼来源先闭合
-FIG3-1	Ch3	2005-2025 ERA5年平均风速	ERA5 archive	HISTORICAL-READY	G2脚本hash复核
-FIG3-2	Ch3	月平均风速气候态	ERA5 archive	HISTORICAL-READY	G2复核
-FIG3-3	Ch3	全年/高风风向玫瑰图	ERA5 archive	HISTORICAL-READY	G2复核
-FIG3-4	Ch3	alpha(t)分布与Hub-height外推	ERA5 archive	HISTORICAL-READY	动态alpha
-FIG3-5	Ch3	TurbSim风场与谱/湍流V&V	G2 wind files	NEED-RUN	不能只截图
-FIG3-6	Ch3	OpenFAST运行点/控制器验证	G3	NEED-RUN	RotorSpeed Pitch Power
-FIG3-7	Ch3	36case多QoI seed离散	G4	NEED-RUN	final baseline
-FIG3-8	Ch3	load-DEL矩阵	G7A/G4	NEED-RUN	DEL不等于寿命
-TAB3-1	Ch3	2-4控制工况及控制理由	G4	NEED-RUN	每case不同物理目的
-FIG4-1	Ch4	OpenFAST→Abaqus自由体/坐标/参考点图	G5 mapping definition	NEED-ASSEMBLE	明确重力惯性分账
-FIG4-2	Ch4	六分量单位载荷与ΣF/ΣM守恒	G5	NEED-RUN	必须先于生产响应
-FIG4-3	Ch4	跨模型塔顶/塔底QoI对比	G5	NEED-RUN	不调参强制吻合
-FIG4-4	Ch4	控制case塔顶时程与PSD	G6	NEED-RUN	统一窗口
-FIG4-5	Ch4	沿塔高N/V/M/T包络	G6	NEED-RUN	保留各分量
-FIG4-6	Ch4	控制区域/材料响应	G6	NEED-RUN	不超出模型能力
-TAB4-1	Ch4	工况-QoI-控制高度-材料/构件-机制矩阵	G6	NEED-RUN	第四章核心表
-FIG5-1	Ch5	linear vs P-Delta vs material nonlinear	G6	NEED-RUN	同一输入受控对照
-FIG5-2	Ch5	条件局部模型/接缝或转换区响应	G6	CONDITIONAL	结果触发
-FIG5-3	Ch5	局部应力rainflow/循环矩阵	G7B conditional	CONDITIONAL	不得从load DEL替代
-FIG5-4	Ch5	参数效应vs seed噪声	G8	NEED-RUN	配对seed
-FIG5-5	Ch5	敏感性排序/交互	G8	NEED-RUN	方法按最终变量数选择
-TAB5-1	Ch5	设计变量物理意义/范围/来源	G8	NEED-RUN	无来源变量不得进入优化
-FIG6-1	Ch6	DOE/代理精度	G9	CONDITIONAL	仅需要代理时
-FIG6-2	Ch6	Pareto前沿	G9	NEED-RUN	真实约束
-TAB6-1	Ch6	代表优化方案参数	G9	NEED-RUN	真实FE重建
-FIG6-3	Ch6	优化前后高保真响应	G9	NEED-RUN	同seed对比
-FIG6-4	Ch6	独立风况/seed稳健性	G9	NEED-RUN	训练外验证
-TAB7-1	Ch7	结论-证据-创新对应表	G10	NEED-RUN	只纳入PASS claim
+FIG1-1	Ch1	混塔研究脉络与本文三个科学问题	literature_master + source evidence	READY-DESIGN	重绘并引用，不直接用文献原图冒充本文图
+FIG1-2	Ch1	五章技术路线	00_WORKSPACE_MASTER	READY-DESIGN	只保留当前五章主线
+TAB1-1	Ch1	直接相关研究对象/方法/不足对比	01_SOURCE_EVIDENCE_MATRIX	NEED-ASSEMBLE	只列直接相关研究
+FIG2-1	Ch2	DTU10MW+158m混塔对象与来源层级	REF001/REF008/T057	NEED-ASSEMBLE	明确组合研究对象非官方统一模型
+FIG2-2	Ch2	31段混凝土+4段钢塔及钢筋/PT布置	T057 + source pages	NEED-RENDER	直接参数与重构参数分级标注
+FIG2-3	Ch2	30水平接缝contact与钢混转换	T057	NEED-RENDER	不把T053 spring解释为当前joint
+FIG2-4	Ch2	RNA-R2质量/CG/惯量空间等效	T057 + OpenFAST identity	NEED-RUN	统一reference point
+FIG2-5	Ch2	Gravity+PT平衡后基准应力/接触状态	G1	NEED-RUN	名义输入与平衡结果分开
+FIG2-6	Ch2	前若干阶振型/有效质量	G1	NEED-RUN	方向与配对明确
+FIG2-7	Ch2	Flex-X/Z与网格收敛	G1	NEED-RUN	global/local QoI分层
+TAB2-1	Ch2	参数来源等级与T057 V&V矩阵	02_MODEL_SOURCE_GATE_MATRIX + G1	PARTIAL	每个关键值有来源或HOLD
+FIG3-1	Ch3	ERA5研究点与2005-2025长期风统计	ERA5 archive	PARTIAL	标reanalysis not measurement
+FIG3-2	Ch3	dynamic alpha与HubHt风速概率	ERA5 + REF093	PARTIAL	经验概率优先
+FIG3-3	Ch3	TurbSim NTM/ETM代表时程与谱/相干性	G2	NEED-RUN	51x51需V&V
+FIG3-4	Ch3	ROSCO运行区域与RotorSpeed/Pitch/Power	G3	NEED-RUN	near-rated重点
+FIG3-5	Ch3	6-seed多QoI离散	G3	NEED-RUN	均值+离散，不用单seed代表
+FIG3-6	Ch3	PSD与1P/3P/塔频关系	G3	NEED-RUN	无证据不写共振
+FIG3-7	Ch3	TwrBsMxt/TwrBsMyt load-DEL与source audit	G4/T062	HOLD	先关闭S03/S04冲突
+TAB3-1	Ch3	多QoI控制工况并集	G4	NEED-RUN	每case说明用途
+FIG4-1	Ch4	长期疲劳技术路线	REF018/REF007 +本文方法	READY-DESIGN	方法图重绘
+FIG4-2	Ch4	DLC1.2 wind bins与场址概率	G2/G7	NEED-RUN	ETM不混入正常运行长期概率
+FIG4-3	Ch4	seed/sample-size收敛	G7	NEED-RUN	材料damage而非只看load DEL
+FIG4-4	Ch4	fatigue候选区域与local stress时程	G6	NEED-RUN	先screening再定控制区
+FIG4-5	Ch4	混凝土range-mean rainflow matrix	G7	NEED-RUN	保留mean/reference stress
+FIG4-6	Ch4	wind-bin concrete damage contribution	G7	NEED-RUN	概率加权
+FIG4-7	Ch4	36 PT位置应力/damage周向分布	G7 conditional	CONDITIONAL	PT控制或重要次控制才展开
+FIG4-8	Ch4	钢塔nominal/hot-spot fatigue	G7 conditional	CONDITIONAL	需网格/细节类别闭合
+FIG4-9	Ch4	load-DEL control vs material-damage control	G4+G7	NEED-RUN	结果触发，不预设差异
+TAB4-1	Ch4	材料/位置/wind-bin/annual damage总表	G7	NEED-RUN	绝对寿命仅在证据闭合后
+TAB5-1	Ch5	主要结论-证据-边界对应表	G8	NEED-RUN	只收录PASS结果
