@@ -93,7 +93,8 @@ jobs:
               for kw in kws:
                   for pi, page in enumerate(doc):
                       if page.search_for(kw):
-                          fname = f"p{pi+1:03d}_FULL_anchor_{re.sub(r'[^0-9A-Za-z\u4e00-\u9fff_-]+','_',kw)}.jpg"
+                          safe_anchor = re.sub(r"[^0-9A-Za-z\\u4e00-\\u9fff_-]+", "_", kw).strip("_")
+                          fname = f"p{pi+1:03d}_FULL_anchor_{safe_anchor}.jpg"
                           pix = page.get_pixmap(matrix=fitz.Matrix(1.15,1.15), alpha=False)
                           pix.save(gdir / fname, jpg_quality=72)
                           rows.append((group, pi+1, kw+"（整页定位）", f"{group}/{fname}"))
