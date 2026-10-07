@@ -1,0 +1,83 @@
+name: Audit T057 raw inp physics
+
+on:
+  push:
+    paths:
+      - '.github/workflows/audit-t057-raw-inp-physics.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Inspect raw inp
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, hashlib
+          p=Path("research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp")
+          b=p.read_bytes()
+          txt=b.decode("utf-8")
+          lines=txt.splitlines()
+          print("FILE_BYTES",len(b))
+          print("SHA256",hashlib.sha256(b).hexdigest())
+          print("LINES",len(lines))
+
+          def show_hits(title, patterns, ctx=4, limit=80):
+              print("\n"+"#"*16+" "+title+" "+"#"*16)
+              hits=[]
+              for i,l in enumerate(lines):
+                  if any(re.search(pt,l,re.I) for pt in patterns):
+                      hits.append(i)
+              print("HITS",len(hits))
+              used=set()
+              for k,i in enumerate(hits[:limit]):
+                  a=max(0,i-ctx); z=min(len(lines),i+ctx+1)
+                  if any(j in used for j in range(a,z)): continue
+                  print(f"--- lines {a+1}-{z} ---")
+                  for j in range(a,z):
+                      used.add(j)
+                      print(f"{j+1:07d}: {lines[j]}")
+          
+          show_hits("CDP_AND_CONCRETE", [
+            r"\*Concrete Damaged Plasticity",
+            r"\*Concrete Tension Stiffening",
+            r"\*Concrete Compression Hardening",
+            r"\*Concrete Tension Damage",
+            r"\*Concrete Compression Damage",
+            r"fracture",
+            r"TYPE\s*=\s*GFI"
+          ],ctx=10,limit=120)
+
+          show_hits("PT_ALL_REFERENCES",[
+            r"PT_36x15p2",r"SET_PT",r"SEC_PT",r"STRAND_1860"
+          ],ctx=5,limit=160)
+
+          show_hits("EMBEDDED",[
+            r"\*Embedded Element",r"embedded"
+          ],ctx=8,limit=120)
+
+          show_hits("EQUATION_COUPLING_TIE",[
+            r"\*Equation",r"\*Coupling",r"\*Kinematic",r"\*Tie",r"SET_FLANGE_RP",r"TIE_C31_S01"
+          ],ctx=5,limit=240)
+
+          show_hits("PRESTRESS_INITIAL_THERMAL",[
+            r"\*Initial Conditions",r"1\.28e\+09",r"1280",r"\*Temperature",r"Pre-tension",r"Prestress",r"prestress"
+          ],ctx=10,limit=160)
+
+          show_hits("BOUNDARY",[
+            r"\*Boundary",r"PT_36x15p2-1\."
+          ],ctx=6,limit=220)
+
+          show_hits("CONTACT",[
+            r"HJOINT_HARD_MU05_T057",r"\*Surface Interaction",r"\*Surface Behavior",r"\*Friction",r"\*Contact",r"CSEG_31-1\.SURF_TOP",r"CSEG_01-1"
+          ],ctx=6,limit=180)
+          PY
