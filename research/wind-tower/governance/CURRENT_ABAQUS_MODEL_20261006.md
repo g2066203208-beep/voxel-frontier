@@ -1,12 +1,12 @@
 # CURRENT ABAQUS MODEL — 2026-10-06
 
-状态：**T057 EVIDENCE-RECONCILED SUCCESSOR GENERATED / STATIC AUDIT PASS / NATIVE ABAQUS SOLVER PENDING**
+状态：**T057 = CURRENT PHYSICS CANDIDATE；T070 = T057+G1 OBSERVABILITY EXECUTION CHILD；NATIVE ABAQUS SOLVER PENDING**
 
 这份文件只回答“论文当前真正应送给Abaqus继续验收的模型是什么”，不描述网页展示层。
 
 ## 1. 当前模型身份已经更新
 
-### 当前证据协调后继候选：T057
+### 当前物理候选：T057
 
 `research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp`
 
@@ -21,6 +21,26 @@ T057的身份是：
 
 不是：
 **FINAL VERIFIED MODEL**
+
+### 当前原生G0/G1执行候选：T070
+
+`research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp`
+
+SHA-256：
+`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9`
+
+T070只增加：
+- 接缝CPRESS/COPEN/CSHEAR/CSLIP；
+- PT专用S/E；
+- 塔底/RP专用节点输出；
+- C31顶、S01底、塔底的SOF/SOM Integrated Output。
+
+`T070_ROUNDTRIP_AUDIT.json` 已证明剥离这些诊断块后可逐字节恢复T057父SHA。因此：
+
+**T057定义物理；T070负责当前原生求解与G1证据采集。**
+
+T070仍然是：
+**NATIVE-SOLVER-PENDING / NOT FINAL VERIFIED**
 
 ### 历史/来源对齐基线：T053
 
@@ -170,7 +190,7 @@ T057生成器没有修改这套转换拓扑。
 因此当前身份：
 **PASS-STATIC-TOPOLOGY / DATACHECK-ACCEPTED-ON-T053 / PENDING-REACTION-TRANSFER-ON-T057**
 
-仍必须用T057 Gravity/PT平衡输出验证C31-S01、flange RP、PT锚固与塔底六分量传力。
+仍必须用T070 Gravity/PT平衡输出验证C31-S01、flange RP、PT锚固与塔底六分量传力。
 
 ## 6. T053已经做过的真实Abaqus 2025 Data Check
 
@@ -195,7 +215,7 @@ T055原生Data Check结果：
 
 ## 7. T057尚未做的关键事情
 
-### 7.1 T057 native Data Check
+### 7.1 T070 native Data Check
 还没有真实Abaqus/Standard原生读取结果。
 
 GitHub Actions生成成功只证明文本转换和静态计数正确，不代表：
@@ -206,7 +226,7 @@ GitHub Actions生成成功只证明文本转换和静态计数正确，不代表
 - 30个接缝能产生正确CPRESS/COPEN/CSHEAR。
 
 ### 7.2 钢塔网格必须优先修
-T057继承T053钢塔网格，因此T055的1512个>100:1高长宽比单元是已知风险。
+T057/T070继承的四段钢塔实际使用 **C3D8I**。T059独立几何审计已复现T055的1512个>100:1长宽比警告，因此这是系统性网格比例问题，不是零散坏单元。
 
 在局部钢塔应力/疲劳前必须：
 - 定位WarnElemAspectRatio；
@@ -250,7 +270,7 @@ T057继承T053钢塔网格，因此T055的1512个>100:1高长宽比单元是已�
 **T057主要来源选择已经闭合到可发表的证据分级，但模型仍处于原生求解验收前。**
 
 真正剩余硬阻塞只有：
-1. T057 native Data Check；
+1. T070 native Data Check；
 2. 钢塔高长宽比网格问题与网格收敛；
 3. Gravity/PT/contact平衡；
 4. 独立质量/CG；
@@ -263,3 +283,17 @@ T057继承T053钢塔网格，因此T055的1512个>100:1高长宽比单元是已�
 为当前主账。
 
 在上述原生求解门禁完成前，禁止在论文或汇报中写“最终Abaqus模型已完全验证”。
+
+
+## 9. 2026-10-07新增原始INP事实
+
+直接解析T057原始INP后，当前模型事实进一步明确：
+
+- C65/C70 CDP拉伸软化为默认strain-based Tension Stiffening，不是GFI；
+- PT为36条T3D2、72节点、仅两端节点、无中间导向、未Embedded；
+- PT用Initial Stress直接输入1280 MPa，而不是降温法；
+- STRAND_1860当前只有线弹性E=195 GPa，没有实现fy=1320 MPa后的Plastic；
+- 四段钢塔真实单元类型为 **C3D8I**；
+- T059几何审计对SSEG_01–04得到 >100 edge ratio 数量 216/432/432/432，总计1512，与T055原生Abaqus警告逐段完全一致。
+
+所以当前第二章的“网格问题”已经从模糊warning升级为可重复的几何证据。钢塔局部疲劳应力在整改/收敛前继续保持HOLD。
