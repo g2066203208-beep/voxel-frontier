@@ -1,0 +1,50 @@
+name: Build T070 G1 observability
+
+on:
+  push:
+    paths:
+      - 'research/wind-tower/experiments/T057/build_t070_g1_observability.py'
+      - '.github/workflows/build-t070-g1-observability.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp
+            research/wind-tower/experiments/T057/build_t070_g1_observability.py
+            research/wind-tower/experiments/T070
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate T070
+        run: python research/wind-tower/experiments/T057/build_t070_g1_observability.py
+      - name: Static diff audit
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import difflib
+          a=Path("research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp").read_text(encoding="utf-8").splitlines()
+          b=Path("research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp").read_text(encoding="utf-8").splitlines()
+          d=list(difflib.unified_diff(a,b,n=2))
+          # Only added header/diagnostic sections/output lines should appear; print tail for audit.
+          print("DIFF_LINES",len(d))
+          print("\n".join(d[-180:]))
+          PY
+      - name: Commit T070
+        run: |
+          git config user.name "openai-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T070
+          if git diff --cached --quiet; then
+            echo "No T070 changes"
+          else
+            git commit -m "model: generate T070 with G1 observability only"
+            git push
+          fi
