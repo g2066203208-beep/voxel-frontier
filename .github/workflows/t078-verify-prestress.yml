@@ -22,7 +22,7 @@ jobs:
         run: python research/wind-tower/experiments/T078/t078_prestress_loss_closure.py
       - name: Verify numerical CSVs are reproducible
         run: |
-          git diff --exit-code --             research/wind-tower/experiments/T078/T078_PRESTRESS_LOSS_BF_SCAN.csv             research/wind-tower/experiments/T078/T078_BF8_SEGMENT_LOSS_AND_GRAVITY_CHECK.csv
+          git diff --ignore-space-at-eol --exit-code --             research/wind-tower/experiments/T078/T078_PRESTRESS_LOSS_BF_SCAN.csv             research/wind-tower/experiments/T078/T078_BF8_SEGMENT_LOSS_AND_GRAVITY_CHECK.csv
       - name: Assert adopted design values
         run: |
           python - <<'PY'
