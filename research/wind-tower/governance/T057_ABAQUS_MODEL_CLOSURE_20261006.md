@@ -173,7 +173,7 @@ Abaqus质量和CG必须与独立质量账逐项对照：
 后续所有状态更新以本T057总账为主；T053总账保留为历史基线与证据谱系记录。
 
 
-## 8. 2026-10-07原始INP物理审计与T058后继
+## 8. 2026-10-07原始INP物理审计与T070后继（编号纠正）
 
 已对T057原始INP本体（16,585,607 bytes / 482,824 lines / SHA与本总账一致）完成静态物理审计：
 
@@ -191,13 +191,13 @@ Abaqus质量和CG必须与独立质量账逐项对照：
 
 因此保留T057物理身份不变，建立后继：
 
-`T058 / BASE001_T058_T057_PLUS_G1_OBSERVABILITY.inp`
+`T070 / BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp`
 
-T058 SHA-256：
+T070 SHA-256：
 
-`0a0bb3b5f8e8e011d73389d3437182fb442e9fb710ee2c0e0043ee5e2958c1bb`
+`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9`
 
-T058只新增G1输出，不改变T057物理参数。后续native Data Check / Gravity优先使用T058，以便同一次原生求解获得：
+T070只新增G1输出，不改变T057物理参数。后续native Data Check / Gravity优先使用T070，以便同一次原生求解获得：
 
 - 接缝CPRESS/COPEN/CSHEAR/CSLIP；
 - 36束PT S11/轴力；
@@ -208,10 +208,13 @@ T058只新增G1输出，不改变T057物理参数。后续native Data Check / Gr
 
 详细总账：
 
-`research/wind-tower/governance/T058_G1_OBSERVABILITY_CANDIDATE_20261007.md`
+`research/wind-tower/governance/T070_G1_OBSERVABILITY_CANDIDATE_20261007.md`
 
 状态仍为：
 
 **NATIVE-SOLVER-PENDING**
 
-不得因T058静态生成成功而将G0/G1标记为PASS。
+不得因T070静态生成成功而将G0/G1标记为PASS。
+
+
+> 编号纠正：仓库原有T058为2026-10-06完整风机CAE钢筋笼修复候选。本G1可观测性后继已迁移为T070；原T058身份保持不变。
