@@ -1,0 +1,34 @@
+name: T071 audit selected formal controllers
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t071-audit-selected-controllers.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-006.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-007.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-011.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-016.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-025.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-029.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-030.zip
+          sparse-checkout-cone-mode: false
+      - name: Hash DISCONs
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/controllers && mkdir -p /tmp/controllers
+          for z in research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-*.zip; do
+            unzip -q "$z" -d /tmp/controllers
+          done
+          find /tmp/controllers/CASES -name 'DTU_10MW_RWT_DISCON.IN' -print0 |
+            sort -z |
+            xargs -0 sha256sum
