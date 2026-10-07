@@ -17,7 +17,7 @@ import pandas as pd
 
 
 ROOT = Path(r"D:/Codex-research-native/openfast-36-r2-data-20261006")
-OUT = Path(r"D:/Codex-research-native/fatigue-literature-20261006/source-git/research/wind-tower/experiments/T061")
+OUT = ROOT
 OUT.mkdir(parents=True, exist_ok=True)
 
 LOADS = ROOT / "U09_158m_31段内力插值_筛选版.csv"
@@ -101,10 +101,13 @@ def row_calc(load, geom, hoop):
     T_Nmm = T_kNm * 1.0e6
     N_N = N_kN * 1000.0
 
-    # Effective depth: center-to-center distance between the two longitudinal bar
-    # rows, using c_nom + hoop diameter + half longitudinal-bar diameter at each face.
-    # This is explicit geometry, not a hidden standard value.
-    h0_mm = D_mm - 2.0 * (COVER_MM + HOOP_D_MM + LONG_D_EQ_MM / 2.0)
+    # Effective depth for a wall strip is taken across the wall thickness, not across
+    # the tower diameter. It is the candidate radial distance from the outer concrete
+    # face to the longitudinal-bar centre: t-c_nom-d_hoop/2-d_long/2. This is an
+    # engineering conversion because the standard does not prescribe the hollow-ring
+    # strip transformation; the earlier D-2(...) expression was dimensionally wrong
+    # for a thin tower wall and is intentionally removed.
+    h0_mm = t_mm - COVER_MM - HOOP_D_MM / 2.0 - LONG_D_EQ_MM / 2.0
     h0_mm = max(h0_mm, 1.0)
 
     # For a circular hollow section, NB/T gives b as a calculation width but no direct
@@ -147,10 +150,10 @@ def row_calc(load, geom, hoop):
     Wt_mm3 = 2.0 * math.pi / 3.0 * (Ro_mm**3 - Ri_mm**3)
     beta_raw = 1.5 / (1.0 + 0.2 * (lam + 1.0) * V_N * Wt_mm3 / (T_Nmm * b_wall_mm * h0_mm)) if T_Nmm > 0 else 1.0
     beta = min(1.0, max(0.5, beta_raw))
-    vc632_wall = (1.0 - beta) * 1.75 / (lam + 1.0) * ft * b_wall_mm * h0_mm
-    vnp632 = (1.0 - beta) * 0.05 * Np0_main
+    vc632_wall = (1.5 - beta) * 1.75 / (lam + 1.0) * ft * b_wall_mm * h0_mm
+    vnp632 = (1.5 - beta) * 0.05 * Np0_main
     vrd632_wall = vc632_wall + vs631 + vnp632
-    vc632_eq = (1.0 - beta) * 1.75 / (lam + 1.0) * ft * b_equiv_mm * h0_mm
+    vc632_eq = (1.5 - beta) * 1.75 / (lam + 1.0) * ft * b_equiv_mm * h0_mm
     vrd632_eq = vc632_eq + vs631 + vnp632
 
     # 6.3.2-3 and -4. Here longitudinal and hoop steel are both HRB400 by design
@@ -166,7 +169,7 @@ def row_calc(load, geom, hoop):
     # Optional one-strand-per-PT-position sensitivity only; it does not change the
     # main check and is labelled candidate, because the real strand grouping/losses are open.
     np0_nominal = NP0_NOMINAL_ONE_STRAND_N
-    vn632_nominal = (1.0 - beta) * 0.05 * np0_nominal
+    vn632_nominal = (1.5 - beta) * 0.05 * np0_nominal
     tc_nominal = beta * (0.35 * ft + 0.05 * np0_nominal / A_mm2) * Wt_mm3
     vrd632_nominal = vc632_wall + vs631 + vn632_nominal
     trd_nominal = tc_nominal + ts
@@ -263,7 +266,7 @@ def main():
 
 对第 i 段，`V=sqrt(Fxt²+Fyt²)`，`M=sqrt(Mxt²+Myt²)`，`T=abs(Mzt)`，`N=max(0,-Fzt)`；OpenFAST 的 `Fzt` 已含重力，本计算未再次叠加重量。单位换成 N、N·mm、mm。
 
-有效高度采用显式几何假设 `h0=D−2(c_nom+d_h+d_l/2)`，其中 `c_nom=30 mm`、环筋 `d_h=14 mm`、等面积纵筋 `d_l=25 mm`。第6.3.1主算取 `b=t`（实体壁厚）；另给出 `b=2A0/h0` 的等效宽度敏感性。NB/T 10907页36没有给本项目圆环薄壁截面的专用 b 换算，因此两者都不能冒称标准直接给定。
+有效高度采用墙厚方向的显式工程假设 `h0=t−c_nom−d_h/2−d_l/2`，其中 `c_nom=30 mm`、环筋 `d_h=14 mm`、等面积纵筋 `d_l=25 mm`；不能用塔架外径 D 代替薄壁剪切条带的有效高度。第6.3.1主算取 `b=t`（实体壁厚）；另给出 `b=2A0/h0` 的等效宽度敏感性。NB/T 10907页36没有给本项目圆环薄壁截面的专用 b 换算，因此两者都不能冒称标准直接给定。
 
 环筋候选为内外两层 φ14@80。每个闭合圆环按剪力方向计两肢，故 `Asv=2×2×Aφ14`；扭转项取两层单肢合计 `Ast1=2×Aφ14`。这是构造几何转换，何泽瑜论文未公开这组环筋数值。
 
@@ -273,7 +276,7 @@ def main():
 
 第6.3.1：`V ≤ 1.75/(λ+1) f_t b h0 + f_yv Asv/s h0 + 0.07N`，`λ=M/(Vh0)`。
 
-第6.3.2：`βt=1.5/[1+0.2(λ+1) V Wt/(T b h0)]`，按标准限制 `0.5≤βt≤1.0`；`V ≤ (1−βt)[1.75/(λ+1) f_t b h0 + 0.05Np0] + f_yv Asv/s h0`；`T ≤ βt(0.35f_t+0.05Np0/A0)Wt + 1.2√ξ f_yv Ast1 Acor/s`。
+第6.3.2：`βt=1.5/[1+0.2(λ+1) V Wt/(T b h0)]`，按标准限制 `0.5≤βt≤1.0`；`V ≤ (1.5−βt)[1.75/(λ+1) f_t b h0 + 0.05Np0] + f_yv Asv/s h0`；`T ≤ βt(0.35f_t+0.05Np0/A0)Wt + 1.2√ξ f_yv Ast1 Acor/s`。
 
 标准图37的式(6.3.2-4)字面印为 `ξ=f_v Ast1 s/(f_yv Ast1 ucor)`，但变量说明把ξ定义为受扭纵向普通钢筋与箍筋的配筋强度比。脚本保留字面Ast1/Ast1读数，并同时提供 `ξ=f_y Asl s/(f_yv Ast1 ucor)` 敏感性，未把符号疑点悄悄改写为标准原文。扭转钢筋项不乘βt，βt只乘第一项。
 
