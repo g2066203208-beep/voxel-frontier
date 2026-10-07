@@ -1,0 +1,111 @@
+{
+  "file_bytes": 16585607,
+  "sha256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "lines": 482824,
+  "materials": {
+    "C65": {
+      "cdp": true,
+      "tension_stiffening_keyword": "*Concrete Tension Stiffening",
+      "tension_mode_gfi": false,
+      "tension_damage": true,
+      "compression_damage": true,
+      "fracture_literal": false
+    },
+    "C70": {
+      "cdp": true,
+      "tension_stiffening_keyword": "*Concrete Tension Stiffening",
+      "tension_mode_gfi": false,
+      "tension_damage": true,
+      "compression_damage": true,
+      "fracture_literal": false
+    }
+  },
+  "pt": {
+    "element_type": "T3D2",
+    "node_count": 72,
+    "element_count": 36,
+    "y_min": 0.0,
+    "y_max": 112.0,
+    "radius_min": 1.749999940192491,
+    "radius_max": 1.7500000196478973,
+    "element_length_min": 112.0,
+    "element_length_max": 112.0,
+    "has_intermediate_nodes": false,
+    "embedded_in_concrete": false,
+    "top_equation_count": 108,
+    "top_positions_equation_sets": 36,
+    "bottom_bc_lines": [
+      "PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 1, 1",
+      "PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 2, 2",
+      "PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 3, 3"
+    ]
+  },
+  "prestress": {
+    "initial_stress_line": 482777,
+    "initial_stress_block": [
+      "*Initial Conditions, type=STRESS",
+      "PT_36x15p2-1.SET_PT_ALL_ELEMS, 1.28e+09, ",
+      "** ----------------------------------------------------------------",
+      "** "
+    ],
+    "temperature_keyword_count": 0,
+    "pretension_keyword_count": 0,
+    "initial_1280_count": 1
+  },
+  "steps": [
+    {
+      "line": 482783,
+      "header": "*Step,name=Gravity,nlgeom=YES,inc=500",
+      "name": "Gravity",
+      "procedure": [
+        "*Static"
+      ]
+    },
+    {
+      "line": 482798,
+      "header": "*Step,name=Modal_From_Gravity,perturbation",
+      "name": "Modal_From_Gravity",
+      "procedure": [
+        "*Frequency,eigensolver=Lanczos,normalization=MASS"
+      ]
+    },
+    {
+      "line": 482805,
+      "header": "*Step,name=Flex_X,perturbation",
+      "name": "Flex_X",
+      "procedure": [
+        "*Static"
+      ]
+    },
+    {
+      "line": 482815,
+      "header": "*Step,name=Flex_Z,perturbation",
+      "name": "Flex_Z",
+      "procedure": [
+        "*Static"
+      ]
+    }
+  ],
+  "gravity_lines": [
+    [
+      482787,
+      ",GRAV,9.81,0.,-1.,0."
+    ]
+  ],
+  "general_contact_line": 482553,
+  "first_step_line": 482783,
+  "general_contact_before_first_step": true,
+  "horizontal_joint_property_count": 30,
+  "outputs": {
+    "CPRESS": 0,
+    "COPEN": 0,
+    "CSHEAR": 0,
+    "S11_literal": 0,
+    "RF_literal": 3,
+    "RM_literal": 0,
+    "energy_literal": 2
+  },
+  "embedded_constraint_count": 32,
+  "joint_spring_count": 0,
+  "joint_coupling_count": 0
+}
