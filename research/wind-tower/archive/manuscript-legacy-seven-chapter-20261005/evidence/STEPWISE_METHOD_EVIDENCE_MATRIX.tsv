@@ -1,0 +1,78 @@
+step_id	chapter	research_step	primary_github_refs	source_class	original_method_or_definition	thesis_adoption	cannot_claim_or_copy	gate_status
+C1-S01	Ch1	大型风机高塔化与混塔研究动机	REF045;REF002;REF005	PDF-IN-REPO	NREL tall-tower opportunity/challenge + hybrid-tower response/test literature	用于说明高塔化约束与混塔研究必要性	不把某篇成本/运输阈值直接移植到本文10MW对象	PASS-LITERATURE
+C1-S02	Ch1	混塔结构体系与接缝/转换区受力特点	REF005;REF015;REF016;REF017;REF026	PDF-IN-REPO	试验/两尺度FE/组合N-M-V-T接缝研究	定义可能的局部控制机制和模型能力需求	不预设接缝一定控制；不照搬摩擦系数/试件尺寸	PASS-LITERATURE
+C1-S03	Ch1	整机气动伺服弹性模型验证逻辑	REF009;REF046	PDF-IN-REPO	OpenFAST one-to-one validation + ROSCO reference controller	采用身份→运行点→载荷→疲劳QoI的验证顺序	不复制2.8MW误差或ROSCO调参到DTU10MW	PASS-LITERATURE
+C1-S04	Ch1	随机风/seed敏感性问题	REF011	PDF-IN-REPO	风机载荷EE/Morris-family敏感性，多风速与seed收敛	用于说明seed不是装饰变量，需QoI收敛	不把论文25x25网格或seed数当本文标准值	PASS-LITERATURE
+C1-S05	Ch1	ERA5长期风环境定位	REF062;REF080;REF090;REF103	OFFICIAL+PDF	ERA5官方数据；再分析风电验证；再分析+随机模拟职责分离	ERA5只承担长期背景	不把ERA5逐时数据当10-min高频湍流或现场实测	PASS-LITERATURE
+C1-S06	Ch1	时变风切变指数与Hub-height外推	REF063;REF083;REF093	OFFICIAL+PDF	U10/U100逐时alpha及幂律外推，含测风塔验证	采用逐时alpha，固定1/7仅作敏感性对照	全球/8塔误差不作为嘉鱼误差	PASS-LITERATURE
+C1-S07	Ch1	整机载荷到高保真FE的研究基础	REF051;REF065;REF066;REF047;REF073	PDF+OFFICIAL	OpenFAST载荷驱动FE、坐标变换、合力合矩守恒、通道定义	把load mapping本身作为V&V接口	不把“导入成功”当耦合验证	PASS-LITERATURE
+C1-S08	Ch1	P-Δ/材料/连接非线性研究基础	REF061;REF031;REF120;REF015;REF017;REF026	PDF-IN-REPO	混塔非线性对照与试验校准接缝机制	采用受控分项对照	不移植文献效应百分比	PASS-LITERATURE
+C1-S09	Ch1	疲劳分层依据	REF018;REF024;REF041;REF125	PDF-IN-REPO/REGISTERED	OpenFAST运行疲劳、混凝土试验、局部疲劳与DEL方法	严格区分G7A load-DEL与G7B材料寿命	不把m=4 DEL当材料寿命	PASS-LITERATURE
+C1-S10	Ch1	机制驱动优化研究基础	REF003;REF004;REF020;REF021;REF076	PDF/WEB-READ	粒子群、几何优化、进化/机器学习多目标、独立高保真复核	优化变量由机制决定，候选必须FE复核	不照搬2–5MW变量范围、成本和算法超参	PASS-LITERATURE
+C2-S01	Ch2	DTU 10MW参考风机身份	REF001	PDF-IN-REPO	DTU Wind Energy Report-I-0092正式机组参数	作为参考风机一级来源	不把DTU报告当158m混塔来源	PASS-SOURCE
+C2-S02	Ch2	158m混塔原型身份	REF008	FULLTEXT-VERIFIED/BINARY-PENDING	何泽瑜2024定义112m混凝土+46m钢塔原型	作为混塔原型一级来源	不把其所有表格未审歧义自动视为正确	PASS-SOURCE/BINARY-PENDING
+C2-S03	Ch2	钢塔半径/直径歧义重建	REF008	FULLTEXT-VERIFIED	表3-3与相邻图/几何内部一致性核查	把外径解释标为重建假设并独立验证	不篡改原文表头，不用目标频率反证几何	CONDITIONAL
+C2-S04	Ch2	OpenFAST Hub-height/坐标基准	REF047;REF073	OFFICIAL-WEB-REGISTERED	ElastoDyn几何与输出坐标/通道定义	BASE001从实际字段计算HubHt和接口位置	不使用名义轮毂高度替代实际输入	NEED-BASE001
+C2-S05	Ch2	分层V&V框架	REF069;REF005	STANDARD-SCOPE+PDF	CSM verification/validation分层；混塔试验-数值两尺度验证	材料→质量/模态→初始状态→局部能力分层	不以单一频率吻合证明全模型	PASS-METHOD
+C2-S06	Ch2	混凝土/钢筋/PT/钢材标准身份	REF055;REF121;REF122;REF123	OFFICIAL-METADATA	现行规范/标准身份与适用材料类别	终稿材料表需标准+实际INP双重核对	未读正式条文前不采用具体阈值	HOLD-CLAUSE
+C2-S07	Ch2	CDP理论定义	REF052	OFFICIAL-WEB-REGISTERED	Abaqus CDP受拉/受压塑性损伤与变量定义	限定CDP输出的物理含义	CDP damage不等于疲劳damage	PASS-OFFICIAL
+C2-S08	Ch2	物理曲线→Abaqus CDP变量转换	REF056	CACHED-PDF	inelastic/cracking strain与damage转换公式	生成可复现CSV/INC并单轴核验	不把总应变直接填入CDP inelastic/cracking列	PASS-METHOD/NEED-RUN
+C2-S09	Ch2	CDP塑性参数来源	REF052;REF041	OFFICIAL+PDF	Abaqus默认参数语义；对象级研究参数背景	默认值与study-choice分开，psi需敏感性	不把psi=30°称Abaqus默认	CONDITIONAL
+C2-S10	Ch2	C65/C70单轴数值试件	REF052;REF056;REF005	OFFICIAL+PDF	材料输入变量定义、转换与试验/FE验证思路	四类单轴试件核实际写入曲线	材料试件通过不代表整塔局部破坏网格客观	NEED-RUN
+C2-S11	Ch2	普通钢筋T3D2+Embedded及钢筋网完整性	REF054;REF130;REF005;REF008;REF061;REF136;REF137	OFFICIAL+PDF+STANDARD-CLAUSE-AUDIT	Truss轴向能力；He原型钢筋网/纵筋数量；同谱系箍筋约束处理；塔筒双层纵环筋构造要求	T045保留纵筋复现基线；T046建立显式环筋/拉筋工程候选并做敏感性	不解释bond-slip/拔出；不把规范推导phi14@80冒充He未公开参数	CODE-COMPLETION/NEED-RUN
+C2-S12	Ch2	预应力筋、锚固边界及预应力实现	REF008;REF061;REF053;REF005;REF017;REF121;REF136;REF137;REF139	OFFICIAL+PDF+STANDARD	15.2mm/端锚/无黏结对象来源；PT有限元先例；锚固区构造标准	冻结T045实际36根/r1.75/端方程拓扑为输入事实，平衡后读取有效应力；真实锚固局部另建模	GB/T5224不证明1280MPa；36的同类工程先例已由REF139增强，但36根/束的等效含义和r1.75仍不得升级为本原型直接设计值	HOLD-PT-GEOMETRY/NEED-RUN
+C2-S13	Ch2	水平接缝全局等效/局部contact边界	REF015;REF016;REF017;REF026;REF115	PDF-IN-REPO	N-M/N-M-T/N-M-V-T试验及接触FE	全局模型定位，结果触发显式contact	SPRING2/Tie模型不得报告COPEN/CPRESS/摩擦滑移	PASS-CAPABILITY/RESULT-TRIGGERED
+C2-S14	Ch2	钢—混转换区局部性	REF005;REF036	PDF-IN-REPO	两尺度结构响应与钢混连接疲劳试验	先全局N/V/M/T识别是否控制，再细化	不移植其他adapter构造尺寸/疲劳结论	RESULT-TRIGGERED
+C2-S15	Ch2	RNA质量/CG/惯量空间等效	REF010;REF039;REF120;REF133;REF134;REF057;REF058	PDF+OFFICIAL	RNA质量偏心/转动惯量对模态影响；Abaqus惯量定义；闭式频率模型	核m、CG、J、reference point及模态趋势	总质量相等不代表空间等效	NEED-RUN
+C2-S16	Ch2	固定基础与PT底端等效锚固边界	REF008;REF039;REF136;REF137;T045	PDF+STANDARD+INPUT	He复现采用塔底/PT底固定；规范要求可靠锚具和锚固区局部加强；当前INP无基础实体	把y=0解释为刚性基础截断面和等效锚固边界，仅用于全局塔架响应	不外推到真实锚具/基础局部应力、滑移或SSI	PASS-SCOPE/HOLD-LOCAL
+C2-S17	Ch2	重力—预应力初始平衡	REF005;REF017;REF053	PDF+OFFICIAL	预应力塔FE与PT实现先例	以反力/位移/PT应力/能量检查平衡	名义PT输入不等于平衡后有效PT	NEED-RUN
+C2-S18	Ch2	模态与独立解析交叉验证	REF010;REF039;REF005	PDF-IN-REPO	RNA影响、闭式基频及试验/FE对照	Abaqus模态+解析/来源对照	模态吻合不证明接触/疲劳能力	NEED-RUN
+C2-S19	Ch2	网格收敛与局部化边界	REF079;REF005;REF052	WEB/PDF/OFFICIAL	风机FE频率网格收敛；断裂能/软化网格处理	按最终QoI做多网格比较	人工能小不等于后峰网格客观	NEED-RUN
+C2-S20	Ch2	Rayleigh阻尼与自由衰减	REF059;REF071;REF078	OFFICIAL+WEB	Rayleigh数值定义；自由衰减识别阻尼的实验先例	目标阻尼→alpha/beta→自由衰减复核	数值拟合目标不证明目标阻尼物理正确	HOLD-PHYSICAL/NEED-RUN
+C2-S21	Ch2	动力时间步/增量收敛	REF131;REF069;REF079	OFFICIAL+STANDARD-SCOPE+WEB	数值verification与逐级离散收敛原则	用位移/加速度/N-V-M-T/局部应力多QoI比较时间步	只看位移收敛不足以证明高频/局部量收敛	NEED-RUN
+C3-S01	Ch3	ERA5数据产品与变量	REF062	OFFICIAL-WEB-REGISTERED	ERA5 single-levels官方数据身份和变量	固定2005-2025原始数据/hash	不称为现场测风	PASS-SOURCE/NEED-HASH
+C3-S02	Ch3	ERA5长期风资源适用性	REF080;REF090;REF096	PDF/WEB	再分析风电建模、误差综述、湖北64测风塔偏差	用于长期场址背景并明确不确定性	不将ERA5当site truth	PASS-METHOD
+C3-S03	Ch3	U10/U100→alpha(t)→Hub-height	REF083;REF093;REF063;REF091	PDF+OFFICIAL+WEB	逐时alpha、8塔验证、官方幂律、160m外推误差背景	按161.37m实际HubHt重算	不把全球误差直接当嘉鱼误差	NEED-RUN
+C3-S04	Ch3	ERA5与随机湍流职责分离	REF103;REF064	PUBLISHER-SUMMARY+OFFICIAL	大尺度再分析+随机高频恢复；TurbSim随机场	ERA5背景，TurbSim 10-min随机风	不把ERA5小时风直接驱动高频动力	PASS-METHOD
+C3-S05	Ch3	NTM/ETM/DLC身份	REF132;REF048;REF018;REF064	FULLTEXT-AUDITED-STANDARD+CURRENT-EDITION-METADATA+PDF+OFFICIAL	IEC 2019 Table2明确DLC1.2=NTM fatigue、DLC1.3=ETM ultimate；REF048保留当前Edition4.1身份	按2019完整条文区分NTM/ETM用途，终稿前核AMD1:2025	不得把ETM DEL写成DLC1.2材料寿命，也不把36case称完整认证矩阵	PASS-BASE-2019/AMD1-PENDING
+C3-S06	Ch3	TurbSim TimeStep/AnalysisTime/空间网格	REF132;REF064;REF001;REF011	FULLTEXT-AUDITED-STANDARD+OFFICIAL+PDF	IEC7.5给空间分辨率判据；DTU给D；TurbSim给时间/网格输入语义	200m/51x51经计算单元对角线5.66m<0.25Λ1=10.5m且<0.15D=26.75m；时间步继续做QoI收敛	51x51不是IEC指定网格；只能说通过IEC空间判据	PASS-SPATIAL/NEED-TIME-STEP
+C3-S07	Ch3	随机seed数量与收敛	REF132;REF011;REF018	FULLTEXT-AUDITED-STANDARD+PDF	IEC7.5一般湍流case每平均风速至少6个10min实现；DLC1.1在Vr-2至cut-out极值统计需15次/风速；论文研究仍需QoI收敛	历史6seed满足一般湍流最低数，但继续以QoI均值/离散/排序检查是否增样本	不得把6seed=统计收敛，也不得把额定以上6seed称完整DLC1.1极值统计	PASS-IEC-MINIMUM/CONVERGENCE-OPEN
+C3-S08	Ch3	OpenFAST整机模型验证	REF009;REF001;REF047;REF073	PDF+OFFICIAL	identity→modal/operating/load/fatigue validation	冻结actual input chain/hash并验证运行点	不以文件能运行作为模型验证	NEED-RUN
+C3-S09	Ch3	ROSCO控制器身份	REF046	PDF-IN-REPO	ROSCO参考控制器结构与范围	绑定实际DISCON/DLL版本与hash	不复制其他机组调参值	NEED-BASE001
+C3-S10	Ch3	统计窗口/多QoI/频域分析	REF132;REF009;REF011;REF061	FULLTEXT-AUDITED-STANDARD+PDF	IEC7.5要求至少10min随机实现且至少剔除最初5s必要时更长；直接论文补充多QoI/频域实践	700s总长剔除100s后分析600s，满足IEC最低有效时长；100s属于本文保守spin-up	不得把100s写成IEC规定，也不因满足10min就跳过QoI收敛	PASS-DURATION/NEED-FINAL-RUN
+C3-S11	Ch3	rainflow循环计数	REF132;REF018;REF124	FULLTEXT-AUDITED-STANDARD+PDF+REGISTERED-ORIGINAL	IEC7.5要求残余按半循环计入；Annex H采用rainflow；风机论文给直接应用	从正式载荷通道提取完整循环ledger并保留residual half cycles	不把未核通道或遗漏残余半循环的历史循环直接当final	NEED-RUN
+C3-S12	Ch3	load-DEL	REF125;REF018;REF132	PDF+FULLTEXT-AUDITED-STANDARD	DEL等效载荷定义；IEC Annex H给rainflow-SN-wind-probability-Miner长期损伤链	统一m/Neq仅用于G7A载荷比较；G7B必须另走材料S-N/均值/概率链	DEL不等于材料寿命；ETM DEL不等于DLC1.2疲劳寿命	NEED-RUN
+C3-S13	Ch3	2–4个多指标控制工况	REF009;REF011;REF018	PDF-IN-REPO	不同QoI/运行区/随机实现可能有不同控制case	按位移/加速度/N-V-M-T/DEL筛选	不只取最大塔底弯矩或最大DEL	NEED-RUN
+C4-S01	Ch4	OpenFAST接口通道身份	REF047;REF073	OFFICIAL-WEB-REGISTERED	YawBr/TwrBs等六分量通道定义与坐标	逐通道记录源点/坐标/单位	不能凭名字猜坐标	PASS-OFFICIAL
+C4-S02	Ch4	自由体与重力/惯性分账	REF135;REF051;REF067;REF047	PDF/AAM/OFFICIAL	整机载荷驱动FE与气动/重力/惯性分离先例	定义OF与Abaqus各承担哪些作用	禁止重复施加RNA重力/惯性	NEED-G5
+C4-S03	Ch4	坐标旋转	REF065;REF047	WEB+OFFICIAL	映射到共同坐标系及OpenFAST参考系定义	使用显式旋转矩阵并保存源/目标系	不靠结果调符号	NEED-G5
+C4-S04	Ch4	作用点换算/力矩运输	REF066;REF065	PDF/WEB	通过r×F保持合矩	按公共reference point运输六分量	不使用经验offset拟合结果	NEED-G5
+C4-S05	Ch4	时间戳与插值	REF070;REF075	OFFICIAL-WEB-REGISTERED	Abaqus tabular amplitude线性插值；OpenFAST六分量时程文件时间语义	保留原时间戳，必要时受控插值	禁止用数组序号代替时间	NEED-G5
+C4-S06	Ch4	参考点/分布耦合施加载荷	REF110;REF065	OFFICIAL+WEB	Abaqus coupling与Rappe distributing coupling映射	检查region of influence和人工刚度	不把coupling当无误差黑箱	NEED-G5
+C4-S07	Ch4	合力/合矩守恒	REF066	PDF/READ	1D→3D映射保持resultant force and moment	逐时间或抽样计算ΣF/ΣM误差	坐标正确但力矩不守恒不得通过	NEED-G5
+C4-S08	Ch4	单位六分量静态/准静态测试	REF066;REF069	PDF+STANDARD-SCOPE	平衡验证+数值verification思想	用手算可核的Fx/Fy/Fz/Mx/My/Mz逐项测试	动态时程能跑不代表映射正确	NEED-G5
+C4-S09	Ch4	跨模型全局QoI对照	REF051;REF065;REF009	PDF/WEB	全局载荷与高保真FE比较、映射验证、OpenFAST验证	比较tower-top displacement/base moment/PSD	不强迫不同模型形式完全相等	NEED-G5
+C4-S10	Ch4	全塔N/V/M/T控制区域识别	REF026;REF115;REF005	PDF-IN-REPO	接缝N-M-V-T与全局/局部两尺度思想	沿塔高固定station提取多轴需求	不以最大M单指标代表所有局部控制	NEED-G6
+C5-S01	Ch5	同工况线性基线	REF120;REF031;REF061	PDF-IN-REPO	混塔linear/nonlinear比较方法	所有非线性分项保持同输入	不跨风况比较并归因于非线性	NEED-G6
+C5-S02	Ch5	P-Δ/NLGEOM对照	REF120;REF031	PDF-IN-REPO	二阶矩/有限元P-Δ对照	L vs G比较位移/内力/应力	不复制2MW/5MW论文效应比例	NEED-G6
+C5-S03	Ch5	材料非线性对照	REF031;REF061;REF052	PDF+OFFICIAL	材料非线性与CDP能力	G vs GM对比	若响应弹性则接受‘影响小’结论	NEED-G6
+C5-S04	Ch5	结果触发水平接缝contact	REF015;REF016;REF017;REF026;REF115	PDF-IN-REPO	试验校准hard contact/摩擦/PT及组合受力	只有控制区触发才建local contact	不照搬0.9摩擦/40mm网格/试件参数	RESULT-TRIGGERED
+C5-S05	Ch5	global-to-local submodel	REF068;REF005	OFFICIAL+PDF	Abaqus submodel边界插值+两尺度FE	局部模型先复现global边界再研究细节	global边界不准时不允许local结论	RESULT-TRIGGERED
+C5-S06	Ch5	局部应力提取规则	REF041;REF024	PDF-IN-REPO	热点单点vs厚度平均、材料疲劳应力状态	明确点/路径/体积平均规则并做网格敏感性	不在网格尖峰上直接算寿命	CONDITIONAL-G7B
+C5-S07	Ch5	局部rainflow/材料疲劳	REF132;REF024;REF018;REF041	FULLTEXT-AUDITED-STANDARD+PDF	IEC7.6.3/AnnexH要求循环幅值+mean stress/strain+S-N+wind probability+Miner；论文提供材料/运行细节	按材料分别建立局部应力疲劳链	混凝土/钢/钢筋/PT不得共享m=4，也不能用load-DEL替代S-N/Miner	CONDITIONAL-G7B
+C5-S08	Ch5	疲劳结论分级	REF132;REF024;REF018;REF125	FULLTEXT-AUDITED-STANDARD+PDF/REGISTERED	IEC standard classes I-III设计寿命至少20年，但疲劳寿命需完整S-N/概率/Miner链；DEL仅等效载荷	明确G7A/G7B结论层级	不能因为IEC写20年设计寿命就宣称本文结构满足20年疲劳寿命	PASS-RULE
+C5-S09	Ch5	设计变量从机制反推	REF002;REF020;REF021	PDF-IN-REPO	Kenna机制/响应→优化；混塔参数优化先例	只保留物理相关、可制造、范围有源变量	不从别人变量表直接抄上下界	NEED-G8
+C5-S10	Ch5	参数敏感性与seed噪声分离	REF011;REF126	PDF+REGISTERED	风机载荷EE/Morris应用及原始方法	优先配对seed，参数效应需稳定超过随机离散	不设无来源的统一显著阈值	NEED-G8
+C6-S01	Ch6	优化变量/范围来自前文机制	REF003;REF004;REF020;REF021	PDF/WEB	混塔几何/预应力/进化/多目标优化	变量由G8冻结，范围有工程来源	不移植2–5MW范围	NEED-G9
+C6-S02	Ch6	目标函数选择	REF003;REF020;REF021	PDF/WEB	LCOE/质量/约束/多目标先例	优先可复现的质量+控制QoI	缺成本来源时不伪造成本模型	NEED-G9
+C6-S03	Ch6	工程约束	REF004;REF020;REF021;REF048;REF049	PDF+PAID-STANDARD-METADATA	频率/强度/SLS/疲劳/几何约束先例与IEC结构范围	每项约束绑定标准/来源	未核IEC条文前不写具体标准阈值	HOLD-CLAUSE/NEED-G9
+C6-S04	Ch6	是否需要DOE/代理模型	REF021;REF076	PDF/WEB	混塔LHS+surrogate+NSGA-II；LHS→Kriging→独立高保真验证	计算成本高时才启用代理	变量少时不为形式强行ML	CONDITIONAL
+C6-S05	Ch6	LHS设计	REF127;REF021	REGISTERED+PDF	LHS原典与混塔直接应用	仅在G9采用时生成DOE	不照搬4096样本等论文数值	CONDITIONAL
+C6-S06	Ch6	Kriging/代理	REF128;REF076;REF021	REGISTERED+WEB+PDF	经典computer experiments/kriging与独立高保真验证	代理必须留出独立验证样本	高R²不等于Pareto区域准确	CONDITIONAL
+C6-S07	Ch6	NSGA-II/Pareto	REF129;REF021	REGISTERED+PDF	NSGA-II原始来源与混塔应用	只作为求解工具，不作为创新	不照搬算法超参数	CONDITIONAL
+C6-S08	Ch6	候选方案真实FE/OpenFAST更新	REF021;REF076;REF009	PDF/WEB	固定载荷局限、独立高保真候选复核、整机模型验证	结构显著变动时重建Abaqus并检查是否重跑OpenFAST	旧载荷不能自动证明新动力系统最优	NEED-G9
+C6-S09	Ch6	未用风况/seed独立稳健性	REF076;REF011;REF018	WEB+PDF	独立高保真验证与seed统计稳定性	用未参与训练/筛选case验证收益	训练case改善不能直接称稳健优化	NEED-G9
+C7-S01	Ch7	主要结论回收	REF069 + RUN/FIG/TAB	STANDARD-SCOPE+INTERNAL-EVIDENCE	V&V/证据链原则	每条结论绑定RUN/FIG/TAB，文献只支持方法/机理	文献不能替代本文结果	NEED-G10
+C7-S02	Ch7	创新点与直接先例比较	REF005;REF051;REF018;REF020;REF021 + RUN	PDF-IN-REPO+INTERNAL-EVIDENCE	与最直接的两尺度/整机/疲劳/优化先例比较	创新由实际G6–G9增量反推	软件名称/常规算法不得作为创新	NEED-G10
+C7-S03	Ch7	适用范围与不足	REF090;REF096;REF049;REF069 + RUN	PDF/WEB/STANDARD	ERA5局限、塔架设计范围、V&V边界	限制逐项对应本文假设	不写空泛‘时间有限’	NEED-G10
+C2-S22	Ch2	环向钢筋/拉筋规范推导候选	REF136;REF137;REF138;REF008;REF061;T046	STANDARD-CLAUSE-AUDIT+PDF+INPUT	双层环筋、拉筋、保护层和最低配筋率有标准依据；He/Xu证明箍筋作用但未公开本塔精确尺寸	T046-E1采用HRB335 phi14@80双层环筋+phi6拉筋作为透明工程候选；与T045做质量/模态/柔度/控制响应敏感性	不把候选尺寸写成原型论文直接值；求解前不得升级为生产模型	CODE-DERIVED/NEED-ABAQUS-RUN
