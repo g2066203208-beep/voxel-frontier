@@ -1,0 +1,86 @@
+{
+  "status": "TASK1-CLOSED-CODE-DESIGN / PT-LOSS-AND-PERMANENT-COMPRESSION",
+  "source_identity": {
+    "strand_diameter_mm": 15.2,
+    "sigma_initial_MPa": 1280.0,
+    "Ep_MPa": 195000.0,
+    "fpk_MPa": 1860.0,
+    "position_count_reconstructed": 36,
+    "radius_mm_reconstructed": 1750.0,
+    "single_strand_area_mm2": 140.0,
+    "warning": "36 positions/radius/BF are not He-public direct; BF=8 is this thesis CODE-DESIGN value"
+  },
+  "normative_basis": {
+    "prestress_losses": "NB/T 10907-2021 Appendix A A.1.1-A.1.6",
+    "materials": "NB/T 10907-2021 Tables 4.1.2, 4.1.3, 4.2.2; GB/T 5224-2023 product identity",
+    "service_boundary": "NB/T 10907-2021 7.1-7.2; final crack-control grade/coupled SLS is Task3"
+  },
+  "registered_assumptions": {
+    "external_path": "straight reconstructed path; k=0, theta=0, friction loss=0 in modelled free length",
+    "anchorage": "one active clip anchorage without top pressure, 6 mm",
+    "horizontal_joints": 30,
+    "joint_compression_mm_each_adopted": 2.0,
+    "joint_compression_reason": "actual joint type not source-direct; use maximum listed Table A.1.3 value as upper-bound",
+    "tensioning_batches": 36,
+    "rho_for_shrink_creep": 0.0,
+    "transfer_strength_factor": 0.75,
+    "transfer_strength_reason": "tensioning-age strength unpublished; registered conservative sensitivity, not source claim"
+  },
+  "PT_quantity_selection": {
+    "historical_T072_joint_screen_BFmin_at_eta0p70": 5.59,
+    "minimum_integer_BF_from_that_screen": 6,
+    "adopted_BF": 8,
+    "selection_reason": "retain BF8 as robust CODE-DESIGN choice above earlier BF>=5.59 engineering screen; not a code-mandated strand count"
+  },
+  "adopted_BF8": {
+    "BF": 8,
+    "strands_total": 288,
+    "Ap_mm2": 40320.0,
+    "P0_MN": 51.6096,
+    "loss_friction_MPa": 0.0,
+    "loss_anchor_joint_MPa": 114.91071428571429,
+    "delta_l_mm": 66.0,
+    "loss_elastic_MPa": 22.555242813844927,
+    "loss_relaxation_MPa": 30.10752688172044,
+    "loss_shrink_creep_MPa": 126.47515305705939,
+    "shrink_creep_control_segment": "CSEG_27",
+    "loss_total_MPa": 294.04863703833905,
+    "loss_ratio": 0.2297254976862024,
+    "sigma_pe_MPa": 985.951362961661,
+    "eta": 0.7702745023137976,
+    "Pe_MN": 39.75355895461417
+  },
+  "BF8_reference_sensitivities": {
+    "1mm_joint_0p75grade": {
+      "sigma_pe_MPa": 1038.183505818804,
+      "eta": 0.8110808639209406,
+      "Pe_MN": 41.85955895461418
+    },
+    "1mm_joint_nominal_grade": {
+      "sigma_pe_MPa": 1056.0522940830688,
+      "eta": 0.8250408547523975,
+      "Pe_MN": 42.58002849742933
+    }
+  },
+  "permanent_compression_control": {
+    "segment": "CSEG_31",
+    "min_edge_compression_MPa": 6.333142035721044,
+    "all_31_segments_PASS": true
+  },
+  "completion_boundary": {
+    "closed_here": [
+      "PT quantity for CODE-DESIGN branch",
+      "Appendix-A loss components",
+      "effective prestress",
+      "31-segment permanent gravity+PT full-compression check"
+    ],
+    "not_claimed_here": [
+      "final operational crack-control grade",
+      "final crack width",
+      "final fatigue",
+      "final 36x31 envelope",
+      "final joint ULS after ordinary reinforcement is frozen"
+    ],
+    "reason": "These are coupled Task3/Task4 checks in the agreed four-task workflow; they are not missing PT-loss calculations."
+  }
+}
