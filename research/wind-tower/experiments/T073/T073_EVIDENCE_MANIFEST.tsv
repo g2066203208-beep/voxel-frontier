@@ -26,3 +26,9 @@ OUTPUT	research/wind-tower/experiments/T073/T073_E01_NUMERICAL_CONVERGENCE_CSEG1
 CALC	research/wind-tower/experiments/T073/t073_code_hrb500_fixed_counts.py	HRB500 code-design branch, He counts fixed	ACTIVE
 LEGACY	research/wind-tower/experiments/T072/T072_STEP3_CORRECTED_PT_LONGITUDINAL_REPORT.md	old E.0.3 combined backsolve	SUPERSEDED_FOR_FINAL
 LEGACY	research/wind-tower/experiments/T072/T072_FINAL_31SEG_REINFORCEMENT_AND_EI_S06.csv	increased-count phi25 redesign	SUPERSEDED_AS_HE_ALIGNED_FINAL
+SOURCE_PDF	research/wind-tower/references/user-provided/Nonlinear dynamic response analyses of Onshore Wind Turbines with Steel-Concrete Hybrid Tower using a co-simulation approach.pdf	Xu/He 2025 same-lineage source	LOCKED_ORIGINAL
+SOURCE_EVIDENCE	research/wind-tower/experiments/T073/source-evidence/Xu2025_lineage/	HRB335 + externally unbonded PT + 15.2mm + 1280MPa	ARCHIVED_ORIGINAL_PAGE
+STANDARD_STATUS	research/wind-tower/references/standards/rebar-prestress-20261006/GB1499_2_2024_STATUS_FOR_T073.md	current nominal rebar diameter product-standard status	ACTIVE
+GATE_REPORT	research/wind-tower/experiments/T073/T073_THREE_GATE_CLOSURE_20261007.md	NB/T Ch5 / longitudinal source / TCEC applicability gates	ACTIVE
+CALC	research/wind-tower/experiments/T073/t073_code_hrb500_fixed_counts.py	HRB500 redesign branch with He counts locked	ACTIVE_CORRECTED_METADATA
+OUTPUT	research/wind-tower/experiments/T073/T073_CODE_HRB500_FIXED_HE_COUNTS_META.json	HRB500 fy435/fyprime410 provenance	CORRECTED
