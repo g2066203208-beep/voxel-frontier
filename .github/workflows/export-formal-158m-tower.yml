@@ -1,0 +1,31 @@
+name: Export formal 158m tower file for EI closure
+
+on:
+  push:
+    paths:
+      - '.github/workflows/export-formal-158m-tower.yml'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
+      - name: Extract exact formal tower file
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/of && mkdir -p /tmp/of out
+          unzip -q research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip -d /tmp/of
+          src=/tmp/of/CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat
+          sha256sum "$src"
+          cp "$src" out/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: formal-158m-tower-dat
+          path: out/C02R3R2_158M_Tower.dat
+          retention-days: 1
