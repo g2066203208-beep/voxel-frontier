@@ -1,0 +1,68 @@
+name: T072 source lock audit
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t072-source-lock-audit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Build source audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="research/wind-tower/experiments/T072/source-audit"
+          mkdir -p "$OUT"
+          HE="research/wind-tower/references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf"
+          GB="research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf"
+          sha256sum "$HE" "$GB" > "$OUT/SHA256SUMS.txt"
+          {
+            echo "# T072 source PDF metadata"
+            echo
+            echo "## He Zeyu 2024"
+            pdfinfo "$HE" | grep -E '^(Pages|Page size|File size|PDF version):' || true
+            echo
+            echo "## GB 50010 repository copy"
+            pdfinfo "$GB" | grep -E '^(Pages|Page size|File size|PDF version):' || true
+          } > "$OUT/PDF_METADATA.md"
+          pdftotext -layout "$HE" "$OUT/he.txt"
+          pdftotext -layout "$GB" "$OUT/gb50010.txt"
+          python - <<'PY'
+          from pathlib import Path
+          out=Path("research/wind-tower/experiments/T072/source-audit")
+          def index(src, terms, dest):
+              pages=Path(src).read_text(errors="ignore").split("\f")
+              lines=["term\tpages"]
+              for term in terms:
+                  hits=[str(i+1) for i,p in enumerate(pages) if term in p]
+                  lines.append(term+"\t"+",".join(hits))
+              Path(dest).write_text("\n".join(lines)+"\n",encoding="utf-8")
+          index(out/"he.txt", ["表3-2","15.2","S345","钢筋网","预应力","31","112","158"], out/"HE_KEYWORD_PAGE_INDEX.tsv")
+          index(out/"gb50010.txt", ["附录 E","环形","保护层","最小配筋率","预应力","钢绞线","HRB500"], out/"GB50010_KEYWORD_PAGE_INDEX.tsv")
+          PY
+          rm -f "$OUT/he.txt" "$OUT/gb50010.txt"
+          cp research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-22.png "$OUT/" || true
+          cp research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-23.png "$OUT/" || true
+          cp research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-24.png "$OUT/" || true
+          cp research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-33.png "$OUT/" || true
+          cp research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-34.png "$OUT/" || true
+          cp research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-44.png "$OUT/" || true
+          cp research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-45.png "$OUT/" || true
+      - name: Commit audit outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T072/source-audit
+          git diff --cached --quiet && exit 0
+          git commit -m "T072: archive machine-verifiable He/GB50010 source audit"
+          git push
