@@ -1,0 +1,42 @@
+name: T071 inspect reinforcement standards
+
+on:
+  push:
+    paths:
+      - '.github/workflows/t071-inspect-reinforcement-standards.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout: |
+            research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pymupdf
+      - name: Search GB50010 clauses
+        shell: bash
+        run: |
+          python - <<'PY'
+          import fitz,re
+          p="research/wind-tower/references/standards/rebar-prestress-20261006/GB_50010-2010_2015_混凝土结构设计规范.pdf"
+          doc=fitz.open(p)
+          print("PAGES",len(doc))
+          kws=["保护层厚度","最小配筋率","受压构件","箍筋","拉筋","环形截面","预应力","纵向受力钢筋","钢筋间距","环境类别"]
+          for kw in kws:
+              print("\n### KEYWORD",kw)
+              cnt=0
+              for i,page in enumerate(doc):
+                  t=page.get_text("text")
+                  if kw in t:
+                      cnt+=1
+                      pos=t.find(kw)
+                      print(f"PDF_PAGE={i+1} hit={cnt}")
+                      print(t[max(0,pos-900):pos+2600])
+                      if cnt>=8: break
+          PY
