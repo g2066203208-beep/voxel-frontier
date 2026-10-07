@@ -184,7 +184,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import pandas as pd, json
-          fs=sorted(Path("incoming").glob("T074_GRAVITY_*.csv"))
+          fs=sorted(Path("incoming").glob("**/T074_GRAVITY_*.csv"))
           x=pd.concat([pd.read_csv(f) for f in fs],ignore_index=True).sort_values("segment")
           if len(x)!=31 or x.segment.nunique()!=31: raise SystemExit("31-segment merge failure")
           range_cols=[c for c in x if c.endswith("_range")]
