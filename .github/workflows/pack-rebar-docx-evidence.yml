@@ -1,0 +1,33 @@
+name: Pack thesis reinforcement source evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/pack-rebar-docx-evidence.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-33.png
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-34.png
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-35.png
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-44.png
+            research/wind-tower/experiments/T073/source-evidence/GB50010_Appendix_E
+          sparse-checkout-cone-mode: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rebar-docx-source-evidence
+          path: |
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-33.png
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-34.png
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-35.png
+            research/wind-tower/references/evidence-screenshots/he-zeyu-tower-original/he-44.png
+            research/wind-tower/experiments/T073/source-evidence/GB50010_Appendix_E/*
+          retention-days: 1
