@@ -1,0 +1,154 @@
+name: t062-extract-fatigue-assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/t062-extract-fatigue-assets.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: t062-extract-fatigue-assets
+  cancel-in-progress: true
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2
+          sparse-checkout-cone-mode: false
+
+      - name: Extract all 36 part ZIPs and collect fatigue package
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC='research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2'
+          MERGED='/tmp/openfast36_merged'
+          OUT='/tmp/t062'
+          mkdir -p "$MERGED" "$OUT"
+
+          for n in $(seq 1 36); do
+            f=$(printf 'part-%03d.zip' "$n")
+            test -f "$SRC/$f"
+            unzip -oq "$SRC/$f" -d "$MERGED"
+          done
+
+          find "$MERGED" -type f | sort > "$OUT/ALL_EXTRACTED_FILES.txt"
+
+          names=(
+            '03_RAINFLOW_CYCLE_LEDGER.csv'
+            '04_RAINFLOW_RANGE_HISTOGRAM.csv'
+            '05_LOAD_DEL_M4_ALL36.csv'
+            '06_LOAD_DEL_M4_GROUP_SUMMARY.csv'
+            '07_DEL_CONTROL_RANKING.csv'
+            '09_NTM_ETM_DEL_COMPARISON.csv'
+            '11_METHOD_AND_EVIDENCE.md'
+            '01_GATE_REPORT.md'
+            'FORMAL_36CASE_GROUP_SUMMARY_CORRECTED.csv'
+            'FORMAL_36CASE_CHANNEL_METRICS_CORRECTED.csv'
+            'FORMAL_36CASE_OUTB_TIME_AUDIT_RAINFLOW.csv'
+            'CHANNEL_INDEXING_CORRECTION.md'
+          )
+
+          for name in "${names[@]}"; do
+            p=$(find "$MERGED" -type f -name "$name" | head -n 1 || true)
+            if [ -n "$p" ]; then
+              cp "$p" "$OUT/$name"
+            fi
+          done
+
+          cat > "$OUT/EXTRACTION_STATUS.md" <<'EOF'
+          # T062 extraction status
+          Source: archive/local-assets-20261004-supplement/openfast-36-r2 part-001..036.
+          All 36 source ZIPs were extracted into one temporary tree.
+          Key rainflow/DEL audit products were copied here without modification.
+          EOF
+
+          echo "Collected:"
+          ls -lh "$OUT"
+
+      - name: Analyze existing load-level fatigue assets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import csv, json, math, os
+          from pathlib import Path
+
+          d=Path('/tmp/t062')
+          out={}
+          ledger=d/'03_RAINFLOW_CYCLE_LEDGER.csv'
+          if ledger.exists():
+              with ledger.open(newline='',encoding='utf-8-sig') as f:
+                  r=csv.DictReader(f)
+                  rows=list(r)
+              out['rainflow_cycle_rows']=len(rows)
+              out['rainflow_columns']=r.fieldnames
+              cases=sorted(set(x.get('case_id','') for x in rows if x.get('case_id','')))
+              chans=sorted(set(x.get('channel','') for x in rows if x.get('channel','')))
+              out['rainflow_cases']=len(cases)
+              out['rainflow_channels']=chans
+              out['case_examples']=cases[:10]
+
+          delcsv=d/'05_LOAD_DEL_M4_ALL36.csv'
+          if delcsv.exists():
+              with delcsv.open(newline='',encoding='utf-8-sig') as f:
+                  rr=list(csv.DictReader(f))
+              out['del_rows']=len(rr)
+              out['del_columns']=list(rr[0].keys()) if rr else []
+              # find largest numeric candidate among columns that look like DEL
+              best=[]
+              for row in rr:
+                  for k,v in row.items():
+                      if 'del' not in k.lower(): continue
+                      try:
+                          x=float(v)
+                      except: continue
+                      best.append((x,row.get('case_id') or row.get('case') or '',row.get('channel') or row.get('Channel') or '',k))
+              best=sorted(best,reverse=True)[:20]
+              out['top_del_numeric_candidates']=best
+
+          (d/'LOAD_LEVEL_FATIGUE_ASSET_AUDIT.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+
+      - name: Commit T062 extracted evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import os, json, base64, urllib.request
+          from pathlib import Path
+
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']; branch='main'
+          src=Path('/tmp/t062')
+          prefix='research/wind-tower/experiments/T062/load-level-fatigue-assets'
+          headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json',
+                   'X-GitHub-Api-Version':'2022-11-28','User-Agent':'wind-tower-t062'}
+          def api(method,path,payload=None):
+              data=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request('https://api.github.com/repos/'+repo+path,data=data,headers=headers,method=method)
+              with urllib.request.urlopen(req,timeout=300) as r:
+                  return json.loads(r.read().decode())
+
+          ref=api('GET','/git/ref/heads/'+branch); parent=ref['object']['sha']
+          base=api('GET','/git/commits/'+parent)['tree']['sha']
+          entries=[]
+          for p in sorted(src.rglob('*')):
+              if not p.is_file(): continue
+              raw=p.read_bytes()
+              blob=api('POST','/git/blobs',{'content':base64.b64encode(raw).decode(),'encoding':'base64'})
+              entries.append({'path':prefix+'/'+p.name,'mode':'100644','type':'blob','sha':blob['sha']})
+          tree=api('POST','/git/trees',{'base_tree':base,'tree':entries})
+          commit=api('POST','/git/commits',{'message':'research: extract and audit existing OpenFAST fatigue assets','tree':tree['sha'],'parents':[parent]})
+          api('PATCH','/git/refs/heads/'+branch,{'sha':commit['sha'],'force':False})
+          print(commit['sha'])
+          PY
