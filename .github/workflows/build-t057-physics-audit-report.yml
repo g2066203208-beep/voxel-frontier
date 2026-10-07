@@ -1,0 +1,220 @@
+name: Build T057 physics audit report
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-t057-physics-audit-report.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp
+            research/wind-tower/experiments/T057
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build deterministic audit
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, math, hashlib, json
+
+          inp=Path("research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp")
+          txt=inp.read_text(encoding="utf-8")
+          lines=txt.splitlines()
+
+          def kw_count(pat):
+              return len(re.findall(pat,txt,re.I|re.M))
+
+          def first_line(pat):
+              rx=re.compile(pat,re.I)
+              for i,l in enumerate(lines,1):
+                  if rx.search(l): return i
+              return None
+
+          def block_after(line_idx, n=15):
+              if not line_idx: return []
+              return lines[line_idx-1:min(len(lines),line_idx-1+n)]
+
+          pm=re.search(r"(?is)\*Part,\s*name=PT_36x15p2\s*(.*?)\*End Part",txt)
+          pt=pm.group(1) if pm else ""
+          node_sec=re.search(r"(?is)\*Node\s*(.*?)(?=\*Element)",pt)
+          elem_sec=re.search(r"(?is)\*Element,\s*type=([^\r\n]+)\s*(.*?)(?=\*Nset|\*Elset|\*Solid Section|\*End Part)",pt)
+          nodes={}
+          if node_sec:
+              for row in node_sec.group(1).splitlines():
+                  vals=[v.strip() for v in row.split(",") if v.strip()]
+                  if len(vals)>=4:
+                      try:nodes[int(vals[0])]=tuple(float(x) for x in vals[1:4])
+                      except:pass
+          elems={}
+          etype=None
+          if elem_sec:
+              etype=elem_sec.group(1).strip()
+              for row in elem_sec.group(2).splitlines():
+                  vals=[v.strip() for v in row.split(",") if v.strip()]
+                  if len(vals)>=3:
+                      try:elems[int(vals[0])]=tuple(int(x) for x in vals[1:])
+                      except:pass
+
+          radii=[math.hypot(x,z) for x,y,z in nodes.values()]
+          ys=[y for x,y,z in nodes.values()]
+          element_lengths=[]
+          for ns in elems.values():
+              if len(ns)==2 and all(n in nodes for n in ns):
+                  a=nodes[ns[0]]; b=nodes[ns[1]]
+                  element_lengths.append(math.sqrt(sum((a[k]-b[k])**2 for k in range(3))))
+
+          mat={}
+          for name in ("C65","C70"):
+              mm=re.search(rf"(?is)\*Material,\s*name={name}\s*(.*?)(?=\*Material,\s*name=|\*Boundary|\*Step|\Z)",txt)
+              b=mm.group(1) if mm else ""
+              tline=next((l for l in b.splitlines() if l.strip().upper().startswith("*CONCRETE TENSION STIFFENING")),None)
+              mat[name]={
+                "cdp":"*CONCRETE DAMAGED PLASTICITY" in b.upper(),
+                "tension_stiffening_keyword":tline,
+                "tension_mode_gfi":bool(tline and re.search(r"TYPE\s*=\s*GFI",tline,re.I)),
+                "tension_damage":"*CONCRETE TENSION DAMAGE" in b.upper(),
+                "compression_damage":"*CONCRETE COMPRESSION DAMAGE" in b.upper(),
+                "fracture_literal":"FRACTURE" in b.upper()
+              }
+
+          pt_embedded=bool(re.search(r"(?is)\*Embedded Element[^\n]*\n[^\n]*PT_36x15p2",txt))
+          pt_top_eq=kw_count(r"^\*\* Constraint:\s*EQ_PT_TOP_\d{2}_U[123]\s*$")
+          pt_top_eq_sets=sorted(set(re.findall(r"SET_PT_TOP_NODE_(\d{2})",txt,re.I)))
+          bottom_bc_lines=[l.strip() for l in lines if re.search(r"PT_36x15p2-1\.SET_PT_BOTTOM_GEOM",l,re.I)]
+
+          init_idx=first_line(r"^\*Initial Conditions,\s*type=STRESS")
+          init_block=block_after(init_idx,4)
+          has_temp=kw_count(r"^\*Temperature\b")>0
+          has_pret=kw_count(r"^\*Pre-tension Section\b")>0
+
+          steps=[]
+          for i,l in enumerate(lines):
+              if l.strip().upper().startswith("*STEP"):
+                  name=None
+                  m=re.search(r"name\s*=\s*([^,]+)",l,re.I)
+                  if m:name=m.group(1).strip()
+                  proc=[]
+                  for q in range(i+1,min(len(lines),i+35)):
+                      s=lines[q].strip()
+                      if s.startswith("**"):continue
+                      if s.startswith("*"):
+                          proc.append(s)
+                          if re.match(r"\*(STATIC|FREQUENCY|DYNAMIC|BUCKLE|STEADY STATE DYNAMICS)",s,re.I):break
+                  steps.append({"line":i+1,"header":l.strip(),"name":name,"procedure":proc})
+
+          grav_lines=[(i+1,l.strip()) for i,l in enumerate(lines) if re.search(r"\bGRAV\b",l,re.I)]
+          first_step_line=steps[0]["line"] if steps else None
+          contact_line=first_line(r"^\*Contact\s*$")
+          outputs={
+            "CPRESS":kw_count(r"\bCPRESS\b"),
+            "COPEN":kw_count(r"\bCOPEN\b"),
+            "CSHEAR":kw_count(r"\bCSHEAR[12]?\b"),
+            "S11_literal":kw_count(r"\bS11\b"),
+            "RF_literal":kw_count(r"\bRF\b"),
+            "RM_literal":kw_count(r"\bRM\b"),
+            "energy_literal":kw_count(r"\bALLIE\b|\bALLSE\b|\bALLWK\b|\bETOTAL\b")
+          }
+
+          facts={
+            "file_bytes":inp.stat().st_size,
+            "sha256":hashlib.sha256(inp.read_bytes()).hexdigest(),
+            "lines":len(lines),
+            "materials":mat,
+            "pt":{
+              "element_type":etype,
+              "node_count":len(nodes),
+              "element_count":len(elems),
+              "y_min":min(ys) if ys else None,
+              "y_max":max(ys) if ys else None,
+              "radius_min":min(radii) if radii else None,
+              "radius_max":max(radii) if radii else None,
+              "element_length_min":min(element_lengths) if element_lengths else None,
+              "element_length_max":max(element_lengths) if element_lengths else None,
+              "has_intermediate_nodes":any(y not in (min(ys),max(ys)) for y in ys) if ys else None,
+              "embedded_in_concrete":pt_embedded,
+              "top_equation_count":pt_top_eq,
+              "top_positions_equation_sets":len(pt_top_eq_sets),
+              "bottom_bc_lines":bottom_bc_lines
+            },
+            "prestress":{
+              "initial_stress_line":init_idx,
+              "initial_stress_block":init_block,
+              "temperature_keyword_count":kw_count(r"^\*Temperature\b"),
+              "pretension_keyword_count":kw_count(r"^\*Pre-tension Section\b"),
+              "initial_1280_count":kw_count(r"PT_36x15p2-1\.SET_PT_ALL_ELEMS,\s*1\.28e\+09")
+            },
+            "steps":steps,
+            "gravity_lines":grav_lines[:20],
+            "general_contact_line":contact_line,
+            "first_step_line":first_step_line,
+            "general_contact_before_first_step":bool(contact_line and first_step_line and contact_line<first_step_line),
+            "horizontal_joint_property_count":kw_count(r"CSEG_\d{2}-1\.SURF_TOP,\s*CSEG_\d{2}-1\.SURF_BOTTOM,\s*HJOINT_HARD_MU05_T057"),
+            "outputs":outputs,
+            "embedded_constraint_count":kw_count(r"^\*Embedded Element\b"),
+            "joint_spring_count":kw_count(r"SPR_J\d{2}_DOF\d"),
+            "joint_coupling_count":kw_count(r"CPL_J\d{2}_(LO|UP)")
+          }
+
+          outj=Path("research/wind-tower/experiments/T057/T057_RAW_PHYSICS_AUDIT_20261007.json")
+          outj.write_text(json.dumps(facts,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+
+          md=Path("research/wind-tower/experiments/T057/T057_RAW_PHYSICS_AUDIT_20261007.md")
+          with md.open("w",encoding="utf-8") as f:
+              f.write("# T057原始INP物理建模审计（2026-10-07）\n\n")
+              f.write(f"对象：{inp.name}  \nSHA-256：{facts['sha256']}  \n规模：{facts['file_bytes']:,} bytes / {facts['lines']:,} lines\n\n")
+              f.write("## 1. CDP拉伸软化\n\n")
+              f.write("|材料|CDP|Tension Stiffening关键字|GFI/断裂能型|Tension Damage|\n|---|---|---|---|---|\n")
+              for name,v in mat.items():
+                  f.write(f"|{name}|{v['cdp']}|{v['tension_stiffening_keyword']}|{v['tension_mode_gfi']}|{v['tension_damage']}|\n")
+              f.write("\n裁决：当前T057的C65/C70均为默认strain-based tension stiffening，不是李泽宇第4章采用的fracture-energy cracking/GFI型。局部拉损伤/开裂用于结论前必须做网格客观性审计；不能把REF007的fracture-energy做法写成T057现状。\n")
+              f.write("\n## 2. PT拓扑与运动学\n\n")
+              f.write(f"- 元素类型：{etype}；{len(elems)}条元素、{len(nodes)}个节点。\n")
+              f.write(f"- 节点高度仅位于 y={min(ys):.6g} m 和 y={max(ys):.6g} m；无中间节点。\n")
+              f.write(f"- 半径 r={min(radii):.6g}–{max(radii):.6g} m；每条长度约{min(element_lengths):.6g} m。\n")
+              f.write(f"- PT Embedded到混凝土：{pt_embedded}。\n")
+              f.write(f"- 顶部Equation：{pt_top_eq} = 36位置×3平移DOF；位置集合数{len(pt_top_eq_sets)}。\n")
+              f.write(f"- 底部边界：{bottom_bc_lines}。\n")
+              f.write("\n裁决：PT没有沿全长轴向锁死在混凝土中；当前本质是仅两端锚固、全长自由的直线无粘结束。PT被Embedded导致不能滑动这一风险不成立。真正待核的是原型是否存在中间导向/偏转/横向跟随要求；若无，则端锚直束具有合理性。\n")
+              f.write("\n## 3. 预应力施加\n\n")
+              f.write("初始条件块：\n\n")
+              for l in init_block:f.write("    "+l+"\n")
+              f.write(f"\nTemperature关键字：{has_temp}；Pre-tension Section关键字：{has_pret}。\n")
+              f.write("\n裁决：T057不是降温法，而是直接对PT单元施加1280 MPa initial stress。1280 MPa只能称名义初始输入，必须用原生Gravity/PT/contact平衡后的S11、轴力、塔底反力和接缝接触状态确认有效预应力。长期锚固/摩擦/松弛/徐变/收缩损失当前未显式实现。\n")
+              f.write("\n## 4. 水平接缝\n\n")
+              f.write(f"- HARD+mu=0.5物理接触属性分配：{facts['horizontal_joint_property_count']}对。\n")
+              f.write(f"- 旧SPRING2匹配：{facts['joint_spring_count']}；旧CPL_J匹配：{facts['joint_coupling_count']}。\n")
+              f.write("\n裁决：静态文本上已替换为30对物理接触；是否被Abaqus/Standard接受、是否初始穿透、CPRESS/COPEN/CSHEAR是否合理仍属native solver门禁。\n")
+              f.write("\n## 5. 分析步与输出覆盖\n\n")
+              f.write("Steps:\n")
+              for s in steps:f.write(f"- line {s['line']}: {s['header']} | procedure={s['procedure']}\n")
+              f.write(f"\nGravity lines: {grav_lines[:20]}\n")
+              f.write(f"\nGeneral contact line={contact_line}; first step line={first_step_line}; contact before first step={facts['general_contact_before_first_step']}.\n")
+              f.write(f"\nOutput literal counts: {outputs}\n")
+              f.write("\n裁决：如果CPRESS/COPEN/CSHEAR、PT轴向应力/轴力、塔底RF/RM、转换界面反力没有专用输出覆盖，即使job完成也无法完成G1证据闭环；应在生产输入中增加明确输出。\n")
+              f.write("\n## 6. 状态更新\n\n")
+              f.write("- P1 CDP fracture-energy/mesh-objectivity：FAIL-AS-DIRECT-MATCH / NEED-MESH-SENSITIVITY OR GFI BRANCH。\n")
+              f.write("- P2 PT unbonded kinematics：PASS-NOT-EMBEDDED / CONDITIONAL；未轴向锁死，原型中间导向仍待来源核对。\n")
+              f.write("- P3 effective prestress/loss：OPEN；1280 MPa是initial-stress input，长期损失未显式实现。\n")
+              f.write("- P4 steel-concrete transition local region：KEEP AS PRIORITY，待native stress/mesh验证。\n")
+              f.write("\n机器可读结果：T057_RAW_PHYSICS_AUDIT_20261007.json。\n")
+
+          print(json.dumps(facts,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit audit
+        run: |
+          git config user.name "openai-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T057/T057_RAW_PHYSICS_AUDIT_20261007.*
+          git commit -m "audit: inspect T057 CDP PT prestress contact and outputs from raw inp"
+          git push
