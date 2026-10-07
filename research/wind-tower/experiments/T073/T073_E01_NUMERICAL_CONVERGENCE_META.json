@@ -1,0 +1,36 @@
+{
+  "purpose": "numerical convergence of borderline D46/BF10 candidate",
+  "criterion": "do not freeze D46 if fine-grid utilization >=1 or discretization error is material",
+  "finest": [
+    {
+      "segment": "CSEG_16",
+      "bar_d_mm": 46.0,
+      "BF": 10,
+      "eta": 1.0,
+      "NR": 32,
+      "NTH": 720,
+      "NZ": 3000,
+      "combo": "uniform_1p40_screen",
+      "N_design_kN": 22886.277822136057,
+      "M_design_kNm": 312573.15930185944,
+      "Mcap_kNm": 312884.85012625874,
+      "utilization": 0.9990038161826196,
+      "Mcap_diff_vs_finest_pct": 0.0
+    },
+    {
+      "segment": "CSEG_16",
+      "bar_d_mm": 46.0,
+      "BF": 10,
+      "eta": 1.0,
+      "NR": 32,
+      "NTH": 720,
+      "NZ": 3000,
+      "combo": "provisional_N1p35_M1p40",
+      "N_design_kN": 22068.91075705977,
+      "M_design_kNm": 312413.5002708073,
+      "Mcap_kNm": 312978.26765001577,
+      "utilization": 0.998195506085937,
+      "Mcap_diff_vs_finest_pct": 0.0
+    }
+  ]
+}
