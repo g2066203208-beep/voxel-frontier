@@ -160,6 +160,44 @@ REF018_Huang2025_p13_Fig24_26_project_factor_sensitivity.png
 - 优先做与本文模型不确定性直接相关的PT有效预应力、seed数量、wind-bin、应力提取和局部网格；
 - foundation/controller只在其对控制damage有实际必要性时扩展。
 
+# 1.5 REF007 — 李泽宇2024博士论文：PCSH学位论文级疲劳组织直接先例
+
+文献：
+李泽宇. 预应力混凝土-钢混合风电塔架结构优化及性能分析. 博士学位论文, 2024.
+
+该论文第6章直接组织“陆上PCSH塔架风致疲劳动力分析”，是当前第四章除REF018外最重要的学位论文级结构参考。其路线包括：
+- 脉动风/风致动力响应；
+- 两尺度有限元获得局部材料应力时程；
+- 先识别钢塔、混凝土、普通钢筋和预应力筋的关键区域；
+- 结合风速概率；
+- rainflow；
+- Miner；
+- 分材料疲劳寿命与控制位置比较。
+
+原页证据位于：
+`references/evidence-screenshots/comparison-theses/`
+
+精选页：
+- `REF007_LiZeyu_p149_Ch6_time_domain_fatigue_method.png`
+- `REF007_LiZeyu_p151_Ch6_SN_curves.png`
+- `REF007_LiZeyu_p152_Ch6_fatigue_analysis_regions.png`
+- `REF007_LiZeyu_p157_Ch6_fatigue_results.png`
+- `REF007_LiZeyu_p159_Ch6_fatigue_life_table_and_summary.png`
+
+本文采用：
+- “先响应筛选控制区，再进入材料疲劳”的章节组织；
+- 混塔不同材料分别评价；
+- 风速概率+rainflow+Miner的长期组织；
+- 学位论文层面的结果图表编排。
+
+本文禁止复制：
+- REF007自己的控制高度/位置；
+- 其钢塔、混凝土、钢筋、PT具体寿命数值；
+- 其塔型、风场、材料参数或S-N曲线到本文对象。
+
+因此REF007的身份为：
+**STRONG SECONDARY THESIS REFERENCE / METHOD-AND-ORGANIZATION ONLY**
+
 # 2. REF002 — Kenna 2019：混塔分材料疲劳总框架
 
 文献：
