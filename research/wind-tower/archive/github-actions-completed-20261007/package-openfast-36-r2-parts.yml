@@ -1,0 +1,62 @@
+name: package-openfast-36-r2-parts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/package-openfast-36-r2-parts.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2
+          sparse-checkout-cone-mode: false
+
+      - name: Validate all 36 ZIP parts
+        shell: bash
+        run: |
+          set -euo pipefail
+          D='research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2'
+          mkdir -p package
+          : > package/SHA256SUMS.txt
+          : > package/CONTENTS.txt
+
+          count=0
+          for n in $(seq 1 36); do
+            f=$(printf 'part-%03d.zip' "$n")
+            src="$D/$f"
+            test -f "$src" || { echo "MISSING: $src"; exit 1; }
+            unzip -t "$src" >/dev/null
+            cp "$src" "package/$f"
+            sha256sum "package/$f" >> package/SHA256SUMS.txt
+            echo "$f $(stat -c%s "package/$f") bytes" >> package/CONTENTS.txt
+            count=$((count+1))
+          done
+
+          test "$count" -eq 36
+          test "$(find package -maxdepth 1 -name 'part-*.zip' | wc -l)" -eq 36
+          du -sh package
+          echo "Validated 36/36 parts."
+
+      - name: Upload one combined ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openfast-36-r2_all-36-parts
+          path: |
+            package/part-*.zip
+            package/SHA256SUMS.txt
+            package/CONTENTS.txt
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
