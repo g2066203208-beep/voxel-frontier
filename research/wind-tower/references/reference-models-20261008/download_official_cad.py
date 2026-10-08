@@ -78,8 +78,9 @@ for original in candidates:
         results.append(f'{original}\tLINK_ONLY_GT_83MB\t{sz}\t{info["sha"]}\t\t\tOfficial GitHub source file is larger than a safe single Git blob')
         continue
     # Only original STL ZIP geometry is hosted as a web asset.
-    # Native SolidWorks / generator archives remain in separate original-source archive.
-    dest = (PUBLIC if "/OpenSCAD/" in original else BASE/"IEA15_original_CAD") / pathlib.Path(original).name
+    # Native SolidWorks, STEP, OpenSCAD source and generator archives stay in a separate archive.
+    is_stl_zip = original.lower().endswith(".stl.zip")
+    dest = (PUBLIC if is_stl_zip else BASE/"IEA15_original_CAD") / pathlib.Path(original).name
     dest.parent.mkdir(parents=True,exist_ok=True)
     if dest.exists() and git_blob_sha(dest)==info["sha"]:
         status="ALREADY_VERIFIED"
@@ -99,7 +100,7 @@ for original in candidates:
             if not zipfile.is_zipfile(temp): raise ValueError("Official source is not a ZIP")
             with zipfile.ZipFile(temp) as zf:
                 if len(zf.namelist())<1: raise ValueError("ZIP archive empty")
-                if "/OpenSCAD/" in original and not any(n.lower().endswith(".stl") for n in zf.namelist()):
+                if is_stl_zip and not any(n.lower().endswith(".stl") for n in zf.namelist()):
                     raise ValueError("Official STL archive does not contain .stl")
             temp.replace(dest);status="ARCHIVED_SOURCE_UNMODIFIED"
         except Exception as err:
