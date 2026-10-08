@@ -45,7 +45,11 @@ candidates=[
  "CAD/OpenSCAD/IEA-15-240-RWT_VolturnUS-S.stl.zip",
  "CAD/OpenSCAD/IEA-15-240-RWT_VolturnUS-S_tower.stl.zip",
  "CAD/OpenSCAD/IEA-15-240-RWT_VolturnUS-S_floater.stl.zip",
- "CAD/IEA-15-240-RWT_Solidworks.zip",
+ "CAD/OpenSCAD/IEA-15-240-RWT.scad.zip",
+ "CAD/OpenSCAD/IEA-15-240-RWT_blade.scad.zip",
+ "CAD/OpenSCAD/IEA-15-240-RWT_tower.scad.zip",
+ "CAD/deprecated/IEA-15-240-RWT_Solidworks.zip",
+ "CAD/deprecated/IEA-15-240-RWT_blade-STEP.zip",
  "CAD/Generator_detail.zip",
 ]
 header="source_path\tresult\tbytes\tgit_sha\tsha256\tarchive_path\tinformation"
