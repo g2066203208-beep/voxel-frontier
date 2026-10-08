@@ -10,7 +10,7 @@
 3. **Wang、Xu、He等（2025）整机—混塔协同建模**：`../user-provided/High-fidelity integrated co-simulation model for dynamic analysis of onshore wind turbines with Steel-Concrete Hybrid Tower.pdf`，文献主表 REF051 标识为“用户原文PDF已归档”。DOI <https://doi.org/10.1016/j.ymssp.2025.112583>，出版社PDF是订阅内容，**不从商业平台绕过付费下载或公开转载**。
 4. **DTU HAWC2原型、Abaqus叶片数据、第三方OpenFAST适配**：`../baselines-and-site-20261004/README.md`及相关来源清单已有原始文件副本。未经复核不能说“158m整机/完整DTU主仓库已下载”；目前完整官方主仓库ZIP未备份。
 
-## B. 本次补充资源：执行下载并核验后才标记入库
+## B. 本次实际下载完成（4/4；见 DOWNLOAD_MANIFEST.tsv）
 
 | 编号 | 正式文件名 / 源文件夹 | 来源与许可 | 用途 |
 |---|---|---|---|
@@ -31,3 +31,11 @@
 - **主对象**：DTU10MW机组 + 何泽瑜/Xu谱系158m预应力混凝土—钢混塔，论文以现有用户提供原文及正式计算输入为唯一身份链。
 - **参考模型**：Frontiers 2026 在役混塔提供现场模态验证方法；Wang 2025给出RNA/混塔联算先例；Wang 2026给出RNA DPM/MPM/CPM简化影响定量验证；IEA15MW和2022外观网格论文均为**不同机组**、对照不能转移数值。
 - 下载成功不等于已运行、已验证或已应用到本论文；需要独立验证。
+
+## E. 本次完成验收（2026-10-08）
+
+- NEW-OA-01：PDF 3,552,619 bytes，SHA256 `35ee6841461055c1dd6aeb7563e45eb1cd99938639ab650c08edb8e3409fae3f`。
+- NEW-OA-02：PDF 15,505,724 bytes，SHA256 `d84c35144c4a01bb4a3ec853ab45d5acb4767609de450d6d649a62eb839f2a12`。
+- NEW-OA-03：PDF 6,290,463 bytes，SHA256 `93762e252922b1e75df59a453d2c08ef3f556367adf57229bc1800a4b1b11dbd`。
+- NEW-MODEL-01：OpenFAST源目录 **166个文件**、约8.9MB，官方上游commit `e4993d63de10f165389534461dd544006750fe60`，保留Apache-2.0 LICENSE及来源说明。
+- 三份PDF已并入 `../open-access-sources.tsv` 和 `../open-access/MANIFEST.tsv`，研究文献主表补充 REF144/REF145、更新 REF133。未进行CAE求解验证。
