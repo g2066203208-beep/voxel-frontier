@@ -1,8 +1,8 @@
-path	bytes	sha	url
-CAD/CFD CAD/Cross_comparision.png	76831	e109cc3b0077f656a71b80a49c4fbcf25b17fa8b	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD CAD/Cross_comparision.png
-CAD/CFD CAD/IEA_15MW_CFD.igs	1080760	6c829264c38faae30916cefda740323b1eda48fa	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD CAD/IEA_15MW_CFD.igs
-CAD/CFD CAD/IEA_15MW_CFD.stp	993200	dde21a2246834ad12676e3156dad2913f8c2e9aa	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD CAD/IEA_15MW_CFD.stp
-CAD/CFD CAD/readme.md	2259	b54e9843542b3aa54f170d4901419b2c87c627e2	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD CAD/readme.md
+path	bytes	git_sha	source
+CAD/CFD CAD/Cross_comparision.png	76831	e109cc3b0077f656a71b80a49c4fbcf25b17fa8b	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD%20CAD/Cross_comparision.png
+CAD/CFD CAD/IEA_15MW_CFD.igs	1080760	6c829264c38faae30916cefda740323b1eda48fa	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD%20CAD/IEA_15MW_CFD.igs
+CAD/CFD CAD/IEA_15MW_CFD.stp	993200	dde21a2246834ad12676e3156dad2913f8c2e9aa	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD%20CAD/IEA_15MW_CFD.stp
+CAD/CFD CAD/readme.md	2259	b54e9843542b3aa54f170d4901419b2c87c627e2	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/CFD%20CAD/readme.md
 CAD/Generator_detail.zip	1982247	3a59902b6fb60ffe0832c041ee997f47079c79ac	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/Generator_detail.zip
 CAD/OpenSCAD/IEA-15-240-RWT.scad.zip	6601373	e363dc61908030f62f3a4a050679333b506330fb	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/OpenSCAD/IEA-15-240-RWT.scad.zip
 CAD/OpenSCAD/IEA-15-240-RWT.stl.zip	4506915	929a5ada4d6ff677a8a668ecfeedc378108215c3	https://github.com/IEAWindSystems/IEA-15-240-RWT/blob/master/CAD/OpenSCAD/IEA-15-240-RWT.stl.zip
