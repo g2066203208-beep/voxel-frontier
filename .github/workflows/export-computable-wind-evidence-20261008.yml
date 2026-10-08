@@ -17,9 +17,9 @@ jobs:
           set -euo pipefail
           root=research/wind-tower
           out=/tmp/wind-compute
-          mkdir -p "$out/era5" "$out/openfast-samples" "$out/T062" "$out/T078" "$out/T077"
-          cp "$root/archive/local-assets-20261004/era5-raw-2005-2014/"part*.zip "$out/era5/"
-          cp "$root/archive/local-assets-20261004/era5-raw-2015-2025/"part*.zip "$out/era5/"
+          mkdir -p "$out/era5/2005-2014" "$out/era5/2015-2025" "$out/openfast-samples" "$out/T062" "$out/T078" "$out/T077"
+          cp "$root/archive/local-assets-20261004/era5-raw-2005-2014/"part*.zip "$out/era5/2005-2014/"
+          cp "$root/archive/local-assets-20261004/era5-raw-2015-2025/"part*.zip "$out/era5/2015-2025/"
           cp "$root/archive/local-assets-20261004-supplement/openfast-36-r2/"part-001.zip "$out/openfast-samples/"
           cp "$root/archive/local-assets-20261004-supplement/openfast-36-r2/"part-002.zip "$out/openfast-samples/"
           cp "$root/experiments/T062/recomputed-load-fatigue/"*.csv "$out/T062/"
