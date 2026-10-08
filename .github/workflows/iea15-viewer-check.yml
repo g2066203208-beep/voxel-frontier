@@ -1,0 +1,58 @@
+name: Validate IEA15 browser model
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - iea15.html
+      - src/iea15-viewer.ts
+      - src/iea15-viewer.css
+      - src/iea15-input.test.ts
+      - vite.config.ts
+      - .github/workflows/iea15-viewer-check.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: iea15-viewer-qa
+  cancel-in-progress: true
+
+jobs:
+  verify-source-and-bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Source data tests
+        run: npm test
+      - name: Type check and Vite production bundle
+        run: npm run build
+      - name: Check IEA15 published entry
+        run: |
+          test -s dist/iea15.html
+          grep -q "IEA 15 MW" dist/iea15.html
+          test -s dist/index.html
+      - name: Report successful build
+        run: |
+          mkdir -p research/wind-tower/references/reference-models-20261008
+          {
+            echo '# IEA15 Viewer Build Verification'
+            echo ''
+            echo '- Outcome: PASS (CI run source tests, TypeScript, Vite bundle, and multi-page HTML checks)'
+            echo "- Test commit: \`$GITHUB_SHA\`"
+            echo "- GitHub Actions run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo '- Published entry intended: https://g2066203208-beep.github.io/voxel-frontier/iea15.html'
+            echo '- Caveat: bundle verification does not prove browser WebGL works or Pages deployment is finished.'
+          } > research/wind-tower/references/reference-models-20261008/VIEWER_BUILD_STATUS.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/reference-models-20261008/VIEWER_BUILD_STATUS.md
+          git commit -m "test(wind): record successful IEA15 viewer build [skip ci]" || true
+          git push origin HEAD:main
