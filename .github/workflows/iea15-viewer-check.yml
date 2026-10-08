@@ -29,30 +29,61 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - name: Install dependencies
+        id: install
+        continue-on-error: true
+        run: npm ci
       - name: Source data tests
+        id: test
+        continue-on-error: true
         run: npm test
       - name: Type check and Vite production bundle
+        id: build
+        continue-on-error: true
         run: npm run build
       - name: Check IEA15 published entry
+        id: html
+        continue-on-error: true
         run: |
           test -s dist/iea15.html
           grep -q "IEA 15 MW" dist/iea15.html
           test -s dist/index.html
-      - name: Report successful build
+      - name: Record reproducible verification outcome
+        if: always()
+        env:
+          INSTALL: ${{ steps.install.outcome }}
+          TEST: ${{ steps.test.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          HTML: ${{ steps.html.outcome }}
         run: |
           mkdir -p research/wind-tower/references/reference-models-20261008
           {
             echo '# IEA15 Viewer Build Verification'
             echo ''
-            echo '- Outcome: PASS (CI run source tests, TypeScript, Vite bundle, and multi-page HTML checks)'
-            echo "- Test commit: \`$GITHUB_SHA\`"
+            echo "- Install: $INSTALL"
+            echo "- Test: $TEST"
+            echo "- Build: $BUILD"
+            echo "- HTML entry: $HTML"
+            echo "- Source commit: $GITHUB_SHA"
             echo "- GitHub Actions run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
             echo '- Published entry intended: https://g2066203208-beep.github.io/voxel-frontier/iea15.html'
-            echo '- Caveat: bundle verification does not prove browser WebGL works or Pages deployment is finished.'
+            echo '- Caveat: a successful bundle does not by itself verify browser WebGL or finished Pages deployment.'
           } > research/wind-tower/references/reference-models-20261008/VIEWER_BUILD_STATUS.md
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add research/wind-tower/references/reference-models-20261008/VIEWER_BUILD_STATUS.md
-          git commit -m "test(wind): record successful IEA15 viewer build [skip ci]" || true
+          git commit -m "test(wind): record IEA15 viewer build outcome [skip ci]" || true
+          git pull --rebase origin main
           git push origin HEAD:main
+      - name: Fail on unsuccessful tests or build
+        if: always()
+        env:
+          INSTALL: ${{ steps.install.outcome }}
+          TEST: ${{ steps.test.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          HTML: ${{ steps.html.outcome }}
+        run: |
+          test "$INSTALL" = "success"
+          test "$TEST" = "success"
+          test "$BUILD" = "success"
+          test "$HTML" = "success"
