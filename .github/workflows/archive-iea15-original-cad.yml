@@ -1,0 +1,53 @@
+name: Archive official IEA15 original CAD files
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/archive-iea15-original-cad.yml
+      - research/wind-tower/references/reference-models-20261008/download_official_cad.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: iea15-official-cad-archive
+  cancel-in-progress: true
+
+jobs:
+  archive-official-originals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout relevant project paths
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            research/wind-tower/references/reference-models-20261008/
+            public/iea15-official/
+            .github/workflows/
+          sparse-checkout-cone-mode: true
+          persist-credentials: true
+      - name: Download identical official CAD ZIP blobs and validate Git hashes
+        run: python3 research/wind-tower/references/reference-models-20261008/download_official_cad.py
+      - name: Verify official fixed-base CAD mesh and SolidWorks source actually archived
+        run: |
+          test -s public/iea15-official/IEA-15-240-RWT.stl.zip
+          test -s research/wind-tower/references/reference-models-20261008/IEA15_original_CAD/IEA-15-240-RWT_Solidworks.zip
+          test -s research/wind-tower/references/reference-models-20261008/IEA15_ORIGINAL_CAD_ARCHIVE_MANIFEST.tsv
+      - name: Commit only official byte-identical CAD sources and manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse public/iea15-official/
+          git add --sparse research/wind-tower/references/reference-models-20261008/IEA15_ORIGINAL_CAD_INVENTORY.tsv
+          git add --sparse research/wind-tower/references/reference-models-20261008/IEA15_ORIGINAL_CAD_ARCHIVE_MANIFEST.tsv
+          git add --sparse research/wind-tower/references/reference-models-20261008/IEA15_original_CAD/
+          if ! git diff --cached --quiet; then
+            git commit -m "data(iea15): archive original official SolidWorks, STEP, STL and OpenSCAD ZIPs"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
