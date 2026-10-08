@@ -4,7 +4,7 @@
 
 **在线工作台：** [打开论文工作室](https://g2066203208-beep.github.io/voxel-frontier/)
 
-**新增三维预览：** [IEA 15 MW参考风机 · 官方OpenFAST参数驱动三维模型](https://g2066203208-beep.github.io/voxel-frontier/iea15.html)（可旋转、缩放、隐藏部件；叶片翼型厚度和机舱外观为简化重建，非官方CAD或Abaqus模型）。
+**新增三维预览：** [IEA 15 MW官方原始STL几何查看器](https://g2066203208-beep.github.io/voxel-frontier/iea15.html)（直接加载IEA Wind官方发布STL网格，不进行模型重建；原始SolidWorks、STEP文件单独归档，不能当作经验证的Abaqus模型）。
 
 ## 功能
 
