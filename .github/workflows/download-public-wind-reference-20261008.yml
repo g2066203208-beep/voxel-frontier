@@ -1,0 +1,45 @@
+name: Archive public wind turbine reference models 2026-10-08
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/download-public-wind-reference-20261008.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-open-resources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout minimal paths without existing heavy binaries
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            research/wind-tower/references/reference-models-20261008/
+            .github/workflows/
+          sparse-checkout-cone-mode: true
+          persist-credentials: true
+      - name: Download, validate and inventory public sources
+        run: |
+          python3 research/wind-tower/references/reference-models-20261008/download_public_assets.py
+          cat research/wind-tower/references/reference-models-20261008/DOWNLOAD_MANIFEST.tsv
+      - name: Commit verified PDFs and upstream OpenFAST reference inputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse research/wind-tower/references/reference-models-20261008/DOWNLOAD_MANIFEST.tsv
+          git add --sparse research/wind-tower/references/open-access/Wang_2026_JMSE_14_956_RNA_Fidelity.pdf                            research/wind-tower/references/open-access/Seismic_2022_AppliedSciences_12_10136.pdf                            research/wind-tower/references/open-access/Gaertner_2020_IEA_15MW_Reference_Report_75698.pdf || true
+          if [ -d research/wind-tower/references/reference-models-20261008/IEA-15-240-RWT_OpenFAST ]; then
+            git add --sparse research/wind-tower/references/reference-models-20261008/IEA-15-240-RWT_OpenFAST
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m "data(wind): archive verified public OA papers and IEA reference files"
+            git push origin HEAD:main
+          else
+            echo "No new validated assets"
+          fi
