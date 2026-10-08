@@ -4,6 +4,8 @@
 
 **在线工作台：** [打开论文工作室](https://g2066203208-beep.github.io/voxel-frontier/)
 
+**新增10 MW混塔可视化：** [打开158m混塔数据看板](https://g2066203208-beep.github.io/voxel-frontier/wind-twin.html)（Three.js三维示意；T072 36工况载荷包络、T077 31段配筋、T078预应力数据直接来自研究文件；[来源与限制](research/wind-tower/workflow/WIND_TWIN_VIEWER_20261008.md)）。
+
 **新增三维预览：** [IEA 15 MW官方原始STL几何查看器](https://g2066203208-beep.github.io/voxel-frontier/iea15.html)（直接加载IEA Wind官方发布STL网格，不进行模型重建；原始SolidWorks、STEP文件单独归档，不能当作经验证的Abaqus模型）。
 
 ## 功能
