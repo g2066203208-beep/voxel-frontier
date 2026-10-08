@@ -1,6 +1,6 @@
 # 公开风机塔筒 / RNA / 整机参考模型归档 — 2026-10-08
 
-**在线查看：** [IEA 15 MW三维参数模型](https://g2066203208-beep.github.io/voxel-frontier/iea15.html)。页面直接读取已归档官方OpenFAST参数，支持交互，不冒充原始CAD、有限元网格或求解结果。
+**在线查看：** [IEA 15 MW官方原始STL查看器](https://g2066203208-beep.github.io/voxel-frontier/iea15.html)。页面只解压显示IEA Wind官方发布的原始CAD/OpenSCAD STL网格（不再根据OpenFAST参数重建几何）；原始SolidWorks和STEP包归档在 `IEA15_original_CAD/`，源文件身份见 `IEA15_ORIGINAL_CAD_ARCHIVE_MANIFEST.tsv`。
 
 > 用途：为吉老师提出的“模型依据明确、RNA简化有依据、简化影响需验证”提供原始公开资料。**本目录存放参考，不改变论文正式158 m混塔研究对象。**
 > 下载工具：`.github/workflows/download-public-wind-reference-20261008.yml`。自动下载及Git提交已成功完成；真实文件、体积和SHA256见 `DOWNLOAD_MANIFEST.tsv`。
