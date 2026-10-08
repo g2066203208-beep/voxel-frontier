@@ -33,7 +33,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --sparse research/wind-tower/references/reference-models-20261008/DOWNLOAD_MANIFEST.tsv
-          git add --sparse research/wind-tower/references/open-access/Wang_2026_JMSE_14_956_RNA_Fidelity.pdf                            research/wind-tower/references/open-access/Seismic_2022_AppliedSciences_12_10136.pdf                            research/wind-tower/references/open-access/Gaertner_2020_IEA_15MW_Reference_Report_75698.pdf || true
+          for pdf in \
+            research/wind-tower/references/open-access/Wang_2026_JMSE_14_956_RNA_Fidelity.pdf \
+            research/wind-tower/references/open-access/Seismic_2022_AppliedSciences_12_10136.pdf \
+            research/wind-tower/references/open-access/Gaertner_2020_IEA_15MW_Reference_Report_75698.pdf; do
+            if [ -f "$pdf" ]; then git add --sparse -- "$pdf"; fi
+          done
           if [ -d research/wind-tower/references/reference-models-20261008/IEA-15-240-RWT_OpenFAST ]; then
             git add --sparse research/wind-tower/references/reference-models-20261008/IEA-15-240-RWT_OpenFAST
           fi
