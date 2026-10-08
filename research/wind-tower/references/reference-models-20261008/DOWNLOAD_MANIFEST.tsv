@@ -1,0 +1,5 @@
+id	asset	status	bytes	sha256	license	source_or_note
+NEW-OA-01	references/open-access/Wang_2026_JMSE_14_956_RNA_Fidelity.pdf	ok	3552619	35ee6841461055c1dd6aeb7563e45eb1cd99938639ab650c08edb8e3409fae3f	CC-BY-4.0	https://mdpi-res.com/d_attachment/jmse/jmse-14-00956/article_deploy/jmse-14-00956.pdf | 10.3390/jmse14100956
+NEW-OA-02	references/open-access/Seismic_2022_AppliedSciences_12_10136.pdf	ok	15505724	d84c35144c4a01bb4a3ec853ab45d5acb4767609de450d6d649a62eb839f2a12	CC-BY-4.0	https://mdpi-res.com/d_attachment/applsci/applsci-12-10136/article_deploy/applsci-12-10136.pdf | 10.3390/app121910136
+NEW-OA-03	references/open-access/Gaertner_2020_IEA_15MW_Reference_Report_75698.pdf	ok	6290463	93762e252922b1e75df59a453d2c08ef3f556367adf57229bc1800a4b1b11dbd	NREL-public-technical-report	https://docs.nlr.gov/docs/fy20osti/75698.pdf | NREL/TP-5000-75698
+NEW-MODEL-01	reference-models-20261008/IEA-15-240-RWT_OpenFAST/	ok	8912221	e4993d63de10f165389534461dd544006750fe60	Apache-2.0	https://github.com/IEAWindSystems/IEA-15-240-RWT.git @ e4993d63de10f165389534461dd544006750fe60 (166 files)
