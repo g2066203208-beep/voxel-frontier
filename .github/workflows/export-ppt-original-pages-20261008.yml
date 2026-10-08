@@ -1,0 +1,40 @@
+name: Export offline original evidence for wind tower PPT
+on:
+  push:
+    paths:
+      - '.github/workflows/export-ppt-original-pages-20261008.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect source screenshots
+        shell: bash
+        run: |
+          mkdir -p /tmp/wind-tower-evidence
+          cp -r research/wind-tower/references/evidence-screenshots /tmp/wind-tower-evidence/
+          mkdir -p /tmp/wind-tower-evidence/standards
+          cp -r research/wind-tower/experiments/T073/source-evidence/GB50010_Appendix_E /tmp/wind-tower-evidence/standards/
+          cp -r research/wind-tower/experiments/T061/audit_evidence_20261007 /tmp/wind-tower-evidence/standards/ || true
+          cp -r research/wind-tower/experiments/T078/T078_NBT10907_APPENDIX_A_SOURCE_LEDGER.md /tmp/wind-tower-evidence/standards/ || true
+          cp -r research/wind-tower/experiments/T046/inner-inventory/SUMMARY.json /tmp/wind-tower-evidence/ || true
+      - name: Export image archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-tower-ppt-original-pages
+          path: /tmp/wind-tower-evidence/
+          retention-days: 7
+      - name: Record run ID for download
+        shell: bash
+        run: |
+          mkdir -p research/wind-tower/governance
+          echo "$GITHUB_RUN_ID" > research/wind-tower/governance/PPT_OFFLINE_EVIDENCE_ARTIFACT_RUNID.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/governance/PPT_OFFLINE_EVIDENCE_ARTIFACT_RUNID.txt
+          git commit -m "Record PPT original-page evidence export run" || true
+          git pull --rebase origin main
+          git push
