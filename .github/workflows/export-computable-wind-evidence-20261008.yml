@@ -1,0 +1,50 @@
+name: Export real computation inputs for thesis PPT
+on:
+  push:
+    paths:
+      - '.github/workflows/export-computable-wind-evidence-20261008.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package original archived inputs and computed ledgers
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          out=/tmp/wind-compute
+          mkdir -p "$out/era5" "$out/openfast-samples" "$out/T062" "$out/T078" "$out/T077"
+          cp "$root/archive/local-assets-20261004/era5-raw-2005-2014/"part*.zip "$out/era5/"
+          cp "$root/archive/local-assets-20261004/era5-raw-2015-2025/"part*.zip "$out/era5/"
+          cp "$root/archive/local-assets-20261004-supplement/openfast-36-r2/"part-001.zip "$out/openfast-samples/"
+          cp "$root/archive/local-assets-20261004-supplement/openfast-36-r2/"part-002.zip "$out/openfast-samples/"
+          cp "$root/experiments/T062/recomputed-load-fatigue/"*.csv "$out/T062/"
+          cp "$root/experiments/T062/recomputed-load-fatigue/"*.json "$out/T062/"
+          cp "$root/experiments/T062/rainflow-method-crosscheck/"*.csv "$out/T062/"
+          cp "$root/experiments/T078/"*.csv "$out/T078/"
+          cp "$root/experiments/T078/"*.json "$out/T078/"
+          cp "$root/experiments/T077/T077_FORMAL_31SEG_REBAR_BF8.csv" "$out/T077/"
+          find "$out" -type f -print0 | sort -z | xargs -0 sha256sum > "$out/INPUT_SHA256SUMS.txt"
+          find "$out" -type f -printf '%P,%s bytes\n' | sort > "$out/INPUT_MANIFEST.csv"
+          du -sh "$out"
+      - name: Publish inputs as downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-ppt-real-inputs
+          path: /tmp/wind-compute/
+          retention-days: 7
+      - name: Record workflow run
+        shell: bash
+        run: |
+          mkdir -p research/wind-tower/governance
+          echo "$GITHUB_RUN_ID" > research/wind-tower/governance/PPT_COMPUTE_INPUTS_RUNID.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/governance/PPT_COMPUTE_INPUTS_RUNID.txt
+          git commit -m "Record PPT real input export run ID" || true
+          git pull --rebase origin main
+          git push
