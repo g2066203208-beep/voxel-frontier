@@ -1,14 +1,54 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#081320" />
-  <meta name="description" content="10 MW 158 m预应力混凝土—钢混合塔架：基于论文工作室T072/T077/T078工程结果的三维交互及载荷包络可视化。" />
-  <title>10 MW 混塔数字可视化 | 论文工作室</title>
-</head>
-<body>
-  <div id="wind-twin-app"><p>正在加载论文仓库中的工程数据…</p></div>
-  <script type="module" src="/src/wind-twin.ts"></script>
-</body>
-</html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#081320">
+<meta name="description" content="10 MW 158m混合塔架三维模型示意与T072/T077/T078真实研究数据">
+<title>10 MW 混塔数字可视化 | 论文工作室</title>
+</head><body><div id="wind-twin-app"><div class="dashboard">
+<header class="topbar"><div class="brand"><div class="brand-symbol">⌁</div><div><div class="micro">PAPER STUDIO / ENGINEERING VISUALIZATION</div><h1>WIND TWIN <span style="color:#65ddd0">/</span> 10 MW 混合塔架</h1></div></div>
+<nav class="nav"><a href="./">论文工作室</a><a href="./iea15.html">IEA 15 MW官方原始几何</a><a href="https://github.com/g2066203208-beep/voxel-frontier" target="_blank" rel="noopener">GitHub源码 ↗</a><a class="highlight" href="#load-section">真实载荷 ↘</a></nav></header>
+<section class="intro"><div><h2>158 m 预应力混凝土—钢混合塔 · 研究数据可视化</h2><p>DTU 10 MW研究体系 ｜ 实际统计与规范设计数据取自GitHub归档CSV ｜ 3D几何和叶轮运动是示意而非原始CAD或实时求解</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill"><i class="dot"></i> 数据源：T072/T077/T078</span><span class="pill warn-pill">研究过程数据 · 非论文最终验收</span></div></section>
+<section class="metric-grid">
+<div class="metric"><div class="head">混合塔架研究高度 <span>GEOMETRY</span></div><strong>158 <em>m</em></strong><small>112 m混凝土塔段 + 46 m钢塔段</small></div>
+<div class="metric"><div class="head">正式OpenFAST包络 <span>DATA</span></div><strong id="metric-cases">—</strong><small>NTM / ETM · 100–700 s分析窗</small></div>
+<div class="metric"><div class="head">塔底最大合成弯矩 <span>ENVELOPE</span></div><strong id="metric-moment">—</strong><small id="metric-control">T072研究归档</small></div>
+<div class="metric"><div class="head">有效总预应力 <span>CODE-DESIGN</span></div><strong id="metric-prestress">—</strong><small>规范设计支路BF8 · T078</small></div>
+</section>
+<div class="main-grid"><section class="surface">
+<div class="surface-head"><h3>三维结构观察 <span>INTERACTIVE 3D</span></h3><span class="surface-note">拖动旋转 · 滚轮缩放 · 点击塔段选取</span></div>
+<div class="viewport" id="wind-viewport">
+<div class="hud top-left"><div class="micro" style="color:#66daca">158M HYBRID TOWER</div><span class="line"></span><div class="small">混凝土分段：31<br>上部钢塔：46 m<br>RNA：示意外形</div></div>
+<div class="hud top-right"><div class="small">VISUAL ROTOR SPEED / NOT SOLVER DATA</div><div class="big" id="hud-rpm">— rpm</div><div class="small" id="hud-state">教学动画</div></div>
+<div class="hud bottom-left"><div class="small" style="color:#d9b785">外径取自T078；钢塔壁厚与RNA外形为图形示意<br>配筋数量取自T077；纵筋与预应力坐标仅为示意</div></div></div>
+<div class="toolbar"><button class="btn active" data-camera="iso">◈ 轴测</button><button class="btn" data-camera="front">正视</button><button class="btn" data-camera="side">侧视</button><button class="btn" id="tower-section">◎ 剖视显示</button><button class="btn" id="tower-pt">〽 预应力位置</button><button class="btn" id="tower-rebar">⌗ 当前段纵筋</button><button class="btn" id="capture-btn">⇩ 导出截图</button></div>
+</section>
+<div class="side-stack"><section class="surface">
+<div class="surface-head"><h3>31 段结构数据 <span>STRUCTURE</span></h3><a class="source-link" href="https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/experiments/T078/T078_BF8_SEGMENT_LOSS_AND_GRAVITY_CHECK.csv" target="_blank" rel="noopener">T078原表 ↗</a></div>
+<div class="content"><div class="control-row"><label for="segment-select">选取混凝土节段</label><select id="segment-select"></select></div>
+<div class="info-list">
+<div class="info-item"><span>混凝土等级</span><b id="seg-grade">—</b></div><div class="info-item"><span>外径 / m</span><b id="seg-diameter">—</b></div>
+<div class="info-item"><span>每层纵筋根数（何文锁定）</span><b id="seg-bars">—</b></div><div class="info-item"><span>设计支路纵筋直径</span><b id="seg-phi">—</b></div>
+<div class="info-item"><span>规范设计利用系数</span><b id="seg-util">—</b></div><div class="info-item"><span>永久状态最小边缘压应力 / MPa</span><b id="seg-stress">—</b></div>
+</div><div class="side-foot">配筋为T077的BF8 <b>CODE-DESIGN规范设计支路</b>，不代表何泽瑜论文原始钢筋直径。<a class="source-link" href="https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/experiments/T077/T077_FORMAL_31SEG_REBAR_BF8.csv" target="_blank" rel="noopener">查看设计表 ↗</a></div></div>
+</section>
+<section class="surface"><div class="surface-head"><h3>可视化情景控制 <span>DEMO / NOT SCADA</span></h3><span class="pill warn-pill">教学动画</span></div>
+<div class="content"><div class="control-box"><div class="caption"><label for="wind-slider">演示风速滑块</label><b id="wind-label">11.4 m/s</b></div><input id="wind-slider" type="range" min="0" max="30" step="0.2" value="11.4"><div class="control-hint">仅控制三维叶轮示意转速，不更改OpenFAST归档数据，也不计算真实功率和变桨响应。</div><div style="display:flex;gap:7px;margin-top:13px;flex-wrap:wrap"><button id="run-btn" class="btn primary">Ⅱ 暂停动画</button><button id="fault-btn" class="btn">⚠ 演示故障停机</button><button id="reset-btn" class="btn">↻ 重置</button></div></div>
+<hr class="section-break"><div class="toggle-list"><label><input id="show-concrete" type="checkbox" checked> 混凝土段</label><label><input id="show-steel" type="checkbox" checked> 钢塔段</label><label><input id="show-pt" type="checkbox"> PT示意</label><label><input id="show-rebar" type="checkbox"> 当前段纵筋</label></div>
+<div class="label-block"><b>物理边界</b>：故障按钮和风速滑块是可视化演示，不是真实SCADA接入、热失效模拟或OpenFAST/Abaqus实时求解。论文科研结论只取自下方有来源的工程数据。</div>
+</div></section></div></div>
+<div class="bottom-grid" id="load-section"><section class="surface">
+<div class="surface-head"><h3>36组 OpenFAST 塔底荷载包络 <span>T072 / RESEARCH DATA</span></h3><a class="source-link" href="https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/experiments/T072/T072_FORMAL_36CASE_BASE_ENVELOPE.csv" target="_blank" rel="noopener">原始CSV ↗</a></div>
+<div class="content"><div class="chart-controls"><label class="surface-note" for="metric-select">分析通道</label><select id="metric-select"><option value="Mres_max_kNm">合成弯矩（kN·m）</option><option value="Vres_max_kN">合成剪力（kN）</option><option value="T_abs_max_kNm">扭矩绝对值（kN·m）</option><option value="Ncomp_max_kN">最大轴压力（kN）</option></select><span class="surface-note">每柱代表单工况极值，并非时程</span></div>
+<div class="chart-area"><div class="chart-y"><span id="chart-title">合成弯矩</span><span id="chart-max">—</span></div><div id="load-chart" class="bar-chart"></div><div class="axis"><span>工况01</span><span>点击柱形查看工况</span><span>工况36</span></div><div class="chart-legend"><span><i class="legend-dot"></i>NTM</span><span><i class="legend-dot etm"></i>ETM</span><span><i class="legend-dot sel"></i>已选</span></div></div>
+<div class="chart-detail"><span>当前：<b class="case-code" id="case-code">—</b></span><span id="case-quantity">—</span><span id="case-time" class="surface-note">—</span></div><div class="side-foot">T072文件：正式158 m OpenFAST OUTB，分析窗100–700 s；不同物理量的极值时刻不一定相同，<b>不可直接拼成同一时刻组合</b>。<a href="https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/experiments/T072/T072_FORMAL_36CASE_BASE_ENVELOPE.md" target="_blank" rel="noopener">控制工况说明 ↗</a></div>
+</div></section>
+<section class="surface"><div class="surface-head"><h3>预应力和规范设计支路 <span>T078 / CODE-DESIGN</span></h3><a class="source-link" href="https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/experiments/T078/T078_PRESTRESS_DESIGN_META.json" target="_blank" rel="noopener">规范计算 ↗</a></div>
+<div class="content"><div class="results-grid">
+<div class="result"><span>预应力位置</span><strong>36</strong><small>重建位置数</small></div><div class="result"><span>每位置钢绞线</span><strong id="pt-bf">—</strong><small>BF8设计支路</small></div><div class="result"><span>钢绞线总数</span><strong id="pt-count">—</strong><small>15.2 mm规格</small></div>
+<div class="result"><span>有效应力</span><strong id="pt-sigma">—</strong><small>MPa</small></div><div class="result"><span>预应力损失</span><strong id="pt-loss">—</strong><small>MPa</small></div><div class="result"><span>保留比例</span><strong id="pt-eta">—</strong><small>η，T078</small></div></div>
+<p class="result-notes">自重+有效预应力的永久状态，31段毛截面压紧检查全部PASS，最小边缘压应力 <b id="pt-minstress">—</b> MPa。不能代替运行裂缝、疲劳或最终接缝ULS验算。</p>
+<p class="result-notes" style="margin-top:10px">何文原型与规范设计支路分开：36个环向位置、1.75m半径和BF8不是何文直接披露的值。<a href="https://github.com/g2066203208-beep/voxel-frontier/blob/main/research/wind-tower/experiments/T077/T077_DESIGN_BRANCH_DECISION_20261007.md" target="_blank" rel="noopener">查看分支冻结规则 ↗</a></p>
+</div></section></div>
+<section class="surface" style="margin-top:14px"><div class="surface-head"><h3>31段配筋计算核对 <span>T077 DATA TABLE</span></h3><span class="surface-note">点击数据行同步选取三维节段</span></div><div class="content" style="padding-top:4px"><div id="csv-table"></div></div></section>
+<footer class="footer"><strong>研究声明</strong>　本页面仅展示可追溯的离线数值结果与交互式示意几何，不代表真实可运行SCADA数字孪生、正式有限元求解模型或整机全链路完成验收。T072数据为已有荷载包络；T077/T078为规范设计分支。RNA、钢塔壁厚、钢筋定位及风速驱动转速均为图形示意。<div class="copyright">GITHUB PAPER STUDIO · GITHUB PAGES · THREE.JS · TRACEABLE ENGINEERING VISUALIZATION</div></footer>
+</div></div><script type="module" src="/src/wind-twin.ts"></script></body></html>
