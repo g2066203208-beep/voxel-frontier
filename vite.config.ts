@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         main: resolve(process.cwd(), 'index.html'),
         iea15: resolve(process.cwd(), 'iea15.html'),
+        windTwin: resolve(process.cwd(), 'wind-twin.html'),
       },
     },
   },
