@@ -62,4 +62,5 @@ T045	P0-P2	2	Q01	建立BASE001首选候选：以T026 M2为塔架母本，接入T
 
 T038-S4	P0-P1	2	Q01	按真实原文制定RNA/环筋修正路线，建立官方详细Standard单叶片候选并核导入导出差异	experiments/T038/source-rna-repair-20261005/README.md	stage1-candidate-created/not-solver-validated	user-review/D08-remains-open	四篇原文及官方源码支撑；实际CAE/INP留档；未装入源RNA或M2，未改原件，未求解；保留失败尝试与导出舍入
 T046	P1-P5	RNA-model-fidelity-and-load-ownership	Q01-Q03	核查GitHub现有RNA文献/模型与2026前沿RNA fidelity研究，决定Abaqus RNA层级并冻结OpenFAST→Abaqus自由体规则	audit/46-t046-rna-modeling-fidelity-and-load-ownership-review.md	complete/method-decision	G0-G5	主线采用两层RNA：BASE001-STRUCTURAL用R2完整空间刚体RNA；CUT-REPLAY以塔顶切口以下自由体回放六分量，默认不重复RNA动态质量；详细RNA保留为可选fidelity对照
+T079	P0-P1/seismic	2/seismic-proposed	Q1/Q-SEISMIC	按用户要求核查现有进度并制定嘉鱼抗震与风震研究方案，全程进入GitHub记录	experiments/T079/REGISTRATION.md	in-progress/github-backfill	G1/G5/SEISMIC-INPUT	2026-10-21补登此前D盘审计及方案；尚无新增求解；七章为新增地震后的结构提案而非旧路线恢复
 
