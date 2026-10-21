@@ -24,8 +24,8 @@
   "files": [
     {
       "path": "research/wind-tower/experiments/T079/build_plan_manifest.py",
-      "sha256": "b469ad9066e6ad7e7f09bb625c12d300b6d3e2327131c3d64ca3f6093d033111",
-      "bytes": 5251
+      "sha256": "bcbd7daa869d8e599966e2fa32167b4467a16f42f6a678b3acb7424cbc3ea147",
+      "bytes": 5265
     },
     {
       "path": "research/wind-tower/experiments/T079/literature_notes.md",
@@ -49,13 +49,13 @@
     },
     {
       "path": "research/wind-tower/experiments/T079/planned_cases.json",
-      "sha256": "f614142374e8a0ec63cafc3bc5bfe41d56bf66c897afc5a0199f64353ff7ee30",
-      "bytes": 202828
+      "sha256": "ec3eef0b1a4eefa6e3ca7a82749bd1ded5c93dd0e64ae5ea69d8f88d46c61ad6",
+      "bytes": 197388
     },
     {
       "path": "research/wind-tower/experiments/T079/PROCESS_LOG.md",
-      "sha256": "15a2cefb6a4e0c392f62ead8fa0495dab7792d1af92b2598548586674177536d",
-      "bytes": 2352
+      "sha256": "c9453a23ca2d3c611dccd2db0614bfd27c9e3ed43e474eea01a1accdfe0dbb12",
+      "bytes": 2350
     },
     {
       "path": "research/wind-tower/experiments/T079/README.md",
@@ -74,8 +74,8 @@
     },
     {
       "path": "research/wind-tower/experiments/T079/studio_audit.md",
-      "sha256": "e6334f79ef4ce192e56c1314139db9be6149ef6135d7a68f0ee7a5541f0d775c",
-      "bytes": 8955
+      "sha256": "e200e9ddf855f8e48221b8214cbd28e5a7af14c54f873d4ee914161e5b119cba",
+      "bytes": 8954
     }
   ]
 }

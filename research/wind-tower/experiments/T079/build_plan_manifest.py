@@ -70,5 +70,5 @@ manifest = {
     "formal_run_registry_entries": 0,
     "cases": cases,
 }
-(root / "planned_cases.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+(root / "planned_cases.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 print(json.dumps({"main_cases": len(cases), "counts": counts, "ready_to_run": 0, "results": 0}, ensure_ascii=False))
