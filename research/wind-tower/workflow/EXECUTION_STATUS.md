@@ -1,50 +1,32 @@
 # EXECUTION STATUS — CURRENT ONLY
 
-更新时间：2026-10-07
+更新时间：2026-10-21。过程历史保留在experiments/audit/archive；当前事实以本文件、final-thesis总控和registry共同追溯。
 
-本文件不再保存逐日历史日志。历史过程已保存在audit/、experiments/和archive/。当前论文事实以final-thesis状态和本文件为准。
+## 当前新增工作
 
-## 当前结构模型
-T057：
-`experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp`
+[T079 嘉鱼地震与风震](../experiments/T079/README.md)：已完成既有状态审计、核心文献检索、方法提案和GitHub记录整合；**0新增地震求解，0地震结果**。候选215条目均ready_to_run=false，3风seed仅为初步筛查，不构成完整规范矩阵。
 
-状态：
-**EVIDENCE-RECONCILED CANDIDATE / STATIC GENERATION PASS / NATIVE SOLVER PENDING**
+当前新增研究问题：当地地震/风震是否改变控制响应、接缝/预应力需求及疲劳优化约束；RNA等效在地震频带是否有效。
 
-下一步：
-1. native Data Check；
-2. Gravity/PT/contact equilibrium；
-3. mass/CG/J；
-4. Modal；
-5. Flex；
-6. steel local mesh remediation if steel fatigue branch is triggered。
+## 当前结构与设计
 
-## 当前论文
-五章制，正式正文仅：
-- Ch1绪论；
-- Ch2精细模型与V&V；
-- Ch3场址风/整机随机载荷；
-- Ch4风致材料疲劳；
-- Ch5结论与展望。
+T057为物理候选，T070为增加诊断输出的执行子模型；原生DataCheck、Gravity/PT/contact、mass/CG/J、Modal/Flex和钢塔网格门禁尚未全部关闭。
 
-## 当前风/整机数据
-已有：
-- ERA5 2005–2025；
-- 36 TurbSim/OpenFAST screening cases；
-- T062 independent rainflow/DEL recomputation。
+T077 HRB500规范设计尚未与T057 HRB335物理分支统一；T078有效PT设计支路完成不等于地震组合已通过；环筋/拉筋与完整构造验算仍待闭合。
 
-HOLD：
-- historical S03=28.177 MN·m vs current archived S04≈26.8 MN·m source divergence；
-- formal DLC1.2 fatigue wind bins；
-- full TurbSim grid/transient V&V。
+## 当前论文与风疲劳
 
-## 当前疲劳
-文献与方法路线已冻结；绝对材料寿命未计算。
+现存正式正文六章：绪论、模型与V&V、场址风与载荷、材料疲劳、疲劳驱动优化、结论。新增地震后的七章仅为T079装配提案，尚未改动正文，不恢复旧Simpack路线。
 
-主参考：
-REF018 Huang 2025；
-强二级：
-REF007 李泽宇2024博士论文第6章。
+ERA5与36组筛查资产保留。S03/S04来源冲突、DLC1.2长期bins、局部材料疲劳和绝对寿命未闭合；已有load-DEL不升级材料寿命。
 
-## 当前最优先任务
-只做T057原生求解门禁；不继续扩论文框架，不恢复优化章，不恢复Simpack。
+## 下一顺序
+
+1. 登记具体运行卡并统一配筋/模型；
+2. 关闭原生初态、质量与模态/柔度门禁；
+3. 补RNA地震适用性对照与嘉鱼输入依据；
+4. 真实记录绑定、反应谱/停机时程交叉验证；
+5. 在载荷去重、阻尼和规范组合明确后开展风震；
+6. 控制工况精细分析及逐项抗震验算，并继续原风疲劳主线。
+
+全过程以GitHub台账为正式记录，失败/HOLD不删除；正式RUN必须事前登记，阶段完成提交并核验远端。D盘保存工程副本、大体量原始结果及受限来源，GitHub记录路径、hash、提取脚本与可分发结果。

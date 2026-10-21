@@ -1,0 +1,59 @@
+{
+  "task_id": "T079",
+  "sources": [
+    {
+      "ref_id": "REF154",
+      "source_url": "https://gf.cabr-fire.com/Web/uploads/allimg/230914/153403I32-34.jpg",
+      "local_evidence_filename": "hubei_annex2024.jpg",
+      "sha256": "e9e698c5e9dc0f36af6561a132c0150950985e0729941799190327bf56e3a67a",
+      "bytes": 608735,
+      "access_date": "2026-10-21",
+      "inspection": "original_table_image_viewed",
+      "publication": "external_original_link_and_hash; binary remains local"
+    },
+    {
+      "ref_id": "REF154",
+      "source_url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192U142-1.jpg",
+      "local_evidence_filename": "time_history_peak.jpg",
+      "sha256": "37e8e81d3bfa5707f62a0ca9bf88e065fbb8b0906459d60923691f81f48e5581",
+      "bytes": 72540,
+      "access_date": "2026-10-21",
+      "inspection": "original_table_image_viewed",
+      "publication": "external_original_link_and_hash; binary remains local"
+    },
+    {
+      "ref_id": "REF154",
+      "source_url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192VM3-4.jpg",
+      "local_evidence_filename": "characteristic_period.jpg",
+      "sha256": "2df9176531765f1bd7c4a791175b422bf044e9d29059edee63beb77613c8a6eb",
+      "bytes": 97402,
+      "access_date": "2026-10-21",
+      "inspection": "original_table_image_viewed",
+      "publication": "external_original_link_and_hash; binary remains local"
+    }
+  ],
+  "reused_refs": [
+    "REF007",
+    "REF048",
+    "REF049",
+    "REF132",
+    "REF133",
+    "REF134",
+    "REF135"
+  ],
+  "new_refs": [
+    "REF146",
+    "REF147",
+    "REF148",
+    "REF149",
+    "REF150",
+    "REF151",
+    "REF152",
+    "REF153",
+    "REF154",
+    "REF155",
+    "REF156",
+    "REF157",
+    "REF158"
+  ]
+}

@@ -48,3 +48,15 @@ PAR046	screening simulation duration	700	s	wind/whole-turbine run design	REF061 
 PAR047	effective screening window	100-700	s	statistics	project design	T062 audit	Ch3	current-screening	600s
 PAR048	load-DEL exponent	4	-	load-level screening	project fatigue convention	T062	Ch3	current-screening-only	Not universal material fatigue exponent
 PAR049	load-DEL Neq	100000	cycles	load-level screening	project fatigue convention	T062	Ch3	current-screening-only	Not material-life cycle count
+PAR050	Jiayu town intensity	6	degree	town-level benchmark	REF154	Appendix A Hubei/Xianning/Jiayu	T079	verified-town-only	Not site-specific safety assessment
+PAR051	Jiayu basic design acceleration	0.05	g	town-level benchmark	REF154	Appendix A Hubei/Xianning/Jiayu	T079	verified-town-only	Not PGA for all earthquake levels
+PAR052	Jiayu design earthquake group	1	-	town-level benchmark	REF154	Appendix A Hubei/Xianning/Jiayu	T079	verified-town-only	Not a substitute for site-specific hazard assessment
+PAR053	provisional soil class	II	-	study-design	T079	METHOD_PLAN.md section2	T079	proposed/HOLD-site	Not inferred from ERA5; compare I1 andIII pending geotechnical evidence
+PAR054	group1 classII characteristic period	0.35	s	conditional spectrum parameter	REF154	5.1 characteristic-period table	T079	conditional-on-soil-class	Not a verified site Tg; rare-level adjustment requires applicable-clause check
+PAR055	frequent acceleration table benchmark	0.18	m/s2	building-code benchmark	REF154	5.1.2-2;18cm/s2	T079	HOLD-wind-tower-applicability	Target spectrum and damping must also be checked
+PAR056	rare acceleration table benchmark	1.25	m/s2	building-code benchmark	REF154	5.1.2-2;125cm/s2	T079	HOLD-wind-tower-applicability	Not a certified site input
+PAR057	candidate paired motion count	7	pairs	study-design budget	REF153;REF157;T079	METHOD_PLAN.md sections5-6	T079	proposed/not-code-minimum	Three-pair pilot; final number and statistics require applicability/dispersion review
+PAR058	candidate operating wind slots	3	slots	screening-only budget	T079;REF132	METHOD_PLAN.md step5; existingIEC audit	T079	proposed/not-production	Not an IEC compliant sample count; formal combination and sample convergence pending
+PAR059	RNA frequency screening tolerance	5	percent	study-design screening criterion	T079;REF149	METHOD_PLAN.md step2	T079	proposed/not-standard-limit	Must include mode identification and response evidence; no result exists
+PAR060	RNA response screening tolerance	10	percent	study-design screening criterion	T079;REF149	METHOD_PLAN.md step2	T079	proposed/not-standard-limit	Not transferred 5MW paper error or regulatory acceptance limit
+PAR061	candidate main case count	215	entries	screening budget	T079	planned_cases.json	T079	planned/unbound/not-executed	210 earthquake combinations plus5baselines;12RNA pilot cases separate

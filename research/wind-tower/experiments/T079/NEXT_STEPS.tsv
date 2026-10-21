@@ -1,0 +1,8 @@
+step_id	objective	status	expected_output	entry_gate	exit_evidence
+T079.1	统一配筋与模型身份	planned/HOLD	差异表与模型hash	T077/T078及构造回代	同一分支材料截面接触PT账闭合
+T079.2	原生DataCheck与重力PT初态	planned/HOLD	输入/原生日志/反力和接触表	具体RUN卡登记	原生通过及质量初态独立核验
+T079.3	RNA地震频带对照	proposed/HOLD	柔性RNA及12组候选对照	原生模型和文献全文方法	频率振型和关键响应适用范围
+T079.4	场址谱与真实选波	proposed/HOLD	地震记录元数据/处理/谱图	规范适用性和场地假设明确	真实记录绑定/频带与谱检查
+T079.5	停机地震基线	planned/HOLD	时程与截面内力	T079.2/.3/.4及RUN卡	模态/直接积分及数值收敛
+T079.6	运行与停机风震筛查	proposed/HOLD	W/E/WE对照与采样检查	自由体/阻尼/标准组合闭合	载荷去重与方向状态比较
+T079.7	非线性控制工况与验算	proposed/HOLD	接缝筋材残余状态及验算表	构造材料验证和控制工况证据	条款化验算及适用边界

@@ -2,3 +2,5 @@ question_id	question	why	chapter	status	gate
 Q01	如何建立10 MW—158 m预应力混凝土—钢混合塔架的可追溯精细模型，并证明其可用于局部应力研究？	所有整机载荷与材料疲劳结论的结构基础	2	open	G1
 Q02	嘉鱼长期风背景下，不同风速、湍流模型和随机seed如何影响DTU10 MW整机运行状态、塔架随机载荷、频域响应和load-DEL？	形成有统计依据的控制工况和长期wind-bin输入	3	open	G2-G4
 Q03	长期正常运行风下，混塔哪个材料、哪个高度和哪个方位控制疲劳，预应力/mean stress、wind-bin probability和随机样本如何共同决定累计damage？	把全局载荷筛选升级为材料级耐久性结论	4	open	G5-G7
+Q04	在频率、强度、预应力和接缝约束下，哪些参数可降低真实控制疲劳损伤并兼顾结构质量？	补登2026-10-07总控已有优化问题，非本次新增结果	5/current-six-chapters	open	G8
+Q05	嘉鱼地震及风震是否改变10MW混塔控制响应、接缝预应力需求及优化约束，现有RNA对地震频带是否适用？	2026-10-21用户新增研究范围；不能预设地震控制	2/seismic-proposed	proposed/NEED-RUN	G1/G5/SEISMIC-INPUT
