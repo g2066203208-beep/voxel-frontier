@@ -62,7 +62,7 @@ T045	P0-P2	2	Q01	建立BASE001首选候选：以T026 M2为塔架母本，接入T
 
 T038-S4	P0-P1	2	Q01	按真实原文制定RNA/环筋修正路线，建立官方详细Standard单叶片候选并核导入导出差异	experiments/T038/source-rna-repair-20261005/README.md	stage1-candidate-created/not-solver-validated	user-review/D08-remains-open	四篇原文及官方源码支撑；实际CAE/INP留档；未装入源RNA或M2，未改原件，未求解；保留失败尝试与导出舍入
 T046	P1-P5	RNA-model-fidelity-and-load-ownership	Q01-Q03	核查GitHub现有RNA文献/模型与2026前沿RNA fidelity研究，决定Abaqus RNA层级并冻结OpenFAST→Abaqus自由体规则	audit/46-t046-rna-modeling-fidelity-and-load-ownership-review.md	complete/method-decision	G0-G5	主线采用两层RNA：BASE001-STRUCTURAL用R2完整空间刚体RNA；CUT-REPLAY以塔顶切口以下自由体回放六分量，默认不重复RNA动态质量；详细RNA保留为可选fidelity对照
-T079	P0-P1/seismic	2/seismic-proposed	Q01/Q05	按用户要求核查现有进度并制定嘉鱼抗震与风震研究方案，全程进入GitHub记录	experiments/T079/README.md	complete-method-record/production-HOLD	G1/G5/SEISMIC-INPUT	2026-10-21补登此前D盘审计及方案；尚无新增求解；七章为新增地震后的结构提案而非旧路线恢复
+T079	P0-P1/seismic	2/seismic-proposed	Q01/Q05	按用户要求核查现有进度并制定嘉鱼抗震与风震研究方案，全程进入GitHub记录	experiments/T079/README.md	initial-proposal-recorded/method-justification-open	G1/G5/SEISMIC-INPUT	2026-10-21补登此前D盘审计及方案；尚无新增求解；七章为新增地震后的结构提案而非旧路线恢复
 T079.1	seismic	2/seismic-proposed	Q05	统一配筋与模型身份	experiments/T079/NEXT_STEPS.tsv	planned/HOLD	T077/T078及构造回代	同一分支材料截面接触PT账闭合
 T079.2	seismic	2/seismic-proposed	Q05	原生DataCheck与重力PT初态	experiments/T079/NEXT_STEPS.tsv	planned/HOLD	具体RUN卡登记	原生通过及质量初态独立核验
 T079.3	seismic	2/seismic-proposed	Q05	RNA地震频带对照	experiments/T079/NEXT_STEPS.tsv	proposed/HOLD	原生模型和文献全文方法	频率振型和关键响应适用范围
@@ -70,4 +70,4 @@ T079.4	seismic	2/seismic-proposed	Q05	场址谱与真实选波	experiments/T079/
 T079.5	seismic	2/seismic-proposed	Q05	停机地震基线	experiments/T079/NEXT_STEPS.tsv	planned/HOLD	T079.2/.3/.4及RUN卡	模态/直接积分及数值收敛
 T079.6	seismic	2/seismic-proposed	Q05	运行与停机风震筛查	experiments/T079/NEXT_STEPS.tsv	proposed/HOLD	自由体/阻尼/标准组合闭合	载荷去重与方向状态比较
 T079.7	seismic	2/seismic-proposed	Q05	非线性控制工况与验算	experiments/T079/NEXT_STEPS.tsv	proposed/HOLD	构造材料验证和控制工况证据	条款化验算及适用边界
-T079.8	method-review	2/seismic-proposed	Q01/Q05	按用户质疑审查学位论文方法严谨性并纠正未论证方案表述	experiments/T079/ACADEMIC_REVIEW.md	in-progress	全文方法/规范适用性/模型与统计设计	审查方案质量，不冒充通过学位论文评审；未求解
+T079.8	method-review	2/seismic-proposed	Q01/Q05	按用户质疑审查学位论文方法严谨性并纠正未论证方案表述	experiments/T079/ACADEMIC_REVIEW.md	internal-review-complete/method-gaps-open	全文方法/规范适用性/模型与统计设计	审查方案质量，不冒充通过学位论文评审；未求解

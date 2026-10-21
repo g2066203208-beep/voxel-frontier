@@ -16,16 +16,21 @@
     "research_questions.tsv": 5,
     "site_evidence.tsv": 2,
     "source_asset_registry.tsv": 21,
-    "task_registry.tsv": 64,
+    "task_registry.tsv": 65,
     "advisor_requirement_matrix.tsv": 21,
     "NEXT_STEPS.tsv": 7
   },
   "source_file_deletions": 0,
   "files": [
     {
+      "path": "research/wind-tower/experiments/T079/ACADEMIC_REVIEW.md",
+      "sha256": "63ec73262338f914f1c186f0b480441508ac68b72bf5a3d8866e5d660f5fb359",
+      "bytes": 8504
+    },
+    {
       "path": "research/wind-tower/experiments/T079/build_plan_manifest.py",
-      "sha256": "bcbd7daa869d8e599966e2fa32167b4467a16f42f6a678b3acb7424cbc3ea147",
-      "bytes": 5265
+      "sha256": "94cb79384a07cd5c3a0ffe9bbadb7cc0724729a7c6e4e7ac3c205596d48b4ba1",
+      "bytes": 5503
     },
     {
       "path": "research/wind-tower/experiments/T079/literature_notes.md",
@@ -34,38 +39,38 @@
     },
     {
       "path": "research/wind-tower/experiments/T079/METHOD_PLAN.md",
-      "sha256": "eb8b8e6d25ffb2f9c062b6a64ff593b664b06716b7f25d7211bfeb5444864039",
-      "bytes": 21940
+      "sha256": "7a590d097951a4067f023b0344d28d63451187c628454dac30ccdd1cb525665e",
+      "bytes": 22728
     },
     {
       "path": "research/wind-tower/experiments/T079/method_review.md",
-      "sha256": "4603026c07951f912bff4d99be23326a5fb201556774028e425163e272978d81",
-      "bytes": 14960
+      "sha256": "1c580e0251f23261c1ffebdcb3d59a4f90dc7e9bd2e7692b87e76bf0ffcb691d",
+      "bytes": 15197
     },
     {
       "path": "research/wind-tower/experiments/T079/NEXT_STEPS.tsv",
-      "sha256": "bd2d59da26eed014f81a89a15e30a82454c4a52931690693af310e20f02bf393",
-      "bytes": 1084
+      "sha256": "3faafcd59e4dc5ff2d62a91e986697580c73adb492c1561f819195ac3bbcc2cf",
+      "bytes": 1112
     },
     {
       "path": "research/wind-tower/experiments/T079/planned_cases.json",
-      "sha256": "ec3eef0b1a4eefa6e3ca7a82749bd1ded5c93dd0e64ae5ea69d8f88d46c61ad6",
-      "bytes": 197388
+      "sha256": "72ed898c50e0efc04bddaae4191c76b5fd583c6984b63f26c87eb104caeea38a",
+      "bytes": 197620
     },
     {
       "path": "research/wind-tower/experiments/T079/PROCESS_LOG.md",
-      "sha256": "c9453a23ca2d3c611dccd2db0614bfd27c9e3ed43e474eea01a1accdfe0dbb12",
-      "bytes": 2350
+      "sha256": "378c8e5cf8f96a7e404dae63da711d012d672ffc9673db14630fda2b9fd853ae",
+      "bytes": 2875
     },
     {
       "path": "research/wind-tower/experiments/T079/README.md",
-      "sha256": "ac203cce0bed52dd7e60fab915b205d61ed151adf67295a7791bc8fd2bff90f2",
-      "bytes": 2440
+      "sha256": "248928c7eae5d28b1619505d884f8a0ba32f539cd38f948ba5403151c15e99e2",
+      "bytes": 2709
     },
     {
       "path": "research/wind-tower/experiments/T079/RESEARCH_CARD.md",
-      "sha256": "80c58a295fb7a253ab8680fc50b07e3383dfd83f87800100050aeff0efde6d81",
-      "bytes": 3788
+      "sha256": "aa36443f5dbc3eddc3dfe3211ad8f42ca2b230769f653ffdf5941bc910a73c1a",
+      "bytes": 4067
     },
     {
       "path": "research/wind-tower/experiments/T079/source_index.json",

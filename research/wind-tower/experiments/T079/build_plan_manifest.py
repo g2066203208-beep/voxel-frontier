@@ -68,6 +68,9 @@ manifest = {
     "matrix_classification": "proposed_screening_budget_not_code_compliance_matrix",
     "wind_sample_limit": "3 operating slots and 1 parked slot are preliminary screening choices only; reuse REF132 and audit seismic-specific combination/sampling clauses before production; expand for convergence.",
     "formal_run_registry_entries": 0,
+    "adoption_status": "historical_candidate_budget_not_adopted_as_formal_experimental_design",
+    "academic_review_task": "T079.8",
+    "acceptance_thresholds": "unjustified_5pct_and_10pct_proposals_withdrawn_pending_QoI_error_budget",
     "cases": cases,
 }
 (root / "planned_cases.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
