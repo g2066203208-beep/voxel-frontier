@@ -71,3 +71,4 @@ T079.5	seismic	2/seismic-proposed	Q05	停机地震基线	experiments/T079/NEXT_S
 T079.6	seismic	2/seismic-proposed	Q05	运行与停机风震筛查	experiments/T079/NEXT_STEPS.tsv	proposed/HOLD	自由体/阻尼/标准组合闭合	载荷去重与方向状态比较
 T079.7	seismic	2/seismic-proposed	Q05	非线性控制工况与验算	experiments/T079/NEXT_STEPS.tsv	proposed/HOLD	构造材料验证和控制工况证据	条款化验算及适用边界
 T079.8	method-review	2/seismic-proposed	Q01/Q05	按用户质疑审查学位论文方法严谨性并纠正未论证方案表述	experiments/T079/ACADEMIC_REVIEW.md	internal-review-complete/method-gaps-open	全文方法/规范适用性/模型与统计设计	审查方案质量，不冒充通过学位论文评审；未求解
+T080	thesis-integration	1-7/revision	Q01-Q05	核读关键全文并将地震方法实质融入现有学位论文与证据台账	experiments/T080/REGISTRATION.md	in-progress	全文/标准/比较设计/章节一致性	2026-10-21用户要求继续；保留原风场疲劳及优化主线；无虚构结果
