@@ -1,0 +1,48 @@
+name: T080 seismic evidence preflight (metadata only)
+
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T057/**'
+      - 'research/wind-tower/experiments/T070/**'
+      - 'research/wind-tower/experiments/T077/**'
+      - 'research/wind-tower/experiments/T078/**'
+      - 'research/wind-tower/experiments/T080/**'
+      - '.github/workflows/t080-evidence-preflight.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/wind-tower/experiments/T057/**'
+      - 'research/wind-tower/experiments/T070/**'
+      - 'research/wind-tower/experiments/T077/**'
+      - 'research/wind-tower/experiments/T078/**'
+      - 'research/wind-tower/experiments/T080/**'
+      - '.github/workflows/t080-evidence-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    name: Static evidence consistency (never CAE scientific PASS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert registered inputs and declared HOLD
+        run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --self-test
+      - name: Write traceable preflight report
+        run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
+      - name: Preserve metadata report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: t080-static-evidence-report
+          path: ${{ runner.temp }}/t080-preflight.json
+          if-no-files-found: warn
