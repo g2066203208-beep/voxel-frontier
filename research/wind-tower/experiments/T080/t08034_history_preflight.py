@@ -69,7 +69,7 @@ def audit(root: Path, meta: Path) -> dict:
                     except (ValueError, TypeError, KeyError) as exc:
                         if len(report['issues']) < 40:
                             report['issues'].append(f'INVALID-ROW: {path}:{line_no}: {exc}')
-        except (OSError, UnicodeError, csv.Error) as exc:
+        except (OSError, EOFError, UnicodeError, csv.Error) as exc:
             report['issues'].append(f'CORRUPT-SOURCE: {path}: {exc}')
     db.commit()
     found = {r[0] for r in db.execute('SELECT DISTINCT case_id FROM states')}
