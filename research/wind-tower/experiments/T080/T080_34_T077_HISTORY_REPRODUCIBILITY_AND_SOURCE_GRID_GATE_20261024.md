@@ -25,7 +25,7 @@ x=x.drop_duplicates(subset=["case","segment","time_s"],keep="first")
 本地Python 3 / pandas 2.2.3实际执行：
 1. 同键两行`Mx=100/900 kN·m`，`keep="first"`保留100；倒序后保留900，**验证RISK-01**。
 2. 合成31段A工况+仅1段B工况，`segment.nunique()==31`且A存在，**验证RISK-02**。
-3. 新编只读标准库源数据门禁程序的**合成测试4/4 PASS**：缺源HOLD、两工况×31段×2时刻完整网格PASS（124唯一行）、同键不同六分量HOLD、单段缺一时刻HOLD。测试使用人工数据，**没有对T077原始四工况运行**。
+3. 新编只读标准库源数据门禁程序的**合成测试4/4 PASS**：缺源HOLD、两工况×31段×2时刻完整网格PASS（124唯一行）、同键不同六分量HOLD、单段缺一时刻HOLD。测试使用人工数据，**没有对T077原始四工况运行**。新增同逻辑的[四项合成单元测试源码](test_t08034_history_preflight.py)至Draft PR；本地`python -m unittest -v test_t08034_history_preflight.py`实际4/4通过，但GitHub远端版本尚无独立CI运行证据。
 4. 门禁程序本地路径`T080_34/t08034_history_preflight.py`，123行，SHA-256=`13b47fb6ef89b06974f04276fb2118902744d020e12ac59465b3aee400c3689d`。功能：扫描`**/*31seg.csv.gz`，逐文件SHA-256，校验登记工况、31段覆盖、每段时间网格一致、有限六分量、相同/冲突重复键；输出机器可读JSON，发现缺失/冲突即非零退出。**程序已作为独立源码文件提交至本Draft PR：** [t08034_history_preflight.py](t08034_history_preflight.py)，Git blob `72e263eddb5b5bc99c9a749e41ba4a25280411ce`。上列SHA-256属于本地已测试脚本；GitHub提交版尚未在独立Python环境执行，不能把本地4项测试自动登记为远端版本CI通过。**没有在完整历史文件上运行。**
 
 ## 4. 预注册的验收、误差预算和真实HOLD
