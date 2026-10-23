@@ -43,6 +43,15 @@ class HistoryGateTests(unittest.TestCase):
         self.assertEqual(result['status'], 'HOLD')
         self.assertEqual(result['conflicting_duplicate_rows'], 1)
 
+    def test_truncated_gzip_returns_hold_not_exception(self):
+        # Missing gzip trailer raises EOFError, not OSError, in Python gzip.
+        self.write()
+        path = self.root / 'batch31seg.csv.gz'
+        path.write_bytes(path.read_bytes()[:-8])
+        result = audit(self.root, self.meta)
+        self.assertEqual(result['status'], 'HOLD')
+        self.assertTrue(any('CORRUPT-SOURCE:' in x for x in result['issues']))
+
     def test_missing_time_grid_holds(self):
         self.rows.pop()
         self.write()
