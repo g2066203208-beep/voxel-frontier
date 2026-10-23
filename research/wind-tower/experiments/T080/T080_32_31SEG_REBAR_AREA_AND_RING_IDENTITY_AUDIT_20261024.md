@@ -5,7 +5,7 @@
 ## 1. 版本、原始来源与已核阅读层级
 
 - **Git版本**：本轮开始时 `main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR #42原HEAD=`1f7d7bf60d0334281b2eb1292e3e93267a3102c1`，PR为Open/Draft。读取AGENTS、README、论文00_STATUS/00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/2/3以及T080.31；阅读层级为**仓库全文文本**。
-- **SOURCE-01**：[T073来源四环半径及节点数](../T073/T073_T053_RBLONG_RADII.csv)，Git blob `f6afdb0f89a13a803dd68da62d1f5802a3ee0bd2`；**CSV全124?行应以文件实际行为准，本次按31段分组**，未把径向节点数直接误认为独立钢筋根数。
+- **SOURCE-01**：[T073来源四环半径及节点数](../T073/T073_T053_RBLONG_RADII.csv)，Git blob `f6afdb0f89a13a803dd68da62d1f5802a3ee0bd2`；**CSV共105条径向记录，按31段分组并按node_count/n展开为每段4个径向环**，未把径向节点数直接误认为独立钢筋根数。
 - **SOURCE-02**：[T071几何及每环根数](../T071/T071_input_geometry_31_segments.csv)，blob `0e187f4eb9d5a66f7c99fb7efa908afe7dae8a8f`；31条正文数据行。
 - **SOURCE-03**：[T077 BF8历史设计结果](../T077/T077_FORMAL_31SEG_REBAR_BF8.csv)，blob `bebea1fcf0828633a2b7ce54573f9ba4c3b8bf45`；31条正文数据行。
 - **SOURCE-04**：[T073源码](../T073/t073_e01_fixed_counts_feasible_map.py) `rings()`；blob `2be9558dbb48d6b697099803634399a2ab7fe713`；[T077源码](../T077/t077_formal_rebar.py) `read_rings()`、`main()`及`As_total_two_layers_mm2`，blob `102b5351ff715e5232f5792eed4b182d9b09ffb2`；**源码函数直接核读**。
