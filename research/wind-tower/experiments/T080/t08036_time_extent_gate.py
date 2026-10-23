@@ -71,11 +71,16 @@ def check(root: Path, meta: Path, manifest: Path | None) -> dict:
     if not files:
         out['issues'].append('MISSING-SOURCE: no *31seg.csv.gz')
         return out
-    # One expected index for every (case,segment,sample), with bounded memory.
+    # One expected index for every (case,segment,sample); memory grows with samples.
     # Using integer grid indices also detects missing or repeated samples in any order.
     seen = {case: {f'CSEG_{i:02d}': set() for i in range(1,32)} for case in cases}
     for path in files:
-        out['files'].append({'path': str(path), 'sha256': sha256(path)})
+        try:
+            digest = sha256(path)
+        except OSError as exc:
+            out['issues'].append(f'UNREADABLE-SOURCE: {path}: {exc}')
+            continue
+        out['files'].append({'path': str(path), 'sha256': digest})
         try:
             with gzip.open(path, 'rt', encoding='utf-8-sig', newline='') as f:
                 reader = csv.DictReader(f)
