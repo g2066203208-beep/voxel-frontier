@@ -30,7 +30,7 @@ T073/T077 `read_rings()` 将源模型四个纵筋环（内两环、外两环）�
 
 **2/2基线回归PASS**（A与T080.28，Mcap绝对差<1e-6 kN·m）。等面积径向重构的影响很小，**材料应力参数和总钢筋面积的影响明显更大**。E的u>1**只是在旧控制时刻、T073简化材料/截面算法下的条件性数值结果**，不能说T057实际风机不安全或规范验算失败。435/410MPa为T077设计参数，335/335MPa为此处假设截断，不等价于T057原生双线性材料，更不是经授权规范确认的设计强度。
 
-独立运行程序 `t08031_four_ring_branch_audit.py` SHA256 `f13c38e17e879b1615a0a4bd012119bf00d6ef43953cbe74a5806b17aaeb1089`；依赖 `t08028_capacity_convergence.py` SHA256 `ff7b497bfbfa7e80339650e3f487f62ec23e05bcaf4eee5fa93678156ba29604`；结果JSON SHA256 `4ea3786571ce1d0f536ae0c24b247cc508bc6219616f19edfe8c5b7cabd2e322`。程序/JSON仅本地可复算归档，**本提交只包含报告，不宣称程序已在PR或CI通过**；本地压缩包解压后校验哈希并重新执行通过。
+独立运行程序 `t08031_four_ring_branch_audit.py` SHA256 `73ddc0d4b611874c92fdf75143bb5a9aeba87ee8aef9e5e2f09c81c996b20537`；依赖 `t08028_capacity_convergence.py` SHA256 `ff7b497bfbfa7e80339650e3f487f62ec23e05bcaf4eee5fa93678156ba29604`；结果JSON SHA256 `7295a1da2222a73ebd3ce8d70dd5b0ad7daca7c9f786ddb5a93b6e81774bcc77`。程序/JSON仅本地可复算归档，**本提交只包含报告，不宣称程序已在PR或CI通过**；本地压缩包解压后校验哈希并重新执行通过。
 
 ## 4. 误差、来源与HOLD
 - **误差预算**：1e-6 kN·m仅是相同算法数值回归容差。纤维/中性轴离散、容量分箱、全时程极值迁移、钢筋角坐标、真实T057材料、PT初态及载荷身份等误差**未闭合**。
