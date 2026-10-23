@@ -26,11 +26,17 @@ def main():
         d = design.loc[design.segment == seg].iloc[0]
         assert int(d.BF) == 8 and int(d.bar_d_mm) == 40
         assert d.control_case == "U09p343881_ETM_S06" and abs(d.control_time_s-652.15)<1e-7
+        # Match the controller's own load-factor branch, not a fixed T075 combo.
+        # CSEG19 is gamma_G=1.00; CSEG21 is gamma_G=1.35.
+        combo = f"G{gg:.2f}_Q1p40".replace(".", "p")
         ctrl = controls[(controls.segment == seg) &
                         (controls.case == d.control_case) &
                         (controls.control_metric == "M_max") &
-                        (controls.combo == "G1p35_Q1p40")]
-        assert len(ctrl) == 1, (seg, len(ctrl))
+                        (controls.combo == combo) &
+                        (np.abs(controls.time_s - float(d.control_time_s)) < 1e-7) &
+                        (np.isclose(controls.gamma_G, gg, rtol=0, atol=1e-12)) &
+                        (np.isclose(controls.gamma_Q, 1.4, rtol=0, atol=1e-12))]
+        assert len(ctrl) == 1, (seg, combo, len(ctrl))
         c = ctrl.iloc[0]
         gg, gp = float(d.control_gamma_G), float(d.control_gamma_P)
         m_x = gg*float(c.G_Mx_kNm) + 1.4*float(c.Q_Mx_kNm)
