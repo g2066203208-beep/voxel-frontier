@@ -37,6 +37,8 @@ jobs:
           python-version: '3.12'
       - name: Assert registered inputs and declared HOLD
         run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --self-test
+      - name: T080.36 synthetic time-window regression (not physics validation)
+        run: python -m unittest discover -s research/wind-tower/experiments/T080 -p 'test_t08036_time_extent_gate.py' -v
       - name: Write traceable preflight report
         run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
       - name: Preserve metadata report
