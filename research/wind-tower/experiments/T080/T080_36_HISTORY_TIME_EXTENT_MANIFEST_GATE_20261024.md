@@ -35,3 +35,9 @@
 ## 4. 下一轮最优先动作
 
 从执行机D盘/原始OpenFAST归档找回四工况31段完整csv.gz及导出元数据，独立核对起止时刻、dt、样本数和真实SHA；先运行T080.34，再运行T080.36。并行追索T057/T070可读INP，完成element→node→section→material与有效PT核验。禁止因合成测试或CI绿灯启动正式地震、W/E/WE、材料疲劳或优化生产。
+
+## 5. 远端CI事后验收补记（仅软件测试）
+
+- 本轮提交HEAD 1ee87879b0848d49ff599f59b45343180c7c92bf 的GitHub Actions：T080 seismic evidence preflight，run ID 40037944777，**completed/success**；其独立步骤“T080.36 synthetic time-window regression (not physics validation)”结论 **success**，注册HOLD元数据自检与报告输出亦success。
+- 同一HEAD的Paper Studio CI，run ID 40037944764，**completed/success**；与混塔物理验证无关。
+- **这将T080.36测试证据从本地9/9提升为远端工作流步骤success，但仍仅是合成数据软件回归**。真实四工况源时程、manifest、原生Abaqus及规范验收仍全部HOLD。
