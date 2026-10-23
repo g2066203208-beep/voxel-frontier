@@ -14,6 +14,23 @@ EX = HERE.parent
 sys.path.insert(0, str(EX / "T077"))
 import t077_formal_rebar as t077
 
+def select_controller_row(controls, d, seg):
+    """Select one T075 row with the same factor/case/time identity as T077."""
+    gg, gp = float(d.control_gamma_G), float(d.control_gamma_P)
+    if gg not in (1.0, 1.35) or gp not in (1.0, 1.2):
+        raise ValueError(f"unsupported T077 load factors: gamma_G={gg}, gamma_P={gp}")
+    combo = f"G{gg:.2f}_Q1p40".replace(".", "p")
+    ctrl = controls[(controls.segment == seg) &
+                    (controls.case == d.control_case) &
+                    (controls.control_metric == "M_max") &
+                    (controls.combo == combo) &
+                    (np.abs(controls.time_s - float(d.control_time_s)) < 1e-7) &
+                    (np.isclose(controls.gamma_G, gg, rtol=0, atol=1e-12)) &
+                    (np.isclose(controls.gamma_Q, 1.4, rtol=0, atol=1e-12))]
+    if len(ctrl) != 1:
+        raise RuntimeError(f"T075 controller identity is not unique: {seg}, {combo}, rows={len(ctrl)}")
+    return ctrl.iloc[0], gg, gp, combo
+
 def main():
     controls = pd.read_csv(EX/"T075"/"T075_S06_31SEG_GQ_CONTROL_ROWS.csv")
     design = pd.read_csv(EX/"T077"/"T077_FORMAL_31SEG_REBAR_BF8.csv")
@@ -26,19 +43,7 @@ def main():
         d = design.loc[design.segment == seg].iloc[0]
         assert int(d.BF) == 8 and int(d.bar_d_mm) == 40
         assert d.control_case == "U09p343881_ETM_S06" and abs(d.control_time_s-652.15)<1e-7
-        # Match the controller's own load-factor branch, not a fixed T075 combo.
-        # CSEG19 is gamma_G=1.00; CSEG21 is gamma_G=1.35.
-        combo = f"G{gg:.2f}_Q1p40".replace(".", "p")
-        ctrl = controls[(controls.segment == seg) &
-                        (controls.case == d.control_case) &
-                        (controls.control_metric == "M_max") &
-                        (controls.combo == combo) &
-                        (np.abs(controls.time_s - float(d.control_time_s)) < 1e-7) &
-                        (np.isclose(controls.gamma_G, gg, rtol=0, atol=1e-12)) &
-                        (np.isclose(controls.gamma_Q, 1.4, rtol=0, atol=1e-12))]
-        assert len(ctrl) == 1, (seg, combo, len(ctrl))
-        c = ctrl.iloc[0]
-        gg, gp = float(d.control_gamma_G), float(d.control_gamma_P)
+        c, gg, gp, combo = select_controller_row(controls, d, seg)
         m_x = gg*float(c.G_Mx_kNm) + 1.4*float(c.Q_Mx_kNm)
         m_y = gg*float(c.G_My_kNm) + 1.4*float(c.Q_My_kNm)
         m_res = math.hypot(m_x, m_y)
