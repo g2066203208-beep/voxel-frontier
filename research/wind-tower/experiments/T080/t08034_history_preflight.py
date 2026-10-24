@@ -47,6 +47,12 @@ def audit(root: Path, meta: Path) -> dict:
                     continue
                 for line_no, row in enumerate(reader, 2):
                     info['rows_read'] += 1
+                    # DictReader silently stores surplus CSV cells under None.
+                    # Reject both surplus and missing cells before parsing six forces.
+                    if None in row or any(value is None for value in row.values()):
+                        if len(report['issues']) < 40:
+                            report['issues'].append(f'BAD-ROW-WIDTH: {path}:{line_no}')
+                        continue
                     try:
                         seg = row['segment']; case = row['case']; t = float(row['time_s'])
                         values = [float(row[c]) for c in FIELDS]
