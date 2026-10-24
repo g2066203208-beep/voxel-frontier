@@ -24,6 +24,7 @@ from pathlib import Path
 
 T057_SHA256 = "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db"
 T057_GIT_BLOB = "da0b5ce5258b4fff08b2389851e29c32c6e4abfc"
+PE_PROXY_EXPECTED_SHA256 = "d721632b3bdaf2891106675affe83422b2d893df383bc22782445d07e24e1d4b"
 PT_STRESS_P0_PA = 1_280_000_000.0
 ETA_DESIGN = 0.7702745023137976
 PT_N = 36
@@ -119,6 +120,8 @@ def main() -> None:
         require(not out.exists() and not manifest.exists(),
                 "refusing to overwrite existing candidate or manifest")
         updated = make_pe_proxy(raw)
+        require(hashlib.sha256(updated).hexdigest() == PE_PROXY_EXPECTED_SHA256,
+                "Pe-proxy bytes differ from independently verified T057 edit")
         report.update({
             "candidate_path": str(out),
             "candidate_sha256": hashlib.sha256(updated).hexdigest(),
