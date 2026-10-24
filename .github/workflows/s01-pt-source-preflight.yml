@@ -1,0 +1,42 @@
+name: S01 PT Source Preflight (Not Abaqus)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
+      - '.github/workflows/s01-pt-source-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-frozen-t057-and-emit-diagnostic-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify frozen source and generate separate Pe input-only proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py"
+          python "$TOOL" --inp "$SRC" > "$RUNNER_TEMP/s01_pt_readonly.json"
+          python "$TOOL" --inp "$SRC" --emit-pe-proxy --outdir "$RUNNER_TEMP/s01_pt_proxy" > "$RUNNER_TEMP/s01_pt_emit.json"
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          folder = pathlib.Path(os.environ["RUNNER_TEMP"]) / "s01_pt_proxy"
+          meta = json.loads((folder / "T057_R335_PT_Pe_PROXY_DIAGNOSTIC_ONLY.json").read_text())
+          candidate = (folder / "T057_R335_PT_Pe_PROXY_DIAGNOSTIC_ONLY.inp").read_bytes()
+          assert hashlib.sha256(candidate).hexdigest() == meta["candidate_sha256"]
+          assert meta["PT_elements"] == 36 and meta["longitudinal_segments"] == 31
+          assert abs(meta["P0_force_N_input_proxy"] - 51609600.0) < 1e-5
+          assert abs(meta["Pe_force_N_input_proxy"] - 39753558.95461416) < 1e-4
+          assert meta["verification_status"] == "STATIC_SOURCE_AUDIT_ONLY_NO_NATIVE_RUN"
+          assert meta["native_data_check"] == "NOT_RUN"
+          assert meta["gravity_PT_contact_equilibrium"] == "NOT_RUN"
+          print("SOURCE STATIC PREFLIGHT PASS; ABAQUS NATIVE NOT RUN")
+          PY
