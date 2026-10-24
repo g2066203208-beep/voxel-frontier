@@ -89,6 +89,12 @@ def check(root: Path, meta: Path, manifest: Path | None) -> dict:
                     out['issues'].append(f'BAD-HEADER: {path}')
                     continue
                 for lineno, row in enumerate(reader,2):
+                    # DictReader does not raise for too many or too few cells.
+                    # Reject overflow (None key) and missing fields (None value).
+                    if None in row or any(value is None for value in row.values()):
+                        if len(out['issues']) < 50:
+                            out['issues'].append(f'BAD-ROW-WIDTH: {path}:{lineno}')
+                        continue
                     case, seg = row.get('case'), row.get('segment')
                     if case not in seen or seg not in seen[case]:
                         out['issues'].append(f'BAD-IDENTITY: {path}:{lineno}')
