@@ -50,7 +50,7 @@ class TimeExtentGateTests(unittest.TestCase):
         path = self.root/'data31seg.csv.gz'
         with gzip.open(path,'rt',newline='') as f:
             lines=f.readlines()
-        lines[1]=lines[1].rstrip('\\r\\n')+',UNACCOUNTED\\n'
+        lines[1]=lines[1].rstrip('\r\n')+',UNACCOUNTED\n'
         with gzip.open(path,'wt',newline='') as f:
             f.writelines(lines)
         result=check(self.root,self.meta,self.manifest)
