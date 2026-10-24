@@ -11,7 +11,7 @@ and overall equilibrium before deciding which physical branch to use.
 
 Usage (read-only by default):
  python s01_pt_initial_state_pair_generator.py --inp /path/T057.inp
- python s01_pt_initial_state_pair_generator.py --inp /path/T057.inp \\
+ python s01_pt_initial_state_pair_generator.py --inp /path/T057.inp \
      --emit-pe-proxy --outdir /path/independent_diagnostic_folder
 """
 from __future__ import annotations
@@ -31,7 +31,7 @@ PT_AREA_PER_ELEMENT_M2 = 0.00112  # 8 x 140 mm2
 PT_AREA_TOTAL_M2 = PT_N * PT_AREA_PER_ELEMENT_M2
 PT_STRESS_PE_PROXY_PA = PT_STRESS_P0_PA * ETA_DESIGN
 PT_INITIAL = re.compile(
-    r"(?m)^(PT_36x15p2-1\\.SET_PT_ALL_ELEMS,\\s*)1\\.28e\\+09(,\\s*)$"
+    r"(?m)^(PT_36x15p2-1\.SET_PT_ALL_ELEMS,\s*)1\.28e\+09(,\s*)$"
 )
 
 
@@ -45,25 +45,25 @@ def inspect_source(raw: bytes) -> dict:
     require(digest == T057_SHA256,
             "T057 source bytes differ from frozen SHA256: " + digest)
     text = raw.decode("utf-8")
-    require(text.count("*Part, name=PT_36x15p2\\n") == 1, "PT part missing/duplicate")
-    pt = text.split("*Part, name=PT_36x15p2\\n", 1)[1].split("*End Part", 1)[0]
-    match = re.search(r"(?m)^\\*Element, type=T3D2\\n([\\s\\S]*?)(?=^\\*)", pt)
+    require(text.count("*Part, name=PT_36x15p2\n") == 1, "PT part missing/duplicate")
+    pt = text.split("*Part, name=PT_36x15p2\n", 1)[1].split("*End Part", 1)[0]
+    match = re.search(r"(?m)^\*Element, type=T3D2\n([\s\S]*?)(?=^\*)", pt)
     require(match is not None, "PT T3D2 connectivity not found")
     elements = [x.strip() for x in match.group(1).splitlines() if x.strip()]
     require(len(elements) == 36, f"expected 36 PT T3D2 elements, got {len(elements)}")
     require(all(len(x.split(",")) == 3 for x in elements), "invalid PT T3D2 rows")
-    require(pt.count("*Solid Section, elset=SET_PT_ALL_GEOM, material=STRAND_1860\\n0.00112,") == 1,
+    require(pt.count("*Solid Section, elset=SET_PT_ALL_GEOM, material=STRAND_1860\n0.00112,") == 1,
             "PT area/material changed")
-    require(len(re.findall(r"(?m)^\\*Solid Section, elset=SET_ALL, material=HRB335_T057$", text)) == 31,
+    require(len(re.findall(r"(?m)^\*Solid Section, elset=SET_ALL, material=HRB335_T057$", text)) == 31,
             "not the frozen R335 31-segment longitudinal reinforcement")
     require(text.count("*Solid Section, elset=SET_HOOP_ALL, material=HRB335_T057") == 1,
             "hoop grade/identity changed")
     require(text.count("*Solid Section, elset=SET_TIE_ALL, material=HRB335_T057") == 1,
             "tie grade/identity changed")
-    require(len(re.findall(r"(?m)^SET_PT_TOP_NODE_\\d+, 1, 1\\.$", text)) == 36,
+    require(len(re.findall(r"(?m)^SET_PT_TOP_NODE_\d+, 1, 1\.$", text)) == 36,
             "36 top PT anchor equations not found")
     require(len(re.findall(
-        r"(?m)^CSEG_\\d{2}-1\\.SURF_TOP, CSEG_\\d{2}-1\\.SURF_BOTTOM, HJOINT_HARD_MU05_T057$",
+        r"(?m)^CSEG_\d{2}-1\.SURF_TOP, CSEG_\d{2}-1\.SURF_BOTTOM, HJOINT_HARD_MU05_T057$",
         text)) == 30, "30 contact property pairs not found")
     require(text.count("*Step,name=Gravity,nlgeom=YES,inc=500") == 1,
             "gravity step identity changed")
@@ -130,7 +130,7 @@ def main() -> None:
             "warning": "Pe input is only a sensitivity proxy; equilibrium Pe must be measured, not presumed.",
         })
         out.write_bytes(updated)
-        manifest.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\\n",
+        manifest.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n",
                             encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
