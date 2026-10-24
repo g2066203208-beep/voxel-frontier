@@ -52,6 +52,18 @@ class HistoryGateTests(unittest.TestCase):
         self.assertEqual(result['status'], 'HOLD')
         self.assertTrue(any('CORRUPT-SOURCE:' in x for x in result['issues']))
 
+    def test_surplus_csv_cell_holds(self):
+        self.write()
+        path = self.root / 'batch31seg.csv.gz'
+        with gzip.open(path, 'rt', newline='') as fh:
+            lines = fh.readlines()
+        lines[1] = lines[1].rstrip('\\r\\n') + ',UNACCOUNTED\\n'
+        with gzip.open(path, 'wt', newline='') as fh:
+            fh.writelines(lines)
+        result = audit(self.root, self.meta)
+        self.assertEqual(result['status'], 'HOLD')
+        self.assertTrue(any('BAD-ROW-WIDTH:' in x for x in result['issues']))
+
     def test_missing_time_grid_holds(self):
         self.rows.pop()
         self.write()
