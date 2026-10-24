@@ -69,9 +69,7 @@
 - **SOURCE / 已核层级：** [T046钢筋笼规范补全JSON](../../T046/spec/rebar-completion.json)全文（blob `d372f30f8cccea1313fd6977bc692d94c17c257e`）：环筋φ14，中心线距混凝土外/内表面37 mm；[T050冻结方案](../../T050/FORMAL_REINFORCEMENT_SPEC_20261006.md)明确环筋在纵筋表面侧；[T053构建器](../../T053/build_t053_he_aligned.py)从T050继承几何；[T057构建器](../../T057/build_t057_evidence_reconciled.py)只改材料/PT/接触等而未重定位环筋与纵筋。T057构建审计（blob `737b048fe9c7cc56546eeff86c741bf7bb9ddfb5`）记录33个HRB335截面=31纵筋+2环/拉筋。T046历史生成结果记载原纵筋中心线距混凝土表面约62.5 mm。
 - **SOURCE / 31段直接核算：** [T071几何CSV](../../T071/T071_input_geometry_31_segments.csv) blob `0e187f4eb9d5a66f7c99fb7efa908afe7dae8a8f`；[T073钢筋环半径CSV](../../T073/T073_T053_RBLONG_RADII.csv) blob `f6afdb0f89a13a803dd68da62d1f5802a3ee0bd2`；[S01两支路直径CSV](S01_EXACT_ETA_31SEG_BRANCH_SCREEN_20261024.csv) blob `7a622eedecc5d2d962b54c0b522fb1b6ae483b5e`。对重复半径按`node_count_at_radius / bars_each_row`展开后逐段得到纵筋中心线表面距62.49979–62.50018 mm。
 - **几何判据（只针对相同高度/方位的钢筋交叉处）：** 环筋直径14 mm，距表面37 mm；原纵筋中心距约62.5 mm。假定保留T046原有环筋与纵筋中心线，钢筋实体之间的径向几何净距为
-  $
-  g=62.5-37-(d_{\mathrm{long}}+14)/2=18.5-d_{\mathrm{long}}/2\quad(\mathrm{mm}).
-  $
+  `g(mm) = 62.5 - 37 - (d_long + 14)/2 = 18.5 - d_long/2`。
   对φ25：`g≈+6.0 mm`；φ36：`+0.5 mm`；φ40：`−1.5 mm`；φ50：`−6.5 mm`。负数表示两圆截面在环筋穿越纵筋方位处发生**几何重叠风险**；Abaqus T3D2线单元可能仍静态读取成功，因此不能以Data Check代替钢筋实体几何校核。
 - **TAB：** [31段环筋—纵筋交叉净距表](S01_31SEG_REBAR_HOOP_CROSSING_CLEARANCE_20261024.csv)（按直接读取的31段CSV/JSON在本轮JavaScript确定性计算）。**D335名义335强度敏感性：24/31段负净距；D335假设300强度敏感性：26/31段负净距；D500/T077历史支路：23/31段负净距；原φ25：0/31段负净距。** 这只对**不重定位环筋/纵筋**的旧中心线方案成立；不意味着无法通过重新布置钢筋笼解决。
 - **新增材料支路差异：** [T071构造报告](../../T071/README.md)使用HRB400 φ14环筋及`f_yv=360MPa`作候选计算；[T050冻结方案](../../T050/FORMAL_REINFORCEMENT_SPEC_20261006.md)及T057实际构建却为**HRB335环筋/拉筋**，其构造强度取值不能直接引用T071 HRB400的结果。T046 JSON记HRB335设计强度300MPa为历史假设，仍须以授权规范原页核对。此项与HRB335/HRB500纵筋支路不同，是独立的**环筋材料设计—模型身份**差异。
