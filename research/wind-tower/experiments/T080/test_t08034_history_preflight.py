@@ -64,6 +64,22 @@ class HistoryGateTests(unittest.TestCase):
         self.assertEqual(result['status'], 'HOLD')
         self.assertTrue(any('BAD-ROW-WIDTH:' in x for x in result['issues']))
 
+    def test_duplicate_six_component_header_holds(self):
+        # DictReader would otherwise keep the LAST Mx_kNm and silently
+        # overwrite the first one even when every row has valid width.
+        self.write()
+        path = self.root / 'batch31seg.csv.gz'
+        with gzip.open(path, 'rt', newline='') as fh:
+            lines = fh.readlines()
+        lines[0] = lines[0].rstrip('\\r\\n') + ',Mx_kNm\\n'
+        lines[1:] = [line.rstrip('\\r\\n') + ',999\\n' for line in lines[1:]]
+        with gzip.open(path, 'wt', newline='') as fh:
+            fh.writelines(lines)
+        result = audit(self.root, self.meta)
+        self.assertEqual(result['status'], 'HOLD')
+        self.assertTrue(any('DUPLICATE-HEADER:' in x for x in result['issues']))
+        self.assertEqual(result['unique_rows'], 0)
+
     def test_missing_time_grid_holds(self):
         self.rows.pop()
         self.write()
