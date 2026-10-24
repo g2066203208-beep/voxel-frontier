@@ -1,0 +1,57 @@
+{
+  "longitudinal": {
+    "part": "RBLONG_01",
+    "eid": 54,
+    "connectivity": [
+      107,
+      108
+    ],
+    "p0": [
+      3.94749999,
+      0,
+      0
+    ],
+    "p1": [
+      3.86750007,
+      3.6400001,
+      0
+    ]
+  },
+  "tie": {
+    "part": "HOOP_TIE_CAGE_T046",
+    "eid": 201457,
+    "connectivity": [
+      1,
+      73
+    ],
+    "p0": [
+      3.92090098165,
+      0.05,
+      0
+    ],
+    "p1": [
+      4.1269011374,
+      0.05,
+      0
+    ]
+  },
+  "hoop": {
+    "part": "HOOP_TIE_CAGE_T046",
+    "eid": 1,
+    "connectivity": [
+      1,
+      2
+    ],
+    "p0": [
+      3.92090098165,
+      0.05,
+      0
+    ],
+    "p1": [
+      3.90598076967,
+      0.05,
+      0.341729037296
+    ]
+  },
+  "provenance": "Coordinates transcribed from T080.11 archived actual T057 INP source subset; T057 SHA c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db; NOT independent full-INP read."
+}
