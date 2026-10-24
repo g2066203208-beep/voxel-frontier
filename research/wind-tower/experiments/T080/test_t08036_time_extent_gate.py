@@ -45,6 +45,17 @@ class TimeExtentGateTests(unittest.TestCase):
         self.write();self.assertEqual(check(self.root,self.meta,self.manifest)['status'],'HOLD')
     def test_missing_case_holds(self):
         self.rows=[r for r in self.rows if r['case']=='A'];self.write();self.assertEqual(check(self.root,self.meta,self.manifest)['status'],'HOLD')
+    def test_surplus_csv_cell_holds(self):
+        self.write()
+        path = self.root/'data31seg.csv.gz'
+        with gzip.open(path,'rt',newline='') as f:
+            lines=f.readlines()
+        lines[1]=lines[1].rstrip('\\r\\n')+',UNACCOUNTED\\n'
+        with gzip.open(path,'wt',newline='') as f:
+            f.writelines(lines)
+        result=check(self.root,self.meta,self.manifest)
+        self.assertEqual(result['status'],'HOLD')
+        self.assertTrue(any('BAD-ROW-WIDTH:' in x for x in result['issues']))
     def test_bad_header_holds(self):
         with gzip.open(self.root/'data31seg.csv.gz','wt',newline='') as f:
             f.write('case,segment,time_s,time_s\nA,CSEG_01,100,100\n')
