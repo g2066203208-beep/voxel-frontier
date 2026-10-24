@@ -42,7 +42,13 @@ def audit(root: Path, meta: Path) -> dict:
         try:
             with gzip.open(path, 'rt', encoding='utf-8-sig', newline='') as fh:
                 reader = csv.DictReader(fh)
-                if not required.issubset(reader.fieldnames or []):
+                header = reader.fieldnames or []
+                # DictReader silently overwrites duplicate column names with the
+                # last occurrence; reject ambiguous six-component provenance.
+                if len(header) != len(set(header)):
+                    report['issues'].append('DUPLICATE-HEADER: ' + str(path))
+                    continue
+                if not required.issubset(header):
                     report['issues'].append('BAD-COLUMNS: ' + str(path))
                     continue
                 for line_no, row in enumerate(reader, 2):
