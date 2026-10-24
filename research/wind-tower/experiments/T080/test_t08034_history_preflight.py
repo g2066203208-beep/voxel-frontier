@@ -57,7 +57,7 @@ class HistoryGateTests(unittest.TestCase):
         path = self.root / 'batch31seg.csv.gz'
         with gzip.open(path, 'rt', newline='') as fh:
             lines = fh.readlines()
-        lines[1] = lines[1].rstrip('\\r\\n') + ',UNACCOUNTED\\n'
+        lines[1] = lines[1].rstrip('\r\n') + ',UNACCOUNTED\n'
         with gzip.open(path, 'wt', newline='') as fh:
             fh.writelines(lines)
         result = audit(self.root, self.meta)
