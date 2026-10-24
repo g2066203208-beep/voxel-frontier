@@ -6,6 +6,12 @@ on:
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
       - '.github/workflows/s01-pt-source-preflight.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
+      - '.github/workflows/s01-pt-source-preflight.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -40,3 +46,15 @@ jobs:
           assert meta["gravity_PT_contact_equilibrium"] == "NOT_RUN"
           print("SOURCE STATIC PREFLIGHT PASS; ABAQUS NATIVE NOT RUN")
           PY
+
+      - name: Publish auditable source hashes and diagnostic manifest (no INP/ODB)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-pt-static-input-proxy-manifest
+          path: |
+            ${{ runner.temp }}/s01_pt_readonly.json
+            ${{ runner.temp }}/s01_pt_emit.json
+            ${{ runner.temp }}/s01_pt_proxy/T057_R335_PT_Pe_PROXY_DIAGNOSTIC_ONLY.json
+          if-no-files-found: error
+          retention-days: 14
