@@ -1,24 +1,32 @@
-name: S01 PT Source Preflight (Not Abaqus)
+name: S01 PT and Rebar Geometry Static Preflight (Not Abaqus)
 on:
   push:
     branches:
       - research/t080-seismic-integration-gates-20261022
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_native_inp_cage_polygon_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
       - '.github/workflows/s01-pt-source-preflight.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_native_inp_cage_polygon_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
       - '.github/workflows/s01-pt-source-preflight.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  inspect-frozen-t057-and-emit-diagnostic-only:
+  inspect-frozen-t057-and-static-geometry:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -44,10 +52,28 @@ jobs:
           assert meta["verification_status"] == "STATIC_SOURCE_AUDIT_ONLY_NO_NATIVE_RUN"
           assert meta["native_data_check"] == "NOT_RUN"
           assert meta["gravity_PT_contact_equilibrium"] == "NOT_RUN"
-          print("SOURCE STATIC PREFLIGHT PASS; ABAQUS NATIVE NOT RUN")
+          print("PT SOURCE STATIC PREFLIGHT PASS; ABAQUS NATIVE NOT RUN")
           PY
-
-      - name: Publish auditable source hashes and diagnostic manifest (no INP/ODB)
+      - name: Compute exact D400 and D500 straight-bar geometry at 31 segments
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py"
+          python "$TOOL" --inp "$SRC" --outdir "$RUNNER_TEMP/s01_rebar_geometry" | tee "$RUNNER_TEMP/s01_rebar_geometry_stdout.json"
+          python - <<'PY'
+          import json, os, pathlib
+          folder = pathlib.Path(os.environ["RUNNER_TEMP"]) / "s01_rebar_geometry"
+          meta = json.loads((folder / "S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json").read_text())
+          assert meta["rows"] == 62
+          assert meta["unique_bar_hoop_samples"] == 245760
+          assert meta["native_abaqus_run"] == "NOT_RUN"
+          assert not meta["target_is_normative"] and not meta["new_inp_emitted"]
+          assert meta["result"]["D400"]["unmoved_negative_segments"] == 28
+          assert meta["result"]["D500"]["unmoved_negative_segments"] == 28
+          print("D400/D500 EXACT STRAIGHT-T3D2 GEOMETRY SCREEN COMPLETE; NO DESIGN PASS")
+          PY
+      - name: Publish PT source hashes and diagnostic manifest (no INP/ODB)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -56,5 +82,16 @@ jobs:
             ${{ runner.temp }}/s01_pt_readonly.json
             ${{ runner.temp }}/s01_pt_emit.json
             ${{ runner.temp }}/s01_pt_proxy/T057_R335_PT_Pe_PROXY_DIAGNOSTIC_ONLY.json
-          if-no-files-found: error
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Publish 62-case geometry CSV and SHA manifest (no INP/ODB)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-d400-d500-exact-straight-bar-geometry
+          path: |
+            ${{ runner.temp }}/s01_rebar_geometry_stdout.json
+            ${{ runner.temp }}/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv
+            ${{ runner.temp }}/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json
+          if-no-files-found: warn
           retention-days: 14
