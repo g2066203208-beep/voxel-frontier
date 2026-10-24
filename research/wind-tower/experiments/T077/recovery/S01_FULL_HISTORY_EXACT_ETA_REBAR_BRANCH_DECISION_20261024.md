@@ -7,13 +7,13 @@
 
 | 来源 | 核读层级与作用 | Git blob SHA-1 |
 |---|---|---|
-| [T071 31段几何](../T071/T071_input_geometry_31_segments.csv) | 全31行、D/di/根数，直接读取；本轮本地计算使用同精度重构的31行数值 | `0e187f4eb9d5a66f7c99fb7efa908afe7dae8a8f` |
-| [T073钢筋环半径](../T073/T073_T053_RBLONG_RADII.csv) | 31段、内外环半径直接核读；按T073原代码成对平均 | `f6afdb0f89a13a803dd68da62d1f5802a3ee0bd2` |
-| [T074重力基准](../T074/T074_158M_31SEG_GRAVITY_BASELINE.csv) | 全31行六分量重力；Fz与My输入 | `a152f130a8cb00f555bf4c973ce62238dd1e0599` |
-| [T073 E.0.1离散截面源码](../T073/t073_e01_fixed_counts_feasible_map.py) | **源码级直接核读**；`components`、`envelope`公式与离散；本地采用逐式独立移植 | `2be9558dbb48d6b697099803634399a2ab7fe713` |
+| [T071 31段几何](../../T071/T071_input_geometry_31_segments.csv) | 全31行、D/di/根数，直接读取；本轮本地计算使用同精度重构的31行数值 | `0e187f4eb9d5a66f7c99fb7efa908afe7dae8a8f` |
+| [T073钢筋环半径](../../T073/T073_T053_RBLONG_RADII.csv) | 31段、内外环半径直接核读；按T073原代码成对平均 | `f6afdb0f89a13a803dd68da62d1f5802a3ee0bd2` |
+| [T074重力基准](../../T074/T074_158M_31SEG_GRAVITY_BASELINE.csv) | 全31行六分量重力；Fz与My输入 | `a152f130a8cb00f555bf4c973ce62238dd1e0599` |
+| [T073 E.0.1离散截面源码](../../T073/t073_e01_fixed_counts_feasible_map.py) | **源码级直接核读**；`components`、`envelope`公式与离散；本地采用逐式独立移植 | `2be9558dbb48d6b697099803634399a2ab7fe713` |
 | [T077正式组合源码](../T077/t077_formal_rebar.py) | **源码级直接核读**；`gamma_G=1/1.35`、`gamma_P=1/1.2`、`gamma_Q=1.4`、同步N-M；本地逐式独立移植 | `102b5351ff715e5232f5792eed4b182d9b09ffb2` |
-| [T077历史BF8表](../T077/T077_FORMAL_31SEG_REBAR_BF8.csv) | 31行历史`eta=1`控制值，用于**全31段回归复现** | `bebea1fcf0828633a2b7ce54573f9ba4c3b8bf45` |
-| [T078设计PT元数据](../T078/T078_PRESTRESS_DESIGN_META.json) | `P0=51.6096MN`、`Pe=39.75355895461417MN`、`eta=0.7702745023137976`，均为**设计假设** | `99a750c22268febde268bcdbea46d7f21cfe34f8` |
+| [T077历史BF8表](../T077_FORMAL_31SEG_REBAR_BF8.csv) | 31行历史`eta=1`控制值，用于**全31段回归复现** | `bebea1fcf0828633a2b7ce54573f9ba4c3b8bf45` |
+| [T078设计PT元数据](../../T078/T078_PRESTRESS_DESIGN_META.json) | `P0=51.6096MN`、`Pe=39.75355895461417MN`、`eta=0.7702745023137976`，均为**设计假设** | `99a750c22268febde268bcdbea46d7f21cfe34f8` |
 | [T057 HRB335同对象材料证据](../../T057/MATERIAL_CONSTITUTIVE_EVIDENCE_20261006.md) | Xu-He-Wang 2025同对象HRB335：E=200000MPa、名义fy=335MPa；**不是授权规范设计强度** | `3d8f2dd7b7abcd290906feda004e35873a94de38` |
 | [T080.39原生配筋映射](../../T080/T080_39_31SEG_NATIVE_INP_REBAR_MAP_20261024.csv) | T057/T070 31段均为HRB335/等效φ25，源于此前INP直接解析，本轮不重读16.6MB原始INP | `862d87ce06d2113c37715dea7cf7ef33637e55ac` |
 | [S06恢复及来源记录](S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md) | 本轮**直接读取本地四个恢复ZIP的真实字节**，总1,488,124条、四工况、31段、100–700s/0.05s | `688882b5b93bb2f06e04ec01fcbd87f62ebabf93` |
