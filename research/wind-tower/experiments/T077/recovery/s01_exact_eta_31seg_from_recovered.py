@@ -4,7 +4,7 @@ Run from cloned repository, with 4 recovered S06 ZIPs:
 python research/wind-tower/experiments/T077/recovery/s01_exact_eta_31seg_from_recovered.py --archives <four ZIP paths> --outdir <dir>
 """
 from __future__ import annotations
-import argparse, gzip, hashlib, io, json, math, sys, zipfile
+import argparse, csv, gzip, hashlib, io, json, math, sys, zipfile
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -28,9 +28,13 @@ def load_archives(paths):
                 raise RuntimeError(f"expected 4 batches per ZIP: {p}")
             for n in gzfiles:
                 with gzip.open(io.BytesIO(z.read(n)), "rt") as f:
+                    header = next(csv.reader([f.readline()]))
+                    if len(header) != len(set(header)) or not NEEDED.issubset(header):
+                        raise RuntimeError(f"duplicate/missing raw CSV header: {p}:{n}")
+                    f.seek(0)
                     q = pd.read_csv(f)
-                if q.columns.duplicated().any() or not NEEDED.issubset(q.columns):
-                    raise RuntimeError(f"duplicate/missing header: {p}:{n}")
+                if not np.isfinite(q[list(NEEDED - {"case", "segment"})].to_numpy(float)).all():
+                    raise RuntimeError(f"nonfinite numeric history: {p}:{n}")
                 frames.append(q[list(sorted(NEEDED))].copy())
     x = pd.concat(frames, ignore_index=True)
     if len(x) != 4 * 31 * 12001 or x.case.nunique() != 4 or x.segment.nunique() != 31:
