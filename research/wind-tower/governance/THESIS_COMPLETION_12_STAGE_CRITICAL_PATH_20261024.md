@@ -94,3 +94,11 @@
 - **FIG/TAB**：新增源结构字段及PT输入对照数据（本节），没有新的物理响应图。
 - **HOLD/误差预算**：P0/Pe是**输入名义合力算术**，实际有效力取决于G0/G1原生平衡、锚端RF、PT S11、接缝接触和损失实施；不能把Pe代理初应力当作实际收敛Pe，也不能据此替代D400/D500材料及构造裁决。数值算术误差可忽略，物理模型与构造误差**尚未估计**。S01未PASS，S02/S03未启动，**12阶段仍0/12 PASS**。
 - **下一唯一动作**：取得可审查的NB/T10907第4.2、6.4、8章授权原页后，冻结D400/D500材料与钢筋笼构造身份，再用此已校验的PT输入对照准备唯一独立候选INP的原生Data Check和G0/G1 pilot。
+
+## 2026-10-25｜S01静态PT预检CI执行结果（已核实，不是原生Abaqus）
+
+- **RUN / GitHub Actions原生执行记录（静态程序）**：[run #40123684501](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40123684501)，触发提交 `25006191013d09c1571ddef77e071053974429aa`；2026-10-24 19:05:22–19:06:51 UTC，`completed/success`，唯一job及“Verify frozen source and generate separate Pe input-only proxy”与artifact上传步骤均为`success`。这是GitHub Ubuntu/Python 3.11执行成功，**不是Abaqus native Data Check、平衡或物理PASS**。
+- **SOURCE / 输入版本**：冻结T057历史已独立核算SHA-256 `c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`；本次CI工作流锁定同一hash、36根PT、31段纵筋；Pe输入代理期望SHA-256 `d721632b3bdaf2891106675affe83422b2d893df383bc22782445d07e24e1d4b`。这两个值由工作流断言及生成器校验，不等于物理场已验证。
+- **可复核产物**：[Actions artifact #12571459263](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40123684501/artifacts/12571459263)，名称 `s01-pt-static-input-proxy-manifest`，ZIP摘要 `sha256:01ed66179a76bd5b9d3256383f460fa2efef8b4877370a6ab71ed315ff15c7a5`，2350字节，2026-11-07 19:06:47 UTC过期；只存JSON清单，不存INP/ODB。此轮已核验API运行、job、step与artifact元数据，**未逐项下载核读ZIP内JSON**。
+- **REF/STANDARD/OFFICIAL**：无新增全文或授权NB/T 10907—2021条文；不作D400/D500材料构造验收。**FIG/TAB**：无新物理响应图表；本节是可追溯运行元数据。**假设/误差预算**：P0=51.609600MN、Pe输入代理=39.753559MN只由PT总面积0.04032m²乘输入应力得到，静态算术断言阈值为1e-5N(P0)、1e-4N(Pe)；真实有效PT、接触、锚端反力及数值/物理误差预算仍未测得。
+- **HOLD**：S01材料/构造/初态唯一物理分支未冻结，S02/S03无原生日志；**12阶段仍0/12 PASS**。下一最优动作：取得NB/T 10907—2021第4.2、6.4、8章可核读授权原页并作D400/D500材料及构造裁决，之后才允许创建唯一独立候选INP与安排原生Data Check。
