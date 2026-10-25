@@ -7,6 +7,11 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py'
       - 'research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py'
       - '.github/workflows/s01-peaware-g1-static.yml'
+  pull_request:
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py'
+      - 'research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py'
+      - '.github/workflows/s01-peaware-g1-static.yml'
   workflow_dispatch:
 jobs:
   pure-python-mock-tests:
@@ -14,5 +19,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - name: Print checked-out source SHA256 (not model INP SHA256)
+        run: |
+          sha256sum research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py
+          sha256sum research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py
       - name: Run 12 static mock tests (NOT Abaqus)
         run: python3 -m unittest -v research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py
