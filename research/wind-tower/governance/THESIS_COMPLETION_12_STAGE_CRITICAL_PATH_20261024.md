@@ -169,3 +169,12 @@
 - **RUN/TAB**：[Actions #40164517041](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40164517041)完成成功，31段/5440根原始纵筋质量 `75,831.70211016893 kg`、Y质心 `52.14428485025488 m`；与此前逆向重构质量相同（按清单存储精度差0）。[完整CSV/JSON artifact #12587334205](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40164517041/artifacts/12587334205)，CSV SHA-256 `8d5ea4a79525993b40e9fcd45f2ba1efcc0241767c5c09a6c000b42bfc563f4a`。代码：[独立父源质量复算](../experiments/T077/recovery/s01_frozen_t057_longitudinal_mass_independent.py)，详细报告：[S01质量账追加记录](../experiments/T077/recovery/S01_D400_FULL_TOWER_MASS_CG_J_STATIC_LEDGER_20261025.md)。CI日志和artifact元数据已核，ZIP未独立逐行解包。
 - **REF/STANDARD/OFFICIAL**：没有新增授权NB/T10907—2021原页；仅确认官方公共登记为现行，第三方预览不提升为条款验收。**FIG**：无新增物理响应图。**假设/误差预算**：纵筋几何积分与两种数据路径的算术误差已对账；原始全塔父模型质量、混凝土体积重叠、RNA惯量、PT有效初态、接触及原生数值误差仍未验证。
 - **HOLD与阶段**：S01 D400纵筋/HRB335环拉筋、构造、P0/Pe尚无唯一经规范核定和原生平衡的设计身份；S02原生Data Check未执行，**12阶段仍0/12 PASS**。不修改冻结T057/T070，不合并Draft PR #42，不启动生产求解。**下一唯一最优动作：取得并核读NB/T10907—2021授权第4.2、6.4、8章，完成材料和构造裁决后再锁定唯一S01候选。**
+
+
+### 2026-10-25 14:07 CST｜S01 D400纵筋—混凝土宿主72弦几何包容检查
+
+- **12阶段状态变化：0/12未晋级**；S01 PARTIAL/HOLD，S02/S03原生验收仍NOT RUN，其他阶段无新增验收。
+- **SOURCE / RUN / TAB**：对SHA-256=`0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217`的D400/Pe诊断INP运行[可复现静态检查](../experiments/T077/recovery/s01_host_check_repro.py)（脚本SHA-256 `3d91ce569ff574af9936b12af4e0d060169acb3f0d6be6717a3a6b63345a789d`），解析31个真实CSEG宿主72边形及5440根RBLONG T3D2；在**59,840个采样点**，无采样点越出宿主环壁，最小多边形宿主表面—纵筋外缘几何净距48.960779mm（CSEG31）。[31段CSV](../experiments/T077/recovery/S01_D400_HOST_CONTAINMENT_31SEG_20261025.csv) SHA-256=`178dc064c6dfe0045dca675a3679ea82eb8889fb991f7bc53bdf9141fa8aefa3`；细节与误差预算已写入[原S01质量账](../experiments/T077/recovery/S01_D400_FULL_TOWER_MASS_CG_J_STATIC_LEDGER_20261025.md)。本地Python静态RUN，**不是Abaqus或GitHub Actions原生求解**。
+- **REF / STANDARD / OFFICIAL / FIG**：NB/T 10907—2021授权第4.2、6.4、8章仍未取得，第三方目录不替代条款；2026先行风震/PT论文边界不变。无新增官方Abaqus输出和原生物理FIG。
+- **假设/误差预算**：72弦面及四轴向层线性插值、直杆等效圆截面；59,840离散采样不构成全线严格几何证明，钢筋—箍筋/PT/锚固及原生embedded约束未验。旧123.251t“扣混凝土”质量增量仅条件性代理，不能修改冻结模型。
+- **单一最大HOLD / 下一动作**：仍是HRB335/D400/D500材料构造及P0/Pe实施的唯一物理基线未冻结；**优先取得NB/T 10907—2021授权原页并裁决唯一S01支路**，然后才允许S02原生Data Check。不修改T057/T070，不合并Draft PR #42，不启动高成本RUN。
