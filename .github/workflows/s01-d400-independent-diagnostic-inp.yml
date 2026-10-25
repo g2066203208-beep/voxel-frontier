@@ -1,0 +1,69 @@
+name: S01 D400 Independent Diagnostic INP (Static Only)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_pe_diagnostic_inp.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_native_inp_cage_polygon_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
+      - '.github/workflows/s01-d400-independent-diagnostic-inp.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_pe_diagnostic_inp.py'
+      - '.github/workflows/s01-d400-independent-diagnostic-inp.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-d400-pe-diagnostic-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate SHA-locked 62-row geometric source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py"
+          python "$TOOL" --inp "$SRC" --outdir "$RUNNER_TEMP/s01_geom" > "$RUNNER_TEMP/s01_geom_stdout.json"
+      - name: Generate independent diagnostic INP and exact parent reverse-patch proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_d400_relayout_pe_diagnostic_inp.py"
+          GEOM="$RUNNER_TEMP/s01_geom/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv"
+          python "$TOOL" --inp "$SRC" --geometry "$GEOM" --outdir "$RUNNER_TEMP/s01_d400_candidate" | tee "$RUNNER_TEMP/s01_d400_stdout.json"
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          p = pathlib.Path(os.environ["RUNNER_TEMP"]) / "s01_d400_candidate"
+          meta = json.loads((p/"S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_MANIFEST.json").read_text())
+          raw = (p/"S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp").read_bytes()
+          assert hashlib.sha256(raw).hexdigest() == meta["candidate_sha256"]
+          assert meta["changed_longitudinal_segments"] == 31
+          assert meta["reverse_patch_exact_parent"]
+          assert meta["status"] == "STATIC_DIAGNOSTIC_ONLY_HOLD"
+          assert meta["native_Abaqus_Data_Check"] == "NOT_RUN"
+          assert meta["PT_gravity_contact_equilibrium"] == "NOT_RUN"
+          assert meta["earthquake_results"] == 0
+          print("S01 STATIC INPUT TRANSFORM VERIFIED; NO ABAQUS, NO PHYSICAL PASS")
+          PY
+      - name: Archive candidate INP and provenance manifest (NOT a native RUN)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-d400-pe-diagnostic-inp-static-not-validated
+          path: |
+            ${{ runner.temp }}/s01_d400_candidate/S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp
+            ${{ runner.temp }}/s01_d400_candidate/S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_MANIFEST.json
+            ${{ runner.temp }}/s01_d400_stdout.json
+            ${{ runner.temp }}/s01_geom/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json
+          retention-days: 14
