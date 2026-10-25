@@ -54,3 +54,16 @@
 **复算与版本：** 本地`s01_rebar_pt_mass_inventory.py` SHA256=`e505efe6b374f9d15f6cfe85a8191604854d4555900b16d8807caf7e63e69701`；34行CSV=`81478d9b6494f36a6154ba26b42b6025849aee07d883f1e4c2c66df20a027540`；JSON=`90169f8c948814bf86ea069d8e6183762e162ea967b699d24156b9e39edcea4f`。补算程序`s01_pt_embedded_mass_gravity_correction.py` SHA256=`596afd0cb96aedafe585e4a6087052102867a31f11059d288517565dabed24af`；补算JSON=`e88cf9fd5c7d60e8ec2488519905a915dcc8e996df57b5c08e6a2da9b96bbcf1`。程序、CSV、JSON及真实本地日志另随本轮会话ZIP提供；**未称GitHub CI运行**。
 
 **REF/STANDARD/OFFICIAL/FIG与误差预算：** 沿用2024 GB/T50010已核读官方修订页和历史文献阅读层级；本轮没有新读NB/T10907授权4.2/6.4/8章、没有原生Abaqus或响应FIG。上述质量只按直线杆中心线计算，未含锚具/搭接、混凝土与钢筋重叠实体处理；一维代理未计PT自身重力锚端传力、钢筋EA、施工时序、接缝、非线性、钢塔柔度和网格，**物理误差预算仍NEED-ESTIMATE**。S01 PARTIAL/HOLD，S02/S03 NOT RUN，**0/12 PASS**。唯一下一动作：恢复NB/T10907授权原页并裁决HRB400环拉筋、纵筋构造及Pe施工阶段，冻结可实施的唯一S01候选。
+
+## 2026-10-26｜独立INP几何实测：重布D400纵筋与φ14环筋的中心线净距
+
+**状态：S01局部几何冲突预检取得增量证据，NOT CODE/PHYSICS PASS，0/12整阶段晋级。** 这项检查针对此前“在T057未移动钢筋中心线下D400有28/31段负净距”的具体风险；该旧结论**不应继续直接套到已经重布钢筋的D400子版**。
+
+- **SOURCE/版本：** 直接读取独立子版`S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp`（16,536,134 bytes；SHA256=`22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`）。解析31个RBLONG part的真实T3D2端点、`*Solid Section`面积、实例竖向平移和`HOOP_TIE_CAGE_T046`环筋节点及元素连接，不使用设计草表臆造位置。
+- **RUN/算法：** 1399个环筋高度各有内外两条72边闭合多边形；逐高度对31段5440根纵筋的T3D2中心线进行线性插值，计算至实际72弦环筋**线段**的最短距离，扣除纵筋半径及φ14环筋半径。全31段共**245,760次“纵筋×环筋高度”距离比较**，`gap<−0.001mm`的比较**0次**；31/31段最小几何净距均为**5.000mm**。独立的第二个本地解析实现逐段核对`pairs/negative_pairs/minimum_gap_mm`一致。脚本和31行CSV已按Git Blob SHA远端回读，与本地字节一致。
+- **可复现：** [源INP几何核验脚本](s01_d400_cage_clearance_verified.py)（Git Blob=`4307099d724383b90d59585d13a03c1c03ec0b6e`，本地SHA256=`e9804a071ffc2a1a84ec999e672583bf731fad7aa59c5b27e02c7532b125f4fa`）；[31段结果CSV](S01_D400_CAGE_HOOP_CLEARANCE_31SEG_20261026.csv)（Git Blob=`4246012325d4a3998504ec53c560e7e08f1572ca`，LF字节SHA256=`c8a05aae39441e96c0d958ca7031d5a193c8de06d18be39015e19998b72d4713`）。执行：`python s01_d400_cage_clearance_verified.py CHILD.inp > results.csv`；Python+NumPy静态计算，不调用Abaqus。
+- **误差/边界：** 这里的5mm是**理想化T3D2纵筋—环筋中心线与名义圆截面**的二维同高切片净距，非施工允许净距或规范验收；未考虑钢筋肋、加工公差、弯折/搭接、锚固、与φ6拉筋的实体相交、接缝处连续性、宿主C3D8R精确包含关系及装配偏差。1e−6m负距判定容差仅为程序分类容差，**不是物理误差预算**；实际施工/本构/网格误差均NEED-ESTIMATE。
+- **REF/STANDARD/OFFICIAL：** 何2024/Xu2025与2026两篇先行论文阅读等级不变；2024 GB/T50010修订原页已有历史核读，本次未新增NB/T10907—2021第4.2/6.4/8章授权全文、未新增Abaqus官方软件运行。**FIG=无原生响应图；TAB=31段CSV；Abaqus native Data Check/G1 ODB=NOT RUN。**
+- **科研解释：** “T057未移动中心线28/31段负净距”与“D400重布子版31/31段名义5mm正净距”是**两个不同几何身份**，不能相互替代；这只减少了一个几何阻塞，不解除HRB400环拉筋构造、D400极小N–M裕量、Pe实施/原生平衡、规范原页及锚固的HOLD。
+
+**单一最大HOLD：** NB/T10907授权材料/构造条款和PT有效状态的S01支路裁决未闭合；**下一唯一动作**仍是找回历史授权标准原件并完成4.2/6.4/8章对照后冻结唯一可实施子版，不启动昂贵生产RUN。
