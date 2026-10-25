@@ -20,3 +20,10 @@
 - **单一最大HOLD**：S01 HRB335/D400/D500与环筋、拉筋及PT目标时点尚未形成可按授权规范和物理验证放行的唯一候选；不能跳至昂贵S02/S03生产求解。
 
 **下一轮唯一最优动作：** 验证远端轻量CI确实执行且12/12通过；若失败直接修复提取器。完成后停止围绕S01编写附加静态小审查，转回授权NB/T10907条款和唯一材料/构造/PT实施决策。
+
+## 2026-10-25 22:12 CST｜远端CI独立实测结果（覆盖此前“远端未确认”）
+
+- **RUN / GitHub Actions**：[run #40201054663](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40201054663)，job ID `121192119601`，GitHub runner `completed/success`；逐项读取原生job日志，12项 `test_...` 均为 `ok`，末尾 `Ran 12 tests in 0.003s / OK`。这是GitHub远端执行，不是仅凭本地测试或workflow文件存在推断成功。
+- **SOURCE / 版本绑定**：触发提交 [`a059c05bd85db08354315cdb9beb7312fc43b399`](https://github.com/g2066203208-beep/voxel-frontier/commit/a059c05bd85db08354315cdb9beb7312fc43b399)，仅改 `.github/workflows/s01-peaware-g1-static.yml`：增加Draft PR可见的 `pull_request` 触发和源码SHA256日志。实际checkout中的提取器SHA256=`5babcba5448093c699c4d6154c240194bff1afb296d6f7b1e05abfa47c73a5e3`，单测SHA256=`909ee671b5df36fbc591a484b3e2e4ee367ba2c9304d5d1bf53e94d746a91943`；这些是**远端代码哈希**，不同于前一轮本地ZIP字节哈希，不能混写。
+- **REF/STANDARD/OFFICIAL**：无新全文/条款核读；沿用前述来源层级。**TAB**：本节12/12及远端代码SHA对账；**FIG**：无原生响应图。
+- **误差与HOLD**：mock测试的数值断言仅证明提取器分支逻辑，不含原生ODB、Data Check、接触、反力、PT施工时点或误差预算；S01 `PARTIAL/HOLD`、S02/S03 `NOT RUN`、整阶段 `0/12 PASS`。下一动作停止堆叠mock审查，优先合法取得NB/T10907—2021第4.2/6.4/8章授权原文，裁决D400/D500/HRB335环拉筋及PT实施身份后形成唯一候选INP。
