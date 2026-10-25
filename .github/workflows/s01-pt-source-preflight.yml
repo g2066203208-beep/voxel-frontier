@@ -6,6 +6,8 @@ on:
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
       - 'research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_fixed_control_nm.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D500_FYC_400_410_435_FIXED_DIAM_93_FULL_PRECISION_20261025.csv'
       - 'research/wind-tower/experiments/T077/recovery/s01_native_inp_cage_polygon_clearance.py'
       - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
       - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
@@ -16,6 +18,8 @@ on:
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
       - 'research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_fixed_control_nm.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D500_FYC_400_410_435_FIXED_DIAM_93_FULL_PRECISION_20261025.csv'
       - 'research/wind-tower/experiments/T077/recovery/s01_native_inp_cage_polygon_clearance.py'
       - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
       - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
@@ -73,6 +77,23 @@ jobs:
           assert meta["result"]["D500"]["unmoved_negative_segments"] == 28
           print("D400/D500 EXACT STRAIGHT-T3D2 GEOMETRY SCREEN COMPLETE; NO DESIGN PASS")
           PY
+      - name: Recompute D400 sectional capacity at 31 fixed historical D500 N-M control states
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check numpy pandas
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_d400_relayout_fixed_control_nm.py"
+          GEOM="$RUNNER_TEMP/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv"
+          python "$TOOL" --geometry "$GEOM" --outdir "$RUNNER_TEMP/s01_d400_fixed_nm" | tee "$RUNNER_TEMP/s01_d400_fixed_nm_stdout.json"
+          python - <<'PY'
+          import json, os, pathlib
+          folder = pathlib.Path(os.environ["RUNNER_TEMP"]) / "s01_d400_fixed_nm"
+          meta = json.loads((folder / "S01_D400_31SEG_RELAYOUT_FIXED_D500_CONTROL_MANIFEST.json").read_text())
+          assert meta["rows"] == 31
+          assert meta["D500_historical_replay_max_abs_util_error"] < 1e-7
+          assert meta["native_Abaqus"] == "NOT_RUN" and not meta["new_INP"]
+          print("S01 31-SEG FIXED HISTORICAL LOAD-STATE REPLAY COMPLETE; NO D400 FULL ENVELOPE OR NATIVE PASS")
+          PY
       - name: Publish PT source hashes and diagnostic manifest (no INP/ODB)
         if: always()
         uses: actions/upload-artifact@v4
@@ -93,5 +114,16 @@ jobs:
             ${{ runner.temp }}/s01_rebar_geometry_stdout.json
             ${{ runner.temp }}/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv
             ${{ runner.temp }}/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Publish 31-case D400 fixed-state N-M sensitivity and source manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-d400-relayout-fixed-d500-control-nm
+          path: |
+            ${{ runner.temp }}/s01_d400_fixed_nm_stdout.json
+            ${{ runner.temp }}/s01_d400_fixed_nm/S01_D400_31SEG_RELAYOUT_FIXED_D500_CONTROL_NM.csv
+            ${{ runner.temp }}/s01_d400_fixed_nm/S01_D400_31SEG_RELAYOUT_FIXED_D500_CONTROL_MANIFEST.json
           if-no-files-found: warn
           retention-days: 14
