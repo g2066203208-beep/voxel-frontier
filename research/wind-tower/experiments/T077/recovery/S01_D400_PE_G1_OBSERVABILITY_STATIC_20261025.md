@@ -8,7 +8,7 @@
 - SOURCE/OFFICIAL：沿用仓库 [T070原生G1输出契约](../../T070/T070_G0_G1_RUNBOOK.md) 与 [T070可逆插桩程序](../../T070/audit_t070_roundtrip.py)；本轮核读其源代码。没有新Abaqus官方原生求解日志。
 - RUN：本地Python 3静态执行 [可复现插桩脚本](s01_d400_pe_g1_instrument.py)，输出新的独立诊断INP，**16,535,636字节**，SHA256 `4c84c61ea07138428d4c0a8f742a9ab6e55725c49d16a94f5d9eaa8f7d9d3d29`。在仅移除插入的header、三个IOS定义和Gravity输出块后，恢复源D400/Pe文件逐字节一致。另对篡改PT输入、已插桩输入和追加字节输入各做一次负向测试，均被SHA锁拒绝。
 - TAB：新增30对接缝CPRESS/COPEN/CSHEAR/CSLIP字段请求；36束PT的S/E输出；法兰RP、塔顶、塔底及PT底锚的U/RF/RM；C31/S01转换与塔底共3个IOS的SOF/SOM。**输出请求并非已存在的ODB结果**。
-- 本地原始程序SHA256（生成时）：`2670529fd34fe8008277788bc51aa30e7007611f085975228bd76c1a9c6f7ec3`；GitHub仓库脚本为等价提交版，以Git blob与远端回读为准。脚本不修改母本，且拒绝覆盖输出文件。
+- 本地复测程序SHA256：`5f3b18bafb8eded93ee3a46dc2b8a5980360e9ad8ed93af758148a139dc9de96`；GitHub远端脚本Blob=`6f638e92dfc10724418e8a79c4ac439b7b60bbdc`（远端代码已回读，**未在远端CI执行**）。本地ZIP SHA256=`8c6b02f513b503206da4bd90b13ee6e9dbd71a3c2d788dbc43aa3c51dc0e5bcd`，包含INP、JSON、运行日志及三项拒绝性测试；不修改母本，拒绝覆盖输出。
 
 ## 新发现的关键物理实施风险
 
