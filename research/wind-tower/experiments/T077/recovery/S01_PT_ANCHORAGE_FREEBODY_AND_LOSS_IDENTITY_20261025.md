@@ -6,8 +6,8 @@
 
 - **本轮真实输入**：[GitHub Actions #40157193495](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40157193495)产物中`S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp`；16,534,319字节；SHA-256 `0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217`。本轮本地逐字节重新计算该哈希。
 - **冻结父本身份**：T057原始INP SHA-256 `c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`（此前CI独立核验，本轮没有重新下载父本）。
-- **设计账**：[T078设计报告](../T078/T078_PRESTRESS_DESIGN_REPORT.md)、[T078 JSON](../T078/T078_PRESTRESS_DESIGN_META.json)（Git Blob `99a750c22268febde268bcdbea46d7f21cfe34f8`），本轮直接核读GitHub文本；损失模型为**T078既定CODE-DESIGN假设**，不是本文重新读取规范全文后的独立验收。
-- **标准证据深度**：[T078附录A原页索引](../T078/T078_NBT10907_APPENDIX_A_SOURCE_LEDGER.md)历史登记用户提供59页PDF及其哈希；本轮无法取得该PDF原件、未核读NB/T 10907—2021第4.2、6.4、8章，不得称材料/锚固/构造条款PASS。
+- **设计账**：[T078设计报告](../../T078/T078_PRESTRESS_DESIGN_REPORT.md)、[T078 JSON](../../T078/T078_PRESTRESS_DESIGN_META.json)（Git Blob `99a750c22268febde268bcdbea46d7f21cfe34f8`），本轮直接核读GitHub文本；损失模型为**T078既定CODE-DESIGN假设**，不是本文重新读取规范全文后的独立验收。
+- **标准证据深度**：[T078附录A原页索引](../../T078/T078_NBT10907_APPENDIX_A_SOURCE_LEDGER.md)历史登记用户提供59页PDF及其哈希；本轮无法取得该PDF原件、未核读NB/T 10907—2021第4.2、6.4、8章，不得称材料/锚固/构造条款PASS。
 - **REF/OFFICIAL**：文献与软件理论仍沿用T079/T080登记阅读层级；本轮没有新增全文精读、官方安装版Abaqus运行或官方求解器日志。
 
 ## RUN与TAB：真实诊断INP几何—约束—荷载自由体
