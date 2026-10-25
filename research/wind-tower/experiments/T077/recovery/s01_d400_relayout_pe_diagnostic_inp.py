@@ -83,6 +83,23 @@ def rewrite_part(full: str, seg: int, row: dict) -> tuple[str, dict]:
     require(len(parsed) >= 4 and len(parsed) % 2 == 0, name + " node count invalid")
     require([v[0] for v in parsed] == list(range(1, len(parsed) + 1)),
             name + " node ids must be contiguous")
+    # The relocation algorithm assumes consecutive endpoint pairs are real T3D2
+    # elements. Validate actual connectivity, not only the node ordering.
+    element_block = full[node_end + len(NODES_END):].split("\n*", 1)[0]
+    elements = []
+    for line in element_block.splitlines():
+        if not line.strip():
+            continue
+        fields = [x.strip() for x in line.split(",")]
+        require(len(fields) == 3, name + " unexpected T3D2 connectivity row")
+        elements.append(tuple(map(int, fields)))
+    require(len(elements) == len(parsed) // 2,
+            name + " T3D2 element count does not match node pairs")
+    require(len({e[0] for e in elements}) == len(elements),
+            name + " duplicate T3D2 element ID")
+    for i, (_, n1, n2) in enumerate(elements):
+        require({n1, n2} == {2*i + 1, 2*i + 2},
+                f"{name} element {i+1} not connected to expected endpoint pair")
     y_levels = sorted(set(v[2] for v in parsed))
     require(len(y_levels) == 2, name + " unexpected vertical node layers")
     mid = {}
@@ -104,17 +121,34 @@ def rewrite_part(full: str, seg: int, row: dict) -> tuple[str, dict]:
     for j in range(0, len(signs), 2):
         require(signs[j] == signs[j+1], name + " bar switches radial layer")
     newlines = []
+    new_coords = {}
     changed = 0
     for (nid, x, y, z, original), sign in zip(parsed, signs):
         if delta == 0:
             newlines.append(original)
+            new_coords[nid] = (x, y, z)
         else:
             r = math.hypot(x, z)
             xx = x + sign * delta * x / r
             zz = z + sign * delta * z / r
             newlines.append(f"{nid}, {xx:.14g}, {y:.14g}, {zz:.14g}\n")
+            # Match coordinates as serialized into the actual diagnostic INP.
+            new_coords[nid] = (float(f"{xx:.14g}"), y, float(f"{zz:.14g}"))
             changed += 1
+    old_coords = {nid: (x, y, z) for nid, x, y, z, _ in parsed}
+    def element_length(coords, n1, n2):
+        a, b = coords[n1], coords[n2]
+        return math.sqrt(sum((a[k] - b[k]) ** 2 for k in range(3)))
+    old_lengths = [element_length(old_coords, n1, n2) for _, n1, n2 in elements]
+    new_lengths = [element_length(new_coords, n1, n2) for _, n1, n2 in elements]
+    max_length_change = max(abs(a - b) for a, b in zip(old_lengths, new_lengths))
+    require(min(new_lengths) > 0 and max_length_change < 2e-7,
+            name + " relocation changed a T3D2 length unexpectedly")
     area = math.pi * (diameter / 1000.0)**2 / 4
+    # Geometry-only steel-mass proxy. Does NOT subtract displaced concrete,
+    # include other rebar/PT/RNA, or establish tower mass/CG/inertia V&V.
+    original_mass_proxy = 7850.0 * 0.000490874 * sum(old_lengths)
+    candidate_mass_proxy = 7850.0 * area * sum(new_lengths)
     suffix = full[node_end:]
     require(suffix.count(OLD_SECTION) == 1, name + " source section differs")
     new_section = (f"*Solid Section, elset=SET_ALL, material=HRB400_D400_DIAGNOSTIC\n"
@@ -127,6 +161,10 @@ def rewrite_part(full: str, seg: int, row: dict) -> tuple[str, dict]:
         "changed_node_lines": changed, "area_each_m2": area,
         "original_area_each_m2": 0.000490874,
         "material": "HRB400_D400_DIAGNOSTIC",
+        "actual_T3D2_connectivity_checked": True,
+        "max_element_length_change_m": max_length_change,
+        "old_longitudinal_rebar_mass_proxy_kg": original_mass_proxy,
+        "new_longitudinal_rebar_mass_proxy_kg": candidate_mass_proxy,
     }
 
 
@@ -181,6 +219,12 @@ def main() -> None:
         old = next(p.group(0) for p in part_spans if p.group(2) == name)
         restored = restored[:m.start()] + old + restored[m.end():]
     require(restored.encode("utf-8") == source_raw, "inverse patch cannot restore T057 exactly")
+    require(sum(r["bar_elements"] for r in records) == 5440,
+            "expected exactly 5440 longitudinal T3D2 elements")
+    require(sum(r["changed_node_lines"] for r in records) == 10880,
+            "expected exactly 10880 relocated node lines")
+    original_rebar_mass = sum(r["old_longitudinal_rebar_mass_proxy_kg"] for r in records)
+    candidate_rebar_mass = sum(r["new_longitudinal_rebar_mass_proxy_kg"] for r in records)
     output = args.outdir / "S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp"
     manifest = args.outdir / "S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_MANIFEST.json"
     require(not output.exists() and not manifest.exists(), "refuse to overwrite diagnostic files")
@@ -195,6 +239,12 @@ def main() -> None:
         "candidate_sha256": sha(candidate_raw), "candidate_bytes": len(candidate_raw),
         "reverse_patch_exact_parent": True, "sections": sorted(records, key=lambda r:r["segment"]),
         "changed_longitudinal_segments": 31,
+        "verified_T3D2_connectivity_elements": 5440,
+        "max_element_length_change_m": max(r["max_element_length_change_m"] for r in records),
+        "old_longitudinal_rebar_mass_proxy_kg": original_rebar_mass,
+        "new_longitudinal_rebar_mass_proxy_kg": candidate_rebar_mass,
+        "delta_longitudinal_rebar_mass_proxy_kg": candidate_rebar_mass - original_rebar_mass,
+        "mass_proxy_scope": "Longitudinal T3D2 only, rho=7850kg/m3; excludes displaced concrete, hoop/tie/PT/RNA and other changes; NOT total mass V&V",
         "unchanged_hoop_and_tie_material": "HRB335_T057 (MIXED-MATERIAL DIAGNOSTIC, NOT CODE DESIGN)",
         "D400_constitutive_assumption": "E=200GPa, nu=0.3, density=7850kg/m3, perfectly plastic fy=400MPa; NOT CALIBRATED",
         "section_design_strength_screen": "fy=fyc=360MPa in T077 screen; distinct from material yield",
@@ -214,6 +264,8 @@ def main() -> None:
                       "candidate_bytes": len(candidate_raw),
                       "segments": len(records), "changed_nodes": sum(x["changed_node_lines"] for x in records),
                       "reverse_patch_exact_parent": True,
+                      "verified_T3D2_connectivity_elements": 5440,
+                      "delta_longitudinal_rebar_mass_proxy_kg": candidate_rebar_mass - original_rebar_mass,
                       "status": data["status"]}, indent=2))
 
 
