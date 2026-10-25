@@ -178,3 +178,8 @@
 - **REF / STANDARD / OFFICIAL / FIG**：NB/T 10907—2021授权第4.2、6.4、8章仍未取得，第三方目录不替代条款；2026先行风震/PT论文边界不变。无新增官方Abaqus输出和原生物理FIG。
 - **假设/误差预算**：72弦面及四轴向层线性插值、直杆等效圆截面；59,840离散采样不构成全线严格几何证明，钢筋—箍筋/PT/锚固及原生embedded约束未验。旧123.251t“扣混凝土”质量增量仅条件性代理，不能修改冻结模型。
 - **单一最大HOLD / 下一动作**：仍是HRB335/D400/D500材料构造及P0/Pe实施的唯一物理基线未冻结；**优先取得NB/T 10907—2021授权原页并裁决唯一S01支路**，然后才允许S02原生Data Check。不修改T057/T070，不合并Draft PR #42，不启动高成本RUN。
+
+
+### 2026-10-25｜S01连续宿主几何证书（实证增量，不晋级）
+
+直接核读SHA-256 `0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217` 的独立D400/Pe诊断INP；对31段C3D8R（每段432个六面体）与5440根T3D2做72弦拓扑、端点/轴向网格层/面切换点的**全线连续几何下界**复算，22,104个有限候选点均无负净距，最小保守三维球扫掠净距 **48.915032 mm**（CSEG31/杆43）。[可复算程序](../experiments/T077/recovery/s01_d400_continuous_host_certificate.py)及[31段原始CSV](../experiments/T077/recovery/S01_D400_31SEG_CONTINUOUS_HOST_CERTIFICATE_20261025.csv)已提交；CSV SHA-256 `4c6afcfc10243efd01335588037be272632f91af576ac9967e1a45575a8ed9b8`；[方法、SOURCE/RUN/TAB/REF/STANDARD/OFFICIAL/FIG及限制](../experiments/T077/recovery/S01_D400_FULL_TOWER_MASS_CG_J_STATIC_LEDGER_20261025.md)。**仅本地静态几何RUN，无Abaqus原生RUN/FIG；NB/T10907授权条款未读；钢筋材料/构造/PT初态及原生验收仍HOLD；12阶段0/12未晋级。** T057/T070冻结母本未改，Draft PR #42不合并。
