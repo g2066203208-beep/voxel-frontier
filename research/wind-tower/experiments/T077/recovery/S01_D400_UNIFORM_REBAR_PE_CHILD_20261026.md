@@ -4,10 +4,10 @@
 
 ## SOURCE / 输入与直接修改
 
-- 原件：此前会话交付的 \`S01_D400_Pe_G1_STATIC_INSTRUMENTATION_20261025.zip\` 内 \`S01_D400_Pe_G1_INSTRUMENTED_DIAGNOSTIC_ONLY.inp\`；16,535,636 bytes，SHA256 \`4c84c61ea07138428d4c0a8f742a9ab6e55725c49d16a94f5d9eaa8f7d9d3d29\`。
-- 仅将 \`HOOP_TIE_CAGE_T046\` 中 \`SET_HOOP_ALL\` 和 \`SET_TIE_ALL\` 两条 \`*Solid Section\` 的 \`material=HRB335_T057\` 改为已有的 \`material=HRB400_D400_DIAGNOSTIC\`；保留旧HRB335材料定义但不再被任何Section引用。**这不是环筋、拉筋重新设计**。
-- 独立子版 \`S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp\`：**16,536,134 bytes**，SHA256 \`22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a\`。大INP仅随会话ZIP交付，GitHub保存可复现生成程序和输入SHA锁；不重复提交16MB模型。
-- 重现脚本：[s01_d400_uniform_pe_repro_min.py](s01_d400_uniform_pe_repro_min.py)，本地执行脚本SHA256 \`cebf1165571ed6e66058130f6b735df3ab836a64ec970e141d6b7b5341c2e6b3\`。运行：\`python s01_d400_uniform_pe_repro_min.py --zip SOURCE.zip --out CHILD.inp\`。输出必须匹配上列SHA，否则直接失败。
+- 原件：此前会话交付的 `S01_D400_Pe_G1_STATIC_INSTRUMENTATION_20261025.zip` 内 `S01_D400_Pe_G1_INSTRUMENTED_DIAGNOSTIC_ONLY.inp`；16,535,636 bytes，SHA256 `4c84c61ea07138428d4c0a8f742a9ab6e55725c49d16a94f5d9eaa8f7d9d3d29`。
+- 仅将 `HOOP_TIE_CAGE_T046` 中 `SET_HOOP_ALL` 和 `SET_TIE_ALL` 两条 `*Solid Section` 的 `material=HRB335_T057` 改为已有的 `material=HRB400_D400_DIAGNOSTIC`；保留旧HRB335材料定义但不再被任何Section引用。**这不是环筋、拉筋重新设计**。
+- 独立子版 `S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp`：**16,536,134 bytes**，SHA256 `22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`。大INP仅随会话ZIP交付，GitHub保存可复现生成程序和输入SHA锁；不重复提交16MB模型。
+- 重现脚本：[s01_d400_uniform_pe_repro_min.py](s01_d400_uniform_pe_repro_min.py)，本地执行脚本SHA256 `cebf1165571ed6e66058130f6b735df3ab836a64ec970e141d6b7b5341c2e6b3`。运行：`python s01_d400_uniform_pe_repro_min.py --zip SOURCE.zip --out CHILD.inp`。输出必须匹配上列SHA，否则直接失败。
 
 ## RUN / TAB / 物理身份边界
 
