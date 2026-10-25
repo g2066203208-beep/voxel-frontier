@@ -183,3 +183,11 @@
 ### 2026-10-25｜S01连续宿主几何证书（实证增量，不晋级）
 
 直接核读SHA-256 `0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217` 的独立D400/Pe诊断INP；对31段C3D8R（每段432个六面体）与5440根T3D2做72弦拓扑、端点/轴向网格层/面切换点的**全线连续几何下界**复算，22,104个有限候选点均无负净距，最小保守三维球扫掠净距 **48.915032 mm**（CSEG31/杆43）。[可复算程序](../experiments/T077/recovery/s01_d400_continuous_host_certificate.py)及[31段原始CSV](../experiments/T077/recovery/S01_D400_31SEG_CONTINUOUS_HOST_CERTIFICATE_20261025.csv)已提交；CSV SHA-256 `4c6afcfc10243efd01335588037be272632f91af576ac9967e1a45575a8ed9b8`；[方法、SOURCE/RUN/TAB/REF/STANDARD/OFFICIAL/FIG及限制](../experiments/T077/recovery/S01_D400_FULL_TOWER_MASS_CG_J_STATIC_LEDGER_20261025.md)。**仅本地静态几何RUN，无Abaqus原生RUN/FIG；NB/T10907授权条款未读；钢筋材料/构造/PT初态及原生验收仍HOLD；12阶段0/12未晋级。** T057/T070冻结母本未改，Draft PR #42不合并。
+
+
+### 2026-10-25｜S01 PT锚端自由体与损失阶段身份直接核算（非原生验收）
+
+- **SOURCE/RUN/TAB**：直接读取16,534,319字节D400/Pe诊断INP（SHA256 `0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217`），本地Python静态RUN验证36根112m PT T3D2、72节点、108条顶部锚端运动学方程；每束面积0.00112m²，总0.04032m²，输入应力985.951363MPa对应Pe=39.753558954614MN，P0−Pe=11.856041045386MN。锚端理想自由体合力Fy=−39.753559MN，环向对称合弯矩≈0；运动学方程系数对真实坐标最大截断差4.41µm。可复现[程序](../experiments/T077/recovery/s01_pt_anchorage_gate_repro.py)与[完整证据、误差预算及HOLD](../experiments/T077/recovery/S01_PT_ANCHORAGE_FREEBODY_AND_LOSS_IDENTITY_20261025.md)。
+- **PT损失物理身份**：T078的294.048637MPa损失换算为112m/Ep=195GPa自由长度等效缩短168.889mm（锚具+30接缝压密66mm、分批张拉弹性压缩12.955mm、松弛17.293mm、收缩徐变72.642mm）；这是应力损失的**等效长度换算**，不是实际塔体缩短。现有诊断INP仅直接将Pe写入初始应力，没有实现/验证上述施工及时间演化，后续不得重复计损。
+- **REF/STANDARD/OFFICIAL/FIG**：T078附录A原页索引是历史来源记录，本轮未取得59页授权PDF本体，亦未读NB/T10907第4.2/6.4/8章；无新全文文献、官方Abaqus原生RUN/FIG。静态对称合矩与方程系数误差不能代替接触/锚固/初态平衡误差预算（NEED-ESTIMATE）。
+- **阶段与唯一HOLD**：**0/12未晋级**，S01材料—构造—PT物理基线未冻结，S02/S03 NOT RUN。T057/T070母本未修改，Draft PR #42未合并，不启动昂贵生产RUN。**下一唯一最优动作**：合法取得NB/T10907第4.2、6.4、8章授权原文并一次性裁决HRB335/D400/D500、环/拉筋锚固与Pe实施支路。
