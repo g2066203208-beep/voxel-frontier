@@ -4,7 +4,7 @@
 
 ## 本轮实际交付
 - [独立Pe-aware提取器](s01_peaware_g1_extract.py)：仅在将来有原生ODB时由Abaqus Python调用；提取Gravity末帧36根PT的S11和力，校验输入INP SHA256、PT截面面积和初应力；拒绝缺项、重复标签、NaN、篡改输入。输出明确区分P0、设计Pe、INP初应力代理、ODB实测力；即使读取到ODB也始终保持S03=HOLD，直到原生RUN卡、反力、接触及误差预算独立闭合。
-- [12项mock ODB单测](test_s01_peaware_g1_extract.py)：本地Python 3执行12/12通过（2026-10-25）；该结果仅为本地静态逻辑测试，不是原生Abaqus测试。已为远端代码增加[轻量CI workflow](../../../..//../.github/workflows/s01-peaware-g1-static.yml)，其真实执行结论须另核GitHub Actions，不因文件已提交便称远端CI PASS。
+- [12项mock ODB单测](test_s01_peaware_g1_extract.py)：本地Python 3执行12/12通过（2026-10-25）；该结果仅为本地静态逻辑测试，不是原生Abaqus测试。已为远端代码增加[轻量CI workflow](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s01-peaware-g1-static.yml)，其真实执行结论须另核GitHub Actions，不因文件已提交便称远端CI PASS。
 - **真实输入核对**：从上轮本地ZIP解包16,535,636字节G1诊断INP，SHA256 `4c84c61ea07138428d4c0a8f742a9ab6e55725c49d16a94f5d9eaa8f7d9d3d29`，直接解析PT初始应力985951362.9616609 Pa、每束面积0.00112 m²，36束初始输入力代理39.753558954614164 MN。父诊断INP SHA256 `0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217`。
 - **P0设计张拉力**：51.609600 MN（1280 MPa × 36 × 0.00112 m²）。**Pe设计长期目标**：39.753558954614164 MN（T078设计损失账）。**INP输入力代理**：39.753558954614164 MN。**G1原生实测力**：NOT AVAILABLE，不能填入39.754 MN。两者数值相等不等于施工时点或真实平衡等价。
 - 本地ZIP：`S01_PEAWARE_G1_EXTRACTOR_STATIC_TESTS_20261025.zip`，SHA256 `95cb65ebf97a7fd88d54ae6c49048479e46d4953945524fa30ebff6c7853d516`（作为本轮会话附件；未声称GitHub托管ZIP）。本地脚本SHA256 `05efb345fdea697e43f90d214bce8b445b0e72fa26a361432c1b2f0372983046`；本地与GitHub源码可能因录入格式存在字节差异，正式执行以远端文件重新测试及固定SHA为准。
