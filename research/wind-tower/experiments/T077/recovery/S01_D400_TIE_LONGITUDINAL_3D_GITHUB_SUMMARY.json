@@ -1,0 +1,22 @@
+{
+  "status": "STATIC_FE_CENTERLINE_PROXIMITY_ONLY_HOLD",
+  "inp_sha256": "0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217",
+  "input_manifest_sha256": "ada88329857a9bb1f8d6c45ced64915ed305cd48114ee38c097e283b8ab7f226",
+  "segments": 31,
+  "ties": 12312,
+  "longitudinal_rods": 5440,
+  "original_overlap_ties": 3712,
+  "D400_overlap_ties": 3832,
+  "additional_overlap_ties": 120,
+  "additional_locations": {
+    "CSEG21": 64,
+    "CSEG22": 56
+  },
+  "min_D400_surface_gap_mm": -28,
+  "D400_ties_below_5mm": 4168,
+  "independent_2d_3d_count_match": "31/31",
+  "csv_sha256": "c6e4750c96184754a7dab0a6776c318a92061238f5d8e25c15aa0af8f50123f8",
+  "not_native": true,
+  "standard_full_text_read": false,
+  "physical_pass": false
+}
