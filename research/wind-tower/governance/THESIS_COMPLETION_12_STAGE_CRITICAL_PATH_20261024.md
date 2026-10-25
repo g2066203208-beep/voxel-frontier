@@ -147,3 +147,11 @@
 - **STANDARD/REF/OFFICIAL**：无新增NB/T10907—2021授权4.2/6.4/8章原页，2024 GB/T50010官方修订原页阅读层级保持原记录；2026先行风震/PT文献阅读深度未升级。**FIG**：无原生响应图。**误差预算**：生成/逆向回退为精确字节一致性检查，不能外推到接触、混凝土约束、构造、锚固、PT平衡或局部疲劳；这些物理/模型误差仍`NEED-ESTIMATE`。
 - **HOLD / 阶段状态**：**S01 PARTIAL/HOLD，0/12整阶段PASS**。诊断INP的存在不构成唯一物理设计基线冻结，**没有Abaqus Data Check、G0/G1、地震或材料疲劳求解**。最大HOLD为D400纵筋—HRB335环/拉筋混合身份及NB/T10907授权构造适用性未闭合，PT输入代理未经原生平衡；S02仍BLOCKED。
 - **下一单一动作**：取得并核读NB/T10907—2021第4.2、6.4及第8章授权原页，裁决环/拉筋材料与构造以及D400/Pe输入代理是否可进入唯一S01生产子版；未取得前不得以本诊断INP开展昂贵原生生产RUN。
+
+## 2026-10-25 11:10 CST｜S01 D400独立INP真实T3D2拓扑与纵筋质量差异核验（静态RUN）
+
+- **SOURCE / 输入版本**：冻结T057父INP SHA256=`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`；62行径向重布几何CSV SHA256=`85a462b18833993853e85b80b755c3097a2698cbc39c18fae5d4b4d226e5dcaf`；独立D400/Pe诊断候选INP SHA256=`0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217`（**与上轮相同**）。[本轮生成器变更提交](https://github.com/g2066203208-beep/voxel-frontier/commit/321be0db53765e51d6dd1df813c365f650f9f988)仅增加验证与质量账，不改变候选INP字节。T057/T070冻结母本未修改。
+- **RUN / 原生GitHub Actions（非Abaqus）**：[run #40157193495](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40157193495)的`static-d400-pe-diagnostic-only` job为`completed/success`；原生job日志直接打印`verified_T3D2_connectivity_elements=5440`、`changed_nodes=10880`、`delta_longitudinal_rebar_mass_proxy_kg=177526.52219941758`；[artifact #12585081663](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40157193495/artifacts/12585081663)保存独立INP及31段逐段manifest，ZIP digest=`sha256:c04ea8330bfa461fc49a7c9cae0f81baf5352d73761b35e9f1b2232387fd00eb`。此轮核读了job日志和artifact元数据，**尚未逐行独立解包artifact manifest**。
+- **实质性新门禁**：此前生成器仅按相邻节点假定每根纵筋的两个端点；现在**逐根核对实际`*Element, type=T3D2`连接表**，拒绝错误节点配对、重复单元ID及非预期杆长变化；计算源/候选每根杆实际长度与`rho=7850kg/m³`下的纵筋质量代理。结果显示**纵筋钢材质量代理增加约177.53 t**，属于可能影响质量、重心、惯量和模态的重大输入变化，不能以原T057模态或质量结果替代D400候选验证。
+- **STANDARD / REF / OFFICIAL / FIG / TAB**：本轮未新增NB/T10907—2021授权条款、IEC/GB全文或2026先行论文全文；未新增原生响应FIG；TAB为31段T3D2拓扑及钢筋质量差异manifest。质量代理**不扣除被钢筋占据的混凝土体积**，不含环筋、拉筋、PT、钢塔、RNA；不是整塔质量、CG、J的物理V&V。杆长变化仅有静态数值门限，实际几何/材料/接触/疲劳误差预算仍`NEED-ESTIMATE`。
+- **HOLD与阶段**：S01仍为`PARTIAL/HOLD`，**0/12阶段PASS**。D400纵筋与原HRB335环/拉筋仍为混合诊断身份；NB/T10907授权材料/构造条款、PT P0/Pe实际平衡、Abaqus原生Data Check及S04独立质量/惯量均未验收。**下一唯一最优动作**：核读NB/T10907授权4.2/6.4/8章并裁决环/拉筋材料与构造，确定是否允许形成唯一可送原生Data Check的S01子版；未授权时保持诊断HOLD。
