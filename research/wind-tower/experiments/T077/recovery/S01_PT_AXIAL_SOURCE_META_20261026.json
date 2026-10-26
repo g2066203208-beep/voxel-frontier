@@ -1,0 +1,40 @@
+{
+  "source_inp_sha256": "22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a",
+  "source_inp_bytes": 16536134,
+  "source_csv_sha256": "d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e",
+  "steel_tower_mass_kg_ideal_circle": 192068.21065748544,
+  "steel_segment_mass_kg": [
+    {
+      "part": "SSEG_01",
+      "mass_kg_ideal_circle": 52161.34057793741,
+      "h_m": 11.5
+    },
+    {
+      "part": "SSEG_02",
+      "mass_kg_ideal_circle": 48738.02119113816,
+      "h_m": 11.5
+    },
+    {
+      "part": "SSEG_03",
+      "mass_kg_ideal_circle": 46620.67721546322,
+      "h_m": 11.5
+    },
+    {
+      "part": "SSEG_04",
+      "mass_kg_ideal_circle": 44548.17167294666,
+      "h_m": 11.5
+    }
+  ],
+  "RNA_mass_kg": 676753.2907231401,
+  "pt_E_Pa": 195000000000.0,
+  "pt_area_m2": 0.04032,
+  "pt_length_m": 112,
+  "pt_initial_stress_Pa": 985951362.9616609,
+  "rebar_E_Pa": 200000000000.0,
+  "rho_concrete_kg_m3": 2400,
+  "rho_rebar_kg_m3": 7850,
+  "g_m_s2": 9.81,
+  "geometry_basis": "ideal circular annuli fitted to source node radii, not Abaqus 72-gon FE volume",
+  "prestress_basis": "single initial stress field Pe proxy, not staged tensioning",
+  "source_status": "provisional D400/Pe, NOT S01 frozen"
+}
