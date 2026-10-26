@@ -1,0 +1,66 @@
+name: S06 archived 158m tower provenance (static only)
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-archived-tower-provenance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  archive-source-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
+      - name: Inspect archived tower source members and possible generator files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import csv, hashlib, json, re, zipfile
+          from pathlib import Path
+          archive=Path('research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip')
+          assert archive.is_file(), 'Source ZIP absent'
+          expected='f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983'
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          archive_sha=sha(archive.read_bytes())
+          rows=[];source_hits=[]
+          with zipfile.ZipFile(archive) as z:
+              entries=[x for x in z.infolist() if not x.is_dir()]
+              for x in entries:
+                  basename=x.filename.rsplit('/',1)[-1]
+                  if basename=='C02R3R2_158M_Tower.dat':
+                      b=z.read(x)
+                      rows.append(dict(path=x.filename,bytes=len(b),sha256=sha(b),expected_sha=(sha(b)==expected)))
+                  elif Path(basename).suffix.lower() in {'.py','.m','.jl','.sh','.json','.yaml','.yml','.md','.txt'} and x.file_size<2_000_000:
+                      b=z.read(x)
+                      if b'\\0' in b[:1024]: continue
+                      s=b.decode('utf-8',errors='replace')
+                      hits=[n for n,line in enumerate(s.splitlines(),1) if re.search('TMassDen|TwEAStff|TwFAStif|C02R3R2_158M_Tower',line,re.I)]
+                      if hits:source_hits.append(dict(path=x.filename,sha256=sha(b),line_numbers=hits[:20],total_hits=len(hits)))
+          assert rows, 'No exact 158m tower files found in source archive'
+          out=Path('s06-source-inventory');out.mkdir()
+          with (out/'tower_member_hashes.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          report=dict(archive_path=str(archive),archive_sha256=archive_sha,zip_member_count=len(entries),
+              tower_member_count=len(rows),tower_unique_sha256=sorted({x['sha256'] for x in rows}),
+              all_towers_match_expected=all(x['expected_sha'] for x in rows),
+              expected_tower_sha256=expected,source_candidates_in_zip=source_hits,
+              limitation='Archive member inspection only; does not establish tower mass/EI generator provenance outside ZIP',
+              native_abaqus='NOT_RUN',native_openfast='NOT_RUN',standard_fulltext='NOT_READ',
+              stage='S06_PARTIAL_HOLD',physical_error_budget='NEED_ESTIMATE')
+          (out/'source_provenance.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({k:report[k] for k in ('archive_sha256','zip_member_count','tower_member_count','tower_unique_sha256','all_towers_match_expected','source_candidates_in_zip')},ensure_ascii=False))
+          if not report['all_towers_match_expected']:
+              raise SystemExit('HOLD: archive tower inputs differ from registered source hash')
+          print('STATIC SOURCE IDENTITY ONLY; NO PHYSICS PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s06-archive-tower-source-inventory
+          path: s06-source-inventory/
+          retention-days: 14
