@@ -25,8 +25,20 @@ jobs:
           cd research/wind-tower/experiments/T077/recovery
           sha256sum S01_PT_AXIAL_31SEG_SOURCE_20261026.csv S01_PT_AXIAL_SOURCE_META_20261026.json
           python s01_pt_axial_compatibility_oracle.py --out /tmp/s01_pt_axial_ci.csv
-          echo "Expected output SHA256: 231e3728cbd6bc06f62b2a61897849a2b60f25d5c78c9eacf7bf54cb68853713"
-          echo "231e3728cbd6bc06f62b2a61897849a2b60f25d5c78c9eacf7bf54cb68853713  /tmp/s01_pt_axial_ci.csv" | sha256sum -c -
+          # Python 3.11 vs 3.13 can differ at the final floating-point digits.
+          # Lock SOURCE bytes, but compare derived numeric results with a predeclared absolute tolerance.
+          python - <<'PY'
+          import csv
+          with open('/tmp/s01_pt_axial_ci.csv', newline='') as f:
+              rows = list(csv.DictReader(f))
+          expected = [38.3622740343, 37.8157937286, 38.6300117193,
+                      38.1690174227, 38.5897978316, 38.1193523048]
+          assert len(rows) == len(expected) == 6
+          for row, target in zip(rows, expected):
+              actual = float(row['PT_after_equilibrium_MN'])
+              assert abs(actual-target) < 1e-6, (row['mode'],actual,target)
+          print('SIX-CASE NUMERIC REGRESSION PASS; tolerance 1e-6 MN')
+          PY
           echo "STATIC ORACLE ONLY; NOT ABAQUS, NOT S01/S03 PHYSICAL PASS"
       - name: Save static numeric output
         uses: actions/upload-artifact@v4
