@@ -146,7 +146,7 @@
 
 **SOURCE / 版本：** 直接读取GitHub恢复的70站`S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat`（原始文件SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`）；31段环形几何来自`experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv`（Git Blob SHA1=`52fc85d4cfeac7319a7d994f9652fd61fdc89eb4`）。本轮另外在会话容器**逐字节核验**D400/Pe独立INP SHA256=`22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`，独立从该INP的31个CSEG实际C3D8R节点反算中截面环形A、I；与T038几何计算的31段A、I最大相对偏差分别为**0.000125%和0.000134%**。T038是历史几何副证，不冒充当前材料或求解验证。
 
-**RUN/TAB：** 对每段`A=π(D²−d²)/4`、`I=π(D⁴−d⁴)/64`，独立反算`E_EA=TwEAStff/A`、`E_EI=TwFAStif/I`、`rho_eq=TMassDen/A`。已提交[31段逐项数据](S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv)及[锁定来源的Python复算器](s06_tower_gross_section_identity_31seg.py)；轻量[GitHub Actions静态CI](../../../../../.github/workflows/s06-tower-mass-ea-identity.yml)已配置源SHA与CSV逐字节diff（**提交时尚未核实成功CI日志**）。无OpenFAST重跑，无Abaqus原生计算。
+**RUN/TAB：** 对每段`A=π(D²−d²)/4`、`I=π(D⁴−d⁴)/64`，独立反算`E_EA=TwEAStff/A`、`E_EI=TwFAStif/I`、`rho_eq=TMassDen/A`。已提交[31段逐项数据](S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv)及[锁定来源的Python复算器](s06_tower_gross_section_identity_31seg.py)；轻量[GitHub Actions静态CI](../../../../../.github/workflows/s06-tower-mass-ea-identity.yml)已配置源SHA与CSV逐字节diff（**已核实成功CI日志，见下方补证**）。无OpenFAST重跑，无Abaqus原生计算。
 
 | 31段有效毛截面参数反算 | 范围 | 均值（31段非加权） |
 |---|---:|---:|
@@ -160,3 +160,7 @@
 **纠偏：** 前次`TMassDen/(rho*TwEAStff/E)`约1%残差只是`rho/E`比值接近，**不能据此称OpenFAST材料与D400混凝土材料基本一致**。分开以同一几何反算可见E和密度各自约6%–10%的有效差异，二者在比值中部分抵消。这里的`E_EA/E_EI/rho_eq`是**OpenFAST等效截面参数**，不是发现了原始材料卡或钢筋/PT质量组成；历史OpenFAST原始生成程序与`TMassDen`分项归属**仍未恢复**，不得根据上述差值直接叠加钢筋质量、修改tower文件或判断历史风载最终有效性。
 
 **REF/STANDARD/OFFICIAL/FIG：** 本轮未新增授权NB/T10907条文、论文全文、OpenFAST原生生成日志或物理响应FIG；仅SOURCE、静态RUN、TAB更新。**误差预算：** 源几何代理与D400几何A/I偏差如上，双精度反算数值误差远小于1%；截面参数来源、钢筋/PT质量归属、等效E与真实复合截面/接缝动力刚度、阻尼与原生模态误差均**NEED-ESTIMATE**。**HOLD：** S01材料/接缝/PT唯一实施支路未冻结，S06原始生成源及OUTB身份未闭合，**0/12阶段PASS**。
+
+**2026-10-26 CI补证（仅静态）：** [GitHub Actions #40272681380](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40272681380) 于2026-10-26 05:09 UTC `completed/success`；job `121408708614`原生日志确认从GitHub checkout读取上述70站tower文件及31段几何，源锁通过、Python复算打印31段E/rho区间、`diff -u`与已提交CSV无差异。CSV SHA256=`8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed`；[Actions artifact #12628068738](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40272681380/artifacts/12628068738) 已归档。**CI PASS只证明可复算静态数据，不是S01/S06整阶段PASS，更不是原生Abaqus物理PASS。**
+
+**几何误差预算补充：** 本表使用理想圆环毛截面；D400实体宿主使用72弦多边形。对同心正72边形相对同外接圆，面积系数`sin(2π/72)/(2π/72)=0.99873124`，面内惯性矩系数约`0.99746442`，理想圆环与72边形分别约有**0.127%面积、0.254%惯性矩**的几何离散差；这与T038/D400直径数据比对的`<0.00014%`**不是同一误差项**。尚未代替Abaqus原生截面与质量核验，也不改变上述6%–10%有效参数差异的量级。
