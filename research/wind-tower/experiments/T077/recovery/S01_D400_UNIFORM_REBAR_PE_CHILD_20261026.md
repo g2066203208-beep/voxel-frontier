@@ -204,3 +204,20 @@
 **证据等级：** SOURCE=上述INP SHA；RUN=本地静态数值；TAB=本节与155行CSV；REF=既有阅读层级；STANDARD=局部原页/第8章HOLD；OFFICIAL=无新增Abaqus原生求解；FIG=无原生响应图。几何算法以既有31段结果交叉复核，**真实施工、接缝、PT、疲劳和物理误差预算仍NEED-ESTIMATE**。**S01 PARTIAL/HOLD，0/12阶段晋级**；不因此创建新生产INP或启动昂贵RUN。
 
 **单一最大HOLD与下一唯一动作：** 恢复历史已登记SHA的NB/T10907完整授权原件，优先核读第8章并一次性裁决D400纵筋/环筋/拉筋实体构造、锚固及PT实施时点；再冻结S01唯一候选。
+
+
+## 2026-10-26 17:20 CST｜S06归档来源CI闭合：恢复文件身份，但质量/EI原始生成器仍缺（非物理PASS）
+
+**阶段：0/12未晋级。** S01 PARTIAL/HOLD；S06 PARTIAL/HOLD；不因此放行S02或风/震/疲劳生产RUN。
+
+**SOURCE/输入SHA256：** 只读检查原始归档 `archive/local-assets-20261004/openfast-36-r2/part-001.zip`，GitHub Actions实际打印归档SHA256=`ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`，归档内94个文件成员；仅1份名为 `C02R3R2_158M_Tower.dat` 的文件，SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`，与此前恢复的70站塔架文件**逐字节身份一致**。检查工作流对应提交 `16aaed613d299b4e7bf8faba1f3509b631d4524a`。
+
+**RUN/原生GitHub CI（仅静态）**：首次 [#40291597927](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40291597927) `completed/success`，原生job `121467701763`；追加实际代码行上下文检查后 [#40298709870](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40298709870) `completed/success`，原生job `121491023032`，artifact [#12639755560](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40298709870/artifacts/12639755560)，ZIP digest `sha256:cf` **不是**此轮artifact（该digest属首次artifact）；二次artifact的digest以GitHub元数据为准。工作流 [源文件](../../../../../.github/workflows/s06-archived-tower-provenance.yml)只读归档，不调用Abaqus/OpenFAST。
+
+**TAB/生成来源追索的真实结果：** 在归档内可解码的常见源码/文本中，仅2份脚本命中塔架文件名或属性列关键词：
+- `finalize_rainflow_del.py`，SHA256=`6c6d1d18e785a825851c58998d3e4aa5c19ab297f8f8767f9ea541dce19e669c`，第39行将 `C02R3R2_158M_Tower.dat` 作为阻尼参数读取文件。
+- `rerun_r2.py`，SHA256=`44d5427178bc95078255dfd18b8df20dba52d7f7bc3e62dac4075820508dbda6`，第32行读取塔架文件并进入行标签处理，第49行读取塔架阻尼值进行核对；其命中行**未出现** `TMassDen`、`TwEAStff` 或 `TwFAStif`。这两项命中只能证明文件**被读取/用于阻尼相关流程**，不能证明任何脚本产生了塔架质量/EI列。该ZIP范围内未发现**可直接定位的质量/EI属性生成公式或分项台账**；不能排除它们在归档之外。
+
+**REF/STANDARD/OFFICIAL/FIG：** REF两篇2026先行论文阅读层级不变；NB/T10907第8章及完整授权条文仍未恢复，不能声称STANDARD条款验收；OFFICIAL仅GitHub Actions原生job日志，不是Abaqus物理原生日志；无新增物理响应FIG。**误差预算**：ZIP/文件SHA是精确身份校验；结构质量、材料分项、EI复合截面、动力与载荷误差均为`NEED-ESTIMATE`。原始塔架质量组成不能由归档SHA相等推导。
+
+**单一最大HOLD：** S01的HRB335原型、D400/D500设计材料与构造、30道接缝、PT P0/Pe实施尚未形成唯一经规范裁决的物理子版。**下一唯一动作转回S01：**合法恢复已登记SHA的NB/T10907—2021完整授权PDF，先核读第8章，再完成材料/构造/PT时点裁决；没有原件时保留NEED-SOURCE。不得继续通过质量/EI反算代替生成器溯源，也不得运行昂贵求解。
