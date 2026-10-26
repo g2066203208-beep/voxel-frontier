@@ -326,3 +326,26 @@ CSEG03、04分别为**252/504**和**288/576**处轴线穿越，全部位于拉�
 - **误差与HOLD**：本轮CSV截面几何A/I保留6位小数、钢筋As/Is保留9位，计算和输出舍入对百分比的影响远小于0.001个百分点；但几何离散、复合本构、Embedded质量占位、OpenFAST原生成器质量归属、接缝、PT及实际频率/载荷误差均 `NEED-ESTIMATE`。**REF**沿用何2024/Xu2025及2026先行研究原阅读等级；**STANDARD**仅历史NB/T10907局部原页，第8章授权全文仍缺；**OFFICIAL**本次无Abaqus/OpenFAST求解；**FIG**无物理响应图。禁止把CI绿灯认定为S01/S04/S06科学PASS，也不能据此立即重算正式风载。
 
 **单一最大HOLD仍是S01材料/构造/接缝/锚固与长期Pe初态的唯一可实施物理子版未冻结。下一最优动作：合法取得NB/T10907第8章授权原页及原型钢筋笼/锚固详图，完成D400整体等效支路的构造和PT实施裁决，才进入S02原生Data Check。**
+
+
+## 2026-10-27｜S01/S06 112m混凝土段积分质量与柔度对照（原生GitHub Actions静态RUN）
+
+**状态：0/12阶段晋级；S01、S06 PARTIAL/HOLD，S02/S03/S04未获原生PASS。** 本次针对上轮31段质量/EA/EI差异，新增**沿112m混凝土段积分**的可复算结果，检查局部截面偏差是否在结构整体质量/弯曲柔度代理上累积；不另立T080审查号，不修改冻结T057/T070及诊断INP。
+
+**SOURCE/版本（真实GitHub仓库源文件、三项Git blob逐字节锁定）：** [31段毛环面积与惯性矩](S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv) SHA256 `8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed`；[31段高度、纵筋As/Is及OpenFAST线质量/EI](S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv) SHA256 `910d427e3fba650b2f42a24c5f68943ff1361a7cd12b5a42210cbd684b55fc4f`；[31段OpenFAST EA](S06_158M_TOWER_MASS_EA_31SEG_20261026.csv) SHA256 `91d04216cee208627ff206300098a5c88cfb2c4e5c63defe5a8cc4856d09e84a`。底层未冻结D400诊断INP SHA256 `22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`；历史70站OpenFAST tower SHA256 `f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`。这次只对归档衍生CSV做静态积分，**没有重新读取原始OUTB或运行Abaqus/OpenFAST**。
+
+**RUN/TAB（可复算）：** [源文件锁定Python程序](s01_s06_integrated_concrete_compliance_gate.py)；[GitHub Actions成功运行 #40410148256](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40410148256)，job `source-identity-only` completed/success；[artifact #12693201519](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40410148256/artifacts/12693201519) 包含**31行逐段CSV、summary JSON、原有31段静态源身份对照**，ZIP SHA256 `ed44a07ab764730cf6c26c23f9b769e9d0cfa113afdf68f032a9ed5c506e1187`，到期2026-11-09 UTC。原生日志中31行CSV SHA256 `163930f2a77b300509eed05195e5df996389bfbaf46aa845530a7dca6ca28b28`，summary JSON SHA256 `c90cc396dfa40178479e45f3a04349f795347c70d2f1dc83ea50eabb77e8eaeb`；静态独立预计算断言PASS。前一run [#40410003692](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40410003692) 的**计算已完成**但在`sha256sum`误扫子目录时失败，已修复工作流并保留失败记录，不掩盖CI失败。
+
+**公式/假设：** 仅混凝土112m段，分段长度 `L_i=z1-z0`，OpenFAST基准用原始`TMassDen/TwEAStff/TwFAStif`，D400采用`m'_i=2400(A-As)+7850As`、`EA'_i=Ec(A-As)+200GPa·As`、`EI'_i=Ec(I-Is)+200GPa·Is`，`Ec=37GPa`(1–2段)/`36.5GPa`(3–31段)。在158m塔顶施加**单位水平力的线弹性固定端悬臂梁代理**，只积分混凝土段对塔顶位移的贡献 `δ/F=Σ[(158-z0)^3-(158-z1)^3]/(3EI_i)`；忽略46m钢段、RNA、PT、环筋/拉筋、接缝、基础与非线性，因此**不是158m整塔实际位移或模态预测**。31段合计积分长度**111.939m**，其余**0.061m**几何间隔不以虚构材料补齐。
+
+| 静态积分代理指标 | OpenFAST 158m历史截面 | D400扣纵筋占位复合截面 | 对照差异 |
+|---|---:|---:|---:|
+| 112m混凝土段质量（不含PT/环拉筋） | 1,731,876.991kg | 1,795,102.886kg | **+3.650715%** |
+| 112m混凝土段质量中心高度 | 53.100866m | 52.469653m | **−0.631213m** |
+| 1MN塔顶横力引起的**混凝土段柔度贡献** | 1.036256m | 0.913456m | **−11.850348%** |
+| 混凝土段轴向柔度代理 | 基准1.0 | — | **−10.151917%** |
+| 混凝土段单位弯矩转角柔度代理 | 基准1.0 | — | **−9.496376%** |
+
+**证据分级/误差预算：** SOURCE为三份锁定衍生CSV；RUN为GitHub Ubuntu/Python静态积分、输出文件SHA及预计算断言；TAB为31行CSV与本表；REF沿用何2024/Xu2025既有阅读层级；STANDARD未新增NB/T10907—2021第8章授权原页；OFFICIAL未新增原生CAE求解；FIG无新增物理响应图。数值计算采用理想圆环截面、分段常EI/EA/线质量，CSV几何舍入误差远小于上述百分比变化；实际环筋/PT、30道接缝、OpenFAST属性生成来源、结构非线性及动力耦合误差仍为**NEED-ESTIMATE**。该结果表明现有D400与历史158m OpenFAST**不能未经S04/S06校准便认定结构身份一致**，但**不能直接推断原始36组风载失效或量化其误差**。
+
+**单一最大HOLD/下一动作：** S01仍缺**授权规范与原型构造证据支持的材料/钢筋笼/锚固/PT有效初态统一裁决**；Pe设计值39.753559MN并非原生平衡Peq。下一步合法取得NB/T10907—2021第4.2、6.4和第8章及原型锚固/拉筋详图，裁决唯一D400等效或重构子版；然后S02原生Data Check。T057/T070冻结母本不变、Draft PR #42不合并、未启动昂贵求解，地震结果仍0。
