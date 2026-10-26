@@ -13,6 +13,8 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv'
       - 'research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv'
       - 'research/wind-tower/experiments/T077/recovery/s01_s06_integrated_concrete_compliance_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json'
   workflow_dispatch:
 
 jobs:
@@ -42,6 +44,10 @@ jobs:
             research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv
           python3 research/wind-tower/experiments/T077/recovery/s01_s06_integrated_concrete_compliance_gate.py \
             --outdir /tmp/s06-mass-ea/compliance
+          diff -u research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv \
+            /tmp/s06-mass-ea/compliance/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv
+          diff -u research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json \
+            /tmp/s06-mass-ea/compliance/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json
           python3 - <<'PY'
           import json
           from pathlib import Path
