@@ -15,6 +15,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s01_s06_integrated_concrete_compliance_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv'
       - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_r335_pt_tower_identity_inverse.py'
   workflow_dispatch:
 
 jobs:
@@ -63,6 +64,27 @@ jobs:
           PY
           sha256sum /tmp/s06-mass-ea/compliance/*
           sha256sum /tmp/s06-mass-ea/*.csv /tmp/s06-mass-ea/*.json
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_r335_pt_tower_identity_inverse.py \
+            --csv /tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE_31SEG.csv \
+            --json /tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE_SUMMARY.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE_SUMMARY.json').read_text())
+          expected={
+              'EA': 0.15927950564576243,
+              'EI': 0.1604517816628712,
+              'mass_PT': 0.2403709429999171,
+              'mass_noPT': 2.1262457210111836,
+          }
+          for k,v in expected.items():
+              assert abs(d['error_rms_percent'][k]-v)<1e-5,(k,d['error_rms_percent'][k],v)
+          assert abs(d['mass_PT_proxy_difference_percent']-(-0.07744862947911546))<1e-5
+          assert abs(d['phi25_proxy_tip_compliance_difference_percent']-0.14101302085405276)<1e-5
+          assert abs(d['PT_mass_if_distributed_kg']-35430.036768)<0.001
+          print('INDEPENDENT_R335_PT_INVERSE_NUMERIC_ASSERTIONS_PASS')
+          PY
+          sha256sum /tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE*
           echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
       - uses: actions/upload-artifact@v4
         with:
