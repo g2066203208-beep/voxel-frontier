@@ -5,6 +5,9 @@ on:
       - '.github/workflows/s06-tower-mass-ea-identity.yml'
       - 'research/wind-tower/experiments/T077/recovery/s06_tower_ea_mass_ownership_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat'
+      - 'research/wind-tower/experiments/T077/recovery/s06_tower_gross_section_identity_31seg.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv'
+      - 'research/wind-tower/experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv'
   workflow_dispatch:
 
 jobs:
@@ -19,6 +22,12 @@ jobs:
           python3 research/wind-tower/experiments/T077/recovery/s06_tower_ea_mass_ownership_gate.py \
             research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat \
             --outdir /tmp/s06-mass-ea
+          python3 research/wind-tower/experiments/T077/recovery/s06_tower_gross_section_identity_31seg.py \
+            research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat \
+            research/wind-tower/experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv \
+            --out /tmp/s06-mass-ea/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv
+          diff -u research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv \
+            /tmp/s06-mass-ea/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv
           sha256sum /tmp/s06-mass-ea/*
           echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
       - uses: actions/upload-artifact@v4
