@@ -314,3 +314,15 @@ CSEG03、04分别为**252/504**和**288/576**处轴线穿越，全部位于拉�
 **REF/STANDARD/OFFICIAL/RUN/FIG/TAB/HOLD：** REF沿用何2024/Xu2025及两篇2026论文既有阅读层级；STANDARD仍缺NB/T10907—2021授权4.2/6.4/8章，不作条款验收；OFFICIAL仅为软件方法页，RUN仅静态Python，FIG无物理响应图，TAB为上述31段CSV。数值面积舍入可控，实际材料/接触/施工构造及疲劳的物理误差预算仍NEED-ESTIMATE。未修改T057/T070冻结母本、未合并PR、未启动高成本RUN，真实地震结果仍为0。
 
 **下一唯一动作：** 以授权NB/T10907材料/构造条款和原型钢筋笼详图裁决**D400作为整体等效待验子版的适用范围及占位处理**，同步锁定T078长期Pe初态语义；然后冻结唯一S01 INP进入S02原生Data Check。
+
+## 2026-10-27｜S01/S06：D400与正式158m OpenFAST的质量/EA/EI三种截面口径同源对照（静态CI成功）
+
+**阶段仍为0/12 PASS；S01、S06 PARTIAL/HOLD。** 本次不再把“OpenFAST等效E约39–40GPa”和“钢筋附加EI约4%–26%”分开孤立陈述，而是按**实际D400 C70/C65弹模**与相同31段钢筋面积/惯性矩，逐段对照同一历史158m塔架的 `TMassDen/TwEAStff/TwFAStif`。这直接检验后续S04/S07是否能够静默复用既有风载结构身份。
+
+- **SOURCE（衍生数据直接核读，原始来源SHA历史登记）**：[31段毛环截面](S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv)，SHA256 `8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed`；[D400纵筋As/Is及正式tower EI/线质量](S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv)，SHA256 `910d427e3fba650b2f42a24c5f68943ff1361a7cd12b5a42210cbd684b55fc4f`；[tower EA](S06_158M_TOWER_MASS_EA_31SEG_20261026.csv)，SHA256 `91d04216cee208627ff206300098a5c88cfb2c4e5c63defe5a8cc4856d09e84a`。底层D400诊断INP SHA256=`22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`；历史70站tower SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`。本轮使用仓库已归档衍生CSV，**未重新声称原始INP/OUTB原生运行**。
+- **RUN/TAB（已通过GitHub Ubuntu/Python原生CI，仍非CAE求解）**：[31段对照CSV](S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv)，SHA256=`331419f7064cdfcdf7476a489dfa8a2d35bddeed7d8714c823a137ab2be63255`；[只读、Git Blob锁定复算程序](s01_s06_d400_composite_identity_gate.py)。[Actions #40401604856](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40401604856) 为 `completed/success`，job `121848596113`的源码哈希、31段运算、`diff -u`逐字节核验、artifact上传均成功；[artifact #12689537263](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40401604856/artifacts/12689537263) ZIP SHA256=`b1258f2089278ab18506cbed5861d2b268e0b4b31d626389d4f614da412dd9c4`。
+- **假设/算式**：Ec=37GPa（CSEG01–02）/36.5GPa（其余），Es=200GPa，rho_c=2400kg/m³，rho_s=7850kg/m³，理想圆环毛截面A/I与纵筋As/Is；三口径依次为毛混凝土 `Ec·I`、实际Embedded加筋代理 `Ec·I+Es·Is`、理想钢筋占位扣除 `Ec·(I−Is)+Es·Is`；EA与线质量作对应面积公式。百分数均以历史OpenFAST原输入为分母；**不含环/拉筋、PT、接缝柔度、开裂与真实复合截面非线性**，不代表Abaqus有效EI。
+- **31段结果**：毛混凝土EI相对OpenFAST为 **−8.622%至−5.818%**；Embedded EI代理为 **−0.202%至+24.072%**；扣占位EI代理为 **−1.526%至+18.195%**。扣占位EA代理为 **−1.503%至+18.179%**；扣占位线质量代理为 **−3.472%至+6.564%**。CSEG04控制扣占位EI **+18.194601%**、线质量 **+6.563610%**；CSEG31分别 **−1.225486%**、**−3.007261%**。偏差随高度变号，**不能用一个统一刚度/质量缩放因子证明两模型同身份**。
+- **误差与HOLD**：本轮CSV截面几何A/I保留6位小数、钢筋As/Is保留9位，计算和输出舍入对百分比的影响远小于0.001个百分点；但几何离散、复合本构、Embedded质量占位、OpenFAST原生成器质量归属、接缝、PT及实际频率/载荷误差均 `NEED-ESTIMATE`。**REF**沿用何2024/Xu2025及2026先行研究原阅读等级；**STANDARD**仅历史NB/T10907局部原页，第8章授权全文仍缺；**OFFICIAL**本次无Abaqus/OpenFAST求解；**FIG**无物理响应图。禁止把CI绿灯认定为S01/S04/S06科学PASS，也不能据此立即重算正式风载。
+
+**单一最大HOLD仍是S01材料/构造/接缝/锚固与长期Pe初态的唯一可实施物理子版未冻结。下一最优动作：合法取得NB/T10907第8章授权原页及原型钢筋笼/锚固详图，完成D400整体等效支路的构造和PT实施裁决，才进入S02原生Data Check。**
