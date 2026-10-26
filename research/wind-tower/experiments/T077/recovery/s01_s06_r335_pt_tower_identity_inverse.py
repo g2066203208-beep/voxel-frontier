@@ -29,7 +29,7 @@ FIELDS = ["segment", "z0_m", "z1_m", "bar_count", "As_phi25_m2",
 def load(folder, key):
     name, expected = SOURCES[key]
     raw = (folder / name).read_bytes()
-    blob = hashlib.sha1(("blob %d\\0" % len(raw)).encode("ascii") + raw).hexdigest()
+    blob = hashlib.sha1(("blob %d\0" % len(raw)).encode("ascii") + raw).hexdigest()
     if blob != expected:
         raise ValueError("SOURCE_GIT_BLOB_MISMATCH: " + name + ": " + blob)
     rows = list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
@@ -129,7 +129,7 @@ def main():
     if args.csv:
         if args.csv.exists(): raise FileExistsError("REFUSE_OVERWRITE_CSV")
         with args.csv.open("w",encoding="utf-8",newline="") as f:
-            w=csv.writer(f,lineterminator="\\n")
+            w=csv.writer(f,lineterminator="\n")
             w.writerow(FIELDS)
             for row in records:
                 w.writerow([row[0]]+[format(v,".12g") if isinstance(v,float) else v
@@ -137,7 +137,7 @@ def main():
     if args.json:
         if args.json.exists(): raise FileExistsError("REFUSE_OVERWRITE_JSON")
         args.json.write_text(json.dumps(summary,ensure_ascii=False,indent=2,
-                                        sort_keys=True)+"\\n",encoding="utf-8")
+                                        sort_keys=True)+"\n",encoding="utf-8")
     print(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True))
     print("STATIC SOURCE-LOCKED INVERSE ONLY; S01/S06 HOLD; NO NATIVE PASS")
 
