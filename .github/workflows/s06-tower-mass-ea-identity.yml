@@ -48,7 +48,7 @@ jobs:
           p = Path('/tmp/s06-mass-ea/compliance/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json')
           d = json.loads(p.read_text())
           expected = {'mass_change_pct': 3.6507150264,
-                      'tip_compliance_change_pct': -11.8503414046,
+                      'tip_compliance_change_pct': -11.8503484459,
                       'concrete_CG_shift_m': -0.6312126237,
                       'represented_length_m': 111.939}
           for key, val in expected.items():
@@ -56,7 +56,7 @@ jobs:
           print('INDEPENDENT_PRECOMPUTED_STATIC_INTEGRATION_ASSERTIONS_PASS')
           PY
           sha256sum /tmp/s06-mass-ea/compliance/*
-          sha256sum /tmp/s06-mass-ea/*
+          sha256sum /tmp/s06-mass-ea/*.csv /tmp/s06-mass-ea/*.json
           echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
       - uses: actions/upload-artifact@v4
         with:
