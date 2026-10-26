@@ -23,7 +23,7 @@ FIELDS = ["segment", "z0_m", "z1_m", "length_m", "openfast_mass_kg", "d400_displ
 def read_locked(folder, key):
     name, expected = FILES[key]
     data = (folder / name).read_bytes()
-    blob = hashlib.sha1(("blob %d\\0" % len(data)).encode() + data).hexdigest()
+    blob = hashlib.sha1(("blob %d" % len(data)).encode() + bytes([0]) + data).hexdigest()
     if blob != expected:
         raise ValueError("SOURCE_GIT_BLOB_MISMATCH: " + name + " " + blob)
     return list(csv.DictReader(io.StringIO(data.decode("utf-8-sig")))), hashlib.sha256(data).hexdigest()
@@ -113,11 +113,11 @@ def main():
     if csv_path.exists() or json_path.exists():
         raise FileExistsError("REFUSE_OVERWRITE")
     with csv_path.open("w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f, lineterminator="\\n")
+        w = csv.writer(f, lineterminator=chr(10))
         w.writerow(FIELDS)
         for row in rows:
             w.writerow([row[0]] + [format(v, ".12g") for v in row[1:]])
-    json_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+    json_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + chr(10), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
     print("STATIC ONLY; no native solver, no physical/standard PASS")
 
