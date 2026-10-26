@@ -1,0 +1,28 @@
+name: S06 158m tower mass-EA identity (static only)
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-tower-mass-ea-identity.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s06_tower_ea_mass_ownership_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat'
+  workflow_dispatch:
+
+jobs:
+  source-identity-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source SHA and 31-segment EA/mass identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T077/recovery/s06_tower_ea_mass_ownership_gate.py \
+            research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat \
+            --outdir /tmp/s06-mass-ea
+          sha256sum /tmp/s06-mass-ea/*
+          echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s06-158m-mass-ea-static-evidence
+          path: /tmp/s06-mass-ea/
+          retention-days: 14
