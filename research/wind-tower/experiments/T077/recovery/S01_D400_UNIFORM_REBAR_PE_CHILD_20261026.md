@@ -141,3 +141,22 @@
 **REF/STANDARD/OFFICIAL/FIG：** 无新增文献全文、NB/T10907授权4.2/6.4/8章、Abaqus/OpenFAST原生生产RUN或响应FIG；本轮RUN为静态源数据计算，TAB为31段表。数值复算/格式误差可由程序锁定，**物理误差预算仍NEED-ESTIMATE**：OpenFAST原生成器与质量成分、塔段几何、钢筋/PT刚度及质量计账、接缝、RNA、模态和载荷重新求解均未验证。
 
 **唯一最大HOLD：** S01材料/构造/PT可实施物理基线尚未冻结（且S06的`TMassDen`质量归属仍未知）。**下一最优动作：**追溯C02R3R2塔架属性原始生成脚本/质量分项，确认`TMassDen`是否已计普通筋/PT，并在原生S02/S04之前锁定质量/EI身份。冻结T057/T070母本不改；Draft PR #42不合并；不运行昂贵求解；地震RUN=0。
+
+## 2026-10-26｜S01/S06：原始塔架截面几何反算纠正“质量—EA比值约1%即材料一致”的过度解释
+
+**SOURCE / 版本：** 直接读取GitHub恢复的70站`S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat`（原始文件SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`）；31段环形几何来自`experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv`（Git Blob SHA1=`52fc85d4cfeac7319a7d994f9652fd61fdc89eb4`）。本轮另外在会话容器**逐字节核验**D400/Pe独立INP SHA256=`22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`，独立从该INP的31个CSEG实际C3D8R节点反算中截面环形A、I；与T038几何计算的31段A、I最大相对偏差分别为**0.000125%和0.000134%**。T038是历史几何副证，不冒充当前材料或求解验证。
+
+**RUN/TAB：** 对每段`A=π(D²−d²)/4`、`I=π(D⁴−d⁴)/64`，独立反算`E_EA=TwEAStff/A`、`E_EI=TwFAStif/I`、`rho_eq=TMassDen/A`。已提交[31段逐项数据](S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv)及[锁定来源的Python复算器](s06_tower_gross_section_identity_31seg.py)；轻量[GitHub Actions静态CI](../../../../../.github/workflows/s06-tower-mass-ea-identity.yml)已配置源SHA与CSV逐字节diff（**提交时尚未核实成功CI日志**）。无OpenFAST重跑，无Abaqus原生计算。
+
+| 31段有效毛截面参数反算 | 范围 | 均值（31段非加权） |
+|---|---:|---:|
+| `TwEAStff/A` 等效E | 38.670–40.125 GPa | 39.454 GPa |
+| `TwFAStif/I` 等效E | 38.755–40.113 GPa | 39.451 GPa |
+| `TMassDen/A` 等效密度 | 2535.850–2588.774 kg/m³ | 2566.991 kg/m³ |
+| 相对D400的E=37/36.5GPa，EA差异 | +5.946%至+9.522% | +7.997% |
+| 相对D400的E=37/36.5GPa，EI差异 | +6.177%至+9.436% | +7.988% |
+| 相对D400的rho=2400kg/m³，线质量差异 | +5.660%至+7.866% | +6.958% |
+
+**纠偏：** 前次`TMassDen/(rho*TwEAStff/E)`约1%残差只是`rho/E`比值接近，**不能据此称OpenFAST材料与D400混凝土材料基本一致**。分开以同一几何反算可见E和密度各自约6%–10%的有效差异，二者在比值中部分抵消。这里的`E_EA/E_EI/rho_eq`是**OpenFAST等效截面参数**，不是发现了原始材料卡或钢筋/PT质量组成；历史OpenFAST原始生成程序与`TMassDen`分项归属**仍未恢复**，不得根据上述差值直接叠加钢筋质量、修改tower文件或判断历史风载最终有效性。
+
+**REF/STANDARD/OFFICIAL/FIG：** 本轮未新增授权NB/T10907条文、论文全文、OpenFAST原生生成日志或物理响应FIG；仅SOURCE、静态RUN、TAB更新。**误差预算：** 源几何代理与D400几何A/I偏差如上，双精度反算数值误差远小于1%；截面参数来源、钢筋/PT质量归属、等效E与真实复合截面/接缝动力刚度、阻尼与原生模态误差均**NEED-ESTIMATE**。**HOLD：** S01材料/接缝/PT唯一实施支路未冻结，S06原始生成源及OUTB身份未闭合，**0/12阶段PASS**。
