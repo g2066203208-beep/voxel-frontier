@@ -12,6 +12,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv'
       - 'research/wind-tower/experiments/T077/recovery/S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv'
       - 'research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_integrated_concrete_compliance_gate.py'
   workflow_dispatch:
 
 jobs:
@@ -39,6 +40,22 @@ jobs:
           sha256sum research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv \
             research/wind-tower/experiments/T077/recovery/S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv \
             research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_integrated_concrete_compliance_gate.py \
+            --outdir /tmp/s06-mass-ea/compliance
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('/tmp/s06-mass-ea/compliance/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json')
+          d = json.loads(p.read_text())
+          expected = {'mass_change_pct': 3.6507150264,
+                      'tip_compliance_change_pct': -11.8503414046,
+                      'concrete_CG_shift_m': -0.6312126237,
+                      'represented_length_m': 111.939}
+          for key, val in expected.items():
+              assert abs(d[key] - val) < 1e-5, (key, d[key], val)
+          print('INDEPENDENT_PRECOMPUTED_STATIC_INTEGRATION_ASSERTIONS_PASS')
+          PY
+          sha256sum /tmp/s06-mass-ea/compliance/*
           sha256sum /tmp/s06-mass-ea/*
           echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
       - uses: actions/upload-artifact@v4
