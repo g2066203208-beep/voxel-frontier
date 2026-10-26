@@ -1,0 +1,3 @@
+segment,tie_elements,envelope_overlaps,centerline_intersections_under_1um,tie_heights,max_overlaps_per_height,min_centerline_distance_mm,min_nominal_envelope_gap_mm
+CSEG_03,504,252,252,7,36,0.000000,-28.000000
+CSEG_04,576,288,288,8,36,0.000000,-28.000000
