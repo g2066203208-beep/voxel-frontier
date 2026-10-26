@@ -1,0 +1,36 @@
+name: S01 PT axial compatibility oracle (static only)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_pt_axial_compatibility_oracle.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S01_PT_AXIAL_SOURCE_META_20261026.json'
+      - '.github/workflows/s01-pt-axial-oracle.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  axial-oracle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify source-locked reduced-order PT calculation
+        run: |
+          cd research/wind-tower/experiments/T077/recovery
+          sha256sum S01_PT_AXIAL_31SEG_SOURCE_20261026.csv S01_PT_AXIAL_SOURCE_META_20261026.json
+          python s01_pt_axial_compatibility_oracle.py --out /tmp/s01_pt_axial_ci.csv
+          echo "Expected output SHA256: 231e3728cbd6bc06f62b2a61897849a2b60f25d5c78c9eacf7bf54cb68853713"
+          echo "231e3728cbd6bc06f62b2a61897849a2b60f25d5c78c9eacf7bf54cb68853713  /tmp/s01_pt_axial_ci.csv" | sha256sum -c -
+          echo "STATIC ORACLE ONLY; NOT ABAQUS, NOT S01/S03 PHYSICAL PASS"
+      - name: Save static numeric output
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-pt-axial-oracle-static-only
+          path: /tmp/s01_pt_axial_ci.csv
+          retention-days: 14
