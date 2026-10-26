@@ -8,6 +8,10 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s06_tower_gross_section_identity_31seg.py'
       - 'research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv'
       - 'research/wind-tower/experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_d400_composite_identity_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv'
   workflow_dispatch:
 
 jobs:
@@ -28,6 +32,13 @@ jobs:
             --out /tmp/s06-mass-ea/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv
           diff -u research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv \
             /tmp/s06-mass-ea/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_d400_composite_identity_gate.py \
+            --out /tmp/s06-mass-ea/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv
+          diff -u research/wind-tower/experiments/T077/recovery/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv \
+            /tmp/s06-mass-ea/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv
+          sha256sum research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv \
+            research/wind-tower/experiments/T077/recovery/S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv \
+            research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv
           sha256sum /tmp/s06-mass-ea/*
           echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
       - uses: actions/upload-artifact@v4
