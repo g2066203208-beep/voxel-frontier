@@ -37,7 +37,7 @@ jobs:
                       rows.append(dict(path=x.filename,bytes=len(b),sha256=sha(b),expected_sha=(sha(b)==expected)))
                   elif Path(basename).suffix.lower() in {'.py','.m','.jl','.sh','.json','.yaml','.yml','.md','.txt'} and x.file_size<2_000_000:
                       b=z.read(x)
-                      if b'\\0' in b[:1024]: continue
+                      if 0 in b[:1024]: continue
                       s=b.decode('utf-8',errors='replace')
                       hits=[n for n,line in enumerate(s.splitlines(),1) if re.search('TMassDen|TwEAStff|TwFAStif|C02R3R2_158M_Tower',line,re.I)]
                       if hits:source_hits.append(dict(path=x.filename,sha256=sha(b),line_numbers=hits[:20],total_hits=len(hits)))
