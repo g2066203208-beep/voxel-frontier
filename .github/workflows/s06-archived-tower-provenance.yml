@@ -42,6 +42,18 @@ jobs:
                       hits=[n for n,line in enumerate(s.splitlines(),1) if re.search('TMassDen|TwEAStff|TwFAStif|C02R3R2_158M_Tower',line,re.I)]
                       if hits:source_hits.append(dict(path=x.filename,sha256=sha(b),line_numbers=hits[:20],total_hits=len(hits)))
           assert rows, 'No exact 158m tower files found in source archive'
+          # Read the actual matching lines: a filename reference is not a property generator.
+          with zipfile.ZipFile(archive) as z:
+              for hit in source_hits:
+                  lines=z.read(hit['path']).decode('utf-8',errors='replace').splitlines()
+                  context=[]
+                  for n in hit['line_numbers']:
+                      context.append({'line':n,'nearby':[
+                          {'n':i+1,'text':lines[i][:300]}
+                          for i in range(max(0,n-3),min(len(lines),n+2))]})
+                  hit['matching_source_context']=context
+                  hit['property_columns_named']=any(re.search(r'TMassDen|TwEAStff|TwFAStif',lines[n-1],re.I) for n in hit['line_numbers'])
+          print('SOURCE_REFERENCE_CONTEXT='+json.dumps(source_hits,ensure_ascii=False))
           out=Path('s06-source-inventory');out.mkdir()
           with (out/'tower_member_hashes.csv').open('w',newline='') as f:
               w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
