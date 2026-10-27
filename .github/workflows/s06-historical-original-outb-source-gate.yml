@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/s06-historical-original-outb-source-gate.yml'
       - 'research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py'
+      - 'research/wind-tower/experiments/T062/s06_t062_original_tower_gage_geometry_gate.py'
   pull_request:
     paths:
       - '.github/workflows/s06-historical-original-outb-source-gate.yml'
@@ -57,11 +58,33 @@ jobs:
           print("REAL_FULL_SERIES_QC", {k:v for k,v in d.items() if k not in ("native_channel_summary","hold")})
           PY
           echo 'S06: ORIGINAL ARCHIVE SOURCE/QC ONLY; NOT 31-GAGE RERUN, DYNAMIC FORCE OWNERSHIP, ABAQUS, OR PHYSICS PASS.'
+      - name: Match original ElastoDyn TwrGagNd and 158m node midpoint to nine actual OUTB TPzi
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output audit/static-part-001.zip \
+            "$base/research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output audit/s06_t062_original_tower_gage_geometry_gate.py \
+            "$base/research/wind-tower/experiments/T062/s06_t062_original_tower_gage_geometry_gate.py"
+          python3 -m py_compile audit/s06_t062_original_tower_gage_geometry_gate.py
+          python3 audit/s06_t062_original_tower_gage_geometry_gate.py --self-test
+          python3 audit/s06_t062_original_tower_gage_geometry_gate.py \
+            --static-zip audit/static-part-001.zip \
+            --receipt audit/previous-three-sample-receipt.json \
+            --out audit/S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT.json
+          sha256sum audit/static-part-001.zip \
+            audit/s06_t062_original_tower_gage_geometry_gate.py \
+            audit/S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT.json
+          echo 'STATIC SOURCE GAGE GEOMETRY ONLY; NOT 31-GAGE, PHYSICS, OR ABAQUS PASS.'
       - name: Retain small source/header receipt for inspection
         uses: actions/upload-artifact@v4
         with:
           name: s06-t062-one-original-outb-full-native-series-qc
           path: |
             audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+            audit/S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT.json
             audit/S06_T062_9GAGE_FULL_NATIVE_SERIES.csv.gz
           retention-days: 14
