@@ -157,6 +157,6 @@
 
 - SOURCE：GitHub PR #42分支原始T077几何SHA256=d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e；T074重力SHA256=b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349。读取层级=真实CSV全部31行，非文献摘要。原始16件动态ZIP本轮未重新下载。
 - RUN：连接器执行环境逐道完成30接口几何连续、真实重力gage力差、分段环形体积Simpson积分及有效单位重折算。结果γ_eff范围24.644553234–26.364713691kN/m³，均值25.200870709kN/m³。30行结果SHA256=ba43732de537854e0361d1aa4cc2792bf8b80ab3536115b6b2f1c9e2317dfe6f；脚本SHA256=a75d8fd15158f573f210a7e093b216936fbddc77377a81e0ebca334bb816c48f。
-- TEST：本地Python 3标准库常截面/线性变截面解析积分oracle、越界负测试已执行通过；既有T080 Actions预检已增加真实仓库输入哈希与30行复算测试，run 40494433792在首次查询时in_progress，**待实际结论**；不冒称CI已PASS。
+- TEST：本地Python 3标准库常截面/线性变截面解析积分oracle、越界负测试已执行通过；既有T080 Actions预检已增加真实仓库输入哈希与30行复算测试，run [40494433792](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40494433792)随后已完成success，job 122156176232原生日志在2026-10-27T11:13:40Z显示30/30真实CSV复算PASS，原始源SHA256校验PASS、重新计算CSV SHA256=ba43732de537854e0361d1aa4cc2792bf8b80ab3536115b6b2f1c9e2317dfe6f（与提交CSV完全一致）；仅源级数值回归PASS，不是物理验收。
 - REF：沿用T079/T080文献，未新增全文阅读。STANDARD：无新授权规范条文。OFFICIAL：仓库原始OpenFAST历史T074来源记录；未核官方OpenFAST分布内力定义。FIG：无。TAB：[30道接口CSV](../T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv)；[研究过程与边界](../T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
 - PASS/HOLD：仅真实源级数值/解析oracle完成，12阶段0/12；没有原生Abaqus、地震或动态接缝计算。主要不确定性为截面力自由体归属、分布惯性、钢筋质量、RNA重力、真实接触，误差预算NEED-ESTIMATE。禁止把上下gage插值当作真实30道接缝力；下一单一动作核对四工况六分量+重力分账。
