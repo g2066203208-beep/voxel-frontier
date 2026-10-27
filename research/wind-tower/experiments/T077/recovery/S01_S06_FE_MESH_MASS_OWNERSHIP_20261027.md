@@ -79,3 +79,15 @@ D400−R335纵筋质量条件差为**177.526522t**，占历史OpenFAST整塔质�
 - **误差预算：** 表内质量加减的舍入影响小于数千克；**物理误差**（R335与D400宿主/环筋是否逐字节同几何、OpenFAST \`TMassDen\`包含哪些筋材/锚具、普通筋Embedded占位是否扣重、PT真实有效力、接缝刚度、RNA惯量及动态模态）均\`NEED-ESTIMATE\`，不得把0.97%作为验证误差限。
 - **S01/S02裁决：** **R335/T070仅作为冻结原型的首个S02诊断输入**，不是满足2024版规范的最终设计分支；**D400仍是需NB/T10907授权原页裁决并与OpenFAST重新配平质量/EI的疲劳敏感设计候选**；T078 \`P0=51.6096MN\` 与 \`Pe≈39.753559MN\`不能互换，T070原输入仍为1280MPa，不能拿其G0结果称设计有效Pe已实现。T057/T070母本未修改，PR #42不合并，昂贵生产RUN禁止。
 - **阶段与HOLD：** **0/12未晋级**。最大HOLD仍是**S01唯一可实施配筋—接缝—有效PT初态未冻结/未获原生验证**。下一轮只做一项：在有Abaqus 2025许可证的执行机上，按已SHA锁定的\`T070/run_t070_g0_datacheck.py\`完成**R335原型诊断性Data Check**并回收原始日志；不将诊断结果当D400设计PASS。
+
+
+## 2026-10-27｜证据留存闭环：原始70站再积分与可执行四分支复算
+
+> **目的：** 把此前仅附在对话或长文里的复算步骤固化为GitHub可执行程序与可下载的4行结果CSV，不创建新T080编号，不提升科学PASS。
+
+- **SOURCE直接再核：** 2026-10-27通过GitHub connector重新读取[原始70站OpenFAST塔属性文件](S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat)（Git blob \`f295c17366dd19e340a82e434f2703fc0ce303b8\`，17,236字符）。直接读取\`HtFract\`与\`TMassDen\` 70行，逐区间用\`158×ΔHtFract×(ρ1+ρ2)/2\`累加，得到**1,923,663.6106908037 kg**，与此前登记的1,923,663.610690804 kg只差约\`2.33×10⁻¹⁰kg\`（浮点舍入）。本次**没有重新逐字节SHA256校验**OpenFAST源，历史登记CRLF SHA256仍为\`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983\`。Git blob和历史SHA不混作同一摘要。
+- **RUN/代码：** [s01_s06_branch_mass_reconcile.py](s01_s06_branch_mass_reconcile.py)完整保留四种计重组合的源数值、公式、参考路径、4项数值断言、70站解析及SHA拒绝策略；不调用求解器，也不改T057/T070/独立D400 INP。用\`python s01_s06_branch_mass_reconcile.py --self-test\`做算术+**合成数据**70站解析自测；用\`python s01_s06_branch_mass_reconcile.py --out-dir NEW_DIR\`基于已登记分项质量重新出CSV/JSON；若要从实际塔原件独立验源则用\`--tower-dat S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat\`，须真实文件SHA256与历史登记完全相符，且独立积分总质量差不超过0.02 kg，否则程序拒绝。**本地同计算逻辑程序已完成自测和登记数值重算；提交的GitHub Python文本在本轮未通过Abaqus/Actions执行**，不能以此声称原生RUN。
+- **TAB/代码留存：** [S01_S06_R335_D400_BRANCH_MASS_RECONCILED_20261027.csv](S01_S06_R335_D400_BRANCH_MASS_RECONCILED_20261027.csv)存四行可复用定量结果；此提交CSV为UTF-8/LF、491字节、SHA256=\`51cfda690d5037bceb8fb84c510c174685e9d0cdcfb94ee9ecdcf17cb52f3e8f\`。前轮本地以\`csv.DictWriter\`产生CRLF版SHA256不同（\`d9653bfe5e0d8e820d23469cfac53f74fa85fc9c9044ccc0d5db9d406d1cce22\`），两版仅换行不同；不能把不同字节哈希混称同一文件。
+- **原始数据来源层级：** OpenFAST 70站文件是GitHub直接读取/再积分；T057 R335纵筋75.831702t是已登记[源文件独立原始CI复核](s01_frozen_t057_longitudinal_mass_independent.py)所得，本轮未重新拉取16.6 MB母本；D400实体、筋材、PT来自前轮[INP静态网格积分](S01_S06_FE_MESH_MASS_OWNERSHIP_20261027.md)，本轮没有重建原INP 35段全部网格。新增程序将这些分项质量**作为冻结的登记输入**，用于验证跨源质量归属算术而非从INP再算。
+- **REF/STANDARD/OFFICIAL：** 何2024/Xu2025、2026两篇先行风震/PT研究的阅读层级不升级；2024 GB/T50010修订已核官方原页、NB/T10907专用材料/构造授权条文依旧HOLD；OFFICIAL无新增Abaqus或OpenFAST solver日志。**FIG：无响应图；RUN为纯Python/connector源读取与数值算术；TAB为上述CSV和本文件原表。**
+- **误差预算/假设：** 70站梯形积分是对历史输入表的数值恒等重算，不代表结构真实质量已通过V&V。R335分支的共同混凝土宿主/环拉筋/PT是反事实假设；Embedded重合体积扣除只是条件性替代，不是当前INP实际质量；真实实体建模、EI、30接缝、Pt=Peq、RNA以及原始塔属性生成器的误差仍\`NEED_ESTIMATE\`。**HOLD：S01唯一可实施配筋—构造—PT基线未定，S02–S04原生验收0，S06质量归属仍PARTIAL/HOLD；12阶段0/12 PASS。**
