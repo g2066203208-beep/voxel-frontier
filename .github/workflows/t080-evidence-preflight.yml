@@ -41,6 +41,29 @@ jobs:
         run: python -m unittest discover -s research/wind-tower/experiments/T080 -p 'test_t08034_history_preflight.py' -v
       - name: T080.36 synthetic time-window regression (not physics validation)
         run: python -m unittest discover -s research/wind-tower/experiments/T080 -p 'test_t08036_time_extent_gate.py' -v
+      - name: S02 T070 frozen-source and native-launcher availability preflight (NO SOLVER)
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOL="research/wind-tower/experiments/T070/run_t070_g0_datacheck.py"
+          INP="research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp"
+          python3 "$TOOL" --self-test
+          set +e
+          python3 "$TOOL" --inp "$INP" --out "$RUNNER_TEMP/s02_t070_preflight" --preflight-only > "$RUNNER_TEMP/s02_t070_preflight_stdout.json"
+          rc=$?
+          set -e
+          python3 - "$rc" <<'PY'
+          import json,os,pathlib,sys
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"s02_t070_preflight"/"S02_G0_EVIDENCE_MANIFEST.json"
+          d=json.loads(p.read_text(encoding="utf-8"))
+          rc=int(sys.argv[1])
+          assert d["source_sha256"]=="9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9"
+          assert d["mode"]=="Abaqus Data Check ONLY, no production RUN"
+          assert d["status"] in ("BLOCKED_NO_NATIVE_ABAQUS_EXECUTABLE","PREFLIGHT_ONLY_NOT_NATIVE_RUN")
+          assert rc==(3 if d["status"]=="BLOCKED_NO_NATIVE_ABAQUS_EXECUTABLE" else 0)
+          assert d["run_level"] in ("No native run; Abaqus executable not found","Native executable located, not invoked")
+          print(json.dumps({"status":d["status"],"source_sha256":d["source_sha256"],"runner_returncode":rc,"native_executable":d["native_executable"],"native_run":"NOT_RUN","S02_scientific_PASS":False}))
+          PY
       - name: Write traceable preflight report
         run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
       - name: Preserve metadata report
@@ -48,5 +71,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: t080-static-evidence-report
-          path: ${{ runner.temp }}/t080-preflight.json
+          path: |
+            ${{ runner.temp }}/t080-preflight.json
+            ${{ runner.temp }}/s02_t070_preflight/S02_G0_EVIDENCE_MANIFEST.json
+            ${{ runner.temp }}/s02_t070_preflight_stdout.json
           if-no-files-found: warn
