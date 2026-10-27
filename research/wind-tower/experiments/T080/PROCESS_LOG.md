@@ -151,3 +151,12 @@
 - **RUN/TAB**：本地Python 3.13 / NumPy 2.3.5 / pandas 2.2.3，完成\`N_ext=-Fz\`、\`M=hypot(Mx,My)\`、环形截面\`A,I\`与\`σ_min(Pe/P0/0)\`全时程筛查；4个case的31/31段均有\`σ_min(Pe)<0\`的至少一个时刻；四case最大假定全接触拉应力需求依次18.453052587、15.677277382、9.896858966、11.779153335 MPa；结果仅是非线性接触优先筛查，绝不是实测接缝张开。独立CSEG17/652.75s直接代入原CSV偏差约3.52e-9MPa；篡改ZIP SHA负测试被拒绝。全部方法/单位/原始输入/假设/错误边界详见[既有S06研究记录新增节](../T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
 - **GitHub持久化**：[真实运行程序](../T077/recovery/s06_joint_kern_history_screen.py) SHA256 \`4fa0b690f6831958c142559942c7bb3f99610892a66c7f3e3001d77a08526f51\`；[124行case×段精简结果](../T077/recovery/S06_JOINT_KERN_COMPACT_124_20261027.csv) SHA256 \`d2f1edb8d7a21a268abda532b3564ec7d92967424f26b165f81b86b0db73569f\`。完整18列本地输出SHA256 \`534e430dcfc10268daad5673e4885d71b11aaf7ae550d919f517affb20538f38\`，不冒称已入GitHub；可由程序和16件ZIP复算。
 - **REF/STANDARD/OFFICIAL/FIG**：无新原刊全文/授权规范原条文核读；官方来源为GitHub Actions历史原产物；无新物理FIG。**误差预算**：仅数值与时间对齐测试通过，载荷所有权、接缝几何与PT分布、非线性响应及规范适用误差均未定量。**阶段状态**：S06恢复数据衍生筛查资产新增，仍PARTIAL/HOLD；S01–S12科学PASS仍0/12。**HOLD**：未验证真实30缝接触、有效PT及原生物理基线。**下一单一动作**：核对OpenFAST历史截面Fz和RNA/塔重所有权及段内测点→30缝的载荷外推，避免把本次筛查误用为接缝响应。
+
+
+### 2026-10-27 19:10 CST｜S06 30道接口重力梯度实数值
+
+- SOURCE：GitHub PR #42分支原始T077几何SHA256=d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e；T074重力SHA256=b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349。读取层级=真实CSV全部31行，非文献摘要。原始16件动态ZIP本轮未重新下载。
+- RUN：连接器执行环境逐道完成30接口几何连续、真实重力gage力差、分段环形体积Simpson积分及有效单位重折算。结果γ_eff范围24.644553234–26.364713691kN/m³，均值25.200870709kN/m³。30行结果SHA256=ba43732de537854e0361d1aa4cc2792bf8b80ab3536115b6b2f1c9e2317dfe6f；脚本SHA256=a75d8fd15158f573f210a7e093b216936fbddc77377a81e0ebca334bb816c48f。
+- TEST：本地Python 3标准库常截面/线性变截面解析积分oracle、越界负测试已执行通过；既有T080 Actions预检已增加真实仓库输入哈希与30行复算测试，run 40494433792在首次查询时in_progress，**待实际结论**；不冒称CI已PASS。
+- REF：沿用T079/T080文献，未新增全文阅读。STANDARD：无新授权规范条文。OFFICIAL：仓库原始OpenFAST历史T074来源记录；未核官方OpenFAST分布内力定义。FIG：无。TAB：[30道接口CSV](../T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv)；[研究过程与边界](../T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
+- PASS/HOLD：仅真实源级数值/解析oracle完成，12阶段0/12；没有原生Abaqus、地震或动态接缝计算。主要不确定性为截面力自由体归属、分布惯性、钢筋质量、RNA重力、真实接触，误差预算NEED-ESTIMATE。禁止把上下gage插值当作真实30道接缝力；下一单一动作核对四工况六分量+重力分账。
