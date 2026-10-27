@@ -158,7 +158,7 @@ def audit(zip_path, manifest_path, case, full_csv_gz=None, previous_receipt=None
         "outb_sha256": outb_sha,
         "outb_size_bytes": len(raw),
         "source_manifest_sha256": hashlib.sha256(Path(manifest_path).read_bytes()).hexdigest(),
-        "source_reading_level": "original archived OUTB bytes: SHA256 + binary header/channel names + three synchronous decoded packed-data samples",
+        "source_reading_level": ("original archived OUTB bytes: SHA256 + complete 12001x141 native-channel time series, three-instant parity and per-channel QC" if full_result is not None else "original archived OUTB bytes: SHA256 + binary header/channel names + three synchronous decoded packed-data samples"),
         "header": h,
         "required_21_channel_presence": {c: c in names for c in required},
         "full_six_component_gage_indices": gages,
@@ -269,8 +269,13 @@ def full_synchronous_series(raw, h, names, units, scales, offsets, csv_gz_path,
             "rms": round(rms, 9), "first": round(first_values[j], 9),
             "last": round(last_values[j], 9)
         }
+    z_at_first = [summary[f"TwHt{g}TPzi"]["first"] for g in range(1, 10)]
+    z_span = max(z_at_first) - min(z_at_first)
     return {
         "status": "FULL_ORIGINAL_SYNCHRONOUS_NATIVE_CHANNEL_QC_NOT_FRAME_OR_PHYSICS_PASS",
+        "observed_TPzi_first_m_by_gage": z_at_first,
+        "observed_TPzi_span_m": round(z_span, 9),
+        "coverage_warning": "Native TPzi gage positions span only %.6f m in this OUTB; this 9-gage history must NOT be treated as full 158-m tower coverage until original TwrGagNd and TowerHt inputs are independently recovered." % z_span,
         "source_outb_sha256": hashlib.sha256(raw).hexdigest(),
         "sample_count": n, "gage_count": 9, "selected_channel_count": len(selected),
         "channel_value_count": n * len(selected),
