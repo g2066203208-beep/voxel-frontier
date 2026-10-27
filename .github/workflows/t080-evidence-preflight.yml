@@ -63,6 +63,14 @@ jobs:
               assert got==digest,(filename,got,digest)
           print('S06 rainflow synthetic oracle and published real-source 24-row summary SHA PASS; NOT full-history CI nor material fatigue PASS')
           PY
+      - name: S06 committed 744-row rainflow and 24-row RMS-QC reproducibility (NOT material fatigue)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=research/wind-tower/experiments/T077/recovery
+          python "$ROOT/s06_qc_half_window_rms.py" \
+            --source "$ROOT/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv" \
+            --qc "$ROOT/S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv"
       - name: S02 T070 frozen-source and native-launcher availability preflight (NO SOLVER)
         shell: bash
         run: |
