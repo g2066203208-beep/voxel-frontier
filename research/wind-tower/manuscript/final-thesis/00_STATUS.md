@@ -112,3 +112,13 @@ HOLD：
 **标准与误差审查：** GB/T50010—2010（2024年局部修订）官方原页已有局部核读，NB/T10907—2021第4.2、6.4、8章授权原文未全部确认；2025 IEC/GB适用条款尚不能宣称验收。几何积分/已登记值加减及70站梯形积分数值误差可定量，结构质量定义、PT施工阶段、初态接触、模态、地震/风震和材料疲劳的**物理误差预算仍NEED-ESTIMATE**。所有终稿结论必须回指SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB且对应真实输入与日志。
 
 **唯一最大HOLD与下一动作：** S01尚无唯一已验证的设计配筋/接缝/有效PT物理基线。下一轮在具有**Abaqus 2025及许可证**的执行机上，对冻结T070/R335开展**仅诊断性质的真实原生Data Check**，提交.dat/.msg/.sta/.log和输入SHA及警告处置；即使成功也不能视为D400或设计Pe初态已PASS。禁止改母本、PR擅合并及高成本生产RUN；S10风致材料疲劳、S11优化主线不变。
+
+
+## 2026-10-27｜冻结T057真实源网格全塔质量独立CI复核（S01证据升级）
+
+**12阶段仍0/12 PASS。** 本轮真正对**冻结T057原始INP**而非D400共享宿主假设进行68 Part/234,364单元全塔静态质量积分；[完整SOURCE/RUN/TAB及误差边界](../../experiments/T077/recovery/S01_S06_FE_MESH_MASS_OWNERSHIP_20261027.md)、[68 Part永久CSV](../../experiments/T077/recovery/S01_T057_ORIGINAL_68PART_STATIC_MASS_20261027.csv)、[只读SHA锁定复算器](../../experiments/T077/recovery/s01_frozen_t057_full_mesh_mass_repro.py)、[真实Actions #40454043222](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40454043222)（completed/success，Python 3.11，**非Abaqus**）。
+
+- **SOURCE身份：** T057原件Git Blob=\`da0b5ce5258b4fff08b2389851e29c32c6e4abfc\`，CI真实checkout字节SHA256=\`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db\`已重新验证；OpenFAST 70站输入SHA256=\`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983\`仍为登记值（本轮无源字节重哈希）；T070源SHA256=\`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9\`未修改。
+- **实际RUN：** T057原始FE整塔毛质量（不含RNA）**1,985,489.118117kg**，RNA点质量676,753.290723kg，塔+RNA **2,662,242.408840kg**；对历史OpenFAST塔架1,923,663.610691kg的毛质量差**+61.825507t / +3.213946%**。仅在**普通筋等体积扣除混凝土**条件假设下，质量**1,942,391.014782kg**、差**+18.727404t / +0.973528%**；不是当前FE真实质量。原先“R335采用D400共同宿主”的毛质量近似现已由**真实T057原始网格**直接核对，不再是单纯条件拼接。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** SOURCE真实T057原文及CI源SHA；REF何2024/Xu2025与2026先行研究阅读层级不变；STANDARD专用NB/T10907授权4.2/6.4/8章仍未核读；OFFICIAL无Abaqus 2025原生日志；RUN仅静态Python CI/独立JS积分；FIG无物理响应图；TAB永久68 Part CSV及[14天CI artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40454043222/artifacts/12711033750)。数值实现交叉差\`<5×10⁻⁹kg\`，物理质量归属、PT、接缝、RNA模态与疲劳误差\`NEED_ESTIMATE\`。
+- **阶段裁决：** S01由“R335毛质量反事实”升级为“冻结T057原始网格毛质量已直接复核”的**局部SOURCE证据**，但仍\`PARTIAL/HOLD\`；S02–S04 BLOCKED，S05/S06 PARTIAL/HOLD，S07–S11 BLOCKED，S12 PARTIAL。**单一最大HOLD：** S01普通筋/接缝/Pe初态唯一可实施设计支路仍未冻结且无原生Abaqus验收。**下一唯一动作：** 在有Abaqus 2025及许可证的执行机按SHA锁定T070完成诊断性Data Check并保存原始日志；不合并PR或改冻结母本。
