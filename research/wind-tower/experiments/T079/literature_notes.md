@@ -175,3 +175,30 @@ SOURCE=上述公开原刊URL/章节、GitHub当前T057/T070/T077/T078登记；RE
 **可执行验证设计（未RUN）：** S01选择经过授权规范和配筋/PT实施裁决的唯一独立子版，保留冻结T057/T070；S03在同一初态输出每道接缝\`CPRESS(θ,t),COPEN(θ,t),CSLIP(θ,t),CSHEAR(θ,t)\`、接触面积和\`PT端力(t)\`，而不只看\`Pe/A\`均值；先用**独立单接缝子模型**按REF160实验\`P→V1..V10\`顺序进行方法标定（必须另外说明中心单杆与周向PT差异），再在真实全塔中比较理想平面/有限表面不平度敏感性。逐个接缝检查最小CPRESS与局部开口，禁止把\`V4\`当本塔荷载。S09地震的循环滞回需另对照REF015，S10运营疲劳需另用REF018真实风载/雨流/材料S-N，**不把十个加载点当风致疲劳寿命**。
 
 **证据等级与阶段：** SOURCE=上述Wiley原刊HTML+精确节图表；REF=新增REF160并复用REF014/015/018/026/159；STANDARD=原文引用德国规范作为作者背景，未获取2025 IEC/NB/T10907授权条款，不能条款PASS；OFFICIAL=原文试验方法，Abaqus/PEER软件官方语义沿用既有登记；RUN=Python静态算术待GitHub CI验证，Abaqus=NOT_RUN；FIG=只引用原刊Figs 8–17，不伪造本塔图；TAB=10点原始CSV；输入T057/T070 SHA仍按总控不变；S01=PARTIAL/HOLD，S08/S09=BLOCKED，S10真实材料疲劳仍HOLD；**12阶段0/12晋级**。
+
+
+---
+
+## 2026-10-27 17时｜REF015/018访问边界与REF023原刊疲劳公式复核、REF161接缝先行研究
+
+**阅读真实范围与失败记录：** 本轮先从中央REF表核对REF015/REF018：仓库登记的用户原件分别位于\`references/user-provided/Experimental study on the combined compression-bending-torsion behavior of prestressed concrete towers for wind turbines considering horizontal joints.pdf\`与\`references/user-provided/Fatigue analysis of segmental precast post-tensioned concrete towers under operational wind turbine loads.pdf\`，**但GitHub连接器只能读取UTF-8文本，当前执行机没有上述PDF二进制文件**。搜索公开作者稿/全文未获得可下载的可靠原件：REF015 [DOI 10.1016/j.tws.2025.113570](https://doi.org/10.1016/j.tws.2025.113570)、REF018 [DOI 10.1016/j.engstruct.2025.120295](https://doi.org/10.1016/j.engstruct.2025.120295) **本轮只能新核读公开摘要/元数据**，不得将既有中央REF表历史\`fulltext-audited\`说成本轮PDF重新打开；其PDF原件SHA256=\`NOT_RECOVERED_THIS_RUN\`。REF015摘要确实为**不同PT比/弯扭比的往复加载**、接缝开口/滞回/极限承载/张拉力变化，未有本轮原页数字/试件曲线；REF018摘要为**160m级分段混塔的运行风疲劳**，比较平均应力、PT、方位角、样本数、混凝土E、基础刚度和控制器，但本轮未取得其确切风seed/载荷文件/材料S–N原页，不能从摘要填寿命。
+
+### 已有REF023｜Qu et al. (2026)公开全文索引的精确疲劳方法，直接约束S01与S10
+
+**原始来源：** *Fatigue Life Evaluation of a Steel–Prestressed Concrete Hybrid Tower Under Prestress Relaxation Using a Bidirectionally Coupled Damage Model and Neural Network Surrogate*, **Buildings** 16(19), 3854，**2026-09-28**，DOI [10.3390/buildings16193854](https://doi.org/10.3390/buildings16193854)，[MDPI原刊](https://www.mdpi.com/2075-5309/16/19/3854)。**本轮访问等级：原刊网页经搜索索引返回的全文选定节2.1–2.4、3.1–3.3、4–6、8及对应公式/文字；直接打开MDPI页面HTTP 429，因此不是直接下载PDF逐页阅读，PDF SHA=\`NOT_CAPTURED\`。** 此前REF023已登记，不另造REF号。
+
+**原文方法链（准确原页节号）：**
+- §2.1：MATLAB R2020b\`rainflow\`，按ASTM E1049-85分完整周期和半周期，输出每周期\`Δσ,σmean,n\`。**这是作者的软件和计数方法，不证明我们自己的雨流实现已验收。**
+- §2.2 Eq.(1)：对1860级钢绞线引用Paulson等的候选\`log10(N)=13.95−3.5 log10(S_r)\`，\`S_r\`单位MPa；Eq.(2) Goodman \`Δσ_G=Δσ/(1−σmean/fpu)\`；混凝土采用**不同于钢绞线**的疲劳模型，不能统一一条S–N。§2.3 Eq.(10)为Miner \`D=Σ n_i/N_i\`，\`D≥1\`为该文模型判据。**公式仅作本文候选，实际材料与规范适用性待验证。**
+- §2.4：材料损伤\`D_c,D_s\`与刚度退化迭代更新，PT损伤/损失改变混凝土预压、混凝土损伤反向改变钢绞线应力幅；这是**已发表的双向材料损伤耦合**，不能将“首次把PT损失和混凝土/钢绞线疲劳双向耦合”作为本文创新。
+- §3.1：**在役4.55MW、35个预制混凝土节段且段间使用Tie**，钢/混凝土C3D8R、普通筋/PT T3D2、C80、HRB400、Q355、1860级钢绞线、1%结构阻尼；**没有证明本158m的30道hard/friction干接缝接触本构**。§3.2.1 Eq.(20)使用**等效降温法**\`ΔT=−σp/(αEp)\`施PT，16位置×18股，\`σp=1260MPa, Ep=200GPa, α=1.2×10^-5/K\`；其初始降温约\`−525°C\`。这是不同的模型与施工状态，不得替代T078设计Pe或T057初始应力输入。
+- §3.2.2–3.2.3：600s、20Hz的随机风场及BEM推力/扭矩；§3.3设置单根/三根损失20/40/60/80%情景，**60%/80%作者明示为严重敏感性，不是常规服役预应力松弛值**。注意T078 **总损失22.9725%**包含锚具/接缝压密、弹性压缩、松弛、收缩徐变等，**其纯松弛损失只有30.1075MPa/1280=2.3522%**；不能将T078总损失误写成“22.97%松弛”，也不能在Pe后无时点依据重复施加2026论文的20%情景。
+- §3.3/表6：该文用现场监测校验全局FA/SS主频，监测约0.224Hz，FE约0.2101/0.2112Hz（相对差约6.21%/5.71%），并对比塔顶位移及5根PT平均力；**这属于该4.55MW对象的全局V&V，不是本塔的原生模态/接缝验证。**
+- §4–6：报告其基准最不利混凝土\`Tc=24.46yr\`、钢绞线\`Ts=39.90yr\`、不耦合整体\`23.05yr\`、耦合\`22.15yr\`，算术复核耦合降低\`(23.05−22.15)/23.05=3.9046%\`。§6的MR1 80%损失耦合0.45yr与作者称28.6%差距，**均为该文4.55MW模型结果，不是DTU10MW的寿命或本文数据**。§8作者自己承认60/80%为严重参数情景，现场数据/试验进一步校准有待研究。
+- **S01/S10直接可证伪启示：** PT名义张拉阶段与设计Pe阶段如果错误地混用为雨流循环平均应力，将显著改变Goodman修正。以**纯假设\`Δσ=20MPa\`、\`σmean=P0/Ap=1280MPa\`或\`Pe/Ap=985.95136MPa\`**代入上述文献候选公式，修正倍数分别3.20689655与2.12802803、对应\`Δσ_G=64.13793/42.56056MPa\`，**固定同一Δσ时条件性每周期损伤比约4.20123**。这是方法敏感性，不是本塔实际PT循环、材料疲劳损伤比或寿命结论。详见[T078源SHA锁定复核脚本](../T078/t078_pt_goodman_2026_source_oracle.py)。**必须从原生平衡后的PT应力时程计算逐周期σmean/Δσ**，不能拿常量P0/Pe当真实雨流均值。
+
+### 新REF161｜Peng/Wang/Li (2026)：S01接缝接触失压四输入解析方法
+
+[Wiley原刊页面](https://onlinelibrary.wiley.com/doi/10.1002/tal.70169)，*The Structural Design of Tall and Special Buildings* 35(8):e70169，**2026-08-12在线发表**，DOI [10.1002/tal.70169](https://doi.org/10.1002/tal.70169)。**本轮仅核读出版社摘要、元数据、参考文献表，直接全文HTTP403；没有看到原式、查表数字、图号或验证误差值**。摘要表明其针对环形截面**内径、外径、竖向轴力、弯矩四输入**提出接缝脱开范围/最大接触应力查表方法，并与FE/既有方法对照；指出竖向缝和扭矩会显著改变接触应力与结构整体性。它与REF159/160的实体实验互补，**不应从摘要伪造本塔31段接触压力**。登记为REF161，后续获取全文才能提取查表、无拉接触假设和误差域。
+
+**本轮SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与边界：** SOURCE=REF015/018原刊摘要及仓库历史原件路径、REF023出版社索引全文节/公式、REF161出版社摘要；REF=复用015/018/023并新登记161；STANDARD=ASTM E1049仅为REF023作者所述标准，未获取授权ASTM/IEC2025/NB10907新条款，不称标准PASS；OFFICIAL=原刊元数据/历史Abaqus官方语义索引，本轮没有原生软件日志；RUN=本轮独立算术及T078脚本**fixture测试**，非真实雨流或求解；FIG=仅原文Fig引用，无本塔结果；TAB=本文方法/误差/阶段对照，未从受限PDF复制图表。**模型T057/T070原始SHA不变；T078元数据GitBlob=\`99a750c22268febde268bcdbea46d7f21cfe34f8\`、独立SHA256=\`50b5d23c9991955b8cfe304bdb1bc8519e07ad1b97a8f7500bb7e878eb69d2a1\`。** 公式算术浮点误差极小，但**材料S–N适用、PT阶段、风载/控制器、接缝开闭、谱/地震和疲劳统计误差**均\`NEED_ESTIMATE\`。阶段仍**0/12**，S01/S05/S10尚未验收、地震RUN=0。
