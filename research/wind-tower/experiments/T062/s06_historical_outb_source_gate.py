@@ -35,7 +35,8 @@ def outb_header(raw):
         raise ValueError("invalid OpenFAST header dimensions")
     first, second = unpack(f, "dd")
     # FileID=1 stores packed-time scale/offset, not first time/time increment.
-    exact(f, 8 * n_channels)  # float32 ColScl and ColOff
+    scales = unpack(f, "f" * n_channels)
+    offsets = unpack(f, "f" * n_channels)
     description_length = unpack(f, "i")[0]
     if not (0 <= description_length <= 1_000_000):
         raise ValueError("invalid description length")
@@ -60,9 +61,46 @@ def outb_header(raw):
         "description_excerpt": description[:160],
         "channel_names": channel_names,
         "channel_units": units,
+        "column_scales": scales,
+        "column_offsets": offsets,
         "data_offset_bytes": data_offset,
         "packed_payload_bytes": remaining,
     }
+
+
+def selected_samples(raw, header, channel_names, units, scales, offsets):
+    """Decode three synchronous ORIGINAL packed-data instants, not a physics load map."""
+    if header["file_id"] == 1:
+        raise ValueError("FileID=1 packed-time layout requires separate decoder")
+    selected = ([f"TwrBs{s}" for s in ("Fxt", "Fyt", "Fzt", "Mxt", "Myt", "Mzt")]
+                + [f"TwHt{g}{s}" for g in (1, 9)
+                   for s in ("FLxt", "FLyt", "FLzt", "MLxt", "MLyt", "MLzt",
+                             "TPxi", "TPyi", "TPzi", "RPxi", "RPyi", "RPzi",
+                             "ALxt", "ALyt", "ALzt")])
+    if any(name not in channel_names for name in selected):
+        raise ValueError("selected original channels missing")
+    indices = {name: channel_names.index(name) - 1 for name in selected}
+    n = header["num_output_channels"]
+    nt = header["num_samples"]
+    first, dt = header["first_time_s"], header["time_increment_s"]
+    if dt <= 0 or first is None:
+        raise ValueError("invalid output time grid")
+    rows = []
+    for tindex in sorted({0, nt // 2, nt - 1}):
+        base = header["data_offset_bytes"] + tindex * n * 2
+        values = {}
+        for name, i in indices.items():
+            scale = scales[i]
+            if scale == 0:
+                raise ValueError(f"zero packed scale for {name}")
+            packed = struct.unpack_from("<h", raw, base + 2*i)[0]
+            value = (packed - offsets[i]) / scale
+            if not (-1e30 < value < 1e30):
+                raise ValueError(f"nonfinite/unreasonable decoded value for {name}")
+            values[name] = {"value": round(value, 9), "unit": units[i+1]}
+        rows.append({"sample_index": tindex, "time_s": round(first + dt*tindex, 9),
+                     "channels": values})
+    return rows
 
 
 def audit(zip_path, manifest_path, case):
@@ -89,8 +127,12 @@ def audit(zip_path, manifest_path, case):
     if len(raw) != expected["bytes"]:
         raise ValueError("original OUTB byte count differs from archival manifest")
     h = outb_header(raw)
-    names = set(h.pop("channel_names"))
+    channel_names = h.pop("channel_names")
+    names = set(channel_names)
     units = h.pop("channel_units")
+    scales = h.pop("column_scales")
+    offsets = h.pop("column_offsets")
+    samples = selected_samples(raw, h, channel_names, units, scales, offsets)
     required = [f"TwHt1{s}" for s in
                 ("FLxt", "FLyt", "FLzt", "MLxt", "MLyt", "MLzt",
                  "TPxi", "TPyi", "TPzi", "RPxi", "RPyi", "RPzi",
@@ -113,12 +155,13 @@ def audit(zip_path, manifest_path, case):
         "outb_sha256": outb_sha,
         "outb_size_bytes": len(raw),
         "source_manifest_sha256": hashlib.sha256(Path(manifest_path).read_bytes()).hexdigest(),
-        "source_reading_level": "original archived OUTB bytes: SHA256 + binary header/channel names; no numerical time-series decoding",
+        "source_reading_level": "original archived OUTB bytes: SHA256 + binary header/channel names + three synchronous decoded packed-data samples",
         "header": h,
         "required_21_channel_presence": {c: c in names for c in required},
         "full_six_component_gage_indices": gages,
         "full_position_rotation_acceleration_gage_indices": motion_gages,
         "first_30_channel_names": sorted(names)[:30],
+        "selected_original_synchronous_samples": samples,
         "time_unit": next((units[i] for i, name in enumerate(["Time"] + list(names)) if name == "Time"), "not independently verified"),
         "hold": "Original 36-case archive is not proven identical to T071/T072 31-gage reruns; 9 gages are not 31; RP angles require OpenFAST frame/order/sign validation; load ownership and native Abaqus remain unverified.",
     }
@@ -149,6 +192,8 @@ def self_test():
         assert "FileID" in str(e)
     else:
         raise AssertionError("invalid FileID was accepted")
+    assert result["channel_names"] == ["Time", "A", "B", "C"]
+    assert result["column_scales"] == (1.0, 1.0, 1.0)
     print("PASS: synthetic OpenFAST header, truncation rejection, invalid FileID rejection")
 
 
