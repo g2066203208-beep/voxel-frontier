@@ -202,3 +202,10 @@ HOLD：
 ### 2026-10-27 21时｜S06→S07真实六分量雨流载荷筛查（非材料疲劳）
 
 **12阶段科学PASS仍0/12，S06=PARTIAL/HOLD，S07仍BLOCKED但源级雨流处理管线已实际运行。** 本轮重新从T071/T072 GitHub Actions下载并逐层哈希校验16/16原始历史ZIP，读取4×31×12001=1,488,124条真实ETM同步记录，计算4×31×6=744个通道雨流/DEL_m4/m10及时间统计。PR #42持久化[可复算程序](../../experiments/T077/recovery/s06_31gage_rainflow_load_screen.py)和[24行六分量控制表](../../experiments/T077/recovery/S06_4CASE_6COMP_RAINFLOW_SCREEN_SUMMARY_20261027.csv)；全部方法、来源、SHA、合成测试、失败记录与[控制工况排序反转](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)已登记。My通道m4最大为U11p4_ETM_S04的94,836.550 kN·m，m10最大为U09p343881_ETM_S06的221,544.884 kN·m，均位于CSEG_01。**这是载荷层级且m为假设筛选指数，不是材料损伤、DLC1.2、地震或Abaqus物理PASS**；完整744行本地结果SHA256=9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b，尚未上传PR。最大HOLD：原始OUTB、动态局部坐标及载荷/惯性自由体所有权未闭合；16件Actions artifact预计2026-11-06过期，优先长期保存。S10/S11主线不变。
+
+
+## 2026-10-27｜S06完整744行结果保全与半窗QC
+
+**严格12阶段PASS仍0/12。** S06=PARTIAL/HOLD，S07=BLOCKED（新增源级可复算质量诊断），S10/S11仍未有真实材料应力与寿命/优化结果。上一轮本地生成但未入库的[744行×20列真实历史雨流/DEL统计](../../experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)现已完整保存GitHub，SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`，与原始会话附件逐字节远端回读一致；并提交[24行半窗RMS QC](../../experiments/T077/recovery/S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv)、[复算程序](../../experiments/T077/recovery/s06_qc_half_window_rms.py)及既有CI自动核验步骤。72/744站点-分量的前后半窗RMS相对差异>20%（**探索性阈值，非规范门槛/平稳性检验**）；具体数值、公式、来源、误差及HOLD见[S06原研究记录](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
+
+**不变的最大HOLD**：尚未完成16件历史ZIP及原始OUTB的长期归档、动态坐标/载荷自由体归属；原始ZIP登记到期2026-11-06。744行是已保存的衍生统计，不是原始六分量时程/OUTB，也不是DLC1.2、材料疲劳寿命或地震验算PASS。下一步优先长期保全原始源数据；无新原始数据时并行推进S10独立方法程序。
