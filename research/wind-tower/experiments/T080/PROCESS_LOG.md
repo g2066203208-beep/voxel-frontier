@@ -193,3 +193,5 @@
 - **RUN/TAB**：Python 3.13标准库[复算程序](../T077/recovery/s06_qc_half_window_rms.py)读取744行，检查4工况×31站×6分量覆盖、SHA256、重复键、时间步、数值合法性；生成[24行QC](../T077/recovery/S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv)，SHA256=`6af88e5b4a4518ab7ccf2f28bcb9df7f4154f0d7b3f78be38c672034bed30804`，逐字节复算PASS。D=100*|RMS_first-RMS_last|/max(RMS_first,RMS_last)，72/744记录D>20%，主要为U09 Fy(14/31)、U11 Mx(27/31)、U19 S06 Mz(31/31)。CI已增加同源校验，GitHub runner是否成功以实际run日志为准，**不提前称CI PASS**。
 - **REF/STANDARD/OFFICIAL/FIG**：沿用T062/T079文献登记，无新原刊全文；无授权规范原条款；原始GitHub Actions为OFFICIAL源记录；FIG无新增原生仿真结果。20%仅为诊断阈值，非规范平稳性/寿命准则。RMS含均值，不能替代分窗rainflow、PSD、seed收敛或材料损伤。
 - **PASS/HOLD**：12阶段仍0/12；S06 PARTIAL/HOLD，S07 BLOCKED，S10/S11无物理生产结果；模型身份、动态坐标/惯性归属、OUTB、16件ZIP长期归档仍HOLD。**下一动作**：优先长期保存16件原始ZIP/OUTB；缺源时转S10可独立执行的方法测试，不再循环S01。
+
+**S06 QC负测试（本地真实执行）**：将744行源CSV第101字节翻转1 bit，再运行同一`s06_qc_half_window_rms.py`复核；程序以退出码1拒绝输入，原始错误为`AssertionError: 744-row source SHA mismatch`，没有把被篡改的数据记为PASS。此负测试不验证物理模型，仅验证文件完整性fail-closed。
