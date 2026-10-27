@@ -95,7 +95,7 @@ def self_test(raw):
     a,b = compute(raw)
     assert len(list(csv.DictReader(io.StringIO(a.decode())))) == 186
     assert len(list(csv.DictReader(io.StringIO(b.decode())))) == 6
-    # SHA lock rejects mutation; shuffled input records preserve the ranking result.
+    # Negative test: the source SHA lock must reject even a one-byte mutation.
     corrupted = bytearray(raw); corrupted[-3] ^= 1
     try:
         compute(bytes(corrupted))
