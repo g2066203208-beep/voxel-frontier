@@ -223,3 +223,10 @@ HOLD：
 ## 2026-10-28｜S06原始16件ZIP已归档（非科学PASS）
 
 **覆盖上方旧的`ARCHIVE_SUBMITTED / RECEIPT_PENDING`：16件T071/T072历史Actions原始ZIP已经实际归档到GitHub Draft Release，归档子任务SOURCE_ARCHIVED_16ZIP_PASS。** 原生[Actions 40537618197](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40537618197)为success，17件资产（16 ZIP + 1验证JSON）共125301985字节；远端GitHub Release API逐件`digest`与[16行源manifest](../../experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)的ZIP SHA256比对16/16一致，`draft=true`。可复核[原生回执](../../experiments/T077/recovery/S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)及[S06研究报告](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。四次失败401及修复代码已保留原始日志和提交。**这不是OUTB、S06整阶段或S07科学PASS**；严格12阶段仍0/12，原始OpenFAST OUTB、模型控制器身份及六分量动态重力/惯性所有权仍HOLD。下一优先转S07→S10真实方法与输入管线，不再反复做已完成的ZIP归档。
+
+## 2026-10-28｜S06同风速两seed配对DEL与测点z身份差异
+
+- **严格整阶段状态不变：0/12 PASS。** S06=PARTIAL/HOLD，S07=BLOCKED但已有源级算法准备；S10/S11没有材料寿命或优化物理结果。地震RUN=0，T057/T070未修改。
+- 从[已保存744行真实ETM历史载荷DEL](../../experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)（SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`）复算U19.202140_ETM_S04与S06的31个名义段×6分量×m=4/10配对；[12行结果](../../experiments/T077/recovery/S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv)与[复用原QC脚本](../../experiments/T077/recovery/s06_qc_half_window_rms.py)。My通道S06/S04中位比m4=1.015026、m10=1.088650，m10最大比=1.109413。31个空间测点不能当31个独立seed。
+- **新身份HOLD：** S04与S06名义同段的`gage_z_m`在26/31段不完全相同，最大差0.414875 mm（CSEG_31）；未查明是输入塔架/测点离散还是其他生成路径差异，暂不得称严格同截面动力对照。详见[S06完整研究记录](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)；原OUTB与自由体归属仍HOLD。两seed ETM仅为历史load-DEL方法敏感性，非DLC1.2、材料疲劳或风震结果。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=744行CSV及已归档16ZIP回执；REF=无新原文；STANDARD=无新授权条文；OFFICIAL=仓库源与新增轻量CI工作流；RUN=Python 3.13.5本地复算，远端CI结果另验；FIG=无；TAB=12行CSV。误差预算仍NEED_ESTIMATE，源级SHA不是物理误差。下一单一动作：追查同风速S04/S06的原始塔架/测点高度生成差异并锁定输入身份。
