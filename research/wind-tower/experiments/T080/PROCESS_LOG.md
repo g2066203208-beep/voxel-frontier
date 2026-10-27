@@ -256,3 +256,12 @@
 
 
 - **2026-10-28 06时｜S06原始OUTB全时程恢复：** 先读main（\`bbc5c9130f2d9fc41f776506d86118a9b8db0e65\`）、PR #42及指定AGENTS/README/论文总控/T079/T080/12阶段计划。复用T062已有原始OUTB读取程序，不再审计S01；在[真实Actions #40592832887](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592832887)（job \`122501168807\`，\`completed/success\`）对SHA锁定原始OUTB完成12001×141=1,692,141个原生同步通道值解码、9测点全窗QC及历史三时刻回执对照；原件SHA \`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c\`。8,524,917字节完整CSV.GZ SHA \`f8ff5debe64b2afb8bdb38cd1b903b82f5cc0d060ab548807a1c75f6a8bab680\`，临时[artifact #12774442508](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592832887/artifacts/12774442508)（14天）；141通道全量统计已永久写入[原有T062回执](../T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json)。新发现\`TPzi\`仅覆盖0.070535714–2.750892473m，跨度2.680356759m；**九测点不等于158m全塔覆盖**，\`TwrGagNd\`输入尚待追索。公式、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、假设/量化误差及HOLD见[既有T062研究记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。无昂贵求解、无原生Abaqus、无地震RUN、无授权标准条款PASS，冻结T057/T070不改、PR不合并；**0/12未晋级**。下一动作：找回此OUTB原始ElastoDyn \`TwrGagNd/TwrNodes/TowerHt\` 以确认实际高度覆盖及坐标定义。
+
+
+### 2026-10-28 07:11 CST｜S06原始ElastoDyn节点/测点高程来源闭合（SOURCE-QC / 非物理PASS）
+
+- **原始输入/阅读层级**：GitHub原始静态ZIP SHA256 `ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`；其中ElastoDyn SHA256 `6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`、FST SHA256 `5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`；与原始OUTB SHA256 `0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`同步核对。不是仅凭文件名、摘要或静态猜测。
+- **RUN/TAB**：[Actions #40600361369](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40600361369)真实 `completed/success`，原始job `122526658660`。从ElastoDyn读得158m、0m塔基、1120节点、九个TwrGagNd=`1,3,5,7,9,13,15,17,20`；节点中点预测高度与九个真实OUTB TPzi最大差 `3.841428570794392e-7m`。此前“九点0–2.75m是否意味着塔高异常”的疑点**纠正为底部选点集中**，而非全塔覆盖。
+- **产物**：[9行永久回执](../T062/S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT_20261028.json)、[可运行源SHA校验程序](../T062/s06_t062_original_tower_gage_geometry_gate.py)、[原T062研究记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。CI含正确合成例及错误节点数/错误OUTB SHA负测试；原生Abaqus/OpenFAST生产RUN=0。
+- **REF/STANDARD/OFFICIAL/FIG/误差**：本轮未新增全文论文、授权规范或原生FIG；OFFICIAL为实际OpenFAST ElastoDyn源文件和OUTB。比对容差1e-5m仅源身份筛查；量化误差/动力坐标/自由体/材料物理预算未闭合。
+- **HOLD/下一动作**：9个测点仅覆盖最低20/1120节点，不可替代T071/T072 31段正式时程；S06 PARTIAL、S07独立准备、0/12阶段PASS、地震RUN=0。下一步查证RP姿态定义并在S07进行真实九点动态坐标单测；不修改T057/T070、不合并PR。
