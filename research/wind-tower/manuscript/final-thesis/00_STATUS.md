@@ -251,3 +251,7 @@ HOLD：
 
 
 **2026-10-28 03时｜S07轻量CI已实际成功（覆盖此前PENDING）：** [Actions #40566932835](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566932835)，job `122410594298`，`completed/success`；原始job日志明确打印：合成旋转/力矩/逆算/1000组固定种子路径回归通过，**真实静态30/30行**、源SHA256及篡改拒绝通过。远端程序SHA256=`56ad7f047e7d6431acd3d87bc411055ba23a5a54d9dd0913f51164463c195557`，源CSV SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`，与本地一致。先前两个完整checkout尝试不能视为本次成功；最终成功的是SHA固定的两文件轻量CI。**仅代码/静态源数值验收，不是S07动态物理PASS**；12阶段仍0/12、地震RUN=0。
+
+## 2026-10-28 04时｜S07归档范围纠偏与S10条件Miner程序
+
+**整阶段0/12正式PASS，地震RUN=0。** 已直接核读T071/T072原工作流，确认其原始OUTB只在runner临时读取、上传仅`extract/*`，16件已归档ZIP不能作为原始OUTB；S06/S07动态姿态、惯性和载荷所有权继续HOLD。新增[S10条件Miner计算器](../../experiments/T077/recovery/s10_miner_damage_gate.py)及[轻量CI](../../../.github/workflows/s10-conditional-miner-gate.yml)，本地双bin/双seed已知解与6项拒绝测试通过；合成年损伤1064.34、20年21286.8**仅为程序验证**，不是任何风机材料疲劳结果。详细SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、阅读层级、输入版本Git blob、误差假设和HOLD见[S06研究记录本轮章节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**最大HOLD**：未恢复带同步运动学的真实OUTB；**下一动作**：核查独立旧归档中是否存在原始OUTB及其通道/SHA，禁止高成本RUN。PR #42仍Draft，不修改T057/T070。
