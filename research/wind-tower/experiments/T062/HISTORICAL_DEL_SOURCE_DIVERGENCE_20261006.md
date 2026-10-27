@@ -120,3 +120,17 @@
 - 07_DEL_CONTROL_RANKING.csv；
 - SHA256 manifest；
 以判断历史 S03 与当前 S04 是否来自不同 outb 版本。
+
+## 2026-10-28｜S06/S07原始OUTB重新发现与真实二进制抽样（补充，覆盖“所有原始OUTB缺失”的旧说法）
+
+**SOURCE（原始字节级，非派生CSV）：** 本仓库`archive/local-assets-20261004-supplement/openfast-36-r2/`中**已有36件原始OpenFAST OUTB**，`file-manifest.json`逐件登记原件SHA256（36件登记，不等于本轮全部重新下载验收）。本轮通过只读[程序](s06_historical_outb_source_gate.py)和[真实CI #40584534880](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40584534880)实际下载`part-001.zip`，CRC通过并对`CASES/U09p343881_ETM_S01/DTU_10MW_RWT.outb`做**完整字节SHA256和OpenFAST二进制头/通道/三个同步时刻数值解码**。这是2026-09-04生成的历史36工况之一，**不是**T071/T072后续31测点补跑的OUTB。
+
+- ZIP SHA256=`c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0`；原始OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`，7088610字节，匹配仓库原始归档清单；清单SHA256=`35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392`。
+- 原始头FileID=4，OpenFAST v3.5.3，295个输出通道，12001点，100.00–700.00s，dt=0.05s；有**9个**而非31个塔架测点的FL/ML六分量、TPx/y/z、RPx/y/z、ALx/y/z，同步塔底六分量；21/21项首测点及塔底指定通道存在。**通道存在不等于局部姿态定义或惯性载荷归属已核实**。
+- **RUN（真实原始数据抽样，非物理求解）：** 同一原件同刻塔底TwrBsMyt（kN·m）在100/400/700s分别为`142572.944598838 / 128357.547468167 / 178590.856733797`；TwHt1FLxt（kN）为`674.649077256 / 703.868382922 / 1299.110535516`。更多9测点通道存在性和三个同步时刻的36通道原始解码值见[永久JSON回执](S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json)。数值来自压缩整型解码，未使用它们推断外部气动力或材料应力。
+- **真实CI与负测试：** [Actions #40584534880](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40584534880) `completed/success`，job `122472382762`，原始日志含合成FileID=2已知头、截断拒绝、非法FileID拒绝、ZIP CRC、OUTB源SHA和真实三时刻解码；程序SHA256=`d1503b2da2afa0e5076bc6c2c5133f85585af1fcaac08362a1d62b9defc06028`，CI JSON SHA256=`5cd67022328c37b79c5eb9be650fcd78779a9134b4c9c81121a9d2b59b1ece76`。脚本只读，无Abaqus/OpenFAST生产RUN。
+- **REF/STANDARD/OFFICIAL/FIG/TAB：** REF未新增期刊原页；STANDARD未新增授权IEC/GB/NB条文，不作条款PASS；OFFICIAL为原始OpenFAST v3.5.3头信息与GitHub Actions原生日志（通道的旋转次序/符号仍须核对官方版本定义）；FIG无物理响应图；TAB为永久JSON中3×36同步原始数值及通道存在性。
+- **假设/误差预算：** 按OpenFAST二进制FileID=4格式读取`ColScl/ColOff`并解码`(packed−offset)/scale`，浮点输出保留9位小数；**量化误差、旋转顺序、结构惯性、模型差异和载荷所有权尚未定量验证**。源SHA及CRC只能证明字节身份与完整性，不代表物理精度。
+- **HOLD与纠偏：** 以前“T071/T072 16ZIP没有OUTB”仍属实；但由此推论“仓库完全没有原始OUTB”是错误的，现纠正为**T062已有36件独立原始OUTB，其中1件已真实复核，9个原始测点具同步运动学通道；T071/T072的31测点原OUTB仍缺，且两个计算谱系是否可等同未验**。S06=PARTIAL/HOLD，S07=独立准备/物理BLOCKED，0/12正式PASS，地震RUN=0。禁止将9测点历史原件直接替换31段正式风载。
+
+**下一单一最优动作：** 使用已SHA验证的T062单条OUTB建立`同刻9测点六分量+运动学`的真实数值坐标转换单测，先依据OpenFAST v3.5.3官方定义确定RP角旋转顺序/参考点及加速度坐标系，再做自由体残差；不能把已解码的截面力直接作为Abaqus外载。
