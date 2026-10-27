@@ -197,3 +197,47 @@ GitHub论文工作室为正式过程与状态入口，D盘保存工程工作副�
 - [计划工况清单](planned_cases.json)
 
 当前尚未取得或关闭的输入包括：具体基础位置与地勘、正式场址谱适用性、最终构造配筋、原生初态、柔性RNA验收、风载接口去重、真实地震记录绑定。上述不妨碍方法和程序准备，但在关闭之前不能写“本塔抗震已通过”。
+
+
+---
+
+## 2026-10-27｜S05/S08文献原页核读与嘉鱼地震输入实施裁决（补充当前方法，不是新T080审查）
+
+**版本与状态：** 基于PR #42的\`T079/METHOD_PLAN.md\`直接补充；遵守\`governance/THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md\`的S01→S12门禁。此处全部为**方法与源数据准备**，没有下载/绑定嘉鱼适用的具体RSN、没有原生E/WE RUN、没有抗震规范PASS。旧215例仍仅历史候选预算，不得误用为正式矩阵。
+
+### A. 回答“用嘉鱼地震还是别的地震”：明确对象与来源层级
+
+1. **目标地震作用属于研究场址，不属于某一次历史地震的地名。** 嘉鱼县城镇级“6度、0.05g、第一组”已见既有附录图和登记；它不是某个研究点的已验证地勘参数，也不是把全部真实记录统一设成0.05g PGA的指令。城镇抗震标准适用性还需与风机体系逐条核对。
+2. **输入波源应优先真实加速度时程**，允许来自中国国家地震科学数据中心、中国强震动台网及经论证适用的PEER、NIED、ESM等记录。记录不是“嘉鱼实测”，应称“符合嘉鱼研究场址目标谱约束的外部真实地震记录”。如具备可检验的区域近场观测或正式地震危险性分析，另做场址专用选波，不强制把数据库限定在嘉鱼。
+3. **单纯PGA吻合不足以放行。** 先确定适用标准/设计水准、基础土层/可能的SSI、目标谱阻尼与长周期段、结构已验模态；按事件—台站—配对水平分量筛选震级、距离、场地Vs30/土层、震源机制、持续时间、脉冲/非脉冲、低频有效范围；之后谱匹配及多记录离散检验。地震的RSN/事件/台站/分量/dt/原始SHA256必须由真实下载产生，**不得预填**。
+4. **中国地震局职责 ≠ 项目Abaqus求解。** 国家区划/地震危险性评估/强震记录提供输入来源，研究组完成处理、计算、核验与论文归档。参考[GB 18306-2015现行标准入口](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623)、[应急管理部区划查询](https://app.gjzwfw.gov.cn/jmopen/webapp/html5/zgdzdcsqht/index.html)、[中国国家地震科学数据中心](https://data.earthquake.cn/datashare/report.shtml?PAGEID=earthquake_strong)、[PEER数据库](https://ngawest2.berkeley.edu/)。
+
+### B. 期刊“人家具体如何做”：原页核读与摘要级核对，严格分级
+
+| 来源 | 本次实际读到的层级与精确位置 | 已确认的实际操作 | 对本10MW/158m的可迁移性与禁区 |
+|---|---|---|---|
+| Ishihara, Iida & Wang, *Structures* 60 (2024) 105886, DOI [10.1016/j.istruc.2024.105886](https://doi.org/10.1016/j.istruc.2024.105886) | **作者公开17页PDF原页核读**：[PDF](https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1-2.pdf) 印刷p3 §2.1–2.2/表1–3；p4 表4–5/图3–4；p5 图6；p6 §2.3/式(1)/图7–8/表8；p7–8 图9–11；p12–15 比较图17/20–24。不是“逐字通读整篇”的声明。 | 2.4MW/80m + GH Bladed 4.8气弹模型与梁单元SLM；以模态/振型对照验证简化，按运行/紧急停机/停机状态与风震夹角设算例；以目标反应谱和真实记录相位生成**人工目标谱波**，文中提及El Centro NS、Taft NS、Hachinohe EW、JMA Kobe EW与随机相位；用时程求底部剪力/弯矩并验证非耦合组合。表4给该文示例Newmark β=1/4、Δt=0.02s、120s；表8采用15条合成波，额定风速11m/s。 | **迁移流程，不移植地震波本身和参数**：该文是按目标谱人工生成15条波，不等于已从PEER下载15组实际记录；0.02s、结构阻尼0.2%、85%分位和矢量和/SRSS只针对其2.4MW验证，不可作为本研究预设准确度或规范下限。其土壤与日本Level II目标谱不能替换嘉鱼。 |
+| Wang et al., *Resilient Cities and Structures* 5(2) (2026) 47–64, DOI [10.1016/j.rcns.2026.03.002](https://doi.org/10.1016/j.rcns.2026.03.002) | **出版社/开放获取期刊摘要与期刊页面**，尚未成功下载并逐页核读全文。 | 160m级外PT分段混塔、Abaqus、8度/II类、依据II类目标谱从PEER选3条真实记录；研究多遇/设防/罕遇，先分别研究37.5m/s强风及地震；罕遇地震下该算例接缝出现失压/混凝土拉应力风险，并研究增加PT的条件效果。 | 与本研究结构最接近，适合确定接缝、PT应力和沿高QoI，但8度、37.5m/s、PT增加21.9%均是论文自有案例，**绝不可写为嘉鱼验算或直接套用优化设计**；作者并非以该论文宣称完整运行风震耦合。 |
+| Wang et al., *Journal of Earthquake Engineering* (2026), DOI [10.1080/13632469.2026.2671807](https://doi.org/10.1080/13632469.2026.2671807) | **原刊摘要/元数据和Data Availability声明**，全文尚未获取；原刊列数据存于[Zenodo DOI 10.5281/zenodo.19346369](https://doi.org/10.5281/zenodo.19346369)，此轮未成功拉取数据。 | 160m混塔Abaqus；三风速Davenport时程、II类目标谱选PEER三条波、风震同时施加。 | 风震同施已有直接先例，**不能宣称首创**；需要取得全文确定施力位置、气动反馈、预应力/接触、时程/接口定义才可细迁移。 |
+| Wang et al., *Soil Dynamics and Earthquake Engineering* 204 (2026) 110209, DOI [10.1016/j.soildyn.2026.110209](https://doi.org/10.1016/j.soildyn.2026.110209) | **出版社摘要与Highlights级**，未核读全文。 | 160m级混塔—基础—土三维Abaqus、黏弹性边界、比较场地与SSI；摘要/亮点指出软弱地基可明显放大响应并改变频率。 | 直接提示嘉鱼II类固定基底只是假设；SSI要有地勘Vs、土层、基底几何和边界参数，不能凭县级设防数据伪造。 |
+| Abaqus 2025 [官方悬臂柱地震算例](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEBMKRefMap/simabmk-c-cantilever.htm) | **官方完整HTML直接核读** §Time domain analysis、§Response spectrum、§Input files；含可下载\`cantilever_dynamic.inp\`/\`cantilever_modal_10s.inp\`等 | 同一El Centro输入对比模态动力、直接积分、反应谱和已知解；直接积分底座边界，模态分析BASE MOTION；强调时间步相位误差和baseline correction。 | 本项目S08第一项真正可复核原生**软件输入语义基准**；应先跑官方小模型并复核，再将经验证的一套输入到非线性分段混塔。示例Δt=0.01s不是本158m推荐默认步长。 |
+
+### C. 执行顺序与交付，不额外制造审计任务号
+
+- **S01→S04阻塞继续有效：** T057/T070冻结，R335原型/HRB400 D400设计/PT名义P0=51.6096MN与长期设计Pe≈39.753559MN必须区分。不能把两者叠加或把D400子版的静态检查写成接缝/原生平衡PASS。
+- **S05可独立完成的工作：** 建立正式“场址假设—GB 18306/GB/T50011/GB55002—IEC61400-1/6—NB/T10907”适用性索引，获取授权2025 IEC条文与可用的场址地勘；核定研究假设场地及初选目标谱。在真实目标谱成立前不计算声称适用的记录库最优波组。
+- **真实波最小档案**（待填，不伪造）: \`dataset_url, event_id, station_id, record_id/RSN, Mw, Rrup/Rjb(if supported), fault_mechanism, Vs30/site_class, H1_file, H2_file, vertical_file_if_needed, dt_s, npts, original_units, raw_sha256, corrections/filter, usable_frequency_low_Hz, PGA_original, target_spectrum_ref, damping, scale_factor, spectral_misfit_definition, processed_sha256, reviewer_decision\`。缩放因子不靠单个PGA拟合事后选“好看”波，需预先定义目标谱周期带/阻尼/聚合和不确定性。
+- **S08首例试验：** 先Abaqus官方悬臂梁示例校验地震输入、加速度单位、直接积分与BASE MOTION差异及相对/绝对加速度；再在已经通过S01–S04原生门禁的同一158m混塔初态上执行**停机、无风、一个真实有来源的记录对**的E pilot。依模型非线性类别选择隐式直接积分而不是用线性反应谱替代开缝/滑移；核查底部反力、能量、网格、时步与模态。
+- **S09风震：** W/E/WE同状态配对、同风seed/同输入起点/同PT/同RNA/同接缝模型；明确外风载含哪些惯性/重力和气动反馈；风震同施≠全耦合。输出塔顶相对位移及**绝对**加速度、塔底和过渡段同步N/M/V/T、30接缝COPEN/CPRESS/CSLIP、PT实际应力/残余力、支座及能量。峰值不得跨时间拼接。
+- **疲劳主线保留：** S10长期DLC1.2局部材料疲劳、S11抗震约束疲劳优化不能用2026论文“增加PT”案例替代。
+
+### D. SOURCE / REF / STANDARD / OFFICIAL / RUN / FIG / TAB 与误差预算
+
+- **SOURCE:** T079\`planned_cases.json\`中所有\`GM01...\`仍为未绑定占位符；2026-10-27读取GitHub main \`bbc5c913\` 和PR #42此前HEAD \`e3735786\`。嘉鱼已有区划参数只是城镇基准；具体地勘/地震记录仍未得到。
+- **REF:** B表列4篇 DOI，2024作者PDF按实际页级别、其余摘要级别；2026两篇风震/PT先行工作限制创新声明。
+- **STANDARD:** [住建部2024年第61号公告](https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2024/art_17339_778179.html)直接确认GB/T50011更名及局部修订；[GB55002强制规范公告](https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2021/art_17339_761174.html)；[IEC61400-1:2019+AMD1:2025](https://webstore.iec.ch/en/publication/111042)、[IEC61400-6:2020+AMD1:2025](https://webstore.iec.ch/en/publication/107942)只确认产品版本/总体范围，**不是授权条款通过**。
+- **OFFICIAL:** Abaqus2025悬臂梁原生校验示例；[PEER官网](https://ngawest2.berkeley.edu/)明确下载原始未缩放记录及缩放因子规则。
+- **RUN:** 本次无本塔新的计算、软件pilot或物理误差估计；所有正式地震\`RUN=0\`、波源SHA\`UNBOUND\`。
+- **FIG/TAB:** 本增补的原文方法对照表/资源字段清单；**无本文原生地震响应FIG**。
+- **误差预算:** 记录处理/谱拟合误差、场址危险性/土层不确定性、数值时间积分/模态截断/网格/接触、PT/RNA与风接口方法差异均\`NEED-ESTIMATE\`，不能先写5%或10%通过。
+- **阶段/HOLD:** S05 PARTIAL/HOLD, S08/S09 BLOCKED；**0/12阶段未晋级**。当前最大HOLD仍为**S01唯一可实施配筋—接缝—有效PT模型与原生初态未冻结通过**。研究输入方面的独立HOLD为：嘉鱼具体场地证据、授权适用条款及真实波文件与SHA。
