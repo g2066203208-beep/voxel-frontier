@@ -298,7 +298,7 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 
 **SOURCE（原件字节核验）：** 直接读取本PR已有[30行历史静态六分量表](S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv)，SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`，Git blob SHA1=`fa38f2097f8380796c5f71add9a64066f9e8a4e8`。该表是T074历史重力截面力的**静态公共坐标假设诊断**，不是OUTB动态姿态或接缝真实外载。源CSV逐字节复建并通过双SHA，30行全部参与本地测试。冻结T057/T070与T078输入未改；原始16ZIP Draft Release归档状态沿用上一节。
 
-**CODE/RUN：** 新增[stdlib可运行程序](s07_six_component_frame_gate.py)，本地Python 3.13执行`--self-test --static-source S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv`成功；脚本SHA256=`e8fddd516c486dc733f092cf1c53ee3ece63090a11735353e54a8619764717c9`（本地生成字节，远端CI需另核）。新增[轻量原生CI](../../../../../.github/workflows/s07-six-component-frame-gate.yml)负责远端checkout、语法检查、合成测试、30行真实源回归与SHA篡改拒绝；**工作流提交不等于已取得成功回执**。测试包括90°局部→惯性旋转、参考点平移、逆旋转、分步搬运路径无关性、有符号六分量平衡、镜像/非正交矩阵/NaN拒绝、来源缺失和非SECTION_RESULTANT所有权拒绝。初始人工合成力矩预期值有误，第一次本地测试明确失败，按叉积重算后修正并通过（保留失败事实）。
+**CODE/RUN：** 新增[stdlib可运行程序](s07_six_component_frame_gate.py)，本地Python 3.13执行`--self-test --static-source S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv`成功；脚本SHA256=`56ad7f047e7d6431acd3d87bc411055ba23a5a54d9dd0913f51164463c195557`（本地生成字节，远端CI需另核）。新增[轻量原生CI](../../../../../.github/workflows/s07-six-component-frame-gate.yml)负责远端checkout、语法检查、合成测试、30行真实源回归与SHA篡改拒绝；**工作流提交不等于已取得成功回执**。测试包括90°局部→惯性旋转、参考点平移、逆旋转、分步搬运路径无关性、有符号六分量平衡、镜像/非正交矩阵/NaN拒绝、来源缺失和非SECTION_RESULTANT所有权拒绝。初始人工合成力矩预期值有误，第一次本地测试明确失败，按叉积重算后修正并通过（保留失败事实）。
 
 **算法/单位：** `F_B=R F_A`，`M_B=R M_A+(A-B)×F_B`；`R`三行是局部分量到全局分量的旋转，`A,B`是**同一时刻同一惯性系**下的源/目标参考点，力kN、矩kN·m、位置m。90°合成测试：`F_A=(2,3,5)`、`M_A=(7,11,13)`、`A=(2,1,4)`、`B=(1,0,0)`，结果`F_B=(-3,2,5)` kN、`M_B=(-14,-10,18)` kN·m，逆算恢复原值。输入CSV必须明确case/gage/time、截面力归属、逐时刻旋转矩阵、位置及来源声明；严格拒绝非法旋转和未知归属。输出显式写`SECTION_RESULTANT_NOT_EXTERNAL`，**没有Abaqus外载导出功能**。来源声明是用户填入字段，程序目前只检查非空，不等于独立验证原OUTB通道或SHA。
 
@@ -307,3 +307,5 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 **REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差预算：** REF=沿用T080.17已登记Abaqus集成截面输出和OpenFAST开发者坐标说明（本轮未新增期刊全文原页）；STANDARD=未取得新的IEC/GB/NB授权原条文，不能称规范条款验收；OFFICIAL=现有T071/T072历史源工作流和本次GitHub CI（需查真实job）；RUN=本地Python 3.13合成+真实静态回归；FIG=无；TAB=既有30行源表与合成算例。算法矩阵正交阈值`1e-8`仅为数值输入质量门槛，静态回归非轴向残差限`5e-8` kN或kN·m，CSV输出保留9位小数；**这些不是物理误差预算或IEC限值**。动态姿态/位置采样、力矩参考点定义、符号、重力/惯性/RNA/气动所有权及S03/S04 OUTB身份仍`HOLD/NEED_NATIVE`。S07=INDEPENDENT_PREPARATION、正式PASS=否；12阶段仍0/12、地震RUN=0，S10材料疲劳与S11优化尚未生产。
 
 **下一单一动作：** 在不运行昂贵求解的前提下，恢复至少一条历史OUTB的同一时刻`TwHt*TPx/TPy/TPz`、局部姿态/加速度与截面六分量原始通道及其SHA，形成可独立核对的逐时刻旋转/自由体所有权manifest，然后才对真实动态时程使用此程序。
+
+**补充数值回归：** 固定随机种子20261028生成1000组非零6D力/矩与三个移动参考点，验证直接搬运与分步搬运最大分量差<1e-10（kN或kN·m），已并入上述脚本`--self-test`并本地Python 3.13.5通过。SHA篡改30行真实源负测试也通过；本轮执行容器未安装`abaqus`/`openfast`可执行文件，无法作原生物理验证。
