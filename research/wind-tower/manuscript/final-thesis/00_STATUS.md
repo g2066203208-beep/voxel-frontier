@@ -255,3 +255,11 @@ HOLD：
 ## 2026-10-28 04时｜S07归档范围纠偏与S10条件Miner程序
 
 **整阶段0/12正式PASS，地震RUN=0。** 已直接核读T071/T072原工作流，确认其原始OUTB只在runner临时读取、上传仅`extract/*`，16件已归档ZIP不能作为原始OUTB；S06/S07动态姿态、惯性和载荷所有权继续HOLD。新增[S10条件Miner计算器](../../experiments/T077/recovery/s10_miner_damage_gate.py)及[轻量CI](../../../../.github/workflows/s10-conditional-miner-gate.yml)，本地双bin/双seed已知解与6项拒绝测试通过；合成年损伤1064.34、20年21286.8**仅为程序验证**，不是任何风机材料疲劳结果。详细SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、阅读层级、输入版本Git blob、误差假设和HOLD见[S06研究记录本轮章节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**最大HOLD**：未恢复带同步运动学的真实OUTB；**下一动作**：核查独立旧归档中是否存在原始OUTB及其通道/SHA，禁止高成本RUN。PR #42仍Draft，不修改T057/T070。
+
+## 2026-10-28 05时｜S06/T062原始OUTB实证恢复（更新S06最大缺口描述）
+
+**12阶段正式状态仍0/12 PASS，地震RUN=0。** S06=PARTIAL/HOLD（独立T062原始OUTB一件已字节验证，T071/T072正式31测点OUTB仍缺）；S07=BLOCKED/INDEPENDENT_PREPARATION（已有同刻9测点真实运动学与六分量源样本，但旋转/自由体未验）；S10/S11材料疲劳及优化主线不变。
+
+**新增真实证据：** [T062原始OUTB复核与方法记录](../../experiments/T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)、[原始OUTB三时刻永久数值回执](../../experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json)、[只读二进制程序](../../experiments/T062/s06_historical_outb_source_gate.py)、[真实GitHub Actions #40584534880](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40584534880)（completed/success，job 122472382762）。本轮从仓库原有36件OUTB归档中，实际对`U09p343881_ETM_S01`一件完成ZIP CRC、原件SHA256及3个同步时刻数值解码；OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`。原始OpenFAST v3.5.3、295通道、12001点、100–700s、0.05s，**9个**测点有六分量/TP/RP/AL同步通道；不等于31测点补跑结果。此前“16件T071/T072归档无OUTB”的事实仍正确，但不能再概括为“GitHub无任何原始OUTB”。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与误差/HOLD：** SOURCE=已验证单条原始OUTB/仓库原清单SHA；REF=未新增全文；STANDARD=未新增授权条文；OFFICIAL=原始OpenFAST v3.5.3头/Actions日志；RUN=轻量只读二进制抽样+合成负测试，非OpenFAST/Abaqus生产；FIG=无；TAB=永久JSON三时刻36通道。压缩解码/格式误差仅数值级，动态坐标定义、惯性/重力/RNA分账、正式31测点模型同一性及材料应力误差预算仍HOLD。**下一单一动作：** 依据官方v3.5.3坐标定义，将这条真实9测点同步运动学和截面六分量接入S07移动参考点变换单测，保留所有权门禁。
