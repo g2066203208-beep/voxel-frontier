@@ -134,3 +134,18 @@
 - **HOLD与纠偏：** 以前“T071/T072 16ZIP没有OUTB”仍属实；但由此推论“仓库完全没有原始OUTB”是错误的，现纠正为**T062已有36件独立原始OUTB，其中1件已真实复核，9个原始测点具同步运动学通道；T071/T072的31测点原OUTB仍缺，且两个计算谱系是否可等同未验**。S06=PARTIAL/HOLD，S07=独立准备/物理BLOCKED，0/12正式PASS，地震RUN=0。禁止将9测点历史原件直接替换31段正式风载。
 
 **下一单一最优动作：** 使用已SHA验证的T062单条OUTB建立`同刻9测点六分量+运动学`的真实数值坐标转换单测，先依据OpenFAST v3.5.3官方定义确定RP角旋转顺序/参考点及加速度坐标系，再做自由体残差；不能把已解码的截面力直接作为Abaqus外载。
+
+
+## 2026-10-28｜S06/S07 真实原始OUTB 12001点×9测点完整同步解码与垂向覆盖发现（非物理PASS）
+
+**SOURCE（原件字节级）**：继续使用已在T062找到的历史36工况之一 \`CASES/U09p343881_ETM_S01/DTU_10MW_RWT.outb\`，原始OUTB SHA256=\`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c\`，原始ZIP SHA256=\`c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0\`，清单SHA256=\`35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392\`。它**不是**T071/T072的31测点补跑OUTB，且不能代替正式DLC1.2。
+
+**RUN/TAB（GitHub Actions真实原始二进制计算）**：[CI #40592618297](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592618297)，job \`122500446643\`，\`completed/success\`。复用[原T062解析程序](s06_historical_outb_source_gate.py)，以Python标准库对**12001个时刻（100–700 s、0.05 s）**解码9个测点的FL/ML/TP/RP/AL（每点15通道）及塔底6分量，共**141个原生通道、1,692,141个真实通道数值**。逐通道有限值、头部单位、时间网格检查及原始三时刻回执逐值对照通过（\`three_instant_parity=PASS\`）。**原始数值未做RP角→方向余弦矩阵转换、未做截面力→外力推断。** 141通道min/max/mean/RMS/首末值均已永久写入[原有JSON回执](S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json)；完整142列（含Time）CSV.GZ=**8,524,917字节**，SHA256=\`f8ff5debe64b2afb8bdb38cd1b903b82f5cc0d060ab548807a1c75f6a8bab680\`，暂存[CI artifact #12775195986](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592618297/artifacts/12775195986)（14天临时留存；原始OUTB及复算代码在仓库，可重建；不将临时artifact写成永久保存）。
+
+**本轮最重要的新增身份HOLD——9测点覆盖极窄：**原始\`TwHt1..9TPzi\`首时刻值依次为 \`0.070535714, 0.352678541, 0.634821398, 0.916964298, 1.199107198, 1.763392914, 2.045535813, 2.327678376, 2.750892473 m\`。九点实际\`TPzi\`跨度仅**2.680356759 m**（占158 m的1.6964%），且在全600秒记录内各测点\`TPzi\`的解码min=max（量化精度内）。OpenFAST的\`TPzi\`定义为相对地面/海平面的垂向位置，**不能把“9个同步测点”误说成覆盖158 m全塔**；这可能源于历史\`TwrGagNd\`选点，必须找回当时ElastoDyn输入核对，不得凭当前OUTB推断全塔网格。源级塔底\`TwrBsMyt\`真实全窗min/max/mean/RMS=\`7627.472840231 / 329871.004821732 / 160732.856202467 / 169833.008278040 kN·m\`，属于**历史ETM源时程统计**，不是疲劳寿命或材料局部应力。
+
+**OFFICIAL/阅读层级**：OpenFAST开发者Jonkman关于\`TwrGagNd\`与分析节点的直接答复（https://forums.nlr.gov/t/fore-aft-and-side-to-side-accelerations-at-mid-tower/1911），OpenFAST ElastoDyn文档的\`TwrGagNd\`定义（https://openfast.readthedocs.io/en/dev/source/user/elastodyn/input.html），及官方legacy OutListParameters的\`TPzi\`定义（相对ground/MSL的位置）；2025年开发者对v4.0以前小角度旋转近似的答复（https://github.com/OpenFAST/openfast/discussions/2940）。阅读层级为**官方网页/开发者回复与源数据头/数值级**，不是对v3.5.3所有旋转源代码的逐行审计；RP转矩阵的符号/顺序仍\`NEED_SOURCE\`。**REF**：本轮未新增期刊原文阅读，2026风震/PT先行研究创新性限制不变。**STANDARD**：未读新增授权IEC/GB/NB条款，不称规范PASS。**FIG**：无结构/地震原生图；**TAB**：141通道统计在原有JSON，完整时序在可复算的临时CI artifact。
+
+**假设/误差预算/失败记录**：FileID=4的\`(packed-offset)/scale\`按原件头解码；CSV每通道保留9位小数，舍入误差至多0.5×10⁻⁹个相应单位，源压缩整数半LSB量化误差上界为\`0.5/abs(ColScl)\`（各通道具体值尚待从原头汇总，不能将CSV小数精度等同物理精度）；统计使用Python float，未做第二独立解析器全时程逐点交叉核验；姿态/运动学、重力/惯性/RNA载荷所有权、OpenFAST塔模态和Abaqus响应的**物理误差预算均NEED_ESTIMATE**。容器直连GitHub源ZIP的DNS失败已在前轮记录，本轮在真实GitHub runner成功完成；未启动昂贵求解。**状态：S06 PARTIAL/HOLD、S07独立数据准备、整阶段0/12 PASS、地震RUN=0**。
+
+**下一单一最优动作**：追索此历史OUTB对应的ElastoDyn \`TwrGagNd/TwrNodes/TowerHt\` 原始输入，证明九点集中于0–2.75m的来源，并选择**确有高程覆盖与姿态定义的原始通道**开展自由体分账；在此之前不把该9点时程直接送入Abaqus生产载荷。
