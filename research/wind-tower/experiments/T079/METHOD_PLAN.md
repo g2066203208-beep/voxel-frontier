@@ -259,3 +259,12 @@ GitHub论文工作室为正式过程与状态入口，D盘保存工程工作副�
 | S10/S11保持科研主线 | Ch4既定REF018/REF007等风疲劳材料来源（本轮未重读）；REF159说明接缝滑移/剪扭可影响约束的材料机制 | 使用**真实Ch4控制材料疲劳**驱动优化，再以S09经过验收的地震需求施加抗震约束，比较Pareto变化 | 先有原生局部应力和真实设计谱/风数据，禁止现在填写疲劳寿命或优化改进百分比 |
 
 **阅读层级、程序与保存：** REF159已登记中央REF表；[REF159原文表4十组数值CSV](FURLL_2024_DRY_JOINT_T4_FRICTION_10TESTS.csv)与[复核脚本](recompute_furll_2024_joint_friction.py)存储GitHub，程序可输出原始文件SHA256及均值/离散/与μ=0.5比值。东京大学作者PDF实页已核；Meng机构PDF部分文本核读但截图接口超时；Wang2026两篇同类论文仍摘要级且已先行研究，**不可宣称风震同时作用首创**。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与物理误差预算详见[文献深读](literature_notes.md)；本节非实验RUN，无地震波已下载、无地震FIG/抗震条款PASS，S01/S05 PARTIAL/HOLD、S08/S09 BLOCKED、整阶段**0/12**。
+
+
+### 2026-10-27 16时｜S01接缝PT与局部卸压的可证伪验证流程（REF160）
+
+**优先完成文献/可复核方法，不等待许可证：** 新增[REF160 Klein et al. 2022 原刊开放全文](https://onlinelibrary.wiley.com/doi/10.1002/suco.202100710) §3–5；[十点Table2 CSV](KLEIN_2022_JOINT_BENDING_SHEAR_V1_V10_TABLE2.csv)与[独立复算脚本](recompute_klein_2022_joint_bending_shear.py)；[原文逐项提取](literature_notes.md)。原刊16环6.5m约1:10塔、中心张拉杆，PT约304kN，加载—卸载V1–V10。**V4=11.988kN观察180°局部开缝**；Eq13/14理想\`F_dec≈10.927kN\`，但沿周向不均匀初始压应变导致局部卸压先于理想均匀预测。论文10次逐级加载不是高周疲劳，不能直接用于S10寿命。
+
+**先注册可检验QoI与失败准则（待S01唯一子版/S02/S03放行后执行）：** (1) 统一T057/T070/T077/T078的实际\`P0\`和设计\`Pe\`身份，先以冻结R335诊断，不用T077 HRB500容量替代；(2) 在独立小模型上以\`P→V1…V10\`验证法向接触分布/张开位置/载荷—位移趋势，记录单杆试验和36束周向PT的拓扑差异；(3) 全塔30道接缝在G+Peq、W、E、WE相同物理基线下输出\`CPRESS(θ,t)\`非均匀性、\`COPEN\`初现时刻/方位、\`CSLIP\`、\`CSHEAR\`、接触面积、PT锚端力与两支承反力；(4) 对理想平面与表面不平度/μ参数开展受控敏感性，必要时接触网格/时间步收敛；(5) 不以均值\`Pe/A\`或单个μ推断全部30接缝闭合，更不以本文10点实验直接宣布抗震/风疲劳通过。每个模型、PT、风/地震输入要有SHA与原生dat/msg/sta/odb、同刻六分量及误差预算。
+
+**已有相关论文复用而非新建T080：** REF159 P/M/T摩擦，REF014/REF026 N/M/V/T交互，REF015 低周滞回，REF018 DLC1.2运行高周疲劳；这些已在[中央文献表](../../registry/literature_master.tsv)登记。区分低周滞回/高周疲劳、理想接缝/真实几何、初始PT/有效PT，避免“同施风震首创”与伪造地震结果。**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**见[文献深读](literature_notes.md)；本阶段标准授权原文与原生求解仍HOLD，0/12阶段晋级。
