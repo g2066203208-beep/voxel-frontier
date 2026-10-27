@@ -1,0 +1,60 @@
+name: S06 preserve expiring T071 T072 original source ZIPs (NO SOLVER)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/s06-preserve-expiring-source-artifacts.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  preserve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify preservation program negative tests
+        run: python research/wind-tower/experiments/T077/recovery/s06_archive_expiring_actions_sources.py --self-test
+      - name: Download and validate original 16 Actions ZIP bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python research/wind-tower/experiments/T077/recovery/s06_archive_expiring_actions_sources.py \
+            --manifest research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv \
+            --out-dir "$RUNNER_TEMP/s06_original_archive"
+      - name: Create DRAFT research release and upload verified originals
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TAG="windtower-s06-t071-t072-source-archive-20261027"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::Archive release already exists; refuse overwrite or duplicate upload"
+            exit 1
+          fi
+          gh release create "$TAG" --target "$GITHUB_SHA" --draft --prerelease \
+            --title "S06 original T071/T072 source ZIP archive (research DRAFT)" \
+            --notes "Research preservation only. Contains 16 SHA256-verified historical GitHub Actions source ZIPs from runs 37582521146 and 37622366681; expires in Actions on 2026-11-06. DRAFT release deliberately not published. These are extracted 31-gage CSV histories, NOT original OpenFAST OUTB. No S06/S07 physical PASS or licensed-standard claim."
+          gh release upload "$TAG" "$RUNNER_TEMP"/s06_original_archive/*.zip \
+            "$RUNNER_TEMP"/s06_original_archive/S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json
+          COUNT="$(gh release view "$TAG" --json assets --jq '.assets | length')"
+          test "$COUNT" = "17" || { echo "::error::Expected 17 release assets, got $COUNT"; exit 1; }
+          gh release view "$TAG" --json url,isDraft,assets \
+            --jq '{url,isDraft,asset_count:(.assets|length)}'
+      - name: Preserve source-verification JSON as CI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s06-source-preservation-verification
+          path: ${{ runner.temp }}/s06_original_archive/S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json
+          if-no-files-found: warn
+          retention-days: 90
