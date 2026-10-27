@@ -59,6 +59,7 @@
   ],
   "full_synchronous_native_series": {
     "channel_value_count": 1692141,
+    "coverage_warning": "Native TPzi gage positions span only 2.680357 m in this OUTB; this 9-gage history must NOT be treated as full 158-m tower coverage until original TwrGagNd and TowerHt inputs are independently recovered.",
     "gage_count": 9,
     "gzip_csv_sha256": "f8ff5debe64b2afb8bdb38cd1b903b82f5cc0d060ab548807a1c75f6a8bab680",
     "gzip_csv_size_bytes": 8524917,
@@ -1334,6 +1335,18 @@
         "unit": "(kN-m)"
       }
     },
+    "observed_TPzi_first_m_by_gage": [
+      0.070535714,
+      0.352678541,
+      0.634821398,
+      0.916964298,
+      1.199107198,
+      1.763392914,
+      2.045535813,
+      2.327678376,
+      2.750892473
+    ],
+    "observed_TPzi_span_m": 2.680356759,
     "sample_count": 12001,
     "selected_channel_count": 141,
     "source_outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
@@ -1342,10 +1355,11 @@
     "time_end_s": 700,
     "time_increment_s": 0.05,
     "time_start_s": 100,
-    "ci_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592618297",
-    "ci_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592618297/artifacts/12775195986",
-    "ci_job_id": 122500446643,
-    "artifact_retention_days": 14
+    "ci_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592832887",
+    "ci_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592832887/artifacts/12774442508",
+    "ci_job_id": 122501168807,
+    "artifact_retention_days": 14,
+    "artifact_zip_sha256": "6a722652b8bac73afb646059f3817e2a5824b4dfaeed0476b9ef4401526c827f"
   },
   "header": {
     "data_offset_bytes": 8020,
@@ -1838,7 +1852,7 @@
     }
   ],
   "source_manifest_sha256": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392",
-  "source_reading_level": "Original SHA-pinned OpenFAST OUTB bytes: complete 12001-sample native-channel extraction (9 gages x 15 FL/ML/TP/RP/AL plus 6 base components), three-instant prior-receipt parity, per-channel min/max/mean/RMS; no orientation or external-force inference.",
+  "source_reading_level": "original archived OUTB bytes: SHA256 + complete 12001x141 native-channel time series, three-instant parity and per-channel QC",
   "status": "SOURCE_HEADER_QC_ONLY_NOT_DYNAMIC_PHYSICS_PASS",
   "time_unit": "(s)"
 }
