@@ -12,7 +12,15 @@ jobs:
   s07-frame-algebra-source-qc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Fetch only two SHA-pinned public source files (avoid 2.2GB checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/wind-tower/experiments/T077/recovery
+          cd research/wind-tower/experiments/T077/recovery
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery"
+          curl --fail --location --silent --show-error --retry 3 --output s07_six_component_frame_gate.py "$base/s07_six_component_frame_gate.py"
+          curl --fail --location --silent --show-error --retry 3 --output S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv "$base/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv"
       - name: Synthetic 6D transport + 30 real historical static rows + tamper rejection
         shell: bash
         run: |
