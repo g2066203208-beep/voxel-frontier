@@ -87,3 +87,21 @@
 **REF/STANDARD/OFFICIAL/FIG/TAB：** REF何2024/Xu2025及两篇2026先行研究阅读层级不变；STANDARD NB/T10907—2021专用条款授权原文未新读，不能宣称规范验收；OFFICIAL原有Abaqus 2025命令与Data Check文档级核读未升级；RUN仅GitHub Actions Python 3静态自测/旧12项mock；FIG无新增物理响应图；TAB=RUNBOOK第8.1节定量表和未来\`G1_SUMMARY.json\`字段。数值误差为已登记质量积分/浮点舍入；真实PT锚端反力、Embedded质量归属、RNA偏心、其他约束、接触、静态/动力误差预算均\`NEED_ESTIMATE\`。
 
 **状态：S01 PARTIAL/HOLD、S02–S04 BLOCKED、S05/S06 PARTIAL/HOLD、S07–S11 BLOCKED、S12 PARTIAL，12阶段仍0/12 PASS。** 单一最大HOLD仍是唯一规范可实施的普通筋—接缝—有效PT物理基线未冻结并通过原生验收。**下一唯一动作**：有Abaqus 2025许可证的执行机对同SHA T070/R335仅做原生诊断性Data Check并回收日志；其后才谈G1双支承实测闭合。冻结母本、PR和高成本RUN均不动。
+
+
+## 2026-10-27｜改为实读期刊全文：REF159干接缝试验与风震两篇方法
+
+**方向调整与真实时间边界：** 用户要求停止因缺Abaqus重复等待，先实质查阅期刊并提取方法。本次直接浏览3份可访问原始论文（证据阅读等级见[T079全文方法笔记](../T079/literature_notes.md)），2026-10-27当轮完成；未记录精确起止时间，不补造。main读取版本\`bbc5c9130f2d9fc41f776506d86118a9b8db0e65\`，原PR #42 head读取\`04741380f0c165c0c042fd44c3bd5671adfc4ea0\`（Open/Draft）；本次均写入同一PR工作分支而非main。
+
+**REF / SOURCE — 可核实的阅读深度：**
+- **新REF159，原刊Wiley开放获取HTML**：Fürll et al. 2024 *Structural Concrete* 25(5):3347–3360 DOI 10.1002/suco.202300873；§3.1–3.5实验装置/材料/加载测量；§4.2–4.4与Fig13–17/Tables2–4；§5试验边界。模型为3节预制RC环段、PT+弯矩+扭矩测试，**未加联合剪力V**。10项无弯试验\`μ\`0.633–0.670，论文取均值0.655。T057原\`μ=0.5\`保持冻结。
+- **Ishihara2024 Structures DOI 10.1016/j.istruc.2024.105886**：作者17页PDF原始页面直接看印刷p3–4,6–8,10–13,15及图表；GH Bladed4.8 AEM与结构梁SLM模态/多工况风震，目标谱合成人工波、0/45/90方向、运行/停机/紧急停机和矢量和/SRSS模型误差。为2.4MW/日本场地示例，不外推嘉鱼。
+- **Meng2020 Renewable Energy DOI 10.1016/j.renene.2020.05.181**：City机构28页**作者接受稿**PDF仅核读可检索文本p1–4,p7,p12,p21（截图接口超时），1:100缩尺风/台振+FAST，EQ1人工波/EQ2–4实波，缩尺时间0.0707、PGA0.4/0.8g均**不适用于嘉鱼实塔**。Cao2020/Huang2023/Wang2026等本轮仍摘要级，无新全文宣称。
+
+**RUN / TAB / 程序与版本留存：** [10项原始数值CSV](../T079/FURLL_2024_DRY_JOINT_T4_FRICTION_10TESTS.csv)已GitHub远端回读，**801字节UTF-8/LF；GitBlob=\`dfa07256a3fd1abd453a4b0c208c562af656dfca\`；SHA256=\`c6ac17aa9a0a295845bdc17d636dfb59b65291fc81e31d5c683d405822d770ec\`**（本轮用独立Python字节SHA计算，GitBlob SHA1二次交叉一致）；10项\`μ\`均值**0.6553**、样本标准差**0.0133670407**；以公开表内\`N,M_T\`及近似半径\`r_m=0.255m\`检查Eq4时各行与报告μ最大差约\`0.0003294\`，属于已舍入表内数字及半径近似，不是物理误差。\`μ_mean/0.5=1.3106\`仅为相同法向载荷的系数比。新增[可复算Python程序](../T079/recompute_furll_2024_joint_friction.py)（GitBlob=\`da2b2778222a694dfb6b8c5c7eecdf0903f8a162\`）；**本轮直接运行了独立等价算术，尚未在GitHub runner运行这份完整脚本**，故RUN等级为\`LITERATURE_TABLE_STATIC_RECOMPUTATION\`，绝非Abaqus/native或接缝试验复现；\`FIG\`只有原文图阅读，论文自身地震FIG为0。正式表4数据已用单独CSV保存，不依赖聊天摘要。原文PDF字节未本地取得，PDF SHA=\`NOT_CAPTURED\`，版权所有原图未复制进本项目。
+
+**已提交GitHub：** 表CSV commit [\`e5517f7\`](https://github.com/g2066203208-beep/voxel-frontier/commit/e5517f7a2f87b5664815faa53aee122fb2d4adea)、脚本 [\`48e6e53\`](https://github.com/g2066203208-beep/voxel-frontier/commit/48e6e53abd4495c105b0370dbfb4b9c5b21c4009)、REF159中央登记 [\`e84e37e\`](https://github.com/g2066203208-beep/voxel-frontier/commit/e84e37e4c7930c82e130d4a9a74f1bbfc7972906)、[详细原页方法提取 \`f72b576\`](https://github.com/g2066203208-beep/voxel-frontier/commit/f72b5767c2af1c8d2c8ac6a9d26b0016b666e2c3)、[T079可执行研究步骤 \`a0a808d\`](https://github.com/g2066203208-beep/voxel-frontier/commit/a0a808d55ddc903afe8db676c2aaccef6e2785cd)。
+
+**STANDARD/OFFICIAL / 假设 / 误差预算：** 论文里对Eurocode/JSCE/GB的引述只当作者背景，**不是IEC2025、GB55002或NB/T10907授权条款验收**；Abaqus官方地震算例、PEER官方数据库沿用既有索引。公开μ数值是试件表面实验，T057 μ=0.5的建模背景与施工粗糙度可能不同，材料/PT阶段/损失/接缝模型/真实输入与地震记录统计的物理误差仍\`NEED_ESTIMATE\`。任何\`0.655/0.5=+31.06%\`只对摩擦系数，**不等于塔架承载力增31%**，更不准擅改T057/T070。当前**0/12阶段晋级**，S01/S05部分证据增强但HOLD不解除，地震E/WE RUN=0。
+
+**当前最大HOLD：** S01唯一可实施普通钢筋—接缝—有效PT基线与原生平衡仍HOLD。**下一项在无Abaqus资源下最优独立动作：** 合法取得并全文核读REF159后续的可验证接缝疲劳/往复试验或NB/T10907授权相关接缝条文，将试验边界与T057的30节缝接触参数作适用域矩阵；不以实验μ均值直接改模型、无依据设规范限值。
