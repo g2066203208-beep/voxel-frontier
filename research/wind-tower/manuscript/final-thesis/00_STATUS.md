@@ -239,3 +239,10 @@ HOLD：
 ## 2026-10-28｜S10真实源表逐测点DEL控制敏感性（独立准备，不晋级）
 
 **12阶段：0/12整阶段PASS；S10仍BLOCKED/INDEPENDENT PREPARATION。** 基于已提交SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`的744行历史四ETM×31测点×6载荷通道统计，真实本地Python 3.13复算并保存[186行m4/m10控制工况表](../../experiments/T077/recovery/S10_ETM_LOAD_DEL_CONTROL_186_20261028.csv)（SHA256 `572eee2436b84b2c8683542ea7e92490970be7fc8a4fd51320f5d41f92229b1f`）、[6行汇总](../../experiments/T077/recovery/S10_ETM_LOAD_DEL_CONTROL_SUMMARY_6_20261028.csv)（SHA256 `07ae691127a24485d008eefa8fba05ffe8cfc7981ccb49de07f62b5286226524`）、[复算程序](../../experiments/T077/recovery/s10_load_del_control_stability.py)。186组中m4→m10控制工况改变：Fx22、Fy19、Fz31、Mx31、My13、Mz31；**多组近并列，不代表物理显著差异**。源SHA校验、744行覆盖、输出逐字节复算和篡改输入拒绝已在本地通过；已有GitHub CI工作流增添复算步骤，**尚待远端CI结果**。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、假设、误差/HOLD记录在[既有S06研究文档追加节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**无新原生Abaqus/地震RUN、无授权规范原页阅读；仅ETM load-DEL筛查，绝非材料疲劳寿命、DLC1.2或结构物理PASS。** 下一优先工作转向S07动态坐标与惯性分账所需源通道恢复及可执行映射。
+
+
+## 2026-10-28 03时｜S07六分量移动参考点变换：独立算法准备
+
+**12阶段仍0/12正式PASS。** S07=BLOCKED/INDEPENDENT_PREPARATION；新[六分量坐标/参考点变换程序](../../experiments/T077/recovery/s07_six_component_frame_gate.py)与[30行真实静态源表](../../experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv)已保存PR #42。输入CSV SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`；程序本地SHA256=`e8fddd516c486dc733f092cf1c53ee3ece63090a11735353e54a8619764717c9`。本地Python 3.13合成90°旋转、参考点力矩叉积、逆算、6D平衡、非法输入拒绝通过；真实历史30行回归通过（ΔFz=413.772200897–642.794741544 kN，其他分量差=0，仅静态公共坐标假设）。已提交[专用轻量CI](../../../../.github/workflows/s07-six-component-frame-gate.yml)，**远端CI须独立查job，不预报PASS**。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差/HOLD**见[原S06研究记录的S07追加节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)：不新增授权规范条款、原刊全文、Abaqus/地震/风场求解；矩阵阈值1e-8与输出9位小数仅属算法质量门槛。程序对真实动态姿态、采样、重力/惯性/RNA及气动自由体所有权仍**不可验证**，严格禁止把转换后的截面内力直接当Abaqus外载；原始OUTB和同刻姿态/加速度通道缺失，S07物理HOLD未关闭。下一动作为恢复一条带SHA的原始OUTB与逐时刻位置/姿态/加速度，做自由体来源分账。S10风致分材料疲劳、S11优化主线不变。
