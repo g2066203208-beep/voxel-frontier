@@ -5,6 +5,7 @@ on:
       - research/t080-seismic-integration-gates-20261022
     paths:
       - '.github/workflows/s06-preserve-expiring-source-artifacts.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s06_archive_expiring_actions_sources.py'
   workflow_dispatch:
 
 concurrency:
