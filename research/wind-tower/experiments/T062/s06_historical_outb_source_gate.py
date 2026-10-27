@@ -103,7 +103,7 @@ def selected_samples(raw, header, channel_names, units, scales, offsets):
     return rows
 
 
-def audit(zip_path, manifest_path, case):
+def audit(zip_path, manifest_path, case, full_csv_gz=None, previous_receipt=None):
     entries = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     matches = [e for e in entries if e.get("relative_path") ==
                f"CASES/{case}/DTU_10MW_RWT.outb" and e.get("section") == "openfast-36-r2"]
@@ -133,6 +133,8 @@ def audit(zip_path, manifest_path, case):
     scales = h.pop("column_scales")
     offsets = h.pop("column_offsets")
     samples = selected_samples(raw, h, channel_names, units, scales, offsets)
+    full_result = (full_synchronous_series(raw, h, channel_names, units, scales, offsets,
+                   full_csv_gz, previous_receipt) if full_csv_gz is not None else None)
     required = [f"TwHt1{s}" for s in
                 ("FLxt", "FLyt", "FLzt", "MLxt", "MLyt", "MLzt",
                  "TPxi", "TPyi", "TPzi", "RPxi", "RPyi", "RPzi",
@@ -147,6 +149,7 @@ def audit(zip_path, manifest_path, case):
                             "ALxt", "ALyt", "ALzt"))]
     return {
         "status": "SOURCE_HEADER_QC_ONLY_NOT_DYNAMIC_PHYSICS_PASS",
+        "full_synchronous_native_series": full_result,
         "case": case,
         "archive_path": expected["canonical_archive"],
         "archive_sha256": hashlib.sha256(zbytes).hexdigest(),
@@ -164,6 +167,121 @@ def audit(zip_path, manifest_path, case):
         "selected_original_synchronous_samples": samples,
         "time_unit": next((units[i] for i, name in enumerate(["Time"] + list(names)) if name == "Time"), "not independently verified"),
         "hold": "Original 36-case archive is not proven identical to T071/T072 31-gage reruns; 9 gages are not 31; RP angles require OpenFAST frame/order/sign validation; load ownership and native Abaqus remain unverified.",
+    }
+
+
+
+def full_synchronous_series(raw, h, names, units, scales, offsets, csv_gz_path,
+                            previous_receipt_path=None):
+    """All 12001 instants: nine gages' native FL/ML/TP/RP/AL + tower-base wrench.
+
+    IMPORTANT: RP angles remain native OpenFAST OUTPUT values; they are NOT
+    interpreted as an Euler rotation matrix. The CSV is NOT an Abaqus load.
+    """
+    import csv
+    import gzip
+    import math
+    suffixes = ("FLxt", "FLyt", "FLzt", "MLxt", "MLyt", "MLzt",
+                "TPxi", "TPyi", "TPzi", "RPxi", "RPyi", "RPzi",
+                "ALxt", "ALyt", "ALzt")
+    base = tuple("TwrBs" + x for x in ("Fxt", "Fyt", "Fzt", "Mxt", "Myt", "Mzt"))
+    selected = base + tuple("TwHt" + str(g) + s for g in range(1, 10) for s in suffixes)
+    if h["file_id"] != 4:
+        raise ValueError("full synchronous export requires verified FileID=4")
+    if len(names) != h["num_output_channels"] + 1 or names[0] != "Time":
+        raise ValueError("invalid time/channel index")
+    if len(set(names)) != len(names) or any(c not in names for c in selected):
+        raise ValueError("missing or duplicate full-series channel")
+    if h["num_samples"] != 12001 or abs(h["first_time_s"] - 100.0) > 1e-10 or abs(h["time_increment_s"] - 0.05) > 1e-12:
+        raise ValueError("source is not the expected 12001-point 100-700 s time grid")
+    expected_units = {}
+    for c in selected:
+        if c.startswith("TwrBs"):
+            expected_units[c] = "(kN-m)" if "M" in c[5:] else "(kN)"
+        elif "FL" in c:
+            expected_units[c] = "(kN)"
+        elif "ML" in c:
+            expected_units[c] = "(kN-m)"
+        elif "TP" in c:
+            expected_units[c] = "(m)"
+        elif "RP" in c:
+            expected_units[c] = "(deg)"
+        else:
+            expected_units[c] = "(m/s^2)"
+    for c in selected:
+        if units[names.index(c)] != expected_units[c]:
+            raise ValueError("unexpected unit for " + c + ": " + units[names.index(c)])
+    idx = [names.index(c) - 1 for c in selected]
+    if any(scales[i] == 0 or not math.isfinite(scales[i]) or not math.isfinite(offsets[i]) for i in idx):
+        raise ValueError("invalid packed-data scale/offset")
+    sums = [0.0] * len(selected)
+    sumsq = [0.0] * len(selected)
+    lows = [math.inf] * len(selected)
+    highs = [-math.inf] * len(selected)
+    first_values = last_values = None
+    parity = {}
+    prior = None
+    if previous_receipt_path is not None:
+        prior = json.loads(Path(previous_receipt_path).read_text(encoding="utf-8"))
+        if prior.get("outb_sha256") != hashlib.sha256(raw).hexdigest():
+            raise ValueError("three-instant source receipt SHA mismatch")
+        parity = {int(x["sample_index"]): x["channels"] for x in prior["selected_original_synchronous_samples"]}
+        if set(parity) != {0, 6000, 12000}:
+            raise ValueError("unexpected three-instant parity indices")
+    # gzip mtime=0 ensures stable output bytes for the same Python/zlib environment.
+    with Path(csv_gz_path).open("wb") as binary:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=binary, compresslevel=6, mtime=0) as zipped:
+            with io.TextIOWrapper(zipped, encoding="utf-8", newline="") as txt:
+                writer = csv.writer(txt, lineterminator="\n")
+                writer.writerow(("time_s",) + selected)
+                for k in range(h["num_samples"]):
+                    pos = h["data_offset_bytes"] + k * 2 * h["num_output_channels"]
+                    packed = struct.unpack_from("<" + "h" * h["num_output_channels"], raw, pos)
+                    vals = [(packed[i] - offsets[i]) / scales[i] for i in idx]
+                    if not all(math.isfinite(v) for v in vals):
+                        raise ValueError("nonfinite decoded full-series value")
+                    t = h["first_time_s"] + k * h["time_increment_s"]
+                    if k in parity:
+                        for name, obj in parity[k].items():
+                            if name not in selected:
+                                continue
+                            actual = vals[selected.index(name)]
+                            # Previous receipt rounded to 9 decimal places.
+                            if abs(actual - float(obj["value"])) > 5.1e-10:
+                                raise ValueError("three-instant real-source parity failure: " + name)
+                    writer.writerow((f"{t:.9f}",) + tuple(f"{v:.9f}" for v in vals))
+                    if k == 0:
+                        first_values = vals[:]
+                    last_values = vals[:]
+                    for j, v in enumerate(vals):
+                        sums[j] += v
+                        sumsq[j] += v*v
+                        lows[j] = min(lows[j], v)
+                        highs[j] = max(highs[j], v)
+    n = h["num_samples"]
+    summary = {}
+    for j, name in enumerate(selected):
+        mean = sums[j] / n
+        rms = math.sqrt(sumsq[j] / n)
+        summary[name] = {
+            "unit": expected_units[name], "min": round(lows[j], 9),
+            "max": round(highs[j], 9), "mean": round(mean, 9),
+            "rms": round(rms, 9), "first": round(first_values[j], 9),
+            "last": round(last_values[j], 9)
+        }
+    return {
+        "status": "FULL_ORIGINAL_SYNCHRONOUS_NATIVE_CHANNEL_QC_NOT_FRAME_OR_PHYSICS_PASS",
+        "source_outb_sha256": hashlib.sha256(raw).hexdigest(),
+        "sample_count": n, "gage_count": 9, "selected_channel_count": len(selected),
+        "channel_value_count": n * len(selected),
+        "time_start_s": h["first_time_s"],
+        "time_end_s": h["first_time_s"] + (n-1)*h["time_increment_s"],
+        "time_increment_s": h["time_increment_s"],
+        "gzip_csv_sha256": hashlib.sha256(Path(csv_gz_path).read_bytes()).hexdigest(),
+        "gzip_csv_size_bytes": Path(csv_gz_path).stat().st_size,
+        "three_instant_parity": "PASS" if prior is not None else "NOT_CHECKED",
+        "native_channel_summary": summary,
+        "hold": "RP degrees not independently proven to be an Euler orientation; no global frame conversion, free-body decomposition, external Abaqus load, 31-gage equivalence, material stress or seismic solver PASS."
     }
 
 
@@ -204,13 +322,16 @@ def main():
     p.add_argument("--manifest", type=Path)
     p.add_argument("--case", default="U09p343881_ETM_S01")
     p.add_argument("--output", type=Path)
+    p.add_argument("--full-series-gzip", type=Path, help="12001 x 9 native-gage synchronous series; NOT an external load")
+    p.add_argument("--previous-receipt", type=Path, help="SHA-bound three-instant source parity regression")
     args = p.parse_args()
     if args.self_test:
         self_test()
     if args.zip_path:
         if args.manifest is None:
             p.error("--manifest required with --zip-path")
-        result = audit(args.zip_path, args.manifest, args.case)
+        result = audit(args.zip_path, args.manifest, args.case,
+                       args.full_series_gzip, args.previous_receipt)
         serialized = json.dumps(result, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
         if args.output:
             args.output.write_text(serialized, encoding="utf-8")
