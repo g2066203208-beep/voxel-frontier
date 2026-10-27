@@ -38,18 +38,54 @@ jobs:
           set -euo pipefail
           TAG="windtower-s06-t071-t072-source-archive-20261027"
           if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "::error::Archive release already exists; refuse overwrite or duplicate upload"
-            exit 1
+            echo "Archive release already exists: checking verified asset inventory"
+          else
+            gh release create "$TAG" --target "$GITHUB_SHA" --draft --prerelease \
+              --title "S06 original T071/T072 source ZIP archive (research DRAFT)" \
+              --notes "Research preservation only. Contains 16 SHA256-verified historical GitHub Actions source ZIPs from runs 37582521146 and 37622366681; expires in Actions on 2026-11-06. DRAFT release deliberately not published. These are extracted 31-gage CSV histories, NOT original OpenFAST OUTB. No S06/S07 physical PASS or licensed-standard claim."
+            gh release upload "$TAG" "$RUNNER_TEMP"/s06_original_archive/*.zip \
+              "$RUNNER_TEMP"/s06_original_archive/S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json
           fi
-          gh release create "$TAG" --target "$GITHUB_SHA" --draft --prerelease \
-            --title "S06 original T071/T072 source ZIP archive (research DRAFT)" \
-            --notes "Research preservation only. Contains 16 SHA256-verified historical GitHub Actions source ZIPs from runs 37582521146 and 37622366681; expires in Actions on 2026-11-06. DRAFT release deliberately not published. These are extracted 31-gage CSV histories, NOT original OpenFAST OUTB. No S06/S07 physical PASS or licensed-standard claim."
-          gh release upload "$TAG" "$RUNNER_TEMP"/s06_original_archive/*.zip \
-            "$RUNNER_TEMP"/s06_original_archive/S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json
           COUNT="$(gh release view "$TAG" --json assets --jq '.assets | length')"
           test "$COUNT" = "17" || { echo "::error::Expected 17 release assets, got $COUNT"; exit 1; }
           gh release view "$TAG" --json url,isDraft,assets \
             --jq '{url,isDraft,asset_count:(.assets|length)}'
+      - name: Commit immutable archive release receipt to research PR branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,pathlib,subprocess,hashlib
+          tag="windtower-s06-t071-t072-source-archive-20261027"
+          raw=subprocess.check_output(["gh","release","view",tag,"--json","url,isDraft,assets"],text=True)
+          d=json.loads(raw)
+          assert d["isDraft"] is True, "archive must remain draft"
+          assets=d["assets"]
+          assert len(assets)==17, f"unexpected asset count {len(assets)}"
+          names={x["name"] for x in assets}
+          assert "S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json" in names
+          assert len([x for x in names if x.endswith("_original_actions.zip")])==16
+          manifest=pathlib.Path("research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv")
+          report={"status":"DRAFT_RELEASE_ARCHIVE_ASSETS_VERIFIED",
+                  "source_manifest_sha256":hashlib.sha256(manifest.read_bytes()).hexdigest(),
+                  "release_url":d["url"],"draft":True,"asset_count":17,
+                  "asset_names":sorted(names),
+                  "actions_run_id":os.environ.get("GITHUB_RUN_ID"),
+                  "source_level":"Actions source ZIPs; not original OpenFAST OUTB",
+                  "S06_scientific_PASS":False}
+          target=manifest.parent/"S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json"
+          target.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\\n",encoding="utf-8")
+          print(json.dumps({"release_url":d["url"],"draft":True,"asset_count":17}))
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T077/recovery/S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json
+          git commit -m "research(S06): record verified 16-ZIP draft release preservation receipt"
+          git pull --rebase origin research/t080-seismic-integration-gates-20261022
+          git push origin HEAD:research/t080-seismic-integration-gates-20261022
       - name: Preserve source-verification JSON as CI evidence
         if: always()
         uses: actions/upload-artifact@v4
