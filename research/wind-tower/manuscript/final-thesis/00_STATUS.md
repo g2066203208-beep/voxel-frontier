@@ -172,3 +172,13 @@ HOLD：
 - **S01 PT身份新可复核结论：** [T078原始元数据](../../experiments/T078/T078_PRESTRESS_DESIGN_META.json)SHA256=\`50b5d23c9991955b8cfe304bdb1bc8519e07ad1b97a8f7500bb7e878eb69d2a1\`（GitBlob=\`99a750c22268febde268bcdbea46d7f21cfe34f8\`），P0=51.6096MN/1280MPa、Pe=39.75355895461417MN/985.95136MPa；**总损失22.97255%≠松弛损失2.35215%**。以**假设**Δσ=20MPa及这两个阶段应力**假装循环均值**代入REF023钢绞线Goodman+S–N候选，条件性损伤比4.20123，**绝非本塔寿命或真实疲劳计算**。脚本[可复算/锁SHA](../../experiments/T078/t078_pt_goodman_2026_source_oracle.py)，[T078算术与方法边界](../../experiments/T078/T078_PRESTRESS_DESIGN_REPORT.md)；本轮Python 3.13.5只完成精简fixture测试，尚无完整原件Python/CI执行日志。不能在Pe后重复扣除已有总损失。
 - **STANDARD/OFFICIAL/RUN/FIG/TAB/误差预算：** 没有IEC2025/NB10907授权新条文、没有Abaqus/OpenFAST原生RUN、没有真实PT雨流时程/本塔地震/疲劳FIG。REF023提及ASTM雨流仅为作者方法；TAB为T078条件敏感性和[T079材料分流数据合同](../../experiments/T079/METHOD_PLAN.md)。原T057/T070锁定SHA不变，未改母本。浮点算术误差远小于物理不确定性；钢绞线S–N适用、PT阶段、接缝/材料/气动/统计/场地误差\`NEED_ESTIMATE\`。
 - **单一最大HOLD：** S01唯一可实施普通筋—接缝—有效PT初态未完成授权规范和原生验证。**下一最优可自主动作：**复用现有S06四工况×31段真实恢复的同步荷载，做\`N(t),M_x(t),M_z(t)\`与Pe分阶段的**静态无拉接触筛查**并明示载荷/预应力双计风险，不能把它当S03原生平衡。
+
+
+## 2026-10-27｜S06四工况完整同步时程的全接触PT核筛查
+
+**本轮科学阶段0/12 PASS不变。** S06=PARTIAL/HOLD，但有新增可复算的**实际数值资产**，不是再次重复S01审计。基于GitHub Actions历史16件真实ZIP，重新读取4个158m风载工况×31段×12001个同步时刻（共1,488,124行），使用现有31段几何与T078的设计Pe=39.753559MN、名义P0=51.609600MN进行环形截面**全接触线弹性无拉应力核**筛查。四工况各31段均存在至少一个假设全接触外缘拉应力时刻；Pe工况最大需求依次18.4531、15.6773、9.8969、11.7792MPa。**这不代表实际30道接缝均张开，也不是Abaqus或规范验算**，31个测点不是30道接缝位置。
+
+- [已提交可运行程序](../../experiments/T077/recovery/s06_joint_kern_history_screen.py)；[124行精简数值表](../../experiments/T077/recovery/S06_JOINT_KERN_COMPACT_124_20261027.csv)；[既有S06报告追加完整来源、公式、RUN与HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)；[过程日志](../../experiments/T080/PROCESS_LOG.md)。
+- 程序Git blob \`a9ac916a22c7e6e1052dfc4e3dd14a660e474b60\`、CSV Git blob \`0315eee6ea2f228b57cbc9e354cc11e9396086ff\`（均与本地实际运行文件字节对应）；精简CSV SHA256 \`d2f1edb8d7a21a268abda532b3564ec7d92967424f26b165f81b86b0db73569f\`。原始16件ZIP仍在历史Actions且登记2026-11-06到期；未永久托管，需尽快备份。
+- SOURCE=历史Actions真实ZIP及31段几何；REF=无新全文；STANDARD=无新授权条文；OFFICIAL=GitHub Actions原产物；RUN=真实本地1.49M行计算/边界oracle/独立单点回算/ZIP SHA篡改负测试；FIG=无原生物理图；TAB=124行；物理误差预算=NEED-ESTIMATE。**S01、S02–S04、S07–S11未升级**，地震原生RUN仍为0。
+- **当前单一最优动作**：核对S06载荷自由体Fz、重力/RNA所有权及31段测点到30道真实接缝的截面转换，随后才能将本次screening用作原生G1的接缝控制位置候选；不阻止并行S05/S10研究。
