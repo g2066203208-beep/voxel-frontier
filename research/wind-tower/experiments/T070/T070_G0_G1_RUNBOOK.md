@@ -169,6 +169,28 @@ B. `IOS_T070_TOWER_BASE` 的 SOF/SOM。
 
 两者应做一致性检查，并与独立质量账和重力方向做量级核对。
 
+
+### 8.1 2026-10-27｜双支承自由体纠偏：PT底端RF不可漏算（S01/S03，静态证据）
+
+**关键发现（直接影响未来G1验收，非原生结果）：** 冻结T057 [原始网格审计](../T057/T057_RAW_PHYSICS_AUDIT_20261007.json)记录PT底端\`PT_36x15p2-1.SET_PT_BOTTOM_GEOM\`有单独三个平动自由度的固定约束，且36条T3D2顶端通过108条Equation连至转换法兰；T070 [G1输出配置](T070_BUILD_AUDIT.json)将\`SET_TOWER_BASE\`和\`PT_36x15p2-1.SET_PT_BOTTOM_GEOM\`分开请求RF。**因此原第8节“塔底RF与整体重力核对”的口径必须包含两个不同支承节点集；单独拿混凝土塔底RF与整机重量比，可能把预应力的锚固传力误判成不平衡。** 真实G1必须再次核验ODB中节点集是否有重复、其他约束/外荷载是否存在。
+
+**SOURCE / 可独立复算的静态参考量（不是反力预测）：**
+
+| 量 | 公式与已登记源 | 结果 |
+|---|---|---:|
+| 原始T057塔架毛质量（不含RNA） | [68 Part原始INP独立2×2×2积分](../T077/recovery/S01_S06_FE_MESH_MASS_OWNERSHIP_20261027.md)，SHA256\`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db\` | 1,985,489.118117 kg |
+| RNA点质量 | 同一原始T057 \`*Mass\`（RNA位置/惯量仍须单独验） | 676,753.290723 kg |
+| 原模型总重力参考（含RNA） | (1,985,489.118117+676,753.290723)kg × 9.81m/s² | **26.116598031 MN**（−Y外荷载） |
+| 初始PT标称总轴力P0 | 36×0.00112m²×1280MPa | **51.609600 MN** |
+| T078设计长期有效Pe（不是原生平衡值） | 36×0.00112m²×985.951362962MPa | **39.753558955 MN** |
+| P0−Pe | 损失模型账，非Abaqus原生响应 | **11.856041045 MN（22.972550%）** |
+
+**整体自由体诊断：** 在确认\`Gravity\`步骤只有\`GRAV,9.81,0,-1,0\`、无其他外力/支承且末帧真实平衡的**条件下**，记\`R_base=ΣRF(SET_TOWER_BASE)\`、\`R_PT=ΣRF(SET_PT_BOTTOM_GEOM)\`，则\`R_base+R_PT+[0,-26.116598031e6,0]≈0\`。实际还须盘点其他支承/外力；若存在则加到同一自由体。**绝不能**将51.6096MN或39.753559MN作为额外向下重力加到26.116598MN上，也不能假定\`R_base_y=W\`或\`R_PT_y=Pe\`。整体力矩应包括所有支承\`r×RF\`、RNA偏心重力力矩和其他外力偶，因尚未核定全部CG与荷载，本轮不设“力矩PASS”或任意残差阈值。
+
+**已实际修改的后处理：** [extract_t070_g1.py](extract_t070_g1.py)在既有\`G1_SUMMARY.json\`中新增\`support_reaction_closure\`：塔底及PT底端RF矢量与关于全局原点的力矩、双支承合力、26.116598MN重力参考、剩余矢量/相对残差、两个节点集输出计数和缺证HOLD；原有PT S11、接触、IOS和能量不删。支持\`python extract_t070_g1.py --self-test\`做无ODB的纯Python正反合成案例，不读取Abaqus或宣称原生通过。已将该测试接入原有[s01-peaware-g1-static.yml](../../../../.github/workflows/s01-peaware-g1-static.yml)；实际CI成功/失败须以本轮Actions运行记录为准。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** SOURCE为T057冻结INP SHA及[原始68 Part CSV](../T077/recovery/S01_T057_ORIGINAL_68PART_STATIC_MASS_20261027.csv)，T078 [损失元数据](../T078/T078_PRESTRESS_DESIGN_META.json)；REF何2024/Xu2025和2026风震/PT先行研究仅沿用旧阅读层级；STANDARD NB/T10907—2021授权条款尚未全核、无新条款验收；OFFICIAL为此前Abaqus 2025原页Data Check语义，不等于原生ODB；RUN=静态数学和合成RF自测，**native G1 NOT_RUN**；FIG无原生响应图；TAB为本节表与未来G1_SUMMARY输出合同。数值算术误差约浮点舍入，**物理误差预算**包括Embedded宿主质量重合、PT初态与损失、RNA偏心、接缝/约束及遗漏外载，均\`NEED_ESTIMATE\`。**S01/S03 HOLD，0/12未晋级。**
+
 ---
 
 ## 9. 能量
