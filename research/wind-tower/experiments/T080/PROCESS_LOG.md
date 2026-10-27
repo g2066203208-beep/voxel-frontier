@@ -68,3 +68,22 @@
 - **REF/STANDARD：** 何2024/Xu2025及2026两篇先行研究原有阅读层级不变；NB/T10907—2021第4.2/6.4/8章授权原页仍未取得，未做条款验收。未新增真实嘉鱼地勘、RSN或地震波。
 - **RUN/FIG/TAB/假设与误差预算：** RUN=真实GitHub CI中源SHA、Python分类器自测、启动器可用性探测；**不是Abaqus datacheck**。FIG=无原生响应图；TAB=永久S02 JSON manifest。源文件SHA比对为字节级一致性，不构成材料、PT、接触、质量/惯量、风震/疲劳物理误差预算（均\`NEED_ESTIMATE\`）；原生\`.dat/.msg/.sta/.log\`和ODB**确实不存在**，不得伪造。
 - **12阶段与HOLD：** S01=PARTIAL/HOLD、S02=BLOCKED（runner缺Abaqus且S01设计基线未冻结）、S03/S04=BLOCKED，S05/S06=PARTIAL/HOLD，S07–S11=BLOCKED，S12=PARTIAL，**0/12未晋级**。单一最大HOLD仍为S01普通筋/接缝/有效PT物理基线不统一；下一唯一最优动作是在有Abaqus 2025和许可证的执行机，核验相同T070 SHA后仅执行诊断Data Check，保留完整原始日志并逐条分类警告。冻结T057/T070 INP不改，PR保持Draft，不做高成本求解。
+
+
+## 2026-10-27 15:12 CST｜S01/S03双支承反力口径纠偏及真实GitHub CI静态验收
+
+**本轮实际新增的可证伪修正：** 原T070 [G1后处理](../T070/extract_t070_g1.py)已提取\`pt_bottom_RF_N\`，却没有与\`SET_TOWER_BASE\` RF合并，原[RUNBOOK](../T070/T070_G0_G1_RUNBOOK.md)第8节容易被误解为“塔底节点反力单独应等于整机自重”。冻结[T057 RAW物理审计](../T057/T057_RAW_PHYSICS_AUDIT_20261007.json)显示PT底端另有三向固定约束（36束/72端节点、108条顶端Equation），因此**PT底端是必须单列的第二外部支承**。本轮将合并反力、合并关于全局原点的支承力矩、重力参考、剩余矢量/无量纲残差和RF缺证HOLD写进已有G1后处理JSON合同；不对真实G1力值进行臆造。
+
+**SOURCE与算术（纯静态参考，非求解器预测）：** T057冻结INP SHA256=\`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db\`；T070冻结INP SHA256=\`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9\`；[T057原始68Part CI质量表](../T077/recovery/S01_T057_ORIGINAL_68PART_STATIC_MASS_20261027.csv)与[完整质量账](../T077/recovery/S01_S06_FE_MESH_MASS_OWNERSHIP_20261027.md)提供塔架1,985,489.118117kg、RNA点质量676,753.290723kg；\`g=9.81m/s²\`由T057原始审计Gravity卡登记。总重力参考=\`(1985489.118117+676753.290723)*9.81/1e6=26.116598031MN\`（-Y）。[T078设计损失元数据](../T078/T078_PRESTRESS_DESIGN_META.json)给出P0=51.609600MN、Pe=39.753558955MN；差额=**11.856041045MN（22.972550%）**。两者均非额外全局重力，且Pe不等于原生G1末帧PT轴力。未核定所有外力/其他支承时只报告残差，不设置PASS阈值；全球力矩还缺RNA偏心/载荷力偶全账。
+
+**实际代码与提交（保留现有文件，不新增T080编号）：**
+
+- [\`5a49b8c\`](https://github.com/g2066203208-beep/voxel-frontier/commit/5a49b8c452f941fc1343dad90c76363b5ce1959d)：修改[extract_t070_g1.py](../T070/extract_t070_g1.py)，新增\`support_gravity_oracle\`、\`--self-test\`（无Abaqus可跑）、\`pt_bottom_moment_about_global_origin_Nm\`、\`support_reaction_closure\`和缺RF的HOLD；Git blob=\`b259dd4f3c873193bdf60821a5558ca70155711c\`。
+- [\`161b637\`](https://github.com/g2066203208-beep/voxel-frontier/commit/161b637fc8cdd4bfc7e38b6f30fe5c1503c4855b)：在已有[静态单测CI工作流](../../../../.github/workflows/s01-peaware-g1-static.yml)加入T070后处理的Python语法检查及双支承合成反力测试；不新增独立CI工作流。
+- [\`b0fc27d\`](https://github.com/g2066203208-beep/voxel-frontier/commit/b0fc27df531c4d8ba70850e110841806cb5925f0)：更新[原生G0/G1执行手册](../T070/T070_G0_G1_RUNBOOK.md)第8.1节，明确整体自由体\`R_base+R_PT+W=0\`及源/假设/误差/缺口。
+
+**RUN真实远端验收（只证明Python静态程序）：** [GitHub Actions #40465604434](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40465604434)，head=\`161b637fc8cdd4bfc7e38b6f30fe5c1503c4855b\`，job=\`122060121089\`，\`completed/success\`；2026-10-27T07:12:03Z日志原句\`Ran 12 tests in 0.002s\`、\`OK\`，新T070步骤\`python3 -m py_compile ...\`通过，\`SELF_TEST_PASS: source-locked 26.116598MN weight, 11.856041MN PT stage difference, two-support closure and missing-RF rejection; NOT ABAQUS\`。日志还含Node.js 20弃用提示，属于GitHub Actions/checkout@v4环境警告，不是Abaqus警告。**没有**原生Abaqus执行、ODB、反力实测、.dat/.msg/.sta/.log。Actions完整日志可在该run/job回看；本节永久保留关键原始stdout文本及run/job ID，避免只依赖临时artifact。
+
+**REF/STANDARD/OFFICIAL/FIG/TAB：** REF何2024/Xu2025及两篇2026先行研究阅读层级不变；STANDARD NB/T10907—2021专用条款授权原文未新读，不能宣称规范验收；OFFICIAL原有Abaqus 2025命令与Data Check文档级核读未升级；RUN仅GitHub Actions Python 3静态自测/旧12项mock；FIG无新增物理响应图；TAB=RUNBOOK第8.1节定量表和未来\`G1_SUMMARY.json\`字段。数值误差为已登记质量积分/浮点舍入；真实PT锚端反力、Embedded质量归属、RNA偏心、其他约束、接触、静态/动力误差预算均\`NEED_ESTIMATE\`。
+
+**状态：S01 PARTIAL/HOLD、S02–S04 BLOCKED、S05/S06 PARTIAL/HOLD、S07–S11 BLOCKED、S12 PARTIAL，12阶段仍0/12 PASS。** 单一最大HOLD仍是唯一规范可实施的普通筋—接缝—有效PT物理基线未冻结并通过原生验收。**下一唯一动作**：有Abaqus 2025许可证的执行机对同SHA T070/R335仅做原生诊断性Data Check并回收日志；其后才谈G1双支承实测闭合。冻结母本、PR和高成本RUN均不动。
