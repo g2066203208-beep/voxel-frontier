@@ -182,3 +182,8 @@ HOLD：
 - 程序Git blob \`a9ac916a22c7e6e1052dfc4e3dd14a660e474b60\`、CSV Git blob \`0315eee6ea2f228b57cbc9e354cc11e9396086ff\`（均与本地实际运行文件字节对应）；精简CSV SHA256 \`d2f1edb8d7a21a268abda532b3564ec7d92967424f26b165f81b86b0db73569f\`。原始16件ZIP仍在历史Actions且登记2026-11-06到期；未永久托管，需尽快备份。
 - SOURCE=历史Actions真实ZIP及31段几何；REF=无新全文；STANDARD=无新授权条文；OFFICIAL=GitHub Actions原产物；RUN=真实本地1.49M行计算/边界oracle/独立单点回算/ZIP SHA篡改负测试；FIG=无原生物理图；TAB=124行；物理误差预算=NEED-ESTIMATE。**S01、S02–S04、S07–S11未升级**，地震原生RUN仍为0。
 - **当前单一最优动作**：核对S06载荷自由体Fz、重力/RNA所有权及31段测点到30道真实接缝的截面转换，随后才能将本次screening用作原生G1的接缝控制位置候选；不阻止并行S05/S10研究。
+
+
+## 2026-10-27｜S06新增30道真实接口几何/重力梯度源级核查
+
+本轮从T077 31段原始几何与T074 31站重力基线直接计算并提交30道真实接口J01–J30的高度、相邻gage距离、环形体积、上下Fz差及折算有效单位重。30道接口几何连续；历史重力力差/几何体积折算γ_eff=24.644553234–26.364713691kN/m³，30道算术平均25.200870709kN/m³。该源级实数值与沿高重力效应相容，**不能直接证明OpenFAST六分量力所有权，更不能称30道接缝实际开缝/接触结果**。参见[现有S06恢复与新计算说明](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)、[30道接口CSV](../../experiments/T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv)及[可复算程序](../../experiments/T077/recovery/s06_30_joint_gravity_ownership.py)。已添加既有CI真实数据回归步骤，成功状态以GitHub Actions日志为准。S06仍PARTIAL/HOLD；S01–S04未过原生门禁；S05/S07/S10/S11独立前期工作不受此阻塞。0/12整阶段PASS，原生地震RUN=0。单一后续动作：核对四工况动态六分量、T074重力基线及分布惯性自由体，先关闭截面力所有权再做30道接缝力映射。
