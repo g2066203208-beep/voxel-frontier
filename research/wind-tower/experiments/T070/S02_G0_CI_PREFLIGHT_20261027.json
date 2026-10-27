@@ -1,0 +1,23 @@
+{
+  "stage": "S02",
+  "input_role": "R335 prototype-reconstruction diagnostic, NOT final code design",
+  "source_input": "/home/runner/work/voxel-frontier/voxel-frontier/research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp",
+  "source_sha256": "9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9",
+  "parent_T057_sha256_from_register": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "created_utc": "2026-10-27T06:07:16.382643+00:00",
+  "native_executable": null,
+  "mode": "Abaqus Data Check ONLY, no production RUN",
+  "status": "BLOCKED_NO_NATIVE_ABAQUS_EXECUTABLE",
+  "warning_disposition": "HUMAN_REVIEW_REQUIRED",
+  "source_level": "T070 frozen INP bytes SHA verified",
+  "standard_level": "No standard clause acceptance from this job",
+  "official_level": "Native solver only if Abaqus executable and job logs confirm",
+  "run_level": "No native run; Abaqus executable not found",
+  "fig": [],
+  "tab": [],
+  "assumptions": [
+    "T070 differs from T057 only in observability (historical source claim, not re-proved here)"
+  ],
+  "error_budget": "Data Check is syntax/consistency screening, not physics error budget",
+  "hold": "S01 design/PT identity and S03 physical equilibrium remain unverified"
+}
