@@ -17,6 +17,9 @@ import os
 from pathlib import Path
 import tempfile
 import urllib.request
+import urllib.error
+import urllib.parse
+from unittest import mock
 import zipfile
 
 CASES = ("U09p343881_ETM_S06", "U11p4_ETM_S04",
@@ -69,15 +72,76 @@ def load_manifest(path: Path) -> list[dict]:
     return rows
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Force explicit handling of the API 302 so its Bearer token cannot leak."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def _safe_artifact_location(location: str) -> str:
+    parts = urllib.parse.urlsplit(location)
+    host = (parts.hostname or "").lower()
+    # GitHub Actions artifacts redirect to time-limited Azure blob SAS URLs.
+    # The signed URL is sufficient; forwarding the GitHub Bearer token can
+    # provoke a 401 on Azure, and would disclose credentials across hosts.
+    allowed = (host.endswith(".blob.core.windows.net")
+               or host.endswith(".actions.githubusercontent.com")
+               or host.endswith(".githubusercontent.com"))
+    if (parts.scheme != "https" or not allowed or parts.username is not None
+            or parts.password is not None):
+        raise ValueError("refusing untrusted artifact redirect destination")
+    return location
+
+
 def download(repo: str, artifact_id: str, token: str) -> bytes:
     url = f"https://api.github.com/repos/{repo}/actions/artifacts/{artifact_id}/zip"
     req = urllib.request.Request(url, headers={
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
-        "User-Agent": "windtower-source-preservation/1"})
-    with urllib.request.urlopen(req, timeout=150) as response:
+        "User-Agent": "windtower-source-preservation/2"})
+    opener = urllib.request.build_opener(_NoRedirect())
+    try:
+        with opener.open(req, timeout=150) as response:
+            return response.read()
+    except urllib.error.HTTPError as exc:
+        if exc.code not in (301, 302, 303, 307, 308):
+            raise
+        location = exc.headers.get("Location")
+        if not location:
+            raise ValueError("GitHub artifact redirect lacks Location") from exc
+        signed_url = _safe_artifact_location(location)
+    # Intentionally construct a NEW request without Authorization.
+    blob_req = urllib.request.Request(signed_url, headers={
+        "User-Agent": "windtower-source-preservation/2"})
+    with urllib.request.urlopen(blob_req, timeout=150) as response:
         return response.read()
+
+
+def redirect_self_test() -> None:
+    """Exercise 302, auth isolation, and rejection of a hostile redirect."""
+    signed = "https://productionresultssa0.blob.core.windows.net/source?sig=fixture"
+    def api_open(req, timeout):
+        assert req.get_header("Authorization") == "Bearer fixture-token"
+        raise urllib.error.HTTPError(req.full_url, 302, "Found",
+                                     {"Location": signed}, None)
+    def blob_open(req, timeout):
+        assert req.get_header("Authorization") is None
+        assert req.full_url == signed
+        return io.BytesIO(b"PKfixture")
+    with mock.patch("urllib.request.build_opener") as build, \
+         mock.patch("urllib.request.urlopen", side_effect=blob_open):
+        build.return_value.open.side_effect = api_open
+        assert download("owner/repo", "123", "fixture-token") == b"PKfixture"
+    for bad in ("http://productionresultssa0.blob.core.windows.net/a",
+                "https://evil.example/steal", "https://blob.core.windows.net.evil.example/a"):
+        try:
+            _safe_artifact_location(bad)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("untrusted artifact redirect accepted")
+    print("PASS: GitHub 302 signed-blob redirect drops Bearer; hostile hosts rejected")
 
 
 def self_test() -> None:
@@ -111,6 +175,7 @@ def self_test() -> None:
             pass
         else:
             raise AssertionError("wrong row count accepted")
+    redirect_self_test()
     print("PASS: ZIP/GZIP/CSV hash, CRC, case, row count, and negative oracles")
 
 
