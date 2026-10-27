@@ -238,7 +238,9 @@
 ### 2026-10-28 03时｜S07六分量坐标/参考点变换代码与真实静态源回归
 
 - **SOURCE**：PR #42现有30行历史静态六分量CSV Git blob=`fa38f2097f8380796c5f71add9a64066f9e8a4e8`、SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`；不是原始OUTB或动态姿态。冻结T057/T070未修改。
-- **CODE/RUN**：[新可执行程序](../T077/recovery/s07_six_component_frame_gate.py)本地SHA256=`e8fddd516c486dc733f092cf1c53ee3ece63090a11735353e54a8619764717c9`，Python 3.13执行`--self-test --static-source`通过：90°旋转及力矩参考点叉积的合成结果F=(-3,2,5)kN、M=(-14,-10,18)kN·m；逆变换、路径无关、正负力矩平衡、镜像/非正交/NaN/无来源/非法owner拒绝；30/30真实历史静态行通过，ΔFz范围413.772200897–642.794741544kN，其他5分量0。第一次合成M预期算术写错导致本地AssertionError，修正叉积后通过，保留失败事实。新增[CI工作流](../../../../.github/workflows/s07-six-component-frame-gate.yml)检查原始30行SHA及篡改拒绝，CI提交后结果待实际job核验。
+- **CODE/RUN**：[新可执行程序](../T077/recovery/s07_six_component_frame_gate.py)本地SHA256=`56ad7f047e7d6431acd3d87bc411055ba23a5a54d9dd0913f51164463c195557`，Python 3.13执行`--self-test --static-source`通过：90°旋转及力矩参考点叉积的合成结果F=(-3,2,5)kN、M=(-14,-10,18)kN·m；逆变换、路径无关、正负力矩平衡、镜像/非正交/NaN/无来源/非法owner拒绝；30/30真实历史静态行通过，ΔFz范围413.772200897–642.794741544kN，其他5分量0。第一次合成M预期算术写错导致本地AssertionError，修正叉积后通过，保留失败事实。新增[CI工作流](../../../../.github/workflows/s07-six-component-frame-gate.yml)检查原始30行SHA及篡改拒绝，CI提交后结果待实际job核验。
 - **REF/STANDARD/OFFICIAL/FIG/TAB**：REF沿用既有T080.17的Abaqus SOF/SOM与OpenFAST官方坐标说明，未新增原文页；STANDARD无新授权条款；OFFICIAL=原T071/T072源及本次GitHub CI（待核）；FIG无；TAB=既有30行历史静态源及合成单测。
 - **算法/误差/假设**：`F_B=R F_A`、`M_B=R M_A+(A-B)×F_B`，R=local→global，A/B=同一时刻惯性系坐标，kN/kN·m/m；旋转正交/行列式1e-8阈值、输出9位小数、静态回归残差5e-8，仅数值算法预算；物理误差`NEED_ESTIMATE`。程序输入声明来源并拒绝非`SECTION_RESULTANT`，输出`SECTION_RESULTANT_NOT_EXTERNAL`，**无Abaqus外载导出**；声明字段非原始OUTB SHA自动验证。
 - **阶段/HOLD/下一动作**：0/12正式PASS，S07=INDEPENDENT_PREPARATION，S06=PARTIAL/HOLD，S10/S11未做材料生产，地震RUN=0。最大缺口仍为OUTB逐时刻姿态/位置/加速度、参考点和重力/惯性/RNA/气动归属。下一唯一动作：恢复至少一条原始OUTB及同刻动态姿态/加速度和来源SHA，再接真实动态自由体QC。
+
+- **补充可复算测试（同一S07程序）：** 20261028固定随机种子生成1000组非零六分力/力矩及3个移动参考点，验证分两步搬运与直接搬运最大分量差<1e-10（kN或kN·m），本地Python 3.13.5通过；真实30行SHA篡改负测试同样通过。此为纯代数数值误差，非物理误差。执行容器`command -v abaqus`及`command -v openfast`均未找到可执行文件，未运行原生求解。脚本现SHA256见本节更新值。
