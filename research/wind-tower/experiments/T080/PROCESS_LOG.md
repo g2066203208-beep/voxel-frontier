@@ -124,3 +124,19 @@
 **STANDARD/OFFICIAL与门禁：** 论文引用DIN EN规范是作者研究背景，不等于本项目IEC61400-1/6:2025或NB/T10907、GB规范授权条款验收；Abaqus官方手册及PEER仍沿用旧登记，无本轮新授权规范页。T057原INP SHA256=\`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db\`、T070=\`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9\`（历史锁定，**本轮未重新读取其完整字节**）；不把表2的实验PT=304kN、V4=11.988kN、µ或接触参数当成T057可直接采用数值。**S01=PARTIAL/HOLD，S02–S04 BLOCKED，S05/S06 PARTIAL/HOLD，S07–S11 BLOCKED，S12 PARTIAL；12阶段0/12晋级；原生Abaqus NOT_RUN、地震结果0。**
 
 **单一最大HOLD**：唯一普通筋/接缝/Pe物理基线未冻结且未原生平衡验证。**下一唯一最优可自主动作**：从已有REF015/REF018的完整原件恢复并核验SHA、按“低周滞回与运行高周疲劳分离”逐式核读实际损伤判据、雨流/均值修正及有效PT输入，形成可直接约束S10的材料疲劳证据，而不因无Abaqus反复停滞。
+
+
+
+## 2026-10-27 17时｜S01/S10：REF015/018访问失败留痕、REF023疲劳公式源锁定、REF161接缝先行
+
+**本轮起始真实GitHub状态：** \`main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65\`，PR #42 \`head=92130075dedd0f85f96922eb19e1450948d9fa02\`，\`state=open,draft=true\`；读取AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/2/3、12阶段总计划及T079既有方法/文献文件。**遵守主线，不改T057/T070、不合并、不跑昂贵生产RUN。**
+
+**SOURCE/REF（直接来源与失败）：** REF015 [Ren2025](https://doi.org/10.1016/j.tws.2025.113570)与REF018 [Huang2025](https://doi.org/10.1016/j.engstruct.2025.120295)在GitHub历史登记有完整用户PDF，但本轮执行机无原件字节且GitHub UTF-8读取连接器不返回二进制；公开作者稿检索未恢复可信全文。**本轮只新核读原刊摘要/元数据，不将历史\`fulltext-audited\`冒充本轮逐页阅读，PDF SHA=\`NOT_RECOVERED\`。** 已登记REF023 [Qu2026 Buildings 16(19):3854](https://doi.org/10.3390/buildings16193854)的出版社页面由搜索索引提供选定§2.1–2.4/3.1–3.3/4–6/8全文文本；直接打开MDPI返回HTTP429，未取得原刊PDF SHA。它已研究PT损失+混凝土/钢绞线疲劳双向损伤及代理网络（4.55MW、35段Tie），不可再宣称这一概念首创。新REF161 [Peng2026 DOI 10.1002/tal.70169](https://doi.org/10.1002/tal.70169)，2026-08-12，Wiley仅摘要/参考文献（直接全文HTTP403）；4输入\`Di,Do,N,M\`接缝失压/最大接触应力查表，缺原式/表/原始数据，不能声称已复现。完整节/公式/适用边界在[现有T079文献笔记](../T079/literature_notes.md)；[中央REF表](../../registry/literature_master.tsv)更新REF023等级、仅新增REF161，无重复REF023。
+
+**RUN / 可复算数据 / 版本：** T078 [原始设计元数据](../T078/T078_PRESTRESS_DESIGN_META.json) GitBlob=\`99a750c22268febde268bcdbea46d7f21cfe34f8\`，从**真实远端ASCII原文**独立计算SHA256=\`50b5d23c9991955b8cfe304bdb1bc8519e07ad1b97a8f7500bb7e878eb69d2a1\`（SHA256实现用空串/abc标准向量交叉验证）；P0=51.6096MN/1280MPa、Pe=39.75355895461417MN/985.951362961661MPa、总损失294.048637MPa（22.97255%），其中**松弛仅30.107527MPa（2.35215%）**。新[Python 3.13.5静态脚本](../T078/t078_pt_goodman_2026_source_oracle.py)采用REF023 Eq1/2和严格SHA/力/损失闭合检查；本轮本地\`py_compile\`通过，**仅用精简fixture**实跑，fixture SHA256=\`03913db873c25f05573b457b42925e0bf54b830804295592ef9fcaaad47a532b\`。假设\`Δσ=20MPa\`，以P0/Ap和Pe/Ap作为**非真实**循环均值，Goodman倍数3.20689655/2.12802803，条件性钢绞线S–N循环数4.2179137e7/1.7720432e8，**损伤比4.20123159**。脚本**尚未以完整原始T078 JSON在本地/CI执行**，源SHA独立验证，数值由真实字段及fixture等价核对；没有Abaqus/OpenFAST/地震RUN，也没有实际PT应力时程或疲劳寿命。GitHub保存了程序、方法、日志与输入原件身份，避免只留在聊天。
+
+**STANDARD/OFFICIAL/FIG/TAB、假设、误差与HOLD：** REF023作者采用MATLAB R2020b rainflow/ASTM E1049、Goodman、Paulson钢绞线S–N、Miner；**这些只是作者方法，不代表本文IEC2025/GB/NB10907或钢绞线材料适用性已验收**。没有新授权标准原页、没有原生Abaqus日志、没有本塔响应FIG；TAB为[T078独立公式敏感性表](../T078/T078_PRESTRESS_DESIGN_REPORT.md)及[T079方法数据合同](../T079/METHOD_PLAN.md)。\`Δσ=20MPa\`是假设值，P0/Pe是**不同施工/长期阶段**不是雨流真实均值；纯数值舍入/浮点误差可忽略，但S–N、真实风种子、PT阶段、接触开缝、控制器、网格和风震误差\`NEED_ESTIMATE\`。单一最大HOLD仍为S01唯一钢筋—接缝—Pe初态未完成规范/原生验收；S10不能因有候选公式就PASS。阶段**0/12未晋级，地震结果0**。
+
+**本轮实际GitHub提交顺序：** [脚本\`d6416fb\`](https://github.com/g2066203208-beep/voxel-frontier/commit/d6416fb5cc1bb25962b60fd1d4e6c42e4e35bb14)、[REF表\`d9f2a16\`](https://github.com/g2066203208-beep/voxel-frontier/commit/d9f2a160aa1479562f1c3b08ffca540ba92d7b44)、[文献\`f5e7bb0\`](https://github.com/g2066203208-beep/voxel-frontier/commit/f5e7bb027c394220e5bc1c59c20fa31b3abdb452)、[T078\`330dcbd\`](https://github.com/g2066203208-beep/voxel-frontier/commit/330dcbd2078bb175fda97449ed5c3214f3db4ae8)、[T079方法\`9fdd382\`](https://github.com/g2066203208-beep/voxel-frontier/commit/9fdd382463f71b7763fe10324844299138c8e030)。
+
+**下一轮唯一最优独立动作：** 对已恢复的S06四工况×31段原始同步载荷与T078 Pe，执行**不启动求解器**的逐段\`N(t),M_x(t),M_z(t)\`受压/接缝初开屏蔽分析，严格保留荷载自由体与PT双计风险标记；先查已有同类分析脚本复用，不得用静态筛查替代S03原生接触。
