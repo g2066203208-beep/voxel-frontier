@@ -1,0 +1,46 @@
+name: S07 six-component frame/point gate (algebra only, NOT Abaqus load)
+on:
+  push:
+    paths:
+      - '.github/workflows/s07-six-component-frame-gate.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  s07-frame-algebra-source-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Synthetic 6D transport + 30 real historical static rows + tamper rejection
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          python3 -m py_compile s07_six_component_frame_gate.py
+          python3 s07_six_component_frame_gate.py --self-test \
+            --static-source S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv
+          python3 - <<'PY'
+          import importlib.util
+          import tempfile
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('s07', 's07_six_component_frame_gate.py')
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          src=Path('S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv')
+          with tempfile.TemporaryDirectory() as d:
+              bad=Path(d)/'tampered.csv'
+              data=bytearray(src.read_bytes())
+              pos=data.find(b'642.794741544')
+              assert pos>=0
+              data[pos]=ord('9')
+              bad.write_bytes(data)
+              try: mod.static_source_regression(bad)
+              except ValueError as e: assert 'SHA mismatch' in str(e), str(e)
+              else: raise AssertionError('tampered real static source accepted')
+          print('PASS: original 30/30 rows and SHA-locked negative test')
+          PY
+          sha256sum s07_six_component_frame_gate.py \
+            S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv
+          echo 'S07: FRAME ALGEBRA + REAL STATIC REGRESSION ONLY. NO DYNAMIC OUTB, INERTIA OWNER, ABAQUS LOAD OR PHYSICS PASS.'
