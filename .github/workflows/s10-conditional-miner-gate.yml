@@ -1,0 +1,28 @@
+name: S10 conditional Miner accumulation (synthetic gate, NOT material life)
+on:
+  push:
+    paths:
+      - '.github/workflows/s10-conditional-miner-gate.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  s10-miner-synthetic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch SHA-pinned single source file (avoid 2.2GB checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s10_miner_damage_gate.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py"
+      - name: Compile and known-answer/negative tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s10_miner_damage_gate.py
+          python3 s10_miner_damage_gate.py --self-test
+          sha256sum s10_miner_damage_gate.py
+          echo 'S10: SYNTHETIC NUMERICAL QC ONLY; NO VERIFIED MATERIAL STRESS, NO S-N PARAMETER OR PHYSICAL PASS.'
