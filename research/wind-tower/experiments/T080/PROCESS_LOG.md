@@ -185,3 +185,11 @@
 
 
 **CI最终核验（2026-10-27 21:13 CST）**：[GitHub Actions run 40509906226](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40509906226)，job 122208750091 于2026-10-27T13:12:55Z完成success；原始job日志确认已在GitHub Ubuntu runner上运行新雨流程序的合成oracle/循环守恒自测，并严格比对已提交的程序SHA256=9149c6ef71424ed073b4233ac7082753b0dcd979ec31b795318570c5c5cdac34和24行汇总SHA256=d8f6dc4a3e34abe09a5c15e0adcdff99a6a4764f1b26245e624f1e7f19a4a499，明确打印“S06 rainflow synthetic oracle and published real-source 24-row summary SHA PASS; NOT full-history CI nor material fatigue PASS”。该CI未重新下载16件原始ZIP；**全量1,488,124条真实记录计算为本轮本地真实RUN**，非GitHub runner的全量RUN；严格科学PASS仍0/12。
+
+
+## 2026-10-27｜S06 744行完整数据入库与半窗RMS诊断（非物理PASS）
+
+- **SOURCE**：原始历史T071/T072的16件ZIP来源与SHA manifest沿用既有[S06恢复记录](../T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)；本轮从上一轮保留的会话附件逐字节读取[744行完整统计](../T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)，SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`，178696 bytes；远端回读与附件完全相同。该CSV是**衍生统计**，不是16件原始ZIP的替代品。
+- **RUN/TAB**：Python 3.13标准库[复算程序](../T077/recovery/s06_qc_half_window_rms.py)读取744行，检查4工况×31站×6分量覆盖、SHA256、重复键、时间步、数值合法性；生成[24行QC](../T077/recovery/S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv)，SHA256=`6af88e5b4a4518ab7ccf2f28bcb9df7f4154f0d7b3f78be38c672034bed30804`，逐字节复算PASS。D=100*|RMS_first-RMS_last|/max(RMS_first,RMS_last)，72/744记录D>20%，主要为U09 Fy(14/31)、U11 Mx(27/31)、U19 S06 Mz(31/31)。CI已增加同源校验，GitHub runner是否成功以实际run日志为准，**不提前称CI PASS**。
+- **REF/STANDARD/OFFICIAL/FIG**：沿用T062/T079文献登记，无新原刊全文；无授权规范原条款；原始GitHub Actions为OFFICIAL源记录；FIG无新增原生仿真结果。20%仅为诊断阈值，非规范平稳性/寿命准则。RMS含均值，不能替代分窗rainflow、PSD、seed收敛或材料损伤。
+- **PASS/HOLD**：12阶段仍0/12；S06 PARTIAL/HOLD，S07 BLOCKED，S10/S11无物理生产结果；模型身份、动态坐标/惯性归属、OUTB、16件ZIP长期归档仍HOLD。**下一动作**：优先长期保存16件原始ZIP/OUTB；缺源时转S10可独立执行的方法测试，不再循环S01。
