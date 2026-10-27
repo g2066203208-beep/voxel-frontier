@@ -61,13 +61,15 @@ PAIR_B = 'U19p202140_ETM_S06'
 PAIR_HEAD = ('wind_speed_mps','turbulence','seed_A','seed_B','channel','m','n_paired_gages',
              'median_DEL_B_over_A','min_DEL_B_over_A','max_DEL_B_over_A',
              'n_B_greater_A','max_abs_pct_change','max_abs_pct_gage',
-             'n_gage_z_nonidentical','max_gage_z_abs_diff_mm')
+             'n_first_sample_TPzi_nonidentical','max_first_sample_TPzi_abs_diff_mm')
 
 def paired_seed_summary(source):
     """Source-verified, same-U ETM S04/S06 paired DEL sensitivity, NOT seed convergence.
 
-    Nominal segment labels match, but z coordinates differ in 26/31 gages.
-    Do not silently call these the same physical stations or independent replicates.
+    Nominal segment/node mapping matches in T071/T072 workflow sources.
+    TPzi is an inertial-frame *deformed position* at the first sampled instant;
+    26/31 first-sample positions differ across seeds. Not nominal gage geometry.
+    Do not treat 31 spatial gages as independent seed replicates.
     """
     import math
     import statistics
@@ -135,5 +137,5 @@ if __name__ == '__main__':
     if args.paired_qc is not None:
         paired = paired_seed_summary(args.source)
         assert paired == args.paired_qc.read_text(encoding='utf-8'), 'paired DEL QC table mismatch'
-        print('S06 PASS: 12 paired-seed rows exact reproduction; 26/31 nominal gage z mismatches; NOT seed convergence')
+        print('S06 PASS: 12 paired-seed rows exact reproduction; 26/31 first-sample TPzi differences (deformed positions); NOT geometry mismatch or seed convergence')
     print('S06 PASS: 744 source rows SHA verified; 24 QC rows exact reproduction; 72/744 >20% RMS imbalance; NOT stationarity or material fatigue PASS')
