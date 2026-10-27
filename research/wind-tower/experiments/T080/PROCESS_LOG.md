@@ -244,3 +244,5 @@
 - **阶段/HOLD/下一动作**：0/12正式PASS，S07=INDEPENDENT_PREPARATION，S06=PARTIAL/HOLD，S10/S11未做材料生产，地震RUN=0。最大缺口仍为OUTB逐时刻姿态/位置/加速度、参考点和重力/惯性/RNA/气动归属。下一唯一动作：恢复至少一条原始OUTB及同刻动态姿态/加速度和来源SHA，再接真实动态自由体QC。
 
 - **补充可复算测试（同一S07程序）：** 20261028固定随机种子生成1000组非零六分力/力矩及3个移动参考点，验证分两步搬运与直接搬运最大分量差<1e-10（kN或kN·m），本地Python 3.13.5通过；真实30行SHA篡改负测试同样通过。此为纯代数数值误差，非物理误差。执行容器`command -v abaqus`及`command -v openfast`均未找到可执行文件，未运行原生求解。脚本现SHA256见本节更新值。
+
+- **CI执行资源纠偏（2026-10-28 03时）：** 仓库元数据size=2,236,627 KB，最初[40566451186](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566451186)和[40566762752](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566762752)在完整checkout阶段耗时，不能把in_progress称success。将[同一S07工作流](../../../../.github/workflows/s07-six-component-frame-gate.yml)改为只下载`github.sha`锁定的两个公开原始小文件，仍由脚本对30行源双SHA核验；工作流修复提交`25fc3f561e472dcb01939ca131968942b60a8224`，[新run 40566932835](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566932835)已创建，**结果待实际job日志确认**。此修复仅影响CI资源效率，不改变计算公式或科学验收状态。
