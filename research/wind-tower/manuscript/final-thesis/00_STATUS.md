@@ -209,3 +209,12 @@ HOLD：
 **严格12阶段PASS仍0/12。** S06=PARTIAL/HOLD，S07=BLOCKED（新增源级可复算质量诊断），S10/S11仍未有真实材料应力与寿命/优化结果。上一轮本地生成但未入库的[744行×20列真实历史雨流/DEL统计](../../experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)现已完整保存GitHub，SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`，与原始会话附件逐字节远端回读一致；并提交[24行半窗RMS QC](../../experiments/T077/recovery/S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv)、[复算程序](../../experiments/T077/recovery/s06_qc_half_window_rms.py)及既有CI自动核验步骤。72/744站点-分量的前后半窗RMS相对差异>20%（**探索性阈值，非规范门槛/平稳性检验**）；具体数值、公式、来源、误差及HOLD见[S06原研究记录](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
 
 **不变的最大HOLD**：尚未完成16件历史ZIP及原始OUTB的长期归档、动态坐标/载荷自由体归属；原始ZIP登记到期2026-11-06。744行是已保存的衍生统计，不是原始六分量时程/OUTB，也不是DLC1.2、材料疲劳寿命或地震验算PASS。下一步优先长期保全原始源数据；无新原始数据时并行推进S10独立方法程序。
+
+
+## 2026-10-27 23时｜S06原始ZIP长期归档执行状态
+
+**0/12科学阶段PASS不变。** GitHub API当轮直接读取T071/T072两次原运行：16件原始Actions artifact均尚未过期，合计125,291,677字节，最早2026-11-06T07:09:33Z到期。历史四工况×31站真实六分量CSV及744行DEL统计已在既有恢复/计算文件中；原始OpenFAST OUTB和动力学归属仍缺。
+
+**本轮新增的实际保全程序及工作流：** [严格SHA256+CRC+GZIP+CSV+行数校验器](../../experiments/T077/recovery/s06_archive_expiring_actions_sources.py)、[只归档不运行求解器的GitHub Actions工作流](../../../../.github/workflows/s06-preserve-expiring-source-artifacts.yml)、[原16件SHA登记](../../experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)；计划将原件上传**Draft Release**（不合并PR、不发布Release），并在真正完成后自动提交[17件资产回执](../../experiments/T077/recovery/S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)。**当前回执未核实，不能说原件已长期归档**；状态为`ARCHIVE_SUBMITTED / RECEIPT_PENDING`，具体SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与失败边界见[S06原报告](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。本轮无新原生Abaqus、无真实地震E/WE、无材料疲劳寿命、无规范条款PASS。
+
+**下一单一动作：** 远端确认17件Draft Release资产及receipt；失败则读取原生Actions job日志修复。
