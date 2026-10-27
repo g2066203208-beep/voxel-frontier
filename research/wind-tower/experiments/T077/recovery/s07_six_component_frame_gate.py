@@ -189,6 +189,19 @@ def selftest():
     f_mid,m_mid=transport((2,3,5),(7,11,13),R,(2,1,4),(0,0,2))
     f_end,m_end=transport(f_mid,m_mid,I,(0,0,2),(1,0,0))
     assert f_end==f and m_end==m
+    # Deterministic 1000-sample moving-origin path-independence regression.
+    import random
+    rng=random.Random(20261028)
+    for _ in range(1000):
+        Fr=[rng.uniform(-100,100) for _ in range(3)]
+        Mr=[rng.uniform(-1000,1000) for _ in range(3)]
+        Ar=[rng.uniform(-50,50) for _ in range(3)]
+        Br=[rng.uniform(-50,50) for _ in range(3)]
+        Cr=[rng.uniform(-50,50) for _ in range(3)]
+        f1,m1=transport(Fr,Mr,R,Ar,Br)
+        f2,m2=transport(f1,m1,I,Br,Cr)
+        f3,m3=transport(Fr,Mr,R,Ar,Cr)
+        assert max(abs(x-y) for x,y in zip(f2+m2,f3+m3)) < 1e-10
     # Move to a common origin before summing: 2 forces cancel, moments only
     # cancel if both are at the same origin with their proper couples.
     aF,aM=transport((10,0,0),(0,0,0),I,(0,0,2),(0,0,0))
