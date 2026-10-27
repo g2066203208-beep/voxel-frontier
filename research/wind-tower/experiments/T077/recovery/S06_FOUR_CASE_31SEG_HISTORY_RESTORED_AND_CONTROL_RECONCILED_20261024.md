@@ -260,3 +260,13 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 **误差/统计边界：** 数据文件字节SHA锁定、输出9位小数取整；本轮没有给出物理误差预算。31段为同一塔沿高相关测点，**不是31个独立随机seed**；只有S04/S06两个seed，无法推断seed统计收敛、置信区间或年损伤。两条均为历史ETM筛查，不能代替DLC1.2/NTM长期风速bins或Abaqus局部材料应力。S06科学状态仍PARTIAL/HOLD，S07仅算法准备，S10/S11生产未放行；12阶段仍0/12 PASS，地震RUN=0。
 
 **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=744行源CSV与16ZIP归档回执；REF=沿用已有REF，不新增原刊阅读；STANDARD=本轮无授权原文，不引用IEC数值限值；OFFICIAL=历史T071/T072 Actions及当前仓库CI；RUN=本地Python 3.13.5真实744行复算/校验（远端CI独立验收待运行结果）；FIG=无新原生物理图；TAB=12行配对CSV。下一单一科研动作：追溯S04/S06对应的原始塔架输入和gage高度生成过程，判明26个测点z差异的来源，之后才能严谨定义S07同截面动态六分量映射；独立S10疲劳方法准备不受此HOLD阻挡。
+
+### 2026-10-28｜重要纠错：TPzi为动态位置，26/31差异不是塔架几何身份冲突
+
+**撤回本节上方的“GEOMETRY-IDENTITY-HOLD”解释；保留原始审查记录供追溯。** 新核对了两份**实际历史运行工作流源代码**：[T071](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/t071-rerun-s06-31seg.yml)与[T072](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/t072-rerun-control-31seg.yml)。T071矩阵第17–28行和T072脚本第75–80行明确使用**完全相同**的31个名义段→TwrGagNd节点映射；T072第61–68行从同一U09p343881_ETM_S01基准拷贝完整模型，并且第99–105行校验同一158m tower文件SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`。这支持S04与S06的**名义节点及塔输入一致**（并不自动关闭控制器、OUTB和载荷自由体的所有科学HOLD）。
+
+**真正的原因是提取字段语义。** T071第173行、T072第149行的`gage_z_m`并不是固定的输入几何节点高度，而是`float(w["TwHt{gi}TPzi"].iloc[0])`，即**100–700s统计窗口第一采样时刻的塔架测点惯性坐标系z位置**。OpenFAST开发者明确指出`TwHt*TPxi/yi/zi`给出塔架位置的**global coordinates**（[NREL Forum：Mode shapes，Jonkman答复](https://forums.nlr.gov/t/mode-shapes/2402)）；[OpenFAST官方ElastoDyn Theory](https://openfast.readthedocs.io/en/main/source/user/elastodyn/theory.html)说明关键点位置由运动学计算，位移是当前位置与参考位置之差。**两个seed在100s时有不同的变形状态，TPzi差异完全可能是正常动力学结果**，不能以0.414875mm推断两套模型几何不同。仍需原OUTB和时间相关旋转/位置才可做严格同参考系六分量动态比较。
+
+**结果及程序已纠正命名**：12行CSV的`n_first_sample_TPzi_nonidentical`与`max_first_sample_TPzi_abs_diff_mm`表示**第一采样时刻动态位置差异**（26/31、最大0.414875mm），不是静态几何误差；[修订后CSV](S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv) SHA256=`48b423b220e199f1415f61e9d72aa596124e1c3d02e05b823b9198d039dac981`。前一版CSV SHA`ebb9dfb1...`为保留在Git提交历史中的中间记录，不再作为当前结果身份。仍只有两条ETM seed，DEL比不能当统计收敛、DLC1.2或材料疲劳结果。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=T071/T072历史原生工作流代码、744行源CSV及其已归档ZIP；REF=OpenFAST官方理论页及NREL开发者公开技术答复（网页层级，非论文全文）；STANDARD=无新授权条款；OFFICIAL=OpenFAST文档/论坛；RUN=真实源数据复算、无新增OpenFAST/Abaqus求解；FIG=无；TAB=更正字段名的12行CSV。输入SHA锁定、物理误差NEED_ESTIMATE。**本轮消除了一个误报的几何HOLD，而非关闭S06总体HOLD。** 下一单一动作调整为恢复原始OUTB或补齐逐时刻位置/姿态/加速度通道，真正完成自由体载荷归属和坐标变换。
