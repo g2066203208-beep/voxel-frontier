@@ -167,3 +167,33 @@ T074的31站Fx=Fy=Mx=Mz=0，My=−5793.573173694369kNm沿高恒定；Fz从−251
 
 
 **2026-10-27 20:12 CST｜本次真实CI闭合**：[T080证据预检GitHub Actions run 40501252495](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40501252495)为**completed/success**；job 122179197703日志验证真实T074/T077输入SHA、30行原接口表和新六分量表逐字段回归、合成剪力/力矩耦合oracle及负测试。新增[30行六分量表](S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv)SHA256=**ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e**，与远端回读独立哈希及CI重新计算输出完全一致；扩展脚本SHA256=**76e3a595cdb83c7873f0ab4dc6f877d0c48a83305d3a1c373d8018b64974c399**。这只使**S06静态数学/输入数据回归PASS**，不使S06整阶段、动力分账、原生CAE或地震PASS。
+
+
+## 2026-10-27 21时｜S06→S07：真实四工况×31站×六分量逐时程雨流及load-DEL筛查
+
+**科研边界**：本轮没有原始OUTB、Abaqus、场址DLC1.2正常运行bins或真实局部材料应力。以下**只对历史ETM工况各塔架局部输出通道**计算统计量和按指定等效循环数归一化的**load-level DEL**；不称为混凝土/钢绞线/钢塔材料疲劳寿命、抗震结果、规范认证DEL或全局坐标自由体平衡。保持12阶段科学PASS=0/12，S06=PARTIAL/HOLD，S07=BLOCKED但准备管线有可复算资产。
+
+### SOURCE / RUN / TAB（原始字节级读取）
+
+- SOURCE：[T071 run 37582521146](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146)、[T072 run 37622366681](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681)，本轮**再次从GitHub Actions实际下载16个未过期ZIP**；每件ZIP、内部gzip、解压CSV与仓库[16件原始SHA manifest](S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)逐字节核对16/16成功。首次人工转录manifest时末行CSV SHA漏3字符，程序按设计**拒绝**并停止，修正为原GitHub manifest末行后全部成功（失败保留，未绕过哈希）。
+- RUN：Python 3.13、NumPy 2.3.5、pandas 2.2.3；四工况×31站×12001采样（100–700 s，dt=0.05 s）=**1,488,124同步源记录**；每条提取六通道Fx/Fy/Fz（kN）、Mx/My/Mz（kN·m），每站每通道完整计算端点保留的雨流循环、均值、标准差、极值、前后半程RMS。共**744个站×通道计算单元**。每件zip身份、case、batch、时间格点、有限值及段号完整性均fail-closed。
+- 数值定义：从真实单通道的峰谷转折点计算闭合整循环权重1及端点未闭合半循环权重0.5，不强制拼接首尾。对每个通道计算 \(\mathrm{DEL}_m=[\sum_i n_i(\Delta L_i)^m/N_{\mathrm{ref}}]^{1/m}\)，**仅取比较用m=4和m=10，Nref=600 s×1 Hz=600个参考循环**。m=4/10是**方法敏感性指数**，不是本文已确定的混凝土/钢绞线S–N斜率；未经标准原页/材料适用性验证，不将此公式称为已完成IEC合规验算。
+- TEST：合成0→1→0（两个半循环）、0→3→1→2→0（一个完整循环+两个半循环）、平台/常值、NaN、单点输入，及40组不同长度的随机序列计数守恒 \(\sum n_i=(N_{\rm turning}-1)/2\) 通过。16个原始ZIP SHA及内层gzip/CSV SHA全部通过；完整输出744行（不含表头）CSV SHA256=9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b，本轮工作容器本地生成**但未上传到PR**，可用程序及16件源ZIP复算；其长期存放尚无回执。提交到PR的[24行工况×六分量汇总](S06_4CASE_6COMP_RAINFLOW_SCREEN_SUMMARY_20261027.csv) SHA256=d8f6dc4a3e34abe09a5c15e0adcdff99a6a4764f1b26245e624f1e7f19a4a499；[复算程序](s06_31gage_rainflow_load_screen.py) SHA256=9149c6ef71424ed073b4233ac7082753b0dcd979ec31b795318570c5c5cdac34。两文件远端GitBlob与本地git hash-object一致。
+- 复算命令：将16个GitHub artifact ZIP按既有manifest对应命名保存同一目录，运行 python research/wind-tower/experiments/T077/recovery/s06_31gage_rainflow_load_screen.py --zip-dir /data/zips --manifest research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv --output /data/744.csv --summary-output /data/24.csv；单测运行 python .../s06_31gage_rainflow_load_screen.py --self-test。
+
+### 真实源级数值发现（TAB，不是材料疲劳结论）
+
+| ETM历史工况 | My通道最大DEL_m4 (kN·m) | m4控制站 | My通道最大DEL_m10 (kN·m) | m10控制站 |
+|---|---:|---|---:|---|
+| U09p343881_ETM_S06 | 92,306.914 | CSEG_01 | **221,544.884** | CSEG_01 |
+| U11p4_ETM_S04 | **94,836.550** | CSEG_01 | 191,175.614 | CSEG_01 |
+| U19p202140_ETM_S04 | 85,921.775 | CSEG_01 | 155,107.630 | CSEG_01 |
+| U19p202140_ETM_S06 | 83,242.012 | CSEG_01 | 156,442.665 | CSEG_01 |
+
+**新结论仅限load screening：** My通道最大DEL_m4由U11p4_ETM_S04控制（较U09p343881_ETM_S06高2.7405%），但DEL_m10由U09p343881_ETM_S06控制（较U11p4_ETM_S04高15.8855%）。因此，**不同循环指数可改变历史候选工况排序**；不得只凭某一峰值或单一m筛选所有材料疲劳控制工况。全六分量24行见CSV；例如My和Mx的最大DEL_m4控制站均为CSEG_01，Mz的最大值则出现在CSEG_16/17附近，说明不同QoI的空间控制点并不一致。
+
+### REF / STANDARD / OFFICIAL / FIG / HOLD
+
+REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读”声明；本轮未取得授权ASTM E1049/IEC原页。STANDARD：无新增授权条文验收。OFFICIAL：真实GitHub历史Actions产物及已登记OpenFAST输出定义，未重跑OpenFAST。FIG：无新增原生仿真图。TAB：24行GitHub持久汇总、744行本轮容器派生CSV SHA及本节控制表。纯算法验证/源文件完整性不能覆盖雨流算法与参考工具的独立逐周期比较、风模型身份、塔架局部坐标变化、统计种子收敛、实际材料S–N及均值应力、场址长期概率等**物理/统计误差预算NEED-ESTIMATE**。
+
+**单一最大HOLD**：缺原始OUTB及可证明六分量载荷所有权、动态坐标和RNA/塔惯性分账；16个ZIP在2026-11-06过期前仍需永久归档。**下一单一最优独立动作**：优先恢复/长期归档原始OUTB与16件ZIP并核对T071/T072塔输入、控制器、坐标与动态载荷所有权；在不能恢复时继续S10分材料雨流/mean-stress测试和S05地震选波，不因S01原生缺失停工。
