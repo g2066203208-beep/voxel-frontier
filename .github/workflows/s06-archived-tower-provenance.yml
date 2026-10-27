@@ -44,7 +44,7 @@ jobs:
                           source_scripts.append(dict(path=x.filename,sha256=sha(b),bytes=len(b),
                               mentions_tower_columns=bool(re.search(r'TMassDen|TwEAStff|TwFAStif',s,re.I)),
                               mentions_tower_filename=bool(re.search(r'C02R3R2_158M_Tower',s,re.I)),
-                              has_numeric_property_formula=bool(re.search(r'(?:TwEAStff|TwFAStif|TMassDen)\\s*(?:\\[|=)',s,re.I))))
+                              has_numeric_property_formula=bool(re.search(r'(?:TwEAStff|TwFAStif|TMassDen)\s*(?:\[|=)',s,re.I))))
                       if hits:source_hits.append(dict(path=x.filename,sha256=sha(b),line_numbers=hits[:20],total_hits=len(hits)))
           assert rows, 'No exact 158m tower files found in source archive'
           # Read the actual matching lines: a filename reference is not a property generator.
