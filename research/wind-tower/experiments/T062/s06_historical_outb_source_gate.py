@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""Read-only SHA-pinned OpenFAST .outb source/channel inventory; NOT a physics RUN.
+
+This checks one archived original OpenFAST file from the independent T062/36-case
+archive, not the 16 T071/T072 derived CSV ZIPs. Python 3.11+ stdlib only.
+"""
+import argparse
+import hashlib
+import io
+import json
+from pathlib import Path
+import struct
+import zipfile
+
+
+def exact(stream, size):
+    data = stream.read(size)
+    if len(data) != size:
+        raise ValueError(f"truncated OUTB header: expected {size}, got {len(data)}")
+    return data
+
+
+def unpack(stream, fmt):
+    return struct.unpack("<" + fmt, exact(stream, struct.calcsize("<" + fmt)))
+
+
+def outb_header(raw):
+    f = io.BytesIO(raw)
+    file_id = unpack(f, "h")[0]
+    if file_id not in (1, 2, 3, 4):
+        raise ValueError(f"unsupported OpenFAST FileID={file_id}")
+    name_length = unpack(f, "h")[0] if file_id == 4 else 10
+    n_channels, n_samples = unpack(f, "ii")
+    if not (1 <= name_length <= 256 and 1 <= n_channels <= 4096 and 1 <= n_samples <= 10_000_000):
+        raise ValueError("invalid OpenFAST header dimensions")
+    first, second = unpack(f, "dd")
+    # FileID=1 stores packed-time scale/offset, not first time/time increment.
+    exact(f, 8 * n_channels)  # float32 ColScl and ColOff
+    description_length = unpack(f, "i")[0]
+    if not (0 <= description_length <= 1_000_000):
+        raise ValueError("invalid description length")
+    description = exact(f, description_length).decode("utf-8", errors="replace")
+    def names():
+        return [exact(f, name_length).decode("ascii", errors="replace").replace("\x00", "").strip()
+                for _ in range(n_channels + 1)]
+    channel_names, units = names(), names()
+    if len(set(channel_names)) != len(channel_names):
+        raise ValueError("duplicate OpenFAST output channel names")
+    data_offset = f.tell()
+    expected_payload = n_samples * (2 * n_channels + (4 if file_id == 1 else 0))
+    remaining = len(raw) - data_offset
+    if remaining != expected_payload:
+        raise ValueError(f"packed payload size mismatch: {remaining} vs {expected_payload}")
+    return {
+        "file_id": file_id, "num_output_channels": n_channels,
+        "num_samples": n_samples,
+        "first_time_s": first if file_id != 1 else None,
+        "time_increment_s": second if file_id != 1 else None,
+        "packed_time_scale_offset": [first, second] if file_id == 1 else None,
+        "description_excerpt": description[:160],
+        "channel_names": channel_names,
+        "channel_units": units,
+        "data_offset_bytes": data_offset,
+        "packed_payload_bytes": remaining,
+    }
+
+
+def audit(zip_path, manifest_path, case):
+    entries = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    matches = [e for e in entries if e.get("relative_path") ==
+               f"CASES/{case}/DTU_10MW_RWT.outb" and e.get("section") == "openfast-36-r2"]
+    if len(matches) != 1:
+        raise ValueError(f"expected one original OUTB manifest entry, found {len(matches)}")
+    expected = matches[0]
+    zip_name = expected["archive"].split("/")[-1]
+    if Path(zip_path).name != zip_name:
+        raise ValueError("archive filename disagrees with manifest")
+    zbytes = Path(zip_path).read_bytes()
+    with zipfile.ZipFile(io.BytesIO(zbytes)) as archive:
+        bad = archive.testzip()
+        if bad is not None:
+            raise ValueError(f"archive CRC failure: {bad}")
+        if expected["relative_path"] not in archive.namelist():
+            raise ValueError("original OUTB member not present")
+        raw = archive.read(expected["relative_path"])
+    outb_sha = hashlib.sha256(raw).hexdigest()
+    if outb_sha.lower() != expected["sha256"].lower():
+        raise ValueError("original OUTB SHA256 differs from archival manifest")
+    if len(raw) != expected["bytes"]:
+        raise ValueError("original OUTB byte count differs from archival manifest")
+    h = outb_header(raw)
+    names = set(h.pop("channel_names"))
+    units = h.pop("channel_units")
+    required = [f"TwHt1{s}" for s in
+                ("FLxt", "FLyt", "FLzt", "MLxt", "MLyt", "MLzt",
+                 "TPxi", "TPyi", "TPzi", "RPxi", "RPyi", "RPzi",
+                 "ALxt", "ALyt", "ALzt")]
+    required += [f"TwrBs{s}" for s in ("Fxt", "Fyt", "Fzt", "Mxt", "Myt", "Mzt")]
+    gages = [g for g in range(1, 32)
+             if all(f"TwHt{g}{s}" in names for s in
+                    ("FLxt", "FLyt", "FLzt", "MLxt", "MLyt", "MLzt"))]
+    motion_gages = [g for g in range(1, 32)
+                    if all(f"TwHt{g}{s}" in names for s in
+                           ("TPxi", "TPyi", "TPzi", "RPxi", "RPyi", "RPzi",
+                            "ALxt", "ALyt", "ALzt"))]
+    return {
+        "status": "SOURCE_HEADER_QC_ONLY_NOT_DYNAMIC_PHYSICS_PASS",
+        "case": case,
+        "archive_path": expected["canonical_archive"],
+        "archive_sha256": hashlib.sha256(zbytes).hexdigest(),
+        "archive_size_bytes": len(zbytes),
+        "outb_member": expected["relative_path"],
+        "outb_sha256": outb_sha,
+        "outb_size_bytes": len(raw),
+        "source_manifest_sha256": hashlib.sha256(Path(manifest_path).read_bytes()).hexdigest(),
+        "source_reading_level": "original archived OUTB bytes: SHA256 + binary header/channel names; no numerical time-series decoding",
+        "header": h,
+        "required_21_channel_presence": {c: c in names for c in required},
+        "full_six_component_gage_indices": gages,
+        "full_position_rotation_acceleration_gage_indices": motion_gages,
+        "first_30_channel_names": sorted(names)[:30],
+        "time_unit": next((units[i] for i, name in enumerate(["Time"] + list(names)) if name == "Time"), "not independently verified"),
+        "hold": "Original 36-case archive is not proven identical to T071/T072 31-gage reruns; 9 gages are not 31; RP angles require OpenFAST frame/order/sign validation; load ownership and native Abaqus remain unverified.",
+    }
+
+
+def self_test():
+    def fixed(s, n=10):
+        return s.encode("ascii").ljust(n, b" ")
+    n, nt = 3, 2
+    raw = (struct.pack("<hii", 2, n, nt) + struct.pack("<dd", 100.0, 0.05)
+           + struct.pack("<" + "f" * (2*n), *([1.0] * n + [0.0] * n))
+           + struct.pack("<i", 4) + b"test"
+           + b"".join(fixed(x) for x in ("Time", "A", "B", "C"))
+           + b"".join(fixed(x) for x in ("(s)", "(kN)", "(m)", "(deg)"))
+           + bytes(nt * n * 2))
+    result = outb_header(raw)
+    assert result["num_samples"] == 2 and result["num_output_channels"] == 3
+    assert abs(result["time_increment_s"] - 0.05) < 1e-12
+    try:
+        outb_header(raw[:-1])
+    except ValueError as e:
+        assert "payload" in str(e)
+    else:
+        raise AssertionError("truncated binary payload was accepted")
+    try:
+        outb_header(b"\xff\xff" + raw[2:])
+    except ValueError as e:
+        assert "FileID" in str(e)
+    else:
+        raise AssertionError("invalid FileID was accepted")
+    print("PASS: synthetic OpenFAST header, truncation rejection, invalid FileID rejection")
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--self-test", action="store_true")
+    p.add_argument("--zip-path", type=Path)
+    p.add_argument("--manifest", type=Path)
+    p.add_argument("--case", default="U09p343881_ETM_S01")
+    p.add_argument("--output", type=Path)
+    args = p.parse_args()
+    if args.self_test:
+        self_test()
+    if args.zip_path:
+        if args.manifest is None:
+            p.error("--manifest required with --zip-path")
+        result = audit(args.zip_path, args.manifest, args.case)
+        serialized = json.dumps(result, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
+        if args.output:
+            args.output.write_text(serialized, encoding="utf-8")
+        print(serialized)
+
+
+if __name__ == "__main__":
+    main()
