@@ -70,6 +70,41 @@ jobs:
           PY
       - name: S01 original Klein 2022 Table 2 numerical reproducibility (NOT ABAQUS)
         run: python research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py --out-json "$RUNNER_TEMP/klein2022_joint_table2_recalc.json"
+      - name: S06 real 30-joint gravity-source reproducibility (not section reconstruction)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=research/wind-tower/experiments
+          python "$ROOT/T077/recovery/s06_30_joint_gravity_ownership.py" \
+            --geometry "$ROOT/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv" \
+            --gravity "$ROOT/T074/T074_158M_31SEG_GRAVITY_BASELINE.csv" \
+            --output "$RUNNER_TEMP/s06_30_joint_recomputed.csv"
+          python - <<'PY'
+          import csv,hashlib,math,os,pathlib
+          root=pathlib.Path("research/wind-tower/experiments")
+          expected={
+            root/"T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv":"d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e",
+            root/"T074/T074_158M_31SEG_GRAVITY_BASELINE.csv":"b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349",
+          }
+          for path,sha in expected.items():
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==sha,(path,"SOURCE SHA mismatch")
+          published=root/"T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv"
+          recomputed=pathlib.Path(os.environ["RUNNER_TEMP"])/"s06_30_joint_recomputed.csv"
+          def load(path):
+              with path.open(newline="",encoding="utf-8") as f:return list(csv.DictReader(f))
+          a,b=load(published),load(recomputed)
+          assert len(a)==len(b)==30
+          for left,right in zip(a,b):
+              assert left.keys()==right.keys()
+              for k in left:
+                  try:
+                      x,y=float(left[k]),float(right[k])
+                  except ValueError:
+                      assert left[k]==right[k],k
+                  else:
+                      assert math.isclose(x,y,rel_tol=0,abs_tol=1e-7),(left["joint"],k,x,y)
+          print("S06: 30/30 true-joint geometry/gravity source-level numerical roundtrip PASS; NOT contact or native PASS")
+          PY
       - name: Write traceable preflight report
         run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
       - name: Preserve metadata report
