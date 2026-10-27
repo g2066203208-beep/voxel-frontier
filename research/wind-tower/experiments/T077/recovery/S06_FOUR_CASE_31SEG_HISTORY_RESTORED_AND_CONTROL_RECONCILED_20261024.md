@@ -240,3 +240,23 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **独立远端复核**：GitHub REST `GET /repos/g2066203208-beep/voxel-frontier/releases`返回Draft Release id=`425693174`，tag=`windtower-s06-t071-t072-source-archive-20261027`，`draft=true`、`prerelease=true`，17/17 assets均`state=uploaded`，总字节`125301985`（16个原ZIP `125291677` bytes + 1个验证JSON `10308` bytes）。对16件Release资产API返回的`digest=sha256:...`与[原始16行manifest](S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)逐件独立比较：**16/16完全一致**；非仅比较资产名称。manifest SHA256=`dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8`；验证JSON Release资产SHA256=`4f6ec8df9fc709fc75d2e86afb20e7e9a0dcac9865f6479ddd72c448a6967b62`。回执[JSON](S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)已由原生工作流写入PR分支并经远端回读，含`actions_run_id=40537618197`、17件名称、Draft状态及manifest SHA。
 - **归档位置**：[GitHub Draft Release](https://github.com/g2066203208-beep/voxel-frontier/releases/tag/untagged-5d55a3aa54c8a01b0862)（未发布，需有仓库权限访问）；保留原始16件Actions下载入口及其2026-11-06过期信息，Release存档不受该原Actions 30天自动过期影响，但仍受仓库/Release管理操作影响，后续建议独立备份。
 - **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=T071/T072真实16件原ZIP及manifest；REF=沿用现有文献，不新增全文；STANDARD=无新增授权条款；OFFICIAL=GitHub Actions原生日志、Release REST资产`digest`及receipt；RUN=上述真实success job；FIG=无原生响应图；TAB=16行manifest、17件Release清单及JSON回执。SHA256为字节身份验收，物理误差预算仍NEED_ESTIMATE；**S06仍PARTIAL/HOLD、12阶段0/12、地震RUN=0**。下一个独立科研动作应转向S07六分量所有权与S10分材料疲劳准备，避免继续围绕已关闭的ZIP存档重复审计。
+
+
+## 2026-10-28 01时｜S06/S07：U=19.202140 m/s ETM同风速两seed配对DEL敏感性（真实744行源数据）
+
+**SOURCE/原始身份**：仅使用已提交[744行真实历史雨流/DEL表](S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)，SHA256=\`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b\`；它源自T071/T072的16件ZIP（已存入Draft Release，回执见本文件上一节），而**不是本轮新运行OpenFAST或新取得OUTB**。程序[复用并扩展原有半窗QC](s06_qc_half_window_rms.py)，新增\`--paired-qc\`可复算[12行配对结果](S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv)，该CSV SHA256=\`ebb9dfb1da740a3968e5fac7c43152010aa58a0e39dc005c9299d13849ce97e3\`（UTF-8/LF）。本地Python 3.13.5执行完整744行输入哈希、4×31×6唯一性、12001样点/0.05s/600s、同单位、每段同标签匹配；配对仅为U19.202140_ETM_S04与S06。采用各通道同一\`Nref=600\`的已存DEL，按每个名义段计算\`r_i=DEL(S06)/DEL(S04)\`，不跨工况拼接峰值。脚本检查非有限、负值、缺失与重复；新CI为[源级配对QC工作流](../../../../../.github/workflows/s06-paired-seed-del-qc.yml)，其成功状态须以实际Actions job为准。
+
+| 同风速19.202140 ETM；31名义段配对 | m=4：S06/S04中位数 | m=10：S06/S04中位数 | m=10比值范围 |
+|---|---:|---:|---:|
+| Fx (kN) | 0.942854 | 0.979835 | 0.957984–1.048876 |
+| Fy (kN) | 0.994199 | 1.052768 | 1.032336–1.062365 |
+| Fz (kN) | 0.992306 | 1.007746 | 1.002564–1.012093 |
+| Mx (kN·m) | 0.978922 | 1.035395 | 1.024150–1.058859 |
+| My (kN·m) | **1.015026** | **1.088650** | **1.008607–1.109413** |
+| Mz (kN·m) | 1.011483 | 0.963359 | 0.963341–0.963394 |
+
+**新增必须显式保留的模型身份异常：** S04/S06虽然使用同名\`CSEG_01..31\`，但逐段读取源表\`gage_z_m\`后，**26/31个名义段的z值不完全相同**，最大差异位于CSEG_31，**0.414875 mm**。不能静默宣称两个seed的截面坐标逐字节一致。该差异可能来自高度离散/输出生成或模型身份变化，现有CSV不能判定原因；配对结果因此标记为**NOMINAL-GAGE-PAIRED / GEOMETRY-IDENTITY-HOLD**，不可用于严格同截面响应比较，需从原始OpenFAST tower-gage和OUTB输入链追溯。表中各m指数是方法敏感性参数，非本塔混凝土、钢绞线或钢塔材料S–N斜率。
+
+**误差/统计边界：** 数据文件字节SHA锁定、输出9位小数取整；本轮没有给出物理误差预算。31段为同一塔沿高相关测点，**不是31个独立随机seed**；只有S04/S06两个seed，无法推断seed统计收敛、置信区间或年损伤。两条均为历史ETM筛查，不能代替DLC1.2/NTM长期风速bins或Abaqus局部材料应力。S06科学状态仍PARTIAL/HOLD，S07仅算法准备，S10/S11生产未放行；12阶段仍0/12 PASS，地震RUN=0。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=744行源CSV与16ZIP归档回执；REF=沿用已有REF，不新增原刊阅读；STANDARD=本轮无授权原文，不引用IEC数值限值；OFFICIAL=历史T071/T072 Actions及当前仓库CI；RUN=本地Python 3.13.5真实744行复算/校验（远端CI独立验收待运行结果）；FIG=无新原生物理图；TAB=12行配对CSV。下一单一科研动作：追溯S04/S06对应的原始塔架输入和gage高度生成过程，判明26个测点z差异的来源，之后才能严谨定义S07同截面动态六分量映射；独立S10疲劳方法准备不受此HOLD阻挡。
