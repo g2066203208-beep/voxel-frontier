@@ -103,3 +103,42 @@ python research/wind-tower/experiments/T077/recovery/s06_joint_kern_history_scre
 **REF**：延续T079/T080先行研究登记，2026年160m混塔风震已有研究；本轮无新全文阅读，不冒称新REF。**STANDARD**：IEC/GB/NB授权原条文未新增核读，规范PASS=0。**OFFICIAL**：GitHub Actions artifact API及历史工作流/真实运行产物。**RUN**：真实历史数据重新下载、逐行计算及负测试；不是原生OpenFAST重新计算，也不是Abaqus。**FIG**：无新增物理响应图。**TAB**：124行原始case×段筛查与上表。**误差预算**：数值舍入和时间同态可校验；PT沿高分布、接缝非线性、原型与OpenFAST EI/质量、惯性力所有权、测点至接缝外推、材料与标准适用性**均NEED-ESTIMATE，不存在可靠的总物理误差上界**。
 
 **单一最大HOLD**：无法把段内风载全接触筛查直接升级为**真实30道接缝**的开闭与锚端有效PT结论；需要冻结相同物理身份并通过Abaqus原生G0/G1。与此同时，独立S05/S07/S10方法与真实输入准备可以继续推进，不受该HOLD阻挡。
+
+
+## 2026-10-27｜30道真实水平接缝坐标与T074重力截面力梯度（S06/S07独立实数值）
+
+> 状态：SOURCE-LEVEL NUMERICAL DIAGNOSTIC，非原生OpenFAST/Abaqus，不是接缝接触计算，不是30道接缝真实内力。12阶段0/12正式PASS；不修改T057/T070。
+
+### SOURCE与输入哈希
+
+- [31段界面几何](S01_PT_AXIAL_31SEG_SOURCE_20261026.csv)：SHA256 d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e；Git blob 3180d17173917d267efe3bf9c7edbfff50033d89。
+- [T074真实历史31站重力基线](../../T074/T074_158M_31SEG_GRAVITY_BASELINE.csv)：SHA256 b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349；Git blob a152f130a8cb00f555bf4c973ce62238dd1e0599。
+- [新30道接口CSV](S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv)：SHA256 ba43732de537854e0361d1aa4cc2792bf8b80ab3536115b6b2f1c9e2317dfe6f；[可复算Python标准库脚本](s06_30_joint_gravity_ownership.py)：SHA256 a75d8fd15158f573f210a7e093b216936fbddc77377a81e0ebca334bb816c48f。
+
+### RUN与方法
+
+按CSEG_i上缘和CSEG_(i+1)下缘生成J01–J30，逐道检查高度、内外半径连续（容差1e-7m）和上下gage确实夹住接口。每段半径沿高度线性插值，环形面积A(z)=π[ro(z)^2-ri(z)^2]为二次函数，采用分段Simpson精确积分求上下gage间的几何环形体积V。T074截面力差ΔFz=Fz_above−Fz_below，折算γ_eff=ΔFz/V（kN/m³）。该量是历史截面力沿高梯度的**有效单位重诊断**，不是混凝土密度、规范材料值或经过原生验证的质量。
+
+| 核实项目 | 实数值 |
+|---|---:|
+| 几何连续接口 | 30/30 |
+| 相邻gage跨度 | 3.103652316–3.667956661m |
+| γ_eff最小–最大 | 24.644553234–26.364713691 kN/m³ |
+| γ_eff 30道算术平均 | 25.200870709 kN/m³ |
+| J01 z、ΔFz、V | 3.640000100m；642.794741544kN；25.462476021m³ |
+| J17 z、ΔFz | 61.880001700m；557.722419650kN |
+| J30 z、ΔFz | 109.200002780m；503.214288472kN |
+
+T074的31站Fx=Fy=Mx=Mz=0，My=−5793.573173694369kNm沿高恒定；Fz从−25192.602388kN变到−8758.837607kN。Fz梯度与混凝土环形体积相称，**支持**OpenFAST历史截面轴力已包含沿高重力效应，但不足以证明RNA/塔体/钢筋/惯性力的精确所有权。因此不能将历史全量Fz无条件与Abaqus同一重力叠加，也不能直接将Fz_G扣掉就称完成映射。
+
+### 六分量参考点和实际接缝的严格边界
+
+同一合力系的纯参考点转移满足 M_new=M_old+(r_old−r_new)×F；对竖向Δz=z_joint−z_gage，有 Mx_new=Mx_old+Δz Fy、My_new=My_old−Δz Fx、Mz_new=Mz_old。**这是同一集中合力系的矩参考点变换，不是分布风荷载/自重/惯性作用下截面内力沿高重构**。上下gage到同一接口的六分量差必须由截段自由体积分和正负号约定解释，不能把差直接当成开缝/接触反力。当前没有30道接口的动态真实力时程，也没有非线性接触响应。
+
+### 验证层级、误差预算与HOLD
+
+本轮实际从GitHub连接器读取两份真实CSV并独立算出30行CSV；Python 3标准库脚本的等截面、线性变截面解析积分oracle和越界负测试在本地执行通过。已在既有GitHub Actions工作流增加以真实源CSV复算30行及SHA/逐项数值回归步骤；该CI必须等到真实运行成功才可标PASS。CSV保留9位小数；几何连续容差1e-7m；积分对线性半径下二次面积函数解析精确。OpenFAST实际质量分配、RNA惯性、分布载荷、接缝截面力与Abaqus模型差异仍NEED-ESTIMATE。
+
+证据链：SOURCE=T077几何+T074重力真实仓库CSV；REF=沿用既有T079/T080来源、未新读全文；STANDARD=未核授权IEC/GB/NB条文；OFFICIAL=GitHub历史数值/既有CI、非官方OpenFAST内部定义审查；RUN=30道静态计算与合成oracle，原生CAE/地震0；FIG=无；TAB=30行接口数据。S06仍PARTIAL/HOLD，S01原生PT与接触仍HOLD。
+
+**下一单一动作：** 依据T071/T072四工况六分量时程及T074重力基线，核对OpenFAST截面力输出定义、截段自由体与分布惯性所有权，再建立有残差解释的上下gage动态对照；禁止直接插值制造真实接缝力。
