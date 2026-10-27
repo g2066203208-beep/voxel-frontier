@@ -1,0 +1,62 @@
+name: S01 Frozen T057 Full Mesh Mass (Static, NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_frozen_t057_full_mesh_mass_repro.py'
+      - '.github/workflows/s01-frozen-t057-full-mesh-mass-static.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frozen-original-mesh-mass-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T057/inputs
+            research/wind-tower/experiments/T077/recovery
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify frozen T057 bytes and static algorithm self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_frozen_t057_full_mesh_mass_repro.py"
+          printf '%s  %s\n' c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db "$SRC" | sha256sum -c -
+          python3 "$TOOL" --self-test
+      - name: Independently integrate original 68-Part frozen T057 mass (NO ABAQUS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_frozen_t057_full_mesh_mass_repro.py"
+          python3 "$TOOL" --inp "$SRC" --out-dir "$RUNNER_TEMP/s01_t057_mass" | tee "$RUNNER_TEMP/s01_t057_stdout.json"
+          python3 - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'s01_t057_mass'
+          d=json.loads((p/'S01_T057_FULL_MESH_LEDGER.json').read_text())
+          assert d['source_sha256_verified']=='c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db'
+          assert d['parts']==68
+          assert abs(d['tower_without_RNA_kg']-1985489.1181173)<0.1
+          assert d['native_abaqus']=='NOT_RUN' and d['seismic_results']==0
+          print('FROZEN ORIGINAL T057 STATIC SOURCE MASS VERIFIED; NOT S01/S04 PHYSICS PASS')
+          PY
+          sha256sum "$RUNNER_TEMP/s01_t057_mass/"* "$RUNNER_TEMP/s01_t057_stdout.json" > "$RUNNER_TEMP/s01_t057_output_sha256.txt"
+      - name: Preserve original-mesh part ledger, hashes, and stdout (temporary CI artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-t057-original-full-mesh-static-mass-not-solver
+          path: |
+            ${{ runner.temp }}/s01_t057_mass/*.csv
+            ${{ runner.temp }}/s01_t057_mass/*.json
+            ${{ runner.temp }}/s01_t057_stdout.json
+            ${{ runner.temp }}/s01_t057_output_sha256.txt
+          if-no-files-found: warn
+          retention-days: 14
