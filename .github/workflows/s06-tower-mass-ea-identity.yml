@@ -16,6 +16,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv'
       - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json'
       - 'research/wind-tower/experiments/T077/recovery/s01_s06_r335_pt_tower_identity_inverse.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_competing_tower_identity_hypotheses.py'
   workflow_dispatch:
 
 jobs:
@@ -85,6 +86,30 @@ jobs:
           print('INDEPENDENT_R335_PT_INVERSE_NUMERIC_ASSERTIONS_PASS')
           PY
           sha256sum /tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE*
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_competing_tower_identity_hypotheses.py \
+            --json /tmp/s06-mass-ea/S01_S06_COMPETING_TOWER_IDENTITY_31SEG.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/s06-mass-ea/S01_S06_COMPETING_TOWER_IDENTITY_31SEG.json').read_text())
+          a=d['rms_relative_error_percent']
+          expected={
+              ('R335_phi25_PT_gross_additive','EA'):0.15927950564576243,
+              ('R335_phi25_PT_gross_additive','EI'):0.1604517816628712,
+              ('R335_phi25_PT_gross_additive','mass'):0.2403709429999171,
+              ('R335_phi25_PT_displace_rebar','mass'):1.4083267608274215,
+              ('uniform_40GPa_2560kgm3','EA'):1.589004929026684,
+              ('uniform_40GPa_2560kgm3','mass'):0.4779399416453295,
+              ('gross_group_fitted_6parameters','EI'):0.5877115342593839,
+          }
+          for (model,field),value in expected.items():
+              assert abs(a[model][field]-value)<1e-5,(model,field,a[model][field],value)
+          assert a['R335_phi25_PT_gross_additive']['mass']<a['R335_phi25_PT_displace_rebar']['mass']
+          assert d['segment_count']==31
+          print('COMPETING_HYPOTHESES_SOURCE_LOCK_AND_PRECOMPUTED_ASSERTIONS_PASS')
+          print('HOLD: lower residual is not proof of historical generator; gross-additive mass double-counts host displacement')
+          PY
+          sha256sum /tmp/s06-mass-ea/S01_S06_COMPETING_TOWER_IDENTITY_31SEG.json
           echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
       - uses: actions/upload-artifact@v4
         with:
