@@ -57,3 +57,49 @@ python research/wind-tower/experiments/T077/recovery/s06_validate_archived_4case
 - **阶段计数**：仍**0/12整阶段PASS**；但S06的关键缺失原始六分量时程从`MISSING`变为`RECOVERED/CSV-VALIDATED`，这是实际数据恢复，不是进度文字更新。
 
 **下一轮单一最优动作：** 以恢复的完整四工况为同源载荷基础，优先关闭S01候选物理支路决策（T057/T070 HRB335与T077 HRB500严格分开，P0/Pe分别登记），绑定原生G0 Data Check唯一输入SHA；未取得原生环境不得报物理PASS。
+
+
+## 2026-10-27｜四工况×31段完整同步时程的PT接缝无拉应力核筛查
+
+> **新真实数值工作 / 仅FULL-CONTACT ELASTIC PROXY / 0/12正式PASS。** 与此前从31个不同时刻的极值组合不同，本次重新通过GitHub Actions下载历史T071/T072全部**16件真实ZIP**，直接读取四工况×31段×12001点、100–700 s、dt=0.05 s的**同步**\`Fz(t),Mx(t),My(t)\`。本节不能称为真实接缝张开、接触压力、裂缝宽度、混凝土强度验算或Abaqus结果。
+
+### SOURCE与数据完整性
+
+- **原始数据**：[T071 run 37582521146](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146) + [T072 run 37622366681](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681)。16件ZIP的原始SHA256、artifact ID、gzip与解压CSV SHA256已登记在本目录\`S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv\`（Git blob \`24723fb07c760ea22dbed043031ceff7939f1ac6\`）；**本轮16件ZIP实际重新下载并逐个按原manifest核对ZIP SHA256，ZIP CRC通过，解压成功**；运行时生成的本地manifest还核对了各gzip/CSV SHA。原始OUTB依然没有取得。
+- **几何**：直接读取仓库\`S01_PT_AXIAL_31SEG_SOURCE_20261026.csv\`的31段上下端内外半径及高度（Git blob \`3180d17173917d267efe3bf9c7edbfff50033d89\`）；本地只转录所需7列，不把本地转录文件SHA冒充仓库原始CSV SHA256。截面几何在每段OpenFAST gage高度线性插值。**全截面混凝土环形面积和惯性矩，不包括钢筋等效截面、开裂和接缝真实接触。**
+- **PT输入**：T078名义\`P0=51.609600 MN\`、设计有效\`Pe=39.753559 MN\`作为两种**均匀同轴压力的研究假设**，并与\`PT=0\`对照。**Pe不是Abaqus测得Peq**；OpenFAST外部Fz不额外叠加重力，不把PT加到OpenFAST输入文件。历史\`Fz\`是否已经正确含塔重、RNA及其自由体截面所有权仍待S06/S07核对。
+
+### RUN：公式、可复算程序和真实结果
+
+程序：[s06_joint_kern_history_screen.py](s06_joint_kern_history_screen.py)；全124行精简表：[S06_JOINT_KERN_COMPACT_124_20261027.csv](S06_JOINT_KERN_COMPACT_124_20261027.csv)；\`case_id=1,2,3,4\`分别是\`U09p343881_ETM_S06\`、\`U11p4_ETM_S04\`、\`U19p202140_ETM_S04\`、\`U19p202140_ETM_S06\`。精简表保存每段每工况的Pe最不利同时时刻、Pe/P0/无PT三支路最大**假定全接触线弹性拉应力需求**，以及Pe工况假定全接触时出现拉应力的样本占比；该占比不是实际接缝张开概率、不是场址年发生概率。
+
+\`A=π(ro²-ri²)\`，\`I=π(ro⁴-ri⁴)/4\`，\`N_ext(t)=-Fz(t)\`（压为正），\`M_res(t)=hypot(Mx(t),My(t))\`（**同一时刻，不拼接独立极值**）。同轴PT假设下环截面外缘最小压应力（MPa）：
+\`σ_min(t;P)=[(N_ext(t)+P)/A - M_res(t) ro/I]/1000\`（输入kN、kN·m、m）。
+\`σ_min<0\`仅说明“**全接触线弹性无拉应力假设在该时刻不自洽**”，是后续接触非线性优先筛查指标。若要据此推断开缝面积/真实应力，必须另做非线性接触与PT初态、轴弯剪扭联合验证。
+
+| 真实历史case | 31段中至少1点\`σ_min(Pe)<0\` | Pe最大全接触拉应力需求(MPa) | 最不利段、时刻(s) | P0对应最大需求(MPa) |
+|---|---:|---:|---|---:|
+| U09p343881_ETM_S06 | 31/31 | **18.453052587** | CSEG_17, 652.75 | 16.522456964（P0峰值在CSEG_16） |
+| U11p4_ETM_S04 | 31/31 | **15.677277382** | CSEG_17, 627.80 | 13.736909937（P0峰值在CSEG_16） |
+| U19p202140_ETM_S04 | 31/31 | **9.896858966** | CSEG_04, 245.10 | 8.106109936 |
+| U19p202140_ETM_S06 | 31/31 | **11.779153335** | CSEG_17, 650.70 | 9.843901385（P0峰值在CSEG_16） |
+
+**注意**：即使按更大的P0仍出现负\`σ_min\`，也**不等于**“30道接缝真实已经张开”；31个OpenFAST测点位于段内，**并非30道水平接缝截面**，且风载与Abaqus结构/控制器/塔质量身份尚未闭合。不得把该数表直接用于规范失压合格性、真实疲劳寿命或地震验算。
+
+**真实运行环境与独立测试**：本地Python 3.13、NumPy 2.3.5、pandas 2.2.3；读取并处理1,488,124条记录，16件ZIP完整；解析闭式\`M_kern=N I/(A ro)\`的边界oracle通过，\`P0>Pe\`单调性通过；故意把manifest一条ZIP SHA改为全零时程序非零退出且报\`ZIP SHA mismatch\`；对\`U09.../CSEG_17/t=652.75s\`另从ZIP原始CSV直接读取\`N_ext=15783.739052 kN\`、\`M_res=212180.419309 kN·m\`独立代入，得到\`σ_min=-18.4530525905 MPa\`，与9位小数输出差约\`3.52e-9 MPa\`（由CSV中A/I/ro打印截断引起）。本轮无Abaqus/地震原生RUN、无新的物理FIG。
+
+**完整可复算命令**（ZIP文件名按历史恢复说明，需先下载16件artifact）：
+
+\`\`\`bash
+python research/wind-tower/experiments/T077/recovery/s06_joint_kern_history_screen.py \
+  --zip-dir /path/to/16-zips \
+  --manifest research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv \
+  --geometry research/wind-tower/experiments/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv \
+  --output /path/to/full_124rows.csv
+\`\`\`
+
+**文件哈希及验收层级**：本轮本地完整18列124行CSV SHA256=\`534e430dcfc10268daad5673e4885d71b11aaf7ae550d919f517affb20538f38\`（临时完整输出，未称已入库）；GitHub已持久化的7列124行精简CSV SHA256=\`d2f1edb8d7a21a268abda532b3564ec7d92967424f26b165f81b86b0db73569f\`；程序SHA256=\`4fa0b690f6831958c142559942c7bb3f99610892a66c7f3e3001d77a08526f51\`。二者已用远端Git blob回读校对。原始16 ZIP尚未长期托管到仓库，历史Actions artifact过期日期登记为2026-11-06，需优先转存长期存储。
+
+**REF**：延续T079/T080先行研究登记，2026年160m混塔风震已有研究；本轮无新全文阅读，不冒称新REF。**STANDARD**：IEC/GB/NB授权原条文未新增核读，规范PASS=0。**OFFICIAL**：GitHub Actions artifact API及历史工作流/真实运行产物。**RUN**：真实历史数据重新下载、逐行计算及负测试；不是原生OpenFAST重新计算，也不是Abaqus。**FIG**：无新增物理响应图。**TAB**：124行原始case×段筛查与上表。**误差预算**：数值舍入和时间同态可校验；PT沿高分布、接缝非线性、原型与OpenFAST EI/质量、惯性力所有权、测点至接缝外推、材料与标准适用性**均NEED-ESTIMATE，不存在可靠的总物理误差上界**。
+
+**单一最大HOLD**：无法把段内风载全接触筛查直接升级为**真实30道接缝**的开闭与锚端有效PT结论；需要冻结相同物理身份并通过Abaqus原生G0/G1。与此同时，独立S05/S07/S10方法与真实输入准备可以继续推进，不受该HOLD阻挡。
