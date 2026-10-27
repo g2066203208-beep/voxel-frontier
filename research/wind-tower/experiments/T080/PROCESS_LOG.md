@@ -226,3 +226,8 @@
 - **实际输入/执行**：本地Python 3.13.5读取PR #42已提交744行源CSV（SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`）；对U19.202140_ETM_S04与S06按同名CSEG、同单位、同采样时长做m4/m10配对，产生12行表（SHA256=`ebb9dfb1da740a3968e5fac7c43152010aa58a0e39dc005c9299d13849ce97e3`）。复用`s06_qc_half_window_rms.py`并增加`--paired-qc`，新增专用轻量Actions工作流做逐字节复算和源文件篡改拒绝测试。**远端CI成功与否须独立查实际run，不能凭工作流文件已提交宣称PASS**。
 - **可证伪新发现**：26/31名义测点的S04/S06高度不完全相同，最大0.414875 mm（CSEG_31）；My通道中位DEL比m4=1.015026、m10=1.088650。不能据此推断seed收敛或疲劳寿命；两seed仅历史ETM，31测点相关。必须查源塔架/测点生成，防止S07错误认定同截面。
 - **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=744行表+16ZIP回执；REF=无新增全文；STANDARD=无授权条款；OFFICIAL=GitHub历史Actions与本次工作流；RUN=本地真实Python复算，CI待验；FIG=无；TAB=12行配对CSV。输入源哈希锁定但模型/物理误差NEED_ESTIMATE。S06 PARTIAL/HOLD，S07/S10/S11无生产PASS；12阶段0/12、地震RUN=0。未改冻结母本、未合并PR。
+
+### 2026-10-28 01时｜纠正误报的S04/S06测点几何差异
+
+- **新证据/纠错**：直接读取原T071/T072 Actions工作流源文件，31个名义段映射TwrGagNd完全相同；T072从同一基准拷贝模型并校验158m tower SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`。原`gage_z_m`来自`TwHt*TPzi`第一个统计窗口样点，是惯性坐标系**动态位置**，不是固定测点高度。OpenFAST官方ElastoDyn运动学文档和NREL开发者公开答复支持此定义。因此撤回上方“26/31静态几何身份不一致”的结论，保留原记录用于审计。当前12行CSV已改为`first_sample_TPzi`字段名，SHA256=`48b423b220e199f1415f61e9d72aa596124e1c3d02e05b823b9198d039dac981`。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=T071/T072 workflow + 744行源数据；REF=OpenFAST官方理论网页、NREL论坛答复（非期刊全文）；STANDARD=无；OFFICIAL=OpenFAST文档；RUN=本地源级复算，无原生OpenFAST/Abaqus；FIG=无；TAB=更正12行CSV。**误报HOLD关闭，不等于S06科学PASS**：原OUTB/逐时刻位置姿态、惯性/气动力归属仍HOLD；12阶段0/12，地震RUN=0。
