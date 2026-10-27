@@ -161,3 +161,14 @@ HOLD：
 - **STANDARD/FIG/假设/误差/HOLD**：未取得2025 IEC/GB/NB/T10907新授权原条文；无本塔地震/风疲劳新FIG，无Abaqus/ODB/原生Data Check。模型原始SHA沿用历史锁定T057=\`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db\`、T070=\`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9\`（本轮未重新哈希母本）。原刊试验数据舍入可量化，缩尺/几何不平度/摩擦/有效PT/网格/长期疲劳的误差\`NEED_ESTIMATE\`。S01仍PARTIAL/HOLD，S02–S04 BLOCKED，S05/S06 PARTIAL/HOLD，S07–S11 BLOCKED，S12 PARTIAL；**0/12未晋级，地震RUN=0**。唯一最大HOLD仍为配筋—接缝—有效PT唯一原生物理基线未冻结。
 
 **下一唯一最优动作（不依赖求解器）：** 从已登记REF015（接缝低周滞回）和REF018（运行风疲劳）的仓库完整原件核实SHA并提取实际模型、损伤判据和适用范围，闭合S10“低周滞回≠运营高周疲劳”的方法证据，不修改T057/T070、不跑昂贵生产RUN。
+
+
+
+## 2026-10-27 17时｜S01/S10新2026先行疲劳方法与PT阶段损失身份（0/12）
+
+**阶段状态变化0/12未晋级。** S01=PARTIAL/HOLD，S02–S04 BLOCKED，S05/S06 PARTIAL/HOLD，S07–S11 BLOCKED，S12 PARTIAL；**真实地震E/WE结果仍0**。本轮依总计划先做不依赖Abaqus的可复核学术/算术工作，原风致分材料疲劳→抗震约束优化主线不变。
+
+- **SOURCE/REF：** REF015/018原始用户PDF虽有GitHub历史路径，本轮执行环境无法恢复原件字节，公开检索只取得原刊摘要/元数据，不能称新读全文。REF023 [Qu等2026](https://doi.org/10.3390/buildings16193854)在出版社网页索引可核读§2–6选定公式与方法，直接网页HTTP429，PDF SHA缺失；其**4.55MW、35段Tie混塔已研究PT损失、混凝土/钢绞线双向疲劳损伤与神经网络**，所以本文不得声称该机制首创，且不能借其验证30道摩擦干缝。新REF161 [Peng等2026](https://doi.org/10.1002/tal.70169)仅出版社摘要/参考文献（全文HTTP403），给出\`Di,Do,N,M\`四输入接缝失压/接触应力查表的研究线索；全文公式未读，不冒充原页验收。全部阅读层级、失败、可迁移/不可迁移见[原文笔记](../../experiments/T079/literature_notes.md)与[中央REF表](../../registry/literature_master.tsv)。
+- **S01 PT身份新可复核结论：** [T078原始元数据](../../experiments/T078/T078_PRESTRESS_DESIGN_META.json)SHA256=\`50b5d23c9991955b8cfe304bdb1bc8519e07ad1b97a8f7500bb7e878eb69d2a1\`（GitBlob=\`99a750c22268febde268bcdbea46d7f21cfe34f8\`），P0=51.6096MN/1280MPa、Pe=39.75355895461417MN/985.95136MPa；**总损失22.97255%≠松弛损失2.35215%**。以**假设**Δσ=20MPa及这两个阶段应力**假装循环均值**代入REF023钢绞线Goodman+S–N候选，条件性损伤比4.20123，**绝非本塔寿命或真实疲劳计算**。脚本[可复算/锁SHA](../../experiments/T078/t078_pt_goodman_2026_source_oracle.py)，[T078算术与方法边界](../../experiments/T078/T078_PRESTRESS_DESIGN_REPORT.md)；本轮Python 3.13.5只完成精简fixture测试，尚无完整原件Python/CI执行日志。不能在Pe后重复扣除已有总损失。
+- **STANDARD/OFFICIAL/RUN/FIG/TAB/误差预算：** 没有IEC2025/NB10907授权新条文、没有Abaqus/OpenFAST原生RUN、没有真实PT雨流时程/本塔地震/疲劳FIG。REF023提及ASTM雨流仅为作者方法；TAB为T078条件敏感性和[T079材料分流数据合同](../../experiments/T079/METHOD_PLAN.md)。原T057/T070锁定SHA不变，未改母本。浮点算术误差远小于物理不确定性；钢绞线S–N适用、PT阶段、接缝/材料/气动/统计/场地误差\`NEED_ESTIMATE\`。
+- **单一最大HOLD：** S01唯一可实施普通筋—接缝—有效PT初态未完成授权规范和原生验证。**下一最优可自主动作：**复用现有S06四工况×31段真实恢复的同步荷载，做\`N(t),M_x(t),M_z(t)\`与Pe分阶段的**静态无拉接触筛查**并明示载荷/预应力双计风险，不能把它当S03原生平衡。
