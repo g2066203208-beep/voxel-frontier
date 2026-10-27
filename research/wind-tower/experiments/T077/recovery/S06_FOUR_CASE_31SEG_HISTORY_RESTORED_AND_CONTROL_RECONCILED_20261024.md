@@ -216,3 +216,16 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=上一轮已恢复并逐ZIP哈希核验的16件真实历史分批数据及本轮744行衍生CSV的字节级保全；REF=沿用T062/T079雨流方法登记，本轮无新增全文核读；STANDARD=未核读新增授权条款、D>20%非规范判据；OFFICIAL=GitHub Actions原始工况产物及当前PR远端内容；RUN=Python 3.13本地标准库对744行复算、完整SHA/覆盖/重复键/数值及24行输出逐字节核对；CI工作流[现有t080-evidence-preflight.yml](../../../../../.github/workflows/t080-evidence-preflight.yml)增加同样的自动测试，真实GitHub runner结果必须独立回查；FIG=无新物理图；TAB=744行完整源级统计与24行半窗QC。**误差预算**：CSV固定9位小数与QC固定6位小数引入可界定的输出舍入（D结果约≤0.000001百分点），但非平稳性/有限记录/模型身份/风场与结构动力误差仍NEED-ESTIMATE；不把静态完整性或数值一致性扩大成S06/S07物理PASS。
 
 **PASS/HOLD**：744行结果已永久入PR分支文本仓库、24行QC及复算程序入库；S06仍PARTIAL/HOLD，S07仍BLOCKED，严格12阶段仍0/12。最大HOLD仍为**原始OUTB、动态坐标、重力/惯性归属及原始16件ZIP长期归档**；本轮保存衍生统计不等于原始时程长期归档。下一单一动作应优先保存原始16件ZIP/OUTB并继续身份链恢复，无法取得时转向S10分材料雨流/mean-stress方法的可执行独立测试。
+
+
+## 2026-10-27 23时｜S06原始16件Actions ZIP到期保全执行与回执门禁
+
+**本轮实际GitHub API查询（2026-10-27，Asia/Shanghai）：** [T071原运行](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146)列出4件、[T072原运行](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681)列出12件；16/16 `expired=false`，API报告总计 **125,291,677 bytes**。最早到期 `2026-11-06T07:09:33Z`，最晚 `2026-11-06T13:11:23Z`。以上是**元数据直接读取**，本轮未在本地重新下载16件原始字节，不能用元数据当作字节校验。
+
+**真实新产物：** 已将[到期原件保全脚本](s06_archive_expiring_actions_sources.py)与[独立只读归档CI](../../../../../.github/workflows/s06-preserve-expiring-source-artifacts.yml)提交Draft PR #42。程序从已冻结[16件manifest](S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)读取case/batch、原artifact ID、ZIP/GZIP/CSV SHA256及行数；下载原始ZIP，逐件验证ZIP字节SHA、CRC、唯一`*_31seg.csv.gz`、gzip字节SHA、解压CSV字节SHA、case及记录数；附有合成正例和ZIP/GZIP/CSV/行数篡改负测试。只有全部16件通过才会在**不修改main、不跑OpenFAST/Abaqus**的情况下，向仓库创建**DRAFT（非公开发布）GitHub Release**并上传16件原件与一件核验JSON；若已存在该draft release，则仅补传缺失的文件。工作流设置`actions:read`与`contents:write`并序列化运行，避免重复/并发上传。
+
+**永久归档的唯一确认门槛：** 工作流须完成17件Release asset的远端计数和`isDraft=true`检查，并由GitHub Actions bot向**本PR分支**提交[S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json](S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)，其中记录release URL、17件资产名、源manifest SHA、run ID；之后由研究端远端回读此receipt及Release资产，才允许把`SOURCE_ARCHIVED`改成`PASS`。截至**本次写入时**尚未看到此回执，故**状态仍为ARCHIVE_SUBMITTED / RECEIPT_PENDING，不能声称长期保存成功**。GitHub Actions原产物本身仍有过期风险。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** SOURCE=GitHub Actions原运行的16件实时元数据 + 已登记原字节manifest（本轮未重新核对字节）；REF=既有研究，不新增原刊阅读；STANDARD=无授权条文新增；OFFICIAL=GitHub Actions API/工作流源代码；RUN=GitHub仓库脚本和归档CI已提交，真实上传是否成功待receipt；FIG=无；TAB=16件manifest/待生成核验JSON。**误差预算：** SHA256/CRC/行数为文件身份验证，不是动力学误差；OpenFAST OUTB、EI/控制器/RNA、坐标惯性、DLC1.2统计及材料疲劳均仍HOLD。**12阶段正式PASS仍0/12。**
+
+**下一单一动作：** 检查归档工作流是否产生17件资产的Draft Release和GitHub回执；如失败，读取失败job日志，直接修复下载/权限/发布问题，不再重复S01静态审计。
