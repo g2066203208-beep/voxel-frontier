@@ -1,4 +1,4 @@
-wind_speed_mps,turbulence,seed_A,seed_B,channel,m,n_paired_gages,median_DEL_B_over_A,min_DEL_B_over_A,max_DEL_B_over_A,n_B_greater_A,max_abs_pct_change,max_abs_pct_gage,n_gage_z_nonidentical,max_gage_z_abs_diff_mm
+wind_speed_mps,turbulence,seed_A,seed_B,channel,m,n_paired_gages,median_DEL_B_over_A,min_DEL_B_over_A,max_DEL_B_over_A,n_B_greater_A,max_abs_pct_change,max_abs_pct_gage,n_first_sample_TPzi_nonidentical,max_first_sample_TPzi_abs_diff_mm
 19.202140,ETM,S04,S06,Fx_kN,4,31,0.942853955,0.933890143,0.981269535,0,6.610986,CSEG_01,26,0.414875
 19.202140,ETM,S04,S06,Fx_kN,10,31,0.979834666,0.957984477,1.048875994,11,4.887599,CSEG_28,26,0.414875
 19.202140,ETM,S04,S06,Fy_kN,4,31,0.994198661,0.975857881,1.008721000,12,2.414212,CSEG_27,26,0.414875
