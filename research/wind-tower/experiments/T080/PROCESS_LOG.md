@@ -220,3 +220,9 @@
 - **RUN**：[40537618197](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40537618197) job 122307019666最终`completed/success`；16 ZIP下载SHA/CRC/GZIP/CSV/行数PASS，安全302正负测试PASS，17件Draft Release上传及receipt push均PASS。前四次HTTP401失败已保留在上方。
 - **OFFICIAL/独立回读**：Release id=425693174，draft=true，17件`state=uploaded`，16件原ZIP共125291677字节，验证JSON 10308字节；GitHub API每个原ZIP `digest`对照既有manifest SHA256为**16/16一致**。验证JSON digest=`sha256:4f6ec8df9fc709fc75d2e86afb20e7e9a0dcac9865f6479ddd72c448a6967b62`。远端[receipt](../T077/recovery/S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)已实际存在，actions_run_id=40537618197，manifest SHA256=dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8。**SOURCE_ARCHIVED_16ZIP_PASS，不是S06科学PASS。**
 - **REF/STANDARD/FIG/TAB/误差**：无新增原刊/授权规范/原生结果图；TAB为16行manifest与17件资产清单。字节误差0不等于动力学误差0；OUTB/模型/六分量惯性所有权仍HOLD，12阶段0/12。下一动作S07/S10独立研究。
+
+### 2026-10-28 01时｜S06/S07同风速两seed源级配对
+
+- **实际输入/执行**：本地Python 3.13.5读取PR #42已提交744行源CSV（SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`）；对U19.202140_ETM_S04与S06按同名CSEG、同单位、同采样时长做m4/m10配对，产生12行表（SHA256=`ebb9dfb1da740a3968e5fac7c43152010aa58a0e39dc005c9299d13849ce97e3`）。复用`s06_qc_half_window_rms.py`并增加`--paired-qc`，新增专用轻量Actions工作流做逐字节复算和源文件篡改拒绝测试。**远端CI成功与否须独立查实际run，不能凭工作流文件已提交宣称PASS**。
+- **可证伪新发现**：26/31名义测点的S04/S06高度不完全相同，最大0.414875 mm（CSEG_31）；My通道中位DEL比m4=1.015026、m10=1.088650。不能据此推断seed收敛或疲劳寿命；两seed仅历史ETM，31测点相关。必须查源塔架/测点生成，防止S07错误认定同截面。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=744行表+16ZIP回执；REF=无新增全文；STANDARD=无授权条款；OFFICIAL=GitHub历史Actions与本次工作流；RUN=本地真实Python复算，CI待验；FIG=无；TAB=12行配对CSV。输入源哈希锁定但模型/物理误差NEED_ESTIMATE。S06 PARTIAL/HOLD，S07/S10/S11无生产PASS；12阶段0/12、地震RUN=0。未改冻结母本、未合并PR。
