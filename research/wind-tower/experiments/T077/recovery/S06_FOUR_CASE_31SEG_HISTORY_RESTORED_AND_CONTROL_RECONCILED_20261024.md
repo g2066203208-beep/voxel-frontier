@@ -142,3 +142,25 @@ T074的31站Fx=Fy=Mx=Mz=0，My=−5793.573173694369kNm沿高恒定；Fz从−251
 证据链：SOURCE=T077几何+T074重力真实仓库CSV；REF=沿用既有T079/T080来源、未新读全文；STANDARD=未核授权IEC/GB/NB条文；OFFICIAL=GitHub历史数值/既有CI、非官方OpenFAST内部定义审查；RUN=30道静态计算与合成oracle，原生CAE/地震0；FIG=无；TAB=30行接口数据。S06仍PARTIAL/HOLD，S01原生PT与接触仍HOLD。
 
 **下一单一动作：** 依据T071/T072四工况六分量时程及T074重力基线，核对OpenFAST截面力输出定义、截段自由体与分布惯性所有权，再建立有残差解释的上下gage动态对照；禁止直接插值制造真实接缝力。
+
+
+## 2026-10-27 20:10 CST｜S06六分量自由体分账：真实T074静态截面力与官方输出语义
+
+**性质：真实31站静态OpenFAST历史截面力的六分量代数核对 + 可执行的合成载荷测试，非动态惯性识别、非30道接缝力、非原生Abaqus验证。** 本轮沿用既有[s06_30_joint_gravity_ownership.py](s06_30_joint_gravity_ownership.py)，新增带量纲的六分量wrench transport、零/负跨度与NaN拒绝、纯剪力—弯矩耦合和线性分布侧向力解析测试；原有30道几何/体积CSV和输出格式不改变。新增[30行静态六分量表](S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv)，所有数据来自原始31行[T074重力基线](../../T074/T074_158M_31SEG_GRAVITY_BASELINE.csv)，不是重新运行OpenFAST。
+
+**六分量共同参考点比较的严格数学定义**（仅在两截面六分量同一右手坐标系、同一内力正号约定时）：
+- 上下gage高差 Δz=z_a−z_b>0，沿下截面原点比较上截面力矩：**M_a@b = M_a + (0,0,Δz)×F_a**。
+- 上下截面力差 **ΔF=F_a−F_b**；下截面原点的力矩差 **ΔM_b=M_a@b−M_b**。即 ΔMx=Mxa−Δz·Fya−Mxb；ΔMy=Mya+Δz·Fxa−Myb；ΔMz=Mza−Mzb。单位F=kN，M=kN·m，z=m。
+- **ΔF/ΔM是两个截面输出的代数差，不自动等于已识别的气动力、塔重、惯性或接缝实际荷载**；要将其解释为某一截段外载，仍需输出正号、局部坐标旋转、分布质量、加速度、阻尼及各项外力的独立自由体方程。
+
+**真实源数据的可复核结果**：T074 31站静态列的Fx=Fy=Mx=Mz=0；My在31站均为**−5793.573173694369 kN·m**（沿高完全常数）；Fz由底部**−25192.602388144347 kN**到上部**−8758.837607229541 kN**，上减下总差**+16433.764780914806 kN**。30个相邻gage间，ΔFz=**413.772200897–642.794741544 kN**；在本次**静态共同坐标假设**下，ΔFx=ΔFy=ΔMx=ΔMy=ΔMz均为0（输出列9位小数）。这证明**该历史静态基线呈现随高变化的轴力和沿高不变的弯矩**；不能仅由−5793.573kN·m认定来源一定是RNA偏心或PT，更不能把恒定My当作塔重分布的独立证明。先前30道接缝体积和γ_eff仍只是源级诊断。
+
+**本轮新增OFFICIAL/方法核读（不把论坛意见冒充标准条款）**：
+1. [OpenFAST ElastoDyn官方输入说明](https://github.com/OpenFAST/OpenFAST/blob/main/docs/source/user/elastodyn/input.rst)指出TwrGagNd为**塔分析单元内部节点/虚拟应变计位置**，而不是混凝土水平接缝；输入OutList通道可有负号前缀，必须核对实际历史输入，不能从CSV字段名反推原始通道符号。
+2. [NLR风能软件官方技术论坛，OpenFAST开发者Jason Jonkman于2020-03-16答复](https://forums.nlr.gov/t/local-tower-loads-output/2220)：TwHt局部塔坐标随塔变形/平台移动，**不随机舱偏航转动**；对通道名称中“fore-aft/side-to-side”的直觉解释有特定适用条件。因此**动态上下gage的本地六分量不得在未获取同时时刻坐标旋转时直接相减**。
+3. [NLR技术论坛，Jason Jonkman于2025-08-19及20日答复](https://forums.nlr.gov/t/openfast-foundation-and-tower-loads/9220)：ElastoDyn塔底反力是**通过塔传给平台的总传递荷载**；其简化运动方程说明反力可由F−m·q¨求得，而不是仅由弹性kq确定，且总传递荷载用于应力计算。**因此不能把完整截面反力作为Abaqus独立施加的风外力同时又重复加同一塔质量惯性/重力**。这两条是开发者对通道物理语义的公开解释，不是对本158m历史模型每个CSV分量的逐项原生证明。
+4. [OpenFAST v3.5.3 ElastoDyn理论](https://openfast.readthedocs.io/en/v3.5.3/source/user/elastodyn/theory.html)区分内部与输入/输出坐标；历史T071/T072声明版本为3.5.3，但本轮未重新校验原始OUTB和TwrGagNd/OutList原始字节。
+
+**SOURCE**：T074原始31站CSV SHA256=**b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349**；T077 31段几何 SHA256=**d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e**；既有30道接缝源CSV SHA256=**ba43732de537854e0361d1aa4cc2792bf8b80ab3536115b6b2f1c9e2317dfe6f**。**REF**：上述两篇NLR开发者原答复按公开HTML全文段落阅读，不作为期刊文献/规范；先行论文来源等级不变。**STANDARD**：本轮未新增授权IEC/GB/NB原条文。**OFFICIAL**：OpenFAST文档与开发者答复，版本/坐标适用性已明确记录。**RUN**：静态30行实际源数据代数计算与合成wrench oracle（新增CI校验步骤；成功状态以对应GitHub Actions真实结论为准）；原生Abaqus/地震/正式OpenFAST RUN=0。**FIG**：无原生响应图。**TAB**：新增30行六分量表。**误差预算**：源CSV双精度代数及9位十进制舍入可检查；**动态坐标、质量/惯性分账、OUTB来源与控制器/气动反馈物理误差均NEED-ESTIMATE**。
+
+**本次确定的阻断点**：动态载荷不是一个可直接以截面差或“31站插值到30道接缝”解决的问题；必须从真实历史OUTB/ElastoDyn输出通道及随时间的局部坐标方向获取**同态全局六分量与塔段加速度**，才能建立分布风载/惯性/重力的独立自由体残差。此项S06继续PARTIAL/HOLD；S07/S10/S11的独立方法研究可以并行推进，不等原生S01全面通过。
