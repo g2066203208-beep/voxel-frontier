@@ -246,3 +246,6 @@
 - **补充可复算测试（同一S07程序）：** 20261028固定随机种子生成1000组非零六分力/力矩及3个移动参考点，验证分两步搬运与直接搬运最大分量差<1e-10（kN或kN·m），本地Python 3.13.5通过；真实30行SHA篡改负测试同样通过。此为纯代数数值误差，非物理误差。执行容器`command -v abaqus`及`command -v openfast`均未找到可执行文件，未运行原生求解。脚本现SHA256见本节更新值。
 
 - **CI执行资源纠偏（2026-10-28 03时）：** 仓库元数据size=2,236,627 KB，最初[40566451186](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566451186)和[40566762752](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566762752)在完整checkout阶段耗时，不能把in_progress称success。将[同一S07工作流](../../../../.github/workflows/s07-six-component-frame-gate.yml)改为只下载`github.sha`锁定的两个公开原始小文件，仍由脚本对30行源双SHA核验；工作流修复提交`25fc3f561e472dcb01939ca131968942b60a8224`，[新run 40566932835](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566932835)已创建，**结果待实际job日志确认**。此修复仅影响CI资源效率，不改变计算公式或科学验收状态。
+
+
+**2026-10-28 03时｜S07轻量CI已实际成功（覆盖此前PENDING）：** [Actions #40566932835](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566932835)，job `122410594298`，`completed/success`；原始job日志明确打印：合成旋转/力矩/逆算/1000组固定种子路径回归通过，**真实静态30/30行**、源SHA256及篡改拒绝通过。远端程序SHA256=`56ad7f047e7d6431acd3d87bc411055ba23a5a54d9dd0913f51164463c195557`，源CSV SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`，与本地一致。先前两个完整checkout尝试不能视为本次成功；最终成功的是SHA固定的两文件轻量CI。**仅代码/静态源数值验收，不是S07动态物理PASS**；12阶段仍0/12、地震RUN=0。
