@@ -170,3 +170,12 @@
 - **误差预算/FAIL/HOLD**：wrench运输仅为共同参考点的数学恒等式；未取得各站实际动态旋转矩阵、加速度、塔段分布气动力与独立惯性，不能将动态局部六分量直接相减、不能声称已分解外风载或获得30道真实接缝力。S06仍PARTIAL/HOLD，S01–S12仍0/12科学PASS，地震RUN=0。下一单一动作恢复并核验158m历史OUTB及其塔局部坐标/加速度通道以执行真实动态自由体残差。
 
 - **真实CI最终回读**：[GitHub Actions run 40501252495](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40501252495)于2026-10-27T12:08:01Z完成**success**；job 122179197703原生日志输出“30/30 static six-component gage wrench transport + synthetic shear/moment oracle PASS”，原始T074与T077 SHA检查、30行旧几何表及新增30行六分量表逐字段数值回归通过；打印的新增六分量CSV SHA256=**ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e**。GitHub远端回读该CSV独立JS SHA256（abc标准测试向量先通过）**完全一致**；程序SHA256=**76e3a595cdb83c7873f0ab4dc6f877d0c48a83305d3a1c373d8018b64974c399**。这仅是数值复算与算法单测成功，绝不是物理PASS。
+
+
+### 2026-10-27 21:05–21:xx CST｜S06/S07独立数据计算（不新增T080任务）
+
+- **SOURCE**：PR开始head=50d65765f2b1f220b6c387c284a6a3f36f2111de，main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65；AGENTS/README/00_STATUS/00_WORKSPACE_MASTER/T079 ACADEMIC_REVIEW/T080.1–3/12阶段总计划均核读。T071 Actions 37582521146 + T072 Actions 37622366681的16件ZIP本轮真实重新下载（合计约120MB），ZIP/gzip/CSV与既有S06 manifest 16/16 SHA校验成功。第一次手工复制manifest时最后一项CSV SHA漏3字符，真实程序在最后一包抛出CSV SHA mismatch；从GitHub原文恢复完整哈希后全通过，没有跳过或伪造数据。
+- **RUN**：Python 3.13、NumPy 2.3.5、pandas 2.2.3，本地对1,488,124条真实4工况×31站六分量时程，生成744行完整逐站逐通道统计/雨流/DEL_m4/m10，输出SHA256=9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b（仅本轮工作容器，未上传GitHub）。生成24行汇总CSV SHA256=d8f6dc4a3e34abe09a5c15e0adcdff99a6a4764f1b26245e624f1e7f19a4a499、程序SHA256=9149c6ef71424ed073b4233ac7082753b0dcd979ec31b795318570c5c5cdac34；两者已提交PR #42并用GitBlob=本地git hash-object逐字节远端回读。
+- **TEST**：单调、平台、半循环、全循环、常值、非法NaN/单点拒绝、40组随机序列雨流计数守恒、完整时间网格与case/batch/segment覆盖；全部通过。程序没有调用Abaqus/OpenFAST生产求解器。My通道m4控制U11p4_ETM_S04/CSEG_01=94,836.550kN·m，m10控制U09p343881_ETM_S06/CSEG_01=221,544.884kN·m，证明历史候选控制工况依m排序可能变化。
+- **REF/STANDARD/OFFICIAL/FIG/TAB**：REF沿用T062/T079，未新增原刊全文阅读；STANDARD未取得授权ASTM/IEC条文，不能声称规范认证；OFFICIAL是GitHub历史原产物与仓库OpenFAST源记录；FIG无物理结果；TAB为S06 24行GitHub CSV及研究记录内控制表。m4/m10仅方法筛选，不等于分材料S–N、真实DLC1.2、20年寿命或抗震。
+- **PASS/HOLD**：严格阶段0/12；S06 PARTIAL/HOLD，S07 BLOCKED（新增可运行源级管线）；S01未冻结、原始OUTB/动态坐标/惯性所有权缺失、长期风速概率与真实局部应力缺失，物理/统计误差NEED_ESTIMATE。**下一单一动作**：在2026-11-06前为16件ZIP和原始OUTB建立长期归档与模型/控制器身份链，若OUTB无法恢复则继续S10方法程序而不回到S01循环审计。
