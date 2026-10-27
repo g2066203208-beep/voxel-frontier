@@ -27,7 +27,10 @@ jobs:
           curl --fail --location --silent --show-error --retry 3 \
             --output audit/s06_historical_outb_source_gate.py \
             "$base/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py"
-      - name: Synthetic parser negative tests and real original OUTB SHA/header/channel inventory
+          curl --fail --location --silent --show-error --retry 3 \
+            --output audit/previous-three-sample-receipt.json \
+            "$base/research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json"
+      - name: Parser negative tests and full real 12001 x 9 synchronous native-channel extraction
         shell: bash
         run: |
           set -euo pipefail
@@ -35,13 +38,26 @@ jobs:
           python3 audit/s06_historical_outb_source_gate.py --self-test
           python3 audit/s06_historical_outb_source_gate.py \
             --zip-path audit/part-001.zip --manifest audit/file-manifest.json \
-            --case U09p343881_ETM_S01 --output audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+            --case U09p343881_ETM_S01 --output audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json \
+            --full-series-gzip audit/S06_T062_9GAGE_FULL_NATIVE_SERIES.csv.gz \
+            --previous-receipt audit/previous-three-sample-receipt.json
           sha256sum audit/part-001.zip audit/file-manifest.json audit/s06_historical_outb_source_gate.py \
-            audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+            audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json \
+            audit/S06_T062_9GAGE_FULL_NATIVE_SERIES.csv.gz
+          python3 - <<'PY'
+          import json
+          d=json.load(open("audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json"))["full_synchronous_native_series"]
+          assert d["sample_count"] == 12001 and d["gage_count"] == 9
+          assert d["selected_channel_count"] == 141 and d["channel_value_count"] == 1692141
+          assert d["three_instant_parity"] == "PASS"
+          print("REAL_FULL_SERIES_QC", {k:v for k,v in d.items() if k not in ("native_channel_summary","hold")})
+          PY
           echo 'S06: ORIGINAL ARCHIVE SOURCE/QC ONLY; NOT 31-GAGE RERUN, DYNAMIC FORCE OWNERSHIP, ABAQUS, OR PHYSICS PASS.'
       - name: Retain small source/header receipt for inspection
         uses: actions/upload-artifact@v4
         with:
-          name: s06-t062-one-original-outb-header-qc
-          path: audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+          name: s06-t062-one-original-outb-full-native-series-qc
+          path: |
+            audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+            audit/S06_T062_9GAGE_FULL_NATIVE_SERIES.csv.gz
           retention-days: 14
