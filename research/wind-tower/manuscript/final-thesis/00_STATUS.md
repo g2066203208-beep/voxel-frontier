@@ -243,6 +243,8 @@ HOLD：
 
 ## 2026-10-28 03时｜S07六分量移动参考点变换：独立算法准备
 
-**12阶段仍0/12正式PASS。** S07=BLOCKED/INDEPENDENT_PREPARATION；新[六分量坐标/参考点变换程序](../../experiments/T077/recovery/s07_six_component_frame_gate.py)与[30行真实静态源表](../../experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv)已保存PR #42。输入CSV SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`；程序本地SHA256=`e8fddd516c486dc733f092cf1c53ee3ece63090a11735353e54a8619764717c9`。本地Python 3.13合成90°旋转、参考点力矩叉积、逆算、6D平衡、非法输入拒绝通过；真实历史30行回归通过（ΔFz=413.772200897–642.794741544 kN，其他分量差=0，仅静态公共坐标假设）。已提交[专用轻量CI](../../../../.github/workflows/s07-six-component-frame-gate.yml)，**远端CI须独立查job，不预报PASS**。
+**12阶段仍0/12正式PASS。** S07=BLOCKED/INDEPENDENT_PREPARATION；新[六分量坐标/参考点变换程序](../../experiments/T077/recovery/s07_six_component_frame_gate.py)与[30行真实静态源表](../../experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv)已保存PR #42。输入CSV SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`；程序本地SHA256=`56ad7f047e7d6431acd3d87bc411055ba23a5a54d9dd0913f51164463c195557`。本地Python 3.13合成90°旋转、参考点力矩叉积、逆算、6D平衡、非法输入拒绝通过；真实历史30行回归通过（ΔFz=413.772200897–642.794741544 kN，其他分量差=0，仅静态公共坐标假设）。已提交[专用轻量CI](../../../../.github/workflows/s07-six-component-frame-gate.yml)，**远端CI须独立查job，不预报PASS**。
 
 **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差/HOLD**见[原S06研究记录的S07追加节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)：不新增授权规范条款、原刊全文、Abaqus/地震/风场求解；矩阵阈值1e-8与输出9位小数仅属算法质量门槛。程序对真实动态姿态、采样、重力/惯性/RNA及气动自由体所有权仍**不可验证**，严格禁止把转换后的截面内力直接当Abaqus外载；原始OUTB和同刻姿态/加速度通道缺失，S07物理HOLD未关闭。下一动作为恢复一条带SHA的原始OUTB与逐时刻位置/姿态/加速度，做自由体来源分账。S10风致分材料疲劳、S11优化主线不变。
+
+**补充：** S07脚本现含固定种子20261028的1000组移动参考点数值路径无关性测试（分量差<1e-10），本地Python 3.13.5通过；当前执行容器无`abaqus`/`openfast`命令，不能执行原生生产RUN。远端CI以实际运行日志为准。
