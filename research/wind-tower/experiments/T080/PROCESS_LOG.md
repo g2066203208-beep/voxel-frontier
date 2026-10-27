@@ -195,3 +195,12 @@
 - **PASS/HOLD**：12阶段仍0/12；S06 PARTIAL/HOLD，S07 BLOCKED，S10/S11无物理生产结果；模型身份、动态坐标/惯性归属、OUTB、16件ZIP长期归档仍HOLD。**下一动作**：优先长期保存16件原始ZIP/OUTB；缺源时转S10可独立执行的方法测试，不再循环S01。
 
 **S06 QC负测试（本地真实执行）**：将744行源CSV第101字节翻转1 bit，再运行同一`s06_qc_half_window_rms.py`复核；程序以退出码1拒绝输入，原始错误为`AssertionError: 744-row source SHA mismatch`，没有把被篡改的数据记为PASS。此负测试不验证物理模型，仅验证文件完整性fail-closed。
+
+
+## 2026-10-27 23时｜S06到期原始Actions ZIP归档作业
+
+- **SOURCE（GitHub原生元数据读取）：** T071 [37582521146](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146) 4件、T072 [37622366681](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681) 12件；16/16 `expired=false`、125291677 bytes，2026-11-06T07:09:33Z至13:11:23Z到期。已登记的16行ZIP/GZIP/CSV SHA256及行数沿用原manifest；**本轮只直接读取原运行元数据，尚无新的16件字节重下载验算结果**。
+- **CODE/CI（已提交）：** [s06_archive_expiring_actions_sources.py](../T077/recovery/s06_archive_expiring_actions_sources.py)新增ZIP/GZIP/CSV哈希+行数fail-closed验证及篡改负测试；[s06-preserve-expiring-source-artifacts.yml](../../../../.github/workflows/s06-preserve-expiring-source-artifacts.yml)自动读取16件原件、创建Draft Release、上传17件资产、成功后在本PR分支写入receipt。文件提交顺序：`ecea088b`脚本、`9c8442ed`工作流、`5655e848`幂等回执、`c8bb4ff4`换行修复、`ff8de456`串行与断点补传；[S06研究报告](../T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)和[中央状态](../../manuscript/final-thesis/00_STATUS.md)同步更新。
+- **RUN/FIG/TAB：** GitHub写入已执行并远端返回commit；**Release上传执行结果/CI测试是否通过未取得，不能声称成功**。FIG=无；TAB=原manifest、待生成Release资产回执；Abaqus/OpenFAST/地震=NOT RUN。
+- **REF/STANDARD/OFFICIAL：** 无新原刊全文或授权标准条款；OFFICIAL=GitHub Actions API原件与工作流机制；REF阅读层级不变。**误差/失败：** 字节身份验证不等于结构/风场误差预算；如工作流因权限、下载跳转或压缩结构失败，必须保留job日志，不能把脚本已提交当长期归档成功。
+- **阶段/最大HOLD/下一动作：** 0/12，S06=PARTIAL/HOLD；原始16件仍处于到期风险，待GitHub Draft Release 17件资产和receipt双向核验；下一轮先取归档结果/失败日志。
