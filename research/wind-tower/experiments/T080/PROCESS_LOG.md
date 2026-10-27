@@ -182,3 +182,6 @@
 
 
 **附加真实负测试（21时）**：对T071-U09p343881_ETM_S06-A原始ZIP的第100字节翻转1bit，使用同一manifest实际执行新脚本，退出码1，错误为ZIP SHA mismatch，未生成输出CSV，验证fail-closed。已在既有.github/workflows/t080-evidence-preflight.yml加入程序合成oracle及24行真实结果表SHA校验（该CI仅为静态自测，不能代表16件真实ZIP在GitHub runner全量重算）；远端CI最终结果须以真实run日志为准，不提前宣称success。
+
+
+**CI最终核验（2026-10-27 21:13 CST）**：[GitHub Actions run 40509906226](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40509906226)，job 122208750091 于2026-10-27T13:12:55Z完成success；原始job日志确认已在GitHub Ubuntu runner上运行新雨流程序的合成oracle/循环守恒自测，并严格比对已提交的程序SHA256=9149c6ef71424ed073b4233ac7082753b0dcd979ec31b795318570c5c5cdac34和24行汇总SHA256=d8f6dc4a3e34abe09a5c15e0adcdff99a6a4764f1b26245e624f1e7f19a4a499，明确打印“S06 rainflow synthetic oracle and published real-source 24-row summary SHA PASS; NOT full-history CI nor material fatigue PASS”。该CI未重新下载16件原始ZIP；**全量1,488,124条真实记录计算为本轮本地真实RUN**，非GitHub runner的全量RUN；严格科学PASS仍0/12。
