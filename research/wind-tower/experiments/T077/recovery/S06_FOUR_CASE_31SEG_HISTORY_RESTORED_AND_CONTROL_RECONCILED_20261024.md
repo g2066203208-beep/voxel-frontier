@@ -270,3 +270,25 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 **结果及程序已纠正命名**：12行CSV的`n_first_sample_TPzi_nonidentical`与`max_first_sample_TPzi_abs_diff_mm`表示**第一采样时刻动态位置差异**（26/31、最大0.414875mm），不是静态几何误差；[修订后CSV](S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv) SHA256=`48b423b220e199f1415f61e9d72aa596124e1c3d02e05b823b9198d039dac981`。前一版CSV SHA`ebb9dfb1...`为保留在Git提交历史中的中间记录，不再作为当前结果身份。仍只有两条ETM seed，DEL比不能当统计收敛、DLC1.2或材料疲劳结果。
 
 **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=T071/T072历史原生工作流代码、744行源CSV及其已归档ZIP；REF=OpenFAST官方理论页及NREL开发者公开技术答复（网页层级，非论文全文）；STANDARD=无新授权条款；OFFICIAL=OpenFAST文档/论坛；RUN=真实源数据复算、无新增OpenFAST/Abaqus求解；FIG=无；TAB=更正字段名的12行CSV。输入SHA锁定、物理误差NEED_ESTIMATE。**本轮消除了一个误报的几何HOLD，而非关闭S06总体HOLD。** 下一单一动作调整为恢复原始OUTB或补齐逐时刻位置/姿态/加速度通道，真正完成自由体载荷归属和坐标变换。
+
+
+## 2026-10-28｜S10独立准备：744条历史ETM载荷DEL控制工况逐测点敏感性（非材料寿命）
+
+**SOURCE（真实源CSV，直接读取）：** [744条S06源表](S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)，SHA256 `9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`，源为历史T071/T072 16件已归档Actions ZIP派生，四ETM工况×31段内测点×6通道；本轮未重新下载OUTB或16件ZIP。源码原始雨流统计的溯源、时间窗与局限沿用本文件此前章节。**读取层级：744行已提交派生CSV的全部字节**，不是原始OUTB/材料应力。
+
+**RUN（确实执行的轻量Python 3.13，stdlib）：** [可复算脚本](s10_load_del_control_stability.py)在本地读取并SHA锁定744条源记录，校验4×31×6键、12001点、0.05s、600s、有限非负DEL及kN/kNm单位；对每个测点和每个载荷通道，分别按`m=4`与`m=10`的已登记1Hz参考DEL选择四个ETM历史工况的最大者，保留第二名差距 `100×(DELmax−DELsecond)/DELmax`，相等时按预定义工况次序确定稳定排序。生成[186行逐测点表](S10_ETM_LOAD_DEL_CONTROL_186_20261028.csv)（SHA256 `572eee2436b84b2c8683542ea7e92490970be7fc8a4fd51320f5d41f92229b1f`）及[6行汇总表](S10_ETM_LOAD_DEL_CONTROL_SUMMARY_6_20261028.csv)（SHA256 `07ae691127a24485d008eefa8fba05ffe8cfc7981ccb49de07f62b5286226524`）。完整输出逐字节二次复算通过；故意篡改源文件1字节被SHA拒绝。现有[轻量QC工作流](../../../../.github/workflows/s06-paired-seed-del-qc.yml)增加相同复算步骤；**远端CI本轮提交时尚未取得完成回执**，不能提前报远端PASS。
+
+**TAB（六分量逐31测点控制工况变化）：**
+
+| 通道 | m4→m10控制工况改变测点/31 | m4最大/第二大差距<5%的测点 | m10差距<5%的测点 |
+|---|---:|---:|---:|
+| Fx | 22 | 28 | 16 |
+| Fy | 19 | 31 | 15 |
+| Fz | 31 | 31 | 31 |
+| Mx | 31 | 31 | 28 |
+| My | 13 | 29 | 0 |
+| Mz | 31 | 31 | 31 |
+
+**解释及误差预算：** 这是已恢复四个**ETM历史工况的载荷级排名敏感性**，不是IEC DLC1.2/NTM正常运行风速分箱、统计种子收敛、材料S–N指数或疲劳寿命；同一31个高度点不构成31个独立随机样本。尤其Fz/Mx/Mz有大量<5%近并列，单凭“换控制工况数量”不能判断工程显著性。5%仅为**探索性排名稳定性标签**，非规范限值或数值误差上界。CSV格式/浮点输出误差通过源SHA及逐字节回归控制；模型、风场、PT、材料、概率和物理误差仍未量化。不能将不同载荷通道的DEL直接相加，也不能把`m=4/10`指定为混凝土/钢筋/PT的正式疲劳指数。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** SOURCE如上；REF沿用既有REF018等登记，**本轮未新增全文原页阅读**；STANDARD本轮无IEC/GB授权条文核读；OFFICIAL未运行Abaqus/OpenFAST或取得原始OUTB；RUN仅上述真实源表Python统计及负测试；FIG无新增物理响应图；TAB为186行+6行真实派生CSV。**HOLD：** S10材料局部应力、均值修正、材料专用S–N、长期DLC1.2概率、有效PT与原生V&V均缺；S10保持独立准备/NEED_NATIVE，12阶段仍0/12整阶段PASS。下一最优工作是补齐可验证的S07动态坐标/惯性自由体输入及映射，而非继续机械重复S01静态审计。
