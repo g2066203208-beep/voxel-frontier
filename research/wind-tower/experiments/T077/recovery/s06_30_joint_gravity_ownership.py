@@ -181,7 +181,7 @@ def main():
     if args.wrench_output is not None:
         wrows=build_wrench(args.gravity,rows)
         with args.wrench_output.open('w',encoding='utf-8',newline='') as f:
-            writer=csv.writer(f,lineterminator='\\n')
+            writer=csv.writer(f,lineterminator='\n')
             writer.writerow(WRENCH_FIELDS)
             for r in wrows:
                 writer.writerow([f'{v:.9f}' if isinstance(v,float) else v for v in r])
