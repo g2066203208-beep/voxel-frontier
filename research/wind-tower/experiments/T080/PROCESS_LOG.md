@@ -179,3 +179,6 @@
 - **TEST**：单调、平台、半循环、全循环、常值、非法NaN/单点拒绝、40组随机序列雨流计数守恒、完整时间网格与case/batch/segment覆盖；全部通过。程序没有调用Abaqus/OpenFAST生产求解器。My通道m4控制U11p4_ETM_S04/CSEG_01=94,836.550kN·m，m10控制U09p343881_ETM_S06/CSEG_01=221,544.884kN·m，证明历史候选控制工况依m排序可能变化。
 - **REF/STANDARD/OFFICIAL/FIG/TAB**：REF沿用T062/T079，未新增原刊全文阅读；STANDARD未取得授权ASTM/IEC条文，不能声称规范认证；OFFICIAL是GitHub历史原产物与仓库OpenFAST源记录；FIG无物理结果；TAB为S06 24行GitHub CSV及研究记录内控制表。m4/m10仅方法筛选，不等于分材料S–N、真实DLC1.2、20年寿命或抗震。
 - **PASS/HOLD**：严格阶段0/12；S06 PARTIAL/HOLD，S07 BLOCKED（新增可运行源级管线）；S01未冻结、原始OUTB/动态坐标/惯性所有权缺失、长期风速概率与真实局部应力缺失，物理/统计误差NEED_ESTIMATE。**下一单一动作**：在2026-11-06前为16件ZIP和原始OUTB建立长期归档与模型/控制器身份链，若OUTB无法恢复则继续S10方法程序而不回到S01循环审计。
+
+
+**附加真实负测试（21时）**：对T071-U09p343881_ETM_S06-A原始ZIP的第100字节翻转1bit，使用同一manifest实际执行新脚本，退出码1，错误为ZIP SHA mismatch，未生成输出CSV，验证fail-closed。已在既有.github/workflows/t080-evidence-preflight.yml加入程序合成oracle及24行真实结果表SHA校验（该CI仅为静态自测，不能代表16件真实ZIP在GitHub runner全量重算）；远端CI最终结果须以真实run日志为准，不提前宣称success。
