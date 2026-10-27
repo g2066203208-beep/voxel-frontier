@@ -9,6 +9,8 @@ on:
       - 'research/wind-tower/experiments/T070/**'
       - 'research/wind-tower/experiments/T077/**'
       - 'research/wind-tower/experiments/T078/**'
+      - 'research/wind-tower/experiments/T079/KLEIN_2022_JOINT_BENDING_SHEAR_V1_V10_TABLE2.csv'
+      - 'research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py'
       - 'research/wind-tower/experiments/T080/**'
       - '.github/workflows/t080-evidence-preflight.yml'
   pull_request:
@@ -18,6 +20,8 @@ on:
       - 'research/wind-tower/experiments/T070/**'
       - 'research/wind-tower/experiments/T077/**'
       - 'research/wind-tower/experiments/T078/**'
+      - 'research/wind-tower/experiments/T079/KLEIN_2022_JOINT_BENDING_SHEAR_V1_V10_TABLE2.csv'
+      - 'research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py'
       - 'research/wind-tower/experiments/T080/**'
       - '.github/workflows/t080-evidence-preflight.yml'
   workflow_dispatch:
@@ -64,6 +68,8 @@ jobs:
           assert d["run_level"] in ("No native run; Abaqus executable not found","Native executable located, not invoked")
           print(json.dumps({"status":d["status"],"source_sha256":d["source_sha256"],"runner_returncode":rc,"native_executable":d["native_executable"],"native_run":"NOT_RUN","S02_scientific_PASS":False}))
           PY
+      - name: S01 original Klein 2022 Table 2 numerical reproducibility (NOT ABAQUS)
+        run: python research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py --out-json "$RUNNER_TEMP/klein2022_joint_table2_recalc.json"
       - name: Write traceable preflight report
         run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
       - name: Preserve metadata report
@@ -73,6 +79,7 @@ jobs:
           name: t080-static-evidence-report
           path: |
             ${{ runner.temp }}/t080-preflight.json
+            ${{ runner.temp }}/klein2022_joint_table2_recalc.json
             ${{ runner.temp }}/s02_t070_preflight/S02_G0_EVIDENCE_MANIFEST.json
             ${{ runner.temp }}/s02_t070_preflight_stdout.json
           if-no-files-found: warn
