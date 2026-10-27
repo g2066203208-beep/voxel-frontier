@@ -324,3 +324,11 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 **REF/STANDARD/OFFICIAL：** 本轮新增核对[OpenFAST ElastoDyn官方运动学理论](https://openfast.readthedocs.io/en/main/source/user/elastodyn/theory.html)网页，描述位置和内部`CoordSys`，阅读层级=官方网页相关段落；未取得版本3.5.3原始OUTB逐时刻旋转/加速度。REF018等材料疲劳参考保持原登记阅读层级，本轮未核读新期刊全文原式；IEC/GB/NB授权条文未新增，不能条款验收。**假设/误差：** 年8760h、每bin时间概率总和1、各bin内等权seed、每条记录时长已知、`N_allow`由独立经审查材料模型给出；浮点与CSV计算已通过合成已知解，材料本构、载荷源、场址概率、PT均值和模型/统计不确定性均`NEED_ESTIMATE`。**HOLD：** S07缺可核验原OUTB及同刻姿态/惯性/所有权；S10缺原生局部材料应力、正式DLC1.2/概率和分材料疲劳曲线。S07/S10仅`INDEPENDENT_PREPARATION`，12阶段仍0/12正式PASS、地震RUN=0。
 
 **下一轮唯一最优动作：** 在已有T062/36工况独立归档中寻找并核验**一条**真实158m原始OUTB（含文件SHA、ElastoDyn输出清单、同步位置/姿态/加速度通道）；如果源OUTB不含姿态，则明确列缺通道，先做可复核的非生产补采计划，绝不直接跑高成本工况。
+
+## 2026-10-28 05时｜独立T062原始OUTB真实恢复：更正“仓库无OUTB”的过宽表述
+
+**实质证据：** [T062原始36工况独立归档](../../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)已在仓库`archive/local-assets-20261004-supplement/openfast-36-r2/`登记36件原始OUTB。本轮在[真实Actions #40584534880](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40584534880)成功下载`part-001.zip`、CRC+SHA256核验并**解码一条真实OUTB的3个同步时刻、36个选定通道**。详见[永久13KB数值回执](../../T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json)、[可复算只读程序](../../T062/s06_historical_outb_source_gate.py)、[原始归档/误差/失败边界详细记录](../../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。
+
+**SOURCE/版本/hash：** T062 `U09p343881_ETM_S01`原始OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`，ZIP SHA256=`c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0`，OpenFAST v3.5.3，FileID4，295输出通道，12001点，100–700s，dt=0.05s。真实源具有9个塔架测点的六分量、TP/RP/AL同步运动学；**T071/T072后续31测点OUTB仍未归档**，不能将两个谱系合并。
+
+**RUN/TAB：** CI `completed/success`、job `122472382762`；TwrBsMyt在100/400/700s为142572.944599/128357.547468/178590.856734 kN·m，其他同步值见永久JSON。REF无新期刊全文、STANDARD无新授权原条文、OFFICIAL为OpenFAST v3.5.3原始头及GitHub原生日志、FIG无新增物理响应图。源文件SHA/CRC/二进制量化检查属于数值QC，不是自由体或材料疲劳物理误差预算；RP角的定义、参考点、加速度系、RNA惯性与重力归属均HOLD。**S06仍PARTIAL/HOLD、S07独立准备、S10风疲劳/S11优化未进入生产，0/12 PASS、地震RUN=0。** 下一动作只做T062同刻9测点的S07真实坐标与自由体单测，不启动昂贵生产。
