@@ -268,3 +268,13 @@ GitHub论文工作室为正式过程与状态入口，D盘保存工程工作副�
 **先注册可检验QoI与失败准则（待S01唯一子版/S02/S03放行后执行）：** (1) 统一T057/T070/T077/T078的实际\`P0\`和设计\`Pe\`身份，先以冻结R335诊断，不用T077 HRB500容量替代；(2) 在独立小模型上以\`P→V1…V10\`验证法向接触分布/张开位置/载荷—位移趋势，记录单杆试验和36束周向PT的拓扑差异；(3) 全塔30道接缝在G+Peq、W、E、WE相同物理基线下输出\`CPRESS(θ,t)\`非均匀性、\`COPEN\`初现时刻/方位、\`CSLIP\`、\`CSHEAR\`、接触面积、PT锚端力与两支承反力；(4) 对理想平面与表面不平度/μ参数开展受控敏感性，必要时接触网格/时间步收敛；(5) 不以均值\`Pe/A\`或单个μ推断全部30接缝闭合，更不以本文10点实验直接宣布抗震/风疲劳通过。每个模型、PT、风/地震输入要有SHA与原生dat/msg/sta/odb、同刻六分量及误差预算。
 
 **已有相关论文复用而非新建T080：** REF159 P/M/T摩擦，REF014/REF026 N/M/V/T交互，REF015 低周滞回，REF018 DLC1.2运行高周疲劳；这些已在[中央文献表](../../registry/literature_master.tsv)登记。区分低周滞回/高周疲劳、理想接缝/真实几何、初始PT/有效PT，避免“同施风震首创”与伪造地震结果。**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**见[文献深读](literature_notes.md)；本阶段标准授权原文与原生求解仍HOLD，0/12阶段晋级。
+
+
+
+### 2026-10-27 17时｜S10风疲劳与PT损失不重复计入的可执行数据合同
+
+新增先行研究不是“可以马上算出疲劳寿命”，而是明确必须**把疲劳输入定义到材料/位置/时刻**。[REF023 Qu2026](https://doi.org/10.3390/buildings16193854)已对4.55MW混塔做PT松弛+混凝土/钢绞线双向疲劳损伤迭代+神经网络，故本文不声称该机制或“疲劳与PT损失耦合”首创；其35个混凝土段为Tie，不是本塔30道摩擦接触缝。REF015/018历史完整PDF路径仍在中央REF登记，本轮未恢复原件字节，不冒称重新逐页阅读。2026 [Peng等](https://doi.org/10.1002/tal.70169)对接缝脱开四输入查表仅摘要级，不能复制其公式。
+
+**S10最小可验收数据合同（待S01–S09门禁）：** 每个实际风工况×种子×材料控制点必须保存\`branch_inp_sha, PT_stage(P0/input/Pe/native_Peq), G_contact_state_sha, wind_raw_sha, wind_processed_sha, seed, OpenFAST_version, Abaqus_version, channel, section_height, material_id, joint_id, stress_time_sha, sample_dt, discarded_transient, mean_stress_MPa, stress_range_MPa, rainflow_count(0.5/1), SN_model_source, Miner_D_per_10min, wind_bin_weight, annual_D, design_life_years\`。混凝土、HRB普通钢筋、PT钢绞线、钢塔分别选适用材料疲劳模型，**接缝开口/滑移另设QoI**，不能把REF023只算混凝土+PT当作全材料完工。强制从**真实应力时程逐周期**计算\`σmean, Δσ\`，不以T078的1280/985.951MPa常量替代。需检验雨流半周期、零幅/平均应力极限、寿命不随样本数和风种子偶然变化；DEL和Miner不可互相替代。
+
+**S01独立静态敏感性入口：** [T078源SHA锁定P0/Pe与Goodman候选复核](../T078/t078_pt_goodman_2026_source_oracle.py)的假设20MPa应力范围显示，误把P0当Pe循环均值可造成条件性候选损伤比4.20123，**不是实际疲劳结果**；PT总损失22.97%≠钢绞线松弛2.35%。所有规范条款/材料S–N与PT原生初态仍HOLD。无新增高成本RUN，12阶段0/12晋级。
