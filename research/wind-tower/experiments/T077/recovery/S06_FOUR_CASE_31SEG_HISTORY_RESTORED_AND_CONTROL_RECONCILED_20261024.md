@@ -229,3 +229,14 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** SOURCE=GitHub Actions原运行的16件实时元数据 + 已登记原字节manifest（本轮未重新核对字节）；REF=既有研究，不新增原刊阅读；STANDARD=无授权条文新增；OFFICIAL=GitHub Actions API/工作流源代码；RUN=GitHub仓库脚本和归档CI已提交，真实上传是否成功待receipt；FIG=无；TAB=16件manifest/待生成核验JSON。**误差预算：** SHA256/CRC/行数为文件身份验证，不是动力学误差；OpenFAST OUTB、EI/控制器/RNA、坐标惯性、DLC1.2统计及材料疲劳均仍HOLD。**12阶段正式PASS仍0/12。**
 
 **下一单一动作：** 检查归档工作流是否产生17件资产的Draft Release和GitHub回执；如失败，读取失败job日志，直接修复下载/权限/发布问题，不再重复S01静态审计。
+
+
+## 2026-10-28｜16件历史源ZIP已完成Draft Release归档（双向SHA复核）
+
+**状态更新（覆盖上方旧的RECEIPT_PENDING）：SOURCE_ARCHIVED_16ZIP_PASS / S06 SCIENTIFIC PARTIAL-HOLD。** 这仅是原始Actions ZIP的长期仓库存档验收，不是原始OpenFAST OUTB、158m动力学源身份、S07正式载荷或材料疲劳PASS。
+
+- **FAIL→FIX→RUN**：原归档运行[40528508006](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40528508006)、[40528578567](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40528578567)、[40528630649](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40528630649)、[40528657570](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40528657570)均在跨域302下载阶段HTTP 401失败；job=122275071489原始日志可查。修复`s06_archive_expiring_actions_sources.py`显式处理GitHub 302签名Azure Blob URL，跨域请求不携带Bearer且拒绝恶意host，提交`e19fff45d341a7884f3295324c5244e9051fc55b`；更新原工作流触发路径，提交`869b5c2d4a137dbc1074603b8af21d47fed5e0c6`。
+- **真实CI**：[40537618197](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40537618197)，job=122307019666，Python 3.12.15。原生日志显示302安全跳转正/负测试PASS，16/16原件ZIP/GZIP/CSV哈希、CRC、case和行数核验PASS，17件Release上传PASS，receipt git push PASS，最终job=completed/success。
+- **独立远端复核**：GitHub REST `GET /repos/g2066203208-beep/voxel-frontier/releases`返回Draft Release id=`425693174`，tag=`windtower-s06-t071-t072-source-archive-20261027`，`draft=true`、`prerelease=true`，17/17 assets均`state=uploaded`，总字节`125301985`（16个原ZIP `125291677` bytes + 1个验证JSON `10308` bytes）。对16件Release资产API返回的`digest=sha256:...`与[原始16行manifest](S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)逐件独立比较：**16/16完全一致**；非仅比较资产名称。manifest SHA256=`dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8`；验证JSON Release资产SHA256=`4f6ec8df9fc709fc75d2e86afb20e7e9a0dcac9865f6479ddd72c448a6967b62`。回执[JSON](S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)已由原生工作流写入PR分支并经远端回读，含`actions_run_id=40537618197`、17件名称、Draft状态及manifest SHA。
+- **归档位置**：[GitHub Draft Release](https://github.com/g2066203208-beep/voxel-frontier/releases/tag/untagged-5d55a3aa54c8a01b0862)（未发布，需有仓库权限访问）；保留原始16件Actions下载入口及其2026-11-06过期信息，Release存档不受该原Actions 30天自动过期影响，但仍受仓库/Release管理操作影响，后续建议独立备份。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=T071/T072真实16件原ZIP及manifest；REF=沿用现有文献，不新增全文；STANDARD=无新增授权条款；OFFICIAL=GitHub Actions原生日志、Release REST资产`digest`及receipt；RUN=上述真实success job；FIG=无原生响应图；TAB=16行manifest、17件Release清单及JSON回执。SHA256为字节身份验收，物理误差预算仍NEED_ESTIMATE；**S06仍PARTIAL/HOLD、12阶段0/12、地震RUN=0**。下一个独立科研动作应转向S07六分量所有权与S10分材料疲劳准备，避免继续围绕已关闭的ZIP存档重复审计。
