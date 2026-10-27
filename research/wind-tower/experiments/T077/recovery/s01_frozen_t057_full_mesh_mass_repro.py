@@ -105,9 +105,14 @@ def parse_inp(lines):
     return parts,translations,densities,rna_kg
 
 def in_elset(eid,ranges):
-    return any((lo<=eid<=hi and (eid-lo)%step==0) if item=="range"
-               else eid==lo for item,lo,*rest in ranges
-               for hi,step in ([rest[0],rest[1]] if item=="range" else [(lo,1)]))
+    for entry in ranges:
+        if entry[0]=="range":
+            _,lo,hi,step=entry
+            if lo<=eid<=hi and (eid-lo)%step==0:return True
+        elif entry[0]=="id":
+            if eid==entry[1]:return True
+        else:raise ValueError("unsupported elset entry")
+    return False
 
 def hex_integral(xyz):
     if len(xyz)!=8:raise ValueError("C3D8 needs 8 nodes")
@@ -181,7 +186,7 @@ def self_test():
     v,y,j=hex_integral(nodes)
     assert abs(v-1)<1e-12 and abs(y-.5)<1e-12 and abs(j-.125)<1e-12
     assert abs(math.dist((0,0,0),(0,1,0))*.1*7850-785)<1e-12
-    try:hex_integral(tuple(reversed(nodes)))
+    try:hex_integral(nodes[4:]+nodes[:4])
     except ValueError:pass
     else:raise AssertionError("inverted element accepted")
     assert in_elset(201456,[("range",1,201456,1)])
