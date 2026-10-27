@@ -1,0 +1,554 @@
+{
+  "archive_path": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+  "archive_sha256": "c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0",
+  "archive_size_bytes": 5142579,
+  "case": "U09p343881_ETM_S01",
+  "first_30_channel_names": [
+    "Azimuth",
+    "BldPitch1",
+    "BldPitch2",
+    "BldPitch3",
+    "GenAccel",
+    "GenPwr",
+    "GenSpeed",
+    "GenTq",
+    "HSSBrTq",
+    "HSShftPwr",
+    "HSShftTq",
+    "LSSGagA",
+    "LSSGagMya",
+    "LSSGagMys",
+    "LSSGagMza",
+    "LSSGagMzs",
+    "LSSGagP",
+    "LSSGagV",
+    "LSSTipMya",
+    "LSSTipMys",
+    "LSSTipMza",
+    "LSSTipMzs",
+    "LSShftFya",
+    "LSShftFys",
+    "LSShftFza",
+    "LSShftFzs",
+    "LSShftTq",
+    "RootFxb1",
+    "RootFxb2",
+    "RootFxb3"
+  ],
+  "full_position_rotation_acceleration_gage_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "full_six_component_gage_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "header": {
+    "data_offset_bytes": 8020,
+    "description_excerpt": "Predictions were generated on 04-Sep-2026 at 14:43:38 using OpenFAST, compiled as a 64-bit application using single precision at commit v3.5.3 linked with  NWTC",
+    "file_id": 4,
+    "first_time_s": 100.0,
+    "num_output_channels": 295,
+    "num_samples": 12001,
+    "packed_payload_bytes": 7080590,
+    "packed_time_scale_offset": null,
+    "time_increment_s": 0.05
+  },
+  "hold": "Original 36-case archive is not proven identical to T071/T072 31-gage reruns; 9 gages are not 31; RP angles require OpenFAST frame/order/sign validation; load ownership and native Abaqus remain unverified.",
+  "outb_member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.outb",
+  "outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
+  "outb_size_bytes": 7088610,
+  "required_21_channel_presence": {
+    "TwHt1ALxt": true,
+    "TwHt1ALyt": true,
+    "TwHt1ALzt": true,
+    "TwHt1FLxt": true,
+    "TwHt1FLyt": true,
+    "TwHt1FLzt": true,
+    "TwHt1MLxt": true,
+    "TwHt1MLyt": true,
+    "TwHt1MLzt": true,
+    "TwHt1RPxi": true,
+    "TwHt1RPyi": true,
+    "TwHt1RPzi": true,
+    "TwHt1TPxi": true,
+    "TwHt1TPyi": true,
+    "TwHt1TPzi": true,
+    "TwrBsFxt": true,
+    "TwrBsFyt": true,
+    "TwrBsFzt": true,
+    "TwrBsMxt": true,
+    "TwrBsMyt": true,
+    "TwrBsMzt": true
+  },
+  "selected_original_synchronous_samples": [
+    {
+      "channels": {
+        "TwHt1ALxt": {
+          "unit": "(m/s^2)",
+          "value": 3.03e-07
+        },
+        "TwHt1ALyt": {
+          "unit": "(m/s^2)",
+          "value": 1.5e-08
+        },
+        "TwHt1ALzt": {
+          "unit": "(m/s^2)",
+          "value": 0.0
+        },
+        "TwHt1FLxt": {
+          "unit": "(kN)",
+          "value": 674.649077256
+        },
+        "TwHt1FLyt": {
+          "unit": "(kN)",
+          "value": 8.214322822
+        },
+        "TwHt1FLzt": {
+          "unit": "(kN)",
+          "value": -25583.746572564
+        },
+        "TwHt1MLxt": {
+          "unit": "(kN-m)",
+          "value": 6310.403680982
+        },
+        "TwHt1MLyt": {
+          "unit": "(kN-m)",
+          "value": 142526.265728559
+        },
+        "TwHt1MLzt": {
+          "unit": "(kN-m)",
+          "value": -2570.724271134
+        },
+        "TwHt1RPxi": {
+          "unit": "(deg)",
+          "value": -1.5695e-05
+        },
+        "TwHt1RPyi": {
+          "unit": "(deg)",
+          "value": 8.5053e-05
+        },
+        "TwHt1RPzi": {
+          "unit": "(deg)",
+          "value": 0.0
+        },
+        "TwHt1TPxi": {
+          "unit": "(m)",
+          "value": 5.3e-08
+        },
+        "TwHt1TPyi": {
+          "unit": "(m)",
+          "value": 1.2e-08
+        },
+        "TwHt1TPzi": {
+          "unit": "(m)",
+          "value": 0.070535714
+        },
+        "TwHt9ALxt": {
+          "unit": "(m/s^2)",
+          "value": 0.000459975
+        },
+        "TwHt9ALyt": {
+          "unit": "(m/s^2)",
+          "value": 2.3522e-05
+        },
+        "TwHt9ALzt": {
+          "unit": "(m/s^2)",
+          "value": 1e-08
+        },
+        "TwHt9FLxt": {
+          "unit": "(kN)",
+          "value": 676.551119705
+        },
+        "TwHt9FLyt": {
+          "unit": "(kN)",
+          "value": 8.433311972
+        },
+        "TwHt9FLzt": {
+          "unit": "(kN)",
+          "value": -25109.635942275
+        },
+        "TwHt9MLxt": {
+          "unit": "(kN-m)",
+          "value": 6332.804209856
+        },
+        "TwHt9MLyt": {
+          "unit": "(kN-m)",
+          "value": 140717.697216388
+        },
+        "TwHt9MLzt": {
+          "unit": "(kN-m)",
+          "value": -2568.893797877
+        },
+        "TwHt9RPxi": {
+          "unit": "(deg)",
+          "value": -0.000508331
+        },
+        "TwHt9RPyi": {
+          "unit": "(deg)",
+          "value": 0.004439768
+        },
+        "TwHt9RPzi": {
+          "unit": "(deg)",
+          "value": 0.0
+        },
+        "TwHt9TPxi": {
+          "unit": "(m)",
+          "value": 9.7597e-05
+        },
+        "TwHt9TPyi": {
+          "unit": "(m)",
+          "value": 1.3033e-05
+        },
+        "TwHt9TPzi": {
+          "unit": "(m)",
+          "value": 2.750892473
+        },
+        "TwrBsFxt": {
+          "unit": "(kN)",
+          "value": 674.610237121
+        },
+        "TwrBsFyt": {
+          "unit": "(kN)",
+          "value": 8.205591211
+        },
+        "TwrBsFzt": {
+          "unit": "(kN)",
+          "value": -25596.111515242
+        },
+        "TwrBsMxt": {
+          "unit": "(kN-m)",
+          "value": 6310.137349446
+        },
+        "TwrBsMyt": {
+          "unit": "(kN-m)",
+          "value": 142572.944598838
+        },
+        "TwrBsMzt": {
+          "unit": "(kN-m)",
+          "value": -2570.785905501
+        }
+      },
+      "sample_index": 0,
+      "time_s": 100.0
+    },
+    {
+      "channels": {
+        "TwHt1ALxt": {
+          "unit": "(m/s^2)",
+          "value": 1.02e-07
+        },
+        "TwHt1ALyt": {
+          "unit": "(m/s^2)",
+          "value": -1.1e-08
+        },
+        "TwHt1ALzt": {
+          "unit": "(m/s^2)",
+          "value": 0.0
+        },
+        "TwHt1FLxt": {
+          "unit": "(kN)",
+          "value": 703.868382922
+        },
+        "TwHt1FLyt": {
+          "unit": "(kN)",
+          "value": -1.07532945
+        },
+        "TwHt1FLzt": {
+          "unit": "(kN)",
+          "value": -25576.834025409
+        },
+        "TwHt1MLxt": {
+          "unit": "(kN-m)",
+          "value": 7577.919091651
+        },
+        "TwHt1MLyt": {
+          "unit": "(kN-m)",
+          "value": 128308.47869283
+        },
+        "TwHt1MLzt": {
+          "unit": "(kN-m)",
+          "value": 6028.969871537
+        },
+        "TwHt1RPxi": {
+          "unit": "(deg)",
+          "value": -1.187e-05
+        },
+        "TwHt1RPyi": {
+          "unit": "(deg)",
+          "value": 8.6681e-05
+        },
+        "TwHt1RPzi": {
+          "unit": "(deg)",
+          "value": 0.0
+        },
+        "TwHt1TPxi": {
+          "unit": "(m)",
+          "value": 5.3e-08
+        },
+        "TwHt1TPyi": {
+          "unit": "(m)",
+          "value": 6e-09
+        },
+        "TwHt1TPzi": {
+          "unit": "(m)",
+          "value": 0.070535714
+        },
+        "TwHt9ALxt": {
+          "unit": "(m/s^2)",
+          "value": 0.000155799
+        },
+        "TwHt9ALyt": {
+          "unit": "(m/s^2)",
+          "value": -1.2931e-05
+        },
+        "TwHt9ALzt": {
+          "unit": "(m/s^2)",
+          "value": -1e-09
+        },
+        "TwHt9FLxt": {
+          "unit": "(kN)",
+          "value": 705.723074655
+        },
+        "TwHt9FLyt": {
+          "unit": "(kN)",
+          "value": -0.925735234
+        },
+        "TwHt9FLzt": {
+          "unit": "(kN)",
+          "value": -25102.697404482
+        },
+        "TwHt9MLxt": {
+          "unit": "(kN-m)",
+          "value": 7574.750310167
+        },
+        "TwHt9MLyt": {
+          "unit": "(kN-m)",
+          "value": 126416.661685768
+        },
+        "TwHt9MLzt": {
+          "unit": "(kN-m)",
+          "value": 6030.65678948
+        },
+        "TwHt9RPxi": {
+          "unit": "(deg)",
+          "value": -0.000357823
+        },
+        "TwHt9RPyi": {
+          "unit": "(deg)",
+          "value": 0.00432243
+        },
+        "TwHt9RPzi": {
+          "unit": "(deg)",
+          "value": 0.0
+        },
+        "TwHt9TPxi": {
+          "unit": "(m)",
+          "value": 9.6227e-05
+        },
+        "TwHt9TPyi": {
+          "unit": "(m)",
+          "value": 9.435e-06
+        },
+        "TwHt9TPzi": {
+          "unit": "(m)",
+          "value": 2.750892473
+        },
+        "TwrBsFxt": {
+          "unit": "(kN)",
+          "value": 703.828078502
+        },
+        "TwrBsFyt": {
+          "unit": "(kN)",
+          "value": -1.0836623
+        },
+        "TwrBsFzt": {
+          "unit": "(kN)",
+          "value": -25589.331229724
+        },
+        "TwrBsMxt": {
+          "unit": "(kN-m)",
+          "value": 7577.869489927
+        },
+        "TwrBsMyt": {
+          "unit": "(kN-m)",
+          "value": 128357.547468167
+        },
+        "TwrBsMzt": {
+          "unit": "(kN-m)",
+          "value": 6028.913045326
+        }
+      },
+      "sample_index": 6000,
+      "time_s": 400.0
+    },
+    {
+      "channels": {
+        "TwHt1ALxt": {
+          "unit": "(m/s^2)",
+          "value": -4.82e-07
+        },
+        "TwHt1ALyt": {
+          "unit": "(m/s^2)",
+          "value": 1.31e-07
+        },
+        "TwHt1ALzt": {
+          "unit": "(m/s^2)",
+          "value": 0.0
+        },
+        "TwHt1FLxt": {
+          "unit": "(kN)",
+          "value": 1299.110535516
+        },
+        "TwHt1FLyt": {
+          "unit": "(kN)",
+          "value": -91.50437986
+        },
+        "TwHt1FLzt": {
+          "unit": "(kN)",
+          "value": -25614.302355467
+        },
+        "TwHt1MLxt": {
+          "unit": "(kN-m)",
+          "value": 14583.733686971
+        },
+        "TwHt1MLyt": {
+          "unit": "(kN-m)",
+          "value": 178500.756257953
+        },
+        "TwHt1MLzt": {
+          "unit": "(kN-m)",
+          "value": 910.024546254
+        },
+        "TwHt1RPxi": {
+          "unit": "(deg)",
+          "value": -5.922e-06
+        },
+        "TwHt1RPyi": {
+          "unit": "(deg)",
+          "value": 0.000172546
+        },
+        "TwHt1RPzi": {
+          "unit": "(deg)",
+          "value": 0.0
+        },
+        "TwHt1TPxi": {
+          "unit": "(m)",
+          "value": 1.06e-07
+        },
+        "TwHt1TPyi": {
+          "unit": "(m)",
+          "value": 1e-09
+        },
+        "TwHt1TPzi": {
+          "unit": "(m)",
+          "value": 0.070535714
+        },
+        "TwHt9ALxt": {
+          "unit": "(m/s^2)",
+          "value": -0.000719515
+        },
+        "TwHt9ALyt": {
+          "unit": "(m/s^2)",
+          "value": 0.000197478
+        },
+        "TwHt9ALzt": {
+          "unit": "(m/s^2)",
+          "value": -3.7e-08
+        },
+        "TwHt9FLxt": {
+          "unit": "(kN)",
+          "value": 1302.475796584
+        },
+        "TwHt9FLyt": {
+          "unit": "(kN)",
+          "value": -91.457196251
+        },
+        "TwHt9FLzt": {
+          "unit": "(kN)",
+          "value": -25140.045993082
+        },
+        "TwHt9MLxt": {
+          "unit": "(kN-m)",
+          "value": 14338.506599643
+        },
+        "TwHt9MLyt": {
+          "unit": "(kN-m)",
+          "value": 175013.208492242
+        },
+        "TwHt9MLzt": {
+          "unit": "(kN-m)",
+          "value": 912.466922957
+        },
+        "TwHt9RPxi": {
+          "unit": "(deg)",
+          "value": -0.000104928
+        },
+        "TwHt9RPyi": {
+          "unit": "(deg)",
+          "value": 0.007795997
+        },
+        "TwHt9RPzi": {
+          "unit": "(deg)",
+          "value": 0.0
+        },
+        "TwHt9TPxi": {
+          "unit": "(m)",
+          "value": 0.000178621
+        },
+        "TwHt9TPyi": {
+          "unit": "(m)",
+          "value": 3.529e-06
+        },
+        "TwHt9TPzi": {
+          "unit": "(m)",
+          "value": 2.750892473
+        },
+        "TwrBsFxt": {
+          "unit": "(kN)",
+          "value": 1299.040401347
+        },
+        "TwrBsFyt": {
+          "unit": "(kN)",
+          "value": -91.508831021
+        },
+        "TwrBsFzt": {
+          "unit": "(kN)",
+          "value": -25626.772121206
+        },
+        "TwrBsMxt": {
+          "unit": "(kN-m)",
+          "value": 14590.089224581
+        },
+        "TwrBsMyt": {
+          "unit": "(kN-m)",
+          "value": 178590.856733797
+        },
+        "TwrBsMzt": {
+          "unit": "(kN-m)",
+          "value": 909.964858001
+        }
+      },
+      "sample_index": 12000,
+      "time_s": 700.0
+    }
+  ],
+  "source_manifest_sha256": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392",
+  "source_reading_level": "original archived OUTB bytes: SHA256 + binary header/channel names + three synchronous decoded packed-data samples",
+  "status": "SOURCE_HEADER_QC_ONLY_NOT_DYNAMIC_PHYSICS_PASS",
+  "time_unit": "(s)"
+}
