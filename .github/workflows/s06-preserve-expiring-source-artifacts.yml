@@ -7,6 +7,10 @@ on:
       - '.github/workflows/s06-preserve-expiring-source-artifacts.yml'
   workflow_dispatch:
 
+concurrency:
+  group: s06-original-archive
+  cancel-in-progress: false
+
 permissions:
   actions: read
   contents: write
@@ -43,9 +47,18 @@ jobs:
             gh release create "$TAG" --target "$GITHUB_SHA" --draft --prerelease \
               --title "S06 original T071/T072 source ZIP archive (research DRAFT)" \
               --notes "Research preservation only. Contains 16 SHA256-verified historical GitHub Actions source ZIPs from runs 37582521146 and 37622366681; expires in Actions on 2026-11-06. DRAFT release deliberately not published. These are extracted 31-gage CSV histories, NOT original OpenFAST OUTB. No S06/S07 physical PASS or licensed-standard claim."
-            gh release upload "$TAG" "$RUNNER_TEMP"/s06_original_archive/*.zip \
-              "$RUNNER_TEMP"/s06_original_archive/S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json
           fi
+          EXISTING="$(gh release view "$TAG" --json assets --jq '.assets[].name')"
+          for file in "$RUNNER_TEMP"/s06_original_archive/*.zip \
+                      "$RUNNER_TEMP"/s06_original_archive/S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json; do
+            name="$(basename "$file")"
+            if grep -Fxq "$name" <<< "$EXISTING"; then
+              echo "Existing archive asset: $name"
+            else
+              gh release upload "$TAG" "$file"
+              echo "Uploaded archive asset: $name"
+            fi
+          done
           COUNT="$(gh release view "$TAG" --json assets --jq '.assets | length')"
           test "$COUNT" = "17" || { echo "::error::Expected 17 release assets, got $COUNT"; exit 1; }
           gh release view "$TAG" --json url,isDraft,assets \
