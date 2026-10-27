@@ -4,6 +4,10 @@ on:
     paths:
       - '.github/workflows/s06-historical-original-outb-source-gate.yml'
       - 'research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py'
+  pull_request:
+    paths:
+      - '.github/workflows/s06-historical-original-outb-source-gate.yml'
+      - 'research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py'
   workflow_dispatch:
 permissions:
   contents: read
