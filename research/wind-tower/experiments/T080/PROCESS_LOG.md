@@ -204,3 +204,5 @@
 - **RUN/FIG/TAB：** GitHub写入已执行并远端返回commit；**Release上传执行结果/CI测试是否通过未取得，不能声称成功**。FIG=无；TAB=原manifest、待生成Release资产回执；Abaqus/OpenFAST/地震=NOT RUN。
 - **REF/STANDARD/OFFICIAL：** 无新原刊全文或授权标准条款；OFFICIAL=GitHub Actions API原件与工作流机制；REF阅读层级不变。**误差/失败：** 字节身份验证不等于结构/风场误差预算；如工作流因权限、下载跳转或压缩结构失败，必须保留job日志，不能把脚本已提交当长期归档成功。
 - **阶段/最大HOLD/下一动作：** 0/12，S06=PARTIAL/HOLD；原始16件仍处于到期风险，待GitHub Draft Release 17件资产和receipt双向核验；下一轮先取归档结果/失败日志。
+
+- **前一轮CI状态本轮实际回查：** [Actions #40518262010](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40518262010)，job `122237642721`为`completed/success`，原始日志明确打印`S06 PASS: 744 source rows SHA verified; 24 QC rows exact reproduction; 72/744 >20% RMS imbalance; NOT stationarity or material fatigue PASS`。这是744行衍生CSV的哈希与24行QC复算成功，不是16件原始ZIP已归档或OpenFAST/ABAQUS物理PASS。
