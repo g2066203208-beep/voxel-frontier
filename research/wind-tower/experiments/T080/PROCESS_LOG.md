@@ -105,3 +105,22 @@
 **STANDARD/OFFICIAL / 假设 / 误差预算：** 论文里对Eurocode/JSCE/GB的引述只当作者背景，**不是IEC2025、GB55002或NB/T10907授权条款验收**；Abaqus官方地震算例、PEER官方数据库沿用既有索引。公开μ数值是试件表面实验，T057 μ=0.5的建模背景与施工粗糙度可能不同，材料/PT阶段/损失/接缝模型/真实输入与地震记录统计的物理误差仍\`NEED_ESTIMATE\`。任何\`0.655/0.5=+31.06%\`只对摩擦系数，**不等于塔架承载力增31%**，更不准擅改T057/T070。当前**0/12阶段晋级**，S01/S05部分证据增强但HOLD不解除，地震E/WE RUN=0。
 
 **当前最大HOLD：** S01唯一可实施普通钢筋—接缝—有效PT基线与原生平衡仍HOLD。**下一项在无Abaqus资源下最优独立动作：** 合法取得并全文核读REF159后续的可验证接缝疲劳/往复试验或NB/T10907授权相关接缝条文，将试验边界与T057的30节缝接触参数作适用域矩阵；不以实验μ均值直接改模型、无依据设规范限值。
+
+
+## 2026-10-27 16:02–16:07 CST｜S01原刊REF160实测接缝非均匀预压、10级弯剪与真实CI
+
+**本轮范围/身份：** 在读取main=\`bbc5c9130f2d9fc41f776506d86118a9b8db0e65\`、PR #42原head=\`875aba5634c3ece7ed01f132564ca3e89e0242f9\`且PR为Open/Draft后，核读AGENTS/README/00_STATUS/00_WORKSPACE_MASTER/T079 ACADEMIC_REVIEW/T080.1/.2/.3及12阶段总计划。根据用户“别反复等Abaqus，先做文献”指令，选择**实测接缝初始压紧不均匀与局部开缝**这条直接支持S01/S03的证据链，不启动生产RUN，不改T057/T070母本，不改研究主题。
+
+**SOURCE/REF/原文阅读层级：** 2022-03-03发表Klein/Fürll/Betz/Marx，*Structural Concrete* 23(3):1370–1384，DOI [10.1002/suco.202100710](https://doi.org/10.1002/suco.202100710)，[Wiley原刊开放全文HTML](https://onlinelibrary.wiley.com/doi/10.1002/suco.202100710)，直接阅读§2.2/§3.1–3.5/§4.1–4.4/§5、Eqs10–14、Tables1–2、Figs2–17，中央文献表新REF160；PDF原件**未取得**，原文PDF SHA=\`NOT_CAPTURED\`。此前REF014/015/018/026/159已登记，**没有重复新建**。REF026 2026 N/M/V/T联合实验全文此前已登记（REF026与REF115历史重复，暂不擅删），本轮没有假装重新读取其PDF；2025 REF015滞回与REF018风疲劳已有完整本地原件登记，未恢复字节本轮不冒称已复核其SHA。
+
+**实验事实（不能移植的部分）：** 16个环段、6.5m高、壁厚40mm、底外径1.0m，中心单根57mm PT杆；与T057的周向36束PT**构造不同**。§4.1 Fig8/10/11/12在相同PT下周向应变不均匀、增压后不均匀仍在；§4.4 Fig17/Table2观察V4=11.988kN时180°局部开缝，随后V5/V6邻近测点也开缝；§5明确几何不平度、缩尺和安全系数外推的不确定性。10个逐级加载卸载点**不是**高周疲劳S-N，也不是地震反复循环的损伤数据。
+
+**TAB/SOURCE原始数值：** [10点Table2原始CSV](../T079/KLEIN_2022_JOINT_BENDING_SHEAR_V1_V10_TABLE2.csv) UTF-8 LF，536 bytes，SHA256=\`91f8ba81a848fce752625d7c288c9984e45086dd00d63b3fbb5225464bd3fde4\`，GitBlob=\`84d7f373ff36f64ffb98d70a65fa30c6fe937b45\`。 [独立复算脚本](../T079/recompute_klein_2022_joint_bending_shear.py) GitBlob=\`deceae79a5690e351be8e16e1a8813b8f03ba053\`，Python stdlib CSV/SHA256/算术/断言，不依赖Abaqus；[本轮CI完整JSON stdout永久保存](../T079/KLEIN_2022_JOINT_RECALC_20261027.json)，GitBlob=\`23321b829d850f7299a7f4a1adb85fc8086ba6ba\`。
+
+**RUN真实执行（只为文献表格复算）：** [GitHub Actions #40471027178](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40471027178)，push head=\`f51632fd78dc71e715b3fc9a3d9aba4a49346302\`，job=\`122077913551\`，\`completed/success\`；CI 2026-10-27T08:05:15Z在Python**3.12.15**执行\`python research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py --out-json "$RUNNER_TEMP/klein2022_joint_table2_recalc.json"\`并实际打印JSON。**K_V1=1.88560157790927 kN/mm，K_V10=1.485724948684456 kN/mm，割线刚度比0.7879315365931163，降幅21.20684634068837%；Eq10显示舍入输入Mdec=71.899628kNm、Fdec=10.918698kN；论文印刷72.015kNm与10.927kN；V4首次高于论文理想Fdec。** 同一workflow的原有静态检查通过，但**全是Python静态证据，不是原生Data Check或接缝物理验收**。提交workflow补充轻量执行与JSON artifact；永久结果已从**真实CI原始日志自动抽取**并写回GitHub（不是手填虚拟日志）。本轮尝试直接从container curl raw.githubusercontent.com失败：\`Could not resolve host\`；转为GitHub Actions执行，故不存在本地原件下载或原始PDF SHA。
+
+**算法、假设、误差预算：** \`Ksec=F/u\`为整个缩尺塔塔顶割线刚度，非接缝切线刚度/损伤；理想薄壁圆环\`Mdec=P r²/da\`，\`Fdec=Mdec/xL\`，打印参数\`P=325.8kN,r=0.461m,da=0.963m,xL=6.585m\`；相对论文印刷\`Mdec\`偏差约-0.1602%，\`Fdec\`约-0.07597%，舍入解释仅**可能**，没有未舍入几何原始值不可证明。原始Table2只给3位小数，局部接触/表面不平度/缩尺/材料/Pe实施/摩擦/时程/地震统计/高周疲劳的物理误差仍\`NEED_ESTIMATE\`。本轮不创建论文自有响应FIG；原文Fig8–17仅为阅读证据。
+
+**STANDARD/OFFICIAL与门禁：** 论文引用DIN EN规范是作者研究背景，不等于本项目IEC61400-1/6:2025或NB/T10907、GB规范授权条款验收；Abaqus官方手册及PEER仍沿用旧登记，无本轮新授权规范页。T057原INP SHA256=\`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db\`、T070=\`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9\`（历史锁定，**本轮未重新读取其完整字节**）；不把表2的实验PT=304kN、V4=11.988kN、µ或接触参数当成T057可直接采用数值。**S01=PARTIAL/HOLD，S02–S04 BLOCKED，S05/S06 PARTIAL/HOLD，S07–S11 BLOCKED，S12 PARTIAL；12阶段0/12晋级；原生Abaqus NOT_RUN、地震结果0。**
+
+**单一最大HOLD**：唯一普通筋/接缝/Pe物理基线未冻结且未原生平衡验证。**下一唯一最优可自主动作**：从已有REF015/REF018的完整原件恢复并核验SHA、按“低周滞回与运行高周疲劳分离”逐式核读实际损伤判据、雨流/均值修正及有效PT输入，形成可直接约束S10的材料疲劳证据，而不因无Abaqus反复停滞。
