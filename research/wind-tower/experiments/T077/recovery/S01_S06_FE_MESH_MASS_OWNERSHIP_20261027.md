@@ -91,3 +91,37 @@ D400−R335纵筋质量条件差为**177.526522t**，占历史OpenFAST整塔质�
 - **原始数据来源层级：** OpenFAST 70站文件是GitHub直接读取/再积分；T057 R335纵筋75.831702t是已登记[源文件独立原始CI复核](s01_frozen_t057_longitudinal_mass_independent.py)所得，本轮未重新拉取16.6 MB母本；D400实体、筋材、PT来自前轮[INP静态网格积分](S01_S06_FE_MESH_MASS_OWNERSHIP_20261027.md)，本轮没有重建原INP 35段全部网格。新增程序将这些分项质量**作为冻结的登记输入**，用于验证跨源质量归属算术而非从INP再算。
 - **REF/STANDARD/OFFICIAL：** 何2024/Xu2025、2026两篇先行风震/PT研究的阅读层级不升级；2024 GB/T50010修订已核官方原页、NB/T10907专用材料/构造授权条文依旧HOLD；OFFICIAL无新增Abaqus或OpenFAST solver日志。**FIG：无响应图；RUN为纯Python/connector源读取与数值算术；TAB为上述CSV和本文件原表。**
 - **误差预算/假设：** 70站梯形积分是对历史输入表的数值恒等重算，不代表结构真实质量已通过V&V。R335分支的共同混凝土宿主/环拉筋/PT是反事实假设；Embedded重合体积扣除只是条件性替代，不是当前INP实际质量；真实实体建模、EI、30接缝、Pt=Peq、RNA以及原始塔属性生成器的误差仍\`NEED_ESTIMATE\`。**HOLD：S01唯一可实施配筋—构造—PT基线未定，S02–S04原生验收0，S06质量归属仍PARTIAL/HOLD；12阶段0/12 PASS。**
+
+
+## 2026-10-27｜冻结T057原始INP 68 Part全量质量独立积分与CI复核
+
+> **本轮实质消除一个SOURCE假设：** 前文“R335沿用D400共同宿主/环拉筋/PT”的条件性**毛质量**，现已由**真正冻结T057原始INP全68 Part独立解析**直接确认（两条来源数值差仅约0.001kg的历史分项舍入）。R335的\`+3.213946%\`现在有原始T057网格证据，而不再仅靠D400反事实拼接。**扣宿主混凝土后的\`+0.973528%\`仍是物理质量定义的条件性情景，不是当前INP的实际质量，也不是OpenFAST动力一致性PASS。**
+
+### SOURCE / 输入版本 / 独立执行
+
+- **直接SOURCE：** GitHub冻结T057原始INP [BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp](../../T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp)，Git Blob=\`da0b5ce5258b4fff08b2389851e29c32c6e4abfc\`。本轮在GitHub connector通过Git Blob API**直接读出482,825行（解析文本16,585,603字符）**；源文件实际字节SHA256=\`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db\`由本轮[原生GitHub Actions #40454043222](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40454043222)以\`sha256sum -c\`对checkout的原始字节再次校验成功。**Git Blob ID、解析文本字符数与SHA256不是同一概念**。
+- **可复算代码：** [s01_frozen_t057_full_mesh_mass_repro.py](s01_frozen_t057_full_mesh_mass_repro.py)，只读原始T057、严格校验SHA256与68 Part拓扑；逐真实Node/Element/Section/Material/Density/Instance积分；实体C3D8R/C3D8I按8节点等参六面体**2×2×2 Gauss**体积及y一阶矩，T3D2按真实长度×Section面积×7850kg/m³，环筋与拉筋依\`*Elset\`分别归属；RNA读取Assembly \`*Mass\`，只计入单独的塔+RNA总质量。所有实体Jacobian为正；**无Abaqus原生运行**。
+- **真实CI执行：** [Actions #40454043222](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40454043222)，job \`frozen-original-mesh-mass-only\` = \`completed/success\`；2026-10-27T05:13:07Z自测打印\`SELF_TEST_PASS\`（立方体、杆、负Jacobian拒绝、Elset边界）；05:13:08Z实际解析打印\`tower_without_RNA_kg=1985489.1181173094\`、\`gross_diff_pct=3.2139458834127055\`、\`net_conditional_diff_pct=0.9735280111965672\`。**这属于GitHub Actions原生Python静态RUN，不是Abaqus原生Data Check/求解。**
+- **长期TAB：** [68 Part逐项CSV](S01_T057_ORIGINAL_68PART_STATIC_MASS_20261027.csv)（Git Blob=\`1ae32a02a565c2d578485c29c819f30de0242933\`），本轮独立JavaScript解析Git Blob并生成，按每Part质量/质心/实体体积永久存储。CSV 68行质量和=**1,985,489.118117305kg**，与CI Python输出差\`<5×10⁻⁹kg\`（浮点与CSV舍入）。[CI原始CSV/JSON/输出hash/日志artifact #12711033750](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40454043222/artifacts/12711033750) ZIP digest=\`sha256:8eb358b4269f745086de29d71fc85860584af3c13fe5bad4d89a3cca7f32ca06\`，**14天保留期，预计2026-11-10T05:13:08Z过期**；不能把CI artifact视为永久原始档案。脚本及68行CSV已永久Git提交，CI ZIP原件须按研究存储策略另存并核SHA。
+
+### RUN / TAB：真正T057 R335原型全塔静态质量（不含RNA）
+
+| 原始T057对象 | 实际单元数 | 直接积分质量kg | 质心y（m） |
+|---|---:|---:|---:|
+| 31段混凝土C3D8R | 13,392 | **1,617,978.893096** | 53.137141 |
+| 4段钢塔C3D8I | 1,728 | **191,094.168029** | 134.197899 |
+| 31段HRB335纵筋T3D2 | 5,440 | **75,831.702110** | 52.144285 |
+| HOOP_TIE_CAGE环筋+拉筋T3D2 | 213,768 | **65,135.010882** | 51.546793 |
+| 36束PT T3D2 | 36 | **35,449.344000** | 56.000000 |
+| **塔架合计，不含RNA** | **234,368** | **1,985,489.118117** | **60.899887** |
+| RNA点质量，单独列示 | 1个MASS | **676,753.290723** | 本表不独立核RNA节点 |
+| **塔架+RNA** | — | **2,662,242.408840** | 本表不声明全局CG/J |
+
+历史OpenFAST 70站\`TMassDen\`整塔积分（不含RNA）=\`1,923,663.610690804kg\`，T057原始FE毛质量比其多**61,825.507427kg（+3.213945883%）**。仅当假设所有普通钢筋等体积替代2400kg/m³混凝土时，扣除\`(75831.702110+65135.010882)×2400/7850=43,098.103335kg\`，条件性净质量=\`1,942,391.014782kg\`，比OpenFAST多**18,727.404091kg（+0.973528011%）**。**不能把条件净质量写成Abaqus当前FE模型质量；PT是否占用宿主体积、混凝土/普通筋重合及OpenFAST生成器的物理归属仍未解决。**
+
+### REF / STANDARD / OFFICIAL / FIG / 假设与误差预算 / HOLD
+
+- **REF：** 何2024/Xu2025原型身份沿用既有登记；两篇2026混塔风震/PT先行研究的摘要/原页阅读层级不变。**STANDARD：** NB/T10907—2021第4.2、6.4、8章授权原文仍未在本轮读取；2024 GB/T50010官方修订既有核读不等于S01构造条款验收。**OFFICIAL：** 仅GitHub Actions Python 3.11静态积分原生CI，**没有Abaqus 2025可执行程序/许可证、.dat/.msg/.sta/.log或ODB**。**RUN：** CI原始T057静态网格积分；**FIG：** 无物理响应图；**TAB：** 本表、68 Part CSV及CI artifact。
+- **数值误差：** 同一网格8点等参积分对体积/一阶矩的算术一致性；JS与CI Python的塔架质量总和一致到\`<5×10⁻⁹kg\`，这是**实现交叉复核而非独立高阶网格收敛**。3×3×3 Gauss独立积分尚待本程序增加，绝不将数值误差当作结构物理误差。实体最小正Jacobian已由独立JS积分检查约\`0.001588823988\`（局部自然坐标积分点量纲m³）。
+- **物理误差/输入不确定性：** Embedded重合体积、接缝PT力路径、RNA惯量、钢塔网格、OpenFAST质量/EI归属、模态/疲劳响应、授权构造条款均\`NEED_ESTIMATE\`。R335原型**质量接近**并不能推出其现行设计构造、频率、动力荷载或疲劳寿命通过。
+- **单一最大HOLD：** S01唯一可实施普通筋—接缝—Pe有效初态生产子版未冻结且未获原生验证；**S01 PARTIAL/HOLD，S02/S03/S04 BLOCKED，12阶段0/12晋级**。下一最优动作仍是具有Abaqus 2025许可证的执行机对SHA锁定T070/R335原型做**诊断性Data Check**，回收原始日志并逐项处置；不擅自修改T057/T070、合并PR或启动昂贵求解。
