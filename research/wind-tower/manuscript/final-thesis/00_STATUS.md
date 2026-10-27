@@ -197,3 +197,8 @@ HOLD：
 
 
 **本轮S06六分量数值回归的真实CI结论**：[run 40501252495](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40501252495) completed/success；新30行CSV SHA256=ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e，程序SHA256=76e3a595cdb83c7873f0ab4dc6f877d0c48a83305d3a1c373d8018b64974c399；**仅静态六分量代数和源级数据回归，不是动态自由体/地震/接触PASS**。
+
+
+### 2026-10-27 21时｜S06→S07真实六分量雨流载荷筛查（非材料疲劳）
+
+**12阶段科学PASS仍0/12，S06=PARTIAL/HOLD，S07仍BLOCKED但源级雨流处理管线已实际运行。** 本轮重新从T071/T072 GitHub Actions下载并逐层哈希校验16/16原始历史ZIP，读取4×31×12001=1,488,124条真实ETM同步记录，计算4×31×6=744个通道雨流/DEL_m4/m10及时间统计。PR #42持久化[可复算程序](../../experiments/T077/recovery/s06_31gage_rainflow_load_screen.py)和[24行六分量控制表](../../experiments/T077/recovery/S06_4CASE_6COMP_RAINFLOW_SCREEN_SUMMARY_20261027.csv)；全部方法、来源、SHA、合成测试、失败记录与[控制工况排序反转](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)已登记。My通道m4最大为U11p4_ETM_S04的94,836.550 kN·m，m10最大为U09p343881_ETM_S06的221,544.884 kN·m，均位于CSEG_01。**这是载荷层级且m为假设筛选指数，不是材料损伤、DLC1.2、地震或Abaqus物理PASS**；完整744行本地结果SHA256=9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b，尚未上传PR。最大HOLD：原始OUTB、动态局部坐标及载荷/惯性自由体所有权未闭合；16件Actions artifact预计2026-11-06过期，优先长期保存。S10/S11主线不变。
