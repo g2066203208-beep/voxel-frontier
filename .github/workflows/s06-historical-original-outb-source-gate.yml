@@ -1,0 +1,47 @@
+name: S06 historical original OUTB source/header QC (NOT physics PASS)
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-historical-original-outb-source-gate.yml'
+      - 'research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-outb-one-case:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Download exactly one 5 MB archived source ZIP, SHA-pinned manifest and audit code
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          mkdir -p audit
+          curl --fail --location --silent --show-error --retry 3 \
+            --output audit/part-001.zip \
+            "$base/research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output audit/file-manifest.json \
+            "$base/research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output audit/s06_historical_outb_source_gate.py \
+            "$base/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py"
+      - name: Synthetic parser negative tests and real original OUTB SHA/header/channel inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile audit/s06_historical_outb_source_gate.py
+          python3 audit/s06_historical_outb_source_gate.py --self-test
+          python3 audit/s06_historical_outb_source_gate.py \
+            --zip-path audit/part-001.zip --manifest audit/file-manifest.json \
+            --case U09p343881_ETM_S01 --output audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+          sha256sum audit/part-001.zip audit/file-manifest.json audit/s06_historical_outb_source_gate.py \
+            audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+          echo 'S06: ORIGINAL ARCHIVE SOURCE/QC ONLY; NOT 31-GAGE RERUN, DYNAMIC FORCE OWNERSHIP, ABAQUS, OR PHYSICS PASS.'
+      - name: Retain small source/header receipt for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: s06-t062-one-original-outb-header-qc
+          path: audit/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT.json
+          retention-days: 14
