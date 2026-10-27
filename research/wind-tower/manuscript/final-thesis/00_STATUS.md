@@ -248,3 +248,6 @@ HOLD：
 **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差/HOLD**见[原S06研究记录的S07追加节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)：不新增授权规范条款、原刊全文、Abaqus/地震/风场求解；矩阵阈值1e-8与输出9位小数仅属算法质量门槛。程序对真实动态姿态、采样、重力/惯性/RNA及气动自由体所有权仍**不可验证**，严格禁止把转换后的截面内力直接当Abaqus外载；原始OUTB和同刻姿态/加速度通道缺失，S07物理HOLD未关闭。下一动作为恢复一条带SHA的原始OUTB与逐时刻位置/姿态/加速度，做自由体来源分账。S10风致分材料疲劳、S11优化主线不变。
 
 **补充：** S07脚本现含固定种子20261028的1000组移动参考点数值路径无关性测试（分量差<1e-10），本地Python 3.13.5通过；当前执行容器无`abaqus`/`openfast`命令，不能执行原生生产RUN。远端CI以实际运行日志为准。
+
+
+**2026-10-28 03时｜S07轻量CI已实际成功（覆盖此前PENDING）：** [Actions #40566932835](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566932835)，job `122410594298`，`completed/success`；原始job日志明确打印：合成旋转/力矩/逆算/1000组固定种子路径回归通过，**真实静态30/30行**、源SHA256及篡改拒绝通过。远端程序SHA256=`56ad7f047e7d6431acd3d87bc411055ba23a5a54d9dd0913f51164463c195557`，源CSV SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`，与本地一致。先前两个完整checkout尝试不能视为本次成功；最终成功的是SHA固定的两文件轻量CI。**仅代码/静态源数值验收，不是S07动态物理PASS**；12阶段仍0/12、地震RUN=0。
