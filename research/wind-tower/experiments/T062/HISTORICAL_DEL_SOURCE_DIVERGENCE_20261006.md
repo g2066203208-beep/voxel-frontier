@@ -149,3 +149,16 @@
 **假设/误差预算/失败记录**：FileID=4的\`(packed-offset)/scale\`按原件头解码；CSV每通道保留9位小数，舍入误差至多0.5×10⁻⁹个相应单位，源压缩整数半LSB量化误差上界为\`0.5/abs(ColScl)\`（各通道具体值尚待从原头汇总，不能将CSV小数精度等同物理精度）；统计使用Python float，未做第二独立解析器全时程逐点交叉核验；姿态/运动学、重力/惯性/RNA载荷所有权、OpenFAST塔模态和Abaqus响应的**物理误差预算均NEED_ESTIMATE**。容器直连GitHub源ZIP的DNS失败已在前轮记录，本轮在真实GitHub runner成功完成；未启动昂贵求解。**状态：S06 PARTIAL/HOLD、S07独立数据准备、整阶段0/12 PASS、地震RUN=0**。
 
 **下一单一最优动作**：追索此历史OUTB对应的ElastoDyn \`TwrGagNd/TwrNodes/TowerHt\` 原始输入，证明九点集中于0–2.75m的来源，并选择**确有高程覆盖与姿态定义的原始通道**开展自由体分账；在此之前不把该9点时程直接送入Abaqus生产载荷。
+
+
+## 2026-10-28｜S06原始ElastoDyn/OUTB九测点高程身份闭合（来源QC，非全塔物理PASS）
+
+**SOURCE / 原件直接读取**：从原始静态归档 `archive/local-assets-20261004/openfast-36-r2/part-001.zip`（SHA256=`ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`）提取 `CASES/U09p343881_ETM_S01/DTU_10MW_RWT_ElastoDyn.dat`（SHA256=`6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`）和FST（SHA256=`5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`），与历史原始OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`的9个 `TwHt*TPzi` 原生解码值逐一对照。**这次确实读取原始ElastoDyn字节和键值，不再只是猜测测点分布。**
+
+**RUN/TAB**：真实[GitHub Actions #40600361369](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40600361369) job `122526658660` = `completed/success`。原始ElastoDyn明确 `TowerHt=158.0 m`、`TowerBsHt=0.0 m`、`TwrNodes=1120`、`NTwGages=9`、`TwrGagNd=[1,3,5,7,9,13,15,17,20]`。以原始塔节点中点公式 `z_i=TowerBsHt+(TwrGagNd_i-0.5)*(TowerHt-TowerBsHt)/TwrNodes` 计算，九个预测高度与原始OUTB的 `TPzi` 最大绝对差仅 **3.841428570794392×10⁻⁷ m**；九点真实跨度 **2.680356759 m**，即158 m的 **1.6964283%**。因此，0.0705–2.7509m的九测点并非证明塔架只有2.75m，而是**158m、1120节点模型中选取了最底部1–20号节点**。这一测点身份疑点已由原始输入与输出一致性检验实质关闭，但**高程覆盖缺口仍在**。
+
+**可复核产物**：[源文件SHA锁定与正负测试程序](s06_t062_original_tower_gage_geometry_gate.py)、[永久9行测点高程回执](S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT_20261028.json)、[既有CI工作流](../../../.github/workflows/s06-historical-original-outb-source-gate.yml)。CI原始日志核验静态ZIP SHA256、FST/ElastoDyn SHA256、OUTB SHA身份；合成正确节点通过，故意错误 `TwrNodes` 和OUTB SHA均正确拒绝。CI原始生成回执SHA256=`8eae0e159ec4761592556553c41da7e5dda978c1bc67a4cc488f9584e9fc4e72`；本轮仓库永久回执是依据同一原始CI数值和已保存OUTB回执重新结构化的审计记录，**不是声称其字节与CI临时回执一致**。
+
+**REF/STANDARD/OFFICIAL/FIG/误差预算**：未新增期刊原页精读；未取得IEC/GB/NB授权条款，规范PASS=NO；OFFICIAL层级为原始OpenFAST v3.5.3配套ElastoDyn输入和原始OUTB输出，节点中点公式为此输入离散的可检验对应关系；无原生物理FIG。高程比对容差 `1e-5 m` 为探索性来源身份阈值，不是标准或物理误差预算；OUTB量化误差、RP姿态、重力/惯性/RNA所有权、模型差异仍HOLD。
+
+**阶段结论**：S06源级九测点身份 `SOURCE_GAGE_MAPPING_MATCH`；全塔载荷/正式31测点 `HOLD`，S07自由体 `HOLD`，12阶段 **0/12正式PASS**，地震RUN=0。未修改T057/T070冻结母本、未合并Draft PR。**下一单一最优动作**：基于已核实的原始ElastoDyn与OUTB，同步查证OpenFAST v3.5.3的 `RPx/y/z` 姿态/参考点定义并接入S07九测点真实动态坐标转换单测，仍不把近底部九点当全塔生产载荷。
