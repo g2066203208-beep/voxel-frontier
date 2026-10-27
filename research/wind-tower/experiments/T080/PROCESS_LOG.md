@@ -249,3 +249,5 @@
 
 
 **2026-10-28 03时｜S07轻量CI已实际成功（覆盖此前PENDING）：** [Actions #40566932835](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40566932835)，job `122410594298`，`completed/success`；原始job日志明确打印：合成旋转/力矩/逆算/1000组固定种子路径回归通过，**真实静态30/30行**、源SHA256及篡改拒绝通过。远端程序SHA256=`56ad7f047e7d6431acd3d87bc411055ba23a5a54d9dd0913f51164463c195557`，源CSV SHA256=`ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e`，与本地一致。先前两个完整checkout尝试不能视为本次成功；最终成功的是SHA固定的两文件轻量CI。**仅代码/静态源数值验收，不是S07动态物理PASS**；12阶段仍0/12、地震RUN=0。
+
+- **2026-10-28 04时｜S07/S10独立准备：** 直接读T071/T072工作流源码（Git blobs `59e76a54...`/`5baab0ea...`），确认历史OUTB只在runner临时生成，16件Actions上传范围为`extract/*`（31站六分量CSV，不含原OUTB、逐时刻三维运动学）；不能继续把已归档16ZIP误称OUTB来源。新增`experiments/T077/recovery/s10_miner_damage_gate.py`及轻量CI，合成双bin/双seed已知解年损伤1064.34、20年21286.8（**合成数据，绝非材料真实损伤**），6项负测试本地通过；远端CI待回执。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、源身份、误差及HOLD详见S06原研究记录2026-10-28 04时节。S07/S10=INDEPENDENT_PREPARATION，0/12正式PASS、地震RUN=0；冻结T057/T070未改。
