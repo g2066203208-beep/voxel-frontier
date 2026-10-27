@@ -6,11 +6,13 @@ on:
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py'
       - 'research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py'
+      - 'research/wind-tower/experiments/T070/extract_t070_g1.py'
       - '.github/workflows/s01-peaware-g1-static.yml'
   pull_request:
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py'
       - 'research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py'
+      - 'research/wind-tower/experiments/T070/extract_t070_g1.py'
       - '.github/workflows/s01-peaware-g1-static.yml'
   workflow_dispatch:
 jobs:
@@ -25,3 +27,8 @@ jobs:
           sha256sum research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py
       - name: Run 12 static mock tests (NOT Abaqus)
         run: python3 -m unittest -v research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py
+      - name: Check T070 G1 two-support gravity/PT ledger (NO ABAQUS)
+        run: |
+          python3 -m py_compile research/wind-tower/experiments/T070/extract_t070_g1.py
+          python3 research/wind-tower/experiments/T070/extract_t070_g1.py --self-test
+          echo "STATIC MOCK ONLY; no native ODB or physics PASS"
