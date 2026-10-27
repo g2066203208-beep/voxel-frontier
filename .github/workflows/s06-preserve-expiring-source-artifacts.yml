@@ -77,7 +77,7 @@ jobs:
                   "source_level":"Actions source ZIPs; not original OpenFAST OUTB",
                   "S06_scientific_PASS":False}
           target=manifest.parent/"S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json"
-          target.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\\n",encoding="utf-8")
+          target.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
           print(json.dumps({"release_url":d["url"],"draft":True,"asset_count":17}))
           PY
           git config user.name "github-actions[bot]"
