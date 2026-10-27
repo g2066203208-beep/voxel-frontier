@@ -1,0 +1,98 @@
+{
+  "source_doi": "10.1002/suco.202100710",
+  "source_url": "https://onlinelibrary.wiley.com/doi/10.1002/suco.202100710",
+  "reading_level": "publisher_open_access_fulltext_HTML_selected_sections_and_original_Table_2",
+  "csv_name": "KLEIN_2022_JOINT_BENDING_SHEAR_V1_V10_TABLE2.csv",
+  "csv_sha256": "91f8ba81a848fce752625d7c288c9984e45086dd00d63b3fbb5225464bd3fde4",
+  "steps": [
+    {
+      "step": "V1",
+      "F_kN": 3.824,
+      "u_mm": 2.028,
+      "secant_kN_per_mm": 1.88560157790927
+    },
+    {
+      "step": "V2",
+      "F_kN": 5.928,
+      "u_mm": 3.174,
+      "secant_kN_per_mm": 1.8676748582230625
+    },
+    {
+      "step": "V3",
+      "F_kN": 9.154,
+      "u_mm": 5.014,
+      "secant_kN_per_mm": 1.8256880733944953
+    },
+    {
+      "step": "V4",
+      "F_kN": 11.988,
+      "u_mm": 6.778,
+      "secant_kN_per_mm": 1.768663322514016
+    },
+    {
+      "step": "V5",
+      "F_kN": 13.597,
+      "u_mm": 7.955,
+      "secant_kN_per_mm": 1.7092394720301696
+    },
+    {
+      "step": "V6",
+      "F_kN": 14.412,
+      "u_mm": 8.754,
+      "secant_kN_per_mm": 1.646333104866347
+    },
+    {
+      "step": "V7",
+      "F_kN": 14.836,
+      "u_mm": 9.244,
+      "secant_kN_per_mm": 1.604932929467763
+    },
+    {
+      "step": "V8",
+      "F_kN": 15.227,
+      "u_mm": 9.734,
+      "secant_kN_per_mm": 1.5643106636531745
+    },
+    {
+      "step": "V9",
+      "F_kN": 15.6,
+      "u_mm": 10.223,
+      "secant_kN_per_mm": 1.5259708500440183
+    },
+    {
+      "step": "V10",
+      "F_kN": 15.924,
+      "u_mm": 10.718,
+      "secant_kN_per_mm": 1.485724948684456
+    }
+  ],
+  "k1_kN_per_mm": 1.88560157790927,
+  "k10_kN_per_mm": 1.485724948684456,
+  "k10_over_k1": 0.7879315365931163,
+  "secant_stiffness_drop_percent": 21.20684634068837,
+  "source_prestress_plus_weight_kN": 325.8,
+  "source_radius_m_rounded": 0.461,
+  "source_outer_diameter_m_rounded": 0.963,
+  "source_lever_m_from_printed_dimensions": 6.585,
+  "Mdec_kNm_recomputed_from_printed_dimensions": 71.89962803738318,
+  "Mdec_kNm_printed_in_paper": 72.015,
+  "Mdec_relative_rounding_gap_percent": -0.16020546083013176,
+  "Fdec_kN_recomputed_from_printed_dimensions": 10.918698259283703,
+  "Fdec_kN_printed_in_paper": 10.927,
+  "Fdec_relative_rounding_gap_percent": -0.07597456498853461,
+  "first_step_above_printed_ideal_Fdec": "V4",
+  "first_step_above_printed_ideal_Fdec_kN": 11.988,
+  "status": "ORIGINAL_LITERATURE_TABLE_STATIC_RECOMPUTATION_ONLY",
+  "physical_pass": false,
+  "earthquake_runs": 0,
+  "assumptions_and_limitations": [
+    "F/u is a global head secant stiffness proxy, not joint tangent stiffness",
+    "Ten increasing load/unload levels are not high-cycle fatigue data",
+    "Ideal thin-ring decompression is not an experimental observed onset",
+    "Published Eq13/14 values differ slightly from displayed rounded inputs",
+    "Test uses one central tendon unlike circumferential PT of full tower",
+    "Measured circumferential contact is nonuniform due to geometric imperfection",
+    "No scale transfer to T057/T070, no code compliance, no native Abaqus"
+  ],
+  "error_budget": "Table 2 printed to 0.001; Eq 13/14 geometry rounded; test/FE/full tower uncertainty NEED_ESTIMATE"
+}
