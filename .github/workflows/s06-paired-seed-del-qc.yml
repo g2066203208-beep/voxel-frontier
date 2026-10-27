@@ -1,0 +1,50 @@
+name: S06 paired ETM seed DEL source-level QC (not fatigue PASS)
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-paired-seed-del-qc.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s06_qc_half_window_rms.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-level-paired-seed-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce all 12 paired DEL rows from source SHA; reject altered input
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          python3 s06_qc_half_window_rms.py \
+            --source S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
+            --qc S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv \
+            --paired-qc S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv
+          python3 - <<'PY'
+          import importlib.util
+          import tempfile
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('s06_qc', 's06_qc_half_window_rms.py')
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          source=Path('S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv')
+          with tempfile.TemporaryDirectory() as tmp:
+              p=Path(tmp)/'tampered.csv'
+              raw=bytearray(source.read_bytes())
+              pos=raw.find(b'U19p202140_ETM_S06')
+              assert pos>=0
+              raw[pos]=ord('X')
+              p.write_bytes(raw)
+              try: mod.paired_seed_summary(p)
+              except ValueError as e:
+                  assert 'SHA mismatch' in str(e), str(e)
+              else: raise AssertionError('tampered source accepted')
+          print('PASS: source tamper rejected; 12 rows are exact and source-SHA bound')
+          PY
+          sha256sum S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
+            S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv
+          echo 'SOURCE-LEVEL ONLY; NOT DLC1.2/SEED CONVERGENCE/MATERIAL FATIGUE/ABAQUS PASS'
