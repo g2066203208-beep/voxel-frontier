@@ -78,7 +78,8 @@ jobs:
           python "$ROOT/T077/recovery/s06_30_joint_gravity_ownership.py" \
             --geometry "$ROOT/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv" \
             --gravity "$ROOT/T074/T074_158M_31SEG_GRAVITY_BASELINE.csv" \
-            --output "$RUNNER_TEMP/s06_30_joint_recomputed.csv"
+            --output "$RUNNER_TEMP/s06_30_joint_recomputed.csv" \
+            --wrench-output "$RUNNER_TEMP/s06_30_wrench_recomputed.csv"
           python - <<'PY'
           import csv,hashlib,math,os,pathlib
           root=pathlib.Path("research/wind-tower/experiments")
@@ -103,7 +104,26 @@ jobs:
                       assert left[k]==right[k],k
                   else:
                       assert math.isclose(x,y,rel_tol=0,abs_tol=1e-7),(left["joint"],k,x,y)
+          # Six-component static wrench transport: compare every published field.
+          published_wrench=root/"T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv"
+          calculated_wrench=pathlib.Path(os.environ["RUNNER_TEMP"])/"s06_30_wrench_recomputed.csv"
+          a,b=load(published_wrench),load(calculated_wrench)
+          assert len(a)==len(b)==30
+          for left,right in zip(a,b):
+              assert left.keys()==right.keys()
+              for k in left:
+                  try: x,y=float(left[k]),float(right[k])
+                  except ValueError: assert left[k]==right[k],k
+                  else: assert math.isclose(x,y,rel_tol=0,abs_tol=1e-7),(left["joint"],k,x,y)
+              for k in ("delta_Fx_kN","delta_Fy_kN","delta_Mx_at_below_kNm",
+                        "delta_My_at_below_kNm","delta_Mz_at_below_kNm"):
+                  assert abs(float(left[k]))<1e-8,(left["joint"],k)
+              assert left["frame_policy"]=="STATIC_COMMON_FRAME_ASSUMED"
+          my=[float(x["My_below_raw_kNm"]) for x in a]
+          assert max(my)-min(my)<1e-8
+          assert abs(my[0]+5793.573173694369)<1e-8
           print("S06: 30/30 true-joint geometry/gravity source-level numerical roundtrip PASS; NOT contact or native PASS")
+          print("S06: 30/30 static six-component gage wrench transport + synthetic shear/moment oracle PASS; My=-5793.573173694369 kNm constant; dynamic frame/inertia still HOLD")
           PY
       - name: Write traceable preflight report
         run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
