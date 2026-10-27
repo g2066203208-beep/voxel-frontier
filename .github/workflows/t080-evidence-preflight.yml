@@ -45,6 +45,24 @@ jobs:
         run: python -m unittest discover -s research/wind-tower/experiments/T080 -p 'test_t08034_history_preflight.py' -v
       - name: T080.36 synthetic time-window regression (not physics validation)
         run: python -m unittest discover -s research/wind-tower/experiments/T080 -p 'test_t08036_time_extent_gate.py' -v
+      - name: S06 source-level rainflow algorithm and published summary integrity (NOT material fatigue)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet numpy==2.3.5 pandas==2.2.3
+          python research/wind-tower/experiments/T077/recovery/s06_31gage_rainflow_load_screen.py --self-test
+          python - <<'PY'
+          import hashlib,pathlib
+          root=pathlib.Path('research/wind-tower/experiments/T077/recovery')
+          expected={
+            's06_31gage_rainflow_load_screen.py':'9149c6ef71424ed073b4233ac7082753b0dcd979ec31b795318570c5c5cdac34',
+            'S06_4CASE_6COMP_RAINFLOW_SCREEN_SUMMARY_20261027.csv':'d8f6dc4a3e34abe09a5c15e0adcdff99a6a4764f1b26245e624f1e7f19a4a499',
+          }
+          for filename,digest in expected.items():
+              got=hashlib.sha256((root/filename).read_bytes()).hexdigest()
+              assert got==digest,(filename,got,digest)
+          print('S06 rainflow synthetic oracle and published real-source 24-row summary SHA PASS; NOT full-history CI nor material fatigue PASS')
+          PY
       - name: S02 T070 frozen-source and native-launcher availability preflight (NO SOLVER)
         shell: bash
         run: |
