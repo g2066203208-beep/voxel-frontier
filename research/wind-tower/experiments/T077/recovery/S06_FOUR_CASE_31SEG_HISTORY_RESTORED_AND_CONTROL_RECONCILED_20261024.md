@@ -244,7 +244,7 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 
 ## 2026-10-28 01时｜S06/S07：U=19.202140 m/s ETM同风速两seed配对DEL敏感性（真实744行源数据）
 
-**SOURCE/原始身份**：仅使用已提交[744行真实历史雨流/DEL表](S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)，SHA256=\`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b\`；它源自T071/T072的16件ZIP（已存入Draft Release，回执见本文件上一节），而**不是本轮新运行OpenFAST或新取得OUTB**。程序[复用并扩展原有半窗QC](s06_qc_half_window_rms.py)，新增\`--paired-qc\`可复算[12行配对结果](S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv)，该CSV SHA256=\`ebb9dfb1da740a3968e5fac7c43152010aa58a0e39dc005c9299d13849ce97e3\`（UTF-8/LF）。本地Python 3.13.5执行完整744行输入哈希、4×31×6唯一性、12001样点/0.05s/600s、同单位、每段同标签匹配；配对仅为U19.202140_ETM_S04与S06。采用各通道同一\`Nref=600\`的已存DEL，按每个名义段计算\`r_i=DEL(S06)/DEL(S04)\`，不跨工况拼接峰值。脚本检查非有限、负值、缺失与重复；新CI为[源级配对QC工作流](../../../../../.github/workflows/s06-paired-seed-del-qc.yml)，其成功状态须以实际Actions job为准。
+**SOURCE/原始身份**：仅使用已提交[744行真实历史雨流/DEL表](S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)，SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`；它源自T071/T072的16件ZIP（已存入Draft Release，回执见本文件上一节），而**不是本轮新运行OpenFAST或新取得OUTB**。程序[复用并扩展原有半窗QC](s06_qc_half_window_rms.py)，新增`--paired-qc`可复算[12行配对结果](S06_U19_ETM_S04_S06_PAIRED_DEL_SENSITIVITY_20261028.csv)，该CSV SHA256=`ebb9dfb1da740a3968e5fac7c43152010aa58a0e39dc005c9299d13849ce97e3`（UTF-8/LF）。本地Python 3.13.5执行完整744行输入哈希、4×31×6唯一性、12001样点/0.05s/600s、同单位、每段同标签匹配；配对仅为U19.202140_ETM_S04与S06。采用各通道同一`Nref=600`的已存DEL，按每个名义段计算`r_i=DEL(S06)/DEL(S04)`，不跨工况拼接峰值。脚本检查非有限、负值、缺失与重复；新CI为[源级配对QC工作流](../../../../../.github/workflows/s06-paired-seed-del-qc.yml)，其成功状态须以实际Actions job为准。
 
 | 同风速19.202140 ETM；31名义段配对 | m=4：S06/S04中位数 | m=10：S06/S04中位数 | m=10比值范围 |
 |---|---:|---:|---:|
@@ -255,7 +255,7 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 | My (kN·m) | **1.015026** | **1.088650** | **1.008607–1.109413** |
 | Mz (kN·m) | 1.011483 | 0.963359 | 0.963341–0.963394 |
 
-**新增必须显式保留的模型身份异常：** S04/S06虽然使用同名\`CSEG_01..31\`，但逐段读取源表\`gage_z_m\`后，**26/31个名义段的z值不完全相同**，最大差异位于CSEG_31，**0.414875 mm**。不能静默宣称两个seed的截面坐标逐字节一致。该差异可能来自高度离散/输出生成或模型身份变化，现有CSV不能判定原因；配对结果因此标记为**NOMINAL-GAGE-PAIRED / GEOMETRY-IDENTITY-HOLD**，不可用于严格同截面响应比较，需从原始OpenFAST tower-gage和OUTB输入链追溯。表中各m指数是方法敏感性参数，非本塔混凝土、钢绞线或钢塔材料S–N斜率。
+**新增必须显式保留的模型身份异常：** S04/S06虽然使用同名`CSEG_01..31`，但逐段读取源表`gage_z_m`后，**26/31个名义段的z值不完全相同**，最大差异位于CSEG_31，**0.414875 mm**。不能静默宣称两个seed的截面坐标逐字节一致。该差异可能来自高度离散/输出生成或模型身份变化，现有CSV不能判定原因；配对结果因此标记为**NOMINAL-GAGE-PAIRED / GEOMETRY-IDENTITY-HOLD**，不可用于严格同截面响应比较，需从原始OpenFAST tower-gage和OUTB输入链追溯。表中各m指数是方法敏感性参数，非本塔混凝土、钢绞线或钢塔材料S–N斜率。
 
 **误差/统计边界：** 数据文件字节SHA锁定、输出9位小数取整；本轮没有给出物理误差预算。31段为同一塔沿高相关测点，**不是31个独立随机seed**；只有S04/S06两个seed，无法推断seed统计收敛、置信区间或年损伤。两条均为历史ETM筛查，不能代替DLC1.2/NTM长期风速bins或Abaqus局部材料应力。S06科学状态仍PARTIAL/HOLD，S07仅算法准备，S10/S11生产未放行；12阶段仍0/12 PASS，地震RUN=0。
 
