@@ -218,3 +218,8 @@ HOLD：
 **本轮新增的实际保全程序及工作流：** [严格SHA256+CRC+GZIP+CSV+行数校验器](../../experiments/T077/recovery/s06_archive_expiring_actions_sources.py)、[只归档不运行求解器的GitHub Actions工作流](../../../../.github/workflows/s06-preserve-expiring-source-artifacts.yml)、[原16件SHA登记](../../experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)；计划将原件上传**Draft Release**（不合并PR、不发布Release），并在真正完成后自动提交[17件资产回执](../../experiments/T077/recovery/S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)。**当前回执未核实，不能说原件已长期归档**；状态为`ARCHIVE_SUBMITTED / RECEIPT_PENDING`，具体SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与失败边界见[S06原报告](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。本轮无新原生Abaqus、无真实地震E/WE、无材料疲劳寿命、无规范条款PASS。
 
 **下一单一动作：** 远端确认17件Draft Release资产及receipt；失败则读取原生Actions job日志修复。
+
+
+## 2026-10-28｜S06原始16件ZIP已归档（非科学PASS）
+
+**覆盖上方旧的`ARCHIVE_SUBMITTED / RECEIPT_PENDING`：16件T071/T072历史Actions原始ZIP已经实际归档到GitHub Draft Release，归档子任务SOURCE_ARCHIVED_16ZIP_PASS。** 原生[Actions 40537618197](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40537618197)为success，17件资产（16 ZIP + 1验证JSON）共125301985字节；远端GitHub Release API逐件`digest`与[16行源manifest](../../experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)的ZIP SHA256比对16/16一致，`draft=true`。可复核[原生回执](../../experiments/T077/recovery/S06_SOURCE_ARCHIVE_RELEASE_RECEIPT_20261027.json)及[S06研究报告](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。四次失败401及修复代码已保留原始日志和提交。**这不是OUTB、S06整阶段或S07科学PASS**；严格12阶段仍0/12，原始OpenFAST OUTB、模型控制器身份及六分量动态重力/惯性所有权仍HOLD。下一优先转S07→S10真实方法与输入管线，不再反复做已完成的ZIP归档。
