@@ -184,3 +184,5 @@
 - **REF/STANDARD/OFFICIAL/FIG**：REF无新期刊全文；STANDARD未取得2025 IEC或NB/T10907授权条款，无规范PASS；OFFICIAL=v3.5.3 NREL原生Fortran代码及GitHub标签/源blob；FIG无物理响应图；TAB见上方原始9行和现有141通道回执。
 - **假设/误差预算**：源代码SHA1+历史OUTB SHA256只保证版本/身份；`first`来自压缩OUTB解码后回执的9位十进制值，打印舍入≤5×10⁻¹⁰（按每值九位小数），差值误差上界约10⁻⁹ kN；动态旋转的真实误差、惯性/气动分账和材料响应误差均`NEED_ESTIMATE`，不可用该数值舍入误差代替物理预算。
 - **HOLD/PASS**：本轮最多`S07_SOURCE_CONTRACT_VERIFIED / PHYSICS_HOLD`；0/12整阶段PASS，地震RUN=0；没有Abaqus原生Data Check/接触平衡、没有31段动态DCM和载荷去重，也没有DLC1.2材料疲劳或优化生产。下一唯一动作：**从v3.5.3塔节点`CoordSys%t1/t2/t3`或`TowerLn2Mesh%Orientation`获取真实逐时刻方向余弦矩阵并进行单条动态六分量映射，禁止用RP三角度直接拼精确Euler矩阵**。T057/T070冻结文件不变，PR不合并。
+
+- **2026-10-28 08时补充源字节SHA256：** OpenFAST v3.5.3原始`ElastoDyn.f90`（Git blob `2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1`，663919 ASCII字节）独立FIPS SHA-256复算=`a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3`；JS哈希实现先用标准`abc`已知向量`ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad`自测通过。等待GitHub Actions对原始源`sha256sum`交叉确认；不得在CI未完成时宣称远端PASS。
