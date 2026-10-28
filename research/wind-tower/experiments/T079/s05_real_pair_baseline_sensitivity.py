@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Transparent NON-DESIGN baseline sensitivity on real Ridgecrest CI.CLC accelerograms.
+"""Transparent NON-DESIGN baseline sensitivity on official CI.CLC event accelerograms.
 
 Original raw station-calibrated CSV and miniSEED are immutable. Two postprocessing
 scenarios are compared (pre-event 20s DC removal, whole-window linear detrend)
 to expose low-frequency sensitivity. No accepted design wave is generated.
 """
 import argparse,csv,hashlib,json,math,pathlib
-from s05_ground_motion_pair_qc import inspect,drift,G
+from s05_ground_motion_pair_qc import inspect,drift,sdof,G
 
 ORIGINAL_SHA={
  "CI_CLC_HNE_accel_mps2.csv":"fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
@@ -60,21 +60,37 @@ def run(raw,out):
     mp=raw/"manifest.json"
     m=json.loads(mp.read_text())
     assert len(m["horizontal_components"])==2
-    assert m["source_accession"]=="USGS:ci38457511;FDSN:CI.CLC:HN*:2019-07-06"
+    receipt=json.loads((raw/"source_receipt.json").read_text(encoding="utf-8"))
+    event_id=receipt["event_id"]
+    if event_id not in ("ci38457511","ci39493944"):raise ValueError("UNEXPECTED_EVENT_ID")
+    if not m["source_accession"].startswith("USGS:"+event_id+";FDSN:CI.CLC:HN*:"):
+        raise ValueError("EVENT_ACCESSION_MISMATCH")
+    if receipt["files_SHA256"]["manifest.json"]!=sha(mp):raise ValueError("SOURCE_MANIFEST_SHA")
+    for src in ("original/CI_waveform_counts.mseed","original/CI_station_response.xml"):
+        if receipt["files_SHA256"][src]!=sha(raw/src):raise ValueError("SOURCE_ORIGINAL_SHA")
+    expected_sha={z["file"]:z["sha256"] for z in m["horizontal_components"]}
+    if len(expected_sha)!=2:raise ValueError("PAIR_IDENTITY")
+    if any(receipt["files_SHA256"].get(k)!=v for k,v in expected_sha.items()):
+        raise ValueError("SOURCE_RECEIPT_SHA")
+    if event_id=="ci38457511" and expected_sha!=ORIGINAL_SHA:
+        raise ValueError("HISTORIC_RIDGECREST_SHA_LOCK")
     assert all(z["rsn"]=="NOT_PEER_RSN" and z["station"]=="CI.CLC" for z in m["horizontal_components"])
     out.mkdir(parents=True,exist_ok=True)
     proc=json.loads(json.dumps(m))
     proc["source_database"]="RESEARCH_BASELINE_SENSITIVITY_PRE_EVENT_20_SECONDS_FROM_OFFICIAL_CI_CLC_NO_DESIGN_ACCEPTANCE"
     proc["source_accession"]=m["source_accession"]+":BASELINE20S_PILOT"
     report={"status":"BASELINE_SENSITIVITY_ONLY_NOT_S05_OR_ABAQUS_PASS",
-        "original_manifest_sha256":sha(mp),"dt_s":DT,"npts":NPTS,"pre_event_seconds":PRE_S,
-        "raw_csv_sha256_lock":ORIGINAL_SHA,"base_line_method":"subtract pre-event mean first 20s; no filter, no time scaling, no artificial spectrum matching",
+        "original_manifest_sha256":sha(mp),"event_id":event_id,
+        "source_receipt_sha256":sha(raw/"source_receipt.json"),
+        "source_raw_mseed_sha256":receipt["raw_mseed_sha256"],
+        "dt_s":DT,"npts":NPTS,"pre_event_seconds":PRE_S,
+        "raw_csv_sha256_lock":expected_sha,"base_line_method":"subtract pre-event mean first 20s; no filter, no time scaling, no artificial spectrum matching",
         "source_is_200s_window_not_complete_record":True,
         "not_PEER_RSN":True,"low_frequency_validated":False,"Jiayu_site_spectrum_matched":False,"Abaqus_RUN":False,
         "components":[]}
     for row in proc["horizontal_components"]:
         filename=row["file"]
-        if filename not in ORIGINAL_SHA or row["sha256"]!=ORIGINAL_SHA[filename] or sha(raw/filename)!=ORIGINAL_SHA[filename]:
+        if filename not in expected_sha or row["sha256"]!=expected_sha[filename] or sha(raw/filename)!=expected_sha[filename]:
             raise ValueError("SOURCE_IDENTITY_OR_SHA")
         a=read(raw/filename)
         b,offset=dc_preevent(a)
@@ -83,7 +99,7 @@ def run(raw,out):
         write(out/dst,b)
         row["file"]=dst
         row["sha256"]=sha(out/dst)
-        report["components"].append({"original_csv":filename,"original_sha256":ORIGINAL_SHA[filename],
+        report["components"].append({"original_csv":filename,"original_sha256":expected_sha[filename],
             "derived_csv":dst,"derived_sha256":row["sha256"],"removed_offset_m_s2":offset,
             "raw_PGA_g":max(map(abs,a))/G,"pre_event_centered_PGA_g":max(map(abs,b))/G,
             "raw_uncorrected_drift":drift(a,DT),"pre_event_mean_removed_drift":drift(b,DT),
@@ -94,9 +110,28 @@ def run(raw,out):
     qc=inspect(out/"manifest.json")
     assert not qc["S05_PASS"]
     (out/"pair_qc.json").write_text(json.dumps(qc,indent=2)+"\n")
-    for row,new in zip(report["components"],qc["components"]):
-        row["preevent_pseudo_SA_m_s2_at_T_1"]=next(x["pseudo_sa_m_s2"] for x in new["spectrum"] if x["period_s"]==1)
-        row["preevent_pseudo_SA_m_s2_at_T_6"]=next(x["pseudo_sa_m_s2"] for x in new["spectrum"] if x["period_s"]==6)
+    raw_qc=json.loads((raw/"pair_qc.json").read_text(encoding="utf-8"))
+    if raw_qc["manifest_sha256"]!=sha(mp):raise ValueError("RAW_QC_MANIFEST_SHA")
+    for row,old,new in zip(report["components"],raw_qc["components"],qc["components"]):
+        a=read(raw/row["original_csv"])
+        c,_=linear_detrend(a)
+        periods=(1.0,2.0,4.0,6.0,8.0,10.0)
+        raw_spec={z["period_s"]:z["pseudo_sa_m_s2"] for z in old["spectrum"]}
+        pre_spec={z["period_s"]:z["pseudo_sa_m_s2"] for z in new["spectrum"]}
+        row["spectral_sensitivity_5pct_damping"]=[]
+        for T in periods:
+            linear_sa=sdof(c,DT,T,0.05)["pseudo_sa_m_s2"]
+            row["spectral_sensitivity_5pct_damping"].append({
+                "T_s":T,"raw_pseudo_sa_m_s2":raw_spec[T],
+                "preevent20_pseudo_sa_m_s2":pre_spec[T],
+                "linear_detrend_pseudo_sa_m_s2":linear_sa,
+                "raw_vs_preevent20_percent":100*abs(raw_spec[T]-pre_spec[T])/max(pre_spec[T],1e-12),
+            })
+        row["max_raw_vs_preevent20_percent_T4_to_10"]=max(
+            z["raw_vs_preevent20_percent"] for z in row["spectral_sensitivity_5pct_damping"] if z["T_s"]>=4
+        )
+        row["preevent_pseudo_SA_m_s2_at_T_1"]=pre_spec[1.0]
+        row["preevent_pseudo_SA_m_s2_at_T_6"]=pre_spec[6.0]
     (out/"baseline_sensitivity_report.json").write_text(json.dumps(report,indent=2)+"\n")
     print("REAL_RECORD_BASELINE_PILOT",json.dumps(report["components"],ensure_ascii=False),flush=True)
 
