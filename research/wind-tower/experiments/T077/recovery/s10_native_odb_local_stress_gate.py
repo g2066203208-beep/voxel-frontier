@@ -78,8 +78,8 @@ def validate_card(card):
     return card
 
 
-# Source-locked whitelist: this is only the frozen T057 diagnostic R335 branch.
-# Other D400/D500/Pe child inputs require a new independently reviewed source map.
+# SHA-locked diagnostic R335/T057 and independently reconstructed D400/Pe maps.
+# Neither map certifies ODB integration points, hotspots, or native equilibrium.
 FROZEN_T057_SHA = 'c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db'
 SOURCE_MAP_SHA = '502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd'
 D400_PE_CHILD_SHA = '22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a'
@@ -299,14 +299,14 @@ def self_test(source_map=None, d400_source_map=None):
         d400['element_label'] = int(source['height_candidate_element_label'])
         validate_source_binding(d400, d400_raw)
         real_tests += 1
-        for meta, raw in (
+        for meta, source_bytes in (
             (dict(d400, material_id='HRB335_T057'), d400_raw),
             (dict(d400, inp_sha256=FROZEN_T057_SHA), d400_raw),
             (dict(d400), real_source_raw if source_map is not None else b'wrong-map'),
             (dict(d400, element_label=d400['element_label'] + 1), d400_raw),
         ):
             try:
-                validate_source_binding(meta, raw)
+                validate_source_binding(meta, source_bytes)
             except ValueError:
                 real_tests += 1
             else:
