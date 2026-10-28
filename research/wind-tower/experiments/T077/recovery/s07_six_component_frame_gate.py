@@ -351,7 +351,7 @@ def main():
         receipt=v353_original_source_contract(a.official_v353_source,a.outb_receipt)
         print('V353_SOURCE_CONTRACT',json.dumps({k:v for k,v in receipt.items() if k!='first_sample_gages'},sort_keys=True))
         if a.contract_json:
-            a.contract_json.write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\\n',encoding='utf-8')
+            a.contract_json.write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n',encoding='utf-8')
     if a.static_source: print('STATIC_REAL_SOURCE',static_source_regression(a.static_source))
     if a.input:
         if a.output is None: p.error('--input requires --output')
