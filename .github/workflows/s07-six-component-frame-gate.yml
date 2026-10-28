@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/s07-six-component-frame-gate.yml'
       - 'research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s07_v353_fixed_base_native_frame.py'
       - 'research/wind-tower/experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv'
       - 'research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json'
   workflow_dispatch:
@@ -92,3 +93,47 @@ jobs:
           PY
           sha256sum ElastoDyn_v353_OFFICIAL.f90 T062_original_receipt.json s07_source_contract_result.json
           echo 'NO EXACT DCM, NO EXTERNAL LOAD EXPORT, NO ABAQUS/OPENFAST/SEISMIC RUN.'
+
+      - name: Verify source-derived fixed-base tower DCM on ORIGINAL 12001x9 OUTB
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s07-native
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/s07_v353_fixed_base_native_frame.py \
+            "$base/research/wind-tower/experiments/T077/recovery/s07_v353_fixed_base_native_frame.py"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/s06_historical_outb_source_gate.py \
+            "$base/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/static-part-001.zip \
+            "$base/research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/dynamic-part-001.zip \
+            "$base/research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/ElastoDyn.f90 \
+            "https://raw.githubusercontent.com/OpenFAST/openfast/v3.5.3/modules/elastodyn/src/ElastoDyn.f90"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/NWTC_Num.f90 \
+            "https://raw.githubusercontent.com/OpenFAST/openfast/v3.5.3/modules/nwtc-library/src/NWTC_Num.f90"
+          python3 -m py_compile s07-native/s07_v353_fixed_base_native_frame.py
+          python3 s07-native/s07_v353_fixed_base_native_frame.py --self-test
+          python3 s07-native/s07_v353_fixed_base_native_frame.py \
+            --static-zip s07-native/static-part-001.zip \
+            --dynamic-zip s07-native/dynamic-part-001.zip \
+            --elastodyn-source s07-native/ElastoDyn.f90 \
+            --nwtc-source s07-native/NWTC_Num.f90 \
+            --parser s07-native/s06_historical_outb_source_gate.py \
+            --output s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          sha256sum s07-native/s07_v353_fixed_base_native_frame.py \
+            s07-native/ElastoDyn.f90 s07-native/NWTC_Num.f90 \
+            s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          echo 'S07 conditional fixed-base DCM gate only: 9 near-base internal section resultants, NOT Abaqus external loads.'
+      - name: Retain S07 original full-series orientation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-v353-fixed-base-frame-12001x9
+          path: s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          retention-days: 14
