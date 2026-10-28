@@ -473,3 +473,6 @@ HOLD：
 ## 2026-10-29 03时｜S05独立程序推进（0/12未晋级）
 
 现有ESM MP原件处理脚本增加HNE/HNN长周期dt/2dt/4dt Newmark谱敏感性、起始10s RMS（非SNR）、积分末漂移（非真实位移）、理想单程Butterworth条件幅值；CI对官方原件复算并保存同一receipt。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、输入SHA、误差边界、失败记录见[过程日志](../../experiments/T079/PROCESS_LOG.md)。本轮不提前宣布CI通过、S05设计谱适用或Abaqus地震结果；S05 PARTIAL/HOLD，S08/S09 BLOCKED，S10材料疲劳和S11优化仍保留。
+
+
+**2026-10-29 03时 S05真实CI结果回填：** [官方ESM数值QC 8行CSV](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv)由[成功CI #40751645932](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40751645932)实测产生，2dt最大差0.009121%、4dt最大差0.399212%；初次fixture失败CI #40751517437及修复均在[过程日志](../../experiments/T079/PROCESS_LOG.md)登记。真实原件HNE/HNN归一化SHA已再次一致；数值稳定≠真实低频可靠性、场址目标谱适用性或原生结构PASS。**0/12未晋级，S05 PARTIAL/HOLD，地震RUN=0。**
