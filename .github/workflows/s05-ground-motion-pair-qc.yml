@@ -171,6 +171,8 @@ jobs:
           set -euo pipefail
           curl -fLsS --retry 3 -o s05_esm_public_processed_pair.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py"
           sha256sum s05_esm_public_processed_pair.py
+          curl -fLsS --retry 3 -o s05_ground_motion_pair_qc.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py"
+          sha256sum s05_ground_motion_pair_qc.py
       - name: Synthetic ZIP security and source-identity tests
         run: |
           python3 -m py_compile s05_esm_public_processed_pair.py
@@ -202,6 +204,8 @@ jobs:
           p='esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_receipt.json'
           x=json.load(open(p,encoding='utf-8'))
           print('ESM_REAL_SOURCE',x['event_id'],x['station_requested'],x['zip_sha256'],x['zip_bytes'])
+          for row in x['processed_pair_spectrum']['spectrum']:
+              print('ESM_REAL_PSA_5PCT',row)
           for f in x['unpacked_files']:
               print('ESM_MEMBER',f['filename'],f['bytes'],f['sha256'],f['dyna_selected_header_fields'])
               for i,line in enumerate(f['dyna_header_lines_SOURCE_TEXT'],1):
