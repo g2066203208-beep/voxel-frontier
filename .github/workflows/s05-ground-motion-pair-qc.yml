@@ -233,6 +233,14 @@ jobs:
               for row in c['periods']:
                   assert all(math.isfinite(v) for k,v in row.items() if isinstance(v,float))
                   print('REAL_ESM_LONG_PERIOD_NUMERICAL_QC',name,row)
+              extra=c['extra_highpass_sensitivity_NOT_ORIGINAL_ESM_FILTER']
+              assert len(extra)==8
+              for item in extra:
+                  assert item['extra_highpass_passes']==2
+                  assert item['extra_highpass_fc_Hz'] in (.04,.08)
+                  assert item['T_s'] in (4.,6.,8.,10.)
+                  assert all(math.isfinite(v) for v in item.values() if isinstance(v,float))
+                  print('REAL_ESM_EXTRA_HP2_SENSITIVITY_NOT_FILTER_RECOVERY',name,item)
           print('S05_QC_NOT_DESIGN_PASS')
           PY
       - name: Preserve original official bytes or explicit failure receipt
