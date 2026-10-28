@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Retrieve REAL two-horizontal strong-motion accelerations from official SCEDC FDSN.
 
-2019 Ridgecrest mainshock USGS event ci38457511. THIS IS AN INPUT-QC
+2019 Ridgecrest or independent 2020 Lone Pine event. THIS IS AN INPUT-QC
 DEMONSTRATION, NOT Jiayu site compatible or PEER NGA-West2 RSN authenticated.
 Requires numpy, requests, obspy, existing s05_ground_motion_pair_qc.py.
 """
@@ -25,10 +25,23 @@ BASES = [
     "https://service.iris.edu/fdsnws",
 ]
 # SCIENCE: event identity independently USGS ci38457511, origin UTC 2019-07-06T03:19:53
-EVENT = "USGS_ci38457511_Ridgecrest_Mw7.1_2019-07-06T03:19:53Z"
-STATIONS = ["CLC", "WRC", "WCS", "RVR", "PASC"]
-START = "2019-07-06T03:19:20"
-END = "2019-07-06T03:22:40"
+# Event origin metadata from USGS/SCEC catalog; data requests are NOT proof of waveform availability.
+EVENTS = {
+    "ridgecrest2019": {
+        "usgs_id": "ci38457511", "event_name": "Ridgecrest", "magnitude_mw": 7.1,
+        "event_utc": "2019-07-06T03:19:53Z",
+        "start": "2019-07-06T03:19:20", "end": "2019-07-06T03:22:40",
+        "stations": ["CLC", "WRC", "WCS", "RVR", "PASC"],
+        "catalog": "https://earthquake.usgs.gov/earthquakes/eventpage/ci38457511",
+    },
+    "lonepine2020": {
+        "usgs_id": "ci39493944", "event_name": "Lone_Pine", "magnitude_mw": 5.8,
+        "event_utc": "2020-06-24T17:40:49Z",
+        "start": "2020-06-24T17:40:20", "end": "2020-06-24T17:43:40",
+        "stations": ["CLC", "WRC", "WCS", "RVR", "PASC"],
+        "catalog": "https://earthquake.usgs.gov/earthquakes/eventpage/ci39493944",
+    },
+}
 NETWORK = "CI"
 
 
@@ -86,9 +99,10 @@ def normalized_acceleration(trace, inv, ch):
     return values, {"input_units": sens.input_units, "counts_per_input_unit": float(sens.value), "azimuth_deg": float(ch.azimuth), "dip_deg": float(ch.dip), "sample_rate_Hz": float(trace.stats.sampling_rate)}
 
 
-def recover(out, station):
-    begin, end = UTCDateTime(START), UTCDateTime(END)
-    par = {"net": NETWORK, "sta": station, "loc": "*", "cha": "HN*", "starttime": START, "endtime": END}
+def recover(out, station, event_key):
+    cfg = EVENTS[event_key]
+    begin, end = UTCDateTime(cfg["start"]), UTCDateTime(cfg["end"])
+    par = {"net": NETWORK, "sta": station, "loc": "*", "cha": "HN*", "starttime": cfg["start"], "endtime": cfg["end"]}
     sta_data, sta_url, sta_errors = get("station", dict(par, level="response", format="xml"))
     inv = read_inventory(io.BytesIO(sta_data), format="STATIONXML")
     wave_data, wave_url, wave_errors = get("dataselect", par)
@@ -155,12 +169,12 @@ def recover(out, station):
                 w.writerow([f"{i*dt:.8f}", f"{float(x):.12g}"])
         meta_pair.append({
             "file": filename, "sha256": digest(p.read_bytes()), "rsn": "NOT_PEER_RSN",
-            "event": EVENT, "station": "CI." + station, "component": tr.stats.channel,
+            "event": "USGS_" + cfg["usgs_id"] + "_" + cfg["event_name"], "station": "CI." + station, "component": tr.stats.channel,
             "unit": "m/s2", "dt_s": dt,
         })
     m = {
         "source_database": "SCEDC_or_EarthScope_official_FDSN_raw_MSEED",
-        "source_accession": "USGS:ci38457511;FDSN:CI." + station + ":HN*:2019-07-06",
+        "source_accession": "USGS:" + cfg["usgs_id"] + ";FDSN:CI." + station + ":HN*:" + cfg["event_utc"][:10],
         "damping_ratio": 0.05,
         "periods_s": [0.1,0.2,0.4,0.6,0.8,1.0,1.5,2.0,3.0,4.0,6.0,8.0,10.0],
         "horizontal_components": meta_pair,
@@ -172,8 +186,8 @@ def recover(out, station):
     summary = {
         "input_type":"REAL_RECORDED_GROUND_ACCELERATION_OFFICIAL_STATION_PILOT_NOT_SITE_MATCHED",
         "source_record_is_not_peer_nga_rsn":True,
-        "event_catalog":"https://earthquake.usgs.gov/earthquakes/eventpage/ci38457511/origin/magnitude",
-        "event_utc":"2019-07-06T03:19:53Z",
+        "event_catalog":cfg["catalog"], "event_utc":cfg["event_utc"],
+        "event_id":cfg["usgs_id"], "event_key":event_key, "event_magnitude_mw":cfg["magnitude_mw"],
         "station_network":NETWORK, "station":station,
         "station_latitude":sta.latitude, "station_longitude":sta.longitude,
         "station_elevation_m":sta.elevation,
@@ -183,7 +197,7 @@ def recover(out, station):
         "raw_mseed_sha256": digest(wave_data),
         "raw_mseed_bytes":len(wave_data),
         "stationxml_bytes":len(sta_data),
-        "window_request_utc":[START,END],
+        "window_request_utc":[cfg["start"],cfg["end"]],
         "common_start_utc":iso, "common_npts":len(aa), "common_dt_s":dt,
         "channels":[
             {"seed_id":item[0].id, **item[2], "csv":m0["file"],"csv_sha256":m0["sha256"],"pga_g":v["pga_g"]}
@@ -218,19 +232,20 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--output-dir",required=True)
     ap.add_argument("--station",default="")
+    ap.add_argument("--event",choices=sorted(EVENTS),default="ridgecrest2019")
     args=ap.parse_args()
-    stations=[args.station] if args.station else STATIONS
+    stations=[args.station] if args.station else EVENTS[args.event]["stations"]
     failures=[]
     for station in stations:
         try:
-            recover(pathlib.Path(args.output_dir),station)
+            recover(pathlib.Path(args.output_dir),station,args.event)
             return
         except Exception as e:
             print("OFFICIAL_STATION_NOT_USABLE",station,repr(e),flush=True)
             failures.append({"station":station,"error":str(e)[:600]})
     out=pathlib.Path(args.output_dir)
     out.mkdir(parents=True,exist_ok=True)
-    (out/"recovery_failures.json").write_text(json.dumps({"status":"HOLD_NO_REAL_PAIR","attempts":failures,"event":EVENT,"earthquake_RUN":0},indent=2)+"\n")
+    (out/"recovery_failures.json").write_text(json.dumps({"status":"HOLD_NO_REAL_PAIR","attempts":failures,"event":EVENTS[args.event],"earthquake_RUN":0},indent=2)+"\n")
     raise SystemExit("NO_OFFICIAL_REAL_ACCELERATION_PAIR; reasons saved in recovery_failures.json")
 
 if __name__=="__main__":
