@@ -299,3 +299,9 @@ HOLD：
 ### 2026-10-28｜S05首次取得真实期刊PDF原件，核读风震方法边界（0/12未晋级）
 
 [真实下载CI #40624117542](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40624117542)取得REF146/REF150/REF151三份**真实全文PDF**，均有可回读原始SHA、页数和Actions artifact；REF146 Wang2026（18页、12,093,333字节、SHA256 `74a2213d18a15cfd0ea7690a262037d8e928d0becf5ec576e12db35820a8c338`）版权**CC BY 4.0**原文已另经[CI #40624436012](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40624436012)上传[原PDF到open-access文献库](../../references/open-access/Wang_2026_RCS_5_2_47_64.pdf)，L090登记。首次按原刊印刷页49–54核实该文实际**163.24m/42段/固定底/16×21 PT、1000MPa、接缝μ0.6、三条PEER波截前18秒、0.02秒步长、0.07/0.20/0.40g**；RSN/原波文件、嘉鱼场址危险性/长周期匹配均未因此获得，不能移植为本塔S05/S08输入。Ali2021作者稿403未下载。完整[原页方法笔记与准确来源等级](../../experiments/T079/literature_notes.md)、[原始下载回执](../../experiments/T079/S05_SEISMIC_FULLTEXT_DOWNLOAD_RECEIPT_20261028.json)及T080过程日志已登记。**S05=PARTIAL/HOLD，S08/S09=BLOCKED，地震RUN=0，12阶段正式PASS仍0/12**，S10风致材料疲劳与S11优化主线保持。
+
+
+### 2026-10-28 11时｜S05可运行双水平地震输入QC及全文原式复核（无物理RUN）
+- [T079原页/数值/误差与SOURCE–TAB记录](../../experiments/T079/literature_notes.md)、[双分量QC程序](../../experiments/T079/s05_ground_motion_pair_qc.py)、[真实Actions #40624836033](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40624836033)：Python3标准库Newmark平均加速度解析正弦解二阶收敛（dt 0.01→0.005s，末位移误差6.50684e-5→1.62740e-5m，比3.99831），SHA/事件台站/分量/时间网格4项负测试PASS；源SHA256 `a7d838cd4796c440051e8bd6c9d570fdc06b3cf6673674c04240d3753f9c2760`。**仅合成数据程序QC，真实PEER RSN=0、Abaqus地震RUN=0**。
+- 2026 Wang原版全文18页已在[CC BY文献库](../../references/open-access/Wang_2026_RCS_5_2_47_64.pdf)；逐页复核Table2/3、Eq.(1)、Fig6、§5.3/6：1000MPa→约427.35°C冷却幅值，1000→1219MPa为该文21.9%改善，**不能移植为T078 Peq或本塔PT优化**。作者Table3无RSN/原始分量SHA，18s截窗及0.07/0.20/0.40g均不可当嘉鱼真实输入；本塔接缝开闭须有CPRESS/COPEN原生输出。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、输入字段及HOLD详见T079。
+- **阶段变化：0/12整阶段未晋级；S05=新增独立程序/原页证据，仍PARTIAL/HOLD，S08/S09仍BLOCKED。最大可独立推进HOLD为真实双水平PEER记录、长周期有效性与适用目标谱未取得。下一一项动作：取得一组可核实RSN/台站/分量的原始双水平记录并跑该QC，保存原波SHA与全频谱/漂移回执；不得先行启动昂贵Abaqus生产。**
