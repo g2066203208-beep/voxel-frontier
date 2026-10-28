@@ -563,14 +563,17 @@
     "max_base_moment_change_from_untransported_local_kNm": 6090.947149304149,
     "max_force_component_change_from_identity_kN": 5.277481016449656,
     "max_independent_gap_transport_difference_kNm": 5.711986439393968e-11,
-    "max_inverse_force_error_kN": 1.4551915228366852e-11
+    "max_inverse_force_error_kN": 1.4551915228366852e-11,
+    "original_tower_gravity_source_comparison": {
+      "HOLD": "original tower gravity reference not available: TwrFile missing/ambiguous in original source"
+    }
   },
   "assumptions": [
     "all six platform DOFs false in original input (programmatically verified)",
     "ElastoDyn small-angle tower formulation valid for this source",
     "RP source angular components inverted only under fixed-base condition"
   ],
-  "cut_gap_interpretation": "lower-minus-upper internal section resultants at global origin; NOT external aerodynamic force or free-body residual",
+  "cut_gap_interpretation": "lower-minus-upper internal section resultants at global origin; comparison to source tower gravity leaves unallocated inertia/distributed loads and is NOT a free-body residual",
   "error_budget": {
     "adjacent_cut_independent_transport_error_kNm": 5.711986439393968e-11,
     "dynamic_load_ownership": "UNVERIFIED",
