@@ -1,0 +1,75 @@
+{
+  "status": "BASELINE_SENSITIVITY_ONLY_NOT_S05_OR_ABAQUS_PASS",
+  "original_manifest_sha256": "8c0c4a78fb767d85f3c4f7534eceaecf86d86f0e3c3ef16d7f4fee0018230781",
+  "dt_s": 0.01,
+  "npts": 20001,
+  "pre_event_seconds": 20,
+  "raw_csv_sha256_lock": {
+    "CI_CLC_HNE_accel_mps2.csv": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+    "CI_CLC_HNN_accel_mps2.csv": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30"
+  },
+  "base_line_method": "subtract pre-event mean first 20s; no filter, no time scaling, no artificial spectrum matching",
+  "source_is_200s_window_not_complete_record": true,
+  "not_PEER_RSN": true,
+  "low_frequency_validated": false,
+  "Jiayu_site_spectrum_matched": false,
+  "Abaqus_RUN": false,
+  "components": [
+    {
+      "original_csv": "CI_CLC_HNE_accel_mps2.csv",
+      "original_sha256": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "derived_csv": "CI_CLC_HNE_preevent20_mps2.csv",
+      "derived_sha256": "271a962d1dec9199f51f6b605996b80f8bb072b29dd57e47e57ceb31b9507583",
+      "removed_offset_m_s2": -0.17817374091472998,
+      "raw_PGA_g": 0.3251691001952757,
+      "pre_event_centered_PGA_g": 0.3433377654290436,
+      "raw_uncorrected_drift": {
+        "end_velocity_m_s": -35.594264413752335,
+        "end_displacement_m": -3559.7901888839856
+      },
+      "pre_event_mean_removed_drift": {
+        "end_velocity_m_s": 0.04048376919351683,
+        "end_displacement_m": 3.68462941062417
+      },
+      "linear_detrend_diagnostic_drift": {
+        "end_velocity_m_s": 9.819441720807881e-05,
+        "end_displacement_m": 1.669664607161724e-06
+      },
+      "linear_detrend_coefficients": {
+        "mean_raw": -0.17797181304084844,
+        "linear_slope_per_sample": 5.308946063342494e-09
+      },
+      "preevent_mean_after_correction_m_s2": -1.6445178552260132e-17,
+      "preevent_pseudo_SA_m_s2_at_T_1": 0.9401817950949521,
+      "preevent_pseudo_SA_m_s2_at_T_6": 0.2443887148455734
+    },
+    {
+      "original_csv": "CI_CLC_HNN_accel_mps2.csv",
+      "original_sha256": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+      "derived_csv": "CI_CLC_HNN_preevent20_mps2.csv",
+      "derived_sha256": "dc2b7879d18ffbb799c0d04d91ab42e8e469680c5dab943cb28e1357027401cd",
+      "removed_offset_m_s2": -0.18917525688816,
+      "raw_PGA_g": 0.5221404480337323,
+      "pre_event_centered_PGA_g": 0.5094357254289855,
+      "raw_uncorrected_drift": {
+        "end_velocity_m_s": -37.81860092419031,
+        "end_displacement_m": -3783.4953134959787
+      },
+      "pre_event_mean_removed_drift": {
+        "end_velocity_m_s": 0.01645045344195902,
+        "end_displacement_m": 0.009824267251767606
+      },
+      "linear_detrend_diagnostic_drift": {
+        "end_velocity_m_s": -1.1565175521779811e-05,
+        "end_displacement_m": -0.00010401859988666894
+      },
+      "linear_detrend_coefficients": {
+        "mean_raw": -0.1890929467950726,
+        "linear_slope_per_sample": 2.454410369980702e-08
+      },
+      "preevent_mean_after_correction_m_s2": 4.191091917959966e-18,
+      "preevent_pseudo_SA_m_s2_at_T_1": 1.8272889180919654,
+      "preevent_pseudo_SA_m_s2_at_T_6": 0.5532885061737797
+    }
+  ]
+}
