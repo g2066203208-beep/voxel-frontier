@@ -1,0 +1,37 @@
+{
+  "source_database": "RECONSTRUCTED_FROM_EXISTING_REPOSITORY_CSV_NOT_INDEPENDENTLY_RETRIEVED_ORIGINAL_FDSN",
+  "source_accession": "USGS:ci38457511;CI.RVR:HNE+HNN:REPO_CSV_UNVERIFIED_SOURCE_RECEIPT",
+  "damping_ratio": 0.05,
+  "periods_s": [
+    0.5,
+    1,
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "provenance_warning": "Original CI.RVR miniSEED/StationXML and processing receipt not archived per station; do not promote to authenticated design input.",
+  "horizontal_components": [
+    {
+      "file": "CI_RVR_HNE_accel_mps2.csv",
+      "sha256": "667c4e1ddef97d480220e976bb328339e40a6365530034ffd889e10a15e357ea",
+      "rsn": "NOT_PEER_RSN",
+      "event": "USGS_ci38457511_Ridgecrest_Mw7.1_2019-07-06T03:19:53Z",
+      "station": "CI.RVR",
+      "component": "HNE",
+      "unit": "m/s2",
+      "dt_s": 0.01
+    },
+    {
+      "file": "CI_RVR_HNN_accel_mps2.csv",
+      "sha256": "7d2ab257f8544f57285ec370860d215a4b1ab23b1d604d32fd362e97c398cad6",
+      "rsn": "NOT_PEER_RSN",
+      "event": "USGS_ci38457511_Ridgecrest_Mw7.1_2019-07-06T03:19:53Z",
+      "station": "CI.RVR",
+      "component": "HNN",
+      "unit": "m/s2",
+      "dt_s": 0.01
+    }
+  ]
+}
