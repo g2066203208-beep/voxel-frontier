@@ -242,6 +242,7 @@ def self_test():
                 'STREAM':stream,'NDATA':'10','SAMPLING_INTERVAL_S':'0.01',
                 'DURATION_S':'0.1','UNITS':'cm/s^2','LOW_CUT_FREQUENCY_HZ':'0.1',
                 'HIGH_CUT_FREQUENCY_HZ':'40','FILTER_TYPE':'Butterworth',
+                'FILTER_ORDER':'2',
                 'PROCESSING':'MP','DATA_LICENSE':'CC-BY-4.0'}.items()):
             header[i] = k+': '+v
         return ('\n'.join(header)+'\n'+'\n'.join(str(i) for i in range(10))+'\n').encode()
