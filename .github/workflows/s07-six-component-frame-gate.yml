@@ -91,6 +91,38 @@ jobs:
           PY
           sha256sum s07-31-source/*
 
+      - name: Check actual T071/T072 artifact inventory and RP/TP source retention
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          curl --fail --location --silent --show-error --retry 3 --output s07-31-source/nine.json "$base/research/wind-tower/experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json"
+          gh api "repos/${{ github.repository }}/actions/runs/37582521146/artifacts?per_page=100" > s07-31-source/actions071.json
+          gh api "repos/${{ github.repository }}/actions/runs/37622366681/artifacts?per_page=100" > s07-31-source/actions072.json
+          python3 research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py \
+            --source-31-manifest s07-31-source/manifest.csv \
+            --t071-workflow s07-31-source/t071.yml \
+            --t072-workflow s07-31-source/t072.yml \
+            --nine-gage-source-receipt s07-31-source/nine.json \
+            --actions071-json s07-31-source/actions071.json \
+            --actions072-json s07-31-source/actions072.json \
+            --source-31-receipt s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json').read_text())
+          r=x['archival_recovery']
+          assert r['artifacts_matched']==16 and r['retained_synchronous_RP_TP_rows']==0
+          assert r['original_31gage_OUTB_RP_TP_expected_from_unchanged_OutList']
+          assert r['negative_tests_passed']==3 and x['RUN']['negative_tests_passed']==7
+          assert x['TAB']['global_wrench_export_rows']==0
+          print('PASS: original 31-gage OUTB expected RP/TP but not archived; no global loads')
+          PY
+          sha256sum s07-31-source/actions*.json s07-31-source/nine.json s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          echo 'No native OpenFAST/Abaqus run; only source/archive tests.'
+
       - name: Verify ORIGINAL OpenFAST v3.5.3 RP and tower-section ownership source against REAL T062 OUTB receipt
         shell: bash
         run: |

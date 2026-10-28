@@ -449,6 +449,82 @@ def audit_31_gage_frame_readiness(manifest, t071, t072):
 
 
 
+
+def archive_inventory_gate(manifest, t071, t072, nine_receipt, actions071, actions072):
+    """Source/archive availability only: NEVER a recovered 31-gage DCM."""
+    import json
+    import copy
+    source=[Path(x).read_bytes() for x in (manifest,t071,t072)]
+    for raw,expected in zip(source,(S07_31_MANIFEST_BLOB,
+                                    S07_T071_WORKFLOW_BLOB,S07_T072_WORKFLOW_BLOB)):
+        if git_blob_sha1(raw)!=expected:
+            raise ValueError('S07_ARCHIVE_GIT_SOURCE_CHANGED')
+    rows,total=_s07_validate_manifest_rows(source[0])
+    a,b=(x.decode('utf-8-sig') for x in source[1:])
+    base_sha='6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65'
+    original=Path(nine_receipt).read_bytes()
+    nine=json.loads(original)
+    if (nine.get('SOURCE',{}).get('elastodyn_input_sha256')!=base_sha
+        or nine.get('RUN',{}).get('gages')!=9
+        or len(nine.get('TAB',{}).get('first_sample',[]))!=9
+        or any(len(x.get('RP_deg',[]))!=3 for x in nine['TAB']['first_sample'])):
+        raise ValueError('S07_ORIGINAL_9GAGE_RP_PROOF_MISSING')
+    checks=(
+        (a,('base_elastodyn_sha256',base_sha,
+            'Copy-Item "$base/DTU_10MW_RWT_ElastoDyn.dat"',
+            'TwrGagNd patch failed','path: extract/*','DTU_10MW_RWT.outb')),
+        (b,('base/CASES/U09p343881_ETM_S01/*',
+            'TwrGagNd patch failed','path: extract/*','DTU_10MW_RWT.outb')))
+    for src,need in checks:
+        if not all(token in src for token in need) or 'OutList' in src:
+            raise ValueError('S07_ORIGINAL_OUTLIST_INVARIANCE_UNPROVEN')
+        if any(token in src for token in ('RPxi','RPyi','RPzi')):
+            raise ValueError('S07_HISTORICAL_EXPORT_CONTRACT_CHANGED')
+    raws=[Path(actions071).read_bytes(),Path(actions072).read_bytes()]
+    snapshots=[json.loads(raw) for raw in raws]
+    def verify(data):
+        seen={}
+        for idx,n in enumerate((4,12)):
+            if data[idx].get('total_count')!=n or len(data[idx].get('artifacts',[]))!=n:
+                raise ValueError('S07_ACTIONS_COUNT_MISMATCH')
+            for item in data[idx]['artifacts']:
+                if item.get('expired') is not False or item.get('size_in_bytes',0)<=0:
+                    raise ValueError('S07_ACTIONS_EXPIRED_OR_EMPTY')
+                if str(item['id']) in seen:
+                    raise ValueError('S07_ACTIONS_DUPLICATE_ID')
+                seen[str(item['id'])]=item
+        for r in rows:
+            item=seen.get(r['artifact_id'])
+            expected=('T071-' if r['run_id']=='37582521146' else 'T072-')+r['case']+'-'+r['batch']
+            if item is None or item['name']!=expected:
+                raise ValueError('S07_ACTIONS_MANIFEST_MISMATCH')
+        if len(seen)!=16:
+            raise ValueError('S07_ACTIONS_EXTRA_ARTIFACT')
+    verify(snapshots)
+    for fault in ('missing','expired','id'):
+        bad=copy.deepcopy(snapshots)
+        if fault=='missing': bad[0]['artifacts'].pop()
+        elif fault=='expired': bad[0]['artifacts'][0]['expired']=True
+        else: bad[0]['artifacts'][0]['id']=-1
+        try: verify(bad)
+        except ValueError: pass
+        else: raise AssertionError('S07_ARCHIVE_TAMPER_NOT_REJECTED_'+fault)
+    return {
+      'source_level':'real Actions artifact metadata + original workflow bytes + original 9-gage OUTB-derived receipt; 31-gage OUTB bytes NOT read',
+      'nine_gage_receipt_sha256':hashlib.sha256(original).hexdigest(),
+      'actions_api_sha256':[hashlib.sha256(x).hexdigest() for x in raws],
+      'base_elastodyn_sha256':base_sha,
+      'artifacts_matched':16,'four_case_31gage_local_rows':total,
+      'original_31gage_OUTB_RP_TP_expected_from_unchanged_OutList':True,
+      'retained_31gage_OUTB_in_T071_T072_artifacts':False,
+      'retained_synchronous_RP_TP_rows':0,
+      'negative_tests_passed':3,
+      'original_31gage_OUTB_directly_read':False,
+      'error_budget':'No source 31-gage RP/TP, DCM or external-load physics error estimate possible',
+      'HOLD':'Ephemeral 31-gage OUTB was not uploaded; existing CSV has no synchronous RP/TP. Find a separate original OUTB copy or request an explicitly approved minimal data-capture rerun.'
+    }
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--self-test',action='store_true')
@@ -462,6 +538,9 @@ def main():
     p.add_argument('--t071-workflow',type=Path)
     p.add_argument('--t072-workflow',type=Path)
     p.add_argument('--source-31-receipt',type=Path)
+    p.add_argument('--nine-gage-source-receipt',type=Path)
+    p.add_argument('--actions071-json',type=Path)
+    p.add_argument('--actions072-json',type=Path)
     a=p.parse_args()
     if a.self_test: print(selftest())
     if a.official_v353_source or a.outb_receipt:
@@ -481,6 +560,15 @@ def main():
             p.error('S07 31-gage audit requires manifest and both historical workflows')
         import json
         receipt=audit_31_gage_frame_readiness(a.source_31_manifest,a.t071_workflow,a.t072_workflow)
+        if any((a.nine_gage_source_receipt,a.actions071_json,a.actions072_json)):
+            if not all((a.nine_gage_source_receipt,a.actions071_json,a.actions072_json)):
+                p.error('archive inventory requires original nine-gage receipt and both Actions JSON')
+            receipt['archival_recovery']=archive_inventory_gate(
+                a.source_31_manifest,a.t071_workflow,a.t072_workflow,
+                a.nine_gage_source_receipt,a.actions071_json,a.actions072_json)
+            receipt['HOLD']=receipt['archival_recovery']['HOLD']
+            receipt['RUN']['negative_tests_passed']+=receipt['archival_recovery']['negative_tests_passed']
+
         print('S07_31_SOURCE_READINESS',json.dumps(receipt['TAB'],sort_keys=True))
         if a.source_31_receipt:
             a.source_31_receipt.write_text(json.dumps(receipt,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
