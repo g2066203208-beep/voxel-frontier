@@ -37,6 +37,8 @@ jobs:
           sha256sum s05-scripts/*.py
       - name: Retrieve real same-station accelerations, official miniSEED, StationXML and compute spectra
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
