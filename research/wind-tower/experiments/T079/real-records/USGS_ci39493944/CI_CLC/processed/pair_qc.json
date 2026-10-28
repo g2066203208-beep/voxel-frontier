@@ -1,0 +1,205 @@
+{
+  "status": "SOURCE_QC_ONLY_NOT_SITE_SPECTRUM_PASS",
+  "manifest_sha256": "528b570595ef4e2a4a63bf74bdaa55dea0e00932a350c6ba64f56af84a32f4b6",
+  "source_database": "RESEARCH_BASELINE_SENSITIVITY_PRE_EVENT_20_SECONDS_FROM_OFFICIAL_CI_CLC_NO_DESIGN_ACCEPTANCE",
+  "source_accession": "USGS:ci39493944;FDSN:CI.CLC:HN*:2020-06-24:BASELINE20S_PILOT",
+  "event": "USGS_ci39493944_Lone_Pine",
+  "station": "CI.CLC",
+  "rsn": "NOT_PEER_RSN",
+  "dt_s": 0.01,
+  "npts": 20001,
+  "damping_ratio": 0.05,
+  "components": [
+    {
+      "component": "HNE",
+      "file": "CI_CLC_HNE_preevent20_mps2.csv",
+      "sha256": "273c1bdedec3c4bb049899808c5f8c882e1591dcf9afd76fc0348e0dd3420025",
+      "original_unit": "m/s2",
+      "pga_m_s2": 0.0316233335515,
+      "pga_g": 0.003224682593087344,
+      "mean_m_s2": 1.4611092748561384e-06,
+      "uncorrected_drift": {
+        "end_velocity_m_s": 0.00029201972263441387,
+        "end_displacement_m": 0.02599597586412738
+      },
+      "spectrum": [
+        {
+          "period_s": 0.1,
+          "sd_m": 2.3725493640271997e-05,
+          "pseudo_sa_m_s2": 0.09366449458001844,
+          "absolute_sa_m_s2": 0.0959452455072633
+        },
+        {
+          "period_s": 0.2,
+          "sd_m": 4.287196573278506e-05,
+          "pseudo_sa_m_s2": 0.04231293416796476,
+          "absolute_sa_m_s2": 0.04227292493015824
+        },
+        {
+          "period_s": 0.4,
+          "sd_m": 0.000178950597059008,
+          "pseudo_sa_m_s2": 0.04415429000777884,
+          "absolute_sa_m_s2": 0.04426701875946533
+        },
+        {
+          "period_s": 0.6,
+          "sd_m": 0.0002851435363218157,
+          "pseudo_sa_m_s2": 0.03126948778915529,
+          "absolute_sa_m_s2": 0.03145258504177372
+        },
+        {
+          "period_s": 0.8,
+          "sd_m": 0.00043398361925460694,
+          "pseudo_sa_m_s2": 0.026770291491224733,
+          "absolute_sa_m_s2": 0.026933454685204583
+        },
+        {
+          "period_s": 1.0,
+          "sd_m": 0.0005989732090759979,
+          "pseudo_sa_m_s2": 0.023646514481724338,
+          "absolute_sa_m_s2": 0.02381760715066725
+        },
+        {
+          "period_s": 1.5,
+          "sd_m": 0.0017370980826593668,
+          "pseudo_sa_m_s2": 0.030479059345313367,
+          "absolute_sa_m_s2": 0.030649776165864465
+        },
+        {
+          "period_s": 2.0,
+          "sd_m": 0.0022601397911152627,
+          "pseudo_sa_m_s2": 0.02230668562946838,
+          "absolute_sa_m_s2": 0.02240791291717162
+        },
+        {
+          "period_s": 3.0,
+          "sd_m": 0.0031361322523277254,
+          "pseudo_sa_m_s2": 0.013756615413320886,
+          "absolute_sa_m_s2": 0.013808886351570581
+        },
+        {
+          "period_s": 4.0,
+          "sd_m": 0.004937526514890464,
+          "pseudo_sa_m_s2": 0.012182858355464581,
+          "absolute_sa_m_s2": 0.0122539831458677
+        },
+        {
+          "period_s": 6.0,
+          "sd_m": 0.006005694700915882,
+          "pseudo_sa_m_s2": 0.006585981205750936,
+          "absolute_sa_m_s2": 0.0066200257897930164
+        },
+        {
+          "period_s": 8.0,
+          "sd_m": 0.006679271038657748,
+          "pseudo_sa_m_s2": 0.004120110177450325,
+          "absolute_sa_m_s2": 0.004164749515112592
+        },
+        {
+          "period_s": 10.0,
+          "sd_m": 0.00597032992906574,
+          "pseudo_sa_m_s2": 0.0023569917817545098,
+          "absolute_sa_m_s2": 0.0024114393382880135
+        }
+      ]
+    },
+    {
+      "component": "HNN",
+      "file": "CI_CLC_HNN_preevent20_mps2.csv",
+      "sha256": "a0a92af8a8a6608f5e490b08392e5f76bad2d0e40c6795954925be746bdaa6df",
+      "original_unit": "m/s2",
+      "pga_m_s2": 0.0367553063696,
+      "pga_g": 0.0037479981818052035,
+      "mean_m_s2": 1.654703547062697e-06,
+      "uncorrected_drift": {
+        "end_velocity_m_s": 0.0003303948116592671,
+        "end_displacement_m": 0.02572474505226891
+      },
+      "spectrum": [
+        {
+          "period_s": 0.1,
+          "sd_m": 2.421620515298712e-05,
+          "pseudo_sa_m_s2": 0.09560174598224179,
+          "absolute_sa_m_s2": 0.09754204693558381
+        },
+        {
+          "period_s": 0.2,
+          "sd_m": 8.541205900707757e-05,
+          "pseudo_sa_m_s2": 0.08429832334823567,
+          "absolute_sa_m_s2": 0.08422655469520741
+        },
+        {
+          "period_s": 0.4,
+          "sd_m": 0.00015151042086302576,
+          "pseudo_sa_m_s2": 0.0373836979140155,
+          "absolute_sa_m_s2": 0.03763864292597916
+        },
+        {
+          "period_s": 0.6,
+          "sd_m": 0.00022851037622217984,
+          "pseudo_sa_m_s2": 0.02505896683174457,
+          "absolute_sa_m_s2": 0.025191804785342015
+        },
+        {
+          "period_s": 0.8,
+          "sd_m": 0.00038780092664335254,
+          "pseudo_sa_m_s2": 0.023921510827161024,
+          "absolute_sa_m_s2": 0.0239840132261432
+        },
+        {
+          "period_s": 1.0,
+          "sd_m": 0.0006978393664319809,
+          "pseudo_sa_m_s2": 0.027549593928761953,
+          "absolute_sa_m_s2": 0.02766760699977559
+        },
+        {
+          "period_s": 1.5,
+          "sd_m": 0.0014568023270124868,
+          "pseudo_sa_m_s2": 0.025561000281243834,
+          "absolute_sa_m_s2": 0.02566971746395509
+        },
+        {
+          "period_s": 2.0,
+          "sd_m": 0.0017763854957100742,
+          "pseudo_sa_m_s2": 0.01753222210649145,
+          "absolute_sa_m_s2": 0.017636738855038893
+        },
+        {
+          "period_s": 3.0,
+          "sd_m": 0.0012661906415648262,
+          "pseudo_sa_m_s2": 0.005554133657158384,
+          "absolute_sa_m_s2": 0.005612811728954002
+        },
+        {
+          "period_s": 4.0,
+          "sd_m": 0.0016537832274608631,
+          "pseudo_sa_m_s2": 0.004080546555048874,
+          "absolute_sa_m_s2": 0.004128816557534847
+        },
+        {
+          "period_s": 6.0,
+          "sd_m": 0.0015210662720015365,
+          "pseudo_sa_m_s2": 0.001668035819166105,
+          "absolute_sa_m_s2": 0.0016931019051257454
+        },
+        {
+          "period_s": 8.0,
+          "sd_m": 0.0011800086110531518,
+          "pseudo_sa_m_s2": 0.0007278886363108455,
+          "absolute_sa_m_s2": 0.0007981450691116852
+        },
+        {
+          "period_s": 10.0,
+          "sd_m": 0.0009446068903839462,
+          "pseudo_sa_m_s2": 0.0003729158529053091,
+          "absolute_sa_m_s2": 0.00042917535998770323
+        }
+      ]
+    }
+  ],
+  "PEER_record_authenticated": false,
+  "site_spectrum_match_PASS": false,
+  "Abaqus_RUN": false,
+  "S05_PASS": false,
+  "HOLD": "Independently verify source RSN, usable low-frequency band, target spectrum, site and code."
+}
