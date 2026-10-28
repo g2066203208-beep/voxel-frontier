@@ -444,3 +444,6 @@
 - **REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** REF沿用Ch4已登记材料疲劳文献，无新全文/原式阅读；STANDARD没有新增2025 IEC、GB或NB/T10907授权原条文，不能做规范PASS；OFFICIAL为GitHub Actions真实job日志及GitHub仓库源文件，不是Abaqus官方物理输出；RUN=Python 3静态源表/模拟元数据测试，原生Abaqus/地震/材料疲劳生产RUN=0；FIG无真实应力云图；TAB=复用372行源表及CI中3张非RUN样例卡（artifact），无虚构材料寿命表。
 - **假设/误差预算/HOLD：** 塔轴全局Y、水平XZ、`atan2(z,x)`；坐标表保留1e-6m，角度保留1e-6°，本轮方位重算容差0.001°仅是CSV舍入/源身份自检，不是局部应力误差；周向离散最大2.5°仍不是热点误差。应力基底、原生积分点、局部网格、Pe+重力/接触平衡、材料专属S–N及疲劳/地震物理误差预算均`NEED_NATIVE/NEED_ESTIMATE`。S10=`D400_372_CANDIDATE_CARD_SOURCE_TESTED/PHYSICS_HOLD`，严格12阶段0/12晋级，未生成寿命或抗震结论。
 - **下一唯一最优动作：** 在真实原生Abaqus ODB可用前，转向S05获取官方**已处理双水平强震记录与滤波截止频率**并执行5%阻尼0.5–10s反应谱长周期可靠性QC；不要继续无限扩展S10候选小审查。
+
+
+- **2026-10-28最终远端CI复核：** [Actions #40713471207](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40713471207) `completed/success`，job `122904701840`真实原生日志确认上述372行、3模板正例、3模板拒绝、1模拟桥接、3桥接负例、12身份负例、2源篡改负例均通过。新增卡程序实际字节SHA256=`9b0676f955724f13cc488d7a9de00985862c5c2dee905e9ca1ce91a12338692c`；更新后ODB接口SHA256=`6cf130afb7f13b9b2e6a8aaa43fdc546beca111a9551a60a6c65827fdd7193b2`。上述hash来自CI `sha256sum`原始打印，不能替代未来真实ODB/原生日志SHA。三张非可执行卡保存在该run的`s10-d400-pe-68part-static-source-map` artifact中；未运行Abaqus。
