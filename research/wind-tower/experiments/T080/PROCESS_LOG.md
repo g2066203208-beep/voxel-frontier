@@ -432,3 +432,5 @@
 - **身份与拒绝测试：** 错误INP SHA、错误源映射SHA、单高度/周向不足及零半径坐标均通过拒绝测试；输出ODB积分点和应力基底字段保持空白。源码和真实表已写入Draft PR #42；新增CI固定SHA与逐字节`cmp`，用于再次验证日志CSV复原准确性（以该后续Actions结果为准）。
 - **REF/STANDARD/OFFICIAL/FIG：** REF仍采用已有分材料疲劳文献台账，未新增全文原式/页码阅读；STANDARD无新授权NB/T10907/IEC条款；OFFICIAL为真实GitHub Actions源级执行日志，不是Abaqus原生日志；FIG无真实局部应力图。**误差预算：** 节点质心计算是确定性几何算法，输出坐标四舍五入至1e-6m、方位至1e-6°；最大2.5°仅为取点方位离散误差，不能当作材料应力误差；网格应力、PT初态、接触、坐标基底和物理响应误差仍NEED_NATIVE/NEED_ESTIMATE。
 - **HOLD / 下一唯一动作：** 缺同一原生Pe+重力+接触平衡初态及ODB中真实积分点、应力方向证据。S10独立准备`REAL_MESH_AZIMUTH_HEIGHT_CANDIDATES_TESTED / PHYSICS_HOLD`，12阶段仍**0/12未晋级**，Abaqus地震/材料疲劳生产RUN=0。下一轮将372行候选中控制截面与应力提取RUN卡字段对接，先做真实标签/ODB积分点存在性拒绝测试，绝不擅认热点或算寿命。
+
+- **2026-10-28最终CI回读：** [Actions #40703712637](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40703712637)在commit `1bdf0e9b2ba5197d22d7c7bae5b1645f8841f399` `completed/success`；job `122870059727`中固定SHA256检查明确打印`S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv: OK`，并将临时真实INP重建的372行CSV与已提交仓库CSV执行`cmp`逐字节一致，输出SHA256 `9052f70b39544c8fbd27b0813face4eecf2dcace3efdbd7c3cebbc896b395595`。2项合成正例+4项拒绝负例通过；无原生Abaqus ODB或物理PASS。
