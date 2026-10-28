@@ -54,7 +54,7 @@ jobs:
           branch='research/t080-seismic-integration-gates-20261022'
           records=[
             ('Meng_2020_RenewableEnergy_AAM.pdf','Meng_2020_RenewableEnergy_AAM.pdf','cc8769039f53587f9dd2c88d70dde15bbc537d918e75dd22473fd279b9235905','CC BY-NC-ND 4.0, original unmodified accepted manuscript, noncommercial academic repository; credit original authors'),
-            ('Ali_2021_SDEE_106483_AAM.pdf','Ali_2021_SDEE_106483_AAM.pdf','a8e7e77881a3e41bf1c8fdf624787dfc472b7e49b8a8d4ebb08d642cd434f372','Bristol CC BY-NC-ND 4.0, original unmodified accepted manuscript; credit original authors'),
+            ('Ali_2021_SDEE_106483_AAM.pdf','Ali_2021_SDEE_106483_AAM.pdf','','Bristol CC BY-NC-ND 4.0, original unmodified accepted manuscript; credit original authors'),
             ('Zhang_2024_ShockVibration_6563460.pdf','Zhang_2024_ShockVibration_6563460.pdf','', 'CC BY 4.0 original fulltext, credit original authors')
           ]
           manifest=[]
