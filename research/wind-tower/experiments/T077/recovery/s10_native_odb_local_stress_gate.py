@@ -265,17 +265,17 @@ def self_test(source_map=None):
         else: raise AssertionError('source binding negative accepted: %d' % i)
     real_tests = 0
     if source_map is not None:
-        raw = Path(source_map).read_bytes()
+        real_source_raw = Path(source_map).read_bytes()
         real = dict(card, inp_sha256=FROZEN_T057_SHA, instance='CSEG_01-1',
                     element_set='SET_ALL', element_label=3, material_class='concrete',
                     material_id='C70', stress_basis='ODB_GLOBAL_S11')
-        validate_source_binding(real, raw)
+        validate_source_binding(real, real_source_raw)
         real_tests += 1
         for changed in (dict(real, material_id='HRB500_BASELINE'),
                         dict(real, element_label=4),
                         dict(real, instance='SSEG_01-1', element_label=1,
                              material_id='Q345_T057', material_class='structural_steel')):
-            try: validate_source_binding(changed, raw)
+            try: validate_source_binding(changed, real_source_raw)
             except ValueError: real_tests += 1
             else: raise AssertionError('real map wrong identity accepted')
     return {'status':'PASS_MOCK_ONLY', 'positive_tests':1,
