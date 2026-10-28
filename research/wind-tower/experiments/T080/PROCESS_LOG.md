@@ -324,3 +324,26 @@
 - **SOURCE/OFFICIAL** 原始158m T062 `U09p343881_ETM_S01` OUTB SHA256 `0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`、70站Tower.dat SHA256 `f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`；v3.5.3 [ElastoDyn原始Fortran](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90#L1177-L1197)核对`FTTower-MassT*(Gravity+LinAccET)`，其中Tower AL为局部投影。详见[T062现有过程记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。
 - **RUN/TAB** 更新[既有S07复算器](../T077/recovery/s07_v353_fixed_base_native_frame.py)，用70站源质量密度解析积分×实测相邻AL端点线性插值，原始12001时刻×8段共**96008次**。全窗各段最大估计惯性力分量0.000078464–0.011627468kN，扣重力和**估计**惯性后的最大未分配分量0.036342574–0.036763896kN。[真实CI #40645553922](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40645553922) `completed/success`、脚本SHA256 `ba14d7337077e77a42e3713ad0137e6772ce9f862090e6412b63b48cba3da6d0`、[永久JSON](../T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json) SHA256 `6cd4ba50837aa8cf7b099562c40d7ee62538c44906a9c3059406be826f934c3c`；解析公式+2负测试PASS。失败[CI #40645476975](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40645476975)原因为将AL单位`m/s²`误当`deg`，现已修正并复跑成功。
 - **REF/STANDARD/FIG/HOLD** REF无新增全文，IEC2025/GB/NB无新授权原页；FIG无物理响应；源级AL在9点原始OUTB，**中间1120节点加速度、FTTower和MFHydro未恢复**，线性插值误差**无法定界**，0.03676kN**不是**已识别气动力、平衡残差或Abaqus载荷；原始打包量化尚待评估。S07`CONDITIONAL_DIAGNOSTIC/PHYSICS_HOLD`，S06仍PARTIAL，地震RUN=0，整阶段**0/12 PASS**，原风致分材料疲劳/优化主线不变。下一动作只做原生OUTB列量化界与该未分配量的可分辨性QC。冻结T057/T070未改，PR#42不合并。
+
+
+### 2026-10-28 16:11 CST｜S07 原始OUTB int16量化误差可分辨性（真实12001×8，非物理PASS）
+
+- **SOURCE（原件级）**：复用真实T062 `U09p343881_ETM_S01`，原始OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`，动态ZIP SHA256=`c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0`，原始ElastoDyn SHA256=`6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`、FST SHA256=`5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`。仅9个靠塔底的gage，不能替代T071/T072 31-gage正式补跑。
+- **OFFICIAL（原始Fortran代码级）**：OpenFAST v3.5.3 ElastoDyn.f90 Git blob=`2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1`，原件SHA256=`a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3`；NWTC_Num.f90 Git blob=`2daf088cca20a91e559490749b99cb35f25f208b`，SHA256=`1f8aa50df80ecf7e39a8b25cb2fdcbc897d0c328b7672e9e5ce003c18a4edf1d`。阅读层级为原始v3.5.3源代码签名与固定平台6DOF=false原始输入，不是IEC授权条款。
+- **RUN（真实原始压缩数据、Python 3.12.3）**：更新[既有S07脚本](../T077/recovery/s07_v353_fixed_base_native_frame.py)，本轮脚本SHA256=`0a7d9e184c6f61b6039ad07c5e88610fc5d069521b57d374ea81f270dc7b1a50`。在**12,001时刻×8相邻gage段=96,008次**真实观测上，按每通道 `q=0.5/abs(ColScl)`、局部FL/AL量化和RP姿态传播保守上界，逐时刻计算全局未分配力分量的**仅源int16打包误差包络**。固定平台小角度极限内，解析极保守的单项DCM导数系数5/rad；不把包络当误差实测值。自测包括正向解析和3个负例；真实GitHub Actions重新执行并将[原始计算结果永久提交](../T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json)（[CI生成提交](https://github.com/g2066203208-beep/voxel-frontier/commit/5c0f164348aca46a3a9317f2e93d8c14c0cec9ec)）。原脚本错误：`source`局部变量曾覆盖官方Fortran provenance并误写到`OFFICIAL`；本轮已修复，回执`OFFICIAL`现在包含两个实际源文件hash。
+- **TAB（每行12,001点，kN）**：
+
+| 相邻gage | 原始未分配分量最大绝对值 | 原始OUTB打包量化保守包络最大值 | 两者比值 |
+|---|---:|---:|---:|
+| 1–2 | 0.036513944 | 0.048245832 | 0.756831 |
+| 2–3 | 0.036492835 | 0.048297129 | 0.755590 |
+| 3–4 | 0.036342574 | 0.048353983 | 0.751594 |
+| 4–5 | 0.036619025 | 0.048414405 | 0.756366 |
+| 5–6 | 0.036421493 | 0.048507906 | 0.750836 |
+| 6–7 | 0.036592138 | 0.048603087 | 0.752877 |
+| 7–8 | 0.036763896 | 0.048668256 | 0.755398 |
+| 8–9 | 0.036590803 | 0.048751403 | 0.750559 |
+
+- **可证伪结论**：8段观测未分配分量最大值全部**小于各自全窗源打包量化保守上界**。因此现有数据**不足以证明**此前约0.03676kN代表可分辨的真实气动力、力学平衡残差或映射误差；也不能反向证明它全由量化造成（保守包络≠实际误差）。量化上界仅含FL/AL/RP的原始int16步长，不含质量表原始小数舍入、插值的1120中间节点加速度、FTTower、外部气动分布力、数值模型/塔架动力误差。未给出可验收的物理误差预算，`NEED_NATIVE/NEED_SOURCE`。
+- **REF/STANDARD/FIG**：REF沿用既有OpenFAST/风疲劳文献，2026先行混塔风震与PT创新性边界不变；STANDARD未新读IEC2025/GB/NB授权条款；FIG无新物理响应或地震图；Abaqus原生RUN=0、地震RUN=0、S07仅`SOURCE_PACKING_RESOLUTION_TESTED/PHYSICS_HOLD`，12阶段**0/12未晋级**。失败记录：并行PR分支更新曾出现一次HTTP 409，刷新远端head后SHA锁定重试成功；不属于数值计算失败。冻结T057/T070未改，PR #42未合并。
+- **唯一最大HOLD**：缺少可复核的中间1120节点加速度与FTTower/分布气动力及正式31-gage源，无法完成同一自由体的S07外载所有权与守恒验收。**下一唯一动作**：推进S10可复核的分材料雨流—均值应力—Miner算法测试（仅合成应力，不报材料寿命），保留S07输入HOLD并避免重复微审计。
