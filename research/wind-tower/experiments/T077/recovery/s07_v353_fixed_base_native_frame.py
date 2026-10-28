@@ -78,6 +78,7 @@ def official_contract(ed_source, nwtc_source):
         raise ValueError("OpenFAST v3.5.3 official Git blob mismatch")
     for token in ("SmllRotTrans( 'tower deflection (ElastoDyn SetCoordSy)'",
                   "RtHSdat%AngPosEF (:,J)            =  RtHSdat%AngPosEX",
+                  "RtHSdat%PAngVelEF (J,DOF_TFA1,0,:) = -p%TwrFASF(1,J,1)*CoordSys%a3",
                   "m%AllOuts( TwHtRPxi(I) ) =  m%RtHS%AngPosEF(1",
                   "m%AllOuts( TwHtRPyi(I) ) = -m%RtHS%AngPosEF(3",
                   "CoordSys%t1(J,:) = TransMat(1,1)*CoordSys%a1",
@@ -95,11 +96,12 @@ def official_contract(ed_source, nwtc_source):
 def dcm_fixed(rpx_deg, rpy_deg, rpz_deg):
     """IEC local->IEC global; exact source SmllRotTrans polar matrix.
 
-    For fixed base: thetaSS=RPxi, thetaFA=RPyi, theta2=0; RPzi=0.
+    For fixed base: thetaSS=RPxi, thetaFA=-RPyi, theta2=0; RPzi=0.
     ElastoDyn internal (x,y,z) maps to IEC (x,-z,y).
     Local IEC axes are (t1,-t3,t2). No Euler approximation is used.
     """
-    a, b, z = (math.radians(float(v)) for v in (rpx_deg, rpy_deg, rpz_deg))
+    a, rpy, z = (math.radians(float(v)) for v in (rpx_deg, rpy_deg, rpz_deg))
+    b = -rpy  # TwHtRPyi = -AngPosEF(3)*R2D; AngPosEF(3) = ThetaFA on fixed base
     if not all(map(math.isfinite, (a, b, z))):
         raise ValueError("nonfinite RP")
     if abs(z) > 1e-10:
@@ -138,6 +140,7 @@ def verify(R):
 def selftest():
     I = dcm_fixed(0,0,0)
     assert I == ((1.,0.,0.),(0.,1.,0.),(0.,0.,1.))
+    assert dcm_fixed(0,1,0)[0][2] > 0  # source's RPyi=-ThetaFA sign
     for a,b in ((0.1,0), (0,0.1), (0.1,-0.2), (0.00001,0.00002)):
         R = dcm_fixed(a,b,0)
         assert verify(R)<1e-14
