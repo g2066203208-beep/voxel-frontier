@@ -70,6 +70,51 @@ jobs:
           if r.returncode: raise RuntimeError('PDF git-upload failed: '+r.stderr[:600])
           print('CC_BY_PDF_PERMANENT_COMMIT',json.loads(r.stdout)['commit']['sha'],'PDF_SHA256',sha,'BYTES',len(data))
           PY
+      - name: Commit licensed full PDF originals DIRECTLY INTO references/open-access in GitHub repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,hashlib,json,os,pathlib,subprocess
+          from pypdf import PdfReader
+          base=pathlib.Path(os.environ['RUNNER_TEMP'])/'seismic_original_pdfs'
+          repo=os.environ['GH_REPO']
+          branch='research/t080-seismic-integration-gates-20261022'
+          records=[
+            ('Meng_2020_RenewableEnergy_AAM.pdf','Meng_2020_RenewableEnergy_AAM.pdf','cc8769039f53587f9dd2c88d70dde15bbc537d918e75dd22473fd279b9235905','CC BY-NC-ND 4.0, original unmodified accepted manuscript, noncommercial academic repository; credit original authors'),
+            ('Zhang_2024_ShockVibration_6563460.pdf','Zhang_2024_ShockVibration_6563460.pdf','', 'CC BY 4.0 original fulltext, credit original authors')
+          ]
+          manifest=[]
+          for source,target,expected,lic in records:
+              file=base/source
+              if not file.exists():
+                  print('REPO_NOT_UPLOADED_NOT_DOWNLOADED',source);continue
+              b=file.read_bytes()
+              sha=hashlib.sha256(b).hexdigest()
+              if expected and sha!=expected:raise ValueError('SOURCE_SHA_MISMATCH '+source)
+              text=' '.join((PdfReader(str(file)).pages[0].extract_text() or '').split()).lower()
+              if 'Meng_' in source:
+                  assert 'copyright and reuse' in text, 'expected accepted-manuscript rights not found'
+              else:
+                  assert 'creative commons attribution' in text or ('creative commons' in text and 'attribution' in text), 'cannot verify CC BY 4.0 in PDF'
+              path='research/wind-tower/references/open-access/'+target
+              gitsha=hashlib.sha1(b'blob '+str(len(b)).encode()+b'\\0'+b).hexdigest()
+              old=subprocess.run(['gh','api',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+              if old.returncode==0:
+                  if json.loads(old.stdout)['sha']==gitsha:
+                      print('ALREADY_IN_GIT_REPO',path,sha);continue
+                  raise ValueError('EXISTING_REPO_PDF_HASH_DIFF_REJECT '+path)
+              payload={'message':'research(S05): store unmodified licensed seismic full PDF '+target,'branch':branch,'content':base64.b64encode(b).decode()}
+              up=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
+              if up.returncode:raise RuntimeError('GIT_PDF_UPLOAD_FAILED '+target+' '+up.stderr[:350])
+              c=json.loads(up.stdout)['commit']['sha']
+              print('PERMANENT_GIT_REPO_PDF',path,'SHA256',sha,'BYTES',len(b),'COMMIT',c)
+              manifest.append({'path':path,'sha256':sha,'bytes':len(b),'license':lic,'commit_sha':c})
+          print('NEW_LICENSED_PDFS_IN_GIT_REPO',len(manifest))
+          PY
       - name: Commit exact download receipt to Draft PR branch (no PDF in public git)
         if: always()
         shell: bash
