@@ -178,6 +178,21 @@ jobs:
       - name: Fetch one PUBLIC official ESM manually processed acceleration ZIP (not a design wave)
         run: |
           python3 s05_esm_public_processed_pair.py --fetch --timeout 90 --output-dir esm-public-processed
+      - name: Display immutable official DYNA source headers for scientific triage
+        if: success()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_receipt.json'
+          x=json.load(open(p,encoding='utf-8'))
+          print('ESM_REAL_SOURCE',x['event_id'],x['station_requested'],x['zip_sha256'],x['zip_bytes'])
+          for f in x['unpacked_files']:
+              print('ESM_MEMBER',f['filename'],f['bytes'],f['sha256'])
+              for i,line in enumerate(f['first_32_lines_SOURCE_TEXT_NOT_INTERPRETED'],1):
+                  print('ESM_HEADER',f['filename'],i,repr(line))
+          assert x['S05_PASS'] is False and x['actual_processing_filter_corner_confirmed'] is False
+          PY
       - name: Preserve original official bytes or explicit failure receipt
         if: always()
         uses: actions/upload-artifact@v4
