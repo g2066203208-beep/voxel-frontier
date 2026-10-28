@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
+      - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json'
@@ -101,5 +102,36 @@ jobs:
             real-ci-clc/long_period_spectral_sensitivity.json
             triage/triage_python.json
             triage/triage_v8.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  cesmd-processed-metadata-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch SHA-pinned CESMD metadata preflight source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 --output s05_cesmd_processed_metadata.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py"
+          sha256sum s05_cesmd_processed_metadata.py
+      - name: Test metadata schema and adversarial inputs (synthetic only)
+        run: |
+          python3 -m py_compile s05_cesmd_processed_metadata.py
+          python3 s05_cesmd_processed_metadata.py --self-test
+      - name: Query official CESMD metadata for TWO existing independent events
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 s05_cesmd_processed_metadata.py \
+            --event-id CI38457511 --event-id CI39493944 --output-dir cesmd-official-metadata
+          echo 'CESMD metadata only; processed waveform download requires registered email; 0 accepted design waves.'
+      - name: Preserve exact official response bytes and SHA256 reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-cesmd-processed-availability-metadata-not-design-wave
+          path: cesmd-official-metadata/
           if-no-files-found: warn
           retention-days: 90
