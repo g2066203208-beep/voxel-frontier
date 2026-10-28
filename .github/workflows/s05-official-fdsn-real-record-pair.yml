@@ -64,6 +64,7 @@ jobs:
           source=pathlib.Path(os.environ["RUNNER_TEMP"])/"s05_real_pair"
           if not source.exists():raise RuntimeError("No source or failure receipt from the official service")
           branch="research/t080-seismic-integration-gates-20261022"
+          original=(source/"source_receipt.json").exists()
           if os.environ.get("GITHUB_EVENT_NAME") == "push":
               event_id="USGS_ci39493944"
           else:
@@ -77,7 +78,6 @@ jobs:
           else:
               prefix=f"research/wind-tower/experiments/T079/real-records/{event_id}/recovery-failed"
           repo=os.environ["GH_REPO"]
-          original=(source/"source_receipt.json").exists()
           if not original:
               assert (source/"recovery_failures.json").exists()
           for file in sorted(source.rglob("*")):
