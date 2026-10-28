@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/s10-conditional-miner-gate.yml'
       - 'research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_local_stress_rainflow_gate.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,11 +19,20 @@ jobs:
           curl --fail --location --silent --show-error --retry 3 \
             --output s10_miner_damage_gate.py \
             "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py"
+      - name: Fetch SHA-pinned S10 local-stress rainflow source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s10_local_stress_rainflow_gate.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/s10_local_stress_rainflow_gate.py"
       - name: Compile and known-answer/negative tests
         shell: bash
         run: |
           set -euo pipefail
           python3 -m py_compile s10_miner_damage_gate.py
           python3 s10_miner_damage_gate.py --self-test
-          sha256sum s10_miner_damage_gate.py
+          python3 -m py_compile s10_local_stress_rainflow_gate.py
+          python3 s10_local_stress_rainflow_gate.py --self-test
+          sha256sum s10_miner_damage_gate.py s10_local_stress_rainflow_gate.py
           echo 'S10: SYNTHETIC NUMERICAL QC ONLY; NO VERIFIED MATERIAL STRESS, NO S-N PARAMETER OR PHYSICAL PASS.'
