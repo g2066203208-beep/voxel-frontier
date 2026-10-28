@@ -378,6 +378,6 @@ HOLD：
 ## 2026-10-28 18:06 CST｜S10原生ODB局部应力接口模拟验证（不代表Abaqus物理PASS）
 
 - **阶段状态**：整阶段仍**0/12未晋级**。S10独立准备升级为`NATIVE_EXTRACTION_INTERFACE_MOCK_TESTED/PHYSICS_HOLD`；S01–S09/S11–S12正式门禁不变。风致分材料疲劳与Ch5优化主线不变，原生地震/材料寿命RUN=0。
-- **SOURCE/RUN/TAB**：[只读ODB局部应力接口](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py) SHA256=`63c85c27c87d12d287783d12729c9fc8eae0e9fa85ef6410bb7c853ae4907f74`，本地Python3.13.5真实运行**1模拟正测+14拒绝负测**，合成CSV SHA256=`2aa8642ca1ef6be2c13ca141528634dd4b01d374327682ad1758c07483471ef6`。程序要求原始INP/ODB及四类日志SHA、材料/积分点/分量/坐标/单位/步/帧身份并重新哈希，输出默认标记**UNVERIFIED**，不允许未经独立验收直接送入雨流/Miner计算。完整数据契约、测试及失败记录见[现有过程日志](../../experiments/T080/PROCESS_LOG.md)，CI工作流已增加接口测试。
+- **SOURCE/RUN/TAB**：[只读ODB局部应力接口](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py) SHA256=`63c85c27c87d12d287783d12729c9fc8eae0e9fa85ef6410bb7c853ae4907f74`，本地Python3.13.5真实运行**1模拟正测+14拒绝负测**，合成CSV SHA256=`2aa8642ca1ef6be2c13ca141528634dd4b01d374327682ad1758c07483471ef6`。程序要求原始INP/ODB及四类日志SHA、材料/积分点/分量/坐标/单位/步/帧身份并重新哈希，输出默认标记**UNVERIFIED**，不允许未经独立验收直接送入雨流/Miner计算。完整数据契约、测试及失败记录见[现有过程日志](../../experiments/T080/PROCESS_LOG.md)，[真实CI #40669878933](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40669878933)完成success，job 122753653811的原生日志确认Python编译、1项模拟正测、14项负测及源SHA256均通过。
 - **REF/STANDARD/OFFICIAL/FIG与误差**：本轮无新增授权标准原页或材料S–N原式；无真实Abaqus ODB、无原生.dat/.msg/.sta/.log、无真实应力图；真实应力、网格、Pe、材料模型和寿命误差预算均NEED_ESTIMATE。不得把模拟ODB测试写成Abaqus原生PASS。
 - **最大HOLD**：同一重力+有效PT初态下经原生验证的局部材料应力时程缺失。**下一唯一动作**：从已恢复的S06真实31-gage控制截面确定材料×实例×积分点提取点位及来源，填入S10只读接口RUN卡。
