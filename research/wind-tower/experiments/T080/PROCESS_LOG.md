@@ -265,3 +265,10 @@
 - **产物**：[9行永久回执](../T062/S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT_20261028.json)、[可运行源SHA校验程序](../T062/s06_t062_original_tower_gage_geometry_gate.py)、[原T062研究记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。CI含正确合成例及错误节点数/错误OUTB SHA负测试；原生Abaqus/OpenFAST生产RUN=0。
 - **REF/STANDARD/OFFICIAL/FIG/误差**：本轮未新增全文论文、授权规范或原生FIG；OFFICIAL为实际OpenFAST ElastoDyn源文件和OUTB。比对容差1e-5m仅源身份筛查；量化误差/动力坐标/自由体/材料物理预算未闭合。
 - **HOLD/下一动作**：9个测点仅覆盖最低20/1120节点，不可替代T071/T072 31段正式时程；S06 PARTIAL、S07独立准备、0/12阶段PASS、地震RUN=0。下一步查证RP姿态定义并在S07进行真实九点动态坐标单测；不修改T057/T070、不合并PR。
+
+
+### 2026-10-28 08时｜S07 OpenFAST v3.5.3原始代码与T062真实9点源合同
+
+- 从最新main与PR #42读取规定入口；直接读取`OpenFAST/openfast@v3.5.3/modules/elastodyn/src/ElastoDyn.f90`（Git blob `2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1`）第922–943/1154–1206行；原生代码证明RP角位置向量分量按R2D输出、`FL/ML`含顶部/重力/惯性且在局部塔节点系投影。不是把2025论坛答复或v5文档误当v3.5.3源。
+- 复用原S07程序与CI，新增严格源版本/8签名/历史OUTB SHA/9×15单位检查，`RP_AS_EULER`不能通过frame_evidence。真实九点首样本和误差、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、HOLD见[既有T062研究记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)；CI状态待实际run核验。此为源代码+原始OUTB解码回执检查，**非原生OpenFAST或Abaqus物理RUN**。
+- 0/12阶段PASS，地震RUN=0；冻结T057/T070不改、PR不合并；唯一下一动作为真实逐时刻DCM而不是RP伪Euler变换。
