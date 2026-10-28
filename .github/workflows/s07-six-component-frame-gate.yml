@@ -5,6 +5,7 @@ on:
       - '.github/workflows/s07-six-component-frame-gate.yml'
       - 'research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s07_v353_fixed_base_native_frame.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv'
       - 'research/wind-tower/experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv'
       - 'research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json'
   workflow_dispatch:
@@ -54,6 +55,41 @@ jobs:
           sha256sum s07_six_component_frame_gate.py \
             S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv
           echo 'S07: FRAME ALGEBRA + REAL STATIC REGRESSION ONLY. NO DYNAMIC OUTB, INERTIA OWNER, ABAQUS LOAD OR PHYSICS PASS.'
+
+      - name: Source-lock recovered four-case 31-gage six-component CSV frame-readiness (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s07-31-source
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-31-source/manifest.csv \
+            "$base/research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-31-source/t071.yml \
+            "$base/.github/workflows/t071-rerun-s06-31seg.yml"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-31-source/t072.yml \
+            "$base/.github/workflows/t072-rerun-control-31seg.yml"
+          python3 research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py \
+            --source-31-manifest s07-31-source/manifest.csv \
+            --t071-workflow s07-31-source/t071.yml \
+            --t072-workflow s07-31-source/t072.yml \
+            --source-31-receipt s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json')
+          r=json.loads(p.read_text())
+          assert r['TAB']['case_gage_series']==124
+          assert r['TAB']['total_six_component_time_rows']==1488124
+          assert r['TAB']['extracted_dynamic_RP_orientation_channels']==0
+          assert r['TAB']['global_wrench_export_rows']==0
+          assert r['RUN']['negative_tests_passed']==4
+          assert 'HOLD' in r['stage']
+          print('PASS source-locked 16 original artifact entries, 124 series, 1,488,124 source rows; no RP/DCM; no Abaqus export')
+          PY
+          sha256sum s07-31-source/*
 
       - name: Verify ORIGINAL OpenFAST v3.5.3 RP and tower-section ownership source against REAL T062 OUTB receipt
         shell: bash
@@ -138,6 +174,15 @@ jobs:
           path: s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
           retention-days: 14
 
+      - name: Retain S07 31-gage source-readiness receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-31gage-source-readiness-not-global-load
+          path: s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Persist exact full-series receipt in Draft PR branch (no merge)
         if: github.event_name == 'push' && github.ref == 'refs/heads/research/t080-seismic-integration-gates-20261022'
         shell: bash
@@ -159,3 +204,18 @@ jobs:
           gh api "${args[@]}" > s07-native/github_commit_response.json
           jq -r '.commit.sha, .content.sha' s07-native/github_commit_response.json
           echo 'Exact CI receipt committed to Draft PR branch; not a physics PASS.'
+
+          # Also preserve the 31-gage missing-DCM finding as a durable source
+          # receipt, not just an expiring CI artifact.
+          receipt31=s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          test -s "$receipt31"
+          endpoint31="repos/${{ github.repository }}/contents/research/wind-tower/experiments/T077/recovery/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json"
+          sha31="$(gh api "$endpoint31?ref=research/t080-seismic-integration-gates-20261022" --jq '.sha' 2>/dev/null || true)"
+          args31=(--method PUT "$endpoint31" \
+            -f message="data(S07): preserve 31-gage source-readiness and missing dynamic DCM HOLD" \
+            -f content="$(base64 -w0 "$receipt31")" \
+            -f branch="research/t080-seismic-integration-gates-20261022")
+          if [[ -n "$sha31" ]]; then args31+=(-f "sha=$sha31"); fi
+          gh api "${args31[@]}" | jq -r '.commit.sha, .content.sha'
+          echo 'Source readiness receipt saved to Draft PR branch; NOT a six-component external-load map.'
+
