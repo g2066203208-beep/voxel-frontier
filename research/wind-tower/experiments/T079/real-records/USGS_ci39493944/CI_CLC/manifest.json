@@ -1,0 +1,42 @@
+{
+  "source_database": "SCEDC_or_EarthScope_official_FDSN_raw_MSEED",
+  "source_accession": "USGS:ci39493944;FDSN:CI.CLC:HN*:2020-06-24",
+  "damping_ratio": 0.05,
+  "periods_s": [
+    0.1,
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.0,
+    1.5,
+    2.0,
+    3.0,
+    4.0,
+    6.0,
+    8.0,
+    10.0
+  ],
+  "horizontal_components": [
+    {
+      "file": "CI_CLC_HNE_accel_mps2.csv",
+      "sha256": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+      "rsn": "NOT_PEER_RSN",
+      "event": "USGS_ci39493944_Lone_Pine",
+      "station": "CI.CLC",
+      "component": "HNE",
+      "unit": "m/s2",
+      "dt_s": 0.01
+    },
+    {
+      "file": "CI_CLC_HNN_accel_mps2.csv",
+      "sha256": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12",
+      "rsn": "NOT_PEER_RSN",
+      "event": "USGS_ci39493944_Lone_Pine",
+      "station": "CI.CLC",
+      "component": "HNN",
+      "unit": "m/s2",
+      "dt_s": 0.01
+    }
+  ]
+}
