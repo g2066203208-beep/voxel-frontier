@@ -149,11 +149,13 @@ jobs:
           test -s "$receipt"
           sha256sum "$receipt"
           encoded="$(base64 -w0 "$receipt")"
-          gh api --method PUT \
-            "repos/${{ github.repository }}/contents/research/wind-tower/experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json" \
+          endpoint="repos/${{ github.repository }}/contents/research/wind-tower/experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json"
+          existing_sha="$(gh api "$endpoint?ref=research/t080-seismic-integration-gates-20261022" --jq '.sha' 2>/dev/null || true)"
+          args=(--method PUT "$endpoint" \
             -f message="data(S07): preserve source-verified 12001x9 fixed-base DCM receipt" \
             -f content="$encoded" \
-            -f branch="research/t080-seismic-integration-gates-20261022" \
-            > s07-native/github_commit_response.json
+            -f branch="research/t080-seismic-integration-gates-20261022")
+          if [[ -n "$existing_sha" ]]; then args+=(-f "sha=$existing_sha"); fi
+          gh api "${args[@]}" > s07-native/github_commit_response.json
           jq -r '.commit.sha, .content.sha' s07-native/github_commit_response.json
           echo 'Exact CI receipt committed to Draft PR branch; not a physics PASS.'
