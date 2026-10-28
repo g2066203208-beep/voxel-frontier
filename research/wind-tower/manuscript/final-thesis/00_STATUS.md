@@ -381,3 +381,13 @@ HOLD：
 - **SOURCE/RUN/TAB**：[只读ODB局部应力接口](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py) SHA256=`63c85c27c87d12d287783d12729c9fc8eae0e9fa85ef6410bb7c853ae4907f74`，本地Python3.13.5真实运行**1模拟正测+14拒绝负测**，合成CSV SHA256=`2aa8642ca1ef6be2c13ca141528634dd4b01d374327682ad1758c07483471ef6`。程序要求原始INP/ODB及四类日志SHA、材料/积分点/分量/坐标/单位/步/帧身份并重新哈希，输出默认标记**UNVERIFIED**，不允许未经独立验收直接送入雨流/Miner计算。完整数据契约、测试及失败记录见[现有过程日志](../../experiments/T080/PROCESS_LOG.md)，[真实CI #40669878933](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40669878933)完成success，job 122753653811的原生日志确认Python编译、1项模拟正测、14项负测及源SHA256均通过。
 - **REF/STANDARD/OFFICIAL/FIG与误差**：本轮无新增授权标准原页或材料S–N原式；无真实Abaqus ODB、无原生.dat/.msg/.sta/.log、无真实应力图；真实应力、网格、Pe、材料模型和寿命误差预算均NEED_ESTIMATE。不得把模拟ODB测试写成Abaqus原生PASS。
 - **最大HOLD**：同一重力+有效PT初态下经原生验证的局部材料应力时程缺失。**下一唯一动作**：从已恢复的S06真实31-gage控制截面确定材料×实例×积分点提取点位及来源，填入S10只读接口RUN卡。
+
+
+## 2026-10-28 19时｜S10真实68部件—31风测点原生应力取点预绑定（CI待回读）
+
+- **阶段**：0/12正式晋级；S10独立准备为REAL_SOURCE_BINDING_PREFLIGHT/PHYSICS_HOLD。未运行Abaqus，未生成材料寿命。
+- **SOURCE/TAB/RUN**：严格读取S06四工况×31测点744行源（SHA256 9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b）、S10 186行载荷DEL控制表（Git blob 27f931b09b1ff9105597946ff00ecbf7d0db985a，需逐字节由前者重算）、T057 68部件静态质量账（Git blob 1ae32a02a565c2d578485c29c819f30de0242933）。新可复算程序：[s10_native_part_station_binding_gate.py](../T077/recovery/s10_native_part_station_binding_gate.py)；真实数值表：[S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv](../T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv)。完整覆盖31混凝土、31纵筋、1连续PT、4钢塔、1箍拉筋笼。
+- **关键数值**：同一CSEG风测点四工况的记录高度最大跨度0.726193 mm（CSEG31），不能假定四工况完全同坐标；风测点与T057部件静态质心高度最大差约0.086264 m，不能把部件质心当作OpenFAST风测点。高度差来源于原始归档表，原因尚未核实，不得解释成塔架挠度。
+- **原生绑定边界**：PT只有36个跨112m的T3D2单元，缺31点逐点积分点；SSEG01–04处于钢塔段，不在31混凝土测点内；箍拉筋笼是独立213768单元组。68行的原生instance/element/IP/material ID/stress basis全部留空并标HOLD，不从部件名猜测实例；六分量DEL只用于候选截面筛查，不能推出材料疲劳控制点。
+- **REF/STANDARD/OFFICIAL/FIG/误差**：文献沿用已登记Ch4来源，无新增全文精读；本轮未读授权IEC/GB/NB条款；官方/模型身份仅限既有OpenFAST v3.5.3归档及T057静态审计，未有新原生求解；FIG无真实局部应力图。CSV数值精度/重算测试可验证，物理坐标、材料曲线、PT初态、网格与应力误差预算均NEED_NATIVE/NEED_ESTIMATE。
+- **单一HOLD**：68部件对应的真实INP实例—单元—积分点与材料/应力基底缺少原生证据。**下一唯一动作**：对已归档T057原始INP执行只读实例/元素集提取，并用原件SHA256对照此68行表，不改冻结母本。

@@ -366,3 +366,13 @@
 - **数据契约**：执行形式为`abaqus python s10_native_odb_local_stress_gate.py --run-card card.json --inp model.inp --odb job.odb --logs-dir logs --out-dir new_dir`。card必须指定INP/ODB及.dat/.msg/.sta/.log的SHA256、run_id、step、instance、element set/label、integration point、可选section point、材料类别/ID、应力基底、单位Pa/s、frame数及dt；程序对实际字节重新哈希，逐帧精确单点取S11并拒绝缺失/重复、非有限、非均匀采样，输出带原始hash和定位的`local_stress.csv`及`local_stress_manifest.json`。**默认输出`UNVERIFIED_NATIVE_LOCAL_STRESS`与`NEED_INDEPENDENT_NATIVE_REVIEW`，故不能直接通过已有雨流/Miner的`VERIFIED_LOCAL_MATERIAL_STRESS`门禁。** 仅提取单个局部S11，不自动构造主应力、混凝土疲劳准则、焊缝hotspot或跨积分点平均。
 - **REF/STANDARD/OFFICIAL/FIG/TAB/误差预算**：REF仍沿用Ch4已登记文献；STANDARD未新增读取ASTM/IEC/GB/NB授权原条文，材料本构及S–N参数HOLD；OFFICIAL只引用仓库既有Abaqus ODB API使用经验，**未在Abaqus 2025运行此脚本**；FIG无真实应力图；TAB仅上述合成三点及14项负测。解析MPa转换为Pa/10^6、模拟数值误差为零；真实网格、应力坐标、PT初态、单点峰值、时间输出分辨率、接触及疲劳模型误差预算=`NEED_ESTIMATE`。原生日志hash可验证字节一致性，**不能单凭日志与ODB hash证明其确实来自同一INP或已通过物理门禁**。
 - **阶段与最大HOLD**：12阶段**0/12未晋级**；S10=`NATIVE_EXTRACTION_INTERFACE_MOCK_TESTED/PHYSICS_HOLD`。**单一最大HOLD**为经原生验证、与同一重力/Pe状态绑定的局部材料应力时程缺失。**下一唯一动作**：对已有S06真实31-gage控制截面建立`材料×实例×积分点`提取点位清单并与S10数据契约逐项绑定（只做真实源定位，不跑生产）。
+
+
+## 2026-10-28 19时｜S10真实68部件—31风测点原生应力取点预绑定（CI待回读）
+
+- **阶段**：0/12正式晋级；S10独立准备为REAL_SOURCE_BINDING_PREFLIGHT/PHYSICS_HOLD。未运行Abaqus，未生成材料寿命。
+- **SOURCE/TAB/RUN**：严格读取S06四工况×31测点744行源（SHA256 9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b）、S10 186行载荷DEL控制表（Git blob 27f931b09b1ff9105597946ff00ecbf7d0db985a，需逐字节由前者重算）、T057 68部件静态质量账（Git blob 1ae32a02a565c2d578485c29c819f30de0242933）。新可复算程序：[s10_native_part_station_binding_gate.py](../T077/recovery/s10_native_part_station_binding_gate.py)；真实数值表：[S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv](../T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv)。完整覆盖31混凝土、31纵筋、1连续PT、4钢塔、1箍拉筋笼。
+- **关键数值**：同一CSEG风测点四工况的记录高度最大跨度0.726193 mm（CSEG31），不能假定四工况完全同坐标；风测点与T057部件静态质心高度最大差约0.086264 m，不能把部件质心当作OpenFAST风测点。高度差来源于原始归档表，原因尚未核实，不得解释成塔架挠度。
+- **原生绑定边界**：PT只有36个跨112m的T3D2单元，缺31点逐点积分点；SSEG01–04处于钢塔段，不在31混凝土测点内；箍拉筋笼是独立213768单元组。68行的原生instance/element/IP/material ID/stress basis全部留空并标HOLD，不从部件名猜测实例；六分量DEL只用于候选截面筛查，不能推出材料疲劳控制点。
+- **REF/STANDARD/OFFICIAL/FIG/误差**：文献沿用已登记Ch4来源，无新增全文精读；本轮未读授权IEC/GB/NB条款；官方/模型身份仅限既有OpenFAST v3.5.3归档及T057静态审计，未有新原生求解；FIG无真实局部应力图。CSV数值精度/重算测试可验证，物理坐标、材料曲线、PT初态、网格与应力误差预算均NEED_NATIVE/NEED_ESTIMATE。
+- **单一HOLD**：68部件对应的真实INP实例—单元—积分点与材料/应力基底缺少原生证据。**下一唯一动作**：对已归档T057原始INP执行只读实例/元素集提取，并用原件SHA256对照此68行表，不改冻结母本。

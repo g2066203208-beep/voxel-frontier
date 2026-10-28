@@ -6,6 +6,8 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_local_stress_rainflow_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_native_part_station_binding_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,6 +36,21 @@ jobs:
           curl --fail --location --silent --show-error --retry 3 \
             --output s10_native_odb_local_stress_gate.py \
             "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py"
+      - name: Fetch SHA-pinned 68-part and 31-gage S10 sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in s10_load_del_control_stability.py s10_native_part_station_binding_gate.py S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv S10_ETM_LOAD_DEL_CONTROL_186_20261028.csv S01_T057_ORIGINAL_68PART_STATIC_MASS_20261027.csv S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv; do
+            curl --fail --location --silent --show-error --retry 3 \
+              --output "$f" \
+              "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/$f"
+          done
+      - name: Source-locked 68-part binding real-data and negative tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s10_load_del_control_stability.py s10_native_part_station_binding_gate.py
+          python3 s10_native_part_station_binding_gate.py --self-test
       - name: Compile and known-answer/negative tests
         shell: bash
         run: |
