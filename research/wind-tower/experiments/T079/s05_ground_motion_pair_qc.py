@@ -242,15 +242,142 @@ def triage_selftest():
         else:raise AssertionError('bad RMS window accepted')
     print('S05_THREE_STATION_TRIAGE_SYNTHETIC_TEST_PASS')
 
+
+
+# S05 real-source two-event/four-pair long-period gate. Read-only secondary
+# analysis of already-computed source spectra; NEVER a design accelerogram PASS.
+def long_period_pair_gate(ridge, lone, target=None):
+    """Return 16 paired horizontal geometric-mean PSA rows at 4/6/8/10s.
+    Raw-vs-pre20 sensitivity is descriptive; NO arbitrary code threshold.
+    Optional target must be separately sourced; even a small error is NOT PASS
+    while low-frequency instrument response and site assumptions are unverified.
+    """
+    import re
+    if ridge.get('independent_event_count') != 1 or ridge.get('source_low_frequency_band_validated') is not False or ridge.get('target_spectrum_available') is not False:
+        raise ValueError('RIDGE_SOURCE_FLAGS')
+    if lone.get('event_id') != 'ci39493944' or lone.get('low_frequency_validated') is not False or lone.get('Jiayu_site_spectrum_matched') is not False:
+        raise ValueError('LONE_SOURCE_FLAGS')
+    if lone.get('dt_s') != .01 or lone.get('npts') != 20001 or ridge.get('dt_s') != .01 or ridge.get('npts') != 20001:
+        raise ValueError('SOURCE_TIME_GRID')
+    if len(ridge.get('stations',[])) != 3 or {s['station'] for s in ridge['stations']} != {'CI.CLC','CI.PASC','CI.RVR'}:
+        raise ValueError('RIDGE_STATIONS')
+    if len(lone.get('components',[])) != 2 or not re.fullmatch('[a-f0-9]{64}',lone.get('source_raw_mseed_sha256','')):
+        raise ValueError('LONE_SOURCE_PROVENANCE')
+    periods=(4.,6.,8.,10.)
+    if target is not None:
+        if not target.get('source_document_id') or not target.get('site_evidence_ref') or target.get('damping_ratio') != .05:
+            raise ValueError('TARGET_PROVENANCE_OR_DAMPING')
+        if target.get('periods_s') != list(periods) or len(target.get('target_psa_m_s2',[])) != 4:
+            raise ValueError('TARGET_PERIOD_GRID')
+        if any(not math.isfinite(float(x)) or float(x)<=0 for x in target['target_psa_m_s2']):
+            raise ValueError('TARGET_VALUES')
+    rows=[]
+    for event,station,components,receipt in (
+        [('ci38457511',s['station'],s['components'],bool(s.get('source_receipt_available'))) for s in ridge['stations']]
+        + [('ci39493944','CI.CLC',lone['components'],True)]
+    ):
+        if len(components)!=2:raise ValueError('PAIR_COUNT')
+        def label(c):
+            if event=='ci38457511':return c['component']
+            return 'HNE' if '_HNE_' in c['original_csv'] else 'HNN' if '_HNN_' in c['original_csv'] else 'INVALID'
+        pair={label(c):c for c in components}
+        if set(pair)!={'HNE','HNN'}:raise ValueError('PAIR_LABELS')
+        def source_hash(c):
+            return c['source_sha256'] if event=='ci38457511' else c['original_sha256']
+        if any(not re.fullmatch('[a-f0-9]{64}',source_hash(c)) for c in components):
+            raise ValueError('SOURCE_SHA256')
+        for period in periods:
+            def extract(c):
+                spec=c['spectrum'] if event=='ci38457511' else c['spectral_sensitivity_5pct_damping']
+                matches=[x for x in spec if (x['period_s'] if event=='ci38457511' else x['T_s'])==period]
+                if len(matches)!=1:raise ValueError('PERIOD_IDENTITY')
+                x=matches[0]
+                if event=='ci38457511':
+                    return x['raw_psa_m_s2'],x['pre20_psa_m_s2'],x['linear_psa_m_s2']
+                return x['raw_pseudo_sa_m_s2'],x['preevent20_pseudo_sa_m_s2'],x['linear_detrend_pseudo_sa_m_s2']
+            a,b=extract(pair['HNE']),extract(pair['HNN'])
+            if any(not math.isfinite(float(v)) or v<=0 for v in a+b):
+                raise ValueError('PSA_NONPOSITIVE_OR_NONFINITE')
+            gm=[math.sqrt(x*y) for x,y in zip(a,b)]
+            drift=max(abs(c['pre20_end_drift']['end_displacement_m'] if event=='ci38457511'
+                          else c['pre_event_mean_removed_drift']['end_displacement_m']) for c in components)
+            if not math.isfinite(drift):raise ValueError('DRIFT_NONFINITE')
+            row={'event_id':event,'station':station,'period_s':period,
+                 'raw_pair_gm_psa_m_s2':gm[0],'pre20_pair_gm_psa_m_s2':gm[1],
+                 'linear_pair_gm_psa_m_s2':gm[2],
+                 'raw_vs_pre20_pair_relative_change':abs(gm[0]-gm[1])/gm[1],
+                 'max_abs_pre20_end_displacement_m':drift,
+                 'original_source_receipt_available':receipt,
+                 'source_HNE_sha256':source_hash(pair['HNE']),
+                 'source_HNN_sha256':source_hash(pair['HNN']),
+                 'decision':'REJECT_RAW__HOLD_PRE20_NO_LOWFREQ_TARGET'}
+            if target is not None:
+                idx=periods.index(period)
+                row['target_log_residual_diagnostic_only']=math.log(gm[1]/float(target['target_psa_m_s2'][idx]))
+            rows.append(row)
+    if len(rows)!=16:raise ValueError('EXPECTED_16_ROWS')
+    return rows
+
+
+def long_period_gate_selftest():
+    # Adversarial checks on real report schema are performed in CI against
+    # source SHA-locked reports; this small test checks target input rejection.
+    t={'source_document_id':'SYNTHETIC_ONLY','site_evidence_ref':'NOT_SITE',
+       'damping_ratio':.05,'periods_s':[4.,6.,8.,10.],
+       'target_psa_m_s2':[1.,1.,1.,1.]}
+    assert math.isclose(math.log(1./1.),0.)
+    for bad in ({**t,'damping_ratio':.1},{**t,'periods_s':[4.,6.]},
+                {**t,'target_psa_m_s2':[1.,0.,1.,1.]},
+                {**t,'source_document_id':''}):
+        # Validation is exercised with synthetic report shells; first check
+        # is performed before any component access.
+        r={'independent_event_count':1,'source_low_frequency_band_validated':False,
+           'target_spectrum_available':False,'dt_s':.01,'npts':20001,
+           'stations':[{'station':s} for s in ('CI.CLC','CI.PASC','CI.RVR')]}
+        l={'event_id':'ci39493944','low_frequency_validated':False,
+           'Jiayu_site_spectrum_matched':False,'dt_s':.01,'npts':20001,
+           'components':[{},{}],'source_raw_mseed_sha256':'0'*64}
+        try:long_period_pair_gate(r,l,bad)
+        except ValueError as exc:
+            assert str(exc).startswith('TARGET_'),str(exc)
+        else:raise AssertionError('ACCEPTED_BAD_TARGET')
+    print('S05_LONG_PERIOD_TARGET_GATE_SYNTHETIC_NEGATIVE_PASS 4')
+
+
+def write_long_period_gate(ridge_path,lone_path,output_path,target_path=None):
+    rpath=pathlib.Path(ridge_path);lpath=pathlib.Path(lone_path)
+    ridge=json.loads(rpath.read_text(encoding='utf-8'))
+    lone=json.loads(lpath.read_text(encoding='utf-8'))
+    target=json.loads(pathlib.Path(target_path).read_text(encoding='utf-8')) if target_path else None
+    rows=long_period_pair_gate(ridge,lone,target)
+    fields=list(rows[0])
+    with pathlib.Path(output_path).open('w',newline='',encoding='utf-8') as f:
+        w=csv.DictWriter(f,fieldnames=fields);w.writeheader()
+        for row in rows:
+            w.writerow({k:format(v,'.12g') if isinstance(v,float) else v for k,v in row.items()})
+    print(json.dumps({'status':'S05_TWO_EVENTS_FOUR_PAIRS_SOURCE_QC_ONLY',
+                      'input_report_sha256':{str(rpath):sha(rpath),str(lpath):sha(lpath)},
+                      'output_csv_sha256':sha(output_path),'rows':len(rows),
+                      'unique_events':len({r['event_id'] for r in rows}),
+                      'target_supplied':bool(target),
+                      'low_frequency_validated':False,'site_spectrum_PASS':False,
+                      'Abaqus_RUN':0,'S05_PASS':False},sort_keys=True))
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--self-test',action='store_true');p.add_argument('--manifest');p.add_argument('--output')
     p.add_argument('--processed-manifest');p.add_argument('--spectral-stability',action='store_true')
     p.add_argument('--station-triage',action='store_true');p.add_argument('--triage-manifests',nargs=3)
+    p.add_argument('--long-period-gate',action='store_true')
+    p.add_argument('--triage-json');p.add_argument('--second-event-json');p.add_argument('--target-json')
     a=p.parse_args()
     if a.self_test:
+        long_period_gate_selftest()
         self_test()
         stability_selftest()
         triage_selftest()
+    elif a.long_period_gate:
+        if not a.triage_json or not a.second_event_json or not a.output:p.error('missing source reports/output')
+        write_long_period_gate(a.triage_json,a.second_event_json,a.output,a.target_json)
     elif a.station_triage:
         if not a.triage_manifests or not a.output:p.error('--station-triage requires --triage-manifests (3) and --output')
         result=station_triage(a.triage_manifests)
