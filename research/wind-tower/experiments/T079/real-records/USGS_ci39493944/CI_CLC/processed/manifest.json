@@ -1,0 +1,42 @@
+{
+  "source_database": "RESEARCH_BASELINE_SENSITIVITY_PRE_EVENT_20_SECONDS_FROM_OFFICIAL_CI_CLC_NO_DESIGN_ACCEPTANCE",
+  "source_accession": "USGS:ci39493944;FDSN:CI.CLC:HN*:2020-06-24:BASELINE20S_PILOT",
+  "damping_ratio": 0.05,
+  "periods_s": [
+    0.1,
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.0,
+    1.5,
+    2.0,
+    3.0,
+    4.0,
+    6.0,
+    8.0,
+    10.0
+  ],
+  "horizontal_components": [
+    {
+      "file": "CI_CLC_HNE_preevent20_mps2.csv",
+      "sha256": "273c1bdedec3c4bb049899808c5f8c882e1591dcf9afd76fc0348e0dd3420025",
+      "rsn": "NOT_PEER_RSN",
+      "event": "USGS_ci39493944_Lone_Pine",
+      "station": "CI.CLC",
+      "component": "HNE",
+      "unit": "m/s2",
+      "dt_s": 0.01
+    },
+    {
+      "file": "CI_CLC_HNN_preevent20_mps2.csv",
+      "sha256": "a0a92af8a8a6608f5e490b08392e5f76bad2d0e40c6795954925be746bdaa6df",
+      "rsn": "NOT_PEER_RSN",
+      "event": "USGS_ci39493944_Lone_Pine",
+      "station": "CI.CLC",
+      "component": "HNN",
+      "unit": "m/s2",
+      "dt_s": 0.01
+    }
+  ]
+}
