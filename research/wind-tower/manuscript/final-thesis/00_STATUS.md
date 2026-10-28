@@ -498,3 +498,5 @@ HOLD：
 
 
 **2026-10-29 07时 S11独立方法进展（严格0/12未晋级）：** 已在PR #42新增[S11同状态风/风震成对Pareto筛查程序](../../experiments/T077/recovery/s11_paired_wind_seismic_pareto_gate.py)，程序SHA256=dab6e9e404514ce096056864b3323d4380c27cb1efdbe7fce3d8e2288173bbf6；本地4项合成已知解断言及9项错误输入拒绝通过。合成7设计风前沿{A,B,D,E}，加地震约束后{B,D,G}，揭示新约束可使旧前沿外的G进入新前沿；这是算法测试而非本塔结果。保持同一候选集、同一风致分材料疲劳目标，只比较抗震约束造成的可行域变化。新增[轻量CI](../../../../.github/workflows/s11-paired-pareto-gate.yml)，远端状态以实际Actions为准。REF沿用Ch5已登记来源；STANDARD无新授权条文；OFFICIAL仅GitHub源文件；RUN=Python合成算法自测、原生0；FIG=无；TAB=合成Pareto已知解；真实疲劳/地震/代理误差预算NEED_ESTIMATE，S11=INDEPENDENT_METHOD_PREP/HOLD，S01–S04及S05–S10门禁不变。详见[T080过程日志](../../experiments/T080/PROCESS_LOG.md)。下一单一动作：T071/T072原工作流的31站RP/TP最小受控补采静态输入/通道核验；未经许可不启动昂贵OpenFAST。
+
+**2026-10-29 07时S11 CI实证回填：** [Actions #40785594900](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40785594900) job 123157853368已completed/success，SHA256固定校验与4项正向/9项负向合成测试通过；不改变0/12及S11物理HOLD。
