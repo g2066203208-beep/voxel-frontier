@@ -7,6 +7,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_local_stress_rainflow_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_d400_pe_source_map_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_azimuth_height_candidate_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_native_part_station_binding_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv'
@@ -73,7 +74,7 @@ jobs:
         run: |
           set -euo pipefail
           ROOT="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower"
-          for f in s01_native_inp_cage_polygon_clearance.py s01_straight_bar_radial_clearance.py s01_d400_d500_straight_t3d2_exact.py s01_d400_relayout_pe_diagnostic_inp.py s01_d400_pe_g1_instrument.py s01_d400_uniform_pe_repro_min.py s01_frozen_t057_full_mesh_mass_repro.py s10_t057_native_metadata_gate.py s10_d400_pe_source_map_gate.py S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv; do
+          for f in s01_native_inp_cage_polygon_clearance.py s01_straight_bar_radial_clearance.py s01_d400_d500_straight_t3d2_exact.py s01_d400_relayout_pe_diagnostic_inp.py s01_d400_pe_g1_instrument.py s01_d400_uniform_pe_repro_min.py s01_frozen_t057_full_mesh_mass_repro.py s10_t057_native_metadata_gate.py s10_d400_pe_source_map_gate.py s10_azimuth_height_candidate_gate.py S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv; do
             curl --fail --location --silent --show-error --retry 3 --output "$f" "$ROOT/experiments/T077/recovery/$f"
           done
           curl --fail --location --silent --show-error --retry 3 --output T057.inp "$ROOT/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
@@ -97,6 +98,13 @@ jobs:
           echo 'BEGIN_S10_D400_CSV'
           cat "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv"
           echo 'END_S10_D400_CSV'
+          python3 -m py_compile s10_azimuth_height_candidate_gate.py
+          python3 s10_azimuth_height_candidate_gate.py --self-test
+          python3 s10_azimuth_height_candidate_gate.py --inp "$RUNNER_TEMP/S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp" --source-map S10_D400_PE_68PART_INP_METADATA_20261028.csv --out "$RUNNER_TEMP/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv" | tee "$RUNNER_TEMP/s10_azimuth_receipt.json"
+          sha256sum "$RUNNER_TEMP/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv"
+          echo 'BEGIN_S10_AZIMUTH_CSV'
+          cat "$RUNNER_TEMP/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv"
+          echo 'END_S10_AZIMUTH_CSV'
           echo 'NO NATIVE ODB, NO PT EQUILIBRIUM, NO MATERIAL FATIGUE PASS.'
       - name: Archive D400 Pe source-level CSV and receipt (no INP/ODB)
         if: always()
@@ -106,5 +114,7 @@ jobs:
           path: |
             ${{ runner.temp }}/S10_D400_PE_68PART_INP_METADATA_20261028.csv
             ${{ runner.temp }}/s10_d400_source_receipt.json
+            ${{ runner.temp }}/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv
+            ${{ runner.temp }}/s10_azimuth_receipt.json
           if-no-files-found: warn
           retention-days: 14
