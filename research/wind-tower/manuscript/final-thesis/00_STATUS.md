@@ -357,3 +357,11 @@ HOLD：
 
 
 **同轮补充（15:13 CST，S05实质候选表）**：对两事件官方CESMD JSON按已预定义Ground/processed/通道数/Vs30/Sa1/Sa3/震中距过滤，实测得到**6个待下载处理波台站—事件组合（2019三条、2020三条）**，其中2020 Lone Pine CE.44015的官方已处理水平PGA=0.193g、Sa(1s)=0.179g、Sa(3s)=0.008g、震中距18.7km、Vs30=299m/s；2019 Ridgecrest CE.43158的PGA=0.064g、Sa(3s)=0.046g、震中距60.9km。详细六行和原件SHA见[正式来源收据](../../experiments/T079/real-records/CESMD_processed_availability_receipt_20261028.json)，[真实成功CI #40648635414](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648635414)。这是**真实元数据的处理波下载候选**，不是已取得双水平V2时程、低频验证、嘉鱼Ⅱ类场地或设计谱匹配；S05 PARTIAL/HOLD，0/12阶段晋级、地震Abaqus RUN=0。
+
+
+## 2026-10-28 16:11 CST｜S07原始OUTB量化可分辨性完成（独立准备，0/12未晋级）
+
+- **阶段**：S01=PARTIAL/HOLD、S02–S04=BLOCKED、S05/S06=PARTIAL/HOLD、S07=`SOURCE_PACKING_RESOLUTION_TESTED/PHYSICS_HOLD`、S08–S11=BLOCKED、S12=PARTIAL；严格科学PASS仍**0/12**，真实地震及Abaqus地震RUN=0。没有更改冻结T057/T070、正式六章或风致分材料疲劳与优化主线。
+- **实质产物（SOURCE/OFFICIAL/RUN/TAB）**：对源SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`的历史158m OpenFAST v3.5.3原始OUTB，复用[源级程序](../../experiments/T077/recovery/s07_v353_fixed_base_native_frame.py)（SHA256=`0a7d9e184c6f61b6039ad07c5e88610fc5d069521b57d374ea81f270dc7b1a50`），对12001点×8相邻段真实计算FL/AL/RP的int16半LSB保守传播包络。8段原始未分配力最大绝对值`0.036343–0.036764 kN`，**小于**对应源打包量化保守上界`0.048246–0.048751 kN`；比值`0.7506–0.7568`。因此0.03676kN尚不具备可分辨物理意义，**既不证明其全由量化造成，也不能作为气动力或力平衡残差**。永久8行表、官方Fortran两原件SHA256及运行程序SHA见[真实JSON](../../experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json)，[原始CI自动提交](https://github.com/g2066203208-beep/voxel-frontier/commit/5c0f164348aca46a3a9317f2e93d8c14c0cec9ec)；[过程与假设/失败记录](../../experiments/T080/PROCESS_LOG.md)。
+- **REF/STANDARD/FIG及误差**：无新增期刊原页、无新读IEC/GB/NB授权条款、无原生响应FIG；只核对OpenFAST v3.5.3源级ElastoDyn/NWTC源码与原始输出，算法包络不是物理不确定度；1120中间节点加速度、FTTower、31测点源与自由体载荷所有权仍HOLD。
+- **单一最大HOLD**：S07缺完整分布力/中间节点和31测点原始数据，不能进行正式六分量外载映射或Abaqus生产。**下一唯一动作**：在已有S10研究文件内实施分材料雨流—均值应力—Miner合成可复算正负测试，待真实局部应力和授权材料参数后才计算寿命。
