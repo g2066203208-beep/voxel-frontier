@@ -2,12 +2,10 @@
   "FIG": "NONE; no native Abaqus physical response",
   "HOLD": "9 near-base gages only; 31-gage rerun different source; internal section resultants include inertia/gravity/RNA; no Abaqus external load or free-body physics PASS",
   "OFFICIAL": {
-    "gravity_axial_reference_kN": -74.85274783974191,
-    "inertia_weight_lower_kg": 3816.428027906671,
-    "inertia_weight_upper_kg": 3816.42802790667,
-    "lower_gage": 8,
-    "source_mass_between_gages_kg": 7632.856055813341,
-    "upper_gage": 9
+    "elastodyn_blob": "2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1",
+    "elastodyn_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+    "nwtc_num_blob": "2daf088cca20a91e559490749b99cb35f25f208b",
+    "nwtc_num_sha256": "1f8aa50df80ecf7e39a8b25cb2fdcbc897d0c328b7672e9e5ce003c18a4edf1d"
   },
   "REF": "OpenFAST v3.5.3 ElastoDyn.f90 lines 922-943, 1190-1206, 6005-6034, 6856-6860; NWTC_Num.f90 lines 5378-5470",
   "RUN": {
