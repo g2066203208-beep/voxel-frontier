@@ -238,3 +238,16 @@ SOURCE=上述公开原刊URL/章节、GitHub当前T057/T070/T077/T078登记；RE
 - 3篇可分享许可的原始PDF**已入同一PR Git树的 `references/open-access/`**：Wang2026 `Wang_2026_RCS_5_2_47_64.pdf` SHA256 `74a2213d18a15cfd0ea7690a262037d8e928d0becf5ec576e12db35820a8c338`；Meng2020 `Meng_2020_RenewableEnergy_AAM.pdf` SHA256 `cc8769039f53587f9dd2c88d70dde15bbc537d918e75dd22473fd279b9235905`；Ali2021 `Ali_2021_SDEE_106483_AAM.pdf` SHA256 `a8e7e77881a3e41bf1c8fdf624787dfc472b7e49b8a8d4ebb08d642cd434f372`。Ali为28页作者接受稿，不能误当15页出版社排版版。
 - Ishihara2024 17页作者公开期刊原稿受 `All rights reserved`限制；私人研究原件只入[本仓库Draft Release](https://github.com/g2066203208-beep/voxel-frontier/releases/tag/untagged-7b6802946d49c37edf96)，并非公开Git文件。4篇剩余核心参考原件下载接口HTTP403，包括2026年160m混塔同时风震；HKU2023作者Word原件亦403。这些来源缺口未关闭。
 - 阅读等级仍以本文件原页审读章节为准；**文件下载与方法完整精读是两项不同的任务**。S05=PARTIAL/HOLD，12阶段0/12，地震RUN=0；禁止把未取得PDF标成fulltext-read。
+
+
+### 2026-10-29｜Ishihara 2024 原刊方程1–6逐页复核与可执行数值基准（S05/S09独立准备）
+
+**SOURCE/REF（直接原页）：** Ishihara, Iida & Wang, *Structures* 60 (2024) 105886, DOI [10.1016/j.istruc.2024.105886](https://doi.org/10.1016/j.istruc.2024.105886)，[东京大学作者PDF（17页）](https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1.pdf)。本轮通过PDF全文可检索文本和**原页图像**双向核对：物理p3–4 Table5/6（AEM/SLM模态）、p6 §2.3 Eq(1)/Fig7–8（日本JSCE工程基岩5%谱）、p9 §3.1 Eq(2)–(3)/Table9（同一时刻水平合量与逐条波最大值平均）、p12 §3.4 Eq(4)（F85=Fave+1.04σ）、p16 §4.1–4.3 Eq(5)/(6)（运行/停机向量合成与紧急停机SRSS）。PDF原件SHA256 **沿用2026-10-28仓库下载收据登记** \`3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238\`，**本轮未重新取得原件字节计算SHA**；不得把网页页图当原件字节复核。作者研究对象为**2.4MW海上重力基础机组**，GH Bladed 4.8 + SLM/等效sway-rocking，不能称本158m陆上塔已复现。
+
+**原式/表与数值：** Eq(1)日本工程基岩目标谱为 \`Sa=a0*(1+9.375*T)\` (0≤T≤0.16s)、\`Sa=2.5*a0\` (0.16<T<0.64s)、\`Sa=1.6*a0/T\` (T≥0.64s)，作者II级 \`a0=3.2m/s²\`，故T=6s得**0.8533333333m/s²**；这不是嘉鱼设计谱或IEC2025适用条文。Eq(2)为同一时刻 \`sqrt(Fx(t)^2+Fy(t)^2)\`，Eq(3)为**逐记录先取峰、再跨记录平均**，不能跨时刻拼接峰值。Eq(4)原文系数1.04；实现时**显式选择总体标准差（n分母）**，原文未清楚限定样本/总体分母，故作为数值实现假设，非复现作者15波统计值。Eq(5) \`sqrt((Fs*cosθ+Fw_FA)^2+(Fs*sinθ+Fw_SS)^2)\` 对运行/停机，Eq(6) \`sqrt(Fs^2+F_ES^2)\` 对紧急停机；这两式是**原文非耦合峰值组合近似**，不是同一时程W+E，也不是全气弹耦合算法。
+
+Table5原值：FA AEM 0.358/2.674/3.964Hz、SLM 0.360/2.960/3.777Hz；SS AEM 0.356/2.314/3.964Hz、SLM 0.356/2.278/3.931Hz。独立计算 \`100*(fSLM/fAEM-1)\`：FA **+0.558659%、+10.695587%、−4.717457%**，SS **0%、−1.555748%、−0.832492%**。**一阶接近不代表高阶/局部应力已验**，FA二阶偏差10.70%是该论文自身的定量反例，不移植为本塔允许误差线。Table9作者算例塔底弯矩：仅风23,850kN·m、0°风震85,017、45°92,375、90°105,893kN·m；是作者**耦合模拟结果**，不能由Eq(5)在缺Fs与各方向Fw输入时倒算成我们塔的W/E/WE。
+
+**RUN（真实轻量计算）：** [Python3标准库可复核方程脚本](s09_ishihara2024_equation_oracle.py)，本轮本地**Python 3.13.5**运行 \`python s09_ishihara2024_equation_oracle.py --self-test\` 成功；程序SHA256=\`ada2813420e2d6ec77d633e3f8663f9b1843cfc91c8c32aa18062774e9feb280\`、Git Blob=\`b4367cfd683f720409834b9bf0f5b72098046d10\`。实际覆盖Eq1–6、Eq1两个分段点连续性、Eq2同刻合量、Eq3逐波峰均值、Eq4解析均值/方差、Eq5的0°/45°/90°极限、Eq6 3-4-5、Table5原值与**7个失败输入拒绝测试**。数值误差预算：纯解析/IEEE754双精度与表值舍入；分段连续性误差<1e−7m/s²（以两侧ε=1e−10s检验）；原论文频率仅三位小数，百分比为这些已发表舍入值的计算，不应报告物理精度为1e−6%。**未有本塔物理误差预算**。
+
+**STANDARD/OFFICIAL/FIG/TAB/HOLD：** STANDARD=原刊引用2019 IEC及日本JSCE，只是**论文方法来源**，不是本轮核读2025 IEC/GB/NB授权条款；OFFICIAL=东京大学作者公开原页，非软件原生日志；FIG=已核原刊Fig7/8、Fig18–25（无本塔原创响应图）；TAB=原刊Table5/6/9与本节逐项数字；RUN仅轻量Python单测，地震E、W/E/WE、Abaqus原生均**0**。最大方法HOLD是**真实场址适用目标谱+可用长周期记录、同状态W/E/WE原生参考**，物理基线S01–S04仍未PASS。S05 PARTIAL/HOLD、S09 BLOCKED、12阶段严格0/12；S10风致材料疲劳与S11抗震约束优化不受此独立准备阻断。
