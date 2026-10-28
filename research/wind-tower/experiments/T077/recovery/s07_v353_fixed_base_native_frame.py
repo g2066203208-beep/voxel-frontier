@@ -526,7 +526,7 @@ def audit(args):
         "SOURCE":{"static_zip_sha256":sha(ed_zip),"dynamic_zip_sha256":sha(out_zip),
                   "fst_sha256":sha(fst),"elastodyn_input_sha256":sha(ed),
                   "outb_sha256":sha(raw),"reading_level":"original 12001x9 packed OUTB, original FST/ElastoDyn, original v3.5.3 Fortran"},
-        "OFFICIAL":official_source,"RUN":{"python":platform.python_version(),"native_solver":"NOT_RUN",
+        "OFFICIAL":official_source,"RUN":{"python":platform.python_version(),"script_sha256":sha(Path(__file__).read_bytes()),"native_solver":"NOT_RUN",
                 "synchronous_time_steps":12001,"gages":9,"transforms":count,
                 "platform_dof_flags":flags},
         "TAB":{"first_sample":first,"max_R_orthogonality_abs":max_ortho,
