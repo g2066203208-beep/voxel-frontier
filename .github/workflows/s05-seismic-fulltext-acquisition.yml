@@ -39,6 +39,37 @@ jobs:
           path: ${{ runner.temp }}/seismic_original_pdfs/
           if-no-files-found: warn
           retention-days: 90
+      - name: Preserve publisher-licensed CC BY fulltext PDF in existing open-access references folder
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,hashlib,json,os,pathlib,subprocess
+          from pypdf import PdfReader
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'seismic_original_pdfs/Wang_2026_RCS_47_64.pdf'
+          if not p.exists(): raise RuntimeError('Original 2026 CC BY PDF missing; do not create git file')
+          data=p.read_bytes()
+          sha=hashlib.sha256(data).hexdigest()
+          assert sha=='74a2213d18a15cfd0ea7690a262037d8e928d0becf5ec576e12db35820a8c338'
+          first=' '.join((PdfReader(str(p)).pages[0].extract_text() or '').split())
+          assert 'CC BY license' in first and 'creativecommons.org/licenses/by/4.0' in first
+          repo=os.environ['GH_REPO']
+          path='research/wind-tower/references/open-access/Wang_2026_RCS_5_2_47_64.pdf'
+          old=subprocess.run(['gh','api','--method','GET',f'repos/{repo}/contents/{path}','-f','ref=research/t080-seismic-integration-gates-20261022'],capture_output=True,text=True)
+          blob_git_sha=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\0'+data).hexdigest()
+          if old.returncode==0:
+              content=json.loads(old.stdout)
+              if content.get('sha')==blob_git_sha:
+                  print('CC_BY_ORIGINAL_ALREADY_SAVED',path,sha);raise SystemExit(0)
+              raise RuntimeError('Different PDF already exists at open-access path. Refuse overwrite')
+          payload={'message':'research(S05): preserve verified CC BY 4.0 full-text 2026 hybrid-tower earthquake paper','branch':'research/t080-seismic-integration-gates-20261022','content':base64.b64encode(data).decode()}
+          r=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
+          if r.returncode: raise RuntimeError('PDF git-upload failed: '+r.stderr[:600])
+          print('CC_BY_PDF_PERMANENT_COMMIT',json.loads(r.stdout)['commit']['sha'],'PDF_SHA256',sha,'BYTES',len(data))
+          PY
       - name: Commit exact download receipt to Draft PR branch (no PDF in public git)
         if: always()
         shell: bash
