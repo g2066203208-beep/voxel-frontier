@@ -54,9 +54,17 @@ def summarize(raw, event_id):
     if count is not None and (isinstance(count, bool) or not isinstance(count, int) or count < 0):
         raise ValueError('invalid CESMD count')
     flags = list(availability_nodes(obj))
-    processed = [x.get('processed') for x in flags]
-    if any(not isinstance(v, bool) for v in processed):
-        raise ValueError('CESMD processed flag nonboolean: '+repr([(type(v).__name__,str(v)[:50]) for v in processed[:10]]))
+    # Live CESMD 2026 API encodes booleans as the strings "true"/"false".
+    # Accept only those exact spellings or native JSON booleans; never bool("false").
+    def parse_flag(v):
+        if isinstance(v, bool):
+            return v
+        if v == 'true':
+            return True
+        if v == 'false':
+            return False
+        raise ValueError('CESMD processed flag invalid: '+repr(v))
+    processed = [parse_flag(x.get('processed')) for x in flags]
     return {
         'status': 'OFFICIAL_METADATA_PREFLIGHT_ONLY_NOT_DESIGN_WAVE',
         'event_id_requested': event_id,
@@ -120,9 +128,11 @@ def self_test():
             pass
         else:
             raise AssertionError('accepted malformed official metadata')
+    string_flags = summarize(b'{"status":200,"count":2,"data_availability":{"processed":"false"},"nested":{"data_availability":{"processed":"true"}}}', 'CI38457511')
+    assert string_flags['processed_true_objects'] == 1 and string_flags['processed_false_objects'] == 1
     empty = summarize(b'{"status":200,"count":0,"events":[]}', 'CI38457511')
     assert empty['availability_objects'] == 0 and not empty['S05_PASS']
-    print('PASS_SYNTHETIC_CESMD_METADATA_GATE 3 processed flags; 7 negative tests; empty-result HOLD')
+    print('PASS_SYNTHETIC_CESMD_METADATA_GATE native+string flags; 7 negative tests; empty-result HOLD')
 
 
 def main():
