@@ -105,3 +105,8 @@
 **T=10s实数（m/s²，raw GM→pre20 GM，|差|/pre20）：** ci38457511/CI.CLC 0.37678583→0.14757149 (155.32%)；ci38457511/CI.PASC 0.09325229→0.02222437 (319.59%)；ci38457511/CI.RVR 0.12303448→0.01026789 (1098.24%)；ci39493944/CI.CLC 0.36232033→0.00093753 (38546.33%)。Ridgecrest三台站同一事件不能做3个独立样本；Lone Pine弱动原始偏置导致近零pre20分母放大。原样加速度不能直接作为158m塔设计地震输入，pre20去均值也没有通过低频可靠性/场址目标谱审查。
 
 **REF/STANDARD/FIG/误差/HOLD：** REF沿用Wang2026 RCS原页与Ishihara2024原页的已登记阅读层级，本轮未新增全文阅读；STANDARD未获取IEC2025/GB/NB授权条文或场址目标谱；OFFICIAL=既有USGS/SCEDC源收据（不等于本轮新下载）；FIG无地震/塔体响应；TAB=16行实数及SHA。几何均值和相对差为双精度算术（CSV 12有效位舍入），Newmark时间积分误差沿用先前解析收敛测试，**仪器完整去响应/频带、谱目标、窗口、土层及本塔物理误差NEED_ESTIMATE**。RUN仅二次数据计算和程序测试，Abaqus E/WE=0，S05 PARTIAL/HOLD，12阶段**0/12未晋级**。下一唯一动作：从官方已处理波中取得**明确低频截止与处理历史**的一对真实双水平原件，连同可追溯参考目标谱绑定到现有门禁；不新增T080审查号。
+
+
+**2026-10-29 01时真实CI回读（替代“待测”）：** [Actions #40732491542](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40732491542)在初始实现提交`e185216dcf52486e472e2aaff8379a0c11ad46ff`上 **completed/success**，job `122972210381`。Python3实际执行`--self-test`（新增4项目标谱负例全部拒绝）、既有原始CLC及Ridgecrest六分量真实源交叉测试，并用两份真实谱报告执行`--long-period-gate`，**16行实际谱值与提交CSV逐字段复核PASS**（5个浮点字段相对1e-10/绝对1e-12；不是字节一致）。CI真正打印`REAL_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_16_ROWS_VERIFIED_NOT_DESIGN_PASS`。
+
+**SHA256/源身份：** CI实际脚本SHA256=`166f3194d60ff40a1bb16c1cb238cf76f8642b7d7235aee6615ea84e37dd02d0`；2019 Ridgecrest派生输入JSON SHA256=`50a05ed72976d0357fb9685410689d0ff07e80ee548938cea2bcac7f94aadf45`；2020 Lone Pine派生输入JSON SHA256=`8e8dd7fd565fd30c7bdbf8cab8faf7c157be3f4dce333830f05734b9b5cab238`；Python重算16行CSV SHA256=`fa4027dac6ca2ae54cb6b494b438b126f4beadd345aab8c04086036058820dfd`（**与仓库提交CSV的数字格式可能不同，CI按数值和身份字段逐项比对**）。原始加速度源CSV SHA256逐行见永久表，**本轮未重取/重哈希miniSEED**。无未预期测试失败，4项人为错误目标谱均被拒绝；本塔地震RUN=0、设计谱误差未定义、0/12科学PASS。
