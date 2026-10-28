@@ -98,7 +98,8 @@ SOURCE_FIELDS = ('source_part', 'source_group', 'native_instance_from_INP',
 
 
 def validate_source_binding(card, raw, expected_sha=None,
-                            expected_inp_sha=None, expected_rows=68):
+                            expected_inp_sha=None, expected_rows=68,
+                            verified_candidate=None):
     """Fail closed on exact model+map pair; height candidates are NOT hotspots."""
     validate_card(card)
     if expected_sha is None or expected_inp_sha is None:
@@ -128,8 +129,19 @@ def validate_source_binding(card, raw, expected_sha=None,
            'S10_ELEMENT_SET_NOT_FROM_INP')
     insist(row['height_candidate_element_label'].strip(),
            'S10_NO_REVIEWED_SOURCE_ELEMENT_CANDIDATE')
-    insist(card['element_label'] == int(row['height_candidate_element_label']),
-           'S10_ELEMENT_LABEL_NOT_IN_HEIGHT_CANDIDATE')
+    if verified_candidate is None:
+        insist(card['element_label'] == int(row['height_candidate_element_label']),
+               'S10_ELEMENT_LABEL_NOT_IN_HEIGHT_CANDIDATE')
+    else:
+        # Only a row returned by SHA-locked candidate table validation may be
+        # passed by the production path. This is still source-level, NOT ODB IP.
+        insist(card['inp_sha256'] == D400_PE_CHILD_SHA and
+               verified_candidate['source_part'] == row['source_part'] and
+               verified_candidate['instance'] == card['instance'] and
+               verified_candidate['element_set'] == card['element_set'] and
+               verified_candidate['section_material'] == card['material_id'] and
+               int(verified_candidate['element_label']) == card['element_label'],
+               'S10_CANDIDATE_SOURCE_BINDING_MISMATCH')
     insist(not row['native_integration_point'] and not row['native_stress_basis'],
            'S10_SOURCE_MAP_MUST_NOT_CERTIFY_ODB_IP_OR_BASIS')
     # A source-level element label does NOT prove ODB integration-point existence,
@@ -323,6 +335,8 @@ def main():
     ap.add_argument('--self-test', action='store_true')
     ap.add_argument('--source-map', type=Path)
     ap.add_argument('--d400-source-map', type=Path)
+    ap.add_argument('--candidate-table', type=Path,
+                    help='SHA-locked 372-row D400 mesh candidate whitelist (mandatory for D400)')
     ap.add_argument('--run-card', type=Path)
     ap.add_argument('--inp', type=Path)
     ap.add_argument('--odb', type=Path)
@@ -340,7 +354,19 @@ def main():
     insist(sha_file(args.inp) == card['inp_sha256'], 'INP_SHA256_MISMATCH')
     insist(sha_file(args.odb) == card['odb_sha256'], 'ODB_SHA256_MISMATCH')
     source_map_raw = args.source_map.read_bytes()
-    validate_source_binding(card, source_map_raw)
+    candidate_raw = None
+    verified_candidate = None
+    if card['inp_sha256'] == D400_PE_CHILD_SHA:
+        insist(args.candidate_table is not None,
+               'D400_REQUIRES_SHA_LOCKED_372_CANDIDATE_TABLE')
+        from s10_candidate_run_card_gate import select
+        candidate_raw = args.candidate_table.read_bytes()
+        verified_candidate = select(card, candidate_raw, source_map_raw)
+    else:
+        insist(args.candidate_table is None,
+               'T057_MUST_NOT_USE_D400_CANDIDATE_TABLE')
+    validate_source_binding(card, source_map_raw,
+                            verified_candidate=verified_candidate)
     for suffix, expected in card['native_log_sha256'].items():
         path = args.logs_dir / (args.odb.stem + '.' + suffix)
         insist(path.is_file() and sha_file(path) == expected,
@@ -362,8 +388,16 @@ def main():
         'source_sha256': sha_bytes(raw),
         'run_card_sha256': sha_bytes(card_raw),
         'source_map_sha256': sha_bytes(source_map_raw),
+        'candidate_table_sha256': (sha_bytes(candidate_raw) if candidate_raw is not None
+                                   else None),
+        'candidate_plane': (verified_candidate['axial_plane']
+                            if verified_candidate is not None else None),
+        'candidate_azimuth_deg': (int(verified_candidate['requested_azimuth_deg'])
+                                  if verified_candidate is not None else None),
+        'candidate_status': ('SOURCE_ELEMENT_ONLY_NO_NATIVE_IP_CERTIFICATION'
+                             if verified_candidate is not None else None),
         'source_map_status': ('T057_HEIGHT_ONLY' if card['inp_sha256'] == FROZEN_T057_SHA
-                              else 'D400_PE_DIRECT_CHILD_HEIGHT_ONLY') + '_NOT_HOTSPOT_OR_IP',
+                              else 'D400_PE_372_AZIMUTH_SOURCE_ONLY') + '_NOT_HOTSPOT_OR_IP',
         'run_id': card['run_id'], 'step': card['step'],
         'instance': card['instance'], 'element_set': card['element_set'],
         'element_label': card['element_label'],
