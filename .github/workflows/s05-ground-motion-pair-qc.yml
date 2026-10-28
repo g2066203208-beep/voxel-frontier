@@ -24,3 +24,38 @@ jobs:
           python3 -m py_compile s05_ground_motion_pair_qc.py
           python3 s05_ground_motion_pair_qc.py --self-test
           echo 'Synthetic unit tests ONLY; 0 real PEER records, 0 Abaqus RUN, 0 S05 physics PASS.'
+      - name: REAL CI.CLC baseline spectral sensitivity on immutable source and pre20 pairs (not a design wave)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC"
+          mkdir -p real-ci-clc/raw real-ci-clc/pre20
+          for file in manifest.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
+            curl -fLsS --retry 3 --output "real-ci-clc/raw/$file" "$base/$file"
+          done
+          for file in manifest.json CI_CLC_HNE_preevent20_mps2.csv CI_CLC_HNN_preevent20_mps2.csv; do
+            curl -fLsS --retry 3 --output "real-ci-clc/pre20/$file" "$base/processed/$file"
+          done
+          python3 s05_ground_motion_pair_qc.py --spectral-stability \
+            --manifest real-ci-clc/raw/manifest.json \
+            --processed-manifest real-ci-clc/pre20/manifest.json \
+            --output real-ci-clc/long_period_spectral_sensitivity.json
+          python3 - <<'PY'
+          import json
+          j=json.load(open('real-ci-clc/long_period_spectral_sensitivity.json'))
+          for c in j['components']:
+              print('REAL_CI_CLC',c['component'],'T_ge_4s_max_relative_change',
+                    c['max_raw_vs_pre20_relative_change_T_ge_4s'])
+              for row in c['spectrum']:
+                  if row['period_s'] in (1.0,6.0,10.0):
+                      print('SPECTRUM',c['component'],row)
+          assert j['S05_PASS'] is False and j['Abaqus_RUN'] is False
+          PY
+      - name: Preserve REAL S05 diagnostic report as CI artifact (not S05 PASS)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-ci-clc-long-period-diagnostic-not-design-pass
+          path: real-ci-clc/long_period_spectral_sensitivity.json
+          if-no-files-found: warn
+          retention-days: 90
