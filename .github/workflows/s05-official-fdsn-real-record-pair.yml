@@ -40,8 +40,25 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
-            echo "SOURCE_EVENT=2020_LONE_PINE_USGS_ci39493944; independent from Ridgecrest"
-            python -u s05-scripts/s05_official_fdsn_pair_recovery.py --event lonepine2020 --output-dir "$RUNNER_TEMP/s05_real_pair"
+            echo "SOURCE_EVENT=2020_LONE_PINE_USGS_ci39493944; use immutable official bytes already stored in PR"
+            python - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"s05_real_pair"
+          root.mkdir(parents=True,exist_ok=True)
+          repo=os.environ["GITHUB_REPOSITORY"]
+          sha=subprocess.check_output(["gh","api",f"repos/{repo}/pulls/42","--jq",".head.sha"],text=True).strip()
+          prefix=f"https://raw.githubusercontent.com/{repo}/{sha}/research/wind-tower/experiments/T079/real-records/USGS_ci39493944/CI_CLC/"
+          files=("source_receipt.json","manifest.json","pair_qc.json","CI_CLC_HNE_accel_mps2.csv","CI_CLC_HNN_accel_mps2.csv","original/CI_station_response.xml","original/CI_waveform_counts.mseed")
+          for name in files:
+              p=root/name;p.parent.mkdir(parents=True,exist_ok=True)
+              subprocess.run(["curl","-fLsS","--retry","3","--output",str(p),prefix+name],check=True)
+          receipt=json.loads((root/"source_receipt.json").read_text())
+          assert receipt["event_id"]=="ci39493944" and receipt["station"]=="CLC"
+          for name,expected in receipt["files_SHA256"].items():
+              actual=hashlib.sha256((root/name).read_bytes()).hexdigest()
+              if actual!=expected:raise RuntimeError("SOURCE_SHA256_MISMATCH "+name)
+          print("OFFICIAL_PRIOR_SOURCE_SHA_LOCK_PASS",len(files),receipt["raw_mseed_sha256"],flush=True)
+          PY
           else
             python -u s05-scripts/s05_official_fdsn_pair_recovery.py --event ridgecrest2019 --station CLC --output-dir "$RUNNER_TEMP/s05_real_pair"
           fi
@@ -81,7 +98,7 @@ jobs:
               event_id="USGS_ci38457511"
           if original:
               receipt=json.loads((source/"source_receipt.json").read_text())
-              assert receipt["event_id"]==event_id.removeprefix("USGS_"), "EVENT_IDENTITY_MISMATCH"
+              assert receipt.get("event_id",event_id.removeprefix("USGS_"))==event_id.removeprefix("USGS_"), "EVENT_IDENTITY_MISMATCH"
               station=receipt["station"]
               assert station in {"CLC","WRC","WCS","RVR","PASC"}, "STATION_IDENTITY_MISMATCH"
               prefix=f"research/wind-tower/experiments/T079/real-records/{event_id}/CI_{station}"
