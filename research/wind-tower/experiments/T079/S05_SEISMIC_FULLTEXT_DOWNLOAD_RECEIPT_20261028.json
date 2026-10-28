@@ -1,6 +1,6 @@
 {
   "status": "RESEARCH_PDF_DOWNLOAD_RECEIPT_NOT_FULLTEXT_METHOD_REVIEW",
-  "utc": "2026-10-28T13:16:07.364755+00:00",
+  "utc": "2026-10-28T13:16:30.530125+00:00",
   "python": "3.12.15",
   "pypdf": "6.21.3",
   "source_level": "direct PDF from author/institution/publisher, PDF byte-verified",
@@ -74,7 +74,7 @@
           "stderr": ""
         }
       ],
-      "sha256": "a8e7e77881a3e41bf1c8fdf624787dfc472b7e49b8a8d4ebb08d642cd434f372",
+      "sha256": "1c47003699837f67fbf1f9774defb86bf13274bda0c954fb3d11df809e7ed7ba",
       "bytes": 2766620,
       "pages": 28,
       "first_page_text_sample": "Seismic assessment of wind turbines How crucial is rotor-nacelle-assembly numerical modeling? Author(s): Ali, Ahmer; De Risi, Raffaele; Sext",
