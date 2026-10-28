@@ -114,6 +114,7 @@ jobs:
             --candidate-table S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv \
             --source-map S10_D400_PE_68PART_INP_METADATA_20261028.csv \
             --out "$RUNNER_TEMP/s10_candidate_card_preflight.json"
+          sha256sum s10_candidate_run_card_gate.py s10_native_odb_local_stress_gate.py
           echo 'BEGIN_S10_AZIMUTH_CSV'
           cat "$RUNNER_TEMP/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv"
           echo 'END_S10_AZIMUTH_CSV'
