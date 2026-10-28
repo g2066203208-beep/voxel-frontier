@@ -4,6 +4,8 @@ on:
     paths:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
+      - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json'
+      - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json'
   workflow_dispatch:
 permissions:
   contents: read
@@ -51,11 +53,53 @@ jobs:
                       print('SPECTRUM',c['component'],row)
           assert j['S05_PASS'] is False and j['Abaqus_RUN'] is False
           PY
+      - name: REAL 3-station / 6-horizontal-trace baseline and long-period QC (single event; no site PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511"
+          mkdir -p triage/clc triage/root
+          for file in manifest.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
+            curl -fLsS --retry 3 --output "triage/clc/$file" "$base/CI_CLC/$file"
+          done
+          for file in manifest.json CI_RVR_manifest.json CI_PASC_HNE_accel_mps2.csv CI_PASC_HNN_accel_mps2.csv CI_RVR_HNE_accel_mps2.csv CI_RVR_HNN_accel_mps2.csv; do
+            curl -fLsS --retry 3 --output "triage/root/$file" "$base/$file"
+          done
+          curl -fLsS --retry 3 --output triage/triage_v8.json "$base/station_pair_baseline_triage_20261028.json"
+          python3 s05_ground_motion_pair_qc.py --station-triage --triage-manifests \
+            triage/clc/manifest.json triage/root/manifest.json triage/root/CI_RVR_manifest.json \
+            --output triage/triage_python.json
+          python3 - <<'PY'
+          import json,math
+          v=json.load(open('triage/triage_v8.json'))
+          p=json.load(open('triage/triage_python.json'))
+          assert not p['S05_PASS'] and not p['Abaqus_RUN']
+          assert p['independent_event_count']==1 and len(p['stations'])==3
+          assert {s['station'] for s in p['stations']}=={'CI.CLC','CI.PASC','CI.RVR'}
+          n=0
+          for a,b in zip(v['stations'],p['stations']):
+              assert a['station']==b['station']
+              for ca,cb in zip(a['components'],b['components']):
+                  assert ca['component']==cb['component'] and ca['source_sha256']==cb['source_sha256']
+                  for key in ('pre20_offset_m_s2','raw_pga_g','pre20_pga_g','pre20_noise_rms_m_s2','post35to120_signal_rms_m_s2','signal_to_noise_rms_ratio','long_period_max_raw_vs_pre20_rel','long_period_max_linear_vs_pre20_rel'):
+                      assert math.isclose(ca[key],cb[key],rel_tol=1e-6,abs_tol=1e-8),(a['station'],key,ca[key],cb[key])
+                      n+=1
+                  for xa,xb in zip(ca['spectrum'],cb['spectrum']):
+                      assert xa['period_s']==xb['period_s']
+                      for key in ('raw_psa_m_s2','pre20_psa_m_s2','linear_psa_m_s2'):
+                          assert math.isclose(xa[key],xb[key],rel_tol=1e-6,abs_tol=1e-8),(a['station'],ca['component'],key,xa[key],xb[key])
+                          n+=1
+          print('REAL_S05_CROSS_LANGUAGE_V8_PYTHON_SIX_TRACE_COMPARISON_PASS',n,'numeric checks')
+          print('NOT_DESIGN_PASS same earthquake, unknown long-period instrument reliability, no target spectrum')
+          PY
       - name: Preserve REAL S05 diagnostic report as CI artifact (not S05 PASS)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: s05-ci-clc-long-period-diagnostic-not-design-pass
-          path: real-ci-clc/long_period_spectral_sensitivity.json
+          path: |
+            real-ci-clc/long_period_spectral_sensitivity.json
+            triage/triage_python.json
+            triage/triage_v8.json
           if-no-files-found: warn
           retention-days: 90
