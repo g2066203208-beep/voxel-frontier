@@ -33,6 +33,277 @@
   },
   "STANDARD": "NONE; no authorized IEC/GB clauses read",
   "TAB": {
+    "adjacent_cut_first_sample": [
+      {
+        "delta_force_global_kN": [
+          0.0031785614861519207,
+          -0.000496324454870134,
+          -49.89925216397023
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.041608465175158926,
+          -2.4361045087571256,
+          -0.009758526598034223
+        ],
+        "lower_gage": 1,
+        "upper_gage": 2
+      },
+      {
+        "delta_force_global_kN": [
+          0.005533536122584337,
+          -0.0003013254390644704,
+          -49.898073393174855
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.038992288276858744,
+          2.3380429225217085,
+          -0.017552015974160895
+        ],
+        "lower_gage": 2,
+        "upper_gage": 3
+      },
+      {
+        "delta_force_global_kN": [
+          0.007588520056629022,
+          6.029154544329174e-05,
+          -49.9016020290328
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.04484087905166234,
+          -2.3616955459292512,
+          -0.01562763541505774
+        ],
+        "lower_gage": 3,
+        "upper_gage": 4
+      },
+      {
+        "delta_force_global_kN": [
+          0.009938873192027131,
+          0.00025937121157326715,
+          -49.90130676832632
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.0228659678978147,
+          2.953929558978416,
+          -0.01567107134451362
+        ],
+        "lower_gage": 4,
+        "upper_gage": 5
+      },
+      {
+        "delta_force_global_kN": [
+          -0.010791085060077421,
+          0.0013862475319275092,
+          -99.80466837326458
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.015568812991659797,
+          -3.9131791423424147,
+          -0.02245647576637566
+        ],
+        "lower_gage": 5,
+        "upper_gage": 6
+      },
+      {
+        "delta_force_global_kN": [
+          -0.020821488874844363,
+          0.001070594020278648,
+          -49.900882706780976
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.0011259712118771859,
+          3.2712916980381124,
+          -0.019265079411070474
+        ],
+        "lower_gage": 6,
+        "upper_gage": 7
+      },
+      {
+        "delta_force_global_kN": [
+          0.017875868085639013,
+          -0.004588102390291837,
+          -49.904069269410684
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.009110372718168946,
+          -1.2805025929410476,
+          -0.009125635770942608
+        ],
+        "lower_gage": 7,
+        "upper_gage": 8
+      },
+      {
+        "delta_force_global_kN": [
+          -0.006811007127112134,
+          -0.0006140164340280307,
+          -74.84935585719359
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.02450418251373776,
+          -0.6132242523890454,
+          -0.02227729929927591
+        ],
+        "lower_gage": 8,
+        "upper_gage": 9
+      }
+    ],
+    "adjacent_cut_full_series_summary": [
+      {
+        "count": 12001,
+        "lower_gage": 1,
+        "max_Fz_kN": -49.89068325783592,
+        "max_abs_force_component_kN": 49.91089038904465,
+        "max_abs_moment_component_at_global_origin_kNm": 5.19023353245575,
+        "mean_Fz_kN": -49.901149806594,
+        "min_Fz_kN": -49.91089038904465,
+        "peak_force_time_s": 476.6,
+        "upper_gage": 2
+      },
+      {
+        "count": 12001,
+        "lower_gage": 2,
+        "max_Fz_kN": -49.889062608264794,
+        "max_abs_force_component_kN": 49.91107129734155,
+        "max_abs_moment_component_at_global_origin_kNm": 5.246589711343404,
+        "mean_Fz_kN": -49.90115032563598,
+        "min_Fz_kN": -49.91107129734155,
+        "peak_force_time_s": 475.6,
+        "upper_gage": 3
+      },
+      {
+        "count": 12001,
+        "lower_gage": 3,
+        "max_Fz_kN": -49.89054501150895,
+        "max_abs_force_component_kN": 49.91134847349895,
+        "max_abs_moment_component_at_global_origin_kNm": 5.193987685517641,
+        "mean_Fz_kN": -49.90127922113452,
+        "min_Fz_kN": -49.91134847349895,
+        "peak_force_time_s": 519.45,
+        "upper_gage": 4
+      },
+      {
+        "count": 12001,
+        "lower_gage": 4,
+        "max_Fz_kN": -49.88969630529391,
+        "max_abs_force_component_kN": 49.91114526366073,
+        "max_abs_moment_component_at_global_origin_kNm": 4.992409232916543,
+        "mean_Fz_kN": -49.901582554180536,
+        "min_Fz_kN": -49.91114526366073,
+        "peak_force_time_s": 165.9,
+        "upper_gage": 5
+      },
+      {
+        "count": 12001,
+        "lower_gage": 5,
+        "max_Fz_kN": -99.78840513366595,
+        "max_abs_force_component_kN": 99.8161543407441,
+        "max_abs_moment_component_at_global_origin_kNm": 5.0515222003741655,
+        "mean_Fz_kN": -99.80399186813023,
+        "min_Fz_kN": -99.8161543407441,
+        "peak_force_time_s": 432.85,
+        "upper_gage": 6
+      },
+      {
+        "count": 12001,
+        "lower_gage": 6,
+        "max_Fz_kN": -49.89055559908593,
+        "max_abs_force_component_kN": 49.91247397013285,
+        "max_abs_moment_component_at_global_origin_kNm": 5.289719297667034,
+        "mean_Fz_kN": -49.902164277175224,
+        "min_Fz_kN": -49.91247397013285,
+        "peak_force_time_s": 391.45,
+        "upper_gage": 7
+      },
+      {
+        "count": 12001,
+        "lower_gage": 7,
+        "max_Fz_kN": -49.891014013301174,
+        "max_abs_force_component_kN": 49.91214582188695,
+        "max_abs_moment_component_at_global_origin_kNm": 5.045037184492685,
+        "mean_Fz_kN": -49.902170324624166,
+        "min_Fz_kN": -49.91214582188695,
+        "peak_force_time_s": 622.5,
+        "upper_gage": 8
+      },
+      {
+        "count": 12001,
+        "lower_gage": 8,
+        "max_Fz_kN": -74.8415511194653,
+        "max_abs_force_component_kN": 74.86561154070296,
+        "max_abs_moment_component_at_global_origin_kNm": 5.306955978332553,
+        "mean_Fz_kN": -74.85324666508872,
+        "min_Fz_kN": -74.86561154070296,
+        "peak_force_time_s": 424.90000000000003,
+        "upper_gage": 9
+      }
+    ],
+    "adjacent_cut_gap_count": 96008,
+    "adjacent_cut_t400_t700_snapshots": [
+      {
+        "delta_force_global_kN": [
+          -0.0010042785603445736,
+          0.00015766524153715267,
+          -49.89888266016351
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.07145812464113988,
+          -1.3440853044594405,
+          -0.033685206631162146
+        ],
+        "lower_gage": 1,
+        "sample_index": 6000,
+        "time_s": 400.0,
+        "upper_gage": 2
+      },
+      {
+        "delta_force_global_kN": [
+          0.0011400177932046063,
+          -0.002037908181754533,
+          -74.85457378127103
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.28843043551023584,
+          0.21980352100217715,
+          -0.056855942021684314
+        ],
+        "lower_gage": 8,
+        "sample_index": 6000,
+        "time_s": 400.0,
+        "upper_gage": 9
+      },
+      {
+        "delta_force_global_kN": [
+          -0.0038739918843475607,
+          -0.0006540597438799978,
+          -49.89922221277084
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.20680179879491334,
+          -0.03770945925498381,
+          0.0530882484661106
+        ],
+        "lower_gage": 1,
+        "sample_index": 12000,
+        "time_s": 700.0,
+        "upper_gage": 2
+      },
+      {
+        "delta_force_global_kN": [
+          -0.020934126123165697,
+          -0.004956452902561637,
+          -74.85823876460563
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.08440408861679316,
+          1.4159645328181796,
+          -0.6001731963774546
+        ],
+        "lower_gage": 8,
+        "sample_index": 12000,
+        "time_s": 700.0,
+        "upper_gage": 9
+      }
+    ],
     "first_sample": [
       {
         "RP_deg": [
@@ -291,6 +562,7 @@
     "max_R_orthogonality_abs": 5.551115123125783e-16,
     "max_base_moment_change_from_untransported_local_kNm": 6090.947149304149,
     "max_force_component_change_from_identity_kN": 5.277481016449656,
+    "max_independent_gap_transport_difference_kNm": 5.711986439393968e-11,
     "max_inverse_force_error_kN": 1.4551915228366852e-11
   },
   "assumptions": [
@@ -298,11 +570,14 @@
     "ElastoDyn small-angle tower formulation valid for this source",
     "RP source angular components inverted only under fixed-base condition"
   ],
+  "cut_gap_interpretation": "lower-minus-upper internal section resultants at global origin; NOT external aerodynamic force or free-body residual",
   "error_budget": {
+    "adjacent_cut_independent_transport_error_kNm": 5.711986439393968e-11,
     "dynamic_load_ownership": "UNVERIFIED",
     "numerical_inverse_force_kN": 1.4551915228366852e-11,
     "orthogonality_abs": 5.551115123125783e-16,
-    "packed_OUTB_quantization": "channel scale/offset finite, precision limited by int16 packing; physical uncertainty NEED_ESTIMATE"
+    "packed_OUTB_quantization": "channel scale/offset finite, precision limited by int16 packing; physical uncertainty NEED_ESTIMATE",
+    "segment_gravity_inertia_distributed_load_residual": "NOT_COMPUTABLE: original distributed force, segment mass/inertia and sectional sign contract not yet closed"
   },
   "stage": "S07_CONDITIONAL_FIXED_BASE_DCM_ALGORITHM_TESTED_NOT_PHYSICS_PASS"
 }
