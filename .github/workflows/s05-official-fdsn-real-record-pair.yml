@@ -1,0 +1,94 @@
+name: S05 real official Ridgecrest station pair -> repository source/QC (NOT Jiayu PASS)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/s05-official-fdsn-real-record-pair.yml'
+      - 'research/wind-tower/experiments/T079/s05_official_fdsn_pair_recovery.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  official-real-ground-motion-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install ObsPy to decode true official miniSEED and StationXML
+        run: python -m pip install 'obspy>=1.4,<2' 'requests>=2.28,<3'
+      - name: Fetch two source scripts from exact Draft PR HEAD, without large checkout
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p s05-scripts
+          sha="$(gh api "repos/$GH_REPO/pulls/42" --jq .head.sha)"
+          root="https://raw.githubusercontent.com/$GH_REPO/$sha/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 --output s05-scripts/s05_official_fdsn_pair_recovery.py "$root/s05_official_fdsn_pair_recovery.py"
+          curl -fLsS --retry 3 --output s05-scripts/s05_ground_motion_pair_qc.py "$root/s05_ground_motion_pair_qc.py"
+          python -m py_compile s05-scripts/*.py
+          python s05-scripts/s05_ground_motion_pair_qc.py --self-test
+          sha256sum s05-scripts/*.py
+      - name: Retrieve real same-station accelerations, official miniSEED, StationXML and compute spectra
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u s05-scripts/s05_official_fdsn_pair_recovery.py --output-dir "$RUNNER_TEMP/s05_real_pair"
+      - name: Retain unmodified source bytes and failure log in CI backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-official-Ridgecrest-real-accelerogram-pair-and-qc
+          path: ${{ runner.temp }}/s05_real_pair/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit original miniSEED, official StationXML, acceleration CSV and QC into PR branch
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,hashlib,json,os,pathlib,subprocess,time
+          source=pathlib.Path(os.environ["RUNNER_TEMP"])/"s05_real_pair"
+          if not source.exists():raise RuntimeError("No source or failure receipt from the official service")
+          branch="research/t080-seismic-integration-gates-20261022"
+          prefix="research/wind-tower/experiments/T079/real-records/USGS_ci38457511"
+          repo=os.environ["GH_REPO"]
+          original=(source/"source_receipt.json").exists()
+          if not original:
+              assert (source/"recovery_failures.json").exists()
+          for file in sorted(source.rglob("*")):
+              if not file.is_file():continue
+              relative=file.relative_to(source).as_posix()
+              path=f"{prefix}/{relative}"
+              data=file.read_bytes()
+              blob_sha=hashlib.sha1(b"blob "+str(len(data)).encode()+bytes([0])+data).hexdigest()
+              message="research(S05): store OFFICIAL REAL earthquake input source "+relative
+              for k in range(12):
+                  res=subprocess.run(["gh","api","--method","GET",f"repos/{repo}/contents/{path}","-f",f"ref={branch}"],capture_output=True,text=True)
+                  if res.returncode==0:
+                      d=json.loads(res.stdout)
+                      if d["sha"]==blob_sha:
+                          print("REAL_REPO_FILE_ALREADY_VERIFIED",relative,len(data),hashlib.sha256(data).hexdigest(),flush=True)
+                          break
+                      raise RuntimeError("Existing different input at "+path+"; do not overwrite")
+                  payload={"message":message,"branch":branch,"content":base64.b64encode(data).decode()}
+                  up=subprocess.run(["gh","api","--method","PUT",f"repos/{repo}/contents/{path}","--input","-"],input=json.dumps(payload),capture_output=True,text=True)
+                  if up.returncode==0:
+                      print("REAL_REPO_FILE_COMMITTED",relative,len(data),hashlib.sha256(data).hexdigest(),json.loads(up.stdout)["commit"]["sha"],flush=True)
+                      break
+                  if "409" in up.stderr:
+                      print("GIT_BRANCH_RACE_RETRY",relative,k+1,flush=True)
+                      time.sleep(2)
+                      continue
+                  raise RuntimeError("Upload error "+path+": "+up.stderr[:400])
+              else:raise RuntimeError("GitHub concurrent branch updates blocked "+path)
+          print("OFFICIAL_PAIR_REPO_PERSISTED",original,"real recorded FDSN, NOT PEER RSN, NOT JIAYU")
+          if not original: raise RuntimeError("OFFICIAL_DATA_MISSING: failure receipt persisted; S05 HOLD")
+          PY
