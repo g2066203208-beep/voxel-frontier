@@ -78,6 +78,56 @@ def validate_card(card):
     return card
 
 
+# Source-locked whitelist: this is only the frozen T057 diagnostic R335 branch.
+# Other D400/D500/Pe child inputs require a new independently reviewed source map.
+FROZEN_T057_SHA = 'c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db'
+SOURCE_MAP_SHA = '502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd'
+SOURCE_GROUP_CLASS = {
+    'concrete': 'concrete', 'longitudinal_rebar': 'ordinary_rebar',
+    'PT': 'prestressing_strand', 'steel_tower': 'structural_steel',
+    'hoops_and_ties': 'ordinary_rebar'
+}
+SOURCE_FIELDS = ('source_part', 'source_group', 'native_instance_from_INP',
+                 'native_elset_from_INP', 'section_material_from_INP',
+                 'height_candidate_element_label', 'native_integration_point',
+                 'native_stress_basis')
+
+
+def validate_source_binding(card, raw, expected_sha=SOURCE_MAP_SHA,
+                            expected_inp_sha=FROZEN_T057_SHA, expected_rows=68):
+    """Fail closed on model identity; source HEIGHT candidates are NOT stress hotspots."""
+    validate_card(card)
+    insist(sha_bytes(raw) == expected_sha, 'S10_SOURCE_MAP_SHA256_MISMATCH')
+    rows = list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig'))))
+    insist(len(rows) == expected_rows, 'S10_SOURCE_MAP_ROW_COUNT_MISMATCH')
+    insist(rows and all(k in rows[0] for k in SOURCE_FIELDS),
+           'S10_SOURCE_MAP_COLUMNS_MISSING')
+    insist(len(set(r['source_part'] for r in rows)) == len(rows),
+           'S10_SOURCE_MAP_DUPLICATE_PART')
+    insist(card['inp_sha256'] == expected_inp_sha,
+           'S10_SOURCE_MAP_WRONG_INP_BRANCH')
+    matches = [r for r in rows if r['native_instance_from_INP'].upper() ==
+               card['instance'].upper()]
+    insist(len(matches) == 1, 'S10_SOURCE_INSTANCE_NOT_UNIQUE')
+    row = matches[0]
+    insist(row['source_group'] in SOURCE_GROUP_CLASS, 'S10_SOURCE_GROUP_UNKNOWN')
+    insist(card['material_class'] == SOURCE_GROUP_CLASS[row['source_group']],
+           'S10_MATERIAL_CLASS_NOT_FROM_INP')
+    insist(card['material_id'] == row['section_material_from_INP'],
+           'S10_MATERIAL_ID_NOT_FROM_INP')
+    insist(card['element_set'].upper() == row['native_elset_from_INP'].upper(),
+           'S10_ELEMENT_SET_NOT_FROM_INP')
+    insist(row['height_candidate_element_label'].strip(),
+           'S10_NO_REVIEWED_SOURCE_ELEMENT_CANDIDATE')
+    insist(card['element_label'] == int(row['height_candidate_element_label']),
+           'S10_ELEMENT_LABEL_NOT_IN_HEIGHT_CANDIDATE')
+    insist(not row['native_integration_point'] and not row['native_stress_basis'],
+           'S10_SOURCE_MAP_MUST_NOT_CERTIFY_ODB_IP_OR_BASIS')
+    # A source-level element label does NOT prove ODB integration-point existence,
+    # material stress criterion, initial PT state, or the governing fatigue hotspot.
+    return row
+
+
 def scalar_s11(v):
     d = v.data
     if isinstance(d, (int, float)):
@@ -138,7 +188,7 @@ def csv_bytes(times, stresses):
     return out.getvalue().encode('utf-8')
 
 
-def self_test():
+def self_test(source_map=None):
     class Obj:
         def __init__(self, **kwargs): self.__dict__.update(kwargs)
     def mock(times=(0, 0.1, 0.2), values=(1e6, 3e6, 1e6), duplicate=False):
@@ -183,14 +233,62 @@ def self_test():
         try: extract(odb, meta)
         except ValueError: pass
         else: raise AssertionError('negative test accepted: %d' % i)
+
+    # Independent synthetic source-identity whitelist: no ODB needed.
+    headers = list(SOURCE_FIELDS)
+    synthetic = io.StringIO(newline='')
+    writer = csv.DictWriter(synthetic, fieldnames=headers, lineterminator='\\n')
+    writer.writeheader()
+    writer.writerow(dict(source_part='CSEG_01', source_group='concrete',
+                         native_instance_from_INP='CSEG_01-1',
+                         native_elset_from_INP='SET_ALL',
+                         section_material_from_INP='C70',
+                         height_candidate_element_label='3',
+                         native_integration_point='', native_stress_basis=''))
+    source_raw = synthetic.getvalue().encode()
+    scard = dict(card, inp_sha256='d'*64, instance='CSEG_01-1',
+                 element_set='SET_ALL', element_label=3, material_class='concrete',
+                 material_id='C70', stress_basis='ODB_GLOBAL_S11')
+    validate_source_binding(scard, source_raw, sha_bytes(source_raw), 'd'*64, 1)
+    source_negatives = [
+        (dict(scard, material_id='HRB500_BASELINE'), source_raw, sha_bytes(source_raw)),
+        (dict(scard, material_class='ordinary_rebar'), source_raw, sha_bytes(source_raw)),
+        (dict(scard, element_set='WRONG'), source_raw, sha_bytes(source_raw)),
+        (dict(scard, element_label=4), source_raw, sha_bytes(source_raw)),
+        (dict(scard, instance='CSEG_02-1'), source_raw, sha_bytes(source_raw)),
+        (dict(scard, inp_sha256='e'*64), source_raw, sha_bytes(source_raw)),
+        (scard, source_raw+b'\\n', sha_bytes(source_raw)),
+    ]
+    for i, (meta, data, digest) in enumerate(source_negatives):
+        try: validate_source_binding(meta, data, digest, 'd'*64, 1)
+        except ValueError: pass
+        else: raise AssertionError('source binding negative accepted: %d' % i)
+    real_tests = 0
+    if source_map is not None:
+        raw = Path(source_map).read_bytes()
+        real = dict(card, inp_sha256=FROZEN_T057_SHA, instance='CSEG_01-1',
+                    element_set='SET_ALL', element_label=3, material_class='concrete',
+                    material_id='C70', stress_basis='ODB_GLOBAL_S11')
+        validate_source_binding(real, raw)
+        real_tests += 1
+        for changed in (dict(real, material_id='HRB500_BASELINE'),
+                        dict(real, element_label=4),
+                        dict(real, instance='SSEG_01-1', element_label=1,
+                             material_id='Q345_T057', material_class='structural_steel')):
+            try: validate_source_binding(changed, raw)
+            except ValueError: real_tests += 1
+            else: raise AssertionError('real map wrong identity accepted')
     return {'status':'PASS_MOCK_ONLY', 'positive_tests':1,
-            'negative_tests':len(cases), 'synthetic_csv_sha256':sha_bytes(raw),
+            'negative_tests':len(cases), 'source_binding_negative_tests':len(source_negatives),
+            'source_binding_real_map_tests':real_tests,
+            'synthetic_csv_sha256':sha_bytes(raw),
             'native_odb_runs':0, 'physical_pass':False}
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test', action='store_true')
+    ap.add_argument('--source-map', type=Path)
     ap.add_argument('--run-card', type=Path)
     ap.add_argument('--inp', type=Path)
     ap.add_argument('--odb', type=Path)
@@ -198,15 +296,17 @@ def main():
     ap.add_argument('--out-dir', type=Path)
     args = ap.parse_args()
     if args.self_test:
-        print(json.dumps(self_test(), sort_keys=True))
+        print(json.dumps(self_test(args.source_map), sort_keys=True))
         return
-    if not all((args.run_card, args.inp, args.odb, args.logs_dir, args.out_dir)):
-        ap.error('require --run-card --inp --odb --logs-dir --out-dir or --self-test')
+    if not all((args.run_card, args.inp, args.odb, args.logs_dir, args.out_dir, args.source_map)):
+        ap.error('require --run-card --inp --odb --logs-dir --out-dir --source-map or --self-test')
     insist(not args.out_dir.exists(), 'REFUSE_OVERWRITE_OUTPUT')
     card_raw = args.run_card.read_bytes()
     card = validate_card(json.loads(card_raw.decode('utf-8')))
     insist(sha_file(args.inp) == card['inp_sha256'], 'INP_SHA256_MISMATCH')
     insist(sha_file(args.odb) == card['odb_sha256'], 'ODB_SHA256_MISMATCH')
+    source_map_raw = args.source_map.read_bytes()
+    validate_source_binding(card, source_map_raw)
     for suffix, expected in card['native_log_sha256'].items():
         path = args.logs_dir / (args.odb.stem + '.' + suffix)
         insist(path.is_file() and sha_file(path) == expected,
@@ -227,6 +327,8 @@ def main():
         'initial_state': 'NEED_INDEPENDENT_NATIVE_REVIEW',
         'source_sha256': sha_bytes(raw),
         'run_card_sha256': sha_bytes(card_raw),
+        'source_map_sha256': sha_bytes(source_map_raw),
+        'source_map_status': 'T057_HEIGHT_ONLY_WHITELIST_NOT_HOTSPOT_OR_IP',
         'run_id': card['run_id'], 'step': card['step'],
         'instance': card['instance'], 'element_set': card['element_set'],
         'element_label': card['element_label'],

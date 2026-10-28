@@ -398,3 +398,9 @@
 - RUN：[Actions #40682979101](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40682979101) `completed/success`，job `122798117888`；`S10 frozen T057 actual 68-Part/Instance/Elset mapping (NO ODB)` 为success；真实checkout原件SHA256=`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`。合成选点2项拒绝测试（空单元组、无效节点）均正确拒绝。非Abaqus。
 - TAB：68行CSV SHA256=`502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd`，逐字节复算一致；62个高度近邻候选、最大元素中心与风测点高度差`0.070048 m`；0个原生ODB积分点、0次原生RUN。这一差距为静态几何选点距离，不是物理应力误差预算。
 - REF/STANDARD/OFFICIAL：本轮只读冻结原始模型，未读取新期刊全文/授权规范条文，FIG无真实云图。最大HOLD=未经初始PT/重力/接触及网格V&V核验的原生ODB局部材料应力；下一单一动作=把本轮真实实例/元素集/元素候选作为现有ODB提取接口允许列表并开展身份错误拒绝测试。12阶段仍0/12，S10准备就绪但物理HOLD。
+
+### 2026-10-28｜S10冻结T057源身份白名单接入ODB提取接口（待CI远端复核）
+
+- SOURCE/TAB：复用已在Actions #40682979101源字节复算的68行T057 INP元数据清单，源CSV SHA256=`502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd`；冻结T057 INP SHA256=`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`。未生成新的T080文件或改动母本。
+- RUN（代码门禁，待远端日志）：更新既有`s10_native_odb_local_stress_gate.py`，对ODB只读提取前的RUN卡进行**SHA锁定INP支路+68行实例/元素集/赋材/材料类/高度近邻候选标签**交叉校验，错误材料（含未实际赋用的HRB500_BASELINE）、错误单元、错误实例/支路/集合、无候选钢塔/PT等均拒绝；新合成负例7项、真实源CSV身份用例4项已接入既有S10 CI，尚不得称远端PASS。未来D400/Pe子版必须提供独立核验映射，禁止借用T057清单。
+- REF/STANDARD/OFFICIAL/FIG：本轮仅直接读取冻结T057源模型与已核验CSV，无新期刊全文、授权规范原页、原生Abaqus日志或响应图。当前白名单只证明静态**源级身份**；62个高度近邻单元不能替代周向热点、原生积分点、真实初态和S–N参数。物理误差预算仍NEED_ESTIMATE，S10=SOURCE_WHITELIST_PREPARED/PHYSICS_HOLD；12阶段0/12，地震与材料寿命生产RUN=0。
