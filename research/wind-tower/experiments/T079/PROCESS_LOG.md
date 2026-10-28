@@ -87,3 +87,10 @@
 
 
 **2026-10-28 15:13 CST｜同轮继续：直接解析官方原始JSON，形成6条可复算处理波获取候选。** 先通过[原始API JSON artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648339562/artifacts/12798427921)检查`results.events[].stations[].record`真实结构，再把过滤算法加入原有[CESMD脚本](s05_cesmd_processed_metadata.py)，[CI #40648635414](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648635414)实测两事件、测试均成功。明确**仅为下载候选过滤**：Ground、官方processed=true、至少3通道（**不证明双水平**）、Vs30/PGA/Sa1/Sa3均为有限正数、震中距≤100km；按已处理PGA降序排队，不用PGA选择正式设计波。2019共3条：CE.33083 (PGA0.065g/Sa3=0.015g/85.1km)、CE.43158 (0.064/0.046/60.9km)、CE.34093 (0.047/0.013/93.7km)；2020共3条：CE.44015 (0.193/0.008/18.7km)、CE.43158 (0.176/0.004/24.3km)、CE.43080 (0.019/0.001/81.7km)。详细`Vs30`、`Sa1`、CESMD场地类别、台站及输入JSON SHA见[永久数值收据](real-records/CESMD_processed_availability_receipt_20261028.json)；**CESMD D/C不等于中国规范II类**。最新原始JSON artifact [#12798865576](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648635414/artifacts/12798865576)，ZIP SHA256 `24b6bca65adc6f2a35c0f9682582dedadfe6ff451fd834376ad29d25f0e9ef41`；脚本SHA256 `fbe00e5a841fde78269a1e66d6f6a1283b736ca6b4c6d2629558497f5efa98e1`。**RUN只为官方元数据下载/解析**，地震设计波=0，S05 HOLD不变。下一单一动作：取得CI39493944/CE.44015等一组已处理V2双水平原件与滤波角频率，复核5%阻尼长周期谱；没有授权下载资格时不得绕过CESMD注册。
+
+
+### 2026-10-29｜S05/S09原文方程与可复算测试
+- SOURCE/REF：Ishihara et al. 2024 DOI 10.1016/j.istruc.2024.105886，作者PDF物理p3–4/p6/p9/p12/p16原页图+文本核对；登记PDF SHA256=3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238（本轮未重新取得PDF原字节）。
+- RUN：Python 3.13.5 \`python s09_ishihara2024_equation_oracle.py --self-test\` 本地真实执行PASS_SYNTHETIC_ONLY，Eq1–6，7项负例，脚本SHA256=ada2813420e2d6ec77d633e3f8663f9b1843cfc91c8c32aa18062774e9feb280；Git blob=b4367cfd683f720409834b9bf0f5b72098046d10。输出Table5 FA二阶偏差+10.695587%；Eq1 T6=0.8533333333m/s²，仅原文日本JSCE基岩谱。
+- STANDARD/OFFICIAL/FIG/TAB：无新增2025 IEC/GB/NB授权条款；官方原刊作者PDF原页可见；FIG原刊Fig7/8、Fig18–25，非本塔；TAB原刊Table5/6/9。所有公式适用边界、假设、数值/物理误差见[literature_notes](literature_notes.md)2026-10-29节。
+- FAIL/HOLD：7个坏输入均按预期拒绝；无非预期失败。未有本塔原生Abaqus、目标谱/低频合格波、W/E/WE、材料疲劳寿命或规范PASS。12阶段0/12；未修改冻结T057/T070，未启动生产RUN。
