@@ -5,6 +5,7 @@ on:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv'
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json'
@@ -216,11 +217,15 @@ jobs:
         if: success()
         shell: bash
         run: |
+          curl -fLsS --retry 3 -o esm-public-processed/committed_lowfreq_qc.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv"
           python3 - <<'PY'
-          import json,math
+          import csv,json,math
           p='esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_receipt.json'
           j=json.load(open(p,encoding='utf-8'))
           q=j['processed_pair_low_frequency_diagnostic']
+          with open('esm-public-processed/committed_lowfreq_qc.csv',newline='') as f:
+              committed={(r['component'],float(r['period_s'])):r for r in csv.DictReader(f)}
+          assert len(committed)==8
           assert not q['S05_PASS'] and not q['instrument_SNR_verified']
           assert set(q['components'])=={'HNE','HNN'}
           for name,c in sorted(q['components'].items()):
@@ -233,6 +238,13 @@ jobs:
               for row in c['periods']:
                   assert all(math.isfinite(v) for k,v in row.items() if isinstance(v,float))
                   print('REAL_ESM_LONG_PERIOD_NUMERICAL_QC',name,row)
+                  old=committed[(name,row['T_s'])]
+                  assert old['numeric_source_SHA256']==c['source_numeric_sha256']
+                  assert math.isclose(float(old['pseudoSa_dt_m_s2']),row['Sa_dt_m_s2'],rel_tol=1e-9)
+                  assert old['original_ESM_filter_pass_count_verified']=='False'
+                  g=float(old['ideal_single_pass_gain_CONDITIONAL'])
+                  assert math.isclose(float(old['ideal_two_pass_gain_CONDITIONAL']),g*g,rel_tol=1e-12)
+                  assert math.isclose(float(old['ideal_two_pass_attenuation_pct_CONDITIONAL']),100*(1-g*g),rel_tol=1e-12)
               extra=c['extra_highpass_sensitivity_NOT_ORIGINAL_ESM_FILTER']
               assert len(extra)==8
               for item in extra:
