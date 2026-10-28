@@ -1,9 +1,5 @@
 name: S05 CI.CLC REAL ground motion baseline/drift/QC sensitivity (NOT site PASS)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/s05-real-pair-baseline-sensitivity.yml'
-      - 'research/wind-tower/experiments/T079/s05_real_pair_baseline_sensitivity.py'
   workflow_dispatch:
 permissions:
   contents: write
