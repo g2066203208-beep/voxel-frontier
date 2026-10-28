@@ -437,3 +437,10 @@ HOLD：
 
 
 - **最终CI/源码哈希回读：** [Actions #40713471207](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40713471207) `completed/success`，job `122904701840`。候选卡程序SHA256=`9b0676f955724f13cc488d7a9de00985862c5c2dee905e9ca1ce91a12338692c`；ODB接口SHA256=`6cf130afb7f13b9b2e6a8aaa43fdc546beca111a9551a60a6c65827fdd7193b2`。CI非原生物理PASS，12阶段仍0/12。
+
+## 2026-10-28｜Ch3首批真实风载筛选图：三张SVG + 124行Origin可导入数据（仍0/12）
+
+- **SOURCE/TAB**：从T077 S06的四工况×31测点×六分量744行真实恢复统计CSV（SHA256 `9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`），无插值，制作[124行图表数据](figures/FIG3_S06_PLOT_POINTS_124.csv)及[完整出图来源说明](figures/README_S06_REAL_SCREENING_FIGURES_20261028.md)。
+- **FIG/RUN**：新增[My沿塔高m4-DEL](figures/FIG3_S06_01_MY_M4_HEIGHT_SCREEN.svg)、[塔底三向弯矩m4-DEL](figures/FIG3_S06_02_BASE_MOMENTS_M4_SCREEN.svg)、[My分半窗RMS差异](figures/FIG3_S06_03_MY_HALF_WINDOW_RMS_SCREEN.svg)。[Node可复算生成器](figures/plot_ch3_s06_etm_screening.js)严格检查744源行、12001点、0.05s、600s、31站×4工况，具有输出字节一致性检查；不执行Abaqus/OpenFAST或Origin。
+- **REF/STANDARD/OFFICIAL与边界**：只引用已恢复历史OpenFAST/T071/T072工况与原记录，本轮未新读授权IEC/GB/NB条文、未增加期刊全文、未生成原生物理云图。图中ETM代表历史载荷筛选，不是DLC1.2长期材料疲劳寿命；20%只为描述性RMS对照指导线而非规范验收限。SVG坐标舍入0.01像素，模型物理误差仍未估计。OUTB原始来源身份、S03/S04差异、EI/RNA及自由体所有权继续HOLD。
+- **阶段**：S06/S07独立图表准备有新增成果，S10/S11主线不变；正式**0/12未晋级**，地震和材料疲劳Abaqus RUN均0；冻结T057/T070不改、PR #42继续Draft。

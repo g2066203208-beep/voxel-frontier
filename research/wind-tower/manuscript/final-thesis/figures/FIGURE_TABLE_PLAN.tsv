@@ -29,3 +29,6 @@ FIG4-8	Ch4	钢塔nominal/hot-spot fatigue	G7 conditional	CONDITIONAL	需网格/�
 FIG4-9	Ch4	load-DEL control vs material-damage control	G4+G7	NEED-RUN	结果触发，不预设差异
 TAB4-1	Ch4	材料/位置/wind-bin/annual damage总表	G7	NEED-RUN	绝对寿命仅在证据闭合后
 TAB5-1	Ch5	主要结论-证据-边界对应表	G8	NEED-RUN	只收录PASS结果
+FIG3-S06-01	Ch3	My load-DEL along 31-gage concrete tower for four ETM screening cases	S06 744-row real-source summary, 124 plotted points	SOURCE_PLOTTED_SCREEN_ONLY	SVG + editable CSV exist; not validated DLC1.2 or material damage
+FIG3-S06-02	Ch3	Base CSEG01 Mx/My/Mz load-DEL in four archived cases	S06 744-row real-source summary	SOURCE_PLOTTED_SCREEN_ONLY	Three independent axes; not material stress
+FIG3-S06-03	Ch3	My 300s/300s half-window RMS contrast at 31 stations	S06 744-row real-source summary	SOURCE_PLOTTED_SCREEN_ONLY	20pct visual guide not an IEC clause/stationarity proof
