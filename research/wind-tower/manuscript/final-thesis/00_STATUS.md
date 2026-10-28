@@ -453,3 +453,9 @@ HOLD：
 - **SOURCE/REF：** DOI 10.1016/j.istruc.2024.105886，作者PDF历史登记SHA256=\`3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238\`（本轮未重哈希）。**RUN：** Python3.13.5本地脚本SHA256=\`ada2813420e2d6ec77d633e3f8663f9b1843cfc91c8c32aa18062774e9feb280\`，Eq1–6解析及7项负向测试PASS；原刊Table5 FA二阶SLM/AEM偏差**+10.695587%**、日本JSCE基岩目标谱T6=**0.8533333333m/s²**，**均非本塔实测/规范参数**。
 - **STANDARD/OFFICIAL/FIG/TAB：** 未核新授权2025 IEC/GB/NB；OFFICIAL=作者PDF原页；FIG仅原文图，无本塔响应图；TAB=原文Table5/6/9及本轮独立算术。**误差/HOLD：** 原式浮点/原表舍入可核，本塔物理误差NEED-ESTIMATE；未有本塔同状态W/E/WE原生计算、可验场址目标谱、可靠低频真实记录、S01–S04物理PASS。Eq5向量峰值近似/Eq6 SRSS不得冒充同步W+E求解。S10材料疲劳、S11优化主线保持。
 - **下一唯一可独立动作：** 以已归档真实双水平地震记录为输入，制定并实测**长周期可靠频带与目标谱误差的失败关闭QC**，明确哪些记录不能作为S08输入；不等待S01才做研究准备，也不启动昂贵RUN。
+
+
+## 2026-10-29 01时｜S05两事件四双水平对长周期谱拒绝门（0/12未晋级）
+- [16行真实来源派生数值CSV](../../experiments/T079/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv)及[可执行源身份/目标谱门禁](../../experiments/T079/s05_ground_motion_pair_qc.py)已按两份既有SHA锁定报告计算：2019 Ridgecrest CI.CLC/PASC/RVR三对（同一事件）与2020 Lone Pine CI.CLC一对，共**2独立事件/4双水平对/16行T=4/6/8/10s**。原始CSV SHA256、两个输入报告Git blob及处理假设见[T079过程日志](../../experiments/T079/PROCESS_LOG.md)。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** SOURCE为既有真实记录及派生谱（本轮未重新下载原始miniSEED）；REF沿用已登记原页，未新阅读；STANDARD没有新授权2025 IEC/GB/NB条款或场址目标谱；OFFICIAL仅既有USGS/SCEDC收据且PASC/RVR缺原始台站响应；RUN仅二次谱组合/程序测试、非Abaqus；FIG无新物理响应；TAB为16行双水平几何均值谱与处理敏感性。目标谱log误差保持UNDEFINED而非填0；原始记录拒绝直接生产、pre20仅HOLD，低频可靠性与物理误差NEED_ESTIMATE。
+- **阶段：** 0/12整阶段PASS未晋级；S05独立准备升级为`TWO_EVENT_FOUR_PAIR_LONG_PERIOD_SOURCE_GATE_READY/PHYSICS_HOLD`，S08/S09仍无地震原生RUN，S10风致材料疲劳及S11优化不变。下一唯一动作：取得官方**已处理且可核低频截止/处理历史**的双水平原件并绑定来源目标谱，执行本门禁。
