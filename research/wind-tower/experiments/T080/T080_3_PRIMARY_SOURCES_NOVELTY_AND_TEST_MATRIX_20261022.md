@@ -52,3 +52,14 @@
 **本轮实际完成：**官方IEC产品页面确认2025年修订版真实存在、GB55002实施依据核验、Abaqus相对/绝对输出语义核查、2026直接同题先行论文核实、公开石世刚原刊表1–5数据核读；搭建相互关联的标准/先行成果/可证伪假说矩阵。**本轮未完成：**各标准完整条款、全文逐页阅读、原始地震选波、真实算例。阶段状态：**NEED-SOURCE + METHOD-DESIGN/CONDITIONAL；不是PASS。**
 
 **下轮第一优先动作：**将已登记T079.1/T080.2的HRB335/HRB500与PT名义/有效力分支决定冻结为唯一试验物理基线，然后准备原生Abaqus G0/G1 RUN卡；并行补齐PRE-01原刊全文与IEC1/6的实际条款对应表。**禁止未经审核直接覆盖T057母本。**
+
+
+## 2026-10-28｜地震期刊来源可获取性复核（只核来源入口，未精读全文）
+
+- **SOURCE / REF / 阅读层级**：出版社原页重核 PRE-01 [DOI 10.1080/13632469.2026.2671807](https://doi.org/10.1080/13632469.2026.2671807)：2026-05-16 online，160m混塔，ABAQUS，Davenport三种风速，三条PEER记录，联合风震，仍属**出版社摘要+元数据**，没有逐页全文/原始Zenodo数据核读；保持PRE-01重复创新风险。
+- **PRE-02** [DOI 10.1016/j.rcns.2026.03.002](https://doi.org/10.1016/j.rcns.2026.03.002)：出版社ScienceDirect页面明确标示**Open access / Creative Commons**，期刊[2026年5卷2期目录](https://journal.hep.com.cn/rcs/EN/2026/5/2)有**Download PDF**入口；本轮只是重新验证公开可获取性，**未下载原件、未逐页审读、PDF SHA256=NOT_CAPTURED**，不能把Open Access误报为全文审计完成。
+- **PRE-03** [DOI 10.1016/j.istruc.2024.105886](https://doi.org/10.1016/j.istruc.2024.105886)：本轮找到东京大学作者公开[PDF入口](https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1.pdf)，搜索索引显示题名、作者、期刊、60卷105886与出版社吻合；**未逐页审阅/未核原件SHA256**。后续优先逐页提取耦合/非耦合方程、运行/停机/紧急停机设置、震风方向、验证图表。
+- **PRE-05** [DOI 10.1016/j.soildyn.2020.106483](https://doi.org/10.1016/j.soildyn.2020.106483)：布里斯托大学[机构记录](https://research-information.bris.ac.uk/en/publications/seismic-assessment-of-wind-turbines-how-crucial-is-rotor-nacelle-/)明确提供**作者接受稿Full-text PDF（2.66MB，CC BY-NC-ND）**；这属于作者接受稿而非出版社排版版，**未下载/逐页审阅/计算PDF SHA**。下一步提取RNA质量、偏心、惯性、柔性对照方法与地震记录来源。
+- **PRE-07 / 扩充对应已有T079核心文献**：Cao等 (2020), *Advances in Structural Engineering* 23(8):1715–1727, [DOI 10.1177/1369433219900295](https://doi.org/10.1177/1369433219900295)，SAGE出版社原页确认为**Restricted access**；摘要说明预应力分段塔干接缝梁柱模型、实体变形和现场模态对照、非线性时程与易损性；本轮为**原刊摘要+元数据**，不宣称接缝本构原式已知。
+- **PRE-08 / 扩充对应已有T079核心文献**：Huang等 (2023), *Journal of Earthquake Engineering* 27(10):2796–2817, [DOI 10.1080/13632469.2022.2121789](https://doi.org/10.1080/13632469.2022.2121789)，出版社原页确认模态/反应谱高阶效应、接缝开闭梁模型、远场/近断层时程；**摘要+元数据**，未精读全文。
+- **来源等级 / 禁止外推**：上面新增的是“公开原件路径可取得”的证据，**不是已完成方法提取、选波或S05/S08科学验收**；STANDARD=未新读IEC/GB/NB授权条款；OFFICIAL=期刊出版社和作者机构链接；RUN=无软件/地震RUN；FIG/TAB=无原创图表；输入PDF原件SHA256均NOT_CAPTURED；误差/适用域NEED_ESTIMATE。S05仍PARTIAL/HOLD、S08/S09 BLOCKED、12阶段0/12、地震结果0。
