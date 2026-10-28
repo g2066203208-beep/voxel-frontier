@@ -165,7 +165,7 @@ jobs:
           if gh release view "$TAG" --json assets --jq '.assets[].name' | grep -Fxq "$name"; then
             echo "PRIVATE_DRAFT_RELEASE_ASSET_ALREADY_EXISTS $name"
           else
-            gh release upload "$TAG" "$src" --display-label "2024 Ishihara 17-page research-only copyrighted PDF"
+            gh release upload "$TAG" "$src"
             echo "PRIVATE_DRAFT_RELEASE_ASSET_UPLOADED $name"
           fi
           gh release view "$TAG" --json url,isDraft,assets --jq '{url,isDraft,asset_count:(.assets|length)}'
