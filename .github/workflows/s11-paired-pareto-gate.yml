@@ -1,0 +1,28 @@
+name: S11 paired wind/seismic Pareto numerical QC (synthetic only)
+on:
+  push:
+    paths:
+      - '.github/workflows/s11-paired-pareto-gate.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s11_paired_wind_seismic_pareto_gate.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  paired-pareto-synthetic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch SHA-pinned S11 source without large checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s11_paired_wind_seismic_pareto_gate.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/s11_paired_wind_seismic_pareto_gate.py"
+      - name: Verify source SHA256 and run paired-front/negative tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'dab6e9e404514ce096056864b3323d4380c27cb1efdbe7fce3d8e2288173bbf6  s11_paired_wind_seismic_pareto_gate.py' | sha256sum --check
+          python3 -m py_compile s11_paired_wind_seismic_pareto_gate.py
+          python3 s11_paired_wind_seismic_pareto_gate.py --self-test
+          echo 'S11: SYNTHETIC PARETO ALGORITHM QC ONLY; NO NATIVE W/E/WE OR FATIGUE/OPTIMIZATION PASS.'
