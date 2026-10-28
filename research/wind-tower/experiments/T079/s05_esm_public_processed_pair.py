@@ -10,6 +10,7 @@ import argparse
 import datetime as dt
 import hashlib
 import io
+import math
 import json
 import pathlib
 import urllib.error
@@ -56,8 +57,43 @@ def inspect_zip(raw):
             if len(body) != member.file_size:
                 raise ValueError('ZIP_MEMBER_LENGTH')
             txt = body.decode('utf-8', errors='replace')
+            lines = txt.splitlines()
+            if len(lines) < 65:
+                raise ValueError('DYNA_64_LINE_HEADER_MISSING')
+            header = {}
+            for line in lines[:64]:
+                if ':' not in line:
+                    raise ValueError('DYNA_HEADER_LINE_NOT_KEY_VALUE')
+                key, value = line.split(':', 1)
+                key = key.strip()
+                if key in header:
+                    raise ValueError('DYNA_DUPLICATE_HEADER_KEY')
+                header[key] = value.strip()
+            required = ('EVENT_ID', 'STATION_CODE', 'STREAM', 'NDATA',
+                        'SAMPLING_INTERVAL_S', 'DURATION_S', 'UNITS',
+                        'LOW_CUT_FREQUENCY_HZ', 'HIGH_CUT_FREQUENCY_HZ',
+                        'FILTER_TYPE', 'PROCESSING', 'DATA_LICENSE')
+            if any(k not in header for k in required):
+                raise ValueError('DYNA_REQUIRED_HEADER_MISSING')
+            npts = int(header['NDATA'])
+            delta = float(header['SAMPLING_INTERVAL_S'])
+            duration = float(header['DURATION_S'])
+            if (npts < 10 or not math.isfinite(delta) or delta <= 0 or
+                not math.isfinite(duration) or abs(npts*delta-duration)>max(.02,2*delta)):
+                raise ValueError('DYNA_SAMPLE_GRID')
+            samples = [float(token) for line in lines[64:] for token in line.split()]
+            if len(samples) != npts or any(not math.isfinite(x) for x in samples):
+                raise ValueError('DYNA_SAMPLES_COUNT_OR_NONFINITE')
+            keys = ('EVENT_ID', 'STATION_CODE', 'STREAM', 'NDATA',
+                    'SAMPLING_INTERVAL_S', 'DURATION_S', 'UNITS',
+                    'PGA_CM/S^2', 'FILTER_TYPE', 'FILTER_ORDER',
+                    'LOW_CUT_FREQUENCY_HZ', 'HIGH_CUT_FREQUENCY_HZ',
+                    'BASELINE_CORRECTION', 'PROCESSING', 'DATA_LICENSE',
+                    'DATA_CITATION', 'ORIGINAL_DATA_CREATOR')
             results.append({'filename': name, 'bytes': len(body), 'sha256': sha(body),
-                'first_32_lines_SOURCE_TEXT_NOT_INTERPRETED': [x[:250] for x in txt.splitlines()[:32]],
+                'dyna_header_64_lines_SOURCE_TEXT': [x[:250] for x in lines[:64]],
+                'dyna_selected_header_fields': {k:header.get(k) for k in keys},
+                'numeric_samples': npts, 'sample_pga_in_header_units': max(map(abs,samples)),
                 'utf8_replacement_chars': txt.count('\ufffd')})
     if not results:
         raise ValueError('NO_FILES')
@@ -99,7 +135,16 @@ def self_test():
             for name, data in names:
                 z.writestr(name, data)
         return out.getvalue()
-    valid = zip_bytes([('wave_H1.ACC', b'header\n1 2 3\n'), ('wave_H2.ACC', b'header\n4 5 6\n')])
+    def fixture(stream):
+        header = [f'USER{i}: NA' for i in range(64)]
+        for i,(k,v) in enumerate({'EVENT_ID':EVENT,'STATION_CODE':STATION,
+                'STREAM':stream,'NDATA':'10','SAMPLING_INTERVAL_S':'0.01',
+                'DURATION_S':'0.1','UNITS':'cm/s^2','LOW_CUT_FREQUENCY_HZ':'0.1',
+                'HIGH_CUT_FREQUENCY_HZ':'40','FILTER_TYPE':'Butterworth',
+                'PROCESSING':'MP','DATA_LICENSE':'CC-BY-4.0'}.items()):
+            header[i] = k+': '+v
+        return ('\n'.join(header)+'\n'+'\n'.join(str(i) for i in range(10))+'\n').encode()
+    valid = zip_bytes([('wave_H1.ACC', fixture('HNE')), ('wave_H2.ACC', fixture('HNN'))])
     r = make_report(valid, 'SYNTHETIC', 'application/zip')
     assert r['unpacked_file_count'] == 2 and r['zip_sha256'] == sha(valid)
     assert not r['S05_PASS'] and not r['actual_processing_filter_corner_confirmed']
