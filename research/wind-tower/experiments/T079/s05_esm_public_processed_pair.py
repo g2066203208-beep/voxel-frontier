@@ -152,6 +152,40 @@ def spectrum_pair(raw):
             'Jiayu_target_spectrum_matched':False,'S05_PASS':False}
 
 
+def butterworth_hp2_zero_phase(samples, dt, fc):
+    """Independent 2nd-order digital Butterworth extra HP, forward/backward.
+
+    This is a *new* sensitivity operation on an ALREADY PROCESSED record;
+    it is NOT a reconstruction of the ESM processing or instrument response.
+    Reflection padding reduces (but cannot remove) boundary dependence.
+    """
+    if (len(samples) < 8 or not math.isfinite(dt) or not math.isfinite(fc)
+        or dt <= 0 or fc <= 0 or fc >= 0.5/dt):
+        raise ValueError('INVALID_HP2_INPUT')
+    omega = 2*math.pi*fc*dt
+    cosine, sine = math.cos(omega), math.sin(omega)
+    alpha = sine/math.sqrt(2)
+    a0 = 1 + alpha
+    b0 = (1 + cosine)/(2*a0)
+    b1, b2 = -2*b0, b0
+    a1, a2 = -2*cosine/a0, (1-alpha)/a0
+    def causal(values):
+        z1 = z2 = 0.
+        output = []
+        for x in values:
+            y = b0*x + z1
+            z1 = b1*x - a1*y + z2
+            z2 = b2*x - a2*y
+            output.append(y)
+        return output
+    pad = min(len(samples)-1, math.ceil(2/(fc*dt)))
+    padded = (list(reversed(samples[1:pad+1])) + list(samples)
+              + list(reversed(samples[-pad-1:-1])))
+    forward = causal(padded)
+    backward = list(reversed(causal(list(reversed(forward)))))
+    return backward[pad:pad+len(samples)]
+
+
 def low_frequency_diagnostic(raw):
     """Numerical triage only: no verified instrument SNR, passband or site spectrum."""
     from s05_ground_motion_pair_qc import sdof
@@ -162,7 +196,9 @@ def low_frequency_diagnostic(raw):
            'caveats':['first 10 s RMS is NOT independently verified pre-event noise',
                       'integrated drift assumes zero initial velocity and displacement',
                       '2x/4x decimation lacks anti-aliasing: numerical sensitivity only',
-                      'ideal analog Butterworth gain does not verify actual filter phase or pass count']}
+                      'ideal analog Butterworth gain does not verify actual filter phase or pass count',
+                      'EXTRA forward/backward high-pass is applied to an ALREADY PROCESSED record: sensitivity ONLY, not original ESM filter history or instrument SNR',
+                      'reflection padding/edge transients and nonlinear PSA peaks limit interpretation of extra-filter differences']}
     with zipfile.ZipFile(io.BytesIO(raw)) as z:
         for member in members:
             h = member['dyna_selected_header_fields']
@@ -190,11 +226,25 @@ def low_frequency_diagnostic(raw):
                     'relative_4dt_difference':abs(s[2]-s[0])/s[0],
                     'f_over_highpass_fc':1/(fc*T),
                     'ideal_single_pass_analog_gain_CONDITIONAL':ideal})
+            extra_rows = []
+            for extra_fc in (fc, 2*fc):
+                filtered = butterworth_hp2_zero_phase(a, delta, extra_fc)
+                for row in rows:
+                    T = row['T_s']
+                    extra_sa = sdof(filtered,delta,T,.05)['pseudo_sa_m_s2']
+                    if not math.isfinite(extra_sa):
+                        raise ValueError('EXTRA_FILTER_PSA_NONFINITE')
+                    extra_rows.append({'T_s':T, 'extra_highpass_fc_Hz':extra_fc,
+                        'extra_highpass_passes':2,
+                        'extra_highpass_psa_m_s2_DIAGNOSTIC':extra_sa,
+                        'relative_change_from_existing_processed':
+                            (extra_sa-row['Sa_dt_m_s2'])/row['Sa_dt_m_s2']})
             out['components'][stream]={'source_numeric_sha256':member['numeric_samples_sha256_normalized_LF'],
                 'npts':len(a),'dt_s':delta,'fc_Hz':fc,'order':order,
                 'first10s_rms_m_s2_NOT_SNR':math.sqrt(sum(x*x for x in first)/len(first)),
                 'final_velocity_m_s_DIAGNOSTIC':v,'final_displacement_m_DIAGNOSTIC':d,
-                'periods':rows}
+                'periods':rows,
+                'extra_highpass_sensitivity_NOT_ORIGINAL_ESM_FILTER':extra_rows}
     if set(out['components'])!={'HNE','HNN'}: raise ValueError('MISSING_HORIZONTALS')
     return out
 
@@ -259,8 +309,25 @@ def self_test():
         try: inspect_zip(bad)
         except (ValueError, zipfile.BadZipFile): pass
         else: raise AssertionError('accepted malformed ZIP')
+    # Verify the independent forward/backward biquad against the analytic
+    # two-pass 2nd-order Butterworth gain for two long-period pure tones.
+    # Synthetic test, not a measurement of ESM noise or original processing.
+    delta, count = .005, 32040
+    for period in (4., 10.):
+        sine = [math.sin(2*math.pi*i*delta/period) for i in range(count)]
+        filt = butterworth_hp2_zero_phase(sine, delta, .04)
+        lo, hi = 12000, 20000
+        measured = (sum(x*x for x in filt[lo:hi])/
+                    sum(x*x for x in sine[lo:hi]))**.5
+        expected = 1/(1+(.04*period)**4)
+        assert abs(measured-expected) < 5e-4, (period,measured,expected)
+    for sample,step,corner in (([1.]*10,0.,.04),([1.]*10,.005,0.),
+                               ([1.]*10,.005,100.),([1.]*5,.005,.04)):
+        try: butterworth_hp2_zero_phase(sample,step,corner)
+        except ValueError: pass
+        else: raise AssertionError('ACCEPTED_INVALID_HP2')
     print(json.dumps({'synthetic_self_test': 'PASS', 'negative_tests': len(cases),
-                      'zip_sha256': sha(valid), 'real_processed_waves': 0,
+                      'zip_sha256': sha(valid), 'real_processed_waves': 0, 'hp2_analytic_sine_tests': 2, 'hp2_invalid_rejections': 4,
                       'Abaqus_RUN': False, 'S05_PASS': False}, sort_keys=True))
 
 
