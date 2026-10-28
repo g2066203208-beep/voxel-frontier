@@ -6,8 +6,12 @@ from datetime import datetime,timezone
 PAPERS=[
  ("Ishihara_2024_Structures_105886","10.1016/j.istruc.2024.105886",17,["https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1.pdf","https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1-2.pdf"],"publisher-layout public author copy; redistribution not verified"),
  ("Wang_2026_RCS_47_64","10.1016/j.rcns.2026.03.002",18,["https://www.sciencedirect.com/science/article/pii/S2772741626000165/pdfft?isDTMRedir=true&download=true","https://journal.hep.com.cn/rcs/EN/PDF/10.1016/j.rcns.2026.03.002","https://www.sciencedirect.com/science/article/pii/S2772741626000165/pdf"],"publisher OA; exact reuse license to verify"),
- ("Ali_2021_SDEE_106483_AAM","10.1016/j.soildyn.2020.106483",15,["https://research-information.bris.ac.uk/files/253922650/SDEE_Manuscript_281020_Proof_PURE_.pdf"],"Bristol author accepted manuscript CC BY-NC-ND"),
- ("Meng_2020_RenewableEnergy_AAM","10.1016/j.renene.2020.05.181",28,["https://openaccess.city.ac.uk/id/eprint/24342/1/Meng_et_al_renewable_energy_2020.pdf"],"City institution author accepted manuscript")
+ ("Ali_2021_SDEE_106483_AAM","10.1016/j.soildyn.2020.106483",15,["https://research-information.bris.ac.uk/files/253922650/SDEE_Manuscript_281020_Proof_PURE_.pdf","https://research-information.bris.ac.uk/ws/portalfiles/portal/253922650/SDEE_Manuscript_281020_Proof_PURE_.pdf"],"Bristol author accepted manuscript CC BY-NC-ND"),
+ ("Meng_2020_RenewableEnergy_AAM","10.1016/j.renene.2020.05.181",28,["https://openaccess.city.ac.uk/id/eprint/24342/1/Meng_et_al_renewable_energy_2020.pdf"],"City institution author accepted manuscript"),
+ ("Zhang_2024_ShockVibration_6563460","10.1155/vib/6563460",21,["https://downloads.hindawi.com/journals/sv/2024/6563460.pdf","https://onlinelibrary.wiley.com/doi/pdfdirect/10.1155/vib/6563460"],"published open access CC BY 4.0; verify exact PDF before repo commit"),
+ ("Wang_2026_JEE_2671807","10.1080/13632469.2026.2671807",0,["https://www.tandfonline.com/doi/pdf/10.1080/13632469.2026.2671807"],"publisher paywalled; no redistribution authorization"),
+ ("Cao_2020_ASE_9900295","10.1177/1369433219900295",0,["https://journals.sagepub.com/doi/pdf/10.1177/1369433219900295"],"publisher paywalled; no redistribution authorization"),
+ ("Huang_2023_JEE_2121789","10.1080/13632469.2022.2121789",0,["https://www.tandfonline.com/doi/pdf/10.1080/13632469.2022.2121789"],"publisher paywalled; no redistribution authorization")
 ]
 
 def sha(b): return hashlib.sha256(b).hexdigest()
@@ -29,7 +33,7 @@ def acquire(out):
         row={'id':name,'doi':doi,'expected_pages':expected,'license_or_version':license,'status':'NOT_DOWNLOADED','attempts':[]}
         for url in urls:
             try:
-                p=subprocess.run(['curl','-A','Mozilla/5.0','-L','-f','-sS','--retry','1','--connect-timeout','12','--max-time','75','-o',str(path),'-w','%{http_code} %{content_type} %{url_effective}',url],capture_output=True,text=True,timeout=90)
+                p=subprocess.run(['curl','-A','Mozilla/5.0','-L','-f','-sS','--retry','0','--connect-timeout','12','--max-time','25','-o',str(path),'-w','%{http_code} %{content_type} %{url_effective}',url],capture_output=True,text=True,timeout=36)
                 att={'url':url,'exit_code':p.returncode,'http_and_redirect':p.stdout.strip()[:300],'stderr':p.stderr.strip()[:200]}
                 row['attempts'].append(att)
                 if p.returncode: continue
