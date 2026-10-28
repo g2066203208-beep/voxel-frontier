@@ -186,7 +186,7 @@ def recover(out, station):
         "window_request_utc":[START,END],
         "common_start_utc":iso, "common_npts":len(aa), "common_dt_s":dt,
         "channels":[
-            {"seed_id":item[0].id, **item[2], "csv":m0["file"],"csv_sha256":m0["sha256"],"pga_g":q["pga_g"] if "pga_g" in q else v["pga_g"]}
+            {"seed_id":item[0].id, **item[2], "csv":m0["file"],"csv_sha256":m0["sha256"],"pga_g":v["pga_g"]}
             for item,m0,v in zip([a,b],meta_pair,qc["components"])
         ],
         "software":{"python":sys.version.split()[0],"obspy":__import__("obspy").__version__,"numpy":np.__version__},
