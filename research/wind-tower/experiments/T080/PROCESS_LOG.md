@@ -392,3 +392,9 @@
 - S01身份提醒：普通纵筋实际`*SOLID SECTION`赋材为`HRB335_T057`；`HRB500_BASELINE`只在原件材料定义中出现，不得因此声称纵筋实际用HRB500。PT截面赋材`STRAND_1860`；T057预定义`1280 MPa`不是有效预应力平衡验证值。
 - 验证：原件SHA、元素类型/数目、实例/Part、集合成员与68行身份均由脚本在GitHub Actions重新验证；单独的高度选择正/负例为算法测试，不能代替Abaqus。**原生积分点编号与应力方向全部留空，0个ODB应力绑定，0次地震和疲劳生产RUN。** 上一轮S06高度偏差只能是静态几何差异，不能认定变形。
 - REF/STANDARD/OFFICIAL：无新增外部论文原页或授权规范原条款阅读；来源等级=冻结GitHub原始模型直接读取+上轮数据原件。FIG：无真实应力云图；TAB：68行身份清单；真实S–N材料参数、PT平衡、网格/场变量基底及接触仍HOLD，几何近邻差异是测点离散定位量而不是物理误差预算，物理误差`NEED_ESTIMATE`。阶段0/12，S10仅`INP_METADATA_HEIGHT_ONLY_READY/PHYSICS_HOLD`。
+
+### 2026-10-28｜S10原始INP静态身份CI远端验收回读
+
+- RUN：[Actions #40682979101](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40682979101) `completed/success`，job `122798117888`；`S10 frozen T057 actual 68-Part/Instance/Elset mapping (NO ODB)` 为success；真实checkout原件SHA256=`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`。合成选点2项拒绝测试（空单元组、无效节点）均正确拒绝。非Abaqus。
+- TAB：68行CSV SHA256=`502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd`，逐字节复算一致；62个高度近邻候选、最大元素中心与风测点高度差`0.070048 m`；0个原生ODB积分点、0次原生RUN。这一差距为静态几何选点距离，不是物理应力误差预算。
+- REF/STANDARD/OFFICIAL：本轮只读冻结原始模型，未读取新期刊全文/授权规范条文，FIG无真实云图。最大HOLD=未经初始PT/重力/接触及网格V&V核验的原生ODB局部材料应力；下一单一动作=把本轮真实实例/元素集/元素候选作为现有ODB提取接口允许列表并开展身份错误拒绝测试。12阶段仍0/12，S10准备就绪但物理HOLD。

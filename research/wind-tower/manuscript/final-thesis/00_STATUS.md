@@ -402,3 +402,5 @@ HOLD：
 ## 2026-10-28｜S10原始T057的68实例/元素集/赋材实证（静态，不是疲劳PASS）
 
 以冻结T057原始INP SHA256 `c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`做只读解析，与[68行预绑定](../../experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv)按Part逐项校对。新增[68行可复核实例/截面赋材/元素集及62个高度近邻候选单元清单](../../experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv)及[来源SHA锁定解析器](../../experiments/T077/recovery/s10_t057_native_metadata_gate.py)。**只证实INP存在的实例与元素，未验证ODB积分点、周向疲劳控制位置或应力方向。** 原型T057纵筋截面赋材HRB335，不得把未使用的HRB500_BASELINE材料定义当成现行钢筋。T057 PT输入1280MPa不等于Peq。参考文献/规范原文未新读取，FIG=无，数值仅为静态高度几何筛查；Abaqus原生日志、S–N和物理误差预算仍HOLD。正式12阶段保持0/12，S10=INP_METADATA_HEIGHT_ONLY_READY/PHYSICS_HOLD。
+
+**S10原始INP身份CI远端回读（2026-10-28）：** [真实Actions #40682979101](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40682979101) `completed/success`；T057冻结原件/68实例/68元素集/截面赋材与62高度近邻候选完成真实源复算，输出CSV SHA256=`502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd`。2项合成拒绝测试通过；ODB积分点=0，Abaqus RUN=0，12阶段0/12，不能称科学PASS。
