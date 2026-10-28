@@ -332,3 +332,6 @@ HOLD：
 ### 2026-10-28 13:08 CST｜S05独立准备实证：三台站六通道、但只有一个地震事件
 
 **12阶段严格PASS仍0/12，S05 PARTIAL/HOLD、S08/S09 BLOCKED，地震Abaqus RUN=0。** 已在PR #42对Ridgecrest 2019事件CI.CLC/CI.PASC/CI.RVR共六条真实存档水平加速度（每条20,001点、0.01s）逐字节SHA256校验，实际计算5%阻尼、0.5–10s原始/去均值/线性去趋势伪谱及残余漂移。T≥4s原始相对前20s去均值的最大谱差分别为CLC HNE/HNN 114.53%/203.88%，PASC 1205.72%/34.84%，RVR 435.70%/2580.20%；同一事件三台站不能当三条独立地震。RVR源字节SHA256与恢复manifest已保存，CLC有原始miniSEED/StationXML/source receipt；PASC/RVR尚缺同级来源收据。**SOURCE/TAB**：[六通道完整计算与源SHA](../../experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json)；**RUN**：[复算程序](../../experiments/T079/s05_ground_motion_pair_qc.py)与[过程日志](../../experiments/T079/PROCESS_LOG.md)，CI另查真实结果；**REF**沿用Wang/Ishihara/Meng已核层级；**STANDARD** IEC2025/GB/NB授权地震条款未新取得；**OFFICIAL**既有FDSN台站记录；**FIG**无物理地震图；**误差/HOLD**低频可靠范围、参考目标谱、源记录处理历史及独立事件间统计仍未验收，不能称正式设计波；本轮真实数值计算不是Abaqus物理PASS。**下一单一动作**：取得另一独立地震事件、可审查处理历史和低频范围的官方双水平记录，按参考目标谱开展选配QC。
+
+
+**2026-10-28 13:12 CST S05 CI补充实证：** [Actions #40636545727](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40636545727)已`completed/success`；六条真实水平CSV的Python重新SHA256、Newmark谱与先前独立V8结果完成**174项数值交叉对照PASS**，相关[artifact #12794115238](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40636545727/artifacts/12794115238)已上传；数据与源码均在PR分支。此处仅S05独立程序数值复核成功，不改变0/12、S05 HOLD、地震Abaqus RUN=0。
