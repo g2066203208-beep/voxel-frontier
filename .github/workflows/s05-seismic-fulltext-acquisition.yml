@@ -102,6 +102,49 @@ jobs:
                   raise RuntimeError('GIT_PDF_UPLOAD_409_RETRIES_EXHAUSTED '+target)
           print('NEW_LICENSED_PDFS_IN_GIT_REPO',len(manifest))
           PY
+      - name: Retrieve and put original HKU-licensed Huang 2023 full Word manuscript directly in repository
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p hkumanuscript
+          src="https://hub.hku.hk/bitstream/10722/338977/1/content.docx"
+          if ! curl --fail --location --silent --show-error --max-time 35 --output hkumanuscript/source.docx "$src"; then
+             echo "HOLD_HKU_SOURCE_DOWNLOAD_FAILED $src"; exit 0
+          fi
+          python - <<'PY'
+          import base64,hashlib,io,json,os,pathlib,subprocess,time,zipfile,xml.etree.ElementTree as ET
+          source=pathlib.Path('hkumanuscript/source.docx')
+          raw=source.read_bytes()
+          if raw[:2]!=b'PK':raise ValueError('NOT_ZIP_DOCX')
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              assert 'word/document.xml' in z.namelist()
+              root=ET.fromstring(z.read('word/document.xml'))
+              alltext=' '.join(n.text or '' for n in root.iter() if n.tag.endswith('}t')).lower()
+          assert 'computational study' in alltext and 'hybrid' in alltext and 'tower' in alltext, 'wrong source manuscript'
+          sha=hashlib.sha256(raw).hexdigest()
+          path='research/wind-tower/references/open-access/Huang_2023_JEE_2121789_HKU_AAM.docx'
+          branch='research/t080-seismic-integration-gates-20261022';repo=os.environ['GH_REPO']
+          gitsha=hashlib.sha1(b'blob '+str(len(raw)).encode()+bytes([0])+raw).hexdigest()
+          for i in range(8):
+              prev=subprocess.run(['gh','api','--method','GET',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+              if prev.returncode==0:
+                  if json.loads(prev.stdout)['sha']==gitsha:
+                      print('HKU_ORIGINAL_ALREADY_IN_REPO',path,sha,len(raw));break
+                  raise ValueError('Different DOCX original already exists; no overwrite')
+              payload={'branch':branch,'message':'refs(S05): store CC BY-NC-ND unmodified HKU seismic fulltext manuscript','content':base64.b64encode(raw).decode()}
+              res=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
+              if res.returncode==0:
+                  print('HKU_ORIGINAL_MANUSCRIPT_COMMITTED',json.loads(res.stdout)['commit']['sha'],path,sha,len(raw));break
+              if '409' in res.stderr:
+                  time.sleep(2);continue
+              raise RuntimeError('HKU_COMMIT_FAILED '+res.stderr[:400])
+          else:raise RuntimeError('HKU_409_RETRIES_EXHAUSTED')
+          PY
       - name: Archive author-hosted ALL-RIGHTS-RESERVED Ishihara PDF as PRIVATE DRAFT GitHub repository Release
         shell: bash
         env:
