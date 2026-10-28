@@ -412,3 +412,9 @@ HOLD：
 ### 2026-10-28｜S10源白名单CI实测成功（0/12不晋级）
 
 [GitHub Actions #40685644528](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40685644528) `completed/success`，对应commit `2c38e6bea2fee255cfb05cb95f264f7a51fce514`；在[既有只读ODB程序](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py)新增T057原始INP与[68行源身份表](../../experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv)的**材料/实例/集合/候选标签拒绝性白名单**。新增7项合成负例、4项真实源CSV身份正负测试通过，原有1正/14负ODB模拟测试亦通过。源码SHA256=`ce93c26ec63332a7c05c64f489bd2a58439db5c36efd0826b6560d43cc0d2c65`。初次失败与中间版打印哈希更正均保存在[过程日志](../../experiments/T080/PROCESS_LOG.md)。此为`SOURCE_IDENTITY_WHITELIST_TESTED/PHYSICS_HOLD`，**不是**Abaqus ODB物理验证；T057 R335白名单不能用于D400/Pe子版，62个高度候选不是周向疲劳热点。S10材料寿命与地震生产RUN仍为0，整阶段**0/12未晋级**。
+
+
+## 2026-10-28｜S10 D400/Pe真实源身份映射（非物理PASS）
+
+**整阶段0/12未晋级。** S10独立准备新增可复核成果：在[真实Actions #40694893985](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40694893985)用SHA锁定冻结T057重建未冻结D400/Pe诊断子版（INP SHA256 `22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`），直接解析其68 Part/Instance/Elset/Section及PT初应力；[68行D400源映射CSV](../../experiments/T077/recovery/S10_D400_PE_68PART_INP_METADATA_20261028.csv) SHA256 `9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83`，62个仅高度近邻单元候选，0个ODB积分点。31纵筋+1箍拉筋笼的Section材料与T057原型HRB335不同，D400为`HRB400_D400_DIAGNOSTIC`；[ODB源身份接口](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py)现在只接受T057或D400/Pe**各自SHA对应的映射**，错误材料/跨分支拒绝。代码、CSV、过程及原始CI已保全，未改T057/T070。
+**证据等级：** SOURCE=真实INP源字节/子版重建/映射；REF/2025 IEC与NB/T10907授权全文无新阅读；STANDARD/OFFICIAL无新条款PASS或Abaqus原生运行；RUN=静态Python与模拟ODB负例；FIG=无；TAB=68行CSV。静态高度数值舍入约1e-6m，材料局部应力、有效PT、网格及物理误差预算仍NEED-ESTIMATE。**最大HOLD**为缺少同一经原生Pe/重力/接触验收初态的真实材料积分点应力时程；下一单一动作：S10建立多方位候选点原生RUN卡及严谨拒绝测试，不进行昂贵生产RUN。详见[T080过程日志](../../experiments/T080/PROCESS_LOG.md)。
