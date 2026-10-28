@@ -484,3 +484,5 @@
 - 方法：两个目标严格保持M/M0及max(Dconcrete/D0concrete,DPT/D0PT,Dsteel/D0steel)不变；只改变同运行状态下W与E/WE的约束可行性。拒绝不同baseline/运行状态、重复设计、NaN、零基准损伤、非法gate、合成冒充原生、缺W/E/WE及fatigue SHA。生产输入必须标NATIVE_VERIFIED，但SHA文本本身不证明物理PASS，输出仍要求独立原生审查。
 - REF/STANDARD/OFFICIAL/FIG：REF仅沿用Ch5既有REF002/004/020/021/022/033，未新读期刊原页；STANDARD无新授权IEC/GB条款；OFFICIAL为GitHub文件及Git blob（非CAE官方验收）；FIG无本塔结果图。误差预算：算法比较未设置任意数值容差，真实局部材料损伤、求解器、代理与风震物理误差均NEED_ESTIMATE。
 - HOLD：S11=INDEPENDENT_METHOD_PREP/HOLD，12阶段仍0/12，原生地震/材料疲劳/优化结果0；不改T057/T070、不合并PR、不做昂贵RUN。下一单一动作：以T071/T072原始工作流为源，做31站RP/TP最小受控补采输入与通道的静态可执行检查（无批准不启动生产）。
+
+**2026-10-29 07时S11远端CI回读：** [Actions #40785594900](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40785594900) 对提交e8fda22d271b49db479e35baab7ee84ab94f8ecd的job 123157853368为completed/success；原生日志明确显示源码SHA256校验OK、Python编译成功、合成输入SHA256=497c9c19a7eaa74909c295d89ace664d1981ce9145ae5414fb48e953fe3de949、4项正向已知解与9项异常拒绝测试通过。该CI仅证明S11算法门禁，绝非本塔风震/材料疲劳/优化物理PASS。
