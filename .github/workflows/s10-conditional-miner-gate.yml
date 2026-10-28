@@ -8,6 +8,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_d400_pe_source_map_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_azimuth_height_candidate_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_candidate_run_card_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv'
       - 'research/wind-tower/experiments/T077/recovery/s10_native_part_station_binding_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv'
@@ -41,6 +42,9 @@ jobs:
           curl --fail --location --silent --show-error --retry 3 \
             --output s10_native_odb_local_stress_gate.py \
             "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s10_candidate_run_card_gate.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/s10_candidate_run_card_gate.py"
       - name: Fetch SHA-pinned 68-part and 31-gage S10 sources
         shell: bash
         run: |
@@ -105,6 +109,11 @@ jobs:
           echo '9052f70b39544c8fbd27b0813face4eecf2dcace3efdbd7c3cebbc896b395595  S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv' | sha256sum --check
           cmp "$RUNNER_TEMP/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv" S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv
           sha256sum "$RUNNER_TEMP/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv"
+          python3 -m py_compile s10_candidate_run_card_gate.py
+          python3 s10_candidate_run_card_gate.py --self-test \
+            --candidate-table S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv \
+            --source-map S10_D400_PE_68PART_INP_METADATA_20261028.csv \
+            --out "$RUNNER_TEMP/s10_candidate_card_preflight.json"
           echo 'BEGIN_S10_AZIMUTH_CSV'
           cat "$RUNNER_TEMP/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv"
           echo 'END_S10_AZIMUTH_CSV'
@@ -119,5 +128,6 @@ jobs:
             ${{ runner.temp }}/s10_d400_source_receipt.json
             ${{ runner.temp }}/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv
             ${{ runner.temp }}/s10_azimuth_receipt.json
+            ${{ runner.temp }}/s10_candidate_card_preflight.json
           if-no-files-found: warn
           retention-days: 14
