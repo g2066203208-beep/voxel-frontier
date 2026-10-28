@@ -10,6 +10,7 @@ Official sample groupby=event: https://github.com/strongmotioncenter/CESMD_webse
 import argparse
 import hashlib
 import json
+import math
 import pathlib
 import re
 import sys
@@ -42,6 +43,51 @@ def availability_nodes(obj):
             yield from availability_nodes(value)
 
 
+
+def candidate_shortlist(obj, max_epidist_km=100.0):
+    """Reproducible DOWNLOAD triage only; not spectral selection or horizontal-pair QC.
+
+    Filters: CESMD Ground, >=3 reported channels, processed available,
+    positive finite Vs30, PGA, Sa(1s), Sa(3s), epicentral distance <=100 km.
+    A 3-channel count DOES NOT establish two horizontal components.
+    PGA sorting prioritizes obtaining actual data, NOT engineering suitability.
+    """
+    events = (obj.get('results') or {}).get('events') or []
+    out = []
+    for event in events:
+        for st in event.get('stations', []):
+            if st.get('type') != 'Ground':
+                continue
+            rec = st.get('record') or {}
+            processed = (rec.get('data_availability') or {}).get('processed')
+            if processed not in (True, 'true'):
+                continue
+            try:
+                n = int(st['channels'])
+                pga = float(rec['pgav2'])
+                sa1 = float(rec['sa10'])
+                sa3 = float(rec['sa30'])
+                distance = float(rec['epidist'])
+                vs30 = float(st['Vs30'])
+            except (KeyError, TypeError, ValueError):
+                continue
+            if (n < 3 or distance < 0 or distance > max_epidist_km
+                or min(pga, sa1, sa3, vs30) <= 0
+                or not all(math.isfinite(v) for v in (pga,sa1,sa3,distance,vs30))):
+                continue
+            out.append({
+                'station': str(st['network']) + '.' + str(st['code']),
+                'station_name': st.get('name'),
+                'CESMD_siteclass_NOT_GB_siteclass': st.get('siteclass'),
+                'Vs30_m_s': vs30, 'epidist_km': distance,
+                'processed_PGA_horizontal_max_g': pga,
+                'SA_1s_g': sa1, 'SA_3s_g': sa3, 'channels_reported': n,
+                'status': 'DOWNLOAD_CANDIDATE_ONLY_NOT_HORIZONTAL_PAIR_OR_DESIGN_WAVE'
+            })
+    out.sort(key=lambda x: (-x['processed_PGA_horizontal_max_g'], x['station']))
+    return out
+
+
 def summarize(raw, event_id):
     request_url(event_id)
     obj = json.loads(raw)
@@ -65,6 +111,7 @@ def summarize(raw, event_id):
             return False
         raise ValueError('CESMD processed flag invalid: '+repr(v))
     processed = [parse_flag(x.get('processed')) for x in flags]
+    shortlist = candidate_shortlist(obj)
     return {
         'status': 'OFFICIAL_METADATA_PREFLIGHT_ONLY_NOT_DESIGN_WAVE',
         'event_id_requested': event_id,
@@ -75,6 +122,9 @@ def summarize(raw, event_id):
         'availability_objects': len(flags),
         'processed_true_objects': sum(processed),
         'processed_false_objects': len(processed) - sum(processed),
+        'download_shortlist_filter': 'Ground; channels>=3; processed=true; Vs30/PGA/Sa1/Sa3>0; epicentral distance<=100km; rank by PGA',
+        'download_shortlist_count': len(shortlist),
+        'download_shortlist': shortlist,
         'CESMD_processed_waveform_downloaded': False,
         'instrument_usable_low_frequency_verified': False,
         'two_horizontal_components_verified': False,
@@ -130,6 +180,16 @@ def self_test():
             raise AssertionError('accepted malformed official metadata')
     string_flags = summarize(b'{"status":200,"count":2,"data_availability":{"processed":"false"},"nested":{"data_availability":{"processed":"true"}}}', 'CI38457511')
     assert string_flags['processed_true_objects'] == 1 and string_flags['processed_false_objects'] == 1
+    candidate_fixture = {'results': {'events': [{'stations': [
+        {'network':'CE','code':'X01','type':'Ground','channels':3,'Vs30':300,
+         'siteclass':'D','record':{'pgav2':0.1,'sa10':0.05,'sa30':0.02,
+         'epidist':50,'data_availability':{'processed':'true'}}},
+        {'network':'CE','code':'X02','type':'Building','channels':3,'Vs30':300,
+         'record':{'pgav2':0.2,'sa10':0.1,'sa30':0.03,
+         'epidist':50,'data_availability':{'processed':'true'}}}
+    ]}]}}
+    candidates = candidate_shortlist(candidate_fixture)
+    assert len(candidates)==1 and candidates[0]['station']=='CE.X01'
     empty = summarize(b'{"status":200,"count":0,"events":[]}', 'CI38457511')
     assert empty['availability_objects'] == 0 and not empty['S05_PASS']
     print('PASS_SYNTHETIC_CESMD_METADATA_GATE native+string flags; 7 negative tests; empty-result HOLD')
