@@ -61,9 +61,9 @@ def inspect_zip(raw):
             if len(lines) < 65:
                 raise ValueError('DYNA_64_LINE_HEADER_MISSING')
             header = {}
-            for line in lines[:64]:
+            for index, line in enumerate(lines[:64], 1):
                 if ':' not in line:
-                    raise ValueError('DYNA_HEADER_LINE_NOT_KEY_VALUE')
+                    raise ValueError(f'DYNA_HEADER_LINE_NOT_KEY_VALUE:{name}:line{index}:{line[:100]!r}')
                 key, value = line.split(':', 1)
                 key = key.strip()
                 if key in header:
@@ -173,10 +173,11 @@ def main():
             ap.error('--fetch requires --output-dir and 1<=timeout<=180')
         a.output_dir.mkdir(parents=True, exist_ok=True)
         stamp = dt.datetime.now(dt.timezone.utc).isoformat()
+        raw = None
         try:
             raw, ct = fetch(a.timeout)
-            report = make_report(raw, stamp, ct)
             (a.output_dir/'ESM_IT-2012-0008_NVL_MP_ACC_original.zip').write_bytes(raw)
+            report = make_report(raw, stamp, ct)
             (a.output_dir/'ESM_IT-2012-0008_NVL_MP_ACC_receipt.json').write_text(
                 json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
             print(json.dumps({'status': report['status'], 'zip_sha256': report['zip_sha256'],
@@ -185,7 +186,8 @@ def main():
         except (OSError, ValueError, urllib.error.URLError, zipfile.BadZipFile) as ex:
             failure = {'status':'OFFICIAL_ESM_FETCH_FAILED_HOLD', 'url':url(),
                 'attempted_utc':stamp, 'error_type':type(ex).__name__,
-                'error':str(ex)[:1000], 'zip_sha256':None, 'S05_PASS':False}
+                'error':str(ex)[:1000], 'zip_sha256':sha(raw) if raw is not None else None,
+                'zip_bytes':len(raw) if raw is not None else None, 'S05_PASS':False}
             (a.output_dir/'ESM_IT-2012-0008_NVL_failure.json').write_text(
                 json.dumps(failure, indent=2) + '\n', encoding='utf-8')
             print(json.dumps(failure), flush=True)
