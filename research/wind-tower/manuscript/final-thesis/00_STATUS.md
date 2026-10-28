@@ -335,3 +335,8 @@ HOLD：
 
 
 **2026-10-28 13:12 CST S05 CI补充实证：** [Actions #40636545727](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40636545727)已`completed/success`；六条真实水平CSV的Python重新SHA256、Newmark谱与先前独立V8结果完成**174项数值交叉对照PASS**，相关[artifact #12794115238](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40636545727/artifacts/12794115238)已上传；数据与源码均在PR分支。此处仅S05独立程序数值复核成功，不改变0/12、S05 HOLD、地震Abaqus RUN=0。
+
+
+### 2026-10-28 14:20 CST｜S05第二独立事件源+长周期基线QC真实闭合（非地震设计PASS）
+
+新取得2020-06-24 Lone Pine Mw5.8 USGS `ci39493944`，与此前2019 Ridgecrest `ci38457511` 为**不同地震事件**；官方SCEDC FDSN CI.CLC台站原始miniSEED、StationXML、双水平20001点×2、dt=0.01s和原件SHA256已提交[完整原件及源收据](../../experiments/T079/real-records/USGS_ci39493944/CI_CLC/)。[真实GitHub Actions #40642999084](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40642999084)完成独立原始源SHA复验、震前20s去均值与全窗线性去趋势、5%阻尼1–10s Newmark伪谱对照，并将[完整谱敏感性JSON](../../experiments/T079/real-records/USGS_ci39493944/CI_CLC/processed/baseline_sensitivity_report.json)及派生CSV永久入仓。HNE原始/去均值PGA=0.022374/0.003225g，HNN=0.024476/0.003748g；原始DC偏置造成数千米积分伪漂移；T10s原始/去均值谱差14674.96%/100985.83%（去偏谱近零使相对百分比病态放大）。**数据获取成功不代表正式地震设计波：** 原始仪器仅灵敏度转换，未核完整频响、可用低频截止、目标谱和场地匹配；源是200s窗口、同台站不同事件且第二事件弱动。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、原始/派生SHA、错误与失败Actions记录见[本轮T079过程日志](../../experiments/T079/PROCESS_LOG.md)末尾。S05=PARTIAL/HOLD、S08/S09=BLOCKED、Abaqus地震RUN=0、正式12阶段**0/12未晋级**。下一项仅做**有独立处理说明及长周期可靠范围的记录/目标谱匹配QC**；Ch4材料风疲劳与Ch5优化不变。
