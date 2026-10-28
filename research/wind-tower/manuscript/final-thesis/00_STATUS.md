@@ -323,3 +323,8 @@ HOLD：
 ### 2026-10-28 论文正文与地震研究统一方案
 
 已核对六章正文；保留风环境、风致材料疲劳和优化主线。地震采用有出处的参考反应谱和真实双水平地震记录，在同一塔架初态下检验E、W及W+E，并研究抗震约束是否改变原疲劳优化结果。嘉鱼只是已有风气候数据来源，不强制作为地震工程场址。详细计算流程与核验条件见[现行T079方案](../../experiments/T079/METHOD_PLAN.md)。目前地震物理求解0次，正式12阶段0/12通过；六章正文未改名，地震结果成立后才考虑扩七章。
+
+
+### 2026-10-28 12时｜S05真实长周期谱QC实证：0/12未晋级
+
+已使用GitHub已保存的官方SCEDC/USGS Ridgecrest CI.CLC双水平20,001点×2、0.01s原始/震前20s去均值波，完成**T=0.5–10s、ζ=5%、原始/去均值/线性去趋势三场景Newmark谱敏感性实算**；两份原始CSV与两份处理CSV均有SHA256锁定。HNE在10s伪Sa由0.404684→0.188639m/s²，HNN由0.350811→0.115445m/s²，以处理后为分母分别相差114.53%、203.88%；HNE去均值后末位移仍约3.68463m。**不能将这条近震源记录用作正式158m塔地震设计波**，也不能据线性去趋势后末位移近零声称低频校正正确。真实Python+独立V8数值一致，[CI #40630764477](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40630764477) success，含解析谐波收敛与负测试；[可复算脚本](../../experiments/T079/s05_ground_motion_pair_qc.py)、[永久完整两水平谱表](../../experiments/T079/real-records/USGS_ci38457511/CI_CLC/processed/long_period_spectral_sensitivity_20261028.json)、[输入SHA/原始日志/数值/失败与HOLD详单](../../experiments/T079/PROCESS_LOG.md)。SOURCE=SCEDC官方原件与处理CSV；REF本轮未新读；STANDARD无授权条文新增；OFFICIAL=USGS/SCEDC；RUN=真实Python数值QC非Abaqus；FIG=无结构结果；TAB=两水平×7周期×3处理方案；误差=二阶算法收敛已验、记录低频与目标谱适用性未验。**S05 PARTIAL/HOLD、S08/S09 BLOCKED、地震原生RUN=0、正式12阶段0/12 PASS**。唯一下一动作：取得有公开处理和可用低频范围说明的另一组官方双水平记录，做相同谱QC；嘉鱼仅为风环境参考，不能强制作为地震实址。原Ch4材料风疲劳及Ch5结构优化不变。
