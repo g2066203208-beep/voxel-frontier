@@ -11,8 +11,10 @@ import hashlib
 import json
 import pathlib
 import re
+import sys
 import urllib.parse
 import urllib.request
+import urllib.error
 
 API = 'https://www.strongmotioncenter.org/wserv/records/query'
 EVENT_ID = re.compile(r'^[A-Z]{2}[0-9]{6,12}$')
@@ -78,13 +80,17 @@ def fetch(event_id, timeout=25):
     req = urllib.request.Request(request_url(event_id), headers={
         'User-Agent': 'academic-source-qc/1.0 (metadata only)',
         'Accept': 'application/json'})
-    with urllib.request.urlopen(req, timeout=timeout) as response:
-        raw = response.read(12_000_001)
-        if len(raw) > 12_000_000:
-            raise ValueError('oversized CESMD metadata response')
-        if response.status != 200:
-            raise ValueError('unexpected HTTP status: ' + str(response.status))
-    return raw
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            raw = response.read(12_000_001)
+            if len(raw) > 12_000_000:
+                raise ValueError('oversized CESMD metadata response')
+            if response.status != 200:
+                raise ValueError('unexpected HTTP status: ' + str(response.status))
+        return raw
+    except urllib.error.HTTPError as exc:
+        body = exc.read(2048).decode('utf-8', errors='replace')
+        raise ValueError(f'CESMD_HTTP_{exc.code}: {body}') from exc
 
 
 def self_test():
@@ -130,13 +136,26 @@ def main():
         if args.output_dir is None:
             ap.error('--event-id requires --output-dir')
         args.output_dir.mkdir(parents=True, exist_ok=True)
+        failed = 0
         for event_id in args.event_id:
-            raw = fetch(event_id)
-            report = summarize(raw, event_id)
-            (args.output_dir / (event_id + '_CESMD_raw_metadata.json')).write_bytes(raw)
-            (args.output_dir / (event_id + '_CESMD_summary.json')).write_text(
-                json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
-            print(json.dumps(report, sort_keys=True))
+            try:
+                raw = fetch(event_id)
+                report = summarize(raw, event_id)
+                (args.output_dir / (event_id + '_CESMD_raw_metadata.json')).write_bytes(raw)
+                (args.output_dir / (event_id + '_CESMD_summary.json')).write_text(
+                    json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+                print(json.dumps(report, sort_keys=True))
+            except (ValueError, urllib.error.URLError, TimeoutError) as exc:
+                failed += 1
+                receipt = {'event_id': event_id, 'query_url': request_url(event_id),
+                           'status': 'OFFICIAL_API_QUERY_FAILED_NO_SOURCE',
+                           'error_type': type(exc).__name__, 'error': str(exc)[:2048],
+                           'S05_PASS': False, 'Abaqus_RUN': False}
+                (args.output_dir / (event_id + '_CESMD_failure.json')).write_text(
+                    json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+                print(json.dumps(receipt, sort_keys=True), file=sys.stderr)
+        if failed:
+            raise SystemExit('CESMD_METADATA_QUERY_HOLD: '+str(failed)+' failed event requests')
     if not args.self_test and not args.event_id:
         ap.error('supply --self-test or --event-id')
 
