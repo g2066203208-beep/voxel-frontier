@@ -1,0 +1,27 @@
+{
+  "status": "HOLD_NO_REAL_PAIR",
+  "attempts": [
+    {
+      "station": "CLC",
+      "error": "name 'q' is not defined"
+    },
+    {
+      "station": "WRC",
+      "error": "No official FDSN response for station: [{'url': 'https://service.scedc.caltech.edu/fdsnws/station/1/query?net=CI&sta=WRC&loc=%2A&cha=HN%2A&starttime=2019-07-06T03%3A19%3A20&endtime=2019-07-06T03%3A22%3A40&level=response&format=xml', 'http': 204, 'bytes': 0}, {'url': 'https://service.earthscope.org/fdsnws/station/1/query?net=CI&sta=WRC&loc=%2A&cha=HN%2A&starttime=2019-07-06T03%3A19%3A20&endtime=2019-07-06T03%3A22%3A40&level=response&format=xml', 'http': 204, 'bytes': 0}]"
+    },
+    {
+      "station": "WCS",
+      "error": "No official FDSN response for station: [{'url': 'https://service.scedc.caltech.edu/fdsnws/station/1/query?net=CI&sta=WCS&loc=%2A&cha=HN%2A&starttime=2019-07-06T03%3A19%3A20&endtime=2019-07-06T03%3A22%3A40&level=response&format=xml', 'http': 204, 'bytes': 0}, {'url': 'https://service.earthscope.org/fdsnws/station/1/query?net=CI&sta=WCS&loc=%2A&cha=HN%2A&starttime=2019-07-06T03%3A19%3A20&endtime=2019-07-06T03%3A22%3A40&level=response&format=xml', 'http': 204, 'bytes': 0}]"
+    },
+    {
+      "station": "RVR",
+      "error": "name 'q' is not defined"
+    },
+    {
+      "station": "PASC",
+      "error": "name 'q' is not defined"
+    }
+  ],
+  "event": "USGS_ci38457511_Ridgecrest_Mw7.1_2019-07-06T03:19:53Z",
+  "earthquake_RUN": 0
+}
