@@ -2,10 +2,10 @@
   "FIG": "NONE; no native Abaqus physical response",
   "HOLD": "9 near-base gages only; 31-gage rerun different source; internal section resultants include inertia/gravity/RNA; no Abaqus external load or free-body physics PASS",
   "OFFICIAL": {
-    "elastodyn_blob": "2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1",
-    "elastodyn_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
-    "nwtc_num_blob": "2daf088cca20a91e559490749b99cb35f25f208b",
-    "nwtc_num_sha256": "1f8aa50df80ecf7e39a8b25cb2fdcbc897d0c328b7672e9e5ce003c18a4edf1d"
+    "gravity_axial_reference_kN": -74.85274783974191,
+    "lower_gage": 8,
+    "source_mass_between_gages_kg": 7632.856055813341,
+    "upper_gage": 9
   },
   "REF": "OpenFAST v3.5.3 ElastoDyn.f90 lines 922-943, 1190-1206, 6005-6034, 6856-6860; NWTC_Num.f90 lines 5378-5470",
   "RUN": {
@@ -155,7 +155,9 @@
         "max_abs_force_component_kN": 49.91089038904465,
         "max_abs_moment_component_at_global_origin_kNm": 5.19023353245575,
         "mean_Fz_kN": -49.901149806594,
+        "mean_unallocated_axial_after_gravity_kN": 0.0006988592248262648,
         "min_Fz_kN": -49.91089038904465,
+        "original_tower_gravity_reference_kN": -49.901848665818825,
         "peak_force_time_s": 476.6,
         "upper_gage": 2
       },
@@ -166,7 +168,9 @@
         "max_abs_force_component_kN": 49.91107129734155,
         "max_abs_moment_component_at_global_origin_kNm": 5.246589711343404,
         "mean_Fz_kN": -49.90115032563598,
+        "mean_unallocated_axial_after_gravity_kN": 0.0007039310687062539,
         "min_Fz_kN": -49.91107129734155,
+        "original_tower_gravity_reference_kN": -49.90185425670469,
         "peak_force_time_s": 475.6,
         "upper_gage": 3
       },
@@ -177,7 +181,9 @@
         "max_abs_force_component_kN": 49.91134847349895,
         "max_abs_moment_component_at_global_origin_kNm": 5.193987685517641,
         "mean_Fz_kN": -49.90127922113452,
+        "mean_unallocated_axial_after_gravity_kN": 0.0005824900846391756,
         "min_Fz_kN": -49.91134847349895,
+        "original_tower_gravity_reference_kN": -49.90186171121916,
         "peak_force_time_s": 519.45,
         "upper_gage": 4
       },
@@ -188,7 +194,9 @@
         "max_abs_force_component_kN": 49.91114526366073,
         "max_abs_moment_component_at_global_origin_kNm": 4.992409232916543,
         "mean_Fz_kN": -49.901582554180536,
+        "mean_unallocated_axial_after_gravity_kN": 0.00027915703862646524,
         "min_Fz_kN": -49.91114526366073,
+        "original_tower_gravity_reference_kN": -49.90186171121916,
         "peak_force_time_s": 165.9,
         "upper_gage": 5
       },
@@ -199,7 +207,9 @@
         "max_abs_force_component_kN": 99.8161543407441,
         "max_abs_moment_component_at_global_origin_kNm": 5.0515222003741655,
         "mean_Fz_kN": -99.80399186813023,
+        "mean_unallocated_axial_after_gravity_kN": -0.00028335472084961566,
         "min_Fz_kN": -99.8161543407441,
+        "original_tower_gravity_reference_kN": -99.80370851340938,
         "peak_force_time_s": 432.85,
         "upper_gage": 6
       },
@@ -210,7 +220,9 @@
         "max_abs_force_component_kN": 49.91247397013285,
         "max_abs_moment_component_at_global_origin_kNm": 5.289719297667034,
         "mean_Fz_kN": -49.902164277175224,
+        "mean_unallocated_axial_after_gravity_kN": -0.00030256595606203973,
         "min_Fz_kN": -49.91247397013285,
+        "original_tower_gravity_reference_kN": -49.90186171121916,
         "peak_force_time_s": 391.45,
         "upper_gage": 7
       },
@@ -221,7 +233,9 @@
         "max_abs_force_component_kN": 49.91214582188695,
         "max_abs_moment_component_at_global_origin_kNm": 5.045037184492685,
         "mean_Fz_kN": -49.902170324624166,
+        "mean_unallocated_axial_after_gravity_kN": -0.00036824952079683726,
         "min_Fz_kN": -49.91214582188695,
+        "original_tower_gravity_reference_kN": -49.90180207510337,
         "peak_force_time_s": 622.5,
         "upper_gage": 8
       },
@@ -232,7 +246,9 @@
         "max_abs_force_component_kN": 74.86561154070296,
         "max_abs_moment_component_at_global_origin_kNm": 5.306955978332553,
         "mean_Fz_kN": -74.85324666508872,
+        "mean_unallocated_axial_after_gravity_kN": -0.0004988253468098947,
         "min_Fz_kN": -74.86561154070296,
+        "original_tower_gravity_reference_kN": -74.85274783974191,
         "peak_force_time_s": 424.90000000000003,
         "upper_gage": 9
       }
@@ -565,7 +581,62 @@
     "max_independent_gap_transport_difference_kNm": 5.711986439393968e-11,
     "max_inverse_force_error_kN": 1.4551915228366852e-11,
     "original_tower_gravity_source_comparison": {
-      "HOLD": "original tower gravity reference not available: TwrFile missing/ambiguous in original source"
+      "gravity_source_FST_m_s2": 9.80665,
+      "mass_adjustment": 1.0,
+      "rows": [
+        {
+          "gravity_axial_reference_kN": -49.901848665818825,
+          "lower_gage": 1,
+          "source_mass_between_gages_kg": 5088.572414210646,
+          "upper_gage": 2
+        },
+        {
+          "gravity_axial_reference_kN": -49.90185425670469,
+          "lower_gage": 2,
+          "source_mass_between_gages_kg": 5088.572984322342,
+          "upper_gage": 3
+        },
+        {
+          "gravity_axial_reference_kN": -49.90186171121916,
+          "lower_gage": 3,
+          "source_mass_between_gages_kg": 5088.573744471269,
+          "upper_gage": 4
+        },
+        {
+          "gravity_axial_reference_kN": -49.90186171121916,
+          "lower_gage": 4,
+          "source_mass_between_gages_kg": 5088.573744471269,
+          "upper_gage": 5
+        },
+        {
+          "gravity_axial_reference_kN": -99.80370851340938,
+          "lower_gage": 5,
+          "source_mass_between_gages_kg": 10177.145968644683,
+          "upper_gage": 6
+        },
+        {
+          "gravity_axial_reference_kN": -49.90186171121916,
+          "lower_gage": 6,
+          "source_mass_between_gages_kg": 5088.573744471269,
+          "upper_gage": 7
+        },
+        {
+          "gravity_axial_reference_kN": -49.90180207510337,
+          "lower_gage": 7,
+          "source_mass_between_gages_kg": 5088.567663279853,
+          "upper_gage": 8
+        },
+        {
+          "gravity_axial_reference_kN": -74.85274783974191,
+          "lower_gage": 8,
+          "source_mass_between_gages_kg": 7632.856055813341,
+          "upper_gage": 9
+        }
+      ],
+      "source_reading_level": "original static ZIP tower input and FST gravity",
+      "tower_input_stations": 70,
+      "tower_member": "CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat",
+      "tower_member_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983"
     }
   },
   "assumptions": [
