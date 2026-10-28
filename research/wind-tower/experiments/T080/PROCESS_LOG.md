@@ -288,3 +288,11 @@
 - **SOURCE/OFFICIAL：** T062同一原始OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`、FST/ED和原始归档Tower.dat重新核验，70站塔源SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`，FST重力9.80665m/s²。源代码v3.5.3与原始归档直接阅读；REF未新读全文，STANDARD未新读授权条文，FIG无新原生响应。
 - **RUN/TAB：** [CI #40619468851](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40619468851) success，12001×8=96008条相邻截面六分量差（非外载）；[永久原始数值回执](../T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json)SHA256=`8cde07e865c52c952e571ee3e74cb33c4480016ee0b0a3b14db10dbc2e6efe12`；[程序](../T077/recovery/s07_v353_fixed_base_native_frame.py)SHA256=`8bbf8eef5b8704e0dbdfa977ffda4026e2650dcd1aa1f4b2528d8ce085434ce6`。八段平均内力差与原始塔质量积分重力参照的未分配轴向分量区间−0.000498825至+0.000703931kN，最大逐时刻绝对偏离0.015303380kN；两套参考点变换代数最大差5.711986e−11kN·m。
 - **失败/假设/误差/HOLD：** 首版Tower源正则多转义导致真实回执记录`TwrFile missing/ambiguous`；修复commit [`040cde3`](https://github.com/g2066203208-beep/voxel-frontier/commit/040cde3198c1ec54a8812c9eba35491746dda27b)并在远端重新运行成功。已核原塔质量与重力不等于完整控制体自由体残差：惯性、分布气动力、转动项及源代码符号仍未闭合，OUTB量化与物理误差预算NEED_ESTIMATE。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及8段数据见[既有T062研究记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。**0/12整阶段PASS、地震RUN=0、S07物理HOLD；未改T057/T070，PR #42保持Draft且未合并。** 下一单一动作：按ElastoDyn原式加入分布作用与惯性项的同步控制体账。
+
+
+### 2026-10-28｜地震参考期刊核查答复：作者全文入口可用，但方法全文未提取
+
+- **SOURCE/REF**：复核T080.3既有PRE-01/02/03/05与T079登记的Cao2020、Huang2023；原文出版社核对2026 160m混塔风震（DOI 10.1080/13632469.2026.2671807）、外PT混塔风/震（10.1016/j.rcns.2026.03.002）、Ishihara2024耦合/非耦合（10.1016/j.istruc.2024.105886）、Ali2021 RNA（10.1016/j.soildyn.2020.106483）、Cao2020干接缝易损性（10.1177/1369433219900295）及Huang2023混塔模态/时程（10.1080/13632469.2022.2121789）。发现PRE-02出版社开放获取PDF入口、PRE-03东京大学作者PDF入口、PRE-05布里斯托大学作者接受稿PDF入口。详细网址、阅读层级与应用边界已写回[既有T080.3](T080_3_PRIMARY_SOURCES_NOVELTY_AND_TEST_MATRIX_20261022.md)。
+- **证据层级/哈希**：本轮仅出版社网页摘要及机构PDF下载入口确认；未下载/分析上述PDF字节，原件SHA256=NOT_CAPTURED，未提取公式页码/图表，不声称全文读完。部分出版社直连403，使用期刊索引/机构学术入口比对；PDF可访问入口不等于完整阅读已完成。
+- **STANDARD/OFFICIAL/RUN/FIG/TAB**：无IEC/GB/NB授权原文复核；OFFICIAL=出版社及大学机构页；无地震原生RUN，无新图表/数值。误差预算、适用域与选波仍NEED_ESTIMATE/HOLD；S05 PARTIAL/HOLD、S08/S09 BLOCKED、12阶段0/12，地震RUN=0。未动冻结T057/T070、未合并PR。
+- **下一动作**：优先获取并逐页审读已经发现的PRE-03作者稿，提取风/震耦合与非耦合建模流程、工况及物理验证，记录原件SHA、公式/图表原页，直接服务S08/S09实施。
