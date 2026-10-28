@@ -56,7 +56,7 @@ def summarize(raw, event_id):
     flags = list(availability_nodes(obj))
     processed = [x.get('processed') for x in flags]
     if any(not isinstance(v, bool) for v in processed):
-        raise ValueError('CESMD processed flag is not boolean')
+        raise ValueError('CESMD processed flag nonboolean: '+repr([(type(v).__name__,str(v)[:50]) for v in processed[:10]]))
     return {
         'status': 'OFFICIAL_METADATA_PREFLIGHT_ONLY_NOT_DESIGN_WAVE',
         'event_id_requested': event_id,
@@ -141,8 +141,8 @@ def main():
         for event_id in args.event_id:
             try:
                 raw = fetch(event_id)
-                report = summarize(raw, event_id)
                 (args.output_dir / (event_id + '_CESMD_raw_metadata.json')).write_bytes(raw)
+                report = summarize(raw, event_id)
                 (args.output_dir / (event_id + '_CESMD_summary.json')).write_text(
                     json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
                 print(json.dumps(report, sort_keys=True))
