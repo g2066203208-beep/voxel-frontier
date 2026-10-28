@@ -408,3 +408,7 @@ HOLD：
 ## 2026-10-28｜S10源级身份白名单接入只读ODB接口（待CI回读）
 
 已在[既有ODB提取程序](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py)增加冻结T057 SHA256与[68行源级元数据](../../experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv)白名单交叉核验：不允许RUN卡凭空把HRB500定义当作HRB335纵筋、把钢塔/连续PT的未选定点冒充31个风测点，也不允许其它D400/Pe输入借用T057白名单。新增合成/真实源身份负例接入原有S10 CI，**当前待远端RUN回读，不是Abaqus PASS**。原生积分点、周向热点、PT/接触初态和S–N仍HOLD；12阶段0/12未晋级，地震/疲劳生产RUN=0。
+
+### 2026-10-28｜S10源白名单CI实测成功（0/12不晋级）
+
+[GitHub Actions #40685644528](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40685644528) `completed/success`，对应commit `2c38e6bea2fee255cfb05cb95f264f7a51fce514`；在[既有只读ODB程序](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py)新增T057原始INP与[68行源身份表](../../experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv)的**材料/实例/集合/候选标签拒绝性白名单**。新增7项合成负例、4项真实源CSV身份正负测试通过，原有1正/14负ODB模拟测试亦通过。源码SHA256=`ce93c26ec63332a7c05c64f489bd2a58439db5c36efd0826b6560d43cc0d2c65`。初次失败与中间版打印哈希更正均保存在[过程日志](../../experiments/T080/PROCESS_LOG.md)。此为`SOURCE_IDENTITY_WHITELIST_TESTED/PHYSICS_HOLD`，**不是**Abaqus ODB物理验证；T057 R335白名单不能用于D400/Pe子版，62个高度候选不是周向疲劳热点。S10材料寿命与地震生产RUN仍为0，整阶段**0/12未晋级**。

@@ -404,3 +404,10 @@
 - SOURCE/TAB：复用已在Actions #40682979101源字节复算的68行T057 INP元数据清单，源CSV SHA256=`502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd`；冻结T057 INP SHA256=`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`。未生成新的T080文件或改动母本。
 - RUN（代码门禁，待远端日志）：更新既有`s10_native_odb_local_stress_gate.py`，对ODB只读提取前的RUN卡进行**SHA锁定INP支路+68行实例/元素集/赋材/材料类/高度近邻候选标签**交叉校验，错误材料（含未实际赋用的HRB500_BASELINE）、错误单元、错误实例/支路/集合、无候选钢塔/PT等均拒绝；新合成负例7项、真实源CSV身份用例4项已接入既有S10 CI，尚不得称远端PASS。未来D400/Pe子版必须提供独立核验映射，禁止借用T057清单。
 - REF/STANDARD/OFFICIAL/FIG：本轮仅直接读取冻结T057源模型与已核验CSV，无新期刊全文、授权规范原页、原生Abaqus日志或响应图。当前白名单只证明静态**源级身份**；62个高度近邻单元不能替代周向热点、原生积分点、真实初态和S–N参数。物理误差预算仍NEED_ESTIMATE，S10=SOURCE_WHITELIST_PREPARED/PHYSICS_HOLD；12阶段0/12，地震与材料寿命生产RUN=0。
+
+### 2026-10-28｜S10 T057白名单实际CI成功与失败更正（SOURCE/RUN/TAB）
+
+- RUN：真实[GitHub Actions #40685644528](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40685644528)在commit `2c38e6bea2fee255cfb05cb95f264f7a51fce514`完成`success`，job `122807175659`原生日志打印：原有ODB模拟1正例/14负例；新增源白名单合成7负例；对已核验的68行T057源CSV执行**1真实源身份正例+3拒绝负例**，全部通过。源级白名单只允许T057 R335分支的具体实例、元素集、赋材、材料类别与高度候选标签；不允许钢塔/PT未绑定点冒充已验材料热点。
+- 真实源CSV SHA256=`502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd`；冻结T057 INP SHA256=`c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`；CI执行Python程序SHA256=`ce93c26ec63332a7c05c64f489bd2a58439db5c36efd0826b6560d43cc0d2c65`；合成应力CSV SHA256=`2aa8642ca1ef6be2c13ca141528634dd4b01d374327682ad1758c07483471ef6`。工作流以触发提交SHA从GitHub raw下载，不是本机Abaqus。
+- 失败保留：[初次CI #40685550431](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40685550431)因合成CSV换行转义写成字面`\\n`触发`S10_SOURCE_MAP_ROW_COUNT_MISMATCH`，修正后[#40685584162](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40685584162)成功；该中间版误将真实源map变量覆盖模拟应力CSV变量，导致**打印的synthetic_csv_sha256错误等于源map SHA**，已在最终成功CI修正并确认真实模拟CSV哈希如上。失败/更正不删档。
+- REF/STANDARD/OFFICIAL/FIG：无新增期刊原页、授权规范原条款或真实应力图；OFFICIAL为GitHub Actions原始job日志及冻结INP。误差预算：源级身份可做字节哈希/确定性标签校验，但周向应力热点、积分点、初态Pe/重力/接触、网格和材料寿命物理误差`NEED_ESTIMATE`。**0次Abaqus/地震/材料寿命生产RUN，12阶段0/12 PASS**。下一最优动作：为D400/Pe独立设计子版构建独立源映射，并要求真实ODB积分点与材料基底审查后才允许材料应力进入雨流/Miner。
