@@ -1,10 +1,10 @@
 {
   "status": "RESEARCH_PDF_DOWNLOAD_RECEIPT_NOT_FULLTEXT_METHOD_REVIEW",
-  "utc": "2026-10-28T03:05:56.061701+00:00",
+  "utc": "2026-10-28T03:06:13.605485+00:00",
   "python": "3.12.15",
   "pypdf": "6.21.3",
   "source_level": "direct PDF from author/institution/publisher, PDF byte-verified",
-  "fulltext_count": 2,
+  "fulltext_count": 3,
   "items": [
     {
       "id": "Ishihara_2024_Structures_105886",
@@ -74,15 +74,21 @@
       "doi": "10.1016/j.renene.2020.05.181",
       "expected_pages": 28,
       "license_or_version": "City institution author accepted manuscript",
-      "status": "NOT_DOWNLOADED",
+      "status": "DOWNLOADED_VERIFIED_PDF",
       "attempts": [
         {
           "url": "https://openaccess.city.ac.uk/id/eprint/24342/1/Meng_et_al_renewable_energy_2020.pdf",
-          "exit_code": 52,
-          "http_and_redirect": "000  https://openaccess.city.ac.uk/id/eprint/24342/1/Meng_et_al_renewable_energy_2020.pdf",
-          "stderr": "curl: (52) Empty reply from server"
+          "exit_code": 0,
+          "http_and_redirect": "200 application/pdf https://openaccess.city.ac.uk/id/eprint/24342/1/Meng_et_al_renewable_energy_2020.pdf",
+          "stderr": ""
         }
-      ]
+      ],
+      "sha256": "cc8769039f53587f9dd2c88d70dde15bbc537d918e75dd22473fd279b9235905",
+      "bytes": 6414636,
+      "pages": 28,
+      "first_page_text_sample": "Copyright and Reuse: Copyright and Moral Rights remain with the author(s) and/or copyright holders. Copies of full items can be used for per",
+      "pdf_url": "https://openaccess.city.ac.uk/id/eprint/24342/1/Meng_et_al_renewable_energy_2020.pdf",
+      "page_count_matches_expected": true
     }
   ],
   "standard_text_READ": false,
