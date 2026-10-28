@@ -159,6 +159,33 @@ def cut_gap_wrench(lower, upper):
     return dF,dM,error
 
 
+def inertia_weights(a,b,density,stations):
+    """Exact mu(z)*LINEAR endpoint acceleration weights; not original node inertia."""
+    if not (math.isfinite(a) and math.isfinite(b) and b>a):
+        raise ValueError("bad span")
+    knots=[a]+[z for z,_ in stations if a<z<b]+[b]
+    mass=wu=0.
+    for l,r in zip(knots,knots[1:]):
+        mid=(l+r)/2
+        ml,mm,mr=density(l),density(mid),density(r)
+        mass+=(r-l)*(ml+mr)/2
+        wu+=(r-l)/6*(ml*(l-a)/(b-a)+4*mm*(mid-a)/(b-a)+mr*(r-a)/(b-a))
+    if not (math.isfinite(mass) and mass>0 and 0<=wu<=mass):
+        raise ValueError("bad density weights")
+    return mass-wu,wu,mass
+
+
+def inertia_remainder(demand,mass,gravity,wl,wu,al,au):
+    """INCOMPLETE: delta cut forces less gravity/LINEAR-INTERPOLATED inertia."""
+    if abs(wl+wu-mass)>max(1e-8,mass*1e-12):
+        raise ValueError("weights do not conserve mass")
+    if len(al)!=3 or len(au)!=3 or not all(math.isfinite(x) for x in tuple(al)+tuple(au)):
+        raise ValueError("invalid node acceleration")
+    inert=tuple(-(wl*al[i]+wu*au[i])/1000 for i in range(3))
+    grav=(0.,0.,-mass*gravity/1000)
+    return inert,tuple(demand[i]-grav[i]-inert[i] for i in range(3))
+
+
 def gap_accumulator():
     return [{"lower_gage":g,"upper_gage":g+1,"count":0,
              "sum_Fz_kN":0.0,"min_Fz_kN":float("inf"),
@@ -215,6 +242,17 @@ def selftest():
     dF,dM,e=cut_gap_wrench(((0,0,1),(100,0,0),(0,0,0)),
                            ((0,0,2),(100,0,0),(0,-100,0)))
     assert max(map(abs,dF))<1e-12 and max(map(abs,dM))<1e-12 and e<1e-12
+    mu=lambda z:1000+100*z
+    wl,wu,m=inertia_weights(0,10,mu,[(0,1000),(10,2000)])
+    assert abs(m-15000)<1e-9 and abs(wu-(5000+10000/3))<1e-9
+    acc=-2*wl/1000-4*wu/1000
+    inert,left=inertia_remainder((acc+5,0,-m*9.80665/1000),m,9.80665,wl,wu,(2,0,0),(4,0,0))
+    assert abs(left[0]-5)<1e-12 and abs(left[2])<1e-12
+    for bad in ((wl+1,wu,(2,0,0)),(wl,wu,(float("nan"),0,0))):
+        try: inertia_remainder((0,0,0),m,9.80665,bad[0],bad[1],bad[2],(4,0,0))
+        except ValueError: pass
+        else: raise AssertionError("invalid inertia not rejected")
+    print("PASS: analytic quadratic mass-acceleration integration, two negative gates")
     print("PASS: adjacent-cut sign, common-origin moments, independent lever-arm identity")
     print("PASS: stable source polar DCM, signs, orthogonality, inverse, tamper gates")
 
@@ -277,9 +315,10 @@ def tower_gravity_reference(static_zip, ed, fst, gage_positions):
         return sum((density(l)+density(r))*(r-l)*0.5 for l,r in zip(bounds,bounds[1:]))
     result=[]
     for i,(a,b) in enumerate(zip(gage_positions,gage_positions[1:]),1):
-        mass=integral(a[2],b[2])
+        wl,wu,mass=inertia_weights(a[2],b[2],density,rows)
         result.append({"lower_gage":i,"upper_gage":i+1,
                        "source_mass_between_gages_kg":mass,
+                       "inertia_weight_lower_kg":wl,"inertia_weight_upper_kg":wu,
                        "gravity_axial_reference_kN":-mass*gravity/1000})
     return {"tower_member":member_path,"tower_member_sha256":sha(raw),
             "tower_input_stations":n,"mass_adjustment":adjust,
@@ -305,7 +344,7 @@ def audit(args):
     names=h["channel_names"]
     if names[0]!="Time":
         raise ValueError("Time channel missing")
-    channels={f"TwHt{g}{suffix}":None for g in range(1,10) for suffix in SUFFIX}
+    channels={f"TwHt{g}{suffix}":None for g in range(1,10) for suffix in SUFFIX+("ALxt","ALyt","ALzt")}
     for name in channels:
         if name not in names:
             raise ValueError("missing native channel "+name)
@@ -323,8 +362,14 @@ def audit(args):
     max_ortho=max_inverse=max_rot=max_force_shift=max_moment_shift=0.0
     count=0; first=[]; first_positions=[]
     gaps=gap_accumulator(); gap_first=[]; gap_snapshots=[]; max_gap_transport_error=0.0
+    mass_reference={"HOLD":"source mass not read"}
+    inertia_stats=[{"lower_gage":k,"upper_gage":k+1,"count":0,
+                    "sum_unallocated_kN":[0.,0.,0.],
+                    "max_abs_inertia_kN":0.,"max_abs_unallocated_kN":0.,
+                    "peak_time_s":None} for k in range(1,9)]
+    inertia_first=[]
     for ti in range(h["num_samples"]):
-        sample=[]
+        sample=[]; accelerations=[]
         offset=h["data_offset_bytes"]+2*n*ti
         def read(name):
             j,s,o=channels[name]
@@ -339,6 +384,7 @@ def audit(args):
             fg=mul(R,F); mg=mul(R,M)
             at_base=tuple(x+y for x,y in zip(mg,cross(A,fg)))
             sample.append((A,fg,mg))
+            accelerations.append(mul(R,tuple(read(p+x) for x in ("ALxt","ALyt","ALzt"))))
             back=tuple(dot(tuple(R[j][i] for j in range(3)),fg) for i in range(3))
             err=max(abs(x-y) for x,y in zip(back,F))
             max_inverse=max(max_inverse,err)
@@ -352,10 +398,29 @@ def audit(args):
                               "global_force_kN":fg,"local_moment_kNm":M,
                               "global_moment_at_base_kNm":at_base})
             count+=1
+        if ti==0:
+            try: mass_reference=tower_gravity_reference(ed_zip,ed,fst,first_positions)
+            except ValueError as e: mass_reference={"HOLD":"mass unavailable: "+str(e)}
         for g in range(8):
             dF,dM,e=cut_gap_wrench(sample[g],sample[g+1])
             max_gap_transport_error=max(max_gap_transport_error,e)
-            gap_update(gaps,g,dF,dM,h["first_time_s"]+ti*h["time_increment_s"])
+            time_s=h["first_time_s"]+ti*h["time_increment_s"]
+            gap_update(gaps,g,dF,dM,time_s)
+            if "rows" in mass_reference:
+                source=mass_reference["rows"][g]
+                inert,rem=inertia_remainder(dF,source["source_mass_between_gages_kg"],
+                    mass_reference["gravity_source_FST_m_s2"],
+                    source["inertia_weight_lower_kg"],source["inertia_weight_upper_kg"],
+                    accelerations[g],accelerations[g+1])
+                stat=inertia_stats[g];stat["count"]+=1
+                for k in range(3):stat["sum_unallocated_kN"][k]+=rem[k]
+                stat["max_abs_inertia_kN"]=max(stat["max_abs_inertia_kN"],*(abs(x) for x in inert))
+                pk=max(map(abs,rem))
+                if pk>stat["max_abs_unallocated_kN"]:
+                    stat["max_abs_unallocated_kN"]=pk;stat["peak_time_s"]=time_s
+                if ti==0:
+                    inertia_first.append({"lower_gage":g+1,"upper_gage":g+2,
+                        "approx_inertia_global_kN":inert,"unallocated_global_kN":rem})
             if ti==0:
                 gap_first.append({"lower_gage":g+1,"upper_gage":g+2,
                                   "delta_force_global_kN":dF,
@@ -367,16 +432,17 @@ def audit(args):
                                       "delta_moment_about_global_origin_kNm":dM})
     for row in gaps:
         row["mean_Fz_kN"]=row.pop("sum_Fz_kN")/row["count"]
-    # If the original source's Tower.dat is present, compute its gravity
-    # contribution. A cut difference minus this term is NOT a free-body residual.
-    try:
-        mass_reference=tower_gravity_reference(ed_zip,ed,fst,first_positions)
+    # Unallocated is NOT an aerodynamic or free-body equilibrium residual.
+    if "rows" in mass_reference:
         for row,source in zip(gaps,mass_reference["rows"]):
             row["original_tower_gravity_reference_kN"]=source["gravity_axial_reference_kN"]
             row["mean_unallocated_axial_after_gravity_kN"]=(
                 row["mean_Fz_kN"]-source["gravity_axial_reference_kN"])
-    except ValueError as e:
-        mass_reference={"HOLD":"original tower gravity reference not available: "+str(e)}
+        for stat in inertia_stats:
+            if stat["count"]!=h["num_samples"]:
+                raise AssertionError("incomplete acceleration diagnostic")
+            stat["mean_unallocated_global_kN"]=[
+                v/stat["count"] for v in stat.pop("sum_unallocated_kN")]
     if max_gap_transport_error>1e-7:
         raise AssertionError("independent adjacent-cut wrench transport mismatch")
     if count!=108009 or max_ortho>1e-12 or max_inverse>1e-8:
@@ -399,6 +465,9 @@ def audit(args):
                "adjacent_cut_t400_t700_snapshots":gap_snapshots,
                "adjacent_cut_full_series_summary":gaps,
                "original_tower_gravity_source_comparison":mass_reference,
+               "approximate_inertia_first_sample":inertia_first,
+               "approximate_inertia_full_series":inertia_stats,
+               "inertia_scope":"source 70-station mass exact; only gage-endpoint linear interpolated AL; no 1120 node accelerations or FTTower",
                "max_independent_gap_transport_difference_kNm":max_gap_transport_error},
         "cut_gap_interpretation":"lower-minus-upper internal section resultants at global origin; comparison to source tower gravity leaves unallocated inertia/distributed loads and is NOT a free-body residual",
         "REF":"OpenFAST v3.5.3 ElastoDyn.f90 lines 922-943, 1190-1206, 6005-6034, 6856-6860; NWTC_Num.f90 lines 5378-5470",
@@ -411,7 +480,8 @@ def audit(args):
                         "orthogonality_abs":max_ortho,
                         "packed_OUTB_quantization":"channel scale/offset finite, precision limited by int16 packing; physical uncertainty NEED_ESTIMATE",
                         "adjacent_cut_independent_transport_error_kNm":max_gap_transport_error,
-                        "segment_gravity_inertia_distributed_load_residual":"NOT_COMPUTABLE: original distributed force, segment mass/inertia and sectional sign contract not yet closed",
+                        "segment_gravity_inertia_distributed_load_residual":"NOT_COMPUTABLE; reported unallocated force is NOT physical residual without source FTTower and 1120-node LinAccET",
+                        "inertia_interpolation_error":"UNBOUNDED without intermediate original node accelerations",
                         "dynamic_load_ownership":"UNVERIFIED"},
         "HOLD":"9 near-base gages only; 31-gage rerun different source; internal section resultants include inertia/gravity/RNA; no Abaqus external load or free-body physics PASS"
     }
@@ -434,7 +504,7 @@ def main():
     Path(args.output).write_text(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)+"\n")
     print("PASS S07 source-derived fixed-base DCM numerical gate; NOT free-body/ABAQUS PHYSICS PASS")
     print(json.dumps({k:result["TAB"][k] for k in result["TAB"] if k not in ("first_sample","adjacent_cut_first_sample","adjacent_cut_full_series_summary","adjacent_cut_t400_t700_snapshots")},sort_keys=True))
-    print("S07: 96008 adjacent-cut wrench DEMANDS, not free-body residuals or Abaqus loads")
+    print("S07: 96008 cut-demand/inertia-approximation comparisons; NO aerodynamic, free-body, Abaqus PASS")
 
 
 if __name__=="__main__":
