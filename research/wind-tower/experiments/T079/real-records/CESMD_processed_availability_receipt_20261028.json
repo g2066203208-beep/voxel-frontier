@@ -1,0 +1,77 @@
+{
+  "status": "S05_OFFICIAL_CESMD_PROCESSED_METADATA_QUERY_VERIFIED_NOT_WAVE_ACCEPTANCE",
+  "date_utc": "2026-10-28T07:10:18Z",
+  "source_level": "OFFICIAL CESMD records API LIVE JSON BYTES, processed availability metadata only; not processed accelerogram or verified low-frequency bandwidth",
+  "source_documentation": "https://www.strongmotioncenter.org/wserv/records/documentation/",
+  "official_example_groupby": "https://github.com/strongmotioncenter/CESMD_webservices/blob/main/V1_pmg.ipynb",
+  "script_path": "research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py",
+  "script_sha256": "6bdaaba47efc9fe6170e6e5ef81d0a4b6af8f89b2db39fce6945b3466def8129",
+  "script_commit": "d0158b9e8da1f4845133ec77f4a3e86c570b5769",
+  "software": "GitHub Actions Ubuntu 24.04; Python 3.12 stdlib urllib/json/hashlib",
+  "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648339562",
+  "run_conclusion": "completed/success",
+  "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648339562/artifacts/12798427921",
+  "artifact_zip_sha256": "ee9fe2bfab3a11cd9679ee86b7651ab7473642e5533c095f6894a82732ebbe4f",
+  "artifact_retention_days": 90,
+  "official_results": [
+    {
+      "event_id": "CI38457511",
+      "api_count_as_reported": 873,
+      "availability_objects": 873,
+      "processed_true_objects": 872,
+      "processed_false_objects": 1,
+      "raw_response_bytes": 1668319,
+      "raw_response_sha256": "8719655eeb628fc5a22578642674d64d36d6577017d872b279429d34102e5126",
+      "query_url": "https://www.strongmotioncenter.org/wserv/records/query?eventid=CI38457511&rettype=metadata&format=json&groupby=event&nodata=404"
+    },
+    {
+      "event_id": "CI39493944",
+      "api_count_as_reported": 246,
+      "availability_objects": 246,
+      "processed_true_objects": 246,
+      "processed_false_objects": 0,
+      "raw_response_bytes": 456657,
+      "raw_response_sha256": "5e553ab4ca4d1aed2ba938a09f4389765f0d7c549f98b9ab2112a76d99f85b98",
+      "query_url": "https://www.strongmotioncenter.org/wserv/records/query?eventid=CI39493944&rettype=metadata&format=json&groupby=event&nodata=404"
+    }
+  ],
+  "interpretation": "processed_true_objects counts availability objects reported by API, NOT distinct events/stations/paired horizontal components or engineering-usable waveforms; two requested event IDs are independent events but no new wave bytes acquired.",
+  "SOURCE": "two official CESMD JSON responses, SHA256 and exact query URLs above",
+  "REF": "existing T079 METHOD_PLAN and T080 novelty matrix; no new article full-text read this round",
+  "STANDARD": "no licensed IEC 2025 or GB/NB seismic design clause inspected; no code acceptance",
+  "OFFICIAL": "CESMD records documentation and USGS NSMP official CESMD processing route",
+  "RUN": "GitHub Actions 40648339562 real HTTP requests plus deterministic Python self-test; NO Abaqus solver",
+  "FIG": "none; no structural response plot",
+  "TAB": "two-event 873/246 availability objects; 872/246 processed=true objects; source bytes/hash above",
+  "error_budget": "API response and source bytes SHA256 reproducible; actual waveform instrument low-frequency, filter corners, orientation, processing revisions, response spectrum and target spectrum fit are unquantified NEED_ESTIMATE",
+  "failures": [
+    {
+      "run": "40648009990",
+      "error": "HTTP 400 missing required groupby parameter"
+    },
+    {
+      "run": "40648105826",
+      "error": "HTTP 400 missing groupby; failure body and per-event receipts preserved"
+    },
+    {
+      "run": "40648192452",
+      "error": "CESMD JSON processed flag is string 'true'/'false', not native boolean"
+    },
+    {
+      "run": "40648298496",
+      "error": "synthetic negative fixture outdated after accepting live string boolean; corrected"
+    },
+    {
+      "run": "40648339562",
+      "result": "both real event metadata queries and tests success"
+    }
+  ],
+  "PASS_HOLD": {
+    "S05": "PARTIAL/HOLD",
+    "official_metadata": "PASS_METADATA_ONLY",
+    "accepted_design_waves": 0,
+    "Abaqus_seismic_runs": 0,
+    "stages_passed": 0
+  },
+  "next_action": "Identify a registered/otherwise public official processed two-horizontal record with per-channel high-pass corner and processing history; fetch waveform bytes and compare computed 5%-damped 0.5–10s spectra with official values before any target-spectrum matching."
+}
