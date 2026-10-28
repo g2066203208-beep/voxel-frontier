@@ -137,6 +137,52 @@ def verify(R):
     return max(abs(dot(R[i],R[j])-(i==j)) for i in range(3) for j in range(3))
 
 
+
+def cut_gap_wrench(lower, upper):
+    """Observed lower-minus-upper INTERNAL cut resultants, in one inertial frame.
+
+    lower/upper = (position_m, global_force_kN, global_free_moment_kNm).
+    Returns delta force and delta moment about global origin. This is the
+    net segment *demand* from internal cuts, NOT a gravity/inertia residual.
+    """
+    A, Fa, Ma = lower
+    B, Fb, Mb = upper
+    dF = tuple(x-y for x,y in zip(Fa,Fb))
+    oa = tuple(x+y for x,y in zip(Ma,cross(A,Fa)))
+    ob = tuple(x+y for x,y in zip(Mb,cross(B,Fb)))
+    dM = tuple(x-y for x,y in zip(oa,ob))
+    # Independent lever-arm composition, then shift the resulting wrench.
+    at_a = tuple(x-y-z for x,y,z in
+                 zip(Ma,Mb,cross(tuple(b-a for a,b in zip(A,B)),Fb)))
+    via_a = tuple(x+y for x,y in zip(at_a,cross(A,dF)))
+    error = max(abs(x-y) for x,y in zip(dM,via_a))
+    return dF,dM,error
+
+
+def gap_accumulator():
+    return [{"lower_gage":g,"upper_gage":g+1,"count":0,
+             "sum_Fz_kN":0.0,"min_Fz_kN":float("inf"),
+             "max_Fz_kN":-float("inf"),
+             "max_abs_force_component_kN":0.0,
+             "max_abs_moment_component_at_global_origin_kNm":0.0,
+             "peak_force_time_s":None} for g in range(1,9)]
+
+
+def gap_update(stats, g, dF, dM, time_s):
+    row=stats[g]
+    row["count"]+=1
+    row["sum_Fz_kN"]+=dF[2]
+    row["min_Fz_kN"]=min(row["min_Fz_kN"],dF[2])
+    row["max_Fz_kN"]=max(row["max_Fz_kN"],dF[2])
+    peak=max(map(abs,dF))
+    if peak>row["max_abs_force_component_kN"]:
+        row["max_abs_force_component_kN"]=peak
+        row["peak_force_time_s"]=time_s
+    row["max_abs_moment_component_at_global_origin_kNm"]=max(
+        row["max_abs_moment_component_at_global_origin_kNm"],
+        *(abs(x) for x in dM))
+
+
 def selftest():
     I = dcm_fixed(0,0,0)
     assert I == ((1.,0.,0.),(0.,1.,0.),(0.,0.,1.))
@@ -162,6 +208,14 @@ def selftest():
     try: fixed_platform(fake.replace(b"False PtfmRDOF",b"True PtfmRDOF"))
     except ValueError: pass
     else: raise AssertionError("moving platform accepted")
+
+    dF,dM,e=cut_gap_wrench(((0,0,1),(0,0,-1049.9),(0,0,0)),
+                           ((0,0,2),(0,0,-1000),(0,0,0)))
+    assert abs(dF[2]+49.9)<1e-10 and max(map(abs,dM))<1e-12 and e<1e-12
+    dF,dM,e=cut_gap_wrench(((0,0,1),(100,0,0),(0,0,0)),
+                           ((0,0,2),(100,0,0),(0,-100,0)))
+    assert max(map(abs,dF))<1e-12 and max(map(abs,dM))<1e-12 and e<1e-12
+    print("PASS: adjacent-cut sign, common-origin moments, independent lever-arm identity")
     print("PASS: stable source polar DCM, signs, orthogonality, inverse, tamper gates")
 
 
@@ -199,7 +253,9 @@ def audit(args):
     n=h["num_output_channels"]
     max_ortho=max_inverse=max_rot=max_force_shift=max_moment_shift=0.0
     count=0; first=[]
+    gaps=gap_accumulator(); gap_first=[]; gap_snapshots=[]; max_gap_transport_error=0.0
     for ti in range(h["num_samples"]):
+        sample=[]
         offset=h["data_offset_bytes"]+2*n*ti
         def read(name):
             j,s,o=channels[name]
@@ -213,6 +269,7 @@ def audit(args):
             A=tuple(read(p+x) for x in ("TPxi","TPyi","TPzi"))
             fg=mul(R,F); mg=mul(R,M)
             at_base=tuple(x+y for x,y in zip(mg,cross(A,fg)))
+            sample.append((A,fg,mg))
             back=tuple(dot(tuple(R[j][i] for j in range(3)),fg) for i in range(3))
             err=max(abs(x-y) for x,y in zip(back,F))
             max_inverse=max(max_inverse,err)
@@ -225,6 +282,23 @@ def audit(args):
                               "global_force_kN":fg,"local_moment_kNm":M,
                               "global_moment_at_base_kNm":at_base})
             count+=1
+        for g in range(8):
+            dF,dM,e=cut_gap_wrench(sample[g],sample[g+1])
+            max_gap_transport_error=max(max_gap_transport_error,e)
+            gap_update(gaps,g,dF,dM,h["first_time_s"]+ti*h["time_increment_s"])
+            if ti==0:
+                gap_first.append({"lower_gage":g+1,"upper_gage":g+2,
+                                  "delta_force_global_kN":dF,
+                                  "delta_moment_about_global_origin_kNm":dM})
+            if ti in (6000,12000) and g in (0,7):
+                gap_snapshots.append({"sample_index":ti,"time_s":h["first_time_s"]+ti*h["time_increment_s"],
+                                      "lower_gage":g+1,"upper_gage":g+2,
+                                      "delta_force_global_kN":dF,
+                                      "delta_moment_about_global_origin_kNm":dM})
+    for row in gaps:
+        row["mean_Fz_kN"]=row.pop("sum_Fz_kN")/row["count"]
+    if max_gap_transport_error>1e-7:
+        raise AssertionError("independent adjacent-cut wrench transport mismatch")
     if count!=108009 or max_ortho>1e-12 or max_inverse>1e-8:
         raise AssertionError("dynamic DCM/inverse numerical acceptance failed")
     return {
@@ -239,7 +313,13 @@ def audit(args):
                "max_inverse_force_error_kN":max_inverse,
                "max_RP_xy_norm_deg":max_rot,
                "max_force_component_change_from_identity_kN":max_force_shift,
-               "max_base_moment_change_from_untransported_local_kNm":max_moment_shift},
+               "max_base_moment_change_from_untransported_local_kNm":max_moment_shift,
+               "adjacent_cut_gap_count":sum(x["count"] for x in gaps),
+               "adjacent_cut_first_sample":gap_first,
+               "adjacent_cut_t400_t700_snapshots":gap_snapshots,
+               "adjacent_cut_full_series_summary":gaps,
+               "max_independent_gap_transport_difference_kNm":max_gap_transport_error},
+        "cut_gap_interpretation":"lower-minus-upper internal section resultants at global origin; NOT external aerodynamic force or free-body residual",
         "REF":"OpenFAST v3.5.3 ElastoDyn.f90 lines 922-943, 1190-1206, 6005-6034, 6856-6860; NWTC_Num.f90 lines 5378-5470",
         "STANDARD":"NONE; no authorized IEC/GB clauses read",
         "FIG":"NONE; no native Abaqus physical response",
@@ -249,6 +329,8 @@ def audit(args):
         "error_budget":{"numerical_inverse_force_kN":max_inverse,
                         "orthogonality_abs":max_ortho,
                         "packed_OUTB_quantization":"channel scale/offset finite, precision limited by int16 packing; physical uncertainty NEED_ESTIMATE",
+                        "adjacent_cut_independent_transport_error_kNm":max_gap_transport_error,
+                        "segment_gravity_inertia_distributed_load_residual":"NOT_COMPUTABLE: original distributed force, segment mass/inertia and sectional sign contract not yet closed",
                         "dynamic_load_ownership":"UNVERIFIED"},
         "HOLD":"9 near-base gages only; 31-gage rerun different source; internal section resultants include inertia/gravity/RNA; no Abaqus external load or free-body physics PASS"
     }
@@ -270,7 +352,8 @@ def main():
     result=audit(args)
     Path(args.output).write_text(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)+"\n")
     print("PASS S07 source-derived fixed-base DCM numerical gate; NOT free-body/ABAQUS PHYSICS PASS")
-    print(json.dumps({k:result["TAB"][k] for k in result["TAB"] if k!="first_sample"},sort_keys=True))
+    print(json.dumps({k:result["TAB"][k] for k in result["TAB"] if k not in ("first_sample","adjacent_cut_first_sample","adjacent_cut_full_series_summary","adjacent_cut_t400_t700_snapshots")},sort_keys=True))
+    print("S07: 96008 adjacent-cut wrench DEMANDS, not free-body residuals or Abaqus loads")
 
 
 if __name__=="__main__":
