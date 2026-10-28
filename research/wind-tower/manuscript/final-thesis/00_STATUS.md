@@ -446,3 +446,10 @@ HOLD：
 - **阶段**：S06/S07独立图表准备有新增成果，S10/S11主线不变；正式**0/12未晋级**，地震和材料疲劳Abaqus RUN均0；冻结T057/T070不改、PR #42继续Draft。
 
 **图表生成CI实证补记（2026-10-28）：** 现有Ch3三张真实源屏查图已从744行SHA锁定源数据逐字节复算；[首次运行#40719782161](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40719782161)因任意text>25断言失败（源SHA、逐字节再生均已通过），随后修正为实有4条曲线/12根柱、SVG XML及124行CSV结构检查，[更正成功#40719936514](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40719936514) completed/success。完整负例、限制和图表输入见[现有图表说明](figures/README_S06_REAL_SCREENING_FIGURES_20261028.md)。这些仍为ETM载荷筛查，不等于论文正式DLC1.2、材料疲劳或物理PASS；**0/12未晋级**。
+
+
+## 2026-10-29｜S05/S09独立方法准备新增原文方程可执行基准（不改变12阶段PASS）
+- **0/12整阶段晋级；S05仍PARTIAL/HOLD，S09仍BLOCKED。** 本轮未重复S01微审计，直接对[2024 Ishihara原刊](https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1.pdf)物理p3–4/p6/p9/p12/p16的Eq1–6、Table5/6/9做**原页图+全文文本核读**，并提交[可复算S05/S09脚本](../../experiments/T079/s09_ishihara2024_equation_oracle.py)和[详细原式、运行、假设、误差及HOLD](../../experiments/T079/literature_notes.md)2026-10-29节。
+- **SOURCE/REF：** DOI 10.1016/j.istruc.2024.105886，作者PDF历史登记SHA256=\`3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238\`（本轮未重哈希）。**RUN：** Python3.13.5本地脚本SHA256=\`ada2813420e2d6ec77d633e3f8663f9b1843cfc91c8c32aa18062774e9feb280\`，Eq1–6解析及7项负向测试PASS；原刊Table5 FA二阶SLM/AEM偏差**+10.695587%**、日本JSCE基岩目标谱T6=**0.8533333333m/s²**，**均非本塔实测/规范参数**。
+- **STANDARD/OFFICIAL/FIG/TAB：** 未核新授权2025 IEC/GB/NB；OFFICIAL=作者PDF原页；FIG仅原文图，无本塔响应图；TAB=原文Table5/6/9及本轮独立算术。**误差/HOLD：** 原式浮点/原表舍入可核，本塔物理误差NEED-ESTIMATE；未有本塔同状态W/E/WE原生计算、可验场址目标谱、可靠低频真实记录、S01–S04物理PASS。Eq5向量峰值近似/Eq6 SRSS不得冒充同步W+E求解。S10材料疲劳、S11优化主线保持。
+- **下一唯一可独立动作：** 以已归档真实双水平地震记录为输入，制定并实测**长周期可靠频带与目标谱误差的失败关闭QC**，明确哪些记录不能作为S08输入；不等待S01才做研究准备，也不启动昂贵RUN。
