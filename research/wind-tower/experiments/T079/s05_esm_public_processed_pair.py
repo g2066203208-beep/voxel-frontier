@@ -58,17 +58,21 @@ def inspect_zip(raw):
                 raise ValueError('ZIP_MEMBER_LENGTH')
             txt = body.decode('utf-8', errors='replace')
             lines = txt.splitlines()
-            if len(lines) < 65:
-                raise ValueError('DYNA_64_LINE_HEADER_MISSING')
+            if len(lines) < 70:
+                raise ValueError('DYNA_HEADER_OR_DATA_TOO_SHORT')
             header = {}
-            for index, line in enumerate(lines[:64], 1):
+            header_end = None
+            for index, line in enumerate(lines[:70], 1):
                 if ':' not in line:
-                    raise ValueError(f'DYNA_HEADER_LINE_NOT_KEY_VALUE:{name}:line{index}:{line[:100]!r}')
+                    header_end = index - 1
+                    break
                 key, value = line.split(':', 1)
                 key = key.strip()
                 if key in header:
                     raise ValueError('DYNA_DUPLICATE_HEADER_KEY')
                 header[key] = value.strip()
+            if header_end is None or not 60 <= header_end <= 70:
+                raise ValueError('DYNA_HEADER_END_NOT_FOUND_OR_OUT_OF_RANGE')
             required = ('EVENT_ID', 'STATION_CODE', 'STREAM', 'NDATA',
                         'SAMPLING_INTERVAL_S', 'DURATION_S', 'UNITS',
                         'LOW_CUT_FREQUENCY_HZ', 'HIGH_CUT_FREQUENCY_HZ',
@@ -81,7 +85,7 @@ def inspect_zip(raw):
             if (npts < 10 or not math.isfinite(delta) or delta <= 0 or
                 not math.isfinite(duration) or abs(npts*delta-duration)>max(.02,2*delta)):
                 raise ValueError('DYNA_SAMPLE_GRID')
-            samples = [float(token) for line in lines[64:] for token in line.split()]
+            samples = [float(token) for line in lines[header_end:] for token in line.split()]
             if len(samples) != npts or any(not math.isfinite(x) for x in samples):
                 raise ValueError('DYNA_SAMPLES_COUNT_OR_NONFINITE')
             keys = ('EVENT_ID', 'STATION_CODE', 'STREAM', 'NDATA',
@@ -91,7 +95,9 @@ def inspect_zip(raw):
                     'BASELINE_CORRECTION', 'PROCESSING', 'DATA_LICENSE',
                     'DATA_CITATION', 'ORIGINAL_DATA_CREATOR')
             results.append({'filename': name, 'bytes': len(body), 'sha256': sha(body),
-                'dyna_header_64_lines_SOURCE_TEXT': [x[:250] for x in lines[:64]],
+                'dyna_header_line_count': header_end,
+                'dyna_header_lines_SOURCE_TEXT': [x[:250] for x in lines[:header_end]],
+                'numeric_samples_sha256_normalized_LF': sha(('\n'.join(lines[header_end:])+'\n').encode()),
                 'dyna_selected_header_fields': {k:header.get(k) for k in keys},
                 'numeric_samples': npts, 'sample_pga_in_header_units': max(map(abs,samples)),
                 'utf8_replacement_chars': txt.count('\ufffd')})
