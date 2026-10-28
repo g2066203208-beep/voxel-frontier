@@ -1,5 +1,9 @@
 # 嘉鱼10 MW预应力钢混塔：地震与风震研究方案
 
+## 2026-10-28 14:20｜S05数据更新（覆盖“仅一事件”旧状态，不改变目标谱HOLD）
+
+官方SCEDC FDSN现已真实归档**第二个独立地震事件**：2020 Lone Pine USGS `ci39493944` 的CI.CLC HNE/HNN双水平原始miniSEED+StationXML+20001×2点CSV、逐文件SHA256及5%阻尼T=1–10s真实基线敏感性结果，路径[real-records/USGS_ci39493944/CI_CLC](real-records/USGS_ci39493944/CI_CLC/)；[CI #40642999084](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40642999084)成功，过程日志末尾有完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、失败记录和SHA。**HNE/HNN原始记录含显著DC偏置**，原始末位移伪漂移数千米，震前20s去均值后PGA约0.0032/0.0037g、T10s谱差受近零分母病态放大；这不是可直接输入本158m混塔的设计地震波。两个事件仍缺**可靠低频截止、完整仪器频响、可审查的参考目标谱/场地假设与多事件谱匹配**。严禁以“两事件已入库”冒充S05 PASS，S08/S09及原生Abaqus地震仍为0，正式12阶段0/12。下一步优先对**具有公开强震处理历史和可用长周期范围**的真实记录做谱相容性QC，而不是继续积累未验低频原始加速度。
+
 ## 2026-10-28 13:08｜S05实际波源筛选新增六通道数据（本节覆盖此前“仅CLC一站”的范围）
 
 本轮已将**同一Ridgecrest地震事件**的三个台站CI.CLC、CI.PASC、CI.RVR共六个水平分量（各20,001点、dt=0.01s）实际逐字节SHA256核验，并在T=0.5/1/2/4/6/8/10s、ζ=5%下计算**原始/前20s去均值/全窗线性去趋势**伪谱加速度及漂移。全部结果、每源SHA、数值误差与来源缺口在[真实六通道JSON](real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json)和[过程日志](PROCESS_LOG.md)；[Python可复算程序](s05_ground_motion_pair_qc.py)扩展了`--station-triage`，[RVR恢复manifest](real-records/USGS_ci38457511/CI_RVR_manifest.json)不伪装原始FDSN收据。**六个分量=三个台站=仅一个独立事件**，且低频可靠范围、参考目标谱与PASC/RVR原始收据仍缺，故**正式可用地震设计波仍0组**，不能进入Abaqus地震生产。T≥4s原样相对前20s去均值最大谱差：CLC HNE/HNN 114.53%/203.88%，PASC 1205.72%/34.84%，RVR 435.70%/2580.20%。这证明原始偏置影响显著，**不证明某种去趋势就是正确地震输入**。下一步必须换**独立地震事件**并取得可用低频、处理历史和可审查参考谱，不能重复用同事件多台站凑样本数。
