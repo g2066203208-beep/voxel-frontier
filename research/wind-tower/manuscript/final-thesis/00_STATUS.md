@@ -365,3 +365,11 @@ HOLD：
 - **实质产物（SOURCE/OFFICIAL/RUN/TAB）**：对源SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`的历史158m OpenFAST v3.5.3原始OUTB，复用[源级程序](../../experiments/T077/recovery/s07_v353_fixed_base_native_frame.py)（SHA256=`0a7d9e184c6f61b6039ad07c5e88610fc5d069521b57d374ea81f270dc7b1a50`），对12001点×8相邻段真实计算FL/AL/RP的int16半LSB保守传播包络。8段原始未分配力最大绝对值`0.036343–0.036764 kN`，**小于**对应源打包量化保守上界`0.048246–0.048751 kN`；比值`0.7506–0.7568`。因此0.03676kN尚不具备可分辨物理意义，**既不证明其全由量化造成，也不能作为气动力或力平衡残差**。永久8行表、官方Fortran两原件SHA256及运行程序SHA见[真实JSON](../../experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json)，[原始CI自动提交](https://github.com/g2066203208-beep/voxel-frontier/commit/5c0f164348aca46a3a9317f2e93d8c14c0cec9ec)；[过程与假设/失败记录](../../experiments/T080/PROCESS_LOG.md)。
 - **REF/STANDARD/FIG及误差**：无新增期刊原页、无新读IEC/GB/NB授权条款、无原生响应FIG；只核对OpenFAST v3.5.3源级ElastoDyn/NWTC源码与原始输出，算法包络不是物理不确定度；1120中间节点加速度、FTTower、31测点源与自由体载荷所有权仍HOLD。
 - **单一最大HOLD**：S07缺完整分布力/中间节点和31测点原始数据，不能进行正式六分量外载映射或Abaqus生产。**下一唯一动作**：在已有S10研究文件内实施分材料雨流—均值应力—Miner合成可复算正负测试，待真实局部应力和授权材料参数后才计算寿命。
+
+## 2026-10-28｜S10局部材料应力雨流方法真实CI通过（独立准备；非材料疲劳PASS）
+
+- **阶段状态**：12阶段整阶段PASS **0/12未晋级**；S10新增`METHODS_TESTED_ON_SYNTHETIC / PHYSICS_HOLD`，不把load-DEL或合成应力称为20年材料寿命；S01–S09/S11–S12既有门禁不变。
+- **SOURCE/RUN**：[S10局部应力雨流程序](../../experiments/T077/recovery/s10_local_stress_rainflow_gate.py)要求原始局部应力CSV SHA256、完整来源manifest、已验证的重力+有效PT均值初态；程序GitHub Actions原始SHA256=`0d149461ab9e064e992c7962060f5d5feb536f2b5d744c5d680bf11a95074fd4`。真实[CI #40662177312](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40662177312) `success`，Python编译/12项负测/解析循环与[原有条件Miner程序](../../experiments/T077/recovery/s10_miner_damage_gate.py)6项负测均通过；**本轮Abaqus/OpenFAST生产RUN=0，材料寿命RUN=0，地震RUN=0**。
+- **TAB/FIG**：解析合成应力`[0,4,1,3,0]` MPa雨流得`range=2 MPa,count=1`与`range=4 MPa,count=0.5+0.5`；可选钢材Goodman假设示例`range=100,mean=100,Su=500 MPa`得到125 MPa，非实际材料参数；无真实响应FIG。
+- **REF/STANDARD/OFFICIAL/误差**：Ch4已有REF主线不变，未读取ASTM/IEC/GB/NB授权材料疲劳条款或S–N原页；OFFICIAL为CI原始日志。解析算术误差<1e-12 MPa（Goodman示例），真实局部应力、材料模型、均值应力修正、wind-bin统计与网格误差预算均`NEED_ESTIMATE`；合成数据SHA256=`2fabca4d30e6018d15a7ad5c1be22b6267e916a8f6404037a7a1af20a2f2dae5`。
+- **最大HOLD**：缺经S01–S04原生验证的局部材料应力时程和材料专属S–N/均值应力来源；不能给Miner工程损伤或寿命。完整[方法、负例与失败边界过程记录](../../experiments/T080/PROCESS_LOG.md)。下一单一动作：准备原生局部应力提取接口及真实数据身份/格式拒绝测试，不伪造应力或启动昂贵求解。
