@@ -145,7 +145,10 @@ def transform_csv(input_path, output_path):
         case=_nonempty(row,'case_id'); gage=_nonempty(row,'gage_id')
         if _nonempty(row,'force_owner')!='SECTION_RESULTANT':
             raise ValueError('force owner must be SECTION_RESULTANT; no external-load export')
-        _nonempty(row,'frame_evidence'); _nonempty(row,'position_evidence')
+        frame_proof=_nonempty(row,'frame_evidence')
+        if frame_proof != 'SYNTHETIC_KNOWN_ROTATION' and not frame_proof.startswith('DCM_SOURCE_VERIFIED:'):
+            raise ValueError('frame_evidence requires independently verified DCM; RP angles alone are not DCM')
+        _nonempty(row,'position_evidence')
         t=float(row['time_s'])
         if not math.isfinite(t):
             raise ValueError('nonfinite time')
@@ -246,19 +249,110 @@ def selftest():
     return 'PASS synthetic rotation/moment/reference/sign/invariance/invalid input/CLI gates'
 
 
+
+# The v3.5.3 source uses AngPosEF components in degrees for TwHt*RP*i.
+# These are NOT a supplied 3x3 direction cosine matrix. Do not silently
+# reinterpret the three outputs as an exact Euler orientation.
+V353_ELASTODYN_GIT_BLOB = '2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1'
+T062_OUTB_SHA256 = '0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c'
+V353_SOURCE_SIGNATURES = (
+    'm%AllOuts( TwHtRPxi(I) ) =  m%RtHS%AngPosEF(1,p%TwrGagNd(I))*R2D',
+    'm%AllOuts( TwHtRPyi(I) ) = -m%RtHS%AngPosEF(3,p%TwrGagNd(I))*R2D',
+    'm%AllOuts( TwHtRPzi(I) ) =  m%RtHS%AngPosEF(2,p%TwrGagNd(I))*R2D',
+    'FrcFGagT = FrcONcRt - p%YawBrMass*( p%Gravity*m%CoordSys%z2 + LinAccEO )',
+    'TmpVec2  = FTTower(:,J) - p%MassT(J)*( p%Gravity*m%CoordSys%z2 + LinAccET(:,J) )',
+    'm%AllOuts( TwHtFLxt(I) ) =     DOT_PRODUCT( FrcFGagT, m%CoordSys%t1(p%TwrGagNd(I),:) )',
+    'm%AllOuts( TwHtTPxi(I) ) =      m%RtHS%rT(1,p%TwrGagNd(I))',
+    'm%AllOuts( TwHtALxt(I) ) =      DOT_PRODUCT( LinAccET(:,p%TwrGagNd(I)), m%CoordSys%t1(p%TwrGagNd(I),:) )',
+)
+
+def v353_original_source_contract(official_source, historical_receipt):
+    """Read original v3.5.3 Fortran + original T062 OUTB receipt, no physics RUN.
+
+    TwHtRP* are angle-vector components (deg), not a proven exact Euler DCM.
+    TwHtFL*/ML* are tower internal section resultants, already integrating
+    gravity, inertial acceleration and tower-top terms (see source lines).
+    """
+    import json
+    raw = Path(official_source).read_bytes()
+    if git_blob_sha1(raw) != V353_ELASTODYN_GIT_BLOB:
+        raise ValueError('official ElastoDyn v3.5.3 Git blob SHA mismatch')
+    source = raw.decode('utf-8')
+    missing = [s for s in V353_SOURCE_SIGNATURES if s not in source]
+    if missing:
+        raise ValueError('official v3.5.3 output/source contract changed: ' + repr(missing))
+    receipt_raw = Path(historical_receipt).read_bytes()
+    receipt = json.loads(receipt_raw.decode('utf-8'))
+    if receipt.get('case') != 'U09p343881_ETM_S01' or receipt.get('outb_sha256') != T062_OUTB_SHA256:
+        raise ValueError('T062 OUTB source identity mismatch')
+    full = receipt['full_synchronous_native_series']
+    if full['sample_count'] != 12001 or full['gage_count'] != 9:
+        raise ValueError('T062 sample count or gage identity mismatch')
+    stats = full['native_channel_summary']
+    units = {
+        'FLxt':'(kN)', 'FLyt':'(kN)', 'FLzt':'(kN)',
+        'MLxt':'(kN-m)', 'MLyt':'(kN-m)', 'MLzt':'(kN-m)',
+        'TPxi':'(m)', 'TPyi':'(m)', 'TPzi':'(m)',
+        'RPxi':'(deg)', 'RPyi':'(deg)', 'RPzi':'(deg)',
+        'ALxt':'(m/s^2)', 'ALyt':'(m/s^2)', 'ALzt':'(m/s^2)',
+    }
+    rows = []
+    for g in range(1,10):
+        sample = {}
+        for suffix, unit in units.items():
+            entry = stats.get(f'TwHt{g}{suffix}')
+            if entry is None or entry.get('unit') != unit:
+                raise ValueError(f'missing or incorrect original unit for TwHt{g}{suffix}')
+            value = float(entry['first'])
+            if not math.isfinite(value):
+                raise ValueError('nonfinite original channel first sample')
+            sample[suffix] = value
+        rows.append({
+            'gage':g, 'TPzi_m':sample['TPzi'],
+            'RPxi_deg':sample['RPxi'], 'RPyi_deg':sample['RPyi'],
+            'RPzi_deg':sample['RPzi'], 'FLxt_kN':sample['FLxt'],
+            'FLyt_kN':sample['FLyt'], 'FLzt_kN':sample['FLzt'],
+            'MLyt_kNm':sample['MLyt'],
+        })
+    return {
+        'source_version':'OpenFAST ElastoDyn v3.5.3 original Fortran',
+        'official_source_git_blob_sha1':git_blob_sha1(raw),
+        'official_source_sha256':hashlib.sha256(raw).hexdigest(),
+        'outb_sha256':T062_OUTB_SHA256,
+        'historical_receipt_sha256':hashlib.sha256(receipt_raw).hexdigest(),
+        'verified_gages':len(rows),
+        'verified_native_channels':len(rows)*len(units),
+        'first_sample_gages':rows,
+        'first_sample_axial_delta_gage9_minus_gage1_kN':rows[-1]['FLzt_kN']-rows[0]['FLzt_kN'],
+        'frame_status':'RP_ANGULAR_POSITION_VECTOR_DEG / EXACT_DCM_NOT_PROVEN',
+        'owner_status':'SECTION_RESULTANT_INCLUDES_GRAVITY_INERTIA_TOP_TERMS / NOT_PURE_AERODYNAMIC_EXTERNAL',
+        'physics_status':'HOLD_NO_VERIFIED_DCM_OR_SIGNED_FREE_BODY',
+    }
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--self-test',action='store_true')
+    p.add_argument('--official-v353-source',type=Path)
+    p.add_argument('--outb-receipt',type=Path)
+    p.add_argument('--contract-json',type=Path)
     p.add_argument('--static-source',type=Path,help='real 30-row static source regression')
     p.add_argument('--input',type=Path,help='explicit dynamic source CSV (frame algebra only)')
     p.add_argument('--output',type=Path,help='frame algebra CSV (NOT external load)')
     a=p.parse_args()
     if a.self_test: print(selftest())
+    if a.official_v353_source or a.outb_receipt:
+        if not (a.official_v353_source and a.outb_receipt):
+            p.error('--official-v353-source and --outb-receipt must be supplied together')
+        import json
+        receipt=v353_original_source_contract(a.official_v353_source,a.outb_receipt)
+        print('V353_SOURCE_CONTRACT',json.dumps({k:v for k,v in receipt.items() if k!='first_sample_gages'},sort_keys=True))
+        if a.contract_json:
+            a.contract_json.write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\\n',encoding='utf-8')
     if a.static_source: print('STATIC_REAL_SOURCE',static_source_regression(a.static_source))
     if a.input:
         if a.output is None: p.error('--input requires --output')
         print('DYNAMIC_FRAME_ONLY',transform_csv(a.input,a.output))
-    if not (a.self_test or a.static_source or a.input): p.error('no action requested')
+    if not (a.self_test or a.static_source or a.input or a.official_v353_source): p.error('no action requested')
 
 
 if __name__=='__main__': main()
