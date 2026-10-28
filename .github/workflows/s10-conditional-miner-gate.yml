@@ -6,6 +6,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_local_stress_rainflow_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_d400_pe_source_map_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_native_part_station_binding_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv'
@@ -64,3 +65,43 @@ jobs:
           python3 s10_native_odb_local_stress_gate.py --self-test --source-map S10_T057_68PART_INP_METADATA_20261028.csv
           sha256sum s10_miner_damage_gate.py s10_local_stress_rainflow_gate.py s10_native_odb_local_stress_gate.py
           echo 'S10: SYNTHETIC NUMERICAL QC ONLY; NO VERIFIED MATERIAL STRESS, NO S-N PARAMETER OR PHYSICAL PASS.'
+
+      - name: Reconstruct SHA-pinned D400 Pe child and inspect actual 68-part source (NO ABAQUS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower"
+          for f in s01_native_inp_cage_polygon_clearance.py s01_straight_bar_radial_clearance.py s01_d400_d500_straight_t3d2_exact.py s01_d400_relayout_pe_diagnostic_inp.py s01_d400_pe_g1_instrument.py s01_d400_uniform_pe_repro_min.py s01_frozen_t057_full_mesh_mass_repro.py s10_t057_native_metadata_gate.py s10_d400_pe_source_map_gate.py S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv; do
+            curl --fail --location --silent --show-error --retry 3 --output "$f" "$ROOT/experiments/T077/recovery/$f"
+          done
+          curl --fail --location --silent --show-error --retry 3 --output T057.inp "$ROOT/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          echo 'c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db  T057.inp' | sha256sum --check
+          python3 -m py_compile s10_d400_pe_source_map_gate.py
+          python3 s10_d400_pe_source_map_gate.py --self-test
+          python3 s01_d400_d500_straight_t3d2_exact.py --inp T057.inp --outdir "$RUNNER_TEMP/s10_geom"
+          python3 s01_d400_relayout_pe_diagnostic_inp.py --inp T057.inp --geometry "$RUNNER_TEMP/s10_geom/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv" --outdir "$RUNNER_TEMP/s10_child"
+          python3 s01_d400_pe_g1_instrument.py --input "$RUNNER_TEMP/s10_child/S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp" --output "$RUNNER_TEMP/S01_D400_Pe_G1_INSTRUMENTED_DIAGNOSTIC_ONLY.inp" --manifest "$RUNNER_TEMP/s10_instrument_manifest.json"
+          python3 - <<'PY'
+          import os, pathlib, zipfile
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          src=root/'S01_D400_Pe_G1_INSTRUMENTED_DIAGNOSTIC_ONLY.inp'
+          with zipfile.ZipFile(root/'s10_g1.zip','w',compression=zipfile.ZIP_DEFLATED) as z:
+              z.write(src,arcname=src.name)
+          PY
+          python3 s01_d400_uniform_pe_repro_min.py --zip "$RUNNER_TEMP/s10_g1.zip" --out "$RUNNER_TEMP/S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp"
+          python3 s10_d400_pe_source_map_gate.py --child "$RUNNER_TEMP/S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp" --t057-map S10_T057_68PART_INP_METADATA_20261028.csv --out "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv" | tee "$RUNNER_TEMP/s10_d400_source_receipt.json"
+          sha256sum "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv"
+          echo 'BEGIN_S10_D400_CSV'
+          cat "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv"
+          echo 'END_S10_D400_CSV'
+          echo 'NO NATIVE ODB, NO PT EQUILIBRIUM, NO MATERIAL FATIGUE PASS.'
+      - name: Archive D400 Pe source-level CSV and receipt (no INP/ODB)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s10-d400-pe-68part-static-source-map
+          path: |
+            ${{ runner.temp }}/S10_D400_PE_68PART_INP_METADATA_20261028.csv
+            ${{ runner.temp }}/s10_d400_source_receipt.json
+          if-no-files-found: warn
+          retention-days: 14
