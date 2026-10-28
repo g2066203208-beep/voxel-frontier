@@ -152,6 +152,53 @@ def spectrum_pair(raw):
             'Jiayu_target_spectrum_matched':False,'S05_PASS':False}
 
 
+def low_frequency_diagnostic(raw):
+    """Numerical triage only: no verified instrument SNR, passband or site spectrum."""
+    from s05_ground_motion_pair_qc import sdof
+    members = inspect_zip(raw)
+    out = {'source_zip_sha256':sha(raw), 'components':{}, 'S05_PASS':False,
+           'Abaqus_RUN':False, 'instrument_SNR_verified':False,
+           'usable_long_period_band_verified':False, 'target_spectrum_verified':False,
+           'caveats':['first 10 s RMS is NOT independently verified pre-event noise',
+                      'integrated drift assumes zero initial velocity and displacement',
+                      '2x/4x decimation lacks anti-aliasing: numerical sensitivity only',
+                      'ideal analog Butterworth gain does not verify actual filter phase or pass count']}
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for member in members:
+            h = member['dyna_selected_header_fields']
+            stream = h['STREAM']
+            if stream not in ('HNE','HNN'): continue
+            if h['UNITS']!='cm/s^2': raise ValueError('EXPECTED_CM_PER_S2')
+            delta, fc, order = float(h['SAMPLING_INTERVAL_S']), float(h['LOW_CUT_FREQUENCY_HZ']), int(h['FILTER_ORDER'])
+            if delta<=0 or fc<=0 or order<=0: raise ValueError('BAD_FILTER_OR_TIME_GRID')
+            lines=z.read(member['filename']).decode('utf-8').splitlines()
+            a=[float(token)*.01 for line in lines[member['dyna_header_line_count']:] for token in line.split()]
+            if len(a)!=member['numeric_samples']: raise ValueError('BAD_SAMPLE_COUNT')
+            v=d=0.
+            for x,y in zip(a,a[1:]):
+                v1=v+(x+y)*delta*.5
+                d+=(v+v1)*delta*.5
+                v=v1
+            first=a[:max(1,min(len(a),round(10/delta)))]
+            rows=[]
+            for T in (4.,6.,8.,10.):
+                s=[sdof(a[::k],delta*k,T,.05)['pseudo_sa_m_s2'] for k in (1,2,4)]
+                if s[0]<=0 or not all(math.isfinite(x) for x in s): raise ValueError('INVALID_PSA')
+                ideal=1/math.sqrt(1+(fc*T)**(2*order))
+                rows.append({'T_s':T,'Sa_dt_m_s2':s[0],'Sa_2dt_m_s2':s[1],'Sa_4dt_m_s2':s[2],
+                    'relative_2dt_difference':abs(s[1]-s[0])/s[0],
+                    'relative_4dt_difference':abs(s[2]-s[0])/s[0],
+                    'f_over_highpass_fc':1/(fc*T),
+                    'ideal_single_pass_analog_gain_CONDITIONAL':ideal})
+            out['components'][stream]={'source_numeric_sha256':member['numeric_samples_sha256_normalized_LF'],
+                'npts':len(a),'dt_s':delta,'fc_Hz':fc,'order':order,
+                'first10s_rms_m_s2_NOT_SNR':math.sqrt(sum(x*x for x in first)/len(first)),
+                'final_velocity_m_s_DIAGNOSTIC':v,'final_displacement_m_DIAGNOSTIC':d,
+                'periods':rows}
+    if set(out['components'])!={'HNE','HNN'}: raise ValueError('MISSING_HORIZONTALS')
+    return out
+
+
 def make_report(raw, timestamp, content_type='unknown'):
     members = inspect_zip(raw)
     return {'status': 'PUBLIC_ESM_PROCESSED_ZIP_RECEIPT_NOT_DESIGN_WAVE',
@@ -163,6 +210,7 @@ def make_report(raw, timestamp, content_type='unknown'):
         'http_content_type': content_type, 'zip_sha256': sha(raw),
         'zip_bytes': len(raw), 'unpacked_files': members,
         'processed_pair_spectrum': spectrum_pair(raw),
+        'processed_pair_low_frequency_diagnostic': low_frequency_diagnostic(raw),
         'unpacked_file_count': len(members),
         'actual_two_horizontal_components_confirmed': False,
         'actual_processing_filter_corner_confirmed': False,
@@ -202,6 +250,7 @@ def self_test():
     r = make_report(valid, 'SYNTHETIC', 'application/zip')
     assert r['unpacked_file_count'] == 3 and r['zip_sha256'] == sha(valid)
     assert not r['S05_PASS'] and not r['actual_processing_filter_corner_confirmed']
+    assert set(r['processed_pair_low_frequency_diagnostic']['components'])=={'HNE','HNN'}
     cases = [b'not a zip', zip_bytes([('../bad.ACC', b'123')]),
              zip_bytes([('empty.ACC', b'')]), zip_bytes([]),
              zip_bytes([('dup.ACC', b'1'), ('dup.ACC', b'2')])]

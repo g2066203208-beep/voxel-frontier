@@ -212,6 +212,29 @@ jobs:
                   print('ESM_HEADER',f['filename'],i,repr(line))
           assert x['S05_PASS'] is False and x['actual_processing_filter_corner_confirmed'] is False
           PY
+      - name: Real ESM processed low-frequency numerical triage (NOT SNR/design PASS)
+        if: success()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,math
+          p='esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_receipt.json'
+          j=json.load(open(p,encoding='utf-8'))
+          q=j['processed_pair_low_frequency_diagnostic']
+          assert not q['S05_PASS'] and not q['instrument_SNR_verified']
+          assert set(q['components'])=={'HNE','HNN'}
+          for name,c in sorted(q['components'].items()):
+              assert c['npts']==32040 and abs(c['dt_s']-.005)<1e-12
+              assert abs(c['fc_Hz']-.04)<1e-12
+              print('REAL_ESM_COMPONENT',name,c['source_numeric_sha256'],
+                    'first10_RMS_NOT_SNR',c['first10s_rms_m_s2_NOT_SNR'],
+                    'v_end_DIAGNOSTIC',c['final_velocity_m_s_DIAGNOSTIC'],
+                    'd_end_DIAGNOSTIC',c['final_displacement_m_DIAGNOSTIC'])
+              for row in c['periods']:
+                  assert all(math.isfinite(v) for k,v in row.items() if isinstance(v,float))
+                  print('REAL_ESM_LONG_PERIOD_NUMERICAL_QC',name,row)
+          print('S05_QC_NOT_DESIGN_PASS')
+          PY
       - name: Preserve original official bytes or explicit failure receipt
         if: always()
         uses: actions/upload-artifact@v4

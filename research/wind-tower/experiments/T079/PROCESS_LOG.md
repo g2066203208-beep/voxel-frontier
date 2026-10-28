@@ -134,3 +134,10 @@
 
 
 **本轮最终复核补记（2026-10-29 02时）：** 最终可执行脚本Python3.13本地实测`--self-test`通过5项非法ZIP拒绝；脚本UTF-8/LF SHA256=`9ce78e4af8ce20d5421a85d1114e42ff0243edc04dd1b91cac99e019c3b2fbe1`，Git blob=`7e748a2dcee6ba0d050b34c26e08261fc71006c4`。从两次实际GitHub Actions官方ZIP artifact原字节分别运行`make_report`，三分量32040行归一化数值SHA完全一致、4个双水平几何均值谱浮点结果逐项相同；并用`git hash-object`核实已提交4行CSV blob=`34966833038fa3561285e6c6d907c02cd9aafcd8`。最终CI新版程序[run #40744138090](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40744138090)查询时仍为**queued**，**不得声称最终CI已成功**；早期官方原件获取ESM job的成功与新版本地真数据计算应分别表述。另一次CESMD 502与63/64行解析失败已按上文保留。所有地震结构响应及物理PASS仍为0。
+
+
+### 2026-10-29 03时｜S05 ESM已处理波长周期数值稳健性独立推进（未冒称低频可靠性PASS）
+
+SOURCE/OFFICIAL：复用前轮ESM v3 IT-2012-0008/IT.NVL MP官方三分量（DOI 10.13127/esm.3），已登记两次下载归一化HNE SHA256 `f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a`、HNN `bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275`；原件在Actions artifact，程序仍由官方重新获取，不把动态ZIP时间戳当波形身份。REF：ESM v3及原DYNA人工处理header，未新增期刊全文阅读。STANDARD：IEC2025/GB/NB授权条款本轮未新核读。
+
+RUN：直接扩展现有 `s05_esm_public_processed_pair.py` 和现有S05 workflow；每条真实HNE/HNN加速度计算起始10s RMS（不是已证实的震前噪声/SNR）、零初速下全窗梯形积分末速度和位移（不是地表永久位移）、T=4/6/8/10s且5%阻尼Newmark伪Sa在dt/2dt/4dt的差异（未经抗混叠的降采样仅是数值敏感性），以及二阶理想单程模拟Butterworth高通幅值 `1/sqrt(1+(fc*T)^(2*order))`（条件性，不等于ESM实际滤波传递函数）。数值追加在原官方ZIP receipt JSON中；workflow打印真实源身份、每分量/周期结果，保留原始数据和失败日志。初次提交时新版CI尚未确认，**不得声称真实数值已PASS**。FIG无本塔地震图；TAB为真实CI待生成的8行周期诊断。误差预算：原采样/2dt/4dt差可测，实际仪器SNR、滤波相位、有效最长周期、嘉鱼目标谱与场地危险性仍HOLD；Abaqus地震RUN=0，S05 PARTIAL/HOLD，12阶段0/12。下一单一动作：核实新版CI真实长周期差异并补独立低频噪声/滤波证据。

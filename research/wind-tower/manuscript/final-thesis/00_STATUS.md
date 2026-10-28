@@ -468,3 +468,8 @@ HOLD：
 - **S05独立准备新增实物证据：** 从[ESM v3官方公开服务](https://esm-db.eu/esmws/eventdata/1/query-options.html)真实取得2012意大利`IT-2012-0008`、`IT.NVL`手工处理MP三分量HNE/HNN/HNZ。**每分量32040点、0.005s、160.2s；DYNA原件头直接给出二阶Butterworth高通0.040Hz、低通30Hz、基线已去除**。这是实际已处理波原件，不再是只有仪器灵敏度转换的原始加速度；但其Vs30=190m/s/EC8 C、震源/场址均非嘉鱼设计事实。
 - **SOURCE/OFFICIAL/RUN/TAB：** [GitHub Actions官方原件artifact #12840226658](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40743023831/artifacts/12840226658)与[独立重取 #12840740904](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40743165018/artifacts/12840740904)；两次动态ZIP SHA不同，但**HNE/HNN/HNZ 32040个数值文本SHA各自完全一致**（见[T079完整过程日志](../../experiments/T079/PROCESS_LOG.md)）。[可运行源获取、63行头解析与谱程序](../../experiments/T079/s05_esm_public_processed_pair.py)复用原S05 Newmark核；[4行真实5%阻尼双水平几何平均谱CSV](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv)，T=4/6/8/10s的Sa=0.03769255/0.02860537/0.01325152/0.00831107 m/s²。实际错误：原63行头曾被错误按64行解析导致CI失败，已修复并保留失败历史；并行CESMD API曾HTTP502，不能把工作流整体失败视为全部成功。
 - **REF/STANDARD/FIG/HOLD：** REF=ESM v3(2026) DOI `10.13127/esm.3`及DYNA原头的Paolucci2011处理名称（未读其全文）；STANDARD未核新授权IEC2025/GB/NB；FIG无塔响应；数值时间积分/源量化与物理低频SNR、滤波处理、场址目标谱不确定性分开记录，后者仍NEED_ESTIMATE。**S05仍PARTIAL/HOLD，S08/S09无地震Abaqus RUN，S01–S04仍未原生PASS，整阶段0/12**；S10分材料风致疲劳与S11优化主线不变。**下一唯一动作：**以这对已处理且SHA锁定的真实双水平波为对象，核实低频可用性与嘉鱼假设目标谱的正式来源/匹配，不进入昂贵生产。
+
+
+## 2026-10-29 03时｜S05独立程序推进（0/12未晋级）
+
+现有ESM MP原件处理脚本增加HNE/HNN长周期dt/2dt/4dt Newmark谱敏感性、起始10s RMS（非SNR）、积分末漂移（非真实位移）、理想单程Butterworth条件幅值；CI对官方原件复算并保存同一receipt。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、输入SHA、误差边界、失败记录见[过程日志](../../experiments/T079/PROCESS_LOG.md)。本轮不提前宣布CI通过、S05设计谱适用或Abaqus地震结果；S05 PARTIAL/HOLD，S08/S09 BLOCKED，S10材料疲劳和S11优化仍保留。
