@@ -274,3 +274,8 @@ HOLD：
 ## 2026-10-28｜S06原始158m九测点来源身份闭合；正式12阶段0/12 PASS
 
 本轮从**原始静态ElastoDyn/FST**及历史原始OUTB读取并交叉核验：`TowerHt=158m`、`TwrNodes=1120`、`TwrGagNd=1,3,5,7,9,13,15,17,20`；对应9个 `TwHt*TPzi` 原生位置0.070535714–2.750892473m，节点中点公式最大差3.84143×10⁻⁷m。**九点集中于塔底是选点配置，不是证明158m模型缩成2.75m；但它们仍不能代表158m全塔或31段。** [完整原始来源、SHA、9行数值、误差及HOLD](../../experiments/T062/S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT_20261028.json)；[真实GitHub CI #40600361369](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40600361369) success。S06=PARTIAL/原始测点身份单项通过，S07=独立准备/自由体HOLD；**0/12正式阶段PASS，地震RUN=0**。本轮无授权标准条款验收、无Abaqus或OpenFAST生产RUN、无材料疲劳寿命。下一单一动作：查证OpenFAST v3.5.3 `RPx/y/z` 的方向/参考点定义，接入S07九点动态坐标与自由体分账单测。冻结T057/T070未修改。
+
+
+### 2026-10-28 08时｜S07原生v3.5.3载荷定义与RP坐标证据升级（无物理PASS）
+
+- **0/12正式PASS，S07独立准备前进**：直接核读[OpenFAST v3.5.3 ElastoDyn.f90第922–943/1154–1206行](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90#L1154-L1208)，Git blob `2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1`。RP是`AngPosEF`角位置向量分量（deg），不是原生3×3 DCM；塔局部`FL/ML`是已含重力、惯性、塔顶/偏航轴承项的**截面内力**，不能当纯气动力叠加进Abaqus。复用[S07程序](../../experiments/T077/recovery/s07_six_component_frame_gate.py)增加原始代码+T062 OUTB回执强制源身份/单位检查和RP伪Euler拒绝；真实九点首样本`FLzt`从-25583.746573至-25109.635942 kN，差474.110630289 kN；详细9行表、源SHA、误差及HOLD见[既有T062研究记录](../../experiments/T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。这仅关闭**源码语义疑点**，并未产生真实DCM、自由体分账或材料应力。REF无新全文，STANDARD无授权条款，OFFICIAL为v3.5.3原生源，RUN为只读源/数据QC，FIG无，TAB九点原始首采样；Abaqus/地震RUN=0，T057/T070不改，PR仍Draft。**下一动作：**导出/恢复真实塔节点逐时刻DCM，完成S07同一时刻六分量映射而非RP伪Euler近似。
