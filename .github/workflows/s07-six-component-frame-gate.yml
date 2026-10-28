@@ -9,7 +9,7 @@ on:
       - 'research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   s07-frame-algebra-source-qc:
     runs-on: ubuntu-latest
@@ -137,3 +137,23 @@ jobs:
           name: s07-v353-fixed-base-frame-12001x9
           path: s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
           retention-days: 14
+
+      - name: Persist exact full-series receipt in Draft PR branch (no merge)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/research/t080-seismic-integration-gates-20261022'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          receipt=s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          test -s "$receipt"
+          sha256sum "$receipt"
+          encoded="$(base64 -w0 "$receipt")"
+          gh api --method PUT \
+            "repos/${{ github.repository }}/contents/research/wind-tower/experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json" \
+            -f message="data(S07): preserve source-verified 12001x9 fixed-base DCM receipt" \
+            -f content="$encoded" \
+            -f branch="research/t080-seismic-integration-gates-20261022" \
+            > s07-native/github_commit_response.json
+          jq -r '.commit.sha, .content.sha' s07-native/github_commit_response.json
+          echo 'Exact CI receipt committed to Draft PR branch; not a physics PASS.'
