@@ -1,10 +1,10 @@
 {
   "status": "RESEARCH_PDF_DOWNLOAD_RECEIPT_NOT_FULLTEXT_METHOD_REVIEW",
-  "utc": "2026-10-28T07:10:37.740047+00:00",
+  "utc": "2026-10-28T07:11:33.501780+00:00",
   "python": "3.12.15",
   "pypdf": "6.21.3",
   "source_level": "direct PDF from author/institution/publisher, PDF byte-verified",
-  "fulltext_count": 4,
+  "fulltext_count": 3,
   "items": [
     {
       "id": "Ishihara_2024_Structures_105886",
@@ -32,7 +32,7 @@
       "doi": "10.1016/j.rcns.2026.03.002",
       "expected_pages": 18,
       "license_or_version": "publisher OA; exact reuse license to verify",
-      "status": "DOWNLOADED_VERIFIED_PDF",
+      "status": "NOT_DOWNLOADED",
       "attempts": [
         {
           "url": "https://www.sciencedirect.com/science/article/pii/S2772741626000165/pdfft?isDTMRedir=true&download=true",
@@ -42,17 +42,17 @@
         },
         {
           "url": "https://journal.hep.com.cn/rcs/EN/PDF/10.1016/j.rcns.2026.03.002",
-          "exit_code": 0,
-          "http_and_redirect": "200 application/pdf https://jf2.hep.com.cn/9c31c2b5716f4576b2168aec03ad26d2.pdf?response-content-disposition=attachment;+filename=\"Research%20on%20the%20dynamic%20response%20and%20disaster-resistance%20performance%20enhancement%20of%20hybrid%20tower%20under%20strong%20wind%20and%20earthquake.pdf\"",
-          "stderr": ""
+          "exit_code": 28,
+          "http_and_redirect": "000  https://journal.hep.com.cn/rcs/EN/PDF/10.1016/j.rcns.2026.03.002",
+          "stderr": "curl: (28) Connection timeout after 12001 ms"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/pii/S2772741626000165/pdf",
+          "exit_code": 22,
+          "http_and_redirect": "403 text/html; charset=UTF-8 https://www.sciencedirect.com/science/article/pii/S2772741626000165/pdf",
+          "stderr": "curl: (22) The requested URL returned error: 403"
         }
-      ],
-      "sha256": "74a2213d18a15cfd0ea7690a262037d8e928d0becf5ec576e12db35820a8c338",
-      "bytes": 12093333,
-      "pages": 18,
-      "first_page_text_sample": "Full Length Article Research on the dynamic response and disaster-resistance performance enhancement of hybrid tower under strong wind and e",
-      "pdf_url": "https://journal.hep.com.cn/rcs/EN/PDF/10.1016/j.rcns.2026.03.002",
-      "page_count_matches_expected": true
+      ]
     },
     {
       "id": "Ali_2021_SDEE_106483_AAM",
