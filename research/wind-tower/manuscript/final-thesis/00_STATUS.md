@@ -426,3 +426,11 @@ HOLD：
 **SOURCE**=原始INP节点/元素/实例/赋材直接解析；**REF**=沿用Ch4文献，未新增全文原式；**STANDARD**=无新增授权条文验收；**OFFICIAL/RUN**=GitHub Actions静态Python运行而非原生Abaqus；**FIG**=无应力云图；**TAB**=372行CSV；**误差预算**=坐标记录精度1e-6m、方位记录精度1e-6°，角度2.5°只表示几何离散，不是应力误差；真实物理误差仍NEED_ESTIMATE。S10=`REAL_MESH_AZIMUTH_HEIGHT_CANDIDATES_TESTED/PHYSICS_HOLD`；最大HOLD为缺原生Pe/重力/接触平衡初态的ODB材料积分点时程，地震和材料疲劳生产RUN均0次，**12阶段0/12未晋级**。下一唯一动作：将候选点与现有ODB提取RUN卡字段连接并做真实标签/积分点拒绝测试，不进行高成本求解。
 
 - **2026-10-28最终CI回读：** [Actions #40703712637](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40703712637)在commit `1bdf0e9b2ba5197d22d7c7bae5b1645f8841f399` `completed/success`；job `122870059727`中固定SHA256检查明确打印`S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv: OK`，并将临时真实INP重建的372行CSV与已提交仓库CSV执行`cmp`逐字节一致，输出SHA256 `9052f70b39544c8fbd27b0813face4eecf2dcace3efdbd7c3cebbc896b395595`。2项合成正例+4项拒绝负例通过；无原生Abaqus ODB或物理PASS。
+
+
+## 2026-10-28 23时｜S10 372个源级周向候选接入ODB卡（真实CI，0/12未晋级）
+
+- **阶段变化：** 严格12阶段科学PASS仍**0/12**；S10独立准备升级为`D400_372_CANDIDATE_CARD_SOURCE_TESTED/PHYSICS_HOLD`。S01–S04、S05–S09、S11–S12原有HOLD不变；Abaqus地震、材料疲劳寿命生产RUN均0。
+- **SOURCE/RUN/TAB：** D400/Pe诊断INP SHA256=`22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`、68部件材料/实例映射SHA256=`9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83`、372行候选CSV SHA256=`9052f70b39544c8fbd27b0813face4eecf2dcace3efdbd7c3cebbc896b395595`。新增[源级RUN卡身份验证器](../../experiments/T077/recovery/s10_candidate_run_card_gate.py)并更新[既有只读ODB提取器](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py)，强制D400源表+候选表双SHA与实例/单元/材料/周向/高度匹配。仅生成3个明确不可执行的源级卡模板，绝不填造ODB SHA、积分点、应力基底或原生日志。
+- **真实测试：** [GitHub Actions #40713310626](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40713310626) success，真实372行源表与D400子版重新生成`cmp`一致；3样例正例、3张模板原生卡拒绝、1个模拟元数据桥接正例、3个桥接负例、12个身份负例、2个源SHA篡改负例通过。详细过程、假设、错误与来源分级见[T080既有过程日志](../../experiments/T080/PROCESS_LOG.md)。
+- **REF/STANDARD/OFFICIAL/FIG与HOLD：** 无新增期刊全文或2025 IEC/GB/NB授权条文；OFFICIAL仅CI日志，非Abaqus；FIG无真实应力/地震图；物理误差预算`NEED_NATIVE/NEED_ESTIMATE`。最大HOLD仍是与原生Pe/重力/接触平衡一致的真实局部材料积分点应力时程；S10测试不等于疲劳寿命。**下一唯一可自主完成动作：** 转S05已处理双水平强震记录的原始时程及低频滤波QC，不再机械延长S10源级白名单。
