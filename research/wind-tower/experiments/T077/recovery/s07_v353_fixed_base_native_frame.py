@@ -351,7 +351,7 @@ def audit(args):
         idx=names.index(name)-1
         unit=h["channel_units"][idx+1]
         expected=("(kN)" if name.endswith(("FLxt","FLyt","FLzt")) else
-                  "(kN-m)" if "ML" in name else "(m)" if "TP" in name else "(deg)")
+                  "(kN-m)" if "ML" in name else "(m)" if "TP" in name else "(m/s^2)" if "AL" in name else "(deg)")
         if unit!=expected:
             raise ValueError("native unit mismatch "+name+" "+unit)
         scale=h["column_scales"][idx]
