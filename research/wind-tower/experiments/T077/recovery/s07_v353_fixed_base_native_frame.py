@@ -234,13 +234,13 @@ def tower_gravity_reference(static_zip, ed, fst, gage_positions):
         if len(hits)!=1:
             raise ValueError(name+" missing/ambiguous in original source")
         return hits[0]
-    twr=one(r'^\\s*("[^"]+"|\\S+)\\s+TwrFile\\b',ed_text,"TwrFile").strip('"')
-    gravity=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+Gravity\\b',fst_text,"Gravity"))
-    tower_ht=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+TowerHt\\b',ed_text,"TowerHt"))
-    tower_bs=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+TowerBsHt\\b',ed_text,"TowerBsHt"))
+    twr=one(r'^\s*("[^"]+"|\S+)\s+TwrFile\b',ed_text,"TwrFile").strip('"')
+    gravity=float(one(r'^\s*([+\-]?[0-9.]+(?:[Ee][+\-]?[0-9]+)?)\s+Gravity\b',fst_text,"Gravity"))
+    tower_ht=float(one(r'^\s*([+\-]?[0-9.]+(?:[Ee][+\-]?[0-9]+)?)\s+TowerHt\b',ed_text,"TowerHt"))
+    tower_bs=float(one(r'^\s*([+\-]?[0-9.]+(?:[Ee][+\-]?[0-9]+)?)\s+TowerBsHt\b',ed_text,"TowerBsHt"))
     if not (9 < gravity < 11 and tower_ht==158 and tower_bs==0):
         raise ValueError("unexpected original gravity/tower height")
-    member_path="CASES/"+CASE+"/"+twr.replace("\\\\","/").lstrip("./")
+    member_path="CASES/"+CASE+"/"+twr.replace("\\","/").lstrip("./")
     if ".." in member_path.split("/"):
         raise ValueError("unsafe TwrFile path")
     with zipfile.ZipFile(__import__("io").BytesIO(static_zip)) as z:
@@ -248,10 +248,10 @@ def tower_gravity_reference(static_zip, ed, fst, gage_positions):
             raise ValueError("original TwrFile not archived: "+member_path)
         raw=z.read(member_path)
     txt=raw.decode("utf-8-sig")
-    n=int(one(r'^\\s*(\\d+)\\s+NTwInpSt\\b',txt,"NTwInpSt"))
-    adjust=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+AdjTwMa\\b',txt,"AdjTwMa"))
+    n=int(one(r'^\s*(\d+)\s+NTwInpSt\b',txt,"NTwInpSt"))
+    adjust=float(one(r'^\s*([+\-]?[0-9.]+(?:[Ee][+\-]?[0-9]+)?)\s+AdjTwMa\b',txt,"AdjTwMa"))
     lines=txt.splitlines()
-    heads=[i for i,l in enumerate(lines) if re.match(r'^\\s*HtFract\\s+TMassDen\\b',l)]
+    heads=[i for i,l in enumerate(lines) if re.match(r'^\s*HtFract\s+TMassDen\b',l)]
     if len(heads)!=1 or n<2 or not (0<adjust<10):
         raise ValueError("ambiguous original tower mass table")
     rows=[]
