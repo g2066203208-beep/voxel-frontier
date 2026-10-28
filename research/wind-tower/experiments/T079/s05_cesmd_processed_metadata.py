@@ -5,6 +5,7 @@ The CESMD Records API returns metadata without registration. Downloading the
 processed waveform ZIP requires a registered email; this script never attempts
 an unauthenticated download or asserts a usable low-frequency corner.
 Official API: https://www.strongmotioncenter.org/wserv/records/documentation/
+Official sample groupby=event: https://github.com/strongmotioncenter/CESMD_webservices/blob/main/V1_pmg.ipynb
 """
 import argparse
 import hashlib
@@ -24,7 +25,7 @@ def request_url(event_id):
     if not EVENT_ID.fullmatch(event_id):
         raise ValueError('invalid CESMD event ID')
     return API + '?' + urllib.parse.urlencode({
-        'eventid': event_id, 'rettype': 'metadata', 'format': 'json', 'nodata': '404'})
+        'eventid': event_id, 'rettype': 'metadata', 'format': 'json', 'groupby': 'event', 'nodata': '404'})
 
 
 def availability_nodes(obj):
