@@ -272,3 +272,5 @@
 - 从最新main与PR #42读取规定入口；直接读取`OpenFAST/openfast@v3.5.3/modules/elastodyn/src/ElastoDyn.f90`（Git blob `2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1`）第922–943/1154–1206行；原生代码证明RP角位置向量分量按R2D输出、`FL/ML`含顶部/重力/惯性且在局部塔节点系投影。不是把2025论坛答复或v5文档误当v3.5.3源。
 - 复用原S07程序与CI，新增严格源版本/8签名/历史OUTB SHA/9×15单位检查，`RP_AS_EULER`不能通过frame_evidence。真实九点首样本和误差、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、HOLD见[既有T062研究记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)；CI状态待实际run核验。此为源代码+原始OUTB解码回执检查，**非原生OpenFAST或Abaqus物理RUN**。
 - 0/12阶段PASS，地震RUN=0；冻结T057/T070不改、PR不合并；唯一下一动作为真实逐时刻DCM而不是RP伪Euler变换。
+
+- **2026-10-28 08时补充源字节SHA256：** OpenFAST v3.5.3原始`ElastoDyn.f90`（Git blob `2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1`，663919 ASCII字节）独立FIPS SHA-256复算=`a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3`；JS哈希实现先用标准`abc`已知向量`ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad`自测通过。等待GitHub Actions对原始源`sha256sum`交叉确认；不得在CI未完成时宣称远端PASS。
