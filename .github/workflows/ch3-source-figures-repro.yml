@@ -1,0 +1,38 @@
+name: Chapter 3 real-source ETM figures verification
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/manuscript/final-thesis/figures/**'
+      - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv'
+      - '.github/workflows/ch3-source-figures-repro.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-figure-repro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source SHA and exact SVG/CSV rerender
+        run: node research/wind-tower/manuscript/final-thesis/figures/plot_ch3_s06_etm_screening.js --check
+      - name: Validate SVG XML and plot data integrity
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          folder=Path("research/wind-tower/manuscript/final-thesis/figures")
+          paths=sorted(folder.glob("FIG3_S06_0*_SCREEN.svg"))
+          assert len(paths)==3, paths
+          for path in paths:
+              root=ET.parse(path).getroot()
+              assert root.tag=="{http://www.w3.org/2000/svg}svg", path
+              assert len(list(root.iter("{http://www.w3.org/2000/svg}text")))>25, path
+          with (folder/"FIG3_S06_PLOT_POINTS_124.csv").open(newline="",encoding="utf-8") as s:
+              rows=list(csv.DictReader(s))
+          assert len(rows)==124, len(rows)
+          assert len({r["case"] for r in rows})==4
+          assert len({r["segment"] for r in rows})==31
+          print("SVG_XML_PASS 3; ORIGIN_CSV_PASS 124; SOURCE_REGEN_PASS")
+          PY

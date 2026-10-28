@@ -33,14 +33,14 @@ function generateFigures(csv) {
   const W=1160,H=720;
   const txt=(x,y,s,sz=15,opts="")=>`<text x="${x}" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="${sz}" fill="${P.ink}" ${opts}>${esc(s)}</text>`;
   const lin=(x1,y1,x2,y2,col=P.grid,width=1,dash="")=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${width}" ${dash?`stroke-dasharray="${dash}"`:""}/>`;
-  const root=(title,subtitle,body,note)=>`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" fill="white"/>${txt(78,56,title,27,'font-weight="700"')}${txt(78,86,subtitle,15)}${body}${lin(78,655,1080,655,"#bccad5",1)}${txt(78,682,note,13)}${txt(1053,684,"S06 / SCREEN",12,'text-anchor="end" font-weight="700" fill="#9a613f"')}</svg>\n`;
+  const root=(title,subtitle,body,note)=>`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" fill="white"/>${txt(78,56,title,27,'font-weight="700"')}${txt(78,86,subtitle,15)}${body}${lin(78,655,1080,655,"#bccad5",1)}${txt(78,682,note,13)}${txt(1053,684,"S06 / SCREEN",12,'text-anchor="end" font-weight="700" style="fill:#9a613f"')}</svg>\n`;
   const seriesChart=(title,subtitle,perCase,yField,yTitle,yLimit,step,note,withThreshold=false)=>{
     const L=120,R=1080,T=148,B=566;
     let out="";
     for(let t=0;t<=yLimit+1e-9;t+=step){const y=B-(t/yLimit)*(B-T);out+=lin(L,y,R,y)+txt(L-13,y+5,fmt(t,0),13,'text-anchor="end"');}
     for(let t=0;t<=112;t+=20){const x=L+(t/112)*(R-L);out+=lin(x,T,x,B,P.grid,1)+txt(x,B+25,t,13,'text-anchor="middle"');}
     out+=lin(L,T,L,B,P.ink,1.7)+lin(L,B,R,B,P.ink,1.7);
-    if(withThreshold){const y=B-(20/yLimit)*(B-T);out+=lin(L,y,R,y,"#ac4f48",1.5,"8 5")+txt(R-4,y-8,"20% visual QC guide (not a code limit)",12,'text-anchor="end" fill="#ac4f48"');}
+    if(withThreshold){const y=B-(20/yLimit)*(B-T);out+=lin(L,y,R,y,"#ac4f48",1.5,"8 5")+txt(R-4,y-8,"20% visual QC guide (not a code limit)",12,'text-anchor="end" style="fill:#ac4f48"');}
     for(let ci=0;ci<cases.length;ci++){
       const pts=[];let last=0;
       for(let s=1;s<=31;s++){
@@ -98,7 +98,7 @@ function generateFigures(csv) {
   const sample=cases.map(c=>{const r=point(c,1,"My_kNm");return {case:c,baseMyM4:Number(r.DEL_m4_Nref_1Hz),maxMyM4:Math.max(...Array.from({length:31},(_,j)=>+point(c,j+1,"My_kNm").DEL_m4_Nref_1Hz))};});
   return {figures:{"FIG3_S06_01_MY_M4_HEIGHT_SCREEN.svg":one,"FIG3_S06_02_BASE_MOMENTS_M4_SCREEN.svg":two,"FIG3_S06_03_MY_HALF_WINDOW_RMS_SCREEN.svg":three},points_csv:csvHead+csvRows.join("\n")+"\n",stats:{rows:rows.length,plotRows:csvRows.length,cases:cases.length,segments:31,maxRmsContrastPct:maxQc,caseSamples:sample}};
 }
-const root=path.resolve(__dirname,"../../../..");
+const root=path.resolve(__dirname,"../../..");
 const input=path.join(root,"experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv");
 const output=__dirname;
 const raw=fs.readFileSync(input);
