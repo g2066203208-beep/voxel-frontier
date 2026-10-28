@@ -18,7 +18,7 @@ jobs:
           python-version: '3.12'
       - name: Install ObsPy to decode true official miniSEED and StationXML
         run: python -m pip install 'obspy>=1.4,<2' 'requests>=2.28,<3'
-      - name: Fetch two source scripts from exact Draft PR HEAD, without large checkout
+      - name: Fetch three source scripts from exact Draft PR HEAD, without large checkout
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -30,8 +30,10 @@ jobs:
           root="https://raw.githubusercontent.com/$GH_REPO/$sha/research/wind-tower/experiments/T079"
           curl -fLsS --retry 3 --output s05-scripts/s05_official_fdsn_pair_recovery.py "$root/s05_official_fdsn_pair_recovery.py"
           curl -fLsS --retry 3 --output s05-scripts/s05_ground_motion_pair_qc.py "$root/s05_ground_motion_pair_qc.py"
+          curl -fLsS --retry 3 --output s05-scripts/s05_real_pair_baseline_sensitivity.py "$root/s05_real_pair_baseline_sensitivity.py"
           python -m py_compile s05-scripts/*.py
           python s05-scripts/s05_ground_motion_pair_qc.py --self-test
+          python s05-scripts/s05_real_pair_baseline_sensitivity.py --self-test
           sha256sum s05-scripts/*.py
       - name: Retrieve real same-station accelerations, official miniSEED, StationXML and compute spectra
         shell: bash
@@ -43,6 +45,14 @@ jobs:
           else
             python -u s05-scripts/s05_official_fdsn_pair_recovery.py --event ridgecrest2019 --station CLC --output-dir "$RUNNER_TEMP/s05_real_pair"
           fi
+      - name: Quantify real-event baseline drift and 1-10s response spectrum sensitivity (NON-DESIGN)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u s05-scripts/s05_real_pair_baseline_sensitivity.py \
+            --raw-dir "$RUNNER_TEMP/s05_real_pair" \
+            --output-dir "$RUNNER_TEMP/s05_real_pair/processed"
       - name: Retain unmodified source bytes and failure log in CI backup
         if: always()
         uses: actions/upload-artifact@v4
