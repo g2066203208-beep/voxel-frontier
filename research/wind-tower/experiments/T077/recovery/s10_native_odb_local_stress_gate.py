@@ -237,7 +237,7 @@ def self_test(source_map=None):
     # Independent synthetic source-identity whitelist: no ODB needed.
     headers = list(SOURCE_FIELDS)
     synthetic = io.StringIO(newline='')
-    writer = csv.DictWriter(synthetic, fieldnames=headers, lineterminator='\\n')
+    writer = csv.DictWriter(synthetic, fieldnames=headers, lineterminator='\n')
     writer.writeheader()
     writer.writerow(dict(source_part='CSEG_01', source_group='concrete',
                          native_instance_from_INP='CSEG_01-1',
@@ -257,7 +257,7 @@ def self_test(source_map=None):
         (dict(scard, element_label=4), source_raw, sha_bytes(source_raw)),
         (dict(scard, instance='CSEG_02-1'), source_raw, sha_bytes(source_raw)),
         (dict(scard, inp_sha256='e'*64), source_raw, sha_bytes(source_raw)),
-        (scard, source_raw+b'\\n', sha_bytes(source_raw)),
+        (scard, source_raw+b'\n', sha_bytes(source_raw)),
     ]
     for i, (meta, data, digest) in enumerate(source_negatives):
         try: validate_source_binding(meta, data, digest, 'd'*64, 1)
