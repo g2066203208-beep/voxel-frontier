@@ -149,7 +149,33 @@ def self_test(raw, source_raw):
                     ("RBLONG_01", "ONLY_PLANE", 180))]
     cards = [template(r) for r in selected]
     assert all(select(c, raw, source_raw) == r for c, r in zip(cards, selected))
-    from s10_native_odb_local_stress_gate import validate_card
+    from s10_native_odb_local_stress_gate import validate_card, validate_source_binding
+    # Synthetic native metadata only: verify the source-level bridge accepts
+    # an actual azimuth label beyond the former single-height whitelist.
+    other = next(r for r in rows if r["source_part"] == "CSEG_01" and
+                 r["axial_plane"] == "LOWEST_PLANE" and
+                 int(r["requested_azimuth_deg"]) == 90)
+    bridged = template(other)
+    bridged.update(odb_sha256="a"*64, native_log_sha256={k:"b"*64
+                    for k in ("dat", "msg", "sta", "log")},
+                   step="MOCK", integration_point=1,
+                   stress_basis="ODB_GLOBAL_S11", expected_frames=3,
+                   dt_s=0.1)
+    assert validate_card(bridged)
+    checked = select(bridged, raw, source_raw)
+    validate_source_binding(bridged, source_raw, verified_candidate=checked)
+    assert int(other["element_label"]) != int(next(
+        r["height_candidate_element_label"] for r in rows_of(source_raw)
+        if r["source_part"] == "CSEG_01"))
+    for changed in (dict(bridged, element_label=bridged["element_label"]+1),
+                    dict(bridged, material_id="HRB335_T057"),
+                    dict(bridged, candidate_azimuth_deg=180)):
+        try:
+            select(changed, raw, source_raw)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("BRIDGE_NEGATIVE_ACCEPTED")
     for card in cards:
         try:
             validate_card(card)
@@ -189,6 +215,7 @@ def self_test(raw, source_raw):
     return cards, {"real_source_rows":len(rows), "source_parts":62,
                    "concrete":248, "ordinary_rebar":124,
                    "template_positive":3, "native_template_rejections":3,
+                   "synthetic_native_metadata_bridge":1, "bridge_negative":3,
                    "identity_negative":12, "source_tamper_negative":2,
                    "native_odb_runs":0, "physical_pass":False}
 
