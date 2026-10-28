@@ -4,6 +4,7 @@ on:
     paths:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
+      - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json'
@@ -157,5 +158,31 @@ jobs:
         with:
           name: s05-cesmd-processed-availability-metadata-not-design-wave
           path: cesmd-official-metadata/
+          if-no-files-found: warn
+          retention-days: 90
+
+  esm-public-processed-accelerogram-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact PR-head ESM source-receipt program
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 -o s05_esm_public_processed_pair.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py"
+          sha256sum s05_esm_public_processed_pair.py
+      - name: Synthetic ZIP security and source-identity tests
+        run: |
+          python3 -m py_compile s05_esm_public_processed_pair.py
+          python3 s05_esm_public_processed_pair.py --self-test
+      - name: Fetch one PUBLIC official ESM manually processed acceleration ZIP (not a design wave)
+        run: |
+          python3 s05_esm_public_processed_pair.py --fetch --timeout 90 --output-dir esm-public-processed
+      - name: Preserve original official bytes or explicit failure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE
+          path: esm-public-processed/
           if-no-files-found: warn
           retention-days: 90
