@@ -7,6 +7,7 @@ on:
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json'
+      - 'research/wind-tower/experiments/T079/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -92,6 +93,29 @@ jobs:
                           n+=1
           print('REAL_S05_CROSS_LANGUAGE_V8_PYTHON_SIX_TRACE_COMPARISON_PASS',n,'numeric checks')
           print('NOT_DESIGN_PASS same earthquake, unknown long-period instrument reliability, no target spectrum')
+          PY
+      - name: REAL two-event four-horizontal-pair long-period gate (16 rows; reject design use)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o triage/ridge.json "$base/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json"
+          curl -fLsS --retry 3 -o triage/lone.json "$base/real-records/USGS_ci39493944/CI_CLC/processed/baseline_sensitivity_report.json"
+          curl -fLsS --retry 3 -o triage/committed_long_period.csv "$base/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv"
+          python3 s05_ground_motion_pair_qc.py --long-period-gate --triage-json triage/ridge.json --second-event-json triage/lone.json --output triage/recomputed_long_period.csv
+          python3 - <<'PY'
+          import csv,math
+          with open('triage/recomputed_long_period.csv') as f:a=list(csv.DictReader(f))
+          with open('triage/committed_long_period.csv') as f:b=list(csv.DictReader(f))
+          assert len(a)==len(b)==16
+          assert len({x['event_id'] for x in a})==2
+          keys=['raw_pair_gm_psa_m_s2','pre20_pair_gm_psa_m_s2','linear_pair_gm_psa_m_s2','raw_vs_pre20_pair_relative_change','max_abs_pre20_end_displacement_m']
+          for x,y in zip(a,b):
+              assert (x['event_id'],x['station'],x['period_s'])==(y['event_id'],y['station'],y['period_s'])
+              assert x['decision']==y['decision']=='REJECT_RAW__HOLD_PRE20_NO_LOWFREQ_TARGET'
+              assert x['source_HNE_sha256']==y['source_HNE_sha256'] and x['source_HNN_sha256']==y['source_HNN_sha256']
+              for k in keys:assert math.isclose(float(x[k]),float(y[k]),rel_tol=1e-10,abs_tol=1e-12),(k,x[k],y[k])
+          print('REAL_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_16_ROWS_VERIFIED_NOT_DESIGN_PASS')
           PY
       - name: Preserve REAL S05 diagnostic report as CI artifact (not S05 PASS)
         if: always()
