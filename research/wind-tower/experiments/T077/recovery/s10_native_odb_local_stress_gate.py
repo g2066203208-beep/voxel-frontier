@@ -82,6 +82,10 @@ def validate_card(card):
 # Other D400/D500/Pe child inputs require a new independently reviewed source map.
 FROZEN_T057_SHA = 'c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db'
 SOURCE_MAP_SHA = '502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd'
+D400_PE_CHILD_SHA = '22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a'
+D400_PE_SOURCE_MAP_SHA = '9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83'
+SOURCE_MAP_BY_INP = {FROZEN_T057_SHA: SOURCE_MAP_SHA,
+                     D400_PE_CHILD_SHA: D400_PE_SOURCE_MAP_SHA}
 SOURCE_GROUP_CLASS = {
     'concrete': 'concrete', 'longitudinal_rebar': 'ordinary_rebar',
     'PT': 'prestressing_strand', 'steel_tower': 'structural_steel',
@@ -93,10 +97,15 @@ SOURCE_FIELDS = ('source_part', 'source_group', 'native_instance_from_INP',
                  'native_stress_basis')
 
 
-def validate_source_binding(card, raw, expected_sha=SOURCE_MAP_SHA,
-                            expected_inp_sha=FROZEN_T057_SHA, expected_rows=68):
-    """Fail closed on model identity; source HEIGHT candidates are NOT stress hotspots."""
+def validate_source_binding(card, raw, expected_sha=None,
+                            expected_inp_sha=None, expected_rows=68):
+    """Fail closed on exact model+map pair; height candidates are NOT hotspots."""
     validate_card(card)
+    if expected_sha is None or expected_inp_sha is None:
+        insist(card['inp_sha256'] in SOURCE_MAP_BY_INP,
+               'S10_UNREGISTERED_MODEL_BRANCH')
+        expected_inp_sha = card['inp_sha256']
+        expected_sha = SOURCE_MAP_BY_INP[expected_inp_sha]
     insist(sha_bytes(raw) == expected_sha, 'S10_SOURCE_MAP_SHA256_MISMATCH')
     rows = list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig'))))
     insist(len(rows) == expected_rows, 'S10_SOURCE_MAP_ROW_COUNT_MISMATCH')
@@ -188,7 +197,7 @@ def csv_bytes(times, stresses):
     return out.getvalue().encode('utf-8')
 
 
-def self_test(source_map=None):
+def self_test(source_map=None, d400_source_map=None):
     class Obj:
         def __init__(self, **kwargs): self.__dict__.update(kwargs)
     def mock(times=(0, 0.1, 0.2), values=(1e6, 3e6, 1e6), duplicate=False):
@@ -278,6 +287,30 @@ def self_test(source_map=None):
             try: validate_source_binding(changed, real_source_raw)
             except ValueError: real_tests += 1
             else: raise AssertionError('real map wrong identity accepted')
+    if d400_source_map is not None:
+        d400_raw = Path(d400_source_map).read_bytes()
+        d400 = dict(card, inp_sha256=D400_PE_CHILD_SHA,
+                    instance='RBLONG_01-1', element_set='SET_ALL',
+                    material_class='ordinary_rebar',
+                    material_id='HRB400_D400_DIAGNOSTIC',
+                    stress_basis='TRUSS_AXIAL_S11')
+        entries = list(csv.DictReader(io.StringIO(d400_raw.decode('utf-8-sig'))))
+        source = next(r for r in entries if r['source_part'] == 'RBLONG_01')
+        d400['element_label'] = int(source['height_candidate_element_label'])
+        validate_source_binding(d400, d400_raw)
+        real_tests += 1
+        for meta, raw in (
+            (dict(d400, material_id='HRB335_T057'), d400_raw),
+            (dict(d400, inp_sha256=FROZEN_T057_SHA), d400_raw),
+            (dict(d400), real_source_raw if source_map is not None else b'wrong-map'),
+            (dict(d400, element_label=d400['element_label'] + 1), d400_raw),
+        ):
+            try:
+                validate_source_binding(meta, raw)
+            except ValueError:
+                real_tests += 1
+            else:
+                raise AssertionError('D400 model/source negative accepted')
     return {'status':'PASS_MOCK_ONLY', 'positive_tests':1,
             'negative_tests':len(cases), 'source_binding_negative_tests':len(source_negatives),
             'source_binding_real_map_tests':real_tests,
@@ -289,6 +322,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test', action='store_true')
     ap.add_argument('--source-map', type=Path)
+    ap.add_argument('--d400-source-map', type=Path)
     ap.add_argument('--run-card', type=Path)
     ap.add_argument('--inp', type=Path)
     ap.add_argument('--odb', type=Path)
@@ -296,7 +330,7 @@ def main():
     ap.add_argument('--out-dir', type=Path)
     args = ap.parse_args()
     if args.self_test:
-        print(json.dumps(self_test(args.source_map), sort_keys=True))
+        print(json.dumps(self_test(args.source_map, args.d400_source_map), sort_keys=True))
         return
     if not all((args.run_card, args.inp, args.odb, args.logs_dir, args.out_dir, args.source_map)):
         ap.error('require --run-card --inp --odb --logs-dir --out-dir --source-map or --self-test')
@@ -328,7 +362,8 @@ def main():
         'source_sha256': sha_bytes(raw),
         'run_card_sha256': sha_bytes(card_raw),
         'source_map_sha256': sha_bytes(source_map_raw),
-        'source_map_status': 'T057_HEIGHT_ONLY_WHITELIST_NOT_HOTSPOT_OR_IP',
+        'source_map_status': ('T057_HEIGHT_ONLY' if card['inp_sha256'] == FROZEN_T057_SHA
+                              else 'D400_PE_DIRECT_CHILD_HEIGHT_ONLY') + '_NOT_HOTSPOT_OR_IP',
         'run_id': card['run_id'], 'step': card['step'],
         'instance': card['instance'], 'element_set': card['element_set'],
         'element_label': card['element_label'],
