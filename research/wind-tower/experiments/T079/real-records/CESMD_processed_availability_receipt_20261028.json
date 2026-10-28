@@ -5,13 +5,13 @@
   "source_documentation": "https://www.strongmotioncenter.org/wserv/records/documentation/",
   "official_example_groupby": "https://github.com/strongmotioncenter/CESMD_webservices/blob/main/V1_pmg.ipynb",
   "script_path": "research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py",
-  "script_sha256": "6bdaaba47efc9fe6170e6e5ef81d0a4b6af8f89b2db39fce6945b3466def8129",
-  "script_commit": "d0158b9e8da1f4845133ec77f4a3e86c570b5769",
+  "script_sha256": "fbe00e5a841fde78269a1e66d6f6a1283b736ca6b4c6d2629558497f5efa98e1",
+  "script_commit": "120bead47edbed3c05e0080c3a774548415db5ec",
   "software": "GitHub Actions Ubuntu 24.04; Python 3.12 stdlib urllib/json/hashlib",
-  "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648339562",
+  "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648635414",
   "run_conclusion": "completed/success",
-  "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648339562/artifacts/12798427921",
-  "artifact_zip_sha256": "ee9fe2bfab3a11cd9679ee86b7651ab7473642e5533c095f6894a82732ebbe4f",
+  "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648635414/artifacts/12798865576",
+  "artifact_zip_sha256": "24b6bca65adc6f2a35c0f9682582dedadfe6ff451fd834376ad29d25f0e9ef41",
   "artifact_retention_days": 90,
   "official_results": [
     {
@@ -35,14 +35,14 @@
       "query_url": "https://www.strongmotioncenter.org/wserv/records/query?eventid=CI39493944&rettype=metadata&format=json&groupby=event&nodata=404"
     }
   ],
-  "interpretation": "processed_true_objects counts availability objects reported by API, NOT distinct events/stations/paired horizontal components or engineering-usable waveforms; two requested event IDs are independent events but no new wave bytes acquired.",
+  "interpretation": "processed_true_objects counts availability objects reported by API, NOT distinct events/stations/paired horizontal components or engineering-usable waveforms; two requested event IDs are independent events but no new wave bytes acquired. CESMD siteclass C/D are database site classes, NOT China GB II/III site category; Sa3 values are metadata, not verified by this run against waveform response spectra.",
   "SOURCE": "two official CESMD JSON responses, SHA256 and exact query URLs above",
   "REF": "existing T079 METHOD_PLAN and T080 novelty matrix; no new article full-text read this round",
   "STANDARD": "no licensed IEC 2025 or GB/NB seismic design clause inspected; no code acceptance",
   "OFFICIAL": "CESMD records documentation and USGS NSMP official CESMD processing route",
   "RUN": "GitHub Actions 40648339562 real HTTP requests plus deterministic Python self-test; NO Abaqus solver",
   "FIG": "none; no structural response plot",
-  "TAB": "two-event 873/246 availability objects; 872/246 processed=true objects; source bytes/hash above",
+  "TAB": "two-event 873/246 availability objects; 872/246 processed=true objects; source bytes/hash above; reproducible six-station processed-wave retrieval shortlist with PGA, Sa1/Sa3, Vs30, epicentral distance",
   "error_budget": "API response and source bytes SHA256 reproducible; actual waveform instrument low-frequency, filter corners, orientation, processing revisions, response spectrum and target spectrum fit are unquantified NEED_ESTIMATE",
   "failures": [
     {
@@ -73,5 +73,90 @@
     "Abaqus_seismic_runs": 0,
     "stages_passed": 0
   },
-  "next_action": "Identify a registered/otherwise public official processed two-horizontal record with per-channel high-pass corner and processing history; fetch waveform bytes and compare computed 5%-damped 0.5–10s spectra with official values before any target-spectrum matching."
+  "next_action": "Obtain CESMD official processed accelerogram bytes and V2 headers for CI39493944/CE.44015 (or another authorized candidate), verify two horizontal channels, low-frequency filter corner and 0.5–10s response spectra; only then test target-spectrum match.",
+  "previous_metadata_only_run": {
+    "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648339562",
+    "script_sha256": "6bdaaba47efc9fe6170e6e5ef81d0a4b6af8f89b2db39fce6945b3466def8129",
+    "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40648339562/artifacts/12798427921"
+  },
+  "download_shortlist_study_design_filter": "CESMD Ground stations only; processed=true; >=3 reported channels (not proof of two horizontals); finite positive Vs30, processed PGA, Sa1, Sa3; epicentral distance <=100 km; descending PGA is retrieval triage only, NOT spectrum selection or acceptance.",
+  "download_shortlist_source_level": "DIRECT official JSON from exact event queries; station metadata and Sa1/Sa3 are CESMD published metadata; no processed waveform bytes or corner-frequency headers acquired.",
+  "download_shortlist": [
+    {
+      "event_id": "CI38457511",
+      "station": "CE.33083",
+      "name": "Boron - Fire Station",
+      "CESMD_siteclass": "D",
+      "Vs30_m_s": 291,
+      "epidist_km": 85.1,
+      "processed_PGA_g": 0.065,
+      "Sa1_g": 0.103,
+      "Sa3_g": 0.015,
+      "reported_channels": 3
+    },
+    {
+      "event_id": "CI38457511",
+      "station": "CE.43158",
+      "name": "Olancha - North Haiwee Reservoir Grounds",
+      "CESMD_siteclass": "D",
+      "Vs30_m_s": 283,
+      "epidist_km": 60.9,
+      "processed_PGA_g": 0.064,
+      "Sa1_g": 0.061,
+      "Sa3_g": 0.046,
+      "reported_channels": 3
+    },
+    {
+      "event_id": "CI38457511",
+      "station": "CE.34093",
+      "name": "Mojave - Hwys 14 & 58",
+      "CESMD_siteclass": "D",
+      "Vs30_m_s": 332,
+      "epidist_km": 93.7,
+      "processed_PGA_g": 0.047,
+      "Sa1_g": 0.11,
+      "Sa3_g": 0.013,
+      "reported_channels": 3
+    },
+    {
+      "event_id": "CI39493944",
+      "station": "CE.44015",
+      "name": "Lone Pine A",
+      "CESMD_siteclass": "D",
+      "Vs30_m_s": 299,
+      "epidist_km": 18.7,
+      "processed_PGA_g": 0.193,
+      "Sa1_g": 0.179,
+      "Sa3_g": 0.008,
+      "reported_channels": 3
+    },
+    {
+      "event_id": "CI39493944",
+      "station": "CE.43158",
+      "name": "Olancha - North Haiwee Reservoir Grounds",
+      "CESMD_siteclass": "D",
+      "Vs30_m_s": 283,
+      "epidist_km": 24.3,
+      "processed_PGA_g": 0.176,
+      "Sa1_g": 0.04,
+      "Sa3_g": 0.004,
+      "reported_channels": 3
+    },
+    {
+      "event_id": "CI39493944",
+      "station": "CE.43080",
+      "name": "Death Valley - Grapevine",
+      "CESMD_siteclass": "C",
+      "Vs30_m_s": 596,
+      "epidist_km": 81.7,
+      "processed_PGA_g": 0.019,
+      "Sa1_g": 0.014,
+      "Sa3_g": 0.001,
+      "reported_channels": 3
+    }
+  ],
+  "download_shortlist_event_counts": {
+    "CI38457511": 3,
+    "CI39493944": 3
+  }
 }
