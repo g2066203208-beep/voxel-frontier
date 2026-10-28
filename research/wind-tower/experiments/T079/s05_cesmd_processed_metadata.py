@@ -121,7 +121,7 @@ def self_test():
         else:
             raise AssertionError('accepted invalid event ID ' + bad)
     for bad in (b'[]', b'{"status":500}', b'{"count":-1}',
-                b'{"data_availability":{"processed":"true"}}'):
+                b'{"data_availability":{"processed":"maybe"}}'):
         try:
             summarize(bad, 'CI38457511')
         except ValueError:
