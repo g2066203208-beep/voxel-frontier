@@ -186,6 +186,37 @@ def inertia_remainder(demand,mass,gravity,wl,wu,al,au):
     return inert,tuple(demand[i]-grav[i]-inert[i] for i in range(3))
 
 
+
+def packed_component_error(local, q_local, q_rpx_deg, q_rpy_deg):
+    """Conservative componentwise source-packing envelope after fixed-base DCM.
+
+    For |thetaSS|, |thetaFA| <= 0.4 rad, every entry of the exact
+    SmllRotTrans polar R has |dRij/dtheta| < 5 for either angle
+    (differentiate c=(1+a*a+b*b)^(-1/2), k=1/[d(d+1)]).
+    Hence |delta (R*v)_i| <= sum(q_v) + 5*(q_a+q_b)*sum(|v|+q_v).
+    This is an overestimate, NOT a calibrated physical uncertainty.
+    RPzi=0 is constrained by the verified fixed-platform source.
+    """
+    q = tuple(float(x) for x in q_local)
+    v = tuple(float(x) for x in local)
+    if len(q)!=3 or len(v)!=3 or any(not math.isfinite(x) for x in q+v):
+        raise ValueError("invalid packed uncertainty")
+    if any(x<0 for x in q) or not all(math.isfinite(x) and x>=0
+                                     for x in (q_rpx_deg,q_rpy_deg)):
+        raise ValueError("invalid packed half LSB")
+    da=math.radians(q_rpx_deg);db=math.radians(q_rpy_deg)
+    return sum(q)+5*(da+db)*sum(abs(x)+e for x,e in zip(v,q))
+
+
+def packed_half_lsb(channels, name):
+    """Int16 output reconstruction (packed-offset)/scale; half step."""
+    if name not in channels:
+        raise ValueError("packed channel missing: "+name)
+    scale=channels[name][1]
+    if not math.isfinite(scale) or scale==0:
+        raise ValueError("invalid packed scale: "+name)
+    return 0.5/abs(scale)
+
 def gap_accumulator():
     return [{"lower_gage":g,"upper_gage":g+1,"count":0,
              "sum_Fz_kN":0.0,"min_Fz_kN":float("inf"),
@@ -252,6 +283,18 @@ def selftest():
         try: inertia_remainder((0,0,0),m,9.80665,bad[0],bad[1],bad[2],(4,0,0))
         except ValueError: pass
         else: raise AssertionError("invalid inertia not rejected")
+    assert packed_component_error((100,20,5),(.01,.02,.03),0,0) == sum((.01,.02,.03))
+    assert packed_component_error((100,20,5),(.01,.02,.03),.001,.002) > .06
+    for invalid in (((1,2,3),(-.1,0,0),0,0),
+                    ((1,2,3),(.1,.1,.1),float("nan"),0)):
+        try: packed_component_error(*invalid)
+        except ValueError: pass
+        else: raise AssertionError("invalid packing uncertainty accepted")
+    assert packed_half_lsb({"F":(0,-4.0,0)},"F")==.125
+    try: packed_half_lsb({"F":(0,0.0,0)},"F")
+    except ValueError: pass
+    else: raise AssertionError("zero packing scale accepted")
+    print("PASS: analytic source-packing error envelope, 3 negative tests")
     print("PASS: analytic quadratic mass-acceleration integration, two negative gates")
     print("PASS: adjacent-cut sign, common-origin moments, independent lever-arm identity")
     print("PASS: stable source polar DCM, signs, orthogonality, inverse, tamper gates")
@@ -368,8 +411,13 @@ def audit(args):
                     "max_abs_inertia_kN":0.,"max_abs_unallocated_kN":0.,
                     "peak_time_s":None} for k in range(1,9)]
     inertia_first=[]
+    # Source packed-int16 resolution audit, not a force-ownership or physics check.
+    packing=[{"lower_gage":g,"upper_gage":g+1,
+              "max_component_quantization_envelope_kN":0.0,
+              "max_envelope_time_s":None,
+              "count":0} for g in range(1,9)]
     for ti in range(h["num_samples"]):
-        sample=[]; accelerations=[]
+        sample=[]; accelerations=[]; qforce=[]; qacc=[]
         offset=h["data_offset_bytes"]+2*n*ti
         def read(name):
             j,s,o=channels[name]
@@ -384,7 +432,16 @@ def audit(args):
             fg=mul(R,F); mg=mul(R,M)
             at_base=tuple(x+y for x,y in zip(mg,cross(A,fg)))
             sample.append((A,fg,mg))
-            accelerations.append(mul(R,tuple(read(p+x) for x in ("ALxt","ALyt","ALzt"))))
+            local_al=tuple(read(p+x) for x in ("ALxt","ALyt","ALzt"))
+            accelerations.append(mul(R,local_al))
+            q_rpx=packed_half_lsb(channels,p+"RPxi")
+            q_rpy=packed_half_lsb(channels,p+"RPyi")
+            qforce.append(packed_component_error(
+                F,tuple(packed_half_lsb(channels,p+x) for x in ("FLxt","FLyt","FLzt")),
+                q_rpx,q_rpy))
+            qacc.append(packed_component_error(
+                local_al,tuple(packed_half_lsb(channels,p+x) for x in ("ALxt","ALyt","ALzt")),
+                q_rpx,q_rpy))
             back=tuple(dot(tuple(R[j][i] for j in range(3)),fg) for i in range(3))
             err=max(abs(x-y) for x,y in zip(back,F))
             max_inverse=max(max_inverse,err)
@@ -412,6 +469,15 @@ def audit(args):
                     mass_reference["gravity_source_FST_m_s2"],
                     source["inertia_weight_lower_kg"],source["inertia_weight_upper_kg"],
                     accelerations[g],accelerations[g+1])
+                # Conservative bound for packed source FL, RP and AL only.
+                # Original mass-density table and interpolation-model errors excluded.
+                qrem=(qforce[g]+qforce[g+1]+
+                      (source["inertia_weight_lower_kg"]*qacc[g]+
+                       source["inertia_weight_upper_kg"]*qacc[g+1])/1000)
+                qrow=packing[g];qrow["count"]+=1
+                if qrem>qrow["max_component_quantization_envelope_kN"]:
+                    qrow["max_component_quantization_envelope_kN"]=qrem
+                    qrow["max_envelope_time_s"]=time_s
                 stat=inertia_stats[g];stat["count"]+=1
                 for k in range(3):stat["sum_unallocated_kN"][k]+=rem[k]
                 stat["max_abs_inertia_kN"]=max(stat["max_abs_inertia_kN"],*(abs(x) for x in inert))
@@ -443,6 +509,14 @@ def audit(args):
                 raise AssertionError("incomplete acceleration diagnostic")
             stat["mean_unallocated_global_kN"]=[
                 v/stat["count"] for v in stat.pop("sum_unallocated_kN")]
+    if "rows" in mass_reference:
+        for qrow,stat in zip(packing,inertia_stats):
+            if qrow["count"]!=12001:
+                raise AssertionError("packed resolution count incomplete")
+            qrow["observed_max_abs_unallocated_component_kN"]=stat["max_abs_unallocated_kN"]
+            qrow["observed_to_packing_bound_ratio"]=(
+                stat["max_abs_unallocated_kN"]/qrow["max_component_quantization_envelope_kN"]
+                if qrow["max_component_quantization_envelope_kN"]>0 else None)
     if max_gap_transport_error>1e-7:
         raise AssertionError("independent adjacent-cut wrench transport mismatch")
     if count!=108009 or max_ortho>1e-12 or max_inverse>1e-8:
@@ -467,6 +541,8 @@ def audit(args):
                "original_tower_gravity_source_comparison":mass_reference,
                "approximate_inertia_first_sample":inertia_first,
                "approximate_inertia_full_series":inertia_stats,
+               "source_int16_packing_envelope_by_gap":packing,
+               "packing_envelope_scope":"conservative componentwise bound from FL/AL/RP half-LSB, fixed-base DCM and endpoint linear-AL; excludes mass table rounding, intermediate-node acceleration, FTTower, external distributed loads and physical model error",
                "inertia_scope":"source 70-station mass exact; only gage-endpoint linear interpolated AL; no 1120 node accelerations or FTTower",
                "max_independent_gap_transport_difference_kNm":max_gap_transport_error},
         "cut_gap_interpretation":"lower-minus-upper internal section resultants at global origin; comparison to source tower gravity leaves unallocated inertia/distributed loads and is NOT a free-body residual",
@@ -480,6 +556,7 @@ def audit(args):
                         "orthogonality_abs":max_ortho,
                         "packed_OUTB_quantization":"channel scale/offset finite, precision limited by int16 packing; physical uncertainty NEED_ESTIMATE",
                         "adjacent_cut_independent_transport_error_kNm":max_gap_transport_error,
+                        "source_int16_packing":"per-gap real 12001-sample upper envelope reported in TAB; not a full force-balance uncertainty",
                         "segment_gravity_inertia_distributed_load_residual":"NOT_COMPUTABLE; reported unallocated force is NOT physical residual without source FTTower and 1120-node LinAccET",
                         "inertia_interpolation_error":"UNBOUNDED without intermediate original node accelerations",
                         "dynamic_load_ownership":"UNVERIFIED"},
