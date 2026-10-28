@@ -1,0 +1,526 @@
+{
+  "status": "S05_EXISTING_THREE_STATION_SAME_EVENT_SOURCE_TRIAGE_NOT_DESIGN_PASS",
+  "computed_date": "2026-10-28",
+  "method": "Independent V8 numerical calculation; 5% damping; Newmark beta=1/4 gamma=1/2; T=0.5,1,2,4,6,8,10s; baseline raw vs first 20s mean vs whole-window linear detrend (diagnostic only); direct double integration",
+  "dt_s": 0.01,
+  "npts": 20001,
+  "periods_s": [
+    0.5,
+    1,
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "noise_window_s": [
+    0,
+    20
+  ],
+  "signal_window_s": [
+    35,
+    120
+  ],
+  "source_event": "USGS ci38457511 Ridgecrest 2019-07-06 Mw7.1",
+  "stations": [
+    {
+      "station": "CI.CLC",
+      "source_accession": "USGS:ci38457511;FDSN:CI.CLC:HN*:2019-07-06",
+      "source_receipt_available": true,
+      "manifest_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/manifest.json",
+      "manifest_sha256": "8c0c4a78fb767d85f3c4f7534eceaecf86d86f0e3c3ef16d7f4fee0018230781",
+      "manifest_git_blob_sha": "078b819fcf8f6b08dcfb05114d4da2750101ace7",
+      "components": [
+        {
+          "component": "HNE",
+          "source_csv_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/CI_CLC_HNE_accel_mps2.csv",
+          "source_sha256": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+          "source_git_blob_sha": "82a19fca825aabd7726bdef8c21dfebc5e4b11aa",
+          "pre20_offset_m_s2": -0.1781737409147306,
+          "raw_pga_g": 0.3251691001952757,
+          "pre20_pga_g": 0.34333776542904365,
+          "pre20_noise_rms_m_s2": 0.0001443351348357341,
+          "post35to120_signal_rms_m_s2": 0.34175203211038324,
+          "signal_to_noise_rms_ratio": 2367.7674358313843,
+          "pre20_end_drift": {
+            "end_velocity_m_s": 0.04048376919363827,
+            "end_displacement_m": 3.6846294106362967
+          },
+          "long_period_max_raw_vs_pre20_rel": 1.1452846997727917,
+          "long_period_max_linear_vs_pre20_rel": 0.0007662674008366045,
+          "spectrum": [
+            {
+              "period_s": 0.5,
+              "raw_psa_m_s2": 3.6381201418081606,
+              "pre20_psa_m_s2": 3.459946400894709,
+              "linear_psa_m_s2": 3.4601167628595157,
+              "raw_vs_pre20_rel": 0.05149609857175175,
+              "linear_vs_pre20_rel": 0.000049238324837270254
+            },
+            {
+              "period_s": 1,
+              "raw_psa_m_s2": 1.0461312748162008,
+              "pre20_psa_m_s2": 0.9401817950960446,
+              "linear_psa_m_s2": 0.9400118671034429,
+              "raw_vs_pre20_rel": 0.11269041824973107,
+              "linear_vs_pre20_rel": 0.00018073950536808483
+            },
+            {
+              "period_s": 2,
+              "raw_psa_m_s2": 1.0287003384181472,
+              "pre20_psa_m_s2": 0.9672622841579459,
+              "linear_psa_m_s2": 0.9670897178277862,
+              "raw_vs_pre20_rel": 0.06351747118278935,
+              "linear_vs_pre20_rel": 0.00017840696674113198
+            },
+            {
+              "period_s": 4,
+              "raw_psa_m_s2": 0.5080675869114878,
+              "pre20_psa_m_s2": 0.3314532132672195,
+              "linear_psa_m_s2": 0.3316307444996635,
+              "raw_vs_pre20_rel": 0.5328485788486859,
+              "linear_vs_pre20_rel": 0.0005356147574918525
+            },
+            {
+              "period_s": 6,
+              "raw_psa_m_s2": 0.4312398839845364,
+              "pre20_psa_m_s2": 0.24438871484554667,
+              "linear_psa_m_s2": 0.24457518618584012,
+              "raw_vs_pre20_rel": 0.7645654557211424,
+              "linear_vs_pre20_rel": 0.0007630112561101822
+            },
+            {
+              "period_s": 8,
+              "raw_psa_m_s2": 0.48932422284226346,
+              "pre20_psa_m_s2": 0.2898149510606975,
+              "linear_psa_m_s2": 0.2900094472497483,
+              "raw_vs_pre20_rel": 0.6884022754912381,
+              "linear_vs_pre20_rel": 0.0006711047457661514
+            },
+            {
+              "period_s": 10,
+              "raw_psa_m_s2": 0.4046841678478639,
+              "pre20_psa_m_s2": 0.1886389102065214,
+              "linear_psa_m_s2": 0.1884943623591008,
+              "raw_vs_pre20_rel": 1.1452846997727917,
+              "linear_vs_pre20_rel": 0.0007662674008366045
+            }
+          ]
+        },
+        {
+          "component": "HNN",
+          "source_csv_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/CI_CLC_HNN_accel_mps2.csv",
+          "source_sha256": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+          "source_git_blob_sha": "75a0c80d29e41c8fbae9e48a19bc03633d23d5eb",
+          "pre20_offset_m_s2": -0.18917525688815973,
+          "raw_pga_g": 0.5221404480337323,
+          "pre20_pga_g": 0.5094357254289855,
+          "pre20_noise_rms_m_s2": 0.00017074762665992044,
+          "post35to120_signal_rms_m_s2": 0.48884949071284844,
+          "signal_to_noise_rms_ratio": 2862.9943518131254,
+          "pre20_end_drift": {
+            "end_velocity_m_s": 0.016450453441903785,
+            "end_displacement_m": 0.00982426724626562
+          },
+          "long_period_max_raw_vs_pre20_rel": 2.038779991651811,
+          "long_period_max_linear_vs_pre20_rel": 0.0002783391355911002,
+          "spectrum": [
+            {
+              "period_s": 0.5,
+              "raw_psa_m_s2": 7.596456121565062,
+              "pre20_psa_m_s2": 7.407280864674219,
+              "linear_psa_m_s2": 7.40721547336377,
+              "raw_vs_pre20_rel": 0.02553909597150973,
+              "linear_vs_pre20_rel": 0.000008827977721351408
+            },
+            {
+              "period_s": 1,
+              "raw_psa_m_s2": 1.9391101524685794,
+              "pre20_psa_m_s2": 1.8272889180906882,
+              "linear_psa_m_s2": 1.8273522184817526,
+              "raw_vs_pre20_rel": 0.06119515817713813,
+              "linear_vs_pre20_rel": 0.00003464169811226856
+            },
+            {
+              "period_s": 2,
+              "raw_psa_m_s2": 1.6747946181428623,
+              "pre20_psa_m_s2": 1.763158999453338,
+              "linear_psa_m_s2": 1.7632161266116535,
+              "raw_vs_pre20_rel": 0.050117080386892415,
+              "linear_vs_pre20_rel": 0.00003240045754984014
+            },
+            {
+              "period_s": 4,
+              "raw_psa_m_s2": 0.959387664224878,
+              "pre20_psa_m_s2": 0.9154103834428942,
+              "linear_psa_m_s2": 0.9154603591682537,
+              "raw_vs_pre20_rel": 0.048041055222231094,
+              "linear_vs_pre20_rel": 0.000054593793410584835
+            },
+            {
+              "period_s": 6,
+              "raw_psa_m_s2": 0.6542713284554473,
+              "pre20_psa_m_s2": 0.5532885061733975,
+              "linear_psa_m_s2": 0.5533501431948897,
+              "raw_vs_pre20_rel": 0.18251386239786146,
+              "linear_vs_pre20_rel": 0.00011140123245734565
+            },
+            {
+              "period_s": 8,
+              "raw_psa_m_s2": 0.37744190575359315,
+              "pre20_psa_m_s2": 0.1759278463366139,
+              "linear_psa_m_s2": 0.17587887873193817,
+              "raw_vs_pre20_rel": 1.145435834139694,
+              "linear_vs_pre20_rel": 0.0002783391355911002
+            },
+            {
+              "period_s": 10,
+              "raw_psa_m_s2": 0.3508107708866473,
+              "pre20_psa_m_s2": 0.11544460995873368,
+              "linear_psa_m_s2": 0.11542566585906358,
+              "raw_vs_pre20_rel": 2.038779991651811,
+              "linear_vs_pre20_rel": 0.0001640968744826644
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "station": "CI.PASC",
+      "source_accession": "USGS:ci38457511;FDSN:CI.PASC:HN*:2019-07-06",
+      "source_receipt_available": false,
+      "manifest_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/manifest.json",
+      "manifest_sha256": "5eb2b57151f880310e2bbb3a3b29154af58f4be2dab2e2ba159f8b6892d1c666",
+      "manifest_git_blob_sha": "47349aabe208858758b7e41d6af6dedcbf2ef899",
+      "components": [
+        {
+          "component": "HNE",
+          "source_csv_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_PASC_HNE_accel_mps2.csv",
+          "source_sha256": "c5cf02a008095c521a3e66b5dc2fe1e8f912c2de875fa2bda2f3b15719ff3465",
+          "source_git_blob_sha": "2eca379cd9e681a550f22875947d2f8ce45d96ee",
+          "pre20_offset_m_s2": -0.1561814069336956,
+          "raw_pga_g": 0.022795717989017656,
+          "pre20_pga_g": 0.006869646707418376,
+          "pre20_noise_rms_m_s2": 0.000013089628689753633,
+          "post35to120_signal_rms_m_s2": 0.010938580104245688,
+          "signal_to_noise_rms_ratio": 835.6677155256701,
+          "pre20_end_drift": {
+            "end_velocity_m_s": 0.00007006499413653308,
+            "end_displacement_m": 0.017564692136618505
+          },
+          "long_period_max_raw_vs_pre20_rel": 12.057150851539635,
+          "long_period_max_linear_vs_pre20_rel": 0.000010850891397428574,
+          "spectrum": [
+            {
+              "period_s": 0.5,
+              "raw_psa_m_s2": 0.3644590623729246,
+              "pre20_psa_m_s2": 0.20827765543922927,
+              "linear_psa_m_s2": 0.20827809461638228,
+              "raw_vs_pre20_rel": 0.749871159267325,
+              "linear_vs_pre20_rel": 0.000002108613869688947
+            },
+            {
+              "period_s": 1,
+              "raw_psa_m_s2": 0.2896639191887405,
+              "pre20_psa_m_s2": 0.11069724076801075,
+              "linear_psa_m_s2": 0.11069689871841035,
+              "raw_vs_pre20_rel": 1.6167221258548976,
+              "linear_vs_pre20_rel": 0.000003089955973919431
+            },
+            {
+              "period_s": 2,
+              "raw_psa_m_s2": 0.28965205802038535,
+              "pre20_psa_m_s2": 0.0944447032242711,
+              "linear_psa_m_s2": 0.09444510428759825,
+              "raw_vs_pre20_rel": 2.0668957403843944,
+              "linear_vs_pre20_rel": 0.000004246541240050295
+            },
+            {
+              "period_s": 4,
+              "raw_psa_m_s2": 0.2896434282093102,
+              "pre20_psa_m_s2": 0.03547662695861876,
+              "linear_psa_m_s2": 0.03547701191164503,
+              "raw_vs_pre20_rel": 7.164345177098177,
+              "linear_vs_pre20_rel": 0.000010850891397428574
+            },
+            {
+              "period_s": 6,
+              "raw_psa_m_s2": 0.2896394039722196,
+              "pre20_psa_m_s2": 0.042793742303663035,
+              "linear_psa_m_s2": 0.04279376829737061,
+              "raw_vs_pre20_rel": 5.768265367327484,
+              "linear_vs_pre20_rel": 6.074184255919371e-7
+            },
+            {
+              "period_s": 8,
+              "raw_psa_m_s2": 0.289633998909032,
+              "pre20_psa_m_s2": 0.029783379471863602,
+              "linear_psa_m_s2": 0.029783483617684625,
+              "raw_vs_pre20_rel": 8.724685514034753,
+              "linear_vs_pre20_rel": 0.000003496776486398426
+            },
+            {
+              "period_s": 10,
+              "raw_psa_m_s2": 0.2896307928222916,
+              "pre20_psa_m_s2": 0.022181775803573545,
+              "linear_psa_m_s2": 0.022181590620020862,
+              "raw_vs_pre20_rel": 12.057150851539635,
+              "linear_vs_pre20_rel": 0.00000834845480015195
+            }
+          ]
+        },
+        {
+          "component": "HNN",
+          "source_csv_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_PASC_HNN_accel_mps2.csv",
+          "source_sha256": "0f309119e08613f0b4c35e97d0cae4dcd29daec803b4ceceb1351bc1f956b34d",
+          "source_git_blob_sha": "b07c01d8cee54e275b717f07ae0838113953f300",
+          "pre20_offset_m_s2": -0.007555207452679113,
+          "raw_pga_g": 0.006762543701345517,
+          "pre20_pga_g": 0.00599212694815466,
+          "pre20_noise_rms_m_s2": 0.000012783755891359052,
+          "post35to120_signal_rms_m_s2": 0.009990138231126645,
+          "signal_to_noise_rms_ratio": 781.4712918508791,
+          "pre20_end_drift": {
+            "end_velocity_m_s": -0.0013592864117422418,
+            "end_displacement_m": -0.039471655473077995
+          },
+          "long_period_max_raw_vs_pre20_rel": 0.3483787745988658,
+          "long_period_max_linear_vs_pre20_rel": 0.00039437486672055016,
+          "spectrum": [
+            {
+              "period_s": 0.5,
+              "raw_psa_m_s2": 0.19820681375256236,
+              "pre20_psa_m_s2": 0.1906516062998833,
+              "linear_psa_m_s2": 0.19064522134752318,
+              "raw_vs_pre20_rel": 0.03962834407382418,
+              "linear_vs_pre20_rel": 0.000033490157696810735
+            },
+            {
+              "period_s": 1,
+              "raw_psa_m_s2": 0.11087373576908124,
+              "pre20_psa_m_s2": 0.11029693186088758,
+              "linear_psa_m_s2": 0.11030410587741261,
+              "raw_vs_pre20_rel": 0.005229555332700968,
+              "linear_vs_pre20_rel": 0.000065042756892624
+            },
+            {
+              "period_s": 2,
+              "raw_psa_m_s2": 0.05309371041563733,
+              "pre20_psa_m_s2": 0.04553850314226866,
+              "linear_psa_m_s2": 0.04553027201868689,
+              "raw_vs_pre20_rel": 0.165908116254176,
+              "linear_vs_pre20_rel": 0.00018075085946630718
+            },
+            {
+              "period_s": 4,
+              "raw_psa_m_s2": 0.0469650499481605,
+              "pre20_psa_m_s2": 0.039948963865708745,
+              "linear_psa_m_s2": 0.03995810733654159,
+              "raw_vs_pre20_rel": 0.17562623416308934,
+              "linear_vs_pre20_rel": 0.0002288787980480414
+            },
+            {
+              "period_s": 6,
+              "raw_psa_m_s2": 0.051535426804794615,
+              "pre20_psa_m_s2": 0.0439629581368565,
+              "linear_psa_m_s2": 0.04395448144702229,
+              "raw_vs_pre20_rel": 0.1722465682214798,
+              "linear_vs_pre20_rel": 0.00019281436448891827
+            },
+            {
+              "period_s": 8,
+              "raw_psa_m_s2": 0.035805360834462,
+              "pre20_psa_m_s2": 0.02975414585963969,
+              "linear_psa_m_s2": 0.029763461799652197,
+              "raw_vs_pre20_rel": 0.20337384253501775,
+              "linear_vs_pre20_rel": 0.0003130972085858068
+            },
+            {
+              "period_s": 10,
+              "raw_psa_m_s2": 0.030024398883637664,
+              "pre20_psa_m_s2": 0.022267036124600622,
+              "linear_psa_m_s2": 0.02225825456519672,
+              "raw_vs_pre20_rel": 0.3483787745988658,
+              "linear_vs_pre20_rel": 0.00039437486672055016
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "station": "CI.RVR",
+      "source_accession": "USGS:ci38457511;CI.RVR:HNE+HNN:REPO_CSV_UNVERIFIED_SOURCE_RECEIPT",
+      "source_receipt_available": false,
+      "manifest_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json",
+      "manifest_sha256": "49a9186bb8fa2d5e5f929a8e182aa5b33d44ba9ca6bacf409d3074199f108e84",
+      "manifest_git_blob_sha": "0b7e2e188650104948952114142fddd068b3d74c",
+      "components": [
+        {
+          "component": "HNE",
+          "source_csv_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_HNE_accel_mps2.csv",
+          "source_sha256": "667c4e1ddef97d480220e976bb328339e40a6365530034ffd889e10a15e357ea",
+          "source_git_blob_sha": "2b6ac1a40a3b941a1d67027696f603d0f1f9289c",
+          "pre20_offset_m_s2": -0.04794051930249413,
+          "raw_pga_g": 0.009985090918876477,
+          "pre20_pga_g": 0.006126051189590138,
+          "pre20_noise_rms_m_s2": 0.000031785236209669176,
+          "post35to120_signal_rms_m_s2": 0.007993413169355236,
+          "signal_to_noise_rms_ratio": 251.48194956385484,
+          "pre20_end_drift": {
+            "end_velocity_m_s": -0.0042916908912523045,
+            "end_displacement_m": -0.21972222032304958
+          },
+          "long_period_max_raw_vs_pre20_rel": 4.3570250143131135,
+          "long_period_max_linear_vs_pre20_rel": 0.001510517881348124,
+          "spectrum": [
+            {
+              "period_s": 0.5,
+              "raw_psa_m_s2": 0.18429458261916368,
+              "pre20_psa_m_s2": 0.14364673307008013,
+              "linear_psa_m_s2": 0.14366816822225933,
+              "raw_vs_pre20_rel": 0.28297092930928613,
+              "linear_vs_pre20_rel": 0.0001492212995108114
+            },
+            {
+              "period_s": 1,
+              "raw_psa_m_s2": 0.13965546594413675,
+              "pre20_psa_m_s2": 0.09171494664164193,
+              "linear_psa_m_s2": 0.09169294726800736,
+              "raw_vs_pre20_rel": 0.5227121756916345,
+              "linear_vs_pre20_rel": 0.00023986683130854035
+            },
+            {
+              "period_s": 2,
+              "raw_psa_m_s2": 0.08891585866345532,
+              "pre20_psa_m_s2": 0.02444340866113379,
+              "linear_psa_m_s2": 0.024475333339146955,
+              "raw_vs_pre20_rel": 2.637621082072562,
+              "linear_vs_pre20_rel": 0.0013060648969113456
+            },
+            {
+              "period_s": 4,
+              "raw_psa_m_s2": 0.08890149270240087,
+              "pre20_psa_m_s2": 0.027034295421720606,
+              "linear_psa_m_s2": 0.027057075982154472,
+              "raw_vs_pre20_rel": 2.288470859535451,
+              "linear_vs_pre20_rel": 0.0008426541205717182
+            },
+            {
+              "period_s": 6,
+              "raw_psa_m_s2": 0.08890694024474172,
+              "pre20_psa_m_s2": 0.023414628965918484,
+              "linear_psa_m_s2": 0.023441975672526916,
+              "raw_vs_pre20_rel": 2.797068079709978,
+              "linear_vs_pre20_rel": 0.001167932519803641
+            },
+            {
+              "period_s": 8,
+              "raw_psa_m_s2": 0.0889053081197009,
+              "pre20_psa_m_s2": 0.026292664824311855,
+              "linear_psa_m_s2": 0.026265925169704867,
+              "raw_vs_pre20_rel": 2.3813730450590707,
+              "linear_vs_pre20_rel": 0.001017000550749151
+            },
+            {
+              "period_s": 10,
+              "raw_psa_m_s2": 0.08890124706550451,
+              "pre20_psa_m_s2": 0.016595264503707675,
+              "linear_psa_m_s2": 0.016570197059929122,
+              "raw_vs_pre20_rel": 4.3570250143131135,
+              "linear_vs_pre20_rel": 0.001510517881348124
+            }
+          ]
+        },
+        {
+          "component": "HNN",
+          "source_csv_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_HNN_accel_mps2.csv",
+          "source_sha256": "7d2ab257f8544f57285ec370860d215a4b1ab23b1d604d32fd362e97c398cad6",
+          "source_git_blob_sha": "b26b52066f1ab31b2493c5282d0e98b2f6458c42",
+          "pre20_offset_m_s2": -0.09182015931428562,
+          "raw_pga_g": 0.01371305845727134,
+          "pre20_pga_g": 0.004350007944172002,
+          "pre20_noise_rms_m_s2": 0.00002595374862794711,
+          "post35to120_signal_rms_m_s2": 0.007528802742563129,
+          "signal_to_noise_rms_ratio": 290.0853688031825,
+          "pre20_end_drift": {
+            "end_velocity_m_s": -0.0055346063987792215,
+            "end_displacement_m": -0.34671634500677834
+          },
+          "long_period_max_raw_vs_pre20_rel": 25.802008900978343,
+          "long_period_max_linear_vs_pre20_rel": 0.005003631061064464,
+          "spectrum": [
+            {
+              "period_s": 0.5,
+              "raw_psa_m_s2": 0.17030512233277725,
+              "pre20_psa_m_s2": 0.06403771701436255,
+              "linear_psa_m_s2": 0.06406480555212338,
+              "raw_vs_pre20_rel": 1.6594502470252144,
+              "linear_vs_pre20_rel": 0.000423009111251654
+            },
+            {
+              "period_s": 1,
+              "raw_psa_m_s2": 0.17027834662469235,
+              "pre20_psa_m_s2": 0.0391119241860418,
+              "linear_psa_m_s2": 0.03908310860933939,
+              "raw_vs_pre20_rel": 3.353617219514376,
+              "linear_vs_pre20_rel": 0.0007367465882103848
+            },
+            {
+              "period_s": 2,
+              "raw_psa_m_s2": 0.17027757034599866,
+              "pre20_psa_m_s2": 0.02602894877723395,
+              "linear_psa_m_s2": 0.02599712854614082,
+              "raw_vs_pre20_rel": 5.541853526367951,
+              "linear_vs_pre20_rel": 0.001222493899598453
+            },
+            {
+              "period_s": 4,
+              "raw_psa_m_s2": 0.17026669973064162,
+              "pre20_psa_m_s2": 0.027450593866495693,
+              "linear_psa_m_s2": 0.027417116134475526,
+              "raw_vs_pre20_rel": 5.202659970080189,
+              "linear_vs_pre20_rel": 0.0012195631243165136
+            },
+            {
+              "period_s": 6,
+              "raw_psa_m_s2": 0.1702654530620348,
+              "pre20_psa_m_s2": 0.028611911819580654,
+              "linear_psa_m_s2": 0.028577880619125737,
+              "raw_vs_pre20_rel": 4.950859003609577,
+              "linear_vs_pre20_rel": 0.0011894067292500018
+            },
+            {
+              "period_s": 8,
+              "raw_psa_m_s2": 0.17026869021524008,
+              "pre20_psa_m_s2": 0.014634850022513968,
+              "linear_psa_m_s2": 0.014666611098840349,
+              "raw_vs_pre20_rel": 10.6344677228193,
+              "linear_vs_pre20_rel": 0.0021702358601229464
+            },
+            {
+              "period_s": 10,
+              "raw_psa_m_s2": 0.1702730020691121,
+              "pre20_psa_m_s2": 0.0063529940124337735,
+              "linear_psa_m_s2": 0.006384782050605144,
+              "raw_vs_pre20_rel": 25.802008900978343,
+              "linear_vs_pre20_rel": 0.005003631061064464
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "all_records_are_same_event": true,
+  "independent_event_count": 1,
+  "source_low_frequency_band_validated": false,
+  "target_spectrum_available": false,
+  "PEER_RSN_verified": false,
+  "S05_PASS": false,
+  "Abaqus_RUN": false,
+  "notes": [
+    "CI.CLC has original miniSEED, StationXML and source receipt; PASC/RVR here have no comparable per-station receipt",
+    "Signal-to-pre-event RMS is descriptive only, not acceptance or frequency-band validation",
+    "The 200s event windows are not necessarily complete earthquake records; same event cannot count as 3 independent records",
+    "No baseline choice alone proves usable long-period band; do not promote to Abaqus design waves"
+  ]
+}
