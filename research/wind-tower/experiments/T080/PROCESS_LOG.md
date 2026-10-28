@@ -274,3 +274,10 @@
 - 0/12阶段PASS，地震RUN=0；冻结T057/T070不改、PR不合并；唯一下一动作为真实逐时刻DCM而不是RP伪Euler变换。
 
 - **2026-10-28 08时补充源字节SHA256：** OpenFAST v3.5.3原始`ElastoDyn.f90`（Git blob `2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1`，663919 ASCII字节）独立FIPS SHA-256复算=`a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3`；JS哈希实现先用标准`abc`已知向量`ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad`自测通过。等待GitHub Actions对原始源`sha256sum`交叉确认；不得在CI未完成时宣称远端PASS。
+
+
+### 2026-10-28 09时｜S07原始固定平台DCM真实全时程转换与失败纠错
+
+- **SOURCE/OFFICIAL/REF/STANDARD**：原始T062静态ZIP/FST/ElastoDyn/OUTB四重SHA与v3.5.3 `ElastoDyn.f90`及`NWTC_Num.f90`原码双Git blob校验，实际确认六个Ptfm*DOF全False。原码证明`ThetaSS=RPxi`、`ThetaFA=-RPyi`（弧度），以`SmllRotTransD`重建DCM；不是把RP伪装为Euler角。REF无新全文，STANDARD无授权条款。来源、版本、hash、误差与失败记录详见[既有T062研究记录](../T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)。
+- **RUN/TAB/FIG**：[GitHub Actions #40613921704](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40613921704)真实success，12001×9=108009次原始OUTB逐时刻DCM/截面内力基点变换；最大正交误差5.5511e-16、逆变换力差1.4552e-11kN、相对恒等方向最大力分量差5.27748kN；[永久数值JSON](../T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json)SHA256 `455487cdaa1859c092004c8729a5fb98e535f2f084ee4e0181fbf2a83f4cdaea`；[程序](../T077/recovery/s07_v353_fixed_base_native_frame.py)SHA256 `9da380afca9bfc06e3baf4f19d0f1e6c4c8debc324cf45c72355c59b88764ff6`。FIG无新增原生结构图。
+- **失败如实保留**：初版RPyi符号反向（CI #40613856051数值撤回）；CI #40613884542保存回执HTTP422缺覆盖blob SHA，已修复；最终成功。所有结果仅算法/原始数据QC，不是风载所有权、Abaqus或地震物理PASS。S07独立准备前进、0/12阶段PASS，T057/T070冻结母本未改、PR #42未合并。下一动作：同状态原始ElastoDyn截面控制体载荷归属与平衡残差。
