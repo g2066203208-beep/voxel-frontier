@@ -178,6 +178,21 @@ jobs:
       - name: Fetch one PUBLIC official ESM manually processed acceleration ZIP (not a design wave)
         run: |
           python3 s05_esm_public_processed_pair.py --fetch --timeout 90 --output-dir esm-public-processed
+      - name: Diagnostic original DYNA lines 33-70 even when parser rejects source
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import glob,zipfile
+          files=glob.glob('esm-public-processed/*original.zip')
+          if files:
+              with zipfile.ZipFile(files[0]) as z:
+                  name=next(n for n in z.namelist() if '.HNE.' in n)
+                  lines=z.read(name).decode('utf-8',errors='replace').splitlines()
+                  print('REAL_DYNA_HNE_HEADER_COUNT_DIAGNOSTIC',len(lines))
+                  for i in range(32,min(72,len(lines))):
+                      print('REAL_DYNA_LINE',i+1,repr(lines[i][:180]))
+          PY
       - name: Display immutable official DYNA source headers for scientific triage
         if: success()
         shell: bash
