@@ -398,3 +398,7 @@ HOLD：
 - GitHub Actions [#40678178362](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40678178362) 已`completed/success`；job `122781814793`原生日志确认68行输出逐字节重算通过、744行原始载荷表与186行控制表一致、68部件源组完整，另有**3项输入单字节破坏拒绝测试**全部通过；现有S10 Miner/雨流/ODB模拟测试同一job通过，均非Abaqus原生求解。
 - **SHA256（原始GitHub文件字节）**：S06载荷=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`；S10控制表=`572eee2436b84b2c8683542ea7e92490970be7fc8a4fd51320f5d41f92229b1f`；T057质量账=`cf42e9e3b07826d9ac61af4e42deb01805d4276251642091bf6e523a3cb4cc9f`；68行输出=`ebcf39ac6c8b937d28a2e324c66ff04958f9daeeaf825446a4ed760edfb670e1`。
 - **更正**：四工况同测点高度最大跨度为0.726193mm；与T057部件质心的最大绝对高度差精确为0.086564482m（CSEG31），此前预提交文字0.086264m为抄录错误，已在两处中央记录更正。**状态仍0/12、原生ODB及地震RUN=0。**
+
+## 2026-10-28｜S10原始T057的68实例/元素集/赋材实证（静态，不是疲劳PASS）
+
+以冻结T057原始INP SHA256 `c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`做只读解析，与[68行预绑定](../../experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv)按Part逐项校对。新增[68行可复核实例/截面赋材/元素集及62个高度近邻候选单元清单](../../experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv)及[来源SHA锁定解析器](../../experiments/T077/recovery/s10_t057_native_metadata_gate.py)。**只证实INP存在的实例与元素，未验证ODB积分点、周向疲劳控制位置或应力方向。** 原型T057纵筋截面赋材HRB335，不得把未使用的HRB500_BASELINE材料定义当成现行钢筋。T057 PT输入1280MPa不等于Peq。参考文献/规范原文未新读取，FIG=无，数值仅为静态高度几何筛查；Abaqus原生日志、S–N和物理误差预算仍HOLD。正式12阶段保持0/12，S10=INP_METADATA_HEIGHT_ONLY_READY/PHYSICS_HOLD。

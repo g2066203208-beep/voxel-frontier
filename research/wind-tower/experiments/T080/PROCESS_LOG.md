@@ -383,3 +383,12 @@
 - GitHub Actions [#40678178362](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40678178362) 已`completed/success`；job `122781814793`原生日志确认68行输出逐字节重算通过、744行原始载荷表与186行控制表一致、68部件源组完整，另有**3项输入单字节破坏拒绝测试**全部通过；现有S10 Miner/雨流/ODB模拟测试同一job通过，均非Abaqus原生求解。
 - **SHA256（原始GitHub文件字节）**：S06载荷=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`；S10控制表=`572eee2436b84b2c8683542ea7e92490970be7fc8a4fd51320f5d41f92229b1f`；T057质量账=`cf42e9e3b07826d9ac61af4e42deb01805d4276251642091bf6e523a3cb4cc9f`；68行输出=`ebcf39ac6c8b937d28a2e324c66ff04958f9daeeaf825446a4ed760edfb670e1`。
 - **更正**：四工况同测点高度最大跨度为0.726193mm；与T057部件质心的最大绝对高度差精确为0.086564482m（CSEG31），此前预提交文字0.086264m为抄录错误，已在两处中央记录更正。**状态仍0/12、原生ODB及地震RUN=0。**
+
+
+## 2026-10-28｜S10冻结T057原始INP静态身份与取点位置绑定（原生物理仍HOLD）
+
+- SOURCE：直接读取冻结T057全文，Git blob `da0b5ce5258b4fff08b2389851e29c32c6e4abfc`，登记原件SHA256 `c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db`；与已提交[68行S06风载/质量预绑定](../T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv)逐部件对应，原表SHA256 `ebcf39ac6c8b937d28a2e324c66ff04958f9daeeaf825446a4ed760edfb670e1`。新数据[68行模型身份表](../T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv)、[可复算SHA锁定解析器](../T077/recovery/s10_t057_native_metadata_gate.py)。
+- RUN/TAB：对原始INP文本只读识别68个Part及其68个真实Instance、各Part的原生元素集和截面赋材、31个C3D8R混凝土段、31组T3D2普通纵筋、4个C3D8I钢塔段、连续T3D2 PT、T3D2环拉筋笼；在62个有31段风测点的混凝土/纵筋部件上仅以元素节点几何中点到相应测点高度的绝对差选出一处**高度近邻候选元素**。选择没有周向临界应力含义，不是疲劳控制点；其余6部件不伪造测点。
+- S01身份提醒：普通纵筋实际`*SOLID SECTION`赋材为`HRB335_T057`；`HRB500_BASELINE`只在原件材料定义中出现，不得因此声称纵筋实际用HRB500。PT截面赋材`STRAND_1860`；T057预定义`1280 MPa`不是有效预应力平衡验证值。
+- 验证：原件SHA、元素类型/数目、实例/Part、集合成员与68行身份均由脚本在GitHub Actions重新验证；单独的高度选择正/负例为算法测试，不能代替Abaqus。**原生积分点编号与应力方向全部留空，0个ODB应力绑定，0次地震和疲劳生产RUN。** 上一轮S06高度偏差只能是静态几何差异，不能认定变形。
+- REF/STANDARD/OFFICIAL：无新增外部论文原页或授权规范原条款阅读；来源等级=冻结GitHub原始模型直接读取+上轮数据原件。FIG：无真实应力云图；TAB：68行身份清单；真实S–N材料参数、PT平衡、网格/场变量基底及接触仍HOLD，几何近邻差异是测点离散定位量而不是物理误差预算，物理误差`NEED_ESTIMATE`。阶段0/12，S10仅`INP_METADATA_HEIGHT_ONLY_READY/PHYSICS_HOLD`。

@@ -151,6 +151,8 @@ jobs:
           print("S06: 30/30 true-joint geometry/gravity source-level numerical roundtrip PASS; NOT contact or native PASS")
           print("S06: 30/30 static six-component gage wrench transport + synthetic shear/moment oracle PASS; My=-5793.573173694369 kNm constant; dynamic frame/inertia still HOLD")
           PY
+      - name: S10 frozen T057 actual 68-Part/Instance/Elset mapping (NO ODB)
+        run: python research/wind-tower/experiments/T077/recovery/s10_t057_native_metadata_gate.py --self-test
       - name: Write traceable preflight report
         run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
       - name: Preserve metadata report
