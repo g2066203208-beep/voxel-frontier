@@ -188,8 +188,8 @@ jobs:
           x=json.load(open(p,encoding='utf-8'))
           print('ESM_REAL_SOURCE',x['event_id'],x['station_requested'],x['zip_sha256'],x['zip_bytes'])
           for f in x['unpacked_files']:
-              print('ESM_MEMBER',f['filename'],f['bytes'],f['sha256'])
-              for i,line in enumerate(f['first_32_lines_SOURCE_TEXT_NOT_INTERPRETED'],1):
+              print('ESM_MEMBER',f['filename'],f['bytes'],f['sha256'],f['dyna_selected_header_fields'])
+              for i,line in enumerate(f['dyna_header_64_lines_SOURCE_TEXT'],1):
                   print('ESM_HEADER',f['filename'],i,repr(line))
           assert x['S05_PASS'] is False and x['actual_processing_filter_corner_confirmed'] is False
           PY
