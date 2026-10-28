@@ -74,7 +74,7 @@ jobs:
                   assert 'creative commons attribution' in text or ('creative commons' in text and 'attribution' in text), 'cannot verify CC BY 4.0 in PDF'
               path='research/wind-tower/references/open-access/'+target
               gitsha=hashlib.sha1(b'blob '+str(len(b)).encode()+bytes([0])+b).hexdigest()
-              old=subprocess.run(['gh','api',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+              old=subprocess.run(['gh','api','--method','GET',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
               if old.returncode==0:
                   if json.loads(old.stdout)['sha']==gitsha:
                       print('ALREADY_IN_GIT_REPO',path,sha);continue
