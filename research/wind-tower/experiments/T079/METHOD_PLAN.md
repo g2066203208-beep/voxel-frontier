@@ -1,5 +1,9 @@
 # 嘉鱼10 MW预应力钢混塔：地震与风震研究方案
 
+## 2026-10-28 13:08｜S05实际波源筛选新增六通道数据（本节覆盖此前“仅CLC一站”的范围）
+
+本轮已将**同一Ridgecrest地震事件**的三个台站CI.CLC、CI.PASC、CI.RVR共六个水平分量（各20,001点、dt=0.01s）实际逐字节SHA256核验，并在T=0.5/1/2/4/6/8/10s、ζ=5%下计算**原始/前20s去均值/全窗线性去趋势**伪谱加速度及漂移。全部结果、每源SHA、数值误差与来源缺口在[真实六通道JSON](real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json)和[过程日志](PROCESS_LOG.md)；[Python可复算程序](s05_ground_motion_pair_qc.py)扩展了`--station-triage`，[RVR恢复manifest](real-records/USGS_ci38457511/CI_RVR_manifest.json)不伪装原始FDSN收据。**六个分量=三个台站=仅一个独立事件**，且低频可靠范围、参考目标谱与PASC/RVR原始收据仍缺，故**正式可用地震设计波仍0组**，不能进入Abaqus地震生产。T≥4s原样相对前20s去均值最大谱差：CLC HNE/HNN 114.53%/203.88%，PASC 1205.72%/34.84%，RVR 435.70%/2580.20%。这证明原始偏置影响显著，**不证明某种去趋势就是正确地震输入**。下一步必须换**独立地震事件**并取得可用低频、处理历史和可审查参考谱，不能重复用同事件多台站凑样本数。
+
 ## 2026-10-28｜按正式六章论文和期刊原文重定的**地震研究执行方案**（优先于本文更早的嘉鱼场址/215工况提案）
 
 > **研究裁决 / DRAFT SCIENTIFIC DESIGN，不是结果**。本节实际对读正式六章 `manuscript/final-thesis/chapters/01–06`、`00_WORKSPACE_MASTER`、T057/T070/T077/T078模型身份审计，并核对Wang et al. 2026 RCS原PDF印刷49–54页、Ishihara et al. 2024 *Structures* 作者PDF物理p6–7和Meng et al. 2020机构原稿。明确不把“嘉鱼风场数据背景”强行当真实安装工址，也不把地震研究替换Ch4长期风疲劳。以下是**唯一当前建议的研究架构**，不再将旧215项候选矩阵当生产设计。
