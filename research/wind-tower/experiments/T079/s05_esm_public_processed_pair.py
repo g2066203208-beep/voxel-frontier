@@ -106,6 +106,52 @@ def inspect_zip(raw):
     return results
 
 
+
+def spectrum_pair(raw):
+    """Use existing S05 Newmark kernel; 4/6/8/10s diagnostic, NOT site PASS."""
+    from s05_ground_motion_pair_qc import sdof
+    traces, meta = {}, {}
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for name in z.namelist():
+            lines = z.read(name).decode('utf-8').splitlines()
+            first_data = next((i for i,line in enumerate(lines) if ':' not in line), None)
+            if first_data is None:
+                raise ValueError('DYNA_NUMERIC_START_NOT_FOUND')
+            header = dict(line.split(':',1) for line in lines[:first_data])
+            header = {k.strip():v.strip() for k,v in header.items()}
+            stream = header['STREAM']
+            if stream in traces:
+                raise ValueError('DUPLICATE_STREAM')
+            if header['UNITS'] != 'cm/s^2':
+                raise ValueError('ESM_UNITS_NOT_CM_S2')
+            traces[stream] = [float(v)/100 for v in lines[first_data:]]
+            meta[stream] = header
+    if set(traces) != {'HNE','HNN','HNZ'}:
+        raise ValueError('HORIZONTAL_PAIR_OR_VERTICAL_MISSING')
+    if len({len(a) for a in traces.values()}) != 1:
+        raise ValueError('COMPONENT_LENGTH_MISMATCH')
+    if len({meta[k]['SAMPLING_INTERVAL_S'] for k in traces}) != 1:
+        raise ValueError('COMPONENT_DT_MISMATCH')
+    if len({meta[k]['LOW_CUT_FREQUENCY_HZ'] for k in traces}) != 1:
+        raise ValueError('COMPONENT_FILTER_MISMATCH')
+    delta = float(meta['HNE']['SAMPLING_INTERVAL_S'])
+    corner = float(meta['HNE']['LOW_CUT_FREQUENCY_HZ'])
+    if delta <= 0 or corner <= 0:
+        raise ValueError('INVALID_DT_OR_FILTER')
+    rows = []
+    for T in (4.,6.,8.,10.):
+        e = sdof(traces['HNE'],delta,T,.05)['pseudo_sa_m_s2']
+        n = sdof(traces['HNN'],delta,T,.05)['pseudo_sa_m_s2']
+        rows.append({'period_s':T,'HNE_pseudoSa_m_s2':e,
+                     'HNN_pseudoSa_m_s2':n,'horizontal_gm_pseudoSa_m_s2':math.sqrt(e*n),
+                     'frequency_Hz':1/T,'frequency_over_highpass_corner':1/(T*corner)})
+    return {'status':'REAL_ESM_MANUALLY_PROCESSED_PAIR_SPECTRUM_DIAGNOSTIC_ONLY',
+            'damping_ratio':.05,'dt_s':delta,'npts':len(traces['HNE']),
+            'highpass_corner_Hz':corner,'highpass_corner_period_s':1/corner,
+            'spectrum':rows,'low_frequency_usable_band_verified':False,
+            'Jiayu_target_spectrum_matched':False,'S05_PASS':False}
+
+
 def make_report(raw, timestamp, content_type='unknown'):
     members = inspect_zip(raw)
     return {'status': 'PUBLIC_ESM_PROCESSED_ZIP_RECEIPT_NOT_DESIGN_WAVE',
@@ -116,6 +162,7 @@ def make_report(raw, timestamp, content_type='unknown'):
         'data_type_requested': 'ACC_cm_per_s2',
         'http_content_type': content_type, 'zip_sha256': sha(raw),
         'zip_bytes': len(raw), 'unpacked_files': members,
+        'processed_pair_spectrum': spectrum_pair(raw),
         'unpacked_file_count': len(members),
         'actual_two_horizontal_components_confirmed': False,
         'actual_processing_filter_corner_confirmed': False,
@@ -150,9 +197,10 @@ def self_test():
                 'PROCESSING':'MP','DATA_LICENSE':'CC-BY-4.0'}.items()):
             header[i] = k+': '+v
         return ('\n'.join(header)+'\n'+'\n'.join(str(i) for i in range(10))+'\n').encode()
-    valid = zip_bytes([('wave_H1.ACC', fixture('HNE')), ('wave_H2.ACC', fixture('HNN'))])
+    valid = zip_bytes([('wave_H1.ACC', fixture('HNE')), ('wave_H2.ACC', fixture('HNN')),
+                       ('wave_Z.ACC', fixture('HNZ'))])
     r = make_report(valid, 'SYNTHETIC', 'application/zip')
-    assert r['unpacked_file_count'] == 2 and r['zip_sha256'] == sha(valid)
+    assert r['unpacked_file_count'] == 3 and r['zip_sha256'] == sha(valid)
     assert not r['S05_PASS'] and not r['actual_processing_filter_corner_confirmed']
     cases = [b'not a zip', zip_bytes([('../bad.ACC', b'123')]),
              zip_bytes([('empty.ACC', b'')]), zip_bytes([]),
