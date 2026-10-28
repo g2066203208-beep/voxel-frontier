@@ -102,6 +102,32 @@ jobs:
                   raise RuntimeError('GIT_PDF_UPLOAD_409_RETRIES_EXHAUSTED '+target)
           print('NEW_LICENSED_PDFS_IN_GIT_REPO',len(manifest))
           PY
+      - name: Archive author-hosted ALL-RIGHTS-RESERVED Ishihara PDF as PRIVATE DRAFT GitHub repository Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/seismic_original_pdfs/Ishihara_2024_Structures_105886.pdf"
+          test -s "$src"
+          echo "3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238  $src" | sha256sum --check
+          TAG="windtower-s05-private-journal-fulltext-20261028"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --target research/t080-seismic-integration-gates-20261022 --draft --prerelease \
+              --title "S05 private full-text research originals (DRAFT, never publish)" \
+              --notes "PRIVATE scholarly reference copy; not licensed for public redistribution. Do not publish this draft Release. Ishihara et al. (2024) Structures 60:105886 DOI 10.1016/j.istruc.2024.105886. Original author-hosted PDF, all rights reserved, SHA256 3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238. CC BY papers reside directly in references/open-access/."
+          fi
+          name="Ishihara_2024_Structures_105886.pdf"
+          if gh release view "$TAG" --json assets --jq '.assets[].name' | grep -Fxq "$name"; then
+            echo "PRIVATE_DRAFT_RELEASE_ASSET_ALREADY_EXISTS $name"
+          else
+            gh release upload "$TAG" "$src" --display-label "2024 Ishihara 17-page research-only copyrighted PDF"
+            echo "PRIVATE_DRAFT_RELEASE_ASSET_UPLOADED $name"
+          fi
+          gh release view "$TAG" --json url,isDraft,assets --jq '{url,isDraft,asset_count:(.assets|length)}'
+          test "$(gh release view "$TAG" --json isDraft --jq .isDraft)" = "true"
+          echo "SOURCE_SHA256=3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238; PRIVATE DRAFT REPO RELEASE, NOT PUBLIC GIT."
       - name: Commit exact download receipt to Draft PR branch (no PDF in public git)
         if: always()
         shell: bash
