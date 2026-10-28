@@ -169,13 +169,93 @@ def stability_selftest():
     assert abs(drift([1.]*101,.01)['end_displacement_m']-.5)<1e-12
     print('S05_SPECTRAL_STABILITY_SYNTHETIC_TEST_PASS 3')
 
+
+# Three existing CI station pairs from the SAME Ridgecrest event, independent
+# of the site-spectrum selection. No claim of three independent earthquakes.
+def _rms_window(a,start,stop):
+    if not 0<=start<stop<=len(a):raise ValueError('RMS_WINDOW')
+    return math.sqrt(sum(x*x for x in a[start:stop])/(stop-start))
+
+def station_triage(manifest_paths):
+    if len(manifest_paths)!=3:raise ValueError('THREE_STATION_MANIFESTS_REQUIRED')
+    periods=[.5,1.,2.,4.,6.,8.,10.]
+    out={'status':'S05_THREE_STATION_SAME_EVENT_TRIAGE_NOT_DESIGN_PASS',
+         'method':'Python stdlib Newmark beta=1/4 gamma=1/2, 5% damping; raw/pre20 mean/whole-window detrend',
+         'periods_s':periods,'npts':20001,'dt_s':.01,'stations':[],
+         'independent_event_count':1,'S05_PASS':False,'Abaqus_RUN':False,
+         'target_spectrum_available':False,'source_low_frequency_band_validated':False,
+         'notes':['Three station pairs are from one event; not three independent earthquakes.',
+                  'PASC and RVR lack same-depth archived per-station miniSEED/StationXML receipts.',
+                  'Signal-to-noise RMS and low detrend sensitivity are not design-wave acceptance.']}
+    all_events=set()
+    for mp in manifest_paths:
+        mp=pathlib.Path(mp).resolve()
+        m=json.loads(mp.read_text(encoding='utf-8'))
+        pair=m['horizontal_components']
+        if len(pair)!=2 or set(e['component'] for e in pair)!={'HNE','HNN'}:raise ValueError('HORIZONTAL_PAIR')
+        station=pair[0]['station']
+        if station!=pair[1]['station']:raise ValueError('STATION_MISMATCH')
+        if any(e['rsn']!='NOT_PEER_RSN' for e in pair):raise ValueError('RSN_UNVERIFIED')
+        if any(e['event']!=pair[0]['event'] for e in pair):raise ValueError('EVENT_MISMATCH')
+        all_events.add(pair[0]['event'])
+        item={'station':station,'source_accession':m['source_accession'],
+              'manifest_path':str(mp),'manifest_sha256':sha(mp),
+              'source_receipt_available':(mp.parent/'source_receipt.json').exists(),
+              'components':[]}
+        for e in pair:
+            a,dt=load(mp.parent,e)
+            if len(a)!=20001 or abs(dt-.01)>1e-12:raise ValueError('GRID_20001_0.01')
+            offset=sum(a[:2000])/2000
+            b=[x-offset for x in a]
+            c=_linear_detrend(a)
+            spec=[]
+            for T in periods:
+                r=sdof(a,dt,T,.05)['pseudo_sa_m_s2']
+                q=sdof(b,dt,T,.05)['pseudo_sa_m_s2']
+                l=sdof(c,dt,T,.05)['pseudo_sa_m_s2']
+                spec.append({'period_s':T,'raw_psa_m_s2':r,
+                             'pre20_psa_m_s2':q,'linear_psa_m_s2':l,
+                             'raw_vs_pre20_rel':abs(r-q)/max(q,1e-12),
+                             'linear_vs_pre20_rel':abs(l-q)/max(q,1e-12)})
+            noise=_rms_window(b,0,2000);signal=_rms_window(b,3500,12000)
+            item['components'].append({
+                'component':e['component'],'source_csv_path':str(mp.parent/e['file']),
+                'source_sha256':sha(mp.parent/e['file']),
+                'pre20_offset_m_s2':offset,
+                'raw_pga_g':max(map(abs,a))/G,'pre20_pga_g':max(map(abs,b))/G,
+                'pre20_noise_rms_m_s2':noise,'post35to120_signal_rms_m_s2':signal,
+                'signal_to_noise_rms_ratio':signal/max(noise,1e-12),
+                'pre20_end_drift':drift(b,dt),
+                'long_period_max_raw_vs_pre20_rel':max(x['raw_vs_pre20_rel'] for x in spec if x['period_s']>=4),
+                'long_period_max_linear_vs_pre20_rel':max(x['linear_vs_pre20_rel'] for x in spec if x['period_s']>=4),
+                'spectrum':spec})
+        out['stations'].append(item)
+    if len(all_events)!=1 or set(x['station'] for x in out['stations'])!={'CI.CLC','CI.PASC','CI.RVR'}:
+        raise ValueError('THREE_STATIONS_ONE_EVENT')
+    return out
+
+def triage_selftest():
+    assert abs(_rms_window([3.,4.],0,2)-math.sqrt(12.5))<1e-12
+    for args in [([1.],0,2),([1.],1,1)]:
+        try:_rms_window(*args)
+        except ValueError as ex:assert str(ex)=='RMS_WINDOW'
+        else:raise AssertionError('bad RMS window accepted')
+    print('S05_THREE_STATION_TRIAGE_SYNTHETIC_TEST_PASS')
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--self-test',action='store_true');p.add_argument('--manifest');p.add_argument('--output')
     p.add_argument('--processed-manifest');p.add_argument('--spectral-stability',action='store_true')
+    p.add_argument('--station-triage',action='store_true');p.add_argument('--triage-manifests',nargs=3)
     a=p.parse_args()
     if a.self_test:
         self_test()
         stability_selftest()
+        triage_selftest()
+    elif a.station_triage:
+        if not a.triage_manifests or not a.output:p.error('--station-triage requires --triage-manifests (3) and --output')
+        result=station_triage(a.triage_manifests)
+        pathlib.Path(a.output).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+        print('S05_REAL_THREE_STATION_TRIAGE_NOT_DESIGN_PASS',[(s['station'],[(x['component'],x['pre20_end_drift']['end_displacement_m']) for x in s['components']]) for s in result['stations']])
     elif a.spectral_stability:
         if not a.manifest or not a.processed_manifest or not a.output:
             p.error('--spectral-stability requires --manifest, --processed-manifest and --output')
