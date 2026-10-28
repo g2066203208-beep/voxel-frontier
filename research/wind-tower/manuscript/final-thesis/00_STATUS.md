@@ -444,3 +444,5 @@ HOLD：
 - **FIG/RUN**：新增[My沿塔高m4-DEL](figures/FIG3_S06_01_MY_M4_HEIGHT_SCREEN.svg)、[塔底三向弯矩m4-DEL](figures/FIG3_S06_02_BASE_MOMENTS_M4_SCREEN.svg)、[My分半窗RMS差异](figures/FIG3_S06_03_MY_HALF_WINDOW_RMS_SCREEN.svg)。[Node可复算生成器](figures/plot_ch3_s06_etm_screening.js)严格检查744源行、12001点、0.05s、600s、31站×4工况，具有输出字节一致性检查；不执行Abaqus/OpenFAST或Origin。
 - **REF/STANDARD/OFFICIAL与边界**：只引用已恢复历史OpenFAST/T071/T072工况与原记录，本轮未新读授权IEC/GB/NB条文、未增加期刊全文、未生成原生物理云图。图中ETM代表历史载荷筛选，不是DLC1.2长期材料疲劳寿命；20%只为描述性RMS对照指导线而非规范验收限。SVG坐标舍入0.01像素，模型物理误差仍未估计。OUTB原始来源身份、S03/S04差异、EI/RNA及自由体所有权继续HOLD。
 - **阶段**：S06/S07独立图表准备有新增成果，S10/S11主线不变；正式**0/12未晋级**，地震和材料疲劳Abaqus RUN均0；冻结T057/T070不改、PR #42继续Draft。
+
+**图表生成CI实证补记（2026-10-28）：** 现有Ch3三张真实源屏查图已从744行SHA锁定源数据逐字节复算；[首次运行#40719782161](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40719782161)因任意text>25断言失败（源SHA、逐字节再生均已通过），随后修正为实有4条曲线/12根柱、SVG XML及124行CSV结构检查，[更正成功#40719936514](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40719936514) completed/success。完整负例、限制和图表输入见[现有图表说明](figures/README_S06_REAL_SCREENING_FIGURES_20261028.md)。这些仍为ETM载荷筛查，不等于论文正式DLC1.2、材料疲劳或物理PASS；**0/12未晋级**。

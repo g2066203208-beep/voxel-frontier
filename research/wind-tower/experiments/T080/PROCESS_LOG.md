@@ -447,3 +447,12 @@
 
 
 - **2026-10-28最终远端CI复核：** [Actions #40713471207](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40713471207) `completed/success`，job `122904701840`真实原生日志确认上述372行、3模板正例、3模板拒绝、1模拟桥接、3桥接负例、12身份负例、2源篡改负例均通过。新增卡程序实际字节SHA256=`9b0676f955724f13cc488d7a9de00985862c5c2dee905e9ca1ce91a12338692c`；更新后ODB接口SHA256=`6cf130afb7f13b9b2e6a8aaa43fdc546beca111a9551a60a6c65827fdd7193b2`。上述hash来自CI `sha256sum`原始打印，不能替代未来真实ODB/原生日志SHA。三张非可执行卡保存在该run的`s10-d400-pe-68part-static-source-map` artifact中；未运行Abaqus。
+
+## 2026-10-28｜Ch3 S06真实风载筛选图首次装配（Origin数据可导入；物理门禁HOLD）
+
+- SOURCE：原始T077恢复四工况×31塔段×六分量744行统计CSV，SHA256 `9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`。图源带有12001样本、0.05s时间步与600s时长；31测点处在112m混凝土段。
+- RUN/TAB/FIG：在`manuscript/final-thesis/figures/`提交3张**原创真实数据**SVG（My沿高DEL、CSEG01三向弯矩DEL、My前后300s RMS差异）、124行Origin可导入CSV及Node可复算程序；CSV逐行来自原有数据，不合成/插值，不生成Abaqus响应图。实际四个CSEG01 My m4值分别为92306.913570060、94836.550375532、85921.775126444、83242.012201847 kN·m。
+- 严格QC：最初[Actions #40719782161](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40719782161)源码SHA及逐字节再生已PASS，但过严文字节点数量断言造成CI失败；校正为可验证的polyline/bar/XML/数据维度断言，[Actions #40719936514](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40719936514)最终completed/success。不可删除前次失败日志；新工作流文件在`.github/workflows/ch3-source-figures-repro.yml`，采用稀疏clone避免高成本拉全库。
+- REF/STANDARD/OFFICIAL：本轮未新增论文原页、IEC/GB/NB授权条款或Abaqus官方求解结果；沿用此前OpenFAST v3.5.3、T071/T072历史恢复来源。技术图为SCREEN，不对应正式DLC1.2或20年疲劳寿命，也不代表S07自由体守恒验收。
+- 误差/假设：SVG坐标绘图舍入0.01像素；RMS相对差定义为两半窗绝对差/两者平均；20%引导线为可视对照而非规范限值；载荷源模型及物理误差未估计。原始OUTB谱系差异、S03/S04冲突、风场/结构模型身份、有效PT及材料疲劳本构仍HOLD。
+- 科学阶段：0/12正式整阶段PASS；S06/S07新增图表产物，S10/S11原疲劳/优化主线保持；Abaqus/地震/疲劳寿命生产RUN仍0。PR #42仍Draft，不修改冻结T057/T070。

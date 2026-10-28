@@ -46,3 +46,10 @@ jobs:
           assert len({r["segment"] for r in rows})==31
           print("SVG_XML_PASS 3; ORIGIN_CSV_PASS 124; SOURCE_REGEN_PASS")
           PY
+      - name: Record exact source, figures and plotted CSV SHA256
+        run: |
+          sha256sum \
+            research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
+            research/wind-tower/manuscript/final-thesis/figures/FIG3_S06_0*_SCREEN.svg \
+            research/wind-tower/manuscript/final-thesis/figures/FIG3_S06_PLOT_POINTS_124.csv \
+            research/wind-tower/manuscript/final-thesis/figures/plot_ch3_s06_etm_screening.js
