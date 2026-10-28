@@ -1,9 +1,5 @@
 name: S05 real official Ridgecrest station pair -> repository source/QC (NOT Jiayu PASS)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/s05-official-fdsn-real-record-pair.yml'
-      - 'research/wind-tower/experiments/T079/s05_official_fdsn_pair_recovery.py'
   workflow_dispatch:
 permissions:
   contents: write
