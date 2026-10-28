@@ -379,7 +379,7 @@ def audit(args):
     ed = member(ed_zip,prefix+"_ElastoDyn.dat",ED_SHA)
     fst = member(ed_zip,prefix+".fst",FST_SHA)
     flags = fixed_platform(ed)
-    source = official_contract(args.elastodyn_source,args.nwtc_source)
+    official_source = official_contract(args.elastodyn_source,args.nwtc_source)
     raw = member(out_zip,prefix+".outb",OUTB_SHA)
     h = parser.outb_header(raw)
     if h["file_id"] != 4 or h["num_samples"] != 12001 or abs(h["time_increment_s"]-.05)>1e-12:
@@ -464,16 +464,16 @@ def audit(args):
             time_s=h["first_time_s"]+ti*h["time_increment_s"]
             gap_update(gaps,g,dF,dM,time_s)
             if "rows" in mass_reference:
-                source=mass_reference["rows"][g]
-                inert,rem=inertia_remainder(dF,source["source_mass_between_gages_kg"],
+                mass_row=mass_reference["rows"][g]
+                inert,rem=inertia_remainder(dF,mass_row["source_mass_between_gages_kg"],
                     mass_reference["gravity_source_FST_m_s2"],
-                    source["inertia_weight_lower_kg"],source["inertia_weight_upper_kg"],
+                    mass_row["inertia_weight_lower_kg"],mass_row["inertia_weight_upper_kg"],
                     accelerations[g],accelerations[g+1])
                 # Conservative bound for packed source FL, RP and AL only.
                 # Original mass-density table and interpolation-model errors excluded.
                 qrem=(qforce[g]+qforce[g+1]+
-                      (source["inertia_weight_lower_kg"]*qacc[g]+
-                       source["inertia_weight_upper_kg"]*qacc[g+1])/1000)
+                      (mass_row["inertia_weight_lower_kg"]*qacc[g]+
+                       mass_row["inertia_weight_upper_kg"]*qacc[g+1])/1000)
                 qrow=packing[g];qrow["count"]+=1
                 if qrem>qrow["max_component_quantization_envelope_kN"]:
                     qrow["max_component_quantization_envelope_kN"]=qrem
@@ -526,7 +526,7 @@ def audit(args):
         "SOURCE":{"static_zip_sha256":sha(ed_zip),"dynamic_zip_sha256":sha(out_zip),
                   "fst_sha256":sha(fst),"elastodyn_input_sha256":sha(ed),
                   "outb_sha256":sha(raw),"reading_level":"original 12001x9 packed OUTB, original FST/ElastoDyn, original v3.5.3 Fortran"},
-        "OFFICIAL":source,"RUN":{"python":platform.python_version(),"native_solver":"NOT_RUN",
+        "OFFICIAL":official_source,"RUN":{"python":platform.python_version(),"native_solver":"NOT_RUN",
                 "synchronous_time_steps":12001,"gages":9,"transforms":count,
                 "platform_dof_flags":flags},
         "TAB":{"first_sample":first,"max_R_orthogonality_abs":max_ortho,
