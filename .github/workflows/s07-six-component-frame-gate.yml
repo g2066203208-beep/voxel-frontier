@@ -5,6 +5,7 @@ on:
       - '.github/workflows/s07-six-component-frame-gate.yml'
       - 'research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv'
+      - 'research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json'
   workflow_dispatch:
 permissions:
   contents: read
@@ -52,3 +53,42 @@ jobs:
           sha256sum s07_six_component_frame_gate.py \
             S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv
           echo 'S07: FRAME ALGEBRA + REAL STATIC REGRESSION ONLY. NO DYNAMIC OUTB, INERTIA OWNER, ABAQUS LOAD OR PHYSICS PASS.'
+
+      - name: Verify ORIGINAL OpenFAST v3.5.3 RP and tower-section ownership source against REAL T062 OUTB receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          curl --fail --location --silent --show-error --retry 3 --output ElastoDyn_v353_OFFICIAL.f90 \
+            https://raw.githubusercontent.com/OpenFAST/openfast/v3.5.3/modules/elastodyn/src/ElastoDyn.f90
+          curl --fail --location --silent --show-error --retry 3 --output T062_original_receipt.json \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json"
+          python3 s07_six_component_frame_gate.py \
+            --official-v353-source ElastoDyn_v353_OFFICIAL.f90 \
+            --outb-receipt T062_original_receipt.json \
+            --contract-json s07_source_contract_result.json
+          python3 - <<'PY'
+          import importlib.util, json, tempfile
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('s07','s07_six_component_frame_gate.py')
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          src=Path('ElastoDyn_v353_OFFICIAL.f90')
+          rec=Path('T062_original_receipt.json')
+          x=m.v353_original_source_contract(src,rec)
+          assert x['verified_gages']==9 and x['verified_native_channels']==135
+          assert abs(x['first_sample_axial_delta_gage9_minus_gage1_kN']-474.110630289)<1e-7
+          with tempfile.TemporaryDirectory() as d:
+              p=Path(d)/'bad.f90';p.write_bytes(src.read_bytes()+b' ')
+              try: m.v353_original_source_contract(p,rec)
+              except ValueError as e: assert 'SHA mismatch' in str(e)
+              else: raise AssertionError('changed official source was accepted')
+              q=Path(d)/'bad.json';data=json.loads(rec.read_text())
+              data['full_synchronous_native_series']['native_channel_summary']['TwHt1RPxi']['unit']='(rad)'
+              q.write_text(json.dumps(data))
+              try: m.v353_original_source_contract(src,q)
+              except ValueError as e: assert 'unit' in str(e)
+              else: raise AssertionError('incorrect RP unit accepted')
+          print('PASS original v3.5.3 SHA/source contract + 9x15 native channel values + two negative tests')
+          PY
+          sha256sum ElastoDyn_v353_OFFICIAL.f90 T062_original_receipt.json s07_source_contract_result.json
+          echo 'NO EXACT DCM, NO EXTERNAL LOAD EXPORT, NO ABAQUS/OPENFAST/SEISMIC RUN.'
