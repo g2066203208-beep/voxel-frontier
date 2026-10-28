@@ -219,6 +219,75 @@ def selftest():
     print("PASS: stable source polar DCM, signs, orthogonality, inverse, tamper gates")
 
 
+
+def tower_gravity_reference(static_zip, ed, fst, gage_positions):
+    """Original archived ElastoDyn tower mass-density reference, if verifiable.
+
+    Piecewise-linear mass-density integral and original FST gravity. This
+    compares an observed cut difference with ONE accounted source term;
+    remaining difference is UNALLOCATED, never a physical equilibrium residual.
+    """
+    ed_text=ed.decode("utf-8-sig")
+    fst_text=fst.decode("utf-8-sig")
+    def one(pattern, source, name):
+        hits=re.findall(pattern,source,re.M|re.I)
+        if len(hits)!=1:
+            raise ValueError(name+" missing/ambiguous in original source")
+        return hits[0]
+    twr=one(r'^\\s*("[^"]+"|\\S+)\\s+TwrFile\\b',ed_text,"TwrFile").strip('"')
+    gravity=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+Gravity\\b',fst_text,"Gravity"))
+    tower_ht=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+TowerHt\\b',ed_text,"TowerHt"))
+    tower_bs=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+TowerBsHt\\b',ed_text,"TowerBsHt"))
+    if not (9 < gravity < 11 and tower_ht==158 and tower_bs==0):
+        raise ValueError("unexpected original gravity/tower height")
+    member_path="CASES/"+CASE+"/"+twr.replace("\\\\","/").lstrip("./")
+    if ".." in member_path.split("/"):
+        raise ValueError("unsafe TwrFile path")
+    with zipfile.ZipFile(__import__("io").BytesIO(static_zip)) as z:
+        if member_path not in z.namelist():
+            raise ValueError("original TwrFile not archived: "+member_path)
+        raw=z.read(member_path)
+    txt=raw.decode("utf-8-sig")
+    n=int(one(r'^\\s*(\\d+)\\s+NTwInpSt\\b',txt,"NTwInpSt"))
+    adjust=float(one(r'^\\s*([+\\-]?[0-9.]+(?:[Ee][+\\-]?[0-9]+)?)\\s+AdjTwMa\\b',txt,"AdjTwMa"))
+    lines=txt.splitlines()
+    heads=[i for i,l in enumerate(lines) if re.match(r'^\\s*HtFract\\s+TMassDen\\b',l)]
+    if len(heads)!=1 or n<2 or not (0<adjust<10):
+        raise ValueError("ambiguous original tower mass table")
+    rows=[]
+    for line in lines[heads[0]+2:]:
+        if len(rows)==n: break
+        cols=line.split()
+        if len(cols)<2: raise ValueError("truncated original tower mass table")
+        rows.append((float(cols[0])*(tower_ht-tower_bs)+tower_bs,float(cols[1])*adjust))
+    if len(rows)!=n or abs(rows[0][0]-tower_bs)>1e-6 or abs(rows[-1][0]-tower_ht)>1e-6:
+        raise ValueError("invalid original tower mass range")
+    if any(rows[i][0]>=rows[i+1][0] for i in range(n-1)) or any(mu<=0 for _,mu in rows):
+        raise ValueError("nonmonotone or nonpositive tower mass stations")
+    def density(z):
+        if not (rows[0][0]-1e-6<=z<=rows[-1][0]+1e-6):
+            raise ValueError("gage outside original tower mass range")
+        for i in range(n-1):
+            z0,m0=rows[i]; z1,m1=rows[i+1]
+            if z<=z1+1e-10:
+                return m0+(m1-m0)*(z-z0)/(z1-z0)
+        return rows[-1][1]
+    def integral(a,b):
+        bounds=[a]+[z for z,_ in rows if a<z<b]+[b]
+        return sum((density(l)+density(r))*(r-l)*0.5 for l,r in zip(bounds,bounds[1:]))
+    result=[]
+    for i,(a,b) in enumerate(zip(gage_positions,gage_positions[1:]),1):
+        mass=integral(a[2],b[2])
+        result.append({"lower_gage":i,"upper_gage":i+1,
+                       "source_mass_between_gages_kg":mass,
+                       "gravity_axial_reference_kN":-mass*gravity/1000})
+    return {"tower_member":member_path,"tower_member_sha256":sha(raw),
+            "tower_input_stations":n,"mass_adjustment":adjust,
+            "gravity_source_FST_m_s2":gravity,
+            "source_reading_level":"original static ZIP tower input and FST gravity",
+            "rows":result}
+
+
 def audit(args):
     sys.path.insert(0,str(Path(args.parser).resolve().parent))
     import s06_historical_outb_source_gate as parser
@@ -252,7 +321,7 @@ def audit(args):
         channels[name]=(idx,scale,h["column_offsets"][idx])
     n=h["num_output_channels"]
     max_ortho=max_inverse=max_rot=max_force_shift=max_moment_shift=0.0
-    count=0; first=[]
+    count=0; first=[]; first_positions=[]
     gaps=gap_accumulator(); gap_first=[]; gap_snapshots=[]; max_gap_transport_error=0.0
     for ti in range(h["num_samples"]):
         sample=[]
@@ -278,6 +347,7 @@ def audit(args):
             max_force_shift=max(max_force_shift,max(abs(x-y) for x,y in zip(fg,F)))
             max_moment_shift=max(max_moment_shift,max(abs(x-y) for x,y in zip(at_base,M)))
             if ti==0:
+                first_positions.append(A)
                 first.append({"gage":g,"RP_deg":rp,"local_force_kN":F,
                               "global_force_kN":fg,"local_moment_kNm":M,
                               "global_moment_at_base_kNm":at_base})
@@ -297,6 +367,16 @@ def audit(args):
                                       "delta_moment_about_global_origin_kNm":dM})
     for row in gaps:
         row["mean_Fz_kN"]=row.pop("sum_Fz_kN")/row["count"]
+    # If the original source's Tower.dat is present, compute its gravity
+    # contribution. A cut difference minus this term is NOT a free-body residual.
+    try:
+        mass_reference=tower_gravity_reference(ed_zip,ed,fst,first_positions)
+        for row,source in zip(gaps,mass_reference["rows"]):
+            row["original_tower_gravity_reference_kN"]=source["gravity_axial_reference_kN"]
+            row["mean_unallocated_axial_after_gravity_kN"]=(
+                row["mean_Fz_kN"]-source["gravity_axial_reference_kN"])
+    except ValueError as e:
+        mass_reference={"HOLD":"original tower gravity reference not available: "+str(e)}
     if max_gap_transport_error>1e-7:
         raise AssertionError("independent adjacent-cut wrench transport mismatch")
     if count!=108009 or max_ortho>1e-12 or max_inverse>1e-8:
@@ -318,8 +398,9 @@ def audit(args):
                "adjacent_cut_first_sample":gap_first,
                "adjacent_cut_t400_t700_snapshots":gap_snapshots,
                "adjacent_cut_full_series_summary":gaps,
+               "original_tower_gravity_source_comparison":mass_reference,
                "max_independent_gap_transport_difference_kNm":max_gap_transport_error},
-        "cut_gap_interpretation":"lower-minus-upper internal section resultants at global origin; NOT external aerodynamic force or free-body residual",
+        "cut_gap_interpretation":"lower-minus-upper internal section resultants at global origin; comparison to source tower gravity leaves unallocated inertia/distributed loads and is NOT a free-body residual",
         "REF":"OpenFAST v3.5.3 ElastoDyn.f90 lines 922-943, 1190-1206, 6005-6034, 6856-6860; NWTC_Num.f90 lines 5378-5470",
         "STANDARD":"NONE; no authorized IEC/GB clauses read",
         "FIG":"NONE; no native Abaqus physical response",
