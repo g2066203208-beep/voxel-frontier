@@ -1,6 +1,11 @@
-name: S05 real official Ridgecrest station pair -> repository source/QC (NOT Jiayu PASS)
+name: S05 official event pairs (Ridgecrest manual / Lone Pine PR push, input QC only)
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - .github/workflows/s05-official-fdsn-real-record-pair.yml
 permissions:
   contents: write
 jobs:
@@ -32,12 +37,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -u s05-scripts/s05_official_fdsn_pair_recovery.py --station CLC --output-dir "$RUNNER_TEMP/s05_real_pair"
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            echo "SOURCE_EVENT=2020_LONE_PINE_USGS_ci39493944; independent from Ridgecrest"
+            python -u s05-scripts/s05_official_fdsn_pair_recovery.py --event lonepine2020 --output-dir "$RUNNER_TEMP/s05_real_pair"
+          else
+            python -u s05-scripts/s05_official_fdsn_pair_recovery.py --event ridgecrest2019 --station CLC --output-dir "$RUNNER_TEMP/s05_real_pair"
+          fi
       - name: Retain unmodified source bytes and failure log in CI backup
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: s05-official-Ridgecrest-real-accelerogram-pair-and-qc
+          name: s05-official-real-accelerogram-pair-and-qc
           path: ${{ runner.temp }}/s05_real_pair/
           if-no-files-found: warn
           retention-days: 90
@@ -54,7 +64,18 @@ jobs:
           source=pathlib.Path(os.environ["RUNNER_TEMP"])/"s05_real_pair"
           if not source.exists():raise RuntimeError("No source or failure receipt from the official service")
           branch="research/t080-seismic-integration-gates-20261022"
-          prefix="research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC"
+          if os.environ.get("GITHUB_EVENT_NAME") == "push":
+              event_id="USGS_ci39493944"
+          else:
+              event_id="USGS_ci38457511"
+          if original:
+              receipt=json.loads((source/"source_receipt.json").read_text())
+              assert receipt["event_id"]==event_id.removeprefix("USGS_"), "EVENT_IDENTITY_MISMATCH"
+              station=receipt["station"]
+              assert station in {"CLC","WRC","WCS","RVR","PASC"}, "STATION_IDENTITY_MISMATCH"
+              prefix=f"research/wind-tower/experiments/T079/real-records/{event_id}/CI_{station}"
+          else:
+              prefix=f"research/wind-tower/experiments/T079/real-records/{event_id}/recovery-failed"
           repo=os.environ["GH_REPO"]
           original=(source/"source_receipt.json").exists()
           if not original:
@@ -85,6 +106,6 @@ jobs:
                       continue
                   raise RuntimeError("Upload error "+path+": "+up.stderr[:400])
               else:raise RuntimeError("GitHub concurrent branch updates blocked "+path)
-          print("OFFICIAL_PAIR_REPO_PERSISTED",original,"real recorded FDSN, NOT PEER RSN, NOT JIAYU")
+          print("OFFICIAL_PAIR_REPO_PERSISTED",original,"EVENT",event_id,"STATION",receipt["station"] if original else "NONE","real recorded FDSN, NOT PEER RSN, NOT JIAYU")
           if not original: raise RuntimeError("OFFICIAL_DATA_MISSING: failure receipt persisted; S05 HOLD")
           PY
