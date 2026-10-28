@@ -332,3 +332,8 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 **SOURCE/版本/hash：** T062 `U09p343881_ETM_S01`原始OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`，ZIP SHA256=`c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0`，OpenFAST v3.5.3，FileID4，295输出通道，12001点，100–700s，dt=0.05s。真实源具有9个塔架测点的六分量、TP/RP/AL同步运动学；**T071/T072后续31测点OUTB仍未归档**，不能将两个谱系合并。
 
 **RUN/TAB：** CI `completed/success`、job `122472382762`；TwrBsMyt在100/400/700s为142572.944599/128357.547468/178590.856734 kN·m，其他同步值见永久JSON。REF无新期刊全文、STANDARD无新授权原条文、OFFICIAL为OpenFAST v3.5.3原始头及GitHub原生日志、FIG无新增物理响应图。源文件SHA/CRC/二进制量化检查属于数值QC，不是自由体或材料疲劳物理误差预算；RP角的定义、参考点、加速度系、RNA惯性与重力归属均HOLD。**S06仍PARTIAL/HOLD、S07独立准备、S10风疲劳/S11优化未进入生产，0/12 PASS、地震RUN=0。** 下一动作只做T062同刻9测点的S07真实坐标与自由体单测，不启动昂贵生产。
+
+
+## 2026-10-29 05时｜S07四工况31站动态方向来源硬门禁（SOURCE-LEVEL / 非外载映射）
+
+已用既有[s07_six_component_frame_gate.py](s07_six_component_frame_gate.py)新增对原T071/T072工作流与16件源SHA manifest的**逐字节Git blob锁定+逐行数据身份检查**；[完整可复算receipt](S07_31GAGE_FRAME_INPUT_READINESS_20261029.json)，[成功Actions #40769585407](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40769585407)。确认历史恢复的4×31×12001=1,488,124条是**六分量局部截面力**，工作流导出字段中无RPxi/RPyi/RPzi/方向矩阵；不能将其直接赋予Abaqus为全局外载。T071/T072源代码SHA256=`19888c0722eb8fa4fd005aed0fa2bdffc66b344806b94634a6d42fd6328070f1` / `0e6a8e97b04ed670384aebb1a8bea43c090d9023cb7a6af3f37ab33d3094a41c`；manifest SHA256=`dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8`。4项坏源拒绝测试PASS。**不代表原OUTB不含RP**；需先检查原OUTB/ElastoDyn OutList并恢复同态方向信息，再进行逐时刻坐标传输与惯性/重力/RNA自由体分账。严格0/12阶段晋级，S07=BLOCKED/NEED_DCM，S06仍PARTIAL/HOLD，未新增Abaqus/地震/材料寿命RUN。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差边界详见[T080过程日志](../../T080/PROCESS_LOG.md)。
