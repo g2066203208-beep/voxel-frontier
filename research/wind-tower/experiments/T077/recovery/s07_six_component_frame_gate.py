@@ -258,6 +258,7 @@ def selftest():
 # These are NOT a supplied 3x3 direction cosine matrix. Do not silently
 # reinterpret the three outputs as an exact Euler orientation.
 V353_ELASTODYN_GIT_BLOB = '2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1'
+V353_ELASTODYN_SHA256 = 'a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3'
 T062_OUTB_SHA256 = '0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c'
 V353_SOURCE_SIGNATURES = (
     'm%AllOuts( TwHtRPxi(I) ) =  m%RtHS%AngPosEF(1,p%TwrGagNd(I))*R2D',
@@ -279,8 +280,8 @@ def v353_original_source_contract(official_source, historical_receipt):
     """
     import json
     raw = Path(official_source).read_bytes()
-    if git_blob_sha1(raw) != V353_ELASTODYN_GIT_BLOB:
-        raise ValueError('official ElastoDyn v3.5.3 Git blob SHA mismatch')
+    if git_blob_sha1(raw) != V353_ELASTODYN_GIT_BLOB or hashlib.sha256(raw).hexdigest() != V353_ELASTODYN_SHA256:
+        raise ValueError('official ElastoDyn v3.5.3 Git blob/SHA mismatch')
     source = raw.decode('utf-8')
     missing = [s for s in V353_SOURCE_SIGNATURES if s not in source]
     if missing:
