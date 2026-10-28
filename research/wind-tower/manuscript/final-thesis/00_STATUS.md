@@ -476,3 +476,9 @@ HOLD：
 
 
 **2026-10-29 03时 S05真实CI结果回填：** [官方ESM数值QC 8行CSV](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv)由[成功CI #40751645932](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40751645932)实测产生，2dt最大差0.009121%、4dt最大差0.399212%；初次fixture失败CI #40751517437及修复均在[过程日志](../../experiments/T079/PROCESS_LOG.md)登记。真实原件HNE/HNN归一化SHA已再次一致；数值稳定≠真实低频可靠性、场址目标谱适用性或原生结构PASS。**0/12未晋级，S05 PARTIAL/HOLD，地震RUN=0。**
+
+### 2026-10-29 04时｜S05双水平已处理波附加滤波敏感性准备（非科学PASS）
+
+- **整阶段状态仍0/12 PASS**；S05 PARTIAL/HOLD，S08/S09 BLOCKED。复用ESM v3真实IT-2012-0008/NVL HNE/HNN 32,040点×0.005s源（SHA及处理头见[T079过程日志](../../experiments/T079/PROCESS_LOG.md)），在[现有ESM程序](../../experiments/T079/s05_esm_public_processed_pair.py)新增双向二阶数字高通fc=0.04/0.08Hz的**附加**处理敏感性；2分量×2截止×4周期=16个真实数据诊断输出目标，已写入现有CI并提交，提交时远端真实结果仍待回读。
+- **TAB已实算而非伪造：** [原8行QC表](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv)新增条件性理想二遍增益G2（T=4/6/8/10s分别0.9993450692/0.9966932111/0.9896230502/0.9750390016）；该增益不是实际反应谱变化、不是原ESM滤波历史或仪器SNR。程序含纯正弦解析增益和非法参数拒绝自测；CI尚未确认为成功。SOURCE=ESM原数值SHA（过程日志）；REF/OFFICIAL=ESM v3原头；STANDARD=本轮无授权条款；RUN=本地滤波算子合成试验、远端真实新输出待验；FIG=无结构结果；TAB=8行原表增加条件性增益。滤波端点、原处理遍数、真实低频可靠性、目标谱和物理误差均HOLD。无Abaqus E/WE求解，无冻结母本改动。
+- **下一项：** 获取新CI的16项真实双水平附加高通谱差，写回同一8行表并回读核验；若失败保留日志并修复。不要因S01原生资源缺失阻断此独立S05输入QC。
