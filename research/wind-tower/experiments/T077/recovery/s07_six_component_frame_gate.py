@@ -334,6 +334,121 @@ def v353_original_source_contract(official_source, historical_receipt):
         'physics_status':'HOLD_NO_VERIFIED_DCM_OR_SIGNED_FREE_BODY',
     }
 
+
+# Source-level S07 readiness audit for the already recovered four-case 31-gage
+# CSVs. This does NOT attempt to invent missing dynamic orientation channels.
+S07_31_MANIFEST_BLOB = '24723fb07c760ea22dbed043031ceff7939f1ac6'
+S07_T071_WORKFLOW_BLOB = '59e76a54ba4f64902ed0750e92eb5158a1da1e96'
+S07_T072_WORKFLOW_BLOB = '5baab0ea2299b6d36544b6d092f7503d8dcaf86c'
+S07_31_CASES = ('U09p343881_ETM_S06', 'U11p4_ETM_S04',
+                'U19p202140_ETM_S04', 'U19p202140_ETM_S06')
+S07_31_BATCH_GAGES = {'A':9, 'B':9, 'C':9, 'D':4}
+S07_31_MANIFEST_COLUMNS = ('case','batch','run_id','artifact_id',
+                           'zip_sha256','gzip_sha256','uncompressed_csv_sha256','rows')
+S07_31_SIX = ('Fx_kN','Fy_kN','Fz_kN','Mx_kNm','My_kNm','Mz_kNm')
+
+
+def _s07_validate_manifest_rows(raw):
+    reader=csv.DictReader(io.StringIO(raw.decode('utf-8-sig')))
+    if tuple(reader.fieldnames or ()) != S07_31_MANIFEST_COLUMNS:
+        raise ValueError('S07_31_MANIFEST_HEADER_MISMATCH')
+    rows=list(reader)
+    if len(rows)!=16:
+        raise ValueError('S07_31_EXPECT_16_SOURCE_ARTIFACTS')
+    expected={(case,batch) for case in S07_31_CASES for batch in S07_31_BATCH_GAGES}
+    found=set()
+    total=0
+    for r in rows:
+        if None in r or any(v is None for v in r.values()):
+            raise ValueError('S07_31_MALFORMED_SOURCE_ROW')
+        key=(r['case'],r['batch'])
+        if key not in expected or key in found:
+            raise ValueError('S07_31_UNKNOWN_OR_DUPLICATE_CASE_BATCH')
+        found.add(key)
+        run='37582521146' if r['case']==S07_31_CASES[0] else '37622366681'
+        if r['run_id']!=run or not r['artifact_id'].isdigit() or int(r['artifact_id'])<=0:
+            raise ValueError('S07_31_RUN_OR_ARTIFACT_ID_MISMATCH')
+        for field in ('zip_sha256','gzip_sha256','uncompressed_csv_sha256'):
+            s=r[field]
+            if len(s)!=64 or any(c not in '0123456789abcdef' for c in s):
+                raise ValueError('S07_31_INVALID_SOURCE_SHA256')
+        n=12001*S07_31_BATCH_GAGES[r['batch']]
+        if not r['rows'].isdigit() or int(r['rows'])!=n:
+            raise ValueError('S07_31_BAD_SAMPLE_COUNT')
+        total+=n
+    if found!=expected or total!=1488124:
+        raise ValueError('S07_31_COVERAGE_OR_TOTAL_MISMATCH')
+    return rows,total
+
+
+def audit_31_gage_frame_readiness(manifest, t071, t072):
+    """Read exact historical workflow and artifact manifest; fail closed on DCM."""
+    import json
+    raw=Path(manifest).read_bytes()
+    a=Path(t071).read_bytes()
+    b=Path(t072).read_bytes()
+    for data, expected, label in ((raw,S07_31_MANIFEST_BLOB,'manifest'),
+                                  (a,S07_T071_WORKFLOW_BLOB,'T071'),
+                                  (b,S07_T072_WORKFLOW_BLOB,'T072')):
+        if git_blob_sha1(data)!=expected:
+            raise ValueError('S07_31_SOURCE_GIT_BLOB_CHANGED_'+label)
+    rows,total=_s07_validate_manifest_rows(raw)
+    for data,label in ((a,'T071'),(b,'T072')):
+        source=data.decode('utf-8-sig')
+        # The source workflow actually exports six local-frame resultants.
+        if not all(c in source for c in S07_31_SIX):
+            raise ValueError('S07_31_MISSING_SIX_EXTRACTED_CHANNELS_'+label)
+        if not all(c in source for c in ('FLxt','FLyt','FLzt','MLxt','MLyt','MLzt')):
+            raise ValueError('S07_31_MISSING_ELASTODYN_OUTPUT_MAPPING_'+label)
+        # No TwHt*RP* columns are extracted in either historical workflow.
+        if any(c in source for c in ('RPxi','RPyi','RPzi')):
+            raise ValueError('S07_31_WORKFLOW_ORIENTATION_CONTRACT_CHANGED_'+label)
+    # Negative tests on actual-source rows: count, duplicate, SHA, case/run.
+    for change in ('count','duplicate','sha','run'):
+        altered=[dict(r) for r in rows]
+        if change=='count': altered[0]['rows']='108008'
+        elif change=='duplicate': altered[1]['batch']='A'
+        elif change=='sha': altered[0]['zip_sha256']='UNKNOWN'
+        else: altered[0]['run_id']='0'
+        buf=io.StringIO(newline='')
+        writer=csv.DictWriter(buf,fieldnames=S07_31_MANIFEST_COLUMNS,lineterminator='\n')
+        writer.writeheader();writer.writerows(altered)
+        try: _s07_validate_manifest_rows(buf.getvalue().encode())
+        except ValueError: pass
+        else: raise AssertionError('S07_31_NEGATIVE_TEST_NOT_REJECTED_'+change)
+    return {
+      'stage':'S07_SOURCE_31GAGE_PROVENANCE_CHECKED_DCM_UNAVAILABLE_HOLD',
+      'SOURCE':{
+        'manifest_git_blob_sha1':git_blob_sha1(raw),
+        'manifest_sha256':hashlib.sha256(raw).hexdigest(),
+        't071_workflow_git_blob_sha1':git_blob_sha1(a),
+        't071_workflow_sha256':hashlib.sha256(a).hexdigest(),
+        't072_workflow_git_blob_sha1':git_blob_sha1(b),
+        't072_workflow_sha256':hashlib.sha256(b).hexdigest(),
+        'reading_level':'original committed 16-artifact SHA manifest and full T071/T072 extraction workflow source; NOT 16 ZIP bytes or original OUTB reread'},
+      'OFFICIAL':'OpenFAST v3.5.3 ElastoDyn FL/ML are section resultants; v3.5.3 source contract checked separately in existing S07 gate',
+      'REF':'existing S07 source contracts; no new peer-reviewed full text',
+      'STANDARD':'NONE: no authorized IEC/GB clauses read in this audit',
+      'RUN':{'kind':'Python source-contract audit, NOT native OpenFAST/Abaqus',
+             'historical_actions_runs':[37582521146,37622366681],
+             'negative_tests_passed':4,'native_solver_runs':0},
+      'FIG':'NONE: no physical response figures',
+      'TAB':{'cases':len(S07_31_CASES),'source_artifacts':len(rows),
+             'gages_per_case':31,'case_gage_series':124,
+             'samples_per_gage':12001,'time_start_s':100.0,'time_end_s':700.0,
+             'sample_dt_s':0.05,'total_six_component_time_rows':total,
+             'extracted_local_force_moment_components':list(S07_31_SIX),
+             'extracted_dynamic_RP_orientation_channels':0,
+             'global_wrench_export_rows':0},
+      'error_budget':{'manifest_count':'exact integer checks, no numerical rounding',
+                      'frame_rotation':'UNBOUNDED_FOR_31_GAGES_NO_SYNCHRONOUS_DCM',
+                      'free_body_inertia_and_gravity':'UNVERIFIED',
+                      'material_fatigue':'NOT_COMPUTED'},
+      'HOLD':'Recovered four-case 31-gage CSVs contain FL/ML but no synchronized RP/DCM. The workflows do not prove whether original OUTB has RP. Require source-verified RP/DCM for all 31 gages at each time and signed free-body/inertia/gravity ownership before any Abaqus external load mapping; do not rerun high-cost solver here.'
+    }
+
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--self-test',action='store_true')
@@ -343,6 +458,10 @@ def main():
     p.add_argument('--static-source',type=Path,help='real 30-row static source regression')
     p.add_argument('--input',type=Path,help='explicit dynamic source CSV (frame algebra only)')
     p.add_argument('--output',type=Path,help='frame algebra CSV (NOT external load)')
+    p.add_argument('--source-31-manifest',type=Path)
+    p.add_argument('--t071-workflow',type=Path)
+    p.add_argument('--t072-workflow',type=Path)
+    p.add_argument('--source-31-receipt',type=Path)
     a=p.parse_args()
     if a.self_test: print(selftest())
     if a.official_v353_source or a.outb_receipt:
@@ -357,7 +476,15 @@ def main():
     if a.input:
         if a.output is None: p.error('--input requires --output')
         print('DYNAMIC_FRAME_ONLY',transform_csv(a.input,a.output))
-    if not (a.self_test or a.static_source or a.input or a.official_v353_source): p.error('no action requested')
+    if a.source_31_manifest or a.t071_workflow or a.t072_workflow or a.source_31_receipt:
+        if not (a.source_31_manifest and a.t071_workflow and a.t072_workflow):
+            p.error('S07 31-gage audit requires manifest and both historical workflows')
+        import json
+        receipt=audit_31_gage_frame_readiness(a.source_31_manifest,a.t071_workflow,a.t072_workflow)
+        print('S07_31_SOURCE_READINESS',json.dumps(receipt['TAB'],sort_keys=True))
+        if a.source_31_receipt:
+            a.source_31_receipt.write_text(json.dumps(receipt,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+    if not (a.self_test or a.static_source or a.input or a.official_v353_source or a.source_31_manifest): p.error('no action requested')
 
 
 if __name__=='__main__': main()
