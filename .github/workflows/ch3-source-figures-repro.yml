@@ -14,6 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/wind-tower/manuscript/final-thesis/figures
+            research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv
+          sparse-checkout-cone-mode: false
       - name: Verify source SHA and exact SVG/CSV rerender
         run: node research/wind-tower/manuscript/final-thesis/figures/plot_ch3_s06_etm_screening.js --check
       - name: Validate SVG XML and plot data integrity
