@@ -1,0 +1,53 @@
+{
+  "FIG": "NONE: no physical response figures",
+  "HOLD": "Recovered four-case 31-gage CSVs contain FL/ML but no synchronized RP/DCM. The workflows do not prove whether original OUTB has RP. Require source-verified RP/DCM for all 31 gages at each time and signed free-body/inertia/gravity ownership before any Abaqus external load mapping; do not rerun high-cost solver here.",
+  "OFFICIAL": "OpenFAST v3.5.3 ElastoDyn FL/ML are section resultants; v3.5.3 source contract checked separately in existing S07 gate",
+  "REF": "existing S07 source contracts; no new peer-reviewed full text",
+  "RUN": {
+    "historical_actions_runs": [
+      37582521146,
+      37622366681
+    ],
+    "kind": "Python source-contract audit, NOT native OpenFAST/Abaqus",
+    "native_solver_runs": 0,
+    "negative_tests_passed": 4
+  },
+  "SOURCE": {
+    "manifest_git_blob_sha1": "24723fb07c760ea22dbed043031ceff7939f1ac6",
+    "manifest_sha256": "dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8",
+    "reading_level": "original committed 16-artifact SHA manifest and full T071/T072 extraction workflow source; NOT 16 ZIP bytes or original OUTB reread",
+    "t071_workflow_git_blob_sha1": "59e76a54ba4f64902ed0750e92eb5158a1da1e96",
+    "t071_workflow_sha256": "19888c0722eb8fa4fd005aed0fa2bdffc66b344806b94634a6d42fd6328070f1",
+    "t072_workflow_git_blob_sha1": "5baab0ea2299b6d36544b6d092f7503d8dcaf86c",
+    "t072_workflow_sha256": "0e6a8e97b04ed670384aebb1a8bea43c090d9023cb7a6af3f37ab33d3094a41c"
+  },
+  "STANDARD": "NONE: no authorized IEC/GB clauses read in this audit",
+  "TAB": {
+    "case_gage_series": 124,
+    "cases": 4,
+    "extracted_dynamic_RP_orientation_channels": 0,
+    "extracted_local_force_moment_components": [
+      "Fx_kN",
+      "Fy_kN",
+      "Fz_kN",
+      "Mx_kNm",
+      "My_kNm",
+      "Mz_kNm"
+    ],
+    "gages_per_case": 31,
+    "global_wrench_export_rows": 0,
+    "sample_dt_s": 0.05,
+    "samples_per_gage": 12001,
+    "source_artifacts": 16,
+    "time_end_s": 700.0,
+    "time_start_s": 100.0,
+    "total_six_component_time_rows": 1488124
+  },
+  "error_budget": {
+    "frame_rotation": "UNBOUNDED_FOR_31_GAGES_NO_SYNCHRONOUS_DCM",
+    "free_body_inertia_and_gravity": "UNVERIFIED",
+    "manifest_count": "exact integer checks, no numerical rounding",
+    "material_fatigue": "NOT_COMPUTED"
+  },
+  "stage": "S07_SOURCE_31GAGE_PROVENANCE_CHECKED_DCM_UNAVAILABLE_HOLD"
+}
