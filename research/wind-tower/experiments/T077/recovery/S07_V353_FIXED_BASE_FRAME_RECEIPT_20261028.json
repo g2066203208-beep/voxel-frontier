@@ -876,7 +876,82 @@
       "tower_input_stations": 70,
       "tower_member": "CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat",
       "tower_member_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983"
-    }
+    },
+    "packing_envelope_scope": "conservative componentwise bound from FL/AL/RP half-LSB, fixed-base DCM and endpoint linear-AL; excludes mass table rounding, intermediate-node acceleration, FTTower, external distributed loads and physical model error",
+    "source_int16_packing_envelope_by_gap": [
+      {
+        "count": 12001,
+        "lower_gage": 1,
+        "max_component_quantization_envelope_kN": 0.04824583177506201,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03651394444904406,
+        "observed_to_packing_bound_ratio": 0.7568310692472692,
+        "upper_gage": 2
+      },
+      {
+        "count": 12001,
+        "lower_gage": 2,
+        "max_component_quantization_envelope_kN": 0.04829712850684746,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036492834612002666,
+        "observed_to_packing_bound_ratio": 0.7555901508063526,
+        "upper_gage": 3
+      },
+      {
+        "count": 12001,
+        "lower_gage": 3,
+        "max_component_quantization_envelope_kN": 0.04835398342213351,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036342573648849276,
+        "observed_to_packing_bound_ratio": 0.751594203347761,
+        "upper_gage": 4
+      },
+      {
+        "count": 12001,
+        "lower_gage": 4,
+        "max_component_quantization_envelope_kN": 0.04841440517962836,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036619025089893655,
+        "observed_to_packing_bound_ratio": 0.7563663119277995,
+        "upper_gage": 5
+      },
+      {
+        "count": 12001,
+        "lower_gage": 5,
+        "max_component_quantization_envelope_kN": 0.048507906440705816,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036421493494230045,
+        "observed_to_packing_bound_ratio": 0.7508362278786503,
+        "upper_gage": 6
+      },
+      {
+        "count": 12001,
+        "lower_gage": 6,
+        "max_component_quantization_envelope_kN": 0.04860308715057675,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03659213811586662,
+        "observed_to_packing_bound_ratio": 0.7528768286364377,
+        "upper_gage": 7
+      },
+      {
+        "count": 12001,
+        "lower_gage": 7,
+        "max_component_quantization_envelope_kN": 0.04866825633119417,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03676389581849158,
+        "observed_to_packing_bound_ratio": 0.7553978422466632,
+        "upper_gage": 8
+      },
+      {
+        "count": 12001,
+        "lower_gage": 8,
+        "max_component_quantization_envelope_kN": 0.04875140318809307,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03659080300868304,
+        "observed_to_packing_bound_ratio": 0.7505589709389102,
+        "upper_gage": 9
+      }
+    ]
   },
   "assumptions": [
     "all six platform DOFs false in original input (programmatically verified)",
@@ -891,7 +966,8 @@
     "numerical_inverse_force_kN": 1.4551915228366852e-11,
     "orthogonality_abs": 5.551115123125783e-16,
     "packed_OUTB_quantization": "channel scale/offset finite, precision limited by int16 packing; physical uncertainty NEED_ESTIMATE",
-    "segment_gravity_inertia_distributed_load_residual": "NOT_COMPUTABLE; reported unallocated force is NOT physical residual without source FTTower and 1120-node LinAccET"
+    "segment_gravity_inertia_distributed_load_residual": "NOT_COMPUTABLE; reported unallocated force is NOT physical residual without source FTTower and 1120-node LinAccET",
+    "source_int16_packing": "per-gap real 12001-sample upper envelope reported in TAB; not a full force-balance uncertainty"
   },
   "stage": "S07_CONDITIONAL_FIXED_BASE_DCM_ALGORITHM_TESTED_NOT_PHYSICS_PASS"
 }
