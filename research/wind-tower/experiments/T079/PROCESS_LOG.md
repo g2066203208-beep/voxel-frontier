@@ -94,3 +94,14 @@
 - RUN：Python 3.13.5 \`python s09_ishihara2024_equation_oracle.py --self-test\` 本地真实执行PASS_SYNTHETIC_ONLY，Eq1–6，7项负例，脚本SHA256=ada2813420e2d6ec77d633e3f8663f9b1843cfc91c8c32aa18062774e9feb280；Git blob=b4367cfd683f720409834b9bf0f5b72098046d10。输出Table5 FA二阶偏差+10.695587%；Eq1 T6=0.8533333333m/s²，仅原文日本JSCE基岩谱。
 - STANDARD/OFFICIAL/FIG/TAB：无新增2025 IEC/GB/NB授权条款；官方原刊作者PDF原页可见；FIG原刊Fig7/8、Fig18–25，非本塔；TAB原刊Table5/6/9。所有公式适用边界、假设、数值/物理误差见[literature_notes](literature_notes.md)2026-10-29节。
 - FAIL/HOLD：7个坏输入均按预期拒绝；无非预期失败。未有本塔原生Abaqus、目标谱/低频合格波、W/E/WE、材料疲劳寿命或规范PASS。12阶段0/12；未修改冻结T057/T070，未启动生产RUN。
+
+
+### 2026-10-29 01时｜S05真实两事件四对双水平长周期谱身份与拒绝门（非设计波）
+
+**SOURCE/OFFICIAL：** 直接读取本PR既有两份真实数据派生报告：[Ridgecrest 2019三台站6分量](real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json)（Git blob `2a11f8183867402631642e7933b431af5cd8c02f`）和[Lone Pine 2020 CI.CLC双分量](real-records/USGS_ci39493944/CI_CLC/processed/baseline_sensitivity_report.json)（Git blob `8f70aead26b6c1511d63de2dc5fb7180c39bfe42`）。这两份报告原始CSV SHA256随16行结果逐行携带；真实原始SCEDC miniSEED/StationXML只有Ridgecrest CLC和Lone Pine CLC具完整已归档收据，PASC/RVR缺同等级原始仪器收据。源事件数**2**，台站—事件双水平对**4**，不是4个独立地震。没有新下载波/新仪器去响应；仅复算现有5%阻尼Newmark谱的派生组合。
+
+**RUN/TAB：** 在既有[双水平QC程序](s05_ground_motion_pair_qc.py)加入`--long-period-gate`，按**同一台站两水平分量**在T=4/6/8/10s取`Sa_GM=sqrt(Sa_HNE*Sa_HNN)`，分别比较raw、前20s去均值、全窗线性去趋势（仅诊断）；生成[16行实际数值CSV](real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv)，含事件/台站/两源SHA/来源收据及每周期相对敏感性。当前**没有嘉鱼适用目标谱**，目标谱误差数值必须保持未定义；程序允许未来经真实来源绑定的目标谱JSON（源文档、site证据、5%阻尼、4/6/8/10s目标Sa），计算`ln(Sa_GM_pre20/Sa_target)`诊断残差，但即使数值小也不放行。对缺目标谱/未核低频仪器响应/仅仪器灵敏度转换的所有4对统一`REJECT_RAW__HOLD_PRE20_NO_LOWFREQ_TARGET`，不是按主观百分比宣布波不合格。
+
+**T=10s实数（m/s²，raw GM→pre20 GM，|差|/pre20）：** ci38457511/CI.CLC 0.37678583→0.14757149 (155.32%)；ci38457511/CI.PASC 0.09325229→0.02222437 (319.59%)；ci38457511/CI.RVR 0.12303448→0.01026789 (1098.24%)；ci39493944/CI.CLC 0.36232033→0.00093753 (38546.33%)。Ridgecrest三台站同一事件不能做3个独立样本；Lone Pine弱动原始偏置导致近零pre20分母放大。原样加速度不能直接作为158m塔设计地震输入，pre20去均值也没有通过低频可靠性/场址目标谱审查。
+
+**REF/STANDARD/FIG/误差/HOLD：** REF沿用Wang2026 RCS原页与Ishihara2024原页的已登记阅读层级，本轮未新增全文阅读；STANDARD未获取IEC2025/GB/NB授权条文或场址目标谱；OFFICIAL=既有USGS/SCEDC源收据（不等于本轮新下载）；FIG无地震/塔体响应；TAB=16行实数及SHA。几何均值和相对差为双精度算术（CSV 12有效位舍入），Newmark时间积分误差沿用先前解析收敛测试，**仪器完整去响应/频带、谱目标、窗口、土层及本塔物理误差NEED_ESTIMATE**。RUN仅二次数据计算和程序测试，Abaqus E/WE=0，S05 PARTIAL/HOLD，12阶段**0/12未晋级**。下一唯一动作：从官方已处理波中取得**明确低频截止与处理历史**的一对真实双水平原件，连同可追溯参考目标谱绑定到现有门禁；不新增T080审查号。
