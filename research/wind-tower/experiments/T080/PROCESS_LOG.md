@@ -372,7 +372,14 @@
 
 - **阶段**：0/12正式晋级；S10独立准备为REAL_SOURCE_BINDING_PREFLIGHT/PHYSICS_HOLD。未运行Abaqus，未生成材料寿命。
 - **SOURCE/TAB/RUN**：严格读取S06四工况×31测点744行源（SHA256 9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b）、S10 186行载荷DEL控制表（Git blob 27f931b09b1ff9105597946ff00ecbf7d0db985a，需逐字节由前者重算）、T057 68部件静态质量账（Git blob 1ae32a02a565c2d578485c29c819f30de0242933）。新可复算程序：[s10_native_part_station_binding_gate.py](../T077/recovery/s10_native_part_station_binding_gate.py)；真实数值表：[S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv](../T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv)。完整覆盖31混凝土、31纵筋、1连续PT、4钢塔、1箍拉筋笼。
-- **关键数值**：同一CSEG风测点四工况的记录高度最大跨度0.726193 mm（CSEG31），不能假定四工况完全同坐标；风测点与T057部件静态质心高度最大差约0.086264 m，不能把部件质心当作OpenFAST风测点。高度差来源于原始归档表，原因尚未核实，不得解释成塔架挠度。
+- **关键数值**：同一CSEG风测点四工况的记录高度最大跨度0.726193 mm（CSEG31），不能假定四工况完全同坐标；风测点与T057部件静态质心高度最大差约0.086564 m，不能把部件质心当作OpenFAST风测点。高度差来源于原始归档表，原因尚未核实，不得解释成塔架挠度。
 - **原生绑定边界**：PT只有36个跨112m的T3D2单元，缺31点逐点积分点；SSEG01–04处于钢塔段，不在31混凝土测点内；箍拉筋笼是独立213768单元组。68行的原生instance/element/IP/material ID/stress basis全部留空并标HOLD，不从部件名猜测实例；六分量DEL只用于候选截面筛查，不能推出材料疲劳控制点。
 - **REF/STANDARD/OFFICIAL/FIG/误差**：文献沿用已登记Ch4来源，无新增全文精读；本轮未读授权IEC/GB/NB条款；官方/模型身份仅限既有OpenFAST v3.5.3归档及T057静态审计，未有新原生求解；FIG无真实局部应力图。CSV数值精度/重算测试可验证，物理坐标、材料曲线、PT初态、网格与应力误差预算均NEED_NATIVE/NEED_ESTIMATE。
 - **单一HOLD**：68部件对应的真实INP实例—单元—积分点与材料/应力基底缺少原生证据。**下一唯一动作**：对已归档T057原始INP执行只读实例/元素集提取，并用原件SHA256对照此68行表，不改冻结母本。
+
+
+### 2026-10-28 19时｜S10真实数据预绑定CI回读与输入SHA256补全
+
+- GitHub Actions [#40678178362](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40678178362) 已`completed/success`；job `122781814793`原生日志确认68行输出逐字节重算通过、744行原始载荷表与186行控制表一致、68部件源组完整，另有**3项输入单字节破坏拒绝测试**全部通过；现有S10 Miner/雨流/ODB模拟测试同一job通过，均非Abaqus原生求解。
+- **SHA256（原始GitHub文件字节）**：S06载荷=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`；S10控制表=`572eee2436b84b2c8683542ea7e92490970be7fc8a4fd51320f5d41f92229b1f`；T057质量账=`cf42e9e3b07826d9ac61af4e42deb01805d4276251642091bf6e523a3cb4cc9f`；68行输出=`ebcf39ac6c8b937d28a2e324c66ff04958f9daeeaf825446a4ed760edfb670e1`。
+- **更正**：四工况同测点高度最大跨度为0.726193mm；与T057部件质心的最大绝对高度差精确为0.086564482m（CSEG31），此前预提交文字0.086264m为抄录错误，已在两处中央记录更正。**状态仍0/12、原生ODB及地震RUN=0。**
