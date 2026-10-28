@@ -252,6 +252,11 @@ jobs:
                   assert item['extra_highpass_fc_Hz'] in (.04,.08)
                   assert item['T_s'] in (4.,6.,8.,10.)
                   assert all(math.isfinite(v) for v in item.values() if isinstance(v,float))
+                  old=committed[(name,item['T_s'])]
+                  prefix='extra_HP2_fc004' if item['extra_highpass_fc_Hz']==.04 else 'extra_HP2_fc008'
+                  assert math.isclose(float(old[prefix+'_psa_m_s2']),item['extra_highpass_psa_m_s2_DIAGNOSTIC'],rel_tol=1e-9)
+                  assert math.isclose(float(old[prefix+'_relative_change']),item['relative_change_from_existing_processed'],rel_tol=1e-9,abs_tol=1e-12)
+                  assert old['extra_filter_script_SHA256']=='8996859a27cbb362588d5e12a47f958fd89a88395a6234f216c5ffed0c5bfa41'
                   print('REAL_ESM_EXTRA_HP2_SENSITIVITY_NOT_FILTER_RECOVERY',name,item)
           print('S05_QC_NOT_DESIGN_PASS')
           PY
