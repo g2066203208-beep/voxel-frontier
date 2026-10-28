@@ -242,6 +242,10 @@ def selftest():
         try: transform_csv(inp,out)
         except ValueError: pass
         else: raise AssertionError('missing provenance accepted')
+        row['frame_evidence']='RP_AS_EULER';write_row(row)
+        try: transform_csv(inp,out)
+        except ValueError as e: assert 'verified DCM' in str(e)
+        else: raise AssertionError('RP pseudo-Euler orientation accepted')
         row['frame_evidence']='SYNTHETIC';row['force_owner']='EXTERNAL';write_row(row)
         try: transform_csv(inp,out)
         except ValueError: pass
