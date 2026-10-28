@@ -10,6 +10,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_native_part_station_binding_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S10_D400_PE_68PART_INP_METADATA_20261028.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -42,7 +43,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in s10_load_del_control_stability.py s10_native_part_station_binding_gate.py S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv S10_ETM_LOAD_DEL_CONTROL_186_20261028.csv S01_T057_ORIGINAL_68PART_STATIC_MASS_20261027.csv S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv S10_T057_68PART_INP_METADATA_20261028.csv; do
+          for f in s10_load_del_control_stability.py s10_native_part_station_binding_gate.py S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv S10_ETM_LOAD_DEL_CONTROL_186_20261028.csv S01_T057_ORIGINAL_68PART_STATIC_MASS_20261027.csv S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv S10_T057_68PART_INP_METADATA_20261028.csv S10_D400_PE_68PART_INP_METADATA_20261028.csv; do
             curl --fail --location --silent --show-error --retry 3 \
               --output "$f" \
               "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery/$f"
@@ -62,7 +63,8 @@ jobs:
           python3 -m py_compile s10_local_stress_rainflow_gate.py
           python3 s10_local_stress_rainflow_gate.py --self-test
           python3 -m py_compile s10_native_odb_local_stress_gate.py
-          python3 s10_native_odb_local_stress_gate.py --self-test --source-map S10_T057_68PART_INP_METADATA_20261028.csv
+          echo '9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83  S10_D400_PE_68PART_INP_METADATA_20261028.csv' | sha256sum --check
+          python3 s10_native_odb_local_stress_gate.py --self-test --source-map S10_T057_68PART_INP_METADATA_20261028.csv --d400-source-map S10_D400_PE_68PART_INP_METADATA_20261028.csv
           sha256sum s10_miner_damage_gate.py s10_local_stress_rainflow_gate.py s10_native_odb_local_stress_gate.py
           echo 'S10: SYNTHETIC NUMERICAL QC ONLY; NO VERIFIED MATERIAL STRESS, NO S-N PARAMETER OR PHYSICAL PASS.'
 
@@ -91,6 +93,7 @@ jobs:
           python3 s01_d400_uniform_pe_repro_min.py --zip "$RUNNER_TEMP/s10_g1.zip" --out "$RUNNER_TEMP/S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp"
           python3 s10_d400_pe_source_map_gate.py --child "$RUNNER_TEMP/S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp" --t057-map S10_T057_68PART_INP_METADATA_20261028.csv --out "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv" | tee "$RUNNER_TEMP/s10_d400_source_receipt.json"
           sha256sum "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv"
+          cmp "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv" S10_D400_PE_68PART_INP_METADATA_20261028.csv
           echo 'BEGIN_S10_D400_CSV'
           cat "$RUNNER_TEMP/S10_D400_PE_68PART_INP_METADATA_20261028.csv"
           echo 'END_S10_D400_CSV'
