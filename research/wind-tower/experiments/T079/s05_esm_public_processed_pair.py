@@ -22,6 +22,7 @@ API = 'https://esm-db.eu/esmws/eventdata/1/query'
 EVENT, STATION = 'IT-2012-0008', 'NVL'
 MAX_ZIP = 30_000_000
 MAX_UNPACKED = 50_000_000
+DENSE_PERIODS_S = (0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0)
 
 
 def sha(data):
@@ -108,48 +109,78 @@ def inspect_zip(raw):
 
 
 def spectrum_pair(raw):
-    """Use existing S05 Newmark kernel; 4/6/8/10s diagnostic, NOT site PASS."""
+    """REAL ESM MP pair: 16-point 0.5--10 s PSA + dt/2dt numerical QC.
+
+    This is a processed RECORD spectrum, NOT a design-target spectrum, an
+    independently verified instrument passband, or an Abaqus E/WE result.
+    """
     from s05_ground_motion_pair_qc import sdof
-    traces, meta = {}, {}
+    members = inspect_zip(raw)
+    traces, meta, source_sha = {}, {}, {}
     with zipfile.ZipFile(io.BytesIO(raw)) as z:
-        for name in z.namelist():
-            lines = z.read(name).decode('utf-8').splitlines()
-            first_data = next((i for i,line in enumerate(lines) if ':' not in line), None)
-            if first_data is None:
-                raise ValueError('DYNA_NUMERIC_START_NOT_FOUND')
-            header = dict(line.split(':',1) for line in lines[:first_data])
-            header = {k.strip():v.strip() for k,v in header.items()}
+        for member in members:
+            header = member['dyna_selected_header_fields']
             stream = header['STREAM']
             if stream in traces:
                 raise ValueError('DUPLICATE_STREAM')
+            if header['EVENT_ID'] != EVENT or header['STATION_CODE'] != STATION:
+                raise ValueError('EVENT_OR_STATION_IDENTITY_MISMATCH')
             if header['UNITS'] != 'cm/s^2':
                 raise ValueError('ESM_UNITS_NOT_CM_S2')
-            traces[stream] = [float(v)/100 for v in lines[first_data:]]
+            if not header['PROCESSING'] or not header['FILTER_TYPE']:
+                raise ValueError('MISSING_PROCESSING_IDENTITY')
+            lines = z.read(member['filename']).decode('utf-8').splitlines()
+            first_data = member['dyna_header_line_count']
+            values = [float(token) / 100.0 for line in lines[first_data:] for token in line.split()]
+            if len(values) != member['numeric_samples']:
+                raise ValueError('COMPONENT_SAMPLE_COUNT_MISMATCH')
+            traces[stream] = values
             meta[stream] = header
-    if set(traces) != {'HNE','HNN','HNZ'}:
+            source_sha[stream] = member['numeric_samples_sha256_normalized_LF']
+    if set(traces) != {'HNE', 'HNN', 'HNZ'}:
         raise ValueError('HORIZONTAL_PAIR_OR_VERTICAL_MISSING')
     if len({len(a) for a in traces.values()}) != 1:
         raise ValueError('COMPONENT_LENGTH_MISMATCH')
-    if len({meta[k]['SAMPLING_INTERVAL_S'] for k in traces}) != 1:
-        raise ValueError('COMPONENT_DT_MISMATCH')
-    if len({meta[k]['LOW_CUT_FREQUENCY_HZ'] for k in traces}) != 1:
-        raise ValueError('COMPONENT_FILTER_MISMATCH')
+    for key in ('SAMPLING_INTERVAL_S', 'LOW_CUT_FREQUENCY_HZ',
+                'HIGH_CUT_FREQUENCY_HZ', 'FILTER_TYPE', 'FILTER_ORDER',
+                'PROCESSING'):
+        if len({meta[stream][key] for stream in traces}) != 1:
+            raise ValueError('COMPONENT_PROCESSING_OR_GRID_MISMATCH_' + key)
     delta = float(meta['HNE']['SAMPLING_INTERVAL_S'])
     corner = float(meta['HNE']['LOW_CUT_FREQUENCY_HZ'])
-    if delta <= 0 or corner <= 0:
+    if not all(math.isfinite(v) and v > 0 for v in (delta, corner)):
         raise ValueError('INVALID_DT_OR_FILTER')
     rows = []
-    for T in (4.,6.,8.,10.):
-        e = sdof(traces['HNE'],delta,T,.05)['pseudo_sa_m_s2']
-        n = sdof(traces['HNN'],delta,T,.05)['pseudo_sa_m_s2']
-        rows.append({'period_s':T,'HNE_pseudoSa_m_s2':e,
-                     'HNN_pseudoSa_m_s2':n,'horizontal_gm_pseudoSa_m_s2':math.sqrt(e*n),
-                     'frequency_Hz':1/T,'frequency_over_highpass_corner':1/(T*corner)})
-    return {'status':'REAL_ESM_MANUALLY_PROCESSED_PAIR_SPECTRUM_DIAGNOSTIC_ONLY',
-            'damping_ratio':.05,'dt_s':delta,'npts':len(traces['HNE']),
-            'highpass_corner_Hz':corner,'highpass_corner_period_s':1/corner,
-            'spectrum':rows,'low_frequency_usable_band_verified':False,
-            'Jiayu_target_spectrum_matched':False,'S05_PASS':False}
+    for T in DENSE_PERIODS_S:
+        e = sdof(traces['HNE'], delta, T, .05)['pseudo_sa_m_s2']
+        n = sdof(traces['HNN'], delta, T, .05)['pseudo_sa_m_s2']
+        e2 = sdof(traces['HNE'][::2], 2*delta, T, .05)['pseudo_sa_m_s2']
+        n2 = sdof(traces['HNN'][::2], 2*delta, T, .05)['pseudo_sa_m_s2']
+        if not all(math.isfinite(v) and v > 0 for v in (e, n, e2, n2)):
+            raise ValueError('DENSE_SPECTRUM_NONPOSITIVE_OR_NONFINITE')
+        rows.append({
+            'period_s': T, 'HNE_pseudoSa_m_s2': e, 'HNN_pseudoSa_m_s2': n,
+            'horizontal_gm_pseudoSa_m_s2': math.sqrt(e*n),
+            'HNE_2dt_pseudoSa_m_s2_DIAGNOSTIC': e2,
+            'HNN_2dt_pseudoSa_m_s2_DIAGNOSTIC': n2,
+            'max_component_dt2_relative_difference_DIAGNOSTIC':
+                max(abs(e2-e)/e, abs(n2-n)/n),
+            'frequency_Hz': 1/T,
+            'frequency_over_highpass_corner': 1/(T*corner)
+        })
+    return {
+        'status': 'REAL_ESM_MP_PAIR_DENSE_SPECTRUM_NUMERICAL_DIAGNOSTIC_ONLY',
+        'damping_ratio': .05, 'dt_s': delta, 'npts': len(traces['HNE']),
+        'event_id': EVENT, 'station_code': STATION,
+        'source_numeric_sha256_by_stream': source_sha,
+        'highpass_corner_Hz': corner, 'highpass_corner_period_s': 1/corner,
+        'period_count': len(rows), 'period_range_s': [rows[0]['period_s'], rows[-1]['period_s']],
+        'spectrum': rows, 'decimation_antialias_filter_applied': False,
+        'low_frequency_usable_band_verified': False,
+        'site_design_target_spectrum_verified': False,
+        'horizontal_orientation_vs_structure_verified': False,
+        'Abaqus_E_WE_RUN': 0, 'S05_PASS': False
+    }
 
 
 def butterworth_hp2_zero_phase(samples, dt, fc):
@@ -302,6 +333,37 @@ def self_test():
     assert r['unpacked_file_count'] == 3 and r['zip_sha256'] == sha(valid)
     assert not r['S05_PASS'] and not r['actual_processing_filter_corner_confirmed']
     assert set(r['processed_pair_low_frequency_diagnostic']['components'])=={'HNE','HNN'}
+    dense = r['processed_pair_spectrum']
+    assert dense['period_count'] == 16 and len(dense['spectrum']) == 16
+    assert dense['period_range_s'] == [0.5, 10.0]
+    assert dense['Abaqus_E_WE_RUN'] == 0 and dense['S05_PASS'] is False
+    assert all(row['horizontal_gm_pseudoSa_m_s2'] > 0 for row in dense['spectrum'])
+    # Source-identity negative cases: reject an unrelated event and a
+    # horizontal with a different sample grid before any science claim.
+    def reject_pair(waves, expected):
+        try: spectrum_pair(zip_bytes(waves))
+        except ValueError as exc:
+            if str(exc) != expected:
+                raise AssertionError((expected, str(exc))) from exc
+        else:
+            raise AssertionError('ACCEPTED_INVALID_DENSE_PAIR_' + expected)
+    reject_pair([
+        ('wave_H1.ACC', fixture('HNE').replace(b'EVENT_ID: '+EVENT.encode(),
+                                            b'EVENT_ID: WRONG_EVENT')),
+        ('wave_H2.ACC', fixture('HNN')), ('wave_Z.ACC', fixture('HNZ'))
+    ], 'EVENT_OR_STATION_IDENTITY_MISMATCH')
+    reject_pair([
+        ('wave_H1.ACC', fixture('HNE')),
+        ('wave_H2.ACC', fixture('HNN').replace(b'SAMPLING_INTERVAL_S: 0.01',
+                                            b'SAMPLING_INTERVAL_S: 0.02')),
+        ('wave_Z.ACC', fixture('HNZ'))
+    ], 'DYNA_SAMPLE_GRID')
+    reject_pair([
+        ('wave_H1.ACC', fixture('HNE')),
+        ('wave_H2.ACC', fixture('HNN').replace(b'FILTER_ORDER: 2',
+                                            b'FILTER_ORDER: 3')),
+        ('wave_Z.ACC', fixture('HNZ'))
+    ], 'COMPONENT_PROCESSING_OR_GRID_MISMATCH_FILTER_ORDER')
     cases = [b'not a zip', zip_bytes([('../bad.ACC', b'123')]),
              zip_bytes([('empty.ACC', b'')]), zip_bytes([]),
              zip_bytes([('dup.ACC', b'1'), ('dup.ACC', b'2')])]
@@ -328,7 +390,7 @@ def self_test():
         else: raise AssertionError('ACCEPTED_INVALID_HP2')
     print(json.dumps({'synthetic_self_test': 'PASS', 'negative_tests': len(cases),
                       'zip_sha256': sha(valid), 'real_processed_waves': 0, 'hp2_analytic_sine_tests': 2, 'hp2_invalid_rejections': 4,
-                      'Abaqus_RUN': False, 'S05_PASS': False}, sort_keys=True))
+                      'Abaqus_RUN': False, 'S05_PASS': False, 'dense_pair_positive_tests': 5, 'dense_pair_negative_tests': 3}, sort_keys=True))
 
 
 def main():
