@@ -7,6 +7,7 @@ ESM v3 (2026), DOI 10.13127/esm.3; documented query-options:
 https://esm-db.eu/esmws/eventdata/1/query-options.html
 """
 import argparse
+import csv
 import datetime as dt
 import hashlib
 import io
@@ -181,6 +182,139 @@ def spectrum_pair(raw):
         'horizontal_orientation_vs_structure_verified': False,
         'Abaqus_E_WE_RUN': 0, 'S05_PASS': False
     }
+
+
+
+# Numerical text identities from the previously archived ESM MP original,
+# NOT a claim that the station is suitable for a Chinese design spectrum.
+ESM_NVL_REAL_NUMERIC_SHA256 = {
+    'HNE': 'f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a',
+    'HNN': 'bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275',
+    'HNZ': '69443ba0a689d39ed202de7d40487a62ef39c969dc2605170cf9a211bce4fd81',
+}
+S08_EXPORT_CSV = 'S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv'
+S08_EXPORT_RECEIPT = 'S08_ESM_IT2012_NVL_MP_ACCEL_SI_SOURCE_RECEIPT.json'
+
+
+def export_s08_acceleration_si(raw, strict_real=True):
+    """Source-locked acceleration time grid for S08 research handoff ONLY.
+
+    ESM cm/s^2 -> SI m/s^2, without scaling, rotation, baseline changes,
+    filtering, padding, or any Abaqus *BASE MOTION/*AMPLITUDE assignment.
+    Time begins at t=0; last sample is (n-1)*dt, not n*dt.
+    """
+    members = inspect_zip(raw)
+    traces, headers, numeric_sha, member_sha = {}, {}, {}, {}
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for member in members:
+            h = member['dyna_selected_header_fields']
+            stream = h['STREAM']
+            if stream not in ('HNE', 'HNN', 'HNZ') or stream in traces:
+                raise ValueError('S08_INVALID_OR_DUPLICATE_STREAM')
+            if h['EVENT_ID'] != EVENT or h['STATION_CODE'] != STATION:
+                raise ValueError('S08_EVENT_STATION_MISMATCH')
+            if h['UNITS'] != 'cm/s^2':
+                raise ValueError('S08_UNITS_MUST_BE_CM_S2')
+            lines = z.read(member['filename']).decode('utf-8').splitlines()
+            values = [float(token)*0.01
+                      for line in lines[member['dyna_header_line_count']:]
+                      for token in line.split()]
+            if len(values) != member['numeric_samples'] or not all(math.isfinite(x) for x in values):
+                raise ValueError('S08_COUNT_OR_NONFINITE')
+            traces[stream], headers[stream] = values, h
+            numeric_sha[stream] = member['numeric_samples_sha256_normalized_LF']
+            member_sha[stream] = member['sha256']
+    if set(traces) != {'HNE', 'HNN', 'HNZ'}:
+        raise ValueError('S08_THREE_COMPONENTS_REQUIRED')
+    if strict_real and numeric_sha != ESM_NVL_REAL_NUMERIC_SHA256:
+        raise ValueError('S08_REAL_NUMERIC_SHA256_MISMATCH')
+    identity_keys = ('NDATA', 'SAMPLING_INTERVAL_S', 'DURATION_S',
+                     'FILTER_TYPE', 'FILTER_ORDER', 'LOW_CUT_FREQUENCY_HZ',
+                     'HIGH_CUT_FREQUENCY_HZ', 'PROCESSING', 'BASELINE_CORRECTION')
+    for key in identity_keys:
+        if len({headers[k].get(key) for k in traces}) != 1:
+            raise ValueError('S08_THREE_COMPONENT_IDENTITY_MISMATCH_' + key)
+    n = len(traces['HNE'])
+    delta = float(headers['HNE']['SAMPLING_INTERVAL_S'])
+    if not math.isfinite(delta) or delta <= 0 or n < 10 or any(len(x) != n for x in traces.values()):
+        raise ValueError('S08_INVALID_GRID')
+    out = io.StringIO(newline='')
+    writer = csv.writer(out)
+    writer.writerow(('time_s', 'HNE_acc_m_s2', 'HNN_acc_m_s2', 'HNZ_acc_m_s2'))
+    max_roundoff = 0.0
+    for i in range(n):
+        t = i*delta
+        row = [t, traces['HNE'][i], traces['HNN'][i], traces['HNZ'][i]]
+        encoded = [format(v, '.12g') for v in row]
+        max_roundoff = max(max_roundoff, *(abs(float(v)-x) for v, x in zip(encoded, row)))
+        writer.writerow(encoded)
+    data = out.getvalue().encode('utf-8')
+    receipt = {
+        'status': 'S08_REAL_SOURCE_TIME_HISTORY_EXPORTED_NOT_DESIGN_OR_NATIVE_PASS',
+        'event_id': EVENT, 'station_code': STATION, 'processing': headers['HNE']['PROCESSING'],
+        'source': 'ESM v3 DOI 10.13127/esm.3; official MP DYNA header',
+        'source_zip_sha256': sha(raw), 'member_sha256_by_stream': member_sha,
+        'numeric_source_sha256_by_stream': numeric_sha,
+        'original_units': 'cm/s^2', 'export_units': 'm/s^2',
+        'unit_conversion_multiplier': 0.01, 'npts': n, 'dt_s': delta,
+        'first_time_s': 0.0, 'last_time_s': (n-1)*delta,
+        'header_duration_s': float(headers['HNE']['DURATION_S']),
+        'peak_abs_acc_m_s2_by_stream': {k:max(map(abs,v)) for k,v in traces.items()},
+        'source_filter_low_cut_hz': headers['HNE']['LOW_CUT_FREQUENCY_HZ'],
+        'source_filter_high_cut_hz': headers['HNE']['HIGH_CUT_FREQUENCY_HZ'],
+        'csv_filename': S08_EXPORT_CSV, 'csv_sha256': sha(data), 'csv_bytes': len(data),
+        'max_text_roundoff_absolute_including_time': max_roundoff,
+        'time_grid_samples_verified': True, 'source_numeric_sha256_verified': bool(strict_real),
+        'horizontal_to_tower_rotation': 'NOT_DEFINED',
+        'ground_motion_amplitude_scale': 'NOT_APPLIED',
+        'base_excitation_implementation': 'NOT_DEFINED',
+        'site_target_spectrum': 'NOT_VERIFIED', 'low_frequency_usable_band': 'NOT_VERIFIED',
+        'Abaqus_E_WE_RUN': 0, 'S08_PASS': False,
+        'HOLD': 'Reference target and low-frequency QC, frame/axis, native initial-state and base-motion semantics.'
+    }
+    return data, receipt
+
+
+def s08_export_self_test(zip_bytes, fixture):
+    import csv as _csv
+    valid = zip_bytes([('wave_H1.ACC', fixture('HNE')),
+                       ('wave_H2.ACC', fixture('HNN')),
+                       ('wave_Z.ACC', fixture('HNZ'))])
+    data, receipt = export_s08_acceleration_si(valid, strict_real=False)
+    rows = list(_csv.DictReader(io.StringIO(data.decode('utf-8'))))
+    assert len(rows) == 10 and rows[0]['time_s'] == '0'
+    assert rows[-1]['time_s'] == '0.09'
+    assert rows[5]['HNE_acc_m_s2'] == '0.05'
+    assert receipt['csv_sha256'] == sha(data)
+    assert receipt['unit_conversion_multiplier'] == .01
+    assert receipt['Abaqus_E_WE_RUN'] == 0 and receipt['S08_PASS'] is False
+    cases = [
+        ('SOURCE_SHA', valid, True),
+        ('MISSING_VERTICAL', zip_bytes([('wave_H1.ACC',fixture('HNE')),
+            ('wave_H2.ACC',fixture('HNN'))]), False),
+        ('WRONG_EVENT', zip_bytes([('wave_H1.ACC',fixture('HNE').replace(
+            b'EVENT_ID: '+EVENT.encode(), b'EVENT_ID: OTHER')),
+            ('wave_H2.ACC',fixture('HNN')),('wave_Z.ACC',fixture('HNZ'))]), False),
+        ('WRONG_UNITS', zip_bytes([('wave_H1.ACC',fixture('HNE').replace(
+            b'UNITS: cm/s^2',b'UNITS: g')),
+            ('wave_H2.ACC',fixture('HNN')),('wave_Z.ACC',fixture('HNZ'))]), False),
+        ('DIFFERENT_DT', zip_bytes([('wave_H1.ACC',fixture('HNE')),
+            ('wave_H2.ACC',fixture('HNN').replace(
+                b'SAMPLING_INTERVAL_S: 0.01',b'SAMPLING_INTERVAL_S: 0.02')),
+            ('wave_Z.ACC',fixture('HNZ'))]), False),
+        ('NONFINITE', zip_bytes([('wave_H1.ACC',fixture('HNE').replace(
+            b'\\n9\\n',b'\\nnan\\n')),
+            ('wave_H2.ACC',fixture('HNN')),('wave_Z.ACC',fixture('HNZ'))]), False),
+    ]
+    for name, blob, strict in cases:
+        try:
+            export_s08_acceleration_si(blob, strict_real=strict)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('S08_ACCEPTED_INVALID_'+name)
+    return {'positive_assertions': 6, 'negative_rejections': len(cases),
+            'fixture_csv_sha256': sha(data), 'Abaqus_RUN': 0, 'S08_PASS': False}
 
 
 def butterworth_hp2_zero_phase(samples, dt, fc):
@@ -364,6 +498,7 @@ def self_test():
                                             b'FILTER_ORDER: 3')),
         ('wave_Z.ACC', fixture('HNZ'))
     ], 'COMPONENT_PROCESSING_OR_GRID_MISMATCH_FILTER_ORDER')
+    s08_test = s08_export_self_test(zip_bytes, fixture)
     cases = [b'not a zip', zip_bytes([('../bad.ACC', b'123')]),
              zip_bytes([('empty.ACC', b'')]), zip_bytes([]),
              zip_bytes([('dup.ACC', b'1'), ('dup.ACC', b'2')])]
@@ -390,13 +525,15 @@ def self_test():
         else: raise AssertionError('ACCEPTED_INVALID_HP2')
     print(json.dumps({'synthetic_self_test': 'PASS', 'negative_tests': len(cases),
                       'zip_sha256': sha(valid), 'real_processed_waves': 0, 'hp2_analytic_sine_tests': 2, 'hp2_invalid_rejections': 4,
-                      'Abaqus_RUN': False, 'S05_PASS': False, 'dense_pair_positive_tests': 5, 'dense_pair_negative_tests': 3}, sort_keys=True))
+                      'Abaqus_RUN': False, 'S05_PASS': False, 'dense_pair_positive_tests': 5, 'dense_pair_negative_tests': 3, 's08_export_tests': s08_test}, sort_keys=True))
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test', action='store_true')
     ap.add_argument('--fetch', action='store_true')
+    ap.add_argument('--export-s08', action='store_true')
+    ap.add_argument('--source-zip', type=pathlib.Path)
     ap.add_argument('--output-dir', type=pathlib.Path)
     ap.add_argument('--timeout', type=int, default=90)
     a = ap.parse_args()
@@ -425,8 +562,19 @@ def main():
                 json.dumps(failure, indent=2) + '\n', encoding='utf-8')
             print(json.dumps(failure), flush=True)
             raise SystemExit(2)
-    if not a.self_test and not a.fetch:
-        ap.error('provide --self-test and/or --fetch')
+    if a.export_s08:
+        if not a.source_zip or not a.output_dir:
+            ap.error('--export-s08 requires --source-zip and --output-dir')
+        data, receipt = export_s08_acceleration_si(a.source_zip.read_bytes(), strict_real=True)
+        a.output_dir.mkdir(parents=True, exist_ok=True)
+        (a.output_dir/S08_EXPORT_CSV).write_bytes(data)
+        (a.output_dir/S08_EXPORT_RECEIPT).write_text(
+            json.dumps(receipt, indent=2, ensure_ascii=False, sort_keys=True)+'\\n', encoding='utf-8')
+        print(json.dumps({'status':receipt['status'], 'csv_sha256':receipt['csv_sha256'],
+                          'npts':receipt['npts'], 'dt_s':receipt['dt_s'],
+                          'Abaqus_E_WE_RUN':0, 'S08_PASS':False},sort_keys=True))
+    if not a.self_test and not a.fetch and not a.export_s08:
+        ap.error('provide --self-test, --fetch, and/or --export-s08')
 
 
 if __name__ == '__main__': main()
