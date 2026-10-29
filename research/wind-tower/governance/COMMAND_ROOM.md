@@ -24,7 +24,7 @@
 | 事项 | 已有进度/当前状态 | 下一步与责任人 |
 |---|---|---|
 | 原稿与前期成果 | 原七章Word已定位；模型验证、36风工况、31段时程、配筋/PT损失、载荷雨流等已完成，见下方成果表 | 所有执行者继承；不得笼统派重做 |
-| C00 / L00–L01：T070诊断 | 本次G0已实际运行，IOS诊断块层级错误导致FAIL；[完整回执](../experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md) | **网页版GPT/Actions先交最小修复子版+SHA+CI；本机收到后L01复验** |
+| C00 / L00–L01：T070诊断 | 旧G0原生1 FATAL已保留；**网页版已生成16,587,215字节独立IOS修复子版**（SHA256 `a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715`），[真实CI成功+child artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810750471/artifacts/12870292013)、[RUN卡](../experiments/T070/repair-20261029/RUN_CARD.md) | **本机L01对新SHA子版执行仅Data Check并回传日志**；新子版未原生PASS |
 | C01：31站动态接口 | 4×31×12001条六分量已恢复归档；旧9站OUTB存在；31站同步RP/TP仍缺；本机已检T072四包 | 网页版复用已有提取器做缺项恢复/最小受控补采；不重复搜同一四包、不默认重跑36组 |
 | C02：新增地震输入 | 已有3事件5对来源、数值QC和论文参考谱残差诊断；[T079最新过程记录](../experiments/T079/PROCESS_LOG.md) | 网页版继续正式研究参考谱的适用域、全周期选波与处理一致性；日本论文诊断谱不能冒充本研究已验收目标谱 |
 | C03 / L02–L03：设计实施 | T077配筋和T078 PT设计已有结果；选定支路的材料/PT/接触改动需与旧原生结果对应 | 网页版整理实施差异和唯一输入；本机仅做受影响的平衡、模态/柔度等增量复核 |
@@ -43,7 +43,7 @@
 ### HANDOFF-20261029-C00-WEB-1107｜T070 IOS最小修复
 
 - **START / 2026-10-29 11:07 CST / 网页版GPT：** read_base_sha=`441170f9c467ad9f7bc9329e9a2c76cc1284ea94`；已读研究AGENTS/README、00_STATUS/WORKSPACE_MASTER、T079学术审查、T080.1/.2/.3、12阶段计划、指挥室当前快照/交接、C00任务书、T070原生G0失败.dat与本机回执、T070 roundtrip程序/审计、Abaqus 2025官方IOS关键字层级。继承T026历史验证、T070原生1 FATAL、T077/T078设计、S05/S07成果；本次只修复IOS定义在`*End Assembly`后的非法位置，拟新增`experiments/T070/repair-20261029/`生成器、单元测试/CI及交接RUN卡，追加T080过程记录与指挥室END；冻结T057/T070输入不修改，不执行高成本RUN。本机负责后续L01原生Data Check。
-- **END：** 待本轮实际生成与远端核验后补记；未补前不得宣称C00完成。
+- **END / 2026-10-29 11:15 CST：** 已交[生成器/父子SHA manifest/单处diff/子版专用原生包装器与RUN卡](../experiments/T070/repair-20261029/RUN_CARD.md)；真实原件16,587,215字节SHA与逆变换独立核实。成功[Actions #40810750471](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810750471) job 123240212848产生[child.inp artifact #12870292013](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810750471/artifacts/12870292013)；子版SHA256 `a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715`。后续新增包装器拒绝旧父输入的CI #40810802204需另行核实，不能提前记成功。SOURCE/OFFICIAL/RUN/TAB/失败/HOLD见[T080过程日志](../experiments/T080/PROCESS_LOG.md)；没有Abaqus子版原生结果、无授权标准验收，0/12未晋级。**下一责任人：本机L01仅Data Check；云端等待时独立推进C01/C02。**
 
 ### HANDOFF-20261029-ENTRY｜统一开工入口与日志
 
