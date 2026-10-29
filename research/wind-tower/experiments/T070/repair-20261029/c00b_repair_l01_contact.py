@@ -166,7 +166,12 @@ def self_test() -> None:
             b"*Surface Interaction, name=HJOINT_HARD_MU05_T057\n"
             b"*Friction\n0.5,\n*Contact\n*Contact Inclusions\n" + inc
             + b"*Contact Property Assignment\n" + ass + BLANK_BEFORE
-            + b"*Material, name=TEST\n*Step\n" + OUTPUT_BEFORE
+            + b"*Material, name=TEST\n"
+            # Keep synthetic edits separated by > 2*n=6 context lines.
+            # Real 16.6 MB input has two hunks; the short fixture formerly
+            # merged them and falsely failed the two-hunk invariant.
+            + (b"** C00b synthetic spacing only\n" * 10)
+            + b"*Step\n" + OUTPUT_BEFORE
             + b"*End Step\n")
     out, m = repair(fake, require_sha=False)
     assert m["exact_inverse_pass"] and m["contact_pairs_preserved"] == 30
