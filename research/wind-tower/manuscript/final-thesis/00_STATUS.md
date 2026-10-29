@@ -539,3 +539,9 @@ HOLD：
 - **继承事实：** 2026-10-29本机T070原生G0已有1 FATAL（`*INTEGRATEDOUTPUTSECTION`错误地位于`*End Assembly`后）；这不否定T026历史原生整塔重力/模态/Flex、36风工况及原稿已完成载荷疲劳研究。原生修复后的新G0尚未运行，S01–S04物理门禁仍HOLD。
 - **SOURCE/OFFICIAL/RUN/TAB：** 直接读取冻结T070完整16,587,215字节，父SHA256=`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9`；按Abaqus 2025官方IOS关键字Assembly层级，精确移动3条IOS而不改变物理模型。子版同字节数SHA256=`a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715`，完整逆变换还原父SHA。实际[生成器、manifest、diff、L01卡](../../experiments/T070/repair-20261029/RUN_CARD.md)及[真实成功Actions #40810750471](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810750471)，[子版artifact #12870292013](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810750471/artifacts/12870292013)可复核。详见[T080过程日志](../../experiments/T080/PROCESS_LOG.md)。
 - **REF/STANDARD/FIG/HOLD：** 未新读授权IEC/GB/NB设计条款、未新增期刊全文；无本塔地震/风震原生FIG或RUN，未启动昂贵生产。字节级精确不等于原生Data Check通过，S02仍`NATIVE_RECHECK_PENDING`；物理误差NEED_ESTIMATE。S05真实地震输入、S07映射、S10风致分材料疲劳与S11抗震约束优化保持独立推进；12阶段仍**0/12未晋级**。
+
+
+### 2026-10-29 12时｜C00b L01原生7 FATAL接触语法修复子版（仍0/12）
+- **继承实际历史：** T026/T038原生重力/模态/Flex、36风工况、T077/T078配筋与PT、载荷雨流DEL保留；本机L01对C00子版已真实Data Check，**7 FATAL/129 WARNING**（详见[原生日志](../../experiments/T070/local-20261029-l01/README.md)），不能再沿用“L01未运行”的旧状态。
+- **SOURCE/OFFICIAL/RUN/TAB：** 读取完整T070冻结INP、C00子版及L01原生DAT；依Abaqus 2025官方接触属性和通用输出组语法，仅删除一条非法空白数据行、将6个直接接触分量请求改为`CSTRESS,CDISP,CFORCE`。30对接触、μ0.5、材料/PT/RNA/荷载不改。独立真实全字节SHA复算C00b子版**16,587,192 bytes，SHA256=`d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`**；[可复算生成器、CI与本机G0交接](../../experiments/T070/repair-20261029/RUN_CARD.md)已登记，实际CI状态需远端核查。
+- **REF/STANDARD/FIG/HOLD：** 无新期刊全文/授权IEC、GB、NB设计条款；无新本塔原生物理图、地震E/WE或材料疲劳寿命；新子版尚未通过Abaqus 2025原生G0，129条警告和接触组输出实际可用性待核。**S02 NATIVE_RECHECK_PENDING，12阶段0/12未晋级**；S05选波、S07映射、S10分材料风疲劳与S11抗震约束优化继续并行。
