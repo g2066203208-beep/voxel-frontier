@@ -1,0 +1,69 @@
+{
+  "title": "S10 four-case load-DEL input screening, not local material damage",
+  "date": "2026-10-29",
+  "source_path": "research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv",
+  "source_blob_sha": "ed6c5dd6961659c0fbe4fea8cd21372c9435531f",
+  "source_sha256": "9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b",
+  "source_read_level": "GitHub PR #42 raw CSV text fetched and all 744 rows parsed",
+  "rows": 744,
+  "case_rows": {
+    "U09p343881_ETM_S06": 186,
+    "U11p4_ETM_S04": 186,
+    "U19p202140_ETM_S04": 186,
+    "U19p202140_ETM_S06": 186
+  },
+  "max_load_DEL_m4_by_channel": {
+    "Fx_kN": {
+      "case": "U11p4_ETM_S04",
+      "segment": "CSEG_05",
+      "load_DEL_m4_1Hz": 949.003602708,
+      "unit": "kN"
+    },
+    "Fy_kN": {
+      "case": "U19p202140_ETM_S06",
+      "segment": "CSEG_05",
+      "load_DEL_m4_1Hz": 289.089227526,
+      "unit": "kN"
+    },
+    "Fz_kN": {
+      "case": "U19p202140_ETM_S04",
+      "segment": "CSEG_01",
+      "load_DEL_m4_1Hz": 211.344655505,
+      "unit": "kN"
+    },
+    "Mx_kNm": {
+      "case": "U19p202140_ETM_S04",
+      "segment": "CSEG_01",
+      "load_DEL_m4_1Hz": 31327.404469417,
+      "unit": "kNm"
+    },
+    "My_kNm": {
+      "case": "U11p4_ETM_S04",
+      "segment": "CSEG_01",
+      "load_DEL_m4_1Hz": 94836.550375532,
+      "unit": "kNm"
+    },
+    "Mz_kNm": {
+      "case": "U19p202140_ETM_S06",
+      "segment": "CSEG_17",
+      "load_DEL_m4_1Hz": 17962.710921465,
+      "unit": "kNm"
+    }
+  },
+  "tests": {
+    "duplicate_key": 0,
+    "cycle_count_mismatch": 0,
+    "rows_per_case": 186,
+    "grid_samples": 12001,
+    "dt_s": 0.05,
+    "window_s": 600
+  },
+  "method": "load-level rainflow DEL; not material stress, not material Miner damage",
+  "status": "LOAD_SOURCE_QC_PASS_MATERIAL_LIFE_HOLD",
+  "material_life_years": null,
+  "physical_uncertainty": "NEED_LOCAL_ABAQUS_STRESS_AND_SN_AND_LONG_TERM_WIND_BINS",
+  "standards": "NO_AUTHORIZED_CODE_CLAUSE_REVIEWED",
+  "native_run": "NOT_RUN",
+  "fig": "NO_STRUCTURAL_RESPONSE_FIG",
+  "ref": "T062 and T077 historical source reports; no new journal full text"
+}
