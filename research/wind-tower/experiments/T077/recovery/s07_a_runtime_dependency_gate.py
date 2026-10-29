@@ -260,7 +260,7 @@ def audit(args):
 
 def selftest():
     files = {
-        "C/one.fst": b'"sub/two.dat" EDFile\n"none" Disabled\n',
+        "C/DTU_10MW_RWT.fst": b'"sub/two.dat" EDFile\n"none" Disabled\n',
         "C/sub/two.dat": b'"../three.dat" TowerFile\n"absent.dat" OtherFile\n',
         "C/three.dat": b"0 Test\n",
     }
