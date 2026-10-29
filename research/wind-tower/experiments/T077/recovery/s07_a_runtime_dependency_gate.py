@@ -284,7 +284,123 @@ def audit(args):
         report["HOLD"] += " Windows-only casefold path(s) will fail on Linux unless source naming is corrected; original bytes unchanged."
     if exe["level"] == "LFS_POINTER_ONLY":
         report["HOLD"] += " Executable LFS payload not verified."
-    return report
+    return (report, virtual) if getattr(args, 'assemble_dir', None) else report
+
+
+
+def assemble_verified_case(virtual, visited, outdir, bts, exe, *, bts_sha=SHA["bts"],
+                           bts_size=BTS_SIZE, exe_sha=SHA["exe"], exe_size=EXE_SIZE):
+    """Materialize ONLY reachable source modules, real BTS and exe. NEVER run solver."""
+    import shutil
+    import tempfile
+    outdir, bts, exe = Path(outdir), Path(bts), Path(exe)
+    if outdir.exists() or not outdir.parent.is_dir():
+        raise ValueError("S07_OUTPUT_EXISTS_OR_PARENT_MISSING")
+    for p, expected, size, label in ((bts, bts_sha, bts_size, "BTS"),
+                                      (exe, exe_sha, exe_size, "EXE")):
+        if not p.is_file() or p.stat().st_size != size or sha_file(p) != expected:
+            raise ValueError("S07_REAL_PAYLOAD_REQUIRED_" + label)
+    fst_key = CASE + "/DTU_10MW_RWT.fst"
+    if fst_key not in visited or len(set(visited)) != len(visited):
+        raise ValueError("S07_REACHABILITY_INVALID")
+    if len({x.casefold() for x in visited}) != len(visited):
+        raise ValueError("S07_CASEFOLD_COLLISION")
+    for name in visited:
+        if name != norm(name) or name not in virtual or not (
+                name.startswith(CASE + "/") or name.startswith("Rotor/")):
+            raise ValueError("S07_UNSAFE_OR_MISSING_MODULE:" + name)
+    if shutil.disk_usage(outdir.parent).free < bts_size + exe_size + 64*1024*1024:
+        raise ValueError("S07_INSUFFICIENT_DISK")
+    raw_fst = virtual[fst_key]
+    pattern = re.compile(rb'(?m)^([ \\t]*)([-+0-9.eEdD]+)([ \\t]+TMax\\b[^\\r\\n]*)')
+    diag_fst, n = pattern.subn(lambda m: m.group(1) + b"0.1" + m.group(3), raw_fst)
+    if n != 1 or diag_fst == raw_fst:
+        raise ValueError("S07_DIAG_TMAX_NOT_UNIQUE")
+    tmp = Path(tempfile.mkdtemp(prefix=".s07-a-", dir=outdir.parent))
+    try:
+        files = {}
+        def record(path):
+            files[str(path.relative_to(tmp)).replace("\\\\", "/")] = {
+                "sha256": sha_file(path), "bytes": path.stat().st_size}
+        for rel in sorted(visited):
+            p = tmp / "CASES" / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(virtual[rel])
+            record(p)
+        diag = tmp / "CASES" / CASE / "DTU_10MW_RWT_INIT_DIAG.fst"
+        diag.write_bytes(diag_fst)
+        record(diag)
+        for source, dest in ((bts, tmp / "CASES" / CASE / (CASE + ".bts")),
+                             (exe, tmp / "bin" / "openfast_x64_v353.exe")):
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            with source.open("rb") as i, dest.open("wb") as o:
+                shutil.copyfileobj(i, o, length=8*1024*1024)
+            record(dest)
+            if files[str(dest.relative_to(tmp)).replace("\\\\", "/")]["sha256"] != (
+                    bts_sha if source == bts else exe_sha):
+                raise ValueError("S07_COPY_SHA_MISMATCH")
+        receipt = {
+            "stage": "S07_A_ASSEMBLED_REAL_BYTES_NOT_NATIVE_INITIALIZED",
+            "SOURCE": {"bts_sha256": bts_sha, "exe_sha256": exe_sha,
+                       "original_fst_sha256": digest(raw_fst),
+                       "diagnostic_fst_sha256": digest(diag_fst)},
+            "REF": "T072 historical Windows topology; S07 04h real dependency graph",
+            "STANDARD": "No new authorized IEC/GB/NB text",
+            "OFFICIAL": "Original archived OpenFAST input; exe version/ABI not native tested",
+            "RUN": {"openfast": 0, "abaqus": 0, "init_tmax_s": 0.1,
+                    "executed": False},
+            "FIG": "NONE", "TAB": {"files": files, "count": len(files)},
+            "error_budget": {"identity": "exact SHA256", "physics": "UNDEFINED"},
+            "assumptions": ["Windows case-insensitive AeroDyn filename resolution",
+                            "Diagnostic FST changes only TMax; source FST retained"],
+            "HOLD": "No OpenFAST native initialization, controller ABI, 31-station OUTB, signed six-component transfer or Abaqus PASS."
+        }
+        (tmp / "S07_A_ASSEMBLY_RECEIPT.json").write_text(
+            json.dumps(receipt, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+        tmp.rename(outdir)
+        return receipt
+    except Exception:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
+
+
+def assembly_selftest():
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        bts, exe = d/"bts", d/"exe"
+        bts.write_bytes(b"wind")
+        exe.write_bytes(b"binary")
+        v = {CASE + "/DTU_10MW_RWT.fst": b"700.0 TMax - duration\\n",
+             "Rotor/Blade.dat": b"blade"}
+        kw = dict(bts_sha=sha_file(bts), bts_size=4,
+                  exe_sha=sha_file(exe), exe_size=6)
+        out = d/"assembled"
+        r = assemble_verified_case(v, sorted(v), out, bts, exe, **kw)
+        assert r["RUN"]["executed"] is False and r["TAB"]["count"] == 5
+        assert (out/"CASES"/CASE/"DTU_10MW_RWT.fst").read_bytes() == v[CASE + "/DTU_10MW_RWT.fst"]
+        assert (out/"CASES"/CASE/"DTU_10MW_RWT_INIT_DIAG.fst").read_bytes().startswith(b"0.1 TMax")
+        for target, payload, expected in (
+            (out, b"wind", "S07_OUTPUT_EXISTS"),
+            (d/"tamper", b"evil", "S07_REAL_PAYLOAD_REQUIRED_BTS")):
+            bts.write_bytes(payload)
+            try:
+                assemble_verified_case(v, sorted(v), target, bts, exe, **kw)
+            except ValueError as err:
+                assert expected in str(err), str(err)
+            else:
+                raise AssertionError("S07_ASSEMBLY_NEGATIVE_ACCEPTED")
+        assert not (d/"tamper").exists()
+        try:
+            assemble_verified_case({CASE + "/DTU_10MW_RWT.fst": b"NO TMAX"},
+                                   [CASE + "/DTU_10MW_RWT.fst"], d/"bad", bts, exe,
+                                   bts_sha=sha_file(bts), bts_size=4,
+                                   exe_sha=sha_file(exe), exe_size=6)
+        except ValueError as err:
+            assert "TMAX_NOT_UNIQUE" in str(err)
+        else:
+            raise AssertionError("S07_TMAX_MISSING_ACCEPTED")
+    print("S07_A_ASSEMBLY_SYNTHETIC_PASS: real-byte mock assembly, original FST unchanged, TMax-only child, overwrite/tamper/missing-TMax rejection; solver=0")
 
 
 def selftest():
@@ -317,6 +433,7 @@ def selftest():
     finally:
         globals()["CASE"] = old_case
     print("S07_DEPENDENCY_SELFTEST_PASS: 1 exact, 1 Windows casefold, 1 missing, 3 unsafe and 1 SHA rejection")
+    assembly_selftest()
 
 
 def main():
@@ -325,26 +442,38 @@ def main():
     for x in ("base-zip", "target-zip", "supp-zip", "child-ed", "dll",
               "exe", "prior-manifest", "output"):
         ap.add_argument("--" + x, type=Path)
+    ap.add_argument("--assemble-dir", type=Path, help="materialize verified A-case, no solver execution")
+    ap.add_argument("--bts", type=Path, help="actual BTS bytes, NOT Git LFS pointer")
     args = ap.parse_args()
     if args.selftest:
         selftest()
-    if args.output:
+    if args.output or args.assemble_dir:
         if not all((args.base_zip, args.target_zip, args.supp_zip,
                     args.child_ed, args.dll, args.exe, args.prior_manifest)):
             ap.error("all source paths required with --output")
-        result = audit(args)
+        if args.assemble_dir:
+            if not args.bts:
+                ap.error("--assemble-dir requires --bts real payload")
+            result, virtual = audit(args)
+            if result["TAB"]["unresolved_or_unsafe"] or result["SOURCE"]["exe"]["level"] != "REAL_EXE_SHA256_AND_PE_X64_VERIFIED":
+                raise ValueError("S07_ASSEMBLY_DEPENDENCY_OR_EXE_HOLD")
+            receipt = assemble_verified_case(virtual, result["visited"], args.assemble_dir, args.bts, args.exe)
+            print("S07_A_ASSEMBLY_STATIC_ONLY=" + json.dumps({"files": receipt["TAB"]["count"], "native_runs": 0}))
+        else:
+            result = audit(args)
         raw = (json.dumps(result, ensure_ascii=False, sort_keys=True,
                           separators=(",", ":")) + "\n").encode("utf-8")
-        if args.output.exists():
-            raise ValueError("S07_REPORT_OVERWRITE_FORBIDDEN")
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_bytes(raw)
+        if args.output:
+            if args.output.exists():
+                raise ValueError("S07_REPORT_OVERWRITE_FORBIDDEN")
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_bytes(raw)
         print("S07_DEPENDENCY_SUMMARY=" + json.dumps({
             "TAB": result["TAB"], "exe": result["SOURCE"]["exe"],
             "unresolved": result["unresolved"][:12],
             "receipt_sha256": digest(raw), "native_runs": 0}, sort_keys=True))
         print("S07_DEPENDENCY_REPORT_BASE64=" + base64.b64encode(raw).decode("ascii"))
-    if not (args.selftest or args.output):
+    if not (args.selftest or args.output or args.assemble_dir):
         ap.error("choose --selftest and/or --output")
 
 
