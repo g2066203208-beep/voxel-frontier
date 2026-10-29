@@ -587,3 +587,8 @@ HOLD：
 ## 2026-10-29 18时｜S05/S08真实Actions artifact字节归档验收（0/12未晋级）
 
 已实际下载、解压、核验[GitHub Actions #40847442979](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979)的[ESM artifact #12884814391](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979/artifacts/12884814391)：ZIP 811,049字节/SHA256 `40dcb0d8ad6aa3ce1be4cd96e633d1aa266f3764c85be556e1a029c682c908d6`；完整三分量32,040行SI CSV 1,311,873字节/SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`，与前轮独立本地文件逐字节相等；16周期谱CSV SHA256 `a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6`。ESM job `123358308022`成功，**远端全量CSV归档缺口关闭**；工作流整体失败是CESMD官方API对两个事件均HTTP500，原生job `123358307473`及失败artifact `12885427563`已核，**不得称整体CI PASS**。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、输入/输出SHA、误差与HOLD见[T079本轮日志](../../experiments/T079/PROCESS_LOG.md)。S05仍缺参考目标谱与低频可靠性；S08/S09原生地震0；0/12整阶段未晋级，S10/S11主线不变；冻结母本未改、PR不合并、不运行昂贵生产。下一独立动作：S10真实时程→分材料雨流/均值应力输入接口验证。
+
+
+## 2026-10-29 20时｜S10找回历史U18p57大型ODB的Git LFS归档入口（来源级进展）
+
+直接核读活动PR #42仓库树、两个历史U18p57 ODB分卷manifest及9/9 Git LFS文本指针，确认4卷普通ODB与5卷STRESS ODB的**元数据连续性和声明哈希一致**，总计8,332,739,680字节；另定位2个INP LFS指针。源manifest登记普通ODB `bb07aff9b5ed7b5ef277f8208d2834cc472673085d7753bf057f05ecc0959290`、STRESS ODB `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd`；这些是**归档声明的整文件SHA256，不是本轮对ODB实体复算**。已提交只读元数据/可选本机真实分卷哈希脚本及GitHub Actions测试；本地合成正向与错位负向测试通过，真实CI状态尚未回读。详见[T077过程记录](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-29-20时s10历史u18p57局部应力fe-safe线索真实lfs分卷恢复入口不是odb验收)。未下载/重组/打开ODB，未找到可核实fe-safe寿命原始日志，历史资产仅`PARTIAL_HISTORICAL_METADATA`；S10仍`LOCAL_STRESS_HOLD`，12阶段**0/12未晋级**。下一单项：本机后台按需拉取STRESS ODB 5卷、流式哈希、重组整体SHA与只读ODB字段核验，不启动求解。
