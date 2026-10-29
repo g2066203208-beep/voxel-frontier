@@ -31,6 +31,16 @@ SUFFIX_UNIT = {
     "RPxi": "deg", "RPyi": "deg", "RPzi": "deg",
     "TPxi": "m", "TPyi": "m", "TPzi": "m",
 }
+# The additional channels are synchronized *internal section resultants* and
+# local accelerations. They are NOT applied external forces or a global DCM.
+DIAG_SUFFIX_UNIT = {
+    "ALxt":"m/s^2", "ALyt":"m/s^2", "ALzt":"m/s^2",
+    "FLxt":"kN", "FLyt":"kN", "FLzt":"kN",
+    "MLxt":"kN-m", "MLyt":"kN-m", "MLzt":"kN-m",
+}
+DIAG_FIELDS = ("ALxt_mps2","ALyt_mps2","ALzt_mps2",
+               "FLxt_kN","FLyt_kN","FLzt_kN",
+               "MLxt_kNm","MLyt_kNm","MLzt_kNm")
 FIELDS = ("case","batch","segment","gage_index","time_s",
           "RPxi_deg","RPyi_deg","RPzi_deg","TPxi_m","TPyi_m","TPzi_m")
 
@@ -120,8 +130,8 @@ def channel(data, prefix, unit):
     return data[name]
 
 
-def extract_rows(data, case, batch, expected_n=12001):
-    """Yield RP/TP only; caller supplies already windowed, synchronized data."""
+def extract_rows(data, case, batch, expected_n=12001, include_diagnostics=False):
+    """Yield synchronized RP/TP, optionally AL/FL/ML; NO load ownership claim."""
     if case not in CASES or batch not in BATCHES:
         raise ValueError("S07_UNKNOWN_CASE_OR_BATCH")
     t = channel(data,"Time","s")
@@ -134,8 +144,11 @@ def extract_rows(data, case, batch, expected_n=12001):
     for gi,seg in enumerate(BATCHES[batch][1],1):
         if not isinstance(seg,int):
             continue
-        values = [channel(data,"TwHt"+str(gi)+s,u)
-                  for s,u in SUFFIX_UNIT.items()]
+        required = dict(SUFFIX_UNIT)
+        if include_diagnostics:
+            required.update(DIAG_SUFFIX_UNIT)
+        values = [channel(data,"TwHt"+str(gi)+suffix,unit)
+                  for suffix,unit in required.items()]
         if any(len(v)!=expected_n for v in values):
             raise ValueError("S07_GAGE_LENGTH_MISMATCH")
         for i,time_s in enumerate(times):
@@ -152,7 +165,17 @@ def selftest():
     for gi in range(1,10):
         for suffix,unit in SUFFIX_UNIT.items():
             data["TwHt%d%s_[%s]"%(gi,suffix,unit)] = [float(gi+j) for j in range(n)]
+    # Synthetic 9-gage source with exactly the channel suffix/unit convention
+    # independently seen in the archived T062 original OUTB receipt.
+    for gi in range(1,10):
+        for suffix,unit in DIAG_SUFFIX_UNIT.items():
+            data["TwHt%d%s_(%s)"%(gi,suffix,unit)] = [float(10*gi+j) for j in range(n)]
     rows=list(extract_rows(data,case,"A",expected_n=n))
+    paired=list(extract_rows(data,case,"A",expected_n=n,
+                             include_diagnostics=True))
+    assert len(paired)==27 and len(paired[0])==len(FIELDS)+len(DIAG_FIELDS)
+    assert paired[0][-9:]==tuple([10.0]*9)
+    assert paired[-1][-1]==92.0
     assert len(rows)==27 and rows[0][2]=="CSEG_01"
     assert rows[-1][2]=="CSEG_09" and rows[-1][4]==100.1
     faults=("missing","unit","time","nan","length","case","ambiguous")
@@ -173,12 +196,33 @@ def selftest():
             pass
         else:
             raise AssertionError("S07_FAULT_NOT_REJECTED_"+fault)
-    return {"synthetic_valid_rows":27,"negative_tests_passed":len(faults),
-            "native_solver_runs":0}
+    # Fail closed if any diagnostic channel is absent, mislabeled or nonfinite.
+    for fault in ("missing_AL","bad_ML_unit","nonfinite_FL","short_AL"):
+        bad={k:list(v) for k,v in data.items()}
+        if fault=="missing_AL": del bad["TwHt1ALxt_(m/s^2)"]
+        elif fault=="bad_ML_unit":
+            bad["TwHt1MLxt_(Nm)"]=bad.pop("TwHt1MLxt_(kN-m)")
+        elif fault=="nonfinite_FL": bad["TwHt1FLxt_(kN)"][0]=float("nan")
+        else: bad["TwHt1ALxt_(m/s^2)"].pop()
+        try: list(extract_rows(bad,case,"A",expected_n=n,
+                               include_diagnostics=True))
+        except ValueError: pass
+        else: raise AssertionError("S07_PAIRED_FAULT_NOT_REJECTED_"+fault)
+    return {"synthetic_valid_rows":27,"paired_synthetic_valid_rows":27,
+            "paired_channels_per_gage":15,
+            "negative_tests_passed":len(faults)+4,
+            "native_solver_runs":0,"external_load_exports":0}
 
 
-def capture_existing_outb(path, case, batch, output):
+def capture_existing_outb(path, case, batch, output,
+                          full_diagnostic=False, expected_sha256=None):
     """Opt-in read of an EXISTING file; NEVER launches OpenFAST."""
+    source_sha=sha256_file(path)
+    if expected_sha256 is not None:
+        if not re.fullmatch(r"[0-9a-f]{64}",expected_sha256):
+            raise ValueError("S07_INVALID_EXPECTED_OUTB_SHA256")
+        if source_sha!=expected_sha256:
+            raise ValueError("S07_ORIGINAL_OUTB_SHA256_MISMATCH")
     try:
         from openfast_toolbox.io.fast_output_file import FASTOutputFile
     except ImportError as exc:
@@ -196,8 +240,9 @@ def capture_existing_outb(path, case, batch, output):
     try:
         with gzip.open(tmp,"wt",newline="",encoding="utf-8") as f:
             writer=csv.writer(f,lineterminator="\n")
-            writer.writerow(FIELDS)
-            for row in extract_rows(window,case,batch):
+            writer.writerow(FIELDS+DIAG_FIELDS if full_diagnostic else FIELDS)
+            for row in extract_rows(window,case,batch,
+                                    include_diagnostics=full_diagnostic):
                 writer.writerow(row)
                 count+=1
         expected=12001*sum(isinstance(s,int) for s in BATCHES[batch][1])
@@ -206,10 +251,15 @@ def capture_existing_outb(path, case, batch, output):
         tmp.replace(out)
     finally:
         if tmp.exists(): tmp.unlink()
-    receipt={"case":case,"batch":batch,"source_outb_sha256":sha256_file(path),
+    receipt={"case":case,"batch":batch,"source_outb_sha256":source_sha,
+             "expected_outb_sha256":expected_sha256,
+             "diagnostic_channels_per_gage":15 if full_diagnostic else 6,
+             "synchronized_acceleration_and_section_resultants":bool(full_diagnostic),
+             "external_load_exports":0,"native_solver_runs":0,
              "source_outb_path":str(path),"output_sha256":sha256_file(out),
              "rows":count,"source_level":"EXISTING original OUTB read; no solver launched",
-             "status":"RP_TP_CAPTURED_NEEDS_DCM_AND_SIGNED_FREE_BODY",
+             "status":"S07_PAIRED_DIAGNOSTIC_CAPTURED_HOLD" if full_diagnostic
+                      else "RP_TP_CAPTURED_NEEDS_DCM_AND_SIGNED_FREE_BODY",
              "HOLD":"Not an Abaqus external load; v3.5.3 DCM and inertia/gravity/RNA owner still need native checks"}
     receipt_path=out.with_name(out.name+".receipt.json")
     receipt_path.write_text(json.dumps(receipt,indent=2)+"\n",encoding="utf-8")
@@ -223,6 +273,10 @@ def main():
     p.add_argument("--t072",type=Path)
     p.add_argument("--source-audit",type=Path)
     p.add_argument("--outb",type=Path,help="EXISTING OUTB only, no solver")
+    p.add_argument("--full-diagnostic",action="store_true",
+                   help="capture RP/TP + AL + FL/ML in identical rows (NOT Abaqus loads)")
+    p.add_argument("--expected-outb-sha256",
+                   help="optional exact 64-char original OUTB SHA256 guard")
     p.add_argument("--case")
     p.add_argument("--batch")
     p.add_argument("--output",type=Path)
@@ -242,7 +296,9 @@ def main():
             if not a.case or not a.batch or not a.output:
                 p.error("--case --batch --output required for existing OUTB capture")
             print("S07_EXISTING_OUTB_CAPTURE",json.dumps(
-                capture_existing_outb(a.outb,a.case,a.batch,a.output),sort_keys=True))
+                capture_existing_outb(a.outb,a.case,a.batch,a.output,
+                    full_diagnostic=a.full_diagnostic,
+                    expected_sha256=a.expected_outb_sha256),sort_keys=True))
     if not (a.self_test or a.source_audit or a.outb):
         p.error("choose --self-test, --source-audit or --outb")
 
