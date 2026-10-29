@@ -29,7 +29,7 @@
 | C01：31站动态接口 | 4×31×12001条六分量已恢复归档；旧9站OUTB存在；31站同步RP/TP仍缺；本机已检T072四包 | 网页版复用已有提取器做缺项恢复/最小受控补采；不重复搜同一四包、不默认重跑36组 |
 | C02：新增地震输入 | 已有3事件5对来源/参考谱残差；**真实ESM处理波16周期双水平密谱及dt/2dt数值表**（[16行CSV](../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv)、[过程日志](../experiments/T079/PROCESS_LOG.md)2026-10-29 14时节），本地真实原件重算；**15时已实算三分量32,040步SI时程，16时新增真实Arias/Husid三分量强度与显著持续时间及积分偏置诊断，程序/3行结果CSV已远端Git blob核验；17时已新增真实水平合向量/能量主轴可复算程序与1行结果CSV并远端核验；完整1.31MB SI时程已在[真实Actions artifact #12884814391](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979/artifacts/12884814391)远端归档并逐字节回读（32040行，SHA256 a353c1216b80...）；同一workflow因CESMD HTTP500整体failure，ESM子job成功**（[程序](../experiments/T079/s05_esm_public_processed_pair.py)、[过程日志](../experiments/T079/PROCESS_LOG.md)15时节） | 网页版先核新Actions真实执行及导出SHA，再推进有来源中国参考目标谱与选波适用域；意大利记录和日本论文谱均非设计波PASS |
 | C03 / L02–L03：设计实施 | T077配筋和T078 PT设计已有结果；选定支路的材料/PT/接触改动需与旧原生结果对应 | 网页版整理实施差异和唯一输入；本机仅做受影响的平衡、模态/柔度等增量复核 |
-| C05 / L04–L05：材料疲劳与优化 | 载荷雨流/DEL和方法已有；历史fe-safe线索待定位核实，不能称从未做过 | 先恢复旧成果；云端做通用算法，确需原生响应/专有提取的缺项交本机；新增E/WE依赖合格输入 |
+| C05 / L04–L05：材料疲劳与优化 | 载荷雨流/DEL和方法已有；**19时独立核验真实744行四工况×31段×6通道载荷统计，并交付分材料局部应力雨流输入接口、合成解析/拒绝测试及[结果收据](../experiments/T077/recovery/S10_4CASE_LOAD_SCREEN_SOURCE_RECEIPT_20261029.json)**；不是材料寿命；历史fe-safe线索待定位 | 先恢复历史U18p57/fe-safe实际局部应力时程及模型身份；云端接口准备可独立继续，确需原生响应的缺项交本机；新增E/WE依赖合格输入 |
 | C06：论文与网站 | 原稿、后期六章重构稿和地震方案已分清；本次统一入口和读写纪律 | 网页版按原稿与证据整合正文/图表；GitHub导航、研究结果合并和Pages发布分别报告 |
 
 **L01已完成且FAIL；C00b静态CI已真实通过并取得锁定SHA的child artifact，下一首项是本机L02后台原生G0复验；C01/C02仍可独立推进。** 等待时C01/C02可由云端并行；不是让所有人停工等待，也不是再开一轮相同状态审计。
@@ -49,7 +49,7 @@
 ### HANDOFF-20261029-S10-CYCLE-CONTRACT-WEB-19｜S10真实载荷筛选与材料循环接口
 
 - **START / 2026-10-29 19时 CST / 网页版GPT：** read_base_sha=`40d18aa85d91df59c04b5ce1e2d07868843bb430`；PR #42 Open/Draft；已读研究AGENTS/README、指挥室当前进度/最近交接/历史成果、00_STATUS/WORKSPACE_MASTER、T079学术审查/最新过程、T080.1/.2/.3、12阶段关键路径、T077 S06恢复及744行DEL原表、T062历史DEL分歧。继承四工况×31段真实时程、744行载荷雨流/DEL、S05/S08完整归档；本轮只补**S10 load-DEL→分材料局部应力雨流的输入契约**、合成测试、744行真实源QC、来源/误差/HOLD记录；拟改`experiments/T077/recovery/s10_material_cycle_contract.py`及同目录小型结果收据、既有T077恢复说明、指挥室本页；不修改T057/T070、不合并PR、不执行高成本原生RUN。责任方：网页版GPT/Actions。
-- **END：** 待本轮实际提交与远端回读后补录；无真实局部应力/材料S–N时禁止输出材料寿命。
+- **END / 2026-10-29 19时 CST：** 已在真实GitHub源744行直接完成四工况各186行、124个段×工况、六通道载荷DEL/循环/时间网格QC，输入SHA256 `9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`；[可执行程序](../experiments/T077/recovery/s10_material_cycle_contract.py)SHA256 `30b787c4f19e20234da3b18c110c408a69d59b6551f03e33163fd220ec4162ae`已与本地实际运行的Python文件逐字节一致，合成解析/异常拒绝自测PASS；[744行统计收据](../experiments/T077/recovery/S10_4CASE_LOAD_SCREEN_SOURCE_RECEIPT_20261029.json)、[S10 GitHub Actions工作流](../../../.github/workflows/s10-material-cycle-contract.yml)、[完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与误差/HOLD](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)和00_STATUS均已提交。最大My载荷DEL为94836.550376kN·m（U11p4 S04/CSEG01）；**不是材料寿命**。新CI尚无可核实run ID/成功日志，记CI_PENDING；本机S10测试通过≠原生Abaqus PASS。S10=LOAD_SCREEN_QC+STRESS_INTERFACE_SELFTESTED/MATERIAL_LIFE_HOLD；严格0/12未晋级，S08/S09原生E/WE仍0，S11主线保留。冻结T057/T070不改，PR #42仍Draft；**下一责任：本机恢复历史U18p57/fe-safe局部应力真实时程并核模型身份；云端收到数据后对真实应力运行此接口，不能由load-DEL推材料寿命。**
 
 
 
