@@ -631,3 +631,8 @@ HOLD：
 
 
 **22:13 CI回填：** [S10 Actions #40888900240](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40888900240)已`completed/success`，原生job日志证实ODB目录mock正向1、负向2及假ODB错误SHA拒绝；[10文件artifact #12904131445](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40888900240/artifacts/12904131445)已下载逐字节验ZIP SHA256 `60f7d3f6561f8fd461735f265d9fb10db01abb57c6c6103a579ab06ed59bc2c8`，其中脚本SHA256 `8dd65f17e598c4bc5e7b99cab3d5857c86ef47c12b16f4fb7f8594a2e0d3b483`。仅`SYNTHETIC_CI_PASS`，不是原生ODB/物理/寿命PASS；S10与12阶段正式HOLD不变。
+
+
+## 2026-10-30 05时｜S07 A批装配程序与初始化RUN卡（无求解）
+
+继承04时三ZIP依赖图、真实BTS/exe SHA与17模块/24引用静态审计，在[既有S07程序](../../experiments/T077/recovery/s07_a_runtime_dependency_gate.py)加入原件BTS/exe强制校验、可达输入最小原子装配、TMax=0.1s独立诊断FST和合成正反测试；新增[初始化RUN卡](../../experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_INIT_RUN_CARD.md)，资源预算2 CPU/4GiB/180s/1GiB输出，仅待授权原生执行。**本轮未重新取得437MB BTS或61MB exe，未生成真实完整A批装配包、未运行OpenFAST/Abaqus，CI结果以真实Actions为准**。来源SHA、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差与HOLD见[既有T077过程日志05时节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。S07独立准备有新可执行代码；严格12阶段**0/12未晋级**，S10/S11主线不变。
