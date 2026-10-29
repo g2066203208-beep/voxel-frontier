@@ -49,6 +49,8 @@ def _hash(s):
 
 
 def _rows(raw, required):
+    if not raw.strip():
+        raise ValueError("ROWS_INVALID")
     text = raw.decode("utf-8-sig")
     reader = csv.DictReader(io.StringIO(text))
     if not reader.fieldnames or len(set(reader.fieldnames)) != len(reader.fieldnames):
