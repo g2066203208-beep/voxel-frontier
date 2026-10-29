@@ -307,8 +307,15 @@ def capture_existing_outb(path, case, batch, output,
     # Original output is typically 0..700s; retain 100..700s only.
     window = df[(df[time_col]>=100.0-1e-4)&(df[time_col]<=700.0+1e-4)]
     out=Path(output)
-    out.parent.mkdir(parents=True,exist_ok=True)
+    receipt_dest=out.with_name(out.name+".receipt.json")
     tmp=out.with_name(out.name+".tmp")
+    protected={Path(x).resolve() for x in
+               (path,baseline_elastodyn,run_elastodyn)}
+    if any(x.resolve() in protected for x in (out,receipt_dest,tmp)):
+        raise ValueError("S07_CAPTURE_OUTPUT_OVERLAPS_SOURCE")
+    if any(x.exists() for x in (out,receipt_dest,tmp)):
+        raise FileExistsError("S07_CAPTURE_WILL_NOT_OVERWRITE_EXISTING_OUTPUT")
+    out.parent.mkdir(parents=True,exist_ok=True)
     count=0
     try:
         with gzip.open(tmp,"wt",newline="",encoding="utf-8") as f:
