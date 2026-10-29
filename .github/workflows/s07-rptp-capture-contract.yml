@@ -51,6 +51,61 @@ jobs:
           sha256sum s07/gate.py s07/t071.yml s07/t072.yml \
             s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json
           echo 'STATIC CONTRACT ONLY: no OUTB read, no OpenFAST, no Abaqus, no global load export.'
+      - uses: actions/checkout@v4
+        with:
+          path: s07-original-archive
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+          lfs: false
+      - name: Build real-source SHA-locked U11p4_ETM_S04 A-batch ElastoDyn input (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 s07/gate.py --diagnostic-a-selftest
+          python3 - <<'PY'
+          import hashlib, json, zipfile
+          from pathlib import Path
+          from importlib.util import spec_from_file_location,module_from_spec
+          spec=spec_from_file_location("s07","s07/gate.py")
+          mod=module_from_spec(spec);spec.loader.exec_module(mod)
+          zp=Path("s07-original-archive/research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip")
+          data=zp.read_bytes()
+          expected_blob="54deb8cf10f41cb54fa2ad650af7898c9d338223"
+          if mod.git_blob(data)!=expected_blob:
+              raise ValueError("S07_ORIGINAL_ARCHIVE_GIT_BLOB_MISMATCH")
+          with zipfile.ZipFile(zp) as z:
+              suffix="/CASES/U09p343881_ETM_S01/DTU_10MW_RWT_ElastoDyn.dat"
+              fst_suffix="/CASES/U09p343881_ETM_S01/DTU_10MW_RWT.fst"
+              def sole(suffix):
+                  matches=[n for n in z.namelist() if ("/"+n.replace("\\\\","/")).endswith(suffix)]
+                  if len(matches)!=1:
+                      raise ValueError("S07_ARCHIVE_PATH_NOT_UNIQUE_"+suffix+":"+str(matches))
+                  return z.read(matches[0])
+              ed=sole(suffix);fst=sole(fst_suffix)
+          base=Path("s07/original_elastodyn.dat");base.write_bytes(ed)
+          fst_sha=hashlib.sha256(fst).hexdigest()
+          expected_fst="5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605"
+          if fst_sha!=expected_fst:
+              raise ValueError("S07_BASE_FST_SHA256_MISMATCH")
+          outdir=Path("s07/S07_U11p4_ETM_S04_A")
+          receipt=mod.emit_a_diagnostic_input(base,outdir,hashlib.sha256(data).hexdigest())
+          receipt["original_zip_git_blob_sha1"]=expected_blob
+          receipt["original_fst_sha256"]=fst_sha
+          (outdir/"S07_A_DIAGNOSTIC_INPUT_MANIFEST.json").write_text(
+              json.dumps(receipt,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+          child=(outdir/"DTU_10MW_RWT_ElastoDyn.dat").read_bytes()
+          assert hashlib.sha256(child).hexdigest()==receipt["child_elastodyn_sha256"]
+          assert child==mod.prepare_a_diagnostic_input(ed)[0]
+          assert receipt["output_channels_required_count"]==135
+          assert receipt["changed_existing_lines"]==1
+          print("S07_REAL_SOURCE_DIAGNOSTIC_A_PASS",json.dumps({
+              "original_zip_sha256":receipt["source_zip_sha256"],
+              "baseline_elastodyn_sha256":receipt["source_baseline_elastodyn_sha256"],
+              "child_elastodyn_sha256":receipt["child_elastodyn_sha256"],
+              "existing_channels":receipt["output_channels_already_present"],
+              "appended_channels":receipt["output_channels_appended"],
+              "native_openfast_runs":0},sort_keys=True))
+          PY
       - name: Preserve validated compact source receipt on existing Draft PR branch
         if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
         env:
@@ -79,5 +134,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: s07-rptp-capture-static-receipt
-          path: s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json
+          path: |
+            s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json
+            s07/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat
+            s07/S07_U11p4_ETM_S04_A/S07_A_DIAGNOSTIC_INPUT_MANIFEST.json
           retention-days: 30
