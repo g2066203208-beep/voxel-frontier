@@ -4,6 +4,7 @@ on:
     paths:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv'
       - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv'
@@ -282,6 +283,7 @@ jobs:
           curl -fLsS --retry 3 -o s05_event_balanced_spectrum_gate.py "$base/s05_event_balanced_spectrum_gate.py"
           curl -fLsS --retry 3 -o us.csv "$base/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv"
           curl -fLsS --retry 3 -o esm.csv "$base/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv"
+          curl -fLsS --retry 3 -o expected.csv "$base/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv"
           sha256sum s05_event_balanced_spectrum_gate.py us.csv esm.csv
       - name: Run analytic and negative tests, then actual source-table event balance
         shell: bash
@@ -298,7 +300,16 @@ jobs:
           assert len(d["rows"])==4 and d["S05_PASS"] is False
           assert d["Abaqus_E_WE_RUN"]==0 and d["target_spectrum"]=="MISSING_NO_MATCH_METRIC"
           assert all(math.isfinite(x["event_over_pair_ratio"]) for x in d["rows"])
-          print("REAL_3_EVENT_5_PAIR_4_PERIOD_EVENT_BALANCE_DIAGNOSTIC_PASS")
+          import csv
+          with open("expected.csv", newline="") as f: expected=list(csv.DictReader(f))
+          assert len(expected)==len(d["rows"])
+          for a,b in zip(expected,d["rows"]):
+              assert float(a["period_s"])==b["period_s"]
+              assert int(a["independent_events"])==3 and int(a["horizontal_pairs"])==5
+              assert a["status"]=="HETEROGENEOUS_PROCESSING_DIAGNOSTIC_NOT_DESIGN_PASS"
+              for key in ("pair_weighted_gm_m_s2","event_weighted_gm_m_s2","event_over_pair_ratio","ridgecrest_station_max_over_min"):
+                  assert math.isclose(float(a[key]),b[key],rel_tol=1e-10,abs_tol=1e-12),(key,a[key],b[key])
+          print("REAL_3_EVENT_5_PAIR_4_PERIOD_COMMITTED_CSV_CROSSCHECK_PASS")
           PY
       - name: Preserve source-hashed diagnostic JSON, never label design PASS
         if: always()
