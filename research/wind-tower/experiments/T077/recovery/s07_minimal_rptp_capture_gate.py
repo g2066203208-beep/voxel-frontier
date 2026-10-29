@@ -266,9 +266,43 @@ def capture_existing_outb(path, case, batch, output,
     return receipt
 
 
+def audit_original_nine_gage_receipt(path):
+    """Validate the T062 OUTB-derived *receipt*, NOT the original OUTB bytes."""
+    r=json.loads(Path(path).read_text(encoding="utf-8"))
+    x=r["full_synchronous_native_series"]
+    if (r["outb_sha256"]!=x["source_outb_sha256"] or
+            x["gage_count"]!=9 or x["sample_count"]!=12001 or
+            abs(x["time_start_s"]-100)>1e-8 or
+            abs(x["time_end_s"]-700)>1e-8 or
+            abs(x["time_increment_s"]-0.05)>1e-9):
+        raise ValueError("S07_T062_ORIGINAL_RECEIPT_IDENTITY_OR_GRID_MISMATCH")
+    cols=x["native_channel_summary"]
+    expected={**SUFFIX_UNIT,**DIAG_SUFFIX_UNIT}
+    for gi in range(1,10):
+        for suffix,unit in expected.items():
+            name="TwHt%d%s"%(gi,suffix)
+            if name not in cols or cols[name].get("unit")!="("+unit+")":
+                raise ValueError("S07_T062_ORIGINAL_CHANNEL_UNIT_MISMATCH_"+name)
+    span=float(x["observed_TPzi_span_m"])
+    if not math.isfinite(span) or span<=0 or span>=158:
+        raise ValueError("S07_T062_GAGE_SPAN_INVALID")
+    return {
+        "SOURCE":{"reading_level":"T062 committed original OUTB-derived JSON receipt; original OUTB bytes NOT reread",
+                  "receipt_sha256":sha256_file(path),
+                  "historical_outb_declared_sha256":r["outb_sha256"]},
+        "RUN":{"kind":"receipt-channel and time-grid check","native_solver_runs":0},
+        "TAB":{"verified_gages":9,"verified_channels_per_gage":len(expected),
+               "verified_channel_records":9*len(expected),
+               "samples_per_gage":12001,"observed_gage_span_m":span},
+        "HOLD":"T062 gage span is not full 158m coverage; 31-gage T071/T072 OUTB absent. RP angles not a verified global DCM; internal section resultants are not Abaqus external loads."
+    }
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--self-test",action="store_true")
+    p.add_argument("--t062-receipt",type=Path,
+                   help="audit existing 9-gage OUTB-derived receipt; no binary reread")
     p.add_argument("--t071",type=Path)
     p.add_argument("--t072",type=Path)
     p.add_argument("--source-audit",type=Path)
@@ -283,6 +317,9 @@ def main():
     a=p.parse_args()
     if a.self_test:
         print("S07_SELFTEST",json.dumps(selftest(),sort_keys=True))
+    if a.t062_receipt:
+        print("S07_REAL_T062_RECEIPT_GATE",json.dumps(
+            audit_original_nine_gage_receipt(a.t062_receipt),sort_keys=True))
     if a.source_audit or a.outb:
         if not a.t071 or not a.t072:
             p.error("--t071 and --t072 required")
@@ -299,7 +336,7 @@ def main():
                 capture_existing_outb(a.outb,a.case,a.batch,a.output,
                     full_diagnostic=a.full_diagnostic,
                     expected_sha256=a.expected_outb_sha256),sort_keys=True))
-    if not (a.self_test or a.source_audit or a.outb):
+    if not (a.self_test or a.t062_receipt or a.source_audit or a.outb):
         p.error("choose --self-test, --source-audit or --outb")
 
 
