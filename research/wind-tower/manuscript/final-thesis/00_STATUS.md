@@ -1,5 +1,14 @@
 # 当前状态 — 2026-10-07
 
+## 2026-10-29｜本机原生G0首次实测与云端分工（最新调度）
+
+[论文指挥室](../../governance/COMMAND_ROOM.md)｜[网页版GPT + Actions任务书](../../governance/WEB_GPT_ACTIONS_DISPATCH_20261029.md)｜[原生日志与本地原件恢复回执](../../experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md)。
+
+Abaqus 2025已对SHA锁定T070执行Data Check，09:59:41–10:00:01（Asia/Shanghai），结果**NATIVE_DATACHECK_FAILED：1 FATAL ERROR**。第482557行`*INTEGRATED OUTPUT SECTION`位于`*End Assembly`之后，原生预处理器拒绝其层级。完整.dat、stdout/stderr及manifest已保存；.msg/.sta/job.log实际缺失，未伪造。不是“无Abaqus环境”，也不是G0通过；未执行Gravity/Modal/Flex或地震/疲劳生产。冻结母本不改，**12阶段未晋级，S01/S03/S04及正式设计S02持续HOLD**。
+
+本机检查D盘T072四包只有六分量CSV，无31站OUTB/RP/TP；历史36工况九测点OUTB不能代替31沿高站点。已检查范围和hash见回执。**下一责任方：网页版GPT/Actions执行C00最小修复子版与真实CI，返回输入hash后本机L01原生复验；等待期间由云端推进C01 OpenFAST最小受控RP/TP补采与C02目标谱选波。** 用户要求云端可做的工作不再本机重复执行。此更新不覆盖下面历史研究记录或并行S05进展。
+
+
 ## 2026-10-21 新增地震范围与正式记录入口
 
 用户已要求在嘉鱼研究基础上增加抗震验算与风震研究，并要求全程GitHub记录。当前入口：[T079](../../experiments/T079/README.md)。

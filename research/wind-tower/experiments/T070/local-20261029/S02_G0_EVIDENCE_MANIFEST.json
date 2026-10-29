@@ -1,0 +1,62 @@
+{
+  "stage": "S02",
+  "input_role": "R335 prototype-reconstruction diagnostic, NOT final code design",
+  "source_input": "C:\\Users\\REME\\Documents\\Codex\\2026-10-29\\ji\\work\\native-source\\BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp",
+  "source_sha256": "9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9",
+  "parent_T057_sha256_from_register": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "created_utc": "2026-10-29T01:59:41.769643+00:00",
+  "native_executable": "D:\\Abaqus\\Commands\\abaqus.bat",
+  "mode": "Abaqus Data Check ONLY, no production RUN",
+  "status": "NATIVE_DATACHECK_FAILED",
+  "warning_disposition": "HUMAN_REVIEW_REQUIRED",
+  "source_level": "T070 frozen INP bytes SHA verified",
+  "standard_level": "No standard clause acceptance from this job",
+  "official_level": "Native solver only if Abaqus executable and job logs confirm",
+  "run_level": "Native Data Check invoked; see logs; NOT equilibrium/physics PASS",
+  "fig": [],
+  "tab": [],
+  "assumptions": [
+    "T070 differs from T057 only in observability (historical source claim, not re-proved here)"
+  ],
+  "error_budget": "Data Check is syntax/consistency screening, not physics error budget",
+  "hold": "S01 design/PT identity and S03 physical equilibrium remain unverified",
+  "command_argv": [
+    "D:\\Abaqus\\Commands\\abaqus.bat",
+    "job=T070_G0_DATACHECK",
+    "input=C:\\Users\\REME\\Documents\\Codex\\2026-10-29\\ji\\work\\native-source\\BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp",
+    "datacheck",
+    "cpus=1",
+    "interactive"
+  ],
+  "start_utc": "2026-10-29T01:59:41.769681+00:00",
+  "process_returncode": 0,
+  "end_utc": "2026-10-29T02:00:01.880183+00:00",
+  "logs": {
+    "T070_G0_DATACHECK.dat": {
+      "sha256": "b22fabc1b95763217eecc5f2dc006fbb9dadbf790ddb2f9c622c62810af71626",
+      "bytes": 3546
+    },
+    "launcher.stdout.log": {
+      "sha256": "5dfb7f4cc74b50a73dc7522de97b834149d6ac00e08c038c3ef966de9f4f55a4",
+      "bytes": 496
+    },
+    "launcher.stderr.log": {
+      "sha256": "623ebf74d98cc2d6832e510a1eeb3fa64fd7f721aaad8fffd96b670869373186",
+      "bytes": 182
+    }
+  },
+  "missing_required_logs": [
+    "T070_G0_DATACHECK.msg",
+    "T070_G0_DATACHECK.sta",
+    "T070_G0_DATACHECK.log"
+  ],
+  "diagnostics": {
+    "error_count": 1,
+    "warning_count": 0,
+    "error_lines": [
+      "***ERROR: in keyword *INTEGRATEDOUTPUTSECTION, file"
+    ],
+    "warning_lines": []
+  },
+  "native_completed_marker": false
+}

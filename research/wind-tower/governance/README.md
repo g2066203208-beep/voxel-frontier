@@ -1,5 +1,7 @@
 # Governance — 当前模型治理入口
 
+> **2026-10-29：[论文指挥室](COMMAND_ROOM.md)｜[云端任务书](WEB_GPT_ACTIONS_DISPATCH_20261029.md)｜[本机原生G0失败与本地恢复回执](../experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md)。** 当前原生执行状态从PENDING更新为首次Data Check已FAIL（第482557行IOS层级）；先由云端生成修复子版，再交本机复验。冻结母本/设计验收边界不变。
+
 本目录只保留“当前模型”的治理文件。
 
 ## 当前权威文件

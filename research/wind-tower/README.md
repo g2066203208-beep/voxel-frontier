@@ -1,5 +1,7 @@
 # 风机论文工作室 — START HERE
 
+> **2026-10-29指挥入口：[论文指挥室](governance/COMMAND_ROOM.md)｜[网页版GPT + Actions任务书](governance/WEB_GPT_ACTIONS_DISPATCH_20261029.md)。** 本机T070原生G0已实际执行并发现关键字层级错误；[真实回执与日志](experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md)。本机做原生软件与本地原件恢复，云端做其余可自动化工作。下方历史“NATIVE待执行”表述以本次回执为最新进度，科学门禁未晋级。
+
 ## 2026-10-21 新增地震范围与正式记录入口
 
 用户已要求在嘉鱼研究基础上增加抗震验算与风震研究，并要求全程GitHub记录。当前入口：[T079](experiments/T079/README.md)。
