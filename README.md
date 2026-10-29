@@ -1,5 +1,9 @@
 # 论文工作室 · Paper Studio
 
+> [!IMPORTANT]
+> **论文每次写入前必读：[最新进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)**
+> 先读当前快照、已完成成果和最近交接，再改正文、模型、脚本或任务书；写后登记实物、状态变化和下一责任人。活动研究在 PR #42 分支，main 上的旧状态不能代替研究进度。此入口不表示研究结果已合并或 Pages 已更新。
+
 一个在浏览器中使用的科研工作台，把论文写作、论文审查、研究复盘、实验记录、执行步骤、模型文件、数据与参考文献放在同一个项目里。
 
 **在线工作台：** [打开论文工作室](https://g2066203208-beep.github.io/voxel-frontier/)

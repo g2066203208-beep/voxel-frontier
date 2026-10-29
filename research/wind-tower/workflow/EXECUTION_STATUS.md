@@ -1,6 +1,9 @@
-# EXECUTION STATUS — CURRENT ONLY
+# 执行状态历史快照 — 2026-10-21
 
-更新时间：2026-10-21。过程历史保留在experiments/audit/archive；当前事实以本文件、final-thesis总控和registry共同追溯。
+> [!IMPORTANT]
+> **当前进度与每次写入前必读日志在[论文指挥室](../governance/COMMAND_ROOM.md#read-before-write)。** 下文是2026-10-21快照，保留当时过程；不是当前派工单。嘉鱼地勘绑定已由2026-10-28方法更新撤销，原生诊断与历史成果继承已在指挥室更新。不要根据下文旧优先级重复开工。
+
+快照日期：2026-10-21。原始证据保留在experiments/audit/archive；本页仅用于追溯当时判断。
 
 ## 当前新增工作
 

@@ -1,10 +1,14 @@
-# 当前状态 — 2026-10-07
+# 章节进展与阶段记录 — 按日期保留
 
-## 2026-10-29｜本机原生G0首次实测与云端分工（最新调度）
+> [!IMPORTANT]
+> **每次写入前先读[指挥室当前快照与最近交接](../../governance/COMMAND_ROOM.md#read-before-write)。** 本文件保留各日期的章节/实验进展，后续回填可能覆盖前段旧状态；不以任一旧“唯一下一动作”派工。当前调度只在指挥室维护。
+> 已完成前期成果见[证据索引](../../governance/COMMAND_ROOM.md#completed-evidence)。下文“尚未计算/无原生/0次”等必须按日期、模型、工况理解，不能据此否定原七章Word和历史结果。新增地震也不能被旧章节安排排除。
+
+## 2026-10-29｜本次T070原生G0与云端分工回执（当时调度）
 
 [论文指挥室](../../governance/COMMAND_ROOM.md)｜[网页版GPT + Actions任务书](../../governance/WEB_GPT_ACTIONS_DISPATCH_20261029.md)｜[原生日志与本地原件恢复回执](../../experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md)。
 
-Abaqus 2025已对SHA锁定T070执行Data Check，09:59:41–10:00:01（Asia/Shanghai），结果**NATIVE_DATACHECK_FAILED：1 FATAL ERROR**。第482557行`*INTEGRATED OUTPUT SECTION`位于`*End Assembly`之后，原生预处理器拒绝其层级。完整.dat、stdout/stderr及manifest已保存；.msg/.sta/job.log实际缺失，未伪造。不是“无Abaqus环境”，也不是G0通过；未执行Gravity/Modal/Flex或地震/疲劳生产。冻结母本不改，**12阶段未晋级，S01/S03/S04及正式设计S02持续HOLD**。
+Abaqus 2025已对SHA锁定T070执行Data Check，09:59:41–10:00:01（Asia/Shanghai），结果**NATIVE_DATACHECK_FAILED：1 FATAL ERROR**。第482557行`*INTEGRATED OUTPUT SECTION`位于`*End Assembly`之后，原生预处理器拒绝其层级。完整.dat、stdout/stderr及manifest已保存；.msg/.sta/job.log实际缺失，未伪造。不是“无Abaqus环境”，也不是G0通过；本次诊断未执行Gravity/Modal/Flex或地震/疲劳生产，历史T026等原生成功结果另有登记。冻结母本不改，**12阶段未晋级，S01/S03/S04及正式设计S02持续HOLD**。
 
 本机检查D盘T072四包只有六分量CSV，无31站OUTB/RP/TP；历史36工况九测点OUTB不能代替31沿高站点。已检查范围和hash见回执。**下一责任方：网页版GPT/Actions执行C00最小修复子版与真实CI，返回输入hash后本机L01原生复验；等待期间由云端推进C01 OpenFAST最小受控RP/TP补采与C02目标谱选波。** 用户要求云端可做的工作不再本机重复执行。此更新不覆盖下面历史研究记录或并行S05进展。
 

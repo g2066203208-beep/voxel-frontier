@@ -1,49 +1,21 @@
 # 网页版 GPT + GitHub Actions 指挥任务书｜2026-10-29
 
-## 原论文、后期重构稿与新增地震范围（2026-10-29纠正）
-
-**原论文已有大量实算与写作成果。此前仅据后期六章重构稿和新模型HOLD概括“前期未完成”的判断撤回。任何新增派工先列已有结果与继承关系，不得把新阶段未整体验收解释为论文从零开始。**
-
-- 原题为《10 MW级陆上风机预应力混凝土—钢混合塔架抗风性能与结构优化研究》。[早期全稿审查](../archive/audit-early/01-first-review.md)明确记录七章、35表、127参考、120幅嵌图及51处数学对象，并明确“只公开问题归纳，不上传论文正文”。
-- 本机已重新定位原稿提取包 `D:\Codex-research-native\parameter-audit-20261005\docx\`，其中原稿SHA256为 `65b5bddae58aac9b5e194ba7ddff498a67cb82aa8bbe984d7ad445684bfc7480`；也找到现存 `D:\MC\cae\10MW级陆上风机预应力混凝土钢混合塔架_R2Z74_修正36组统计_Rainflow_DEL闭合_20260905_第四章修订版.docx`，SHA256为 `5dfe6c70e768f13ebd90c2e561a768e9be143f571b240945b1f17807628512d0`。二者版本不同，不互换hash；本次只发布来源与成果核对，不上传原稿正文。
-- [仓库六章目录](../manuscript/final-thesis/chapters/)是后期重构工作稿，不能视为用户原论文的全部内容或据其TBD否定历史成果。原稿第3章写明36/36正式OpenFAST计算完成，第4章已有57,286条循环、72条DEL及控制机制分析；原摘要的“待重跑”与正文存在旧状态不一致，应以运行来源核对并修正文稿。
-- 本轮对原稿第4–6章连续读文本、选读第2/3章及封面摘要，并核查历史原生日志与结果表；不声称已逐字重审全部七章，也未重新视觉验收120图和51公式。原稿第5/6章的敏感性与优化方法不能误作已核实的最终Pareto数值。
-- 研究对象为DTU 10 MW参考风机与158 m预应力混凝土—钢混合塔（112 m混凝土+46 m钢、31混凝土段、30道接缝）。原有风致分材料疲劳/优化主线继续保留。
-- 新增地震以[T079 METHOD_PLAN 2026-10-28更新](../experiments/T079/METHOD_PLAN.md)及[T080配对设计](../experiments/T080/INTEGRATION_GATES_AND_PAIRED_DESIGN_20261022.md)为准：抗震动力性能、同状态W/E/WE的接缝/PT/结构响应，以及加入抗震约束前后的疲劳优化比较。
-- 嘉鱼ERA5是风环境背景。2026-10-28已撤销必须绑定嘉鱼实址地勘的限制；可采用来源和适用范围明确的研究参考谱，研究假设不得写成嘉鱼工程合规结论。
-- 六章重构稿在已核版本 `a1bbda9a363c3a9c2605d089857d8b78062282b7` 尚未同步地震内容；这只说明该工作稿待整合。原七章与拟新增地震后的章节方案是不同版本，不靠章数判断研究完成度。章节迁移按METHOD_PLAN的结果条件进行，必须继承原有图表和论证。
-- GitHub研究分支、main与Pages分开报告；本任务书在Draft PR #42，未合并或部署新版在线界面。
-
-## 已完成成果与增量任务边界
-
-以下依据研究分支 `71b5a5f3062a2f506a4523b00b55da69bea71353` 的实际文件及本机原稿核对，按各自模型和数据版本继承：
-
-| 已有成果 | 直接证据 | 后续只补什么 |
-|---|---|---|
-| 整塔重力、30阶模态、X/Z柔度及三档网格 | [T026原生M2成功日志](../experiments/T026/outputs/RUN-T026-034/DTU158_RECONSTRUCTED_M2.sta)、[原件hash与汇总](../experiments/T038/model-disclosure-20261005/historical-run-evidence-summary.json)；M2/M3一阶0.13521/0.13498 Hz，差0.1704%，Flex差0.3007% | 保留历史模型验证；实际材料/PT/接触等变化造成的响应差异才触发增量原生复核 |
-| PT、阻尼及RNA独立实现验证 | [PT all_pass](../experiments/T026/results/pt-verification-results.json)、[5个阻尼样本](../experiments/T026/results/damping/damping-verification-results.json)、[RNA-R2原生样本](../experiments/T038/validation-sample-20261005/RESULTS.md) | 未改变的实现验证直接引用；RNA-R2在T057保持不变，不能无故重开全部单元benchmark |
-| 36工况风载及控制工况 | [36工况包络](../experiments/T072/T072_FORMAL_36CASE_BASE_ENVELOPE.md)，最大塔底合弯矩344.012746 MN·m；原稿第3章明确36/36已完成 | 先核源版本与现选结构分支的适用性；不从头重做ERA5、TurbSim和全部OpenFAST |
-| 四控制工况31段六分量时程 | [恢复及后续回执](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)：1,488,124行；10月27日16ZIP与17件Release归档完成；10月28日另恢复T062原OUTB | 31站归档缺逐时刻RP/DCM等接口量，按缺项恢复/最小补采；不能说全部OUTB或所有31段时程不存在 |
-| 配筋与预应力设计 | [T077 BF1–16及31段配筋](../experiments/T077/T077_FORMAL_REBAR_REPORT.md)、[T078已关闭的PT设计](../experiments/T078/T078_PRESTRESS_DESIGN_REPORT.md)：288股、P0=51.6096 MN、Pe=39.7535589546 MN、31/31段永久全压 | 继承设计及五项损失；核选定支路的几何实施、初态阶段与新增风震适用性，不重新派“计算PT损失” |
-| 载荷级雨流/DEL及机制分析 | 原稿57,286循环/72 DEL；[T062独立复算与差异](../experiments/T062/HISTORICAL_DEL_SOURCE_DIVERGENCE_20261006.md)；[四工况31站744条DEL](../experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv) | 原稿S03/28.177010与T062 S04/26.8024785 MN·m及循环行数的来源差异需对齐；已有载荷疲劳结果必须保留，不能称疲劳空白 |
-| 历史Simpack结构与传递验证 | 原稿R3-P/R4/R5实算；[R5C六分量闭合回执](../archive/local-work-evidence-20261004/010_R5C_SIX_COMPONENT_FINAL_GATE.json)：930函数、600 s、solver return 0、闭合残差约10⁻¹³ | 保留历史方法探索与验证成果；不因此恢复已停止的Simpack生产路线，也不直接替代现行映射 |
-| 历史局部应力/fe-safe线索 | 旧U18p57应力INP/ODB分卷及[已有fe-safe恢复任务](CODEX_FESAFE_RECOVER_OR_EXECUTE_20261008.md) | 先定位原项目、ODB、材料设置与结果；未核实不等于从未做过，只有缺项/不适用部分才补算 |
- 
-T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 mm²及30道SPRING2→hard contact+μ0.5。其整塔平衡、有效PT与接触、模态/柔度及受影响局部应力需要与旧结果比较。[T070](../experiments/T070/README.md)在T057上仅增诊断输出；本次IOS非法层级导致预处理终止，**没有产生能否定上述历史物理结果的新计算证据**。
-
-新增派工须写清：既有run/文件与hash → 改动内容或缺失输出 → 受影响指标 → 最小补验工况。没有此对应关系，不发整套重跑任务。新地震E/WE与抗震约束比较是新增研究；旧风研究与方法成果作为基础保留。
+> [!IMPORTANT]
+> **每次执行前先读[指挥室的当前进度与最近交接](COMMAND_ROOM.md#read-before-write)，并登记读取回执。** 本文件只维护任务执行细节；完成状态、已完成成果与原稿版本统一看指挥室，不再复制一套状态。
+>
+> [已有成果与增量边界](COMMAND_ROOM.md#completed-evidence) · [原稿与新增地震范围](COMMAND_ROOM.md#thesis-scope) · [当前快照](COMMAND_ROOM.md#current-progress)
 
 > 用户本轮分工：**能用 GitHub Actions 完成的工作由网页版 GPT 负责，本机 Codex 不重复执行；本机只接原生 Abaqus/CAE/ODB、其他确需本机授权的软件以及本地独有原件恢复。** 本任务书是实际派工，不是新增一轮仅写政策的审查。
 >
-> 当前研究分支：`research/t080-seismic-integration-gates-20261022`，[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。本轮初审HEAD `224da11efbcd7c216803e953ea138037efae130a`；提交前已刷新到 `4084d374365517ce51aa4fc4e7103dacad62bcc3`，保留并行S05全文归档改动。后续每轮重新读HEAD，禁止覆盖并行进度。
+> 当前研究分支：`research/t080-seismic-integration-gates-20261022`，[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。该任务书首建时初审HEAD `224da11efbcd7c216803e953ea138037efae130a`；首建提交前已刷新到 `4084d374365517ce51aa4fc4e7103dacad62bcc3`，保留并行S05全文归档改动。后续每轮重新读HEAD，禁止覆盖并行进度。
 
 ## 立即行动顺序
-1. **先按上表继承已有成果，撤销把历史整塔验证、36工况、配筋/PT损失和载荷雨流当作未做的重复任务。C00仅修复新增诊断输出，交本机复验。**
+1. **先按指挥室成果表继承已有成果，撤销把历史整塔验证、36工况、配筋/PT损失和载荷雨流当作未做的重复任务。C00仅修复新增诊断输出，交本机复验。**
 2. C00等待本机时，推进**C01：31站RP/TP原始证据恢复或受控OpenFAST补采**；C02真实目标谱与选波可独立并行。
 3. C03继承T077/T078，核选定支路实施差异；C04–C06逐项写既有成果与新增缺口后推进。不要继续围绕已有合成例子生成“0/12未晋级”的微审计。
 4. 每完成一个实物交付，登记路径、commit、Actions run/job、artifact及SHA、失败日志、剩余阻塞和下一责任人。保留真实失败，不以CI绿灯替代物理验收。
 
-## 本轮本机新增回执（历史完成成果见上表）
+## 本轮本机新增回执（历史完成成果见指挥室）
 - [原生G0回执和完整日志](../experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md)：Abaqus 2025运行已完成，**1 FATAL ERROR**；原因是T070第482557行 `*INTEGRATED OUTPUT SECTION` 在 `*End Assembly` 之后，层级不合法。
 - 本机已检查D盘T072四包：只含六分量CSV，无原始31站OUTB或RP/TP。36工况旧9测点OUTB不能代替31沿高站点。不能再以“尚未检查D盘”作为停工理由；新线索出现才请本机再查具体路径。
 - 本次只做原生Data Check和本地来源恢复，没有重复运行云端选波、静态配筋、疲劳算法或OpenFAST。
@@ -128,14 +100,14 @@ ERA5时间/QC/长期概率、TurbSim频谱网格、DLC1.2 NTM bins、OpenFAST/RO
 
 通常的GitHub-hosted runner没有本机Abaqus安装/授权环境；这属于当前资源分工，不是“Actions技术上永远不能调用Abaqus”。若将来已有授权self-hosted runner，应重新分配，本任务不自行安装或暴露本机runner。
 
-## 双向交接与状态
+## 双向交接
 **云端→本机**：task ID、准确分支/commit/父子hash、唯一工况、命令、资源预算、输出字段、事前判据、失败动作；没有可取输入包就保持CLOUD_PREPARING。
 **本机→云端**：实际命令/版本/起止/退出码、原生日志、输入/ODB/hash、提取器版本、CSV/JSON、错误警告和科学边界。大ODB留本机记录路径/hash，不能只回复“已完成”。
-**当前状态**：L00完成但FAIL；L01等待C00；C00–C06仅指本轮增量任务，表内继承的历史工作已完成；S01–S04及S07–S11的物理门禁不因任务书或CI更新而解除。网页版每轮报告实物增量、残余HOLD、下一责任人即可。
+**当前执行状态与下一责任人只在[指挥室快照](COMMAND_ROOM.md#current-progress)维护。** 每次交付在[同一交接日志](COMMAND_ROOM.md#handoff-log)追加START/END与证据；不得把任务书存在当作任务完成。
 
 ## C06补充验收｜后期六章工作稿修订，不代表原论文全部进度
 
-以下位置仅适用于已读的六章重构工作稿，基准`a1bbda9a363c3a9c2605d089857d8b78062282b7`；必须对照原稿与上表成果继承，不得照此删除历史结果。本机只读核对并纠正派工，正文编辑与渲染交云端。
+以下位置仅适用于已读的六章重构工作稿，基准`a1bbda9a363c3a9c2605d089857d8b78062282b7`；必须对照原稿与指挥室成果表继承，不得照此删除历史结果。本机只读核对并纠正派工，正文编辑与渲染交云端。
 
 1. **第1章**：旧1.6仅Q1–Q4，1.8仍“最终六章”；另有“三个/四个科学问题”不一致。按2026-10-28地震方案先形成Q1–Q5、研究路线及章节—证据映射修订稿，保留风致疲劳/优化主线。
 2. **第2章**：先保留T026整塔/材料/PT/阻尼与T038 RNA已完成验证，再说明T070新增诊断G0失败及T057物理修改的增量复核；区分R335原型与D400/D500待评设计；补P0/设计Pe/真实Peq的阶段身份，以及塔底+PT底端双支承反力口径。把地震基底输入、相对/绝对响应、同一G/PT初态等方法写入地震整合修订稿，不编原生结果。

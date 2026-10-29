@@ -1,4 +1,7 @@
-# MASTER RESEARCH PROTOCOL — 当前版
+# MASTER RESEARCH PROTOCOL — 2026-10-07流程基线
+
+> [!IMPORTANT]
+> **开工、写入和提交前先读[指挥室必读规则与交接日志](../governance/COMMAND_ROOM.md#read-before-write)。** 本页保留2026-10-07技术流程基线；固定五/六章、排除地震或与当前疲劳优化冲突的旧范围文字不再控制新授权工作。当前范围见T079最新METHOD_PLAN与论文装配总控；当前进度只在指挥室维护。
 
 > 更新：2026-10-07  
 > 本文件只描述研究执行流程；论文内容和章节的最高权威见`../manuscript/final-thesis/00_WORKSPACE_MASTER.md`。
