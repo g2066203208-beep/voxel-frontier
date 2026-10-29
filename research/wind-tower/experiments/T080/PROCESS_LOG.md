@@ -498,3 +498,5 @@
 - **下一单一动作：** 搜索用户已有D盘/长期备份的T071/T072 16件原OUTB；若不存在，先审定最小补采运行许可和输入清单，再用已提交提取器处理新取得的真实OUTB，不擅自重跑。
 
 **2026-10-29 08时远端回读闭合：** [静态补采收据JSON](../T077/recovery/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json)已由PR #42分支提交[da73feb2d74e84e64ca5762d37a332072f4a3995](https://github.com/g2066203208-beep/voxel-frontier/commit/da73feb2d74e84e64ca5762d37a332072f4a3995)并重新获取；Git blob SHA1=`f1ee8c67871895c3bc1a4f8161df33f34946bec7`与原成功CI artifact字节的本地`git hash-object`完全相同，SHA256=`2c9005dc68777d6b0d01487cf6db462a25280a9e145226db85cf2ba3b25d8379`。PR仍Open/Draft，未合并；这是SOURCE/程序门禁成功，**不是**31站RP/TP数据恢复或Abaqus物理PASS。
+
+**可执行性纠偏：** 本执行环境无法访问用户D盘，不能虚称已搜索本地长期备份；31站原OUTB目前仍缺。下轮在没有新OUTB/原生Abaqus/授权规范原页的情况下，不继续S07来源微审查，**唯一独立优先动作改为S05参考目标谱来源、参数可追溯性及谱匹配QC的真实程序/数据**；场址仅为研究假设，不将嘉鱼ERA5误作地勘证据。
