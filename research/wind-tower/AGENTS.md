@@ -4,6 +4,11 @@
 > **每次写入前必须先读[论文指挥室的当前进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)。**
 > 这包括本机 Codex、网页版 GPT、新开的会话和其他执行者。没有核对最新进度，不得凭旧会话摘要重新派工、改状态或启动重复计算。
 
+## 本机后台执行（用户2026-10-29最新明确要求）
+
+- 本机Abaqus、fe-safe及其他程序只用命令行/原生Python或隐藏后台方式；不得启动或操控GUI、切换窗口、抢焦点、操作用户鼠标键盘。用户后续明确要求前台展示时才改变这一模式。
+- 使用有限CPU/内存与独立运行目录，避免并发重求解影响用户电脑；只关闭本任务自行启动且确认无用户编辑的空白窗口，不触碰用户程序。
+
 ## 每次开工及每批提交前
 
 1. 确认指挥室列明的活动研究分支，读取其最新 HEAD；main 与活动分支都需辨明，不能用 main 旧副本覆盖研究进度。
