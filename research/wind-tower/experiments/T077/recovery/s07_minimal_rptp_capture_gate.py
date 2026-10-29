@@ -510,9 +510,182 @@ def diagnostic_a_selftest():
             "positive_tests":4,"negative_tests":len(faults),
             "new_solver_runs":0}
 
+
+# S07 A-batch source bundle identity audit: NO OpenFAST execution.
+def _s07_zip_member(z, suffix):
+    matches=[n for n in z.namelist()
+             if ("/"+n.replace("\\","/")).endswith("/"+suffix)]
+    if len(matches)!=1:
+        raise ValueError("S07_BUNDLE_MISSING_OR_AMBIGUOUS_"+suffix+":"+str(matches))
+    name=matches[0]
+    if ".." in Path(name.replace("\\","/")).parts:
+        raise ValueError("S07_BUNDLE_UNSAFE_ZIP_PATH")
+    return name,z.read(name)
+
+
+def _s07_bts_identity(path):
+    raw=Path(path).read_bytes() if Path(path).stat().st_size<512 else None
+    expected_oid="9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78"
+    expected_size=436968166
+    if raw is not None and raw.startswith(b"version https://git-lfs.github.com/spec/v1"):
+        text=raw.decode("ascii")
+        if ("oid sha256:"+expected_oid not in text or
+                "size "+str(expected_size) not in text):
+            raise ValueError("S07_BTS_LFS_POINTER_IDENTITY_MISMATCH")
+        return {"level":"GIT_LFS_POINTER_ONLY_NOT_PAYLOAD",
+                "declared_sha256":expected_oid,"declared_bytes":expected_size,
+                "actual_payload_verified":False}
+    actual_bytes=Path(path).stat().st_size
+    if actual_bytes!=expected_size or sha256_file(path)!=expected_oid:
+        raise ValueError("S07_BTS_ACTUAL_PAYLOAD_SIZE_OR_SHA_MISMATCH")
+    return {"level":"REAL_LFS_PAYLOAD_SHA256_VERIFIED",
+            "declared_sha256":expected_oid,"declared_bytes":expected_size,
+            "actual_payload_verified":True}
+
+
+def audit_a_case_bundle(base_zip,target_zip,supp_zip,bts,dll,child_ed,
+                        source_lock=True):
+    """Reconstruct the T072 A-case *input identity* from actual archives.
+
+    The original T072 Windows workflow overlays base CASES with the target
+    InflowWind and supplement DISCON. This routine reads bytes without
+    extracting or executing any native binary. A source manifest is not a
+    signed external load, validated DLC or an OpenFAST run.
+    """
+    import zipfile
+    paths=[Path(p) for p in (base_zip,target_zip,supp_zip)]
+    expected_blobs=("54deb8cf10f41cb54fa2ad650af7898c9d338223",
+                    "bccc4c6f6d74c3f12a5cd98b1bd4ac59e476ab2e",
+                    "b6a6144cef058ee125ac4e5d0a79afafbbe0b691")
+    zips=[]
+    for path,blob in zip(paths,expected_blobs):
+        data=path.read_bytes()
+        if source_lock and git_blob(data)!=blob:
+            raise ValueError("S07_BUNDLE_ARCHIVE_GIT_BLOB_MISMATCH_"+path.name)
+        zips.append({"name":path.name,"git_blob_sha1":git_blob(data),
+                     "sha256":hashlib.sha256(data).hexdigest(),
+                     "bytes":len(data)})
+    prefix="CASES/U09p343881_ETM_S01/"
+    with zipfile.ZipFile(paths[0]) as base, \
+         zipfile.ZipFile(paths[1]) as target, \
+         zipfile.ZipFile(paths[2]) as supplement:
+        def item(z,suffix):
+            name,raw=_s07_zip_member(z,suffix)
+            return {"member":name,"bytes":len(raw),
+                    "sha256":hashlib.sha256(raw).hexdigest()},raw
+        fst,fr=item(base,prefix+"DTU_10MW_RWT.fst")
+        ed,er=item(base,prefix+"DTU_10MW_RWT_ElastoDyn.dat")
+        tower,tr=item(base,prefix+"C02R3R2_158M_Tower.dat")
+        if fst["sha256"]!="5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605":
+            raise ValueError("S07_BUNDLE_FST_IDENTITY_MISMATCH")
+        if ed["sha256"]!=ED_BASE_SHA256:
+            raise ValueError("S07_BUNDLE_PARENT_ED_IDENTITY_MISMATCH")
+        if tower["sha256"]!="f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983":
+            raise ValueError("S07_BUNDLE_TOWER_IDENTITY_MISMATCH")
+        inflow,ir=item(target,"CASES/U11p4_ETM_S04/DTU_10MW_InflowWind.dat")
+        discon,dr=item(supplement,prefix+"Control/DTU_10MW_RWT_DISCON.IN")
+        child_raw=Path(child_ed).read_bytes()
+        expected_child=prepare_a_diagnostic_input(er)[0]
+        if child_raw!=expected_child or hashlib.sha256(child_raw).hexdigest()!=\
+                "701a3e30bc058d97c673e28947307066a245c276cb10042a1eb3ca133c571833":
+            raise ValueError("S07_BUNDLE_A_CHILD_ED_NOT_IDENTICAL")
+        ifw_text=ir.decode("utf-8-sig",errors="replace")
+        pattern=r'(?m)^"[^"\r\n]*U11p4_ETM_S04\.bts"\s+FileName_BTS\b'
+        replacement='"U11p4_ETM_S04.bts" FileName_BTS'
+        patched,n=re.subn(pattern,replacement,ifw_text)
+        if n!=1:
+            raise ValueError("S07_BUNDLE_TARGET_BTS_REFERENCE_NOT_UNIQUE")
+        # Preserve the exact T072 source workflow text rewrite semantics.
+        patched_ifw=patched.encode("utf-8")
+        baseline_files=[]
+        for name in base.namelist():
+            normalized=name.replace("\\","/")
+            if normalized.startswith(prefix) and not normalized.endswith("/"):
+                payload=base.read(name)
+                baseline_files.append({"member":normalized,"bytes":len(payload),
+                  "sha256":hashlib.sha256(payload).hexdigest()})
+        if not baseline_files or len(baseline_files)>200:
+            raise ValueError("S07_BUNDLE_BASELINE_MEMBER_COUNT_UNEXPECTED")
+        rotor=[n.replace("\\","/") for n in base.namelist()
+               if "/Rotor/" in "/"+n.replace("\\","/")]
+        # T072 copies the entire CASES topology; include a compact inventory.
+        shared=[n.replace("\\","/") for n in base.namelist()
+                if n.replace("\\","/").startswith("CASES/")
+                and not n.replace("\\","/").startswith(prefix)
+                and not n.endswith("/")]
+    dll_data=Path(dll).read_bytes()
+    if source_lock and git_blob(dll_data)!="c840574f3a29bca2b6bd57e0f7247270bbf163a3":
+        raise ValueError("S07_BUNDLE_CONTROLLER_DLL_GIT_BLOB_MISMATCH")
+    bts_receipt=_s07_bts_identity(bts)
+    result={
+      "stage":"S07_A_CASE_STATIC_SOURCE_BUNDLE_AUDIT_NOT_NATIVE",
+      "case":"U11p4_ETM_S04","batch":"A",
+      "SOURCE":{"reading_level":"Direct original Git ZIP member bytes, controller DLL bytes, and BTS pointer or LFS payload",
+        "archive_files":zips,"baseline_case_files":baseline_files,
+        "shared_cases_files_count":len(shared),
+        "shared_rotor_paths_count":len(rotor)},
+      "inputs":{"fst":fst,"parent_elastodyn":ed,
+        "child_elastodyn":{"bytes":len(child_raw),"sha256":hashlib.sha256(child_raw).hexdigest()},
+        "tower":tower,"target_inflowwind":inflow,
+        "patched_inflowwind":{"bytes":len(patched_ifw),
+           "sha256":hashlib.sha256(patched_ifw).hexdigest(),
+           "bts_reference":"U11p4_ETM_S04.bts"},
+        "supplement_controller_discon":discon,
+        "controller_dll":{"bytes":len(dll_data),
+          "git_blob_sha1":git_blob(dll_data),
+          "sha256":hashlib.sha256(dll_data).hexdigest()},
+        "bts":bts_receipt},
+      "REF":"T072 original workflow and OpenFAST v3.5.3 source-input format; no new article full text",
+      "STANDARD":"No new authorized IEC/GB/NB clause read; no design code PASS",
+      "OFFICIAL":"Original T072 committed workflow input topology; no solver output",
+      "RUN":{"openfast":0,"abaqus":0,"kind":"source ZIP + file hash static audit"},
+      "FIG":"NONE","TAB":{"baseline_case_file_count":len(baseline_files),
+        "source_archive_count":3,"changed_elastodyn_lines":1,
+        "bts_actual_payload_verified":bts_receipt["actual_payload_verified"]},
+      "assumptions":["T072 Windows overlay of base CASES + target InflowWind + supplement DISCON + controller DLL",
+        "A-batch ElastoDyn is gage-only child of SHA-locked parent",
+        "All FST-relative references and executable compatibility require native validation"],
+      "error_budget":{"hash":"exact bytes SHA256","physical":"UNDEFINED, no solver run"},
+      "HOLD":"No same-case native OpenFAST OUTB, RP/TP, signed free-body or Abaqus load PASS. Static input identity alone does not validate physical input semantics."
+    }
+    return result
+
+
+def bundle_selftest():
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        from zipfile import ZipFile
+        z=Path(d)/"x.zip"
+        with ZipFile(z,"w") as f:
+            f.writestr("CASES/A/one.dat",b"hello")
+        with ZipFile(z) as f:
+            assert _s07_zip_member(f,"CASES/A/one.dat")[1]==b"hello"
+            for suffix in ("CASES/A/missing.dat","CASES/B/one.dat"):
+                try:_s07_zip_member(f,suffix)
+                except ValueError:pass
+                else:raise AssertionError("S07_BUNDLE_BAD_ZIP_MEMBER_ACCEPTED")
+        pointer=Path(d)/"wind.bts"
+        pointer.write_text("version https://git-lfs.github.com/spec/v1\n"
+          "oid sha256:9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78\n"
+          "size 436968166\n")
+        assert not _s07_bts_identity(pointer)["actual_payload_verified"]
+        pointer.write_text(pointer.read_text().replace("436968166","436968165"))
+        try:_s07_bts_identity(pointer)
+        except ValueError:pass
+        else:raise AssertionError("S07_BUNDLE_BAD_BTS_POINTER_ACCEPTED")
+    return {"zip_positive":1,"zip_negative":2,
+            "bts_pointer_positive":1,"bts_pointer_negative":1,
+            "solver_runs":0}
+
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--self-test",action="store_true")
+    p.add_argument("--bundle-selftest",action="store_true")
+    p.add_argument("--audit-a-bundle",action="store_true")
+    for name in ("base-zip","target-zip","supp-zip","bts","dll","child-elastodyn","bundle-json"):
+        p.add_argument("--"+name,type=Path)
     p.add_argument("--diagnostic-a-selftest",action="store_true")
     p.add_argument("--prepare-a-baseline",type=Path)
     p.add_argument("--prepare-a-dir",type=Path)
@@ -535,6 +708,18 @@ def main():
     p.add_argument("--batch")
     p.add_argument("--output",type=Path)
     a=p.parse_args()
+    if a.bundle_selftest:
+        print("S07_BUNDLE_SELFTEST",json.dumps(bundle_selftest(),sort_keys=True))
+    if a.audit_a_bundle:
+        required=[a.base_zip,a.target_zip,a.supp_zip,a.bts,a.dll,a.child_elastodyn,a.bundle_json]
+        if any(x is None for x in required):
+            p.error("--audit-a-bundle requires --base-zip --target-zip --supp-zip --bts --dll --child-elastodyn --bundle-json")
+        result=audit_a_case_bundle(a.base_zip,a.target_zip,a.supp_zip,a.bts,a.dll,a.child_elastodyn)
+        if a.bundle_json.exists():
+            raise ValueError("S07_BUNDLE_RECEIPT_OVERWRITE_FORBIDDEN")
+        a.bundle_json.parent.mkdir(parents=True,exist_ok=True)
+        a.bundle_json.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+        print("S07_A_BUNDLE_REAL_SOURCE_AUDIT",json.dumps({"case":result["case"],"source_zip_sha256":[x["sha256"] for x in result["SOURCE"]["archive_files"]],"bts_payload_verified":result["inputs"]["bts"]["actual_payload_verified"],"controller_dll_sha256":result["inputs"]["controller_dll"]["sha256"],"target_inflowwind_sha256":result["inputs"]["target_inflowwind"]["sha256"],"patched_inflowwind_sha256":result["inputs"]["patched_inflowwind"]["sha256"],"baseline_case_files":result["TAB"]["baseline_case_file_count"],"native_runs":0},sort_keys=True))
     if a.diagnostic_a_selftest:
         print("S07_A_DIAGNOSTIC_SELFTEST",json.dumps(diagnostic_a_selftest(),sort_keys=True))
     if a.prepare_a_baseline:
@@ -565,7 +750,7 @@ def main():
                     expected_sha256=a.expected_outb_sha256,
                     baseline_elastodyn=a.baseline_elastodyn,
                     run_elastodyn=a.run_elastodyn),sort_keys=True))
-    if not (a.self_test or a.diagnostic_a_selftest or a.prepare_a_baseline or a.t062_receipt or a.source_audit or a.outb):
+    if not (a.self_test or a.bundle_selftest or a.audit_a_bundle or a.diagnostic_a_selftest or a.prepare_a_baseline or a.t062_receipt or a.source_audit or a.outb):
         p.error("choose --self-test, --source-audit or --outb")
 
 
