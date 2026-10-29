@@ -56,6 +56,7 @@ jobs:
           path: s07-original-archive
           sparse-checkout: |
             research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+          sparse-checkout-cone-mode: false
           lfs: false
       - name: Build real-source SHA-locked U11p4_ETM_S04 A-batch ElastoDyn input (NO solver)
         shell: bash
