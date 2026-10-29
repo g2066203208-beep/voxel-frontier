@@ -187,3 +187,6 @@ RUN：直接扩展现有 `s05_esm_public_processed_pair.py` 和现有S05 workflo
 **TAB实数：** 按Python排序，IT.NVL、Ridgecrest CLC/PASC/RVR、Lone Pine CLC相对**日本论文参考谱**的纯代数幅值拟合因子依次41.6666、2.6985、23.9915、39.8436、311.6486；4点拟合后log-RMSE分别0.28645、0.16635、0.20894、0.19579、0.40995。**这些不是设计地震波放大倍数、也不是中国目标谱匹配验收结果**；四周期远不足以评价全频段谱匹配。
 
 **STANDARD/FIG/误差/HOLD：** 本轮未读授权2025 IEC/GB/NB标准条款；FIG=无本塔地震响应；程序按CSV 12有效数字与CI数值rel≤1e-10/abs≤1e-12核对；真实低频信噪比、滤波/土层、场址目标谱、结构/接缝/PT及W/E/WE物理误差均`NEED_ESTIMATE`。S05=`REFERENCE_METHOD_TESTED/SITE_AND_WAVE_HOLD`，S08/S09原生E/WE RUN=0，12阶段严格0/12；不改冻结T057/T070，不合并PR，不做昂贵求解。**下一唯一动作：** 取得具有明确中国参考场地适用域及参数来源的设计目标谱，建立全周期选波误差门禁；不得以日本Eq1冒充中国规范验收。
+
+
+**2026-10-29 10时｜并行原刊PDF归档失败实录（与上方S05谱算法成功CI相互独立）：** [Actions #40804857545](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40804857545) 的`acquire-original-pdfs` job `123221245824` 为`completed/failure`；原生日志显示`Meng_2020_RenewableEnergy_AAM.pdf`已在GitHub且SHA一致，但`Ali_2021_SDEE_106483_AAM.pdf`出现`EXISTING_REPO_PDF_HASH_DIFF_REJECT`，因此程序**拒绝覆盖已有原件**，后续PDF上传步骤跳过；收据单独成功提交于`dcdc1827486d45af1552e622930da39b530aa254`。本轮没有修改、覆盖或宣称归档该Ali PDF，不能将独立PDF归档失败误报为本轮谱计算失败，也不能声称PDF原件哈希已复核。应单独人工核对两版Ali接受稿来源、许可证与原件SHA后再决定是否保留/另存，不擅自覆盖。
