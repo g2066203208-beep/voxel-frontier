@@ -600,3 +600,8 @@ HOLD：
 ## 2026-10-29 21时｜S10历史STRESS ODB按需恢复工具（独立准备）
 
 已在[既有LFS源身份脚本](../../experiments/T077/recovery/s10_legacy_odb_lfs_gate.py)增设五卷实际实体的流式逐卷/整体SHA256核验及只读重组，禁止覆盖原件，完整运行命令、失败与SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB见[T077过程记录21时节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。[Actions #40878854136](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40878854136)原始job日志确认**合成小字节重组及三类拒绝测试成功**，并回归真实9个LFS指针及744行载荷数据；**4,316,822,840字节历史STRESS ODB实体尚未下载，声明整体SHA256 `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd`尚未按原件实测**，无Abaqus odbAccess、材料寿命、地震原生结果。S10=独立恢复工具就绪/真实ODB与物理HOLD；严格**0/12整阶段未晋级**。本机后台下一动作仅恢复五卷实物、验证完整SHA并只读列出ODB步/帧/S输出；风致材料疲劳及优化主线保留。
+
+
+## 2026-10-29 22时｜S10历史ODB原生只读目录清点工具（非原生结果）
+
+在既有[T077原生应力提取器](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py)中增加SHA256+字节数锁定的`--inventory-only`模式，供本机Abaqus `odbAccess`只读清点历史4,316,822,840字节STRESS ODB的步/帧/S字段/实例/集合，严格不读取应力值。新增mock 2步3帧、2/3帧含S的合成正向及NaN帧时间、非法数量上限拒绝测试；[S10工作流](../../../../.github/workflows/s10-material-cycle-contract.yml)已加入回归及伪ODB错误SHA拒绝，真实CI结果按后续日志判定。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、命令、误差预算和HOLD见[T077 22时过程节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。实际五卷实体、Abaqus原生打开及局部材料应力/fe-safe寿命仍缺；历史U18p57 NTM不代表当前ETM/D400/Pe。S10仅`NATIVE_INVENTORY_TOOL_PREPARED / NEED_REAL_ODB`，**0/12整阶段未晋级**，地震原生E/WE仍0；冻结T057/T070未改，PR仍Draft。
