@@ -265,6 +265,43 @@ jobs:
           cmp esm-public-processed/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv esm-public-processed/committed_dense.csv
           sha256sum esm-public-processed/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv esm-public-processed/committed_dense.csv
           echo 'S05_REAL_DENSE_16_ROW_COMMITTED_BYTE_IDENTITY_PASS_NOT_DESIGN_WAVE'
+      - name: REAL three-component processed acceleration time-grid export for S08 handoff (NOT a design wave)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 s05_esm_public_processed_pair.py --export-s08 \
+            --source-zip esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_original.zip \
+            --output-dir esm-public-processed
+          python3 - <<'PY'
+          import csv,hashlib,json,math,pathlib,zipfile
+          folder=pathlib.Path('esm-public-processed')
+          rec=json.loads((folder/'S08_ESM_IT2012_NVL_MP_ACCEL_SI_SOURCE_RECEIPT.json').read_text())
+          data=(folder/'S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv').read_bytes()
+          assert hashlib.sha256(data).hexdigest()==rec['csv_sha256']
+          assert rec['source_numeric_sha256_verified'] is True
+          assert rec['npts']==32040 and math.isclose(rec['dt_s'],.005)
+          assert math.isclose(rec['last_time_s'],160.195,rel_tol=0,abs_tol=1e-10)
+          assert rec['Abaqus_E_WE_RUN']==0 and rec['S08_PASS'] is False
+          rows=list(csv.DictReader(data.decode('utf-8').splitlines()))
+          assert len(rows)==32040
+          with zipfile.ZipFile(folder/'ESM_IT-2012-0008_NVL_MP_ACC_original.zip') as z:
+              for stream in ('HNE','HNN','HNZ'):
+                  name=next(n for n in z.namelist() if '.'+stream+'.' in n)
+                  lines=z.read(name).decode('utf-8').splitlines()
+                  idx=next(i for i,line in enumerate(lines) if ':' not in line)
+                  original=[float(v) for line in lines[idx:] for v in line.split()]
+                  assert len(original)==32040
+                  for i in (0,12345,32039):
+                      assert math.isclose(float(rows[i][stream+'_acc_m_s2']),original[i]*.01,
+                                          rel_tol=2e-11,abs_tol=1e-12)
+          for i in (0,1,12345,32039):
+              assert math.isclose(float(rows[i]['time_s']),i*.005,rel_tol=0,abs_tol=1e-10)
+          assert all(math.isfinite(float(v)) for row in rows for v in row.values())
+          print('REAL_ESM_S08_32040_ROW_3_COMPONENT_SI_SOURCE_LOCK_AND_12_INDEPENDENT_SAMPLES_PASS')
+          print('S08_HANDOFF_SHA256',rec['csv_sha256'])
+          print('S08_SITE_SPECTRUM_AND_NATIVE_HOLD')
+          PY
       - name: Real ESM processed low-frequency numerical triage (NOT SNR/design PASS)
         if: success()
         shell: bash
