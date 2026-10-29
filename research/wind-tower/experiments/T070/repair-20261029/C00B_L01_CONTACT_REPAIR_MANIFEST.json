@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "status": "STATIC_ONLY_NATIVE_G0_PENDING",
+  "source_read_level": "full 16,587,215-byte frozen Git blob and actual 144,319-byte L01 native DAT",
+  "frozen_t070_sha256": "9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9",
+  "frozen_t070_bytes": 16587215,
+  "c00_sha256": "a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715",
+  "c00_bytes": 16587215,
+  "c00b_sha256": "d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac",
+  "c00b_bytes": 16587192,
+  "l01_native_dat_sha256": "60805bb07d8ccb5c5d922de57d910ab6417beed9dbe3d2ffb04b8c6efe7f8e57",
+  "l01_fatal_count": 7,
+  "l01_warning_count": 129,
+  "contact_pair_count": 30,
+  "friction_mu": 0.5,
+  "changes": [
+    "delete 1 empty data line after *Contact Property Assignment",
+    "replace six direct *Contact Output identifiers with CSTRESS,CDISP,CFORCE"
+  ],
+  "diff_hunks": 2,
+  "patch_file": "C00B_L01_CONTACT_REPAIR.patch",
+  "inverse": "deterministic generator checks C00b->C00 exact-byte identity",
+  "native_run": "NOT_RUN",
+  "standard": "no newly authorized IEC/GB/NB design clauses",
+  "official": [
+    "Abaqus 2025 CONTACT PROPERTY ASSIGNMENT",
+    "Abaqus 2025 CONTACT OUTPUT",
+    "Abaqus Standard general contact"
+  ],
+  "ref": "no new paper",
+  "fig": "none",
+  "tab": "two diff hunks; 30 pair identity",
+  "uncertainty": "byte edits exact, native parser and physical errors NEED_ESTIMATE",
+  "hold": "native Abaqus 2025 Data Check and warning/ODB output verification",
+  "ci": "PENDING_NO_RUN_RECEIPT"
+}
