@@ -83,7 +83,7 @@ jobs:
           set -euo pipefail
           mkdir -p s07-native-source
           curl --fail --location --silent --show-error --retry 3 \
-            --output s07-native-source/static-part-001.zip \\
+            --output s07-native-source/static-part-001.zip \
             "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip"
           python3 - <<'PY'
           from pathlib import Path
