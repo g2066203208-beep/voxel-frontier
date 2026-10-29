@@ -395,15 +395,15 @@ def prepare_a_diagnostic_input(baseline_bytes, expected_base_sha=ED_BASE_SHA256)
     lines=text.splitlines(keepends=True)
     newline="\r\n" if b"\r\n" in baseline_bytes else "\n"
     gage=[i for i,s in enumerate(lines) if re.match(
-        r"^[ \t]*[0-9, \t]+[ \t]+TwrGagNd\\b",s)]
+        r"^[ \t]*[0-9, \t]+[ \t]+TwrGagNd\b",s)]
     if len(gage)!=1 or not re.match(
-        r"^[ \t]*1,3,5,7,9,13,15,17,20[ \t]+TwrGagNd\\b",lines[gage[0]]):
+        r"^[ \t]*1,3,5,7,9,13,15,17,20[ \t]+TwrGagNd\b",lines[gage[0]]):
         raise ValueError("S07_DIAG_PARENT_GAGE_LINE_UNEXPECTED")
-    nt=[s for s in lines if re.match(r"^[ \t]*[0-9]+[ \t]+NTwGages\\b",s)]
-    if len(nt)!=1 or not re.match(r"^[ \t]*9[ \t]+NTwGages\\b",nt[0]):
+    nt=[s for s in lines if re.match(r"^[ \t]*[0-9]+[ \t]+NTwGages\b",s)]
+    if len(nt)!=1 or not re.match(r"^[ \t]*9[ \t]+NTwGages\b",nt[0]):
         raise ValueError("S07_DIAG_NTWGAGES_NOT_NINE")
     outlist=[i for i,s in enumerate(lines) if re.match(
-        r"^[ \t]*OutList\\b",s,re.I)]
+        r"^[ \t]*OutList\b",s,re.I)]
     if len(outlist)!=1:
         raise ValueError("S07_DIAG_OUTLIST_AMBIGUOUS")
     ends=[i for i,s in enumerate(lines) if i>outlist[0] and
