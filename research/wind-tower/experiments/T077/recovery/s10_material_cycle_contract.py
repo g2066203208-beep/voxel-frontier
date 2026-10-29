@@ -202,6 +202,5 @@ def main():
         ap.error('need --self-test and/or a source input')
     print(json.dumps(result,sort_keys=True))
 
-
 if __name__=='__main__':
     main()
