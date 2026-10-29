@@ -592,3 +592,6 @@ HOLD：
 ## 2026-10-29 20时｜S10找回历史U18p57大型ODB的Git LFS归档入口（来源级进展）
 
 直接核读活动PR #42仓库树、两个历史U18p57 ODB分卷manifest及9/9 Git LFS文本指针，确认4卷普通ODB与5卷STRESS ODB的**元数据连续性和声明哈希一致**，总计8,332,739,680字节；另定位2个INP LFS指针。源manifest登记普通ODB `bb07aff9b5ed7b5ef277f8208d2834cc472673085d7753bf057f05ecc0959290`、STRESS ODB `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd`；这些是**归档声明的整文件SHA256，不是本轮对ODB实体复算**。已提交只读元数据/可选本机真实分卷哈希脚本及GitHub Actions测试；本地合成正向与错位负向测试通过，真实CI状态尚未回读。详见[T077过程记录](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-29-20时s10历史u18p57局部应力fe-safe线索真实lfs分卷恢复入口不是odb验收)。未下载/重组/打开ODB，未找到可核实fe-safe寿命原始日志，历史资产仅`PARTIAL_HISTORICAL_METADATA`；S10仍`LOCAL_STRESS_HOLD`，12阶段**0/12未晋级**。下一单项：本机后台按需拉取STRESS ODB 5卷、流式哈希、重组整体SHA与只读ODB字段核验，不启动求解。
+
+
+**20:16 CI结果回填：** [S10 Actions #40871655096](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40871655096) 已真实成功，job `123439951101`，日志验证2个ODB/2个INP指针、9卷元数据与8,332,739,680字节总量；拒绝将未下载的LFS指针冒充ODB。artifact `12896053089` 已上传但未下载逐字节复核。仅 `LFS_METADATA_CI_PASS`，S10物理/寿命HOLD与0/12不变。
