@@ -106,33 +106,16 @@ jobs:
               "existing_channels":receipt["output_channels_already_present"],
               "appended_channels":receipt["output_channels_appended"],
               "native_openfast_runs":0},sort_keys=True))
+          # The GitHub App connector, not Actions GITHUB_TOKEN, performs
+          # the durable PR write; Actions emits bounded, SHA-verifiable bytes.
+          import base64, textwrap
+          for tag,payload in (
+              ("S07_CHILD_ELASTODYN",child),
+              ("S07_CHILD_MANIFEST",(outdir/"S07_A_DIAGNOSTIC_INPUT_MANIFEST.json").read_bytes())):
+              print(tag+"_BASE64_BEGIN")
+              print("\n".join(textwrap.wrap(base64.b64encode(payload).decode("ascii"),120)))
+              print(tag+"_BASE64_END")
           PY
-      - name: Persist verified diagnostic input bytes and manifest to PR branch (immutable)
-        if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          source_dir="s07/S07_U11p4_ETM_S04_A"
-          dest_dir="research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A"
-          for file in DTU_10MW_RWT_ElastoDyn.dat S07_A_DIAGNOSTIC_INPUT_MANIFEST.json; do
-            source="$source_dir/$file"
-            dest="$dest_dir/$file"
-            existing_sha="$(gh api "repos/${{ github.repository }}/contents/$dest?ref=${{ github.ref_name }}" --jq .sha 2>/dev/null || true)"
-            if [ -n "$existing_sha" ]; then
-              gh api "repos/${{ github.repository }}/contents/$dest?ref=${{ github.ref_name }}" --jq .content | base64 -d > s07/existing-persisted
-              cmp -s "$source" s07/existing-persisted || {
-                echo "FAIL: immutable diagnostic artifact differs: $dest"; exit 1;
-              }
-              echo "Existing PR file verified identical: $dest"
-            else
-              gh api --method PUT "repos/${{ github.repository }}/contents/$dest" \
-                -f message="data(S07): preserve source-locked A diagnostic $file" \
-                -f branch="${{ github.ref_name }}" \
-                -f content="$(base64 -w0 "$source")" --jq .commit.sha
-            fi
-          done
       - name: Preserve validated compact source receipt on existing Draft PR branch
         if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
         env:
