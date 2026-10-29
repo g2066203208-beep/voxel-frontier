@@ -1,6 +1,6 @@
 {
   "FIG": "NONE",
-  "HOLD": "NOT A COMPLETE RUN PACKAGE. Missing same-run BTS/controller/FST byte binding, actual OpenFAST OUTB and RP/TP; no signed free-body or Abaqus load PASS.",
+  "HOLD": "A-case original ZIP/BTS/controller/FST/Tower/ElastoDyn bytes now verified and persisted; full FST relative dependency closure, OpenFAST executable compatibility, native OUTB/RP/TP, signed free-body and Abaqus load PASS remain unverified.",
   "OFFICIAL": "OpenFAST native output not run; this is only deterministic input construction",
   "REF": "Existing OpenFAST 3.5.3 ElastoDyn output nomenclature and T062 original 9-gage receipt; no new paper full text",
   "RUN": {
@@ -17,7 +17,7 @@
   },
   "assumptions": [
     "Output-only channels do not alter solver physics; requires native confirmation",
-    "U11p4_ETM_S04 BTS/Controller/FST and full case input identity not yet independently bound"
+    "Original BTS/controller/FST byte identities verified; exact runtime dependency graph and native solver behavior not yet verified"
   ],
   "baseline_fst_sha256_from_historical_T071": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
   "batch": "A",
@@ -196,5 +196,22 @@
   "source_baseline_elastodyn_sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
   "source_workflow_t072_git_blob": "5baab0ea2299b6d36544b6d092f7503d8dcaf86c",
   "source_zip_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
-  "stage": "S07_A_BATCH_DIAGNOSTIC_INPUT_STATIC_ONLY"
+  "stage": "S07_A_BATCH_DIAGNOSTIC_INPUT_STATIC_ONLY",
+  "real_case_bundle": {
+    "manifest_path": "research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_REAL_BUNDLE_IDENTITY.json",
+    "manifest_sha256": "b38374c1a484ae26327bf9806790738b97002d586e6d06b66d25cc5f81f5c954",
+    "read_level": "actual ZIP member bytes + 436,968,166-byte BTS LFS payload + controller DLL bytes in GitHub Actions; no solver",
+    "actions_run": 40937242200,
+    "actions_job": 123670925538,
+    "actions_artifact": 12924857698,
+    "source_part_002_zip_sha256": "5100b6b255e1706874feac95d6d967c7625b53536efac26d77719d56db63d71a",
+    "target_inflowwind_sha256": "6f05d75c2c6faba769b841f8792ffbb839d23efe7e429e2c0089e80f828757a0",
+    "patched_inflowwind_sha256": "a479943720548490536b0305f5e8a1b13ea22a34f580fedf0825c1001704dd0c",
+    "controller_discon_sha256": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "controller_dll_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+    "bts_payload_sha256_verified": "9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78",
+    "bts_payload_bytes_verified": 436968166,
+    "native_openfast_runs": 0,
+    "physical_pass": false
+  }
 }
