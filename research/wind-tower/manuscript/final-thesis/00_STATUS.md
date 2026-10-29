@@ -5,6 +5,12 @@
 > 已完成前期成果见[证据索引](../../governance/COMMAND_ROOM.md#completed-evidence)。下文“尚未计算/无原生/0次”等必须按日期、模型、工况理解，不能据此否定原七章Word和历史结果。新增地震也不能被旧章节安排排除。
 
 
+
+
+## 2026-10-30 03时｜S07目标U11p4_ETM_S04 A批BTS实体及控制器/FST真实输入身份恢复
+
+从原part-001、**目标part-002**、supplement ZIP的真实字节和成员完成源哈希审计；Git LFS成功取得目标**436,968,166字节BTS实体**并逐字节SHA256复算为9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78，非仅指针。目标InflowWind源SHA256=6f05d75c2c6faba769b841f8792ffbb839d23efe7e429e2c0089e80f828757a0，按T072单处路径修正后=a479943720548490536b0305f5e8a1b13ea22a34f580fedf0825c1001704dd0c；DISCON.IN=8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a，控制器DLL=7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa。原FST/158m塔/ElastoDyn及21个基准成员逐件登记。真实[Actions #40937242200](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40937242200) success；[完整JSON已持久提交](../../experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_REAL_BUNDLE_IDENTITY.json)，SHA256 b38374c1a484ae26327bf9806790738b97002d586e6d06b66d25cc5f81f5c954，已与下载的artifact原JSON逐字节Git Blob比对；[完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-03时s07-u11p4_etm_s04-a批真实437mb-bts及控制器fst源身份闭合真实actions无求解)。本轮新OpenFAST/Abaqus/31站OUTB=0，完整FST相对路径及控制器兼容性、签名自由体、载荷所有权仍HOLD；S07独立输入身份显著推进，**严格0/12未晋级**，S10风致材料疲劳与S11优化主线不变。
+
 ## 2026-10-30 02时｜S07原始ZIP实证135通道已配齐，单工况A批SHA锁定诊断输入已持久归档
 
 直接从T071/T072使用的原始ZIP提取ElastoDyn/FST并校验SHA：ZIP=`ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`，ElastoDyn=`6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`，FST=`5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`。**关键新发现：原始9测点×15同步通道已存在135/135，OutList无需新增；历史T071/T072的31站OUTB未归档才是缺口。** 仅改变A批TwrGagNd一行生成`U11p4_ETM_S04`输入子版SHA256=`701a3e30bc058d97c673e28947307066a245c276cb10042a1eb3ca133c571833`，已保存[真实ElastoDyn子版](../../experiments/T077/recovery/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat)与[JSON manifest](../../experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_DIAGNOSTIC_INPUT_MANIFEST.json)。[真实CI #40928798765](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40928798765)完成成功，合成4正6负、真实原源哈希及确定性字节重算通过；先前CRLF与Actions GITHUB_TOKEN 404失败均保留在[过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-02时s07真实原源zip的u11p4_etm_s04-a批15通道静态补采输入已持久提交非openfast运行)。本轮无OpenFAST/Abaqus原生RUN、无31站RP/TP、无载荷所有权或规范PASS；目标case BTS/controller及完整RUN输入身份仍HOLD。S07独立准备实质增加，**严格12阶段0/12未晋级**；S10风致材料疲劳/S11优化不变。
