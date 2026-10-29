@@ -512,3 +512,6 @@
 - **REF/STANDARD/FIG/TAB：** REF未新增期刊全文；STANDARD无新增授权NB/T10907、IEC/GB条款核读；OFFICIAL是Abaqus软件关键字语法而非设计规范；FIG无新原生响应；TAB为三条IOS身份、前后SHA、单处diff与原生错误日志。
 - **误差预算/失败/HOLD：** 真实父/子字节SHA及逆变换精确；原生Abaqus对新子版的预处理、约束、接触、PT平衡、网格及物理误差均`NEED_ESTIMATE`。旧G0失败完整保留；本轮不调用Abaqus/OpenFAST高成本生产，不修改冻结T057/T070原件、不合并PR。**严格12阶段0/12未晋级，C00静态修复已交付但S02 NATIVE_RECHECK_PENDING。** S05真实选波、S07接口、S10分材料风致疲劳与S11抗震约束优化主线继续。
 - **下一唯一动作：** 本机L01仅对SHA锁定的`a0b885...`子版运行Abaqus 2025原生Data Check并回传真实.dat/.msg/.sta/.log及警告处置；等待时云端可独立推进C01/C02，不重做已完成成果。
+
+
+**2026-10-29 11时C00最新版CI最终回读（覆盖上方“待核”）：** [Actions #40810802204](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810802204) job `123240376889` 已`completed/success`。原生日志直接确认Python合成4正6负、旧T070原生日志分类自测，以及**新子版包装器对冻结父文件名的拒绝测试**（`REFUSE: wrong input filename`）；再次对完整16,587,215字节冻结父INP做SHA核验、生成同一SHA256=`a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715`子版，上传[最新child.inp+manifest+diff artifact #12869763351](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810802204/artifacts/12869763351)。ZIP 2,959,786 bytes，动态ZIP SHA256=`08ef6a163d146908bc83fe942e3eccf893a43243048e11b2d4ee9d40720c6ec1`；包内child SHA与首轮完全一致。**静态子版已可交本机L01；新子版原生G0尚未执行，S02及物理PASS仍HOLD。**
