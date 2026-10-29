@@ -39,6 +39,12 @@
 <a id="handoff-log"></a>
 ## 最近交接日志 — 新记录置顶，旧记录保留
 
+### HANDOFF-20261029-S08-ARIAS-HUSID-WEB-16｜真实ESM三分量时程强度与显著持续时间诊断
+
+- **START / 2026-10-29 16时 CST / 网页版GPT：** read_base_sha=`ad978917456336d15d8b5aa9445db2cd8d934a82`；PR #42 Open/Draft。已核main与PR、AGENTS/README、指挥室进度及交接、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG 15时实证、T080.1/.2/.3及12阶段总计划。继承真实ESM IT-2012-0008/NVL三分量32040行SI时程（CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`）及独立oracle；保留L02原生G0待验。
+- **本轮独立增量/拟改范围：** 利用本轮实际可读的SHA锁定真实CSV，新增可复算的Arias强度、Husid 5–95%显著持续时间、原始积分末漂移/均值偏置敏感性诊断，执行合成解析测试；只改T079一件小程序、T079 PROCESS_LOG、00_STATUS及本指挥室END/快照。此诊断**不是**低频仪器SNR、地震选波或Abaqus物理PASS；无中国场址目标谱/授权条款时不推定合规。完整CSV归档及CI回读缺口继续保留。责任方：网页版/Actions，冻结T057/T070不改，不合并PR或高成本RUN。
+- **END：** 待本轮真实提交、测试及远端回读后填写。
+
 ### HANDOFF-20261029-S08-ESM-EXPORT-WEB-1506｜真实处理波至S08双水平输入数据桥接
 
 - **START / 2026-10-29 15:06 CST / 网页版GPT：** read_base_sha=`b57c38052dac0fbbcc205afdce56a810114009c6`；PR #42 open/draft。已读研究AGENTS/README、指挥室快照/交接/历史成果、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG最新14时节、T080.1/.2/.3与12阶段总计划，及既有S05 ESM程序、16周期真实谱CSV与S05 Actions工作流。继承已处理ESM IT-2012-0008/NVL三分量各32040点、16周期真实谱和原件数值SHA；C00b静态CI已通过但L02原生Data Check待验。
