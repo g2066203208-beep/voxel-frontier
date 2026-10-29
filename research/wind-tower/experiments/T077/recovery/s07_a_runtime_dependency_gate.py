@@ -142,7 +142,19 @@ def traverse(virtual):
                 elif dst == CASE + "/" + CASE + ".bts":
                     item["status"] = "BTS_PRIOR_REAL_LFS_HASH_VERIFIED_NOT_REDOWNLOADED"
                 else:
-                    item["status"] = "UNRESOLVED_REFERENCE_CHECK_OPTIONALITY"
+                    # Historical T072 ran on Windows; a case-only name mismatch
+                    # resolves there but MUST remain visible as Linux-portability risk.
+                    folded = [k for k in virtual if k.casefold() == dst.casefold()]
+                    if len(folded) == 1:
+                        item["status"] = "PRESENT_WINDOWS_CASEFOLD_ONLY"
+                        item["actual_case_sensitive_path"] = folded[0]
+                        if folded[0] not in seen:
+                            todo.append(folded[0])
+                    elif len(folded) > 1:
+                        item["status"] = "AMBIGUOUS_WINDOWS_CASEFOLD_COLLISION"
+                        item["candidates"] = sorted(folded)
+                    else:
+                        item["status"] = "UNRESOLVED_REFERENCE_CHECK_OPTIONALITY"
             except ValueError as e:
                 item["status"] = "UNSAFE_OR_ABSOLUTE_REFERENCE"
                 item["detail"] = str(e)
@@ -232,7 +244,7 @@ def audit(args):
             if edge["from"] == base + "DTU_10MW_InflowWind.dat" and edge["ref"].lower().endswith(".bin") and edge["status"] == "UNRESOLVED_REFERENCE_CHECK_OPTIONALITY":
                 edge["status"] = "INACTIVE_WINDTYPE_3_BINARY_SLOTS"
     missing = [e for e in edges if e["status"] in
-               ("UNRESOLVED_REFERENCE_CHECK_OPTIONALITY", "UNSAFE_OR_ABSOLUTE_REFERENCE")]
+               ("UNRESOLVED_REFERENCE_CHECK_OPTIONALITY", "UNSAFE_OR_ABSOLUTE_REFERENCE", "AMBIGUOUS_WINDOWS_CASEFOLD_COLLISION")]
     # Expected module files are checked for presence, not assumed to be active.
     expected_suffixes = ("DTU_10MW_RWT.fst", "DTU_10MW_RWT_ElastoDyn.dat",
                          "DTU_10MW_InflowWind.dat", "DTU_10MW_RWT_ServoDyn.dat",
@@ -253,6 +265,7 @@ def audit(args):
         "FIG": "NONE",
         "TAB": {"virtual_overlay_files": len(virtual), "visited_text_modules": len(visited),
                 "references": len(edges), "unresolved_or_unsafe": len(missing),
+                "windows_casefold_only": sum(e["status"] == "PRESENT_WINDOWS_CASEFOLD_ONLY" for e in edges),
                 "expected_module_suffixes_found": {k: len(v) for k, v in expected.items()}},
         "error_budget": {"identity": "exact SHA256", "paths": "strict lexical resolution",
                          "physics": "UNDEFINED; no native diagnostic or structural RUN"},
@@ -267,6 +280,8 @@ def audit(args):
         "expected_modules": expected,
         "HOLD": "STATIC ONLY: unresolved/optional path semantics, executable reported version/ABI, actual OUTB/RP/TP, signed free body and native structural PASS remain unverified.",
     }
+    if report["TAB"]["windows_casefold_only"]:
+        report["HOLD"] += " Windows-only casefold path(s) will fail on Linux unless source naming is corrected; original bytes unchanged."
     if exe["level"] == "LFS_POINTER_ONLY":
         report["HOLD"] += " Executable LFS payload not verified."
     return report
@@ -276,14 +291,15 @@ def selftest():
     files = {
         "C/DTU_10MW_RWT.fst": b'"sub/two.dat" EDFile\n"none" Disabled\n',
         "C/sub/two.dat": b'"../three.dat" TowerFile\n"absent.dat" OtherFile\n',
-        "C/three.dat": b"0 Test\n",
+        "C/THREE.dat": b"0 Test\n",
     }
     old_case = globals()["CASE"]
     try:
         globals()["CASE"] = "C"
         visited, edges = traverse(files)
         assert len(visited) == 3 and len(edges) == 3
-        assert sum(e["status"].startswith("PRESENT") for e in edges) == 2
+        assert sum(e["status"] == "PRESENT_IN_RECONSTRUCTED_OVERLAY" for e in edges) == 1
+        assert sum(e["status"] == "PRESENT_WINDOWS_CASEFOLD_ONLY" for e in edges) == 1
         assert sum(e["status"].startswith("UNRESOLVED") for e in edges) == 1
         for path in ("../../escape.dat", "C:/bad.dat", "/abs.dat"):
             try:
@@ -300,7 +316,7 @@ def selftest():
             raise AssertionError("TAMPER_ACCEPTED")
     finally:
         globals()["CASE"] = old_case
-    print("S07_DEPENDENCY_SELFTEST_PASS: 2 present, 1 missing, 3 unsafe and 1 SHA rejection")
+    print("S07_DEPENDENCY_SELFTEST_PASS: 1 exact, 1 Windows casefold, 1 missing, 3 unsafe and 1 SHA rejection")
 
 
 def main():
