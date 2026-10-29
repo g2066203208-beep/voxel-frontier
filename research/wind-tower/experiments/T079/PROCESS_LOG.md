@@ -174,3 +174,16 @@ RUN：直接扩展现有 `s05_esm_public_processed_pair.py` 和现有S05 workflo
 
 
 **2026-10-29 09时CI实证回填（覆盖本节待验）：** [修复后真实Actions #40799025213](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40799025213)四个job均completed/success；新增event-balanced job 123202389677实际编译并运行[程序](s05_event_balanced_spectrum_gate.py)，程序SHA256 **c506a5e81fd6a2a4439ae5ba5504e682538fa9237871d810a1f0c6a5cae611f6**，两份真实源表SHA与本节一致。真实CI明确打印“4 positive + 8 negative”，并逐项验证3事件/5对/4周期及[已提交4行CSV](real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv)的四列数值（相对容差1e-10、绝对1e-12）。[原始JSON Actions artifact #12865137488](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40799025213/artifacts/12865137488)保留了真实输入SHA、原始20行的逐台站来源SHA和输出。先前失败CI #40798945363未删除；本次通过仅为软件与历史谱数据诊断，**非低频有效性/目标谱/嘉鱼场址/原生Abaqus物理PASS**。
+
+
+### 2026-10-29 10时｜S05 Ishihara原刊参考谱与真实5对长周期残差（仅方法/来源诊断，0/12未晋级）
+
+**SOURCE/TAB：** 复用已有US 2事件4对×4周期CSV（SHA256 `45c71c29677dd0918e68c281e6552cedf6d1370a13f6abbf319349cdc1f5fc80`）及ESM 1事件1对×4周期CSV（SHA256 `4fd1ecf5f3010524e2c5c54dae4072e1187718344f3a64bec46490e9ec617def`），直接读的是20行既有**派生谱**，不是本轮重新下载原始加速度；US为未经长周期可靠性验收的pre20去均值谱，ESM为0.04Hz高通的MP已处理谱，两者处理不一致，三事件不能扩称五事件。新增[5行真实来源参考谱残差CSV](real-records/S05_ISHIHARA_REFERENCE_PAPER_FOUR_PERIOD_DIAGNOSTIC_20261029.csv)，SHA256 `1ffd9fdfa460f58805f33f610e5dfbca214103065c8f12ff9822b4b8ee92100a`、Git blob `ed80fc947414fa36b383c26833b02783aec830be`。
+
+**REF/OFFICIAL：** 本轮直接核读Ishihara, Iida & Wang, *Structures* 60 (2024) 105886, DOI [10.1016/j.istruc.2024.105886](https://doi.org/10.1016/j.istruc.2024.105886)，[作者17页原刊PDF](https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1.pdf)的PDF零基p5/印刷p6 §2.3 Eq.(1)及PDF p6/印刷p7合成波说明。其日本JSCE Level II**工程基岩**5%阻尼谱为T>=0.64s时Sa=1.6×3.2/T m/s²，T=4/6/8/10s分别为1.28/0.8533333333/0.64/0.512m/s²；论文采用15条目标谱人工波，**不是中国/嘉鱼/本塔设计谱或本研究5对波的目标**。PDF历史登记SHA256 `3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238`，本轮仅在线原页核读，**未重新取得PDF字节或重算该SHA**。
+
+**RUN：** 扩展[现有S05 Python程序](s05_event_balanced_spectrum_gate.py)的`--reference-paper-benchmark`，复用[原式oracle](s09_ishihara2024_equation_oracle.py)，计算各对4个离散周期ln(Sa观测/Sa原刊)、未缩放log-RMSE、解析常幅值最佳拟合因子exp(-mean log ratio)及缩放后残差；**未实际缩放任何地震加速度**。源码SHA256 `f1352e738e21173ca47a7165e82da066d8189645a18da07c815ce96aba84a9c8`、Git blob `58e4674cff926765fab2c5319ec13a3423e7f512`。真实[Actions #40804857544](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40804857544)的event-balanced-source-diagnostic job `123221245898` **completed/success**：原刊Eq1 oracle测试、S05旧4正8负、S05新4正3负、20行真实源及5行新CSV逐项交叉核验PASS，源码/CSV SHA在原生日志与上述一致。编写期间静态发现并修复3处错误：浮点0.512直接相等断言、参考模式JSON打印键、JS/Python事件名大小写排序；不是Abaqus失败，也没有删去历史CI失败记录。
+
+**TAB实数：** 按Python排序，IT.NVL、Ridgecrest CLC/PASC/RVR、Lone Pine CLC相对**日本论文参考谱**的纯代数幅值拟合因子依次41.6666、2.6985、23.9915、39.8436、311.6486；4点拟合后log-RMSE分别0.28645、0.16635、0.20894、0.19579、0.40995。**这些不是设计地震波放大倍数、也不是中国目标谱匹配验收结果**；四周期远不足以评价全频段谱匹配。
+
+**STANDARD/FIG/误差/HOLD：** 本轮未读授权2025 IEC/GB/NB标准条款；FIG=无本塔地震响应；程序按CSV 12有效数字与CI数值rel≤1e-10/abs≤1e-12核对；真实低频信噪比、滤波/土层、场址目标谱、结构/接缝/PT及W/E/WE物理误差均`NEED_ESTIMATE`。S05=`REFERENCE_METHOD_TESTED/SITE_AND_WAVE_HOLD`，S08/S09原生E/WE RUN=0，12阶段严格0/12；不改冻结T057/T070，不合并PR，不做昂贵求解。**下一唯一动作：** 取得具有明确中国参考场地适用域及参数来源的设计目标谱，建立全周期选波误差门禁；不得以日本Eq1冒充中国规范验收。
