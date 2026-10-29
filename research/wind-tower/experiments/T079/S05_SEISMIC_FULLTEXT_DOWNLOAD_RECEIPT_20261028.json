@@ -1,6 +1,6 @@
 {
   "status": "RESEARCH_PDF_DOWNLOAD_RECEIPT_NOT_FULLTEXT_METHOD_REVIEW",
-  "utc": "2026-10-29T02:10:07.746136+00:00",
+  "utc": "2026-10-29T02:10:41.702364+00:00",
   "python": "3.12.15",
   "pypdf": "6.21.4",
   "source_level": "direct PDF from author/institution/publisher, PDF byte-verified",
@@ -43,7 +43,7 @@
         {
           "url": "https://journal.hep.com.cn/rcs/EN/PDF/10.1016/j.rcns.2026.03.002",
           "exit_code": 28,
-          "http_and_redirect": "302 application/pdf;charset=UTF-8 https://jf2.hep.com.cn/9c31c2b5716f4576b2168aec03ad26d2.pdf?response-content-disposition=attachment;+filename=\"Research%20on%20the%20dynamic%20response%20and%20disaster-resistance%20performance%20enhancement%20of%20hybrid%20tower%20under%20strong%20wind%20and%20eart",
+          "http_and_redirect": "000  https://journal.hep.com.cn/rcs/EN/PDF/10.1016/j.rcns.2026.03.002",
           "stderr": "curl: (28) Connection timeout after 12001 ms"
         },
         {
@@ -74,7 +74,7 @@
           "stderr": ""
         }
       ],
-      "sha256": "bf6071ab180fe291d69f6405d2fe503c9e83d757bafed9a2a0f27817d85d5cd5",
+      "sha256": "bcb3e699f8300734386b6fc6365458086b670e891c8ac36930de1ad370fd25ad",
       "bytes": 2766620,
       "pages": 28,
       "first_page_text_sample": "Seismic assessment of wind turbines How crucial is rotor-nacelle-assembly numerical modeling? Author(s): Ali, Ahmer; De Risi, Raffaele; Sext",
