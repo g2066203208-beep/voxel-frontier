@@ -54,7 +54,7 @@ jobs:
       - name: Preserve validated compact source receipt on existing Draft PR branch
         if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
         env:
-          ${{ secrets.GITHUB_TOKEN }}: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
