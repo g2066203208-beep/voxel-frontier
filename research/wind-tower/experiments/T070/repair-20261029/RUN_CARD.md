@@ -37,3 +37,9 @@ python research/wind-tower/experiments/T070/repair-20261029/c00_run_child_g0.py 
 - **FIG：** 无原生结构云图；**TAB：** 三条IOS搬移前后身份、源/子SHA及单hunk diff见manifest/patch。
 - **假设与误差预算：** 仅依据本次原生报错修复层级；全字节SHA与逆变换给出**零个未解释的文本修改**，不等于Abaqus语法/求解/物理误差为零。尚未在原生Abaqus上验证该子版，潜在后续错误及PT/接触/RNA/网格物理误差均`NEED_ESTIMATE`。
 - **单一HOLD：** 等待本机L01对SHA锁定子版执行Abaqus 2025原生Data Check并回传真实日志。保持原风致材料疲劳和抗震约束优化主线。
+
+
+## 2026-10-29 11:12 CST｜首个真实CI回读（非原生G0）
+- [Actions #40810750471](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810750471)，job `123240212848`，**completed/success**。完整GitHub checkout真实T070原件哈希验证、生成器4正6负自测、父/子SHA与精确逆变换全部PASS；子版SHA=`a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715`。
+- [真实可下载的child.inp、manifest、patch三文件artifact #12870292013](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810750471/artifacts/12870292013)；ZIP 2,959,786 bytes，上传日志ZIP SHA256=`f0b9f228b785f3000ecb483245b5c5fea9e4d50b5394fba28551397e08d0ab56`；内含生成manifest SHA256=`923437b0d06eeb3ee41e949b4c989eb3ad43e610914a09612a50805b8e0c59ee`，生成diff SHA256=`6959aa90274c5bec57a2f8110c4c08c48b058c58b3cf9bb284b8569d9b00e99e`。
+- 首个CI在子版白名单包装器新增前运行；包装器拒绝旧父输入的新增CI为[#40810802204](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40810802204)，须独立查实际结果。**不把CI成功写成原生Abaqus G0通过。**
