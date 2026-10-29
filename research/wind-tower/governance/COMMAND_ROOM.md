@@ -27,7 +27,7 @@
 | 原稿与前期成果 | 原七章Word已定位；模型验证、36风工况、31段时程、配筋/PT损失、载荷雨流等已完成，见下方成果表 | 所有执行者继承；不得笼统派重做 |
 | C00 / L00–L01：T070诊断 | **L01已于11:27–11:28实际执行：7 FATAL / 129 WARNING**；旧IOS层级错误消失；C00b已针对空白接触数据行及6个非法直接输出请求生成**独立SHA锁定静态子版**（[RUN卡](../experiments/T070/repair-20261029/RUN_CARD.md)，子版SHA256 `d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`），原生复验仍待执行；[L01真实日志](../experiments/T070/local-20261029-l01/README.md) | **网页版GPT已生成C00b锁定子版；[C00b真实CI #40822101386](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40822101386)已completed/success，子版artifact #12874778778已可取；本机L02可从仓库原件确定性再生并仅做一次后台G0复验**；未进入物理求解 |
 | C01：31站动态接口 | 4×31×12001条六分量已恢复归档；旧9站OUTB存在；31站同步RP/TP仍缺；本机已检T072四包 | 网页版复用已有提取器做缺项恢复/最小受控补采；不重复搜同一四包、不默认重跑36组 |
-| C02：新增地震输入 | 已有3事件5对来源、数值QC和论文参考谱残差诊断；[T079最新过程记录](../experiments/T079/PROCESS_LOG.md) | 网页版继续正式研究参考谱的适用域、全周期选波与处理一致性；日本论文诊断谱不能冒充本研究已验收目标谱 |
+| C02：新增地震输入 | 已有3事件5对来源/参考谱残差；**新增真实ESM处理波16周期双水平密谱及dt/2dt数值表**（[16行CSV](../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv)、[过程日志](../experiments/T079/PROCESS_LOG.md)2026-10-29 14时节），本地真实原件重算，远端新CI待验 | 网页版继续有来源中国参考目标谱及选波适用域、处理一致性；意大利记录和日本论文参考谱都不能冒充设计波PASS |
 | C03 / L02–L03：设计实施 | T077配筋和T078 PT设计已有结果；选定支路的材料/PT/接触改动需与旧原生结果对应 | 网页版整理实施差异和唯一输入；本机仅做受影响的平衡、模态/柔度等增量复核 |
 | C05 / L04–L05：材料疲劳与优化 | 载荷雨流/DEL和方法已有；历史fe-safe线索待定位核实，不能称从未做过 | 先恢复旧成果；云端做通用算法，确需原生响应/专有提取的缺项交本机；新增E/WE依赖合格输入 |
 | C06：论文与网站 | 原稿、后期六章重构稿和地震方案已分清；本次统一入口和读写纪律 | 网页版按原稿与证据整合正文/图表；GitHub导航、研究结果合并和Pages发布分别报告 |
@@ -43,7 +43,7 @@
 
 - **START / 2026-10-29 14时 CST / 网页版GPT：** read_base_sha=`03a30490661e7e312f777192656f0d62b4d95dbd`；main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 open/draft。已读AGENTS、README、指挥室当前进度/交接/成果表、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/METHOD_PLAN/PROCESS_LOG末节、T080.1/.2/.3及12阶段总计划；直接检查S05 ESM官方处理波提取脚本和既有CI。继承真实ESM IT-2012-0008/NVL已处理HNE/HNN/HNZ及4/6/8/10s数值谱、既有SHA/CI；C00b已静态CI通过但本机L02原生G0未验收。
 - **本轮独立增量/拟改范围：** 复用`experiments/T079/s05_esm_public_processed_pair.py`和既有S05 CI，把同一官方处理波从4周期扩为16个0.5–10s密周期双水平谱，增加事件/台站/处理/时间网格身份拒绝与既有4点数值回归，取得真实CI的32个分量谱数值及密谱CSV；更新同一T079 PROCESS_LOG、00_STATUS及本页END。只作S05输入算法与实际记录谱诊断，不称中国目标谱、低频SNR或原生抗震PASS；不改冻结T057/T070、不启动昂贵生产或合并PR。责任方：网页版GPT/Actions；本机L02原生复验独立进行。
-- **END：** 待实际提交与远端CI回读后填写，不预报成功。
+- **END / 2026-10-29 14时 CST：** 已在同一PR #42更新[原ESM处理波程序](../experiments/T079/s05_esm_public_processed_pair.py)、[既有S05 CI](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s05-ground-motion-pair-qc.yml)、[真实16行CSV](../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv)、[T079原过程日志](../experiments/T079/PROCESS_LOG.md)及00_STATUS。直接从已有Actions真实ESM原件ZIP（SHA256 `dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6`）读63行DYNA头及三分量各32040数值；本地Python3.13.5同式Newmark独立重算16周期，16行CSV SHA256 `a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6`，T=4/6/8/10s与旧真实数据一致，最大2dt相对差0.2291559%（T=.75s）。源码SHA256 `cdc173e442bebcdc533f475f95037aec817f7169306ffa2e6bf092ebfcb9c763`；新CI已加原件数值SHA、旧4周期回归和CSV逐字节cmp，**截至本条未取得新Actions run，CI=PENDING，不报成功**。远端文件已读回16行及blob `aa509182a0ab83c21b26c72018e2ba54a250f58f`；本轮未获得中国参考设计目标谱/低频独立SNR，不产生E/WE或物理PASS。S05独立输入准备进展，12阶段0/12；T057/T070冻结母本、Draft PR、原风致疲劳/优化主线不变。下一责任方：网页版/Actions优先取得新版S05 CI原生日志并处理任何失败，再开展有来源参考谱的全周期拒绝门；本机L02仅后台原生G0复验。
 
 ### HANDOFF-20261029-C00B-CI-WEB-1311｜修复真实CI合成测试假失败
 
