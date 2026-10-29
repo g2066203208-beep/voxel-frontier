@@ -216,6 +216,50 @@ jobs:
                   print('ESM_HEADER',f['filename'],i,repr(line))
           assert x['S05_PASS'] is False and x['actual_processing_filter_corner_confirmed'] is False
           PY
+      - name: REAL 16-period ESM processed pair dense PSA and four-period regression (not design PASS)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 -o esm-public-processed/committed_four_period.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv"
+          python3 - <<'PY'
+          import csv,hashlib,json,math,pathlib
+          folder=pathlib.Path('esm-public-processed')
+          x=json.loads((folder/'ESM_IT-2012-0008_NVL_MP_ACC_receipt.json').read_text())
+          p=x['processed_pair_spectrum']
+          assert p['status']=='REAL_ESM_MP_PAIR_DENSE_SPECTRUM_NUMERICAL_DIAGNOSTIC_ONLY'
+          assert p['period_count']==16 and len(p['spectrum'])==16
+          assert p['period_range_s']==[0.5,10.0] and p['damping_ratio']==.05
+          assert p['npts']==32040 and math.isclose(p['dt_s'],.005)
+          assert p['Abaqus_E_WE_RUN']==0 and p['S05_PASS'] is False
+          assert p['low_frequency_usable_band_verified'] is False
+          assert p['site_design_target_spectrum_verified'] is False
+          assert p['decimation_antialias_filter_applied'] is False
+          assert p['source_numeric_sha256_by_stream']['HNE']=='f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a'
+          assert p['source_numeric_sha256_by_stream']['HNN']=='bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275'
+          with (folder/'committed_four_period.csv').open(newline='') as f:
+              old={float(row['period_s']):row for row in csv.DictReader(f)}
+          assert set(old)=={4.,6.,8.,10.}
+          for row in p['spectrum']:
+              if row['period_s'] not in old: continue
+              previous=old[row['period_s']]
+              for new_key,old_key in [('HNE_pseudoSa_m_s2','HNE_pseudoSa_m_s2'),
+                                      ('HNN_pseudoSa_m_s2','HNN_pseudoSa_m_s2'),
+                                      ('horizontal_gm_pseudoSa_m_s2','pair_gm_pseudoSa_m_s2')]:
+                  assert math.isclose(row[new_key],float(previous[old_key]),rel_tol=2e-9,abs_tol=1e-12),(row['period_s'],new_key,row[new_key],previous[old_key])
+          keys=['period_s','HNE_pseudoSa_m_s2','HNN_pseudoSa_m_s2','horizontal_gm_pseudoSa_m_s2',
+                'HNE_2dt_pseudoSa_m_s2_DIAGNOSTIC','HNN_2dt_pseudoSa_m_s2_DIAGNOSTIC',
+                'max_component_dt2_relative_difference_DIAGNOSTIC','frequency_over_highpass_corner']
+          output=folder/'S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv'
+          with output.open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=keys)
+              w.writeheader()
+              for row in p['spectrum']:
+                  w.writerow({key:format(row[key],'.12g') for key in keys})
+                  print('S05_REAL_DENSE_ROW',json.dumps({key:format(row[key],'.12g') for key in keys},sort_keys=True))
+          print('S05_DENSE_REAL_CSV_SHA256',hashlib.sha256(output.read_bytes()).hexdigest())
+          print('S05_DENSE_16_PERIOD_2_COMPONENT_4_OLD_PERIOD_REGRESSION_PASS_NO_DESIGN_WAVE')
+          PY
       - name: Real ESM processed low-frequency numerical triage (NOT SNR/design PASS)
         if: success()
         shell: bash
