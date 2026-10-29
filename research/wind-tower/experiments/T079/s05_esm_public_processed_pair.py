@@ -303,7 +303,7 @@ def s08_export_self_test(zip_bytes, fixture):
                 b'SAMPLING_INTERVAL_S: 0.01',b'SAMPLING_INTERVAL_S: 0.02')),
             ('wave_Z.ACC',fixture('HNZ'))]), False),
         ('NONFINITE', zip_bytes([('wave_H1.ACC',fixture('HNE').replace(
-            b'\\n9\\n',b'\\nnan\\n')),
+            b'\n9\n',b'\nnan\n')),
             ('wave_H2.ACC',fixture('HNN')),('wave_Z.ACC',fixture('HNZ'))]), False),
     ]
     for name, blob, strict in cases:
@@ -569,7 +569,7 @@ def main():
         a.output_dir.mkdir(parents=True, exist_ok=True)
         (a.output_dir/S08_EXPORT_CSV).write_bytes(data)
         (a.output_dir/S08_EXPORT_RECEIPT).write_text(
-            json.dumps(receipt, indent=2, ensure_ascii=False, sort_keys=True)+'\\n', encoding='utf-8')
+            json.dumps(receipt, indent=2, ensure_ascii=False, sort_keys=True)+'\n', encoding='utf-8')
         print(json.dumps({'status':receipt['status'], 'csv_sha256':receipt['csv_sha256'],
                           'npts':receipt['npts'], 'dt_s':receipt['dt_s'],
                           'Abaqus_E_WE_RUN':0, 'S08_PASS':False},sort_keys=True))
