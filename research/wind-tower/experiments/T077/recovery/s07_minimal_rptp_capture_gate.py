@@ -1,0 +1,251 @@
+#!/usr/bin/env python3
+"""S07 minimal RP/TP recovery contract for the archived T071/T072 31-gage runs.
+
+Source audit and synthetic tests need Python 3.11 standard library only.
+A future --capture reads an EXISTING OUTB using openfast_toolbox; it never
+starts OpenFAST. RP is NOT a generic Euler angle; no Abaqus load is exported.
+"""
+import argparse
+import csv
+import gzip
+import hashlib
+import json
+import math
+from pathlib import Path
+import re
+import sys
+
+T071_BLOB = "59e76a54ba4f64902ed0750e92eb5158a1da1e96"
+T072_BLOB = "5baab0ea2299b6d36544b6d092f7503d8dcaf86c"
+ED_BASE_SHA256 = "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65"
+CASES = ("U09p343881_ETM_S06", "U11p4_ETM_S04",
+         "U19p202140_ETM_S04", "U19p202140_ETM_S06")
+BATCHES = {
+    "A": ((13,39,65,91,117,142,168,194,220), tuple(range(1,10))),
+    "B": ((246,271,297,323,349,375,400,426,452), tuple(range(10,19))),
+    "C": ((478,504,529,555,581,607,633,658,684), tuple(range(19,28))),
+    "D": ((710,736,762,784,810,850,900,1000,1120),
+          (28,29,30,31,"EX1","EX2","EX3","EX4","EX5")),
+}
+SUFFIX_UNIT = {
+    "RPxi": "deg", "RPyi": "deg", "RPzi": "deg",
+    "TPxi": "m", "TPyi": "m", "TPzi": "m",
+}
+FIELDS = ("case","batch","segment","gage_index","time_s",
+          "RPxi_deg","RPyi_deg","RPzi_deg","TPxi_m","TPyi_m","TPzi_m")
+
+
+def sha256_file(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as f:
+        for chunk in iter(lambda: f.read(1024*1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def git_blob(raw):
+    return hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
+
+
+def source_gate(t071, t072):
+    """Verify ORIGINAL committed workflow bytes and exact batch/node identity."""
+    raw_a, raw_b = Path(t071).read_bytes(), Path(t072).read_bytes()
+    if git_blob(raw_a) != T071_BLOB or git_blob(raw_b) != T072_BLOB:
+        raise ValueError("S07_SOURCE_WORKFLOW_GIT_BLOB_MISMATCH")
+    a, b = raw_a.decode("utf-8-sig"), raw_b.decode("utf-8-sig")
+    for label, src in (("T071",a),("T072",b)):
+        for required in ("TwrGagNd patch failed", "DTU_10MW_RWT.outb",
+                         "FASTOutputFile", "path: extract/*"):
+            if required not in src:
+                raise ValueError("S07_SOURCE_CONTRACT_MISSING_"+label+"_"+required)
+        if "OutList" in src or any(x in src for x in ("RPxi","RPyi","RPzi")):
+            raise ValueError("S07_HISTORICAL_WORKFLOW_NOT_UNCHANGED_"+label)
+    for batch,(nodes,segments) in BATCHES.items():
+        m = re.search(r"- batch:\s*"+batch+
+                      r"\s*\n\s*nodes:\s*\"([0-9,]+)\""+
+                      r"\s*\n\s*segments:\s*\"([0-9A-Z,]+)\"", a)
+        if m is None:
+            raise ValueError("S07_T071_BATCH_MISSING_"+batch)
+        got_nodes = tuple(int(x) for x in m.group(1).split(","))
+        got_segments = tuple(int(x) if x.isdigit() else x
+                             for x in m.group(2).split(","))
+        if got_nodes != nodes or got_segments != segments:
+            raise ValueError("S07_T071_GAGE_MAP_CHANGED_"+batch)
+        n = re.search(r'(?m)^\s*"'+batch+r'":\(\[([0-9,]+)\],', b)
+        if n is None or tuple(int(x) for x in n.group(1).split(",")) != nodes:
+            raise ValueError("S07_T072_GAGE_MAP_CHANGED_"+batch)
+    valid = sum(sum(isinstance(s,int) for s in x[1]) for x in BATCHES.values())
+    assert valid == 31
+    return {
+        "stage":"S07_MINIMAL_RPTP_CAPTURE_CONTRACT_TESTED_NOT_DATA_RECOVERED",
+        "SOURCE":{
+            "reading_level":"Original T071/T072 full committed workflow text; no 31-gage OUTB bytes",
+            "t071_git_blob_sha1":T071_BLOB, "t072_git_blob_sha1":T072_BLOB,
+            "t071_sha256":hashlib.sha256(raw_a).hexdigest(),
+            "t072_sha256":hashlib.sha256(raw_b).hexdigest(),
+            "baseline_elastodyn_sha256":ED_BASE_SHA256},
+        "REF":"Existing OpenFAST v3.5.3 ElastoDyn and 9-gage source-derived DCM receipt; no new paper full text",
+        "STANDARD":"No newly read authorized IEC/GB/NB clauses",
+        "OFFICIAL":"Historical GitHub Actions workflow bytes, NOT official native solver validation",
+        "RUN":{"kind":"Static source audit + synthetic extractor tests only",
+               "new_openfast_runs":0,"new_abaqus_runs":0},
+        "FIG":"NONE: no physical-response plot",
+        "TAB":{"cases":4,"batches_per_case":4,"valid_gages_per_case":31,
+               "valid_series":124,"expected_samples_per_series":12001,
+               "expected_new_rows":1488124,
+               "new_RP_TP_components_per_row":6,
+               "expected_new_RP_TP_scalar_positions":8928744,
+               "time_start_s":100.0,"time_end_s":700.0,"dt_s":0.05,
+               "required_suffix_units":SUFFIX_UNIT,
+               "batch_gage_map":{k:{"nodes":v[0],"segments":v[1]}
+                                 for k,v in BATCHES.items()}},
+        "error_budget":{
+            "static_identity":"Exact Git blob + exact integer node/segment mapping",
+            "time_grid":"Absolute 1e-4 s acceptance for packed 0.05 s time grid",
+            "RP_TP_physics":"UNBOUNDED until original 31-gage OUTB and v3.5.3 source-based inversion are checked",
+            "external_load_ownership":"UNVERIFIED; internal section resultants cannot be applied as external loads"},
+        "HOLD":"No archived 31-gage OUTB/RP/TP. This only specifies a fail-closed extraction of EXISTING OUTB; any OpenFAST rerun requires explicit approval. RP is not generic Euler. No signed free-body, gravity/inertia/RNA allocation, or Abaqus load export."
+    }
+
+
+def channel(data, prefix, unit):
+    cols = list(data.keys()) if isinstance(data,dict) else list(data.columns)
+    found = [name for name in cols if name.startswith(prefix)
+             and (name == prefix or name[len(prefix)] in "_([")]
+    if len(found) != 1:
+        raise ValueError("S07_MISSING_OR_AMBIGUOUS_CHANNEL_"+prefix)
+    name = found[0]
+    if ("["+unit+"]" not in name and "("+unit+")" not in name):
+        raise ValueError("S07_UNIT_NOT_VERIFIED_"+prefix)
+    return data[name]
+
+
+def extract_rows(data, case, batch, expected_n=12001):
+    """Yield RP/TP only; caller supplies already windowed, synchronized data."""
+    if case not in CASES or batch not in BATCHES:
+        raise ValueError("S07_UNKNOWN_CASE_OR_BATCH")
+    t = channel(data,"Time","s")
+    if len(t) != expected_n:
+        raise ValueError("S07_WRONG_TIME_COUNT")
+    times = [float(x) for x in t]
+    for i,v in enumerate(times):
+        if not math.isfinite(v) or abs(v-(100.0+0.05*i))>1e-4:
+            raise ValueError("S07_BAD_TIME_GRID")
+    for gi,seg in enumerate(BATCHES[batch][1],1):
+        if not isinstance(seg,int):
+            continue
+        values = [channel(data,"TwHt"+str(gi)+s,u)
+                  for s,u in SUFFIX_UNIT.items()]
+        if any(len(v)!=expected_n for v in values):
+            raise ValueError("S07_GAGE_LENGTH_MISMATCH")
+        for i,time_s in enumerate(times):
+            q = [float(v[i]) for v in values]
+            if not all(math.isfinite(x) for x in q):
+                raise ValueError("S07_NONFINITE_RP_TP")
+            yield (case,batch,"CSEG_%02d"%seg,gi,time_s,*q)
+
+
+def selftest():
+    case = CASES[0]
+    n=3
+    data={"Time_[s]":[100.0,100.05,100.10]}
+    for gi in range(1,10):
+        for suffix,unit in SUFFIX_UNIT.items():
+            data["TwHt%d%s_[%s]"%(gi,suffix,unit)] = [float(gi+j) for j in range(n)]
+    rows=list(extract_rows(data,case,"A",expected_n=n))
+    assert len(rows)==27 and rows[0][2]=="CSEG_01"
+    assert rows[-1][2]=="CSEG_09" and rows[-1][4]==100.1
+    faults=("missing","unit","time","nan","length","case","ambiguous")
+    for fault in faults:
+        bad={k:list(v) for k,v in data.items()}
+        c=case
+        if fault=="missing": del bad["TwHt1RPxi_[deg]"]
+        elif fault=="unit":
+            bad["TwHt1RPxi_[rad]"]=bad.pop("TwHt1RPxi_[deg]")
+        elif fault=="time": bad["Time_[s]"][1]=100.07
+        elif fault=="nan": bad["TwHt1RPxi_[deg]"][0]=float("nan")
+        elif fault=="length": bad["TwHt1RPxi_[deg]"].pop()
+        elif fault=="case": c="INVALID_CASE"
+        else: bad["TwHt1RPxi_(deg)"]=list(bad["TwHt1RPxi_[deg]"])
+        try:
+            list(extract_rows(bad,c,"A",expected_n=n))
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("S07_FAULT_NOT_REJECTED_"+fault)
+    return {"synthetic_valid_rows":27,"negative_tests_passed":len(faults),
+            "native_solver_runs":0}
+
+
+def capture_existing_outb(path, case, batch, output):
+    """Opt-in read of an EXISTING file; NEVER launches OpenFAST."""
+    try:
+        from openfast_toolbox.io.fast_output_file import FASTOutputFile
+    except ImportError as exc:
+        raise RuntimeError("Install openfast_toolbox for existing OUTB reads") from exc
+    df = FASTOutputFile(str(path)).toDataFrame()
+    time_col = next((c for c in df.columns if c.startswith("Time")),None)
+    if time_col is None:
+        raise ValueError("S07_NO_TIME_COLUMN")
+    # Original output is typically 0..700s; retain 100..700s only.
+    window = df[(df[time_col]>=100.0-1e-4)&(df[time_col]<=700.0+1e-4)]
+    out=Path(output)
+    out.parent.mkdir(parents=True,exist_ok=True)
+    tmp=out.with_name(out.name+".tmp")
+    count=0
+    try:
+        with gzip.open(tmp,"wt",newline="",encoding="utf-8") as f:
+            writer=csv.writer(f,lineterminator="\n")
+            writer.writerow(FIELDS)
+            for row in extract_rows(window,case,batch):
+                writer.writerow(row)
+                count+=1
+        expected=12001*sum(isinstance(s,int) for s in BATCHES[batch][1])
+        if count!=expected:
+            raise ValueError("S07_WRONG_EXPORTED_ROW_COUNT")
+        tmp.replace(out)
+    finally:
+        if tmp.exists(): tmp.unlink()
+    receipt={"case":case,"batch":batch,"source_outb_sha256":sha256_file(path),
+             "source_outb_path":str(path),"output_sha256":sha256_file(out),
+             "rows":count,"source_level":"EXISTING original OUTB read; no solver launched",
+             "status":"RP_TP_CAPTURED_NEEDS_DCM_AND_SIGNED_FREE_BODY",
+             "HOLD":"Not an Abaqus external load; v3.5.3 DCM and inertia/gravity/RNA owner still need native checks"}
+    receipt_path=out.with_name(out.name+".receipt.json")
+    receipt_path.write_text(json.dumps(receipt,indent=2)+"\n",encoding="utf-8")
+    return receipt
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--self-test",action="store_true")
+    p.add_argument("--t071",type=Path)
+    p.add_argument("--t072",type=Path)
+    p.add_argument("--source-audit",type=Path)
+    p.add_argument("--outb",type=Path,help="EXISTING OUTB only, no solver")
+    p.add_argument("--case")
+    p.add_argument("--batch")
+    p.add_argument("--output",type=Path)
+    a=p.parse_args()
+    if a.self_test:
+        print("S07_SELFTEST",json.dumps(selftest(),sort_keys=True))
+    if a.source_audit or a.outb:
+        if not a.t071 or not a.t072:
+            p.error("--t071 and --t072 required")
+        receipt=source_gate(a.t071,a.t072)
+        if a.source_audit:
+            a.source_audit.parent.mkdir(parents=True,exist_ok=True)
+            a.source_audit.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n",
+                                      encoding="utf-8")
+            print("S07_SOURCE_GATE",json.dumps(receipt["TAB"],sort_keys=True))
+        if a.outb:
+            if not a.case or not a.batch or not a.output:
+                p.error("--case --batch --output required for existing OUTB capture")
+            print("S07_EXISTING_OUTB_CAPTURE",json.dumps(
+                capture_existing_outb(a.outb,a.case,a.batch,a.output),sort_keys=True))
+    if not (a.self_test or a.source_audit or a.outb):
+        p.error("choose --self-test, --source-audit or --outb")
+
+
+if __name__=="__main__":
+    main()
