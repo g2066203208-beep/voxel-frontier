@@ -366,3 +366,6 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **STANDARD/REF/OFFICIAL：** 本轮无新授权标准/期刊全文核读；继续沿用T064材料应力输出契约和 `governance/CODEX_FESAFE_RECOVER_OR_EXECUTE_20261008.md` 的恢复判据，不新增疲劳强度或寿命参数。
 - **误差预算与FAIL/HOLD：** 元数据核验为整数、字节完全一致（允许偏差0）；不涉及数值积分/物理误差。尚未验证LFS对象下载、重组后整体SHA、Abaqus能否打开、ODB是否包含真实Wind步及局部应力、对应模型是否为当前158m T057/T070或旧历史版本、材料/积分点/网格/初始PT/fe-safe项目与S–N。故状态为 `HISTORICAL_LFS_METADATA_RECOVERED / NATIVE_ODB_AND_MATERIAL_LIFE_HOLD`，非 `VERIFIED_REUSABLE`，无原生RUN/FIG/材料寿命TAB。**S10整阶段仍HOLD，12阶段0/12未晋级。**
 - **下一唯一动作：** 在具备git-lfs和Abaqus odbAccess的本机后台，只按manifest按需取回 `..._STRESS.odb.parts` 五个真实LFS对象，逐卷SHA与重组ODB整体SHA核验后，先只读打开ODB列出steps/frames/S输出与模型材料身份；不做任何新求解，不打开GUI。若下载失败记录实际LFS错误，不把指针当原件。
+
+
+**2026-10-29 20:16 CI回填（覆盖本节CI_PENDING，不改变物理HOLD）：** 实际远端[Actions #40871655096](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40871655096) 已 `completed/success`，job `123439951101` 成功。原生Actions job日志明确打印 `SYNTHETIC_PASS: 2 ODB manifests + 2 INP pointers; offset tamper rejected`、`REAL_GIT_LFS_POINTER_AND_MANIFEST_METADATA_PASS_NOT_ODB 8332739680`，且故意执行 `--verify-payload` 对未下载LFS对象失败并通过 `LFS_OBJECT_NOT_FETCHED` 拒绝检查；旧744行源SHA回归也成功。远端[结果artifact #12896053089](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40871655096/artifacts/12896053089) 已登记（3,479字节）；本轮仅通过GitHub作业与artifact元数据回读，**未下载artifact ZIP逐字节验证**。真实LFS二进制、ODB打开、局部应力及fe-safe仍HOLD；这次成功仅为元数据/程序测试。
