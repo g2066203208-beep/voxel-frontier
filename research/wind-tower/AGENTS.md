@@ -1,36 +1,37 @@
 # 论文研究工作要求
 
-## 2026-10-21 新增地震范围与正式记录入口
+> [!IMPORTANT]
+> **每次写入前必须先读[论文指挥室的当前进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)。**
+> 这包括本机 Codex、网页版 GPT、新开的会话和其他执行者。没有核对最新进度，不得凭旧会话摘要重新派工、改状态或启动重复计算。
 
-用户已要求在嘉鱼研究基础上增加抗震验算与风震研究，并要求全程GitHub记录。当前入口：[T079](experiments/T079/README.md)。
+## 每次开工及每批提交前
 
-T079完成进度核查、文献检索和方法提案；尚无新增地震求解。现存六章正文保留，七章仅为新增地震后的装配方案，原疲劳与优化主线保留。旧文字中的“不得扩框架”不再禁止用户新授权的地震支路；Simpack仍不回到production。
+1. 确认指挥室列明的活动研究分支，读取其最新 HEAD；main 与活动分支都需辨明，不能用 main 旧副本覆盖研究进度。
+2. 读指挥室的“当前进度”“已完成成果”“最近交接日志”，再读对应任务书及该任务的最新过程节、真实结果和来源。长日志按任务定位最新补充，不只读首段旧 HOLD。
+3. 在指挥室最近交接区追加开工读取回执：时间/执行者/task、`read_base_sha`、已读文件及日志节、继承成果、本次增量、拟改文件、责任方。首次写入可只登记此回执；后续工作必须遵循已登记范围。
+4. 每批提交前重新查 HEAD；如有并行更新，重读受影响文件、合并新内容，以当前 SHA 作条件提交，禁止覆盖或强推别人的进度。
+5. 交付时在原任务追加收尾：实际文件/证据、运行或失败、状态变化、下一责任人与输入；同步指挥室相关快照行，并回读远端。交付 commit 可用“本提交”及 GitHub History 识别，避免自指 SHA 补交循环。
 
-GitHub为任务、过程、依据、状态和验收入口；D盘为工程工作副本。先登记task与RUN卡再正式执行，每阶段提交并核验远端；失败/HOLD与大文件hash/存放位置也要记录。当前模型/初态/配筋门禁没有因上传而通过。
+## 唯一入口与文件职责
 
-本目录所有后续工作先读取：
+- 指挥室负责当前调度快照、已完成成果索引与交接日志；网页版任务书只定义 C/L 任务的执行细节，不复制另一张进度表。
+- `00_STATUS.md`、T079/T080 `PROCESS_LOG.md`及其他实验日志保留带日期的阶段证据；旧“下一唯一动作”只是当时判断。
+- `00_WORKSPACE_MASTER.md`负责论文科学问题和章节装配；六章重构稿、原始七章 Word、新地震章节方案必须分开。
+- 科学结论由对应版本的原始输入、RUN、结果及来源支持。指挥室整理状态，不能用管理文字代替计算或消除失败。
 
-1. `README.md`
-2. `manuscript/final-thesis/00_STATUS.md`
-3. `manuscript/final-thesis/00_WORKSPACE_MASTER.md`
-4. `governance/CURRENT_ABAQUS_MODEL_20261006.md`
-5. `registry/literature_master.tsv`
+## 成果继承与当前分工
 
-## 强制规则
+- 原稿和T026/T038验证、36风工况、31段六分量、T077配筋、T078损失、载荷雨流/DEL均有已有成果。先核模型/数据版本再继承，禁止因新阶段HOLD归零。
+- 新增地震及同状态W/E/WE、抗震约束疲劳优化属于用户已授权范围，按T079最新METHOD_PLAN实施；嘉鱼ERA5不自动确定地震场址，不再强制绑定嘉鱼实址地勘。
+- GitHub Actions可完成的输入生成、OpenFAST/TurbSim、统计、算法、图表、正文和网站工作交网页版GPT/Actions；本机只承担确需本机授权的Abaqus/CAE/ODB/fe-safe和本地独有原件恢复。
+- 历史fe-safe/寿命/优化线索先定位核验；“本次没找到”不得写成“从未做过”。需要补算时写清旧成果、实际变更、受影响指标和最小补验。
+- T057物理父本、T070诊断父本及原始失败日志保留；不以一次新诊断失败否定旧成功计算。Simpack不重回生产路线。
 
-- 每一步研究必须有可追溯依据：REF / STANDARD / OFFICIAL / SOURCE / RUN / FIG / TAB。
-- 核心文献必须记录原文对象、软件/模型、边界条件、步骤、参数、验证、结果和适用边界；不能只凭题目或摘要转移方法。
-- 参数来源必须区分：直接原型、同对象文献、标准/官方、独立工程重构、本文study-design、HOLD。
-- 源模型不能证明自身正确；文件名含FINAL/VALIDATED不代表科学状态。
-- 当前Abaqus唯一候选是T057；T053/T045及更早模型只作历史/对照。
-- 当前论文正式结构是六章制；第5章为“疲劳控制参数敏感性与结构优化”，第6章为结论与展望。旧七章仍归档。
-- Simpack不得重新进入production thesis route。
-- load-DEL不等于material fatigue life；不同材料不得统一使用一个m值。
-- 真实失败记录、原始RUN和研究谱系不为了“目录整洁”而删除；被替代规则/正文统一进入archive。
-- 发布或修改前先读取最新GitHub主分支，禁止用陈旧本地副本覆盖当前状态。
+## 科学证据规则
 
-## 当前优先级
-
-T070 native Data Check → Gravity/PT/contact equilibrium → mass/CG/J → Modal/Flex → Ch3数据身份与DLC1.2 bins → Ch4 local material fatigue → Ch5 fatigue-driven sensitivity/optimization。
-
-任何与此冲突的历史audit/workflow文字只作为当时记录，不再作为当前执行授权。
+- 研究依据记录REF / STANDARD / OFFICIAL / SOURCE / RUN / FIG / TAB；来源与研究假设分开。
+- 核心文献记录原文对象、方法、边界、参数、验证、结果及适用范围，不凭摘要迁移结论。
+- load-DEL不等于材料寿命；不同材料不能统一一个m值；CDP损伤不等于Miner损伤。
+- 文件名FINAL/VALIDATED、CI绿灯和上传成功不能替代原生物理验收。
+- 原始RUN、真实失败和研究谱系不为“整洁”删除；纠错追加依据与替代关系。
+- 不合并Draft PR #42或宣称Pages发布，除非用户授权该动作；导航文档更新不等于研究验收。
