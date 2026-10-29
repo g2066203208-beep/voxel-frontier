@@ -51,6 +51,9 @@ jobs:
         run: |
           python3 -m py_compile research/wind-tower/experiments/T070/repair-20261029/c00b_repair_l01_contact.py
           python3 research/wind-tower/experiments/T070/repair-20261029/c00b_repair_l01_contact.py --self-test
+          python3 -m py_compile research/wind-tower/experiments/T070/repair-20261029/c00b_run_child_g0.py
+          python3 research/wind-tower/experiments/T070/repair-20261029/c00b_run_child_g0.py --self-test
+          if python3 research/wind-tower/experiments/T070/repair-20261029/c00b_run_child_g0.py --inp research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp --out /tmp/C00B_REFUSE_PARENT --preflight-only; then echo 'ERROR: C00b wrapper accepted frozen parent'; exit 1; else echo 'C00B_WRAPPER_PARENT_REJECT_PASS'; fi
       - name: C00b real frozen parent and actual L01 native DAT static repair
         shell: bash
         run: |
@@ -70,6 +73,7 @@ jobs:
           assert x['c00_sha256']=='a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715'
           assert x['l01_native_error_count']==7
           assert x['native_datacheck']=='NOT_RUN_ON_C00B'
+          assert x['c00b_sha256']=='d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac'
           print('C00B_REAL_PARENT_NATIVE_DAT_STATIC_PASS', x['c00b_sha256'])
           PY
       - name: Upload C00b child, two-hunk diff and manifest for local L02 (NOT native pass)
