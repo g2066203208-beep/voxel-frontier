@@ -4,6 +4,7 @@ on:
     paths:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ISHIHARA_REFERENCE_PAPER_FOUR_PERIOD_DIAGNOSTIC_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv'
       - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
@@ -284,6 +285,8 @@ jobs:
           curl -fLsS --retry 3 -o us.csv "$base/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv"
           curl -fLsS --retry 3 -o esm.csv "$base/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv"
           curl -fLsS --retry 3 -o expected.csv "$base/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv"
+          curl -fLsS --retry 3 -o s09_ishihara2024_equation_oracle.py "$base/s09_ishihara2024_equation_oracle.py"
+          curl -fLsS --retry 3 -o reference_expected.csv "$base/real-records/S05_ISHIHARA_REFERENCE_PAPER_FOUR_PERIOD_DIAGNOSTIC_20261029.csv"
           sha256sum s05_event_balanced_spectrum_gate.py us.csv esm.csv
       - name: Run analytic and negative tests, then actual source-table event balance
         shell: bash
@@ -311,11 +314,37 @@ jobs:
                   assert math.isclose(float(a[key]),b[key],rel_tol=1e-10,abs_tol=1e-12),(key,a[key],b[key])
           print("REAL_3_EVENT_5_PAIR_4_PERIOD_COMMITTED_CSV_CROSSCHECK_PASS")
           PY
+      - name: Reference-paper Eq1 and real 20-row PSA mismatch oracle (NOT Jiayu target)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 s09_ishihara2024_equation_oracle.py --self-test
+          python3 s05_event_balanced_spectrum_gate.py --reference-paper-benchmark --us-csv us.csv --esm-csv esm.csv --output reference-paper-diagnostic.json
+          python3 - <<'PY'
+          import csv,json,math
+          x=json.load(open("reference-paper-diagnostic.json"))
+          with open("reference_expected.csv",newline="") as f: rows=list(csv.DictReader(f))
+          assert x["status"]=="REFERENCE_PAPER_ALGEBRA_ONLY_NOT_DESIGN_SPECTRUM"
+          assert not x["design_site_spectrum_PASS"] and not x["record_low_frequency_PASS"]
+          assert x["Abaqus_E_WE_RUN"]==0 and x["actual_scaled_waveforms"]==0
+          assert len(rows)==len(x["rows"])==5
+          for a,b in zip(rows,x["rows"]):
+              assert (a["event_id"],a["station"])==(b["event_id"],b["station"])
+              assert a["source_HNE_sha256"]==b["source_HNE_sha256"]
+              assert a["source_HNN_sha256"]==b["source_HNN_sha256"]
+              assert a["decision"]==b["decision"]=="REJECT_DESIGN_USE_REFERENCE_PAPER_ONLY"
+              for k in ("pre_scale_log_rmse","least_squares_amplitude_scale_DIAGNOSTIC",
+                        "post_scale_log_rmse","max_abs_post_log_residual"):
+                  assert math.isclose(float(a[k]),b[k],rel_tol=1e-10,abs_tol=1e-12),(k,a[k],b[k])
+          print("REAL_FIVE_PAIRS_REFERENCE_PAPER_EQ1_CROSSCHECK_PASS_NO_DESIGN_WAVES")
+          PY
       - name: Preserve source-hashed diagnostic JSON, never label design PASS
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: s05-three-event-event-balanced-source-diagnostic-not-design-pass
-          path: s05-event-balance.json
+          path: |
+            s05-event-balance.json
+            reference-paper-diagnostic.json
           if-no-files-found: warn
           retention-days: 90
