@@ -269,7 +269,7 @@ def reference_paper_self_test():
     u, e = _fixture()
     out = reference_paper_spectrum_diagnostic(u, e, enforce_source_sha=False)
     assert len(out["rows"]) == 5 and len(out["reference_sa_m_s2"]) == 4
-    assert out["reference_sa_m_s2"]["10.0"] == .512
+    assert math.isclose(out["reference_sa_m_s2"]["10.0"], .512, rel_tol=1e-13)
     assert math.isclose(out["reference_sa_m_s2"]["4.0"], 1.28, rel_tol=1e-13)
     assert all(row["period_count"] == 4 and row["post_scale_log_rmse"] >= 0
                and row["post_scale_log_rmse"] <= row["pre_scale_log_rmse"]
