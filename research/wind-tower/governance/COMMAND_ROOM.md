@@ -294,3 +294,6 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 ### HANDOFF-20261030-S07-A-ASSEMBLY-WEB-05｜开工读取回执
 
 - **START / 2026-10-30 05时 CST / 网页版GPT：** read_base_sha=`b220b23ddf80dd91028a397a9c26b6fa0f92d6a3`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft。已读取AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、指挥室当前进度/最新交接、C01任务书、S07现有静态依赖图脚本/真实JSON/输入身份JSON及现有Actions工作流。继承04时79件Windows overlay、17模块、24引用、BTS真实SHA与OpenFAST PE/x64源身份；**不重新下载437MB BTS、不重复运行风载或DEL**。本轮仅扩展既有`s07_a_runtime_dependency_gate.py`为源SHA锁定、路径安全、拒绝不完整源的可复现A批装配器，增加可执行合成正负测试；在T077既有S06/S07过程日志、00_STATUS、本指挥室记录最小初始化RUN卡与实际结果。**只准备装配和初始化卡，不启动OpenFAST/Abaqus**；冻结T057/T070不改，PR不合并。责任：网页版GPT/Actions；真实完整BTS与exe二进制只在具备资源时按需附加。
+
+
+- **END / 2026-10-30 05时 CST / S07 A批静态装配与最小初始化卡：** 继承04时真实源身份，修改[既有S07程序](../experiments/T077/recovery/s07_a_runtime_dependency_gate.py)加入仅在提供真实BTS+exe时运行的SHA锁定、原子装配功能和合成拒绝测试；新增[最小初始化RUN卡](../experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_INIT_RUN_CARD.md)，原FST不动、诊断FST仅TMax=0.1s、2 CPU/4GiB/180s/1GiB资源上限；完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差/HOLD见[T077 05时过程节](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。本轮无437MB BTS再次下载、无真实A批完整装配、无OpenFAST/Abaqus求解，**0/12未晋级**。下一责任人：云端/Actions验证脚本CI；通过后按需在已持有BTS实体的环境装配并核验，才考虑原生最小初始化；不触发生产RUN。冻结T057/T070未修改，PR不合并。
