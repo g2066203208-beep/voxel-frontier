@@ -1,0 +1,28 @@
+name: S09 same-state paired W-E-WE algebra gate
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - research/wind-tower/experiments/T079/s09_same_state_w_e_we_history_gate.py
+      - .github/workflows/s09-same-state-paired-history.yml
+  workflow_dispatch:
+jobs:
+  paired-history-selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run analytic and fail-closed tests
+        run: |
+          python3 --version
+          sha256sum research/wind-tower/experiments/T079/s09_same_state_w_e_we_history_gate.py
+          python3 research/wind-tower/experiments/T079/s09_same_state_w_e_we_history_gate.py --self-test | tee s09_selftest.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s09-paired-history-analytic-receipt
+          path: s09_selftest.json
+          if-no-files-found: warn
