@@ -41,6 +41,12 @@
 
 每次开工追加START，结束在同一条下追加END；不同任务各占一条。原始技术明细仍写回对应实验日志，此处只登记本次变化及链接。
 
+### HANDOFF-20261029-C00B-WEB-1208｜L01七项原生致命错误最小修复
+
+- **START / 2026-10-29 12:08 CST / 网页版GPT：** read_base_sha=`6cc48ed95d640f42c08935f0adb6604ab25c87a0`；main=`58c1e545f67b645417d5957189f5dad693d975bb`。已读研究AGENTS/README、指挥室当前快照与交接/已完成成果、00_STATUS/WORKSPACE_MASTER、T079学术审查、T080.1/.2/.3、12阶段计划、WEB_GPT任务书、L01真实.dat/README、T070完整父本Git blob与C00生成器/包装器/CI。继承T026历史原生成功、T077/T078设计、四工况31站、S05选波与C00 IOS修复；**新原生L01已失败7 FATAL/129 WARNING**，不再沿用“尚未运行”旧状态。
+- **本次增量/写入范围：** C00b只处理L01原生发现的接触属性段尾空白行及6个直接请求接触输出变量非法问题，按Abaqus 2025官方*CONTACT OUTPUT、Standard general contact、*CONTACT PROPERTY ASSIGNMENT原页替换为分组变量并保留30对接触、μ0.5、所有结构物理参数。仅新增`experiments/T070/repair-20261029/`的可复算子版生成器/原生G0包装器，更新现有CI/RUN_CARD、T080过程日志、本页交接及00_STATUS；不改冻结T057/T070，不启动高成本求解、不合并PR。
+- **责任与验收：** 网页版GPT/Actions负责全16.6MB原件SHA锁定、子版字节diff/逆变换/异常拒绝/真实CI artifact；本机Codex仅在收到C00b锁定SHA后后台执行一次Abaqus 2025 Data Check并回传原生.dat/.msg/.sta/.log（如有）。静态CI不称原生PASS。END待本轮实际交付后填写。
+
 ### HANDOFF-20261029-NATIVE-L01-FESAFE｜原生复验与历史疲劳恢复
 
 - **START / 2026-10-29 11:18 CST / 本机Codex：** read_base_sha=`8ab7527415ac390776a29365d8bf6699721e8050`。已读两层AGENTS、指挥室当前快照/最近交接/成果表、任务书、T057修改清单、C00 RUN_CARD/manifest/包装器/生成器及T070 G0/G1运行手册；已接收网页版11:15交付，两次CI真实成功。
