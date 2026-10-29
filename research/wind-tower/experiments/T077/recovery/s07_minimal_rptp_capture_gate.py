@@ -134,7 +134,7 @@ def verify_patched_elastodyn(baseline, run_input, batch,
     run_lines = Path(run_input).read_text(encoding="utf-8-sig").splitlines()
     if len(base_lines) != len(run_lines):
         raise ValueError("S07_ELASTODYN_UNEXPECTED_LINE_COUNT")
-    pattern = re.compile(r"^\\s*([0-9]+(?:\\s*,\\s*[0-9]+)*)\\s+TwrGagNd\\b")
+    pattern = re.compile(r"^\s*([0-9]+(?:\s*,\s*[0-9]+)*)\s+TwrGagNd\b")
     base_gages = [(i,tuple(int(n) for n in m.group(1).split(",")))
                   for i,line in enumerate(base_lines)
                   if (m := pattern.search(line))]
@@ -252,9 +252,9 @@ def selftest():
     import tempfile
     with tempfile.TemporaryDirectory() as d:
         base=Path(d)/"base.dat"; patched=Path(d)/"run.dat"
-        base.write_text("header\\n1,3,5,7,9,13,15,17,20  TwrGagNd  - source\\nfooter\\n")
-        patched.write_text("header\\n"+",".join(map(str,BATCHES["A"][0]))+
-                           "  TwrGagNd  - T071\\nfooter\\n")
+        base.write_text("header\n1,3,5,7,9,13,15,17,20  TwrGagNd  - source\nfooter\n")
+        patched.write_text("header\n"+",".join(map(str,BATCHES["A"][0]))+
+                           "  TwrGagNd  - T071\nfooter\n")
         got=verify_patched_elastodyn(base,patched,"A",sha256_file(base))
         assert got["verified_tower_gage_nodes"]==list(BATCHES["A"][0])
         for fault in ("swapped_batch","physics_change","extra_line","bad_base_sha"):
@@ -264,15 +264,15 @@ def selftest():
                 patched.write_text(patched.read_text().replace("footer","changed"))
                 op=lambda: verify_patched_elastodyn(base,patched,"A",sha256_file(base))
             elif fault=="extra_line":
-                patched.write_text(patched.read_text()+"extra\\n")
+                patched.write_text(patched.read_text()+"extra\n")
                 op=lambda: verify_patched_elastodyn(base,patched,"A",sha256_file(base))
             else:
                 op=lambda: verify_patched_elastodyn(base,patched,"A","0"*64)
             try: op()
             except ValueError: pass
             else: raise AssertionError("S07_PROVENANCE_FAULT_NOT_REJECTED_"+fault)
-            patched.write_text("header\\n"+",".join(map(str,BATCHES["A"][0]))+
-                               "  TwrGagNd  - T071\\nfooter\\n")
+            patched.write_text("header\n"+",".join(map(str,BATCHES["A"][0]))+
+                               "  TwrGagNd  - T071\nfooter\n")
         fake=Path(d)/"fake.outb";fake.write_bytes(b"not an OUTB")
         for kwargs in (dict(),dict(expected_sha256="0"*64)):
             try: capture_existing_outb(fake,case,"A",Path(d)/"out.gz",**kwargs)
