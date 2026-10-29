@@ -82,7 +82,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p s07-native-source
-          curl --fail --location --silent --show-error --retry 3 \\
+          curl --fail --location --silent --show-error --retry 3 \
             --output s07-native-source/static-part-001.zip \\
             "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip"
           python3 - <<'PY'
@@ -100,7 +100,7 @@ jobs:
           with tempfile.TemporaryDirectory() as d:
               base=Path(d)/'baseline.dat';base.write_bytes(raw)
               original=base.read_text(encoding='utf-8-sig')
-              pat=r'(?m)^\\s*1,3,5,7,9,13,15,17,20\\s+TwrGagNd\\b[^\\r\\n]*'
+              pat=r'(?m)^\s*1,3,5,7,9,13,15,17,20\s+TwrGagNd\b[^\r\n]*'
               for batch in mod.BATCHES:
                   patched=Path(d)/('run-'+batch+'.dat')
                   nodes=','.join(map(str,mod.BATCHES[batch][0]))
@@ -113,7 +113,7 @@ jobs:
                   try:mod.verify_patched_elastodyn(base,patched,'B' if batch!='B' else 'A')
                   except ValueError as e:assert 'GAGE_MAP_MISMATCH' in str(e)
                   else:raise AssertionError('wrong 31-gage batch accepted')
-                  patched.write_text(changed.replace('TwrGagNd      - T071 gages','TwrGagNd      - T071 gages')+'\\nEXTRA')
+                  patched.write_text(changed.replace('TwrGagNd      - T071 gages','TwrGagNd      - T071 gages')+'\nEXTRA')
                   try:mod.verify_patched_elastodyn(base,patched,batch)
                   except ValueError:pass
                   else:raise AssertionError('extra physics line accepted')
