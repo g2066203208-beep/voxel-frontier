@@ -385,3 +385,16 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 
 
 **21:07 真实CI回填（覆盖本节CI_PENDING）：** [Actions #40878854136](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40878854136) 已`completed/success`，job `123464651225`原始日志出现`SYNTHETIC_REASSEMBLY_PASS: exact bytes, overwrite/tamper/missing rejects`、`REAL_GIT_LFS_POINTER_AND_MANIFEST_METADATA_PASS_NOT_ODB 8332739680`及真实744行载荷源SHA回归。原始日志同时保留对尚未下载LFS实体的拒绝测试；[artifact #12899541916](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40878854136/artifacts/12899541916)已上传，3,522字节，Actions上传日志声明ZIP SHA256=`cbe47dd08db43078dac99f663801ca6381257049ee4f8547efef4d88182b7353`；本轮**未下载该ZIP逐字节复核**。CI只覆盖合成重组与真实指针/744行源，不代表4.3GB STRESS ODB实际下载/重组或原生打开，S10物理HOLD维持。
+
+
+## 2026-10-29 22时｜S10历史STRESS ODB原生只读目录清点入口（不下载大件、不做求解）
+
+- **SOURCE / 阅读层级：** 本轮实际读取PR #42当前 `main`、活动分支、AGENTS/README、指挥室、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080三份门禁审查、12阶段总计划、既有S10 ODB提取器及本报告21时节。历史`DTU158_SITE_NTM_U18p57_S04_STRESS.odb`的5卷manifest声明总字节 **4,316,822,840**、整体SHA256 `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd`；**没有取得实体或独立复算这个整体SHA**。T057/T070冻结输入未修改。
+- **RUN / 可运行代码：** 复用并更新[既有原生应力提取器](s10_native_odb_local_stress_gate.py)，新增`--inventory-only`。运行前要求ODB实体存在、确切字节数及SHA256全文件匹配，随后才以`odbAccess.openOdb(readOnly=True)`列出step、帧数、帧时间、每步含`S`场的帧数、抽样帧`S`分量名、instance、element set及单元/节点计数。**不访问`S.values`、不导出应力值、不推断材料寿命**。可用`--inventory-json`写新的只读结果收据（禁止覆盖）。未取得本机Abaqus环境和真实ODB，本轮无native执行日志。
+- **本机最小复现命令（在仓库根目录，先执行21时节的五卷实体恢复及完整SHA核验）：** `abaqus python research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py --inventory-only --odb /独立目录/DTU158_SITE_NTM_U18p57_S04_STRESS.odb --expected-odb-bytes 4316822840 --expected-odb-sha256 996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd --inventory-json /独立目录/S10_STRESS_ODB_INVENTORY.json`。仅当输出为`NATIVE_READ_ONLY_DIRECTORY_INVENTORY_NOT_PHYSICS_PASS`且原生日志确实存在，才能称“目录元数据已原生清点”；若无`S`或帧缺失，直接记录实际情况。
+- **合成测试与失败拒绝：** 新增mock ODB：2步（其中空步）、3帧、1实例，检验`S`仅在2/3帧出现、frame time、实例集合/网格计数及零应力值读取；拒绝NaN帧时间与非法数量上限。CI脚本增加伪ODB错误SHA拒绝，检查在`odbAccess`导入前失败，避免把测试二进制冒充原生ODB。自动化入口为[既有S10工作流](../../../../../.github/workflows/s10-material-cycle-contract.yml)；本节写入时新CI结果尚待原生日志核对，不能称CI PASS。
+- **REF / STANDARD / OFFICIAL：** 本轮无新增期刊全文、授权规范条款或Abaqus官方原页阅读；`odbAccess`字段清点属于程序接口使用，不是官方规范验收。
+- **FIG / TAB：** FIG无新增本塔云图。TAB为将来真实ODB的目录JSON收据；本轮只存在合成自测输出，不伪造实际帧数或材料应力。
+- **假设与误差预算：** ODB manifest整体SHA只作为声明值，要求真实实体**字节数和SHA256零误差**；mock逻辑断言为精确布尔验收，未建立物理模型/网格/材料/阻尼误差预算；ODB内时间标为`time_s_unverified`，未确认原生单位。
+- **FAIL / HOLD：** 本轮未下载4.3GB、未原生打开ODB、未发现经核验的材料积分点应力时程、无fe-safe/疲劳寿命/地震E/WE新RUN。S10仅`NATIVE_INVENTORY_TOOL_PREPARED / ODB_PAYLOAD_HOLD`，**12阶段0/12未晋级**；后续需将历史NTM U18p57与当前158m D400/Pe及四ETM身份分开，不得直接移植寿命。
+- **下一唯一动作：** 本机后台按需取得五卷实体、逐卷及整体SHA实测，再使用上述只读目录模式生成真实steps/frames/S清单；若下载或odbAccess失败，保存原始错误日志，不再追加无意义元数据审查。
