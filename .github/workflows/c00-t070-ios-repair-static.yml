@@ -22,6 +22,9 @@ jobs:
         run: |
           python3 -m py_compile research/wind-tower/experiments/T070/repair-20261029/c00_relocate_t070_ios.py
           python3 research/wind-tower/experiments/T070/repair-20261029/c00_relocate_t070_ios.py --self-test
+          python3 -m py_compile research/wind-tower/experiments/T070/repair-20261029/c00_run_child_g0.py
+          python3 research/wind-tower/experiments/T070/repair-20261029/c00_run_child_g0.py --self-test
+          if python3 research/wind-tower/experiments/T070/repair-20261029/c00_run_child_g0.py --inp research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp --out /tmp/C00_MUST_REFUSE_PARENT --preflight-only; then echo 'ERROR: child wrapper accepted frozen parent'; exit 1; else echo 'C00_CHILD_WRAPPER_PARENT_REJECT_PASS'; fi
       - name: Check original exact bytes and generate only child
         shell: bash
         run: |
