@@ -449,3 +449,13 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **REF / STANDARD / OFFICIAL / FIG：** REF继承T071/T072历史OpenFAST v3.5.3输入拓扑及T062通道证据，未新增同行评议全文或原页；STANDARD未读新增授权IEC/GB/NB条款，不做条款验收；OFFICIAL为原始T072工作流、真实三ZIP、LFS实体及Actions原生日志（不是OpenFAST/Abaqus原生结果）；FIG无新增本塔风震/应力结果图。TAB为24边真实输入图，不是响应结果。
 - **误差预算 / 假设 / 失败记录 / HOLD：** 原件身份采用完整SHA256字节相等；相对路径按T072 Windows拓扑和唯一大小写折叠解释，不能推断Linux或控制器动态兼容；WindType=3仅说明该3个WAsP槽位在当前配置下不使用。早期[Actions #40947000302](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40947000302)把4条路径暂记待判，[#40947312172](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40947312172)从真实开关消去3条，[#40947518479](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40947518479)根据Windows原工作流和实际大小写差异闭合剩余1条；不是隐藏失败。原生OpenFAST/Abaqus RUN=0，真实新31站OUTB=0，载荷自由体/动力/材料误差预算**UNDEFINED**；当前S07=`A_CASE_WINDOWS_STATIC_DEPENDENCY_GRAPH_CLOSED / NATIVE_OUTB_AND_SIGNED_FREE_BODY_HOLD`，**整阶段0/12未晋级**，正式DLC1.2长期风疲劳、S10材料寿命和S11抗震约束优化未因此PASS。
 - **下一单一最优动作：** 复用这套SHA锁定的Windows输入拓扑生成**完整A批诊断装配及最小初始化RUN卡**（明确短时、资源上限、保存OUTB/RP/TP及失败退出），先完成不求解的装配/预检；后续是否执行最小受控OpenFAST诊断另依物理门禁决定，不擅自启动700s生产RUN。
+
+
+## 2026-10-30 05时｜S07 A批真实字节装配器及最小初始化RUN卡（静态准备，非OpenFAST运行）
+
+- **SOURCE（已读取原始证据的层级）：** 继承04时真实三ZIP/79件Windows overlay、17可达模块、24条路径、0未解释引用、1条仅Windows大小写折叠；真实BTS=436,968,166字节/SHA256 `9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78`、exe=61,086,208字节/SHA256 `0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a`来自前轮原件核验，本轮**未重新下载实体**。原ZIP三个SHA见[既有依赖图](S07_U11p4_ETM_S04_A/S07_A_RUNTIME_DEPENDENCY_RECEIPT.json)；子版ED SHA256 `701a3e30bc058d97c673e28947307066a245c276cb10042a1eb3ca133c571833`。
+- **RUN（本轮真实代码交付，不是求解）：** 在[既有静态依赖程序](s07_a_runtime_dependency_gate.py)新增`--assemble-dir --bts`：需三ZIP、SHA锁定A批ED、DLL、真实BTS、真实exe及既有源manifest；逐件验证大小/SHA256、禁止LFS指针、拒绝覆盖/路径越界/Windows大小写冲突，8MiB分块复制、临时目录原子提交与失败清理；只保留可达输入，另生成只把TMax设为0.1s的独立`DTU_10MW_RWT_INIT_DIAG.fst`，不修改原FST、不执行求解。新增合成装配正向、BTS篡改、覆盖、缺失TMax拒绝测试；**Actions执行结果以该轮真实日志为准，未取得前不声称通过**。实际新OpenFAST/Abaqus运行=0。
+- **REF/STANDARD/OFFICIAL：** 仅继承T072历史Windows拓扑及v3.5.3历史标签；本轮未读新论文全文、IEC/GB/NB授权条款，exe PE/x64不能证明运行时ABI/版本。详细资源限制、失败退出和原生日志清单见[最小初始化RUN卡](S07_U11p4_ETM_S04_A/S07_A_INIT_RUN_CARD.md)，仅准备，**未授权执行**。
+- **FIG/TAB：** FIG无新增物理响应；TAB为可达17模块+诊断FST+BTS+exe的装配输出合同（只有真实执行`--assemble-dir`并校验后才能填写实际逐件SHA/数量）。
+- **假设/误差预算/失败：** Windows大小写折叠仅适用Windows；诊断TMax=0.1s只测最小初始化，不代表长时控制器或完整600s输出。文件SHA身份误差为精确字节相等，物理数值误差未定义。BTS与exe实际实体本轮没有再取；不能把本地合成字节装配称作真实437MB包已生成。旧Actions/归档失败保留，新的CI结果待真实回读。
+- **HOLD/PASS：** `ASSEMBLER_PREPARED / REAL_A_BUNDLE_NOT_ASSEMBLED / NATIVE_INIT_HOLD`。缺真实新31站OUTB、RP/TP/DCM、载荷所有权/签名自由体、OpenFAST原生初始化与Abaqus；S07整阶段未PASS，12阶段仍**0/12**。S10分材料疲劳及S11抗震约束优化保持。
