@@ -636,3 +636,5 @@ HOLD：
 ## 2026-10-30 05时｜S07 A批装配程序与初始化RUN卡（无求解）
 
 继承04时三ZIP依赖图、真实BTS/exe SHA与17模块/24引用静态审计，在[既有S07程序](../../experiments/T077/recovery/s07_a_runtime_dependency_gate.py)加入原件BTS/exe强制校验、可达输入最小原子装配、TMax=0.1s独立诊断FST和合成正反测试；新增[初始化RUN卡](../../experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_INIT_RUN_CARD.md)，资源预算2 CPU/4GiB/180s/1GiB输出，仅待授权原生执行。**本轮未重新取得437MB BTS或61MB exe，未生成真实完整A批装配包、未运行OpenFAST/Abaqus，CI结果以真实Actions为准**。来源SHA、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差与HOLD见[既有T077过程日志05时节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。S07独立准备有新可执行代码；严格12阶段**0/12未晋级**，S10/S11主线不变。
+
+**05:15 CI回填：** 初版[Actions #40956000007](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40956000007)真实失败（TMax正则转义）；修复后[Actions #40956055239](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40956055239) `completed/success`，job原生日志包含`S07_A_ASSEMBLY_SYNTHETIC_PASS`，程序SHA256 `e844af3260ba87816ac0d0864f5b65339369868ecb286d65a1092d79b9721481`，依赖图收据仍为`4980726329942e823a9dd58723583ae437c1dcf34209722483ba0a05343ea008`。这是合成字节装配与真实原件静态审计，**未重新下载437MB BTS/未完成真实装配/未执行OpenFAST**；S07与12阶段PASS状态不变。
