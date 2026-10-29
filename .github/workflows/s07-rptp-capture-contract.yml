@@ -149,3 +149,58 @@ jobs:
             s07/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat
             s07/S07_U11p4_ETM_S04_A/S07_A_DIAGNOSTIC_INPUT_MANIFEST.json
           retention-days: 30
+
+
+  a-case-source-bundle-audit:
+    name: S07 real A-case input provenance (NO solver)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py
+            research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+          sparse-checkout-cone-mode: false
+      - name: Try exact target BTS Git LFS payload (download only; no solver)
+        shell: bash
+        run: |
+          set +e
+          git lfs install --local
+          git lfs pull --include="research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts" --exclude=""
+          rc=$?
+          echo "S07_BTS_LFS_FETCH_EXIT=$rc"
+          if [ "$rc" -ne 0 ]; then
+            echo "BTS_PAYLOAD_HOLD: LFS transfer failed; static audit must label pointer-only"
+          fi
+          exit 0
+      - name: Read original three ZIPs, target InflowWind, DISCON, DLL and BTS identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          py="$root/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py"
+          python3 -m py_compile "$py"
+          python3 "$py" --bundle-selftest
+          python3 "$py" --audit-a-bundle \
+            --base-zip "$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip" \
+            --target-zip "$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip" \
+            --supp-zip "$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" \
+            --bts "$root/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts" \
+            --dll "$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll" \
+            --child-elastodyn "$root/experiments/T077/recovery/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat" \
+            --bundle-json S07_U11p4_ETM_S04_A_REAL_BUNDLE_IDENTITY.json
+          sha256sum S07_U11p4_ETM_S04_A_REAL_BUNDLE_IDENTITY.json "$py"
+          echo 'STATIC INPUT IDENTITY ONLY: no native OpenFAST/Abaqus run, no 31-gage OUTB, no free-body load.'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s07-u11p4-a-real-input-bundle-identity
+          path: S07_U11p4_ETM_S04_A_REAL_BUNDLE_IDENTITY.json
+          retention-days: 30
