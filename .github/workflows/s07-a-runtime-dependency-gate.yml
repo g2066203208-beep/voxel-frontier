@@ -1,0 +1,74 @@
+name: S07 A-case FST dependency closure and exe SHA (STATIC, NO solver)
+on:
+  push:
+    paths:
+      - '.github/workflows/s07-a-runtime-dependency-gate.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s07_a_runtime_dependency_gate.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  a-case-static-dependency:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Sparse source checkout; DO NOT pull 437MB BTS
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T077/recovery/s07_a_runtime_dependency_gate.py
+            research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat
+            research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_REAL_BUNDLE_IDENTITY.json
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+
+      - name: Obtain exact 61MB OpenFAST exe LFS payload only (NO execution)
+        shell: bash
+        run: |
+          set -euo pipefail
+          exe='research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe'
+          git lfs install --local
+          if git lfs pull --include="$exe" --exclude=""; then
+            echo 'EXE_LFS_TRANSFER_OK'
+          else
+            echo 'EXE_LFS_TRANSFER_FAILED: preserve pointer-only HOLD'
+          fi
+          sha256sum "$exe"
+          echo 'NO OpenFAST process or 437MB BTS download is permitted in this job.'
+
+      - name: Synthetic graph and source-locked real A-case static audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          py="$root/experiments/T077/recovery/s07_a_runtime_dependency_gate.py"
+          python3 --version
+          python3 -m py_compile "$py"
+          python3 "$py" --selftest
+          python3 "$py" \
+            --base-zip "$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip" \
+            --target-zip "$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip" \
+            --supp-zip "$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" \
+            --child-ed "$root/experiments/T077/recovery/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat" \
+            --dll "$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll" \
+            --exe "$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe" \
+            --prior-manifest "$root/experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_REAL_BUNDLE_IDENTITY.json" \
+            --output S07_A_RUNTIME_DEPENDENCY_RECEIPT.json
+          sha256sum "$py" S07_A_RUNTIME_DEPENDENCY_RECEIPT.json
+          echo 'STATIC ONLY: graph/PE SHA test, NOT native solver, NOT physical PASS.'
+
+      - name: Retain exact receipt for connector-side PR persistence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s07-a-runtime-dependency-static-only
+          path: S07_A_RUNTIME_DEPENDENCY_RECEIPT.json
+          if-no-files-found: warn
+          retention-days: 30
