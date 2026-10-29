@@ -39,6 +39,12 @@
 <a id="handoff-log"></a>
 ## 最近交接日志 — 新记录置顶，旧记录保留
 
+### HANDOFF-20261029-S05-DENSE-PAIR-WEB-14｜ESM真实双水平密周期谱与输入身份拒绝门
+
+- **START / 2026-10-29 14时 CST / 网页版GPT：** read_base_sha=`03a30490661e7e312f777192656f0d62b4d95dbd`；main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 open/draft。已读AGENTS、README、指挥室当前进度/交接/成果表、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/METHOD_PLAN/PROCESS_LOG末节、T080.1/.2/.3及12阶段总计划；直接检查S05 ESM官方处理波提取脚本和既有CI。继承真实ESM IT-2012-0008/NVL已处理HNE/HNN/HNZ及4/6/8/10s数值谱、既有SHA/CI；C00b已静态CI通过但本机L02原生G0未验收。
+- **本轮独立增量/拟改范围：** 复用`experiments/T079/s05_esm_public_processed_pair.py`和既有S05 CI，把同一官方处理波从4周期扩为16个0.5–10s密周期双水平谱，增加事件/台站/处理/时间网格身份拒绝与既有4点数值回归，取得真实CI的32个分量谱数值及密谱CSV；更新同一T079 PROCESS_LOG、00_STATUS及本页END。只作S05输入算法与实际记录谱诊断，不称中国目标谱、低频SNR或原生抗震PASS；不改冻结T057/T070、不启动昂贵生产或合并PR。责任方：网页版GPT/Actions；本机L02原生复验独立进行。
+- **END：** 待实际提交与远端CI回读后填写，不预报成功。
+
 ### HANDOFF-20261029-C00B-CI-WEB-1311｜修复真实CI合成测试假失败
 
 - **START / 2026-10-29 13:11 CST / 网页版GPT：** read_base_sha=`5d69cbf9c291c99c9d86700a738e051dfdff17ca`；main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`；PR #42 open/draft。已读研究AGENTS/README、指挥室当前快照/交接、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080三份门禁/先行研究、12阶段计划、T070 C00b RUN_CARD/生成器、真实GitHub Actions失败日志。继承本机L01 7 FATAL/129 WARNING、C00b静态子版SHA `d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`、历史T026验证/风载/疲劳成果。
