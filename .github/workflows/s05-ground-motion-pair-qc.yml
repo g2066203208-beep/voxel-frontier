@@ -287,7 +287,7 @@ jobs:
           curl -fLsS --retry 3 -o expected.csv "$base/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv"
           curl -fLsS --retry 3 -o s09_ishihara2024_equation_oracle.py "$base/s09_ishihara2024_equation_oracle.py"
           curl -fLsS --retry 3 -o reference_expected.csv "$base/real-records/S05_ISHIHARA_REFERENCE_PAPER_FOUR_PERIOD_DIAGNOSTIC_20261029.csv"
-          sha256sum s05_event_balanced_spectrum_gate.py us.csv esm.csv
+          sha256sum s05_event_balanced_spectrum_gate.py s09_ishihara2024_equation_oracle.py us.csv esm.csv reference_expected.csv
       - name: Run analytic and negative tests, then actual source-table event balance
         shell: bash
         run: |
