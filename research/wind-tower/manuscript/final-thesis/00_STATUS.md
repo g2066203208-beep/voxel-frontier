@@ -595,3 +595,8 @@ HOLD：
 
 
 **20:16 CI结果回填：** [S10 Actions #40871655096](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40871655096) 已真实成功，job `123439951101`，日志验证2个ODB/2个INP指针、9卷元数据与8,332,739,680字节总量；拒绝将未下载的LFS指针冒充ODB。artifact `12896053089` 已上传但未下载逐字节复核。仅 `LFS_METADATA_CI_PASS`，S10物理/寿命HOLD与0/12不变。
+
+
+## 2026-10-29 21时｜S10历史STRESS ODB按需恢复工具（独立准备）
+
+已在[既有LFS源身份脚本](../../experiments/T077/recovery/s10_legacy_odb_lfs_gate.py)增设五卷实际实体的流式逐卷/整体SHA256核验及只读重组，禁止覆盖原件，完整运行命令、失败与SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB见[T077过程记录21时节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。[Actions #40878854136](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40878854136)原始job日志确认**合成小字节重组及三类拒绝测试成功**，并回归真实9个LFS指针及744行载荷数据；**4,316,822,840字节历史STRESS ODB实体尚未下载，声明整体SHA256 `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd`尚未按原件实测**，无Abaqus odbAccess、材料寿命、地震原生结果。S10=独立恢复工具就绪/真实ODB与物理HOLD；严格**0/12整阶段未晋级**。本机后台下一动作仅恢复五卷实物、验证完整SHA并只读列出ODB步/帧/S输出；风致材料疲劳及优化主线保留。
