@@ -39,6 +39,14 @@
 <a id="handoff-log"></a>
 ## 最近交接日志 — 新记录置顶，旧记录保留
 
+### HANDOFF-20261029-C00B-CI-WEB-1311｜修复真实CI合成测试假失败
+
+- **START / 2026-10-29 13:11 CST / 网页版GPT：** read_base_sha=`5d69cbf9c291c99c9d86700a738e051dfdff17ca`；main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`；PR #42 open/draft。已读研究AGENTS/README、指挥室当前快照/交接、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080三份门禁/先行研究、12阶段计划、T070 C00b RUN_CARD/生成器、真实GitHub Actions失败日志。继承本机L01 7 FATAL/129 WARNING、C00b静态子版SHA `d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`、历史T026验证/风载/疲劳成果。
+- **定位：** [真实失败Actions #40816703112](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40816703112) 的`c00b_repair_l01_contact.py --self-test`在合成fixture因两处修改距离不足而将unified diff合成一个hunk，触发`UNEXPECTED_DIFF_HUNKS`；**不是**16.6MB真实子版SHA不符或新的Abaqus FATAL。C00旧生成器/源身份步骤均通过。此前成功[#40816315513](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40816315513)只验证C00，不能冒称C00b CI成功。
+- **本轮增量/拟改范围：** 仅调整现有C00b合成测试的上下文间距，不放宽真实INP的双hunk约束；更新同一T070 RUN_CARD、T080 PROCESS_LOG、00_STATUS和本页END；通过真实Actions重跑验证。严禁修改冻结T057/T070或C00b物理编辑、不得执行昂贵RUN或合并PR。C01/C02和S10/S11保持并行。END待实测回读。
+
+
+
 每次开工追加START，结束在同一条下追加END；不同任务各占一条。原始技术明细仍写回对应实验日志，此处只登记本次变化及链接。
 
 ### HANDOFF-20261029-C00B-WEB-1208｜L01七项原生致命错误最小修复
