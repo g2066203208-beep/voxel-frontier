@@ -382,3 +382,6 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **STANDARD / REF / OFFICIAL：** 无新授权标准原文、期刊全文或原生软件日志阅读；本轮只依据仓库历史LFS manifest和Python SHA256文件完整性方法，不作条款或物理验收。
 - **FAIL/HOLD：** 本轮没有实际下载五卷、没有4.3GB整体SHA实测、没有Abaqus ODB原生打开、没有fe-safe计算、没有材料寿命；仍为`LFS_METADATA_RECOVERED + REASSEMBLER_SYNTHETIC_TESTED / ODB_NATIVE_HOLD`。旧U18p57 NTM历史ODB也不能直接替代四个ETM控制工况或当前D400/Pe模型。严格**0/12整阶段PASS**；S08/S09原生地震结果0，S10/S11主线不变。冻结T057/T070不改，PR #42不合并。
 - **下一最优动作：** 本机后台仅下载历史STRESS ODB五卷并用本程序取得**实际完整SHA256**，然后原生只读打开检查是否有可复用的S积分点时程；若LFS失败保留下载错误日志，不再重复元数据小审查。
+
+
+**21:07 真实CI回填（覆盖本节CI_PENDING）：** [Actions #40878854136](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40878854136) 已`completed/success`，job `123464651225`原始日志出现`SYNTHETIC_REASSEMBLY_PASS: exact bytes, overwrite/tamper/missing rejects`、`REAL_GIT_LFS_POINTER_AND_MANIFEST_METADATA_PASS_NOT_ODB 8332739680`及真实744行载荷源SHA回归。原始日志同时保留对尚未下载LFS实体的拒绝测试；[artifact #12899541916](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40878854136/artifacts/12899541916)已上传，3,522字节，Actions上传日志声明ZIP SHA256=`cbe47dd08db43078dac99f663801ca6381257049ee4f8547efef4d88182b7353`；本轮**未下载该ZIP逐字节复核**。CI只覆盖合成重组与真实指针/744行源，不代表4.3GB STRESS ODB实际下载/重组或原生打开，S10物理HOLD维持。
