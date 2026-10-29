@@ -39,6 +39,13 @@
 <a id="handoff-log"></a>
 ## 最近交接日志 — 新记录置顶，旧记录保留
 
+### HANDOFF-20261029-S08-HORIZONTAL-ORIENTATION-WEB-17｜真实双水平能量主轴与方向无关筛查
+
+- **START / 2026-10-29 17时 CST / 网页版GPT：** read_base_sha=`67bbcde9261a35e265ddcbff147228addaeb70cc`；PR #42 Open/Draft。已读最新main/PR身份、AGENTS/README、指挥室当前进度/历史成果/最新交接、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG 16时、T080三份方法/门禁、12阶段总计划及现有S05 Actions工作流。继承真实ESM 32,040行×3分量SI加速度CSV（SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`）及15–16时计算；本机L02仍独立待原生Data Check。
+- **本轮独立增量/拟改范围：** 使用已锁定真实双水平同时时程，新增水平向量PGA、水平Arias能量和Husid D5–95、二维积分能量矩阵主轴/特征值比；进行90°旋转不变性解析测试、异常拒绝及全32,040步真实数值复算。只新增T079一件小型可运行程序与一行CSV，更新既有S05 CI、T079 PROCESS_LOG、00_STATUS和本指挥室END；在CI成功时归档完整1.31MB时程artifact。**水平合向量峰值是方位上界，不是某一方向结构响应；能量主轴不是最不利风震方向；没有目标谱/低频SNR不称设计波PASS。** 不改冻结T057/T070、不合并PR、不执行昂贵RUN。责任方：网页版/Actions。
+- **END：** 待真实提交与远端CI回读后追加。
+
+
 ### HANDOFF-20261029-S08-ARIAS-HUSID-WEB-16｜真实ESM三分量时程强度与显著持续时间诊断
 
 - **START / 2026-10-29 16时 CST / 网页版GPT：** read_base_sha=`ad978917456336d15d8b5aa9445db2cd8d934a82`；PR #42 Open/Draft。已核main与PR、AGENTS/README、指挥室进度及交接、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG 15时实证、T080.1/.2/.3及12阶段总计划。继承真实ESM IT-2012-0008/NVL三分量32040行SI时程（CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`）及独立oracle；保留L02原生G0待验。
