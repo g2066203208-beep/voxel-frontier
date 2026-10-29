@@ -77,6 +77,50 @@ jobs:
           sha256sum research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py
           echo 'S07 paired extraction tested on synthetic channels only; original 31-gage OUTB and native DCM/owner remain HOLD.'
 
+      - name: Real archived ElastoDyn baseline versus four gage-only patched inputs (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s07-native-source
+          curl --fail --location --silent --show-error --retry 3 \\
+            --output s07-native-source/static-part-001.zip \\
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip"
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib, importlib.util, re, tempfile
+          p=Path('research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py')
+          spec=importlib.util.spec_from_file_location('s07capture',p)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          z=Path('s07-native-source/static-part-001.zip')
+          assert mod.sha256_file(z)=='ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267'
+          with ZipFile(z) as archive:
+              raw=archive.read('CASES/U09p343881_ETM_S01/DTU_10MW_RWT_ElastoDyn.dat')
+          assert hashlib.sha256(raw).hexdigest()==mod.ED_BASE_SHA256
+          with tempfile.TemporaryDirectory() as d:
+              base=Path(d)/'baseline.dat';base.write_bytes(raw)
+              original=base.read_text(encoding='utf-8-sig')
+              pat=r'(?m)^\\s*1,3,5,7,9,13,15,17,20\\s+TwrGagNd\\b[^\\r\\n]*'
+              for batch in mod.BATCHES:
+                  patched=Path(d)/('run-'+batch+'.dat')
+                  nodes=','.join(map(str,mod.BATCHES[batch][0]))
+                  changed,n=re.subn(pat,nodes+'             TwrGagNd      - T071 gages',original)
+                  assert n==1
+                  patched.write_text(changed)
+                  receipt=mod.verify_patched_elastodyn(base,patched,batch)
+                  assert receipt['changed_lines']==1
+                  assert receipt['verified_tower_gage_nodes']==list(mod.BATCHES[batch][0])
+                  try:mod.verify_patched_elastodyn(base,patched,'B' if batch!='B' else 'A')
+                  except ValueError as e:assert 'GAGE_MAP_MISMATCH' in str(e)
+                  else:raise AssertionError('wrong 31-gage batch accepted')
+                  patched.write_text(changed.replace('TwrGagNd      - T071 gages','TwrGagNd      - T071 gages')+'\\nEXTRA')
+                  try:mod.verify_patched_elastodyn(base,patched,batch)
+                  except ValueError:pass
+                  else:raise AssertionError('extra physics line accepted')
+          print('S07_REAL_BASELINE_SHA_LOCK_PASS: four gage-only patches, four swapped-batch and four extra-line rejections; NO OUTB read or solver run')
+          PY
+          sha256sum s07-native-source/static-part-001.zip
+
       - name: Source-lock recovered four-case 31-gage six-component CSV frame-readiness (NO solver)
         shell: bash
         run: |
