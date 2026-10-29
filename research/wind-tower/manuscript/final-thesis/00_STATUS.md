@@ -4,6 +4,10 @@
 > **每次写入前先读[指挥室当前快照与最近交接](../../governance/COMMAND_ROOM.md#read-before-write)。** 本文件保留各日期的章节/实验进展，后续回填可能覆盖前段旧状态；不以任一旧“唯一下一动作”派工。当前调度只在指挥室维护。
 > 已完成前期成果见[证据索引](../../governance/COMMAND_ROOM.md#completed-evidence)。下文“尚未计算/无原生/0次”等必须按日期、模型、工况理解，不能据此否定原七章Word和历史结果。新增地震也不能被旧章节安排排除。
 
+## 2026-10-29 19时｜S10真实载荷级DEL身份核验与分材料应力雨流接口（独立准备，不是材料寿命）
+
+直接读取T077已恢复744行（4工况×31段×6通道）载荷级雨流/DEL表，源SHA256 `9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`；各工况186行，12001点/段、dt0.05s、600s，雨流全/半循环及幅值统计通过数据身份检查。实际最大My载荷DEL为U11p4_ETM_S04/CSEG01 **94,836.550376 kN·m**（m=4、Nref=1Hz）；这不是材料应力幅或20年寿命。新增[标准库可执行S10材料雨流接口](../../experiments/T077/recovery/s10_material_cycle_contract.py)、[真实744行结果收据](../../experiments/T077/recovery/S10_4CASE_LOAD_SCREEN_SOURCE_RECEIPT_20261029.json)与[完整SOURCE/RUN/误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-29-19时s10载荷筛选到分材料局部应力循环接口新增独立可执行资产)。Python本地合成解析及拒绝测试PASS；真实744行源直接独立解析；GitHub Actions真实run日志尚未回读，故CI_PENDING。局部混凝土/钢筋/PT/钢塔应力时程、材料S–N和长期风速bin尚未验收，**S10 METHODS_PREPARED / MATERIAL_LIFE_HOLD**；12阶段**0/12未晋级**，S08/S09地震原生0，S11优化不伪造结论。冻结T057/T070不改，PR #42继续Draft。
+
 ## 2026-10-29｜本次T070原生G0与云端分工回执（当时调度）
 
 [论文指挥室](../../governance/COMMAND_ROOM.md)｜[网页版GPT + Actions任务书](../../governance/WEB_GPT_ACTIONS_DISPATCH_20261029.md)｜[原生日志与本地原件恢复回执](../../experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md)。
