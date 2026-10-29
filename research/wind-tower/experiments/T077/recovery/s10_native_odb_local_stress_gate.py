@@ -330,9 +330,100 @@ def self_test(source_map=None, d400_source_map=None):
             'native_odb_runs':0, 'physical_pass':False}
 
 
+
+def inventory_native_odb(odb, max_names=80):
+    """Inspect ODB directory/field metadata only; never read stress values or certify physics."""
+    insist(type(max_names) is int and max_names > 0, 'INVALID_INVENTORY_LIMIT')
+    instances = odb.rootAssembly.instances
+    instance_names = sorted(str(k) for k in instances.keys())
+    instance_rows = []
+    for name in instance_names[:max_names]:
+        inst = instances[name]
+        sets = sorted(str(k) for k in inst.elementSets.keys())
+        instance_rows.append({
+            'instance': name,
+            'element_set_count': len(sets),
+            'element_sets_sample': sets[:max_names],
+            'element_sets_truncated': len(sets) > max_names,
+            'element_count': len(inst.elements),
+            'node_count': len(inst.nodes)})
+    step_rows = []
+    for step_name in sorted(str(k) for k in odb.steps.keys()):
+        frames = odb.steps[step_name].frames
+        n = len(frames)
+        s_frames = 0
+        times = []
+        for frame in frames:
+            t = float(frame.frameValue)
+            insist(math.isfinite(t), 'NONFINITE_ODB_FRAME_TIME')
+            times.append(t)
+            if 'S' in frame.fieldOutputs:
+                s_frames += 1
+        samples = []
+        for i in sorted(set((0, n // 2, n - 1))) if n else []:
+            frame = frames[i]
+            has_s = 'S' in frame.fieldOutputs
+            labels = (list(getattr(frame.fieldOutputs['S'], 'componentLabels', ()))
+                      if has_s else [])
+            samples.append({'frame_index': i, 'time_s_unverified': times[i],
+                            'has_S': has_s, 'S_components': labels})
+        step_rows.append({
+            'step': step_name, 'frame_count': n, 'S_frame_count': s_frames,
+            'S_present_every_frame': n > 0 and s_frames == n,
+            'frame_time_monotonic': all(b > a for a, b in zip(times, times[1:])),
+            'first_frame_time_unverified': times[0] if n else None,
+            'last_frame_time_unverified': times[-1] if n else None,
+            'sampled_frames': samples})
+    return {
+        'status': 'NATIVE_READ_ONLY_DIRECTORY_INVENTORY_NOT_PHYSICS_PASS',
+        'instance_count': len(instance_names),
+        'instances_truncated': len(instance_names) > max_names,
+        'instances_sample': instance_rows,
+        'step_count': len(step_rows), 'steps': step_rows,
+        'total_frames': sum(r['frame_count'] for r in step_rows),
+        'any_S_field': any(r['S_frame_count'] for r in step_rows),
+        'stress_values_read': 0, 'native_equilibrium_verified': False,
+        'local_material_stress_verified': False, 'fatigue_life_verified': False}
+
+
+def self_test_inventory():
+    class Obj:
+        def __init__(self, **kwargs): self.__dict__.update(kwargs)
+    inst = Obj(elements=[1, 2], nodes=[1, 2, 3], elementSets={'SET_A': object()})
+    frames = [
+        Obj(frameValue=0.0, fieldOutputs={'S': Obj(componentLabels=('S11', 'S22'))}),
+        Obj(frameValue=0.1, fieldOutputs={'U': object()}),
+        Obj(frameValue=0.2, fieldOutputs={'S': Obj(componentLabels=('S11', 'S22'))})]
+    odb = Obj(rootAssembly=Obj(instances={'STEEL-1': inst}),
+              steps={'Wind': Obj(frames=frames), 'Empty': Obj(frames=[])})
+    r = inventory_native_odb(odb)
+    assert r['step_count'] == 2 and r['total_frames'] == 3
+    assert r['instance_count'] == 1 and r['instances_sample'][0]['element_count'] == 2
+    wind = next(row for row in r['steps'] if row['step'] == 'Wind')
+    assert wind['S_frame_count'] == 2 and not wind['S_present_every_frame']
+    assert wind['frame_time_monotonic'] and wind['sampled_frames'][1]['has_S'] is False
+    assert r['stress_values_read'] == 0 and r['fatigue_life_verified'] is False
+    bad = Obj(rootAssembly=odb.rootAssembly,
+              steps={'Wind': Obj(frames=[frames[0], Obj(frameValue=float('nan'),
+                    fieldOutputs={'S': Obj(componentLabels=('S11',))})])})
+    try: inventory_native_odb(bad)
+    except ValueError as exc: assert str(exc) == 'NONFINITE_ODB_FRAME_TIME'
+    else: raise AssertionError('nonfinite ODB time accepted')
+    try: inventory_native_odb(odb, max_names=0)
+    except ValueError as exc: assert str(exc) == 'INVALID_INVENTORY_LIMIT'
+    else: raise AssertionError('invalid inventory bound accepted')
+    return {'status': 'SYNTHETIC_DIRECTORY_INVENTORY_PASS_NOT_NATIVE',
+            'positive_tests': 1, 'negative_tests': 2,
+            'stress_values_read': 0, 'physical_pass': False}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test', action='store_true')
+    ap.add_argument('--inventory-only', action='store_true', help='native ODB metadata only; no stress values')
+    ap.add_argument('--expected-odb-sha256', help='required whole-file SHA256 for inventory')
+    ap.add_argument('--expected-odb-bytes', type=int, help='required exact byte count for inventory')
+    ap.add_argument('--inventory-json', type=Path, help='optional new receipt path; never overwrite')
     ap.add_argument('--source-map', type=Path)
     ap.add_argument('--d400-source-map', type=Path)
     ap.add_argument('--candidate-table', type=Path,
@@ -344,7 +435,39 @@ def main():
     ap.add_argument('--out-dir', type=Path)
     args = ap.parse_args()
     if args.self_test:
-        print(json.dumps(self_test(args.source_map, args.d400_source_map), sort_keys=True))
+        report = self_test(args.source_map, args.d400_source_map)
+        report['directory_inventory'] = self_test_inventory()
+        print(json.dumps(report, sort_keys=True))
+        return
+    if args.inventory_only:
+        insist(args.odb is not None and args.odb.is_file(), 'INVENTORY_REQUIRES_REAL_ODB_FILE')
+        insist(is_sha(args.expected_odb_sha256), 'INVENTORY_REQUIRES_SHA256')
+        insist(type(args.expected_odb_bytes) is int and args.expected_odb_bytes > 0,
+               'INVENTORY_REQUIRES_EXPECTED_BYTES')
+        insist(args.odb.stat().st_size == args.expected_odb_bytes,
+               'INVENTORY_ODB_SIZE_MISMATCH')
+        digest = sha_file(args.odb)
+        insist(digest == args.expected_odb_sha256, 'INVENTORY_ODB_SHA256_MISMATCH')
+        try:
+            from odbAccess import openOdb
+        except ImportError as exc:
+            raise SystemExit('NEED_NATIVE_ABAQUS_PYTHON: ' + str(exc))
+        odb = openOdb(str(args.odb), readOnly=True)
+        try:
+            report = inventory_native_odb(odb)
+        finally:
+            odb.close()
+        report.update({'odb_sha256': digest, 'odb_bytes': args.expected_odb_bytes,
+                       'odb_path': str(args.odb.resolve()),
+                       'software': 'Abaqus odbAccess readOnly=True',
+                       'native_execution': True, 'physical_pass': False})
+        payload = json.dumps(report, sort_keys=True, indent=2) + '\\n'
+        if args.inventory_json:
+            insist(args.inventory_json.parent.is_dir() and
+                   not args.inventory_json.exists(), 'REFUSE_OVERWRITE_INVENTORY_RECEIPT')
+            args.inventory_json.write_text(payload, encoding='utf-8')
+        else:
+            print(payload)
         return
     if not all((args.run_card, args.inp, args.odb, args.logs_dir, args.out_dir, args.source_map)):
         ap.error('require --run-card --inp --odb --logs-dir --out-dir --source-map or --self-test')
