@@ -312,7 +312,7 @@ def assemble_verified_case(virtual, visited, outdir, bts, exe, *, bts_sha=SHA["b
     if shutil.disk_usage(outdir.parent).free < bts_size + exe_size + 64*1024*1024:
         raise ValueError("S07_INSUFFICIENT_DISK")
     raw_fst = virtual[fst_key]
-    pattern = re.compile(rb'(?m)^([ \\t]*)([-+0-9.eEdD]+)([ \\t]+TMax\\b[^\\r\\n]*)')
+    pattern = re.compile(rb'(?m)^([ \t]*)([-+0-9.eEdD]+)([ \t]+TMax\b[^\r\n]*)')
     diag_fst, n = pattern.subn(lambda m: m.group(1) + b"0.1" + m.group(3), raw_fst)
     if n != 1 or diag_fst == raw_fst:
         raise ValueError("S07_DIAG_TMAX_NOT_UNIQUE")
@@ -320,7 +320,7 @@ def assemble_verified_case(virtual, visited, outdir, bts, exe, *, bts_sha=SHA["b
     try:
         files = {}
         def record(path):
-            files[str(path.relative_to(tmp)).replace("\\\\", "/")] = {
+            files[str(path.relative_to(tmp)).replace("\\", "/")] = {
                 "sha256": sha_file(path), "bytes": path.stat().st_size}
         for rel in sorted(visited):
             p = tmp / "CASES" / rel
@@ -336,7 +336,7 @@ def assemble_verified_case(virtual, visited, outdir, bts, exe, *, bts_sha=SHA["b
             with source.open("rb") as i, dest.open("wb") as o:
                 shutil.copyfileobj(i, o, length=8*1024*1024)
             record(dest)
-            if files[str(dest.relative_to(tmp)).replace("\\\\", "/")]["sha256"] != (
+            if files[str(dest.relative_to(tmp)).replace("\\", "/")]["sha256"] != (
                     bts_sha if source == bts else exe_sha):
                 raise ValueError("S07_COPY_SHA_MISMATCH")
         receipt = {
@@ -356,7 +356,7 @@ def assemble_verified_case(virtual, visited, outdir, bts, exe, *, bts_sha=SHA["b
             "HOLD": "No OpenFAST native initialization, controller ABI, 31-station OUTB, signed six-component transfer or Abaqus PASS."
         }
         (tmp / "S07_A_ASSEMBLY_RECEIPT.json").write_text(
-            json.dumps(receipt, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+            json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         tmp.rename(outdir)
         return receipt
     except Exception:
@@ -371,7 +371,7 @@ def assembly_selftest():
         bts, exe = d/"bts", d/"exe"
         bts.write_bytes(b"wind")
         exe.write_bytes(b"binary")
-        v = {CASE + "/DTU_10MW_RWT.fst": b"700.0 TMax - duration\\n",
+        v = {CASE + "/DTU_10MW_RWT.fst": b"700.0 TMax - duration\n",
              "Rotor/Blade.dat": b"blade"}
         kw = dict(bts_sha=sha_file(bts), bts_size=4,
                   exe_sha=sha_file(exe), exe_size=6)
