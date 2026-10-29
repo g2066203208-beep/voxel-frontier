@@ -471,3 +471,12 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **REF/STANDARD/OFFICIAL/FIG：** REF=历史T072 Windows原始OpenFAST输入及04/05时已有来源；无新期刊全文/页码。STANDARD=未读新增IEC/GB/NB授权原页，条款PASS=0。OFFICIAL=GitHub Actions真实作业日志与原始LFS/ZIP字节，EXE版本及控制器ABI仍**未原生启动验证**。FIG=无本塔新增响应图。TAB=20件逐文件SHA/字节数及既有79文件/17模块/24引用静态图；**不是结构响应表**。
 - **假设/误差预算/FAIL/HOLD：** 原始T072运行环境为Windows，气动翼型Cylinder文件有一处大小写差异；本轮Linux只做字节装配，未验证Linux原生路径可运行。输入SHA误差预算为**严格字节一致**；物理动力/载荷映射误差预算`UNDEFINED`。本轮真实job `completed/success`，无新失败；历史TMax合成正则失败仍见05时节，不删除。阶段新增`REAL_A_BATCH_ASSEMBLY_RECEIPT_PERSISTED / NATIVE_INIT_AND_31GAGE_OUTB_HOLD`，严格**12阶段0/12未晋级**。单一最大HOLD是**没有同一工况A批的真实31站OUTB及同步RP/TP，因而尚无签名自由体外载V&V**；S10风致分材料疲劳及S11抗震约束优化主线不变。
 - **下一单一动作：** 在Windows原生环境按既有[0.1s最小初始化RUN卡](S07_U11p4_ETM_S04_A/S07_A_INIT_RUN_CARD.md)执行**仅一个受控短时OpenFAST初始化诊断**并保留真实stdout/stderr/版本/ABI及退出码，先确认20件包能启动；需另行遵循RUN卡资源和用户禁止昂贵生产RUN约束，不运行700s生产、不扩批。
+
+
+## 2026-10-30 07时｜S07 A批真实二进制ABI前置门禁：EXE/DLL SHA、PE AMD64及DISCON导出检查（无求解）
+
+- **SOURCE/阅读层级：** 直接读取PR #42已有真实[A批装配收据](S07_U11p4_ETM_S04_A/S07_A_ASSEMBLY_RECEIPT.json)（Git blob `f17552647c5caf8033cb0aacfae9eb49bfad7935`、前轮实测文件SHA256 `c365edbb6e9b351ed26886d40265b818c494269b2522d04bdebd0856fa615925`），本轮独立解析20/20条、大小写折叠后路径碰撞0、文件总登记字节**499,397,689**；EXE 61,086,208字节/SHA256 `0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a`，DLL 1,122,431字节/SHA256 `7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa`。这些为**已持久化装配收据数据**，不等于本轮重新打开全部499MB实体；CI另外只按需获取61MB EXE与DLL真实字节，不重复437MB BTS。
+- **RUN/实际程序：** 新增[可复算静态ABI检查器](s07_a_native_binary_abi_gate.py)和[独立轻量工作流](../../../../../.github/workflows/s07-a-native-binary-abi-gate.yml)。使用Python内置struct直接解析PE/COFF DOS签名、AMD64/PE32+、节表、DLL导出表，强制原件大小+完整SHA256与20件收据一致，要求导出准确符号`DISCON`；没有执行任何OpenFAST或Abaqus进程。执行过合成PE正向及错误导出/x86/无MZ/截断节表拒绝测试，打印`S07_NATIVE_BINARY_PE_SYNTHETIC_PASS`；真实CI见[Actions #40971387336](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40971387336)，提交本节时**尚在执行/结果待回读**，不能称真实DLL ABI PASS。
+- **REF/STANDARD/OFFICIAL：** REF仅T072历史Windows运行拓扑与原有S07 RUN卡；STANDARD未新读IEC/GB/NB授权条款；OFFICIAL为GitHub原始ZIP/LFS及Actions作业日志（待完整作业结束），PE文件头与导出符号只能排除部分静态ABI不匹配，不能验证OpenFAST版本、动态依赖、控制器调用约定或物理行为。
+- **FIG/TAB/误差预算：** FIG=无新物理响应图；TAB=20条已归档真实输入登记、1个EXE/1个DLL静态身份与PE/导出合同；哈希验收严格字节相等，导出名严格大小写匹配；模型/动力/风震/疲劳物理误差预算仍`UNDEFINED`。
+- **FAIL/HOLD/PASS：** 本轮无原生初始化、无31站OUTB/RP/TP/DCM、无Abaqus，**S07仍HOLD、12阶段0/12**；如果CI报错，必须记录真实失败，不得将合成测试等同于真实ABI。现有初始化RUN卡明确标注未授权执行，本轮不启动0.1s求解，更不启动700s生产。S10分材料疲劳/S11抗震约束优化主线不变。**下一单一动作：** 回读此CI真实DLL导出及EXE PE结果；若PASS，再由有权限的本机Windows原生环境按RUN卡决定是否执行受控0.1s初始化并留完整日志。
