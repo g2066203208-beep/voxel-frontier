@@ -407,7 +407,7 @@ def prepare_a_diagnostic_input(baseline_bytes, expected_base_sha=ED_BASE_SHA256)
     if len(outlist)!=1:
         raise ValueError("S07_DIAG_OUTLIST_AMBIGUOUS")
     ends=[i for i,s in enumerate(lines) if i>outlist[0] and
-          re.match(r"^[ \t]*END(?:[ \t]|$)",s,re.I)]
+          re.match(r"^[ \t]*END(?:[ \t\r]|$)",s,re.I)]
     if len(ends)!=1:
         raise ValueError("S07_DIAG_END_AMBIGUOUS")
     end=ends[0]
