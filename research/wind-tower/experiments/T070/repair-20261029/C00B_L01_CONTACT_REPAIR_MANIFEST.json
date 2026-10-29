@@ -32,5 +32,7 @@
   "tab": "two diff hunks; 30 pair identity",
   "uncertainty": "byte edits exact, native parser and physical errors NEED_ESTIMATE",
   "hold": "native Abaqus 2025 Data Check and warning/ODB output verification",
-  "ci": "PENDING_NO_RUN_RECEIPT"
+  "ci": "PENDING_NO_RUN_RECEIPT",
+  "patch_sha256": "5f2e66237c9891059ab7e63e2d46fb13b88722056406ac63cf81b5df55390baf",
+  "patch_bytes": 563
 }
