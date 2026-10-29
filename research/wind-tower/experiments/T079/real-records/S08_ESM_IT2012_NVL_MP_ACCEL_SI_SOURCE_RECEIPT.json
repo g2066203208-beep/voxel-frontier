@@ -1,0 +1,47 @@
+{
+  "Abaqus_E_WE_RUN": 0,
+  "HOLD": "Reference target and low-frequency QC, frame/axis, native initial-state and base-motion semantics.",
+  "S08_PASS": false,
+  "base_excitation_implementation": "NOT_DEFINED",
+  "csv_bytes": 1311873,
+  "csv_filename": "S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv",
+  "csv_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "dt_s": 0.005,
+  "event_id": "IT-2012-0008",
+  "export_units": "m/s^2",
+  "first_time_s": 0.0,
+  "ground_motion_amplitude_scale": "NOT_APPLIED",
+  "header_duration_s": 160.2,
+  "horizontal_to_tower_rotation": "NOT_DEFINED",
+  "last_time_s": 160.195,
+  "low_frequency_usable_band": "NOT_VERIFIED",
+  "max_text_roundoff_absolute_including_time": 2.842170943040401e-14,
+  "member_sha256_by_stream": {
+    "HNE": "e90c7d02fe59acf7df8dc9842ea8a461d51a9be114a6d085fe13a2077970f761",
+    "HNN": "a4ecdfbc952387d75cba320fdf7dcca8068966560f98de0359dab6af0e9be5fa",
+    "HNZ": "ebe372b7c3a782a15439de6c85b3a400311f86df214eeadc1edbf39f205e5e8c"
+  },
+  "npts": 32040,
+  "numeric_source_sha256_by_stream": {
+    "HNE": "f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a",
+    "HNN": "bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275",
+    "HNZ": "69443ba0a689d39ed202de7d40487a62ef39c969dc2605170cf9a211bce4fd81"
+  },
+  "original_units": "cm/s^2",
+  "peak_abs_acc_m_s2_by_stream": {
+    "HNE": 0.47522846,
+    "HNN": 0.51205727,
+    "HNZ": 0.28926626
+  },
+  "processing": "manual (Paolucci et al., 2011)",
+  "site_target_spectrum": "NOT_VERIFIED",
+  "source": "ESM v3 DOI 10.13127/esm.3; official MP DYNA header",
+  "source_filter_high_cut_hz": "30.000",
+  "source_filter_low_cut_hz": "0.040",
+  "source_numeric_sha256_verified": true,
+  "source_zip_sha256": "dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6",
+  "station_code": "NVL",
+  "status": "S08_REAL_SOURCE_TIME_HISTORY_EXPORTED_NOT_DESIGN_OR_NATIVE_PASS",
+  "time_grid_samples_verified": true,
+  "unit_conversion_multiplier": 0.01
+}
