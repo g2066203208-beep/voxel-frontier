@@ -39,6 +39,12 @@
 <a id="handoff-log"></a>
 ## 最近交接日志 — 新记录置顶，旧记录保留
 
+### HANDOFF-20261029-S08-ESM-EXPORT-WEB-1506｜真实处理波至S08双水平输入数据桥接
+
+- **START / 2026-10-29 15:06 CST / 网页版GPT：** read_base_sha=`b57c38052dac0fbbcc205afdce56a810114009c6`；PR #42 open/draft。已读研究AGENTS/README、指挥室快照/交接/历史成果、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG最新14时节、T080.1/.2/.3与12阶段总计划，及既有S05 ESM程序、16周期真实谱CSV与S05 Actions工作流。继承已处理ESM IT-2012-0008/NVL三分量各32040点、16周期真实谱和原件数值SHA；C00b静态CI已通过但L02原生Data Check待验。
+- **本轮增量/拟改范围：** 在既有`experiments/T079/s05_esm_public_processed_pair.py`实现**无缩放、无旋转**三分量加速度SI时程导出、严格源数值SHA锁定、样本数/单位/滤波/事件/站点身份与CSV输出SHA、异常拒绝；在现有S05 CI上对真实官方处理波生成32,040行时程及artifact。追加同一T079 PROCESS_LOG、00_STATUS及本交接END；不写新T080编号、不修改冻结T057/T070、不运行Abaqus/OpenFAST生产或合并PR。**输出仅供S08输入准备，不是Abaqus基底激励已实施或正式地震波验收。**
+- **责任与验收：** 网页版GPT/Actions执行合成已知解及负例、真实原件源SHA/导出数据校验，尽量取得真实CI日志；若未获得明确记录，标CI_UNVERIFIED。本机L02独立后台G0复验。END见后续回填。
+
 ### HANDOFF-20261029-S05-DENSE-PAIR-WEB-14｜ESM真实双水平密周期谱与输入身份拒绝门
 
 - **START / 2026-10-29 14时 CST / 网页版GPT：** read_base_sha=`03a30490661e7e312f777192656f0d62b4d95dbd`；main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 open/draft。已读AGENTS、README、指挥室当前进度/交接/成果表、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/METHOD_PLAN/PROCESS_LOG末节、T080.1/.2/.3及12阶段总计划；直接检查S05 ESM官方处理波提取脚本和既有CI。继承真实ESM IT-2012-0008/NVL已处理HNE/HNN/HNZ及4/6/8/10s数值谱、既有SHA/CI；C00b已静态CI通过但本机L02原生G0未验收。
