@@ -556,3 +556,10 @@ HOLD：
 - **SOURCE/OFFICIAL：** 直接解压既有[真实ESM MP三分量原件artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40751645932/artifacts/12843169066)，原件ZIP SHA256=`dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6`，HNE/HNN数值SHA锁定，头部63行、每分量32040点×0.005s、手工处理0.04Hz高通；真实记录属于意大利IT-2012-0008/NVL，不是嘉鱼实址。
 - **RUN/TAB：** [已有S05 ESM脚本](../../experiments/T079/s05_esm_public_processed_pair.py)扩展16个0.5–10s周期的Newmark 5%阻尼双水平谱及2dt敏感性，另用Python3.13.5直接从上述原件独立实算[16行CSV](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv)（SHA256 `a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6`）。最大2dt差0.2291559%（T=0.75s）；4/6/8/10s与旧真实谱一致。已更新[原S05 CI](../../../../.github/workflows/s05-ground-motion-pair-qc.yml)做原源身份/旧值回归/CSV字节比较，**新版CI仍待真实运行回读**。
 - **REF/STANDARD/FIG/误差/HOLD：** REF沿用ESM v3 DOI 10.13127/esm.3，未新读期刊全文；STANDARD无新授权IEC/GB/NB条款或中国目标谱；FIG无本塔地震响应。2dt差只是数值诊断，低频SNR、滤波遍数、场址目标谱和物理误差NEED_ESTIMATE。S05独立输入准备增加真实数表，S08/S09原生E/WE仍0，**严格0/12未晋级**，S10风致分材料疲劳与S11优化主线不变。完整SOURCE/RUN/失败及SHA见[T079过程日志](../../experiments/T079/PROCESS_LOG.md)2026-10-29 14时节；冻结T057/T070不改，PR #42不合并、不做昂贵生产。
+
+
+### 2026-10-29 15时｜S05→S08已处理地震波SI时程桥接（代码与CI契约已提交；原生E/WE=0）
+
+- **阶段严格PASS=0/12**，但独立准备新增可执行交付：复用[现有ESM程序](../../experiments/T079/s05_esm_public_processed_pair.py)，增加源数值SHA锁定的三分量 `cm/s²→m/s²`、0..160.195s/32040步时程CSV与来源/量化误差收据导出接口；6正向断言/6负例测试代码已写入。现有[S05工作流](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s05-ground-motion-pair-qc.yml)增加真实官方ZIP导出与独立12点复核。**本次CI和真实新CSV尚未回读，状态为CONTRACT_PREPARED/CI_UNVERIFIED，不能声称已生成32,040行实际数据。**
+- **SOURCE/OFFICIAL/REF/STANDARD/RUN/FIG/TAB与SHA、误差预算及失败/HOLD：** 见[T079 15时过程日志](../../experiments/T079/PROCESS_LOG.md)。程序SHA256 `db7a71866f046508fcb8eec11cbe28c67e88db1781fbe4c1cf15e21fa4e38954`；workflow SHA256 `48562ae8300fff498ea85c046fb69c12126f4484ff92f3a3340a3f2bbfc9b701`。官方意大利MP波仅作参考数据；未取得中国场地目标谱/低频独立SNR，未做地震方向旋转、幅值匹配、Abaqus基底输入或物理计算；S08/S09仍HOLD。
+- **下一一项：** 回读新S05 Actions源SHA、CSV与receipt的真实执行日志，若失败修复；不重复S01微审计。T057/T070冻结母本、Draft PR #42及S10/S11风疲劳优化主线保持。
