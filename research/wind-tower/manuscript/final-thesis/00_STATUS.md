@@ -605,3 +605,6 @@ HOLD：
 ## 2026-10-29 22时｜S10历史ODB原生只读目录清点工具（非原生结果）
 
 在既有[T077原生应力提取器](../../experiments/T077/recovery/s10_native_odb_local_stress_gate.py)中增加SHA256+字节数锁定的`--inventory-only`模式，供本机Abaqus `odbAccess`只读清点历史4,316,822,840字节STRESS ODB的步/帧/S字段/实例/集合，严格不读取应力值。新增mock 2步3帧、2/3帧含S的合成正向及NaN帧时间、非法数量上限拒绝测试；[S10工作流](../../../../.github/workflows/s10-material-cycle-contract.yml)已加入回归及伪ODB错误SHA拒绝，真实CI结果按后续日志判定。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、命令、误差预算和HOLD见[T077 22时过程节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。实际五卷实体、Abaqus原生打开及局部材料应力/fe-safe寿命仍缺；历史U18p57 NTM不代表当前ETM/D400/Pe。S10仅`NATIVE_INVENTORY_TOOL_PREPARED / NEED_REAL_ODB`，**0/12整阶段未晋级**，地震原生E/WE仍0；冻结T057/T070未改，PR仍Draft。
+
+
+**22:13 CI回填：** [S10 Actions #40888900240](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40888900240)已`completed/success`，原生job日志证实ODB目录mock正向1、负向2及假ODB错误SHA拒绝；[10文件artifact #12904131445](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40888900240/artifacts/12904131445)已下载逐字节验ZIP SHA256 `60f7d3f6561f8fd461735f265d9fb10db01abb57c6c6103a579ab06ed59bc2c8`，其中脚本SHA256 `8dd65f17e598c4bc5e7b99cab3d5857c86ef47c12b16f4fb7f8594a2e0d3b483`。仅`SYNTHETIC_CI_PASS`，不是原生ODB/物理/寿命PASS；S10与12阶段正式HOLD不变。
