@@ -25,14 +25,14 @@
 | 事项 | 已有进度/当前状态 | 下一步与责任人 |
 |---|---|---|
 | 原稿与前期成果 | 原七章Word已定位；模型验证、36风工况、31段时程、配筋/PT损失、载荷雨流等已完成，见下方成果表 | 所有执行者继承；不得笼统派重做 |
-| C00 / L00–L01：T070诊断 | **L01已于11:27–11:28实际执行：7 FATAL / 129 WARNING**；旧IOS层级错误消失；C00b已针对空白接触数据行及6个非法直接输出请求生成**独立SHA锁定静态子版**（[RUN卡](../experiments/T070/repair-20261029/RUN_CARD.md)，子版SHA256 `d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`），原生复验仍待执行；[L01真实日志](../experiments/T070/local-20261029-l01/README.md) | **网页版GPT已生成C00b锁定子版；CI触发/结果待远端核验；本机可从仓库原件确定性再生并在CI可核后仅做一次G0复验**；未进入物理求解 |
+| C00 / L00–L01：T070诊断 | **L01已于11:27–11:28实际执行：7 FATAL / 129 WARNING**；旧IOS层级错误消失；C00b已针对空白接触数据行及6个非法直接输出请求生成**独立SHA锁定静态子版**（[RUN卡](../experiments/T070/repair-20261029/RUN_CARD.md)，子版SHA256 `d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`），原生复验仍待执行；[L01真实日志](../experiments/T070/local-20261029-l01/README.md) | **网页版GPT已生成C00b锁定子版；[C00b真实CI #40822101386](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40822101386)已completed/success，子版artifact #12874778778已可取；本机L02可从仓库原件确定性再生并仅做一次后台G0复验**；未进入物理求解 |
 | C01：31站动态接口 | 4×31×12001条六分量已恢复归档；旧9站OUTB存在；31站同步RP/TP仍缺；本机已检T072四包 | 网页版复用已有提取器做缺项恢复/最小受控补采；不重复搜同一四包、不默认重跑36组 |
 | C02：新增地震输入 | 已有3事件5对来源、数值QC和论文参考谱残差诊断；[T079最新过程记录](../experiments/T079/PROCESS_LOG.md) | 网页版继续正式研究参考谱的适用域、全周期选波与处理一致性；日本论文诊断谱不能冒充本研究已验收目标谱 |
 | C03 / L02–L03：设计实施 | T077配筋和T078 PT设计已有结果；选定支路的材料/PT/接触改动需与旧原生结果对应 | 网页版整理实施差异和唯一输入；本机仅做受影响的平衡、模态/柔度等增量复核 |
 | C05 / L04–L05：材料疲劳与优化 | 载荷雨流/DEL和方法已有；历史fe-safe线索待定位核实，不能称从未做过 | 先恢复旧成果；云端做通用算法，确需原生响应/专有提取的缺项交本机；新增E/WE依赖合格输入 |
 | C06：论文与网站 | 原稿、后期六章重构稿和地震方案已分清；本次统一入口和读写纪律 | 网页版按原稿与证据整合正文/图表；GitHub导航、研究结果合并和Pages发布分别报告 |
 
-**L01已完成且FAIL；C00b最小修复子版及锁定SHA已交付静态计算，下一首项是C00b CI回读/本机后台原生G0复验；C01/C02仍可独立推进。** 等待时C01/C02可由云端并行；不是让所有人停工等待，也不是再开一轮相同状态审计。
+**L01已完成且FAIL；C00b静态CI已真实通过并取得锁定SHA的child artifact，下一首项是本机L02后台原生G0复验；C01/C02仍可独立推进。** 等待时C01/C02可由云端并行；不是让所有人停工等待，也不是再开一轮相同状态审计。
 
 **状态用语：** 已完成（有证据）／待定位核验（已有线索）／增量待做（明确变更或缺项）／阻塞（指出依赖）。“0/12整阶段PASS”只能描述新验收框架，不能表示原论文完成度为0。
 
@@ -56,6 +56,8 @@
 - **责任与验收：** 网页版GPT/Actions负责全16.6MB原件SHA锁定、子版字节diff/逆变换/异常拒绝/真实CI artifact；本机Codex仅在收到C00b锁定SHA后后台执行一次Abaqus 2025 Data Check并回传原生.dat/.msg/.sta/.log（如有）。静态CI不称原生PASS。END待本轮实际交付后填写。
 - **END / 2026-10-29 12时 CST：** 已在PR #42交付[确定性C00b生成器](../experiments/T070/repair-20261029/c00b_repair_l01_contact.py)、[原生G0子版包装器](../experiments/T070/repair-20261029/c00b_run_child_g0.py)、[复用原CI工作流](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/c00-t070-ios-repair-static.yml)、[RUN卡](../experiments/T070/repair-20261029/RUN_CARD.md)、[T080过程日志](../experiments/T080/PROCESS_LOG.md)及00_STATUS。本轮独立对完整16.6MB冻结父本/C00子版/C00b子版进行UTF-8 SHA256真实计算，前两份SHA与既有登记完全一致，新子版16,587,192 bytes、SHA256 `d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`；30对接触及μ0.5未改。原生L01 DAT SHA及7 FATAL身份见RUN卡。**当前未获取新Actions run/job/artifact的可核实成功回执，CI状态PENDING，不报通过**；本机C00b原生G0未运行，S02 HOLD，0/12未晋级。下一责任人：网页版GPT优先远端回读真实CI并处理失败；CI实证通过后本机Codex后台仅Data Check并返回完整原生日志。冻结母本/PR状态未变。
 
+
+**2026-10-29 13:14 CST｜同一C00b任务的真实CI后续回填：** [失败#40816703112](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40816703112)确认为合成fixture的`UNEXPECTED_DIFF_HUNKS`假失败；在[程序](../experiments/T070/repair-20261029/c00b_repair_l01_contact.py)仅加10行合成上下文，真实父本/子版SHA和两处真实补丁不变。后续[成功#40822101386](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40822101386) job 123276684274通过4正7负与真实L01 DAT SHA、父本/子版字节检查；[C00b artifact #12874778778](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40822101386/artifacts/12874778778)已可取，解压INP SHA256必须为`d5f0922a...`。C00b原生Data Check仍**未运行**，12阶段0/12；交本机L02后台原生G0，不把CI误作物理PASS。
 
 ### HANDOFF-20261029-NATIVE-L01-FESAFE｜原生复验与历史疲劳恢复
 
