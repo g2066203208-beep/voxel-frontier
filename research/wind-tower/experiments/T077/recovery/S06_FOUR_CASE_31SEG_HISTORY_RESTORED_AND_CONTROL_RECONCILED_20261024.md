@@ -347,3 +347,22 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **OFFICIAL / REF / STANDARD：** OFFICIAL仅沿用T071/T072 OpenFAST工作流及历史源文件；REF沿用T062/T077方法和已登记论文，**本轮未阅读新的期刊全文原式/页码**；STANDARD无新增授权IEC 2025、NB/T或GB条款，不作条款验收。**FIG**无本塔局部材料应力或损伤图。**CI**：[S10源数据及自测工作流](../../../../../.github/workflows/s10-material-cycle-contract.yml)已提交，若无真实run ID/日志则记`CI_PENDING`，不能冒称云端成功。
 - **误差预算 / HOLD：** CSV十进制检查容差1e-7循环数、2e-6载荷量纲内的p2p；这些只是序列化误差，不能代替真实OpenFAST/Abaqus映射、网格、接缝、PT初态、材料均值应力、S–N参数、DLC1.2长期风速bin及多seed的物理不确定性（均`NEED_ESTIMATE`）。ASTM式循环算法目前只有合成解析回归，尚无独立ASTM参考实现的全时程比对。S10标记`LOAD_SCREEN_QC + STRESS_INTERFACE_SELFTESTED / MATERIAL_LIFE_HOLD`；S01–S04和S07物理门禁不变，严格0/12阶段PASS。地震E/WE原生结果仍为0，S11优化未宣称Pareto结论。不改冻结T057/T070、不合并PR、不执行昂贵生产。
 - **下一唯一动作：** 从既有历史U18p57/fe-safe/Abaqus ODB恢复一份**带模型SHA、材料、单元/积分点、绝对应力、采样网格**的真实局部应力时程，先验证是否与158m当前材料/PT支路同一物理身份；若不一致只作算法验证，不冒充正式S10寿命。无需再次计算已有载荷DEL。
+
+
+## 2026-10-29 20时｜S10历史U18p57局部应力/fe-safe线索：真实LFS分卷恢复入口（不是ODB验收）
+
+- **SOURCE/阅读层级：** 直接读取活动PR #42分支Git tree（2,974条路径，未截断）及 `archive/local-large-assets-20261004/abaqus-dtu-models/` 中2个INP Git LFS文本指针、2个ODB分卷manifest、9个分卷LFS文本指针。未获取任何GB级LFS实际二进制，未调用Abaqus odbAccess或fe-safe，不能把LFS指针/manifest称为已打开的真实应力ODB。当前Git tree可见的这组文件没有fe-safe原生项目、寿命输出；仅限已检Git tree范围，**不能据此推断本机不存在fe-safe结果**。
+- **实际找回的历史身份（Git LFS指针/manifest核验）：**
+
+| 历史资产 | 登记原件字节数 | 原件SHA256（manifest/LFS声明，未独立读取原件复算） | 可见分卷 | 证据级别 |
+|---|---:|---|---:|---|
+| `DTU158_SITE_NTM_U18p57_S04.odb` | 4,015,916,840 | `bb07aff9b5ed7b5ef277f8208d2834cc472673085d7753bf057f05ecc0959290` | 4 | manifest + 4个LFS指针 |
+| `DTU158_SITE_NTM_U18p57_S04_STRESS.odb` | 4,316,822,840 | `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd` | 5 | manifest + 5个LFS指针 |
+| `DTU158_SITE_NTM_U18p57_S04.inp` | 19,581,516 | `04afaada2dec0f206bf29b3e90364f14029c26d3cdb7425f99c8e8d21afc0b0e` | LFS指针 | 未打开INP实体 |
+| `DTU158_SITE_NTM_U18p57_S04_STRESS.inp` | 19,581,623 | `14666b495a1531ef05863bd0f00db2cfe3106e25a97bba33ff0c8f6d90312795` | LFS指针 | 未打开INP实体 |
+
+- **RUN/元数据实检：** 9/9分卷的Git Blob文本LFS `oid sha256`和`size`逐一与两个manifest一致，分卷offset从0严格连续；4+5分卷总长度分别精确为4,015,916,840与4,316,822,840字节，合计8,332,739,680字节（约7.76047 GiB）。原manifest Git Blob分别为 `3e8c69892cb50c10c71f4334f97b34c6597a5957` 和 `c193cc8e184cff5c8a95a387b5d9a9ca6998a660`；两INP指针Git Blob为 `bd0afbfd43ba999a61c551882c49907343f65669`、`1884fd657024c3be31a390807790dc2309943126`。manifest中的历史 `error=[WinError 10054]` 保留；其 `status=uploaded-lfs-multipart` 是上传记录，**本轮未验证LFS服务器仍可下载对象**。
+- **可运行代码与测试：** 复用本目录已有S10流程，新增唯一小型只读 `s10_legacy_odb_lfs_gate.py`，按精确资产名/字节/声明SHA、分卷顺序、offset、LFS pointer内容、INP指针身份做检查；本地Python合成2个ODB manifest+2个INP指针正向测试通过，错位offset负向测试正确拒绝。默认只查指针与manifest，`--verify-payload` 仅供本机LFS实体下载后进行流式SHA检查，绝不在云端将文本指针误当4GB ODB。S10现有GitHub Actions工作流已增元数据实测、故意拒绝未下载实体的测试；**CI实际运行结果待回读，不能写CI PASS**。
+- **STANDARD/REF/OFFICIAL：** 本轮无新授权标准/期刊全文核读；继续沿用T064材料应力输出契约和 `governance/CODEX_FESAFE_RECOVER_OR_EXECUTE_20261008.md` 的恢复判据，不新增疲劳强度或寿命参数。
+- **误差预算与FAIL/HOLD：** 元数据核验为整数、字节完全一致（允许偏差0）；不涉及数值积分/物理误差。尚未验证LFS对象下载、重组后整体SHA、Abaqus能否打开、ODB是否包含真实Wind步及局部应力、对应模型是否为当前158m T057/T070或旧历史版本、材料/积分点/网格/初始PT/fe-safe项目与S–N。故状态为 `HISTORICAL_LFS_METADATA_RECOVERED / NATIVE_ODB_AND_MATERIAL_LIFE_HOLD`，非 `VERIFIED_REUSABLE`，无原生RUN/FIG/材料寿命TAB。**S10整阶段仍HOLD，12阶段0/12未晋级。**
+- **下一唯一动作：** 在具备git-lfs和Abaqus odbAccess的本机后台，只按manifest按需取回 `..._STRESS.odb.parts` 五个真实LFS对象，逐卷SHA与重组ODB整体SHA核验后，先只读打开ODB列出steps/frames/S输出与模型材料身份；不做任何新求解，不打开GUI。若下载失败记录实际LFS错误，不把指针当原件。
