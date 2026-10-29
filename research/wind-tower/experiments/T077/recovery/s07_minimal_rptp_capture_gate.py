@@ -380,9 +380,143 @@ def audit_original_nine_gage_receipt(path):
     }
 
 
+
+def prepare_a_diagnostic_input(baseline_bytes, expected_base_sha=ED_BASE_SHA256):
+    """Generate an OUTPUT-ONLY A-batch ElastoDyn diagnostic child.
+
+    Exactly one TwrGagNd line and missing OutList channels may change.
+    No OpenFAST run, no physics keyword change, no external-load conversion.
+    """
+    actual=hashlib.sha256(baseline_bytes).hexdigest()
+    if actual != expected_base_sha:
+        raise ValueError("S07_DIAG_PARENT_SHA256_MISMATCH")
+    bom=b"\xef\xbb\xbf" if baseline_bytes.startswith(b"\xef\xbb\xbf") else b""
+    text=baseline_bytes[len(bom):].decode("utf-8")
+    lines=text.splitlines(keepends=True)
+    newline="\r\n" if b"\r\n" in baseline_bytes else "\n"
+    gage=[i for i,s in enumerate(lines) if re.match(
+        r"^[ \t]*[0-9, \t]+[ \t]+TwrGagNd\\b",s)]
+    if len(gage)!=1 or not re.match(
+        r"^[ \t]*1,3,5,7,9,13,15,17,20[ \t]+TwrGagNd\\b",lines[gage[0]]):
+        raise ValueError("S07_DIAG_PARENT_GAGE_LINE_UNEXPECTED")
+    nt=[s for s in lines if re.match(r"^[ \t]*[0-9]+[ \t]+NTwGages\\b",s)]
+    if len(nt)!=1 or not re.match(r"^[ \t]*9[ \t]+NTwGages\\b",nt[0]):
+        raise ValueError("S07_DIAG_NTWGAGES_NOT_NINE")
+    outlist=[i for i,s in enumerate(lines) if re.match(
+        r"^[ \t]*OutList\\b",s,re.I)]
+    if len(outlist)!=1:
+        raise ValueError("S07_DIAG_OUTLIST_AMBIGUOUS")
+    ends=[i for i,s in enumerate(lines) if i>outlist[0] and
+          re.match(r"^[ \t]*END(?:[ \t]|$)",s,re.I)]
+    if len(ends)!=1:
+        raise ValueError("S07_DIAG_END_AMBIGUOUS")
+    end=ends[0]
+    existing=[]
+    for line in lines[outlist[0]+1:end]:
+        m=re.match(r"""^[ \t]*["']([A-Za-z][A-Za-z0-9]*)["']""",line)
+        if m: existing.append(m.group(1))
+    required=["TwHt%d%s"%(gage_idx,suffix)
+              for gage_idx in range(1,10)
+              for suffix in tuple(SUFFIX_UNIT)+tuple(DIAG_SUFFIX_UNIT)]
+    if len(required)!=135 or len(set(required))!=135:
+        raise AssertionError("S07_DIAG_INTERNAL_CHANNEL_CONTRACT")
+    if any(existing.count(x)>1 for x in required):
+        raise ValueError("S07_DIAG_DUPLICATE_PARENT_CHANNEL")
+    additions=[x for x in required if x not in existing]
+    # The existing OutList is preserved byte-for-byte; only missing channels
+    # are inserted before its sole END terminator.
+    lines[gage[0]]=(
+        ",".join(map(str,BATCHES["A"][0]))+
+        "             TwrGagNd      - S07 A-batch diagnostic output only"+
+        newline)
+    lines[end:end]=['"'+x+'" - S07 paired diagnostic'+newline for x in additions]
+    child=bom+"".join(lines).encode("utf-8")
+    child_sha=hashlib.sha256(child).hexdigest()
+    return child,{
+        "stage":"S07_A_BATCH_DIAGNOSTIC_INPUT_STATIC_ONLY",
+        "case":"U11p4_ETM_S04","batch":"A",
+        "source_baseline_elastodyn_sha256":actual,
+        "child_elastodyn_sha256":child_sha,
+        "source_workflow_t072_git_blob":T072_BLOB,
+        "baseline_fst_sha256_from_historical_T071":"5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+        "gage_nodes":list(BATCHES["A"][0]),
+        "concrete_segments":list(BATCHES["A"][1]),
+        "output_channels_required":required,
+        "output_channels_required_count":135,
+        "output_channels_already_present":135-len(additions),
+        "output_channels_appended":len(additions),
+        "changed_existing_lines":1,
+        "SOURCE":"SHA256-locked parent ElastoDyn extracted from historical original case ZIP; not a recovered 31-gage OUTB",
+        "REF":"Existing OpenFAST 3.5.3 ElastoDyn output nomenclature and T062 original 9-gage receipt; no new paper full text",
+        "STANDARD":"No new authorized IEC/GB/NB original pages read",
+        "OFFICIAL":"OpenFAST native output not run; this is only deterministic input construction",
+        "RUN":{"openfast":0,"abaqus":0,"kind":"static input-only"},
+        "FIG":"NONE","TAB":{"gage_count":9,"paired_channels_per_gage":15,"channel_count":135},
+        "assumptions":["Output-only channels do not alter solver physics; requires native confirmation",
+                       "U11p4_ETM_S04 BTS/Controller/FST and full case input identity not yet independently bound"],
+        "error_budget":{"source_identity":"exact SHA256 match",
+                        "output_identity":"exact deterministic bytes; no numerical response yet",
+                        "native_physics":"UNDEFINED until a separate authorized diagnostic run"},
+        "HOLD":"NOT A COMPLETE RUN PACKAGE. Missing same-run BTS/controller/FST byte binding, actual OpenFAST OUTB and RP/TP; no signed free-body or Abaqus load PASS."
+    }
+
+
+def emit_a_diagnostic_input(baseline, outdir, source_zip_sha256=None):
+    outdir=Path(outdir)
+    if outdir.exists() and any(outdir.iterdir()):
+        raise ValueError("S07_DIAG_OUTPUT_DIR_NOT_EMPTY")
+    child,receipt=prepare_a_diagnostic_input(Path(baseline).read_bytes())
+    if source_zip_sha256:
+        if not re.fullmatch(r"[0-9a-f]{64}",source_zip_sha256):
+            raise ValueError("S07_DIAG_ZIP_SHA_INVALID")
+        receipt["source_zip_sha256"]=source_zip_sha256
+    outdir.mkdir(parents=True,exist_ok=True)
+    target=outdir/"DTU_10MW_RWT_ElastoDyn.dat"
+    target.write_bytes(child)
+    if sha256_file(target)!=receipt["child_elastodyn_sha256"]:
+        raise AssertionError("S07_DIAG_OUTPUT_BYTE_VERIFICATION_FAILED")
+    (outdir/"S07_A_DIAGNOSTIC_INPUT_MANIFEST.json").write_text(
+        json.dumps(receipt,indent=2,sort_keys=True,ensure_ascii=False)+"\n",
+        encoding="utf-8")
+    return receipt
+
+
+def diagnostic_a_selftest():
+    sample=(b"header\r\n9 NTwGages - count\r\n"
+            b"1,3,5,7,9,13,15,17,20 TwrGagNd - original\r\n"
+            b"OutList the following channels\r\n"
+            b'"TwHt1FLxt" - original\r\nEND\r\nfooter\r\n')
+    h=hashlib.sha256(sample).hexdigest()
+    child,r=prepare_a_diagnostic_input(sample,h)
+    assert r["output_channels_required_count"]==135
+    assert r["output_channels_appended"]==134
+    assert child.count(b"TwHt1FLxt")==1
+    assert b"footer\r\n" in child and child.endswith(b"footer\r\n")
+    assert child.count(b"TwHt9MLzt")==1
+    assert child==prepare_a_diagnostic_input(sample,h)[0]
+    faults=[
+        (sample,"0"*64,"bad_sha"),
+        (sample.replace(b"OutList",b"NoList"),h,"missing_outlist"),
+        (sample.replace(b"9 NTwGages",b"8 NTwGages"),None,"bad_count"),
+        (sample.replace(b"1,3,5,7,9,13,15,17,20",b"1,2,3,4,5,6,7,8,9"),None,"bad_parent"),
+        (sample.replace(b"END",b"NOT_END"),None,"missing_end"),
+        (sample.replace(b"END",b'"TwHt1FLxt" - duplicate\r\nEND'),None,"duplicate"),
+    ]
+    for raw,expected,name in faults:
+        try: prepare_a_diagnostic_input(raw,expected or hashlib.sha256(raw).hexdigest())
+        except ValueError: pass
+        else: raise AssertionError("S07_DIAG_FAULT_ACCEPTED_"+name)
+    return {"synthetic_child_sha256":r["child_elastodyn_sha256"],
+            "positive_tests":4,"negative_tests":len(faults),
+            "new_solver_runs":0}
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--self-test",action="store_true")
+    p.add_argument("--diagnostic-a-selftest",action="store_true")
+    p.add_argument("--prepare-a-baseline",type=Path)
+    p.add_argument("--prepare-a-dir",type=Path)
+    p.add_argument("--source-zip-sha256")
     p.add_argument("--t062-receipt",type=Path,
                    help="audit existing 9-gage OUTB-derived receipt; no binary reread")
     p.add_argument("--t071",type=Path)
@@ -401,6 +535,13 @@ def main():
     p.add_argument("--batch")
     p.add_argument("--output",type=Path)
     a=p.parse_args()
+    if a.diagnostic_a_selftest:
+        print("S07_A_DIAGNOSTIC_SELFTEST",json.dumps(diagnostic_a_selftest(),sort_keys=True))
+    if a.prepare_a_baseline:
+        if not a.prepare_a_dir:
+            p.error("--prepare-a-dir required")
+        print("S07_A_DIAGNOSTIC_INPUT",json.dumps(emit_a_diagnostic_input(
+            a.prepare_a_baseline,a.prepare_a_dir,a.source_zip_sha256),sort_keys=True))
     if a.self_test:
         print("S07_SELFTEST",json.dumps(selftest(),sort_keys=True))
     if a.t062_receipt:
@@ -424,7 +565,7 @@ def main():
                     expected_sha256=a.expected_outb_sha256,
                     baseline_elastodyn=a.baseline_elastodyn,
                     run_elastodyn=a.run_elastodyn),sort_keys=True))
-    if not (a.self_test or a.t062_receipt or a.source_audit or a.outb):
+    if not (a.self_test or a.diagnostic_a_selftest or a.prepare_a_baseline or a.t062_receipt or a.source_audit or a.outb):
         p.error("choose --self-test, --source-audit or --outb")
 
 
