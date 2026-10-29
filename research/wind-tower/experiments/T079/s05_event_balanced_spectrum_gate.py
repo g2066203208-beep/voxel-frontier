@@ -251,6 +251,8 @@ def reference_paper_spectrum_diagnostic(us_bytes, esm_bytes, enforce_source_sha=
         "reference_DOI": REFERENCE_DOI,
         "reference_eq": "Ishihara_2024_Eq1_JSCE_Level2_bedrock_5pct_a0_3.2",
         "reference_sa_m_s2": {str(t): jsce_level2_bedrock_sa(t) for t in PERIODS},
+        "us_csv_sha256": digest(us_bytes),
+        "esm_csv_sha256": digest(esm_bytes),
         "source_US_csv_sha256": digest(us_bytes),
         "source_ESM_csv_sha256": digest(esm_bytes),
         "source_read_level": "previously archived 20 precomputed PSA rows; not raw waveforms",
@@ -315,7 +317,7 @@ def main():
           "S05_REAL_SOURCE_EVENT_BALANCED_DIAGNOSTIC_NOT_DESIGN_PASS",
           result["us_csv_sha256"], result["esm_csv_sha256"])
     for row in result["rows"]:
-        print("S05_REAL_PERIOD", row)
+        print("S05_REFERENCE_PAPER_PAIR" if args.reference_paper_benchmark else "S05_REAL_PERIOD", row)
 
 
 if __name__ == "__main__":
