@@ -7,6 +7,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv'
       - '.github/workflows/s10-material-cycle-contract.yml'
       - 'research/wind-tower/experiments/T077/recovery/s10_legacy_odb_lfs_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py'
       - 'research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/**'
   workflow_dispatch:
 jobs:
@@ -37,6 +38,19 @@ jobs:
           assert obj['status']=='NO_MATERIAL_LIFE'
           assert obj['load_screen']['material_life_years'] is None
           print('REAL_SOURCE_SHA_AND_NO_MATERIAL_LIFE_PASS',actual)
+          PY
+          python3 research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py \
+            --self-test > s10-receipts/S10_ODB_DIRECTORY_SYNTHETIC.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('s10-receipts/S10_ODB_DIRECTORY_SYNTHETIC.json').read_text())
+          assert x['directory_inventory']['status']=='SYNTHETIC_DIRECTORY_INVENTORY_PASS_NOT_NATIVE'
+          assert x['directory_inventory']['positive_tests']==1
+          assert x['directory_inventory']['negative_tests']==2
+          assert x['directory_inventory']['physical_pass'] is False
+          assert x['native_odb_runs']==0 and x['physical_pass'] is False
+          print('S10_ODB_DIRECTORY_SYNTHETIC_ONLY_PASS_NOT_NATIVE')
           PY
           python3 research/wind-tower/experiments/T077/recovery/s10_legacy_odb_lfs_gate.py \
             --self-test --out s10-receipts/S10_U18P57_LFS_METADATA_ONLY.json | tee s10-receipts/lfs_metadata.log
