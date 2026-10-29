@@ -207,22 +207,112 @@ def self_test():
     print("S05_EVENT_BALANCE_SYNTHETIC_SELFTEST_PASS 4 positive + 8 negative")
 
 
+
+# This reference-paper spectrum is NOT a China/Jiayu target and is never an S05 gate.
+# DOI 10.1016/j.istruc.2024.105886, Ishihara et al. 2024, Eq.(1), PDF p.6.
+REFERENCE_US_CSV_SHA256 = "45c71c29677dd0918e68c281e6552cedf6d1370a13f6abbf319349cdc1f5fc80"
+REFERENCE_ESM_CSV_SHA256 = "4fd1ecf5f3010524e2c5c54dae4072e1187718344f3a64bec46490e9ec617def"
+REFERENCE_DOI = "10.1016/j.istruc.2024.105886"
+
+
+def reference_paper_spectrum_diagnostic(us_bytes, esm_bytes, enforce_source_sha=True):
+    """Log-spectrum amplitude-only oracle; NOT wave scaling or code matching.
+
+    Four discrete T=4/6/8/10s periods only, five pairs/three earthquakes,
+    with heterogeneous preprocessing and unverified low-frequency fidelity.
+    A post-scale residual is purely an algebraic best-fit diagnostic.
+    """
+    from s09_ishihara2024_equation_oracle import jsce_level2_bedrock_sa
+    if enforce_source_sha and (digest(us_bytes) != REFERENCE_US_CSV_SHA256 or
+                               digest(esm_bytes) != REFERENCE_ESM_CSV_SHA256):
+        raise ValueError("REFERENCE_SOURCE_SHA256_CHANGED")
+    spectra, provenance = _parse(us_bytes, esm_bytes)
+    rows = []
+    for event, station in sorted(provenance):
+        residual = [math.log(spectra[((event, station), t)] /
+                             jsce_level2_bedrock_sa(t)) for t in PERIODS]
+        mean_log = math.fsum(residual) / len(residual)
+        scale = math.exp(-mean_log)
+        post = [v - mean_log for v in residual]
+        rows.append({
+            "event_id": event,
+            "station": station,
+            "source_HNE_sha256": provenance[(event, station)][0],
+            "source_HNN_sha256": provenance[(event, station)][1],
+            "period_count": len(PERIODS),
+            "pre_scale_log_rmse": math.sqrt(math.fsum(v*v for v in residual)/len(residual)),
+            "least_squares_amplitude_scale_DIAGNOSTIC": scale,
+            "post_scale_log_rmse": math.sqrt(math.fsum(v*v for v in post)/len(post)),
+            "max_abs_post_log_residual": max(abs(v) for v in post),
+            "decision": "REJECT_DESIGN_USE_REFERENCE_PAPER_ONLY",
+        })
+    return {
+        "status": "REFERENCE_PAPER_ALGEBRA_ONLY_NOT_DESIGN_SPECTRUM",
+        "reference_DOI": REFERENCE_DOI,
+        "reference_eq": "Ishihara_2024_Eq1_JSCE_Level2_bedrock_5pct_a0_3.2",
+        "reference_sa_m_s2": {str(t): jsce_level2_bedrock_sa(t) for t in PERIODS},
+        "source_US_csv_sha256": digest(us_bytes),
+        "source_ESM_csv_sha256": digest(esm_bytes),
+        "source_read_level": "previously archived 20 precomputed PSA rows; not raw waveforms",
+        "source_processing": "US pre20 mean removal NOT low-frequency verified; ESM MP highpass 0.04Hz",
+        "fit_definition": "ln(obs/target), unweighted 4-point RMSE; scale exp(-mean ln(obs/target))",
+        "design_site_spectrum_PASS": False,
+        "record_low_frequency_PASS": False,
+        "actual_scaled_waveforms": 0,
+        "Abaqus_E_WE_RUN": 0,
+        "rows": rows,
+    }
+
+
+def reference_paper_self_test():
+    from s09_ishihara2024_equation_oracle import jsce_level2_bedrock_sa
+    u, e = _fixture()
+    out = reference_paper_spectrum_diagnostic(u, e, enforce_source_sha=False)
+    assert len(out["rows"]) == 5 and len(out["reference_sa_m_s2"]) == 4
+    assert out["reference_sa_m_s2"]["10.0"] == .512
+    assert math.isclose(out["reference_sa_m_s2"]["4.0"], 1.28, rel_tol=1e-13)
+    assert all(row["period_count"] == 4 and row["post_scale_log_rmse"] >= 0
+               and row["post_scale_log_rmse"] <= row["pre_scale_log_rmse"]
+               for row in out["rows"])
+    expected_scale = math.exp(math.fsum(math.log(
+        jsce_level2_bedrock_sa(t)/.5) for t in PERIODS)/4)
+    assert all(math.isclose(row["least_squares_amplitude_scale_DIAGNOSTIC"],
+                            expected_scale, rel_tol=1e-13) for row in out["rows"])
+    for fn, error in [
+        (lambda: reference_paper_spectrum_diagnostic(u, e), "REFERENCE_SOURCE_SHA256_CHANGED"),
+        (lambda: reference_paper_spectrum_diagnostic(u.replace(b"0.5", b"nan", 1), e, False),
+         "NONPOSITIVE_OR_NONFINITE_PSA"),
+        (lambda: reference_paper_spectrum_diagnostic(u, e.replace(b"0.05", b"0.1", 1), False),
+         "DAMPING_NOT_5_PERCENT"),
+    ]:
+        try: fn()
+        except ValueError as exc:
+            if str(exc) != error: raise AssertionError((error, str(exc))) from exc
+        else: raise AssertionError("failed closed: " + error)
+    print("S05_REFERENCE_PAPER_SYNTHETIC_PASS 4 positive + 3 negative; NOT DESIGN PASS")
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--self-test", action="store_true")
+    p.add_argument("--reference-paper-benchmark", action="store_true")
     p.add_argument("--us-csv", type=Path)
     p.add_argument("--esm-csv", type=Path)
     p.add_argument("--output", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
+        reference_paper_self_test()
         return
     if not (args.us_csv and args.esm_csv and args.output):
         p.error("require --us-csv --esm-csv --output")
-    result = calculate(args.us_csv.read_bytes(), args.esm_csv.read_bytes())
+    result = (reference_paper_spectrum_diagnostic(args.us_csv.read_bytes(), args.esm_csv.read_bytes())
+              if args.reference_paper_benchmark else
+              calculate(args.us_csv.read_bytes(), args.esm_csv.read_bytes()))
     args.output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n",
                            encoding="utf-8")
-    print("S05_REAL_SOURCE_EVENT_BALANCED_DIAGNOSTIC_NOT_DESIGN_PASS",
+    print("S05_REFERENCE_PAPER_NOT_DESIGN_PASS" if args.reference_paper_benchmark else
+          "S05_REAL_SOURCE_EVENT_BALANCED_DIAGNOSTIC_NOT_DESIGN_PASS",
           result["us_csv_sha256"], result["esm_csv_sha256"])
     for row in result["rows"]:
         print("S05_REAL_PERIOD", row)
