@@ -27,7 +27,7 @@
 | 原稿与前期成果 | 原七章Word已定位；模型验证、36风工况、31段时程、配筋/PT损失、载荷雨流等已完成，见下方成果表 | 所有执行者继承；不得笼统派重做 |
 | C00 / L00–L01：T070诊断 | **L01已于11:27–11:28实际执行：7 FATAL / 129 WARNING**；旧IOS层级错误消失；C00b已针对空白接触数据行及6个非法直接输出请求生成**独立SHA锁定静态子版**（[RUN卡](../experiments/T070/repair-20261029/RUN_CARD.md)，子版SHA256 `d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`），原生复验仍待执行；[L01真实日志](../experiments/T070/local-20261029-l01/README.md) | **网页版GPT已生成C00b锁定子版；[C00b真实CI #40822101386](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40822101386)已completed/success，子版artifact #12874778778已可取；本机L02可从仓库原件确定性再生并仅做一次后台G0复验**；未进入物理求解 |
 | C01：31站动态接口 | 4×31×12001条六分量已恢复归档；旧9站OUTB存在；31站同步RP/TP仍缺；本机已检T072四包 | 网页版复用已有提取器做缺项恢复/最小受控补采；不重复搜同一四包、不默认重跑36组 |
-| C02：新增地震输入 | 已有3事件5对来源/参考谱残差；**真实ESM处理波16周期双水平密谱及dt/2dt数值表**（[16行CSV](../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv)、[过程日志](../experiments/T079/PROCESS_LOG.md)2026-10-29 14时节），本地真实原件重算；**15时已实算三分量32,040步SI时程，16时新增真实Arias/Husid三分量强度与显著持续时间及积分偏置诊断，程序/3行结果CSV已远端Git blob核验；17时已新增真实水平合向量/能量主轴可复算程序与1行结果CSV并远端核验；完整1.31MB SI时程GitHub artifact仍待归档**（[程序](../experiments/T079/s05_esm_public_processed_pair.py)、[过程日志](../experiments/T079/PROCESS_LOG.md)15时节） | 网页版先核新Actions真实执行及导出SHA，再推进有来源中国参考目标谱与选波适用域；意大利记录和日本论文谱均非设计波PASS |
+| C02：新增地震输入 | 已有3事件5对来源/参考谱残差；**真实ESM处理波16周期双水平密谱及dt/2dt数值表**（[16行CSV](../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv)、[过程日志](../experiments/T079/PROCESS_LOG.md)2026-10-29 14时节），本地真实原件重算；**15时已实算三分量32,040步SI时程，16时新增真实Arias/Husid三分量强度与显著持续时间及积分偏置诊断，程序/3行结果CSV已远端Git blob核验；17时已新增真实水平合向量/能量主轴可复算程序与1行结果CSV并远端核验；完整1.31MB SI时程已在[真实Actions artifact #12884814391](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979/artifacts/12884814391)远端归档并逐字节回读（32040行，SHA256 a353c1216b80...）；同一workflow因CESMD HTTP500整体failure，ESM子job成功**（[程序](../experiments/T079/s05_esm_public_processed_pair.py)、[过程日志](../experiments/T079/PROCESS_LOG.md)15时节） | 网页版先核新Actions真实执行及导出SHA，再推进有来源中国参考目标谱与选波适用域；意大利记录和日本论文谱均非设计波PASS |
 | C03 / L02–L03：设计实施 | T077配筋和T078 PT设计已有结果；选定支路的材料/PT/接触改动需与旧原生结果对应 | 网页版整理实施差异和唯一输入；本机仅做受影响的平衡、模态/柔度等增量复核 |
 | C05 / L04–L05：材料疲劳与优化 | 载荷雨流/DEL和方法已有；历史fe-safe线索待定位核实，不能称从未做过 | 先恢复旧成果；云端做通用算法，确需原生响应/专有提取的缺项交本机；新增E/WE依赖合格输入 |
 | C06：论文与网站 | 原稿、后期六章重构稿和地震方案已分清；本次统一入口和读写纪律 | 网页版按原稿与证据整合正文/图表；GitHub导航、研究结果合并和Pages发布分别报告 |
@@ -37,6 +37,13 @@
 **状态用语：** 已完成（有证据）／待定位核验（已有线索）／增量待做（明确变更或缺项）／阻塞（指出依赖）。“0/12整阶段PASS”只能描述新验收框架，不能表示原论文完成度为0。
 
 <a id="handoff-log"></a>
+
+### HANDOFF-20261029-S05-S08-ARTIFACT-WEB-18｜真实Actions全量SI时程归档核验
+
+- **START / 2026-10-29 18时 CST / 网页版GPT：** `read_base_sha=6ef50956574a31a8b076a3a35a64b10947963195`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft。已读AGENTS、README、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG最新节、T080.1/.2/.3、12阶段计划、本指挥室进度/交接/成果。继承ESM三分量32,040步本地CSV；本轮仅做真实Actions日志及artifact远端回读、错误定位；拟更新既有T079 PROCESS_LOG、00_STATUS和本页，不改冻结母本、不新开T080、不跑昂贵生产。
+- **END / 2026-10-29 18时 CST：** 已回读[Actions #40847442979](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979)，ESM job `123358308022`成功；下载[14文件artifact #12884814391](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979/artifacts/12884814391)，ZIP SHA256 `40dcb0d8ad6aa3ce1be4cd96e633d1aa266f3764c85be556e1a029c682c908d6`与上传日志一致；完整SI CSV 32,040行、SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`与前轮本地文件**逐字节相同**。全套workflow因CESMD两事件HTTP500整体failure（job `123358307473`，失败artifact `12885427563`），不能冒称整体CI成功。已更新C02快照；0/12未晋级、S05目标谱/低频HOLD、S08/S09原生0，S10/S11保留。下一责任：网页版/Actions推进S10真实时程→分材料雨流输入接口，本机L02处理独立G0。详细SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与误差见[T079过程日志](../experiments/T079/PROCESS_LOG.md)。提交与PR状态以远端回读为准。
+
+
 ## 最近交接日志 — 新记录置顶，旧记录保留
 
 ### HANDOFF-20261029-S08-HORIZONTAL-ORIENTATION-WEB-17｜真实双水平能量主轴与方向无关筛查
