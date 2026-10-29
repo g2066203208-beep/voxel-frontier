@@ -118,6 +118,45 @@ def source_gate(t071, t072):
     }
 
 
+def verify_patched_elastodyn(baseline, run_input, batch,
+                             expected_baseline_sha256=ED_BASE_SHA256):
+    """Check exact 31-gage node map and that ONLY TwrGagNd changed.
+
+    This is input provenance, not proof an arbitrary OUTB was produced by it.
+    The actual run/OUTB association still requires original job evidence.
+    """
+    if batch not in BATCHES:
+        raise ValueError("S07_UNKNOWN_BATCH_FOR_ELASTODYN")
+    baseline_sha = sha256_file(baseline)
+    if baseline_sha != expected_baseline_sha256:
+        raise ValueError("S07_BASELINE_ELASTODYN_SHA256_MISMATCH")
+    base_lines = Path(baseline).read_text(encoding="utf-8-sig").splitlines()
+    run_lines = Path(run_input).read_text(encoding="utf-8-sig").splitlines()
+    if len(base_lines) != len(run_lines):
+        raise ValueError("S07_ELASTODYN_UNEXPECTED_LINE_COUNT")
+    pattern = re.compile(r"^\\s*([0-9]+(?:\\s*,\\s*[0-9]+)*)\\s+TwrGagNd\\b")
+    base_gages = [(i,tuple(int(n) for n in m.group(1).split(",")))
+                  for i,line in enumerate(base_lines)
+                  if (m := pattern.search(line))]
+    run_gages = [(i,tuple(int(n) for n in m.group(1).split(",")))
+                 for i,line in enumerate(run_lines)
+                 if (m := pattern.search(line))]
+    if len(base_gages)!=1 or base_gages[0][1]!=(1,3,5,7,9,13,15,17,20):
+        raise ValueError("S07_BASELINE_GAGE_MAP_UNEXPECTED")
+    if len(run_gages)!=1 or run_gages[0][0]!=base_gages[0][0]:
+        raise ValueError("S07_PATCHED_GAGE_LINE_MISSING_OR_MOVED")
+    if run_gages[0][1]!=BATCHES[batch][0]:
+        raise ValueError("S07_PATCHED_GAGE_MAP_MISMATCH")
+    changes=[i for i,(a,b) in enumerate(zip(base_lines,run_lines)) if a!=b]
+    if changes != [base_gages[0][0]]:
+        raise ValueError("S07_ELASTODYN_PHYSICS_CHANGED_OUTSIDE_GAGE_LINE")
+    return {"baseline_elastodyn_sha256":baseline_sha,
+            "patched_elastodyn_sha256":sha256_file(run_input),
+            "verified_tower_gage_nodes":list(run_gages[0][1]),
+            "changed_lines":1,
+            "provenance_limit":"No original native run-log/OUTB-input binding established"}
+
+
 def channel(data, prefix, unit):
     cols = list(data.keys()) if isinstance(data,dict) else list(data.columns)
     found = [name for name in cols if name.startswith(prefix)
@@ -208,21 +247,55 @@ def selftest():
                                include_diagnostics=True))
         except ValueError: pass
         else: raise AssertionError("S07_PAIRED_FAULT_NOT_REJECTED_"+fault)
+    # An unrelated 9-gage OUTB must not be relabeled as 31 concrete segments.
+    # The actual original baseline SHA is exercised separately by CI.
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        base=Path(d)/"base.dat"; patched=Path(d)/"run.dat"
+        base.write_text("header\\n1,3,5,7,9,13,15,17,20  TwrGagNd  - source\\nfooter\\n")
+        patched.write_text("header\\n"+",".join(map(str,BATCHES["A"][0]))+
+                           "  TwrGagNd  - T071\\nfooter\\n")
+        got=verify_patched_elastodyn(base,patched,"A",sha256_file(base))
+        assert got["verified_tower_gage_nodes"]==list(BATCHES["A"][0])
+        for fault in ("swapped_batch","physics_change","extra_line","bad_base_sha"):
+            if fault=="swapped_batch":
+                op=lambda: verify_patched_elastodyn(base,patched,"B",sha256_file(base))
+            elif fault=="physics_change":
+                patched.write_text(patched.read_text().replace("footer","changed"))
+                op=lambda: verify_patched_elastodyn(base,patched,"A",sha256_file(base))
+            elif fault=="extra_line":
+                patched.write_text(patched.read_text()+"extra\\n")
+                op=lambda: verify_patched_elastodyn(base,patched,"A",sha256_file(base))
+            else:
+                op=lambda: verify_patched_elastodyn(base,patched,"A","0"*64)
+            try: op()
+            except ValueError: pass
+            else: raise AssertionError("S07_PROVENANCE_FAULT_NOT_REJECTED_"+fault)
+            patched.write_text("header\\n"+",".join(map(str,BATCHES["A"][0]))+
+                               "  TwrGagNd  - T071\\nfooter\\n")
+        fake=Path(d)/"fake.outb";fake.write_bytes(b"not an OUTB")
+        for kwargs in (dict(),dict(expected_sha256="0"*64)):
+            try: capture_existing_outb(fake,case,"A",Path(d)/"out.gz",**kwargs)
+            except ValueError: pass
+            else: raise AssertionError("S07_CAPTURE_WITHOUT_SOURCE_BINDING_ACCEPTED")
     return {"synthetic_valid_rows":27,"paired_synthetic_valid_rows":27,
             "paired_channels_per_gage":15,
-            "negative_tests_passed":len(faults)+4,
+            "negative_tests_passed":len(faults)+4+4+2,
             "native_solver_runs":0,"external_load_exports":0}
 
 
 def capture_existing_outb(path, case, batch, output,
-                          full_diagnostic=False, expected_sha256=None):
+                          full_diagnostic=False, expected_sha256=None,
+                          baseline_elastodyn=None, run_elastodyn=None):
     """Opt-in read of an EXISTING file; NEVER launches OpenFAST."""
+    if not expected_sha256 or not re.fullmatch(r"[0-9a-f]{64}",expected_sha256):
+        raise ValueError("S07_MANDATORY_ORIGINAL_OUTB_SHA256_REQUIRED")
+    if baseline_elastodyn is None or run_elastodyn is None:
+        raise ValueError("S07_MANDATORY_BASELINE_AND_PATCHED_ELASTODYN_REQUIRED")
+    provenance=verify_patched_elastodyn(baseline_elastodyn,run_elastodyn,batch)
     source_sha=sha256_file(path)
-    if expected_sha256 is not None:
-        if not re.fullmatch(r"[0-9a-f]{64}",expected_sha256):
-            raise ValueError("S07_INVALID_EXPECTED_OUTB_SHA256")
-        if source_sha!=expected_sha256:
-            raise ValueError("S07_ORIGINAL_OUTB_SHA256_MISMATCH")
+    if source_sha!=expected_sha256:
+        raise ValueError("S07_ORIGINAL_OUTB_SHA256_MISMATCH")
     try:
         from openfast_toolbox.io.fast_output_file import FASTOutputFile
     except ImportError as exc:
@@ -253,6 +326,8 @@ def capture_existing_outb(path, case, batch, output,
         if tmp.exists(): tmp.unlink()
     receipt={"case":case,"batch":batch,"source_outb_sha256":source_sha,
              "expected_outb_sha256":expected_sha256,
+             "elastodyn_input_provenance":provenance,
+             "source_to_run_binding":"HOLD: independent original run evidence required",
              "diagnostic_channels_per_gage":15 if full_diagnostic else 6,
              "synchronized_acceleration_and_section_resultants":bool(full_diagnostic),
              "external_load_exports":0,"native_solver_runs":0,
@@ -310,7 +385,11 @@ def main():
     p.add_argument("--full-diagnostic",action="store_true",
                    help="capture RP/TP + AL + FL/ML in identical rows (NOT Abaqus loads)")
     p.add_argument("--expected-outb-sha256",
-                   help="optional exact 64-char original OUTB SHA256 guard")
+                   help="MANDATORY for capture: exact 64-char original OUTB SHA256")
+    p.add_argument("--baseline-elastodyn",type=Path,
+                   help="SHA-locked original ElastoDyn before gage-only patch")
+    p.add_argument("--run-elastodyn",type=Path,
+                   help="ElastoDyn from the same archived 31-gage run (identity preflight)")
     p.add_argument("--case")
     p.add_argument("--batch")
     p.add_argument("--output",type=Path)
@@ -335,7 +414,9 @@ def main():
             print("S07_EXISTING_OUTB_CAPTURE",json.dumps(
                 capture_existing_outb(a.outb,a.case,a.batch,a.output,
                     full_diagnostic=a.full_diagnostic,
-                    expected_sha256=a.expected_outb_sha256),sort_keys=True))
+                    expected_sha256=a.expected_outb_sha256,
+                    baseline_elastodyn=a.baseline_elastodyn,
+                    run_elastodyn=a.run_elastodyn),sort_keys=True))
     if not (a.self_test or a.t062_receipt or a.source_audit or a.outb):
         p.error("choose --self-test, --source-audit or --outb")
 
