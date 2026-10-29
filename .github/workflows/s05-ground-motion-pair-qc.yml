@@ -1,5 +1,14 @@
 name: S05 original-record pair QC self-test (NO real PEER or physics PASS)
 on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/s05-ground-motion-pair-qc.yml'
+      - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
+      - 'research/wind-tower/experiments/T079/s08_si_motion_diagnostics.py'
+      - 'research/wind-tower/experiments/T079/s08_horizontal_orientation_energy_gate.py'
+      - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv'
   pull_request:
     paths:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
@@ -31,7 +40,7 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --location --silent --show-error --retry 3 --output s05_ground_motion_pair_qc.py \
-            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py"
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py"
           sha256sum s05_ground_motion_pair_qc.py
       - name: Python source QC and independent analytic SDOF convergence
         run: |
@@ -42,7 +51,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC"
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC"
           mkdir -p real-ci-clc/raw real-ci-clc/pre20
           for file in manifest.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
             curl -fLsS --retry 3 --output "real-ci-clc/raw/$file" "$base/$file"
@@ -69,7 +78,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511"
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511"
           mkdir -p triage/clc triage/root
           for file in manifest.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
             curl -fLsS --retry 3 --output "triage/clc/$file" "$base/CI_CLC/$file"
@@ -108,7 +117,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
           curl -fLsS --retry 3 -o triage/ridge.json "$base/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json"
           curl -fLsS --retry 3 -o triage/lone.json "$base/real-records/USGS_ci39493944/CI_CLC/processed/baseline_sensitivity_report.json"
           curl -fLsS --retry 3 -o triage/committed_long_period.csv "$base/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv"
@@ -148,7 +157,7 @@ jobs:
         run: |
           set -euo pipefail
           curl -fLsS --retry 3 --output s05_cesmd_processed_metadata.py \
-            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py"
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py"
           sha256sum s05_cesmd_processed_metadata.py
       - name: Test metadata schema and adversarial inputs (synthetic only)
         run: |
@@ -178,9 +187,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -fLsS --retry 3 -o s05_esm_public_processed_pair.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py"
+          curl -fLsS --retry 3 -o s05_esm_public_processed_pair.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py"
           sha256sum s05_esm_public_processed_pair.py
-          curl -fLsS --retry 3 -o s05_ground_motion_pair_qc.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py"
+          curl -fLsS --retry 3 -o s05_ground_motion_pair_qc.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py"
           sha256sum s05_ground_motion_pair_qc.py
       - name: Synthetic ZIP security and source-identity tests
         run: |
@@ -226,7 +235,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -fLsS --retry 3 -o esm-public-processed/committed_four_period.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv"
+          curl -fLsS --retry 3 -o esm-public-processed/committed_four_period.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv"
           python3 - <<'PY'
           import csv,hashlib,json,math,pathlib
           folder=pathlib.Path('esm-public-processed')
@@ -265,7 +274,7 @@ jobs:
           print('S05_DENSE_REAL_CSV_SHA256',hashlib.sha256(output.read_bytes()).hexdigest())
           print('S05_DENSE_16_PERIOD_2_COMPONENT_4_OLD_PERIOD_REGRESSION_PASS_NO_DESIGN_WAVE')
           PY
-          curl -fLsS --retry 3 -o esm-public-processed/committed_dense.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv"
+          curl -fLsS --retry 3 -o esm-public-processed/committed_dense.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv"
           cmp esm-public-processed/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv esm-public-processed/committed_dense.csv
           sha256sum esm-public-processed/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv esm-public-processed/committed_dense.csv
           echo 'S05_REAL_DENSE_16_ROW_COMMITTED_BYTE_IDENTITY_PASS_NOT_DESIGN_WAVE'
@@ -311,7 +320,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
           curl -fLsS --retry 3 -o s08_si_motion_diagnostics.py "$base/s08_si_motion_diagnostics.py"
           curl -fLsS --retry 3 -o esm-public-processed/committed_s08_arias_husid.csv "$base/real-records/S08_ESM_IT2012_NVL_ARIAS_HUSID_3COMP_20261029.csv"
           echo "7c083e2a07453bd2d6e17181239287873b2b92eaf2fc7d4625f9dc787eb0ab7a  s08_si_motion_diagnostics.py" | sha256sum -c -
@@ -337,7 +346,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
           curl -fLsS --retry 3 -o s08_horizontal_orientation_energy_gate.py "$base/s08_horizontal_orientation_energy_gate.py"
           curl -fLsS --retry 3 -o esm-public-processed/committed_s08_orientation.csv "$base/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv"
           echo "bb6e9ba3aed16a7ce6d5b60306a7fa001f3dc9746035bee57d31fab69724569a  s08_horizontal_orientation_energy_gate.py" | sha256sum -c -
@@ -370,7 +379,7 @@ jobs:
         if: success()
         shell: bash
         run: |
-          curl -fLsS --retry 3 -o esm-public-processed/committed_lowfreq_qc.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv"
+          curl -fLsS --retry 3 -o esm-public-processed/committed_lowfreq_qc.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv"
           python3 - <<'PY'
           import csv,json,math
           p='esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_receipt.json'
@@ -430,7 +439,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
           curl -fLsS --retry 3 -o s05_event_balanced_spectrum_gate.py "$base/s05_event_balanced_spectrum_gate.py"
           curl -fLsS --retry 3 -o us.csv "$base/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv"
           curl -fLsS --retry 3 -o esm.csv "$base/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv"
