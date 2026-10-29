@@ -6,7 +6,7 @@
 
 ## 2026-10-30 00时｜S07同步15通道诊断提取与T062真实9站字段身份交叉核验（独立准备）
 
-继承四工况31段1,488,124行六分量、历史T062真实9站OUTB通道收据及原S07 RP/TP提取器。直接解析T062原生OUTB派生收据，核对9站×15通道=**135/135通道单位**、每站12001点、100–700s/0.05s；原9站TPzi高度跨度仅2.680356759m，**不等于158m全塔31站**。在[既有S07提取器](../../experiments/T077/recovery/s07_minimal_rptp_capture_gate.py)新增同刻RP/TP、AL、FL/ML诊断导出、源OUTB SHA守卫、负例测试及[既有S07 CI](../../../.github/workflows/s07-six-component-frame-gate.yml)回归步骤。脚本SHA256=`aeae86cc903a5ef9471e9369e16d0ddb47b5f648a0dc4c83802d48c8976d543b`；[SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-00时s07同步rptpalflml一体化只读提取器真实历史源字段验证非新风场run)。**本轮仅实际运行了真实JSON的独立135字段交叉检查，尚无新Python CI成功日志或原31站OUTB字节**；无新风载/地震/Abaqus生产RUN、无外载/材料寿命PASS。S07=`PAIRED_CAPTURE_CODE_PREPARED / REAL_31GAGE_OUTB_HOLD`；整阶段**0/12未晋级**，S10疲劳及S11优化主线不变。
+继承四工况31段1,488,124行六分量、历史T062真实9站OUTB通道收据及原S07 RP/TP提取器。直接解析T062原生OUTB派生收据，核对9站×15通道=**135/135通道单位**、每站12001点、100–700s/0.05s；原9站TPzi高度跨度仅2.680356759m，**不等于158m全塔31站**。在[既有S07提取器](../../experiments/T077/recovery/s07_minimal_rptp_capture_gate.py)新增同刻RP/TP、AL、FL/ML诊断导出、源OUTB SHA守卫、负例测试及[既有S07 CI](../../../../.github/workflows/s07-six-component-frame-gate.yml)回归步骤。脚本SHA256=`aeae86cc903a5ef9471e9369e16d0ddb47b5f648a0dc4c83802d48c8976d543b`；[SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-00时s07同步rptpalflml一体化只读提取器真实历史源字段验证非新风场run)。**本轮仅实际运行了真实JSON的独立135字段交叉检查，尚无新Python CI成功日志或原31站OUTB字节**；无新风载/地震/Abaqus生产RUN、无外载/材料寿命PASS。S07=`PAIRED_CAPTURE_CODE_PREPARED / REAL_31GAGE_OUTB_HOLD`；整阶段**0/12未晋级**，S10疲劳及S11优化主线不变。
 
 ## 2026-10-29 19时｜S10真实载荷级DEL身份核验与分材料应力雨流接口（独立准备，不是材料寿命）
 
