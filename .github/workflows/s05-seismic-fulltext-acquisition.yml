@@ -1,0 +1,196 @@
+name: S05 acquire original earthquake journal PDFs (source bytes; no solver)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/s05-seismic-fulltext-acquisition.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  acquire-original-pdfs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch only version-locked downloader (avoid 2.2GB Git checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p paper
+          curl --fail --location --silent --show-error --retry 3 --output paper/seismic_fulltext_acquire.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/seismic_fulltext_acquire.py"
+          sha256sum paper/seismic_fulltext_acquire.py
+      - name: Install PDF parser
+        run: python -m pip install 'pypdf>=5,<7'
+      - name: Check downloader and SHA256 known vector
+        run: |
+          python -m py_compile paper/seismic_fulltext_acquire.py
+          python paper/seismic_fulltext_acquire.py --self-test
+      - name: Download real journal PDF bytes, record HTTP failures and PDF SHA256
+        continue-on-error: true
+        run: python paper/seismic_fulltext_acquire.py --output-dir "$RUNNER_TEMP/seismic_original_pdfs"
+      - name: Save full original PDFs to private research artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-original-earthquake-journal-fulltext
+          path: ${{ runner.temp }}/seismic_original_pdfs/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit licensed full PDF originals DIRECTLY INTO references/open-access in GitHub repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,hashlib,json,os,pathlib,subprocess
+          from pypdf import PdfReader
+          base=pathlib.Path(os.environ['RUNNER_TEMP'])/'seismic_original_pdfs'
+          repo=os.environ['GH_REPO']
+          branch='research/t080-seismic-integration-gates-20261022'
+          records=[
+            ('Meng_2020_RenewableEnergy_AAM.pdf','Meng_2020_RenewableEnergy_AAM.pdf','cc8769039f53587f9dd2c88d70dde15bbc537d918e75dd22473fd279b9235905','CC BY-NC-ND 4.0, original unmodified accepted manuscript, noncommercial academic repository; credit original authors'),
+            ('Ali_2021_SDEE_106483_AAM.pdf','Ali_2021_SDEE_106483_AAM.pdf','','Bristol CC BY-NC-ND 4.0, original unmodified accepted manuscript; credit original authors'),
+            ('Zhang_2024_ShockVibration_6563460.pdf','Zhang_2024_ShockVibration_6563460.pdf','', 'CC BY 4.0 original fulltext, credit original authors')
+          ]
+          manifest=[]
+          for source,target,expected,lic in records:
+              file=base/source
+              if not file.exists():
+                  print('REPO_NOT_UPLOADED_NOT_DOWNLOADED',source);continue
+              b=file.read_bytes()
+              sha=hashlib.sha256(b).hexdigest()
+              if expected and sha!=expected:raise ValueError('SOURCE_SHA_MISMATCH '+source)
+              text=' '.join((PdfReader(str(file)).pages[0].extract_text() or '').split()).lower()
+              if 'Meng_' in source:
+                  assert 'copyright and reuse' in text, 'expected accepted-manuscript rights not found'
+              elif 'Ali_' in source:
+                  assert 'seismic assessment' in text and 'rotor-nacelle' in text, 'incorrect Bristol source PDF'
+              else:
+                  assert 'creative commons attribution' in text or ('creative commons' in text and 'attribution' in text), 'cannot verify CC BY 4.0 in PDF'
+              path='research/wind-tower/references/open-access/'+target
+              gitsha=hashlib.sha1(b'blob '+str(len(b)).encode()+bytes([0])+b).hexdigest()
+              old=subprocess.run(['gh','api','--method','GET',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+              if old.returncode==0:
+                  if json.loads(old.stdout)['sha']==gitsha:
+                      print('ALREADY_IN_GIT_REPO',path,sha);continue
+                  raise ValueError('EXISTING_REPO_PDF_HASH_DIFF_REJECT '+path)
+              payload={'message':'research(S05): store unmodified licensed seismic full PDF '+target,'branch':branch,'content':base64.b64encode(b).decode()}
+              import time
+              for attempt in range(8):
+                  up=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
+                  if up.returncode==0:
+                      c=json.loads(up.stdout)['commit']['sha']
+                      print('PERMANENT_GIT_REPO_PDF',path,'SHA256',sha,'BYTES',len(b),'COMMIT',c)
+                      manifest.append({'path':path,'sha256':sha,'bytes':len(b),'license':lic,'commit_sha':c})
+                      break
+                  if '409' in up.stderr or 'already exists' in up.stderr:
+                      current=subprocess.run(['gh','api','--method','GET',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+                      if current.returncode==0:
+                          existing=json.loads(current.stdout)
+                          if existing.get('sha')==gitsha:
+                              print('GIT_REPO_PDF_CONFIRMED_AFTER_RACE',path,sha);break
+                      print('BRANCH_HEAD_CONFLICT_RETRY',path,attempt+1,up.stderr[:180],flush=True)
+                      time.sleep(2)
+                      continue
+                  raise RuntimeError('GIT_PDF_UPLOAD_FAILED '+target+' '+up.stderr[:350])
+              else:
+                  raise RuntimeError('GIT_PDF_UPLOAD_409_RETRIES_EXHAUSTED '+target)
+          print('NEW_LICENSED_PDFS_IN_GIT_REPO',len(manifest))
+          PY
+      - name: Retrieve and put original HKU-licensed Huang 2023 full Word manuscript directly in repository
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p hkumanuscript
+          src="https://hub.hku.hk/bitstream/10722/338977/1/content.docx"
+          if ! curl --fail --location --silent --show-error --max-time 35 --output hkumanuscript/source.docx "$src"; then
+             echo "HOLD_HKU_SOURCE_DOWNLOAD_FAILED $src"; exit 0
+          fi
+          python - <<'PY'
+          import base64,hashlib,io,json,os,pathlib,subprocess,time,zipfile,xml.etree.ElementTree as ET
+          source=pathlib.Path('hkumanuscript/source.docx')
+          raw=source.read_bytes()
+          if raw[:2]!=b'PK':raise ValueError('NOT_ZIP_DOCX')
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              assert 'word/document.xml' in z.namelist()
+              root=ET.fromstring(z.read('word/document.xml'))
+              alltext=' '.join(n.text or '' for n in root.iter() if n.tag.endswith('}t')).lower()
+          assert 'computational study' in alltext and 'hybrid' in alltext and 'tower' in alltext, 'wrong source manuscript'
+          sha=hashlib.sha256(raw).hexdigest()
+          path='research/wind-tower/references/open-access/Huang_2023_JEE_2121789_HKU_AAM.docx'
+          branch='research/t080-seismic-integration-gates-20261022';repo=os.environ['GH_REPO']
+          gitsha=hashlib.sha1(b'blob '+str(len(raw)).encode()+bytes([0])+raw).hexdigest()
+          for i in range(8):
+              prev=subprocess.run(['gh','api','--method','GET',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+              if prev.returncode==0:
+                  if json.loads(prev.stdout)['sha']==gitsha:
+                      print('HKU_ORIGINAL_ALREADY_IN_REPO',path,sha,len(raw));break
+                  raise ValueError('Different DOCX original already exists; no overwrite')
+              payload={'branch':branch,'message':'refs(S05): store CC BY-NC-ND unmodified HKU seismic fulltext manuscript','content':base64.b64encode(raw).decode()}
+              res=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
+              if res.returncode==0:
+                  print('HKU_ORIGINAL_MANUSCRIPT_COMMITTED',json.loads(res.stdout)['commit']['sha'],path,sha,len(raw));break
+              if '409' in res.stderr:
+                  time.sleep(2);continue
+              raise RuntimeError('HKU_COMMIT_FAILED '+res.stderr[:400])
+          else:raise RuntimeError('HKU_409_RETRIES_EXHAUSTED')
+          PY
+      - name: Archive author-hosted ALL-RIGHTS-RESERVED Ishihara PDF as PRIVATE DRAFT GitHub repository Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/seismic_original_pdfs/Ishihara_2024_Structures_105886.pdf"
+          test -s "$src"
+          echo "3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238  $src" | sha256sum --check
+          TAG="windtower-s05-private-journal-fulltext-20261028"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --target research/t080-seismic-integration-gates-20261022 --draft --prerelease \
+              --title "S05 private full-text research originals (DRAFT, never publish)" \
+              --notes "PRIVATE scholarly reference copy; not licensed for public redistribution. Do not publish this draft Release. Ishihara et al. (2024) Structures 60:105886 DOI 10.1016/j.istruc.2024.105886. Original author-hosted PDF, all rights reserved, SHA256 3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238. CC BY papers reside directly in references/open-access/."
+          fi
+          name="Ishihara_2024_Structures_105886.pdf"
+          if gh release view "$TAG" --json assets --jq '.assets[].name' | grep -Fxq "$name"; then
+            echo "PRIVATE_DRAFT_RELEASE_ASSET_ALREADY_EXISTS $name"
+          else
+            gh release upload "$TAG" "$src"
+            echo "PRIVATE_DRAFT_RELEASE_ASSET_UPLOADED $name"
+          fi
+          gh release view "$TAG" --json url,isDraft,assets --jq '{url,isDraft,asset_count:(.assets|length)}'
+          test "$(gh release view "$TAG" --json isDraft --jq .isDraft)" = "true"
+          echo "SOURCE_SHA256=3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238; PRIVATE DRAFT REPO RELEASE, NOT PUBLIC GIT."
+      - name: Commit exact download receipt to Draft PR branch (no PDF in public git)
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,json,os,pathlib,subprocess
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"seismic_original_pdfs/seismic_fulltext_download_receipt.json"
+          if not p.exists(): raise RuntimeError("No real download receipt; see previous step")
+          repo=os.environ["GH_REPO"]
+          branch="research/t080-seismic-integration-gates-20261022"
+          path="research/wind-tower/experiments/T079/S05_SEISMIC_FULLTEXT_DOWNLOAD_RECEIPT_20261028.json"
+          old=subprocess.run(["gh","api","--method","GET",f"repos/{repo}/contents/{path}","-f",f"ref={branch}"],capture_output=True,text=True)
+          data={"message":"research(S05): record actually downloaded seismic journal PDF SHA256 and access failures","branch":branch,"content":base64.b64encode(p.read_bytes()).decode()}
+          if old.returncode==0: data["sha"]=json.loads(old.stdout)["sha"]
+          payload=subprocess.run(["gh","api","--method","PUT",f"repos/{repo}/contents/{path}","--input","-"],input=json.dumps(data),capture_output=True,text=True)
+          print("receipt_api_status",payload.returncode,payload.stderr[:500])
+          if payload.returncode: raise RuntimeError("Could not save PDF receipt: "+payload.stderr[:500])
+          print("receipt_commit",json.loads(payload.stdout)["commit"]["sha"])
+          PY

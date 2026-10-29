@@ -4,16 +4,20 @@ from __future__ import print_function
 import argparse, csv, json, math, os
 from pathlib import Path
 
-try:
-    from odbAccess import openOdb
-except Exception as exc:
-    raise SystemExit("This script must be executed with Abaqus Python/odbAccess: %s" % exc)
+# Abaqus odbAccess is intentionally imported lazily in main().
+# This permits pure-Python gravity/PT support-ledger self-tests without Abaqus.
 
 PT_AREA = 0.00112
 PT_FY = 1.320e9
 PT_FU = 1.860e9
 PT_NOMINAL_STRESS = 1.280e9
 PT_NOMINAL_TOTAL_FORCE = 36.0 * PT_AREA * PT_NOMINAL_STRESS
+PT_DESIGN_PE_MN = 39.75355895461417  # T078 code-design long-term loss estimate, NOT native G1
+T057_TOWER_MASS_KG = 1985489.1181173094  # direct 68-Part Gauss integral, 2026-10-27 CI
+T057_RNA_MASS_KG = 676753.290723  # T057 Assembly *Mass, separately counted
+GRAVITY_M_S2 = 9.81  # T057 Gravity step, global negative Y
+T057_SOURCE_SHA256 = "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db"
+T070_SOURCE_SHA256 = "9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9"
 
 def ci_key(mapping, wanted):
     w = wanted.upper()
@@ -80,6 +84,81 @@ def reaction_resultant_with_moment(odb, frame, region, origin=(0.0,0.0,0.0)):
         moment=add(moment,cross(r,f))
     return force,moment,len(vals)
 
+def support_gravity_oracle(base_force, pt_force, base_moment, pt_moment, base_n, pt_n):
+    """Diagnostic free-body balance, NOT a physical PASS criterion.
+
+    T057/T070 fix BOTH the tower-base nodes and the separate PT-bottom nodes.
+    Comparing SET_TOWER_BASE RF alone with total dead weight is not a valid
+    global-equilibrium test. Include all distinct external support sets, then
+    check the reaction sum against gravity, subject to load/constraint inventory.
+    """
+    mass = T057_TOWER_MASS_KG + T057_RNA_MASS_KG
+    w = mass * GRAVITY_M_S2
+    support_force = add(base_force, pt_force)
+    support_moment = add(base_moment, pt_moment)
+    residual = [support_force[0], support_force[1] - w, support_force[2]]
+    available = bool(base_n > 0 and pt_n > 0)
+    return {
+        "evidence_level": "FROZEN_SOURCE_STATIC_GRAVITY_REFERENCE_PLUS_NATIVE_RF_IF_AUTHENTIC",
+        "source_T057_sha256_registered": T057_SOURCE_SHA256,
+        "source_T070_sha256_registered": T070_SOURCE_SHA256,
+        "source_note": "T057 68-Part mass source CI; native ODB/input binding MUST be separately verified",
+        "tower_mass_kg": T057_TOWER_MASS_KG,
+        "RNA_mass_kg": T057_RNA_MASS_KG,
+        "total_gravity_mass_kg": mass,
+        "gravity_acceleration_m_s2": GRAVITY_M_S2,
+        "reference_gravity_force_N": [0.0, -w, 0.0],
+        "reference_dead_weight_MN": w / 1e6,
+        "tower_base_RF_N": list(base_force),
+        "PT_bottom_RF_N": list(pt_force),
+        "total_external_support_RF_N": support_force,
+        "gravity_plus_support_residual_N": residual,
+        "residual_norm_over_dead_weight": norm(residual) / w,
+        "tower_base_moment_about_global_origin_Nm": list(base_moment),
+        "PT_bottom_moment_about_global_origin_Nm": list(pt_moment),
+        "combined_support_moment_about_global_origin_Nm": support_moment,
+        "moment_closure_status": "HOLD_NEED_GLOBAL_CG_AND_ALL_EXTERNAL_MOMENT_INVENTORY",
+        "PT_jacking_P0_MN": PT_NOMINAL_TOTAL_FORCE / 1e6,
+        "PT_long_term_design_Pe_MN_NOT_NATIVE": PT_DESIGN_PE_MN,
+        "PT_P0_minus_Pe_MN": PT_NOMINAL_TOTAL_FORCE / 1e6 - PT_DESIGN_PE_MN,
+        "PT_P0_is_not_additional_global_dead_weight": True,
+        "tower_base_RF_node_values": base_n,
+        "PT_bottom_RF_node_values": pt_n,
+        "status": "NOT_PHYSICS_PASS_REVIEW_ALL_SUPPORTS_AND_LOADS" if available
+                  else "INCOMPLETE_RF_EVIDENCE_HOLD",
+        "assumptions": [
+            "Gravity step external force inventory contains only g=-9.81Y; verify native INP/ODB",
+            "Tower-base and PT-bottom are distinct support sets; confirm all active constraints",
+            "Initial PT stress is internal to the assembly and is NOT extra global dead weight",
+            "Mass includes T057 FE gross embedded material and RNA; no host-volume correction",
+            "No arbitrary acceptance tolerance is applied to the residual",
+            "RNA eccentricity/CG and all applied couples are needed for global moment closure"
+        ]
+    }
+
+
+def self_test():
+    w = (T057_TOWER_MASS_KG + T057_RNA_MASS_KG) * GRAVITY_M_S2
+    assert abs(w / 1e6 - 26.116598030723438) < 1e-10
+    assert abs(PT_NOMINAL_TOTAL_FORCE / 1e6 - 51.6096) < 1e-10
+    assert abs((PT_NOMINAL_TOTAL_FORCE / 1e6 - PT_DESIGN_PE_MN) -
+               11.85604104538583) < 1e-10
+    pt = PT_DESIGN_PE_MN * 1e6
+    good = support_gravity_oracle([0, w-pt, 0], [0, pt, 0],
+                                  [0, 0, 0], [0, 0, 0], 4, 36)
+    assert norm(good["gravity_plus_support_residual_N"]) < 1e-6
+    assert good["status"] == "NOT_PHYSICS_PASS_REVIEW_ALL_SUPPORTS_AND_LOADS"
+    bad = support_gravity_oracle([0, w-pt+1e6, 0], [0, pt, 0],
+                                 [0, 0, 0], [0, 0, 0], 4, 36)
+    assert abs(bad["gravity_plus_support_residual_N"][1] - 1e6) < 1e-6
+    missing = support_gravity_oracle([0, w, 0], [0, 0, 0],
+                                     [0, 0, 0], [0, 0, 0], 4, 0)
+    assert missing["status"] == "INCOMPLETE_RF_EVIDENCE_HOLD"
+    assert abs(good["PT_bottom_RF_N"][1]) > 0  # prevents tower-base-only check
+    print("SELF_TEST_PASS: source-locked 26.116598MN weight, 11.856041MN PT stage "
+          "difference, two-support closure and missing-RF rejection; NOT ABAQUS")
+
+
 def contact_field_summary(frame):
     rows=[]
     bases=["CPRESS","COPEN","CSHEAR1","CSHEAR2","CSLIP1","CSLIP2"]
@@ -130,11 +209,24 @@ def all_energy_last(step):
 
 def main():
     ap=argparse.ArgumentParser()
-    ap.add_argument("--odb",required=True)
-    ap.add_argument("--out",required=True)
+    ap.add_argument("--odb")
+    ap.add_argument("--out")
+    ap.add_argument("--self-test",action="store_true",
+                    help="Pure-Python two-support gravity/PT checks, no odbAccess")
     args=ap.parse_args()
+    if args.self_test:
+        self_test()
+        return
+    if not args.odb or not args.out:
+        ap.error("--odb and --out are required unless --self-test")
+    try:
+        from odbAccess import openOdb
+    except Exception as exc:
+        raise SystemExit("This script must be executed with Abaqus Python/odbAccess: %s" % exc)
     outdir=Path(args.out)
-    outdir.mkdir(parents=True,exist_ok=True)
+    if outdir.exists():
+        raise SystemExit("REFUSE: output directory exists; preserve earlier evidence")
+    outdir.mkdir(parents=True,exist_ok=False)
 
     odb=openOdb(args.odb,readOnly=True)
     try:
@@ -198,10 +290,14 @@ def main():
             "moment_about_global_origin_MNm":[x/1e6 for x in base_moment]
         }
 
-        # PT bottom reaction.
+        # PT bottom is a SEPARATE fixed support. Its reaction must be included
+        # in the total external-support free body, not mistaken for tower weight.
         ptn_key=ci_key(pt_inst.nodeSets,"SET_PT_BOTTOM_GEOM")
         pt_bottom_region=pt_inst.nodeSets[ptn_key]
-        pt_bottom_rf=sum_node_vector(frame,"RF",pt_bottom_region)
+        pt_bottom_rf,pt_bottom_moment,npt=reaction_resultant_with_moment(
+            odb,frame,pt_bottom_region)
+        support_ledger=support_gravity_oracle(
+            base_force,pt_bottom_rf,base_moment,pt_bottom_moment,nbase,npt)
 
         # Reference point observability.
         rp={}
@@ -275,7 +371,10 @@ def main():
             "frame_value":float(frame.frameValue),
             "pt":pt_summary,
             "pt_bottom_RF_N":pt_bottom_rf,
+            "pt_bottom_moment_about_global_origin_Nm":pt_bottom_moment,
+            "pt_bottom_RF_node_count":npt,
             "tower_base":base_summary,
+            "support_reaction_closure":support_ledger,
             "reference_points":rp,
             "contact":{
                 "field_keys_found":len(contact_rows),
@@ -294,7 +393,9 @@ def main():
                 "contact_output_present":any(r["base"]=="CPRESS" for r in contact_rows),
                 "pt_36_elements_found":len(pt_rows)==36,
                 "pt_below_fy":bool(pt_s11 and max(pt_s11)<PT_FY),
-                "transition_integrated_output_present":bool(c31 and s01)
+                "transition_integrated_output_present":bool(c31 and s01),
+                "two_support_RF_available":bool(nbase>0 and npt>0),
+                "global_gravity_balance": "HOLD_REVIEW_RESIDUAL_LOADS_AND_CONSTRAINTS"
             }
         }
         with (outdir/"G1_SUMMARY.json").open("w") as f:

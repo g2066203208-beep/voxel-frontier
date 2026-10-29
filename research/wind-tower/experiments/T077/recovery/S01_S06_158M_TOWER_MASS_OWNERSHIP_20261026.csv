@@ -1,0 +1,7 @@
+case,mass_kg,minus_openfast_total_kg,relative_to_openfast_total_pct,scope_or_assumption
+openfast_70station_total,1923663.610690804,0.000000000,0.000000000,source_tmassden
+openfast_0_112m,1732815.850380447,-190847.760310357,-9.921056844,source_tmassden
+openfast_112_158m,190847.760310357,-1732815.850380447,-90.078943156,source_tmassden
+abaqus_host_and_steel_only,1809074.681124633,-114588.929566170,-5.956807049,excludes_rebar_pt
+abaqus_plus_rebar_pt_no_displacement,2163017.260316381,239353.649625577,12.442593824,embedded_host_not_displaced
+abaqus_plus_rebar_pt_nominal_displacement,2065643.532359758,141979.921668954,7.380704240,conditional_2400kgpm3_host_displacement

@@ -1,0 +1,15 @@
+Analysis initiated from SIMULIA established products
+Abaqus JOB T070_G0_DATACHECK
+Abaqus 2025
+Begin Analysis Input File Processor
+10/29/2026 9:59:51 AM
+Run pre.exe
+10/29/2026 9:59:59 AM
+Abaqus Error: Analysis Input File Processor exited with an error - Please see the 
+T070_G0_DATACHECK.dat file for possible error messages if the file exists.
+Begin SIM Wrap-up
+10/29/2026 10:00:01 AM
+Run SMASimUtility.exe
+10/29/2026 10:00:01 AM
+End SIM Wrap-up
+Abaqus/Analysis exited with errors

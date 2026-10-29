@@ -1,0 +1,972 @@
+{
+  "FIG": "NONE; no native Abaqus physical response",
+  "HOLD": "9 near-base gages only; 31-gage rerun different source; internal section resultants include inertia/gravity/RNA; no Abaqus external load or free-body physics PASS",
+  "OFFICIAL": {
+    "elastodyn_blob": "2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1",
+    "elastodyn_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+    "nwtc_num_blob": "2daf088cca20a91e559490749b99cb35f25f208b",
+    "nwtc_num_sha256": "1f8aa50df80ecf7e39a8b25cb2fdcbc897d0c328b7672e9e5ce003c18a4edf1d"
+  },
+  "REF": "OpenFAST v3.5.3 ElastoDyn.f90 lines 922-943, 1190-1206, 6005-6034, 6856-6860; NWTC_Num.f90 lines 5378-5470",
+  "RUN": {
+    "gages": 9,
+    "native_solver": "NOT_RUN",
+    "platform_dof_flags": {
+      "PtfmHvDOF": false,
+      "PtfmPDOF": false,
+      "PtfmRDOF": false,
+      "PtfmSgDOF": false,
+      "PtfmSwDOF": false,
+      "PtfmYDOF": false
+    },
+    "python": "3.12.3",
+    "script_sha256": "0a7d9e184c6f61b6039ad07c5e88610fc5d069521b57d374ea81f270dc7b1a50",
+    "synchronous_time_steps": 12001,
+    "transforms": 108009
+  },
+  "SOURCE": {
+    "dynamic_zip_sha256": "c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0",
+    "elastodyn_input_sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+    "fst_sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
+    "reading_level": "original 12001x9 packed OUTB, original FST/ElastoDyn, original v3.5.3 Fortran",
+    "static_zip_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267"
+  },
+  "STANDARD": "NONE; no authorized IEC/GB clauses read",
+  "TAB": {
+    "adjacent_cut_first_sample": [
+      {
+        "delta_force_global_kN": [
+          0.0031785614861519207,
+          -0.000496324454870134,
+          -49.89925216397023
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.041608465175158926,
+          -2.4361045087571256,
+          -0.009758526598034223
+        ],
+        "lower_gage": 1,
+        "upper_gage": 2
+      },
+      {
+        "delta_force_global_kN": [
+          0.005533536122584337,
+          -0.0003013254390644704,
+          -49.898073393174855
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.038992288276858744,
+          2.3380429225217085,
+          -0.017552015974160895
+        ],
+        "lower_gage": 2,
+        "upper_gage": 3
+      },
+      {
+        "delta_force_global_kN": [
+          0.007588520056629022,
+          6.029154544329174e-05,
+          -49.9016020290328
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.04484087905166234,
+          -2.3616955459292512,
+          -0.01562763541505774
+        ],
+        "lower_gage": 3,
+        "upper_gage": 4
+      },
+      {
+        "delta_force_global_kN": [
+          0.009938873192027131,
+          0.00025937121157326715,
+          -49.90130676832632
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.0228659678978147,
+          2.953929558978416,
+          -0.01567107134451362
+        ],
+        "lower_gage": 4,
+        "upper_gage": 5
+      },
+      {
+        "delta_force_global_kN": [
+          -0.010791085060077421,
+          0.0013862475319275092,
+          -99.80466837326458
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.015568812991659797,
+          -3.9131791423424147,
+          -0.02245647576637566
+        ],
+        "lower_gage": 5,
+        "upper_gage": 6
+      },
+      {
+        "delta_force_global_kN": [
+          -0.020821488874844363,
+          0.001070594020278648,
+          -49.900882706780976
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.0011259712118771859,
+          3.2712916980381124,
+          -0.019265079411070474
+        ],
+        "lower_gage": 6,
+        "upper_gage": 7
+      },
+      {
+        "delta_force_global_kN": [
+          0.017875868085639013,
+          -0.004588102390291837,
+          -49.904069269410684
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.009110372718168946,
+          -1.2805025929410476,
+          -0.009125635770942608
+        ],
+        "lower_gage": 7,
+        "upper_gage": 8
+      },
+      {
+        "delta_force_global_kN": [
+          -0.006811007127112134,
+          -0.0006140164340280307,
+          -74.84935585719359
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.02450418251373776,
+          -0.6132242523890454,
+          -0.02227729929927591
+        ],
+        "lower_gage": 8,
+        "upper_gage": 9
+      }
+    ],
+    "adjacent_cut_full_series_summary": [
+      {
+        "count": 12001,
+        "lower_gage": 1,
+        "max_Fz_kN": -49.89068325783592,
+        "max_abs_force_component_kN": 49.91089038904465,
+        "max_abs_moment_component_at_global_origin_kNm": 5.19023353245575,
+        "mean_Fz_kN": -49.901149806594,
+        "mean_unallocated_axial_after_gravity_kN": 0.0006988592248262648,
+        "min_Fz_kN": -49.91089038904465,
+        "original_tower_gravity_reference_kN": -49.901848665818825,
+        "peak_force_time_s": 476.6,
+        "upper_gage": 2
+      },
+      {
+        "count": 12001,
+        "lower_gage": 2,
+        "max_Fz_kN": -49.889062608264794,
+        "max_abs_force_component_kN": 49.91107129734155,
+        "max_abs_moment_component_at_global_origin_kNm": 5.246589711343404,
+        "mean_Fz_kN": -49.90115032563598,
+        "mean_unallocated_axial_after_gravity_kN": 0.0007039310687062539,
+        "min_Fz_kN": -49.91107129734155,
+        "original_tower_gravity_reference_kN": -49.90185425670469,
+        "peak_force_time_s": 475.6,
+        "upper_gage": 3
+      },
+      {
+        "count": 12001,
+        "lower_gage": 3,
+        "max_Fz_kN": -49.89054501150895,
+        "max_abs_force_component_kN": 49.91134847349895,
+        "max_abs_moment_component_at_global_origin_kNm": 5.193987685517641,
+        "mean_Fz_kN": -49.90127922113452,
+        "mean_unallocated_axial_after_gravity_kN": 0.0005824900846391756,
+        "min_Fz_kN": -49.91134847349895,
+        "original_tower_gravity_reference_kN": -49.90186171121916,
+        "peak_force_time_s": 519.45,
+        "upper_gage": 4
+      },
+      {
+        "count": 12001,
+        "lower_gage": 4,
+        "max_Fz_kN": -49.88969630529391,
+        "max_abs_force_component_kN": 49.91114526366073,
+        "max_abs_moment_component_at_global_origin_kNm": 4.992409232916543,
+        "mean_Fz_kN": -49.901582554180536,
+        "mean_unallocated_axial_after_gravity_kN": 0.00027915703862646524,
+        "min_Fz_kN": -49.91114526366073,
+        "original_tower_gravity_reference_kN": -49.90186171121916,
+        "peak_force_time_s": 165.9,
+        "upper_gage": 5
+      },
+      {
+        "count": 12001,
+        "lower_gage": 5,
+        "max_Fz_kN": -99.78840513366595,
+        "max_abs_force_component_kN": 99.8161543407441,
+        "max_abs_moment_component_at_global_origin_kNm": 5.0515222003741655,
+        "mean_Fz_kN": -99.80399186813023,
+        "mean_unallocated_axial_after_gravity_kN": -0.00028335472084961566,
+        "min_Fz_kN": -99.8161543407441,
+        "original_tower_gravity_reference_kN": -99.80370851340938,
+        "peak_force_time_s": 432.85,
+        "upper_gage": 6
+      },
+      {
+        "count": 12001,
+        "lower_gage": 6,
+        "max_Fz_kN": -49.89055559908593,
+        "max_abs_force_component_kN": 49.91247397013285,
+        "max_abs_moment_component_at_global_origin_kNm": 5.289719297667034,
+        "mean_Fz_kN": -49.902164277175224,
+        "mean_unallocated_axial_after_gravity_kN": -0.00030256595606203973,
+        "min_Fz_kN": -49.91247397013285,
+        "original_tower_gravity_reference_kN": -49.90186171121916,
+        "peak_force_time_s": 391.45,
+        "upper_gage": 7
+      },
+      {
+        "count": 12001,
+        "lower_gage": 7,
+        "max_Fz_kN": -49.891014013301174,
+        "max_abs_force_component_kN": 49.91214582188695,
+        "max_abs_moment_component_at_global_origin_kNm": 5.045037184492685,
+        "mean_Fz_kN": -49.902170324624166,
+        "mean_unallocated_axial_after_gravity_kN": -0.00036824952079683726,
+        "min_Fz_kN": -49.91214582188695,
+        "original_tower_gravity_reference_kN": -49.90180207510337,
+        "peak_force_time_s": 622.5,
+        "upper_gage": 8
+      },
+      {
+        "count": 12001,
+        "lower_gage": 8,
+        "max_Fz_kN": -74.8415511194653,
+        "max_abs_force_component_kN": 74.86561154070296,
+        "max_abs_moment_component_at_global_origin_kNm": 5.306955978332553,
+        "mean_Fz_kN": -74.85324666508872,
+        "mean_unallocated_axial_after_gravity_kN": -0.0004988253468098947,
+        "min_Fz_kN": -74.86561154070296,
+        "original_tower_gravity_reference_kN": -74.85274783974191,
+        "peak_force_time_s": 424.90000000000003,
+        "upper_gage": 9
+      }
+    ],
+    "adjacent_cut_gap_count": 96008,
+    "adjacent_cut_t400_t700_snapshots": [
+      {
+        "delta_force_global_kN": [
+          -0.0010042785603445736,
+          0.00015766524153715267,
+          -49.89888266016351
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.07145812464113988,
+          -1.3440853044594405,
+          -0.033685206631162146
+        ],
+        "lower_gage": 1,
+        "sample_index": 6000,
+        "time_s": 400.0,
+        "upper_gage": 2
+      },
+      {
+        "delta_force_global_kN": [
+          0.0011400177932046063,
+          -0.002037908181754533,
+          -74.85457378127103
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          -0.28843043551023584,
+          0.21980352100217715,
+          -0.056855942021684314
+        ],
+        "lower_gage": 8,
+        "sample_index": 6000,
+        "time_s": 400.0,
+        "upper_gage": 9
+      },
+      {
+        "delta_force_global_kN": [
+          -0.0038739918843475607,
+          -0.0006540597438799978,
+          -49.89922221277084
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.20680179879491334,
+          -0.03770945925498381,
+          0.0530882484661106
+        ],
+        "lower_gage": 1,
+        "sample_index": 12000,
+        "time_s": 700.0,
+        "upper_gage": 2
+      },
+      {
+        "delta_force_global_kN": [
+          -0.020934126123165697,
+          -0.004956452902561637,
+          -74.85823876460563
+        ],
+        "delta_moment_about_global_origin_kNm": [
+          0.08440408861679316,
+          1.4159645328181796,
+          -0.6001731963774546
+        ],
+        "lower_gage": 8,
+        "sample_index": 12000,
+        "time_s": 700.0,
+        "upper_gage": 9
+      }
+    ],
+    "approximate_inertia_first_sample": [
+      {
+        "approx_inertia_global_kN": [
+          -2.011211351314573e-05,
+          -1.0781649005738301e-06,
+          6.750824617392688e-10
+        ],
+        "lower_gage": 1,
+        "unallocated_global_kN": [
+          0.0031986735996650663,
+          -0.0004952462899695602,
+          0.0025965011735109293
+        ],
+        "upper_gage": 2
+      },
+      {
+        "approx_inertia_global_kN": [
+          -8.197358140580182e-05,
+          -4.380310470039591e-06,
+          5.010387465555171e-09
+        ],
+        "lower_gage": 2,
+        "unallocated_global_kN": [
+          0.005615509703990139,
+          -0.0002969451285944308,
+          0.003780858519445846
+        ],
+        "upper_gage": 3
+      },
+      {
+        "approx_inertia_global_kN": [
+          -0.0001932050249717587,
+          -1.0261026485016495e-05,
+          4.592987138450243e-09
+        ],
+        "lower_gage": 3,
+        "unallocated_global_kN": [
+          0.007781725081600781,
+          7.055257192830823e-05,
+          0.00025967759337338297
+        ],
+        "upper_gage": 4
+      },
+      {
+        "approx_inertia_global_kN": [
+          -0.0003537250405626419,
+          -1.8683292027680812e-05,
+          4.906770275667146e-09
+        ],
+        "lower_gage": 4,
+        "unallocated_global_kN": [
+          0.010292598232589774,
+          0.00027805450360094796,
+          0.0005549379860701397
+        ],
+        "upper_gage": 5
+      },
+      {
+        "approx_inertia_global_kN": [
+          -0.0014102022228441016,
+          -7.376934096532605e-05,
+          3.1653688021273835e-08
+        ],
+        "lower_gage": 5,
+        "unallocated_global_kN": [
+          -0.00938088283723332,
+          0.0014600168728928352,
+          -0.0009598915088883281
+        ],
+        "upper_gage": 6
+      },
+      {
+        "approx_inertia_global_kN": [
+          -0.0011300730255326351,
+          -5.8714275166839774e-05,
+          3.118094320828452e-08
+        ],
+        "lower_gage": 6,
+        "unallocated_global_kN": [
+          -0.01969141584931173,
+          0.0011293082954454876,
+          0.0009789732572426737
+        ],
+        "upper_gage": 7
+      },
+      {
+        "approx_inertia_global_kN": [
+          -0.0014867711643082751,
+          -7.684488121323668e-05,
+          5.733776627777265e-08
+        ],
+        "lower_gage": 7,
+        "unallocated_global_kN": [
+          0.01936263924994729,
+          -0.004511257509078601,
+          -0.0022672516450812016
+        ],
+        "upper_gage": 8
+      },
+      {
+        "approx_inertia_global_kN": [
+          -0.0030134345634436083,
+          -0.00015464766309771904,
+          1.5477144610873384e-07
+        ],
+        "lower_gage": 8,
+        "unallocated_global_kN": [
+          -0.003797572563668526,
+          -0.0004593687709303117,
+          0.0033918277768762942
+        ],
+        "upper_gage": 9
+      }
+    ],
+    "approximate_inertia_full_series": [
+      {
+        "count": 12001,
+        "lower_gage": 1,
+        "max_abs_inertia_kN": 7.846392062988634e-05,
+        "max_abs_unallocated_kN": 0.03651394444904406,
+        "mean_unallocated_global_kN": [
+          -0.00015042573663345203,
+          -1.3720046648347634e-05,
+          0.0006988587380318186
+        ],
+        "peak_time_s": 549.1500000000001,
+        "upper_gage": 2
+      },
+      {
+        "count": 12001,
+        "lower_gage": 2,
+        "max_abs_inertia_kN": 0.0003193679155082845,
+        "max_abs_unallocated_kN": 0.036492834612002666,
+        "mean_unallocated_global_kN": [
+          5.756212814448842e-05,
+          -9.7604728705641e-06,
+          0.0007039273640316587
+        ],
+        "peak_time_s": 460.85,
+        "upper_gage": 3
+      },
+      {
+        "count": 12001,
+        "lower_gage": 3,
+        "max_abs_inertia_kN": 0.0007518290884312458,
+        "max_abs_unallocated_kN": 0.036342573648849276,
+        "mean_unallocated_global_kN": [
+          -0.00012124643978849947,
+          -1.256797335383123e-05,
+          0.0005824895565529573
+        ],
+        "peak_time_s": 353.25,
+        "upper_gage": 4
+      },
+      {
+        "count": 12001,
+        "lower_gage": 4,
+        "max_abs_inertia_kN": 0.0013746822065871793,
+        "max_abs_unallocated_kN": 0.036619025089893655,
+        "mean_unallocated_global_kN": [
+          -3.9082280905994926e-05,
+          4.0086625910911434e-05,
+          0.0002791608309029245
+        ],
+        "peak_time_s": 188.4,
+        "upper_gage": 5
+      },
+      {
+        "count": 12001,
+        "lower_gage": 5,
+        "max_abs_inertia_kN": 0.005467496579979705,
+        "max_abs_unallocated_kN": 0.036421493494230045,
+        "mean_unallocated_global_kN": [
+          0.00016984343185456687,
+          -3.263065733030789e-05,
+          -0.00028335285623737165
+        ],
+        "peak_time_s": 268.95000000000005,
+        "upper_gage": 6
+      },
+      {
+        "count": 12001,
+        "lower_gage": 6,
+        "max_abs_inertia_kN": 0.004374111732710946,
+        "max_abs_unallocated_kN": 0.03659213811586662,
+        "mean_unallocated_global_kN": [
+          4.96227573557685e-05,
+          1.0397662779908474e-06,
+          -0.0003025661818287955
+        ],
+        "peak_time_s": 542.95,
+        "upper_gage": 7
+      },
+      {
+        "count": 12001,
+        "lower_gage": 7,
+        "max_abs_inertia_kN": 0.005747099188579921,
+        "max_abs_unallocated_kN": 0.03676389581849158,
+        "mean_unallocated_global_kN": [
+          -0.00018901599635369904,
+          3.5388670908784433e-07,
+          -0.0003682495603272146
+        ],
+        "peak_time_s": 153.05,
+        "upper_gage": 8
+      },
+      {
+        "count": 12001,
+        "lower_gage": 8,
+        "max_abs_inertia_kN": 0.011627467803833273,
+        "max_abs_unallocated_kN": 0.03659080300868304,
+        "mean_unallocated_global_kN": [
+          -1.1994521554256838e-05,
+          4.484591654210548e-06,
+          -0.0004988254280518353
+        ],
+        "peak_time_s": 600.3,
+        "upper_gage": 9
+      }
+    ],
+    "first_sample": [
+      {
+        "RP_deg": [
+          -1.5695125195227183e-05,
+          8.505265159567877e-05,
+          0.0
+        ],
+        "gage": 1,
+        "global_force_kN": [
+          674.6110994928807,
+          8.207314624892673,
+          -25583.74757626735
+        ],
+        "global_moment_at_base_kNm": [
+          6309.820656452601,
+          142573.8505515046,
+          -2570.7726885176094
+        ],
+        "local_force_kN": [
+          674.6490772557268,
+          8.214322821948516,
+          -25583.746572564316
+        ],
+        "local_moment_kNm": [
+          6310.403680981506,
+          142526.26572855873,
+          -2570.7242711335625
+        ]
+      },
+      {
+        "RP_deg": [
+          -7.70176684842843e-05,
+          0.0004411348063222981,
+          0.0
+        ],
+        "gage": 2,
+        "global_force_kN": [
+          674.6079209313946,
+          8.207810949347543,
+          -25533.84832410338
+        ],
+        "global_moment_at_base_kNm": [
+          6309.779047987426,
+          142576.28665601337,
+          -2570.7629299910113
+        ],
+        "local_force_kN": [
+          674.8045125160181,
+          8.242133848548274,
+          -25533.843118312187
+        ],
+        "local_moment_kNm": [
+          6312.699669378864,
+          142338.33619292028,
+          -2570.522843646715
+        ]
+      },
+      {
+        "RP_deg": [
+          -0.0001360259233490146,
+          0.0008223088681176666,
+          0.0
+        ],
+        "gage": 3,
+        "global_force_kN": [
+          674.602387395272,
+          8.208112274786608,
+          -25483.950250710204
+        ],
+        "global_moment_at_base_kNm": [
+          6309.740055699149,
+          142573.94861309085,
+          -2570.745377975037
+        ],
+        "local_force_kN": [
+          674.9681329086925,
+          8.268613715428591,
+          -25483.940546635327
+        ],
+        "local_moment_kNm": [
+          6315.007106290409,
+          142145.58958087047,
+          -2570.3167983519493
+        ]
+      },
+      {
+        "RP_deg": [
+          -0.0001927527520977609,
+          0.0012281725769949824,
+          0.0
+        ],
+        "gage": 4,
+        "global_force_kN": [
+          674.5947988752154,
+          8.208051983241164,
+          -25434.04864868117
+        ],
+        "global_moment_at_base_kNm": [
+          6309.695214820097,
+          142576.31030863678,
+          -2570.729750339622
+        ],
+        "local_force_kN": [
+          675.1399942182842,
+          8.293616426525293,
+          -25434.034154699108
+        ],
+        "local_moment_kNm": [
+          6317.31679589428,
+          141957.4986232126,
+          -2570.115782995641
+        ]
+      },
+      {
+        "RP_deg": [
+          -0.0002472369426514189,
+          0.0016582176819992438,
+          0.0
+        ],
+        "gage": 5,
+        "global_force_kN": [
+          674.5848600020233,
+          8.207792612029591,
+          -25384.147341912845
+        ],
+        "global_moment_at_base_kNm": [
+          6309.672348852199,
+          142573.3563790778,
+          -2570.7140792682776
+        ],
+        "local_force_kN": [
+          675.3195114211704,
+          8.317327670518088,
+          -25384.127772226067
+        ],
+        "local_moment_kNm": [
+          6319.656303052689,
+          141764.04724825596,
+          -2569.917796148672
+        ]
+      },
+      {
+        "RP_deg": [
+          -0.0003496298336202794,
+          0.00258969192594202,
+          0.0
+        ],
+        "gage": 6,
+        "global_force_kN": [
+          674.5956510870834,
+          8.206406364497663,
+          -25284.34267353958
+        ],
+        "global_moment_at_base_kNm": [
+          6309.656780039208,
+          142577.26955822014,
+          -2570.691622792511
+        ],
+        "local_force_kN": [
+          675.7384685688775,
+          8.360696178670304,
+          -25284.312106351663
+        ],
+        "local_moment_kNm": [
+          6324.385752302804,
+          141386.76205187943,
+          -2569.53952938521
+        ]
+      },
+      {
+        "RP_deg": [
+          -0.0003975817071549661,
+          0.0030901957064134494,
+          0.0
+        ],
+        "gage": 7,
+        "global_force_kN": [
+          674.6164725759583,
+          8.205335770477385,
+          -25234.4417908328
+        ],
+        "global_moment_at_base_kNm": [
+          6309.6579060104195,
+          142573.9982665221,
+          -2570.6723577131
+        ],
+        "local_force_kN": [
+          675.9774682359716,
+          8.380440207007275,
+          -25234.405311760253
+        ],
+        "local_moment_kNm": [
+          6326.7687335358605,
+          141192.7671926195,
+          -2569.3467790064497
+        ]
+      },
+      {
+        "RP_deg": [
+          -0.00044344527091276184,
+          0.0036134159216882414,
+          0.0
+        ],
+        "gage": 8,
+        "global_force_kN": [
+          674.5985967078726,
+          8.209923872867677,
+          -25184.53772156339
+        ],
+        "global_moment_at_base_kNm": [
+          6309.667016383138,
+          142575.27876911504,
+          -2570.663232077329
+        ],
+        "local_force_kN": [
+          676.1868835449364,
+          8.404841452801262,
+          -25184.495062945804
+        ],
+        "local_moment_kNm": [
+          6329.178892517052,
+          141003.34048318447,
+          -2569.1669101944117
+        ]
+      },
+      {
+        "RP_deg": [
+          -0.0005083308034571741,
+          0.00443976843055724,
+          0.0
+        ],
+        "gage": 9,
+        "global_force_kN": [
+          674.6054077149997,
+          8.210537889301705,
+          -25109.688365706195
+        ],
+        "global_moment_at_base_kNm": [
+          6309.691520565651,
+          142575.89199336743,
+          -2570.64095477803
+        ],
+        "local_force_kN": [
+          676.5511197048025,
+          8.43331197190146,
+          -25109.63594227537
+        ],
+        "local_moment_kNm": [
+          6332.804209855747,
+          140717.69721638787,
+          -2568.893797876769
+        ]
+      }
+    ],
+    "inertia_scope": "source 70-station mass exact; only gage-endpoint linear interpolated AL; no 1120 node accelerations or FTTower",
+    "max_RP_xy_norm_deg": 0.011994835656302138,
+    "max_R_orthogonality_abs": 5.551115123125783e-16,
+    "max_base_moment_change_from_untransported_local_kNm": 6090.947149304149,
+    "max_force_component_change_from_identity_kN": 5.277481016449656,
+    "max_independent_gap_transport_difference_kNm": 5.711986439393968e-11,
+    "max_inverse_force_error_kN": 1.4551915228366852e-11,
+    "original_tower_gravity_source_comparison": {
+      "gravity_source_FST_m_s2": 9.80665,
+      "mass_adjustment": 1.0,
+      "rows": [
+        {
+          "gravity_axial_reference_kN": -49.901848665818825,
+          "inertia_weight_lower_kg": 2544.2862071053223,
+          "inertia_weight_upper_kg": 2544.2862071053232,
+          "lower_gage": 1,
+          "source_mass_between_gages_kg": 5088.572414210646,
+          "upper_gage": 2
+        },
+        {
+          "gravity_axial_reference_kN": -49.90185425670469,
+          "inertia_weight_lower_kg": 2544.2864921611713,
+          "inertia_weight_upper_kg": 2544.2864921611704,
+          "lower_gage": 2,
+          "source_mass_between_gages_kg": 5088.572984322342,
+          "upper_gage": 3
+        },
+        {
+          "gravity_axial_reference_kN": -49.90186171121916,
+          "inertia_weight_lower_kg": 2544.2868722356343,
+          "inertia_weight_upper_kg": 2544.2868722356343,
+          "lower_gage": 3,
+          "source_mass_between_gages_kg": 5088.573744471269,
+          "upper_gage": 4
+        },
+        {
+          "gravity_axial_reference_kN": -49.90186171121916,
+          "inertia_weight_lower_kg": 2544.2868722356343,
+          "inertia_weight_upper_kg": 2544.2868722356343,
+          "lower_gage": 4,
+          "source_mass_between_gages_kg": 5088.573744471269,
+          "upper_gage": 5
+        },
+        {
+          "gravity_axial_reference_kN": -99.80370851340938,
+          "inertia_weight_lower_kg": 5088.5729843223435,
+          "inertia_weight_upper_kg": 5088.57298432234,
+          "lower_gage": 5,
+          "source_mass_between_gages_kg": 10177.145968644683,
+          "upper_gage": 6
+        },
+        {
+          "gravity_axial_reference_kN": -49.90186171121916,
+          "inertia_weight_lower_kg": 2544.2868722356343,
+          "inertia_weight_upper_kg": 2544.2868722356343,
+          "lower_gage": 6,
+          "source_mass_between_gages_kg": 5088.573744471269,
+          "upper_gage": 7
+        },
+        {
+          "gravity_axial_reference_kN": -49.90180207510337,
+          "inertia_weight_lower_kg": 2544.2838316399298,
+          "inertia_weight_upper_kg": 2544.2838316399234,
+          "lower_gage": 7,
+          "source_mass_between_gages_kg": 5088.567663279853,
+          "upper_gage": 8
+        },
+        {
+          "gravity_axial_reference_kN": -74.85274783974191,
+          "inertia_weight_lower_kg": 3816.428027906671,
+          "inertia_weight_upper_kg": 3816.42802790667,
+          "lower_gage": 8,
+          "source_mass_between_gages_kg": 7632.856055813341,
+          "upper_gage": 9
+        }
+      ],
+      "source_reading_level": "original static ZIP tower input and FST gravity",
+      "tower_input_stations": 70,
+      "tower_member": "CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat",
+      "tower_member_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983"
+    },
+    "packing_envelope_scope": "conservative componentwise bound from FL/AL/RP half-LSB, fixed-base DCM and endpoint linear-AL; excludes mass table rounding, intermediate-node acceleration, FTTower, external distributed loads and physical model error",
+    "source_int16_packing_envelope_by_gap": [
+      {
+        "count": 12001,
+        "lower_gage": 1,
+        "max_component_quantization_envelope_kN": 0.04824583177506201,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03651394444904406,
+        "observed_to_packing_bound_ratio": 0.7568310692472692,
+        "upper_gage": 2
+      },
+      {
+        "count": 12001,
+        "lower_gage": 2,
+        "max_component_quantization_envelope_kN": 0.04829712850684746,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036492834612002666,
+        "observed_to_packing_bound_ratio": 0.7555901508063526,
+        "upper_gage": 3
+      },
+      {
+        "count": 12001,
+        "lower_gage": 3,
+        "max_component_quantization_envelope_kN": 0.04835398342213351,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036342573648849276,
+        "observed_to_packing_bound_ratio": 0.751594203347761,
+        "upper_gage": 4
+      },
+      {
+        "count": 12001,
+        "lower_gage": 4,
+        "max_component_quantization_envelope_kN": 0.04841440517962836,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036619025089893655,
+        "observed_to_packing_bound_ratio": 0.7563663119277995,
+        "upper_gage": 5
+      },
+      {
+        "count": 12001,
+        "lower_gage": 5,
+        "max_component_quantization_envelope_kN": 0.048507906440705816,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.036421493494230045,
+        "observed_to_packing_bound_ratio": 0.7508362278786503,
+        "upper_gage": 6
+      },
+      {
+        "count": 12001,
+        "lower_gage": 6,
+        "max_component_quantization_envelope_kN": 0.04860308715057675,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03659213811586662,
+        "observed_to_packing_bound_ratio": 0.7528768286364377,
+        "upper_gage": 7
+      },
+      {
+        "count": 12001,
+        "lower_gage": 7,
+        "max_component_quantization_envelope_kN": 0.04866825633119417,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03676389581849158,
+        "observed_to_packing_bound_ratio": 0.7553978422466632,
+        "upper_gage": 8
+      },
+      {
+        "count": 12001,
+        "lower_gage": 8,
+        "max_component_quantization_envelope_kN": 0.04875140318809307,
+        "max_envelope_time_s": 574.6500000000001,
+        "observed_max_abs_unallocated_component_kN": 0.03659080300868304,
+        "observed_to_packing_bound_ratio": 0.7505589709389102,
+        "upper_gage": 9
+      }
+    ]
+  },
+  "assumptions": [
+    "all six platform DOFs false in original input (programmatically verified)",
+    "ElastoDyn small-angle tower formulation valid for this source",
+    "RP source angular components inverted only under fixed-base condition"
+  ],
+  "cut_gap_interpretation": "lower-minus-upper internal section resultants at global origin; comparison to source tower gravity leaves unallocated inertia/distributed loads and is NOT a free-body residual",
+  "error_budget": {
+    "adjacent_cut_independent_transport_error_kNm": 5.711986439393968e-11,
+    "dynamic_load_ownership": "UNVERIFIED",
+    "inertia_interpolation_error": "UNBOUNDED without intermediate original node accelerations",
+    "numerical_inverse_force_kN": 1.4551915228366852e-11,
+    "orthogonality_abs": 5.551115123125783e-16,
+    "packed_OUTB_quantization": "channel scale/offset finite, precision limited by int16 packing; physical uncertainty NEED_ESTIMATE",
+    "segment_gravity_inertia_distributed_load_residual": "NOT_COMPUTABLE; reported unallocated force is NOT physical residual without source FTTower and 1120-node LinAccET",
+    "source_int16_packing": "per-gap real 12001-sample upper envelope reported in TAB; not a full force-balance uncertainty"
+  },
+  "stage": "S07_CONDITIONAL_FIXED_BASE_DCM_ALGORITHM_TESTED_NOT_PHYSICS_PASS"
+}

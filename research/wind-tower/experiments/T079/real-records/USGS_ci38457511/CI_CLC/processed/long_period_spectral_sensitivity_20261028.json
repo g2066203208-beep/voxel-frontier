@@ -1,0 +1,199 @@
+{
+  "status": "S05_REAL_RECORD_BASELINE_SPECTRAL_SENSITIVITY_NOT_DESIGN_PASS",
+  "computed_at": "2026-10-28",
+  "source_accession": "USGS:ci38457511;FDSN:CI.CLC:HN*:2019-07-06",
+  "station": "CI.CLC",
+  "event": "USGS_ci38457511_Ridgecrest_Mw7.1_2019-07-06T03:19:53Z",
+  "rsn": "NOT_PEER_RSN",
+  "raw_manifest_git_blob_sha": "078b819fcf8f6b08dcfb05114d4da2750101ace7",
+  "pre20_manifest_git_blob_sha": "5fab69e85640f052ee8301ceaaa6972d501ab253",
+  "damping_ratio": 0.05,
+  "periods_s": [
+    0.5,
+    1,
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "method": "Independent V8 implementation of zero-initial-state Newmark average acceleration; pseudoSa=w²*max|u|; verify with repo Python s05_ground_motion_pair_qc.py",
+  "processing": [
+    "raw",
+    "pre_event_20s_mean_removed",
+    "whole_window_linear_detrend_DIAGNOSTIC_ONLY"
+  ],
+  "components": [
+    {
+      "component": "HNE",
+      "raw_sha256": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "pre20_sha256": "271a962d1dec9199f51f6b605996b80f8bb072b29dd57e47e57ceb31b9507583",
+      "npts": 20001,
+      "dt_s": 0.01,
+      "removed_dc_m_s2": -0.1781737409146453,
+      "constant_offset_max_residual_m_s2": 4.645589468665889e-12,
+      "drift": {
+        "raw": {
+          "end_velocity_m_s": -35.594264413752335,
+          "end_displacement_m": -3559.7901888839856
+        },
+        "pre20": {
+          "end_velocity_m_s": 0.04048376918549928,
+          "end_displacement_m": 3.6846294095017633
+        },
+        "linear_DIAGNOSTIC": {
+          "end_velocity_m_s": 0.00009819441725292857,
+          "end_displacement_m": 0.0000016696691202139466
+        }
+      },
+      "spectrum": [
+        {
+          "period_s": 0.5,
+          "raw_pseudo_sa_m_s2": 3.6381201418081606,
+          "pre20_pseudo_sa_m_s2": 3.459946400901469,
+          "linear_pseudo_sa_m_s2": 3.4601167628595157,
+          "raw_vs_pre20_relative_change": 0.05149609856969737,
+          "linear_vs_pre20_relative_change": 0.00004923832288340796
+        },
+        {
+          "period_s": 1,
+          "raw_pseudo_sa_m_s2": 1.0461312748162008,
+          "pre20_pseudo_sa_m_s2": 0.9401817950949521,
+          "linear_pseudo_sa_m_s2": 0.9400118671034429,
+          "raw_vs_pre20_relative_change": 0.11269041825102398,
+          "linear_vs_pre20_relative_change": 0.00018073950420632864
+        },
+        {
+          "period_s": 2,
+          "raw_pseudo_sa_m_s2": 1.0287003384181472,
+          "pre20_pseudo_sa_m_s2": 0.9672622841575887,
+          "linear_pseudo_sa_m_s2": 0.9670897178277862,
+          "raw_vs_pre20_relative_change": 0.06351747118318204,
+          "linear_vs_pre20_relative_change": 0.00017840696637195082
+        },
+        {
+          "period_s": 4,
+          "raw_pseudo_sa_m_s2": 0.5080675869114878,
+          "pre20_pseudo_sa_m_s2": 0.3314532132675491,
+          "linear_pseudo_sa_m_s2": 0.3316307444996635,
+          "raw_vs_pre20_relative_change": 0.5328485788471614,
+          "linear_vs_pre20_relative_change": 0.0005356147564968349
+        },
+        {
+          "period_s": 6,
+          "raw_pseudo_sa_m_s2": 0.4312398839845364,
+          "pre20_pseudo_sa_m_s2": 0.2443887148455734,
+          "linear_pseudo_sa_m_s2": 0.24457518618584012,
+          "raw_vs_pre20_relative_change": 0.7645654557209495,
+          "linear_vs_pre20_relative_change": 0.0007630112560007295
+        },
+        {
+          "period_s": 8,
+          "raw_pseudo_sa_m_s2": 0.48932422284226346,
+          "pre20_pseudo_sa_m_s2": 0.28981495106195215,
+          "linear_pseudo_sa_m_s2": 0.2900094472497483,
+          "raw_vs_pre20_relative_change": 0.6884022754839287,
+          "linear_vs_pre20_relative_change": 0.0006711047414340594
+        },
+        {
+          "period_s": 10,
+          "raw_pseudo_sa_m_s2": 0.4046841678478639,
+          "pre20_pseudo_sa_m_s2": 0.18863891020874884,
+          "linear_pseudo_sa_m_s2": 0.1884943623591008,
+          "raw_vs_pre20_relative_change": 1.1452846997474602,
+          "linear_vs_pre20_relative_change": 0.0007662674126355151
+        }
+      ],
+      "max_raw_vs_pre20_relative_change_T_ge_4s": 1.1452846997474602,
+      "max_linear_vs_pre20_relative_change_T_ge_4s": 0.0007662674126355151
+    },
+    {
+      "component": "HNN",
+      "raw_sha256": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+      "pre20_sha256": "dc2b7879d18ffbb799c0d04d91ab42e8e469680c5dab943cb28e1357027401cd",
+      "npts": 20001,
+      "dt_s": 0.01,
+      "removed_dc_m_s2": -0.18917525688815676,
+      "constant_offset_max_residual_m_s2": 4.84332018935163e-12,
+      "drift": {
+        "raw": {
+          "end_velocity_m_s": -37.81860092419031,
+          "end_displacement_m": -3783.4953134959787
+        },
+        "pre20": {
+          "end_velocity_m_s": 0.01645045345036439,
+          "end_displacement_m": 0.009824268333341433
+        },
+        "linear_DIAGNOSTIC": {
+          "end_velocity_m_s": -0.00001156517574307266,
+          "end_displacement_m": -0.00010401862198203958
+        }
+      },
+      "spectrum": [
+        {
+          "period_s": 0.5,
+          "raw_pseudo_sa_m_s2": 7.596456121565062,
+          "pre20_pseudo_sa_m_s2": 7.407280864673244,
+          "linear_pseudo_sa_m_s2": 7.40721547336377,
+          "raw_vs_pre20_relative_change": 0.02553909597164475,
+          "linear_vs_pre20_relative_change": 0.000008827977589695633
+        },
+        {
+          "period_s": 1,
+          "raw_pseudo_sa_m_s2": 1.9391101524685794,
+          "pre20_pseudo_sa_m_s2": 1.8272889180919654,
+          "linear_pseudo_sa_m_s2": 1.8273522184817526,
+          "raw_vs_pre20_relative_change": 0.0611951581763964,
+          "linear_vs_pre20_relative_change": 0.00003464169741328506
+        },
+        {
+          "period_s": 2,
+          "raw_pseudo_sa_m_s2": 1.6747946181428623,
+          "pre20_pseudo_sa_m_s2": 1.7631589994541077,
+          "linear_pseudo_sa_m_s2": 1.7632161266116535,
+          "raw_vs_pre20_relative_change": 0.050117080387307035,
+          "linear_vs_pre20_relative_change": 0.00003240045711333297
+        },
+        {
+          "period_s": 4,
+          "raw_pseudo_sa_m_s2": 0.959387664224878,
+          "pre20_pseudo_sa_m_s2": 0.9154103834442395,
+          "linear_pseudo_sa_m_s2": 0.9154603591682537,
+          "raw_vs_pre20_relative_change": 0.0480410552206908,
+          "linear_vs_pre20_relative_change": 0.000054593791940815935
+        },
+        {
+          "period_s": 6,
+          "raw_pseudo_sa_m_s2": 0.6542713284554473,
+          "pre20_pseudo_sa_m_s2": 0.5532885061737797,
+          "linear_pseudo_sa_m_s2": 0.5533501431948897,
+          "raw_vs_pre20_relative_change": 0.18251386239704473,
+          "linear_vs_pre20_relative_change": 0.00011140123176660053
+        },
+        {
+          "period_s": 8,
+          "raw_pseudo_sa_m_s2": 0.37744190575359315,
+          "pre20_pseudo_sa_m_s2": 0.1759278463365017,
+          "linear_pseudo_sa_m_s2": 0.17587887873193817,
+          "raw_vs_pre20_relative_change": 1.1454358341410624,
+          "linear_vs_pre20_relative_change": 0.00027833913495342653
+        },
+        {
+          "period_s": 10,
+          "raw_pseudo_sa_m_s2": 0.3508107708866473,
+          "pre20_pseudo_sa_m_s2": 0.11544460995879793,
+          "linear_pseudo_sa_m_s2": 0.11542566585906358,
+          "raw_vs_pre20_relative_change": 2.0387799916501197,
+          "linear_vs_pre20_relative_change": 0.00016409687503915303
+        }
+      ],
+      "max_raw_vs_pre20_relative_change_T_ge_4s": 2.0387799916501197,
+      "max_linear_vs_pre20_relative_change_T_ge_4s": 0.00027833913495342653
+    }
+  ],
+  "usable_low_frequency_band_validated": false,
+  "target_response_spectrum_defined": false,
+  "S05_PASS": false,
+  "Abaqus_RUN": false,
+  "HOLD": "Raw and pre20 baseline processing give materially different long-period spectra; independently calibrated usable frequency band and target spectrum remain absent; NOT a design input."
+}

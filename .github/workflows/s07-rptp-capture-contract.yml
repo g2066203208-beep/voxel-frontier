@@ -1,0 +1,83 @@
+name: S07 31-gage RP/TP capture contract (STATIC ONLY; NO solver)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/s07-rptp-capture-contract.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py'
+  push:
+    paths:
+      - '.github/workflows/s07-rptp-capture-contract.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  static-source-and-extractor-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch only three SHA-pinned text sources (no checkout or production data)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s07
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}"
+          curl -fLsS --retry 3 "$base/research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py" -o s07/gate.py
+          curl -fLsS --retry 3 "$base/.github/workflows/t071-rerun-s06-31seg.yml" -o s07/t071.yml
+          curl -fLsS --retry 3 "$base/.github/workflows/t072-rerun-control-31seg.yml" -o s07/t072.yml
+      - name: Execute source-locked 31-gage capture contract and negative tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s07/gate.py
+          python3 s07/gate.py --self-test --t071 s07/t071.yml --t072 s07/t072.yml \
+            --source-audit s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json
+          python3 - <<'PY'
+          import importlib.util, json
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('s07', 's07/gate.py')
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          x=json.loads(Path('s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json').read_text())
+          assert x['TAB']['valid_series']==124
+          assert x['TAB']['expected_new_rows']==1488124
+          assert x['TAB']['expected_new_RP_TP_scalar_positions']==8928744
+          assert x['RUN']['new_openfast_runs']==0 and x['RUN']['new_abaqus_runs']==0
+          bad=Path('s07/bad.yml')
+          bad.write_bytes(Path('s07/t071.yml').read_bytes()+b'\n')
+          try: mod.source_gate(bad,'s07/t072.yml')
+          except ValueError as e: assert 'GIT_BLOB_MISMATCH' in str(e)
+          else: raise AssertionError('tampered workflow accepted')
+          print('PASS: exact source bytes, 31-gage map, 7 synthetic rejection tests and 1 real-source tamper rejection')
+          PY
+          sha256sum s07/gate.py s07/t071.yml s07/t072.yml \
+            s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json
+          echo 'STATIC CONTRACT ONLY: no OUTB read, no OpenFAST, no Abaqus, no global load export.'
+      - name: Preserve validated compact source receipt on existing Draft PR branch
+        if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        env:
+          ${{ secrets.GITHUB_TOKEN }}: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="research/wind-tower/experiments/T077/recovery/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json"
+          receipt="s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json"
+          existing_sha="$(gh api "repos/${{ github.repository }}/contents/$file?ref=${{ github.ref_name }}" --jq .sha 2>/dev/null || true)"
+          if [ -n "$existing_sha" ]; then
+            gh api "repos/${{ github.repository }}/contents/$file?ref=${{ github.ref_name }}" --jq .content | base64 -d > s07/existing.json
+            if cmp -s s07/existing.json "$receipt"; then
+              echo 'Receipt already identical on PR branch'; exit 0
+            fi
+            gh api --method PUT "repos/${{ github.repository }}/contents/$file" \
+              -f message="data(S07): persist tested RP/TP source capture readiness" \
+              -f branch="${{ github.ref_name }}" -f sha="$existing_sha" \
+              -f content="$(base64 -w0 "$receipt")" --jq .commit.sha
+          else
+            gh api --method PUT "repos/${{ github.repository }}/contents/$file" \
+              -f message="data(S07): persist tested RP/TP source capture readiness" \
+              -f branch="${{ github.ref_name }}" \
+              -f content="$(base64 -w0 "$receipt")" --jq .commit.sha
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s07-rptp-capture-static-receipt
+          path: s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json
+          retention-days: 30

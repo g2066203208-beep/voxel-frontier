@@ -1,0 +1,158 @@
+name: S01 PT and Rebar Geometry Static Preflight (Not Abaqus)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_fixed_control_nm.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D500_FYC_400_410_435_FIXED_DIAM_93_FULL_PRECISION_20261025.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_native_inp_cage_polygon_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_frozen_t057_longitudinal_mass_independent.py'
+      - '.github/workflows/s01-pt-source-preflight.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_fixed_control_nm.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D500_FYC_400_410_435_FIXED_DIAM_93_FULL_PRECISION_20261025.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_native_inp_cage_polygon_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_frozen_t057_longitudinal_mass_independent.py'
+      - '.github/workflows/s01-pt-source-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-frozen-t057-and-static-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify frozen source and generate separate Pe input-only proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_pt_initial_state_pair_generator.py"
+          python "$TOOL" --inp "$SRC" > "$RUNNER_TEMP/s01_pt_readonly.json"
+          python "$TOOL" --inp "$SRC" --emit-pe-proxy --outdir "$RUNNER_TEMP/s01_pt_proxy" > "$RUNNER_TEMP/s01_pt_emit.json"
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          folder = pathlib.Path(os.environ["RUNNER_TEMP"]) / "s01_pt_proxy"
+          meta = json.loads((folder / "T057_R335_PT_Pe_PROXY_DIAGNOSTIC_ONLY.json").read_text())
+          candidate = (folder / "T057_R335_PT_Pe_PROXY_DIAGNOSTIC_ONLY.inp").read_bytes()
+          assert hashlib.sha256(candidate).hexdigest() == meta["candidate_sha256"]
+          assert meta["PT_elements"] == 36 and meta["longitudinal_segments"] == 31
+          assert abs(meta["P0_force_N_input_proxy"] - 51609600.0) < 1e-5
+          assert abs(meta["Pe_force_N_input_proxy"] - 39753558.95461416) < 1e-4
+          assert meta["verification_status"] == "STATIC_SOURCE_AUDIT_ONLY_NO_NATIVE_RUN"
+          assert meta["native_data_check"] == "NOT_RUN"
+          assert meta["gravity_PT_contact_equilibrium"] == "NOT_RUN"
+          print("PT SOURCE STATIC PREFLIGHT PASS; ABAQUS NATIVE NOT RUN")
+          PY
+      - name: Independent raw T057 longitudinal mass and centroid replay (static only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_frozen_t057_longitudinal_mass_independent.py"
+          python "$TOOL" --inp "$SRC" --outdir "$RUNNER_TEMP/s01_t057_parent_mass" --expect-frozen-parent | tee "$RUNNER_TEMP/s01_t057_parent_mass_stdout.json"
+          python - <<'PY'
+          import json, os, pathlib
+          p = pathlib.Path(os.environ["RUNNER_TEMP"])/"s01_t057_parent_mass"/"S01_T057_PARENT_RBLONG_31SEG_EXACT_MASS_MANIFEST.json"
+          d=json.loads(p.read_text())
+          assert d["totals"]["segments"]==31 and d["totals"]["elements"]==5440
+          assert abs(d["totals"]["mass_kg"]-75831.70211016893)<1e-4
+          assert d["totals"]["native_abaqus"]=="NOT_RUN"
+          print("RAW T057 31-SEG MASS REPLAY PASS (STATIC ONLY, NO ABAQUS)")
+          PY
+      - name: Compute exact D400 and D500 straight-bar geometry at 31 segments
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp"
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py"
+          python "$TOOL" --inp "$SRC" --outdir "$RUNNER_TEMP/s01_rebar_geometry" | tee "$RUNNER_TEMP/s01_rebar_geometry_stdout.json"
+          python - <<'PY'
+          import json, os, pathlib
+          folder = pathlib.Path(os.environ["RUNNER_TEMP"]) / "s01_rebar_geometry"
+          meta = json.loads((folder / "S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json").read_text())
+          assert meta["rows"] == 62
+          assert meta["unique_bar_hoop_samples"] == 245760
+          assert meta["native_abaqus_run"] == "NOT_RUN"
+          assert not meta["target_is_normative"] and not meta["new_inp_emitted"]
+          assert meta["result"]["D400"]["unmoved_negative_segments"] == 28
+          assert meta["result"]["D500"]["unmoved_negative_segments"] == 28
+          print("D400/D500 EXACT STRAIGHT-T3D2 GEOMETRY SCREEN COMPLETE; NO DESIGN PASS")
+          PY
+      - name: Recompute D400 sectional capacity at 31 fixed historical D500 N-M control states
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check numpy pandas
+          TOOL="research/wind-tower/experiments/T077/recovery/s01_d400_relayout_fixed_control_nm.py"
+          GEOM="$RUNNER_TEMP/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv"
+          python "$TOOL" --geometry "$GEOM" --outdir "$RUNNER_TEMP/s01_d400_fixed_nm" | tee "$RUNNER_TEMP/s01_d400_fixed_nm_stdout.json"
+          python - <<'PY'
+          import json, os, pathlib
+          folder = pathlib.Path(os.environ["RUNNER_TEMP"]) / "s01_d400_fixed_nm"
+          meta = json.loads((folder / "S01_D400_31SEG_RELAYOUT_FIXED_D500_CONTROL_MANIFEST.json").read_text())
+          assert meta["rows"] == 31
+          assert meta["D500_historical_replay_max_abs_util_error"] < 1e-7
+          assert meta["native_Abaqus"] == "NOT_RUN" and not meta["new_INP"]
+          print("S01 31-SEG FIXED HISTORICAL LOAD-STATE REPLAY COMPLETE; NO D400 FULL ENVELOPE OR NATIVE PASS")
+          PY
+      - name: Publish independently re-parsed raw T057 31-segment mass ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-t057-parent-rblong-mass-independent
+          path: |
+            ${{ runner.temp }}/s01_t057_parent_mass_stdout.json
+            ${{ runner.temp }}/s01_t057_parent_mass/S01_T057_PARENT_RBLONG_31SEG_EXACT_MASS.csv
+            ${{ runner.temp }}/s01_t057_parent_mass/S01_T057_PARENT_RBLONG_31SEG_EXACT_MASS_MANIFEST.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Publish PT source hashes and diagnostic manifest (no INP/ODB)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-pt-static-input-proxy-manifest
+          path: |
+            ${{ runner.temp }}/s01_pt_readonly.json
+            ${{ runner.temp }}/s01_pt_emit.json
+            ${{ runner.temp }}/s01_pt_proxy/T057_R335_PT_Pe_PROXY_DIAGNOSTIC_ONLY.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Publish 62-case geometry CSV and SHA manifest (no INP/ODB)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-d400-d500-exact-straight-bar-geometry
+          path: |
+            ${{ runner.temp }}/s01_rebar_geometry_stdout.json
+            ${{ runner.temp }}/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv
+            ${{ runner.temp }}/s01_rebar_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Publish 31-case D400 fixed-state N-M sensitivity and source manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-d400-relayout-fixed-d500-control-nm
+          path: |
+            ${{ runner.temp }}/s01_d400_fixed_nm_stdout.json
+            ${{ runner.temp }}/s01_d400_fixed_nm/S01_D400_31SEG_RELAYOUT_FIXED_D500_CONTROL_NM.csv
+            ${{ runner.temp }}/s01_d400_fixed_nm/S01_D400_31SEG_RELAYOUT_FIXED_D500_CONTROL_MANIFEST.json
+          if-no-files-found: warn
+          retention-days: 14

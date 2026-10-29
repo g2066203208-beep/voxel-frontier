@@ -1,0 +1,1858 @@
+{
+  "archive_path": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+  "archive_sha256": "c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0",
+  "archive_size_bytes": 5142579,
+  "case": "U09p343881_ETM_S01",
+  "first_30_channel_names": [
+    "Azimuth",
+    "BldPitch1",
+    "BldPitch2",
+    "BldPitch3",
+    "GenAccel",
+    "GenPwr",
+    "GenSpeed",
+    "GenTq",
+    "HSSBrTq",
+    "HSShftPwr",
+    "HSShftTq",
+    "LSSGagA",
+    "LSSGagMya",
+    "LSSGagMys",
+    "LSSGagMza",
+    "LSSGagMzs",
+    "LSSGagP",
+    "LSSGagV",
+    "LSSTipMya",
+    "LSSTipMys",
+    "LSSTipMza",
+    "LSSTipMzs",
+    "LSShftFya",
+    "LSShftFys",
+    "LSShftFza",
+    "LSShftFzs",
+    "LSShftTq",
+    "RootFxb1",
+    "RootFxb2",
+    "RootFxb3"
+  ],
+  "full_position_rotation_acceleration_gage_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "full_six_component_gage_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "full_synchronous_native_series": {
+    "channel_value_count": 1692141,
+    "coverage_warning": "Native TPzi gage positions span only 2.680357 m in this OUTB; this 9-gage history must NOT be treated as full 158-m tower coverage until original TwrGagNd and TowerHt inputs are independently recovered.",
+    "gage_count": 9,
+    "gzip_csv_sha256": "f8ff5debe64b2afb8bdb38cd1b903b82f5cc0d060ab548807a1c75f6a8bab680",
+    "gzip_csv_size_bytes": 8524917,
+    "hold": "RP degrees not independently proven to be an Euler orientation; no global frame conversion, free-body decomposition, external Abaqus load, 31-gage equivalence, material stress or seismic solver PASS.",
+    "native_channel_summary": {
+      "TwHt1ALxt": {
+        "first": 3.03e-7,
+        "last": -4.82e-7,
+        "max": 0.000001145,
+        "mean": 0,
+        "min": -0.000001188,
+        "rms": 3.25e-7,
+        "unit": "(m/s^2)"
+      },
+      "TwHt1ALyt": {
+        "first": 1.5e-8,
+        "last": 1.31e-7,
+        "max": 2.89e-7,
+        "mean": 0,
+        "min": -2.9e-7,
+        "rms": 6e-8,
+        "unit": "(m/s^2)"
+      },
+      "TwHt1ALzt": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(m/s^2)"
+      },
+      "TwHt1FLxt": {
+        "first": 674.649077256,
+        "last": 1299.110535516,
+        "max": 2211.827436205,
+        "mean": 948.976465049,
+        "min": -199.869285294,
+        "rms": 1016.426414445,
+        "unit": "(kN)"
+      },
+      "TwHt1FLyt": {
+        "first": 8.214322822,
+        "last": -91.50437986,
+        "max": 143.667416609,
+        "mean": -8.551327277,
+        "min": -240.431865176,
+        "rms": 49.426829544,
+        "unit": "(kN)"
+      },
+      "TwHt1FLzt": {
+        "first": -25583.746572564,
+        "last": -25614.302355467,
+        "max": -25449.602202706,
+        "mean": -25590.494386713,
+        "min": -25812.303385916,
+        "rms": 25590.54983789,
+        "unit": "(kN)"
+      },
+      "TwHt1MLxt": {
+        "first": 6310.403680982,
+        "last": 14583.733686971,
+        "max": 33594.023796625,
+        "mean": 9911.222707499,
+        "min": -6399.535393647,
+        "rms": 12207.267004648,
+        "unit": "(kN-m)"
+      },
+      "TwHt1MLyt": {
+        "first": 142526.265728559,
+        "last": 178500.756257953,
+        "max": 329716.48017857,
+        "mean": 160665.91889984,
+        "min": 7641.584434878,
+        "rms": 169761.95204673,
+        "unit": "(kN-m)"
+      },
+      "TwHt1MLzt": {
+        "first": -2570.724271134,
+        "last": 910.024546254,
+        "max": 20311.765355706,
+        "mean": 181.250869343,
+        "min": -23597.931227069,
+        "rms": 6624.865214632,
+        "unit": "(kN-m)"
+      },
+      "TwHt1RPxi": {
+        "first": -0.000015695,
+        "last": -0.000005922,
+        "max": 0.000006654,
+        "mean": -0.00001451,
+        "min": -0.00003689,
+        "rms": 0.000016357,
+        "unit": "(deg)"
+      },
+      "TwHt1RPyi": {
+        "first": 0.000085053,
+        "last": 0.000172546,
+        "max": 0.000264301,
+        "mean": 0.000118189,
+        "min": -0.000016834,
+        "rms": 0.00012642,
+        "unit": "(deg)"
+      },
+      "TwHt1RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt1TPxi": {
+        "first": 5.3e-8,
+        "last": 1.06e-7,
+        "max": 1.63e-7,
+        "mean": 7.3e-8,
+        "min": -1e-8,
+        "rms": 7.8e-8,
+        "unit": "(m)"
+      },
+      "TwHt1TPyi": {
+        "first": 1.2e-8,
+        "last": 1e-9,
+        "max": 2.2e-8,
+        "mean": 9e-9,
+        "min": -4e-9,
+        "rms": 1e-8,
+        "unit": "(m)"
+      },
+      "TwHt1TPzi": {
+        "first": 0.070535714,
+        "last": 0.070535714,
+        "max": 0.070535714,
+        "mean": 0.070535714,
+        "min": 0.070535714,
+        "rms": 0.070535714,
+        "unit": "(m)"
+      },
+      "TwHt2ALxt": {
+        "first": 0.000007602,
+        "last": -0.000012028,
+        "max": 0.000028507,
+        "mean": 2e-9,
+        "min": -0.000029651,
+        "rms": 0.000008117,
+        "unit": "(m/s^2)"
+      },
+      "TwHt2ALyt": {
+        "first": 4.08e-7,
+        "last": 0.000003296,
+        "max": 0.000007163,
+        "mean": 0,
+        "min": -0.000007241,
+        "rms": 0.000001484,
+        "unit": "(m/s^2)"
+      },
+      "TwHt2ALzt": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(m/s^2)"
+      },
+      "TwHt2FLxt": {
+        "first": 674.804512516,
+        "last": 1299.428950535,
+        "max": 2212.293457742,
+        "mean": 949.194434385,
+        "min": -199.890546122,
+        "rms": 1016.65822818,
+        "unit": "(kN)"
+      },
+      "TwHt2FLyt": {
+        "first": 8.242133849,
+        "last": -91.493953022,
+        "max": 143.724703483,
+        "mean": -8.526273945,
+        "min": -240.441539205,
+        "rms": 49.431492748,
+        "unit": "(kN)"
+      },
+      "TwHt2FLzt": {
+        "first": -25533.843118312,
+        "last": -25564.387174531,
+        "max": -25399.690568439,
+        "mean": -25540.58401045,
+        "min": -25762.383941208,
+        "rms": 25540.639564381,
+        "unit": "(kN)"
+      },
+      "TwHt2MLxt": {
+        "first": 6312.699669379,
+        "last": 14557.700043637,
+        "max": 33526.19197213,
+        "mean": 9908.813544618,
+        "min": -6362.786289127,
+        "rms": 12198.844284908,
+        "unit": "(kN-m)"
+      },
+      "TwHt2MLyt": {
+        "first": 142338.33619292,
+        "last": 178134.213434156,
+        "max": 329095.809987072,
+        "mean": 160398.191401896,
+        "min": 7697.972611485,
+        "rms": 169477.73835147,
+        "unit": "(kN-m)"
+      },
+      "TwHt2MLzt": {
+        "first": -2570.522843647,
+        "last": 910.219023353,
+        "max": 20311.921091248,
+        "mean": 181.510448039,
+        "min": -23597.687812281,
+        "rms": 6624.876517654,
+        "unit": "(kN-m)"
+      },
+      "TwHt2RPxi": {
+        "first": -0.000077018,
+        "last": -0.000027837,
+        "max": 0.000033688,
+        "mean": -0.000070686,
+        "min": -0.000181744,
+        "rms": 0.000080061,
+        "unit": "(deg)"
+      },
+      "TwHt2RPyi": {
+        "first": 0.000441135,
+        "last": 0.000877842,
+        "max": 0.001345024,
+        "mean": 0.000606893,
+        "min": -0.000080469,
+        "rms": 0.000648436,
+        "unit": "(deg)"
+      },
+      "TwHt2RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt2TPxi": {
+        "first": 0.000001339,
+        "last": 0.000002682,
+        "max": 0.00000411,
+        "mean": 0.000001847,
+        "min": -2.52e-7,
+        "rms": 0.000001975,
+        "unit": "(m)"
+      },
+      "TwHt2TPyi": {
+        "first": 2.39e-7,
+        "last": 8.7e-8,
+        "max": 5.61e-7,
+        "mean": 2.2e-7,
+        "min": -1.03e-7,
+        "rms": 2.49e-7,
+        "unit": "(m)"
+      },
+      "TwHt2TPzi": {
+        "first": 0.352678541,
+        "last": 0.352678541,
+        "max": 0.352678541,
+        "mean": 0.352678541,
+        "min": 0.352678541,
+        "rms": 0.352678541,
+        "unit": "(m)"
+      },
+      "TwHt3ALxt": {
+        "first": 0.000024616,
+        "last": -0.000038889,
+        "max": 0.000092152,
+        "mean": 6e-9,
+        "min": -0.000095873,
+        "rms": 0.000026239,
+        "unit": "(m/s^2)"
+      },
+      "TwHt3ALyt": {
+        "first": 0.000001313,
+        "last": 0.000010665,
+        "max": 0.000023151,
+        "mean": 1e-9,
+        "min": -0.000023412,
+        "rms": 0.000004795,
+        "unit": "(m/s^2)"
+      },
+      "TwHt3ALzt": {
+        "first": -1e-9,
+        "last": -1e-9,
+        "max": -1e-9,
+        "mean": -1e-9,
+        "min": -1e-9,
+        "rms": 1e-9,
+        "unit": "(m/s^2)"
+      },
+      "TwHt3FLxt": {
+        "first": 674.968132909,
+        "last": 1299.759740553,
+        "max": 2212.777940398,
+        "mean": 949.422563734,
+        "min": -199.909467943,
+        "rms": 1016.900439603,
+        "unit": "(kN)"
+      },
+      "TwHt3FLyt": {
+        "first": 8.268613715,
+        "last": -91.485264997,
+        "max": 143.781215026,
+        "mean": -8.502636374,
+        "min": -240.453558775,
+        "rms": 49.436649007,
+        "unit": "(kN)"
+      },
+      "TwHt3FLzt": {
+        "first": -25483.940546635,
+        "last": -25514.467834827,
+        "max": -25349.777653172,
+        "mean": -25490.673167964,
+        "min": -25712.469065726,
+        "rms": 25490.728824726,
+        "unit": "(kN)"
+      },
+      "TwHt3MLxt": {
+        "first": 6315.00710629,
+        "last": 14532.311982041,
+        "max": 33458.33863736,
+        "mean": 9906.416445933,
+        "min": -6326.019742687,
+        "rms": 12190.439876906,
+        "unit": "(kN-m)"
+      },
+      "TwHt3MLyt": {
+        "first": 142145.58958087,
+        "last": 177763.343168783,
+        "max": 328475.673409697,
+        "mean": 160130.303572721,
+        "min": 7754.392647966,
+        "rms": 169193.373289518,
+        "unit": "(kN-m)"
+      },
+      "TwHt3MLzt": {
+        "first": -2570.316798352,
+        "last": 910.418952329,
+        "max": 20312.086927782,
+        "mean": 181.764696047,
+        "min": -23597.4448183,
+        "rms": 6624.884133714,
+        "unit": "(kN-m)"
+      },
+      "TwHt3RPxi": {
+        "first": -0.000136026,
+        "last": -0.000046942,
+        "max": 0.000061393,
+        "mean": -0.000123909,
+        "min": -0.000322315,
+        "rms": 0.000141063,
+        "unit": "(deg)"
+      },
+      "TwHt3RPyi": {
+        "first": 0.000822309,
+        "last": 0.001607001,
+        "max": 0.0024629,
+        "mean": 0.001120805,
+        "min": -0.000138255,
+        "rms": 0.001196316,
+        "unit": "(deg)"
+      },
+      "TwHt3RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt3TPxi": {
+        "first": 0.000004438,
+        "last": 0.00000879,
+        "max": 0.000013468,
+        "mean": 0.000006091,
+        "min": -7.93e-7,
+        "rms": 0.000006506,
+        "unit": "(m)"
+      },
+      "TwHt3TPyi": {
+        "first": 7.64e-7,
+        "last": 2.74e-7,
+        "max": 0.000001807,
+        "mean": 7e-7,
+        "min": -3.37e-7,
+        "rms": 7.94e-7,
+        "unit": "(m)"
+      },
+      "TwHt3TPzi": {
+        "first": 0.634821398,
+        "last": 0.634821398,
+        "max": 0.634821398,
+        "mean": 0.634821398,
+        "min": 0.634821398,
+        "rms": 0.634821398,
+        "unit": "(m)"
+      },
+      "TwHt4ALxt": {
+        "first": 0.00005132,
+        "last": -0.000080982,
+        "max": 0.000191818,
+        "mean": 1.2e-8,
+        "min": -0.000199624,
+        "rms": 0.000054623,
+        "unit": "(m/s^2)"
+      },
+      "TwHt4ALyt": {
+        "first": 0.00000272,
+        "last": 0.000022202,
+        "max": 0.000048186,
+        "mean": 2e-9,
+        "min": -0.000048742,
+        "rms": 0.000009978,
+        "unit": "(m/s^2)"
+      },
+      "TwHt4ALzt": {
+        "first": 1e-9,
+        "last": 1e-9,
+        "max": 1e-9,
+        "mean": 1e-9,
+        "min": -4e-9,
+        "rms": 1e-9,
+        "unit": "(m/s^2)"
+      },
+      "TwHt4FLxt": {
+        "first": 675.139994218,
+        "last": 1300.103011184,
+        "max": 2213.281060779,
+        "mean": 949.660988976,
+        "min": -199.926063711,
+        "rms": 1017.153243403,
+        "unit": "(kN)"
+      },
+      "TwHt4FLyt": {
+        "first": 8.293616427,
+        "last": -91.478364012,
+        "max": 143.836672489,
+        "mean": -8.480379949,
+        "min": -240.467826043,
+        "rms": 49.442313504,
+        "unit": "(kN)"
+      },
+      "TwHt4FLzt": {
+        "first": -25434.034154699,
+        "last": -25464.549882059,
+        "max": -25299.86235671,
+        "mean": -25440.761738235,
+        "min": -25662.547919374,
+        "rms": 25440.817498103,
+        "unit": "(kN)"
+      },
+      "TwHt4MLxt": {
+        "first": 6317.316795894,
+        "last": 14506.346191423,
+        "max": 33390.459893246,
+        "mean": 9904.021011554,
+        "min": -6289.247421799,
+        "rms": 12182.049678305,
+        "unit": "(kN-m)"
+      },
+      "TwHt4MLyt": {
+        "first": 141957.498623213,
+        "last": 177397.541625524,
+        "max": 327855.345795044,
+        "mean": 159862.395126192,
+        "min": 7810.806983349,
+        "rms": 168908.985547016,
+        "unit": "(kN-m)"
+      },
+      "TwHt4MLzt": {
+        "first": -2570.115782996,
+        "last": 910.613573375,
+        "max": 20312.245906857,
+        "mean": 182.020728703,
+        "min": -23597.20517491,
+        "rms": 6624.90071399,
+        "unit": "(kN-m)"
+      },
+      "TwHt4RPxi": {
+        "first": -0.000192753,
+        "last": -0.000063277,
+        "max": 0.000089757,
+        "mean": -0.000174226,
+        "min": -0.000458668,
+        "rms": 0.000199446,
+        "unit": "(deg)"
+      },
+      "TwHt4RPyi": {
+        "first": 0.001228173,
+        "last": 0.002359612,
+        "max": 0.003617302,
+        "mean": 0.001659506,
+        "min": -0.000190281,
+        "rms": 0.00176969,
+        "unit": "(deg)"
+      },
+      "TwHt4RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt4TPxi": {
+        "first": 0.000009475,
+        "last": 0.000018547,
+        "max": 0.000028426,
+        "mean": 0.000012927,
+        "min": -0.000001605,
+        "rms": 0.000013799,
+        "unit": "(m)"
+      },
+      "TwHt4TPyi": {
+        "first": 0.000001572,
+        "last": 5.45e-7,
+        "max": 0.000003732,
+        "mean": 0.000001435,
+        "min": -7.09e-7,
+        "rms": 0.000001633,
+        "unit": "(m)"
+      },
+      "TwHt4TPzi": {
+        "first": 0.916964298,
+        "last": 0.916964298,
+        "max": 0.916964298,
+        "mean": 0.916964298,
+        "min": 0.916964298,
+        "rms": 0.916964298,
+        "unit": "(m)"
+      },
+      "TwHt5ALxt": {
+        "first": 0.000087707,
+        "last": -0.000138211,
+        "max": 0.000327262,
+        "mean": 2.1e-8,
+        "min": -0.000340677,
+        "rms": 0.000093199,
+        "unit": "(m/s^2)"
+      },
+      "TwHt5ALyt": {
+        "first": 0.000004623,
+        "last": 0.000037904,
+        "max": 0.000082212,
+        "mean": 4e-9,
+        "min": -0.000083175,
+        "rms": 0.000017021,
+        "unit": "(m/s^2)"
+      },
+      "TwHt5ALzt": {
+        "first": 1e-9,
+        "last": -5e-9,
+        "max": 6e-9,
+        "mean": 0,
+        "min": -1e-8,
+        "rms": 2e-9,
+        "unit": "(m/s^2)"
+      },
+      "TwHt5FLxt": {
+        "first": 675.319511421,
+        "last": 1300.457700499,
+        "max": 2213.801058347,
+        "mean": 949.909200976,
+        "min": -199.940249685,
+        "rms": 1017.416137173,
+        "unit": "(kN)"
+      },
+      "TwHt5FLyt": {
+        "first": 8.317327671,
+        "last": -91.473100434,
+        "max": 143.891310605,
+        "mean": -8.459532667,
+        "min": -240.484245164,
+        "rms": 49.44851317,
+        "unit": "(kN)"
+      },
+      "TwHt5FLzt": {
+        "first": -25384.127772226,
+        "last": -25414.626240163,
+        "max": -25249.947795164,
+        "mean": -25390.849554126,
+        "min": -25612.625548061,
+        "rms": 25390.905417741,
+        "unit": "(kN)"
+      },
+      "TwHt5MLxt": {
+        "first": 6319.656303053,
+        "last": 14480.44519846,
+        "max": 33322.604079212,
+        "mean": 9901.631774989,
+        "min": -6252.451438066,
+        "rms": 12173.671438798,
+        "unit": "(kN-m)"
+      },
+      "TwHt5MLyt": {
+        "first": 141764.047248256,
+        "last": 177031.612051511,
+        "max": 327234.304101519,
+        "mean": 159594.44139144,
+        "min": 7867.182451486,
+        "rms": 168624.570181865,
+        "unit": "(kN-m)"
+      },
+      "TwHt5MLzt": {
+        "first": -2569.917796149,
+        "last": 910.80572196,
+        "max": 20312.405512887,
+        "mean": 182.262503852,
+        "min": -23596.971919113,
+        "rms": 6624.912503768,
+        "unit": "(kN-m)"
+      },
+      "TwHt5RPxi": {
+        "first": -0.000247237,
+        "last": -0.000076885,
+        "max": 0.00012409,
+        "mean": -0.000221681,
+        "min": -0.000590865,
+        "rms": 0.000255294,
+        "unit": "(deg)"
+      },
+      "TwHt5RPyi": {
+        "first": 0.001658218,
+        "last": 0.003135277,
+        "max": 0.00480761,
+        "mean": 0.002222584,
+        "min": -0.000236636,
+        "rms": 0.002368185,
+        "unit": "(deg)"
+      },
+      "TwHt5RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt5TPxi": {
+        "first": 0.000016572,
+        "last": 0.000032066,
+        "max": 0.000049157,
+        "mean": 0.000022475,
+        "min": -0.000002658,
+        "rms": 0.000023976,
+        "unit": "(m)"
+      },
+      "TwHt5TPyi": {
+        "first": 0.000002661,
+        "last": 8.91e-7,
+        "max": 0.000006317,
+        "mean": 0.000002411,
+        "min": -0.000001222,
+        "rms": 0.000002754,
+        "unit": "(m)"
+      },
+      "TwHt5TPzi": {
+        "first": 1.199107198,
+        "last": 1.199107198,
+        "max": 1.199107198,
+        "mean": 1.199107198,
+        "min": 1.199107198,
+        "rms": 1.199107198,
+        "unit": "(m)"
+      },
+      "TwHt6ALxt": {
+        "first": 0.000189424,
+        "last": -0.000297706,
+        "max": 0.000704493,
+        "mean": 4.4e-8,
+        "min": -0.000733788,
+        "rms": 0.000200659,
+        "unit": "(m/s^2)"
+      },
+      "TwHt6ALyt": {
+        "first": 0.000009874,
+        "last": 0.000081667,
+        "max": 0.000176972,
+        "mean": 8e-9,
+        "min": -0.000179117,
+        "rms": 0.000036627,
+        "unit": "(m/s^2)"
+      },
+      "TwHt6ALzt": {
+        "first": 4e-9,
+        "last": -6e-9,
+        "max": 2e-8,
+        "mean": -2e-9,
+        "min": -3.3e-8,
+        "rms": 6e-9,
+        "unit": "(m/s^2)"
+      },
+      "TwHt6FLxt": {
+        "first": 675.738468569,
+        "last": 1301.164484324,
+        "max": 2214.891516237,
+        "mean": 950.434009966,
+        "min": -199.961128698,
+        "rms": 1017.971189603,
+        "unit": "(kN)"
+      },
+      "TwHt6FLyt": {
+        "first": 8.360696179,
+        "last": -91.467461045,
+        "max": 143.99767223,
+        "mean": -8.421686822,
+        "min": -240.523209611,
+        "rms": 49.46216008,
+        "unit": "(kN)"
+      },
+      "TwHt6FLzt": {
+        "first": -25284.312106352,
+        "last": -25314.781100134,
+        "max": -25150.117936495,
+        "mean": -25291.023034711,
+        "min": -25512.77422192,
+        "rms": 25291.079105455,
+        "unit": "(kN)"
+      },
+      "TwHt6MLxt": {
+        "first": 6324.385752303,
+        "last": 14428.782435818,
+        "max": 33186.86868195,
+        "mean": 9896.871207587,
+        "min": -6178.802579106,
+        "rms": 12156.957833433,
+        "unit": "(kN-m)"
+      },
+      "TwHt6MLyt": {
+        "first": 141386.762051879,
+        "last": 176296.115138256,
+        "max": 325992.894866035,
+        "mean": 159058.258205511,
+        "min": 7980.043251397,
+        "rms": 168055.470182798,
+        "unit": "(kN-m)"
+      },
+      "TwHt6MLzt": {
+        "first": -2569.539529385,
+        "last": 911.171478226,
+        "max": 20312.701535476,
+        "mean": 182.747450995,
+        "min": -23596.518076426,
+        "rms": 6624.927331364,
+        "unit": "(kN-m)"
+      },
+      "TwHt6RPxi": {
+        "first": -0.00034963,
+        "last": -0.000096099,
+        "max": 0.000215721,
+        "mean": -0.000308183,
+        "min": -0.00084304,
+        "rms": 0.000359725,
+        "unit": "(deg)"
+      },
+      "TwHt6RPyi": {
+        "first": 0.002589692,
+        "last": 0.004754145,
+        "max": 0.007293481,
+        "mean": 0.00342024,
+        "min": -0.000312688,
+        "rms": 0.003639033,
+        "unit": "(deg)"
+      },
+      "TwHt6RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt6TPxi": {
+        "first": 0.000037414,
+        "last": 0.000070843,
+        "max": 0.000108628,
+        "mean": 0.000050185,
+        "min": -0.000005381,
+        "rms": 0.000053476,
+        "unit": "(m)"
+      },
+      "TwHt6TPyi": {
+        "first": 0.000005604,
+        "last": 0.000001753,
+        "max": 0.000013391,
+        "mean": 0.00000503,
+        "min": -0.000002784,
+        "rms": 0.000005789,
+        "unit": "(m)"
+      },
+      "TwHt6TPzi": {
+        "first": 1.763392914,
+        "last": 1.763392914,
+        "max": 1.763392914,
+        "mean": 1.763392914,
+        "min": 1.763392914,
+        "rms": 1.763392914,
+        "unit": "(m)"
+      },
+      "TwHt7ALxt": {
+        "first": 0.000254737,
+        "last": -0.00039981,
+        "max": 0.000945794,
+        "mean": 5.9e-8,
+        "min": -0.000985401,
+        "rms": 0.000269409,
+        "unit": "(m/s^2)"
+      },
+      "TwHt7ALyt": {
+        "first": 0.000013203,
+        "last": 0.000109684,
+        "max": 0.000237585,
+        "mean": 1e-8,
+        "min": -0.000240513,
+        "rms": 0.000049163,
+        "unit": "(m/s^2)"
+      },
+      "TwHt7ALzt": {
+        "first": 6e-9,
+        "last": -1.5e-8,
+        "max": 2.7e-8,
+        "mean": -3e-9,
+        "min": -5.2e-8,
+        "rms": 9e-9,
+        "unit": "(m/s^2)"
+      },
+      "TwHt7FLxt": {
+        "first": 675.977468236,
+        "last": 1301.515675053,
+        "max": 2215.460461433,
+        "mean": 950.710286416,
+        "min": -199.967678077,
+        "rms": 1018.262937228,
+        "unit": "(kN)"
+      },
+      "TwHt7FLyt": {
+        "first": 8.380440207,
+        "last": -91.461085843,
+        "max": 144.049422705,
+        "mean": -8.404708863,
+        "min": -240.545558176,
+        "rms": 49.469663549,
+        "unit": "(kN)"
+      },
+      "TwHt7FLzt": {
+        "first": -25234.40531176,
+        "last": -25264.857045948,
+        "max": -25100.202975305,
+        "mean": -25241.108958613,
+        "min": -25462.851421602,
+        "rms": 25241.165132669,
+        "unit": "(kN)"
+      },
+      "TwHt7MLxt": {
+        "first": 6326.768733536,
+        "last": 14403.013398415,
+        "max": 33118.981025113,
+        "mean": 9894.503366264,
+        "min": -6141.956154094,
+        "rms": 12148.628280859,
+        "unit": "(kN-m)"
+      },
+      "TwHt7MLyt": {
+        "first": 141192.76719262,
+        "last": 175930.878296363,
+        "max": 325371.57872621,
+        "mean": 158790.054437059,
+        "min": 8036.46425955,
+        "rms": 167770.813290724,
+        "unit": "(kN-m)"
+      },
+      "TwHt7MLzt": {
+        "first": -2569.346779006,
+        "last": 911.358390404,
+        "max": 20312.855905442,
+        "mean": 182.981476862,
+        "min": -23596.290057469,
+        "rms": 6624.939853365,
+        "unit": "(kN-m)"
+      },
+      "TwHt7RPxi": {
+        "first": -0.000397582,
+        "last": -0.00010179,
+        "max": 0.000269201,
+        "mean": -0.000347316,
+        "min": -0.000963141,
+        "rms": 0.000408483,
+        "unit": "(deg)"
+      },
+      "TwHt7RPyi": {
+        "first": 0.003090196,
+        "last": 0.005596593,
+        "max": 0.008587835,
+        "mean": 0.004054012,
+        "min": -0.000342559,
+        "rms": 0.00431063,
+        "unit": "(deg)"
+      },
+      "TwHt7RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt7TPxi": {
+        "first": 0.000051388,
+        "last": 0.000096323,
+        "max": 0.000147716,
+        "mean": 0.000068578,
+        "min": -0.000006997,
+        "rms": 0.000073039,
+        "unit": "(m)"
+      },
+      "TwHt7TPyi": {
+        "first": 0.000007447,
+        "last": 0.000002241,
+        "max": 0.000017841,
+        "mean": 0.000006645,
+        "min": -0.000003975,
+        "rms": 0.00000768,
+        "unit": "(m)"
+      },
+      "TwHt7TPzi": {
+        "first": 2.045535813,
+        "last": 2.045535813,
+        "max": 2.045535813,
+        "mean": 2.045535813,
+        "min": 2.045535813,
+        "rms": 2.045535813,
+        "unit": "(m)"
+      },
+      "TwHt8ALxt": {
+        "first": 0.000329621,
+        "last": -0.000516661,
+        "max": 0.001221899,
+        "mean": 7.6e-8,
+        "min": -0.001273426,
+        "rms": 0.000348084,
+        "unit": "(m/s^2)"
+      },
+      "TwHt8ALyt": {
+        "first": 0.000017,
+        "last": 0.000141769,
+        "max": 0.000306938,
+        "mean": 1.3e-8,
+        "min": -0.000310784,
+        "rms": 0.000063503,
+        "unit": "(m/s^2)"
+      },
+      "TwHt8ALzt": {
+        "first": 6e-9,
+        "last": -2e-8,
+        "max": 4.3e-8,
+        "mean": -4e-9,
+        "min": -7.8e-8,
+        "rms": 1.3e-8,
+        "unit": "(m/s^2)"
+      },
+      "TwHt8FLxt": {
+        "first": 676.186883545,
+        "last": 1301.877368485,
+        "max": 2216.044641349,
+        "mean": 950.995711139,
+        "min": -199.971498795,
+        "rms": 1018.5640044,
+        "unit": "(kN)"
+      },
+      "TwHt8FLyt": {
+        "first": 8.404841453,
+        "last": -91.462012594,
+        "max": 144.100264743,
+        "mean": -8.388980526,
+        "min": -240.569670603,
+        "rms": 49.477550097,
+        "unit": "(kN)"
+      },
+      "TwHt8FLzt": {
+        "first": -25184.495062946,
+        "last": -25214.934583494,
+        "max": -25050.286713306,
+        "mean": -25191.194453776,
+        "min": -25412.921503181,
+        "rms": 25191.250730967,
+        "unit": "(kN)"
+      },
+      "TwHt8MLxt": {
+        "first": 6329.178892517,
+        "last": 14377.306865349,
+        "max": 33051.11470966,
+        "mean": 9892.13646735,
+        "min": -6105.089202702,
+        "rms": 12140.306970952,
+        "unit": "(kN-m)"
+      },
+      "TwHt8MLyt": {
+        "first": 141003.340483184,
+        "last": 175565.765085385,
+        "max": 324750.003809408,
+        "mean": 158521.782058921,
+        "min": 8092.867460296,
+        "rms": 167486.085643241,
+        "unit": "(kN-m)"
+      },
+      "TwHt8MLzt": {
+        "first": -2569.166910194,
+        "last": 911.532143027,
+        "max": 20312.995566341,
+        "mean": 183.213064617,
+        "min": -23596.07324075,
+        "rms": 6624.949404505,
+        "unit": "(kN-m)"
+      },
+      "TwHt8RPxi": {
+        "first": -0.000443445,
+        "last": -0.000104934,
+        "max": 0.000327677,
+        "mean": -0.000383763,
+        "min": -0.001079331,
+        "rms": 0.000455056,
+        "unit": "(deg)"
+      },
+      "TwHt8RPyi": {
+        "first": 0.003613416,
+        "last": 0.006460614,
+        "max": 0.009915662,
+        "mean": 0.00471055,
+        "min": -0.000367107,
+        "rms": 0.005005835,
+        "unit": "(deg)"
+      },
+      "TwHt8RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt8TPxi": {
+        "first": 0.000067883,
+        "last": 0.000125999,
+        "max": 0.000193262,
+        "mean": 0.000090149,
+        "min": -0.000008746,
+        "rms": 0.000095966,
+        "unit": "(m)"
+      },
+      "TwHt8TPyi": {
+        "first": 0.000009519,
+        "last": 0.000002749,
+        "max": 0.00002287,
+        "mean": 0.000008446,
+        "min": -0.000005443,
+        "rms": 0.000009805,
+        "unit": "(m)"
+      },
+      "TwHt8TPzi": {
+        "first": 2.327678376,
+        "last": 2.327678376,
+        "max": 2.327678376,
+        "mean": 2.327678376,
+        "min": 2.327678376,
+        "rms": 2.327678376,
+        "unit": "(m)"
+      },
+      "TwHt9ALxt": {
+        "first": 0.000459975,
+        "last": -0.000719515,
+        "max": 0.001700797,
+        "mean": 1.04e-7,
+        "min": -0.001773262,
+        "rms": 0.000484563,
+        "unit": "(m/s^2)"
+      },
+      "TwHt9ALyt": {
+        "first": 0.000023522,
+        "last": 0.000197478,
+        "max": 0.000427228,
+        "mean": 1.8e-8,
+        "min": -0.000432711,
+        "rms": 0.000088368,
+        "unit": "(m/s^2)"
+      },
+      "TwHt9ALzt": {
+        "first": 1e-8,
+        "last": -3.7e-8,
+        "max": 7.8e-8,
+        "mean": -7e-9,
+        "min": -1.32e-7,
+        "rms": 2.3e-8,
+        "unit": "(m/s^2)"
+      },
+      "TwHt9FLxt": {
+        "first": 676.551119705,
+        "last": 1302.475796584,
+        "max": 2216.948356559,
+        "mean": 951.43977694,
+        "min": -199.972082946,
+        "rms": 1019.031974224,
+        "unit": "(kN)"
+      },
+      "TwHt9FLyt": {
+        "first": 8.433311972,
+        "last": -91.457196251,
+        "max": 144.174724985,
+        "mean": -8.367680119,
+        "min": -240.608937882,
+        "rms": 49.490119773,
+        "unit": "(kN)"
+      },
+      "TwHt9FLzt": {
+        "first": -25109.635942275,
+        "last": -25140.045993082,
+        "max": -24975.413414534,
+        "mean": -25116.321927826,
+        "min": -25338.026711407,
+        "rms": 25116.37836002,
+        "unit": "(kN)"
+      },
+      "TwHt9MLxt": {
+        "first": 6332.804209856,
+        "last": 14338.506599643,
+        "max": 32949.250414271,
+        "mean": 9888.590849048,
+        "min": -6049.761413179,
+        "rms": 12127.844101395,
+        "unit": "(kN-m)"
+      },
+      "TwHt9MLyt": {
+        "first": 140717.697216388,
+        "last": 175013.208492242,
+        "max": 323818.156504173,
+        "mean": 158119.226116561,
+        "min": 8150.13242228,
+        "rms": 167058.862938655,
+        "unit": "(kN-m)"
+      },
+      "TwHt9MLzt": {
+        "first": -2568.893797877,
+        "last": 912.466922957,
+        "max": 20313.213849914,
+        "mean": 183.551992507,
+        "min": -23595.749745131,
+        "rms": 6624.962197242,
+        "unit": "(kN-m)"
+      },
+      "TwHt9RPxi": {
+        "first": -0.000508331,
+        "last": -0.000104928,
+        "max": 0.000424579,
+        "mean": -0.000433486,
+        "min": -0.001246641,
+        "rms": 0.000521019,
+        "unit": "(deg)"
+      },
+      "TwHt9RPyi": {
+        "first": 0.004439768,
+        "last": 0.007795997,
+        "max": 0.01196888,
+        "mean": 0.005737185,
+        "min": -0.000394136,
+        "rms": 0.006092086,
+        "unit": "(deg)"
+      },
+      "TwHt9RPzi": {
+        "first": 0,
+        "last": 0,
+        "max": 0,
+        "mean": 0,
+        "min": 0,
+        "rms": 0,
+        "unit": "(deg)"
+      },
+      "TwHt9TPxi": {
+        "first": 0.000097597,
+        "last": 0.000178621,
+        "max": 0.000274043,
+        "mean": 0.000128704,
+        "min": -0.000011565,
+        "rms": 0.000136917,
+        "unit": "(m)"
+      },
+      "TwHt9TPyi": {
+        "first": 0.000013033,
+        "last": 0.000003529,
+        "max": 0.000031462,
+        "mean": 0.000011468,
+        "min": -0.000008215,
+        "rms": 0.000013408,
+        "unit": "(m)"
+      },
+      "TwHt9TPzi": {
+        "first": 2.750892473,
+        "last": 2.750892473,
+        "max": 2.750892473,
+        "mean": 2.750892473,
+        "min": 2.750892473,
+        "rms": 2.750892473,
+        "unit": "(m)"
+      },
+      "TwrBsFxt": {
+        "first": 674.610237121,
+        "last": 1299.040401347,
+        "max": 2211.711562472,
+        "mean": 948.923816046,
+        "min": -199.864300133,
+        "rms": 1016.370408709,
+        "unit": "(kN)"
+      },
+      "TwrBsFyt": {
+        "first": 8.205591211,
+        "last": -91.508831021,
+        "max": 143.65287064,
+        "mean": -8.55779944,
+        "min": -240.429923587,
+        "rms": 49.425725674,
+        "unit": "(kN)"
+      },
+      "TwrBsFzt": {
+        "first": -25596.111515242,
+        "last": -25626.772121206,
+        "max": -25462.142806932,
+        "mean": -25602.881939474,
+        "min": -25824.578379055,
+        "rms": 25602.937377823,
+        "unit": "(kN)"
+      },
+      "TwrBsMxt": {
+        "first": 6310.137349446,
+        "last": 14590.089224581,
+        "max": 33610.956619426,
+        "mean": 9911.824153729,
+        "min": -6408.709000234,
+        "rms": 12209.372805369,
+        "unit": "(kN-m)"
+      },
+      "TwrBsMyt": {
+        "first": 142572.944598838,
+        "last": 178590.856733797,
+        "max": 329871.004821732,
+        "mean": 160732.856202467,
+        "min": 7627.472840231,
+        "rms": 169833.00827804,
+        "unit": "(kN-m)"
+      },
+      "TwrBsMzt": {
+        "first": -2570.785905501,
+        "last": 909.964858001,
+        "max": 20311.716515117,
+        "mean": 181.184632294,
+        "min": -23598.004617911,
+        "rms": 6624.863123265,
+        "unit": "(kN-m)"
+      }
+    },
+    "observed_TPzi_first_m_by_gage": [
+      0.070535714,
+      0.352678541,
+      0.634821398,
+      0.916964298,
+      1.199107198,
+      1.763392914,
+      2.045535813,
+      2.327678376,
+      2.750892473
+    ],
+    "observed_TPzi_span_m": 2.680356759,
+    "sample_count": 12001,
+    "selected_channel_count": 141,
+    "source_outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
+    "status": "FULL_ORIGINAL_SYNCHRONOUS_NATIVE_CHANNEL_QC_NOT_FRAME_OR_PHYSICS_PASS",
+    "three_instant_parity": "PASS",
+    "time_end_s": 700,
+    "time_increment_s": 0.05,
+    "time_start_s": 100,
+    "ci_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592832887",
+    "ci_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40592832887/artifacts/12774442508",
+    "ci_job_id": 122501168807,
+    "artifact_retention_days": 14,
+    "artifact_zip_sha256": "6a722652b8bac73afb646059f3817e2a5824b4dfaeed0476b9ef4401526c827f"
+  },
+  "header": {
+    "data_offset_bytes": 8020,
+    "description_excerpt": "Predictions were generated on 04-Sep-2026 at 14:43:38 using OpenFAST, compiled as a 64-bit application using single precision at commit v3.5.3 linked with  NWTC",
+    "file_id": 4,
+    "first_time_s": 100,
+    "num_output_channels": 295,
+    "num_samples": 12001,
+    "packed_payload_bytes": 7080590,
+    "packed_time_scale_offset": null,
+    "time_increment_s": 0.05
+  },
+  "hold": "Original 36-case archive is not proven identical to T071/T072 31-gage reruns; 9 gages are not 31; RP angles require OpenFAST frame/order/sign validation; load ownership and native Abaqus remain unverified.",
+  "outb_member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.outb",
+  "outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
+  "outb_size_bytes": 7088610,
+  "required_21_channel_presence": {
+    "TwHt1ALxt": true,
+    "TwHt1ALyt": true,
+    "TwHt1ALzt": true,
+    "TwHt1FLxt": true,
+    "TwHt1FLyt": true,
+    "TwHt1FLzt": true,
+    "TwHt1MLxt": true,
+    "TwHt1MLyt": true,
+    "TwHt1MLzt": true,
+    "TwHt1RPxi": true,
+    "TwHt1RPyi": true,
+    "TwHt1RPzi": true,
+    "TwHt1TPxi": true,
+    "TwHt1TPyi": true,
+    "TwHt1TPzi": true,
+    "TwrBsFxt": true,
+    "TwrBsFyt": true,
+    "TwrBsFzt": true,
+    "TwrBsMxt": true,
+    "TwrBsMyt": true,
+    "TwrBsMzt": true
+  },
+  "selected_original_synchronous_samples": [
+    {
+      "channels": {
+        "TwHt1ALxt": {
+          "unit": "(m/s^2)",
+          "value": 3.03e-7
+        },
+        "TwHt1ALyt": {
+          "unit": "(m/s^2)",
+          "value": 1.5e-8
+        },
+        "TwHt1ALzt": {
+          "unit": "(m/s^2)",
+          "value": 0
+        },
+        "TwHt1FLxt": {
+          "unit": "(kN)",
+          "value": 674.649077256
+        },
+        "TwHt1FLyt": {
+          "unit": "(kN)",
+          "value": 8.214322822
+        },
+        "TwHt1FLzt": {
+          "unit": "(kN)",
+          "value": -25583.746572564
+        },
+        "TwHt1MLxt": {
+          "unit": "(kN-m)",
+          "value": 6310.403680982
+        },
+        "TwHt1MLyt": {
+          "unit": "(kN-m)",
+          "value": 142526.265728559
+        },
+        "TwHt1MLzt": {
+          "unit": "(kN-m)",
+          "value": -2570.724271134
+        },
+        "TwHt1RPxi": {
+          "unit": "(deg)",
+          "value": -0.000015695
+        },
+        "TwHt1RPyi": {
+          "unit": "(deg)",
+          "value": 0.000085053
+        },
+        "TwHt1RPzi": {
+          "unit": "(deg)",
+          "value": 0
+        },
+        "TwHt1TPxi": {
+          "unit": "(m)",
+          "value": 5.3e-8
+        },
+        "TwHt1TPyi": {
+          "unit": "(m)",
+          "value": 1.2e-8
+        },
+        "TwHt1TPzi": {
+          "unit": "(m)",
+          "value": 0.070535714
+        },
+        "TwHt9ALxt": {
+          "unit": "(m/s^2)",
+          "value": 0.000459975
+        },
+        "TwHt9ALyt": {
+          "unit": "(m/s^2)",
+          "value": 0.000023522
+        },
+        "TwHt9ALzt": {
+          "unit": "(m/s^2)",
+          "value": 1e-8
+        },
+        "TwHt9FLxt": {
+          "unit": "(kN)",
+          "value": 676.551119705
+        },
+        "TwHt9FLyt": {
+          "unit": "(kN)",
+          "value": 8.433311972
+        },
+        "TwHt9FLzt": {
+          "unit": "(kN)",
+          "value": -25109.635942275
+        },
+        "TwHt9MLxt": {
+          "unit": "(kN-m)",
+          "value": 6332.804209856
+        },
+        "TwHt9MLyt": {
+          "unit": "(kN-m)",
+          "value": 140717.697216388
+        },
+        "TwHt9MLzt": {
+          "unit": "(kN-m)",
+          "value": -2568.893797877
+        },
+        "TwHt9RPxi": {
+          "unit": "(deg)",
+          "value": -0.000508331
+        },
+        "TwHt9RPyi": {
+          "unit": "(deg)",
+          "value": 0.004439768
+        },
+        "TwHt9RPzi": {
+          "unit": "(deg)",
+          "value": 0
+        },
+        "TwHt9TPxi": {
+          "unit": "(m)",
+          "value": 0.000097597
+        },
+        "TwHt9TPyi": {
+          "unit": "(m)",
+          "value": 0.000013033
+        },
+        "TwHt9TPzi": {
+          "unit": "(m)",
+          "value": 2.750892473
+        },
+        "TwrBsFxt": {
+          "unit": "(kN)",
+          "value": 674.610237121
+        },
+        "TwrBsFyt": {
+          "unit": "(kN)",
+          "value": 8.205591211
+        },
+        "TwrBsFzt": {
+          "unit": "(kN)",
+          "value": -25596.111515242
+        },
+        "TwrBsMxt": {
+          "unit": "(kN-m)",
+          "value": 6310.137349446
+        },
+        "TwrBsMyt": {
+          "unit": "(kN-m)",
+          "value": 142572.944598838
+        },
+        "TwrBsMzt": {
+          "unit": "(kN-m)",
+          "value": -2570.785905501
+        }
+      },
+      "sample_index": 0,
+      "time_s": 100
+    },
+    {
+      "channels": {
+        "TwHt1ALxt": {
+          "unit": "(m/s^2)",
+          "value": 1.02e-7
+        },
+        "TwHt1ALyt": {
+          "unit": "(m/s^2)",
+          "value": -1.1e-8
+        },
+        "TwHt1ALzt": {
+          "unit": "(m/s^2)",
+          "value": 0
+        },
+        "TwHt1FLxt": {
+          "unit": "(kN)",
+          "value": 703.868382922
+        },
+        "TwHt1FLyt": {
+          "unit": "(kN)",
+          "value": -1.07532945
+        },
+        "TwHt1FLzt": {
+          "unit": "(kN)",
+          "value": -25576.834025409
+        },
+        "TwHt1MLxt": {
+          "unit": "(kN-m)",
+          "value": 7577.919091651
+        },
+        "TwHt1MLyt": {
+          "unit": "(kN-m)",
+          "value": 128308.47869283
+        },
+        "TwHt1MLzt": {
+          "unit": "(kN-m)",
+          "value": 6028.969871537
+        },
+        "TwHt1RPxi": {
+          "unit": "(deg)",
+          "value": -0.00001187
+        },
+        "TwHt1RPyi": {
+          "unit": "(deg)",
+          "value": 0.000086681
+        },
+        "TwHt1RPzi": {
+          "unit": "(deg)",
+          "value": 0
+        },
+        "TwHt1TPxi": {
+          "unit": "(m)",
+          "value": 5.3e-8
+        },
+        "TwHt1TPyi": {
+          "unit": "(m)",
+          "value": 6e-9
+        },
+        "TwHt1TPzi": {
+          "unit": "(m)",
+          "value": 0.070535714
+        },
+        "TwHt9ALxt": {
+          "unit": "(m/s^2)",
+          "value": 0.000155799
+        },
+        "TwHt9ALyt": {
+          "unit": "(m/s^2)",
+          "value": -0.000012931
+        },
+        "TwHt9ALzt": {
+          "unit": "(m/s^2)",
+          "value": -1e-9
+        },
+        "TwHt9FLxt": {
+          "unit": "(kN)",
+          "value": 705.723074655
+        },
+        "TwHt9FLyt": {
+          "unit": "(kN)",
+          "value": -0.925735234
+        },
+        "TwHt9FLzt": {
+          "unit": "(kN)",
+          "value": -25102.697404482
+        },
+        "TwHt9MLxt": {
+          "unit": "(kN-m)",
+          "value": 7574.750310167
+        },
+        "TwHt9MLyt": {
+          "unit": "(kN-m)",
+          "value": 126416.661685768
+        },
+        "TwHt9MLzt": {
+          "unit": "(kN-m)",
+          "value": 6030.65678948
+        },
+        "TwHt9RPxi": {
+          "unit": "(deg)",
+          "value": -0.000357823
+        },
+        "TwHt9RPyi": {
+          "unit": "(deg)",
+          "value": 0.00432243
+        },
+        "TwHt9RPzi": {
+          "unit": "(deg)",
+          "value": 0
+        },
+        "TwHt9TPxi": {
+          "unit": "(m)",
+          "value": 0.000096227
+        },
+        "TwHt9TPyi": {
+          "unit": "(m)",
+          "value": 0.000009435
+        },
+        "TwHt9TPzi": {
+          "unit": "(m)",
+          "value": 2.750892473
+        },
+        "TwrBsFxt": {
+          "unit": "(kN)",
+          "value": 703.828078502
+        },
+        "TwrBsFyt": {
+          "unit": "(kN)",
+          "value": -1.0836623
+        },
+        "TwrBsFzt": {
+          "unit": "(kN)",
+          "value": -25589.331229724
+        },
+        "TwrBsMxt": {
+          "unit": "(kN-m)",
+          "value": 7577.869489927
+        },
+        "TwrBsMyt": {
+          "unit": "(kN-m)",
+          "value": 128357.547468167
+        },
+        "TwrBsMzt": {
+          "unit": "(kN-m)",
+          "value": 6028.913045326
+        }
+      },
+      "sample_index": 6000,
+      "time_s": 400
+    },
+    {
+      "channels": {
+        "TwHt1ALxt": {
+          "unit": "(m/s^2)",
+          "value": -4.82e-7
+        },
+        "TwHt1ALyt": {
+          "unit": "(m/s^2)",
+          "value": 1.31e-7
+        },
+        "TwHt1ALzt": {
+          "unit": "(m/s^2)",
+          "value": 0
+        },
+        "TwHt1FLxt": {
+          "unit": "(kN)",
+          "value": 1299.110535516
+        },
+        "TwHt1FLyt": {
+          "unit": "(kN)",
+          "value": -91.50437986
+        },
+        "TwHt1FLzt": {
+          "unit": "(kN)",
+          "value": -25614.302355467
+        },
+        "TwHt1MLxt": {
+          "unit": "(kN-m)",
+          "value": 14583.733686971
+        },
+        "TwHt1MLyt": {
+          "unit": "(kN-m)",
+          "value": 178500.756257953
+        },
+        "TwHt1MLzt": {
+          "unit": "(kN-m)",
+          "value": 910.024546254
+        },
+        "TwHt1RPxi": {
+          "unit": "(deg)",
+          "value": -0.000005922
+        },
+        "TwHt1RPyi": {
+          "unit": "(deg)",
+          "value": 0.000172546
+        },
+        "TwHt1RPzi": {
+          "unit": "(deg)",
+          "value": 0
+        },
+        "TwHt1TPxi": {
+          "unit": "(m)",
+          "value": 1.06e-7
+        },
+        "TwHt1TPyi": {
+          "unit": "(m)",
+          "value": 1e-9
+        },
+        "TwHt1TPzi": {
+          "unit": "(m)",
+          "value": 0.070535714
+        },
+        "TwHt9ALxt": {
+          "unit": "(m/s^2)",
+          "value": -0.000719515
+        },
+        "TwHt9ALyt": {
+          "unit": "(m/s^2)",
+          "value": 0.000197478
+        },
+        "TwHt9ALzt": {
+          "unit": "(m/s^2)",
+          "value": -3.7e-8
+        },
+        "TwHt9FLxt": {
+          "unit": "(kN)",
+          "value": 1302.475796584
+        },
+        "TwHt9FLyt": {
+          "unit": "(kN)",
+          "value": -91.457196251
+        },
+        "TwHt9FLzt": {
+          "unit": "(kN)",
+          "value": -25140.045993082
+        },
+        "TwHt9MLxt": {
+          "unit": "(kN-m)",
+          "value": 14338.506599643
+        },
+        "TwHt9MLyt": {
+          "unit": "(kN-m)",
+          "value": 175013.208492242
+        },
+        "TwHt9MLzt": {
+          "unit": "(kN-m)",
+          "value": 912.466922957
+        },
+        "TwHt9RPxi": {
+          "unit": "(deg)",
+          "value": -0.000104928
+        },
+        "TwHt9RPyi": {
+          "unit": "(deg)",
+          "value": 0.007795997
+        },
+        "TwHt9RPzi": {
+          "unit": "(deg)",
+          "value": 0
+        },
+        "TwHt9TPxi": {
+          "unit": "(m)",
+          "value": 0.000178621
+        },
+        "TwHt9TPyi": {
+          "unit": "(m)",
+          "value": 0.000003529
+        },
+        "TwHt9TPzi": {
+          "unit": "(m)",
+          "value": 2.750892473
+        },
+        "TwrBsFxt": {
+          "unit": "(kN)",
+          "value": 1299.040401347
+        },
+        "TwrBsFyt": {
+          "unit": "(kN)",
+          "value": -91.508831021
+        },
+        "TwrBsFzt": {
+          "unit": "(kN)",
+          "value": -25626.772121206
+        },
+        "TwrBsMxt": {
+          "unit": "(kN-m)",
+          "value": 14590.089224581
+        },
+        "TwrBsMyt": {
+          "unit": "(kN-m)",
+          "value": 178590.856733797
+        },
+        "TwrBsMzt": {
+          "unit": "(kN-m)",
+          "value": 909.964858001
+        }
+      },
+      "sample_index": 12000,
+      "time_s": 700
+    }
+  ],
+  "source_manifest_sha256": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392",
+  "source_reading_level": "original archived OUTB bytes: SHA256 + complete 12001x141 native-channel time series, three-instant parity and per-channel QC",
+  "status": "SOURCE_HEADER_QC_ONLY_NOT_DYNAMIC_PHYSICS_PASS",
+  "time_unit": "(s)"
+}

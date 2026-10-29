@@ -1,4 +1,7 @@
-# Governance — 当前模型治理入口
+# Governance — 模型治理与论文指挥入口
+
+> [!IMPORTANT]
+> **每次写入前先读[指挥室的最新进度与交接日志](COMMAND_ROOM.md#read-before-write)。** 本目录模型文件说明候选身份，当前调度只在指挥室维护；已完成历史验证须按版本继承。
 
 本目录只保留“当前模型”的治理文件。
 
@@ -24,7 +27,7 @@
 原生执行候选 T070：
 `../experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp`
 
-T070 = T057物理模型 + G1诊断输出；已经通过exact round-trip SHA审计，但仍是 **NATIVE-SOLVER-PENDING**。
+T070 = T057物理模型 + G1诊断输出；exact round-trip SHA审计已完成。2026-10-29本次原生Data Check因诊断IOS层级错误FAIL，见[真实回执](../experiments/T070/local-20261029/RESULTS_AND_LOCAL_RECOVERY.md)。后续修复/复验状态只在[指挥室](COMMAND_ROOM.md#current-progress)维护；此失败不否定历史模型的原生成功结果。
 
 ## 历史治理
 

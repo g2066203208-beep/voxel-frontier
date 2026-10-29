@@ -1,0 +1,7 @@
+channel,units,n_gages,n_control_switch,n_m4_near_tie_lt5pct,n_m10_near_tie_lt5pct,n_controlled_by_U19_S04_m4,n_controlled_by_U19_S06_m4,n_controlled_by_U19_S04_m10,n_controlled_by_U19_S06_m10
+Fx_kN,kN,31,22,28,16,0,0,0,0
+Fy_kN,kN,31,19,31,15,19,12,0,31
+Fz_kN,kN,31,31,31,31,31,0,0,31
+Mx_kNm,kNm,31,31,31,28,31,0,0,31
+My_kNm,kNm,31,13,29,0,0,0,0,0
+Mz_kNm,kNm,31,31,31,31,0,31,31,0

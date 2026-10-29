@@ -1,0 +1,81 @@
+{
+  "input_type": "REAL_RECORDED_GROUND_ACCELERATION_OFFICIAL_STATION_PILOT_NOT_SITE_MATCHED",
+  "source_record_is_not_peer_nga_rsn": true,
+  "event_catalog": "https://earthquake.usgs.gov/earthquakes/eventpage/ci38457511/origin/magnitude",
+  "event_utc": "2019-07-06T03:19:53Z",
+  "station_network": "CI",
+  "station": "CLC",
+  "station_latitude": 35.81574,
+  "station_longitude": -117.59751,
+  "station_elevation_m": 775.0,
+  "official_stationxml_url": "https://service.scedc.caltech.edu/fdsnws/station/1/query?net=CI&sta=CLC&loc=%2A&cha=HN%2A&starttime=2019-07-06T03%3A19%3A20&endtime=2019-07-06T03%3A22%3A40&level=response&format=xml",
+  "official_mseed_url": "https://service.scedc.caltech.edu/fdsnws/dataselect/1/query?net=CI&sta=CLC&loc=%2A&cha=HN%2A&starttime=2019-07-06T03%3A19%3A20&endtime=2019-07-06T03%3A22%3A40",
+  "stationxml_sha256": "31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c",
+  "raw_mseed_sha256": "9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab",
+  "raw_mseed_bytes": 143360,
+  "stationxml_bytes": 25695,
+  "window_request_utc": [
+    "2019-07-06T03:19:20",
+    "2019-07-06T03:22:40"
+  ],
+  "common_start_utc": "2019-07-06T03:19:19.998300Z",
+  "common_npts": 20001,
+  "common_dt_s": 0.01,
+  "channels": [
+    {
+      "seed_id": "CI.CLC..HNE",
+      "input_units": "M/S**2",
+      "counts_per_input_unit": 213945.0,
+      "azimuth_deg": 90.0,
+      "dip_deg": 0.0,
+      "sample_rate_Hz": 100.0,
+      "csv": "CI_CLC_HNE_accel_mps2.csv",
+      "csv_sha256": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "pga_g": 0.3251691001952757
+    },
+    {
+      "seed_id": "CI.CLC..HNN",
+      "input_units": "M/S**2",
+      "counts_per_input_unit": 213809.0,
+      "azimuth_deg": 0.0,
+      "dip_deg": 0.0,
+      "sample_rate_Hz": 100.0,
+      "csv": "CI_CLC_HNN_accel_mps2.csv",
+      "csv_sha256": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+      "pga_g": 0.5221404480337323
+    }
+  ],
+  "software": {
+    "python": "3.12.15",
+    "obspy": "1.5.1",
+    "numpy": "2.5.4"
+  },
+  "station_errors": [],
+  "wave_errors": [],
+  "rejected_channels": [
+    {
+      "trace": "CI.CLC..HNZ",
+      "reason": "NOT_HORIZONTAL"
+    }
+  ],
+  "npts_matches": true,
+  "source_is_window_not_complete_earthquake_record": true,
+  "raw_counts_instrument_sensitivity_only_no_baseline_correction": true,
+  "reliability_flags": {
+    "usable_low_frequency_not_verified": true,
+    "site_target_spectrum_not_available": true,
+    "Jiayu_site_class_geotechnical_not_verified": true,
+    "site_match_PASS": false,
+    "PEER_RSN_verified": false,
+    "Abaqus_RUN": false,
+    "S05_PASS": false
+  },
+  "files_SHA256": {
+    "CI_CLC_HNE_accel_mps2.csv": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+    "CI_CLC_HNN_accel_mps2.csv": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+    "manifest.json": "8c0c4a78fb767d85f3c4f7534eceaecf86d86f0e3c3ef16d7f4fee0018230781",
+    "original/CI_station_response.xml": "31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c",
+    "original/CI_waveform_counts.mseed": "9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab",
+    "pair_qc.json": "488acd951e19e8d5355e20925e9f3bdbd841a98c41931939ed0685f44d460122"
+  }
+}

@@ -1,0 +1,28 @@
+name: S01-S06 D400 70-station static identity (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_31SEG_FE_MASS_ALLOCATION_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_d400_70station_static_child.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_D400_70STATION_NONPRODUCTION_20261027.csv'
+      - '.github/workflows/s01-s06-static-d400-tower-child.yml'
+  workflow_dispatch:
+jobs:
+  static-identity-only:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild and compare D400 70-station static child
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          python3 s01_s06_d400_70station_static_child.py --out "$RUNNER_TEMP/d400_70station.csv"
+          cmp "$RUNNER_TEMP/d400_70station.csv" S01_S06_D400_70STATION_NONPRODUCTION_20261027.csv
+          printf '%s  %s\n' bf76a4a1460e3fa01395173f4191f185ffb81a5e3ce325e448615ae862d015e5 "$RUNNER_TEMP/d400_70station.csv" | sha256sum -c -
+          echo 'STATIC_CHILD_BYTES_MATCH; NO ABAQUS/OPENFAST; NO SCIENTIFIC PASS'

@@ -1,0 +1,350 @@
+name: S05 original-record pair QC self-test (NO real PEER or physics PASS)
+on:
+  pull_request:
+    paths:
+      - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
+      - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ISHIHARA_REFERENCE_PAPER_FOUR_PERIOD_DIAGNOSTIC_20261029.csv'
+      - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv'
+      - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
+      - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv'
+      - '.github/workflows/s05-ground-motion-pair-qc.yml'
+      - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json'
+      - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json'
+      - 'research/wind-tower/experiments/T079/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  seismic-source-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact PR script without large checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 3 --output s05_ground_motion_pair_qc.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py"
+          sha256sum s05_ground_motion_pair_qc.py
+      - name: Python source QC and independent analytic SDOF convergence
+        run: |
+          python3 -m py_compile s05_ground_motion_pair_qc.py
+          python3 s05_ground_motion_pair_qc.py --self-test
+          echo 'Synthetic unit tests ONLY; 0 real PEER records, 0 Abaqus RUN, 0 S05 physics PASS.'
+      - name: REAL CI.CLC baseline spectral sensitivity on immutable source and pre20 pairs (not a design wave)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC"
+          mkdir -p real-ci-clc/raw real-ci-clc/pre20
+          for file in manifest.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
+            curl -fLsS --retry 3 --output "real-ci-clc/raw/$file" "$base/$file"
+          done
+          for file in manifest.json CI_CLC_HNE_preevent20_mps2.csv CI_CLC_HNN_preevent20_mps2.csv; do
+            curl -fLsS --retry 3 --output "real-ci-clc/pre20/$file" "$base/processed/$file"
+          done
+          python3 s05_ground_motion_pair_qc.py --spectral-stability \
+            --manifest real-ci-clc/raw/manifest.json \
+            --processed-manifest real-ci-clc/pre20/manifest.json \
+            --output real-ci-clc/long_period_spectral_sensitivity.json
+          python3 - <<'PY'
+          import json
+          j=json.load(open('real-ci-clc/long_period_spectral_sensitivity.json'))
+          for c in j['components']:
+              print('REAL_CI_CLC',c['component'],'T_ge_4s_max_relative_change',
+                    c['max_raw_vs_pre20_relative_change_T_ge_4s'])
+              for row in c['spectrum']:
+                  if row['period_s'] in (1.0,6.0,10.0):
+                      print('SPECTRUM',c['component'],row)
+          assert j['S05_PASS'] is False and j['Abaqus_RUN'] is False
+          PY
+      - name: REAL 3-station / 6-horizontal-trace baseline and long-period QC (single event; no site PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/USGS_ci38457511"
+          mkdir -p triage/clc triage/root
+          for file in manifest.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
+            curl -fLsS --retry 3 --output "triage/clc/$file" "$base/CI_CLC/$file"
+          done
+          for file in manifest.json CI_RVR_manifest.json CI_PASC_HNE_accel_mps2.csv CI_PASC_HNN_accel_mps2.csv CI_RVR_HNE_accel_mps2.csv CI_RVR_HNN_accel_mps2.csv; do
+            curl -fLsS --retry 3 --output "triage/root/$file" "$base/$file"
+          done
+          curl -fLsS --retry 3 --output triage/triage_v8.json "$base/station_pair_baseline_triage_20261028.json"
+          python3 s05_ground_motion_pair_qc.py --station-triage --triage-manifests \
+            triage/clc/manifest.json triage/root/manifest.json triage/root/CI_RVR_manifest.json \
+            --output triage/triage_python.json
+          python3 - <<'PY'
+          import json,math
+          v=json.load(open('triage/triage_v8.json'))
+          p=json.load(open('triage/triage_python.json'))
+          assert not p['S05_PASS'] and not p['Abaqus_RUN']
+          assert p['independent_event_count']==1 and len(p['stations'])==3
+          assert {s['station'] for s in p['stations']}=={'CI.CLC','CI.PASC','CI.RVR'}
+          n=0
+          for a,b in zip(v['stations'],p['stations']):
+              assert a['station']==b['station']
+              for ca,cb in zip(a['components'],b['components']):
+                  assert ca['component']==cb['component'] and ca['source_sha256']==cb['source_sha256']
+                  for key in ('pre20_offset_m_s2','raw_pga_g','pre20_pga_g','pre20_noise_rms_m_s2','post35to120_signal_rms_m_s2','signal_to_noise_rms_ratio','long_period_max_raw_vs_pre20_rel','long_period_max_linear_vs_pre20_rel'):
+                      assert math.isclose(ca[key],cb[key],rel_tol=1e-6,abs_tol=1e-8),(a['station'],key,ca[key],cb[key])
+                      n+=1
+                  for xa,xb in zip(ca['spectrum'],cb['spectrum']):
+                      assert xa['period_s']==xb['period_s']
+                      for key in ('raw_psa_m_s2','pre20_psa_m_s2','linear_psa_m_s2'):
+                          assert math.isclose(xa[key],xb[key],rel_tol=1e-6,abs_tol=1e-8),(a['station'],ca['component'],key,xa[key],xb[key])
+                          n+=1
+          print('REAL_S05_CROSS_LANGUAGE_V8_PYTHON_SIX_TRACE_COMPARISON_PASS',n,'numeric checks')
+          print('NOT_DESIGN_PASS same earthquake, unknown long-period instrument reliability, no target spectrum')
+          PY
+      - name: REAL two-event four-horizontal-pair long-period gate (16 rows; reject design use)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o triage/ridge.json "$base/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json"
+          curl -fLsS --retry 3 -o triage/lone.json "$base/real-records/USGS_ci39493944/CI_CLC/processed/baseline_sensitivity_report.json"
+          curl -fLsS --retry 3 -o triage/committed_long_period.csv "$base/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv"
+          python3 s05_ground_motion_pair_qc.py --long-period-gate --triage-json triage/ridge.json --second-event-json triage/lone.json --output triage/recomputed_long_period.csv
+          python3 - <<'PY'
+          import csv,math
+          with open('triage/recomputed_long_period.csv') as f:a=list(csv.DictReader(f))
+          with open('triage/committed_long_period.csv') as f:b=list(csv.DictReader(f))
+          assert len(a)==len(b)==16
+          assert len({x['event_id'] for x in a})==2
+          keys=['raw_pair_gm_psa_m_s2','pre20_pair_gm_psa_m_s2','linear_pair_gm_psa_m_s2','raw_vs_pre20_pair_relative_change','max_abs_pre20_end_displacement_m']
+          for x,y in zip(a,b):
+              assert (x['event_id'],x['station'],x['period_s'])==(y['event_id'],y['station'],y['period_s'])
+              assert x['decision']==y['decision']=='REJECT_RAW__HOLD_PRE20_NO_LOWFREQ_TARGET'
+              assert x['source_HNE_sha256']==y['source_HNE_sha256'] and x['source_HNN_sha256']==y['source_HNN_sha256']
+              for k in keys:assert math.isclose(float(x[k]),float(y[k]),rel_tol=1e-10,abs_tol=1e-12),(k,x[k],y[k])
+          print('REAL_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_16_ROWS_VERIFIED_NOT_DESIGN_PASS')
+          PY
+      - name: Preserve REAL S05 diagnostic report as CI artifact (not S05 PASS)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-ci-clc-long-period-diagnostic-not-design-pass
+          path: |
+            real-ci-clc/long_period_spectral_sensitivity.json
+            triage/triage_python.json
+            triage/triage_v8.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  cesmd-processed-metadata-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch SHA-pinned CESMD metadata preflight source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 --output s05_cesmd_processed_metadata.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py"
+          sha256sum s05_cesmd_processed_metadata.py
+      - name: Test metadata schema and adversarial inputs (synthetic only)
+        run: |
+          python3 -m py_compile s05_cesmd_processed_metadata.py
+          python3 s05_cesmd_processed_metadata.py --self-test
+      - name: Query official CESMD metadata for TWO existing independent events
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 s05_cesmd_processed_metadata.py \
+            --event-id CI38457511 --event-id CI39493944 --output-dir cesmd-official-metadata
+          echo 'CESMD metadata only; processed waveform download requires registered email; 0 accepted design waves.'
+      - name: Preserve exact official response bytes and SHA256 reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-cesmd-processed-availability-metadata-not-design-wave
+          path: cesmd-official-metadata/
+          if-no-files-found: warn
+          retention-days: 90
+
+  esm-public-processed-accelerogram-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact PR-head ESM source-receipt program
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 -o s05_esm_public_processed_pair.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py"
+          sha256sum s05_esm_public_processed_pair.py
+          curl -fLsS --retry 3 -o s05_ground_motion_pair_qc.py "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py"
+          sha256sum s05_ground_motion_pair_qc.py
+      - name: Synthetic ZIP security and source-identity tests
+        run: |
+          python3 -m py_compile s05_esm_public_processed_pair.py
+          python3 s05_esm_public_processed_pair.py --self-test
+      - name: Fetch one PUBLIC official ESM manually processed acceleration ZIP (not a design wave)
+        run: |
+          python3 s05_esm_public_processed_pair.py --fetch --timeout 90 --output-dir esm-public-processed
+      - name: Diagnostic original DYNA lines 33-70 even when parser rejects source
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import glob,zipfile
+          files=glob.glob('esm-public-processed/*original.zip')
+          if files:
+              with zipfile.ZipFile(files[0]) as z:
+                  name=next(n for n in z.namelist() if '.HNE.' in n)
+                  lines=z.read(name).decode('utf-8',errors='replace').splitlines()
+                  print('REAL_DYNA_HNE_HEADER_COUNT_DIAGNOSTIC',len(lines))
+                  for i in range(32,min(72,len(lines))):
+                      print('REAL_DYNA_LINE',i+1,repr(lines[i][:180]))
+          PY
+      - name: Display immutable official DYNA source headers for scientific triage
+        if: success()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_receipt.json'
+          x=json.load(open(p,encoding='utf-8'))
+          print('ESM_REAL_SOURCE',x['event_id'],x['station_requested'],x['zip_sha256'],x['zip_bytes'])
+          for row in x['processed_pair_spectrum']['spectrum']:
+              print('ESM_REAL_PSA_5PCT',row)
+          for f in x['unpacked_files']:
+              print('ESM_MEMBER',f['filename'],f['bytes'],f['sha256'],f['dyna_selected_header_fields'])
+              for i,line in enumerate(f['dyna_header_lines_SOURCE_TEXT'],1):
+                  print('ESM_HEADER',f['filename'],i,repr(line))
+          assert x['S05_PASS'] is False and x['actual_processing_filter_corner_confirmed'] is False
+          PY
+      - name: Real ESM processed low-frequency numerical triage (NOT SNR/design PASS)
+        if: success()
+        shell: bash
+        run: |
+          curl -fLsS --retry 3 -o esm-public-processed/committed_lowfreq_qc.csv "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv"
+          python3 - <<'PY'
+          import csv,json,math
+          p='esm-public-processed/ESM_IT-2012-0008_NVL_MP_ACC_receipt.json'
+          j=json.load(open(p,encoding='utf-8'))
+          q=j['processed_pair_low_frequency_diagnostic']
+          with open('esm-public-processed/committed_lowfreq_qc.csv',newline='') as f:
+              committed={(r['component'],float(r['period_s'])):r for r in csv.DictReader(f)}
+          assert len(committed)==8
+          assert not q['S05_PASS'] and not q['instrument_SNR_verified']
+          assert set(q['components'])=={'HNE','HNN'}
+          for name,c in sorted(q['components'].items()):
+              assert c['npts']==32040 and abs(c['dt_s']-.005)<1e-12
+              assert abs(c['fc_Hz']-.04)<1e-12
+              print('REAL_ESM_COMPONENT',name,c['source_numeric_sha256'],
+                    'first10_RMS_NOT_SNR',c['first10s_rms_m_s2_NOT_SNR'],
+                    'v_end_DIAGNOSTIC',c['final_velocity_m_s_DIAGNOSTIC'],
+                    'd_end_DIAGNOSTIC',c['final_displacement_m_DIAGNOSTIC'])
+              for row in c['periods']:
+                  assert all(math.isfinite(v) for k,v in row.items() if isinstance(v,float))
+                  print('REAL_ESM_LONG_PERIOD_NUMERICAL_QC',name,row)
+                  old=committed[(name,row['T_s'])]
+                  assert old['numeric_source_SHA256']==c['source_numeric_sha256']
+                  assert math.isclose(float(old['pseudoSa_dt_m_s2']),row['Sa_dt_m_s2'],rel_tol=1e-9)
+                  assert old['original_ESM_filter_pass_count_verified']=='False'
+                  g=float(old['ideal_single_pass_gain_CONDITIONAL'])
+                  assert math.isclose(float(old['ideal_two_pass_gain_CONDITIONAL']),g*g,rel_tol=1e-12)
+                  assert math.isclose(float(old['ideal_two_pass_attenuation_pct_CONDITIONAL']),100*(1-g*g),rel_tol=1e-12)
+              extra=c['extra_highpass_sensitivity_NOT_ORIGINAL_ESM_FILTER']
+              assert len(extra)==8
+              for item in extra:
+                  assert item['extra_highpass_passes']==2
+                  assert item['extra_highpass_fc_Hz'] in (.04,.08)
+                  assert item['T_s'] in (4.,6.,8.,10.)
+                  assert all(math.isfinite(v) for v in item.values() if isinstance(v,float))
+                  old=committed[(name,item['T_s'])]
+                  prefix='extra_HP2_fc004' if item['extra_highpass_fc_Hz']==.04 else 'extra_HP2_fc008'
+                  assert math.isclose(float(old[prefix+'_psa_m_s2']),item['extra_highpass_psa_m_s2_DIAGNOSTIC'],rel_tol=1e-9)
+                  assert math.isclose(float(old[prefix+'_relative_change']),item['relative_change_from_existing_processed'],rel_tol=1e-9,abs_tol=1e-12)
+                  assert old['extra_filter_script_SHA256']=='8996859a27cbb362588d5e12a47f958fd89a88395a6234f216c5ffed0c5bfa41'
+                  print('REAL_ESM_EXTRA_HP2_SENSITIVITY_NOT_FILTER_RECOVERY',name,item)
+          print('S05_QC_NOT_DESIGN_PASS')
+          PY
+      - name: Preserve original official bytes or explicit failure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE
+          path: esm-public-processed/
+          if-no-files-found: warn
+          retention-days: 90
+
+  event-balanced-source-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch exact PR source and existing real 20-row tables
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s05_event_balanced_spectrum_gate.py "$base/s05_event_balanced_spectrum_gate.py"
+          curl -fLsS --retry 3 -o us.csv "$base/real-records/S05_TWO_EVENT_FOUR_PAIR_LONG_PERIOD_GATE_20261029.csv"
+          curl -fLsS --retry 3 -o esm.csv "$base/real-records/S05_ESM_IT2012_NVL_PROCESSED_PAIR_4_10S_20261029.csv"
+          curl -fLsS --retry 3 -o expected.csv "$base/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv"
+          curl -fLsS --retry 3 -o s09_ishihara2024_equation_oracle.py "$base/s09_ishihara2024_equation_oracle.py"
+          curl -fLsS --retry 3 -o reference_expected.csv "$base/real-records/S05_ISHIHARA_REFERENCE_PAPER_FOUR_PERIOD_DIAGNOSTIC_20261029.csv"
+          sha256sum s05_event_balanced_spectrum_gate.py s09_ishihara2024_equation_oracle.py us.csv esm.csv reference_expected.csv
+      - name: Run analytic and negative tests, then actual source-table event balance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s05_event_balanced_spectrum_gate.py
+          python3 s05_event_balanced_spectrum_gate.py --self-test
+          python3 s05_event_balanced_spectrum_gate.py --us-csv us.csv --esm-csv esm.csv --output s05-event-balance.json
+          python3 - <<'PY'
+          import json, math
+          d=json.load(open("s05-event-balance.json"))
+          assert d["status"]=="INPUT_DIAGNOSTIC_ONLY_HOLD"
+          assert len(d["independent_event_ids"])==3 and d["pair_count"]==5
+          assert len(d["rows"])==4 and d["S05_PASS"] is False
+          assert d["Abaqus_E_WE_RUN"]==0 and d["target_spectrum"]=="MISSING_NO_MATCH_METRIC"
+          assert all(math.isfinite(x["event_over_pair_ratio"]) for x in d["rows"])
+          import csv
+          with open("expected.csv", newline="") as f: expected=list(csv.DictReader(f))
+          assert len(expected)==len(d["rows"])
+          for a,b in zip(expected,d["rows"]):
+              assert float(a["period_s"])==b["period_s"]
+              assert int(a["independent_events"])==3 and int(a["horizontal_pairs"])==5
+              assert a["status"]=="HETEROGENEOUS_PROCESSING_DIAGNOSTIC_NOT_DESIGN_PASS"
+              for key in ("pair_weighted_gm_m_s2","event_weighted_gm_m_s2","event_over_pair_ratio","ridgecrest_station_max_over_min"):
+                  assert math.isclose(float(a[key]),b[key],rel_tol=1e-10,abs_tol=1e-12),(key,a[key],b[key])
+          print("REAL_3_EVENT_5_PAIR_4_PERIOD_COMMITTED_CSV_CROSSCHECK_PASS")
+          PY
+      - name: Reference-paper Eq1 and real 20-row PSA mismatch oracle (NOT Jiayu target)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 s09_ishihara2024_equation_oracle.py --self-test
+          python3 s05_event_balanced_spectrum_gate.py --reference-paper-benchmark --us-csv us.csv --esm-csv esm.csv --output reference-paper-diagnostic.json
+          python3 - <<'PY'
+          import csv,json,math
+          x=json.load(open("reference-paper-diagnostic.json"))
+          with open("reference_expected.csv",newline="") as f: rows=list(csv.DictReader(f))
+          assert x["status"]=="REFERENCE_PAPER_ALGEBRA_ONLY_NOT_DESIGN_SPECTRUM"
+          assert not x["design_site_spectrum_PASS"] and not x["record_low_frequency_PASS"]
+          assert x["Abaqus_E_WE_RUN"]==0 and x["actual_scaled_waveforms"]==0
+          assert len(rows)==len(x["rows"])==5
+          for a,b in zip(rows,x["rows"]):
+              assert (a["event_id"],a["station"])==(b["event_id"],b["station"])
+              assert a["source_HNE_sha256"]==b["source_HNE_sha256"]
+              assert a["source_HNN_sha256"]==b["source_HNN_sha256"]
+              assert a["decision"]==b["decision"]=="REJECT_DESIGN_USE_REFERENCE_PAPER_ONLY"
+              for k in ("pre_scale_log_rmse","least_squares_amplitude_scale_DIAGNOSTIC",
+                        "post_scale_log_rmse","max_abs_post_log_residual"):
+                  assert math.isclose(float(a[k]),b[k],rel_tol=1e-10,abs_tol=1e-12),(k,a[k],b[k])
+          print("REAL_FIVE_PAIRS_REFERENCE_PAPER_EQ1_CROSSCHECK_PASS_NO_DESIGN_WAVES")
+          PY
+      - name: Preserve source-hashed diagnostic JSON, never label design PASS
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-three-event-event-balanced-source-diagnostic-not-design-pass
+          path: |
+            s05-event-balance.json
+            reference-paper-diagnostic.json
+          if-no-files-found: warn
+          retention-days: 90

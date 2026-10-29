@@ -1,0 +1,34 @@
+name: S01 Pe-aware G1 static unit tests
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py'
+      - 'research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py'
+      - 'research/wind-tower/experiments/T070/extract_t070_g1.py'
+      - '.github/workflows/s01-peaware-g1-static.yml'
+  pull_request:
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py'
+      - 'research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py'
+      - 'research/wind-tower/experiments/T070/extract_t070_g1.py'
+      - '.github/workflows/s01-peaware-g1-static.yml'
+  workflow_dispatch:
+jobs:
+  pure-python-mock-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print checked-out source SHA256 (not model INP SHA256)
+        run: |
+          sha256sum research/wind-tower/experiments/T077/recovery/s01_peaware_g1_extract.py
+          sha256sum research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py
+      - name: Run 12 static mock tests (NOT Abaqus)
+        run: python3 -m unittest -v research/wind-tower/experiments/T077/recovery/test_s01_peaware_g1_extract.py
+      - name: Check T070 G1 two-support gravity/PT ledger (NO ABAQUS)
+        run: |
+          python3 -m py_compile research/wind-tower/experiments/T070/extract_t070_g1.py
+          python3 research/wind-tower/experiments/T070/extract_t070_g1.py --self-test
+          echo "STATIC MOCK ONLY; no native ODB or physics PASS"

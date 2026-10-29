@@ -1,0 +1,118 @@
+name: S06 158m tower mass-EA identity (static only)
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-tower-mass-ea-identity.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s06_tower_ea_mass_ownership_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat'
+      - 'research/wind-tower/experiments/T077/recovery/s06_tower_gross_section_identity_31seg.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv'
+      - 'research/wind-tower/experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_d400_composite_identity_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_integrated_concrete_compliance_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_r335_pt_tower_identity_inverse.py'
+      - 'research/wind-tower/experiments/T077/recovery/s01_s06_competing_tower_identity_hypotheses.py'
+  workflow_dispatch:
+
+jobs:
+  source-identity-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source SHA and 31-segment EA/mass identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T077/recovery/s06_tower_ea_mass_ownership_gate.py \
+            research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat \
+            --outdir /tmp/s06-mass-ea
+          python3 research/wind-tower/experiments/T077/recovery/s06_tower_gross_section_identity_31seg.py \
+            research/wind-tower/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat \
+            research/wind-tower/experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv \
+            --out /tmp/s06-mass-ea/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv
+          diff -u research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv \
+            /tmp/s06-mass-ea/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_d400_composite_identity_gate.py \
+            --out /tmp/s06-mass-ea/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv
+          diff -u research/wind-tower/experiments/T077/recovery/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv \
+            /tmp/s06-mass-ea/S01_S06_D400_COMPOSITE_VS_158M_31SEG_20261027.csv
+          sha256sum research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv \
+            research/wind-tower/experiments/T077/recovery/S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv \
+            research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_MASS_EA_31SEG_20261026.csv
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_integrated_concrete_compliance_gate.py \
+            --outdir /tmp/s06-mass-ea/compliance
+          diff -u research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv \
+            /tmp/s06-mass-ea/compliance/S01_S06_112M_INTEGRATED_COMPLIANCE_31SEG_20261027.csv
+          diff -u research/wind-tower/experiments/T077/recovery/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json \
+            /tmp/s06-mass-ea/compliance/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('/tmp/s06-mass-ea/compliance/S01_S06_112M_INTEGRATED_COMPLIANCE_SUMMARY_20261027.json')
+          d = json.loads(p.read_text())
+          expected = {'mass_change_pct': 3.6507150264,
+                      'tip_compliance_change_pct': -11.8503484459,
+                      'concrete_CG_shift_m': -0.6312126237,
+                      'represented_length_m': 111.939}
+          for key, val in expected.items():
+              assert abs(d[key] - val) < 1e-5, (key, d[key], val)
+          print('INDEPENDENT_PRECOMPUTED_STATIC_INTEGRATION_ASSERTIONS_PASS')
+          PY
+          sha256sum /tmp/s06-mass-ea/compliance/*
+          sha256sum /tmp/s06-mass-ea/*.csv /tmp/s06-mass-ea/*.json
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_r335_pt_tower_identity_inverse.py \
+            --csv /tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE_31SEG.csv \
+            --json /tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE_SUMMARY.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE_SUMMARY.json').read_text())
+          expected={
+              'EA': 0.15927950564576243,
+              'EI': 0.1604517816628712,
+              'mass_PT': 0.2403709429999171,
+              'mass_noPT': 2.1262457210111836,
+          }
+          for k,v in expected.items():
+              assert abs(d['error_rms_percent'][k]-v)<1e-5,(k,d['error_rms_percent'][k],v)
+          assert abs(d['mass_PT_proxy_difference_percent']-(-0.07744862947911546))<1e-5
+          assert abs(d['phi25_proxy_tip_compliance_difference_percent']-0.14101302085405276)<1e-5
+          assert abs(d['PT_mass_if_distributed_kg']-35430.036768)<0.001
+          print('INDEPENDENT_R335_PT_INVERSE_NUMERIC_ASSERTIONS_PASS')
+          PY
+          sha256sum /tmp/s06-mass-ea/S01_S06_R335_PT_INVERSE*
+          python3 research/wind-tower/experiments/T077/recovery/s01_s06_competing_tower_identity_hypotheses.py \
+            --json /tmp/s06-mass-ea/S01_S06_COMPETING_TOWER_IDENTITY_31SEG.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/s06-mass-ea/S01_S06_COMPETING_TOWER_IDENTITY_31SEG.json').read_text())
+          a=d['rms_relative_error_percent']
+          expected={
+              ('R335_phi25_PT_gross_additive','EA'):0.15927950564576243,
+              ('R335_phi25_PT_gross_additive','EI'):0.1604517816628712,
+              ('R335_phi25_PT_gross_additive','mass'):0.2403709429999171,
+              ('R335_phi25_PT_displace_rebar','mass'):1.4083267608274215,
+              ('uniform_40GPa_2560kgm3','EA'):1.589004929026684,
+              ('uniform_40GPa_2560kgm3','mass'):0.4779399416453295,
+              ('gross_group_fitted_6parameters','EI'):0.5877115342593839,
+          }
+          for (model,field),value in expected.items():
+              assert abs(a[model][field]-value)<1e-5,(model,field,a[model][field],value)
+          assert a['R335_phi25_PT_gross_additive']['mass']<a['R335_phi25_PT_displace_rebar']['mass']
+          assert d['segment_count']==31
+          print('COMPETING_HYPOTHESES_SOURCE_LOCK_AND_PRECOMPUTED_ASSERTIONS_PASS')
+          print('HOLD: lower residual is not proof of historical generator; gross-additive mass double-counts host displacement')
+          PY
+          sha256sum /tmp/s06-mass-ea/S01_S06_COMPETING_TOWER_IDENTITY_31SEG.json
+          echo 'STATIC ONLY: no Abaqus/OpenFAST solver, no material/standard PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s06-158m-mass-ea-static-evidence
+          path: /tmp/s06-mass-ea/
+          retention-days: 14

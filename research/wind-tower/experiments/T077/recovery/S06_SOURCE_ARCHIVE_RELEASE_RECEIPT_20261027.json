@@ -1,0 +1,29 @@
+{
+  "status": "DRAFT_RELEASE_ARCHIVE_ASSETS_VERIFIED",
+  "source_manifest_sha256": "dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8",
+  "release_url": "https://github.com/g2066203208-beep/voxel-frontier/releases/tag/untagged-5d55a3aa54c8a01b0862",
+  "draft": true,
+  "asset_count": 17,
+  "asset_names": [
+    "S06_ORIGINAL_16ZIP_ARCHIVE_VERIFICATION.json",
+    "U09p343881_ETM_S06_batchA_original_actions.zip",
+    "U09p343881_ETM_S06_batchB_original_actions.zip",
+    "U09p343881_ETM_S06_batchC_original_actions.zip",
+    "U09p343881_ETM_S06_batchD_original_actions.zip",
+    "U11p4_ETM_S04_batchA_original_actions.zip",
+    "U11p4_ETM_S04_batchB_original_actions.zip",
+    "U11p4_ETM_S04_batchC_original_actions.zip",
+    "U11p4_ETM_S04_batchD_original_actions.zip",
+    "U19p202140_ETM_S04_batchA_original_actions.zip",
+    "U19p202140_ETM_S04_batchB_original_actions.zip",
+    "U19p202140_ETM_S04_batchC_original_actions.zip",
+    "U19p202140_ETM_S04_batchD_original_actions.zip",
+    "U19p202140_ETM_S06_batchA_original_actions.zip",
+    "U19p202140_ETM_S06_batchB_original_actions.zip",
+    "U19p202140_ETM_S06_batchC_original_actions.zip",
+    "U19p202140_ETM_S06_batchD_original_actions.zip"
+  ],
+  "actions_run_id": "40537618197",
+  "source_level": "Actions source ZIPs; not original OpenFAST OUTB",
+  "S06_scientific_PASS": false
+}

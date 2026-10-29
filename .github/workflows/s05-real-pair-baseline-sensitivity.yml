@@ -1,0 +1,75 @@
+name: S05 CI.CLC REAL ground motion baseline/drift/QC sensitivity (NOT site PASS)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  baseline-real-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Fetch hash-locked REAL raw CI.CLC CSV pair, manifest and programs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          sha="$(gh api "repos/$GH_REPO/pulls/42" --jq .head.sha)"
+          base="https://raw.githubusercontent.com/$GH_REPO/$sha/research/wind-tower/experiments/T079"
+          mkdir -p real raw-py
+          curl -fLsS --retry 3 --output raw-py/s05_real_pair_baseline_sensitivity.py "$base/s05_real_pair_baseline_sensitivity.py"
+          curl -fLsS --retry 3 --output raw-py/s05_ground_motion_pair_qc.py "$base/s05_ground_motion_pair_qc.py"
+          root="$base/real-records/USGS_ci38457511/CI_CLC"
+          for file in manifest.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
+            curl -fLsS --retry 3 --output "real/$file" "$root/$file"
+          done
+          python -m py_compile raw-py/*.py
+          python raw-py/s05_real_pair_baseline_sensitivity.py --self-test
+          sha256sum real/* raw-py/*.py
+      - name: Process actual paired acceleration and run 5-percent-damped SDOF spectrum independently
+        run: |
+          set -euo pipefail
+          python raw-py/s05_real_pair_baseline_sensitivity.py --raw-dir real --output-dir "$RUNNER_TEMP/s05_derived"
+      - name: Research backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-ci-clc-baseline-sensitivity-not-design-pass
+          path: ${{ runner.temp }}/s05_derived/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Permanently commit REAL pilot processed files to PR Git tree (separate from immutable original)
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,hashlib,json,os,pathlib,subprocess,time
+          source=pathlib.Path(os.environ['RUNNER_TEMP'])/'s05_derived'
+          if not (source/'baseline_sensitivity_report.json').exists():raise RuntimeError('REAL_PAIR_PROCESSING_DID_NOT_SUCCEED')
+          repo=os.environ['GH_REPO']
+          branch='research/t080-seismic-integration-gates-20261022'
+          root='research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/processed'
+          for file in sorted(source.glob('*')):
+              if not file.is_file():continue
+              path=root+'/'+file.name;data=file.read_bytes()
+              gsha=hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()
+              for attempt in range(12):
+                  old=subprocess.run(['gh','api','--method','GET',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+                  if old.returncode==0:
+                      if json.loads(old.stdout)['sha']==gsha:
+                          print('VERIFIED_EXISTING_BASELINE_REPO_FILE',path);break
+                      raise RuntimeError('NO_OVERWRITE_UNDIAGNOSED_DERIVED_INPUT '+path)
+                  payload={'message':'research(S05): persist measured CI.CLC baseline/drift/spectrum sensitivity '+file.name,'branch':branch,'content':base64.b64encode(data).decode()}
+                  up=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
+                  if up.returncode==0:
+                      print('BASELINE_PILOT_REPO_COMMIT',path,hashlib.sha256(data).hexdigest(),json.loads(up.stdout)['commit']['sha']);break
+                  if '409' in up.stderr:
+                      time.sleep(2);continue
+                  raise RuntimeError('UPLOAD_ERROR '+up.stderr[:400])
+              else:raise RuntimeError('GIT_409_RETRIES_EXHAUSTED '+path)
+          PY

@@ -1,0 +1,48 @@
+name: S01 PT axial compatibility oracle (static only)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_pt_axial_compatibility_oracle.py'
+      - 'research/wind-tower/experiments/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S01_PT_AXIAL_SOURCE_META_20261026.json'
+      - '.github/workflows/s01-pt-axial-oracle.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  axial-oracle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify source-locked reduced-order PT calculation
+        run: |
+          cd research/wind-tower/experiments/T077/recovery
+          sha256sum S01_PT_AXIAL_31SEG_SOURCE_20261026.csv S01_PT_AXIAL_SOURCE_META_20261026.json
+          python s01_pt_axial_compatibility_oracle.py --out /tmp/s01_pt_axial_ci.csv
+          # Python 3.11 vs 3.13 can differ at the final floating-point digits.
+          # Lock SOURCE bytes, but compare derived numeric results with a predeclared absolute tolerance.
+          python - <<'PY'
+          import csv
+          with open('/tmp/s01_pt_axial_ci.csv', newline='') as f:
+              rows = list(csv.DictReader(f))
+          expected = [38.3622740343, 37.8157937286, 38.6300117193,
+                      38.1690174227, 38.5897978316, 38.1193523048]
+          assert len(rows) == len(expected) == 6
+          for row, target in zip(rows, expected):
+              actual = float(row['PT_after_equilibrium_MN'])
+              assert abs(actual-target) < 1e-6, (row['mode'],actual,target)
+          print('SIX-CASE NUMERIC REGRESSION PASS; tolerance 1e-6 MN')
+          PY
+          echo "STATIC ORACLE ONLY; NOT ABAQUS, NOT S01/S03 PHYSICAL PASS"
+      - name: Save static numeric output
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-pt-axial-oracle-static-only
+          path: /tmp/s01_pt_axial_ci.csv
+          retention-days: 14

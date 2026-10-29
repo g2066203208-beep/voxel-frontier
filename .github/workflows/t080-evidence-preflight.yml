@@ -1,0 +1,168 @@
+name: T080 seismic evidence preflight (metadata only)
+
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T057/**'
+      - 'research/wind-tower/experiments/T070/**'
+      - 'research/wind-tower/experiments/T077/**'
+      - 'research/wind-tower/experiments/T078/**'
+      - 'research/wind-tower/experiments/T079/KLEIN_2022_JOINT_BENDING_SHEAR_V1_V10_TABLE2.csv'
+      - 'research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py'
+      - 'research/wind-tower/experiments/T080/**'
+      - '.github/workflows/t080-evidence-preflight.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/wind-tower/experiments/T057/**'
+      - 'research/wind-tower/experiments/T070/**'
+      - 'research/wind-tower/experiments/T077/**'
+      - 'research/wind-tower/experiments/T078/**'
+      - 'research/wind-tower/experiments/T079/KLEIN_2022_JOINT_BENDING_SHEAR_V1_V10_TABLE2.csv'
+      - 'research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py'
+      - 'research/wind-tower/experiments/T080/**'
+      - '.github/workflows/t080-evidence-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    name: Static evidence consistency (never CAE scientific PASS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert registered inputs and declared HOLD
+        run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --self-test
+      - name: T080.34 synthetic six-component source-grid regression (not physics validation)
+        run: python -m unittest discover -s research/wind-tower/experiments/T080 -p 'test_t08034_history_preflight.py' -v
+      - name: T080.36 synthetic time-window regression (not physics validation)
+        run: python -m unittest discover -s research/wind-tower/experiments/T080 -p 'test_t08036_time_extent_gate.py' -v
+      - name: S06 source-level rainflow algorithm and published summary integrity (NOT material fatigue)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet numpy==2.3.5 pandas==2.2.3
+          python research/wind-tower/experiments/T077/recovery/s06_31gage_rainflow_load_screen.py --self-test
+          python - <<'PY'
+          import hashlib,pathlib
+          root=pathlib.Path('research/wind-tower/experiments/T077/recovery')
+          expected={
+            's06_31gage_rainflow_load_screen.py':'9149c6ef71424ed073b4233ac7082753b0dcd979ec31b795318570c5c5cdac34',
+            'S06_4CASE_6COMP_RAINFLOW_SCREEN_SUMMARY_20261027.csv':'d8f6dc4a3e34abe09a5c15e0adcdff99a6a4764f1b26245e624f1e7f19a4a499',
+          }
+          for filename,digest in expected.items():
+              got=hashlib.sha256((root/filename).read_bytes()).hexdigest()
+              assert got==digest,(filename,got,digest)
+          print('S06 rainflow synthetic oracle and published real-source 24-row summary SHA PASS; NOT full-history CI nor material fatigue PASS')
+          PY
+      - name: S06 committed 744-row rainflow and 24-row RMS-QC reproducibility (NOT material fatigue)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=research/wind-tower/experiments/T077/recovery
+          python "$ROOT/s06_qc_half_window_rms.py" \
+            --source "$ROOT/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv" \
+            --qc "$ROOT/S06_4CASE_6COMP_HALF_WINDOW_RMS_QC_20261027.csv"
+      - name: S02 T070 frozen-source and native-launcher availability preflight (NO SOLVER)
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOL="research/wind-tower/experiments/T070/run_t070_g0_datacheck.py"
+          INP="research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp"
+          python3 "$TOOL" --self-test
+          set +e
+          python3 "$TOOL" --inp "$INP" --out "$RUNNER_TEMP/s02_t070_preflight" --preflight-only > "$RUNNER_TEMP/s02_t070_preflight_stdout.json"
+          rc=$?
+          set -e
+          python3 - "$rc" <<'PY'
+          import json,os,pathlib,sys
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"s02_t070_preflight"/"S02_G0_EVIDENCE_MANIFEST.json"
+          d=json.loads(p.read_text(encoding="utf-8"))
+          rc=int(sys.argv[1])
+          assert d["source_sha256"]=="9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9"
+          assert d["mode"]=="Abaqus Data Check ONLY, no production RUN"
+          assert d["status"] in ("BLOCKED_NO_NATIVE_ABAQUS_EXECUTABLE","PREFLIGHT_ONLY_NOT_NATIVE_RUN")
+          assert rc==(3 if d["status"]=="BLOCKED_NO_NATIVE_ABAQUS_EXECUTABLE" else 0)
+          assert d["run_level"] in ("No native run; Abaqus executable not found","Native executable located, not invoked")
+          print(json.dumps({"status":d["status"],"source_sha256":d["source_sha256"],"runner_returncode":rc,"native_executable":d["native_executable"],"native_run":"NOT_RUN","S02_scientific_PASS":False}))
+          PY
+      - name: S01 original Klein 2022 Table 2 numerical reproducibility (NOT ABAQUS)
+        run: python research/wind-tower/experiments/T079/recompute_klein_2022_joint_bending_shear.py --out-json "$RUNNER_TEMP/klein2022_joint_table2_recalc.json"
+      - name: S06 real 30-joint gravity-source reproducibility (not section reconstruction)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=research/wind-tower/experiments
+          python "$ROOT/T077/recovery/s06_30_joint_gravity_ownership.py" \
+            --geometry "$ROOT/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv" \
+            --gravity "$ROOT/T074/T074_158M_31SEG_GRAVITY_BASELINE.csv" \
+            --output "$RUNNER_TEMP/s06_30_joint_recomputed.csv" \
+            --wrench-output "$RUNNER_TEMP/s06_30_wrench_recomputed.csv"
+          python - <<'PY'
+          import csv,hashlib,math,os,pathlib
+          root=pathlib.Path("research/wind-tower/experiments")
+          expected={
+            root/"T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv":"d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e",
+            root/"T074/T074_158M_31SEG_GRAVITY_BASELINE.csv":"b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349",
+          }
+          for path,sha in expected.items():
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==sha,(path,"SOURCE SHA mismatch")
+          published=root/"T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv"
+          recomputed=pathlib.Path(os.environ["RUNNER_TEMP"])/"s06_30_joint_recomputed.csv"
+          def load(path):
+              with path.open(newline="",encoding="utf-8") as f:return list(csv.DictReader(f))
+          a,b=load(published),load(recomputed)
+          assert len(a)==len(b)==30
+          for left,right in zip(a,b):
+              assert left.keys()==right.keys()
+              for k in left:
+                  try:
+                      x,y=float(left[k]),float(right[k])
+                  except ValueError:
+                      assert left[k]==right[k],k
+                  else:
+                      assert math.isclose(x,y,rel_tol=0,abs_tol=1e-7),(left["joint"],k,x,y)
+          # Six-component static wrench transport: compare every published field.
+          published_wrench=root/"T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv"
+          calculated_wrench=pathlib.Path(os.environ["RUNNER_TEMP"])/"s06_30_wrench_recomputed.csv"
+          a,b=load(published_wrench),load(calculated_wrench)
+          assert len(a)==len(b)==30
+          for left,right in zip(a,b):
+              assert left.keys()==right.keys()
+              for k in left:
+                  try: x,y=float(left[k]),float(right[k])
+                  except ValueError: assert left[k]==right[k],k
+                  else: assert math.isclose(x,y,rel_tol=0,abs_tol=1e-7),(left["joint"],k,x,y)
+              for k in ("delta_Fx_kN","delta_Fy_kN","delta_Mx_at_below_kNm",
+                        "delta_My_at_below_kNm","delta_Mz_at_below_kNm"):
+                  assert abs(float(left[k]))<1e-8,(left["joint"],k)
+              assert left["frame_policy"]=="STATIC_COMMON_FRAME_ASSUMED"
+          my=[float(x["My_below_raw_kNm"]) for x in a]
+          assert max(my)-min(my)<1e-8
+          assert abs(my[0]+5793.573173694369)<1e-8
+          print("S06: 30/30 true-joint geometry/gravity source-level numerical roundtrip PASS; NOT contact or native PASS")
+          print("S06: 30/30 static six-component gage wrench transport + synthetic shear/moment oracle PASS; My=-5793.573173694369 kNm constant; dynamic frame/inertia still HOLD")
+          PY
+      - name: S10 frozen T057 actual 68-Part/Instance/Elset mapping (NO ODB)
+        run: python research/wind-tower/experiments/T077/recovery/s10_t057_native_metadata_gate.py --self-test
+      - name: Write traceable preflight report
+        run: python research/wind-tower/experiments/T080/t080_evidence_preflight.py --out "$RUNNER_TEMP/t080-preflight.json"
+      - name: Preserve metadata report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: t080-static-evidence-report
+          path: |
+            ${{ runner.temp }}/t080-preflight.json
+            ${{ runner.temp }}/klein2022_joint_table2_recalc.json
+            ${{ runner.temp }}/s02_t070_preflight/S02_G0_EVIDENCE_MANIFEST.json
+            ${{ runner.temp }}/s02_t070_preflight_stdout.json
+          if-no-files-found: warn

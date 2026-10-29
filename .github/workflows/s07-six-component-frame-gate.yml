@@ -1,0 +1,253 @@
+name: S07 six-component frame/point gate (algebra only, NOT Abaqus load)
+on:
+  push:
+    paths:
+      - '.github/workflows/s07-six-component-frame-gate.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s07_v353_fixed_base_native_frame.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv'
+      - 'research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  s07-frame-algebra-source-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch only two SHA-pinned public source files (avoid 2.2GB checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/wind-tower/experiments/T077/recovery
+          cd research/wind-tower/experiments/T077/recovery
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery"
+          curl --fail --location --silent --show-error --retry 3 --output s07_six_component_frame_gate.py "$base/s07_six_component_frame_gate.py"
+          curl --fail --location --silent --show-error --retry 3 --output S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv "$base/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv"
+      - name: Synthetic 6D transport + 30 real historical static rows + tamper rejection
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          python3 -m py_compile s07_six_component_frame_gate.py
+          python3 s07_six_component_frame_gate.py --self-test \
+            --static-source S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv
+          python3 - <<'PY'
+          import importlib.util
+          import tempfile
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('s07', 's07_six_component_frame_gate.py')
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          src=Path('S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv')
+          with tempfile.TemporaryDirectory() as d:
+              bad=Path(d)/'tampered.csv'
+              data=bytearray(src.read_bytes())
+              pos=data.find(b'642.794741544')
+              assert pos>=0
+              data[pos]=ord('9')
+              bad.write_bytes(data)
+              try: mod.static_source_regression(bad)
+              except ValueError as e: assert 'SHA mismatch' in str(e), str(e)
+              else: raise AssertionError('tampered real static source accepted')
+          print('PASS: original 30/30 rows and SHA-locked negative test')
+          PY
+          sha256sum s07_six_component_frame_gate.py \
+            S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv
+          echo 'S07: FRAME ALGEBRA + REAL STATIC REGRESSION ONLY. NO DYNAMIC OUTB, INERTIA OWNER, ABAQUS LOAD OR PHYSICS PASS.'
+
+      - name: Source-lock recovered four-case 31-gage six-component CSV frame-readiness (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s07-31-source
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-31-source/manifest.csv \
+            "$base/research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-31-source/t071.yml \
+            "$base/.github/workflows/t071-rerun-s06-31seg.yml"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-31-source/t072.yml \
+            "$base/.github/workflows/t072-rerun-control-31seg.yml"
+          python3 research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py \
+            --source-31-manifest s07-31-source/manifest.csv \
+            --t071-workflow s07-31-source/t071.yml \
+            --t072-workflow s07-31-source/t072.yml \
+            --source-31-receipt s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json')
+          r=json.loads(p.read_text())
+          assert r['TAB']['case_gage_series']==124
+          assert r['TAB']['total_six_component_time_rows']==1488124
+          assert r['TAB']['extracted_dynamic_RP_orientation_channels']==0
+          assert r['TAB']['global_wrench_export_rows']==0
+          assert r['RUN']['negative_tests_passed']==4
+          assert 'HOLD' in r['stage']
+          print('PASS source-locked 16 original artifact entries, 124 series, 1,488,124 source rows; no RP/DCM; no Abaqus export')
+          PY
+          sha256sum s07-31-source/*
+
+      - name: Check actual T071/T072 artifact inventory and RP/TP source retention
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          curl --fail --location --silent --show-error --retry 3 --output s07-31-source/nine.json "$base/research/wind-tower/experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json"
+          gh api "repos/${{ github.repository }}/actions/runs/37582521146/artifacts?per_page=100" > s07-31-source/actions071.json
+          gh api "repos/${{ github.repository }}/actions/runs/37622366681/artifacts?per_page=100" > s07-31-source/actions072.json
+          python3 research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py \
+            --source-31-manifest s07-31-source/manifest.csv \
+            --t071-workflow s07-31-source/t071.yml \
+            --t072-workflow s07-31-source/t072.yml \
+            --nine-gage-source-receipt s07-31-source/nine.json \
+            --actions071-json s07-31-source/actions071.json \
+            --actions072-json s07-31-source/actions072.json \
+            --source-31-receipt s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json').read_text())
+          r=x['archival_recovery']
+          assert r['artifacts_matched']==16 and r['retained_synchronous_RP_TP_rows']==0
+          assert r['original_31gage_OUTB_RP_TP_expected_from_unchanged_OutList']
+          assert r['negative_tests_passed']==3 and x['RUN']['negative_tests_passed']==7
+          assert x['TAB']['global_wrench_export_rows']==0
+          print('PASS: original 31-gage OUTB expected RP/TP but not archived; no global loads')
+          PY
+          sha256sum s07-31-source/actions*.json s07-31-source/nine.json s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          echo 'No native OpenFAST/Abaqus run; only source/archive tests.'
+
+      - name: Verify ORIGINAL OpenFAST v3.5.3 RP and tower-section ownership source against REAL T062 OUTB receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          curl --fail --location --silent --show-error --retry 3 --output ElastoDyn_v353_OFFICIAL.f90 \
+            https://raw.githubusercontent.com/OpenFAST/openfast/v3.5.3/modules/elastodyn/src/ElastoDyn.f90
+          curl --fail --location --silent --show-error --retry 3 --output T062_original_receipt.json \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json"
+          python3 s07_six_component_frame_gate.py \
+            --official-v353-source ElastoDyn_v353_OFFICIAL.f90 \
+            --outb-receipt T062_original_receipt.json \
+            --contract-json s07_source_contract_result.json
+          python3 - <<'PY'
+          import importlib.util, json, tempfile
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('s07','s07_six_component_frame_gate.py')
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          src=Path('ElastoDyn_v353_OFFICIAL.f90')
+          rec=Path('T062_original_receipt.json')
+          x=m.v353_original_source_contract(src,rec)
+          assert x['verified_gages']==9 and x['verified_native_channels']==135
+          assert abs(x['first_sample_axial_delta_gage9_minus_gage1_kN']-474.110630289)<1e-7
+          with tempfile.TemporaryDirectory() as d:
+              p=Path(d)/'bad.f90';p.write_bytes(src.read_bytes()+b' ')
+              try: m.v353_original_source_contract(p,rec)
+              except ValueError as e: assert 'SHA mismatch' in str(e)
+              else: raise AssertionError('changed official source was accepted')
+              q=Path(d)/'bad.json';data=json.loads(rec.read_text())
+              data['full_synchronous_native_series']['native_channel_summary']['TwHt1RPxi']['unit']='(rad)'
+              q.write_text(json.dumps(data))
+              try: m.v353_original_source_contract(src,q)
+              except ValueError as e: assert 'unit' in str(e)
+              else: raise AssertionError('incorrect RP unit accepted')
+          print('PASS original v3.5.3 SHA/source contract + 9x15 native channel values + two negative tests')
+          PY
+          sha256sum ElastoDyn_v353_OFFICIAL.f90 T062_original_receipt.json s07_source_contract_result.json
+          echo 'NO EXACT DCM, NO EXTERNAL LOAD EXPORT, NO ABAQUS/OPENFAST/SEISMIC RUN.'
+
+      - name: Verify source-derived fixed-base tower DCM on ORIGINAL 12001x9 OUTB
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s07-native
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/s07_v353_fixed_base_native_frame.py \
+            "$base/research/wind-tower/experiments/T077/recovery/s07_v353_fixed_base_native_frame.py"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/s06_historical_outb_source_gate.py \
+            "$base/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/static-part-001.zip \
+            "$base/research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/dynamic-part-001.zip \
+            "$base/research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/ElastoDyn.f90 \
+            "https://raw.githubusercontent.com/OpenFAST/openfast/v3.5.3/modules/elastodyn/src/ElastoDyn.f90"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output s07-native/NWTC_Num.f90 \
+            "https://raw.githubusercontent.com/OpenFAST/openfast/v3.5.3/modules/nwtc-library/src/NWTC_Num.f90"
+          python3 -m py_compile s07-native/s07_v353_fixed_base_native_frame.py
+          python3 s07-native/s07_v353_fixed_base_native_frame.py --self-test
+          python3 s07-native/s07_v353_fixed_base_native_frame.py \
+            --static-zip s07-native/static-part-001.zip \
+            --dynamic-zip s07-native/dynamic-part-001.zip \
+            --elastodyn-source s07-native/ElastoDyn.f90 \
+            --nwtc-source s07-native/NWTC_Num.f90 \
+            --parser s07-native/s06_historical_outb_source_gate.py \
+            --output s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          sha256sum s07-native/s07_v353_fixed_base_native_frame.py \
+            s07-native/ElastoDyn.f90 s07-native/NWTC_Num.f90 \
+            s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          echo 'S07 conditional fixed-base DCM gate only: 9 near-base internal section resultants, NOT Abaqus external loads.'
+      - name: Retain S07 original full-series orientation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-v353-fixed-base-frame-12001x9
+          path: s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          retention-days: 14
+
+      - name: Retain S07 31-gage source-readiness receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-31gage-source-readiness-not-global-load
+          path: s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Persist exact full-series receipt in Draft PR branch (no merge)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/research/t080-seismic-integration-gates-20261022'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          receipt=s07-native/S07_V353_FIXED_BASE_FRAME_RECEIPT.json
+          test -s "$receipt"
+          sha256sum "$receipt"
+          encoded="$(base64 -w0 "$receipt")"
+          endpoint="repos/${{ github.repository }}/contents/research/wind-tower/experiments/T077/recovery/S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json"
+          existing_sha="$(gh api "$endpoint?ref=research/t080-seismic-integration-gates-20261022" --jq '.sha' 2>/dev/null || true)"
+          args=(--method PUT "$endpoint" \
+            -f message="data(S07): preserve source-verified 12001x9 fixed-base DCM receipt" \
+            -f content="$encoded" \
+            -f branch="research/t080-seismic-integration-gates-20261022")
+          if [[ -n "$existing_sha" ]]; then args+=(-f "sha=$existing_sha"); fi
+          gh api "${args[@]}" > s07-native/github_commit_response.json
+          jq -r '.commit.sha, .content.sha' s07-native/github_commit_response.json
+          echo 'Exact CI receipt committed to Draft PR branch; not a physics PASS.'
+
+          # Also preserve the 31-gage missing-DCM finding as a durable source
+          # receipt, not just an expiring CI artifact.
+          receipt31=s07-31-source/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json
+          test -s "$receipt31"
+          endpoint31="repos/${{ github.repository }}/contents/research/wind-tower/experiments/T077/recovery/S07_31GAGE_FRAME_INPUT_READINESS_20261029.json"
+          sha31="$(gh api "$endpoint31?ref=research/t080-seismic-integration-gates-20261022" --jq '.sha' 2>/dev/null || true)"
+          args31=(--method PUT "$endpoint31" \
+            -f message="data(S07): preserve 31-gage source-readiness and missing dynamic DCM HOLD" \
+            -f content="$(base64 -w0 "$receipt31")" \
+            -f branch="research/t080-seismic-integration-gates-20261022")
+          if [[ -n "$sha31" ]]; then args31+=(-f "sha=$sha31"); fi
+          gh api "${args31[@]}" | jq -r '.commit.sha, .content.sha'
+          echo 'Source readiness receipt saved to Draft PR branch; NOT a six-component external-load map.'
+

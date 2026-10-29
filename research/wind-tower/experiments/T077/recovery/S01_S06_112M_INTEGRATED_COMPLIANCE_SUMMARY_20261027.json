@@ -1,0 +1,26 @@
+{
+  "axial_compliance_change_pct": -10.151916872271904,
+  "concrete_CG_shift_m": -0.6312126116551511,
+  "concrete_height_m": 112.0,
+  "d400_concrete_CG_y_m": 52.46965304572589,
+  "d400_concrete_contribution_tip_deflection_1MN_m": 0.9134558090746201,
+  "d400_displaced_concrete_mass_kg": 1795102.8862315328,
+  "evidence_class": "STATIC_ELASTIC_CONCRETE_PART_PROXY_NOT_SOLVER",
+  "limitations": "No 46m steel tower, RNA, PT, hoops/ties, joints, foundation, geometric/material nonlinearity or native dynamics. Not a total 158m deflection or frequency prediction.",
+  "mass_change_pct": 3.6507151220990686,
+  "omitted_gap_length_m": 0.06100000000000705,
+  "openfast_concrete_CG_y_m": 53.10086565738104,
+  "openfast_concrete_contribution_tip_deflection_1MN_m": 1.0362557230461322,
+  "openfast_concrete_mass_kg": 1731876.991024063,
+  "represented_length_m": 111.939,
+  "rotation_compliance_change_pct": -9.496375516159194,
+  "source_sha256": {
+    "S01_D400_VS_FORMAL_158M_OPENFAST_31SEG_20261026.csv": "910d427e3fba650b2f42a24c5f68943ff1361a7cd12b5a42210cbd684b55fc4f",
+    "S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv": "8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed",
+    "S06_158M_TOWER_MASS_EA_31SEG_20261026.csv": "91d04216cee208627ff206300098a5c88cfb2c4e5c63defe5a8cc4856d09e84a"
+  },
+  "tip_compliance_change_pct": -11.85034844589663,
+  "tower_top_height_m": 158.0,
+  "underlying_70station_tower_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+  "underlying_d400_inp_sha256": "22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a"
+}

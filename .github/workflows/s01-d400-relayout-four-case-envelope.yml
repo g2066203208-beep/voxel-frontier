@@ -1,0 +1,85 @@
+name: S01 D400 Relayout Four-Case Full History Screen (Not Abaqus)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_four_case_envelope.py'
+      - '.github/workflows/s01-d400-relayout-four-case-envelope.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_four_case_envelope.py'
+      - '.github/workflows/s01-d400-relayout-four-case-envelope.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  screen-four-real-histories:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install sectional-screen dependencies
+        run: python -m pip install --disable-pip-version-check numpy pandas
+      - name: Reconstruct exact 31-segment D400 straight-bar geometry (not an INP)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/wind-tower/experiments/T077/recovery/s01_d400_d500_straight_t3d2_exact.py \
+            --inp research/wind-tower/experiments/T057/inputs/BASE001_T057_EVIDENCE_RECONCILED_HRB335_Q345_PTBF8_CONTACT_RNA_R2.inp \
+            --outdir "$RUNNER_TEMP/s01_geometry"
+      - name: Recover and SHA-check the 16 original T071/T072 Actions artifact ZIPs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s01_source_zips"
+          MANIFEST="research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv"
+          while IFS=, read -r case batch run_id artifact_id zip_sha gzip_sha csv_sha nrows; do
+            if [[ "$case" == "case" ]]; then continue; fi
+            out="$RUNNER_TEMP/s01_source_zips/${case}-${batch}.zip"
+            curl --fail --location --silent --show-error --retry 2 --retry-delay 1 \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -o "$out" \
+              "https://api.github.com/repos/g2066203208-beep/voxel-frontier/actions/artifacts/${artifact_id}/zip"
+            printf '%s  %s\n' "$zip_sha" "$out" | sha256sum --check --status
+            echo "Verified original archived ZIP: ${case}/${batch} artifact=${artifact_id}"
+          done < "$MANIFEST"
+      - name: Re-envelope D400 before/after relayout on all four real synchronous histories
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/wind-tower/experiments/T077/recovery/s01_d400_relayout_four_case_envelope.py \
+            --zip-dir "$RUNNER_TEMP/s01_source_zips" \
+            --geometry "$RUNNER_TEMP/s01_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_GEOMETRY.csv" \
+            --outdir "$RUNNER_TEMP/s01_full_envelope" \
+            | tee "$RUNNER_TEMP/s01_full_envelope_stdout.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["RUNNER_TEMP"]) / "s01_full_envelope" / "S01_D400_RELAYOUT_4CASE_31SEG_FULL_ENVELOPE_MANIFEST.json"
+          m = json.loads(p.read_text(encoding="utf-8"))
+          assert m["rows"] == 31 and m["history_records"] == 1488124
+          assert m["old_envelope_regression_max_abs_u"] < 1e-6
+          assert m["Abaqus_native"] == "NOT_RUN" and m["new_INP"] is False
+          print("FOUR-CASE D400 SECTIONAL SCREEN REPLAY COMPLETE (NO NATIVE/COMPLIANCE PASS)")
+          PY
+      - name: Archive verified full-history sectional result and input SHA manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-d400-relayout-four-case-full-envelope-not-abaqus
+          path: |
+            ${{ runner.temp }}/s01_full_envelope_stdout.json
+            ${{ runner.temp }}/s01_full_envelope/S01_D400_RELAYOUT_4CASE_31SEG_FULL_ENVELOPE.csv
+            ${{ runner.temp }}/s01_full_envelope/S01_D400_RELAYOUT_4CASE_31SEG_FULL_ENVELOPE_MANIFEST.json
+            ${{ runner.temp }}/s01_geometry/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json
+          if-no-files-found: warn
+          retention-days: 14

@@ -43,3 +43,7 @@
 - `open-access/MANIFEST.tsv`
 - `user-provided/MANIFEST.tsv`
 为准。
+## 2026-10-28｜S05地震全文原件保存与版权分层
+- 可依法按原许可非商业研究分享的原文放在 `open-access/`：`Wang_2026_RCS_5_2_47_64.pdf`（CC BY 4.0）、`Meng_2020_RenewableEnergy_AAM.pdf`（CC BY-NC-ND 4.0，作者接受稿，不得商用或修改）、`Ali_2021_SDEE_106483_AAM.pdf`（CC BY-NC-ND 4.0，作者接受稿，不得商用或修改）。**请勿将此repo中的CC BY-NC-ND文档用于商业发布或制作改写版本**。见 `open-access/MANIFEST.tsv` L090–L092与 `open-access-sources.tsv`。
+- Ishihara2024 `10.1016/j.istruc.2024.105886` 17页作者公开期刊版首末页注明 All rights reserved；真实下载核验SHA256 `3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238` 后，保存到此仓库仅写权限成员可访问的[Draft研究Release](https://github.com/g2066203208-beep/voxel-frontier/releases/tag/untagged-7b6802946d49c37edf96)，**不要发布该Release或把其全文提交公共Git目录**。这不是Actions暂存。
+- 当前还有4篇地震核心论文未取得原PDF，详见`../experiments/T079/S05_SEISMIC_FULLTEXT_DOWNLOAD_RECEIPT_20261028.json`；有DOI不等于有全文。继续取得授权版本后再更新原件清单/全文方法页码。

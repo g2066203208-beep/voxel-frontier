@@ -1,6 +1,10 @@
 # 风机论文工作室 — START HERE
 
-## 2026-10-21 新增地震范围与正式记录入口
+> [!IMPORTANT]
+> **论文每次写入前必读：[最新进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)**
+> 先读当前快照、已完成成果和最近交接，再改正文、模型、脚本或任务书；写后登记实物、状态变化和下一责任人。活动研究在 PR #42 分支，main 上的旧状态不能代替研究进度。此入口不表示研究结果已合并或 Pages 已更新。
+
+## 2026-10-21 范围变更历史（当前进度见指挥室）
 
 用户已要求在嘉鱼研究基础上增加抗震验算与风震研究，并要求全程GitHub记录。当前入口：[T079](experiments/T079/README.md)。
 
@@ -10,19 +14,18 @@ GitHub为任务、过程、依据、状态和验收入口；D盘为工程工作�
 
 > 原六章基线记录日期：2026-10-07；新增范围见上方2026-10-21记录
 > 当前论文主线：**DTU 10 MW参考风机 + 158 m预应力混凝土—钢混合塔架 → 场址长期风/整机随机载荷 → 局部材料疲劳**。  
-> 当前正式结构：**六章制**。  
+> 2026-10-07仓库重构结构：**六章制**；原稿及新增地震的当前关系见指挥室。  
 > Simpack生产路线和旧七章路线已退出；当前保留一个由Ch4真实疲劳结果驱动的Ch5结构优化章。
 
-## 1. 只看这四个入口
+## 1. 每次开工先看同一个入口
 
-1. **论文当前状态**：`manuscript/final-thesis/00_STATUS.md`
-2. **论文唯一总控**：`manuscript/final-thesis/00_WORKSPACE_MASTER.md`
-3. **当前Abaqus模型**：`governance/CURRENT_ABAQUS_MODEL_20261006.md`
-4. **文献主表**：`registry/literature_master.tsv`
+1. **[指挥室：必读顺序、当前快照、最近交接](governance/COMMAND_ROOM.md#read-before-write)**。
+2. 指挥室中的**[已完成成果](governance/COMMAND_ROOM.md#completed-evidence)**，明确本次继承什么、只补什么。
+3. [云端/本机任务书](governance/WEB_GPT_ACTIONS_DISPATCH_20261029.md)和本任务相关最新实验日志/原始结果。
 
-如果某个旧audit、workflow或历史报告与以上四个入口冲突，以上四个入口优先。
+`00_STATUS.md`保留带日期的章节进展；`00_WORKSPACE_MASTER.md`负责科学问题和章节装配；模型治理与registry提供输入/原始证据。它们不另行定义一套当前调度。旧的“唯一下一步”按发生日期理解，更新后必须在指挥室交接。
 
-## 2. 当前六章
+## 2. 后期六章重构工作稿
 
 - 第1章：绪论
 - 第2章：10 MW预应力混凝土—钢混合塔架精细有限元模型建立与分层验证
@@ -31,10 +34,7 @@ GitHub为任务、过程、依据、状态和验收入口；D盘为工程工作�
 - 第5章：疲劳控制参数敏感性与结构优化
 - 第6章：结论与展望
 
-正式正文只在：
-`manuscript/final-thesis/chapters/`
-
-该目录现在只允许出现这6章。
+仓库重构工作稿位于 `manuscript/final-thesis/chapters/`。用户原七章Word及已有图表/结果是研究历史来源，位置和hash见[原稿索引](governance/COMMAND_ROOM.md#thesis-scope)。新增地震的章节装配依T079最新方法计划与真实结果推进，不能把重构稿TBD视为原论文全部进度，也不能靠改章数宣称研究完成。
 
 ## 3. 目录职责
 
@@ -105,7 +105,7 @@ T070 native Data Check → Gravity/PT/contact平衡 → mass/CG/J → Modal → 
 
 ## 7. 历史资料规则
 
-`audit/`和`archive/`保存研究过程，不是当前事实源。
+`audit/`和`archive/`保存带版本的研究证据。它们不决定当前调度，但其中真实原生结果仍可按模型/数据身份继承，不能整体视为无效。
 
 规则：
 - 旧文件不因文件名含FINAL/VALIDATED就自动有效；
@@ -113,12 +113,8 @@ T070 native Data Check → Gravity/PT/contact平衡 → mass/CG/J → Modal → 
 - T026/T038等大型历史实验不删除，因为需要保留科研可追溯性；
 - 活动实验以`experiments/README.md`的状态表为准；
 - 当前模型状态以`governance/`为准；
-- 当前论文状态以`manuscript/final-thesis/00_STATUS.md`为准。
+- 当前调度与完成摘要以指挥室为入口；章节历史在`manuscript/final-thesis/00_STATUS.md`，结论须回指真实证据。
 
-## 8. 下一步
+## 8. 下一步只在指挥室维护
 
-当前优先级仍然不是立即跑优化，而是先关闭第二章计算门禁；Ch5只有在Ch4控制机理闭合后才启动：
-
-**T070 native Abaqus Data Check → Gravity/PT/contact equilibrium → mass/CG/J → Modal/Flex → 钢塔C3D8I局部网格整改与收敛。**
-
-随后进入第三章正式数据闭合与第四章材料疲劳生产；第四章确定控制材料/位置后，再进入第五章敏感性与优化。
+打开[当前进度](governance/COMMAND_ROOM.md#current-progress)和[最近交接](governance/COMMAND_ROOM.md#handoff-log)，按责任方领取已登记增量任务。已完成计算不重新派发；新模型只复核受改动影响的部分，新增地震另按现行方案推进。
