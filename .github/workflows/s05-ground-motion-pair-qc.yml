@@ -8,6 +8,8 @@ on:
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_EVENT_BALANCE_20261029.csv'
       - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
+      - 'research/wind-tower/experiments/T079/s08_si_motion_diagnostics.py'
+      - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_ARIAS_HUSID_3COMP_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv'
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
@@ -301,6 +303,32 @@ jobs:
           print('REAL_ESM_S08_32040_ROW_3_COMPONENT_SI_SOURCE_LOCK_AND_12_INDEPENDENT_SAMPLES_PASS')
           print('S08_HANDOFF_SHA256',rec['csv_sha256'])
           print('S08_SITE_SPECTRUM_AND_NATIVE_HOLD')
+          PY
+      - name: REAL S08 three-component Arias and Husid diagnostic regression (NOT design PASS)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s08_si_motion_diagnostics.py "$base/s08_si_motion_diagnostics.py"
+          curl -fLsS --retry 3 -o esm-public-processed/committed_s08_arias_husid.csv "$base/real-records/S08_ESM_IT2012_NVL_ARIAS_HUSID_3COMP_20261029.csv"
+          echo "7c083e2a07453bd2d6e17181239287873b2b92eaf2fc7d4625f9dc787eb0ab7a  s08_si_motion_diagnostics.py" | sha256sum -c -
+          echo "d5df379ff81cfd8aac061f2b7738c54effb952c106b5149ca2d03244c5963f30  esm-public-processed/committed_s08_arias_husid.csv" | sha256sum -c -
+          python3 -m py_compile s08_si_motion_diagnostics.py
+          python3 s08_si_motion_diagnostics.py esm-public-processed/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv | tee esm-public-processed/s08_arias_husid.stdout
+          tail -n +2 esm-public-processed/s08_arias_husid.stdout > esm-public-processed/s08_arias_husid.json
+          python3 - <<'PY'
+          import csv,json,math
+          j=json.load(open('esm-public-processed/s08_arias_husid.json'))
+          with open('esm-public-processed/committed_s08_arias_husid.csv',newline='') as f: rows=list(csv.DictReader(f))
+          assert j['samples']==32040 and j['abaqus_run']==0 and not j['physical_pass'] and not j['target_spectrum_pass']
+          assert len(rows)==3 and set(j['channels'])=={r['component'] for r in rows}
+          keys=('pga_m_s2','arias_intensity_m_s','t5_s','t95_s','d595_s','raw_terminal_velocity_m_s','raw_terminal_displacement_m','mean_corrected_terminal_displacement_m')
+          for row in rows:
+              actual=j['channels'][row['component']]
+              for key in keys:
+                  assert math.isclose(float(row[key]),actual[key],rel_tol=2e-12,abs_tol=1e-12),(row['component'],key)
+          print('REAL_S08_3COMP_ARIAS_HUSID_24_NUMERIC_CROSSCHECK_PASS_NOT_DESIGN_OR_NATIVE_PASS')
           PY
       - name: Real ESM processed low-frequency numerical triage (NOT SNR/design PASS)
         if: success()
