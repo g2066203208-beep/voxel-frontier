@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/s07-six-component-frame-gate.yml'
       - 'research/wind-tower/experiments/T077/recovery/s07_six_component_frame_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s07_v353_fixed_base_native_frame.py'
       - 'research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv'
       - 'research/wind-tower/experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv'
@@ -55,6 +56,19 @@ jobs:
           sha256sum s07_six_component_frame_gate.py \
             S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv
           echo 'S07: FRAME ALGEBRA + REAL STATIC REGRESSION ONLY. NO DYNAMIC OUTB, INERTIA OWNER, ABAQUS LOAD OR PHYSICS PASS.'
+
+      - name: S07 synchronized RP/TP + AL/FL/ML extractor synthetic regression (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery"
+          curl --fail --location --silent --show-error --retry 3 \
+            --output research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py \
+            "$base/s07_minimal_rptp_capture_gate.py"
+          python3 -m py_compile research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py
+          python3 research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py --self-test
+          sha256sum research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py
+          echo 'S07 paired extraction tested on synthetic channels only; original 31-gage OUTB and native DCM/owner remain HOLD.'
 
       - name: Source-lock recovered four-case 31-gage six-component CSV frame-readiness (NO solver)
         shell: bash
