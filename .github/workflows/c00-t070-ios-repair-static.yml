@@ -1,0 +1,53 @@
+name: C00 T070 IOS repair static child (NO ABAQUS)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T070/repair-20261029/**'
+      - '.github/workflows/c00-t070-ios-repair-static.yml'
+  pull_request:
+    paths:
+      - 'research/wind-tower/experiments/T070/repair-20261029/**'
+      - '.github/workflows/c00-t070-ios-repair-static.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  generate-locked-child:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Synthetic known solution and negative tests (not Abaqus)
+        run: |
+          python3 -m py_compile research/wind-tower/experiments/T070/repair-20261029/c00_relocate_t070_ios.py
+          python3 research/wind-tower/experiments/T070/repair-20261029/c00_relocate_t070_ios.py --self-test
+      - name: Check original exact bytes and generate only child
+        shell: bash
+        run: |
+          set -euo pipefail
+          p=research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp
+          out=research/wind-tower/experiments/T070/repair-20261029/output
+          test -s "$p"
+          echo "9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9  $p" | sha256sum -c -
+          python3 research/wind-tower/experiments/T070/repair-20261029/c00_relocate_t070_ios.py --parent "$p" --outdir "$out"
+          sha256sum "$out"/*
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T070/repair-20261029/output/C00_IOS_REPAIR_MANIFEST.json')
+          x=json.loads(p.read_text())
+          assert x['parent_bytes']==16587215, x
+          assert x['child_bytes']==x['parent_bytes']
+          assert x['exact_inverse_pass'] and x['assembly_level_static_check']
+          assert x['native_datacheck']=='NOT_RUN_ON_CHILD'
+          assert len(x['moved_sections'])==3
+          print('C00_REAL_INPUT_STATIC_IDENTITY_PASS',x['child_sha256'])
+          PY
+      - name: Upload generated child, diff, manifest for local L01 (NOT native pass)
+        uses: actions/upload-artifact@v4
+        with:
+          name: C00_T070_IOS_CHILD_STATIC_ONLY
+          path: research/wind-tower/experiments/T070/repair-20261029/output/
+          if-no-files-found: error
+          retention-days: 30
