@@ -4,6 +4,10 @@
 > **每次写入前先读[指挥室当前快照与最近交接](../../governance/COMMAND_ROOM.md#read-before-write)。** 本文件保留各日期的章节/实验进展，后续回填可能覆盖前段旧状态；不以任一旧“唯一下一动作”派工。当前调度只在指挥室维护。
 > 已完成前期成果见[证据索引](../../governance/COMMAND_ROOM.md#completed-evidence)。下文“尚未计算/无原生/0次”等必须按日期、模型、工况理解，不能据此否定原七章Word和历史结果。新增地震也不能被旧章节安排排除。
 
+## 2026-10-30 00时｜S07同步15通道诊断提取与T062真实9站字段身份交叉核验（独立准备）
+
+继承四工况31段1,488,124行六分量、历史T062真实9站OUTB通道收据及原S07 RP/TP提取器。直接解析T062原生OUTB派生收据，核对9站×15通道=**135/135通道单位**、每站12001点、100–700s/0.05s；原9站TPzi高度跨度仅2.680356759m，**不等于158m全塔31站**。在[既有S07提取器](../../experiments/T077/recovery/s07_minimal_rptp_capture_gate.py)新增同刻RP/TP、AL、FL/ML诊断导出、源OUTB SHA守卫、负例测试及[既有S07 CI](../../../.github/workflows/s07-six-component-frame-gate.yml)回归步骤。脚本SHA256=`aeae86cc903a5ef9471e9369e16d0ddb47b5f648a0dc4c83802d48c8976d543b`；[SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-00时s07同步rptpalflml一体化只读提取器真实历史源字段验证非新风场run)。**本轮仅实际运行了真实JSON的独立135字段交叉检查，尚无新Python CI成功日志或原31站OUTB字节**；无新风载/地震/Abaqus生产RUN、无外载/材料寿命PASS。S07=`PAIRED_CAPTURE_CODE_PREPARED / REAL_31GAGE_OUTB_HOLD`；整阶段**0/12未晋级**，S10疲劳及S11优化主线不变。
+
 ## 2026-10-29 19时｜S10真实载荷级DEL身份核验与分材料应力雨流接口（独立准备，不是材料寿命）
 
 直接读取T077已恢复744行（4工况×31段×6通道）载荷级雨流/DEL表，源SHA256 `9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`；各工况186行，12001点/段、dt0.05s、600s，雨流全/半循环及幅值统计通过数据身份检查。实际最大My载荷DEL为U11p4_ETM_S04/CSEG01 **94,836.550376 kN·m**（m=4、Nref=1Hz）；这不是材料应力幅或20年寿命。新增[标准库可执行S10材料雨流接口](../../experiments/T077/recovery/s10_material_cycle_contract.py)、[真实744行结果收据](../../experiments/T077/recovery/S10_4CASE_LOAD_SCREEN_SOURCE_RECEIPT_20261029.json)与[完整SOURCE/RUN/误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-29-19时s10载荷筛选到分材料局部应力循环接口新增独立可执行资产)。Python本地合成解析及拒绝测试PASS；真实744行源直接独立解析；GitHub Actions真实run日志尚未回读，故CI_PENDING。局部混凝土/钢筋/PT/钢塔应力时程、材料S–N和长期风速bin尚未验收，**S10 METHODS_PREPARED / MATERIAL_LIFE_HOLD**；12阶段**0/12未晋级**，S08/S09地震原生0，S11优化不伪造结论。冻结T057/T070不改，PR #42继续Draft。
