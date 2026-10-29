@@ -67,6 +67,13 @@ jobs:
             "$base/s07_minimal_rptp_capture_gate.py"
           python3 -m py_compile research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py
           python3 research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py --self-test
+          mkdir -p research/wind-tower/experiments/T062
+          curl --fail --location --silent --show-error --retry 3 \
+            --output research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json"
+          python3 research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py \
+            --t062-receipt research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json
+          sha256sum research/wind-tower/experiments/T062/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json
           sha256sum research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py
           echo 'S07 paired extraction tested on synthetic channels only; original 31-gage OUTB and native DCM/owner remain HOLD.'
 
