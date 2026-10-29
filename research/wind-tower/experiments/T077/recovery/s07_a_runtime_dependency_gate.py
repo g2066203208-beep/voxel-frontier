@@ -220,7 +220,17 @@ def audit(args):
             or bts["declared_bytes"] != BTS_SIZE):
         raise ValueError("S07_BTS_PRIOR_REAL_PAYLOAD_RECEIPT_MISMATCH")
     exe = exe_identity(args.exe)
+    # Parse active input switches before classifying dormant file slots.
+    wind_match = re.search(r'(?m)^\\s*(\\d+)\\s+WindType\\b', patched)
+    wind_type = int(wind_match.group(1)) if wind_match else None
+    aero_text = virtual.get("Rotor/DTU_10MW_RWT_AeroDyn15.dat", b"").decode("utf-8-sig", errors="replace")
+    af_match = re.search(r'(?m)^\\s*(\\d+)\\s+NumAFfiles\\b', aero_text)
+    airfoil_declared = int(af_match.group(1)) if af_match else None
     visited, edges = traverse(virtual)
+    if wind_type == 3:
+        for edge in edges:
+            if edge["from"] == base + "DTU_10MW_InflowWind.dat" and edge["ref"].lower().endswith(".bin") and edge["status"] == "UNRESOLVED_REFERENCE_CHECK_OPTIONALITY":
+                edge["status"] = "INACTIVE_WINDTYPE_3_BINARY_SLOTS"
     missing = [e for e in edges if e["status"] in
                ("UNRESOLVED_REFERENCE_CHECK_OPTIONALITY", "UNSAFE_OR_ABSOLUTE_REFERENCE")]
     # Expected module files are checked for presence, not assumed to be active.
@@ -250,6 +260,10 @@ def audit(args):
                         "Reference scanner is conservative; optionality needs native module parsing",
                         "BTS real bytes were verified in prior Actions #40937242200; not re-downloaded"],
         "visited": visited, "edges": edges, "unresolved": missing,
+        "input_switches": {"InflowWind_WindType": wind_type,
+                           "AeroDyn_NumAFfiles": airfoil_declared},
+        "airfoil_inventory": sorted(k for k in virtual if "Airfoils/" in k),
+        "cylinder_named_inventory": sorted(k for k in virtual if "cyl" in k.lower()),
         "expected_modules": expected,
         "HOLD": "STATIC ONLY: unresolved/optional path semantics, executable reported version/ABI, actual OUTB/RP/TP, signed free body and native structural PASS remain unverified.",
     }
