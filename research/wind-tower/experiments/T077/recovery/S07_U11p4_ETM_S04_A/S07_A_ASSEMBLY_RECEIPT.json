@@ -1,0 +1,113 @@
+{
+  "FIG": "NONE",
+  "HOLD": "No OpenFAST native initialization, controller ABI, 31-station OUTB, signed six-component transfer or Abaqus PASS.",
+  "OFFICIAL": "Original archived OpenFAST input; exe version/ABI not native tested",
+  "REF": "T072 historical Windows topology; S07 04h real dependency graph",
+  "RUN": {
+    "abaqus": 0,
+    "executed": false,
+    "init_tmax_s": 0.1,
+    "openfast": 0
+  },
+  "SOURCE": {
+    "bts_sha256": "9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78",
+    "diagnostic_fst_sha256": "5bb6d04da85452f459413de691636377e464576bb362729367ac23e85873a2be",
+    "exe_sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a",
+    "original_fst_sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605"
+  },
+  "STANDARD": "No new authorized IEC/GB/NB text",
+  "TAB": {
+    "count": 20,
+    "files": {
+      "CASES/Rotor/Airfoils/Cylinder_Aerodyn15.dat": {
+        "bytes": 10987,
+        "sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb"
+      },
+      "CASES/Rotor/Airfoils/FFA_W3_241_AeroDyn15.dat": {
+        "bytes": 12455,
+        "sha256": "6c5aff68e1e4d52021867a7cda42616aafc8fdd08d52d6f92d2b7841714c69fd"
+      },
+      "CASES/Rotor/Airfoils/FFA_W3_301_AeroDyn15.dat": {
+        "bytes": 12455,
+        "sha256": "2a38e9062d278a55e7bbc8f879022bbb2696906a628ac57a896455146c798296"
+      },
+      "CASES/Rotor/Airfoils/FFA_W3_360_AeroDyn15.dat": {
+        "bytes": 12455,
+        "sha256": "d32e7c2ef4babab699126167e2108d92471fbead0a61aafb2ddd40fb662dbcb4"
+      },
+      "CASES/Rotor/Airfoils/FFA_W3_480_AeroDyn15.dat": {
+        "bytes": 12456,
+        "sha256": "a8933ac866dc3ec019d77a9c9b2a25fc45a8924f525807a0c36de0b727a3892d"
+      },
+      "CASES/Rotor/Airfoils/FFA_W3_600_AeroDyn15.dat": {
+        "bytes": 6736,
+        "sha256": "0f8603417eb31cfd5604aedf64e2e2a5c2994d7d14b94db2ec9fd250a6d5934f"
+      },
+      "CASES/Rotor/DTU_10MW_AeroDyn15_blade.dat": {
+        "bytes": 2745,
+        "sha256": "2e1597b858dab17c5bfd98d5963d0e00c2dc279f5107a5f21d4b2a48f8edb9fa"
+      },
+      "CASES/Rotor/DTU_10MW_ElastoDyn_Blades.dat": {
+        "bytes": 12348,
+        "sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d"
+      },
+      "CASES/Rotor/DTU_10MW_RWT_AeroDyn15.dat": {
+        "bytes": 10088,
+        "sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568"
+      },
+      "CASES/U11p4_ETM_S04/C02R3R2_158M_Tower.dat": {
+        "bytes": 17236,
+        "sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983"
+      },
+      "CASES/U11p4_ETM_S04/Control/Cp_Ct_Cq_10MW.txt": {
+        "bytes": 33009,
+        "sha256": "95bf5593e05f7b204dd24f1dc08810e95c175a71d9ed3ebdbc09da696e8005f9"
+      },
+      "CASES/U11p4_ETM_S04/Control/DTU_10MW_RWT_DISCON.IN": {
+        "bytes": 17600,
+        "sha256": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a"
+      },
+      "CASES/U11p4_ETM_S04/Control/DTU_10MW_RWT_ServoDyn.dat": {
+        "bytes": 12108,
+        "sha256": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e"
+      },
+      "CASES/U11p4_ETM_S04/Control/libdiscon.dll": {
+        "bytes": 1122431,
+        "sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa"
+      },
+      "CASES/U11p4_ETM_S04/DTU_10MW_InflowWind.dat": {
+        "bytes": 6146,
+        "sha256": "a479943720548490536b0305f5e8a1b13ea22a34f580fedf0825c1001704dd0c"
+      },
+      "CASES/U11p4_ETM_S04/DTU_10MW_RWT.fst": {
+        "bytes": 7131,
+        "sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605"
+      },
+      "CASES/U11p4_ETM_S04/DTU_10MW_RWT_ElastoDyn.dat": {
+        "bytes": 27798,
+        "sha256": "701a3e30bc058d97c673e28947307066a245c276cb10042a1eb3ca133c571833"
+      },
+      "CASES/U11p4_ETM_S04/DTU_10MW_RWT_INIT_DIAG.fst": {
+        "bytes": 7131,
+        "sha256": "5bb6d04da85452f459413de691636377e464576bb362729367ac23e85873a2be"
+      },
+      "CASES/U11p4_ETM_S04/U11p4_ETM_S04.bts": {
+        "bytes": 436968166,
+        "sha256": "9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78"
+      },
+      "bin/openfast_x64_v353.exe": {
+        "bytes": 61086208,
+        "sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a"
+      }
+    }
+  },
+  "assumptions": [
+    "Windows case-insensitive AeroDyn filename resolution",
+    "Diagnostic FST changes only TMax; source FST retained"
+  ],
+  "error_budget": {
+    "identity": "exact SHA256",
+    "physics": "UNDEFINED"
+  },
+  "stage": "S07_A_ASSEMBLED_REAL_BYTES_NOT_NATIVE_INITIALIZED"
+}
