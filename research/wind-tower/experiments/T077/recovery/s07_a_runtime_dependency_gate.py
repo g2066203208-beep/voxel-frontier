@@ -221,10 +221,10 @@ def audit(args):
         raise ValueError("S07_BTS_PRIOR_REAL_PAYLOAD_RECEIPT_MISMATCH")
     exe = exe_identity(args.exe)
     # Parse active input switches before classifying dormant file slots.
-    wind_match = re.search(r'(?m)^\\s*(\\d+)\\s+WindType\\b', patched)
+    wind_match = re.search(r'(?m)^\s*(\d+)\s+WindType\b', patched)
     wind_type = int(wind_match.group(1)) if wind_match else None
     aero_text = virtual.get("Rotor/DTU_10MW_RWT_AeroDyn15.dat", b"").decode("utf-8-sig", errors="replace")
-    af_match = re.search(r'(?m)^\\s*(\\d+)\\s+NumAFfiles\\b', aero_text)
+    af_match = re.search(r'(?m)^\s*(\d+)\s+NumAFfiles\b', aero_text)
     airfoil_declared = int(af_match.group(1)) if af_match else None
     visited, edges = traverse(virtual)
     if wind_type == 3:
