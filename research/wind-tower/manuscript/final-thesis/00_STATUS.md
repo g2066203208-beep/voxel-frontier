@@ -4,6 +4,11 @@
 > **每次写入前先读[指挥室当前快照与最近交接](../../governance/COMMAND_ROOM.md#read-before-write)。** 本文件保留各日期的章节/实验进展，后续回填可能覆盖前段旧状态；不以任一旧“唯一下一动作”派工。当前调度只在指挥室维护。
 > 已完成前期成果见[证据索引](../../governance/COMMAND_ROOM.md#completed-evidence)。下文“尚未计算/无原生/0次”等必须按日期、模型、工况理解，不能据此否定原七章Word和历史结果。新增地震也不能被旧章节安排排除。
 
+
+## 2026-10-30 01时｜S07真实CI修复并回归旧9站源派生方向/截面力（独立准备）
+
+定位并修复[S07原生CI失败](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40918563610)：TwrGagNd正则与合成换行转义、GH_TOKEN环境及两处curl续行/原始ElastoDyn夹具正则。真实[31站源合同CI #40919347531](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40919347531)与[六分量源派生CI #40919431852](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40919431852)均`completed/success`。原始ElastoDyn四批次测点映射、T062真实9站135通道、旧9站×12001步共96008组同步截面差与近似惯性对照、v3.5.3固定底座DCM源派生回归通过；矩阵正交误差≤5.56e-16，**但不是31站原OUTB恢复、签名自由体外载闭合或Abaqus物理PASS**。新增脚本实测SHA256=`9b498a3085d1a68c9447f3864c2eaccdabeea178757fe1342fa965c08c5cc292`，完整[SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、失败日志、误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-01时s07真实ci失败修复原始elastodyn四批次复验及9站源派生dcm回归不代表31站动态恢复)。S07=`SOURCE_AND_9GAGE_ALGORITHM_CI_PASS / REAL_31GAGE_OUTB_AND_SIGNED_FREE_BODY_HOLD`，12阶段严格**0/12未晋级**，S10风致分材料疲劳/S11抗震约束优化不变。
+
 ## 2026-10-30 00时｜S07同步15通道诊断提取与T062真实9站字段身份交叉核验（独立准备）
 
 继承四工况31段1,488,124行六分量、历史T062真实9站OUTB通道收据及原S07 RP/TP提取器。直接解析T062原生OUTB派生收据，核对9站×15通道=**135/135通道单位**、每站12001点、100–700s/0.05s；原9站TPzi高度跨度仅2.680356759m，**不等于158m全塔31站**。在[既有S07提取器](../../experiments/T077/recovery/s07_minimal_rptp_capture_gate.py)新增同刻RP/TP、AL、FL/ML诊断导出、源OUTB SHA守卫、负例测试及[既有S07 CI](../../../../.github/workflows/s07-six-component-frame-gate.yml)回归步骤。脚本SHA256=`aeae86cc903a5ef9471e9369e16d0ddb47b5f648a0dc4c83802d48c8976d543b`；[SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-00时s07同步rptpalflml一体化只读提取器真实历史源字段验证非新风场run)。**本轮仅实际运行了真实JSON的独立135字段交叉检查，尚无新Python CI成功日志或原31站OUTB字节**；无新风载/地震/Abaqus生产RUN、无外载/材料寿命PASS。S07=`PAIRED_CAPTURE_CODE_PREPARED / REAL_31GAGE_OUTB_HOLD`；整阶段**0/12未晋级**，S10疲劳及S11优化主线不变。
