@@ -46,6 +46,12 @@
 
 ## 最近交接日志 — 新记录置顶，旧记录保留
 
+### HANDOFF-20261030-S07-OUTB-PROVENANCE-WEB-01｜原始31站OUTB身份误标防线
+
+- **START / 2026-10-30 01时 CST / 网页版GPT：** read_base_sha=`c0d15840e90d240b22b12682ecd41bbb020ec523`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft。已读研究AGENTS/README、00_STATUS/WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、指挥室最近交接及S07既有程序/真实T062收据、原T071/T072工作流。继承4×31×12001六分量已恢复及9站真实OUTB校验，不重做DEL/元数据审计。确认历史T071/T072工作流上传的只有`extract/*`，不含原OUTB，现有提取器`--outb`仅按用户传入case/batch命名，尚未核实实际TwrGagNd；存在将旧9站OUTB误标为31段的风险。
+- **本轮唯一增量/拟改范围：** 复用`experiments/T077/recovery/s07_minimal_rptp_capture_gate.py`加入原始ElastoDyn输入及其SHA锁定父本的逐行唯一差异检查、31段TwrGagNd映射与OUTB预期SHA强制绑定；用仓库真实原始ElastoDyn档案做合成受控patch及篡改拒绝回归，更新既有S07 Actions工作流、T077 S06过程日志、00_STATUS及本交接END。严格不生成外载、不启动OpenFAST/Abaqus、不改冻结T057/T070、不合并PR。新校验只证明源身份与程序行为，不证明真实31站OUTB存在或物理PASS。
+
+
 ### HANDOFF-20261030-S07-PAIRED-DIAGNOSTIC-WEB-00｜同步31站六分量与运动学只读提取增量
 
 - **START / 2026-10-30 00时 CST / 网页版GPT：** read_base_sha=`986c805f9fa2b966bf0d95854f2f6c41f22e8177`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR #42 Open/Draft。已读研究AGENTS/README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段总计划、指挥室及云端任务书、T077 S06恢复报告最新S07/S10节、原T071/T072工作流全文、现有S07 RP/TP提取器与S07帧门禁、T062真实9站OUTB来源收据。继承四工况31站六分量、T062真实9站同步TP/RP/AL/FL/ML及既有合成接口；**本轮只改已有S07提取器，增加同刻RP/TP/AL/FL/ML一体化诊断输出与输入源SHA守卫、解析/负例测试；复用既有S07 CI，更新本报告、00_STATUS和本交接END**。不启动OpenFAST/Abaqus、不修改T057/T070、不合并PR。目标是让将来仅取得一件真实OUTB时可一次性导出位置/转角/加速度与截面内力同步证据，禁止输出为Abaqus外载或物理PASS。
