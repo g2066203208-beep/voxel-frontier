@@ -92,3 +92,8 @@
 5. **GitHub路径和commit SHA**及实际结果图入口。
 
 **Codex现在立即开始执行第一阶段检索并持续推进；不需因文件很多反复征求确认。只有遇到不可逆删除、许可证购买、无法安全取得私人数据或有风险的外部付费操作时才请求用户。**
+
+
+## 2026-10-29 20时｜历史U18p57实际仓库恢复结果（补充执行回执）
+
+直接检查PR #42 Git tree（2974项）和历史LFS文本指针/分卷manifest，**定位到2套真实登记的U18p57 ODB归档入口**：`DTU158_SITE_NTM_U18p57_S04.odb`（4,015,916,840字节，SHA256声明 `bb07aff9b5ed7b5ef277f8208d2834cc472673085d7753bf057f05ecc0959290`，4卷）及`DTU158_SITE_NTM_U18p57_S04_STRESS.odb`（4,316,822,840字节，SHA256声明 `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd`，5卷），对应两套INP LFS声明19,581,516/19,581,623字节。9/9卷LFS指针与manifest的OID、大小和连续offset一致；未读取实际8.33GB二进制。完整SHA/来源层级/失败/HOLD及本地合成测试见[T077 S10过程节](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-29-20时s10历史u18p57局部应力fe-safe线索真实lfs分卷恢复入口不是odb验收)，只读校验脚本为[T077/recovery/s10_legacy_odb_lfs_gate.py](../experiments/T077/recovery/s10_legacy_odb_lfs_gate.py)。**分类：PARTIAL_HISTORICAL_METADATA；不是已验证fe-safe寿命。** 本轮Git tree可见范围未找到fe-safe项目实体；不代表本机不存在。下一本机任务为按需git-lfs取回STRESS ODB 5卷、哈希与只读ODB打开/输出目录核验，不能重新派完整风载求解。
