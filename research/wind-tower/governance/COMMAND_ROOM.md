@@ -40,6 +40,11 @@
 
 每次开工追加START，结束在同一条下追加END；不同任务各占一条。原始技术明细仍写回对应实验日志，此处只登记本次变化及链接。
 
+### HANDOFF-20261029-C00-WEB-1107｜T070 IOS最小修复
+
+- **START / 2026-10-29 11:07 CST / 网页版GPT：** read_base_sha=`441170f9c467ad9f7bc9329e9a2c76cc1284ea94`；已读研究AGENTS/README、00_STATUS/WORKSPACE_MASTER、T079学术审查、T080.1/.2/.3、12阶段计划、指挥室当前快照/交接、C00任务书、T070原生G0失败.dat与本机回执、T070 roundtrip程序/审计、Abaqus 2025官方IOS关键字层级。继承T026历史验证、T070原生1 FATAL、T077/T078设计、S05/S07成果；本次只修复IOS定义在`*End Assembly`后的非法位置，拟新增`experiments/T070/repair-20261029/`生成器、单元测试/CI及交接RUN卡，追加T080过程记录与指挥室END；冻结T057/T070输入不修改，不执行高成本RUN。本机负责后续L01原生Data Check。
+- **END：** 待本轮实际生成与远端核验后补记；未补前不得宣称C00完成。
+
 ### HANDOFF-20261029-ENTRY｜统一开工入口与日志
 
 - **时间/执行者/task：** 2026-10-29 10:52（Asia/Shanghai），本机Codex，用户要求“每次写之前必须看、显眼明确”。
