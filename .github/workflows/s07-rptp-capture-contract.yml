@@ -1,5 +1,9 @@
 name: S07 31-gage RP/TP capture contract (STATIC ONLY; NO solver)
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/s07-rptp-capture-contract.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py'
   push:
     paths:
       - '.github/workflows/s07-rptp-capture-contract.yml'
@@ -16,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p s07
-          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}"
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}"
           curl -fLsS --retry 3 "$base/research/wind-tower/experiments/T077/recovery/s07_minimal_rptp_capture_gate.py" -o s07/gate.py
           curl -fLsS --retry 3 "$base/.github/workflows/t071-rerun-s06-31seg.yml" -o s07/t071.yml
           curl -fLsS --retry 3 "$base/.github/workflows/t072-rerun-control-31seg.yml" -o s07/t072.yml
@@ -48,7 +52,7 @@ jobs:
             s07/S07_MINIMAL_RPTP_CAPTURE_READINESS_20261029.json
           echo 'STATIC CONTRACT ONLY: no OUTB read, no OpenFAST, no Abaqus, no global load export.'
       - name: Preserve validated compact source receipt on existing Draft PR branch
-        if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
         env:
           ${{ secrets.GITHUB_TOKEN }}: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
