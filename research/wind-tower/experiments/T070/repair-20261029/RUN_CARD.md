@@ -50,21 +50,23 @@ python research/wind-tower/experiments/T070/repair-20261029/c00_run_child_g0.py 
 
 ## 2026-10-29 12时｜C00b：L01实际7 FATAL的最小接触语法修复（覆盖上方“L01尚未运行”的旧时点）
 
-**原生新事实：** [L01原生Data Check回执](../local-20261029-l01/README.md)和[完整DAT](../local-20261029-l01/T070_C00_G0_DATACHECK.dat)已实际读取；DAT 144,319 bytes，SHA256=\`60805bb07d8ccb5c5d922de57d910ab6417beed9dbe3d2ffb04b8c6efe7f8e57\`。Abaqus 2025在C00子版报告**7 FATAL/129 WARNING**，原IOS层级错误已消失；本轮不是“还没跑L01”。
+**原生新事实：** [L01原生Data Check回执](../local-20261029-l01/README.md)和[完整DAT](../local-20261029-l01/T070_C00_G0_DATACHECK.dat)已实际读取；DAT 144,319 bytes，SHA256=`60805bb07d8ccb5c5d922de57d910ab6417beed9dbe3d2ffb04b8c6efe7f8e57`。Abaqus 2025在C00子版报告**7 FATAL/129 WARNING**，原IOS层级错误已消失；本轮不是“还没跑L01”。
 
-**SOURCE/OFFICIAL：** 完整冻结T070父本Git blob \`d202b6e6b34cc158e7a91bca42c6047a8ba06b7d\`，SHA256=\`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9\`，16,587,215 bytes。C00子版SHA256=\`a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715\`。直接核读Abaqus 2025官方[*CONTACT PROPERTY ASSIGNMENT](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-contactpropertyassignment.htm)、[*CONTACT OUTPUT](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-contactoutput.htm)和[Standard general contact](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEITNRefMap/simaitn-c-contactgeneralstd.htm)的关键字/输出组语义。L01 DAT第611行指出空白数据行；第3190–3200行逐项拒绝直接请求CPRESS/COPEN/CSHEAR1/2/CSLIP1/2。
+**SOURCE/OFFICIAL：** 完整冻结T070父本Git blob `d202b6e6b34cc158e7a91bca42c6047a8ba06b7d`，SHA256=`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9`，16,587,215 bytes。C00子版SHA256=`a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715`。直接核读Abaqus 2025官方[*CONTACT PROPERTY ASSIGNMENT](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-contactpropertyassignment.htm)、[*CONTACT OUTPUT](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-contactoutput.htm)和[Standard general contact](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEITNRefMap/simaitn-c-contactgeneralstd.htm)的关键字/输出组语义。L01 DAT第611行指出空白数据行；第3190–3200行逐项拒绝直接请求CPRESS/COPEN/CSHEAR1/2/CSLIP1/2。
 
 **仅两处修复，非物理参数修改：**
-1. 删除30行\`*Contact Property Assignment\`之后、\`** END T057 HORIZONTAL JOINT CONTACT\`注释后的**一条真实空白数据行**。30对\`CSEG_01-1\`至\`CSEG_31-1\`的上下接触表面、\`HJOINT_HARD_MU05_T057\`、硬接触及摩擦μ=0.5均原样保留。
-2. 将\`*Contact Output\`下一行六个**非法直接分量请求**替换为Abaqus/Standard通用组键\`CSTRESS,CDISP,CFORCE\`。官方说明COPEN需请求CDISP，压力用CSTRESS，接触力用CFORCE；**具体ODB实际可得分量仍需本机原生确认**，尤其CSHEAR1/2不应预先承诺。保留接触可观测性，不删接触定义。
+1. 删除30行`*Contact Property Assignment`之后、`** END T057 HORIZONTAL JOINT CONTACT`注释后的**一条真实空白数据行**。30对`CSEG_01-1`至`CSEG_31-1`的上下接触表面、`HJOINT_HARD_MU05_T057`、硬接触及摩擦μ=0.5均原样保留。
+2. 将`*Contact Output`下一行六个**非法直接分量请求**替换为Abaqus/Standard通用组键`CSTRESS,CDISP,CFORCE`。官方说明COPEN需请求CDISP，压力用CSTRESS，接触力用CFORCE；**具体ODB实际可得分量仍需本机原生确认**，尤其CSHEAR1/2不应预先承诺。保留接触可观测性，不删接触定义。
 
-**RUN/TAB：** [确定性C00b生成器](c00b_repair_l01_contact.py)从冻结父本先调用已有C00 IOS转换，再执行以上两处修改；[C00b独立原生包装器](c00b_run_child_g0.py)锁定输入名/完整SHA，复用原T070日志采集，且只能做Data Check。独立JavaScript在真实完整Git blob上复算SHA256（与冻结父及C00既有已知SHA逐字一致），得到C00b **16,587,192 bytes、SHA256=\`d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac\`**。生成器还对30对接触身份、两处diff、精确逆变换、原生DAT SHA及7个错误原文设置拒绝门。既有[CI工作流](../../../../../.github/workflows/c00-t070-ios-repair-static.yml)已扩展为真实父本+真实L01 DAT+合成异常输入的检查与C00b artifact上传；**Actions实际运行/成功与否以回读结果为准，不以本段提交宣称通过**。
+**RUN/TAB：** [确定性C00b生成器](c00b_repair_l01_contact.py)从冻结父本先调用已有C00 IOS转换，再执行以上两处修改；[C00b独立原生包装器](c00b_run_child_g0.py)锁定输入名/完整SHA，复用原T070日志采集，且只能做Data Check。独立JavaScript在真实完整Git blob上复算SHA256（与冻结父及C00既有已知SHA逐字一致），得到C00b **16,587,192 bytes、SHA256=`d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`**。生成器还对30对接触身份、两处diff、精确逆变换、原生DAT SHA及7个错误原文设置拒绝门。既有[CI工作流](../../../../../.github/workflows/c00-t070-ios-repair-static.yml)已扩展为真实父本+真实L01 DAT+合成异常输入的检查与C00b artifact上传；**Actions实际运行/成功与否以回读结果为准，不以本段提交宣称通过**。
 
-**本机下一轮仅原生G0：** 从当前PR分支取冻结父INP、C00b生成器及包装器，在独立后台目录生成子版并核对\`d5f0922a...\`，然后执行：
+**本机下一轮仅原生G0：** 从当前PR分支取冻结父INP、C00b生成器及包装器，在独立后台目录生成子版并核对`d5f0922a...`，然后执行：
 
-\`\`\`powershell
+```powershell
 python research/wind-tower/experiments/T070/repair-20261029/c00b_repair_l01_contact.py --parent research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp --native-dat research/wind-tower/experiments/T070/local-20261029-l01/T070_C00_G0_DATACHECK.dat --outdir D:/Codex-research-native/T070-20261029/C00B_INPUT
 python research/wind-tower/experiments/T070/repair-20261029/c00b_run_child_g0.py --inp D:/Codex-research-native/T070-20261029/C00B_INPUT/BASE001_T070_G0_CONTACT_GROUPS_C00B_CHILD.inp --out D:/Codex-research-native/T070-20261029/L02_G0_NATIVE --abaqus D:/Abaqus/Commands/abaqus.bat
-\`\`\`
+```
 
 **验收/HOLD：** C00b原生G0**尚未运行**；即使无FATAL也必须逐项审129条原警告的延续/消失、30接缝接触激活、CSTRESS/CDISP/CFORCE实际ODB键及完整.dat/.msg/.sta/.log存在性。对模型/PT/接触/网格/地震/疲劳的物理误差均NEED_ESTIMATE。REF无新增期刊全文；STANDARD未读新授权IEC/GB/NB条款；FIG无新本塔物理图；TAB=30对源表与两处diff；**12阶段0/12，S02 NATIVE_RECHECK_PENDING**。冻结T057/T070未改，不合并PR，不执行昂贵生产。
+
+**精确小文件已持久化：** [C00b两处真实差异patch](C00B_L01_CONTACT_REPAIR.patch)（563 bytes，SHA256 `5f2e66237c9891059ab7e63e2d46fb13b88722056406ac63cf81b5df55390baf`）及[输入/原生失败/子版身份manifest](C00B_L01_CONTACT_REPAIR_MANIFEST.json)均已提交PR #42；16.6MB子版不重复提交进Git仓库，脚本可确定性再生，CI artifact在实际运行成功后另行核验。
