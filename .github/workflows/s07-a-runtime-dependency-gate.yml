@@ -1,4 +1,4 @@
-name: S07 A-case FST dependency closure and exe SHA (STATIC, NO solver)
+name: S07 A-case real-byte SHA-locked assembly (NO solver)
 on:
   push:
     paths:
@@ -12,9 +12,9 @@ permissions:
 jobs:
   a-case-static-dependency:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
-      - name: Sparse source checkout; DO NOT pull 437MB BTS
+      - name: Sparse source checkout; LFS pointers only until explicit single transfer
         uses: actions/checkout@v4
         with:
           lfs: false
@@ -28,20 +28,20 @@ jobs:
             research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
             research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
             research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts
 
-      - name: Obtain exact 61MB OpenFAST exe LFS payload only (NO execution)
+      - name: Obtain exact BTS and EXE real LFS payloads once (NO execution)
         shell: bash
         run: |
           set -euo pipefail
           exe='research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe'
+          bts='research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts'
           git lfs install --local
-          if git lfs pull --include="$exe" --exclude=""; then
-            echo 'EXE_LFS_TRANSFER_OK'
-          else
-            echo 'EXE_LFS_TRANSFER_FAILED: preserve pointer-only HOLD'
-          fi
-          sha256sum "$exe"
-          echo 'NO OpenFAST process or 437MB BTS download is permitted in this job.'
+          git lfs pull --include="$exe,$bts" --exclude=""
+          test "$(stat -c%s "$exe")" -eq 61086208
+          test "$(stat -c%s "$bts")" -eq 436968166
+          printf '%s  %s\n' '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a' "$exe" '9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78' "$bts" | sha256sum --check --status
+          echo 'REAL_LFS_PAYLOAD_SHA256_VERIFIED; solver=0; single transfer this job.'
 
       - name: Synthetic graph and source-locked real A-case static audit
         shell: bash
@@ -64,11 +64,54 @@ jobs:
           sha256sum "$py" S07_A_RUNTIME_DEPENDENCY_RECEIPT.json
           echo 'STATIC ONLY: graph/PE SHA test, NOT native solver, NOT physical PASS.'
 
+      - name: Assemble actual A-case bytes; independently rehash receipt (NO solver)
+        shell: bash
+        env:
+          OMP_NUM_THREADS: '2'
+          OPENBLAS_NUM_THREADS: '2'
+        run: |
+          set -euo pipefail
+          ulimit -v 4194304
+          root=research/wind-tower
+          py="$root/experiments/T077/recovery/s07_a_runtime_dependency_gate.py"
+          mkdir -p s07-assembled
+          python3 "$py" \
+            --base-zip "$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip" \
+            --target-zip "$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip" \
+            --supp-zip "$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" \
+            --child-ed "$root/experiments/T077/recovery/S07_U11p4_ETM_S04_A/DTU_10MW_RWT_ElastoDyn.dat" \
+            --dll "$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll" \
+            --exe "$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe" \
+            --prior-manifest "$root/experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_REAL_BUNDLE_IDENTITY.json" \
+            --bts "$root/archive/local-large-assets-20261004/turbSim-36/inputs/U11p4_ETM_S04.bts" \
+            --assemble-dir s07-assembled/A_case
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          p=pathlib.Path('s07-assembled/A_case/S07_A_ASSEMBLY_RECEIPT.json')
+          d=json.loads(p.read_text())
+          assert d['RUN']['executed'] is False and d['RUN']['openfast']==0 and d['RUN']['abaqus']==0
+          assert d['SOURCE']['bts_sha256']=='9f138ad2065efb791352a6e5a242b03e06e731fb68176bf9f6cbca98c9888c78'
+          assert d['SOURCE']['exe_sha256']=='0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a'
+          root=p.parent
+          for name, entry in d['TAB']['files'].items():
+              path=root/name
+              assert path.is_file(), name
+              assert path.stat().st_size==entry['bytes'], name
+              h=hashlib.sha256(path.read_bytes()).hexdigest()
+              assert h==entry['sha256'], name
+          print('S07_A_REAL_ASSEMBLY_VERIFIED: files=',d['TAB']['count'], 'receipt_sha256=',hashlib.sha256(p.read_bytes()).hexdigest(), 'solver=0')
+          PY
+          cp s07-assembled/A_case/S07_A_ASSEMBLY_RECEIPT.json S07_A_ASSEMBLY_RECEIPT.json
+          sha256sum S07_A_ASSEMBLY_RECEIPT.json
+          echo 'No OpenFAST or Abaqus was executed; no 700s output or OUTB produced.'
+
       - name: Retain exact receipt for connector-side PR persistence
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: s07-a-runtime-dependency-static-only
-          path: S07_A_RUNTIME_DEPENDENCY_RECEIPT.json
+          name: s07-a-runtime-dependency-and-real-assembly-static-only
+          path: |
+            S07_A_RUNTIME_DEPENDENCY_RECEIPT.json
+            S07_A_ASSEMBLY_RECEIPT.json
           if-no-files-found: warn
           retention-days: 30
