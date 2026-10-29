@@ -47,6 +47,38 @@ jobs:
           assert len(x['moved_sections'])==3
           print('C00_REAL_INPUT_STATIC_IDENTITY_PASS',x['child_sha256'])
           PY
+      - name: C00b synthetic contact group and tamper refusal tests (NOT Abaqus)
+        run: |
+          python3 -m py_compile research/wind-tower/experiments/T070/repair-20261029/c00b_repair_l01_contact.py
+          python3 research/wind-tower/experiments/T070/repair-20261029/c00b_repair_l01_contact.py --self-test
+      - name: C00b real frozen parent and actual L01 native DAT static repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          p=research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp
+          dat=research/wind-tower/experiments/T070/local-20261029-l01/T070_C00_G0_DATACHECK.dat
+          out=research/wind-tower/experiments/T070/repair-20261029/output-c00b
+          echo "60805bb07d8ccb5c5d922de57d910ab6417beed9dbe3d2ffb04b8c6efe7f8e57  $dat" | sha256sum -c -
+          python3 research/wind-tower/experiments/T070/repair-20261029/c00b_repair_l01_contact.py --parent "$p" --native-dat "$dat" --outdir "$out"
+          sha256sum "$out"/*
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T070/repair-20261029/output-c00b/C00B_L01_CONTACT_REPAIR_MANIFEST.json')
+          x=json.loads(p.read_text())
+          assert x['exact_inverse_pass'] and x['contact_pairs_preserved']==30
+          assert x['c00_sha256']=='a0b885031393bee3e2904d80a72139b0027621f0814e6323c639d30a35ff2715'
+          assert x['l01_native_error_count']==7
+          assert x['native_datacheck']=='NOT_RUN_ON_C00B'
+          print('C00B_REAL_PARENT_NATIVE_DAT_STATIC_PASS', x['c00b_sha256'])
+          PY
+      - name: Upload C00b child, two-hunk diff and manifest for local L02 (NOT native pass)
+        uses: actions/upload-artifact@v4
+        with:
+          name: C00B_T070_CONTACT_GROUPS_CHILD_STATIC_ONLY
+          path: research/wind-tower/experiments/T070/repair-20261029/output-c00b/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload generated child, diff, manifest for local L01 (NOT native pass)
         uses: actions/upload-artifact@v4
         with:
