@@ -80,14 +80,120 @@ def selftest():
   except ValueError as e: assert str(e)=='NONCONTIGUOUS_OFFSETS'
   else: raise AssertionError('bad offset accepted')
   print('SYNTHETIC_PASS: 2 ODB manifests + 2 INP pointers; offset tamper rejected')
+
+def reassemble_parts(parts, expected_size, expected_sha, output):
+    """Bounded-memory, fail-closed reconstruction; no ODB semantic validation."""
+    import os
+    import shutil
+    output = Path(output).resolve()
+    check(output.parent.is_dir(), 'OUTPUT_PARENT_MISSING')
+    check(not output.exists(), 'OUTPUT_EXISTS_REFUSE_OVERWRITE')
+    temp = output.with_name(output.name + '.partial')
+    check(not temp.exists(), 'PARTIAL_EXISTS_REFUSE_OVERWRITE')
+    check(shutil.disk_usage(output.parent).free > expected_size + 64 * 1024 * 1024,
+          'INSUFFICIENT_DISK_FOR_REASSEMBLY')
+    total = 0
+    whole = hashlib.sha256()
+    try:
+        with temp.open('xb') as dst:
+            for part in parts:
+                source = Path(part['path'])
+                check(source.is_file(), 'PART_NOT_FETCHED')
+                check(source.stat().st_size == part['bytes'], 'PART_SIZE_OR_LFS_POINTER_MISMATCH')
+                part_hash = hashlib.sha256()
+                count = 0
+                with source.open('rb') as src:
+                    while True:
+                        block = src.read(8 * 1024 * 1024)
+                        if not block:
+                            break
+                        dst.write(block)
+                        whole.update(block)
+                        part_hash.update(block)
+                        count += len(block)
+                check(count == part['bytes'] and part_hash.hexdigest() == part['sha256'],
+                      'PART_SHA256_MISMATCH')
+                total += count
+            dst.flush()
+            os.fsync(dst.fileno())
+        check(total == expected_size and whole.hexdigest() == expected_sha,
+              'REASSEMBLED_ODB_SHA256_MISMATCH')
+        temp.rename(output)
+    except BaseException:
+        if temp.exists():
+            temp.unlink()
+        raise
+    return {'status': 'BYTE_REASSEMBLED_ONLY_NEED_NATIVE_ODB_OPEN',
+            'output': str(output), 'bytes': total, 'sha256': whole.hexdigest(),
+            'native_odb_open': False, 'material_life': None, 'physics_pass': False}
+
+
+def selftest_reassemble():
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        folder = Path(d)
+        payloads = (b'ABC\\x00' * 17, b'xyz\\x01' * 23)
+        parts = []
+        for i, raw in enumerate(payloads, 1):
+            path = folder / ('part-%04d' % i)
+            path.write_bytes(raw)
+            parts.append({'path': path, 'bytes': len(raw),
+                          'sha256': hashlib.sha256(raw).hexdigest()})
+        expected = b''.join(payloads)
+        target = folder / 'recovered.odb'
+        result = reassemble_parts(parts, len(expected), hashlib.sha256(expected).hexdigest(), target)
+        assert target.read_bytes() == expected
+        assert result['status'] == 'BYTE_REASSEMBLED_ONLY_NEED_NATIVE_ODB_OPEN'
+        try:
+            reassemble_parts(parts, len(expected), hashlib.sha256(expected).hexdigest(), target)
+        except ValueError as e:
+            assert str(e) == 'OUTPUT_EXISTS_REFUSE_OVERWRITE'
+        else:
+            raise AssertionError('overwriting existing ODB accepted')
+        target.unlink()
+        parts[1]['path'].write_bytes(payloads[1][:-1] + b'!')
+        try:
+            reassemble_parts(parts, len(expected), hashlib.sha256(expected).hexdigest(), target)
+        except ValueError as e:
+            assert str(e) == 'PART_SHA256_MISMATCH'
+        else:
+            raise AssertionError('tampered part accepted')
+        assert not target.exists() and not (folder / 'recovered.odb.partial').exists()
+        parts[1]['path'].unlink()
+        try:
+            reassemble_parts(parts, len(expected), hashlib.sha256(expected).hexdigest(), target)
+        except ValueError as e:
+            assert str(e) == 'PART_NOT_FETCHED'
+        else:
+            raise AssertionError('missing part accepted')
+        assert not target.exists()
+    print('SYNTHETIC_REASSEMBLY_PASS: exact bytes, overwrite/tamper/missing rejects')
+
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--root',type=Path,default=BASE)
  ap.add_argument('--self-test',action='store_true');ap.add_argument('--verify-payload',action='store_true');ap.add_argument('--out',type=Path)
+ ap.add_argument('--reassemble-stress',action='store_true')
+ ap.add_argument('--output',type=Path)
+ ap.add_argument('--allow-large-io',action='store_true')
  a=ap.parse_args()
- if a.self_test: selftest()
+ if a.self_test:
+  selftest()
+  selftest_reassemble()
  if a.root.exists():
   result=audit(a.root,a.verify_payload)
   if a.out: a.out.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
   print(json.dumps({'status':result['status'],'odb_count':len(result['odb']),'native_runs':0}))
  elif not a.self_test: raise ValueError('SOURCE_DIRECTORY_NOT_FOUND')
+ if a.reassemble_stress:
+  check(a.allow_large_io and a.output is not None, 'EXPLICIT_LARGE_IO_AND_OUTPUT_REQUIRED')
+  check(a.root.exists(), 'SOURCE_DIRECTORY_NOT_FOUND')
+  target=a.output.resolve()
+  check(a.root.resolve() not in target.parents, 'OUTPUT_MUST_BE_OUTSIDE_SOURCE_ARCHIVE')
+  name='DTU158_SITE_NTM_U18p57_S04_STRESS.odb'
+  m=json.loads((a.root/(name+'.parts')/'parts-manifest.json').read_text())
+  check(m['relative_path']==name and (m['bytes'],m['sha256'])==ODBS[name][:2], 'STRESS_MANIFEST_MISMATCH')
+  parts=[{'path':a.root/(name+'.parts')/('part-%04d'%i),'bytes':p['bytes'],'sha256':p['sha256']} for i,p in enumerate(m['parts'],1)]
+  result=reassemble_parts(parts,m['bytes'],m['sha256'],target)
+  print(json.dumps(result,sort_keys=True))
 if __name__=='__main__': main()
