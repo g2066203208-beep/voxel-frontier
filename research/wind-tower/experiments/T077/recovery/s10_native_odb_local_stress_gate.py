@@ -461,7 +461,7 @@ def main():
                        'odb_path': str(args.odb.resolve()),
                        'software': 'Abaqus odbAccess readOnly=True',
                        'native_execution': True, 'physical_pass': False})
-        payload = json.dumps(report, sort_keys=True, indent=2) + '\\n'
+        payload = json.dumps(report, sort_keys=True, indent=2) + '\n'
         if args.inventory_json:
             insist(args.inventory_json.parent.is_dir() and
                    not args.inventory_json.exists(), 'REFUSE_OVERWRITE_INVENTORY_RECEIPT')
