@@ -372,3 +372,13 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 
 
 **代码原件身份独立复核（2026-10-29 20:17）：** 本轮本地执行Python自测的 `s10_legacy_odb_lfs_gate.py` 字节数5,056、SHA256=`69df9fb9d9b471f5908f3d762a51e99b895ac891dcf0cad8f55209c55e39fe26`，本地 `git hash-object`=`4e21714fcdfb59d9189d281e277ebb03bf23cb22`，与PR #42远端Git Blob SHA **完全一致**；因此本地自测与远端Actions所执行的是同一代码字节版本。远端最终状态以指挥室最新HEAD为准。
+
+## 2026-10-29 21时｜S10历史STRESS ODB五卷确定性字节重组器（独立准备；未下载原件）
+
+- **SOURCE / 阅读层级：** 直接读取PR #42活动分支已有`s10_legacy_odb_lfs_gate.py`及其两份manifest、9个LFS指针的20时真实元数据核验记录；本轮复用既有程序，没有新增T080编号。目标仅为历史`DTU158_SITE_NTM_U18p57_S04_STRESS.odb`的**五卷**，登记原件4,316,822,840字节、完整SHA256 `996f2f91f34a3ab642f419ae2808f8c2483ccd0aa1ae82da1d20e09c8e04f2fd`（manifest声明；**本轮未重新读取4.3GB原件**）。程序的输入是实际LFS实体字节及对应manifest，仍缺本机下载后的真实输入SHA实测。
+- **RUN / 真实程序与自测：** 在原有[只读LFS审计程序](s10_legacy_odb_lfs_gate.py)增加`--reassemble-stress --allow-large-io --output ABSOLUTE_OUTPUT_PATH`。先检查已有两ODB manifest及指针/实体的元数据连续性，目标输出必须在源归档外、父目录存在、目标与`.partial`均不存在，磁盘可用空间必须大于4,316,822,840字节+64MiB；逐卷按8MiB块读取、分别核SHA256，流式计算整体SHA256，核实总字节数后才将临时文件改名为ODB。任意错误删除临时文件、拒绝覆盖源与已有目标。仅执行**本地合成小字节正向重组**及已有文件覆盖、篡改分卷、缺失分卷三项负向拒绝测试；这不是原生ODB读取。Python 3标准库，无Abaqus/fe-safe求解。远端[S10 Actions #40878854136](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40878854136)已由脚本变更触发，CI状态以真实完成日志为准，未完成前不能报CI PASS。
+- **本机后台复现（需先合法按需下载五卷；不得在云端自动拉4.3GB）：** 在包含全部LFS文本指针的仓库工作副本中使用`git lfs pull --include="research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/DTU158_SITE_NTM_U18p57_S04_STRESS.odb.parts/part-*"`；然后在仓库根目录执行`python research/wind-tower/experiments/T077/recovery/s10_legacy_odb_lfs_gate.py --reassemble-stress --allow-large-io --output /独立运行目录/DTU158_SITE_NTM_U18p57_S04_STRESS.odb`。成功只表示**整体字节身份已验证**；后续必须由本机Abaqus 2025 `odbAccess`只读列出steps/frames/fieldOutputs、单元/积分点、材料与INP身份，不能将文件名`STRESS`当作局部应力已存在。
+- **TAB / FIG / 误差预算：** TAB为manifest中的五卷精确offset/长度及完整SHA身份；不产生新的应力数表。FIG无新增本塔响应图。字节级误差容限**0**；算法内存8MiB流式缓冲（另有文件IO缓冲），临时盘需求约4.32GB；未估计物理模型/材料/网格误差。
+- **STANDARD / REF / OFFICIAL：** 无新授权标准原文、期刊全文或原生软件日志阅读；本轮只依据仓库历史LFS manifest和Python SHA256文件完整性方法，不作条款或物理验收。
+- **FAIL/HOLD：** 本轮没有实际下载五卷、没有4.3GB整体SHA实测、没有Abaqus ODB原生打开、没有fe-safe计算、没有材料寿命；仍为`LFS_METADATA_RECOVERED + REASSEMBLER_SYNTHETIC_TESTED / ODB_NATIVE_HOLD`。旧U18p57 NTM历史ODB也不能直接替代四个ETM控制工况或当前D400/Pe模型。严格**0/12整阶段PASS**；S08/S09原生地震结果0，S10/S11主线不变。冻结T057/T070不改，PR #42不合并。
+- **下一最优动作：** 本机后台仅下载历史STRESS ODB五卷并用本程序取得**实际完整SHA256**，然后原生只读打开检查是否有可复用的S积分点时程；若LFS失败保留下载错误日志，不再重复元数据小审查。
