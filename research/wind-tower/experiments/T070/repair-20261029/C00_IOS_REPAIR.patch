@@ -1,0 +1,12 @@
+--- a/research/wind-tower/experiments/T070/inputs/BASE001_T070_T057_PLUS_G1_OBSERVABILITY.inp
++++ b/research/wind-tower/experiments/T070/repair-20261029/BASE001_T070_G0_IOS_ASSEMBLY_CHILD.inp
+@@ -482554,8 +482554,8 @@
+-*End Assembly
+ **
+ ** T070 G1 integrated output sections — diagnostic only, no added constraint
+ *Integrated Output Section, name=IOS_T070_C31_TOP, surface=CSEG_31-1.SURF_TOP, ref node=62
+ *Integrated Output Section, name=IOS_T070_S01_BOTTOM, surface=SSEG_01-1.SURF_BOTTOM, ref node=62
+ *Integrated Output Section, name=IOS_T070_TOWER_BASE, surface=CSEG_01-1.SURF_BOTTOM
++*End Assembly
+ **
+ ** T057 HORIZONTAL JOINTS — experimentally supported physical contact
