@@ -1,0 +1,47 @@
+name: S10 load screening and material-cycle contract (no life PASS)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s10_material_cycle_contract.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv'
+      - '.github/workflows/s10-material-cycle-contract.yml'
+  workflow_dispatch:
+jobs:
+  s10-input-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run synthetic tests and real 744-row source check
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s10-receipts
+          python3 research/wind-tower/experiments/T077/recovery/s10_material_cycle_contract.py \
+            --self-test \
+            --load-summary research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
+            --output-json s10-receipts/S10_4CASE_LOAD_SCREEN.json | tee s10-receipts/run.log
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv')
+          expected='9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b'
+          actual=hashlib.sha256(p.read_bytes()).hexdigest()
+          assert actual==expected, ('SOURCE_SHA_MISMATCH',actual)
+          obj=json.loads(Path('s10-receipts/S10_4CASE_LOAD_SCREEN.json').read_text())
+          assert obj['load_screen']['rows']==744
+          assert obj['load_screen']['source_sha256']==expected
+          assert obj['status']=='NO_MATERIAL_LIFE'
+          assert obj['load_screen']['material_life_years'] is None
+          print('REAL_SOURCE_SHA_AND_NO_MATERIAL_LIFE_PASS',actual)
+          PY
+          sha256sum research/wind-tower/experiments/T077/recovery/s10_material_cycle_contract.py \
+            research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
+            s10-receipts/S10_4CASE_LOAD_SCREEN.json > s10-receipts/sha256.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s10-input-contract-${{ github.run_id }}
+          path: s10-receipts/
+          retention-days: 30
