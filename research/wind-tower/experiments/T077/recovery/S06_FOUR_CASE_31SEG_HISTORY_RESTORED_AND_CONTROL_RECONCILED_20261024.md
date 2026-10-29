@@ -369,3 +369,6 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 
 
 **2026-10-29 20:16 CI回填（覆盖本节CI_PENDING，不改变物理HOLD）：** 实际远端[Actions #40871655096](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40871655096) 已 `completed/success`，job `123439951101` 成功。原生Actions job日志明确打印 `SYNTHETIC_PASS: 2 ODB manifests + 2 INP pointers; offset tamper rejected`、`REAL_GIT_LFS_POINTER_AND_MANIFEST_METADATA_PASS_NOT_ODB 8332739680`，且故意执行 `--verify-payload` 对未下载LFS对象失败并通过 `LFS_OBJECT_NOT_FETCHED` 拒绝检查；旧744行源SHA回归也成功。远端[结果artifact #12896053089](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40871655096/artifacts/12896053089) 已登记（3,479字节）；本轮仅通过GitHub作业与artifact元数据回读，**未下载artifact ZIP逐字节验证**。真实LFS二进制、ODB打开、局部应力及fe-safe仍HOLD；这次成功仅为元数据/程序测试。
+
+
+**代码原件身份独立复核（2026-10-29 20:17）：** 本轮本地执行Python自测的 `s10_legacy_odb_lfs_gate.py` 字节数5,056、SHA256=`69df9fb9d9b471f5908f3d762a51e99b895ac891dcf0cad8f55209c55e39fe26`，本地 `git hash-object`=`4e21714fcdfb59d9189d281e277ebb03bf23cb22`，与PR #42远端Git Blob SHA **完全一致**；因此本地自测与远端Actions所执行的是同一代码字节版本。远端最终状态以指挥室最新HEAD为准。
