@@ -6,6 +6,8 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_material_cycle_contract.py'
       - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv'
       - '.github/workflows/s10-material-cycle-contract.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_legacy_odb_lfs_gate.py'
+      - 'research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/**'
   workflow_dispatch:
 jobs:
   s10-input-contract:
@@ -36,6 +38,23 @@ jobs:
           assert obj['load_screen']['material_life_years'] is None
           print('REAL_SOURCE_SHA_AND_NO_MATERIAL_LIFE_PASS',actual)
           PY
+          python3 research/wind-tower/experiments/T077/recovery/s10_legacy_odb_lfs_gate.py \
+            --self-test --out s10-receipts/S10_U18P57_LFS_METADATA_ONLY.json | tee s10-receipts/lfs_metadata.log
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('s10-receipts/S10_U18P57_LFS_METADATA_ONLY.json').read_text())
+          assert x['status']=='METADATA_ONLY_NO_ODB_BYTES'
+          assert len(x['odb'])==2 and len(x['inp'])==2
+          assert [len(v['parts']) for v in x['odb']]==[4,5]
+          assert sum(v['size'] for v in x['odb'])==8332739680
+          assert x['native_runs']==0 and x['material_life'] is None and x['physics_pass'] is False
+          print('REAL_GIT_LFS_POINTER_AND_MANIFEST_METADATA_PASS_NOT_ODB',sum(v['size'] for v in x['odb']))
+          PY
+          if python3 research/wind-tower/experiments/T077/recovery/s10_legacy_odb_lfs_gate.py --verify-payload >s10-receipts/lfs_negative.log 2>&1; then
+            echo 'ERROR: LFS pointers accepted as actual ODB payload' >&2; exit 1
+          fi
+          grep -q 'LFS_OBJECT_NOT_FETCHED' s10-receipts/lfs_negative.log
           sha256sum research/wind-tower/experiments/T077/recovery/s10_material_cycle_contract.py \
             research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
             s10-receipts/S10_4CASE_LOAD_SCREEN.json > s10-receipts/sha256.txt
