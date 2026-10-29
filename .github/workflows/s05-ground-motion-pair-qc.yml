@@ -9,6 +9,8 @@ on:
       - 'research/wind-tower/experiments/T079/s05_cesmd_processed_metadata.py'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
       - 'research/wind-tower/experiments/T079/s08_si_motion_diagnostics.py'
+      - 'research/wind-tower/experiments/T079/s08_horizontal_orientation_energy_gate.py'
+      - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_ARIAS_HUSID_3COMP_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv'
@@ -329,6 +331,40 @@ jobs:
               for key in keys:
                   assert math.isclose(float(row[key]),actual[key],rel_tol=2e-12,abs_tol=1e-12),(row['component'],key)
           print('REAL_S08_3COMP_ARIAS_HUSID_24_NUMERIC_CROSSCHECK_PASS_NOT_DESIGN_OR_NATIVE_PASS')
+          PY
+      - name: REAL S08 horizontal energy orientation-invariance diagnostic (NOT design or structural response)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s08_horizontal_orientation_energy_gate.py "$base/s08_horizontal_orientation_energy_gate.py"
+          curl -fLsS --retry 3 -o esm-public-processed/committed_s08_orientation.csv "$base/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv"
+          echo "bb6e9ba3aed16a7ce6d5b60306a7fa001f3dc9746035bee57d31fab69724569a  s08_horizontal_orientation_energy_gate.py" | sha256sum -c -
+          echo "507ce28dfdb2dfc97d91a2a03a742093c21b6b350aa5dedd6e69a690044e54fa  esm-public-processed/committed_s08_orientation.csv" | sha256sum -c -
+          python3 -m py_compile s08_horizontal_orientation_energy_gate.py
+          python3 s08_horizontal_orientation_energy_gate.py esm-public-processed/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv | tee esm-public-processed/s08_orientation.stdout
+          tail -n +2 esm-public-processed/s08_orientation.stdout > esm-public-processed/s08_orientation.json
+          python3 - <<'PY'
+          import csv,json,math
+          j=json.load(open('esm-public-processed/s08_orientation.json'))
+          with open('esm-public-processed/committed_s08_orientation.csv',newline='') as f: rows=list(csv.DictReader(f))
+          assert len(rows)==1 and j['npts']==32040
+          assert not j['design_wave_pass'] and not j['instrument_low_frequency_pass'] and j['abaqus_e_we_run']==0
+          a=rows[0]
+          assert a['source_csv_sha256']==j['source_csv_sha256']
+          assert int(a['npts'])==j['npts']
+          for key in ('dt_s','horizontal_vector_pga_m_s2','horizontal_vector_pga_time_s',
+                      'horizontal_arias_sum_m_s','horizontal_husid_d5_95_s',
+                      'energy_q_ee_m2_s3','energy_q_nn_m2_s3','energy_q_en_m2_s3',
+                      'energy_principal_azimuth_deg_from_HNE_mod180',
+                      'energy_eigenvalue_major_m2_s3','energy_eigenvalue_minor_m2_s3',
+                      'energy_major_minor_ratio'):
+              assert math.isclose(float(a[key]),j[key],rel_tol=2e-12,abs_tol=1e-12),(key,a[key],j[key])
+          assert a['design_wave_pass']==a['instrument_low_frequency_pass']=='False'
+          assert int(a['abaqus_e_we_run'])==0
+          assert j['energy_eigenvalue_major_m2_s3']>j['energy_eigenvalue_minor_m2_s3']>0
+          print('REAL_S08_HORIZONTAL_ORIENTATION_12_NUMERIC_CROSSCHECK_PASS_NOT_DESIGN_OR_NATIVE_PASS')
           PY
       - name: Real ESM processed low-frequency numerical triage (NOT SNR/design PASS)
         if: success()
