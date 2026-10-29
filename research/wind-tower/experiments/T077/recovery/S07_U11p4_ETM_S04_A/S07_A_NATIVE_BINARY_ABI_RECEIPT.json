@@ -1,0 +1,35 @@
+{
+  "FIG": "NONE",
+  "HOLD": "No native initialization/version/banner/controller runtime ABI or 31-station OUTB",
+  "RUN": {
+    "abaqus": 0,
+    "openfast": 0,
+    "type": "static PE/ABI preflight"
+  },
+  "SOURCE": {
+    "dll_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+    "exe_sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a"
+  },
+  "STANDARD": "NOT_READ",
+  "TAB": {
+    "dll_pe": {
+      "discon_case_variants": [
+        "DISCON"
+      ],
+      "discon_export": true,
+      "export_count": 1,
+      "machine": "AMD64",
+      "optional_header": "PE32+",
+      "sections": 19
+    },
+    "exe_pe": {
+      "discon_case_variants": [],
+      "discon_export": false,
+      "export_count": 0,
+      "machine": "AMD64",
+      "optional_header": "PE32+",
+      "sections": 9
+    },
+    "manifest_files": 20
+  }
+}
