@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 04时｜S06原生九站TPzi位置核验（SOURCE/RUN实测，非物理PASS）
+
+本轮直接下载[真实OpenFAST 0.1s原生artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678/artifacts/13003849096)，对SHA256锁定OUTB（`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`）中九站×三时刻的`TPzi`实值解码，并与原始31段CSEG→ED节点映射逐站比较。九站原生高度与理想ED节点差最大21.566μm；节点与CSEG中点离散误差最大58.393mm；半量化界约2.634nm。输出[九行真实数表](../../experiments/T062/S06_9GAGE_NATIVE_TPZI_POSITION_QC_20261031.csv)（SHA256 `eea27b44441289ee6a605e26026e8aaeb00e634238109637de7a79a81bb20061`）及[可复算程序](../../experiments/T062/s06_native_tpzi_position_qc.py)（SHA256 `b4a3732651d3308c1ce6f790f4f3b265aaa7adf233fc245f74d02692e2599b18`），本地4项负向拒绝测试通过，未新跑求解/CI。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、来源阅读层级、量化/几何误差与HOLD见[T077既有S06过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。1mm为非规范内部诊断界；本轮仅**首批9站位置身份数值QC**，不是31站NTM、DLC1.2或Abaqus物理PASS。**12阶段0/12未晋级，S06 PARTIAL，E/WE原生0项。**
+
+
 ## 2026-10-31 03时｜S06原生OpenFAST 0.1s九站初始化/通道成功（不是正式NTM或物理PASS）
 
 已在[Actions #41114066678](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678)真实执行OpenFAST v3.5.3+ROSCO v2.6.0（0.1s，exit=0，原生日志`terminated normally`），得到[SHA锁定OUTB/原生日志收据](../../experiments/T062/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json)：FileID4、295通道、0/0.05/0.1s三点、9站×6力矩通道+9个TPzi共63个必需字段全部存在。OUTB SHA256=`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`。本轮源是158m原始FST/ED/NTM InflowWind同SHA；为避免436MB风场转储仅将派生子版改成9.343881m/s稳态风，TMax=0.1s、TStart=0s、首批9个gage。**这不是NTM/DLC1.2风场、不是31段同步生产时程，也不证明Abaqus/PT或材料疲劳物理PASS。** 初次CRLF字段解析、TStart门禁、缺共享Rotor依赖的真实失败及修复均已写入[T077原过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。STANDARD无新授权条文验收，地震E/WE=0；**12阶段0/12未晋级，S06 PARTIAL**。下一单一动作：用已归档OUTB的9个TPzi与31段中点源几何逐点核位置误差，不重跑同一0.1s。
