@@ -18,6 +18,8 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_GROSS_SINGLE_CHANNEL_NOMINAL_DEL_20261030.csv'
       - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv'
       - 'research/wind-tower/experiments/T071/T071_input_geometry_31_segments.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s10_pt_uniform_offset_counterfactual.py'
+      - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_P0_PE_UNIFORM_OFFSET_COUNTERFACTUAL_20261030.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -314,3 +316,48 @@ jobs:
                   assert resp.status==201 and result['content']['path']==path
                   print('REAL_S10_PR_FILE_CREATED',path,result['commit']['sha'])
           PY
+
+
+  s10-pt-uniform-real-counterfactual:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch SHA-pinned real 1984-row gross stress, geometry, and PT scenario code
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments"
+          curl -fLsS --retry 3 -o geometry.csv "$root/T071/T071_input_geometry_31_segments.csv"
+          curl -fLsS --retry 3 -o gross.csv "$root/T077/recovery/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv"
+          curl -fLsS --retry 3 -o s10_pt_uniform_offset_counterfactual.py "$root/T077/recovery/s10_pt_uniform_offset_counterfactual.py"
+          curl -fLsS --retry 3 -o committed.csv "$root/T077/recovery/S10_4CASE_31SEG_P0_PE_UNIFORM_OFFSET_COUNTERFACTUAL_20261030.csv"
+          echo "fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800  geometry.csv" | sha256sum -c -
+          echo "16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b  gross.csv" | sha256sum -c -
+          echo "1d56cdf44971589dde25ab8075cdf50999a94eac47707eadfb4870cf74fc8f5d  committed.csv" | sha256sum -c -
+      - name: Independently reproduce real 124-row P0/Pe sensitivity and negative tests (NOT physics)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s10_pt_uniform_offset_counterfactual.py
+          python3 s10_pt_uniform_offset_counterfactual.py --self-test
+          python3 s10_pt_uniform_offset_counterfactual.py --geometry geometry.csv --gross gross.csv --check committed.csv
+          python3 - <<'PY'
+          import csv,math
+          rows=list(csv.DictReader(open('committed.csv',newline='')))
+          assert len(rows)==124
+          assert len({(x['case'],x['segment']) for x in rows})==124
+          assert all(x['status']=='COUNTERFACTUAL_UNIFORM_PT_SHIFT_NOT_LOCAL_OR_FATIGUE_OR_NATIVE' for x in rows)
+          for x in rows:
+              ng=int(x['n_of_16_angles_positive_peak_gross'])
+              ne=int(x['n_of_16_angles_positive_peak_Pe'])
+              n0=int(x['n_of_16_angles_positive_peak_P0'])
+              assert 0<=n0<=ne<=ng<=16
+              assert math.isclose(float(x['gross_max_sigma_MPa'])-float(x['uniform_Pe_compression_MPa']),
+                                  float(x['Pe_shifted_max_sigma_MPa']),rel_tol=1e-10,abs_tol=1e-9)
+          print('REAL_S10_PT_P0_PE_124ROW_MONOTONIC_QC_PASS_NOT_NATIVE_OR_LIFE')
+          PY
+          cp gross.csv tampered.csv
+          sed -i '2s/U09p343881_ETM_S06/FAKE_CASE/' tampered.csv
+          if python3 s10_pt_uniform_offset_counterfactual.py --geometry geometry.csv --gross tampered.csv --check committed.csv >/dev/null 2>&1; then
+            echo 'ERROR: altered source unexpectedly accepted'; exit 1
+          fi
+          echo 'REAL_S10_SOURCE_SHA_TAMPER_REJECTED'
