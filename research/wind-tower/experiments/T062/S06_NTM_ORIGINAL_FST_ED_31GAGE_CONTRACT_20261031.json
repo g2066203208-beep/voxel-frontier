@@ -1,0 +1,147 @@
+{
+  "FST": {
+    "EDFile": "\"DTU_10MW_RWT_ElastoDyn.dat\"",
+    "InflowFile": "\"DTU_10MW_InflowWind.dat\"",
+    "TMax": "700",
+    "DT": "0.0125",
+    "DT_Out": "0.05",
+    "CompElast": "1",
+    "CompInflow": "1",
+    "CompAero": "2",
+    "CompServo": "1"
+  },
+  "ElastoDyn": {
+    "TowerHt_m": 158.0,
+    "TowerBsHt_m": 0.0,
+    "TwrNodes": 1120,
+    "original_NTwGages": 9,
+    "original_TwrGagNd": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      13,
+      15,
+      17,
+      20
+    ],
+    "tower_node_pitch_m": 0.14107142857142857
+  },
+  "batches": [
+    {
+      "batch": 1,
+      "NTwGages": 9,
+      "TwrGagNd": [
+        13,
+        39,
+        65,
+        91,
+        117,
+        142,
+        168,
+        194,
+        220
+      ],
+      "segments": [
+        "CSEG_01",
+        "CSEG_02",
+        "CSEG_03",
+        "CSEG_04",
+        "CSEG_05",
+        "CSEG_06",
+        "CSEG_07",
+        "CSEG_08",
+        "CSEG_09"
+      ]
+    },
+    {
+      "batch": 2,
+      "NTwGages": 9,
+      "TwrGagNd": [
+        246,
+        271,
+        297,
+        323,
+        349,
+        375,
+        400,
+        426,
+        452
+      ],
+      "segments": [
+        "CSEG_10",
+        "CSEG_11",
+        "CSEG_12",
+        "CSEG_13",
+        "CSEG_14",
+        "CSEG_15",
+        "CSEG_16",
+        "CSEG_17",
+        "CSEG_18"
+      ]
+    },
+    {
+      "batch": 3,
+      "NTwGages": 9,
+      "TwrGagNd": [
+        478,
+        504,
+        529,
+        555,
+        581,
+        607,
+        633,
+        658,
+        684
+      ],
+      "segments": [
+        "CSEG_19",
+        "CSEG_20",
+        "CSEG_21",
+        "CSEG_22",
+        "CSEG_23",
+        "CSEG_24",
+        "CSEG_25",
+        "CSEG_26",
+        "CSEG_27"
+      ]
+    },
+    {
+      "batch": 4,
+      "NTwGages": 4,
+      "TwrGagNd": [
+        710,
+        736,
+        762,
+        784
+      ],
+      "segments": [
+        "CSEG_28",
+        "CSEG_29",
+        "CSEG_30",
+        "CSEG_31"
+      ]
+    }
+  ],
+  "max_midpoint_mapping_error_m": 0.07053568928571963,
+  "stage": "S06_PREPARATION_ONLY / NO_NATIVE_31GAGE_OUTPUT",
+  "limitations": "Four output configurations are NOT four validated synchronized native histories; repeat-run state/seed/controller determinism, channel identity, wind loads, reference frame and six-component ownership require native verification. No production solve is authorized.",
+  "STANDARD": "No authorized IEC/GB/NB clause read in this run",
+  "OFFICIAL": "OpenFAST ElastoDyn nine-gage limit: upstream OpenFAST discussions #3087/#3241; check exact executable version before applying",
+  "REF": "No journal article full text read",
+  "RUN": "Python source-byte extraction and geometry mapping only",
+  "FIG": "none",
+  "TAB": "31 CSEG-to-ED-node rows and four planned gage batches",
+  "error_budget": "mapping error is reported per segment; no interpolation of physical load histories; dynamic/structural model error unknown",
+  "physical_pass": false,
+  "SOURCE": {
+    "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+    "fst_sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "ed_sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+    "geometry_sha256": "76fae64318a358ae3621d9ad0934e5bc8f110d886128ce2d02a24d23b6218bfe",
+    "reading_level": "Original ZIP byte stream and FST/ED original text; 31 CSEG source geometry; no new OUTB/solver",
+    "cross_case": "18 NTM FST/ED hashes match these two exact source hashes per existing S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv"
+  },
+  "TAB_sha256": "14e47139816d51030b6255ece5112cdbb8e4ee113b88e3e997c68d433a718692"
+}
