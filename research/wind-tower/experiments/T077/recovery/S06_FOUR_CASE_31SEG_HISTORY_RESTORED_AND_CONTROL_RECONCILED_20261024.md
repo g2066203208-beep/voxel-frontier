@@ -2,6 +2,15 @@
 
 ## 2026-10-31 05时｜S06四批0.1s原生重复性诊断程序与Windows CI（RUN待远端结果，不冒充已完成）
 
+### 2026-10-31 05:20｜四批原生0.1s远端数值诊断已产生真实收据（覆盖上段PENDING，不代表NTM物理PASS）
+
+**真实新增证据**：Windows Actions执行路径自动向PR #42提交了[四批原生公共通道QC收据](../../T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json)，自动提交[fb738e98224539ece026d60b085b821dca8cf8a3](https://github.com/g2066203208-beep/voxel-frontier/commit/fb738e98224539ece026d60b085b821dca8cf8a3)已从远端回读，文件Git blob=`e000a88302ea925a57bfb184740ed35d434a2e2b`。真实收据`status=NUMERICAL_CHANNEL_PARITY_PASS`、四批9+9+9+4节点、四个原生OUTB SHA256依次为`d20794e8f5c7d288be614b71da39bf98d080cb187220d2e4caa2790c6c6c8509`、`a33ab325ad70cd9e16bf4b12795022b147956352934a89acbf47281811cf472d`、`4968554a871d6378ffdd57db4ecb00d09ae9ec5ae5ca2dae794793`、`e17005faef1013c8a38c4fe77760cfae4eca6514d9d9fb700e72af6e5c6f804d`。四份stdout SHA256在收据`native_stdout_sha256`字段逐一锁定。四批native exit=0、原生正常终止日志及3时刻FileID4均通过程序检查；**106个公共非gage通道×3个时刻×3组对照=954项，最大绝对解码差=0，失败0项**。该零差是在packed OUTB解码分辨率下，不能推出未量化内部状态逐位相同。
+
+**SOURCE/阅读层级**：本轮直接远端读取自动提交的完整QC JSON及commit；原生OUTB与stdout的SHA由远端脚本从真实字节计算，**本轮未再次下载四份OUTB原件或逐行读取原生stdout**。原生日志/OUTB按工作流定义保存在[四批Actions工作流](https://github.com/g2066203208-beep/voxel-frontier/actions/workflows/s06-ntm-native-0p1s-probe.yml)artifact；本轮连接器未提供该次run ID/原件下载，后续须回读具体run/artifact以进一步独立核验，不能冒充已经二次逐字节复算。**REF**=沿用T062 31段源几何与OpenFAST配置，无新期刊原页。**STANDARD**=无新授权IEC/GB/NB原页，不作规范PASS。**OFFICIAL**=SHA锁定OpenFAST v3.5.3+ROSCO；**RUN**=四个原生0.1s STEADY风诊断，自动提交的收据表明全部检查成功，未直接读取workflow总体status；**FIG**=无；**TAB**=收据内106行公共通道数值对照。**误差预算**=每通道每批`1.1×(halfLSB_A+halfLSB_B)+1e-8`，最大量化容差随通道而异（收据最大67.176原单位），本次实测解码差0，物理误差仍未知。**HOLD**=436MB真实NTM BTS未使用、0.1s不能证明控制器长期同态、31段700s四批同步/六分量载荷映射/材料疲劳均未通过；S06仍PARTIAL、S07/S10物理HOLD、E/WE原生0、**12阶段0/12未晋级**。PR #42仍Draft，未合并、未修改T057/T070或main。
+
+**下一单一动作**：恢复一个真实NTM seed的原始BTS并仅作最短可行时长的四批共同通道一致性复核（先验证风场起始时间/有效区间，禁止直接700s生产），将稳态诊断与真实湍流确定性严格分开。
+
+
 **本轮新增可执行物**：复用既有[T062 0.1s原生探针](../../T062/s06_ntm_native_0p1s_probe.py)，新增`--batch 1..4`，依照已核31段映射的`9+9+9+4`节点修改**派生**ElastoDyn（第4批同时把`NTwGages`改为4），保留T057/T070冻结母本和原始FST/ED字节。新增[四批原生OUTB公共通道对照程序](../../T062/s06_native_4batch_common_channel_qc.py)，以原生OUTB FileID4、三时刻0/0.05/0.1s、九/四测点各6载荷+TPzi为门禁，比较四批非`TwHt`公共通道（含塔底六分量），要求每一时刻相对第一批的偏差不超过`1.1×(两批各自packed半LSB之和)+1e-8`（按原通道单位）。源输入SHA、派生FST/风场/控制器一致性、四份stdout与OUTB SHA及逐通道残差将在真实[四批CI工作流](../../../../.github/workflows/s06-ntm-native-0p1s-probe.yml)中记录。此界仅为数值量化一致性诊断，不是结构响应/控制器内部状态误差预算。
 
 **SOURCE/阅读层级**：直接读取PR #42原始`s06_ntm_native_0p1s_probe.py`、[31段原始ED映射收据](../../T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json)、既有0.1s原生收据及Actions #41114066678原生结果记录；原FST SHA256=`5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`、ED=`6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`、历史首批OUTB=`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`。本轮**未重新下载原ZIP/OUTB**；新四批原生OUTB与日志在工作流成功前均为**待生成**，绝不借用历史首批OUTB当四批结果。
