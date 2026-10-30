@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 05时｜S06四批0.1s原生诊断可执行管线已提交（待CI原生结果）
+
+已复用[T062原生0.1s探针](../../experiments/T062/s06_ntm_native_0p1s_probe.py)增加四批9+9+9+4独立测点派生配置，并提交[四批公共通道量化误差对照程序](../../experiments/T062/s06_native_4batch_common_channel_qc.py)与[Windows原生CI工作流](../../../../.github/workflows/s06-ntm-native-0p1s-probe.yml)。基于已归档的原始158m FST/ED、31段中点映射及OpenFAST v3.5.3/ROSCO SHA锁定输入；拟生成四份0.1s OUTB/日志和一份公共通道逐时刻QC收据。**本轮代码已远端提交，尚未取得四批新原生OUTB/成功日志，故仅记`PENDING_NATIVE_CI`，不称四批运行PASS**。具体SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、量化误差预算、失败保留与HOLD见[T077既有S06日志05时节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。使用的仍是**稳态诊断风而非真实NTM BTS**，不等于31站700s同步、DLC1.2、材料疲劳或地震。**12阶段0/12未晋级，S06 PARTIAL，E/WE原生0项**。
+
+
 ## 2026-10-31 04时｜S06原生九站TPzi位置核验（SOURCE/RUN实测，非物理PASS）
 
 本轮直接下载[真实OpenFAST 0.1s原生artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678/artifacts/13003849096)，对SHA256锁定OUTB（`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`）中九站×三时刻的`TPzi`实值解码，并与原始31段CSEG→ED节点映射逐站比较。九站原生高度与理想ED节点差最大21.566μm；节点与CSEG中点离散误差最大58.393mm；半量化界约2.634nm。输出[九行真实数表](../../experiments/T062/S06_9GAGE_NATIVE_TPZI_POSITION_QC_20261031.csv)（SHA256 `eea27b44441289ee6a605e26026e8aaeb00e634238109637de7a79a81bb20061`）及[可复算程序](../../experiments/T062/s06_native_tpzi_position_qc.py)（SHA256 `b4a3732651d3308c1ce6f790f4f3b265aaa7adf233fc245f74d02692e2599b18`），本地4项负向拒绝测试通过，未新跑求解/CI。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、来源阅读层级、量化/几何误差与HOLD见[T077既有S06过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。1mm为非规范内部诊断界；本轮仅**首批9站位置身份数值QC**，不是31站NTM、DLC1.2或Abaqus物理PASS。**12阶段0/12未晋级，S06 PARTIAL，E/WE原生0项。**
