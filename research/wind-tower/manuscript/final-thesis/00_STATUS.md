@@ -7,6 +7,10 @@
 
 
 
+## 2026-10-30 09时｜S05真实ESM 16周期高通边界/数值网格QC（数据准备，不是设计或原生PASS）
+
+继承ESM v3真实`IT-2012-0008/NVL/MP`三分量32,040×0.005s和已归档0.5–10s处理谱，使用SHA256锁定源表`a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6`新增[可复算16周期逐点QC](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv)和[既有S05程序](../../experiments/T079/s05_ground_motion_pair_qc.py)输入校验/8项异常拒绝测试。周期频率相对0.040Hz已登记高通角频率比50→2.5，10s处理想二阶高通单程/假设双程单频衰减约1.256%/2.496%，**不能当作真实ESM滤波幅频响应，也不能修正宽频PSA**；dt/2dt未抗混叠抽稀的最大相对差0.2292%不代表低频仪器可靠。首个真实[CI #40983864763](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40983864763)在原源SHA及合成测试通过后因归档12有效位PSA舍入容差过严失败，修正输入舍入容差后新CI待核；完整失败、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及HOLD见[T079 09时过程节](../../experiments/T079/PROCESS_LOG.md)。**S05仍PARTIAL，S08/S09真实E/WE=0，严格0/12整阶段未晋级**；S10材料疲劳与S11结构优化保留。
+
 ## 2026-10-30 08时｜S10分材料疲劳管线：风速bin种子完整性与逐bin损伤可审计输出（仅算法）
 
 本轮在既有[s10_miner_damage_gate.py](../../experiments/T077/recovery/s10_miner_damage_gate.py)中新增事前声明`expected_seeds_per_bin`与实际唯一seed数量一致性门禁，防止风速bin漏样后被静默平均；输出逐bin概率、时长、种子范围及年度条件性损伤贡献。合成解析两bin年损伤贡献118.26+946.08=1064.34，20年21286.8，**均为无工程意义的测试数字**，不是风机材料寿命。新增5项异常拒绝测试；[真实GitHub Actions #40977689111](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40977689111) job 123809670552已completed/success，合成11项拒绝、逐bin贡献4项核对通过，脚本SHA256=8882406749f71f5a0e94ebea3e038d7ae79b47c93daf91f36bc4c3473a3d8e50。**仅算法CI PASS，不是原生/物理PASS。**完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差和HOLD见[T077 08时过程节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。没有新增真实材料应力、S–N或长期风速bin概率，S10仍`CODE_PREPARED / REAL_MATERIAL_STRESS_HOLD`；**12阶段严格0/12未晋级**。S07既有真实装配/静态ABI成果保留，S11优化主线不变。
