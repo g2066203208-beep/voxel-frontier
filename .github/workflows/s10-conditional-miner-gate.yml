@@ -24,6 +24,7 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv'
       - 'research/wind-tower/experiments/T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv'
       - 'research/wind-tower/experiments/T077/recovery/s10_real_stress_sign_regime.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_control_cycle_export_compact.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_3PT_SIGN_REGIME_20261030.csv'
   workflow_dispatch:
 permissions:
@@ -464,3 +465,54 @@ jobs:
             echo 'ERROR: tampered source unexpectedly accepted'; exit 1
           fi
           echo 'S10_REAL_SIGN_REGIME_TAMPERED_SOURCE_REJECTED'
+
+
+  s10-real-control-cycle-mean:
+    name: Real archived 2 ETM ZIP / 3 control points / cycle range+mean (NO MATERIAL LIFE)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Fetch source-locked control cycle script and two historical Actions ZIPs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery"
+          curl -fLsS --retry 3 -o s10_control_cycle_export_compact.py "$base/s10_control_cycle_export_compact.py"
+          echo "4f69b9d6dac90afcfd0e8a7bb5c1c9d5336efb4c12df75790914fa7ae33d8147  s10_control_cycle_export_compact.py" | sha256sum -c -
+          curl -fLsS --retry 3 -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            -o T071-U09-S06-B.zip "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/11465219800/zip"
+          curl -fLsS --retry 3 -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            -o T072-U11-S04-A.zip "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/11483249910/zip"
+          echo "5acbb25968ce43892157545cded26973623f22b5a137839e5154b293aef167db  T071-U09-S06-B.zip" | sha256sum -c -
+          echo "c66a8a22693af0ed5c9cb8f68f51c48a24c046ba4e60cacdb1115040dd0007a9  T072-U11-S04-A.zip" | sha256sum -c -
+      - name: Real 1574 cycle range-mean rows and independent prior DEL oracle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s10_control_cycle_export_compact.py
+          python3 s10_control_cycle_export_compact.py --self-test
+          python3 s10_control_cycle_export_compact.py --zip-dir . \
+            --out S10_3CONTROL_REAL_GROSS_CYCLES.csv --receipt S10_3CONTROL_REAL_GROSS_CYCLES_RECEIPT.json
+          echo "646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83  S10_3CONTROL_REAL_GROSS_CYCLES.csv" | sha256sum -c -
+          python3 - <<'PY'
+          import csv,json,math
+          rows=list(csv.DictReader(open('S10_3CONTROL_REAL_GROSS_CYCLES.csv',newline='')))
+          j=json.load(open('S10_3CONTROL_REAL_GROSS_CYCLES_RECEIPT.json'))
+          assert len(rows)==j['rows']==1574 and not j['physical_pass'] and j['material_damage'] is None
+          assert sum(float(r['count']) for r in rows)==1556.0
+          assert {r['segment'] for r in rows}=={'CSEG_04','CSEG_16','CSEG_17'}
+          print('REAL_S10_1574_CONTROL_CYCLES_RANGE_MEAN_3_ORACLE_PASS_NOT_MATERIAL_LIFE')
+          PY
+      - name: Publish complete 1574-row detail as traceable Actions artifact (NOT PR committed)
+        uses: actions/upload-artifact@v4
+        with:
+          name: S10-REAL-3CONTROL-CYCLE-RANGE-MEAN-${{ github.sha }}
+          path: |
+            S10_3CONTROL_REAL_GROSS_CYCLES.csv
+            S10_3CONTROL_REAL_GROSS_CYCLES_RECEIPT.json
+          retention-days: 30
