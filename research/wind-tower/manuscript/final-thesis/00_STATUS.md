@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+
+## 2026-10-31 00时｜S06真实18组NTM原始OUTB恢复与1080行雨流结果
+
+原始36工况ZIP中18组NTM OUTB（3风速×6 seeds）已逐件SHA验证并解码12001点、60通道，新增[1080行结果CSV](../../experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv)、[18原件SHA收据](../../experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json)、[可复算程序](../../experiments/T062/s06_ntm_18case_original_outb_gate.py)。结果SHA256=95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f；[真实Actions #41087172683](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41087172683)两job成功并提交PR #42。塔底TwrBsMyt m4/Nref600六seed均值为43701.1570/56611.7542/61333.1965 kN·m。原始OUTB仅9测点，**不等于31段、正式DLC1.2或局部材料寿命**；S06 PARTIAL，0/12阶段晋级。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差及HOLD见[T077 S06日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
+
 ## 2026-10-30 23时｜S10真实1574逐循环数据形成第四章原创图与3行对照表
 
 以已提交真实ETM毛截面雨流CSV（SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`）为输入，本轮在JS实际计算三控制点计数加权应力范围超越曲线、P50/P90/P99及5/10MPa非规范阈值超越比例，原1574行/3组DEL oracle一致，3项异常输入拒绝。新增[原创SVG](../../experiments/T077/recovery/FIG4_S10_REAL_CONTROL_RANGE_EXCEEDANCE_20261030.svg)、[3行数表](../../experiments/T077/recovery/S10_3CONTROL_REAL_CYCLE_EXCEEDANCE_SUMMARY_20261030.csv)、[可复算Node程序](../../experiments/T077/recovery/plot_s10_real_cycle_exceedance.js)，并实际嵌入[第四章4.3.5](chapters/04_10MW混合塔架风致疲劳性能分析.md)；详情SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差及HOLD见[T077过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。ETM名义应力≠DLC1.2局部材料寿命；原生E/WE=0，严格0/12未晋级。
