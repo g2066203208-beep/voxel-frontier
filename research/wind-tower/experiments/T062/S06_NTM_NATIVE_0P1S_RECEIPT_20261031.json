@@ -1,9 +1,9 @@
 {
   "case": "U09p343881_NTM_S01",
-  "native_exit_code": 1,
-  "native_log_sha256": "902de15b31f14916fa35e9e54ddb6b34b1a50098244bd47c4e28052d61072f9f",
-  "native_log_tail": "\n**************************************************************************************************\nOpenFAST\n\nCopyright (C) 2024 National Renewable Energy Laboratory\nCopyright (C) 2024 Envision Energy USA LTD\n\nThis program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.\nSee the \"LICENSE\" file distributed with this software for details.\n**************************************************************************************************\n\nOpenFAST-v3.5.3\nCompile Info:\n - Compiler: Intel(R) Fortran Compiler 2021\n - Architecture: 64 bit\n - Precision: single\n - OpenMP: No\n - Date: Apr 11 2024\n - Time: 20:51:36\nExecution Info:\n - Date: 10/30/2026\n - Time: 19:17:10-0000\n\nOpenFAST input file heading:\n    DTU 10MW RWT                - Landbased\n\nRunning ElastoDyn.\nNodal outputs section of ElastoDyn input file not found or improperly formatted.\n\nFAST_InitializeAll:ED_Init:ED_ReadInput:ReadBladeInputs:ReadBladeFile:OpenFInpFile:The input\nfile, \".\\..\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat\", was not found.\n\n\u0007 OpenFAST encountered an error during module initialization.\n Simulation error level: FATAL ERROR\n\n Aborting OpenFAST.\n\n",
-  "outb_present": false,
+  "native_exit_code": 0,
+  "native_log_sha256": "c47a528a4cb8080095a06f4cc20927fbe8a4d450c012070fea30379bbcdcb62b",
+  "native_log_tail": "\n**************************************************************************************************\nOpenFAST\n\nCopyright (C) 2024 National Renewable Energy Laboratory\nCopyright (C) 2024 Envision Energy USA LTD\n\nThis program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.\nSee the \"LICENSE\" file distributed with this software for details.\n**************************************************************************************************\n\nOpenFAST-v3.5.3\nCompile Info:\n - Compiler: Intel(R) Fortran Compiler 2021\n - Architecture: 64 bit\n - Precision: single\n - OpenMP: No\n - Date: Apr 11 2024\n - Time: 20:51:36\nExecution Info:\n - Date: 10/30/2026\n - Time: 19:18:52-0000\n\nOpenFAST input file heading:\n    DTU 10MW RWT                - Landbased\n\nRunning ElastoDyn.\nNodal outputs section of ElastoDyn input file not found or improperly formatted.\nRunning AeroDyn.\nAD15 Nodal Outputs: Nodal output section of AeroDyn input file not found or improperly formatted.\nSkipping nodal outputs.\nRunning InflowWind.\nRunning ServoDyn.\nRunning ServoDyn Interface for Bladed Controllers (using Intel Visual Fortran for Windows).\nUsing legacy Bladed DLL interface.\n Time: 0 of 0.1 seconds.\n                                                                               \n------------------------------------------------------------------------------\nRunning ROSCO-v2.6.0\nA wind turbine controller framework for public use in the scientific field    \nDeveloped in collaboration: National Renewable Energy Laboratory              \n                            Delft University of Technology, The Netherlands   \n------------------------------------------------------------------------------\nGenerator speed:  480.0 RPM, Pitch angle:   0.0 deg, Power:     0.0 kW, Est. wind Speed:   9.3 m/s\n                                                                                                  \n\n Total Real Time:       0.345 seconds\n Total CPU Time:        0.34375 seconds\n Simulation CPU Time:   0.29688 seconds\n Simulated Time:        0.1 seconds\n Time Ratio (Sim/CPU):  0.33684\n\n OpenFAST terminated normally.\n\n",
+  "outb_present": true,
   "source_sha256": {
     "static_part001": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
     "fst": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
@@ -33,6 +33,33 @@
   "TAB": "native nine-gage header and 3 time samples if produced",
   "error_budget": "0.05s output spacing; 3 samples expected; packed OUTB quantization 0.5/scale; no physical accuracy inference",
   "HOLD": "0.1s steady-wind diagnostic only, NOT NTM/31-gage production/ABAQUS or physics PASS",
-  "channel_diagnostic_pass": false,
-  "failure": "OPENFAST_EXIT_1"
+  "outb_sha256": "2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb",
+  "header": {
+    "file_id": 4,
+    "num_samples": 3,
+    "num_output_channels": 295,
+    "first_time_s": 0.0,
+    "time_increment_s": 0.05
+  },
+  "native_gage_channels": 63,
+  "sample_times_s": [
+    0.0,
+    0.05,
+    0.1
+  ],
+  "sample_first_gage": [
+    {
+      "value": -77.186357636,
+      "unit": "(kN)"
+    },
+    {
+      "value": -69.440983688,
+      "unit": "(kN)"
+    },
+    {
+      "value": -55.072866234,
+      "unit": "(kN)"
+    }
+  ],
+  "channel_diagnostic_pass": true
 }
