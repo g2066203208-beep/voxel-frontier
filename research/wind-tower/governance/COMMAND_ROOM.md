@@ -20,6 +20,10 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-30 18时S06→S10真实同步雨流已完成（NUMERIC ONLY）**：16/16历史真实ZIP由Actions重新下载并按原SHA验证，4 ETM×31段×12001时刻=1,488,124行，同一时刻Fz/Mx/My生成16周向×124站=**1,984行**毛截面名义应力雨流、**124行**控制表；372真实源载荷通道×m4/m10=744个数值与既有载荷DEL交叉验算，最大绝对差5.09e−10。真实[Actions #41040252054/job #124011001555](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41040252054/job/124011001555) completed/success，[1984行](../experiments/T077/recovery/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv) SHA256=16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b，[124行](../experiments/T077/recovery/S10_4CASE_31SEG_SYNC_GROSS_CONTROL_20261030.csv) SHA256=36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3，[源收据](../experiments/T077/recovery/S10_4CASE_31SEG_SYNC_GROSS_RECEIPT_20261030.json)均由Actions create-only提交PR #42。首次远端urllib重定向401失败保留，curl重试成功。原生Abaqus 0、真实材料寿命0，S10物理HOLD，**12阶段0/12未晋级**。下一责任：本机/网页协同核定同一截面风轴及有效PT/材料位置，继承该真实时程接口，推进分材料局部应力雨流，而非再算单通道DEL。
+
+
+
 **2026-10-30 16时S05独立增量：** 已从真实ESM RotD50 16周期数表对**明确假设**的6度/II/第一组多遇谱形完成0.5–6s 12周期对数最小二乘比较，最佳单尺度0.980397、谱形RMSE(log)=0.534707、9/12周期偏离自设±30%诊断带；[真实CI job #123959751440](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41024644851/job/123959751440) success，96数值单元回归，7–10s未外推，详细[源/算法/失败/规范层级](../experiments/T079/PROCESS_LOG.md)。不是嘉鱼正式谱或GB/IEC验收；原生E/WE=0，12阶段0/12。
 
 **2026-10-30 15时S08独立增量：** ESM三向32,040点真实处理波已转换为96,120对X/Y/Z幅值表，来源/产物SHA及自由质点符号测试见[T079 15时日志](../experiments/T079/PROCESS_LOG.md)；不是Abaqus E/WE，场址谱与方向/单位仍HOLD，12阶段0/12。
@@ -422,3 +426,9 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 ### HANDOFF-20261030-S10-REAL-SYNC-18-START
 
 - **START / 2026-10-30 18:10–18:20 CST / 网页版GPT**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=4f3042dadba1cfc9539ba19936a3509e4d7313b2`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、指挥室进度/最近交接、T077 S06原始16批manifest/来源release、T071几何、S06现有rainflow脚本及17时单通道S10结果。**本轮不是新DEL推导或S01重复审查**：从真实旧Actions归档实际下载16个原始ZIP，按各自SHA256验源，计算四ETM工况×31站×16周向方位**同一时刻Fz/Mx/My联合名义正应力**，重新雨流而不是叠加单通道DEL。已完成本地全源32s运行和4工况×CSEG01 12通道/24 DEL独立回归；当前原生Abaqus/材料寿命仍0。拟提交T077/recovery既有任务目录内新实质性计算脚本、124站控制表、真实结果收据，补T077现有过程日志、00_STATUS和本指挥室。旧T057/T070冻结母本不改，不合并PR，不跑高成本生产。下一责任：网页版完成原始时程到材料局部应力的源身份/坐标/PT有效态接口，本机原生应力验证另行按门禁。
+
+
+
+### HANDOFF-20261030-S10-REAL-SYNC-18-END
+
+- **END / 2026-10-30 18时 CST / 网页版GPT**：继承4工况×31站真实历史源，不重复S01；实际从历史Actions直接取得16/16 ZIP且逐SHA验证，完成同一时刻Fz/Mx/My 16角1,984行名义应力雨流与124行控制截面表。本地24个真实通道DEL数值独立回归通过；首次真实CI #41040074980因urllib跨域重定向401失败，保留日志；修复为curl后真实[CI #41040252054/job #124011001555](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41040252054/job/124011001555) completed/success，原仓库manifest/几何/744行源SHA与16 ZIP/GZIP/CSV三层验证，**372通道×2指数=744个真实数值交叉核验**通过。已在Draft PR #42创建[程序](../experiments/T077/recovery/s10_sync_gross_from_archived.py)、[1984行CSV](../experiments/T077/recovery/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv)、[124行CSV](../experiments/T077/recovery/S10_4CASE_31SEG_SYNC_GROSS_CONTROL_20261030.csv)、[原源收据](../experiments/T077/recovery/S10_4CASE_31SEG_SYNC_GROSS_RECEIPT_20261030.json)，并更新[T077过程日志](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)和[论文状态](../manuscript/final-thesis/00_STATUS.md)。原始16 ZIP仍在Actions归档/已有Draft Release，不重复进Git；全量数值已实际下载回读。**SOURCE**=16 ZIP原始SHA及T071几何、历史744行DEL；**REF**=REF018 Eq1及既有ASTM雨流；**STANDARD**=未核授权2025 IEC/GB/NB条款；**OFFICIAL**=Actions源ZIP/日志；**RUN**=Python真实历史数值，非Abaqus；**FIG**=无原生云图；**TAB**=1984+124行真实结果；**误差**=浮点CSV解析末位最大1e−13、离散角度/坐标/截面错位0.07041m及PT/材料/局部FE未闭合。阶段0/12未晋级，S10材料寿命0。**单一最大HOLD**：局部材料应力输入尚未与经验证的有效PT/接缝/坐标物理基线绑定。**下一单一动作**：以真实同步应力时程为基础，核定截面坐标和有效PT/材料位置并建立可审计局部应力时程映射（不启动昂贵RUN）。冻结T057/T070未改、PR仍Draft、不合并。
