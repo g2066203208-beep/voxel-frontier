@@ -2,6 +2,16 @@
 
 > **结论：PASS-RECOVERED-CSV-INTEGRITY + PASS-31-CONTROL-ALGEBRA-ROUNDTRIP；S06仍PARTIAL/HOLD；不是OpenFAST原始OUTB重新复算、不是Abaqus native、不是任何规范验算PASS。** 这是12阶段关键路径中S06的实质性源数据恢复，不新增T080编号、不改T057/T070母本、不合并Draft PR #42、不启动昂贵计算。
 
+## 2026-10-30 12时｜S10 Paulson 1983原始试验域门禁：真实Python CI原生日志回读（仅算法PASS）
+
+**SOURCE / 输入身份与阅读层级：** 本轮未增加新材料试验或ODB。直接通过GitHub Actions官方API回读[工作流 #40995874124](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40995874124)及其[job #123868750975](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40995874124/job/123868750975)原始完整日志（713行，约165250字符）。该workflow绑定commit `c41a3cf22e27d07dabb43d6dccbe8706f2433410`，按该commit URL直接获取原程序；job日志显示`sha256sum s10_local_stress_rainflow_gate.py` = `30f6745c177dbc502b33709885800d294a8c437e3822f1dc1641f82581a729da`，与11时已提交程序的SHA256**完全一致**。**这是一份对确切源码的真实Python执行证据，不是从GitHub工作流绿色图标推测。** 
+
+**RUN / 原生日志逐项核实：** job `s10-miner-synthetic`已`completed/success`；步骤`Compile and known-answer/negative tests`通过，日志逐行执行`python3 -m py_compile s10_local_stress_rainflow_gate.py`与`python3 s10_local_stress_rainflow_gate.py --self-test`。程序JSON原样可复算的关键值：`status=PASS_SYNTHETIC_ONLY`、`negative_tests=12`、`pt_negative_tests=14`、`counted_cycles=2.0`、`pt_paulson_primary_A1L_log10_N_raw_only=5.851211455321456`、`pt_eq1_eq2_analytic_log10_N=4.8427900303521305`、`pt_eq1_eq2_synthetic_sample_damage=1.4361836215065169e-05`、`pt_paulson_15p2mm_subset_domain_match=false`、`real_local_stress_runs=0`、`material_life_runs=0`。合成源CSV SHA256=`2fabca4d30e6018d15a7ad5c1be22b6267e916a8f6404037a7a1af20a2f2dae5`。相同job的Miner种子完整性测试亦为`PASS_SYNTHETIC_ONLY`（`negative_tests=11, seed_contract_tests=5, bin_contribution_checks=4`）。这些均不是158m塔的应力、疲劳损伤或寿命。
+
+**REF / STANDARD / OFFICIAL：** REF163 Paulson/Frank/Breen 1983原报告印刷p57/58/60/62与REF023 Qu2026 HTML §2.2 Eq.(1)–(2)的阅读层级**沿用11时记录，本轮没有重新读取PDF原件**；A-1L原式不含Goodman，Qu是二级组合，15.2mm F子样本`Smin=50–97ksi, Sr=26–69ksi`，本次正例`Smin=830MPa≈120.38ksi`**不落入F子域**，因此仅为A全集域方法正例。STANDARD：未读新的授权GB/IEC/fib条款，规范验收仍HOLD。OFFICIAL：GitHub Actions原生Python作业日志（不是Abaqus/fe-safe原生）。
+
+**FIG / TAB / 误差预算 / 失败与HOLD：** FIG：新真实响应图0；TAB：上述真实CI JSON数值和14项PT负向测试。算术测试采用双精度约`1e-12`断言，不构成材料离散、网格、Pe或长期风气候误差预算；这些仍为`NEED_ESTIMATE`。前次100MPa试验域外测试已修正，旧失败保留在10/11时节；**本轮原生Python CI通过，没有Abaqus或OpenFAST生产求解**。原始UT Austin PDF实体SHA256仍`NOT_CAPTURED`，真实局部PT/混凝土/钢筋/钢塔应力及适用S–N参数仍缺，S10只可记`SOURCE_LOCKED_PYTHON_CI_PASS / REAL_MATERIAL_STRESS_HOLD`，**12阶段整阶段0/12未晋级**。S11抗震约束疲劳优化主线保留，不把合成Miner数值写入论文材料寿命。
+
 ## 2026-10-30 10时｜S10 REF023 PT疲劳原式核读与分材料方法接口实证（仅研究级）
 
 **阅读层级：**直接读取2026-09-28开放原刊[Qu等, Buildings 16(19):3854, DOI 10.3390/buildings16193854](https://www.mdpi.com/2075-5309/16/19/3854)网页全文§2.1–2.3相关段落及§2.2 Eq.(1)–(5)；不是摘要。其引用的Paulson等700余根钢绞线试验**原论文未直接核读**，属于二级方法证据。继承[第四章原页图谱](../../manuscript/final-thesis/04_FATIGUE_SOURCE_EVIDENCE_ATLAS_20261006.md)REF018 Huang2025 p3/p6/p7/p10/p11、REF002 Kenna2019 p205–206、REF007李泽宇第6章的历史页码；这些原PDF本轮未重新逐页打开。2024 GB/T50010官方修订p8–9为前轮原页证据，本轮没有新增授权规范条文。
