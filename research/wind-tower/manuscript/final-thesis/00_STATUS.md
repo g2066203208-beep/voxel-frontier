@@ -1,5 +1,9 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 05:20｜S06四批原生0.1s公共通道数值诊断通过（仅稳态风）
+
+Windows原生四批9+9+9+4派生测点诊断已产生并自动提交[真实QC收据](../../experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json)，[自动commit fb738e9](https://github.com/g2066203208-beep/voxel-frontier/commit/fb738e98224539ece026d60b085b821dca8cf8a3)已远端回读。**四个原生OUTB SHA锁定，106个公共非gage通道×3时刻×3对照=954项，最大解码差0，失败0**；这仅是packed OUTB分辨率内数值重复性，不是内部控制器状态证明。具体四个SHA、stdout SHA、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差预算及run ID/原始artifact二次核验缺口见[T077 05:20日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**原始NTM 436MB BTS未使用（改为稳态诊断风），700s四批同步/六分量映射/DLC1.2仍HOLD；S06 PARTIAL、12阶段0/12未晋级，E/WE原生0项。** 下一项仅恢复单个真实NTM seed做短时确定性核验，不启动生产。
+
 ## 2026-10-31 05时｜S06四批0.1s原生诊断可执行管线已提交（待CI原生结果）
 
 已复用[T062原生0.1s探针](../../experiments/T062/s06_ntm_native_0p1s_probe.py)增加四批9+9+9+4独立测点派生配置，并提交[四批公共通道量化误差对照程序](../../experiments/T062/s06_native_4batch_common_channel_qc.py)与[Windows原生CI工作流](../../../../.github/workflows/s06-ntm-native-0p1s-probe.yml)。基于已归档的原始158m FST/ED、31段中点映射及OpenFAST v3.5.3/ROSCO SHA锁定输入；拟生成四份0.1s OUTB/日志和一份公共通道逐时刻QC收据。**本轮代码已远端提交，尚未取得四批新原生OUTB/成功日志，故仅记`PENDING_NATIVE_CI`，不称四批运行PASS**。具体SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、量化误差预算、失败保留与HOLD见[T077既有S06日志05时节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。使用的仍是**稳态诊断风而非真实NTM BTS**，不等于31站700s同步、DLC1.2、材料疲劳或地震。**12阶段0/12未晋级，S06 PARTIAL，E/WE原生0项**。
