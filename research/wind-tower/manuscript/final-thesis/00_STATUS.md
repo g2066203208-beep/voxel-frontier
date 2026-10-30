@@ -7,6 +7,10 @@
 
 
 
+## 2026-10-30 10时｜S10 REF023 PT钢绞线原式已接入可执行条件性算法（非材料寿命）
+
+直接核读[REF023 Qu2026开放原刊HTML §2.2 Eq.(1)–(5)](https://www.mdpi.com/2075-5309/16/19/3854)：Paulson型lgN=13.95−3.5lg(Sr/MPa)、PT Goodman等效应力Δσ/(1−σm/fu)，fu=1860MPa为该文钢绞线材料；Paulson原始试验全文未读。既有[s10_local_stress_rainflow_gate.py](../../experiments/T077/recovery/s10_local_stress_rainflow_gate.py)新增REF023二级文献方法专用参数锁与9项负向测试；[真实CI #40989738556](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989738556) job 123848968255 success，含原有雨流/Miner/68part静态回归。合成范围100MPa、均值930MPa、fu1860MPa → 等效200MPa、lgN=5.896395015176065、单合成循环damage=1.2694189722453895e-6，**绝非本塔真实寿命**。初版[CI #40989722290](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989722290)因合成CSV双反斜杠换行失败，已修复并保留失败证据。混凝土fib原式/拉压、HRB400规范疲劳表应用、钢塔DNV/EN焊缝细节均仍HOLD；详见[T077 10时四材料来源矩阵、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。无原生ODB局部应力、无真实材料寿命或地震结果，S10仅方法程序实证，**12阶段严格0/12未晋级**，S11优化主线不变。
+
 ## 2026-10-30 09时｜S05真实ESM 16周期高通边界/数值网格QC（数据准备，不是设计或原生PASS）
 
 继承ESM v3真实`IT-2012-0008/NVL/MP`三分量32,040×0.005s和已归档0.5–10s处理谱，使用SHA256锁定源表`a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6`新增[可复算16周期逐点QC](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv)和[既有S05程序](../../experiments/T079/s05_ground_motion_pair_qc.py)输入校验/8项异常拒绝测试。周期频率相对0.040Hz已登记高通角频率比50→2.5，10s处理想二阶高通单程/假设双程单频衰减约1.256%/2.496%，**不能当作真实ESM滤波幅频响应，也不能修正宽频PSA**；dt/2dt未抗混叠抽稀的最大相对差0.2292%不代表低频仪器可靠。首个真实[CI #40983864763](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40983864763)在源SHA及合成测试通过后因归档12有效位PSA舍入容差过严失败；修正后[CI #40983937279](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40983937279)的S05数值子job `123830353233`真实success（16行逐点数值回归通过），**整体workflow因CESMD官方域名DNS解析失败而failure**，不能称整体CI通过；完整失败、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及HOLD见[T079 09时过程节](../../experiments/T079/PROCESS_LOG.md)。**S05仍PARTIAL，S08/S09真实E/WE=0，严格0/12整阶段未晋级**；S10材料疲劳与S11结构优化保留。
