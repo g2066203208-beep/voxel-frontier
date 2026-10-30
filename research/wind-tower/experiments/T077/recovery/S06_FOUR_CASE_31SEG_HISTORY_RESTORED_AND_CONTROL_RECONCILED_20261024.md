@@ -1,5 +1,16 @@
 # S06：四工况×31段六分量时程从历史GitHub Actions恢复（2026-10-24）
 
+## 2026-10-31 05时｜S06四批0.1s原生重复性诊断程序与Windows CI（RUN待远端结果，不冒充已完成）
+
+**本轮新增可执行物**：复用既有[T062 0.1s原生探针](../../T062/s06_ntm_native_0p1s_probe.py)，新增`--batch 1..4`，依照已核31段映射的`9+9+9+4`节点修改**派生**ElastoDyn（第4批同时把`NTwGages`改为4），保留T057/T070冻结母本和原始FST/ED字节。新增[四批原生OUTB公共通道对照程序](../../T062/s06_native_4batch_common_channel_qc.py)，以原生OUTB FileID4、三时刻0/0.05/0.1s、九/四测点各6载荷+TPzi为门禁，比较四批非`TwHt`公共通道（含塔底六分量），要求每一时刻相对第一批的偏差不超过`1.1×(两批各自packed半LSB之和)+1e-8`（按原通道单位）。源输入SHA、派生FST/风场/控制器一致性、四份stdout与OUTB SHA及逐通道残差将在真实[四批CI工作流](../../../../.github/workflows/s06-ntm-native-0p1s-probe.yml)中记录。此界仅为数值量化一致性诊断，不是结构响应/控制器内部状态误差预算。
+
+**SOURCE/阅读层级**：直接读取PR #42原始`s06_ntm_native_0p1s_probe.py`、[31段原始ED映射收据](../../T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json)、既有0.1s原生收据及Actions #41114066678原生结果记录；原FST SHA256=`5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`、ED=`6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`、历史首批OUTB=`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`。本轮**未重新下载原ZIP/OUTB**；新四批原生OUTB与日志在工作流成功前均为**待生成**，绝不借用历史首批OUTB当四批结果。
+
+**REF**：沿用T062历史配置，无新期刊全文原页阅读。**STANDARD**：未新读IEC/GB/NB授权原文，不作条款验收。**OFFICIAL**：固定OpenFAST v3.5.3 exe SHA256=`0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a`与原ROSCO DLL；原生运行结果以新CI stdout/OUTB为准。**RUN**：已将Windows四批0.1s native job与失败日志artifact流程提交，提交时尚未回读新run成功，状态`PENDING_NATIVE_CI`；不声称四批成功。**FIG**：无。**TAB**：四批节点9/9/9/4沿用已有31行表；待生成新逐通道QC JSON（若真实RUN成功）。**误差预算**：packed量化+浮点容差如上；结构/载荷所有权/长期风场/真实控制器内部状态误差仍`NEED-ESTIMATE`。**失败**：本轮暂未取得新CI失败/成功日志，若CI失败须保留原日志并修复，不降格为PASS。**HOLD**：本次为**9.343881m/s稳态风代替436MB真实NTM BTS**的0.1s诊断，即使四批通过也不能证明同一湍流seed的31站700s同步、DLC1.2、PT初态、材料疲劳或E/WE。**S06 PARTIAL；12阶段0/12，E/WE原生0**。
+
+**下一单一动作**：回读四批原生CI与失败/成功日志，取得四份OUTB SHA及公共通道逐时刻残差；若通过再设计单个真实NTM seed的最小同步验证，不启动700s生产。
+
+
 ## 2026-10-31 04时｜S06原生九站TPzi位置与CSEG中点实测对照（非物理PASS）
 
 **SOURCE/阅读层级：** 本轮实际下载并解包[Actions #41114066678 artifact #13003849096](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678/artifacts/13003849096)，原始ZIP 9142字节 SHA256=`694df4176bf222b0db851117bfb606a861f4e5d29d5af2411ddfa6b2c40e4e78`，其中原生OUTB 9790字节 SHA256=`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`，原生stdout SHA256=`c47a528a4cb8080095a06f4cc20927fbe8a4d450c012070fea30379bbcdcb62b`。原始31段节点映射CSV SHA256=`14e47139816d51030b6255ece5112cdbb8e4ee113b88e3e997c68d433a718692`；原始FST/ED、派生诊断风源SHA沿用本日志03时收据。本轮直接读取ZIP/OUTB/日志**原始字节**，非仅复述manifest。CRC、exit=0及原生`OpenFAST terminated normally`均通过。
