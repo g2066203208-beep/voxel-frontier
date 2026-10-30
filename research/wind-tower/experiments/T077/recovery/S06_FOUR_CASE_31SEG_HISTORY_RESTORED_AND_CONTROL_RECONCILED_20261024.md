@@ -586,3 +586,27 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **REF**：原T074静重力模型、原S06 30接缝重力账及S07 OpenFAST v3.5.3 ElastoDyn源码审计收据；这些是工程源码/派生数据级证据，**不是新增期刊原页阅读**。**STANDARD**：未读取新增IEC2025/GB/NB授权条款，未进行条款验收。**OFFICIAL**：仓库真实OpenFAST历史Actions源/静重力账，D400仅诊断子模型；本轮没有新的官方标准文件。**FIG**：无原生云图或自造结构响应图。**TAB**：124行真实轴力绝对对照+120相邻段差分。**误差预算**：CSV源9位小数、浮点相减的数值误差约1e−6 kN量级以下；**物理误差未定**：静态与运行状态差异、截面位置0.07041m上限、惯性/RNA归属、模型质量差异、局部坐标、PT自平衡和接缝接触均未验收。**PASS/HOLD**：只有真实CSV数值诊断及脚本测试可PASS，S01–S04物理门禁仍HOLD，S10材料寿命0、原生E/WE=0、12阶段0/12；冻结T057/T070未修改、PR #42保持Draft。
 
 **2026-10-30 20:08 真实CI回读与输入/输出字节身份：** [Actions #41052970884 / job #124053328891](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41052970884/job/124053328891)于2026-10-30实际回读为`completed/success`，job的“源SHA固定下载”和“124站120增量复算+PT反例/篡改拒绝”两步骤均success；同workflow的另外3个轻量job success，16 ZIP昂贵重算job按条件skipped，整个workflow success。该次CI绑定代码commit `615bcc936c9ecf1db16e444c25cddd7436599685`；源文件逐字节SHA256分别为`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`（744行）与`ba43732de537854e0361d1aa4cc2792bf8b80ab3536115b6b2f1c9e2317dfe6f`（30接口）；新增[124行CSV](S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv) **24685字节/SHA256=`bcec1d70d0a5e93a9f9d37efcde32e9e57bfa61b592ab31ba5bc58a6a455797e`**，[Python程序](s10_fz_gravity_ownership_real.py) **7854字节/SHA256=`d45b23bc92af65fe50b18407b7fb7fa985aadd026cbe62ee51c64930cfec22f8`**；SHA计算使用独立标准SHA256实现，并以已知源SHA及`abc`标准测试向量校验。GitHub连接器无法直接取job的完整原始文本日志（`/actions/jobs/124053328891/logs` 返回HTTP400端点不允许），所以**只声称job及各step状态真实回读，不伪称已经下载逐行原始日志**。数值PASS不替代PT原生物理PASS；无新Abaqus、无新材料寿命、0/12。
+
+
+## 2026-10-30 21时｜S10：真实同步名义应力的“全压／拉压变号／全拉”疲劳域识别（NUMERIC ONLY）
+
+**研究问题与实质增量：**此前已完成4个真实ETM工况×31段×16周向位置=1984条同一时刻Fz/Mx/My生成的名义应力雨流；P0与Pe均匀压应力偏置已做过“是否有正峰值”计数。本轮不重复DEL或单纯重算正峰，而是进一步判定**每一个周向测点的整个600s采样窗口**属于哪种应力符号域：\(\max_t\sigma\le0\)为**全压**，\(\min_t\sigma<0<\max_t\sigma\)为**拉压变号**，\(\min_t\sigma\ge0\)为**全拉**。这是按样本极值分类的**测点数**，绝不是“循环次数”或材料裂缝次数。只用已有真实min/max，按互斥条件性\(\sigma_{\mathrm{gross}}\)、\(\sigma_{\mathrm{gross}}-P_e/A\)、\(\sigma_{\mathrm{gross}}-P_0/A\)三个假设，避免把PT施加到未经证明的OpenFAST内力上并称物理事实。
+
+**SOURCE/输入原件及SHA256（本轮实际GitHub Git Blob完整CSV读取并用独立标准SHA256算法验证）：**
+- [1984行真实同步名义应力及雨流统计](S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv)，479328字节，SHA256 \`16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b\`；来源是18时真实16 ZIP归档重算，原始12001步时程**本轮未重新下载**，此轮读的是每条同步时程已计算的min/max/DEL及12001样本身份。
+- [124行P0/Pe互斥均匀偏置表](S10_4CASE_31SEG_P0_PE_UNIFORM_OFFSET_COUNTERFACTUAL_20261030.csv)，30349字节，SHA256 \`1d56cdf44971589dde25ab8075cdf50999a94eac47707eadfb4870cf74fc8f5d\`；\`P0=51.6096 MN\`、\`Pe=39.7535589546 MN\`，是条件性毛截面P/A，**非本次Abaqus原生平衡**。
+- 上游身份：OpenFAST 158m四个ETM×31段×0.05s×600s、16方位22.5°离散；D400/Pe是HRB400/C65诊断支路，不能称冻结T057 HRB335/原型混凝土C50。
+
+**RUN/TAB：** 用JavaScript IEEE754双精度对GitHub完整CSV逐行计算、分组及124条既有“正峰值计数”交叉检查，生成[372行真实应力域表](S10_4CASE_31SEG_3PT_SIGN_REGIME_20261030.csv)，54171字节、SHA256 \`5aed0d1eaf822e6119deeacf1183f97d87f431667fc733d4afae6eede286441e\`，4工况×31段×3条件，每行16周向位置；总计每条件1984个测点：
+
+| 互斥条件 | 600s全压测点 | 600s拉压变号测点 | 600s全拉测点 | 与旧“正峰值测点数”独立核对 |
+|---|---:|---:|---:|---|
+| 毛截面、不另加PT | 784 | 1200 | 0 | 1200/1984 |
+| 均匀有效PT Pe/A | 1285 | 699 | 0 | 699/1984 |
+| 均匀名义初张P0/A | 1366 | 618 | 0 | 618/1984 |
+
+每一行三类之和16，124组各三情景的有正峰值测点数与此前P0/Pe 124行独立表逐格相同；随压应力增加，“有正峰值”测点数单调不增；**全拉为0并不意味着没有拉应力，也不等于接缝无开裂**。例如U09p343881_ETM_S06/CSEG16：毛截面全压4/变号12、Pe全压9/变号7、P0全压10/变号6，最大采样名义应力分别24.902338/18.427328/16.496230 MPa。对每个固定周向点，常数PT偏置不改变原雨流应力幅与DEL，但改变应力均值、应力比和符号域；这解释为什么不能只看DEL就选择材料疲劳模型。
+
+**CODE/数值验收：** [Python 3标准库源锁定复算程序](s10_real_stress_sign_regime.py) SHA256 \`015f70786df20a18bc1bd1a42e0947d0bc03043381e39e8803df9e57e78439c4\`，校验2份源SHA、1984/124行、4×31×16完备性、样本数/方位/应力极值/材料身份、PT大小关系、旧正峰计数oracle；可\`--self-test\`、\`--gross ... --pt ... --check ...\`或\`--output\`；已有[S10轻量工作流](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s10-conditional-miner-gate.yml)新增独立job，执行SHA锁定源、Python复算、逐字节\`cmp\`、三类合计及篡改输入拒绝。**本段提交时仅确认JS真实数值运算、输出SHA及远端文件身份；Python CI状态待远端job完成后按实际记录，绝不提前声称CI PASS。** 这不是原生Abaqus/fe-safe运行。
+
+**REF**：已归档Huang et al. 2025印刷p6 Eq.(1)毛截面应力解析映射，当前只复用已完成的真实同步应力时程统计；本轮未新增期刊原页阅读。**STANDARD**：未读取新增GB/IEC/NB授权原文，未做规范条款验收。**OFFICIAL**：历史OpenFAST源/归档Actions与GitHub原CSV；未取得原生ODB。**FIG**：未生成未经FE验证的结构云图或寿命图。**TAB**：372行应力域结果及上述真实统计。**误差预算/假设**：CSV极值保留约12有效数字、IEEE754舍入约1e-9MPa以下（离零极近时符号分类可能敏感，未建立物理不确定带）；16周向点不是连续截面全周最大值，600s/0.05s采样不是20年风况，PT按毛截面均匀P/A是反事实且可能与源Fz/PT归属重计；未知真实局部材料应力、接缝开闭、PT有效态、材料S–N/平均应力修正。**FAIL/HOLD**：不能从每条时程的总体min/max/DEL恢复每个雨流循环的均值/应力比，因此不做Goodman/混凝土/钢筋/PT材料寿命；原生E/WE=0、材料寿命0、12阶段0/12。**下一动作**：将已有原始同步12001步时程（不是本轮汇总极值）与经原生验证的材料位置/有效PT耦合，提取**每个雨流循环的幅值+均值**，再进入分材料损伤；不可从这372行倒推出材料寿命。
