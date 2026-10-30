@@ -745,3 +745,6 @@ PR #42已实际存在[16行真实RotD表](../../experiments/T079/real-records/S0
 
 
 **2026-10-30 21时｜S10真实同步名义应力符号域（非材料寿命）：** 继承已真实恢复的4 ETM×31段×16方位=1984条600s同步应力极值，使用互斥gross/Pe/P0均匀偏置生成[372行符号域表](../../experiments/T077/recovery/S10_4CASE_31SEG_3PT_SIGN_REGIME_20261030.csv)，SHA256 \`5aed0d1eaf822e6119deeacf1183f97d87f431667fc733d4afae6eede286441e\`；三种条件下1984测点“全压/拉压变号/全拉”分别为**784/1200/0、1285/699/0、1366/618/0**。每组16方位三类合计、与旧PT正峰计数逐格一致，实际输入SHA及Python复算程序/CI见[T077 21时原过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。这不是1200次循环、裂缝、材料疲劳寿命或PT原生物理PASS；仅解释为什么相同应力幅DEL不足以决定不同均值/符号域的疲劳材料模型。12阶段0/12，原生E/WE与材料寿命仍0，未改冻结T057/T070。
+
+
+**2026-10-30 22时 S10真实逐循环均值推进：** 本轮实际下载两件SHA锁定历史Actions ZIP，读取216018行同步六分量，选CSEG16/17（U09 S06、180°）与CSEG04（U11 S04、0°）三个真实控制点，从12001步应力时程独立雨流得到**1574行cycle range/mean/count**（413/526/635），m4 DEL 7.052731838/7.037161801/7.169089049MPa，m10与半整循环数均与原1984行结果独立一致；真实Pe/P0常数偏置后重新雨流验证仅mean平移，range/count不变。脚本/3行数值表/源SHA收据在[T077 recovery](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)22时节，完整1574行本地SHA=\`646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83\`，Actions复算/PR全量提交尚待远端真实核验。**不是局部材料应力、20年Miner寿命或原生PT验证**；12阶段0/12，冻结T057/T070不变。
