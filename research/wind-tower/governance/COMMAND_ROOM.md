@@ -20,6 +20,8 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-31 06时 S06源级新进展：** [30行真实18 NTM塔底+9个低位测点My六seed离散表](../experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv)与[可复算Node程序](../experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js)已入PR #42，源1080行CSV和2000条manifest SHA锁定；[Actions #41136033657](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41136033657)成功完成源SHA、坏输入拒绝和30行逐字节复算。塔底三风速m4 DEL六seed CV=13.329354%/11.900626%/6.428970%。**36个原始BTS在当前GitHub归档中均无实体/原件SHA**，.inp/.sum/.dat有108项manifest索引；不得声称本机也缺BTS。仅source-only，S06 PARTIAL、0/12、E/WE=0；下一独立动作：S07真实九站六分量坐标/力矩基准变换守恒测试，不因BTS缺失停摆。详细证据[T077 06时](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
+
 **2026-10-31 05:20 S06四批原生0.1s诊断数值结果已回写：** [自动提交fb738e9](https://github.com/g2066203208-beep/voxel-frontier/commit/fb738e98224539ece026d60b085b821dca8cf8a3)和[四批真实QC JSON](../experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json)远端已读：9+9+9+4测点、4份OUTB SHA及stdout SHA、106公共通道×3时刻×3对照=954项、最大解码差0、失败0。**只验证0.1s稳态诊断风的packed数值一致性；真实NTM BTS、700s四批时程、内部控制状态及载荷坐标仍HOLD。** 完整SOURCE/误差/原生日志run ID待回读缺口见[T077 05:20](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。S06 PARTIAL，12阶段0/12，E/WE=0。下一项：真实NTM seed短时四批确定性验证，不做700s生产。
 
 
@@ -79,6 +81,10 @@
 - **START / 2026-10-31 02时 CST / 自动研究任务：** main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=88cdcd4cca5d4c7a134db89e20bb40cb82719236`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、本指挥室当前进度及最近交接、T077既有S06日志、T062原始几何收据与18组NTM SHA身份表。继承已验证18 NTM原始OUTB与FST/ED同一SHA身份，不重算DEL。限定本轮从真实静态ZIP直接读取原始FST/ElastoDyn字节，使用31段原始几何映射TwrGagNd并输出最多9个gage一组的四批只读配置计划；不生成生产INP、不执行700s OpenFAST/Abaqus、不改冻结T057/T070、不合并。拟改T062源解析程序/两张轻量结果、既有S06轻量workflow、T077过程日志、00_STATUS与本指挥室；责任方网页版/Actions，原生求解保留本机后续门禁。
 
 <a id="handoff-log"></a>
+### HANDOFF-20261031-06-S06-NTM-SEED-SPREAD-BTS-SOURCE-END
+- **START/补登（顺序偏差透明记录）/2026-10-31 06时 CST / 自动研究任务：** 开工时已读取main=`58c1e545f67b645417d5957189f5dad693d975bb`、PR #42 Open/Draft、read_base_sha=`0880848961430eacc5884cbe5a50e1663742726b`，AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、COMMAND_ROOM现有快照与05时交接、T062真实18 NTM载荷源CSV/四批0.1s稳态原生收据、T077 05:20日志。**本次先完成小型脚本/CSV提交后才在指挥室补登START，不符合AGENTS“写前登记”顺序；如实记录，不伪造提前登记。** 继承18 NTM源级DEL及四批稳态诊断，不重复OpenFAST/Abaqus。
+- **END / 本轮新增**：脚本commit `6031b9e3ca319aebec456925d27a7b72480203f7`、30行数据commit `e7e8fa87cdad913ca9fe91de0a4e78930eb4b2b2`、轻量CI workflow commit `1e88a56503abe716dcda0d1838faf1f8bb955b65`；[Actions #41136033657/job #124338588919](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41136033657)成功，日志逐字节cmp通过，输出SHA256 `8ffc0beda1ee837561e798c547f1ba2f1ad9db514124820853a381922a0b79d7`。源manifest中36/36 BTS缺归档实体和SHA；这不代表本地无BTS。已同步T077过程日志、00_STATUS与本指挥室。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差/HOLD详见T077 06时节。**0/12未晋级、S06 PARTIAL、E/WE=0；未启动生产RUN、未动T057/T070、未合并PR。** 下一责任：S07九站六分量坐标/力矩守恒回归程序；BTS有原件后再做真实湍流四批短时核验。
+
 ### HANDOFF-20261031-04-S06-NATIVE-TPZI-END
 - **END / 2026-10-31 04时 CST：** 从真实原生artifact #13003849096直接读取ZIP/OUTB/stdout并核三重SHA；9站×3时刻TPzi解码、9行CSV、可复算Python及4项错误输入拒绝已在本轮容器实跑。程序SHA256 `b4a3732651d3308c1ce6f790f4f3b265aaa7adf233fc245f74d02692e2599b18`、CSV SHA256 `eea27b44441289ee6a605e26026e8aaeb00e634238109637de7a79a81bb20061`，Git blob分别 `1103a694ecd53199f5cf4686a5aa0cdfc7809e3c`、`94ab49b73cf988affb8900df8e3106622382d650`，远端已回读；T077 S06日志和00_STATUS同步。数值最大原生-ED节点差21.566μm、ED节点-截面中点差58.393mm；仅本地算法验收，**无新CI/求解/规范条款/物理PASS**。PR仍Draft、冻结T057/T070及main不改。下一责任：网页版/Actions在无生产求解前先形成同seed四批短时重复运行的确定性对照与状态一致性QC；本机Abaqus L02独立推进。
 
