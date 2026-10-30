@@ -48,6 +48,10 @@
 **状态用语：** 已完成（有证据）／待定位核验（已有线索）／增量待做（明确变更或缺项）／阻塞（指出依赖）。“0/12整阶段PASS”只能描述新验收框架，不能表示原论文完成度为0。
 
 <a id="handoff-log"></a>
+### HANDOFF-20261031-01-S06-NTM-INPUT-IDENTITY-START
+
+- **START / 2026-10-31 01时 CST / 自动研究任务：** main=\`58c1e545f67b645417d5957189f5dad693d975bb\`，PR #42 Open/Draft，\`read_base_sha=f2a416e0059034d4cfa8aaa6017147c69c406075\`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划及本指挥室；继承18组原始NTM OUTB的SHA收据与1080行DEL，不重算。发现**原始静态归档manifest含18组NTM的FST/ElastoDyn/Tower/ServoDyn/InflowWind条目**，此前S06仅强调9站OUTB；本轮限定：将静态配置manifest与补充OUTB manifest、18组真实OUTB收据逐案例交叉连接，输出可复算18行源身份表及严格失败测试，说明读取级别为manifest、非本轮重新解包。拟改T062轻量程序/数表、T077既有S06过程日志、00_STATUS和本指挥室；不修改冻结母本、不合并、不跑生产。
+
 ### HANDOFF-20261030-S07-A-REAL-ASSEMBLY-WEB-06-START
 
 - **START / 2026-10-30 06时 CST / 网页版GPT：** main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 Open/Draft；`read_base_sha=e66bb1f942994f7f5d8ddea0afd28a7e82d9d1e2`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、指挥室快照与交接、T077 S07最新程序/源SHA/依赖图/初始化RUN卡、T072历史workflow及S07现有Actions工作流。继承A批原始三ZIP、437MB BTS与61MB EXE前轮真实哈希、合成装配测试和所有HOLD；本轮仅尝试**在一次GitHub-hosted受控job中实际获取BTS实体并装配、逐件哈希与持久保存轻量收据**，不重复原有DEL、S01小审查或合成测试报告，不启动OpenFAST/Abaqus。拟改既有S07 workflow、T077过程日志、00_STATUS与本指挥室；不改冻结T057/T070、不合并PR。说明：前次BTS实体未持久上传且runner已释放，本轮必须重新拉取一次才能完成真实装配；如LFS/配额失败记录真实日志与HOLD，不冒称装配。
