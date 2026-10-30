@@ -346,3 +346,7 @@ RUN：直接扩展现有 `s05_esm_public_processed_pair.py` 和现有S05 workflo
 已核GitHub目录：Ch1–3 38张、Ch4疲劳30张、比较学位论文6张PNG，三份SHA文件按**文件名**74/74相符，尚未逐图像素/SHA字节重新核验；地震S05/S08/S09专门原图缺、Ch5优化原页图册缺，六章正文Markdown嵌图0，正式自有结果仅S06三张ETM筛查SVG（非结构寿命/地震响应）。
 
 详见[12阶段计划本轮原图和自图对照审计](../../governance/THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md#2026-10-30按原文图证据和自有结果逐阶段核查github文件级非原图像素审稿)及[已补录的FIG登记表](../../registry/figure_table_registry.tsv)。REF论文图存在不等于本文RUN可信；S05–S09地震原文方法页/本站目标谱未配齐，S10/S11真材料/优化图未有。**本轮仅目录审计，不新增求解/物理图，严格0/12未晋级。**
+
+### 2026-10-30｜源论文实际原图与本文下一步物理量对照
+
+本轮直接以GitHub二进制PNG原页进行**两张像素回读**：何泽瑜2024表3-2（Git Blob `b65d9d271fd50c71084d4ffee8aa55bcc663623e`）确实显示31段几何/内外纵筋数量；Huang2025印刷p6 Fig.10与Eq.(1)/(2)（Git Blob `f4d6cc1ea2a763cbd7ba0b85a9a8417528f1348c`）显示wind-bin damage，以及**Fz/Fpt/Mx/My→方位截面名义应力**和按风速概率的Miner汇总。纠正“必须先有Abaqus才可独立形成任何应力筛查”的过度门槛：可在真实31站六分量与本模型截面/PT身份核准后独立做**名义应力条件性初筛**；接缝、PT局部热点和绝对材料寿命仍须后续验证。详细原图链接、方法适用边界及科研状态写入[12阶段证据审计](../../governance/THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md)。SOURCE/REF=上述两页实际可读；STANDARD=未核；RUN=0原生；FIG=2抽样原页；TAB=真实表3-2；**不得以抽核代表全部原页已验证**。
