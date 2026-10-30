@@ -1,0 +1,90 @@
+{
+  "date_local": "2026-10-30 22:12 Asia/Shanghai",
+  "status": "REAL_3CONTROL_12001STEP_GROSS_RAINFLOW_RANGE_MEAN_NUMERIC_PASS_NOT_LOCAL_MATERIAL",
+  "source_read_level": "HISTORICAL_ACTIONS_ARTIFACT_ZIP_BYTES_AND_GZIP_CSV_FULL_12001_POINT_SOURCE_READ",
+  "source": [
+    {
+      "case": "U09p343881_ETM_S06",
+      "batch": "B",
+      "artifact_id": 11465219800,
+      "zip_sha256": "5acbb25968ce43892157545cded26973623f22b5a137839e5154b293aef167db",
+      "gzip_sha256": "73ac606f43a1bf777fa303ca781a76a643dbe79bda52f7177886f417d07c5e20",
+      "csv_sha256": "43d4b07d6dbe63de3d6b12b5fc3093ce91ba8e0510eccc29aba0087732dcc734",
+      "source_rows": 108009
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "batch": "A",
+      "artifact_id": 11483249910,
+      "zip_sha256": "c66a8a22693af0ed5c9cb8f68f51c48a24c046ba4e60cacdb1115040dd0007a9",
+      "gzip_sha256": "1931fd91b7e7fc1304f928c404def83e7e7106f3359357642882b8101b55291d",
+      "csv_sha256": "3b6d048afdb86f955b413015e51a8b44fa662627f5cdb7eb92038b7c7fd30245",
+      "source_rows": 108009
+    }
+  ],
+  "geometry_source_sha256": "fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800",
+  "prior_gross_1984row_sha256": "16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b",
+  "conditional_pt_124row_sha256": "1d56cdf44971589dde25ab8075cdf50999a94eac47707eadfb4870cf74fc8f5d",
+  "script_sha256": "4f69b9d6dac90afcfd0e8a7bb5c1c9d5336efb4c12df75790914fa7ae33d8147",
+  "full_cycle_csv_rows": 1574,
+  "full_cycle_csv_sha256": "646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83",
+  "full_cycle_csv_bytes": 280249,
+  "output_csv_repository_status": "FULL_DETAIL_GENERATED_LOCALLY;_CI_ARTIFACT_JOB_REGISTERED_SEPARATELY;_NOT_YET_COMMITTED",
+  "controls": [
+    {
+      "case": "U09p343881_ETM_S06",
+      "segment": "CSEG_16",
+      "angle_deg": 180,
+      "cycle_rows": 413,
+      "half": 11,
+      "full": 402,
+      "eq_cycles": 407.5,
+      "DEL4_MPa": 7.052731838018007,
+      "DEL10_MPa": 17.1088699573567
+    },
+    {
+      "case": "U09p343881_ETM_S06",
+      "segment": "CSEG_17",
+      "angle_deg": 180,
+      "cycle_rows": 526,
+      "half": 11,
+      "full": 515,
+      "eq_cycles": 520.5,
+      "DEL4_MPa": 7.037161800717715,
+      "DEL10_MPa": 17.040793412716468
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "segment": "CSEG_04",
+      "angle_deg": 0,
+      "cycle_rows": 635,
+      "half": 14,
+      "full": 621,
+      "eq_cycles": 628,
+      "DEL4_MPa": 7.169089049140665,
+      "DEL10_MPa": 14.537117957290361
+    }
+  ],
+  "checks": [
+    "ZIP_GZIP_CSV_SOURCE_SHA_MATCH",
+    "600_SECOND_TIME_GRID_12001_SAMPLES_EACH",
+    "RAIN_FLOW_KNOWN_ANSWER_AND_BAD_INPUT_REJECTED",
+    "PRIOR_REAL_DEL_M4_M10_AND_CYCLE_COUNTS_MATCH",
+    "PE_P0_MEAN_SHIFT_RAINFLOW_RECOMPUTE_INVARIANCE",
+    "ONE_BYTE_ZIP_TAMPER_REJECTED"
+  ],
+  "software": "Python 3.13 stdlib local; original OpenFAST generated in historical workflow",
+  "REF": "existing ASTM E1049 style rainflow convention; no new journal full text this run",
+  "STANDARD": "no newly read authorized IEC/GB/NB clauses; no clause PASS",
+  "OFFICIAL": "GitHub Actions source ZIP artifacts, original OpenFAST OUTB not re-read",
+  "RUN": "local 2 ZIP/216018 rows; no native Abaqus",
+  "FIG": "none",
+  "TAB": "3-row control summary committed; 1574-row detail generated and sha-locked; Actions artifact pending",
+  "assumptions": "gross elastic sigma=0.001*[Fz/A+R/I(sin(theta)Mx-cos(theta)My)], fixed 3 azimuths, Pe/P0 are mutually exclusive uniform P/A mean-shift hypotheses",
+  "numeric_error_budget": "DEL4/DEL10 independent 1984-row oracle absolute tolerance 1e-8 MPa; Pe/P0 cycle invariance abs 1e-10 MPa; source grid abs 1e-7 s",
+  "physical_error_budget": "NOT_ESTIMATED: gage-section offset, local material/geometry, joint/PT state, coordinate and load ownership, wind bin probabilities, fatigue curves",
+  "native_Abaqus_runs": 0,
+  "material_damage": null,
+  "physical_pass": false,
+  "stage_pass_count": 0
+}
