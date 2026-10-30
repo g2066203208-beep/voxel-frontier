@@ -10,6 +10,8 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_load_del_control_stability.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_ETM_LOAD_DEL_CONTROL_186_20261028.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_ETM_LOAD_DEL_CONTROL_SUMMARY_6_20261028.csv'
+      - 'research/wind-tower/experiments/T062/s06_ntm_18case_input_identity.js'
+      - 'research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,6 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Reproduce original 18 NTM input/OUTB SHA identity without any solver or ZIP download
+        shell: bash
+        run: |
+          set -euo pipefail
+          node research/wind-tower/experiments/T062/s06_ntm_18case_input_identity.js \
+            --static research/wind-tower/archive/local-assets-20261004/file-manifest.json \
+            --supplement research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json \
+            --receipt research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json \
+            --check research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv \
+            --self-test
       - name: Reproduce all 12 paired DEL rows from source SHA; reject altered input
         shell: bash
         run: |
