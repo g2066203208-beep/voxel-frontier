@@ -447,6 +447,46 @@ jobs:
                   print('REAL_ESM_EXTRA_HP2_SENSITIVITY_NOT_FILTER_RECOVERY',name,item)
           print('S05_QC_NOT_DESIGN_PASS')
           PY
+      - name: REAL ESM 16-period horizontal RotD00/50/100 and vertical PSA regression (NOT design wave)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check 'numpy==2.3.5'
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s05_esm_rotd_real.py "$base/s05_esm_rotd_real.py"
+          curl -fLsS --retry 3 -o esm-public-processed/committed_rotd.csv "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv"
+          curl -fLsS --retry 3 -o esm-public-processed/committed_rotd_receipt.json "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_RECEIPT_20261030.json"
+          echo "d315ea8a9501bdf5c7542c0b454809ef5b9db7f18e69515cb1ba6e946fd98571  s05_esm_rotd_real.py" | sha256sum -c -
+          echo "6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205  esm-public-processed/committed_rotd.csv" | sha256sum -c -
+          echo "abd7554a07f8be499469443d9199de19b135f9c3703a06ea3ea833747ed9d63f  esm-public-processed/committed_rotd_receipt.json" | sha256sum -c -
+          python3 -m py_compile s05_esm_rotd_real.py
+          python3 s05_esm_rotd_real.py --self-test --source-csv esm-public-processed/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv --reference-csv esm-public-processed/committed_dense.csv --output-csv esm-public-processed/recomputed_rotd.csv --output-receipt esm-public-processed/recomputed_rotd_receipt.json
+          python3 - <<'PY'
+          import csv, json, math, hashlib
+          root='esm-public-processed/'
+          def digest(name):
+              return hashlib.sha256(open(root+name,'rb').read()).hexdigest()
+          assert digest('S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv')=='a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34'
+          assert digest('committed_dense.csv')=='a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6'
+          with open(root+'committed_rotd.csv',newline='') as f: old=list(csv.DictReader(f))
+          with open(root+'recomputed_rotd.csv',newline='') as f: new=list(csv.DictReader(f))
+          assert len(old)==len(new)==16
+          numeric=0
+          for x,y in zip(old,new):
+              assert x['status']==y['status']=='PROCESSED_RECORD_ORIENTATION_NUMERICAL_QC_NOT_DESIGN_WAVE'
+              for key in x:
+                  if key=='status': continue
+                  assert math.isclose(float(x[key]),float(y[key]),rel_tol=2e-7,abs_tol=1e-10),(key,x[key],y[key])
+                  numeric+=1
+          j=json.load(open(root+'recomputed_rotd_receipt.json'))
+          k=json.load(open(root+'committed_rotd_receipt.json'))
+          for key in k:
+              if key!='numpy_version': assert j[key]==k[key],(key,j[key],k[key])
+          assert j['S05_PASS'] is False and j['Abaqus_E_WE_RUN']==0
+          print('REAL_ESM_16PERIOD_360ANGLE_ROTD_NUMERIC_QC_PASS_NOT_SITE_OR_STRUCTURAL_PASS',numeric)
+          print('REAL_ESM_ROTD_SOURCE_SHA256',j['source_csv_sha256'])
+          PY
       - name: Preserve original official bytes or explicit failure receipt
         if: always()
         uses: actions/upload-artifact@v4
