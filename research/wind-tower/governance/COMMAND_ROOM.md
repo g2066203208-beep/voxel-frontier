@@ -20,6 +20,9 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-31 05时S06四批短时原生重复性诊断管线已提交（尚未取得四批新原生日志）：** 继承04时首批9站TPzi原生QC和02时31段9+9+9+4映射，更新[T062 0.1s探针](../experiments/T062/s06_ntm_native_0p1s_probe.py)支持四批派生ED测点、[新公共通道量化对照程序](../experiments/T062/s06_native_4batch_common_channel_qc.py)及既有Windows CI工作流。原始FST/ED/OpenFAST exe SHA锁定，四批各0.1s稳态风、非真实NTM BTS，比较公共非测点通道的三个时刻并保留原生日志和OUTB。**代码/CI已入Draft PR #42，四批RUN及结果收据仍待远端执行/回读，不能宣称四批成功**；[T077 05时SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB和HOLD](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级、S06 PARTIAL、E/WE=0**。下一项：回读本次CI真实stdout/OUTB/公共通道残差，优先修复任何原生失败，不启动700s。
+
+
 **2026-10-31 04时S06真实原生九站位置QC：** 本轮实际下载[原生Actions artifact #13003849096](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678/artifacts/13003849096)并验证ZIP/OUTB/stdout SHA，逐点解码FileID4九站×三时刻TPzi。原生TPzi与理想ED节点z最大差**21.566μm**；首批9站ED节点与CSEG中点最大离散差**58.393mm**，二者不可混淆。新[九行CSV](../experiments/T062/S06_9GAGE_NATIVE_TPZI_POSITION_QC_20261031.csv) SHA256 `eea27b44441289ee6a605e26026e8aaeb00e634238109637de7a79a81bb20061`、[只读复算程序](../experiments/T062/s06_native_tpzi_position_qc.py) SHA256 `b4a3732651d3308c1ce6f790f4f3b265aaa7adf233fc245f74d02692e2599b18`已入PR #42；4项负向拒绝本地通过，未新跑OpenFAST/Abaqus/CI。**仅9站短时位置QC；S06 PARTIAL、12阶段0/12、E/WE原生0。** 下一项同一NTM seed四批短时重复运行确定性对照，非700s生产。
 
 **2026-10-31 03时S06原生0.1s九站通道诊断：** [Actions #41114066678](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678) completed/success，SHA锁定原始158m OpenFAST v3.5.3+ROSCO v2.6.0、第一批9站；`TMax=0.1s,TStart=0s,DT_Out=0.05s`，为避免436MB BTS采用明确改动的9.343881m/s**稳态诊断风**，原生exit=0、OUTB 295通道/3时刻、9×6+9TPzi=63字段存在。OUTB SHA256=`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`，真实[小型收据](../experiments/T062/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json)、[程序](../experiments/T062/s06_ntm_native_0p1s_probe.py)和原生日志artifact均保存。失败修复链见[T077 03时过程](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**只判短时初始化/字段存在性PASS；不是NTM、DLC1.2、31站同步、PT或Abaqus物理PASS，S06 PARTIAL，12阶段0/12**。下一唯一动作：用现有OUTB 9个TPzi逐点核CSEG中点空间误差，无须重复0.1s求解。
@@ -57,6 +60,11 @@
 
 **状态用语：** 已完成（有证据）／待定位核验（已有线索）／增量待做（明确变更或缺项）／阻塞（指出依赖）。“0/12整阶段PASS”只能描述新验收框架，不能表示原论文完成度为0。
 
+
+### HANDOFF-20261031-05-S06-FOUR-BATCH-NATIVE-DIAGNOSTIC
+- **START/读回执（补登）/2026-10-31 05时 CST / 网页版GPT：** `read_base_sha=28468d013bbf96e3f920f99c602989d927fe4ba3`，main基准经README核读，PR #42当时Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、指挥室当前进度/历史交接及T062原生探针/31段映射/原生OUTB历史收据、T077 S06最新过程。继承首批9站原生0.1s PASS及TPzi位置QC；本轮只增量开发四批9+9+9+4短时原生输出与公共通道数值一致性检查，不改T057/T070、不做生产RUN。拟改T062原探针、T062四批QC、既有workflow、T077 S06日志、00_STATUS、指挥室；责任方网页版GPT/Windows Actions。**写前回执晚于首次代码提交补登，不冒称已在首次写入前登记。**
+- **END/已提交：** T062原探针新增`--batch`，第四批`NTwGages=4`；新增`s06_native_4batch_common_channel_qc.py`；原有`.github/workflows/s06-ntm-native-0p1s-probe.yml`改为四批Windows原生0.1s、四份失败/成功日志与OUTB归档、源SHA检查、逐公共通道packed量化容差对照、成功时自动提交小型QC JSON。代码提交`3f9dc3e`、`4cf8fd3`、`8232a76`；T077记录`f1d139f`，论文状态`8196c51`。本交接登记时**未见新CI原生成功日志**，新四批OUTB SHA、结果表均为待生成，不能声称RUN PASS。来源和误差预算见T077 05时节；不合并PR、不修改main或冻结母本。**12阶段0/12未晋级，S06 PARTIAL、地震E/WE=0**。
+- **下一责任/唯一动作：** 回读新四批Windows CI的四份原生stdout/OUTB与公共通道QC；若失败按实际日志修复；真实NTM BTS与700s四批同步仍HOLD，不能以稳态0.1s外推。
 
 ### HANDOFF-20261031-02-S06-NTM-FST-ED-ORIGINAL-START
 - **END / 2026-10-31 02时 CST：** 实际提交T062[原始FST/ED解析器](../experiments/T062/s06_ntm_fst_ed_31seg_gage_contract.py)、31行节点表、四批配置JSON及既有S06轻量CI扩展；原始ZIP SHA256 `ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`，FST `5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`，ED `6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`，T038几何 `76fae64318a358ae3621d9ad0934e5bc8f110d886128ce2d02a24d23b6218bfe`。初次CI真实FAIL（字段误读注释），修复后[真实job #124231340583](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41104769260/job/124231340583) success、四批9+9+9+4、31行及3项拒绝测试通过，job自动提交结果commit `cb2fe6f`；未跑OpenFAST/Abaqus，未读新授权标准，S06 PARTIAL、0/12。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差、HOLD已写入T077既有日志及00_STATUS。责任交接：网页版/本机按原生版本与依赖情况仅做0.1s一个NTM九站通道初始化验证；禁止700s生产、禁止擅合并或改冻结母本。
