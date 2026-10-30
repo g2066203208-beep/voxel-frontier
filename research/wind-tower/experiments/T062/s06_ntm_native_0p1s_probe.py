@@ -109,6 +109,21 @@ def prepare(args):
             target=out/rel
             target.parent.mkdir(parents=True,exist_ok=True)
             target.write_bytes(read(name))
+        # The archived model resolves blade/airfoil references via ../Rotor, not case/Rotor.
+        # Preserve the original shared CASES/Rotor tree in outdir.parent/Rotor.
+        shared=sorted(set(n for z in (z1,z2) for n in z.namelist()
+                          if n.startswith("CASES/Rotor/") and not n.endswith("/")))
+        if not any(n.endswith("/DTU_10MW_ElastoDyn_Blades.dat") for n in shared):
+            raise ValueError("SHARED_ROTOR_BLADE_SOURCE_MISSING")
+        shared_hashes={}
+        for name in shared:
+            rel=name[len("CASES/Rotor/"):]
+            target=out.parent/"Rotor"/rel
+            target.parent.mkdir(parents=True,exist_ok=True)
+            data=read(name);target.write_bytes(data)
+            shared_hashes[rel]=digest(data)
+        if shared_hashes["DTU_10MW_ElastoDyn_Blades.dat"]!="6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d":
+            raise ValueError("SHARED_ROTOR_BLADE_SHA256_MISMATCH")
         fst=read(source_root+"DTU_10MW_RWT.fst")
         ed=read(source_root+"DTU_10MW_RWT_ElastoDyn.dat")
         tower=read(source_root+"C02R3R2_158M_Tower.dat")
@@ -139,6 +154,7 @@ def prepare(args):
         "gage_nodes":GAGES,"source_sha256":SOURCE_SHA,
         "source_archives_sha256":{"part001":digest(a.read_bytes()),"part002":digest(b.read_bytes()),
                                   "supp":digest(s.read_bytes())},
+        "shared_rotor_source_sha256":shared_hashes,
         "derived_sha256":{rel:digest((out/rel).read_bytes()) for rel in
                           ("DTU_10MW_RWT.fst","DTU_10MW_RWT_ElastoDyn.dat",
                            "DTU_10MW_InflowWind.dat","Control/DTU_10MW_RWT_DISCON.IN",
@@ -156,6 +172,7 @@ def prepare(args):
     }
     (out/"S06_0P1S_PREP_RECEIPT.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     print("PREP_PASS",json.dumps({"case":NTM,"gages":GAGES,"TMax":0.1,
+                                   "shared_rotor_files":len(shared_hashes),
                                    "wind":"STEADY_DIAGNOSTIC_NOT_NTM","source_sha256_verified":len(originals)}))
 
 def inspect(args):
