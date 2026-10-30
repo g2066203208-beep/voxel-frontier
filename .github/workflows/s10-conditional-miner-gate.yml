@@ -20,6 +20,9 @@ on:
       - 'research/wind-tower/experiments/T071/T071_input_geometry_31_segments.csv'
       - 'research/wind-tower/experiments/T077/recovery/s10_pt_uniform_offset_counterfactual.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_P0_PE_UNIFORM_OFFSET_COUNTERFACTUAL_20261030.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s10_fz_gravity_ownership_real.py'
+      - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -361,3 +364,53 @@ jobs:
             echo 'ERROR: altered source unexpectedly accepted'; exit 1
           fi
           echo 'REAL_S10_SOURCE_SHA_TAMPER_REJECTED'
+
+  s10-fz-gravity-real-ownership:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch exact SHA-pinned S06 real source statistics and static gravity ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery"
+          curl -fLsS --retry 3 -o loads.csv "$base/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv"
+          curl -fLsS --retry 3 -o gravity.csv "$base/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv"
+          curl -fLsS --retry 3 -o committed.csv "$base/S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv"
+          curl -fLsS --retry 3 -o s10_fz_gravity_ownership_real.py "$base/s10_fz_gravity_ownership_real.py"
+          curl -fLsS --retry 3 -o d400_parts.csv "$base/S10_D400_PE_68PART_INP_METADATA_20261028.csv"
+          echo "9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b  loads.csv" | sha256sum -c -
+          echo "ba43732de537854e0361d1aa4cc2792bf8b80ab3536115b6b2f1c9e2317dfe6f  gravity.csv" | sha256sum -c -
+          sha256sum committed.csv s10_fz_gravity_ownership_real.py d400_parts.csv
+      - name: Reproduce 124 real stations and 120 gravity increments, and reject false PT attribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s10_fz_gravity_ownership_real.py
+          python3 s10_fz_gravity_ownership_real.py --self-test
+          python3 s10_fz_gravity_ownership_real.py --load loads.csv --gravity gravity.csv --check committed.csv
+          python3 s10_fz_gravity_ownership_real.py --load loads.csv --gravity gravity.csv --output recomputed.csv
+          python3 - <<'PY'
+          import csv,math
+          with open('committed.csv',newline='') as f: rows=list(csv.DictReader(f))
+          with open('recomputed.csv',newline='') as f: own=list(csv.DictReader(f))
+          assert len(rows)==len(own)==124
+          assert len({(r['case'],r['segment']) for r in rows})==124
+          joint=[abs(float(r['adjacent_delta_residual_kN'])) for r in rows if r['adjacent_delta_residual_kN']]
+          assert len(joint)==120 and math.isclose(max(joint),.488227530,abs_tol=2e-7)
+          residual=[abs(float(r['mean_minus_gravity_kN'])) for r in rows]
+          assert math.isclose(max(residual),102.724371749,abs_tol=2e-7)
+          assert all(r['status']=='REAL_SOURCE_FZ_GRAVITY_QC_PT_OWNERSHIP_NOT_NATIVE_CERTIFIED' for r in rows)
+          with open('d400_parts.csv',newline='') as f: parts={r['source_part']:r for r in csv.DictReader(f)}
+          for i in (16,17):
+              c=parts['CSEG_%02d'%i]; rb=parts['RBLONG_%02d'%i]
+              assert c['section_material_from_INP']=='C65'
+              assert rb['section_material_from_INP']=='HRB400_D400_DIAGNOSTIC'
+              assert not c['native_integration_point'] and not rb['native_integration_point']
+          print('REAL_FZ_124STATIONS_120JOINTS_D400_CSEG16_17_SOURCE_QC_NOT_PT_OR_NATIVE_PASS')
+          PY
+          cp loads.csv tampered.csv
+          sed -i '2s/U09p343881_ETM_S06/FAKE_CASE/' tampered.csv
+          if python3 s10_fz_gravity_ownership_real.py --load tampered.csv --gravity gravity.csv --check committed.csv >/dev/null 2>&1; then
+            echo 'ERROR: altered source unexpectedly accepted'; exit 1
+          fi
+          echo 'REAL_S10_FZ_SOURCE_TAMPER_REJECTED'
