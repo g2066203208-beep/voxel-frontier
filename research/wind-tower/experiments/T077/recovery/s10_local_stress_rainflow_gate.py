@@ -3,7 +3,8 @@
 
 ASTM E1049-style three-point stack; residual cycles are half cycles.
 No local Abaqus stress, material S-N curves, annual damage or physical PASS.
-Concrete/PT retain range+mean; Goodman is an optional steel hypothesis only.
+Concrete retains range+mean. Steel Goodman is optional; REF023 Qu2026 PT
+Goodman + Paulson Eq(1) is opt-in SECONDARY METHOD ONLY, never a design life.
 """
 import argparse
 import csv
