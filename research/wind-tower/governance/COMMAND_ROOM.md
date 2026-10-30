@@ -417,3 +417,8 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 
 - **2026-10-30 17时｜S10真实来源计算交接（不是小审查）：** 从[4 ETM工况×31段×6载荷雨流DEL](../experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)744行及[T071几何](../experiments/T071/T071_input_geometry_31_segments.csv)31行，以单通道线性名义应力系数分别变换Fz/Mx/My的m4/m10，产生[124行×6值的正式小型数据表](../experiments/T077/recovery/S10_4CASE_31SEG_GROSS_SINGLE_CHANNEL_NOMINAL_DEL_20261030.csv)（输出SHA256 `dda5d57c656786f0a87e586f1f6d84858cd47dc8f929d21a15036dfdd6d0d83b`）；[Python可复算脚本](../experiments/T077/recovery/s10_4case_gross_component_nominal_del.py)源SHA锁、拒绝缺失/坏单位/重复、解析自测；在既有S10 workflow增加真实数据Python复算+源篡改拒绝job。**本轮真实JS数据计算完成，但Python CI job尚未核实，不能写成PASS。** 控制单通道m4为Fz 0.04748161、Mx 2.37467604、My 7.16394572 MPa；不可相加、不可冒称钢筋/混凝土/PT寿命或DLC1.2。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB与测点位置偏差0.070411 m见[T080过程日志](../experiments/T080/PROCESS_LOG.md)。S10 PREP真实计算增加，原生物理PASS仍0/12，未碰T057/T070、不合并。**下一项最优动作：** 从已归档真实四工况完整同步31段六分量时程恢复每个截面周向名义应力时程，按固定材料点逐角雨流；不要从分量DEL拼联合疲劳。
+
+
+### HANDOFF-20261030-S10-REAL-SYNC-18-START
+
+- **START / 2026-10-30 18:10–18:20 CST / 网页版GPT**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=4f3042dadba1cfc9539ba19936a3509e4d7313b2`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、指挥室进度/最近交接、T077 S06原始16批manifest/来源release、T071几何、S06现有rainflow脚本及17时单通道S10结果。**本轮不是新DEL推导或S01重复审查**：从真实旧Actions归档实际下载16个原始ZIP，按各自SHA256验源，计算四ETM工况×31站×16周向方位**同一时刻Fz/Mx/My联合名义正应力**，重新雨流而不是叠加单通道DEL。已完成本地全源32s运行和4工况×CSEG01 12通道/24 DEL独立回归；当前原生Abaqus/材料寿命仍0。拟提交T077/recovery既有任务目录内新实质性计算脚本、124站控制表、真实结果收据，补T077现有过程日志、00_STATUS和本指挥室。旧T057/T070冻结母本不改，不合并PR，不跑高成本生产。下一责任：网页版完成原始时程到材料局部应力的源身份/坐标/PT有效态接口，本机原生应力验证另行按门禁。
