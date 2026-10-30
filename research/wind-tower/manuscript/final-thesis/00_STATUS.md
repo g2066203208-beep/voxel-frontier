@@ -7,6 +7,10 @@
 
 
 
+## 2026-10-30 08时｜S10分材料疲劳管线：风速bin种子完整性与逐bin损伤可审计输出（仅算法）
+
+本轮在既有[s10_miner_damage_gate.py](../../experiments/T077/recovery/s10_miner_damage_gate.py)中新增事前声明`expected_seeds_per_bin`与实际唯一seed数量一致性门禁，防止风速bin漏样后被静默平均；输出逐bin概率、时长、种子范围及年度条件性损伤贡献。合成解析两bin年损伤贡献118.26+946.08=1064.34，20年21286.8，**均为无工程意义的测试数字**，不是风机材料寿命。新增5项异常拒绝测试；远端CI实际执行结果尚待核验，不能提前称PASS。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差和HOLD见[T077 08时过程节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。没有新增真实材料应力、S–N或长期风速bin概率，S10仍`CODE_PREPARED / REAL_MATERIAL_STRESS_HOLD`；**12阶段严格0/12未晋级**。S07既有真实装配/静态ABI成果保留，S11优化主线不变。
+
 ## 2026-10-30 06时｜S07 U11p4_ETM_S04 A批20件真实装配已在Actions执行并持久化收据（非原生OpenFAST）
 
 真实[Actions #40963931099](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40963931099) job `123763470411` completed/success：从SHA锁定三ZIP、A批ED、控制器DLL和Git LFS实际下载的**436,968,166字节BTS**、**61,086,208字节EXE**装配出20件真实文件（含独立0.1s诊断FST）；逐件重读实际字节并核SHA256，20/20匹配。原FST未改。真实[装配收据JSON](../../experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_ASSEMBLY_RECEIPT.json) SHA256 `c365edbb6e9b351ed26886d40265b818c494269b2522d04bdebd0856fa615925`，已从[artifact #12935544419](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40963931099/artifacts/12935544419)实际下载并与PR Git Blob逐字节核对；完整[SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、原始SHA/误差/HOLD](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md#2026-10-30-06时s07-u11p4_etm_s04-a批20件真实字节装配完成不是原生openfast运行)已归档。大型装配目录仅在临时runner生成，不称持久存储；OpenFAST/Abaqus实际求解=0，31站OUTB/RP/TP新增=0，地震/材料寿命无新结果。S07为`REAL_A_BATCH_ASSEMBLY_RECEIPT_PERSISTED / NATIVE_INIT_AND_31GAGE_OUTB_HOLD`，**12阶段严格0/12未晋级**，S10风致分材料疲劳与S11优化不变。下一动作：按既有资源上限仅进行**单工况0.1s Windows原生初始化诊断**，先核控制器ABI/运行路径，不启动700s生产。
