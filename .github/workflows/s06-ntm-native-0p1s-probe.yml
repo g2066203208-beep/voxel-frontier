@@ -1,0 +1,123 @@
+name: S06 NTM source 0.1s nine-gage native initialization (STEADY WIND DIAGNOSTIC)
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-ntm-native-0p1s-probe.yml'
+      - 'research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  one-native-0p1s-probe:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - name: Sparse original-source checkout, do not fetch 436MB BTS
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py
+            research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Exact executable payload only, no wind-field transfer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe='research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe'
+          git lfs install --local
+          git lfs pull --include="$exe" --exclude=""
+          if ((Get-Item $exe).Length -ne 61086208) { throw 'OpenFAST executable LFS payload not materialized' }
+          $sha=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($sha -ne '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a') { throw "EXE_SHA256_MISMATCH $sha" }
+          Write-Host "EXE_SHA256_PASS $sha"
+      - name: Known-answer, malformed source and SHA rejection tests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $root='research/wind-tower/experiments/T062'
+          python -m py_compile "$root/s06_ntm_native_0p1s_probe.py"
+          python "$root/s06_ntm_native_0p1s_probe.py" --selftest
+          python "$root/s06_historical_outb_source_gate.py" --self-test
+      - name: Assemble original 158m case with nine gages and 0.1s limit
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $root='research/wind-tower'
+          $p="$root/experiments/T062/s06_ntm_native_0p1s_probe.py"
+          $args=@('--prepare','--archive1',"$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip",'--archive2',"$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip",'--supp',"$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",'--dll',"$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll",'--exe',"$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe",'--contract',"$root/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json",'--outdir','work/probe')
+          & python "$p" @args
+          if ($LASTEXITCODE -ne 0) { throw 'SOURCE_PREPARATION_FAILURE' }
+          Write-Host 'PREP_ONLY: steady 9.343881m/s wind replaces NTM BTS solely for channel initialization; NOT NTM physics'
+      - name: Run exactly 0.1s native OpenFAST, preserve failure
+        shell: pwsh
+        continue-on-error: true
+        env:
+          OMP_NUM_THREADS: '2'
+          OPENBLAS_NUM_THREADS: '2'
+        run: |
+          $ErrorActionPreference='Continue'
+          $exe=(Resolve-Path 'research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe').Path
+          Push-Location 'work/probe'
+          & $exe 'DTU_10MW_RWT.fst' 2>&1 | Tee-Object -FilePath 'native_stdout.log'
+          $code=$LASTEXITCODE
+          if ($null -eq $code) { $code=999 }
+          Set-Content -Path 'native_exit_code.txt' -Value "$code"
+          Pop-Location
+          Write-Host "NATIVE_0P1S_EXIT_CODE $code"
+          if ($code -ne 0) { throw "OpenFAST 0.1s native diagnostic failed with $code" }
+      - name: Independently inspect native OUTB time and 9x6 channels
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Continue'
+          $root='research/wind-tower/experiments/T062'
+          if (-not (Test-Path 'work/probe/S06_0P1S_PREP_RECEIPT.json')) { throw 'PREP_NOT_COMPLETED: no native claim' }
+          $args=@('--inspect','--outdir','work/probe','--log','work/probe/native_stdout.log','--exit-code-file','work/probe/native_exit_code.txt','--receipt','work/probe/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json')
+          & python "$root/s06_ntm_native_0p1s_probe.py" @args
+          $code=$LASTEXITCODE
+          if (Test-Path 'work/probe/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json') {
+            Copy-Item 'work/probe/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json' "$root/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json" -Force
+          }
+          if ($code -ne 0) { throw "NATIVE_CHANNEL_GATE_HOLD exit=$code" }
+      - name: Preserve native log, source receipt and exact 0.1s output for audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s06-ntm-0p1s-native-nine-gage-diagnostic-not-physics-pass
+          path: |
+            work/probe/native_stdout.log
+            work/probe/native_exit_code.txt
+            work/probe/S06_0P1S_PREP_RECEIPT.json
+            work/probe/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json
+            work/probe/DTU_10MW_RWT.outb
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Persist only the small real success/failure receipt on Draft PR branch
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $p='research/wind-tower/experiments/T062/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json'
+          if (-not (Test-Path $p)) {
+            Write-Host 'NO_RECEIPT: preparation failed before native inspection; raw Actions failure is authoritative'
+            exit 0
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- $p
+          if (git diff --cached --quiet) { Write-Host 'RECEIPT_UNCHANGED'; exit 0 }
+          git commit -m 'data(S06): preserve 0.1s native OpenFAST nine-gage probe outcome'
+          git pull --rebase origin $env:GITHUB_REF_NAME
+          git push origin "HEAD:$env:GITHUB_REF_NAME"
+          Write-Host 'RECEIPT_PERSISTED_ON_DRAFT_BRANCH; NOT PHYSICS PASS'
