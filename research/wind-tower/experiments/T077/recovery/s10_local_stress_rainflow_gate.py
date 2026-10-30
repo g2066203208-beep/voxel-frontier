@@ -19,6 +19,42 @@ REQUIRED = ('source_sha256', 'stress_owner', 'material_id', 'material_class',
             'initial_state', 'mean_stress_rule')
 CLASSES = ('concrete', 'ordinary_rebar', 'prestressing_strand', 'structural_steel')
 
+# REF023 Qu et al., Buildings 2026 16(19):3854, open HTML section 2.2,
+# Eqs (1)-(2). Eq (1) cites Paulson et al. (original not read in this task).
+# This is a source-bound, secondary-literature method oracle, NOT a design S-N.
+PT_REF = 'REF023_QU2026_PT_EQ1_EQ2_PAULSON_SECONDARY'
+PT_SOURCE = 'https://www.mdpi.com/2075-5309/16/19/3854'
+PT_SCOPE = 'SECONDARY_METHOD_COMPARISON_ONLY'
+
+
+def pt_qu2026_log10_cycles(equivalent_range_MPa):
+    """Qu 2026 Eq(1): lg(N) = 13.95 - 3.5 lg(delta_sigma_G in MPa)."""
+    x = float(equivalent_range_MPa)
+    if not math.isfinite(x) or x <= 0:
+        raise ValueError('PT_EQ1_INVALID_RANGE')
+    log_n = 13.95 - 3.5 * math.log10(x)
+    if not math.isfinite(log_n) or abs(log_n) > 100:
+        raise ValueError('PT_EQ1_EXTRAPOLATION_OVERFLOW')
+    return log_n
+
+
+def pt_qu2026_corrected_range(rng, mean, meta):
+    """Qu 2026 Eq(2), 1860 MPa strand ONLY, strictly method comparison."""
+    if meta['material_class'] != 'prestressing_strand':
+        raise ValueError('PT_MODEL_MATERIAL_MISMATCH')
+    if (meta.get('material_model_ref') != PT_REF or
+            meta.get('material_model_source_url') != PT_SOURCE or
+            meta.get('model_scope') != PT_SCOPE):
+        raise ValueError('PT_MODEL_SOURCE_SCOPE_NOT_LOCKED')
+    su = float(meta.get('ultimate_tensile_MPa', 'nan'))
+    if not math.isfinite(su) or abs(su - 1860.0) > 1e-9:
+        raise ValueError('PT_1860_GRADE_UNVERIFIED_FOR_MODEL')
+    if (not math.isfinite(rng) or not math.isfinite(mean) or rng <= 0 or
+            mean <= rng / 2 or mean + rng / 2 >= su):
+        raise ValueError('PT_CYCLE_OUTSIDE_POSITIVE_TENSION_BELOW_UTS')
+    return rng / (1.0 - mean / su)
+
+
 
 def reversals(values):
     """Keep endpoints and turning points; remove plateaus."""
@@ -65,6 +101,8 @@ def corrected_range(rng, mean, meta):
     rule = meta['mean_stress_rule']
     if rule == 'NONE_KEEP_MEAN':
         return rng
+    if rule == 'QU2026_PT_GOODMAN':
+        return pt_qu2026_corrected_range(rng, mean, meta)
     if rule != 'GOODMAN_TENSION_ONLY':
         raise ValueError('unknown mean-stress rule')
     if meta['material_class'] not in ('ordinary_rebar', 'structural_steel'):
@@ -107,14 +145,24 @@ def calculate(raw, meta):
     dt = dts[0]
     if max(abs(x-dt) for x in dts)>max(1e-9,1e-7*dt):
         raise ValueError('nonuniform time sampling')
-    if meta['mean_stress_rule'] not in ('NONE_KEEP_MEAN','GOODMAN_TENSION_ONLY'):
+    if meta['mean_stress_rule'] not in (
+            'NONE_KEEP_MEAN','GOODMAN_TENSION_ONLY','QU2026_PT_GOODMAN'):
         raise ValueError('unknown mean-stress rule')
     cycles = rainflow(stress)
     if not cycles:
         raise ValueError('no nonzero rainflow cycles')
-    out = [{'stress_range_MPa':r,'mean_stress_MPa':m,'cycles':n,
-            'equivalent_range_MPa':corrected_range(r,m,meta)}
-           for r,m,n in cycles]
+    pt_method = meta['mean_stress_rule'] == 'QU2026_PT_GOODMAN'
+    out = []
+    for r,m,n in cycles:
+        equiv = corrected_range(r,m,meta)
+        row = {'stress_range_MPa':r,'mean_stress_MPa':m,'cycles':n,
+               'equivalent_range_MPa':equiv}
+        if pt_method:
+            log_n = pt_qu2026_log10_cycles(equiv)
+            # Log-domain damage avoids overflow in N=10**logN.
+            row['log10_N_allow_secondary_only'] = log_n
+            row['sample_damage_secondary_only'] = n * 10**(-log_n)
+        out.append(row)
     return {'status':'NUMERICAL_QC_ONLY_NOT_FATIGUE_LIFE',
             'source_sha256':sha,'material_id':meta['material_id'],
             'material_class':meta['material_class'],
@@ -124,7 +172,12 @@ def calculate(raw, meta):
             'n_samples':len(ts),'dt_s':dt,'duration_s':ts[-1]-ts[0],
             'n_reversals':len(reversals(stress)),
             'counted_cycles':sum(c['cycles'] for c in out),
-            'cycles':out,'N_allow_cycles':'NEED_MATERIAL_SPECIFIC_SOURCE',
+            'cycles':out,'N_allow_cycles':'NOT_APPROVED_FOR_DESIGN',
+            'secondary_pt_sample_damage': (
+                math.fsum(x['sample_damage_secondary_only'] for x in out)
+                if pt_method else None),
+            'secondary_pt_source': PT_SOURCE if pt_method else None,
+            'secondary_pt_scope': PT_SCOPE if pt_method else None,
             'miner_damage':'NOT_COMPUTED'}
 
 
@@ -176,7 +229,43 @@ def self_test():
         try:calculate(bad,meta)
         except ValueError:pass
         else:raise AssertionError('invalid source/physics accepted')
+    # Qu 2026 Eqs (1)-(2): 100 MPa at mean 930 MPa, Su=1860 MPa
+    # => Goodman equivalent range 200 MPa. These are SYNTHETIC values.
+    ptmeta = dict(manifest,material_class='prestressing_strand',
+                  material_model_ref=PT_REF,material_model_source_url=PT_SOURCE,
+                  model_scope=PT_SCOPE,ultimate_tensile_MPa=1860,
+                  mean_stress_rule='QU2026_PT_GOODMAN')
+    assert abs(pt_qu2026_corrected_range(100,930,ptmeta)-200)<1e-12
+    expected_log_n = 13.95 - 3.5*math.log10(200)
+    assert abs(pt_qu2026_log10_cycles(200)-expected_log_n)<1e-12
+    pt_raw=b'time_s,stress_MPa\\n0,880\\n1,980\\n2,880\\n'
+    ptmeta['source_sha256']=hashlib.sha256(pt_raw).hexdigest()
+    ptresult=calculate(pt_raw,ptmeta)
+    assert ptresult['counted_cycles']==1.0
+    assert len(ptresult['cycles'])==2
+    assert abs(ptresult['secondary_pt_sample_damage'] -
+               10**(-expected_log_n)) < 1e-17
+    assert ptresult['miner_damage']=='NOT_COMPUTED'
+    pt_bad=[
+        dict(ptmeta,material_class='concrete'),
+        dict(ptmeta,material_model_ref='UNREVIEWED'),
+        dict(ptmeta,model_scope='DESIGN_PASS'),
+        dict(ptmeta,ultimate_tensile_MPa=1800),
+        dict(ptmeta,material_model_source_url='UNKNOWN'),
+    ]
+    for bad in pt_bad:
+        try:calculate(pt_raw,bad)
+        except ValueError:pass
+        else:raise AssertionError('invalid PT material/source accepted')
+    for badrange,badmean in [(100,40),(100,1810),(0,930),(100,float('nan'))]:
+        try:pt_qu2026_corrected_range(badrange,badmean,ptmeta)
+        except ValueError:pass
+        else:raise AssertionError('invalid PT cycle accepted')
     return {'status':'PASS_SYNTHETIC_ONLY','analytic_cycles':expected,
+            'pt_eq1_eq2_analytic_log10_N':expected_log_n,
+            'pt_eq1_eq2_synthetic_sample_damage':ptresult['secondary_pt_sample_damage'],
+            'pt_source_level':'REF023_OPEN_HTML_EQ1_EQ2_SECONDARY_PAULSON_NOT_ORIGINAL',
+            'pt_negative_tests':len(pt_bad)+4,
             'counted_cycles':result['counted_cycles'],
             'source_sha256':manifest['source_sha256'],
             'negative_tests':len(bad_rules)+len(bad_inputs),
