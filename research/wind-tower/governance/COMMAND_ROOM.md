@@ -50,6 +50,10 @@
 
 **状态用语：** 已完成（有证据）／待定位核验（已有线索）／增量待做（明确变更或缺项）／阻塞（指出依赖）。“0/12整阶段PASS”只能描述新验收框架，不能表示原论文完成度为0。
 
+
+### HANDOFF-20261031-02-S06-NTM-FST-ED-ORIGINAL-START
+- **START / 2026-10-31 02时 CST / 自动研究任务：** main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=88cdcd4cca5d4c7a134db89e20bb40cb82719236`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、本指挥室当前进度及最近交接、T077既有S06日志、T062原始几何收据与18组NTM SHA身份表。继承已验证18 NTM原始OUTB与FST/ED同一SHA身份，不重算DEL。限定本轮从真实静态ZIP直接读取原始FST/ElastoDyn字节，使用31段原始几何映射TwrGagNd并输出最多9个gage一组的四批只读配置计划；不生成生产INP、不执行700s OpenFAST/Abaqus、不改冻结T057/T070、不合并。拟改T062源解析程序/两张轻量结果、既有S06轻量workflow、T077过程日志、00_STATUS与本指挥室；责任方网页版/Actions，原生求解保留本机后续门禁。
+
 <a id="handoff-log"></a>
 ### HANDOFF-20261031-01-S06-NTM-INPUT-IDENTITY-START
 - **END / 2026-10-31 01时 CST：** 已提交T062 18行源身份CSV、同一核心的Node复算脚本、既有S06轻量CI扩展；JS真实manifest交叉验证18/18、四项负向拒绝通过。固定FST/ED/Tower/Servo各1 SHA，18组InflowWind与OUTB各18 SHA；静态归档manifest SHA `c9da25...`、补充manifest `35235d...`、既有OUTB收据 `c0a061...`。本轮没有重新下载原始ZIP/执行原生OpenFAST/Abaqus；初次CI #41097123209因Node ESM语法失败，已记录；修复后CI #41097352068/job #124206418960 completed/success，CSV SHA256 `d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5`。对应SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、初次跨section路径重复失败、误差预算及HOLD已入T077日志和00_STATUS。S06 PARTIAL，0/12；下一责任：网页版/Actions核读原始NTM FST/ED字段与31站输出可重建条件，本机L02独立进行。PR不合并、冻结母本不变。
