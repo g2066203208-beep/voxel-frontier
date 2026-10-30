@@ -109,7 +109,7 @@ def analyze(loads, gravity):
 
 def render(rows):
     s=io.StringIO(newline="")
-    w=csv.DictWriter(s,fieldnames=FIELDS,lineterminator="\\n")
+    w=csv.DictWriter(s,fieldnames=FIELDS,lineterminator="\n")
     w.writeheader()
     for row in rows:
         w.writerow({k:(format(row[k],".9f") if isinstance(row[k],float)
