@@ -1,0 +1,716 @@
+{
+  "stage": "S06_NATIVE_FOUR_BATCH_0P1S_DIAGNOSTIC_ONLY",
+  "status": "NUMERICAL_CHANNEL_PARITY_PASS",
+  "batch_gage_nodes": [
+    [
+      13,
+      39,
+      65,
+      91,
+      117,
+      142,
+      168,
+      194,
+      220
+    ],
+    [
+      246,
+      271,
+      297,
+      323,
+      349,
+      375,
+      400,
+      426,
+      452
+    ],
+    [
+      478,
+      504,
+      529,
+      555,
+      581,
+      607,
+      633,
+      658,
+      684
+    ],
+    [
+      710,
+      736,
+      762,
+      784
+    ]
+  ],
+  "native_outb_sha256": [
+    "d20794e8f5c7d288be614b71da39bf98d080cb187220d2e4caa2790c6c6c8509",
+    "a33ab325ad70cd9e16bf4b12795022b147956352934a89acbf47281811cf472d",
+    "4968554a871d6378ffdd57db4ecb00d09ae9ec5ae5ca5e857a56ca2dae794793",
+    "e17005faef1013c8a38c4fe77760cfae4eca6514d9d9fb700e72af6e5c6f804d"
+  ],
+  "native_stdout_sha256": [
+    "72a6006e6bd70ac04bcd22b13dee2938ea37b48e34353d725503148b29138666",
+    "4fae364dce91fa85bbb87db66b6e1eb349d8be1933a05d71e0d89557933eee04",
+    "ae490d4296a441b2698b934270bbaa927863e252aca98c3ca789825d06ae05e1",
+    "c78b0d4951ab7a4b73967b13e2768f2ec968efca46a5a875a9e980a3da127783"
+  ],
+  "time_grid_s": [
+    0,
+    0.05,
+    0.1
+  ],
+  "common_channel_count": 106,
+  "paired_channel_samples": 954,
+  "max_abs_common_difference": 0.0,
+  "max_pair_quantization_budget": 67.17602476747912,
+  "common_channel_table": [
+    {
+      "channel": "Azimuth",
+      "unit": "(deg)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 9.61643796808996e-05
+    },
+    {
+      "channel": "BldPitch1",
+      "unit": "(deg)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "BldPitch2",
+      "unit": "(deg)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "BldPitch3",
+      "unit": "(deg)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "GenAccel",
+      "unit": "(deg/s^2)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.11242256457851738
+    },
+    {
+      "channel": "GenPwr",
+      "unit": "(kW)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0158884320608956
+    },
+    {
+      "channel": "GenSpeed",
+      "unit": "(rpm)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0007626549541251017
+    },
+    {
+      "channel": "GenTq",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "HSSBrTq",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "HSShftPwr",
+      "unit": "(kW)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.2533194544352936
+    },
+    {
+      "channel": "HSShftTq",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.005386331059541332
+    },
+    {
+      "channel": "LSSGagA",
+      "unit": "(deg/s^2)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.002248460793524451
+    },
+    {
+      "channel": "LSSGagMya",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.009690574276529293
+    },
+    {
+      "channel": "LSSGagMys",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.009566916944360213
+    },
+    {
+      "channel": "LSSGagMza",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.006502790181718039
+    },
+    {
+      "channel": "LSSGagMzs",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0033346847968607905
+    },
+    {
+      "channel": "LSSGagP",
+      "unit": "(deg)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 8.967689354046513e-05
+    },
+    {
+      "channel": "LSSGagV",
+      "unit": "(rpm)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.526289252473937e-05
+    },
+    {
+      "channel": "LSSTipMya",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.007127747295200008
+    },
+    {
+      "channel": "LSSTipMys",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.00692702457467712
+    },
+    {
+      "channel": "LSSTipMza",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.001516382283934787
+    },
+    {
+      "channel": "LSSTipMzs",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.00010962424136561595
+    },
+    {
+      "channel": "LSShftFya",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0020951394610607757
+    },
+    {
+      "channel": "LSShftFys",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.001447190489722653
+    },
+    {
+      "channel": "LSShftFza",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.001076832937361031
+    },
+    {
+      "channel": "LSShftFzs",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0011092103238285924
+    },
+    {
+      "channel": "LSShftTq",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.2693160805842522
+    },
+    {
+      "channel": "RootFxb1",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0010694288251274972
+    },
+    {
+      "channel": "RootFxb2",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0013085885944034421
+    },
+    {
+      "channel": "RootFxb3",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0012361716516761444
+    },
+    {
+      "channel": "RootFxc1",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0010694288251274972
+    },
+    {
+      "channel": "RootFxc2",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0013085885944034421
+    },
+    {
+      "channel": "RootFxc3",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0012361716516761444
+    },
+    {
+      "channel": "RootFyb1",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0037560722785570434
+    },
+    {
+      "channel": "RootFyb2",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.003906177368035941
+    },
+    {
+      "channel": "RootFyb3",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0030235026134352865
+    },
+    {
+      "channel": "RootFyc1",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0037560722785570434
+    },
+    {
+      "channel": "RootFyc2",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.003906177368035941
+    },
+    {
+      "channel": "RootFyc3",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0030235026134352865
+    },
+    {
+      "channel": "RootFzc1",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0003032614524348657
+    },
+    {
+      "channel": "RootFzc2",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.000651608075518042
+    },
+    {
+      "channel": "RootFzc3",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0005591045338942067
+    },
+    {
+      "channel": "RootMxb1",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0817044912192838
+    },
+    {
+      "channel": "RootMxb2",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0998473779982493
+    },
+    {
+      "channel": "RootMxb3",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.05567512471133676
+    },
+    {
+      "channel": "RootMxc1",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0817044912192838
+    },
+    {
+      "channel": "RootMxc2",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0998473779982493
+    },
+    {
+      "channel": "RootMxc3",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.05567512471133676
+    },
+    {
+      "channel": "RootMyb1",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.04153440292522883
+    },
+    {
+      "channel": "RootMyb2",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.04720507980941069
+    },
+    {
+      "channel": "RootMyb3",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.04585293746154156
+    },
+    {
+      "channel": "RootMyc1",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.04153440292522883
+    },
+    {
+      "channel": "RootMyc2",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.04720507980941069
+    },
+    {
+      "channel": "RootMyc3",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.04585293746154156
+    },
+    {
+      "channel": "RootMzc1",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.003004660001971435
+    },
+    {
+      "channel": "RootMzc2",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0030749922085976456
+    },
+    {
+      "channel": "RootMzc3",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0028848753417902097
+    },
+    {
+      "channel": "RotAccel",
+      "unit": "(deg/s^2)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0003921093921832842
+    },
+    {
+      "channel": "RotSpeed",
+      "unit": "(rpm)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 3.1756777221365953e-06
+    },
+    {
+      "channel": "RotThrust",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0030337988264209506
+    },
+    {
+      "channel": "RtAeroCp",
+      "unit": "(-)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.1873506893555525e-06
+    },
+    {
+      "channel": "RtAeroCq",
+      "unit": "(-)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 3.0658109403373206e-07
+    },
+    {
+      "channel": "RtAeroCt",
+      "unit": "(-)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 9.58201143855367e-06
+    },
+    {
+      "channel": "RtAeroPwr",
+      "unit": "(W)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 67.17602476747912
+    },
+    {
+      "channel": "RtSpeed",
+      "unit": "(rpm)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 2.9048334952630823e-06
+    },
+    {
+      "channel": "RtTSR",
+      "unit": "(-)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 8.805014080169677e-05
+    },
+    {
+      "channel": "TipDxc1",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 8.630931928864333e-06
+    },
+    {
+      "channel": "TipDxc2",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 9.674338576923399e-06
+    },
+    {
+      "channel": "TipDxc3",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 9.465178257978765e-06
+    },
+    {
+      "channel": "TipDyc1",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.275306342527773e-06
+    },
+    {
+      "channel": "TipDyc2",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 2.939486429403788e-06
+    },
+    {
+      "channel": "TipDyc3",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 4.010884453629888e-07
+    },
+    {
+      "channel": "TwrBsFxt",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0003709255330758263
+    },
+    {
+      "channel": "TwrBsFyt",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0054374244765910806
+    },
+    {
+      "channel": "TwrBsFzt",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0012279321472939708
+    },
+    {
+      "channel": "TwrBsMxt",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.25467457854628867
+    },
+    {
+      "channel": "TwrBsMyt",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.014227311195847912
+    },
+    {
+      "channel": "TwrBsMzt",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.02299761938699419
+    },
+    {
+      "channel": "Wind1VelX",
+      "unit": "(m/s)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "Wind1VelY",
+      "unit": "(m/s)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "Wind1VelZ",
+      "unit": "(m/s)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawAccel",
+      "unit": "(deg/s^2)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawBrFxn",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0004902857158894883
+    },
+    {
+      "channel": "YawBrFxp",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0004902857158894883
+    },
+    {
+      "channel": "YawBrFyn",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.005326764495180624
+    },
+    {
+      "channel": "YawBrFyp",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.005326764495180624
+    },
+    {
+      "channel": "YawBrFzn",
+      "unit": "(kN)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.0012284812164308026
+    },
+    {
+      "channel": "YawBrMxn",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.2518811969080192
+    },
+    {
+      "channel": "YawBrMxp",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.2518811969080192
+    },
+    {
+      "channel": "YawBrMyn",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.013102339506786069
+    },
+    {
+      "channel": "YawBrMyp",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.013102339506786069
+    },
+    {
+      "channel": "YawBrMzn",
+      "unit": "(kN-m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 0.022996898592073163
+    },
+    {
+      "channel": "YawBrTAxp",
+      "unit": "(m/s^2)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 5.179347151840247e-06
+    },
+    {
+      "channel": "YawBrTAyp",
+      "unit": "(m/s^2)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 7.299875046985523e-06
+    },
+    {
+      "channel": "YawBrTAzp",
+      "unit": "(m/s^2)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawBrTDxi",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawBrTDxp",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawBrTDxt",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawBrTDyi",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 2.107537635337072e-08
+    },
+    {
+      "channel": "YawBrTDyp",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 2.107537635337072e-08
+    },
+    {
+      "channel": "YawBrTDyt",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 2.107537635337072e-08
+    },
+    {
+      "channel": "YawBrTDzi",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawBrTDzp",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawBrTDzt",
+      "unit": "(m)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawPos",
+      "unit": "(deg)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    },
+    {
+      "channel": "YawRate",
+      "unit": "(deg/s)",
+      "max_abs_difference": 0.0,
+      "max_pair_budget": 1.579528018894215e-08
+    }
+  ],
+  "failure_count": 0,
+  "first_failures": [],
+  "SOURCE": "Four original-input-SHA-pinned OpenFAST v3.5.3 diagnostic OUTBs; original NTM InflowWind deliberately replaced by STEADY wind; original BTS not used",
+  "REF": "T062 31-segment original ElastoDyn gage contract; no new journal full text",
+  "STANDARD": "No new authorized IEC/GB/NB clauses",
+  "OFFICIAL": "SHA-pinned native OpenFAST executable and ROSCO DLL",
+  "RUN": "Four separate 0.1s native initialization runs; compare non-gage common channels only",
+  "FIG": "none",
+  "TAB": "common_channel_table in this receipt",
+  "error_budget": "1.1*(packed half-LSB batch1 + batchN) + 1e-8 in channel native unit; structural/controller internal-state errors unknown",
+  "HOLD": "Does not verify true NTM seed wind, full controller internal state, 700s 31-station synchronization, 6-component mapping or Abaqus physics",
+  "physical_pass": false
+}
