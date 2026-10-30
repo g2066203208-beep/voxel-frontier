@@ -23,6 +23,8 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s10_fz_gravity_ownership_real.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv'
       - 'research/wind-tower/experiments/T077/recovery/S06_30_JOINT_GRAVITY_OWNERSHIP_20261027.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s10_real_stress_sign_regime.py'
+      - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_3PT_SIGN_REGIME_20261030.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -414,3 +416,51 @@ jobs:
             echo 'ERROR: altered source unexpectedly accepted'; exit 1
           fi
           echo 'REAL_S10_FZ_SOURCE_TAMPER_REJECTED'
+
+
+  s10-real-pt-stress-regime:
+    name: Real 4case 31seg 16az sign regimes x3 PT hypotheses (NOT material life)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch PR-head-locked real stress extrema and mutually exclusive PT offset source
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery"
+          curl -fLsS --retry 3 -o gross.csv "$base/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv"
+          curl -fLsS --retry 3 -o pt.csv "$base/S10_4CASE_31SEG_P0_PE_UNIFORM_OFFSET_COUNTERFACTUAL_20261030.csv"
+          curl -fLsS --retry 3 -o committed.csv "$base/S10_4CASE_31SEG_3PT_SIGN_REGIME_20261030.csv"
+          curl -fLsS --retry 3 -o s10_real_stress_sign_regime.py "$base/s10_real_stress_sign_regime.py"
+          echo "16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b  gross.csv" | sha256sum -c -
+          echo "1d56cdf44971589dde25ab8075cdf50999a94eac47707eadfb4870cf74fc8f5d  pt.csv" | sha256sum -c -
+          sha256sum committed.csv s10_real_stress_sign_regime.py
+      - name: Recompute 372 rows, verify true extrema and PT regime monotonicity, reject tampered input
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s10_real_stress_sign_regime.py
+          python3 s10_real_stress_sign_regime.py --self-test
+          python3 s10_real_stress_sign_regime.py --gross gross.csv --pt pt.csv --check committed.csv
+          python3 s10_real_stress_sign_regime.py --gross gross.csv --pt pt.csv --output recomputed.csv
+          cmp committed.csv recomputed.csv
+          python3 - <<'PY'
+          import csv
+          with open('committed.csv',newline='') as f: x=list(csv.DictReader(f))
+          assert len(x)==372
+          totals={s:{k:sum(int(r[k]) for r in x if r['scenario']==s)
+                      for k in ('all_compressive','reversing','all_tensile')}
+                  for s in ('gross','Pe','P0')}
+          assert totals=={
+            'gross':{'all_compressive':784,'reversing':1200,'all_tensile':0},
+            'Pe':{'all_compressive':1285,'reversing':699,'all_tensile':0},
+            'P0':{'all_compressive':1366,'reversing':618,'all_tensile':0}}
+          assert all(r['status']=='PT_CONDITIONAL_SIGN_REGIME_NOT_LOCAL_MATERIAL_LIFE' for r in x)
+          print('S10_REAL_372ROW_PT_SIGN_REGIME_SOURCE_LOCKED_NUMERIC_PASS_NOT_NATIVE_OR_LIFE')
+          PY
+          cp gross.csv tampered.csv
+          sed -i '2s/U09p343881_ETM_S06/FAKE_CASE/' tampered.csv
+          if python3 s10_real_stress_sign_regime.py --gross tampered.csv --pt pt.csv --check committed.csv >/dev/null 2>&1; then
+            echo 'ERROR: tampered source unexpectedly accepted'; exit 1
+          fi
+          echo 'S10_REAL_SIGN_REGIME_TAMPERED_SOURCE_REJECTED'
