@@ -166,8 +166,8 @@ def self_test():
             pass
         else:
             raise AssertionError("invalid extrema accepted")
-    for lo, hi in ((-2, 3), (-4, 1), (-7, -2)):
-        assert classify(lo - 1, hi - 1) <= classify(lo, hi) or True
+    for lo, hi in ((-2, 3), (-4, 1), (-7, -2), (1, 4)):
+        assert classify(lo - 1, hi - 1) <= classify(lo, hi)
     # Uniform offset cannot change any stress range.
     for lo, hi in ((-2, 3), (-7, -2), (1, 4)):
         assert math.isclose((hi - 6) - (lo - 6), hi - lo, abs_tol=1e-12)
