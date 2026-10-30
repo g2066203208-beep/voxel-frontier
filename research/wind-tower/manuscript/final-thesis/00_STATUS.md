@@ -1,5 +1,8 @@
 # 章节进展与阶段记录 — 按日期保留
 
+**16:25 远端回读：** [S08真实Actions #41019771563/job #123944189896](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41019771563/job/123944189896)已completed/success，16周期之外新增3轴×6周期的18行独立精确分段线性解/Newmark复算，表SHA256=`31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`，源码SHA256按远端job为`1de4d03cdde2e750fe1aff356b80b13251336b3398a1f3d7546e20f1113ba19e`。观察到远端ESM ZIP哈希因重新请求变化，而导出的数值CSV仍SHA一致，详情见T079 16:25日志；来源原件与数值身份必须分开记录。**整个Actions workflow failure**仅因CESMD独立DNS，不能称全绿。无原生地震E/WE，严格0/12。
+
+
 ## 2026-10-30 16时｜S08真实地震独立SDOF数值验证完成（非塔架抗震结果）
 
 [程序](../../experiments/T079/s08_independent_sdof_ground_acceleration.py)与[18行真实数据表](../../experiments/T079/real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv)已完成本地Python实测：三分量×6周期，精确分段线性加速度积分vs独立Newmark最大伪加速度偏差0.06822%；解析常加速度与二阶收敛比3.99737通过。ESM来源SI CSV SHA256=`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`，表SHA256=`31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`。详情/误差/HOLD见[T079本轮日志](../../experiments/T079/PROCESS_LOG.md)。远端Actions结果待回读；**没有嘉鱼目标谱、原生Abaqus地震结构结果，12阶段0/12未晋级**，S10/S11保留。
