@@ -658,6 +658,20 @@ jobs:
             curl -fLsS --retry 3 -o "real-records/$f" "$base/real-records/$f"
           done
           sha256sum s08_independent_sdof_ground_acceleration.py real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv
+      - name: Reproduce real ESM 18-row SDOF SVG from immutable committed table (NO native E/WE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T079
+          mkdir -p real-s08
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/manuscript/final-thesis/figures"
+          curl -fLsS --retry 3 -o real-s08/plot_s08_real_sdof_figure.js "$base/plot_s08_real_sdof_figure.js"
+          curl -fLsS --retry 3 -o real-s08/committed.svg "$base/FIG_S08_01_ESM_3COMP_SDOF_ORACLE_NUMERICAL_QC.svg"
+          node --check real-s08/plot_s08_real_sdof_figure.js
+          node real-s08/plot_s08_real_sdof_figure.js real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv real-s08/generated.svg
+          cmp real-s08/generated.svg real-s08/committed.svg
+          sha256sum real-s08/plot_s08_real_sdof_figure.js real-s08/generated.svg
+          echo "S08_REAL_ESM_FIGURE_EXACT_BYTES_MATCH_PASS_NO_STRUCTURE_OR_DESIGN_PASS"
       - name: Independent analytical ODE and Newmark self tests with REAL ESM 32040 x 3
         shell: bash
         run: |
@@ -691,6 +705,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: s08-real-esm-independent-sdof-qc-not-native
-          path: research/wind-tower/experiments/T079/real-s08/recomputed*
+          path: |
+            research/wind-tower/experiments/T079/real-s08/recomputed*
+            research/wind-tower/experiments/T079/real-s08/generated.svg
+            research/wind-tower/experiments/T079/real-s08/committed.svg
           if-no-files-found: warn
           retention-days: 90
