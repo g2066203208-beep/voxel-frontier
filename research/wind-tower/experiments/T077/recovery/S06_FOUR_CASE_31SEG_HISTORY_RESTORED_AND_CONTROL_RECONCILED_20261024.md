@@ -1,5 +1,16 @@
 # S06：四工况×31段六分量时程从历史GitHub Actions恢复（2026-10-24）
 
+## 2026-10-31 04时｜S06原生九站TPzi位置与CSEG中点实测对照（非物理PASS）
+
+**SOURCE/阅读层级：** 本轮实际下载并解包[Actions #41114066678 artifact #13003849096](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678/artifacts/13003849096)，原始ZIP 9142字节 SHA256=`694df4176bf222b0db851117bfb606a861f4e5d29d5af2411ddfa6b2c40e4e78`，其中原生OUTB 9790字节 SHA256=`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`，原生stdout SHA256=`c47a528a4cb8080095a06f4cc20927fbe8a4d450c012070fea30379bbcdcb62b`。原始31段节点映射CSV SHA256=`14e47139816d51030b6255ece5112cdbb8e4ee113b88e3e997c68d433a718692`；原始FST/ED、派生诊断风源SHA沿用本日志03时收据。本轮直接读取ZIP/OUTB/日志**原始字节**，非仅复述manifest。CRC、exit=0及原生`OpenFAST terminated normally`均通过。
+
+**RUN：** Python 3标准库本轮只读解码OpenFAST FileID4（295通道、3时刻0/0.05/0.1s）中九站`TwHt1..9TPzi`的27个原生数值，逐一核`(m)`单位、packed scale/offset、节点`13,39,65,91,117,142,168,194,220`和CSEG01–09中点。原生TPzi与**理想ED节点高度**最大绝对差`0.000021566m`（21.566μm）；**ED节点与截面中点**的最大离散差`0.058392907m`（58.393mm），两类误差不能混称。三时刻TPzi解码值相同（观测变化0.0m，不证明实际运动为零）；每通道半量化界约`2.6342e-9m`，21.566μm差异明显超出量化界，不能简单归于量化噪声或已验证的物理挠度。研究者自定1mm仅为位置诊断阈值，**非规范限值**；九站均满足。4项故意错误拒绝（ZIP/映射SHA篡改、错误FileID、截断OUTB）通过。**没有新增OpenFAST/Abaqus求解，也没有新增远端CI，不声称CI通过。**
+
+**TAB/程序：** [9行原生位置CSV](../../T062/S06_9GAGE_NATIVE_TPZI_POSITION_QC_20261031.csv) SHA256=`eea27b44441289ee6a605e26026e8aaeb00e634238109637de7a79a81bb20061`；[可复算只读程序](../../T062/s06_native_tpzi_position_qc.py) SHA256=`b4a3732651d3308c1ce6f790f4f3b265aaa7adf233fc245f74d02692e2599b18`。运行：`python s06_native_tpzi_position_qc.py --artifact-zip <artifact.zip> --mapping S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv --out <output.csv> --self-test`。ZIP保留在Actions artifact，不重复提交大二进制。
+
+**REF/STANDARD/OFFICIAL/FIG/误差预算/HOLD：** REF=既有T062原始ED/几何来源，无新增期刊全文；STANDARD=本轮未读新授权IEC/GB/NB原页，不作条款验收；OFFICIAL=原生OpenFAST v3.5.3与ROSCO v2.6.0日志/OUTB；FIG=无新结构响应图；TAB=上述9行；误差预算为量化界、节点中点离散、原生位置偏移，动力学/坐标/结构模型误差未估。**仅首批9站位置数值QC通过；0.1s稳态风非NTM/DLC1.2、非31站同步时程，S06 PARTIAL、S07/S10物理HOLD、地震E/WE原生0项、12阶段0/12。** 下一单一动作：同一NTM seed的四批输出配置短时重复运行确定性对照（非700s生产）。
+
+
 ## 2026-10-31 03时｜S06真实OpenFAST v3.5.3单NTM来源、9站0.1s原生通道初始化（成功；非NTM生产/物理PASS）
 
 **RUN / 实际原生结果：** [Actions #41114066678](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678) completed/success，Windows原生`openfast_x64_v353.exe`（SHA256 `0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a`）确实运行了`0.1s`，exit=0，原生日志明确`OpenFAST terminated normally`、ROSCO-v2.6.0、0.345s real time、0.34375s CPU。原生OUTB FileID=4，**295个输出通道、3个同步时刻0/0.05/0.1s**，9个塔架gage各6个力矩通道共54项、另9个`TPzi`位置通道均在原生OUTB header中存在，63项字段存在性验收通过；gage1 `TwHt1FLxt`三时刻原始解码值为`-77.186357636/-69.440983688/-55.072866234 kN`，**仅为0.1s初始化瞬态，不能用作风疲劳/设计载荷**。原生OUTB SHA256=`2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`，原生stdout SHA256=`c47a528a4cb8080095a06f4cc20927fbe8a4d450c012070fea30379bbcdcb62b`。[原生收据](../../T062/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json)已由Actions自动提交Draft PR分支，SHA/字段/原生日志尾段均可回读；[可复算Python程序](../../T062/s06_ntm_native_0p1s_probe.py)、[原生Windows小型工作流](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s06-ntm-native-0p1s-probe.yml)、[原始日志/OUTB归档artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678)均保留。
