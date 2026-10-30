@@ -16,9 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - name: Fetch only two small PR-HEAD text inputs (avoid huge repository checkout)
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T079
+          mkdir -p "$root/real-records"
+          base="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$root"
+          curl --fail --location --silent --show-error --retry 3 -o "$root/s05_esm_rotd_real.py" "$base/s05_esm_rotd_real.py"
+          curl --fail --location --silent --show-error --retry 3 -o "$root/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv" "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv"
+          sha256sum "$root/s05_esm_rotd_real.py" "$root/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv"
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
