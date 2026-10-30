@@ -294,10 +294,97 @@ def reference_paper_self_test():
     print("S05_REFERENCE_PAPER_SYNTHETIC_PASS 4 positive + 3 negative; NOT DESIGN PASS")
 
 
+
+# Source-derived per-record long-period triage. All five pairs remain HOLD.
+SCREEN_COLUMNS = ("event_id","station","period_s","event_pair_count","gm_psa_m_s2",
+    "HNE_sha256","HNN_sha256","processing","raw_vs_pre20_rel",
+    "pre20_vs_linear_rel","pre20_end_displacement_m","original_receipt",
+    "reported_highpass_Hz","f_over_fc","low_frequency_verified",
+    "site_target_verified","design_wave","decision")
+
+
+def candidate_screen(us_bytes, esm_bytes, enforce_source_sha=True):
+    if enforce_source_sha and (digest(us_bytes) != REFERENCE_US_CSV_SHA256 or
+                               digest(esm_bytes) != REFERENCE_ESM_CSV_SHA256):
+        raise ValueError("SCREEN_SOURCE_SHA_CHANGED")
+    spectra, hashes = _parse(us_bytes, esm_bytes)
+    source_rows = _rows(us_bytes, US_COLUMNS) + _rows(esm_bytes, ESM_COLUMNS)
+    out = []
+    for row in source_rows:
+        event, station = row["event_id"], row["station"]
+        t = _positive(row["period_s"], "PERIOD")
+        pair = (event, station)
+        is_esm = event == "IT-2012-0008"
+        if is_esm:
+            fc = _positive(row["filter_low_Hz"], "FILTER")
+            ratio = _positive(row["period_to_corner_ratio"], "PERIOD_CORNER")
+            if not math.isclose(ratio, t*fc, rel_tol=1e-9):
+                raise ValueError("ESM_FILTER_PERIOD_MISMATCH")
+            _hash(row["source_zip_sha256"])
+            raw_rel, lin_rel, drift, receipt = "NA", "NA", "NA", "true"
+            processing = "ESM_MP_REPORTED_0p04HZ_HIGH_PASS"
+            decision = "HOLD_ESM_INSTRUMENT_LOW_FREQ_AND_SITE_TARGET"
+            fc_out, freq_ratio = fc, 1.0/(t*fc)
+        else:
+            raw = _positive(row["raw_pair_gm_psa_m_s2"], "RAW")
+            pre = spectra[pair, t]
+            linear = _positive(row["linear_pair_gm_psa_m_s2"], "LINEAR")
+            raw_rel = float(row["raw_vs_pre20_pair_relative_change"])
+            if not math.isfinite(raw_rel) or raw_rel < 0 or not math.isclose(
+                    raw_rel, abs(raw/pre-1), rel_tol=1e-8, abs_tol=1e-9):
+                raise ValueError("US_BASELINE_RATIO_MISMATCH")
+            drift = float(row["max_abs_pre20_end_displacement_m"])
+            if not math.isfinite(drift) or drift < 0:
+                raise ValueError("US_DRIFT_INVALID")
+            receipt = row["original_source_receipt_available"].lower()
+            if receipt not in ("true","false"):
+                raise ValueError("US_RECEIPT_INVALID")
+            lin_rel = abs(linear/pre-1)
+            processing = "US_20S_MEAN_REMOVAL_UNVERIFIED"
+            decision = ("HOLD_US_BASELINE_LOW_FREQ_AND_SITE_TARGET" if receipt == "true"
+                else "HOLD_US_ORIGINAL_RECEIPT_BASELINE_LOW_FREQ_TARGET")
+            fc_out, freq_ratio = "NA", "NA"
+        out.append(dict(event_id=event,station=station,period_s=t,
+            event_pair_count=3 if event=="ci38457511" else 1,
+            gm_psa_m_s2=spectra[pair,t],HNE_sha256=hashes[pair][0],
+            HNN_sha256=hashes[pair][1],processing=processing,
+            raw_vs_pre20_rel=raw_rel,pre20_vs_linear_rel=lin_rel,
+            pre20_end_displacement_m=drift,original_receipt=receipt,
+            reported_highpass_Hz=fc_out,f_over_fc=freq_ratio,
+            low_frequency_verified="false",site_target_verified="false",
+            design_wave="false",decision=decision))
+    out.sort(key=lambda x:(x["event_id"],x["station"],x["period_s"]))
+    if len(out)!=20 or len({x["event_id"] for x in out})!=3:
+        raise ValueError("SCREEN_3EVENT_5PAIR_20PERIOD")
+    return out
+
+
+def screen_negative_tests(us_bytes, esm_bytes):
+    assert len(candidate_screen(us_bytes,esm_bytes))==20
+    checks = [
+        (us_bytes.replace(b"true",b"unknown",1),esm_bytes,"US_RECEIPT_INVALID"),
+        (us_bytes.replace(b",3.68462941064,true",b",-1,true",1),esm_bytes,"US_DRIFT_INVALID"),
+        (us_bytes,esm_bytes.replace(b",0.040,0.160000",b",0.050,0.160000",1),
+         "ESM_FILTER_PERIOD_MISMATCH"),
+    ]
+    for u,e,err in checks:
+        try: candidate_screen(u,e,False)
+        except ValueError as exc:
+            if str(exc)!=err: raise AssertionError((err,str(exc))) from exc
+        else: raise AssertionError("accepted invalid source: "+err)
+    try: candidate_screen(us_bytes+b"\n",esm_bytes)
+    except ValueError as exc:
+        if str(exc)!="SCREEN_SOURCE_SHA_CHANGED": raise
+    else: raise AssertionError("accepted changed source SHA")
+    print("S05_REAL_FIVE_PAIR_SCREEN_PASS 20 rows + 4 negative; NO DESIGN PASS")
+
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--self-test", action="store_true")
     p.add_argument("--reference-paper-benchmark", action="store_true")
+    p.add_argument("--screen-csv", type=Path)
     p.add_argument("--us-csv", type=Path)
     p.add_argument("--esm-csv", type=Path)
     p.add_argument("--output", type=Path)
@@ -308,6 +395,17 @@ def main():
         return
     if not (args.us_csv and args.esm_csv and args.output):
         p.error("require --us-csv --esm-csv --output")
+    if args.screen_csv:
+        u,e=args.us_csv.read_bytes(),args.esm_csv.read_bytes()
+        screen_negative_tests(u,e)
+        rows=candidate_screen(u,e)
+        with args.screen_csv.open("w",newline="",encoding="utf-8") as f:
+            w=csv.DictWriter(f,fieldnames=SCREEN_COLUMNS,lineterminator="\\n")
+            w.writeheader()
+            w.writerows(rows)
+        args.output.write_text(json.dumps({"status":"REAL_FIVE_PAIR_SCREEN_HOLD","US_SHA256":digest(u),"ESM_SHA256":digest(e),"rows":rows,"S05_PASS":False,"Abaqus_E_WE_RUN":0},indent=2)+"\\n",encoding="utf-8")
+        print("S05_REAL_3EVENT_5PAIR_20ROW_SCREEN_NOT_DESIGN_PASS")
+        return
     result = (reference_paper_spectrum_diagnostic(args.us_csv.read_bytes(), args.esm_csv.read_bytes())
               if args.reference_paper_benchmark else
               calculate(args.us_csv.read_bytes(), args.esm_csv.read_bytes()))
