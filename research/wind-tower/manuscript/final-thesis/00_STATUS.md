@@ -9,7 +9,7 @@
 
 ## 2026-10-30 08时｜S10分材料疲劳管线：风速bin种子完整性与逐bin损伤可审计输出（仅算法）
 
-本轮在既有[s10_miner_damage_gate.py](../../experiments/T077/recovery/s10_miner_damage_gate.py)中新增事前声明`expected_seeds_per_bin`与实际唯一seed数量一致性门禁，防止风速bin漏样后被静默平均；输出逐bin概率、时长、种子范围及年度条件性损伤贡献。合成解析两bin年损伤贡献118.26+946.08=1064.34，20年21286.8，**均为无工程意义的测试数字**，不是风机材料寿命。新增5项异常拒绝测试；远端CI实际执行结果尚待核验，不能提前称PASS。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差和HOLD见[T077 08时过程节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。没有新增真实材料应力、S–N或长期风速bin概率，S10仍`CODE_PREPARED / REAL_MATERIAL_STRESS_HOLD`；**12阶段严格0/12未晋级**。S07既有真实装配/静态ABI成果保留，S11优化主线不变。
+本轮在既有[s10_miner_damage_gate.py](../../experiments/T077/recovery/s10_miner_damage_gate.py)中新增事前声明`expected_seeds_per_bin`与实际唯一seed数量一致性门禁，防止风速bin漏样后被静默平均；输出逐bin概率、时长、种子范围及年度条件性损伤贡献。合成解析两bin年损伤贡献118.26+946.08=1064.34，20年21286.8，**均为无工程意义的测试数字**，不是风机材料寿命。新增5项异常拒绝测试；[真实GitHub Actions #40977689111](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40977689111) job 123809670552已completed/success，合成11项拒绝、逐bin贡献4项核对通过，脚本SHA256=8882406749f71f5a0e94ebea3e038d7ae79b47c93daf91f36bc4c3473a3d8e50。**仅算法CI PASS，不是原生/物理PASS。**完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差和HOLD见[T077 08时过程节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。没有新增真实材料应力、S–N或长期风速bin概率，S10仍`CODE_PREPARED / REAL_MATERIAL_STRESS_HOLD`；**12阶段严格0/12未晋级**。S07既有真实装配/静态ABI成果保留，S11优化主线不变。
 
 ## 2026-10-30 06时｜S07 U11p4_ETM_S04 A批20件真实装配已在Actions执行并持久化收据（非原生OpenFAST）
 
