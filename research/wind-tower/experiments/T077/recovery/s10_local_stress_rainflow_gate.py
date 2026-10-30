@@ -238,7 +238,7 @@ def self_test():
     assert abs(pt_qu2026_corrected_range(100,930,ptmeta)-200)<1e-12
     expected_log_n = 13.95 - 3.5*math.log10(200)
     assert abs(pt_qu2026_log10_cycles(200)-expected_log_n)<1e-12
-    pt_raw=b'time_s,stress_MPa\\n0,880\\n1,980\\n2,880\\n'
+    pt_raw=b'time_s,stress_MPa\n0,880\n1,980\n2,880\n'
     ptmeta['source_sha256']=hashlib.sha256(pt_raw).hexdigest()
     ptresult=calculate(pt_raw,ptmeta)
     assert ptresult['counted_cycles']==1.0
