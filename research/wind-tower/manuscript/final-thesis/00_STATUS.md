@@ -736,3 +736,6 @@ PR #42已实际存在[16行真实RotD表](../../experiments/T079/real-records/S0
 
 
 **2026-10-30 19时 S10真实P0/Pe条件性敏感性：**继承已验真实4ETM×31段×16角同步毛截面应力1984行及T071真实几何，计算互斥P0=51.6096MN、Pe=39.753558954614MN均匀压应力偏置的[124行反事实数值表](../../experiments/T077/recovery/S10_4CASE_31SEG_P0_PE_UNIFORM_OFFSET_COUNTERFACTUAL_20261030.csv)，SHA256=1d56cdf44971589dde25ab8075cdf50999a94eac47707eadfb4870cf74fc8f5d，及[可复算Python3脚本](../../experiments/T077/recovery/s10_pt_uniform_offset_counterfactual.py)。31段P0−Pe条件性应力差1.691117–2.668196MPa；1984角度记录的正峰值计数gross/Pe/P0=1200/699/618；Pe最高条件性正峰18.427328MPa（CSEG16）。**绝非真实PT/接缝平衡或材料疲劳寿命**：Fz是否已含PT、材料位置、非线性接缝及D400诊断支路与HRB335主支路身份均HOLD。来源、SHA、标准阅读层级、运行、误差与失败见[T077 19时过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。严格12阶段0/12。
+
+
+**2026-10-30 19:11 S10 PT条件性真实CI：** [Actions #41046187878/job #124030740456](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41046187878/job/124030740456) completed/success；源几何/1984行应力/124行结果三份SHA256校验、Python独立124行重算、逐行数值一致性与源篡改拒绝全部通过，重算输出SHA256=1d56cdf44971589dde25ab8075cdf50999a94eac47707eadfb4870cf74fc8f5d。**NUMERIC_QC_PASS / PT_PHYSICS_HOLD / MATERIAL_LIFE_0 / 12阶段0/12**。
