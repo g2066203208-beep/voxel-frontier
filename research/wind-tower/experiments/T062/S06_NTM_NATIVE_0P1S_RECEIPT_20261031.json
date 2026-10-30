@@ -1,0 +1,38 @@
+{
+  "case": "U09p343881_NTM_S01",
+  "native_exit_code": 1,
+  "native_log_sha256": "902de15b31f14916fa35e9e54ddb6b34b1a50098244bd47c4e28052d61072f9f",
+  "native_log_tail": "\n**************************************************************************************************\nOpenFAST\n\nCopyright (C) 2024 National Renewable Energy Laboratory\nCopyright (C) 2024 Envision Energy USA LTD\n\nThis program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.\nSee the \"LICENSE\" file distributed with this software for details.\n**************************************************************************************************\n\nOpenFAST-v3.5.3\nCompile Info:\n - Compiler: Intel(R) Fortran Compiler 2021\n - Architecture: 64 bit\n - Precision: single\n - OpenMP: No\n - Date: Apr 11 2024\n - Time: 20:51:36\nExecution Info:\n - Date: 10/30/2026\n - Time: 19:17:10-0000\n\nOpenFAST input file heading:\n    DTU 10MW RWT                - Landbased\n\nRunning ElastoDyn.\nNodal outputs section of ElastoDyn input file not found or improperly formatted.\n\nFAST_InitializeAll:ED_Init:ED_ReadInput:ReadBladeInputs:ReadBladeFile:OpenFInpFile:The input\nfile, \".\\..\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat\", was not found.\n\n\u0007 OpenFAST encountered an error during module initialization.\n Simulation error level: FATAL ERROR\n\n Aborting OpenFAST.\n\n",
+  "outb_present": false,
+  "source_sha256": {
+    "static_part001": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+    "fst": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "ed": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+    "tower": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+    "servo": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+    "inflow": "d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9",
+    "discon": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "dll": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+    "exe": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a"
+  },
+  "derived_sha256": {
+    "DTU_10MW_RWT.fst": "7b1e58baa0abc148d2623a8e85456362d82d857be4ba1d65d043a703feaaa5b6",
+    "DTU_10MW_RWT_ElastoDyn.dat": "e8c1653486cc96eaa5f32a28b01701df080bd2f185f851abd4ebf54a13ef23c7",
+    "DTU_10MW_InflowWind.dat": "957298a6ee1b5f3fcd727d105e75424e3ab992672fdaba65a920a4b6ae96c705",
+    "Control/DTU_10MW_RWT_DISCON.IN": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "Control/libdiscon.dll": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa"
+  },
+  "wind": "STEADY_DIAGNOSTIC_NOT_NTM",
+  "physical_pass": false,
+  "SOURCE": "original SHA-verified 158m OpenFAST inputs; 0.1s derived FST/ED/inflow",
+  "REF": "T062 source mapping; no new journal full text",
+  "STANDARD": "no authorized standard clauses read",
+  "OFFICIAL": "OpenFAST v3.5.3 native executable, original controller DLL",
+  "RUN": "0.1s native initialization attempt; see exit code and log SHA",
+  "FIG": "none",
+  "TAB": "native nine-gage header and 3 time samples if produced",
+  "error_budget": "0.05s output spacing; 3 samples expected; packed OUTB quantization 0.5/scale; no physical accuracy inference",
+  "HOLD": "0.1s steady-wind diagnostic only, NOT NTM/31-gage production/ABAQUS or physics PASS",
+  "channel_diagnostic_pass": false,
+  "failure": "OPENFAST_EXIT_1"
+}
