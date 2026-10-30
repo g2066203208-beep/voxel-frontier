@@ -20,7 +20,7 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
-**2026-10-31 01时S06 NTM源配置身份新增：** 在00时18组原始OUTB和1080行DEL基础上，从两套历史归档manifest找回18组NTM FST/ED/158m Tower/Servo/InflowWind条目并与18个OUTB收据逐案匹配，新增[18行SHA矩阵](../experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv)、[轻量复算程序](../experiments/T062/s06_ntm_18case_input_identity.js)。四类固定结构/控制输入各1个唯一SHA，InflowWind/OUTB各18个不同SHA；读取层级是manifest+既有OUTB收据，未重读静态ZIP或执行原生OpenFAST。轻量[CI #41097123209](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41097123209)待回读。S06 PARTIAL、12阶段0/12；下一项直接解析已定位NTM原始FST/ED的TwrGagNd/风场依赖，为31段原生输出恢复做准备。
+**2026-10-31 01时S06 NTM源配置身份新增：** 在00时18组原始OUTB和1080行DEL基础上，从两套历史归档manifest找回18组NTM FST/ED/158m Tower/Servo/InflowWind条目并与18个OUTB收据逐案匹配，新增[18行SHA矩阵](../experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv)、[轻量复算程序](../experiments/T062/s06_ntm_18case_input_identity.js)。四类固定结构/控制输入各1个唯一SHA，InflowWind/OUTB各18个不同SHA；读取层级是manifest+既有OUTB收据，未重读静态ZIP或执行原生OpenFAST。轻量CI初次[#41097123209](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41097123209)因ESM/CommonJS失败，修复后[#41097352068/job #124206418960](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41097352068/job/124206418960)成功，18行CSV SHA256=`d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5`。S06 PARTIAL、12阶段0/12；下一项直接解析已定位NTM原始FST/ED的TwrGagNd/风场依赖，为31段原生输出恢复做准备。
 
 
 
@@ -52,7 +52,7 @@
 
 <a id="handoff-log"></a>
 ### HANDOFF-20261031-01-S06-NTM-INPUT-IDENTITY-START
-- **END / 2026-10-31 01时 CST：** 已提交T062 18行源身份CSV、同一核心的Node复算脚本、既有S06轻量CI扩展；JS真实manifest交叉验证18/18、四项负向拒绝通过。固定FST/ED/Tower/Servo各1 SHA，18组InflowWind与OUTB各18 SHA；静态归档manifest SHA `c9da25...`、补充manifest `35235d...`、既有OUTB收据 `c0a061...`。本轮没有重新下载原始ZIP/执行原生OpenFAST/Abaqus；CI #41097123209 待回读。对应SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、初次跨section路径重复失败、误差预算及HOLD已入T077日志和00_STATUS。S06 PARTIAL，0/12；下一责任：网页版/Actions核读原始NTM FST/ED字段与31站输出可重建条件，本机L02独立进行。PR不合并、冻结母本不变。
+- **END / 2026-10-31 01时 CST：** 已提交T062 18行源身份CSV、同一核心的Node复算脚本、既有S06轻量CI扩展；JS真实manifest交叉验证18/18、四项负向拒绝通过。固定FST/ED/Tower/Servo各1 SHA，18组InflowWind与OUTB各18 SHA；静态归档manifest SHA `c9da25...`、补充manifest `35235d...`、既有OUTB收据 `c0a061...`。本轮没有重新下载原始ZIP/执行原生OpenFAST/Abaqus；初次CI #41097123209因Node ESM语法失败，已记录；修复后CI #41097352068/job #124206418960 completed/success，CSV SHA256 `d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5`。对应SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、初次跨section路径重复失败、误差预算及HOLD已入T077日志和00_STATUS。S06 PARTIAL，0/12；下一责任：网页版/Actions核读原始NTM FST/ED字段与31站输出可重建条件，本机L02独立进行。PR不合并、冻结母本不变。
 
 
 - **START / 2026-10-31 01时 CST / 自动研究任务：** main=\`58c1e545f67b645417d5957189f5dad693d975bb\`，PR #42 Open/Draft，\`read_base_sha=f2a416e0059034d4cfa8aaa6017147c69c406075\`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划及本指挥室；继承18组原始NTM OUTB的SHA收据与1080行DEL，不重算。发现**原始静态归档manifest含18组NTM的FST/ElastoDyn/Tower/ServoDyn/InflowWind条目**，此前S06仅强调9站OUTB；本轮限定：将静态配置manifest与补充OUTB manifest、18组真实OUTB收据逐案例交叉连接，输出可复算18行源身份表及严格失败测试，说明读取级别为manifest、非本轮重新解包。拟改T062轻量程序/数表、T077既有S06过程日志、00_STATUS和本指挥室；不修改冻结母本、不合并、不跑生产。
