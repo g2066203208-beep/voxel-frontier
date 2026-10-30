@@ -1,0 +1,41 @@
+{
+  "Abaqus_E_WE_RUN": 0,
+  "S08_PASS": false,
+  "acceleration_units": "mm/s^2 (Abaqus model units MUST be confirmed)",
+  "artifacts": [
+    {
+      "axis": "X",
+      "bytes": 639437,
+      "file": "S08_ESM_X_ACC_MM_S2_AMP.inp",
+      "max_roundtrip_acc_mm_s2": 5.684341886080802e-14,
+      "peak_abs_acc_m_s2": 0.47522846,
+      "sha256": "6a5af28067f7dcb3b552439f2d0e4af2ef3fe0db8cb4fba7758dc09f8c674fac"
+    },
+    {
+      "axis": "Y",
+      "bytes": 639834,
+      "file": "S08_ESM_Y_ACC_MM_S2_AMP.inp",
+      "max_roundtrip_acc_mm_s2": 5.684341886080802e-14,
+      "peak_abs_acc_m_s2": 0.51205727,
+      "sha256": "47d6910ff6201e4756acafab114748272d394f668d78121289667d81977285b6"
+    },
+    {
+      "axis": "Z",
+      "bytes": 637245,
+      "file": "S08_ESM_Z_ACC_MM_S2_AMP.inp",
+      "max_roundtrip_acc_mm_s2": 5.684341886080802e-14,
+      "peak_abs_acc_m_s2": 0.28926626,
+      "sha256": "2ae9b307315343a17cb60172052f2aa24dd8f0d3762c67e27f6b75344f3d36a0"
+    }
+  ],
+  "assumed_frame": "HNE East, HNN North, HNZ Up; not tower-local validated",
+  "azimuth_deg_CCW_from_East": 0,
+  "dt_s": 0.005,
+  "last_time_s": 160.195,
+  "npts": 32040,
+  "not_generated": "No *BASE MOTION or *BOUNDARY card; do not attach before native semantics check",
+  "relative_equation": "M u_rel_ddot+C u_rel_dot+K u_rel=-M r a_ground",
+  "source": "ESM v3 DOI 10.13127/esm.3; IT-2012-0008/NVL/MP processed",
+  "source_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "source_status": "processed ESM MP; site target, low-frequency SNR and structural orientation HOLD"
+}

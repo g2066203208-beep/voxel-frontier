@@ -10,6 +10,7 @@ on:
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv'
+      - 'research/wind-tower/experiments/T079/s08_base_motion_amplitude_gate.py'
       - 'research/wind-tower/experiments/T079/s08_si_motion_diagnostics.py'
       - 'research/wind-tower/experiments/T079/s08_horizontal_orientation_energy_gate.py'
       - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv'
@@ -489,6 +490,30 @@ jobs:
           print('REAL_ESM_16PERIOD_360ANGLE_ROTD_NUMERIC_QC_PASS_NOT_SITE_OR_STRUCTURAL_PASS',numeric)
           print('REAL_ESM_ROTD_SOURCE_SHA256',j['source_csv_sha256'])
           PY
+      - name: S08 REAL ESM 3comp acceleration amplitude, sign and units gate (NO Abaqus RUN)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s08_base_motion_amplitude_gate.py "$base/s08_base_motion_amplitude_gate.py"
+          python3 -m py_compile s08_base_motion_amplitude_gate.py
+          python3 s08_base_motion_amplitude_gate.py --self-test --source esm-public-processed/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv --outdir esm-public-processed/s08-amplitudes
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          root=pathlib.Path('esm-public-processed/s08-amplitudes')
+          receipt=json.loads((root/'S08_ESM_BASE_MOTION_AMPLITUDE_RECEIPT.json').read_text())
+          assert receipt['S08_PASS'] is False and receipt['Abaqus_E_WE_RUN']==0
+          assert receipt['npts']==32040 and receipt['dt_s']==0.005
+          expected={'X':'6a5af28067f7dcb3b552439f2d0e4af2ef3fe0db8cb4fba7758dc09f8c674fac','Y':'47d6910ff6201e4756acafab114748272d394f668d78121289667d81977285b6','Z':'2ae9b307315343a17cb60172052f2aa24dd8f0d3762c67e27f6b75344f3d36a0'}
+          for a in receipt['artifacts']:
+              path=root/a['file'];actual=hashlib.sha256(path.read_bytes()).hexdigest()
+              assert actual==a['sha256']==expected[a['axis']],(a['axis'],actual)
+              assert sum(1 for line in path.open() if not line.startswith('*'))==32040
+              print('S08_REAL_ESM_AMPLITUDE_SHA_PASS',a['axis'],a['bytes'],actual)
+          print('S08_REAL_SOURCE_3COMP_AMPLITUDE_NUMERIC_QC_PASS_NOT_DESIGN_OR_NATIVE')
+          PY
+
       - name: Preserve original official bytes or explicit failure receipt
         if: always()
         uses: actions/upload-artifact@v4
