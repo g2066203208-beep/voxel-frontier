@@ -20,6 +20,9 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-31 07时 S07独立输入管线进展：** [180行真实18 NTM×塔底/9近底站原生输出轴系SI均值六分量表](../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)与[6DOF参考点变换/旋转守恒算法](../experiments/T062/s07_sixdof_wrench_source_contract.mjs)已提交。V8真实1080行源→180行接口、恒等残差0、已知100N×2m→Mz=200N·m、旋转逆变换与8项非法输入拒绝通过；原始统计SHA=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`。已加入既有轻量CI但**未回读远端成功日志**。这不是同步时程/已验证坐标/31段/DLC1.2或Abaqus载荷；S06 PARTIAL、S07 BLOCKED、12阶段0/12、E/WE=0。完整SOURCE/误差/HOLD见[T077 07时](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。下一项：核读OpenFAST输出坐标与参考点原文并用同步OUTB验证，不能凭时均值实施物理映射。
+
+
 **2026-10-31 06时 S06源级新进展：** [30行真实18 NTM塔底+9个低位测点My六seed离散表](../experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv)与[可复算Node程序](../experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js)已入PR #42，源1080行CSV和2000条manifest SHA锁定；[Actions #41136033657](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41136033657)成功完成源SHA、坏输入拒绝和30行逐字节复算。塔底三风速m4 DEL六seed CV=13.329354%/11.900626%/6.428970%。**36个原始BTS在当前GitHub归档中均无实体/原件SHA**，.inp/.sum/.dat有108项manifest索引；不得声称本机也缺BTS。仅source-only，S06 PARTIAL、0/12、E/WE=0；下一独立动作：S07真实九站六分量坐标/力矩基准变换守恒测试，不因BTS缺失停摆。详细证据[T077 06时](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
 
 **2026-10-31 05:20 S06四批原生0.1s诊断数值结果已回写：** [自动提交fb738e9](https://github.com/g2066203208-beep/voxel-frontier/commit/fb738e98224539ece026d60b085b821dca8cf8a3)和[四批真实QC JSON](../experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json)远端已读：9+9+9+4测点、4份OUTB SHA及stdout SHA、106公共通道×3时刻×3对照=954项、最大解码差0、失败0。**只验证0.1s稳态诊断风的packed数值一致性；真实NTM BTS、700s四批时程、内部控制状态及载荷坐标仍HOLD。** 完整SOURCE/误差/原生日志run ID待回读缺口见[T077 05:20](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。S06 PARTIAL，12阶段0/12，E/WE=0。下一项：真实NTM seed短时四批确定性验证，不做700s生产。
@@ -536,3 +539,6 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-07-S07-SIXDOF-START
 - **START / 2026-10-31 07时 CST / 自动研究**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，read_base_sha=`081ac4b6e9fbeb8d996580baecc732cd74474aed`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、本指挥室最新S06交接、T077 S06过程日志、T062 1080行真实NTM六分量源表及seed离散脚本。继承18组NTM×塔底/9近底测点的原始六分量均值和SHA，不重复雨流或0.1s原生求解。本轮增量：S07独立六分量刚体参考点变换/旋转/单位与守恒算法测试，并以真实1080行源数据生成18×10站的**原生轴系SI单位均值向量接口**；未核轴系和参考点不得实施物理映射。拟改T062既有目录的S07小脚本/表、T077既有过程日志、00_STATUS及指挥室。SOURCE-only + synthetic algorithm tests，不改T057/T070，不跑高成本，不合并PR。
+
+### HANDOFF-20261031-07-S07-SIXDOF-END
+- **END / 2026-10-31 07时 CST / 自动研究**：实际创建[T062 6DOF源码](../experiments/T062/s07_sixdof_wrench_source_contract.mjs)和[180行真实原生均值向量表](../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)，既有轻量[CI workflow](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s06-paired-seed-del-qc.yml)追加源SHA/180行逐字节复算及损坏输入拒绝；V8数值实测通过，远端CI尚未核得PASS。T077 07时过程与论文00_STATUS已同步；**没有新OpenFAST/Abaqus生产RUN、规范授权页或地震结果**。S07为SOURCE-ONLY程序准备、12阶段0/12未晋级。冻结T057/T070不改、PR #42保持Open/Draft。下一责任方：S07原生坐标/力矩参考点官方定义核读及一份真实同步OUTB逐点验证，不重复1080行源级DEL。
