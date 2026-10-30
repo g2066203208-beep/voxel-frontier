@@ -400,10 +400,10 @@ def main():
         screen_negative_tests(u,e)
         rows=candidate_screen(u,e)
         with args.screen_csv.open("w",newline="",encoding="utf-8") as f:
-            w=csv.DictWriter(f,fieldnames=SCREEN_COLUMNS,lineterminator="\\n")
+            w=csv.DictWriter(f,fieldnames=SCREEN_COLUMNS,lineterminator="\n")
             w.writeheader()
             w.writerows(rows)
-        args.output.write_text(json.dumps({"status":"REAL_FIVE_PAIR_SCREEN_HOLD","US_SHA256":digest(u),"ESM_SHA256":digest(e),"rows":rows,"S05_PASS":False,"Abaqus_E_WE_RUN":0},indent=2)+"\\n",encoding="utf-8")
+        args.output.write_text(json.dumps({"status":"REAL_FIVE_PAIR_SCREEN_HOLD","US_SHA256":digest(u),"ESM_SHA256":digest(e),"rows":rows,"S05_PASS":False,"Abaqus_E_WE_RUN":0},indent=2)+"\n",encoding="utf-8")
         print("S05_REAL_3EVENT_5PAIR_20ROW_SCREEN_NOT_DESIGN_PASS")
         return
     result = (reference_paper_spectrum_diagnostic(args.us_csv.read_bytes(), args.esm_csv.read_bytes())
