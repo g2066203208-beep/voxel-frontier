@@ -2,6 +2,28 @@
 
 > **结论：PASS-RECOVERED-CSV-INTEGRITY + PASS-31-CONTROL-ALGEBRA-ROUNDTRIP；S06仍PARTIAL/HOLD；不是OpenFAST原始OUTB重新复算、不是Abaqus native、不是任何规范验算PASS。** 这是12阶段关键路径中S06的实质性源数据恢复，不新增T080编号、不改T057/T070母本、不合并Draft PR #42、不启动昂贵计算。
 
+## 2026-10-30 10时｜S10 REF023 PT疲劳原式核读与分材料方法接口实证（仅研究级）
+
+**阅读层级：**直接读取2026-09-28开放原刊[Qu等, Buildings 16(19):3854, DOI 10.3390/buildings16193854](https://www.mdpi.com/2075-5309/16/19/3854)网页全文§2.1–2.3相关段落及§2.2 Eq.(1)–(5)；不是摘要。其引用的Paulson等700余根钢绞线试验**原论文未直接核读**，属于二级方法证据。继承[第四章原页图谱](../../manuscript/final-thesis/04_FATIGUE_SOURCE_EVIDENCE_ATLAS_20261006.md)REF018 Huang2025 p3/p6/p7/p10/p11、REF002 Kenna2019 p205–206、REF007李泽宇第6章的历史页码；这些原PDF本轮未重新逐页打开。2024 GB/T50010官方修订p8–9为前轮原页证据，本轮没有新增授权规范条文。
+
+### REF/STANDARD/OFFICIAL｜四材料模型适用性矩阵
+
+| 材料/模型身份 | 公式及真实阅读深度 | 已实现/未实现 | HOLD |
+|---|---|---|---|
+| **预应力筋**：现有静态source map为STRAND_1860 | **REF023原刊HTML §2.2 Eq.(1)：** lgN=13.95−3.5 lg(Sr/MPa)，Qu称引用Paulson试验；**Eq.(2)：** ΔσG=Δσ/(1−σm/fu)。Qu §4.1将Goodman修正应力代入Eq.(1)，其材料fu=1860 MPa。 | 既有[s10_local_stress_rainflow_gate.py](s10_local_stress_rainflow_gate.py)新增QU2026_PT_GOODMAN与REF023_QU2026_PT_EQ1_EQ2_PAULSON_SECONDARY来源锁，核验原刊URL、1860MPa、SECONDARY_METHOD_COMPARISON_ONLY、全循环正拉及峰值小于fu；仅输出合成/条件性N和样本损伤。 | Paulson原文及试验应力幅适用域未核读；本模型36×8股、锚固、有效PT及局部应力未验证；Qu的4.55MW/16束×18股不能移植。 |
+| **混凝土C50** | REF023 §2.2 Eq.(3)–(5)展示分段压疲劳lgN1/N2/N3；REF018历史p6/p7保留均值与fib Model Code分支。Qu HTML与其他fib二手转录对lgN1是否显式含(1−Sc,max)存在公式显示差异，待核PDF。 | 不生成混凝土N_allow，保留σmax/σmin/mean/range。 | fib 2010/2020授权原式、C50疲劳参考强度、拉压/开裂边界未核，不复制Qu C80参数。 |
+| **普通钢筋**：R335原型/D400候选/D500对照 | 历史2024 GB/T50010修订官方p8–9的4.2.6-1保留HRB400疲劳表；REF007历史p151 S–N图谱。 | 无经原页参数化的钢筋S–N；仅保留局部循环。 | D400未原生回代，HRB335旧牌号非现行新设计默认，直径/接头/规范幅值适用性HOLD。 |
+| **Q345钢塔/焊缝** | REF002历史p206采用EN 1993-1-9；REF018历史p6/p10采用DNV路线。 | 不指定统一m或焊缝类别；可选金属Goodman仅为假设。 | DNV/EN原页细节等级、厚度修正、名义/热点应力定义未核；不得输出焊缝寿命。 |
+
+### RUN/TAB｜真实可复算算法与失败
+
+- 新增PT原式函数pt_qu2026_corrected_range、pt_qu2026_log10_cycles，严格限制为**二级文献方法敏感性**，不解除原生初态和材料证据门禁。[GitHub Actions #40989738556](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989738556) job 123848968255已completed/success：Python语法、原有雨流/Miner/68part静态回归、PT解析正向与9项拒绝测试通过。该job计算时源码SHA256为b144386687a2071ca25fac3240ab22a37205c0726d14e20251fbc747e8e0f3a0（**随后仅修改脚本docstring；最终版本SHA以新的CI为准**）。
+- **仅合成算例**：范围100MPa、均值930MPa、fu=1860MPa → Goodman等效200MPa → lgN=5.896395015176065 → N≈787761.98；1个全循环的n/N≈1.2694189722453895×10^-6（程序以2个半循环求和）。**不是158m真实应力、年损伤或寿命。** 双精度解析断言容差约1e-12；试验离散性、公式外推、PT有效应力及网格物理误差均NEED_QUANTIFY。
+- **失败原始记录：**[Actions #40989722290](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989722290)首次failure，因PT合成CSV误写双反斜杠换行而报time/stress columns mismatch；修复后成功，失败不删除。
+- **SOURCE：** 合成PT时程见程序self_test，真实局部应力输入0份；**REF：** Qu原刊HTML Eq1–5、REF018/002/007历史图谱（非本轮重读）；**STANDARD：** 无新增授权条款PASS；**OFFICIAL：** GitHub Actions/Python真实job，不是Abaqus；**RUN：** 仅Python CI/静态source map，原生疲劳/地震RUN=0；**FIG：** 新真实疲劳响应图0；**TAB：** 上表四材料证据与合成解析数值。
+- **HOLD：** 尚缺同一已验收重力/有效PT/接触初态下的四材料局部应力、真实DLC1.2风速概率与经授权规范确认的参数。S10为METHOD_TESTED / REAL_MATERIAL_STRESS_AND_PARAMETER_HOLD；**严格12阶段0/12未晋级**，S11抗震约束疲劳优化主线不变。
+
+
 ## 1. SOURCE：真实恢复了什么
 
 在GitHub Actions历史运行中找到仍未过期的**16个真实T071/T072工况分批产物**，通过连接器逐个下载ZIP，在本轮工作容器读取原始压缩CSV字节，而不是从31个历史极值反推或合成时程：
