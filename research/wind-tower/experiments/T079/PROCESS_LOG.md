@@ -350,3 +350,10 @@ RUN：直接扩展现有 `s05_esm_public_processed_pair.py` 和现有S05 workflo
 ### 2026-10-30｜源论文实际原图与本文下一步物理量对照
 
 本轮直接以GitHub二进制PNG原页进行**两张像素回读**：何泽瑜2024表3-2（Git Blob `b65d9d271fd50c71084d4ffee8aa55bcc663623e`）确实显示31段几何/内外纵筋数量；Huang2025印刷p6 Fig.10与Eq.(1)/(2)（Git Blob `f4d6cc1ea2a763cbd7ba0b85a9a8417528f1348c`）显示wind-bin damage，以及**Fz/Fpt/Mx/My→方位截面名义应力**和按风速概率的Miner汇总。纠正“必须先有Abaqus才可独立形成任何应力筛查”的过度门槛：可在真实31站六分量与本模型截面/PT身份核准后独立做**名义应力条件性初筛**；接缝、PT局部热点和绝对材料寿命仍须后续验证。详细原图链接、方法适用边界及科研状态写入[12阶段证据审计](../../governance/THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md)。SOURCE/REF=上述两页实际可读；STANDARD=未核；RUN=0原生；FIG=2抽样原页；TAB=真实表3-2；**不得以抽核代表全部原页已验证**。
+
+### 2026-10-30｜S08来自真实地震记录的正式方法对照图与原刊逐页核验
+
+- SOURCE=既有ESM v3 IT-2012-0008/NVL/MP真实SI导出（输入SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`）；输入18行CSV SHA `31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`。
+- REF=Ishihara等2024 **实际PDF index5、8、15原页截图读取**；Eq1日本基岩人工谱与Fig7/8生成方法；Eq2/3同记录同时刻双向合力/峰值；Eq5/6不同运行状态风震合成方法；详见[literature_notes原式定位](literature_notes.md)新段。PDF原件先前收据SHA `3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238`（**不是本轮重新下载**）；本轮尝试直接下载遇DNS失败，保留失败事实。
+- STANDARD=本轮没有IEC/GB授权正文；原刊提及的日本级别不得用于嘉鱼。OFFICIAL=原作者学校公开PDF / 既有GitHub原件下载收据。RUN=仅18行CSV物理量比对与轻量绘图函数测试；FIG=[FIG S08-01](../../manuscript/final-thesis/figures/FIG_S08_01_ESM_3COMP_SDOF_ORACLE_NUMERICAL_QC.svg)和脚本[plot](../../manuscript/final-thesis/figures/plot_s08_real_sdof_figure.js)，不是158m结构响应；TAB=18行源CSV（3分量×6周期）。
+- 误差预算：PSA相对误差的最大值=0.0006821572913593958（无量纲）=0.0682157%，属于数值积分差，不包含仪器、长周期带通、目标谱、建模或不确定性；原生E/WE=0；SITE/S08/S09 PHYSICS=HOLD；12阶段0/12。

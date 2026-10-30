@@ -251,3 +251,18 @@ Table5原值：FA AEM 0.358/2.674/3.964Hz、SLM 0.360/2.960/3.777Hz；SS AEM 0.3
 **RUN（真实轻量计算）：** [Python3标准库可复核方程脚本](s09_ishihara2024_equation_oracle.py)，本轮本地**Python 3.13.5**运行 \`python s09_ishihara2024_equation_oracle.py --self-test\` 成功；程序SHA256=\`ada2813420e2d6ec77d633e3f8663f9b1843cfc91c8c32aa18062774e9feb280\`、Git Blob=\`b4367cfd683f720409834b9bf0f5b72098046d10\`。实际覆盖Eq1–6、Eq1两个分段点连续性、Eq2同刻合量、Eq3逐波峰均值、Eq4解析均值/方差、Eq5的0°/45°/90°极限、Eq6 3-4-5、Table5原值与**7个失败输入拒绝测试**。数值误差预算：纯解析/IEEE754双精度与表值舍入；分段连续性误差<1e−7m/s²（以两侧ε=1e−10s检验）；原论文频率仅三位小数，百分比为这些已发表舍入值的计算，不应报告物理精度为1e−6%。**未有本塔物理误差预算**。
 
 **STANDARD/OFFICIAL/FIG/TAB/HOLD：** STANDARD=原刊引用2019 IEC及日本JSCE，只是**论文方法来源**，不是本轮核读2025 IEC/GB/NB授权条款；OFFICIAL=东京大学作者公开原页，非软件原生日志；FIG=已核原刊Fig7/8、Fig18–25（无本塔原创响应图）；TAB=原刊Table5/6/9与本节逐项数字；RUN仅轻量Python单测，地震E、W/E/WE、Abaqus原生均**0**。最大方法HOLD是**真实场址适用目标谱+可用长周期记录、同状态W/E/WE原生参考**，物理基线S01–S04仍未PASS。S05 PARTIAL/HOLD、S09 BLOCKED、12阶段严格0/12；S10风致材料疲劳与S11抗震约束优化不受此独立准备阻断。
+
+## 2026-10-30｜Ishihara 2024 原文页与S08本人结果的同一方法意义对照（实际浏览原PDF截图）
+
+**SOURCE/REF**: Ishihara, Iida & Wang, *Structures* 60 (2024) 105886, DOI 10.1016/j.istruc.2024.105886; 作者机构原件 https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1.pdf 。既有[获取收据](S05_SEISMIC_FULLTEXT_DOWNLOAD_RECEIPT_20261028.json)在 2026-10-29 捕获完整17页、4,394,304字节、PDF SHA256 `3ba73647db2b158f94c18c6dca0350489dc5c36e7826a298e754bd8a7f2d5238`。**本轮实际web PDF全文文本核读并像素截屏PDF index 5（印刷p6）、index 8（印刷p9）、index 15（印刷p16）**；不能把2026-10-29 PDF SHA误称为本轮重新下载实得SHA，本轮运行容器官方PDF下载DNS失败。版权重复发布未验证，**原图通过作者原PDF页链接指向，不向PR上传整页截图**。
+
+| 引用定位（PDF索引0基） | 原文真实内容与实际阅读层级 | 本文能用/不能照抄 | 本文自有FIG/RUN |
+|---|---|---|---|
+| index 3 = 印刷p4，Table 4（全文文字核读） | FE积分采用Newmark β=1/4、ΔT=0.02s；另给Rayleigh阻尼、120s | 只借鉴积分算法；本研究使用Δt=0.005s、独立精确分段线性激励解，5%阻尼仅SDOF示范，不继承其塔阻尼/网格 | [S08 18行真实CSV](real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv)、[FIG S08-01](../../manuscript/final-thesis/figures/FIG_S08_01_ESM_3COMP_SDOF_ORACLE_NUMERICAL_QC.svg) |
+| index 5 = 印刷p6，§2.3 Eq.(1), Fig.7 & Fig.8（**实际截图目视**） | 日本JSCE-II级工程基岩**人工波**目标谱分段函数；Fig7迭代合成波流程；Fig8合成波与目标谱的5%阻尼PSA比较 | 参考**目标谱→选配→逐周期误差**证据结构；不得把a0=3.2 m/s²、日本II级谱或合成波当成嘉鱼正式地震输入；本研究ESM为真实处理波、**未选配** | 原记录已计算16周期RotD，但没有嘉鱼目标谱匹配图 |
+| index 8 = 印刷p9，§3.1 Eq.(2)(3)（**实际截图目视**） | 同一地震记录的x/y分量时程**先作矢量合成再取最大**，多条波取峰值平均 | 启发同时间对应的W/E/WE指标，禁止不同时间峰值拼接；地震2.4MW及其15波统计量非本塔 | 当前S09仅编程代数校验，**原生风震结果0** |
+| index 15 = 印刷p16，§4 Eq.(5)(6)、Fig25（**实际截图目视**） | 运行/停放采用方向相关vector sum；紧急停机采用SRSS，且原文通过其2.4MW耦合算例比较 | 可以作为要检验的**对照假说**，不自动成立于10MW/158m有接缝/PT的强非线性混塔；不同运行状态不可硬拼同状态增量 | 对照策略待真实B/W/E/WE配对求解 |
+
+**自身可复核成果**：[FIG S08-01](../../manuscript/final-thesis/figures/FIG_S08_01_ESM_3COMP_SDOF_ORACLE_NUMERICAL_QC.svg)为真实ESM已处理波3轴×6周期共18个值的精确分段线性激励解与Newmark平均加速度PSA/误差，计算程序[plot_s08_real_sdof_figure.js](../../manuscript/final-thesis/figures/plot_s08_real_sdof_figure.js)需实际源CSV SHA256 `31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`。最大相对数值误差0.0682157%（HNN、0.5s），**只界定数值积分误差**；原始地震仪器频带、ESM处理高通0.04Hz、场址适用性、真实结构模型误差完全不在其中。
+
+**STANDARD/OFFICIAL/RUN/FIG/TAB/HOLD**：STANDARD=未读取IEC/GB授权条款，原文提及IEC年份仅为原刊转述；OFFICIAL=东京大学作者原件PDF网页，与先前下载收据一致，未本轮复抓原件字节；RUN=本轮绘图/CSV一致性算法检查，无Abaqus native；FIG=既有原刊Fig7/8/25原PDF页引用+新增1张独立本文数值SVG；TAB=18行真实源结果、原刊Table4/8原页定位；HOLD=正式目标谱、长周期记录可靠性、10MW具体输入/初态和原生S08/S09全部未通过。**12阶段=0/12**。

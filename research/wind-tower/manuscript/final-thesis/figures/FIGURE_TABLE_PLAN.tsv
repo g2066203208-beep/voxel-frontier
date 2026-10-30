@@ -32,3 +32,4 @@ TAB5-1	Ch5	主要结论-证据-边界对应表	G8	NEED-RUN	只收录PASS结果
 FIG3-S06-01	Ch3	My load-DEL along 31-gage concrete tower for four ETM screening cases	S06 744-row real-source summary, 124 plotted points	SOURCE_PLOTTED_SCREEN_ONLY	SVG + editable CSV exist; not validated DLC1.2 or material damage
 FIG3-S06-02	Ch3	Base CSEG01 Mx/My/Mz load-DEL in four archived cases	S06 744-row real-source summary	SOURCE_PLOTTED_SCREEN_ONLY	Three independent axes; not material stress
 FIG3-S06-03	Ch3	My 300s/300s half-window RMS contrast at 31 stations	S06 744-row real-source summary	SOURCE_PLOTTED_SCREEN_ONLY	20pct visual guide not an IEC clause/stationarity proof
+FIG-S08-01	Seismic-method annex/Ch2 integration	ESM true 3-axis SDOF: exact piecewise-linear vs Newmark PSA and relative error	ESM real CSV 18-row SHA 31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7	REAL_NUMERICAL_SDOF_FIG_ONLY	No site spectrum or actual 158m E/WE response, plot not structural stress

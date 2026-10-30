@@ -712,3 +712,5 @@ PR #42已实际存在[16行真实RotD表](../../experiments/T079/real-records/S0
 **13:10 远端实证回填：** [S05 Actions #41006885865](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006885865)真实ESM job 123903701850 **success**，原始日志证实16周期×360方向、208个数值逐项回归与4项异常拒绝通过；[真实源artifact #12956355394](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006885865/artifacts/12956355394)已上传（未独立下载）。**整体workflow failure**是独立CESMD API DNS失败，不能称全CI通过。仅已处理波方向谱数值准备PASS；场址设计波、原生E/WE及规范条款仍HOLD，12阶段0/12，S10/S11不变。
 
 **2026-10-30原文图抽样实证（非论文物理PASS）：** GitHub已实际打开何泽瑜2024“表格3-2”原始页面（印刷p23）和Huang2025印刷p6 Fig10+Eq1/2原始页面。Huang原式可用于经轴系/截面/PT检验的名义应力筛查，不需将S10所有前置计算无条件阻塞于Abaqus，但必须明确区别接缝/钢筋/PT局部应力及设计寿命。图证据覆盖仍只有抽样2张，地震/优化原页专集仍缺，实际原生地震与材料疲劳物理PASS仍0。
+
+**2026-10-30 S08论文图/原页方法收敛（非物理晋级）：** 已从作者Ishihara2024原PDF像素核印刷p6（目标谱Eq1/Fig7–8）、p9（合力时程Eq2–3）、p16（运行/停机分支Eq5–6，Fig25），并将真实ESM三轴×6周期的18行已验证数值转换为[本文编辑型SVG](figures/FIG_S08_01_ESM_3COMP_SDOF_ORACLE_NUMERICAL_QC.svg)及[可复算Node绘图脚本](figures/plot_s08_real_sdof_figure.js)。方法细节在[T079文献核读](../../experiments/T079/literature_notes.md)；日本谱不得直接代替嘉鱼；真实地震结构输出仍0、阶段0/12。
