@@ -530,9 +530,14 @@ jobs:
           if gh api "repos/${{ github.repository }}/contents/$path?ref=$TARGET_BRANCH" >/dev/null 2>&1; then
             echo "FULL_CSV_ALREADY_PRESENT_NO_OVERWRITE"; exit 0
           fi
+          python3 - <<'PY'
+          import base64,json,os
+          raw=open('S10_3CONTROL_REAL_GROSS_CYCLES.csv','rb').read()
+          payload={'message':'research(S10): persist 1574 real cycle range-mean rows from SHA-locked Actions ZIPs',
+                   'branch':os.environ['TARGET_BRANCH'],
+                   'content':base64.b64encode(raw).decode('ascii')}
+          with open('s10_gh_contents_payload.json','w') as f:json.dump(payload,f)
+          PY
           sha=$(gh api --method PUT "repos/${{ github.repository }}/contents/$path" \
-            -f message="research(S10): persist 1574 real cycle range-mean rows from SHA-locked Actions ZIPs" \
-            -f branch="$TARGET_BRANCH" \
-            -f content="$(base64 -w0 S10_3CONTROL_REAL_GROSS_CYCLES.csv)" \
-            --jq '.commit.sha')
+            --input s10_gh_contents_payload.json --jq '.commit.sha')
           echo "FULL_REAL_CYCLE_CSV_CREATED_COMMIT=$sha"
