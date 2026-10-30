@@ -118,6 +118,7 @@ def prepare(args):
     for label,data in originals.items():verify(label,data)
     fst_new=replace_scalar(fst.decode("utf-8-sig"),"TMax","0.1",expected="700")
     ed_new=replace_gages(ed.decode("utf-8-sig"))
+    print("INFLOW_SOURCE_FIELD_DIAGNOSTIC",repr([line for line in inflow.decode("utf-8-sig").splitlines() if "windtype" in line.lower() or "hwindspeed" in line.lower()][:8]))
     inflow_new=replace_scalar(inflow.decode("utf-8-sig"),"WindType","1",expected="3")
     inflow_new=replace_scalar(inflow_new,"HWindSpeed","9.343881")
     for rel,data in {
