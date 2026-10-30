@@ -20,6 +20,9 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-31 05:20 S06四批原生0.1s诊断数值结果已回写：** [自动提交fb738e9](https://github.com/g2066203208-beep/voxel-frontier/commit/fb738e98224539ece026d60b085b821dca8cf8a3)和[四批真实QC JSON](../experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json)远端已读：9+9+9+4测点、4份OUTB SHA及stdout SHA、106公共通道×3时刻×3对照=954项、最大解码差0、失败0。**只验证0.1s稳态诊断风的packed数值一致性；真实NTM BTS、700s四批时程、内部控制状态及载荷坐标仍HOLD。** 完整SOURCE/误差/原生日志run ID待回读缺口见[T077 05:20](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。S06 PARTIAL，12阶段0/12，E/WE=0。下一项：真实NTM seed短时四批确定性验证，不做700s生产。
+
+
 **2026-10-31 05时S06四批短时原生重复性诊断管线已提交（尚未取得四批新原生日志）：** 继承04时首批9站TPzi原生QC和02时31段9+9+9+4映射，更新[T062 0.1s探针](../experiments/T062/s06_ntm_native_0p1s_probe.py)支持四批派生ED测点、[新公共通道量化对照程序](../experiments/T062/s06_native_4batch_common_channel_qc.py)及既有Windows CI工作流。原始FST/ED/OpenFAST exe SHA锁定，四批各0.1s稳态风、非真实NTM BTS，比较公共非测点通道的三个时刻并保留原生日志和OUTB。**代码/CI已入Draft PR #42，四批RUN及结果收据仍待远端执行/回读，不能宣称四批成功**；[T077 05时SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB和HOLD](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级、S06 PARTIAL、E/WE=0**。下一项：回读本次CI真实stdout/OUTB/公共通道残差，优先修复任何原生失败，不启动700s。
 
 
@@ -60,6 +63,9 @@
 
 **状态用语：** 已完成（有证据）／待定位核验（已有线索）／增量待做（明确变更或缺项）／阻塞（指出依赖）。“0/12整阶段PASS”只能描述新验收框架，不能表示原论文完成度为0。
 
+
+### HANDOFF-20261031-05-S06-FOUR-BATCH-NATIVE-RESULT
+- **END/追加闭合/2026-10-31 05:20 CST：** 远端PR #42自动出现`fb738e98224539ece026d60b085b821dca8cf8a3`及[T062四批原生QC JSON](../experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json)（Git blob `e000a88302ea925a57bfb184740ed35d434a2e2b`），四份OUTB SHA/四份stdout SHA见收据；106个公共非gage通道×3时刻×3对照共954项、最大packed解码差0、失败0。原生exit/日志/输出通道由CI脚本检查；本轮仅远端读JSON/commit，未独立下载新run artifact，run ID未取得，不冒称原生日志二次字节复算或整个workflow状态直接回读。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差和HOLD已同步T077及00_STATUS。**稳态0.1s诊断数值PASS≠NTM/DLC1.2/材料疲劳/地震物理PASS**；S06 PARTIAL，0/12，冻结T057/T070和main未修改，PR保持Draft。下一责任：网页版GPT/Actions恢复一个真实NTM BTS seed的最短四批对照，先核时间有效域，不启动700s。
 
 ### HANDOFF-20261031-05-S06-FOUR-BATCH-NATIVE-DIAGNOSTIC
 - **START/读回执（补登）/2026-10-31 05时 CST / 网页版GPT：** `read_base_sha=28468d013bbf96e3f920f99c602989d927fe4ba3`，main基准经README核读，PR #42当时Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、指挥室当前进度/历史交接及T062原生探针/31段映射/原生OUTB历史收据、T077 S06最新过程。继承首批9站原生0.1s PASS及TPzi位置QC；本轮只增量开发四批9+9+9+4短时原生输出与公共通道数值一致性检查，不改T057/T070、不做生产RUN。拟改T062原探针、T062四批QC、既有workflow、T077 S06日志、00_STATUS、指挥室；责任方网页版GPT/Windows Actions。**写前回执晚于首次代码提交补登，不冒称已在首次写入前登记。**
