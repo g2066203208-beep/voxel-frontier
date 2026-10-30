@@ -532,3 +532,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-03-S06-NTM-NATIVE-0P1S-START
 - **START / 2026-10-31 03时 CST / 自动研究任务**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，read_base_sha=`32734fae5b94e5c84d8ff4efa8209c74aa1bb402`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、本指挥室当前/02时交接、T062真实原FST/ED SHA与31站9+9+9+4节点映射、18 NTM输入身份表、既有T071 Windows OpenFAST原生运行workflow。继承历史源而不重复18 NTM DEL或ETM雨流。本轮仅准备并尝试一个U09p343881_NTM_S01、第一批9站、TMax=0.1s的OpenFAST v3.5.3**受控初始化/通道诊断**：采用原始158m静态模型SHA，原ED仅变gage、原FST仅变TMax；若为避免436MB BTS改用常定风，则明确为DIAGNOSTIC_ALTERED_INFLOW、不可证明NTM气动/控制状态等价。输出真实原生日志、OUTB通道和源/派生SHA；若运行不可得，保留精确失败与脚本自测，不冒称native PASS。拟改T062已有任务目录内最小诊断程序、独立小workflow、T077既有过程日志、00_STATUS和本指挥室；不碰冻结T057/T070、不合并PR、不执行700s生产。
+
+
+### HANDOFF-20261031-07-S07-SIXDOF-START
+- **START / 2026-10-31 07时 CST / 自动研究**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，read_base_sha=`081ac4b6e9fbeb8d996580baecc732cd74474aed`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、本指挥室最新S06交接、T077 S06过程日志、T062 1080行真实NTM六分量源表及seed离散脚本。继承18组NTM×塔底/9近底测点的原始六分量均值和SHA，不重复雨流或0.1s原生求解。本轮增量：S07独立六分量刚体参考点变换/旋转/单位与守恒算法测试，并以真实1080行源数据生成18×10站的**原生轴系SI单位均值向量接口**；未核轴系和参考点不得实施物理映射。拟改T062既有目录的S07小脚本/表、T077既有过程日志、00_STATUS及指挥室。SOURCE-only + synthetic algorithm tests，不改T057/T070，不跑高成本，不合并PR。
