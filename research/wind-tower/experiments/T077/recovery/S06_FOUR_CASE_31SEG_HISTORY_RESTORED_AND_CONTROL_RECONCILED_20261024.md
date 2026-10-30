@@ -1,3 +1,15 @@
+## 2026-10-31 07时｜S07真实NTM六分量源向量接口及刚体参考点变换数值验收（SOURCE-ONLY）
+
+**SOURCE/实际阅读层级**：读取PR #42现有[T062原始OUTB派生1080行NTM六分量统计](../../T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv)，前序Actions #41087172683验证其原始OUTB SHA与600s/12001点统计，源CSV已锁SHA256=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；本轮直接读取的是**1080行CSV文本**，没有重下载18份OUTB、没有取得任一完整同步六分量时程。18个case各60通道（塔底6+九站各6），原始均值单位kN/kN-m；每case对应OUTB SHA与part ZIP指针原样传递。main读取SHA=`58c1e545f67b645417d5957189f5dad693d975bb`；开工PR read_base_sha=`081ac4b6e9fbeb8d996580baecc732cd74474aed`。
+
+**RUN/可复算程序**：新增[T062 S07六分量刚体变换与源向量程序](../../T062/s07_sixdof_wrench_source_contract.mjs)，数学关系为 `F_B=R F_A`、`M_B(Q)=R[M_A(P)-(Q-P)_A×F_A]`，其中`R`必须是行列式+1的正交旋转，`P→Q`的平移在A系表达。**这是wrench的自由体静力学恒等式，不是Abaqus结点力、惯性去重或软件轴系已验证**。V8实测：解析1080行、18个case、10个测点/工况，产生**180行**实际源均值六分量向量（SI：N/N·m），保留每分量原OUTB packed半量化步长上界（换算至SI）及原OUTB SHA。恒等R、零参考点偏移下180向量六分量逐值一致、最大残差0；解析已知100N沿x、2m沿y参考点移动，目标Mz=+200N·m；90°绕z旋转及逆变换、一般向量往返相对容差1e-12通过；4个非法旋转/CSV自测拒绝及4个真实源破坏（缺行、重复通道、错单位、NaN）拒绝通过。**测试在JS V8中执行，非Node远端CI或OpenFAST/Abaqus求解**。
+
+**TAB**：[180行真实原生输出坐标标签的均值向量CSV](../../T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)，只作S07输入管线；源样例U09p343881_NTM_S01/TwrBs的均值为Fx=1,052,788.706950N、Fy=−7,189.800739N、Fz=−25,613,963.371500N、Mx=9,796,052.494610N·m、My=178,620,636.689000N·m、Mz=308,448.232325N·m（直接从源CSV×1000）。**不得把18×10站的时均值当同步时程、31段全高度、Abaqus输入或DLC1.2正式风载**。新程序实际运行SHA核验需Node/CI完成；GitHub新CSV字节SHA256在本段撰写时尚无独立Node计算回执，不冒称已验。
+
+**REF**=既有T062 OpenFAST v3.5.3六分量原始载荷及刚体力矩定义，无新增论文全文/原式页码。**STANDARD**=本轮未读IEC/GB/NB授权规范条款，非条款验收。**OFFICIAL**=原始OUTB前序Actions证据链，未本轮新增原生软件日志。**FIG**=无新响应图；**TAB**=180行真实源均值接口。**误差预算**=原始OUTB量化上界逐分量来自源表 `quantization_half_step_unit`（×1000为SI）；时均值原CSV有限位数、最终输出四舍五入到0.000001 SI单位；浮点变换往返仅对合成解析测试达到1e-12相对容差。**未知的原生局部/全局坐标轴、力矩参考点、作用力归属、惯性重复计算和31站全高度映射误差均未量化**，不能被上述零残差掩盖。
+
+**PASS/HOLD**=仅`S07_SOURCE_MEAN_VECTOR_AND_SYNTHETIC_WRENCH_ALGORITHM_QC`，S07整阶段仍BLOCKED、S06 PARTIAL、12阶段0/12未晋级、原生E/WE=0。小型远端CI复算已加入既有`.github/workflows/s06-paired-seed-del-qc.yml`，**截至本段尚未核得Actions成功日志**；不得声称远端CI通过。冻结T057/T070、main未改，PR #42保持Draft不合并。**下一唯一动作**：直接核读OpenFAST官方输出定义和原FST/ElastoDyn配置，冻结TwrBs/TwHt的原生轴系与力矩参考点，再用一份真实同步OUTB逐时刻验证变换；无轴系证据前不生成Abaqus载荷。
+
 ## 2026-10-31 06时｜S06真实18 NTM九站弯矩seed离散+36 BTS归档可用性门禁（source-only）
 
 **SOURCE/阅读层级**：本轮从PR #42直接读取[18 NTM×60原生载荷通道的1080行CSV](../../T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv)，已由远端Node实际复算并核源SHA256=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；读取[2000条原始文件manifest](../../../archive/local-assets-20261004/file-manifest.json)，SHA256=`c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302`。本轮没有重新解包18份OUTB、没有下载任何BTS，也没有读取TurbSim .inp/.sum/.dat的原始字节：对后者仅核对manifest条目及其历史SHA。**关键新发现**：36/36个原始BTS在此GitHub归档的manifest中均为`prior-size-deferral-cancelled-see-transfer-ledger`，无归档路径、无原件SHA；36组对应.inp/.sum/.dat共108条条目则均标为included并有SHA及分包指针。**只能说此GitHub归档无法直接恢复原始BTS，不能推断用户本机D盘没有BTS，更不能以重新生成的风场冒充原件。**
