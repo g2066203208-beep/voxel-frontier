@@ -12,6 +12,8 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S10_ETM_LOAD_DEL_CONTROL_SUMMARY_6_20261028.csv'
       - 'research/wind-tower/experiments/T062/s06_ntm_18case_input_identity.js'
       - 'research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv'
+      - 'research/wind-tower/experiments/T062/s07_sixdof_wrench_source_contract.mjs'
+      - 'research/wind-tower/experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,6 +32,26 @@ jobs:
             --receipt research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json \
             --check research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv \
             --self-test
+      - name: S07 native-frame real 18x10 mean wrenches, synthetic 6DOF transform invariance
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T062
+          node "$root/s07_sixdof_wrench_source_contract.mjs" --self-test
+          tmp=$(mktemp -d)
+          trap 'rm -rf "$tmp"' EXIT
+          node "$root/s07_sixdof_wrench_source_contract.mjs" \
+            --source "$root/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv" \
+            --out "$tmp/s07.csv"
+          cmp "$tmp/s07.csv" "$root/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv"
+          cp "$root/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv" "$tmp/tampered.csv"
+          sed -i '2s/U09p343881/INVALID_CASE/' "$tmp/tampered.csv"
+          if node "$root/s07_sixdof_wrench_source_contract.mjs" \
+            --source "$tmp/tampered.csv" --out "$tmp/should_not_exist.csv"; then
+            echo "FAIL: altered source accepted"; exit 1
+          fi
+          sha256sum "$root/s07_sixdof_wrench_source_contract.mjs" "$tmp/s07.csv"
+          echo 'S07_NUMERIC_ONLY_PASS; OpenFAST native t frame not yet mapped to Abaqus, no time-series or physical PASS'
       - name: Reproduce all 12 paired DEL rows from source SHA; reject altered input
         shell: bash
         run: |
