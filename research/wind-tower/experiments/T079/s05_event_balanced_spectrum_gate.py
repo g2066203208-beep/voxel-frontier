@@ -321,7 +321,7 @@ def candidate_screen(us_bytes, esm_bytes, enforce_source_sha=True):
             if not math.isclose(ratio, t*fc, rel_tol=1e-9):
                 raise ValueError("ESM_FILTER_PERIOD_MISMATCH")
             _hash(row["source_zip_sha256"])
-            raw_rel, lin_rel, drift, receipt = "NA", "NA", "NA", "true"
+            raw_rel, lin_rel, drift, receipt = "NA", "NA", "NA", "processed_zip_only"
             processing = "ESM_MP_REPORTED_0p04HZ_HIGH_PASS"
             decision = "HOLD_ESM_INSTRUMENT_LOW_FREQ_AND_SITE_TARGET"
             fc_out, freq_ratio = fc, 1.0/(t*fc)
