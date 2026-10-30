@@ -7,6 +7,10 @@
 
 
 
+## 2026-10-30 11时｜S10 Paulson 1983原始试验域已核读并接入防外推门禁（非材料寿命）
+
+直接核读[Paulson/Frank/Breen 1983原始报告](https://library.ctr.utexas.edu/digitized/texasarchive/phase2/300-1-ctr.pdf)印刷p57 Table5-2、p58 Table5-3、p60 §5.2、p62 Table5-5，新增[REF163](../../registry/literature_master.tsv)：A全样本391点实际范围22–81ksi、最小应力75–165ksi；15.2mm F子样本26点范围26–69ksi、最小应力50–97ksi。原始A-1L为`log10N=10.97−3.5log10(Sr/ksi)`，**未包含Goodman修正**；REF023 Qu2026的Goodman+13.95(MPa)是二级模型组合。已在[既有S10 PT计算程序](../../experiments/T077/recovery/s10_local_stress_rainflow_gate.py)增加实际应力范围/最小应力双域门禁、等效范围防外推、原始A-1L独立对照及15.2mm子域提示；旧100MPa合成样例位于原刊实测域外，已换成200MPa/930MPa正向样例。独立Python数值已验证：A-1L logN=5.8512114553、Qu二级组合logN=4.8427900304（**不同输入，不是直接强度比较**），源码SHA256=`30f6745c177dbc502b33709885800d294a8c437e3822f1dc1641f82581a729da`。原PDF字节SHA尚未取得、脚本真实CI回读待完成、现代15.2mm材料/锚具及真实有效Pe局部应力HOLD；没有真实材料寿命或原生地震RUN，**0/12整阶段未晋级**。详见[T077 11时SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及失败记录](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
+
 ## 2026-10-30 10时｜S10 REF023 PT钢绞线原式已接入可执行条件性算法（非材料寿命）
 
 直接核读[REF023 Qu2026开放原刊HTML §2.2 Eq.(1)–(5)](https://www.mdpi.com/2075-5309/16/19/3854)：Paulson型lgN=13.95−3.5lg(Sr/MPa)、PT Goodman等效应力Δσ/(1−σm/fu)，fu=1860MPa为该文钢绞线材料；Paulson原始试验全文未读。既有[s10_local_stress_rainflow_gate.py](../../experiments/T077/recovery/s10_local_stress_rainflow_gate.py)新增REF023二级文献方法专用参数锁与9项负向测试；[最终脚本真实CI #40989811821](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989811821) job 123849202096 success，脚本SHA256=61e36ac743d9570c65f56928096a78cc0cc06e5cf04e0a89bc2be1c8e4d86bc6，含原有雨流/Miner/68part静态回归。合成范围100MPa、均值930MPa、fu1860MPa → 等效200MPa、lgN=5.896395015176065、单合成循环damage=1.2694189722453895e-6，**绝非本塔真实寿命**。初版[CI #40989722290](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989722290)因合成CSV双反斜杠换行失败，已修复并保留失败证据。混凝土fib原式/拉压、HRB400规范疲劳表应用、钢塔DNV/EN焊缝细节均仍HOLD；详见[T077 10时四材料来源矩阵、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。无原生ODB局部应力、无真实材料寿命或地震结果，S10仅方法程序实证，**12阶段严格0/12未晋级**，S11优化主线不变。
