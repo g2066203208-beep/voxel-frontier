@@ -60,7 +60,7 @@ function build(rows){
    }
    const t=transform(vals.slice(0,3),vals.slice(3),I,r);
    for(let k=0;k<3;k++)maxResidual=Math.max(maxResidual,Math.abs(t.F[k]-vals[k]),Math.abs(t.M[k]-vals[k+3]));
-   const row=[caseName,g===0?"TwrBs":"TwHt"+g,"OpenFAST_native_t_UNVERIFIED_ABAQUS_FRAME",a[0].outb_sha256,a[0].source_archive,
+   const row=[caseName,g===0?"TwrBs":"TwHt"+g,"OpenFAST_output_native_UNVERIFIED_COORDINATE_BASIS",a[0].outb_sha256,a[0].source_archive,
     ...vals.map(x=>x.toFixed(6)),...err.map(x=>x.toFixed(6)),"100-700","SOURCE_MEAN_ONLY_NO_TIME_SERIES_NO_PHYSICAL_MAPPING"];
    lines.push(row.join(","));
   }
