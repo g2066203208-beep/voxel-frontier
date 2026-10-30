@@ -63,6 +63,10 @@
 - **START / 2026-10-31 02时 CST / 自动研究任务：** main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=88cdcd4cca5d4c7a134db89e20bb40cb82719236`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、本指挥室当前进度及最近交接、T077既有S06日志、T062原始几何收据与18组NTM SHA身份表。继承已验证18 NTM原始OUTB与FST/ED同一SHA身份，不重算DEL。限定本轮从真实静态ZIP直接读取原始FST/ElastoDyn字节，使用31段原始几何映射TwrGagNd并输出最多9个gage一组的四批只读配置计划；不生成生产INP、不执行700s OpenFAST/Abaqus、不改冻结T057/T070、不合并。拟改T062源解析程序/两张轻量结果、既有S06轻量workflow、T077过程日志、00_STATUS与本指挥室；责任方网页版/Actions，原生求解保留本机后续门禁。
 
 <a id="handoff-log"></a>
+### HANDOFF-20261031-04-S06-NATIVE-TPZI-START
+- **START / 2026-10-31 04时 CST / 自动研究任务：** main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=6bd835e7585281ae170518fdf78e2fac10abfe26`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、指挥室当前进度/最近交接及T077 S06 03时原生日志。继承[Actions #41114066678](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41114066678) 0.1s原生九站OUTB（SHA256 `2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb`）与T062 31段节点表（SHA256 `14e47139816d51030b6255ece5112cdbb8e4ee113b88e3e997c68d433a718692`）；本轮仅下载既有小型artifact、逐站解码TPzi并核对原生高度，不重复求解、不重算DEL、不改T057/T070。拟改T062位置QC程序与九行CSV、T077既有S06过程日志、00_STATUS及指挥室；责任方网页版GPT，后续NTM/31站仍按原生门禁。
+
+
 ### HANDOFF-20261031-01-S06-NTM-INPUT-IDENTITY-START
 - **END / 2026-10-31 01时 CST：** 已提交T062 18行源身份CSV、同一核心的Node复算脚本、既有S06轻量CI扩展；JS真实manifest交叉验证18/18、四项负向拒绝通过。固定FST/ED/Tower/Servo各1 SHA，18组InflowWind与OUTB各18 SHA；静态归档manifest SHA `c9da25...`、补充manifest `35235d...`、既有OUTB收据 `c0a061...`。本轮没有重新下载原始ZIP/执行原生OpenFAST/Abaqus；初次CI #41097123209因Node ESM语法失败，已记录；修复后CI #41097352068/job #124206418960 completed/success，CSV SHA256 `d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5`。对应SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、初次跨section路径重复失败、误差预算及HOLD已入T077日志和00_STATUS。S06 PARTIAL，0/12；下一责任：网页版/Actions核读原始NTM FST/ED字段与31站输出可重建条件，本机L02独立进行。PR不合并、冻结母本不变。
 
