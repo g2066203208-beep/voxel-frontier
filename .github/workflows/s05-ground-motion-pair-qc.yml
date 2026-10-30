@@ -7,6 +7,8 @@ on:
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
+      - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv'
       - 'research/wind-tower/experiments/T079/s08_si_motion_diagnostics.py'
       - 'research/wind-tower/experiments/T079/s08_horizontal_orientation_energy_gate.py'
@@ -562,6 +564,43 @@ jobs:
                   assert math.isclose(float(a[k]),b[k],rel_tol=1e-10,abs_tol=1e-12),(k,a[k],b[k])
           print("REAL_FIVE_PAIRS_REFERENCE_PAPER_EQ1_CROSSCHECK_PASS_NO_DESIGN_WAVES")
           PY
+      - name: REAL 3-event 5-pair 20-row source/processing screening (NOT design input)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o committed_screen.csv "$base/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv"
+          python3 s05_event_balanced_spectrum_gate.py --us-csv us.csv --esm-csv esm.csv --output real-screen.json --screen-csv real-screen.csv
+          python3 - <<'PY'
+          import csv,math,json,hashlib
+          with open('committed_screen.csv',newline='') as f: expected=list(csv.DictReader(f))
+          with open('real-screen.csv',newline='') as f: actual=list(csv.DictReader(f))
+          assert len(expected)==len(actual)==20
+          assert {x['event_id'] for x in actual}=={'ci38457511','ci39493944','IT-2012-0008'}
+          assert len({(x['event_id'],x['station']) for x in actual})==5
+          numeric=('period_s','event_pair_count','gm_psa_m_s2','raw_vs_pre20_rel',
+              'pre20_vs_linear_rel','pre20_end_displacement_m',
+              'reported_highpass_Hz','f_over_fc')
+          count=0
+          for a,b in zip(actual,expected):
+              assert set(a)==set(b)
+              for k in a:
+                  if k in numeric and a[k]!='NA':
+                      assert b[k]!='NA' and math.isclose(float(a[k]),float(b[k]),rel_tol=1e-9,abs_tol=1e-11),(k,a[k],b[k])
+                      count+=1
+                  else: assert a[k]==b[k],(k,a[k],b[k])
+              assert a['design_wave']=='false' and a['site_target_verified']=='false'
+              assert a['low_frequency_verified']=='false' and a['decision'].startswith('HOLD_')
+          d=json.load(open('real-screen.json'))
+          assert d['S05_PASS'] is False and d['Abaqus_E_WE_RUN']==0
+          assert d['US_SHA256']=='45c71c29677dd0918e68c281e6552cedf6d1370a13f6abbf319349cdc1f5fc80'
+          assert d['ESM_SHA256']=='4fd1ecf5f3010524e2c5c54dae4072e1187718344f3a64bec46490e9ec617def'
+          print('REAL_S05_3EVENT_5PAIR_20ROW_SOURCE_SCREEN_PASS',count,'numeric cells')
+          for name in ('committed_screen.csv','real-screen.csv'):
+              print(name,hashlib.sha256(open(name,'rb').read()).hexdigest())
+          print('NO_SITE_TARGET_OR_INSTRUMENT_LOW_FREQUENCY_PASS; E_WE_RUN=0')
+          PY
+
       - name: Preserve source-hashed diagnostic JSON, never label design PASS
         if: always()
         uses: actions/upload-artifact@v4
