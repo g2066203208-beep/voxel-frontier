@@ -1,5 +1,18 @@
 # S06：四工况×31段六分量时程从历史GitHub Actions恢复（2026-10-24）
 
+
+## 2026-10-31 00时｜S06真实18组NTM原始OUTB后处理：1080行雨流数据（非物理PASS）
+
+**SOURCE / 阅读层级：** 从仓库既有openfast-36-r2历史ZIP中真实恢复18组NTM原始OpenFAST OUTB（3风速×6 seeds），逐件对照原始file-manifest.json的SHA256及字节数，解码每组100–700s、dt=0.05s、12001点。原始OUTB仅9个塔架测点，不能冒充T071/T072的31段。源清单SHA256=35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392；各18原件SHA在[收据](../../T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json)。
+
+**RUN / 原始日志：** [真实Actions #41087172683/job #124171256937](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41087172683/job/124171256937) completed/success；18/18原件SHA验证、FileID4压缩整数原始解码、60通道×12001点、已知半/整循环及异常输入拒绝、1080行独立形状检查通过；同工作流另一原始单工况job亦success。仅复算已有原始OUTB，**未执行新OpenFAST或Abaqus生产求解**。[程序](../../T062/s06_ntm_18case_original_outb_gate.py) SHA256=584c45eae91c9283305953649aaacb0f257d0fb298919f5083e5ac67c8d274a8；[1080行结果表](../../T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv) SHA256=95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f；源级数据由job直接commit到PR #42，commit 8d549620f119381072627ff10865b93ecbfb3aa5。
+
+**TAB / 实际结果：** 塔底TwrBsMyt、m4、Nref=600、单位kN·m，六seed均值：U09p343881_NTM=43701.1570，U11p4_NTM=56611.7542，U19p202140_NTM=61333.1965；对应六seed最小—最大为35979.4422–51074.5572、48324.9430–65207.8376、55251.1429–67188.1112。Nref600与旧Neq100000不可直接比较。全部18×60通道的m4/m10、均值、极值、标准差、量化误差上界在CSV。FIG：无新图。
+
+**REF / STANDARD / OFFICIAL / 误差：** REF=既有T062 OUTB头解析器、T077 ASTM式雨流范围计数方法；STANDARD=未读取授权IEC/GB原文，不声称DLC1.2合规；OFFICIAL=本项目原始OpenFAST计算产物与GitHub Actions原生日志，非IEC官方认证。压缩整数解码误差上界为每通道0.5/abs(scale)（逐行记录），CSV 12有效数字；源模型、控制器、坐标、31段映射及材料疲劳物理误差仍未量化。失败记录：提交前工作流模板JS语法错误已纠正，未形成远端失败RUN；正式两job成功。
+
+**单一最大HOLD：** 18组NTM原始OUTB只有9测点，尚未闭合与31段T071/T072及158m模型身份的映射，S06=PARTIAL、S07/S10物理HOLD、12阶段0/12未晋级。下一唯一动作：核对18组NTM FST/ElastoDyn/TwrGagNd与31段原始同步输出是否存在，不插值冒充31段原生结果。
+
 > **结论：PASS-RECOVERED-CSV-INTEGRITY + PASS-31-CONTROL-ALGEBRA-ROUNDTRIP；S06仍PARTIAL/HOLD；不是OpenFAST原始OUTB重新复算、不是Abaqus native、不是任何规范验算PASS。** 这是12阶段关键路径中S06的实质性源数据恢复，不新增T080编号、不改T057/T070母本、不合并Draft PR #42、不启动昂贵计算。
 
 ## 2026-10-30 12时｜S10 Paulson 1983原始试验域门禁：真实Python CI原生日志回读（仅算法PASS）
