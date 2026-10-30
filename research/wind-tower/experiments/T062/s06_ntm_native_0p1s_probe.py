@@ -68,6 +68,7 @@ def replace_gages(text):
 def selftest():
     s="700 TMax - stop\n0.05 DT_Out - output\n"
     assert replace_scalar(s,"TMax","0.1",expected="700").startswith("0.1 TMax")
+    assert replace_scalar("3 WindType - x\r\n".replace("\r\n","\n"),"WindType","1",expected="3").startswith("1 WindType")
     for bad in ("700 TMax\n700 TMax\n","700 SomethingElse\n"):
         try:replace_scalar(bad,"TMax","0.1")
         except ValueError:pass
@@ -118,8 +119,9 @@ def prepare(args):
     for label,data in originals.items():verify(label,data)
     fst_new=replace_scalar(fst.decode("utf-8-sig"),"TMax","0.1",expected="700")
     ed_new=replace_gages(ed.decode("utf-8-sig"))
-    print("INFLOW_SOURCE_FIELD_DIAGNOSTIC",repr([line for line in inflow.decode("utf-8-sig").splitlines() if "windtype" in line.lower() or "hwindspeed" in line.lower()][:8]))
-    inflow_new=replace_scalar(inflow.decode("utf-8-sig"),"WindType","1",expected="3")
+    # Original NTM InflowWind source uses CRLF; normalize derived diagnostic copy only.
+    inflow_text=inflow.decode("utf-8-sig").replace("\r\n","\n")
+    inflow_new=replace_scalar(inflow_text,"WindType","1",expected="3")
     inflow_new=replace_scalar(inflow_new,"HWindSpeed","9.343881")
     for rel,data in {
         "DTU_10MW_RWT.fst":fst_new.encode("utf-8"),
@@ -140,7 +142,7 @@ def prepare(args):
                            "DTU_10MW_InflowWind.dat","Control/DTU_10MW_RWT_DISCON.IN",
                            "Control/libdiscon.dll")},
         "modifications":["FST TMax 700 -> 0.1 s","ED TwrGagNd original 9 -> batch1 9",
-                         "InflowWind WindType 3 -> 1, HWindSpeed -> 9.343881 m/s"],
+                         "InflowWind CRLF normalized in diagnostic child; WindType 3 -> 1, HWindSpeed -> 9.343881 m/s"],
         "source_reading_level":"Original SHA-pinned FST/ED/NTM InflowWind/Tower/Servo/ROSCO binary bytes",
         "STANDARD":"No authorized IEC/GB/NB clauses read",
         "REF":"Existing T062 original input identity and S06 gage mapping",
