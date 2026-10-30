@@ -29,7 +29,7 @@
   "full_cycle_csv_rows": 1574,
   "full_cycle_csv_sha256": "646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83",
   "full_cycle_csv_bytes": 280249,
-  "output_csv_repository_status": "FULL_DETAIL_GENERATED_LOCALLY;_CI_ARTIFACT_JOB_REGISTERED_SEPARATELY;_NOT_YET_COMMITTED",
+  "output_csv_repository_status": "COMMITTED_TO_DRAFT_PR_BRANCH_AND_REMOTE_READ_BACK_1574_ROWS",
   "controls": [
     {
       "case": "U09p343881_ETM_S06",
@@ -86,5 +86,15 @@
   "native_Abaqus_runs": 0,
   "material_damage": null,
   "physical_pass": false,
-  "stage_pass_count": 0
+  "stage_pass_count": 0,
+  "full_csv_commit_sha": "4613237244688ebd7276bd7b35cb8effc862ed34",
+  "full_csv_git_blob_sha": "4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d",
+  "actions_run_id": 41070940116,
+  "actions_job_id": 124114538660,
+  "actions_job_status": "completed/success",
+  "actions_workflow_status_at_record": "in_progress_other_jobs; job success confirmed",
+  "actions_artifact_id": 12983309475,
+  "previous_failed_run_id": 41070762094,
+  "previous_failed_job_id": 124113908736,
+  "previous_failure": "gh: Argument list too long, code 126; fixed by gh api --input JSON file"
 }
