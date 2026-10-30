@@ -55,7 +55,7 @@ def replace_scalar(text, key, value, expected=None):
     return text[:m.start()]+m.group(1)+str(value)+m.group(2)+text[m.end():]
 
 def replace_gages(text):
-    pat=re.compile(r"^(\s*)[\d,\s]+?(\s+TwrGagNd\b[^\r\n]*)$",re.M|re.I)
+    pat=re.compile(r"^([ \t]*)[0-9, \t]+?(\s+TwrGagNd\b[^\r\n]*)$",re.M|re.I)
     hits=list(pat.finditer(text))
     if len(hits)!=1:
         raise ValueError(f"TWGAGND_CARDINALITY {len(hits)}")
