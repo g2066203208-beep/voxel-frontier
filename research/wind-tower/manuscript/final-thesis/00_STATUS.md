@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-30 15时｜S08三向真实地震加速度幅值适配：96,120数据对已生成，非原生抗震PASS
+
+复用ESM v3 `IT-2012-0008/NVL/MP`已归档三向SI时程（32,040点，0.005s，CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`），本轮真实执行[三向基底加速度幅值适配器](../../experiments/T079/s08_base_motion_amplitude_gate.py)，生成X/Y/Z各32,040条`*AMPLITUDE`时间—加速度表，单位mm/s²、总96,120对，逐项回读误差最大5.68434e−14mm/s²；峰值0.47522846/0.51205727/0.28926626m/s²。三幅值表SHA、单位/坐标假设、自由质点相对运动负号解析测试及失败修复见[T079 15时过程日志](../../experiments/T079/PROCESS_LOG.md)和[源锁定收据](../../experiments/T079/real-records/S08_ESM_BASE_MOTION_AMPLITUDE_RECEIPT_20261030.json)。真实Actions回归初始[run #41018343026](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41018343026)尚待结论；**不生成*BASE MOTION/*BOUNDARY载荷卡，不声称已验证Abaqus输入语义、场址谱或原生E/WE**。S08=真实处理波三向幅值准备/物理HOLD；严格0/12未晋级，地震结构响应0项。风致材料疲劳S10与抗震约束优化S11保持主线。
+
+
 ## 2026-10-30 14:10｜S05三事件五对真实谱逐记录筛查20行，非地震设计PASS
 
 复用历史USGS/SCEDC 2019 Ridgecrest三站、2020 Lone Pine一站及ESM 2012 Italy NVL官方MP处理波一站的既有20行**源派生谱**（T4/6/8/10s，非本轮重新下载原始波），扩展[既有S05程序](../../experiments/T079/s05_event_balanced_spectrum_gate.py)，生成[逐记录20行源SHA/基线差/原件层级/高通距离/拒绝决策表](../../experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv)。输入US SHA256 `45c71c29677dd0918e68c281e6552cedf6d1370a13f6abbf319349cdc1f5fc80`、ESM SHA256 `4fd1ecf5f3010524e2c5c54dae4072e1187718344f3a64bec46490e9ec617def`；输出CSV SHA256 `bbd02ad8f1d0bb4e37671f2f1b24d5558ab05b63c2ebd5c7919301155fa79231`，程序SHA256 `f1af68612854353b7aad24dc5aa3d2db825c4ee92eec86f9fba1e4520d075eba`。真实[Actions #41012493902](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012493902) S05 event job [#123921279172](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012493902/job/123921279172) **success**，20行、116数值单元、4项负向拒绝测试通过；首个CI排序错位失败已修复且保留日志。US最大原样/去均值谱差比385.463，ESM T10s的`f_T/f_c=2.5`，仅数值筛查；ESM仅有处理ZIP收据而非未经处理仪器原始波。S05低频仪器、目标谱及标准授权条款均未闭合，正式设计波0组，原生E/WE=0，**12阶段0/12未晋级**；无新增Abaqus/OpenFAST求解，S10/S11风疲劳与优化主线保留。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差预算、失败记录见[T079过程日志](../../experiments/T079/PROCESS_LOG.md)。

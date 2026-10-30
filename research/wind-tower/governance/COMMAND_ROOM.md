@@ -20,6 +20,8 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-30 15时S08独立增量：** ESM三向32,040点真实处理波已转换为96,120对X/Y/Z幅值表，来源/产物SHA及自由质点符号测试见[T079 15时日志](../experiments/T079/PROCESS_LOG.md)；不是Abaqus E/WE，场址谱与方向/单位仍HOLD，12阶段0/12。
+
 读取基准：`94cc0d5f2f7daa86b51aca4d476ef7dde8467238`。这是快照基准，不保证是下一次开工时的最新HEAD；每轮必须刷新。
 
 | 事项 | 已有进度/当前状态 | 下一步与责任人 |
@@ -375,3 +377,8 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 - **END / 2026-10-30 14:10 CST / S05三事件五对逐记录真实谱QC：**继承本节14:05 START，新增[20行真实源派生逐记录CSV](../experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv)与[既有可运行程序](../experiments/T079/s05_event_balanced_spectrum_gate.py)的`--screen-csv`，并接入既有S05 Actions；输入两份原谱SHA256分别`45c71c29677dd0918e68c281e6552cedf6d1370a13f6abbf319349cdc1f5fc80`/`4fd1ecf5f3010524e2c5c54dae4072e1187718344f3a64bec46490e9ec617def`，新CSV SHA256 `bbd02ad8f1d0bb4e37671f2f1b24d5558ab05b63c2ebd5c7919301155fa79231`，源码SHA256 `f1af68612854353b7aad24dc5aa3d2db825c4ee92eec86f9fba1e4520d075eba`。真实[Actions #41012493902](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012493902) job [#123921279172](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012493902/job/123921279172) **success**，20/20行、116数值格、4项负向拒绝通过；首次[Actions #41012414191](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012414191)因跨语言排序不同失败，已修正并留失败日志。2019 Ridgecrest三站仍只算一独立事件；2020 Lone Pine原样/前20s去均值T10谱差比385.463，ESM MP处理波0.04Hz高通T10`f/fc=2.5`；PASC/RVR原始FDSN收据缺，ESM只有**处理ZIP**收据，绝不冒充原始仪器波。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差与HOLD见[T079 14时日志](../experiments/T079/PROCESS_LOG.md)及[论文状态](../manuscript/final-thesis/00_STATUS.md)。**S05独立源筛查准备新增一项已验数表，但设计谱/低频/场址HOLD、正式设计波0、原生E/WE=0、12阶段0/12未晋级**；无Abaqus/高成本OpenFAST RUN，T057/T070冻结未改，PR不合并，S10/S11主线保留。**下一责任/单一动作：云端复用已归档ESM真实三分量SI时程，开发S08基底运动输入适配与解析已知解的符号/单位/坐标校验，不启动原生求解。**
 
 - **14:11 CST真实CI总状态补记：** 上述[Actions #41012493902](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012493902) **整体completed/failure**，三项独立S05/ESM job success；CESMD metadata job #123921279476两事件官方API均`URLError [Errno -3] Temporary failure in name resolution`，没有获取CESMD新增元数据。已记录于[T079过程日志](../experiments/T079/PROCESS_LOG.md)；20行真实源派生筛查job仍success，绝不冒称全workflow成功或设计波PASS。
+
+
+### HANDOFF-20261030-S08-ESM-BASE-AMPLITUDE-WEB-15
+- **START/read receipt（本批提交记录）/ 2026-10-30 15时 CST：** main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=864f49807a67287cabb0c9b6c2194ba19f5830d9`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW及PROCESS_LOG末节、T080.1/.2/.3、12阶段总计划、指挥室当前快照与交接；继承ESM三向源收据及14时20行筛查，不重复S01、S05滤波器小审查。拟改T079现有PROCESS_LOG、00_STATUS、指挥室及S05现有CI，新增必要S08输入适配程序和轻量JSON收据；不改冻结T057/T070、不合并、不启动原生高成本求解。
+- **END / 本批实际交付：** 本地CPython3.13.5真实处理32,040×3 SI时程为三向`*AMPLITUDE`表，96,120对数据，SHA/峰值/误差/已知解/失败修复详见[T079 15时日志](../experiments/T079/PROCESS_LOG.md)与[收据](../experiments/T079/real-records/S08_ESM_BASE_MOTION_AMPLITUDE_RECEIPT_20261030.json)。[S08程序](../experiments/T079/s08_base_motion_amplitude_gate.py)源码Git Blob `df1d560be664a70ea16139a8a7c3c4177ec7773c`与本地逐字节一致；[S05既有CI](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41018343026)已接入三向真实源重算/产物SHA回归，初始queued，后续按真实结论补录。**S08输入程序准备有真实增量，但场址谱/原始低频可靠性/坐标方向/原生加载仍HOLD，原生E/WE=0，严格0/12**。下一责任：云端先核真实Actions并用独立SDOF方法交叉验证时程输入，不重复小审计；本机仅在具备合法原生环境时验证加载语义。
