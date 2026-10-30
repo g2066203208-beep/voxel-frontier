@@ -7,6 +7,10 @@
 
 
 
+## 2026-10-30 13时 CST｜S05真实地震波三分量RotD 16周期计算（独立准备）
+
+本轮取回ESM原始Actions artifact #12884814391的32,040步SI三分量真实波，完成16周期×360水平转角的RotD00/50/100及竖向PSA数值表、已检真实双水平谱和4项异常输入拒绝测试；来源CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`。复算脚本/16行表/收据在[T079 13时过程日志](../../experiments/T079/PROCESS_LOG.md)。非嘉鱼正式设计波，无新增Abaqus E/WE，12阶段0/12未晋级。
+
 ## 2026-10-30 12时｜S10 Paulson原始域CI原生日志已核验（仅算法，不是寿命）
 
 已直接回读[真实S10 GitHub Actions #40995874124](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40995874124)的[job #123868750975](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40995874124/job/123868750975)完整原始日志：workflow `completed/success`，实际执行`python3 -m py_compile`和`--self-test`，源码SHA256=`30f6745c177dbc502b33709885800d294a8c437e3822f1dc1641f82581a729da`与11时原始域防外推程序完全一致；14项PT负向测试及12项通用拒绝测试通过。合成200MPa应力范围/930MPa均值下原始A-1L `logN=5.851211455321456`，Qu二级Goodman `logN=4.8427900303521305`；该正例不在15.2mm F子样本应力下限域，**只作A全集算法测试，不是本塔PT疲劳寿命**。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、合成CSV SHA、误差与HOLD已写入[T077 12时既有过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。未取得原始PDF字节SHA、授权规范新原页或真实局部材料应力；S10仅`SOURCE_LOCKED_PYTHON_CI_PASS / REAL_MATERIAL_STRESS_HOLD`，严格**0/12阶段未晋级**，S11结构优化保留。
