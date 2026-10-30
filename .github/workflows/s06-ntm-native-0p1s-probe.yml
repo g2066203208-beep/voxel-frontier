@@ -22,6 +22,7 @@ jobs:
             research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py
             research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
             research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+            research/wind-tower/experiments/T062/S06_NTM_NATIVE_0P1S_RECEIPT_20261031.json
             research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
             research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
             research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
@@ -115,9 +116,13 @@ jobs:
           }
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- $p
+          git add --sparse -- $p
+          if ($LASTEXITCODE -ne 0) { throw 'RECEIPT_GIT_ADD_FAILED' }
           if (git diff --cached --quiet) { Write-Host 'RECEIPT_UNCHANGED'; exit 0 }
           git commit -m 'data(S06): preserve 0.1s native OpenFAST nine-gage probe outcome'
+          if ($LASTEXITCODE -ne 0) { throw 'RECEIPT_GIT_COMMIT_FAILED' }
           git pull --rebase origin $env:GITHUB_REF_NAME
+          if ($LASTEXITCODE -ne 0) { throw 'RECEIPT_GIT_REBASE_FAILED' }
           git push origin "HEAD:$env:GITHUB_REF_NAME"
+          if ($LASTEXITCODE -ne 0) { throw 'RECEIPT_GIT_PUSH_FAILED' }
           Write-Host 'RECEIPT_PERSISTED_ON_DRAFT_BRANCH; NOT PHYSICS PASS'
