@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/s06-archived-tower-provenance.yml'
+      - 'research/wind-tower/experiments/T062/s06_ntm_fst_ed_31seg_gage_contract.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -82,3 +83,57 @@ jobs:
           name: s06-archive-tower-source-inventory
           path: s06-source-inventory/
           retention-days: 14
+
+  original-fst-ed-31cseg-source-contract:
+    if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv
+            research/wind-tower/experiments/T062/s06_ntm_fst_ed_31seg_gage_contract.py
+            research/wind-tower/experiments/T062/S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+          sparse-checkout-cone-mode: false
+      - name: Validate real source bytes, plan 31 segment nodes, reject invalid test inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s06_ntm_fst_ed_31seg_gage_contract.py
+          python3 -m py_compile "$script"
+          python3 "$script" --self-test
+          python3 "$script" \
+            --zip research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip \
+            --geometry research/wind-tower/experiments/T038/model-disclosure-20261005/tower-segment-geometry-mesh.csv \
+            --outdir research/wind-tower/experiments/T062
+          sha256sum "$script" \
+            research/wind-tower/experiments/T062/S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv \
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+          echo 'SOURCE CONFIGURATION QC ONLY: no 31-gage native histories, no DLC1.2/physics PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s06-original-fst-ed-31cseg-source-contract
+          path: |
+            research/wind-tower/experiments/T062/S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+          retention-days: 14
+      - name: Save only small verified source mapping to PR draft branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'research/t080-seismic-integration-gates-20261022'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/wind-tower/experiments/T062/S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv \
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+          if git diff --cached --quiet; then
+            echo 'NO_CHANGE_SOURCE_VERIFIED'
+          else
+            git commit -m 'data(S06): retain original FST/ED source contract and 31 CSEG node mapping'
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
