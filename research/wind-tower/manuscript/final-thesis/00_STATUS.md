@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-30 16时｜S08真实地震独立SDOF数值验证完成（非塔架抗震结果）
+
+[程序](../../experiments/T079/s08_independent_sdof_ground_acceleration.py)与[18行真实数据表](../../experiments/T079/real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv)已完成本地Python实测：三分量×6周期，精确分段线性加速度积分vs独立Newmark最大伪加速度偏差0.06822%；解析常加速度与二阶收敛比3.99737通过。ESM来源SI CSV SHA256=`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`，表SHA256=`31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`。详情/误差/HOLD见[T079本轮日志](../../experiments/T079/PROCESS_LOG.md)。远端Actions结果待回读；**没有嘉鱼目标谱、原生Abaqus地震结构结果，12阶段0/12未晋级**，S10/S11保留。
+
+
 ## 2026-10-30 15时｜S08三向真实地震加速度幅值适配：96,120数据对已生成，非原生抗震PASS
 
 复用ESM v3 `IT-2012-0008/NVL/MP`已归档三向SI时程（32,040点，0.005s，CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`），本轮真实执行[三向基底加速度幅值适配器](../../experiments/T079/s08_base_motion_amplitude_gate.py)，生成X/Y/Z各32,040条`*AMPLITUDE`时间—加速度表，单位mm/s²、总96,120对，逐项回读误差最大5.68434e−14mm/s²；峰值0.47522846/0.51205727/0.28926626m/s²。三幅值表SHA、单位/坐标假设、自由质点相对运动负号解析测试及失败修复见[T079 15时过程日志](../../experiments/T079/PROCESS_LOG.md)和[源锁定收据](../../experiments/T079/real-records/S08_ESM_BASE_MOTION_AMPLITUDE_RECEIPT_20261030.json)。真实[Actions #41018343026](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41018343026) ESM job 123939674367已success、[三幅值实体artifact #12960178722](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41018343026/artifacts/12960178722)已下载逐字节核验（ZIP SHA256 dc79225b66f79653a91f19074ac04570c7f1823682577bc0628ee43e0258b51f）；整个workflow因独立CESMD DNS失败为failure；**不生成*BASE MOTION/*BOUNDARY载荷卡，不声称已验证Abaqus输入语义、场址谱或原生E/WE**。S08=真实处理波三向幅值准备/物理HOLD；严格0/12未晋级，地震结构响应0项。风致材料疲劳S10与抗震约束优化S11保持主线。

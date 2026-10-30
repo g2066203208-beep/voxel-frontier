@@ -11,6 +11,7 @@ on:
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv'
       - 'research/wind-tower/experiments/T079/s08_base_motion_amplitude_gate.py'
+      - 'research/wind-tower/experiments/T079/s08_independent_sdof_ground_acceleration.py'
       - 'research/wind-tower/experiments/T079/s08_si_motion_diagnostics.py'
       - 'research/wind-tower/experiments/T079/s08_horizontal_orientation_energy_gate.py'
       - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv'
@@ -636,5 +637,47 @@ jobs:
           path: |
             s05-event-balance.json
             reference-paper-diagnostic.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  s08-independent-exact-sdof-real-wave:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Independent analytical ODE and Newmark self tests with REAL ESM 32040 x 3
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T079
+          python3 -m py_compile s08_independent_sdof_ground_acceleration.py
+          python3 s08_independent_sdof_ground_acceleration.py --self-test
+          python3 s05_esm_public_processed_pair.py --self-test
+          mkdir -p real-s08
+          python3 s05_esm_public_processed_pair.py --fetch --timeout 90 --output-dir real-s08
+          python3 s05_esm_public_processed_pair.py --export-s08 --source-zip real-s08/ESM_IT-2012-0008_NVL_MP_ACC_original.zip --output-dir real-s08
+          python3 s08_independent_sdof_ground_acceleration.py --real-source real-s08/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv --output real-s08/recomputed.csv --receipt real-s08/recomputed_receipt.json
+          python3 - <<'PY'
+          import csv,hashlib,json,math,pathlib
+          root=pathlib.Path('real-s08')
+          want='31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7'
+          raw=(root/'recomputed.csv').read_bytes()
+          assert hashlib.sha256(raw).hexdigest()==want,'independent table SHA mismatch'
+          expected=pathlib.Path('real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv').read_bytes()
+          assert hashlib.sha256(expected).hexdigest()==want,'committed real table differs'
+          got=json.loads((root/'recomputed_receipt.json').read_text())
+          old=json.loads(pathlib.Path('real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_RECEIPT_20261030.json').read_text())
+          assert got['output_csv_sha256']==old['output_csv_sha256']==want
+          assert not got['S05_site_design_PASS'] and not got['S08_physics_PASS'] and got['S08_native_structural_RUN']==0
+          rows=list(csv.DictReader(raw.decode().splitlines()))
+          assert len(rows)==18 and max(float(r['newmark_vs_exact_relative_error']) for r in rows)<.001
+          print('S08_REAL_INDEPENDENT_EXACT_VS_NEWMARK_18_ROWS_SHA_LOCKED_PASS_NOT_NATIVE')
+          PY
+      - name: Preserve real independent SDOF QC (NO native result)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s08-real-esm-independent-sdof-qc-not-native
+          path: research/wind-tower/experiments/T079/real-s08/recomputed*
           if-no-files-found: warn
           retention-days: 90

@@ -1,0 +1,45 @@
+{
+  "status": "INDEPENDENT_SDOF_PIECEWISE_LINEAR_REAL_ESM_QC_ONLY",
+  "source_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "source_original_zip_sha256": "dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6",
+  "source_npts": 32040,
+  "dt_s": 0.005,
+  "damping_ratio": 0.05,
+  "components": [
+    "HNE_acc_m_s2",
+    "HNN_acc_m_s2",
+    "HNZ_acc_m_s2"
+  ],
+  "periods_s": [
+    0.5,
+    1,
+    2,
+    4,
+    6,
+    10
+  ],
+  "comparison_rows": 18,
+  "reference_method": "exact underdamped SDOF state transition for piecewise-linear sampled ag",
+  "compared_method": "Newmark average-acceleration beta=1/4 gamma=1/2",
+  "relative_error_threshold_diagnostic": 0.02,
+  "maximum_relative_psa_discrepancy": 0.0006821572913593958,
+  "output_csv_sha256": "31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7",
+  "output_csv_bytes": 5804,
+  "SOURCE": "ESM v3 DOI 10.13127/esm.3 IT-2012-0008/NVL/MP processed accelerogram; numerical SI CSV",
+  "REF": "exact linear ODE solution derived explicitly in script; Newmark beta=1/4 gamma=1/2",
+  "STANDARD": "NO_AUTHORIZED_SITE_OR_IEC_GB_CLAUSE_CLAIM",
+  "OFFICIAL": "ESM public processed record; low-frequency instrument chain NOT VERIFIED",
+  "RUN": "Python stdlib only; no structural solver",
+  "FIG": "NONE",
+  "TAB": "18-row SDOF comparison CSV",
+  "assumptions": [
+    "5% illustrative oscillator damping, NOT tower damping",
+    "zero initial relative displacement and velocity",
+    "piecewise-linear interpolated ground acceleration between measured samples",
+    "no wave scaling or seismic target spectrum match"
+  ],
+  "error_budget": "numerical integrator discrepancy reported per record/period; input, site, material and structural errors NOT BOUNDED",
+  "S08_native_structural_RUN": 0,
+  "S05_site_design_PASS": false,
+  "S08_physics_PASS": false
+}
