@@ -20,7 +20,7 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
-**2026-10-30 15时S08独立增量：** ESM三向32,040点真实处理波已转换为96,120对X/Y/Z幅值表，来源/产物SHA及自由质点符号测试见[T079 15时日志](../experiments/T079/PROCESS_LOG.md)；不是Abaqus E/WE，场址谱与方向/单位仍HOLD，12阶段0/12。
+**2026-10-30 16时S05独立增量：** 已从真实ESM RotD50 16周期数表对**明确假设**的6度/II/第一组多遇谱形完成0.5–6s 12周期对数最小二乘比较，最佳单尺度0.980397、谱形RMSE(log)=0.534707、9/12周期偏离自设±30%诊断带；[真实CI job #123959751440](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41024644851/job/123959751440) success，96数值单元回归，7–10s未外推，详细[源/算法/失败/规范层级](../experiments/T079/PROCESS_LOG.md)。不是嘉鱼正式谱或GB/IEC验收；原生E/WE=0，12阶段0/12。\n\n**2026-10-30 15时S08独立增量：** ESM三向32,040点真实处理波已转换为96,120对X/Y/Z幅值表，来源/产物SHA及自由质点符号测试见[T079 15时日志](../experiments/T079/PROCESS_LOG.md)；不是Abaqus E/WE，场址谱与方向/单位仍HOLD，12阶段0/12。
 
 读取基准：`94cc0d5f2f7daa86b51aca4d476ef7dde8467238`。这是快照基准，不保证是下一次开工时的最新HEAD；每轮必须刷新。
 
@@ -406,3 +406,6 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 ### HANDOFF-20261030-S05-2024-PARAMETRIC-SPECTRUM-16-START
 - **START / 2026-10-30 16时 CST / 自动研究执行：** main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 Open/Draft；`read_base_sha=760b5f8c8f45e7c09d432f98ed6fa10baeef086c`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG末节、T080.1/.2/.3、12阶段计划、指挥室快照及最近交接；继承真实ESM三分量SI/RotD16周期/独立SDOF18行及其SHA，不重复S01、SDOF或原图。**本轮唯一增量：**针对S05现有真实RotD50 16周期表，建立可复算的*明确假设*6度/II类/第一组、5%阻尼、0.5–6s参数谱形与单标量最小二乘谱匹配；7–10s必须排除而不是把建筑6s曲线外推；产出逐周期真实比值、数值拒绝测试及可替换的场址目标谱输入接口。2024 GB/T50011 5.1.5目前只核到公开转录和住建部2024年第61号公告，**未读授权官方修订原页，非条款验收/非风机设计谱**。拟改T079 S05现有过程日志、00_STATUS、本指挥室，新增一份必要S05算法脚本与12行数表/轻量收据，并复用既有S05 Actions工作流做原生Python实测。禁止高成本RUN、冻结T057/T070变更或PR合并；责任：云端代码+真实数表+远端核验，场址和原生E/WE仍HOLD。
 
+
+
+- **END / 2026-10-30 16时 CST / S05真实ESM与假设2024谱形拟合：**继承本指挥室HANDOFF-20261030-S05-2024-PARAMETRIC-SPECTRUM-16-START，未重做S01/S08。实际提交[Python脚本](../experiments/T079/s05_parametric_target_spectrum_fit.py) SHA256 `60de3ad5c653fd3c97e659f8dd4e06ca4112166d12d762375b72badcec7efb7a`、[12行真实RotD50数表](../experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv) SHA256 `704f8d9725b6a595c6ee8ba29358510a821e8e65701de58714d6c204021c9f5f`，并同步[T079 16时日志](../experiments/T079/PROCESS_LOG.md)与[论文状态](../manuscript/final-thesis/00_STATUS.md)。[真实Actions #41024644851](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41024644851)新S05 job #123959751440 `completed/success`，SHA锁定输入、12行×8数值=96单元通过1e−12回归，原生重算CSV SHA256 `227ee19d6d7772453939a95dc69e9a4166d5ea7c5edac6d516a34fd7d5ca97c0`，输出[artifact #12963081629](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41024644851/artifacts/12963081629)；全workflow因独立CESMD两事件DNS失败，未称全CI通过。结果：最佳单尺度0.980397、对数RMSE0.534707、真实/假设目标缩放比0.39623–1.84736，9/12超自设±30%带；**不是嘉鱼场址谱、不是2024 GB/T50011原文条款合规、不是风机E/WE响应**。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、假设、误差、失败与HOLD见T079过程。冻结T057/T070未改，PR #42仍Draft不合并、无高成本RUN，12阶段0/12；S10/S11保持。**下一责任/唯一动作：**取得可直接核读的2024 GB/T50011修订原页及适用于本参数场地研究的目标谱后，复用同一脚本替换假设目标、进行正式选波谱差；缺少授权资料时转S07/10真实数据接口，不再重复小审查。
