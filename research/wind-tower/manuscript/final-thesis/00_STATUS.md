@@ -2,7 +2,7 @@
 
 ## 2026-10-31 07时｜S07真实NTM六分量源向量与参考点变换算法接口
 
-继承T062原始18组NTM×60通道的1080行SHA锁定统计，新增[180行塔底+九站六分量原生轴系时均值SI向量](../../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)与[可复算S07变换程序](../../experiments/T062/s07_sixdof_wrench_source_contract.mjs)。本轮实际V8数值测试：真实源1080→180行、恒等变换最大残差0、100N×2m已知解Mz=200N·m、90°旋转和逆变换、4项合成及4项真实源坏输入拒绝；远端Node CI已配置但成功日志尚未取得。源SHA256=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差预算与HOLD详见[T077 07时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**输出仅为真实原始六分量的时间均值及合成变换算法QC，不是31段同步时程、已核OpenFAST→Abaqus坐标映射或物理验收。S06 PARTIAL、S07 BLOCKED、12阶段0/12未晋级、E/WE=0。**
+继承T062原始18组NTM×60通道的1080行SHA锁定统计，新增[180行塔底+九站六分量原生轴系时均值SI向量](../../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)与[可复算S07变换程序](../../experiments/T062/s07_sixdof_wrench_source_contract.mjs)。本轮实际V8数值测试：真实源1080→180行、恒等变换最大残差0、100N×2m已知解Mz=200N·m、90°旋转和逆变换、4项合成及4项真实源坏输入拒绝；远端Node CI已配置但成功日志尚未取得。源SHA256=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；新180行CSV SHA256=`ee051cdc35ef3bfdc1ec2f9e053353ca6ba10f9f27079253830736fac9315f97`（远端实体回读后独立V8计算）；SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差预算与HOLD详见[T077 07时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**输出仅为真实原始六分量的时间均值及合成变换算法QC，不是31段同步时程、已核OpenFAST→Abaqus坐标映射或物理验收。S06 PARTIAL、S07 BLOCKED、12阶段0/12未晋级、E/WE=0。**
 
 
 ## 2026-10-31 06时｜S06真实NTM六seed离散表与BTS来源缺口已远端验收
