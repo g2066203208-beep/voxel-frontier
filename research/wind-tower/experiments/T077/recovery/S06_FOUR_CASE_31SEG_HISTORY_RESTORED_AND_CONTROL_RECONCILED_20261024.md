@@ -1,3 +1,13 @@
+## 2026-10-31 06时｜S06真实18 NTM九站弯矩seed离散+36 BTS归档可用性门禁（source-only）
+
+**SOURCE/阅读层级**：本轮从PR #42直接读取[18 NTM×60原生载荷通道的1080行CSV](../../T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv)，已由远端Node实际复算并核源SHA256=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；读取[2000条原始文件manifest](../../../archive/local-assets-20261004/file-manifest.json)，SHA256=`c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302`。本轮没有重新解包18份OUTB、没有下载任何BTS，也没有读取TurbSim .inp/.sum/.dat的原始字节：对后者仅核对manifest条目及其历史SHA。**关键新发现**：36/36个原始BTS在此GitHub归档的manifest中均为`prior-size-deferral-cancelled-see-transfer-ledger`，无归档路径、无原件SHA；36组对应.inp/.sum/.dat共108条条目则均标为included并有SHA及分包指针。**只能说此GitHub归档无法直接恢复原始BTS，不能推断用户本机D盘没有BTS，更不能以重新生成的风场冒充原件。**
+
+**RUN/TAB**：新增[源SHA锁定、6-seed与BTS来源门禁Node程序](../../T062/s06_ntm_seed_dispersion_and_bts_gate.js)和[30行真实原生塔底+9个低位测点MLyt的seed离散表](../../T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv)，输出SHA256=`8ffc0beda1ee837561e798c547f1ba2f1ad9db514124820853a381922a0b79d7`。三个NTM风速的塔底TwrBsMyt m=4、Nref=600等效载荷DEL六seed均值分别为43701.157、56611.754、61333.196 kN·m，样本标准差5825.082、6737.153、3943.093 kN·m，描述性CV分别**13.329354%、11.900626%、6.428970%**。9个测点均在近塔底，不能用这30行表推断全高度31段疲劳分布。每个均值严格来自6个不同seed，样本标准差分母n−1；这不是年损伤、统计收敛或材料寿命。
+
+**远端真验收**：[Actions #41136033657/job #124338588919](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41136033657) completed/success；原生Node 20语法、样本标准差已知解/坏CSV拒绝、两个真实输入SHA、1080行×18工况×60通道、36组BTS来源状态、30行输出与提交CSV逐字节cmp均通过；原始job日志实际回读含`SELFTEST_PASS`和`SOURCE_ONLY_30_ROW_QC_PASS`。**REF**=沿用T062 OpenFAST来源，无新增期刊全文。**STANDARD**=未读2025 IEC/GB授权条款，不作规范PASS。**OFFICIAL**=原始OpenFAST OUTB历史归档和GitHub Actions执行记录；未新增原生求解。**FIG**=无；**TAB**=30行真实统计CSV。**误差预算**=原始OUTB packed半量化步长详见1080行源表；均值/样本标准差用IEEE754 double、CSV舍入9位kN·m/6位CV百分数；n=6仅描述性，不声称置信界或多seed收敛；坐标、重力/PT及材料点映射物理误差未定。**失败/HOLD**=本轮CI无失败；真实NTM原始BTS在GitHub归档中不可恢复，四批真实NTM短时确定性验证未运行；S06 PARTIAL、S07/S10物理HOLD、地震E/WE原生0、12阶段0/12。不修改冻结T057/T070、不合并Draft PR、不启动700s生产。
+
+**下一单一动作**：不等待缺失的BTS，先基于现有18组真实NTM九测点载荷建立S07六分量坐标/力矩基准变换的守恒回归程序；BTS原件一旦可访问，再进行四批短时原生同步验证。
+
 # S06：四工况×31段六分量时程从历史GitHub Actions恢复（2026-10-24）
 
 ## 2026-10-31 05时｜S06四批0.1s原生重复性诊断程序与Windows CI（RUN待远端结果，不冒充已完成）
