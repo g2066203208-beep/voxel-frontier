@@ -363,18 +363,141 @@ def write_long_period_gate(ridge_path,lone_path,output_path,target_path=None):
                       'low_frequency_validated':False,'site_spectrum_PASS':False,
                       'Abaqus_RUN':0,'S05_PASS':False},sort_keys=True))
 
+
+# ESM v3 MP: secondary 16-period passband-distance / integration-grid diagnostic.
+# Ideal Butterworth gain at f=1/T is NOT an instrument transfer-function
+# measurement and must NEVER be applied as a correction to response spectra.
+_ESM_PERIODS_16=(.5,.75,1.,1.25,1.5,2.,2.5,3.,3.5,4.,5.,6.,7.,8.,9.,10.)
+_ESM_DENSE_HEADER=('period_s','HNE_pseudoSa_m_s2','HNN_pseudoSa_m_s2',
+    'horizontal_gm_pseudoSa_m_s2','HNE_2dt_pseudoSa_m_s2_DIAGNOSTIC',
+    'HNN_2dt_pseudoSa_m_s2_DIAGNOSTIC',
+    'max_component_dt2_relative_difference_DIAGNOSTIC','frequency_over_highpass_corner')
+
+def esm_16period_passband_audit(source_csv, expected_sha256):
+    """Read source-locked REAL ESM spectral CSV; return per-period diagnostics.
+    Source DYNA: 2nd-order Butterworth HP corner=0.040Hz, dt=0.005s.
+    Gain formula is hypothetical SINGLE-PASS magnitude at 1/T, not observed
+    filtering, and PSA is broadband: gain must not be used to 'repair' PSA.
+    """
+    import re
+    path=pathlib.Path(source_csv)
+    if not re.fullmatch(r'[a-f0-9]{64}',expected_sha256 or '') or sha(path)!=expected_sha256:
+        raise ValueError('ESM_DENSE_SOURCE_SHA256')
+    with path.open(newline='',encoding='utf-8') as f:
+        reader=csv.DictReader(f)
+        if tuple(reader.fieldnames or ())!=_ESM_DENSE_HEADER:
+            raise ValueError('ESM_DENSE_COLUMNS')
+        raw=list(reader)
+    if len(raw)!=16:raise ValueError('ESM_DENSE_ROW_COUNT')
+    out=[]
+    fc=.040
+    for i,row in enumerate(raw):
+        try:v={k:float(row[k]) for k in _ESM_DENSE_HEADER}
+        except (TypeError,ValueError,KeyError) as e:raise ValueError('ESM_DENSE_NUMERIC') from e
+        if any(not math.isfinite(z) for z in v.values()):
+            raise ValueError('ESM_DENSE_NONFINITE')
+        T=v['period_s']
+        if T!=_ESM_PERIODS_16[i]:raise ValueError('ESM_DENSE_PERIOD_ORDER')
+        e,n=v['HNE_pseudoSa_m_s2'],v['HNN_pseudoSa_m_s2']
+        e2,n2=v['HNE_2dt_pseudoSa_m_s2_DIAGNOSTIC'],v['HNN_2dt_pseudoSa_m_s2_DIAGNOSTIC']
+        if min(e,n,e2,n2)<=0:raise ValueError('ESM_DENSE_NONPOSITIVE_PSA')
+        gm=math.sqrt(e*n)
+        if not math.isclose(gm,v['horizontal_gm_pseudoSa_m_s2'],rel_tol=5e-10,abs_tol=1e-12):
+            raise ValueError('ESM_DENSE_GM_MISMATCH')
+        delta=max(abs(e2-e)/e,abs(n2-n)/n)
+        if not math.isclose(delta,v['max_component_dt2_relative_difference_DIAGNOSTIC'],rel_tol=5e-9,abs_tol=1e-12):
+            raise ValueError('ESM_DENSE_DT2_MISMATCH')
+        ratio=1/(T*fc)
+        if not math.isclose(ratio,v['frequency_over_highpass_corner'],rel_tol=5e-10,abs_tol=1e-10):
+            raise ValueError('ESM_DENSE_CORNER_RATIO_MISMATCH')
+        gain=1/math.sqrt(1+ratio**(-4)) # IDEAL single-pass 2nd-order HP only
+        out.append({'period_s':T,'frequency_hz':1/T,
+            'frequency_over_reported_0p040hz_corner':ratio,
+            'ideal_single_pass_HP2_gain_AT_1_over_T_NOT_MEASURED':gain,
+            'ideal_two_pass_HP2_gain_IF_FORWARD_BACKWARD_NOT_VERIFIED':gain*gain,
+            'ideal_single_pass_HP2_attenuation_pct_AT_1_over_T':100*(1-gain),
+            'ideal_two_pass_HP2_attenuation_pct_IF_FORWARD_BACKWARD':100*(1-gain*gain),
+            'HNE_pseudoSa_m_s2_REAL_PROCESSED':e,
+            'HNN_pseudoSa_m_s2_REAL_PROCESSED':n,
+            'horizontal_gm_pseudoSa_m_s2_REAL_PROCESSED':gm,
+            'dt_to_T':.005/T,'decimated_dt_to_T':.010/T,
+            'max_component_dt2_rel_difference_NO_ANTIALIAS':delta,
+            'record_duration_over_T_DIAGNOSTIC':(32040-1)*.005/T,
+            'decision':'HOLD_INSTRUMENT_LOWFREQ_SNR_FILTER_HISTORY_AND_SITE_TARGET'})
+    return out
+
+def esm_16period_passband_selftest():
+    with tempfile.TemporaryDirectory() as d:
+        path=pathlib.Path(d)/'realistic_synthetic.csv'
+        rows=[]
+        for T in _ESM_PERIODS_16:
+            e,n=1/T,1.1/T
+            e2,n2=e*1.001,n*.999
+            rows.append([T,e,n,math.sqrt(e*n),e2,n2,.001,1/(T*.04)])
+        def write(rows,header=_ESM_DENSE_HEADER):
+            with path.open('w',newline='') as f:
+                w=csv.writer(f);w.writerow(header);w.writerows(rows)
+            return sha(path)
+        key=write(rows)
+        result=esm_16period_passband_audit(path,key)
+        assert len(result)==16 and all(x['decision'].startswith('HOLD_') for x in result)
+        assert math.isclose(result[-1]['frequency_over_reported_0p040hz_corner'],2.5)
+        assert math.isclose(result[-1]['ideal_single_pass_HP2_gain_AT_1_over_T_NOT_MEASURED'],
+                            1/math.sqrt(1+2.5**(-4)),rel_tol=1e-14)
+        tests=[('ESM_DENSE_SOURCE_SHA256',lambda:esm_16period_passband_audit(path,'0'*64))]
+        def corrupted(change,err):
+            original=[list(x) for x in rows]
+            change(original)
+            key=write(original)
+            try:esm_16period_passband_audit(path,key)
+            except ValueError as ex:assert str(ex)==err,(err,str(ex))
+            else:raise AssertionError('ACCEPTED_'+err)
+        for change,err in [
+            (lambda x:x.pop(),'ESM_DENSE_ROW_COUNT'),
+            (lambda x:x[1].__setitem__(0,.5),'ESM_DENSE_PERIOD_ORDER'),
+            (lambda x:x[0].__setitem__(1,float('nan')),'ESM_DENSE_NONFINITE'),
+            (lambda x:x[0].__setitem__(1,-1),'ESM_DENSE_NONPOSITIVE_PSA'),
+            (lambda x:x[0].__setitem__(3,999),'ESM_DENSE_GM_MISMATCH'),
+            (lambda x:x[0].__setitem__(6,.5),'ESM_DENSE_DT2_MISMATCH'),
+            (lambda x:x[0].__setitem__(7,1),'ESM_DENSE_CORNER_RATIO_MISMATCH')]:
+            corrupted(change,err)
+        write(rows)
+        try:esm_16period_passband_audit(path,'0'*64)
+        except ValueError as ex:assert str(ex)=='ESM_DENSE_SOURCE_SHA256'
+        else:raise AssertionError('ACCEPTED_BAD_SHA')
+    print('S05_ESM_16PERIOD_PASSBAND_SYNTHETIC_PASS 16 analytic rows 8 rejects NOT_DESIGN_PASS')
+
+def write_esm_16period_passband(source_csv, expected_sha256, output):
+    rows=esm_16period_passband_audit(source_csv,expected_sha256)
+    with pathlib.Path(output).open('w',newline='',encoding='utf-8') as f:
+        writer=csv.DictWriter(f,fieldnames=list(rows[0]))
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k:format(v,'.12g') if isinstance(v,float) else v for k,v in row.items()})
+    print(json.dumps({'status':'S05_ESM_16PERIOD_REAL_PROCESSED_SPECTRUM_BAND_DIAGNOSTIC_ONLY',
+        'source_sha256':expected_sha256,'output_sha256':sha(output),
+        'periods':len(rows),'max_dt2_relative_difference':max(x['max_component_dt2_rel_difference_NO_ANTIALIAS'] for x in rows),
+        'minimum_frequency_over_highpass_corner':min(x['frequency_over_reported_0p040hz_corner'] for x in rows),
+        'instrument_low_frequency_pass':False,'target_spectrum_pass':False,
+        'Abaqus_E_WE_RUN':0,'S05_PASS':False},sort_keys=True))
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--self-test',action='store_true');p.add_argument('--manifest');p.add_argument('--output')
     p.add_argument('--processed-manifest');p.add_argument('--spectral-stability',action='store_true')
     p.add_argument('--station-triage',action='store_true');p.add_argument('--triage-manifests',nargs=3)
     p.add_argument('--long-period-gate',action='store_true')
     p.add_argument('--triage-json');p.add_argument('--second-event-json');p.add_argument('--target-json')
+    p.add_argument('--esm-band-csv');p.add_argument('--expected-source-sha256')
     a=p.parse_args()
     if a.self_test:
+        esm_16period_passband_selftest()
         long_period_gate_selftest()
         self_test()
         stability_selftest()
         triage_selftest()
+    elif a.esm_band_csv:
+        if not a.expected_source_sha256 or not a.output:p.error('--esm-band-csv requires --expected-source-sha256 and --output')
+        write_esm_16period_passband(a.esm_band_csv,a.expected_source_sha256,a.output)
     elif a.long_period_gate:
         if not a.triage_json or not a.second_event_json or not a.output:p.error('missing source reports/output')
         write_long_period_gate(a.triage_json,a.second_event_json,a.output,a.target_json)
