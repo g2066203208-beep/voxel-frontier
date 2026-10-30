@@ -92,7 +92,7 @@
   "actions_run_id": 41070940116,
   "actions_job_id": 124114538660,
   "actions_job_status": "completed/success",
-  "actions_workflow_status_at_record": "in_progress_other_jobs; job success confirmed",
+  "actions_workflow_status_at_record": "completed/success",
   "actions_artifact_id": 12983309475,
   "previous_failed_run_id": 41070762094,
   "previous_failed_job_id": 124113908736,
