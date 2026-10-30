@@ -724,3 +724,6 @@ PR #42已实际存在[16行真实RotD表](../../experiments/T079/real-records/S0
 
 
 **2026-10-30 原刊方法迁移而非参数照搬：** 从Ishihara 2024 p9/p16学习状态分组、同条件配对和以真实WE检验简化组合，已在[T080原有配对设计](../../experiments/T080/INTEGRATION_GATES_AND_PAIRED_DESIGN_20261022.md)登记本塔OP W/WE、停放B/E、条件性非加性与疲劳优化约束。真实ESM能量矩阵推得相对HNE主轴139.080330189°、次轴49.0803301885°并存储[4行方向候选表](../../experiments/T079/real-records/S08_ESM_METHOD_DIRECTION_CANDIDATES_20261030.csv)，表SHA256 `3273364803b20e102ad1441321b2a9380ea218d32d8cc3c6637481f4a5b98bc9`。非风向/塔最不利方位/正式设计波；原生结构E/WE仍0，12阶段0/12，S10/S11不变。
+
+
+**2026-10-30 17时｜S06→S10真实数值增量（物理PASS不变）**：对已归档4个ETM工况×31段×6载荷通道=744行雨流DEL与T071真实31段圆环几何，完成**124行×6个单通道m4/m10名义应力DEL**转换。源SHA256：载荷`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`、几何`fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800`；[结果CSV](../../experiments/T077/recovery/S10_4CASE_31SEG_GROSS_SINGLE_CHANNEL_NOMINAL_DEL_20261030.csv) SHA256 `dda5d57c656786f0a87e586f1f6d84858cd47dc8f929d21a15036dfdd6d0d83b`，[可复算程序](../../experiments/T077/recovery/s10_4case_gross_component_nominal_del.py)。单分量m4最高Fz 0.04748161 MPa(CSEG27/U19S04)、Mx 2.37467604 MPa(CSEG04/U19S04)、My 7.16394572 MPa(CSEG04/U11S04)；**不同通道/事件不得相加**。JS真实来源计算已完成，Python CI执行状态本轮未证实。m4/m10仅筛查指数，非材料S–N；原生局部应力/真实寿命仍0，12阶段0/12。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、偏差、失败与HOLD见[T080既有过程日志](../../experiments/T080/PROCESS_LOG.md)。
