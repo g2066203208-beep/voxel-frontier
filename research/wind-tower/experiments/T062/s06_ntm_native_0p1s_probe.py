@@ -69,6 +69,7 @@ def selftest():
     s="700 TMax - stop\n0.05 DT_Out - output\n"
     assert replace_scalar(s,"TMax","0.1",expected="700").startswith("0.1 TMax")
     assert replace_scalar("3 WindType - x\r\n".replace("\r\n","\n"),"WindType","1",expected="3").startswith("1 WindType")
+    assert replace_scalar("100 TStart - x\n","TStart","0",expected="100").startswith("0 TStart")
     for bad in ("700 TMax\n700 TMax\n","700 SomethingElse\n"):
         try:replace_scalar(bad,"TMax","0.1")
         except ValueError:pass
@@ -118,6 +119,7 @@ def prepare(args):
                "dll":Path(args.dll).read_bytes(),"exe":Path(args.exe).read_bytes()}
     for label,data in originals.items():verify(label,data)
     fst_new=replace_scalar(fst.decode("utf-8-sig"),"TMax","0.1",expected="700")
+    fst_new=replace_scalar(fst_new,"TStart","0",expected="100")
     ed_new=replace_gages(ed.decode("utf-8-sig"))
     # Original NTM InflowWind source uses CRLF; normalize derived diagnostic copy only.
     inflow_text=inflow.decode("utf-8-sig").replace("\r\n","\n")
@@ -141,7 +143,7 @@ def prepare(args):
                           ("DTU_10MW_RWT.fst","DTU_10MW_RWT_ElastoDyn.dat",
                            "DTU_10MW_InflowWind.dat","Control/DTU_10MW_RWT_DISCON.IN",
                            "Control/libdiscon.dll")},
-        "modifications":["FST TMax 700 -> 0.1 s","ED TwrGagNd original 9 -> batch1 9",
+        "modifications":["FST TMax 700 -> 0.1 s and TStart 100 -> 0 s (required for native initialization)","ED TwrGagNd original 9 -> batch1 9",
                          "InflowWind CRLF normalized in diagnostic child; WindType 3 -> 1, HWindSpeed -> 9.343881 m/s"],
         "source_reading_level":"Original SHA-pinned FST/ED/NTM InflowWind/Tower/Servo/ROSCO binary bytes",
         "STANDARD":"No authorized IEC/GB/NB clauses read",
