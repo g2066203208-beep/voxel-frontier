@@ -682,3 +682,6 @@ HOLD：
 
 ### 2026-10-30 13时｜S05 RotD远端回读与真实波CI接线（不晋级）
 PR #42已实际存在[16行真实RotD表](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv)、[简化版计算程序](../../experiments/T079/s05_esm_rotd_real.py)、[原件收据](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_RECEIPT_20261030.json)；当前程序SHA256 d315ea8a9501bdf5c7542c0b454809ef5b9db7f18e69515cb1ba6e946fd98571，CSV SHA256 6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205。既有[S05工作流](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s05-ground-motion-pair-qc.yml)接入真实ESM 32040×3输入的16周期×360方向CI数值回归，原生日志待回读。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差见[T079过程日志](../../experiments/T079/PROCESS_LOG.md)；无新授权规范或嘉鱼目标谱、无原生地震E/WE，严格0/12，风致材料疲劳与优化主线不变。
+
+
+**13:10 远端实证回填：** [S05 Actions #41006885865](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006885865)真实ESM job 123903701850 **success**，原始日志证实16周期×360方向、208个数值逐项回归与4项异常拒绝通过；[真实源artifact #12956355394](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006885865/artifacts/12956355394)已上传（未独立下载）。**整体workflow failure**是独立CESMD API DNS失败，不能称全CI通过。仅已处理波方向谱数值准备PASS；场址设计波、原生E/WE及规范条款仍HOLD，12阶段0/12，S10/S11不变。
