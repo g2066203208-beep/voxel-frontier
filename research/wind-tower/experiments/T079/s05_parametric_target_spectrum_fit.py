@@ -143,8 +143,6 @@ def self_test():
     altered=dict(doubled);altered[6.]=10*doubled[6.]
     _,miss=fit(synthetic,altered)
     assert miss["log_rmse"]>.1 and 6. in miss["periods_outside_illustrative_30pct_band"]
-    for bad,err in [(dict(synthetic,**{}),None)]:
-        pass
     try:fit(synthetic,{t:1 for t in FIT_PERIODS[:-1]})
     except ValueError as e: assert str(e)=="SOURCE_TARGET_GRID_OR_DOMAIN"
     else:raise AssertionError("ACCEPTED_MISSING_PERIOD")
