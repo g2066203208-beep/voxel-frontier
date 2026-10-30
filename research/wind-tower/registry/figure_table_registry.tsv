@@ -1,1 +1,4 @@
 artifact_id	type	chapter	title	source_run_ids	source_refs	generation_method	status
+FIG3_S06_01_MY_M4_HEIGHT_SCREEN	figure	Ch3	31站四个ETM筛查工况My载荷DEL随高程	T077-S06_SOURCE_SCREEN_ONLY	REF009(method only)	plot_ch3_s06_etm_screening.js; 124-point csv; SVG	REAL_SOURCE_SCREEN_ONLY_NOT_DLC1_2_OR_MATERIAL_LIFE
+FIG3_S06_02_BASE_MOMENTS_M4_SCREEN	figure	Ch3	四工况塔底Mx My Mz载荷DEL筛查	T077-S06_SOURCE_SCREEN_ONLY	REF009(method only)	plot_ch3_s06_etm_screening.js; 124-point csv; SVG	REAL_SOURCE_SCREEN_ONLY_NOT_NATIVE_STRESS
+FIG3_S06_03_MY_HALF_WINDOW_RMS_SCREEN	figure	Ch3	31站My前后300s RMS差异诊断	T077-S06_SOURCE_SCREEN_ONLY	REF009(method only)	plot_ch3_s06_etm_screening.js; 124-point csv; SVG	REAL_SOURCE_SCREEN_ONLY_NOT_STATIONARITY_PROOF

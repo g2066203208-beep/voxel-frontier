@@ -234,3 +234,39 @@
 **评价指标并行报告两个维度：** 12阶段严格科学PASS数（物理结果为0就如实0/12），和本轮独立实际完成的工作资产（来源核读、数据、程序、可投稿正文）；不因严格PASS为0就宣布所有预研究等于0。已撤回的5%/10%数值不复活。S10风致材料疲劳与S11抗震约束疲劳优化继续是研究核心，不能被S01文档审计替代。
 
 **当前调整后的下一项工作（在无Abaqus runner时）**：优先对S05真实强震记录选择与目标谱程序，或S06已恢复四工况×31段时程做**真实来源数值QC**，直接提交数据/脚本/测试；不再仅重复“下一轮T070 native Data Check”。若获取合格原生环境则恢复S02/S03诊断，并把日志如实写入；不擅自合并PR或启动高成本生产。
+
+
+## 2026-10-30｜按原文图证据和自有结果逐阶段核查（GitHub文件级，非原图像素审稿）
+
+**审计类型**：SOURCE/REF/FIG/TAB evidence-availability audit；读取 main \`58c1e545f67b645417d5957189f5dad693d975bb\`、Draft PR #42 起始 HEAD \`46d597b1dfdb7779bb9d7bce6baca733f2e3f74f\`；只读GitHub目录、既有证据图目录与SHA清单、六章MD、图表计划和T079地震原文下载收据。本审计**未重新下载/逐张渲染原始图、未逐张重新散列PNG字节、未重新执行任何物理求解、未读授权GB/IEC标准正文**；仓库目录存在≠图像内容/页码/版权可复用性已核实。
+
+### 实际目录审计与关键缺口
+
+- [Ch1–3文献原页](../references/evidence-screenshots/ch1-ch3/) **38 PNG**；[Ch4疲劳原页](../references/evidence-screenshots/fatigue-ch4/) **30 PNG**；[学位论文比较原页](../references/evidence-screenshots/comparison-theses/) **6 PNG**；三目录**74 PNG**，各自\`EVIDENCE_PAGE_SHA256.txt\`均**74/74文件名与目录相符**。但清单记录\`/tmp/t068\`/\`/tmp/t066\`等当时机器**绝对临时路径**，不是仓库当前可执行的相对路径；本轮没有重新获取PNG字节验证清单中的SHA256，也没有逐页核对图号/印刷页码，故只能称**路径/文件名覆盖PASS、字节与内容/原图审计PENDING**。另有何泽瑜原型11张/其他页图，存在同图重复与不同页版本，不能简单计作独立方法。
+- [本文正式figure目录](../manuscript/final-thesis/figures/)目前仅**3张真实ETM载荷筛查SVG**及其关联124点CSV/绘图JS（S06源数据筛查，**非**DLC1.2、Abaqus局部应力、材料寿命或地震结构响应）；其余拟定图见[FIGURE_TABLE_PLAN.tsv](../manuscript/final-thesis/figures/FIGURE_TABLE_PLAN.tsv)。本轮把3张已有SVG补录到[正式FIG/TAB登记表](../registry/figure_table_registry.tsv)，但没有人为补出缺失物理图。
+- [六章正式MD](../manuscript/final-thesis/chapters/)六份正文中每份Markdown图片嵌入计数为**0**。文中有\`REF\`/原图页码说明与拟制图表编号，**不是已在论文中排版的“左文献原图—右本研究结果”**。现有Ch2 PPT[12页对照位预留](CH2_PPT_LITERATURE_VS_OURS_REALDATA_20261008.md)只有左文献原页与右位设计，不证明右侧原生结构图已生成/母版已保存。
+- 新增地震S05/S08/S09相关的[四篇已核PDF字节下载收据](../experiments/T079/S05_SEISMIC_FULLTEXT_DOWNLOAD_RECEIPT_20261028.json)记录Ishihara 2024、Wang 2026 RCS、Ali 2021、Meng 2020；有全文原件的**来源与PDF SHA**，但\`references/evidence-screenshots/\`未见对应**逐页研究图/原式截图与SHA清单**。2026 160m风震论文10.1080/13632469.2026.2671807的授权全文原件仍未归档；**不能用Wang 2026另一篇代替该原文全文**。此为本轮最大可直接补的原页缺口。
+
+### 12阶段最小“一方法一原文页—一自有可比结果”证据链（禁止把源码/合成测试称作物理图）
+
+| Stage | 现有直接原文图/全文可定位 | 本文对应的实物 | 实际证据状态 / 缺失 |
+|---|---|---|---|
+| S01 158m原型/配筋/PT身份 | \`REF008_He2024_p33_reinforcement_and_PT_model.png\`, \`p34_31segment_rebar_table.png\`, \`p35_tower_geometry_and_model.png\` | T057/T070与T077/T078模型/参数账，尚未同支路冻结 | **原页有；右侧同支路真实模型截面/锚固/纵筋图及实施一致性HOLD** |
+| S02 原生Data Check | \`REF005_Li2023_p07_load_displacement_and_stress_validation.png\`等验证方法图 | C00b静态子版及L01失败日志 | **原页有；原生Data Check成功日志/实际验收图缺** |
+| S03 有效PT/重力接触 | \`REF010_Cheng2024_p03_RNA_eccentricity_inertia_prestress_model.png\`, \`REF061_Xu2025_p10_Abaqus_model_and_pushover_validation.png\` | P0/Pe计算账及诊断支路 | **原页有；实际PT平衡后的S11/CPRESS/COPEN与平衡表缺** |
+| S04 RNA/模态/网格V&V | \`REF010_Cheng2024_p09_RNA_simplification_frequency_effect.png\`, \`REF039_Frequency2023_p25_mesh_sensitivity.png\`, \`p29_frequency_comparison.png\` | 旧历史验证线索，无本支路原生V&V闭合 | **原页有；真实同支路模态/网格/RNA对照曲线缺** |
+| S05 场址与真实选波 | Ali2021、Wang2026 RCS、Ishihara2024原始PDF字节有归档；**无地震选波对应原文截图集**；IEC/GB授权条文未核 | 3事件5水平对、ESM真实波、RotD及长周期QC CSV | **原文页图缺；中国场址目标谱/波谱匹配/长周期可信频带HOLD** |
+| S06 长期风与真实载荷 | \`REF009_Brown2024_p10_10min_inflow_bins.png\`, \`p15_DEL_validation.png\`; \`REF093_DynamicAlpha_p05_measured_vs_ERA5_alpha.png\` | **3张ETM筛查SVG** + 124点CSV；历史36风况 | **有原页+少量本文筛查图，但不构成DLC1.2与长期疲劳** |
+| S07 OpenFAST→有限元六分量映射 | Rappe2025/OpenFAST–Abaqus及Berg2011载荷映射PDF在仓；**未建立相应原页截图** | 四工况31站×6分量原始恢复、A批装配/六分量方法程序 | **全文存在，原文方法图号未逐页核实；31站正式RUN与六分量映射结果图缺** |
+| S08 地震独立验证与单震E | Ali2021/2024等全文来源有；**无精确动力方程/输入符号/长周期页图** | ESM 3轴幅值及18行SDOF精确法/Newmark真数据对照CSV | **算法验证有数据无成套论文图；原生单震结构图=0** |
+| S09 同状态W/E/WE | Wang2026 RCS原始PDF有；首篇2026同施风震论文全文仍缺；**无风震方法原图索引** | 同状态差分程序仅合成数值验证 | **原页图与真实同状态响应图均缺，风震结论不得产生** |
+| S10 分材料风致疲劳 | \`REF018_Huang2025_p03_Fig04_sectional_stress_fatigue.png\`, \`p06_Fig10_windbin_damage_and_rainflow_method.png\`, \`p11_Fig20_SPPT_stress_timeseries.png\`；REF023/REF041/REF143页图及李泽宇REF007页图 | 真实载荷统计、雨流/Miner代码与PT Paulson原式域核验 | **源方法原图较充分；真实混凝土/PT/钢应力、损伤/寿命对应图=0** |
+| S11 抗震约束下疲劳优化 | REF002/REF004/REF020/REF021/REF022/REF033优化文献来源已登记，**未见正式Ch5原页截图专集** | Pareto代码合成解析通过，无真实响应优化 | **原页图及真实DOE/Pareto/复核图缺** |
+| S12 论文及期刊投稿 | 六章有引用索引、方法草稿与计划 | 六章MD无实际嵌图；正式图表登记此前仅表头 | **原图—自图—原始RUN—论文图题—正文结论未一一链接，不可宣称成稿** |
+
+### 正式补齐规则与优先顺序（不是无差别“每一步贴一张论文图”）
+
+1. **方法性核心图**须有\`REF/DOI→论文版本与原PDF SHA256→PDF物理页与印刷页→原Fig/Table/Equation→实际仓库PNG相对路径+文件SHA256→本文为何适用/不适用→本文同QoI对应FIG/TAB/RUN\`。纯算术、程序输入SHA自检不需伪造外部“同公式原图”；自研方法则给推导、独立参考验证和算法误差。
+2. **双栏对照**只有在物理量、坐标、单位、统计窗口、加载状态与模型差异均清楚时成立。文献p6风速概率不能与本研究某张无关的截面弯矩图配对；文献模态图不能拿没有原生解的示意图冒充右图。正文一般以自行生成的研究图为主，整页原文截图适用于工作底稿/答辩对照，并遵守引用及授权规则，不建议把别人的整页图直接贴满终稿。
+3. **本轮实际源信息级别**：SOURCE=GitHub目录内容列表、文件名、文本SHA清单和T079原始PDF下载收据；REF=对应文献登记，但**未重新逐页读图**；STANDARD=无新授权规范逐条核读；OFFICIAL=已有PDF下载收据/官方来源，非本轮新取；RUN=没有新增原生运行；FIG=74张原图文件名与manifest一致、3张本文筛查SVG存在（不是新图）；TAB=原有方法计划与本文筛查CSV；误差预算=文件清单计数/名称精确核对、图像字节哈希与图内方法一致性**NOT_VERIFIED**。
+4. **最优先的内容工作**：先针对S05–S09从已存Ali2021、Ishihara2024、Wang2026 RCS、Rappe2025 PDF直接逐页提取**可核读的动力输入方程、真实波选配与风震作用方法原页**，按上述元数据归档；再与已完成的ESM真实谱和S08精确Newmark误差表建立相同QoI对照；S10疲劳与S11优化继续沿原核心主线，不以新图片代替原生结果。

@@ -392,3 +392,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 
 - **16:25真实S08回读／网页版研究：** [Actions #41019771563](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41019771563) 的S08独立解析SDOF job #123944189896 **success**，日志逐字证实源码SHA `1de4d03cdde2e750fe1aff356b80b13251336b3398a1f3d7546e20f1113ba19e`、Newmark二阶收敛比3.99737、真实输入CSV SHA `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`、18行实际表SHA `31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`，artifact #12961635185上传未独立下载。修正CI性能：去除全仓库checkout，改仅下载SHA作用域小源文件；完整workflow仍因CESMD DNS为failure。**实证发现ESM在线ZIP包装SHA会变化但相同32,040×3原始数值导出SHA稳定**，保留本轮两个真实ZIP SHA并标记未知具体差异，见T079 16:25过程。下一由云端推进嘉鱼场址适用目标谱/记录有效频带原文并准备正式选波矩阵；0项原生E/WE、0/12阶段PASS，S10/S11主线保留。
+
+### HANDOFF-20261030-REFERENCE-ORIGINAL-FIGURE-COVERAGE-AUDIT
+
+- **2026-10-30／网页版GPT／SOURCE+FIG学术信服力核查：** start HEAD `46d597b1dfdb7779bb9d7bce6baca733f2e3f74f`，main `58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft。开工已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW及PROCESS_LOG、T080三份审查、12阶段计划、本指挥室当前进度与最近交接，另读FIG/TAB规划、全部六章和原图文件名/SHA清单、地震原始PDF下载收据。继承已有原图，不重新生成同一截图，不改冻结T057/T070，不做原生或昂贵RUN。本轮只修改既有12阶段治理文档、T079过程日志、中央状态/交接、原本空白的FIG/TAB登记，实际审计发现74原图三目录文件名与74条清单吻合但散列条目为旧`/tmp`路径；S05–S09专门地震方法原页截图不成套、Ch5原页不成套、六章正文实际图像嵌入0、本文FIG只有3张ETM筛查SVG。**学术证据链接未闭合；状态仍0/12未晋级。** 下一责任：网页/Actions优先利用已有PDF制作地震原文页号/方程及本研究S08数值对照，未获重用许可仅登记页面信息/受限来源而不公开上传整页图。

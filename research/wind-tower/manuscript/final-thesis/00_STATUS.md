@@ -1,5 +1,12 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-30｜逐阶段文献原图—自有结果证据链目录核查
+
+已核GitHub目录：Ch1–3 38张、Ch4疲劳30张、比较学位论文6张PNG，三份SHA文件按**文件名**74/74相符，尚未逐图像素/SHA字节重新核验；地震S05/S08/S09专门原图缺、Ch5优化原页图册缺，六章正文Markdown嵌图0，正式自有结果仅S06三张ETM筛查SVG（非结构寿命/地震响应）。
+
+详见[12阶段计划本轮原图和自图对照审计](../../governance/THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md#2026-10-30按原文图证据和自有结果逐阶段核查github文件级非原图像素审稿)及[已补录的FIG登记表](../../registry/figure_table_registry.tsv)。REF论文图存在不等于本文RUN可信；S05–S09地震原文方法页/本站目标谱未配齐，S10/S11真材料/优化图未有。**本轮仅目录审计，不新增求解/物理图，严格0/12未晋级。**
+
+
 **16:25 远端回读：** [S08真实Actions #41019771563/job #123944189896](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41019771563/job/123944189896)已completed/success，16周期之外新增3轴×6周期的18行独立精确分段线性解/Newmark复算，表SHA256=`31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`，源码SHA256按远端job为`1de4d03cdde2e750fe1aff356b80b13251336b3398a1f3d7546e20f1113ba19e`。观察到远端ESM ZIP哈希因重新请求变化，而导出的数值CSV仍SHA一致，详情见T079 16:25日志；来源原件与数值身份必须分开记录。**整个Actions workflow failure**仅因CESMD独立DNS，不能称全绿。无原生地震E/WE，严格0/12。
 
 

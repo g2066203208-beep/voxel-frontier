@@ -340,3 +340,9 @@ RUN：直接扩展现有 `s05_esm_public_processed_pair.py` 和现有S05 workflo
 - **SOURCE包装追踪的重要新发现：** 同一公开ESM MP地震记录的官方下载ZIP字节哈希可能变化：本次真实job #123944189896 ZIP SHA=`7c4e34dd244852e4a1d6d8b838c0f9496b80a2e76fe8832da5e3e30731e50c24`，上一job #123943831662 ZIP SHA=`c22d590e348c8628bec1dea5b9102fea1d85896aed40f1f08a3ced66d6cc06bb`，历史归档源收据ZIP SHA=`dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6`（历史身份，**不冒称与本次下载相同**），但三者产生的32,040×3 SI CSV SHA**完全一致**。可能是ZIP包装内元数据/归档时间变化，尚未逐项二进制diff，**不得断言具体差异原因**。因此本次数值身份由官方DYNA分量核验+确定性SI CSV哈希共同锁定；保留每次实际ZIP哈希，不混为同一原件。
 - **OFFICIAL页面阅读层级（本轮新增）：** [ESM官网](https://esm-db.eu/)于2026-03宣布v3全库重新处理，新增更新后的处理/QC；2026-04-09 [ORFEUS ESM工作组公告](https://forum.orfeus-eu.org/t/esm-update-new-release-available/2055)明确新处理与BEST/GOOD/BAD质量级、warnings字段。本轮只阅读官网说明及工作组公告，**未直接取得本测站的ESM v3质量等级或可信长周期频带**。 [Abaqus 2025模态动力学官方理论：Base motion definition](https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-modaldynamic.htm)确认模态基础运动求得相对基底响应、总绝对运动须加基底运动；本轮为**官方文档网页阅读**，没有在本机原生模型实际加载验证。REF=该官方理论及上述本程序解析推导；STANDARD=仍未查阅GB/IEC授权适用条款；FIG=NONE；TAB=本轮18行真实地震数值表。
 - **错误预算与科学门禁：** 当前0.0682%只度量Newmark相对分段线性精确解的采样点伪谱数值差，不能用于表述ESM本身的记录误差或158m塔架求解误差。ESM 0.04Hz高通、场址目标谱、仪器低频SNR、原生Abaqus加载及结构输出未验收；S08 PHYSICS=HOLD，地震E/WE实际求解仍0，12阶段0/12，S10材料疲劳/S11优化不变。
+
+## 2026-10-30｜逐阶段文献原图—自有结果证据链目录核查
+
+已核GitHub目录：Ch1–3 38张、Ch4疲劳30张、比较学位论文6张PNG，三份SHA文件按**文件名**74/74相符，尚未逐图像素/SHA字节重新核验；地震S05/S08/S09专门原图缺、Ch5优化原页图册缺，六章正文Markdown嵌图0，正式自有结果仅S06三张ETM筛查SVG（非结构寿命/地震响应）。
+
+详见[12阶段计划本轮原图和自图对照审计](../../governance/THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md#2026-10-30按原文图证据和自有结果逐阶段核查github文件级非原图像素审稿)及[已补录的FIG登记表](../../registry/figure_table_registry.tsv)。REF论文图存在不等于本文RUN可信；S05–S09地震原文方法页/本站目标谱未配齐，S10/S11真材料/优化图未有。**本轮仅目录审计，不新增求解/物理图，严格0/12未晋级。**
