@@ -1,0 +1,187 @@
+{
+  "geometry_sha256": "fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800",
+  "limitations": "ETM 4-case screening only; not DLC1.2, not local material stress, not validated coordinate frame, no PT/connection/mean-stress model, no 20y damage",
+  "load_del_oracle_count": 372,
+  "load_del_oracle_max_abs_error": 5.093170329928398e-10,
+  "manifest_sha256": "dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8",
+  "material_fatigue_life": null,
+  "max_DEL4": {
+    "DEL_m10_MPa": 14.537117957290361,
+    "DEL_m4_MPa": 7.169089049140665,
+    "azimuth_deg": 0.0,
+    "case": "U11p4_ETM_S04",
+    "delta_z_m": 0.026955506818106656,
+    "gage_z_m": 12.766955556818107,
+    "n_samples": 12001,
+    "rainflow_equivalent_cycles": 628.0,
+    "rainflow_full_cycles": 621,
+    "rainflow_half_cycles": 14,
+    "section_z_m": 12.74000005,
+    "segment": "CSEG_04",
+    "sigma_max_MPa": -1.7301008566827032,
+    "sigma_max_time_s": 363.1,
+    "sigma_mean_MPa": -16.234091894572412,
+    "sigma_min_MPa": -28.28422736637542,
+    "sigma_peak_to_peak_MPa": 26.554126509692715,
+    "stress_class": "SYNCHRONOUS_GROSS_ELASTIC_16AZIMUTH_NO_PT_NO_MATERIAL_LIFE"
+  },
+  "max_gage_section_offset_m": 0.0704106204540551,
+  "max_tension": {
+    "DEL_m10_MPa": 17.040793412716468,
+    "DEL_m4_MPa": 7.037161800717715,
+    "azimuth_deg": 180.0,
+    "case": "U09p343881_ETM_S06",
+    "delta_z_m": -0.03427785889257251,
+    "gage_z_m": 60.02572219110743,
+    "n_samples": 12001,
+    "rainflow_equivalent_cycles": 520.5,
+    "rainflow_full_cycles": 515,
+    "rainflow_half_cycles": 11,
+    "section_z_m": 60.06000005,
+    "segment": "CSEG_17",
+    "sigma_max_MPa": 24.96398428751364,
+    "sigma_max_time_s": 652.75,
+    "sigma_mean_MPa": 11.04405709223446,
+    "sigma_min_MPa": -8.709919792212524,
+    "sigma_peak_to_peak_MPa": 33.673904079726164,
+    "stress_class": "SYNCHRONOUS_GROSS_ELASTIC_16AZIMUTH_NO_PT_NO_MATERIAL_LIFE"
+  },
+  "native_Abaqus_runs": 0,
+  "output_rows": 1984,
+  "output_sha256": "16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b",
+  "physical_pass": false,
+  "source_records": [
+    {
+      "artifact_id": "11466755161",
+      "batch": "A",
+      "case": "U09p343881_ETM_S06",
+      "csv_sha256": "cc65fc05f07d2068e56fc5589cb158ce51ea885f4bf2122ea8ac4672c6d1886e",
+      "gzip_sha256": "3280b3a8332719b163f776efa61999588717ba5c1d71394b32f002e3c9b93e56",
+      "zip_sha256": "ebccacd12a6f5fb3e6098c5130a7ca355409c4f7d5be4169ab23e4b265cd477f"
+    },
+    {
+      "artifact_id": "11465219800",
+      "batch": "B",
+      "case": "U09p343881_ETM_S06",
+      "csv_sha256": "43d4b07d6dbe63de3d6b12b5fc3093ce91ba8e0510eccc29aba0087732dcc734",
+      "gzip_sha256": "73ac606f43a1bf777fa303ca781a76a643dbe79bda52f7177886f417d07c5e20",
+      "zip_sha256": "5acbb25968ce43892157545cded26973623f22b5a137839e5154b293aef167db"
+    },
+    {
+      "artifact_id": "11466308388",
+      "batch": "C",
+      "case": "U09p343881_ETM_S06",
+      "csv_sha256": "1832bf99eca8bf5aad2db5c1688a50a215b1056b7b421c3652f9ab53e0db29a5",
+      "gzip_sha256": "6a65c81c4941993b769de89f3290f3579087f912c33900870ddf418af6fbfd26",
+      "zip_sha256": "f202176ca1b1849f2de2b278c5cc1aab2a70892bfbee5163c70950f36920b9ab"
+    },
+    {
+      "artifact_id": "11465344577",
+      "batch": "D",
+      "case": "U09p343881_ETM_S06",
+      "csv_sha256": "215cb586217ca2e3d0a105e1bba13de19ed79ab5b0c0fef10a5838706c9465c6",
+      "gzip_sha256": "c76ed030f23538e92d66fc16479b267bbd4e091e734609e72f1b73a872146c89",
+      "zip_sha256": "8ac68a5cdc2da3eceadbc2ca6507ae2ded953610fcc4d21f58169a0775fa17ab"
+    },
+    {
+      "artifact_id": "11483249910",
+      "batch": "A",
+      "case": "U11p4_ETM_S04",
+      "csv_sha256": "3b6d048afdb86f955b413015e51a8b44fa662627f5cdb7eb92038b7c7fd30245",
+      "gzip_sha256": "1931fd91b7e7fc1304f928c404def83e7e7106f3359357642882b8101b55291d",
+      "zip_sha256": "c66a8a22693af0ed5c9cb8f68f51c48a24c046ba4e60cacdb1115040dd0007a9"
+    },
+    {
+      "artifact_id": "11483576990",
+      "batch": "B",
+      "case": "U11p4_ETM_S04",
+      "csv_sha256": "c88b5a6be2258f3d18112ddce6b28159fa3f0d0d7e5dd5f3d7a59bcb6db2cbfd",
+      "gzip_sha256": "c3cc8ad336ebc1614a2cec4df9a1db130d2be5d3ebacf766c0f6f341666c76c1",
+      "zip_sha256": "9f8da88aaee392748989537da923cc5c4d08778ad82902d6e595e67c4e3dfacc"
+    },
+    {
+      "artifact_id": "11483529748",
+      "batch": "C",
+      "case": "U11p4_ETM_S04",
+      "csv_sha256": "8540818faf7abe5eb2730482b424bb51566157f8a8cdab7dbf6158db983d6077",
+      "gzip_sha256": "d112a7c9e9efeaa53c0d636b189d0f4e9adc11683fb56b5ab6329a1cc1f0685e",
+      "zip_sha256": "a2a11f4b81d42efe9c90592f3b452f8f895091c5c5ed5e201c7a9cbbf70923b8"
+    },
+    {
+      "artifact_id": "11483494528",
+      "batch": "D",
+      "case": "U11p4_ETM_S04",
+      "csv_sha256": "5248e974420837f7641039771fd8fc65ac7ba919e191cf62df978510310b523b",
+      "gzip_sha256": "fabd1b384d24bf90eee5561d730424a7fca23ed6c5f719c0beb34a5a2c8e1b82",
+      "zip_sha256": "e9df5093f221da7b17831c4f5c5a4a6c3db9ce1008a85b3b0e07f79348d56235"
+    },
+    {
+      "artifact_id": "11483158482",
+      "batch": "A",
+      "case": "U19p202140_ETM_S04",
+      "csv_sha256": "93fabb2d08666fe7a065931ce0e90b95fd1561578ae1fb998e11c07e6795c875",
+      "gzip_sha256": "dfa86c52da20ec6d5a38d141922ea6ec397a00661366a58d0c7c7d7ef6bda15b",
+      "zip_sha256": "e232b56f5048f6eb68acdde3a207569122000107da77d156fcb67ba018ed196e"
+    },
+    {
+      "artifact_id": "11483158738",
+      "batch": "B",
+      "case": "U19p202140_ETM_S04",
+      "csv_sha256": "a1e8a6b78bbeb020e0630566d0e4680f46b99856156faf5cef149947fbb25c17",
+      "gzip_sha256": "38f21f08d3708175a302b98b8883fa5c106e04a32ed712896cb15fb85281613e",
+      "zip_sha256": "ac6122d52ce94cd68a78a48ef9575068ff100d65bdc3aefef4a105df9afe14eb"
+    },
+    {
+      "artifact_id": "11484551322",
+      "batch": "C",
+      "case": "U19p202140_ETM_S04",
+      "csv_sha256": "462bbb8b29d2594bd162e287929a9f9212c991823eb0dcbe7c8fbc7060c169fc",
+      "gzip_sha256": "5ddd47022f781e5be06ecd11cefa84f669567bf3b3b4ab669182dc47c31b8975",
+      "zip_sha256": "83d78b38b14561799c54b4c2e2592301085eb8002699674fc465b9b913f6044b"
+    },
+    {
+      "artifact_id": "11484357337",
+      "batch": "D",
+      "case": "U19p202140_ETM_S04",
+      "csv_sha256": "fcffb956ee574cf954ad69b9a1cd2a16639d820a893dd7f5c2cb55c280f3efbf",
+      "gzip_sha256": "769ca91660065ecbe752e297c820ab1655bb55336bde09523d9305feb454122e",
+      "zip_sha256": "cff5136795dd77b0e1297018d40a3cbfa9880b91338d9a3a96d426c042a11e80"
+    },
+    {
+      "artifact_id": "11483559449",
+      "batch": "A",
+      "case": "U19p202140_ETM_S06",
+      "csv_sha256": "20ec3610dd8c42f1c075712c1223d4e56b8a4b227bc16804e4b68a1728d59c9a",
+      "gzip_sha256": "ed18a3cf225674da7a163e6d204e5255c502f8040f8b752bdf2447b092f2315f",
+      "zip_sha256": "83060fec0ded3088c13df1cd237e82d6995db04a8e40405d020428cad692fb20"
+    },
+    {
+      "artifact_id": "11484387463",
+      "batch": "B",
+      "case": "U19p202140_ETM_S06",
+      "csv_sha256": "7d3a1ba6830d0f0c14355f3ce2b91609d7835dcdae93c532a6794f68eb0164fc",
+      "gzip_sha256": "e4e87602f3afe13984d6ba72e9f2c8524308335341fe2f3bf7d69fc5fc0da6a6",
+      "zip_sha256": "bcc1e23c48c63d97c0139e09ced2d6d90bb8907baaec559dcc751998074ccdc2"
+    },
+    {
+      "artifact_id": "11484352220",
+      "batch": "C",
+      "case": "U19p202140_ETM_S06",
+      "csv_sha256": "1ad71612d9d3588c48d399086315861b79c0b58a406c40a7f0a0312f0922a918",
+      "gzip_sha256": "271c0851a9621f685b7a7709cee798724fea13c8ecf1318b9d277382060b2ccb",
+      "zip_sha256": "db8a20d563a3c4c30ec6a1c7d0947fe1ae20d8e411b21b3cecc8ae365a77f74d"
+    },
+    {
+      "artifact_id": "11483203427",
+      "batch": "D",
+      "case": "U19p202140_ETM_S06",
+      "csv_sha256": "fce7e74fd721725113adf1996583001323c1a7c0fcd03237805997e860e478cd",
+      "gzip_sha256": "5d43a409e244d11f7a9a9b288116202873742014a3b536495be99af264dffc78",
+      "zip_sha256": "81b756bfac670c08f7061d132aabf77d0b95f19c2a2d2f8899d7f804ba186239"
+    }
+  ],
+  "source_rows": 1488124,
+  "source_zip_count": 16,
+  "status": "REAL_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_NUMERIC_ONLY",
+  "summary_sha256": "36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3"
+}
