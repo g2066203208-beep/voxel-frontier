@@ -644,7 +644,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
-      - uses: actions/checkout@v4
+      - name: Fetch only SHA-scoped source/real reference tables (NO giant checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          mkdir -p research/wind-tower/experiments/T079/real-records
+          cd research/wind-tower/experiments/T079
+          for f in s08_independent_sdof_ground_acceleration.py s05_esm_public_processed_pair.py s05_ground_motion_pair_qc.py; do
+            curl -fLsS --retry 3 -o "$f" "$base/$f"
+          done
+          for f in S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv S08_ESM_SDOF_EXACT_VS_NEWMARK_RECEIPT_20261030.json; do
+            curl -fLsS --retry 3 -o "real-records/$f" "$base/real-records/$f"
+          done
+          sha256sum s08_independent_sdof_ground_acceleration.py real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv
       - name: Independent analytical ODE and Newmark self tests with REAL ESM 32040 x 3
         shell: bash
         run: |
