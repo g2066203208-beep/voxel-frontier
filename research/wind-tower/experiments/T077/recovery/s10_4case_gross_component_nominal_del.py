@@ -115,7 +115,7 @@ def compute(loads, geom):
 
 def render(rows):
     stream = io.StringIO(newline="")
-    w = csv.DictWriter(stream, fieldnames=FIELDS, lineterminator="\\n")
+    w = csv.DictWriter(stream, fieldnames=FIELDS, lineterminator="\n")
     w.writeheader()
     for row in rows:
         w.writerow({k: format(v, ".12g") if isinstance(v, float) else v
@@ -178,7 +178,7 @@ def main():
             method="one-channel rainflow DEL linear gross-section conversion",
             assumptions="A,I,D from T071 gross OpenFAST geometry; same segment gage at offset; Nref=600",
             limitations="no synchronous combined stress; no steel/concrete/PT local stress; m4/m10 are screening exponents not material SN; four ETM samples not DLC1.2 design distribution")
-        a.receipt.write_text(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True)+"\\n", encoding="utf-8")
+        a.receipt.write_text(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True)+"\n", encoding="utf-8")
         print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
     if not a.self_test and not a.loads:
         p.error("use --self-test or source inputs")
