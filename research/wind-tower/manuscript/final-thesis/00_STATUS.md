@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-30 14:10｜S05三事件五对真实谱逐记录筛查20行，非地震设计PASS
+
+复用历史USGS/SCEDC 2019 Ridgecrest三站、2020 Lone Pine一站及ESM 2012 Italy NVL官方MP处理波一站的既有20行**源派生谱**（T4/6/8/10s，非本轮重新下载原始波），扩展[既有S05程序](../../experiments/T079/s05_event_balanced_spectrum_gate.py)，生成[逐记录20行源SHA/基线差/原件层级/高通距离/拒绝决策表](../../experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv)。输入US SHA256 `45c71c29677dd0918e68c281e6552cedf6d1370a13f6abbf319349cdc1f5fc80`、ESM SHA256 `4fd1ecf5f3010524e2c5c54dae4072e1187718344f3a64bec46490e9ec617def`；输出CSV SHA256 `bbd02ad8f1d0bb4e37671f2f1b24d5558ab05b63c2ebd5c7919301155fa79231`，程序SHA256 `f1af68612854353b7aad24dc5aa3d2db825c4ee92eec86f9fba1e4520d075eba`。真实[Actions #41012493902](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012493902) S05 event job [#123921279172](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41012493902/job/123921279172) **success**，20行、116数值单元、4项负向拒绝测试通过；首个CI排序错位失败已修复且保留日志。US最大原样/去均值谱差比385.463，ESM T10s的`f_T/f_c=2.5`，仅数值筛查；ESM仅有处理ZIP收据而非未经处理仪器原始波。S05低频仪器、目标谱及标准授权条款均未闭合，正式设计波0组，原生E/WE=0，**12阶段0/12未晋级**；无新增Abaqus/OpenFAST求解，S10/S11风疲劳与优化主线保留。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差预算、失败记录见[T079过程日志](../../experiments/T079/PROCESS_LOG.md)。
+
+
 > [!IMPORTANT]
 > **每次写入前先读[指挥室当前快照与最近交接](../../governance/COMMAND_ROOM.md#read-before-write)。** 本文件保留各日期的章节/实验进展，后续回填可能覆盖前段旧状态；不以任一旧“唯一下一动作”派工。当前调度只在指挥室维护。
 > 已完成前期成果见[证据索引](../../governance/COMMAND_ROOM.md#completed-evidence)。下文“尚未计算/无原生/0次”等必须按日期、模型、工况理解，不能据此否定原七章Word和历史结果。新增地震也不能被旧章节安排排除。
