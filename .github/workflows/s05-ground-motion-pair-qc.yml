@@ -8,6 +8,8 @@ on:
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
+      - 'research/wind-tower/experiments/T079/s05_parametric_target_spectrum_fit.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv'
       - 'research/wind-tower/experiments/T079/s08_base_motion_amplitude_gate.py'
@@ -709,5 +711,61 @@ jobs:
             research/wind-tower/experiments/T079/real-s08/recomputed*
             research/wind-tower/experiments/T079/real-s08/generated.svg
             research/wind-tower/experiments/T079/real-s08/committed.svg
+          if-no-files-found: warn
+          retention-days: 90
+
+  s05-real-rotd50-provisional-2024-spectrum-fit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch SHA-scoped real ESM 16-period table and S05 fitting program (no full checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s05_fit.py "$base/s05_parametric_target_spectrum_fit.py"
+          curl -fLsS --retry 3 -o rotd16.csv "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv"
+          curl -fLsS --retry 3 -o committed12.csv "$base/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv"
+          echo "6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205  rotd16.csv" | sha256sum -c -
+          sha256sum s05_fit.py rotd16.csv committed12.csv
+      - name: Run real ESM numerical fit and compare committed 12-row table (not site or design PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile s05_fit.py
+          python3 s05_fit.py --self-test --real-rotd-csv rotd16.csv --output computed12.csv --receipt s05_receipt.json
+          python3 - <<'PY'
+          import csv,math,json,hashlib
+          with open('computed12.csv',newline='') as f: a=list(csv.DictReader(f))
+          with open('committed12.csv',newline='') as f: b=list(csv.DictReader(f))
+          assert len(a)==len(b)==12 and set(a[0])==set(b[0])
+          n=0
+          for x,y in zip(a,b):
+              for k in x:
+                  if k=='status':
+                      assert x[k]==y[k] and 'NOT_SITE_DESIGN_OR_NATIVE' in x[k]
+                  else:
+                      assert math.isclose(float(x[k]),float(y[k]),rel_tol=1e-12,abs_tol=1e-14),(k,x[k],y[k])
+                      n+=1
+          receipt=json.load(open('s05_receipt.json'))
+          assert receipt['evaluated_period_count']==12 and receipt['excluded_periods_over_6s']==[7.,8.,9.,10.]
+          assert len(receipt['periods_outside_illustrative_30pct_band'])==9
+          assert math.isclose(receipt['fitted_scale'],.9803971950520918,rel_tol=1e-12)
+          assert math.isclose(receipt['log_rmse'],.5347074826605486,rel_tol=1e-12)
+          assert receipt['S05_PASS'] is False and receipt['E_WE_native_RUN']==0
+          assert receipt['site_target_verified'] is False and receipt['authorized_clause_verified'] is False
+          print('S05_REAL_ESM_HYPOTHETICAL_2024_SHAPE_12_PERIODS_NUMERIC_PASS',n,'numeric cells')
+          print('S05_REAL_ESM_COMMITTED_CSV_SHA256',hashlib.sha256(open('committed12.csv','rb').read()).hexdigest())
+          print('S05_REAL_ESM_COMPUTED_CSV_SHA256',hashlib.sha256(open('computed12.csv','rb').read()).hexdigest())
+          print('S05_NOT_A_SITE_DESIGN_OR_NATIVE_Abaqus_PASS')
+          PY
+      - name: Archive provisional S05 diagnostic (NOT official target)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-real-rotd50-provisional-spectrum-fit-NOT-design
+          path: |
+            computed12.csv
+            s05_receipt.json
           if-no-files-found: warn
           retention-days: 90
