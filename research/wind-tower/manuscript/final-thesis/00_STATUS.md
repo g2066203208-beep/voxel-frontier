@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-30 23时｜S10真实1574逐循环数据形成第四章原创图与3行对照表
+
+以已提交真实ETM毛截面雨流CSV（SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`）为输入，本轮在JS实际计算三控制点计数加权应力范围超越曲线、P50/P90/P99及5/10MPa非规范阈值超越比例，原1574行/3组DEL oracle一致，3项异常输入拒绝。新增[原创SVG](../../experiments/T077/recovery/FIG4_S10_REAL_CONTROL_RANGE_EXCEEDANCE_20261030.svg)、[3行数表](../../experiments/T077/recovery/S10_3CONTROL_REAL_CYCLE_EXCEEDANCE_SUMMARY_20261030.csv)、[可复算Node程序](../../experiments/T077/recovery/plot_s10_real_cycle_exceedance.js)，并实际嵌入[第四章4.3.5](chapters/04_10MW混合塔架风致疲劳性能分析.md)；详情SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差及HOLD见[T077过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。ETM名义应力≠DLC1.2局部材料寿命；原生E/WE=0，严格0/12未晋级。
+
+
 ## 2026-10-30｜逐阶段文献原图—自有结果证据链目录核查
 
 已核GitHub目录：Ch1–3 38张、Ch4疲劳30张、比较学位论文6张PNG，三份SHA文件按**文件名**74/74相符，尚未逐图像素/SHA字节重新核验；地震S05/S08/S09专门原图缺、Ch5优化原页图册缺，六章正文Markdown嵌图0，正式自有结果仅S06三张ETM筛查SVG（非结构寿命/地震响应）。
