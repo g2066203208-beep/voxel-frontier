@@ -20,6 +20,9 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-31 02时S06原始FST/ED直接核读：** 真实[Actions #41104769260/job #124231340583](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41104769260/job/124231340583) completed/success，从原始静态ZIP字节核验FST/ElastoDyn与T038 31段几何：158m/1120节点/原始9 gage均靠塔底，FST TMax=700s、DT=0.0125s、DT_Out=0.05s；新增[31行CSEG→ED节点表](../experiments/T062/S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv) SHA256 `14e47139816d51030b6255ece5112cdbb8e4ee113b88e3e997c68d433a718692`及[9+9+9+4四批配置收据](../experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json) SHA256 `cc0512c9d6e5cf93e15e758667269069cdac4a6776c6c65e275658ddacbae9bd`，空间节点偏差最大0.070536m；首次[CI #41104641273](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41104641273)参数注释误解析失败，已修复并保留日志。四批不是已完成同步31站原生输出，**S06 PARTIAL，12阶段0/12**。下一项一个NTM单批9站0.1s原生初始化/通道诊断（非生产）。
+
+
 **2026-10-31 01时S06 NTM源配置身份新增：** 在00时18组原始OUTB和1080行DEL基础上，从两套历史归档manifest找回18组NTM FST/ED/158m Tower/Servo/InflowWind条目并与18个OUTB收据逐案匹配，新增[18行SHA矩阵](../experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv)、[轻量复算程序](../experiments/T062/s06_ntm_18case_input_identity.js)。四类固定结构/控制输入各1个唯一SHA，InflowWind/OUTB各18个不同SHA；读取层级是manifest+既有OUTB收据，未重读静态ZIP或执行原生OpenFAST。轻量CI初次[#41097123209](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41097123209)因ESM/CommonJS失败，修复后[#41097352068/job #124206418960](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41097352068/job/124206418960)成功，18行CSV SHA256=`d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5`。S06 PARTIAL、12阶段0/12；下一项直接解析已定位NTM原始FST/ED的TwrGagNd/风场依赖，为31段原生输出恢复做准备。
 
 
@@ -52,6 +55,9 @@
 
 
 ### HANDOFF-20261031-02-S06-NTM-FST-ED-ORIGINAL-START
+- **END / 2026-10-31 02时 CST：** 实际提交T062[原始FST/ED解析器](../experiments/T062/s06_ntm_fst_ed_31seg_gage_contract.py)、31行节点表、四批配置JSON及既有S06轻量CI扩展；原始ZIP SHA256 `ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`，FST `5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`，ED `6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`，T038几何 `76fae64318a358ae3621d9ad0934e5bc8f110d886128ce2d02a24d23b6218bfe`。初次CI真实FAIL（字段误读注释），修复后[真实job #124231340583](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41104769260/job/124231340583) success、四批9+9+9+4、31行及3项拒绝测试通过，job自动提交结果commit `cb2fe6f`；未跑OpenFAST/Abaqus，未读新授权标准，S06 PARTIAL、0/12。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差、HOLD已写入T077既有日志及00_STATUS。责任交接：网页版/本机按原生版本与依赖情况仅做0.1s一个NTM九站通道初始化验证；禁止700s生产、禁止擅合并或改冻结母本。
+
+
 - **START / 2026-10-31 02时 CST / 自动研究任务：** main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，`read_base_sha=88cdcd4cca5d4c7a134db89e20bb40cb82719236`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段关键路径、本指挥室当前进度及最近交接、T077既有S06日志、T062原始几何收据与18组NTM SHA身份表。继承已验证18 NTM原始OUTB与FST/ED同一SHA身份，不重算DEL。限定本轮从真实静态ZIP直接读取原始FST/ElastoDyn字节，使用31段原始几何映射TwrGagNd并输出最多9个gage一组的四批只读配置计划；不生成生产INP、不执行700s OpenFAST/Abaqus、不改冻结T057/T070、不合并。拟改T062源解析程序/两张轻量结果、既有S06轻量workflow、T077过程日志、00_STATUS与本指挥室；责任方网页版/Actions，原生求解保留本机后续门禁。
 
 <a id="handoff-log"></a>
