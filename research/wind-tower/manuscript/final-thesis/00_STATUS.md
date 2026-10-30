@@ -7,6 +7,10 @@
 
 
 
+## 2026-10-30 12时｜S10 Paulson原始域CI原生日志已核验（仅算法，不是寿命）
+
+已直接回读[真实S10 GitHub Actions #40995874124](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40995874124)的[job #123868750975](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40995874124/job/123868750975)完整原始日志：workflow `completed/success`，实际执行`python3 -m py_compile`和`--self-test`，源码SHA256=`30f6745c177dbc502b33709885800d294a8c437e3822f1dc1641f82581a729da`与11时原始域防外推程序完全一致；14项PT负向测试及12项通用拒绝测试通过。合成200MPa应力范围/930MPa均值下原始A-1L `logN=5.851211455321456`，Qu二级Goodman `logN=4.8427900303521305`；该正例不在15.2mm F子样本应力下限域，**只作A全集算法测试，不是本塔PT疲劳寿命**。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、合成CSV SHA、误差与HOLD已写入[T077 12时既有过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。未取得原始PDF字节SHA、授权规范新原页或真实局部材料应力；S10仅`SOURCE_LOCKED_PYTHON_CI_PASS / REAL_MATERIAL_STRESS_HOLD`，严格**0/12阶段未晋级**，S11结构优化保留。
+
 ## 2026-10-30 11时｜S10 Paulson 1983原始试验域已核读并接入防外推门禁（非材料寿命）
 
 直接核读[Paulson/Frank/Breen 1983原始报告](https://library.ctr.utexas.edu/digitized/texasarchive/phase2/300-1-ctr.pdf)印刷p57 Table5-2、p58 Table5-3、p60 §5.2、p62 Table5-5，新增[REF163](../../registry/literature_master.tsv)：A全样本391点实际范围22–81ksi、最小应力75–165ksi；15.2mm F子样本26点范围26–69ksi、最小应力50–97ksi。原始A-1L为`log10N=10.97−3.5log10(Sr/ksi)`，**未包含Goodman修正**；REF023 Qu2026的Goodman+13.95(MPa)是二级模型组合。已在[既有S10 PT计算程序](../../experiments/T077/recovery/s10_local_stress_rainflow_gate.py)增加实际应力范围/最小应力双域门禁、等效范围防外推、原始A-1L独立对照及15.2mm子域提示；旧100MPa合成样例位于原刊实测域外，已换成200MPa/930MPa正向样例。独立Python数值已验证：A-1L logN=5.8512114553、Qu二级组合logN=4.8427900304（**不同输入，不是直接强度比较**），源码SHA256=`30f6745c177dbc502b33709885800d294a8c437e3822f1dc1641f82581a729da`。原PDF字节SHA尚未取得、脚本真实CI回读待完成、现代15.2mm材料/锚具及真实有效Pe局部应力HOLD；没有真实材料寿命或原生地震RUN，**0/12整阶段未晋级**。详见[T077 11时SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及失败记录](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
