@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
+      - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv'
       - 'research/wind-tower/experiments/T079/s08_si_motion_diagnostics.py'
       - 'research/wind-tower/experiments/T079/s08_horizontal_orientation_energy_gate.py'
       - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv'
@@ -23,6 +25,7 @@ on:
       - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_ARIAS_HUSID_3COMP_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_LOW_FREQUENCY_NUMERICAL_QC_20261029.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv'
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_RVR_manifest.json'
       - 'research/wind-tower/experiments/T079/real-records/USGS_ci38457511/station_pair_baseline_triage_20261028.json'
@@ -47,6 +50,28 @@ jobs:
           python3 -m py_compile s05_ground_motion_pair_qc.py
           python3 s05_ground_motion_pair_qc.py --self-test
           echo 'Synthetic unit tests ONLY; 0 real PEER records, 0 Abaqus RUN, 0 S05 physics PASS.'
+      - name: REAL ESM 16-period source-locked highpass-distance and dt-grid QC (not design PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records"
+          curl -fLsS --retry 3 -o esm_dense.csv "$base/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv"
+          curl -fLsS --retry 3 -o esm_committed_band.csv "$base/S05_ESM_IT2012_NVL_MP_PASSBAND_16PERIOD_QC_20261030.csv"
+          echo "a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6  esm_dense.csv" | sha256sum -c -
+          python3 s05_ground_motion_pair_qc.py --esm-band-csv esm_dense.csv --expected-source-sha256 a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6 --output esm_recomputed_band.csv
+          python3 - <<'PY'
+          import csv,math
+          with open('esm_recomputed_band.csv',newline='') as f: a=list(csv.DictReader(f))
+          with open('esm_committed_band.csv',newline='') as f: b=list(csv.DictReader(f))
+          assert len(a)==len(b)==16 and list(a[0])==list(b[0])
+          for x,y in zip(a,b):
+              for k in x:
+                  if k=='decision': assert x[k]==y[k] and x[k].startswith('HOLD_')
+                  else: assert math.isclose(float(x[k]),float(y[k]),rel_tol=5e-10,abs_tol=1e-12),(k,x[k],y[k])
+          assert float(a[-1]['frequency_over_reported_0p040hz_corner'])==2.5
+          print('REAL_ESM_16_PERIOD_PASSBAND_AND_DT2_QC_PASS_NOT_INSTRUMENT_OR_DESIGN_PASS')
+          PY
+          sha256sum esm_dense.csv esm_committed_band.csv esm_recomputed_band.csv
       - name: REAL CI.CLC baseline spectral sensitivity on immutable source and pre20 pairs (not a design wave)
         shell: bash
         run: |
