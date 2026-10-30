@@ -12,6 +12,8 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import math
+import struct
 import shutil
 import sys
 import zipfile
@@ -54,7 +56,7 @@ def replace_scalar(text, key, value, expected=None):
         raise ValueError(f"FIELD_ORIGINAL_MISMATCH_{key} {original}")
     return text[:m.start()]+m.group(1)+str(value)+m.group(2)+text[m.end():]
 
-def replace_gages(text):
+def replace_gages(text, gages=GAGES):
     pat=re.compile(r"^([ \t]*)[0-9, \t]+?(\s+TwrGagNd\b[^\r\n]*)$",re.M|re.I)
     hits=list(pat.finditer(text))
     if len(hits)!=1:
@@ -63,7 +65,9 @@ def replace_gages(text):
     old=[int(v) for v in re.split(r"[\s,]+",text[m.start():m.end()].split("TwrGagNd")[0].strip()) if v]
     if old!=[1,3,5,7,9,13,15,17,20]:
         raise ValueError(f"UNEXPECTED_ORIGINAL_GAGES {old}")
-    return text[:m.start()]+m.group(1)+",".join(map(str,GAGES))+m.group(2)+text[m.end():]
+    if not 1 <= len(gages) <= 9 or len(set(gages)) != len(gages):
+        raise ValueError('BAD_BATCH_GAGE_COUNT')
+    return text[:m.start()]+m.group(1)+",".join(map(str,gages))+m.group(2)+text[m.end():]
 
 def selftest():
     s="700 TMax - stop\n0.05 DT_Out - output\n"
@@ -88,8 +92,13 @@ def prepare(args):
     contract=json.loads(Path(args.contract).read_text(encoding="utf-8"))
     if contract["ElastoDyn"]["TwrNodes"]!=1120 or contract["ElastoDyn"]["TowerHt_m"]!=158.0:
         raise ValueError("CONTRACT_158M_IDENTITY_FAILURE")
-    if contract["batches"][0]["TwrGagNd"]!=GAGES or contract["batches"][0]["NTwGages"]!=9:
-        raise ValueError("CONTRACT_BATCH1_GAGE_MISMATCH")
+    batch=int(args.batch)
+    if batch not in (1,2,3,4) or [b['NTwGages'] for b in contract['batches']]!=[9,9,9,4]:
+        raise ValueError('INVALID_BATCH_CONTRACT')
+    gages=contract['batches'][batch-1]['TwrGagNd']
+    if len(gages)!=contract['batches'][batch-1]['NTwGages'] or len(set(gages))!=len(gages):
+        raise ValueError('BATCH_GAGE_IDENTITY_FAILURE')
+    if contract['batches'][0]['TwrGagNd']!=GAGES:raise ValueError('BATCH1_CONTRACT_FAILURE')
     a=Path(args.archive1);b=Path(args.archive2);s=Path(args.supp)
     verify("static_part001",a.read_bytes())
     with zipfile.ZipFile(a) as z1, zipfile.ZipFile(b) as z2, zipfile.ZipFile(s) as zs:
@@ -135,7 +144,8 @@ def prepare(args):
     for label,data in originals.items():verify(label,data)
     fst_new=replace_scalar(fst.decode("utf-8-sig"),"TMax","0.1",expected="700")
     fst_new=replace_scalar(fst_new,"TStart","0",expected="100")
-    ed_new=replace_gages(ed.decode("utf-8-sig"))
+    ed_new=replace_gages(ed.decode("utf-8-sig"),gages)
+    if batch==4:ed_new=replace_scalar(ed_new,'NTwGages','4',expected='9')
     # Original NTM InflowWind source uses CRLF; normalize derived diagnostic copy only.
     inflow_text=inflow.decode("utf-8-sig").replace("\r\n","\n")
     inflow_new=replace_scalar(inflow_text,"WindType","1",expected="3")
@@ -151,7 +161,7 @@ def prepare(args):
     report={
         "case":NTM,"diagnostic_only":True,"native_model_height_m":158,
         "TMax_s":0.1,"DT_s":0.0125,"DT_Out_s":0.05,
-        "gage_nodes":GAGES,"source_sha256":SOURCE_SHA,
+        "gage_nodes":gages,"batch":batch,"source_sha256":SOURCE_SHA,
         "source_archives_sha256":{"part001":digest(a.read_bytes()),"part002":digest(b.read_bytes()),
                                   "supp":digest(s.read_bytes())},
         "shared_rotor_source_sha256":shared_hashes,
@@ -159,7 +169,7 @@ def prepare(args):
                           ("DTU_10MW_RWT.fst","DTU_10MW_RWT_ElastoDyn.dat",
                            "DTU_10MW_InflowWind.dat","Control/DTU_10MW_RWT_DISCON.IN",
                            "Control/libdiscon.dll")},
-        "modifications":["FST TMax 700 -> 0.1 s and TStart 100 -> 0 s (required for native initialization)","ED TwrGagNd original 9 -> batch1 9",
+        "modifications":["FST TMax 700 -> 0.1 s and TStart 100 -> 0 s (required for native initialization)",f"ED TwrGagNd original 9 -> batch{batch} {len(gages)}; NTwGages 9 -> {len(gages)}",
                          "InflowWind CRLF normalized in diagnostic child; WindType 3 -> 1, HWindSpeed -> 9.343881 m/s"],
         "source_reading_level":"Original SHA-pinned FST/ED/NTM InflowWind/Tower/Servo/ROSCO binary bytes",
         "STANDARD":"No authorized IEC/GB/NB clauses read",
@@ -171,7 +181,7 @@ def prepare(args):
         "physical_pass":False
     }
     (out/"S06_0P1S_PREP_RECEIPT.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
-    print("PREP_PASS",json.dumps({"case":NTM,"gages":GAGES,"TMax":0.1,
+    print("PREP_PASS",json.dumps({"case":NTM,"batch":batch,"gages":gages,"TMax":0.1,
                                    "shared_rotor_files":len(shared_hashes),
                                    "wind":"STEADY_DIAGNOSTIC_NOT_NTM","source_sha256_verified":len(originals)}))
 
@@ -201,12 +211,21 @@ def inspect(args):
         raw=outb.read_bytes();h=outb_header(raw)
         if h["num_samples"]!=3 or abs(h["time_increment_s"]-0.05)>1e-8:
             raise ValueError(f"TIME_GRID_MISMATCH {h['num_samples']} {h['time_increment_s']}")
-        required=[f"TwHt{i}{s}" for i in range(1,10) for s in LOAD_SUFFIX]
-        required += [f"TwHt{i}TPzi" for i in range(1,10)]
+        ng=len(prep['gage_nodes'])
+        required=[f"TwHt{i}{s}" for i in range(1,ng+1) for s in LOAD_SUFFIX]
+        required += [f"TwHt{i}TPzi" for i in range(1,ng+1)]
         missing=[c for c in required if c not in h["channel_names"]]
         if missing:raise ValueError("MISSING_GAGE_CHANNELS "+",".join(missing))
-        rows=selected_samples(raw,h,h["channel_names"],h["channel_units"],
-                              h["column_scales"],h["column_offsets"])
+        rows=[]
+        j=h['channel_names'].index('TwHt1FLxt')-1
+        scale=h['column_scales'][j];offset=h['column_offsets'][j]
+        if scale==0:raise ValueError('BAD_NATIVE_PACKED_SCALE')
+        for k in range(3):
+            packed=struct.unpack_from('<h',raw,h['data_offset_bytes']+2*(k*h['num_output_channels']+j))[0]
+            rows.append({'time_s':h['first_time_s']+k*h['time_increment_s'],
+                         'channels':{'TwHt1FLxt':{'value':(packed-offset)/scale,'unit':h['channel_units'][j+1]}}})
+        receipt['batch']=prep['batch']
+        receipt['gage_nodes']=prep['gage_nodes']
         receipt["outb_sha256"]=digest(raw)
         receipt["header"]={k:h[k] for k in ("file_id","num_samples","num_output_channels",
                                           "first_time_s","time_increment_s")}
@@ -229,6 +248,7 @@ def main():
     p.add_argument("--selftest",action="store_true")
     p.add_argument("--prepare",action="store_true")
     p.add_argument("--inspect",action="store_true")
+    p.add_argument('--batch',type=int,default=1)
     for flag in ("archive1","archive2","supp","dll","exe","contract","outdir",
                  "log","exit-code-file","receipt"):
         p.add_argument("--"+flag)
