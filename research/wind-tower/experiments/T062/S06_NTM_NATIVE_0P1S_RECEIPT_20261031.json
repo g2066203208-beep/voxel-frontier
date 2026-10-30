@@ -1,8 +1,8 @@
 {
   "case": "U09p343881_NTM_S01",
   "native_exit_code": 0,
-  "native_log_sha256": "c47a528a4cb8080095a06f4cc20927fbe8a4d450c012070fea30379bbcdcb62b",
-  "native_log_tail": "\n**************************************************************************************************\nOpenFAST\n\nCopyright (C) 2024 National Renewable Energy Laboratory\nCopyright (C) 2024 Envision Energy USA LTD\n\nThis program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.\nSee the \"LICENSE\" file distributed with this software for details.\n**************************************************************************************************\n\nOpenFAST-v3.5.3\nCompile Info:\n - Compiler: Intel(R) Fortran Compiler 2021\n - Architecture: 64 bit\n - Precision: single\n - OpenMP: No\n - Date: Apr 11 2024\n - Time: 20:51:36\nExecution Info:\n - Date: 10/30/2026\n - Time: 19:18:52-0000\n\nOpenFAST input file heading:\n    DTU 10MW RWT                - Landbased\n\nRunning ElastoDyn.\nNodal outputs section of ElastoDyn input file not found or improperly formatted.\nRunning AeroDyn.\nAD15 Nodal Outputs: Nodal output section of AeroDyn input file not found or improperly formatted.\nSkipping nodal outputs.\nRunning InflowWind.\nRunning ServoDyn.\nRunning ServoDyn Interface for Bladed Controllers (using Intel Visual Fortran for Windows).\nUsing legacy Bladed DLL interface.\n Time: 0 of 0.1 seconds.\n                                                                               \n------------------------------------------------------------------------------\nRunning ROSCO-v2.6.0\nA wind turbine controller framework for public use in the scientific field    \nDeveloped in collaboration: National Renewable Energy Laboratory              \n                            Delft University of Technology, The Netherlands   \n------------------------------------------------------------------------------\nGenerator speed:  480.0 RPM, Pitch angle:   0.0 deg, Power:     0.0 kW, Est. wind Speed:   9.3 m/s\n                                                                                                  \n\n Total Real Time:       0.345 seconds\n Total CPU Time:        0.34375 seconds\n Simulation CPU Time:   0.29688 seconds\n Simulated Time:        0.1 seconds\n Time Ratio (Sim/CPU):  0.33684\n\n OpenFAST terminated normally.\n\n",
+  "native_log_sha256": "74624e52c07a04e57df5a21f47df04c27ef39b7e2cb59967681a4e33c3867c4b",
+  "native_log_tail": "\n**************************************************************************************************\nOpenFAST\n\nCopyright (C) 2024 National Renewable Energy Laboratory\nCopyright (C) 2024 Envision Energy USA LTD\n\nThis program is licensed under Apache License Version 2.0 and comes with ABSOLUTELY NO WARRANTY.\nSee the \"LICENSE\" file distributed with this software for details.\n**************************************************************************************************\n\nOpenFAST-v3.5.3\nCompile Info:\n - Compiler: Intel(R) Fortran Compiler 2021\n - Architecture: 64 bit\n - Precision: single\n - OpenMP: No\n - Date: Apr 11 2024\n - Time: 20:51:36\nExecution Info:\n - Date: 10/30/2026\n - Time: 21:18:45-0000\n\nOpenFAST input file heading:\n    DTU 10MW RWT                - Landbased\n\nRunning ElastoDyn.\nNodal outputs section of ElastoDyn input file not found or improperly formatted.\nRunning AeroDyn.\nAD15 Nodal Outputs: Nodal output section of AeroDyn input file not found or improperly formatted.\nSkipping nodal outputs.\nRunning InflowWind.\nRunning ServoDyn.\nRunning ServoDyn Interface for Bladed Controllers (using Intel Visual Fortran for Windows).\nUsing legacy Bladed DLL interface.\n Time: 0 of 0.1 seconds.\n                                                                               \n------------------------------------------------------------------------------\nRunning ROSCO-v2.6.0\nA wind turbine controller framework for public use in the scientific field    \nDeveloped in collaboration: National Renewable Energy Laboratory              \n                            Delft University of Technology, The Netherlands   \n------------------------------------------------------------------------------\nGenerator speed:  480.0 RPM, Pitch angle:   0.0 deg, Power:     0.0 kW, Est. wind Speed:   9.3 m/s\n                                                                                                  \n\n Total Real Time:       0.358 seconds\n Total CPU Time:        0.35938 seconds\n Simulation CPU Time:   0.3125 seconds\n Simulated Time:        0.1 seconds\n Time Ratio (Sim/CPU):  0.32\n\n OpenFAST terminated normally.\n\n",
   "outb_present": true,
   "source_sha256": {
     "static_part001": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
@@ -33,7 +33,19 @@
   "TAB": "native nine-gage header and 3 time samples if produced",
   "error_budget": "0.05s output spacing; 3 samples expected; packed OUTB quantization 0.5/scale; no physical accuracy inference",
   "HOLD": "0.1s steady-wind diagnostic only, NOT NTM/31-gage production/ABAQUS or physics PASS",
-  "outb_sha256": "2f3c506e8ad9db4f13b5c0d0351768b8ddd5617a908f4d4acc290864edf12aeb",
+  "batch": 1,
+  "gage_nodes": [
+    13,
+    39,
+    65,
+    91,
+    117,
+    142,
+    168,
+    194,
+    220
+  ],
+  "outb_sha256": "3c3f155765cfdf873368a0d53e77816b5fdd595660835d63d8c0927c70ace569",
   "header": {
     "file_id": 4,
     "num_samples": 3,
@@ -49,15 +61,15 @@
   ],
   "sample_first_gage": [
     {
-      "value": -77.186357636,
+      "value": -77.18635763569807,
       "unit": "(kN)"
     },
     {
-      "value": -69.440983688,
+      "value": -69.44098368826256,
       "unit": "(kN)"
     },
     {
-      "value": -55.072866234,
+      "value": -55.072866233537816,
       "unit": "(kN)"
     }
   ],
