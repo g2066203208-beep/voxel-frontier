@@ -24,8 +24,12 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 def value(text, key, required=True):
+    # Do not match the key in a preceding parameter's trailing comment.
+    # TwrGagNd is the sole multi-token numeric field we extract.
+    pattern = (r"^\s*([\d,\s]+?)\s+" if key == "TwrGagNd"
+               else r"^\s*(\S+)\s+") + re.escape(key) + r"\b"
     hits = [m.group(1).strip() for line in text.splitlines()
-            if (m := re.match(r"^\s*(.*?)\s+" + re.escape(key) + r"\b", line, re.I))]
+            if (m := re.match(pattern, line, re.I))]
     if len(hits) != 1:
         if not required and not hits:
             return None
