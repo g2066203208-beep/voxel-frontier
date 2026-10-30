@@ -1,5 +1,17 @@
 # S06：四工况×31段六分量时程从历史GitHub Actions恢复（2026-10-24）
 
+## 2026-10-31 02时｜S06原始FST/ElastoDyn字节核读与31段输出节点映射（非原生31站时程）
+
+**SOURCE / 原始阅读层级：** 本轮在真实[GitHub Actions #41104769260/job #124231340583](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41104769260/job/124231340583)上直接读取历史静态ZIP `openfast-36-r2/part-001.zip`（SHA256 `ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`），逐字节核验其中原始FST（`5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`）及ElastoDyn（`6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65`）。原件来自ETM S01，但18个NTM的FST/ED SHA与其相同（已由上一轮18行manifest交叉验证），因此可将这两份**完全相同的静态源字节**用于NTM配置身份分析，不等于重新读取18个NTM ZIP。另直接读取T038 31段CSEG原始几何CSV，SHA256 `76fae64318a358ae3621d9ad0934e5bc8f110d886128ce2d02a24d23b6218bfe`。
+
+**RUN / 实际执行与失败保留：** 初次[Actions #41104641273/job #124230833116](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41104641273/job/124230833116)自测通过，但原始ED的`TwrNodes`字段解析误将其他参数注释中的同名词算作重复，报`ValueError: TwrNodes: expected exactly one field, got 2`，真实FAIL已保留；随后收紧为参数首字段锚定并增加TwrGagNd列表特判。[修复后真实job #124231340583](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41104769260/job/124231340583) `completed/success`，Python 3原始ZIP CRC/字节SHA核验、31段源几何映射、4批输出配置及三类故意错误拒绝测试通过。源码SHA256=`da6761fd8da16a4a998656aea2af918cddc20adc0359a8f27df556cef95becfb`；本轮**没有**执行OpenFAST或Abaqus。
+
+**TAB / 实际字段及数值：** 原始FST：`TMax=700s`、`DT=0.0125s`、`DT_Out=0.05s`、`CompElast=1`、`CompInflow=1`、`CompAero=2`、`CompServo=1`；引用`DTU_10MW_RWT_ElastoDyn.dat`及`DTU_10MW_InflowWind.dat`。原始ED：`TowerHt=158m`、`TowerBsHt=0m`、`TwrNodes=1120`、`NTwGages=9`、`TwrGagNd=[1,3,5,7,9,13,15,17,20]`；节点中点步距0.141071428571m，9个输出点集中在塔底约2.75m内。依据31段CSEG的原始上下边界中点，映射为31个互异ED节点，并形成9+9+9+4四批**候选输出配置**，最大中点映射偏差0.0705356893m（纯离散化空间偏差，非载荷/应力误差）。[31行CSV](../../T062/S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv) SHA256=`14e47139816d51030b6255ece5112cdbb8e4ee113b88e3e997c68d433a718692`；[FST/ED字段与4批配置收据](../../T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json) SHA256=`cc0512c9d6e5cf93e15e758667269069cdac4a6776c6c65e275658ddacbae9bd`；[可复算Python](../../T062/s06_ntm_fst_ed_31seg_gage_contract.py)。两份数值文件由成功job自动commit并远端回读。
+
+**OFFICIAL / REF / STANDARD / FIG：** OpenFAST上游维护者对ElastoDyn分析节点中点及9输出gage限制的解释见[官方仓库讨论 #3087](https://github.com/OpenFAST/openfast/issues/3087)及[讨论 #3241](https://github.com/OpenFAST/openfast/discussions/3241)，但确切历史EXE版本/ABI尚未原生验证；REF本轮未精读新增期刊全文；STANDARD本轮未读取授权IEC/GB/NB原文，不作条款验收；FIG无新增物理图，TAB为真实31行节点表。原始FST/ED字段、空间偏差可复算，物理误差预算尚未知。
+
+**HOLD / 下一动作：** 四批只是四份不同的输出配置，**不是**四份已验证同步31站历史；同seed重复运行的控制器状态、采样时刻、模型与通道一致性及六分量力学所有权仍待原生核验。S06 PARTIAL、S07/S10物理HOLD，12阶段仍0/12 PASS；E/WE原生结果0。下一最优动作是使用已定位的OpenFAST可执行程序对**一个NTM、一个9站输出配置**做0.1s受控初始化/输出通道诊断（非700s生产），核对原生OUTB/RP/TP通道身份，再决定是否具备31站分批回放条件。冻结T057/T070未改，PR #42不合并。
+
 
 ## 2026-10-31 00时｜S06真实18组NTM原始OUTB后处理：1080行雨流数据（非物理PASS）
 
