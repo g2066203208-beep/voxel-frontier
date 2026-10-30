@@ -1,0 +1,71 @@
+name: S05 real ESM RotD source-locked 16-period regression (not design PASS)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/s05-esm-rotd-real.yml'
+      - 'research/wind-tower/experiments/T079/s05_esm_rotd_real.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  real-processed-wave-rotation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin numerical package used in measured reference
+        run: python -m pip install 'numpy==2.3.5'
+      - name: Retrieve ALREADY archived real 2012 ESM 3-component source (no new event fetch)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p source
+          gh run download 40847442979 -R "$GITHUB_REPOSITORY" -n s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE -D source
+          test -f source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv
+          test -f source/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv
+          echo 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34  source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv' | sha256sum --check
+          echo 'a2e2ea94d81ef1cfff63863148518cf2159bb821161577a67b5c4b7705143bc6  source/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv' | sha256sum --check
+      - name: Execute real processed 16x360 angle spectra, strict input checks, and compare reference
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T079/s05_esm_rotd_real.py
+          python -m py_compile "$script"
+          python "$script" --self-test
+          python "$script" \
+            --source-csv source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv \
+            --reference-csv source/S05_ESM_IT2012_NVL_MP_DENSE_16PERIOD_20261029.csv \
+            --output-csv recomputed.csv --output-receipt recomputed.json
+          python - <<'PY'
+          import csv,math,json
+          root='research/wind-tower/experiments/T079/real-records/'
+          with open(root+'S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv',newline='') as f: old=list(csv.DictReader(f))
+          with open('recomputed.csv',newline='') as f: new=list(csv.DictReader(f))
+          assert len(old)==len(new)==16
+          for a,b in zip(old,new):
+              assert a.keys()==b.keys()
+              for k in a:
+                  if k=='status': assert a[k]==b[k]
+                  else: assert math.isclose(float(a[k]),float(b[k]),rel_tol=3e-12,abs_tol=2e-13),(k,a[k],b[k])
+          with open('recomputed.json') as f:j=json.load(f)
+          assert j['S05_PASS'] is False and j['Abaqus_E_WE_RUN']==0
+          print('REAL_ESM_ROTD_16_PERIOD_CROSS_CHECK_PASS_NO_DESIGN_WAVE')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s05-esm-rotd-real-16period-independent-recompute-NOT-DESIGN-PASS
+          path: |
+            recomputed.csv
+            recomputed.json
+          if-no-files-found: warn
+          retention-days: 90
