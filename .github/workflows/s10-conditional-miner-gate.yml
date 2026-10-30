@@ -473,7 +473,7 @@ jobs:
     timeout-minutes: 12
     permissions:
       actions: read
-      contents: read
+      contents: write
     steps:
       - name: Fetch source-locked control cycle script and two historical Actions ZIPs
         shell: bash
@@ -516,3 +516,23 @@ jobs:
             S10_3CONTROL_REAL_GROSS_CYCLES.csv
             S10_3CONTROL_REAL_GROSS_CYCLES_RECEIPT.json
           retention-days: 30
+      - name: Commit full cycle detail to Draft PR branch only (create-only, never force)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ "$TARGET_BRANCH" != "research/t080-seismic-integration-gates-20261022" ]]; then
+            echo "NOT_DRAFT_PR_WORK_BRANCH_SKIP_COMMIT"; exit 0
+          fi
+          path="research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv"
+          if gh api "repos/${{ github.repository }}/contents/$path?ref=$TARGET_BRANCH" >/dev/null 2>&1; then
+            echo "FULL_CSV_ALREADY_PRESENT_NO_OVERWRITE"; exit 0
+          fi
+          sha=$(gh api --method PUT "repos/${{ github.repository }}/contents/$path" \
+            -f message="research(S10): persist 1574 real cycle range-mean rows from SHA-locked Actions ZIPs" \
+            -f branch="$TARGET_BRANCH" \
+            -f content="$(base64 -w0 S10_3CONTROL_REAL_GROSS_CYCLES.csv)" \
+            --jq '.commit.sha')
+          echo "FULL_REAL_CYCLE_CSV_CREATED_COMMIT=$sha"
