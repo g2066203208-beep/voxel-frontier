@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 01时｜S06 18组NTM输入身份与原始OUTB逐案例对应
+
+已从两套历史归档manifest和18组真实OUTB收据，逐案例交叉核对FST、ElastoDyn、158m Tower、ServoDyn、InflowWind及OUTB身份，形成[18行SHA对应表](../../experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv)和[可复算Node程序](../../experiments/T062/s06_ntm_18case_input_identity.js)。18个NTM工况固定FST/ED/Tower/Servo各1个SHA，InflowWind与OUTB各18个不同SHA；完整36工况静态manifest四类固定输入也各1个SHA，InflowWind 36个不同SHA。**本轮读取的是manifest和此前真实OUTB收据，不是本轮重新下载ZIP/解析FST正文；不等于31站时程恢复或DLC1.2。** 四项故意篡改/缺项被核心算法拒绝；[轻量CI #41097123209](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41097123209)状态待远端回读。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、输入SHA、失败与误差预算见[T077 S06过程日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。严格0/12未晋级。
+
+
 
 ## 2026-10-31 00时｜S06真实18组NTM原始OUTB恢复与1080行雨流结果
 

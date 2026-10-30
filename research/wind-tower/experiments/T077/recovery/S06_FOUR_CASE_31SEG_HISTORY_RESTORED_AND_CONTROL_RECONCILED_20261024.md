@@ -648,3 +648,16 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **REF**：沿用REF018/已有ASTM雨流方法，未本轮新增原页核读。**STANDARD**：2025 IEC/GB/NB授权条款本轮无新增，非规范验收。**OFFICIAL**：历史GitHub Actions归档及其22时成功job #124114538660为前序来源，**本轮没有新增Abaqus/OpenFAST原生RUN**。
 - **误差预算**：计数加权和四则运算为双精度；原源CSV约12有效数字、最大约1e-9量级的单条范围舍入对分位数阈值影响待高精度重核；半循环精确计0.5；本图x轴0–35MPa每0.2MPa采样、纵轴1e-3–1为可视化离散化，不是材料计算误差。截面错位0.070411m、PT/接触/材料点映射、ETM→DLC1.2外推误差均未量化，**不可作寿命验收**。
 - **HOLD/PASS**：图和数表仅`REAL_ETM_GROSS_NOMINAL_NUMERICAL_QC`；材料局部应力、DLC1.2风速概率、S01–S04原生初态、真实S–N/寿命仍HOLD；0/12阶段未晋级，地震E/WE=0，冻结T057/T070不变、不合并PR、不运行高成本生产。下一独立最优动作：恢复DLC1.2/NTM真实同步载荷及多seed覆盖，并复用现有雨流与图表管线形成正常运行疲劳输入，避免再次只做ETM统计。
+
+
+## 2026-10-31 01时｜S06 18组NTM静态输入—原始OUTB逐案例身份闭合（MANIFEST LEVEL）
+
+**实质问题/新增结果：** 在已完成18组真实NTM OUTB解码、1080行载荷DEL的基础上，本轮从**原始静态归档manifest**找回18组NTM各自的FST、ElastoDyn、158m塔架数据、ServoDyn和InflowWind文件条目；以**独立补充归档manifest**中的OUTB条目与既有18组原始OUTB SHA收据逐案例交叉，生成[18行输入—输出身份表](../../T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv)及[可复算Node脚本](../../T062/s06_ntm_18case_input_identity.js)。此前NTM恢复只核对了原始OUTB的9测点及DEL，此次补齐其**对应的原始静态配置身份**，不重复18个ZIP/雨流计算。
+
+**SOURCE（本轮实际读取层级=GitHub完整manifest字节和历史OUTB收据，非重新下载原始ZIP或直接解析18个FST/ED正文）：** 静态归档 `archive/local-assets-20261004/file-manifest.json` SHA256=`c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302`（2000条）；补充归档 `archive/local-assets-20261004-supplement/file-manifest.json` SHA256=`35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392`（161条）；既有[18份OUTB真实源收据](../../T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json) SHA256=`c0a061e5895c580de413dfa02ab828dbc8be09e05ead8c57ba45445b72581125`。三份原件的Git blob SHA与本轮独立读取结果已匹配；本轮静态配置**仅manifest SHA与canonical member指针级**，没有重新哈希每份静态ZIP内成员。此前OUTB的18件实际字节验证归属00时Actions #41087172683，不能冒充本轮重新解包。
+
+**RUN/代码及负向验收：** 以实际两份完整manifest+18组收据，在JS V8内真实运行与Node脚本同一`build`核心，完成18行×5种静态配置+OUTB交叉检验；四项故意异常（缺FST、OUTB哈希篡改、塔架canonical SHA不一致、两seed相同InflowWind SHA）均被拒绝。初次运行发现manifest不同section的相同relative_path引发`DUPLICATE_OR_MISSING_PATH`，已修正为仅索引`section=openfast-36-r2`，保留失败记录。独立轻量CI已加入既有`s06-paired-seed-del-qc.yml`（[Actions #41097123209](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41097123209)），本段编写时Node远端执行结果**待回读**；不启动OpenFAST/Abaqus，也不触发18 ZIP高成本重算。
+
+**TAB/关键数据：** 18个NTM工况对应的`DTU_10MW_RWT.fst`、`DTU_10MW_RWT_ElastoDyn.dat`、`C02R3R2_158M_Tower.dat`、`Control/DTU_10MW_RWT_ServoDyn.dat`各只有**1个唯一SHA**，`DTU_10MW_InflowWind.dat`有**18个不同SHA**，对应18个OUTB也有18个不同SHA；全部18个OUTB与先前12001样本/295通道/9塔架测点收据逐案一致。另在完整静态manifest核对36个NTM+ETM工况：上述四类固定配置各1个SHA，InflowWind有36个不同SHA。这个发现**只证明已归档输入文件的版本身份一致**，不证明不同工况的运行控制状态、完整风场BTS、源FST与输出的动力学因果对应或31段输出已经原生恢复。
+
+**REF**=沿用T062历史OpenFAST归档和T071/T072 31段源追踪，未新增期刊全文。**STANDARD**=未读新的IEC/GB/NB授权条文，非规范验收。**OFFICIAL**=仓库归档源manifest与OpenFAST输出格式历史解析；未新增官方软件原生RUN。**FIG**=无新物理响应图。**TAB**=18行源身份CSV。**误差预算**=manifest SHA/成员身份为逐字节精确比较（无数值容差）；历史OUTB量化及DEL误差沿用00时收据；实际运行时FST引用解析、风场BTS内容、控制器行为、载荷映射与结构动力误差仍NEED-ESTIMATE。**PASS/HOLD**=仅MANIFEST_SOURCE_IDENTITY_NUMERIC_PASS；S06仍PARTIAL，S07正式DLC1.2与S10材料寿命均HOLD，地震E/WE原生0，整阶段0/12。下一唯一动作：利用已定位的18份NTM静态FST/ED及真实OUTB，直接解析源文件中的TwrGagNd/塔高/风场引用，确定可复现的31段原生输出修改点，不能用9个近塔底测点插值冒充31段。
