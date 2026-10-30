@@ -8,7 +8,8 @@
      --receipt research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json \
      --check research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv --self-test
 */
-const fs=require("node:fs"),crypto=require("node:crypto");
+import fs from "node:fs";
+import crypto from "node:crypto";
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const expected={
   "--static":"c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
@@ -112,5 +113,4 @@ function main(args) {
     evidence:"MANIFEST_AND_PRIOR_OUTB_RECEIPT_ONLY",
     physical_pass:false}));
 }
-if(require.main===module){try{main(process.argv.slice(2))}catch(e){console.error(e.message);process.exitCode=1}}
-module.exports={build};
+try{main(process.argv.slice(2))}catch(e){console.error(e.message);process.exitCode=1}
