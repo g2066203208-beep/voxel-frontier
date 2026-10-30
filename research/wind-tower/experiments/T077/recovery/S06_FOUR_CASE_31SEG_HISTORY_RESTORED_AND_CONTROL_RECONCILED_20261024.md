@@ -17,10 +17,10 @@
 
 ### RUN/TAB｜真实可复算算法与失败
 
-- 新增PT原式函数pt_qu2026_corrected_range、pt_qu2026_log10_cycles，严格限制为**二级文献方法敏感性**，不解除原生初态和材料证据门禁。[GitHub Actions #40989738556](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989738556) job 123848968255已completed/success：Python语法、原有雨流/Miner/68part静态回归、PT解析正向与9项拒绝测试通过。该job计算时源码SHA256为b144386687a2071ca25fac3240ab22a37205c0726d14e20251fbc747e8e0f3a0（**随后仅修改脚本docstring；最终版本SHA以新的CI为准**）。
+- 新增PT原式函数pt_qu2026_corrected_range、pt_qu2026_log10_cycles，严格限制为**二级文献方法敏感性**，不解除原生初态和材料证据门禁。[GitHub Actions #40989738556](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989738556) job 123848968255已completed/success：Python语法、原有雨流/Miner/68part静态回归、PT解析正向与9项拒绝测试通过。该job计算时源码SHA256为b144386687a2071ca25fac3240ab22a37205c0726d14e20251fbc747e8e0f3a0（**最新仅修改docstring后的真实[CI #40989811821](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989811821) job 123849202096亦completed/success，最新脚本SHA256=61e36ac743d9570c65f56928096a78cc0cc06e5cf04e0a89bc2be1c8e4d86bc6**）。
 - **仅合成算例**：范围100MPa、均值930MPa、fu=1860MPa → Goodman等效200MPa → lgN=5.896395015176065 → N≈787761.98；1个全循环的n/N≈1.2694189722453895×10^-6（程序以2个半循环求和）。**不是158m真实应力、年损伤或寿命。** 双精度解析断言容差约1e-12；试验离散性、公式外推、PT有效应力及网格物理误差均NEED_QUANTIFY。
 - **失败原始记录：**[Actions #40989722290](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40989722290)首次failure，因PT合成CSV误写双反斜杠换行而报time/stress columns mismatch；修复后成功，失败不删除。
-- **SOURCE：** 合成PT时程见程序self_test，真实局部应力输入0份；**REF：** Qu原刊HTML Eq1–5、REF018/002/007历史图谱（非本轮重读）；**STANDARD：** 无新增授权条款PASS；**OFFICIAL：** GitHub Actions/Python真实job，不是Abaqus；**RUN：** 仅Python CI/静态source map，原生疲劳/地震RUN=0；**FIG：** 新真实疲劳响应图0；**TAB：** 上表四材料证据与合成解析数值。
+- **SOURCE：** 合成PT时程见程序self_test，原始36字节SHA256=14cddde5896387e9f892fddf16ab70449d3807cbb8786962bf42a2ff9e50b23c，真实局部应力输入0份；**REF：** Qu原刊HTML Eq1–5、REF018/002/007历史图谱（非本轮重读）；**STANDARD：** 无新增授权条款PASS；**OFFICIAL：** GitHub Actions/Python真实job，不是Abaqus；**RUN：** 仅Python CI/静态source map，原生疲劳/地震RUN=0；**FIG：** 新真实疲劳响应图0；**TAB：** 上表四材料证据与合成解析数值。
 - **HOLD：** 尚缺同一已验收重力/有效PT/接触初态下的四材料局部应力、真实DLC1.2风速概率与经授权规范确认的参数。S10为METHOD_TESTED / REAL_MATERIAL_STRESS_AND_PARAMETER_HOLD；**严格12阶段0/12未晋级**，S11抗震约束疲劳优化主线不变。
 
 
