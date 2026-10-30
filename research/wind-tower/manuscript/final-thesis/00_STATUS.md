@@ -1,5 +1,9 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 06时｜S06真实NTM六seed离散表与BTS来源缺口已远端验收
+
+基于已核1080行18组原始NTM载荷统计，新增[30行塔底/九个近底部测点MLyt六seed离散表](../../experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv)和[可复算Node程序](../../experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js)。塔底TwrBsMyt三风速六seed描述性CV为**13.329354%、11.900626%、6.428970%**；原始BTS在GitHub归档manifest中36/36无实体/无SHA，.inp/.sum/.dat 108项仅manifest有来源条目。真实[Actions #41136033657](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41136033657)成功复算并逐字节对照CSV，输出SHA256=`8ffc0beda1ee837561e798c547f1ba2f1ad9db514124820853a381922a0b79d7`。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、假设、误差、缺口及下一项见[T077本轮过程节](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**仅原生历史载荷的source-only统计，不是新OpenFAST求解/31段同步/DLC1.2/材料疲劳PASS；S06 PARTIAL，12阶段0/12，E/WE=0。**
+
 ## 2026-10-31 05:20｜S06四批原生0.1s公共通道数值诊断通过（仅稳态风）
 
 Windows原生四批9+9+9+4派生测点诊断已产生并自动提交[真实QC收据](../../experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json)，[自动commit fb738e9](https://github.com/g2066203208-beep/voxel-frontier/commit/fb738e98224539ece026d60b085b821dca8cf8a3)已远端回读。**四个原生OUTB SHA锁定，106个公共非gage通道×3时刻×3对照=954项，最大解码差0，失败0**；这仅是packed OUTB分辨率内数值重复性，不是内部控制器状态证明。具体四个SHA、stdout SHA、SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差预算及run ID/原始artifact二次核验缺口见[T077 05:20日志](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**原始NTM 436MB BTS未使用（改为稳态诊断风），700s四批同步/六分量映射/DLC1.2仍HOLD；S06 PARTIAL、12阶段0/12未晋级，E/WE原生0项。** 下一项仅恢复单个真实NTM seed做短时确定性核验，不启动生产。
