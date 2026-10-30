@@ -4,7 +4,7 @@
 ASTM E1049-style three-point stack; residual cycles are half cycles.
 No local Abaqus stress, material S-N curves, annual damage or physical PASS.
 Concrete retains range+mean. Steel Goodman is optional; REF023 Qu2026 PT
-Goodman + Paulson Eq(1) is opt-in SECONDARY METHOD ONLY, never a design life.
+Goodman + Qu Eq(1) is opt-in SECONDARY METHOD ONLY; Paulson 1983 original\nA-1L and observed stress domains are checked independently, never design life.
 """
 import argparse
 import csv
@@ -21,11 +21,44 @@ REQUIRED = ('source_sha256', 'stress_owner', 'material_id', 'material_class',
 CLASSES = ('concrete', 'ordinary_rebar', 'prestressing_strand', 'structural_steel')
 
 # REF023 Qu et al., Buildings 2026 16(19):3854, open HTML section 2.2,
-# Eqs (1)-(2). Eq (1) cites Paulson et al. (original not read in this task).
-# This is a source-bound, secondary-literature method oracle, NOT a design S-N.
+# Eqs (1)-(2). Paulson/Frank/Breen 1983 original report pp57-62 NOW READ.
+# Original A-1L uses RAW stress range in ksi; Qu Goodman is NOT from Paulson.
+# Neither Qu+Goodman nor the A-1L comparison is a validated tower design S-N.
 PT_REF = 'REF023_QU2026_PT_EQ1_EQ2_PAULSON_SECONDARY'
 PT_SOURCE = 'https://www.mdpi.com/2075-5309/16/19/3854'
 PT_SCOPE = 'SECONDARY_METHOD_COMPARISON_ONLY'
+PT_PRIMARY_SOURCE = 'https://library.ctr.utexas.edu/digitized/texasarchive/phase2/300-1-ctr.pdf'
+PT_PRIMARY_REPORT = 'FHWA/TX-82/54+300-1'
+KSI_TO_MPA = 6.894757293168361
+
+
+def pt_paulson1983_primary_domain(raw_range_MPa, mean_MPa, qu_equivalent_MPa):
+    """Paulson 1983 printed p57 Table5-2 and p62 Table5-5.
+
+    Dataset A: 75<=Smin<=165 ksi, 22<=Sr<=81 ksi (391 tests).
+    15.2mm-only dataset F: 50<=Smin<=97, 26<=Sr<=69 ksi (26 tests).
+    A-1L: log10(N)=10.97-3.50*log10(raw Sr/ksi), NOT Goodman-corrected.
+    Checking Qu's corrected range within A bounds is an EXTRA guard, not
+    evidence that Paulson experimentally validated Qu's Goodman transform.
+    """
+    sr = raw_range_MPa / KSI_TO_MPA
+    smin = (mean_MPa - raw_range_MPa / 2) / KSI_TO_MPA
+    seq = qu_equivalent_MPa / KSI_TO_MPA
+    if not all(math.isfinite(x) for x in (sr, smin, seq)):
+        raise ValueError('PT_PAULSON_NONFINITE_STRESS')
+    if not (75 <= smin <= 165 and 22 <= sr <= 81):
+        raise ValueError('PT_PAULSON_A_DATASET_OUTSIDE_TESTED_DOMAIN')
+    if not 22 <= seq <= 81:
+        raise ValueError('PT_QU_GOODMAN_EQUIVALENT_OUTSIDE_PRIMARY_A_RANGE')
+    return {
+        'raw_range_ksi': sr,
+        'minimum_stress_ksi': smin,
+        'qu_equivalent_range_ksi': seq,
+        'primary_A1L_log10_N_raw_range_only': 10.97 - 3.5 * math.log10(sr),
+        'observed_15p2mm_subset_F_domain_match': (
+            50 <= smin <= 97 and 26 <= sr <= 69),
+        'primary_source_report': PT_PRIMARY_REPORT,
+    }
 
 
 def pt_qu2026_log10_cycles(equivalent_range_MPa):
@@ -53,7 +86,9 @@ def pt_qu2026_corrected_range(rng, mean, meta):
     if (not math.isfinite(rng) or not math.isfinite(mean) or rng <= 0 or
             mean <= rng / 2 or mean + rng / 2 >= su):
         raise ValueError('PT_CYCLE_OUTSIDE_POSITIVE_TENSION_BELOW_UTS')
-    return rng / (1.0 - mean / su)
+    equivalent = rng / (1.0 - mean / su)
+    pt_paulson1983_primary_domain(rng, mean, equivalent)
+    return equivalent
 
 
 
@@ -159,6 +194,13 @@ def calculate(raw, meta):
         row = {'stress_range_MPa':r,'mean_stress_MPa':m,'cycles':n,
                'equivalent_range_MPa':equiv}
         if pt_method:
+            original = pt_paulson1983_primary_domain(r, m, equiv)
+            row['paulson1983_primary_A1L_log10_N_raw_only'] = original[
+                'primary_A1L_log10_N_raw_range_only']
+            row['paulson1983_raw_range_ksi'] = original['raw_range_ksi']
+            row['paulson1983_minimum_stress_ksi'] = original['minimum_stress_ksi']
+            row['paulson1983_15p2mm_F_domain_match'] = original[
+                'observed_15p2mm_subset_F_domain_match']
             log_n = pt_qu2026_log10_cycles(equiv)
             # Log-domain damage avoids overflow in N=10**logN.
             row['log10_N_allow_secondary_only'] = log_n
@@ -179,6 +221,9 @@ def calculate(raw, meta):
                 if pt_method else None),
             'secondary_pt_source': PT_SOURCE if pt_method else None,
             'secondary_pt_scope': PT_SCOPE if pt_method else None,
+            'paulson1983_primary_source': PT_PRIMARY_SOURCE if pt_method else None,
+            'paulson1983_primary_report': PT_PRIMARY_REPORT if pt_method else None,
+            'paulson1983_goodman_validated_by_original': False,
             'miner_damage':'NOT_COMPUTED'}
 
 
@@ -230,16 +275,24 @@ def self_test():
         try:calculate(bad,meta)
         except ValueError:pass
         else:raise AssertionError('invalid source/physics accepted')
-    # Qu 2026 Eqs (1)-(2): 100 MPa at mean 930 MPa, Su=1860 MPa
-    # => Goodman equivalent range 200 MPa. These are SYNTHETIC values.
+    # Synthetic range=200 MPa, mean=930 MPa, Su=1860 MPa -> Qu
+    # Goodman equivalent=400 MPa. Raw min=830 MPa, inside Paulson A
+    # observed domain but OUTSIDE 15.2mm-only F minimum-stress domain.
+    # Earlier 100 MPa synthetic example was below original A Sr lower bound.
     ptmeta = dict(manifest,material_class='prestressing_strand',
                   material_model_ref=PT_REF,material_model_source_url=PT_SOURCE,
                   model_scope=PT_SCOPE,ultimate_tensile_MPa=1860,
                   mean_stress_rule='QU2026_PT_GOODMAN')
-    assert abs(pt_qu2026_corrected_range(100,930,ptmeta)-200)<1e-12
-    expected_log_n = 13.95 - 3.5*math.log10(200)
-    assert abs(pt_qu2026_log10_cycles(200)-expected_log_n)<1e-12
-    pt_raw=b'time_s,stress_MPa\n0,880\n1,980\n2,880\n'
+    assert abs(pt_qu2026_corrected_range(200,930,ptmeta)-400)<1e-12
+    expected_log_n = 13.95 - 3.5*math.log10(400)
+    assert abs(pt_qu2026_log10_cycles(400)-expected_log_n)<1e-12
+    original = pt_paulson1983_primary_domain(200,930,400)
+    primary_log_n = 10.97 - 3.5*math.log10(200/KSI_TO_MPA)
+    assert abs(original['primary_A1L_log10_N_raw_range_only']-primary_log_n)<1e-12
+    assert not original['observed_15p2mm_subset_F_domain_match']
+    assert abs(primary_log_n - (
+        10.97+3.5*math.log10(KSI_TO_MPA)-3.5*math.log10(200)))<1e-12
+    pt_raw=b'time_s,stress_MPa\n0,830\n1,1030\n2,830\n'
     ptmeta['source_sha256']=hashlib.sha256(pt_raw).hexdigest()
     ptresult=calculate(pt_raw,ptmeta)
     assert ptresult['counted_cycles']==1.0
@@ -258,15 +311,25 @@ def self_test():
         try:calculate(pt_raw,bad)
         except ValueError:pass
         else:raise AssertionError('invalid PT material/source accepted')
-    for badrange,badmean in [(100,40),(100,1810),(0,930),(100,float('nan'))]:
+    pt_bad_cycles = [
+        (100,40), (100,1810), (0,930), (200,float('nan')),
+        (100,930), # raw range 14.5ksi below 22ksi primary A boundary
+        (600,930), # raw range above 81ksi
+        (200,600), # raw Smin below 75ksi
+        (300,1500), # raw Smin above 165ksi
+        (400,1300), # Qu equivalent range above 81ksi
+    ]
+    for badrange,badmean in pt_bad_cycles:
         try:pt_qu2026_corrected_range(badrange,badmean,ptmeta)
         except ValueError:pass
         else:raise AssertionError('invalid PT cycle accepted')
     return {'status':'PASS_SYNTHETIC_ONLY','analytic_cycles':expected,
             'pt_eq1_eq2_analytic_log10_N':expected_log_n,
             'pt_eq1_eq2_synthetic_sample_damage':ptresult['secondary_pt_sample_damage'],
-            'pt_source_level':'REF023_OPEN_HTML_EQ1_EQ2_SECONDARY_PAULSON_NOT_ORIGINAL',
-            'pt_negative_tests':len(pt_bad)+4,
+            'pt_source_level':'PAULSON1983_PRIMARY_P57_P58_P62_READ_QU2026_GOODMAN_SECONDARY',
+            'pt_paulson_primary_A1L_log10_N_raw_only':primary_log_n,
+            'pt_paulson_15p2mm_subset_domain_match':False,
+            'pt_negative_tests':len(pt_bad)+len(pt_bad_cycles),
             'counted_cycles':result['counted_cycles'],
             'source_sha256':manifest['source_sha256'],
             'negative_tests':len(bad_rules)+len(bad_inputs),
