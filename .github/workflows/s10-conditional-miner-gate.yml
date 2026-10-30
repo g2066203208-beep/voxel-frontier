@@ -14,6 +14,10 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S10_68PART_NATIVE_STRESS_BINDING_PREFLIGHT_20261028.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_D400_PE_68PART_INP_METADATA_20261028.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s10_4case_gross_component_nominal_del.py'
+      - 'research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_GROSS_SINGLE_CHANNEL_NOMINAL_DEL_20261030.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv'
+      - 'research/wind-tower/experiments/T071/T071_input_geometry_31_segments.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -130,5 +134,70 @@ jobs:
             ${{ runner.temp }}/S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv
             ${{ runner.temp }}/s10_azimuth_receipt.json
             ${{ runner.temp }}/s10_candidate_card_preflight.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  s10-nominal-4case:
+    name: Real 4-case gross-section component DEL (NO material life)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch four SHA-pinned small CSV and code sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower"
+          curl -fLsS --retry 3 -o s10_4case_gross_component_nominal_del.py "$base/experiments/T077/recovery/s10_4case_gross_component_nominal_del.py"
+          curl -fLsS --retry 3 -o loads.csv "$base/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv"
+          curl -fLsS --retry 3 -o geometry.csv "$base/experiments/T071/T071_input_geometry_31_segments.csv"
+          curl -fLsS --retry 3 -o committed.csv "$base/experiments/T077/recovery/S10_4CASE_31SEG_GROSS_SINGLE_CHANNEL_NOMINAL_DEL_20261030.csv"
+          echo "9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b  loads.csv" | sha256sum -c -
+          echo "fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800  geometry.csv" | sha256sum -c -
+          python3 -m py_compile s10_4case_gross_component_nominal_del.py
+          python3 s10_4case_gross_component_nominal_del.py --self-test
+          python3 s10_4case_gross_component_nominal_del.py --loads loads.csv --geometry geometry.csv --output recomputed.csv --receipt receipt.json
+          python3 - <<'PY'
+          import csv, json, math
+          with open('committed.csv', newline='') as f: x=list(csv.DictReader(f))
+          with open('recomputed.csv', newline='') as f: y=list(csv.DictReader(f))
+          assert len(x)==len(y)==124
+          assert set(x[0])==set(y[0])
+          for a,b in zip(x,y):
+              assert (a['case'],a['segment'])==(b['case'],b['segment'])
+              for key in a:
+                  if key in ('case','segment','source_class'):
+                      assert a[key]==b[key],key
+                  else:
+                      assert math.isclose(float(a[key]),float(b[key]),rel_tol=3e-11,abs_tol=3e-12),(key,a[key],b[key])
+          j=json.load(open('receipt.json'))
+          assert j['rows']==124 and j['material_fatigue_life'] is None
+          PY
+      - name: Negative input integrity and no-material-life proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          j=json.load(open('receipt.json'))
+          assert j['rows']==124 and j['material_fatigue_life'] is None
+          assert j['native_Abaqus_runs']==0 and j['physical_pass'] is False
+          assert j['status']=='REAL_4CASE_31SEG_COMPONENT_NOMINAL_DEL_ONLY'
+          print('REAL_124_ROW_4CASE_31SEG_NOMINAL_COMPONENT_DEL_PASS_NO_MATERIAL_LIFE')
+          PY
+          cp loads.csv bad_loads.csv
+          printf '\nTAMPER' >> bad_loads.csv
+          if python3 s10_4case_gross_component_nominal_del.py --loads bad_loads.csv --geometry geometry.csv --output invalid.csv --receipt invalid.json >negative.log 2>&1; then
+            echo "ERROR: source tamper accepted" >&2; exit 1
+          fi
+          grep -q 'SOURCE_SHA256_MISMATCH' negative.log
+          sha256sum s10_4case_gross_component_nominal_del.py recomputed.csv receipt.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s10-real-4case-nominal-component-del
+          path: |
+            recomputed.csv
+            receipt.json
+            negative.log
           if-no-files-found: warn
           retention-days: 14
