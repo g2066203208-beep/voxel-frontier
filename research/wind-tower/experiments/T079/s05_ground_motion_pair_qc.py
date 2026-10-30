@@ -405,10 +405,10 @@ def esm_16period_passband_audit(source_csv, expected_sha256):
         if not math.isclose(gm,v['horizontal_gm_pseudoSa_m_s2'],rel_tol=5e-10,abs_tol=1e-12):
             raise ValueError('ESM_DENSE_GM_MISMATCH')
         delta=max(abs(e2-e)/e,abs(n2-n)/n)
-        if not # 12-significant-digit archived component PSA introduces <=5.2e-12
-        # absolute rounding into this dimensionless difference; 1e-11 is
-        # an INPUT-ROUNDING tolerance, never an oscillator/physics error budget.
-        math.isclose(delta,v['max_component_dt2_relative_difference_DIAGNOSTIC'],rel_tol=5e-9,abs_tol=1e-11):
+        # Archived PSA is rounded to 12 significant digits; the derived
+        # relative-difference field can differ by up to 5.2e-12 from
+        # recalculation. 1e-11 is INPUT rounding, not physics tolerance.
+        if not math.isclose(delta,v['max_component_dt2_relative_difference_DIAGNOSTIC'],rel_tol=5e-9,abs_tol=1e-11):
             raise ValueError('ESM_DENSE_DT2_MISMATCH')
         ratio=1/(T*fc)
         if not math.isclose(ratio,v['frequency_over_highpass_corner'],rel_tol=5e-10,abs_tol=1e-10):
