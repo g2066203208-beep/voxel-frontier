@@ -7,6 +7,11 @@
 
 
 
+## 2026-10-30 13:08｜真实ESM RotD独立远端复算CI已通过
+
+
+**2026-10-30 13:08 CST 真波远端复算验收回填（只对S05程序/真波数字，非设计PASS）：** [Actions #41006693293](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006693293) 的 job [#123903088783](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006693293/job/123903088783) 已 completed/success；原生日志证明 CPython 3.12.15 + NumPy 2.3.5 真正从此前已归档 artifact #12884814391 拉取 SI 三分量原始CSV，SHA256两份来源自检通过、重算16周期×360方向RotD00/50/100及HNZ PSA、与PR提交数表逐项比较（3e-12相对/2e-13绝对）全部PASS，并完成单向旋转、线性叠加和4项异常拒绝测试。回读GitHub Actions字节显示**实际提交计算程序SHA256=d315ea8a9501bdf5c7542c0b454809ef5b9db7f18e69515cb1ba6e946fd98571；真实16行CSV SHA256=6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205**，和本地数表原件吻合；[复算artifact #12955791247](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006693293/artifacts/12955791247) 已上传。前序[Actions #41006586176](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41006586176)也success，但其全仓checkout对2GB库不必要，已改成只下载两个小Git blob，新job无需大checkout。公式输出是ESM处理波的**线性单自由度方向谱**，不是158m塔架响应，绝不意味着仪器低频通带/设计目标谱/条款通过或Abaqus结果。S05仍HOLD，0/12阶段未晋级。
+
 ## 2026-10-30 13时 CST｜S05真实地震波三分量RotD 16周期计算（独立准备）
 
 本轮取回ESM原始Actions artifact #12884814391的32,040步SI三分量真实波，完成16周期×360水平转角的RotD00/50/100及竖向PSA数值表、已检真实双水平谱和4项异常输入拒绝测试；来源CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`。复算脚本/16行表/收据在[T079 13时过程日志](../../experiments/T079/PROCESS_LOG.md)。非嘉鱼正式设计波，无新增Abaqus E/WE，12阶段0/12未晋级。
