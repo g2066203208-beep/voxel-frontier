@@ -20,6 +20,9 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+
+**2026-10-31 00时S06新增真实NTM源级数据：** 18组NTM原始OUTB（3风速×6 seeds）全部SHA验证、100–700s×12001点×60通道，新增[1080行CSV](../experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv) SHA256=95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f、[18源SHA收据](../experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json)；[真实Actions #41087172683](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41087172683)两job成功，源级结果已回写Draft PR #42。**原始9测点不是31段，S06 PARTIAL/HOLD、S07/S10物理HOLD、12阶段0/12**。下一动作：追索18 NTM FST/ElastoDyn与31段原始同步输出身份；完整证据见[T077既有过程日志](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。
+
 **2026-10-30 18时S06→S10真实同步雨流已完成（NUMERIC ONLY）**：16/16历史真实ZIP由Actions重新下载并按原SHA验证，4 ETM×31段×12001时刻=1,488,124行，同一时刻Fz/Mx/My生成16周向×124站=**1,984行**毛截面名义应力雨流、**124行**控制表；372真实源载荷通道×m4/m10=744个数值与既有载荷DEL交叉验算，最大绝对差5.09e−10。真实[Actions #41040252054/job #124011001555](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41040252054/job/124011001555) completed/success，[1984行](../experiments/T077/recovery/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv) SHA256=16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b，[124行](../experiments/T077/recovery/S10_4CASE_31SEG_SYNC_GROSS_CONTROL_20261030.csv) SHA256=36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3，[源收据](../experiments/T077/recovery/S10_4CASE_31SEG_SYNC_GROSS_RECEIPT_20261030.json)均由Actions create-only提交PR #42。首次远端urllib重定向401失败保留，curl重试成功。原生Abaqus 0、真实材料寿命0，S10物理HOLD，**12阶段0/12未晋级**。下一责任：本机/网页协同核定同一截面风轴及有效PT/材料位置，继承该真实时程接口，推进分材料局部应力雨流，而非再算单通道DEL。
 
 
