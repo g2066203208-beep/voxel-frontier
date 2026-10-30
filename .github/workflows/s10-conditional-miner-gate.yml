@@ -204,7 +204,7 @@ jobs:
 
   s10-sync-real-16zip:
     name: Real archived 4case x31 x16 azimuth synchronized rainflow (NO Abaqus)
-    if: github.ref == 'refs/heads/research/t080-seismic-integration-gates-20261022' && contains(github.event.head_commit.message, '[S10-SYNC-REAL-ONCE]')
+    if: github.ref == 'refs/heads/research/t080-seismic-integration-gates-20261022' && contains(github.event.head_commit.message, '[S10-SYNC-REAL-RETRY]')
     runs-on: ubuntu-latest
     timeout-minutes: 18
     permissions:
@@ -242,10 +242,12 @@ jobs:
               prefix='T071' if r['case'].startswith('U09') else 'T072'
               name=f"{prefix}-{r['case']}-{r['batch']}.zip"
               url='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/actions/artifacts/'+r['artifact_id']+'/zip'
-              req=urllib.request.Request(url,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
-              with urllib.request.urlopen(req,timeout=120) as response:data=response.read()
+              target=Path('source-zips',name)
+              import subprocess
+              subprocess.run(['curl','-fLsS','--retry','3','-H','Authorization: Bearer '+os.environ['GH_TOKEN'],'-H','Accept: application/vnd.github+json',url,'-o',str(target)],check=True)
+              data=target.read_bytes()
               if hashlib.sha256(data).hexdigest()!=r['zip_sha256']:raise ValueError('ZIP_SHA:'+name)
-              Path('source-zips',name).write_bytes(data)
+              # file already written by curl
               print('REAL_ZIP_SOURCE',name,len(data),r['zip_sha256'])
           print('REAL_16_ARCHIVED_ZIP_SHA256_PASS')
           PY
