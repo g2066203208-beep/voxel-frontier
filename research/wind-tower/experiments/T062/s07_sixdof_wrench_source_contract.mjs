@@ -138,9 +138,83 @@ function frameSelfTest(){
   correct_mean_Mz_Nm:v.mean_M_SI[2],negative_rejections:rejected,physical_pass:false};
 }
 
+
+// v3.5.3 source-identity gate (SOURCE ONLY, never an Abaqus load prescription).
+// OpenFAST/openfast tag v3.5.3: ElastoDyn.f90 Git blob 2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1
+// L937-943: TwHt#TPxi/yi/zi and RPxi/yi/zi (RP in deg, NOT Euler angles).
+// L1169-1206: TwHt#FL/ML are section resultants, include gravity/inertia.
+// L6023-6034: local basis from SmllRotTrans, not nacelle-yaw axes.
+// NWTC_Num.f90 Git blob 2daf088cca20a91e559490749b99cb35f25f208b
+// L5378-5470: SmllRotTransD, source's closest-orthogonal small-angle matrix.
+// This is the SOURCE-level candidate only: RP output alone does not prove exact
+// recovery of CoordSys%t1/t2/t3; require independent native orientation comparison.
+const ED353_SOURCE={
+ tag:"v3.5.3",ed_blob:"2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1",
+ nwtc_blob:"2daf088cca20a91e559490749b99cb35f25f208b",
+ ed_lines:"937-943;1169-1206;6023-6034",nwtc_lines:"5378-5470",
+ physical_pass:false
+};
+function smllRotTrans353(theta){
+ must(Array.isArray(theta)&&theta.length===3&&theta.every(Number.isFinite),"BAD_SMALL_ANGLE_VECTOR");
+ // Fortran checks EACH component >0.4 rad, and continues with a warning;
+ // this research gate rejects rather than silently using an unvalidated approximation.
+ must(theta.every(x=>Math.abs(x)<=0.4),"SMALL_ANGLE_SOURCE_LIMIT_EXCEEDED");
+ const [a,b,c]=theta,s2=a*a+b*b+c*c;
+ if(s2===0)return [[1,0,0],[0,1,0],[0,0,1]];
+ const root=Math.sqrt(1+s2),den=s2*root;
+ const ab=a*b*(root-1),ac=a*c*(root-1),bc=b*c*(root-1);
+ const R=[
+  [(a*a*root+b*b+c*c)/den,(c*s2+ab)/den,(-b*s2+ac)/den],
+  [(-c*s2+ab)/den,(a*a+b*b*root+c*c)/den,(a*s2+bc)/den],
+  [(b*s2+ac)/den,(-a*s2+bc)/den,(a*a+b*b+c*c*root)/den]
+ ];
+ checkRotation(R);return R;
+}
+function requiredED353Channels(g){
+ must(Number.isInteger(g)&&g>=1&&g<=9,"BAD_TOWER_GAGE_INDEX");
+ const p="TwHt"+g;
+ return [
+  ...["FLxt","FLyt","FLzt","MLxt","MLyt","MLzt"].map(s=>p+s),
+  ...["TPxi","TPyi","TPzi","RPxi","RPyi","RPzi"].map(s=>p+s)
+ ];
+}
+function nativeChannelGate(header,g){
+ must(Array.isArray(header)&&header.every(s=>typeof s==="string"),"BAD_NATIVE_HEADER");
+ must(new Set(header).size===header.length,"DUPLICATE_NATIVE_HEADER");
+ const req=requiredED353Channels(g),missing=req.filter(s=>!header.includes(s));
+ must(missing.length===0,"MISSING_NATIVE_POSITION_OR_ORIENTATION_"+missing.join("_"));
+ return {gage:g,required_channels:req.length,has_position:3,has_rotational_position:3,
+  force_moment_kind:"INTERNAL_SECTION_RESULTANTS_NOT_EXTERNAL_NODAL_LOADS",
+  local_frame:"DEFLECTED_TOWER_NOT_NACELLE_YAW",physical_pass:false};
+}
+function source353SelfTest(){
+ const I=smllRotTrans353([0,0,0]);approx(I.flat(),[1,0,0,0,1,0,0,0,1],1e-14);
+ const t=0.1,root=Math.sqrt(1+t*t),P=smllRotTrans353([0,0,t]);
+ approx(P.flat(),[1/root,t/root,0,-t/root,1/root,0,0,0,1],1e-12);
+ const Q=smllRotTrans353([0.17,-0.12,0.09]);const QT=tr(Q);
+ const prod=Q.map(row=>QT[0].map((_,j)=>dot(row,QT.map(x=>x[j]))));
+ approx(prod.flat(),[1,0,0,0,1,0,0,0,1],1e-12);
+ const one=nativeChannelGate(requiredED353Channels(1),1);
+ let rejected=0;
+ for(const fn of [
+  ()=>nativeChannelGate(requiredED353Channels(1).filter(s=>s!=="TwHt1RPzi"),1),
+  ()=>nativeChannelGate(requiredED353Channels(1).filter(s=>s!=="TwHt1TPxi"),1),
+  ()=>nativeChannelGate([...requiredED353Channels(1),"TwHt1FLxt"],1),
+  ()=>nativeChannelGate(requiredED353Channels(1),10),
+  ()=>smllRotTrans353([0.401,0,0]),
+  ()=>smllRotTrans353([NaN,0,0])
+ ]){try{fn()}catch{rejected++}}
+ must(rejected===6,"SOURCE353_NEGATIVE_TEST_FAILED");
+ return {source:ED353_SOURCE,one_axis_theta_rad:t,passive_transform_P12:P[0][1],
+  active_candidate_local_to_global_Fy_for_100N:100*tr(P)[1][0],
+  multiaxis_orthogonality_checked:true,required_channels_per_gage:one.required_channels,
+  negative_rejections:rejected,physical_pass:false};
+}
+
 function sha(s){return crypto.createHash("sha256").update(s).digest("hex")}
 function main(){
  const a=process.argv.slice(2);
+ if(a.includes("--source-gate")){console.log("S07_ED353_SOURCE_GATE_PASS "+JSON.stringify(source353SelfTest()));return}
  if(a.includes("--self-test")){console.log("S07_SELFTEST_PASS "+JSON.stringify({...selfTest(),frame_test:frameSelfTest()}));return}
  const get=k=>{const i=a.indexOf(k);must(i>=0&&i+1<a.length,"MISSING_ARG_"+k);return a[i+1]};
  if(a.includes("--frame-gate")){const bytes=fs.readFileSync(get("--mean-csv"));must(sha(bytes)===MEAN_SHA,"MEAN_SOURCE_SHA256_MISMATCH");console.log("S07_REAL_MEAN_FRAME_HOLD "+JSON.stringify({...meanGate(bytes.toString("utf8")),frame_test:frameSelfTest()}));return}
