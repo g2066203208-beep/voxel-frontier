@@ -830,3 +830,7 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **REF/STANDARD/OFFICIAL**：REF=Huang2025 Eq.(1)名义截面应力、Kenna2019局部应变及T079逐图方法表；STANDARD=无新授权IEC2025/GB/NB原页，不能规范PASS；OFFICIAL=真实INP静态材料、实例、元素标签及原OpenFAST派生时程收据，不等于原生积分点。
 - **FIG/TAB/误差**：FIG=无虚构Abaqus应力云图；TAB=372行逐控制量、段号、方位、混凝土/HRB400候选元素、轴向与角度差、T057 HRB335材料身份，所有`odb_ip/local_stress/local_over_gross`为空且标HOLD。CSV gap输出六位小数引入<5e-7m舍入；源CSV本身已有限精度；**局部应力、应力方向、坐标R(t)、PT/接缝/重力惯性所有权的误差无界**。4案×3控制量的极值并不同步，不能组合为一个真实载荷向量；18NTM九站仍仅0.07–2.75m且全属CSEG01，不可映射31段。
 - **PASS/HOLD**：源级空间错配数值检查`NUMERIC_QC_PASS`，Abaqus原生局部材料应力`HOLD`，S10整阶段HOLD，12阶段0/12、E/WE原生0；T057/T070冻结母本未改，Draft PR #42不合并。**下一唯一最优动作**：从既有D400 PE INP原字节解析每段**中部质心层×0/90/180/270°**的真实单元标签与方位坐标，替换旧最低/最高层错配候选，并保留源SHA和独立负向测试；无需运行Abaqus生产求解。
+
+### 2026-10-31 16:12｜S10源级空间绑定新GitHub Actions原生Node验证完成（覆盖16时CI待回读）
+- **RUN/原生软件实际日志级别**：[Actions #41183531634](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41183531634)、[job #124485674985](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41183531634/job/124485674985)均已远端API核实`completed/success`，关键步骤`S10 4ETM x31 segment gross-to-Abaqus source element spatial binding, negative and exact regeneration tests`为`completed/success`，包括`node s10_etm31_native_element_spatial_binding.cjs --self-test --check`、5个SHA256源锁、6项负向输入拒绝及372行CSV/JSON逐字节再生比对。其他原有S06/S07轻量步骤亦全部成功。**原始job stdout日志下载端点本轮GitHub连接器拒绝，故没有声称取得stdout全文；可直接查Actions job页面的步骤和原生输出。**
+- **验收边界**：`SOURCE_NUMERIC_QC_PASS`，**不是Abaqus/材料物理PASS**；实际原生Abaqus ODB积分点/Pe/接缝/局部放大系数仍0，12阶段0/12、E/WE原生0。下一单项仍是D400 PE INP中部轴向质心四方位真实标签提取，不重复源级空间差的计算。
