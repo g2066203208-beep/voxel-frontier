@@ -54,7 +54,7 @@ def columns(h):
  a={norm(v):k for k,v in h.items()}
  def get(*names):
   for s in names:
-   if norm(s) in a:return a[norm(s)]
+   if norm(s) and norm(s) in a:return a[norm(s)]
   return None
  c={}
  c["hub"]=get("U_hub","Uhub","HubHtSpeed","hub_speed","hubwindspeed","wind_speed_hub","U161","WS161","Uhub_mps","hub_height_speed")
@@ -78,6 +78,7 @@ def hubcalc(a,b):
  return b*(HUB/100)**(math.log(b/a)/math.log(10)),False
 def tests():
  assert idx("AA1")==26 and norm("Wind Speed 10m")=="windspeed10m"
+ assert columns({0:"时间（UTC）",1:"年",2:"数据来源文件",5:"10 m U风速分量（m/s）",6:"10 m V风速分量（m/s）",9:"100 m U风速分量（m/s）",10:"100 m V风速分量（m/s）"})["time"]==0
  assert gettime("2005-01-01 00:00:00")==D.datetime(2005,1,1)
  assert gettime(38353)==D.datetime(2005,1,1)
  assert abs(hubcalc(4,5)[0]-5*(HUB/100)**(math.log(1.25)/math.log(10)))<1e-12
