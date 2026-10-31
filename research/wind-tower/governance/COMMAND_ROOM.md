@@ -598,3 +598,6 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 - 禁止扩大解释：没有158m结构E/WE原生响应、接缝、PT、31段内力和抗震验算图，**0/12未晋级**；本次绘图是source QC，不是场址/物理PASS。
 - 下一单项：恢复并直接读取ESM 32,040点三分量加速度SI时程，生成完整原波/处理记录时程图并对源SHA与单位进行核验；结构类图必须以原生ODB为依据。
 - SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB和误差约束见T079/PROCESS_LOG同日期条目。冻结T057/T070不动，PR #42保持Draft。
+
+### HANDOFF-20261031-13-S08-3COMP-REAL-ACC-FIG-START
+- **START / 2026-10-31 13时 CST / 自动研究任务**：main=\`58c1e545f67b645417d5957189f5dad693d975bb\`，PR #42=Open/Draft，read_base_sha=\`95634ca4a4259f77cc7f09afbe1c233cd7092ca5\`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG、T080.1/.2/.3、12阶段计划、本指挥室当前/12时交接；实际下载历史[ESM源artifact #12884814391](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979/artifacts/12884814391)，本地ZIP SHA256=\`40dcb0d8ad6aa3ce1be4cd96e633d1aa266f3764c85be556e1a029c682c908d6\`，内含32,040×3点SI源CSV SHA256=\`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34\`，原始Arias三行CSV可用。继承12时两幅源谱图和六图组，不重复谱图/S01小审查；本轮仅新作**完整三分量真实加速度时程的学术图（全程+强震段，极值保真）**、可运行无外部依赖的SHA锁定复算脚本与真实数值测试，更新既有T079过程、论文状态、指挥室及图表计划。禁止称嘉鱼设计波、E/WE结构响应或Abaqus PASS；不改冻结T057/T070、main，不合并PR、不跑昂贵生产。
