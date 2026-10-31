@@ -103,14 +103,19 @@ jobs:
           PY
           child="$RUNNER_TEMP/s01_d400_candidate/S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp"
           python "$root/s10_d400_midplane_azimuth_gate.py" --self-test
+          # Never write into an already tracked output while validating; fail closed
+          # on temporary new paths, then replace only after all checks succeed.
+          work="$RUNNER_TEMP/s10_midplane"
+          mkdir -p "$work"
           python "$root/s10_d400_midplane_azimuth_gate.py" \
             --inp "$child" \
             --source-map "$root/S10_D400_PE_68PART_INP_METADATA_20261028.csv" \
-            --out "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv" \
-            --receipt "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"
+            --out "$work/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv" \
+            --receipt "$work/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"
           python - <<'PY'
           import csv, hashlib, json, pathlib
-          p=pathlib.Path("research/wind-tower/experiments/T077/recovery")
+          import os
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"s10_midplane"
           c=p/"S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv"
           j=p/"S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"
           r=list(csv.DictReader(c.open()))
@@ -122,6 +127,8 @@ jobs:
           assert hashlib.sha256(c.read_bytes()).hexdigest()==m['output_sha256']
           print('S10_248_MIDPLANE_REAL_INP_SOURCE_ROWS_SHA_AND_NO_ODB_PASS')
           PY
+          cp "$work/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv" "$root/"
+          cp "$work/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json" "$root/"
           sha256sum "$child" "$root/s10_d400_midplane_azimuth_gate.py" \
             "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv" \
             "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"

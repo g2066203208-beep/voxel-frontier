@@ -843,3 +843,7 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 ### 2026-10-31 17:10｜真实CI失败与模型分支身份修复（保留原始失败）
 - **真实失败RUN**：[Actions #41187517273/job #124497347216](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187517273/job/124497347216) 前两步T057→几何62行→D400 Pe独立诊断生成均成功，新增S10步骤合成1通过+6项负向拒绝通过，随后报`ValueError: D400_INP_SHA256_MISMATCH`。**原因已核实为模型分支选错**：既有S01生成器输出SHA256=`0965b234b948178b486389550594425c9959ef9ccf5fbd69522485ec9c662217`，但2026-10-28 D400 68-part地图实际对应**uniform HRB400 hoop/tie + G1子版**SHA256=`22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a`，不能混用。这是模型身份门禁有效拒绝，**不是物理求解失败**。
 - **纠正**：不改任何冻结源/模型；在原CI临时目录顺序调用已有已SHA锁定`s01_d400_pe_g1_instrument.instrument`（0965→4c84）和`s01_d400_uniform_pe_repro_min.make`（4c84→22c），逐步assert原始子版SHA；再用22c真实INP和匹配地图提取中层。修改既有workflow而非新建T080小审查。新CI结果**尚未回读**，248行暂不称完成。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB/误差边界沿用本轮17时节；原生E/WE=0、12阶段0/12。
+
+### 2026-10-31 17:13｜第二次真实CI失败：重复源文件防覆盖门禁，已修复执行目录
+- [Actions #41187749548/job #124498013033](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187749548/job/124498013033)真实failure：0965→4c84→22c逐SHA源分支重现已通过，S10 1合成+6负向自测通过；**失败于`REFUSE_OVERWRITE`**，原因第一轮成功的248行CSV/JSON已经在PR分支受版本控制，第二轮脚本仍直接写入受保护的仓库文件路径。这是输出安全门禁正常拒绝，**非源数据或物理模型失败**。
+- 修复既有CI：始终先在全新`RUNNER_TEMP/s10_midplane`路径生成并校验248行、SHA、无ODB字段，再复制到原有仓库路径并提交；保留程序自身`REFUSE_OVERWRITE`，绝不降低防覆盖约束。已更新SOURCE/脚本记录，重试真实CI，暂不称第二轮成功。12阶段0/12、E/WE=0，未改冻结母本。
