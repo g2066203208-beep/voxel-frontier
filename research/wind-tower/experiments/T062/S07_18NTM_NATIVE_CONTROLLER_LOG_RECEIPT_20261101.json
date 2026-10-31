@@ -1,7 +1,7 @@
 {
   "FIG": "none",
-  "HOLD": "All 18 per-case libdiscon.dll excluded-format without SHA; reference DLL SHA verified but equality/runtime identity unproven; no controller executable version, BTS or IEC compliance",
-  "OFFICIAL": "Archived native OpenFAST/ServoDyn textual logs; distinct reference DLL not proven identical to original case runtime DLL",
+  "HOLD": "All 18 original stdout logs explicitly print ROSCO-v2.6.0 and legacy Bladed DLL interface; 18 per-case libdiscon.dll remain excluded-format without SHA; distinct reference DLL SHA verified but runtime binary equality and exact build unproven; BTS and IEC compliance unresolved",
+  "OFFICIAL": "18 original OpenFAST stdout logs print Running ROSCO-v2.6.0; separate reference DLL not proven identical to original per-case runtime binary",
   "REF": "T062 original FST/ServoDyn/TurbSim audit; T077 S07 A-case static DLL/ABI receipt; no new journal fulltext",
   "RUN": "Python3 stdlib SHA/ZIP text parser only; no OpenFAST/TurbSim/Abaqus native production run",
   "SOURCE": "Original 18 NTM OpenFAST .SrvD.sum and openfast_stdout.log ZIP members, pinned static manifest; separate repository reference controller DLL",
@@ -1643,7 +1643,7 @@
     "nominal_bytes_each": 1122431,
     "original_sha256_available": 0
   },
-  "output_csv_sha256": "8104e20310ffaae5b68433ff2cf8b8c0bde61dcfd5102f49691e21bd8b0ad7af",
+  "output_csv_sha256": "46667b0a0d01467b7a0635c203db83e880dd26f67f663cfaf7ea82f760f881e1",
   "physical_pass": false,
   "reference_dll_bytes": 1122431,
   "source_logs_verified": 36,
@@ -1651,6 +1651,8 @@
   "stages_passed": 0,
   "summary": {
     "formal_dlc12_reuse_approved": 0,
+    "native_stdout_legacy_bladed_interface": 18,
+    "native_stdout_rosco_v2_6_0_banners": 18,
     "runtime_dll_sha_verified": 0,
     "srvd_controller_hits": 450,
     "stdout_controller_hits": 108,
