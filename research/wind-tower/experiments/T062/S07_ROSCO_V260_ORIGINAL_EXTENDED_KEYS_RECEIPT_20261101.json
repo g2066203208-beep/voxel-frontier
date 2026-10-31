@@ -1,13 +1,13 @@
 {
   "FIG": "none",
   "HOLD": "Original 18 per-case BTS/DLL SHA not recovered, controller internal state not recorded, IEC2025 clauses and S01-S04 physics not passed",
-  "OFFICIAL": "NatLabRockies/ROSCO v2.6.0 tag 51629665d22f92770f861daeebcebd47ab32abb1, ROSCO/rosco_registry/rosco_types.yaml",
+  "OFFICIAL": "NatLabRockies/ROSCO v2.6.0 tag 51629665d22f92770f861daeebcebd47ab32abb1; executable Controllers.f90 lines 190/213, ReadSetParameters.f90 lines 628-631, ControllerBlocks.f90 lines 238+, compared against rosco_types.yaml registry",
   "REF": "ROSCO v2.6.0 tagged registry semantics, previously SHA-pinned; no new journal full text",
   "RUN": "Python original ZIP read + SHA256 and conditional source-parameter validation; NO OpenFAST/Abaqus/fe-safe run",
   "SOURCE": "Original 17,600-byte DISCON.IN member read by make() and SHA256 verified; historical 18-row OUTB-derived source table regenerated in same invocation",
   "STANDARD": "IEC 61400-1/6:2025 authorized DLC1.2 clauses not read",
   "TAB": "9-key original DISCON supplement, not duplicate 18-case source table",
-  "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. Registry VS_GenEff is a fraction [-]; source values >1 are preserved verbatim as SEMANTIC_HOLD and NOT divided by 100. VS_TSRopt registry unit wording is retained, not independently certified.",
+  "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. VS_GenEff source=100 is percentage as used by Controllers.f90 /100; WE_Mode=2 is EKF in ControllerBlocks.f90. Registry descriptions are inconsistent with executable source and documented separately. VS_TSRopt registry unit wording is retained, not independently certified.",
   "error_budget": "Original DISCON bytes/SHA exact; output CSV deterministic; floating group means have roundoff ~1e-14 relative plus previously documented packed-OUTB uncertainty; internal state/closed-loop dynamics and DLL binary uncertainty NOT ESTIMATED",
   "formal_dlc12_approved": 0,
   "input_sha256": {
@@ -19,8 +19,25 @@
     "supplement_manifest": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392"
   },
   "native_earthquake_results": 0,
-  "negative_tests": "parser rejects duplicate, malformed, insufficient keys; extended validator rejects non-scalar, invalid modes, efficiency outside (0,1], nonpositive speed, absent key never filled with zero",
+  "negative_tests": "parser rejects duplicate, malformed, insufficient keys; extended validator rejects non-scalar, WE_Mode outside {0,1,2}, SS_Mode outside {0,1}, VS_GenEff outside (0,100] percent, nonpositive speed; absent key never filled with zero",
+  "official_executable_sha256": {
+    "ControllerBlocks.f90": "136744e014f31bf95d8fe6b82c07c139ec647264a65a2319152881b1cebf00e4",
+    "Controllers.f90": "ded8d2b5ffbf4f0472ed400fc0ad5e178dd771aaf16c1b1d3ed74a190821b62d",
+    "ReadSetParameters.f90": "0a0da7452a02c85b56a4c1dfea2e8cb1cb32523e4514499c9da5e6373ceea584"
+  },
   "official_registry_sha256_previous_read": "c83eb68cadccbbf9a2084cc14c9dc94f6731304179b6ffad30aa1d4df4b63b4c",
+  "official_registry_vs_executable_conflicts": [
+    {
+      "parameter": "VS_GenEff",
+      "registry": "efficiency fraction [-]",
+      "source": "Controllers.f90 lines 190/213 use VS_GenEff/100.0; DISCON=100 percent"
+    },
+    {
+      "parameter": "WE_Mode",
+      "registry": "0 or 1",
+      "source": "ReadSetParameters.f90 lines 628-631 allow 0,1,2; ControllerBlocks.f90 lines 238+ implement EKF mode 2"
+    }
+  ],
   "operating_band_diagnostics": {
     "11.400000": {
       "mean_gen_speed_over_vs_reference": 0.9915421674301245,
@@ -45,30 +62,12 @@
     }
   },
   "original_discon_bytes": 17600,
-  "output_csv_sha256": "a9f175a383b17e75521d89c964618cac74707e73032791c1285b67812980d9af",
-  "parameters_absent": [
-    "VS_GenEff",
-    "WE_Mode"
-  ],
+  "output_csv_sha256": "8c53f3f320b98459966d34f4046f51d77444ff158e0216b93bfcf8d6203142fd",
+  "parameters_absent": [],
   "parameters_present": 9,
   "physical_pass": false,
-  "semantic_holds": [
-    {
-      "parameter": "VS_GenEff",
-      "raw_value": "100.0000000000",
-      "reason": "Original source exceeds v2.6.0 fraction definition; unit/identity unresolved",
-      "registry_expected": "0 < efficiency <= 1",
-      "source_line": 62
-    },
-    {
-      "parameter": "WE_Mode",
-      "raw_value": "2",
-      "reason": "Original value not listed by official v2.6.0 registry",
-      "registry_expected": "0 or 1",
-      "source_line": 15
-    }
-  ],
-  "semantic_validation_pass": false,
+  "semantic_holds": [],
+  "semantic_validation_pass": true,
   "source_reading_level": "Original DISCON bytes; existing 18 OUTB summaries cross-checked, original 18 OUTB binaries not reread",
   "stages_passed": 0
 }
