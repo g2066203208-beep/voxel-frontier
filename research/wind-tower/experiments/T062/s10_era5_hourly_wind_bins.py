@@ -161,7 +161,7 @@ def main():
   print("ERA5_SOURCE_NUMERIC_PASS",json.dumps({k:q[k] for k in ("sheet","n_hours","mean_mps","p95_mps","max_mps","operating_probability","output_sha256")}))
  except Exception as e:
   q["source_numeric_qc"]="HOLD";q["error"]=type(e).__name__+": "+str(e)
-  print("ERA5_SOURCE_HOLD",q["error"],json.dumps(q.get("sheet_samples",{}),ensure_ascii=False)[:6500],file=sys.stderr)
+  print("ERA5_SOURCE_HOLD",q["error"],"DIAGNOSTICS",json.dumps({k:q.get(k) for k in ("n_hours","time_parsed","time_unparsed","time_gaps_or_reverse","time_duplicates","first_utc","last_utc","columns","fallback_hours")},ensure_ascii=False),"SAMPLES",json.dumps(q.get("sheet_samples",{}),ensure_ascii=False)[:1600],file=sys.stderr)
   raise
  finally:rec.write_text(json.dumps(q,ensure_ascii=False,sort_keys=True,indent=2)+"\n",encoding="utf-8")
 if __name__=="__main__":main()
