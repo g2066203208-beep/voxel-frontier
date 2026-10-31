@@ -1,0 +1,222 @@
+{
+  "stage": "S07_S10_REAL_T100_CSEG01_SOURCE_FRAME_GEOMETRY_QC_NOT_PHYSICS_PASS",
+  "SOURCE": {
+    "original_ETM_outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
+    "original_FST_sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "original_ED_input_sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+    "official_ED_v353_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+    "source_DCM_receipt_git_blob": "e3149c26a66adb184b5c5803b4ace5f7b70b6dff",
+    "corrected_element_csv_sha256": "bae37eeb07144db0f26c25a60a0698f4073ea878941e565c03e24154af17888f",
+    "source_Abaqus_INP_sha256": "22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a",
+    "reading_level": "This turn reads complete previously native-derived 9-gage t100 source receipt and 248 original-INP-derived element CSV, NOT original OUTB or INP bytes"
+  },
+  "REF": "OpenFAST v3.5.3 ElastoDyn.f90 L937-943,1704-1717,6004-6034,6856-6860; T077 source DCM 2026-10-28 and 248 real centroids 2026-10-31",
+  "STANDARD": "No newly read authorized IEC2025/GB/NB clauses; 0.08m is only source diagnostic",
+  "OFFICIAL": "Original source-verified fixed-base DCM and original-INP-derived C3D8R centroids, not independent native TowerLn2Mesh dump/ODB",
+  "RUN": "JavaScript V8 real-source numeric test and 6 negative mutations, no new native OpenFAST/Abaqus solver",
+  "FIG": "none",
+  "TAB": "9 real RP/DCM/force samples and 8 CSEG01 source element projections",
+  "stats": {
+    "real_time_s": 100,
+    "real_gages": 9,
+    "inherited_full_series_DCM_count": 108009,
+    "max_source_vs_candidate_matrix_delta": 0,
+    "max_DCM_orthogonality_abs": 2.220446049250313e-16,
+    "max_real_force_reconstruction_error_kN": 1.1368683772161603e-13,
+    "max_real_RP_norm_deg": 0.004468774319958004,
+    "nearest_gage": 6,
+    "nearest_node": 13,
+    "gage_to_CSEG01_centroid_gap_m": 0.056607197857142744,
+    "projected_elements": 8,
+    "max_projected_az_drift_deg": 1.0375288184150122e-8,
+    "max_vertical_tilt_mm": 0.18185350064544614,
+    "max_projected_radius_change_mm": 0.000004081653237619776
+  },
+  "frame_samples": [
+    {
+      "gage": 1,
+      "RP_deg": [
+        -0.000015695125195227183,
+        0.00008505265159567877,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 1.1368683772161603e-13
+    },
+    {
+      "gage": 2,
+      "RP_deg": [
+        -0.0000770176684842843,
+        0.0004411348063222981,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 1.1368683772161603e-13
+    },
+    {
+      "gage": 3,
+      "RP_deg": [
+        -0.0001360259233490146,
+        0.0008223088681176666,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 0
+    },
+    {
+      "gage": 4,
+      "RP_deg": [
+        -0.0001927527520977609,
+        0.0012281725769949824,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 0
+    },
+    {
+      "gage": 5,
+      "RP_deg": [
+        -0.0002472369426514189,
+        0.0016582176819992438,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 1.1368683772161603e-13
+    },
+    {
+      "gage": 6,
+      "RP_deg": [
+        -0.0003496298336202794,
+        0.00258969192594202,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 1.7763568394002505e-15
+    },
+    {
+      "gage": 7,
+      "RP_deg": [
+        -0.0003975817071549661,
+        0.0030901957064134494,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 0
+    },
+    {
+      "gage": 8,
+      "RP_deg": [
+        -0.00044344527091276184,
+        0.0036134159216882414,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 0
+    },
+    {
+      "gage": 9,
+      "RP_deg": [
+        -0.0005083308034571741,
+        0.00443976843055724,
+        0
+      ],
+      "max_candidate_matrix_delta": 0,
+      "global_force_reconstruction_max_abs_kN": 0
+    }
+  ],
+  "projected_CSEG01_elements": [
+    {
+      "layer": "INNER",
+      "target_az_deg": 0,
+      "element_label": 429,
+      "initial_az_deg": 357.49999999437983,
+      "projected_global_az_deg": 357.49999998400455,
+      "projected_az_drift_deg": -1.0375288184150122e-8,
+      "vertical_tilt_mm": -0.17557495739599596,
+      "radial_projection_delta_mm": -0.0000039407326291041045
+    },
+    {
+      "layer": "INNER",
+      "target_az_deg": 90,
+      "element_label": 105,
+      "initial_az_deg": 87.49999999437983,
+      "projected_global_az_deg": 87.50000000475507,
+      "projected_az_drift_deg": 1.0375288184150122e-8,
+      "vertical_tilt_mm": -0.0315558486697364,
+      "radial_projection_delta_mm": -1.2729550746826135e-7
+    },
+    {
+      "layer": "INNER",
+      "target_az_deg": 180,
+      "element_label": 213,
+      "initial_az_deg": 177.49999999437978,
+      "projected_global_az_deg": 177.4999999840045,
+      "projected_az_drift_deg": -1.0375288184150122e-8,
+      "vertical_tilt_mm": 0.17557495739599596,
+      "radial_projection_delta_mm": -0.0000039407326291041045
+    },
+    {
+      "layer": "INNER",
+      "target_az_deg": 270,
+      "element_label": 321,
+      "initial_az_deg": 267.4999999943798,
+      "projected_global_az_deg": 267.50000000475507,
+      "projected_az_drift_deg": 1.0375288184150122e-8,
+      "vertical_tilt_mm": 0.0315558486697364,
+      "radial_projection_delta_mm": -1.2729550746826135e-7
+    },
+    {
+      "layer": "OUTER",
+      "target_az_deg": 0,
+      "element_label": 430,
+      "initial_az_deg": 357.50000001731445,
+      "projected_global_az_deg": 357.50000000693916,
+      "projected_az_drift_deg": -1.0375288184150122e-8,
+      "vertical_tilt_mm": -0.18185350064544614,
+      "radial_projection_delta_mm": -0.000004081653237619776
+    },
+    {
+      "layer": "OUTER",
+      "target_az_deg": 90,
+      "element_label": 106,
+      "initial_az_deg": 87.50000001731445,
+      "projected_global_az_deg": 87.50000002768968,
+      "projected_az_drift_deg": 1.0375288184150122e-8,
+      "vertical_tilt_mm": -0.0326842826468308,
+      "radial_projection_delta_mm": -1.318474218692245e-7
+    },
+    {
+      "layer": "OUTER",
+      "target_az_deg": 180,
+      "element_label": 214,
+      "initial_az_deg": 177.5000000173145,
+      "projected_global_az_deg": 177.50000000693922,
+      "projected_az_drift_deg": -1.0375288184150122e-8,
+      "vertical_tilt_mm": 0.18185350064544614,
+      "radial_projection_delta_mm": -0.000004081653237619776
+    },
+    {
+      "layer": "OUTER",
+      "target_az_deg": 270,
+      "element_label": 328,
+      "initial_az_deg": 272.49999998268555,
+      "projected_global_az_deg": 272.499999988053,
+      "projected_az_drift_deg": 5.367382982512936e-9,
+      "vertical_tilt_mm": 0.016710332274902744,
+      "radial_projection_delta_mm": -3.446398721962396e-8
+    }
+  ],
+  "assumptions": [
+    "Abaqus undeformed vertical y and radial x/z; OpenFAST vertical z, conditional proper mapping [xA,yA,zA]=[xOF,zOF,-yOF]",
+    "All 6 platform DOFs false as verified in 2026-10-28 original ED input; RP inverse is source-derived not independent native mesh export",
+    "Nearest source gage6 z≈1.7634m approximates CSEG01 source centroid y≈1.8200m; no interpolation of true DCM",
+    "Projection of rotated radius into global x/z is NOT local strain, ODB deformation or actual stress"
+  ],
+  "error_budget": "Source RP packing uncertainty inherited from T077; 2.5deg static mesh azimuth sampling, ~0.0566m gage-centroid height gap; unbounded spatial gradient, yaw, local stress, PT/contact and load ownership",
+  "failure": "6 bad-source mutation rejections required; no native solver run or new standards",
+  "HOLD": "Independent native TowerLn2Mesh orientation dump and Abaqus initial datum/ODB stress still unavailable; only fixed-base source/conditional static-axis interface is numerically tested",
+  "physical_pass": false,
+  "native_E_WE": 0,
+  "formal_stage_pass": "0/12",
+  "negative_source_rejections": 6
+}

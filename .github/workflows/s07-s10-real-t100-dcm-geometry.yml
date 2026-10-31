@@ -1,0 +1,37 @@
+name: S07/S10 real t100 source DCM to Abaqus CSEG01 geometry (NO solver)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s07-s10-real-t100-dcm-geometry.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s07_s10_real_t100_dcm_abaqus_alignment.cjs'
+      - 'research/wind-tower/experiments/T077/recovery/S07_S10_REAL_T100_CSEG01_DCM_ABAQUS_ALIGNMENT_20261031.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-source-numeric-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch 4 exact PR commit source files without large repository checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments"
+          mkdir -p research/wind-tower/experiments/T077/recovery research/wind-tower/experiments/T062
+          for f in s07_s10_real_t100_dcm_abaqus_alignment.cjs S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json S10_31SEG_4AZ_2RAD_HANDEDNESS_CORRECTED_CANDIDATES_20261031.csv S07_S10_REAL_T100_CSEG01_DCM_ABAQUS_ALIGNMENT_20261031.json; do
+            curl -fLsS --retry 3 "$base/T077/recovery/$f" -o "research/wind-tower/experiments/T077/recovery/$f"
+          done
+          curl -fLsS --retry 3 "$base/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json" -o research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+      - name: Node 20 real-source 9 DCM x 8 centroids, six negative mutations, byte-exact receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          node --version
+          node --check s07_s10_real_t100_dcm_abaqus_alignment.cjs
+          node s07_s10_real_t100_dcm_abaqus_alignment.cjs --check | tee s07_s10_real_t100_stdout.log
+          grep -q S07_S10_REAL_T100_SOURCE_QC_PASS s07_s10_real_t100_stdout.log
+          sha256sum s07_s10_real_t100_dcm_abaqus_alignment.cjs S07_S10_REAL_T100_CSEG01_DCM_ABAQUS_ALIGNMENT_20261031.json S07_V353_FIXED_BASE_FRAME_RECEIPT_20261028.json S10_31SEG_4AZ_2RAD_HANDEDNESS_CORRECTED_CANDIDATES_20261031.csv ../../T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+          echo 'SOURCE/GEOMETRY QC ONLY; NOT INDEPENDENT NATIVE MESH ORIENTATION, NOT ABAQUS PHYSICS PASS.'
