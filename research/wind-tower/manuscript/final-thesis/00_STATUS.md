@@ -1,3 +1,6 @@
+## 2026-10-31 17:16｜S10 D400/Pe 31段中层四方位双径向层源元素直接提取完成（非物理PASS）
+[Actions #41187856002](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187856002)真实completed/success：SHA锁定的**22c uniform D400/Pe/G1**全INP（非0965混合诊断）直接解析节点、C3D8R连接及Instance，得到[248行31×4×2中层源元素标签与质心](../../experiments/T077/recovery/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv)及[可复算SHA/误差收据](../../experiments/T077/recovery/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json)；最大轴向偏差0.070048m、最大方位差2.500000107°，248/248均在自定0.1m源级排错阈值内，内外层最小径向间隔0.129876m。旧372行低/高层绑定保留为失败证据、不得再用于局部应力放大。首次[41187517273](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187517273)因模型SHA身份冲突失败，第二次[41187749548](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187749548)因防覆盖拒绝失败，最终修复后1合成+6负向拒绝及源输出SHA逐字节核验通过。**ODB局部材料应力仍0，PT/contact未原生平衡、规范专用条款未验收、地震E/WE原生0，12阶段0/12未晋级。** 下一唯一源级工作：将4 ETM×31段×3控制量正确绑定到这248个中层源元素（内外层都保留）。
+
 **2026-10-31 17:10真实失败留痕：** [Actions #41187517273](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187517273) 新S10中层解析在真实源SHA门禁拒绝（0965诊断与22c uniform D400地图不是同一子版），合成自测已通过；已更新既有workflow按0965→4c84→22c逐源SHA复现，待新CI验证。**无248行产物PASS，0/12不变。**
 
 ## 2026-10-31 17时｜S10中层混凝土单元四方位直接源级解析准备
