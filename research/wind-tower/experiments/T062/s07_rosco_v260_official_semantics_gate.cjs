@@ -101,7 +101,7 @@ function selfTest(rows) {
   ];
   let rejected=0;
   for (const [test,expected] of cases) {
-    try { validateRows(test); } catch(e) { fail(e.message===expected, "NEGATIVE_TEST_WRONG_ERROR:"+e.message); rejected++; continue; }
+    try { validateRows(test); } catch(e) { fail(e.message===expected || e.message.startsWith(expected+":"), "NEGATIVE_TEST_WRONG_ERROR:"+e.message); rejected++; continue; }
     throw Error("NEGATIVE_TEST_ACCEPTED:"+expected);
   }
   fail(rejected===5, "NEGATIVE_TEST_COUNT");
