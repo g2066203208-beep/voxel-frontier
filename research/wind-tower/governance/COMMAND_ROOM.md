@@ -640,3 +640,6 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-17-S10-D400-MIDPLANE-DIRECT-INP-START
 - **START / 2026-10-31 17时 CST / 自动研究**：main=58c1e545f67b645417d5957189f5dad693d975bb；PR #42 Open/Draft，read_base_sha=`74818c2b60755f2cab265c154aeaf51e92f14ae7`。已读AGENTS、README、论文00_STATUS/00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划及本指挥室16:12交接。继承16时已确认**372/372混凝土方位候选错位>0.1m**；已有S10_D400_PE_68PART_INP_METADATA_20261028.csv给出中层高度但没有该层实际方位/单元标签。本轮复用**既有S01 D400/Pe SHA锁定诊断INP生成CI**，在临时目录静态解析真实C3D8R单元与节点，针对31段×4方位保留内外两径向层，输出248条真正中层源单元坐标、轴向/角度差、源SHA及负向测试；不重复S01材料审查、ETM雨流、地震输入图；拟更新现有S01诊断workflow、T077源过程、00_STATUS、指挥室并自动持久化小CSV/JSON。**本提交只登记代码与待执行源级CI，绝不提前称248行实际完成。** 不改冻结T057/T070或main、不合并PR、不运行昂贵求解。
+
+### HANDOFF-20261031-17H10-S10-D400-MIDPLANE-FIRST-FAIL-AND-FIX
+- [Actions #41187517273/job #124497347216](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187517273/job/124497347216)实际failure；完整job日志已读取：S01 62行及0965诊断INP成功，S10自测PASS，源模型SHA门禁拒绝`0965 != 22c`。既有68-part map属于**22c uniform D400/Pe/G1**，不是0965混合环拉筋诊断。已在同一既有CI添加已有两个SHA锁定转换0965→4c84→22c，不改T057/T070，重试真实源级RUN；结果待回读，0/12/E/WE=0。

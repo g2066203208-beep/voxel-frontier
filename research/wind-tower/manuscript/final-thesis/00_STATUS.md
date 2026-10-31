@@ -1,3 +1,5 @@
+**2026-10-31 17:10真实失败留痕：** [Actions #41187517273](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41187517273) 新S10中层解析在真实源SHA门禁拒绝（0965诊断与22c uniform D400地图不是同一子版），合成自测已通过；已更新既有workflow按0965→4c84→22c逐源SHA复现，待新CI验证。**无248行产物PASS，0/12不变。**
+
 ## 2026-10-31 17时｜S10中层混凝土单元四方位直接源级解析准备
 复用既有D400/Pe SHA锁定静态INP生成器及已有68部件元数据，新增[中层31段×4方位×内外双径向层直接提取脚本](../../experiments/T077/recovery/s10_d400_midplane_azimuth_gate.py)，接入既有S01诊断CI。目标解决16时发现的372/372低/高层混凝土候选轴向>0.1m错位；**本次代码提交时尚未取得CI实际输出，不称248行PASS**。源哈希、方法、失败及误差边界见[T077 17时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。原生ODB积分点/材料应力仍无，12阶段0/12，E/WE=0；T057/T070不改。
 

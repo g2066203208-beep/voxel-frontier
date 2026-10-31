@@ -81,7 +81,27 @@ jobs:
         run: |
           set -euo pipefail
           root="research/wind-tower/experiments/T077/recovery"
-          child="$RUNNER_TEMP/s01_d400_candidate/S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp"
+          # IMPORTANT: 0965... is a mixed-hoop/tie diagnostic, NOT the SHA-locked
+          # 22c... uniform D400/Pe/G1 child used to derive the 68-part map.
+          # Reproduce exact 0965 -> 4c84 (G1-only) -> 22c (uniform material refs).
+          python - <<'PY'
+          import hashlib, os, pathlib, sys
+          root=pathlib.Path("research/wind-tower/experiments/T077/recovery")
+          sys.path.insert(0,str(root.resolve()))
+          from s01_d400_pe_g1_instrument import instrument
+          from s01_d400_uniform_pe_repro_min import make
+          temp=pathlib.Path(os.environ["RUNNER_TEMP"])/"s01_d400_candidate"
+          source=temp/"S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp"
+          g1=instrument(source.read_bytes())
+          assert hashlib.sha256(g1).hexdigest()=="4c84c61ea07138428d4c0a8f742a9ab6e55725c49d16a94f5d9eaa8f7d9d3d29"
+          uniform=make(g1)
+          assert hashlib.sha256(uniform).hexdigest()=="22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a"
+          dest=temp/"S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp"
+          assert not dest.exists()
+          dest.write_bytes(uniform)
+          print("S10_EXACT_0965_TO_4C84_TO_22C_SOURCE_BRANCH_REPRODUCED",len(uniform))
+          PY
+          child="$RUNNER_TEMP/s01_d400_candidate/S01_D400_UNIFORM_REBAR_Pe_G1_PROVISIONAL_NOT_FROZEN.inp"
           python "$root/s10_d400_midplane_azimuth_gate.py" --self-test
           python "$root/s10_d400_midplane_azimuth_gate.py" \
             --inp "$child" \
