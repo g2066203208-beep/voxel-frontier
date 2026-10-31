@@ -1,14 +1,14 @@
 {
-  "SOURCE": "Direct D400/Pe diagnostic INP 68-part mesh + previously verified 68-part source map",
+  "SOURCE": "Direct 22c D400/Pe/G1 uniform-rebar diagnostic INP 68-part mesh + matching 68-part source map",
   "SOURCE_READING": "Full original D400/Pe INP bytes, SHA-locked; Abaqus element connectivity and node coordinate centroids parsed, no ODB",
   "source_model_sha256": "22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a",
   "source_map_sha256": "9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83",
-  "script_sha256": "d4506a62b3b480ccbc707deac82b7f3b4170742afc8d442bd67760e2c9ad1e63",
+  "script_sha256": "6181d90200d5b9b5f7004f415cc0ee4986f2604dc9d339e25cd1ee6397c32ef2",
   "output_sha256": "e0e74585c07d8db2d8300bc6a64b9bcb0c829cdba2f9e854e53153a0d5796ccc",
   "REF": "Kenna2019 local strain method; T079 29-row original figure-method matrix (method only)",
   "STANDARD": "No new authorized IEC/GB/NB clause; 0.08m and 5deg are numerical diagnostic gates, NOT standards",
   "OFFICIAL": "Abaqus source *Part/*Node/*Element C3D8R/*Instance; NOT native solver or ODB",
-  "RUN": "GitHub Actions Python 3.11 static full INP parse, source SHA and 6 synthetic/negative tests; no Abaqus",
+  "RUN": "GitHub Actions Python 3.11 static full INP parse, source SHA, 1 synthetic and 6 negative tests; no Abaqus",
   "FIG": "None; no fabricated stress contours",
   "TAB": "248 = 31 segments x 4 azimuths x 2 through-wall radial layers",
   "rows": 248,
@@ -33,6 +33,7 @@
     "Model local Y is tower axis, X/Z are circumferential; original OpenFAST-to-Abaqus axis orientation NOT independently certified",
     "C3D8R element centroid is arithmetic mean of eight node coordinates; not Gauss/integration point",
     "Outer and inner centroid layers are distinct; both retained to avoid fabricated hotspot selection",
+    "Uniform D400/Pe/G1 source changes hoop/tie material references but does not establish compliant detailing",
     "Prior wind-gage target comes from SHA-locked 68-part metadata"
   ],
   "error_budget": "Centroids use INP node float precision, output rounded 1e-9m/deg; axial and angular sampling gaps quantified; element size, stress extrapolation, local hotspot, PT/contact and frame physical errors NEED_NATIVE",
@@ -40,5 +41,5 @@
   "physical_pass": false,
   "seismic_native_runs": 0,
   "stage": "0/12",
-  "HOLD": "NO ODB IP / NO VALIDATED LOCAL MATERIAL STRESS; D400 diagnostic mixed hoop/tie grade; PT+gravity+contact equilibrium missing"
+  "HOLD": "NO ODB IP / NO VALIDATED LOCAL MATERIAL STRESS; D400 hoop/tie references are uniform HRB400 but detailing NOT certified; PT+gravity+contact equilibrium missing"
 }
