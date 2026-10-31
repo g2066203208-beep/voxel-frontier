@@ -1,0 +1,44 @@
+name: S07 ROSCO v2.6.0 official source and 18 NTM semantics QC (NO solver)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s07-rosco-v260-official-semantics-qc.yml'
+      - 'research/wind-tower/experiments/T062/s07_rosco_v260_official_semantics_gate.cjs'
+      - 'research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pinned-source-qc:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_rosco_v260_official_semantics_gate.cjs
+            research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv
+      - name: Download immutable ROSCO v2.6.0 tag-commit source files (no solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/rosco"
+          sha=51629665d22f92770f861daeebcebd47ab32abb1
+          for file in ROSCO/rosco_registry/rosco_types.yaml ROSCO/src/Controllers.f90 ROSCO/src/ControllerBlocks.f90 ROSCO/src/ReadSetParameters.f90; do
+            mkdir -p "$root/$(dirname "$file")"
+            curl -fLsS --retry 2 --max-time 45 "https://raw.githubusercontent.com/NatLabRockies/ROSCO/$sha/$file" -o "$root/$file"
+            sha256sum "$root/$file"
+          done
+      - name: Native Node syntax, pinned original SHA and five negative-input tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_rosco_v260_official_semantics_gate.cjs
+          node --version
+          node --check "$script"
+          node "$script" --repo-root . --rosco-root "$RUNNER_TEMP/rosco" --self-test
+          sha256sum "$script" research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv
+          echo 'S07_ROSCO_V260_SOURCE_SEMANTICS_QC_PASS_NOT_DLC12_NOT_NATIVE_ABAQUS'
