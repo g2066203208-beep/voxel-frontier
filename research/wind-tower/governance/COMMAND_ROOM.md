@@ -20,6 +20,9 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-31 10时 S07原始同步源恢复：** 已从5.14MB历史ETM原始ZIP重读SHA锁定OUTB，确认9个近塔底站×12001时刻=**108009个真实同步站点时刻**，每站均有FL/ML/TP/RP；历史收据3时刻原值逐通道校验，`RP`小转角候选R/R^T与参考点搬移完成代数QC。最大候选旋转力差5296.929N、R/R^T候选差10593.857N（均为候选轴系敏感性，**不是物理映射误差**）；[结果JSON](../experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json)、[可复算脚本](../experiments/T062/s07_original_etm_native_history_frame_qc.py)、[Actions #41159161911](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41159161911)已真实通过并入PR #42。**修正“没有同步RP”的过宽描述**：已有原始ETM九站同步RP/TP，但仍无31段全高度同态时程、RP与内部取向独立对照及截面内力→外载去重验收。S06 PARTIAL、S07 BLOCKED、12阶段0/12、E/WE原生0；不运行高成本求解。完整来源/误差/HOLD见[T077 10时](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**下一唯一动作**：独立核验`TowerLn2Mesh%Orientation`与RP候选的轴系符号/参考点，不把内力当独立外载。
+
+
 **2026-10-31 09时 S07源码级重大身份纠错：** 本轮直接读取OpenFAST v3.5.3 [ElastoDyn.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90)与[NWTC_Num.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/nwtc-library/src/NWTC_Num.f90)原始Fortran全文及SHA，定位局部塔架六分量内力、TP/RP及`SmllRotTrans`。**TwHt#FL/ML为含重力和惯性效应的截面内力，不是独立可直接施加于Abaqus的外部风载；RP角位置不应未经验证按Euler角解释。** 已更新[既有S07程序](../experiments/T062/s07_sixdof_wrench_source_contract.mjs)及轻量CI，V8同源合成数值测试：0.1rad矩阵`P12=0.09950371902099893`、100N旋转候选Fy=9.950371902099892N、6项负向输入拒绝；**尚无新增远端CI job结果/原生R(t)对照**。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、源码SHA、精确行号、误差/HOLD见[T077 09时过程](../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12、S06 PARTIAL、S07 BLOCKED、E/WE原生0；下一项单站0.1s RP/TP/六分量同步原生探针及独立姿态对照，禁止700s生产。**
 
 
@@ -565,3 +568,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-10-S07-ORIGINAL-ETM-OUTB-START
 - **START / 2026-10-31 10时 CST / 自动研究**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，read_base_sha=`32574cdea048f2582b6be122e687a10f8e304c28`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER（实际位于manuscript/final-thesis）、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、指挥室当前及09时交接、T077 09时日志。**新发现**：既有T062原始ETM OUTB收据（`S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json`）已明确保存9个塔架站的FL/ML/TP/RP/AL全同步原生输出（12001时刻），此前“没有任何真实同步RP”应限定为**尚无独立坐标取向验证/31段完整同步**，不能否定已恢复的9站RP。拟直接复用原始SHA锁定的5.14MB ETM ZIP、既有OUTB解码器及S07 v3.5.3数学候选，形成**原始12001×9站**逐时刻旋转候选与参考点搬移数值QC，保存小型摘要和三时刻复核；不冒称局部姿态独立验证或Abaqus外载映射。拟改：T062新增唯一可复算S07源级程序/摘要、现有轻量CI、T077过程日志、00_STATUS和本指挥室；不改T057/T070、不跑生产、不合并PR。
+
+
+### HANDOFF-20261031-10-S07-ORIGINAL-ETM-OUTB-END
+- **END / 2026-10-31 10时 CST / 自动研究**：继承本轮START，已实际读取原始ETM ZIP+OUTB全字节（SHA见T077 10时），复用既有T062原生解码器和OpenFAST v3.5.3官方源码，提交[S07原始同步源程序](../experiments/T062/s07_original_etm_native_history_frame_qc.py)、[108009站点时刻数值收据](../experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json)、既有轻量CI、T077日志及00_STATUS；[Actions #41159161911/job #124412609892](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41159161911) `completed/success`，原始日志确认自测、源级108009计算、故意损坏ZIP SHA拒绝和小型结果远端保存。源OUTB SHA=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`；脚本SHA256=`dfb61f12150930dfaccfab3488885afc7b6467b7b821ebb70e626943961c3906`；结果Git blob=`b458611c01479cb5cd8a20c25ccf00eb461291e6`；首批真实三时刻×两站数值亦经V8独立复算。状态`REAL_OUTB_MATH_QC_PASS_FRAME_AND_LOAD_OWNERSHIP_HOLD`，**非物理PASS**。12阶段0/12、S06 PARTIAL、S07 BLOCKED、E/WE原生0；没有新solver生产、没有新授权标准原文，不修改T057/T070/main、不合并PR。下一责任：S07独立`TowerLn2Mesh%Orientation`对照与力矩参考点所有权；原风致分材料疲劳和抗震约束优化主线不变。
