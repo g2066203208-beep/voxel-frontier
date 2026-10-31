@@ -93,6 +93,12 @@
       "raw": "1.570000000000",
       "tokens": 1
     },
+    "PC_MaxRat": {
+      "comment": "PC_MaxRat\t\t\t- Maximum pitch rate (in absolute value) in pitch controller, [rad/s].",
+      "line": 47,
+      "raw": "0.174530000000",
+      "tokens": 1
+    },
     "PC_MinPit": {
       "comment": "PC_MinPit\t\t\t- Minimum physical pitch limit, [rad].",
       "line": 46,
@@ -111,10 +117,28 @@
       "raw": "0.017450000000",
       "tokens": 1
     },
+    "SS_Mode": {
+      "comment": "SS_Mode           - Setpoint Smoother mode {0: no setpoint smoothing, 1: introduce setpoint smoothing}",
+      "line": 14,
+      "raw": "1",
+      "tokens": 1
+    },
     "VS_ControlMode": {
       "comment": "VS_ControlMode\t- Generator torque control mode in above rated conditions {0: constant torque, 1: constant power, 2: TSR tracking PI control with constant torque, 3: TSR tracking PI control with constant power}",
       "line": 11,
       "raw": "2",
+      "tokens": 1
+    },
+    "VS_GenEff": {
+      "comment": "VS_GenEff\t\t\t- Generator efficiency mechanical power -> electrical power, [should match the efficiency defined in the generator properties!], [%]",
+      "line": 62,
+      "raw": "100.0000000000",
+      "tokens": 1
+    },
+    "VS_MaxRat": {
+      "comment": "VS_MaxRat\t\t\t- Maximum torque rate (in absolute value) in torque controller, [Nm/s].",
+      "line": 64,
+      "raw": "1500000.000000",
       "tokens": 1
     },
     "VS_MaxTq": {
@@ -123,10 +147,22 @@
       "raw": "218838.0467500",
       "tokens": 1
     },
+    "VS_MinOMSpd": {
+      "comment": "VS_MinOMSpd\t\t- Minimum generator speed [rad/s]",
+      "line": 67,
+      "raw": "36.60000000000",
+      "tokens": 1
+    },
     "VS_MinTq": {
       "comment": "VS_MinTq\t\t\t- Minimum generator torque (HSS side), [Nm].",
       "line": 66,
       "raw": "0.000000000000",
+      "tokens": 1
+    },
+    "VS_RefSpd": {
+      "comment": "VS_RefSpd\t\t\t- Rated generator speed [rad/s]",
+      "line": 71,
+      "raw": "47.92601000000",
       "tokens": 1
     },
     "VS_Rgn2K": {
@@ -147,6 +183,24 @@
       "raw": "198943.6788600",
       "tokens": 1
     },
+    "VS_TSRopt": {
+      "comment": "VS_TSRopt\t\t\t- Power-maximizing region 2 tip-speed-ratio [rad].",
+      "line": 75,
+      "raw": "7.50",
+      "tokens": 1
+    },
+    "WE_GearboxRatio": {
+      "comment": "WE_GearboxRatio\t- Gearbox ratio [>=1],  [-]",
+      "line": 86,
+      "raw": "50.0",
+      "tokens": 1
+    },
+    "WE_Mode": {
+      "comment": "WE_Mode           - Wind speed estimator mode {0: One-second low pass filtered hub height wind speed, 1: Immersion and Invariance Estimator, 2: Extended Kalman Filter}",
+      "line": 15,
+      "raw": "2",
+      "tokens": 1
+    },
     "Y_ControlMode": {
       "comment": "Y_ControlMode\t\t- Yaw control mode {0: no yaw control, 1: yaw rate control, 2: yaw-by-IPC}",
       "line": 13,
@@ -155,7 +209,7 @@
     }
   },
   "physical_pass": false,
-  "recognized_parameter_count": 17,
+  "recognized_parameter_count": 26,
   "source_reading_level": "Original DISCON.IN bytes verified this run; existing OUTB summaries/log source rows SHA-pinned, NOT reread 18 OUTB binaries or 18 stdout raw ZIP members",
   "stages_passed": 0
 }

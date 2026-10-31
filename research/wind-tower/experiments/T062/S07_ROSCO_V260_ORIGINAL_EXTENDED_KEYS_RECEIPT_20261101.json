@@ -1,0 +1,74 @@
+{
+  "FIG": "none",
+  "HOLD": "Original 18 per-case BTS/DLL SHA not recovered, controller internal state not recorded, IEC2025 clauses and S01-S04 physics not passed",
+  "OFFICIAL": "NatLabRockies/ROSCO v2.6.0 tag 51629665d22f92770f861daeebcebd47ab32abb1, ROSCO/rosco_registry/rosco_types.yaml",
+  "REF": "ROSCO v2.6.0 tagged registry semantics, previously SHA-pinned; no new journal full text",
+  "RUN": "Python original ZIP read + SHA256 and conditional source-parameter validation; NO OpenFAST/Abaqus/fe-safe run",
+  "SOURCE": "Original 17,600-byte DISCON.IN member read by make() and SHA256 verified; historical 18-row OUTB-derived source table regenerated in same invocation",
+  "STANDARD": "IEC 61400-1/6:2025 authorized DLC1.2 clauses not read",
+  "TAB": "9-key original DISCON supplement, not duplicate 18-case source table",
+  "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. Registry VS_GenEff is a fraction [-]; source values >1 are preserved verbatim as SEMANTIC_HOLD and NOT divided by 100. VS_TSRopt registry unit wording is retained, not independently certified.",
+  "error_budget": "Original DISCON bytes/SHA exact; output CSV deterministic; floating group means have roundoff ~1e-14 relative plus previously documented packed-OUTB uncertainty; internal state/closed-loop dynamics and DLL binary uncertainty NOT ESTIMATED",
+  "formal_dlc12_approved": 0,
+  "input_sha256": {
+    "18case_input_csv": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
+    "18case_native_log_csv": "46667b0a0d01467b7a0635c203db83e880dd26f67f663cfaf7ea82f760f881e1",
+    "18case_operating_csv": "0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04",
+    "original_discon": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "original_manifest": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
+    "supplement_manifest": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392"
+  },
+  "native_earthquake_results": 0,
+  "negative_tests": "parser rejects duplicate, malformed, insufficient keys; extended validator rejects non-scalar, invalid modes, efficiency outside (0,1], nonpositive speed, absent key never filled with zero",
+  "official_registry_sha256_previous_read": "c83eb68cadccbbf9a2084cc14c9dc94f6731304179b6ffad30aa1d4df4b63b4c",
+  "operating_band_diagnostics": {
+    "11.400000": {
+      "mean_gen_speed_over_vs_reference": 0.9915421674301245,
+      "mean_gen_speed_rpm": 453.788874672,
+      "mean_pitch_deg": 3.7424374343266664,
+      "n": 6,
+      "reference_missing": false
+    },
+    "19.202140": {
+      "mean_gen_speed_over_vs_reference": 1.0479862408006018,
+      "mean_gen_speed_rpm": 479.6210514346667,
+      "mean_pitch_deg": 16.60207795768333,
+      "n": 6,
+      "reference_missing": false
+    },
+    "9.343881": {
+      "mean_gen_speed_over_vs_reference": 0.8425495932908288,
+      "mean_gen_speed_rpm": 385.60098032516663,
+      "mean_pitch_deg": 0.39523996414833334,
+      "n": 6,
+      "reference_missing": false
+    }
+  },
+  "original_discon_bytes": 17600,
+  "output_csv_sha256": "a9f175a383b17e75521d89c964618cac74707e73032791c1285b67812980d9af",
+  "parameters_absent": [
+    "VS_GenEff",
+    "WE_Mode"
+  ],
+  "parameters_present": 9,
+  "physical_pass": false,
+  "semantic_holds": [
+    {
+      "parameter": "VS_GenEff",
+      "raw_value": "100.0000000000",
+      "reason": "Original source exceeds v2.6.0 fraction definition; unit/identity unresolved",
+      "registry_expected": "0 < efficiency <= 1",
+      "source_line": 62
+    },
+    {
+      "parameter": "WE_Mode",
+      "raw_value": "2",
+      "reason": "Original value not listed by official v2.6.0 registry",
+      "registry_expected": "0 or 1",
+      "source_line": 15
+    }
+  ],
+  "semantic_validation_pass": false,
+  "source_reading_level": "Original DISCON bytes; existing 18 OUTB summaries cross-checked, original 18 OUTB binaries not reread",
+  "stages_passed": 0
+}

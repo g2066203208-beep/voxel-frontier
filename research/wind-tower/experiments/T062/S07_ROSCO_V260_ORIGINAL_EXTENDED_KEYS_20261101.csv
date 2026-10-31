@@ -1,0 +1,10 @@
+parameter,source_line,status,raw_value,numeric_tokens,v260_registry_semantics,original_discon_sha256
+VS_RefSpd,71,ORIGINAL_VALUE,47.92601000000,1,rated generator speed [rad/s],8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+VS_TSRopt,75,ORIGINAL_VALUE,7.50,1,region-2 optimal tip-speed ratio (registry says [rad]; unit requires caution),8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+VS_GenEff,62,ORIGINAL_VALUE_SEMANTIC_HOLD,100.0000000000,1,generator mechanical-to-electrical efficiency fraction [-],8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+WE_Mode,15,ORIGINAL_VALUE_SEMANTIC_HOLD,2,1,"wind-speed estimator mode {0,1}",8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+SS_Mode,14,ORIGINAL_VALUE,1,1,"setpoint smoother mode {0,1}",8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+VS_MinOMSpd,67,ORIGINAL_VALUE,36.60000000000,1,optimal-mode minimum generator speed [rad/s],8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+VS_MaxRat,64,ORIGINAL_VALUE,1500000.000000,1,maximum generator torque rate [N m/s],8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+PC_MaxRat,47,ORIGINAL_VALUE,0.174530000000,1,maximum pitch rate [rad/s],8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
+WE_GearboxRatio,86,ORIGINAL_VALUE,50.0,1,wind estimator gearbox ratio [-],8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a
