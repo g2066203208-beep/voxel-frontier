@@ -58,13 +58,13 @@ def columns(h):
   return None
  c={}
  c["hub"]=get("U_hub","Uhub","HubHtSpeed","hub_speed","hubwindspeed","wind_speed_hub","U161","WS161","Uhub_mps","hub_height_speed")
- c["u10"]=get("u10","u10m","u10_component")
- c["v10"]=get("v10","v10m","v10_component")
- c["u100"]=get("u100","u100m","u100_component")
- c["v100"]=get("v100","v100m","v100_component")
- c["s10"]=get("ws10","wind_speed_10m","windspeed10","speed10","U10_speed","Wind10m")
- c["s100"]=get("ws100","wind_speed_100m","windspeed100","speed100","U100_speed","Wind100m")
- c["time"]=get("time","datetime","valid_time","timestamp","date","utc_time","日期时间","时间")
+ c["u10"]=get("u10","u10m","u10_component","10 m U风速分量（m/s）")
+ c["v10"]=get("v10","v10m","v10_component","10 m V风速分量（m/s）")
+ c["u100"]=get("u100","u100m","u100_component","100 m U风速分量（m/s）")
+ c["v100"]=get("v100","v100m","v100_component","100 m V风速分量（m/s）")
+ c["s10"]=get("ws10","wind_speed_10m","windspeed10","speed10","U10_speed","Wind10m","10 m合成风速（m/s）")
+ c["s100"]=get("ws100","wind_speed_100m","windspeed100","speed100","U100_speed","Wind100m","100 m合成风速（m/s）")
+ c["time"]=get("time","datetime","valid_time","timestamp","date","utc_time","日期时间","时间","时间（UTC）")
  c["mode"]="vector" if all(c[k] is not None for k in ("u10","v10","u100","v100")) else "speed" if c["s10"] is not None and c["s100"] is not None else "u_labels" if c["u10"] is not None and c["u100"] is not None and c["v10"] is None and c["v100"] is None else None
  c["score"]=(100 if c["hub"] is not None else 0)+(75 if c["mode"] else 0)+(5 if c["time"] is not None else 0)
  return c
