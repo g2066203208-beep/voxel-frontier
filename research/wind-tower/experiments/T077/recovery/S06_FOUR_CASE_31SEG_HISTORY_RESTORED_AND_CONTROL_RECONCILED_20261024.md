@@ -1,3 +1,12 @@
+## 2026-11-01 04时｜S07 原始ROSCO DISCON缺失参数补提管线（原件重读CI待验）
+
+- **SOURCE/阅读层级**：继承17,600字节原始DISCON SHA256=`8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a`、18组历史原始输入/OUTB源级表及36份OpenFAST/ServoDyn日志；本轮通过GitHub连接器直接读取既有Python解析器、两份旧收据及ROSCO v2.6.0官方注册表第149–280行。**本轮尚未重新取得原始DISCON二进制或新参数值**，新表必须由既有Actions工作流原件ZIP读取后生成。
+- **OFFICIAL/REF**：官方ROSCO v2.6.0 tag `51629665d22f92770f861daeebcebd47ab32abb1`，`ROSCO/rosco_registry/rosco_types.yaml`已登记SHA256=`c83eb68cadccbbf9a2084cc14c9dc94f6731304179b6ffad30aa1d4df4b63b4c`；核对`VS_RefSpd`为发电机参考角速度rad/s、`VS_GenEff`为机械转电功率效率、`WE_Mode`风速估计器、`SS_Mode`设定值平滑、`VS_TSRopt`为最优TSR（官方字段注释写[rad]，不能据此声称角度物理量）。不把`PC_RefSpd`误写成`VS_RefSpd`。
+- **RUN/程序**：更新[既有源级解析器](../../T062/s07_ntm18_discon_operating_contract.py)，在旧17键之外补读9个v2.6.0注册字段，新增标量/效率/模式合法性拒绝测试，明确缺失字段`NOT_PRESENT_IN_ORIGINAL`而非零。扩展[既有原件CI](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s07-ntm18-original-controller-input-qc.yml)读取原始ZIP并生成最小9行补充表和独立JSON收据，SHA256及源行号由原生执行时实算。**本轮写入的代码/工作流已提交；新原件重读CI状态及数表待远端核验，不报原生PASS**。未启动700s/OpenFAST/Abaqus/fe-safe生产RUN。
+- **TAB/FIG**：拟生成`T062/S07_ROSCO_V260_ORIGINAL_EXTENDED_KEYS_20261101.csv`（9键×原始行号/数值/缺失状态）和同名`_RECEIPT_20261101.json`；生成前不把计划表写作成果。FIG=无新增风机响应图。
+- **STANDARD/假设/误差预算**：未读IEC 61400-1/6:2025授权全文，不能称DLC1.2条款PASS；原件字节/SHA应精确一致，CSV复算逐字节一致，浮点组均值舍入误差约1e-14量级，OUTB量化误差继承先前收据；控制器内部状态、实际DLL、BTS、物理误差均**未估计**。
+- **HOLD/验收**：原始18案BTS及逐件DLL SHA未恢复，正式DLC1.2仍0/126、原生地震E/WE=0、12阶段0/12未晋级。下一唯一动作：回读扩展CI原生结果及9键真实原值，若失败先修复源级解析，不重复既有18组OUTB统计。
+
 ## 2026-11-01 03时｜S07 ROSCO-v2.6.0官方源码逐行核读与18组历史运行参数语义闭合（SOURCE-QC，不是DLC1.2）
 
 - **SOURCE/OFFICIAL（直接原始源码）**：核验ROSCO官方v2.6.0标签commit=`51629665d22f92770f861daeebcebd47ab32abb1`；实际阅读`ROSCO/rosco_registry/rosco_types.yaml`（SHA256 `c83eb68cadccbbf9a2084cc14c9dc94f6731304179b6ffad30aa1d4df4b63b4c`，第149、187、198、222–228行）、`ROSCO/src/Controllers.f90`（`ded8d2b5ffbf4f0472ed400fc0ad5e178dd771aaf16c1b1d3ed74a190821b62d`，第187–190、211–213行）、`ROSCO/src/ControllerBlocks.f90`（`136744e014f31bf95d8fe6b82c07c139ec647264a65a2319152881b1cebf00e4`，第52–56、110–142行）、`ROSCO/src/ReadSetParameters.f90`（`0a0da7452a02c85b56a4c1dfea2e8cb1cb32523e4514499c9da5e6373ceea584`，第303–305行）。四份官方原始字节由[Actions #41232842992](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41232842992)按不可变tag commit URL下载并复核SHA。不是拿最新版ROSCO文档反推历史版本。
