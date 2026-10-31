@@ -1,3 +1,6 @@
+## 2026-10-31 17时｜S10中层混凝土单元四方位直接源级解析准备
+复用既有D400/Pe SHA锁定静态INP生成器及已有68部件元数据，新增[中层31段×4方位×内外双径向层直接提取脚本](../../experiments/T077/recovery/s10_d400_midplane_azimuth_gate.py)，接入既有S01诊断CI。目标解决16时发现的372/372低/高层混凝土候选轴向>0.1m错位；**本次代码提交时尚未取得CI实际输出，不称248行PASS**。源哈希、方法、失败及误差边界见[T077 17时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。原生ODB积分点/材料应力仍无，12阶段0/12，E/WE=0；T057/T070不改。
+
 **2026-10-31 16:12补充远端验证：** [Actions #41183531634/job #124485674985](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41183531634/job/124485674985)实际`completed/success`，S10 SHA锁定源绑定`--self-test --check`步骤通过（源数据/372行输出逐字节再生及6项负向拒绝）；job stdout未通过GitHub连接器下载，步骤成功状态已API回读。仅SOURCE-NUMERIC-QC，原生ODB/材料物理仍HOLD。
 
 ## 2026-10-31 16时｜S10真实31段风载控制点到Abaqus局部材料点的空间错配被定量发现（SOURCE-QC）

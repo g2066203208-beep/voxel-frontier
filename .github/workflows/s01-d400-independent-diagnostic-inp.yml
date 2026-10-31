@@ -10,14 +10,16 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/s01_straight_bar_radial_clearance.py'
       - 'research/wind-tower/experiments/T077/recovery/S01_D400_D500_UNMOVED_CAGE_CLEARANCE_31SEG_20261025.csv'
       - '.github/workflows/s01-d400-independent-diagnostic-inp.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_d400_midplane_azimuth_gate.py'
   pull_request:
     branches: [main]
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s01_d400_relayout_pe_diagnostic_inp.py'
       - '.github/workflows/s01-d400-independent-diagnostic-inp.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_d400_midplane_azimuth_gate.py'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   static-d400-pe-diagnostic-only:
     runs-on: ubuntu-latest
@@ -72,3 +74,51 @@ jobs:
             ${{ runner.temp }}/s01_d400_stdout.json
             ${{ runner.temp }}/s01_geom/S01_D400_D500_31SEG_STRAIGHT_T3D2_EXACT_MANIFEST.json
           retention-days: 14
+
+      - name: S10 direct 31x4x2 midplane concrete element extraction from SHA-locked D400 INP (static only)
+        if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="research/wind-tower/experiments/T077/recovery"
+          child="$RUNNER_TEMP/s01_d400_candidate/S01_D400_RELAYOUT_Pe_PROXY_DIAGNOSTIC_ONLY.inp"
+          python "$root/s10_d400_midplane_azimuth_gate.py" --self-test
+          python "$root/s10_d400_midplane_azimuth_gate.py" \
+            --inp "$child" \
+            --source-map "$root/S10_D400_PE_68PART_INP_METADATA_20261028.csv" \
+            --out "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv" \
+            --receipt "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"
+          python - <<'PY'
+          import csv, hashlib, json, pathlib
+          p=pathlib.Path("research/wind-tower/experiments/T077/recovery")
+          c=p/"S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv"
+          j=p/"S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"
+          r=list(csv.DictReader(c.open()))
+          m=json.loads(j.read_text())
+          assert len(r)==248 and len({(x['segment'],x['radial_layer'],x['requested_azimuth_deg']) for x in r})==248
+          assert len({(x['instance'],x['element_label']) for x in r})==248
+          assert all(x['odb_integration_point']==x['local_stress_MPa']=='' for x in r)
+          assert m['rows_over_0p1m_axial']==0 and m['physical_pass'] is False
+          assert hashlib.sha256(c.read_bytes()).hexdigest()==m['output_sha256']
+          print('S10_248_MIDPLANE_REAL_INP_SOURCE_ROWS_SHA_AND_NO_ODB_PASS')
+          PY
+          sha256sum "$child" "$root/s10_d400_midplane_azimuth_gate.py" \
+            "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv" \
+            "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"
+      - name: Persist 248 real source-element records and provenance to PR42 branch (never merge)
+        if: github.event_name == 'push' && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="research/wind-tower/experiments/T077/recovery"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv" \
+            "$root/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_RECEIPT_20261031.json"
+          if git diff --cached --quiet; then
+            echo 'S10_MIDPLANE_NO_CHANGE_VERIFIED'
+          else
+            git commit -m 'data(S10): persist 248 direct D400 midplane concrete element candidates'
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+          echo 'S10 SOURCE-ELEMENT CENTROIDS ONLY; NO ODB/LOCAL STRESS/PHYSICS PASS'
