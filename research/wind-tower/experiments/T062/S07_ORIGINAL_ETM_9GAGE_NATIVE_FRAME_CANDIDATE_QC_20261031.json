@@ -5,7 +5,7 @@
   "source_archive_sha256": "c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0",
   "source_outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
   "source_receipt_sha256": "404a44c4f13d9c7723c609fc3786ad0094528739203598fe6abfeffa7aa05d54",
-  "script_sha256": "dfb61f12150930dfaccfab3488885afc7b6467b7b821ebb70e626943961c3906",
+  "script_sha256": "030df0f05c130002274a7580695347fafc5442448a63cd4da57b6e9940c5dac9",
   "time_grid": {
     "start_s": 100.0,
     "end_s": 700.0,
@@ -27,7 +27,7 @@
   "assumptions": "TP is global position and origin Q=(0,0,0) m; RP orientation sign/order candidate, not independently verified; FL/ML are INTERNAL section resultants",
   "error_budget": "Per-channel packed half-LSB in summary; floating point orthogonality/roundtrip in summary; RP-to-frame, section force ownership, reference-point physical errors UNKNOWN",
   "failure_log": "No source mismatch when status PASS; script aborts on source SHA, CRC, header, units, time, parity, or RP angle >0.4rad",
-  "HOLD": "ETM not DLC1.2 NTM; nine near-base stations not 31 full-height; candidate frame unverified; internal FL/ML cannot be applied as independent Abaqus external loads; no material fatigue, earthquake or native Abaqus PASS",
+  "HOLD": "ETM not DLC1.2 NTM; nine near-base stations not 31 full-height; TP/RP kinematic chord is not an independent TowerLn2Mesh orientation test; internal FL/ML cannot be applied as independent Abaqus external loads; no material fatigue, earthquake or native Abaqus PASS",
   "physical_pass": false,
   "summary": [
     {
@@ -359,5 +359,140 @@
       ],
       "frame_status": "RP_TO_FRAME_UNVERIFIED"
     }
-  ]
+  ],
+  "kinematic_qc": {
+    "status": "NATIVE_TP_RP_SPATIAL_KINEMATIC_CANDIDATE_ONLY",
+    "source": "same original 9-station 12001-step ETM OUTB SHA locked above",
+    "method": "TP chord (gage9-gage1) versus trapezoidal integration of local-z tangent from SmllRotTrans(RP), for R^T and R; native TPzi sets dz",
+    "time_samples": 12001,
+    "spatial_stations": 9,
+    "rms_chord_residual_m": {
+      "transpose": 1.785593373146336e-07,
+      "direct": 0.0002751582458942383
+    },
+    "max_chord_residual_m": {
+      "transpose": 3.431904441125919e-07,
+      "direct": 0.0005494427265065654
+    },
+    "max_conservative_packed_bound_m": 2.144888899409766e-08,
+    "preferred_sign_sample_counts": {
+      "transpose": 12001,
+      "direct": 0,
+      "tie_within_packed": 0
+    },
+    "samples": [
+      {
+        "time_s": 100.0,
+        "gage_1_to_9": {
+          "observed_m": [
+            9.754447476814559e-05,
+            1.3021311334189826e-05
+          ],
+          "predicted_m": {
+            "transpose": [
+              9.771230103716556e-05,
+              1.3010451319464386e-05
+            ],
+            "direct": [
+              -9.771230103716556e-05,
+              -1.3010451319464386e-05
+            ]
+          },
+          "residual_m": {
+            "transpose": [
+              -1.6782626901997453e-07,
+              1.0860014725439863e-08
+            ],
+            "direct": [
+              0.00019525677580531115,
+              2.6031762653654214e-05
+            ]
+          },
+          "packed_error_bound_m": [
+            1.516583521395472e-08,
+            1.5164407124787554e-08
+          ]
+        },
+        "residual_norm_m": {
+          "transpose": 1.6817727698176598e-07,
+          "direct": 0.00019698441858365784
+        }
+      },
+      {
+        "time_s": 400.0,
+        "gage_1_to_9": {
+          "observed_m": [
+            9.617468126894109e-05,
+            9.428237617045694e-06
+          ],
+          "predicted_m": {
+            "transpose": [
+              9.63149510628075e-05,
+              9.41013872074706e-06
+            ],
+            "direct": [
+              -9.63149510628075e-05,
+              -9.41013872074706e-06
+            ]
+          },
+          "residual_m": {
+            "transpose": [
+              -1.4026979386641493e-07,
+              1.8098896298633432e-08
+            ],
+            "direct": [
+              0.0001924896323317486,
+              1.8838376337792755e-05
+            ]
+          },
+          "packed_error_bound_m": [
+            1.516580995744522e-08,
+            1.516434695943354e-08
+          ]
+        },
+        "residual_norm_m": {
+          "transpose": 1.414326168836426e-07,
+          "direct": 0.00019340926290706986
+        }
+      },
+      {
+        "time_s": 700.0,
+        "gage_1_to_9": {
+          "observed_m": [
+            0.00017851507588073824,
+            3.527588697395504e-06
+          ],
+          "predicted_m": {
+            "transpose": [
+              0.00017867512550121168,
+              3.5068349852816276e-06
+            ],
+            "direct": [
+              -0.00017867512550121168,
+              -3.5068349852816276e-06
+            ]
+          },
+          "residual_m": {
+            "transpose": [
+              -1.6004962047344584e-07,
+              2.0753712113876475e-08
+            ],
+            "direct": [
+              0.0003571902013819499,
+              7.034423682677132e-06
+            ]
+          },
+          "packed_error_bound_m": [
+            1.5167187285865675e-08,
+            1.5164248110832295e-08
+          ]
+        },
+        "residual_norm_m": {
+          "transpose": 1.613895832456349e-07,
+          "direct": 0.0003572594618478639
+        }
+      }
+    ],
+    "limitations": "Kinematic consistency is not independent TowerLn2Mesh%Orientation validation; beam shear, finite station spacing and RP semantic/model errors are unbudgeted; ETM near-base only; no external-load mapping PASS"
+  }
 }
