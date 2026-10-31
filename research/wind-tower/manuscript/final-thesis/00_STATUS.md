@@ -1,5 +1,9 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 08时｜S07塔架局部坐标原文核验及180行真实均值物理映射拒绝门禁
+
+本轮核读[OpenFAST v3.5.3 ElastoDyn理论与坐标](https://openfast.readthedocs.io/en/v3.5.3/source/user/elastodyn/theory.html)和[NREL旧FAST指南印刷p.8、117–118](https://openfast.readthedocs.io/en/main/_downloads/d8bd014121d6505cb25cf49bee5eaa80/Old_FAST6_UsersGuide.pdf)，明确塔基与各局部塔架测点的坐标系不能默认等同；旧指南为辅助，尚未完成v3.5.3源码级逐通道核验。更新[现有S07程序](../../experiments/T062/s07_sixdof_wrench_source_contract.mjs)与轻量CI：逐时刻`R(t)`及`r(t)`变换契约，2个合成时刻±30°已知解得到全局平均Fx=86.6025403784N，而错误固定坐标得100N；5项坏输入拒绝。对[真实180行NTM源均值](../../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)执行身份核验，180/180明确拒绝直接作为已验证Abaqus物理映射。测试为V8数值/真实源读取，**非原生同步物理验收**；旧指南PDF原件SHA未取得，远端CI运行中，完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差、失败及HOLD见[T077 08时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级；S06 PARTIAL、S07 BLOCKED、E/WE=0**。
+
 ## 2026-10-31 07时｜S07真实NTM六分量源向量与参考点变换算法接口
 
 继承T062原始18组NTM×60通道的1080行SHA锁定统计，新增[180行塔底+九站六分量原生轴系时均值SI向量](../../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)与[可复算S07变换程序](../../experiments/T062/s07_sixdof_wrench_source_contract.mjs)。本轮实际V8数值测试：真实源1080→180行、恒等变换最大残差0、100N×2m已知解Mz=200N·m、90°旋转和逆变换、4项合成及4项真实源坏输入拒绝；远端Node CI已配置但成功日志尚未取得。源SHA256=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；新180行CSV SHA256=`ee051cdc35ef3bfdc1ec2f9e053353ca6ba10f9f27079253830736fac9315f97`（远端实体回读后独立V8计算）；SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差预算与HOLD详见[T077 07时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**输出仅为真实原始六分量的时间均值及合成变换算法QC，不是31段同步时程、已核OpenFAST→Abaqus坐标映射或物理验收。S06 PARTIAL、S07 BLOCKED、12阶段0/12未晋级、E/WE=0。**
