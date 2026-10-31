@@ -6,6 +6,7 @@ on:
       - '.github/workflows/s07-ntm18-original-controller-input-qc.yml'
       - 'research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py'
       - 'research/wind-tower/experiments/T062/s07_ntm18_controller_native_log_gate.py'
+      - 'research/wind-tower/experiments/T062/s07_ntm18_discon_operating_contract.py'
   workflow_dispatch:
 permissions:
   contents: write
@@ -40,6 +41,9 @@ jobs:
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
             research/wind-tower/experiments/T062/s07_ntm18_controller_native_log_gate.py
+            research/wind-tower/experiments/T062/s07_ntm18_discon_operating_contract.py
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_OPERATING_STATE_QC_20261101.csv
+            research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_QC_20261101.csv
             research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
       - name: Python parser selftest and fail-closed original member SHA audit
         shell: bash
@@ -90,6 +94,33 @@ jobs:
           PY
           sha256sum "$root/S07_18NTM_NATIVE_CONTROLLER_LOG_QC_20261101.csv" \
             "$root/S07_18NTM_NATIVE_CONTROLLER_LOG_RECEIPT_20261101.json"
+      - name: Verify original ROSCO DISCON numeric settings against 18 NTM operating summaries (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T062
+          python3 -m py_compile "$root/s07_ntm18_discon_operating_contract.py"
+          python3 "$root/s07_ntm18_discon_operating_contract.py" --self-test
+          python3 "$root/s07_ntm18_discon_operating_contract.py" --repo-root . \
+            --out "$root/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv" \
+            --receipt "$root/S07_18NTM_DISCON_VS_OPERATING_RECEIPT_20261101.json"
+          python3 - <<'PY'
+          import csv,json,hashlib,pathlib
+          p=pathlib.Path('research/wind-tower/experiments/T062')
+          a=p/'S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv'
+          b=p/'S07_18NTM_DISCON_VS_OPERATING_RECEIPT_20261101.json'
+          rows=list(csv.DictReader(a.open()))
+          r=json.loads(b.read_text())
+          assert len(rows)==18 and len({x['case'] for x in rows})==18
+          assert r['recognized_parameter_count']>=6 and r['formal_dlc12_approved']==0
+          assert not r['physical_pass'] and r['native_earthquake_results']==0
+          assert hashlib.sha256(a.read_bytes()).hexdigest()==r['output_csv_sha256']
+          assert all(x['runtime_dll_sha_verified']=='NO' for x in rows)
+          print('S07_18NTM_ORIGINAL_DISCON_PARAMETER_SOURCE_QC_PASS_NOT_DLC12')
+          PY
+          sha256sum "$root/s07_ntm18_discon_operating_contract.py" \
+            "$root/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv" \
+            "$root/S07_18NTM_DISCON_VS_OPERATING_RECEIPT_20261101.json"
       - name: Archive source QC output and failure context
         if: always()
         uses: actions/upload-artifact@v4
@@ -100,6 +131,8 @@ jobs:
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
             research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_QC_20261101.csv
             research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_RECEIPT_20261101.json
+            research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv
+            research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_RECEIPT_20261101.json
           if-no-files-found: warn
           retention-days: 21
       - name: Persist source-verified small CSV and receipt on Draft PR only
@@ -113,7 +146,9 @@ jobs:
           git add --sparse -- research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv \
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json \
             research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_QC_20261101.csv \
-            research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_RECEIPT_20261101.json
+            research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_RECEIPT_20261101.json \
+            research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv \
+            research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_RECEIPT_20261101.json
           if git diff --cached --quiet; then echo 'SOURCE_QC_UNCHANGED'; exit 0; fi
           git commit -m 'data(S07): preserve source-verified 18 NTM TurbSim and controller input QC'
           git pull --rebase origin "$GITHUB_REF_NAME"
