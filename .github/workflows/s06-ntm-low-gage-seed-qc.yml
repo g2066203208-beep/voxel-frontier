@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - '.github/workflows/s06-ntm-low-gage-seed-qc.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_openfast_abaqus_handedness_gate.cjs'
+      - 'research/wind-tower/experiments/T077/recovery/S10_31SEG_4AZ_2RAD_HANDEDNESS_CORRECTED_CANDIDATES_20261031.csv'
       - 'research/wind-tower/experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js'
       - 'research/wind-tower/experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv'
       - 'research/wind-tower/experiments/T062/S10_18NTM_6SEED_LOAD_DEL_CONVERGENCE_SUMMARY_20261031.csv'
@@ -27,9 +29,22 @@ jobs:
             research/wind-tower/experiments/T062/S10_18NTM_6SEED_LOAD_DEL_CONVERGENCE_SUMMARY_20261031.csv
             research/wind-tower/experiments/T062/S10_18NTM_6SEED_EXHAUSTIVE_SUBSET_CONVERGENCE_20261031.csv
             research/wind-tower/experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js
+            research/wind-tower/experiments/T077/recovery/s10_openfast_abaqus_handedness_gate.cjs
+            research/wind-tower/experiments/T077/recovery/S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv
+            research/wind-tower/experiments/T077/recovery/S10_4ETM_31SEG_MIDPLANE_2RAD_CONTROL_BINDING_20261031.csv
+            research/wind-tower/experiments/T077/recovery/S10_31SEG_4AZ_2RAD_HANDEDNESS_CORRECTED_CANDIDATES_20261031.csv
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: S10 248 real element coordinate handedness and independent annular equilibrium (NO Abaqus)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T077/recovery
+          node --check "$root/s10_openfast_abaqus_handedness_gate.cjs"
+          node "$root/s10_openfast_abaqus_handedness_gate.cjs" --check
+          sha256sum "$root/s10_openfast_abaqus_handedness_gate.cjs" "$root/S10_31SEG_4AZ_2RAD_HANDEDNESS_CORRECTED_CANDIDATES_20261031.csv"
+          echo 'CONDITIONAL_RIGHT_HANDED_STATIC_ALGEBRA_ONLY: no native local DCM, no ODB/PT, no material fatigue or physical PASS'
       - name: Actual source SHA and six-seed arithmetic; negative tests; exact output diff
         shell: bash
         run: |

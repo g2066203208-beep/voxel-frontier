@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-31 19:11 Asia/Shanghai",
+  "SOURCE": "Direct PR #42 248-row D400/Pe original-INP-derived centroids and 372-row four ETM control binding; no ODB, no native solver, no original INP bytes reread this turn",
+  "SOURCE_READING": "Complete two CSV texts fetched from current Draft PR head; prior recorded source SHA256 pinned by runnable Node crypto; this turn numerical compute and negative tests in JS V8, NOT native Node CI",
+  "source_sha256": {
+    "S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv": "e0e74585c07d8db2d8300bc6a64b9bcb0c829cdba2f9e854e53153a0d5796ccc",
+    "S10_4ETM_31SEG_MIDPLANE_2RAD_CONTROL_BINDING_20261031.csv": "2e9fb654ed081ec7a169a1ab81e0a3483dd64be404e28f57d659d43f5e9bb4f7"
+  },
+  "source_git_blob_sha1": {
+    "248": "b8f8bf9b6e943c63cba1843fc8cc68a9a82f14c2",
+    "372": "7d61a4c0f83367644d135da35a171a858410922b"
+  },
+  "REF": "T062 original OpenFAST v3.5.3 source/frame contract, T077 S10 gross nominal sigma formula, T079 paper-to-figure matrix (no new full-text reading)",
+  "STANDARD": "No new licensed IEC/GB/NB clause; 2.50001 deg is a geometry consistency threshold, not code tolerance",
+  "OFFICIAL": "OpenFAST v3.5.3 source-derived right-handed Cartesian convention conditional on x_OF=x_A and z_OF=y_A; physical alignment and deflected DCM NOT independently certified",
+  "RUN": "Real 248+372 row JS V8 computation, analytic annulus force/moment integration self-test, six corrupted-source rejections; runnable Node program saved, no Node CLI/Actions log yet",
+  "FIG": "None; no structural response or fabricated ODB",
+  "TAB": "248 row corrected 31 segment x 4 cardinal azimuth x 2 radial layers mapping; 372 existing 0/180 control rows unchanged",
+  "stats": {
+    "rows": 248,
+    "segments": 31,
+    "radial_layers": 2,
+    "openfast_cardinal_angles": 4,
+    "old_same_angle_90_270_misbindings": 124,
+    "old_0_180_control_rows_unaffected": 372,
+    "old_0_180_element_bindings_unaffected": 744,
+    "maximum_proper_angle_gap_deg": 2.5000001078381615,
+    "maximum_old_angle_gap_deg": 177.5000000978581,
+    "min_radius_m": 2.2600967693513194,
+    "max_radius_m": 4.051140511053883
+  },
+  "analytic": {
+    "proper_rotation_det": 1,
+    "naive_reflection_det": -1,
+    "stress_invariance_max_MPa": 0,
+    "annulus_force_moment_relative_error": 1.8947806286936005e-15,
+    "synthetic_negative_tests": 4
+  },
+  "negative_source_rejections": 6,
+  "assumptions": [
+    "Conditional undeformed basis [x_A,y_A,z_A]=[x_OF,z_OF,-y_OF] with det+1; actual yaw/initial frame and time-varying local DCM not proven",
+    "Moments transform as axial vectors under proper rotation, [Mx_A,My_A,Mz_A]=[Mx_OF,Mz_OF,-My_OF]",
+    "Nominal gross stress σ_OF=Fz/A+(Mx*y-My*x)/I equals σ_A=Fy/A+(Mz*x-Mx*z)/I only under stated mapping",
+    "Existing 372 control rows target only 0/180 so remain same element labels; 90/270 future mapping would be swapped",
+    "C3D8R centroids not ODB integration points; D400 branch is not T057 HRB335"
+  ],
+  "error_budget": "Geometry source centroid x/z rounded to 1e-9m; atan2 numerical angular error <~1e-7deg; maximum 2.5deg angular sampling gap measured; naive 90/270 angular error ~177.5deg; synthetic equilibrium <1e-12 relative. Unknown yaw, local time-dependent frame, stress localization, PT/contact, mesh and load ownership are unbounded NEED_NATIVE.",
+  "failure": "No actual test failure in this V8 computation; six deliberately corrupted sources correctly rejected; no GitHub Actions/Node CLI native run acquired",
+  "physical_pass": false,
+  "stage": "0/12",
+  "native_E_WE": 0,
+  "HOLD": "Conditional proper handedness algebra and source centroid pairing are not proof of actual OpenFAST local frame vs Abaqus initial orientation; no native ODB local stress/PT/contact balance.",
+  "script_sha256": "PENDING_GITHUB_ACTIONS_NODE_SHA256",
+  "output_sha256": "PENDING_GITHUB_ACTIONS_NODE_SHA256",
+  "source_sha_status": "Pinned by original source receipt; Node will independently check both source bytes SHA256 on GitHub Actions"
+}
