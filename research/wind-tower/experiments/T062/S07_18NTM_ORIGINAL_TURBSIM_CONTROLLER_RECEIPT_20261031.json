@@ -1,0 +1,188 @@
+{
+  "FIG": "none",
+  "HOLD": "All 18 original BTS wind-field bytes lack archive SHA and are not recoverable from .inp/.sum/.dat by assertion; no IEC 2025 clauses or DLC1.2 controller/operating-state native proof; 0/18 formal reuse; no material Miner",
+  "OFFICIAL": "Original archived TurbSim/OpenFAST input text and historical manifest, NOT an official controller certification",
+  "REF": "Existing T062 source identity, 21-bin x 6-seed coverage and 12-stage plan; no new full paper read",
+  "RUN": "Python 3 standard-library ZIP/source parser, self-test and SHA gates only; no production solver",
+  "SOURCE": "18 original archived TurbSim .inp/.sum/.dat, 18 archived FST/ED/ServoDyn/InflowWind, original DISCON.IN, two original SHA-pinned manifests and 18-case identity CSV",
+  "STANDARD": "IEC 61400-1/6 2025 authorized DLC1.2 clauses not read; configuration names do not prove IEC compliance",
+  "TAB": "18-row per-seed original TurbSim/FST/ServoDyn/InflowWind/DISCON source table",
+  "assumptions": "Original 18 NTM nominal case labels are planning labels; 4-25m/s bins are diagnostic only; no unarchived BTS reconstructed",
+  "bts_source_status": {
+    "prior-size-deferral-cancelled-see-transfer-ledger": 18
+  },
+  "case_count": 18,
+  "controller_identity_conclusion": "DISCON.IN source name and ServoDyn DLL references only; binary DLL provenance/version and actual controller algorithm unverified; never assert ROSCO from filenames",
+  "discon_source_text_contains_ROSCO_marker": true,
+  "formal_dlc12_reuse_approved": 0,
+  "input_sha256": {
+    "18case_identity_csv": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5",
+    "static_manifest": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
+    "supplement_manifest": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392"
+  },
+  "missing_or_ambiguous_input_fields": {
+    "inflow.Filename": 18
+  },
+  "numerical_error_budget": "Source-byte SHA256 and byte-length are exact checks; extracted values are strings with no interpolation; original wind-field realization, turbulence sampling, controller runtime and IEC/site uncertainty NOT ESTIMATED",
+  "original_members_verified": 127,
+  "output_csv_sha256": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
+  "physical_pass": false,
+  "source_config_by_case": {
+    "U09p343881_NTM_S01": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "9.343881",
+      "turb_model": "IECKAI",
+      "turb_seed1": "104729"
+    },
+    "U09p343881_NTM_S02": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "9.343881",
+      "turb_model": "IECKAI",
+      "turb_seed1": "130363"
+    },
+    "U09p343881_NTM_S03": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "9.343881",
+      "turb_model": "IECKAI",
+      "turb_seed1": "155921"
+    },
+    "U09p343881_NTM_S04": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "9.343881",
+      "turb_model": "IECKAI",
+      "turb_seed1": "181081"
+    },
+    "U09p343881_NTM_S05": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "9.343881",
+      "turb_model": "IECKAI",
+      "turb_seed1": "206369"
+    },
+    "U09p343881_NTM_S06": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "9.343881",
+      "turb_model": "IECKAI",
+      "turb_seed1": "231701"
+    },
+    "U11p4_NTM_S01": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "11.400000",
+      "turb_model": "IECKAI",
+      "turb_seed1": "104729"
+    },
+    "U11p4_NTM_S02": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "11.400000",
+      "turb_model": "IECKAI",
+      "turb_seed1": "130363"
+    },
+    "U11p4_NTM_S03": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "11.400000",
+      "turb_model": "IECKAI",
+      "turb_seed1": "155921"
+    },
+    "U11p4_NTM_S04": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "11.400000",
+      "turb_model": "IECKAI",
+      "turb_seed1": "181081"
+    },
+    "U11p4_NTM_S05": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "11.400000",
+      "turb_model": "IECKAI",
+      "turb_seed1": "206369"
+    },
+    "U11p4_NTM_S06": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "11.400000",
+      "turb_model": "IECKAI",
+      "turb_seed1": "231701"
+    },
+    "U19p202140_NTM_S01": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "19.202140",
+      "turb_model": "IECKAI",
+      "turb_seed1": "104729"
+    },
+    "U19p202140_NTM_S02": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "19.202140",
+      "turb_model": "IECKAI",
+      "turb_seed1": "130363"
+    },
+    "U19p202140_NTM_S03": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "19.202140",
+      "turb_model": "IECKAI",
+      "turb_seed1": "155921"
+    },
+    "U19p202140_NTM_S04": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "19.202140",
+      "turb_model": "IECKAI",
+      "turb_seed1": "181081"
+    },
+    "U19p202140_NTM_S05": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "19.202140",
+      "turb_model": "IECKAI",
+      "turb_seed1": "206369"
+    },
+    "U19p202140_NTM_S06": {
+      "servo_DLL_FileName": "libdiscon.dll",
+      "servo_DLL_InFile": "DTU_10MW_RWT_DISCON.IN",
+      "turb_IEC_WindType": "NTM",
+      "turb_URef_mps": "19.202140",
+      "turb_model": "IECKAI",
+      "turb_seed1": "231701"
+    }
+  },
+  "source_reading_level": "THIS RUN: original ZIP member bytes read, length and SHA256 verified for 127 members; no original .bts bytes, native controller DLL execution, or 700s OpenFAST rerun",
+  "source_zip_archives_opened": 13,
+  "stage": "S07_DLC12_HISTORICAL_SOURCE_CONFIGURATION_PREPARATION_ONLY",
+  "stages_passed": 0,
+  "unique_sha_counts": {
+    "fst_sha256": 1,
+    "inflow_sha256": 18,
+    "servo_sha256": 1,
+    "turb_dat_sha256": 18,
+    "turb_inp_sha256": 18,
+    "turb_sum_sha256": 18
+  }
+}
