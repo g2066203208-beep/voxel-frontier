@@ -1,0 +1,363 @@
+{
+  "stage": "S07_REAL_ORIGINAL_ETM_9GAGE_SYNCHRONOUS_SOURCE_FRAME_CANDIDATE_QC",
+  "status": "REAL_OUTB_MATH_QC_PASS_FRAME_AND_LOAD_OWNERSHIP_HOLD",
+  "case": "U09p343881_ETM_S01",
+  "source_archive_sha256": "c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0",
+  "source_outb_sha256": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
+  "source_receipt_sha256": "404a44c4f13d9c7723c609fc3786ad0094528739203598fe6abfeffa7aa05d54",
+  "script_sha256": "dfb61f12150930dfaccfab3488885afc7b6467b7b821ebb70e626943961c3906",
+  "time_grid": {
+    "start_s": 100.0,
+    "end_s": 700.0,
+    "dt_s": 0.05,
+    "n": 12001
+  },
+  "gage_count": 9,
+  "station_sample_count": 108009,
+  "source_level": "Original ZIP+OUTB full packed bytes, SHA and CRC; 3-sample parity to previous verified receipt",
+  "orientation_candidate": "SmllRotTrans353(RP*deg2rad) transpose used as one candidate; opposite R also quantified; neither independently validated against TowerLn2Mesh%Orientation",
+  "moment_candidate": "M_origin=R_candidate*M_section+TP_global x (R_candidate*F_section); algebraic transport only, not an external load or tower-base equilibrium assertion",
+  "SOURCE": "Original SHA-pinned 2026-10-04 supplementary ETM OUTB and T062 previous source receipt",
+  "REF": "OpenFAST v3.5.3 ElastoDyn.f90 L937-943,1169-1206,6023-6034; NWTC_Num.f90 L5378-5470",
+  "STANDARD": "No authorized 2025 IEC/GB/NB clause read; not a code check",
+  "OFFICIAL": "Original native OpenFAST OUTB; this script only reads and transforms, no new solver RUN",
+  "RUN": "Python 3.11 source-byte read, 108009 synchronized station-samples and numeric tests",
+  "FIG": "none",
+  "TAB": "9-station summary and six actual three-time-point samples",
+  "assumptions": "TP is global position and origin Q=(0,0,0) m; RP orientation sign/order candidate, not independently verified; FL/ML are INTERNAL section resultants",
+  "error_budget": "Per-channel packed half-LSB in summary; floating point orthogonality/roundtrip in summary; RP-to-frame, section force ownership, reference-point physical errors UNKNOWN",
+  "failure_log": "No source mismatch when status PASS; script aborts on source SHA, CRC, header, units, time, parity, or RP angle >0.4rad",
+  "HOLD": "ETM not DLC1.2 NTM; nine near-base stations not 31 full-height; candidate frame unverified; internal FL/ML cannot be applied as independent Abaqus external loads; no material fatigue, earthquake or native Abaqus PASS",
+  "physical_pass": false,
+  "summary": [
+    {
+      "gage": 1,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.00026430066783965947,
+      "max_candidate_force_rotation_delta_N": 119.25151799986858,
+      "max_candidate_frame_choice_delta_N": 238.5030359991833,
+      "max_candidate_base_moment_arm_Nm": 156364.00964408874,
+      "max_force_norm_roundtrip_N": 1.8649777704576617e-08,
+      "max_moment_roundtrip_Nm": 1.7886243413295113e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.40006654076798,
+      "max_native_RP_halfLSB_deg": 2.634218267700977e-09
+    },
+    {
+      "gage": 2,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.0013450237539889226,
+      "max_candidate_force_rotation_delta_N": 605.5557507359866,
+      "max_candidate_frame_choice_delta_N": 1211.111501387609,
+      "max_candidate_base_moment_arm_Nm": 781901.3221054949,
+      "max_force_norm_roundtrip_N": 1.864977111809904e-08,
+      "max_moment_roundtrip_Nm": 1.7916299118284296e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.403784266907103,
+      "max_native_RP_halfLSB_deg": 1.0875814555006912e-08
+    },
+    {
+      "gage": 3,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.00246289982061618,
+      "max_candidate_force_rotation_delta_N": 1106.4583549876174,
+      "max_candidate_frame_choice_delta_N": 2212.9167094600716,
+      "max_candidate_base_moment_arm_Nm": 1407571.7902607075,
+      "max_force_norm_roundtrip_N": 1.863556161975977e-08,
+      "max_moment_roundtrip_Nm": 1.7978385680070906e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.40762499688401,
+      "max_native_RP_halfLSB_deg": 1.9845538207027068e-08
+    },
+    {
+      "gage": 4,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.003617302393644186,
+      "max_candidate_force_rotation_delta_N": 1621.5950627243408,
+      "max_candidate_frame_choice_delta_N": 3243.1901238223218,
+      "max_candidate_base_moment_arm_Nm": 2033380.5181931027,
+      "max_force_norm_roundtrip_N": 1.8639634500299864e-08,
+      "max_moment_roundtrip_Nm": 1.7959802810845263e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.411590176926683,
+      "max_native_RP_halfLSB_deg": 2.9049996554670407e-08
+    },
+    {
+      "gage": 5,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.004807609555418275,
+      "max_candidate_force_rotation_delta_N": 2150.605637420835,
+      "max_candidate_frame_choice_delta_N": 4301.211271032622,
+      "max_candidate_base_moment_arm_Nm": 2659331.195072879,
+      "max_force_norm_roundtrip_N": 1.8639634500299864e-08,
+      "max_moment_roundtrip_Nm": 1.7885516000034863e-07,
+      "max_rotation_orthogonality_error": 1.1102230246251565e-15,
+      "max_native_force_halfLSB_N": 18.415665736109236,
+      "max_native_RP_halfLSB_deg": 3.848512688392393e-08
+    },
+    {
+      "gage": 6,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.007293480780975421,
+      "max_candidate_force_rotation_delta_N": 3248.8251045592788,
+      "max_candidate_frame_choice_delta_N": 6497.650195887481,
+      "max_candidate_base_moment_arm_Nm": 3911676.168200336,
+      "max_force_norm_roundtrip_N": 1.8635559222850203e-08,
+      "max_moment_roundtrip_Nm": 1.7916299118284296e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.424144693183706,
+      "max_native_RP_halfLSB_deg": 5.803134690872238e-08
+    },
+    {
+      "gage": 7,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.008587835389713212,
+      "max_candidate_force_rotation_delta_N": 3817.3325225393223,
+      "max_candidate_frame_choice_delta_N": 7634.665023531172,
+      "max_candidate_base_moment_arm_Nm": 4538077.514888779,
+      "max_force_norm_roundtrip_N": 1.8635569875779254e-08,
+      "max_moment_roundtrip_Nm": 1.788527352237374e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.42853543533816,
+      "max_native_RP_halfLSB_deg": 6.813453900579716e-08
+    },
+    {
+      "gage": 8,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.009915662346333122,
+      "max_candidate_force_rotation_delta_N": 4398.3080617082705,
+      "max_candidate_frame_choice_delta_N": 8796.616090328138,
+      "max_candidate_base_moment_arm_Nm": 5164635.429860109,
+      "max_force_norm_roundtrip_N": 1.863956926524237e-08,
+      "max_moment_roundtrip_Nm": 1.7883579875789288e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.43302159261858,
+      "max_native_RP_halfLSB_deg": 7.845250242300554e-08
+    },
+    {
+      "gage": 9,
+      "samples": 12001,
+      "max_RP_abs_deg": 0.011968880045944163,
+      "max_candidate_force_rotation_delta_N": 5296.928531355658,
+      "max_candidate_frame_choice_delta_N": 10593.85700492212,
+      "max_candidate_base_moment_arm_Nm": 6104774.225657369,
+      "max_force_norm_roundtrip_N": 1.8635560399111417e-08,
+      "max_moment_roundtrip_Nm": 1.4905818215865486e-07,
+      "max_rotation_orthogonality_error": 8.881784197001252e-16,
+      "max_native_force_halfLSB_N": 18.439920954483128,
+      "max_native_RP_halfLSB_deg": 9.432376557073141e-08
+    }
+  ],
+  "selected_native_samples": [
+    {
+      "gage": 1,
+      "time_s": 100.0,
+      "native_F_N": [
+        674649.077256,
+        8214.322822,
+        -25583746.572564
+      ],
+      "native_M_Nm": [
+        6310403.680982,
+        142526265.728559,
+        -2570724.271134
+      ],
+      "native_TP_m": [
+        5.3e-08,
+        1.2e-08,
+        0.070535714
+      ],
+      "native_RP_deg": [
+        -1.5695e-05,
+        8.5053e-05,
+        0.0
+      ],
+      "candidate_F_global_N": [
+        674611.099493,
+        8207.314625,
+        -25583747.576267
+      ],
+      "candidate_M_at_origin_Nm": [
+        6309820.656453,
+        142573850.551505,
+        -2570772.688518
+      ],
+      "frame_status": "RP_TO_FRAME_UNVERIFIED"
+    },
+    {
+      "gage": 1,
+      "time_s": 400.0,
+      "native_F_N": [
+        703868.382922,
+        -1075.32945,
+        -25576834.025409
+      ],
+      "native_M_Nm": [
+        7577919.091651,
+        128308478.69283,
+        6028969.871537
+      ],
+      "native_TP_m": [
+        5.3e-08,
+        6e-09,
+        0.070535714
+      ],
+      "native_RP_deg": [
+        -1.187e-05,
+        8.6681e-05,
+        0.0
+      ],
+      "candidate_F_global_N": [
+        703829.688705,
+        -1080.628325,
+        -25576835.090012
+      ],
+      "candidate_M_at_origin_Nm": [
+        7578004.270758,
+        128358126.422731,
+        6028931.820314
+      ],
+      "frame_status": "RP_TO_FRAME_UNVERIFIED"
+    },
+    {
+      "gage": 1,
+      "time_s": 700.0,
+      "native_F_N": [
+        1299110.535516,
+        -91504.37986,
+        -25614302.355467
+      ],
+      "native_M_Nm": [
+        14583733.686971,
+        178500756.257953,
+        910024.546254
+      ],
+      "native_TP_m": [
+        1.06e-07,
+        1e-09,
+        0.070535714
+      ],
+      "native_RP_deg": [
+        -5.922e-06,
+        0.000172546,
+        0.0
+      ],
+      "candidate_F_global_N": [
+        1299033.398335,
+        -91507.027392,
+        -25614306.258149
+      ],
+      "candidate_M_at_origin_Nm": [
+        14590190.910912,
+        178592387.303212,
+        909962.166228
+      ],
+      "frame_status": "RP_TO_FRAME_UNVERIFIED"
+    },
+    {
+      "gage": 9,
+      "time_s": 100.0,
+      "native_F_N": [
+        676551.119705,
+        8433.311972,
+        -25109635.942275
+      ],
+      "native_M_Nm": [
+        6332804.209856,
+        140717697.216388,
+        -2568893.797877
+      ],
+      "native_TP_m": [
+        9.7597e-05,
+        1.3033e-05,
+        2.750892473
+      ],
+      "native_RP_deg": [
+        -0.000508331,
+        0.004439768,
+        0.0
+      ],
+      "candidate_F_global_N": [
+        674605.407715,
+        8210.537889,
+        -25109688.365706
+      ],
+      "candidate_M_at_origin_Nm": [
+        6309691.520566,
+        142575891.993367,
+        -2570640.954778
+      ],
+      "frame_status": "RP_TO_FRAME_UNVERIFIED"
+    },
+    {
+      "gage": 9,
+      "time_s": 400.0,
+      "native_F_N": [
+        705723.074655,
+        -925.735234,
+        -25102697.404482
+      ],
+      "native_M_Nm": [
+        7574750.310167,
+        126416661.685768,
+        6030656.78948
+      ],
+      "native_TP_m": [
+        9.6227e-05,
+        9.435e-06,
+        2.750892473
+      ],
+      "native_RP_deg": [
+        -0.000357823,
+        0.00432243,
+        0.0
+      ],
+      "candidate_F_global_N": [
+        703829.309361,
+        -1082.506438,
+        -25102750.566971
+      ],
+      "candidate_M_at_origin_Nm": [
+        7577946.237791,
+        128355273.668517,
+        6029289.088015
+      ],
+      "frame_status": "RP_TO_FRAME_UNVERIFIED"
+    },
+    {
+      "gage": 9,
+      "time_s": 700.0,
+      "native_F_N": [
+        1302475.796584,
+        -91457.196251,
+        -25140045.993082
+      ],
+      "native_M_Nm": [
+        14338506.599643,
+        175013208.492242,
+        912466.922957
+      ],
+      "native_TP_m": [
+        0.000178621,
+        3.529e-06,
+        2.750892473
+      ],
+      "native_RP_deg": [
+        -0.000104928,
+        0.007795997,
+        0.0
+      ],
+      "candidate_F_global_N": [
+        1299055.083845,
+        -91503.236221,
+        -25140222.815254
+      ],
+      "candidate_M_at_origin_Nm": [
+        14590257.45059,
+        178591261.574688,
+        910174.498041
+      ],
+      "frame_status": "RP_TO_FRAME_UNVERIFIED"
+    }
+  ]
+}
