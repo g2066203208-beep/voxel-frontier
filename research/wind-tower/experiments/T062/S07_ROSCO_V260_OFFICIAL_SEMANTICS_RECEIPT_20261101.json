@@ -151,6 +151,8 @@
     "failed_reason": "negative test expected exact SIX_SEED_COVERAGE but actual error includes wind-speed suffix",
     "fix_commit": "ec161d5f82c6c97134934944640bd7ae77227432",
     "logs_read": true,
-    "physical_solver_run": false
+    "physical_solver_run": false,
+    "script_sha256_from_native_log": "9c6faee0290bc36729e4fa946142b36228660afe21f115032a899689f1bd3f30",
+    "verified_input_csv_sha256_from_native_log": "11469d9f19009b89aac99fe3405677ed2831f9c91dca253e2780e45f7b767a18"
   }
 }
