@@ -6,10 +6,11 @@ on:
     paths:
       - '.github/workflows/s05-esm-rotd-real.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_rotd_real.py'
+      - 'research/wind-tower/manuscript/final-thesis/figures/plot_s08_esm_3comp_real_acceleration.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
   real-processed-wave-rotation:
@@ -75,3 +76,82 @@ jobs:
             recomputed.json
           if-no-files-found: warn
           retention-days: 90
+
+  s08-real-acceleration-source-figure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve archived 2012 ESM source, not a new earthquake event
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p source figures
+          gh run download 40847442979 -R "$GITHUB_REPOSITORY" -n s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE -D source
+          echo 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34  source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv' | sha256sum -c
+          echo 'd5df379ff81cfd8aac061f2b7738c54effb952c106b5149ca2d03244c5963f30  source/committed_s08_arias_husid.csv' | sha256sum -c
+          script=research/wind-tower/manuscript/final-thesis/figures/plot_s08_esm_3comp_real_acceleration.py
+          mkdir -p "$(dirname "$script")"
+          curl --fail --location --silent --show-error --retry 3 -o "$script" "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$script"
+          sha256sum "$script"
+      - name: Real waveform min-max, source SHA, SVG XML and negative-input checks
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/manuscript/final-thesis/figures/plot_s08_esm_3comp_real_acceleration.py
+          python -m py_compile "$script"
+          python "$script" --self-test
+          python "$script" \
+            --source-csv source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv \
+            --arias-csv source/committed_s08_arias_husid.csv \
+            --svg figures/FIG_S08_04_ESM_REAL_3COMP_ACCELERATION_SOURCE_QC.svg \
+            --receipt figures/S08_ESM_3COMP_ACCELERATION_FIGURE_RECEIPT_20261031.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          root=Path('figures')
+          r=json.loads((root/'S08_ESM_3COMP_ACCELERATION_FIGURE_RECEIPT_20261031.json').read_text())
+          f=root/'FIG_S08_04_ESM_REAL_3COMP_ACCELERATION_SOURCE_QC.svg'
+          assert r['Abaqus_E_WE_RUN']==0 and not r['S08_PASS']
+          assert r['figure_bytes']==f.stat().st_size
+          svg=ET.parse(f).getroot()
+          assert svg.tag=='{http://www.w3.org/2000/svg}svg'
+          assert len(list(svg.iter('{http://www.w3.org/2000/svg}line')))>3000
+          assert len(list(svg.iter('{http://www.w3.org/2000/svg}circle')))==6
+          print('S08_REAL_WAVEFORM_XML_AND_EXTREMA_GATE_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s08-real-esm-3comp-acceleration-source-figure-NOT-DESIGN-PASS
+          path: figures/*
+          retention-days: 90
+      - name: Commit exact original source figure and receipt to Draft PR branch, create-only
+        if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="$GITHUB_REF_NAME"
+          for entry in \
+            'figures/FIG_S08_04_ESM_REAL_3COMP_ACCELERATION_SOURCE_QC.svg|research/wind-tower/manuscript/final-thesis/figures/FIG_S08_04_ESM_REAL_3COMP_ACCELERATION_SOURCE_QC.svg' \
+            'figures/S08_ESM_3COMP_ACCELERATION_FIGURE_RECEIPT_20261031.json|research/wind-tower/experiments/T079/real-records/S08_ESM_3COMP_ACCELERATION_FIGURE_RECEIPT_20261031.json'
+          do
+            IFS='|' read -r localfile target <<< "$entry"
+            if gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$branch" --jq '.content' > existing.b64 2>/dev/null; then
+              base64 --decode existing.b64 > existing.file
+              cmp existing.file "$localfile" || { echo "EXISTING_FILE_DIFFERS_HOLD: $target"; exit 1; }
+              echo "EXACT_FILE_ALREADY_ARCHIVED $target"
+              continue
+            fi
+            python - "$localfile" "$branch" <<'PY' > payload.json
+          import base64,json,sys
+          p,b=sys.argv[1:]
+          data=open(p,'rb').read()
+          print(json.dumps({'message':'research(S08): archive real three-component ESM acceleration source figure and SHA receipt','content':base64.b64encode(data).decode(),'branch':b}))
+          PY
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
+            echo "S08_REAL_SOURCE_QC_PERSISTED $target"
+          done
