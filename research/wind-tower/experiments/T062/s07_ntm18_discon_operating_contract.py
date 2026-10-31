@@ -218,6 +218,7 @@ def extended_source_qc(data, receipt):
     """Small non-duplicative original DISCON key table + conditional operating bands."""
     p = receipt["parsed_discon_parameters"]
     rows = []
+    semantic_holds = []
     for key, unit in EXTENDED_PARAMETER_KEYS.items():
         obj = p.get(key)
         rows.append({
@@ -236,7 +237,13 @@ def extended_source_qc(data, receipt):
         if key in ("WE_Mode", "SS_Mode"):
             require(val in (0.0, 1.0), "EXTENDED_MODE_OUT_OF_RANGE:" + key)
         elif key == "VS_GenEff":
-            require(0 < val <= 1, "EXTENDED_EFFICIENCY_OUT_OF_RANGE")
+            require(val > 0, "EXTENDED_EFFICIENCY_NONPOSITIVE")
+            if val > 1:
+                # Official registry uses a fraction [-]; never silently divide by 100.
+                rows[-1]["status"] = "ORIGINAL_VALUE_SEMANTIC_HOLD"
+                semantic_holds.append({"parameter": key, "source_line": obj["line"],
+                    "raw_value": obj["raw"], "registry_expected": "0 < efficiency <= 1",
+                    "reason": "Original source exceeds v2.6.0 fraction definition; unit/identity unresolved"})
         elif key in ("VS_RefSpd", "VS_TSRopt", "VS_MinOMSpd", "WE_GearboxRatio"):
             require(val > 0, "EXTENDED_POSITIVE_PARAMETER:" + key)
     buf = io.StringIO(newline="")
@@ -274,10 +281,12 @@ def extended_source_qc(data, receipt):
         "official_registry_sha256_previous_read": "c83eb68cadccbbf9a2084cc14c9dc94f6731304179b6ffad30aa1d4df4b63b4c",
         "original_discon_bytes": receipt["original_discon_bytes"],
         "output_csv_sha256": sha(output),
-        "parameters_present": sum(x["status"] == "ORIGINAL_VALUE" for x in rows),
+        "parameters_present": sum(x["status"] != "NOT_PRESENT_IN_ORIGINAL" for x in rows),
+        "semantic_holds": semantic_holds,
+        "semantic_validation_pass": len(semantic_holds) == 0,
         "parameters_absent": [x["parameter"] for x in rows if x["status"] != "ORIGINAL_VALUE"],
         "operating_band_diagnostics": groups,
-        "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. VS_TSRopt registry unit wording is retained, not independently certified.",
+        "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. Registry VS_GenEff is a fraction [-]; source values >1 are preserved verbatim as SEMANTIC_HOLD and NOT divided by 100. VS_TSRopt registry unit wording is retained, not independently certified.",
         "error_budget": "Original DISCON bytes/SHA exact; output CSV deterministic; floating group means have roundoff ~1e-14 relative plus previously documented packed-OUTB uncertainty; internal state/closed-loop dynamics and DLL binary uncertainty NOT ESTIMATED",
         "negative_tests": "parser rejects duplicate, malformed, insufficient keys; extended validator rejects non-scalar, invalid modes, efficiency outside (0,1], nonpositive speed, absent key never filled with zero",
         "HOLD": "Original 18 per-case BTS/DLL SHA not recovered, controller internal state not recorded, IEC2025 clauses and S01-S04 physics not passed",
@@ -310,7 +319,7 @@ def self_test():
     assert p["VS_GenEff"]["raw"] == "0.94"
     assert p["WE_Mode"]["raw"] == "1" and p["SS_Mode"]["raw"] == "0"
     assert "VS_MinOMSpd" not in p and p["PC_RefSpd"]["raw"] == "3"
-    for key, val in (("VS_GenEff", "1.1"), ("WE_Mode", "2"),
+    for key, val in (("VS_GenEff", "-1.1"), ("WE_Mode", "2"),
                      ("VS_RefSpd", "-3")):
         altered = fixture.replace(
             {"VS_GenEff": b"0.94", "WE_Mode": b"1", "VS_RefSpd": b"49.9"}[key]
@@ -330,7 +339,17 @@ def self_test():
             pass
         else:
             raise AssertionError("EXTENDED_BAD_PARAMETER_ACCEPTED:" + key)
-    print("EXTENDED_DISCON_SELFTEST_PASS: 5 extracted keys, 3 invalid parameter rejections")
+    # Out-of-registry efficiency is retained with explicit semantic HOLD.
+    high_eff = fixture.replace(b"0.94 ! VS_GenEff", b"94 ! VS_GenEff")
+    fake_receipt = {"parsed_discon_parameters": parse_discon(high_eff),
+                    "input_sha256": {"original_discon": DISCON_SHA},
+                    "original_discon_bytes": len(high_eff)}
+    fake_csv = ("case,wind_speed_mps,GenSpeed_mean_rpm,BldPitch1_mean_deg\n"
+                + "".join(f"C{i},{i//6},480,5\n" for i in range(18))).encode()
+    _, flagged = extended_source_qc(fake_csv, fake_receipt)
+    assert flagged["semantic_holds"][0]["raw_value"] == "94"
+    assert not flagged["semantic_validation_pass"] and not flagged["physical_pass"]
+    print("EXTENDED_DISCON_SELFTEST_PASS: 5 extracted keys, 3 invalid parameter rejections, 1 semantic HOLD")
 
 def main():
     parser = argparse.ArgumentParser()
