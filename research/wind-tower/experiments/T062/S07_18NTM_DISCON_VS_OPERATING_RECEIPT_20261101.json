@@ -1,0 +1,153 @@
+{
+  "FIG": "none",
+  "HOLD": "18 historical per-case DLL binaries and NTM BTS not archived with SHA; DISCON text + ROSCO banner do not certify actual binary equality or 2025 IEC DLC1.2; no material IP stress",
+  "OFFICIAL": "Original archived DISCON/ServoDyn inputs and native OpenFAST stdout-derived evidence; not proof of identical historical DLL binaries",
+  "REF": "Existing T062 ROSCO-v2.6.0 historical stdout evidence and 12-stage plan; no new journal full text",
+  "RUN": "Python3 standard-library ZIP+CSV SHA source postprocessing and negative tests; no solver run",
+  "SOURCE": "Direct original 17,600-byte DISCON.IN ZIP member, source manifests; existing 18-case FST/ServoDyn, 18 OUTB-derived summaries and 18 original native ROSCO banner CSVs",
+  "STANDARD": "IEC 61400-1/6:2025 authorized DLC1.2 clauses NOT read",
+  "TAB": "18-case original controller settings vs original OUTB summary CSV",
+  "assumptions": "DISCON numeric settings kept as literal raw tokens: no rad/s, W, N*m or degree conversion without verified unit semantics; case labels do not prove DLC1.2",
+  "error_budget": "Input SHA256 and source member length exact; CSV means are archived packed-OUTB postprocessed summaries, with per-channel quantization bounds in prior receipt; parameter-to-response causal error and controller dynamics NOT ESTIMATED",
+  "formal_dlc12_approved": 0,
+  "group_sixseed_operating_summary": {
+    "11.400000": {
+      "mean_pitch_deg": 3.7424374343266664,
+      "mean_power_kW": 9122.971092201666,
+      "mean_rotor_rpm": 9.075774664193334,
+      "seed_count": 6
+    },
+    "19.202140": {
+      "mean_pitch_deg": 16.60207795768333,
+      "mean_power_kW": 9986.465333976666,
+      "mean_rotor_rpm": 9.592416988725,
+      "seed_count": 6
+    },
+    "9.343881": {
+      "mean_pitch_deg": 0.39523996414833334,
+      "mean_power_kW": 6230.954404883333,
+      "mean_rotor_rpm": 7.712016203801667,
+      "seed_count": 6
+    }
+  },
+  "input_sha256": {
+    "18case_input_csv": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
+    "18case_native_log_csv": "46667b0a0d01467b7a0635c203db83e880dd26f67f663cfaf7ea82f760f881e1",
+    "18case_operating_csv": "0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04",
+    "original_discon": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "original_manifest": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
+    "supplement_manifest": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392"
+  },
+  "native_earthquake_results": 0,
+  "negative_tests": "duplicate parameter, malformed numeric, missing key set, missing runtime banner, SHA and case-set fail closed",
+  "original_discon_bytes": 17600,
+  "output_csv_sha256": "541df9975abe5b41d5290aee056a06ae46e048f09d3b72566ed485c0e4b99b01",
+  "parsed_discon_parameters": {
+    "F_LPFCornerFreq": {
+      "comment": "F_LPFCornerFreq\t- Corner frequency (-3dB point) in the low-pass filters, [rad/s]",
+      "line": 27,
+      "raw": "1.46084",
+      "tokens": 1
+    },
+    "F_LPFType": {
+      "comment": "F_LPFType\t\t\t- {1: first-order low-pass filter, 2: second-order low-pass filter}, [rad/s] (currently filters generator speed and pitch control signals",
+      "line": 8,
+      "raw": "2",
+      "tokens": 1
+    },
+    "PC_ControlMode": {
+      "comment": "PC_ControlMode    - Blade pitch control mode {0: No pitch, fix to fine pitch, 1: active PI blade pitch control}",
+      "line": 12,
+      "raw": "1",
+      "tokens": 1
+    },
+    "PC_GS_KI": {
+      "comment": "PC_GS_KI\t\t- Gain-schedule table: pitch controller ki gains [-].",
+      "line": 42,
+      "raw": "-0.002438  -0.002190  -0.001988  -0.001821  -0.001679  -0.001558  -0.001453  -0.001361  -0.001281  -0.001209  -0.001145  -0.001087  -0.001035  -0.000988  -0.000944  -0.000905  -0.000868  -0.000835  -0.000804  -0.000775  -0.000748  -0.000723  -0.000700  -0.000678  -0.000657  -0.000638  -0.000619  -0.000602  -0.000586  -0.000570",
+      "tokens": 30
+    },
+    "PC_GS_KP": {
+      "comment": "PC_GS_KP\t\t- Gain-schedule table: pitch controller kp gains [s].",
+      "line": 41,
+      "raw": "-0.022917  -0.019800  -0.017257  -0.015144  -0.013359  -0.011831  -0.010510  -0.009355  -0.008337  -0.007433  -0.006625  -0.005899  -0.005242  -0.004645  -0.004100  -0.003601  -0.003143  -0.002719  -0.002328  -0.001964  -0.001626  -0.001310  -0.001015  -0.000738  -0.000478  -0.000233  -0.000003  0.000215  0.000421  0.000616",
+      "tokens": 30
+    },
+    "PC_GS_angles": {
+      "comment": "PC_GS_angles\t    - Gain-schedule table: pitch angles [rad].",
+      "line": 40,
+      "raw": "0.065175  0.091489  0.112051  0.129784  0.145707  0.160387  0.174135  0.186957  0.199261  0.211153  0.222495  0.233499  0.244293  0.254613  0.264813  0.274725  0.284446  0.294002  0.303331  0.312569  0.321572  0.330525  0.339253  0.347945  0.356435  0.364887  0.373175  0.381409  0.389515  0.397540",
+      "tokens": 30
+    },
+    "PC_MaxPit": {
+      "comment": "PC_MaxPit\t\t\t- Maximum physical pitch limit, [rad].",
+      "line": 45,
+      "raw": "1.570000000000",
+      "tokens": 1
+    },
+    "PC_MinPit": {
+      "comment": "PC_MinPit\t\t\t- Minimum physical pitch limit, [rad].",
+      "line": 46,
+      "raw": "0.000000000000",
+      "tokens": 1
+    },
+    "PC_RefSpd": {
+      "comment": "PC_RefSpd\t\t\t- Desired (reference) HSS speed for pitch controller, [rad/s].",
+      "line": 49,
+      "raw": "50.26548000000",
+      "tokens": 1
+    },
+    "PC_Switch": {
+      "comment": "PC_Switch\t\t\t- Angle above lowest minimum pitch angle for switch, [rad]",
+      "line": 51,
+      "raw": "0.017450000000",
+      "tokens": 1
+    },
+    "VS_ControlMode": {
+      "comment": "VS_ControlMode\t- Generator torque control mode in above rated conditions {0: constant torque, 1: constant power, 2: TSR tracking PI control with constant torque, 3: TSR tracking PI control with constant power}",
+      "line": 11,
+      "raw": "2",
+      "tokens": 1
+    },
+    "VS_MaxTq": {
+      "comment": "VS_MaxTq\t\t\t- Maximum generator torque in Region 3 (HSS side), [Nm].",
+      "line": 65,
+      "raw": "218838.0467500",
+      "tokens": 1
+    },
+    "VS_MinTq": {
+      "comment": "VS_MinTq\t\t\t- Minimum generator torque (HSS side), [Nm].",
+      "line": 66,
+      "raw": "0.000000000000",
+      "tokens": 1
+    },
+    "VS_Rgn2K": {
+      "comment": "VS_Rgn2K\t\t\t- Generator torque constant in Region 2 (HSS side), [Nm/(rad/s)^2]",
+      "line": 68,
+      "raw": "88.18387000000",
+      "tokens": 1
+    },
+    "VS_RtPwr": {
+      "comment": "VS_RtPwr\t\t\t- Wind turbine rated power [W]",
+      "line": 69,
+      "raw": "10000000.00000",
+      "tokens": 1
+    },
+    "VS_RtTq": {
+      "comment": "VS_RtTq\t\t\t- Rated torque, [Nm].",
+      "line": 70,
+      "raw": "198943.6788600",
+      "tokens": 1
+    },
+    "Y_ControlMode": {
+      "comment": "Y_ControlMode\t\t- Yaw control mode {0: no yaw control, 1: yaw rate control, 2: yaw-by-IPC}",
+      "line": 13,
+      "raw": "0",
+      "tokens": 1
+    }
+  },
+  "physical_pass": false,
+  "recognized_parameter_count": 17,
+  "source_reading_level": "Original DISCON.IN bytes verified this run; existing OUTB summaries/log source rows SHA-pinned, NOT reread 18 OUTB binaries or 18 stdout raw ZIP members",
+  "stages_passed": 0
+}
