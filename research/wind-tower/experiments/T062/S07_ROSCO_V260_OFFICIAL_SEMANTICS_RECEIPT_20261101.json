@@ -1,0 +1,141 @@
+{
+  "stage": "S07_SOURCE_SEMANTICS_QC_NOT_PHYSICAL_PASS",
+  "date": "2026-11-01",
+  "source_reading_level": "Original tagged v2.6.0 ROSCO source code and registry directly read via GitHub connector, not merely latest-version docs; 18 historical CSV directly read and SHA256 verified; original 18 OUTB and 18 DLL binaries NOT reread this round",
+  "SOURCE": {
+    "historical_csv": "research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv",
+    "sha256": "11469d9f19009b89aac99fe3405677ed2831f9c91dca253e2780e45f7b767a18",
+    "original_DISCON_sha256_from_prior_receipt": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "runtime_banner": "18/18 archived stdout reports ROSCO-v2.6.0 (previously SHA verified)",
+    "tag_commit": "51629665d22f92770f861daeebcebd47ab32abb1",
+    "tag_ref": "v2.6.0",
+    "tag_ref_verified_from_GitHub_API": true,
+    "official_files": [
+      {
+        "path": "ROSCO/rosco_registry/rosco_types.yaml",
+        "git_blob": "ea78a05cc336f7c36afaabca53083f88fd5cd5d2",
+        "sha256": "c83eb68cadccbbf9a2084cc14c9dc94f6731304179b6ffad30aa1d4df4b63b4c",
+        "lines": [
+          149,
+          155,
+          159,
+          175,
+          187,
+          198,
+          222,
+          225
+        ]
+      },
+      {
+        "path": "ROSCO/src/Controllers.f90",
+        "git_blob": "7568d4df0c04c710d490cf1010dd54d48e1be81a",
+        "sha256": "ded8d2b5ffbf4f0472ed400fc0ad5e178dd771aaf16c1b1d3ed74a190821b62d",
+        "lines": [
+          158,
+          180,
+          187,
+          190,
+          211,
+          213
+        ]
+      },
+      {
+        "path": "ROSCO/src/ControllerBlocks.f90",
+        "git_blob": "a62c536619ffd440f7d50cc306538db56281fcb4",
+        "sha256": "136744e014f31bf95d8fe6b82c07c139ec647264a65a2319152881b1cebf00e4",
+        "lines": [
+          35,
+          42,
+          48,
+          52,
+          92,
+          110,
+          134
+        ]
+      },
+      {
+        "path": "ROSCO/src/ReadSetParameters.f90",
+        "git_blob": "a0ac9e382effb32b11951a46c4abc378edeffb69",
+        "sha256": "0a0da7452a02c85b56a4c1dfea2e8cb1cb32523e4514499c9da5e6373ceea584",
+        "lines": [
+          235,
+          279,
+          303,
+          305,
+          596,
+          602
+        ]
+      }
+    ]
+  },
+  "REF": "ROSCO v2.6.0 tagged original source; no new peer-reviewed full text",
+  "STANDARD": "IEC 61400-1/6:2025 authorized text not accessed; no DLC1.2 compliance claim",
+  "OFFICIAL": "https://github.com/NatLabRockies/ROSCO/tree/v2.6.0/ROSCO ; source tag SHA pinned; current ROSCO docs may use changed mode semantics and must not be substituted for v2.6.0",
+  "RUN": "This turn: JavaScript V8 parsed actual 18-row historical CSV, SHA256 checked CSV and four tagged source files, tested source-mode markers and grouped six seeds; no native OpenFAST/Abaqus. New Node script and lightweight Actions workflow committed; native CI job status must be independently checked.",
+  "FIG": "None; no turbine physical response generated",
+  "TAB": "18 real cases, 3 wind speeds x 6 seeds; existing 18-row table reused, no duplicate data table",
+  "semantic_findings": {
+    "VS_ControlMode_2": "v2.6.0 TSR tracking with above-rated constant torque branch (Controllers.f90); NOT equivalent to constant power mode",
+    "VS_ControlMode_3": "v2.6.0 TSR tracking with dynamic constant-power torque limit, source Controllers.f90 lines 187-190",
+    "PC_ControlMode_1": "active PI blade pitch control",
+    "PC_RefSpd": "desired high-speed-shaft (generator-side) reference angular speed in rad/s; not rotor speed",
+    "VS_RtPwr": "wind turbine rated power in W",
+    "VS_RtTq": "rated generator torque in N m",
+    "VS_RefSpd": "actual v2.6.0 generator-speed reference key; previous 17-key extractor omitted it, so its value remains NOT EXTRACTED",
+    "VS_ConstPower": "previous 17-key extractor yields blank in 18 rows; blank is NOT zero or proof of any operating mode",
+    "power_identity": "VS_RtTq*PC_RefSpd is a decimal rated-value consistency check, not a dynamic power-control or DLL identity check"
+  },
+  "observed": {
+    "rows": 18,
+    "seeds_per_wind": 6,
+    "discon_VS_ControlMode": "2",
+    "discon_PC_ControlMode": "1",
+    "historical_case_DLL_sha_verified": 0,
+    "formal_DLC12_approved": 0,
+    "rated_product_W": 9999999.510864,
+    "rated_relative_residual": 4.891362469643354e-8,
+    "groups": [
+      {
+        "wind_mps": 9.343881,
+        "mean_power_to_rated": 0.6230954404883334,
+        "mean_torque_to_rated": 0.7617170966278334,
+        "mean_gen_speed_to_pitch_ref": 0.8033354149518334
+      },
+      {
+        "wind_mps": 11.4,
+        "mean_power_to_rated": 0.9122971092201667,
+        "mean_torque_to_rated": 0.9586624388315,
+        "mean_gen_speed_to_pitch_ref": 0.9453935351193333
+      },
+      {
+        "wind_mps": 19.20214,
+        "mean_power_to_rated": 0.9986465333976667,
+        "mean_torque_to_rated": 0.9993266800201667,
+        "mean_gen_speed_to_pitch_ref": 0.9992105726726668
+      }
+    ],
+    "missing_extracted_fields": [
+      "VS_RefSpd",
+      "VS_TSRopt",
+      "VS_GenEff",
+      "WE_Mode",
+      "SS_Mode"
+    ],
+    "source_level_checks": {
+      "18_cases_unique": true,
+      "six_seeds_per_speed": true,
+      "mode_2_and_pitch_1": true,
+      "historical_DLL_not_claimed": true,
+      "csv_SHA256": true,
+      "v2_6_source_markers": true,
+      "empty_legacy_fields_not_zero": true
+    }
+  },
+  "assumptions": "Historical summary means are from previously verified packed OUTB. Mean of power is not equal to product of mean torque and mean speed in general; no timewise PI/control-state identification is claimed.",
+  "error_budget": "Source bytes SHA256 exact; rated multiplication relative decimal mismatch 4.89136e-8. Output ratios from historical summary values have source decimal/OUTB quantization uncertainty described in prior T062 receipt; no dynamic controller tracking error, fatigue error, IEC uncertainty or DLL identity bound estimated.",
+  "failure_record": "Current audit encountered GitHub connector raw-URL fetch wrapper error; recovered via fetch_file at exact v2.6.0 tag. Official current-version docs have materially different VS_ControlMode descriptions; version-specific tagged source was used. No production solver failures this round.",
+  "HOLD": "Missing historical 18 original BTS and per-case DLL SHA; full DISCON extraction of VS_RefSpd/VS_TSRopt/VS_GenEff/WE_Mode/SS_Mode and dynamic controller-state evidence; 2025 IEC authorized DLC1.2 criteria; native Abaqus local stress.",
+  "physical_PASS": false,
+  "stages_passed": 0,
+  "earthquake_E_WE_native_results": 0
+}
