@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="690" viewBox="0 0 1280 690">
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;fill:#26303b}</style>
+<rect width="1280" height="690" fill="#fff"/>
+<text x="67.00" y="46.00" font-size="24" font-weight="600">图 S08-03  单自由度数值积分交叉核验</text>
+<text x="67.00" y="75.00" font-size="14" >实际三向地震输入 · 分段线性解析解 vs Newmark平均加速度 · 阻尼5%</text>
+<line x1="67.00" y1="99.00" x2="1213.00" y2="99.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="89.00" y="136.00" font-size="17" font-weight="600">(a) 解析解与Newmark</text>
+<line x1="105.00" y1="510.00" x2="545.00" y2="510.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="514.00" font-size="12" text-anchor="end">0</text>
+<line x1="105.00" y1="458.44" x2="545.00" y2="458.44" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="462.44" font-size="12" text-anchor="end">0.005</text>
+<line x1="105.00" y1="406.88" x2="545.00" y2="406.88" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="410.88" font-size="12" text-anchor="end">0.01</text>
+<line x1="105.00" y1="355.31" x2="545.00" y2="355.31" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="359.31" font-size="12" text-anchor="end">0.015</text>
+<line x1="105.00" y1="303.75" x2="545.00" y2="303.75" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="307.75" font-size="12" text-anchor="end">0.02</text>
+<line x1="105.00" y1="252.19" x2="545.00" y2="252.19" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="256.19" font-size="12" text-anchor="end">0.025</text>
+<line x1="105.00" y1="200.63" x2="545.00" y2="200.63" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="204.63" font-size="12" text-anchor="end">0.03</text>
+<line x1="105.00" y1="180.00" x2="105.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="105.00" y="534.00" font-size="12" text-anchor="middle">0.5</text>
+<line x1="128.16" y1="180.00" x2="128.16" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="128.16" y="534.00" font-size="12" text-anchor="middle">1</text>
+<line x1="174.47" y1="180.00" x2="174.47" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="174.47" y="534.00" font-size="12" text-anchor="middle">2</text>
+<line x1="267.11" y1="180.00" x2="267.11" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="267.11" y="534.00" font-size="12" text-anchor="middle">4</text>
+<line x1="359.74" y1="180.00" x2="359.74" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="359.74" y="534.00" font-size="12" text-anchor="middle">6</text>
+<line x1="545.00" y1="180.00" x2="545.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="545.00" y="534.00" font-size="12" text-anchor="middle">10</text>
+<line x1="105.00" y1="180.00" x2="105.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="105.00" y1="510.00" x2="545.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="325.00" y="569.00" font-size="14" text-anchor="middle">单自由度周期 (s)</text>
+<text x="45.00" y="345.00" transform="rotate(-90 45.00 345.00)" text-anchor="middle" font-size="14">相对位移峰值 (m)</text>
+<polyline points="105.00,476.82 128.16,436.31 174.47,353.50 267.11,382.85 359.74,232.05 545.00,318.87" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="476.82" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="128.16" cy="436.31" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="174.47" cy="353.50" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="267.11" cy="382.85" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="359.74" cy="232.05" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="545.00" cy="318.87" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="105.00" y1="579.00" x2="124.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="130.00" y="583.00" font-size="12" >HNE精确</text>
+<polyline points="105.00,473.28 128.16,435.71 174.47,397.92 267.11,314.82 359.74,249.65 545.00,263.40" fill="none" stroke="#bc6d52" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="473.28" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="128.16" cy="435.71" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="174.47" cy="397.92" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="267.11" cy="314.82" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="359.74" cy="249.65" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="545.00" cy="263.40" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<line x1="256.00" y1="579.00" x2="275.00" y2="579.00" stroke="#bc6d52" stroke-width="3" />
+<text x="281.00" y="583.00" font-size="12" >HNN精确</text>
+<polyline points="105.00,502.52 128.16,497.99 174.47,474.21 267.11,459.77 359.74,400.47 545.00,465.37" fill="none" stroke="#378372" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="502.52" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="128.16" cy="497.99" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="174.47" cy="474.21" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="267.11" cy="459.77" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="359.74" cy="400.47" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="545.00" cy="465.37" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<line x1="407.00" y1="579.00" x2="426.00" y2="579.00" stroke="#378372" stroke-width="3" />
+<text x="432.00" y="583.00" font-size="12" >HNZ精确</text>
+<polyline points="105.00,476.82 128.16,436.31 174.47,353.51 267.11,382.85 359.74,232.05 545.00,318.87" fill="none" stroke="#8067a2" stroke-width="1.2"  stroke-linejoin="round"/>
+<line x1="105.00" y1="600.00" x2="124.00" y2="600.00" stroke="#8067a2" stroke-width="3" />
+<text x="130.00" y="604.00" font-size="12" >HNE数值</text>
+<polyline points="105.00,473.25 128.16,435.71 174.47,397.93 267.11,314.82 359.74,249.66 545.00,263.40" fill="none" stroke="#8b969e" stroke-width="1.2"  stroke-linejoin="round"/>
+<line x1="256.00" y1="600.00" x2="275.00" y2="600.00" stroke="#8b969e" stroke-width="3" />
+<text x="281.00" y="604.00" font-size="12" >HNN数值</text>
+<polyline points="105.00,502.52 128.16,497.99 174.47,474.21 267.11,459.77 359.74,400.47 545.00,465.37" fill="none" stroke="#256a85" stroke-width="1.2"  stroke-linejoin="round"/>
+<line x1="407.00" y1="600.00" x2="426.00" y2="600.00" stroke="#256a85" stroke-width="3" />
+<text x="432.00" y="604.00" font-size="12" >HNZ数值</text>
+<text x="680.00" y="136.00" font-size="17" font-weight="600">(b) 数值误差</text>
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="514.00" font-size="12" text-anchor="end">0.0001</text>
+<line x1="696.00" y1="400.00" x2="1136.00" y2="400.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="404.00" font-size="12" text-anchor="end">0.001</text>
+<line x1="696.00" y1="290.00" x2="1136.00" y2="290.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="294.00" font-size="12" text-anchor="end">0.01</text>
+<line x1="696.00" y1="180.00" x2="1136.00" y2="180.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="184.00" font-size="12" text-anchor="end">0.1</text>
+<line x1="696.00" y1="180.00" x2="696.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="696.00" y="534.00" font-size="12" text-anchor="middle">0.5</text>
+<line x1="719.16" y1="180.00" x2="719.16" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="719.16" y="534.00" font-size="12" text-anchor="middle">1</text>
+<line x1="765.47" y1="180.00" x2="765.47" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="765.47" y="534.00" font-size="12" text-anchor="middle">2</text>
+<line x1="858.11" y1="180.00" x2="858.11" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="858.11" y="534.00" font-size="12" text-anchor="middle">4</text>
+<line x1="950.74" y1="180.00" x2="950.74" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="950.74" y="534.00" font-size="12" text-anchor="middle">6</text>
+<line x1="1136.00" y1="180.00" x2="1136.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="1136.00" y="534.00" font-size="12" text-anchor="middle">10</text>
+<line x1="696.00" y1="180.00" x2="696.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="916.00" y="569.00" font-size="14" text-anchor="middle">单自由度周期 (s)</text>
+<text x="636.00" y="345.00" transform="rotate(-90 636.00 345.00)" text-anchor="middle" font-size="14">相对误差 (%)</text>
+<polyline points="696.00,309.12 719.16,378.05 765.47,302.10 858.11,469.65 950.74,447.00 1136.00,393.79" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="309.12" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="719.16" cy="378.05" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="765.47" cy="302.10" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="858.11" cy="469.65" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="950.74" cy="447.00" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1136.00" cy="393.79" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="696.00" y1="579.00" x2="715.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="721.00" y="583.00" font-size="12" >HNE</text>
+<polyline points="696.00,198.27 719.16,287.35 765.47,357.14 858.11,369.28 950.74,402.53 1136.00,455.75" fill="none" stroke="#bc6d52" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="198.27" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="719.16" cy="287.35" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="765.47" cy="357.14" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="858.11" cy="369.28" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="950.74" cy="402.53" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="1136.00" cy="455.75" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<line x1="847.00" y1="579.00" x2="866.00" y2="579.00" stroke="#bc6d52" stroke-width="3" />
+<text x="872.00" y="583.00" font-size="12" >HNN</text>
+<polyline points="696.00,272.75 719.16,235.49 765.47,401.40 858.11,407.88 950.74,378.99 1136.00,328.46" fill="none" stroke="#378372" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="272.75" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="719.16" cy="235.49" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="765.47" cy="401.40" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="858.11" cy="407.88" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="950.74" cy="378.99" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="1136.00" cy="328.46" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<line x1="998.00" y1="579.00" x2="1017.00" y2="579.00" stroke="#378372" stroke-width="3" />
+<text x="1023.00" y="583.00" font-size="12" >HNZ</text>
+<line x1="67.00" y1="644.00" x2="1213.00" y2="644.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="67.00" y="669.00" font-size="12" >仅SDOF算法一致性，不是塔架真实E/W/WE或Abaqus原生求解。</text>
+</svg>

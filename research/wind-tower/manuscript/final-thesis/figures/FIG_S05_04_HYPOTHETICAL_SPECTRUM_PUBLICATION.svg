@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="690" viewBox="0 0 1280 690">
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;fill:#26303b}</style>
+<rect width="1280" height="690" fill="#fff"/>
+<text x="67.00" y="46.00" font-size="24" font-weight="600">图 S05-04  记录谱与假定目标谱失配</text>
+<text x="67.00" y="75.00" font-size="14" >12周期(0.5–6s) · 最佳统一缩放系数0.980397</text>
+<line x1="67.00" y1="99.00" x2="1213.00" y2="99.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="89.00" y="136.00" font-size="17" font-weight="600">(a) 缩放记录与假定谱</text>
+<line x1="105.00" y1="510.00" x2="545.00" y2="510.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="514.00" font-size="12" text-anchor="end">0.02</text>
+<line x1="105.00" y1="428.03" x2="545.00" y2="428.03" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="432.03" font-size="12" text-anchor="end">0.05</text>
+<line x1="105.00" y1="366.02" x2="545.00" y2="366.02" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="370.02" font-size="12" text-anchor="end">0.1</text>
+<line x1="105.00" y1="304.02" x2="545.00" y2="304.02" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="308.02" font-size="12" text-anchor="end">0.2</text>
+<line x1="105.00" y1="222.05" x2="545.00" y2="222.05" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="226.05" font-size="12" text-anchor="end">0.5</text>
+<line x1="105.00" y1="180.00" x2="105.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="105.00" y="534.00" font-size="12" text-anchor="middle">0.5</text>
+<line x1="227.73" y1="180.00" x2="227.73" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="227.73" y="534.00" font-size="12" text-anchor="middle">1</text>
+<line x1="350.47" y1="180.00" x2="350.47" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="350.47" y="534.00" font-size="12" text-anchor="middle">2</text>
+<line x1="422.27" y1="180.00" x2="422.27" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="422.27" y="534.00" font-size="12" text-anchor="middle">3</text>
+<line x1="473.20" y1="180.00" x2="473.20" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="473.20" y="534.00" font-size="12" text-anchor="middle">4</text>
+<line x1="545.00" y1="180.00" x2="545.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="545.00" y="534.00" font-size="12" text-anchor="middle">6</text>
+<line x1="105.00" y1="180.00" x2="105.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="105.00" y1="510.00" x2="545.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="325.00" y="569.00" font-size="14" text-anchor="middle">周期 T (s)</text>
+<text x="45.00" y="345.00" transform="rotate(-90 45.00 345.00)" text-anchor="middle" font-size="14">PSA (m/s²)</text>
+<polyline points="105.00,217.57 176.80,262.34 227.73,277.72 267.25,300.40 299.53,342.23 350.47,342.27 389.98,367.52 422.27,397.70 449.56,420.30 473.20,449.63 512.72,485.13 545.00,484.07" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="217.57" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="176.80" cy="262.34" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="227.73" cy="277.72" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="267.25" cy="300.40" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="299.53" cy="342.23" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="350.47" cy="342.27" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="389.98" cy="367.52" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="422.27" cy="397.70" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="449.56" cy="420.30" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="473.20" cy="449.63" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="512.72" cy="485.13" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="545.00" cy="484.07" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="105.00" y1="579.00" x2="124.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="130.00" y="583.00" font-size="12" >缩放RotD50</text>
+<polyline points="105.00,272.47 176.80,305.12 227.73,328.28 267.25,346.24 299.53,360.92 350.47,375.26 389.98,379.24 422.27,383.40 449.56,387.77 473.20,392.36 512.72,402.31 545.00,413.51" fill="none" stroke="#bc6d52" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="272.47" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="176.80" cy="305.12" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="227.73" cy="328.28" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="267.25" cy="346.24" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="299.53" cy="360.92" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="350.47" cy="375.26" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="389.98" cy="379.24" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="422.27" cy="383.40" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="449.56" cy="387.77" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="473.20" cy="392.36" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="512.72" cy="402.31" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="545.00" cy="413.51" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<line x1="256.00" y1="579.00" x2="275.00" y2="579.00" stroke="#bc6d52" stroke-width="3" />
+<text x="281.00" y="583.00" font-size="12" >假定目标</text>
+<text x="680.00" y="136.00" font-size="17" font-weight="600">(b) 周期点失配 9/12</text>
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="514.00" font-size="12" text-anchor="end">0</text>
+<line x1="696.00" y1="431.43" x2="1136.00" y2="431.43" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="435.43" font-size="12" text-anchor="end">0.5</text>
+<line x1="696.00" y1="352.86" x2="1136.00" y2="352.86" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="356.86" font-size="12" text-anchor="end">1</text>
+<line x1="696.00" y1="274.29" x2="1136.00" y2="274.29" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="278.29" font-size="12" text-anchor="end">1.5</text>
+<line x1="696.00" y1="195.71" x2="1136.00" y2="195.71" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="199.71" font-size="12" text-anchor="end">2</text>
+<line x1="696.00" y1="180.00" x2="696.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="696.00" y="534.00" font-size="12" text-anchor="middle">0.5</text>
+<line x1="818.73" y1="180.00" x2="818.73" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="818.73" y="534.00" font-size="12" text-anchor="middle">1</text>
+<line x1="941.47" y1="180.00" x2="941.47" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="941.47" y="534.00" font-size="12" text-anchor="middle">2</text>
+<line x1="1013.27" y1="180.00" x2="1013.27" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="1013.27" y="534.00" font-size="12" text-anchor="middle">3</text>
+<line x1="1064.20" y1="180.00" x2="1064.20" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="1064.20" y="534.00" font-size="12" text-anchor="middle">4</text>
+<line x1="1136.00" y1="180.00" x2="1136.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="1136.00" y="534.00" font-size="12" text-anchor="middle">6</text>
+<line x1="696.00" y1="180.00" x2="696.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="916.00" y="569.00" font-size="14" text-anchor="middle">周期 T (s)</text>
+<text x="636.00" y="345.00" transform="rotate(-90 636.00 345.00)" text-anchor="middle" font-size="14">谱比 (—)</text>
+<rect x="696.00" y="305.71" width="440" height="94.29" fill="#edf0f2" opacity=".9"/>
+<polyline points="696.00,219.70 767.80,256.52 818.73,233.47 858.25,247.66 890.53,316.33 941.47,282.78 980.98,330.87 1013.27,376.07 1040.56,400.77 1064.20,427.16 1103.72,447.74 1136.00,438.59" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="219.70" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="767.80" cy="256.52" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="818.73" cy="233.47" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="858.25" cy="247.66" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="890.53" cy="316.33" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="941.47" cy="282.78" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="980.98" cy="330.87" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1013.27" cy="376.07" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1040.56" cy="400.77" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1064.20" cy="427.16" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1103.72" cy="447.74" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1136.00" cy="438.59" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="696.00" y1="579.00" x2="715.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="721.00" y="583.00" font-size="12" >记录/目标</text>
+<line x1="67.00" y1="644.00" x2="1213.00" y2="644.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="67.00" y="669.00" font-size="12" >假定研究目标谱，不是嘉鱼设计谱；±30%仅为可视化诊断带。</text>
+</svg>
