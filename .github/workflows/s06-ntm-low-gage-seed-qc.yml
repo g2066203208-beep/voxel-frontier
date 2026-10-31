@@ -5,6 +5,8 @@ on:
       - '.github/workflows/s06-ntm-low-gage-seed-qc.yml'
       - 'research/wind-tower/experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js'
       - 'research/wind-tower/experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv'
+      - 'research/wind-tower/experiments/T062/S10_18NTM_6SEED_LOAD_DEL_CONVERGENCE_SUMMARY_20261031.csv'
+      - 'research/wind-tower/experiments/T062/S10_18NTM_6SEED_EXHAUSTIVE_SUBSET_CONVERGENCE_20261031.csv'
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,6 +24,8 @@ jobs:
             research/wind-tower/archive/local-assets-20261004/file-manifest.json
             research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv
             research/wind-tower/experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv
+            research/wind-tower/experiments/T062/S10_18NTM_6SEED_LOAD_DEL_CONVERGENCE_SUMMARY_20261031.csv
+            research/wind-tower/experiments/T062/S10_18NTM_6SEED_EXHAUSTIVE_SUBSET_CONVERGENCE_20261031.csv
             research/wind-tower/experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js
       - uses: actions/setup-node@v4
         with:
@@ -36,6 +40,10 @@ jobs:
           node "$root/experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js" \
             --source "$root/experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv" \
             --manifest "$root/archive/local-assets-20261004/file-manifest.json" \
-            --out "$RUNNER_TEMP/s06_ntm_seed_spread.csv"
+            --out "$RUNNER_TEMP/s06_ntm_seed_spread.csv" \
+            --convergence-summary "$RUNNER_TEMP/s10_convergence_summary.csv" \
+            --convergence-subsets "$RUNNER_TEMP/s10_convergence_subsets.csv"
           cmp "$RUNNER_TEMP/s06_ntm_seed_spread.csv" "$root/experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv"
-          echo 'SOURCE_ONLY_30_ROW_QC_PASS; NOT PHYSICS_PASS; NO BTS OR SOLVER'
+          cmp "$RUNNER_TEMP/s10_convergence_summary.csv" "$root/experiments/T062/S10_18NTM_6SEED_LOAD_DEL_CONVERGENCE_SUMMARY_20261031.csv"
+          cmp "$RUNNER_TEMP/s10_convergence_subsets.csv" "$root/experiments/T062/S10_18NTM_6SEED_EXHAUSTIVE_SUBSET_CONVERGENCE_20261031.csv"
+          echo 'SOURCE_ONLY_30_GROUP_180_SUBSET_ROW_QC_PASS; LOAD_DEL_ONLY_NOT_MATERIAL_DAMAGE; NO SOLVER'
