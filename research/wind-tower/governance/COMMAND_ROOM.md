@@ -542,3 +542,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-07-S07-SIXDOF-END
 - **END / 2026-10-31 07时 CST / 自动研究**：实际创建[T062 6DOF源码](../experiments/T062/s07_sixdof_wrench_source_contract.mjs)和[180行真实原生均值向量表](../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)，既有轻量[CI workflow](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s06-paired-seed-del-qc.yml)追加源SHA/180行逐字节复算及损坏输入拒绝；V8数值实测通过，远端CI尚未核得PASS。T077 07时过程与论文00_STATUS已同步；**没有新OpenFAST/Abaqus生产RUN、规范授权页或地震结果**。S07为SOURCE-ONLY程序准备、12阶段0/12未晋级。冻结T057/T070不改、PR #42保持Open/Draft。下一责任方：S07原生坐标/力矩参考点官方定义核读及一份真实同步OUTB逐点验证，不重复1080行源级DEL。
+
+
+### HANDOFF-20261031-08-S07-LOCAL-FRAME-START
+- **START / 2026-10-31 08时 CST / 自动研究**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，read_base_sha=`843143630080c3ec9f10ac4ab619e4621611936a`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、本指挥室当前/07时交接及T077 07时S07源均值日志；继承18×10站180行真实NTM六分量源均值与现有wrench算法，不重算DEL、不碰冻结T057/T070。本轮查核OpenFAST v3.5.3官方ElastoDyn坐标系文档及NREL FAST v6用户指南印刷第8、117–118页（历史指南，须区分版本），目标为明确**TwrBs塔基坐标与TwHt局部随塔弯曲坐标不可默认为相同固定坐标**，并在现有T062 S07脚本加入逐时刻坐标旋转/参考点契约及负例、真实180行源均值拒绝直接物理映射门禁。拟更新T062原脚本、T077原过程日志、00_STATUS和本指挥室；SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及误差与HOLD均追加原文件；无新授权标准条款/原生求解，不执行700s生产、不合并PR。
