@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 12时｜S05真实地震输入谱两幅可复算图（SOURCE-FIG，不是塔架地震响应）
+
+复用ESM IT-2012-0008/IT.NVL/MP真实已处理波的[16周期水平RotD源表](../../experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv)及[12周期假设谱形拟合表](../../experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv)，已绘制[真实RotD00/50/100与HNE/HNN对比图](figures/FIG_S05_01_ESM_REAL_ROTD_16PERIOD_SOURCE_QC.svg)和[真实RotD50与研究假设目标谱对比图](figures/FIG_S05_02_ESM_REAL_ROTD50_VS_HYPOTHETICAL_SPECTRUM_QC.svg)，可用[SHA锁定Node绘图程序](figures/plot_s05_esm_real_spectra.js)复算；16/12行真实数据已由V8实际校验，s=0.980397、RMSE(log)=0.534707，12周期中9周期超出**自设**±30%图示带。源SHA/图表身份、误差预算、负向门禁及CI状态见[T079 12时过程日志](../../experiments/T079/PROCESS_LOG.md)。**不是嘉鱼批准设计谱或158m地震响应图**，原生Abaqus E/WE仍0，S05 PARTIAL、12阶段**0/12未晋级**，正式规范/场址/低频仪器可用性仍HOLD；不修改冻结T057/T070。
+
+
 ## 2026-10-31 11时｜S07原生TP/RP九站空间运动学一致性数值验证（SOURCE-QC，不是物理PASS）
 
 复用真实原始ETM `U09p343881_ETM_S01` OUTB（SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`），9站×12001同步时刻，将实测首尾`TPx/TPy`弦差与`RP`候选旋转矩阵所给切线斜率沿塔高梯形积分对照。**`R^T`候选RMS残差0.17856 μm、最大0.34319 μm；`R`候选RMS残差275.158 μm**；12001/12001时刻均优选`R^T`。原生packed量化传播界最大0.02145 μm，故`R^T`残差仍超纯量化界，不能误报为“零误差”或独立局部姿态验收。真实数据与三时刻对照已写入[既有T062结果JSON](../../experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json)，[Actions #41163087229](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41163087229) completed/success，含解析自测、篡改ZIP SHA拒绝、结果远端保存；程序SHA256=`030df0f05c130002274a7580695347fafc5442448a63cd4da57b6e9940c5dac9`。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、假设/误差/HOLD见[T077 11时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级，S06 PARTIAL、S07 BLOCKED、E/WE原生0**；待独立导出`TowerLn2Mesh%Orientation`验证，不把截面内力当外部风载，不新增高成本RUN。
