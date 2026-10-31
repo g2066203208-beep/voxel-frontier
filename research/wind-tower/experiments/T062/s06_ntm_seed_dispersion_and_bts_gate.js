@@ -60,7 +60,7 @@ function convergence(rows){
  const channels=["TwrBsMyt",...Array.from({length:9},(_,i)=>"TwHt"+(i+1)+"MLyt")];
  const must=(x,m)=>{if(!x)throw Error(m)};
  const fmt=(x,n=9)=>{must(Number.isFinite(x),"NONFINITE_RESULT");return x.toFixed(n)};
- const pow4=a=>Math.pow(a.reduce((s,x)=>s+x**4,0)/a.length,.25);
+ const pow4=a=>Math.sqrt(Math.sqrt(a.reduce((s,x)=>{const y=x*x;return s+y*y},0)/a.length));
  const choose=(a,n)=>{const out=[];const recur=(s,acc)=>{if(acc.length===n){out.push(pow4(acc));return}for(let j=s;j<=a.length-(n-acc.length);j++)recur(j+1,[...acc,a[j]])};recur(0,[]);return out};
  const counts=[0,6,15,20,15,6,1];
  const summary=["wind_case,channel,seed_count,arithmetic_mean_DEL_m4_kNm,equal_duration_power_mean_m4_kNm,power_vs_arithmetic_percent,seed_sample_CV_percent,min_seed_DEL_kNm,max_seed_DEL_kNm,leave_one_out_max_abs_power_mean_shift_percent,source_csv_sha256"];

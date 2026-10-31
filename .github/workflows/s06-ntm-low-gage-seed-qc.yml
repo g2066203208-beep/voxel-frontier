@@ -45,5 +45,8 @@ jobs:
             --convergence-subsets "$RUNNER_TEMP/s10_convergence_subsets.csv"
           cmp "$RUNNER_TEMP/s06_ntm_seed_spread.csv" "$root/experiments/T062/S06_18NTM_NATIVE_LOW_GAGE_MYT_SEED_SPREAD_20261031.csv"
           cmp "$RUNNER_TEMP/s10_convergence_summary.csv" "$root/experiments/T062/S10_18NTM_6SEED_LOAD_DEL_CONVERGENCE_SUMMARY_20261031.csv"
-          cmp "$RUNNER_TEMP/s10_convergence_subsets.csv" "$root/experiments/T062/S10_18NTM_6SEED_EXHAUSTIVE_SUBSET_CONVERGENCE_20261031.csv"
+          if ! cmp "$RUNNER_TEMP/s10_convergence_subsets.csv" "$root/experiments/T062/S10_18NTM_6SEED_EXHAUSTIVE_SUBSET_CONVERGENCE_20261031.csv"; then
+            diff -u "$RUNNER_TEMP/s10_convergence_subsets.csv" "$root/experiments/T062/S10_18NTM_6SEED_EXHAUSTIVE_SUBSET_CONVERGENCE_20261031.csv" | head -40 || true
+            exit 1
+          fi
           echo 'SOURCE_ONLY_30_GROUP_180_SUBSET_ROW_QC_PASS; LOAD_DEL_ONLY_NOT_MATERIAL_DAMAGE; NO SOLVER'
