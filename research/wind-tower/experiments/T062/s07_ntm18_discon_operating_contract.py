@@ -235,7 +235,14 @@ def extended_source_qc(data, receipt):
         val = float(obj["raw"])
         require(math.isfinite(val), "EXTENDED_PARAMETER_NONFINITE:" + key)
         if key in ("WE_Mode", "SS_Mode"):
-            require(val in (0.0, 1.0), "EXTENDED_MODE_OUT_OF_RANGE:" + key)
+            require(val >= 0 and val.is_integer(), "EXTENDED_MODE_INVALID:" + key)
+            if val not in (0.0, 1.0):
+                # Registry lists {0,1}; source may contain a legacy or custom mode.
+                # Do not overwrite, normalize, or imply official semantic acceptance.
+                rows[-1]["status"] = "ORIGINAL_VALUE_SEMANTIC_HOLD"
+                semantic_holds.append({"parameter": key, "source_line": obj["line"],
+                    "raw_value": obj["raw"], "registry_expected": "0 or 1",
+                    "reason": "Original value not listed by official v2.6.0 registry"})
         elif key == "VS_GenEff":
             require(val > 0, "EXTENDED_EFFICIENCY_NONPOSITIVE")
             if val > 1:
@@ -319,7 +326,7 @@ def self_test():
     assert p["VS_GenEff"]["raw"] == "0.94"
     assert p["WE_Mode"]["raw"] == "1" and p["SS_Mode"]["raw"] == "0"
     assert "VS_MinOMSpd" not in p and p["PC_RefSpd"]["raw"] == "3"
-    for key, val in (("VS_GenEff", "-1.1"), ("WE_Mode", "2"),
+    for key, val in (("VS_GenEff", "-1.1"), ("WE_Mode", "-2"),
                      ("VS_RefSpd", "-3")):
         altered = fixture.replace(
             {"VS_GenEff": b"0.94", "WE_Mode": b"1", "VS_RefSpd": b"49.9"}[key]
@@ -349,7 +356,14 @@ def self_test():
     _, flagged = extended_source_qc(fake_csv, fake_receipt)
     assert flagged["semantic_holds"][0]["raw_value"] == "94"
     assert not flagged["semantic_validation_pass"] and not flagged["physical_pass"]
-    print("EXTENDED_DISCON_SELFTEST_PASS: 5 extracted keys, 3 invalid parameter rejections, 1 semantic HOLD")
+    high_mode = fixture.replace(b"1 ! WE_Mode", b"2 ! WE_Mode")
+    mode_receipt = {"parsed_discon_parameters": parse_discon(high_mode),
+                    "input_sha256": {"original_discon": DISCON_SHA},
+                    "original_discon_bytes": len(high_mode)}
+    _, flagged_mode = extended_source_qc(fake_csv, mode_receipt)
+    assert any(h["parameter"] == "WE_Mode" and h["raw_value"] == "2"
+               for h in flagged_mode["semantic_holds"])
+    print("EXTENDED_DISCON_SELFTEST_PASS: 5 extracted keys, 3 invalid parameter rejections, 2 semantic HOLD checks")
 
 def main():
     parser = argparse.ArgumentParser()
