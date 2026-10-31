@@ -1,3 +1,17 @@
+## 2026-10-31 11时｜S07原始ETM九站TP/RP全时程空间运动学符号辨识（真实源级，非独立物理PASS）
+
+**SOURCE/实际阅读层级**：PR #42原始ETM `U09p343881_ETM_S01` 的归档ZIP原件SHA256=`c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0`、OUTB SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`，通过既有T062解码器与前序3时刻原生收据核对；本轮Actions实际解包并逐时刻处理9站×12001=108009组真实同步TP/RP（100–700s、dt=0.05s）。开工PR HEAD=`828929c90dc2dee26f3a36708d547d98ac860866`，后续已有START和代码/自动结果提交；main当时=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`。
+
+**RUN/方法**：在[既有原始ETM程序](../../T062/s07_original_etm_native_history_frame_qc.py)加入`kinematic_chord/kinematic_history`，不增加新T080编号、无OpenFAST生产求解。每个真实时刻，按9个原生`TPzi`高度顺序，梯形积分`SmllRotTrans(RP)^T e_z`与`SmllRotTrans(RP)e_z`两种候选的横向切线斜率，分别预测首尾站`TPx/TPy`空间弦差；与实际`TP9−TP1`对照。严格拒绝高度非单调、RP非有限/越界、源SHA变化；已知3站二次位移/线性转角解析算例和反向符号及坏z拒绝自测通过。该方法只检验**同一OpenFAST模型内部运动学自洽和符号优选**，不构成独立`TowerLn2Mesh%Orientation`基准。
+
+**TAB/真实数值**：[原有S07结果JSON](../../T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json)新增`kinematic_qc`字段，12001/12001时刻候选`R^T`的弦差残差均小于候选`R`（按量化预算排除平局）：`R^T`残差RMS **1.785593373146336e-7 m（0.17856 μm）**、最大3.431904441125919e-7 m；`R`残差RMS **2.751582458942383e-4 m（275.158 μm）**、最大5.494427265065654e-4 m。两候选RMS相差约**1541倍**。代表时刻100s：实测首尾站`ΔTPx=9.7544474768e-5 m`，`R^T`积分预测`9.7712301037e-5 m`，而`R`为`−9.7712301037e-5 m`；400/700s同向。此为真实原生数据内部一致性证据，不能直接推断Abaqus加载误差。
+
+**误差预算/失败**：仅按OUTB packed TP/RP半量化步长与`TPzi`高度差传播计算，最大全向量保守量化界**2.144888899409766e-8 m（0.02145 μm）**；优选`R^T`的RMS **仍大于量化界**，故残差不能归咎于纯量化噪声。梁剪切变形、9站非均匀积分/有限站距、RP到内部方向矩阵的真实定义、几何参考点及模型误差均未有独立预算（`NEED-ESTIMATE`），不得将0.17856μm当作“坐标误差已验收”。篡改原始ZIP触发`ARCHIVE_SHA256_MISMATCH`为**预期负向测试**，非生产失败。
+
+**OFFICIAL/真实远端执行**：[Actions #41163087229/job #124424718686](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41163087229) `completed/success`；实际原生日志有`S07_KINEMATIC_SELFTEST_PASS`、`S07_ORIGINAL_ETM_NATIVE_HISTORY_SOURCE_QC_PASS`、预期篡改拒绝、`S07_REAL_SOURCE_QC_PERSISTED`。结果由Actions提交到Draft PR分支，源程序SHA256=`030df0f05c130002274a7580695347fafc5442448a63cd4da57b6e9940c5dac9`；结果Git Blob=`cfb2a5c0f6c1145a96456cbe2d4889753fdde57f`。**REF**=此前已核OpenFAST v3.5.3 ElastoDyn.f90/NWTC_Num.f90源码公式（本轮未新增期刊全文原页）；**STANDARD**=本轮无授权IEC/GB条款原页，不作规范PASS；**FIG**=无新图；**TAB**=既有结果JSON内真实12001时刻统计和3时刻双候选对照。
+
+**PASS/HOLD**：`S07_NATIVE_TP_RP_KINEMATIC_SOURCE_QC_PASS`仅为源级/数值测试；**S07物理BLOCKED、S06 PARTIAL、12阶段0/12未晋级，地震E/WE原生0项**。未独立输出并比对`TowerLn2Mesh%Orientation(t)`，未核截面内力到外部风载的自由体所有权，且ETM九站近底不等于正式DLC1.2的31段。冻结T057/T070、main不变，未合并PR、未运行700s/高成本Abaqus。**下一唯一动作**：在受控短时OpenFAST v3.5.3派生诊断中独立导出一站`TowerLn2Mesh%Orientation(t)`，逐时刻与RP重建`R^T`对照（不启动生产RUN）。
+
 ## 2026-10-31 07时｜S07真实NTM六分量源向量接口及刚体参考点变换数值验收（SOURCE-ONLY）
 
 **SOURCE/实际阅读层级**：读取PR #42现有[T062原始OUTB派生1080行NTM六分量统计](../../T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv)，前序Actions #41087172683验证其原始OUTB SHA与600s/12001点统计，源CSV已锁SHA256=`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；本轮直接读取的是**1080行CSV文本**，没有重下载18份OUTB、没有取得任一完整同步六分量时程。18个case各60通道（塔底6+九站各6），原始均值单位kN/kN-m；每case对应OUTB SHA与part ZIP指针原样传递。main读取SHA=`58c1e545f67b645417d5957189f5dad693d975bb`；开工PR read_base_sha=`081ac4b6e9fbeb8d996580baecc732cd74474aed`。
