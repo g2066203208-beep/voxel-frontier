@@ -20,6 +20,9 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-11-01 07时 S08 T057竖向轴与真实ESM三向加速度静态契约（独立SOURCE-NUMERIC）**：核对冻结[T057原始审计](../experiments/T057/T057_RAW_PHYSICS_AUDIT_20261007.json)发现塔架+Y竖直（PT Y=0–112m，Gravity=-Y）且尺度与SI一致；此前[通用幅值导出器](../experiments/T079/s08_base_motion_amplitude_gate.py)按Z-up/mm/s²假定，**不可直接施加于T057**，否则存在轴置换/1000倍量纲风险，未实际加载。已用真实[ESM五行同刻峰值](../experiments/T079/real-records/S08_ESM_IT2012_NVL_3COMP_COINCIDENT_PEAKS_20261101.csv)完成[右手系Y-up映射Node程序](../experiments/T079/s08_t057_yup_frame_unit_contract.cjs)及[SHA/三角度数值收据](../experiments/T079/real-records/S08_ESM_T057_YUP_FRAME_UNIT_RECEIPT_20261101.json)；Node22.16.0本地6项异常拒绝测试通过，33.675s θ=0映射(X,Y,Z)=(0.47490368,0.28759727,0.11274797)m/s²，θ=0/30/90范数最大差1.11e-16m/s²。仅重读5行真实样本，未重跑32040点、未生成Abaqus加载卡；谱/场址/原生初态/方位/竖向符号/完整质量单位/底座输入语义HOLD，**E/WE原生0、12阶段0/12未晋级**。详见[T079 07时过程](../experiments/T079/PROCESS_LOG.md)。下一唯一动作：已知解小模型原生基底加速度输入语义/坐标与密度单位验证，仍不做158m生产RUN。
+
+
 **2026-11-01 06时 S08 ESM真实三分量同步峰值数值QC**：继承既有ESM v3 `IT-2012-0008/NVL/MP`真实三向波形和历史[Actions原始归档](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979)，从32,040同步时刻×3分量实际读取、源CSV SHA256=`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`，本地Python 3.13.5通过6类异常输入拒绝测试，得三向**同步**PGA=`0.566531375766706m/s²@33.675s`、水平矢量PGA=`0.514763366939388m/s²@33.455s`；三分量**各自峰值**平方和开方`0.756121489000420m/s²`只是上界，比同步真实峰值高33.4651%，不能冒充同一时刻波形或结构响应。新增[可复算程序](../experiments/T079/s08_esm_three_component_coincident_peak_gate.py)、[5行源级数表](../experiments/T079/real-records/S08_ESM_IT2012_NVL_3COMP_COINCIDENT_PEAKS_20261101.csv)、[SHA/误差收据](../experiments/T079/real-records/S08_ESM_IT2012_NVL_3COMP_COINCIDENT_PEAKS_RECEIPT_20261101.json)，详见[T079 06时过程](../experiments/T079/PROCESS_LOG.md)。原生E/WE=0、正式S05谱/IEC/GB/场址/长周期SNR和Abaqus坐标/PT初态HOLD，**12阶段0/12未晋级**；本轮无新增CI原生日志/昂贵求解，未改T057/T070/main或PR Draft。下一唯一动作：真实三向输入→Abaqus坐标/单位静态契约与独立测试。
 
 
@@ -758,3 +761,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261101-07-S08-T057-YUP-AXIS-UNIT-START
 - START / 2026-11-01 07时 CST / 云端研究：`read_base_sha=d2d444b6a0fb7ae8774c783ae34ab3ec231c147c`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 经Open/Draft搜索确认。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/METHOD_PLAN/PROCESS_LOG、T080.1/.2/.3、12阶段计划、指挥室与T079三向真实峰值、已有基底幅值导出程序及收据、T057原始物理审计。发现T057审计PT高度沿**Y=0–112m**且重力方向**-Y**，与既有solver-agnostic地震幅值导出器的`Z=Up`及`mm/s²`假定**不可直接互换**。本轮只补T057专用ENU→Y-up右手坐标与SI单位静态映射契约、5个真实同步样本的独立数值测试及SHA收据；拟改T079最小程序/收据、T079过程日志、00_STATUS及本指挥室；不写Abaqus载荷卡、不改冻结T057/T070、不做原生E/WE或高成本RUN。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及HOLD以本轮收尾为准。
+
+
+### HANDOFF-20261101-07-S08-T057-YUP-AXIS-UNIT-END
+- END / 2026-11-01 07时 CST / 继承START的`read_base_sha=d2d444b6a0fb7ae8774c783ae34ab3ec231c147c`；本地Node22.16.0运行真实5行ESM同刻样本+T057审计+历史幅值收据，6项坏输入拒绝和坐标/范数/右手性/单位测试通过，stdout=`S08_T057_YUP_FRAME_UNIT_SELFTEST_PASS`，未取得新的GitHub Actions作业或Abaqus原生日志。新增[T079程序](../experiments/T079/s08_t057_yup_frame_unit_contract.cjs) Git blob=`09ef70bcd8b574c851dbfefc12be6443c6a6b4c7`、SHA256=`42de4ac43eb6f3340b4e5ed64dcbf58b6387d73e37d24959d5463c1b40941885`；[收据](../experiments/T079/real-records/S08_ESM_T057_YUP_FRAME_UNIT_RECEIPT_20261101.json) Git blob=`9812f7addc6d2b7014b73f8230d26e62d2544775`、SHA256=`9f1d3b77b5360916e96a3200b5e1ad21b2383290f17835068c30e668437eff41`，均已远端回读；T079过程、论文00_STATUS、本指挥室同步。关键纠错：T057是Y-up，旧通用Z-up/mm/s²幅值不能直接接入。**无地震原生E/WE RUN、无标准PASS、无生产计算，0/12阶段未晋级；不改冻结T057/T070、不合并PR**。下一责任方：本机Abaqus执行端进行独立小模型基底加速度/单位/BC验证；网页版继续准备正式谱与波形源QC，不阻挡S10风疲劳准备。
