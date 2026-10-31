@@ -1,0 +1,57 @@
+{
+  "SOURCE": "ESM v3 IT-2012-0008/NVL/MP processed three-component source, 5 synchronous diagnostic samples; NOT full wave re-read",
+  "SOURCE_SHA256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "SOURCE_SAMPLE_CSV_SHA256": "1b8d4e2f2b47222694a363eb96aa1ec53217a8610b952aa8a519470a9142bc29",
+  "SOURCE_MODEL_AUDIT_SHA256": "9fe35e625f8abc04f056cad301e7285136aa199fbad5aed944fc101bf4efad0b",
+  "SOURCE_PREVIOUS_AMP_RECEIPT_SHA256": "3615cce0d23b7ba992c3bf98a6322e974146d50263881ecf110c9a9b444dee0f",
+  "T057_FROZEN_INP_SHA256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "REF": "ESM v3 DOI 10.13127/esm.3",
+  "STANDARD": "IEC/GB target and applicable clauses NOT_VERIFIED",
+  "OFFICIAL": "T057 original input audit: gravity -Y, PT from Y=0 to Y=112 m, prestress 1.28e9 Pa; Abaqus native input semantics NOT_VERIFIED",
+  "RUN": "Node.js source-level deterministic self-test only; native Abaqus E/WE=0",
+  "FIG": "NONE",
+  "TAB": "5 source synchronous samples + 3 rotated values at same peak time in this JSON",
+  "assumptions": "ESM HNE=East, HNN=North, HNZ=Up assumed; X azimuth from East CCW, Y=Up, Z chosen for right-handed frame. Physical turbine azimuth and HNZ station header still unverified.",
+  "model_unit_contract": "T057 audit consistent with metre, second, Pa, gravity 9.81 m/s^2. Use factor=1 m/s^2 for this SI branch; previous 1000 mm/s^2 amplitudes are NOT directly compatible. Full density/mass-unit independent audit pending.",
+  "orientation_formula": "X=cos(theta)*HNE+sin(theta)*HNN; Y=HNZ; Z=sin(theta)*HNE-cos(theta)*HNN; determinant +1",
+  "sample_three_component_peak_time_s": 33.675,
+  "sample_peak_m_s2": 0.5665313757667055,
+  "transformed": [
+    {
+      "azimuth_deg_ccw_from_east": 0,
+      "source_time_s": 33.675,
+      "global_X_m_s2": 0.47490368,
+      "global_Y_up_m_s2": 0.28759727,
+      "global_Z_m_s2": 0.11274797,
+      "norm_m_s2": 0.5665313757667055
+    },
+    {
+      "azimuth_deg_ccw_from_east": 30,
+      "source_time_s": 33.675,
+      "global_X_m_s2": 0.35490466623071587,
+      "global_Y_up_m_s2": 0.28759727,
+      "global_Z_m_s2": 0.33509444624512574,
+      "norm_m_s2": 0.5665313757667056
+    },
+    {
+      "azimuth_deg_ccw_from_east": 90,
+      "source_time_s": 33.675,
+      "global_X_m_s2": -0.11274796999999998,
+      "global_Y_up_m_s2": 0.28759727,
+      "global_Z_m_s2": 0.47490368,
+      "norm_m_s2": 0.5665313757667055
+    }
+  ],
+  "error_budget": {
+    "rotation_norm_abs_m_s2": 1.1102230246251565e-16,
+    "source_sample_peak_abs_m_s2": 4.440892098500626e-16,
+    "time_sampling_s": 0.005,
+    "physical_azimuth_error": "NOT_ESTIMATED",
+    "vertical_sign_error": "NOT_ESTIMATED",
+    "low_frequency_reliability": "NOT_VERIFIED"
+  },
+  "negative_tests": 6,
+  "PASS": "STATIC_AXIS_AND_UNIT_CONTRACT_ONLY",
+  "HOLD": "Model-global Y-up and SI inference require full native Abaqus unit/BC audit; site spectrum, processed wave low-frequency validity, structural azimuth, HNZ sign and base-motion semantics unresolved.",
+  "generated_keywords": "NONE; no *AMPLITUDE, *BOUNDARY or *BASE MOTION load cards generated; no native run"
+}
