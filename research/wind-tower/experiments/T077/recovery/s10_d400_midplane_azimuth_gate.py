@@ -107,14 +107,14 @@ def build(inp, mapfile):
     writer.writerows(out)
     data = sink.getvalue().encode("utf-8")
     receipt = {
-      "SOURCE": "Direct D400/Pe diagnostic INP 68-part mesh + previously verified 68-part source map",
+      "SOURCE": "Direct 22c D400/Pe/G1 uniform-rebar diagnostic INP 68-part mesh + matching 68-part source map",
       "SOURCE_READING": "Full original D400/Pe INP bytes, SHA-locked; Abaqus element connectivity and node coordinate centroids parsed, no ODB",
       "source_model_sha256": D400_SHA, "source_map_sha256": MAP_SHA,
       "script_sha256": h(Path(__file__).read_bytes()), "output_sha256": h(data),
       "REF": "Kenna2019 local strain method; T079 29-row original figure-method matrix (method only)",
       "STANDARD": "No new authorized IEC/GB/NB clause; 0.08m and 5deg are numerical diagnostic gates, NOT standards",
       "OFFICIAL": "Abaqus source *Part/*Node/*Element C3D8R/*Instance; NOT native solver or ODB",
-      "RUN": "GitHub Actions Python 3.11 static full INP parse, source SHA and 6 synthetic/negative tests; no Abaqus",
+      "RUN": "GitHub Actions Python 3.11 static full INP parse, source SHA, 1 synthetic and 6 negative tests; no Abaqus",
       "FIG": "None; no fabricated stress contours", "TAB": "248 = 31 segments x 4 azimuths x 2 through-wall radial layers",
       "rows": len(out), "segments": len(concrete), "azimuths_deg": list(AZ),
       "radial_layers": ["INNER", "OUTER"],
@@ -125,11 +125,12 @@ def build(inp, mapfile):
       "assumptions": ["Model local Y is tower axis, X/Z are circumferential; original OpenFAST-to-Abaqus axis orientation NOT independently certified",
                       "C3D8R element centroid is arithmetic mean of eight node coordinates; not Gauss/integration point",
                       "Outer and inner centroid layers are distinct; both retained to avoid fabricated hotspot selection",
+                      "Uniform D400/Pe/G1 source changes hoop/tie material references but does not establish compliant detailing",
                       "Prior wind-gage target comes from SHA-locked 68-part metadata"],
       "error_budget": "Centroids use INP node float precision, output rounded 1e-9m/deg; axial and angular sampling gaps quantified; element size, stress extrapolation, local hotspot, PT/contact and frame physical errors NEED_NATIVE",
       "negative_tests": "wrong INP SHA, wrong map SHA, 2-plane data, incomplete azimuth, unsplit radial layers, midplane-gage mismatch",
       "physical_pass": False, "seismic_native_runs": 0, "stage": "0/12",
-      "HOLD": "NO ODB IP / NO VALIDATED LOCAL MATERIAL STRESS; D400 diagnostic mixed hoop/tie grade; PT+gravity+contact equilibrium missing"
+      "HOLD": "NO ODB IP / NO VALIDATED LOCAL MATERIAL STRESS; D400 hoop/tie references are uniform HRB400 but detailing NOT certified; PT+gravity+contact equilibrium missing"
     }
     return data, (json.dumps(receipt, ensure_ascii=False, indent=2)+"\n").encode(), receipt
 
