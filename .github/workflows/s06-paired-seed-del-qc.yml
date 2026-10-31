@@ -13,10 +13,11 @@ on:
       - 'research/wind-tower/experiments/T062/s06_ntm_18case_input_identity.js'
       - 'research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv'
       - 'research/wind-tower/experiments/T062/s07_sixdof_wrench_source_contract.mjs'
+      - 'research/wind-tower/experiments/T062/s07_original_etm_native_history_frame_qc.py'
       - 'research/wind-tower/experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   source-level-paired-seed-qc:
     runs-on: ubuntu-latest
@@ -92,3 +93,50 @@ jobs:
             --summary S10_ETM_LOAD_DEL_CONTROL_SUMMARY_6_20261028.csv
           sha256sum S10_ETM_LOAD_DEL_CONTROL_186_20261028.csv S10_ETM_LOAD_DEL_CONTROL_SUMMARY_6_20261028.csv
           echo 'SOURCE-LEVEL ONLY; NOT DLC1.2/SEED CONVERGENCE/MATERIAL FATIGUE/ABAQUS PASS'
+
+      - name: S07 real original ETM 12001x9 synchronized RP/TP/FL/ML source-frame candidate QC
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T062
+          python3 -m py_compile "$root/s07_original_etm_native_history_frame_qc.py"
+          python3 "$root/s07_original_etm_native_history_frame_qc.py" --self-test
+          python3 "$root/s07_original_etm_native_history_frame_qc.py" \
+            --archive research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip \
+            --receipt "$root/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json" \
+            --out "$root/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json"
+          tmp=$(mktemp -d)
+          trap 'rm -rf "$tmp"' EXIT
+          cp research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip "$tmp/tampered.zip"
+          printf 'X' | dd of="$tmp/tampered.zip" bs=1 seek=0 conv=notrunc status=none
+          if python3 "$root/s07_original_etm_native_history_frame_qc.py" \
+            --archive "$tmp/tampered.zip" \
+            --receipt "$root/S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json" \
+            --out "$tmp/should_not_exist.json"; then
+            echo 'FAIL: tampered ETM source accepted'; exit 1
+          fi
+          echo 'S07_REAL_ORIGINAL_ETM_SOURCE_QC_PASS; NOT PHYSICAL FRAME OR EXTERNAL ABAQUS LOAD PASS'
+      - name: Archive S07 real-source QC receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-original-etm-9gage-native-source-frame-candidate-only
+          path: research/wind-tower/experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Persist small S07 real-source QC in Draft PR branch (not physics PASS)
+        if: success() && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        shell: bash
+        run: |
+          set -euo pipefail
+          p=research/wind-tower/experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$p"
+          if git diff --cached --quiet; then
+            echo 'S07_QC_RECEIPT_UNCHANGED'; exit 0
+          fi
+          git commit -m 'data(S07): persist real original ETM 9-gage synchronized source-frame QC'
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+          echo 'S07_REAL_SOURCE_QC_PERSISTED; PHYSICAL_PASS_FALSE'
