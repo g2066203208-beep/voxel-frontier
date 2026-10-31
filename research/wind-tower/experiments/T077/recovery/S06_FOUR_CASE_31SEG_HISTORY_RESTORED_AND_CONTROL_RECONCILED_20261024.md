@@ -812,3 +812,6 @@ REF：沿用T062、T079已登记雨流及疲劳方法，不新增“全文精读
 - **FIG/TAB**：FIG=本轮不制造本塔材料寿命图；TAB=待真实CI成功后产出`S10_18NTM_10NEARBASE_16AZ_GROSS_RAINFLOW_20261031.csv`（预期2880行）、`S10_18NTM_6SEED_GROSS_STRESS_CONTROL_20261031.csv`（预期30行）、JSON源收据。图表尚未完成。
 - **假设/误差预算**：九站真实高度0.0705–2.7509m，另BASE z=0，全部落CSEG01；采用原几何端点线性插值，绝不当作31段分布。每样本误差由原packed各通道半步按线性应力系数上界计算；雨流配对/DEL非线性误差、坐标R(t)误差、重力惯性所有权、截面近似/连接、PT有效力、材料局部、场址概率均`NEED_ESTIMATE`。不把每样本幅值误差上界冒充DEL严格上界。
 - **PASS/HOLD**：源码/CI已入Draft PR，原生Abaqus=0、新OpenFAST生产=0、E/WE=0，严格12阶段0/12。**HOLD**=等待真实Actions完整18源SHA/540 oracle/2880+30行验证及坐标/PT/局部材料；不得宣称本轮材料寿命。下一唯一动作：回读新CI真实原生日志与数值结果，失败立即修复，成功后推进固定角度样本收敛的论文表/图。
+
+### 2026-10-31 15:16｜首次真实S10 CI失败与源SHA大小写修复（保留原始失败）
+- [Actions #41179905532/job #124474999317](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41179905532/job/124474999317)：18个原始NTM ZIP下载及旧60通道1080行源DEL逐字节SHA复算均成功；新S10步骤在第一个原始OUTB验证时报`ValueError: NTM_ORIGINAL_OUTB_SHA_MISMATCH:U09p343881_NTM_S01`，输出CSV/receipt未生成，job failure。**根因已从真实manifest原文核实**：manifest中OUTB SHA为大写`F2D5D236...`，Python hashlib输出小写`f2d5d236...`，旧S06程序已用`.lower()`，新S10误用大小写敏感比较。仅修改新S10脚本SHA大小写归一；保持原始失败日志，不改原manifest或旧S06源文件，等待新CI真实验收。无材料物理PASS、12阶段0/12。

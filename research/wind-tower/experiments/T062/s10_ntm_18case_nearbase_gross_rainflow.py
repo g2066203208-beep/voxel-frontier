@@ -159,7 +159,7 @@ def run(a):
             raise ValueError("ARCHIVE_SHA_MISMATCH")
         with zipfile.ZipFile(io.BytesIO(zbytes)) as z:
             raw=z.read(e["relative_path"])
-        if len(raw)!=int(e["bytes"]) or sha(raw)!=e["sha256"] or sha(raw)!=identity[case]["outb_sha256"]:
+        if len(raw)!=int(e["bytes"]) or sha(raw).lower()!=str(e["sha256"]).lower() or sha(raw)!=identity[case]["outb_sha256"]:
             raise ValueError("NTM_ORIGINAL_OUTB_SHA_MISMATCH:"+case)
         h=outb_header(raw)
         names,units=h.pop("channel_names"),h.pop("channel_units")
