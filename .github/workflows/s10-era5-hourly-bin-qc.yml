@@ -1,0 +1,72 @@
+name: S10 real 21-year ERA5 LFS hourly wind bins SOURCE-QC
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s10-era5-hourly-bin-qc.yml'
+      - 'research/wind-tower/experiments/T062/s10_era5_hourly_wind_bins.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  era5-real-hourly:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s10_era5_hourly_wind_bins.py
+            research/wind-tower/references/baselines-and-site-20261004/era5-derived-workbook/Jiayu_Paizhouwan_ERA5_2005_2025.xlsx
+            research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv
+            research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_BIN_RECEIPT_20261031.json
+      - name: Compile and negative tests
+        run: |
+          set -euo pipefail
+          python3 -m py_compile research/wind-tower/experiments/T062/s10_era5_hourly_wind_bins.py
+          python3 research/wind-tower/experiments/T062/s10_era5_hourly_wind_bins.py --self-test
+      - name: Materialize 31.8 MB source via Git LFS
+        id: lfs
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          git lfs install --local
+          git lfs pull --include="research/wind-tower/references/baselines-and-site-20261004/era5-derived-workbook/Jiayu_Paizhouwan_ERA5_2005_2025.xlsx" --exclude=""
+          sha256sum research/wind-tower/references/baselines-and-site-20261004/era5-derived-workbook/Jiayu_Paizhouwan_ERA5_2005_2025.xlsx
+      - name: Process original source full 184080 hours
+        id: compute
+        if: steps.lfs.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T062/s10_era5_hourly_wind_bins.py \
+            --source research/wind-tower/references/baselines-and-site-20261004/era5-derived-workbook/Jiayu_Paizhouwan_ERA5_2005_2025.xlsx \
+            --out research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv \
+            --receipt research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_BIN_RECEIPT_20261031.json
+      - name: Archive outputs or failure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s10-era5-full-hourly-source-qc
+          path: |
+            research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv
+            research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_BIN_RECEIPT_20261031.json
+          if-no-files-found: warn
+          retention-days: 21
+      - name: Persist small verified result to Draft PR
+        if: steps.compute.outcome == 'success'
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --sparse research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_BIN_RECEIPT_20261031.json
+          if git diff --cached --quiet; then echo 'UNCHANGED'; exit 0; fi
+          git commit -m 'data(S10): full-source ERA5 hourly wind-bin probabilities'
+          git pull --rebase origin research/t080-seismic-integration-gates-20261022
+          git push origin HEAD:research/t080-seismic-integration-gates-20261022
+      - name: Fail closed if source or numeric QC unavailable
+        if: steps.lfs.outcome != 'success' || steps.compute.outcome != 'success'
+        run: exit 1
