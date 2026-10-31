@@ -18,4 +18,9 @@
 
 REF：ESM与USGS-SCEDC、既有T079研究收据；STANDARD：授权条款及假定参考谱未冻结；OFFICIAL：本轮读取的是T079已存原始来源派生CSV，不是重新获取官方加速度原件；RUN：JS真实源数值与绘图、无原生Abaqus；FIG：6张；TAB：6份源CSV。误差预算：原数表双精度坐标绘制，无额外插值；波的低频/谱型、模型误差未闭合，HOLD。地震结构E/WE仍0结果。
 ## 严格缺图
-完整三向加速度时程、已验收研究目标谱、塔架模态与RNA对照、E位移/绝对加速度、W/E/WE同态对照、31段内力、30接缝开闭/滑移/PT力、应力损伤云图、抗震验算、抗震约束Pareto；这些必须由原生模型和ODS/ODB真实结果生成，不能造图。
+已验收研究目标谱、塔架模态与RNA对照、E位移/绝对加速度、W/E/WE同态对照、31段内力、30接缝开闭/滑移/PT力、应力损伤云图、抗震验算、抗震约束Pareto；这些必须由原生模型和ODS/ODB真实结果生成，不能造图。
+
+## 2026-10-31 13时增量：S08-04真实三向加速度时程（六图组之外第七张，沿用本审计入口）
+- [FIG-S08-04](FIG_S08_04_ESM_REAL_3COMP_ACCELERATION_SOURCE_QC.svg)是实际32,040×3点ESM处理波（0–160.195s）及20–65s放大时程；每像素min/max极值保持，HNE/HNN/HNZ分别PGA 0.47522846/0.51205727/0.28926626m/s²。
+- [程序](plot_s08_esm_3comp_real_acceleration.py)、[原始来源与数值收据](../../../experiments/T079/real-records/S08_ESM_3COMP_ACCELERATION_FIGURE_RECEIPT_20261031.json)；SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、原件SHA、失败/误差/HOLD完整见[T079 13时过程](../../../experiments/T079/PROCESS_LOG.md)。
+- 真实[Actions #41171424384](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41171424384)两个job completed/success；SVG SHA256=1c0d622b13621dcbb7515889ea458ec1c2a25a711fbd2e2e11eef8ea8e4b43e2。只关闭“源波形输入图缺失”，**不关闭**场址设计谱、仪器低频质量、结构E/WE原生结果或抗震验算；12阶段0/12。
