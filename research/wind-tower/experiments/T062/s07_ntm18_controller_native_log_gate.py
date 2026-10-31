@@ -21,7 +21,8 @@ CASES = [f"{wind}_NTM_S{seed:02d}" for wind in ("U09p343881", "U11p4", "U19p2021
 FIELDS = ["case", "srvd_sum_sha256", "stdout_sha256", "srvd_bytes", "stdout_bytes",
           "srvd_controller_hits", "stdout_controller_hits", "stdout_warning_lines",
           "stdout_error_lines", "manifest_dll_status", "manifest_dll_bytes",
-          "manifest_dll_sha256", "runtime_dll_identity_verified", "formal_dlc12_reuse"]
+          "manifest_dll_sha256", "runtime_dll_identity_verified", "formal_dlc12_reuse",
+          "native_stdout_rosco_banner", "native_stdout_legacy_bladed_interface"]
 TOKENS = re.compile(r"rosco|discon|dll|controller|servo|bladed|dynamic library|version", re.I)
 WARN = re.compile(r"\bwarning\b", re.I)
 ERROR = re.compile(r"\b(error|fatal|aborted)\b", re.I)
@@ -88,6 +89,10 @@ def build(root):
             require(not d.get("sha256"), "UNEXPECTED_ORIGINAL_DLL_SHA:" + case)
             require(d["bytes"] == 1122431, "ORIGINAL_DLL_LENGTH_CHANGED:" + case)
             a, b = scan(srvd), scan(stdout)
+            stdout_text = stdout.decode("utf-8-sig", errors="replace")
+            rosco_banners = re.findall(r"(?m)^\\s*Running (ROSCO-v[0-9]+(?:\\.[0-9]+){1,3})\\s*$", stdout_text)
+            legacy_lines = re.findall(r"(?m)^\\s*Using legacy Bladed DLL interface\\.\\s*$", stdout_text)
+            require(len(rosco_banners) == 1 and len(legacy_lines) == 1, "CONTROLLER_NATIVE_BANNER_MISSING_OR_DUPLICATE:" + case)
             rows.append({
                 "case": case, "srvd_sum_sha256": sha(srvd), "stdout_sha256": sha(stdout),
                 "srvd_bytes": len(srvd), "stdout_bytes": len(stdout),
@@ -95,13 +100,16 @@ def build(root):
                 "stdout_warning_lines": b["warning_lines"], "stdout_error_lines": b["error_lines"],
                 "manifest_dll_status": d["status"], "manifest_dll_bytes": d["bytes"],
                 "manifest_dll_sha256": "", "runtime_dll_identity_verified": "NO",
-                "formal_dlc12_reuse": "HOLD"
+                "formal_dlc12_reuse": "HOLD",
+                "native_stdout_rosco_banner": rosco_banners[0],
+                "native_stdout_legacy_bladed_interface": "YES"
             })
             excerpts[case] = {"srvd": a, "stdout": b}
     finally:
         for z in archives.values():
             z.close()
     require(len(rows) == 18 and len({r["case"] for r in rows}) == 18, "CASE_COVERAGE")
+    require(all(r["native_stdout_rosco_banner"] == "ROSCO-v2.6.0" for r in rows), "MIXED_ROSCO_BANNER")
     buf = io.StringIO(newline="")
     w = csv.DictWriter(buf, fieldnames=FIELDS, lineterminator="\n")
     w.writeheader()
@@ -112,11 +120,11 @@ def build(root):
         "source_reading_level": "36 original ZIP member bytes checked against manifest member SHA256 and length; one independent reference DLL bytes checked; no original per-case DLL bytes",
         "REF": "T062 original FST/ServoDyn/TurbSim audit; T077 S07 A-case static DLL/ABI receipt; no new journal fulltext",
         "STANDARD": "No authorized IEC 61400-1/6:2025 clause read; no DLC1.2 certification",
-        "OFFICIAL": "Archived native OpenFAST/ServoDyn textual logs; distinct reference DLL not proven identical to original case runtime DLL",
+        "OFFICIAL": "18 original OpenFAST stdout logs print Running ROSCO-v2.6.0; separate reference DLL not proven identical to original per-case runtime binary",
         "RUN": "Python3 stdlib SHA/ZIP text parser only; no OpenFAST/TurbSim/Abaqus native production run",
         "FIG": "none",
         "TAB": "18-row original controller log source QC CSV and limited original text excerpts in this receipt",
-        "HOLD": "All 18 per-case libdiscon.dll excluded-format without SHA; reference DLL SHA verified but equality/runtime identity unproven; no controller executable version, BTS or IEC compliance",
+        "HOLD": "All 18 original stdout logs explicitly print ROSCO-v2.6.0 and legacy Bladed DLL interface; 18 per-case libdiscon.dll remain excluded-format without SHA; distinct reference DLL SHA verified but runtime binary equality and exact build unproven; BTS and IEC compliance unresolved",
         "input_sha256": {"static_manifest": MANIFEST_SHA, "reference_dll": DLL_SHA},
         "reference_dll_bytes": len(dll),
         "original_per_case_dll_manifest": {"excluded_format": 18, "original_sha256_available": 0, "nominal_bytes_each": 1122431},
@@ -128,6 +136,8 @@ def build(root):
             "stdout_warning_lines": sum(int(r["stdout_warning_lines"]) for r in rows),
             "stdout_error_lines": sum(int(r["stdout_error_lines"]) for r in rows),
             "runtime_dll_sha_verified": 0, "formal_dlc12_reuse_approved": 0,
+            "native_stdout_rosco_v2_6_0_banners": sum(r["native_stdout_rosco_banner"] == "ROSCO-v2.6.0" for r in rows),
+            "native_stdout_legacy_bladed_interface": sum(r["native_stdout_legacy_bladed_interface"] == "YES" for r in rows),
         },
         "excerpts_by_case": excerpts,
         "output_csv_sha256": sha(out),
