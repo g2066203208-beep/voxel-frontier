@@ -28,6 +28,22 @@ KEYS = (
     "PC_GS_KI", "VS_Rgn2K", "VS_MaxTq", "VS_MinTq", "VS_ConstPower",
     "PC_Switch", "F_LPFType", "F_LPFCornerFreq", "Y_ControlMode",
 )
+# Additional v2.6.0 registry keys omitted by the historical 17-key screen.
+# Registry original source: NatLabRockies/ROSCO v2.6.0 tag 51629665...,
+# ROSCO/rosco_registry/rosco_types.yaml SHA256 c83eb68c... .
+# Do not treat a missing key as zero or infer it from a different controller key.
+EXTENDED_PARAMETER_KEYS = {
+    "VS_RefSpd": "rated generator speed [rad/s]",
+    "VS_TSRopt": "region-2 optimal tip-speed ratio (registry says [rad]; unit requires caution)",
+    "VS_GenEff": "generator mechanical-to-electrical efficiency fraction [-]",
+    "WE_Mode": "wind-speed estimator mode {0,1}",
+    "SS_Mode": "setpoint smoother mode {0,1}",
+    "VS_MinOMSpd": "optimal-mode minimum generator speed [rad/s]",
+    "VS_MaxRat": "maximum generator torque rate [N m/s]",
+    "PC_MaxRat": "maximum pitch rate [rad/s]",
+    "WE_GearboxRatio": "wind estimator gearbox ratio [-]",
+}
+KEYS = KEYS + tuple(EXTENDED_PARAMETER_KEYS)
 NUM = re.compile(r"^[+-]?(?:(?:\d+\.?\d*|\.\d+)(?:[EeDd][+-]?\d+)?)$")
 HEADER = [
     "case", "wind_speed_mps", "seed", "discon_sha256", "rosco_runtime_banner",
@@ -193,6 +209,79 @@ def make(root):
     }
     return data, receipt
 
+
+def extended_source_qc(data, receipt):
+    """Small non-duplicative original DISCON key table + conditional operating bands."""
+    p = receipt["parsed_discon_parameters"]
+    rows = []
+    for key, unit in EXTENDED_PARAMETER_KEYS.items():
+        obj = p.get(key)
+        rows.append({
+            "parameter": key, "source_line": str(obj["line"]) if obj else "",
+            "status": "ORIGINAL_VALUE" if obj else "NOT_PRESENT_IN_ORIGINAL",
+            "raw_value": obj["raw"] if obj else "",
+            "numeric_tokens": str(obj["tokens"]) if obj else "",
+            "v260_registry_semantics": unit,
+            "original_discon_sha256": DISCON_SHA,
+        })
+        if not obj:
+            continue
+        require(obj["tokens"] == 1, "EXTENDED_PARAMETER_NOT_SCALAR:" + key)
+        val = float(obj["raw"])
+        require(math.isfinite(val), "EXTENDED_PARAMETER_NONFINITE:" + key)
+        if key in ("WE_Mode", "SS_Mode"):
+            require(val in (0.0, 1.0), "EXTENDED_MODE_OUT_OF_RANGE:" + key)
+        elif key == "VS_GenEff":
+            require(0 < val <= 1, "EXTENDED_EFFICIENCY_OUT_OF_RANGE")
+        elif key in ("VS_RefSpd", "VS_TSRopt", "VS_MinOMSpd", "WE_GearboxRatio"):
+            require(val > 0, "EXTENDED_POSITIVE_PARAMETER:" + key)
+    buf = io.StringIO(newline="")
+    columns = ["parameter", "source_line", "status", "raw_value",
+               "numeric_tokens", "v260_registry_semantics", "original_discon_sha256"]
+    writer = csv.DictWriter(buf, fieldnames=columns, lineterminator="\\n")
+    writer.writeheader()
+    writer.writerows(rows)
+    output = buf.getvalue().encode("utf-8")
+    historic = list(csv.DictReader(io.StringIO(data.decode("utf-8"))))
+    require(len(historic) == 18, "EXTENDED_18CASE_CROSS_SOURCE")
+    speed = float(p["VS_RefSpd"]["raw"]) if "VS_RefSpd" in p else None
+    groups = {}
+    for wind in sorted({r["wind_speed_mps"] for r in historic}, key=float):
+        subset = [r for r in historic if r["wind_speed_mps"] == wind]
+        require(len(subset) == 6, "EXTENDED_SEED_COVERAGE:" + wind)
+        mean_gen_rpm = sum(float(r["GenSpeed_mean_rpm"]) for r in subset) / 6
+        mean_pitch_deg = sum(float(r["BldPitch1_mean_deg"]) for r in subset) / 6
+        groups[wind] = {
+            "n": 6, "mean_gen_speed_rpm": mean_gen_rpm,
+            "mean_pitch_deg": mean_pitch_deg,
+            "mean_gen_speed_over_vs_reference": (
+                mean_gen_rpm * math.pi / 30 / speed if speed else None),
+            "reference_missing": speed is None,
+        }
+    result = {
+        "SOURCE": "Original 17,600-byte DISCON.IN member read by make() and SHA256 verified; historical 18-row OUTB-derived source table regenerated in same invocation",
+        "source_reading_level": "Original DISCON bytes; existing 18 OUTB summaries cross-checked, original 18 OUTB binaries not reread",
+        "REF": "ROSCO v2.6.0 tagged registry semantics, previously SHA-pinned; no new journal full text",
+        "STANDARD": "IEC 61400-1/6:2025 authorized DLC1.2 clauses not read",
+        "OFFICIAL": "NatLabRockies/ROSCO v2.6.0 tag 51629665d22f92770f861daeebcebd47ab32abb1, ROSCO/rosco_registry/rosco_types.yaml",
+        "RUN": "Python original ZIP read + SHA256 and conditional source-parameter validation; NO OpenFAST/Abaqus/fe-safe run",
+        "FIG": "none", "TAB": "9-key original DISCON supplement, not duplicate 18-case source table",
+        "input_sha256": receipt["input_sha256"],
+        "official_registry_sha256_previous_read": "c83eb68cadccbbf9a2084cc14c9dc94f6731304179b6ffad30aa1d4df4b63b4c",
+        "original_discon_bytes": receipt["original_discon_bytes"],
+        "output_csv_sha256": sha(output),
+        "parameters_present": sum(x["status"] == "ORIGINAL_VALUE" for x in rows),
+        "parameters_absent": [x["parameter"] for x in rows if x["status"] != "ORIGINAL_VALUE"],
+        "operating_band_diagnostics": groups,
+        "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. VS_TSRopt registry unit wording is retained, not independently certified.",
+        "error_budget": "Original DISCON bytes/SHA exact; output CSV deterministic; floating group means have roundoff ~1e-14 relative plus previously documented packed-OUTB uncertainty; internal state/closed-loop dynamics and DLL binary uncertainty NOT ESTIMATED",
+        "negative_tests": "parser rejects duplicate, malformed, insufficient keys; extended validator rejects non-scalar, invalid modes, efficiency outside (0,1], nonpositive speed, absent key never filled with zero",
+        "HOLD": "Original 18 per-case BTS/DLL SHA not recovered, controller internal state not recorded, IEC2025 clauses and S01-S04 physics not passed",
+        "formal_dlc12_approved": 0, "physical_pass": False,
+        "native_earthquake_results": 0, "stages_passed": 0,
+    }
+    return output, result
+
 def self_test():
     good = b" 1 ! VS_ControlMode - test\n 2.0 3e-1 ! PC_GS_KP - test\n 0 ! PC_ControlMode\n 1 ! VS_RtPwr\n 2 ! VS_RtTq\n 3 ! PC_RefSpd\n"
     assert len(parse_discon(good)) == 6
@@ -205,7 +294,35 @@ def self_test():
             pass
         else:
             raise AssertionError("MALFORMED_CONTROLLER_ACCEPTED")
-    print("S07_DISCON_PARAMETER_PARSER_SELFTEST_PASS: 3 negative cases")
+        fixture = good + (b" 49.9 ! VS_RefSpd\\n 7.5 ! VS_TSRopt\\n"
+                      b" 0.94 ! VS_GenEff\\n 1 ! WE_Mode\\n 0 ! SS_Mode\\n")
+    p = parse_discon(fixture)
+    assert p["VS_RefSpd"]["raw"] == "49.9"
+    assert p["VS_TSRopt"]["raw"] == "7.5"
+    assert p["VS_GenEff"]["raw"] == "0.94"
+    assert p["WE_Mode"]["raw"] == "1" and p["SS_Mode"]["raw"] == "0"
+    assert "VS_MinOMSpd" not in p and p["PC_RefSpd"]["raw"] == "3"
+    for key, val in (("VS_GenEff", "1.1"), ("WE_Mode", "2"),
+                     ("VS_RefSpd", "-3")):
+        altered = fixture.replace(
+            {"VS_GenEff": b"0.94", "WE_Mode": b"1", "VS_RefSpd": b"49.9"}[key]
+            + b" ! " + key.encode(),
+            val.encode() + b" ! " + key.encode())
+        try:
+            # Call the scalar validation on a minimal real-shaped receipt.
+            pbad = parse_discon(altered)
+            fake = {"parsed_discon_parameters": pbad,
+                    "input_sha256": {"original_discon": DISCON_SHA},
+                    "original_discon_bytes": len(altered)}
+            extended_source_qc(
+                ("case,wind_speed_mps,GenSpeed_mean_rpm,BldPitch1_mean_deg\\n"
+                 + "".join(f"C{i},{i//6},480,5\\n" for i in range(18))).encode(),
+                fake)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("EXTENDED_BAD_PARAMETER_ACCEPTED:" + key)
+    print("EXTENDED_DISCON_SELFTEST_PASS: 5 extracted keys, 3 invalid parameter rejections")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -213,6 +330,8 @@ def main():
     parser.add_argument("--out", type=Path)
     parser.add_argument("--receipt", type=Path)
     parser.add_argument("--self-test", action="store_true")
+    parser.add_argument("--extended-out", type=Path)
+    parser.add_argument("--extended-receipt", type=Path)
     args = parser.parse_args()
     if args.self_test:
         self_test()
@@ -220,6 +339,19 @@ def main():
             return
     require(args.repo_root and args.out and args.receipt, "MISSING_OUTPUT_PATHS")
     data, receipt = make(args.repo_root)
+    require(bool(args.extended_out) == bool(args.extended_receipt),
+            "EXTENDED_OUTPUT_PAIR_REQUIRED")
+    if args.extended_out:
+        ext_data, ext_receipt = extended_source_qc(data, receipt)
+        args.extended_out.parent.mkdir(parents=True, exist_ok=True)
+        args.extended_out.write_bytes(ext_data)
+        args.extended_receipt.write_text(json.dumps(ext_receipt, ensure_ascii=False,
+            sort_keys=True, indent=2) + "\\n", encoding="utf-8")
+        print("S07_EXTENDED_DISCON_ORIGINAL_SOURCE_QC",
+              json.dumps({"keys": len(EXTENDED_PARAMETER_KEYS),
+                "present": ext_receipt["parameters_present"],
+                "csv_sha256": ext_receipt["output_csv_sha256"],
+                "formal_dlc12_approved": 0}, sort_keys=True))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_bytes(data)
     args.receipt.write_text(json.dumps(receipt, ensure_ascii=False, sort_keys=True,
