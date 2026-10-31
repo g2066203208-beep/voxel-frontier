@@ -1,0 +1,89 @@
+name: S07 original 18 NTM TurbSim and controller source inputs (NO production)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s07-ntm18-original-controller-input-qc.yml'
+      - 'research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original-ntm-config-source:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/archive/local-assets-20261004/file-manifest.json
+            research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-003.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-004.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-005.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-006.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-010.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-011.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-012.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-016.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-017.zip
+            research/wind-tower/archive/local-assets-20261004/turbSim-36/part-018.zip
+            research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv
+            research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
+      - name: Python parser selftest and fail-closed original member SHA audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py
+          python3 -m py_compile "$script"
+          python3 "$script" --self-test
+          python3 "$script" --repo-root . \
+            --out research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv \
+            --receipt research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
+          python3 - <<'PY'
+          import csv,json,hashlib,pathlib
+          p=pathlib.Path('research/wind-tower/experiments/T062')
+          a=p/'S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv'
+          b=p/'S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json'
+          rows=list(csv.DictReader(a.open()))
+          r=json.loads(b.read_text())
+          assert len(rows)==18 and r['original_members_verified']==127
+          assert r['formal_dlc12_reuse_approved']==0 and not r['physical_pass']
+          assert hashlib.sha256(a.read_bytes()).hexdigest()==r['output_csv_sha256']
+          assert all(x['bts_archived_sha256']=='' for x in rows)
+          print('S07_ORIGINAL_18_CONFIG_BYTES_SHA_VERIFIED_NO_DLC12_APPROVAL')
+          PY
+          sha256sum "$script" research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_*
+      - name: Archive source QC output and failure context
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-original-18ntm-turbsim-controller-source-qc
+          path: |
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
+          if-no-files-found: warn
+          retention-days: 21
+      - name: Persist source-verified small CSV and receipt on Draft PR only
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = research/t080-seismic-integration-gates-20261022
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --sparse -- research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv \
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
+          if git diff --cached --quiet; then echo 'SOURCE_QC_UNCHANGED'; exit 0; fi
+          git commit -m 'data(S07): preserve source-verified 18 NTM TurbSim and controller input QC'
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+          echo 'S07_18NTM_SOURCE_QC_PERSISTED_NOT_DLC12_NOT_ABAQUS'
