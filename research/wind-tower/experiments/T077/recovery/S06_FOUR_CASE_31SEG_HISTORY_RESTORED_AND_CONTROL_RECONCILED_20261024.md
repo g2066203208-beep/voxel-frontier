@@ -5,6 +5,7 @@
 - **RUN/程序**：更新[既有源级解析器](../../T062/s07_ntm18_discon_operating_contract.py)，在旧17键之外补读9个v2.6.0注册字段，新增标量/效率/模式合法性拒绝测试，明确缺失字段`NOT_PRESENT_IN_ORIGINAL`而非零。扩展[既有原件CI](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s07-ntm18-original-controller-input-qc.yml)读取原始ZIP并生成最小9行补充表和独立JSON收据，SHA256及源行号由原生执行时实算。**本轮写入的代码/工作流已提交；新原件重读CI状态及数表待远端核验，不报原生PASS**。未启动700s/OpenFAST/Abaqus/fe-safe生产RUN。
 - **TAB/FIG**：拟生成`T062/S07_ROSCO_V260_ORIGINAL_EXTENDED_KEYS_20261101.csv`（9键×原始行号/数值/缺失状态）和同名`_RECEIPT_20261101.json`；生成前不把计划表写作成果。FIG=无新增风机响应图。
 - **STANDARD/假设/误差预算**：未读IEC 61400-1/6:2025授权全文，不能称DLC1.2条款PASS；原件字节/SHA应精确一致，CSV复算逐字节一致，浮点组均值舍入误差约1e-14量级，OUTB量化误差继承先前收据；控制器内部状态、实际DLL、BTS、物理误差均**未估计**。
+- **本轮代码版本SHA256（直接远端回读计算）**：解析器`2ad1c53400fc428afff0995dad4cd1be267b203efd45fe05668be1d6a15996d8`（21,072字节；Git blob `c53a2f09429fd4adc882a9ceb88c19cbe6c69851`）；既有CI YAML更新版`4aab190028822cdea3585d75cc30733f7d372d5ce103be7f6d3e9b3894e2d989`（11,631字节；Git blob `a644f47dcd212b1bf26dbc43753c60eba2c254df`）。独立V8 SHA256实现先用`abc`标准摘要核验，两个远端ASCII源按原字节计算；**仅源版本身份QC，不是Python原生执行日志**。
 - **HOLD/验收**：原始18案BTS及逐件DLL SHA未恢复，正式DLC1.2仍0/126、原生地震E/WE=0、12阶段0/12未晋级。下一唯一动作：回读扩展CI原生结果及9键真实原值，若失败先修复源级解析，不重复既有18组OUTB统计。
 
 ## 2026-11-01 03时｜S07 ROSCO-v2.6.0官方源码逐行核读与18组历史运行参数语义闭合（SOURCE-QC，不是DLC1.2）
