@@ -160,7 +160,11 @@ def make(root):
             "runtime_dll_sha_verified": "NO",
             "formal_dlc12_reuse": "HOLD",
         }
+        # Preserve the historical 18-case CSV schema. New v2.6.0 keys belong
+        # exclusively in the separate 9-row original-DISCON supplement.
         for key in KEYS:
+            if key in EXTENDED_PARAMETER_KEYS:
+                continue
             row["discon_" + key + "_raw"] = p.get(key, {}).get("raw", "")
         rows.append(row)
     buf = io.StringIO(newline="")
@@ -283,6 +287,10 @@ def extended_source_qc(data, receipt):
     return output, result
 
 def self_test():
+    assert all("discon_" + k + "_raw" in HEADER
+               for k in KEYS if k not in EXTENDED_PARAMETER_KEYS)
+    assert all("discon_" + k + "_raw" not in HEADER
+               for k in EXTENDED_PARAMETER_KEYS)
     good = b" 1 ! VS_ControlMode - test\n 2.0 3e-1 ! PC_GS_KP - test\n 0 ! PC_ControlMode\n 1 ! VS_RtPwr\n 2 ! VS_RtTq\n 3 ! PC_RefSpd\n"
     assert len(parse_discon(good)) == 6
     for bad in (good + b" 3 ! VS_ControlMode\n",
