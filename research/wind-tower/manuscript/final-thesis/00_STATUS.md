@@ -1,5 +1,9 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 11时｜S07原生TP/RP九站空间运动学一致性数值验证（SOURCE-QC，不是物理PASS）
+
+复用真实原始ETM `U09p343881_ETM_S01` OUTB（SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`），9站×12001同步时刻，将实测首尾`TPx/TPy`弦差与`RP`候选旋转矩阵所给切线斜率沿塔高梯形积分对照。**`R^T`候选RMS残差0.17856 μm、最大0.34319 μm；`R`候选RMS残差275.158 μm**；12001/12001时刻均优选`R^T`。原生packed量化传播界最大0.02145 μm，故`R^T`残差仍超纯量化界，不能误报为“零误差”或独立局部姿态验收。真实数据与三时刻对照已写入[既有T062结果JSON](../../experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json)，[Actions #41163087229](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41163087229) completed/success，含解析自测、篡改ZIP SHA拒绝、结果远端保存；程序SHA256=`030df0f05c130002274a7580695347fafc5442448a63cd4da57b6e9940c5dac9`。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、假设/误差/HOLD见[T077 11时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级，S06 PARTIAL、S07 BLOCKED、E/WE原生0**；待独立导出`TowerLn2Mesh%Orientation`验证，不把截面内力当外部风载，不新增高成本RUN。
+
 ## 2026-10-31 10时｜S07原始ETM同步9站×12001时刻真实RP/TP/FL/ML恢复与数学候选验收
 
 直接从已存5.14MB SHA锁定ETM原始ZIP重新解码`U09p343881_ETM_S01`的真实OUTB（SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`），**9站×12001=108009个同步站点时刻**均含六分量内力、三向位置、三向角位置；100/400/700s抽样与既有T062原生收据逐项校验。使用v3.5.3小转角公式作候选R/R^T及参考点搬移：最大候选旋转力差5296.929N，R/R^T候选差10593.857N，代数力逆变换残差≤1.865e-8N；这些**不是实际Abaqus映射误差**，RP与内部取向尚未独立对照。程序、9站统计/6条真实抽样、源SHA、量化预算及HOLD见[T077 10时完整过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)与[真实结果JSON](../../experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json)。[Actions #41159161911](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41159161911)已completed/success，含篡改ZIP拒绝测试。**更正此前过宽HOLD**：并非“没有真实同步RP/TP”，而是**已有ETM九站同步原始输出，但没有31段全高度同态数据及独立局部取向/内力所有权验收**。12阶段**0/12未晋级**，S06 PARTIAL、S07 BLOCKED、E/WE原生0；不新增高成本RUN，不宣称规范/材料疲劳/抗震物理PASS。
