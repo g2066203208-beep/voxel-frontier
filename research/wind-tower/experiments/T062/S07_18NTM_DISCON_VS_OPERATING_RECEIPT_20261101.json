@@ -7,8 +7,16 @@
   "SOURCE": "Direct original 17,600-byte DISCON.IN ZIP member, source manifests; existing 18-case FST/ServoDyn, 18 OUTB-derived summaries and 18 original native ROSCO banner CSVs",
   "STANDARD": "IEC 61400-1/6:2025 authorized DLC1.2 clauses NOT read",
   "TAB": "18-case original controller settings vs original OUTB summary CSV",
-  "assumptions": "DISCON numeric settings kept as literal raw tokens: no rad/s, W, N*m or degree conversion without verified unit semantics; case labels do not prove DLC1.2",
-  "error_budget": "Input SHA256 and source member length exact; CSV means are archived packed-OUTB postprocessed summaries, with per-channel quantization bounds in prior receipt; parameter-to-response causal error and controller dynamics NOT ESTIMATED",
+  "assumptions": "Original DISCON values retained as raw tokens; additional W/N-m/rad-s to OUTB kW/kN-m/rpm ratios are CONDITIONAL on ROSCO unit semantics, not official certification; case labels do not prove DLC1.2",
+  "conditional_rated_power_torque_speed_identity": {
+    "PC_RefSpd_assumed_rad_per_s": 50.26548,
+    "VS_RtPwr_assumed_W": 10000000.0,
+    "VS_RtTq_assumed_Nm": 198943.67886,
+    "assumption": "ROSCO setting names interpreted in W, N-m and rad/s; OUTB source units kW, kN-m and rpm. Diagnostic unit contract only, not IEC compliance.",
+    "product_W": 9999999.510863753,
+    "relative_residual": 4.891362469643354e-08
+  },
+  "error_budget": "Input SHA256 and source member length exact; rated identity floating arithmetic ~1e-15 plus source parameter decimal rounding; CSV means are packed-OUTB summaries with per-channel quantization in prior receipt; unit interpretation, controller dynamics and causal error NOT ESTIMATED",
   "formal_dlc12_approved": 0,
   "group_sixseed_operating_summary": {
     "11.400000": {
@@ -41,7 +49,7 @@
   "native_earthquake_results": 0,
   "negative_tests": "duplicate parameter, malformed numeric, missing key set, missing runtime banner, SHA and case-set fail closed",
   "original_discon_bytes": 17600,
-  "output_csv_sha256": "541df9975abe5b41d5290aee056a06ae46e048f09d3b72566ed485c0e4b99b01",
+  "output_csv_sha256": "11469d9f19009b89aac99fe3405677ed2831f9c91dca253e2780e45f7b767a18",
   "parsed_discon_parameters": {
     "F_LPFCornerFreq": {
       "comment": "F_LPFCornerFreq\t- Corner frequency (-3dB point) in the low-pass filters, [rad/s]",
