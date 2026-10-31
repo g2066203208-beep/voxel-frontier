@@ -85,11 +85,65 @@ function selfTest(){
  return {analytic_arm_Nm:200,round_trip_max_relative_tolerance:1e-12,negative_rejections:4};
 }
 
+
+const MEAN_SHA="ee051cdc35ef3bfdc1ec2f9e053353ca6ba10f9f27079253830736fac9315f97";
+// Local tower gage axes rotate with tower deflection; transform EACH sample,
+// not the average in a possibly moving local frame. NUMERIC CONTRACT ONLY.
+function transformHistory(samples){
+ must(Array.isArray(samples)&&samples.length>=2,"MISSING_SYNCHRONOUS_HISTORY");
+ let prev=null,dt=null;const SF=[0,0,0],SM=[0,0,0];
+ for(const s of samples){
+  must(s&&Number.isFinite(s.t_s),"BAD_TIME");
+  must(typeof s.frame_source==="string"&&s.frame_source.length>0&&typeof s.point_source==="string"&&s.point_source.length>0,"MISSING_FRAME_OR_POINT_PROVENANCE");
+  if(prev!==null){const step=s.t_s-prev;must(step>0,"NONMONOTONIC_TIME");
+   if(dt===null)dt=step;else must(Math.abs(step-dt)<=1e-10*Math.max(1,dt),"UNSYNCED_TIME_GRID");}
+  prev=s.t_s;
+  must(Array.isArray(s.F_SI)&&Array.isArray(s.M_SI)&&Array.isArray(s.R_A_to_B)&&Array.isArray(s.r_PQ_A_m),"MISSING_PER_SAMPLE_WRENCH_OR_ROTATION");
+  const w=transform(s.F_SI,s.M_SI,s.R_A_to_B,s.r_PQ_A_m);
+  for(let k=0;k<3;k++){SF[k]+=w.F[k];SM[k]+=w.M[k]}
+ }
+ return {n:samples.length,dt_s:dt,mean_F_SI:SF.map(x=>x/samples.length),mean_M_SI:SM.map(x=>x/samples.length),physical_pass:false};
+}
+function meanGate(s){
+ const lines=s.trimEnd().split(/\r?\n/),h=lines.shift().split(",");
+ must(new Set(h).size===h.length,"MEAN_DUPLICATE_HEADER");
+ for(const k of ["case","station","native_frame","status","source_outb_sha256"])must(h.includes(k),"MEAN_MISSING_"+k);
+ const ix=k=>h.indexOf(k),seen=new Set();let refused=0;
+ for(const [i,line] of lines.entries()){
+  const a=line.split(",");must(a.length===h.length,"MEAN_BAD_WIDTH_"+i);
+  const id=a[ix("case")]+"|"+a[ix("station")];must(!seen.has(id),"MEAN_DUPLICATE_STATION");seen.add(id);
+  must(/^[a-f0-9]{64}$/.test(a[ix("source_outb_sha256")]),"MEAN_BAD_OUTB_SHA");
+  must(a[ix("native_frame")]==="OpenFAST_output_native_UNVERIFIED_COORDINATE_BASIS"&&
+       a[ix("status")]==="SOURCE_MEAN_ONLY_NO_TIME_SERIES_NO_PHYSICAL_MAPPING","MEAN_UNEXPECTED_PHYSICAL_CLAIM");
+  refused++;
+ }
+ must(refused===180,"MEAN_EXPECTED_180_UNVERIFIED");
+ return {real_source_vectors:180,physical_mapping_refused:refused,physical_pass:false,reason:"NO_PER_SAMPLE_LOCAL_FRAME_AND_REFERENCE_POINT"};
+}
+function frameSelfTest(){
+ const c=Math.cos(Math.PI/6),s=Math.sin(Math.PI/6);
+ const R1=[[c,-s,0],[s,c,0],[0,0,1]],R2=[[c,s,0],[-s,c,0],[0,0,1]];
+ const sample=(t,R)=>({t_s:t,F_SI:[100,0,0],M_SI:[0,0,0],R_A_to_B:R,r_PQ_A_m:[0,2,0],frame_source:"SYNTHETIC_ONLY",point_source:"SYNTHETIC_ONLY"});
+ const a=sample(0,R1),b=sample(0.05,R2),v=transformHistory([a,b]);
+ must(Math.abs(v.mean_F_SI[0]-100*c)<1e-10&&Math.abs(v.mean_F_SI[1])<1e-10,"ROTATING_FRAME_MEAN_FAILED");
+ must(Math.abs(v.mean_M_SI[2]-200)<1e-10,"MOMENT_ARM_MEAN_FAILED");
+ let rejected=0;
+ for(const bad of [
+  [{...a,R_A_to_B:null},b],[a,{...b,t_s:0}],[a,{...b,frame_source:""}],
+  [a,{...b,R_A_to_B:[[1,0,0],[0,2,0],[0,0,1]]}],[a,b,{...b,t_s:0.11}]
+ ]){try{transformHistory(bad)}catch{rejected++}}
+ must(rejected===5,"FRAME_NEGATIVE_TEST_FAILED");
+ return {synthetic_samples:2,dt_s:0.05,correct_mean_global_Fx_N:v.mean_F_SI[0],
+  invalid_fixed_identity_mean_Fx_N:100,bias_if_fixed_identity_N:100-v.mean_F_SI[0],
+  correct_mean_Mz_Nm:v.mean_M_SI[2],negative_rejections:rejected,physical_pass:false};
+}
+
 function sha(s){return crypto.createHash("sha256").update(s).digest("hex")}
 function main(){
  const a=process.argv.slice(2);
- if(a.includes("--self-test")){console.log("S07_SELFTEST_PASS "+JSON.stringify(selfTest()));return}
+ if(a.includes("--self-test")){console.log("S07_SELFTEST_PASS "+JSON.stringify({...selfTest(),frame_test:frameSelfTest()}));return}
  const get=k=>{const i=a.indexOf(k);must(i>=0&&i+1<a.length,"MISSING_ARG_"+k);return a[i+1]};
+ if(a.includes("--frame-gate")){const bytes=fs.readFileSync(get("--mean-csv"));must(sha(bytes)===MEAN_SHA,"MEAN_SOURCE_SHA256_MISMATCH");console.log("S07_REAL_MEAN_FRAME_HOLD "+JSON.stringify({...meanGate(bytes.toString("utf8")),frame_test:frameSelfTest()}));return}
  const source=fs.readFileSync(get("--source"));
  must(sha(source)===SOURCE_SHA,"SOURCE_SHA256_MISMATCH");
  const result=build(parseCSV(source.toString("utf8")));
