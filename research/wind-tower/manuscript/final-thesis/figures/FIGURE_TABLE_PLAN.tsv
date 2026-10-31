@@ -3,12 +3,12 @@ FIG1-1	Ch1	混塔研究脉络与本文三个科学问题	literature_master + sou
 FIG1-2	Ch1	五章技术路线	00_WORKSPACE_MASTER	READY-DESIGN	只保留当前五章主线
 TAB1-1	Ch1	直接相关研究对象/方法/不足对比	01_SOURCE_EVIDENCE_MATRIX	NEED-ASSEMBLE	只列直接相关研究
 FIG2-1	Ch2	DTU10MW+158m混塔对象与来源层级	REF001/REF008/T057	NEED-ASSEMBLE	明确组合研究对象非官方统一模型
-FIG2-2	Ch2	31段混凝土+4段钢塔及钢筋/PT布置	T057 + source pages	NEED-RENDER	直接参数与重构参数分级标注
+FIG2-2	Ch2	31段混凝土+4段钢塔及钢筋/PT布置	T057 + source pages	NEED-RENDER	直接参数与重构参数分级标注 | LIT_SOURCE: Kenna2019 Fig3.8 p81 geometry/PT method; actual frozen 158m details required
 FIG2-3	Ch2	30水平接缝contact与钢混转换	T057	NEED-RENDER	不把T053 spring解释为当前joint
 FIG2-4	Ch2	RNA-R2质量/CG/惯量空间等效	T057 + OpenFAST identity	NEED-RUN	统一reference point
-FIG2-5	Ch2	Gravity+PT平衡后基准应力/接触状态	G1	NEED-RUN	名义输入与平衡结果分开
-FIG2-6	Ch2	前若干阶振型/有效质量	G1	NEED-RUN	方向与配对明确
-FIG2-7	Ch2	Flex-X/Z与网格收敛	G1	NEED-RUN	global/local QoI分层
+FIG2-5	Ch2	Gravity+PT平衡后基准应力/接触状态	G1	NEED-RUN	名义输入与平衡结果分开 | LIT_SOURCE: Kenna2019 Fig3.10 p87 and Fig5.23/26 source; NEED_NATIVE PT/G/contact
+FIG2-6	Ch2	前若干阶振型/有效质量	G1	NEED-RUN	方向与配对明确 | LIT_SOURCE: Kenna2019 Fig3.11-12 p89-90 and Fig5.22 p156; multimode validation
+FIG2-7	Ch2	Flex-X/Z与网格收敛	G1	NEED-RUN	global/local QoI分层 | LIT_SOURCE: Kenna2019 Fig3.13 p91; global/local stress and mesh V&V
 TAB2-1	Ch2	参数来源等级与T057 V&V矩阵	02_MODEL_SOURCE_GATE_MATRIX + G1	PARTIAL	每个关键值有来源或HOLD
 FIG3-1	Ch3	ERA5研究点与2005-2025长期风统计	ERA5 archive	PARTIAL	标reanalysis not measurement
 FIG3-2	Ch3	dynamic alpha与HubHt风速概率	ERA5 + REF093	PARTIAL	经验概率优先
@@ -20,9 +20,9 @@ FIG3-7	Ch3	TwrBsMxt/TwrBsMyt load-DEL与source audit	G4/T062	HOLD	先关闭S03/S
 TAB3-1	Ch3	多QoI控制工况并集	G4	NEED-RUN	每case说明用途
 FIG4-1	Ch4	长期疲劳技术路线	REF018/REF007 +本文方法	READY-DESIGN	方法图重绘
 FIG4-2	Ch4	DLC1.2 wind bins与场址概率	G2/G7	NEED-RUN	ETM不混入正常运行长期概率
-FIG4-3	Ch4	seed/sample-size收敛	G7	NEED-RUN	材料damage而非只看load DEL
-FIG4-4	Ch4	fatigue候选区域与local stress时程	G6	NEED-RUN	先screening再定控制区
-FIG4-5	Ch4	混凝土range-mean rainflow matrix	G7	NEED-RUN	保留mean/reference stress
+FIG4-3	Ch4	seed/sample-size收敛	G7	NEED-RUN	材料damage而非只看load DEL | LIT_SOURCE: Mozafari2023 DTU PhD abstract only; actual material damage seed convergence needed
+FIG4-4	Ch4	fatigue候选区域与local stress时程	G6	NEED-RUN	先screening再定控制区 | LIT_SOURCE: Kenna2019 Fig5.15 p143 global-vs-local response; ODB stress required
+FIG4-5	Ch4	混凝土range-mean rainflow matrix	G7	NEED-RUN	保留mean/reference stress | LIT_SOURCE: Kenna2019 Fig5.24/27 p159/162; source method only, no material Miner
 FIG4-6	Ch4	wind-bin concrete damage contribution	G7	NEED-RUN	概率加权
 FIG4-7	Ch4	36 PT位置应力/damage周向分布	G7 conditional	CONDITIONAL	PT控制或重要次控制才展开
 FIG4-8	Ch4	钢塔nominal/hot-spot fatigue	G7 conditional	CONDITIONAL	需网格/细节类别闭合
@@ -33,8 +33,8 @@ FIG3-S06-01	Ch3	My load-DEL along 31-gage concrete tower for four ETM screening 
 FIG3-S06-02	Ch3	Base CSEG01 Mx/My/Mz load-DEL in four archived cases	S06 744-row real-source summary	SOURCE_PLOTTED_SCREEN_ONLY	Three independent axes; not material stress
 FIG3-S06-03	Ch3	My 300s/300s half-window RMS contrast at 31 stations	S06 744-row real-source summary	SOURCE_PLOTTED_SCREEN_ONLY	20pct visual guide not an IEC clause/stationarity proof
 FIG-S08-01	Seismic-method annex/Ch2 integration	ESM true 3-axis SDOF: exact piecewise-linear vs Newmark PSA and relative error	ESM real CSV 18-row SHA 31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7	REAL_NUMERICAL_SDOF_FIG_ONLY	No site spectrum or actual 158m E/WE response, plot not structural stress
-FIG-S05-01	Seismic input / proposed Ch5	ESM processed horizontal RotD00/50/100 and HNE/HNN 16-period 5%-damped pseudo-Sa	T079 real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv SHA256 6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205	REAL_SOURCE_PLOTTED_QC_NOT_SITE_PASS	SVG and Node source-locked plot; 0.04Hz processed record low-frequency reliability/official target HOLD; not structural E/WE
-FIG-S05-02	Seismic input / proposed Ch5	Real ESM RotD50 vs hypothetical 6deg/II/first-group frequent reference 0.5–6s	T079 real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv SHA256 704f8d9725b6a595c6ee8ba29358510a821e8e65701de58714d6c204021c9f5f	HYPOTHETICAL_SHAPE_FIT_QC_NOT_STANDARD_PASS	Uniform scale 0.980397, log RMSE 0.534707, 9/12 outside illustrative ±30%; not official spectrum, no >6s extrapolation
+FIG-S05-01	Seismic input / proposed Ch5	ESM processed horizontal RotD00/50/100 and HNE/HNN 16-period 5%-damped pseudo-Sa	T079 real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv SHA256 6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205	REAL_SOURCE_PLOTTED_QC_NOT_SITE_PASS	SVG and Node source-locked plot; 0.04Hz processed record low-frequency reliability/official target HOLD; not structural E/WE | LIT_SOURCE: Ishihara2024 Fig7-8 p6; their synthetic Japanese wave is not our design wave
+FIG-S05-02	Seismic input / proposed Ch5	Real ESM RotD50 vs hypothetical 6deg/II/first-group frequent reference 0.5–6s	T079 real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv SHA256 704f8d9725b6a595c6ee8ba29358510a821e8e65701de58714d6c204021c9f5f	HYPOTHETICAL_SHAPE_FIT_QC_NOT_STANDARD_PASS	Uniform scale 0.980397, log RMSE 0.534707, 9/12 outside illustrative ±30%; not official spectrum, no >6s extrapolation | LIT_SOURCE: Ishihara2024 Fig8 p6; first validate official target spectrum
 
 FIG-S05-03	Seismic-input	Real RotD directional pseudo-spectra 16 periods	T079 real-records	REAL_SOURCE_QC	low-frequency and target HOLD
 FIG-S05-04	Seismic-input	Hypothetical spectrum mismatch 12 periods	T079 real-records	HYPOTHETICAL_ONLY	not Jiayu target
@@ -43,10 +43,10 @@ FIG-S05-06	Seismic-input	Event-vs-station weighting	T079 real-records	STATISTICA
 FIG-S08-02	Seismic-input	Three-axis PGA and Arias duration	T079 real-records	REAL_INPUT_QC	not 158m response
 FIG-S08-03	Seismic-method	Independent SDOF numerical solver oracle	T079 real-records	NUMERIC_QC	not Abaqus native
 FIG-S08-04	Seismic-response	158m tower E displacement/absolute acceleration histories	native E ODB	NEED_NATIVE	no E run
-FIG-S09-01	Seismic-response	Same-state W/E/WE paired histories	native matched ODB	NEED_NATIVE	no W/E/WE run
-FIG-S09-02	Seismic-response	31 segment N/V/M/T height envelope	native matched ODB	NEED_NATIVE	no E/WE run
-FIG-S09-03	Seismic-response	Joint COPEN/CPRESS/CSLIP 30 interfaces	native matched ODB	NEED_NATIVE	no E/WE run
-FIG-S09-04	Seismic-response	PT force and residual comparison	native matched ODB	NEED_NATIVE	no E/WE run
-FIG-S09-05	Seismic-response	Seismic stress and energy plots	native matched ODB	NEED_NATIVE	no E/WE run
+FIG-S09-01	Seismic-response	Same-state W/E/WE paired histories	native matched ODB	NEED_NATIVE	no W/E/WE run | LIT_SOURCE: Ishihara2024 Fig9 p7; paired E/W/WE time histories, NOT source data
+FIG-S09-02	Seismic-response	31 segment N/V/M/T height envelope	native matched ODB	NEED_NATIVE	no E/WE run | LIT_SOURCE: Ishihara2024 Fig10 p7; 31 native segment force envelopes
+FIG-S09-03	Seismic-response	Joint COPEN/CPRESS/CSLIP 30 interfaces	native matched ODB	NEED_NATIVE	no E/WE run | LIT_SOURCE: Ishihara2024 Fig19/24 p13/15 angles; 30 joints require separate COPEN
+FIG-S09-04	Seismic-response	PT force and residual comparison	native matched ODB	NEED_NATIVE	no E/WE run | LIT_SOURCE: Kenna2019 Fig5.23/27 and Wang2026 RCS; PT dynamics require own ODB
+FIG-S09-05	Seismic-response	Seismic stress and energy plots	native matched ODB	NEED_NATIVE	no E/WE run | LIT_SOURCE: Ishihara2024 Fig18/23 p13/15; approximation error vs coupled reference
 TAB-S09-01	Seismic-check	Simultaneous resistance/ductility standard verification	verified ODB and authorized standard	NEED_NATIVE	do not invent code clause
-FIG-S11-01	Optimization	Pareto wind fatigue with/without E constraints	native verified fatigue/earthquake	NEED_NATIVE	no optimization run
+FIG-S11-01	Optimization	Pareto wind fatigue with/without E constraints	native verified fatigue/earthquake	NEED_NATIVE	no optimization run | LIT_SOURCE: Kenna2019 Fig6.16 p211; earthquake constrained fatigue Pareto

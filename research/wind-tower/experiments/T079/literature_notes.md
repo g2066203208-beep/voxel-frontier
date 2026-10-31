@@ -266,3 +266,25 @@ Table5原值：FA AEM 0.358/2.674/3.964Hz、SLM 0.360/2.960/3.777Hz；SS AEM 0.3
 **自身可复核成果**：[FIG S08-01](../../manuscript/final-thesis/figures/FIG_S08_01_ESM_3COMP_SDOF_ORACLE_NUMERICAL_QC.svg)为真实ESM已处理波3轴×6周期共18个值的精确分段线性激励解与Newmark平均加速度PSA/误差，计算程序[plot_s08_real_sdof_figure.js](../../manuscript/final-thesis/figures/plot_s08_real_sdof_figure.js)需实际源CSV SHA256 `31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7`。最大相对数值误差0.0682157%（HNN、0.5s），**只界定数值积分误差**；原始地震仪器频带、ESM处理高通0.04Hz、场址适用性、真实结构模型误差完全不在其中。
 
 **STANDARD/OFFICIAL/RUN/FIG/TAB/HOLD**：STANDARD=未读取IEC/GB授权条款，原文提及IEC年份仅为原刊转述；OFFICIAL=东京大学作者原件PDF网页，与先前下载收据一致，未本轮复抓原件字节；RUN=本轮绘图/CSV一致性算法检查，无Abaqus native；FIG=既有原刊Fig7/8/25原PDF页引用+新增1张独立本文数值SVG；TAB=18行真实源结果、原刊Table4/8原页定位；HOLD=正式目标谱、长周期记录可靠性、10MW具体输入/初态和原生S08/S09全部未通过。**12阶段=0/12**。
+
+## 2026-10-31 14时｜正式论文图表反向拆解：先核原刊图，再决定本塔该做哪些实验
+
+**本轮纠正：**“生成SVG”不是完成论文；每幅论文图必须有原文图号→研究问题→自有输入SHA→原生RUN→FIG/TAB→物理解释。已将**29条**原图/方法核验结果转为机器可读的[逐图方法映射TSV](PRIMARY_PAPER_FIGURE_TO_158M_METHOD_MATRIX_20261031.tsv)，区分`IMAGE_SCREENED`、`FIGURE_LIST_SCREEN`、`PUBLISHER_ABSTRACT_ONLY`，**绝不把仅检查图目录说成已研究全部图中曲线**。
+
+### A. 两项本轮真正新增的原始资料（不只是旧论文综述）
+1. **Kenna (2019), Trinity College Dublin博士论文，326页开放PDF**：[高校原始PDF](https://www.tara.tcd.ie/bitstreams/43be90ce-4853-47c5-bf9d-4ce0d57f5dbf/download)；本轮WEB直接阅读PDF图目录（PDF索引20–25）、目视Fig5.22实际图（PDF索引187，论文印刷p156）和Fig6.4相关印刷页。图3.8 PT筋映射(p81)，3.10沿高PT损失(p87)，3.11–13三层次模态/壳体应力V&V(p89–91)，5.14–15塔顶频谱与局部应变(p141–143)，5.22–27 PT影响/长期损失(p156–162)，6.6与Table6.5约束优化(p184–185)，6.15–16多目标优化(p208,211)均为**已目视图目录或页内正文核定位**。图号、印刷页和需要的本人RUN一一登记；并不意味着这些全部图的每个图像都在本轮逐一看完。**新发现的重要设计**：将`G+PT`初态—局部应变—多目标优化明确拆为不同物理证据；不能把统一`Pe/A`应力谱和单张DEL图当完成。
+2. **Ishihara/Iida/Wang (2024), Structures 60:105886**：[作者公开17页PDF](https://windeng.t.u-tokyo.ac.jp/ishihara/paper/2024-1-2.pdf)；本轮实际截图PDF索引5/6/11/12/14（原刊印刷p6/7/12/13/15）核读Fig7–10、17–19、23–24，并核查这些图的工况、图例与方向。Fig9与10同时提供弯矩时程、沿高剪力/弯矩包络；Fig18/19、23/24将完整气弹法与简化组合**在同一对象同一状态下**比对，且运行/停机分别研究。**本塔必须有自己的31段同时间历史数据、E/WE及独立参考**；不把2.4MW日本谱和vector sum规则移植成我们的结论。
+3. 2026全文已归档的[Wang等RCS](https://doi.org/10.1016/j.rcns.2026.03.002)与2026年[Wang等JEE](https://doi.org/10.1080/13632469.2026.2671807)确认约160m混塔地震/PT及同时风震已有先行成果；另新增查到[Wei等Ocean Engineering 2026](https://doi.org/10.1016/j.oceaneng.2026.128065)，**本轮仅出版社Highlights，不声称全文核读**。因此创新点必须审慎置于**30接缝/有效PT、真实DLC1.2分材料疲劳及震约束优化**，并做独立高保真验证。
+4. [Mozafari (2023) DTU博士论文](https://doi.org/10.11581/DTU.00000274)出版社目录摘要明确DTU 10MW用于前3项研究，分别讨论**有限样本疲劳、极值外推、可靠性敏感性**；本轮论文PDF下载403，**无全文图号**，只采用研究框架，不能造出Fig号。[Asareh (2015)博士论文](https://scholarsmine.mst.edu/doctoral_dissertations/2375/)高校摘要明确正常发电/空转/紧急停机和增量动力分析框架，PDF被403拒绝，亦**不声称全文图号**。
+
+### B. 对本论文的强制结论——少画缺物理支撑的图，优先P0图链
+- **S01–S04 P0**：31段/30缝、36×8 PT真实几何、长期`P0→Pe→Peq`差异、原生接触与多阶模态、局部应力V&V；对读Kenna Fig3.8/3.10–3.13/5.22，不把图看完当原生验收。
+- **S05/S08 P0**：由可靠双水平源波、正式研究参考谱、低频质量与目标谱匹配→输入算法/基底加速度小模型（Ishihara Fig7/8）。目前处理波图多，**真实设计地震波仍未合格**。
+- **S09 P0**：同初态、同seed/角度下W/E/WE塔顶`u(t),a_abs(t)`、基底/过渡段`N,V,M,T`时程和31段沿高包络；30缝`CPRESS/COPEN/CSLIP`、PT时程和残余力；包括运行/停机对照与一向近似对原生参考误差（Ishihara Fig9/10/18/19/23/24）。无ODB不造图。
+- **S10 P0**：真实DLC1.2 × wind bins × seed 的*材料局部*应力雨流`range-mean-count`、混凝土/HRB335/钢塔/PT各材料独立疲劳贡献、样本收敛与年度权重；Mozafari出版社摘要只提供研究框架，不能用塔底load DEL代替材料Miner。
+- **S11 P0**：有/无地震约束的可行设计DOE、Pareto、局部需求/质量/频率/损伤与高保真复核（Kenna Fig6.6/6.16）；需要的是不同约束下**相同变量和同工况**、结果是否变动的实测对照，**不是**借原论文优化百分比。
+
+### C. 学术图规范与数量判断
+原著图目录里即有多种物理层级，而不是一堆花哨谱图。本论文不按“凑够50张”或“别人的图直接搬过来”决策：每个控制科学问题至少需**输入+模型验证+结果+对照+误差/机制**，对应TSV P0行，符合数据限制可合并多面板，严禁无意义重复。数据读取层级如上、**本轮不提交任何别人论文原图或受限PDF**。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=两篇原始PDF在线逐页可视查验，Kenna新的高校原件**本轮未下载本地字节，SHA256=NOT_CAPTURED**；Ishihara沿用先前原件收据但本轮原页在线重新目视、**本轮SHA=NOT_RECALCULATED**。REF=现有T079文献与本文新增TSV对应；STANDARD=未新阅2025 IEC/GB/NB授权条款，不能条款PASS；OFFICIAL=Trinity College Dublin机构库、东京大学作者PDF、DTU机构论文页面、出版社官方文献网页；RUN=论文原文目视/TSV字段与来源层级校验**不含结构求解**，原生Abaqus E/WE仍0；FIG=本轮只定位原作者图，不绘制/提交冒名的本塔响应图；TAB=29行可追溯方法映射+原FIGURE_TABLE_PLAN索引；误差预算=页码采用论文印刷页与PDF索引区分，方法迁移模型差异很大，模型/源波/材料不确定度**NEED_ESTIMATE**。PASS/HOLD=文献证据映射已建，12阶段0/12不晋级。下一单项优先选已归档源的**控制结构输出规范并同本塔现有结果可用性逐图验证**，而不是再叠加地震输入曲线。
