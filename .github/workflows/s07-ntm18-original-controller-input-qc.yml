@@ -129,7 +129,8 @@ jobs:
           assert hashlib.sha256(ext.read_bytes()).hexdigest()==ext_r['output_csv_sha256']
           assert all(x['status'] in ('ORIGINAL_VALUE','NOT_PRESENT_IN_ORIGINAL','ORIGINAL_VALUE_SEMANTIC_HOLD') for x in ext_rows)
           assert ext_r['semantic_validation_pass'] == (len(ext_r['semantic_holds']) == 0)
-          assert all(h['parameter'] == 'VS_GenEff' for h in ext_r['semantic_holds'])
+          assert all(h['parameter'] in ('VS_GenEff','WE_Mode','SS_Mode') for h in ext_r['semantic_holds'])
+          assert all(any(row['parameter']==h['parameter'] and row['status']=='ORIGINAL_VALUE_SEMANTIC_HOLD' for row in ext_rows) for h in ext_r['semantic_holds'])
           assert all(x['raw_value']=='' for x in ext_rows if x['status']=='NOT_PRESENT_IN_ORIGINAL')
           print('S07_EXTENDED_ORIGINAL_DISCON_9KEYS_SHA_VERIFIED_NO_DLC12')
           print('S07_18NTM_ORIGINAL_DISCON_PARAMETER_SOURCE_QC_PASS_NOT_DLC12')
