@@ -1,0 +1,27 @@
+{
+  "ARCHIVED_ESM_ZIP_SHA256": "ad370abe14e308856754456e5bf172bb327ca59cb002344e2937726c14fec2b7",
+  "FIG": "NONE",
+  "HOLD": "site target, long-period SNR/filter, tower axes, native PT/contact and base motion",
+  "OFFICIAL": "ESM DYNA MP processed 0.040Hz high-pass; instrument low-frequency SNR NOT_VERIFIED",
+  "PASS": "SOURCE_NUMERIC_QC_ONLY",
+  "REF": "ESM v3 DOI 10.13127/esm.3",
+  "RUN": "Python stdlib source QC; native Abaqus E/WE=0",
+  "SOURCE": "ESM v3 DOI 10.13127/esm.3; IT-2012-0008/NVL/MP processed; 32040x3, dt=0.005s, SI",
+  "SOURCE_SHA256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "STANDARD": "IEC/GB site target and authorized clauses NOT_VERIFIED",
+  "TAB": "S08_ESM_IT2012_NVL_3COMP_COINCIDENT_PEAKS_20261101.csv",
+  "TAB_SHA256": "1b8d4e2f2b47222694a363eb96aa1ec53217a8610b952aa8a519470a9142bc29",
+  "algorithm": "argmax at identical sample times, not quadrature of independent peaks",
+  "assumptions": "orthogonal HNE/HNN/HNZ, tower frame and vertical sign unverified",
+  "error_budget": "full 32040 samples, no interpolation; CSV 15 significant digits; 1e-14 norm invariant; site uncertainty NOT_ESTIMATED",
+  "metrics": {
+    "horizontal_vector_pga_m_s2": 0.5147633669393884,
+    "independent_component_quadrature_upper_bound_m_s2": 0.7561214890004199,
+    "independent_peak_quadrature_over_actual_ratio": 1.334650685457863,
+    "simultaneous_three_component_vector_pga_m_s2": 0.5665313757667056,
+    "three_component_vector_pga_time_s": 33.675,
+    "vertical_at_horizontal_vector_peak_m_s2": 0.00505547,
+    "vertical_at_three_component_vector_peak_m_s2": 0.28759727
+  },
+  "negative_tests": 6
+}
