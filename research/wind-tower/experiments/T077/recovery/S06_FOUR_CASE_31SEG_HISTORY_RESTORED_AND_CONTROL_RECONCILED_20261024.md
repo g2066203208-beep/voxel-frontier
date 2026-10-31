@@ -1,3 +1,7 @@
+### 2026-10-31 19:15｜S07/S10真实Node原生日志及输出SHA回填
+[Actions #41196047817/job #124522310149](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41196047817/job/124522310149)真实completed/success；已直接读取完整job日志。原生Node程序`--check`通过、248行真实源元素+372行既有绑定的两份SHA256门禁通过、248行纠偏CSV逐字节一致、6项真实输入破坏和4项合成非法输入拒绝通过；独立环截面轴力/弯矩数值积分最大相对误差1.8947806286936005e-15。程序SHA256=`4ba6c336a4bb9745958d2ecb34e8e044b7eec559658a371a1db4e683db45b381`；248行输出CSV SHA256=`bae37eeb07144db0f26c25a60a0698f4073ea878941e565c03e24154af17888f`。旧18NTM 30组/180子集回归同一job亦通过。收据已更新。
+**RUN**=GitHub Actions原生Node静态源级后处理，不是OpenFAST/Abaqus原生求解；**SOURCE**=SHA锁定248/372源CSV；**REF/STANDARD/OFFICIAL**=上一19时节所列，不新增规范原页；**FIG**=无；**TAB**=248行CSV；**误差/HOLD**=模型时变轴系/安装偏航/局部ODB与PT平衡仍未知。**12阶段0/12，E/WE原生0**。
+
 ## 2026-10-31 19时｜S07/S10坐标手性独立数值验证与四方位实际元素重绑定（禁止直接外载映射）
 **SOURCE/读取层级**：本轮直接从Draft PR HEAD=`43d81159ecbf3b27d2b609fdf4bbfc1b1e6557a5`完整读取D400/Pe/G1 22c模型已解析的248行C3D8R中层元素CSV（SHA256沿用源收据=`e0e74585c07d8db2d8300bc6a64b9bcb0c829cdba2f9e854e53153a0d5796ccc`）与4 ETM×31段×3控制量372行绑定CSV（SHA256=`2e9fb654ed081ec7a169a1ab81e0a3483dd64be404e28f57d659d43f5e9bb4f7`）；本轮未再读取16.5MB INP/原始OUTB字节，不把前次原生Actions当本轮RUN。**REF**：已有T062 OpenFAST v3.5.3源级截面力矩、T077 `s10_sync_gross_from_archived.py`的`σ=Fz/A+(Mx*y−My*x)/I`。**STANDARD**：未新读授权IEC2025/GB/NB原页，2.50001°为自设几何QC而非规范允许误差。**OFFICIAL**：现有v3.5.3源码定义与真实INP元素坐标，不等于初始轴系原生证明。
 

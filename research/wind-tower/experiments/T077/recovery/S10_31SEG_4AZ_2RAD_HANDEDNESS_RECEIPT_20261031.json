@@ -13,7 +13,7 @@
   "REF": "T062 original OpenFAST v3.5.3 source/frame contract, T077 S10 gross nominal sigma formula, T079 paper-to-figure matrix (no new full-text reading)",
   "STANDARD": "No new licensed IEC/GB/NB clause; 2.50001 deg is a geometry consistency threshold, not code tolerance",
   "OFFICIAL": "OpenFAST v3.5.3 source-derived right-handed Cartesian convention conditional on x_OF=x_A and z_OF=y_A; physical alignment and deflected DCM NOT independently certified",
-  "RUN": "Real 248+372 row JS V8 computation, analytic annulus force/moment integration self-test, six corrupted-source rejections; runnable Node program saved, no Node CLI/Actions log yet",
+  "RUN": "GitHub Actions Ubuntu Node 20 native CLI + source SHA256 and byte-for-byte CSV regeneration; workflow #41196047817 completed/success job #124522310149; V8 original source compute and six negative source tests independently executed",
   "FIG": "None; no structural response or fabricated ODB",
   "TAB": "248 row corrected 31 segment x 4 cardinal azimuth x 2 radial layers mapping; 372 existing 0/180 control rows unchanged",
   "stats": {
@@ -45,12 +45,26 @@
     "C3D8R centroids not ODB integration points; D400 branch is not T057 HRB335"
   ],
   "error_budget": "Geometry source centroid x/z rounded to 1e-9m; atan2 numerical angular error <~1e-7deg; maximum 2.5deg angular sampling gap measured; naive 90/270 angular error ~177.5deg; synthetic equilibrium <1e-12 relative. Unknown yaw, local time-dependent frame, stress localization, PT/contact, mesh and load ownership are unbounded NEED_NATIVE.",
-  "failure": "No actual test failure in this V8 computation; six deliberately corrupted sources correctly rejected; no GitHub Actions/Node CLI native run acquired",
+  "failure": "No native Node CI failure; all steps success. Earlier transient HTTP 400 when querying unsupported GitHub workflow-runs endpoint was read API routing, not an experiment failure. No native OpenFAST/Abaqus run.",
   "physical_pass": false,
   "stage": "0/12",
   "native_E_WE": 0,
   "HOLD": "Conditional proper handedness algebra and source centroid pairing are not proof of actual OpenFAST local frame vs Abaqus initial orientation; no native ODB local stress/PT/contact balance.",
-  "script_sha256": "PENDING_GITHUB_ACTIONS_NODE_SHA256",
-  "output_sha256": "PENDING_GITHUB_ACTIONS_NODE_SHA256",
-  "source_sha_status": "Pinned by original source receipt; Node will independently check both source bytes SHA256 on GitHub Actions"
+  "script_sha256": "4ba6c336a4bb9745958d2ecb34e8e044b7eec559658a371a1db4e683db45b381",
+  "output_sha256": "bae37eeb07144db0f26c25a60a0698f4073ea878941e565c03e24154af17888f",
+  "source_sha_status": "Two source CSV SHA256 verified by native Node CLI, original expected hashes pinned in script; exact output compared with committed CSV",
+  "native_ci": {
+    "workflow_run_id": 41196047817,
+    "job_id": 124522310149,
+    "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41196047817",
+    "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41196047817/job/124522310149",
+    "status": "completed",
+    "conclusion": "success",
+    "log_verified": true,
+    "source_sha_test": true,
+    "negative_source_rejections": 6,
+    "negative_synthetic_rejections": 4,
+    "byte_exact_csv_reproduction": true,
+    "physical_pass": false
+  }
 }
