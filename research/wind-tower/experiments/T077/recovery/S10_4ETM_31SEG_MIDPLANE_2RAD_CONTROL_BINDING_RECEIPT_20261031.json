@@ -1,0 +1,43 @@
+{
+  "SOURCE": "Original 4 ETM 124 gross controls + 248 D400/Pe/G1 true midplane INP centroids + prior 372 wrong low/high plane bindings",
+  "SOURCE_READING": "Three complete GitHub source CSVs independently SHA256 checked in JS V8; 16.5MB D400 original INP read by earlier Actions #41187856002, NOT re-read this turn",
+  "input_sha256": {
+    "S10_4CASE_31SEG_SYNC_GROSS_CONTROL_20261030.csv": "36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3",
+    "S10_D400_PE_31SEG_4AZ_2RAD_MIDPLANE_ELEMENTS_20261031.csv": "e0e74585c07d8db2d8300bc6a64b9bcb0c829cdba2f9e854e53153a0d5796ccc",
+    "S10_4ETM_31SEG_NATIVE_ELEMENT_SPATIAL_BINDING_QC_20261031.csv": "05812d6211594bf6187cb68d214544e8fdcf91fc75d591475abc9d4460afe864"
+  },
+  "d400_model_sha256": "22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a",
+  "output_sha256": "2e9fb654ed081ec7a169a1ab81e0a3483dd64be404e28f57d659d43f5e9bb4f7",
+  "script_sha256": "157200285378f00e2bad822211c6b788e6289461525de33139aec0ef3c00d8e7",
+  "REF": "Kenna2019 local strain and T079 29-row original-figure matrix (methods only)",
+  "STANDARD": "No new IEC2025/GB/NB authorized clause; 0.08m/5deg are self-set diagnostic gates only",
+  "OFFICIAL": "OpenFAST derived controls and Abaqus original INP-derived C3D8R centroids; no native ODB",
+  "RUN": "Real JS V8 complete SHA-locked join + six negative inputs rejected; committed Node script embeds exactly executed build/negatives, CI not yet run",
+  "FIG": "None; no fabricated structural/material results",
+  "TAB": "372 case-segment-criterion rows, 744 INNER/OUTER real midplane source elements, old 372 erroneous elements preserved",
+  "stats": {
+    "rows": 372,
+    "bindings": 744,
+    "min_axial_m": 0.000897982030000577,
+    "max_axial_m": 0.0704106480000064,
+    "mean_axial_m": 0.03565609536113039,
+    "max_az_deg": 2.500000107,
+    "max_case_gage_shift_m": 0.0003635480000099278,
+    "min_inner_outer_radial_gap_m": 0.1298763089999997,
+    "old_gt_0p1": 372,
+    "new_lt_0p08": 744
+  },
+  "negative_tests": 6,
+  "assumptions": [
+    "DEL4, maximum tension, minimum compression are independent nonsynchronous criteria",
+    "Only tension event time exists; no event time invented for DEL4/compression",
+    "Case gage_z_m may differ from nominal fixed model gage_z_m; per-case gap recalculated",
+    "D400 HRB400 diagnostic branch not T057 HRB335; Abaqus model Y axial and source local azimuth mapping not physically certified",
+    "Centroids are not integration points"
+  ],
+  "error_budget": "New axial gaps use case gage z and 9-digit centroid y, 1e-9m reporting (<0.5e-9m rounding); old gap 1e-6m reporting (reduction error approx ±0.5e-6m); angle and nominal gage shift in stats; material stress/PT/mesh/contact/frame NEED_NATIVE",
+  "physical_pass": false,
+  "stage": "0/12",
+  "seismic_native_runs": 0,
+  "HOLD": "All 744 bound candidate locations have no ODB IP/local material stress, effective PT+gravity+contact not balanced, model identity D400 vs T057 unresolved"
+}
