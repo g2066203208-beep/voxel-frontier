@@ -561,3 +561,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-09-S07-V353-SOURCE-END
 - **END / 2026-10-31 09时 CST / 自动研究任务**：继承本指挥室09时START，已直接核v3.5.3完整官方源文件、代码行号与Git blob/SHA256。更新T062既有S07脚本、既有轻量CI、T077过程日志、论文00_STATUS及本指挥室；S07新增`--source-gate` V8同源数值测试PASS（零转角/0.1rad单轴/多轴正交/6项非法输入拒绝），非原生映射物理PASS。脚本SHA256=`3cdc755a735d9bd34bf2df4834df4a348925a340a93c1901bb15e96327236f78`，原始OpenFAST v3.5.3源码SHA见T077。主要纠错：TwHt#FL/ML为含惯性/重力的截面内力，不可直接当独立外载；RP角不是无条件Euler角。新CI未回读成功job，保留CI_UNVERIFIED；S06 PARTIAL/S07 BLOCKED/12阶段0/12/E/WE=0；未改冻结T057/T070/main，未合并Draft PR #42或运行昂贵求解。**下一唯一动作**：单站0.1s派生输入补TPxi/yi/zi与RPxi/yi/zi，原生OUTB SHA验证并与独立姿态基准比较。
+
+
+### HANDOFF-20261031-10-S07-ORIGINAL-ETM-OUTB-START
+- **START / 2026-10-31 10时 CST / 自动研究**：main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft，read_base_sha=`32574cdea048f2582b6be122e687a10f8e304c28`。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER（实际位于manuscript/final-thesis）、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、指挥室当前及09时交接、T077 09时日志。**新发现**：既有T062原始ETM OUTB收据（`S06_T062_ORIGINAL_OUTB_CHANNEL_RECEIPT_20261028.json`）已明确保存9个塔架站的FL/ML/TP/RP/AL全同步原生输出（12001时刻），此前“没有任何真实同步RP”应限定为**尚无独立坐标取向验证/31段完整同步**，不能否定已恢复的9站RP。拟直接复用原始SHA锁定的5.14MB ETM ZIP、既有OUTB解码器及S07 v3.5.3数学候选，形成**原始12001×9站**逐时刻旋转候选与参考点搬移数值QC，保存小型摘要和三时刻复核；不冒称局部姿态独立验证或Abaqus外载映射。拟改：T062新增唯一可复算S07源级程序/摘要、现有轻量CI、T077过程日志、00_STATUS和本指挥室；不改T057/T070、不跑生产、不合并PR。
