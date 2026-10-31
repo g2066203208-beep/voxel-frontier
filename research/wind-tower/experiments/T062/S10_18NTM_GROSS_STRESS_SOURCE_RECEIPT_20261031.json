@@ -1,0 +1,173 @@
+{
+  "FIG": "none: full source CSV can support a source-only near-base seed dispersion plot",
+  "HOLD": "original nine gages occupy 0.07-2.75m, not full 31-segment coverage; frame/RP and force ownership not independently certified; no Pe/contact/local material stresses, site wind probabilities, DLC1.2 or lifetime Miner",
+  "OFFICIAL": "OpenFAST v3.5.3 native OUTB data and common source ED identity, not design certification",
+  "REF": "T077 S10 4 ETM x31 gross stress method; T062 original load rainflow",
+  "RUN": "source postprocessing Python only, no new OpenFAST/Abaqus solve",
+  "SOURCE": "18 original SHA-verified NTM OUTB, original source manifest, source gage height receipt and CSEG01 geometry",
+  "STANDARD": "IEC/GB/NB authorized DLC1.2/material fatigue clauses NOT checked",
+  "TAB": "2880 stress/angle/case/station rows and 30 six-seed control rows",
+  "assumptions": {
+    "azimuth": "local gage frame candidate, not globally certified structural azimuth",
+    "diagnostic_exponents": [
+      4,
+      10
+    ],
+    "reference_cycles": 600,
+    "section": "CSEG01 linear outer/inner radius interpolation at true original ED gage z; base z=0",
+    "six_seed": "power-mean DEL for identical fixed azimuth; exact 20 three-seed subsets",
+    "stress_MPa": "0.001*(Fz_kN/A_m2 + R_m/I_m4*(Mx_kNm*sin(theta)-My_kNm*cos(theta)))",
+    "wind_bins": "3 original NTM wind-speed samples, NOT 20-year IEC DLC1.2"
+  },
+  "full_sha256": "d45f047f5d622fb834d63728c13cead49b614b6cf42e598918e55242ed45f94b",
+  "gage_receipt_sha256": "6259bcc86c1db2f02b5df6df6a462891bc720510d24b77d148c02f00f68b4fcf",
+  "geometry_sha256": "d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e",
+  "identity_sha256": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5",
+  "material_fatigue_life": null,
+  "native_abaqus_runs": 0,
+  "numerical_error_budget": "each sample gross stress absolute quantization bound recorded per row using original packed channel half steps; output CSV 12 significant digits; oracle load DEL agreement 5e-10 relative and 5e-8 absolute; rainflow cycle rearrangement/DEL uncertainty NOT bounded by sample amplitude bound",
+  "oracle_load_DEL_checked": 540,
+  "oracle_max_abs_DEL_error": 4.912144504487514e-07,
+  "oracle_sha256": "95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f",
+  "original_outb_count": 18,
+  "output_rows": 2880,
+  "physical_pass": false,
+  "script_sha256": "3bb91eb676b08c66ee555a08daee51fc3346c549fa1fa2912341205488f060f8",
+  "source_azimuth_count": 16,
+  "source_case_count": 18,
+  "source_manifest_sha256": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392",
+  "source_reading_level": "18 original OUTB bytes SHA-checked, 12001 simultaneous samples per case; common FST/ED SHA via identity manifest; nine source gage heights from original ETM matched common ED",
+  "source_records": [
+    {
+      "archive": "part-007.zip",
+      "archive_sha256": "fc23f0a921e6b6735f8e5d28747335c30885e6523cf76649559fe9cd524ff947",
+      "case": "U09p343881_NTM_S01",
+      "native_samples": 12001,
+      "outb_sha256": "f2d5d236038f67f5bee729dca66ff1612d72636dcd2bc4369fe034d2a70b45cf"
+    },
+    {
+      "archive": "part-008.zip",
+      "archive_sha256": "a95ee7075dc73fb2de3c24727ce44442332eac4132088b525c224409217dbcd4",
+      "case": "U09p343881_NTM_S02",
+      "native_samples": 12001,
+      "outb_sha256": "0ae8763e4a95bc59d760eaa708978db819f8974be093dcd3ba22c071b66636e2"
+    },
+    {
+      "archive": "part-009.zip",
+      "archive_sha256": "f8d00641540ba6911fd6c5213c80fb3dffb5373a6454ccf88d73dc40f4b6c2df",
+      "case": "U09p343881_NTM_S03",
+      "native_samples": 12001,
+      "outb_sha256": "4aedb30c5bf19c17fd2745446382068862f1baf8a61b417d056ccfdb5a082eae"
+    },
+    {
+      "archive": "part-010.zip",
+      "archive_sha256": "653e361c90914caaa498e28b1b46b3cfb44cfb326abc8f601869e529e1493439",
+      "case": "U09p343881_NTM_S04",
+      "native_samples": 12001,
+      "outb_sha256": "a2dda590e9d8afc9a5a6401f843ec5786e42a84be764611c4647d90cdc63c8ff"
+    },
+    {
+      "archive": "part-011.zip",
+      "archive_sha256": "41036dbf638e6882c4b4de7e1ef8573e01183a158d6f3cc8093f5cb9032e3487",
+      "case": "U09p343881_NTM_S05",
+      "native_samples": 12001,
+      "outb_sha256": "87d7d9e5cf880d82f9179f524c7e0710f6c697df7fff26a21c29b0940f1af0c6"
+    },
+    {
+      "archive": "part-012.zip",
+      "archive_sha256": "9f1f7c8191a3375e4682d95119aa298cb0e93ef771eca58b0dfd5e8379fc7f69",
+      "case": "U09p343881_NTM_S06",
+      "native_samples": 12001,
+      "outb_sha256": "abdcc0569d1f532284a063ebe6f59a66faff2afc7761ea8f063b0999254c5e88"
+    },
+    {
+      "archive": "part-019.zip",
+      "archive_sha256": "4babf2dd59e6f65e308c7a83f9e1daf2782f1acc5696a8ad1538c8f2c0d8c0e6",
+      "case": "U11p4_NTM_S01",
+      "native_samples": 12001,
+      "outb_sha256": "bcebcb7971b2e0dcc459ff38748045ce02ec9559ce79d173187dee82fb796a79"
+    },
+    {
+      "archive": "part-020.zip",
+      "archive_sha256": "966f98afe8b041f04f1272c569b521fadab338acb882847cb733838611ca2ae9",
+      "case": "U11p4_NTM_S02",
+      "native_samples": 12001,
+      "outb_sha256": "873e8d0ac7e147d29a25426d1ddfe99d450b37d41f4a2db6abd3127cb65f54d0"
+    },
+    {
+      "archive": "part-021.zip",
+      "archive_sha256": "ac065ed9836a5e1c304246f51b2618ae464fcc9f457b10385d246e07d8868852",
+      "case": "U11p4_NTM_S03",
+      "native_samples": 12001,
+      "outb_sha256": "1d9efdfa291a7103cd5061bca60fbb6bb0c8d5940d2f53acfca0d4f43b0f99df"
+    },
+    {
+      "archive": "part-022.zip",
+      "archive_sha256": "d9d39f33372601096e77f0ee1b92fd83b486a38605f9a71ede0a8a9c46856689",
+      "case": "U11p4_NTM_S04",
+      "native_samples": 12001,
+      "outb_sha256": "709b6f94525c22be51dd61d5dd2205f699d2169fd4bb65364882a381f9c89733"
+    },
+    {
+      "archive": "part-023.zip",
+      "archive_sha256": "69b61003301b76e29027983f51d3418fe3d646359126868ee9623983192c4dc7",
+      "case": "U11p4_NTM_S05",
+      "native_samples": 12001,
+      "outb_sha256": "c2c0e97e8420b9710ce090ef32bda1aeebb0fab610a8484ee708480097e85383"
+    },
+    {
+      "archive": "part-024.zip",
+      "archive_sha256": "bf2b3cf970a712f4edef03f1282112f5facd5671f0dda6e2b0c62a9eb180c22b",
+      "case": "U11p4_NTM_S06",
+      "native_samples": 12001,
+      "outb_sha256": "43185f8551ec839da2894855a112266c848464e16055687513e0cd662b724d49"
+    },
+    {
+      "archive": "part-031.zip",
+      "archive_sha256": "f8665509b246fb92e69e4dc10312c7074d94a711773a83e66f0a4b66760b4839",
+      "case": "U19p202140_NTM_S01",
+      "native_samples": 12001,
+      "outb_sha256": "a9f91e5d1d2c99342ae514739f6123ad977930c4ed78308ddfef24739f474352"
+    },
+    {
+      "archive": "part-032.zip",
+      "archive_sha256": "a565b797ead06ce1e9a53b69eaecc685c055492b6cd7e18546445cb730e4c890",
+      "case": "U19p202140_NTM_S02",
+      "native_samples": 12001,
+      "outb_sha256": "105358014a9c292e7c1708ab7407851e114ca34b6bd9d3f86be055195343d61f"
+    },
+    {
+      "archive": "part-033.zip",
+      "archive_sha256": "04ca35c59713f9cbb49795b4353fa5a112131c2ed1d17f7b9ab2775fc24222cf",
+      "case": "U19p202140_NTM_S03",
+      "native_samples": 12001,
+      "outb_sha256": "255c3fbaa1f7c10a5fc06df32335999a03a73c8295a2ca65a2c7da20ceb3a2d5"
+    },
+    {
+      "archive": "part-034.zip",
+      "archive_sha256": "ea7bbceaa7afee968a9561504b2b25a3e01aaabd9b19565a42d11d5bc6159de4",
+      "case": "U19p202140_NTM_S04",
+      "native_samples": 12001,
+      "outb_sha256": "dd85987779922a66597886f8fbb65c1d7304a27da68671e11ec48a23b7ed023c"
+    },
+    {
+      "archive": "part-035.zip",
+      "archive_sha256": "bc5d49ce614a2b9728deeda2390d4ac4b652316f5b2b3f675b4588d7d04b6884",
+      "case": "U19p202140_NTM_S05",
+      "native_samples": 12001,
+      "outb_sha256": "95406ac6876ad7ebd14a14195173aa06f202b17cc8277e9b00b3b73e8e8e8320"
+    },
+    {
+      "archive": "part-036.zip",
+      "archive_sha256": "dadbb84bb1234bbad8378279eccb2c3fcf8f8d49c76d186948ea09cbdb9dd529",
+      "case": "U19p202140_NTM_S06",
+      "native_samples": 12001,
+      "outb_sha256": "dc95a0662e3d92099fe778ef4e1468e86eba0cefad2fe730b8f2fcd78f6edcab"
+    }
+  ],
+  "source_samples_per_case": 12001,
+  "source_station_count": 10,
+  "status": "REAL_18_NTM_10_NEAR_BASE_STATION_16_AZ_SYNCHRONOUS_GROSS_STRESS_NUMERIC_ONLY",
+  "summary_rows": 30,
+  "summary_sha256": "619e28d6ae2b76292224df999efc04e0650dcf4e001353647e75b9536d7cecd6"
+}
