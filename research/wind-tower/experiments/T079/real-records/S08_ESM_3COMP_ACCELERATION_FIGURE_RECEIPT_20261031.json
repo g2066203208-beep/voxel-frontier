@@ -1,0 +1,66 @@
+{
+  "status": "S08_REAL_ESM_3COMP_INPUT_WAVEFORM_FIGURE_QC_NOT_DESIGN_OR_ABAQUS_PASS",
+  "source": "ESM v3 DOI 10.13127/esm.3; IT-2012-0008/NVL/MP processed; Actions #40847442979 artifact #12884814391",
+  "reading_level": "actual archived 32040x3 SI waveform and 3 Arias rows, SHA locked; source ZIP independently downloaded",
+  "original_artifact_sha256": "40dcb0d8ad6aa3ce1be4cd96e633d1aa266f3764c85be556e1a029c682c908d6",
+  "original_esm_zip_sha256": "ad370abe14e308856754456e5bf172bb327ca59cb002344e2937726c14fec2b7",
+  "source_waveform_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "source_arias_sha256": "d5df379ff81cfd8aac061f2b7738c54effb952c106b5149ca2d03244c5963f30",
+  "npts_per_component": 32040,
+  "dt_s": 0.005,
+  "full_window_s": [
+    0.0,
+    160.195
+  ],
+  "zoom_window_s": [
+    20.0,
+    65.0
+  ],
+  "algorithm": "exact min/max per display pixel; no smoothing/interpolation/filtering/rescaling",
+  "error_budget": "amplitude extrema exactly preserved at input CSV precision; display time-bin <=0.267s full and <=0.075s zoom; PGA markers use exact source sample",
+  "figure_sha256": "1c0d622b13621dcbb7515889ea458ec1c2a25a711fbd2e2e11eef8ea8e4b43e2",
+  "figure_bytes": 348536,
+  "figure_name": "FIG_S08_04_ESM_REAL_3COMP_ACCELERATION_SOURCE_QC.svg",
+  "data": {
+    "HNE_acc_m_s2": {
+      "pga_m_s2": 0.47522846,
+      "pga_time_s": 33.67,
+      "pga_signed_m_s2": 0.47522846,
+      "t5_s": 32.75696341903203,
+      "t95_s": 50.60670251997232,
+      "plot_y_limit_m_s2": 0.6,
+      "full_samples": 32040,
+      "full_nonempty_bins": 600,
+      "zoom_samples": 9001,
+      "zoom_nonempty_bins": 600
+    },
+    "HNN_acc_m_s2": {
+      "pga_m_s2": 0.51205727,
+      "pga_time_s": 33.455,
+      "pga_signed_m_s2": -0.51205727,
+      "t5_s": 32.90017073636002,
+      "t95_s": 50.96714610780516,
+      "plot_y_limit_m_s2": 0.6,
+      "full_samples": 32040,
+      "full_nonempty_bins": 600,
+      "zoom_samples": 9001,
+      "zoom_nonempty_bins": 600
+    },
+    "HNZ_acc_m_s2": {
+      "pga_m_s2": 0.28926626,
+      "pga_time_s": 33.68,
+      "pga_signed_m_s2": 0.28926626,
+      "t5_s": 28.7989759100097,
+      "t95_s": 49.27043766699511,
+      "plot_y_limit_m_s2": 0.4,
+      "full_samples": 32040,
+      "full_nonempty_bins": 600,
+      "zoom_samples": 9001,
+      "zoom_nonempty_bins": 600
+    }
+  },
+  "Abaqus_E_WE_RUN": 0,
+  "S05_PASS": false,
+  "S08_PASS": false,
+  "HOLD": "site target spectrum, long-period SNR/passband, structural orientation, PT/contact native baseline and Abaqus base-motion physics"
+}
