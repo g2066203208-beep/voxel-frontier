@@ -592,3 +592,9 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-12-S05-ESM-REAL-FIGURES-END
 - **END / 2026-10-31 12时 CST / 自动研究**：继承本轮START，读取两份源SHA锁定的真实ESM RotD/假设谱CSV（16/12行），**V8实际计算并绘制**两张论文输入诊断SVG；提交Node复算脚本、两张SVG、既有Ch3轻量CI增强、FIGURE_TABLE_PLAN、T079 PROCESS_LOG、论文00_STATUS及本指挥室。远端[Actions #41167692673/job #124438719832](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41167692673/job/124438719832) `completed/success`，原生日志有`S05_REAL_ESM_FIGURES_NUMERICAL_QC_PASS`、`S05_TWO_REAL_SOURCE_SVG_XML_AND_EXACT_REGEN_PASS`。输入SHA256 RotD=`6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205`、fit=`704f8d9725b6a595c6ee8ba29358510a821e8e65701de58714d6c204021c9f5f`；程序SHA256=`d616b11a6dfb68bbd8d22a62f9d0d053f77782a0313d24ca97086a92b46d49cd`；图SHA256=`2bb14ec85c8142142659488fe7b780f720868ba7808a2946d24a09608f11497a`、`0def065fdb1babbc7875ee672f67e01ada2412b57d59f79593a83b157ce76e35`。FIG仅输入谱，假设目标谱未经授权条款/场址地勘核验，长周期仪器可靠性HOLD；S05 SOURCE-FIG-QC、**12阶段0/12**、原生E/WE=0。未改T057/T070/main，未合并Draft PR #42，未运行生产求解。下一责任：S05真实三向加速度时程图，继承现有ESM规范化SI源CSV与SHA，不重复RotD。写入前read_base_sha=`46bdde52de3e2f438d320d53802e9d8f532f9ae5`，本轮终结提交以Git历史识别。
+
+## 2026-10-31｜地震论文图表质量纠偏：六图真实源图组提交
+- 研究成果：S05-03/04/05/06、S08-02/03六幅真实数值双面板SVG，新生成器及源审计已在论文figures目录；`00_STATUS`与T079/PROCESS_LOG更新；六输入文件原源blob登记。
+- 禁止扩大解释：没有158m结构E/WE原生响应、接缝、PT、31段内力和抗震验算图，**0/12未晋级**；本次绘图是source QC，不是场址/物理PASS。
+- 下一单项：恢复并直接读取ESM 32,040点三分量加速度SI时程，生成完整原波/处理记录时程图并对源SHA与单位进行核验；结构类图必须以原生ODB为依据。
+- SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB和误差约束见T079/PROCESS_LOG同日期条目。冻结T057/T070不动，PR #42保持Draft。

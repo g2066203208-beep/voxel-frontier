@@ -389,3 +389,11 @@ RUN：直接扩展现有 `s05_esm_public_processed_pair.py` 和现有S05 workflo
 
 
 **12时远端CI回读补证（覆盖本节先前“CI待回读”时间点）：** [Actions #41167692673 / job #124438719832](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41167692673/job/124438719832)已`completed/success`，原生Node日志确认`S05_REAL_ESM_FIGURES_NUMERICAL_QC_PASS`、`S05_TWO_REAL_SOURCE_SVG_XML_AND_EXACT_REGEN_PASS`；16/12行CSV源SHA严格一致，两个SVG逐字节cmp一致、XML解析通过。输出SHA256：Node程序`d616b11a6dfb68bbd8d22a62f9d0d053f77782a0313d24ca97086a92b46d49cd`；FIG-S05-01 `2bb14ec85c8142142659488fe7b780f720868ba7808a2946d24a09608f11497a`；FIG-S05-02 `0def065fdb1babbc7875ee672f67e01ada2412b57d59f79593a83b157ce76e35`。此CI是**数表→图的原生Node/文件一致性**，不是Abaqus地震RUN或场址/标准PASS。
+
+## 2026-10-31｜真实地震图表的论文级重排（SOURCE/RUN/FIG）
+- SOURCE：从T079/real-records已归档CSV直接读取16行RotD、12行假定谱拟合、20行多事件谱、4行事件计权、3行Arias、18行SDOF算法比较。六份源文件Git blob分别为`da83ab108ccc848a2356410339e66f6cb7e8401b`、`e8e088c2e7d282fe254eddc02bdf8710a9f9ce63`、`30eae037aa177693250eb759a0233843a2fbc2ba`、`748babdfff51bfebf3f7efcdc3e33ed33bc4b568`、`ec10e37b89bfc20f4ba61d494f7d16bb3db8e90d`、`3b2b6610fe592ad3ddd6b879284d8d3886d8a056`，与历史SHA256收据分开看待（Git blob并非SHA256）。
+- REF：T079既有ESM/USGS-SCEDC官方源收据；STANDARD：未新取得2025 IEC或GB/NB授权地震条款；OFFICIAL：本轮直接读二级仓库CSV，并非重新下载仪器原始加速度三分量文件。
+- RUN：在JS执行环境真实加载数表，校验6文件行数/字段有限/9个目标谱偏差点，并从原记录数值生成六份SVG。程序保存为[`plot_s05_s08_publication_six.cjs`](../../manuscript/final-thesis/figures/plot_s05_s08_publication_six.cjs)，可用Node >=18复算并打印每个输入及结果SHA256；**本轮未取得新远端CI或Node执行日志**，故仅称JS数值生成及Git远端文件持久化，不称Native PASS。
+- FIG：[`FIG_S05_03_ROTD_PUBLICATION.svg`](../../manuscript/final-thesis/figures/FIG_S05_03_ROTD_PUBLICATION.svg)、S05-04、S05-05、S05-06、S08-02、S08-03；TAB为六份真实CSV。六图与缺图明细见[`S05_S08_SIX_FIGURE_AUDIT_20261031.md`](../../manuscript/final-thesis/figures/S05_S08_SIX_FIGURE_AUDIT_20261031.md)。
+- 误差预算：原离散数值不作光滑拟合；SVG像素坐标四舍五入至0.01，图像显示误差需与原数表可追溯；真正处理源低频误差、目标谱适用性、结构模型误差均**尚未估计/未验收**。
+- HOLD：真实三向连续加速度源波图、正式目标谱和完整E/W/WE结构ODB图表尚缺。S05 PARTIAL、S08/S09 BLOCKED、地震结构结果0、严格0/12正式晋级。不得把本文方法图替代论文应有的结构响应图。
