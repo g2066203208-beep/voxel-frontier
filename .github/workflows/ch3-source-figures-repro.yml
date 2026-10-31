@@ -19,6 +19,8 @@ jobs:
           sparse-checkout: |
             research/wind-tower/manuscript/final-thesis/figures
             research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv
+            research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv
+            research/wind-tower/experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv
           sparse-checkout-cone-mode: false
       - name: Verify source SHA and exact SVG/CSV rerender
         run: node research/wind-tower/manuscript/final-thesis/figures/plot_ch3_s06_etm_screening.js --check
@@ -46,6 +48,27 @@ jobs:
           assert len({r["segment"] for r in rows})==31
           print("SVG_XML_PASS 3; ORIGIN_CSV_PASS 124; SOURCE_REGEN_PASS")
           PY
+      - name: Reproduce real ESM S05 figures with SHA-locked source and exact byte comparison
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          fig="$root/manuscript/final-thesis/figures"
+          src="$root/experiments/T079/real-records"
+          node "$fig/plot_s05_esm_real_spectra.js" \
+            "$src/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv" \
+            "$src/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv" \
+            /tmp/s05_rotd.svg /tmp/s05_fit.svg
+          cmp /tmp/s05_rotd.svg "$fig/FIG_S05_01_ESM_REAL_ROTD_16PERIOD_SOURCE_QC.svg"
+          cmp /tmp/s05_fit.svg "$fig/FIG_S05_02_ESM_REAL_ROTD50_VS_HYPOTHETICAL_SPECTRUM_QC.svg"
+          python3 - <<'PY'
+          from xml.etree import ElementTree as ET
+          for p in ['/tmp/s05_rotd.svg','/tmp/s05_fit.svg']:
+              root=ET.parse(p).getroot()
+              assert root.tag=='{http://www.w3.org/2000/svg}svg'
+              assert len(list(root.iter('{http://www.w3.org/2000/svg}polyline'))) >= 3
+          print('S05_TWO_REAL_SOURCE_SVG_XML_AND_EXACT_REGEN_PASS')
+          PY
+          sha256sum "$fig/plot_s05_esm_real_spectra.js" "$fig"/FIG_S05_0*.svg
       - name: Record exact source, figures and plotted CSV SHA256
         run: |
           sha256sum \
