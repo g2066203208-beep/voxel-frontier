@@ -1,0 +1,66 @@
+{
+  "SOURCE": "4 ETM x31 source-derived gross stress controls; D400 PE INP static element candidates; D400/T057 68-part source metadata; 18 NTM six-seed near-base scope table",
+  "SOURCE_READING": "actual GitHub CSV text bytes; SHA256 locked; no ODB read",
+  "input_sha256": {
+    "S10_4CASE_31SEG_SYNC_GROSS_CONTROL_20261030.csv": "36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3",
+    "S10_D400_PE_AZIMUTH_HEIGHT_CANDIDATES_20261028.csv": "9052f70b39544c8fbd27b0813face4eecf2dcace3efdbd7c3cebbc896b395595",
+    "S10_D400_PE_68PART_INP_METADATA_20261028.csv": "9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83",
+    "S10_T057_68PART_INP_METADATA_20261028.csv": "502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd",
+    "S10_18NTM_6SEED_GROSS_STRESS_CONTROL_20261031.csv": "619e28d6ae2b76292224df999efc04e0650dcf4e001353647e75b9536d7cecd6"
+  },
+  "model_sha256": "22c29916aa78f289d95b036d1c63dec68c886d8994b5c32909d4f3a0206d9f2a",
+  "REF": "REF018 Huang2025 Eq1-2 and Kenna2019 local strain method; research/wind-tower/experiments/T079/PRIMARY_PAPER_FIGURE_TO_158M_METHOD_MATRIX_20261031.tsv",
+  "STANDARD": "No new IEC/GB/NB authorized clause reading",
+  "OFFICIAL": "Abaqus source INP element instance/section identity only; no native ODB or material stress",
+  "RUN": "Node.js SHA-locked CSV join and fail-closed negative tests, zero Abaqus/OpenFAST production",
+  "FIG": "none, no invented local stress cloud plot",
+  "TAB": "372 ETM segment/criterion-to-D400 source-element candidates; 30 NTM nearbase rows scoped but NOT falsely mapped to 31 segments",
+  "cases": [
+    "U09p343881_ETM_S06",
+    "U11p4_ETM_S04",
+    "U19p202140_ETM_S04",
+    "U19p202140_ETM_S06"
+  ],
+  "source_rows": {
+    "etm": 124,
+    "candidate": 372,
+    "d400_metadata": 68,
+    "t057_metadata": 68,
+    "ntm_nearbase": 30,
+    "output": 372
+  },
+  "concrete_axial_gap_m": {
+    "min": 0.8629223549999949,
+    "max": 1.21243507297,
+    "mean": 1.1686446889291915
+  },
+  "rebar_axial_gap_m": {
+    "min": 0.000897927029999579,
+    "max": 0.0704106449999955,
+    "mean": 0.03565608526435445
+  },
+  "concrete_height_only_gap_m": {
+    "min": 0.000897927029999579,
+    "max": 0.0704106449999955,
+    "mean": 0.03565608526435445
+  },
+  "concrete_azimuth_gap_deg": {
+    "min": 2.5,
+    "max": 2.5,
+    "mean": 2.5
+  },
+  "concrete_over_0p1m": 372,
+  "output_sha256": "05812d6211594bf6187cb68d214544e8fdcf91fc75d591475abc9d4460afe864",
+  "assumptions": [
+    "ETM DEL4/tension/compression are separate extrema, not synchronous states",
+    "Concrete azimuth candidates cover only LOWEST/HIGHEST centroid planes; mid-height-only label has no verified azimuth",
+    "D400/T057 rebar grade and element label identity cannot be interchanged",
+    "OpenFAST local azimuth not yet independently mapped to Abaqus global frame"
+  ],
+  "error_budget": "Source candidate axial and angular offsets explicit in each row; 6-digit output gaps round <5e-7m; local stress, PT, gravity, contact, ODB integration point, frame and material errors unbounded",
+  "negative_tests": "tamper SHA; duplicate candidate; wrong T057 grade; NTM out of CSEG01; missing source; no matching azimuth",
+  "physical_pass": false,
+  "stage": "0/12",
+  "seismic_native_runs": 0,
+  "HOLD": "ALL_372_CONCRETE_AZIMUTH_CANDIDATES_HAVE_GT_0p1M_AXIAL_GAP; NO_ODB_IP/PT/CONTACT/NATIVE_LOCAL_STRESS; NTM only CSEG01; steel/PT not bound"
+}

@@ -13,6 +13,9 @@ on:
       - 'research/wind-tower/experiments/T062/s06_ntm_18case_input_identity.js'
       - 'research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv'
       - 'research/wind-tower/experiments/T062/s07_sixdof_wrench_source_contract.mjs'
+      - 'research/wind-tower/experiments/T077/recovery/s10_etm31_native_element_spatial_binding.cjs'
+      - 'research/wind-tower/experiments/T077/recovery/S10_4ETM_31SEG_NATIVE_ELEMENT_SPATIAL_BINDING_QC_20261031.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S10_4ETM_31SEG_NATIVE_ELEMENT_SPATIAL_BINDING_RECEIPT_20261031.json'
       - 'research/wind-tower/experiments/T062/s07_original_etm_native_history_frame_qc.py'
       - 'research/wind-tower/experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv'
   workflow_dispatch:
@@ -23,6 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: S10 4ETM x31 segment gross-to-Abaqus source element spatial binding, negative and exact regeneration tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T077/recovery
+          node "$root/s10_etm31_native_element_spatial_binding.cjs" --self-test --check
+          sha256sum "$root/s10_etm31_native_element_spatial_binding.cjs"             "$root/S10_4ETM_31SEG_NATIVE_ELEMENT_SPATIAL_BINDING_QC_20261031.csv"             "$root/S10_4ETM_31SEG_NATIVE_ELEMENT_SPATIAL_BINDING_RECEIPT_20261031.json"
+          echo 'S10_SOURCE_BINDING_QC_ONLY; no native ODB integration point, no PT equilibrium, no material fatigue PASS'
       - name: Reproduce original 18 NTM input/OUTB SHA identity without any solver or ZIP download
         shell: bash
         run: |
