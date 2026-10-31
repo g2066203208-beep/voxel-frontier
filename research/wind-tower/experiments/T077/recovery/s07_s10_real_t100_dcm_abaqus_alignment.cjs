@@ -64,7 +64,7 @@ const files=[
  path.join(__dirname,"S10_31SEG_4AZ_2RAD_HANDEDNESS_CORRECTED_CANDIDATES_20261031.csv"),
  path.resolve(__dirname,"../../T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json")];
 function sha(b){return crypto.createHash("sha256").update(b).digest("hex")}
-function gitblob(b){return crypto.createHash("sha1").update(Buffer.from("blob "+b.length+" ")).update(Buffer.from([0])).update(b).digest("hex")}
+function gitblob(b){return crypto.createHash("sha1").update(Buffer.from("blob "+b.length)).update(Buffer.from([0])).update(b).digest("hex")}
 function main(){
  const raw=files.map(f=>fs.readFileSync(f));
  must(gitblob(raw[0])==="e3149c26a66adb184b5c5803b4ace5f7b70b6dff","S07_RECEIPT_BLOB_MISMATCH");
