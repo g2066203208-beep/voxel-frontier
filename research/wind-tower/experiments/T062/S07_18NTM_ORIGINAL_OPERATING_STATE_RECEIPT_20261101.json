@@ -1,0 +1,350 @@
+{
+  "FIG": "none",
+  "HOLD": "Actual controller DLL version and runtime log, 18 BTS wind-field bytes, formal DLC1.2 configuration and complete operating-state/IEC checks unavailable; diagnostic activity is not shutdown certification",
+  "OFFICIAL": "Original OpenFAST binary output channels and archived input source, not certified controller DLL",
+  "REF": "T062 18-case source identity and existing S07 original TurbSim/ServoDyn input QC; no new paper fulltext",
+  "RUN": "Python3 original OUTB postprocessing in GitHub Actions; no new OpenFAST/Abaqus/TurbSim run",
+  "SOURCE": "18 original OpenFAST 158m NTM OUTB packed binary files from SHA-pinned archive",
+  "STANDARD": "No authorized IEC 61400-1/6:2025 DLC1.2 clause inspected; thresholds are diagnostics only",
+  "TAB": "18-row synchronized RotorSpeed/BldPitch1-3/GenPwr/GenSpeed/GenTq operating-state QC CSV",
+  "assumptions": {
+    "active_diagnostic": "GenPwr>1 kW AND RotSpeed>0.1 rpm",
+    "dt_s": 0.05,
+    "negative_power_diagnostic": "GenPwr<-1 kW",
+    "no_controller_state_or_stop_label_inferred": true,
+    "pitch_extreme_diagnostic": "any |BldPitch|>=80 deg",
+    "window_s": [
+      100,
+      700
+    ]
+  },
+  "input_sha256": {
+    "config_csv": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
+    "identity_csv": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5",
+    "manifest": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392"
+  },
+  "numerical_error_budget": "Each channel native packed-int16 half-step 0.5/abs(scale) recorded per case; threshold ambiguity counted; 12-significant-digit CSV rounding; no physical or IEC acceptance tolerance",
+  "original_outb_verified": 18,
+  "output_csv_sha256": "0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04",
+  "physical_pass": false,
+  "script_sha256": "5f869ef7656ff799eba4af5bfd1b25328c691ee0e7c045a60e267fe75068ff7e",
+  "source_cases": [
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-007.zip",
+      "archive_sha256": "fc23f0a921e6b6735f8e5d28747335c30885e6523cf76649559fe9cd524ff947",
+      "case": "U09p343881_NTM_S01",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.07169607770539403,
+      "outb_bytes": 7088610,
+      "outb_sha256": "f2d5d236038f67f5bee729dca66ff1612d72636dcd2bc4369fe034d2a70b45cf"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-008.zip",
+      "archive_sha256": "a95ee7075dc73fb2de3c24727ce44442332eac4132088b525c224409217dbcd4",
+      "case": "U09p343881_NTM_S02",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.054242596486886396,
+      "outb_bytes": 7088610,
+      "outb_sha256": "0ae8763e4a95bc59d760eaa708978db819f8974be093dcd3ba22c071b66636e2"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-009.zip",
+      "archive_sha256": "f8d00641540ba6911fd6c5213c80fb3dffb5373a6454ccf88d73dc40f4b6c2df",
+      "case": "U09p343881_NTM_S03",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.06628052080513902,
+      "outb_bytes": 7088610,
+      "outb_sha256": "4aedb30c5bf19c17fd2745446382068862f1baf8a61b417d056ccfdb5a082eae"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-010.zip",
+      "archive_sha256": "653e361c90914caaa498e28b1b46b3cfb44cfb326abc8f601869e529e1493439",
+      "case": "U09p343881_NTM_S04",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.06266171122257733,
+      "outb_bytes": 7088610,
+      "outb_sha256": "a2dda590e9d8afc9a5a6401f843ec5786e42a84be764611c4647d90cdc63c8ff"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-011.zip",
+      "archive_sha256": "41036dbf638e6882c4b4de7e1ef8573e01183a158d6f3cc8093f5cb9032e3487",
+      "case": "U09p343881_NTM_S05",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.05011373583654768,
+      "outb_bytes": 7088610,
+      "outb_sha256": "87d7d9e5cf880d82f9179f524c7e0710f6c697df7fff26a21c29b0940f1af0c6"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-012.zip",
+      "archive_sha256": "9f1f7c8191a3375e4682d95119aa298cb0e93ef771eca58b0dfd5e8379fc7f69",
+      "case": "U09p343881_NTM_S06",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.06344974079770119,
+      "outb_bytes": 7088610,
+      "outb_sha256": "abdcc0569d1f532284a063ebe6f59a66faff2afc7761ea8f063b0999254c5e88"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-019.zip",
+      "archive_sha256": "4babf2dd59e6f65e308c7a83f9e1daf2782f1acc5696a8ad1538c8f2c0d8c0e6",
+      "case": "U11p4_NTM_S01",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.06376924128556284,
+      "outb_bytes": 7088610,
+      "outb_sha256": "bcebcb7971b2e0dcc459ff38748045ce02ec9559ce79d173187dee82fb796a79"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-020.zip",
+      "archive_sha256": "966f98afe8b041f04f1272c569b521fadab338acb882847cb733838611ca2ae9",
+      "case": "U11p4_NTM_S02",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.03520744698532273,
+      "outb_bytes": 7088610,
+      "outb_sha256": "873e8d0ac7e147d29a25426d1ddfe99d450b37d41f4a2db6abd3127cb65f54d0"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-021.zip",
+      "archive_sha256": "ac065ed9836a5e1c304246f51b2618ae464fcc9f457b10385d246e07d8868852",
+      "case": "U11p4_NTM_S03",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.05821293631416741,
+      "outb_bytes": 7088610,
+      "outb_sha256": "1d9efdfa291a7103cd5061bca60fbb6bb0c8d5940d2f53acfca0d4f43b0f99df"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-022.zip",
+      "archive_sha256": "d9d39f33372601096e77f0ee1b92fd83b486a38605f9a71ede0a8a9c46856689",
+      "case": "U11p4_NTM_S04",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.04650167345108765,
+      "outb_bytes": 7088610,
+      "outb_sha256": "709b6f94525c22be51dd61d5dd2205f699d2169fd4bb65364882a381f9c89733"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-023.zip",
+      "archive_sha256": "69b61003301b76e29027983f51d3418fe3d646359126868ee9623983192c4dc7",
+      "case": "U11p4_NTM_S05",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.03459957842058779,
+      "outb_bytes": 7088610,
+      "outb_sha256": "c2c0e97e8420b9710ce090ef32bda1aeebb0fab610a8484ee708480097e85383"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-024.zip",
+      "archive_sha256": "bf2b3cf970a712f4edef03f1282112f5facd5671f0dda6e2b0c62a9eb180c22b",
+      "case": "U11p4_NTM_S06",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.053334809068610295,
+      "outb_bytes": 7088610,
+      "outb_sha256": "43185f8551ec839da2894855a112266c848464e16055687513e0cd662b724d49"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-031.zip",
+      "archive_sha256": "f8665509b246fb92e69e4dc10312c7074d94a711773a83e66f0a4b66760b4839",
+      "case": "U19p202140_NTM_S01",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.023748395146102854,
+      "outb_bytes": 7088610,
+      "outb_sha256": "a9f91e5d1d2c99342ae514739f6123ad977930c4ed78308ddfef24739f474352"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-032.zip",
+      "archive_sha256": "a565b797ead06ce1e9a53b69eaecc685c055492b6cd7e18546445cb730e4c890",
+      "case": "U19p202140_NTM_S02",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.04820892791299206,
+      "outb_bytes": 7088610,
+      "outb_sha256": "105358014a9c292e7c1708ab7407851e114ca34b6bd9d3f86be055195343d61f"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-033.zip",
+      "archive_sha256": "04ca35c59713f9cbb49795b4353fa5a112131c2ed1d17f7b9ab2775fc24222cf",
+      "case": "U19p202140_NTM_S03",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.04273460104955257,
+      "outb_bytes": 7088610,
+      "outb_sha256": "255c3fbaa1f7c10a5fc06df32335999a03a73c8295a2ca65a2c7da20ceb3a2d5"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-034.zip",
+      "archive_sha256": "ea7bbceaa7afee968a9561504b2b25a3e01aaabd9b19565a42d11d5bc6159de4",
+      "case": "U19p202140_NTM_S04",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.026217055787751298,
+      "outb_bytes": 7088610,
+      "outb_sha256": "dd85987779922a66597886f8fbb65c1d7304a27da68671e11ec48a23b7ed023c"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-035.zip",
+      "archive_sha256": "bc5d49ce614a2b9728deeda2390d4ac4b652316f5b2b3f675b4588d7d04b6884",
+      "case": "U19p202140_NTM_S05",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.02350285662848624,
+      "outb_bytes": 7088610,
+      "outb_sha256": "95406ac6876ad7ebd14a14195173aa06f202b17cc8277e9b00b3b73e8e8e8320"
+    },
+    {
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-036.zip",
+      "archive_sha256": "dadbb84bb1234bbad8378279eccb2c3fcf8f8d49c76d186948ea09cbdb9dd529",
+      "case": "U19p202140_NTM_S06",
+      "channel_units": {
+        "BldPitch1": "(deg)",
+        "BldPitch2": "(deg)",
+        "BldPitch3": "(deg)",
+        "GenPwr": "(kW)",
+        "GenSpeed": "(rpm)",
+        "GenTq": "(kN-m)",
+        "RotSpeed": "(rpm)"
+      },
+      "max_packed_halfstep": 0.04526186439639078,
+      "outb_bytes": 7088610,
+      "outb_sha256": "dc95a0662e3d92099fe778ef4e1468e86eba0cefad2fe730b8f2fcd78f6edcab"
+    }
+  ],
+  "source_reading_level": "Original ZIP member bytes SHA256/size, 12001 synchronized packed samples x seven operating channels per case",
+  "stages_passed": 0,
+  "status": "S07_18_ORIGINAL_NTM_OPERATING_STATE_SOURCE_NUMERIC_QC_NOT_DLC12",
+  "summary": {
+    "active_heuristic_fraction_max": 1.0,
+    "active_heuristic_fraction_min": 1.0,
+    "formal_dlc12_approved": 0,
+    "max_active_transitions": 0,
+    "max_pitch_spread_deg": 0.0,
+    "total_quantization_ambiguous_samples": 0
+  }
+}
