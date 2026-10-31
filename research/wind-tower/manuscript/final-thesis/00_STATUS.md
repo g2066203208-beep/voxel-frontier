@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 09时｜S07 OpenFAST v3.5.3 源码级通道/载荷所有权闭合（数学准备，不是物理PASS）
+
+本轮直接读取OpenFAST v3.5.3的[ElastoDyn.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90)与[NWTC_Num.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/nwtc-library/src/NWTC_Num.f90)原始Fortran全文，并登记SHA256、精确代码行号。确认`TwHt#FL/ML`是包含质量/重力/惯性贡献的截面内力，不能作为独立风外载直接施加于Abaqus；`TwHt#RPxi/yi/zi`是角位置分量（deg）而非无条件可用的Euler角；局部基底由`SmllRotTrans`构造，`TowerLn2Mesh%Orientation`可作未来原生独立参照。已在[既有S07脚本](../../experiments/T062/s07_sixdof_wrench_source_contract.mjs)增加`--source-gate`：复刻v3.5.3小转角矩阵公式、每站12通道输入门禁、6项坏输入拒绝；本轮JS V8同源数值测试PASS，程序SHA256=`3cdc755a735d9bd34bf2df4834df4a348925a340a93c1901bb15e96327236f78`。轻量CI已接入，但本轮**未取得新远端job结果**。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、源码SHA、误差与HOLD见[T077 09时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级；S06 PARTIAL、S07 BLOCKED、E/WE原生0**；下一项为一站0.1s原生RP/TP/六分量同步输出与独立姿态对照，非700s生产。
+
+
 ## 2026-10-31 08时｜S07塔架局部坐标原文核验及180行真实均值物理映射拒绝门禁
 
 本轮核读[OpenFAST v3.5.3 ElastoDyn理论与坐标](https://openfast.readthedocs.io/en/v3.5.3/source/user/elastodyn/theory.html)和[NREL旧FAST指南印刷p.8、117–118](https://openfast.readthedocs.io/en/main/_downloads/d8bd014121d6505cb25cf49bee5eaa80/Old_FAST6_UsersGuide.pdf)，明确塔基与各局部塔架测点的坐标系不能默认等同；旧指南为辅助，尚未完成v3.5.3源码级逐通道核验。更新[现有S07程序](../../experiments/T062/s07_sixdof_wrench_source_contract.mjs)与轻量CI：逐时刻`R(t)`及`r(t)`变换契约，2个合成时刻±30°已知解得到全局平均Fx=86.6025403784N，而错误固定坐标得100N；5项坏输入拒绝。对[真实180行NTM源均值](../../experiments/T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv)执行身份核验，180/180明确拒绝直接作为已验证Abaqus物理映射。测试为V8数值/真实源读取，**非原生同步物理验收**；旧指南PDF原件SHA未取得，[远端Actions #41148800534/job #124380110148](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41148800534/job/124380110148)已completed/success，原生Node脚本SHA256=`82ea2de528d4100a9f94954e5d949405e10dbd89b124b617f28510d442c398e9`，真实180行防误用门禁PASS；完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、误差、失败及HOLD见[T077 08时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级；S06 PARTIAL、S07 BLOCKED、E/WE=0**。
