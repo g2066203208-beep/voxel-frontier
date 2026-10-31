@@ -6,6 +6,7 @@ on:
       - 'research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py'
       - 'research/wind-tower/experiments/T062/s06_t062_original_tower_gage_geometry_gate.py'
       - 'research/wind-tower/experiments/T062/s06_ntm_18case_original_outb_gate.py'
+      - 'research/wind-tower/experiments/T062/s10_ntm_18case_nearbase_gross_rainflow.py'
   pull_request:
     paths:
       - '.github/workflows/s06-historical-original-outb-source-gate.yml'
@@ -103,12 +104,15 @@ jobs:
           sparse-checkout: |
             research/wind-tower/experiments/T062
             research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
+            research/wind-tower/experiments/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv
           sparse-checkout-cone-mode: false
       - name: Known-answer and invalid-input rainflow checks
         run: |
           set -euo pipefail
           python3 -m py_compile research/wind-tower/experiments/T062/s06_ntm_18case_original_outb_gate.py
           python3 research/wind-tower/experiments/T062/s06_ntm_18case_original_outb_gate.py --self-test
+          python3 -m py_compile research/wind-tower/experiments/T062/s10_ntm_18case_nearbase_gross_rainflow.py
+          python3 research/wind-tower/experiments/T062/s10_ntm_18case_nearbase_gross_rainflow.py --self-test
       - name: Fetch only 18 SHA-identified original NTM OUTB archives
         shell: bash
         run: |
@@ -146,12 +150,43 @@ jobs:
           assert len(r['sources'])==18 and r['physical_pass'] is False
           print('PASS 18 ORIGINAL NTM CASES / 1080 SHA-PINNED CHANNEL DEL ROWS')
           PY
+      - name: S10 18 original NTM synchronous near-base nominal stress and 6-seed controls (no solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          python3 "$root/experiments/T062/s10_ntm_18case_nearbase_gross_rainflow.py" \
+            --manifest "$root/archive/local-assets-20261004-supplement/file-manifest.json" \
+            --zip-dir /tmp/ntm-archives \
+            --oracle "$root/experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv" \
+            --identity "$root/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv" \
+            --gage-receipt "$root/experiments/T062/S06_T062_ORIGINAL_GAGE_GEOMETRY_RECEIPT_20261028.json" \
+            --geometry "$root/experiments/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv" \
+            --out "$root/experiments/T062/S10_18NTM_10NEARBASE_16AZ_GROSS_RAINFLOW_20261031.csv" \
+            --summary "$root/experiments/T062/S10_18NTM_6SEED_GROSS_STRESS_CONTROL_20261031.csv" \
+            --receipt "$root/experiments/T062/S10_18NTM_GROSS_STRESS_SOURCE_RECEIPT_20261031.json"
+          python3 - <<'PY'
+          import csv,json,hashlib,pathlib
+          p=pathlib.Path('research/wind-tower/experiments/T062')
+          full=p/'S10_18NTM_10NEARBASE_16AZ_GROSS_RAINFLOW_20261031.csv'
+          short=p/'S10_18NTM_6SEED_GROSS_STRESS_CONTROL_20261031.csv'
+          rec=json.loads((p/'S10_18NTM_GROSS_STRESS_SOURCE_RECEIPT_20261031.json').read_text())
+          assert sum(1 for _ in csv.DictReader(full.open()))==2880
+          assert sum(1 for _ in csv.DictReader(short.open()))==30
+          assert rec['oracle_load_DEL_checked']==540 and rec['physical_pass'] is False
+          assert hashlib.sha256(full.read_bytes()).hexdigest()==rec['full_sha256']
+          assert hashlib.sha256(short.read_bytes()).hexdigest()==rec['summary_sha256']
+          print('S10_REAL_18NTM_2880_GROSS_30_CONTROL_540_LOAD_ORACLE_NUMERIC_PASS_NO_ABAQUS')
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: s06-18-original-ntm-9gage-rainflow-20261031
           path: |
             research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv
             research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json
+            research/wind-tower/experiments/T062/S10_18NTM_10NEARBASE_16AZ_GROSS_RAINFLOW_20261031.csv
+            research/wind-tower/experiments/T062/S10_18NTM_6SEED_GROSS_STRESS_CONTROL_20261031.csv
+            research/wind-tower/experiments/T062/S10_18NTM_GROSS_STRESS_SOURCE_RECEIPT_20261031.json
           retention-days: 14
       - name: Persist verified small results to the same Draft PR branch (no merge)
         shell: bash
@@ -161,11 +196,14 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv \
-            research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json
+            research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json \
+            research/wind-tower/experiments/T062/S10_18NTM_10NEARBASE_16AZ_GROSS_RAINFLOW_20261031.csv \
+            research/wind-tower/experiments/T062/S10_18NTM_6SEED_GROSS_STRESS_CONTROL_20261031.csv \
+            research/wind-tower/experiments/T062/S10_18NTM_GROSS_STRESS_SOURCE_RECEIPT_20261031.json
           if git diff --cached --quiet; then
             echo 'NO_CHANGE_SOURCE_VERIFIED'
           else
-            git commit -m 'data(S06): pin original 18 NTM OUTB 1080 load-DEL rows and SHA receipt'
+            git commit -m 'data(S10): persist 18 original NTM 10-station gross-stress rainflow and seed controls'
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi
           echo 'SOURCE-NUMERIC ONLY; NOT DLC1.2/31-GAGE/ABAQUS/MATERIAL FATIGUE PASS'
