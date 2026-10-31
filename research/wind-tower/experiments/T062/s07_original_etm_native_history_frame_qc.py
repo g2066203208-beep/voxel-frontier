@@ -73,6 +73,86 @@ def decode(raw,h,channel,k):
     must(math.isfinite(v),"NONFINITE_NATIVE_SAMPLE")
     return v,.5/abs(s)
 
+
+def kinematic_chord(stations):
+    """Compare measured TP chord with integral of RP-implied tangent; NOT an independent frame oracle.
+    stations: ordered (TP[m], RP[deg], TP_halfLSB[m], RP_halfLSB[deg]).
+    Both R^T e_z and R e_z are compared, with dz measured from native TPzi.
+    """
+    must(len(stations)>=2, "KINEMATIC_NEEDS_TWO_STATIONS")
+    obs=tuple(stations[-1][0][j]-stations[0][0][j] for j in (0,1))
+    pred={"transpose":[0.,0.],"direct":[0.,0.]}
+    bound=[stations[0][2][j]+stations[-1][2][j] for j in (0,1)]
+    for left,right in zip(stations[:-1],stations[1:]):
+        p0,r0,pe0,re0=left
+        p1,r1,pe1,re1=right
+        dz=p1[2]-p0[2]
+        must(math.isfinite(dz) and 0<dz<158., "KINEMATIC_NONMONOTONIC_Z")
+        R0=smallrot(tuple(math.radians(x) for x in r0))
+        R1=smallrot(tuple(math.radians(x) for x in r1))
+        maxslope=[0.,0.]
+        for name in pred:
+            A0=trans(R0) if name=="transpose" else R0
+            A1=trans(R1) if name=="transpose" else R1
+            t0=mv(A0,(0.,0.,1.))
+            t1=mv(A1,(0.,0.,1.))
+            must(t0[2]>.9 and t1[2]>.9,"KINEMATIC_INVALID_TANGENT")
+            for j in (0,1):
+                s0=t0[j]/t0[2];s1=t1[j]/t1[2]
+                pred[name][j]+=dz*.5*(s0+s1)
+                maxslope[j]=max(maxslope[j],abs(s0),abs(s1))
+        # Conservative packed-data propagation only; excludes beam shear,
+        # finite station spacing, RP-to-frame definition and model-form errors.
+        rp_rad=max(*(abs(x) for x in re0+re1))*math.pi/180.
+        dz_lsb=pe0[2]+pe1[2]
+        for j in (0,1):
+            bound[j]+=dz*4*rp_rad+dz_lsb*maxslope[j]
+    residual={name:tuple(obs[j]-pred[name][j] for j in (0,1)) for name in pred}
+    return {"observed_m":obs,"predicted_m":pred,"residual_m":residual,
+            "packed_error_bound_m":tuple(bound)}
+
+def kinematic_history(raw,h):
+    """Use every native synchronous 9-station TP/RP sample; no new solver."""
+    n=h["num_samples"]
+    squared={"transpose":0.,"direct":0.}
+    maxima={"transpose":0.,"direct":0.}
+    max_packed=0.
+    preference={"transpose":0,"direct":0,"tie_within_packed":0}
+    examples=[]
+    for k in range(n):
+        stations=[]
+        for g in range(1,10):
+            tp=[decode(raw,h,f"TwHt{g}TP{a}",k) for a in ("xi","yi","zi")]
+            rp=[decode(raw,h,f"TwHt{g}RP{a}",k) for a in ("xi","yi","zi")]
+            stations.append((tuple(v for v,_ in tp),tuple(v for v,_ in rp),
+                             tuple(e for _,e in tp),tuple(e for _,e in rp)))
+        c=kinematic_chord(stations)
+        distances={name:norm(c["residual_m"][name]) for name in squared}
+        for name in squared:
+            squared[name]+=distances[name]**2
+            maxima[name]=max(maxima[name],distances[name])
+        eps=norm(c["packed_error_bound_m"])
+        max_packed=max(max_packed,eps)
+        if abs(distances["transpose"]-distances["direct"])<=eps:
+            preference["tie_within_packed"]+=1
+        else:
+            preference[min(distances,key=distances.get)]+=1
+        if k in TIMES:
+            examples.append({"time_s":100.+.05*k,"gage_1_to_9":c,
+                             "residual_norm_m":distances})
+    must(sum(preference.values())==n and len(examples)==3,
+         "KINEMATIC_SAMPLE_COUNT_MISMATCH")
+    return {"status":"NATIVE_TP_RP_SPATIAL_KINEMATIC_CANDIDATE_ONLY",
+            "source":"same original 9-station 12001-step ETM OUTB SHA locked above",
+            "method":"TP chord (gage9-gage1) versus trapezoidal integration of local-z tangent from SmllRotTrans(RP), for R^T and R; native TPzi sets dz",
+            "time_samples":n,"spatial_stations":9,
+            "rms_chord_residual_m":{key:math.sqrt(val/n) for key,val in squared.items()},
+            "max_chord_residual_m":maxima,
+            "max_conservative_packed_bound_m":max_packed,
+            "preferred_sign_sample_counts":preference,
+            "samples":examples,
+            "limitations":"Kinematic consistency is not independent TowerLn2Mesh%Orientation validation; beam shear, finite station spacing and RP semantic/model errors are unbudgeted; ETM near-base only; no external-load mapping PASS"}
+
 def selftest():
     I=smallrot((0.,0.,0.))
     must(mv(I,(1,2,3))==(1.,2.,3.),"IDENTITY_FAIL")
@@ -88,6 +168,20 @@ def selftest():
         try:smallrot(bad)
         except ValueError:refused+=1
     must(refused==3,"BAD_RP_ACCEPTED")
+
+    zero=(0.,0.,0.)
+    known=[((0.,0.,0.),zero,zero,zero),
+           ((.05,0.,1.),(0.,math.degrees(.1),0.),zero,zero),
+           ((.2,0.,2.),(0.,math.degrees(.2),0.),zero,zero)]
+    kc=kinematic_chord(known)
+    must(norm(kc["residual_m"]["transpose"])<1e-12 and
+         abs(norm(kc["residual_m"]["direct"])-.4)<1e-12,
+         "KINEMATIC_KNOWN_CHORD_FAIL")
+    bad=[known[0],((.1,0.,0.),zero,zero,zero)]
+    try:kinematic_chord(bad)
+    except ValueError as e:must("NONMONOTONIC_Z" in str(e),"BAD_KINEMATIC_REJECTION")
+    else:raise AssertionError("NONMONOTONIC_Z_ACCEPTED")
+    print("S07_KINEMATIC_SELFTEST_PASS known_chord transpose_vs_direct bad_z_rejected")
     print("S07_SELFTEST_PASS identity v353_formula known_rotation known_arm inverse 3_bad_RP")
 
 def run(archive,receipt,out):
@@ -190,8 +284,9 @@ def run(archive,receipt,out):
       "assumptions":"TP is global position and origin Q=(0,0,0) m; RP orientation sign/order candidate, not independently verified; FL/ML are INTERNAL section resultants",
       "error_budget":"Per-channel packed half-LSB in summary; floating point orthogonality/roundtrip in summary; RP-to-frame, section force ownership, reference-point physical errors UNKNOWN",
       "failure_log":"No source mismatch when status PASS; script aborts on source SHA, CRC, header, units, time, parity, or RP angle >0.4rad",
-      "HOLD":"ETM not DLC1.2 NTM; nine near-base stations not 31 full-height; candidate frame unverified; internal FL/ML cannot be applied as independent Abaqus external loads; no material fatigue, earthquake or native Abaqus PASS",
-      "physical_pass":False,"summary":summary,"selected_native_samples":selected
+      "HOLD":"ETM not DLC1.2 NTM; nine near-base stations not 31 full-height; TP/RP kinematic chord is not an independent TowerLn2Mesh orientation test; internal FL/ML cannot be applied as independent Abaqus external loads; no material fatigue, earthquake or native Abaqus PASS",
+      "physical_pass":False,"summary":summary,"selected_native_samples":selected,
+      "kinematic_qc":kinematic_history(raw,h)
     }
     must(len(summary)==9 and len(selected)==6,"OUTPUT_COVERAGE_FAIL")
     Path(out).parent.mkdir(parents=True,exist_ok=True)
@@ -200,7 +295,7 @@ def run(archive,receipt,out):
       "source_outb_sha256":OUTB_SHA,"station_samples":9*12001,
       "max_frame_candidate_force_delta_N":max(x["max_candidate_force_rotation_delta_N"] for x in summary),
       "max_algebraic_force_roundtrip_N":max(x["max_force_norm_roundtrip_N"] for x in summary),
-      "physical_pass":False}))
+      "physical_pass":False,"kinematic_qc":result["kinematic_qc"]["rms_chord_residual_m"]}))
 
 def main():
     p=argparse.ArgumentParser()
