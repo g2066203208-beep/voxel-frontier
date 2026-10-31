@@ -8,6 +8,7 @@ import csv
 import hashlib
 import io
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -38,7 +39,10 @@ HEADER = [
     "discon_VS_MinTq_raw", "discon_VS_ConstPower_raw", "discon_PC_Switch_raw",
     "discon_F_LPFType_raw", "discon_F_LPFCornerFreq_raw",
     "discon_Y_ControlMode_raw", "GenPwr_mean_kW", "RotSpeed_mean_rpm",
-    "BldPitch1_mean_deg", "GenTq_mean_kNm", "n_original_outb_samples",
+    "BldPitch1_mean_deg", "GenTq_mean_kNm", "GenSpeed_mean_rpm",
+    "rated_power_torque_speed_relerr", "mean_power_to_rated_fraction",
+    "mean_torque_to_rated_fraction", "mean_genspeed_to_reference_fraction",
+    "n_original_outb_samples",
     "runtime_dll_sha_verified", "formal_dlc12_reuse",
 ]
 
@@ -92,6 +96,17 @@ def make(root):
     require(sha(raw) == DISCON_SHA and entry["bytes"] == len(raw),
             "DISCON_ORIGINAL_BYTE_IDENTITY")
     p = parse_discon(raw)
+    for required in ("VS_RtPwr", "VS_RtTq", "PC_RefSpd"):
+        require(required in p and p[required]["tokens"] == 1,
+                "RATED_PARAMETER_MISSING_OR_ARRAY:" + required)
+    rated_power_W = float(p["VS_RtPwr"]["raw"])
+    rated_torque_Nm = float(p["VS_RtTq"]["raw"])
+    reference_speed_radps = float(p["PC_RefSpd"]["raw"])
+    require(all(math.isfinite(x) and x > 0 for x in
+                (rated_power_W, rated_torque_Nm, reference_speed_radps)),
+            "INVALID_RATED_PARAMETERS")
+    rated_relerr = abs(rated_torque_Nm * reference_speed_radps -
+                       rated_power_W) / rated_power_W
     rows = []
     for case in sorted(cfg):
         a, b, c = cfg[case], state[case], logs[case]
@@ -117,6 +132,14 @@ def make(root):
             "RotSpeed_mean_rpm": b["RotSpeed_mean"],
             "BldPitch1_mean_deg": b["BldPitch1_mean"],
             "GenTq_mean_kNm": b["GenTq_mean"],
+            "GenSpeed_mean_rpm": b["GenSpeed_mean"],
+            "rated_power_torque_speed_relerr": f"{rated_relerr:.12g}",
+            "mean_power_to_rated_fraction":
+                f"{float(b['GenPwr_mean'])*1000/rated_power_W:.12g}",
+            "mean_torque_to_rated_fraction":
+                f"{float(b['GenTq_mean'])*1000/rated_torque_Nm:.12g}",
+            "mean_genspeed_to_reference_fraction":
+                f"{float(b['GenSpeed_mean'])*math.pi/30/reference_speed_radps:.12g}",
             "n_original_outb_samples": b["n_samples"],
             "runtime_dll_sha_verified": "NO",
             "formal_dlc12_reuse": "HOLD",
@@ -152,9 +175,17 @@ def make(root):
             "18case_operating_csv": STATE_SHA, "18case_native_log_csv": LOG_SHA},
         "original_discon_bytes": len(raw),
         "parsed_discon_parameters": p, "recognized_parameter_count": len(p),
+        "conditional_rated_power_torque_speed_identity": {
+            "VS_RtPwr_assumed_W": rated_power_W,
+            "VS_RtTq_assumed_Nm": rated_torque_Nm,
+            "PC_RefSpd_assumed_rad_per_s": reference_speed_radps,
+            "product_W": rated_torque_Nm * reference_speed_radps,
+            "relative_residual": rated_relerr,
+            "assumption": "ROSCO setting names interpreted in W, N-m and rad/s; OUTB source units kW, kN-m and rpm. Diagnostic unit contract only, not IEC compliance."
+        },
         "group_sixseed_operating_summary": groups, "output_csv_sha256": sha(data),
-        "assumptions": "DISCON numeric settings kept as literal raw tokens: no rad/s, W, N*m or degree conversion without verified unit semantics; case labels do not prove DLC1.2",
-        "error_budget": "Input SHA256 and source member length exact; CSV means are archived packed-OUTB postprocessed summaries, with per-channel quantization bounds in prior receipt; parameter-to-response causal error and controller dynamics NOT ESTIMATED",
+        "assumptions": "Original DISCON values retained as raw tokens; additional W/N-m/rad-s to OUTB kW/kN-m/rpm ratios are CONDITIONAL on ROSCO unit semantics, not official certification; case labels do not prove DLC1.2",
+        "error_budget": "Input SHA256 and source member length exact; rated identity floating arithmetic ~1e-15 plus source parameter decimal rounding; CSV means are packed-OUTB summaries with per-channel quantization in prior receipt; unit interpretation, controller dynamics and causal error NOT ESTIMATED",
         "negative_tests": "duplicate parameter, malformed numeric, missing key set, missing runtime banner, SHA and case-set fail closed",
         "HOLD": "18 historical per-case DLL binaries and NTM BTS not archived with SHA; DISCON text + ROSCO banner do not certify actual binary equality or 2025 IEC DLC1.2; no material IP stress",
         "formal_dlc12_approved": 0, "physical_pass": False,
