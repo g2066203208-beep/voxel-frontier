@@ -35,8 +35,8 @@ KEYS = (
 EXTENDED_PARAMETER_KEYS = {
     "VS_RefSpd": "rated generator speed [rad/s]",
     "VS_TSRopt": "region-2 optimal tip-speed ratio (registry says [rad]; unit requires caution)",
-    "VS_GenEff": "generator mechanical-to-electrical efficiency fraction [-]",
-    "WE_Mode": "wind-speed estimator mode {0,1}",
+    "VS_GenEff": "source implementation uses percent (Controllers.f90 /100); registry description [-] conflicts",
+    "WE_Mode": "source implementation {0 LPF,1 I&I,2 EKF}; registry description {0,1} incomplete",
     "SS_Mode": "setpoint smoother mode {0,1}",
     "VS_MinOMSpd": "optimal-mode minimum generator speed [rad/s]",
     "VS_MaxRat": "maximum generator torque rate [N m/s]",
@@ -226,7 +226,7 @@ def extended_source_qc(data, receipt):
             "status": "ORIGINAL_VALUE" if obj else "NOT_PRESENT_IN_ORIGINAL",
             "raw_value": obj["raw"] if obj else "",
             "numeric_tokens": str(obj["tokens"]) if obj else "",
-            "v260_registry_semantics": unit,
+            "v260_source_semantics": unit,
             "original_discon_sha256": DISCON_SHA,
         })
         if not obj:
@@ -235,27 +235,18 @@ def extended_source_qc(data, receipt):
         val = float(obj["raw"])
         require(math.isfinite(val), "EXTENDED_PARAMETER_NONFINITE:" + key)
         if key in ("WE_Mode", "SS_Mode"):
-            require(val >= 0 and val.is_integer(), "EXTENDED_MODE_INVALID:" + key)
-            if val not in (0.0, 1.0):
-                # Registry lists {0,1}; source may contain a legacy or custom mode.
-                # Do not overwrite, normalize, or imply official semantic acceptance.
-                rows[-1]["status"] = "ORIGINAL_VALUE_SEMANTIC_HOLD"
-                semantic_holds.append({"parameter": key, "source_line": obj["line"],
-                    "raw_value": obj["raw"], "registry_expected": "0 or 1",
-                    "reason": "Original value not listed by official v2.6.0 registry"})
+            require(val.is_integer() and
+                    val in ((0.0, 1.0, 2.0) if key == "WE_Mode" else (0.0, 1.0)),
+                    "EXTENDED_MODE_INVALID:" + key)
         elif key == "VS_GenEff":
-            require(val > 0, "EXTENDED_EFFICIENCY_NONPOSITIVE")
-            if val > 1:
-                # Official registry uses a fraction [-]; never silently divide by 100.
-                rows[-1]["status"] = "ORIGINAL_VALUE_SEMANTIC_HOLD"
-                semantic_holds.append({"parameter": key, "source_line": obj["line"],
-                    "raw_value": obj["raw"], "registry_expected": "0 < efficiency <= 1",
-                    "reason": "Original source exceeds v2.6.0 fraction definition; unit/identity unresolved"})
+            # v2.6.0 Controllers.f90 lines 190/213 divide by 100.
+            # The tagged registry says [-], but executable source uses percent.
+            require(0 < val <= 100, "EXTENDED_EFFICIENCY_PERCENT_OUT_OF_RANGE")
         elif key in ("VS_RefSpd", "VS_TSRopt", "VS_MinOMSpd", "WE_GearboxRatio"):
             require(val > 0, "EXTENDED_POSITIVE_PARAMETER:" + key)
     buf = io.StringIO(newline="")
     columns = ["parameter", "source_line", "status", "raw_value",
-               "numeric_tokens", "v260_registry_semantics", "original_discon_sha256"]
+               "numeric_tokens", "v260_source_semantics", "original_discon_sha256"]
     writer = csv.DictWriter(buf, fieldnames=columns, lineterminator="\n")
     writer.writeheader()
     writer.writerows(rows)
@@ -281,7 +272,8 @@ def extended_source_qc(data, receipt):
         "source_reading_level": "Original DISCON bytes; existing 18 OUTB summaries cross-checked, original 18 OUTB binaries not reread",
         "REF": "ROSCO v2.6.0 tagged registry semantics, previously SHA-pinned; no new journal full text",
         "STANDARD": "IEC 61400-1/6:2025 authorized DLC1.2 clauses not read",
-        "OFFICIAL": "NatLabRockies/ROSCO v2.6.0 tag 51629665d22f92770f861daeebcebd47ab32abb1, ROSCO/rosco_registry/rosco_types.yaml",
+        "OFFICIAL": "NatLabRockies/ROSCO v2.6.0 tag 51629665d22f92770f861daeebcebd47ab32abb1; executable Controllers.f90 lines 190/213, ReadSetParameters.f90 lines 628-631, ControllerBlocks.f90 lines 238+, compared against rosco_types.yaml registry",
+        "official_executable_sha256": {"Controllers.f90": "ded8d2b5ffbf4f0472ed400fc0ad5e178dd771aaf16c1b1d3ed74a190821b62d", "ReadSetParameters.f90": "0a0da7452a02c85b56a4c1dfea2e8cb1cb32523e4514499c9da5e6373ceea584", "ControllerBlocks.f90": "136744e014f31bf95d8fe6b82c07c139ec647264a65a2319152881b1cebf00e4"},
         "RUN": "Python original ZIP read + SHA256 and conditional source-parameter validation; NO OpenFAST/Abaqus/fe-safe run",
         "FIG": "none", "TAB": "9-key original DISCON supplement, not duplicate 18-case source table",
         "input_sha256": receipt["input_sha256"],
@@ -291,11 +283,16 @@ def extended_source_qc(data, receipt):
         "parameters_present": sum(x["status"] != "NOT_PRESENT_IN_ORIGINAL" for x in rows),
         "semantic_holds": semantic_holds,
         "semantic_validation_pass": len(semantic_holds) == 0,
-        "parameters_absent": [x["parameter"] for x in rows if x["status"] != "ORIGINAL_VALUE"],
+        "official_registry_vs_executable_conflicts": [
+            {"parameter": "VS_GenEff", "registry": "efficiency fraction [-]",
+             "source": "Controllers.f90 lines 190/213 use VS_GenEff/100.0; DISCON=100 percent"},
+            {"parameter": "WE_Mode", "registry": "0 or 1",
+             "source": "ReadSetParameters.f90 lines 628-631 allow 0,1,2; ControllerBlocks.f90 lines 238+ implement EKF mode 2"}],
+        "parameters_absent": [x["parameter"] for x in rows if x["status"] == "NOT_PRESENT_IN_ORIGINAL"],
         "operating_band_diagnostics": groups,
-        "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. Registry VS_GenEff is a fraction [-]; source values >1 are preserved verbatim as SEMANTIC_HOLD and NOT divided by 100. VS_TSRopt registry unit wording is retained, not independently certified.",
+        "assumptions": "Six-seed averages are descriptive only; no timewise ROSCO internal state, no covariance or actual generator efficiency inferred from means. Missing original keys are NOT zero. VS_GenEff source=100 is percentage as used by Controllers.f90 /100; WE_Mode=2 is EKF in ControllerBlocks.f90. Registry descriptions are inconsistent with executable source and documented separately. VS_TSRopt registry unit wording is retained, not independently certified.",
         "error_budget": "Original DISCON bytes/SHA exact; output CSV deterministic; floating group means have roundoff ~1e-14 relative plus previously documented packed-OUTB uncertainty; internal state/closed-loop dynamics and DLL binary uncertainty NOT ESTIMATED",
-        "negative_tests": "parser rejects duplicate, malformed, insufficient keys; extended validator rejects non-scalar, invalid modes, efficiency outside (0,1], nonpositive speed, absent key never filled with zero",
+        "negative_tests": "parser rejects duplicate, malformed, insufficient keys; extended validator rejects non-scalar, WE_Mode outside {0,1,2}, SS_Mode outside {0,1}, VS_GenEff outside (0,100] percent, nonpositive speed; absent key never filled with zero",
         "HOLD": "Original 18 per-case BTS/DLL SHA not recovered, controller internal state not recorded, IEC2025 clauses and S01-S04 physics not passed",
         "formal_dlc12_approved": 0, "physical_pass": False,
         "native_earthquake_results": 0, "stages_passed": 0,
@@ -326,7 +323,7 @@ def self_test():
     assert p["VS_GenEff"]["raw"] == "0.94"
     assert p["WE_Mode"]["raw"] == "1" and p["SS_Mode"]["raw"] == "0"
     assert "VS_MinOMSpd" not in p and p["PC_RefSpd"]["raw"] == "3"
-    for key, val in (("VS_GenEff", "-1.1"), ("WE_Mode", "-2"),
+    for key, val in (("VS_GenEff", "101"), ("WE_Mode", "3"),
                      ("VS_RefSpd", "-3")):
         altered = fixture.replace(
             {"VS_GenEff": b"0.94", "WE_Mode": b"1", "VS_RefSpd": b"49.9"}[key]
@@ -346,7 +343,8 @@ def self_test():
             pass
         else:
             raise AssertionError("EXTENDED_BAD_PARAMETER_ACCEPTED:" + key)
-    # Out-of-registry efficiency is retained with explicit semantic HOLD.
+    # Executable v2.6.0 source, not stale registry annotation, defines
+    # valid 100%-efficiency and WE_Mode=2 EKF settings.
     high_eff = fixture.replace(b"0.94 ! VS_GenEff", b"94 ! VS_GenEff")
     fake_receipt = {"parsed_discon_parameters": parse_discon(high_eff),
                     "input_sha256": {"original_discon": DISCON_SHA},
@@ -354,16 +352,15 @@ def self_test():
     fake_csv = ("case,wind_speed_mps,GenSpeed_mean_rpm,BldPitch1_mean_deg\n"
                 + "".join(f"C{i},{i//6},480,5\n" for i in range(18))).encode()
     _, flagged = extended_source_qc(fake_csv, fake_receipt)
-    assert flagged["semantic_holds"][0]["raw_value"] == "94"
-    assert not flagged["semantic_validation_pass"] and not flagged["physical_pass"]
+    assert flagged["semantic_validation_pass"] and not flagged["semantic_holds"]
+    assert not flagged["physical_pass"]
     high_mode = fixture.replace(b"1 ! WE_Mode", b"2 ! WE_Mode")
     mode_receipt = {"parsed_discon_parameters": parse_discon(high_mode),
                     "input_sha256": {"original_discon": DISCON_SHA},
                     "original_discon_bytes": len(high_mode)}
     _, flagged_mode = extended_source_qc(fake_csv, mode_receipt)
-    assert any(h["parameter"] == "WE_Mode" and h["raw_value"] == "2"
-               for h in flagged_mode["semantic_holds"])
-    print("EXTENDED_DISCON_SELFTEST_PASS: 5 extracted keys, 3 invalid parameter rejections, 2 semantic HOLD checks")
+    assert flagged_mode["semantic_validation_pass"] and not flagged_mode["semantic_holds"]
+    print("EXTENDED_DISCON_SELFTEST_PASS: 5 extracted keys, 3 invalid parameter rejections, 2 source-implementation compatibility checks")
 
 def main():
     parser = argparse.ArgumentParser()
