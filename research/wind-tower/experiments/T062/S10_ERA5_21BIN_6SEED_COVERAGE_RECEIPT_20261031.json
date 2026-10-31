@@ -1,0 +1,206 @@
+{
+  "stage": "S10_INDEPENDENT_PREPARATION_ONLY",
+  "SOURCE": "ERA5-derived 184080-hour source-verified 1m/s bin CSV; 18 NTM original OUTB identity table crosschecked against archived original OUTB SHA receipt",
+  "source_reading_level": "THIS RUN: direct derived 31-bin CSV and 18-row identity CSV plus prior SHA receipts; NOT direct re-read of original 31.8MB ERA5 workbook or 18 OUTB bytes",
+  "REF": "T062 18 NTM source and six-seed convergence; T079 method and 12-stage plan",
+  "STANDARD": "IEC 61400-1/6 2025 licensed clauses NOT read this run; bin centers and 4-25 operating range are NONNORMATIVE planning assumptions",
+  "OFFICIAL": "Archived OpenFAST v3.5.3 source identity, ERA5-derived workbook provenance; no new ECMWF original-CDS or site mast verification",
+  "RUN": "Pure JS source-locked coverage construction and six negative tests; no OpenFAST/TurbSim/Abaqus production solve",
+  "FIG": "none: no physical response figure",
+  "TAB": "126-row 21 wind bins x 6 seed source availability CSV; 21-bin summary in this receipt",
+  "input_sha256": {
+    "era5_derived_workbook_from_prior_receipt": "bbc290075fb4d7ff6435988acf1ea83c2c31453d207bfa821609b8e9a86953d0",
+    "era5_bin_csv": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
+    "era5_bin_receipt_json": "52170c6deb49ddc73a3af79288555f4aa252dd1f4128e507c5284e0ab20b4978",
+    "ntm_18case_identity_csv": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5",
+    "ntm_outb_source_receipt_json": "34c89da6dd95ce9ebc9e873bddd0a2db8bdf6789b3f65e05505678da9e241bdc"
+  },
+  "output_csv_sha256": "d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67",
+  "software": "Node.js >=20 standard library, same pure-JS algorithm checked in V8; SHA256 independently checked against abc oracle",
+  "assumptions": {
+    "hub_height_m": 161.368806,
+    "operating_wind_range_mps": "[4,25) DIAGNOSTIC ONLY",
+    "bin_width_mps": 1,
+    "planned_centers": "4.5...24.5 m/s; NOT IEC official sampling plan",
+    "case_matching": "floor(actual archived NTM wind speed); NOT equivalence to planned bin center or formal DLC1.2",
+    "seed_count_per_bin": 6,
+    "zero_ERA5_hours": "zero observed in 21-year derived record, NOT zero design probability or zero required simulations"
+  },
+  "summary": {
+    "total_era5_hours": 184080,
+    "diagnostic_operating_hours": 106900,
+    "planning_bins": 21,
+    "planned_seed_slots": 126,
+    "archived_ntm_screening_slots": 18,
+    "unfilled_source_slots": 108,
+    "formal_dlc12_verified_slots": 0,
+    "historical_bins": [
+      9,
+      11,
+      19
+    ],
+    "archived_bin_site_hours": 7164,
+    "archived_bin_share_of_operating_hours": 0.06701590271281571,
+    "unrepresented_operating_hours": 99736,
+    "unrepresented_share_of_operating_hours": 0.9329840972871842,
+    "positive_hours_bins_without_archived_ntm": 13,
+    "zero_observed_hours_bins_without_archived_ntm": 5,
+    "low_wind_4_to_9_hours": 95402,
+    "max_abs_historical_center_offset_mps": 0.29786,
+    "top5_missing_bins_by_hours": [
+      {
+        "bin": 4,
+        "hours": 26927
+      },
+      {
+        "bin": 5,
+        "hours": 24769
+      },
+      {
+        "bin": 6,
+        "hours": 19994
+      },
+      {
+        "bin": 7,
+        "hours": 14467
+      },
+      {
+        "bin": 8,
+        "hours": 9245
+      }
+    ]
+  },
+  "per_bin": [
+    {
+      "bin": 4,
+      "hours": 26927,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 5,
+      "hours": 24769,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 6,
+      "hours": 19994,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 7,
+      "hours": 14467,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 8,
+      "hours": 9245,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 9,
+      "hours": 5736,
+      "historical_seed_count": 6,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 10,
+      "hours": 3149,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 11,
+      "hours": 1426,
+      "historical_seed_count": 6,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 12,
+      "hours": 674,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 13,
+      "hours": 283,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 14,
+      "hours": 126,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 15,
+      "hours": 61,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 16,
+      "hours": 26,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 17,
+      "hours": 14,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 18,
+      "hours": 1,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 19,
+      "hours": 2,
+      "historical_seed_count": 6,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 20,
+      "hours": 0,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 21,
+      "hours": 0,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 22,
+      "hours": 0,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 23,
+      "hours": 0,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    },
+    {
+      "bin": 24,
+      "hours": 0,
+      "historical_seed_count": 0,
+      "formal_dlc12_seed_count": 0
+    }
+  ],
+  "negative_tests_passed": 6,
+  "numerical_error_budget": "integer hour counts exact; p_all/p_conditional are 12-decimal rounded prior outputs (up to 0.5e-12 per bin); bin boundary classification and ERA5 wind shear/source bias unquantified; 0.1-0.29786 m/s actual-to-center offset is a planning mismatch, not physics error tolerance",
+  "HOLD": "0/126 slots formally validated DLC1.2; 18 historical NTM are screening only; no 4-25 full-source suite, controller/IEC gate, local Abaqus material stress, annual Miner, native E/WE or S01-S04 physical PASS",
+  "physical_pass": false,
+  "stages_passed": 0
+}
