@@ -71,7 +71,7 @@
   "REF": "ROSCO v2.6.0 tagged original source; no new peer-reviewed full text",
   "STANDARD": "IEC 61400-1/6:2025 authorized text not accessed; no DLC1.2 compliance claim",
   "OFFICIAL": "https://github.com/NatLabRockies/ROSCO/tree/v2.6.0/ROSCO ; source tag SHA pinned; current ROSCO docs may use changed mode semantics and must not be substituted for v2.6.0",
-  "RUN": "This turn: JavaScript V8 parsed actual 18-row historical CSV, SHA256 checked CSV and four tagged source files, tested source-mode markers and grouped six seeds; no native OpenFAST/Abaqus. New Node script and lightweight Actions workflow committed; native CI job status must be independently checked.",
+  "RUN": "Native GitHub Actions Node.js v22.23.4 #41232842992 job #124630430604 completed/success; original ROSCO tag-commit four SHA256 files and 18-case source CSV, 5 negative-input rejection tests verified. First run #41232792446 failed due to strict negative-test error text, fixed at ec161d5f82c6c97134934944640bd7ae77227432; both original logs read. No OpenFAST/Abaqus solver run.",
   "FIG": "None; no turbine physical response generated",
   "TAB": "18 real cases, 3 wind speeds x 6 seeds; existing 18-row table reused, no duplicate data table",
   "semantic_findings": {
@@ -133,9 +133,24 @@
   },
   "assumptions": "Historical summary means are from previously verified packed OUTB. Mean of power is not equal to product of mean torque and mean speed in general; no timewise PI/control-state identification is claimed.",
   "error_budget": "Source bytes SHA256 exact; rated multiplication relative decimal mismatch 4.89136e-8. Output ratios from historical summary values have source decimal/OUTB quantization uncertainty described in prior T062 receipt; no dynamic controller tracking error, fatigue error, IEC uncertainty or DLL identity bound estimated.",
-  "failure_record": "Current audit encountered GitHub connector raw-URL fetch wrapper error; recovered via fetch_file at exact v2.6.0 tag. Official current-version docs have materially different VS_ControlMode descriptions; version-specific tagged source was used. No production solver failures this round.",
+  "failure_record": "Current audit encountered GitHub connector raw-URL fetch wrapper error; recovered via fetch_file at exact v2.6.0 tag. Official current-version docs have materially different VS_ControlMode descriptions; version-specific tagged source was used. No production solver failures this round. First native Actions #41232792446 failed on seed-specific negative-test error-message exact-match; fixed by accepting expected error prefix, rerun #41232842992 passed; both job logs read.",
   "HOLD": "Missing historical 18 original BTS and per-case DLL SHA; full DISCON extraction of VS_RefSpd/VS_TSRopt/VS_GenEff/WE_Mode/SS_Mode and dynamic controller-state evidence; 2025 IEC authorized DLC1.2 criteria; native Abaqus local stress.",
   "physical_PASS": false,
   "stages_passed": 0,
-  "earthquake_E_WE_native_results": 0
+  "earthquake_E_WE_native_results": 0,
+  "native_CI": {
+    "success_run_id": 41232842992,
+    "success_job_id": 124630430604,
+    "success_conclusion": "success",
+    "node_version": "v22.23.4",
+    "official_source_files_sha256_verified": 4,
+    "real_historical_csv_rows": 18,
+    "negative_tests_rejected": 5,
+    "failed_run_id": 41232792446,
+    "failed_job_id": 124630281735,
+    "failed_reason": "negative test expected exact SIX_SEED_COVERAGE but actual error includes wind-speed suffix",
+    "fix_commit": "ec161d5f82c6c97134934944640bd7ae77227432",
+    "logs_read": true,
+    "physical_solver_run": false
+  }
 }
