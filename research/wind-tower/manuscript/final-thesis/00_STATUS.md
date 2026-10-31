@@ -1,5 +1,10 @@
 # 章节进展与阶段记录 — 按日期保留
 
+## 2026-10-31 10时｜S07原始ETM同步9站×12001时刻真实RP/TP/FL/ML恢复与数学候选验收
+
+直接从已存5.14MB SHA锁定ETM原始ZIP重新解码`U09p343881_ETM_S01`的真实OUTB（SHA256=`0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c`），**9站×12001=108009个同步站点时刻**均含六分量内力、三向位置、三向角位置；100/400/700s抽样与既有T062原生收据逐项校验。使用v3.5.3小转角公式作候选R/R^T及参考点搬移：最大候选旋转力差5296.929N，R/R^T候选差10593.857N，代数力逆变换残差≤1.865e-8N；这些**不是实际Abaqus映射误差**，RP与内部取向尚未独立对照。程序、9站统计/6条真实抽样、源SHA、量化预算及HOLD见[T077 10时完整过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)与[真实结果JSON](../../experiments/T062/S07_ORIGINAL_ETM_9GAGE_NATIVE_FRAME_CANDIDATE_QC_20261031.json)。[Actions #41159161911](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41159161911)已completed/success，含篡改ZIP拒绝测试。**更正此前过宽HOLD**：并非“没有真实同步RP/TP”，而是**已有ETM九站同步原始输出，但没有31段全高度同态数据及独立局部取向/内力所有权验收**。12阶段**0/12未晋级**，S06 PARTIAL、S07 BLOCKED、E/WE原生0；不新增高成本RUN，不宣称规范/材料疲劳/抗震物理PASS。
+
+
 ## 2026-10-31 09时｜S07 OpenFAST v3.5.3 源码级通道/载荷所有权闭合（数学准备，不是物理PASS）
 
 本轮直接读取OpenFAST v3.5.3的[ElastoDyn.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90)与[NWTC_Num.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/nwtc-library/src/NWTC_Num.f90)原始Fortran全文，并登记SHA256、精确代码行号。确认`TwHt#FL/ML`是包含质量/重力/惯性贡献的截面内力，不能作为独立风外载直接施加于Abaqus；`TwHt#RPxi/yi/zi`是角位置分量（deg）而非无条件可用的Euler角；局部基底由`SmllRotTrans`构造，`TowerLn2Mesh%Orientation`可作未来原生独立参照。已在[既有S07脚本](../../experiments/T062/s07_sixdof_wrench_source_contract.mjs)增加`--source-gate`：复刻v3.5.3小转角矩阵公式、每站12通道输入门禁、6项坏输入拒绝；本轮JS V8同源数值测试PASS，程序SHA256=`3cdc755a735d9bd34bf2df4834df4a348925a340a93c1901bb15e96327236f78`。轻量CI已接入，但本轮**未取得新远端job结果**。完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、源码SHA、误差与HOLD见[T077 09时过程](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。**12阶段0/12未晋级；S06 PARTIAL、S07 BLOCKED、E/WE原生0**；下一项为一站0.1s原生RP/TP/六分量同步输出与独立姿态对照，非700s生产。
