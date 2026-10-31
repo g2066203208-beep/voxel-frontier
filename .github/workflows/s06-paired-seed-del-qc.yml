@@ -38,6 +38,7 @@ jobs:
           set -euo pipefail
           root=research/wind-tower/experiments/T062
           node "$root/s07_sixdof_wrench_source_contract.mjs" --self-test
+          node "$root/s07_sixdof_wrench_source_contract.mjs" --frame-gate --mean-csv "$root/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv"
           tmp=$(mktemp -d)
           trap 'rm -rf "$tmp"' EXIT
           node "$root/s07_sixdof_wrench_source_contract.mjs" \
