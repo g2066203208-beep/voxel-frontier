@@ -238,7 +238,7 @@ def extended_source_qc(data, receipt):
     buf = io.StringIO(newline="")
     columns = ["parameter", "source_line", "status", "raw_value",
                "numeric_tokens", "v260_registry_semantics", "original_discon_sha256"]
-    writer = csv.DictWriter(buf, fieldnames=columns, lineterminator="\\n")
+    writer = csv.DictWriter(buf, fieldnames=columns, lineterminator="\n")
     writer.writeheader()
     writer.writerows(rows)
     output = buf.getvalue().encode("utf-8")
@@ -294,8 +294,8 @@ def self_test():
             pass
         else:
             raise AssertionError("MALFORMED_CONTROLLER_ACCEPTED")
-        fixture = good + (b" 49.9 ! VS_RefSpd\\n 7.5 ! VS_TSRopt\\n"
-                      b" 0.94 ! VS_GenEff\\n 1 ! WE_Mode\\n 0 ! SS_Mode\\n")
+    fixture = good + (b" 49.9 ! VS_RefSpd\n 7.5 ! VS_TSRopt\n"
+                      b" 0.94 ! VS_GenEff\n 1 ! WE_Mode\n 0 ! SS_Mode\n")
     p = parse_discon(fixture)
     assert p["VS_RefSpd"]["raw"] == "49.9"
     assert p["VS_TSRopt"]["raw"] == "7.5"
@@ -315,8 +315,8 @@ def self_test():
                     "input_sha256": {"original_discon": DISCON_SHA},
                     "original_discon_bytes": len(altered)}
             extended_source_qc(
-                ("case,wind_speed_mps,GenSpeed_mean_rpm,BldPitch1_mean_deg\\n"
-                 + "".join(f"C{i},{i//6},480,5\\n" for i in range(18))).encode(),
+                ("case,wind_speed_mps,GenSpeed_mean_rpm,BldPitch1_mean_deg\n"
+                 + "".join(f"C{i},{i//6},480,5\n" for i in range(18))).encode(),
                 fake)
         except ValueError:
             pass
@@ -346,7 +346,7 @@ def main():
         args.extended_out.parent.mkdir(parents=True, exist_ok=True)
         args.extended_out.write_bytes(ext_data)
         args.extended_receipt.write_text(json.dumps(ext_receipt, ensure_ascii=False,
-            sort_keys=True, indent=2) + "\\n", encoding="utf-8")
+            sort_keys=True, indent=2) + "\n", encoding="utf-8")
         print("S07_EXTENDED_DISCON_ORIGINAL_SOURCE_QC",
               json.dumps({"keys": len(EXTENDED_PARAMETER_KEYS),
                 "present": ext_receipt["parameters_present"],
