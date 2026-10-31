@@ -90,8 +90,8 @@ def build(root):
             require(d["bytes"] == 1122431, "ORIGINAL_DLL_LENGTH_CHANGED:" + case)
             a, b = scan(srvd), scan(stdout)
             stdout_text = stdout.decode("utf-8-sig", errors="replace")
-            rosco_banners = re.findall(r"(?m)^\\s*Running (ROSCO-v[0-9]+(?:\\.[0-9]+){1,3})\\s*$", stdout_text)
-            legacy_lines = re.findall(r"(?m)^\\s*Using legacy Bladed DLL interface\\.\\s*$", stdout_text)
+            rosco_banners = re.findall(r"(?m)^\s*Running (ROSCO-v[0-9]+(?:\.[0-9]+){1,3})\s*$", stdout_text)
+            legacy_lines = re.findall(r"(?m)^\s*Using legacy Bladed DLL interface\.\s*$", stdout_text)
             require(len(rosco_banners) == 1 and len(legacy_lines) == 1, "CONTROLLER_NATIVE_BANNER_MISSING_OR_DUPLICATE:" + case)
             rows.append({
                 "case": case, "srvd_sum_sha256": sha(srvd), "stdout_sha256": sha(stdout),
