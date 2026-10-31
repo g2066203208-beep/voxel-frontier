@@ -20,6 +20,10 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-10-31 21:25 S10真实21年风速概率已回填（SOURCE_NUMERIC_PASS）**：直接Git LFS读取SHA锁定31.8MB ERA5派生工作簿，184080/184080 UTC小时完整，`Uhub=161.368806m`动态幂律，生成[31行1m/s真实概率表](../experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv)、[全原件/时间轴/误差收据](../experiments/T062/S10_ERA5_2005_2025_HUB_BIN_RECEIPT_20261031.json)、[可复算Python](../experiments/T062/s10_era5_hourly_wind_bins.py)；[Actions #41205311164](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41205311164)真实成功，失败源识别/时间列/并发push记录保留。4–25m/s**仅诊断运行**概率0.5807257714；历史三风速所在3箱仅覆盖诊断运行小时6.70159%，**不能把三点DEL当年度材料疲劳**。第三章3.2.4、第四章4.7.1已写概率和条件权重防双乘。**S10独立概率输入完成、材料疲劳仍HOLD；12阶段0/12、E/WE=0**；下一唯一动作4–25m/s DLC1.2逐bin源输入覆盖矩阵，暂不生产RUN。
+
+
+
 **2026-10-31 18时 S10真实中层双径向绑定完成（SOURCE-QC）：** 直接SHA核对124行4ETM×31段名义控制、248行D400/Pe/G1中层INP元素、372行旧错误绑定；[372行控制×INNER/OUTER新表](../experiments/T077/recovery/S10_4ETM_31SEG_MIDPLANE_2RAD_CONTROL_BINDING_20261031.csv)共744个源级元素绑定，[可复算Node](../experiments/T077/recovery/s10_etm31_midplane_control_binding.cjs)及[收据](../experiments/T077/recovery/S10_4ETM_31SEG_MIDPLANE_2RAD_CONTROL_BINDING_RECEIPT_20261031.json)。本轮V8真实计算+6负向拒绝通过；最大轴向差0.070410648m、最大角差2.500000107°，四ETM测点高度与静态名义高度最大偏移0.000363548m；旧372项轴向>0.1m错误保留作失败证据。**无ODB/IP/材料局部应力，S10仍HOLD，12阶段0/12，E/WE原生0**；下一独立动作S07→S10轴系/力矩正负号小测试，不运行生产。
 
 
@@ -675,3 +679,6 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261031-21-S10-ERA5-REAL-WIND-BIN-START
 - START / 2026-10-31 21:10 CST / hourly research / read_base_sha=`fb2b5e73a67a8209313f09f7b87d169c21c46f30`; main=`58c1e545f67b645417d5957189f5dad693d975bb`; PR #42 Open/Draft. 已读取AGENTS、README、00_STATUS/00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段总计划、本指挥室20:21收尾与T062/T077现有数据；继承18组NTM载荷雨流与真实t100源DCM，不重复S01/S07小审计。**本轮增量**：尝试实际拉取LFS SHA256=`bbc290075fb4d7ff6435988acf1ea83c2c31453d207bfa821609b8e9a86953d0`、31,793,340字节的21年ERA5派生工作簿，以源字节计算161.368806m的1m/s全小时wind-bin概率和异常/敏感性QC；复用T062及第三章入口，新增一份可运行轻量提取程序和必要的源数据小表/收据，GitHub Actions负责LFS物化与真实运行。若LFS不可访问/工作簿结构不合，保留真实失败与缺口，绝不编造184080行数值。**拟改**：T062脚本/结果/收据、现有第三章、T077过程日志、00_STATUS、本指挥室、一个轻量CI。禁高成本生产RUN、禁改冻结T057/T070/main、禁合并PR。
+
+### HANDOFF-20261031-21-S10-ERA5-REAL-WIND-BIN-END
+- END / 2026-10-31 21:25 CST / 继承21:10 START；真实LFS原件SHA=`bbc290075fb4d7ff6435988acf1ea83c2c31453d207bfa821609b8e9a86953d0`，从184080小时U/V直接计算31个1m/s bin；[结果](../experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv)、[收据](../experiments/T062/S10_ERA5_2005_2025_HUB_BIN_RECEIPT_20261031.json)、[可复算程序](../experiments/T062/s10_era5_hourly_wind_bins.py)、[Actions #41205311164](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41205311164)已真实完成并保存；另更新Ch3 3.2.4、Ch4 4.7.1、T077过程及00_STATUS。本轮真实失败#41204677507/#41204765814/#41205114312和并发旧CI push失败#41205280150均记录T077，不删。已区分p_all与p_conditional防止运行概率重复相乘，21年统计不等于DLC1.2/材料寿命/测风塔；全原始CDS及标准原文仍HOLD。**12阶段0/12未晋级，E/WE=0，冻结T057/T070/main未改，PR #42 Draft不合并。** 下一责任/唯一最优动作：S10基于真实31-bin概率做4–25m/s DLC1.2最小源风速bin×seed覆盖矩阵，标记已归档18NTM与需新增的真实载荷，不运行700s生产。
