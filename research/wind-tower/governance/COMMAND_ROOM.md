@@ -738,3 +738,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261101-04-S07-EXTENDED-DISCON-START
 - **START / 2026-11-01 04时 CST / 自动研究任务：** `read_base_sha=df0a2f34c68691855c0e77e14bc86440251037c5`；已读最新main、活动PR分支、AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段总计划、本指挥室当前进度与既有T062控制器原始参数程序/ROSCO v2.6.0官方源码收据。继承18组OUTB运行QC、36份原生日志及4份官方源码语义，不重算风载；本轮只在现有S07原始DISCON读取程序补提`VS_RefSpd/VS_TSRopt/VS_GenEff/WE_Mode/SS_Mode`等缺失关键参数，建立独立源级参数表、源SHA和可执行异常测试。拟改T062原程序、既有S07 CI、既有T077过程日志、00_STATUS及本指挥室；如确有新原始参数，新增最小参数CSV/JSON收据。**不改冻结T057/T070，不合并PR，不运行生产求解，不将SOURCE-QC视作IEC/物理PASS。**
+
+### HANDOFF-20261101-05-S07-EXTENDED-DISCON-CI-FAILURE-START
+- START / 2026-11-01 05时 CST / 研究自动任务：`read_base_sha=fd752aab413fe52e60a62730e6ec47b89ab3f715`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、指挥室最新交接、T077 04时过程、T062既有原件解析器与S07工作流。继承18案原始OUTB/ROSCO日志及17键源级收据，不重做生产。
+- 实际回读[失败的Actions #41237356956](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41237356956)原生job #124643818377：原始127成员与36日志门禁成功，扩展DISCON阶段在`csv.DictWriter.writerows`因9个新增`discon_*_raw`字段不在旧18案CSV `HEADER`而`ValueError`，未生成9键CSV/JSON，persist步骤skipped。前次#41237323102曾因VS_TSRopt自测KeyError失败，已在当前源码修复。拟仅修复既有T062程序中18案旧表字段隔离、保留9键单独CSV，不更改原始数据/物理模型；随后重新回读Actions和数表，更新T077/00_STATUS/指挥室。SOURCE=原生Actions失败日志；RUN=源级Python，FIG=无；STANDARD/物理仍HOLD，正式DLC1.2 0/126，地震E/WE=0，12阶段0/12。
