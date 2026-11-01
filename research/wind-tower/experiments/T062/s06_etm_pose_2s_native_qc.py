@@ -6,12 +6,20 @@ The RP angle triplet is not a direction cosine matrix (DCM).
 import argparse
 import hashlib
 import json
+import tempfile
+import zipfile
 from pathlib import Path
 from s06_historical_outb_source_gate import outb_header
 from s06_native_4batch_common_channel_qc import decode, within_quant, overlap_topology
 from s06_etm_2s_native_overlap import CASE, BTS_SHA, SAMPLES, DT_OUT, DURATION
 
 ED = "DTU_10MW_RWT_ElastoDyn.dat"
+ORIGINAL_ARTIFACT_SHA = "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b"
+ORIGINAL_OUTB_SHA = (
+"c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+"be9dd3b6dd611925cf5c314200ed4e1c111218bd4464d6cccf0ee1f73bb3b902",
+"867553e8ef29806fccdaad24bb3938493138b31b616c9a9446e81cbefe53bbd7",
+"701575bd988177b7c0c666640b49981c653d77738893909cb307fccdf172c855")
 SUFFIX = ("TPxi","TPyi","RPxi","RPyi","RPzi","ALxt","ALyt","ALzt")
 PARENTS = {
 "e8c1653486cc96eaa5f32a28b01701df080bd2f185f851abd4ebf54a13ef23c7",
@@ -26,21 +34,27 @@ def reject(condition, name):
     if not condition:
         raise ValueError(name)
 
-def qc(root, destination):
+def qc(root, destination, original=False):
     entries=[]
     for batch in range(1,5):
         p=Path(root)/f"batch{batch}"
         receipt=json.loads((p/"S06_0P1S_PREP_RECEIPT.json").read_text(encoding="utf-8"))
         reject(receipt["case"]==CASE and receipt["TMax_s"]==DURATION and receipt["DT_Out_s"]==DT_OUT and receipt["overlap_mode"] is True,"CASE_TIME_IDENTITY")
         reject(receipt["etm_s06_bts_original_sha256"]==BTS_SHA,"BTS_SHA")
-        parent=receipt.get("pose_parent_sha256")
-        child=receipt.get("pose_child_sha256")
-        reject(parent in PARENTS and isinstance(child,str) and len(child)==64 and parent!=child,"ED_PARENT_CHILD_SHA")
-        reject(sha((p/ED).read_bytes())==child and receipt["derived_sha256"][ED]==child,"ED_CHILD_BYTES")
+        if original:
+            parent=receipt["derived_sha256"][ED]
+            child=None
+            reject(parent in PARENTS,"ORIGINAL_ED_SHA")
+        else:
+            parent=receipt.get("pose_parent_sha256")
+            child=receipt.get("pose_child_sha256")
+            reject(parent in PARENTS and isinstance(child,str) and len(child)==64 and parent!=child,"ED_PARENT_CHILD_SHA")
+            reject(sha((p/ED).read_bytes())==child and receipt["derived_sha256"][ED]==child,"ED_CHILD_BYTES")
         reject((p/"native_exit_code.txt").read_text().strip()=="0","NATIVE_EXIT")
         stdout=(p/"native_stdout.log").read_bytes()
         reject(b"OpenFAST terminated normally." in stdout,"NATIVE_TERMINATION")
         raw=(p/"DTU_10MW_RWT.outb").read_bytes()
+        if original: reject(sha(raw)==ORIGINAL_OUTB_SHA[batch-1],"ORIGINAL_OUTB_SHA")
         h=outb_header(raw)
         reject(h["file_id"]==4 and h["num_samples"]==SAMPLES and abs(h["time_increment_s"]-DT_OUT)<1e-10 and abs(h["first_time_s"])<1e-10,"OUTB_TIME")
         names=h["channel_names"]
@@ -76,8 +90,9 @@ def qc(root, destination):
       "stage":"S06/S07","status":"POSE_CHANNEL_NUMERIC_PARITY_PASS_PHYSICAL_HOLD" if not failures else "POSE_CHANNEL_NUMERIC_PARITY_FAIL",
       "case":CASE,"samples":SAMPLES,"dt_s":DT_OUT,"TMax_s":DURATION,
       "bts_sha256":BTS_SHA,"original_input_sha256":entries[0][0]["source_sha256"],
-      "parent_ed_sha256":[e[0]["pose_parent_sha256"] for e in entries],
-      "child_ed_sha256":[e[0]["pose_child_sha256"] for e in entries],
+      "parent_ed_sha256":[e[0].get("pose_parent_sha256",e[0]["derived_sha256"][ED]) for e in entries],
+      "child_ed_sha256":[e[0].get("pose_child_sha256") for e in entries],
+      "source_mode":"ORIGINAL_2S_NATIVE_OUTB_NO_RERUN" if original else "2S_NATIVE_POSE_RERUN",
       "outb_sha256":[sha(e[1]) for e in entries],
       "stdout_sha256":[e[3] for e in entries],
       "new_pose_channels_per_batch":72,"overlap_rows":rows,
@@ -111,8 +126,19 @@ def selftest():
 if __name__=="__main__":
     p=argparse.ArgumentParser()
     p.add_argument("--selftest",action="store_true");p.add_argument("--qc",action="store_true")
-    p.add_argument("--root");p.add_argument("--receipt")
+    p.add_argument("--root");p.add_argument("--receipt");p.add_argument("--original-archive")
     a=p.parse_args()
     if a.selftest:selftest()
+    elif a.qc and a.original_archive and a.receipt:
+        archive=Path(a.original_archive)
+        reject(sha(archive.read_bytes())==ORIGINAL_ARTIFACT_SHA,"ORIGINAL_ARTIFACT_SHA")
+        with tempfile.TemporaryDirectory() as td:
+            with zipfile.ZipFile(archive) as z:
+                for batch in range(1,5):
+                    for name in ("S06_0P1S_PREP_RECEIPT.json","native_exit_code.txt","native_stdout.log","DTU_10MW_RWT.outb"):
+                        member=f"work/batch{batch}/{name}"
+                        dst=Path(td)/member;dst.parent.mkdir(parents=True,exist_ok=True)
+                        dst.write_bytes(z.read(member))
+            qc(Path(td)/"work",a.receipt,original=True)
     elif a.qc and a.root and a.receipt:qc(a.root,a.receipt)
-    else:p.error("Use --selftest or --qc --root --receipt")
+    else:p.error("Use --selftest or --qc --root --receipt or --qc --original-archive ZIP --receipt JSON")
