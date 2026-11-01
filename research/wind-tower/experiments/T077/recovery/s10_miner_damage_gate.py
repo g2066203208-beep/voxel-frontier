@@ -3,7 +3,10 @@
 
 Inputs are stress-cycle bins with externally supplied, material-specific N_allow.
 No built-in S-N/mean-stress model; no load-DEL conversion; no physical PASS.
-Annual damage = 8760*3600 * sum_b p_b * mean_seeds(D_sample / duration_s).
+Annual damage = 8760*3600 * sum_b p_unconditional,b * mean_seeds(D_sample / duration_s).
+If probabilities are conditional on operation, multiply by explicit operating_fraction.
+The 2026-10-31 ERA5 source uses p_unconditional=n_bin/184080, with p_op=106900/184080.
+Never multiply p_unconditional by operating hours again; never assume p_op=1.
 Each bin probability is time fraction; seed runs must cover the same duration
 within a bin. The predeclared expected_seeds_per_bin is checked against actual
 unique seed IDs to reject silent incomplete sampling; it is NOT a convergence
@@ -31,8 +34,15 @@ def _positive(v, name, allow_zero=False):
     return x
 
 
-def calculate(raw, years=20.0):
+def calculate(raw, years=20.0, operating_fraction=None, probability_basis='conditional'):
     years = _positive(years, 'years')
+    if operating_fraction is None:
+        raise ValueError('explicit operating_fraction required: do not assume 8760 operating hours')
+    operating_fraction = _positive(operating_fraction, 'operating_fraction')
+    if operating_fraction > 1:
+        raise ValueError('operating_fraction exceeds 1')
+    if probability_basis not in ('conditional', 'unconditional'):
+        raise ValueError('probability_basis must be conditional or unconditional')
     reader = csv.DictReader(io.StringIO(raw.decode('utf-8-sig')))
     if reader.fieldnames is None or set(reader.fieldnames) != set(FIELDS):
         raise ValueError('required cycle input columns missing or unexpected')
@@ -94,8 +104,9 @@ def calculate(raw, years=20.0):
     for material in sorted(material_models):
         bins = sorted({b for (m,b) in probabilities if m == material})
         p_sum = sum(probabilities[material,b] for b in bins)
-        if abs(p_sum - 1.0) > 1e-8:
-            raise ValueError(f'incomplete bin probabilities for {material}: {p_sum}')
+        expected_probability = 1.0 if probability_basis == 'conditional' else operating_fraction
+        if abs(p_sum - expected_probability) > 1e-8:
+            raise ValueError(f'incomplete or double-counted {probability_basis} bin probabilities for {material}: {p_sum}, expected {expected_probability}')
         annual = 0.0
         bin_breakdown = []
         for b in bins:
@@ -109,7 +120,9 @@ def calculate(raw, years=20.0):
             duration_s = next(iter(durations))
             rates = [samples[k]/duration_s for k in keys]
             per_second = sum(rates)/len(rates)
-            contribution = probabilities[material,b] * per_second * SECONDS_PER_YEAR
+            # Conditional P(bin|operating) needs p_op; unconditional P(bin) does not.
+            annual_weight = operating_fraction if probability_basis == 'conditional' else 1.0
+            contribution = probabilities[material,b] * annual_weight * per_second * SECONDS_PER_YEAR
             annual += contribution
             bin_breakdown.append({
                 'bin_id':b,'probability':probabilities[material,b],
@@ -117,13 +130,18 @@ def calculate(raw, years=20.0):
                 'duration_s':duration_s,'mean_damage_per_second':per_second,
                 'min_seed_damage_per_second':min(rates),
                 'max_seed_damage_per_second':max(rates),
-                'annual_damage_contribution_conditional':contribution})
+                'annual_damage_contribution_conditional':contribution,
+                'annual_damage_contribution':contribution})
         out.append({'material_id':material,'material_model_ref':material_models[material],
                     'bin_count':len(bins),'bin_breakdown':bin_breakdown,
-                    'annual_damage_conditional':annual,
+                    'annual_damage_conditional':annual,  # deprecated field name; corrected value
+                    'annual_damage':annual,'probability_basis':probability_basis,
+                    'operating_fraction':operating_fraction,
                     'design_years':years,'design_damage_conditional':annual*years,
+                    'design_damage':annual*years,
                     'status':'CONDITIONAL_NO_PHYSICAL_PASS'})
-    return {'source_sha256':hashlib.sha256(raw).hexdigest(),'input_schema_version':2,
+    return {'source_sha256':hashlib.sha256(raw).hexdigest(),'input_schema_version':3,
+            'probability_basis':probability_basis,'operating_fraction':operating_fraction,
             'row_count':len(rows),
             'seconds_per_year':SECONDS_PER_YEAR,'results':out}
 
@@ -144,8 +162,16 @@ def selftest():
         w=csv.DictWriter(s,fieldnames=FIELDS,lineterminator='\n')
         w.writeheader();w.writerows(items)
         return s.getvalue().encode()
-    result=calculate(encode(rows),years=20)
-    expected=SECONDS_PER_YEAR*(.25*.0015/100 + .75*.004/100)
+    # Conditional bin weights .25/.75, but only half the hours are operating.
+    result=calculate(encode(rows),years=20,operating_fraction=.5)
+    expected=.5*SECONDS_PER_YEAR*(.25*.0015/100 + .75*.004/100)
+    legacy=calculate(encode(rows),years=20,operating_fraction=1)
+    assert abs(legacy['results'][0]['annual_damage']-2*expected)<1e-10
+    # Unconditional p_bin=.125/.375 must give the SAME annual damage.
+    raw_unconditional=encode([dict(r,bin_probability=str(float(r['bin_probability'])*.5)) for r in rows])
+    uncond=calculate(raw_unconditional,years=20,operating_fraction=.5,probability_basis='unconditional')
+    assert abs(uncond['results'][0]['annual_damage']-expected)<1e-10
+    assert abs(result['results'][0]['annual_damage']-uncond['results'][0]['annual_damage'])<1e-10
     assert abs(result['results'][0]['annual_damage_conditional']-expected)<1e-10
     assert abs(result['results'][0]['design_damage_conditional']-20*expected)<1e-8
     breakdown = result['results'][0]['bin_breakdown']
@@ -158,16 +184,16 @@ def selftest():
            dict(rows[0],stress_source_sha256='UNKNOWN'),
            dict(rows[0],N_allow_cycles='0')]
     for altered in tests:
-        try: calculate(encode([altered]+rows[1:]))
+        try: calculate(encode([altered]+rows[1:]),operating_fraction=.5)
         except ValueError: pass
         else: raise AssertionError('invalid stress input accepted')
-    try: calculate(encode(rows+rows[:1]))
+    try: calculate(encode(rows+rows[:1]),operating_fraction=.5)
     except ValueError: pass
     else: raise AssertionError('duplicate cycles accepted')
-    try: calculate(encode([dict(r,bin_probability='0.2') if r['bin_id']=='B1' else r for r in rows]))
+    try: calculate(encode([dict(r,bin_probability='0.2') if r['bin_id']=='B1' else r for r in rows]),operating_fraction=.5)
     except ValueError: pass
     else: raise AssertionError('incomplete bin probability accepted')
-    try: calculate(encode([dict(rows[0],duration_s='99')]+rows[1:]))
+    try: calculate(encode([dict(rows[0],duration_s='99')]+rows[1:],operating_fraction=.5)
     except ValueError: pass
     else: raise AssertionError('different seed durations accepted')
     # Previously this missing-seed case was silently averaged as one seed,
@@ -180,12 +206,20 @@ def selftest():
         [dict(r,expected_seeds_per_bin='2.0') if r['bin_id']=='B1' else r for r in rows],
     ]
     for i, bad in enumerate(new_bad):
-        try: calculate(encode(bad))
+        try: calculate(encode(bad),operating_fraction=.5)
         except ValueError: pass
         else: raise AssertionError('incomplete or invalid seed contract accepted: %d' % i)
+    for args in ({}, {'operating_fraction':0}, {'operating_fraction':1.1},
+                 {'operating_fraction':.5,'probability_basis':'invalid'},
+                 {'operating_fraction':.5,'probability_basis':'unconditional'}):
+        try: calculate(encode(rows),**args)
+        except ValueError: pass
+        else: raise AssertionError('missing/mismatched operating probability contract accepted')
     return {'status':'PASS_SYNTHETIC_ONLY','annual_expected':expected,
             'design_20y_expected':20*expected,'negative_tests':11,
-            'seed_contract_tests':5,'bin_contribution_checks':4}
+            'seed_contract_tests':5,'bin_contribution_checks':4,
+            'probability_contract_negative_tests':5,
+            'conditional_unconditional_equivalence':True,'operating_fraction':.5}
 
 
 def main():
@@ -193,12 +227,17 @@ def main():
     ap.add_argument('--self-test',action='store_true')
     ap.add_argument('--input',type=Path)
     ap.add_argument('--years',type=float,default=20)
+    ap.add_argument('--operating-fraction',type=float,
+                    help='P(operating) from the SAME wind probability source; required for --input')
+    ap.add_argument('--probability-basis',choices=('conditional','unconditional'),default='conditional')
     ap.add_argument('--output',type=Path)
     a=ap.parse_args()
     if a.self_test:
         print(json.dumps(selftest(),sort_keys=True))
     if a.input:
-        result=calculate(a.input.read_bytes(),a.years)
+        result=calculate(a.input.read_bytes(),a.years,
+                         operating_fraction=a.operating_fraction,
+                         probability_basis=a.probability_basis)
         data=json.dumps(result,sort_keys=True,indent=2)+'\n'
         if a.output: a.output.write_text(data,encoding='utf-8')
         else: print(data)
