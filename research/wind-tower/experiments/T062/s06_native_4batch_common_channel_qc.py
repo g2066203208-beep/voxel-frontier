@@ -141,9 +141,9 @@ def run(root,out,overlap=False):
       'REF':'T062 31-segment original ElastoDyn gage contract; no new journal full text',
       'STANDARD':'No new authorized IEC/GB/NB clauses',
       'OFFICIAL':'SHA-pinned native OpenFAST executable and ROSCO DLL',
-      'RUN':'Four separate 0.1s native initialization runs; compare non-gage common channels only',
-      'FIG':'none','TAB':'common_channel_table in this receipt',
-      'error_budget':'1.1*(packed half-LSB batch1 + batchN) + 1e-8 in channel native unit; structural/controller internal-state errors unknown',
+      'RUN':'Four separate 0.1s native initialization runs; compare common non-gage channels and (overlap mode) 3 duplicate gage nodes x 7 channels x 3 instants',
+      'FIG':'none','TAB':'common_channel_table and overlap_gage_table in this receipt',
+      'error_budget':'For each pair 1.1*(packed half-LSB from both OUTBs) + 1e-8 in that channel unit; full dynamic/model uncertainty NEED-ESTIMATE',
       'HOLD':'0.1s STEADY wind: overlap only checks duplicated local gage channels at 3 samples; does not verify ETM/NTM seed wind, full controller internal state, 700s synchronization, RP/TP/DCM, inertia ownership or Abaqus physics',
       'physical_pass':False}
     Path(out).parent.mkdir(parents=True,exist_ok=True)
