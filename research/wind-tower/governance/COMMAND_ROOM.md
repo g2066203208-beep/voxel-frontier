@@ -1,5 +1,3 @@
-**17时追加源模型身份：** 16个历史job恢复步骤的FST SHA256 `5307e04d...fdb605`、塔筒SHA256 `f738d35f...d2983`一致；T071四批还打印相同BTS SHA256 `ad68a83a...052147`；T072只见相同case BTS路径与FST/Tower硬断言，未打印BTS字节SHA。完整SHA见17时收据；全速率同态仍HOLD。
-
 # 论文指挥室 — 每次写入前必读
 
 > [!IMPORTANT]
@@ -21,6 +19,8 @@
 
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
+
+**17时追加源模型身份：** 16个历史job恢复步骤的FST SHA256 `5307e04d...fdb605`、塔筒SHA256 `f738d35f...d2983`一致；T071四批还打印相同BTS SHA256 `ad68a83a...052147`；T072只见相同case BTS路径与FST/Tower硬断言，未打印BTS字节SHA。完整SHA见17时收据；全速率同态仍HOLD。
 
 **2026-11-01 17时 S06历史ROSCO四批控制台轨迹源级核验：** 实际回读T071/T072 **16个成功OpenFAST job**的原始Actions日志，四工况×四批各71条ROSCO打印值，12对跨批共3408个发电机转速/桨距/功率/估计风速打印值**逐项一致**（显示0.1单位）。已保存[1136行打印数据](../experiments/T077/recovery/S06_T071_T072_16JOB_ROSCO_CONSOLE_SAMPLES_20261101.csv)、[12对误差表](../experiments/T077/recovery/S06_T071_T072_ROSCO_CONSOLE_PAIR_QC_20261101.csv)、[16 job及SHA收据](../experiments/T077/recovery/S06_T071_T072_ROSCO_CONSOLE_RECEIPT_20261101.json)、[Python复核程序](../experiments/T077/recovery/s06_rosco_console_cross_batch_qc.py)。**新证据支持粗粒度控制状态一致，但不能证明0.05s全状态同态或RP/TP/DCM；J09/J18/J27继续HOLD**。T071/T072原始OUTB在job临时目录被读取，16个历史artifact只上传`extract/*`；源OUTB仍未定位。S06 PARTIAL/HOLD、S07 BLOCKED、12阶段0/12、E/WE原生0；下一动作=追索其他OUTB备份或最小短时同态补采。
 
