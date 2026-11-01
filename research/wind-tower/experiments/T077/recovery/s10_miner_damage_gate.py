@@ -378,7 +378,7 @@ def integration_selftest():
            if r['bin_id']=='B1' else r for r in rows]),
            operating_fraction=.5), 'incomplete')
     reject(lambda:calculate(encode(rows[:-1]),operating_fraction=.5),
-           'missing or excess seed' if False else 'incomplete')
+           'missing or excess seed')
     reject(lambda:calculate(encode([dict(r,material_model_ref='WRONG_MODEL')
            if i==0 else r for i,r in enumerate(rows)]),
            operating_fraction=.5), 'mixed material')
