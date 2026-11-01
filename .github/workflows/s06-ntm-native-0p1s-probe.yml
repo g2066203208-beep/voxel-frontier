@@ -51,7 +51,7 @@ jobs:
           python "$root/s06_native_4batch_common_channel_qc.py" --self-test
           if ($LASTEXITCODE -ne 0) { throw 'COMPARATOR_NEGATIVE_TEST_FAILURE' }
           Write-Host "SOURCE_EXECUTABLE_SHA_PASS $sha"
-      - name: Prepare 9+9+9+9 gages: 31 unique CSEG nodes plus 3 overlapping boundary nodes
+      - name: "Prepare 9+9+9+9 gages: 31 unique CSEG nodes plus 3 overlapping boundary nodes"
         shell: pwsh
         run: |
           $ErrorActionPreference='Stop'
