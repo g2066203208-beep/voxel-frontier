@@ -1,4 +1,6 @@
 # 论文指挥室 — 每次写入前必读
+**2026-11-01 19时S06真实ETM短时原生结果（覆盖19时开工PENDING）：** [Actions #41300388698](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41300388698)完成四批各2s真实ETM S06 BTS（436968166字节、SHA256 `ad68a83a...052147`）原生OpenFAST v3.5.3，41时刻、106公共通道及220/426/633三跨批重复节点，共**13,899项逐时刻解码数值差=0、失败0**；[T062真实数值收据](../experiments/T062/S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json)已Git远端回读，四OUTB+日志+收据17件artifact SHA256 `7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b`已保全至用户持久Library `/WindTower/S06_ETM_Native_2S_Pilot_20261101/`，上传后独立取回SHA和字节完全一致；[T080 19时过程](../experiments/T080/PROCESS_LOG.md)含完整SHA、误差预算、原生失败/通过记录。**只关闭2s真实ETM跨批诊断，100–700s/姿态RP/TP/DCM/外载惯性与S03/S04仍HOLD，S06 PARTIAL，S07 BLOCKED，E/WE原生0、材料寿命0、12阶段0/12未晋级。** 下一责任方=云端S06/S07：用本次原生OUTB核公共姿态通道与最小新增RP/TP/DCM输出，不启动700s生产。
+
 
 **2026-11-01 19时开工读取回执（云端S06）：** read_base_sha=`6a0c2bdb2370d70c8dc3b97c568482b30be45b20`；已读main/PR #42、AGENTS/README/论文状态/总计划/T079/T080原方法、指挥室18时最终原生重叠QC与T062准备器/比较器/工作流/T071原始ETM工作流。继承0.1s稳态风1017项原生对照，不重复该计算；本轮仅拟新增T062同真实BTS `U09p343881_ETM_S06` 的2s短时四批重叠原生诊断脚本与独立Actions工作流，追加T080过程及本指挥室交接，不触碰T057/T070/main、不跑700s生产；责任方=云端Actions。真实BTS SHA与原始FST/ED/控制器均必须在执行时核验，未运行前标PENDING。
 
