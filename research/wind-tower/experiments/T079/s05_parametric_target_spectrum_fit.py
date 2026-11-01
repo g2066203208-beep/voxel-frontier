@@ -210,4 +210,134 @@ def main():
               stats["fitted_scale"],stats["log_rmse"],stats["minimum_scaled_over_target"],
               stats["maximum_scaled_over_target"],sha(output))
     elif not a.self_test:p.error("provide --self-test and/or --real-rotd-csv")
-if __name__=="__main__":main()
+
+# Independent published worked-example gate. JRC bridge reference, NOT site design.
+# European Commission JRC, EUR 25193 EN (2012), printed pp.249-251,
+# Bridge Design to Eurocodes, sec.8.4.3.1 and 8.4.3.3.
+JRC_REPORT = "https://eurocodes.jrc.ec.europa.eu/sites/default/files/2022-06/Bridge_Design-Eurocodes-Worked_examples.pdf"
+JRC_BEAM_T1 = 6.230957762865167  # conditional 35-element beam, NOT native Abaqus
+JRC_FIT_PERIODS = tuple(t for t in PERIODS if .2*JRC_BEAM_T1 <= t <= 4.0)
+JRC_COLUMNS = ("period_s","real_ESM_RotD50_psa_m_s2","JRC_bridge_example_elastic_psa_m_s2",
+    "logfit_scale_shape_only","scaled_record_psa_m_s2","scaled_over_example",
+    "signed_log_ratio","within_0p2T1_to_1p5T1","JRC_4s_formula_domain","status")
+
+def jrc_example_spectrum(t):
+    """JRC 2012 example: Type 1, soil B, ag=.40g, S=1.2, TB=.15, TC=.5, TD=2.5.
+    The 5%-damped elastic acceleration branch is evaluated only at 0<T<=4s.
+    Do NOT extrapolate to 6.23s; EN1998-1 points to long-period Annex A.
+    """
+    if not math.isfinite(t) or not 0 < t <= 4.0:
+        raise ValueError("JRC_OUTSIDE_4S_ACCELERATION_FORMULA_DOMAIN")
+    ag=.4*G; s=1.2; tb=.15; tc=.5; td=2.5
+    if t <= tb: return ag*s*(1+t/tb*(2.5-1))
+    if t <= tc: return ag*s*2.5
+    if t <= td: return ag*s*2.5*(tc/t)
+    return ag*s*2.5*(tc*td/t**2)
+
+def jrc_shape_gate(source):
+    if set(source)!=set(PERIODS) or len(JRC_FIT_PERIODS)!=7:
+        raise ValueError("JRC_SOURCE_GRID_OR_FIT_PERIODS")
+    scale=math.exp(sum(math.log(jrc_example_spectrum(t)/source[t])
+                       for t in JRC_FIT_PERIODS)/len(JRC_FIT_PERIODS))
+    rows=[]
+    for t in PERIODS:
+        within=.2*JRC_BEAM_T1 <= t <= 1.5*JRC_BEAM_T1
+        if t<=4:
+            target=jrc_example_spectrum(t); ratio=scale*source[t]/target
+            rows.append(dict(period_s=t,real_ESM_RotD50_psa_m_s2=source[t],
+                JRC_bridge_example_elastic_psa_m_s2=target,
+                logfit_scale_shape_only=scale,scaled_record_psa_m_s2=scale*source[t],
+                scaled_over_example=ratio,signed_log_ratio=math.log(ratio),
+                within_0p2T1_to_1p5T1=within,JRC_4s_formula_domain=True,
+                status="RESEARCH_SHAPE_FIT_NOT_DESIGN_ACCEPTANCE"))
+        else:
+            rows.append(dict(period_s=t,real_ESM_RotD50_psa_m_s2=source[t],
+                JRC_bridge_example_elastic_psa_m_s2="",logfit_scale_shape_only="",
+                scaled_record_psa_m_s2="",scaled_over_example="",signed_log_ratio="",
+                within_0p2T1_to_1p5T1=within,JRC_4s_formula_domain=False,
+                status="EXCLUDED_NEEDS_LONG_PERIOD_ANNEX_A_OR_SITE_TARGET"))
+    ratios=[scale*source[t]/jrc_example_spectrum(t) for t in JRC_FIT_PERIODS]
+    return rows,dict(fitted_shape_only_scale=scale,fitted_periods_s=list(JRC_FIT_PERIODS),
+        fitted_log_rmse=math.sqrt(sum(math.log(x)**2 for x in ratios)/len(ratios)),
+        min_ratio=min(ratios),max_ratio=max(ratios),
+        band_0p2T1_to_1p5T1_s=[.2*JRC_BEAM_T1,1.5*JRC_BEAM_T1],
+        sampled_periods_in_band_s=[t for t in PERIODS if .2*JRC_BEAM_T1<=t<=1.5*JRC_BEAM_T1],
+        excluded_over_4s_s=[t for t in PERIODS if t>4],
+        provisional_beam_T1_s=JRC_BEAM_T1,
+        JRC_example_does_not_cover_T1_or_full_band=True,
+        single_event_only=True,site_target_verified=False)
+
+def jrc_shape_self_test():
+    assert abs(jrc_example_spectrum(.5)-11.76798)<1e-9
+    for t in (.15,.5,2.5):
+        assert abs(jrc_example_spectrum(t-1e-10)-jrc_example_spectrum(t+1e-10))<1e-7
+    for bad in (0.,-1.,4.0000001,JRC_BEAM_T1,float("nan")):
+        try:jrc_example_spectrum(bad)
+        except ValueError as e:assert str(e)=="JRC_OUTSIDE_4S_ACCELERATION_FORMULA_DOMAIN"
+        else:raise AssertionError("ACCEPTED_OUT_OF_SCOPE")
+    synthetic={t:1/(1+t) for t in PERIODS}
+    rows,stat=jrc_shape_gate(synthetic)
+    assert len(rows)==16 and sum(r["JRC_4s_formula_domain"] for r in rows)==10
+    assert len(stat["sampled_periods_in_band_s"])==12
+    assert abs(sum(math.log(stat["fitted_shape_only_scale"]*synthetic[t]/
+        jrc_example_spectrum(t)) for t in JRC_FIT_PERIODS))<1e-12
+    try:jrc_shape_gate({t:1 for t in PERIODS[:-1]})
+    except ValueError:pass
+    else:raise AssertionError("ACCEPTED_MISSING_SOURCE_PERIOD")
+    print("JRC_BRIDGE_16PERIOD_4S_DOMAIN_7FIT_TESTS_PASS_NOT_DESIGN")
+
+def jrc_cli(argv):
+    parser=argparse.ArgumentParser(description="JRC bridge example: source-backed S05 shape-only QC")
+    parser.add_argument("--self-test",action="store_true")
+    parser.add_argument("--real-rotd-csv",type=Path)
+    parser.add_argument("--output",type=Path)
+    parser.add_argument("--receipt",type=Path)
+    a=parser.parse_args(argv)
+    if a.self_test:jrc_shape_self_test()
+    if a.real_rotd_csv:
+        if not a.output or not a.receipt:parser.error("output and receipt required")
+        if len({str(p.resolve()) for p in (a.real_rotd_csv,a.output,a.receipt)})!=3:
+            raise ValueError("JRC_SOURCE_OUTPUT_PATH_COLLISION")
+        raw=a.real_rotd_csv.read_bytes();source=parse_source(raw,strict=True)
+        rows,stats=jrc_shape_gate(source)
+        buf=io.StringIO(newline="")
+        writer=csv.DictWriter(buf,fieldnames=JRC_COLUMNS,lineterminator="\n")
+        writer.writeheader();writer.writerows(rows)
+        table=buf.getvalue().encode("utf-8")
+        a.output.write_bytes(table)
+        receipt=dict(classification="S05_PUBLISHED_JRC_BRIDGE_EXAMPLE_SHAPE_QC_NOT_SITE_DESIGN",
+            SOURCE={"real_rotd16_sha256":sha(raw),
+                "record":"ESM v3 IT-2012-0008/IT.NVL/HN/MP processed RotD50",
+                "processed_acceleration_sha256":"a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34"},
+            REF={"report":"European Commission JRC EUR 25193 EN (2012), Bridge Design to Eurocodes",
+                 "url":JRC_REPORT,"printed_pages":"249-251, sec.8.4.3.1, Fig.8.51, sec.8.4.3.3",
+                 "reading_level":"Official JRC public PDF text, not licensed EN standard full text"},
+            STANDARD="JRC quotes EN1998-1/2, no authorized GB/IEC/EN clause acceptance",
+            OFFICIAL="European Commission JRC worked example public PDF",
+            RUN="Python 3 standard library; existing real RotD50 16-period table; no native E/WE",
+            FIG="JRC Fig.8.51 is reference only; no new Abaqus figure",
+            TAB="16 rows: 10 research comparison, 6 >4s explicitly excluded",
+            published_example={"ag_g":.4,"S":1.2,"TB_s":.15,"TC_s":.5,"TD_s":2.5,
+                "damping_ratio":.05,"ground_type":"B (bridge, NOT IT.NVL C or Jiayu)"},
+            **stats,
+            assumptions=["Bridge worked example only; 0.4g NOT Jiayu hazard",
+                "5% damping, provisional beam T1 not native PT/contact T1",
+                "single Italian event not an ensemble, log-fit is NOT wave matching",
+                "no long-period extrapolation beyond 4s"],
+            error_budget={"arithmetic":"float64, continuity and missing-source negative tests",
+                "sampling":"16 discrete periods only, no continuous-band proof",
+                "long_period":"Annex A NOT READ; T1=6.23s outside JRC comparison domain",
+                "site_and_physics":"unbounded pending site target and native PT/contact modes"},
+            failure_tests=["reject T>4s","reject missing period","reject source SHA mismatch"],
+            output_csv_sha256=sha(table),S05_PASS=False,S08_PASS=False,native_Abaqus_E_WE=0,
+            HOLD="no site-specific validated long-period spectrum and no native structural modes")
+        a.receipt.write_text(json.dumps(receipt,ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+        print("S05_JRC_SHAPE_GATE_REAL_ESM",stats["fitted_shape_only_scale"],
+              stats["fitted_log_rmse"],stats["min_ratio"],stats["max_ratio"],sha(table))
+    elif not a.self_test:parser.error("provide --self-test and/or --real-rotd-csv")
+
+if __name__=="__main__":
+    import sys
+    if "--jrc-example" in sys.argv:
+        jrc_cli([v for v in sys.argv[1:] if v!="--jrc-example"])
+    else: main()
