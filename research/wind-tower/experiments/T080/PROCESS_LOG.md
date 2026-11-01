@@ -693,3 +693,14 @@
 - **REF/STANDARD/OFFICIAL/FIG：** REF=沿用T062测点契约，未读新期刊全文；STANDARD=未取得新的IEC/GB/NB授权条文，不作规范PASS；OFFICIAL=继承OpenFAST v3.5.3原生数值收据，尚未新读ElastoDyn源码语义；FIG=无本塔物理响应图。
 - **误差预算、失败与HOLD：** 本轮精确检查通道计数、单位、拓扑、输入SHA形式及异常拒绝；既有原生OUTB误差预算为各批半LSB之和×1.1+1e-8，不能推广为坐标/惯性物理误差。当前缺31站逐时刻RP/TP三维姿态、DCM、局部加速度和惯性归属；历史100–700s跨批同态与S03/S04源差异仍HOLD。**S06 PARTIAL、S07 BLOCKED、0/12阶段未晋级，地震E/WE原生0，材料寿命0。** 冻结T057/T070/main未改，PR仍待最终远端回读。
 - **下一轮唯一最优动作：** 直接核读OpenFAST v3.5.3 ElastoDyn官方输出定义及源码坐标转换，判定`TwHt...TPzi`和可获取的RP/TP/AL/DCM内部量，给出**一个重复接口**最小短时原生输出补采方案与六分量参考点运输/惯性归属的可复算验证；不得虚构OutList通道，不跑700s生产。
+
+
+## 2026-11-01｜S06/S07：OpenFAST v3.5.3 ElastoDyn源码语义及最小姿态补采（无新原生RUN）
+
+- **SOURCE/OFFICIAL：** 直接获取OpenFAST/openfast官方v3.5.3 annotated tag（tag SHA1 e48885091a09c950315464ffcd21707dcfe08cb1；commit 6a7a543790f3cad4a65b87242a619ac5b34b4c0f）。[ElastoDyn.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90) 原始663919 ASCII字节、SHA256 a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3；精读L922–945及L1200–1207。[ElastoDyn_IO.f90](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn_IO.f90) 原始226556 ASCII字节、SHA256 af1c78a15e4102668f83740c8ad1fc450f7112cdcc2ce004093278acf75d1d5a；精读L513、L594、L621，MaxOutPts=863。SHA256由纯JS对官方原字节计算，先用abc标准已知解校验。阅读层级=带tag原始源码字节与目标赋值语句，不是全部动力学源码逐行验收。
+- **确定的输出语义：** TwHt#TPxi/yi/zi是RtHS%rT在惯性坐标系的塔节点位置，不是位移；TPzi另加PtfmRefzt。TwHt#RPxi/yi/zi是AngPosEF分量乘R2D，单位deg，**不能直接冒充严格DCM或未经验证的欧拉角序列**。TwHt#ALxt/yt/zt是节点加速度投影到局部t1/-t3/t2；TwHt#FLxt/yt/zt与MLxt/yt/zt也是局部t轴投影。全局运输必须先获得同刻有效局部→惯性DCM并旋转F/M，再使用 M_B=M_A+(r_A-r_B)×F；不可将时均局部截面弯矩差当外载。
+- **RUN/代码：** 新增[T062原目录的源哈希锁定OutList子版生成器](../T062/s06_etm_pose_outlist_gate.cjs)，用node脚本 --selftest，或 --patch verified_parent.dat new_child.dat。输入仅接受上轮四份真实2s原生ED子版的SHA256白名单（完整值见[更新的既有收据](../T062/S06_ETM_2S_CHANNEL_COVERAGE_RECEIPT_20261101.json)）；绝不覆盖父本或已有子版。每批9测点补TPxi/TPyi/RPxi/RPyi/RPzi/ALxt/ALyt/ALzt共72通道，保留原TPzi和FL/ML。V8真实执行同一CJS模块：正例及幂等PASS、8项异常输入拒绝；解析力矩F=[2,-3,5]kN、M_A=[7,11,13]kN·m、r_A=[0,0,10]m、r_B=[0,0,4]m，得到M_B=[25,23,13]kN·m，逆向回算及非有限数拒绝PASS。**本轮未获得四份原ED字节进行实际patch，也没有Node Actions或新OpenFAST/Abaqus原生运行。**
+- **TAB/FIG：** [原覆盖收据](../T062/S06_ETM_2S_CHANNEL_COVERAGE_RECEIPT_20261101.json)追加官方源码tag/SHA/行号/物理语义、父ED SHA和测试边界。计划在原2s×41时刻、3重复节点对8新增通道比较，新增3×8×41=984项**待执行**，不是本轮真实RUN。FIG=无新增物理响应图。
+- **误差预算：** 原始源码SHA严格逐字节；合成整数力矩为解析已知解；历史OUTB量化预算仍按每通道packed半LSB。真实姿态、DCM重建、惯性所有权、100–700s跨批同态、S03/S04身份冲突均NEED_ESTIMATE。RP只提供角位置分量，严格DCM需从内部CoordSys%t1/t2/t3或运动网格姿态提取并独立验证。
+- **失败记录：** 首版内联JS动态编译SyntaxError，未提交；改独立CJS后上述正反例通过。首次收据更新误用不存在的derived_input_sha256字段而失败；回读原生收据四批ED SHA后成功写入。
+- **REF/STANDARD/HOLD：** REF=既有T062测点契约，未新增期刊全文；STANDARD=无新增IEC/GB/NB授权条款，不能称规范PASS；OFFICIAL/RUN/FIG/TAB见上。S06 PARTIAL、S07 BLOCKED、12阶段0/12未晋级，地震E/WE原生0、真实材料寿命0。单一最大HOLD=缺31站同刻精确DCM及惯性归属。下一唯一动作=用已锁定的四批2s ED原件执行最小姿态OutList补采，先检查220接口RP/TP/AL与FL/ML的同态，再决定是否需在v3.5.3源码内加t轴仪表；不启动700s生产。
