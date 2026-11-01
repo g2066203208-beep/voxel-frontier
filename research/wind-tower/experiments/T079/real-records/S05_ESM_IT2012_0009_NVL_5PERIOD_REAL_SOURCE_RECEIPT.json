@@ -1,0 +1,99 @@
+{
+  "Abaqus_E_WE_RUN": 0,
+  "FIG": "NONE",
+  "HOLD": "independent event not a distinct seismic source family; GOOD with lc/hc warning; no Chinese site target or usable low-frequency certification",
+  "OFFICIAL": "OFFICIAL_DYNA_MP_PROCESSED_SOURCE_BYTES",
+  "REF": "ESM v3 DOI 10.13127/esm.3",
+  "RUN": "PYTHON_3_12_REAL_SOURCE_FIVE_PERIOD_SDOF_NO_ABAQUS",
+  "S05_PASS": false,
+  "SOURCE": "ESM v3 MP original official ZIP from Actions #41361152018/artifact #13105770913",
+  "STANDARD": "NO_AUTHORIZED_IEC_GB_CLAUSE_READ",
+  "TAB": "FIVE_PERIOD_REAL_NVL_HORIZONTAL_PSA_CSV",
+  "assumptions": "two horizontal components from same NVL station, 5% linear SDOF; T1 from unvalidated elastic beam",
+  "csv_bytes": 706,
+  "csv_sha256": "0c790ae1ae5cd4e4bc94a08561e7cdfc39354baa4aa1d7e5fc76800c887192ce",
+  "damping_ratio_assumed": 0.05,
+  "dt_s": 0.005,
+  "error_budget": "integration dt=0.005s no independent exact-integrator comparison; processing highpass 0.08Hz; station/site/structural uncertainties unquantified",
+  "event_id": "IT-2012-0009",
+  "low_cut_Hz": 0.08,
+  "npts": 15970,
+  "periods_s": [
+    4.0,
+    6.0,
+    6.230957762865167,
+    8.0,
+    10.0
+  ],
+  "quality_from_official_selection": "GOOD / lc or hc issues (NOT BEST)",
+  "source_header_rejections": [
+    {
+      "reason": "INDEPENDENT_HORIZONTAL_MISMATCH_LOW_CUT_FREQUENCY_HZ",
+      "source_values": {
+        "LOW_CUT_FREQUENCY_HZ": [
+          "0.080",
+          "0.100"
+        ]
+      },
+      "station": "MDN"
+    }
+  ],
+  "source_numeric_sha256_by_stream": {
+    "HNE": {
+      "member_sha256": "fd500a8e8989ced97bd83639659694ee35344fedcd1b8861f72e6dd7e7873352",
+      "numeric_samples_text_sha256": "2f3d1fb3e528865ac9d974593b6a542ef8593f88d37c717e83ed75649ff39e3d"
+    },
+    "HNN": {
+      "member_sha256": "2660f5313bfb8a2be62368bd5fb052664473ebad524bac29d1449fa1669ad7c0",
+      "numeric_samples_text_sha256": "5f367317392777afd999f416dc7a57500b243da19216b1fc0bcfeb4afcad9e03"
+    }
+  },
+  "source_stability": "official ZIP varied across HTTP requests; this one source hash is immutable and selected explicitly",
+  "source_zip_bytes": 386242,
+  "source_zip_sha256": "84334aa45b65f1ba55b4474af3cc65f5640ea0e0bf05a4a8915095eb87f6f13f",
+  "spectra": [
+    {
+      "HNE_pseudoSa_m_s2": 0.0020240551488510737,
+      "HNN_pseudoSa_m_s2": 0.005576309998585255,
+      "frequency_over_highpass_corner": 3.125,
+      "pair_gm_pseudoSa_m_s2": 0.0033595772002182373,
+      "period_s": 4.0,
+      "status": "REAL_ESM_MP_2012_0009_NVL_NUMERIC_SOURCE_QC_NOT_DESIGN"
+    },
+    {
+      "HNE_pseudoSa_m_s2": 0.001195812374276268,
+      "HNN_pseudoSa_m_s2": 0.002181212623048419,
+      "frequency_over_highpass_corner": 2.0833333333333335,
+      "pair_gm_pseudoSa_m_s2": 0.001615029735196506,
+      "period_s": 6.0,
+      "status": "REAL_ESM_MP_2012_0009_NVL_NUMERIC_SOURCE_QC_NOT_DESIGN"
+    },
+    {
+      "HNE_pseudoSa_m_s2": 0.0012034228685792287,
+      "HNN_pseudoSa_m_s2": 0.0020595923798133434,
+      "frequency_over_highpass_corner": 2.0061121380884073,
+      "pair_gm_pseudoSa_m_s2": 0.0015743444889282949,
+      "period_s": 6.230957762865167,
+      "status": "REAL_ESM_MP_2012_0009_NVL_NUMERIC_SOURCE_QC_NOT_DESIGN"
+    },
+    {
+      "HNE_pseudoSa_m_s2": 0.0006896771383849303,
+      "HNN_pseudoSa_m_s2": 0.0015400204046757838,
+      "frequency_over_highpass_corner": 1.5625,
+      "pair_gm_pseudoSa_m_s2": 0.0010305905422383795,
+      "period_s": 8.0,
+      "status": "REAL_ESM_MP_2012_0009_NVL_NUMERIC_SOURCE_QC_NOT_DESIGN"
+    },
+    {
+      "HNE_pseudoSa_m_s2": 0.0003038944490386382,
+      "HNN_pseudoSa_m_s2": 0.0010436650885633782,
+      "frequency_over_highpass_corner": 1.25,
+      "pair_gm_pseudoSa_m_s2": 0.0005631731768025084,
+      "period_s": 10.0,
+      "status": "REAL_ESM_MP_2012_0009_NVL_NUMERIC_SOURCE_QC_NOT_DESIGN"
+    }
+  ],
+  "stages_passed": 0,
+  "station": "NVL",
+  "status": "SECOND_INDEPENDENT_EVENT_REAL_WAVEFORM_FIVE_PERIOD_SOURCE_QC_NOT_DESIGN"
+}
