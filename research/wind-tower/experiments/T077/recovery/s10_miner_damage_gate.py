@@ -381,7 +381,10 @@ def integration_selftest():
            'missing or excess seed')
     reject(lambda:calculate(encode([dict(r,material_model_ref='WRONG_MODEL')
            if i==0 else r for i,r in enumerate(rows)]),
-           operating_fraction=.5), 'mixed material')
+           operating_fraction=.5), 'inconsistent seed metadata')
+    reject(lambda:calculate(encode([dict(r,material_model_ref='WRONG_MODEL')
+           if r['material_id']=='SYNTH_CONCRETE' and r['seed_id']=='S01'
+           else r for r in rows]),operating_fraction=.5), 'mixed material')
     reject(lambda:calculate(raw_cycles), 'operating_fraction required')
 
     return {'status':'PASS_SYNTHETIC_END_TO_END_ONLY',
