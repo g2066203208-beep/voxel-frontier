@@ -176,13 +176,13 @@ def t057_amplitude_bytes(rows, axis, azimuth_deg):
         raise ValueError('INVALID_T057_AXIS')
     label = 'XYZ'[axis]
     header = (
-        '** SOURCE-LOCKED ESM MP processed acceleration; NOT DESIGN / NOT ABAQUS-VALIDATED\\n'
-        '** T057 candidate Y=Up, SI m/s^2; E/N/U sign and structural azimuth ASSUMED\\n'
-        f'** X azimuth CCW from East={azimuth_deg:g} deg; Z=sin(theta)*E-cos(theta)*N\\n'
-        f'*AMPLITUDE, NAME=S08_T057_{label}_ACC_M_S2, DEFINITION=TABULAR, TIME=TOTAL TIME\\n'
+        '** SOURCE-LOCKED ESM MP processed acceleration; NOT DESIGN / NOT ABAQUS-VALIDATED\n'
+        '** T057 candidate Y=Up, SI m/s^2; E/N/U sign and structural azimuth ASSUMED\n'
+        f'** X azimuth CCW from East={azimuth_deg:g} deg; Z=sin(theta)*E-cos(theta)*N\n'
+        f'*AMPLITUDE, NAME=S08_T057_{label}_ACC_M_S2, DEFINITION=TABULAR, TIME=TOTAL TIME\n'
     )
     return (header + ''.join(
-        f'{t:.6f}, {rotate_t057_yup_si(e,n,u,azimuth_deg)[axis]:.12g}\\n'
+        f'{t:.6f}, {rotate_t057_yup_si(e,n,u,azimuth_deg)[axis]:.12g}\n'
         for t,e,n,u in rows
     )).encode('ascii')
 
@@ -304,7 +304,7 @@ def export_t057_yup_si(source, outdir, angle_deg):
         'generated_keywords':'*AMPLITUDE only; no *BASE MOTION, *BOUNDARY, or production load cards'
     }
     receipt = outdir/'S08_ESM_T057_YUP_SI_AMPLITUDE_RECEIPT.json'
-    receipt.write_text(json.dumps(report,indent=2,sort_keys=True)+'\\n',encoding='utf-8')
+    receipt.write_text(json.dumps(report,indent=2,sort_keys=True)+'\n',encoding='utf-8')
     print(json.dumps({'status':report['PASS'],'npts':len(rows),'source_sha256':source_sha,
                       'qc':qc,'amplitude_sha256':[x['sha256'] for x in artifacts],
                       'receipt_sha256':sha256(receipt.read_bytes())},sort_keys=True))
