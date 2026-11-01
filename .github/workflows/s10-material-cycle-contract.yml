@@ -54,6 +54,13 @@ jobs:
           assert obj['load_screen']['material_life_years'] is None
           print('REAL_SOURCE_SHA_AND_NO_MATERIAL_LIFE_PASS',actual)
           PY
+          # Real Git bytes, not a simulated ODB: two independently SHA-locked 68-Part maps.
+          printf '%s\n' '502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd  research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv' | sha256sum -c -
+          printf '%s\n' '9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83  research/wind-tower/experiments/T077/recovery/S10_D400_PE_68PART_INP_METADATA_20261028.csv' | sha256sum -c -
+          python3 research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py --self-test \
+            --source-map research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv \
+            --d400-source-map research/wind-tower/experiments/T077/recovery/S10_D400_PE_68PART_INP_METADATA_20261028.csv > s10-receipts/S10_REAL_SOURCE_MAP_STATIC_TEST.json
+          echo S10_TWO_REAL_SOURCE_MAP_BYTES_VERIFIED_NOT_NATIVE
           python3 research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py \
             --self-test > s10-receipts/S10_ODB_DIRECTORY_SYNTHETIC.json
           python3 - <<'PY'
