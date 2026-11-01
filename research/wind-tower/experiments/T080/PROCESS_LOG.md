@@ -1,3 +1,13 @@
+## 2026-11-02 01时｜S08真实ESM三向线性地震响应时程、能量闭合与两幅论文方法图（非158m结构E）
+
+- **SOURCE / 阅读层级：** 直接下载并解压既有[原生Actions #40847442979的ESM处理波形归档](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979/artifacts/12884814391)；源artifact ZIP SHA256=`40dcb0d8ad6aa3ce1be4cd96e633d1aa266f3764c85be556e1a029c682c908d6`，真实ESM v3 IT-2012-0008/NVL/MP三向处理后SI波形CSV SHA256=`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`，32040时刻×3分量、dt=0.005s、160.195s。**不是未经处理的台站原波；没有新的场址适用性判断。**
+- **REF / 方法：** 真实输入激励单位质量SDOF `u''+2ζωu'+ω²u=-ag(t)`；ζ=5%为演示假设，T=1/4s为方法基准**不是塔架已验模态**。逐段线性地震加速度的精确状态转移与独立Newmark平均加速度算法对照；速度、相对位移、绝对加速度及`E(t)+D(t)-Wg(t)`能量平衡；精确中点状态+Simpson功/耗散积分。
+- **真实RUN / 结果：** 本地Python3.13.5与[Actions #41330660360](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41330660360)的Python3.12.15实际运行成功；6条真实波驱动的线性振子时程。HNE/HNN/HNZ的T=1s峰值相对位移分别7.146/7.204/1.165mm，T=4s分别12.330/18.927/4.871mm；与历史[18行独立精确解收据](../T079/real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv)六项峰值相对差0，Newmark最大峰值相对差`3.13024016e-4`，能量归一化最大残差`4.34394733e-7`。解析恒定加速度正例及5项坏输入拒绝通过。**这些不是158m塔架位移或抗震验算值。**
+- **FIG/TAB：** [全时段真实输入驱动的6面板响应图](../../manuscript/final-thesis/figures/FIG_S08_05_REAL_ESM_SDOF_RESPONSE_FULL.svg)、[20–70s放大图](../../manuscript/final-thesis/figures/FIG_S08_05_REAL_ESM_SDOF_RESPONSE_20_70S.svg)、[6行真实数值/能量表](../T079/real-records/S08_REAL_ESM_SDOF_ENERGY_6CASE_20261102.csv)、[原生CI数值及图哈希收据](../T079/real-records/S08_REAL_ESM_SDOF_ENERGY_HISTORY_RECEIPT_20261102.json)；[可复算源程序](../T079/s08_real_esm_sdof_energy_history.py) SHA256=`0bb376256e6cf7d2cd69aa16dec13ed2f81d43bb0bec6509a668df36e5c34c3f`，CI实际产物artifact #13093710298。图中明确注明数值基准非塔架结构结果。
+- **STANDARD/OFFICIAL：** ESM公开处理数据为实际输入；IEC/GB授权规范原文及工址地震危险性未取得，不声称规范PASS。原始波形高通处理、低频有效带宽、场址目标谱和方位均HOLD。
+- **误差/失败：** 能量残差预算为`<1e-6`、Newmark相对差`<0.002`，真实均通过；解析恒定输入和SHA/列数/非有限/时间轴负向检查均通过。此前未通过的Abaqus原生SDOF/塔架计算仍为0；本轮没有Abaqus、没有结构物理PASS，没有生产RUN。**S08方法级SOURCE_NUMERIC_QC，S08阶段BLOCKED；12阶段0/12未晋级，E/WE原生0。**
+- **下一动作（单一）：** 在有授权的原生Abaqus环境中执行仓库已有`T079/S08_SDOF_PRIMARY_BASE_PILOT_20261101.inp` 201点已知解验证并提交原生`.dat/.msg/.sta/.odb`、源SHA与六通道相对/绝对加速度误差；通过后再移交158m塔架真实E pilot，禁止把本轮SDOF图冒充后者。
+
 ## 2026-11-02 00时｜S07 node220原生t轴与质量/重力/惯性逐项账本：可执行最小探针（非OpenFAST native PASS）
 
 - **开工/继承：** 先核PR #42 Open/Draft、head `4c913981e98f468ad83ac1bfcbef7bc2dfe60c68`、main `bbc5c9130f2d9fc41f776506d86118a9b8db0e65`；已读AGENTS/README/论文状态/工作母版/T079/T080.1-.3/12阶段总计划、指挥室与本日志最近交接及T062既有2s OUTB/三时刻旋转收据。继承真实ETM 2s 984项姿态跨批差0与FL/ML含重力/惯性结论，不再补采已有TP/RP/AL，不改T057/T070。
