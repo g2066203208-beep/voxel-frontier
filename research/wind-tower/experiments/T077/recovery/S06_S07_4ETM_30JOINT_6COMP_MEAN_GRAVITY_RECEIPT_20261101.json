@@ -17,6 +17,23 @@
       "path": "research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv",
       "sha256": "bcec1d70d0a5e93a9f9d37efcde32e9e57bfa61b592ab31ba5bc58a6a455797e",
       "rows": 124
+    },
+    "original_16_artifact_live_inventory_20261101": {
+      "source": "GitHub Actions artifact metadata API directly read on 2026-11-01; binary ZIP bytes NOT downloaded in this check",
+      "runs": [
+        37582521146,
+        37622366681
+      ],
+      "count": 16,
+      "expired": 0,
+      "total_zip_bytes": 125291677,
+      "total_zip_MiB": 119.48745441436768,
+      "first_expires_utc": "2026-11-06T07:09:33Z",
+      "last_expires_utc": "2026-11-06T13:11:23Z",
+      "manifest_path": "research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv",
+      "manifest_git_blob": "24723fb07c760ea22dbed043031ceff7939f1ac6",
+      "original_zip_sha256": "16 per-artifact hashes in existing manifest; not recalculated from ZIP bytes this turn",
+      "status": "TEMPORARY_SOURCE_ARCHIVE_AT_RISK_NOT_DURABLY_COPIED_THIS_TURN"
     }
   },
   "REF": "T074 static gravity and T077/S06 historic OpenFAST-derived section resultants; S07 wrench transport; no new journal full text this turn",
@@ -109,6 +126,7 @@
     "PT_and_contact_equilibrium": "NEED_NATIVE"
   },
   "failure_record": "First full-source attempt rejected at 1mm source/static gage mismatch (actual 1.047910mm at U11p4_ETM_S04 J30); retained real discrepancy, revised explicit diagnostic screening threshold to 2mm rather than suppressing row.",
-  "HOLD": "Missing synchronized 31-gage original RP/TP/DCM and distributed force/inertia ownership. Conditional six-component mean residuals cannot be used as Abaqus external loads or material stress.",
-  "acceptance": "SOURCE_NUMERIC_PARTIAL; PHYSICAL_HOLD; 0/12 STAGE PASS; native E/WE=0"
+  "HOLD": "Missing synchronized 31-gage original RP/TP/DCM and distributed force/inertia ownership. Conditional six-component mean residuals cannot be used as Abaqus external loads or material stress. All 16 original Actions ZIPs remain unexpired but will expire on 2026-11-06 UTC unless durably archived.",
+  "acceptance": "SOURCE_NUMERIC_PARTIAL; PHYSICAL_HOLD; 0/12 STAGE PASS; native E/WE=0",
+  "next_priority": "Before expiry, preserve the 16 source ZIPs to approved durable storage with original manifest SHA256 verification, without committing large binaries to PR #42; then resume synchronized RP/TP/DCM ownership recovery."
 }
