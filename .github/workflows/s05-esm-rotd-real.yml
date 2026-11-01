@@ -342,17 +342,22 @@ jobs:
             test -f "$file" || continue
             test "$(wc -c < "$file")" -le 300000 || { echo "LARGE_OFFICIAL_JSON_ARTIFACT_ONLY $name"; continue; }
             target="$root/$name"
+            existing_sha=""
             if gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.content' > existing.b64 2>/dev/null; then
               base64 -d existing.b64 > existing.file
-              cmp -s existing.file "$file" || { echo "EXISTING_SOURCE_OUTPUT_DIFFERS_HOLD: $target"; exit 1; }
-              echo "ALREADY_IDENTICAL $target"
-              continue
+              if cmp -s existing.file "$file"; then echo "ALREADY_IDENTICAL $target"; continue; fi
+              if [[ "$name" != "S05_ESM_IT2012_0009_OFFICIAL_SOURCE_RECEIPT.json" ]]; then
+                echo "IMMUTABLE_SOURCE_JSON_DIFFERS_HOLD: $target"; exit 1
+              fi
+              existing_sha="$(gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.sha')"
             fi
-            python - "$file" "$GITHUB_REF_NAME" <<'PY' > payload.json
+            python - "$file" "$GITHUB_REF_NAME" "$existing_sha" <<'PY' > payload.json
           import base64,json,sys
-          f,branch=sys.argv[1:]
-          print(json.dumps({'message':'research(S05): archive independent ESM official source or failure, not design PASS',
-                            'content':base64.b64encode(open(f,'rb').read()).decode(),'branch':branch}))
+          f,branch,existing_sha=sys.argv[1:]
+          payload={'message':'research(S05): update official second-event source QC after filter mismatch triage',
+                   'content':base64.b64encode(open(f,'rb').read()).decode(),'branch':branch}
+          if existing_sha: payload['sha']=existing_sha
+          print(json.dumps(payload))
           PY
             gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
             echo "PERSISTED_INDEPENDENT_ESM_SOURCE $target"
