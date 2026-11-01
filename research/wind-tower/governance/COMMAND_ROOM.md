@@ -830,3 +830,8 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 
 **13时最终原生CI回执（覆盖此前“待回读”）：** [Actions #41275815335/job #124757657411](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41275815335/job/124757657411) completed/success；实际下载[artifact #13070592690](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41275815335/artifacts/13070592690)，ZIP SHA256=`5113849fac70535b9c5cebb356c7a06040d18a4c73b1ef4f656a2f43512382e5`；新增S10脚本SHA256=`24d5ea831b43415583553b1dc7c57e8f8cb711bc41e94df06fc5450b9c8c9b77`，真实两源映射SHA256=`502fe65c94a8d060611e6b4293790ed3a5f48174a41b7732a3b221a5195e66fd`/`9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83`，原生提取器两源表9项静态绑定检查及新程序15项合成拒绝通过；`native_odb_runs=0`、`miner_admitted=false`。详细RUN/误差及HOLD见[T080 13时过程](../experiments/T080/PROCESS_LOG.md)。**0/12未晋级；下一独立最优动作：S06/07真实31段六分量长时程载荷与局部应力所有权的输入对照，优先复用既有四工况原始档案，不重复小审查。**
+
+
+### 2026-11-01 14时｜S06/S07四工况×30接缝六分量均值自由体对照：开工回执
+- START / 云端研究；`read_base_sha=0235daa7d9165b92ffd75bdae05a9200a54d2bc2`；main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、本指挥室13时交接及T077 S06恢复过程。继承744行真实历史4ETM×31站六分量统计、30行T074静重力共同参考点对照、124行Fz-only所有权诊断、现有S07坐标门禁；不重做雨流/DEL、不生成材料寿命。
+- 本轮唯一增量：在**同一局部坐标近似**下，对4工况×30对相邻站进行六分量时均差及力矩参考点转移，与静重力六分量差逐项对照；强制标记`NOT_DYNAMIC_COMMON_FRAME`，不把截面内力当外力、不推断PT/惯性。拟更新既有`experiments/T077/recovery/s10_fz_gravity_ownership_real.py`或相邻S07诊断程序及小型120行CSV/收据、T080 PROCESS_LOG、论文00_STATUS和本指挥室；责任方=云端源级数值验证，无原生Abaqus/2025授权条款，不运行昂贵生产。
