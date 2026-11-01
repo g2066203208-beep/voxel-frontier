@@ -1,0 +1,320 @@
+{
+  "classification": "S05_OFFICIAL_ESM_PROCESSING_SNR_SOURCE_AUDIT_NOT_DESIGN_PASS",
+  "UTC_time": "2026-11-01T20:08:19.577808+00:00",
+  "source_reading_level": "Official ESM v3 JSON services; direct machine response if accessible",
+  "SOURCE": {
+    "event": "IT-2012-0008",
+    "network": "IT",
+    "station": "NVL",
+    "archived_processed_acceleration_csv_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+    "archived_MP_DYNA_filter_low_high_Hz": [
+      0.04,
+      30.0
+    ]
+  },
+  "REF": "ESM v3 DOI 10.13127/esm.3; Boore & Bommer 2005 and Douglas & Boore 2011 (abstract-level, NOT filter acceptance rules)",
+  "STANDARD": "No new authorized IEC/GB/NB clause read; NO standard PASS",
+  "OFFICIAL": "https://esm-db.eu/esmws/waveform-details/1/ ; https://esm-db.eu/esmws/waveform-snr/1/",
+  "RUN": "Python standard-library HTTP metadata fetch only; Abaqus E/WE=0",
+  "FIG": null,
+  "TAB": "this JSON receipt",
+  "conditional_beam_proxy_f1_Hz": 0.1604889710470726,
+  "conditional_beam_proxy_T1_s": 6.230957762865167,
+  "f1_frequency_probe_Hz": [
+    0.0802444855235363,
+    0.1604889710470726,
+    0.3209779420941452
+  ],
+  "S05_PASS": false,
+  "S08_PASS": false,
+  "Abaqus_E_WE_RUN": 0,
+  "assumptions": [
+    "35-element linear beam f1 is a provisional screening period",
+    "ESM v3 current metadata may differ from archived MP ZIP; no silent substitution",
+    "reported SNR service quantity is not assigned unverified dB/linear units",
+    "no SNR acceptance threshold or design target spectrum is assumed"
+  ],
+  "error_budget": {
+    "frequency_interpolation": "log-frequency interpolation, not original frequency-bin observation",
+    "instrument_lowfreq_reliability": "NEED_METADATA_AND_INDEPENDENT_CRITERION",
+    "site_target_spectrum": "NOT_DEFINED"
+  },
+  "attempts": [
+    {
+      "instrument": "HN",
+      "details": {
+        "url": "https://esm-db.eu/esmws/waveform-details/1/query?eventid=IT-2012-0008&network=IT&station=NVL&location=&instrument=HN&indent=true&processing=MP&ptarget=mp&group=all",
+        "HTTP_status": 200,
+        "error": null,
+        "raw_response_sha256": "91d2bb349521b34f925b9d8d46f13f05a7f538aa12a58ced3cbabf75a33cd37c",
+        "raw_bytes": 3045,
+        "parsed": {
+          "event": {
+            "event_id": "IT-2012-0008",
+            "origin_time": "2012-05-20T02:03:50",
+            "origin_latitude": "44.8955",
+            "origin_longitude": "11.2635",
+            "origin_depth": "9.5",
+            "origin_status": "0",
+            "epi_area_radius_km": "31.0",
+            "magnitude_value_l": "",
+            "magnitude_value_w": "6.1",
+            "magnitude_value_s": "6.0",
+            "magnitude_value_b": "",
+            "magnitude_value_d": "",
+            "magnitude_value_m": "",
+            "focal_mechanism": "TF",
+            "focal_mechanism_description": "Thrust faulting"
+          },
+          "station": {
+            "internal_network_code": "IT",
+            "network_code": "IT",
+            "station_code": "NVL",
+            "station_name": "Novellara",
+            "station_latitude": "44.843000",
+            "station_longitude": "10.731500",
+            "station_altitude_m": "22"
+          },
+          "location": {
+            "sensor_location": "",
+            "sensor_depth_m": "0.0",
+            "site_classification_ec8": "C",
+            "vs30_m_s": "190"
+          },
+          "orientation": {
+            "channel_code": "HN",
+            "U_orientation_code": "E",
+            "V_orientation_code": "N",
+            "W_orientation_code": "Z"
+          },
+          "instrument": {
+            "sampling_interval_s": "0.005000",
+            "date_time_first_sample_yyyymmdd_hhmmss": "20120520_020336.000",
+            "instrument": "sensor = MS2007+ [Syscom] | digitizer = 130-01/3 [Reftek]",
+            "instrument_analog_digital": "D"
+          },
+          "quality": {
+            "class": "BEST",
+            "reason": "no warnings detected",
+            "warnings": []
+          },
+          "workflow": {
+            "type": "D",
+            "method": "P",
+            "trigger": "NT",
+            "modality": "M"
+          },
+          "processing_settings": {
+            "waveform_cut": {
+              "end_time": "2012-05-20T02:06:16.195Z",
+              "start_time": "2012-05-20T02:03:36.000Z"
+            },
+            "waveform_taper": {
+              "side": {
+                "left": 5,
+                "right": 5
+              },
+              "type": "cosine",
+              "end_lt": null
+            },
+            "waveform_detrend": {
+              "type": "linear",
+              "t1_samples": null,
+              "t2_samples": null,
+              "t3_samples": null
+            },
+            "amplitude_scaling": {
+              "multiplier_factor": 1
+            },
+            "waveform_integrate": {
+              "method": "cumsum"
+            },
+            "waveform_resampling": {
+              "delta": 0.005,
+              "action": false
+            },
+            "waveform_differentiate": {
+              "method": "diff"
+            },
+            "fourier_spectrum_filter": {
+              "type": "bandpass",
+              "order": 2,
+              "low_cut": [
+                0.04,
+                0.04,
+                0.04
+              ],
+              "high_cut": [
+                30.0,
+                30.0,
+                30.0
+              ]
+            }
+          },
+          "reported_low_cut_Hz": [
+            0.04,
+            0.04,
+            0.04
+          ],
+          "reported_high_cut_Hz": [
+            30.0,
+            30.0,
+            30.0
+          ],
+          "same_corners_as_archived_MP_DYNA": true
+        }
+      },
+      "snr": {
+        "url": "https://esm-db.eu/esmws/waveform-snr/1/query?eventid=IT-2012-0008&network=IT&station=NVL&location=&instrument=HN&indent=true",
+        "HTTP_status": 200,
+        "error": null,
+        "raw_response_sha256": "4b1dc4b4d9d818b500e8c8c8fbfad0e30fad53837ec6288cd86c8c5bd575da3f",
+        "raw_bytes": 21362,
+        "reported_snr_at_provisional_f1": {
+          "U": {
+            "reported_value_logfreq_interpolated": 1879.8908797740487,
+            "frequency_bracket_Hz": [
+              0.153436840893001,
+              0.160705281826164
+            ],
+            "reported_bracket_values": [
+              1981.3356881947,
+              1876.85017732526
+            ]
+          },
+          "V": {
+            "reported_value_logfreq_interpolated": 1088.181665980851,
+            "frequency_bracket_Hz": [
+              0.153436840893001,
+              0.160705281826164
+            ],
+            "reported_bracket_values": [
+              909.337389412428,
+              1093.54233685381
+            ]
+          },
+          "W": {
+            "reported_value_logfreq_interpolated": 2431.1034836703943,
+            "frequency_bracket_Hz": [
+              0.153436840893001,
+              0.160705281826164
+            ],
+            "reported_bracket_values": [
+              2387.18161842801,
+              2432.41999582392
+            ]
+          }
+        },
+        "reported_snr_at_half_f1": {
+          "U": {
+            "reported_value_logfreq_interpolated": 630.1175620041361,
+            "frequency_bracket_Hz": [
+              0.0766341086800746,
+              0.0802643352225718
+            ],
+            "reported_bracket_values": [
+              510.924254505671,
+              630.757947311769
+            ]
+          },
+          "V": {
+            "reported_value_logfreq_interpolated": 1651.0797770609638,
+            "frequency_bracket_Hz": [
+              0.0766341086800746,
+              0.0802643352225718
+            ],
+            "reported_bracket_values": [
+              1290.65245027488,
+              1653.01623112359
+            ]
+          },
+          "W": {
+            "reported_value_logfreq_interpolated": 65.11538695661318,
+            "frequency_bracket_Hz": [
+              0.0766341086800746,
+              0.0802643352225718
+            ],
+            "reported_bracket_values": [
+              45.2875068359464,
+              65.2219154469896
+            ]
+          }
+        },
+        "reported_snr_at_twice_f1": {
+          "U": {
+            "reported_value_logfreq_interpolated": 3398.1867639269853,
+            "frequency_bracket_Hz": [
+              0.307211299886176,
+              0.321764175025074
+            ],
+            "reported_bracket_values": [
+              2420.54423876073,
+              3452.74843989994
+            ]
+          },
+          "V": {
+            "reported_value_logfreq_interpolated": 3349.320816849094,
+            "frequency_bracket_Hz": [
+              0.307211299886176,
+              0.321764175025074
+            ],
+            "reported_bracket_values": [
+              3899.420779373,
+              3318.62004930335
+            ]
+          },
+          "W": {
+            "reported_value_logfreq_interpolated": 320.31704183840503,
+            "frequency_bracket_Hz": [
+              0.307211299886176,
+              0.321764175025074
+            ],
+            "reported_bracket_values": [
+              394.855217474436,
+              316.157108445597
+            ]
+          }
+        },
+        "official_reported_cutoff_frequencies": {
+          "lc": [
+            0.09,
+            0.09,
+            0.09
+          ],
+          "hc": [
+            57.0,
+            57.0,
+            57.0
+          ]
+        },
+        "official_signal_noise_windows": {
+          "start_noise": "2012-05-20 02:03:36+02:00",
+          "end_noise": "2012-05-20 02:03:57+02:00",
+          "start_signal": "2012-05-20 02:03:59+02:00",
+          "end_signal": "2012-05-20 02:04:20+02:00"
+        }
+      }
+    },
+    {
+      "instrument": "HG",
+      "details": {
+        "url": "https://esm-db.eu/esmws/waveform-details/1/query?eventid=IT-2012-0008&network=IT&station=NVL&location=&instrument=HG&indent=true&processing=MP&ptarget=mp&group=all",
+        "HTTP_status": null,
+        "error": "ValueError:EMPTY_OFFICIAL_RESPONSE"
+      },
+      "snr": {
+        "url": "https://esm-db.eu/esmws/waveform-snr/1/query?eventid=IT-2012-0008&network=IT&station=NVL&location=&instrument=HG&indent=true",
+        "HTTP_status": null,
+        "error": "ValueError:EMPTY_OFFICIAL_RESPONSE"
+      }
+    }
+  ],
+  "source_level_status": "OFFICIAL_PROCESSING_AND_SNR_RETRIEVED_NOT_DESIGN_PASS",
+  "archive_vs_current_processing": [
+    {
+      "instrument": "HN",
+      "matches_archived_MP_DYNA_filter_corners": true
+    }
+  ],
+  "HOLD": "No native Abaqus, no authorized site target, no accepted long-period reliability criterion; if official v3 corners differ from archived source, require reprocessed waveform identity before comparing. SNR values alone are not an engineering PASS."
+}
