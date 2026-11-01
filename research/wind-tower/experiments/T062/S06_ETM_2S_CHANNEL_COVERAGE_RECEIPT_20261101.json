@@ -1,0 +1,92 @@
+{
+  "stage": "S06/S07",
+  "status": "CHANNEL_INVENTORY_PASS_PHYSICAL_HOLD",
+  "case": "U09p343881_ETM_S06",
+  "bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+  "outb_sha256": [
+    "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+    "be9dd3b6dd611925cf5c314200ed4e1c111218bd4464d6cccf0ee1f73bb3b902",
+    "867553e8ef29806fccdaad24bb3938493138b31b616c9a9446e81cbefe53bbd7",
+    "701575bd988177b7c0c666640b49981c653d77738893909cb307fccdf172c855"
+  ],
+  "observed": {
+    "common_non_gage": 106,
+    "tower_base_six_wrench": [
+      "TwrBsFxt",
+      "TwrBsFyt",
+      "TwrBsFzt",
+      "TwrBsMxt",
+      "TwrBsMyt",
+      "TwrBsMzt"
+    ],
+    "yaw_bearing_displacement_nine": [
+      "YawBrTDxi",
+      "YawBrTDxp",
+      "YawBrTDxt",
+      "YawBrTDyi",
+      "YawBrTDyp",
+      "YawBrTDyt",
+      "YawBrTDzi",
+      "YawBrTDzp",
+      "YawBrTDzt"
+    ],
+    "yaw_bearing_acceleration_three": [
+      "YawBrTAxp",
+      "YawBrTAyp",
+      "YawBrTAzp"
+    ],
+    "yaw_kinematics": [
+      "YawPos",
+      "YawRate",
+      "YawAccel"
+    ],
+    "overlap_nodes": [
+      220,
+      426,
+      633
+    ],
+    "overlap_suffixes": [
+      "FLxt",
+      "FLyt",
+      "FLzt",
+      "MLxt",
+      "MLyt",
+      "MLzt",
+      "TPzi"
+    ],
+    "overlap_TPzi_scalar_count": 3,
+    "samples": 41,
+    "common_pair_comparisons": 13038,
+    "overlap_pair_comparisons": 861,
+    "max_decoded_difference": 0
+  },
+  "absent": [
+    "31-station 3D position",
+    "31-station 3D rotation",
+    "31-station 3x3 DCM",
+    "31-station 3D acceleration",
+    "section inertia ownership",
+    "100-700s full-state proof"
+  ],
+  "boundary": "Three overlap nodes have one scalar TPzi each; NOT full TP/DCM. YawBrTD/TA and YawPos do NOT provide each tower section orientation. Names and units only, not source-code semantics.",
+  "next": "Inspect OpenFAST v3.5.3 ElastoDyn OutList and internal coordinate transforms; add only supported verified RP/TP/AL/DCM instrumentation or reconstruction. Test one interface with wrench transport/inertia before production.",
+  "SOURCE": "Four-OUTB native JSON receipt, raw OUTB not re-read in this audit",
+  "REF": "T062 31-gage contract; no new paper",
+  "STANDARD": "No new authorized IEC/GB/NB clauses",
+  "OFFICIAL": "OpenFAST v3.5.3 native receipt; semantics not revalidated",
+  "RUN": "V8 JS audit, not new solver run",
+  "FIG": "none",
+  "TAB": "106+21 rows",
+  "assumptions": "Receipt matches native header, startup 0-2s only",
+  "error_budget": "Exact counts/units/topology and inherited packed half-LSB; physical mapping NEED-ESTIMATE",
+  "HOLD": "No per-gage full pose/DCM, no inertia attribution, no 100-700s sync or S03/S04 reconciliation",
+  "physical_pass": false,
+  "source_receipt_git_blob_sha1": "49455bfa890ceaf60dc1bd3bd9eea641e7a81494",
+  "source_receipt_sha256_from_previous_verified_log": "6bac6147e1edd94532edea6b7dc0a6bac87da90eb35993e438326532aa7adbf3",
+  "test": {
+    "executor": "V8 on actual GitHub receipt; Node CI not yet run",
+    "positive": "PASS",
+    "negative_rejections": 12
+  },
+  "date": "2026-11-01"
+}
