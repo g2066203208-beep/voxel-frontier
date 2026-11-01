@@ -628,3 +628,5 @@
 - **测试/误差/失败：** Python真实源级读取与`SELFTEST_PASS`，逐站时间网格允许绝对差<2×10⁻⁸s；固定轴叉积正负号、J09/J18/J27分批、时间错位/非有限数/越界负例测试通过；独立故意翻转A批ZIP字节，程序正确以`A: ZIP_SHA_MISMATCH`拒绝，退出码1。首次真实运行曾因错误假设所有`gage_index=1`而`GAGE_INDEX_MISMATCH`失败，核对原始源确认每批编号1–9（D批1–4）后修复。ZIP/gzip SHA必须零差异，输出保留9位小数；跨批运行状态、时变DCM、分布惯性、重力/PT与外载所有权的**物理误差预算仍NEED-ESTIMATE**。本轮没有GitHub Actions新job或Abaqus/OpenFAST原生RUN。
 - **PASS/HOLD：** `S06_ONE_CASE_BATCH_LOCAL_SOURCE_NUMERIC_QC=PASS`仅表示批内同钟源级条件运算；**S06整阶段PARTIAL/HOLD，S07 BLOCKED，12阶段0/12未晋级，正式DLC1.2=0/126、E/WE原生0、材料寿命0**。四批数据缺31站原生同步RP/TP/AL/DCM和跨批共同状态证据，不能将这30个差值作为Abaqus风载或抗震/疲劳输入。冻结T057/T070及main未改，PR #42仍Draft。
 - **下一唯一动作：** 定位T071/T072原始各批OUTB/同一输入的公共通道（含RP/TP/AL），先证实A/B/C/D运行状态一致；若OUTB已不存在，则基于现有短时OpenFAST 9站原生诊断设计**同工况单批最小补采方案**，不启动700s生产。
+
+**16时持久化/清理补记：** 为将容器生成的三份小文本准确转写到GitHub，短暂经Library中转，远端回读三个Git Blob均与本地原文件逐字节一致（程序`a4e015ebdba1c530980132559e9ffc8db6f2ef0d`、表`3bfd2eeaa3f856d5966f5304228355f1469741dd`、收据`088be5fd3c89d22c64021c9c3b27c88657b26dc3`）。尝试删除四个TEMP中转件时API返回401 Unauthorized，**不能声称删除调用成功**；随后独立Library目录回读`/WindTower/S06_T071_T072_Source_Archives_20261101/`显示仅16件原始ZIP、0件TEMP，原ZIP均仍在。该临时操作不改变S06数据/物理验收。\n
