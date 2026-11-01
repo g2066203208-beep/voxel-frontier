@@ -4,7 +4,7 @@
   "case": "U09p343881_ETM_S06",
   "samples": 41,
   "dt_s": 0.05,
-  "TMax_s": 2,
+  "TMax_s": 2.0,
   "bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
   "original_input_sha256": {
     "static_part001": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
@@ -29,247 +29,226 @@
     "9da71c63f2d7006c9fd422ade3b6be445a9fba9330610a4b1ee908e7281d3e7f",
     "eb8ef69eb4441f82f8a521a814b6a8efe30633e88b81b5de00da819d9a3c9fd1"
   ],
+  "source_mode": "2S_NATIVE_POSE_RERUN",
   "outb_sha256": [
-    "a75e7d288366871ef21d5a3a3da4bb5b99af1e96f48561eb29451014680ee643",
-    "0ae0fe2a5398ac41be6613ce83a915be10ca5f1e03a894a12ed5b8ad36fec9a8",
-    "5c2669d8caf8487b65d142d92f5654698cdbd693667ffe4f97aaef076cade6e5",
-    "9b331c3b4e1a99d57a82fef831933bc7a393974e438f772952b8b3134bdb01da"
+    "b41d99f8531ef832d7c37cecca5407387673b8896403fade07f3b67220264283",
+    "a4a737db9414802d696aa15d87d901541c696cef2503689e55836cc1cc9cfa0f",
+    "7006146798b08cc4174f1d463d427839a0252e845219b257e6e7e251afeeeb74",
+    "ef967a89e7ac21fa7ea1e8bafbb372efe89c2372a840ba5f81b8ac962dfa4106"
   ],
   "stdout_sha256": [
-    "59ed805fb107ded0051106aac3baa4138f6ba030dbc5d72e653bc92020680a45",
-    "fe2f0190cf7cb2bf87f2baf2f1cf37d146ada38838fd14bcf135fe111bdc6dc0",
-    "fd412a4121a1091b52113c7245cee52c3868803fe0e2a78c9b9edfc8d1990f23",
-    "4809faa6256ab3ad6ca044e63a357019d923914fbedda712a5c312b829fb5068"
+    "d9321537cdc70be2393d6405d397bc41f9f072ae69d5a0883731ba2a6db13723",
+    "bc69af67760cff64738c5fab0c96712df15754eebbabe6e54f06bd179d1eee46",
+    "5d944994267033918a52564d103843c8c1a62568e3cf73f42106720f77f04f40",
+    "f76c73638a75dea634a4b9e10c6a8599518f2f616ce4b591935d8c097a2ec281"
   ],
-  "new_pose_channels_per_batch": 0,
+  "new_pose_channels_per_batch": 72,
   "overlap_rows": [
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "TPxi",
       "unit": "(m)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.0000010106215224138083
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.0106215224138083e-06
     },
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "TPyi",
       "unit": "(m)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 1.1940334696664801e-7
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.1940334696664801e-07
     },
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "RPxi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 4.2820793716843957e-7
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.2820793716843957e-07
     },
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "RPyi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000004237063691222124
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.237063691222124e-06
     },
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "RPzi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 1.579528018894215e-8
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
     },
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "ALxt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000003892719801098854
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 3.892719801098854e-06
     },
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "ALyt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000004561448304469134
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.561448304469134e-06
     },
     {
       "node": 220,
       "pair": "1-2",
       "suffix": "ALzt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 1.579528018894215e-8
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "TPxi",
       "unit": "(m)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000004334239592602577
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.334239592602577e-06
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "TPyi",
       "unit": "(m)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 4.2099121272765066e-7
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.2099121272765066e-07
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "RPxi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 7.552985424585993e-7
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 7.552985424585993e-07
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "RPyi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000008780065027416109
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 8.780065027416109e-06
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "RPzi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 1.579528018894215e-8
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "ALxt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000012359457005426832
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.2359457005426832e-05
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "ALyt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000013654719793856194
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.3654719793856194e-05
     },
     {
       "node": 426,
       "pair": "2-3",
       "suffix": "ALzt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 4.270251179074198e-8
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.270251179074198e-08
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "TPxi",
       "unit": "(m)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000009901718699472233
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 9.901718699472233e-06
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "TPyi",
       "unit": "(m)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 8.496977011939548e-7
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 8.496977011939548e-07
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "RPxi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 9.250437032151412e-7
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 9.250437032151412e-07
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "RPyi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000013167192662510253
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.3167192662510253e-05
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "RPzi",
       "unit": "(deg)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 1.579528018894215e-8
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "ALxt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.0000211470375090842
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 2.11470375090842e-05
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "ALyt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 0.000021440373963069744
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 2.1440373963069744e-05
     },
     {
       "node": 633,
       "pair": "3-4",
       "suffix": "ALzt",
       "unit": "(m/s^2)",
-      "max_abs_delta": 0,
-      "max_quant_budget": 1.0495169462015783e-7
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.0495169462015783e-07
     }
   ],
   "overlap_comparisons": 984,
   "failure_count": 0,
   "failures": [],
-  "SOURCE": "Four actual SHA-locked original OpenFAST v3.5.3 2s ETM input batches and decoded native OUTB; original native 2s artifact 13080759167 and rerun artifact 13087396230 independently decoded",
+  "SOURCE": "Four actual SHA-locked original OpenFAST v3.5.3 2s ETM input batches and decoded native OUTB",
   "REF": "Existing T062 gage mapping; no new journal original pages",
   "STANDARD": "No authorized IEC/GB/NB clauses read; no standards acceptance",
   "OFFICIAL": "OpenFAST v3.5.3 tagged ElastoDyn.f90/ElastoDyn_IO.f90 output semantics",
   "RUN": "Four 2s real ETM native diagnostics; only if runner logs and hashes present",
   "FIG": "none",
-  "TAB": "24 overlap rows x 41 times = 984 comparisons; 4 batches x 295 channels x 41 samples = 48,380 old/new checks, all exact decoded equality",
+  "TAB": "24 overlap rows x 41 times = 984 comparisons",
   "assumptions": "Output suffixes correspond to same physical tower nodes; RP are angular-position components in deg, not exact DCM",
   "error_budget": "1.1*(two packed OUTB half-LSB)+1e-8 per compared channel; physical pose/DCM and inertial force uncertainty unbounded",
-  "HOLD": "Exact per-station DCM and section inertia/force ownership not yet recovered; 2s startup not 100-700s; no Abaqus, E/WE or fatigue physical PASS",
-  "physical_pass": false,
-  "pose_target_channels_preexisting_per_batch": 72,
-  "pose_channels_including_existing_TPzi_per_batch": 81,
-  "pose_outlist_correction": {
-    "status": "ORIGINAL_NATIVE_OUTB_ALREADY_CONTAINED_ALL_POSE_CHANNELS",
-    "source_read_level": "RAW_ORIGINAL_2S_NATIVE_OUTB_HEADER_AND_ALL_295_CHANNELS_41_SAMPLES_PER_BATCH_PLUS_ORIGINAL_ED_BYTES",
-    "original_artifact_id": 13080759167,
-    "original_artifact_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
-    "rerun_artifact_id": 13087396230,
-    "rerun_artifact_sha256": "5a4937fdf66f1fd9ddd11adbcaa6f3db5d6e533aa0046769d24f529311f893cc",
-    "original_outb_sha256": [
-      "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
-      "be9dd3b6dd611925cf5c314200ed4e1c111218bd4464d6cccf0ee1f73bb3b902",
-      "867553e8ef29806fccdaad24bb3938493138b31b616c9a9446e81cbefe53bbd7",
-      "701575bd988177b7c0c666640b49981c653d77738893909cb307fccdf172c855"
-    ],
-    "original_vs_rerun_decoded_values": 48380,
-    "original_vs_rerun_nonzero_differences": 0,
-    "max_decoded_difference": 0,
-    "ed_child_change": "ONLY_TERMINAL_NEWLINE_NORMALIZATION; four original ED parents already had 9 gages x (TPxi,TPyi,TPzi,RPxi,RPyi,RPzi,ALxt,ALyt,ALzt). Parent normalized CRLF->LF bytes equal child. No new output channels.",
-    "correction_to_prior_claim": "Prior 2s coverage audit only checked seven overlap suffixes; its 'missing 31-station TP/RP/AL' conclusion was wrong for the original 2s OUTB. Exact DCM and inertial force ownership remain absent.",
-    "evidence": "GitHub Actions original artifact and rerun artifact downloaded and independently decoded with Python struct OpenFAST FileID4; source hash and 4 x 295 x 41 comparison"
-  }
+  "HOLD": "0-2s startup only; no exact DCM, 100-700s proof, inertial ownership, 31-station global wrench, Abaqus, E/WE or fatigue life",
+  "physical_pass": false
 }
