@@ -291,6 +291,8 @@ jobs:
           done
 
   s05-independent-event-official-source:
+    # Source acquisition completed and frozen in run 41361152018; do not refetch mutable ZIP.
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 7
     steps:
@@ -361,4 +363,78 @@ jobs:
           PY
             gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
             echo "PERSISTED_INDEPENDENT_ESM_SOURCE $target"
+          done
+
+  s05-independent-locked-second-event-spectra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch existing source QC and SDOF routines
+        run: |
+          set -euo pipefail
+          mkdir -p source output
+          root=research/wind-tower/experiments/T079
+          for name in s05_esm_public_processed_pair.py s05_ground_motion_pair_qc.py; do
+            curl -fLsS --retry 3 -o "source/$name" "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$root/$name"
+          done
+          python -m py_compile source/*.py
+          python source/s05_esm_public_processed_pair.py --independent-self-test
+      - name: Retrieve exact previous official ZIP artifact, not a new HTTP waveform request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run download 41361152018 -R "$GITHUB_REPOSITORY" -n s05-independent-esm-2012-0009-official-source-or-failure-NOT-DESIGN -D source
+          echo '84334aa45b65f1ba55b4474af3cc65f5640ea0e0bf05a4a8915095eb87f6f13f  source/S05_ESM_IT2012_0009_MP_ACC_OFFICIAL.zip' | sha256sum -c
+      - name: Compute real five-period second-event HNE HNN spectra and source receipts
+        run: |
+          set -euo pipefail
+          python source/s05_esm_public_processed_pair.py --independent-archive --source-zip source/S05_ESM_IT2012_0009_MP_ACC_OFFICIAL.zip --output-dir output | tee output/runner_stdout.log
+          python - <<'PY'
+          import csv,json,hashlib,pathlib,math
+          p=pathlib.Path('output')
+          name='S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_QC.csv'
+          rows=list(csv.DictReader((p/name).open()))
+          r=json.loads((p/'S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_RECEIPT.json').read_text())
+          assert len(rows)==5 and r['npts']==15970 and r['low_cut_Hz']==.08
+          assert r['source_zip_sha256']=='84334aa45b65f1ba55b4474af3cc65f5640ea0e0bf05a4a8915095eb87f6f13f'
+          assert hashlib.sha256((p/name).read_bytes()).hexdigest()==r['csv_sha256']
+          assert not r['S05_PASS'] and r['Abaqus_E_WE_RUN']==0
+          assert all(float(x['HNE_pseudoSa_m_s2'])>0 and float(x['HNN_pseudoSa_m_s2'])>0 for x in rows)
+          assert math.isclose(float(rows[2]['period_s']),6.230957762865167,rel_tol=1e-10)
+          print('S05_SECOND_EVENT_REAL_WAVEFORM_5PERIOD_SOURCE_QC_PASS_NOT_DESIGN')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s05-second-independent-event-locked-5period-source-QC-NOT-DESIGN
+          path: output/*
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Create-only archive of second-event 5-period table and SHA receipt
+        if: success() && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T079/real-records
+          for name in S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_QC.csv S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_RECEIPT.json; do
+            file="output/$name"
+            target="$root/$name"
+            if gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.content' > existing.b64 2>/dev/null; then
+              base64 -d existing.b64 > existing.file
+              cmp -s existing.file "$file" || { echo "LOCKED_SOURCE_OUTPUT_CHANGED_HOLD: $target"; exit 1; }
+              echo "ALREADY_IDENTICAL $target"; continue
+            fi
+            python - "$file" "$GITHUB_REF_NAME" <<'PY' > payload.json
+          import base64,json,sys
+          f,branch=sys.argv[1:]
+          print(json.dumps({'message':'research(S05): archive second independent ESM real 5-period source spectra, no design PASS',
+                            'content':base64.b64encode(open(f,'rb').read()).decode(),'branch':branch}))
+          PY
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
+            echo "PERSISTED_SECOND_EVENT_REAL_SPECTRUM $target"
           done
