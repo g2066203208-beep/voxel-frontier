@@ -102,7 +102,7 @@ def qc(root, destination):
 def selftest():
     reject(len(SUFFIX)==8 and len(set(SUFFIX))==8,"SUFFIX_CARDINALITY")
     reject(len(PARENTS)==4,"PARENT_SHA_CARDINALITY")
-    for name,invalid in (("SOURCE",False),("UNIT",0),("FINITE",float("nan"))):
+    for name,invalid in (("SOURCE",False),("UNIT",0),("EMPTY","")):
         try: reject(invalid,name)
         except ValueError: pass
         else: raise AssertionError("NEGATIVE_REJECTION_FAILURE_"+name)
