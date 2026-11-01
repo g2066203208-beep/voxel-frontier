@@ -1,3 +1,13 @@
+## 2026-11-02 02时｜S08首个真实158m条件性梁模型地震响应（非Abaqus原生E）
+
+- **SOURCE/阅读层级：** 已直接取回[T077/recovery的158m OpenFAST 70站塔架质量/弯曲刚度文件](../T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat) SHA256 `f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`，历史ESM处理后三向真实波源CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`；使用HNE/HNN两水平32040点×0.005s。RNA-R2平动质量676753.290723kg为已存T057值，偏心和转动惯量未包含。详细源/参数/失败与限制见[T079本轮过程](../T079/PROCESS_LOG.md#2026-11-02-02时真实esm驱动158m简化梁动力时程与论文筛查图非原生abaqus-e)。
+- **RUN/算法：** [可复算35段线弹性梁程序](../T079/s08_158m_reduced_beam_real_esm.py) SHA256 `76498f16e370c4e4fee702b90ecff80431f7374fe9222b8a678d4f03a9b6340c`，真实[Actions #41335140298](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41335140298) `completed/success`，NumPy 2.2.6、SciPy 1.15.3，Euler–Bernoulli 2DOF节点+一致质量+顶端集中RNA平动质量，12模态5%假设阻尼，Newmark平均加速度。Runner完整日志与4件结果在[artifact #13094852965](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41335140298/artifacts/13094852965)，ZIP SHA256 `d2f0f72395ee36a03cfd01d3c7e4546234afc23c7203ae908f11b789b835af14`。
+- **TAB/FIG：** [模态12行](../T079/real-records/S08_158M_BEAM_PROXY_MODAL_20261102.csv)：f1=0.160488971Hz、T1=6.230958s、f2=0.908933606Hz，12模态有效质量97.1453%；[峰值2行](../T079/real-records/S08_158M_BEAM_PROXY_PEAKS_20261102.csv)：HNE/HNN顶相对峰值35.037/29.303mm、底部弹性弯矩11233.623/8613.007kN·m；[0.1s时程3204行](../T079/real-records/S08_158M_BEAM_PROXY_HISTORY_20261102.csv)及[真实派生图](../../manuscript/final-thesis/figures/FIG_S08_06_158M_REAL_ESM_ELASTIC_BEAM_PROXY_NOT_ABAQUS.svg)，[SHA/方法/误差收据](../T079/real-records/S08_158M_BEAM_PROXY_RECEIPT_20261102.json)均已保存。**弹性底部弯矩不等于全动力反力，不能写为抗震承载验算。**
+- **误差/验收：** 解析悬臂梁首阶频率、零/非零输入自测通过；35→70单元前六模态最大相对差0.0326154%；模态正交8.88e-16、特征残差6.43e-9；质量积分1923663.610690804kg与已有OpenFAST塔架质量账一致。此为`REAL_158M_BEAM_PROXY_NUMERICAL_QC`，不是完整物理PASS。原始ESM低频滤波次数/SNR、6.23s长周期适用性、PT/接缝/RNA转动惯量、地基与地震规范适用性均HOLD。
+- **REF/STANDARD/OFFICIAL：** 未新读期刊全文/授权规范；恢复的OpenFAST塔架属性不是原生Abaqus塔架/官方DTU设计。图和数字都显式标非生产。
+- **失败：** 首次V8编译绘图脚本因shebang失败，修复后成功；首版SVG页脚拥挤，已修复。**S08仍BLOCKED、12阶段0/12未晋级、原生Abaqus E/WE=0；未动T057/T070/main、PR #42仍Draft。**
+- **下一唯一动作：** 对本梁首阶6.23s处真实ESM低频通带/仪器SNR进行源级QC或锁定可靠的替代实测波，形成Abaqus首个E试算输入，不重复SDOF和S01审查。
+
 ## 2026-11-02 01时｜S08真实ESM三向线性地震响应时程、能量闭合与两幅论文方法图（非158m结构E）
 
 - **SOURCE / 阅读层级：** 直接下载并解压既有[原生Actions #40847442979的ESM处理波形归档](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40847442979/artifacts/12884814391)；源artifact ZIP SHA256=`40dcb0d8ad6aa3ce1be4cd96e633d1aa266f3764c85be556e1a029c682c908d6`，真实ESM v3 IT-2012-0008/NVL/MP三向处理后SI波形CSV SHA256=`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`，32040时刻×3分量、dt=0.005s、160.195s。**不是未经处理的台站原波；没有新的场址适用性判断。**
