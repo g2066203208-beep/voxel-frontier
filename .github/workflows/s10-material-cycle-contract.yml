@@ -61,6 +61,10 @@ jobs:
             --source-map research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv \
             --d400-source-map research/wind-tower/experiments/T077/recovery/S10_D400_PE_68PART_INP_METADATA_20261028.csv > s10-receipts/S10_REAL_SOURCE_MAP_STATIC_TEST.json
           echo S10_TWO_REAL_SOURCE_MAP_BYTES_VERIFIED_NOT_NATIVE
+          sha256sum research/wind-tower/experiments/T077/recovery/s10_local_stress_provenance_admission.py \
+            research/wind-tower/experiments/T077/recovery/S10_T057_68PART_INP_METADATA_20261028.csv \
+            research/wind-tower/experiments/T077/recovery/S10_D400_PE_68PART_INP_METADATA_20261028.csv \
+            > s10-receipts/S10_PROVENANCE_SCRIPT_AND_REAL_MAPS_SHA256.txt
           python3 research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py \
             --self-test > s10-receipts/S10_ODB_DIRECTORY_SYNTHETIC.json
           python3 - <<'PY'
