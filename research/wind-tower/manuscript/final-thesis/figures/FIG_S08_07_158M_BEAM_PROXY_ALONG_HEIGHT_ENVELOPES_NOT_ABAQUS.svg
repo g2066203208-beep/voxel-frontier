@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="650" viewBox="0 0 1080 650">
+<rect width="100%" height="100%" fill="#fff"/>
+<text x="52" y="39" font-family="Arial" font-size="22" font-weight="bold">158 m hybrid tower | measured ESM input, linear-beam screening</text>
+<text x="52" y="65" font-family="Arial" font-size="14" fill="#b02020">NOT ABAQUS E/WE · no PT, contact, RNA inertia or site-spectrum qualification</text>
+<text x="100" y="106" font-family="Arial" font-size="16">Elastic bending |M| envelope (kN m)</text>
+<path d="M100 132V552H480" fill="none" stroke="#333" stroke-width="1.5"/>
+<line x1="100" y1="552.00" x2="480" y2="552.00" stroke="#ddd"/>
+<text x="91" y="557.00" text-anchor="end" font-size="12" font-family="Arial">0.0</text>
+<text x="100.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">0.0</text>
+<line x1="100" y1="447.00" x2="480" y2="447.00" stroke="#ddd"/>
+<text x="91" y="452.00" text-anchor="end" font-size="12" font-family="Arial">39.5</text>
+<text x="195.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">3089.2</text>
+<line x1="100" y1="342.00" x2="480" y2="342.00" stroke="#ddd"/>
+<text x="91" y="347.00" text-anchor="end" font-size="12" font-family="Arial">79.0</text>
+<text x="290.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">6178.5</text>
+<line x1="100" y1="237.00" x2="480" y2="237.00" stroke="#ddd"/>
+<text x="91" y="242.00" text-anchor="end" font-size="12" font-family="Arial">118.5</text>
+<text x="385.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">9267.7</text>
+<line x1="100" y1="132.00" x2="480" y2="132.00" stroke="#ddd"/>
+<text x="91" y="137.00" text-anchor="end" font-size="12" font-family="Arial">158.0</text>
+<text x="480.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">12357.0</text>
+<text x="56" y="342.0" transform="rotate(-90 56 342.0)" text-anchor="middle" font-size="13" font-family="Arial">Elevation z (m)</text>
+<polyline points="445.45,552.00 411.07,542.32 411.06,542.32 376.95,532.65 376.94,532.65 343.25,522.97 343.24,522.97 310.36,513.30 310.34,513.30 278.76,503.62 278.74,503.62 261.71,493.94 261.70,493.94 254.48,484.27 254.48,484.27 248.35,474.59 248.35,474.59 242.02,464.92 242.02,464.92 235.45,455.24 235.45,455.24 228.66,445.56 228.66,445.56 221.62,435.89 221.62,435.89 214.36,426.21 214.35,426.21 209.18,416.54 209.18,416.54 208.82,406.86 208.82,406.86 208.17,397.18 208.17,397.18 205.57,387.51 205.56,387.51 201.01,377.83 201.00,377.83 199.18,368.16 199.16,368.16 199.66,358.53 199.64,358.53 198.45,348.81 198.43,348.81 198.00,339.13 198.00,339.13 198.59,329.45 198.58,329.45 197.80,319.78 197.78,319.78 198.80,310.10 198.77,310.10 199.63,300.43 199.61,300.43 199.27,290.75 199.26,290.75 199.10,281.07 199.12,281.07 199.04,271.40 199.08,271.40 199.80,261.72 199.71,261.72 199.42,254.28 200.16,254.28 189.16,223.71 189.08,223.71 167.07,193.14 166.82,193.14 136.04,162.57 135.34,162.57 100.27,132.00" fill="none" stroke="#21618c" stroke-width="2"/>
+<polyline points="364.87,552.00 341.73,542.32 341.74,542.32 318.67,532.65 318.67,532.65 295.75,522.97 295.75,522.97 272.74,513.30 272.73,513.30 249.73,503.62 249.71,503.62 227.34,493.94 227.33,493.94 219.29,484.27 219.29,484.27 212.90,474.59 212.90,474.59 209.01,464.92 209.01,464.92 205.23,455.24 205.23,455.24 201.34,445.56 201.34,445.56 197.35,435.89 197.34,435.89 193.24,426.21 193.23,426.21 189.02,416.54 189.02,416.54 191.32,406.86 191.32,406.86 194.88,397.18 194.87,397.18 197.11,387.51 197.10,387.51 197.70,377.83 197.69,377.83 204.76,368.16 204.76,368.16 210.41,358.53 210.41,358.53 213.13,348.81 213.12,348.81 213.19,339.13 213.18,339.13 210.63,329.45 210.61,329.45 205.75,319.78 205.71,319.78 199.28,310.10 199.24,310.10 199.23,300.43 199.22,300.43 201.16,290.75 201.16,290.75 202.41,281.07 202.44,281.07 202.32,271.40 202.36,271.40 200.85,261.72 200.78,261.72 198.72,254.28 199.27,254.28 186.79,223.71 186.78,223.71 165.09,193.14 164.88,193.14 136.81,162.57 136.20,162.57 100.29,132.00" fill="none" stroke="#c05a25" stroke-width="2"/>
+<line x1="155" y1="601" x2="185" y2="601" stroke="#21618c" stroke-width="3"/>
+<text x="192" y="606" font-size="13" font-family="Arial">HNE</text>
+<line x1="290" y1="601" x2="320" y2="601" stroke="#c05a25" stroke-width="3"/>
+<text x="327" y="606" font-size="13" font-family="Arial">HNN</text>
+<text x="600" y="106" font-family="Arial" font-size="16">Relative lateral |u| envelope (mm)</text>
+<path d="M600 132V552H980" fill="none" stroke="#333" stroke-width="1.5"/>
+<line x1="600" y1="552.00" x2="980" y2="552.00" stroke="#ddd"/>
+<text x="591" y="557.00" text-anchor="end" font-size="12" font-family="Arial">0.0</text>
+<text x="600.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">0.0</text>
+<line x1="600" y1="447.00" x2="980" y2="447.00" stroke="#ddd"/>
+<text x="591" y="452.00" text-anchor="end" font-size="12" font-family="Arial">39.5</text>
+<text x="695.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">9.6</text>
+<line x1="600" y1="342.00" x2="980" y2="342.00" stroke="#ddd"/>
+<text x="591" y="347.00" text-anchor="end" font-size="12" font-family="Arial">79.0</text>
+<text x="790.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">19.3</text>
+<line x1="600" y1="237.00" x2="980" y2="237.00" stroke="#ddd"/>
+<text x="591" y="242.00" text-anchor="end" font-size="12" font-family="Arial">118.5</text>
+<text x="885.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">28.9</text>
+<line x1="600" y1="132.00" x2="980" y2="132.00" stroke="#ddd"/>
+<text x="591" y="137.00" text-anchor="end" font-size="12" font-family="Arial">158.0</text>
+<text x="980.00" y="572" text-anchor="middle" font-size="12" font-family="Arial">38.5</text>
+<text x="556" y="342.0" transform="rotate(-90 556 342.0)" text-anchor="middle" font-size="13" font-family="Arial">Elevation z (m)</text>
+<polyline points="600.00,552.00 600.32,542.32 601.25,532.65 602.75,522.97 604.80,513.30 607.34,503.62 610.33,493.94 613.69,484.27 617.37,474.59 621.28,464.92 625.39,455.24 629.59,445.56 633.81,435.89 638.00,426.21 642.07,416.54 646.55,406.86 652.91,397.18 659.67,387.51 666.82,377.83 674.43,368.16 682.45,358.53 690.90,348.81 699.61,339.13 708.60,329.45 717.81,319.78 727.24,310.10 736.84,300.43 746.61,290.75 756.72,281.07 767.22,271.40 777.89,261.72 786.20,254.28 821.99,223.71 860.66,193.14 902.11,162.57 945.45,132.00" fill="none" stroke="#21618c" stroke-width="2"/>
+<polyline points="600.00,552.00 600.24,542.32 600.96,532.65 602.14,522.97 603.75,513.30 605.77,503.62 608.16,493.94 610.89,484.27 613.90,474.59 617.16,464.92 620.60,455.24 624.18,445.56 627.85,435.89 631.57,426.21 635.28,416.54 638.93,406.86 642.48,397.18 645.91,387.51 651.31,377.83 656.96,368.16 662.81,358.53 669.65,348.81 676.77,339.13 684.20,329.45 691.90,319.78 699.87,310.10 708.10,300.43 716.58,290.75 725.29,281.07 734.22,271.40 743.31,261.72 750.41,254.28 781.34,223.71 815.10,193.14 851.11,162.57 888.92,132.00" fill="none" stroke="#c05a25" stroke-width="2"/>
+<line x1="655" y1="601" x2="685" y2="601" stroke="#21618c" stroke-width="3"/>
+<text x="692" y="606" font-size="13" font-family="Arial">HNE</text>
+<line x1="790" y1="601" x2="820" y2="601" stroke="#c05a25" stroke-width="3"/>
+<text x="827" y="606" font-size="13" font-family="Arial">HNN</text>
+<text x="52" y="633" font-family="Arial" font-size="12" fill="#555">Each curve is a timewise maximum at each location, NOT a simultaneous load profile. Source: ESM IT-2012-0008/NVL/MP; zeta=5% assumed.</text>
+</svg>
