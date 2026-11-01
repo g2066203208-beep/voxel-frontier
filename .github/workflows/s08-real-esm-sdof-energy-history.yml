@@ -1,0 +1,96 @@
+name: S08 real ESM 3-axis SDOF response and energy figures (not tower E)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/s08-real-esm-sdof-energy-history.yml'
+      - 'research/wind-tower/experiments/T079/s08_real_esm_sdof_energy_history.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  real-esm-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch exact code and original independent oracle from PR HEAD
+        run: |
+          set -euo pipefail
+          mkdir -p source output
+          base="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s08_real_esm_sdof_energy_history.py "$base/s08_real_esm_sdof_energy_history.py"
+          curl -fLsS --retry 3 -o oracle.csv "$base/real-records/S08_ESM_SDOF_EXACT_VS_NEWMARK_18ROW_20261030.csv"
+          echo '31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7  oracle.csv' | sha256sum -c
+          sha256sum s08_real_esm_sdof_energy_history.py
+      - name: Download already archived original ESM processed 3-component source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run download 40847442979 -R "$GITHUB_REPOSITORY" -n s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE -D source
+          echo 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34  source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv' | sha256sum -c
+      - name: Reproduce six real histories, energy closure and two source-labelled SVG figures
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'matplotlib==3.10.8'
+          python s08_real_esm_sdof_energy_history.py --self-test
+          python s08_real_esm_sdof_energy_history.py \
+            --source source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv \
+            --oracle oracle.csv --outdir output
+          python - <<'PY'
+          import csv,hashlib,json,pathlib
+          from xml.etree import ElementTree as ET
+          d=pathlib.Path('output')
+          r=json.loads((d/'S08_REAL_ESM_SDOF_ENERGY_HISTORY_RECEIPT_20261102.json').read_text())
+          rows=list(csv.DictReader((d/r['TAB']).open()))
+          assert len(rows)==6 and len(r['figures'])==2
+          assert r['S08_PASS'] is False and r['native_E_WE_RUN']==0
+          assert r['error_budget']['max_energy_residual_normalized']<1e-6
+          assert r['error_budget']['max_newmark_peak_u_relative_error']<.002
+          assert r['code_sha256']==hashlib.sha256(pathlib.Path('s08_real_esm_sdof_energy_history.py').read_bytes()).hexdigest()
+          for f in r['figures']:
+              p=d/f['filename']
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==f['sha256']
+              assert ET.parse(p).getroot().tag=='{http://www.w3.org/2000/svg}svg'
+          print('S08_REAL_ESM_6CASE_2FIG_ENERGY_CI_PASS_NOT_TOWER_OR_ABAQUS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s08-real-esm-sdof-6history-energy-2fig-NOT-TOWER
+          path: output/*
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Persist source-locked small table, receipt and two SVGs to Draft PR (create-only)
+        if: success() && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for entry in \
+            'output/S08_REAL_ESM_SDOF_ENERGY_6CASE_20261102.csv|research/wind-tower/experiments/T079/real-records/S08_REAL_ESM_SDOF_ENERGY_6CASE_20261102.csv' \
+            'output/S08_REAL_ESM_SDOF_ENERGY_HISTORY_RECEIPT_20261102.json|research/wind-tower/experiments/T079/real-records/S08_REAL_ESM_SDOF_ENERGY_HISTORY_RECEIPT_20261102.json' \
+            'output/FIG_S08_05_REAL_ESM_SDOF_RESPONSE_FULL.svg|research/wind-tower/manuscript/final-thesis/figures/FIG_S08_05_REAL_ESM_SDOF_RESPONSE_FULL.svg' \
+            'output/FIG_S08_05_REAL_ESM_SDOF_RESPONSE_20_70S.svg|research/wind-tower/manuscript/final-thesis/figures/FIG_S08_05_REAL_ESM_SDOF_RESPONSE_20_70S.svg'
+          do
+            IFS='|' read -r localfile target <<< "$entry"
+            if gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.content' > existing.b64 2>/dev/null; then
+              base64 -d existing.b64 > existing.file
+              cmp existing.file "$localfile" || { echo "EXISTING_OUTPUT_DIFFERENT_HOLD $target"; exit 1; }
+              echo "ALREADY_IDENTICAL $target"
+              continue
+            fi
+            python - "$localfile" "$GITHUB_REF_NAME" <<'PY' > payload.json
+          import base64,json,sys
+          path,branch=sys.argv[1:]
+          print(json.dumps({'message':'research(S08): archive real ESM SDOF response histories and energy balance figures',
+                            'content':base64.b64encode(open(path,'rb').read()).decode(),'branch':branch}))
+          PY
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
+            echo "PERSISTED $target"
+          done
