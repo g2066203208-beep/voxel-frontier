@@ -88,5 +88,86 @@
     "positive": "PASS",
     "negative_rejections": 12
   },
-  "date": "2026-11-01"
+  "date": "2026-11-01",
+  "v353_source_audit": {
+    "status": "SOURCE_SEMANTICS_SYNTHETIC_PATCH_PASS_NO_NEW_NATIVE",
+    "date": "2026-11-01",
+    "tag": "v3.5.3",
+    "tag_object_sha1": "e48885091a09c950315464ffcd21707dcfe08cb1",
+    "tag_commit_sha1": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+    "files": [
+      {
+        "path": "modules/elastodyn/src/ElastoDyn.f90",
+        "sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+        "bytes": 663919,
+        "lines": {
+          "ALxt": 922,
+          "TPxi": 937,
+          "RPxi": 941,
+          "FLxt": 1200
+        },
+        "url": "https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90"
+      },
+      {
+        "path": "modules/elastodyn/src/ElastoDyn_IO.f90",
+        "sha256": "af1c78a15e4102668f83740c8ad1fc450f7112cdcc2ce004093278acf75d1d5a",
+        "bytes": 226556,
+        "lines": {
+          "ALxt": 513,
+          "TPxi": 594,
+          "RPxi": 621
+        },
+        "MaxOutPts": 863,
+        "url": "https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn_IO.f90"
+      }
+    ],
+    "read_level": "OFFICIAL_TAGGED_PRIMARY_SOURCE_TARGETED_LINES__NOT_COMPLETE_PHYSICS_AUDIT",
+    "semantics": {
+      "TPxi/yi/zi": "inertial-frame tower node position, not displacement; TPzi adds PtfmRefzt",
+      "RPxi/yi/zi": "AngPosEF components times R2D, angular position in degrees; not exact DCM",
+      "ALxt/yt/zt": "tower-node acceleration projected on t1/-t3/t2 local basis",
+      "FLxt/yt/zt and MLxt/yt/zt": "section force/moment projected on t1/-t3/t2 local basis",
+      "exact_DCM": "NOT_VERIFIED_AS_STANDARD_OUTLIST_CHANNEL"
+    },
+    "native_receipt_sha256": "6bac6147e1edd94532edea6b7dc0a6bac87da90eb35993e438326532aa7adbf3",
+    "parent_2s_ed_sha256": [
+      "e8c1653486cc96eaa5f32a28b01701df080bd2f185f851abd4ebf54a13ef23c7",
+      "7cce15fcb6ef0a0e6f9138850e4c66745450655d50d1ee59a7171b1e1530ce0f",
+      "bd59ed51c843f1ca9e82b2d3cd1441b2055e2b222a36636becc31bd54400c060",
+      "4c524f1e524d049c816f5fa44dea01f9c1d8e3a2e8cf34ca13ff45487655c4c7"
+    ],
+    "script": "experiments/T062/s06_etm_pose_outlist_gate.cjs",
+    "additional_suffixes": [
+      "TPxi",
+      "TPyi",
+      "RPxi",
+      "RPyi",
+      "RPzi",
+      "ALxt",
+      "ALyt",
+      "ALzt"
+    ],
+    "new_channels_per_9_gage_batch": 72,
+    "planned_new_overlap_comparisons": 984,
+    "tests": {
+      "executor": "V8 executed JS module exact source; no Node CI",
+      "positive": "PASS",
+      "negative_rejections": 8,
+      "analytic_wrench": "PASS",
+      "wrench_reverse": "PASS",
+      "nonfinite_rejection": "PASS"
+    },
+    "transport_formula": "M_B=M_A+(r_A-r_B)×F; F kN, r m, M kN·m; rotate F and M into same inertial frame before transporting",
+    "assumptions": "SHA-locked four 2s ETM ED children; real original ED text not available in this run; synthetic known solution M_B=[25,23,13] kN*m",
+    "error_budget": "Exact source SHA256 and synthetic integer wrench; real local-to-global rotation, inertia and 100-700s error NEED_ESTIMATE",
+    "SOURCE": "OpenFAST v3.5.3 original source; existing 2s ETM native receipt",
+    "REF": "T062 existing mapping; no new paper",
+    "STANDARD": "No authorized IEC/GB/NB clause read",
+    "OFFICIAL": "Tagged v3.5.3 ElastoDyn source",
+    "RUN": "V8 JS synthetic tests; no native solver",
+    "FIG": "none",
+    "TAB": "8 suffixes x 9 gages; planned 984 overlap comparisons",
+    "HOLD": "No actual 2s ED child patch/OUTB with RP/TP/AL yet; no exact DCM or inertia attribution; no 100-700s synchronization",
+    "physical_pass": false
+  }
 }
