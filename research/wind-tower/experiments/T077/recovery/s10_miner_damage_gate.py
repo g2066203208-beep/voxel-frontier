@@ -193,7 +193,7 @@ def selftest():
     try: calculate(encode([dict(r,bin_probability='0.2') if r['bin_id']=='B1' else r for r in rows]),operating_fraction=.5)
     except ValueError: pass
     else: raise AssertionError('incomplete bin probability accepted')
-    try: calculate(encode([dict(rows[0],duration_s='99')]+rows[1:],operating_fraction=.5)
+    try: calculate(encode([dict(rows[0],duration_s='99')]+rows[1:]),operating_fraction=.5)
     except ValueError: pass
     else: raise AssertionError('different seed durations accepted')
     # Previously this missing-seed case was silently averaged as one seed,
