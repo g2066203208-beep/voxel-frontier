@@ -248,6 +248,7 @@ def run(source,oracle,outdir):
              'FIG':[x['filename'] for x in figures], 'TAB':table.name,
              'reading_level':'actual archived 32040x3 SI waveform + original source ZIP; not unprocessed station waveform',
              'source_artifact_zip_sha256':ARTIFACT_SHA,'source_csv_sha256':SOURCE_SHA,
+             'code_sha256':sha(Path(__file__).read_bytes()),
              'prior_independent_exact_oracle_sha256':ORACLE_SHA,
              'input_npts':N,'dt_s':DT,'periods_s':list(PERIODS),'damping_ratio':ZETA,
              'assumptions':['m=1 kg normalized oscillator','piecewise-linear ground acceleration between 0.005s samples',
