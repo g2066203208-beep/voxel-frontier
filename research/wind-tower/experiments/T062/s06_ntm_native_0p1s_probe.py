@@ -34,6 +34,25 @@ SOURCE_SHA = {
     "exe": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a",
 }
 GAGES = [13,39,65,91,117,142,168,194,220]
+# Overlap pilot: 36 available slots = 31 distinct segment nodes + 3 repeated
+# boundary nodes + 2 diagnostic extras. Only 0.1s STEADY wind is authorized.
+OVERLAP_GAGES = [
+    [13,39,65,91,117,142,168,194,220],   # CSEG01..09
+    [220,246,271,297,323,349,375,400,426], # CSEG09..17
+    [426,452,478,504,529,555,581,607,633], # CSEG17..25
+    [633,658,684,710,736,762,784,810,850], # CSEG25..31, EX1/EX2
+]
+OVERLAP_SEGMENTS = [
+    list(range(1,10)), list(range(9,18)), list(range(17,26)),
+    list(range(25,32))+["EX1","EX2"],
+]
+def check_overlap_contract():
+    assert all(len(nodes)==9 and len(set(nodes))==9 for nodes in OVERLAP_GAGES)
+    assert [set(a)&set(b) for a,b in zip(OVERLAP_GAGES,OVERLAP_GAGES[1:])]==[
+        {220},{426},{633}]
+    assert set(n for row in OVERLAP_SEGMENTS for n in row if isinstance(n,int))==set(range(1,32))
+    assert len([n for row in OVERLAP_SEGMENTS for n in row if isinstance(n,int)])==34
+    assert all(len(x)==9 for x in OVERLAP_SEGMENTS)
 LOAD_SUFFIX = ("FLxt","FLyt","FLzt","MLxt","MLyt","MLzt")
 
 def digest(data):
@@ -86,7 +105,12 @@ def selftest():
     try:verify("fst",b"tampered")
     except ValueError:pass
     else:raise AssertionError("BAD_SHA_ACCEPTED")
-    print("SELFTEST_PASS scalar_field_cardinality original_gage_identity SHA_rejection")
+    check_overlap_contract()
+    assert replace_gages(ed,OVERLAP_GAGES[1]).startswith("220,246,271")
+    try: replace_gages(ed,[220,220,246])
+    except ValueError: pass
+    else: raise AssertionError("DUPLICATE_OVERLAP_NODE_ACCEPTED")
+    print("SELFTEST_PASS scalar_field_cardinality original_gage_identity SHA_rejection overlap_31_unique_3_duplicates")
 
 def prepare(args):
     contract=json.loads(Path(args.contract).read_text(encoding="utf-8"))
@@ -95,8 +119,14 @@ def prepare(args):
     batch=int(args.batch)
     if batch not in (1,2,3,4) or [b['NTwGages'] for b in contract['batches']]!=[9,9,9,4]:
         raise ValueError('INVALID_BATCH_CONTRACT')
-    gages=contract['batches'][batch-1]['TwrGagNd']
-    if len(gages)!=contract['batches'][batch-1]['NTwGages'] or len(set(gages))!=len(gages):
+    if args.overlap:
+        check_overlap_contract()
+        gages=OVERLAP_GAGES[batch-1]
+        segments=OVERLAP_SEGMENTS[batch-1]
+    else:
+        gages=contract['batches'][batch-1]['TwrGagNd']
+        segments=contract['batches'][batch-1]['segments']
+    if len(gages)!=(9 if args.overlap else contract['batches'][batch-1]['NTwGages']) or len(set(gages))!=len(gages):
         raise ValueError('BATCH_GAGE_IDENTITY_FAILURE')
     if contract['batches'][0]['TwrGagNd']!=GAGES:raise ValueError('BATCH1_CONTRACT_FAILURE')
     a=Path(args.archive1);b=Path(args.archive2);s=Path(args.supp)
@@ -145,7 +175,7 @@ def prepare(args):
     fst_new=replace_scalar(fst.decode("utf-8-sig"),"TMax","0.1",expected="700")
     fst_new=replace_scalar(fst_new,"TStart","0",expected="100")
     ed_new=replace_gages(ed.decode("utf-8-sig"),gages)
-    if batch==4:ed_new=replace_scalar(ed_new,'NTwGages','4',expected='9')
+    if batch==4 and not args.overlap:ed_new=replace_scalar(ed_new,'NTwGages','4',expected='9')
     # Original NTM InflowWind source uses CRLF; normalize derived diagnostic copy only.
     inflow_text=inflow.decode("utf-8-sig").replace("\r\n","\n")
     inflow_new=replace_scalar(inflow_text,"WindType","1",expected="3")
@@ -161,7 +191,8 @@ def prepare(args):
     report={
         "case":NTM,"diagnostic_only":True,"native_model_height_m":158,
         "TMax_s":0.1,"DT_s":0.0125,"DT_Out_s":0.05,
-        "gage_nodes":gages,"batch":batch,"source_sha256":SOURCE_SHA,
+        "gage_nodes":gages,"gage_segments":segments,"batch":batch,"overlap_mode":bool(args.overlap),
+        "overlap_nodes":[220,426,633] if args.overlap else [],"source_sha256":SOURCE_SHA,
         "source_archives_sha256":{"part001":digest(a.read_bytes()),"part002":digest(b.read_bytes()),
                                   "supp":digest(s.read_bytes())},
         "shared_rotor_source_sha256":shared_hashes,
@@ -169,7 +200,7 @@ def prepare(args):
                           ("DTU_10MW_RWT.fst","DTU_10MW_RWT_ElastoDyn.dat",
                            "DTU_10MW_InflowWind.dat","Control/DTU_10MW_RWT_DISCON.IN",
                            "Control/libdiscon.dll")},
-        "modifications":["FST TMax 700 -> 0.1 s and TStart 100 -> 0 s (required for native initialization)",f"ED TwrGagNd original 9 -> batch{batch} {len(gages)}; NTwGages 9 -> {len(gages)}",
+        "modifications":["FST TMax 700 -> 0.1 s and TStart 100 -> 0 s (required for native initialization)",f"ED TwrGagNd original 9 -> batch{batch} {len(gages)}; NTwGages 9 -> {len(gages)}; overlap_mode={bool(args.overlap)}",
                          "InflowWind CRLF normalized in diagnostic child; WindType 3 -> 1, HWindSpeed -> 9.343881 m/s"],
         "source_reading_level":"Original SHA-pinned FST/ED/NTM InflowWind/Tower/Servo/ROSCO binary bytes",
         "STANDARD":"No authorized IEC/GB/NB clauses read",
@@ -246,6 +277,7 @@ def inspect(args):
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--selftest",action="store_true")
+    p.add_argument("--overlap",action="store_true",help="31 unique CSEG nodes plus 3 duplicate boundary nodes, 0.1s only")
     p.add_argument("--prepare",action="store_true")
     p.add_argument("--inspect",action="store_true")
     p.add_argument('--batch',type=int,default=1)
