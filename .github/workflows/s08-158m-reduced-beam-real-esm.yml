@@ -1,0 +1,91 @@
+name: S08 158m reduced beam real ESM screening (NOT Abaqus E)
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/s08-158m-reduced-beam-real-esm.yml'
+      - 'research/wind-tower/experiments/T079/s08_158m_reduced_beam_real_esm.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  reduced-beam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch source-locked code and original OpenFAST 70-station tower
+        run: |
+          set -euo pipefail
+          mkdir -p source output
+          base="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/research/wind-tower"
+          curl -fLsS --retry 3 -o s08_158m_reduced_beam_real_esm.py "$base/experiments/T079/s08_158m_reduced_beam_real_esm.py"
+          curl -fLsS --retry 3 -o source/tower.dat "$base/experiments/T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat"
+          sha256sum s08_158m_reduced_beam_real_esm.py source/tower.dat
+      - name: Retrieve archived real processed ESM ground motion
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run download 40847442979 -R "$GITHUB_REPOSITORY" -n s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE -D source
+          echo 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34  source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv' | sha256sum -c
+      - name: Execute analytic cantilever test and real 158m reduced beam
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy==2.2.6' 'scipy==1.15.3'
+          python s08_158m_reduced_beam_real_esm.py --self-test
+          python s08_158m_reduced_beam_real_esm.py \
+            --tower source/tower.dat \
+            --esm source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv \
+            --outdir output | tee output/runner_stdout.log
+          python - <<'PY'
+          import csv,hashlib,json,pathlib
+          d=pathlib.Path('output')
+          r=json.loads((d/'S08_158M_BEAM_PROXY_RECEIPT_20261102.json').read_text())
+          assert r['tower_height_m']==158 and r['ground_motion_npts']==32040
+          assert r['max_first_six_mesh_frequency_relative_difference']<.02
+          assert r['modal_mass_orthogonality_max']<1e-8
+          assert r['modal_residual_relative_max']<1e-7
+          assert r['source_tower_sha256']==hashlib.sha256(pathlib.Path('source/tower.dat').read_bytes()).hexdigest()
+          assert r['source_esm_sha256']=='a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34'
+          assert len(list(csv.DictReader((d/'S08_158M_BEAM_PROXY_MODAL_20261102.csv').open())))==12
+          assert len(list(csv.DictReader((d/'S08_158M_BEAM_PROXY_PEAKS_20261102.csv').open())))==2
+          assert len(list(csv.DictReader((d/'S08_158M_BEAM_PROXY_HISTORY_20261102.csv').open())))==3204
+          assert r['RUN'].endswith('native Abaqus E/WE=0')
+          print('S08_REAL_158M_REDUCED_BEAM_SOURCE_QC_PASS_NOT_ABAQUS_E')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s08-real-esm-158m-reduced-beam-NOT-ABAQUS
+          path: output/*
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Persist small source-locked tables and receipt on Draft PR
+        if: success() && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for f in S08_158M_BEAM_PROXY_MODAL_20261102.csv S08_158M_BEAM_PROXY_PEAKS_20261102.csv S08_158M_BEAM_PROXY_HISTORY_20261102.csv S08_158M_BEAM_PROXY_RECEIPT_20261102.json; do
+            target="research/wind-tower/experiments/T079/real-records/$f"
+            if gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.content' > existing.b64 2>/dev/null; then
+              base64 -d existing.b64 > existing.file
+              cmp existing.file "output/$f" || { echo "EXISTING_OUTPUT_DIFFERENT_HOLD $target"; exit 1; }
+              echo "ALREADY_IDENTICAL $target"
+              continue
+            fi
+            python - "$f" "$GITHUB_REF_NAME" <<'PY' > payload.json
+          import base64,json,sys
+          filename,branch=sys.argv[1:]
+          print(json.dumps({'message':'research(S08): archive source-locked real ESM 158m reduced-beam tables (NOT Abaqus)',
+                            'content':base64.b64encode(open('output/'+filename,'rb').read()).decode(),
+                            'branch':branch}))
+          PY
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
+            echo "PERSISTED $target"
+          done
