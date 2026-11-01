@@ -1,0 +1,56 @@
+{
+  "FIG": [
+    "FIG_S08_05_REAL_ESM_SDOF_RESPONSE_FULL.svg",
+    "FIG_S08_05_REAL_ESM_SDOF_RESPONSE_20_70S.svg"
+  ],
+  "HOLD": "real 158m model S01-S04 native validated state, authorized site spectrum, ESM low-frequency and actual Abaqus E pilot",
+  "OFFICIAL": "archived ESM processed record, low-frequency instrument suitability not verified",
+  "REF": "exact piecewise-linear ground acceleration underdamped SDOF transition and independent Newmark average acceleration",
+  "RUN": "Python 3.12.15 float64 numerical SDOF only; Abaqus/OpenFAST structural seismic=0",
+  "S05_PASS": false,
+  "S08_PASS": false,
+  "SOURCE": "ESM v3 DOI 10.13127/esm.3 IT-2012-0008/NVL/MP processed waveform",
+  "STANDARD": "NO_AUTHORIZED_IEC_GB_SITE_CLAUSE_VERIFICATION",
+  "TAB": "S08_REAL_ESM_SDOF_ENERGY_6CASE_20261102.csv",
+  "assumptions": [
+    "m=1 kg normalized oscillator",
+    "piecewise-linear ground acceleration between 0.005s samples",
+    "zero relative initial conditions",
+    "5% damping illustrative, not measured tower modal damping",
+    "no scaling to a site spectrum; unverified low-frequency passband and site class"
+  ],
+  "code_sha256": "0bb376256e6cf7d2cd69aa16dec13ed2f81d43bb0bec6509a668df36e5c34c3f",
+  "damping_ratio": 0.05,
+  "dt_s": 0.005,
+  "error_budget": {
+    "max_energy_residual_normalized": 4.3439473319744585e-07,
+    "max_newmark_peak_u_relative_error": 0.0003130240162723483,
+    "max_oracle_peak_u_relative_error": 0.0,
+    "source_low_frequency_site_model_uncertainty": "UNBOUNDED"
+  },
+  "failed_cases": "selftest five rejection cases; any input SHA mismatch/energy/oracle mismatch fails closed",
+  "figures": [
+    {
+      "bytes": 178793,
+      "filename": "FIG_S08_05_REAL_ESM_SDOF_RESPONSE_FULL.svg",
+      "sha256": "3c766e1b32e3bfc922b93c216e92c5d10bc8c6a0286d299b259b99661d1e77c1"
+    },
+    {
+      "bytes": 132843,
+      "filename": "FIG_S08_05_REAL_ESM_SDOF_RESPONSE_20_70S.svg",
+      "sha256": "6d08cd3928c05db55a5d98035d282169ccf5e98a040c3301224648c261e598a6"
+    }
+  ],
+  "input_npts": 32040,
+  "native_E_WE_RUN": 0,
+  "output_table_sha256": "d0992fd28520c967646d8b3204b9ceea21ff9b0f1d43fc4fd63d61b8f84df4af",
+  "periods_s": [
+    1.0,
+    4.0
+  ],
+  "prior_independent_exact_oracle_sha256": "31f94af34005e7ed763b494a3e440f6a4c6f2b6e5a0e9a4129c08ab2ed44b5f7",
+  "reading_level": "actual archived 32040x3 SI waveform + original source ZIP; not unprocessed station waveform",
+  "source_artifact_zip_sha256": "40dcb0d8ad6aa3ce1be4cd96e633d1aa266f3764c85be556e1a029c682c908d6",
+  "source_csv_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "status": "REAL_ESM_3COMP_SDOF_HISTORY_ENERGY_NUMERIC_QC_NOT_TOWER"
+}
