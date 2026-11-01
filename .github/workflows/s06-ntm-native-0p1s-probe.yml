@@ -1,4 +1,4 @@
-name: S06 four-batch native 0.1s OpenFAST common-channel QC (STEADY WIND ONLY)
+name: S06 0.1s native overlapping-gage QC (STEADY WIND ONLY)
 on:
   push:
     paths:
@@ -29,7 +29,7 @@ jobs:
             research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
             research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
             research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
-            research/wind-tower/experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json
+            research/wind-tower/experiments/T062/S06_NTM_NATIVE_4BATCH_OVERLAP_0P1S_QC_20261101.json
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -51,7 +51,7 @@ jobs:
           python "$root/s06_native_4batch_common_channel_qc.py" --self-test
           if ($LASTEXITCODE -ne 0) { throw 'COMPARATOR_NEGATIVE_TEST_FAILURE' }
           Write-Host "SOURCE_EXECUTABLE_SHA_PASS $sha"
-      - name: Prepare 9+9+9+4 source-verified gage configurations
+      - name: Prepare 9+9+9+9 gages: 31 unique CSEG nodes plus 3 overlapping boundary nodes
         shell: pwsh
         run: |
           $ErrorActionPreference='Stop'
@@ -64,7 +64,7 @@ jobs:
               '--supp',"$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
               '--dll',"$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll",
               '--exe',"$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe",
-              '--contract',"$root/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json",
+              '--contract',"$root/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json", '--overlap',
               '--outdir',"work/batch$b")
             & python "$script" @args
             if ($LASTEXITCODE -ne 0) { throw "BATCH_$b SOURCE_PREPARATION_FAILURE" }
@@ -105,20 +105,20 @@ jobs:
             & python "$root/s06_ntm_native_0p1s_probe.py" @args
             if ($LASTEXITCODE -ne 0) { throw "BATCH_$b NATIVE_CHANNEL_FAILURE" }
           }
-          & python "$root/s06_native_4batch_common_channel_qc.py" --root work --out "$root/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json"
-          if ($LASTEXITCODE -ne 0) { throw 'FOUR_BATCH_COMMON_CHANNEL_PARITY_HOLD' }
+          & python "$root/s06_native_4batch_common_channel_qc.py" --root work --overlap --out "$root/S06_NTM_NATIVE_4BATCH_OVERLAP_0P1S_QC_20261101.json"
+          if ($LASTEXITCODE -ne 0) { throw 'FOUR_BATCH_OVERLAP_CHANNEL_PARITY_HOLD' }
       - name: Archive all four native OUTBs, logs, and QC (failure evidence too)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: s06-four-batch-native-0p1s-steady-wind-diagnostic-not-ntm
+          name: s06-four-batch-native-0p1s-overlap-diagnostic-not-ntm
           path: |
             work/batch*/native_stdout.log
             work/batch*/native_exit_code.txt
             work/batch*/S06_0P1S_PREP_RECEIPT.json
             work/batch*/S06_NATIVE_RECEIPT.json
             work/batch*/DTU_10MW_RWT.outb
-            research/wind-tower/experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json
+            research/wind-tower/experiments/T062/S06_NTM_NATIVE_4BATCH_OVERLAP_0P1S_QC_20261101.json
           if-no-files-found: warn
           retention-days: 14
       - name: Commit small real QC receipt to existing Draft PR branch only
@@ -126,14 +126,14 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference='Stop'
-          $p='research/wind-tower/experiments/T062/S06_NTM_NATIVE_4BATCH_COMMON_CHANNEL_QC_20261031.json'
+          $p='research/wind-tower/experiments/T062/S06_NTM_NATIVE_4BATCH_OVERLAP_0P1S_QC_20261101.json'
           if (-not (Test-Path $p)) { throw 'QC_RECEIPT_MISSING' }
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add --sparse -- $p
           if ($LASTEXITCODE -ne 0) { throw 'GIT_ADD_FAILURE' }
           if (git diff --cached --quiet) { Write-Host 'QC_RECEIPT_UNCHANGED'; exit 0 }
-          git commit -m 'data(S06): preserve four-batch 0.1s native common-channel parity'
+          git commit -m 'data(S06): preserve 0.1s native three-overlap gage parity'
           if ($LASTEXITCODE -ne 0) { throw 'GIT_COMMIT_FAILURE' }
           git pull --rebase origin $env:GITHUB_REF_NAME
           if ($LASTEXITCODE -ne 0) { throw 'GIT_REBASE_FAILURE' }
