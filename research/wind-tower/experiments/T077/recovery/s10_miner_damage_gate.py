@@ -254,9 +254,151 @@ def selftest(probability_source=None):
             'real_era5_probability_qc':source_check}
 
 
+
+def integration_selftest():
+    """End-to-end SYNTHETIC stress history -> existing rainflow -> Miner.
+
+    This fixture explicitly impersonates the manifest labels required by the
+    two separate gates. It NEVER authenticates an ODB, material law or design
+    S-N curve. No real stress may enter via this self-test.
+    """
+    import s10_local_stress_rainflow_gate as rf
+
+    scales = {'concrete':100000.0, 'ordinary_rebar':200000.0,
+              'prestressing_strand':400000.0, 'structural_steel':800000.0}
+    basen = {2:100.0, 4:200.0, 6:300.0}
+    rows, source_hashes, cycle_counts = [], [], {}
+    raw_by_key = {}
+    for cls, scale in scales.items():
+        material = 'SYNTH_' + cls.upper()
+        model = 'SYNTHETIC_' + cls.upper() + '_TEST_ONLY'
+        for bin_id, p, base in [('B1', .25, [0,4,1,3,0]),
+                                ('B2', .75, [0,6,0])]:
+            for seed, offset in [('S01',0),('S02',10)]:
+                duration = 4.0
+                raw = ('time_s,stress_MPa\\n' + ''.join(
+                    f'{i*duration/(len(base)-1):g},{v+offset:g}\\n'
+                    for i,v in enumerate(base))).encode('utf-8')
+                sha = hashlib.sha256(raw).hexdigest()
+                meta = {'source_sha256':sha,
+                        'stress_owner':'VERIFIED_LOCAL_MATERIAL_STRESS',
+                        'material_id':material, 'material_class':cls,
+                        'stress_location':'SYNTHETIC_FIXTURE_ONLY',
+                        'stress_component':'S11',
+                        'material_model_ref':model,
+                        'initial_state':'VERIFIED_GRAVITY_EFFECTIVE_PT_INCLUDED',
+                        'mean_stress_rule':'NONE_KEEP_MEAN'}
+                ledger = rf.calculate(raw, meta)
+                assert ledger['source_sha256']==sha
+                assert abs(ledger['duration_s']-duration)<1e-12
+                # Miner rejects exact duplicate rows. Merge identical
+                # half-cycles while preserving range AND mean stress.
+                grouped = defaultdict(float)
+                for c in ledger['cycles']:
+                    r,m,n = c['stress_range_MPa'],c['mean_stress_MPa'],c['cycles']
+                    assert r in basen and math.isfinite(m)
+                    grouped[(r,m)] += n
+                assert len(grouped)==(2 if bin_id=='B1' else 1)
+                assert abs(sum(grouped.values())-(2 if bin_id=='B1' else 1))<1e-12
+                cycle_counts[material+'/'+bin_id+'/'+seed] = sum(grouped.values())
+                source_hashes.append(sha)
+                raw_by_key[cls,bin_id,seed] = (raw,meta)
+                for (rng,mean),count in sorted(grouped.items()):
+                    # Purely synthetic, independent known-answer lookup;
+                    # distinct per material and sensitive to cycle mean.
+                    n_allow = scale*basen[int(rng)]/(1+mean/100)
+                    rows.append({'material_id':material,'bin_id':bin_id,
+                        'seed_id':seed,'bin_probability':str(p),
+                        'duration_s':str(duration),'expected_seeds_per_bin':'2',
+                        'stress_range_MPa':str(rng),'mean_stress_MPa':str(mean),
+                        'cycles':str(count),'N_allow_cycles':str(n_allow),
+                        'stress_owner':'VERIFIED_LOCAL_MATERIAL_STRESS',
+                        'material_model_ref':model,'stress_source_sha256':sha})
+
+    def encode(items):
+        out = io.StringIO(newline='')
+        writer = csv.DictWriter(out,fieldnames=FIELDS,lineterminator='\\n')
+        writer.writeheader()
+        writer.writerows(items)
+        return out.getvalue().encode('utf-8')
+
+    raw_cycles = encode(rows)
+    conditional = calculate(raw_cycles,years=20,operating_fraction=.5)
+    uncond_rows = [dict(r,bin_probability=str(float(r['bin_probability'])*.5))
+                   for r in rows]
+    unconditional = calculate(encode(uncond_rows),years=20,
+                              operating_fraction=.5,probability_basis='unconditional')
+    expected, measured = {}, {}
+    for cls,scale in scales.items():
+        material = 'SYNTH_'+cls.upper()
+        # Independent oracle: bin1 per-seed damage .0153/.0168 per scale;
+        # bin2 .003433333333/.003766666667 per scale. Each run lasts 4 s.
+        analytic = .5*SECONDS_PER_YEAR*(.25*.01605/4+.75*.0036/4)/scale
+        expected[material]=analytic
+    for x,y in zip(conditional['results'],unconditional['results']):
+        assert x['material_id']==y['material_id']
+        m=x['material_id']
+        assert abs(x['annual_damage']-expected[m])<=1e-10*max(1,expected[m])
+        assert abs(y['annual_damage']-expected[m])<=1e-10*max(1,expected[m])
+        assert abs(x['design_damage']-20*expected[m])<=1e-9*max(1,expected[m])
+        measured[m]=x['annual_damage']
+    assert len(measured)==4 and len(rows)==24
+    assert len(source_hashes)==16
+    assert all(n==2 for k,n in cycle_counts.items() if '/B1/' in k)
+    assert all(n==1 for k,n in cycle_counts.items() if '/B2/' in k)
+
+    negative_tests=0
+    def reject(fn, error):
+        nonlocal negative_tests
+        try:
+            fn()
+        except ValueError as exc:
+            if error not in str(exc):
+                raise AssertionError('unexpected rejection: '+str(exc))
+            negative_tests+=1
+        else:
+            raise AssertionError('unsafe S10 synthetic bridge input accepted: '+error)
+
+    src,meta=raw_by_key['concrete','B1','S01']
+    reject(lambda:rf.calculate(src,dict(meta,source_sha256='0'*64)),
+           'SHA256 mismatch')
+    reject(lambda:rf.calculate(src,dict(meta,stress_owner='LOAD_DEL')),
+           'unverified stress')
+    reject(lambda:rf.calculate(src,dict(meta,initial_state='P0_ONLY')),
+           'mean state not verified')
+    reject(lambda:calculate(encode([dict(r,stress_owner='LOAD_DEL')
+           if i==0 else r for i,r in enumerate(rows)]),
+           operating_fraction=.5), 'unverified stress')
+    reject(lambda:calculate(encode([dict(r,N_allow_cycles='0')
+           if i==0 else r for i,r in enumerate(rows)]),
+           operating_fraction=.5), 'N_allow_cycles')
+    reject(lambda:calculate(encode(rows+[rows[0]]),operating_fraction=.5),
+           'duplicate cycle')
+    reject(lambda:calculate(encode([dict(r,bin_probability='.3')
+           if r['bin_id']=='B1' else r for r in rows]),
+           operating_fraction=.5), 'incomplete')
+    reject(lambda:calculate(encode(rows[:-1]),operating_fraction=.5),
+           'missing or excess seed' if False else 'incomplete')
+    reject(lambda:calculate(encode([dict(r,material_model_ref='WRONG_MODEL')
+           if i==0 else r for i,r in enumerate(rows)]),
+           operating_fraction=.5), 'mixed material')
+    reject(lambda:calculate(raw_cycles), 'operating_fraction required')
+
+    return {'status':'PASS_SYNTHETIC_END_TO_END_ONLY',
+            'material_classes':list(scales),'source_histories':len(source_hashes),
+            'source_history_sha256':sorted(set(source_hashes)),
+            'rainflow_merged_rows':len(rows),'negative_tests':negative_tests,
+            'operating_fraction':.5,'conditional_unconditional_equal':True,
+            'synthetic_annual_damage':measured,'analytic_annual_damage':expected,
+            'synthetic_cycle_csv_sha256':hashlib.sha256(raw_cycles).hexdigest(),
+            'local_material_stress_runs':0,'native_Abaqus_runs':0,
+            'physical_pass':False,'material_life':None}
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test',action='store_true')
+    ap.add_argument('--integration-self-test',action='store_true')
     ap.add_argument('--wind-bin-source',type=Path,
                     help='optional SHA-locked actual 31-bin ERA5 source for self-test QC')
     ap.add_argument('--input',type=Path)
@@ -266,6 +408,8 @@ def main():
     ap.add_argument('--probability-basis',choices=('conditional','unconditional'),default='conditional')
     ap.add_argument('--output',type=Path)
     a=ap.parse_args()
+    if a.integration_self_test:
+        print(json.dumps(integration_selftest(),sort_keys=True))
     if a.self_test:
         print(json.dumps(selftest(a.wind_bin_source.read_bytes()
                                  if a.wind_bin_source else None),sort_keys=True))
@@ -276,7 +420,8 @@ def main():
         data=json.dumps(result,sort_keys=True,indent=2)+'\n'
         if a.output: a.output.write_text(data,encoding='utf-8')
         else: print(data)
-    if not a.self_test and not a.input: ap.error('provide --self-test or --input')
+    if not a.self_test and not a.integration_self_test and not a.input:
+        ap.error('provide --self-test, --integration-self-test or --input')
 
 
 if __name__=='__main__': main()
