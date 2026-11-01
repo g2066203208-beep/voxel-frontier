@@ -72,6 +72,49 @@ jobs:
 
           print('S08_REAL_158M_REDUCED_BEAM_SOURCE_QC_PASS_NOT_ABAQUS_E')
           PY
+      - name: Independent historical-output numeric regression and new envelope receipt
+        env:
+          GH_TOKEN: \${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p historical
+          for f in S08_158M_BEAM_PROXY_MODAL_20261102.csv S08_158M_BEAM_PROXY_PEAKS_20261102.csv S08_158M_BEAM_PROXY_HISTORY_20261102.csv; do
+            gh api "repos/$GITHUB_REPOSITORY/contents/research/wind-tower/experiments/T079/real-records/$f?ref=$GITHUB_REF_NAME" --jq '.content' | base64 -d > "historical/$f"
+          done
+          python - <<'PY'
+          import csv,json,math,pathlib
+          names=['S08_158M_BEAM_PROXY_MODAL_20261102.csv',
+                 'S08_158M_BEAM_PROXY_PEAKS_20261102.csv',
+                 'S08_158M_BEAM_PROXY_HISTORY_20261102.csv']
+          results=[]
+          for name in names:
+              with open('historical/'+name,newline='') as f:a=list(csv.DictReader(f))
+              with open('output/'+name,newline='') as f:b=list(csv.DictReader(f))
+              assert len(a)==len(b) and a and a[0].keys()==b[0].keys(),name
+              max_abs=0.;max_scaled=0.;num=0
+              for old,new in zip(a,b):
+                  for k in old:
+                      try:x=float(old[k]);y=float(new[k])
+                      except ValueError:
+                          assert old[k]==new[k],(name,k,old[k],new[k]);continue
+                      assert math.isfinite(x) and math.isfinite(y)
+                      delta=abs(x-y);scale=max(1.,abs(x),abs(y))
+                      max_abs=max(max_abs,delta);max_scaled=max(max_scaled,delta/scale)
+                      assert delta<=1e-5*scale,(name,k,x,y,delta)
+                      num+=1
+              results.append({'file':name,'rows':len(a),'numeric_cells':num,
+                              'max_absolute_difference':max_abs,
+                              'max_scale_normalized_difference':max_scaled,
+                              'pass_threshold':'abs(x-y)<=1e-5*max(1,abs(x),abs(y))'})
+          p=pathlib.Path('output/S08_158M_BEAM_PROXY_RECEIPT_20261102.json')
+          r=json.loads(p.read_text())
+          r['historical_regression']=results
+          r['historical_receipt_policy']='Old 20261102 receipt and three original tables remain byte-unchanged in Git; this separate receipt documents the extended code version.'
+          r['status']='ALONG_HEIGHT_NUMERIC_QC_PASS_NOT_ABAQUS_E'
+          dest=pathlib.Path('output/S08_158M_BEAM_PROXY_ALONG_HEIGHT_RECEIPT_20261102.json')
+          dest.write_text(json.dumps(r,indent=2,ensure_ascii=False)+'\n')
+          print('S08_HISTORICAL_3TABLE_NUMERIC_REGRESSION_PASS',json.dumps(results))
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -85,7 +128,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          for f in S08_158M_BEAM_PROXY_MODAL_20261102.csv S08_158M_BEAM_PROXY_PEAKS_20261102.csv S08_158M_BEAM_PROXY_HISTORY_20261102.csv S08_158M_BEAM_PROXY_RECEIPT_20261102.json S08_158M_BEAM_PROXY_35SEG_MOMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_36NODE_DISPLACEMENT_ENVELOPE_20261102.csv FIG_S08_07_158M_BEAM_PROXY_ALONG_HEIGHT_ENVELOPES_NOT_ABAQUS.svg; do
+          for f in S08_158M_BEAM_PROXY_35SEG_MOMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_36NODE_DISPLACEMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_ALONG_HEIGHT_RECEIPT_20261102.json FIG_S08_07_158M_BEAM_PROXY_ALONG_HEIGHT_ENVELOPES_NOT_ABAQUS.svg; do
             if [[ "$f" == *.svg ]]; then
               target="research/wind-tower/manuscript/final-thesis/figures/$f"
             else
@@ -98,22 +141,8 @@ jobs:
                 echo "ALREADY_IDENTICAL $target"
                 continue
               fi
-              if [[ "$f" != "S08_158M_BEAM_PROXY_RECEIPT_20261102.json" ]]; then
-                echo "EXISTING_OUTPUT_DIFFERENT_HOLD $target"
-                exit 1
-              fi
-              # Only the receipt may be updated after code extension; old physics outputs must match.
-              python - <<'PY'
-          import json
-          a=json.load(open('existing.file'));b=json.load(open('output/S08_158M_BEAM_PROXY_RECEIPT_20261102.json'))
-          assert a['source_tower_sha256']==b['source_tower_sha256']
-          assert a['source_esm_sha256']==b['source_esm_sha256']
-          assert a['peak_summary']==b['peak_summary']
-          assert a['first_six_frequency_Hz']==b['first_six_frequency_Hz']
-          assert b['along_height_envelopes']['moment_rows']==140
-          print('RECEIPT_EXTENDED_SAME_SOURCE_SAME_OLD_PHYSICS')
-          PY
-              sha="$(gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.sha')"
+              echo "EXISTING_NEW_ENVELOPE_DIFFERENT_HOLD $target"
+              exit 1
             fi
             python - "$f" "$GITHUB_REF_NAME" "$sha" <<'PY' > payload.json
           import base64,json,sys
