@@ -1,0 +1,57 @@
+{
+  "stage": "S08",
+  "date": "2026-11-01",
+  "status": "SOURCE_NUMERIC_PASS_NATIVE_HOLD",
+  "source_sha256": "cb36944613d8a0f49da7737b64dcdbf3064ba6bd346ea7468c068421b5ba1686",
+  "inp_sha256": "fda63c9347b906f8d03b8fdb0bcf5ab8f69112f9c7629c3e68a5db582a5adbeb",
+  "csv_sha256": "16452bf491a3355493acf72598eedbfcdc8748b36c67fe4a0a485667ad73b16c",
+  "synthetic_knots_sha256": "a2efe759b8993ebbfcc932a343b1cbd0a4a634b3a42d0ced3ff44ef2d70e7b1f",
+  "SOURCE": "synthetic 0-2 s triangular acceleration, knots stored in program, not ESM nor approved site wave",
+  "REF": "T079/s08_independent_sdof_ground_acceleration.py existing exact piecewise-linear SDOF; current pilot independently evaluated",
+  "STANDARD": "IEC 2025 / GB / NB authorized seismic clauses NOT_REVIEWED this round",
+  "OFFICIAL": [
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEANLRefMap/simaanl-c-modaldynamic.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-basemotions.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-basemotion.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-spring.htm",
+    "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEOUTRefMap/simaout-c-std-nodalvariables.htm"
+  ],
+  "RUN": "V8 JavaScript executed source selftests: exact piecewise-linear transition, Newmark beta=1/4 gamma=1/2, 7 rejection cases, algebraic identities. No Abaqus native run.",
+  "FIG": "none",
+  "TAB": "201-row U/V/A/TU/TV/TA numeric CSV",
+  "metrics": {
+    "npts": 201,
+    "dt_s": 0.01,
+    "period_s": 1,
+    "frequency_hz": 1,
+    "damping": 0.05,
+    "max_newmark_exact_abs_u_m": 0.00011280787409627315,
+    "max_abs_U_m": 0.05541036876403169,
+    "max_abs_A_m_s2": 2.1820837518970166,
+    "max_abs_TA_m_s2": 2.198881795519059,
+    "end_ground_u_m": 0.12500000000000003,
+    "end_ground_v_m_s": 1.9217483507305566e-17,
+    "negative_cases": 7
+  },
+  "assumptions": [
+    "m=1kg, f=1Hz, zeta=5% illustrative only",
+    "zero initial relative displacement/velocity and base displacement/velocity",
+    "piecewise-linear acceleration, 0.01s step",
+    "single global X primary base; no tower, PT, contact, RNA or site wave"
+  ],
+  "error_budget": {
+    "max_Newmark_vs_exact_abs_u_m": 0.00011280787409627315,
+    "exact_identity_abs_tolerance": 1e-12,
+    "model_and_native_errors": "UNBOUNDED_NEED_NATIVE"
+  },
+  "native_Abaqus_Data_Check": false,
+  "native_Abaqus_modal_run": false,
+  "S08_stage_PASS": false,
+  "HOLD": "Abaqus 2025 syntax, frequency and output variable semantics still require native Data Check + ODB history. Compare U1,V1,A1,TU1,TV1,TA1 at 201 times, 1Hz eigenfrequency, primary base sign; do not reuse for nonlinear T057 without new validation.",
+  "native_acceptance": "After native run, check 1Hz eigenfrequency, all 201 sampled U/A/TU/TA values vs CSV with justified numerical tolerance; reject any sign, unit or relative-total confusion. No physical PASS before that.",
+  "files": [
+    "experiments/T079/s08_sdof_primary_base_pilot.cjs",
+    "experiments/T079/S08_SDOF_PRIMARY_BASE_PILOT_20261101.inp",
+    "experiments/T079/S08_SDOF_PRIMARY_BASE_ANALYTIC_20261101.csv"
+  ]
+}
