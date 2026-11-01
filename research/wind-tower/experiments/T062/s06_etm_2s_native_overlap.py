@@ -34,7 +34,7 @@ def read_etm_inflow(archive1, archive2):
     raise ValueError("ETM_S06_INFLOW_SOURCE_MISSING")
 
 def patch_bts_path(s):
-    pattern = r'(?m)^\\s*"[^"\\r\\n]*U09p343881_ETM_S06\\.bts"\\s+FileName_BTS\\b'
+    pattern = r'(?m)^\s*"[^"\r\n]*U09p343881_ETM_S06\.bts"\s+FileName_BTS\b'
     changed, n = re.subn(pattern, '"U09p343881_ETM_S06.bts" FileName_BTS', s)
     if n != 1:
         raise ValueError("ETM_S06_BTS_FIELD_CARDINALITY_" + str(n))
@@ -57,7 +57,7 @@ def prep(args):
     fst.write_text(replace_scalar(fst.read_text(encoding="utf-8"), "TMax", "2.0", expected="0.1"), encoding="utf-8")
     original = read_etm_inflow(args.archive1, args.archive2)
     etm_sha = digest(original)
-    inflow = original.decode("utf-8-sig").replace("\\r\\n", "\\n")
+    inflow = original.decode("utf-8-sig").replace("\r\n", "\n")
     inflow = replace_scalar(inflow, "WindType", "3", expected="3")
     inflow = patch_bts_path(inflow)
     (out / "DTU_10MW_InflowWind.dat").write_text(inflow, encoding="utf-8")
@@ -80,13 +80,13 @@ def prep(args):
         "RUN": "2s real ETM native pilot pending", "physical_pass": False,
         "HOLD": "Startup 0-2s not equilibrated 100-700s; not DLC1.2, full RP/TP/DCM, external force ownership, Abaqus, or fatigue PASS"
     })
-    receipt.write_text(json.dumps(r, indent=2, ensure_ascii=False)+"\\n", encoding="utf-8")
+    receipt.write_text(json.dumps(r, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
     print("ETM_2S_PREP_PASS", json.dumps({"batch":args.batch,"bts_sha256":bts_sha,"etm_inflow_sha256":etm_sha,"derived_sha256":r["derived_sha256"]}))
 
 def selftest():
     assert len(BTS_SHA) == 64
     assert patch_bts_path('"/old/U09p343881_ETM_S06.bts" FileName_BTS') == '"U09p343881_ETM_S06.bts" FileName_BTS'
-    for bad in ('"other.bts" FileName_BTS', '"x/U09p343881_ETM_S06.bts" FileName_BTS\\n"x/U09p343881_ETM_S06.bts" FileName_BTS'):
+    for bad in ('"other.bts" FileName_BTS', '"x/U09p343881_ETM_S06.bts" FileName_BTS\n"x/U09p343881_ETM_S06.bts" FileName_BTS'):
         try: patch_bts_path(bad)
         except ValueError: pass
         else: raise AssertionError("BAD_BTS_CARDINALITY_ACCEPTED")
@@ -185,7 +185,7 @@ def qc(root, dest):
         "physical_pass":False
     }
     Path(dest).parent.mkdir(parents=True,exist_ok=True)
-    Path(dest).write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\\n",encoding="utf-8")
+    Path(dest).write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print("ETM_2S_NATIVE_OVERLAP_QC",json.dumps({"status":receipt["status"],"common_comparisons":receipt["common_comparisons"],"overlap_comparisons":receipt["overlap_comparisons"],"failures":len(errors)}))
     if errors: raise ValueError("REAL_ETM_2S_CROSS_BATCH_PARITY_FAIL")
 
