@@ -25,6 +25,35 @@ FIELDS = ('material_id','bin_id','seed_id','bin_probability','duration_s',
           'expected_seeds_per_bin','stress_range_MPa','mean_stress_MPa','cycles','N_allow_cycles',
           'stress_owner','material_model_ref','stress_source_sha256')
 SECONDS_PER_YEAR = 8760 * 3600
+ERA5_31BIN_SHA256 = 'e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102'
+
+
+def validate_era5_probability_source(raw):
+    """Check the actual 2005-2025 ERA5-derived 31-bin table; no life calculation."""
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != ERA5_31BIN_SHA256:
+        raise ValueError('ERA5_31BIN_SOURCE_SHA_MISMATCH')
+    rows = list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig'))))
+    if len(rows) != 31:
+        raise ValueError('ERA5_31BIN_ROW_COUNT')
+    n_total = sum(int(r['hours']) for r in rows)
+    n_op = sum(int(r['hours']) for r in rows if 4 <= int(r['bin_lower_mps']) < 25)
+    if n_total != 184080 or n_op != 106900:
+        raise ValueError('ERA5_31BIN_HOURS_MISMATCH')
+    for i, r in enumerate(rows):
+        if int(r['bin_lower_mps']) != i or int(r['bin_upper_mps_exclusive']) != i + 1:
+            raise ValueError('ERA5_31BIN_ORDER_MISMATCH')
+        p = float(r['p_all_hours'])
+        q = float(r['p_conditional_4_to_25'])
+        if abs(p-int(r['hours'])/n_total)>1e-12:
+            raise ValueError('ERA5_UNCONDITIONAL_PROBABILITY_MISMATCH')
+        expected = int(r['hours'])/n_op if 4 <= i < 25 else 0.0
+        if abs(q-expected)>1e-12:
+            raise ValueError('ERA5_CONDITIONAL_PROBABILITY_MISMATCH')
+    return {'source_sha256':digest,'hours_total':n_total,'hours_operating':n_op,
+            'operating_fraction':n_op/n_total,
+            'conditional_overestimate_factor_if_8760h':n_total/n_op,
+            'status':'REAL_ERA5_PROBABILITY_IDENTITY_QC_NOT_MATERIAL_DAMAGE'}
 
 
 def _positive(v, name, allow_zero=False):
@@ -146,7 +175,7 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
             'seconds_per_year':SECONDS_PER_YEAR,'results':out}
 
 
-def selftest():
+def selftest(probability_source=None):
     # Two bins p=.25/.75, two 100-second seeds each; synthetic Dsample 0.001/0.002/0.003/0.005.
     base = dict(material_id='SYNTH_STEEL',duration_s='100',expected_seeds_per_bin='2',
                 stress_range_MPa='10',mean_stress_MPa='5',N_allow_cycles='1000',
@@ -215,16 +244,21 @@ def selftest():
         try: calculate(encode(rows),**args)
         except ValueError: pass
         else: raise AssertionError('missing/mismatched operating probability contract accepted')
+    source_check = (validate_era5_probability_source(probability_source)
+                    if probability_source is not None else None)
     return {'status':'PASS_SYNTHETIC_ONLY','annual_expected':expected,
             'design_20y_expected':20*expected,'negative_tests':11,
             'seed_contract_tests':5,'bin_contribution_checks':4,
             'probability_contract_negative_tests':5,
-            'conditional_unconditional_equivalence':True,'operating_fraction':.5}
+            'conditional_unconditional_equivalence':True,'operating_fraction':.5,
+            'real_era5_probability_qc':source_check}
 
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test',action='store_true')
+    ap.add_argument('--wind-bin-source',type=Path,
+                    help='optional SHA-locked actual 31-bin ERA5 source for self-test QC')
     ap.add_argument('--input',type=Path)
     ap.add_argument('--years',type=float,default=20)
     ap.add_argument('--operating-fraction',type=float,
@@ -233,7 +267,8 @@ def main():
     ap.add_argument('--output',type=Path)
     a=ap.parse_args()
     if a.self_test:
-        print(json.dumps(selftest(),sort_keys=True))
+        print(json.dumps(selftest(a.wind_bin_source.read_bytes()
+                                 if a.wind_bin_source else None),sort_keys=True))
     if a.input:
         result=calculate(a.input.read_bytes(),a.years,
                          operating_fraction=a.operating_fraction,
