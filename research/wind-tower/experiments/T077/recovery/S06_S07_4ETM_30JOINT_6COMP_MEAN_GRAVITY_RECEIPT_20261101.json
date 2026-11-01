@@ -82,7 +82,15 @@
     "max_source_to_static_gage_height_difference_m": 0.00104791,
     "max_source_to_static_gage_height_case": "U11p4_ETM_S04",
     "max_source_to_static_gage_height_joint": "J30",
-    "note": "Means of local section resultants are NOT synchronous common-frame wrench histories; these residuals are not external wind loads or contact reactions."
+    "note": "Means of local section resultants are NOT synchronous common-frame wrench histories; these residuals are not external wind loads or contact reactions.",
+    "largest_reference_point_transport_example": {
+      "case": "U09p343881_ETM_S06",
+      "joint": "J27",
+      "raw_upper_minus_lower_My_kNm": -3955.989293821993,
+      "lever_cross_force_My_kNm": 3956.947795252176,
+      "transported_mean_delta_My_kNm": 0.9585014301833326,
+      "interpretation": "These are LOCAL mean sectional quantities under a conditional common-frame assumption, not actual joint load or external wind load; unshifted moment difference would be misleading."
+    }
   },
   "FIG": "No new physical response figure; 120-row source-level TAB only",
   "assumptions": [
