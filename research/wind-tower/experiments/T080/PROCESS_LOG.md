@@ -30,6 +30,10 @@
 - **下一唯一最优动作：** 复用已保全原始16 ZIP，选同一工况同一时刻31站同步RP/TP/DCM及六分量，建立全局参考系力矩运输与截段惯性/风荷载所有权对照；不得用时均截面内力当作外力。
 
 
+
+**15时后续上传字节复验（覆盖上文“上传后未复哈希”的暂态）：** 从持久Library的16个`library_file_id`逐一调用`files__materialize(raw_file)`重新取回16份**已上传副本**，对每件重新计算SHA256，并与同工况原始Actions下载ZIP的SHA256、历史16行manifest逐件三方比对，**16/16完全一致**，大小总和125,291,677字节。原始容器下载件与Library重新取回件为两个独立文件路径；逐件终端打印`POST_UPLOAD_SHA_PASS`，最终`VERIFIED 16 TOTAL_BYTES 125291677`。已将[保全索引](../T077/recovery/S06_T071_T072_16_ARTIFACT_LIBRARY_PRESERVATION_20261101.csv)的16行`post_upload_sha_check`由`POST_UPLOAD_BYTES_NOT_REHASHED`升级为`POST_UPLOAD_SHA_MATCH`。**此项仅为存储字节身份PASS，不是原生OpenFAST/Abaqus物理PASS，也不意味着用户D盘有副本。**
+
+
 ## 2026-10-27｜前序工作结果补登记与中央证据闭环
 
 > 该节追登记2026-10-27已发生的实质产物、来源等级与实际GitHub commits；不是开新的T080子任务号。GitHub本节写入时间未额外补造精确分钟；所有记录均在PR #42工作分支，**不在main**。
