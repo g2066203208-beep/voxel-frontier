@@ -785,3 +785,8 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 ### 2026-11-01 09时｜S08已知解pilot交接
 - CLOSE/read_base_sha=`a3160fdde2cad8a99c720047df08b880ba1becaf`；继承08时32,040×3真实ESM幅值，未重做原件恢复；本轮交付合成1Hz最小primary-base Abaqus INP + 可复算JS + 201行解析数表 + SHA/官方原页收据。已执行轻量V8数值与7项异常拒绝测试，**未运行Abaqus原生**，不是地震设计波或塔架响应。详情见[T079 09时过程](../experiments/T079/PROCESS_LOG.md)。
 - 无T057/T070/main修改、不合并PR；S08独立准备增加，12阶段0/12。下一责任方=具授权Abaqus环境的原生小模型验证；云端继续可独立推进S05目标谱/S10疲劳程序。
+
+### 2026-11-01 10时｜开工读取回执：S08最小pilot原生ODB后处理验收管线（网页版GPT）
+- read_base_sha=`f31fa09851cf357c6c9149bbc3470d99418d1b93`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft；已读AGENTS/README、论文00_STATUS与00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW及09时PROCESS_LOG、T080.1/.2/.3、12阶段总计划、指挥室当前进度/最新交接，已读09时SDOF原始JS/INP/201行解析结果收据。继承09时1Hz合成输入与201点解析基准，不重复计算历史S01审查。
+- 环境探测：本执行环境无`abaqus`可执行程序/授权原生ODB，不能原生Data Check或模态求解。OFFICIAL直接核读Abaqus 2025 *BASE MOTION、modal dynamic、base motions、nodal variables原页；S08原生物理仍HOLD。
+- 本轮增量：复用T079既有201点解析基准，新增可执行的ODB→U/V/A/TU/TV/TA时程提取与严格201点验收程序、纯Python模拟对象负向测试；记录SHA/测试日志与失败、更新T079 PROCESS_LOG/00_STATUS/指挥室。责任方：网页版GPT；无高成本RUN、不改冻结T057/T070、不合并PR。
