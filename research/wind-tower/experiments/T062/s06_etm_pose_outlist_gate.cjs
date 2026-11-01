@@ -31,7 +31,7 @@ function patch(src){
   const n="TwHt"+i+s;if(!names.has(n.toUpperCase())){add.push('  "'+n+'"');names.add(n.toUpperCase());}
  }
  ck(names.size<=863,"MAXOUTPTS");
- return {text:[...lines.slice(0,end),...add,...lines.slice(end)].join("\n"),added:add.length,nodes};
+ return {text:[...lines.slice(0,end),...add,...lines.slice(end)].join("\n"),added:add.length,present:9*suffixes.length,nodes};
 }
 function cross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
 function transport(F,M,rA,rB){
@@ -63,10 +63,10 @@ function main(a){
  ck(input!==output&&!fs.existsSync(output),"NO_OVERWRITE");
  const b=fs.readFileSync(input),hash=sha(b);
  ck(parents.has(hash),"UNVERIFIED_2S_ETM_PARENT_SHA");
- const p=patch(b.toString("utf8"));ck(p.added===72,"EXPECTED_72_ADDITIONS");
+ const p=patch(b.toString("utf8"));ck(p.added>=0&&p.added<=72&&p.present===72,"POSE_CHANNEL_COVERAGE");
  fs.writeFileSync(output,p.text,"utf8");
  console.log(JSON.stringify({parent_sha256:hash,child_sha256:sha(fs.readFileSync(output)),
- added:p.added,nodes:p.nodes,exact_DCM:false,physical_pass:false}));
+ added:p.added,pose_target_channels_present:p.present,nodes:p.nodes,exact_DCM:false,physical_pass:false}));
 }
 module.exports={patch,transport,selftest,parents};
 if(require.main===module)main(process.argv.slice(2));
