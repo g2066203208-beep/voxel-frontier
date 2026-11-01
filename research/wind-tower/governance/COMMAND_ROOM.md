@@ -818,3 +818,9 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### 2026-11-01 12时｜S10四材料端到端合成门禁收尾交接
 - END / START已登记于本指挥室12时，起始read_base_sha=ab88a366ebc21e280c10945757f8f40bc63b3723；本次写入前PR HEAD=49d7582935bb18de2c7cb9ec30f5d548928fcbb1，PR Open/Draft。真实Python CI [#41272166094](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41272166094)成功并回读完整job日志；旧雨流/Miner自测、ERA5 31-bin SHA、16份合成历史→24行循环→四材料合成年度损伤与11项异常拒绝通过。修复两次原生CI失败，原始失败链接及输入SHA/误差见[T080 12时过程](../experiments/T080/PROCESS_LOG.md)。实际修改原T077 Miner程序、原S10 CI、T080过程、论文00_STATUS及本指挥室；未生成新T080编号、未碰T057/T070/main、未合并PR、无Abaqus或生产RUN。S10仅算法独立准备，12阶段0/12、E/WE原生0；下一责任=云端生产准入manifest与合成拒绝测试，本机Abaqus真实ODB需另行取得。
+
+
+## 2026-11-01 13时｜S10 ODB→材料疲劳输入来源准入：开工回执
+
+- 执行者：云端研究自动化；`read_base_sha=6e7663a264949b90638ca8dc1d355fa6ec162ad7`；main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 Open/Draft。已读 AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段总计划、指挥室最新进度及T080最新过程；继承S10真实ERA5概率、既有local-stress rainflow/Miner合成CI、ODB provisional导出器，不重复已有测试。
+- 本轮只补S10独立来源准入边界：复用T077 recovery中的原生ODB provisional manifest及source map，新增可执行的本地应力来源/材料曲线/原生日志/初态审阅证据一致性预检和负向测试；拟改`experiments/T077/recovery/s10_local_stress_provenance_admission.py`、现有`s10-material-cycle-contract.yml`、T080 PROCESS_LOG、00_STATUS及本指挥室。责任方：云端脚本/CI；真实Abaqus、材料曲线授权及物理审阅仍需独立提供。禁止将预检/自填审阅字段当物理PASS。
