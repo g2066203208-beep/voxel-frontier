@@ -528,9 +528,167 @@ def self_test():
                       'Abaqus_RUN': False, 'S05_PASS': False, 'dense_pair_positive_tests': 5, 'dense_pair_negative_tests': 3, 's08_export_tests': s08_test}, sort_keys=True))
 
 
+
+def _independent_member_gate(members, expected_event, allowed_stations):
+    """Verify event, paired horizontal streams, identical sampling and filter metadata.
+    SOURCE HEADER QC ONLY: no low-frequency/target-spectrum or structural PASS.
+    """
+    grouped = {}
+    for m in members:
+        h = m['dyna_selected_header_fields']
+        if h['EVENT_ID'] != expected_event:
+            raise ValueError('INDEPENDENT_EVENT_ID_MISMATCH')
+        station = h['STATION_CODE']
+        if station not in allowed_stations:
+            raise ValueError('INDEPENDENT_STATION_ID_MISMATCH')
+        stream = h['STREAM']
+        if stream not in ('HNE', 'HNN', 'HNZ'):
+            continue
+        if stream in grouped.setdefault(station, {}):
+            raise ValueError('INDEPENDENT_DUPLICATE_STREAM')
+        grouped[station][stream] = m
+    verified = []
+    for station, streams in sorted(grouped.items()):
+        if not {'HNE', 'HNN'} <= set(streams):
+            continue
+        horiz = [streams[k] for k in ('HNE', 'HNN')]
+        keys = ('NDATA', 'SAMPLING_INTERVAL_S', 'DURATION_S', 'UNITS',
+                'LOW_CUT_FREQUENCY_HZ', 'HIGH_CUT_FREQUENCY_HZ',
+                'FILTER_TYPE', 'FILTER_ORDER', 'PROCESSING')
+        for key in keys:
+            if len({m['dyna_selected_header_fields'][key] for m in horiz}) != 1:
+                raise ValueError('INDEPENDENT_HORIZONTAL_MISMATCH_' + key)
+        h = horiz[0]['dyna_selected_header_fields']
+        if h['UNITS'] != 'cm/s^2':
+            raise ValueError('INDEPENDENT_UNITS_NOT_CM_S2')
+        dt_value = float(h['SAMPLING_INTERVAL_S'])
+        corner = float(h['LOW_CUT_FREQUENCY_HZ'])
+        if not all(math.isfinite(x) and x > 0 for x in (dt_value, corner)):
+            raise ValueError('INDEPENDENT_INVALID_DT_OR_FILTER')
+        verified.append({'station': station, 'horizontal_streams': ['HNE','HNN'],
+            'vertical_present': 'HNZ' in streams,
+            'npts': int(h['NDATA']), 'dt_s': dt_value,
+            'low_cut_Hz': corner, 'high_cut_Hz': h['HIGH_CUT_FREQUENCY_HZ'],
+            'processing': h['PROCESSING'],
+            'HNE_member_sha256': horiz[0]['sha256'],
+            'HNN_member_sha256': horiz[1]['sha256'],
+            'S05_design_wave_PASS': False})
+    if not verified:
+        raise ValueError('INDEPENDENT_NO_MATCHED_HORIZONTAL_PAIR')
+    return verified
+
+
+def independent_source_self_test():
+    h = {'EVENT_ID':'IT-2012-0009','STATION_CODE':'NVL',
+         'NDATA':'32040','SAMPLING_INTERVAL_S':'0.005',
+         'DURATION_S':'160.2','UNITS':'cm/s^2',
+         'LOW_CUT_FREQUENCY_HZ':'0.04','HIGH_CUT_FREQUENCY_HZ':'30',
+         'FILTER_TYPE':'Butterworth','FILTER_ORDER':'2','PROCESSING':'MP'}
+    def member(stream, overrides=None):
+        fields=dict(h,STREAM=stream)
+        fields.update(overrides or {})
+        return {'dyna_selected_header_fields':fields,'sha256':'a'*64}
+    a,b=member('HNE'),member('HNN')
+    out=_independent_member_gate([a,b],h['EVENT_ID'],{'NVL','MDN'})
+    assert len(out)==1 and out[0]['npts']==32040 and not out[0]['S05_design_wave_PASS']
+    failures=[
+        ([member('HNE',{'EVENT_ID':'IT-2012-0008'}),b], 'INDEPENDENT_EVENT_ID_MISMATCH'),
+        ([a,member('HNN',{'LOW_CUT_FREQUENCY_HZ':'0.08'})], 'INDEPENDENT_HORIZONTAL_MISMATCH_LOW_CUT_FREQUENCY_HZ'),
+        ([a], 'INDEPENDENT_NO_MATCHED_HORIZONTAL_PAIR'),
+        ([a,member('HNN',{'UNITS':'g'})], 'INDEPENDENT_HORIZONTAL_MISMATCH_UNITS'),
+        ([a,b,member('HNE')], 'INDEPENDENT_DUPLICATE_STREAM'),
+        ([a,member('HNN',{'SAMPLING_INTERVAL_S':'0.01'})], 'INDEPENDENT_HORIZONTAL_MISMATCH_SAMPLING_INTERVAL_S'),
+    ]
+    for bad, reason in failures:
+        try: _independent_member_gate(bad,h['EVENT_ID'],{'NVL','MDN'})
+        except ValueError as ex:
+            assert str(ex)==reason, (str(ex),reason)
+        else: raise AssertionError('ACCEPTED_INVALID_INDEPENDENT_SOURCE_'+reason)
+    print('S05_INDEPENDENT_EVENT_SYNTHETIC_SOURCE_GATE_PASS 1 positive 6 negative; NO_REAL_WAVE_CLAIM')
+
+
+def recover_independent_event(output_dir, timeout=90):
+    """Attempt public second-event MP source; persist raw official bytes and failure.
+    Deliberately does not alter the source-locked IT-2012-0008/NVL methods.
+    """
+    event='IT-2012-0009'
+    stations=('NVL','MDN')
+    output_dir.mkdir(parents=True,exist_ok=True)
+    stamp=dt.datetime.now(dt.timezone.utc).isoformat()
+    receipt={'status':'HOLD_OFFICIAL_INDEPENDENT_EVENT_SOURCE_NOT_YET_VERIFIED',
+        'retrieved_utc':stamp,'event_id':event,'stations_requested':list(stations),
+        'SOURCE':'ESM v3 official dataset-selection JSON and eventdata MP DYNA ZIP',
+        'REF':'DOI 10.13127/esm.3',
+        'STANDARD':'NO_AUTHORIZED_IEC_GB_CLAUSE_READ',
+        'OFFICIAL':'DIRECT_ESM_HTTP_RESPONSE_ONLY',
+        'RUN':'LIGHTWEIGHT_SOURCE_FETCH_NO_ABAQUS',
+        'FIG':'NONE','TAB':'OFFICIAL_METADATA_AND_HEADER_PAIR_GATE',
+        'source_read_level':'HTTP raw bytes and DYNA headers if successful',
+        'assumptions':['IT-2012-0009 is a distinct event ID, not site compatible',
+                       'NVL/MDN are only candidates; not confirmed to have waveforms'],
+        'error_budget':'Header/grid checks only; instrument low-frequency, spectral fit, site hazard, structural modal errors NOT_ESTIMATED',
+        'S05_PASS':False,'Abaqus_E_WE_RUN':0,'stages_passed':0}
+    def download(query_url, limit):
+        req=urllib.request.Request(query_url,headers={
+            'User-Agent':'Academic wind-tower independent-event source QC/1.0',
+            'Accept':'application/json,application/zip,application/octet-stream'})
+        with urllib.request.urlopen(req,timeout=timeout) as response:
+            body=response.read(limit+1)
+            if len(body)>limit: raise ValueError('OFFICIAL_RESPONSE_TOO_LARGE')
+            return body,response.headers.get('Content-Type','unknown')
+    meta_url='https://esm-db.eu/esmws/dataset-selection/1/query?'+urllib.parse.urlencode({
+        'eventid':event,'station':','.join(stations),'unprocessed':'false',
+        'format':'json','limit':100})
+    wave_url=API+'?'+urllib.parse.urlencode({
+        'eventid':event,'station':','.join(stations),'format':'ascii',
+        'processing-type':'MP','data-type':'ACC'})
+    receipt['metadata_url']=meta_url
+    receipt['waveform_url']=wave_url
+    try:
+        metadata,ct=download(meta_url,3_000_000)
+        (output_dir/'S05_ESM_IT2012_0009_OFFICIAL_SELECTION.json').write_bytes(metadata)
+        parsed=json.loads(metadata)
+        receipt['metadata_sha256']=sha(metadata)
+        receipt['metadata_bytes']=len(metadata)
+        receipt['metadata_content_type']=ct
+        receipt['metadata_root_type']=type(parsed).__name__
+        receipt['metadata_root_keys']=sorted(parsed)[:40] if isinstance(parsed,dict) else []
+        receipt['metadata_array_length']=len(parsed) if isinstance(parsed,list) else None
+    except Exception as ex:
+        receipt['metadata_failure']=type(ex).__name__+': '+str(ex)[:400]
+    try:
+        raw,ct=download(wave_url,MAX_ZIP)
+        receipt['waveform_response_sha256']=sha(raw)
+        receipt['waveform_response_bytes']=len(raw)
+        receipt['waveform_content_type']=ct
+        if not raw.startswith(b'PK'): raise ValueError('OFFICIAL_NOT_ZIP')
+        (output_dir/'S05_ESM_IT2012_0009_MP_ACC_OFFICIAL.zip').write_bytes(raw)
+        members=inspect_zip(raw)
+        receipt['members']=[{'filename':m['filename'],'bytes':m['bytes'],
+            'sha256':m['sha256'],'header':m['dyna_selected_header_fields']}
+            for m in members]
+        receipt['paired_station_headers']=_independent_member_gate(members,event,set(stations))
+        receipt['status']='SOURCE_RECOVERED_HEADER_QC_ONLY_NOT_DESIGN_PASS'
+    except Exception as ex:
+        receipt['waveform_failure']=type(ex).__name__+': '+str(ex)[:500]
+        receipt['status']='HOLD_INDEPENDENT_WAVEFORM_NOT_RECOVERED_OR_HEADER_QC_FAILED'
+    (output_dir/'S05_ESM_IT2012_0009_OFFICIAL_SOURCE_RECEIPT.json').write_text(
+        json.dumps(receipt,indent=2,ensure_ascii=False,sort_keys=True)+'\n',encoding='utf-8')
+    print(json.dumps({'status':receipt['status'],'event':event,
+        'metadata_sha256':receipt.get('metadata_sha256'),
+        'waveform_sha256':receipt.get('waveform_response_sha256'),
+        'paired_stations':len(receipt.get('paired_station_headers',[])),
+        'metadata_failure':receipt.get('metadata_failure'),
+        'waveform_failure':receipt.get('waveform_failure'),
+        'S05_PASS':False,'Abaqus_E_WE_RUN':0},sort_keys=True),flush=True)
+    return receipt
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test', action='store_true')
+    ap.add_argument('--independent-self-test', action='store_true')
+    ap.add_argument('--independent-source', action='store_true')
     ap.add_argument('--fetch', action='store_true')
     ap.add_argument('--export-s08', action='store_true')
     ap.add_argument('--source-zip', type=pathlib.Path)
@@ -538,6 +696,11 @@ def main():
     ap.add_argument('--timeout', type=int, default=90)
     a = ap.parse_args()
     if a.self_test: self_test()
+    if a.independent_self_test: independent_source_self_test()
+    if a.independent_source:
+        if not a.output_dir or not 1 <= a.timeout <= 180:
+            ap.error('--independent-source requires --output-dir and 1<=timeout<=180')
+        recover_independent_event(a.output_dir, a.timeout)
     if a.fetch:
         if not a.output_dir or not 1 <= a.timeout <= 180:
             ap.error('--fetch requires --output-dir and 1<=timeout<=180')
@@ -573,7 +736,7 @@ def main():
         print(json.dumps({'status':receipt['status'], 'csv_sha256':receipt['csv_sha256'],
                           'npts':receipt['npts'], 'dt_s':receipt['dt_s'],
                           'Abaqus_E_WE_RUN':0, 'S08_PASS':False},sort_keys=True))
-    if not a.self_test and not a.fetch and not a.export_s08:
+    if not a.self_test and not a.fetch and not a.export_s08 and not a.independent_source and not a.independent_self_test:
         ap.error('provide --self-test, --fetch, and/or --export-s08')
 
 
