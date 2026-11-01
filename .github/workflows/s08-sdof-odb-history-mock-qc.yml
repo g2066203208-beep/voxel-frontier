@@ -1,0 +1,57 @@
+name: S08 SDOF ODB history mock and 201-point oracle QC
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T079/s08_sdof_native_history_gate.py'
+      - 'research/wind-tower/experiments/T079/S08_SDOF_PRIMARY_BASE_ANALYTIC_20261101.csv'
+      - '.github/workflows/s08-sdof-odb-history-mock-qc.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mock-history-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate mock ODB extraction and 7 negative cases
+        run: |
+          set -euo pipefail
+          python research/wind-tower/experiments/T079/s08_sdof_native_history_gate.py selftest
+      - name: Test 201-point oracle, relative-total identities and corruption rejection
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, json, pathlib, subprocess, sys, tempfile
+          base=pathlib.Path('research/wind-tower/experiments/T079')
+          gate=base/'s08_sdof_native_history_gate.py'
+          oracle=base/'S08_SDOF_PRIMARY_BASE_ANALYTIC_20261101.csv'
+          fields={'U1':'U1_rel_m','V1':'V1_rel_m_s','A1':'A1_rel_m_s2','TU1':'TU1_total_m','TV1':'TV1_total_m_s','TA1':'TA1_total_m_s2'}
+          with oracle.open(newline='') as f: rows=list(csv.DictReader(f))
+          assert len(rows)==201, 'ORACLE_ROW_COUNT'
+          with tempfile.TemporaryDirectory() as d:
+              native=pathlib.Path(d)/'MOCK_NOT_ABAQUS.csv'
+              with native.open('w',newline='') as f:
+                  writer=csv.DictWriter(f,fieldnames=['time_s']+list(fields))
+                  writer.writeheader()
+                  writer.writerows([{'time_s':r['time_s'],**{k:r[v] for k,v in fields.items()}} for r in rows])
+              cmd=[sys.executable,str(gate),'validate','--native',str(native),'--oracle',str(oracle)]
+              ok=subprocess.run(cmd,text=True,capture_output=True)
+              assert ok.returncode==0,(ok.stdout,ok.stderr)
+              assert json.loads(ok.stdout)['diagnostic_pass']
+              print('S08_201_REAL_ORACLE_MOCK_HISTORY_PASS_NOT_ABAQUS')
+              with native.open(newline='') as f: bad=list(csv.DictReader(f))
+              bad[40]['A1']=str(float(bad[40]['A1'])+1)
+              with native.open('w',newline='') as f:
+                  writer=csv.DictWriter(f,fieldnames=['time_s']+list(fields))
+                  writer.writeheader();writer.writerows(bad)
+              fail=subprocess.run(cmd,text=True,capture_output=True)
+              assert fail.returncode==2,(fail.stdout,fail.stderr)
+              detected=json.loads(fail.stdout)['failures']
+              assert 'A1_ORACLE' in detected and 'TA1_REL_TOTAL' in detected,detected
+              print('S08_201_REAL_ORACLE_CORRUPTION_REJECTED',detected)
+          PY
