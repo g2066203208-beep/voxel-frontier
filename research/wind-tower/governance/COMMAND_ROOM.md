@@ -859,3 +859,9 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 - **START / 2026-11-01 16时 CST / 自动研究：** `read_base_sha=928e576c2a4717e327a65322b6be301994117b93`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR #42 Open/Draft。已读取AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、本指挥室当前与15时交接及T080 15时源ZIP保全日志。继承16件原ZIP持久Library SHA保全与既有120行六分量时均表。本轮实际从Library物化U09p343881_ETM_S06四批原ZIP，确认仅含31站FL/ML而不含RP/TP/AL/DCM；拟做**批内27接缝12001时刻的条件性六分量动态诊断**，明确J09/J18/J27跨批不能假定同态，保存可复算脚本、30行表及SHA收据，追加T080过程、00_STATUS和指挥室；不做昂贵RUN、不修改冻结T057/T070、不合并PR。责任：云端源级后处理。
 
 - **END / 2026-11-01 16时 CST / 自动研究：** 继承本轮START（起始HEAD 928e576c、已登记读取及拟改范围），真实取回U09p343881_ETM_S06四份原ZIP并逐件ZIP/gzip SHA复核，完成Python 3.13.5 372031行源级解析、27批内接口×12001时刻条件性六分量统计和J09/J18/J27跨批禁止同态输出；保存脚本、30行CSV、JSON SHA收据、T080过程、00_STATUS与本指挥室。程序SHA256=9815386a586511644f009a85d095a8e2c24244d4c3ebe6dd9b5629f7cd4b94e2；表SHA256=ae7d587b21d856f415e4298f8b2941f86f3590f35bbcd9f56c7a75a86b611185；收据SHA256=54bc454523e725ec204abcd81f9cec44e1cc22ea3ea52c5de28c776b547500e0。首次错误gage_index假设真实失败已修正；坏ZIP SHA拒绝测试成功；无新solver/Actions，SOURCE数值QC不升级物理PASS。冻结T057/T070/main未改，PR仍Draft；下一责任云端/本机原始OUTB与跨批公共状态证据，禁止昂贵RUN。
+
+
+### 2026-11-01 17时｜S06 T071/T072历史原生Actions控制状态日志追索开工回执
+- START / 云端研究；read_base_sha=`83f93bb181e758f50d6901560cd1b809e8172e35`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR #42 Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、本指挥室16时交接及T080最新过程；继承已保全16份原始ZIP与四批31站源级QC，不重跑700s OpenFAST。
+- 新增真实输入：直接读取T071 Actions run 37582521146及T072 run 37622366681的16个成功OpenFAST job原始控制台日志；已初步比对每工况A/B/C/D各71个ROSCO打印样本的发电机转速、变桨、功率、估计风速，四工况每组A-B/A-C/A-D打印值完全一致。**此为四通道十秒级四舍五入控制状态证据，不是12001点RP/TP/DCM/OUTB逐点同步证明。**
+- 本轮拟在T077/recovery原目录保存16×71原始打印值的紧凑可复核CSV、12对比较表、可执行复核脚本和SHA/原始job URL，并更新T080 PROCESS_LOG、00_STATUS及本指挥室交接；不新建T080编号，不改T057/T070/main，不合并PR、不跑昂贵生产。
