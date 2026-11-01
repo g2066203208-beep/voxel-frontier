@@ -275,5 +275,73 @@
     "fourth_redundant_run_id": 41315608933,
     "fourth_redundant_artifact_id": 13086838251,
     "fourth_redundant_artifact_sha256": "sha256:06ea552d0759d0d3c0cc8d138c9065b3713e36049d27688141c9b6dc681ede4e"
+  },
+  "original_outb_node220_three_instant_examples": {
+    "source": "Original artifact 13080759167 / batch1 / TwHt9 / tower node 220, OUTB SHA256 c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+    "read_level": "RAW_FILEID4_PACKED_NATIVE_OUTB_ALL_295_CHANNELS",
+    "units": {
+      "TP": "m inertial position",
+      "RP": "deg angular-position components (NOT DCM)",
+      "AL": "m/s^2 local tower basis",
+      "FL": "kN local tower basis",
+      "ML": "kN-m local tower basis"
+    },
+    "rows": [
+      {
+        "time_s": 0,
+        "TPxi": 0,
+        "TPyi": -4e-9,
+        "TPzi": 30.965157005,
+        "RPxi": -4e-9,
+        "RPyi": 0,
+        "RPzi": 0,
+        "ALxt": 0.038539041,
+        "ALyt": -0.00015488,
+        "ALzt": 0,
+        "FLxt": -69.927244283,
+        "FLyt": 0.318729893,
+        "FLzt": -20089.951654679,
+        "MLxt": -5.626462923,
+        "MLyt": -1116.316165013,
+        "MLzt": -168.291156472
+      },
+      {
+        "time_s": 1,
+        "TPxi": 0.010067162,
+        "TPyi": 0.000179119,
+        "TPzi": 30.965154308,
+        "RPxi": 0.000676352,
+        "RPyi": 0.046497701,
+        "RPzi": 0,
+        "ALxt": 0.114015584,
+        "ALyt": 0.062696483,
+        "ALzt": -0.000033491,
+        "FLxt": 39.176516622,
+        "FLyt": -128.872638027,
+        "FLzt": -20381.102314663,
+        "MLxt": 7022.781243043,
+        "MLyt": 52661.648394194,
+        "MLzt": 6168.622797049
+      },
+      {
+        "time_s": 2,
+        "TPxi": 0.059614301,
+        "TPyi": -0.001123974,
+        "TPzi": 30.965073385,
+        "RPxi": 0.007504927,
+        "RPyi": 0.251836926,
+        "RPzi": 0,
+        "ALxt": 0.034324525,
+        "ALyt": 0.02440639,
+        "ALzt": -0.000026432,
+        "FLxt": 1914.467705993,
+        "FLyt": -87.540191969,
+        "FLzt": -20414.584717532,
+        "MLxt": 15221.240084024,
+        "MLyt": 242918.802351231,
+        "MLzt": 8385.006173734
+      }
+    ],
+    "disclaimer": "0-2s startup transient, not physical equilibrated design load or validated global wrench; 9-decimal rounded decoded values."
   }
 }
