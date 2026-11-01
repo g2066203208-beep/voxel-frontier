@@ -119,4 +119,160 @@ def main():
         a.output_receipt.write_text(json.dumps(receipt,sort_keys=True,indent=2)+"\n",encoding="utf-8")
         print("REAL_ESM_ROTD_16_PERIOD_RECOMPUTED",len(rows),"S05_PASS",False)
     elif not a.self_test:ap.error("choose --self-test or real input")
-if __name__=="__main__":main()
+
+# Independent dense long-period real-record spectrum; same source and Newmark
+# solver as the historical 16-period RotD, NOT a new seismic event or design wave.
+BEAM_T1_S = 6.230957762865167  # linear beam proxy only, NOT native PT/contact
+LEGACY_ROTD16_SHA256 = "6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205"
+OFFICIAL_SNR_REPORTED_LOWCUT_HZ = .09  # separate from waveform processing .04Hz
+
+def dense_grid():
+    lo, hi = .2*BEAM_T1_S, 1.5*BEAM_T1_S
+    anchors = [float(t) for t in PERIODS if lo <= t <= hi]
+    periods = sorted(set([float(x) for x in np.geomspace(lo,hi,33)] +
+                         anchors + [BEAM_T1_S]))
+    if not (len(periods)==46 and periods[0]>=lo-1e-12 and
+            periods[-1]<=hi+1e-12 and BEAM_T1_S in periods):
+        raise ValueError("DENSE_GRID_IDENTITY")
+    return periods, anchors
+
+def dense_calculate(source_raw, legacy_raw):
+    src=load(source_raw,strict=True)
+    if sha(legacy_raw)!=LEGACY_ROTD16_SHA256:
+        raise ValueError("LEGACY_ROT_D16_SHA256_MISMATCH")
+    legacy=list(csv.DictReader(io.StringIO(legacy_raw.decode("utf-8-sig"))))
+    if len(legacy)!=16 or any(abs(float(r["period_s"])-t)>1e-12
+                              for r,t in zip(legacy,PERIODS)):
+        raise ValueError("LEGACY_GRID_MISMATCH")
+    old={float(r["period_s"]):r for r in legacy}
+    grid, anchors=dense_grid()
+    rows=[]; overlap_errors=[]; angular_errors=[]
+    for T in grid:
+        ue=response_history(src[:,1],T)
+        un=response_history(src[:,2],T)
+        k=(2*math.pi/T)**2
+        e=k*float(np.max(np.abs(ue)))
+        n=k*float(np.max(np.abs(un)))
+        half=angle_psa(ue,un,T,.5)
+        one=angle_psa(ue,un,T,1.)
+        r00,r50,r100=map(float,(np.min(half),np.median(half),np.max(half)))
+        err50=abs(float(np.median(one))-r50)/r50
+        err100=abs(float(np.max(one))-r100)/r100
+        if not (0<r00<=r50<=r100 and e>0 and n>0):
+            raise ValueError("DENSE_ROTD_INVARIANT")
+        if T in old:
+            record=old[T]
+            for col,got in (("HNE_psa_m_s2",e),("HNN_psa_m_s2",n),
+                            ("RotD00_psa_m_s2",r00),
+                            ("RotD50_psa_m_s2",r50),
+                            ("RotD100_psa_m_s2",r100)):
+                ref=float(record[col])
+                rel=abs(got-ref)/max(abs(ref),1e-30)
+                if rel>5e-11: raise ValueError("LEGACY_ROTD16_NUMERIC_REGRESSION_"+col)
+                overlap_errors.append(rel)
+        angular_errors.extend((err50,err100))
+        rows.append(dict(period_s=T,frequency_Hz=1/T,
+            HNE_psa_m_s2=e,HNN_psa_m_s2=n,
+            RotD00_psa_m_s2=r00,RotD50_psa_m_s2=r50,
+            RotD100_psa_m_s2=r100,
+            RotD50_1deg_vs_halfdeg_relative=err50,
+            RotD100_1deg_vs_halfdeg_relative=err100,
+            f_over_processing_0p04Hz=1/(T*.04),
+            f_over_official_snr_reported_0p09Hz=1/(T*OFFICIAL_SNR_REPORTED_LOWCUT_HZ),
+            is_conditional_beam_T1=T==BEAM_T1_S,
+            is_legacy_16period_overlap=T in old,
+            status="REAL_ESM_NUMERIC_SPECTRUM_ONLY_NOT_SITE_DESIGN_OR_ABAQUS"))
+    if len(overlap_errors)!=5*len(anchors):
+        raise ValueError("DENSE_LEGACY_OVERLAP_COUNT")
+    return rows,dict(period_count=len(rows),overlap_period_count=len(anchors),
+        overlap_numeric_cells=len(overlap_errors),
+        max_overlap_relative_difference=max(overlap_errors),
+        max_half_vs_one_degree_relative_difference=max(angular_errors),
+        band_s=[.2*BEAM_T1_S,1.5*BEAM_T1_S],
+        conditional_beam_T1_s=BEAM_T1_S,
+        T1_RotD50_psa_m_s2=next(r["RotD50_psa_m_s2"] for r in rows
+                                if r["is_conditional_beam_T1"]),
+        T1_HNE_psa_m_s2=next(r["HNE_psa_m_s2"] for r in rows
+                            if r["is_conditional_beam_T1"]),
+        T1_HNN_psa_m_s2=next(r["HNN_psa_m_s2"] for r in rows
+                            if r["is_conditional_beam_T1"]))
+
+def dense_self_test():
+    grid,anchors=dense_grid()
+    assert len(grid)==46 and len(anchors)==12
+    assert 6. in anchors and 7. in anchors and 10. not in anchors
+    a=np.sin(np.arange(800)*.005*2*math.pi/1.5)
+    u=response_history(a,1.4)
+    z=np.zeros_like(u)
+    half=angle_psa(u,z,1.4,.5)
+    assert abs(float(np.median(half))/float(np.max(half))-2**-.5)<2e-5
+    for bad in (b"bad",b""):
+        try:load(bad,strict=True)
+        except ValueError:pass
+        else:raise AssertionError("DENSE_SOURCE_SHA_REJECTION_FAILED")
+    print("S05_DENSE_GRID_46_WITH_12_LEGACY_ANCHORS_AND_2_BAD_SOURCE_REJECTIONS_PASS")
+
+def dense_cli():
+    ap=argparse.ArgumentParser(description="Source-locked real ESM 1.246-9.346s dense RotD; NOT design.")
+    ap.add_argument("--dense-band",action="store_true")
+    ap.add_argument("--self-test",action="store_true")
+    ap.add_argument("--source-csv",type=Path)
+    ap.add_argument("--legacy-rotd",type=Path)
+    ap.add_argument("--out-dense",type=Path)
+    ap.add_argument("--out-receipt",type=Path)
+    a=ap.parse_args()
+    if a.self_test:
+        self_test()
+        dense_self_test()
+    if a.source_csv:
+        if not (a.legacy_rotd and a.out_dense and a.out_receipt):
+            ap.error("source, legacy, output CSV and receipt all required")
+        source_raw=a.source_csv.read_bytes()
+        legacy_raw=a.legacy_rotd.read_bytes()
+        rows,metrics=dense_calculate(source_raw,legacy_raw)
+        output=io.StringIO(newline="")
+        w=csv.DictWriter(output,fieldnames=list(rows[0]),lineterminator="\n")
+        w.writeheader();w.writerows(rows)
+        b=output.getvalue().encode("utf-8")
+        a.out_dense.write_bytes(b)
+        receipt=dict(classification="S05_REAL_ESM_DENSE_LONG_PERIOD_NUMERIC_QC_ONLY",
+            SOURCE={"record":"IT-2012-0008/IT.NVL/HN/MP",
+                    "source_processed_32040x3_sha256":sha(source_raw),
+                    "source_RotD16_sha256":sha(legacy_raw),
+                    "source_read_level":"ESM v3 processed archived SI waveform and prior 16-period RotD"},
+            REF="Newmark average acceleration 5% SDOF, rotate displacement histories before peak",
+            STANDARD="NO authorized IEC/GB/EN clause or site design target read in this RUN",
+            OFFICIAL="ESM v3 source processing highpass 0.04Hz; separate SNR reported lc 0.09Hz; no station-to-site transfer",
+            RUN="GitHub Actions Python 3.12 NumPy; real processed wave; no Abaqus E/WE",
+            FIG="NONE; direct numerical table for future design-spectrum selection",
+            TAB="46-period real RotD00/50/100 1.246-9.346s with conditional T1",
+            program_sha256=sha(Path(__file__).read_bytes()),
+            numpy_version=np.__version__,damping_ratio_assumed=.05,
+            dt_s=.005,npts=32040,angular_step_deg=.5,
+            angular_grid_comparison_deg=1.,
+            output_csv_sha256=sha(b),output_csv_bytes=len(b),
+            **metrics,
+            assumptions=["5% assumed damping, fixed ESM processed source",
+                         "T1=6.230957762865167s from simplified 158m beam NOT native Abaqus",
+                         "one Italian event, NOT independent multi-event selection",
+                         "no physical long-period instrument validation inferred from SNR cutoff"],
+            error_budget={"angular_discretization":"measured half-vs-one-degree max difference in metrics",
+                          "time_integration":"Newmark dt=0.005s, independent exact-integration error NOT bounded",
+                          "spectral_resolution":"46 points, no interpolation asserted between points",
+                          "record_site_model":"not bounded; no target spectrum or PT/contact modes"},
+            failed_cases=["strict source SHA mismatch rejected","legacy SHA mismatch rejected",
+                          "12 overlap periods x 5 numeric columns checked"],
+            site_target_verified=False,low_frequency_usable_for_design=False,
+            S05_PASS=False,S08_PASS=False,native_Abaqus_E_WE=0,
+            HOLD="site-specific long-period target, multiple independent qualified events and native PT/contact modes missing")
+        a.out_receipt.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
+        print("S05_REAL_ESM_DENSE_ROTD_46_NUMERIC_QC_PASS_NOT_DESIGN",
+              metrics["overlap_period_count"],metrics["max_overlap_relative_difference"],
+              metrics["T1_RotD50_psa_m_s2"],sha(b))
+    elif not a.self_test:
+        ap.error("use --self-test or provide real source")
+
+if __name__=="__main__":
+    import sys
+    if "--dense-band" in sys.argv: dense_cli()
+    else: main()
