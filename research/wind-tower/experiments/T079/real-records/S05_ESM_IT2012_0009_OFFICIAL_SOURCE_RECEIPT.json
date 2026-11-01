@@ -222,5 +222,12 @@
   "waveform_content_type": "application/zip; charset=UTF-8",
   "waveform_response_bytes": 386241,
   "waveform_response_sha256": "83f65efb9a4ed6e9790a5ffa29550c0bab20cafc89b523d88edfde8dd347db95",
-  "waveform_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0009&station=NVL%2CMDN&format=ascii&processing-type=MP&data-type=ACC"
+  "waveform_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0009&station=NVL%2CMDN&format=ascii&processing-type=MP&data-type=ACC",
+  "downstream_numeric_analysis": {
+    "locked_zip_sha256": "84334aa45b65f1ba55b4474af3cc65f5640ea0e0bf05a4a8915095eb87f6f13f",
+    "locked_artifact": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41361152018/artifacts/13105770913",
+    "analysis_receipt": "S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_RECEIPT.json",
+    "warning": "THIS retrieval ZIP hash differs from locked downstream ZIP. Five-period spectra were computed only from the locked artifact, not from this latest response. Dynamic ZIP/header or numeric-content variability has not been isolated."
+  },
+  "source_retrieval_variability_status": "UNRESOLVED_DIFFERENT_OFFICIAL_HTTP_ZIP_SHA256; DO_NOT_MIX_VERSIONS"
 }
