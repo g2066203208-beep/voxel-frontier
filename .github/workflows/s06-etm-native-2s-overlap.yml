@@ -1,0 +1,139 @@
+name: S06 2s real ETM four-batch overlap native diagnostic
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-etm-native-2s-overlap.yml'
+      - 'research/wind-tower/experiments/T062/s06_etm_2s_native_overlap.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  etm-2s-overlap:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: windows-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout SHA-pinned original sources (no automatic LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s06_etm_2s_native_overlap.py
+            research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py
+            research/wind-tower/experiments/T062/s06_native_4batch_common_channel_qc.py
+            research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify resource cap, native executable, original BTS and selftests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $root='research/wind-tower'
+          $exe="$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe"
+          $bts="$root/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts"
+          git lfs install --local
+          git lfs pull --include="$exe,$bts" --exclude=""
+          if ($LASTEXITCODE -ne 0) { throw 'LFS_MATERIALIZATION_FAILURE' }
+          if ((Get-Item $exe).Length -ne 61086208) { throw 'NATIVE_EXE_SIZE_MISMATCH' }
+          if ((Get-Item $bts).Length -gt 524288000 -or (Get-Item $bts).Length -lt 1024) { throw 'BTS_RESOURCE_CAP_OR_POINTER_FAILURE' }
+          $exesha=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          $btssha=(Get-FileHash $bts -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($exesha -ne '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a') { throw 'EXE_SHA_MISMATCH' }
+          if ($btssha -ne 'ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147') { throw 'BTS_SHA_MISMATCH' }
+          $p="$root/experiments/T062"
+          python -m py_compile "$p/s06_etm_2s_native_overlap.py" "$p/s06_ntm_native_0p1s_probe.py" "$p/s06_native_4batch_common_channel_qc.py"
+          if ($LASTEXITCODE -ne 0) { throw 'PYTHON_COMPILE_FAILURE' }
+          python "$p/s06_etm_2s_native_overlap.py" --selftest
+          if ($LASTEXITCODE -ne 0) { throw 'ETM_2S_NEGATIVE_TEST_FAILURE' }
+          Write-Host "ETM_BTS_SOURCE_PASS size=$((Get-Item $bts).Length) sha=$btssha"
+      - name: Prepare four overlapping gage batches with identical 2s original ETM BTS
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $root='research/wind-tower'
+          $script="$root/experiments/T062/s06_etm_2s_native_overlap.py"
+          foreach ($b in 1..4) {
+            $args=@('--prepare','--overlap','--batch',"$b",
+              '--archive1',"$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+              '--archive2',"$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip",
+              '--supp',"$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+              '--dll',"$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll",
+              '--exe',"$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe",
+              '--contract',"$root/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json",
+              '--bts',"$root/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts",
+              '--outdir',"work/batch$b")
+            & python "$script" @args
+            if ($LASTEXITCODE -ne 0) { throw "BATCH_$b_PREP_FAILED" }
+          }
+          Write-Host 'FOUR_BATCH_REAL_ETM_2S_PREPARED; NO_700S_PRODUCTION'
+      - name: Run four independent native 2s ETM diagnostics
+        shell: pwsh
+        continue-on-error: true
+        env:
+          OMP_NUM_THREADS: '2'
+          OPENBLAS_NUM_THREADS: '2'
+        run: |
+          $ErrorActionPreference='Continue'
+          $exe=(Resolve-Path 'research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe').Path
+          $failed=0
+          foreach ($b in 1..4) {
+            Push-Location "work/batch$b"
+            & $exe 'DTU_10MW_RWT.fst' 2>&1 | Tee-Object -FilePath 'native_stdout.log'
+            $code=$LASTEXITCODE
+            if ($null -eq $code) { $code=999 }
+            Set-Content -Path 'native_exit_code.txt' -Value "$code"
+            Pop-Location
+            Write-Host "BATCH_$b ETM_2S_NATIVE_EXIT=$code"
+            if ($code -ne 0) { $failed++ }
+          }
+          if ($failed -gt 0) { throw "NATIVE_BATCH_FAILURE_COUNT_$failed" }
+      - name: Check 41 times, common states and three duplicated gages
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $script='research/wind-tower/experiments/T062/s06_etm_2s_native_overlap.py'
+          $receipt='research/wind-tower/experiments/T062/S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json'
+          & python $script --qc --root work --receipt $receipt
+          if ($LASTEXITCODE -ne 0) { throw 'ETM_2S_CROSS_BATCH_PARITY_HOLD' }
+      - name: Archive four original OUTBs, native logs, inputs and QC including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s06-etm-real-bts-2s-four-batch-overlap-native-diagnostic
+          path: |
+            work/batch*/native_stdout.log
+            work/batch*/native_exit_code.txt
+            work/batch*/S06_0P1S_PREP_RECEIPT.json
+            work/batch*/DTU_10MW_RWT.outb
+            research/wind-tower/experiments/T062/S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Persist small QC receipt on Draft PR branch only
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $p='research/wind-tower/experiments/T062/S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json'
+          if (-not (Test-Path $p)) { throw 'QC_RECEIPT_MISSING' }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --sparse -- $p
+          if ($LASTEXITCODE -ne 0) { throw 'GIT_ADD_FAILURE' }
+          if (git diff --cached --quiet) { Write-Host 'QC_RECEIPT_UNCHANGED'; exit 0 }
+          git commit -m 'data(S06): retain real ETM 2s four-batch native parity receipt'
+          if ($LASTEXITCODE -ne 0) { throw 'GIT_COMMIT_FAILURE' }
+          git pull --rebase origin $env:GITHUB_REF_NAME
+          if ($LASTEXITCODE -ne 0) { throw 'GIT_REBASE_FAILURE' }
+          git push origin "HEAD:$env:GITHUB_REF_NAME"
+          if ($LASTEXITCODE -ne 0) { throw 'GIT_PUSH_FAILURE' }
+          Write-Host 'S06_2S_NATIVE_QC_PERSISTED; NOT_700S_OR_PHYSICS_PASS'
