@@ -1,3 +1,9 @@
+## 2026-11-02 03时｜S08真实158m沿高地震包络（非Abaqus E）
+
+- **SOURCE/阅读层级：** 继承T077 158m/70站OpenFAST质量/EI SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`及历史ESM v3 IT-2012-0008/NVL/MP已处理波CSV SHA256=`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`；HNE/HNN各32040点×0.005s。**REF**=既有T079方法/ESM来源；**STANDARD**=无新授权规范条款核读；**OFFICIAL**=历史ESM已处理源而非原始仪器波或嘉鱼设计谱。
+- **RUN/FIG/TAB：** 扩展[既有T079梁程序](../T079/s08_158m_reduced_beam_real_esm.py) SHA256=`4dcc1407e5e1f71c602405b965d79c8bfa07c14830ccb44de65ce58786b98397`，真实[Actions #41340675376](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41340675376) completed/success；35段两端弹性弯矩**140行**、36节点相对位移**72行**和[本文沿高筛查图](../../manuscript/final-thesis/figures/FIG_S08_07_158M_BEAM_PROXY_ALONG_HEIGHT_ENVELOPES_NOT_ABAQUS.svg)已持久化；[T079完整源/失败/误差/数值/收据](../T079/PROCESS_LOG.md#2026-11-02-03时真实esm驱动158m简化梁35段沿高弯矩36节点位移包络非abaqus-e)。112m钢混交界HNE两侧弯矩包络3232.944/3257.061 kN·m，HNN3210.336/3227.972 kN·m；塔底11233.623/8613.007 kN·m，塔顶位移35.037/29.303mm，均为**线弹性简化梁、分点异时包络**。
+- **误差/失败/PASS-HOLD：** 35段Hermite端矩对单元刚度矩阵自测PASS；旧12模态/2峰值/3204时程表按列峰值尺度独立回归最大归一化差6.68245e-7，旧三表与旧收据不覆盖。此前四次CI失败（旧产物字节不同、Actions token转义、近零剪力比较阈值）及最终成功详见T079新节。没有Abaqus原生E/WE、PT/接缝/场址验收；地震波T1=6.231s低频SNR/处理史未核；**S08独立数值研究进展、12阶段0/12未晋级**。不改T057/T070/main、不合并PR、不跑昂贵生产。
+
 ## 2026-11-02 02时｜S08首个真实158m条件性梁模型地震响应（非Abaqus原生E）
 
 - **SOURCE/阅读层级：** 已直接取回[T077/recovery的158m OpenFAST 70站塔架质量/弯曲刚度文件](../T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat) SHA256 `f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`，历史ESM处理后三向真实波源CSV SHA256 `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`；使用HNE/HNN两水平32040点×0.005s。RNA-R2平动质量676753.290723kg为已存T057值，偏心和转动惯量未包含。详细源/参数/失败与限制见[T079本轮过程](../T079/PROCESS_LOG.md#2026-11-02-02时真实esm驱动158m简化梁动力时程与论文筛查图非原生abaqus-e)。
