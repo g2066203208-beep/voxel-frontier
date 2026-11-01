@@ -85,7 +85,67 @@ def read_esm(path):
     if any(not np.all(np.isfinite(x)) for x in a.values()):raise ValueError('nonfinite ground acceleration')
     return t,a
 
-def integrate_modal(acc,omega,phi,gamma,K,dt,zeta=0.05):
+
+def section_moment_operator(z, ei):
+    """Elastic EI*curvature at both ends of each 2-node Hermite beam.
+    Sign convention: left curvature moment = -ke[theta_left],
+    right curvature moment = +ke[theta_right]; NOT full dynamic section forces.
+    """
+    nd=2*len(z);B=np.zeros((2*len(ei),nd-2))
+    positions=[];element_ids=[];ends=[]
+    for i,rigidity in enumerate(ei):
+        L=z[i+1]-z[i]
+        if L<=0 or rigidity<=0:raise ValueError('nonpositive element length/EI')
+        left=rigidity/L**2*np.array([-6.,-4.*L,6.,-2.*L])
+        right=rigidity/L**2*np.array([6.,2.*L,-6.,4.*L])
+        for j,(row,location,which) in enumerate(((left,z[i],'lower'),(right,z[i+1],'upper'))):
+            for k,val in enumerate(row):
+                gdof=2*i+k
+                if gdof>=2:B[2*i+j,gdof-2]+=val
+            positions.append(float(location));element_ids.append(i+1);ends.append(which)
+    return B,positions,element_ids,ends
+
+def envelope_svg(path, moment_rows, displacement_rows):
+    """Direct SVG from numeric envelopes; display only, no interpolated physics."""
+    from html import escape
+    W,H=1080,650
+    panels=[
+      {'x':100,'title':'Elastic bending |M| envelope (kN m)','rows':moment_rows,
+       'key':'peak_abs_elastic_bending_moment_kNm','factor':1.0},
+      {'x':600,'title':'Relative lateral |u| envelope (mm)','rows':displacement_rows,
+       'key':'peak_abs_relative_u_mm','factor':1.0},
+    ]
+    colors={'HNE':'#21618c','HNN':'#c05a25'}
+    out=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
+      '<rect width="100%" height="100%" fill="#fff"/>',
+      '<text x="52" y="39" font-family="Arial" font-size="22" font-weight="bold">158 m hybrid tower | measured ESM input, linear-beam screening</text>',
+      '<text x="52" y="65" font-family="Arial" font-size="14" fill="#b02020">NOT ABAQUS E/WE · no PT, contact, RNA inertia or site-spectrum qualification</text>']
+    for p in panels:
+        x0=p['x'];y0=132;pw=380;ph=420
+        vmax=max(float(row[p['key']]) for row in p['rows'])*1.10
+        out.append(f'<text x="{x0}" y="106" font-family="Arial" font-size="16">{escape(p["title"])}</text>')
+        out.append(f'<path d="M{x0} {y0}V{y0+ph}H{x0+pw}" fill="none" stroke="#333" stroke-width="1.5"/>')
+        for k in range(5):
+            yy=y0+ph*(1-k/4)
+            xx=x0+pw*k/4
+            out.append(f'<line x1="{x0}" y1="{yy:.2f}" x2="{x0+pw}" y2="{yy:.2f}" stroke="#ddd"/>')
+            out.append(f'<text x="{x0-9}" y="{yy+5:.2f}" text-anchor="end" font-size="12" font-family="Arial">{158*k/4:.1f}</text>')
+            out.append(f'<text x="{xx:.2f}" y="{y0+ph+20}" text-anchor="middle" font-size="12" font-family="Arial">{vmax*k/4:.1f}</text>')
+        out.append(f'<text x="{x0-44}" y="{y0+ph/2}" transform="rotate(-90 {x0-44} {y0+ph/2})" text-anchor="middle" font-size="13" font-family="Arial">Elevation z (m)</text>')
+        for direction in ('HNE','HNN'):
+            data=[row for row in p['rows'] if row['direction']==direction]
+            data.sort(key=lambda row:float(row['elevation_m']))
+            points=' '.join(f'{x0+pw*float(row[p["key"]])/vmax:.2f},{y0+ph*(1-float(row["elevation_m"])/158):.2f}' for row in data)
+            out.append(f'<polyline points="{points}" fill="none" stroke="{colors[direction]}" stroke-width="2"/>')
+        for j,direction in enumerate(('HNE','HNN')):
+            lx=x0+55+j*135
+            out.append(f'<line x1="{lx}" y1="{y0+ph+49}" x2="{lx+30}" y2="{y0+ph+49}" stroke="{colors[direction]}" stroke-width="3"/>')
+            out.append(f'<text x="{lx+37}" y="{y0+ph+54}" font-size="13" font-family="Arial">{direction}</text>')
+    out.append('<text x="52" y="633" font-family="Arial" font-size="12" fill="#555">Each curve is a timewise maximum at each location, NOT a simultaneous load profile. Source: ESM IT-2012-0008/NVL/MP; zeta=5% assumed.</text>')
+    out.append('</svg>')
+    Path(path).write_text('\n'.join(out)+'\n')
+
+def integrate_modal(acc,omega,phi,gamma,K,dt,zeta=0.05,moment_phi=None,node_phi=None):
     # Newmark average acceleration, initial rest, -Gamma*a_g generalized forcing.
     q=np.zeros(len(omega));v=q.copy();aa=-gamma*acc[0]
     c=2*zeta*omega;k=omega**2;b=.25;g=.5
@@ -93,11 +153,25 @@ def integrate_modal(acc,omega,phi,gamma,K,dt,zeta=0.05):
     peak={'top_u_m':(0.,0),'top_abs_acc_m_s2':(0.,0),
           'base_elastic_shear_N':(0.,0),'base_elastic_moment_Nm':(0.,0)}
     history=[]
+    if moment_phi is not None:
+        nm=moment_phi.shape[0];nn=node_phi.shape[0]
+        mom_min=np.full(nm,np.inf);mom_max=np.full(nm,-np.inf)
+        mom_abs=np.zeros(nm);mom_signed=np.zeros(nm);mom_idx=np.zeros(nm,dtype=int)
+        nod_abs=np.zeros(nn);nod_signed=np.zeros(nn);nod_idx=np.zeros(nn,dtype=int)
     for idx,ag in enumerate(acc):
         if idx:
             qp=q+dt*v+dt*dt*(.5-b)*aa;vp=v+dt*(1-g)*aa
             an=(-gamma*ag-c*vp-k*qp)/den
             q=qp+b*dt*dt*an;v=vp+g*dt*an;aa=an
+        if moment_phi is not None:
+            m=moment_phi@q;nu=node_phi@q
+            mom_min=np.minimum(mom_min,m);mom_max=np.maximum(mom_max,m)
+            update_m=np.abs(m)>mom_abs
+            mom_abs[update_m]=np.abs(m[update_m])
+            mom_signed[update_m]=m[update_m];mom_idx[update_m]=idx
+            update_n=np.abs(nu)>nod_abs
+            nod_abs[update_n]=np.abs(nu[update_n])
+            nod_signed[update_n]=nu[update_n];nod_idx[update_n]=idx
         u=phi@q;u_abs_acc=phi@aa
         top_u=u[-2];top_abs_acc=u_abs_acc[-2]+ag
         shear=K[0,2:]@u;moment=K[1,2:]@u
@@ -105,7 +179,12 @@ def integrate_modal(acc,omega,phi,gamma,K,dt,zeta=0.05):
                         ('base_elastic_shear_N',shear),('base_elastic_moment_Nm',moment)]:
             if abs(val)>peak[key][0]:peak[key]=(float(abs(val)),idx)
         if idx%20==0:history.append((idx*dt,top_u,top_abs_acc,shear,moment))
-    return peak,history
+    envelope=None
+    if moment_phi is not None:
+        envelope={'mom_min':mom_min,'mom_max':mom_max,'mom_abs':mom_abs,
+                  'mom_signed':mom_signed,'mom_idx':mom_idx,
+                  'nod_abs':nod_abs,'nod_signed':nod_signed,'nod_idx':nod_idx}
+    return peak,history,envelope
 
 def self_test():
     z=np.linspace(0,100,36);mu=np.ones(35)*1200;ei=np.ones(35)*1e10
@@ -114,10 +193,21 @@ def self_test():
     exact=(1.875104068711961**2)/(2*np.pi*100**2)*np.sqrt(1e10/1200)
     assert abs(f[0]/exact-1)<2e-5,(f[0],exact)
     assert orth<1e-8 and res<1e-7,(orth,res)
-    p,h=integrate_modal(np.zeros(101),om[:4],phi[:,:4],g[:4],K,0.01)
+    p,h,_=integrate_modal(np.zeros(101),om[:4],phi[:,:4],g[:4],K,0.01)
     assert all(v[0]==0 for v in p.values())
-    p,_=integrate_modal(np.sin(np.arange(1001)*0.01),om[:4],phi[:,:4],g[:4],K,0.01)
+    p,_,_=integrate_modal(np.sin(np.arange(1001)*0.01),om[:4],phi[:,:4],g[:4],K,0.01)
     assert p['top_u_m'][0]>0
+    B,_,_,_=section_moment_operator(z,ei)
+    u=np.linspace(-0.002,0.003,K.shape[0]);u[:2]=0.
+    for i in (0,3,34):
+        L=z[i+1]-z[i];k=ei[i]/L**3*np.array(
+            [[12,6*L,-12,6*L],[6*L,4*L*L,-6*L,2*L*L],
+             [-12,-6*L,12,-6*L],[6*L,2*L*L,-6*L,4*L*L]])
+        endforces=k@u[2*i:2*i+4]
+        m0=B[2*i]@u[2:];m1=B[2*i+1]@u[2:]
+        assert np.isclose(m0,-endforces[1],rtol=1e-10,atol=1e-6)
+        assert np.isclose(m1,endforces[3],rtol=1e-10,atol=1e-6)
+    print('PASS 35-element EI-curvature endpoint operators vs element end-force moments')
     print('PASS uniform cantilever analytic frequency, orthogonality, modal residual, zero/nonzero forcing',f[0],exact)
 
 def main():
@@ -133,15 +223,19 @@ def main():
     if mesherr.max()>0.02:raise ValueError('mesh convergence 2% screen failed')
     if orth>1e-8 or res>1e-7:raise ValueError('modal numerical QC failed')
     mass_est=float(np.sum(mu*np.diff(z)));rna=float(RNA_MASS_KG)
-    t,acc=read_esm(args.esm);dt=float(t[1]-t[0]);summary=[];histories={}
+    B,section_z,section_element,section_end=section_moment_operator(z,ei)
+    moment_phi=B@phi
+    node_phi=np.vstack((np.zeros((1,len(om))),phi[::2]))
+    t,acc=read_esm(args.esm);dt=float(t[1]-t[0]);summary=[];histories={};envelopes={}
+
     for name,series in acc.items():
-        peaks,history=integrate_modal(series,om,phi,g,K,dt)
+        peaks,history,envelope=integrate_modal(series,om,phi,g,K,dt,moment_phi=moment_phi,node_phi=node_phi)
         summary.append({'direction':name,'peak_top_relative_displacement_m':peaks['top_u_m'][0],
                         'time_peak_top_displacement_s':peaks['top_u_m'][1]*dt,
                         'peak_top_absolute_acceleration_m_s2':peaks['top_abs_acc_m_s2'][0],
                         'peak_base_elastic_shear_kN':peaks['base_elastic_shear_N'][0]/1000,
                         'peak_base_elastic_moment_kNm':peaks['base_elastic_moment_Nm'][0]/1000})
-        histories[name]=history
+        histories[name]=history;envelopes[name]=envelope
     with (out/'S08_158M_BEAM_PROXY_MODAL_20261102.csv').open('w',newline='') as h:
         w=csv.writer(h);w.writerow(['mode','frequency_Hz','period_s','effective_mass_fraction',
           'cumulative_mass_fraction','refined_frequency_Hz','relative_mesh_difference'])
@@ -153,6 +247,38 @@ def main():
           'base_elastic_shear_N','base_elastic_moment_Nm'])
         for key,history in histories.items():
             for row in history:w.writerow([key,*row])
+    moment_rows=[];displacement_rows=[]
+    for direction,envelope in envelopes.items():
+        for i in range(len(section_z)):
+            moment_rows.append({
+                'direction':direction,'element':section_element[i],
+                'end':section_end[i],'elevation_m':section_z[i],
+                'peak_abs_elastic_bending_moment_kNm':float(envelope['mom_abs'][i])/1000,
+                'signed_moment_at_peak_kNm':float(envelope['mom_signed'][i])/1000,
+                'time_peak_s':float(envelope['mom_idx'][i])*dt,
+                'max_positive_kNm':max(0.,float(envelope['mom_max'][i])/1000),
+                'min_negative_kNm':min(0.,float(envelope['mom_min'][i])/1000)})
+        for i,elevation in enumerate(z):
+            displacement_rows.append({
+                'direction':direction,'node':i,'elevation_m':float(elevation),
+                'peak_abs_relative_u_mm':float(envelope['nod_abs'][i])*1000,
+                'signed_u_at_peak_mm':float(envelope['nod_signed'][i])*1000,
+                'time_peak_s':float(envelope['nod_idx'][i])*dt})
+    assert len(moment_rows)==140 and len(displacement_rows)==72
+    moment_file='S08_158M_BEAM_PROXY_35SEG_MOMENT_ENVELOPE_20261102.csv'
+    displacement_file='S08_158M_BEAM_PROXY_36NODE_DISPLACEMENT_ENVELOPE_20261102.csv'
+    figure_file='FIG_S08_07_158M_BEAM_PROXY_ALONG_HEIGHT_ENVELOPES_NOT_ABAQUS.svg'
+    for filename,rows in ((moment_file,moment_rows),(displacement_file,displacement_rows)):
+        with (out/filename).open('w',newline='') as h:
+            w=csv.DictWriter(h,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+    envelope_svg(out/figure_file,moment_rows,displacement_rows)
+    # The last node is exactly the original tower-top displacement DOF.
+    for direction in acc:
+        row=next(row for row in displacement_rows if row['direction']==direction and row['node']==35)
+        original=next(row for row in summary if row['direction']==direction)
+        assert np.isclose(row['peak_abs_relative_u_mm']/1000,
+                          original['peak_top_relative_displacement_m'],rtol=1e-12,atol=1e-12)
+    assert all(np.isfinite(float(row['peak_abs_elastic_bending_moment_kNm'])) for row in moment_rows)
     receipt={'classification':'NONPRODUCTION_CONDITIONAL_LINEAR_158M_BEAM_PROXY_NOT_ABAQUS_E',
       'source_reading_level':'GitHub OpenFAST 70-station tower file + archived processed ESM acceleration',
       'source_tower_sha256':sha(args.tower),'source_esm_sha256':sha(args.esm),
@@ -170,15 +296,16 @@ def main():
       'STANDARD':'No authorized GB/IEC clauses read; NOT STANDARD PASS',
       'OFFICIAL':'Recovered OpenFAST tower file is a project source, not official DTU tower design',
       'RUN':'Python reduced-order beam model only; native Abaqus E/WE=0',
-      'FIG':'None; numerical tables only',
+      'FIG':figure_file+' (linear-beam screening only, not Abaqus)',
       'TAB':['S08_158M_BEAM_PROXY_MODAL_20261102.csv','S08_158M_BEAM_PROXY_PEAKS_20261102.csv',
-             'S08_158M_BEAM_PROXY_HISTORY_20261102.csv'],
+             'S08_158M_BEAM_PROXY_HISTORY_20261102.csv',moment_file,displacement_file],
       'assumptions':['perfectly continuous linear Euler-Bernoulli beam, fixed base',
           'no prestress/contact/cracking/soil/foundation','RNA mass at 158m; CG offset, inertia, blades ignored',
           'horizontal HNE/HNN only; HNZ vertical not represented','5% equal modal damping assumed',
           'base shear/moment are elastic restoring components, not total dynamic support reactions',
           '35 segments from 70 OpenFAST paired stations, tiny interstation gaps closed'],
       'error_budget':'Uniform cantilever frequency <2e-5; modal residual <1e-7; orthogonality <1e-8; first 6 coarse/refined frequencies <2%; physical model error UNQUANTIFIED',
+      'along_height_envelopes':{'beam_elements':35,'section_ends_per_element':2,'moment_rows':140,'node_rows':72,'each_location_timewise_peak_not_simultaneous':True,'elastic_moment_only_not_total_support_reaction':True},
       'failure_records':[],'stage':'S08 independent structural proxy only; BLOCKED for Abaqus native E',
       'HOLD':'no native Abaqus E, no PT/contact initial state, no RNA inertia, no site-matched design spectrum',
       'peak_summary':summary}
