@@ -1,6 +1,7 @@
 "use strict";
 // OpenFAST v3.5.3 source-audited S06 nine-gage TP/RP/AL child OutList.
 // Never changes frozen inputs; RP angles are NOT an exact DCM.
+// Original 2s ETM ED parents already have all 72 target channels: do not write a redundant child.
 // ElastoDyn.f90 SHA256 a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3
 // ElastoDyn_IO.f90 SHA256 af1c78a15e4102668f83740c8ad1fc450f7112cdcc2ce004093278acf75d1d5a
 const fs=require("fs"),crypto=require("crypto"),path=require("path");
@@ -64,6 +65,7 @@ function main(a){
  const b=fs.readFileSync(input),hash=sha(b);
  ck(parents.has(hash),"UNVERIFIED_2S_ETM_PARENT_SHA");
  const p=patch(b.toString("utf8"));ck(p.added>=0&&p.added<=72&&p.present===72,"POSE_CHANNEL_COVERAGE");
+ if(p.added===0){console.log(JSON.stringify({status:"POSE_ALREADY_PRESENT_NO_CHILD_CREATED",parent_sha256:hash,pose_target_channels_present:p.present,exact_DCM:false,physical_pass:false}));return;}
  fs.writeFileSync(output,p.text,"utf8");
  console.log(JSON.stringify({parent_sha256:hash,child_sha256:sha(fs.readFileSync(output)),
  added:p.added,pose_target_channels_present:p.present,nodes:p.nodes,exact_DCM:false,physical_pass:false}));
