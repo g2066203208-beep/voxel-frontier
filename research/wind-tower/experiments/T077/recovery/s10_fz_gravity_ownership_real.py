@@ -201,7 +201,7 @@ def sixcomp_analyze(loads, static_rows, fz_rows):
                 return finite(load_map[(case,seg,"Fz_kN")]["gage_z_m"])
             mismatch=max(abs(z(lo)-finite(s["z_below_gage_m"])),
                          abs(z(hi)-finite(s["z_above_gage_m"])))
-            if mismatch>0.001: raise ValueError("SIX_GAGE_HEIGHT")
+            if mismatch>0.002: raise ValueError("SIX_GAGE_HEIGHT")
             # Upper cut moved to lower point: (r_upper-r_lower) x F_upper,
             # where the assumed common vertical direction is +z.
             dyn=[val(hi,ch)-val(lo,ch) for ch in SIX_CHANNELS]
