@@ -1,0 +1,58 @@
+name: S05 JRC 2012 published example vs real ESM RotD16 (research only)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s05-jrc-2012-real-rotd-shape-qc.yml'
+      - 'research/wind-tower/experiments/T079/s05_parametric_target_spectrum_fit.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  jrc-bridge-shape-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch PR-head real source and existing T079 program; SHA gate
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T079
+          mkdir -p "$root/real-records" output
+          base="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$root"
+          curl -fLsS --retry 3 -o "$root/s05_parametric_target_spectrum_fit.py" "$base/s05_parametric_target_spectrum_fit.py"
+          curl -fLsS --retry 3 -o "$root/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv" "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv"
+          echo '6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205  research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv' | sha256sum --check
+      - name: Real Python 3.12 JRC reference example 4s domain and shape-only test
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T079
+          python -m py_compile "$root/s05_parametric_target_spectrum_fit.py"
+          python "$root/s05_parametric_target_spectrum_fit.py" --jrc-example --self-test
+          python "$root/s05_parametric_target_spectrum_fit.py" --jrc-example --real-rotd-csv "$root/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv" --output output/jrc_16.csv --receipt output/jrc_receipt.json
+          python - <<'PY'
+          import csv,json,math
+          from pathlib import Path
+          rows=list(csv.DictReader(Path('output/jrc_16.csv').open()))
+          r=json.loads(Path('output/jrc_receipt.json').read_text())
+          assert len(rows)==16 and sum(x['JRC_4s_formula_domain']=='True' for x in rows)==10
+          assert sum(x['status'].startswith('EXCLUDED') for x in rows)==6
+          assert r['S05_PASS'] is False and r['S08_PASS'] is False and r['native_Abaqus_E_WE']==0
+          assert math.isclose(r['fitted_shape_only_scale'],23.395312845709142,rel_tol=1e-12)
+          assert math.isclose(r['fitted_log_rmse'],.09771262057347191,rel_tol=1e-12)
+          assert math.isclose(r['min_ratio'],.7937216036086762,rel_tol=1e-12)
+          assert math.isclose(r['max_ratio'],1.0832561612444036,rel_tol=1e-12)
+          assert r['JRC_example_does_not_cover_T1_or_full_band']
+          print('REAL_ESM_JRC_SHAPE_PYTHON_CI_PASS_NUMERIC_ONLY_NOT_SITE_DESIGN')
+          PY
+          sha256sum "$root/s05_parametric_target_spectrum_fit.py" output/*
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s05-jrc-2012-real-rotd-shape-only-not-design
+          path: output/*
+          if-no-files-found: warn
+          retention-days: 30
