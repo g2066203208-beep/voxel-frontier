@@ -1,8 +1,8 @@
 name: S06 T071-T072 ROSCO console source QC
 on:
-  push:
+  pull_request:
     branches:
-      - research/t080-seismic-integration-gates-20261022
+      - main
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s06_rosco_console_cross_batch_qc.py'
       - 'research/wind-tower/experiments/T077/recovery/S06_T071_T072_*ROSCO*'
