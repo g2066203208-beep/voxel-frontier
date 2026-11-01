@@ -319,5 +319,8 @@
     "No new OpenFAST/Abaqus run attempted; no native DCM data in current 3-snapshot JSON.",
     "Seven intentionally malformed synthetic inputs rejected; all 15 conditional scenarios passed inversion and invariants."
   ],
-  "acceptance": "MATH_AND_PROVENANCE_ONLY_PASS__EXTERNAL_WIND_MAPPING_HOLD"
+  "acceptance": "MATH_AND_PROVENANCE_ONLY_PASS__EXTERNAL_WIND_MAPPING_HOLD",
+  "program_sha256": "67b53228293bcb032122143d2b2a3e45f1a764bb74fd5a9d128abba58ea6e060",
+  "pose_receipt_sha256": "d4427612da71affcebd00e4bcf36cb38aa543daa63153fa44bbfefe2cb304e2e",
+  "sha256_algorithm": "SHA-256 (pure JS verified against NIST abc known answer; UTF-8 ASCII source and JSON)"
 }
