@@ -697,11 +697,90 @@ def recover_independent_event(output_dir, timeout=90):
     return receipt
 
 
+
+# This exact official ZIP is preserved in Actions run 41361152018 artifact 13105770913.
+# ESM ZIP bytes differed across repeated HTTP requests; never silently replace it.
+INDEPENDENT_EVENT_ARCHIVE_SHA256 = '84334aa45b65f1ba55b4474af3cc65f5640ea0e0bf05a4a8915095eb87f6f13f'
+INDEPENDENT_T1_PROXY_S = 6.230957762865167
+INDEPENDENT_PERIODS_S = (4., 6., INDEPENDENT_T1_PROXY_S, 8., 10.)
+
+
+def independent_locked_archive_spectrum(raw):
+    """Five true waveform-derived horizontal spectra, frozen source ZIP only.
+    Not RotD, design spectrum, verified instrument band or Abaqus response.
+    """
+    from s05_ground_motion_pair_qc import sdof
+    if sha(raw) != INDEPENDENT_EVENT_ARCHIVE_SHA256:
+        raise ValueError('INDEPENDENT_LOCKED_SOURCE_ZIP_SHA256_CHANGED')
+    members=inspect_zip(raw)
+    rejects=[]
+    accepted=_independent_member_gate(members,'IT-2012-0009',{'NVL','MDN'},rejects)
+    nvl=[x for x in accepted if x['station']=='NVL']
+    if len(nvl)!=1: raise ValueError('INDEPENDENT_LOCKED_NVL_NOT_VERIFIED')
+    traces={}
+    by_stream={}
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for m in members:
+            h=m['dyna_selected_header_fields']
+            if h['STATION_CODE']!='NVL' or h['STREAM'] not in ('HNE','HNN'):
+                continue
+            lines=z.read(m['filename']).decode('utf-8').splitlines()
+            values=[float(v)*0.01 for line in lines[m['dyna_header_line_count']:]
+                    for v in line.split()]
+            if len(values)!=m['numeric_samples'] or any(not math.isfinite(v) for v in values):
+                raise ValueError('INDEPENDENT_INVALID_SAMPLES')
+            traces[h['STREAM']]=values
+            by_stream[h['STREAM']]={
+                'member_sha256':m['sha256'],
+                'numeric_samples_text_sha256':m['numeric_samples_sha256_normalized_LF']}
+    if set(traces)!={'HNE','HNN'}: raise ValueError('INDEPENDENT_LOCKED_NO_TWO_HORIZONTAL')
+    delta=nvl[0]['dt_s']
+    rows=[]
+    for period in INDEPENDENT_PERIODS_S:
+        e=sdof(traces['HNE'],delta,period,.05)['pseudo_sa_m_s2']
+        n=sdof(traces['HNN'],delta,period,.05)['pseudo_sa_m_s2']
+        if not all(math.isfinite(v) and v>0 for v in (e,n)):
+            raise ValueError('INDEPENDENT_NONPOSITIVE_SPECTRUM')
+        rows.append({'period_s':period,'HNE_pseudoSa_m_s2':e,
+                     'HNN_pseudoSa_m_s2':n,'pair_gm_pseudoSa_m_s2':math.sqrt(e*n),
+                     'frequency_over_highpass_corner':1/(period*nvl[0]['low_cut_Hz']),
+                     'status':'REAL_ESM_MP_2012_0009_NVL_NUMERIC_SOURCE_QC_NOT_DESIGN'})
+    out=io.StringIO(newline='')
+    cols=list(rows[0])
+    writer=csv.DictWriter(out,fieldnames=cols,lineterminator='\n')
+    writer.writeheader()
+    for row in rows:
+        writer.writerow({k:format(v,'.12g') if isinstance(v,float) else v for k,v in row.items()})
+    data=out.getvalue().encode('utf-8')
+    receipt={'status':'SECOND_INDEPENDENT_EVENT_REAL_WAVEFORM_FIVE_PERIOD_SOURCE_QC_NOT_DESIGN',
+        'SOURCE':'ESM v3 MP original official ZIP from Actions #41361152018/artifact #13105770913',
+        'source_zip_sha256':sha(raw),'source_zip_bytes':len(raw),
+        'source_numeric_sha256_by_stream':by_stream,
+        'REF':'ESM v3 DOI 10.13127/esm.3',
+        'STANDARD':'NO_AUTHORIZED_IEC_GB_CLAUSE_READ',
+        'OFFICIAL':'OFFICIAL_DYNA_MP_PROCESSED_SOURCE_BYTES',
+        'RUN':'PYTHON_3_12_REAL_SOURCE_FIVE_PERIOD_SDOF_NO_ABAQUS',
+        'FIG':'NONE','TAB':'FIVE_PERIOD_REAL_NVL_HORIZONTAL_PSA_CSV',
+        'event_id':'IT-2012-0009','station':'NVL','npts':nvl[0]['npts'],
+        'dt_s':delta,'low_cut_Hz':nvl[0]['low_cut_Hz'],
+        'damping_ratio_assumed':.05,'periods_s':list(INDEPENDENT_PERIODS_S),
+        'spectra':rows,'source_header_rejections':rejects,
+        'quality_from_official_selection':'GOOD / lc or hc issues (NOT BEST)',
+        'csv_sha256':sha(data),'csv_bytes':len(data),
+        'assumptions':'two horizontal components from same NVL station, 5% linear SDOF; T1 from unvalidated elastic beam',
+        'error_budget':'integration dt=0.005s no independent exact-integrator comparison; processing highpass 0.08Hz; station/site/structural uncertainties unquantified',
+        'source_stability':'official ZIP varied across HTTP requests; this one source hash is immutable and selected explicitly',
+        'HOLD':'independent event not a distinct seismic source family; GOOD with lc/hc warning; no Chinese site target or usable low-frequency certification',
+        'S05_PASS':False,'Abaqus_E_WE_RUN':0,'stages_passed':0}
+    return data,receipt
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test', action='store_true')
     ap.add_argument('--independent-self-test', action='store_true')
     ap.add_argument('--independent-source', action='store_true')
+    ap.add_argument('--independent-archive', action='store_true')
     ap.add_argument('--fetch', action='store_true')
     ap.add_argument('--export-s08', action='store_true')
     ap.add_argument('--source-zip', type=pathlib.Path)
@@ -738,6 +817,14 @@ def main():
                 json.dumps(failure, indent=2) + '\n', encoding='utf-8')
             print(json.dumps(failure), flush=True)
             raise SystemExit(2)
+    if a.independent_archive:
+        if not a.source_zip or not a.output_dir:
+            ap.error('--independent-archive requires --source-zip and --output-dir')
+        data,receipt=independent_locked_archive_spectrum(a.source_zip.read_bytes())
+        a.output_dir.mkdir(parents=True,exist_ok=True)
+        (a.output_dir/'S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_QC.csv').write_bytes(data)
+        (a.output_dir/'S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_RECEIPT.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+        print(json.dumps({'status':receipt['status'],'zip_sha256':receipt['source_zip_sha256'],'csv_sha256':receipt['csv_sha256'],'period_count':len(receipt['spectra']),'S05_PASS':False},sort_keys=True))
     if a.export_s08:
         if not a.source_zip or not a.output_dir:
             ap.error('--export-s08 requires --source-zip and --output-dir')
@@ -749,7 +836,7 @@ def main():
         print(json.dumps({'status':receipt['status'], 'csv_sha256':receipt['csv_sha256'],
                           'npts':receipt['npts'], 'dt_s':receipt['dt_s'],
                           'Abaqus_E_WE_RUN':0, 'S08_PASS':False},sort_keys=True))
-    if not a.self_test and not a.fetch and not a.export_s08 and not a.independent_source and not a.independent_self_test:
+    if not a.self_test and not a.fetch and not a.export_s08 and not a.independent_source and not a.independent_self_test and not a.independent_archive:
         ap.error('provide --self-test, --fetch, and/or --export-s08')
 
 
