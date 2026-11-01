@@ -19,6 +19,17 @@
 下一轮操作：获取CI实际结论并处理报错（如有）；对照原始D盘/授权规范/模型来源做物理设计决策，并在具备本机Abaqus时按[T070原生RUN手册](../T070/T070_G0_G1_RUNBOOK.md)执行。所有失败都保留，不以自动化任务调度作为模型真正运行的证明。
 
 
+## 2026-11-01 15时｜S06原始16件四ETM源ZIP到期前保全（真实原件下载、逐件SHA、持久Library上传）
+
+- **SOURCE/直接原件层级：** 复用既有[S06原始16件SHA256清单](../T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv)（原文件未修改）；通过GitHub Actions真实artifact API核对T071 run 37582521146与T072 run 37622366681的16件原ZIP，均显示未过期，原到期区间为2026-11-06 07:09:33–13:11:23 UTC。使用GitHub connector逐件下载16个ZIP到工作容器，**对实际下载的16份二进制逐件重新计算SHA256**，16/16与既有manifest中`zip_sha256`完全相同，合计**125,291,677字节**（四工况×A/B/C/D），并非从派生CSV重打包。
+- **RUN/保全实物：** 已通过用户ChatGPT持久Library接口成功上传16/16个原始ZIP到`/WindTower/S06_T071_T072_Source_Archives_20261101/`，随后用Library目录API独立回读**16个不同文件、全部大小及路径、无分页或警告**，合计125,291,677字节；各自Library文件ID、原artifact ID、下载端SHA与历史manifest对应关系见[16行保全索引](../T077/recovery/S06_T071_T072_16_ARTIFACT_LIBRARY_PRESERVATION_20261101.csv)。**Library上传成功及大小核对不等于上传后再下载逐字节SHA复验**，该项明确标`POST_UPLOAD_BYTES_NOT_REHASHED`；不声称已复制至用户D盘/Google Drive/GitHub release。保全位置为用户ChatGPT Library，不是GitHub源码分支，且需按该服务的保留和访问规则管理。
+- **REF/STANDARD/OFFICIAL：** REF=既有T071/T072原始OpenFAST数据恢复及S06方法，不新增期刊原页；STANDARD=本轮未取得IEC 2025或GB/NB授权条文，未进行规范条款PASS；OFFICIAL=GitHub Actions artifact API原始二进制与既有历史源manifest，非Abaqus/OpenFAST新原生求解。
+- **FIG/TAB/误差预算：** FIG=无新物理响应图；TAB=16行Library保全CSV；下载端SHA256逐字节完全相同（零容许hash差异），上传后Library大小严格一致（零字节差），上传后内容哈希尚待二次取回。原始时程物理误差、同步RP/TP/DCM、惯性所有权、S03/S04冲突及原始OUTB身份仍为`NEED_ESTIMATE/HOLD`。
+- **失败记录/边界：** 尝试将下载的connector file_uri直接上传Google Drive，遭遇`file_uri`参数类型不一致及`BLOCKED_FILE_REFERENCE: this file is unavailable for connector egress`；转用用户持久Library成功，未把125MB二进制提交PR。第一次Library容器路径上传因`container_session_unavailable`失败，改用原下载文件的精确`source_file_ref.file_id`后成功；失败没有掩盖。
+- **PASS/HOLD：** `S06_ARCHIVE_PRESERVATION=SOURCE_SHA_PASS; LIBRARY_16_OF_16_PRESENT`，**仅关闭16件历史源ZIP即将到期的保全风险**，不关闭S06整阶段。12阶段仍**0/12未晋级**，正式DLC1.2=0/126、真实E/WE原生0、材料寿命0；冻结T057/T070、main、PR Draft未改，未启动高成本生产RUN。
+- **下一唯一最优动作：** 复用已保全原始16 ZIP，选同一工况同一时刻31站同步RP/TP/DCM及六分量，建立全局参考系力矩运输与截段惯性/风荷载所有权对照；不得用时均截面内力当作外力。
+
+
 ## 2026-10-27｜前序工作结果补登记与中央证据闭环
 
 > 该节追登记2026-10-27已发生的实质产物、来源等级与实际GitHub commits；不是开新的T080子任务号。GitHub本节写入时间未额外补造精确分钟；所有记录均在PR #42工作分支，**不在main**。
