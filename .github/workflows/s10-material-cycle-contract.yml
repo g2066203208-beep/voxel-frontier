@@ -8,6 +8,7 @@ on:
       - '.github/workflows/s10-material-cycle-contract.yml'
       - 'research/wind-tower/experiments/T077/recovery/s10_legacy_odb_lfs_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/s10_native_odb_local_stress_gate.py'
+      - 'research/wind-tower/experiments/T077/recovery/s10_local_stress_provenance_admission.py'
       - 'research/wind-tower/archive/local-large-assets-20261004/abaqus-dtu-models/**'
   workflow_dispatch:
 jobs:
@@ -21,6 +22,20 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p s10-receipts
+          python3 -m py_compile research/wind-tower/experiments/T077/recovery/s10_local_stress_provenance_admission.py
+          python3 research/wind-tower/experiments/T077/recovery/s10_local_stress_provenance_admission.py --self-test | tee s10-receipts/S10_LOCAL_STRESS_PROVENANCE_SYNTHETIC.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('s10-receipts/S10_LOCAL_STRESS_PROVENANCE_SYNTHETIC.json').read_text())
+          assert r['status']=='PASS_SYNTHETIC_ONLY' and r['negative_tests']==15
+          assert r['physical_pass'] is False and r['miner_admitted'] is False
+          print('S10_NATIVE_TO_MATERIAL_SOURCE_CONTRACT_15_NEGATIVES_NO_PHYSICAL_PASS')
+          PY
+          if python3 research/wind-tower/experiments/T077/recovery/s10_local_stress_provenance_admission.py >s10-receipts/s10_missing_native_negative.log 2>&1; then
+            echo 'ERROR: source contract accepted missing native evidence'; exit 1
+          fi
+          grep -q 'seven input/output paths required' s10-receipts/s10_missing_native_negative.log
           python3 research/wind-tower/experiments/T077/recovery/s10_material_cycle_contract.py \
             --self-test \
             --load-summary research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
