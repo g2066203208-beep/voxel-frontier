@@ -19,7 +19,7 @@ def overlap_topology(node_lists):
     if len(set().union(*(set(x) for x in node_lists)))!=33:
         # 31 CSEG gages plus EX1/EX2, with three intentional repeats.
         raise ValueError('OVERLAP_BAD_UNIQUE_NODE_COUNT')
-    return [(i,i+1,next(iter(intersections[i]))) for i in range(3)}
+    return [(i,i+1,next(iter(intersections[i]))) for i in range(3)]
 def sha(b): return hashlib.sha256(b).hexdigest()
 def decode(raw,h,name,k):
     i=h['channel_names'].index(name)-1
