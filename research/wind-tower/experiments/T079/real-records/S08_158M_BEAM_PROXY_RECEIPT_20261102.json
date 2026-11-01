@@ -1,0 +1,71 @@
+{
+  "classification": "NONPRODUCTION_CONDITIONAL_LINEAR_158M_BEAM_PROXY_NOT_ABAQUS_E",
+  "source_reading_level": "GitHub OpenFAST 70-station tower file + archived processed ESM acceleration",
+  "source_tower_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+  "source_esm_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "code_sha256": "76498f16e370c4e4fee702b90ecff80431f7374fe9222b8a678d4f03a9b6340c",
+  "software": "Python NumPy SciPy Euler-Bernoulli consistent mass Newmark",
+  "tower_height_m": 158,
+  "elements_coarse": 35,
+  "elements_refined": 70,
+  "rna_tip_translational_mass_kg": 676753.290723,
+  "tower_mass_estimate_kg": 1923663.6106908037,
+  "n_modes": 12,
+  "damping_ratio_assumed": 0.05,
+  "max_first_six_mesh_frequency_relative_difference": 0.00032615402621588997,
+  "modal_mass_orthogonality_max": 8.881784197001252e-16,
+  "modal_residual_relative_max": 6.430732586776654e-09,
+  "first_six_frequency_Hz": [
+    0.1604889710470726,
+    0.9089336057055148,
+    2.6956851242271083,
+    5.76342353719608,
+    9.497918665003896,
+    14.211212046805228
+  ],
+  "first_twelve_effective_mass_fraction_sum": 0.9714529331040161,
+  "ground_motion_npts": 32040,
+  "ground_motion_dt_s": 0.005,
+  "SOURCE": "T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat and historical ESM artifact 12884814391",
+  "REF": "Existing T079 seismic method notes; no new paper full-text read",
+  "STANDARD": "No authorized GB/IEC clauses read; NOT STANDARD PASS",
+  "OFFICIAL": "Recovered OpenFAST tower file is a project source, not official DTU tower design",
+  "RUN": "Python reduced-order beam model only; native Abaqus E/WE=0",
+  "FIG": "None; numerical tables only",
+  "TAB": [
+    "S08_158M_BEAM_PROXY_MODAL_20261102.csv",
+    "S08_158M_BEAM_PROXY_PEAKS_20261102.csv",
+    "S08_158M_BEAM_PROXY_HISTORY_20261102.csv"
+  ],
+  "assumptions": [
+    "perfectly continuous linear Euler-Bernoulli beam, fixed base",
+    "no prestress/contact/cracking/soil/foundation",
+    "RNA mass at 158m; CG offset, inertia, blades ignored",
+    "horizontal HNE/HNN only; HNZ vertical not represented",
+    "5% equal modal damping assumed",
+    "base shear/moment are elastic restoring components, not total dynamic support reactions",
+    "35 segments from 70 OpenFAST paired stations, tiny interstation gaps closed"
+  ],
+  "error_budget": "Uniform cantilever frequency <2e-5; modal residual <1e-7; orthogonality <1e-8; first 6 coarse/refined frequencies <2%; physical model error UNQUANTIFIED",
+  "failure_records": [],
+  "stage": "S08 independent structural proxy only; BLOCKED for Abaqus native E",
+  "HOLD": "no native Abaqus E, no PT/contact initial state, no RNA inertia, no site-matched design spectrum",
+  "peak_summary": [
+    {
+      "direction": "HNE",
+      "peak_top_relative_displacement_m": 0.03503702829349452,
+      "time_peak_top_displacement_s": 50.160000000000004,
+      "peak_top_absolute_acceleration_m_s2": 0.14504504896507978,
+      "peak_base_elastic_shear_kN": 325.96826265232266,
+      "peak_base_elastic_moment_kNm": 11233.622625615168
+    },
+    {
+      "direction": "HNN",
+      "peak_top_relative_displacement_m": 0.029303411223895688,
+      "time_peak_top_displacement_s": 63.97,
+      "peak_top_absolute_acceleration_m_s2": 0.15393397970018596,
+      "peak_base_elastic_shear_kN": 302.69328343242034,
+      "peak_base_elastic_moment_kNm": 8613.006873416594
+    }
+  ]
+}
