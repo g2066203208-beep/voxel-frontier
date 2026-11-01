@@ -1,0 +1,253 @@
+{
+  "stage": "S06/S07",
+  "status": "POSE_CHANNEL_NUMERIC_PARITY_PASS_PHYSICAL_HOLD",
+  "case": "U09p343881_ETM_S06",
+  "samples": 41,
+  "dt_s": 0.05,
+  "TMax_s": 2.0,
+  "bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+  "original_input_sha256": {
+    "static_part001": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+    "fst": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "ed": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+    "tower": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+    "servo": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+    "inflow": "d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9",
+    "discon": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "dll": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+    "exe": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a"
+  },
+  "parent_ed_sha256": [
+    "e8c1653486cc96eaa5f32a28b01701df080bd2f185f851abd4ebf54a13ef23c7",
+    "7cce15fcb6ef0a0e6f9138850e4c66745450655d50d1ee59a7171b1e1530ce0f",
+    "bd59ed51c843f1ca9e82b2d3cd1441b2055e2b222a36636becc31bd54400c060",
+    "4c524f1e524d049c816f5fa44dea01f9c1d8e3a2e8cf34ca13ff45487655c4c7"
+  ],
+  "child_ed_sha256": [
+    "d457abb02e5fd23dca83a16496e3ab3d9f976a5c5ffb896df9a47655a7d3bb32",
+    "8af49a809e34f65c284b37575c74830f87e7c0e633248b75345be9faf4de3858",
+    "9da71c63f2d7006c9fd422ade3b6be445a9fba9330610a4b1ee908e7281d3e7f",
+    "eb8ef69eb4441f82f8a521a814b6a8efe30633e88b81b5de00da819d9a3c9fd1"
+  ],
+  "outb_sha256": [
+    "a75e7d288366871ef21d5a3a3da4bb5b99af1e96f48561eb29451014680ee643",
+    "0ae0fe2a5398ac41be6613ce83a915be10ca5f1e03a894a12ed5b8ad36fec9a8",
+    "5c2669d8caf8487b65d142d92f5654698cdbd693667ffe4f97aaef076cade6e5",
+    "9b331c3b4e1a99d57a82fef831933bc7a393974e438f772952b8b3134bdb01da"
+  ],
+  "stdout_sha256": [
+    "59ed805fb107ded0051106aac3baa4138f6ba030dbc5d72e653bc92020680a45",
+    "fe2f0190cf7cb2bf87f2baf2f1cf37d146ada38838fd14bcf135fe111bdc6dc0",
+    "fd412a4121a1091b52113c7245cee52c3868803fe0e2a78c9b9edfc8d1990f23",
+    "4809faa6256ab3ad6ca044e63a357019d923914fbedda712a5c312b829fb5068"
+  ],
+  "new_pose_channels_per_batch": 72,
+  "overlap_rows": [
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "TPxi",
+      "unit": "(m)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.0106215224138083e-06
+    },
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "TPyi",
+      "unit": "(m)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.1940334696664801e-07
+    },
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "RPxi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.2820793716843957e-07
+    },
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "RPyi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.237063691222124e-06
+    },
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "RPzi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
+    },
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "ALxt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 3.892719801098854e-06
+    },
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "ALyt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.561448304469134e-06
+    },
+    {
+      "node": 220,
+      "pair": "1-2",
+      "suffix": "ALzt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "TPxi",
+      "unit": "(m)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.334239592602577e-06
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "TPyi",
+      "unit": "(m)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.2099121272765066e-07
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "RPxi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 7.552985424585993e-07
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "RPyi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 8.780065027416109e-06
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "RPzi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "ALxt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.2359457005426832e-05
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "ALyt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.3654719793856194e-05
+    },
+    {
+      "node": 426,
+      "pair": "2-3",
+      "suffix": "ALzt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 4.270251179074198e-08
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "TPxi",
+      "unit": "(m)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 9.901718699472233e-06
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "TPyi",
+      "unit": "(m)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 8.496977011939548e-07
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "RPxi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 9.250437032151412e-07
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "RPyi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.3167192662510253e-05
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "RPzi",
+      "unit": "(deg)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.579528018894215e-08
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "ALxt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 2.11470375090842e-05
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "ALyt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 2.1440373963069744e-05
+    },
+    {
+      "node": 633,
+      "pair": "3-4",
+      "suffix": "ALzt",
+      "unit": "(m/s^2)",
+      "max_abs_delta": 0.0,
+      "max_quant_budget": 1.0495169462015783e-07
+    }
+  ],
+  "overlap_comparisons": 984,
+  "failure_count": 0,
+  "failures": [],
+  "SOURCE": "Four actual SHA-locked original OpenFAST v3.5.3 2s ETM input batches and decoded native OUTB",
+  "REF": "Existing T062 gage mapping; no new journal original pages",
+  "STANDARD": "No authorized IEC/GB/NB clauses read; no standards acceptance",
+  "OFFICIAL": "OpenFAST v3.5.3 tagged ElastoDyn.f90/ElastoDyn_IO.f90 output semantics",
+  "RUN": "Four 2s real ETM native diagnostics; only if runner logs and hashes present",
+  "FIG": "none",
+  "TAB": "24 overlap rows x 41 times = 984 comparisons",
+  "assumptions": "Output suffixes correspond to same physical tower nodes; RP are angular-position components in deg, not exact DCM",
+  "error_budget": "1.1*(two packed OUTB half-LSB)+1e-8 per compared channel; physical pose/DCM and inertial force uncertainty unbounded",
+  "HOLD": "0-2s startup only; no exact DCM, 100-700s proof, inertial ownership, 31-station global wrench, Abaqus, E/WE or fatigue life",
+  "physical_pass": false
+}
