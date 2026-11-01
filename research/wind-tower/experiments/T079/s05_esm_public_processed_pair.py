@@ -529,7 +529,7 @@ def self_test():
 
 
 
-def _independent_member_gate(members, expected_event, allowed_stations):
+def _independent_member_gate(members, expected_event, allowed_stations, rejected=None):
     """Verify event, paired horizontal streams, identical sampling and filter metadata.
     SOURCE HEADER QC ONLY: no low-frequency/target-spectrum or structural PASS.
     """
@@ -548,6 +548,7 @@ def _independent_member_gate(members, expected_event, allowed_stations):
             raise ValueError('INDEPENDENT_DUPLICATE_STREAM')
         grouped[station][stream] = m
     verified = []
+    if rejected is None: rejected=[]
     for station, streams in sorted(grouped.items()):
         if not {'HNE', 'HNN'} <= set(streams):
             continue
@@ -555,9 +556,14 @@ def _independent_member_gate(members, expected_event, allowed_stations):
         keys = ('NDATA', 'SAMPLING_INTERVAL_S', 'DURATION_S', 'UNITS',
                 'LOW_CUT_FREQUENCY_HZ', 'HIGH_CUT_FREQUENCY_HZ',
                 'FILTER_TYPE', 'FILTER_ORDER', 'PROCESSING')
-        for key in keys:
-            if len({m['dyna_selected_header_fields'][key] for m in horiz}) != 1:
-                raise ValueError('INDEPENDENT_HORIZONTAL_MISMATCH_' + key)
+        mismatched=[key for key in keys if len({
+            m['dyna_selected_header_fields'][key] for m in horiz}) != 1]
+        if mismatched:
+            rejected.append({'station':station,
+                'reason':'INDEPENDENT_HORIZONTAL_MISMATCH_'+mismatched[0],
+                'source_values':{key:[m['dyna_selected_header_fields'][key] for m in horiz]
+                                 for key in mismatched}})
+            continue
         h = horiz[0]['dyna_selected_header_fields']
         if h['UNITS'] != 'cm/s^2':
             raise ValueError('INDEPENDENT_UNITS_NOT_CM_S2')
@@ -574,6 +580,7 @@ def _independent_member_gate(members, expected_event, allowed_stations):
             'HNN_member_sha256': horiz[1]['sha256'],
             'S05_design_wave_PASS': False})
     if not verified:
+        if rejected: raise ValueError(rejected[0]['reason'])
         raise ValueError('INDEPENDENT_NO_MATCHED_HORIZONTAL_PAIR')
     return verified
 
@@ -591,6 +598,9 @@ def independent_source_self_test():
     a,b=member('HNE'),member('HNN')
     out=_independent_member_gate([a,b],h['EVENT_ID'],{'NVL','MDN'})
     assert len(out)==1 and out[0]['npts']==32040 and not out[0]['S05_design_wave_PASS']
+    rejected=[]
+    accepted=_independent_member_gate([a,b,member('HNE',{'STATION_CODE':'MDN'}),member('HNN',{'STATION_CODE':'MDN','LOW_CUT_FREQUENCY_HZ':'0.10'})],h['EVENT_ID'],{'NVL','MDN'},rejected)
+    assert len(accepted)==1 and accepted[0]['station']=='NVL' and len(rejected)==1 and rejected[0]['station']=='MDN'
     failures=[
         ([member('HNE',{'EVENT_ID':'IT-2012-0008'}),b], 'INDEPENDENT_EVENT_ID_MISMATCH'),
         ([a,member('HNN',{'LOW_CUT_FREQUENCY_HZ':'0.08'})], 'INDEPENDENT_HORIZONTAL_MISMATCH_LOW_CUT_FREQUENCY_HZ'),
@@ -604,7 +614,7 @@ def independent_source_self_test():
         except ValueError as ex:
             assert str(ex)==reason, (str(ex),reason)
         else: raise AssertionError('ACCEPTED_INVALID_INDEPENDENT_SOURCE_'+reason)
-    print('S05_INDEPENDENT_EVENT_SYNTHETIC_SOURCE_GATE_PASS 1 positive 6 negative; NO_REAL_WAVE_CLAIM')
+    print('S05_INDEPENDENT_EVENT_SYNTHETIC_SOURCE_GATE_PASS 2 positive 6 negative; NO_REAL_WAVE_CLAIM')
 
 
 def recover_independent_event(output_dir, timeout=90):
@@ -667,7 +677,10 @@ def recover_independent_event(output_dir, timeout=90):
         receipt['members']=[{'filename':m['filename'],'bytes':m['bytes'],
             'sha256':m['sha256'],'header':m['dyna_selected_header_fields']}
             for m in members]
-        receipt['paired_station_headers']=_independent_member_gate(members,event,set(stations))
+        rejected=[]
+        receipt['paired_station_headers']=_independent_member_gate(members,event,set(stations),rejected)
+        receipt['station_rejections']=rejected
+        receipt['quality_class_and_reason_by_station']={x.get('station_code'): {'quality_class':x.get('class'), 'reason':x.get('reason'), 'event_time':x.get('event_time'), 'magnitude':x.get('mag_value')} for x in parsed if isinstance(x,dict)} if isinstance(parsed,list) else {}
         receipt['status']='SOURCE_RECOVERED_HEADER_QC_ONLY_NOT_DESIGN_PASS'
     except Exception as ex:
         receipt['waveform_failure']=type(ex).__name__+': '+str(ex)[:500]
