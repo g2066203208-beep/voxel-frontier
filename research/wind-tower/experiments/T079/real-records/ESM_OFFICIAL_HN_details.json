@@ -1,0 +1,111 @@
+{
+    "quality": {
+        "class": "BEST",
+        "reason": "no warnings detected",
+        "warnings": []
+    },
+    "workflow": {
+        "type": "D",
+        "method": "P",
+        "trigger": "NT",
+        "modality": "M"
+    },
+    "settings": {
+        "waveform_cut": {
+            "end_time": "2012-05-20T02:06:16.195Z",
+            "start_time": "2012-05-20T02:03:36.000Z"
+        },
+        "waveform_taper": {
+            "side": {
+                "left": 5,
+                "right": 5
+            },
+            "type": "cosine",
+            "end_lt": null
+        },
+        "waveform_detrend": {
+            "type": "linear",
+            "t1_samples": null,
+            "t2_samples": null,
+            "t3_samples": null
+        },
+        "amplitude_scaling": {
+            "multiplier_factor": 1
+        },
+        "waveform_integrate": {
+            "method": "cumsum"
+        },
+        "waveform_resampling": {
+            "delta": 0.005,
+            "action": false
+        },
+        "waveform_differentiate": {
+            "method": "diff"
+        },
+        "fourier_spectrum_filter": {
+            "type": "bandpass",
+            "order": 2,
+            "low_cut": [
+                0.04,
+                0.04,
+                0.04
+            ],
+            "high_cut": [
+                30.0,
+                30.0,
+                30.0
+            ]
+        }
+    },
+    "automatic_pick": {
+        "p_pick": "2012-05-20T02:03:59.000000Z",
+        "s_pick": "2012-05-20T02:04:08.000000Z"
+    },
+    "event": {
+        "event_id": "IT-2012-0008",
+        "origin_time": "2012-05-20T02:03:50",
+        "origin_latitude": "44.8955",
+        "origin_longitude": "11.2635",
+        "origin_depth": "9.5",
+        "origin_status": "0",
+        "epi_area_radius_km": "31.0",
+        "magnitude_value_l": "",
+        "magnitude_value_w": "6.1",
+        "magnitude_value_s": "6.0",
+        "magnitude_value_b": "",
+        "magnitude_value_d": "",
+        "magnitude_value_m": "",
+        "focal_mechanism": "TF",
+        "focal_mechanism_description": "Thrust faulting"
+    },
+    "station": {
+        "internal_network_code": "IT",
+        "network_code": "IT",
+        "station_code": "NVL",
+        "station_name": "Novellara",
+        "station_latitude": "44.843000",
+        "station_longitude": "10.731500",
+        "station_altitude_m": "22"
+    },
+    "location": {
+        "sensor_location": "",
+        "sensor_depth_m": "0.0",
+        "site_classification_ec8": "C",
+        "vs30_m_s": "190"
+    },
+    "asdf-instrument": {
+        "sampling_interval_s": "0.005000",
+        "date_time_first_sample_yyyymmdd_hhmmss": "20120520_020336.000",
+        "instrument": "sensor = MS2007+ [Syscom] | digitizer = 130-01/3 [Reftek]",
+        "instrument_analog_digital": "D"
+    },
+    "asdf-orientation": {
+        "channel_code": "HN",
+        "U_orientation_code": "E",
+        "V_orientation_code": "N",
+        "W_orientation_code": "Z"
+    },
+    "waveform-distances": {
+        "epicentral_distance_km": "42.4"
+    }
+}
