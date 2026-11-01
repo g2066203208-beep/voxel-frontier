@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/s06-etm-native-2s-pose.yml'
       - 'research/wind-tower/experiments/T062/s06_etm_pose_2s_native_qc.py'
+      - 'research/wind-tower/experiments/T062/s06_etm_pose_outlist_gate.cjs'
   workflow_dispatch:
 permissions:
   contents: write
