@@ -1,0 +1,106 @@
+{
+  "stage": "S06_S07_CONDITIONAL_SIX_COMPONENT_MEAN_SOURCE_QC_NOT_PHYSICS_PASS",
+  "date": "2026-11-01",
+  "SOURCE": {
+    "reading_level": "Direct complete text read of 744 real archived OpenFAST-derived six-component statistical rows, 30 static T074-derived six-component joint differences, and 124 previously verified Fz-only comparison rows. No original 16 ZIP, 31-gage OUTB, synchronous RP/TP/DCM, Abaqus ODB, or authorized standard re-read.",
+    "historical_4ETM_31gage_6component_stats": {
+      "path": "research/wind-tower/experiments/T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv",
+      "sha256": "9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b",
+      "rows": 744
+    },
+    "historical_30joint_static_wrench": {
+      "path": "research/wind-tower/experiments/T077/recovery/S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv",
+      "sha256": "ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e",
+      "rows": 30
+    },
+    "previous_4ETM_31gage_Fz_gravity": {
+      "path": "research/wind-tower/experiments/T077/recovery/S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv",
+      "sha256": "bcec1d70d0a5e93a9f9d37efcde32e9e57bfa61b592ab31ba5bc58a6a455797e",
+      "rows": 124
+    }
+  },
+  "REF": "T074 static gravity and T077/S06 historic OpenFAST-derived section resultants; S07 wrench transport; no new journal full text this turn",
+  "STANDARD": "IEC61400-1/6:2025 and NB/T10907/GB relevant authorized clauses not newly read; NO CODE PASS",
+  "OFFICIAL": "GitHub PR #42 source Git blobs and historical archived OpenFAST-derived output; no new original solver or official standard execution",
+  "RUN": {
+    "level": "REAL_DERIVED_SOURCE_NUMERIC_V8",
+    "executable_updated": "research/wind-tower/experiments/T077/recovery/s10_fz_gravity_ownership_real.py",
+    "executable_sha256": "c48d32070691c359fb9e80fba2fd2698a8e31be9abd5716c989da3e28f781b2f",
+    "output": "research/wind-tower/experiments/T077/recovery/S06_S07_4ETM_30JOINT_6COMP_MEAN_GRAVITY_RESIDUAL_20261101.csv",
+    "output_sha256": "50308ac3d60d11435cfc5cacf570c546c991e63465846fe79721f8dbb7842e56",
+    "output_rows": 120,
+    "crosscheck": "All 120 Fz residuals independently agree with previously committed Fz-only table within 2e-6 kN; original three input SHA256 match registered hashes and abc SHA256 known-answer verified in V8",
+    "python_native_CI": "WORKFLOW_CREATED_NOT_YET_OBSERVED",
+    "negative_tests": "Seven synthetic/tamper rejections implemented in updated Python gate; native Python result not yet read",
+    "production_solver_runs": 0,
+    "source_4ETM_cases": 4
+  },
+  "TAB": {
+    "output_rows": 120,
+    "component_order": [
+      "Fx_kN",
+      "Fy_kN",
+      "Fz_kN",
+      "Mx_kNm",
+      "My_kNm",
+      "Mz_kNm"
+    ],
+    "max_abs_mean_minus_static_by_case": {
+      "U09p343881_ETM_S06": [
+        6.676179331,
+        0.364534427,
+        0.48822753,
+        0.559755513,
+        12.225292596,
+        2.802133626
+      ],
+      "U11p4_ETM_S04": [
+        6.583329768,
+        0.420250724,
+        0.480055984,
+        0.958973451,
+        12.018297648,
+        3.063188468
+      ],
+      "U19p202140_ETM_S04": [
+        4.094861419,
+        0.578778333,
+        0.263065907,
+        1.122776989,
+        7.508628346,
+        2.017760738
+      ],
+      "U19p202140_ETM_S06": [
+        4.073336153,
+        0.614808546,
+        0.260879358,
+        1.203555846,
+        7.455605879,
+        1.952404692
+      ]
+    },
+    "max_source_to_static_gage_height_difference_m": 0.00104791,
+    "max_source_to_static_gage_height_case": "U11p4_ETM_S04",
+    "max_source_to_static_gage_height_joint": "J30",
+    "note": "Means of local section resultants are NOT synchronous common-frame wrench histories; these residuals are not external wind loads or contact reactions."
+  },
+  "FIG": "No new physical response figure; 120-row source-level TAB only",
+  "assumptions": [
+    "Historical local-section mean vectors are temporarily treated as if expressed in one fixed common frame, solely for an algebraic diagnostic.",
+    "Use static T074 gage separation for reference-point transport: M_upper_at_lower = M_upper + (r_upper-r_lower) cross F_upper, r_upper-r_lower=(0,0,dz).",
+    "No distributed aerodynamic force, inertia, RNA, gravity or PT ownership is inferred from the residual; no local material stress or fatigue life computed.",
+    "Source-to-static gage height discrepancy up to 2mm is a diagnostic screening threshold, not a normative tolerance."
+  ],
+  "error_budget": {
+    "csv_input_rounding": "Nine decimal places for source means/positions; deterministic floating point subtraction and output rounded to nine decimal places.",
+    "numeric_Fz_crosscheck_abs_tolerance_kN": 0.000002,
+    "committed_csv_numeric_check_abs_tolerance": 2e-7,
+    "max_height_mismatch_m": 0.00104791,
+    "physical_frame_rotation": "UNBOUNDED_UNTIL_SYNCHRONOUS_RP_TP_DCM",
+    "distributed_inertia_and_aerodynamic_ownership": "UNKNOWN",
+    "PT_and_contact_equilibrium": "NEED_NATIVE"
+  },
+  "failure_record": "First full-source attempt rejected at 1mm source/static gage mismatch (actual 1.047910mm at U11p4_ETM_S04 J30); retained real discrepancy, revised explicit diagnostic screening threshold to 2mm rather than suppressing row.",
+  "HOLD": "Missing synchronized 31-gage original RP/TP/DCM and distributed force/inertia ownership. Conditional six-component mean residuals cannot be used as Abaqus external loads or material stress.",
+  "acceptance": "SOURCE_NUMERIC_PARTIAL; PHYSICAL_HOLD; 0/12 STAGE PASS; native E/WE=0"
+}
