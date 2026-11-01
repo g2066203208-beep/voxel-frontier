@@ -207,3 +207,84 @@ jobs:
           path: output/*
           if-no-files-found: warn
           retention-days: 90
+
+  s05-esm-dense-longperiod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch locked program and historical RotD16
+        run: |
+          set -euo pipefail
+          mkdir -p source output
+          root=research/wind-tower/experiments/T079
+          base="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$root"
+          curl -fLsS --retry 3 -o source/s05_esm_rotd_real.py "$base/s05_esm_rotd_real.py"
+          curl -fLsS --retry 3 -o source/legacy_rotd16.csv "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv"
+          echo '6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205  source/legacy_rotd16.csv' | sha256sum -c
+          python -m py_compile source/s05_esm_rotd_real.py
+          python -m pip install --disable-pip-version-check 'numpy==2.3.5'
+      - name: Recover archived 32040x3 ESM and SHA gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run download 40847442979 -R "$GITHUB_REPOSITORY" -n s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE -D source
+          echo 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34  source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv' | sha256sum -c
+      - name: Real 46-period RotD with 12 legacy period numeric regression
+        run: |
+          set -euo pipefail
+          python source/s05_esm_rotd_real.py --dense-band --self-test \
+            --source-csv source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv \
+            --legacy-rotd source/legacy_rotd16.csv \
+            --out-dense output/S05_ESM_IT2012_NVL_DENSE_LONGPERIOD_ROTD_20261102.csv \
+            --out-receipt output/S05_ESM_IT2012_NVL_DENSE_LONGPERIOD_ROTD_RECEIPT_20261102.json | tee output/runner_stdout.log
+          python - <<'PY'
+          import csv,json,math,pathlib,hashlib
+          p=pathlib.Path('output')
+          table=p/'S05_ESM_IT2012_NVL_DENSE_LONGPERIOD_ROTD_20261102.csv'
+          r=json.loads((p/'S05_ESM_IT2012_NVL_DENSE_LONGPERIOD_ROTD_RECEIPT_20261102.json').read_text())
+          rows=list(csv.DictReader(table.open()))
+          assert len(rows)==46 and r['period_count']==46
+          assert r['overlap_period_count']==12 and r['overlap_numeric_cells']==60
+          assert r['max_overlap_relative_difference']<5e-11
+          assert sum(x['is_conditional_beam_T1']=='True' for x in rows)==1
+          assert all(0<float(x['RotD00_psa_m_s2'])<=float(x['RotD50_psa_m_s2'])<=float(x['RotD100_psa_m_s2']) for x in rows)
+          assert hashlib.sha256(table.read_bytes()).hexdigest()==r['output_csv_sha256']
+          assert not r['S05_PASS'] and not r['S08_PASS'] and r['native_Abaqus_E_WE']==0
+          print('S05_REAL_ESM_46_PERIOD_12_ANCHOR_SOURCE_QC_PASS_NOT_DESIGN')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s05-esm-46period-dense-rotd-real-source-NOT-DESIGN
+          path: output/*
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Create-only archive of numeric table and SHA receipt on Draft PR
+        if: success() && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T079/real-records
+          for name in S05_ESM_IT2012_NVL_DENSE_LONGPERIOD_ROTD_20261102.csv S05_ESM_IT2012_NVL_DENSE_LONGPERIOD_ROTD_RECEIPT_20261102.json; do
+            file="output/$name"
+            target="$root/$name"
+            if gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.content' > existing.b64 2>/dev/null; then
+              base64 -d existing.b64 > existing.file
+              cmp -s existing.file "$file" || { echo "EXISTING_SOURCE_OUTPUT_DIFFERS_HOLD: $target"; exit 1; }
+              echo "ALREADY_IDENTICAL $target"
+              continue
+            fi
+            python - "$file" "$GITHUB_REF_NAME" <<'PY' > payload.json
+          import base64,json,sys
+          f,branch=sys.argv[1:]
+          print(json.dumps({'message':'research(S05): persist real ESM dense long-period RotD and SHA receipt (not design PASS)',
+                            'content':base64.b64encode(open(f,'rb').read()).decode(),'branch':branch}))
+          PY
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
+            echo "PERSISTED_REAL_ESM_DENSE_ROTD $target"
+          done
