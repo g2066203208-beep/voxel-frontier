@@ -1,0 +1,195 @@
+{
+  "status": "REAL_GITHUB_ACTIONS_CONSOLE_SOURCE_NUMERIC_QC_ONLY",
+  "source_reading_level": "16 native GitHub Actions OpenFAST job text logs; parsed rounded ROSCO console diagnostics (NOT original OUTB, NOT 0.05-s synchronized physical states)",
+  "case_count": 4,
+  "jobs": 16,
+  "samples_per_job": 71,
+  "paired_comparisons": 12,
+  "printed_values_compared": 3408,
+  "all_printed_values_match": true,
+  "source_job_manifest": [
+    {
+      "case": "U09p343881_ETM_S06",
+      "batch": "A",
+      "job_id": 112665200215,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146/job/112665200215",
+      "printed_samples": 71,
+      "normalized_series_sha256": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235"
+    },
+    {
+      "case": "U09p343881_ETM_S06",
+      "batch": "B",
+      "job_id": 112665199930,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146/job/112665199930",
+      "printed_samples": 71,
+      "normalized_series_sha256": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235"
+    },
+    {
+      "case": "U09p343881_ETM_S06",
+      "batch": "C",
+      "job_id": 112665200511,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146/job/112665200511",
+      "printed_samples": 71,
+      "normalized_series_sha256": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235"
+    },
+    {
+      "case": "U09p343881_ETM_S06",
+      "batch": "D",
+      "job_id": 112665200138,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37582521146/job/112665200138",
+      "printed_samples": 71,
+      "normalized_series_sha256": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235"
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "batch": "A",
+      "job_id": 112795535771,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535771",
+      "printed_samples": 71,
+      "normalized_series_sha256": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec"
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "batch": "B",
+      "job_id": 112795535878,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535878",
+      "printed_samples": 71,
+      "normalized_series_sha256": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec"
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "batch": "C",
+      "job_id": 112795535859,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535859",
+      "printed_samples": 71,
+      "normalized_series_sha256": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec"
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "batch": "D",
+      "job_id": 112795535903,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535903",
+      "printed_samples": 71,
+      "normalized_series_sha256": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec"
+    },
+    {
+      "case": "U19p202140_ETM_S04",
+      "batch": "A",
+      "job_id": 112795535534,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535534",
+      "printed_samples": 71,
+      "normalized_series_sha256": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f"
+    },
+    {
+      "case": "U19p202140_ETM_S04",
+      "batch": "B",
+      "job_id": 112795535891,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535891",
+      "printed_samples": 71,
+      "normalized_series_sha256": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f"
+    },
+    {
+      "case": "U19p202140_ETM_S04",
+      "batch": "C",
+      "job_id": 112795535820,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535820",
+      "printed_samples": 71,
+      "normalized_series_sha256": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f"
+    },
+    {
+      "case": "U19p202140_ETM_S04",
+      "batch": "D",
+      "job_id": 112795535860,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535860",
+      "printed_samples": 71,
+      "normalized_series_sha256": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f"
+    },
+    {
+      "case": "U19p202140_ETM_S06",
+      "batch": "A",
+      "job_id": 112795535896,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535896",
+      "printed_samples": 71,
+      "normalized_series_sha256": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff"
+    },
+    {
+      "case": "U19p202140_ETM_S06",
+      "batch": "B",
+      "job_id": 112795535824,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535824",
+      "printed_samples": 71,
+      "normalized_series_sha256": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff"
+    },
+    {
+      "case": "U19p202140_ETM_S06",
+      "batch": "C",
+      "job_id": 112795535961,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535961",
+      "printed_samples": 71,
+      "normalized_series_sha256": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff"
+    },
+    {
+      "case": "U19p202140_ETM_S06",
+      "batch": "D",
+      "job_id": 112795535808,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/37622366681/job/112795535808",
+      "printed_samples": 71,
+      "normalized_series_sha256": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff"
+    }
+  ],
+  "job_series_sha256": {
+    "U09p343881_ETM_S06": {
+      "A": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235",
+      "B": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235",
+      "C": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235",
+      "D": "9a0a411ff05bcc3b0cc6608d16cf640175b7d9003bfb236740bd0c74f5deb235"
+    },
+    "U11p4_ETM_S04": {
+      "A": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec",
+      "B": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec",
+      "C": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec",
+      "D": "290965a2b92248827acabbc681cbbacfa75dbcf4af26a218bf82be9999d0a3ec"
+    },
+    "U19p202140_ETM_S04": {
+      "A": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f",
+      "B": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f",
+      "C": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f",
+      "D": "54319d4b224a3ce5459c021332c0c510b32fe644a0ac85c525bb172d3a07cb1f"
+    },
+    "U19p202140_ETM_S06": {
+      "A": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff",
+      "B": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff",
+      "C": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff",
+      "D": "16b161997ccca087afc30823c19e73973403c5d37e3f6b7595c2d598905c36ff"
+    }
+  },
+  "samples_sha256": "693f9c0ca6a0c4ebea353db5b33349593412b1abdde1e0c6cda825afaf41c734",
+  "summary_sha256": "35785deca4dd1eb646a54239405e82e30a80f0b7b52a8f771d09352bf47e1bc2",
+  "time_interpretation": "71 ordered controller console samples, nominally 0..700 s at ~10 s; console text rounded to 0.1 for RPM/pitch/power/estimated wind speed; exact per-sample simulation timestamp not separately extracted",
+  "assumptions": [
+    "OpenFAST console samples from same case and distinct batch jobs are compared in their printed order.",
+    "Identical rounded values are evidence of coarse shared controller trajectory only; they do not prove exact 0.05-s state, RP/TP/DCM, aerodynamic force or inertia identity.",
+    "Historical 16 source ZIPs contain derived FL/ML, not raw OUTB."
+  ],
+  "error_budget": {
+    "printed_value_comparison": "0 at printed 0.1-unit precision; physical error at finer times UNBOUNDED",
+    "quantization_uncertainty": "Each printed value rounded to nearest 0.1 nominal units; if rounding-to-nearest, two matching values may differ by almost 0.1 in underlying value, without bound on unprinted time instants.",
+    "source_hash": "Each normalized 71x4 printed-value series has exact SHA256; GitHub job URLs identify upstream original logs",
+    "physical_frame_inertia": "NEED_NATIVE_OUTB_DCM_AND_SAME_STATE_QC"
+  },
+  "SOURCE": "GitHub Actions T071 run 37582521146 and T072 run 37622366681, 16 successful OpenFAST jobs; source_job_manifest",
+  "REF": "Existing OpenFAST 3.5.3/ROSCO v2.6.0 methodology in archived job logs; no new journal full text",
+  "STANDARD": "No new authorized IEC/GB/NB clauses read",
+  "OFFICIAL": "GitHub Actions job logs, OpenFAST/ROSCO run-time printouts (not official design code)",
+  "RUN": "Actual connector read of 16 original job logs and JavaScript binary64 parsing/12-pair comparison; offline Python independent selftest pending real CSV CI",
+  "FIG": "NONE",
+  "TAB": [
+    "S06_T071_T072_16JOB_ROSCO_CONSOLE_SAMPLES_20261101.csv",
+    "S06_T071_T072_ROSCO_CONSOLE_PAIR_QC_20261101.csv"
+  ],
+  "HOLD": [
+    "No original 16 OUTB retained in the 16 archived artifacts; source logs show temporary runroot/<case>/DTU_10MW_RWT.outb was read before upload extract/* only.",
+    "No time-resolved RP/TP/DCM and no full-rate cross-batch dynamic state proof.",
+    "Do not map cross-batch 31-station loads or claim S07/Abaqus physics PASS."
+  ]
+}
