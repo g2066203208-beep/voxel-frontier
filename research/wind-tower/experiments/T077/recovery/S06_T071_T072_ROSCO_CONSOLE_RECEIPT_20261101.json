@@ -191,5 +191,22 @@
     "No original 16 OUTB retained in the 16 archived artifacts; source logs show temporary runroot/<case>/DTU_10MW_RWT.outb was read before upload extract/* only.",
     "No time-resolved RP/TP/DCM and no full-rate cross-batch dynamic state proof.",
     "Do not map cross-batch 31-station loads or claim S07/Abaqus physics PASS."
-  ]
+  ],
+  "input_identity_evidence": {
+    "source": "16 original Actions job logs, executable restore-step code and emitted SHA or expected-hash assertions; this is code/log evidence, not a re-hash of all current source bytes",
+    "all_16_jobs_have_gage_patch_only_step": true,
+    "all_16_jobs_have_outb_reader_and_extract_only_upload": true,
+    "base_fst_sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "base_tower_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+    "T071_four_jobs_emitted_identical_sha256": {
+      "base_elastodyn_sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+      "libdiscon_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+      "discon_sha256": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+      "bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147"
+    },
+    "T072_twelve_jobs_expected_fst_tower_sha_assertion": true,
+    "T072_bts_sha256": "NOT_PRINTED_IN_JOB_LOG",
+    "same_wind_path_per_case": "Each T072 batch copies the same repo path turbSim-36/inputs/<case_id>.bts; no job-level byte SHA printed",
+    "warning": "Identical base FST/tower source hashes, same case wind path and rounded controller trajectories strongly support common configured physical model and inflow, but output gage settings differ and native full-rate state identity, RP/TP/DCM and inertia ownership are NOT proven."
+  }
 }
