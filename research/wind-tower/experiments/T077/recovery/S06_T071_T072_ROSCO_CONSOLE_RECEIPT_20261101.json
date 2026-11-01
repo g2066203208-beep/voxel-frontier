@@ -208,5 +208,8 @@
     "T072_bts_sha256": "NOT_PRINTED_IN_JOB_LOG",
     "same_wind_path_per_case": "Each T072 batch copies the same repo path turbSim-36/inputs/<case_id>.bts; no job-level byte SHA printed",
     "warning": "Identical base FST/tower source hashes, same case wind path and rounded controller trajectories strongly support common configured physical model and inflow, but output gage settings differ and native full-rate state identity, RP/TP/DCM and inertia ownership are NOT proven."
-  }
+  },
+  "reproducer_script_sha256": "b0be0c47efcb955904bc2620c12c9082ce8084647c7f1657a33f37581950bed3",
+  "reproducer_script_git_blob": "82304694331418a5b75d2ce0176c9c8230fd6bc6",
+  "real_source_python_ci": "NOT_CONFIRMED; local Python3 synthetic negative selftest PASS, 16 original Actions logs were compared in JS; PR workflow file exists but no completed job URL has been verified"
 }
