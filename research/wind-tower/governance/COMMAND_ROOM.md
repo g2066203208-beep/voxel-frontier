@@ -765,3 +765,8 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 
 ### HANDOFF-20261101-07-S08-T057-YUP-AXIS-UNIT-END
 - END / 2026-11-01 07时 CST / 继承START的`read_base_sha=d2d444b6a0fb7ae8774c783ae34ab3ec231c147c`；本地Node22.16.0运行真实5行ESM同刻样本+T057审计+历史幅值收据，6项坏输入拒绝和坐标/范数/右手性/单位测试通过，stdout=`S08_T057_YUP_FRAME_UNIT_SELFTEST_PASS`，未取得新的GitHub Actions作业或Abaqus原生日志。新增[T079程序](../experiments/T079/s08_t057_yup_frame_unit_contract.cjs) Git blob=`09ef70bcd8b574c851dbfefc12be6443c6a6b4c7`、SHA256=`42de4ac43eb6f3340b4e5ed64dcbf58b6387d73e37d24959d5463c1b40941885`；[收据](../experiments/T079/real-records/S08_ESM_T057_YUP_FRAME_UNIT_RECEIPT_20261101.json) Git blob=`9812f7addc6d2b7014b73f8230d26e62d2544775`、SHA256=`9f1d3b77b5360916e96a3200b5e1ad21b2383290f17835068c30e668437eff41`，均已远端回读；T079过程、论文00_STATUS、本指挥室同步。关键纠错：T057是Y-up，旧通用Z-up/mm/s²幅值不能直接接入。**无地震原生E/WE RUN、无标准PASS、无生产计算，0/12阶段未晋级；不改冻结T057/T070、不合并PR**。下一责任方：网页版/Actions先把T057 Y-up/SI模式接入已有32040点导出器并回读原生源级CI；本机Abaqus独立小模型基底加速度/单位/BC验证保留后续门禁，不阻挡S10风疲劳准备。
+
+
+### 2026-11-01 08时｜S08全32,040点T057 Y-up/SI幅值导出开工读取回执
+- START/read_base_sha: `c01d9ee0626cc69d6c9113786bbed04824176f9a`; main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`; PR #42 Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW及07时PROCESS_LOG、T080.1/.2/.3、12阶段总计划、本指挥室；继承T057坐标静态契约与ESM v3历史原始Actions #40847442979/artifact #12884814391。
+- 本轮独立增量：在**既有**`experiments/T079/s08_base_motion_amplitude_gate.py`添加显式T057 Y-up/SI模式，恢复并逐时刻核验32,040×3真实处理波，记录三向幅值SHA、范数/时间/误差、负向测试和原生执行缺口；拟改既有T079过程日志、00_STATUS及本指挥室，必要的紧凑CSV/JSON收据。只做输入数值准备，禁止改T057/T070、合并PR或运行昂贵Abaqus。
