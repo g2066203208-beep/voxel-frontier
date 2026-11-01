@@ -252,7 +252,7 @@ def self_test_t057():
     for fn in (
         lambda: t057_amplitude_bytes(synthetic,3,0),
         lambda: t057_check_amplitudes(blobs[:2],synthetic,30),
-        lambda: t057_check_amplitudes([blobs[0].replace(b'1.2',b'999',1),*blobs[1:]],synthetic,30),
+        lambda: t057_check_amplitudes([blobs[0].replace(b'0.000000, ',b'0.000000, 999',1),*blobs[1:]],synthetic,30),
     ):
         try: fn()
         except ValueError: negatives += 1
