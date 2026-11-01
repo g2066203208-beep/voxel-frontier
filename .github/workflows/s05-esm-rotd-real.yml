@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/s05-esm-rotd-real.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_rotd_real.py'
+      - 'research/wind-tower/experiments/T079/s08_base_motion_amplitude_gate.py'
       - 'research/wind-tower/manuscript/final-thesis/figures/plot_s08_esm_3comp_real_acceleration.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv'
   workflow_dispatch:
@@ -155,3 +156,54 @@ jobs:
             gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
             echo "S08_REAL_SOURCE_QC_PERSISTED $target"
           done
+
+  s08-t057-yup-si-full-source-qc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover original archived 32040x3 processed ESM source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p source output
+          gh run download 40847442979 -R "$GITHUB_REPOSITORY" -n s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE -D source
+          echo 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34  source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv' | sha256sum -c
+          script=research/wind-tower/experiments/T079/s08_base_motion_amplitude_gate.py
+          mkdir -p "$(dirname "$script")"
+          curl --fail --location --silent --show-error --retry 3 -o "$script" "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$script"
+          sha256sum "$script"
+      - name: Full-wave source/axis/unit/roundtrip checks without solver
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T079/s08_base_motion_amplitude_gate.py
+          python -m py_compile "$script"
+          python "$script" --self-test
+          python "$script" --source source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv --outdir output --frame t057-yup-si --confirm-t057-identity --azimuth-deg 0
+          python - <<'PY'
+          import json,hashlib,pathlib,math
+          p=pathlib.Path('output/S08_ESM_T057_YUP_SI_AMPLITUDE_RECEIPT.json')
+          r=json.loads(p.read_text())
+          assert r['SOURCE_NPTS']==32040 and r['SOURCE_LAST_TIME_S']==160.195
+          assert r['SOURCE_SHA256']=='a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34'
+          assert r['Abaqus_E_WE_RUN']==0 and r['S08_PASS'] is False
+          assert r['frame'].endswith('Y-up; metre-second SI')
+          assert len(r['artifacts'])==3 and len(r['samples'])==7
+          assert math.isclose(r['error_budget']['max_synch_vector_peak_m_s2'],0.5665313757667056,abs_tol=2e-14)
+          for a in r['artifacts']:
+              f=pathlib.Path('output')/a['filename']
+              assert f.stat().st_size==a['bytes']
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==a['sha256']
+              assert b'*BASE MOTION' not in f.read_bytes() and b'*BOUNDARY' not in f.read_bytes()
+          print('S08_T057_FULL_32040x3_YUP_SI_SOURCE_NUMERIC_QC_PASS_NOT_NATIVE')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s08-t057-yup-si-32040x3-amplitudes-NOT-DESIGN-OR-NATIVE
+          path: output/*
+          if-no-files-found: warn
+          retention-days: 90
