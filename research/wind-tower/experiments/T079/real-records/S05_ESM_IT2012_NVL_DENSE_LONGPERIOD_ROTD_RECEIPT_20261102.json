@@ -1,0 +1,60 @@
+{
+  "FIG": "NONE; direct numerical table for future design-spectrum selection",
+  "HOLD": "site-specific long-period target, multiple independent qualified events and native PT/contact modes missing",
+  "OFFICIAL": "ESM v3 source processing highpass 0.04Hz; separate SNR reported lc 0.09Hz; no station-to-site transfer",
+  "REF": "Newmark average acceleration 5% SDOF, rotate displacement histories before peak",
+  "RUN": "GitHub Actions Python 3.12 NumPy; real processed wave; no Abaqus E/WE",
+  "S05_PASS": false,
+  "S08_PASS": false,
+  "SOURCE": {
+    "record": "IT-2012-0008/IT.NVL/HN/MP",
+    "source_RotD16_sha256": "6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205",
+    "source_processed_32040x3_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+    "source_read_level": "ESM v3 processed archived SI waveform and prior 16-period RotD"
+  },
+  "STANDARD": "NO authorized IEC/GB/EN clause or site design target read in this RUN",
+  "T1_HNE_psa_m_s2": 0.02867776578944345,
+  "T1_HNN_psa_m_s2": 0.02381194479907268,
+  "T1_RotD50_psa_m_s2": 0.02641699587560876,
+  "TAB": "46-period real RotD00/50/100 1.246-9.346s with conditional T1",
+  "angular_grid_comparison_deg": 1.0,
+  "angular_step_deg": 0.5,
+  "assumptions": [
+    "5% assumed damping, fixed ESM processed source",
+    "T1=6.230957762865167s from simplified 158m beam NOT native Abaqus",
+    "one Italian event, NOT independent multi-event selection",
+    "no physical long-period instrument validation inferred from SNR cutoff"
+  ],
+  "band_s": [
+    1.2461915525730334,
+    9.34643664429775
+  ],
+  "classification": "S05_REAL_ESM_DENSE_LONG_PERIOD_NUMERIC_QC_ONLY",
+  "conditional_beam_T1_s": 6.230957762865167,
+  "damping_ratio_assumed": 0.05,
+  "dt_s": 0.005,
+  "error_budget": {
+    "angular_discretization": "measured half-vs-one-degree max difference in metrics",
+    "record_site_model": "not bounded; no target spectrum or PT/contact modes",
+    "spectral_resolution": "46 points, no interpolation asserted between points",
+    "time_integration": "Newmark dt=0.005s, independent exact-integration error NOT bounded"
+  },
+  "failed_cases": [
+    "strict source SHA mismatch rejected",
+    "legacy SHA mismatch rejected",
+    "12 overlap periods x 5 numeric columns checked"
+  ],
+  "low_frequency_usable_for_design": false,
+  "max_half_vs_one_degree_relative_difference": 0.0013887863035274572,
+  "max_overlap_relative_difference": 0.0,
+  "native_Abaqus_E_WE": 0,
+  "npts": 32040,
+  "numpy_version": "2.3.5",
+  "output_csv_bytes": 12527,
+  "output_csv_sha256": "31fea6aa2064abbd042e4a1b1a15b9aee90a598a7d1991bc0869bcd63177dd8c",
+  "overlap_numeric_cells": 60,
+  "overlap_period_count": 12,
+  "period_count": 46,
+  "program_sha256": "f7457ca63b34d7feb54234e776d55b2e54e1d1054b22c21fc1b3c336e376c8c3",
+  "site_target_verified": false
+}
