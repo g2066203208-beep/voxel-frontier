@@ -8,21 +8,49 @@
 - **REF/STANDARD/FIG/TAB：** REF=继承T062/T071/T072，不新增期刊全文，2026两篇先行DOI边界不变；STANDARD=本轮无IEC/GB/NB授权条文新阅读，条款验收HOLD；FIG=无真实物理响应图；TAB=源代码字段合同G(24实数)/T(20实数)/E(14实数)与合成两单元复算，**非31段真实响应表**。
 - **状态/HOLD：** S06 PARTIAL、S07 BLOCKED、12阶段**0/12未晋级**，地震E/WE原生0、真实材料疲劳寿命0；单一最大HOLD=**未用真实OpenFAST v3.5.3 2s ETM重编译执行此t轴/惯性探针并验证220节点逐时刻精确DCM和全部分项**。下一轮唯一动作=在核验执行资源后对A/B两批同一真实2s ETM输入编译独立诊断版，保存原生日志/源与可执行文件SHA、G/T/E输出，运行 `--audit` 验证41时刻与两批DCM/六分量守恒；禁止700s生产、改冻结T057/T070、合并PR。
 
-**本轮原始终端stdout摘录（测试本身合成；SHA256= `8fdedba88eb585340e8f110f514ecfb26f0a8db0a563557a694f59c2133af0fd`；程序输入SHA256=`b14fc9c6bb7679e665b30c050d43ae32cf5f86a107e09eac90a199897b83e957`）：**
+**本轮完整原始终端stdout（GitHub内嵌原始文本，stdout文件SHA256=`8fdedba88eb585340e8f110f514ecfb26f0a8db0a563557a694f59c2133af0fd`）：**
 ```text
 $ python --version
 Python 3.13.5
 $ gfortran --version
 GNU Fortran (Debian 14.2.0-19) 14.2.0
 $ python s07_elastodyn_taxis_ownership_probe.py --selftest
-{"synthetic_ledger":"PASS_NONZERO_GRAVITY_INERTIA_HYDRO","negative_rejections":7,"native_solver_run":false,"physical_pass":false,"Q_IEC":[[1.0,0.0,0.0],[-0.0,1.0,-0.0],[0.0,0.0,1.0]]}
+{
+  "synthetic_ledger": "PASS_NONZERO_GRAVITY_INERTIA_HYDRO",
+  "negative_rejections": 7,
+  "native_solver_run": false,
+  "physical_pass": false,
+  "Q_IEC": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      -0.0,
+      1.0,
+      -0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ]
+}
 $ python s07_elastodyn_taxis_ownership_probe.py --fortran-smoke
-{"fortran_syntax_and_runtime":"PASS","independent_ledger":"PASS","scope":"SYNTHETIC_STUB_NOT_OPENFAST_NATIVE","physical_pass":false}
+{
+  "fortran_syntax_and_runtime": "PASS",
+  "independent_ledger": "PASS",
+  "scope": "SYNTHETIC_STUB_NOT_OPENFAST_NATIVE",
+  "physical_pass": false
+}
 $ python -m py_compile s07_elastodyn_taxis_ownership_probe.py
 py_compile: success
+$ sha256sum s07_elastodyn_taxis_ownership_probe.py
+b14fc9c6bb7679e665b30c050d43ae32cf5f86a107e09eac90a199897b83e957  /mnt/data/s07_elastodyn_taxis_ownership_probe.py
 ```
-此处JSON压缩为同字段可读摘录；完整终端stdout未作为独立文件提交（本机临时输出，不能称GitHub已保全原始stdout字节）。gfortran编译器stderr由可复算脚本捕获但未保存；真实OpenFAST编译/执行日志缺失，必须在下一轮native pilot补齐。所有测试命令可直接在PR脚本上重跑。
-
+该代码块内stdout与原始文件对应（不包含`tee`后的额外文件SHA输出）。gfortran编译器stderr由脚本捕获但未单独保存；**真实OpenFAST编译/执行日志不存在**，下一轮native pilot须保存。此测试只验证合成桩，不得升级为原生物理PASS。
 
 **2026-11-01 23时｜S06/S07真实OUTB三时刻截面力坐标敏感性与源码惯性归属（非物理PASS）：** 直接核读OpenFAST v3.5.3官方ElastoDyn.f90 L1165–1206（原始SHA256 `a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3`），确认局部塔段`FL/ML`由塔顶/偏航轴承作用及其质量×(重力+加速度)、上方塔节点`FTTower−MassT×(重力+LinAccET)`逐段积分、半测点单元贡献和力矩臂组成，再投影到`t1,-t3,t2`；**它们是含重力与惯性项的截面内力，不是可直接施加到Abaqus的纯风外力。** 读取[原生2s姿态收据](../T062/S06_ETM_NATIVE_2S_POSE_QC_20261101.json)中的节点220真实0/1/2s三行（源OUTB SHA256 `c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242`、原ZIP SHA256 `7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b`），以实际TP位置为截面参考点，分别在**假定**`Ry=0/±0.25°/±0.5°`正交坐标系中严格旋转F/M并按`M_B=Q M_A+(r_A-r_B)×QF`运输到原点，形成[15情景真实源数值收据](../T062/S07_NODE220_NATIVE_WRENCH_FRAME_SENSITIVITY_20261101.json)与[可执行JS复算程序](../T062/s07_wrench_frame_ownership_qc.cjs)。实际V8执行同一源码，3项正向解析检验、7项篡改/非法矩阵拒绝、15情景的旋转逆运算/范数/螺旋不变量全部通过；节点220在2s时，±0.5°假定旋转相对`Q=I`可改变力向量范数差178.932 kN、原点弯矩向量范数差最大5519.781 kN·m。**这些角度并非从RP反演出的真实DCM；数字仅为条件性敏感性，绝非新风载、地震、结构响应或材料疲劳寿命。** SOURCE=已保全FileID4原生OUTB衍生的3行及Git Blob SHA；REF=沿用T062/T071/T072，未新增期刊全文；STANDARD=未读IEC/GB/NB授权条款；OFFICIAL=上述官方源码精读行号；RUN=V8真实输入算术/负向测试，无新OpenFAST/Abaqus求解；FIG=无物理图；TAB=3行实测源、15条件情景；误差预算=数值代数相对1e-8内，原OUTB量化继承，**真实DCM/逐节点惯性与100–700s误差无上界**；失败=7项故意错误输入均拒绝，无新原生失败；状态=S06 PARTIAL、S07 BLOCKED、E/WE=0、材料寿命=0、12阶段0/12。单一HOLD=缺内部`t1/-t3/t2`时变DCM及全节点`FTTower/MassT/LinAccET`所有权证据。下一动作=在不重跑700s前，基于v3.5.3源码定位能以最小原生诊断导出一个220节点的`t1/-t3/t2`及惯性分项的接口。
 
