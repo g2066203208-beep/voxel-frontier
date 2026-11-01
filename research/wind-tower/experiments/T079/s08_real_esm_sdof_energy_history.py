@@ -16,6 +16,7 @@ import hashlib
 import io
 import json
 import math
+import platform
 from pathlib import Path
 
 SOURCE_SHA = 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34'
@@ -175,9 +176,15 @@ def plot(results,out,zoom=False):
         for i,T in enumerate(PERIODS):
             ax=axs[j][i];r=results[name,T]
             history=r['history']
-            step=1 if zoom else 8
-            data=history[::step]
-            if data[-1][0]!=history[-1][0]:data.append(history[-1])
+            if zoom:
+                data=[v for v in history if 20 <= v[0] <= 70]
+            else:
+                data=[]
+                for start in range(0,len(history),8):
+                    chunk=history[start:start+8]
+                    extrema={min(chunk,key=lambda v:v[1]),max(chunk,key=lambda v:v[1])}
+                    data.extend(sorted(extrema,key=lambda v:v[0]))
+                if history[-1] not in data:data.append(history[-1])
             t=[v[0] for v in data];u=[v[1]*1000 for v in data]
             ax.plot(t,u,color=colors[j],linewidth=.85,rasterized=False)
             ax.axhline(0,color='#777777',linewidth=.55)
@@ -237,7 +244,7 @@ def run(source,oracle,outdir):
              'REF':'exact piecewise-linear ground acceleration underdamped SDOF transition and independent Newmark average acceleration',
              'STANDARD':'NO_AUTHORIZED_IEC_GB_SITE_CLAUSE_VERIFICATION',
              'OFFICIAL':'archived ESM processed record, low-frequency instrument suitability not verified',
-             'RUN':'Python 3.13.5 float64 numerical SDOF only; Abaqus/OpenFAST structural seismic=0',
+             'RUN':'Python '+platform.python_version()+' float64 numerical SDOF only; Abaqus/OpenFAST structural seismic=0',
              'FIG':[x['filename'] for x in figures], 'TAB':table.name,
              'reading_level':'actual archived 32040x3 SI waveform + original source ZIP; not unprocessed station waveform',
              'source_artifact_zip_sha256':ARTIFACT_SHA,'source_csv_sha256':SOURCE_SHA,
