@@ -796,3 +796,8 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 ### 2026-11-01 10时｜S08最小pilot原生历史验收管线交接（网页版GPT）
 - START已登记于本文件10时回执（`read_base_sha=f31fa09851cf357c6c9149bbc3470d99418d1b93`，实际开工时分支已存在并行读取回执`418a24b23832e59dee5cf0e72d2093950de6fee3`）；本次写入前已刷新HEAD并按各文件当前Git Blob SHA条件更新，不修改T057/T070或main，不合并PR。
 - END：新增[Python提取/验证脚本](../experiments/T079/s08_sdof_native_history_gate.py)（SHA256=`d6edf2217c182f2a7d6b64aae761e154d31b22a2ee422a83f1aa7c23934379e6`）和[GitHub Actions工作流](../../../.github/workflows/s08-sdof-odb-history-mock-qc.yml)（SHA256=`5893db1318ffccaf0cbdb1ac5626f6245c8e2d14714bcad7b8df50f10d4c093b`），[Actions #41264189138/job #124723432200](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41264189138/job/124723432200)完整日志回读，201点源CSV/7异常拒绝/2变异识别全部通过；T079 PROCESS_LOG与论文00_STATUS已同步。没有Abaqus ODB/Data Check/模态结果、没有授权IEC/GB新增原页或地震E/WE；12阶段0/12。责任方=具授权Abaqus执行方取得最小模型原生ODB时验收；云端若缺原生资源优先转S10算法。程序的extract模式尚未在Abaqus Python执行，不能写为原生物理PASS。
+
+
+### 2026-11-01 11时｜S10分材料疲劳算法开工读取回执
+- START/read_base_sha=`5ff842ea3438caa3f9c1249e64329e352efbcd89`；main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/PROCESS_LOG最新10时、T080.1/.2/.3、12阶段计划、指挥室当前快照/交接及第四章、T062现有18NTM源级雨流/DEL脚本与SHA收据。
+- 继承18组真实OUTB近塔底2880行名义毛截面应力/DEL与ERA5风速概率；这些**不是**局部材料应力，不重复计算、不从其编造寿命。无新授权Abaqus/材料规范全文/局部应力时程；本轮转S10新增可运行的四材料雨流循环/显式S-N输入/Miner与风速概率汇总**算法及合成已知解负向测试**，缺原典公式时保持模型参数待定和物理HOLD。拟新增T062一份材料算法程序、必要紧凑测试收据，追加T079过程日志、论文00_STATUS及指挥室收尾；不动T057/T070、不合并、不跑高成本求解。
