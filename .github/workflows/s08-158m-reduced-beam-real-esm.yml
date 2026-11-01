@@ -91,6 +91,13 @@ jobs:
               with open('historical/'+name,newline='') as f:a=list(csv.DictReader(f))
               with open('output/'+name,newline='') as f:b=list(csv.DictReader(f))
               assert len(a)==len(b) and a and a[0].keys()==b[0].keys(),name
+              scales={}
+              for k in a[0]:
+                  vals=[]
+                  for old,new in zip(a,b):
+                      try:vals.extend((abs(float(old[k])),abs(float(new[k]))))
+                      except ValueError:continue
+                  scales[k]=max(1.,*vals) if vals else 1.
               max_abs=0.;max_scaled=0.;num=0
               for old,new in zip(a,b):
                   for k in old:
@@ -98,14 +105,16 @@ jobs:
                       except ValueError:
                           assert old[k]==new[k],(name,k,old[k],new[k]);continue
                       assert math.isfinite(x) and math.isfinite(y)
-                      delta=abs(x-y);scale=max(1.,abs(x),abs(y))
+                      delta=abs(x-y);scale=scales[k]
                       max_abs=max(max_abs,delta);max_scaled=max(max_scaled,delta/scale)
-                      assert delta<=1e-5*scale,(name,k,x,y,delta)
+                      # Near-zero shear/moment histories are cancellation-prone.
+                      # Compare against each column's peak physical scale, not each tiny sample.
+                      assert delta<=1e-6*scale,(name,k,x,y,delta,scale)
                       num+=1
               results.append({'file':name,'rows':len(a),'numeric_cells':num,
                               'max_absolute_difference':max_abs,
-                              'max_scale_normalized_difference':max_scaled,
-                              'pass_threshold':'abs(x-y)<=1e-5*max(1,abs(x),abs(y))'})
+                              'max_column_scale_normalized_difference':max_scaled,
+                              'pass_threshold':'abs(x-y)<=1e-6*max(1,column_peak_abs)'})
           p=pathlib.Path('output/S08_158M_BEAM_PROXY_RECEIPT_20261102.json')
           r=json.loads(p.read_text())
           r['historical_regression']=results
