@@ -777,3 +777,7 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 ### 2026-11-01 08时｜S08完整三向输入源数值验收收尾
 - CLOSE/read_base_sha=`c01d9ee0626cc69d6c9113786bbed04824176f9a`，远端当前PR HEAD（写前）=`0bb46173b52ab767ce8e59ea1e42d3e5fedf5119`，main直接读取=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42=open/Draft=true；本次修改仅T079既有导出器、既有S05 workflow、新S08精确收据、T079 PROCESS_LOG、00_STATUS、本指挥室。
 - 交付=32,040×3真实处理波映射、3幅值原始SHA及历史artifact、Python原生CI success和两次失败日志；T057/T070不变、无*BASE MOTION/*BOUNDARY、无Abaqus物理求解。SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、数值误差/HOLD详见T079 08时过程。责任方=云端后续已知解小模型方法与脚本；原生Abaqus执行方需有授权程序/许可。
+
+### 2026-11-01 09时｜S08已知解基底运动最小验证开工回执
+- START/read_base_sha=`5ab021423a78fe87241fc3dfae477f59d3ba049c`；main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR #42 Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/METHOD_PLAN/PROCESS_LOG最新08时、T080三份入口、12阶段计划、本指挥室及既有`s08_independent_sdof_ground_acceleration.py`、`s08_base_motion_amplitude_gate.py`。继承真实32,040×3 ESM输入及其SHA，不重复波形提取。
+- 本轮增量：依据Abaqus 2025官方modal dynamic/base motion/SPRING2手册，建立1自由度SPRING2+MASS的**非生产**最小原生待运行INP，配套独立分段线性解析时程与U/A/TU/TA比较合同、实际本地轻量测试和误差收据。拟改T079现有PROCESS_LOG、00_STATUS及本指挥室；新增最小pilot INP/程序/紧凑CSV或JSON收据（仅在原目录无同类实物时）。绝不执行158m生产RUN、改冻结T057/T070或合并PR。
