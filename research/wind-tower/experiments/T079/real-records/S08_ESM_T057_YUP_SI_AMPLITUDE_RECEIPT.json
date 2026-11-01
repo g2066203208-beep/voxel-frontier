@@ -1,0 +1,120 @@
+{
+  "Abaqus_E_WE_RUN": 0,
+  "FIG": "NONE",
+  "HOLD": "NO DESIGN WAVE; station HNZ sign, physical azimuth, 0.040Hz highpass/long-period SNR, site target spectrum, mass/density consistency, native Abaqus BC/base-motion/PT/contact all unverified",
+  "OFFICIAL": "T057 original model audit indicates +Y vertical, gravity -Y; base-motion semantics not verified in native Abaqus",
+  "PASS": "FULL_SOURCE_STATIC_YUP_SI_NUMERIC_QC_ONLY",
+  "REF": "ESM v3 DOI 10.13127/esm.3",
+  "RUN": "Python 3 deterministic full 32040x3 source-level amplitude and norm QC; native Abaqus E/WE=0",
+  "S08_PASS": false,
+  "SOURCE": "ESM v3 IT-2012-0008/NVL/MP processed three-component SI CSV; archived Actions 40847442979 artifact 12884814391",
+  "SOURCE_DT_S": 0.005,
+  "SOURCE_LAST_TIME_S": 160.195,
+  "SOURCE_NPTS": 32040,
+  "SOURCE_SHA256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "STANDARD": "2025 IEC / GB site target spectrum and clauses NOT_VERIFIED",
+  "T057_FROZEN_INP_SHA256": "c5652eae36ad8b60ef2caed1ab12e147b149f5199d40b83a3cb2af4dfaf672db",
+  "TAB": "7 synchronized original samples in receipt; full three-axis amplitude files remain in archived run artifact",
+  "artifacts": [
+    {
+      "axis": "X",
+      "bytes": 716882,
+      "filename": "S08_ESM_T057_X_ACC_M_S2_AMP.inp",
+      "sha256": "43675a5606c0be1121e18e88fdf203c9978327e2cb865b046497614ae1494ab8"
+    },
+    {
+      "axis": "Y",
+      "bytes": 717164,
+      "filename": "S08_ESM_T057_Y_ACC_M_S2_AMP.inp",
+      "sha256": "65ff27c4d46eff76c1740b1db066f3be3e13c6a54953b81c4f5f0f25ad8a556b"
+    },
+    {
+      "axis": "Z",
+      "bytes": 716978,
+      "filename": "S08_ESM_T057_Z_ACC_M_S2_AMP.inp",
+      "sha256": "32a6c3d760f5aedd58d8442273dfa846168617e73f1558d06568ea8b99678078"
+    }
+  ],
+  "assumptions": "HNE=East, HNN=North, HNZ=Up assumed; physical tower azimuth and HNZ sign unverified; no PGA scaling",
+  "azimuth_deg_CCW_from_East": 0.0,
+  "error_budget": {
+    "amplitude_roundtrip_tolerance_m_s2": "2e-11 + 1e-11*abs(a)",
+    "low_frequency_processing_uncertainty": "NEED_ESTIMATE",
+    "max_roundtrip_acc_m_s2": 0.0,
+    "max_synch_vector_norm_error_m_s2": 0.0,
+    "max_synch_vector_peak_m_s2": 0.5665313757667056,
+    "max_time_error_s": 0.0,
+    "physical_orientation_uncertainty": "NEED_ESTIMATE",
+    "time_grid_tolerance_s": 2e-10,
+    "vector_norm_tolerance_m_s2": 3e-11
+  },
+  "frame": "T057 candidate global XYZ right-handed Y-up; metre-second SI",
+  "generated_keywords": "*AMPLITUDE only; no *BASE MOTION, *BOUNDARY, or production load cards",
+  "mapping": "X=cos(theta)*E+sin(theta)*N; Y=U; Z=sin(theta)*E-cos(theta)*N",
+  "samples": [
+    {
+      "index": 0,
+      "time_s": 0.0,
+      "xyz_m_s2": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 1,
+      "time_s": 0.005,
+      "xyz_m_s2": [
+        -2.12e-06,
+        -4.2e-07,
+        5.11e-06
+      ]
+    },
+    {
+      "index": 200,
+      "time_s": 1.0,
+      "xyz_m_s2": [
+        -3.65e-06,
+        -7.9e-07,
+        9.02e-06
+      ]
+    },
+    {
+      "index": 6734,
+      "time_s": 33.67,
+      "xyz_m_s2": [
+        0.47522846,
+        0.27869123,
+        0.10204503
+      ]
+    },
+    {
+      "index": 6735,
+      "time_s": 33.675,
+      "xyz_m_s2": [
+        0.47490368,
+        0.28759727,
+        0.11274797
+      ]
+    },
+    {
+      "index": 6736,
+      "time_s": 33.68,
+      "xyz_m_s2": [
+        0.46295818,
+        0.28926626,
+        0.12053101
+      ]
+    },
+    {
+      "index": 32039,
+      "time_s": 160.195,
+      "xyz_m_s2": [
+        3.25e-06,
+        -1.079e-05,
+        8.56e-06
+      ]
+    }
+  ],
+  "units": "m/s^2; no factor 1000; legacy Z-up/mm/s^2 is incompatible with this T057 branch"
+}
