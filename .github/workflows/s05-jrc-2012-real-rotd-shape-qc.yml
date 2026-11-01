@@ -48,6 +48,28 @@ jobs:
           assert r['JRC_example_does_not_cover_T1_or_full_band']
           print('REAL_ESM_JRC_SHAPE_PYTHON_CI_PASS_NUMERIC_ONLY_NOT_SITE_DESIGN')
           PY
+          curl -fLsS --retry 3 -o output/committed_jrc_16.csv "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/research/wind-tower/experiments/T079/real-records/S05_ESM_ROTD16_JRC2012_BRIDGE_EXAMPLE_SHAPE_GATE_20261102.csv"
+          echo '83cb24140a35d1e71ee6bad48bd81f2f2a66c12d990ed264d8ed214dd75770a9  output/committed_jrc_16.csv' | sha256sum --check
+          python - <<'PY'
+          import csv,math
+          from pathlib import Path
+          def read(p):return list(csv.DictReader(Path(p).open()))
+          generated=read('output/jrc_16.csv')
+          committed=read('output/committed_jrc_16.csv')
+          assert len(generated)==len(committed)==16
+          numerical=('period_s','real_ESM_RotD50_psa_m_s2','JRC_bridge_example_elastic_psa_m_s2',
+            'logfit_scale_shape_only','scaled_record_psa_m_s2','scaled_over_example','signed_log_ratio')
+          for i,(a,b) in enumerate(zip(generated,committed)):
+            assert a.keys()==b.keys()
+            for key in a:
+              if key in numerical:
+                assert (not a[key])==(not b[key]),(i,key,'empty mismatch')
+                if a[key]:
+                  assert math.isclose(float(a[key]),float(b[key]),rel_tol=1e-12,abs_tol=1e-12),(i,key,a[key],b[key])
+              else: assert a[key]==b[key],(i,key)
+          print('REAL_ESM_16_ROWS_COMMITTED_VS_PYTHON_NUMERIC_REPLAY_PASS_TOL_1E-12')
+
+          PY
           sha256sum "$root/s05_parametric_target_spectrum_fit.py" output/*
       - uses: actions/upload-artifact@v4
         if: always()
