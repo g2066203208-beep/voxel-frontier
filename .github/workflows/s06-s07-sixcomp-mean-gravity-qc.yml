@@ -1,0 +1,58 @@
+name: S06-S07 real six-component mean gravity QC (NO dynamic DCM or Abaqus)
+on:
+  push:
+    paths:
+      - '.github/workflows/s06-s07-sixcomp-mean-gravity-qc.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_fz_gravity_ownership_real.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_S07_4ETM_30JOINT_6COMP_MEAN_GRAVITY_RESIDUAL_20261101.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-744-30-124-six-component:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch five small SHA-pinned sources (no checkout or production RUN)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T077/recovery"
+          for f in s10_fz_gravity_ownership_real.py S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv S06_S07_4ETM_30JOINT_6COMP_MEAN_GRAVITY_RESIDUAL_20261101.csv; do
+            curl --fail --location --silent --show-error --retry 3 --output "$f" "$base/$f"
+          done
+          printf '%s  %s\n' \
+            '9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b' S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
+            'ae1e5bc3e217cd9151bcd45f9d70909d0459df3c258329f17c6c2fdb457fd64e' S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv \
+            'bcec1d70d0a5e93a9f9d37efcde32e9e57bfa61b592ab31ba5bc58a6a455797e' S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv | sha256sum -c -
+      - name: Python source-level 120-row six-component comparison and 7 tamper rejections
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 --version
+          python3 -m py_compile s10_fz_gravity_ownership_real.py
+          python3 s10_fz_gravity_ownership_real.py --self-test \
+            --load S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv \
+            --sixcomp-static S06_30_GAGE_SIX_COMPONENT_WRENCH_DIFFERENCES_20261027.csv \
+            --sixcomp-fz S10_4CASE_31SEG_FZ_GRAVITY_OWNERSHIP_20261030.csv \
+            --sixcomp-check S06_S07_4ETM_30JOINT_6COMP_MEAN_GRAVITY_RESIDUAL_20261101.csv
+          sha256sum s10_fz_gravity_ownership_real.py S06_S07_4ETM_30JOINT_6COMP_MEAN_GRAVITY_RESIDUAL_20261101.csv
+          python3 - <<'PY'
+          from pathlib import Path
+          import importlib.util
+          s=importlib.util.spec_from_file_location("gate","s10_fz_gravity_ownership_real.py")
+          m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+          src=Path("S06_S07_4ETM_30JOINT_6COMP_MEAN_GRAVITY_RESIDUAL_20261101.csv").read_bytes()
+          bad=src.replace(b"12.225292596",b"99.225292596",1)
+          assert bad!=src
+          import csv,io
+          rows=list(csv.DictReader(io.StringIO(src.decode())))
+          model=[dict(r) for r in rows]
+          for r in model:
+              for k in m.SIX_FIELDS:
+                  if k in ("gage_span_m","max_gage_z_mismatch_m") or k.startswith(("mean_delta_","static_delta_","mean_minus_static_")):
+                      r[k]=float(r[k])
+          try:m.sixcomp_check(model,bad)
+          except ValueError:print("PASS: tampered committed output rejected")
+          else:raise AssertionError("TAMPERED_OUTPUT_ACCEPTED")
+          PY
+          echo 'SOURCE-NUMERIC-QC ONLY: 120 conditional local-frame means; NO dynamic DCM, inertia owner, PT or native Abaqus PASS.'
