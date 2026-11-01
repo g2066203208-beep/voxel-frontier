@@ -37,7 +37,7 @@
         "STREAM": "HNE",
         "UNITS": "cm/s^2"
       },
-      "sha256": "5b48ad2d01a2e328ab06170cbc74164764916ef49263fbf0c382eae435309a7a"
+      "sha256": "db0feb1df024094fa76c01a20f9ed13aa78a25035c16162b0f881353ccd4dd12"
     },
     {
       "bytes": 177102,
@@ -61,7 +61,7 @@
         "STREAM": "HNN",
         "UNITS": "cm/s^2"
       },
-      "sha256": "97c84fdca927bf615404931b7cb3dd143101a803d2fc8e4aab03419e5add391f"
+      "sha256": "131aa45ac719176f8a8fd9458cc9b61c535a1a96653b189988857f9bf2dfcb0e"
     },
     {
       "bytes": 177750,
@@ -85,7 +85,7 @@
         "STREAM": "HNZ",
         "UNITS": "cm/s^2"
       },
-      "sha256": "76218fcd765d81b9363aa3e21abe234b93516d46caef70b8ff7dc20f61631861"
+      "sha256": "9a9728e609fb3d01507dc577954df55cca49f128634d238ab6e9c117873a3ee5"
     },
     {
       "bytes": 153765,
@@ -109,7 +109,7 @@
         "STREAM": "HNE",
         "UNITS": "cm/s^2"
       },
-      "sha256": "fd500a8e8989ced97bd83639659694ee35344fedcd1b8861f72e6dd7e7873352"
+      "sha256": "3703b42d757f8b745eb3ed1cc01cd2873ec55d873ecc314f7b0297d9de1e7cb3"
     },
     {
       "bytes": 154226,
@@ -133,7 +133,7 @@
         "STREAM": "HNN",
         "UNITS": "cm/s^2"
       },
-      "sha256": "2660f5313bfb8a2be62368bd5fb052664473ebad524bac29d1449fa1669ad7c0"
+      "sha256": "1f6461a08375cd97af1091169fb67681ae8daba2b03d7943282794d5cc1df9bd"
     },
     {
       "bytes": 154532,
@@ -157,7 +157,7 @@
         "STREAM": "HNZ",
         "UNITS": "cm/s^2"
       },
-      "sha256": "610d4ec31f5980fab7362ad4e18ab1d17495dcf91bb6d5d3ded966fdff83e8e1"
+      "sha256": "40a81a544d2e03a05f7b89ed8516473bbdedc8a2e37473b9b11b08706825e663"
     }
   ],
   "metadata_array_length": 2,
@@ -169,8 +169,8 @@
   "metadata_url": "https://esm-db.eu/esmws/dataset-selection/1/query?eventid=IT-2012-0009&station=NVL%2CMDN&unprocessed=false&format=json&limit=100",
   "paired_station_headers": [
     {
-      "HNE_member_sha256": "fd500a8e8989ced97bd83639659694ee35344fedcd1b8861f72e6dd7e7873352",
-      "HNN_member_sha256": "2660f5313bfb8a2be62368bd5fb052664473ebad524bac29d1449fa1669ad7c0",
+      "HNE_member_sha256": "3703b42d757f8b745eb3ed1cc01cd2873ec55d873ecc314f7b0297d9de1e7cb3",
+      "HNN_member_sha256": "1f6461a08375cd97af1091169fb67681ae8daba2b03d7943282794d5cc1df9bd",
       "S05_design_wave_PASS": false,
       "dt_s": 0.005,
       "high_cut_Hz": "50.000",
@@ -199,7 +199,7 @@
       "reason": "lc or hc issues"
     }
   },
-  "retrieved_utc": "2026-11-01T23:14:54.006218+00:00",
+  "retrieved_utc": "2026-11-01T23:16:07.657335+00:00",
   "source_read_level": "HTTP raw bytes and DYNA headers if successful",
   "stages_passed": 0,
   "station_rejections": [
@@ -220,7 +220,7 @@
   ],
   "status": "SOURCE_RECOVERED_HEADER_QC_ONLY_NOT_DESIGN_PASS",
   "waveform_content_type": "application/zip; charset=UTF-8",
-  "waveform_response_bytes": 386242,
-  "waveform_response_sha256": "84334aa45b65f1ba55b4474af3cc65f5640ea0e0bf05a4a8915095eb87f6f13f",
+  "waveform_response_bytes": 386241,
+  "waveform_response_sha256": "83f65efb9a4ed6e9790a5ffa29550c0bab20cafc89b523d88edfde8dd347db95",
   "waveform_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0009&station=NVL%2CMDN&format=ascii&processing-type=MP&data-type=ACC"
 }
