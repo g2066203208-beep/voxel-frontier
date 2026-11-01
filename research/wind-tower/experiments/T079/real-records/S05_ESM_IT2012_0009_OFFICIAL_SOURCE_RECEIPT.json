@@ -37,7 +37,7 @@
         "STREAM": "HNE",
         "UNITS": "cm/s^2"
       },
-      "sha256": "97ec052f32db11b1ef820f6e3e32458f0303f92a3c61a67f46efd0a16b68f0dc"
+      "sha256": "5b48ad2d01a2e328ab06170cbc74164764916ef49263fbf0c382eae435309a7a"
     },
     {
       "bytes": 177102,
@@ -61,7 +61,7 @@
         "STREAM": "HNN",
         "UNITS": "cm/s^2"
       },
-      "sha256": "a08e5d23866f42972619b65716b32316686eb132a29146a4d7760fdf53281fb0"
+      "sha256": "97c84fdca927bf615404931b7cb3dd143101a803d2fc8e4aab03419e5add391f"
     },
     {
       "bytes": 177750,
@@ -85,7 +85,7 @@
         "STREAM": "HNZ",
         "UNITS": "cm/s^2"
       },
-      "sha256": "0f6465cac65e51a588b3ec4e83fc665e763e15ff4a32b66e6d27a39c7d4469f8"
+      "sha256": "76218fcd765d81b9363aa3e21abe234b93516d46caef70b8ff7dc20f61631861"
     },
     {
       "bytes": 153765,
@@ -109,7 +109,7 @@
         "STREAM": "HNE",
         "UNITS": "cm/s^2"
       },
-      "sha256": "ae040ec782ecec682f319f4d5c5c3fe49d8e0b429a07869261ff53022973844e"
+      "sha256": "fd500a8e8989ced97bd83639659694ee35344fedcd1b8861f72e6dd7e7873352"
     },
     {
       "bytes": 154226,
@@ -133,7 +133,7 @@
         "STREAM": "HNN",
         "UNITS": "cm/s^2"
       },
-      "sha256": "3cca4eec065acac673a3b61b93b9465c07a01b6359a5569a551f766874cd61bf"
+      "sha256": "2660f5313bfb8a2be62368bd5fb052664473ebad524bac29d1449fa1669ad7c0"
     },
     {
       "bytes": 154532,
@@ -157,7 +157,7 @@
         "STREAM": "HNZ",
         "UNITS": "cm/s^2"
       },
-      "sha256": "8bdc4e1d7a3bfb81d082c25bb64735d8e29fa379adc01419465a6dad1b45e478"
+      "sha256": "610d4ec31f5980fab7362ad4e18ab1d17495dcf91bb6d5d3ded966fdff83e8e1"
     }
   ],
   "metadata_array_length": 2,
@@ -167,17 +167,60 @@
   "metadata_root_type": "list",
   "metadata_sha256": "2f5da6df96d227b8b13422566d445313f38ad0ae5a6708ff05b5d256f65aed4a",
   "metadata_url": "https://esm-db.eu/esmws/dataset-selection/1/query?eventid=IT-2012-0009&station=NVL%2CMDN&unprocessed=false&format=json&limit=100",
-  "retrieved_utc": "2026-11-01T23:13:39.007927+00:00",
+  "paired_station_headers": [
+    {
+      "HNE_member_sha256": "fd500a8e8989ced97bd83639659694ee35344fedcd1b8861f72e6dd7e7873352",
+      "HNN_member_sha256": "2660f5313bfb8a2be62368bd5fb052664473ebad524bac29d1449fa1669ad7c0",
+      "S05_design_wave_PASS": false,
+      "dt_s": 0.005,
+      "high_cut_Hz": "50.000",
+      "horizontal_streams": [
+        "HNE",
+        "HNN"
+      ],
+      "low_cut_Hz": 0.08,
+      "npts": 15970,
+      "processing": "manual (Paolucci et al., 2011)",
+      "station": "NVL",
+      "vertical_present": true
+    }
+  ],
+  "quality_class_and_reason_by_station": {
+    "MDN": {
+      "event_time": "2012-05-20T03:02:47",
+      "magnitude": 5.1,
+      "quality_class": "GOOD",
+      "reason": "lc or hc issues"
+    },
+    "NVL": {
+      "event_time": "2012-05-20T03:02:47",
+      "magnitude": 5.1,
+      "quality_class": "GOOD",
+      "reason": "lc or hc issues"
+    }
+  },
+  "retrieved_utc": "2026-11-01T23:14:54.006218+00:00",
   "source_read_level": "HTTP raw bytes and DYNA headers if successful",
   "stages_passed": 0,
+  "station_rejections": [
+    {
+      "reason": "INDEPENDENT_HORIZONTAL_MISMATCH_LOW_CUT_FREQUENCY_HZ",
+      "source_values": {
+        "LOW_CUT_FREQUENCY_HZ": [
+          "0.080",
+          "0.100"
+        ]
+      },
+      "station": "MDN"
+    }
+  ],
   "stations_requested": [
     "NVL",
     "MDN"
   ],
-  "status": "HOLD_INDEPENDENT_WAVEFORM_NOT_RECOVERED_OR_HEADER_QC_FAILED",
+  "status": "SOURCE_RECOVERED_HEADER_QC_ONLY_NOT_DESIGN_PASS",
   "waveform_content_type": "application/zip; charset=UTF-8",
-  "waveform_failure": "ValueError: INDEPENDENT_HORIZONTAL_MISMATCH_LOW_CUT_FREQUENCY_HZ",
-  "waveform_response_bytes": 386239,
-  "waveform_response_sha256": "6e689a0e79003d2e53988df9afbe6c5747fde871137ccd43f5dc0d3106336d93",
+  "waveform_response_bytes": 386242,
+  "waveform_response_sha256": "84334aa45b65f1ba55b4474af3cc65f5640ea0e0bf05a4a8915095eb87f6f13f",
   "waveform_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0009&station=NVL%2CMDN&format=ascii&processing-type=MP&data-type=ACC"
 }
