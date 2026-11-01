@@ -1,5 +1,8 @@
 # 论文指挥室 — 每次写入前必读
 
+**2026-11-01 S06/S07 ElastoDyn源码与姿态OutList补采收尾交接：** 继承本日开工read_base_sha=2c9135c7a1ecf1721c250a8313216ce4bdf6af06，已精读OpenFAST v3.5.3 tag=6a7a543790f3cad4a65b87242a619ac5b34b4c0f的ElastoDyn.f90/ElastoDyn_IO.f90原始源码（SHA256 a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3 / af1c78a15e4102668f83740c8ad1fc450f7112cdcc2ce004093278acf75d1d5a）。证实TPxi/yi/zi=惯性系节点位置、RPxi/yi/zi=角位置分量deg（非严格DCM）、ALxt/yt/zt及FL/ML局部t轴。实际新增[T062 72通道/批OutList子版生成器与解析力矩自测](../experiments/T062/s06_etm_pose_outlist_gate.cjs)，V8正例/幂等+8项异常拒绝+力矩逆运算通过；[既有收据追加源码SHA及通道合同](../experiments/T062/S06_ETM_2S_CHANNEL_COVERAGE_RECEIPT_20261101.json)，[T080完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB/误差与失败](../experiments/T080/PROCESS_LOG.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)已同步。没有对真实四份ED字节执行patch，没有新Node CI/原生OpenFAST/Abaqus RUN；984个新重叠比较只是设计目标。**12阶段0/12未晋级，S06 PARTIAL、S07 BLOCKED、E/WE原生0、真实材料寿命0。** 单一HOLD为同刻精确DCM与惯性归属；下一责任方=云端T062最小真实ETM 2s四批TP/RP/AL原生补采并在220接口做数值对照；不跑700s生产、不改T057/T070/main、不合并Draft PR #42。
+
+
 **2026-11-01 S06/S07 ElastoDyn v3.5.3源码与姿态补采开工回执：** 执行者=云端研究；read_base_sha=`2c9135c7a1ecf1721c250a8313216ce4bdf6af06`；main经远端读取为`58c1e545f67b645417d5957189f5dad693d975bb`（另有PR base SHA差异，未修改main）；已读AGENTS/README、论文00_STATUS/00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、本指挥室最近交接、T080过程最新节及T062 2s原生收据/通道程序。继承13,899项2s ETM原生跨批数值一致及TPzi标量发现；本轮仅精读OpenFAST v3.5.3 ElastoDyn.f90/ElastoDyn_IO.f90官方源码，核验TP/RP/AL与局部FL/ML的坐标语义，复用T062现有JS程序添加最小姿态OutList子版生成与合成力矩参考点测试；拟更新T062现有程序/收据、T080 PROCESS_LOG、论文00_STATUS和本指挥室。仅静态/合成验证，不做原生新RUN、700s生产、Abaqus，不动冻结T057/T070或合并PR。责任方=云端源码/程序验证。**
 
 
