@@ -85,6 +85,8 @@ jobs:
           python3 s10_miner_damage_gate.py --self-test --wind-bin-source S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv
           python3 -m py_compile s10_local_stress_rainflow_gate.py
           python3 s10_local_stress_rainflow_gate.py --self-test
+          python3 s10_miner_damage_gate.py --integration-self-test
+          echo 'S10_INTEGRATION_SYNTHETIC_ONLY_NO_MATERIAL_LIFE'
           python3 -m py_compile s10_native_odb_local_stress_gate.py
           echo '9850c1983a1bc69cc829f338260a31ff29b4e6ab86660749d453f9cc5791ff83  S10_D400_PE_68PART_INP_METADATA_20261028.csv' | sha256sum --check
           python3 s10_native_odb_local_stress_gate.py --self-test --source-map S10_T057_68PART_INP_METADATA_20261028.csv --d400-source-map S10_D400_PE_68PART_INP_METADATA_20261028.csv
